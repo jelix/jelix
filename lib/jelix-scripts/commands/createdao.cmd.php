@@ -25,7 +25,7 @@ class createdaoCommand extends JelixScriptCommand {
                            la base et récupérer les informations de la table
     -empty (facultatif) : ne se connecte pas à la base et génère un fichier
                           dao vide
-    
+
     MODULE : le nom du module concerné.
     DAO :  nom du dao à créer.
     TABLEPRINCIPALE : nom de la table principale sur laquelle s'appuie le dao
@@ -34,26 +34,25 @@ class createdaoCommand extends JelixScriptCommand {
 
 
     public function run(){
-       die("Non disponible dans cette version\n");
-    
-    
+       die("Non disponible encore dans cette version\n");
+
+
        $path= $this->getModulePath($this->_parameters['module']);
 
        $filename= $path.'daos/';
        $this->createDir($filename);
 
        $filename.=strtolower($this->_parameters['name']).'.dao.xml';
-       
-       $profil= $this->getOption('-profil')
 
-       $param = array('name'=>$this->_parameters['name'],
-              'table'=>$this->_parameters['table'],
-              'connection'=>$connection);
+       $profil= $this->getOption('-profil');
+
+       $param = array('name'=>($this->_parameters['name']),
+              'table'=>($this->_parameters['table']));
 
        if($this->getOption('-empty')){
           $this->createFile($filename,'dao_empty.xml.tpl',$param);
        }else{
-         require_once(JELIX_LIB_DB_PATH.'JDb.class.php');
+         require_once(JELIX_LIB_DB_PATH.'jDb.class.php');
 
          $tools = jDb::getTools($profil);
          $fields = $tools->getFieldList($this->_parameters['table']);

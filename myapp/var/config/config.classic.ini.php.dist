@@ -55,7 +55,7 @@ force  = off
 use_IIS = off
 
 ;indique le paramètre dans $_GET ou est indiqué le path_info
-IIS_path_key = __COPIX_URL__
+IIS_path_key = __JELIX_URL__
 
 ;indique si il faut stripslashé le path_info récupéré par le biais de url_IIS_path_key
 IIS_stripslashes_path_key = on

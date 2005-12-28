@@ -73,24 +73,28 @@ class jDbConnectionMySQL extends jDbConnection {
    }
 
 
-   protected function _doQuery ($queryString){
+   protected function _doQuery ($query){
 
        // ici et non lors du connect, pour le cas où il y a plusieurs connexion active
       if(!mysql_select_db ($this->profil['database'], $this->_connection))
          throw new JException('jelix~db.error.database.unknow',$this->profil['database']);
 
-      if ($qI = mysql_query ($queryString, $this->_connection)){
+      if ($qI = mysql_query ($query, $this->_connection)){
          return new jDbResultSetMySQL ($qI);
       }else{
-         throw new JException('jelix~db.error.query.bad',  mysql_error($this->_connection).'('.$queryString.')');
+         throw new JException('jelix~db.error.query.bad',  mysql_error($this->_connection).'('.$query.')');
       }
    }
 
    protected function _doExec($query){
-     if($this->_doQuery($query)){
+      if(!mysql_select_db ($this->profil['database'], $this->_connection))
+         throw new JException('jelix~db.error.database.unknow',$this->profil['database']);
+
+      if ($qI = mysql_query ($query, $this->_connection)){
          return mysql_affected_rows($this->_connection);
-     }else
-         return 0;
+      }else{
+         throw new JException('jelix~db.error.query.bad',  mysql_error($this->_connection).'('.$query.')');
+      }
    }
 
    protected function _doLimitQuery ($queryString, $offset, $number){

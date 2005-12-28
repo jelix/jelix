@@ -35,9 +35,8 @@ class AGMain extends jActionGroup {
         $dao = jDAO::create('config');
         $rec = jDAO::createRecord('config');
 
-        $rec->id = $id;
-        $rec->grp = 'AAA';
-        $rec->value='bbbb';
+        $rec->ckey = $id;
+        $rec->cvalue=$this->_get('newvalue','');
         $dao->insert($rec);
     }
 

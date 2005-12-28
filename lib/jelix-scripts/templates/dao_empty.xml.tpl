@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
    <datasources>
-      <table name="{$table}" realname="{$table}">
-         <primarykey fieldname="" />
-      </table>
+      <primarytable name="{$table}" realname="{$table}" primarykey=""/>
    </datasources>
    <record>
       <!--<property name="" fieldname="" datatype="string/int/float/autoincrement/date"
@@ -14,7 +12,7 @@
       updatemotif="" insertmotif="" selectmotif=""
       />-->
    </record>
-   <!--<methods>
+   <!--<factory>
       <method name="findByStage" type="select/selectfirst/delete/update/php">
           <parameters>
             <parameter name="" />
@@ -32,5 +30,5 @@
           <body><![CDATA[
           ]]></body>
       </method>
-   </methods>-->
+   </factory>-->
 </dao>

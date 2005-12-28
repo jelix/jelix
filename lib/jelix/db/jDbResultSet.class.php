@@ -12,7 +12,7 @@
 
 abstract class jDbResultSet {
 
-	protected $_idResult;
+	protected $_idResult=null;
 
 	function __construct (  $idResult){
 		$this->_idResult = $idResult;

@@ -68,11 +68,17 @@ class jDAOParser {
     */
     public function parse( $xml){
         // -- tables
-        if(isset ($xml->datasources) && isset ($xml->datasources[0]->table)){
-            $t = $this->_parseTable ($xml->datasources[0]->table[0]);
+        if(isset ($xml->datasources) && isset ($xml->datasources[0]->primarytable)){
+            $t = $this->_parseTable (0, $xml->datasources[0]->primarytable[0]);
             $this->_primaryTable = $t['name'];
-            if(isset($xml->datasources[0]->table[1])){
+            if(isset($xml->datasources[0]->primarytable[1])){
                $this->_compiler->doDefError ('table.two.many');
+            }
+            foreach($xml->datasources[0]->foreigntable as $table){
+                $this->_parseTable (1, $table);
+            }
+            foreach($xml->datasources[0]->optionalforeigntable as $table){
+                $this->_parseTable (2, $table);
             }
         }else{
             $this->_compiler->doDefError ('datasource.missing');
@@ -89,8 +95,8 @@ class jDAOParser {
            $this->_compiler->doDefError ('properties.missing');
 
         // get additionnal methods definition
-        if(isset ($xml->methods) && isset ($xml->methods[0]->method)){
-           foreach($xml->methods[0]->method as $method){
+        if(isset ($xml->factory) && isset ($xml->factory[0]->method)){
+           foreach($xml->factory[0]->method as $method){
                $m = new jDAOMethod ($method, $this);
                if(isset ($this->_methods[$m->name])){
                   $this->_compiler->doDefError ('method.duplicate',$m->name);
@@ -103,8 +109,8 @@ class jDAOParser {
    /**
    * parse a join definition
    */
-   private function _parseTable ($tabletag, $noMoreJoin =false){
-      $infos = $this->getAttr($tabletag, array('name','realname'));
+   private function _parseTable ($typetable, $tabletag){
+      $infos = $this->getAttr($tabletag, array('name','realname','primarykey','onforeignkey'));
 
       if ($infos['name'] === null )
          $this->_compiler->doDefError('table.name');
@@ -112,49 +118,27 @@ class jDAOParser {
       if($infos['realname'] === null)
          $infos['realname'] = $infos['name'];
 
-      $infos['pk']=array();
-      foreach($tabletag->primarykey as $pk){
-         if(!isset($pk['fieldname'])){
-            $this->_compiler->doDefError ('primarykey.fieldname.missing');
-         }else{
-            $infos['pk'][]=(string)$pk['fieldname'];
-         }
+      if($infos['primarykey'] === null)
+          $this->_compiler->doDefError ('primarykey.missing');
+
+      $infos['pk']=explode(',',$infos['primarykey']);
+      unset($infos['primarykey']);
+
+      if(count($infos['pk']) == 0 || $infos['pk'][0] == '')
+          $this->_compiler->doDefError ('primarykey.missing');
+
+      if($typetable){ // pour les foreigntable et optionalforeigntable
+          if($infos['onforeignkey'] === null)
+              $this->_compiler->doDefError ('foreignkey.missing');
+          if($typetable == 1){
+             $this->_ijoins[]=$infos['name'];
+          }else{
+             $this->_ojoins[]=array($infos['name'],0);
+          }
+      }else{
+          unset($infos['onforeignkey']);
       }
-      if(!count($infos['pk'])){
-         $this->_compiler->doDefError ('primarykey.fieldname.missing');
-      }
 
-      if($noMoreJoin && isset($tabletag->foreignkey)){
-         $this->_compiler->doDefError ('primarykey.innerafterouter.forbidden');
-      }
-
-      if(!$noMoreJoin){
-         foreach($tabletag->foreignkey as $fk){
-            $fkattr = $this->getAttr($fk, array('fieldname','join'));
-            if($fkattr['fieldname']===null){
-                  $this->_compiler->doDefError ('foreignkey.fieldname.missing');
-            }
-            if($fkattr['join']=== null){
-               $fkattr['join']='inner';
-            }elseif(!in_array($fkattr['join'], array('inner','left','right'))){
-               $this->_compiler->doDefError ('foreignkey.join.invalid',$fkattr['fieldname']);
-            }
-
-            if(!isset($fk->table)){
-               $this->_compiler->doDefError ('foreignkey.table.missing', $fkattr['fieldname']);
-            }
-
-            $table= $this->_parseTable($fk->table[0], ($fkattr['join']!='inner'));
-
-            if($fkattr['join']=='inner'){
-               $this->_ijoins[]=array ('l'=> $infos['name'], 'r'=> $table['name'],
-                     'lf'=>$fkattr['fieldname'], 'rf'=>$table['pk'][0]);
-            }else{
-               $this->_ojoins[]=array ('j'=>$fkattr['join'], 'l'=> $infos['name'], 'r'=> $table['name'],
-                     'lf'=>$fkattr['fieldname'], 'rf'=>$table['pk'][0]);
-            }
-         }
-      }
       $infos['fields'] = array ();
       $this->_tables[$infos['name']] = $infos;
 

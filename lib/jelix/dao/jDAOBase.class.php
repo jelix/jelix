@@ -81,7 +81,7 @@ abstract class jDAORecordBase {
 
 /**
 */
-abstract class jDAOBase  {
+abstract class jDAOFactoryBase  {
 
    protected $_tables;
    protected $_primaryTable;

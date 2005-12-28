@@ -103,7 +103,7 @@ class jDAOGenerator {
          $sqlPkCondition= ($sqlWhereClause !='' ? ' AND ':' WHERE ').$sqlPkCondition;
       }
 
-      $src[] = "\nclass ".$this->_DAOClassName.' extends jDAOBase {';
+      $src[] = "\nclass ".$this->_DAOClassName.' extends jDAOFactoryBase {';
       $src[] ='   protected $_tables = '.var_export($tables, true).';';
       $src[] ='   protected $_primaryTable = \''.$this->_datasParser->getPrimaryTable().'\';';
       $src[] ='   protected $_selectClause=\''.$sqlSelectClause.'\';';
@@ -302,23 +302,17 @@ class jDAOGenerator {
       $driverName = $this->_compiler->getDbDriver();
       $aliaslink = ($driverName == 'oci8'?' ':' AS ');
 
-      $usedTable = array();
-      $sqlFrom = '';
       $sqlWhere = '';
       $tables = $this->_datasParser->getTables();
-      foreach($this->_datasParser->getOuterJoins() as $join){
-         if(!in_array($join['l'], $usedTable)){
-            $usedTable[]=$join['l'];
-            $table= $tables[$join['l']];
-            if($table['name']!=$table['realname'])
-               $sqlFrom .=', '.$table['realname'].$aliaslink.$table['name'];
-            else
-               $sqlFrom .=', '.$table['realname'];
-         }
-         if(!in_array($join['r'], $usedTable)){
-            $usedTable[]=$join['r'];
-         }
-         $table= $tables[$join['r']];
+
+      $primarytable = $tables[$this->_datasParser->getPrimaryTable()];
+      if($primarytable['name']!=$primarytable['realname'])
+         $sqlFrom =$primarytable['realname'].$aliaslink.$primarytable['name'];
+      else
+         $sqlFrom =$primarytable['realname'];
+
+      foreach($this->_datasParser->getOuterJoins() as $tablejoin){
+         $table= $tables[$tablejoin[0]];
 
          if($table['name']!=$table['realname'])
             $r =$table['realname'].$aliaslink.$table['name'];
@@ -326,53 +320,34 @@ class jDAOGenerator {
             $r =$table['realname'];
 
          if ($driverName == 'oci8') {
-            if($join['j'] == 'left'){
-               $fieldjoin=$join['l'].'.'.$join['lf'].'='.$join['r'].'.'.$join['rf'].'(+)';
-            }elseif($join['j'] == 'right'){
-               $fieldjoin=$join['l'].'.'.$join['lf'].'(+)='.$join['r'].'.'.$join['rf'];
+            if($tablejoin[1] == 0){
+               $fieldjoin=$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'].'(+)';
+            }elseif($tablejoin[1] == 1){
+               $fieldjoin=$primarytable['name'].'.'.$table['onforeignkey'].'(+)='.$table['name'].'.'.$table['primarykey'];
             }
             $sqlFrom.=', '.$r;
             $sqlWhere.=' AND '.$fieldjoin;
          }else{
-            $fieldjoin=$join['l'].'.'.$join['lf'].'='.$join['r'].'.'.$join['rf'];
-            if($join['join'] == 'left'){
+            $fieldjoin=$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'];
+            if($tablejoin[1] == 0){
                $sqlFrom.=' LEFT JOIN '.$r.' ON ('.$fieldjoin.')';
-            }elseif($join['join'] == 'right'){
+            }elseif($tablejoin[1] == 1){
                $sqlFrom.=' RIGHT JOIN '.$r.' ON ('.$fieldjoin.')';
             }
          }
       }
 
-      foreach($this->_datasParser->getInnerJoins() as $join){
-         if(!in_array($join['l'], $usedTable)){
-            $usedTable[]=$join['l'];
-            $table= $tables[$join['l']];
-            if($table['name']!=$table['realname'])
-               $sqlFrom .=', '.$table['realname'].$aliaslink.$table['name'];
-            else
-               $sqlFrom .=', '.$table['realname'];
-         }
-         if(!in_array($join['r'], $usedTable)){
-            $usedTable[]=$join['r'];
-            $table= $tables[$join['r']];
-            if($table['name']!=$table['realname'])
-               $sqlFrom .=', '.$table['realname'].$aliaslink.$table['name'];
-            else
-               $sqlFrom .=', '.$table['realname'];
-         }
-         $sqlWhere.=' AND '.$join['l'].'.'.$join['lf'].'='.$join['r'].'.'.$join['rf'];
-      }
-      $pt = $this->_datasParser->getPrimaryTable();
-      $table = $tables[$pt];
-      if(!in_array($pt, $usedTable)){
+      foreach($this->_datasParser->getInnerJoins() as $tablejoin){
+         $table= $tables[$tablejoin];
          if($table['name']!=$table['realname'])
             $sqlFrom .=', '.$table['realname'].$aliaslink.$table['name'];
-         else
+        else
             $sqlFrom .=', '.$table['realname'];
+         $sqlWhere.=' AND '.$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'];
       }
 
       $sqlWhere=($sqlWhere !='') ? ' WHERE '.substr($sqlWhere,4) :'';
-      return array(' FROM '.substr($sqlFrom,1),$sqlWhere);
+      return array(' FROM '.$sqlFrom,$sqlWhere);
    }
 
     /**
@@ -424,7 +399,7 @@ class jDAOGenerator {
     * @param string   $end     string to add after the info
     * @param string   $beetween string to add between each info
     * @param array    $using     list of CopixPropertiesForDAO object. if null, get default fields list
-    * @see  CopixPropertiesForDAO
+    * @see  jDAOProperty
     */
     private function _writeFieldsInfoWith ($info, $start = '', $end='', $beetween = '', $using = null){
         $result = array();
