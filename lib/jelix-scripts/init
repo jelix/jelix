@@ -1,0 +1,3 @@
+#!/bin/bash
+export JELIX_CONFIG=/var/www/projets/jelix/trunk/lib/jelix_scripts/scripts.conf.php
+#alias php="/usr/local/php5/bin/php"

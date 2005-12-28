@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <table name="copixconfig">
+         <primarykey fieldname="id_ccfg" />
+      </table>
+   </datasources>
+   <record>
+      <property name="id"   fieldname="id_ccfg" datatype="string" required="true" />
+      <property name="grp" fieldname="group_ccfg" datatype="string" />
+      <property name="value" fieldname="value_ccfg" datatype="string" />
+
+   </record>
+   <!--<methods>
+
+   </methods>-->
+</dao>
+

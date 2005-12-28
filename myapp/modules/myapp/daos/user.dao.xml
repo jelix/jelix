@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <table name="usr" realname="copixuser">
+         <primarykey fieldname="login_cusr" />
+         <foreignkey fieldname="login_cusr" join="inner">
+             <table name="usrgrp" realname="copixusergroup">
+               <primarykey fieldname="login_cusr" />
+               <foreignkey fieldname="id_cgrp" join="inner">
+                  <table name="grp" realname="copixgroup">
+                     <primarykey fieldname="id_cgrp" />
+                  </table>
+               </foreignkey>
+             </table>
+         </foreignkey>
+      </table>
+   </datasources>
+   <record>
+      <property name="login"  fieldname="login_cusr" datatype="string" required="true" />
+      <property name="email" fieldname="email_cusr" datatype="string" />
+      <property name="groupname" fieldname="name_cgrp" datatype="string" table="grp"/>
+   </record>
+   <methods>
+    <method name="findSome" type="select">
+        <parameter name="id" />
+        <parameter name="max" />
+        <parameter name="off" />
+        <conditions logic='or'>
+            <eq property="email" value="toto@mail.com" />
+            <like property='email' value="%@truc.fr" />
+            <lt property="login" value="b" />
+            <neq property="login" expr="$id" />
+        </conditions>
+        <order>
+          <orderitem property="login" way="asc" />
+        </order>
+        <limit offset="$off" count="$max"/>
+    </method>
+
+    <method name="updt" type="update">
+        <parameter name="id" />
+        <parameter name="max" />
+        <parameter name="off" />
+        <parameter name="foo" />
+        <values>
+            <value property="email" value="nomail@mail.com" />
+            <value property="email" expr="$foo" />
+        </values>
+        <conditions logic='or'>
+            <eq property="email" value="toto@mail.com" />
+            <like property='email' value="%@truc.fr" />
+            <lt property="login" value="b" />
+            <neq property="login" expr="$id" />
+        </conditions>
+
+    </method>
+
+
+    <method name="testPhp" type="php">
+        <parameter name="foo" />
+        <body><![CDATA[
+        echo 'ceci et le parametre',$foo;
+
+        ]]></body>
+    </method>
+
+   </methods>
+</dao>
+
