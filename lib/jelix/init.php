@@ -50,7 +50,7 @@ $gJCoord = null;
 $gJConfig = array();
 $gJContext = array();
 
-$gLibPath=array('Event'=>JELIX_LIB_EVENTS_PATH, 'Db'=>JELIX_LIB_DB_PATH, 
+$gLibPath=array('Event'=>JELIX_LIB_EVENTS_PATH, 'Db'=>JELIX_LIB_DB_PATH,
  'DAO'=>JELIX_LIB_DAO_PATH, 'Auth'=>JELIX_LIB_AUTH_PATH);
 
 

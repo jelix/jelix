@@ -16,7 +16,7 @@ class ZoneTest extends jZone {
 
     protected function _prepareTpl(){
 
-        $dao = jDAO::create('config');
+        $dao = jDAO::get('config');
 
         $this->_tpl->assign('config',$dao->findAll());
         $this->_tpl->assign('oneconf',$dao->get('foo'));

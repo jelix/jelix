@@ -31,9 +31,11 @@ class jDAO {
         if(!$sel->isValid())
            throw new jException('jelix~errors.selector.invalid',$sel->toString(true));
 
-        $results = jIncluder::inc($sel);
-        $conn = jDb::getConnection ($profil);
         $c = $sel->getDAOClass();
+        if(!class_exists($c,false)){
+            $results = jIncluder::inc($sel);
+        }
+        $conn = jDb::getConnection ($profil);
         $obj = new $c ($conn);
         return $obj;
     }
@@ -41,7 +43,7 @@ class jDAO {
     /**
     * Creates a DAO from its ID. Handles a singleton of the DAO.
     */
-    public static function getInstance ($DAOid, $profil='') {
+    public static function get ($DAOid, $profil='') {
        static $_daoSingleton=array();
 
        $sel = new jSelectorDao($DAOid, $profil);
@@ -58,14 +60,17 @@ class jDAO {
     */
     public static function createRecord ($DAOid, $profil=''){
         $sel = new jSelectorDao($DAOid, $profil);
-        $results = jIncluder::inc($sel);
+        $c = $sel->getDAOClass();
+        if(!class_exists($c,false)){
+            $results = jIncluder::inc($sel);
+        }
         $c = $sel->getDAORecordClass();
         $obj = new $c();
         return $obj;
     }
 
-    public static function createConditions ($kind = 'AND'){
-        $obj = new jDAOConditions ($kind);
+    public static function createConditions ($glueOp = 'AND'){
+        $obj = new jDAOConditions ($glueOp);
         return $obj;
     }
 

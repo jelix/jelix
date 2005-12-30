@@ -32,7 +32,7 @@ class AGMain extends jActionGroup {
 
    function getTestDao(){
     if( $id=$this->_get('newid')){
-        $dao = jDAO::create('config');
+        $dao = jDAO::get('config');
         $rec = jDAO::createRecord('config');
 
         $rec->ckey = $id;
