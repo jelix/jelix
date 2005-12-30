@@ -9,16 +9,21 @@
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * adaptation pour Jelix par Laurent Jouanneau
+*
+* classe originellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixXmlRpc)
+* Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
+* Auteur initial : Laurent Jouanneau
+* Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
 
-require_once(JELIX_LIB_UTILS_PATH.'CopixDate.lib.php');
+
 
 /**
  * objet permettant d'encoder/décoder des request/responses XMl-RPC
  * pour les specs, voir http://www.xmlrpc.com/spec
  */
-class CopixXmlRpc {
+class jXmlRpc {
 
      private function __construct(){}
 
@@ -52,8 +57,8 @@ class CopixXmlRpc {
      * @param
      * @return
      */
-    public static function encodeRequest($methodname, $params){
-          $request =  '<?xml version="1.0"?>
+    public static function encodeRequest($methodname, $params, $charset=''){
+          $request =  '<?xml version="1.0" '.($charset?'encoding="'.$charset'"':'').'?>
 <methodCall><methodName>'.htmlspecialchars($methodname).'</methodName><params>';
            foreach($params as $param){
                $request.= '<param>'.self::_encodeValue($param).'</param>';
@@ -102,8 +107,8 @@ class CopixXmlRpc {
      * @param
      * @return
      */
-    public static function encodeResponse($params){
-        return '<?xml version="1.0"?>
+    public static function encodeResponse($params, $charset=''){
+        return '<?xml version="1.0" '.($charset?'encoding="'.$charset'"':'').'?>
 <methodResponse><params><param>'.self::_encodeValue($params).'</param></params></methodResponse>';
     }
 
@@ -112,8 +117,8 @@ class CopixXmlRpc {
      * @param
      * @return
      */
-    public static function encodeFaultResponse($code, $message){
-        return '<?xml version="1.0"?>
+    public static function encodeFaultResponse($code, $message, $charset=''){
+        return '<?xml version="1.0" '.($charset?'encoding="'.$charset'"':'').'?>
 <methodResponse><fault><value><struct>
 <member><name>faultCode</name><value><int>'.intval($code).'</int></value></member>
 <member><name>faultString</name><value><string>'.htmlspecialchars($message).'</string></value></member>
@@ -158,8 +163,8 @@ class CopixXmlRpc {
                     }
                 }
             }else if(isset($valuetag->{'dateTime.iso8601'})){
-                    $value = new CopixDateTime();
-                    $value->setFromString((string)$valuetag->{'dateTime.iso8601'}, CopixDateTime::ISO8601_FORMAT);
+                    $value = new jDateTime();
+                    $value->setFromString((string)$valuetag->{'dateTime.iso8601'}, jDateTime::ISO8601_FORMAT);
                     break;
             }else if(isset($valuetag->base64)){
                     $value = new CopixBinary();
@@ -213,8 +218,8 @@ class CopixXmlRpc {
             $response .= '<double>'.doubleval($value).'</double>';
         }else if(is_object($value)){
             switch(get_class($value)){
-                case 'copixdatetime':
-                    $response .= '<dateTime.iso8601>'.$value->toString($value->ISO8601_FORMAT).'</dateTime.iso8601>';
+                case 'jdatetime':
+                    $response .= '<dateTime.iso8601>'.$value->toString(jDateTime::ISO8601_FORMAT).'</dateTime.iso8601>';
                     break;
                 case 'copixbinary':
                     $response .= '<base64>'.$value->toBase64String().'</base64>';

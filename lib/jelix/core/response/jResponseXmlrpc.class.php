@@ -32,7 +32,7 @@ final class jResponseXmlRpc extends jResponse {
         if($this->errorCode != 0 || $this->errorMessage != '') return false;
 
         header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset);
-        $content = CopixXmlRpc::encodeResponse($this->response);
+        $content = jXmlRpc::encodeResponse($this->response, $GLOBALS['gJConfig']->defaultCharset);
         header("Content-length: ".strlen($content));
         echo $content;
         return true;
@@ -40,12 +40,12 @@ final class jResponseXmlRpc extends jResponse {
 
     public  function fetch(){
         if($this->errorCode != 0 || $this->errorMessage != '') return false;
-        return CopixXmlRpc::encodeResponse($this->response);
+        return jXmlRpc::encodeResponse($this->response, $GLOBALS['gJConfig']->defaultCharset);
     }
 
     public function outputErrors(){
         header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset);
-        $content = CopixXmlRpc::encodeFaultResponse($this->errorCode,$this->errorMessage);
+        $content = jXmlRpc::encodeFaultResponse($this->errorCode,$this->errorMessage, $GLOBALS['gJConfig']->defaultCharset);
         header("Content-length: ".strlen($content));
         echo $content;
     }
