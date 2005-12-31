@@ -31,8 +31,10 @@ class helpCommand extends JelixScriptCommand {
           echo "# php jelix.php ".$this->_parameters['command']." ". $command->syntaxhelp,"\n\n";
           echo $command->help,"\n\n";
        }else{
-          echo "\nUtilisation générale : php jelix.php COMMANDE [OPTIONS] [PARAMETRES]
+          echo "\nUtilisation générale : php jelix.php [--NOM_APP] COMMANDE [OPTIONS] [PARAMETRES]
 
+    NOM_APP : nom de l'application concernée. Si non présent, le nom de l'application doit
+             être dans une variable d'environnement JELIX_APP_NAME
     COMMANDE : nom de la commande à executer
     OPTIONS : une ou plusieurs options. Le nom d'une option commence par un tiret
               et peut être suivi par une valeur.

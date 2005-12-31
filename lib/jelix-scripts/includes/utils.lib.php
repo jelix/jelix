@@ -93,4 +93,41 @@ function jxs_commandlist(){
 }
 
 
+function jxs_getPathSeparator(){
+    if(preg_match("/^(\w+).*$/", PHP_OS, $m)){
+        $os=$m[1];
+    }else{
+        $os=PHP_OS;
+    }
+    if(strtolower($os) == 'win')
+        return "\\";
+    else
+       return '/';
+}
+
+
+function jxs_getRelativePath($path, $targetPath){
+    $sep = jxs_getPathSeparator();
+
+    $path = explode($sep,$path);
+    $targetPath = explode($sep,$targetPath);
+
+    $dir='';
+    $targetdir='';
+
+    while(count($path)){
+        $dir=array_shift($path);
+        $targetdir=array_shift($targetPath);
+        if($dir != $targetdir)
+            break;
+    }
+    $relativePath=str_repeat('..'.$sep,count($path));
+    if($targetdir != '' && $dir != $targetdir)
+        $relativePath.= $targetdir.$sep.implode($sep,$targetPath);
+    else
+        $relativePath.='.';
+    return $relativePath;
+}
+
+
 ?>

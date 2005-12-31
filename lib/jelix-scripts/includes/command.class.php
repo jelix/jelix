@@ -23,7 +23,7 @@ abstract class JelixScriptCommand {
 
    public $syntaxhelp = '';
    public $help = 'No help for this command';
-   
+
    function __construct(){}
 
    public function init($opt, $parameters){
@@ -77,6 +77,7 @@ abstract class JelixScriptCommand {
 
    protected function createDir($dirname){
       if(!file_exists($dirname)){
+         $this->createDir(dirname($dirname));
          mkdir($dirname);
          if(DO_CHMOD){
             chmod($dirname, CHMOD_DIR_VALUE);

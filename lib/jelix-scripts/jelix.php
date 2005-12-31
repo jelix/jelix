@@ -9,8 +9,35 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
+
 /**
- * initialisation des constantes jelix.
+ * récupération du nom de la commande et éventuellement du nom de l'application
+ */
+
+if($_SERVER['argc'] < 2){
+   die("Error: command is missing\n");
+}
+
+$argv = $_SERVER['argv'];
+array_shift($argv); // shift the script name
+$commandName = array_shift($argv); // get the command name
+
+if(preg_match('/^\-\-(\w+)$/',$commandName,$m)){
+    $APPNAME=$m[1];
+    if($_SERVER['argc'] < 3){
+       die("Error: command is missing\n");
+    }
+    $commandName = array_shift($argv);
+}else{
+    if(!isset($_ENV['JELIX_APP_NAME'])||$_ENV['JELIX_APP_NAME'] == ''){
+        die("Error: JELIX_APP_NAME environnement variable doesn't exists \n");
+    }else{
+        $APPNAME = $_ENV['JELIX_APP_NAME'];
+    }
+}
+
+/**
+ * recupération de la config
  */
 
 if(!isset($_ENV['JELIX_CONFIG'])){
@@ -26,22 +53,25 @@ if(!isset($_ENV['JELIX_CONFIG'])){
 
 require($jelix_config);
 
-if(!file_exists(JELIX_APP_PATH)){
-   die("Error: path given by the JELIX_APP_PATH constant doesn't exist (".JELIX_APP_PATH." )\n");
-}
-if(!file_exists(JELIX_APP_TEMP_PATH)){
-   die("Error: path given by the JELIX_APP_TEMP_PATH constant doesn't exist (".JELIX_APP_TEMP_PATH." )\n");
-}
-if(!file_exists(JELIX_APP_VAR_PATH)){
-   die("Error: path given by the JELIX_APP_VAR_PATH constant doesn't exist (".JELIX_APP_VAR_PATH." )\n");
-}
-if(!file_exists(JELIX_APP_CONFIG_PATH)){
-   die("Error: path given by the JELIX_APP_CONFIG_PATH constant doesn't exist (".JELIX_APP_CONFIG_PATH." )\n");
-}
+
 if(!file_exists(JELIX_LIB_PATH)){
    die("Error: path given by the JELIX_LIB_PATH constant doesn't exist (".JELIX_LIB_PATH." )\n");
 }
 
+if($commandName !='createapp'){
+    if(!file_exists(JELIX_APP_PATH)){
+        die("Error: path given by the JELIX_APP_PATH constant doesn't exist (".JELIX_APP_PATH." )\n");
+    }
+    if(!file_exists(JELIX_APP_TEMP_PATH)){
+        die("Error: path given by the JELIX_APP_TEMP_PATH constant doesn't exist (".JELIX_APP_TEMP_PATH." )\n");
+    }
+    if(!file_exists(JELIX_APP_VAR_PATH)){
+        die("Error: path given by the JELIX_APP_VAR_PATH constant doesn't exist (".JELIX_APP_VAR_PATH." )\n");
+    }
+    if(!file_exists(JELIX_APP_CONFIG_PATH)){
+        die("Error: path given by the JELIX_APP_CONFIG_PATH constant doesn't exist (".JELIX_APP_CONFIG_PATH." )\n");
+    }
+}
 
 define ('JELIX_LIB_CORE_PATH',    JELIX_LIB_PATH.'core/');
 define ('JELIX_LIB_UTILS_PATH',   JELIX_LIB_PATH.'utils/');
@@ -59,17 +89,7 @@ include('includes/command.class.php');
 include('includes/utils.lib.php');
 
 
-/**
- * récupération des paramètres de ligne de commande.
- */
 
-if($_SERVER['argc'] < 2){
-   die("Error: command is missing\n");
-}
-
-$argv = $_SERVER['argv'];
-array_shift($argv); // shift the script name
-$commandName = array_shift($argv); // get the command name
 
 /**
  * chargement de la commande
