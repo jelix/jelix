@@ -27,21 +27,20 @@ defaultTheme = default
 [responses]
 
 
-[errorhandler]
-defaultAction = ERR_MSG_ECHO_EXIT
-messageFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
+[errorhandling]
+messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
 logFile = error.log
 email = root@localhost
 emailHeaders = "From: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
 
-[errorHandlerActions]
-error         = ERR_MSG_ECHO_EXIT
-warning       = ERR_MSG_ECHO
-notice        = ERR_MSG_NOTHING
-jlx_error    = ERR_MSG_ECHO_EXIT
-jlx_warning  = ERR_MSG_ECHO
-jlx_notice   = ERR_MSG_NOTHING
-strict        = ERR_MSG_NOTHING
+; mots clés que vous pouvez utiliser : ECHO, EXIT, LOGFILE, SYSLOG, MAIL
+default      = ECHO EXIT
+error        = ECHO EXIT
+warning      = ECHO
+notice       =
+strict       =
+; pour les exceptions, il y a implicitement un EXIT
+exception    = ECHO
 
 
 

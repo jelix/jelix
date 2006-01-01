@@ -43,24 +43,19 @@ $gDefaultConfig = array (
      'xuldialog'=>'jResponseXulDialog',
      'xulpage'=>'jResponseXulPage'
   ),
-  'errorhandler' =>
-        array (
-            'defaultAction' => ERR_MSG_ECHO_EXIT,
-            'messageFormat' => '%date%\\t[%code%]\\t%msg%\\t%file%\\t%line%\\n',
-            'logFile' => 'error.log',
-            'email' => 'root@localhost',
-            'emailHeaders' => 'From: webmaster@yoursite.com\\nX-Mailer: Jelix\\nX-Priority: 1 (Highest)\\n'
-        ),
-  'errorHandlerActions' =>
-        array (
-            'error' => ERR_MSG_ECHO_EXIT,
-            'warning' => ERR_MSG_ECHO,
-            'notice' => ERR_MSG_NOTHING,
-            'jlx_error' => ERR_MSG_ECHO_EXIT,
-            'jlx_warning' => ERR_MSG_ECHO,
-            'jlx_notice' => ERR_MSG_NOTHING,
-            'strict' => ERR_MSG_NOTHING
-        ),
+  'errorhandling'=> array (
+        'messageLogFormat' => '%date%\\t[%code%]\\t%msg%\\t%file%\\t%line%\\n',
+        'logFile' => 'error.log',
+        'email' => 'root@localhost',
+        'emailHeaders' => 'From: webmaster@yoursite.com\\nX-Mailer: Jelix\\nX-Priority: 1 (Highest)\\n',
+        'error' => 'ECHO EXIT',
+        'warning' =>  'ECHO ',
+        'notice' =>  '',
+        'strict' =>  '',
+        'default' =>  'ECHO EXIT',
+        'exception' => 'ECHO'
+    ),
+
   'compilation' =>
   array (
     'check_cache_filetime' => '1',

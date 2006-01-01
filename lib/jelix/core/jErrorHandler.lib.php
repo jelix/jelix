@@ -9,24 +9,13 @@
 * @link        http://www.jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
-* fichier orginellement issue du framework Copix 2.3dev. http://www.copix.org (CopixErrorHandler.lib.php)
+* fichier orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixErrorHandler.lib.php)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteur initial :Laurent Jouanneau
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
 error_reporting (E_ALL);
-
-define ('ERR_MSG_NOTHING'   ,0);
-define ('ERR_MSG_ECHO'      ,1);
-define ('ERR_MSG_LOG_FILE'  ,2);
-define ('ERR_MSG_LOG_MAIL'  ,4);
-define ('ERR_MSG_LOG_SYSLOG',8);
-
-//define ('ERR_ACT_REDIRECT',  128);
-define ('ERR_ACT_EXIT',      256);
-define ('ERR_ACT_NOTHING',   0);
-define ('ERR_MSG_ECHO_EXIT', ERR_MSG_ECHO | ERR_ACT_EXIT);
 
 /**
 * Gestionnaire d'erreur du framework
@@ -40,29 +29,29 @@ define ('ERR_MSG_ECHO_EXIT', ERR_MSG_ECHO | ERR_ACT_EXIT);
 function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     global $gJConfig, $gJCoord;
 
+    if (error_reporting() == 0)
+        return;
+
     $codeString = array(
         E_ERROR         => 'error',
         E_WARNING       => 'warning',
         E_NOTICE        => 'notice',
-        E_USER_ERROR    => 'jlx_error',
-        E_USER_WARNING  => 'jlx_warning',
-        E_USER_NOTICE   => 'jlx_notice',
+        E_USER_ERROR    => 'error',
+        E_USER_WARNING  => 'warning',
+        E_USER_NOTICE   => 'notice',
         E_STRICT        => 'strict'
-        );
+    );
 
-    if (error_reporting() == 0)
-        return;
-
-    $conf = $gJConfig->errorHandlerActions;
+    $conf = $gJConfig->errorHandling;
 
     if (isset ($codeString[$errno])){
         $action = $conf[$codeString[$errno]];
     }else{
-        $action = $gJConfig->errorhandler['defaultAction'];
+        $action = $conf['default'];
     }
 
     // formatage du message
-    $messageLog = strtr($gJConfig->errorhandler['messageFormat'], array(
+    $messageLog = strtr($conf['messageLogFormat'], array(
         '%date%' => date("Y-m-d H:i:s"),
         '%code%' => $codeString[$errno],
         '%msg%'  => $errmsg,
@@ -71,34 +60,29 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     ));
 
     // traitement du message
-    if($action & ERR_MSG_ECHO){
+    if(strpos($action , 'ECHO') !== false){
+
         /*if($action & ERR_ACT_EXIT)
-            header("HTTP/1.1 500 Internal copix error");*/
+            header("HTTP/1.1 500 Internal jelix error");*/
 
         if($gJCoord->response == null){
             $gJCoord->initDefaultResponseOfRequest();
         }
-        if($gJCoord->response->addErrorMsg($codeString[$errno], 0, $errmsg, $filename, $linenum) || $action & ERR_ACT_EXIT){
+        if($gJCoord->response->addErrorMsg($codeString[$errno], 0, $errmsg, $filename, $linenum) || strpos($action , 'EXIT') !== false){
             $gJCoord->response->outputErrors();
         }
     }
-    if($action & ERR_MSG_LOG_FILE){
-        error_log($messageLog,3, JELIX_APP_LOG_PATH.$gJConfig->errorhandler['logFile']);
+    if(strpos($action , 'LOGFILE') !== false){
+        error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);
     }
-    if($action & ERR_MSG_LOG_MAIL){
-        error_log($messageLog,1, $gJConfig->errorhandler['email'], $gJConfig->errorhandler['emailHeaders']);
+    if(strpos($action , 'MAIL') !== false){
+        error_log($messageLog,1, $conf['email'], $conf['emailHeaders']);
     }
-    if($action & ERR_MSG_LOG_SYSLOG){
+    if(strpos($action , 'SYSLOG') !== false){
         error_log($messageLog,0);
     }
 
-    // action
-    /*if($action & ERR_ACT_REDIRECT){
-        header('location: '.$gJConfig->errhandler_redirect);
-        exit;
-    }*/
-
-    if($action & ERR_ACT_EXIT){
+    if(strpos($action , 'EXIT') !== false){
         exit;
     }
 }

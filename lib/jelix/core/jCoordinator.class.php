@@ -68,8 +68,8 @@ class jCoordinator {
         $this->_initConfig();
 
         // set Error and exception handler
-        //set_error_handler('jErrorHandler');
-        //set_exception_handler('JExceptionHandler');
+        set_error_handler('jErrorHandler');
+        set_exception_handler('JExceptionHandler');
 
         $this->_loadPlugins();
         session_start ();
@@ -231,15 +231,15 @@ class jCoordinator {
             $this->plugins[$name]->beforeProcess ($this->action);
         }
 
-        try{
+        //try{
             $this->response = $this->action->perform();
-        }catch(jException $e){
+        /*}catch(jException $e){
             trigger_error($e->getLocaleMessage(), E_USER_ERROR);
             return ;
         }catch(Exception $e){
             trigger_error($e->getMessage(),E_USER_ERROR);
             return;
-        }
+        }*/
 
         if($this->response == null){
             trigger_error(jLocale::get('jelix~errors.response.missing',$result->toString()), E_USER_ERROR);

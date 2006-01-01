@@ -44,10 +44,10 @@ class jFile {
         if(!@is_writable($_dirname)) {
             // cache_dir not writable, see if it exists
             if(!@is_dir($_dirname)) {
-                trigger_error (jLocale::get ('jelix~errors.file.directory.notexists', array ($_dirname)));
+                trigger_error (jLocale::get ('jelix~errors.file.directory.notexists', array ($_dirname)),E_USER_ERROR);
                 return false;
             }
-            trigger_error (jLocale::get ('jelix~errors.file.directory.notwritable', array ($file, $_dirname)));
+            trigger_error (jLocale::get ('jelix~errors.file.directory.notwritable', array ($file, $_dirname)),E_USER_ERROR);
             return false;
         }
 
@@ -58,7 +58,7 @@ class jFile {
         if (!($fd = @fopen($_tmp_file, 'wb'))) {
             $_tmp_file = $_dirname . '/' . uniqid('wrt');
             if (!($fd = @fopen($_tmp_file, 'wb'))) {
-                trigger_error(jLocale::get ('jelix~errors.file.write.error', array ($file, $_tmp_file)));
+                trigger_error(jLocale::get ('jelix~errors.file.write.error', array ($file, $_tmp_file)),E_USER_ERROR);
                 return false;
             }
         }
