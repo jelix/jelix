@@ -10,14 +10,13 @@
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-
 require_once ('../../lib/jelix/init.php');
 //require_once ('/usr/lib/jelix/1.0/jelix/init.php');
 
 require_once ('../../myapp/application.init.php');
 //require_once ('/usr/share/jelix/myapp/application.init.php');
 
-$config_file = 'xmlrpc.conf.php';
+$config_file = 'config.xmlrpc.ini.php';
 
 require_once (JELIX_LIB_CORE_PATH.'request/jXmlRpcRequest.class.php');
 

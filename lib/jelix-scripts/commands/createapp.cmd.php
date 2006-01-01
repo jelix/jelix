@@ -58,6 +58,16 @@ class createappCommand extends JelixScriptCommand {
 
        $this->createFile(JELIX_APP_PATH.'application.init.php','application.init.php.tpl',$param);
 
+
+       $param = array('appname'=>$GLOBALS['APPNAME']);
+       $param['rp_jelix']=jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_LIB_PATH );
+       $param['rp_app']=jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH );
+
+       $this->createFile(JELIX_APP_WWW_PATH.'index.php','www/index.php.tpl',$param);
+       $this->createFile(JELIX_APP_WWW_PATH.'jsonrpc.php','www/jsonrpc.php.tpl',$param);
+       $this->createFile(JELIX_APP_WWW_PATH.'xmlrpc.php','www/xmlrpc.php.tpl',$param);
+
+
        if($this->getOption('-withdefaultmodule')){
             $cmd = jxs_load_command('createmodule');
             $cmd->init(array(),array('module'=>$GLOBALS['APPNAME']));
