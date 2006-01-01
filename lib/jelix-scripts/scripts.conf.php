@@ -15,7 +15,7 @@ define ('JELIX_APP_PATH'        , $basepath."/$APPNAME/");
 define ('JELIX_APP_TEMP_PATH'   , $basepath."/temp/$APPNAME/");
 define ('JELIX_APP_WWW_PATH'    , $basepath."/$APPNAME/www/");
 define ('JELIX_APP_VAR_PATH'    , $basepath."/$APPNAME/var/");
-define ('JELIX_APP_LOG_PATH'    , $basepath."/$APPNAME/log/");
+define ('JELIX_APP_LOG_PATH'    , $basepath."/$APPNAME/var/log/");
 define ('JELIX_APP_CONFIG_PATH' , $basepath."/$APPNAME/var/config/");
 
 /* example for linux installation

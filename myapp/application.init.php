@@ -13,11 +13,10 @@
 
 define ('JELIX_APP_PATH', dirname (__FILE__).'/'); // don't change
 
-
-define ('JELIX_APP_TEMP_PATH',    realpath(dirname(__FILE__).'/../temp/myapp/').'/');
-define ('JELIX_APP_VAR_PATH',     realpath(dirname(__FILE__).'/var/').'/');
-define ('JELIX_APP_LOG_PATH',     JELIX_APP_VAR_PATH.'log/');
-define ('JELIX_APP_CONFIG_PATH',  JELIX_APP_VAR_PATH.'config/');
-
+define ('JELIX_APP_TEMP_PATH',    realpath(JELIX_APP_PATH.'../temp/myapp/').'/');
+define ('JELIX_APP_VAR_PATH',     realpath(JELIX_APP_PATH.'var/').'/');
+define ('JELIX_APP_LOG_PATH',     realpath(JELIX_APP_PATH.'var/log/').'/');
+define ('JELIX_APP_CONFIG_PATH',  realpath(JELIX_APP_PATH.'var/config/').'/');
+define ('JELIX_APP_WWW_PATH',     realpath(JELIX_APP_PATH.'www/').'/');
 
 ?>

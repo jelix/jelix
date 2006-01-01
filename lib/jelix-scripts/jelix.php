@@ -8,7 +8,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
-
+error_reporting(E_ALL);
 
 /**
  * récupération du nom de la commande et éventuellement du nom de l'application
@@ -85,11 +85,9 @@ define ('JELIX_LIB_RESPONSE_PATH',JELIX_LIB_PATH.'core/response/');
 
 define ('JELIX_SCRIPT_PATH', dirname(__FILE__).'/');
 
+
 include('includes/command.class.php');
 include('includes/utils.lib.php');
-
-
-
 
 /**
  * chargement de la commande

@@ -14,6 +14,7 @@
 */
 
 abstract class JelixScriptCommand {
+
    public $name;
    public $allowed_options=array();
    public $allowed_parameters=array();
