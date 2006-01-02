@@ -33,7 +33,10 @@ class jTplCompiler implements jISimpleCompiler {
 
     private $_pluginPath=array();
 
-    private $_modifier = array('upper'=>'strtoupper', 'lower'=>'strtolower', 'esc'=>'htmlspecialchars');
+    private $_modifier = array('upper'=>'strtoupper', 'lower'=>'strtolower',
+    'escxml'=>'htmlspecialchars', 'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
+    'capitalize'=>'ucwords'
+    );
 
     private $_blockStack=array();
 
@@ -161,13 +164,6 @@ class jTplCompiler implements jISimpleCompiler {
             $res = 'foreach('.$this->_parseFinal($args,array(T_AS, T_DOUBLE_ARROW)).'):';
             array_push($this->_blockStack,'foreach');
             break;
-            if(end($this->_blockStack) !='foreach'){
-              trigger_error(jLocale('jelix~errors.tpl.tag.block.end.missing',array(end($this->_blockStack),$this->_sourceFile)),E_USER_ERROR);
-            }
-            array_pop($this->_blockStack);
-            $res='endforeach;';
-            break;
-
          case 'while':
             $res = 'while('.$this->_parseFinal($args,$this->_allowedInExpr).'):';
             array_push($this->_blockStack,'while');
@@ -200,8 +196,13 @@ class jTplCompiler implements jISimpleCompiler {
             trigger_error(jLocale('jelix~errors.tpl.tag.block.begin.missing',array('literal',$this->_sourceFile)),E_USER_ERROR);
             break;
          default:
-            trigger_error(jLocale('jelix~errors.tpl.tag.function.unknow',array($name,$this->_sourceFile)),E_USER_ERROR);
-            $res='';
+            if( ! $path = $this->_getPlugin('function',$name)){
+                trigger_error(jLocale('jelix~errors.tpl.tag.function.unknow',array($name,$this->_sourceFile)),E_USER_ERROR);
+                $res='';
+            }else{
+                $res = 'jtpl_function_'.$name.'( $t,'.$this->_parseFinal($args,$this->_allowedAssign).');';
+                $this->_pluginPath[] = $path;
+            }
        }
 
        return $res;
