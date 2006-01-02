@@ -29,11 +29,17 @@ if(preg_match('/^\-\-(\w+)$/',$commandName,$m)){
     }
     $commandName = array_shift($argv);
 }else{
+   
     if(!isset($_ENV['JELIX_APP_NAME'])||$_ENV['JELIX_APP_NAME'] == ''){
-        die("Error: JELIX_APP_NAME environnement variable doesn't exists \n");
+        if($commandName != 'help'){
+            die("Error: JELIX_APP_NAME environnement variable doesn't exists \n");
+        }else{
+            $APPNAME='';
+        }
     }else{
         $APPNAME = $_ENV['JELIX_APP_NAME'];
     }
+  
 }
 
 /**
@@ -58,7 +64,7 @@ if(!file_exists(JELIX_LIB_PATH)){
    die("Error: path given by the JELIX_LIB_PATH constant doesn't exist (".JELIX_LIB_PATH." )\n");
 }
 
-if($commandName !='createapp'){
+if($commandName !='createapp' && $commandName !='help'){
     if(!file_exists(JELIX_APP_PATH)){
         die("Error: path given by the JELIX_APP_PATH constant doesn't exist (".JELIX_APP_PATH." )\n");
     }
