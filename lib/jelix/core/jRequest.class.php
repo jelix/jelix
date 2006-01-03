@@ -74,9 +74,7 @@ abstract class jRequest {
     }
 
     public function getParam($name, $defaultValue=null, $useDefaultIfEmpty=false){
-//var_dump(         $this->params);
 
-//echo '#',$name,'#',$defaultValue,'#<br>';
         if(isset($this->params[$name])){
             if($useDefaultIfEmpty && trim($this->params[$name]) == ''){
                 return $defaultValue;

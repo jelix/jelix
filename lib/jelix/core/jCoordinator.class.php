@@ -188,8 +188,11 @@ class jCoordinator {
             if($conf && isset($this->pluginPathList[$name])){
                 if($conf=='1')
                     $conf=$name.'.plugin.ini.php';
-
-                $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.$conf);
+                if(file_exists(JELIX_APP_CONFIG_PATH.$conf)){
+                   $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.$conf);
+                }else{
+                    $conf = array();
+                }
                 include( $this->pluginPathList[$name]);
                 $class= $name.'Plugin';
                 $this->plugins[strtolower($name)] = new $class($conf);
