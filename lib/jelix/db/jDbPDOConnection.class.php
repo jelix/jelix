@@ -22,14 +22,13 @@ class jDbPDOResultSet extends PDOStatement {
 	public function fetchInto ( $object){
       if(is_object($object)){
         if ($result = $this->fetch ()){
-            foreach (get_object_vars ($result) as $k=>$value){
-                $object->$k = $value;
-            }
+                foreach (get_object_vars ($result) as $k=>$value){
+                    $object->$k = $value;
+                }
                 return $object;
             }else{
                 return false;
             }
-        }
 
       }else{
          $this->setFetchMode( PDO::FETCH_CLASS, $object );
@@ -62,7 +61,7 @@ class jDbPDOConnection extends PDO {
        unset($prof['password']);
        unset($prof['driver']);
        parent::_construct($profil['dsn'], $profil['user'], $profil['password'], $prof);
-       $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet')).
+       $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
     }
 
 

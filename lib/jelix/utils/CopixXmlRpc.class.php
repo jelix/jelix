@@ -58,7 +58,7 @@ class jXmlRpc {
      * @return
      */
     public static function encodeRequest($methodname, $params, $charset=''){
-          $request =  '<?xml version="1.0" '.($charset?'encoding="'.$charset'"':'').'?>
+          $request =  '<?xml version="1.0" '.($charset?'encoding="'.$charset.'"':'').'?>
 <methodCall><methodName>'.htmlspecialchars($methodname).'</methodName><params>';
            foreach($params as $param){
                $request.= '<param>'.self::_encodeValue($param).'</param>';
@@ -108,7 +108,7 @@ class jXmlRpc {
      * @return
      */
     public static function encodeResponse($params, $charset=''){
-        return '<?xml version="1.0" '.($charset?'encoding="'.$charset'"':'').'?>
+        return '<?xml version="1.0" '.($charset?'encoding="'.$charset.'"':'').'?>
 <methodResponse><params><param>'.self::_encodeValue($params).'</param></params></methodResponse>';
     }
 
@@ -118,7 +118,7 @@ class jXmlRpc {
      * @return
      */
     public static function encodeFaultResponse($code, $message, $charset=''){
-        return '<?xml version="1.0" '.($charset?'encoding="'.$charset'"':'').'?>
+        return '<?xml version="1.0" '.($charset?'encoding="'.$charset.'"':'').'?>
 <methodResponse><fault><value><struct>
 <member><name>faultCode</name><value><int>'.intval($code).'</int></value></member>
 <member><name>faultString</name><value><string>'.htmlspecialchars($message).'</string></value></member>

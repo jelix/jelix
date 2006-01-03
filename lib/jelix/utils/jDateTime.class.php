@@ -65,7 +65,7 @@ class jDateTime{
     const BD_DTFORMAT=21;
     const BD_TFORMAT=22;
     const ISO8601_FORMAT=40;
-    const TIMESTAMP_FORMAT=50
+    const TIMESTAMP_FORMAT=50;
 
 
     function __construct($year=0, $month=0, $day=0, $hour=0, $minute=0, $second=0){
