@@ -28,7 +28,7 @@ class jDBToolsPostgreSQL extends jDbTools {
    protected function _getTableList (){
       $results = array ();
       $sql = "SELECT tablename FROM pg_tables WHERE tablename NOT LIKE 'pg_%' ORDER BY tablename";
-      $rs = $this->_connector->doQuery ($sql);
+      $rs = $this->_connector->query ($sql);
       while ($line = $rs->fetch()){
          $results[] = $line->tablename;
       }
@@ -53,19 +53,25 @@ class jDBToolsPostgreSQL extends jDbTools {
           c.relname = '{$tableName}' AND a.attnum > 0 AND a.attrelid = c.oid AND a.atttypid = t.oid
         ORDER BY a.attnum";
 
-        $rs = $this->connector->doQuery ($sql_get_fields);
+        $rs = $this->connector->query ($sql_get_fields);
         $toReturn=array();
-        //$results = $this->getAll ($sql_get_fields);
         while ($result_line = $rs->fetch ()){
+            $field = new jDbFieldProperties();
             if(preg_match('/nextval\(\'(.*?)\.'.$tableName.'_'.$result_line->field.'_seq\'::text\)/',
             $result_line->adsrc)){
-                $result_line->auto="auto_increment";
+                $field->auto_increment=true;
             }
 
-            $result_line->notnull = ($result_line->notnull==1)  ? true:false;
-            $result_line->type = preg_replace('/(\D*)\d*/','\\1',$result_line->type);
-            if($result_line->length<0) $result_line->length=null;
-            $toReturn[$result_line->field]=$result_line;
+            $field->notnull = ($result_line->notnull==1)  ? true:false;
+            $field->type = preg_replace('/(\D*)\d*/','\\1',$result_line->type);
+            if($result_line->length<0)
+                $field->length=null;
+            else
+                $field->length=$result_line->length;
+            $field->name = $result_line->field;
+            // TODO : $field->primary = ?;
+
+            $toReturn[$result_line->field]=$field;
         }
 
         return $toReturn;

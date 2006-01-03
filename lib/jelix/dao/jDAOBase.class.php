@@ -189,7 +189,7 @@ abstract class jDAOFactoryBase  {
    }
 
 
-   protected function _generateCondition($condition){
+   protected function _generateCondition($condition, $principal=true){
       $r = ' ';
       $first = true;
       foreach ($condition->conditions as $cond){
@@ -243,7 +243,7 @@ abstract class jDAOFactoryBase  {
          if (!$first){
                $r .= ' '.$condition->glueOp.' ';
          }
-         $r .= $this->_generateCondition($conditionDetail);
+         $r .= $this->_generateCondition($conditionDetail,false);
          $first=false;
       }
 
@@ -270,9 +270,12 @@ abstract class jDAOFactoryBase  {
          case 'numeric'://usefull for bigint and stuff
          case 'bigautoincrement':
             if (is_numeric ($value)){
-                  return $value === null ? 'NULL' : $value;//was numeric, we can sends it as is
+                  //was numeric, we can sends it as is
+                  // no cast with intval else overflow
+                  return $value === null ? 'NULL' : $value;
             }else{
-                  return $value === null ? 'NULL' : intval ($value);//not a numeric, nevermind, casting it
+                   //not a numeric, nevermind, casting it
+                  return $value === null ? 'NULL' : intval ($value);
             }
             break;
          default:

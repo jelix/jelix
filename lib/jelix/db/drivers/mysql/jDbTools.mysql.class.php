@@ -30,7 +30,7 @@ class jDbToolsMySQL extends jDbTools {
    function _getTableList (){
       $results = array ();
 
-      $rs = $this->_connector->doQuery ('SHOW TABLES FROM '.$this->_connector->profil['database']);
+      $rs = $this->_connector->query ('SHOW TABLES FROM '.$this->_connector->profil['database']);
       $col_name = 'Tables_in_'.$this->_connector->profil['database'];
 
       while ($line = $rs->fetch ()){
@@ -47,11 +47,11 @@ class jDbToolsMySQL extends jDbTools {
    function _getFieldList ($tableName){
       $results = array ();
 
-      $sql_get_fields = 'SHOW FIELDS FROM ' . $tableName;
-      $rs = $this->_connector->doQuery ($sql_get_fields);
+      $rs = $this->_connector->query ('SHOW FIELDS FROM ' . $tableName);
 
       while ($result_line = $rs->fetch ()){
-         $p_result_line->type      = $result_line->Type;
+         $field = new jDbFieldProperties();
+
          $type = $result_line->Type;
 
           /**
@@ -80,12 +80,13 @@ class jDbToolsMySQL extends jDbTools {
           preg_match('/^(\w+).*$/',$type,$m);
 
 
-          $p_result_line->type      = $m[1];
+          $field->type      = $m[1];
+          $field->name = $result_line->Field;
           //$p_result_line->length    = $length;
-          $p_result_line->notnull   = (trim ($result_line->Null) != 'YES');
-          $p_result_line->primary  = (trim ($result_line->Key) == 'PRI');
-          $p_result_line->auto_increment  = ($result_line->Extra == 'auto_increment');
-          $results[$result_line->Field] = $p_result_line;
+          $field->not_null   = (trim ($result_line->Null) != 'YES');
+          $field->primary  = (trim ($result_line->Key) == 'PRI');
+          $field->auto_increment  = ($result_line->Extra == 'auto_increment');
+          $results[$result_line->Field] = $field;
       }
       return $results;
    }

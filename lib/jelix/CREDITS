@@ -1,7 +1,17 @@
 Crédits
 =======
 
-Concepteur et développeur principal du code original à Jelix  : Laurent Jouanneau
+Développeurs
+------------
 
-Certaines parties du code sont issues du projet Copix 2.3dev20050901 (http://www.copix.org)
-et sont sous copyright 2001-2005 Copix Team (principaux contributeurs : Gerald Croes et Laurent Jouanneau)
+Laurent Jouanneau : Concepteur et développeur principal du code original à Jelix
+
+Gerald Croes et Laurent Jouanneau : principaux contributeurs à certaines
+parties du code qui sont issues du projet Copix 2.3dev20050901 et qui sont
+sous copyright 2001-2005 Copix Team (http://www.copix.org)
+
+Contributeurs
+-------------
+
+d-m-p : corrections de bugs de syntaxe
+Loic Mathaud (bballizlife) : corrections orthographiques dans la documentation

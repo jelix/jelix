@@ -15,6 +15,16 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
+class jDbFieldProperties {
+    public $type;
+    public $name;
+    public $not_null=true;
+    public $primary=false;
+    public $auto_increment=false;
+}
+
+
+
 /**
  * classe d'outils pour gérer une base de données
  */

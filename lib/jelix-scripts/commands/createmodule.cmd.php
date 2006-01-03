@@ -31,7 +31,7 @@ class createmoduleCommand extends JelixScriptCommand {
        $path= $this->getModulePath($this->_parameters['module'], false);
 
        if(file_exists($path)){
-          die("Error: module '".$module."' already exists");
+          die("Error: module '".$this->_parameters['module']."' already exists");
        }
        $this->createDir($path);
        $this->createFile($path.'module.xml','module.xml.tpl',array('name'=>$this->_parameters['module']));
@@ -47,8 +47,8 @@ class createmoduleCommand extends JelixScriptCommand {
           $this->createDir($path.'locales/');
           $this->createDir($path.'locales/en_EN/');
           $this->createDir($path.'locales/fr_FR/');
-       }       
-       
+       }
+
        if(!$this->getOption('-noag')){
          $agcommand = jxs_load_command('createag');
          $agcommand->init(array(),array('module'=>$this->_parameters['module'], 'name'=>'default','method'=>'getDefault'));
