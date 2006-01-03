@@ -42,7 +42,7 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         E_STRICT        => 'strict'
     );
 
-    $conf = $gJConfig->errorHandling;
+    $conf = $gJConfig->error_handling;
 
     if (isset ($codeString[$errno])){
         $action = $conf[$codeString[$errno]];

@@ -43,7 +43,7 @@ $gDefaultConfig = array (
      'xuldialog'=>'jResponseXulDialog',
      'xulpage'=>'jResponseXulPage'
   ),
-  'errorhandling'=> array (
+  'error_handling'=> array (
         'messageLogFormat' => '%date%\\t[%code%]\\t%msg%\\t%file%\\t%line%\\n',
         'logFile' => 'error.log',
         'email' => 'root@localhost',
