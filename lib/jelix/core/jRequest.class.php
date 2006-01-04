@@ -27,11 +27,9 @@ abstract class jRequest {
 
     public $type;
 
-    public $allowedResponse = array();
-
     public $defaultResponseType = '';
 
-    /* ========================================= paramètres de l'url courante */
+    /*  paramètres de l'url courante */
     public $url_script_path;
     public $url_script_name;
     public $url_path_info;
@@ -85,7 +83,20 @@ abstract class jRequest {
             return $defaultValue;
         }
     }
+
+    /**
+     * indique la liste des classes de reponses autorisées pour le type de requete
+     * si renvoi false : autorise n'importe quoi
+     * @see jActionDesc::getResponse
+     */
     public function allowedResponses(){ return false;}
+
+    public function isAllowedResponse($respclass){
+        if($ar=$this->allowedResponses()){
+            return in_array($respclass, $ar);
+        }else
+            return true;
+    }
 
 }
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<actions xmlns="http://jelix.org/ns/actions/1.0">
+
+   <request type="classic">
+      <pluginparam name="auth.required" value="false" />
+
+      <action name="login" ag="Login" method="doLogin" >
+          <response  default="true" name="next" type="redirectUrl" />
+      </action>
+
+      <action name="logout" ag="Login" method="doLogout" >
+          <response  default="true" name="next" type="redirectUrl" />
+      </action>
+
+      <action name="loginform" ag="Login" method="getLoginForm" >
+          <response default="true" name="loginform" type="html" />
+      </action>
+
+   </request>
+
+</actions>

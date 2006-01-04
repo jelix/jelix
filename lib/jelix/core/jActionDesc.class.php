@@ -83,11 +83,9 @@ class jActionDesc implements jIActionDesc {
            return null;
         }
 
-        if($ar = $gJCoord->request->allowedResponses()){
-           if(!in_array($respclass, $ar)){
-              trigger_error(jLocale::get('jelix~errors.ad.reponse.type.notallowed',array($this->name,$type,$name,$this->actionsGroupPath)),E_USER_ERROR);
-              return null;
-           }
+        if(!$gJCoord->request->isAllowedResponse($respclass)){
+           trigger_error(jLocale::get('jelix~errors.ad.reponse.type.notallowed',array($this->name,$type,$name,$this->actionsGroupPath)),E_USER_ERROR);
+           return null;
         }
 
         $response = new $respclass($attr);
