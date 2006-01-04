@@ -150,20 +150,6 @@ abstract class jDAOFactoryBase  {
    abstract protected function _getPkWhereClauseForSelect($pk);
    abstract protected function _getPkWhereClauseForNonSelect($pk);
 
-
-   protected function  _fetchAllRecords ($query, $class, $limitOffset=null, $limitCount=null){
-        $rs = $this->_getResultSetFromQuery ($query, $limitOffset, $limitCount);
-        $result = array();
-        if ($rs){
-            while($res = & $rs->fetchRecord ($recordName)){
-                $result[] = & $res;
-            }
-        }
-        return $result;
-    }
-
-
-
    /**
     *
     */
