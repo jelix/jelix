@@ -53,7 +53,7 @@ class jAuth {
             global $gJCoord;
             $plugin = $gJCoord->getPlugin('auth');
             if($plugin === null){
-                trigger_error(jLocale::get('jylix~auth.error.plugin.missing'), E_USER_ERROR);
+                trigger_error(jLocale::get('jelix~auth.error.plugin.missing'), E_USER_ERROR);
                 return null;
             }
             $config = & $plugin->config;

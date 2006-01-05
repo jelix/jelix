@@ -27,11 +27,6 @@ class jResponseText extends jResponse {
      */
     public $content = '';
 
-    /**
-    * Contruction et initialisation
-    */
-    function __construct(){
-    }
 
     /**
      * génère le contenu et l'envoi au navigateur.
@@ -67,7 +62,7 @@ class jResponseText extends jResponse {
      * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
      */
     public function addErrorMsg($type, $code, $message, $file, $line){
-        $this->_errorMessages[] = "[$type] $message \t$file \t$line\n";
+        $this->_errorMessages[] = "[$type $code] $message \t$file \t$line\n";
         return false;
     }
 }

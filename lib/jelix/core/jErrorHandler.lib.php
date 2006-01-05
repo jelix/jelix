@@ -42,6 +42,13 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         E_STRICT        => 'strict'
     );
 
+    if(preg_match('/^\s*\((\d+)\)(.+)$/',$errmsg,$m)){
+        $code = $m[1];
+        $errmsg = $m[2];
+    }else{
+        $code=1;
+    }
+
     $conf = $gJConfig->error_handling;
 
     if (isset ($codeString[$errno])){
@@ -53,7 +60,8 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     // formatage du message
     $messageLog = strtr($conf['messageLogFormat'], array(
         '%date%' => date("Y-m-d H:i:s"),
-        '%code%' => $codeString[$errno],
+        '%typeerror%'=>$codeString[$errno],
+        '%code%' => $code,
         '%msg%'  => $errmsg,
         '%file%' => $filename,
         '%line%' => $linenum
@@ -62,13 +70,10 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     // traitement du message
     if(strpos($action , 'ECHO') !== false){
 
-        /*if($action & ERR_ACT_EXIT)
-            header("HTTP/1.1 500 Internal jelix error");*/
-
         if($gJCoord->response == null){
             $gJCoord->initDefaultResponseOfRequest();
         }
-        if($gJCoord->response->addErrorMsg($codeString[$errno], 0, $errmsg, $filename, $linenum) || strpos($action , 'EXIT') !== false){
+        if($gJCoord->response->addErrorMsg($codeString[$errno], $code, $errmsg, $filename, $linenum) || strpos($action , 'EXIT') !== false){
             $gJCoord->response->outputErrors();
         }
     }

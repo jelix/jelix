@@ -81,7 +81,7 @@ class jResponseHtml extends jResponse {
     /**
     * Contruction et initialisation
     */
-    function __construct ($attributes){
+    function __construct ($attributes=array()){
         global $gJConfig;
         $this->_charset = $gJConfig->defaultCharset;
         $this->_lang = $gJConfig->defaultLocale;
@@ -171,7 +171,7 @@ class jResponseHtml extends jResponse {
      * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
      */
     function addErrorMsg($type, $code, $message, $file, $line){
-        $this->_errorMessages[] = "<p style=\"margin:0;\"><b>[$type]</b> <span style=\"color:#FF0000\">".htmlentities($message)."</span> \t$file \t$line</p>\n";
+        $this->_errorMessages[] = "<p style=\"margin:0;\"><b>[$type $code]</b> <span style=\"color:#FF0000\">".htmlentities($message)."</span> \t$file \t$line</p>\n";
         return false;
     }
 

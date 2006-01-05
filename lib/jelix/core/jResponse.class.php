@@ -30,7 +30,7 @@ abstract class jResponse {
     /**
     * Contruction et initialisation
     */
-    function __construct ($attributes){
+    function __construct ($attributes=array()){
        $this->_attributes = $attributes;
     }
 
@@ -56,8 +56,11 @@ abstract class jResponse {
     /**
      * indique au générateur qu'il y a un message d'erreur/warning/notice à prendre en compte
      * cette méthode stocke le message d'erreur
-     * @param  string $type  type d'erreur dont la valeur est l'une du tableau codeString de la config du gestionnaire d'erreur
-     * @param  string $code  code d'erreur (non utilisé en PHP4)
+     * @param  string $type  type d'erreur 'error', 'warning', 'notice'
+     * @param  integer $code  code d'erreur
+     * @param  string $message le message d'erreur
+     * @param  string $file  nom du fichier où s'est produite l'erreur
+     * @param  integer $line  ligne où s'est produite l'erreur
      * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
      */
     public function addErrorMsg($type, $code, $message, $file, $line){

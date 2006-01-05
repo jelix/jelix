@@ -67,7 +67,7 @@ class jResponseXul extends jResponse {
     /**
     * Contruction et initialisation
     */
-    function __construct ($attributes){
+    function __construct ($attributes=array()){
         $this->body = new jTpl();
         parent::__construct($attributes);
     }
@@ -126,7 +126,7 @@ class jResponseXul extends jResponse {
      * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
      */
     function addErrorMsg($type, $code, $message, $file, $line){
-        $this->_errorMessages[] = "<description style=\"color:#FF0000;\">[$type] ".htmlentities($message)." \t$file \t$line</description>";
+        $this->_errorMessages[] = "<description style=\"color:#FF0000;\">[$type $code] ".htmlentities($message)." \t$file \t$line</description>";
         return false;
     }
 

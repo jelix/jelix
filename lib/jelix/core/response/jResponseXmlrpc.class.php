@@ -57,7 +57,7 @@ final class jResponseXmlRpc extends jResponse {
      * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
      */
     public function addErrorMsg($type, $code, $message, $file, $line){
-        $this->errorCode = 1;
+        $this->errorCode = $code;
         $this->errorMessage = "[$type] $message (file: $file, line: $line)";
         return true;
     }

@@ -15,9 +15,9 @@ function jExceptionHandler($exception){
     global $gJConfig, $gJCoord;
 
     if($exception instanceof jException){
-        $msg = $exception->getMessage();
-    }else{
         $msg = $exception->getLocaleMessage();
+    }else{
+        $msg = $exception->getMessage();
     }
 
     $conf = $gJConfig->errorHandling;
@@ -42,7 +42,7 @@ function jExceptionHandler($exception){
             $gJCoord->initDefaultResponseOfRequest();
         }
 
-        if($gJCoord->response->addErrorMsg(E_USER_ERROR, $exception->getCode(), $msg, $exception->getFile(), $exception->getLine()) || strpos($action , 'EXIT') !== false){
+        if($gJCoord->response->addErrorMsg('error', $exception->getCode(), $msg, $exception->getFile(), $exception->getLine()) || strpos($action , 'EXIT') !== false){
             $gJCoord->response->outputErrors();
         }
     }
@@ -65,23 +65,29 @@ function jExceptionHandler($exception){
 
 class jException extends Exception {
    public $localeParams = array();
+   public $localizedMessage = '';
 
-   public function __construct($localekey, $localeParams=array(), $code = 0) {
-       parent::__construct($localekey, $code);
-       $this->localeParams=$localeParams;
+   public function __construct($localekey, $localeParams=array(), $code = 1) {
+      try{
+         $this->localizedMessage = jLocale::get($localekey, $localeParams);
+      }catch(Exception $e){
+         $this->localizedMessage = $localekey;
+      }
+      if(preg_match('/^\s*\((\d+)\)(.+)$/',$this->localizedMessage,$m)){
+          $code = $m[1];
+          $this->localizedMessage = $m[2];
+      }
+      parent::__construct($localekey, $code);
+      $this->localeParams=$localeParams;
 
    }
 
    public function __toString() {
-      try{
-         return jLocale::get($this->message, $this->localeParams);
-      }catch(Exception $e){
-         return $this->message;
-      }
+      return $this->localizedMessage;
    }
 
    public function getLocaleMessage(){
-      return jLocale::get($this->message, $this->localeParams);
+      return $this->localizedMessage;
    }
 
 }
