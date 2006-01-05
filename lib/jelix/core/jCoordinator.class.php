@@ -63,6 +63,9 @@ class jCoordinator {
 
         $gJCoord = $this;
 
+        if(!is_writable(JELIX_APP_TEMP_PATH)){
+            trigger_error('Temp directory is not writable',E_USER_ERROR);
+        }
         // load configuration data
         $this->configFile = $configFile;
         $this->_initConfig();

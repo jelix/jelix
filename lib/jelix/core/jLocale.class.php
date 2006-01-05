@@ -199,11 +199,15 @@ class jLocale {
         $file = new jSelectorLoc($keySelector, $locale, $charset);
 
         if (!$file->isValid()){
-            trigger_error (jLocale::get ('jelix~errors.locale.key.selector.invalid', array($key,$file->module, $charset, $locale)), E_USER_ERROR);
+            if($key == 'jelix~errors.locale.key.selector.invalid'){
+                return '(200)The given locale key "'.$args[0].'" is invalid  (for module '.$args[1].', charset '.$args[2].', lang '.$args[3].')';
+            }else{
+                trigger_error (jLocale::get ('jelix~errors.locale.key.selector.invalid', array($key,$file->module, $charset, $locale)), E_USER_ERROR);
+            }
         }
 
         if (!isset (self::$bundles[$keySelector][$locale])){
-            self::$bundles[$keySelector][$locale] = & new jBundle ($file, $locale);
+            self::$bundles[$keySelector][$locale] =  new jBundle ($file, $locale);
         }
         $bundle = self::$bundles[$keySelector][$locale];
 
