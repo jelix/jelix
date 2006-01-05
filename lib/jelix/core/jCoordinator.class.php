@@ -168,11 +168,14 @@ class jCoordinator {
                     closedir($handle);
                 }
             }
-            $f = new jFile ();
-            if($tplp){
-               $f->write ($file, serialize($result));
+            if($f = @fopen($file, 'wb')){
+                if($tplp){
+                   $result = serialize($result);
+                }
+                fwrite($f, $result);
+                fclose($f);
             }else{
-               $f->write ($file, $result);
+                trigger_error('Can\'t write '.$file.' file',E_USER_ERROR);
             }
         }
         if($tplp){
