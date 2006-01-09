@@ -132,7 +132,6 @@ class jZone {
     * Méthode qui efface le cache de la zone
     */
     public function clearCache (){
-        $this->params = $params;
         if ($this->_useCache){
             $f = $this->_getCacheFile();
             if(file_exists($f)){

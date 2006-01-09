@@ -28,7 +28,7 @@ class jUser {
  * interface pour les classes de drivers d'authentification
  */
 
-interface class jIAuthDriver {
+interface jIAuthDriver {
 
     function __construct($params);
     public function createUser($login, $password);

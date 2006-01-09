@@ -27,6 +27,7 @@ class MagicQuotesPlugin implements jPlugin {
                 $req->params[$key] = $this->_stripSlashes ($elem);
         }
       }
+      set_magic_quotes_runtime(0);
    }
 
    /**

@@ -35,11 +35,11 @@ class jClasses {
 
    static public function getService($selector){
        $sel = new jSelectorClass($selector);
-       if(isset(self:_instances[$sel->toString()])){
-           return self:_instances[$sel->toString()];
+       if(isset(self::$_instances[$sel->toString()])){
+           return self::$_instances[$sel->toString()];
        }else{
            $o = self::create($selector);
-           self:_instances[$sel->toString()]=$o;
+           self::$_instances[$sel->toString()]=$o;
            return $o;
        }
    }
