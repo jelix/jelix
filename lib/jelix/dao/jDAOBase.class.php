@@ -138,7 +138,7 @@ abstract class jDAOFactoryBase  {
     * @param jDAOConditions $searchcond
     */
    public function findBy ($searchcond){
-      $query = $this->_selectQuery.$this->_fromClause.$this->_whereClause;
+      $query = $this->_selectClause.$this->_fromClause.$this->_whereClause;
       if (!$searchcond->isEmpty ()){
          $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
          $query .= $this->_createConditionsClause($searchcond);
