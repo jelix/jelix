@@ -202,7 +202,7 @@ class jResponseHtml extends jResponse {
             $this->_CSSLink[$src] = $params;
         }
     }
-    final public function addStyle ($selector, $def=null){
+    final public function addStyle ($selector, $def){
         if (!isset ($this->_Styles[$selector])){
             $this->_Styles[$selector] = $def;
         }
