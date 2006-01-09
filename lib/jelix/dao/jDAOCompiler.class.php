@@ -76,7 +76,7 @@ class jDAOCompiler  implements jISimpleCompiler {
     public function getDbDriver(){ return  $this->_selector->driver;}
 
     public function doDefError($message, $arg1=null){
-        $arg=array($selector->gtoString(true),$selector->getPath());
+        $arg=array($this->_selector->toString(true),$this->_selector->getPath());
         if(is_array($arg1)){
             $arg=array_merge($arg, $arg1);
         }else{

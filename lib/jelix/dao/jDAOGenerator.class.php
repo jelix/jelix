@@ -242,7 +242,7 @@ class jDAOGenerator {
                case 'selectfirst':
                case 'select':
                default:
-                  $src[] = '    $query = $this->_selectQuery.$this->_fromClause.$this->_whereClause;';
+                  $src[] = '    $query = $this->_selectClause.$this->_fromClause.$this->_whereClause;';
                   $glueCondition = ($sqlWhereClause !='' ? ' AND ':' WHERE ');
                   if( ($lim = $method->getLimit ()) !==null){
                      $limit=', '.$lim['offset'].', '.$lim['count'];
