@@ -202,7 +202,7 @@ class jResponseHtml extends jResponse {
             $this->_CSSLink[$src] = $params;
         }
     }
-    final public function addStyle ($selector, $def){
+    final public function addStyle ($selector, $def=null){
         if (!isset ($this->_Styles[$selector])){
             $this->_Styles[$selector] = $def;
         }
@@ -224,7 +224,7 @@ class jResponseHtml extends jResponse {
             //the extra params we may found in there.
             $more = '';
             foreach ($params as $param_name=>$param_value){
-                $more .= $param_name.'="'.$param_value.'" ';
+                $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
             }
             echo  '<link rel="stylesheet" type="text/css" href="',$src,'" ',$more,$this->_endTag;
         }
@@ -234,7 +234,7 @@ class jResponseHtml extends jResponse {
             //the extra params we may found in there.
             $more = '';
             foreach ($params as $param_name=>$param_value){
-                $more .= $param_name.'="'.$param_value.'" ';
+                $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
             }
             echo '<script type="text/javascript" src="',$src,'" ',$more,'></script>';
         }
