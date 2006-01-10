@@ -28,8 +28,8 @@ class helpCommand extends JelixScriptCommand {
              $command = jxs_load_command($this->_parameters['command']);
           }
           $this->disp("\nUtilisation de la commande ".$this->_parameters['command']." :\n");
-          $this->disp("# php jelix.php  [--NOM_APP] ".$this->_parameters['command']." ". $command->syntaxhelp,"\n\n");
-          $this->disp($command->help,"\n\n");
+          $this->disp("# php jelix.php  [--NOM_APP] ".$this->_parameters['command']." ". $command->syntaxhelp."\n\n");
+          $this->disp($command->help."\n\n");
        }else{
           $this->disp("\nUtilisation générale : php jelix.php [--NOM_APP] COMMANDE [OPTIONS] [PARAMETRES]
 
