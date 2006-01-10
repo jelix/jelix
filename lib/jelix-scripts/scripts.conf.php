@@ -41,5 +41,6 @@ define('DO_CHOWN',false); // indique si lors de la création des fichiers, il fau
 define('CHOWN_USER','');   // indique le user qui deviendra le propriétaire d'un fichier crée par le script
 define('CHOWN_GROUP','');   // indique le groupe qui deviendra le propriétaire d'un fichier crée par le script
 
+define('DISPLAY_HELP_UTF_8', false); // affiche l'aide en utf-8 (si votre console est en utf-8)
 
 ?>

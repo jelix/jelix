@@ -27,11 +27,11 @@ class helpCommand extends JelixScriptCommand {
           }else{
              $command = jxs_load_command($this->_parameters['command']);
           }
-          echo "\nUtilisation de la commande ".$this->_parameters['command']." :\n";
-          echo "# php jelix.php ".$this->_parameters['command']." ". $command->syntaxhelp,"\n\n";
-          echo $command->help,"\n\n";
+          $this->disp("\nUtilisation de la commande ".$this->_parameters['command']." :\n");
+          $this->disp("# php jelix.php  [--NOM_APP] ".$this->_parameters['command']." ". $command->syntaxhelp,"\n\n");
+          $this->disp($command->help,"\n\n");
        }else{
-          echo "\nUtilisation générale : php jelix.php [--NOM_APP] COMMANDE [OPTIONS] [PARAMETRES]
+          $this->disp("\nUtilisation générale : php jelix.php [--NOM_APP] COMMANDE [OPTIONS] [PARAMETRES]
 
     NOM_APP : nom de l'application concernée. Si non présent, le nom de l'application doit
              être dans une variable d'environnement JELIX_APP_NAME
@@ -48,13 +48,21 @@ class helpCommand extends JelixScriptCommand {
     Consulter l'aide d'une commande en faisant :
        php jelix help COMMANDE
 
-Liste des commandes disponibles :\n\t";
+Liste des commandes disponibles :\n\t");
 
           $list = jxs_commandlist();
           foreach($list as $cmd)
-             echo $cmd,' ';
-          echo "\n\n";
+             $this->disp($cmd,' ');
+          $this->disp("\n\n");
 
+       }
+    }
+    
+    protected function disp($str){
+       if( DISPLAY_HELP_UTF_8){
+         echo utf8_encode($str);
+       }else{
+         echo $str;
        }
     }
 }
