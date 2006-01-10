@@ -60,7 +60,7 @@ function __autoload($class){
    }elseif(preg_match('/^cDAO(?:Record)?_(.*)_(.*)_(.*)$/', $class, $m)){
        // pour les dao stockés en sessions notament
        $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
-       $f = $f->getCompiledFilePath ();
+       $f = $s->getCompiledFilePath ();
    }else{
       $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
    }

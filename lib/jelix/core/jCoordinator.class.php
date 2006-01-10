@@ -75,7 +75,6 @@ class jCoordinator {
         set_exception_handler('JExceptionHandler');
 
         $this->_loadPlugins();
-        session_start ();
     }
 
     /**
@@ -215,6 +214,7 @@ class jCoordinator {
     public function process ($request){
         global $gJConfig;
         $this->request = $request;
+		session_start();
 
         $this->moduleName = $this->request->getParam('module', $gJConfig->defaultModule,true);
         $this->actionName = $this->request->getParam('action', $gJConfig->defaultAction,true);
@@ -251,7 +251,7 @@ class jCoordinator {
         }*/
 
         if($this->response == null){
-            trigger_error(jLocale::get('jelix~errors.response.missing',$result->toString()), E_USER_ERROR);
+            trigger_error(jLocale::get('jelix~errors.response.missing',$selector->toString()), E_USER_ERROR);
             return;
         }
 

@@ -33,7 +33,7 @@ $gDefaultConfig = array (
   array (
      'html'=>'jResponseHtml',
      'redirect'=>'jResponseRedirect',
-     'redirectext'=>'jResponseRedirectExt',
+     'redirectUrl'=>'jResponseRedirectUrl',
      'binary'=>'jResponseBinary',
      'text'=>'jResponseText',
      'jsonrpc'=>'jResponseJsonRpc',

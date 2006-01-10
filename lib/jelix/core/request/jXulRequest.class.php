@@ -20,7 +20,7 @@ class jXulRequest extends jRequest {
 
     protected function _initParams(){
         $this->url  = jUrl::parse($_SERVER['SCRIPT_NAME'], $_GET, $this->url_path_info);
-        $this->params = $this->url->params;
+        $this->params = array_merge($this->url->params, $_POST);
     }
 
 
