@@ -52,7 +52,7 @@ Liste des commandes disponibles :\n\t");
 
           $list = jxs_commandlist();
           foreach($list as $cmd)
-             $this->disp($cmd,' ');
+             $this->disp($cmd.' ');
           $this->disp("\n\n");
 
        }
