@@ -144,6 +144,33 @@ class jSelectorAct extends jSelectorModule {
         $this->_compiler='jActionsCompiler';
         $this->_compilerPath=JELIX_LIB_CORE_PATH.'jActionsCompiler.class.php';
         $this->request = $gJCoord->request->type;
+        
+        if(preg_match("/^(([\w\.]+)~)?([\w\.]+)$/", $sel, $m)){
+        //"/^(([\w\.]+|\#)~)?([\w\.]+|\#)(@([\w\.]+))?$/"    à tester avant...
+            $this->_valid = true;
+            if($m[1]!='' && $m[2]!=''){
+              if($m[2] == '#')
+                $this->module = $gJCoord->moduleName;
+              else
+                $this->module = $m[2];
+            }else{
+                $this->module = jContext::get ();
+                //$this->module = $GLOBALS['gJConfig']->defaultModule;
+            }
+            if($m[3] == '#')
+               $this->resource = $gJCoord->actionName;
+            else
+               $this->resource = $m[3];
+               
+            if(isset($m[4]) && $m[4] != '') // test à virer aprés activation de la nouvelle regexp
+              $this->request = $m[4];
+            else
+              $this->request = $gJCoord->request->type;
+            
+            $this->_createPath();
+        }else{
+            $this->_valid = false;
+        }
         parent::__construct($sel);
     }
 

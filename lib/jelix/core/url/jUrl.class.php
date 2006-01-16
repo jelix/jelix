@@ -124,12 +124,11 @@ class jUrl {
 
         $urlobj=$this;
         if($isUrlForApp){
-            // dans le cas d'une url pour copix, on passe par l'engine
+            // dans le cas d'une url pour jelix, on passe par le moteur d'url spécifique
 
-            // on ne doit pas modifier les données de l'url, il nous faut donc un
-            // clone
+            // on ne doit pas modifier les données de l'url, il nous faut donc un clone
             $urlobj= clone $this;
-            $urlobj->scriptName = jUrl::getScript($urlobj->getParam('module'),$urlobj->getParam('desc'));
+            $urlobj->scriptName = 'index.php'; // pour le moment... à tester avec jUrl::getScript($urlobj->getParam('module'),$urlobj->getParam('action'));
             $engine = & jUrl::getEngine();
             $engine->create($urlobj); // set path info
         }
@@ -190,7 +189,7 @@ class jUrl {
 
     /**
     * Gets the url string from parameters
-    * @param string $dest the module|desc|action description, if null, we get only the base path
+    * @param string $actSel  action selector. if null we get the script path
     * @param array $params associative array with the parameters
     */
     static function get ($dest = null, $params = array (), $forxml = false) {
@@ -200,7 +199,8 @@ class jUrl {
         if($dest == '@'){
             $url = new jUrl('',array_merge($GLOBALS['gJCoord']->request->url->params,$params));
         }else{
-            $url = new jUrl('',array_merge($params,jUrl::getDest ($dest)));
+            
+            $url = new jUrl('',array_merge($params,jUrl::getAction ($dest)));
         }
 
         return $url->toString($forxml,true);
@@ -242,63 +242,41 @@ class jUrl {
 
     /**
     * gets the module/action parameters from the destination string.
-    *   dest is described as modules|action where module is optionnal.
     * @param string $dest the destination to parse
-    * @see function.jurl.php
     * @return assocative array where keys are module and action
     */
-    function getDest ($dest){
+    static function getAction ($actionSelector){
         global $gJCoord, $gJConfig;
 
-        if($dest == '@'){
+        if($actionSelector == '@'){
             // we get the current url
             return $gJCoord->request->url->params;
         }
-
-        $tabUrl    = explode ('|', $dest);
-        $params = array ();
-        switch (count ($tabUrl)){
-            case 1:
-            $params = array ('module'=>jContext::get (), 'action'=>$tabUrl[0]);
-            break;
-
-            case 2:
-            $params = array ('module'=>$tabUrl[0], 'action'=>$tabUrl[1]);
-            break;
-
-            default :
-            $params = array ('module'=>$gJConfig->defaultModule, 'action'=>$gJConfig->defaultAction);
+        $sel = new JSelectorAct($actionSelector);
+        if($sel->isValid()){        
+           return array('module'=>$sel->module, 'action'=>$sel->ressource);
+        }else{
+          return false;
         }
-
-        if ($params['action'] == ''){
-            $params['action'] = $gJConfig->defaultAction;
-        }else if($params['action'] == '#'){
-            $params['action'] =  $gJCoord->actionName;
-        }
-        if($params['module'] == '#'){
-            $params['module'] =  $gJCoord->moduleName;
-        }
-
-
-        return $params;
     }
 
-    static function getScript($module,$desc, $nosuffix=false){
-        $script = $GLOBALS['gJConfig']->urlengine->default_entrypoint;
+    static function getScript($module,$requestType, $nosuffix=false){
+        global $gJConfig;
+        $script = $gJConfig->urlengine->default_entrypoint;
 
-        if(count($GLOBALS['gJConfig']->urlengine_specific_entrypoints)){
-           $sep = $GLOBALS['gJConfig']->urlengine_specific_entrypoints;
-           if(isset($sep[$module.'~'.$desc])){
-               $script = $sep[$module.'~'.$desc];
-           }else if(isset($sep['*~'.$desc])){
-               $script = $sep['*~'.$desc];
+        if(count($gJConfig->urlengine_specific_entrypoints)){
+           $sep = $gJConfig->urlengine_specific_entrypoints;
+           if(isset($sep[$module.'~'.$requestType])){
+               $script = $sep[$module.'~'.$requestType];
+           }else if(isset($sep['*~'.$requestType])){
+               $script = $sep['*~'.$requestType];
            }else if(isset($sep[$module])){
                $script = $sep[$module];
            }
         }
 
-        if(!$nosuffix && !$GLOBALS['gJConfig']->urlengine->multiview_on){
-            $script.=$GLOBALS['gJConfig']->urlengine->entrypoint_extension;
+        if(!$nosuffix && !$gJConfig->urlengine->multiview_on){
+            $script.=$gJConfig->urlengine->entrypoint_extension;
         }
         return $script;
     }
