@@ -44,6 +44,11 @@ final class jResponseXmlRpc extends jResponse {
     }
 
     public function outputErrors(){
+        if($this->errorCode == 0 && $this->errorMessage == ''){
+            $this->errorMessage = 'Unknow error';
+            $this->errorCode = -1;
+        }
+
         header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset);
         $content = jXmlRpc::encodeFaultResponse($this->errorCode,$this->errorMessage, $GLOBALS['gJConfig']->defaultCharset);
         header("Content-length: ".strlen($content));

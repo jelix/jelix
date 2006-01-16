@@ -115,7 +115,11 @@ class jResponseXul extends jResponse {
             echo '<',$this->_root,' title="Erreurs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">';
         }
         echo '<vbox>';
-        echo implode("\n",$this->_errorMessages);
+        if(count($this->_errorMessages)){
+           echo implode("\n",$this->_errorMessages);
+        }else{
+           echo "<description style=\"color:#FF0000;\">Unknow error</description>";
+        }
         echo '</vbox></',$this->_root,'>';
     }
 

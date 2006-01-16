@@ -20,7 +20,7 @@ function jExceptionHandler($exception){
         $msg = $exception->getMessage();
     }
 
-    $conf = $gJConfig->errorHandling;
+    $conf = $gJConfig->error_handling;
     $action = $conf['exception'];
 
     // formatage du message de log
@@ -31,20 +31,13 @@ function jExceptionHandler($exception){
         '%file%' => $exception->getFile(),
         '%line%' => $exception->getLine()
     ));
+    if($gJCoord->response == null){
+      $gJCoord->initDefaultResponseOfRequest();
+    }
 
     // traitement du message
     if(strpos($action , 'ECHO') !== false){
-
-        /*if($action & ERR_ACT_EXIT)
-            header("HTTP/1.1 500 Internal jelix error");*/
-
-        if($gJCoord->response == null){
-            $gJCoord->initDefaultResponseOfRequest();
-        }
-
-        if($gJCoord->response->addErrorMsg('error', $exception->getCode(), $msg, $exception->getFile(), $exception->getLine()) || strpos($action , 'EXIT') !== false){
-            $gJCoord->response->outputErrors();
-        }
+      $gJCoord->response->addErrorMsg('error', $exception->getCode(), $msg, $exception->getFile(), $exception->getLine());
     }
     if(strpos($action , 'LOGFILE') !== false){
         error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);
@@ -56,9 +49,7 @@ function jExceptionHandler($exception){
         error_log($messageLog,0);
     }
 
-    if(strpos($action , 'EXIT') !== false){
-        exit;
-    }
+    $gJCoord->response->outputErrors();
 }
 
 

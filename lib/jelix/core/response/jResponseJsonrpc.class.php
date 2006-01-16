@@ -55,6 +55,10 @@ final class jResponseJsonRpc extends jResponse {
 
     public function outputErrors(){
         global $gJCoord;
+        if($this->errorCode == 0 && $this->errorMessage == ''){
+            $this->errorMessage = 'Unknow error';
+            $this->errorCode = -1;
+        }
         header("Content-Type: text/plain");
         $content = jJsonRpc::encodeFaultResponse($this->errorCode,$this->errorMessage, $gJCoord->request->params['id']);
         header("Content-length: ".strlen($content));

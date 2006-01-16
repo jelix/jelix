@@ -160,7 +160,11 @@ class jResponseHtml extends jResponse {
             echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n";
             echo '<html><head><title>Errors</title></head><body>';
         }
-        echo implode("\n",$this->_errorMessages);
+        if(count($this->_errorMessages)){
+            echo implode("\n",$this->_errorMessages);
+        }else{
+            echo '<p style="color:#FF0000">Unknow Error</p>';
+        }
         echo '</body></html>';
     }
 

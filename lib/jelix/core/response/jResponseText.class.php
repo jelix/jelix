@@ -52,7 +52,11 @@ class jResponseText extends jResponse {
     public function outputErrors(){
         global $gJConfig;
         header('Content-Type: text/plain;charset='.$gJConfig->defaultCharset);
-        echo implode("\n",$this->_errorMessages);
+        if(count($this->_errorMessages)){
+            echo implode("\n",$this->_errorMessages);
+        }else{
+            echo 'unknow error';
+        }
     }
 
 
