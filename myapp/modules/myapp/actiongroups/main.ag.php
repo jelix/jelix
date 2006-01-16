@@ -13,7 +13,7 @@
 class AGMain extends jActionGroup {
 
   function getDefault(){
-      $rep = $this->_getResponse('hello');
+      $rep = $this->getResponse('hello');
       $rep->bodyTpl = 'myapp~hello';
       return $rep;
    }

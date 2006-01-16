@@ -30,11 +30,11 @@ class jActionGroup {
     }
 
     /**
-    * CopixZone::process alias
-    * @param string $name identifier module|zoneName
+    * jZone::processZone alias
+    * @param string $name zone selector
     * @param array $params associative array, parameters
     */
-    protected function _processZone($name, $params=array ()){
+    protected function processZone($name, $params=array ()){
         return jZone::processZone ($name, $params);
     }
 
@@ -44,11 +44,11 @@ class jActionGroup {
     * @param mixed $varDefaultValue the default value of the request variable
     * @return mixed the request variable value
     */
-    protected function _get ($varName, $varDefaultValue=null, $useDefaultIfEmpty=false){
+    protected function param ($varName, $varDefaultValue=null, $useDefaultIfEmpty=false){
        return $this->request->getParam($varName, $varDefaultValue, $useDefaultIfEmpty);
     }
 
-    protected function _getResponse($name){
+    protected function getResponse($name){
         return $this->action->getResponse($name);
     }
 

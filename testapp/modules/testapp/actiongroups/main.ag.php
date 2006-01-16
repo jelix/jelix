@@ -14,16 +14,15 @@ class AGMain extends jActionGroup {
 
   function getDefault(){
 
-      if($this->_get('output') == 'text'){
-         $rep = $this->_getResponse('hellotext');
+      if($this->param('output') == 'text'){
+         $rep = $this->getResponse('hellotext');
          $rep->content = 'Hello World !';
       }else{
 
-         $rep = $this->_getResponse('hello');
+         $rep = $this->getResponse('hello');
          $rep->title = 'Hello From Jelix !';
          $rep->bodyTpl = 'testapp~hello';
-         $rep->body->assign('person', $this->_get('person','You'));
-
+         $rep->body->assign('person', $this->param('person','You'));
       }
       return $rep;
    }
@@ -31,16 +30,16 @@ class AGMain extends jActionGroup {
 
 
    function getTestDao(){
-    if( $id=$this->_get('newid')){
+    if( $id=$this->param('newid')){
         $dao = jDAO::get('config');
         $rec = jDAO::createRecord('config');
 
         $rec->ckey = $id;
-        $rec->cvalue=$this->_get('newvalue','');
+        $rec->cvalue=$this->param('newvalue','');
         $dao->insert($rec);
     }
 
-    $rep = $this->_getResponse('dao');
+    $rep = $this->getResponse('dao');
     $rep->title = 'This is a DAO Test';
     $rep->bodyTpl = 'testapp~main';
     $rep->body->assign('person','Laurent');
