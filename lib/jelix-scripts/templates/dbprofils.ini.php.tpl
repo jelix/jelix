@@ -16,7 +16,6 @@ default =
 ;user= "root"
 ;password=
 ;persistent= on
-;shared= on
 
 
 

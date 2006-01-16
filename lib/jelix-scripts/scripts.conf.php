@@ -9,31 +9,31 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-$basepath = realpath(dirname(__FILE__).'/../../');
 
-define ('JELIX_APP_PATH'        , $basepath."/$APPNAME/");
-define ('JELIX_APP_TEMP_PATH'   , $basepath."/temp/$APPNAME/");
-define ('JELIX_APP_WWW_PATH'    , $basepath."/$APPNAME/www/");
-define ('JELIX_APP_VAR_PATH'    , $basepath."/$APPNAME/var/");
-define ('JELIX_APP_LOG_PATH'    , $basepath."/$APPNAME/var/log/");
-define ('JELIX_APP_CONFIG_PATH' , $basepath."/$APPNAME/var/config/");
+define('JELIXS_APPS_BASEPATH', realpath(dirname(__FILE__).'/../../'));
 
-/* example for linux installation
+define ('JELIXS_APPTPL_PATH'        , JELIXS_APPS_BASEPATH."/$APPNAME/");
+define ('JELIXS_APPTPL_TEMP_PATH'   , JELIXS_APPS_BASEPATH."/temp/$APPNAME/");
+define ('JELIXS_APPTPL_WWW_PATH'    , JELIXS_APPS_BASEPATH."/$APPNAME/www/");
+define ('JELIXS_APPTPL_VAR_PATH'    , JELIXS_APPS_BASEPATH."/$APPNAME/var/");
+define ('JELIXS_APPTPL_LOG_PATH'    , JELIXS_APPS_BASEPATH."/$APPNAME/var/log/");
+define ('JELIXS_APPTPL_CONFIG_PATH' , JELIXS_APPS_BASEPATH."/$APPNAME/var/config/");
+define ('JELIXS_INIT_PATH'          , '../jelix/init.php');
 
-define ('JELIX_APPS_PATH',         "/usr/local/lib/jelixapp/$APPNAME/");
-define ('JELIX_APPS_TEMP_PATH',    "/var/www/jelixapp/temp/$APPNAME/");
-define ('JELIX_APPS_WWW_PATH',     "/var/www/jelixapp/www/$APPNAME/");
-define ('JELIX_APPS_VAR_PATH',     "/var/www/jelixapp/var/$APPNAME/");
-define ('JELIX_APPS_LOG_PATH',     JELIX_APPS_VAR_PATH.'log/');
-define ('JELIX_APPS_CONFIG_PATH',  JELIX_APPS_VAR_PATH.'config/');
+/* example for a linux package :
+
+define('JELIXS_APPS_BASEPATH', '/var/www/jelixapp/');
+
+define ('JELIXS_APPTPL_PATH'        , "/usr/local/lib/jelixapp/$APPNAME/");
+define ('JELIXS_APPTPL_TEMP_PATH'   , "/var/www/jelixapp/temp/$APPNAME/");
+define ('JELIXS_APPTPL_WWW_PATH'    , "/var/www/jelixapp/www/$APPNAME/");
+define ('JELIXS_APPTPL_VAR_PATH'    , "/var/www/jelixapp/var/$APPNAME/");
+define ('JELIXS_APPTPL_LOG_PATH'    , JELIXS_APPTPL_VAR_PATH."log/");
+define ('JELIXS_APPTPL_CONFIG_PATH' , JELIXS_APPTPL_VAR_PATH."config/");
+define ('JELIXS_INIT_PATH'          , '/usr/local/lib/jelix/init.php');
 */
 
-
-define ('LIB_PATH',               realpath(dirname (__FILE__).'/../').'/');
-define ('JELIX_PLUGINS_PATH',     LIB_PATH.'jelix-plugins/');
-define ('JELIX_MODULE_PATH',      LIB_PATH.'jelix-modules/');
-define ('JELIX_LIB_PATH',         LIB_PATH.'jelix/');
-
+define ('JELIXS_APP_CONFIG_FILE'    , 'config.classic.ini.php');
 define('DO_CHMOD',false); // indique si lors de la création des fichiers, il faut faire un chmod
 define('CHMOD_FILE_VALUE',0644);
 define('CHMOD_DIR_VALUE',0755);

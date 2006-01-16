@@ -34,8 +34,8 @@ class createdaoCommand extends JelixScriptCommand {
 
 
     public function run(){
-       die("Non disponible encore dans cette version\n");
 
+       jxs_init_jelix_env();
 
        $path= $this->getModulePath($this->_parameters['module']);
 
@@ -52,7 +52,6 @@ class createdaoCommand extends JelixScriptCommand {
        if($this->getOption('-empty')){
           $this->createFile($filename,'dao_empty.xml.tpl',$param);
        }else{
-         require_once(JELIX_LIB_DB_PATH.'jDb.class.php');
 
          $tools = jDb::getTools($profil);
          $fields = $tools->getFieldList($this->_parameters['table']);
@@ -112,10 +111,12 @@ class createdaoCommand extends JelixScriptCommand {
                $properties.="\n    <property name=\"$fieldname\"";
                $properties.=' type="'.$type.'"';
                if($prop->primary){
-                  $properties.=' pk="yes"';
-                  $primarykeys.="\n <primarykey fieldname=\"$fieldname\" />";
+                  if($primarykeys != '')
+                     $primarykeys.=','.$fieldname;
+                  else
+                     $primarykeys.=$fieldname;
                }
-               if($prop->notnull)
+               if($prop->not_null)
                   $properties.=' required="yes"';
                $properties.='/>';
             }

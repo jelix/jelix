@@ -22,14 +22,14 @@ $argv = $_SERVER['argv'];
 array_shift($argv); // shift the script name
 $commandName = array_shift($argv); // get the command name
 
-if(preg_match('/^\-\-(\w+)$/',$commandName,$m)){
+if(preg_match('/^\-\-([\w\-\.]+)$/',$commandName,$m)){
     $APPNAME=$m[1];
     if($_SERVER['argc'] < 3){
        die("Error: command is missing\n");
     }
     $commandName = array_shift($argv);
 }else{
-   
+
     if(!isset($_ENV['JELIX_APP_NAME'])||$_ENV['JELIX_APP_NAME'] == ''){
         if($commandName != 'help'){
             die("Error: JELIX_APP_NAME environnement variable doesn't exists \n");
@@ -39,7 +39,7 @@ if(preg_match('/^\-\-(\w+)$/',$commandName,$m)){
     }else{
         $APPNAME = $_ENV['JELIX_APP_NAME'];
     }
-  
+
 }
 
 /**
@@ -47,10 +47,11 @@ if(preg_match('/^\-\-(\w+)$/',$commandName,$m)){
  */
 
 if(!isset($_ENV['JELIX_CONFIG'])){
-   //die("Error: JELIX_CONFIG environnement variable is not set \n\t(it should content the absolute path of the config file for the script)\n");
+
    $jelix_config=dirname(__FILE__).'/scripts.conf.php';
 
 }elseif(!file_exists($_ENV['JELIX_CONFIG'])){
+
    die("Error: path given by the JELIX_CONFIG environnement variable doesn't exists (".$_ENV['JELIX_CONFIG']." )\n");
 
 }else{
@@ -59,38 +60,26 @@ if(!isset($_ENV['JELIX_CONFIG'])){
 
 require($jelix_config);
 
-
-if(!file_exists(JELIX_LIB_PATH)){
-   die("Error: path given by the JELIX_LIB_PATH constant doesn't exist (".JELIX_LIB_PATH." )\n");
-}
-
-if($commandName !='createapp' && $commandName !='help'){
-    if(!file_exists(JELIX_APP_PATH)){
-        die("Error: path given by the JELIX_APP_PATH constant doesn't exist (".JELIX_APP_PATH." )\n");
-    }
-    if(!file_exists(JELIX_APP_TEMP_PATH)){
-        die("Error: path given by the JELIX_APP_TEMP_PATH constant doesn't exist (".JELIX_APP_TEMP_PATH." )\n");
-    }
-    if(!file_exists(JELIX_APP_VAR_PATH)){
-        die("Error: path given by the JELIX_APP_VAR_PATH constant doesn't exist (".JELIX_APP_VAR_PATH." )\n");
-    }
-    if(!file_exists(JELIX_APP_CONFIG_PATH)){
-        die("Error: path given by the JELIX_APP_CONFIG_PATH constant doesn't exist (".JELIX_APP_CONFIG_PATH." )\n");
-    }
-}
-
-define ('JELIX_LIB_CORE_PATH',    JELIX_LIB_PATH.'core/');
-define ('JELIX_LIB_UTILS_PATH',   JELIX_LIB_PATH.'utils/');
-define ('JELIX_LIB_AUTH_PATH',    JELIX_LIB_PATH.'auth/');
-define ('JELIX_LIB_DB_PATH',      JELIX_LIB_PATH.'db/');
-define ('JELIX_LIB_ACL_PATH',     JELIX_LIB_PATH.'acl/');
-define ('JELIX_LIB_DAO_PATH',     JELIX_LIB_PATH.'dao/');
-define ('JELIX_LIB_EVENTS_PATH',  JELIX_LIB_PATH.'events/');
-define ('JELIX_LIB_REQUEST_PATH', JELIX_LIB_PATH.'core/request/');
-define ('JELIX_LIB_RESPONSE_PATH',JELIX_LIB_PATH.'core/response/');
+// include all jelix libraries and constants : needed by some commands.
+include (JELIXS_INIT_PATH);
 
 define ('JELIX_SCRIPT_PATH', dirname(__FILE__).'/');
 
+
+
+if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
+   include (JELIXS_APPTPL_PATH.'application.init.php');
+}else{
+   if($commandName !='createapp' && $commandName !='help'){
+     die("Error: the given application doesn't exists (".JELIXS_APPTPL_PATH." )\n");
+   }
+   define ('JELIX_APP_PATH',         JELIXS_APPTPL_PATH );
+   define ('JELIX_APP_TEMP_PATH',    JELIXS_APPTPL_TEMP_PATH);
+   define ('JELIX_APP_VAR_PATH',     JELIXS_APPTPL_VAR_PATH);
+   define ('JELIX_APP_LOG_PATH',     JELIXS_APPTPL_LOG_PATH);
+   define ('JELIX_APP_CONFIG_PATH',  JELIXS_APPTPL_CONFIG_PATH);
+   define ('JELIX_APP_WWW_PATH',     JELIXS_APPTPL_WWW_PATH);
+}
 
 include('includes/command.class.php');
 include('includes/utils.lib.php');

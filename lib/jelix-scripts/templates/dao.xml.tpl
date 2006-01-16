@@ -4,9 +4,12 @@
       <primarytable name="{$table}" realname="{$table}" primarykey="{$primarykeys}" />
    </datasources>
    <record>
+
+
        {$properties}
+
+
       <!--<property name="" fieldname="" datatype="string/int/float/autoincrement/date"
-      pk="yes"
       required="yes"
       maxlength="" minlength="" regexp=""
       sequence=""

@@ -5,7 +5,6 @@
    </datasources>
    <record>
       <!--<property name="" fieldname="" datatype="string/int/float/autoincrement/date"
-      pk="yes"
       required="yes"
       maxlength="" minlength="" regexp=""
       sequence=""

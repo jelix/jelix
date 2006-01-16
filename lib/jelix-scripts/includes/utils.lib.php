@@ -129,5 +129,13 @@ function jxs_getRelativePath($path, $targetPath){
     return $relativePath;
 }
 
+function jxs_init_jelix_env(){
+   global $gJConfig;
+
+   $gJConfig = jConfig::load(JELIXS_APP_CONFIG_FILE);
+
+
+}
+
 
 ?>
