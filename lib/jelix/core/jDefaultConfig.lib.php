@@ -75,7 +75,9 @@ $gDefaultConfig = array (
   ),
   'urlengine_specific_entrypoints' =>
   array (
-    //'mymodule' => 'index',
+     'index' => '@classic',
+     'xmlrpc'=> '@xmlrpc',
+     'jsonrpc'=>'@jsonrpc'
   )
 );
 ?>

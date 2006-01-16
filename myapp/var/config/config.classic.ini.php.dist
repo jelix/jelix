@@ -67,6 +67,12 @@ multiview_on = off
 notfound_dest = "jelix~notfound"
 
 [urlengine_specific_entrypoints]
-;/foo/index.php = "mymodule"
-;foo.php = "*~myaction"
+; nom_script_sans_suffix = "liste de selecteur d'action séparé par un espace"
+; selecteurs :
+;   m~a@r    -> pour action "a" du module "m" répondant au type de requete "r"
+;   m~*@r    -> pour toute action du module "m" répondant au type de requete "r"
+;   @r       -> toute action de tout module répondant au type de requete "r"
 
+index = "@classic"
+xmlrpc = "@xmlrpc"
+jsonrpc = "@jsonrpc"

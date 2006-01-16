@@ -66,6 +66,8 @@ class jUrl {
     */
     public $pathInfo = '';
 
+    
+    public $requestType ='';
     /**
     * initialise l'objet
     * @param    string    $scriptname    nom du script
@@ -128,8 +130,11 @@ class jUrl {
 
             // on ne doit pas modifier les données de l'url, il nous faut donc un clone
             $urlobj= clone $this;
-            $urlobj->scriptName = 'index.php'; // pour le moment... à tester avec jUrl::getScript($urlobj->getParam('module'),$urlobj->getParam('action'));
-            $engine = & jUrl::getEngine();
+            if($urlobj->requestType == ''){
+               $urlobj->requestType = $gJCoord->request->type;
+            }
+            $urlobj->scriptName =  self::getScript($urlobj->requestType, $urlobj->getParam('module'),$urlobj->getParam('action'));
+            $engine = & self::getEngine();
             $engine->create($urlobj); // set path info
         }
         if (count ($urlobj->params)>0){
@@ -192,15 +197,18 @@ class jUrl {
     * @param string $actSel  action selector. if null we get the script path
     * @param array $params associative array with the parameters
     */
-    static function get ($dest = null, $params = array (), $forxml = false) {
-        if ($dest === null){
+    static function get ($actSel = null, $params = array (), $forxml = false) {
+        if ($actSel === null){
             return '/'.$GLOBALS['gJCoord']->request->url_script_path;
         }
-        if($dest == '@'){
+        if($actSel == '@'){
             $url = new jUrl('',array_merge($GLOBALS['gJCoord']->request->url->params,$params));
         }else{
-            
-            $url = new jUrl('',array_merge($params,jUrl::getAction ($dest)));
+            $sel = new JSelectorAct($actSel);
+            $params['module'] = $sel->module;
+            $params['action'] = $sel->resource;            
+            $url = new jUrl('',$params);
+            $url->requestType= $sel->request;
         }
 
         return $url->toString($forxml,true);
@@ -254,24 +262,43 @@ class jUrl {
         }
         $sel = new JSelectorAct($actionSelector);
         if($sel->isValid()){        
-           return array('module'=>$sel->module, 'action'=>$sel->ressource);
+           return array('module'=>$sel->module, 'action'=>$sel->ressource, 'request'=>$sel->request);
         }else{
           return false;
         }
     }
 
-    static function getScript($module,$requestType, $nosuffix=false){
+    static function getScript($requestType, $module=null, $action=null, $nosuffix=false){
         global $gJConfig;
+        static $urlspe = null;
         $script = $gJConfig->urlengine->default_entrypoint;
 
         if(count($gJConfig->urlengine_specific_entrypoints)){
-           $sep = $gJConfig->urlengine_specific_entrypoints;
-           if(isset($sep[$module.'~'.$requestType])){
-               $script = $sep[$module.'~'.$requestType];
-           }else if(isset($sep['*~'.$requestType])){
-               $script = $sep['*~'.$requestType];
-           }else if(isset($sep[$module])){
-               $script = $sep[$module];
+           if($urlspe == null){
+               $urlspe = array();
+               foreach($gJConfig->urlengine_specific_entrypoints as $entrypoint=>$sel){
+                 $selectors = preg_split("/[\s,]+/", $sel);
+                 foreach($selectors as $sel){
+                     $urlspe[$sel]= $entrypoint;                 
+                 }
+               }
+           }
+
+           $found = false;
+          
+           if($action && $action !='' && isset($sep[$module.'~'.$action.'@'.$requestType])){
+                $script = $sep[$module.'~'.$action.'@'.$requestType];
+                $found = true;
+           }
+                      
+           if($module && $module !='' && !$found &&  isset($sep[$module.'~*@'.$requestType])){
+                $script = $sep[$module.'~*@'.$requestType];
+                $found = true;
+           }
+           
+           if(!$found && isset($sep['@'.$requestType])){
+               $script = $sep['@'.$requestType];
+                $found = true;
            }
         }
 
