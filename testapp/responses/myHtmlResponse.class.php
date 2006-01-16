@@ -16,8 +16,8 @@ require_once (JELIX_LIB_RESPONSE_PATH.'jResponseHtml.class.php');
 class myHtmlResponse extends jResponseHtml {
 
 
-	public $bodyTpl = 'myapp~main';
-    public $bodyErrorTpl = 'myapp~error';
+	public $bodyTpl = 'testapp~main';
+    public $bodyErrorTpl = 'testapp~error';
 
 
 

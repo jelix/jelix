@@ -42,11 +42,11 @@ class jCoordinator {
     /**
      * @var string
      */
-    private $moduleName;
+    public $moduleName;
     /**
      * @var string
      */
-    private $actionName;
+    public $actionName;
 
     /**
      * @param  string $configFile name of the ini file to configure the framework
@@ -100,6 +100,7 @@ class jCoordinator {
     */
     public function process ($request){
         global $gJConfig;
+
         $this->request = $request;
 		  session_start();
 
@@ -169,7 +170,7 @@ class jCoordinator {
         $type= $this->request->defaultResponseType;
 
         if(!isset($gJConfig->responses[$type])){
-            trigger_error(jLocale::get('jelix~errors.default.response.type.unknow',array($type)),E_USER_ERROR);
+            trigger_error(jLocale::get('jelix~errors.default.response.type.unknow',array($this->moduleName.'~'.$this->actionName,$type)),E_USER_ERROR);
             return null;
         }
 
@@ -179,7 +180,7 @@ class jCoordinator {
         }elseif(file_exists($path=JELIX_APP_PATH.'responses/'.$respclass.'.class.php')){
            require_once ($path);
         }else{
-           trigger_error(jLocale::get('jelix~errors.default.reponse.not.loaded',array($type)),E_USER_ERROR);
+           trigger_error(jLocale::get('jelix~errors.default.response.not.loaded',array($this->moduleName.'~'.$this->actionName,$type)),E_USER_ERROR);
            return null;
         }
 

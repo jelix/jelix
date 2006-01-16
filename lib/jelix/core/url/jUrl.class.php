@@ -66,7 +66,7 @@ class jUrl {
     */
     public $pathInfo = '';
 
-    
+
     public $requestType ='';
     /**
     * initialise l'objet
@@ -123,7 +123,7 @@ class jUrl {
     * @return    string    l'url formée
     */
     public function toString ($forxml = false, $isUrlForApp=true){
-
+        global $gJCoord;
         $urlobj=$this;
         if($isUrlForApp){
             // dans le cas d'une url pour jelix, on passe par le moteur d'url spécifique
@@ -133,7 +133,8 @@ class jUrl {
             if($urlobj->requestType == ''){
                $urlobj->requestType = $gJCoord->request->type;
             }
-            $urlobj->scriptName =  self::getScript($urlobj->requestType, $urlobj->getParam('module'),$urlobj->getParam('action'));
+
+            $urlobj->scriptName =  $this->getScript($urlobj->requestType, $urlobj->getParam('module'),$urlobj->getParam('action'));
             $engine = & self::getEngine();
             $engine->create($urlobj); // set path info
         }
@@ -198,6 +199,7 @@ class jUrl {
     * @param array $params associative array with the parameters
     */
     static function get ($actSel = null, $params = array (), $forxml = false) {
+
         if ($actSel === null){
             return '/'.$GLOBALS['gJCoord']->request->url_script_path;
         }
@@ -206,7 +208,7 @@ class jUrl {
         }else{
             $sel = new JSelectorAct($actSel);
             $params['module'] = $sel->module;
-            $params['action'] = $sel->resource;            
+            $params['action'] = $sel->resource;
             $url = new jUrl('',$params);
             $url->requestType= $sel->request;
         }
@@ -261,17 +263,18 @@ class jUrl {
             return $gJCoord->request->url->params;
         }
         $sel = new JSelectorAct($actionSelector);
-        if($sel->isValid()){        
+        if($sel->isValid()){
            return array('module'=>$sel->module, 'action'=>$sel->ressource, 'request'=>$sel->request);
         }else{
           return false;
         }
     }
 
-    static function getScript($requestType, $module=null, $action=null, $nosuffix=false){
-        global $gJConfig;
+     function getScript($requestType, $module=null, $action=null, $nosuffix=false){
         static $urlspe = null;
-        $script = $gJConfig->urlengine->default_entrypoint;
+        global $gJConfig;
+
+        $script = $gJConfig->urlengine['default_entrypoint'];
 
         if(count($gJConfig->urlengine_specific_entrypoints)){
            if($urlspe == null){
@@ -279,31 +282,31 @@ class jUrl {
                foreach($gJConfig->urlengine_specific_entrypoints as $entrypoint=>$sel){
                  $selectors = preg_split("/[\s,]+/", $sel);
                  foreach($selectors as $sel){
-                     $urlspe[$sel]= $entrypoint;                 
+                     $urlspe[$sel]= $entrypoint;
                  }
                }
            }
 
            $found = false;
-          
+
            if($action && $action !='' && isset($sep[$module.'~'.$action.'@'.$requestType])){
                 $script = $sep[$module.'~'.$action.'@'.$requestType];
                 $found = true;
            }
-                      
+
            if($module && $module !='' && !$found &&  isset($sep[$module.'~*@'.$requestType])){
                 $script = $sep[$module.'~*@'.$requestType];
                 $found = true;
            }
-           
+
            if(!$found && isset($sep['@'.$requestType])){
                $script = $sep['@'.$requestType];
                 $found = true;
            }
         }
 
-        if(!$nosuffix && !$gJConfig->urlengine->multiview_on){
-            $script.=$gJConfig->urlengine->entrypoint_extension;
+        if(!$nosuffix && !$gJConfig->urlengine['multiview_on']){
+            $script.=$gJConfig->urlengine['entrypoint_extension'];
         }
         return $script;
     }

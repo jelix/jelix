@@ -14,7 +14,6 @@ host= "localhost"
 user= "root"
 password=
 persistent= on
-shared= on
-schema=
+
 
 

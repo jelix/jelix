@@ -309,20 +309,22 @@ class jTplCompiler implements jISimpleCompiler {
 
 
     private function _getPlugin($type, $name){
-       global $gJCoord;
+       global $gJCoord, $gJConfig;
        $treq = $gJCoord->response->getType();
 
        $foundPath='';
-       if(isset($gJCoord->tplpluginPathList[$treq])){
-         foreach($gJCoord->tplpluginPathList[$treq] as $path){
+
+       if(isset($gJConfig->tplpluginsPathList[$treq])){
+         foreach($gJConfig->tplpluginsPathList[$treq] as $path){
            $foundPath=$path.$type.'.'.$name.'.php';
+
            if(file_exists($foundPath)){
               return $foundPath;
            }
          }
        }
-       if(isset($gJCoord->tplpluginPathList['common'])){
-         foreach($gJCoord->tplpluginPathList['common'] as $path){
+       if(isset($gJConfig->tplpluginsPathList['common'])){
+         foreach($gJConfig->tplpluginsPathList['common'] as $path){
             $foundPath=$path.$type.'.'.$name.'.php';
            if(file_exists($foundPath)){
               return $foundPath;

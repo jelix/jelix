@@ -126,7 +126,7 @@ class jResponseHtml extends jResponse {
         if(count($this->_errorMessages)){
             echo '<div id="jelixerror" style="position:absolute;left:0px;top:0px;border:3px solid red; background-color:#f39999;color:black;">';
             echo implode("\n",$this->_errorMessages);
-            echo '</div>';
+            echo '<p><a href="#" onclick="document.getElementById(\'jelixerror\').style.display=\'none\';return false;">fermer</a></div>';
         }
         echo implode("\n",$this->_bodyBottom);
         echo '</body></html>';

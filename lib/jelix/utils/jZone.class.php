@@ -84,7 +84,7 @@ class jZone {
     * @param string $name le nom de la zone à instancier.
     * @param array   $params un tableau a passer a la fonction processZone de l'objet zone.
     */
-    function  _callZone($name,$method, &$params){
+    protected static function  _callZone($name,$method, &$params){
 
         $sel = new jSelectorZone($name);
         jContext::push ($sel->module);

@@ -76,8 +76,9 @@ class jDbConnectionMySQL extends jDbConnection {
    protected function _doQuery ($query){
 
        // ici et non lors du connect, pour le cas où il y a plusieurs connexion active
-      if(!mysql_select_db ($this->profil['database'], $this->_connection))
+      if(!mysql_select_db ($this->profil['database'], $this->_connection)){
          throw new JException('jelix~db.error.database.unknow',$this->profil['database']);
+      }
 
       if ($qI = mysql_query ($query, $this->_connection)){
          return new jDbResultSetMySQL ($qI);
