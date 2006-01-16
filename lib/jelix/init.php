@@ -10,7 +10,7 @@
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-define ('JELIX_VERSION', '0.20051228');
+define ('JELIX_VERSION', '0.20060117');
 define ('JELIX_NAMESPACE_BASE' , 'http://jelix.org/ns/');
 
 // all path needed by jelix
