@@ -4,29 +4,6 @@
    <request type="classic">
       <action name="default" ag="main" method="getDefault" >
           <response default="true" name="hello" type="html" />
-          <response  name="hellotext" type="text" />
       </action>
-
-      <action name="testdao" ag="main" method="getTestDao" >
-          <response default="true" name="dao" type="html" />
-      </action>
-
    </request>
-
-
-<!--  <request type="">
-      <pluginparam name="" value="" />
-      <pluginparam name="" value="" />
-      <response name="" type="" parameter="value" />
-      <response name="" type="" parameter="value" />
-
-      <action name="" ag="" method="" >
-          <pluginparam name="" value="" />
-          <pluginparam name="" value="" />
-          <response default="true" name="" type="html,redirect,xul.." parameter="value" />
-          <response name="" type="" parameter="value" />
-      </action>
-      </request>
-
-  -->
 </actions>

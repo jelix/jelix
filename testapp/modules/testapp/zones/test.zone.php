@@ -1,7 +1,7 @@
 <?php
 /**
-* @package     myapp
-* @subpackage  myappmodule
+* @package     testapp
+* @subpackage  test app module
 * @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
