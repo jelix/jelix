@@ -38,14 +38,7 @@ class jCoordinator {
      * @var string
      */
     private $configFile;
-    /**
-     * @var array
-     */
-    private $pluginsPathList;
-    /**
-     * @var array
-     */
-    private $modulesPathList;
+
     /**
      * @var string
      */
@@ -68,7 +61,8 @@ class jCoordinator {
         }
         // load configuration data
         $this->configFile = $configFile;
-        $this->_initConfig();
+        $gJConfig = jConfig::load($configFile);
+        //$this->_initConfig();
 
         // set Error and exception handler
         set_error_handler('jErrorHandler');
@@ -78,119 +72,12 @@ class jCoordinator {
     }
 
     /**
-     * lecture de la configuration du framework
-     */
-    protected function _initConfig(){
-        global $gJConfig,$gDefaultConfig;
-
-        $gJConfig = parse_ini_file(JELIX_APP_CONFIG_PATH.$this->configFile,true);
-
-        // traitement spécial pour la liste des réponses.
-        if(isset($gJConfig['responses'])){
-           $resplist = array_merge($gDefaultConfig['responses'],$gJConfig['responses']) ;
-        }else{
-           $resplist = $gDefaultConfig['responses'];
-        }
-
-        $gJConfig = array_merge($gDefaultConfig,$gJConfig);
-        $gJConfig['responses'] = $resplist;
-        $gJConfig = (object) $gJConfig;
-
-        if(preg_match("/^(\w+).*$/", PHP_OS, $m)){
-            $os=$m[1];
-        }else{
-            $os=PHP_OS;
-        }
-        $gJConfig->OS = $os;
-        $gJConfig->isWindows = (strtolower($os) == 'win');
-        if(trim( $gJConfig->defaultAction) == '')
-             $gJConfig->defaultAction = 'default';
-
-        $this->pluginPathList = $this->_loadPathList('plugins');
-        $this->modulePathList = $this->_loadPathList('modules');
-        $this->tplpluginPathList = $this->_loadPathList('tplplugins',true);
-
-        if($gJConfig->checkTrustedModules){
-            $gJConfig->trustedModules = explode(',',$gJConfig->trustedModules);
-        }else{
-            $gJConfig->trustedModules = array_keys($this->modulePathList);
-        }
-        $gJConfig->urlengine_specific_entrypoints = array_flip($gJConfig->urlengine_specific_entrypoints);
-
-    }
-
-    /**
-     * compilation et mise en cache de liste de chemins
-     */
-    private function _loadPathList($dir, $tplp=false){
-        global $gJConfig;
-
-        $file = JELIX_APP_TEMP_PATH.$dir.'list.ini.php';
-        $compil=false;
-        if(!file_exists($file)){
-            $compil=true;
-        }else if($gJConfig->compilation['check_cache_filetime']){
-            $t = filemtime($file);
-            if(filemtime(JELIX_APP_CONFIG_PATH.$this->configFile)>$t){
-                $compil=true;
-            }else{
-
-                $list = split(' *, *',$gJConfig->{$dir.'Path'});
-                foreach($list as $p){
-                    $path = str_replace(array('lib:','app:'), array(LIB_PATH,JELIX_APP_PATH), $p);
-                    if(!file_exists($path)){
-                        trigger_error($p.' path doesn\'t exist',E_USER_ERROR);
-                        exit;
-                    }
-                    if(filemtime($path)>$t){
-                        $compil=true;
-                        break;
-                    }
-                }
-            }
-        }
-        if($compil){
-            $list = split(' *, *',$gJConfig->{$dir.'Path'});
-            $result='';
-            foreach($list as $path){
-                $path = str_replace(array('lib:','app:'), array(LIB_PATH,JELIX_APP_PATH), $path);
-                if ($handle = opendir($path)) {
-                     while (false !== ($f = readdir($handle))) {
-                        if ($f{0} != '.' && is_dir($path.$f)) {
-                           if($tplp){
-                              $result[$f][] = $path.$f.'/';
-                           }else{
-                              $result.=$f.'='.$path.$f."/\n";
-                           }
-                        }
-                     }
-                    closedir($handle);
-                }
-            }
-            if($f = @fopen($file, 'wb')){
-                if($tplp){
-                   $result = serialize($result);
-                }
-                fwrite($f, $result);
-                fclose($f);
-            }else{
-                trigger_error('Can\'t write '.$file.' file',E_USER_ERROR);
-            }
-        }
-        if($tplp){
-           return unserialize(file_get_contents($file));
-        }else{
-           return parse_ini_file($file);
-        }
-    }
-
-    /**
      * instanciation des plugins
      */
     private function _loadPlugins(){
 
         foreach($GLOBALS['gJConfig']->plugins as $name=>$conf){
-            if($conf && isset($this->pluginPathList[$name])){
+            if($conf && isset($GLOBALS['gJConfig']->pluginsPathList[$name])){
                 if($conf=='1')
                     $conf=$name.'.plugin.ini.php';
                 if(file_exists(JELIX_APP_CONFIG_PATH.$conf)){
@@ -198,7 +85,7 @@ class jCoordinator {
                 }else{
                     $conf = array();
                 }
-                include( $this->pluginPathList[$name]);
+                include( $GLOBALS['gJConfig']->pluginsPathList[$name]);
                 $class= $name.'Plugin';
                 $this->plugins[strtolower($name)] = new $class($conf);
             }
@@ -214,7 +101,7 @@ class jCoordinator {
     public function process ($request){
         global $gJConfig;
         $this->request = $request;
-		session_start();
+		  session_start();
 
         $this->moduleName = $this->request->getParam('module', $gJConfig->defaultModule,true);
         $this->actionName = $this->request->getParam('action', $gJConfig->defaultAction,true);
@@ -349,77 +236,5 @@ class jCoordinator {
         return in_array($moduleName, $GLOBALS['gJConfig']->trustedModules);
     }
 
-
-    /**
-    * Creation d'un objet zone et appel de sa méthode processZone.
-    * Utilise en interne _callZone.
-    * @param string $name le nom de la zone à instancier.
-    * @param array   $params un tableau a passer a la fonction processZone de l'objet zone.
-    * @see CopixCoordination::_callZone
-    */
-    /*function processZone ($name, $params=array ()){
-        return $this->_callZone($name, 'processZone', $params);
-    }*/
-
-    /**
-    * Creation d'un objet zone et appel de sa méthode clearZone.
-    * @param string $name le nom de la zone à instancier.
-    * @param array   $params un tableau a passer a la fonction clearZone de l'objet zone.
-    */
-    /*function clearZone ($name, $params=array ()){
-        return $this->_callZone($name, 'clearZone', $params);
-    }*/
-
-    /**
-    * Creation d'un objet zone et appel de sa méthode processZone.
-    * @param string $name le nom de la zone à instancier.
-    * @param array   $params un tableau a passer a la fonction processZone de l'objet zone.
-    */
-    /*function & _callZone($name,$method, &$params){
-        //Récupération des éléments critiques.
-        $fileInfo = & new CopixModuleFileSelector ($name);
-        jContext::push ($fileInfo->module);
-
-        //Récupère le nom du fichier en fonction du module courant.
-        $fileName = $fileInfo->getPath(COPIX_ZONES_DIR). strtolower($fileInfo->fileName) . '.zone.php';
-
-        if (!is_readable ($fileName)){
-            trigger_error (CopixI18N::get('copix:copix.error.load.zone',$fileInfo->fileName), E_USER_ERROR);
-        }
-
-        //inclusion du fichier.
-        require_once($fileName);
-        $objName = 'Zone'.$fileInfo->fileName;
-        $objTraitement = & new $objName ();
-        $toReturn = $objTraitement->$method ($params);
-
-        jContext::pop ();
-        return $toReturn;
-    }*/
-
-    /**
-    * Include a static file.
-    *
-    * we're gonna parse the file for a | (pipe), if founded, we're gonna
-    *   include the static file from the module path.
-    *  Else, we'll include the file considering the project path
-    * @param    string $idOfFile le nom formaté du fichier
-    */
-    /*function includeStatic ($idOfFile){
-        //Récupération des éléments critiques.
-        $fileInfo = new CopixModuleFileSelector($idOfFile);
-        //makes the fileName.
-        $fileName = $fileInfo->getPath(COPIX_STATIC_DIR). $fileInfo->fileName;
-        //test & go.
-        if (is_readable ($fileName)){
-            ob_start ();
-            readfile ($fileName);
-            $toShow = ob_get_contents();
-            ob_end_clean();
-            return $toShow;
-        }else{
-            trigger_error (CopixI18N::get ('copix:copix.error.unfounded.static',$fileName), E_USER_ERROR);
-        }
-    }*/
 }
 ?>

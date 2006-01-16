@@ -57,6 +57,10 @@ class jTplCompiler implements jISimpleCompiler {
 
         jContext::push($selector->module);
 
+        if(!file_exists($this->_sourceFile)){
+            trigger_error(jLocale::get('jelix~errors.tpl.not.found',array($this->_sourceFile)),E_USER_ERROR);
+        }
+
         $tplcontent = file_get_contents ( $this->_sourceFile);
 
 		  preg_match_all("!{literal}(.*?){/literal}!s", $tplcontent, $_match);

@@ -35,6 +35,7 @@ require_once (JELIX_LIB_CORE_PATH . 'jErrorHandler.lib.php');
 require_once (JELIX_LIB_CORE_PATH . 'jException.lib.php');
 require_once (JELIX_LIB_CORE_PATH . 'jDefaultConfig.lib.php');
 require_once (JELIX_LIB_CORE_PATH . 'jContext.class.php');
+require_once (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jSelector.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'url/jUrl.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jCoordinator.class.php');

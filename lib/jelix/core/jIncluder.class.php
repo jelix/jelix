@@ -73,7 +73,7 @@ class jIncluder {
         $mustCompile = $gJConfig->compilation['force'] || !file_exists($cachefile);
         $sourcefile = $aSelector->getPath();
 
-        if($sourcefile == ''){
+        if($sourcefile == '' || !file_exists($sourcefile)){
            trigger_error(jLocale::get('jelix~errors.includer.source.missing',array( $aSelector->toString(true))), E_USER_ERROR);
            return array('selector'=>$aSelector, 'compilation'=>false, 'compileok'=>false);
         }
