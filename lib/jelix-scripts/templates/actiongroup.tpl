@@ -2,7 +2,7 @@
 /**
 * @package
 * @subpackage {$module}
-* @version	$Id:$
+* @version  $Id:$
 * @author
 * @copyright
 * @link
@@ -14,7 +14,7 @@ class AG{$name} extends jActionGroup {
    *
    */
    function {$method} () {
-      $rep = $this->_getResponse('default');
+      $rep = $this->getResponse('default');
 
       return $rep;
    }

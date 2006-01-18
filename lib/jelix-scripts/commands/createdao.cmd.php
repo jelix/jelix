@@ -108,8 +108,8 @@ class createdaoCommand extends JelixScriptCommand {
             }
 
             if($type!=''){
-               $properties.="\n    <property name=\"$fieldname\"";
-               $properties.=' type="'.$type.'"';
+               $properties.="\n    <property name=\"$fieldname\" fieldname=\"$fieldname\"";
+               $properties.=' datatype="'.$type.'"';
                if($prop->primary){
                   if($primarykeys != '')
                      $primarykeys.=','.$fieldname;
