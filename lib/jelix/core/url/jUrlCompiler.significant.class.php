@@ -67,16 +67,20 @@ class jUrlCompiler implements jISimpleCompiler{
 
             $CREATE_URL = array(
                'news~show@classic' =>
-                  array('entrypoint', false,'handler')
+                  array(0,'entrypoint','handler')
                   ou
-                  array('entrypoint',
+                  array(1,'entrypoint',
                         array('annee','mois','jour','id','titre'), // liste des paramètres de l'url à prendre en compte
                         array(true, false..), // valeur des escapes
                         "/news/%1/%2/%3/%4-%5", // forme de l'url
                         )
+                  ou
+                  array(2,'entrypoint'); pour les clés du type "@request" ou "module~@request"
 
         */
         $createUrlInfos=array();
+        $createUrlContent="<?php \n";
+        $defaultEntrypoints=array();
         foreach($xml->children() as $name=>$tag){
            if(!preg_match("/^(.*)EntryPoint$/", $name,$m)){
                //TODO : erreur
@@ -85,50 +89,89 @@ class jUrlCompiler implements jISimpleCompiler{
            $requestType= $m[1];
            $entryPoint = (string)$tag['name'];
            $isDefault =  (isset($tag['default']) ? (((string)$tag['default']) == 'true'):false);
-           $parseInfos = array($isDefault);
-           $includes = array();
+           $parseInfos = array($isDefault);           
+           
+           if($isDefault){
+             $createUrlInfos['@'.$requestType]=array(2,$entryPoint);           
+           }
+           
+           
+           $parseContent = "<?php \n";
            foreach($tag->url as $url){
                $module = (string)$url['module'];
+               
+               // dans le cas d'un point d'entrée qui est celui par defaut pour le type de requete indiqué
+               // si il y a juste un module indiqué alors on sait que toutes les actions 
+               // concernant ce module passeront par ce point d'entrée.
+               if($isDefault && !isset($url['action']) && !isset($url['handler'])){                 
+                 $parseInfos[]=array($module, '', '.*', array(), array(), array() );
+                 $createUrlInfos[$module.'~@'.$requestType] = array(2,$entryPoint);
+                 continue;
+               }
+                              
                $action = (string)$url['action'];
+               
+               // si il y a un handler indiqué, on sait alors que pour le module et action indiqué
+               // il faut passer par cette classe handler pour le parsing et la creation de l'url
                if(isset($url['handler'])){
                   $class = (string)$url['handler'];
                   $parseInfos[]=array($module, $action, $class );
                   $s= new jSelectorUrlHandler($module.'~'.$action)
-                  $includes[]= $s->getPath();
-                  $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array($entryPoint, false, $class);
+                  $createUrlContent.="include_once('".$s->getPath()."');\n";
+                  $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$entryPoint, $class);
                   continue;
                }
-               $path = (string)$url['path'];
+                              
                $listparam=array();
-               if(preg_match_all("/\:([a-zA-Z]+)/",$path,$m, PREG_PATTERN_ORDER)){
-                  $listparam=$m[1];
-
-                  foreach($url->var as $var){
-                     $nom = (string) $var['name'];
-                     if (isset ($var['escape'])){
-                        $escape = (((string)$var['escape']) == 'true');
-                     }else{
-                        $escape = false;
-                     }
-                     if (isset ($var['regexp'])){
-                        $regexp = '('.(string)$var['regexp'].')';
-                     }else{
-                        $regexp = '([^\/]+)';
-                     }
-
-                     $path = str_replace(':'.$name, $regexp, $path);
+               $escapes = array();
+               if(isset($url['path'])){
+                  $path = (string)$url['path'];
+                  $regexppath = $path;
+                  
+                  if(preg_match_all("/\:([a-zA-Z]+)/",$path,$m, PREG_PATTERN_ORDER)){
+                      $listparam=$m[1];
+                      
+                      foreach($url->var as $var){
+                        
+                        $nom = (string) $var['name'];
+                        $k = array_search($nom, $listparam);
+                        if($k === false){
+                          // TODO error
+                          continue;
+                        }
+                        
+                        if (isset ($var['escape'])){
+                            $escapes[$k] = (((string)$var['escape']) == 'true');
+                        }else{
+                            $escapes[$k] = false;
+                        }
+                        
+                        if (isset ($var['regexp'])){
+                            $regexp = '('.(string)$var['regexp'].')';
+                        }else{
+                            $regexp = '([^\/]+)';
+                        }
+    
+                        $regexppath = str_replace(':'.$name, $regexp, $regexppath);
+                      }
                   }
+               }else{
+                 $regexppath='.*';
+                 $path='';
                }
+               $liststatics = array();
                foreach($url->staticvar as $var){
-
+                  $liststatics[(string)$var['name']] =(string)$var['value'];
                }
-               $parseInfos[]=array($module, $action, $class );
-               $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array($entryPoint, $listparam, $escapes,$path);
+               $parseInfos[]=array($module, $action, $regexppath, $listparam, $escapes, $liststatics );
+               $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(1,$entryPoint, $listparam, $escapes,$path);
            }
-
-
+           
+           $parseContent.='$PARSE_URL_INFOS = '.var_export($parseInfos, true).";\n?>";
+           file_put_contents(JELIX_APP_CONFIG_PATH.'urls/'.$entryPoint.'.entrypoint.php',$parseContent);
         }
-
+        $createUrlContent .='$CREATE_URL_INFOS ='.var_export($createUrlInfos, true).";\n?>";
+        file_put_contents(JELIX_APP_CONFIG_PATH.'urls/creationinfos.php',$createUrlContent);
     }
 
 }

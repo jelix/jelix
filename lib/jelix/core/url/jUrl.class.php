@@ -15,32 +15,24 @@
 * http://www.copix.org
 */
 
-/**
- * objet responsable du parsing et de la création d'url
- */
-class jUrlEngine {
+interface jIUrlEngine {
+  /**
+    * Parse une chaine url
+    * @param string $scriptNamePath    /path/index.php
+    * @param string $pathinfo the path info of the url.
+    * @param array  $params  url parameter ($_REQUEST)
+    * @return jUrl l'objet url resultant
+    */
+  public function parse($scriptNamePath, $params, $pathinfo );
+  
+  /**
+   * Modifie les données de l'url selon le type d'url proposé par le moteur d'url
+   * (notament le pathinfo etc..)
+   * @param jUrl $url l'url à transformer
+   * @return void
+   */
+  public function create(&$url);
 
-    /**
-     * Parse une chaine url
-     * @param string $scriptNamePath    /path/index.php
-     * @param string $pathinfo the path info of the url.
-     * @param array  $params  url parameter ($_REQUEST)
-     * @return jUrl l'objet url resultant
-     */
-    function parse($scriptNamePath, $params, $pathinfo ){
-        $url = new jUrl($scriptNamePath, $params, $pathinfo);
-        return $url;
-    }
-
-    /**
-     * Modifie les données de l'url selon le type d'url proposé par l'engine
-     * (notament le pathinfo etc..)
-     * @param jUrl $url l'url à transformer
-     * @return void
-     */
-    function create(&$url){
-
-    }
 }
 
 
@@ -133,8 +125,7 @@ class jUrl {
             if($urlobj->requestType == ''){
                $urlobj->requestType = $gJCoord->request->type;
             }
-
-            $urlobj->scriptName =  $this->getScript($urlobj->requestType, $urlobj->getParam('module'),$urlobj->getParam('action'));
+            
             $engine = & self::getEngine();
             $engine->create($urlobj); // set path info
         }
@@ -270,46 +261,6 @@ class jUrl {
         }
     }
 
-     function getScript($requestType, $module=null, $action=null, $nosuffix=false){
-        static $urlspe = null;
-        global $gJConfig;
-
-        $script = $gJConfig->urlengine['default_entrypoint'];
-
-        if(count($gJConfig->urlengine_specific_entrypoints)){
-           if($urlspe == null){
-               $urlspe = array();
-               foreach($gJConfig->urlengine_specific_entrypoints as $entrypoint=>$sel){
-                 $selectors = preg_split("/[\s,]+/", $sel);
-                 foreach($selectors as $sel){
-                     $urlspe[$sel]= $entrypoint;
-                 }
-               }
-           }
-
-           $found = false;
-
-           if($action && $action !='' && isset($sep[$module.'~'.$action.'@'.$requestType])){
-                $script = $sep[$module.'~'.$action.'@'.$requestType];
-                $found = true;
-           }
-
-           if($module && $module !='' && !$found &&  isset($sep[$module.'~*@'.$requestType])){
-                $script = $sep[$module.'~*@'.$requestType];
-                $found = true;
-           }
-
-           if(!$found && isset($sep['@'.$requestType])){
-               $script = $sep['@'.$requestType];
-                $found = true;
-           }
-        }
-
-        if(!$nosuffix && !$gJConfig->urlengine['multiview_on']){
-            $script.=$gJConfig->urlengine['entrypoint_extension'];
-        }
-        return $script;
-    }
 
 
     static function escape($str, $highlevel=false){
@@ -335,18 +286,14 @@ class jUrl {
         if($reset) $engine=null; // pour pouvoir faire les tests unitaires
 
         if($engine === null){
-            if($GLOBALS['gJConfig']->urlengine['engine'] == 'default'){
-                $engine = new jUrlEngine();// pas de &, car bug sur static
-            }else{
-                $file = JELIX_LIB_CORE_PATH.'url/jUrlEngine.'.$GLOBALS['gJConfig']->urlengine['engine'].'.class.php';
-                if(!file_exists($file)){
-                    trigger_error("Url engine doesn't exist",E_USER_ERROR);
-                    return null;
-                }
-                include_once($file);
-                $cl='jUrlEngine'.$GLOBALS['gJConfig']->urlengine['engine'];
-                $engine = new $cl(); // pas de &, car bug sur static
+            $file = JELIX_LIB_CORE_PATH.'url/jUrlEngine.'.$GLOBALS['gJConfig']->urlengine['engine'].'.class.php';
+            if(!file_exists($file)){
+                trigger_error("Url engine doesn't exist",E_USER_ERROR);
+                return null;
             }
+            include_once($file);
+            $cl='jUrlEngine'.$GLOBALS['gJConfig']->urlengine['engine'];
+            $engine = new $cl(); 
         }
         return $engine;
     }
