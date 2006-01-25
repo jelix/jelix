@@ -68,10 +68,10 @@ $gDefaultConfig = array (
     'IIS_stripslashes_path_key' => '1',
     'default_entrypoint' => 'index',
     'entrypoint_extension' => '.php',
-    'engine' => 'default',
+    'engine' => 'simple',
     'enable_parser' => '1',
     'multiview_on' => '',
-    'notfound_dest' => 'jelix~notfound'
+    'notfound_act' => 'jelix~notfound'
   ),
   'urlengine_specific_entrypoints' =>
   array (

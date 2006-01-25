@@ -24,7 +24,7 @@ interface jIUrlEngine {
     * @return jUrl l'objet url resultant
     */
   public function parse($scriptNamePath, $params, $pathinfo );
-  
+
   /**
    * Modifie les données de l'url selon le type d'url proposé par le moteur d'url
    * (notament le pathinfo etc..)
@@ -125,7 +125,7 @@ class jUrl {
             if($urlobj->requestType == ''){
                $urlobj->requestType = $gJCoord->request->type;
             }
-            
+
             $engine = & self::getEngine();
             $engine->create($urlobj); // set path info
         }
@@ -288,12 +288,12 @@ class jUrl {
         if($engine === null){
             $file = JELIX_LIB_CORE_PATH.'url/jUrlEngine.'.$GLOBALS['gJConfig']->urlengine['engine'].'.class.php';
             if(!file_exists($file)){
-                trigger_error("Url engine doesn't exist",E_USER_ERROR);
+                trigger_error("Url engine doesn't exist (".$GLOBALS['gJConfig']->urlengine['engine'].')',E_USER_ERROR);
                 return null;
             }
             include_once($file);
             $cl='jUrlEngine'.$GLOBALS['gJConfig']->urlengine['engine'];
-            $engine = new $cl(); 
+            $engine = new $cl();
         }
         return $engine;
     }

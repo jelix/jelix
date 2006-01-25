@@ -48,25 +48,34 @@ check_cache_filetime  = on
 force  = off
 
 [urlengine]
+; nom du moteur d'url :  simple ou significant
+engine        = simple
 
-;indique si vous utiliser IIS comme serveur
+; active l'analyse d'url (mettre à off si vous utilisez le mod_rewrite d'apache)
+enable_parser = on
+
+multiview_on = off
+
+default_entrypoint= index
+
+entrypoint_extension= .php
+
+notfound_act = "jelix~notfound"
+
+;indique si vous utilisez IIS comme serveur
 use_IIS = off
 
-;indique le paramètre dans $_GET ou est indiqué le path_info
+;indique le paramètre dans $_GET où est indiqué le path_info
 IIS_path_key = __JELIX_URL__
 
 ;indique si il faut stripslashé le path_info récupéré par le biais de url_IIS_path_key
 IIS_stripslashes_path_key = on
 
-default_entrypoint= index
-entrypoint_extension= .php
 
-engine        = default
-enable_parser = on
-multiview_on = off
-notfound_dest = "jelix~notfound"
+[simple_urlengine_entrypoints]
+; paramètres pour le moteur d'url simple : liste des points d'entrées avec les actions
+; qui y sont rattachées
 
-[urlengine_specific_entrypoints]
 ; nom_script_sans_suffix = "liste de selecteur séparé par un espace"
 ; selecteurs :
 ;   m~a@r    -> pour action a du module m répondant au type de requete r
@@ -76,5 +85,5 @@ notfound_dest = "jelix~notfound"
 index = "@classic"
 xmlrpc = "@xmlrpc"
 jsonrpc = "@jsonrpc"
- 
+
 

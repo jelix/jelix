@@ -17,40 +17,40 @@
 * @return jISelector    l'objet selecteur correspondant
 */
 class jSelectorFactory {
-	function create ($id){
+   function create ($id){
         if(preg_match("/^([a-z]{3,5})\:([\w~\/\.]+)$/", $id, $m)){
             $cname='jSelector'.$m[1];
             if(class_exists($cname)){
                 $sel = new $cname($m[2]);
                 if($sel->isValid())
                     return $sel;
-			}
+         }
         }
         trigger_error (jLocale::get ('jelix~errors.selector.unknown', $id));
         $ret = null;
         return $ret;
-	}
+   }
 }
 
 /**
  * interface d'un objet selecteur
  */
 interface jISelector {
-	public function getPath ();
+   public function getPath ();
    public function isValid();
-	public function getCompiledFilePath ();
+   public function getCompiledFilePath ();
    public function getCompiler();
    public function useMultiSourceCompiler();
-	public function toString($full=false);
+   public function toString($full=false);
 }
 
 /**
 * implémentation des selecteurs de type module
 */
 abstract class jSelectorModule implements jISelector {
-	public $type = '_module';
-	public $module = null;
-	public $resource = null;
+   public $type = '_module';
+   public $module = null;
+   public $resource = null;
 
     private $_valid;
     protected $_dirname='';
@@ -62,7 +62,7 @@ abstract class jSelectorModule implements jISelector {
     protected $_compilerPath;
     protected $_useMultiSourceCompiler=false;
 
-	function __construct($sel){
+   function __construct($sel){
 
         if(preg_match("/^(([\w\.]+)~)?([\w\.]+)$/", $sel, $m)){
             $this->_valid = true;
@@ -78,22 +78,22 @@ abstract class jSelectorModule implements jISelector {
             $this->_valid = false;
         }
 
-	}
+   }
 
-	public function getPath (){
+   public function getPath (){
         $this->_createPath();
         return $this->_path;
-	}
+   }
 
     public function isValid(){
         return $this->_valid;
     }
 
 
-	public function getCompiledFilePath (){
+   public function getCompiledFilePath (){
         $this->_createCachePath();
         return $this->_cachePath;
-	}
+   }
 
     public function getCompiler(){
         $n = $this->_compiler;
@@ -106,12 +106,12 @@ abstract class jSelectorModule implements jISelector {
         return $this->_useMultiSourceCompiler;
     }
 
-	public function toString($full=false){
+   public function toString($full=false){
         if($full)
             return $this->type.':'.$this->module.'~'.$this->resource;
         else
             return $this->module.'~'.$this->resource;
-	}
+   }
 
     protected function _createPath(){
         global $gJConfig;
@@ -186,6 +186,12 @@ class jSelectorAct extends jSelectorModule {
         $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->module.'~'.$this->resource.'~'.$this->request.'.php';
     }
 
+    public function toString($full=false){
+        if($full)
+            return $this->type.':'.$this->module.'~'.$this->resource.'@'.$this->request;
+        else
+            return $this->module.'~'.$this->resource.'@'.$this->request;
+    }
 }
 
 class jSelectorClass extends jSelectorModule {
@@ -374,13 +380,13 @@ class jSelectorZone extends jSelectorModule {
 * implémentation des selecteurs de type plugin
 */
 class jSelectorPlugin implements jISelector {
-	public $type = 'plug';
+   public $type = 'plug';
     public $plugin='';
     public $file = '';
     private $_valid;
     private $_path;
 
-	function __construct($sel){
+   function __construct($sel){
         global $gJConfig;
         if(preg_match("/^([\w\.]+)~([\w\.]+)$/", $sel, $m)){
             $this->plugin = $m[1];
@@ -393,31 +399,31 @@ class jSelectorPlugin implements jISelector {
         }else{
             $this->_valid=false;
         }
-	}
+   }
 
-	public function getPath (){
+   public function getPath (){
         global $gJConfig;
         if(isset($gJConfig->pluginsPathList[$this->plugin])){
             return $gJConfig->pluginsPathList[$this->plugin].$this->file;
         }else{
             return '';
         }
-	}
+   }
 
     public function isValid(){
         return $this->_valid;
     }
 
-	public function toString($full=false){
+   public function toString($full=false){
         if($full)
             return $this->type.':'.$this->plugin.'~'.$this->file;
         else
             return $this->plugin.'~'.$this->file;
-	}
+   }
 
    public function getCompiler(){ return null;}
    public function useMultiSourceCompiler() { return false;}
-	public function getCompiledFilePath (){ return '';}
+   public function getCompiledFilePath (){ return '';}
 
 }
 
@@ -429,13 +435,13 @@ class jSelectorPlugin implements jISelector {
 * implémentation des selecteurs de type simple fichier
 */
 class jSelectorSimpleFile implements jISelector {
-	public $type = 'simplefile';
+   public $type = 'simplefile';
     public $file = '';
     protected $_valid;
     protected $_path;
     protected $_basePath='';
 
-	function __construct($sel){
+   function __construct($sel){
         if(preg_match("/^([\w\.\/]+)$/", $sel, $m)){
             $this->file = $m[1];
             $this->_path = $this->_basePath.$m[1];
@@ -443,25 +449,25 @@ class jSelectorSimpleFile implements jISelector {
         }else{
             $this->_valid = false;
         }
-	}
+   }
 
-	public function getPath (){
+   public function getPath (){
         return $this->_path;
-	}
+   }
 
     public function isValid(){
         return $this->_valid;
     }
 
-	public function toString($full=false){
+   public function toString($full=false){
         if($full)
             return $this->type.':'.$this->file;
         else
             return $this->file;
-	}
+   }
     public function getCompiler(){ return null;}
     public function useMultiSourceCompiler() { return false;}
-	public function getCompiledFilePath (){ return '';}
+   public function getCompiledFilePath (){ return '';}
 }
 
 
@@ -469,7 +475,7 @@ class jSelectorVar extends jSelectorSimpleFile {
      public $type = 'var';
      function __construct($sel){
         $this->_basePath = JELIX_APP_VAR_PATH;
-        parent::_construct($sel);
+        parent::__construct($sel);
      }
 }
 
@@ -477,7 +483,7 @@ class jSelectorCfg extends jSelectorSimpleFile {
      public $type = 'cfg';
      function __construct($sel){
         $this->_basePath = JELIX_APP_CONFIG_PATH;
-        parent::_construct($sel);
+        parent::__construct($sel);
      }
 }
 

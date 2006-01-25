@@ -40,15 +40,6 @@ class jIncluder {
         );
     }
 
-    public static function URL(){
-        return  array('jUrlCompiler',
-                    'core/url/jUrlCompiler.class.php',
-                    'actions.xml',
-                    'urls.php'
-        );
-    }
-
-
     /**
      * @param    jISelector   $aSelectorId    selecteur du fichier à compiler
      * @return   array    contenant l'objet selecteur correspondant à $aSelectorId, et 2 booleans indiquant si il a fallu compiler et si la compilation s'est bien passée

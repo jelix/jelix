@@ -54,7 +54,7 @@ class jConfig {
         }else{
             $config->trustedModules = array_keys($config->modulesPathList);
         }
-        //$config->urlengine_specific_entrypoints = array_flip($config->urlengine_specific_entrypoints);
+
         return $config;
     }
 

@@ -1,191 +1,211 @@
 <?php
 /**
-* @package    copix
-* @subpackage plugins
-* @version    $Id: CopixUrlEngine.significant.class.php,v 1.1.2.1 2005/08/17 22:12:50 laurentj Exp $
-* @author    Laurent Jouanneau
-* @copyright 2001-2005 CopixTeam
-* @link      http://copix.aston.fr
-* @link      http://copix.org
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+* @package     jelix
+* @subpackage  core
+* @version     $Id$
+* @author      Jouanneau Laurent
+* @contributor
+* @copyright   2005-2006 Jouanneau laurent
+* @link        http://www.jelix.org
+* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+*
+* Some parts of this file are took from an experimental version of Copix Framework v2.3dev20050901,
+* CopixUrlEngine.significant.class.php,
+* copyrighted by CopixTeam and released under GNU Lesser General Public Licence
+* author : Laurent Jouanneau
+* http://www.copix.org
 */
 
 
-class CopixUrlEngineSignificant extends CopixUrlEngine {
+class jSelectorUrlCfgSig extends jSelectorCfg {
+   public $type = 'urlcfgsig';
 
-    /**
-     * liste des données pour la création des urls (voir structure plus loin)
-     */
-    var $dataCreateUrl = array();
+   public function getCompiler(){
+      require_once(JELIX_LIB_CORE_PATH.'url/jUrlCompiler.significant.class.php');
+      $o = new jUrlCompilerSignificant();
+      return $o;
+   }
+   public function getCompiledFilePath (){ return JELIX_APP_TEMP_PATH.'compiled/urlsig/creationinfos.php';}
+}
 
-    /**
-    * liste des données pour l'analyse des urls
-    */
-    var $dataParseUrl = array();
+class jUrlEngineSignificant implements jIUrlEngine {
 
-    function CopixUrlEngineSignificant(){
+   /**
+   * liste des données pour la création des urls (voir structure plus loin)
+   */
+   var $dataCreateUrl = null;
 
-        $this->coordination = & $GLOBALS['COPIX']['COORD'];
-        $this->config = & $GLOBALS['COPIX']['CONFIG'];
-        $cplCfg = CopixInclude::SIGNIFICANTURL();
+   /**
+   * liste des données pour l'analyse des urls
+   */
+   var $dataParseUrl =  null;
 
-        // on change le nom de fichier de compil car on n'a pas moyen de savoir si
-        // la config copix a été changée (disons que CopixInclude n'est pour le moment
-        // pas prévu pour vérifier à la fois le fichier de conf, et à la fois les  fichiers
-        // de chaque module
-        // @todo améliorer CopixInclude sur ce point ?
-        $cplCfg[2]='significant.'.md5($this->config->url_default_entrypoint.serialize($this->config->url_specific_entrypoints)).'.php';
-        // charger ici les données sur les urls
-        $rv = CopixInclude::includeCacheFile($cplCfg);
+   /**
+   *
+   */
+   public function parse($scriptNamePath, $params, $pathinfo ){
 
-        $this->dataParseUrl  = & $GLOBALS['SIGNIFICANT_PARSEURL'];
-        $this->dataCreateUrl  = & $GLOBALS['SIGNIFICANT_CREATEURL'];
-    }
+      $url = new jUrl($scriptNamePath, $params, $pathinfo);
 
-    /**
-     *
-     */
-    function parse($scriptNamePath, $params, $pathinfo ){
-        $url = new CopixUrl($scriptNamePath, $params, $pathinfo);
+      if ($GLOBALS['gJConfig']->urlengine['enable_parser']){
+         $sel = new jSelectorUrlCfgSig('urls.xml');
+         jIncluder::inc($sel);
+         require_once(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($scriptNamePath).'.entrypoint.php');
+         $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
+         $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'];
 
-        if ($this->config->url_enable_parser){
-            $urloriginal = new CopixUrl($scriptNamePath, $params, $pathinfo);
-            if(!$this->_parse(&$url)){
-                $url=$urloriginal;
+         if(!$this->_parse($url)){
+            $url= new jUrl($scriptNamePath, $params, $pathinfo);
+         }
+      }
+      return $url;
+   }
+
+   protected function _parse($url){
+      global $gJConfig;
+      /*$script = $url->scriptName;
+      if(strpos($script, $gJConfig->urlengine['entrypoint_extension']) !== false){
+         $script=substr($script,0,- (strlen($gJConfig->urlengine['entrypoint_extension'])));
+      }*/
+      if(substr($url->pathInfo,-1) == '/' && $url->pathInfo != '/'){
+            $pathinfo = substr($url->pathInfo,0,-1);
+      }else{
+            $pathinfo = $url->pathInfo;
+      }
+
+      $foundurl = false;
+      $isDefault = false;
+      foreach($this->dataParseUrl as $k=>$infoparsing){
+         if($k==0){
+            $isDefault = $infoparsing;
+            continue;
+         }
+
+         $url->params['module']=$infoparsing[0];
+         $url->params['action']=$infoparsing[1];
+
+         if(count($infoparsing < 4)){
+            // on a un tableau du style
+            // array( 0=> 'module', 1=>'action', 2=>'handler')
+            $cl = $infoparsing[2];
+            $handler = new $cl();
+            if($handler->parse($url)){
+               $foundurl=true;
+               break;
             }
-        }
-        return $url;
-    }
+         }else{
+            /* on a un tableau du style
+            array( 0=>'module', 1=>'action', 2=>'regexp_pathinfo',
+               3=>array('annee','mois'), // tableau des valeurs dynamiques, classées par ordre croissant
+               4=>array(true, false), // tableau des valeurs escapes
+               5=>array('bla'=>'cequejeveux' ) // tableau des valeurs statiques
+            */
+            if(preg_match ($infoparsing[2], $pathinfo, $matches)){
 
-    function _parse(&$url){
+               // on fusionne les parametres statiques
+               if ($infoparsing[5]){
+                  $url->params = array_merge ($url->params, $infoparsing[5]);
+               }
 
-            $script = $url->scriptName;
-
-            if(strpos($script, $this->config->url_entrypoint_extension) !== false){
-              $script=substr($script,0,- (strlen($this->config->url_entrypoint_extension)));
-            }
-            if(substr($url->pathInfo,-1) == '/' && $url->pathInfo != '/'){
-                $pathinfo = substr($url->pathInfo,0,-1);
-            }else{
-                 $pathinfo = $url->pathInfo;
-            }
-            $foundurl = false;
-
-            if(isset($this->dataParseUrl[$script])){
-              foreach($this->dataParseUrl[$script] as $mod=>$moduleinfoparsing){
-                foreach($moduleinfoparsing as $infoparsing){
-
-                  $url->params['module']=$infoparsing[0];
-                  $url->params['desc']=$infoparsing[1];
-                  $url->params['action']=$infoparsing[2];
-
-                  if($infoparsing[3]=== false){
-                    // on a un tableau du style
-                    // array( 0=> 'module', 1=>'desc', 2=>'action', 3=>false,4=>'handler')
-                    $cl = $infoparsing[4];
-                    $handler = new $cl();
-                    if($handler->parse($url)){
-                        $foundurl=true;
-                        break;
-                    }
-                  }else{
-                      // on a un tableau du style
-                      /*
-                      array( 0=> 'module', 1=>'desc', 2=>'action', 3=>'pathinfo',
-                             4=>array('annee','mois'), // tableau des valeurs dynamiques, classées par ordre croissant
-                             5=>array(true, false),
-                             6=>array('bla'=>'cequejeveux' ) // tableau des valeurs statiques
-                      )
-                      */
-                      if(preg_match ($infoparsing[3], $pathinfo, $matches)){
-
-                          // on fusionne les parametres statiques
-                          if ($infoparsing[6]){
-                              $url->params = array_merge ($url->params, $infoparsing[6]);
-                          }
-
-                          if(count($matches)){
-                            foreach($infoparsing[4] as $k=>$name){
-                                if(isset($matches[$k+1])){
-                                    if($infoparsing[5][$k]){
-                                        $url->params[$name] = CopixUrl::unescape($matches[$k+1]);
-                                    }else{
-                                        $url->params[$name] = $matches[$k+1];
-                                    }
-                                 }
-                             }
-                          }
-                          $foundurl = true;
-                          break;
-                      }
+               if(count($matches)){
+                  array_shift($matches);
+                  foreach($infoparsing[3] as $k=>$name){
+                     if(isset($matches[$k])){
+                        if($infoparsing[4][$k]){
+                              $url->params[$name] = jUrl::unescape($matches[$k]);
+                        }else{
+                              $url->params[$name] = $matches[$k];
+                        }
+                     }
                   }
                }
-               if($foundurl)
-                  break;
+               $foundurl = true;
+               break;
             }
-        }
+         }
+      }
+      if(!$foundurl && !$isDefault){
+         $url->pathInfo='';
+         $url->params = $url->getAction($gJConfig->urlengine['notfound_act']);
+         $foundurl = true;
+      }
 
-        if(!$foundurl){
-            $url->pathInfo='';
-            $url->params = $url->getDest($this->config->url_404notfound_dest);
-            $foundurl = true;
-        }
-
-        return $foundurl;
-    }
+      return ($isDefault?true:$foundurl);
+   }
 
 
-    /**
-    * @param CopixUrl    $url    url à modifier
-    */
-    function create( &$url){
+   /**
+   * @param jUrl    $url    url à modifier
+   */
+   public function create( &$url){
+      if($this->dataCreateUrl == null){
+         $sel = new jSelectorUrlCfgSig('urls.xml');
+         jIncluder::inc($sel);
+         $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
+      }
+      /*
+      a) recupere module~action@request -> obtient les infos pour la creation de l'url
+      b) récupère un à un les parametres indiqués dans params à partir de jUrl
+      c) remplace la valeur récupérée dans le result et supprime le paramètre de l'url
+      d) remplace scriptname de jUrl par le resultat
+      */
 
-        /*
-        a) recupere module|desc|action -> obtient les infos pour la creation de l'url
-        b) récupère un à un les parametres indiqués dans params à partir de CopixUrl
-        c) remplace la valeur récupérée dans le result et supprime le paramètre de l'url
-        d) remplace scriptname de CopixUrl par le resultat
-        */
+      $module = $url->getParam ('module', jContext::get());
+      $action = $url->getParam('action');
 
-        $module = $url->getParam ('module');
-        if($module === null)
-            $module = CopixContext::get();
-        if($module == '')
-           $module='_';
-
-        $desc= $url->getParam('desc',COPIX_DEFAULT_VALUE_DESC);
-        $action = $url->getParam('action',COPIX_DEFAULT_VALUE_ACTION);
-
-        $id = $module.'|'.$desc.'|'.$action;
-
-        $urlinfo = null;
-        if (isset ($this->dataCreateUrl [$id])){
-
-            $url->delParam('module');
-            $url->delParam('desc');
-            $url->delParam('action');
+      $id = $module.'~'.$action.'@'.$url->requestType;
+      $urlinfo = null;
+      if (isset ($this->dataCreateUrl [$id])){
+         $urlinfo = &$this->dataCreateUrl[$id];
+         $url->delParam('module');
+         $url->delParam('action');
+      }else{
+         $id = $module.'~@'.$url->requestType;
+         if (isset ($this->dataCreateUrl [$id])){
             $urlinfo = &$this->dataCreateUrl[$id];
-
-            if($urlinfo[0]===false){
-                $cl = $urlinfo[1];
-                $handler = new $cl();
-                $handler->create($url);
-            }else{
-                $dturl = & $urlinfo[0];
-                $result = $urlinfo[2];
-                foreach ($dturl as $k=>$param){
-                    if($urlinfo[1][$k]){
-                        $result=str_replace('%'.($k+1), CopixUrl::escape($url->getParam($param,''),true), $result);
-                    }else{
-                        $result=str_replace('%'.($k+1), $url->getParam($param,''), $result);
-                    }
-                    $url->delParam($param);
-                }
-
-                $url->pathInfo = $result;
+            $url->delParam('module');
+         }else{
+            $id = '@'.$url->requestType;
+            if (isset ($this->dataCreateUrl [$id])){
+               $urlinfo = &$this->dataCreateUrl[$id];
             }
-        }
+         }
+      }
 
-    }
+      if($urlinfo != null){
+         /*array(
+         'news~show@classic' =>
+            array(0,'entrypoint','handler')
+            ou
+            array(1,'entrypoint',
+                  array('annee','mois','jour','id','titre'), // liste des paramètres de l'url à prendre en compte
+                  array(true, false..), // valeur des escapes
+                  "/news/%1/%2/%3/%4-%5", // forme de l'url
+                  )
+            ou
+            array(2,'entrypoint'); pour les clés du type "@request" ou "module~@request"
+         */
+
+         $url->scriptName = $urlinfo[1];
+
+         if($urlinfo[0]==0){
+            $cl = $urlinfo[1];
+            $handler = new $cl();
+            $handler->create($url);
+         }elseif($urlinfo[0]==1){
+            $result = $urlinfo[4];
+            foreach ($urlinfo[2] as $k=>$param){
+               if($urlinfo[3][$k]){
+                  $result=str_replace('%'.($k+1), jUrl::escape($url->getParam($param,''),true), $result);
+               }else{
+                  $result=str_replace('%'.($k+1), $url->getParam($param,''), $result);
+               }
+               $url->delParam($param);
+            }
+
+            $url->pathInfo = $result;
+         }
+      }
+   }
 }
 ?>

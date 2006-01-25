@@ -62,11 +62,10 @@ class jCoordinator {
         // load configuration data
         $this->configFile = $configFile;
         $gJConfig = jConfig::load($configFile);
-        //$this->_initConfig();
 
         // set Error and exception handler
-        set_error_handler('jErrorHandler');
-        set_exception_handler('JExceptionHandler');
+        //set_error_handler('jErrorHandler');
+        //set_exception_handler('JExceptionHandler');
 
         $this->_loadPlugins();
     }
@@ -102,7 +101,7 @@ class jCoordinator {
         global $gJConfig;
 
         $this->request = $request;
-		  session_start();
+        session_start();
 
         $this->moduleName = $this->request->getParam('module', $gJConfig->defaultModule,true);
         $this->actionName = $this->request->getParam('action', $gJConfig->defaultAction,true);
@@ -204,7 +203,7 @@ class jCoordinator {
     /**
     * gets a given plugin if registered
     * @param string   $plugin_name   nom du plugin
-    * @param boolean  $required 	if the plugin is required or not. If true, will trigger a fatal_error if the plugin is not registered.
+    * @param boolean  $required  if the plugin is required or not. If true, will trigger a fatal_error if the plugin is not registered.
     */
     function getPlugin ($pluginName, $required = true){
         $pluginName = strtolower ($pluginName);

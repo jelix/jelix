@@ -8,7 +8,6 @@
 * @copyright   2005-2006 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*
 */
 
 /**
@@ -24,17 +23,17 @@ class jUrlEngineSimple implements jIUrlEngine {
     public function create(&$url){
          $url->scriptName = $this->getScript($url->requestType, $url->getParam('module'),$url->getParam('action'));
     }
-    
+
     protected function getScript($requestType, $module=null, $action=null, $nosuffix=false){
         static $urlspe = null;
         global $gJConfig;
 
         $script = $gJConfig->urlengine['default_entrypoint'];
 
-        if(count($gJConfig->urlengine_specific_entrypoints)){
+        if(count($gJConfig->simple_urlengine_entrypoints)){
            if($urlspe == null){
                $urlspe = array();
-               foreach($gJConfig->urlengine_specific_entrypoints as $entrypoint=>$sel){
+               foreach($gJConfig->simple_urlengine_entrypoints as $entrypoint=>$sel){
                  $selectors = preg_split("/[\s,]+/", $sel);
                  foreach($selectors as $sel){
                      $urlspe[$sel]= $entrypoint;
