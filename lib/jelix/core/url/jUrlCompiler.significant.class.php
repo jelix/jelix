@@ -83,7 +83,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
         $defaultEntrypoints=array();
         $file = new jFile();
         foreach($xml->children() as $name=>$tag){
-           if(!preg_match("/^(.*)EntryPoint$/", $name,$m)){
+           if(!preg_match("/^(.*)entrypoint$/", $name,$m)){
                //TODO : erreur
                continue;
            }
