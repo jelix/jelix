@@ -48,7 +48,7 @@ class jEvent {
    * gets the name of the event
    *    will be used internally for optimisations
    */
-   function getName (){
+   public function getName (){
       return $this->_name;
    }
 
@@ -56,7 +56,7 @@ class jEvent {
    * gets the given param
    * @param string $name the param name
    */
-   function getParam ($name){
+   public function getParam ($name){
       if (isset ($this->_params[$name])){
          $ret = $this->_params[$name];
       }else{
@@ -72,7 +72,7 @@ class jEvent {
    * @param $event string   the event name
    * @return jEvent
    */
-   static function notify ($eventname, $params=array()) {
+   public static function notify ($eventname, $params=array()) {
 
       $event = new jEvent($eventname, $params);
 
@@ -92,13 +92,13 @@ class jEvent {
    /**
     * @var array of array
     */
-   var $_responses = array ();
+   protected $_responses = array ();
 
    /**
     * add a response in the list
     * @param array response a single response
     */
-   function add ($response) {
+   public function add ($response) {
       $this->_responses[] = & $response;
    }
 
@@ -110,7 +110,7 @@ class jEvent {
     * @param ref $response the response that have this value
     * @return boolean wether or not we have founded the response value
     */
-   function inResponse ($responseName, $value, & $response){
+   public function inResponse ($responseName, $value, & $response){
       $founded  = false;
       $response = array ();
 
@@ -128,7 +128,7 @@ class jEvent {
     * gets all the responses
     * @return array of associative array
     */
-   function getResponse () {
+   public function getResponse () {
       return $this->_responses;
    }
 }

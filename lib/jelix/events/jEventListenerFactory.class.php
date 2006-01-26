@@ -24,24 +24,25 @@ class jEventListenerFactory {
     /**
     * handles the listeners singleton (all listeners will be stored in here)
     *    events are stored by events listened
-    * @var array of CopixListener
+    * @var array of jListener
     */
-    var $_listenersSingleton = array ();
+    protected static $_listenersSingleton = array ();
 
     /**
-    * hash table for evet listened.
+    * hash table for event listened.
     * $_hash['eventName'] = array of events (by reference)
     * @var associative array of object
     */
-    var $_hashListened = array ();
+    protected static $_hashListened = array ();
 
+    private function __construct(){}
     /**
     * instanciation of a listener
     */
-    function create ($module, $listenerName){
-        $me = jEventListenerFactory::instance ();
+    public static function create ($module, $listenerName){
+
         jIncluder::incAll(jIncluder::EVENTS());
-        return $me->_createListener ($module, $listenerName);
+        return self::_createListener ($module, $listenerName);
     }
 
     /**
@@ -49,37 +50,23 @@ class jEventListenerFactory {
     * @param string $eventName the event name we wants the listeners for.
     * @return array of objects
     */
-    function getListenersOf ($eventName) {
-        $me = jEventListenerFactory::instance ();
-        jIncluder::incAll(jIncluder::EVENTS());
-        $me->_createForEvent ($eventName);
-
-        return $me->_hashListened[$eventName];
-    }
-
-    /**
-    * singleton
-    * @return CopixListenerFactory.
-    */
-    function & instance () {
-        static $me = false;
-        if ($me === false) {
-            $me = new jEventListenerFactory ();
-        }
-        return $me;
+    public static function getListenersOf ($eventName) {
+        jIncluder::incAll(jIncluder::EVENT());
+        self::_createForEvent ($eventName);
+        return self::$_hashListened[$eventName];
     }
 
     /**
     * Creates listeners for the given eventName
     * @param string eventName the eventName we wants to create the listeners for
     */
-    function _createForEvent ($eventName) {
+    protected static function _createForEvent ($eventName) {
         $inf = & $GLOBALS['JELIX_EVENTS'];
-        if (! isset ($this->_hashListened[$eventName])){
-            $this->_hashListened[$eventName] = array();
+        if (! isset (self::$_hashListened[$eventName])){
+            self::$_hashListened[$eventName] = array();
             if(isset($inf[$eventName])){
                 foreach ($inf[$eventName] as $listener){
-                    $this->_hashListened[$eventName][] = & $this->_createListener ($listener[0], $listener[1]);
+                    self::$_hashListened[$eventName][] =  self::_createListener ($listener[0], $listener[1]);
                 }
             }
         }
@@ -88,14 +75,14 @@ class jEventListenerFactory {
     /**
     * creates a single listener
     */
-    function  _createListener ($module, $listenerName){
-        if (! isset ($this->_listenersSingleton[$module][$listenerName])){
-            global $gJCoord;
-            require_once ($gJCoord->modulePathList[$this->module].'classes/'.strtolower ($listenerName).'.listener.php');
+    protected static function  _createListener ($module, $listenerName){
+        if (! isset (self::$_listenersSingleton[$module][$listenerName])){
+            global $gJConfig;
+            require_once ($gJConfig->modulesPathList[$module].'classes/'.strtolower ($listenerName).'.listener.php');
             $className = 'Listener'.$listenerName;
-            $this->_listenersSingleton[$module][$listenerName] = & new $className ();
+            self::$_listenersSingleton[$module][$listenerName] =  new $className ();
         }
-        return $this->_listenersSingleton[$module][$listenerName];
+        return self::$_listenersSingleton[$module][$listenerName];
     }
 }
 ?>

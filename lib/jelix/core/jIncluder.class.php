@@ -31,7 +31,6 @@ interface jIMultiFileCompiler {
 class jIncluder {
     protected static $_includedFiles = array();
 
-
     public static function EVENT(){
         return  array('jEventCompiler',
                     'events/jEventCompiler.class.php',
@@ -39,6 +38,8 @@ class jIncluder {
                     'events.php'
         );
     }
+
+    private function __construct(){}
 
     /**
      * @param    jISelector   $aSelectorId    selecteur du fichier à compiler
@@ -114,7 +115,7 @@ class jIncluder {
 
         if(!$mustCompile && $checkCompile){
             $compiledate = filemtime($cachefile);
-            foreach($gJCoord->modulesPathList as $module=>$path){
+            foreach($gJConfig->modulesPathList as $module=>$path){
                 $sourcefile = $path.$aType[2];
                 if (is_readable ($sourcefile)){
                     if( filemtime($sourcefile) > $compiledate){
@@ -130,7 +131,7 @@ class jIncluder {
             require_once(JELIX_LIB_PATH.$aType[1]);
             $compiler = new $aType[0];
 
-            foreach($gJCoord->modulesPathList as $module=>$path){
+            foreach($gJConfig->modulesPathList as $module=>$path){
                 $compileok=$compiler->compileItem($path.$aType[2], $module);
                 if(!$compileok) break;
             }

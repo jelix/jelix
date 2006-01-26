@@ -19,25 +19,23 @@ class jEventCompiler implements jIMultiFileCompiler {
     }
 
     public function compileItem($sourceFile, $module){
-
         if (is_readable ($sourceFile)){
             $xml = simplexml_load_file($sourceFile);
 
             if (isset ($xml->listener)){
                 foreach ($xml->listener as $listener){
+
                     $listenerName = (string)$listener['name'];
 
                     foreach ($listener->event as $eventListened){
                         $name = (string) $eventListened['name'];
-                        if(!isset($this->eventList[$name]))
-                            $this->eventList[$name]=array();
-
                         // clé = nom de l'event, valeur = liste des fichiers listener
                         $this->eventList[$name][] = array($module,$listenerName);
                     }
                 }
             }
         }
+        return true;
     }
 
     public function endCompile($cachefile){
@@ -45,7 +43,6 @@ class jEventCompiler implements jIMultiFileCompiler {
 
         $file = new jFile();
         $file->write($cachefile, $content);
-
     }
 }
 
