@@ -38,12 +38,12 @@ class jResponseHtml extends jResponse {
      * selecteur du template principal
      * le contenu du template principal concerne le contenu de <body>
      */
-	 public $bodyTpl = 'myapp~main';
+    public $bodyTpl = '';
 
     /**
      * template principal à afficher en cas d'erreur
      */
-    public $bodyErrorTpl = 'myapp~error';
+    public $bodyErrorTpl = '';
 
     /**
      * attribut du body
@@ -121,7 +121,8 @@ class jResponseHtml extends jResponse {
         echo ">\n";
         $this->_headSent = true;
         echo implode("\n",$this->_bodyTop);
-        $this->body->display($this->bodyTpl);
+        if($this->bodyTpl != '')
+           $this->body->display($this->bodyTpl);
 
         if(count($this->_errorMessages)){
             echo '<div id="jelixerror" style="position:absolute;left:0px;top:0px;border:3px solid red; background-color:#f39999;color:black;">';

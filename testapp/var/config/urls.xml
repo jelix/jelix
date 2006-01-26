@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <urls xmlns="http://jelix.org/ns/urls/1.0">
     <classicentrypoint name="index" default="true">
-        <url path="/test/:mois/:annee" module="testapp" action="test1">
-              <var name="mois" escape="true" regexp="\d{4}"/>
-              <var name="annee" escape="false" />
-              <staticvar name="bla" value="cequejeveux" />
+       <url pathinfo="/test/:annee/:mois" module="testapp" action="test1">
+              <param name="annee" escape="true" regexp="\d{4}"/>
+              <param name="mois" escape="false" />
+              <static name="bla" value="cequejeveux" />
         </url>
-        <url handler="foo" module="testapp" action="withhandler"  />
+        <!--<url handler="foo" module="testapp"  />-->
     </classicentrypoint>
     <classicentrypoint name="news">
         <url module="news" />
     </classicentrypoint>
     <xmlrpcentrypoint name="xmlrpc" default="true" />
     <jsonrpcentrypoint name="jsonrpc" default="true" />
-    
+
 </urls>

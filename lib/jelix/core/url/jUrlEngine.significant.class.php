@@ -50,12 +50,22 @@ class jUrlEngineSignificant implements jIUrlEngine {
       if ($GLOBALS['gJConfig']->urlengine['enable_parser']){
          $sel = new jSelectorUrlCfgSig('urls.xml');
          jIncluder::inc($sel);
-         require_once(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($scriptNamePath).'.entrypoint.php');
-         $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
-         $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'];
+         $basepath = $GLOBALS['gJConfig']->urlengine['basepath'];
+         if(strpos($scriptNamePath, $basepath) === 0){
+            $snp = substr($scriptNamePath,strlen($basepath));
+         }else{
+            $snp = $scriptNamePath;
+         }
+         $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($snp).'.entrypoint.php';
+         if(file_exists($file)){
+            require_once($file);
+            $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
+            $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'];
 
-         if(!$this->_parse($url)){
-            $url= new jUrl($scriptNamePath, $params, $pathinfo);
+            if(!$this->_parse($url)){
+               // $url peut avoir été modifié par _parse, on remet l'ancien
+               $url= new jUrl($scriptNamePath, $params, $pathinfo);
+            }
          }
       }
       return $url;
@@ -150,7 +160,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
       d) remplace scriptname de jUrl par le resultat
       */
 
-      $module = $url->getParam ('module', jContext::get());
+      $module = $url->getParam('module', jContext::get());
       $action = $url->getParam('action');
 
       $id = $module.'~'.$action.'@'.$url->requestType;
@@ -196,9 +206,9 @@ class jUrlEngineSignificant implements jIUrlEngine {
             $result = $urlinfo[4];
             foreach ($urlinfo[2] as $k=>$param){
                if($urlinfo[3][$k]){
-                  $result=str_replace('%'.($k+1), jUrl::escape($url->getParam($param,''),true), $result);
+                  $result=str_replace(':'.$param, jUrl::escape($url->getParam($param,''),true), $result);
                }else{
-                  $result=str_replace('%'.($k+1), $url->getParam($param,''), $result);
+                  $result=str_replace(':'.$param, $url->getParam($param,''), $result);
                }
                $url->delParam($param);
             }

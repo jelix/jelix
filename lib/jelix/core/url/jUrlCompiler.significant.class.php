@@ -38,10 +38,10 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
         /*
         <urls>
          <classicentrypoint name="index" default="true">
-            <url path="/test/:mois/:annee" module="" action="">
-                  <var name="mois" escape="true" regexp="\d{4}"/>
-                  <var name="annee" escape="false" />
-                  <staticvar name="bla" value="cequejeveux" />
+            <url pathinfo="/test/:mois/:annee" module="" action="">
+                  <param name="mois" escape="true" regexp="\d{4}"/>
+                  <param name="annee" escape="false" />
+                  <static name="bla" value="cequejeveux" />
             </url>
             <url handler="" module="" action=""  />
          </classicentrypoint>
@@ -125,14 +125,14 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
 
                $listparam=array();
                $escapes = array();
-               if(isset($url['path'])){
-                  $path = (string)$url['path'];
+               if(isset($url['pathinfo'])){
+                  $path = (string)$url['pathinfo'];
                   $regexppath = $path;
 
                   if(preg_match_all("/\:([a-zA-Z]+)/",$path,$m, PREG_PATTERN_ORDER)){
                       $listparam=$m[1];
 
-                      foreach($url->var as $var){
+                      foreach($url->param as $var){
 
                         $nom = (string) $var['name'];
                         $k = array_search($nom, $listparam);
@@ -153,7 +153,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                             $regexp = '([^\/]+)';
                         }
 
-                        $regexppath = str_replace(':'.$name, $regexp, $regexppath);
+                        $regexppath = str_replace(':'.$nom, $regexp, $regexppath);
                       }
                   }
                }else{
@@ -161,7 +161,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                  $path='';
                }
                $liststatics = array();
-               foreach($url->staticvar as $var){
+               foreach($url->static as $var){
                   $liststatics[(string)$var['name']] =(string)$var['value'];
                }
                $parseInfos[]=array($module, $action, $regexppath, $listparam, $escapes, $liststatics );

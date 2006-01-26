@@ -69,6 +69,7 @@ $gDefaultConfig = array (
     'default_entrypoint' => 'index',
     'entrypoint_extension' => '.php',
     'engine' => 'simple',
+    'basepath'=>'',
     'enable_parser' => '1',
     'multiview_on' => '',
     'notfound_act' => 'jelix~notfound'

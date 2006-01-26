@@ -57,6 +57,10 @@ enable_parser = on
 
 multiview_on = off
 
+; chemin url jusqu'au repertoire www (celui que vous tapez dans le navigateur pour accéder à index.php etc.)
+; peut être égale à "/" si vous spécifiez www comme étant le documentRoot de votre site au niveau du serveur
+basepath = "/{$appname}/www"
+
 default_entrypoint= index
 
 entrypoint_extension= .php

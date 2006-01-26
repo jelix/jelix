@@ -6,13 +6,13 @@ Développeurs
 
 Laurent Jouanneau : Concepteur et développeur principal du code original à Jelix
 
-Gerald Croes et Laurent Jouanneau : principaux contributeurs à certaines
+Gerald Croes et Laurent Jouanneau : principaux contributeurs aux
 parties du code qui sont issues du projet Copix 2.3dev20050901 et qui sont
 sous copyright 2001-2005 Copix Team (http://www.copix.org)
 
 Contributeurs
 -------------
 
-Gildas Givaja (Giviz) : testeur, corrections de bugs de syntaxe
-Olivier Gambier (d-m-p) : reviewer de code, corrections de bugs de syntaxe
-Loic Mathaud (bballizlife) : corrections orthographiques dans la documentation
+Gildas Givaja (Giviz) : testeur, corrections de bugs
+Loic Mathaud (bballizlife) : testeur, corrections de bugs, corrections orthographiques dans la documentation
+Olivier Gambier (d-m-p) : review de code, corrections de bugs
