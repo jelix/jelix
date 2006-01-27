@@ -10,6 +10,8 @@ default =
 ; la liste des paramètres dépend du driver.
 
 ;[myapp]
+
+; pour la plupart des drivers :
 ;driver="mysql"
 ;database="jelix"
 ;host= "localhost"
@@ -17,5 +19,9 @@ default =
 ;password=
 ;persistent= on
 
-
+; pour pdo :
+;driver=pdo
+;dsn=mysql:host=localhost;dbname=test
+;user=
+;password=
 

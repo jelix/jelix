@@ -15,5 +15,8 @@ user= "root"
 password=
 persistent= on
 
-
-
+; pour pdo :
+;driver=pdo
+;dsn=mysql:host=localhost;dbname=test
+;user=
+;password=
