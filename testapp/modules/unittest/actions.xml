@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<actions xmlns="http://jelix.org/ns/actions/1.0">
+
+   <request type="classic">
+      <action name="default" ag="default" method="getDefault" >
+          <response default="true" name="accueil" type="html" />
+      </action>
+
+      <action name="testevent" ag="default" method="getTestEvents" >
+          <response default="true" name="event" type="html" />
+      </action>
+
+      <action name="urlsigparse" ag="urlsig" method="getTestParsing" >
+         <response default="true" name="default" type="html" />
+      </action>
+
+      <action name="urlsigcreate" ag="urlsig" method="getTestCreate" >
+         <response default="true" name="default" type="html" />
+      </action>
+
+      <action name="url1" ag="urlsig" method="getDummyUrl" >
+         <response default="true" name="default" type="html" />
+      </action>
+      <action name="url2" ag="urlsig" method="getDummyUrl" >
+         <response default="true" name="default" type="html" />
+      </action>
+      <action name="url3" ag="urlsig" method="getDummyUrl" >
+         <response default="true" name="default" type="html" />
+      </action>
+      <action name="url4" ag="urlsig" method="getDummyUrl" >
+         <response default="true" name="default" type="html" />
+      </action>
+      <action name="url5" ag="urlsig" method="getDummyUrl" >
+         <response default="true" name="default" type="html" />
+      </action>
+
+   </request>
+</actions>
