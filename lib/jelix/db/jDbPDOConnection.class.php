@@ -11,8 +11,22 @@
 *
 */
 
+// les noms des constantes de PDO ont changés entre php 5.0 et 5.1
+// on utilise alors les notres
+define('JPDO_FETCH_OBJ',5); // PDO::FETCH_OBJ
+define('JPDO_FETCH_ORI_NEXT',0); // PDO::FETCH_ORI_NEXT
+define('JPDO_FETCH_CLASS',8); // PDO::FETCH_CLASS
+define('JPDO_ATTR_STATEMENT_CLASS',13); //PDO::ATTR_STATEMENT_CLASS
+
 class jDbPDOResultSet extends PDOStatement {
 
+   public function fetchAll ( $fetch_style = JPDO_FETCH_OBJ, $column_index=0 ){
+      return parent::fetchAll( JPDO_FETCH_OBJ, $column_index);
+   }
+
+   public function fetch( $fetch_style= JPDO_FETCH_OBJ, $cur_or=JPDO_FETCH_ORI_NEXT, $cur_offset=0 ){
+     return parent::fetch(JPDO_FETCH_OBJ,$cur_or,$cur_offset);
+   }
     /**
     * recupere un enregistrement et rempli les propriétes d'un objet existant avec
     * les valeurs récupérées.
@@ -31,8 +45,8 @@ class jDbPDOResultSet extends PDOStatement {
             }
 
       }else{
-         $this->setFetchMode( PDO::FETCH_CLASS, $object );
-         return $this->fetch (PDO::FETCH_CLASS);
+         $this->setFetchMode( JPDO_FETCH_CLASS, $object );
+         return $this->fetch (JPDO_FETCH_CLASS);
       }
    }
 
