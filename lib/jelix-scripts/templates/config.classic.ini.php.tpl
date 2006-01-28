@@ -17,8 +17,6 @@ tplpluginsPath = lib:jelix/tpl_plugins/
 
 dbProfils = dbprofils.ini.php
 
-
-useTheme = false
 defaultTheme = default
 
 [plugins]

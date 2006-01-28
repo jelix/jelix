@@ -17,14 +17,13 @@ tplpluginsPath = lib:jelix/tpl_plugins/
 
 dbProfils = dbprofils.ini.php
 
-useTheme = false
 defaultTheme = default
 
 [plugins]
 ;nom = nom_fichier_ini
 
 [responses]
-
+html = myHtmlResponse
 
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"

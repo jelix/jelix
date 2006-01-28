@@ -17,6 +17,7 @@ define('JPDO_FETCH_OBJ',5); // PDO::FETCH_OBJ
 define('JPDO_FETCH_ORI_NEXT',0); // PDO::FETCH_ORI_NEXT
 define('JPDO_FETCH_CLASS',8); // PDO::FETCH_CLASS
 define('JPDO_ATTR_STATEMENT_CLASS',13); //PDO::ATTR_STATEMENT_CLASS
+define('JPDO_ATTR_AUTOCOMMIT',0); //PDO::ATTR_AUTOCOMMIT
 
 class jDbPDOResultSet extends PDOStatement {
 
@@ -75,7 +76,7 @@ class jDbPDOConnection extends PDO {
        unset($prof['password']);
        unset($prof['driver']);
        parent::__construct($profil['dsn'], $profil['user'], $profil['password'], $prof);
-       $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
+       $this->setAttribute(JPDO_ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
     }
 
 
@@ -91,14 +92,12 @@ class jDbPDOConnection extends PDO {
         return $result;
     }
 
-
-
     /**
     * sets the autocommit state
     * @param boolean state the status of autocommit
     */
     public function setAutoCommit($state=true){
-        $this->setAttribute(PDO::ATTR_AUTOCOMMIT,$state);
+        $this->setAttribute(JPDO_ATTR_AUTOCOMMIT,$state);
     }
 
 

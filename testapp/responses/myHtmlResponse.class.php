@@ -16,7 +16,7 @@ require_once (JELIX_LIB_RESPONSE_PATH.'jResponseHtml.class.php');
 class myHtmlResponse extends jResponseHtml {
 
 
-	public $bodyTpl = 'testapp~main';
+   public $bodyTpl = 'testapp~main';
     public $bodyErrorTpl = 'testapp~error';
 
 
@@ -24,7 +24,7 @@ class myHtmlResponse extends jResponseHtml {
     // à surcharger dans les classes héritières
     protected function _commonProcess(){
 
-       $this->title .= ($this->title !=''?' - ':'').' My Sample App !';
+       $this->title .= ($this->title !=''?' - ':'').' My Test App !';
     }
 
 

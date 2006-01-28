@@ -25,7 +25,6 @@ $gDefaultConfig = array (
 
   'dbProfils' => 'dbProfils.ini.php',
 
-  'useTheme' => '',
   'defaultTheme' => 'default',
 
   'plugins' => array(),
