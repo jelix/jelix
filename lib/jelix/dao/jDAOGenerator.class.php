@@ -130,18 +130,29 @@ class jDAOGenerator {
       //----- Insert method
       $src[] = 'public function insert ($record){';
 
-
       if($pkai !== null){
+         $src[]=' if($record->'.$pkai->name.' > 0 ){';
+         $src[] = '    $query = \'INSERT INTO '.$pTableRealName.' (';
+         $fields = $this->_getPropertiesBy('PrimaryTable');
+         list($fields, $values) = $this->_prepareValues($fields,'insertMotif', 'record->');
+
+         $src[] = implode(',',$fields);
+         $src[] = ') VALUES (';
+         $src[] = implode(', ',$values);
+         $src[] = ")';";
+
+         $src[] = '}else{';
+
          if (($driverName=='mysql') || ($driverName=='sqlserver')) {
             $fields = $this->_getPropertiesBy('PrimaryFieldsExcludeAutoIncrement');
          }elseif ($pkai->sequenceName != ''){
-            $src[] = '     $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
-            $fields = $this->_getPropertiesBy('All');
+            $src[] = '    $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
+            $fields = $this->_getPropertiesBy('PrimaryTable');
          }else{
-            $fields = $this->_getPropertiesBy('All');
+            $fields = $this->_getPropertiesBy('PrimaryTable');
          }
       }else{
-         $fields = $this->_getPropertiesBy('PrimaryFieldsExcludeAutoIncrement');
+         $fields = $this->_getPropertiesBy('PrimaryTable');
       }
 
       $src[] = '    $query = \'INSERT INTO '.$pTableRealName.' (';
@@ -152,15 +163,19 @@ class jDAOGenerator {
       $src[] = ') VALUES (';
       $src[] = implode(', ',$values);
       $src[] = ")';";
+
+      if($pkai !== null)
+         $src[] = '}';
+
       $src[] = '   $result = $this->_conn->exec ($query);';
 
 
       if($pkai !== null){
          $src[] = '   if($result){';
          if ($driverName=='mysql') {
-            $src[] = '      $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
+            $src[] = '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
          }else if ($driverName=='sqlserver') {
-            $src[] = '      $record->'.$pkai->name.'= $this->_conn->lastIdInTable(\''.$pkai->fieldName.'\',\''.$pTableRealName.'\');';
+            $src[] = '      if($record->'.$pkai->name.' < 1 ) $record->'.$pkai->name.'= $this->_conn->lastIdInTable(\''.$pkai->fieldName.'\',\''.$pTableRealName.'\');';
          }
          $src[] = '    return $result;';
          $src[] = ' }else return false;';
