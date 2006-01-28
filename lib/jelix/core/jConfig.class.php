@@ -63,7 +63,7 @@ class jConfig {
      */
     static private function _loadPathList($config, $configFile, $dir, $tplp=false){
 
-        $file = JELIX_APP_TEMP_PATH.$dir.'list.ini.php';
+        $file = JELIX_APP_TEMP_PATH.$configFile.'.'.$dir.'list.ini.php';
         $compil=false;
         if(!file_exists($file)){
             $compil=true;
