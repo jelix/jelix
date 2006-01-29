@@ -13,15 +13,16 @@
 
 require_once (JELIX_LIB_RESPONSE_PATH.'jResponseHtml.class.php');
 
-class myHtmlResponse extends jResponseHtml {
+class testUnitResponse extends jResponseHtml {
 
 
-   public $bodyTpl = 'testapp~main';
-   public $bodyErrorTpl = 'testapp~error';
+    public $bodyTpl = 'unittest~accueil';
 
-   // modifications communes aux actions utilisant cette reponses
-   protected function _commonProcess(){
-       $this->title .= ($this->title !=''?' - ':'').' My Test App !';
-   }
+    protected function _commonProcess(){
+       $this->title .= ($this->title !=''?' - ':'').' Test unitaires';
+       $this->addCSSLink('/unittest.css');
+    }
+
+
 }
 ?>

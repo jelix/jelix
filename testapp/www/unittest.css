@@ -1,0 +1,43 @@
+body {
+   font-family: arial;
+   font-size:0.8em;
+
+}
+
+
+
+#menu {
+ width : 12em;
+ border-right: 3px solid black;
+ float:left;
+}
+
+#menu h3 {
+   background-color: #99bdcb;
+   color:#304d58;
+   padding:0.1em;
+
+}
+
+#menu ul {
+  margin:0;
+  padding-left:1em;
+
+}
+
+
+#content {
+  margin-left: 13em;
+}
+
+.fail { color: red; }
+pre { background-color: lightgray; }
+
+
+.resultfail {
+  padding: 8px; margin-top: 1em; background-color: red; color: white;
+}
+
+.resultsuccess {
+  padding: 8px; margin-top: 1em; background-color: green; color: white;
+}

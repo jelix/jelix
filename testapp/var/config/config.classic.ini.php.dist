@@ -24,6 +24,7 @@ defaultTheme = default
 
 [responses]
 html = myHtmlResponse
+unittest = testUnitResponse
 
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
