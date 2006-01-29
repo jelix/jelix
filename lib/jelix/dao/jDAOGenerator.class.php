@@ -253,7 +253,10 @@ class jDAOGenerator {
                   $src[] = '}';
                   break;
 
-
+               case 'count':
+                  $src[] = '    $query = \'SELECT COUNT(*) as c \'.$this->_fromClause.$this->_whereClause;';
+                  $glueCondition = ($sqlWhereClause !='' ? ' AND ':' WHERE ');
+                  break;
                case 'selectfirst':
                case 'select':
                default:
@@ -279,19 +282,25 @@ class jDAOGenerator {
 
             if(trim($sqlCond) != '')
                $src[] = '$query .=\''.$glueCondition.$sqlCond."';";
-            else
-               $src[] =";";
-         }else
-            $src[] =";";
+            /*else
+               $src[] =";";*/
+         }
+         /*else
+            $src[] =";";*/
 
          switch($method->type){
                case 'delete':
                case 'update' :
                   $src[] = '    return $this->_conn->exec ($query);';
                break;
+               case 'count':
+                  $src[] = '    $dbw = new jDbWidget ($this->_conn);';
+                  $src[] = '    $res = $dbw->fetchFirst ($query, \''.$this->_compiler->getDAOId().'\');';
+                  $src[] = '    return $res->c;';
+                  break;
                case 'selectfirst':
                   $src[] = '    $dbw = new jDbWidget ($this->_conn);';
-                  $src[] = '    return $dbw->fetchFirst ($query, \''.$this->_compiler->_DAOid.'\');';
+                  $src[] = '    return $dbw->fetchFirst ($query, \''.$this->_compiler->getDAOId().'\');';
                   break;
                case 'select':
                default:
@@ -557,11 +566,18 @@ class jDAOGenerator {
 
         $order = array ();
         foreach ($cond->order as $name => $way){
+            $ord='';
             if (isset($fields[$name])){
-                if($way{0} == '$'){
-                    $order[] = $name.' \'.( strtolower('.$way.') ==\'asc\'?\'asc\':\'desc\').\'';
-                }else
-                    $order[] = $name.' '.$way;
+               $ord = $name;
+            }elseif($name{0} == '$'){
+               $ord = '\'.'.$name.'.\'';
+            }else{
+               continue;
+            }
+            if($way{0} == '$'){
+               $order[]=$ord.' \'.( strtolower('.$way.') ==\'asc\'?\'asc\':\'desc\').\'';
+            }else{
+               $order[]=$ord.' '.$way;
             }
         }
         if(count ($order) > 0){

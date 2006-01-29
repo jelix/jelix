@@ -23,6 +23,7 @@ class AGMain extends jActionGroup {
          $rep->title = 'Hello From Jelix !';
          $rep->bodyTpl = 'testapp~hello';
          $rep->body->assign('person', $this->param('person','You'));
+         $rep->body->assign('value','name');
       }
       return $rep;
    }

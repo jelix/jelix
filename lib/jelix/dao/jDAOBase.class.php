@@ -103,6 +103,13 @@ abstract class jDAOFactoryBase  {
       return $dbw->fetchAllInto($this->_selectClause.$this->_fromClause.$this->_whereClause , $this->_DAORecordClassName);
    }
 
+   public function countAll(){
+     $query = 'SELECT COUNT(*) as c '.$this->_fromClause.$this->_whereClause;
+     $dbw = new jDbWidget ($this->_conn);
+     $res = $dbw->fetchFirst ($query, 'testapp~config');
+     return $res->c;
+   }
+
    public function get(){
       $args=func_get_args();
       $keys = array_combine($this->_pkFields,$args );

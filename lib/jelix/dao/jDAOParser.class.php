@@ -387,7 +387,11 @@ class jDAOMethod {
          }else{
                $def->_compiler->doDefError('method.values.undefine',array($this->name));
          }
+         return;
       }
+
+      if($this->type == 'count')
+         return;
 
       if (isset ($method->order) && isset($method->order[0]->orderitem)){
          foreach($method->order[0]->orderitem as $item){

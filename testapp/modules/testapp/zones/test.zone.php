@@ -20,6 +20,9 @@ class ZoneTest extends jZone {
 
         $this->_tpl->assign('config',$dao->findAll());
         $this->_tpl->assign('oneconf',$dao->get('foo'));
+        $this->_tpl->assign('nombre',$dao->countAll());
+        $this->_tpl->assign('nombrevalue',$dao->getCountValue());
+
     }
 
 }
