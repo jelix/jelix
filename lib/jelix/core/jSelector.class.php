@@ -185,7 +185,9 @@ class jSelectorAct extends jSelectorModule {
     protected function _createCachePath(){
         $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->module.'~'.$this->resource.'~'.$this->request.'.php';
     }
-
+    public function getCacheDir(){
+        return JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname;
+    }
     public function toString($full=false){
         if($full)
             return $this->type.':'.$this->module.'~'.$this->resource.'@'.$this->request;

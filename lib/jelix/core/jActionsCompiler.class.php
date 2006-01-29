@@ -22,8 +22,16 @@ class jActionsCompiler implements jISimpleCompiler {
 
         jContext::push($sel->module);
 
-        // effacement des anciens fichiers compilés
-        // @todo
+        // effacement des anciens fichiers compilés pour effacer les actions qui n'existent plus
+        $cachedir= $selector->getCacheDir();
+        if ($handle = opendir($cachedir)) {
+            $f =$sel->module.'~';
+            while (false !== ($file = readdir($handle))) {
+               if(strpos($file,$f) === 0)
+                  unlink($cachedir.$file);
+            }
+            closedir($handle);
+        }
 
         // compilation du fichier xml
         $xml = simplexml_load_file ( $sourceFile);
@@ -31,6 +39,9 @@ class jActionsCompiler implements jISimpleCompiler {
            jContext::pop();
            return false;
         }
+
+
+
         $foundAction=false;
         foreach($xml->request as $req){
             if(isset($req['type'])){
