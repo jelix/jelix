@@ -63,9 +63,13 @@ class jCoordinator {
         $this->configFile = $configFile;
         $gJConfig = jConfig::load($configFile);
 
+
         // set Error and exception handler
-        //set_error_handler('jErrorHandler');
-        //set_exception_handler('JExceptionHandler');
+        // ne devrait être désactivé que lors de certains tests de jelix
+        if($gJConfig->use_error_handler){
+            set_error_handler('jErrorHandler');
+            set_exception_handler('JExceptionHandler');
+        }
 
         $this->_loadPlugins();
     }

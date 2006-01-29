@@ -51,7 +51,7 @@ class jResponseXul extends jResponse {
      * selecteur du template principal
      * le contenu du template principal concerne le contenu de <body>
      */
-	 public $bodyTpl = 'myapp~mainxul';
+    public $bodyTpl = 'myapp~mainxul';
 
     /**
      * template principal à afficher en cas d'erreur
@@ -138,12 +138,12 @@ class jResponseXul extends jResponse {
      * methode pour ajouter du contenu avant/aprés le contenu principal
      */
 
-    function addTopOfBody($content){
+    function addContent($content, $beforeTpl = false){
+      if($beforeTpl){
         $this->_bodyTop[]=$content;
-    }
-
-    function addBottomOfBody($content){
-        $this->_bodyBottom[]=$content;
+      }else{
+         $this->_bodyBottom[]=$content;
+      }
     }
 
     /**

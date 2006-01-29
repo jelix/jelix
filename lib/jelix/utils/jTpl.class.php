@@ -28,6 +28,22 @@ class jTpl {
         }
     }
 
+    public function append ($name, $value = null){
+        if(is_array($name)){
+           foreach ($name as $key => $val) {
+               if(isset($this->_vars[$key]))
+                  $this->_vars[$key] .= $val;
+               else
+                  $this->_vars[$key] = $val;
+           }
+        }else{
+            if(isset($this->_vars[$name]))
+               $this->_vars[$name] .= $value;
+            else
+               $this->_vars[$name] = $value;
+        }
+    }
+
     function assignZone($name, $zoneName, $params=array()){
         $this->_vars[$name] = jZone::processZone ($zoneName, $params);
     }

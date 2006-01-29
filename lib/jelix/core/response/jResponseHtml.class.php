@@ -100,6 +100,13 @@ class jResponseHtml extends jResponse {
         if($this->_isXhtml){
             if($this->_httpHeader){
                header('Content-Type: text/html;charset='.$this->_charset);
+               /*
+               header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+               header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+               header("Cache-Control: no-store, no-cache, must-revalidate");
+               header("Cache-Control: post-check=0, pre-check=0", false);
+               header("Pragma: no-cache");
+               */
             }
             echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$this->_lang,'" lang="',$this->_lang,'">
@@ -184,13 +191,14 @@ class jResponseHtml extends jResponse {
      * methode pour ajouter du contenu avant/aprés le contenu du body
      */
 
-    final public function addTopOfBody($content){
+    function addContent($content, $beforeTpl = false){
+      if($beforeTpl){
         $this->_bodyTop[]=$content;
+      }else{
+         $this->_bodyBottom[]=$content;
+      }
     }
 
-    final public function addBottomOfBody($content){
-        $this->_bodyBottom[]=$content;
-    }
 
     /**
      * méthodes pour manipuler le header

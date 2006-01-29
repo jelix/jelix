@@ -33,12 +33,12 @@ class jUrlEngineSignificant implements jIUrlEngine {
    /**
    * liste des données pour la création des urls (voir structure plus loin)
    */
-   var $dataCreateUrl = null;
+   protected $dataCreateUrl = null;
 
    /**
    * liste des données pour l'analyse des urls
    */
-   var $dataParseUrl =  null;
+   protected $dataParseUrl =  null;
 
    /**
    *
