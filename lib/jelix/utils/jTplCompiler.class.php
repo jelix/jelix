@@ -63,7 +63,7 @@ class jTplCompiler implements jISimpleCompiler {
 
         $tplcontent = file_get_contents ( $this->_sourceFile);
 
-		  preg_match_all("!{literal}(.*?){/literal}!s", $tplcontent, $_match);
+        preg_match_all("!{literal}(.*?){/literal}!s", $tplcontent, $_match);
 
         $this->_literals = $_match[1];
 
@@ -256,6 +256,8 @@ class jTplCompiler implements jISimpleCompiler {
 
              if($type == T_STRING && $inLocale){
                 $locale.=$str;
+             }elseif($type == T_VARIABLE && $inLocale){
+                $locale.='\'.$t->_vars[\''.substr($str,1).'\'].\'';
              }elseif($type == T_VARIABLE){
                 $result.='$t->_vars[\''.substr($str,1).'\']';
              }elseif($type == T_WHITESPACE || in_array($type, $allowed)){
