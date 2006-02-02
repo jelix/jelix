@@ -10,11 +10,11 @@
          <response default="true" name="event" type="unittest" />
       </action>
 
-      <action name="urlsigparse" ag="urlsig" method="getTestParsing" >
+      <action name="urlsigparse" ag="default" method="getTestParsing" >
          <response default="true" name="default" type="unittest" />
       </action>
 
-      <action name="urlsigcreate" ag="urlsig" method="getTestCreate" >
+      <action name="urlsigcreate" ag="default" method="getTestCreate" >
          <response default="true" name="default" type="unittest" />
       </action>
 

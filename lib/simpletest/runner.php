@@ -182,6 +182,7 @@
                 if ($this->_scorer->shouldInvoke($this->_test_case->getLabel(), $method)) {
                     $invoker->invoke($method);
                 }
+
                 $this->_scorer->paintMethodEnd($method);
             }
         }

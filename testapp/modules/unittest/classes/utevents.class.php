@@ -1,22 +1,30 @@
 <?php
+/**
+* @package     testapp
+* @subpackage  unittest module
+* @version     $Id$
+* @author      Jouanneau Laurent
+* @contributor
+* @copyright   2006 Jouanneau laurent
+* @link        http://www.jelix.org
+* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+*/
 
 class UTEvents extends UnitTestCase {
 
     function testEvents() {
-      $this->sendMessage("évenement simple");
       $response = jEvent::notify('TestEvent');
       $response = $response->getResponse ();
       $response = serialize($response[0]);
       $temoin = serialize(array('module'=>'unittest','ok'=>true));
 
-      $this->assertTrue($temoin == $response, 'Premier evènement');
+      $this->assertTrue($temoin == $response, 'évenement simple');
 
-      $this->sendMessage("évenement avec paramètres");
       $temoin = array('hello'=>'world');
       $response = jEvent::notify('TestEventWithParams',$temoin );
       $response = $response->getResponse ();
 
-      $this->assertTrue(($response[0]['params'] == 'world'), 'Deuxième evènement');
+      $this->assertTrue(($response[0]['params'] == 'world'), 'évenement avec paramètres');
     }
 }
 

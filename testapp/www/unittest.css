@@ -31,6 +31,7 @@ body {
 }
 
 .fail { color: red; }
+.pass { color: green; }
 pre { background-color: lightgray; }
 
 

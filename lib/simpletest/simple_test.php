@@ -83,7 +83,7 @@
          */
         function run(&$reporter) {
             $reporter->paintCaseStart($this->getLabel());
-            $this->_runner = &$this->_createRunner($reporter);
+            $this->_runner = & $this->_createRunner($reporter);
             $this->_runner->run();
             $reporter->paintCaseEnd($this->getLabel());
             return $reporter->getStatus();

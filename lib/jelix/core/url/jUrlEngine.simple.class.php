@@ -24,7 +24,7 @@ class jUrlEngineSimple implements jIUrlEngine {
          $url->scriptName = $this->getScript($url->requestType, $url->getParam('module'),$url->getParam('action'));
     }
 
-    protected function getScript($requestType, $module=null, $action=null, $nosuffix=false){
+    protected function getScript($requestType, $module=null, $action=null){
         static $urlspe = null;
         global $gJConfig;
 
@@ -40,26 +40,21 @@ class jUrlEngineSimple implements jIUrlEngine {
                  }
                }
            }
-
            $found = false;
-
-           if($action && $action !='' && isset($sep[$module.'~'.$action.'@'.$requestType])){
-                $script = $sep[$module.'~'.$action.'@'.$requestType];
+           if($action && $action !='' && isset($urlspe[$module.'~'.$action.'@'.$requestType])){
+                $script = $urlspe[$module.'~'.$action.'@'.$requestType];
                 $found = true;
            }
-
-           if($module && $module !='' && !$found &&  isset($sep[$module.'~*@'.$requestType])){
-                $script = $sep[$module.'~*@'.$requestType];
+           if($module && $module !='' && !$found &&  isset($urlspe[$module.'~*@'.$requestType])){
+                $script = $urlspe[$module.'~*@'.$requestType];
                 $found = true;
            }
-
-           if(!$found && isset($sep['@'.$requestType])){
-               $script = $sep['@'.$requestType];
+           if(!$found && isset($urlspe['@'.$requestType])){
+               $script = $urlspe['@'.$requestType];
                 $found = true;
            }
         }
-
-        if(!$nosuffix && !$gJConfig->urlengine['multiview_on']){
+        if(!$gJConfig->urlengine['multiview_on']){
             $script.=$gJConfig->urlengine['entrypoint_extension'];
         }
         return $script;

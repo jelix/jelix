@@ -197,7 +197,9 @@ class jUrlEngineSignificant implements jIUrlEngine {
          */
 
          $url->scriptName = $urlinfo[1];
-
+         if(!$GLOBALS['gJConfig']->urlengine['multiview_on']){
+            $script.=$GLOBALS['gJConfig']->urlengine['entrypoint_extension'];
+         }
          if($urlinfo[0]==0){
             $cl = $urlinfo[1];
             $handler = new $cl();

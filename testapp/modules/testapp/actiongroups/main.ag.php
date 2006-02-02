@@ -25,6 +25,7 @@ class AGMain extends jActionGroup {
          $rep->body->assign('person', $this->param('person','You'));
          $rep->body->assign('value','name');
       }
+
       return $rep;
    }
 
