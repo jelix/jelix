@@ -28,6 +28,17 @@ class jSelectorUrlCfgSig extends jSelectorCfg {
    public function getCompiledFilePath (){ return JELIX_APP_TEMP_PATH.'compiled/urlsig/creationinfos.php';}
 }
 
+class jSelectorUrlHandler extends jSelectorClass {
+    public $type = 'urlhandler';
+    protected $_suffix = '.urlhandler.php';
+}
+
+interface jIUrlSignificantHandler {
+   public function parse($url);
+   public function create($url);
+
+}
+
 class jUrlEngineSignificant implements jIUrlEngine {
 
    /**
@@ -44,10 +55,11 @@ class jUrlEngineSignificant implements jIUrlEngine {
    *
    */
    public function parse($scriptNamePath, $params, $pathinfo ){
+      global $gJConfig;
 
       $url = new jUrl($scriptNamePath, $params, $pathinfo);
 
-      if ($GLOBALS['gJConfig']->urlengine['enable_parser']){
+      if ($gJConfig->urlengine['enable_parser']){
          $sel = new jSelectorUrlCfgSig('urls.xml');
          jIncluder::inc($sel);
          $basepath = $GLOBALS['gJConfig']->urlengine['basepath'];
@@ -56,7 +68,13 @@ class jUrlEngineSignificant implements jIUrlEngine {
          }else{
             $snp = $scriptNamePath;
          }
+         $pos = strrpos($snp,$gJConfig->urlengine['entrypoint_extension']);
+         if($pos !== false){
+            $snp = substr($snp,0,$pos);
+         }
+
          $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($snp).'.entrypoint.php';
+jLog::log($file);
          if(file_exists($file)){
             require_once($file);
             $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
@@ -90,15 +108,16 @@ class jUrlEngineSignificant implements jIUrlEngine {
             $isDefault = $infoparsing;
             continue;
          }
-
+jLog::dump($infoparsing, "infoparsing");
          $url->params['module']=$infoparsing[0];
          $url->params['action']=$infoparsing[1];
 
-         if(count($infoparsing < 4)){
+         if(count($infoparsing) < 4){
             // on a un tableau du style
             // array( 0=> 'module', 1=>'action', 2=>'handler')
-            $cl = $infoparsing[2];
-            $handler = new $cl();
+            $s = new jSelectorUrlHandler($infoparsing[2]);
+            $c ='URLS'.$s->resource;
+            $handler =new $c();
             if($handler->parse($url)){
                $foundurl=true;
                break;
@@ -111,7 +130,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
                5=>array('bla'=>'cequejeveux' ) // tableau des valeurs statiques
             */
             if(preg_match ($infoparsing[2], $pathinfo, $matches)){
-
+jLog::dump($matches, "matches pathinfo");
                // on fusionne les parametres statiques
                if ($infoparsing[5]){
                   $url->params = array_merge ($url->params, $infoparsing[5]);
@@ -125,12 +144,15 @@ class jUrlEngineSignificant implements jIUrlEngine {
                               $url->params[$name] = jUrl::unescape($matches[$k]);
                         }else{
                               $url->params[$name] = $matches[$k];
+
                         }
                      }
                   }
                }
                $foundurl = true;
                break;
+            }else{
+jLog::log("regexp echouée ".         $infoparsing[2]);
             }
          }
       }
@@ -147,12 +169,14 @@ class jUrlEngineSignificant implements jIUrlEngine {
    /**
    * @param jUrl    $url    url à modifier
    */
-   public function create( &$url){
+   public function create( $url){
+
       if($this->dataCreateUrl == null){
          $sel = new jSelectorUrlCfgSig('urls.xml');
          jIncluder::inc($sel);
          $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
       }
+
       /*
       a) recupere module~action@request -> obtient les infos pour la creation de l'url
       b) récupère un à un les parametres indiqués dans params à partir de jUrl
@@ -170,7 +194,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
          $url->delParam('module');
          $url->delParam('action');
       }else{
-         $id = $module.'~@'.$url->requestType;
+         $id = $module.'~*@'.$url->requestType;
          if (isset ($this->dataCreateUrl [$id])){
             $urlinfo = &$this->dataCreateUrl[$id];
             $url->delParam('module');
@@ -198,11 +222,21 @@ class jUrlEngineSignificant implements jIUrlEngine {
 
          $url->scriptName = $urlinfo[1];
          if(!$GLOBALS['gJConfig']->urlengine['multiview_on']){
-            $script.=$GLOBALS['gJConfig']->urlengine['entrypoint_extension'];
+            $url->scriptName.=$GLOBALS['gJConfig']->urlengine['entrypoint_extension'];
          }
+         // pour certains types de requete, les paramètres ne sont pas dans l'url
+         // donc on les supprime
+         // c'est un peu crade de faire ça en dur ici, mais ce serait lourdingue
+         // de charger la classe request pour savoir si on peut supprimer ou pas
+         if(in_array($url->requestType ,array('xmlrpc','jsonrpc','soap'))){
+            $url->clearParam();
+            return;
+         }
+
          if($urlinfo[0]==0){
-            $cl = $urlinfo[1];
-            $handler = new $cl();
+            $s = new jSelectorUrlHandler($urlinfo[2]);
+            $c ='URLS'.$s->resource;
+            $handler =new $c();
             $handler->create($url);
          }elseif($urlinfo[0]==1){
             $result = $urlinfo[4];
@@ -216,6 +250,8 @@ class jUrlEngineSignificant implements jIUrlEngine {
             }
 
             $url->pathInfo = $result;
+         }elseif($urlinfo[0]==3){
+               $url->delParam('module');
          }
       }
    }

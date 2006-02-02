@@ -11,12 +11,6 @@
 *
 */
 
-class jSelectorUrlHandler extends jSelectorClass {
-    public $type = 'urlhandler';
-    protected $_dirname = 'classes/';
-    protected $_suffix = '.urlhandler.php';
-
-}
 
 /**
 * Compilateur pour le moteur d'url significatifs
@@ -92,21 +86,23 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
            $isDefault =  (isset($tag['default']) ? (((string)$tag['default']) == 'true'):false);
            $parseInfos = array($isDefault);
 
+           // si c'est le point d'entrée par défaut pour le type de requet indiqué
+           // alors on indique une regle supplementaire que matcherons
+           // toutes les urls qui ne correspondent pas aux autres rêgles
            if($isDefault){
              $createUrlInfos['@'.$requestType]=array(2,$entryPoint);
            }
-
 
            $parseContent = "<?php \n";
            foreach($tag->url as $url){
                $module = (string)$url['module'];
 
-               // dans le cas d'un point d'entrée qui est celui par defaut pour le type de requete indiqué
+               // dans le cas d'un point d'entrée qui n'est pas celui par défaut pour le type de requete indiqué
                // si il y a juste un module indiqué alors on sait que toutes les actions
                // concernant ce module passeront par ce point d'entrée.
-               if($isDefault && !isset($url['action']) && !isset($url['handler'])){
+               if(!$isDefault && !isset($url['action']) && !isset($url['handler'])){
                  $parseInfos[]=array($module, '', '.*', array(), array(), array() );
-                 $createUrlInfos[$module.'~@'.$requestType] = array(2,$entryPoint);
+                 $createUrlInfos[$module.'~*@'.$requestType] = array(3,$entryPoint);
                  continue;
                }
 
@@ -117,7 +113,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                if(isset($url['handler'])){
                   $class = (string)$url['handler'];
                   $parseInfos[]=array($module, $action, $class );
-                  $s= new jSelectorUrlHandler($module.'~'.$action);
+                  $s= new jSelectorUrlHandler($module.'~'.$class);
                   $createUrlContent.="include_once('".$s->getPath()."');\n";
                   $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$entryPoint, $class);
                   continue;
@@ -129,7 +125,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                   $path = (string)$url['pathinfo'];
                   $regexppath = $path;
 
-                  if(preg_match_all("/\:([a-zA-Z]+)/",$path,$m, PREG_PATTERN_ORDER)){
+                  if(preg_match_all("/\:([a-zA-Z_]+)/",$path,$m, PREG_PATTERN_ORDER)){
                       $listparam=$m[1];
 
                       foreach($url->param as $var){
@@ -164,7 +160,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                foreach($url->static as $var){
                   $liststatics[(string)$var['name']] =(string)$var['value'];
                }
-               $parseInfos[]=array($module, $action, $regexppath, $listparam, $escapes, $liststatics );
+               $parseInfos[]=array($module, $action, '!^'.$regexppath.'$!', $listparam, $escapes, $liststatics );
                $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(1,$entryPoint, $listparam, $escapes,$path);
            }
 
@@ -174,6 +170,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
         }
         $createUrlContent .='$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($createUrlInfos, true).";\n?>";
         $file->write(JELIX_APP_TEMP_PATH.'compiled/urlsig/creationinfos.php',$createUrlContent);
+        return true;
     }
 
 }

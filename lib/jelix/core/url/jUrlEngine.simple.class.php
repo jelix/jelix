@@ -15,13 +15,21 @@
  */
 class jUrlEngineSimple implements jIUrlEngine {
 
-    public function parse($scriptNamePath, $params, $pathinfo ){
+    public function parse($scriptNamePath, $pathinfo, $params ){
         $url = new jUrl($scriptNamePath, $params, $pathinfo);
         return $url;
     }
 
-    public function create(&$url){
+    public function create($url){
          $url->scriptName = $this->getScript($url->requestType, $url->getParam('module'),$url->getParam('action'));
+
+         // pour certains types de requete, les paramètres ne sont pas dans l'url
+         // donc on les supprime
+         // c'est un peu crade de faire ça en dur ici, mais ce serait lourdingue
+         // de charger la classe request pour savoir si on peut supprimer ou pas
+         if(in_array($url->requestType ,array('xmlrpc','jsonrpc','soap')))
+            $url->clearParam();
+
     }
 
     protected function getScript($requestType, $module=null, $action=null){
@@ -35,8 +43,8 @@ class jUrlEngineSimple implements jIUrlEngine {
                $urlspe = array();
                foreach($gJConfig->simple_urlengine_entrypoints as $entrypoint=>$sel){
                  $selectors = preg_split("/[\s,]+/", $sel);
-                 foreach($selectors as $sel){
-                     $urlspe[$sel]= $entrypoint;
+                 foreach($selectors as $sel2){
+                     $urlspe[$sel2]= $entrypoint;
                  }
                }
            }

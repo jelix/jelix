@@ -80,7 +80,7 @@
          *    @access public
          *    @static
          */
-        function instance() {
+        static function instance() {
             static $queue = false;
             if (! $queue) {
                 $queue = new SimpleErrorQueue();

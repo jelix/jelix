@@ -28,7 +28,7 @@
         </url>
     </classicentrypoint>
     <classicentrypoint name="foo/bar">
-       <url handler="urlfoo" module="unittest" action="url4" />
+       <url handler="urlsig" module="unittest" action="url4" />
     </classicentrypoint>
 
     <classicentrypoint name="news">

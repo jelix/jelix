@@ -1,14 +1,14 @@
 <?php
 
-class URLurlsig {
+class URLSurlsig implements jIUrlSignificantHandler {
 
     // exemple de handler.
     // ici les traitements sont simples, c'est juste pour montrer le principe
 
     // on peut utiliser le même handler pour plusieurs actions
-    // il suffit de tester les parametres module desc action de l'objet url
+    // il suffit de tester les parametres de l'objet url
 
-    function parse(&$url){
+    function parse($url){
         if(preg_match("/^\/withhandler\/(.*)\/(.*)$/",$url->pathInfo,$match)){
 
             $url->pathInfo='';
@@ -19,7 +19,7 @@ class URLurlsig {
             return false;
     }
 
-    function create(&$url){
+    function create($url){
 
         $f=$url->getParam('first');
         $s=$url->getParam('second');

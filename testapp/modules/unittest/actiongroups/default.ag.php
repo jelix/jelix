@@ -39,9 +39,18 @@ class AGDefault extends jActionGroup {
 
       $ut = jClasses::create("unittestservice");
       $ut->init($rep);
-      $ut->urlsTest();
+      $ut->urlsCreateTest();
 
       return $rep;
    }
-}
+   function getTestParsing(){
+      $rep = $this->getResponse('default');
+      $rep->title = 'test unitaires sur le parsing d\'url avec jUrl';
+
+      $ut = jClasses::create("unittestservice");
+      $ut->init($rep);
+      $ut->urlsParseTest();
+
+      return $rep;
+   }}
 ?>

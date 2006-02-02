@@ -73,7 +73,7 @@ $gDefaultConfig = array (
     'multiview_on' => '',
     'notfound_act' => 'jelix~notfound'
   ),
-  'urlengine_specific_entrypoints' =>
+  'simple_urlengine_entrypoints' =>
   array (
      'index' => '@classic',
      'xmlrpc'=> '@xmlrpc',

@@ -89,7 +89,7 @@ IIS_stripslashes_path_key = on
 index = "@classic"
 xmlrpc = "@xmlrpc"
 jsonrpc = "@jsonrpc"
-testnews = "unittest~url2@classic"
+testnews = "unittest~url2@classic unittest~url3@classic"
 foo/bar = "unittest~url4@classic"
 news = "new~*@classic"
 

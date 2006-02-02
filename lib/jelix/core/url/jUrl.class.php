@@ -31,7 +31,7 @@ interface jIUrlEngine {
    * @param jUrl $url l'url à transformer
    * @return void
    */
-  public function create(&$url);
+  public function create($url);
 
 }
 
@@ -216,7 +216,7 @@ class jUrl {
      */
     static function parse($scriptNamePath, $pathinfo, $params ){
          $engine = jUrl::getEngine();
-         return $engine->parse($scriptNamePath,$pathinfo, $params);
+         return $engine->parse($scriptNamePath, $params,$pathinfo);
     }
 
 
@@ -255,7 +255,7 @@ class jUrl {
         }
         $sel = new JSelectorAct($actionSelector);
         if($sel->isValid()){
-           return array('module'=>$sel->module, 'action'=>$sel->ressource, 'request'=>$sel->request);
+           return array('module'=>$sel->module, 'action'=>$sel->resource, 'request'=>$sel->request);
         }else{
           return false;
         }
@@ -267,7 +267,7 @@ class jUrl {
         if($highlevel){
             $str=strtr($str,'àâäéèêëïîôöùüû','aaaeeeeiioouuu'); // supprime les caractères accentués, et les quotes, doubles quotes
             $str=preg_replace("/([^\w])/"," ",$str); // remplace tout ce qui n'est pas lettre par un espace
-            $str=preg_replace("/(?<=\s)\w{1,2}(?=\s)/"," ",$str); // enleve les mots de moins de 2 lettres
+            //$str=preg_replace("/(?<=\s)\w{1,2}(?=\s)/"," ",$str); // enleve les mots de moins de 2 lettres
             $str=preg_replace("/( +)/","-",trim($str)); // on remplace les espaces et groupes d'espaces par -
             $str=strtolower($str); // on met en minuscule
             return $str;
