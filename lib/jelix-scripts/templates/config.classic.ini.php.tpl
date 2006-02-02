@@ -89,3 +89,7 @@ IIS_stripslashes_path_key = on
 index = "@classic"
 xmlrpc = "@xmlrpc"
 jsonrpc = "@jsonrpc"
+
+
+[logfiles]
+default=messages.log

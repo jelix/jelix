@@ -78,6 +78,9 @@ $gDefaultConfig = array (
      'index' => '@classic',
      'xmlrpc'=> '@xmlrpc',
      'jsonrpc'=>'@jsonrpc'
+  ),
+  'logfiles'=>array(
+   'default'=>'messages.log'
   )
 );
 ?>

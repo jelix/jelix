@@ -487,7 +487,7 @@ class jSelectorTmp extends jSelectorSimpleFile {
      public $type = 'tmp';
      function __construct($sel){
         $this->_basePath = JELIX_APP_TEMP_PATH;
-        parent::_construct($sel);
+        parent::__construct($sel);
      }
 }
 
@@ -495,7 +495,7 @@ class jSelectorLog extends jSelectorSimpleFile {
      public $type = 'log';
      function __construct($sel){
         $this->_basePath = JELIX_APP_LOG_PATH;
-        parent::_construct($sel);
+        parent::__construct($sel);
      }
 }
 
@@ -503,7 +503,7 @@ class jSelectorLib extends jSelectorSimpleFile {
      public $type = 'lib';
      function __construct($sel){
         $this->_basePath = LIB_PATH;
-        parent::_construct($sel);
+        parent::__construct($sel);
      }
 }
 
