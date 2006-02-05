@@ -47,12 +47,12 @@ class UTCreateUrls extends UnitTestCase {
        //$gJCoord->request->type=;
        $gJConfig->urlengine = array(
          'engine'=>'simple',
-         'enable_parser'=>true,
-         'multiview_on'=>false,
-         'basepath'=>'/',
-         'default_entrypoint'=>'index',
-         'entrypoint_extension'=>'.php',
-         'notfound_act'=>'jelix~notfound'
+         'enableParser'=>true,
+         'multiview'=>false,
+         'basePath'=>'/',
+         'defaultEntrypoint'=>'index',
+         'entrypointExtension'=>'.php',
+         'notfoundAct'=>'jelix~notfound'
        );
       /* $gJConfig->simple_urlengine_entrypoints = array(
           'index' => "@classic",
@@ -89,7 +89,7 @@ class UTCreateUrls extends UnitTestCase {
 
 
       $this->sendMessage("simple, multiview = true");
-      $gJConfig->urlengine['multiview_on']=true;
+      $gJConfig->urlengine['multiview']=true;
       $trueResult=array(
           "index?mois=10&annee=2005&id=35&module=unittest&action=url1",
           "testnews?mois=05&annee=2004&module=unittest&action=url2",
@@ -117,12 +117,12 @@ class UTCreateUrls extends UnitTestCase {
        //$gJCoord->request->type=;
        $gJConfig->urlengine = array(
          'engine'=>'significant',
-         'enable_parser'=>true,
-         'multiview_on'=>false,
-         'basepath'=>'/',
-         'default_entrypoint'=>'index',
-         'entrypoint_extension'=>'.php',
-         'notfound_act'=>'jelix~notfound'
+         'enableParser'=>true,
+         'multiview'=>false,
+         'basePath'=>'/',
+         'defaultEntrypoint'=>'index',
+         'entrypointExtension'=>'.php',
+         'notfoundAct'=>'jelix~notfound'
        );
 
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
@@ -156,7 +156,7 @@ class UTCreateUrls extends UnitTestCase {
 
 
       $this->sendMessage("significant, multiview = true");
-      $gJConfig->urlengine['multiview_on']=true;
+      $gJConfig->urlengine['multiview']=true;
       $trueResult=array(
           "index/test/news/2005/10/35",
           "testnews/2004/05",
@@ -173,19 +173,4 @@ class UTCreateUrls extends UnitTestCase {
       }
     }
 }
-/*      // significant
-         // parse
-            $GLOBALS['gJConfig']->urlengine['enable_parser']
-            jSelectorUrlCfgSig
-            $GLOBALS['gJConfig']->urlengine['basepath']
-            $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
-            $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'];
-            $gJConfig->urlengine['notfound_act']
-         //create
-            jContext::get()
-            $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
-            $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'];
-            $gJConfig->urlengine['multiview_on']
-            $gJConfig->urlengine['entrypoint_extension'];
-*/
 ?>

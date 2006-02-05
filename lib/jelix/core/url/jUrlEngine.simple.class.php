@@ -36,7 +36,7 @@ class jUrlEngineSimple implements jIUrlEngine {
         static $urlspe = null;
         global $gJConfig;
 
-        $script = $gJConfig->urlengine['default_entrypoint'];
+        $script = $gJConfig->urlengine['defaultEntrypoint'];
 
         if(count($gJConfig->simple_urlengine_entrypoints)){
            if($urlspe == null){
@@ -62,8 +62,8 @@ class jUrlEngineSimple implements jIUrlEngine {
                 $found = true;
            }
         }
-        if(!$gJConfig->urlengine['multiview_on']){
-            $script.=$gJConfig->urlengine['entrypoint_extension'];
+        if(!$gJConfig->urlengine['multiview']){
+            $script.=$gJConfig->urlengine['entrypointExtension'];
         }
         return $script;
     }

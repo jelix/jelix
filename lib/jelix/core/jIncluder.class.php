@@ -70,7 +70,7 @@ class jIncluder {
            return array('selector'=>$aSelector, 'compilation'=>false, 'compileok'=>false);
         }
 
-        if($gJConfig->compilation['check_cache_filetime'] && !$mustCompile){
+        if($gJConfig->compilation['checkCacheFiletime'] && !$mustCompile){
             if( filemtime($sourcefile) > filemtime($cachefile)){
                 $mustCompile = true;
             }
@@ -111,7 +111,7 @@ class jIncluder {
         }
 
         $mustCompile = $gJConfig->compilation['force'] || !file_exists($cachefile);
-        $checkCompile = $gJConfig->compilation['check_cache_filetime'];
+        $checkCompile = $gJConfig->compilation['checkCacheFiletime'];
 
         if(!$mustCompile && $checkCompile){
             $compiledate = filemtime($cachefile);

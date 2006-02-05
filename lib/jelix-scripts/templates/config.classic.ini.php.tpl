@@ -43,7 +43,7 @@ exception    = ECHO
 
 
 [compilation]
-check_cache_filetime  = on
+checkCacheFiletime  = on
 force  = off
 
 [urlengine]
@@ -51,28 +51,28 @@ force  = off
 engine        = simple
 
 ; active l'analyse d'url (mettre à off si vous utilisez le mod_rewrite d'apache)
-enable_parser = on
+enableParser = on
 
-multiview_on = off
+multiview = off
 
 ; chemin url jusqu'au repertoire www (celui que vous tapez dans le navigateur pour accéder à index.php etc.)
 ; peut être égale à "/" si vous spécifiez www comme étant le documentRoot de votre site au niveau du serveur
-basepath = "/{$appname}/www"
+basePath = "/{$appname}/www"
 
-default_entrypoint= index
+defaultEntrypoint= index
 
-entrypoint_extension= .php
+entrypointExtension= .php
 
-notfound_act = "jelix~notfound"
+notfoundAct = "jelix~notfound"
 
 ;indique si vous utilisez IIS comme serveur
-use_IIS = off
+useIIS = off
 
 ;indique le paramètre dans $_GET où est indiqué le path_info
-IIS_path_key = __JELIX_URL__
+IISPathKey = __JELIX_URL__
 
-;indique si il faut stripslashé le path_info récupéré par le biais de url_IIS_path_key
-IIS_stripslashes_path_key = on
+;indique si il faut stripslashé le path_info récupéré par le biais de IISPathKey
+IISStripslashes_path_key = on
 
 
 [simple_urlengine_entrypoints]

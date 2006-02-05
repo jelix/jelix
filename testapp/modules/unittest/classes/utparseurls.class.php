@@ -46,12 +46,12 @@ class UTParseUrls extends UnitTestCase {
        //$gJCoord->request->type=;
        $gJConfig->urlengine = array(
          'engine'=>'significant',
-         'enable_parser'=>true,
-         'multiview_on'=>false,
-         'basepath'=>'/',
-         'default_entrypoint'=>'index',
-         'entrypoint_extension'=>'.php',
-         'notfound_act'=>'jelix~notfound'
+         'enableParser'=>true,
+         'multiview'=>false,
+         'basePath'=>'/',
+         'defaultEntrypoint'=>'index',
+         'entrypointExtension'=>'.php',
+         'notfoundAct'=>'jelix~notfound'
        );
 
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
@@ -89,7 +89,7 @@ class UTParseUrls extends UnitTestCase {
 
 
       $this->sendMessage("significant, multiview = true");
-      $gJConfig->urlengine['multiview_on']=true;
+      $gJConfig->urlengine['multiview']=true;
       $request=array(
           array("index","/test/news/2005/10/35",array()),
           array("testnews","/2004/05",array()),

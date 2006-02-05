@@ -59,16 +59,16 @@ class jUrlEngineSignificant implements jIUrlEngine {
 
       $url = new jUrl($scriptNamePath, $params, $pathinfo);
 
-      if ($gJConfig->urlengine['enable_parser']){
+      if ($gJConfig->urlengine['enableParser']){
          $sel = new jSelectorUrlCfgSig('urls.xml');
          jIncluder::inc($sel);
-         $basepath = $GLOBALS['gJConfig']->urlengine['basepath'];
+         $basepath = $GLOBALS['gJConfig']->urlengine['basePath'];
          if(strpos($scriptNamePath, $basepath) === 0){
             $snp = substr($scriptNamePath,strlen($basepath));
          }else{
             $snp = $scriptNamePath;
          }
-         $pos = strrpos($snp,$gJConfig->urlengine['entrypoint_extension']);
+         $pos = strrpos($snp,$gJConfig->urlengine['entrypointExtension']);
          if($pos !== false){
             $snp = substr($snp,0,$pos);
          }
@@ -92,8 +92,8 @@ class jUrlEngineSignificant implements jIUrlEngine {
    protected function _parse($url){
       global $gJConfig;
       /*$script = $url->scriptName;
-      if(strpos($script, $gJConfig->urlengine['entrypoint_extension']) !== false){
-         $script=substr($script,0,- (strlen($gJConfig->urlengine['entrypoint_extension'])));
+      if(strpos($script, $gJConfig->urlengine['entrypointExtension']) !== false){
+         $script=substr($script,0,- (strlen($gJConfig->urlengine['entrypointExtension'])));
       }*/
       if(substr($url->pathInfo,-1) == '/' && $url->pathInfo != '/'){
             $pathinfo = substr($url->pathInfo,0,-1);
@@ -163,7 +163,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
       }
       if(!$foundurl && !$isDefault){
          $url->pathInfo='';
-         $url->params = $url->getAction($gJConfig->urlengine['notfound_act']);
+         $url->params = $url->getAction($gJConfig->urlengine['notfoundAct']);
          $foundurl = true;
       }
 
@@ -226,8 +226,8 @@ class jUrlEngineSignificant implements jIUrlEngine {
          */
 
          $url->scriptName = $urlinfo[1];
-         if(!$GLOBALS['gJConfig']->urlengine['multiview_on']){
-            $url->scriptName.=$GLOBALS['gJConfig']->urlengine['entrypoint_extension'];
+         if(!$GLOBALS['gJConfig']->urlengine['multiview']){
+            $url->scriptName.=$GLOBALS['gJConfig']->urlengine['entrypointExtension'];
          }
          // pour certains types de requete, les paramètres ne sont pas dans l'url
          // donc on les supprime

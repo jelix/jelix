@@ -57,9 +57,9 @@ abstract class jRequest {
                 $pathinfo = substr ($_SERVER['PATH_INFO'], strlen ($_SERVER['SCRIPT_NAME']));
             }
         }else{
-            if($gJConfig->urlengine['use_IIS'] && isset ($_GET[$gJConfig->urlengine['url_IIS_path_key']])){
-                $pathinfo = $_GET[$gJConfig->urlengine['url_IIS_path_key']];
-                $pathinfo = $gJConfig->urlengine['IIS_stripslashes_path_key'] === true ? stripslashes($pathinfo) : $pathinfo;
+            if($gJConfig->urlengine['useIIS'] && isset ($_GET[$gJConfig->urlengine['IISPathKey']])){
+                $pathinfo = $_GET[$gJConfig->urlengine['IISPathKey']];
+                $pathinfo = $gJConfig->urlengine['IISStripslashesPathKey'] === true ? stripslashes($pathinfo) : $pathinfo;
             }else{
                 //if($_SERVER['PHP_SELF']!= $_SERVER['SCRIPT_NAME']){
                 //   $pathinfo = substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME'])-1);

@@ -77,7 +77,7 @@ class jBundle {
             if ($gJConfig->compilation['force']){
                $okcompile = false;
             }else{
-                if ($gJConfig->compilation['check_cache_filetime']){
+                if ($gJConfig->compilation['checkCacheFiletime']){
                     if (is_readable ($source) && filemtime($source) > filemtime($cache)){
                         $okcompile = false;
                     }

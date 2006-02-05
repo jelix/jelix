@@ -67,7 +67,7 @@ class jConfig {
         $compil=false;
         if(!file_exists($file)){
             $compil=true;
-        }else if($config->compilation['check_cache_filetime']){
+        }else if($config->compilation['checkCacheFiletime']){
             $t = filemtime($file);
             if(filemtime(JELIX_APP_CONFIG_PATH.$configFile)>$t){
                 $compil=true;

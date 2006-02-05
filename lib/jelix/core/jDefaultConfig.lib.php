@@ -57,21 +57,21 @@ $gDefaultConfig = array (
 
   'compilation' =>
   array (
-    'check_cache_filetime' => '1',
+    'checkCacheFiletime' => '1',
     'force' => ''
   ),
   'urlengine' =>
   array (
-    'use_IIS' => '',
-    'IIS_path_key' => '\'__JELIX_URL__\'',
-    'IIS_stripslashes_path_key' => '1',
-    'default_entrypoint' => 'index',
-    'entrypoint_extension' => '.php',
+    'useIIS' => '',
+    'IISPathKey' => '\'__JELIX_URL__\'',
+    'IISStripslashesPathKey' => '1',
+    'defaultEntrypoint' => 'index',
+    'entrypointExtension' => '.php',
     'engine' => 'simple',
-    'basepath'=>'',
-    'enable_parser' => '1',
-    'multiview_on' => '',
-    'notfound_act' => 'jelix~notfound'
+    'basePath'=>'',
+    'enableParser' => '1',
+    'multiview' => '',
+    'notfoundAct' => 'jelix~notfound'
   ),
   'simple_urlengine_entrypoints' =>
   array (
