@@ -41,7 +41,7 @@
                     new SimpleUrl('http://host/'));
         }
 
-        function testDefaultFrameTargetOnForm() {
+       function testDefaultFrameTargetOnForm() {
             $tag = new SimpleFormTag(array('method' => 'GET', 'action' => 'here.php', 'id' => '33'));
             $form = new SimpleForm($tag, new SimpleUrl('http://host/a/index.html'));
             $form->setDefaultTarget('frame');
@@ -82,7 +82,7 @@
             $this->assertIdentical($form->submit(), new SimpleFormEncoding());
         }
 
-        function testSubmitButton() {
+         function testSubmitButton() {
             $form = new SimpleForm(
                     new SimpleFormTag(array()),
                     new SimpleUrl('http://host'));
@@ -199,7 +199,7 @@
                     new SimpleFormEncoding(array('go.x' => 100, 'go.y' => 101, 'a' => 'A')));
         }
 
-        function testButtonTag() {
+       function testButtonTag() {
             $form = new SimpleForm(
                     new SimpleFormTag(array()),
                     new SimpleUrl('http://host'));
@@ -233,7 +233,7 @@
                     new SimpleFormEncoding(array('a' => 'aaa')));
         }
 
-        function testUnchecked() {
+         function testUnchecked() {
             $form = new SimpleForm(
                     new SimpleFormTag(array()),
                     new SimpleUrl('htp://host'));
@@ -259,7 +259,7 @@
             $this->assertEqual($form->getValue('me'), false);
         }
 
-        function testSingleUncheckedRadioButton() {
+       function testSingleUncheckedRadioButton() {
             $form = new SimpleForm(
                     new SimpleFormTag(array()),
                     new SimpleUrl('htp://host'));
@@ -280,7 +280,7 @@
             $this->assertFalse($form->setField('me', 'other'));
         }
 
-        function testUncheckedRadioButtons() {
+         function testUncheckedRadioButtons() {
             $form = new SimpleForm(
                     new SimpleFormTag(array()),
                     new SimpleUrl('htp://host'));
@@ -313,11 +313,12 @@
         function testMultipleFieldsWithSameKey() {
             $form = new SimpleForm(
                     new SimpleFormTag(array()),
-                    new SimpleUrl('htp://host'));
+                    new SimpleUrl('http://host'));
             $form->addWidget(new SimpleCheckboxTag(
                     array('name' => 'a', 'type' => 'checkbox', 'value' => 'me')));
             $form->addWidget(new SimpleCheckboxTag(
                     array('name' => 'a', 'type' => 'checkbox', 'value' => 'you')));
+             $a=$form->getValue('a');
             $this->assertIdentical($form->getValue('a'), false);
             $this->assertTrue($form->setField('a', 'me'));
             $this->assertIdentical($form->getValue('a'), 'me');

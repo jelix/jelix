@@ -966,6 +966,7 @@
                     $values[] = $this->_widgets[$i]->getValue();
                 }
             }
+
             return $this->_coerceValues($values);
         }
 

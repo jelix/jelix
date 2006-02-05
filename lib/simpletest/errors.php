@@ -58,6 +58,9 @@
             return false;
         }
 
+        function getCount(){
+            return count($this->_queue);
+        }
         /**
          *    Discards the contents of the error queue.
          *    @access public

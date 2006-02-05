@@ -124,11 +124,17 @@
             set_error_handler('simpleTestErrorHandler');
             parent::invoke($method);
             $queue = &SimpleErrorQueue::instance();
-            while (list($severity, $message, $file, $line, $globals) = $queue->extract()) {
+            $c = $queue->getCount();
+            restore_error_handler();
+            //while (list($severity, $message, $file, $line, $globals) = $queue->extract()) {
+            // not use "while", because in the case where an error appear during the paint
+            // processing, this cause an infinite loop
+            for($i=0; $i < $c; $i++){
+                list($severity, $message, $file, $line, $globals) = $queue->extract();
                 $test_case = &$this->getTestCase();
                 $test_case->error($severity, $message, $file, $line, $globals);
             }
-            restore_error_handler();
+            //restore_error_handler();
         }
     }
 

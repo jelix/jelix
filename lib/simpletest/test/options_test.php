@@ -71,7 +71,7 @@
             $object = new ComparisonClass();
             $object_reference = $object;
             $object_copy = new ComparisonClass();
-            $object_assignment = clone $object;
+            $object_assignment = $object;
             $this->assertTrue(SimpleTestCompatibility::isReference(
                     $object,
                     $object));

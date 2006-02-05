@@ -602,14 +602,14 @@
 
     class TestOfBrowserFrames extends UnitTestCase {
 
-        function &createBrowser(&$agent) {
+        function createBrowser($agent) {
             $browser = new MockUserAgentSimpleBrowser($this);
             $browser->setReturnReference('_createUserAgent', $agent);
             $browser->SimpleBrowser();
             return $browser;
         }
 
-        function &createUserAgent($pages) {
+        function createUserAgent($pages) {
             $agent = new MockSimpleUserAgent($this);
             foreach ($pages as $url => $raw) {
                 $url = new SimpleUrl($url);
@@ -641,7 +641,7 @@
 
         function testFramesetWithSingleFrame() {
             $frameset = '<frameset><frame name="a" src="frame.html"></frameset>';
-            $browser = &$this->createBrowser($this->createUserAgent(array(
+            $browser = $this->createBrowser($this->createUserAgent(array(
                     'http://site.with.one.frame/' => $frameset,
                     'http://site.with.one.frame/frame.html' => 'A frame')));
 
