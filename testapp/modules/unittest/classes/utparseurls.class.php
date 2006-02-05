@@ -60,11 +60,11 @@ class UTParseUrls extends UnitTestCase {
       $resultList=array();
       $resultList[]= array('module'=>'unittest', 'action'=>'url1', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
       $resultList[]= array('module'=>'unittest', 'action'=>'url2', 'mois'=>'05',  'annee'=>'2004', "mystatic"=>"valeur statique");
-      $resultList[]= array('module'=>'unittest', 'action'=>'url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fête au village');
+      $resultList[]= array('module'=>'unittest', 'action'=>'url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fete au village');
       $resultList[]= array('module'=>'unittest', 'action'=>'url4', 'first'=>'premier',  'second'=>'deuxieme');
       // celle ci n'a pas de définition dans urls.xml *exprés*
       $resultList[]= array('module'=>'unittest', 'action'=>'url5', 'foo'=>'oof',  'bar'=>'rab');
-      $resultList[]= array('module'=>'foo', 'action'=>'bar', 'aaa'=>'bbb');
+      $resultList[]= array();
       $resultList[]= array('module'=>'news', 'action'=>'bar', 'aaa'=>'bbb');
 
       $request=array(
@@ -88,24 +88,27 @@ class UTParseUrls extends UnitTestCase {
       }
 
 
-/*      $this->sendMessage("significant, multiview = true");
+      $this->sendMessage("significant, multiview = true");
       $gJConfig->urlengine['multiview_on']=true;
-*/
+      $request=array(
+          array("index","/test/news/2005/10/35",array()),
+          array("testnews","/2004/05",array()),
+          array("index","/test/cms/actualite/65-c-est-la-fete-au-village",array()),
+          array("foo/bar","/withhandler/premier/deuxieme",array()),
+          array("index",'',array('module'=>'unittest', 'action'=>'url5', 'foo'=>'oof',  'bar'=>'rab')),
+          array("xmlrpc","",array()),
+          array("news","",array('aaa'=>'bbb','action'=>'bar'))
+       );
+      foreach($request as $k=>$urldata){
+         $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);
+         $p = $url->params;
+         ksort($p);
+         ksort($resultList[$k]);
+
+         $this->assertTrue( ($p == $resultList[$k]), 'crée:'.var_export($p,true).' attendu:'.var_export($resultList[$k],true));
+      }
+
     }
 }
-/*      // significant
-         // parse
-            $GLOBALS['gJConfig']->urlengine['enable_parser']
-            jSelectorUrlCfgSig
-            $GLOBALS['gJConfig']->urlengine['basepath']
-            $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
-            $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'];
-            $gJConfig->urlengine['notfound_act']
-         //create
-            jContext::get()
-            $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
-            $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'];
-            $gJConfig->urlengine['multiview_on']
-            $gJConfig->urlengine['entrypoint_extension'];
-*/
+
 ?>

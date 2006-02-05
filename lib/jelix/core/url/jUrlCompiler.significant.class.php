@@ -101,7 +101,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                // si il y a juste un module indiqué alors on sait que toutes les actions
                // concernant ce module passeront par ce point d'entrée.
                if(!$isDefault && !isset($url['action']) && !isset($url['handler'])){
-                 $parseInfos[]=array($module, '', '.*', array(), array(), array() );
+                 $parseInfos[]=array($module, '', '/.*/', array(), array(), array() );
                  $createUrlInfos[$module.'~*@'.$requestType] = array(3,$entryPoint);
                  continue;
                }
@@ -164,7 +164,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(1,$entryPoint, $listparam, $escapes,$path);
            }
 
-           $parseContent.='$GLOBALS[\'SIGNIFICANT_PARSEURL\'] = '.var_export($parseInfos, true).";\n?>";
+           $parseContent.='$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($entryPoint).'\'] = '.var_export($parseInfos, true).";\n?>";
 
            $file->write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($entryPoint).'.entrypoint.php',$parseContent);
         }

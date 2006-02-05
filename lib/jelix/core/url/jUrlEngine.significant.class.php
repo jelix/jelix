@@ -74,11 +74,11 @@ class jUrlEngineSignificant implements jIUrlEngine {
          }
 
          $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($snp).'.entrypoint.php';
-jLog::log($file);
+
          if(file_exists($file)){
             require_once($file);
             $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
-            $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'];
+            $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][rawurlencode($snp)];
 
             if(!$this->_parse($url)){
                // $url peut avoir été modifié par _parse, on remet l'ancien
@@ -103,14 +103,12 @@ jLog::log($file);
 
       $foundurl = false;
       $isDefault = false;
+      $urlcl = clone $url;
       foreach($this->dataParseUrl as $k=>$infoparsing){
          if($k==0){
             $isDefault = $infoparsing;
             continue;
          }
-jLog::dump($infoparsing, "infoparsing");
-         $url->params['module']=$infoparsing[0];
-         $url->params['action']=$infoparsing[1];
 
          if(count($infoparsing) < 4){
             // on a un tableau du style
@@ -118,8 +116,14 @@ jLog::dump($infoparsing, "infoparsing");
             $s = new jSelectorUrlHandler($infoparsing[2]);
             $c ='URLS'.$s->resource;
             $handler =new $c();
-            if($handler->parse($url)){
+
+            $urlcl->params['module']=$infoparsing[0];
+            $urlcl->params['action']=$infoparsing[1];
+            if($handler->parse($urlcl)){
                $foundurl=true;
+               $url->pathInfo = $urlcl->pathInfo;
+               $url->params = $urlcl->params;
+               $url->scriptName = $urlcl->scriptName;
                break;
             }
          }else{
@@ -130,7 +134,10 @@ jLog::dump($infoparsing, "infoparsing");
                5=>array('bla'=>'cequejeveux' ) // tableau des valeurs statiques
             */
             if(preg_match ($infoparsing[2], $pathinfo, $matches)){
-jLog::dump($matches, "matches pathinfo");
+               if($infoparsing[0] !='')
+                  $url->params['module']=$infoparsing[0];
+               if($infoparsing[1] !='')
+                  $url->params['action']=$infoparsing[1];
                // on fusionne les parametres statiques
                if ($infoparsing[5]){
                   $url->params = array_merge ($url->params, $infoparsing[5]);
@@ -151,8 +158,6 @@ jLog::dump($matches, "matches pathinfo");
                }
                $foundurl = true;
                break;
-            }else{
-jLog::log("regexp echouée ".         $infoparsing[2]);
             }
          }
       }
