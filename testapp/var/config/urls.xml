@@ -2,8 +2,8 @@
 <urls xmlns="http://jelix.org/ns/urls/1.0">
     <classicentrypoint name="index" default="true">
         <url pathinfo="/test/:annee/:mois" module="testapp" action="test1">
-              <param name="annee" escape="true" regexp="\d{4}"/>
-              <param name="mois" escape="false" />
+              <param name="annee" escape="true" type="year"/>
+              <!--<param name="mois" escape="false" />-->
               <static name="bla" value="cequejeveux" />
         </url>
 
@@ -16,14 +16,14 @@
         <url pathinfo="/test/cms/:rubrique/:id_art-:article" module="unittest" action="url3">
            <param name="rubrique" />
            <param name="id_art" regexp="\d+"/>
-           <param name="article" escape="true"/>
+           <param name="article" escape="true" type="string"/>
         </url>
 
     </classicentrypoint>
     <classicentrypoint name="testnews">
        <url pathinfo="/:annee/:mois" module="unittest" action="url2">
-          <param name="annee" regexp="\d{4}"/>
-          <param name="mois"  regexp="\d{2}" />
+          <param name="annee" type="year"/>
+          <param name="mois"  type="mounth" />
           <static name="mystatic" value="valeur statique" />
         </url>
     </classicentrypoint>

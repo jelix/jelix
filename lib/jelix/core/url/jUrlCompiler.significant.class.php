@@ -72,6 +72,10 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                   array(2,'entrypoint'); pour les clés du type "@request" ou "module~@request"
 
         */
+        $typeparam = array('string'=>'([^\/]+)','char'=>'([^\/])', 'letter'=>'(\w)',
+           'number'=>'(\d+)', 'int'=>'(\d+)', 'integer'=>'(\d+)', 'digit'=>'(\d)',
+           'date'=>'([0-2]\d{3}\-(?:0[1-9]|1[0-2])\-(?:[0-2][1-9]|3[0-1]))', 'year'=>'([0-2]\d{3})', 'month'=>'(0[1-9]|1[0-2])', 'day'=>'([0-2][1-9]|3[0-1])'
+           );
         $createUrlInfos=array();
         $createUrlContent="<?php \n";
         $defaultEntrypoints=array();
@@ -153,6 +157,13 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                             $escapes[$k] = false;
                         }
 
+                        if(isset($var['type'])){
+                           if(isset($typeparam[(string)$var['type']]))
+                              $regexp = $typeparam[(string)$var['type']];
+                           else
+                              $regexp = '([^\/]+)';
+                        }
+
                         if (isset ($var['regexp'])){
                             $regexp = '('.(string)$var['regexp'].')';
                         }else{
@@ -160,6 +171,14 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                         }
 
                         $regexppath = str_replace(':'.$nom, $regexp, $regexppath);
+                      }
+
+                      foreach($listparam as $k=>$name){
+                        if(isset($escapes[$k])){
+                           continue;
+                        }
+                        $escapes[$k] = false;
+                        $regexppath = str_replace(':'.$name, '([^\/]+)', $regexppath);
                       }
                   }
                }else{
