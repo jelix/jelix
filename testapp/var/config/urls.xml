@@ -7,7 +7,7 @@
               <static name="bla" value="cequejeveux" />
         </url>
 
-        <url pathinfo="/test/news/:annee/:mois/:id" module="unittest" action="url1">
+        <url pathinfo="/test/news/:annee/:mois/:id" module="unittest" action="url1" actionoverride="url8,url9,url10">
            <param name="annee" regexp="\d{4}"/>
            <param name="mois"  regexp="\d{2}" />
            <param name="id"   regexp="\d{2}" />
@@ -36,5 +36,4 @@
     </classicentrypoint>
     <xmlrpcentrypoint name="xmlrpc" default="true" />
     <jsonrpcentrypoint name="jsonrpc" default="true" />
-
 </urls>

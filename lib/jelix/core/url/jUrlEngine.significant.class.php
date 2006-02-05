@@ -110,7 +110,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
             continue;
          }
 
-         if(count($infoparsing) < 4){
+         if(count($infoparsing) < 5){
             // on a un tableau du style
             // array( 0=> 'module', 1=>'action', 2=>'handler')
             $s = new jSelectorUrlHandler($infoparsing[2]);
@@ -118,7 +118,11 @@ class jUrlEngineSignificant implements jIUrlEngine {
             $handler =new $c();
 
             $urlcl->params['module']=$infoparsing[0];
-            $urlcl->params['action']=$infoparsing[1];
+            if($infoparsing[3] && isset($url->params['action'])&& in_array($url->params['action'], $infoparsing[3])){
+               $urlcl->params['action']=$url->params['action'];
+            }else{
+               $urlcl->params['action']=$infoparsing[1];
+            }
             if($handler->parse($urlcl)){
                $foundurl=true;
                $url->pathInfo = $urlcl->pathInfo;
@@ -132,12 +136,17 @@ class jUrlEngineSignificant implements jIUrlEngine {
                3=>array('annee','mois'), // tableau des valeurs dynamiques, classées par ordre croissant
                4=>array(true, false), // tableau des valeurs escapes
                5=>array('bla'=>'cequejeveux' ) // tableau des valeurs statiques
+               6=>false ou array('act','act'...) // autres actions autorisées
             */
             if(preg_match ($infoparsing[2], $pathinfo, $matches)){
                if($infoparsing[0] !='')
                   $url->params['module']=$infoparsing[0];
-               if($infoparsing[1] !='')
-                  $url->params['action']=$infoparsing[1];
+
+               if( ! ($infoparsing[6] && isset($url->params['action'])&& in_array($url->params['action'], $infoparsing[6]))){
+                  if($infoparsing[1] !='')
+                     $url->params['action']=$infoparsing[1];
+               }
+
                // on fusionne les parametres statiques
                if ($infoparsing[5]){
                   $url->params = array_merge ($url->params, $infoparsing[5]);

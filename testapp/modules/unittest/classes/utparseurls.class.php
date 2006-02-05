@@ -59,6 +59,7 @@ class UTParseUrls extends UnitTestCase {
 
       $resultList=array();
       $resultList[]= array('module'=>'unittest', 'action'=>'url1', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
+      $resultList[]= array('module'=>'unittest', 'action'=>'url8', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
       $resultList[]= array('module'=>'unittest', 'action'=>'url2', 'mois'=>'05',  'annee'=>'2004', "mystatic"=>"valeur statique");
       $resultList[]= array('module'=>'unittest', 'action'=>'url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fete au village');
       $resultList[]= array('module'=>'unittest', 'action'=>'url4', 'first'=>'premier',  'second'=>'deuxieme');
@@ -69,6 +70,7 @@ class UTParseUrls extends UnitTestCase {
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
+          array("index.php","/test/news/2005/10/35",array("action"=>"url8")),
           array("testnews.php","/2004/05",array()),
           array("index.php","/test/cms/actualite/65-c-est-la-fete-au-village",array()),
           array("foo/bar.php","/withhandler/premier/deuxieme",array()),
@@ -92,6 +94,7 @@ class UTParseUrls extends UnitTestCase {
       $gJConfig->urlengine['multiview']=true;
       $request=array(
           array("index","/test/news/2005/10/35",array()),
+          array("index","/test/news/2005/10/35",array("action"=>"url8")),
           array("testnews","/2004/05",array()),
           array("index","/test/cms/actualite/65-c-est-la-fete-au-village",array()),
           array("foo/bar","/withhandler/premier/deuxieme",array()),

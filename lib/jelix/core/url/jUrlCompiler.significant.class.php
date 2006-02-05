@@ -101,21 +101,31 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                // si il y a juste un module indiqué alors on sait que toutes les actions
                // concernant ce module passeront par ce point d'entrée.
                if(!$isDefault && !isset($url['action']) && !isset($url['handler'])){
-                 $parseInfos[]=array($module, '', '/.*/', array(), array(), array() );
+                 $parseInfos[]=array($module, '', '/.*/', array(), array(), array(), false );
                  $createUrlInfos[$module.'~*@'.$requestType] = array(3,$entryPoint);
                  continue;
                }
 
                $action = (string)$url['action'];
+               if(isset($url['actionoverride'])){
+                  $actionOverride = preg_split("/[\s,]+/", (string)$url['actionoverride']);
+               }else{
+                  $actionOverride = false;
+               }
 
                // si il y a un handler indiqué, on sait alors que pour le module et action indiqué
                // il faut passer par cette classe handler pour le parsing et la creation de l'url
                if(isset($url['handler'])){
                   $class = (string)$url['handler'];
-                  $parseInfos[]=array($module, $action, $class );
                   $s= new jSelectorUrlHandler($module.'~'.$class);
                   $createUrlContent.="include_once('".$s->getPath()."');\n";
+                  $parseInfos[]=array($module, $action, $class, $actionOverride );
                   $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$entryPoint, $class);
+                  if($actionOverride){
+                     foreach($actionOverride as $ao){
+                        $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(0,$entryPoint, $class);
+                     }
+                  }
                   continue;
                }
 
@@ -160,8 +170,13 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                foreach($url->static as $var){
                   $liststatics[(string)$var['name']] =(string)$var['value'];
                }
-               $parseInfos[]=array($module, $action, '!^'.$regexppath.'$!', $listparam, $escapes, $liststatics );
+               $parseInfos[]=array($module, $action, '!^'.$regexppath.'$!', $listparam, $escapes, $liststatics, $actionOverride );
                $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(1,$entryPoint, $listparam, $escapes,$path);
+               if($actionOverride){
+                  foreach($actionOverride as $ao){
+                     $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(1,$entryPoint, $listparam, $escapes,$path);
+                  }
+               }
            }
 
            $parseContent.='$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($entryPoint).'\'] = '.var_export($parseInfos, true).";\n?>";
