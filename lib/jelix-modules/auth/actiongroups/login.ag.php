@@ -23,16 +23,16 @@ class AGLogin extends jActionGroup {
     function doLogin (){
         $conf = $GLOBALS['gJCoord']->getPlugin ('auth')->config;
 
-        if (!($conf['enable_after_login_override'] && $url_return= $this->_get('auth_url_return'))){
+        if (!($conf['enable_after_login_override'] && $url_return= $this->param('auth_url_return'))){
             $url_return =  jUrl::get($conf['after_login']);
         }
 
-        if (!jAuth::login($this->_get('login'), $this->_get('password'))){
+        if (!jAuth::login($this->param('login'), $this->param('password'))){
             sleep (intval($conf['on_error_sleep']));
-            $url_return = jUrl::get('auth~loginform',array ('login'=>$this->_get('login'), 'failed'=>1));
+            $url_return = jUrl::get('auth~loginform',array ('login'=>$this->param('login'), 'failed'=>1));
         }
 
-        $rep = $this->_getResponse('next');
+        $rep = $this->getResponse('next');
         $rep->url = $url_return;
         return $rep;
     }
@@ -44,10 +44,10 @@ class AGLogin extends jActionGroup {
         jAuth::logout();
         $conf = $GLOBALS['gJCoord']->getPlugin ('auth')->config;
 
-        if (!($conf['enable_after_login_override'] && $url_return= $this->_get('auth_url_return'))){
+        if (!($conf['enable_after_login_override'] && $url_return= $this->param('auth_url_return'))){
             $url_return =  jUrl::get($conf['after_logout']);
         }
-        $rep = $this->_getResponse('next');
+        $rep = $this->getResponse('next');
         $rep->url = $url_return;
         return $rep;
     }
@@ -56,10 +56,10 @@ class AGLogin extends jActionGroup {
     * Shows the login form
     */
     function getLoginForm() {
-        $rep = $this->_getResponse('loginform');
+        $rep = $this->getResponse('loginform');
 
         $rep->title =  jLocale::get ('auth.titlePage.login');
-        $rep->body->assignZone ('MAIN', 'auth~loginForm', array ('login'=>$this->_get('login'), 'failed'=>$this->_get('failed')));
+        $rep->body->assignZone ('MAIN', 'auth~loginForm', array ('login'=>$this->param('login'), 'failed'=>$this->param('failed')));
 
         return $rep;
     }

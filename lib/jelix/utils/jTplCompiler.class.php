@@ -191,7 +191,7 @@ class jTplCompiler implements jISimpleCompiler {
          case 'rdelim': $res ='}'; break;
          case 'literal':
             if(count($this->_literals)){
-               $res = array_shift($this->_literals);
+               $res = '?>'.array_shift($this->_literals).'<?php ';
             }else{
                trigger_error(jLocale::get('jelix~errors.tpl.tag.block.end.missing',array('literal',$this->_sourceFile)),E_USER_ERROR);
             }
