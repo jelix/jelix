@@ -28,12 +28,14 @@ class jActionDesc implements jIActionDesc {
     public $method;
     public $pluginParams = array();
     public $responses = array();
+    public $defaultResponse;
 
-    function __construct($name, $pathAg, $ag, $meth){
+    function __construct($name, $pathAg, $ag, $meth, $defaultResp){
         $this->name = $name;
         $this->actionsGroupPath = $pathAg;
         $this->actionsGroupClass = $ag;
         $this->method = $meth;
+        $this->defaultResponse = $defaultResp;
     }
 
     public function perform (){
@@ -60,9 +62,12 @@ class jActionDesc implements jIActionDesc {
         return $ag->$method();
     }
 
-    public function getResponse($name='default'){
+    public function getResponse($name=''){
         global $gJCoord, $gJConfig;
-
+        if($name == ''){           
+            $name = $this->defaultResponse;
+        }
+        
         if(!isset($this->responses[$name])){
             trigger_error(jLocale::get('jelix~errors.ad.response.unknow',array($this->name,$name,$this->actionsGroupPath)),E_USER_ERROR);
             return null;

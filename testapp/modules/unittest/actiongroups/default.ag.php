@@ -12,8 +12,8 @@
 
 class AGDefault extends jActionGroup {
 
-   function getDefault() {
-      $rep = $this->getResponse('accueil');
+   function home() {
+      $rep = $this->getResponse();
       $rep->title = 'test unitaires';
       $rep->body->assign('MAIN','');
       return $rep;
@@ -23,7 +23,7 @@ class AGDefault extends jActionGroup {
    *
    */
    function getTestEvents (){
-      $rep = $this->getResponse('event');
+      $rep = $this->getResponse();
       $rep->title = 'test unitaires sur jEvent';
 
       $ut = jClasses::create("unittestservice");
@@ -33,8 +33,8 @@ class AGDefault extends jActionGroup {
       return $rep;
    }
 
-   function getTestCreate(){
-      $rep = $this->getResponse('default');
+   function testurlcreate(){
+      $rep = $this->getResponse();
       $rep->title = 'test unitaires sur la creation d\'url avec jUrl';
 
       $ut = jClasses::create("unittestservice");
@@ -43,8 +43,8 @@ class AGDefault extends jActionGroup {
 
       return $rep;
    }
-   function getTestParsing(){
-      $rep = $this->getResponse('default');
+   function testurlparse(){
+      $rep = $this->getResponse();
       $rep->title = 'test unitaires sur le parsing d\'url avec jUrl';
 
       $ut = jClasses::create("unittestservice");

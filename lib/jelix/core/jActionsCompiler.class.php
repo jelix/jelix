@@ -40,8 +40,6 @@ class jActionsCompiler implements jISimpleCompiler {
            return false;
         }
 
-
-
         $foundAction=false;
         foreach($xml->request as $req){
             if(isset($req['type'])){
@@ -51,21 +49,47 @@ class jActionsCompiler implements jISimpleCompiler {
                 jContext::pop();
                 return false;
             }
+            if(isset($req['defaultag'])){
+                $defaultag=$req['defaultag'];
+            }else{
+               $defaultag = '';
+            }
             $commonPluginParams=$this->_readPluginParams($req);
-            $commonResponses= $this->_readResponses($req);
+            $defaultResponse = '';
+            $commonResponses= $this->_readResponses($req, $defaultResponse);
 
             foreach($req->action as $action){
 
                $pluginParams = array_merge($commonPluginParams, $this->_readPluginParams($action));
-               $responses = array_merge($commonResponses, $this->_readResponses($action));
-               $actionsel = new jSelectorAg($action['ag']);
+               $defrep='';
+               $responses = array_merge($commonResponses, $this->_readResponses($action, $defrep));
+               if($defrep == ''){
+                 if($defaultResponse ==''){
+                   reset($responses);
+                   $defrep=key($responses);
+                 }else{
+                   $defrep = $defaultResponse;
+                 }
+               }
+               
+               if(isset($action['ag'])){
+                  $ag=(string)$action['ag'];
+               }else{
+                  $ag = $defaultag;
+               }
+               
+               $actionsel = new jSelectorAg($ag);
                if(!$actionsel->isValid()){
-                  trigger_error(jLocale::get('jelix~errors.ac.xml.ag.selector.invalid',array($action['ag'],$action['name'], $sourceFile) ),E_USER_ERROR);
+                  trigger_error(jLocale::get('jelix~errors.ac.xml.ag.selector.invalid',array($ag,$action['name'], $sourceFile) ),E_USER_ERROR);
                   jContext::pop();
                   return false;
                }
                $path = $actionsel->getPath();
-               $content ="<?php\n".'$GLOBALS[\'gJCoord\']->action = new jActionDesc(\''.$action['name'].'\',\''.$path.'\',\'AG'.$actionsel->resource.'\',\''.$action['method'].'\');'."\n";
+               if(isset($action['method']))
+                 $method = $action['method'];
+               else
+                 $method = $action['name'];                 
+               $content ="<?php\n".'$GLOBALS[\'gJCoord\']->action = new jActionDesc(\''.$action['name'].'\',\''.$path.'\',\'AG'.$actionsel->resource.'\',\''.$method.'\',\''.$defrep.'\');'."\n";
                if(count($pluginParams)){
                    $content .= '$GLOBALS[\'gJCoord\']->action->pluginParams = '.var_export($pluginParams,true).";\n";
                }
@@ -114,10 +138,9 @@ class jActionsCompiler implements jISimpleCompiler {
         return $pps;
     }
 
-    private function _readResponses($tag){
+    private function _readResponses($tag, &$defaultResponse){
         $reps=array();
         if(isset($tag->response)){
-            $defaultresponse ='';
             foreach($tag->response as $rep){
 
                 $attr= array();
@@ -133,12 +156,12 @@ class jActionsCompiler implements jISimpleCompiler {
                 $default = (isset($rep['default'])? (string)$rep['default']:'false');
 
                 if($default == 'true')
-                    $defaultresponse = $name;
+                    $defaultResponse = $name;
                 $reps[$name]=array($type, $attr);
             }
-            if(!isset($reps['default'])){
+            /*if(!isset($reps['default'])){
                 $reps['default'] = $reps[$defaultresponse];
-            }
+            }*/
         }
         return $reps;
     }
