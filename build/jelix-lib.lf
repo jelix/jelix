@@ -1,0 +1,18 @@
+cd lib
+  .htaccess
+  
+cd lib/jelix
+  CHANGELOG
+  CREDITS
+  init.php
+  INSTALL
+  LICENCE
+  VERSION
+  
+# hello world
+cd lib/jelix/auth
+*  jAuth.class.php
+  jAuthDriverDb.class.php
+cd lib/jelix/core
+  jActionDesc.class.php
+*  jActionGroup.class.php

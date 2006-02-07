@@ -6,9 +6,9 @@
       
       
       <action name="default" ag="default" method="home" />
-      <action name="testevent" ag="default" method="getTestEvents"/>
-      <action name="testurlparse" ag="default" />
-      <action name="testurlcreate" ag="default" />
+      <action name="testevent"  method="getTestEvents"/>
+      <action name="testurlparse"  />
+      <action name="testurlcreate"  />
 
       <action name="url1" ag="urlsig" method="getDummyUrl" />
       <action name="url2" ag="urlsig" method="getDummyUrl" />
