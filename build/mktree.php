@@ -1,7 +1,7 @@
 <?php
 
 /**
-* @package     php make tools
+* @package     jBuildTools
 * @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
@@ -12,7 +12,7 @@
 
 // arguments :  fichier.lf   chemin_source chemin_dist
 
-if($_SERVER['argc'] < 3){
+if($_SERVER['argc'] < 4){
    exit(1);
 }
 array_shift($_SERVER['argv']); // shift the script name
@@ -22,7 +22,7 @@ $options = array('verbose'=>false);
 if(substr($_SERVER['argv'][0],0,1) == '-'){
   $sw = substr(array_shift($_SERVER['argv']),1);
   $options['verbose'] = (strpos('v', $sw) !== false);
-  
+
 }
 
 list($ficlist, $sourcedir, $distdir) = $_SERVER['argv'];
@@ -36,7 +36,7 @@ function createDir ($dir){
 }
 
 function normalizeDir($dirpath){
-  
+
   if(substr($dirpath,-1) != '/'){
     $dirpath.='/';
   }
@@ -67,14 +67,14 @@ foreach($script as $nbline=>$line){
         break;
       }
       if($m[3]=='') $m[3]=$m[2];
-      
+
       $destfile = $distdir.$currentdestdir.$m[3];
       createDir(dirname($destfile));
 
       if($m[1]=='*'){
         if($options['verbose'])
           echo "process  ".$sourcedir.$currentsrcdir.$m[2]."\tto\t".$destfile."\n";
-        
+
         if(!copy($sourcedir.$currentsrcdir.$m[2], $destfile)){
             echo "$ficlist : cannot process file ".$m[2].", line $nbline \n";
             $hasError=true;
@@ -83,16 +83,16 @@ foreach($script as $nbline=>$line){
       }else{
         if($options['verbose'])
           echo "copy  ".$sourcedir.$currentsrcdir.$m[2]."\tto\t".$destfile."\n";
-        
+
         if(!copy($sourcedir.$currentsrcdir.$m[2], $destfile)){
             echo "$ficlist : cannot copy file ".$m[2].", line $nbline \n";
             $hasError=true;
             break;
         }
       }
-    
+
     }
-  
+
   }elseif(preg_match("!^\s*(\#.*)?$!",$line)){
     // commentaire, on ignore
   }else{
