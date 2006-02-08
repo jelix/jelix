@@ -1,0 +1,26 @@
+aaaaa
+
+bbbbb
+
+#ifdef FOO
+FOO is here
+
+#ifdef BAR
+ok BAR is here
+#else
+no BAR
+#endif
+cccccc
+#else
+NO FOO
+#ifdef BAR
+ok BAR is here in NO FOO
+#else
+no BAR in NO FOO
+#endif
+dddddddd
+#endif
+
+eeeeee
+
+ffffff

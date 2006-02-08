@@ -1,0 +1,13 @@
+aaaaa
+
+bbbbb
+
+#ifdef FOO
+ccccc
+#else
+dddddd
+#endif
+
+eeeeee
+
+ffffff

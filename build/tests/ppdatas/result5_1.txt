@@ -1,0 +1,9 @@
+aaaaa
+
+bbbbb
+
+dddddd
+
+ voici le contenu de FOO : "__FOO__" et celui de BAR : __BAR__
+
+ffffff

@@ -1,0 +1,13 @@
+aaaaa
+
+bbbbb
+
+#ifdef FOO
+ccccc
+#else
+dddddd
+#endif
+
+#expand  voici le contenu de FOO : "__FOO__" et celui de BAR : __BAR__
+
+ffffff

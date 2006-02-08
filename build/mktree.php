@@ -12,6 +12,8 @@
 
 // arguments :  fichier.lf   chemin_source chemin_dist
 
+require_once(dirname(__FILE__).'/preprocessor.lib.php');
+
 if($_SERVER['argc'] < 4){
    exit(1);
 }
@@ -50,6 +52,8 @@ $script = file($ficlist);
 $hasError=false;
 $currentdestdir = '';
 $currentsrcdir = '';
+$preproc = new jPreProcessor();
+
 foreach($script as $nbline=>$line){
   $nbline++;
   if(preg_match('!^(cd|sd|dd|\*)?\s+([a-zA-Z0-9\/.\-_]+)\s*(?:\(([a-zA-Z0-9\/.\-_]*)\))?\s*$!m', $line, $m)){
@@ -72,13 +76,18 @@ foreach($script as $nbline=>$line){
       createDir(dirname($destfile));
 
       if($m[1]=='*'){
-        if($options['verbose'])
-          echo "process  ".$sourcedir.$currentsrcdir.$m[2]."\tto\t".$destfile."\n";
-
-        if(!copy($sourcedir.$currentsrcdir.$m[2], $destfile)){
-            echo "$ficlist : cannot process file ".$m[2].", line $nbline \n";
+        if($options['verbose']){
+            echo "process  ".$sourcedir.$currentsrcdir.$m[2]."\tto\t".$destfile."\n";
+        }
+          
+        $preproc->setVars($_ENV);
+        $contents = $preproc->run(file_get_contents($sourcedir.$currentsrcdir.$m[2]));
+        if($contents===false){
+            echo "$ficlist : line $nbline, cannot process file ".$m[2]." (error code=".$preproc->errorCode."  line=".$preproc->errorLine.")\n";
             $hasError=true;
             break;
+        }else{
+          file_put_contents($destfile,$contents);
         }
       }else{
         if($options['verbose'])
