@@ -16,7 +16,7 @@ class jTplCompiler implements jISimpleCompiler {
     private $_literals;
 
     private  $_vartype = array(T_CHARACTER, T_CONSTANT_ENCAPSED_STRING, T_DNUMBER,
-    T_ENCAPSED_AND_WHITESPACE, T_LNUMBER, T_OBJECT_OPERATOR, T_STRING, T_WHITESPACE);
+    T_ENCAPSED_AND_WHITESPACE, T_LNUMBER, T_OBJECT_OPERATOR, T_STRING, T_WHITESPACE,T_ARRAY);
 
     private  $_assignOp = array(T_AND_EQUAL, T_DIV_EQUAL, T_MINUS_EQUAL, T_MOD_EQUAL,
     T_MUL_EQUAL, T_OR_EQUAL, T_PLUS_EQUAL, T_PLUS_EQUAL, T_SL_EQUAL,
@@ -25,7 +25,7 @@ class jTplCompiler implements jISimpleCompiler {
     private  $_op = array(T_BOOLEAN_AND, T_BOOLEAN_OR, T_EMPTY, T_INC, T_ISSET,
     T_IS_EQUAL, T_IS_GREATER_OR_EQUAL, T_IS_IDENTICAL, T_IS_NOT_EQUAL,
     T_IS_NOT_IDENTICAL, T_IS_SMALLER_OR_EQUAL, T_LOGICAL_AND,
-    T_LOGICAL_OR, T_LOGICAL_XOR, T_SR, T_SL);
+    T_LOGICAL_OR, T_LOGICAL_XOR, T_SR, T_SL, T_DOUBLE_ARROW);
 
     private $_allowedInVar;
     private $_allowedInExpr;
@@ -50,7 +50,6 @@ class jTplCompiler implements jISimpleCompiler {
     }
 
     public function compile($selector){
-        global $gJCoord;
 
         $this->_sourceFile = $selector->getPath();
         $cachefile = $selector->getCompiledFilePath();
@@ -72,7 +71,7 @@ class jTplCompiler implements jISimpleCompiler {
         $result = preg_replace_callback("/{((.).*?)}/s", array($this,'_callback'), $tplcontent);
 
         $header ="<?php \n";
-        foreach($this->_pluginPath as $path){
+        foreach($this->_pluginPath as $path=>$ok){
            $header.=' require_once(\''.$path."');\n";
         }
         $header.='function template_'.md5($selector->module.'_'.$selector->resource).'($t){'."\n?>";
@@ -139,7 +138,7 @@ class jTplCompiler implements jISimpleCompiler {
                }
             }
             $res = 'jtpl_modifier_'.$m[1].'('.implode(',',$targs).')';
-            $this->_pluginPath[] = $path;
+            $this->_pluginPath[$path] = true;
           }
       }
       return $res;
@@ -165,7 +164,7 @@ class jTplCompiler implements jISimpleCompiler {
             $res = 'elseif('.$this->_parseFinal($args,$this->_allowedInExpr).'):';
             break;
          case 'foreach':
-            $res = 'foreach('.$this->_parseFinal($args,array(T_AS, T_DOUBLE_ARROW)).'):';
+            $res = 'foreach('.$this->_parseFinal($args,array(T_AS, T_DOUBLE_ARROW,T_STRING, T_OBJECT_OPERATOR), array(';','!')).'):';
             array_push($this->_blockStack,'foreach');
             break;
          case 'while':
@@ -204,8 +203,9 @@ class jTplCompiler implements jISimpleCompiler {
                 trigger_error(jLocale::get('jelix~errors.tpl.tag.function.unknow',array($name,$this->_sourceFile)),E_USER_ERROR);
                 $res='';
             }else{
-                $res = 'jtpl_function_'.$name.'( $t,'.$this->_parseFinal($args,$this->_allowedAssign).');';
-                $this->_pluginPath[] = $path;
+                $argfct=$this->_parseFinal($args,$this->_allowedAssign);
+                $res = 'jtpl_function_'.$name.'( $t'.(trim($argfct)!=''?','.$argfct:'').');';
+                $this->_pluginPath[$path] = true;
             }
        }
 
@@ -283,8 +283,8 @@ class jTplCompiler implements jISimpleCompiler {
                 }
             }elseif($inLocale && ($tok=='.' || $tok =='~') ){
                $locale.=$tok;
-            }elseif($first || $inLocale || in_array($tok,$exceptchar)){
-               trigger_error(jLocale::get('jelix~errors.tpl.tag.character.illegal',array($this->_currentTag,$tok,$this->_sourceFile)),E_USER_ERROR);
+            }elseif($inLocale || in_array($tok,$exceptchar) || ($first && $tok !='!')){
+               trigger_error(jLocale::get('jelix~errors.tpl.tag.character.invalid',array($this->_currentTag,$tok,$this->_sourceFile)),E_USER_ERROR);
                return '';
             }elseif($tok =='('){
                $bracketcount++;$result.=$tok;
