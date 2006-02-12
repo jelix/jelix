@@ -70,7 +70,7 @@ foreach($script as $nbline=>$line){
         $hasError=true;
         break;
       }
-      if($m[3]=='') $m[3]=$m[2];
+      if(!isset($m[3]) || $m[3]=='') $m[3]=$m[2];
 
       $destfile = $distdir.$currentdestdir.$m[3];
       createDir(dirname($destfile));
@@ -79,7 +79,7 @@ foreach($script as $nbline=>$line){
         if($options['verbose']){
             echo "process  ".$sourcedir.$currentsrcdir.$m[2]."\tto\t".$destfile."\n";
         }
-          
+
         $preproc->setVars($_ENV);
         $contents = $preproc->run(file_get_contents($sourcedir.$currentsrcdir.$m[2]));
         if($contents===false){

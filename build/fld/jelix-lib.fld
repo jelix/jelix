@@ -1,0 +1,190 @@
+cd lib
+  .htaccess
+
+cd lib/jelix
+  CHANGELOG
+  CREDITS
+  init.php
+  INSTALL
+  LICENCE
+  VERSION
+
+cd lib/jelix/auth
+  jAuth.class.php
+  jAuthDriverDb.class.php
+
+cd lib/jelix/core
+  jActionDesc.class.php
+  jActionGroup.class.php
+  jActionsCompiler.class.php
+  jConfig.class.php
+  jContext.class.php
+  jCoordinator.class.php
+  jDefaultConfig.lib.php
+  jErrorHandler.lib.php
+  jException.lib.php
+  jIncluder.class.php
+  jIPlugin.iface.php
+  jLocale.class.php
+  jRequest.class.php
+  jResponse.class.php
+  jSelector.class.php
+
+cd lib/jelix/core/request
+  jClassicRequest.class.php
+  jCmdLineRequest.class.php
+  jJsonRpcRequest.class.php
+  jXmlRpcRequest.class.php
+  jXulRequest.class.php
+
+cd lib/jelix/core/response
+  jResponseBinary.class.php
+  jResponseHtml.class.php
+  jResponseJsonrpc.class.php
+  jResponseRedirect.class.php
+  jResponseRedirectUrl.class.php
+  jResponseText.class.php
+  jResponseXmlrpc.class.php
+  jResponseXul.class.php
+
+cd lib/jelix/core/url
+  jUrl.class.php
+  jUrlCompiler.significant.class.php
+  jUrlEngine.significant.class.php
+  jUrlEngine.simple.class.php
+
+cd lib/jelix/dao
+  jDAOBase.class.php
+  jDAO.class.php
+  jDAOCompiler.class.php
+  jDAOConditions.class.php
+  jDAOGenerator.class.php
+  jDAOParser.class.php
+
+cd lib/jelix/db
+  jDb.class.php
+  jDbConnection.class.php
+  jDbPDOConnection.class.php
+  jDbResultSet.class.php
+  jDbTools.class.php
+  jDbWidget.class.php
+
+cd lib/jelix/db/drivers/mysql
+  jDbConnection.mysql.class.php
+  jDbResultSet.mysql.class.php
+  jDbTools.mysql.class.php
+
+cd lib/jelix/db/drivers/postgresql
+  jDbConnection.postgresql.class.php
+  jDbResultSet.postgresql.class.php
+  jDbTools.postgresql.class.php
+
+cd lib/jelix/events
+  jEvent.class.php
+  jEventCompiler.class.php
+  jEventListener.class.php
+  jEventListenerFactory.class.php
+
+cd lib/jelix/tpl_plugins/common
+  modifier.cat.php
+  modifier.count_characters.php
+  modifier.count_paragraphs.php
+  modifier.count_sentences.php
+  modifier.count_words.php
+  modifier.indent.php
+  modifier.jdatetime.php
+  modifier.regex_replace.php
+  modifier.replace.php
+  modifier.spacify.php
+  modifier.sprintf.php
+  modifier.strip.php
+  modifier.truncate.php
+  modifier.wordwrap.php
+
+cd lib/jelix/tpl_plugins/html
+  function.jlocale.php
+  function.jurl.php
+  modifier.nl2br.php
+
+cd lib/jelix/tpl_plugins/text
+  function.jlocale.php
+  function.jurl.php
+
+cd lib/jelix/tpl_plugins/xul
+  function.jlocale.php
+  function.jurl.php
+
+cd lib/jelix/utils/
+  jClasses.class.php
+  jDateTime.class.php
+  jFile.class.php
+  jJsonRpc.class.php
+  jLog.class.php
+  jTpl.class.php
+  jTplCompiler.class.php
+  jXmlRpc.class.php
+  jZone.class.php
+
+cd lib/json
+  JSON.php
+  LICENSE
+
+cd lib/jelix-modules
+  LICENCE
+  INSTALL
+  CREDITS
+cd lib/jelix-modules/jelix
+  module.xml
+cd lib/jelix-modules/jelix/locales/en_US
+  dao.ISO-8859-1.properties
+  daoxml.ISO-8859-1.properties
+  db.ISO-8859-1.properties
+  common.ISO-8859-1.properties
+  format.ISO-8859-1.properties
+  jelix.ISO-8859-1.properties
+  errors.ISO-8859-1.properties
+  ui.ISO-8859-1.properties
+  auth.ISO-8859-1.properties
+cd lib/jelix-modules/jelix/locales/fr_FR
+  dao.ISO-8859-1.properties
+  daoxml.ISO-8859-1.properties
+  db.ISO-8859-1.properties
+  common.ISO-8859-1.properties
+  format.ISO-8859-1.properties
+  jelix.ISO-8859-1.properties
+  errors.ISO-8859-1.properties
+  ui.ISO-8859-1.properties
+  auth.ISO-8859-1.properties
+cd lib/jelix-modules/auth
+  actions.xml
+  module.xml
+cd lib/jelix-modules/auth/plugins/auth
+  auth.plugin.php
+  plugin.xml
+  auth.plugin.ini.php.dist
+cd lib/jelix-modules/auth/locales/en_US
+  auth.ISO-8859-1.properties
+  autherror.ISO-8859-1.properties
+cd lib/jelix-modules/auth/locales/fr_FR
+  auth.ISO-8859-1.properties
+  autherror.ISO-8859-1.properties
+cd lib/jelix-modules/auth/install/scripts
+  delete.postgresql.sql
+  install.postgresql.sql
+  delete.mysql.sql
+  install.mysql.sql
+cd lib/jelix-modules/auth/actiongroups
+  login.ag.php
+cd lib/jelix-modules/auth/zones
+  loginform.zone.php
+cd lib/jelix-modules/auth/templates
+  login.form.tpl
+cd lib/jelix-modules/auth/daos
+  jelixuser.dao.xml
+cd lib/jelix-plugins
+  LICENCE
+  INSTALL
+  CREDITS
+cd lib/jelix-plugins/magicquotes
+  magicquotes.plugin.php
+  plugin.xml
