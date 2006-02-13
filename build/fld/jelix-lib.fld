@@ -4,7 +4,7 @@ cd lib
 cd lib/jelix
   CHANGELOG
   CREDITS
-  init.php
+* init.php
   INSTALL
   LICENCE
   VERSION

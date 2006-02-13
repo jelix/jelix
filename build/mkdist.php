@@ -26,7 +26,22 @@ if(substr($_SERVER['argv'][0],0,1) == '-'){
   $options['verbose'] = (strpos('v', $sw) !== false);
 
 }
+/*$env = $_ENV;
+$options = array('verbose'=>false);
+$arrargv = $_SERVER['argv'];
+foreach($arrargv as $argv){
 
+  if($argv{0} == '-'){
+    $sw = substr(array_shift($_SERVER['argv']),1);
+    if($sw{0} =='D'){
+      
+    }else{
+      $options['verbose'] = (strpos('v', $sw) !== false);
+    }    
+  }else{
+    break;
+  }
+}*/
 list($ficlist, $sourcedir, $distdir) = $_SERVER['argv'];
 
 
