@@ -37,13 +37,13 @@ class createzoneCommand extends JelixScriptCommand {
 
        if(!$this->getOption('-notpl')){
           if($tpl = $this->getParam('template')){
-             $param['template'] = $tpl.'.tpl';
+             $param['template'] = $tpl;
           }else{
-             $param['template'] = strtolower($this->_parameters['name']).'.tpl';
+             $param['template'] = strtolower($this->_parameters['name']);
           }
-          $this->createFile($path.'templates/'.$param['template'],'template.tpl');
+          $this->createFile($path.'templates/'.$param['template'].'.tpl','template.tpl');
        }else{
-          $param['template'] ='.tpl';
+          $param['template'] = '';
        }
 
        $this->createFile($filename,'zone.tpl',$param);
