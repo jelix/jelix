@@ -22,6 +22,7 @@ define ('JELIX_LIB_DB_PATH',      JELIX_LIB_PATH.'db/');
 define ('JELIX_LIB_ACL_PATH',     JELIX_LIB_PATH.'acl/');
 define ('JELIX_LIB_DAO_PATH',     JELIX_LIB_PATH.'dao/');
 define ('JELIX_LIB_EVENTS_PATH',  JELIX_LIB_PATH.'events/');
+define ('JELIX_LIB_FORMS_PATH',   JELIX_LIB_PATH.'forms/');
 define ('JELIX_LIB_REQUEST_PATH', JELIX_LIB_PATH.'core/request/');
 define ('JELIX_LIB_RESPONSE_PATH',JELIX_LIB_PATH.'core/response/');
 
@@ -51,12 +52,12 @@ $gJCoord = null;
 $gJConfig = array();
 $gJContext = array();
 
-$gLibPath=array('Event'=>JELIX_LIB_EVENTS_PATH, 'Db'=>JELIX_LIB_DB_PATH,
- 'DAO'=>JELIX_LIB_DAO_PATH, 'Auth'=>JELIX_LIB_AUTH_PATH);
+$gLibPath=array('Db'=>JELIX_LIB_DB_PATH, 'DAO'=>JELIX_LIB_DAO_PATH,
+ 'Forms'=>JELIX_LIB_FORMS_PATH, 'Event'=>JELIX_LIB_EVENTS_PATH, 'Auth'=>JELIX_LIB_AUTH_PATH);
 
 
 function __autoload($class){
-   if(preg_match('/^j(Event|Db|DAO|Auth).*$/', $class, $m)){
+   if(preg_match('/^j(DAO|Db|Forms|Event|Auth).*$/', $class, $m)){
        $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
    }elseif(preg_match('/^cDAO(?:Record)?_(.*)_(.*)_(.*)$/', $class, $m)){
        // pour les dao stockés en sessions notament
