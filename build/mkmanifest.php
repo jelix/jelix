@@ -10,7 +10,7 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-// arguments :  repertoire1 [repertoire2] fichier.fld
+// arguments :  repertoire1 [repertoire2] fichier.mn
 // repertoire1 : le chemin du repertoire duquel on veut la liste
 // repertoire2 : si on veut une base de chemin différente de repertoire1 dans le fichier de sortie
 //               on l'indique ici

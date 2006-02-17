@@ -5,7 +5,6 @@ cd myapp
 cd myapp/plugins
   .htaccess
 cd myapp/www
-  test.php
   jsonrpc.php
   .htaccess
   xmlrpc.php
@@ -26,11 +25,6 @@ cd myapp/modules/myapp/actiongroups
   main.ag.php
 cd myapp/modules/myapp/templates
   hello.tpl
-cd myapp/modules/news
-  module.xml
-  actions.xml
-cd myapp/modules/news/actiongroups
-  default.ag.php
 cd myapp/var
   .htaccess
 cd myapp/var/config

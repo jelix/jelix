@@ -1,3 +1,7 @@
-This package contains the Jelix Framework and a sample application myapp
+lib/ directory contains libraries of Jelix Framework.
+
+You should create a new application by using the lib/jelix-scripts/jelix.php script on the command line.
+
+Or you can install an application by downloading one on the jelix web site.
 
 http://www.jelix.org
