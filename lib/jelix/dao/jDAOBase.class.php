@@ -85,7 +85,6 @@ abstract class jDAOFactoryBase  {
 
    protected $_tables;
    protected $_primaryTable;
-   protected $_fields;
    protected $_conn;
    protected $_selectClause;
    protected $_fromClause;
@@ -145,7 +144,7 @@ abstract class jDAOFactoryBase  {
     * @param jDAOConditions $searchcond
     */
    public function findBy ($searchcond){
-      $query = $this->_selectQuery.$this->_fromClause.$this->_whereClause;
+      $query = $this->_selectClause.$this->_fromClause.$this->_whereClause;
       if (!$searchcond->isEmpty ()){
          $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
          $query .= $this->_createConditionsClause($searchcond);
@@ -162,8 +161,11 @@ abstract class jDAOFactoryBase  {
     */
    protected function _createConditionsClause($daocond){
 
+      $c = $this->_DAORecordClassName;
+      $rec= new $c();
+      $fields = & $rec->getProperties();
 
-      $sql = $this->_generateCondition ($daocond, true);
+      $sql = $this->_generateCondition ($daocond->condition, $fields, true);
 
       $order = array ();
       foreach ($daocond->order as $name => $way){
@@ -182,62 +184,61 @@ abstract class jDAOFactoryBase  {
    }
 
 
-   protected function _generateCondition($condition, $principal=true){
+   protected function _generateCondition($condition, &$fields, $principal=true){
       $r = ' ';
-      $first = true;
+      $notfirst = false;
       foreach ($condition->conditions as $cond){
-         if (!$first){
+         if ($notfirst){
             $r .= ' '.$condition->glueOp.' ';
-         }
-         $first = false;
+         }else
+            $notfirst = true;
 
-         $prop=$this->_fields[$cond['field_id']];
+         $prop=$fields[$cond['field_id']];
 
-         if(isset($prop[2]) && $prop[2] != ''){
-            $prefix = $prop[2].'.'.$prop[0];
-         }else{
-            $prefix = $prop[0];
-         }
-
-         if(isset($prop[3]) && $prop[3] != '' && $prop[3] != '%s'){
-            $prefix=sprintf($prop[3], $prefix);
-         }
-
-         $prefixNoCondition = $prefix;
-         $prefix.=' '.$cond['condition'].' '; // ' ' pour les like..
+         $prefixNoCondition = $this->_tables[$prop['table']]['name'].'.'.$prop['fieldName'];
+         $prefix=$prefixNoCondition.' '.$cond['operator'].' '; // ' ' pour les like..
 
          if (!is_array ($cond['value'])){
-            $value = $this->_prepareValue($cond['value'],$prop[1]);
-            if ($value === 'NULL' && $cond['operator'] == '='){
-               $r .= $prefixNoCondition.' IS '.$value;
+            $value = $this->_prepareValue($cond['value'],$prop['datatype']);
+            if ($value === 'NULL'){
+               if($cond['operator'] == '='){
+                  $r .= $prefixNoCondition.' IS NULL';
+               }else{
+                  $r .= $prefixNoCondition.' IS NOT NULL';
+               }
             } else {
                $r .= $prefix.$value;
             }
          }else{
             $r .= ' ( ';
-                  $firstCV = true;
-                  foreach ($cond['value'] as $conditionValue){
-                  if (!$firstCV){
+            $firstCV = true;
+            foreach ($cond['value'] as $conditionValue){
+               if (!$firstCV){
                   $r .= ' or ';
-                  }
-                  $value = $this->_prepareValue($conditionValue,$prop[1]);
-                  if (($value === 'NULL') && ($cond['operator'] == '=')){;
-                  $r .= $prefixNoCondition.' IS '.$value;
+               }
+               $value = $this->_prepareValue($conditionValue,$prop['datatype']);
+               if ($value === 'NULL'){
+                  if($cond['operator'] == '='){
+                     $r .= $prefixNoCondition.' IS NULL';
                   }else{
+                     $r .= $prefixNoCondition.' IS NOT NULL';
+                  }
+               }else{
                   $r .= $prefix.$value;
-                  }
-                  $firstCV = false;
-                  }
-                  $r .= ' ) ';
+               }
+               $firstCV = false;
+            }
+            $r .= ' ) ';
          }
       }
       //sub conditions
       foreach ($condition->group as $conditionDetail){
-         if (!$first){
+         if ($notfirst){
             $r .= ' '.$condition->glueOp.' ';
+         }else{
+           $notfirst=true;
          }
-         $r .= $this->_generateCondition($conditionDetail,false);
-         $first=false;
+         $r .= $this->_generateCondition($conditionDetail, $fields, false);
       }
 
       //adds parenthesis around the sql if needed (non empty)

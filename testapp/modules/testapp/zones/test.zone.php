@@ -23,6 +23,13 @@ class ZoneTest extends jZone {
         $this->_tpl->assign('nombre',$dao->countAll());
         $this->_tpl->assign('nombrevalue',$dao->getCountValue());
 
+        $cond = new jDAOConditions('or');
+        $cond->addCondition('ckey','=','foo');
+        $cond->addCondition('ckey','=','bar');
+
+        $this->_tpl->assign('petitconfig',$dao->findBy($cond));
+
+
     }
 
 }
