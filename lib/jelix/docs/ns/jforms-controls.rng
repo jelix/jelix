@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+  ns="http://jelix.org/ns/forms/1.0">
+
+  <define name="Linking.Attributes">
+    <attribute name="src" />
+  </define>
+
+  <define name="selector">
+    <optional><attribute name="ref" /></optional>  <!--  donnée -->
+  </define>
+
+  <define name="UI.Common.Attrs">
+      <optional>
+         <attribute name="appearance">
+            <choice>
+               <value>full</value>
+               <value>compact</value>
+               <value>minimal</value>
+            </choice>
+         </attribute>
+      </optional>
+  </define>
+
+   <define name="UI.inline">
+      <zeroOrMore>
+        <ref name="output" />
+      </zeroOrMore>
+  </define>
+
+  <define name="UI.Common">
+     <ref name="label" />
+     <ref name="selector" />
+     <zeroOrMore>
+        <choice>
+           <ref name="help" />
+           <ref name="hint" />
+           <ref name="alert" />
+           <ref name="actions" />
+        </choice>
+     </zeroOrMore>
+  </define>
+
+  <define name="List.UI.Common">
+     <choice>
+       <ref name="item" />
+       <ref name="itemset" />
+       <ref name="choices" />
+     </choice>
+  </define>
+
+
+   <define name="commands">
+      <oneOrMore>
+        <choice>
+            <ref name="input" />
+            <ref name="textarea" />
+            <ref name="secret" />
+            <ref name="output" />
+            <ref name="upload" />
+            <ref name="select1" />
+            <ref name="select" />
+            <ref name="range" />
+            <ref name="submit" />
+            <ref name="trigger" />
+        </choice>
+      </oneOrMore>
+  </define>
+
+
+  <define name="input">
+     <element name="input">
+       <ref name="UI.Common" />
+     </element>
+  </define>
+
+  <define name="textarea">
+     <element name="textarea">
+       <ref name="UI.Common" />
+     </element>
+  </define>
+
+  <define name="secret">
+     <element name="secret">
+       <ref name="UI.Common" />
+     </element>
+  </define>
+
+
+  <define name="upload">
+     <element name="upload">
+       <ref name="UI.Common" />
+       <attribute name="mediatype" /> <!-- indique les types autorisés -->
+     </element>
+  </define>
+
+  <define name="select1">
+     <element name="select1">
+       <oneOrMore>
+         <ref name="List.UI.Common" />
+       </oneOrMore>
+       <ref name="UI.Common" />
+       <ref name="UI.Common.Attrs" />
+       <optional>
+           <attribute name="selection">
+             <choice>
+                 <value>open</value><!-- saisie libre autorisée -->
+                 <value>close</value>
+              </choice>
+           </attribute>
+       </optional>
+     </element>
+  </define>
+
+
+  <define name="select">
+     <element name="select">
+       <oneOrMore>
+         <ref name="List.UI.Common" />
+       </oneOrMore>
+       <ref name="UI.Common" />
+       <ref name="UI.Common.Attrs" />
+       <optional>
+           <attribute name="selection">
+             <choice>
+                 <value>open</value>
+                 <value>close</value>
+              </choice>
+           </attribute>
+       </optional>
+     </element>
+  </define>
+
+  <define name="range">
+     <element name="range">
+       <ref name="UI.Common" />
+       <ref name="UI.Common.Attrs" />
+       <optional><attribute name="start"/></optional>
+       <optional><attribute name="end"/></optional>
+       <optional><attribute name="step"/></optional>
+       <optional><attribute name="incremental"><data type="boolean" /></attribute></optional>
+     </element>
+  </define>
+
+  <define name="trigger">
+     <element name="trigger">
+       <ref name="UI.Common" />
+       <ref name="UI.Common.Attrs" />
+     </element>
+  </define>
+
+  <define name="output">
+     <element name="output">
+       <ref name="UI.Common" />
+       <ref name="UI.Common.Attrs" />
+       <optional><attribute name="appearance"/></optional>
+       <optional><attribute name="value"/></optional>
+     </element>
+  </define>
+
+  <define name="submit">
+     <element name="submit">
+       <ref name="UI.Common" />
+       <ref name="UI.Common.Attrs" />
+       <optional><attribute name="appearance"/></optional>
+       <optional><attribute name="value"/></optional>
+       <attribute name="submission" />
+     </element>
+  </define>
+
+
+  <define name="message.content">
+      <choice>
+          <text />
+          <attribute name="locale" />
+      </choice>
+  </define>
+
+
+  <define name="label">
+     <element name="label">
+        <ref name="message.content" />
+     </element>
+  </define>
+
+  <define name="hint">
+     <element name="hint">
+        <ref name="message.content" />
+     </element>
+  </define>
+
+  <define name="help">
+     <element name="help">
+        <ref name="message.content" />
+     </element>
+  </define>
+
+  <define name="alert">
+     <element name="alert">
+        <ref name="message.content" />
+     </element>
+  </define>
+
+
+
+
+  <define name="choices">
+     <element name="choices">
+       <optional> <ref name="label" /></optional>
+       <oneOrMore>
+         <choice>
+           <ref name="choices" />
+           <ref name="item" />
+          </choice>
+       </oneOrMore>
+       <ref name="Common.Attributes" />
+     </element>
+  </define>
+
+  <define name="value">
+     <element name="value">
+       <text />
+     </element>
+  </define>
+
+  <define name="item">
+     <element name="item">
+         <choice>
+             <ref name="label" />
+             <attribute name="label" />
+             <attribute name="labellocale" />
+         </choice>
+        <choice>
+            <ref name="value" />
+            <attribute name="value" />
+         </choice>
+     </element>
+  </define>
+
+</grammar>
