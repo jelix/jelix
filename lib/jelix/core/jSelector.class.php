@@ -369,6 +369,21 @@ class jSelectorZone extends jSelectorModule {
     }
 }
 
+class jSelectorForm extends jSelectorModule {
+    public $type = 'form';
+
+    function __construct($sel){
+        global $gJConfig;
+
+        $this->_dirname =  'forms/';
+        $this->_suffix = '.form.xml';
+        $this->_cacheSuffix = '.php';
+        $this->_compiler='jFormsCompiler';
+        $this->_compilerPath=JELIX_LIB_FORMS_PATH.'jFormsCompiler.class.php';
+
+        parent::__construct($sel);
+    }
+}
 
 
 

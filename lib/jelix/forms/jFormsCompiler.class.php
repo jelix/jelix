@@ -10,33 +10,60 @@
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
 
 class jFormsCompiler implements jISimpleCompiler {
 
-    public function compile($selector){
-        global $gJCoord;
-        $sel = clone $selector;
+   public function compile($selector){
+      global $gJCoord;
+      $sel = clone $selector;
 
-        $sourceFile = $selector->getPath();
-        $cachefile = $selector->getCompiledFilePath();
+      $sourceFile = $selector->getPath();
+      $cachefile = $selector->getCompiledFilePath();
 
-        // compilation du fichier xml
-        $xml = simplexml_load_file ( $sourceFile);
-        if(!$xml){
-           return false;
-        }
+      // compilation du fichier xml
+      $xml = simplexml_load_file ( $sourceFile);
+      if(!$xml){
+         return false;
+      }
 
-        $foundAction=false;
-        foreach($xml->request as $req){
-            if(isset($req['type'])){
-                $requesttype=$req['type'];
-            }else{
-                trigger_error(jLocale::get('jelix~errors.ac.xml.request.type.attr.missing',array($sourceFile)), E_USER_ERROR);
-                jContext::pop();
-                return false;
-            }
+      /*if(!isset($xml->model)){
+         trigger_error(jLocale::get('jelix~formserr.missing.tag',array('model',$sourceFile)), E_USER_ERROR);
+         return false;
+      }
+      */
 
-        }
+      $source=array();
+      foreach($xml->children() as $controltype=>$control){
+
+         $class = 'jFormsControl'.$controltype;
+
+         if(!class_exists($class,false)){
+            trigger_error(jLocale::get('jelix~formserr.unknow.tag',array($controltype,$sourceFile)), E_USER_ERROR);
+            return false;
+         }
+
+
+         if(!isset($control['ref'])){
+            trigger_error(jLocale::get('jelix~formserr.attribute.missing',array('ref',$controltype,$sourceFile)), E_USER_ERROR);
+            return false;
+         }
+         $source[]='$ctrl= new '.$class.'(\''.(string)$control['ref'].'\');';
+         if(isset($control['type'])){
+            $source[]='$ctrl->datatype=\''.(string)$control['type'].'\';';
+         }
+         if(isset($control['readonly'])){
+            $readonly=(string)$control['readonly'];
+
+            $source[]='$ctrl->readonly='.($readonly=='true'?'true':'false').';';
+         }
+         if(isset($control['required'])){
+            $required=(string)$control['required'];
+            $source[]='$ctrl->required='.($required=='true'?'true':'false').';';
+         }
+
+         $source[]='$this->addControl($ctrl);';
+      }
 
 
 

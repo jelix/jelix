@@ -12,20 +12,21 @@
 
 
 abstract class jFormsControl {
-   public $name;
    public $type = null;
-   public $ref;
-   public $refdao;
-   public $datatype;
-   public $required;
-   public $label;
-   public $labellocal;
+   public $ref='';
+   public $datatype='string';
+   public $required=false;
+   public $readonly=false;
+   public $label='';
+   public $labellocal='';
 
-   public $value;
-   public $defaultValue;
+   public $value='';
+   public $defaultValue='';
+//  public $pattern =null;
 
-//   var $regexp       =null;   // expression regulière
-
+   function __construct($ref){
+      $this->ref = $ref;
+   }
 }
 
 class jFormsControlInput extends jFormsControl {
