@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    ns="http://jelix.org/ns/actions/1.0"
+    datatype="http://www.w3.org/2001/XMLSchema-datatypes"
+    >
+
+   <start>
+      <element name="actions">
+         <oneOrMore>
+            <ref name="request" />
+         </oneOrMore>
+      </element>
+   </start>
+
+
+   <define name="request">
+      <element name="request">
+         <attribute name="type"/>
+         <optional><attribute name="defaultag" /></optional>
+         <zeroOrMore>
+           <ref name="pluginparam" />
+         </zeroOrMore>
+         <zeroOrMore>
+            <ref name="response" />
+         </zeroOrMore>
+         <oneOrMore>
+           <ref name="action" />
+         </oneOrMore>
+      </element>
+   </define>
+
+   <define name="pluginparam">
+      <element name="pluginparam">
+         <attribute name="name" />
+         <attribute name="value" />
+         <empty/>
+      </element>
+   </define>
+
+   <define name="response">
+      <element name="response">
+         <attribute name="name" />
+         <attribute name="type" />
+         <optional><attribute name="default"><data type="boolean"/></attribute></optional>
+         <zeroOrMore>
+            <attribute>
+               <anyName />
+               <text />
+            </attribute>
+         </zeroOrMore>
+         <empty/>
+      </element>
+   </define>
+
+
+   <define name="action">
+      <element name="action">
+         <attribute name="name" />
+         <optional><attribute name="ag" /></optional>
+         <optional><attribute name="method" /></optional>
+         <interleave>
+            <zeroOrMore>
+               <ref name="pluginparam" />
+            </zeroOrMore>
+            <oneOrMore>
+               <ref name="response" />
+            </oneOrMore>
+         </interleave>
+      </element>
+   </define>
+
+</grammar>

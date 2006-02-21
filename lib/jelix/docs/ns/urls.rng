@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         ns="http://jelix.org/ns/urls/1.0"
+         datatype="http://www.w3.org/2001/XMLSchema-datatypes"
+         >
+
+   <start>
+      <element name="urls">
+         <oneOrMore>
+            <ref name="entrypoint" />
+         </oneOrMore>
+      </element>
+   </start>
+
+
+   <define name="entrypoint">
+      <element>
+         <choice>
+            <name>classicentrypoint</name>
+            <name>xmlrpcentrypoint</name>
+            <name>jsonrpcentrypoint</name>
+         </choice>
+
+         <optional><attribute name="default"><data type="boolean"/></attribute></optional>
+         <attribute name="name"/>
+         <zeroOrMore>
+            <choice>
+               <ref name="url" />
+               <ref name="url.handler" />
+            </choice>
+         </zeroOrMore>
+      </element>
+   </define>
+
+   <define name="url">
+      <element name="url">
+         <attribute name="module" />
+         <optional>
+             <attribute name="action" />
+             <optional>
+                <attribute name="actionoverride" />
+             </optional>
+         </optional>
+         <optional>
+            <attribute name="pathinfo" />
+            <oneOrMore>
+               <ref name="param" />
+            </oneOrMore>
+            <zeroOrMore>
+               <ref name="static" />
+            </zeroOrMore>
+         </optional>
+      </element>
+   </define>
+
+   <define name="url.handler">
+      <element name="url">
+         <attribute name="handler" />
+         <attribute name="module" />
+         <optional>
+            <attribute name="action" />
+            <optional>
+               <attribute name="actionoverride" />
+            </optional>
+         </optional>
+         <empty/>
+      </element>
+   </define>
+
+   <define name="param">
+      <element name="param">
+         <attribute name="name" />
+         <optional>
+            <choice>
+               <attribute name="type">
+                  <choice>
+                     <value>string</value>
+                     <value>char</value>
+                     <value>letter</value>
+                     <value>number</value>
+                     <value>int</value>
+                     <value>integer</value>
+                     <value>digit</value>
+                     <value>date</value>
+                     <value>year</value>
+                     <value>month</value>
+                     <value>day</value>
+                  </choice>
+               </attribute>
+               <attribute name="regexp"/>
+            </choice>
+         </optional>
+         <optional><attribute name="escape"><data type="boolean"/></attribute></optional>
+         <empty />
+      </element>
+   </define>
+
+
+   <define name="static">
+      <element name="static">
+         <attribute name="name" />
+         <attribute name="value" />
+         <empty />
+      </element>
+   </define>
+
+</grammar>

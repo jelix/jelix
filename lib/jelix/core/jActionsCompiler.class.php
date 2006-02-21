@@ -71,13 +71,13 @@ class jActionsCompiler implements jISimpleCompiler {
                    $defrep = $defaultResponse;
                  }
                }
-               
+
                if(isset($action['ag'])){
                   $ag=(string)$action['ag'];
                }else{
                   $ag = $defaultag;
                }
-               
+
                $actionsel = new jSelectorAg($ag);
                if(!$actionsel->isValid()){
                   trigger_error(jLocale::get('jelix~errors.ac.xml.ag.selector.invalid',array($ag,$action['name'], $sourceFile) ),E_USER_ERROR);
@@ -88,7 +88,7 @@ class jActionsCompiler implements jISimpleCompiler {
                if(isset($action['method']))
                  $method = $action['method'];
                else
-                 $method = $action['name'];                 
+                 $method = $action['name'];
                $content ="<?php\n".'$GLOBALS[\'gJCoord\']->action = new jActionDesc(\''.$action['name'].'\',\''.$path.'\',\'AG'.$actionsel->resource.'\',\''.$method.'\',\''.$defrep.'\');'."\n";
                if(count($pluginParams)){
                    $content .= '$GLOBALS[\'gJCoord\']->action->pluginParams = '.var_export($pluginParams,true).";\n";
@@ -110,7 +110,7 @@ class jActionsCompiler implements jISimpleCompiler {
     }
 /*
 <actions>
-  <actiongroup requesttype="">
+  <request type="">
       <!-- parametres communs à toutes les actions du group -->
       <pluginparam name="" value="" />
       <pluginparam name="" value="" />
@@ -124,7 +124,7 @@ class jActionsCompiler implements jISimpleCompiler {
           <response default="true" name="" type="html,redirect,xul.." parameter="value" />
           <response name="" type="" parameter="value" />
       </action>
-  </actiongroup>
+  </request>
 </actions>
 */
 

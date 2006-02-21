@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    ns="http://jelix.org/ns/dao/1.0"
+    datatype="http://www.w3.org/2001/XMLSchema-datatypes"
+    >
+
+   <start>
+      <element name="dao">
+         <ref name="datasources" />
+         <ref name="record" />
+         <optional><ref name="factory" /></optional>
+      </element>
+   </start>
+
+
+   <!-- section datasources -->
+
+   <define name="datasources">
+      <element name="datasources">
+         <element name="primarytable">
+            <ref name="table.content" />
+         </element>
+         <zeroOrMore>
+            <element name="foreigntable">
+               <ref name="table.content" />
+               <ref name="foreigntable.content" />
+            </element>
+         </zeroOrMore>
+         <zeroOrMore>
+            <element name="optionalforeigntable">
+               <ref name="table.content" />
+               <ref name="foreigntable.content" />
+            </element>
+         </zeroOrMore>
+      </element>
+   </define>
+
+   <define name="table.content">
+      <attribute name="name" />
+      <optional><attribute name="realname" /></optional>
+      <attribute name="primarykey" />
+   </define>
+
+   <define name="foreigntable.content">
+      <attribute name="onforeignkey" />
+   </define>
+
+
+
+   <!-- section record -->
+   <define name="record">
+      <element name="record">
+         <oneOrMore>
+            <element name="property">
+               <attribute name="name" />
+               <attribute name="datatype">
+                  <ref  name="dao.datatypes"/>
+               </attribute>
+               <optional><attribute name="fieldname" /></optional>
+               <optional><attribute name="table" /></optional>
+               <optional><attribute name="required"><data type="boolean" /></attribute></optional>
+               <optional><attribute name="minlength"><data type="int" /></attribute></optional>
+               <optional><attribute name="maxlength"><data type="int" /></attribute></optional>
+               <optional><attribute name="required"><data type="boolean" /></attribute></optional>
+               <optional><attribute name="regexp" /></optional>
+               <optional><attribute name="sequence" /></optional>
+               <optional><attribute name="updatemotif" /></optional>
+               <optional><attribute name="insertmotif" /></optional>
+               <optional><attribute name="selectmotif" /></optional>
+            </element>
+         </oneOrMore>
+      </element>
+   </define>
+
+   <!-- section factory -->
+
+   <define name="factory">
+      <element name="factory">
+         <oneOrMore>
+            <ref name="method" />
+         </oneOrMore>
+      </element>
+   </define>
+
+   <define name="method">
+      <choice>
+         <element name="method">
+            <attribute name="type"><value>php</value></attribute>
+            <ref name="method.common" />
+            <element name="body"> <text /> </element>
+         </element>
+
+         <element name="method">
+            <attribute name="type"><value>sql</value></attribute>
+            <ref name="method.common" />
+            <attribute name="call" />
+         </element>
+
+         <element name="method">
+            <attribute name="type">
+               <choice>
+                  <value>count</value>
+                  <value>delete</value>
+               </choice>
+            </attribute>
+            <ref name="method.common" />
+            <ref name="method.conditions"/>
+         </element>
+
+         <element name="method">
+            <attribute name="type"><value>update</value></attribute>
+            <ref name="method.common" />
+            <ref name="method.values" />
+            <ref name="method.conditions" />
+         </element>
+
+         <element name="method">
+            <optional>
+               <attribute name="type">
+                  <choice>
+                     <value>select</value>
+                     <value>selectfirst</value>
+                  </choice>
+               </attribute>
+            </optional>
+            <ref name="method.common" />
+            <ref name="method.conditions" />
+            <ref name="method.orders" />
+            <ref name="method.limit" />
+         </element>
+      </choice>
+   </define>
+
+   <define name="method.common">
+      <attribute name="name" />
+      <zeroOrMore>
+         <element name="parameter">
+            <attribute name="name" />
+            <empty/>
+         </element>
+      </zeroOrMore>
+   </define>
+
+   <define name="method.conditions">
+      <element name="conditions">
+         <optional>
+             <attribute name="logic">
+                <choice>
+                   <value>and</value>
+                   <value>or</value>
+                </choice>
+             </attribute>
+          </optional>
+         <oneOrMore>
+            <choice>
+               <element name="eq"><ref name="method.condition.attr" /></element>
+               <element name="noteq"><ref name="method.condition.attr" /></element>
+               <element name="lt"><ref name="method.condition.attr" /></element>
+               <element name="gt"><ref name="method.condition.attr" /></element>
+               <element name="lteq"><ref name="method.condition.attr" /></element>
+               <element name="gteq"><ref name="method.condition.attr" /></element>
+               <element name="isnull"><ref name="method.condition.attr.null" /></element>
+               <element name="notisnull"><ref name="method.condition.attr.null" /></element>
+               <ref name="method.conditions" />
+            </choice>
+         </oneOrMore>
+      </element>
+
+   </define>
+
+   <define name="method.condition.attr">
+      <attribute name="property" />
+      <choice>
+         <attribute name="value" />
+         <attribute name="expr" />
+      </choice>
+      <empty />
+   </define>
+
+   <define name="method.condition.attr.null">
+      <attribute name="property" />
+      <empty />
+   </define>
+
+
+
+   <define name="method.values">
+      <optional>
+         <element name="values">
+            <oneOrMore>
+               <element name="value">
+                  <attribute name="property" />
+                  <choice>
+                     <attribute name="value" />
+                     <attribute name="expr" />
+                  </choice>
+                  <empty />
+               </element>
+            </oneOrMore>
+         </element>
+      </optional>
+   </define>
+
+   <define name="method.orders">
+      <optional>
+         <element name="order">
+            <oneOrMore>
+               <element name="orderitem">
+                  <attribute name="property" />
+                  <optional>
+                     <attribute name="way">
+                        <choice>
+                           <value>ASC</value>
+                           <value>DESC</value>
+                        </choice>
+                     </attribute>
+                  </optional>
+                  <empty/>
+               </element>
+            </oneOrMore>
+         </element>
+      </optional>
+   </define>
+
+   <define name="method.limit">
+      <optional>
+         <element name="limit">
+            <attribute name="offset" />
+            <attribute name="count" />
+            <empty />
+         </element>
+      </optional>
+   </define>
+
+   <!-- divers -->
+
+
+   <define name="any">
+      <element>
+         <anyName/>
+         <zeroOrMore>
+            <choice>
+               <attribute>
+                  <anyName/>
+               </attribute>
+               <text/>
+               <ref name="any"/>
+            </choice>
+         </zeroOrMore>
+      </element>
+   </define>
+
+
+   <define name="dao.datatypes">
+      <choice>
+         <value>varchar</value>
+         <value>varchardate</value>
+         <value>autoincrement</value>
+         <value>bigautoincrement</value>
+         <ref name="jelix.datatypes.value"/>
+      </choice>
+   </define>
+
+   <define name="jelix.datatypes.value">
+      <choice>
+         <value>int</value>
+         <value>integer</value>
+         <value>numeric</value>
+         <value>double</value>
+         <value>float</value>
+         <value>datetime</value>
+         <value>time</value>
+         <value>date</value>
+         <value>string</value>
+      </choice>
+   </define>
+</grammar>

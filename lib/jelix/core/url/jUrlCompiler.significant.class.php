@@ -162,9 +162,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                               $regexp = $typeparam[(string)$var['type']];
                            else
                               $regexp = '([^\/]+)';
-                        }
-
-                        if (isset ($var['regexp'])){
+                        }else if (isset ($var['regexp'])){
                             $regexp = '('.(string)$var['regexp'].')';
                         }else{
                             $regexp = '([^\/]+)';

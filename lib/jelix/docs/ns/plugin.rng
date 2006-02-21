@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         ns="http://jelix.org/ns/plugin/1.0"
+    datatype="http://www.w3.org/2001/XMLSchema-datatypes"
+    >
+
+   <start>
+      <element name="plugin">
+         <empty /> <!-- not defined for the moment -->
+      </element>
+   </start>
+
+</grammar>

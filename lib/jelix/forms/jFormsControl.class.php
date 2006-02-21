@@ -18,7 +18,7 @@ abstract class jFormsControl {
    public $required=false;
    public $readonly=false;
    public $label='';
-   public $labellocal='';
+   public $labellocale='';
 
    public $value='';
    public $defaultValue='';
@@ -39,7 +39,27 @@ class jFormsControlSelect1 extends jFormsControl {
    public $datasource; // jIFormDatasource
 }
 
+class jFormsControlSelect extends jFormsControlSelect1 {
+   public $type="select";
+}
 
+class jFormsControlTextarea extends jFormsControl {
+   public $type='textarea';
+}
 
+class jFormsControlSecret extends jFormsControl {
+   public $type='secret';
+}
+
+class jFormsControlOutput extends jFormsControl {
+   public $type='output';
+}
+class jFormsControlUpload extends jFormsControl {
+   public $type='upload';
+}
+
+class jFormsControlSubmit extends jFormsControl {
+   public $type='submit';
+}
 
 ?>
