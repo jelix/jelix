@@ -61,7 +61,19 @@ class jFormsCompiler implements jISimpleCompiler {
             $required=(string)$control['required'];
             $source[]='$ctrl->required='.($required=='true'?'true':'false').';';
          }
-
+         
+         
+         if(!isset($control->label)){
+            trigger_error(jLocale::get('jelix~formserr.tag.missing',array('label',$controltype,$sourceFile)), E_USER_ERROR);
+            return false;
+         }
+         
+         if(isset($control->label['locale'])){
+             $source[]='$ctrl->labellocale=\''.(string)$control->label['locale'].'\';';
+         }else{
+             $source[]='$ctrl->label=\''.(string)$control->label.'\';';
+         }
+         
          $source[]='$this->addControl($ctrl);';
       }
 
@@ -71,6 +83,11 @@ class jFormsCompiler implements jISimpleCompiler {
 
         return true;
     }
+    
+    
+    
+    
+    
 }
 
 
