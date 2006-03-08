@@ -34,6 +34,8 @@ class jFormsCompiler implements jISimpleCompiler {
       */
 
       $source=array();
+      $source[]='<?php class '.$selector->getClass().' extends jForms {';
+      $source[]=' public function __construct(){';
       foreach($xml->children() as $controltype=>$control){
 
          $class = 'jFormsControl'.$controltype;
@@ -50,8 +52,16 @@ class jFormsCompiler implements jISimpleCompiler {
          }
          $source[]='$ctrl= new '.$class.'(\''.(string)$control['ref'].'\');';
          if(isset($control['type'])){
-            $source[]='$ctrl->datatype=\''.(string)$control['type'].'\';';
+            $dt = (string)$control['type'];
+            if(!in_array(strtolower($dt), array('string','boolean','decimal','integer','datetime','date','time','localedatetime','localedate','localetime'))){
+               trigger_error(jLocale::get('jelix~formserr.datatype.unknow',array($dt,$controltype,$sourceFile)), E_USER_ERROR);
+               return false;
+            }
+            $source[]='$ctrl->datatype= new jDatatype'.$dt.'();';
+         }else{
+            $source[]='$ctrl->datatype= new jDatatypeString();';
          }
+
          if(isset($control['readonly'])){
             $readonly=(string)$control['readonly'];
 
@@ -93,16 +103,15 @@ class jFormsCompiler implements jISimpleCompiler {
          $source[]='$this->addControl($ctrl);';
       }
 
+      $source[]=' }';
+      $source[]='} ?>';
 
 
 
-
-        return true;
-    }
-
-
-
-
+      $file = new jFile();
+      $file->write($cachefile, implode("\n", $source));
+      return true;
+   }
 
 }
 

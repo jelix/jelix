@@ -75,7 +75,7 @@ abstract class jForms {
    * @param $control jFormsControl
    */
    protected function addControl($control){
-      $this->_controls [$control->name] = $control;
+      $this->_controls [$control->ref] = $control;
    }
 
    public function check(){

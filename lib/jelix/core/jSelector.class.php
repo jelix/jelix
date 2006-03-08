@@ -58,7 +58,7 @@ abstract class jSelectorModule implements jISelector {
     protected $_cacheSuffix='.php';
     protected $_path;
     protected $_cachePath;
-    protected $_compiler;
+    protected $_compiler = null;
     protected $_compilerPath;
     protected $_useMultiSourceCompiler=false;
 
@@ -96,6 +96,7 @@ abstract class jSelectorModule implements jISelector {
    }
 
     public function getCompiler(){
+        if($this->_compiler == null) return null;
         $n = $this->_compiler;
         require_once($this->_compilerPath);
         $o = new $n();
@@ -204,10 +205,6 @@ class jSelectorClass extends jSelectorModule {
     protected function _createCachePath(){
         $this->_cachePath = '';
     }
-
-    public function getCompiler(){
-        return null;
-    }
 }
 
 class jSelectorAg extends jSelectorModule {
@@ -217,10 +214,6 @@ class jSelectorAg extends jSelectorModule {
 
     protected function _createCachePath(){
         $this->_cachePath = '';
-    }
-
-    public function getCompiler(){
-        return null;
     }
 }
 
@@ -363,10 +356,6 @@ class jSelectorZone extends jSelectorModule {
     protected function _createCachePath(){
         $this->_cachePath = '';
     }
-
-    public function getCompiler(){
-        return null;
-    }
 }
 
 class jSelectorForm extends jSelectorModule {
@@ -383,6 +372,11 @@ class jSelectorForm extends jSelectorModule {
 
         parent::__construct($sel);
     }
+
+    public function getClass(){
+       return 'cForm_'.$this->module.'_'.$this->resource;
+    }
+
 }
 
 

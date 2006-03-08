@@ -4,13 +4,13 @@
   xmlns:ev="http://www.w3.org/2001/xml-events">
 
 
-   <include href="jforms-model.rng" />
+   <!--<include href="jforms-model.rng" />-->
    <include href="jforms-controls.rng" />
-   <include href="jforms-actions.rng" />
+   <!--<include href="jforms-actions.rng" />-->
 
    <start>
-      <element name="jforms">
-         <ref name="model" />
+      <element name="forms">
+         <!--<ref name="model" />-->
          <ref name="controls" />
       </element>
    </start>

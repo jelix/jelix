@@ -249,6 +249,22 @@ class jDateTime{
         $this->minute = $t['minutes'];
         $this->second = $t['seconds'];
     }
+
+    /**
+     * compare la date avec une autre
+     * @return integer -1 si $dt >, 0 si =, 1 si $dt <
+     */
+    public function compareTo($dt){
+      $fields=array('year','month','day','hour','minute','second');
+      foreach($fields as $field){
+         if($dt->$field > $this->$field)
+            return -1;
+         else if($dt->$field < $this->$field)
+            return 1;
+      }
+      return 0;
+    }
+
 }
 
 ?>

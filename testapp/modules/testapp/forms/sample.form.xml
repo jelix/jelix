@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<forms xmlns="http://jelix.org/ns/forms/1.0">
+
+   <input ref="nom" >
+      <label>Votre nom</label>
+   </input>
+
+   <input ref="prenom" >
+      <label>Votre prénom</label>
+   </input>
+
+</forms>

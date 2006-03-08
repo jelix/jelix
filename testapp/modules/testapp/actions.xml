@@ -10,9 +10,24 @@
       <action name="testdao" ag="main" method="getTestDao" >
           <response default="true" name="dao" type="html" />
       </action>
-
    </request>
 
+   <request type="classic" defaultag="forms">
+
+      <action name="newform" >
+           <response type="redirect" action="showform" />
+      </action>
+
+      <action name="showform" >
+         <response type="html"/>
+      </action>
+
+      <action name="resultform" >
+         <response default="true" name="results" type="html"/>
+         <response name="errors" type="redirect" action="showform" />
+      </action>
+
+   </request>
 
 <!--  <request type="">
       <pluginparam name="" value="" />
