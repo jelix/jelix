@@ -15,7 +15,7 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
-class jActionGroup {
+class jController{
 
     public $pluginParams=array();
     private $request;

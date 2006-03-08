@@ -13,17 +13,17 @@
 class createmoduleCommand extends JelixScriptCommand {
 
     public  $name = 'createmodule';
-    public  $allowed_options=array('-nosubdir'=>false, '-noag'=>false);
+    public  $allowed_options=array('-nosubdir'=>false, '-nocontroller'=>false);
     public  $allowed_parameters=array('module'=>true);
 
-    public  $syntaxhelp = "[-nosubdir] [-noag]  MODULE";
+    public  $syntaxhelp = "[-nosubdir] [-nocontroller]  MODULE";
     public  $help="
     Créer un nouveau module, avec son fichier module.xml,
-    et un actiongroup par défaut, ainsi que tous les sous-repertoires courants
+    et un controleur par défaut, ainsi que tous les sous-repertoires courants
     (zones, templates, daos, locales, classes...).
 
     -nosubdir (facultatif) : ne créer pas tous les sous-repertoires courant..
-    -noag (facultatif) : ne créer pas le fichier desc et actiongroup par défaut
+    -nocontroller (facultatif) : ne créer pas de fichier controller par défaut
     MODULE : le nom du module à créer.";
 
 
@@ -35,12 +35,11 @@ class createmoduleCommand extends JelixScriptCommand {
        }
        $this->createDir($path);
        $this->createFile($path.'module.xml','module.xml.tpl',array('name'=>$this->_parameters['module']));
-       //$this->createFile($path.'actions.xml','actions.xml.tpl',array('module'=>$this->_parameters['module']));
 
        if(!$this->getOption('-nosubdir')){
           $this->createDir($path.'classes/');
           $this->createDir($path.'zones/');
-          $this->createDir($path.'actiongroups/');
+          $this->createDir($path.'controllers/');
           $this->createDir($path.'templates/');
           $this->createDir($path.'classes/');
           $this->createDir($path.'daos/');
@@ -49,17 +48,10 @@ class createmoduleCommand extends JelixScriptCommand {
           $this->createDir($path.'locales/fr_FR/');
        }
 
-       if(!$this->getOption('-noag')){
-         $agcommand = jxs_load_command('createag');
-         $agcommand->init(array(),array('module'=>$this->_parameters['module'], 'name'=>'default','method'=>'getDefault'));
+       if(!$this->getOption('-nocontroller')){
+         $agcommand = jxs_load_command('createctrl');
+         $agcommand->init(array(),array('module'=>$this->_parameters['module'], 'name'=>'default','method'=>'index'));
          $agcommand->run();
-
-          /*
-         $desccommand = jxs_load_command('createaction');
-         $desccommand->init(array(),array('module'=>$this->_parameters['module'], 'name'=>'default','action'=>'default', 'actiongroup'=>'default', 'method'=>'getDefault'));
-         $desccommand->run();
-         */
-
        }
     }
 }

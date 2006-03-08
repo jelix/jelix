@@ -9,12 +9,12 @@
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-class AG{$name} extends jActionGroup {
+class AG{$name} extends jController {
    /**
    *
    */
    function {$method} () {
-      $rep = $this->getResponse('default');
+      $rep = $this->getResponse('html');
 
       return $rep;
    }

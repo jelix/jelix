@@ -10,34 +10,34 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-class createagCommand extends JelixScriptCommand {
+class createctrlCommand extends JelixScriptCommand {
 
-    public  $name = 'createag';
+    public  $name = 'createctrl';
     public  $allowed_options=array();
     public  $allowed_parameters=array('module'=>true,'name'=>true, 'method'=>false);
 
-    public  $syntaxhelp = "MODULE NOM_ACTIONGROUP [NOM_METHOD]";
+    public  $syntaxhelp = "MODULE NOM_CONTROLEUR [NOM_METHOD]";
     public  $help="
-    Permet de créer un nouveau fichier d'une classe actiongroup
+    Permet de créer un nouveau fichier d'une classe jController
 
     MODULE : le nom du module concerné.
-    NOM_ACTIONGROUP :  nom de l'actiongroup que vous voulez créer.
-    NOM_METHOD (facultatif) : nom de la première méthode. Par défaut, elle a le nom getDefault.";
+    NOM_CONTROLEUR :  nom du controleur que vous voulez créer.
+    NOM_METHOD (facultatif) : nom de la première méthode. Par défaut, elle a le nom index.";
 
 
     public function run(){
        $path= $this->getModulePath($this->_parameters['module']);
 
-       $agfilename= $path.'actiongroups/';
+       $agfilename= $path.'controllers/';
        $this->createDir($agfilename);
 
-       $agfilename.=strtolower($this->_parameters['name']).'.ag.php';
+       $agfilename.=strtolower($this->_parameters['name']).'.classic.php';
 
-       $method = $this->getParam('method','getDefault');
+       $method = $this->getParam('method','index');
 
        $param= array('name'=>$this->_parameters['name'] , 'method'=>$method);
 
-       $this->createFile($agfilename,'actiongroup.tpl',$param);
+       $this->createFile($agfilename,'controller.tpl',$param);
 
     }
 }

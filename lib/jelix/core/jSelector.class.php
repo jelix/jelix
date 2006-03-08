@@ -188,7 +188,7 @@ class jSelectorAct extends jSelectorModule {
             $this->_path=='';
             $this->_valid = false;
         }else{
-           $this->_path = $gJConfig->modulesPathList[$this->module].'actiongroups/'.$this->controller.'.'.$this->request.'.php';
+           $this->_path = $gJConfig->modulesPathList[$this->module].'controllers/'.$this->controller.'.'.$this->request.'.php';
         }
     }
 
@@ -213,16 +213,6 @@ class jSelectorClass extends jSelectorModule {
     public $type = 'class';
     protected $_dirname = 'classes/';
     protected $_suffix = '.class.php';
-
-    protected function _createCachePath(){
-        $this->_cachePath = '';
-    }
-}
-
-class jSelectorAg extends jSelectorModule {
-    public $type = 'ag';
-    protected $_dirname = 'actiongroups/';
-    protected $_suffix = '.ag.php';
 
     protected function _createCachePath(){
         $this->_cachePath = '';

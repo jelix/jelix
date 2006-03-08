@@ -14,26 +14,26 @@ class createactionCommand extends JelixScriptCommand {
 
     public  $name = 'createaction';
     public  $allowed_options=array();
-    public  $allowed_parameters=array('module'=>true,'name'=>true, 'actiongroup'=>false, 'method'=>false);
+    public  $allowed_parameters=array('module'=>true,'name'=>true, 'controller'=>false, 'method'=>false);
 
-    public  $syntaxhelp = "MODULE ACTION [ACTIONGROUP] [METHOD]";
+    public  $syntaxhelp = "MODULE ACTION [CONTROLLER] [METHOD]";
     public  $help="
     Permet d'ajouter une nouvelle action
 
-    MODULE : le nom du module concerné.    
+    MODULE : le nom du module concerné.
     ACTION (facultatif) : nom de l'action que vous voulez ajouter
-    ACTIONGROUP (facultatif) :  nom de l'actiongroup concerné par l'action que vous
+    CONTROLLER (facultatif) :  nom du controleur concerné par l'action que vous
                                avez spécifié.
-    METHOD (facultatif) : nom de la méthode de l'actiongroup que vous avez spécifié.";
+    METHOD (facultatif) : nom de la méthode du controleur que vous avez spécifié.";
 
 
     public function run(){
        $path= $this->getModulePath($this->_parameters['module']);
 
-       $actiongroup = $this->getParam('actiongroup','default');
+       $controller = $this->getParam('controller','default');
        $method = $this->getParam('method','getDefault');
 
-       $param= compact('actiongroup','method');
+       $param= compact('controller','method');
        $param['name'] = $this->_parameters['name'];
        $param['module'] = $this->_parameters['module'];
 

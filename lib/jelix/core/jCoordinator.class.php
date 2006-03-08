@@ -130,28 +130,28 @@ class jCoordinator {
 
         $this->action = new jSelectorAct($this->actionName);
 
-        $ag = $this->getController($this->action);
+        $ctrl = $this->getController($this->action);
 
         $pluginparams = array();
-        if(isset($ag->pluginsParam['*'])){
-            $pluginparams = $ag->pluginsParam['*'];
+        if(isset($ctrl->pluginsParam['*'])){
+            $pluginparams = $ctrl->pluginsParam['*'];
         }
 
-        if(isset($ag->pluginsParam[$this->action->method])){
-            $pluginparams = array_merge($pluginparams, $ag->pluginsParam[$this->action->method]);
+        if(isset($ctrl->pluginsParam[$this->action->method])){
+            $pluginparams = array_merge($pluginparams, $ctrl->pluginsParam[$this->action->method]);
         }
 
         foreach ($this->plugins as $name => $obj){
             $result = $this->plugins[$name]->beforeProcess ($pluginparams);
             if($result){
                $this->action = $result;
-               $ag = $this->getController($this->action);
+               $ctrl = $this->getController($this->action);
                break;
             }
         }
 
         //try{
-            $this->response = $ag->{$this->action->method}();
+            $this->response = $ctrl->{$this->action->method}();
         /*}catch(jException $e){
             trigger_error($e->getLocaleMessage(), E_USER_ERROR);
             return ;
@@ -183,27 +183,27 @@ class jCoordinator {
 
     private function getController($selector){
 
-        $agpath = $selector->getPath();
+        $ctrlpath = $selector->getPath();
         $class = $selector->getClass();
         $method = $selector->method;
 
         if(!file_exists($agpath)){
-            trigger_error(jLocale::get('jelix~errors.ad.actiongroup.file.unknow',array($this->actionName,$agpath)),E_USER_ERROR);
+            trigger_error(jLocale::get('jelix~errors.ad.controller.file.unknow',array($this->actionName,$ctrlpath)),E_USER_ERROR);
             return;
         }
         require($agpath);
         if(!class_exists($class,false)){
-            trigger_error(jLocale::get('jelix~errors.ad.actiongroup.class.unknow',array($this->actionName,$class, $agpath)),E_USER_ERROR);
+            trigger_error(jLocale::get('jelix~errors.ad.controller.class.unknow',array($this->actionName,$class, $ctrlpath)),E_USER_ERROR);
             return;
         }
 
-        $ag = new $class($this->request);
+        $ctrl = new $class($this->request);
 
-        if(!method_exists($ag,$method)){
-            trigger_error(jLocale::get('jelix~errors.ad.actiongroup.method.unknow',array($this->actionName,$method, $class, $agpath)),E_USER_ERROR);
+        if(!method_exists($ctrl,$method)){
+            trigger_error(jLocale::get('jelix~errors.ad.controller.method.unknow',array($this->actionName,$method, $class, $ctrlpath)),E_USER_ERROR);
             return;
         }
-        return $ag;
+        return $ctrl;
     }
 
 
