@@ -188,8 +188,7 @@ class jSelectorAct extends jSelectorModule {
             $this->_path=='';
             $this->_valid = false;
         }else{
-           // $this->_path = $gJConfig->modulesPathList[$this->module].'actiongroups/'.$this->controller.'.'.$this->request.'.php';
-            $this->_path = $gJConfig->modulesPathList[$this->module].'actiongroups/'.$this->controller.'.ag.php';
+           $this->_path = $gJConfig->modulesPathList[$this->module].'actiongroups/'.$this->controller.'.'.$this->request.'.php';
         }
     }
 

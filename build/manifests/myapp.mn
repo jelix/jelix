@@ -21,7 +21,7 @@ cd myapp/modules
 cd myapp/modules/myapp
   module.xml
 cd myapp/modules/myapp/actiongroups
-  main.ag.php
+  main.classic.php
 cd myapp/modules/myapp/templates
   hello.tpl
 cd myapp/var

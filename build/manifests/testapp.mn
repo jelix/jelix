@@ -31,7 +31,7 @@ cd testapp/modules/testapp/locales/fr_FR
 cd testapp/modules/testapp/daos
   config.dao.xml
 cd testapp/modules/testapp/actiongroups
-  main.ag.php
+  main.classic.php
 cd testapp/modules/testapp/templates
   hello.tpl
   main.tpl
@@ -58,8 +58,8 @@ cd testapp/modules/unittest/locales/en_US
 cd testapp/modules/unittest/templates
   accueil.tpl
 cd testapp/modules/unittest/actiongroups
-  default.ag.php
-  urlsig.ag.php
+  default.classic.php
+  urlsig.classic.php
 cd testapp/var
   .htaccess
 cd testapp/var/log
