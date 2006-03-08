@@ -25,19 +25,19 @@ final class jResponseRedirect extends jResponse {
     /**
      * selecteur d'action vers lequel rediriger
      */
-    public $selector = '';
+    public $action = '';
 
-    public $selectorParams = array();
+    public $params = array();
 
     public function output(){
         if(count($this->_errorMessage)) return false;
-        header ('location: '.jUrl::get($this->selector, $this->selectorParams));
+        header ('location: '.jUrl::get($this->action, $this->selectorParams));
         return true;
     }
 
     public function fetch(){
         if(count($this->_errorMessage)) return false;
-        return 'location: '.jUrl::get($this->selector, $this->selectorParams);
+        return 'location: '.jUrl::get($this->action, $this->selectorParams);
     }
 
     public function outputErrors(){
