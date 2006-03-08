@@ -18,17 +18,26 @@ if($_SERVER['argc'] < 3){
    exit(1);
 }
 array_shift($_SERVER['argv']); // shift the script name
-
+$restrictedDirectory = '';
 $options = array('verbose'=>false);
 
 if(substr($_SERVER['argv'][0],0,1) == '-'){
   $sw = substr(array_shift($_SERVER['argv']),1);
-  $options['verbose'] = (strpos('v', $sw) !== false);
+  $options['verbose'] = (strpos($sw, 'v') !== false);
+  if(strpos($sw,'d') !== false){
+     $restrictedDirectory = array_shift($_SERVER['argv']);
+  }
 
 }
 
 list($sourcefile, $distfile) = $_SERVER['argv'];
 
+if($restrictedDirectory !=''){
+   $s = realpath($sourcefile);
+   if(strpos($s, $restrictedDirectory) !==0){
+      exit(1);
+   }
+}
 
 function createDir ($dir){
     if (!file_exists($dir)) {
