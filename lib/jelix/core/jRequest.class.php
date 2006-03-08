@@ -98,6 +98,36 @@ abstract class jRequest {
             return true;
     }
 
+    public function getResponse($type=''){
+        global $gJCoord, $gJConfig;
+        if($type == ''){
+            $type = $this->defaultResponseType;
+        }
+
+        if(!isset($gJConfig->responses[$type])){
+            trigger_error(jLocale::get('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
+            return null;
+        }
+        $respclass = $gJConfig->responses[$type];
+        if(file_exists($path=JELIX_LIB_RESPONSE_PATH.$respclass.'.class.php')){
+           require_once ($path);
+        }elseif(file_exists($path=JELIX_APP_PATH.'responses/'.$respclass.'.class.php')){
+           require_once ($path);
+        }else{
+           trigger_error(jLocale::get('jelix~errors.ad.response.not.loaded',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
+           return null;
+        }
+
+        if(!$this->isAllowedResponse($respclass)){
+           trigger_error(jLocale::get('jelix~errors.ad.response.type.notallowed',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
+           return null;
+        }
+
+        $response = new $respclass();
+        $gJCoord->response= $response;
+
+        return $response;
+    }
 }
 
 

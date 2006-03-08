@@ -22,10 +22,10 @@
 <p>one conf key={$oneconf->ckey} value={$oneconf->cvalue}</p>
 <p>Link to actions:</p>
 <ul>
-<li> "testapp~default@classic" : {jurl "testapp~default@classic"}</li>
-<li> "default@classic": {jurl "default@classic"}</li>
-<li> "default" : {jurl "default"}</li>
-<li> "testapp~default" : {jurl "testapp~default"}</li>
+<li> "testapp~main_index@classic" : {jurl "testapp~main_index@classic"}</li>
+<li> "main_index@classic": {jurl "main_index@classic"}</li>
+<li> "main_index" : {jurl "main_index"}</li>
+<li> "testapp~main_" : {jurl "testapp~main_"}</li>
 <li> "testapp~#" : {jurl "testapp~#"}</li>
 <li> "#~#" : {jurl "#~#"}</li>
 <li> "@" : {jurl "@"}</li>

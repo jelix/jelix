@@ -2,7 +2,7 @@
 ;for security reasons , don't remove or modify the first line
 
 defaultModule = "testapp"
-defaultAction = "default"
+defaultAction = "main_index"
 defaultLocale = "fr_FR"
 defaultCharset = "ISO-8859-1"
 
@@ -89,8 +89,8 @@ IISStripslashesPathKey = on
 index = "@classic"
 xmlrpc = "@xmlrpc"
 jsonrpc = "@jsonrpc"
-testnews = "unittest~url2@classic unittest~url3@classic"
-foo/bar = "unittest~url4@classic"
+testnews = "unittest~urlsig_url2@classic unittest~urlsig_url3@classic"
+foo/bar = "unittest~urlsig_url4@classic"
 news = "new~*@classic"
 
 [logfiles]

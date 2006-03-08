@@ -13,11 +13,21 @@
 
 class AGUrlsig extends jActionGroup {
 
-   function getDummyUrl() {
-      return $this->getResponse('default');
+   function url1() {
+      return $this->getResponse('testunit');
    }
-
-
+   function url2() {
+      return $this->getResponse('testunit');
+   }
+   function url3() {
+      return $this->getResponse('testunit');
+   }
+   function url4() {
+      return $this->getResponse('testunit');
+   }
+   function url5() {
+      return $this->getResponse('testunit');
+   }
 }
 
 ?>

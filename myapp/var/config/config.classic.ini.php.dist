@@ -2,7 +2,7 @@
 ;for security reasons , don't remove or modify the first line
 
 defaultModule = "myapp"
-defaultAction = "default"
+defaultAction = "main_"
 defaultLocale = "fr_FR"
 defaultCharset = "ISO-8859-1"
 

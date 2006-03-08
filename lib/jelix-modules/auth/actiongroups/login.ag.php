@@ -17,10 +17,15 @@
 
 
 class AGLogin extends jActionGroup {
+
+    public $pluginParams = array(
+      '*'=>array('auth.required'=>false)
+    );
+
     /**
     *
     */
-    function doLogin (){
+    function in (){
         $conf = $GLOBALS['gJCoord']->getPlugin ('auth')->config;
 
         if (!($conf['enable_after_login_override'] && $url_return= $this->param('auth_url_return'))){
@@ -29,10 +34,10 @@ class AGLogin extends jActionGroup {
 
         if (!jAuth::login($this->param('login'), $this->param('password'))){
             sleep (intval($conf['on_error_sleep']));
-            $url_return = jUrl::get('auth~loginform',array ('login'=>$this->param('login'), 'failed'=>1));
+            $url_return = jUrl::get('auth~login_form',array ('login'=>$this->param('login'), 'failed'=>1));
         }
 
-        $rep = $this->getResponse('next');
+        $rep = $this->getResponse('redirectUrl');
         $rep->url = $url_return;
         return $rep;
     }
@@ -40,14 +45,14 @@ class AGLogin extends jActionGroup {
     /**
     *
     */
-    function doLogout (){
+    function out (){
         jAuth::logout();
         $conf = $GLOBALS['gJCoord']->getPlugin ('auth')->config;
 
         if (!($conf['enable_after_login_override'] && $url_return= $this->param('auth_url_return'))){
             $url_return =  jUrl::get($conf['after_logout']);
         }
-        $rep = $this->getResponse('next');
+        $rep = $this->getResponse('redirectUrl');
         $rep->url = $url_return;
         return $rep;
     }
@@ -55,8 +60,8 @@ class AGLogin extends jActionGroup {
     /**
     * Shows the login form
     */
-    function getLoginForm() {
-        $rep = $this->getResponse('loginform');
+    function form() {
+        $rep = $this->getResponse('html');
 
         $rep->title =  jLocale::get ('auth.titlePage.login');
         $rep->body->assignZone ('MAIN', 'auth~loginForm', array ('login'=>$this->param('login'), 'failed'=>$this->param('failed')));

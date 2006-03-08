@@ -23,7 +23,6 @@ cd testapp/www/jelix/js
 cd testapp/modules
   .htaccess
 cd testapp/modules/testapp
-  actions.xml
   module.xml
 cd testapp/modules/testapp/locales/en_US
   parameter.ISO-8859-1.properties
@@ -43,7 +42,6 @@ cd testapp/modules/testapp/zones
   test.zone.php
 cd testapp/modules/unittest
   events.xml
-  actions.xml
   module.xml
 cd testapp/modules/unittest/classes
   utevents.class.php

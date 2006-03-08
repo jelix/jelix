@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<actions xmlns="http://jelix.org/ns/actions/1.0">
-
-   <request type="classic">
-      <action name="default" ag="main" method="getDefault" >
-          <response default="true" name="hello" type="html" />
-      </action>
-   </request>
-</actions>

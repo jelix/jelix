@@ -1,6 +1,6 @@
 cd .
   README
-  
+
 cd lib
   .htaccess
 
@@ -17,9 +17,7 @@ cd lib/jelix/auth
   jAuthDriverDb.class.php
 
 cd lib/jelix/core
-  jActionDesc.class.php
   jActionGroup.class.php
-  jActionsCompiler.class.php
   jConfig.class.php
   jContext.class.php
   jCoordinator.class.php
@@ -159,7 +157,6 @@ cd lib/jelix-modules/jelix/locales/fr_FR
   ui.ISO-8859-1.properties
   auth.ISO-8859-1.properties
 cd lib/jelix-modules/auth
-  actions.xml
   module.xml
 cd lib/jelix-modules/auth/plugins/auth
   auth.plugin.php

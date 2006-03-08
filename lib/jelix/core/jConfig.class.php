@@ -43,7 +43,7 @@ class jConfig {
         $config->OS = $os;
         $config->isWindows = (strtolower($os) == 'win');
         if(trim( $config->defaultAction) == '')
-             $config->defaultAction = 'default';
+             $config->defaultAction = '_';
 
         $config->pluginsPathList = self::_loadPathList($config, $configFile,'plugins');
         $config->modulesPathList = self::_loadPathList($config, $configFile, 'modules');

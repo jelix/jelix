@@ -107,8 +107,18 @@ class jCoordinator {
         $this->request = $request;
         session_start();
 
-        $this->moduleName = $this->request->getParam('module', $gJConfig->defaultModule,true);
-        $this->actionName = $this->request->getParam('action', $gJConfig->defaultAction,true);
+        $this->moduleName = $this->request->getParam('module');
+        $this->actionName = $this->request->getParam('action');
+
+        if($this->moduleName === null){
+            $this->moduleName = $gJConfig->defaultModule;
+            if($this->actionName === null)
+               $this->actionName = $gJConfig->defaultAction;
+        }
+        if($this->actionName === null){
+            $this->actionName = 'default_index';
+        }
+
 
         // verification du module
         if(!in_array($this->moduleName,$gJConfig->trustedModules)){
@@ -118,21 +128,30 @@ class jCoordinator {
 
         jContext::push ($this->moduleName);
 
-        $selector = new jSelectorAct($this->actionName);
+        $this->action = new jSelectorAct($this->actionName);
 
-        $result = jIncluder::inc($selector);
-        if($result['compileok'] == false || $this->action===null){
-           trigger_error(jLocale::get('jelix~errors.action.unknow',$this->actionName), E_USER_ERROR);
-           return;
+        $ag = $this->getController($this->action);
+
+        $pluginparams = array();
+        if(isset($ag->pluginsParam['*'])){
+            $pluginparams = $ag->pluginsParam['*'];
         }
 
+        if(isset($ag->pluginsParam[$this->action->method])){
+            $pluginparams = array_merge($pluginparams, $ag->pluginsParam[$this->action->method]);
+        }
 
         foreach ($this->plugins as $name => $obj){
-            $this->plugins[$name]->beforeProcess ($this->action);
+            $result = $this->plugins[$name]->beforeProcess ($pluginparams);
+            if($result){
+               $this->action = $result;
+               $ag = $this->getController($this->action);
+               break;
+            }
         }
 
         //try{
-            $this->response = $this->action->perform();
+            $this->response = $ag->{$this->action->method}();
         /*}catch(jException $e){
             trigger_error($e->getLocaleMessage(), E_USER_ERROR);
             return ;
@@ -160,6 +179,31 @@ class jCoordinator {
         }
 
         jContext::pop();
+    }
+
+    private function getController($selector){
+
+        $agpath = $selector->getPath();
+        $class = $selector->getClass();
+        $method = $selector->method;
+
+        if(!file_exists($agpath)){
+            trigger_error(jLocale::get('jelix~errors.ad.actiongroup.file.unknow',array($this->actionName,$agpath)),E_USER_ERROR);
+            return;
+        }
+        require($agpath);
+        if(!class_exists($class,false)){
+            trigger_error(jLocale::get('jelix~errors.ad.actiongroup.class.unknow',array($this->actionName,$class, $agpath)),E_USER_ERROR);
+            return;
+        }
+
+        $ag = new $class($this->request);
+
+        if(!method_exists($ag,$method)){
+            trigger_error(jLocale::get('jelix~errors.ad.actiongroup.method.unknow',array($this->actionName,$method, $class, $agpath)),E_USER_ERROR);
+            return;
+        }
+        return $ag;
     }
 
 

@@ -19,7 +19,6 @@ cd myapp/www/jelix/js
 cd myapp/modules
   .htaccess
 cd myapp/modules/myapp
-  actions.xml
   module.xml
 cd myapp/modules/myapp/actiongroups
   main.ag.php

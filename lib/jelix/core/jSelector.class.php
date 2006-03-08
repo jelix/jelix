@@ -138,13 +138,12 @@ abstract class jSelectorModule implements jISelector {
 class jSelectorAct extends jSelectorModule {
     public $type = 'act';
     public $request = '';
+    public $controller = '';
+    public $method='';
     protected $_dirname='actions/';
 
     function __construct($sel){
         global $gJCoord;
-        $this->_compiler='jActionsCompiler';
-        $this->_compilerPath=JELIX_LIB_CORE_PATH.'jActionsCompiler.class.php';
-        $this->request = $gJCoord->request->type;
 
         if(preg_match("/^(?:([\w\.]+|\#)~)?([\w\.]+|\#)(?:@([\w\.]+))?$/", $sel, $m)){
             $this->_valid = true;
@@ -160,6 +159,16 @@ class jSelectorAct extends jSelectorModule {
                $this->resource = $gJCoord->actionName;
             else
                $this->resource = $m[2];
+
+            $r = explode('_',$this->resource);
+
+            if(count($r) == 1){
+               $this->controller = 'default';
+               $this->method = $r[0]==''?'index':$r[0];
+            }else{
+               $this->controller = $r[0]=='' ? 'default':$r[0];
+               $this->method = $r[1]==''?'index':$r[1];
+            }
 
             if(isset($m[3]) && $m[3] != '')
               $this->request = $m[3];
@@ -179,22 +188,26 @@ class jSelectorAct extends jSelectorModule {
             $this->_path=='';
             $this->_valid = false;
         }else{
-            $this->_path = $gJConfig->modulesPathList[$this->module].'actions.xml';
+           // $this->_path = $gJConfig->modulesPathList[$this->module].'actiongroups/'.$this->controller.'.'.$this->request.'.php';
+            $this->_path = $gJConfig->modulesPathList[$this->module].'actiongroups/'.$this->controller.'.ag.php';
         }
     }
 
     protected function _createCachePath(){
-        $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->module.'~'.$this->resource.'~'.$this->request.'.php';
+        $this->_cachePath = '';
     }
-    public function getCacheDir(){
-        return JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname;
-    }
+
     public function toString($full=false){
         if($full)
             return $this->type.':'.$this->module.'~'.$this->resource.'@'.$this->request;
         else
             return $this->module.'~'.$this->resource.'@'.$this->request;
     }
+
+    public function getClass(){
+      return 'AG'.$this->controller;
+    }
+
 }
 
 class jSelectorClass extends jSelectorModule {

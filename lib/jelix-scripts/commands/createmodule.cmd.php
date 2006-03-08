@@ -18,7 +18,7 @@ class createmoduleCommand extends JelixScriptCommand {
 
     public  $syntaxhelp = "[-nosubdir] [-noag]  MODULE";
     public  $help="
-    Créer un nouveau module, avec son fichier module.xml, action.xml
+    Créer un nouveau module, avec son fichier module.xml,
     et un actiongroup par défaut, ainsi que tous les sous-repertoires courants
     (zones, templates, daos, locales, classes...).
 
@@ -35,7 +35,7 @@ class createmoduleCommand extends JelixScriptCommand {
        }
        $this->createDir($path);
        $this->createFile($path.'module.xml','module.xml.tpl',array('name'=>$this->_parameters['module']));
-       $this->createFile($path.'actions.xml','actions.xml.tpl',array('module'=>$this->_parameters['module']));
+       //$this->createFile($path.'actions.xml','actions.xml.tpl',array('module'=>$this->_parameters['module']));
 
        if(!$this->getOption('-nosubdir')){
           $this->createDir($path.'classes/');

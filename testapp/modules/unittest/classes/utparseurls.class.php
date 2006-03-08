@@ -58,25 +58,25 @@ class UTParseUrls extends UnitTestCase {
 
 
       $resultList=array();
-      $resultList[]= array('module'=>'unittest', 'action'=>'url1', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
-      $resultList[]= array('module'=>'unittest', 'action'=>'url8', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
-      $resultList[]= array('module'=>'unittest', 'action'=>'url2', 'mois'=>'05',  'annee'=>'2004', "mystatic"=>"valeur statique");
-      $resultList[]= array('module'=>'unittest', 'action'=>'url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fete au village');
-      $resultList[]= array('module'=>'unittest', 'action'=>'url4', 'first'=>'premier',  'second'=>'deuxieme');
+      $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url1', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
+      $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url8', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
+      $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url2', 'mois'=>'05',  'annee'=>'2004', "mystatic"=>"valeur statique");
+      $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fete au village');
+      $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url4', 'first'=>'premier',  'second'=>'deuxieme');
       // celle ci n'a pas de définition dans urls.xml *exprés*
-      $resultList[]= array('module'=>'unittest', 'action'=>'url5', 'foo'=>'oof',  'bar'=>'rab');
+      $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url5', 'foo'=>'oof',  'bar'=>'rab');
       $resultList[]= array();
-      $resultList[]= array('module'=>'news', 'action'=>'bar', 'aaa'=>'bbb');
+      $resultList[]= array('module'=>'news', 'action'=>'main_bar', 'aaa'=>'bbb');
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
-          array("index.php","/test/news/2005/10/35",array("action"=>"url8")),
+          array("index.php","/test/news/2005/10/35",array("action"=>"urlsig_url8")),
           array("testnews.php","/2004/05",array()),
           array("index.php","/test/cms/actualite/65-c-est-la-fete-au-village",array()),
           array("foo/bar.php","/withhandler/premier/deuxieme",array()),
-          array("index.php",'',array('module'=>'unittest', 'action'=>'url5', 'foo'=>'oof',  'bar'=>'rab')),
+          array("index.php",'',array('module'=>'unittest', 'action'=>'urlsig_url5', 'foo'=>'oof',  'bar'=>'rab')),
           array("xmlrpc.php","",array()),
-          array("news.php","",array('aaa'=>'bbb','action'=>'bar'))
+          array("news.php","",array('aaa'=>'bbb','action'=>'main_bar'))
        );
 
       $this->sendMessage("significant, multiview = false");
@@ -94,13 +94,13 @@ class UTParseUrls extends UnitTestCase {
       $gJConfig->urlengine['multiview']=true;
       $request=array(
           array("index","/test/news/2005/10/35",array()),
-          array("index","/test/news/2005/10/35",array("action"=>"url8")),
+          array("index","/test/news/2005/10/35",array("action"=>"urlsig_url8")),
           array("testnews","/2004/05",array()),
           array("index","/test/cms/actualite/65-c-est-la-fete-au-village",array()),
           array("foo/bar","/withhandler/premier/deuxieme",array()),
-          array("index",'',array('module'=>'unittest', 'action'=>'url5', 'foo'=>'oof',  'bar'=>'rab')),
+          array("index",'',array('module'=>'unittest', 'action'=>'urlsig_url5', 'foo'=>'oof',  'bar'=>'rab')),
           array("xmlrpc","",array()),
-          array("news","",array('aaa'=>'bbb','action'=>'bar'))
+          array("news","",array('aaa'=>'bbb','action'=>'main_bar'))
        );
       foreach($request as $k=>$urldata){
          $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);

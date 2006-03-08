@@ -40,7 +40,6 @@ require_once (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jSelector.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'url/jUrl.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jCoordinator.class.php');
-require_once (JELIX_LIB_CORE_PATH . 'jActionDesc.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jActionGroup.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jResponse.class.php');

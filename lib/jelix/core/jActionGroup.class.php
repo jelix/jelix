@@ -17,16 +17,15 @@
 
 class jActionGroup {
 
+    public $pluginParams=array();
     private $request;
-    private $action;
 
     /**
     *
     * @param
     */
-    function __construct ($action, $request){
+    function __construct ( $request){
         $this->request = $request;
-        $this->action = $action;
     }
 
     /**
@@ -49,7 +48,7 @@ class jActionGroup {
     }
 
     protected function getResponse($name){
-        return $this->action->getResponse($name);
+        return $this->request->getResponse($name);
     }
 
 

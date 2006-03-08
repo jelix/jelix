@@ -7,13 +7,13 @@
               <static name="bla" value="cequejeveux" />
         </url>
 
-        <url pathinfo="/test/news/:annee/:mois/:id" module="unittest" action="url1" actionoverride="url8,url9,url10">
+        <url pathinfo="/test/news/:annee/:mois/:id" module="unittest" action="urlsig_url1" actionoverride="urlsig_url8,urlsig_url9,urlsig_url10">
            <param name="annee" regexp="\d{4}"/>
            <param name="mois"  regexp="\d{2}" />
            <param name="id"   regexp="\d{2}" />
         </url>
 
-        <url pathinfo="/test/cms/:rubrique/:id_art-:article" module="unittest" action="url3">
+        <url pathinfo="/test/cms/:rubrique/:id_art-:article" module="unittest" action="urlsig_url3">
            <param name="rubrique" />
            <param name="id_art" regexp="\d+"/>
            <param name="article" escape="true" type="string"/>
@@ -21,14 +21,14 @@
 
     </classicentrypoint>
     <classicentrypoint name="testnews">
-       <url pathinfo="/:annee/:mois" module="unittest" action="url2">
+       <url pathinfo="/:annee/:mois" module="unittest" action="urlsig_url2">
           <param name="annee" type="year"/>
           <param name="mois"  type="mounth" />
           <static name="mystatic" value="valeur statique" />
         </url>
     </classicentrypoint>
     <classicentrypoint name="foo/bar">
-       <url handler="urlsig" module="unittest" action="url4" />
+       <url handler="urlsig" module="unittest" action="urlsig_url4" />
     </classicentrypoint>
 
     <classicentrypoint name="news">

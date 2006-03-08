@@ -13,7 +13,7 @@
 
 $gDefaultConfig = array (
   'defaultModule' => 'myapp',
-  'defaultAction' => 'default',
+  'defaultAction' => '_',
   'checkTrustedModules' => '',
   'trustedModules' => '', // liste des modules, séparés par des virgules, sans espace
   'pluginsPath' => 'app:plugins/,lib:jelix-plugins/',

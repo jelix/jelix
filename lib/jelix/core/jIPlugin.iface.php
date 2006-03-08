@@ -23,9 +23,10 @@ interface jIPlugin {
     public function __construct($config);
 
     /**
-     * @param    jAction  $action  action that will be executed
+     * @param    array  $params   plugin parameters for the current action
+     * @return null or jSelectorAct  if action should change
      */
-    public function beforeAction(& $action);
+    public function beforeAction($params);
 
     /**
      *

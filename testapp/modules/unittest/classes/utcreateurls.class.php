@@ -64,20 +64,20 @@ class UTCreateUrls extends UnitTestCase {
 
 
       $urlList=array();
-      $urlList[]= array('url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
-      $urlList[]= array('url2', array('mois'=>'05',  'annee'=>'2004'));
-      $urlList[]= array('unittest~url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
-      $urlList[]= array('unittest~url4', array('first'=>'premier',  'second'=>'deuxieme'));
+      $urlList[]= array('urlsig_url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
+      $urlList[]= array('urlsig_url2', array('mois'=>'05',  'annee'=>'2004'));
+      $urlList[]= array('unittest~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
+      $urlList[]= array('unittest~urlsig_url4', array('first'=>'premier',  'second'=>'deuxieme'));
       // celle ci n'a pas de définition dans urls.xml *exprés*
-      $urlList[]= array('url5', array('foo'=>'oof',  'bar'=>'rab'));
+      $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
 
       $trueResult=array(
-          "index.php?mois=10&annee=2005&id=35&module=unittest&action=url1",
-          "testnews.php?mois=05&annee=2004&module=unittest&action=url2",
-          "testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=url3",
-          "foo/bar.php?first=premier&second=deuxieme&module=unittest&action=url4",
-          "index.php?foo=oof&bar=rab&module=unittest&action=url5",
+          "index.php?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
+          "testnews.php?mois=05&annee=2004&module=unittest&action=urlsig_url2",
+          "testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
+          "foo/bar.php?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
+          "index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "xmlrpc.php",
        );
 
@@ -91,11 +91,11 @@ class UTCreateUrls extends UnitTestCase {
       $this->sendMessage("simple, multiview = true");
       $gJConfig->urlengine['multiview']=true;
       $trueResult=array(
-          "index?mois=10&annee=2005&id=35&module=unittest&action=url1",
-          "testnews?mois=05&annee=2004&module=unittest&action=url2",
-          "testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=url3",
-          "foo/bar?first=premier&second=deuxieme&module=unittest&action=url4",
-          "index?foo=oof&bar=rab&module=unittest&action=url5",
+          "index?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
+          "testnews?mois=05&annee=2004&module=unittest&action=urlsig_url2",
+          "testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
+          "foo/bar?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
+          "index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "xmlrpc",
        );
 
@@ -129,12 +129,12 @@ class UTCreateUrls extends UnitTestCase {
 
 
       $urlList=array();
-      $urlList[]= array('url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
-      $urlList[]= array('url2', array('mois'=>'05',  'annee'=>'2004'));
-      $urlList[]= array('unittest~url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
-      $urlList[]= array('unittest~url4', array('first'=>'premier',  'second'=>'deuxieme'));
+      $urlList[]= array('urlsig_url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
+      $urlList[]= array('urlsig_url2', array('mois'=>'05',  'annee'=>'2004'));
+      $urlList[]= array('unittest~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
+      $urlList[]= array('unittest~urlsig_url4', array('first'=>'premier',  'second'=>'deuxieme'));
       // celle ci n'a pas de définition dans urls.xml *exprés*
-      $urlList[]= array('url5', array('foo'=>'oof',  'bar'=>'rab'));
+      $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('news~bar', array('aaa'=>'bbb'));
 
@@ -143,7 +143,7 @@ class UTCreateUrls extends UnitTestCase {
           "testnews.php/2004/05",
           "index.php/test/cms/actualite/65-c-est-la-fete-au-village",
           "foo/bar.php/withhandler/premier/deuxieme",
-          "index.php?foo=oof&bar=rab&module=unittest&action=url5",
+          "index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "xmlrpc.php",
           "news.php?aaa=bbb&action=bar"
        );
@@ -162,7 +162,7 @@ class UTCreateUrls extends UnitTestCase {
           "testnews/2004/05",
           "index/test/cms/actualite/65-c-est-la-fete-au-village",
           "foo/bar/withhandler/premier/deuxieme",
-          "index?foo=oof&bar=rab&module=unittest&action=url5",
+          "index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "xmlrpc",
           "news?aaa=bbb&action=bar"
        );

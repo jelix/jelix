@@ -12,8 +12,8 @@
 
 class AGMain extends jActionGroup {
 
-  function getDefault(){
-      $rep = $this->getResponse('hello');
+  function index(){
+      $rep = $this->getResponse('html');
       $rep->bodyTpl = 'myapp~hello';
       return $rep;
    }

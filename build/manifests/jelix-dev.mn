@@ -121,7 +121,6 @@ cd lib/jelix-scripts/templates
   actiongroup.tpl
   template.tpl
   zone.tpl
-  actions.xml.tpl
   project.xml.tpl
   application.init.php.tpl
   dbprofils.ini.php.tpl

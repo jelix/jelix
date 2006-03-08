@@ -24,13 +24,13 @@ class AuthPlugin implements jPlugin {
     }
 
     /**
-	 * IPCheck if needed, creating the user object if not yet.
-	 * @param	CopixAction	$action	le descripteur de page détécté.
-	 * @access public
-	 */
-    public function beforeProcess (&$action){
+     * @param    array  $params   plugin parameters for the current action
+     * @return null or jSelectorAct  if action should change
+     */
+    public function beforeProcess ($params){
         $notLogged = false;
         $badip = false;
+        $selector = null;
 
         //Do we check the ip ?
         if ($this->config['secure_with_ip']){
@@ -39,10 +39,7 @@ class AuthPlugin implements jPlugin {
             }else{
                 if (($_SESSION['JELIX_AUTH_SECURE_WITH_IP'] != $this->_getIpForSecure ())){
                     session_destroy ();
-                    $sel= new jSelectorAg($this->config['bad_ip_ag']);
-                    $action->actionsGroupPath = $sel->getPath();
-                    $action->actionsGroupClass = 'AG'.$sel->ressource;
-                    $action->method = $this->config['bad_ip_method'];
+                    $selector = new jSelectorAct($this->config['bad_ip_action']);
                     $notLogged = true;
                     $badip = true;
                 }
@@ -66,7 +63,7 @@ class AuthPlugin implements jPlugin {
             }
         }
 
-        $needAuth = isset($action->pluginParams['auth.required']) ? ($action->pluginParams['auth.required']=='true'):$this->config['auth_required'];
+        $needAuth = isset($action->pluginParams['auth.required']) ? ($action->pluginParams['auth.required']==true):$this->config['auth_required'];
         $authok = false;
 
         if($needAuth){
@@ -76,10 +73,7 @@ class AuthPlugin implements jPlugin {
                     exit;
                 }else{
                     if(!$badip){
-                        $sel= new jSelectorAg($this->config['on_error_ag']);
-                        $action->actionsGroupPath = $sel->getPath();
-                        $action->actionsGroupClass = 'AG'.$sel->ressource;
-                        $action->method = $this->config['on_error_method'];
+                        $selector= new jSelectorAct($this->config['on_error_action']);
                     }
                 }
             }else{
@@ -88,6 +82,8 @@ class AuthPlugin implements jPlugin {
         }else{
           $authok= true;
         }
+
+        return $selector;
     }
 
 

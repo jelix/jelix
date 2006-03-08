@@ -27,8 +27,7 @@ timeout = 0
 on_error = 1
 
 ; action à executer en cas de défaut d'authentification quand onError = 2
-on_error_ag = auth~login
-on_error_method = doLogout
+on_error_action = auth~login_out
 
 ; nombre de secondes d'attentes aprés un défaut d'authentification
 on_error_sleep = 3
@@ -41,14 +40,13 @@ error_message = auth~autherror.notlogged
 secure_with_ip = 0
 
 ; action en cas de piratage de la session et si onError = 2
-bad_ip_ag = auth~login
-bad_ip_method = doLogout
+bad_ip_action = auth~login_out
 
 enable_after_login_override = off
 after_login =
 
 enable_after_logout_override = off
-after_logout = auth~login
+after_logout = auth~login_out
 
 login_template = auth~login.form
 

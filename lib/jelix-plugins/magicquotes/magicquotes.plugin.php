@@ -47,11 +47,11 @@ class MagicQuotesPlugin implements jPlugin {
             return stripslashes ($string);
         }
    }
-   /**
-     * @param    jAction  $action  action that will be executed
+    /**
+     * @param    array  $params   plugin parameters for the current action
+     * @return null or jSelectorAct  if action should change
      */
-    public function beforeAction(& $action){ }
-
+    public function beforeAction($params){ return null;}
     public function beforeOutput() {}
 
     public function afterProcess (){}
