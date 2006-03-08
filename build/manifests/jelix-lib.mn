@@ -173,7 +173,7 @@ cd lib/jelix-modules/auth/install/scripts
   install.postgresql.sql
   delete.mysql.sql
   install.mysql.sql
-cd lib/jelix-modules/auth/actiongroups
+cd lib/jelix-modules/auth/controllers
   login.ag.php
 cd lib/jelix-modules/auth/zones
   loginform.zone.php

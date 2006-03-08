@@ -9,7 +9,7 @@
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-class AG{$name} extends jController {
+class CT{$name} extends jController {
    /**
    *
    */

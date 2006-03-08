@@ -10,7 +10,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class AGForms extends jActionGroup {
+class CTForms extends jController {
 
   function newform(){
       $form = jForm::create('sample');

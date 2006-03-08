@@ -30,7 +30,7 @@ cd testapp/modules/testapp/locales/fr_FR
   parameter.ISO-8859-1.properties
 cd testapp/modules/testapp/daos
   config.dao.xml
-cd testapp/modules/testapp/actiongroups
+cd testapp/modules/testapp/controllers
   main.classic.php
 cd testapp/modules/testapp/templates
   hello.tpl
@@ -57,7 +57,7 @@ cd testapp/modules/unittest/locales/en_US
   testunit.ISO-8859-1.properties
 cd testapp/modules/unittest/templates
   accueil.tpl
-cd testapp/modules/unittest/actiongroups
+cd testapp/modules/unittest/controllers
   default.classic.php
   urlsig.classic.php
 cd testapp/var

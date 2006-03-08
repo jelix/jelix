@@ -204,7 +204,7 @@ class jSelectorAct extends jSelectorModule {
     }
 
     public function getClass(){
-      return 'AG'.$this->controller;
+      return 'CT'.$this->controller;
     }
 
 }

@@ -11,7 +11,7 @@
 */
 
 
-class AGUrlsig extends jActionGroup {
+class CTUrlsig extends jController {
 
    function url1() {
       return $this->getResponse('testunit');

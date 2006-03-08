@@ -108,7 +108,7 @@ cd lib/jelix-scripts/commands
   createdao.cmd.php
   help.cmd.php
   createmodule.cmd.php
-  createag.cmd.php
+  createctrl.cmd.php
   createzone.cmd.php
   createaction.cmd.php
 cd lib/jelix-scripts/includes
@@ -118,7 +118,7 @@ cd lib/jelix-scripts/templates
   module.xml.tpl
   dao.xml.tpl
   dao_empty.xml.tpl
-  actiongroup.tpl
+  controller.tpl
   template.tpl
   zone.tpl
   project.xml.tpl

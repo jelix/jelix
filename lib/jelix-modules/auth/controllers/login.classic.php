@@ -16,7 +16,7 @@
 */
 
 
-class AGLogin extends jActionGroup {
+class CTLogin extends jController {
 
     public $pluginParams = array(
       '*'=>array('auth.required'=>false)

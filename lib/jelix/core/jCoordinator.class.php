@@ -187,11 +187,11 @@ class jCoordinator {
         $class = $selector->getClass();
         $method = $selector->method;
 
-        if(!file_exists($agpath)){
+        if(!file_exists($ctrlpath)){
             trigger_error(jLocale::get('jelix~errors.ad.controller.file.unknow',array($this->actionName,$ctrlpath)),E_USER_ERROR);
             return;
         }
-        require($agpath);
+        require($ctrlpath);
         if(!class_exists($class,false)){
             trigger_error(jLocale::get('jelix~errors.ad.controller.class.unknow',array($this->actionName,$class, $ctrlpath)),E_USER_ERROR);
             return;
