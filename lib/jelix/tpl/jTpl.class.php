@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  utils
+* @subpackage  jtpl
 * @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
@@ -43,10 +43,11 @@ class jTpl {
                $this->_vars[$name] = $value;
         }
     }
-
+#ifndef JTPL_STANDALONE
     function assignZone($name, $zoneName, $params=array()){
         $this->_vars[$name] = jZone::processZone ($zoneName, $params);
     }
+#endif
     /*
     function assignStatic($varName, $select){
         $this->_vars[$varName] =  $GLOBALS['COPIX']['COORD']->includeStatic ($select);

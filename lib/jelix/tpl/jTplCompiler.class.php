@@ -1,18 +1,24 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  jtpl
 * @version     $Id$
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Mathaud Loic (version standalone)
 * @copyright   2005-2006 Jouanneau laurent
+* @copyright   2006 Mathaud Loic
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+class jTplCompiler
+#ifndef JTPL_STANDALONE
+    implements jISimpleCompiler {
+#else
+    {
 
-class jTplCompiler implements jISimpleCompiler {
-
+    private $_locales;
+#endif
     private $_literals;
 
     private  $_vartype = array(T_CHARACTER, T_CONSTANT_ENCAPSED_STRING, T_DNUMBER,
@@ -47,17 +53,32 @@ class jTplCompiler implements jISimpleCompiler {
        $this->_allowedInVar = array_merge($this->_vartype, $this->_op);
        $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
        $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
+#ifdef JTPL_STANDALONE
+       require_once(JTPL_LOCALES_PATH.$GLOBALS['jTplConfig']['lang'].'.php');
+       $this->_locales = $GLOBALS['jTplConfig']['locales'];
+#endif
     }
 
+#ifdef JTPL_STANDALONE
+   public function compile($tplFile){
+      $this->_sourceFile = $tplFile;
+      $cachefile = JTPL_CACHE_PATH . basename($tplFile);
+
+#else
     public function compile($selector){
 
         $this->_sourceFile = $selector->getPath();
         $cachefile = $selector->getCompiledFilePath();
 
         jContext::push($selector->module);
+#endif
 
         if(!file_exists($this->_sourceFile)){
+#ifdef JTPL_STANDALONE
+            trigger_error(sprintf($this->_locales['errors.tpl.not.found'], $this->_sourceFile), E_USER_ERROR);
+#else
             trigger_error(jLocale::get('jelix~errors.tpl.not.found',array($this->_sourceFile)),E_USER_ERROR);
+#endif
         }
 
         $tplcontent = file_get_contents ( $this->_sourceFile);

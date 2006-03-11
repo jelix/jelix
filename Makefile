@@ -16,12 +16,12 @@ endif
 
 DISTJELIX="$(DIST)/jelix-$(LIB_VERSION)"
 DISTHACKER="$(DIST)/jelix-svn"
-
+DISTJTPL="$(DIST)/jtpl"
 
 default:
-	@echo "target:  dist-all dist-jelix dist-testapp dist-myapp dev-all dev-jelix dev-myapp dev-testapp"
+	@echo "target:  dist-all dist-jelix dist-testapp dist-myapp dev-all dev-jelix dev-myapp dev-testapp jtpl"
 
-dist-all: dist-jelix dist-testapp dist-myapp
+dist-all: dist-jelix dist-testapp dist-myapp jtpl
 
 dev-all: dev-jelix dev-myapp dev-testapp
 
@@ -57,5 +57,9 @@ common:
 	if [ ! -d "$(DIST)" ] ; then mkdir $(DIST) ; fi
 	if [ ! -d "$(DISTJELIX)" ] ; then mkdir $(DISTJELIX) ; fi
 	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
+	if [ ! -d "$(DISTJTPL)" ] ; then mkdir $(DISTJTPL) ; fi
 	
+jtpl: common
+	export JTPL_STANDALONE=1 \
+	&& $(PHP) build/mkdist.php build/manifests/jtpl-standalone.mn . $(DISTJTPL)
 

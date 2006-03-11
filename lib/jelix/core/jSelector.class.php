@@ -307,7 +307,7 @@ class jSelectorTpl extends jSelectorModule {
 
     function __construct($sel){
         $this->_compiler='jTplCompiler';
-        $this->_compilerPath=JELIX_LIB_UTILS_PATH.'jTplCompiler.class.php';
+        $this->_compilerPath=JELIX_LIB_TPL_PATH.'jTplCompiler.class.php';
         parent::__construct($sel);
     }
 
