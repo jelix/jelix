@@ -18,7 +18,7 @@ $gDefaultConfig = array (
   'trustedModules' => '', // liste des modules, séparés par des virgules, sans espace
   'pluginsPath' => 'app:plugins/,lib:jelix-plugins/',
   'modulesPath' => 'app:modules/,lib:jelix-modules/',
-  'tplPluginsPath' => 'lib:jelix/tpl_plugins/',
+  'tplPluginsPath' => 'lib:jelix/tpl/plugins/',
 
   'defaultLocale' => 'fr_FR',
   'defaultCharset'=> 'ISO-8859-1',

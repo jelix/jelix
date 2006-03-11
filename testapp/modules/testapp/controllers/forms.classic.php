@@ -14,27 +14,44 @@ class CTForms extends jController {
 
   function newform(){
       $form = jForm::create('sample');
-
-      return $this->getResponse();
-   }
-
-
-
-   function showform(){
-
-      /*$rep = $this->getResponse('');
-      $rep->title = '';
-      $rep->bodyTpl = '';
-      */
+      $rep= $this->getResponse("redirect");
+      $rep->action="forms_show";
       return $rep;
    }
 
-   function resultform(){
+
+  function edit(){
+     $form = jForm::create('sample', $this->param('id'));
+
+     $rep= $this->getResponse("redirect");
+     $rep->action="forms_show";
+      return $rep;
+  }
+
+   function show(){
+      $form = jForms::get('sample',$this->param('id'));
+      $rep = $this->getResponse('html');
+      $rep->title = 'Edition d\'un formulaire';
+      $rep->body->assign('MAIN','<p>Ici sera le formulaire</p>');
 
       return $rep;
-
-
    }
+
+   function save(){
+      $form = jForms::getFromRequest('sel~form',$this->param('id'));
+
+      $rep= $this->getResponse("redirect");
+      $rep->action="forms_ok";
+      return $rep;
+   }
+
+   function ok(){
+      $rep = $this->getResponse('html');
+      $rep->title = 'Edition d\'un formulaire';
+      $rep->body->assign('MAIN','<p>Fin du formulaire</p>');
+      return $rep;
+   }
+
 }
 
 ?>
