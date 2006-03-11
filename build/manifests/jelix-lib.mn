@@ -86,7 +86,12 @@ cd lib/jelix/events
   jEventListener.class.php
   jEventListenerFactory.class.php
 
-cd lib/jelix/tpl_plugins/common
+cd lib/jelix/tpl/
+*  jTpl.class.php
+*  jTplCompiler.class.php
+
+
+cd lib/jelix/tpl/plugins/common
   modifier.cat.php
   modifier.count_characters.php
   modifier.count_paragraphs.php
@@ -102,16 +107,16 @@ cd lib/jelix/tpl_plugins/common
   modifier.truncate.php
   modifier.wordwrap.php
 
-cd lib/jelix/tpl_plugins/html
+cd lib/jelix/tpl/plugins/html
   function.jlocale.php
   function.jurl.php
   modifier.nl2br.php
 
-cd lib/jelix/tpl_plugins/text
+cd lib/jelix/tpl/plugins/text
   function.jlocale.php
   function.jurl.php
 
-cd lib/jelix/tpl_plugins/xul
+cd lib/jelix/tpl/plugins/xul
   function.jlocale.php
   function.jurl.php
 
@@ -121,8 +126,6 @@ cd lib/jelix/utils/
   jFile.class.php
   jJsonRpc.class.php
   jLog.class.php
-  jTpl.class.php
-  jTplCompiler.class.php
   jXmlRpc.class.php
   jZone.class.php
 

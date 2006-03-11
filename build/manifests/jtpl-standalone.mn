@@ -29,3 +29,7 @@ dd plugins/text
 
 cd lib/jelix/tpl/plugins/xul
 dd plugins/xul
+
+sd lib/jelix/tpl/locales/
+dd plugins/locales/
+  fr.php
