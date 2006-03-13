@@ -34,6 +34,9 @@ sd lib/jelix/tpl/locales/
 dd locales/
   fr.php
 
+sd lib/jelix/tpl/temp/
+dd temp/
+
 sd lib/jelix/tpl/tests_std/
 dd tests_std/
    exemple.php

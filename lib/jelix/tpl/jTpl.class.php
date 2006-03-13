@@ -79,7 +79,7 @@ class jTpl {
 
 
     function display ($tpl){
-
+#ifndef JTPL_STANDALONE
         $sel = new jSelectorTpl($tpl);
         if(!$sel->isValid()){
             trigger_error (jLocale::get('jelix~errors.selector.invalid',$sel->toString(true)), E_USER_ERROR);
@@ -87,6 +87,26 @@ class jTpl {
         }
         jIncluder::inc($sel);
         $fct = 'template_'.md5($sel->module.'_'.$sel->resource);
+#else
+		$filename = basename($tpl);
+		$cachefile = JTPL_CACHE_PATH . $filename;
+		
+		$mustCompile = $_GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
+		if (!$mustCompile) {
+			if (filemtime($tpl) > filemtime($cachefile)) {
+				$mustCompile = true;
+			}
+		}
+		
+		if ($mustCompile) {
+            include(JTPL_PATH . 'jTplCompiler.class.php');
+            
+			$compiler = new jTplCompiler();
+			$compiler->compile($tpl);          
+		}
+		require_once($cachefile);
+		$fct = 'template_'.md5($tpl);
+#endif
         $fct($this);
     }
 

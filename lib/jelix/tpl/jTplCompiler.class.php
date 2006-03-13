@@ -40,8 +40,8 @@ class jTplCompiler
     private $_pluginPath=array();
 
     private $_modifier = array('upper'=>'strtoupper', 'lower'=>'strtolower',
-    'escxml'=>'htmlspecialchars', 'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
-    'capitalize'=>'ucwords'
+        'escxml'=>'htmlspecialchars', 'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
+        'capitalize'=>'ucwords'
     );
 
     private $_blockStack=array();
@@ -50,23 +50,22 @@ class jTplCompiler
     private $_currentTag;
 
     function __construct(){
-       $this->_allowedInVar = array_merge($this->_vartype, $this->_op);
-       $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
-       $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
+        $this->_allowedInVar = array_merge($this->_vartype, $this->_op);
+        $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
+        $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
 #ifdef JTPL_STANDALONE
-       require_once(JTPL_LOCALES_PATH.$GLOBALS['jTplConfig']['lang'].'.php');
-       $this->_locales = $GLOBALS['jTplConfig']['locales'];
+        require_once(JTPL_LOCALES_PATH.$GLOBALS['jTplConfig']['lang'].'.php');
+        $this->_locales = $GLOBALS['jTplConfig']['locales'];
 #endif
     }
 
 #ifdef JTPL_STANDALONE
-   public function compile($tplFile){
-      $this->_sourceFile = $tplFile;
-      $cachefile = JTPL_CACHE_PATH . basename($tplFile);
+    public function compile($tplFile){
+        $this->_sourceFile = $tplFile;
+        $cachefile = JTPL_CACHE_PATH . basename($tplFile);
 
 #else
     public function compile($selector){
-
         $this->_sourceFile = $selector->getPath();
         $cachefile = $selector->getCompiledFilePath();
 
@@ -95,23 +94,71 @@ class jTplCompiler
         foreach($this->_pluginPath as $path=>$ok){
            $header.=' require_once(\''.$path."');\n";
         }
+#ifdef JTPL_STANDALONE
+        $header.='function template_'.md5($tplFile).'($t){'."\n?>";
+#else
         $header.='function template_'.md5($selector->module.'_'.$selector->resource).'($t){'."\n?>";
-
+#endif
         $result = $header.$result."<?php \n}\n?>";
 
         $result = preg_replace('/\?>\n?<\?php/', '', $result);
-
+#ifdef JTPL_STANDALONE
+		$_dirname = dirname($cachefile);
+		if (!@is_writable($_dirname)) {
+			// cache_dir not writable, see if it exists
+			if (!@is_dir($_dirname)) {
+				trigger_error (sprintf($this->_locales['file.directory.notexists'], $_dirname), E_USER_ERROR);
+				return false;
+			}
+			trigger_error (sprintf($this->_locales['file.directory.notwritable'], $cachefile, $_dirname), E_USER_ERROR);
+			return false;
+		}
+		
+		// write to tmp file, then rename it to avoid
+		// file locking race condition
+		$_tmp_file = tempnam($_dirname, 'wrt');
+		
+		if (!($fd = @fopen($_tmp_file, 'wb'))) {
+			$_tmp_file = $_dirname . '/' . uniqid('wrt');
+			if (!($fd = @fopen($_tmp_file, 'wb'))) {
+				trigger_error(sprintf($this->_locales['file.write.error'], $cachefile, $_tmp_file), E_USER_ERROR);
+				return false;
+			}
+		}
+		
+		fwrite($fd, $result);
+		fclose($fd);
+		
+		// Delete the file if it allready exists (this is needed on Win,
+		// because it cannot overwrite files with rename()
+		if (preg_match("/^(\w+).*$/", PHP_OS, $m)) {
+			$os=$m[1];
+		} else {
+			$os = PHP_OS;
+		}
+		$isWindows = (strtolower($os) == 'win');
+		if ($isWindows && file_exists($cachefile)) {
+			@unlink($cachefile);
+		}
+		@rename($_tmp_file, $cachefile);
+		@chmod($cachefile, 0664);
+#else
         $file = new jFile();
         $file->write($cachefile, $result);
 
         jContext::pop();
+#endif
         return true;
     }
 
     public function _callback($matches){
        list(,$tag, $firstcar) = $matches;
        if(!preg_match('/^\$|@|[a-zA-Z\/]$/',$firstcar)){
-           trigger_error(jLocale::get('jelix~errors.tpl.tag.syntax.invalid',array($tag,$this->_sourceFile)),E_USER_ERROR);
+#ifdef JTPL_STANDALONE
+           trigger_error(sprintf($this->_locales['errors.tpl.tag.syntax.invalid'], $tag, $this->_sourceFile),E_USER_ERROR);
+#else
+            trigger_error(jLocale::get('jelix~errors.tpl.tag.syntax.invalid',array($tag,$this->_sourceFile)),E_USER_ERROR);
+#endif
            return '';
        }
        $this->_currentTag = $tag;
@@ -119,7 +166,11 @@ class jTplCompiler
           return  '<?php echo '.$this->_parseVariable($tag).'; ?>';
        }else{
           if(!preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/',$tag,$m)){
+#ifdef JTPL_STANDALONE
+             trigger_error(sprintf($this->_locales['errors.tpl.tag.function.invalid'], $tag, $this->_sourceFile),E_USER_ERROR);
+#else
              trigger_error(jLocale::get('jelix~errors.tpl.tag.function.invalid',array($tag,$this->_sourceFile)),E_USER_ERROR);
+#endif
              return '';
           }
           if(count($m) == 4){
@@ -137,7 +188,11 @@ class jTplCompiler
 
       foreach($tok as $modifier){
          if(!preg_match('/^(\w+)(?:\:(.*))?$/',$modifier,$m)){
+#ifdef JTPL_STANDALONE
+            trigger_error(sprintf($this->_locales['errors.tpl.tag.modifier.invalid'], $this->_currentTag, $modifier, $this->_sourceFile),E_USER_ERROR);
+#else
             trigger_error(jLocale::get('jelix~errors.tpl.tag.modifier.invalid',array($this->_currentTag,$modifier,$this->_sourceFile)),E_USER_ERROR);
+#endif
             return '';
          }
 
@@ -147,7 +202,11 @@ class jTplCompiler
             if(isset($this->_modifier[$m[1]])){
                $res = $this->_modifier[$m[1]].'('.$res.')';
             }else{
-               trigger_error(jLocale::get('jelix~errors.tpl.tag.modifier.unknow',array($this->_currentTag,$m[1],$this->_sourceFile)),E_USER_ERROR);
+#ifdef JTPL_STANDALONE
+               trigger_error(sprintf($this->_locales['errors.tpl.tag.modifier.unknow'], $this->_currentTag, $m[1], $this->_sourceFile),E_USER_ERROR);
+#else
+                trigger_error(jLocale::get('jelix~errors.tpl.tag.modifier.unknow',array($this->_currentTag,$m[1],$this->_sourceFile)),E_USER_ERROR);
+#endif               
                return '';
             }
          }else{
@@ -174,13 +233,21 @@ class jTplCompiler
             break;
          case 'else':
             if(end($this->_blockStack) !='if'){
-              trigger_error(jLocale::get('jelix~errors.tpl.tag.block.end.missing',array(end($this->_blockStack),$this->_sourceFile)),E_USER_ERROR);
+#ifdef JTPL_STANDALONE
+              trigger_error(sprintf($this->_locales['errors.tpl.tag.block.end.missing'], end($this->_blockStack), $this->_sourceFile),E_USER_ERROR);
+#else
+                trigger_error(jLocale::get('jelix~errors.tpl.tag.block.end.missing',array(end($this->_blockStack),$this->_sourceFile)),E_USER_ERROR);
+#endif
             }
             $res = 'else:';
             break;
          case 'elseif':
             if(end($this->_blockStack) !='if'){
+#ifdef JTPL_STANDALONE
+              trigger_error(sprintf($this->_locales['errors.tpl.tag.block.end.missing'], end($this->_blockStack), $this->_sourceFile),E_USER_ERROR);
+#else
               trigger_error(jLocale::get('jelix~errors.tpl.tag.block.end.missing',array(end($this->_blockStack),$this->_sourceFile)),E_USER_ERROR);
+#endif
             }
             $res = 'elseif('.$this->_parseFinal($args,$this->_allowedInExpr).'):';
             break;
@@ -198,7 +265,11 @@ class jTplCompiler
          case '/while':
             $short = substr($name,1);
             if(end($this->_blockStack) !=$short){
+#ifdef JTPL_STANDALONE
+              trigger_error(sprintf($this->_locales['errors.tpl.tag.block.end.missing'], end($this->_blockStack), $this->_sourceFile),E_USER_ERROR);
+#else
               trigger_error(jLocale::get('jelix~errors.tpl.tag.block.end.missing',array(end($this->_blockStack),$this->_sourceFile)),E_USER_ERROR);
+#endif
             }
             array_pop($this->_blockStack);
             $res='end'.$short.';';
@@ -213,15 +284,27 @@ class jTplCompiler
             if(count($this->_literals)){
                $res = '?>'.array_shift($this->_literals).'<?php ';
             }else{
+#ifdef JTPL_STANDALONE
+               trigger_error(sprintf($this->_locales['errors.tpl.tag.block.end.missing'], 'literal', $this->_sourceFile),E_USER_ERROR);
+#else
                trigger_error(jLocale::get('jelix~errors.tpl.tag.block.end.missing',array('literal',$this->_sourceFile)),E_USER_ERROR);
+#endif
             }
             break;
          case '/literal':
+#ifdef JTPL_STANDALONE
+            trigger_error(sprintf($this->_locales['errors.tpl.tag.block.begin.missing'], 'literal', $this->_sourceFile),E_USER_ERROR);
+#else
             trigger_error(jLocale::get('jelix~errors.tpl.tag.block.begin.missing',array('literal',$this->_sourceFile)),E_USER_ERROR);
+#endif
             break;
          default:
             if( ! $path = $this->_getPlugin('function',$name)){
+#ifdef JTPL_STANDALONE
+                trigger_error(sprintf($this->_locales['errors.tpl.tag.function.unknow'], $name, $this->_sourceFile),E_USER_ERROR);
+#else
                 trigger_error(jLocale::get('jelix~errors.tpl.tag.function.unknow',array($name,$this->_sourceFile)),E_USER_ERROR);
+#endif
                 $res='';
             }else{
                 $argfct=$this->_parseFinal($args,$this->_allowedAssign);
@@ -284,7 +367,11 @@ class jTplCompiler
              }elseif($type == T_WHITESPACE || in_array($type, $allowed)){
                 $result.=$str;
              }else{
+#ifdef JTPL_STANDALONE
+                trigger_error(sprintf($this->_locales['errors.tpl.tag.phpsyntax.invalid'], $this->_currentTag, $str, $this->_sourceFile),E_USER_ERROR);
+#else
                 trigger_error(jLocale::get('jelix~errors.tpl.tag.phpsyntax.invalid',array($this->_currentTag,$str,$this->_sourceFile)),E_USER_ERROR);
+#endif
                 return '';
              }
 
@@ -293,10 +380,18 @@ class jTplCompiler
                 if($inLocale){
                    $inLocale = false;
                    if($locale==''){
+#ifdef JTPL_STANDALONE
+                      trigger_error(sprintf($this->_locales['errors.tpl.tag.locale.invalid'], $this->_currentTag, $this->_sourceFile),E_USER_ERROR);
+#else
                       trigger_error(jLocale::get('jelix~errors.tpl.tag.locale.invalid',array($this->_currentTag,$this->_sourceFile)),E_USER_ERROR);
+#endif
                       return '';
                    }else{
+#ifdef JTPL_STANDALONE
+                      $result.='${$GLOBALS[\'jTplConfig\'][\'localesGetter\']}(\''.$locale.'\')';
+#else
                       $result.='jLocale::get(\''.$locale.'\')';
+#endif
                       $locale='';
                    }
                 }else{
@@ -305,7 +400,11 @@ class jTplCompiler
             }elseif($inLocale && ($tok=='.' || $tok =='~') ){
                $locale.=$tok;
             }elseif($inLocale || in_array($tok,$exceptchar) || ($first && $tok !='!')){
+#ifdef JTPL_STANDALONE
+               trigger_error(sprintf($this->_locales['errors.tpl.tag.character.invalid'], $this->_currentTag, $tok, $this->_sourceFile),E_USER_ERROR);
+#else
                trigger_error(jLocale::get('jelix~errors.tpl.tag.character.invalid',array($this->_currentTag,$tok,$this->_sourceFile)),E_USER_ERROR);
+#endif
                return '';
             }elseif($tok =='('){
                $bracketcount++;$result.=$tok;
@@ -324,7 +423,11 @@ class jTplCompiler
       }
 
       if($bracketcount != 0 || $sqbracketcount !=0){
+#ifdef JTPL_STANDALONE
+         trigger_error(sprintf($this->_locales['errors.tpl.tag.bracket.error'], $this->_currentTag, $this->_sourceFile),E_USER_ERROR);
+#else
          trigger_error(jLocale::get('jelix~errors.tpl.tag.bracket.error',array($this->_currentTag,$this->_sourceFile)),E_USER_ERROR);
+#endif
       }
 
       return $result;
@@ -332,31 +435,43 @@ class jTplCompiler
 
 
     private function _getPlugin($type, $name){
-       global $gJCoord, $gJConfig;
-       $treq = $gJCoord->response->getType();
+#ifdef JTPL_STANDALONE
+        $treq = 'html';
+#else
+        global $gJCoord, $gJConfig;
+        $treq = $gJCoord->response->getType();
+#endif
+        $foundPath='';
 
-       $foundPath='';
+#ifdef JTPL_STANDALONE
+        if(isset($GLOBALS['jTplConfig']['tplpluginsPathList'][$treq])){
+            foreach($GLOBALS['jTplConfig']['tplpluginsPathList'][$treq] as $path){
+#else
+        if(isset($gJConfig->tplpluginsPathList[$treq])){
+            foreach($gJConfig->tplpluginsPathList[$treq] as $path){
+#endif
+                $foundPath=$path.$type.'.'.$name.'.php';
 
-       if(isset($gJConfig->tplpluginsPathList[$treq])){
-         foreach($gJConfig->tplpluginsPathList[$treq] as $path){
-           $foundPath=$path.$type.'.'.$name.'.php';
-
-           if(file_exists($foundPath)){
-              return $foundPath;
-           }
-         }
-       }
-       if(isset($gJConfig->tplpluginsPathList['common'])){
-         foreach($gJConfig->tplpluginsPathList['common'] as $path){
-            $foundPath=$path.$type.'.'.$name.'.php';
-           if(file_exists($foundPath)){
-              return $foundPath;
-           }
-         }
-       }
-       return '';
+                if(file_exists($foundPath)){
+                    return $foundPath;
+                }
+            }
+        }
+#ifdef JTPL_STANDALONE
+        if(isset($GLOBALS['jTplConfig']['tplpluginsPathList']['common'])){
+            foreach($GLOBALS['jTplConfig']['tplpluginsPathList']['common'] as $path){
+#else
+        if(isset($gJConfig->tplpluginsPathList['common'])){
+            foreach($gJConfig->tplpluginsPathList['common'] as $path){
+#endif
+                $foundPath=$path.$type.'.'.$name.'.php';
+                if(file_exists($foundPath)){
+                    return $foundPath;
+                }
+            }
+        }
+        return '';
     }
-
 }
 
 /*
