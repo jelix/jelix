@@ -17,9 +17,9 @@ cd lib/jelix/auth
   jAuthDriverDb.class.php
 
 cd lib/jelix/core
-  jActionGroup.class.php
   jConfig.class.php
   jContext.class.php
+  jController.class.php
   jCoordinator.class.php
   jDefaultConfig.lib.php
   jErrorHandler.lib.php
@@ -177,7 +177,7 @@ cd lib/jelix-modules/auth/install/scripts
   delete.mysql.sql
   install.mysql.sql
 cd lib/jelix-modules/auth/controllers
-  login.ag.php
+  login.classic.php
 cd lib/jelix-modules/auth/zones
   loginform.zone.php
 cd lib/jelix-modules/auth/templates
