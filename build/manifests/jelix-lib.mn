@@ -159,6 +159,15 @@ cd lib/jelix-modules/jelix/locales/fr_FR
   errors.ISO-8859-1.properties
   ui.ISO-8859-1.properties
   auth.ISO-8859-1.properties
+  dao.UTF-8.properties
+  daoxml.UTF-8.properties
+  db.UTF-8.properties
+  common.UTF-8.properties
+  format.UTF-8.properties
+  jelix.UTF-8.properties
+  errors.UTF-8.properties
+  ui.UTF-8.properties
+  auth.UTF-8.properties
 cd lib/jelix-modules/auth
   module.xml
 cd lib/jelix-modules/auth/plugins/auth
@@ -171,6 +180,8 @@ cd lib/jelix-modules/auth/locales/en_US
 cd lib/jelix-modules/auth/locales/fr_FR
   auth.ISO-8859-1.properties
   autherror.ISO-8859-1.properties
+  auth.UTF-8.properties
+  autherror.UTF-8.properties
 cd lib/jelix-modules/auth/install/scripts
   delete.postgresql.sql
   install.postgresql.sql

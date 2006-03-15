@@ -129,3 +129,10 @@ cd lib/jelix-scripts/templates/www
   xmlrpc.php.tpl
   index.php.tpl
   jsonrpc.php.tpl
+cd lib/jelix/docs/ns
+  dao.rng
+  events.rng
+  module.rng
+  plugin.rng
+  project.rng
+  urls.rng
