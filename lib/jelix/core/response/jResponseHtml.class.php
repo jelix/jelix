@@ -183,7 +183,8 @@ class jResponseHtml extends jResponse {
      * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
      */
     function addErrorMsg($type, $code, $message, $file, $line){
-        $this->_errorMessages[] = "<p style=\"margin:0;\"><b>[$type $code]</b> <span style=\"color:#FF0000\">".htmlentities($message)."</span> \t$file \t$line</p>\n";
+        // FIXME : Pourquoi utiliser htmlentities() ?
+        $this->_errorMessages[] = "<p style=\"margin:0;\"><b>[$type $code]</b> <span style=\"color:#FF0000\">".htmlentities($message, ENT_NOQUOTES, $this->_charset)."</span> \t$file \t$line</p>\n";
         return false;
     }
 
