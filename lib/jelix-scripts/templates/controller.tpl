@@ -10,13 +10,13 @@
 */
 
 class CT{$name} extends jController {
-   /**
-   *
-   */
-   function {$method} () {
-      $rep = $this->getResponse('html');
-
-      return $rep;
-   }
+    /**
+    *
+    */
+    function {$method}() {
+        $rep = $this->getResponse('html');
+        
+        return $rep;
+    }
 }
 ?>

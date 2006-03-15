@@ -24,4 +24,3 @@ default =
 ;dsn=mysql:host=localhost;dbname=test
 ;user=
 ;password=
-

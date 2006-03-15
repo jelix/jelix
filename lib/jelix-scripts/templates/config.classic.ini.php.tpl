@@ -2,7 +2,7 @@
 ;for security reasons , don't remove or modify the first line
 
 defaultModule = "{$appname}"
-defaultAction = "default"
+defaultAction = "default_index"
 defaultLocale = "fr_FR"
 defaultCharset = "ISO-8859-1"
 

@@ -18,4 +18,5 @@ require_once (JELIX_LIB_CORE_PATH.'request/jJsonRpcRequest.class.php');
 
 $jelix = new JCoordinator($config_file);
 $jelix->process(new jJsonRpcRequest());
+
 ?>

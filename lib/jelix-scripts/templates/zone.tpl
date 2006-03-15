@@ -10,13 +10,11 @@
 */
 
 class Zone{$name} extends jZone {
-   protected $_tplname='{$template}';
+    protected $_tplname='{$template}';
 
-
+    
     protected function _prepareTpl(){
         $this->_tpl->assign('foo','bar');
     }
-
 }
-
 ?>
