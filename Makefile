@@ -59,6 +59,7 @@ dev-jelix: common
 	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTHACKER) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(DISTHACKER) \
 	&& echo "$(LIB_VERSION)" > "$(DISTHACKER)/lib/jelix/VERSION"
+	if [ ! -d "$(DISTHACKER)/temp" ] ; then mkdir $(DISTHACKER)/temp ; fi
 
 dev-jelix-lib: common
 	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
