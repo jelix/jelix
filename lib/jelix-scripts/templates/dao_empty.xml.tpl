@@ -13,9 +13,7 @@
     </record>
     <!--<factory>
         <method name="findByStage" type="select/selectfirst/delete/update/php">
-            <parameters>
-                <parameter name="" />
-            </parameters>
+            <parameter name="" />
             <values>
                 <value property="" value="" />
             </values>

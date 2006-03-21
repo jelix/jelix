@@ -3,6 +3,9 @@ sd lib/jelix/tpl/
 *  jTpl.class.php
 *  jTplCompiler.class.php
    jtpl_standalone_prepend.php
+   VERSION
+   CREDITS
+   LICENCE
 
 sd lib/jelix/tpl/plugins/common
 dd plugins/common

@@ -5,9 +5,18 @@ ifndef LIB_VERSION
 LIB_VERSION = $(shell cat lib/jelix/VERSION)
 endif
 
+ifndef JTPL_VERSION
+JTPL_VERSION = $(shell cat lib/jelix/tpl/VERSION)
+endif
+
 ifeq ($(LIB_VERSION),SVN)
 SVN_REVISION = $(shell svn info | grep "Revision" | cut -d " " -f 2)
 LIB_VERSION=SVN-$(SVN_REVISION)
+endif
+
+ifeq ($(JTPL_VERSION),SVN)
+SVN_REVISION = $(shell svn info | grep "Revision" | cut -d " " -f 2)
+JTPL_VERSION=SVN-$(SVN_REVISION)
 endif
 
 ifndef DIST
@@ -19,13 +28,14 @@ DISTHACKER="$(DIST)/jelix-svn"
 DISTJTPL="$(DIST)/jtpl"
 
 default:
-	@echo "target:  dist-all dist-jelix dist-testapp dist-myapp dev-all dev-jelix dev-myapp dev-testapp jtpl"
+	@echo "target:  dist-all dist-jelix dist-testapp dist-myapp dev-all dev-jelix dev-myapp dev-testapp jtpl jtpl-dist"
 
-dist-all: dist-jelix dist-testapp dist-myapp jtpl
+dist-all: dist-jelix dist-testapp dist-myapp jtpl-dist
 
-dev-all: dev-jelix dev-myapp dev-testapp
+dev-all: dev-jelix dev-myapp dev-testapp jtpl
 
 dist-jelix: common
+	if [ ! -d "$(DISTJELIX)" ] ; then mkdir $(DISTJELIX) ; fi
 	export LIB_VERSION=$(LIB_VERSION) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTJELIX) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(DISTJELIX) \
@@ -34,32 +44,46 @@ dist-jelix: common
 	tar czf $(DIST)/jelix-lib-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) lib/ temp/
 
 dist-testapp: common
+	if [ ! -d "$(DISTJELIX)" ] ; then mkdir $(DISTJELIX) ; fi
 	$(PHP) build/mkdist.php build/manifests/testapp.mn . $(DISTJELIX)
 	tar czf $(DIST)/testapp-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) testapp/
 
 dist-myapp: common
+	if [ ! -d "$(DISTJELIX)" ] ; then mkdir $(DISTJELIX) ; fi
 	$(PHP) build/mkdist.php build/manifests/myapp.mn . $(DISTJELIX)
 	tar czf $(DIST)/myapp-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) myapp/
 
 dev-jelix: common
+	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
 	export LIB_VERSION=$(LIB_VERSION) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTHACKER) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(DISTHACKER) \
 	&& echo "$(LIB_VERSION)" > "$(DISTHACKER)/lib/jelix/VERSION"
 
+dev-jelix-lib: common
+	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
+	export LIB_VERSION=$(LIB_VERSION) \
+	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTHACKER) \
+	&& echo "$(LIB_VERSION)" > "$(DISTHACKER)/lib/jelix/VERSION"
+
 dev-testapp: common
+	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
 	$(PHP) build/mkdist.php build/manifests/testapp.mn . $(DISTHACKER)
 
 dev-myapp: common
+	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
 	$(PHP) build/mkdist.php build/manifests/myapp.mn . $(DISTHACKER)
+	
+jtpl: common 
+	if [ ! -d "$(DISTJTPL)" ] ; then mkdir $(DISTJTPL) ; fi
+	export JTPL_STANDALONE=1 \
+	&& $(PHP) build/mkdist.php build/manifests/jtpl-standalone.mn . $(DISTJTPL) \
+	&& echo "$(JTPL_VERSION)" > "$(DISTJTPL)/VERSION"
+
+jtpl-dist: jtpl
+	tar czf $(DIST)/jtpl-$(JTPL_VERSION).tar.gz  -C $(DIST) jtpl/
+
 
 common:
 	if [ ! -d "$(DIST)" ] ; then mkdir $(DIST) ; fi
-	if [ ! -d "$(DISTJELIX)" ] ; then mkdir $(DISTJELIX) ; fi
-	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
-	if [ ! -d "$(DISTJTPL)" ] ; then mkdir $(DISTJTPL) ; fi
-	
-jtpl: common
-	export JTPL_STANDALONE=1 \
-	&& $(PHP) build/mkdist.php build/manifests/jtpl-standalone.mn . $(DISTJTPL)
 
