@@ -131,7 +131,7 @@ abstract class jDAOFactoryBase  {
       if($keys === false){
          throw new jException('jelix~dao.error.keys.missing');
       }
-      $q = 'DELETE FROM '.$this->_tables[$this->_primaryTable]['realname'].' where ';
+      $q = 'DELETE FROM '.$this->_tables[$this->_primaryTable]['realname'].' ';
       $q.= $this->_getPkWhereClauseForNonSelect($keys);
       return $this->_conn->exec ($q);
    }
