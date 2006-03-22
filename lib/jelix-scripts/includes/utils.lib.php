@@ -100,17 +100,17 @@ function jxs_getPathSeparator(){
         $os=PHP_OS;
     }
     if(strtolower($os) == 'win')
-        return "\\";
+        return array("\\","![/\\]!");
     else
-       return '/';
+       return array('/','!/!');
 }
 
 
 function jxs_getRelativePath($path, $targetPath){
-    $sep = jxs_getPathSeparator();
+    list($sep, $cut) = jxs_getPathSeparator();
 
-    $path = explode($sep,$path);
-    $targetPath = explode($sep,$targetPath);
+    $path = preg_split($cut,$path);
+    $targetPath = preg_split($cut,$targetPath);
 
     $dir='';
     $targetdir='';

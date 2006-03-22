@@ -18,7 +18,7 @@ define ('JELIXS_APPTPL_WWW_PATH'    , JELIXS_APPS_BASEPATH."/$APPNAME/www/");
 define ('JELIXS_APPTPL_VAR_PATH'    , JELIXS_APPS_BASEPATH."/$APPNAME/var/");
 define ('JELIXS_APPTPL_LOG_PATH'    , JELIXS_APPS_BASEPATH."/$APPNAME/var/log/");
 define ('JELIXS_APPTPL_CONFIG_PATH' , JELIXS_APPS_BASEPATH."/$APPNAME/var/config/");
-define ('JELIXS_INIT_PATH'          , '../jelix/init.php');
+define ('JELIXS_INIT_PATH'          , JELIXS_APPS_BASEPATH.'/lib/jelix/init.php');
 
 /* example for a linux package :
 
