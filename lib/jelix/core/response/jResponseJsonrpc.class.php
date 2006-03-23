@@ -22,16 +22,14 @@ final class jResponseJsonRpc extends jResponse {
     * @var string
     */
     protected $_type = 'jsonrpc';
-
-    protected $errorCode = 0;
-    protected $errorMessage = '';
-
+    protected $_acceptSeveralErrors=false;
+    
     public $response = null;
 
 
     public function output(){
         global $gJCoord;
-        if($this->errorCode != 0 || $this->errorMessage != '') return false;
+        if($this->hasErrors()) return false;
         header("Content-Type: text/plain");
         if($gJCoord->request->params['id'] !== null){
             $content = jJsonRpc::encodeResponse($this->response, $gJCoord->request->params['id']);
@@ -45,7 +43,7 @@ final class jResponseJsonRpc extends jResponse {
 
     public function fetch(){
         global $gJCoord;
-        if($this->errorCode != 0 || $this->errorMessage != '') return false;
+        if($this->hasErrors()) return false;
 
         if($gJCoord->request->params['id'] !== null)
             return jJsonRpc::encodeResponse($this->response, $gJCoord->request->params['id']);
@@ -55,28 +53,19 @@ final class jResponseJsonRpc extends jResponse {
 
     public function outputErrors(){
         global $gJCoord;
-        if($this->errorCode == 0 && $this->errorMessage == ''){
-            $this->errorMessage = 'Unknow error';
-            $this->errorCode = -1;
+        if(count($gJCoord->errorMessages)){
+           $e = $gJCoord->errorMessages[0];            
+           $errorCode = $e[1];
+           $errorMessage = '['.$e[0].'] '.$e[2].' (file: '.$e[3].', line: '.$e[4].')';
+        }else{
+            $errorMessage = 'Unknow error';
+            $errorCode = -1;
         }
         header("Content-Type: text/plain");
-        $content = jJsonRpc::encodeFaultResponse($this->errorCode,$this->errorMessage, $gJCoord->request->params['id']);
+        $content = jJsonRpc::encodeFaultResponse($errorCode,$errorMessage, $gJCoord->request->params['id']);
         header("Content-length: ".strlen($content));
         echo $content;
     }
-
-
-    /**
-     * indique au générateur qu'il y a un message d'erreur/warning/notice à prendre en compte
-     * cette méthode stocke le message d'erreur
-     * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
-     */
-    public function addErrorMsg($type, $code, $message, $file, $line){
-        $this->errorCode = $code;
-        $this->errorMessage = "[$type] $message (file: $file, line: $line)";
-        return true;
-    }
-
 }
 
 ?>

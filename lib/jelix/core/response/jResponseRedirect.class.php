@@ -30,13 +30,13 @@ final class jResponseRedirect extends jResponse {
     public $params = array();
 
     public function output(){
-        if(count($this->_errorMessage)) return false;
+        if($this->hasErrors()) return false;
         header ('location: '.jUrl::get($this->action, $this->params));
         return true;
     }
 
     public function fetch(){
-        if(count($this->_errorMessage)) return false;
+        if($this->hasErrors()) return false;
         return 'location: '.jUrl::get($this->action, $this->params);
     }
 

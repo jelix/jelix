@@ -36,11 +36,14 @@ abstract class jRequest {
 
     public $url;
 
-    function __construct(){
+    function __construct(){  }
+
+    function init(){
         $this->_initUrlDatas();
         $this->_initParams();
     }
-
+    
+    
     abstract protected function _initParams();
 
     protected function _initUrlDatas(){

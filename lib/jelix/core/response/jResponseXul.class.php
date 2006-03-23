@@ -74,7 +74,7 @@ class jResponseXul extends jResponse {
 
     /**
      * génère le contenu et l'envoi au navigateur.
-     * Il doit tenir compte des appels éventuels à addErrorMsg
+     * Il doit tenir compte des erreurs
      * @return boolean    true si la génération est ok, false sinon
      */
     function output(){
@@ -85,9 +85,9 @@ class jResponseXul extends jResponse {
         $this->_headSent = true;
         echo implode('',$this->_bodyTop);
         $this->body->display($this->bodyTpl);
-        if($this->_errorMessages){
+        if($this->hasErrors()){
             echo '<vbox id="copixerror" style="border:3px solid red; background-color:#f39999;color:black;">';
-            echo implode("\n",$this->_errorMessages);
+            echo $this->getFormatedErrorMsg();
             echo '</vbox>';
         }
         echo implode('',$this->_bodyBottom);
@@ -115,23 +115,25 @@ class jResponseXul extends jResponse {
             echo '<',$this->_root,' title="Erreurs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">';
         }
         echo '<vbox>';
-        if(count($this->_errorMessages)){
-           echo implode("\n",$this->_errorMessages);
+        if($this->hasErrors()){
+           echo $this->getFormatedErrorMsg();
         }else{
            echo "<description style=\"color:#FF0000;\">Unknow error</description>";
         }
         echo '</vbox></',$this->_root,'>';
     }
 
-
     /**
-     * indique au générateur qu'il y a un message d'erreur/warning/notice à prendre en compte
-     * cette méthode stocke le message d'erreur
-     * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
+     * formate les messages d'erreurs
+     * @return string les erreurs formatées
      */
-    function addErrorMsg($type, $code, $message, $file, $line){
-        $this->_errorMessages[] = "<description style=\"color:#FF0000;\">[$type $code] ".htmlentities($message)." \t$file \t$line</description>";
-        return false;
+    protected function getFormatedErrorMsg(){
+        $errors='';
+        foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+            // FIXME : Pourquoi utiliser htmlentities() ?
+           $errors .=  '<description style="color:#FF0000;">['.$e[0].' '.$e[1].'] '.htmlentities($e[2], ENT_NOQUOTES, $this->_charset)." \t".$e[3]." \t".$e[4]."</description>\n";
+        }
+        return $errors;
     }
 
     /**

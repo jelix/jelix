@@ -24,7 +24,7 @@ final class jResponseRedirectUrl extends jResponse {
     public $url = '';
 
     public function output(){
-        if(count($this->_errorMessage)) return false;
+        if($this->hasErrors()) return false;
         header ('location: '.$this->url);
         return true;
     }
@@ -34,7 +34,7 @@ final class jResponseRedirectUrl extends jResponse {
      * @return    string    contenu généré, ou false si il y a une erreur de génération
      */
     public function fetch(){
-       if(count($this->_errorMessage)) return false;
+       if($this->hasErrors()) return false;
            return 'location: '.$this->url;
     }
 

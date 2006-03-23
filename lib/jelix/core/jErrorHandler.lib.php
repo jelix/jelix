@@ -69,10 +69,8 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
 
     // traitement du message
     if(strpos($action , 'ECHO') !== false){
-        if($gJCoord->response == null){
-            $gJCoord->initDefaultResponseOfRequest();
-        }
-        $gJCoord->response->addErrorMsg($codeString[$errno], $code, $errmsg, $filename, $linenum);
+        if($gJCoord->addErrorMsg($codeString[$errno], $code, $errmsg, $filename, $linenum))
+            $action.=' EXIT';
     }
     if(strpos($action , 'LOGFILE') !== false){
         error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);

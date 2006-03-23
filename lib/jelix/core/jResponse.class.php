@@ -26,6 +26,8 @@ abstract class jResponse {
     protected $_errorMessages=array();
 
     protected $_attributes = array();
+    
+    protected $_acceptSeveralErrors=true;
 
     /**
     * Contruction et initialisation
@@ -36,7 +38,7 @@ abstract class jResponse {
 
     /**
      * génère le contenu et l'envoi au navigateur.
-     * Il doit tenir compte des appels éventuels à addErrorMsg
+     * Il doit tenir compte des erreurs
      * @return boolean    true si la génération est ok, false sinon
      */
     abstract public function output();
@@ -53,21 +55,8 @@ abstract class jResponse {
     abstract public function outputErrors();
 
 
-    /**
-     * indique au générateur qu'il y a un message d'erreur/warning/notice à prendre en compte
-     * cette méthode stocke le message d'erreur
-     * @param  string $type  type d'erreur 'error', 'warning', 'notice'
-     * @param  integer $code  code d'erreur
-     * @param  string $message le message d'erreur
-     * @param  string $file  nom du fichier où s'est produite l'erreur
-     * @param  integer $line  ligne où s'est produite l'erreur
-     * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
-     */
-    public function addErrorMsg($type, $code, $message, $file, $line){
-        $this->_errorMessages[] = array($type, $code, $message, $file, $line);
-        return false;
-    }
-
     public final function getType(){ return $this->_type;}
+    public final function acceptSeveralErrors(){ return $this->_acceptSeveralErrors;}
+    public final function hasErrors(){ return count($GLOBALS['gJCoord']->errorMessages)>0;}
 }
 ?>

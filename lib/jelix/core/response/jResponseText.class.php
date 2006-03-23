@@ -52,22 +52,13 @@ class jResponseText extends jResponse {
     public function outputErrors(){
         global $gJConfig;
         header('Content-Type: text/plain;charset='.$gJConfig->defaultCharset);
-        if(count($this->_errorMessages)){
-            echo implode("\n",$this->_errorMessages);
+        if($this->hasErrors()){
+            foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+               echo '['.$e[0].' '.$e[1].'] '.$e[2]." \t".$e[3]." \t".$e[4]."\n";
+            }
         }else{
-            echo 'unknow error';
+            echo "[unknow error]\n";
         }
-    }
-
-
-    /**
-     * indique au générateur qu'il y a un message d'erreur/warning/notice à prendre en compte
-     * cette méthode stocke le message d'erreur
-     * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
-     */
-    public function addErrorMsg($type, $code, $message, $file, $line){
-        $this->_errorMessages[] = "[$type $code] $message \t$file \t$line\n";
-        return false;
     }
 }
 ?>

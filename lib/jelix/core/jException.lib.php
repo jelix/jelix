@@ -37,7 +37,7 @@ function jExceptionHandler($exception){
 
     // traitement du message
     if(strpos($action , 'ECHO') !== false){
-      $gJCoord->response->addErrorMsg('error', $exception->getCode(), $msg, $exception->getFile(), $exception->getLine());
+       $gJCoord->addErrorMsg('error', $exception->getCode(), $msg, $exception->getFile(), $exception->getLine());
     }
     if(strpos($action , 'LOGFILE') !== false){
         error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);

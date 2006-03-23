@@ -48,7 +48,7 @@ final class jResponseBinary  extends jResponse {
 
     /**
      * génère le contenu et l'envoi au navigateur.
-     * Il doit tenir compte des appels éventuels à addErrorMsg
+     * Il doit tenir compte des erreurs
      * @return boolean    true si la génération est ok, false sinon
      */
     public function output(){
@@ -59,7 +59,7 @@ final class jResponseBinary  extends jResponse {
                 $this->outputFileName = $f[count ($f)-1];
             }
         }
-        if(count($this->_errorMessage)) return false;
+        if($this->hasErrors()) return false;
 
         if($this->content === null){
             if (is_readable ($this->fileName) && is_file ($this->fileName)){
@@ -95,7 +95,7 @@ final class jResponseBinary  extends jResponse {
      * @return    string    contenu généré ou false si il y a une erreur de génération
      */
     public function fetch(){
-        if(count($this->_errorMessage)) return false;
+        if($this->hasErrors()) return false;
         if($this->content === null){
             if (is_readable ($this->fileName) && is_file ($this->fileName)){
                 return file_get_contents ($this->fileName);

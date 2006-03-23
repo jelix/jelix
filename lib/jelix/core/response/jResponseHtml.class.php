@@ -91,7 +91,7 @@ class jResponseHtml extends jResponse {
 
     /**
      * génère le contenu et l'envoi au navigateur.
-     * Il doit tenir compte des appels éventuels à addErrorMsg
+     * Il doit tenir compte des erreurs
      * @return boolean    true si la génération est ok, false sinon
      */
     final public function output(){
@@ -131,9 +131,9 @@ class jResponseHtml extends jResponse {
         if($this->bodyTpl != '')
            $this->body->display($this->bodyTpl);
 
-        if(count($this->_errorMessages)){
+        if($this->hasErrors()){
             echo '<div id="jelixerror" style="position:absolute;left:0px;top:0px;border:3px solid red; background-color:#f39999;color:black;">';
-            echo implode("\n",$this->_errorMessages);
+            echo $this->getFormatedErrorMsg();
             echo '<p><a href="#" onclick="document.getElementById(\'jelixerror\').style.display=\'none\';return false;">fermer</a></div>';
         }
         echo implode("\n",$this->_bodyBottom);
@@ -168,8 +168,8 @@ class jResponseHtml extends jResponse {
             echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n";
             echo '<html><head><title>Errors</title></head><body>';
         }
-        if(count($this->_errorMessages)){
-            echo implode("\n",$this->_errorMessages);
+        if($this->hasErrors()){
+            echo $this->getFormatedErrorMsg();
         }else{
             echo '<p style="color:#FF0000">Unknow Error</p>';
         }
@@ -178,14 +178,16 @@ class jResponseHtml extends jResponse {
 
 
     /**
-     * indique au générateur qu'il y a un message d'erreur/warning/notice à prendre en compte
-     * cette méthode stocke le message d'erreur
-     * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
+     * formate les messages d'erreurs
+     * @return string les erreurs formatées
      */
-    function addErrorMsg($type, $code, $message, $file, $line){
-        // FIXME : Pourquoi utiliser htmlentities() ?
-        $this->_errorMessages[] = "<p style=\"margin:0;\"><b>[$type $code]</b> <span style=\"color:#FF0000\">".htmlentities($message, ENT_NOQUOTES, $this->_charset)."</span> \t$file \t$line</p>\n";
-        return false;
+    protected function getFormatedErrorMsg(){
+        $errors='';
+        foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+            // FIXME : Pourquoi utiliser htmlentities() ?
+           $errors .=  '<p style="margin:0;"><b>['.$e[0].' '.$e[1].']</b> <span style="color:#FF0000">'.htmlentities($e[2], ENT_NOQUOTES, $this->_charset)."</span> \t".$e[3]." \t".$e[4]."</p>\n";
+        }
+        return $errors;
     }
 
     /**

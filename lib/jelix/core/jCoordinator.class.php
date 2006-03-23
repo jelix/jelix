@@ -47,6 +47,12 @@ class jCoordinator {
      * @var string
      */
     public $actionName;
+    
+    /**
+     * List of all errors
+     * @var array
+     */
+    public $errorMessages=array();
 
     /**
      * @param  string $configFile name of the ini file to configure the framework
@@ -54,7 +60,7 @@ class jCoordinator {
     function __construct ($configFile) {
         global $gJCoord, $gJConfig;
 
-        $gJCoord = $this;
+        $gJCoord =  $this;
 
         if(!is_writable(JELIX_APP_TEMP_PATH)){
             trigger_error('Temp directory is not writable',E_USER_ERROR);
@@ -95,6 +101,23 @@ class jCoordinator {
         }
     }
 
+    /**
+     * stocke un message d'erreur/warning/notice à prendre en compte par les réponses
+     * @param  string $type  type d'erreur 'error', 'warning', 'notice'
+     * @param  integer $code  code d'erreur
+     * @param  string $message le message d'erreur
+     * @param  string $file  nom du fichier où s'est produite l'erreur
+     * @param  integer $line  ligne où s'est produite l'erreur
+     * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
+     */
+    public function addErrorMsg($type, $code, $message, $file, $line){
+        $this->errorMessages[] = array($type, $code, $message, $file, $line);
+        if(!$this->response){
+            if($this->initDefaultResponseOfRequest())
+                return true;
+        }
+        return !$this->response->acceptSeveralErrors();
+    }    
 
     /**
     * Fonction principale du coordinateur à appeler dans le index.php pour démarrer
@@ -105,6 +128,7 @@ class jCoordinator {
         global $gJConfig;
 
         $this->request = $request;
+        $this->request->init();
         session_start();
 
         $this->moduleName = $this->request->getParam('module');
@@ -217,8 +241,7 @@ class jCoordinator {
         $type= $this->request->defaultResponseType;
 
         if(!isset($gJConfig->responses[$type])){
-            trigger_error(jLocale::get('jelix~errors.default.response.type.unknow',array($this->moduleName.'~'.$this->actionName,$type)),E_USER_ERROR);
-            return null;
+            return jLocale::get('jelix~errors.default.response.type.unknow',array($this->moduleName.'~'.$this->actionName,$type));
         }
 
         $respclass = $gJConfig->responses[$type];
@@ -227,11 +250,12 @@ class jCoordinator {
         }elseif(file_exists($path=JELIX_APP_PATH.'responses/'.$respclass.'.class.php')){
            require_once ($path);
         }else{
-           trigger_error(jLocale::get('jelix~errors.default.response.not.loaded',array($this->moduleName.'~'.$this->actionName,$type)),E_USER_ERROR);
-           return null;
+           return jLocale::get('jelix~errors.default.response.not.loaded',array($this->moduleName.'~'.$this->actionName,$type));
         }
 
         $this->response = new $respclass();
+        
+        return false;
     }
 
 
