@@ -19,7 +19,7 @@ class jXulRequest extends jRequest {
     public $defaultResponseType = 'xul';
 
     protected function _initParams(){
-        $this->url  = jUrl::parse($_SERVER['SCRIPT_NAME'], $_GET, $this->url_path_info);
+        $this->url  = jUrl::parse($_SERVER['SCRIPT_NAME'], $this->url_path_info, $_GET);
         $this->params = array_merge($this->url->params, $_POST);
     }
 

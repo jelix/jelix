@@ -23,7 +23,7 @@ interface jIUrlEngine {
     * @param array  $params  url parameter ($_REQUEST)
     * @return jUrl l'objet url resultant
     */
-  public function parse($scriptNamePath, $params, $pathinfo );
+  public function parse($scriptNamePath, $pathinfo, $params );
 
   /**
    * Modifie les données de l'url selon le type d'url proposé par le moteur d'url
@@ -216,7 +216,7 @@ class jUrl {
      */
     static function parse($scriptNamePath, $pathinfo, $params ){
          $engine = jUrl::getEngine();
-         return $engine->parse($scriptNamePath, $params,$pathinfo);
+         return $engine->parse($scriptNamePath,$pathinfo, $params);
     }
 
 

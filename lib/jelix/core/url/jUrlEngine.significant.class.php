@@ -54,7 +54,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
    /**
    *
    */
-   public function parse($scriptNamePath, $params, $pathinfo ){
+   public function parse($scriptNamePath, $pathinfo, $params ){
       global $gJConfig;
 
       $url = new jUrl($scriptNamePath, $params, $pathinfo);
@@ -74,12 +74,10 @@ class jUrlEngineSignificant implements jIUrlEngine {
          }
 
          $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($snp).'.entrypoint.php';
-
          if(file_exists($file)){
             require_once($file);
             $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
             $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][rawurlencode($snp)];
-
             if(!$this->_parse($url)){
                // $url peut avoir été modifié par _parse, on remet l'ancien
                $url= new jUrl($scriptNamePath, $params, $pathinfo);
@@ -95,6 +93,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
       if(strpos($script, $gJConfig->urlengine['entrypointExtension']) !== false){
          $script=substr($script,0,- (strlen($gJConfig->urlengine['entrypointExtension'])));
       }*/
+      
       if(substr($url->pathInfo,-1) == '/' && $url->pathInfo != '/'){
             $pathinfo = substr($url->pathInfo,0,-1);
       }else{
@@ -139,6 +138,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
                6=>false ou array('act','act'...) // autres actions autorisées
             */
             if(preg_match ($infoparsing[2], $pathinfo, $matches)){
+
                if($infoparsing[0] !='')
                   $url->params['module']=$infoparsing[0];
 
