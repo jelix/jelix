@@ -91,7 +91,7 @@ class jTpl {
 		$filename = basename($tpl);
 		$cachefile = JTPL_CACHE_PATH . $filename;
 		
-		$mustCompile = $_GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
+		$mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
 		if (!$mustCompile) {
 			if (filemtime($tpl) > filemtime($cachefile)) {
 				$mustCompile = true;
