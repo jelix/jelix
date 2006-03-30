@@ -12,33 +12,51 @@
 
 class CTForms extends jController {
 
+ //=======================================
+ //  ATTENTION !
+ // ce controleur ne fonctionne pas pour le moment
+ // il s'agit juste d'un prototype, servant de base de recherche
+ // pour trouver l'api la plus adéquate pour jForm....
+
+
+
   function newform(){
+      // création d'un formulaire vierge
       $form = jForm::create('sample');
       $rep= $this->getResponse("redirect");
       $rep->action="forms_show";
-      return $rep;
-   }
-
-
-  function edit(){
-     $form = jForm::create('sample', $this->param('id'));
-
-     $rep= $this->getResponse("redirect");
-     $rep->action="forms_show";
+      $rep->params['id']=0; //$form->ident();
       return $rep;
   }
 
-   function show(){
-      $form = jForms::get('sample',$this->param('id'));
+
+  function edit(){
+     $form = jForm::create('sample', 'id');
+     // remplissage...
+     $rep= $this->getResponse("redirect");
+     $rep->action="forms_show";
+     $rep->params['id']=$this->param('id');
+     return $rep;
+  }
+
+  function show(){
+      // recupère les données du formulaire dont l'id est dans le paramètre id
+      $form = jForm::get('sample','id');
+
       $rep = $this->getResponse('html');
       $rep->title = 'Edition d\'un formulaire';
-      $rep->body->assign('MAIN','<p>Ici sera le formulaire</p>');
+
+      $tpl = new jTpl();
+      $tpl->assign('formulaire', $form);
+      $rep->body->assign('MAIN',$tpl->fetch('sampleform'));
 
       return $rep;
    }
 
    function save(){
-      $form = jForms::getFromRequest('sel~form',$this->param('id'));
+      // récuper le formulaire dont l'id est dans le paramètre id
+      // et le rempli avec les données reçues de la requête
+      $form = jForms::fill('sample','id');
 
       $rep= $this->getResponse("redirect");
       $rep->action="forms_ok";

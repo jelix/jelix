@@ -51,6 +51,7 @@ class jController{
         return $this->request->getResponse($name);
     }
 
+    protected function params(){ return $this->request->params; }
 
 }
 ?>
