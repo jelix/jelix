@@ -88,6 +88,7 @@ class jTpl {
         jIncluder::inc($sel);
         $fct = 'template_'.md5($sel->module.'_'.$sel->resource);
 #else
+        $tpl = JTPL_TEMPLATES_PATH . $tpl;
 		$filename = basename($tpl);
 		$cachefile = JTPL_CACHE_PATH . $filename;
 		
@@ -99,7 +100,7 @@ class jTpl {
 		}
 		
 		if ($mustCompile) {
-            include(JTPL_PATH . 'jTplCompiler.class.php');
+            include_once(JTPL_PATH . 'jTplCompiler.class.php');
             
 			$compiler = new jTplCompiler();
 			$compiler->compile($tpl);          

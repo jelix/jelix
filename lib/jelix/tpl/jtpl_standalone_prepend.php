@@ -17,6 +17,8 @@ if(!defined('JTPL_PLUGIN_PATH'))
     define('JTPL_PLUGIN_PATH', realpath(JTPL_PATH.'plugins/') . '/');
 if(!defined('JTPL_LOCALES_PATH'))
     define('JTPL_LOCALES_PATH', realpath(JTPL_PATH.'locales/') . '/');
+if(!defined('JTPL_TEMPLATES_PATH'))
+    define('JTPL_TEMPLATES_PATH', realpath(JTPL_PATH.'templates/') . '/'); 
 
 $GLOBALS['jTplConfig'] = array(
     'tplpluginsPathList'=> array(

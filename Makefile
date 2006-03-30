@@ -81,6 +81,7 @@ jtpl: common
 	&& $(PHP) build/mkdist.php build/manifests/jtpl-standalone.mn . $(DISTJTPL) \
 	&& echo "$(JTPL_VERSION)" > "$(DISTJTPL)/VERSION"
 	if [ ! -d "$(DISTJTPL)/temp" ] ; then mkdir $(DISTJTPL)/temp ; fi
+	if [ ! -d "$(DISTJTPL)/templates" ] ; then mkdir $(DISTJTPL)/templates ; fi
 
 jtpl-dist: jtpl
 	tar czf $(DIST)/jtpl-$(JTPL_VERSION).tar.gz  -C $(DIST) jtpl/

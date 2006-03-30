@@ -9,6 +9,7 @@ sd lib/jelix/tpl/
 
 sd lib/jelix/tpl/plugins/common
 dd plugins/common
+  function.include.php
   modifier.cat.php
   modifier.count_characters.php
   modifier.count_paragraphs.php
@@ -39,6 +40,9 @@ dd locales/
 
 sd lib/jelix/tpl/temp/
 dd temp/
+
+sd lib/jelix/tpl/templates/
+dd templates/
 
 sd lib/jelix/tpl/tests_std/
 dd tests_std/
