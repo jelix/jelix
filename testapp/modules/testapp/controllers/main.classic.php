@@ -14,6 +14,14 @@ class CTMain extends jController {
 
   function index(){
 
+      $rep = $this->getResponse('html');
+      $rep->title = 'Accueil de TestApp';
+      $rep->body->assignZone('MAIN','sommaire');
+      return $rep;
+   }
+
+   function hello(){
+
       if($this->param('output') == 'text'){
          $rep = $this->getResponse('text');
          $rep->content = 'Hello World !';
@@ -28,6 +36,7 @@ class CTMain extends jController {
 
       return $rep;
    }
+
 
    function testdao(){
     if( $id=$this->param('newid')){

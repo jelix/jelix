@@ -24,7 +24,7 @@ final class jResponseRedirectUrl extends jResponse {
     public $url = '';
 
     public function output(){
-        if($this->hasErrors()) return false;
+       if($this->hasErrors())   return false;
         header ('location: '.$this->url);
         return true;
     }
@@ -35,11 +35,13 @@ final class jResponseRedirectUrl extends jResponse {
      */
     public function fetch(){
        if($this->hasErrors()) return false;
-           return 'location: '.$this->url;
+       return 'location: '.$this->url;
     }
 
     public function outputErrors(){
-
+         include_once(JELIX_LIB_RESPONSE_PATH.'jResponseHtml.class.php');
+         $resp = new jResponseHtml();
+         $resp->outputErrors();
     }
 
 }

@@ -22,6 +22,9 @@ class myHtmlResponse extends jResponseHtml {
    // modifications communes aux actions utilisant cette reponses
    protected function _commonProcess(){
        $this->title .= ($this->title !=''?' - ':'').' My Test App !';
+
+       $this->body->assignIfNone('person','you');
+       $this->body->assignIfNone('MAIN','<p>No content</p>');
    }
 }
 ?>

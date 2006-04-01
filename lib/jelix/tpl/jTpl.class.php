@@ -43,6 +43,20 @@ class jTpl {
                $this->_vars[$name] = $value;
         }
     }
+
+    public function assignIfNone ($name, $value = null){
+        if(is_array($name)){
+           foreach ($name as $key => $val) {
+               if(!isset($this->_vars[$key]))
+                  $this->_vars[$key] = $val;
+           }
+        }else{
+            if(!isset($this->_vars[$name]))
+               $this->_vars[$name] = $value;
+        }
+    }
+
+
 #ifndef JTPL_STANDALONE
     function assignZone($name, $zoneName, $params=array()){
         $this->_vars[$name] = jZone::processZone ($zoneName, $params);
@@ -89,24 +103,24 @@ class jTpl {
         $fct = 'template_'.md5($sel->module.'_'.$sel->resource);
 #else
         $tpl = JTPL_TEMPLATES_PATH . $tpl;
-		$filename = basename($tpl);
-		$cachefile = JTPL_CACHE_PATH . $filename;
-		
-		$mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
-		if (!$mustCompile) {
-			if (filemtime($tpl) > filemtime($cachefile)) {
-				$mustCompile = true;
-			}
-		}
-		
-		if ($mustCompile) {
+      $filename = basename($tpl);
+      $cachefile = JTPL_CACHE_PATH . $filename;
+
+      $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
+      if (!$mustCompile) {
+         if (filemtime($tpl) > filemtime($cachefile)) {
+            $mustCompile = true;
+         }
+      }
+
+      if ($mustCompile) {
             include_once(JTPL_PATH . 'jTplCompiler.class.php');
-            
-			$compiler = new jTplCompiler();
-			$compiler->compile($tpl);          
-		}
-		require_once($cachefile);
-		$fct = 'template_'.md5($tpl);
+
+         $compiler = new jTplCompiler();
+         $compiler->compile($tpl);
+      }
+      require_once($cachefile);
+      $fct = 'template_'.md5($tpl);
 #endif
         $fct($this);
     }

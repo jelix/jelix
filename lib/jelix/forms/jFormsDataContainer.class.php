@@ -11,38 +11,16 @@
 */
 
 class jFormsDataContainer {
-   private $datas = array();
-   private $id;
-   private $formSelector;
+   public $datas = array();
+   public $id;
+   public $formSelector;
 
    function __construct($id, $formSelector){
       $this->id = $id;
       $this->formSelector =$formSelector;
    }
 
-   function getId(){
-      return $id;
-   }
-   
-   function getFormSelector(){
-      return $id;
-   }
-   
-   function setDatas($datas){
-      $this->datas = $datas;
-   }
-
-   function getDatas($datas){
-      return $this->datas;
-   }
-   function get($name){
-      return $this->datas[$name];
-   }
-   function set($name,$value){
-      $this->datas[$name]=$value;
-   }
-
-   function unset($name){
+   function unsetData($name){
       unset($this->datas[$name]);
    }
 

@@ -114,7 +114,7 @@ class jDatatypeString extends jDatatype {
  * Datatype Booléen
  */
 class jDatatypeBoolean extends jDatatype {
-  protected function _checkType($value) { return ($value == 'true' || $value=='false'); };
+  protected function _checkType($value) { return ($value == 'true' || $value=='false'); }
   protected function _checkValueFacets($value){ return true; }
   protected function _checkFacets($value){ return true; }
 }

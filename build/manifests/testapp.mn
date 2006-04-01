@@ -32,14 +32,20 @@ cd testapp/modules/testapp/daos
   config.dao.xml
 cd testapp/modules/testapp/controllers
   main.classic.php
+  forms.classic.php
 cd testapp/modules/testapp/templates
   hello.tpl
   main.tpl
-  blank.tpl
   error.tpl
   testzone.tpl
+  sommaire.tpl
+  sampleform.tpl
+  sampleformresult.tpl
 cd testapp/modules/testapp/zones
   test.zone.php
+  sommaire.zone.php
+cd testapp/modules/testapp/forms
+  sample.form.xml
 cd testapp/modules/unittest
   events.xml
   module.xml
@@ -69,3 +75,6 @@ cd testapp/var/config
   urls.xml
 cd testapp/var/themes/default/testapp
   main.tpl
+cd testapp/var/overloads/testapp/daos
+cd testapp/var/overloads/testapp/locales
+

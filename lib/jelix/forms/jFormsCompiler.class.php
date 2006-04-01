@@ -34,8 +34,9 @@ class jFormsCompiler implements jISimpleCompiler {
       */
 
       $source=array();
-      $source[]='<?php class '.$selector->getClass().' extends jForms {';
-      $source[]=' public function __construct(){';
+      $source[]='<?php class '.$selector->getClass().' extends jFormsBase {';
+      $source[]=' public function __construct($formSel,$id=0, $reset = false){';
+      $source[]='          parent::__construct($formSel,$id, $reset); ';
       foreach($xml->children() as $controltype=>$control){
 
          $class = 'jFormsControl'.$controltype;
@@ -103,7 +104,10 @@ class jFormsCompiler implements jISimpleCompiler {
          $source[]='$this->addControl($ctrl);';
       }
 
-      $source[]=' }';
+      $source[]='  }';
+
+      $source[]=' public function save(){ } ';
+
       $source[]='} ?>';
 
 

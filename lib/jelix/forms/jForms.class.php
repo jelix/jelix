@@ -11,114 +11,53 @@
 */
 
 define('JFORMS_ID_PARAM','__forms_id__');
-
-
+require_once(JELIX_LIB_FORMS_PATH.'jFormsBase.class.php');
+require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
+require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 /**
  * Classe abstraite pour gérer un formulaire
  */
-abstract class jForms {
+class jForms {
 
-   //------------- méthodes statiques
+   private function __construct(){ }
 
-   static public create($formSel){
-      $sel = new jSelectorForms($formSel);
+
+   public static function create($formSel , $idName=null)
+   {
+      $form = self::_getInstance($formSel,$idName, true);
+      return $form;
+   }
+
+   static public function get($formSel,$idName){
+      $form = self::_getInstance($formSel,$idName);
+      return $form;
+   }
+
+   static public function fill($formSel,$idName){
+      $form = self::_getInstance($formSel,$idName);
+      $form->initFromRequest();
+      return $form;
+   }
+
+
+   static protected function _getInstance($formSel, $idName, $reset=false){
+      global $gJCoord;
+
+      $sel = new jSelectorForm($formSel);
       jIncluder::inc($sel);
       $c = $sel->getClass();
-      return new $c;
-   }
 
-   static public get($formSel){
-      $form = self::create($formSel);
-      $form->initFromRequest($formSel);
-   }
 
-   static public destroy($formSel){
-      global $gJCoord;
-      $req = $gJCoord->request;
-      $id = $gJCoord->request->getParam(JFORMS_ID_PARAM);
-      if($id !== null &&  isset($_SESSION['JFORMS'][$id])){
-          unset($_SESSION['JFORMS'][$id];
+      if(empty($idName)){
+         $id = 0;
+      }else{
+         $id = $gJCoord->request->getParam($idName);
       }
+      $form = new $c($formSel,$id,$reset);
+
+      return $form;
    }
 
-   //---------------- membres non statiques
-
-   protected $_controls = array();
-   protected $_container=null;
-   protected $_readOnly = false;
-   protected $_errors;
-
-   public function __construct(){
-
-   }
-
-   protected function initFromRequest($formSel){
-      global $gJCoord;
-      $req = $gJCoord->request;
-      $this->_container = $this->getDataContainer($req->getParam(JFORMS_ID_PARAM),$formSel);
-      foreach($this->_controls as $name=>$ctrl){
-         $value = $req->getParam($name);
-         if($value !== null)
-            $this->_container->set($name, $value);
-      }
-   }
-
-   protected function getDataContainer($id==null, $formSel){
-      if($id === null || ! isset($_SESSION['JFORMS'][$id])){
-          $id=md5(uniqid(rand(), true));
-          $_SESSION['JFORMS'][$id]= new jFormsDataContainer($id, $formSel);
-      }
-      return $_SESSION['JFORMS'][$id];
-   }
-
-   /**
-   * @param $control jFormsControl
-   */
-   protected function addControl($control){
-      $this->_controls [$control->ref] = $control;
-   }
-
-   public function check(){
-      $this->_errors = array();
-      foreach($this->_controls as $name=>$ctrl){
-          $value=$this->_container->get($name);
-          if($value === null && $ctrl->required){
-            $this->_errors[$name]=2;
-          }elseif($ctrl->datatype->check($value)){
-            $this->_errors[$name]=1;
-          }
-      }
-      return count($this->errors) == 0:
-   }
-
-   abstract public function save();
-
-   public function setReadOnly($r = true){  $this->_readOnly = $r;  }
-
-   public function getErrors(){  return $this->_errors;  }
-
-   public function getDatas(){ return $this->_container->getDatas(); }
-
-}
-
-/**
- * Classe de gestion de formulaire basé sur un DAO
- */
-class jFormsDAO extends jForms {
-
-
-   public function __construct(){
-
-   }
-
-   public function save(){
-
-   }
-
-   public function init(){
-
-
-   }
 
 }
 

@@ -64,7 +64,9 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         '%code%' => $code,
         '%msg%'  => $errmsg,
         '%file%' => $filename,
-        '%line%' => $linenum
+        '%line%' => $linenum,
+        '\t' =>"\t",
+        '\n' => "\n"
     ));
 
     // traitement du message

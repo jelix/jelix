@@ -34,10 +34,10 @@ foreach($arrargv as $argv){
   if($argv{0} == '-'){
     $sw = substr(array_shift($_SERVER['argv']),1);
     if($sw{0} =='D'){
-      
+
     }else{
       $options['verbose'] = (strpos('v', $sw) !== false);
-    }    
+    }
   }else{
     break;
   }
@@ -74,11 +74,13 @@ foreach($script as $nbline=>$line){
   if(preg_match('!^(cd|sd|dd|\*)?\s+([a-zA-Z0-9\/.\-_]+)\s*(?:\(([a-zA-Z0-9\/.\-_]*)\))?\s*$!m', $line, $m)){
     if($m[1] == 'dd'){
       $currentdestdir = normalizeDir($m[2]);
+      createDir($distdir.$currentdestdir);
     }elseif($m[1] == 'sd'){
       $currentsrcdir = normalizeDir($m[2]);
     }elseif($m[1] == 'cd'){
       $currentsrcdir = normalizeDir($m[2]);
       $currentdestdir = normalizeDir($m[2]);
+      createDir($distdir.$currentdestdir);
     }else{
       if($m[2] == ''){
         echo "$ficlist : file required on line $nbline \n";
@@ -88,7 +90,6 @@ foreach($script as $nbline=>$line){
       if(!isset($m[3]) || $m[3]=='') $m[3]=$m[2];
 
       $destfile = $distdir.$currentdestdir.$m[3];
-      createDir(dirname($destfile));
 
       if($m[1]=='*'){
         if($options['verbose']){

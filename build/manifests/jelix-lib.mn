@@ -86,6 +86,14 @@ cd lib/jelix/events
   jEventListener.class.php
   jEventListenerFactory.class.php
 
+cd lib/jelix/forms
+   jForms.class.php
+   jFormsBase.class.php
+   jFormsCompiler.class.php
+   jFormsControl.class.php
+   jFormsDataContainer.class.php
+   jFormsDatasource.class.php
+
 cd lib/jelix/tpl/
 *  jTpl.class.php
 *  jTplCompiler.class.php
@@ -128,6 +136,7 @@ cd lib/jelix/utils/
   jLog.class.php
   jXmlRpc.class.php
   jZone.class.php
+  jDatatype.class.php
 
 cd lib/json
   JSON.php

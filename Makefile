@@ -10,12 +10,12 @@ JTPL_VERSION = $(shell cat lib/jelix/tpl/VERSION)
 endif
 
 ifeq ($(LIB_VERSION),SVN)
-SVN_REVISION = $(shell svn info | grep "Revision" | cut -d " " -f 2)
+SVN_REVISION = $(shell svn info | grep -E "Revision|Révision" -m 1 | cut -d ":" -f 2 | cut -d " " -f 2)
 LIB_VERSION=SVN-$(SVN_REVISION)
 endif
 
 ifeq ($(JTPL_VERSION),SVN)
-SVN_REVISION = $(shell svn info | grep "Revision" | cut -d " " -f 2)
+SVN_REVISION = $(shell svn info | grep -E "Revision|Révision" -m 1 | cut -d ":" -f 2  | cut -d " " -f 2)
 JTPL_VERSION=SVN-$(SVN_REVISION)
 endif
 
@@ -28,7 +28,18 @@ DISTHACKER="$(DIST)/jelix-svn"
 DISTJTPL="$(DIST)/jtpl"
 
 default:
-	@echo "target:  dist-all dist-jelix dist-testapp dist-myapp dev-all dev-jelix dev-myapp dev-testapp jtpl jtpl-dist"
+	@echo "target:  "
+	@echo "   dist-all dist-jelix dist-testapp dist-myapp"
+	@echo "   dev-all dev-jelix dev-jelix-lib dev-myapp dev-testapp"
+	@echo "   jtpl jtpl-dist"
+	@echo "paramètres facultatifs (valeurs actuelles) :"
+	@echo "   DIST : repertoire cible (" $(DIST) ")"
+	@echo "   LIB_VERSION : numéro de version de Jelix (" $(LIB_VERSION) ")"
+	@echo "   JTPL_VERSION : numéro de version de jtpl standalone (" $(JTPL_VERSION) ")"
+	@echo "répertoire de construction des projets:"
+	@echo "   distributions jelix testapp myapp : " $(DISTJELIX)
+	@echo "   developpement jelix testapp myapp : " $(DISTHACKER)
+	@echo "   distribution jtpl : " $(DISTJTPL)
 
 dist-all: dist-jelix dist-testapp dist-myapp jtpl-dist
 
