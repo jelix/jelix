@@ -3,6 +3,7 @@
 <ul>
    <li><a href="{jurl 'main_hello'}">Hello world en html</a></li>
    <li><a href="{jurl 'main_hello', array('output'=>'text')}">Hello world en texte</a></li>
+   <li><a href="{jurl 'main_hello2'}">Template Hello world surchargé</a></li>
    <li><a href="{jurl 'unittest~default_index'}">Tests unitaires</a></li>
 </ul>
 

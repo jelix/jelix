@@ -13,6 +13,8 @@ cd testapp/www
   .htaccess
   xmlrpc.php
   index.php
+cd testapp/www/design
+  screen.css
 cd testapp/www/jelix
   json.js
 cd testapp/www/jelix/styles
@@ -35,6 +37,7 @@ cd testapp/modules/testapp/controllers
   forms.classic.php
 cd testapp/modules/testapp/templates
   hello.tpl
+  hello2.tpl
   main.tpl
   error.tpl
   testzone.tpl
@@ -62,7 +65,7 @@ cd testapp/modules/unittest/locales/fr_FR
 cd testapp/modules/unittest/locales/en_US
   testunit.ISO-8859-1.properties
 cd testapp/modules/unittest/templates
-  accueil.tpl
+  menu.tpl
 cd testapp/modules/unittest/controllers
   default.classic.php
   urlsig.classic.php
@@ -74,7 +77,7 @@ cd testapp/var/config
   dbprofils.ini.php.dist
   urls.xml
 cd testapp/var/themes/default/testapp
-  main.tpl
+  hello2.tpl
 cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales
 

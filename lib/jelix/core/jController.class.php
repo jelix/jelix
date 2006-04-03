@@ -47,8 +47,8 @@ class jController{
        return $this->request->getParam($varName, $varDefaultValue, $useDefaultIfEmpty);
     }
 
-    protected function getResponse($name){
-        return $this->request->getResponse($name);
+    protected function getResponse($name, $useOriginal=false){
+        return $this->request->getResponse($name, $useOriginal);
     }
 
     protected function params(){ return $this->request->params; }

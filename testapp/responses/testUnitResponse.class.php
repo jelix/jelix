@@ -16,12 +16,18 @@ require_once (JELIX_LIB_RESPONSE_PATH.'jResponseHtml.class.php');
 class testUnitResponse extends jResponseHtml {
 
 
-    public $bodyTpl = 'unittest~accueil';
+    public $bodyTpl = 'testapp~main';
 
     protected function _commonProcess(){
        $this->title .= ($this->title !=''?' - ':'').' Test unitaires';
-       $this->addCSSLink('/unittest.css');
-    }
+
+       $tpl = new jTpl();
+       $this->body->assign('menu',$tpl->fetch('unittest~menu'));
+       $this->body->assignIfNone('MAIN','<p></p>');
+       $this->body->assign('page_title', 'Test unitaires sur Jelix');
+       $this->addCSSLink('design/screen.css');
+   }
+
 
 
 }

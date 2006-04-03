@@ -17,14 +17,15 @@ class myHtmlResponse extends jResponseHtml {
 
 
    public $bodyTpl = 'testapp~main';
-   public $bodyErrorTpl = 'testapp~error';
 
    // modifications communes aux actions utilisant cette reponses
    protected function _commonProcess(){
-       $this->title .= ($this->title !=''?' - ':'').' My Test App !';
+       $this->title .= ($this->title !=''?' - ':'').' Test App';
 
-       $this->body->assignIfNone('person','you');
+       $this->body->assignZone('menu','testapp~sommaire');
        $this->body->assignIfNone('MAIN','<p>No content</p>');
+       $this->body->assignIfNone('page_title','Test App');
+       $this->addCSSLink('design/screen.css');
    }
 }
 ?>

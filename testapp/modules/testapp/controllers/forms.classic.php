@@ -49,6 +49,7 @@ class CTForms extends jController {
       $tpl = new jTpl();
       $tpl->assign('form', $form->getContainer());
       $rep->body->assign('MAIN',$tpl->fetch('sampleform'));
+      $rep->body->assign('page_title','formulaires');
 
       return $rep;
    }
@@ -73,8 +74,7 @@ class CTForms extends jController {
       $tpl->assign('nom', $datas['nom']);
       $tpl->assign('prenom', $datas['prenom']);
 
-
-
+      $rep->body->assign('page_title','formulaires');
       $rep->body->assign('MAIN',$tpl->fetch('sampleformresult'));
       return $rep;
    }

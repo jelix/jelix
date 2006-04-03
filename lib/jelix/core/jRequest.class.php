@@ -42,8 +42,8 @@ abstract class jRequest {
         $this->_initUrlDatas();
         $this->_initParams();
     }
-    
-    
+
+
     abstract protected function _initParams();
 
     protected function _initUrlDatas(){
@@ -101,17 +101,25 @@ abstract class jRequest {
             return true;
     }
 
-    public function getResponse($type=''){
-        global $gJCoord, $gJConfig;
+    public function getResponse($type='', $useOriginal = false){
+        global $gJCoord, $gJConfig, $gDefaultConfig;
         if($type == ''){
             $type = $this->defaultResponseType;
         }
 
-        if(!isset($gJConfig->responses[$type])){
-            trigger_error(jLocale::get('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
-            return null;
+        if($useOriginal){
+            if(!isset($gDefaultConfig->responses[$type])){
+               trigger_error(jLocale::get('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
+               return null;
+            }
+            $respclass = $gDefaultConfig->responses[$type];
+        }else{
+            if(!isset($gJConfig->responses[$type])){
+               trigger_error(jLocale::get('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
+               return null;
+            }
+            $respclass = $gJConfig->responses[$type];
         }
-        $respclass = $gJConfig->responses[$type];
         if(file_exists($path=JELIX_LIB_RESPONSE_PATH.$respclass.'.class.php')){
            require_once ($path);
         }elseif(file_exists($path=JELIX_APP_PATH.'responses/'.$respclass.'.class.php')){

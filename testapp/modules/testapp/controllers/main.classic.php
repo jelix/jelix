@@ -16,18 +16,18 @@ class CTMain extends jController {
 
       $rep = $this->getResponse('html');
       $rep->title = 'Accueil de TestApp';
-      $rep->body->assignZone('MAIN','sommaire');
+      $rep->body->assign('page_title','Test App');
+      $rep->body->assign('MAIN','<p>Bienvenue sur cette application de test</p>');
       return $rep;
    }
 
    function hello(){
 
       if($this->param('output') == 'text'){
-         $rep = $this->getResponse('text');
+         $rep = $this->getResponse('text', true);
          $rep->content = 'Hello World !';
       }else{
-
-         $rep = $this->getResponse('html');
+         $rep = $this->getResponse('html',true);
          $rep->title = 'Hello From Jelix !';
          $rep->bodyTpl = 'testapp~hello';
          $rep->body->assign('person', $this->param('person','You'));
@@ -37,6 +37,14 @@ class CTMain extends jController {
       return $rep;
    }
 
+   function hello2(){
+
+      $rep = $this->getResponse('html',true);
+      $rep->title = 'Hello 2 From Jelix !';
+      $rep->bodyTpl = 'testapp~hello2';
+
+      return $rep;
+   }
 
    function testdao(){
     if( $id=$this->param('newid')){

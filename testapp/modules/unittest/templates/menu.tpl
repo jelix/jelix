@@ -1,8 +1,4 @@
-<h1>Test unitaires sur Jelix</h1>
-
-
-<div id="menu">
-
+<h2>Tests unitaires</h2>
 <h3>jEvent</h3>
 <ul>
     <li><a href="?module=unittest&amp;action=testevent">lancer deux évènements</a></li>
@@ -15,9 +11,4 @@
     <li><a href="?module=unittest&amp;action=testurlparse">Tester l'analyse d'url</a></li>
 </ul>
 
-</div>
-
-<div id="content">
-{$MAIN}
-
-</div>
+<p><a href="?">Retour à l'accueil</a></p>
