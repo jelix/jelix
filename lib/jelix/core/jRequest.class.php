@@ -108,11 +108,11 @@ abstract class jRequest {
         }
 
         if($useOriginal){
-            if(!isset($gDefaultConfig->responses[$type])){
+            if(!isset($gDefaultConfig['responses'][$type])){
                trigger_error(jLocale::get('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
                return null;
             }
-            $respclass = $gDefaultConfig->responses[$type];
+            $respclass = $gDefaultConfig['responses'][$type];
         }else{
             if(!isset($gJConfig->responses[$type])){
                trigger_error(jLocale::get('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
