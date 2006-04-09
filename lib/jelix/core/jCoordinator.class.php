@@ -47,7 +47,7 @@ class jCoordinator {
      * @var string
      */
     public $actionName;
-    
+
     /**
      * List of all errors
      * @var array
@@ -117,7 +117,7 @@ class jCoordinator {
                 return true;
         }
         return !$this->response->acceptSeveralErrors();
-    }    
+    }
 
     /**
     * Fonction principale du coordinateur à appeler dans le index.php pour démarrer
@@ -185,7 +185,7 @@ class jCoordinator {
         }*/
 
         if($this->response == null){
-            trigger_error(jLocale::get('jelix~errors.response.missing',$selector->toString()), E_USER_ERROR);
+            trigger_error(jLocale::get('jelix~errors.response.missing',$this->action->toString()), E_USER_ERROR);
             return;
         }
 
@@ -254,7 +254,7 @@ class jCoordinator {
         }
 
         $this->response = new $respclass();
-        
+
         return false;
     }
 

@@ -35,8 +35,8 @@ class jFormsCompiler implements jISimpleCompiler {
 
       $source=array();
       $source[]='<?php class '.$selector->getClass().' extends jFormsBase {';
-      $source[]=' public function __construct($formSel,$id=0, $reset = false){';
-      $source[]='          parent::__construct($formSel,$id, $reset); ';
+      $source[]=' public function __construct(&$container, $reset = false){';
+      $source[]='          parent::__construct($container, $reset); ';
       foreach($xml->children() as $controltype=>$control){
 
          $class = 'jFormsControl'.$controltype;

@@ -17,23 +17,13 @@
  */
 abstract class jFormsBase {
 
-   protected $_id;
-   protected $_selector;
    protected $_controls = array();
    protected $_container=null;
    protected $_readOnly = false;
    protected $_errors;
 
-   public function __construct($formSel,$id=0, $reset = false){
-      if($id == null) $id=0;
-
-      if(!isset($_SESSION['JFORMS'][$formSel][$id]) || $reset){
-          $_SESSION['JFORMS'][$formSel][$id]= new jFormsDataContainer($formSel, $id);
-      }
-
-      $this->_container = & $_SESSION['JFORMS'][$formSel][$id];
-      $this->_id = $id;
-      $this->_selector = $formSel;
+   public function __construct(&$container, $reset = false){
+      $this->_container = & $container;
    }
 
    public function initFromRequest(){
@@ -77,6 +67,7 @@ abstract class jFormsBase {
 
    public function getDatas(){ return $this->_container->datas; }
    public function getContainer(){ return $this->_container; }
+   public function id(){ return $this->_container->id; }
 
 }
 

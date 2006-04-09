@@ -10,30 +10,19 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class CTForms extends jController {
+class CTSampleForm extends jController {
 
   function newform(){
       // création d'un formulaire vierge
       $form = jForms::create('sample');
       $rep= $this->getResponse("redirect");
-      $rep->action="forms_show";
-      $rep->params['id']= $form->id();
+      $rep->action="sampleform_show";
       return $rep;
   }
 
-
-  function edit(){
-     $form = jForms::create('sample', $this->param('id'));
-     // remplissage...
-     $rep= $this->getResponse("redirect");
-     $rep->action="forms_show";
-     $rep->params['id']= $form->id();
-     return $rep;
-  }
-
   function show(){
-      // recupère les données du formulaire dont l'id est dans le paramètre id
-      $form = jForms::get('sample','id');
+      // recupère les données du formulaire
+      $form = jForms::get('sample');
 
       $rep = $this->getResponse('html');
       $rep->title = 'Edition d\'un formulaire';
@@ -47,17 +36,17 @@ class CTForms extends jController {
    }
 
    function save(){
-      // récuper le formulaire dont l'id est dans le paramètre id
+      // récuper le formulaire
       // et le rempli avec les données reçues de la requête
-      $form = jForms::fill('sample','id');
+      $form = jForms::fill('sample');
 
       $rep= $this->getResponse("redirect");
-      $rep->action="forms_ok";
+      $rep->action="sampleform_ok";
       return $rep;
    }
 
    function ok(){
-      $form = jForms::get('sample','id');
+      $form = jForms::get('sample');
       $datas=$form->getContainer()->datas;
 
       $rep = $this->getResponse('html');
@@ -68,6 +57,25 @@ class CTForms extends jController {
 
       $rep->body->assign('page_title','formulaires');
       $rep->body->assign('MAIN',$tpl->fetch('sampleformresult'));
+      return $rep;
+   }
+
+   function destroy(){
+      jForms::destroy('sample');
+      $rep= $this->getResponse("redirect");
+      $rep->action="sampleform_status";
+      return $rep;
+   }
+
+   function status(){
+      $rep = $this->getResponse('html');
+      $rep->title = 'Etat des données formulaire';
+
+      $rep->body->assign('page_title','formulaires');
+
+      $content='<h1>Données en session des formulaires</h1>';
+      $content.='<pre>'.htmlspecialchars(var_export($_SESSION['JFORMS'],true)).'</pre>';
+      $rep->body->assign('MAIN',$content);
       return $rep;
    }
 

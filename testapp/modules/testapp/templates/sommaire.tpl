@@ -7,9 +7,22 @@
    <li><a href="{jurl 'unittest~default_index'}">Tests unitaires</a></li>
 </ul>
 
-<p>Exemples formulaires :</p>
-
+<h3>Formulaires</h3>
 <ul>
-   <li><a href="{jurl 'forms_newform'}">Nouveau formulaire</a></li>
+   <li><a href="{jurl 'sampleform_status'}">données session</a></li>
+</ul>
+<p>formulaire simple (singleton)</p>
+<ul>
+   <li><a href="{jurl 'sampleform_newform'}">Nouveau formulaire</a></li>
+   <li><a href="{jurl 'sampleform_show'}">voir le formulaire</a></li>
+   <li><a href="{jurl 'sampleform_ok'}">Resultats</a></li>
+   <li><a href="{jurl 'sampleform_destroy'}">détruire le formulaire</a></li>
 </ul>
 
+<p>formulaire différencié (multiples instances)</p>
+<!--<ul>
+   <li><a href="{jurl 'productform_newform'}">Nouveau produit</a></li>
+   <li><a href="{jurl 'productform_show'}">voir le formulaire</a></li>
+   <li><a href="{jurl 'productform_ok'}">Resultats</a></li>
+   <li><a href="{jurl 'productform_destroy'}">détruire le formulaire</a></li>
+</ul>-->

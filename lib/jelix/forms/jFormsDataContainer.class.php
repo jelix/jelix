@@ -15,7 +15,7 @@ class jFormsDataContainer {
    public $id;
    public $formSelector;
 
-   function __construct($id, $formSelector){
+   function __construct($formSelector,$id){
       $this->id = $id;
       $this->formSelector =$formSelector;
    }

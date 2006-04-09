@@ -35,6 +35,7 @@ cd testapp/modules/testapp/daos
 cd testapp/modules/testapp/controllers
   main.classic.php
   forms.classic.php
+  sampleform.classic.php
 cd testapp/modules/testapp/templates
   hello.tpl
   hello2.tpl
