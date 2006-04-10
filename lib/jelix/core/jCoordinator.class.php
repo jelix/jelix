@@ -134,12 +134,12 @@ class jCoordinator {
         $this->moduleName = $this->request->getParam('module');
         $this->actionName = $this->request->getParam('action');
 
-        if($this->moduleName === null){
+        if(empty($this->moduleName)){
             $this->moduleName = $gJConfig->defaultModule;
-            if($this->actionName === null)
+            if(empty($this->actionName))
                $this->actionName = $gJConfig->defaultAction;
         }
-        if($this->actionName === null){
+        if(empty($this->actionName)){
             $this->actionName = 'default_index';
         }
 
