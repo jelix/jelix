@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
    <datasources>
-      <primarytable name="jlx_config" primarykey="cfg_key" />
+      <primarytable name="myconfig" primarykey="cfg_key" />
    </datasources>
    <record>
       <property name="ckey"   fieldname="cfg_key" datatype="string" required="true" />

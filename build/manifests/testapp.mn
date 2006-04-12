@@ -32,6 +32,7 @@ cd testapp/modules/testapp/locales/fr_FR
   parameter.ISO-8859-1.properties
 cd testapp/modules/testapp/daos
   config.dao.xml
+  testnews.dao.xml
 cd testapp/modules/testapp/controllers
   main.classic.php
   forms.classic.php

@@ -5,3 +5,16 @@
 
 
 <p><a href="{jurl 'main_index'}">Retour au sommaire</a></p>
+
+<!--
+<p>Link to actions:</p>
+<ul>
+<li> "testapp~main_index@classic" : {jurl "testapp~main_index@classic"}</li>
+<li> "main_index@classic": {jurl "main_index@classic"}</li>
+<li> "main_index" : {jurl "main_index"}</li>
+<li> "testapp~main_" : {jurl "testapp~main_"}</li>
+<li> "testapp~#" : {jurl "testapp~#"}</li>
+<li> "#~#" : {jurl "#~#"}</li>
+<li> "@" : {jurl "@"}</li>
+</ul>
+-->
