@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+  <datasources>
+     <primarytable name="hd_news"           primarykey="news_id" />
+     <foreigntable name="hd_news_rubriques" primarykey="news_rubriques_id" onforeignkey="news_rubrique" />
+  </datasources>
+  <record>
+     <property name="id"          fieldname="news_id"            datatype="autoincrement" required="yes" />
+     <property name="titre"       fieldname="news_titre"         datatype="string"        required="yes" />
+     <property name="description" fieldname="news_description"   datatype="string"        required="yes" />
+     <property name="texte"       fieldname="news_texte"         datatype="string"        required="yes" />
+     <property name="auteur"      fieldname="news_auteur"        datatype="string"        required="yes" />
+     <property name="date"        fieldname="news_date"          datatype="date"          required="yes" />
+     <property name="valider"     fieldname="news_valider"       datatype="integer"       required="yes" />
+     <property name="rubrique"    fieldname="news_rubriques_nom" table="hd_news_rubriques" datatype="string" required="yes" />
+  </record>
+  <factory>
+    <method name="getById" type="selectfirst">
+        <parameter name="id" />
+        <conditions>
+            <eq property="id" expr="$id" />
+        </conditions>
+    </method>
+    <method name="findLastById" type="select">
+        <parameter name="limit" />
+        <conditions>
+            <eq property="valider" value="3" />
+        </conditions>
+        <order>
+            <orderitem property="date" way="desc" />
+        </order>
+        <limit offset="0" count="$limit" />
+    </method>
+  </factory>
+</dao>

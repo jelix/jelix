@@ -130,6 +130,12 @@ class jDAOParser {
       if($typetable){ // pour les foreigntable et optionalforeigntable
           if($infos['onforeignkey'] === null)
               $this->_compiler->doDefError ('foreignkey.missing');
+          $infos['fk']=explode(',',$infos['onforeignkey']);
+          unset($infos['onforeignkey']);
+          if(count($infos['fk']) == 0 || $infos['fk'][0] == '')
+             $this->_compiler->doDefError ('foreignkey.missing');
+          if(count($infos['fk']) != count($infos['pk']))
+             $this->_compiler->doDefError ('foreignkey.missing');
           if($typetable == 1){
              $this->_ijoins[]=$infos['name'];
           }else{

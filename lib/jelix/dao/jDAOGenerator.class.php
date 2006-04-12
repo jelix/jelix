@@ -345,14 +345,22 @@ class jDAOGenerator {
 
          if ($driverName == 'oci8') {
             if($tablejoin[1] == 0){
-               $fieldjoin=$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'].'(+)';
+               $operand='='; $opafter='(+)';
             }elseif($tablejoin[1] == 1){
-               $fieldjoin=$primarytable['name'].'.'.$table['onforeignkey'].'(+)='.$table['name'].'.'.$table['primarykey'];
+               $operand='(+)='; $opafter='';
+            }
+            $fieldjoin='';
+            foreach($table['fk'] as $k => $fk){
+               $fieldjoin.=' AND '.$primarytable['name'].'.'.$fk.$operand.$table['name'].'.'.$table['pk'][$k].$opafter;
             }
             $sqlFrom.=', '.$r;
-            $sqlWhere.=' AND '.$fieldjoin;
+            $sqlWhere.=$fieldjoin;
          }else{
-            $fieldjoin=$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'];
+            foreach($table['fk'] as $k => $fk){
+               $fieldjoin.=' AND '.$primarytable['name'].'.'.$fk.'='.$table['name'].'.'.$table['pk'][$k];
+            }
+            $fieldjoin=substr($fieldjoin,4);
+            //$fieldjoin=$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'];
             if($tablejoin[1] == 0){
                $sqlFrom.=' LEFT JOIN '.$r.' ON ('.$fieldjoin.')';
             }elseif($tablejoin[1] == 1){
@@ -367,7 +375,11 @@ class jDAOGenerator {
             $sqlFrom .=', '.$table['realname'].$aliaslink.$table['name'];
         else
             $sqlFrom .=', '.$table['realname'];
-         $sqlWhere.=' AND '.$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'];
+
+        foreach($table['fk'] as $k => $fk){
+           $sqlWhere.=' AND '.$primarytable['name'].'.'.$fk.'='.$table['name'].'.'.$table['pk'][$k];
+        }
+         //$sqlWhere.=' AND '.$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'];
       }
 
       $sqlWhere=($sqlWhere !='') ? ' WHERE '.substr($sqlWhere,4) :'';
