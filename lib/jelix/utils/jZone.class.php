@@ -146,6 +146,7 @@ class jZone {
     function _createContent (){
         if($this->_tplname != ''){
             $this->_tpl = new jTpl();
+            $this->_tpl->assign($this->_params);
             $this->_prepareTpl();
             return $this->_tpl->fetch($this->_tplname);
         }
