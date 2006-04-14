@@ -16,6 +16,11 @@ cd lib/jelix/auth
   jAuth.class.php
   jAuthDriverDb.class.php
 
+cd lib/jelix/acl
+  jAcl.class.php
+  jAclUserGroup.class.php
+  jAclManager.class.php
+
 cd lib/jelix/core
   jConfig.class.php
   jContext.class.php
@@ -204,6 +209,20 @@ cd lib/jelix-modules/auth/templates
   login.form.tpl
 cd lib/jelix-modules/auth/daos
   jelixuser.dao.xml
+cd lib/jelix-modules/acl
+   module.xml
+cd lib/jelix-modules/acl/daos
+   jaclgroup.dao.xml
+   jaclrights.dao.xml
+   jaclrightvalues.dao.xml
+   jaclrightvaluesgroup.dao.xml
+   jaclsubject.dao.xml
+   jaclusergroup.dao.xml
+cd lib/jelix-modules/acl/install/sql
+  delete.mysql.sql
+  install.mysql.sql
+
+
 cd lib/jelix-plugins
   LICENCE
   INSTALL
