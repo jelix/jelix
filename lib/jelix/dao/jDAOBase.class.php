@@ -71,6 +71,24 @@ abstract class jDAORecordBase {
       }
       return $errors;
    }
+
+   public function setPk(){
+      $args=func_get_args();
+      if(count($args) == 0) throw new jException('jelix~dao.error.keys.missing');
+      if(count($args)==1 && is_array($args[0])){
+            $args=$args[0];
+      }
+      $i=0;
+      foreach($this->_properties as $prop=>$infos){
+         if($infos['isPk']){
+            if($i>= count($args))
+               throw new jException('jelix~dao.error.keys.missing');
+            $this->$prop = $args[$i++];
+         }
+      }
+      return true;
+   }
+
 }
 
 
@@ -111,6 +129,9 @@ abstract class jDAOFactoryBase  {
 
    public function get(){
       $args=func_get_args();
+      if(count($args)==1 && is_array($args[0])){
+         $args=$args[0];
+      }
       $keys = array_combine($this->_pkFields,$args );
 
       if($keys === false){
@@ -127,6 +148,9 @@ abstract class jDAOFactoryBase  {
 
    public function delete(){
       $args=func_get_args();
+      if(count($args)==1 && is_array($args[0])){
+         $args=$args[0];
+      }
       $keys = array_combine($this->_pkFields, $args);
       if($keys === false){
          throw new jException('jelix~dao.error.keys.missing');

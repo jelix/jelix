@@ -333,6 +333,7 @@ class jDAOMethod {
    public $type;
    private $_conditions = null;
    private $_parameters   = array();
+   private $_parametersDefaultValues = array();
    private $_limit = null;
    private $_values = array();
    private $_def = null;
@@ -358,6 +359,9 @@ class jDAOMethod {
                   $this->_def->_compiler->doDefError('method.parameter.unknowname', array($this->name));
             }
             $this->_parameters[]=(string)$attr['name'];
+            if (isset ($attr['default'])){
+               $this->_parametersDefaultValues[(string)$attr['name']]=(string)$attr['default'];
+            }
          }
       }
 
@@ -419,6 +423,7 @@ class jDAOMethod {
 
    public function getConditions (){ return $this->_conditions;}
    public function getParameters (){ return $this->_parameters;}
+   public function getParametersDefaultValues (){ return $this->_parametersDefaultValues;}
    public function getLimit (){ return $this->_limit;}
    public function getValues (){ return $this->_values;}
    public function getProcStock (){ return $this->_procstock;}
@@ -470,8 +475,8 @@ class jDAOMethod {
 
 
    private $_op = array('eq'=>'=', 'neq'=>'<>', 'lt'=>'<', 'gt'=>'>', 'like'=>'LIKE',
-       'isnull'=>'IS NULL', 'isnotnull'=>'IS NOT NULL');
-      // 'between'=>'BETWEEN',  'notbetween'=>'NOT BETWEEN','in'=>'IN', 'notin'=>'NOT IN',
+       'isnull'=>'IS NULL', 'isnotnull'=>'IS NOT NULL','in'=>'IN', 'notin'=>'NOT IN');
+      // 'between'=>'BETWEEN',  'notbetween'=>'NOT BETWEEN',
 
    private $_attrcond = array('property', 'value', 'expr'); //, 'min', 'max', 'exprmin', 'exprmax'
 
@@ -487,11 +492,7 @@ class jDAOMethod {
 
       $operator = $this->_op[$op];
 
-
-
       $props = $this->_def->getProperties();
-
-
 
       if (!isset ($props[$field_id])){
          $this->_def->_compiler->doDefError('method.property.unknown', array($this->name, $field_id));
@@ -513,6 +514,9 @@ class jDAOMethod {
       }else if($attr['expr']!==null){
          if($op == 'isnull' || $op =='isnotnull'){
             $this->_def->_compiler->doDefError('method.condition.valueexpr.notallowed', array($this->name, $op, $field_id));
+         }
+         if(($op == 'in' || $op =='notin')&& !preg_match('/^\$[a-zA-Z0-9]+$/', $attr['expr'])){
+            $this->_def->_compiler->doDefError('method.condition.innotin.bad.expr', array($this->name, $op, $field_id));
          }
          $this->_conditions->addCondition ($field_id, $operator, $attr['expr'], true);
       }else{

@@ -217,8 +217,19 @@ class jDAOGenerator {
 
       foreach($this->_datasParser->getMethods() as $name=>$method){
 
-         $mparam=implode(', $',$method->getParameters());
-         if($mparam != '') $mparam ='$'.$mparam;
+         $defval = $method->getParametersDefaultValues();
+         if(count($defval)){
+            $mparam='';
+            foreach($method->getParameters() as $param){
+               $mparam.=', $'.$param;
+               if(isset($defval[$param]))
+                  $mparam.='=\''.str_replace("'","\'",$defval[$param]).'\'';
+            }
+            $mparam = substr($mparam,1);
+         }else{
+            $mparam=implode(', $',$method->getParameters());
+            if($mparam != '') $mparam ='$'.$mparam;
+         }
 
          $src[] = ' function '.$method->name.' ('. $mparam.'){';
 
@@ -626,14 +637,30 @@ class jDAOGenerator {
 
             $r .= $f.' '.$cond['operator'].' ';
 
+            if($cond['operator'] == 'IN' || $cond['operator'] == 'NOT IN'){
+               if($cond['expr']){
+                  $phpvalue= $this->_preparePHPValue('$e', $prop->datatype, false);
+                  if(strpos($phpvalue,'$this->_conn->quote')===0){
+                     $phpvalue = str_replace('$this->_conn->quote(',"'\''.str_replace('\\'','\\\\\\'',",$phpvalue).".'\''";
+                     $phpvalue = str_replace('\\','\\\\', $phpvalue);
+                     $phpvalue = str_replace('\'','\\\'', $phpvalue);
+                  }
+                  $phpvalue = 'implode(\',\', array_map( create_function(\'$e\',\'return '.$phpvalue.';\'), '.$cond['expr'].'))';
+                  $value= '(\'.'.$phpvalue.'.\')';
 
-            if($cond['expr']){
-                $value=$cond['value'];
-                foreach($params as $param){
-                    $value = str_replace('$'.$param, '\'.'.$this->_preparePHPValue('$'.$param, $prop->datatype, false).'.\'',$value);
-                }
+               }else{
+                  $value= '(\'.'.$cond['value'].'.\')';
+               }
             }else{
-                $value= '\'.'.$this->_preparePHPValue('\''.$cond['value'].'\'', $prop->datatype,false).'.\'';
+
+               if($cond['expr']){
+                  $value=$cond['expr'];
+                  foreach($params as $param){
+                     $value = str_replace('$'.$param, '\'.'.$this->_preparePHPValue('$'.$param, $prop->datatype, false).'.\'',$value);
+                  }
+               }else{
+                  $value= '\'.'.$this->_preparePHPValue('\''.$cond['value'].'\'', $prop->datatype,false).'.\'';
+               }
             }
             $r.=$value;
 
@@ -691,7 +718,7 @@ class jDAOGenerator {
             }
             break;
          default:
-            $value ='$this->_conn->quote ('.$value.')';
+            $value ='$this->_conn->quote('.$value.')';
       }
       return $value;
    }

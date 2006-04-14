@@ -161,6 +161,8 @@
                <element name="gteq"><ref name="method.condition.attr" /></element>
                <element name="isnull"><ref name="method.condition.attr.null" /></element>
                <element name="notisnull"><ref name="method.condition.attr.null" /></element>
+               <element name="in"><ref name="method.condition.attr" /></element>
+               <element name="notin"><ref name="method.condition.attr" /></element>
                <ref name="method.conditions" />
             </choice>
          </oneOrMore>
