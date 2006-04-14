@@ -106,7 +106,7 @@ class jFormsCompiler implements jISimpleCompiler {
 
       $source[]='  }';
 
-      $source[]=' public function save(){ } ';
+      //$source[]=' public function save(){ } ';
 
       $source[]='} ?>';
 

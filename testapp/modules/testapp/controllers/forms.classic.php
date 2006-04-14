@@ -17,13 +17,13 @@ class CTForms extends jController {
       $form = jForms::create('sample');
       $rep= $this->getResponse("redirect");
       $rep->action="forms_show";
-      $rep->params['id']= $form->id();
+      $rep->params['fid']= $form->id();
       return $rep;
   }
 
 
   function edit(){
-     $form = jForms::create('sample', $this->param('id'));
+     $form = jForms::create('sample', $this->param('newsid'));
      // remplissage...
      $rep= $this->getResponse("redirect");
      $rep->action="forms_show";
@@ -33,7 +33,7 @@ class CTForms extends jController {
 
   function show(){
       // recupère les données du formulaire dont l'id est dans le paramètre id
-      $form = jForms::get('sample','id');
+      $form = jForms::get('sample','fid');
 
       $rep = $this->getResponse('html');
       $rep->title = 'Edition d\'un formulaire';
@@ -49,7 +49,7 @@ class CTForms extends jController {
    function save(){
       // récuper le formulaire dont l'id est dans le paramètre id
       // et le rempli avec les données reçues de la requête
-      $form = jForms::fill('sample','id');
+      $form = jForms::fill('sample','fid');
 
       $rep= $this->getResponse("redirect");
       $rep->action="forms_ok";

@@ -22,55 +22,61 @@ class jForms {
    private function __construct(){ }
 
 
-   public static function create($formSel , $id=null)
+   public static function create($formSel , $userId=null)
    {
-      $form = self::_getInstance($formSel,$id, true);
-      return $form;
-   }
-
-   static public function get($formSel,$idName=''){
-      global $gJCoord;
-      if(empty($idName)){
-         $id = 0;
-      }else{
-         $id = $gJCoord->request->getParam($idName);
-      }
-      $form = self::_getInstance($formSel,$id);
-      return $form;
-   }
-
-   static public function fill($formSel,$idName=''){
-      $form = self::get($formSel,$idName);
-      $form->initFromRequest();
-      return $form;
-   }
-
-
-   static protected function _getInstance($formSel, $id, $reset=false){
       $sel = new jSelectorForm($formSel);
       jIncluder::inc($sel);
       $c = $sel->getClass();
 
-      if($id == null) $id=0;
-      if(!isset($_SESSION['JFORMS'][$formSel][$id]) || $reset){
-          $_SESSION['JFORMS'][$formSel][$id]= new jFormsDataContainer($formSel, $id);
+      if($userId == null)
+         $userId=0;
+      $internalId = md5($userId);
+
+      if(!isset($_SESSION['JFORMS'][$formSel][$internalId])){
+          $_SESSION['JFORMS'][$formSel][$internalId]= new jFormsDataContainer($formSel, $internalId, $userId);
+      }
+      $form = new $c($_SESSION['JFORMS'][$formSel][$internalId],true);
+      return $form;
+   }
+
+   static public function get($formSel,$internalIdName=''){
+      global $gJCoord;
+      if(empty($internalIdName)){
+         $internalId = 0;
+      }else{
+         $internalId = $gJCoord->request->getParam($internalIdName);
+         if($internalId == null) $internalId=0;
       }
 
-      $form = new $c($_SESSION['JFORMS'][$formSel][$id],$reset);
+      if(!isset($_SESSION['JFORMS'][$formSel][$internalId])){
+          return null;
+      }
+
+      $sel = new jSelectorForm($formSel);
+      jIncluder::inc($sel);
+      $c = $sel->getClass();
+      $form = new $c($_SESSION['JFORMS'][$formSel][$internalId],false);
 
       return $form;
    }
 
-   static public function destroy($formSel,$idName=''){
+   static public function fill($formSel,$internalIdName=''){
+      $form = self::get($formSel,$internalIdName);
+      $form->initFromRequest();
+      return $form;
+   }
+
+   static public function destroy($formSel,$internalIdName=''){
       global $gJCoord;
-      if(empty($idName)){
-         $id = 0;
+      if(empty($internalIdName)){
+         $internalId = 0;
       }else{
-         $id = $gJCoord->request->getParam($idName,0);
+         $internalId = $gJCoord->request->getParam($internalIdName);
+         if($internalId == null) $internalId=0;
       }
 
-      if(isset($_SESSION['JFORMS'][$formSel][$id])){
-          unset($_SESSION['JFORMS'][$formSel][$id]);
+      if(isset($_SESSION['JFORMS'][$formSel][$internalId])){
+          unset($_SESSION['JFORMS'][$formSel][$internalId]);
       }
    }
 

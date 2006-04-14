@@ -59,7 +59,27 @@ abstract class jFormsBase {
       return count($this->errors) == 0;
    }
 
-   abstract public function save();
+   public function initFromDao($daoSelector){
+      $dao = jDAO::create($daoSelector);
+      $daorec = $dao->get($this->_container->userId);
+      foreach($this->_controls as $name=>$ctrl){
+          $this->_container->datas[$name] = $daorec->$name;
+      }
+   }
+
+   public function saveToDao($daoSelector){
+      $dao = jDAO::create($daoSelector);
+      $daorec = jDAO::createRecord($daoSelector);
+      foreach($this->_controls as $name=>$ctrl){
+          $daorec->$name = $this->_container->datas[$name];
+      }
+      if($this->_container->userId){
+         $daorec->setPk($this->_container->userId);
+         $dao->update($daorec);
+      }else{
+         $dao->insert($daorec);
+      }
+   }
 
    public function setReadOnly($r = true){  $this->_readOnly = $r;  }
 
@@ -67,29 +87,9 @@ abstract class jFormsBase {
 
    public function getDatas(){ return $this->_container->datas; }
    public function getContainer(){ return $this->_container; }
-   public function id(){ return $this->_container->id; }
+   public function id(){ return $this->_container->internalId; }
 
 }
 
-/**
- * Classe de gestion de formulaire basé sur un DAO
- */
-class jFormsDAO extends jFormsBase {
-
-
-   public function __construct(){
-
-   }
-
-   public function save(){
-
-   }
-
-   public function init(){
-
-
-   }
-
-}
 
 ?>

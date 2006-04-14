@@ -12,11 +12,13 @@
 
 class jFormsDataContainer {
    public $datas = array();
-   public $id;
+   public $internalId;
+   public $userId;
    public $formSelector;
 
-   function __construct($formSelector,$id){
-      $this->id = $id;
+   function __construct($formSelector,$internalId, $userId){
+      $this->internalId = $internalId;
+      $this->userId = $userId;
       $this->formSelector =$formSelector;
    }
 
@@ -27,7 +29,6 @@ class jFormsDataContainer {
    function clear(){
       $this->datas=array();
    }
-
 
 }
 
