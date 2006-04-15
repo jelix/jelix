@@ -101,10 +101,10 @@ class jDateTime{
                $str = strftime($lf, $t);
                break;
            case self::BD_DFORMAT:
-               $str = sprintf('%04d-%02d-%04d', $this->year, $this->month, $this->day);
+               $str = sprintf('%04d-%02d-%02d', $this->year, $this->month, $this->day);
                break;
            case self::BD_DTFORMAT:
-               $str = sprintf('%04d-%02d-%04d %02d:%02d:%02d', $this->year, $this->month, $this->day, $this->hour, $this->minute, $this->second);
+               $str = sprintf('%04d-%02d-%02d %02d:%02d:%02d', $this->year, $this->month, $this->day, $this->hour, $this->minute, $this->second);
                break;
            case self::BD_TFORMAT:
                $str = sprintf('%02d:%02d:%02d', $this->hour, $this->minute, $this->second);
@@ -221,11 +221,13 @@ class jDateTime{
     }
 
     /**
-     * @param jDateTime $dt la date à ajouter
+     * @param jDateTime $dt la durée à ajouter
      */
     public function add($dt){
-       $t = mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year )
-           + mktime ( $dt->hour, $dt->minute,$dt->second , $dt->month, $dt->day, $dt->year );
+
+        $t = mktime ( $this->hour +  $dt->hour, $this->minute + $dt->minute, $this->second + $dt->second ,
+             $this->month + $dt->month, $this->day + $dt->day, $this->year + $dt->year);
+
         $t = getdate ($t);
         $this->year = $t['year'];
         $this->month = $t['mon'];
@@ -236,11 +238,12 @@ class jDateTime{
     }
 
     /**
-     * @param jDateTime $dt la date à enlever
+     * @param jDateTime $dt la durée à enlever
      */
     public function sub($dt){
-       $t = mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year )
-           - mktime ( $dt->hour, $dt->minute,$dt->second , $dt->month, $dt->day, $dt->year );
+        $t = mktime ( $this->hour -  $dt->hour, $this->minute - $dt->minute, $this->second - $dt->second ,
+             $this->month - $dt->month, $this->day - $dt->day, $this->year - $dt->year);
+
         $t = getdate ($t);
         $this->year = $t['year'];
         $this->month = $t['mon'];
@@ -248,6 +251,16 @@ class jDateTime{
         $this->hour = $t['hours'];
         $this->minute = $t['minutes'];
         $this->second = $t['seconds'];
+    }
+
+    /**
+     * pour connaître la durée entre deux dates.
+     */
+    public function durationTo($dt){
+       $t = mktime ( $dt->hour, $dt->minute,$dt->second , $dt->month, $dt->day, $dt->year )
+         - mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
+       $t = getdate ($t);
+       return new jDateTime( $t['year']-1970,$t['mon']-1, $t['mday']-1, $t['hours']-1, $t['minutes'], $t['seconds']);
     }
 
     /**
