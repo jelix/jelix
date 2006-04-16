@@ -26,8 +26,10 @@ abstract class jResponse {
     protected $_errorMessages=array();
 
     protected $_attributes = array();
-    
+
     protected $_acceptSeveralErrors=true;
+
+    protected $_httpHeaders = array();
 
     /**
     * Contruction et initialisation
@@ -58,5 +60,20 @@ abstract class jResponse {
     public final function getType(){ return $this->_type;}
     public final function acceptSeveralErrors(){ return $this->_acceptSeveralErrors;}
     public final function hasErrors(){ return count($GLOBALS['gJCoord']->errorMessages)>0;}
+
+    public function addHttpHeader($htype, $hcontent){ $this->_httpHeaders[$htype]=$hcontent;}
+    protected function sendHttpHeaders(){
+        foreach($this->_httpHeaders as $ht=>$hc){
+            header($ht.': '.$hc);
+        }
+
+        /*
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+        */
+    }
 }
 ?>

@@ -15,6 +15,13 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
+interface jIRestController{
+    public function get();
+    public function post();
+    public function put();
+    public function delete();
+}
+
 class jController{
 
     public $pluginParams=array();

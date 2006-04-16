@@ -62,7 +62,7 @@ class jResponseXul extends jResponse {
     protected $_bodyTop = array();
     protected $_bodyBottom = array();
     protected $_headSent = false;
-
+    protected $_sendHttpHeader=true;
 
     /**
     * Contruction et initialisation
@@ -79,8 +79,10 @@ class jResponseXul extends jResponse {
      */
     function output(){
         $this->_headSent = false;
-
-        header('Content-Type:application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset);
+        $this->_httpHeaders['Content-Type']='application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset;
+        if($this->_sendHttpHeader){
+            $this->sendHttpHeaders();
+        }
         $this->outputHeader();
         $this->_headSent = true;
         echo implode('',$this->_bodyTop);
@@ -100,10 +102,12 @@ class jResponseXul extends jResponse {
      * @return    string    contenu généré ou false si il y a une erreur de génération
      */
     function fetch(){
+        $this->_sendHttpHeader = false;
         ob_start();
         $ok = $this->output();
         $content= ob_get_contents();
         ob_end_clean();
+        $this->_sendHttpHeader = true;
         if($ok) return $content;
         else return false;
     }

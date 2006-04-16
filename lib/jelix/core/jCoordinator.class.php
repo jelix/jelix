@@ -174,15 +174,7 @@ class jCoordinator {
             }
         }
 
-        //try{
-            $this->response = $ctrl->{$this->action->method}();
-        /*}catch(jException $e){
-            trigger_error($e->getLocaleMessage(), E_USER_ERROR);
-            return ;
-        }catch(Exception $e){
-            trigger_error($e->getMessage(),E_USER_ERROR);
-            return;
-        }*/
+        $this->response = $ctrl->{$this->action->method}();
 
         if($this->response == null){
             trigger_error(jLocale::get('jelix~errors.response.missing',$this->action->toString()), E_USER_ERROR);
@@ -222,8 +214,9 @@ class jCoordinator {
         }
 
         $ctrl = new $class($this->request);
-
-        if(!method_exists($ctrl,$method)){
+        if($ctrl instanceof jIRestController){
+            $method = $selector->method = strtolower($_SERVER['REQUEST_METHOD']);
+        }elseif(!method_exists($ctrl,$method)){
             trigger_error(jLocale::get('jelix~errors.ad.controller.method.unknow',array($this->actionName,$method, $class, $ctrlpath)),E_USER_ERROR);
             return;
         }

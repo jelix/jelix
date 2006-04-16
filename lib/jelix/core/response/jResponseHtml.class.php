@@ -25,7 +25,7 @@ class jResponseHtml extends jResponse {
     protected $_type = 'html';
 
 
-    protected $_httpHeader=true;
+    protected $_sendHttpHeader=true;
     public $title = '';
 
     /**
@@ -96,24 +96,18 @@ class jResponseHtml extends jResponse {
      */
     final public function output(){
         $this->_headSent = false;
+        $this->_httpHeaders['Content-Type']='text/html;charset='.$this->_charset;
 
         if($this->_isXhtml){
-            if($this->_httpHeader){
-               header('Content-Type: text/html;charset='.$this->_charset);
-               /*
-               header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-               header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-               header("Cache-Control: no-store, no-cache, must-revalidate");
-               header("Cache-Control: post-check=0, pre-check=0", false);
-               header("Pragma: no-cache");
-               */
+            if($this->_sendHttpHeader){
+               $this->sendHttpHeaders();
             }
             echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$this->_lang,'" lang="',$this->_lang,'">
 ';
         }else{
-            if($this->_httpHeader){
-               header('Content-Type: text/html;charset='.$this->_charset);
+            if($this->_sendHttpHeader){
+                $this->sendHttpHeaders();
             }
             echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n";
             echo '<html lang="',$this->_lang,'">';
@@ -152,11 +146,11 @@ class jResponseHtml extends jResponse {
      */
     final public function fetch(){
         ob_start();
-        $this->_httpHeader = false;
+        $this->_sendHttpHeader = false;
         $ok = $this->output();
         $content= ob_get_contents();
         ob_end_clean();
-        $this->_httpHeader = true;
+        $this->_sendHttpHeader = true;
         if($ok) return $content;
         else return false;
     }

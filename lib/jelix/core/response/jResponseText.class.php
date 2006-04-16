@@ -34,8 +34,9 @@ class jResponseText extends jResponse {
      */
     public function output(){
         global $gJConfig;
-        header('Content-Type: text/plain;charset='.$gJConfig->defaultCharset);
-        header("Content-length: ".strlen($this->content));
+        $this->_httpHeaders['Content-Type']='text/plain;charset='.$this->_charset;
+        $this->_httpHeaders['Content-length']=strlen($this->content);
+        $this->sendHttpHeaders();
         echo $this->content;
         return true;
     }
