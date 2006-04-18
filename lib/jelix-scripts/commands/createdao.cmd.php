@@ -74,6 +74,7 @@ class createdaoCommand extends JelixScriptCommand {
                   break;
                case 'tinyint':
                case 'int':
+               case 'integer':
                case 'smallint':
                case 'year':
                   if($prop->auto_increment ){

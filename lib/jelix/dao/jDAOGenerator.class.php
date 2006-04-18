@@ -420,7 +420,11 @@ class jDAOGenerator {
                      $result[] = $table.$prop->fieldName.' as '.$prop->name;
                   }
                }else{
-                  $result[] = $table.$prop->fieldName;
+                    if ($driverName == 'sqlite') {
+                        $result[] = $table.$prop->fieldName.' as '.$prop->name;
+                    } else {
+                     $result[] = $table.$prop->fieldName;
+                    }
                }
             }else{
                //in oracle we must escape name
