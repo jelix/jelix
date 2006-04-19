@@ -3,16 +3,11 @@
 * @package    jelix
 * @subpackage db
 * @version    $Id:$
-* @author     Croes Gérald, Laurent Jouanneau
-* @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @author     Loic Mathaud
+* @contributor 
+* @copyright  2006 Loic Mathaud
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-* Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixDbConnectionMysql)
-* Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
 /**
