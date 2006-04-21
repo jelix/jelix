@@ -412,7 +412,7 @@ class jDAOGenerator {
 
          if ($prop->selectMotif !=''){
             if ($prop->selectMotif =='%s'){
-               if ($prop->fieldName != $prop->name){
+               if ($prop->fieldName != $prop->name || $driverName == 'sqlite'){
                      //in oracle we must escape name
                   if ($driverName == 'oci8') {
                      $result[] = $table.$prop->fieldName.' "'.$prop->name.'"';
@@ -420,11 +420,7 @@ class jDAOGenerator {
                      $result[] = $table.$prop->fieldName.' as '.$prop->name;
                   }
                }else{
-                    if ($driverName == 'sqlite') {
-                        $result[] = $table.$prop->fieldName.' as '.$prop->name;
-                    } else {
                      $result[] = $table.$prop->fieldName;
-                    }
                }
             }else{
                //in oracle we must escape name
@@ -649,7 +645,7 @@ class jDAOGenerator {
                      $phpvalue = str_replace('\\','\\\\', $phpvalue);
                      $phpvalue = str_replace('\'','\\\'', $phpvalue);
                   }
-                  $phpvalue = 'implode(\',\', array_map( create_function(\'$e\',\'return '.$phpvalue.';\'), '.$cond['expr'].'))';
+                  $phpvalue = 'implode(\',\', array_map( create_function(\'$e\',\'return '.$phpvalue.';\'), '.$cond['value'].'))';
                   $value= '(\'.'.$phpvalue.'.\')';
 
                }else{
@@ -658,7 +654,7 @@ class jDAOGenerator {
             }else{
 
                if($cond['expr']){
-                  $value=$cond['expr'];
+                  $value=$cond['value'];
                   foreach($params as $param){
                      $value = str_replace('$'.$param, '\'.'.$this->_preparePHPValue('$'.$param, $prop->datatype, false).'.\'',$value);
                   }
