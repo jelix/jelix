@@ -26,7 +26,7 @@ class ZoneLoginForm extends jZone {
         $this->_tpl->assign ('failed',  $this->getParam('failed'));
 
         $this->_tpl->assign ('user', jAuth::getUserSession());
-        $this->_tpl->assign ('isLogged', CopixAuth::isConnected());
+        $this->_tpl->assign ('isLogged', jAuth::isConnected());
         $this->_tpl->assign ('showLostPassword', false);
         $this->_tpl->assign ('showRememberMe', false);
     }

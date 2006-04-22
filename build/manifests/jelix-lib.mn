@@ -15,6 +15,7 @@ cd lib/jelix
 cd lib/jelix/auth
   jAuth.class.php
   jAuthDriverDb.class.php
+  jAuthUser.class.php
 
 cd lib/jelix/acl
   jAcl.class.php
@@ -84,6 +85,11 @@ cd lib/jelix/db/drivers/postgresql
   jDbConnection.postgresql.class.php
   jDbResultSet.postgresql.class.php
   jDbTools.postgresql.class.php
+  
+cd lib/jelix/db/drivers/sqlite
+  jDbConnection.sqlite.class.php
+  jDbResultSet.sqlite.class.php
+  jDbTools.sqlite.class.php  
 
 cd lib/jelix/events
   jEvent.class.php

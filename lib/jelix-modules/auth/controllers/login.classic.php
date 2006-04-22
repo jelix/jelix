@@ -64,7 +64,7 @@ class CTLogin extends jController {
         $rep = $this->getResponse('html');
 
         $rep->title =  jLocale::get ('auth.titlePage.login');
-        $rep->body->assignZone ('MAIN', 'auth~loginForm', array ('login'=>$this->param('login'), 'failed'=>$this->param('failed')));
+        $rep->body->assignZone ('MAIN', 'auth~loginform', array ('login'=>$this->param('login'), 'failed'=>$this->param('failed')));
 
         return $rep;
     }

@@ -474,8 +474,8 @@ class jDAOMethod {
     */
 
 
-   private $_op = array('eq'=>'=', 'neq'=>'<>', 'lt'=>'<', 'gt'=>'>', 'like'=>'LIKE',
-       'isnull'=>'IS NULL', 'isnotnull'=>'IS NOT NULL','in'=>'IN', 'notin'=>'NOT IN');
+   private $_op = array('eq'=>'=', 'neq'=>'<>', 'lt'=>'<', 'gt'=>'>', 'lteq'=>'<=', 'gteq'=>'>=',
+        'like'=>'LIKE', 'isnull'=>'IS NULL', 'isnotnull'=>'IS NOT NULL','in'=>'IN', 'notin'=>'NOT IN');
       // 'between'=>'BETWEEN',  'notbetween'=>'NOT BETWEEN',
 
    private $_attrcond = array('property', 'value', 'expr'); //, 'min', 'max', 'exprmin', 'exprmax'

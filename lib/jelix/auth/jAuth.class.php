@@ -15,15 +15,6 @@
 * Adaptée pour Jelix par Laurent Jouanneau
 */
 
-
-// pas de méthode pour cet objet, car le user peut ne pas etre
-// une instance de jUser, tout dépend du driver..
-class jUser {
-    var $login = '';
-    var $level = 0;
-    var $email ='';
-}
-
 /**
  * interface pour les classes de drivers d'authentification
  */
@@ -195,7 +186,7 @@ class jAuth {
     */
     public static function getUserSession (){
       if (! isset ($_SESSION['JELIX_USER'])){
-            $_SESSION['JELIX_USER'] = new jUser();
+            $_SESSION['JELIX_USER'] = new jAuthUser();
       }
       return $_SESSION['JELIX_USER'];
     }

@@ -4,7 +4,7 @@
 {/if}
 
 {if ! $isLogged}
-  <form action="{url action="auth~login_in"}" method="post" id="loginForm">
+  <form action="{jurl "auth~login_in"}" method="post" id="loginForm">
       <fieldset>
       <table>
        <tr>
