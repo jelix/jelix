@@ -22,9 +22,12 @@ endif
 ifndef DIST
 DIST=_dist
 endif
+ifndef DEV
+DEV=_dev
+endif
 
 DISTJELIX="$(DIST)/jelix-$(LIB_VERSION)"
-DISTHACKER="$(DIST)/jelix-svn"
+DISTHACKER="$(DEV)"
 DISTJTPL="$(DIST)/jtpl"
 
 default:
@@ -33,7 +36,8 @@ default:
 	@echo "   dev-all dev-jelix dev-jelix-lib dev-myapp dev-testapp"
 	@echo "   jtpl jtpl-dist"
 	@echo "paramètres facultatifs (valeurs actuelles) :"
-	@echo "   DIST : repertoire cible (" $(DIST) ")"
+	@echo "   DIST : repertoire cible pour les distributions (" $(DIST) ")"
+	@echo "   DEV : repertoire cible pour developper (" $(DEV) ")"
 	@echo "   LIB_VERSION : numéro de version de Jelix (" $(LIB_VERSION) ")"
 	@echo "   JTPL_VERSION : numéro de version de jtpl standalone (" $(JTPL_VERSION) ")"
 	@echo "répertoire de construction des projets:"
