@@ -1,0 +1,29 @@
+
+@namespace jfx url("http://jelix.org/ns/jformxul/1.0");
+@namespace xul url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+@namespace html url("http://www.w3.org/1999/xhtml");
+
+jfx|submission {
+  display: -moz-box;
+  visibility:collapse;
+  -moz-binding: url("jformxul.xml#submission");
+}
+
+/*jfx|submission[format="urlencoded-post-php"] {
+  display: -moz-box;
+  -moz-binding: url("jformxul.xml#submission-post-php");
+}*/
+
+jfx|submit {
+  display: -moz-box;
+  -moz-binding: url("jformxul.xml#submit");
+
+}
+
+jfx|submit[loading=true]:not([nothrobber]) {
+  list-style-image:url(throbber.gif);
+}
+
+textbox[invalid] html|input {background-color:#ffc0c0;}
+
+/**[invalid] { background-color:red; border:1px solid red; -moz-appearance:none; }*/

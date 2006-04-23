@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/css" href="chrome://global/skin/"?>
+<?xml-stylesheet type="text/css" href="../jxulform.css"?>
+<window
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  xmlns:xbl="http://www.mozilla.org/xbl"
+  xmlns:jxf="http://jelix.org/ns/jxulform/1.0"
+  >
+
+
+
+    <jxf:submission id="test" action="testxulform.php" method="POST" format="urlencoded-post"
+             onsubmit="document.getElementById('sendBox').value=this.formDatas.toSource()+'\n\net donc:\n'+this._prepareContent(); document.getElementById('receiveBox').value=''"
+             onresult="document.getElementById('receiveBox').value=this.httpreq.responseText"
+             onhttperror="alert('erreur http :' + event.errorCode)"
+             progressmeter="progression"
+             oninvalidate="alert('erreur dans les valeurs')"
+             />
+  <groupbox>
+    <textbox label="toto" name="text" form="test" value="" required="true"/>
+    <textbox name="entier" form="test" value="" required="true" datatype="integer"/>
+    <textbox name="decimal" form="test" value="" required="true" datatype="float"/>
+    <textbox name="entier" form="test" value="" required="true" datatype="integer" constraint="return val&gt;50 &amp;&amp;val&lt;100;"/>
+    <checkbox name="checkbox" form="test" label="checkbox" checked="true"/>
+    <radiogroup id="radioGroup" name="radio" value="" form="test bar">
+      <radio value="one" label="one" selected="true"/>
+      <radio value="two" label="two"/>
+      <radio value="three" label="three"/>
+    </radiogroup>
+ </groupbox>
+ <hbox>
+     <jxf:submit form="test" label="Envoyer"/>
+     <progressmeter   id="progression"/>
+ </hbox>
+
+ <textbox multiline="true" rows="10" cols="80" id="sendBox"/>
+ <textbox multiline="true" rows="10" cols="80" id="receiveBox"/>
+
+</window>
