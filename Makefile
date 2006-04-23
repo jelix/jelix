@@ -55,18 +55,17 @@ dist-jelix: common
 	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTJELIX) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(DISTJELIX) \
 	&& echo "$(LIB_VERSION)" > "$(DISTJELIX)/lib/jelix/VERSION"
-	if [ ! -d "$(DISTJELIX)/temp" ] ; then mkdir $(DISTJELIX)/temp ; fi
 	tar czf $(DIST)/jelix-lib-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) lib/ temp/
 
 dist-testapp: common
 	if [ ! -d "$(DISTJELIX)" ] ; then mkdir $(DISTJELIX) ; fi
 	$(PHP) build/mkdist.php build/manifests/testapp.mn . $(DISTJELIX)
-	tar czf $(DIST)/testapp-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) testapp/
+	tar czf $(DIST)/testapp-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) testapp/ temp/testapp/
 
 dist-myapp: common
 	if [ ! -d "$(DISTJELIX)" ] ; then mkdir $(DISTJELIX) ; fi
 	$(PHP) build/mkdist.php build/manifests/myapp.mn . $(DISTJELIX)
-	tar czf $(DIST)/myapp-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) myapp/
+	tar czf $(DIST)/myapp-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) myapp/ temp/myapp/
 
 dev-jelix: common
 	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
@@ -74,7 +73,6 @@ dev-jelix: common
 	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTHACKER) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(DISTHACKER) \
 	&& echo "$(LIB_VERSION)" > "$(DISTHACKER)/lib/jelix/VERSION"
-	if [ ! -d "$(DISTHACKER)/temp" ] ; then mkdir $(DISTHACKER)/temp ; fi
 
 dev-jelix-lib: common
 	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi

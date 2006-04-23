@@ -22,3 +22,4 @@ cd myapp/var
 cd myapp/var/config
   config.classic.ini.php.dist
   dbprofils.ini.php.dist
+cd temp/myapp

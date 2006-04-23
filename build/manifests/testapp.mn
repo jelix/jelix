@@ -76,3 +76,4 @@ cd testapp/var/themes/default/testapp
 cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales
 
+cd temp/testapp
