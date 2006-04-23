@@ -85,11 +85,11 @@ cd lib/jelix/db/drivers/postgresql
   jDbConnection.postgresql.class.php
   jDbResultSet.postgresql.class.php
   jDbTools.postgresql.class.php
-  
+
 cd lib/jelix/db/drivers/sqlite
   jDbConnection.sqlite.class.php
   jDbResultSet.sqlite.class.php
-  jDbTools.sqlite.class.php  
+  jDbTools.sqlite.class.php
 
 cd lib/jelix/events
   jEvent.class.php
@@ -236,3 +236,17 @@ cd lib/jelix-plugins
 cd lib/jelix-plugins/magicquotes
   magicquotes.plugin.php
   plugin.xml
+
+
+cd lib/jelix-www
+  json.js
+cd lib/jelix-www/design
+  jelix.css
+  tooltip.css
+cd lib/jelix-www/js
+  tooltip.js
+cd lib/jelix-www/xul
+  jxulform.css
+  jxulform.xml
+  throbber.gif
+

@@ -15,13 +15,6 @@ cd testapp/www
   index.php
 cd testapp/www/design
   screen.css
-cd testapp/www/jelix
-  json.js
-cd testapp/www/jelix/styles
-  tooltip.css
-  jylix.css
-cd testapp/www/jelix/js
-  tooltip.js
 cd testapp/modules
   .htaccess
 cd testapp/modules/testapp

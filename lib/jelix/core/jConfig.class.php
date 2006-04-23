@@ -41,7 +41,7 @@ class jConfig {
             $os=PHP_OS;
         }
         $config->OS = $os;
-        $config->isWindows = (strtolower($os) == 'win');
+        $config->isWindows = (strpos(strtolower($os),'win')!== false);
         if(trim( $config->defaultAction) == '')
              $config->defaultAction = '_';
 

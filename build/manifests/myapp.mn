@@ -9,13 +9,6 @@ cd myapp/www
   .htaccess
   xmlrpc.php
   index.php
-cd myapp/www/jelix
-  json.js
-cd myapp/www/jelix/styles
-  tooltip.css
-  jylix.css
-cd myapp/www/jelix/js
-  tooltip.js
 cd myapp/modules
   .htaccess
 cd myapp/modules/myapp

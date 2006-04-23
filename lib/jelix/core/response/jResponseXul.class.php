@@ -115,6 +115,7 @@ class jResponseXul extends jResponse {
 
     function outputErrors(){
         if(!$this->_headSent){
+            if(!$this->_sendHttpHeader) header('Content-Type: application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset);
             echo '<?xml version="1.0" encoding="'.$GLOBALS['gJConfig']->defaultCharset.'" ?>'."\n";
             echo '<',$this->_root,' title="Erreurs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">';
         }

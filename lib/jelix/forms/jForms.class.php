@@ -42,10 +42,10 @@ class jForms {
    static public function get($formSel,$internalIdName=''){
       global $gJCoord;
       if(empty($internalIdName)){
-         $internalId = 0;
+         $internalId = md5(0);
       }else{
          $internalId = $gJCoord->request->getParam($internalIdName);
-         if($internalId == null) $internalId=0;
+         if($internalId == null) $internalId=md5(0);
       }
 
       if(!isset($_SESSION['JFORMS'][$formSel][$internalId])){
@@ -69,10 +69,10 @@ class jForms {
    static public function destroy($formSel,$internalIdName=''){
       global $gJCoord;
       if(empty($internalIdName)){
-         $internalId = 0;
+         $internalId = md5(0);
       }else{
          $internalId = $gJCoord->request->getParam($internalIdName);
-         if($internalId == null) $internalId=0;
+         if($internalId == null) $internalId=md5(0);
       }
 
       if(isset($_SESSION['JFORMS'][$formSel][$internalId])){
