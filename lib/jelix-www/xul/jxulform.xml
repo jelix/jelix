@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+ @package     jelix
+ @subpackage  xul
+ @version  $Id$
+ @author   Jouanneau Laurent
+ @contributor
+ @copyright 2006 Jouanneau laurent
+ @link     http://www.jelix.org
+ @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+-->
+
 <bindings xmlns="http://www.mozilla.org/xbl"
           xmlns:xbl="http://www.mozilla.org/xbl"
           xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
