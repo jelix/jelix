@@ -97,14 +97,18 @@
          </element>
 
          <element name="method">
-            <attribute name="type">
-               <choice>
-                  <value>count</value>
-                  <value>delete</value>
-               </choice>
-            </attribute>
+            <attribute name="type"><value>delete</value></attribute>
             <ref name="method.common" />
             <ref name="method.conditions"/>
+         </element>
+
+         <element name="method">
+             <attribute name="type"><value>count</value></attribute>
+             <optional>
+                 <attribute name="distinct" />
+             </optional>
+             <ref name="method.common" />
+             <ref name="method.conditions"/>
          </element>
 
          <element name="method">
@@ -122,6 +126,9 @@
                      <value>selectfirst</value>
                   </choice>
                </attribute>
+            </optional>
+            <optional>
+                <attribute name="distinct" />
             </optional>
             <ref name="method.common" />
             <ref name="method.conditions" />

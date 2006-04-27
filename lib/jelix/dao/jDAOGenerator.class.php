@@ -265,13 +265,25 @@ class jDAOGenerator {
                   break;
 
                case 'count':
-                  $src[] = '    $query = \'SELECT COUNT(*) as c \'.$this->_fromClause.$this->_whereClause;';
+                  if($method->distinct !=''){
+                    $prop=$this->_datasParser->getProperties ();
+                    $prop = $prop[$method->distinct];
+                    $count=' DISTINCT '.$tables[$prop->table]['name'] .'.'.$prop->fieldName;
+                  }else{
+                    $count='*';
+                  }
+                  $src[] = '    $query = \'SELECT COUNT('.$count.') as c \'.$this->_fromClause.$this->_whereClause;';
                   $glueCondition = ($sqlWhereClause !='' ? ' AND ':' WHERE ');
                   break;
                case 'selectfirst':
                case 'select':
                default:
-                  $src[] = '    $query = $this->_selectClause.$this->_fromClause.$this->_whereClause;';
+                  if($method->distinct !=''){
+                    $select = '\''.$this->_getSelectClause($method->distinct).'\'';
+                  }else{
+                     $select=' $this->_selectClause';
+                  }
+                  $src[] = '    $query = '.$select.'.$this->_fromClause.$this->_whereClause;';
                   $glueCondition = ($sqlWhereClause !='' ? ' AND ':' WHERE ');
                   if( ($lim = $method->getLimit ()) !==null){
                      $limit=', '.$lim['offset'].', '.$lim['count'];
@@ -400,7 +412,7 @@ class jDAOGenerator {
     /**
     * build SELECT clause for all SELECT queries
     */
-   private function _getSelectClause (){
+   private function _getSelectClause ($distinct=''){
       $result = array();
 
       $driverName = $this->_compiler->getDbDriver();
@@ -415,25 +427,30 @@ class jDAOGenerator {
                if ($prop->fieldName != $prop->name || $driverName == 'sqlite'){
                      //in oracle we must escape name
                   if ($driverName == 'oci8') {
-                     $result[] = $table.$prop->fieldName.' "'.$prop->name.'"';
+                     $field = $table.$prop->fieldName.' "'.$prop->name.'"';
                   }else{
-                     $result[] = $table.$prop->fieldName.' as '.$prop->name;
+                     $field = $table.$prop->fieldName.' as '.$prop->name;
                   }
                }else{
-                     $result[] = $table.$prop->fieldName;
+                     $field = $table.$prop->fieldName;
                }
             }else{
                //in oracle we must escape name
                if ($driverName == 'oci8') {
-                  $result[] = sprintf ($prop->selectMotif, $table.$prop->fieldName).' "'.$prop->name.'"';
+                  $field = sprintf ($prop->selectMotif, $table.$prop->fieldName).' "'.$prop->name.'"';
                }else{
-                  $result[] = sprintf ($prop->selectMotif, $table.$prop->fieldName).' as '.$prop->name;
+                  $field = sprintf ($prop->selectMotif, $table.$prop->fieldName).' as '.$prop->name;
                }
             }
+
+            if($distinct == $prop->name)
+                array_unshift($result, $field);
+            else
+                $result[]=$field;
          }
       }
 
-      return 'SELECT '.(implode (', ',$result));
+      return 'SELECT '.($distinct!=''?'DISTINCT ':'').(implode (', ',$result));
     }
 
     /**

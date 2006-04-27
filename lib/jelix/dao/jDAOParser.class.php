@@ -331,6 +331,7 @@ class jDAOProperty {
 class jDAOMethod {
    public $name;
    public $type;
+   public $distinct='';
    private $_conditions = null;
    private $_parameters   = array();
    private $_parametersDefaultValues = array();
@@ -342,7 +343,7 @@ class jDAOMethod {
    function __construct ($method, $def){
       $this->_def = $def;
 
-      $params = $def->getAttr($method, array('name', 'type', 'call'));
+      $params = $def->getAttr($method, array('name', 'type', 'call','distinct'));
 
       if ($params['name']===null){
          $def->_compiler->doDefError ('missing.attr', array('name', 'method'));
@@ -398,6 +399,15 @@ class jDAOMethod {
                $def->_compiler->doDefError('method.values.undefine',array($this->name));
          }
          return;
+      }
+
+      if(($this->type == 'select' || $this->type == 'count') && strlen($params['distinct'])){
+        $props = $this->_def->getProperties();
+
+        if (!isset ($props[$params['distinct']])){
+            $this->_def->_compiler->doDefError('method.property.unknown', array($this->name, $params['distinct']));
+        }
+        $this->distinct=$params['distinct'];
       }
 
       if($this->type == 'count')

@@ -31,5 +31,23 @@
         </order>
         <limit offset="0" count="$limit" />
     </method>
+    <method name="selectdistinct" type="select" distinct="titre">
+        <parameter name="limit" />
+        <conditions>
+            <eq property="valider" value="3" />
+        </conditions>
+        <order>
+            <orderitem property="date" way="desc" />
+        </order>
+        <limit offset="0" count="$limit" />
+    </method>
+    <method name="countdistinct" type="count" distinct="titre">
+        <parameter name="limit" />
+        <conditions>
+            <eq property="valider" value="3" />
+        </conditions>
+    </method>
+
+
   </factory>
 </dao>
