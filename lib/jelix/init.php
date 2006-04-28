@@ -46,6 +46,7 @@ require_once (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
+require_once (JELIX_LIB_CORE_PATH . 'jIPlugin.iface.php');
 
 // global variables
 $gJCoord = null;

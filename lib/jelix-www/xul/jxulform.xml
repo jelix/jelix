@@ -105,6 +105,14 @@
             ]]></body>
         </method>
 
+        <method name="_onload">
+            <body><![CDATA[
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent("result", true, false);
+            this.dispatchEvent(evt);
+            ]]>
+            </body>
+        </method>
         <method name="_UIendofload">
             <body><![CDATA[
             if(this.submitButton){
@@ -119,6 +127,7 @@
             </body>
         </method>
 
+
         <method name="_submit">
             <parameter name="method"/>
             <parameter name="contentType"/>
@@ -129,14 +138,15 @@
 
             this.httpreq.onload = function() {
                 this.submission._UIendofload();
-                var evt = document.createEvent("HTMLEvents");
                 if(this.status >=200 && this.status < 300)
-                    evt.initEvent("result", true, false);
+                     this.submission._onload();
                 else{
+                    var evt = document.createEvent("HTMLEvents");
                     evt.errorCode = this.status ;
                     evt.initEvent("httperror", true, false);
+                    this.submission.dispatchEvent(evt);
                 }
-                this.submission.dispatchEvent(evt);
+
             }
             this.httpreq.onerror = function() {
                 this.submission._UIendofload();
@@ -428,6 +438,54 @@
 
 </binding>
 
+<binding id="submission-json-rpc" extends="#submission">
+    <implementation>
+        <field name="contentType">"text/plain"</field>
+        <field name="jsonResponse" />
+        <property name="rpcmethod"
+                  onget="return this.getAttribute('rpcmethod');"
+                  onset="this.setAttribute('rpcmethod', val); return val;"/>
+        <method name="_prepareContent">
+            <body><![CDATA[
+                this.jsonReponse = null;
+                this.method="POST";
+                var datas = { method: this.rpcmethod, params:this.formDatas, id:1 };
+                var content= datas.toSource();
+                return content.substring(1, content.length -1); // on enleve les () qui entourent;
+            ]]></body>
+        </method>
+        <method name="_onload">
+            <body><![CDATA[
+                var evt = document.createEvent("HTMLEvents");
+                eval("this.jsonResponse="+this.httpreq.responseText);
+                var evtname;
+                if(this.jsonResponse.error ==null){
+                   evtname="result";
+                }else{
+                   evtname="rpcerror";
+                }
+                evt.initEvent(evtname, true, false);
+                this.dispatchEvent(evt);
+                ]]>
+            </body>
+        </method>
+
+    </implementation>
+    <handlers>
+        <handler event="rpcerror" phase="at-target">
+            var onrpcerror = this.getAttribute("onrpcerror");
+            if( onrpcerror){
+                var func = new Function("event", onrpcerror+"\n return true;");
+                var retval = func.call(this, event);
+                this.httpreq = null;
+                return retval;
+            }else{
+                return true;
+            }
+        </handler>
+    </handlers>
+
+</binding>
 
 
 

@@ -16,7 +16,7 @@
 * Adaptée pour Jelix par Laurent Jouanneau
 */
 
-class AuthPlugin implements jPlugin {
+class AuthPlugin implements jIPlugin {
     public $config;
 
     function __construct($conf){
@@ -27,7 +27,7 @@ class AuthPlugin implements jPlugin {
      * @param    array  $params   plugin parameters for the current action
      * @return null or jSelectorAct  if action should change
      */
-    public function beforeProcess ($params){
+    public function beforeAction ($params){
         $notLogged = false;
         $badip = false;
         $selector = null;
@@ -49,7 +49,7 @@ class AuthPlugin implements jPlugin {
         //Creating the user's object if needed
         if (! isset ($_SESSION['JELIX_USER'])){
             $notLogged = true;
-            $_SESSION['JELIX_USER'] = new jUser();
+            $_SESSION['JELIX_USER'] = new jAuthUser();
         }else{
             $notLogged = ! jAuth::isConnected();
         }
@@ -62,8 +62,7 @@ class AuthPlugin implements jPlugin {
                 $_SESSION['JELIX_AUTH_LASTTIME'] =mktime();
             }
         }
-
-        $needAuth = isset($action->pluginParams['auth.required']) ? ($action->pluginParams['auth.required']==true):$this->config['auth_required'];
+        $needAuth = isset($params['auth.required']) ? ($params['auth.required']==true):$this->config['auth_required'];
         $authok = false;
 
         if($needAuth){

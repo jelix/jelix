@@ -97,7 +97,7 @@ class jCoordinator {
                 }else{
                     $conf = array();
                 }
-                include( $GLOBALS['gJConfig']->pluginsPathList[$name]);
+                include( $GLOBALS['gJConfig']->pluginsPathList[$name].$name.".plugin.php");
                 $class= $name.'Plugin';
                 $this->plugins[strtolower($name)] = new $class($conf);
             }
@@ -169,7 +169,7 @@ class jCoordinator {
         }
 
         foreach ($this->plugins as $name => $obj){
-            $result = $this->plugins[$name]->beforeProcess ($pluginparams);
+            $result = $this->plugins[$name]->beforeAction ($pluginparams);
             if($result){
                $this->action = $result;
                $ctrl = $this->getController($this->action);

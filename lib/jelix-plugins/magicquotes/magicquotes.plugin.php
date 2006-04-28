@@ -15,7 +15,7 @@
 * http://www.copix.org
 */
 
-class MagicQuotesPlugin implements jPlugin {
+class MagicQuotesPlugin implements jIPlugin {
 
    /**
     *

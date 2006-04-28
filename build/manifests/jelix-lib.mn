@@ -209,6 +209,8 @@ cd lib/jelix-modules/auth/install/scripts
   install.mysql.sql
 cd lib/jelix-modules/auth/controllers
   login.classic.php
+  loginsw.classic.php
+  login.jsonrpc.php
 cd lib/jelix-modules/auth/zones
   loginform.zone.php
 cd lib/jelix-modules/auth/templates
@@ -249,5 +251,7 @@ cd lib/jelix-www/xul
   jxulform.css
   jxulform.xml
   throbber.gif
+  jsonrpc.js
+
 
 cd temp
