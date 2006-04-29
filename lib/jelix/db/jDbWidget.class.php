@@ -57,7 +57,7 @@ class jDBWidget {
     * @return  array    tableau d'objets
     */
     public function fetchAll($query, $limitOffset=null, $limitCount=null){
-        if($limitOffset==null || $limitCount==null){
+        if($limitOffset===null || $limitCount===null){
             $rs =  $this->_conn->query ($query);
         }else{
             $rs =  $this->_conn->limitQuery ($query, $limitOffset, $limitCount);
@@ -72,7 +72,7 @@ class jDBWidget {
     * @return  array    tableau d'objets
     */
     public function fetchAllInto($query, $className, $limitOffset=null, $limitCount=null){
-        if($limitOffset==null || $limitCount==null){
+        if($limitOffset===null || $limitCount===null){
             $rs =  $this->_conn->query ($query);
         }else{
             $rs =  $this->_conn->limitQuery ($query, $limitOffset, $limitCount);

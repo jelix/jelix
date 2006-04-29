@@ -115,7 +115,7 @@ class jResponseXul extends jResponse {
 
     function outputErrors(){
         if(!$this->_headSent){
-            if(!$this->_sendHttpHeader) header('Content-Type: application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset);
+            if($this->_sendHttpHeader) header('Content-Type: application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset);
             echo '<?xml version="1.0" encoding="'.$GLOBALS['gJConfig']->defaultCharset.'" ?>'."\n";
             echo '<',$this->_root,' title="Erreurs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">';
         }
@@ -136,7 +136,7 @@ class jResponseXul extends jResponse {
         $errors='';
         foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
             // FIXME : Pourquoi utiliser htmlentities() ?
-           $errors .=  '<description style="color:#FF0000;">['.$e[0].' '.$e[1].'] '.htmlentities($e[2], ENT_NOQUOTES, $this->_charset)." \t".$e[3]." \t".$e[4]."</description>\n";
+           $errors .=  '<description style="color:#FF0000;">['.$e[0].' '.$e[1].'] '.htmlspecialchars($e[2], ENT_NOQUOTES, $GLOBALS['gJConfig']->defaultCharset)." \t".$e[3]." \t".$e[4]."</description>\n";
         }
         return $errors;
     }

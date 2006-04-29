@@ -25,9 +25,9 @@ class CTLoginsw extends jController {
 
         if (!jAuth::login($this->param('login'), $this->param('password'))){
             sleep (intval($conf['on_error_sleep']));
-            $result='OK';
-        }else{
             $result='BAD';
+        }else{
+            $result='OK';
         }
 
         $rep = $this->getResponse('text');

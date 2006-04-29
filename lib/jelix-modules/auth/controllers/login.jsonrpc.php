@@ -22,16 +22,16 @@ class CTLogin extends jController {
     */
     function in (){
         $conf = $GLOBALS['gJCoord']->getPlugin('auth')->config;
-
-        if (!jAuth::login($this->param('login'), $this->param('password'))){
+        $p = $this->param('params');
+        if (!isset($p['login']) || !isset($p['password']) || !jAuth::login($p['login'], $p['password'])){
             sleep (intval($conf['on_error_sleep']));
-            $result='OK';
-        }else{
             $result='BAD';
+        }else{
+            $result='OK';
         }
 
         $rep = $this->getResponse('jsonrpc');
-        $rep->content = $result;
+        $rep->response = $result;
         return $rep;
     }
 
@@ -42,7 +42,7 @@ class CTLogin extends jController {
         jAuth::logout();
 
         $rep = $this->getResponse('jsonrpc');
-        $rep->content = 'OK';
+        $rep->response = 'OK';
         return $rep;
     }
 }
