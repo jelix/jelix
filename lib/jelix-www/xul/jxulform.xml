@@ -434,6 +434,18 @@
                 return false;
             }
         </handler>
+        <handler event="error" phase="at-target">
+            var onerror = this.getAttribute("onerror");
+            if( onerror){
+                var func = new Function("event", onerror+"\n return true;");
+                var retval = func.call(this, event);
+                this.httpreq = null;
+                return retval;
+            }else{
+                this.httpreq = null;
+                return false;
+            }
+        </handler>
     </handlers>
 
 </binding>
@@ -457,7 +469,14 @@
         <method name="_onload">
             <body><![CDATA[
                 var evt = document.createEvent("HTMLEvents");
-                eval("this.jsonResponse="+this.httpreq.responseText);
+                try{
+                    eval("this.jsonResponse="+this.httpreq.responseText);
+                }catch(e){
+                    var evt = document.createEvent("HTMLEvents");
+                    evt.initEvent("error", true, false);
+                    this.dispatchEvent(evt);
+                    return;
+                }
                 var evtname;
                 if(this.jsonResponse.error ==null){
                    evtname="result";

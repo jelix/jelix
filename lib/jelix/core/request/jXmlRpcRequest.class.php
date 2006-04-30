@@ -47,7 +47,7 @@ class jXmlRpcRequest extends jRequest {
             $this->url  = new jUrl($_SERVER['SCRIPT_NAME']);
     }
 
-    public function allowedResponses(){ return array('jResponseXmlRpc');}
+    public function allowedResponses(){ return array('jResponseXmlrpc');}
 
 }
 ?>

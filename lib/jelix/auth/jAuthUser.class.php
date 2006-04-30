@@ -18,9 +18,9 @@
 // pas de méthode pour cet objet, car le user peut ne pas etre
 // une instance de jUser, tout dépend du driver..
 class jAuthUser {
-    var $login = '';
-    var $level = 0;
-    var $email ='';
+    public $login = '';
+    public $level = 0;
+    public $email ='';
 }
 
 ?>

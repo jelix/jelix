@@ -40,8 +40,13 @@ class jJsonRpcRequest extends jRequest {
 
         // Décodage de la requete
         $requestobj = jJsonRpc::decodeRequest($request);
+        if($requestobj['method']){
+            list($module, $action) = explode('~',$requestobj['method']);
+        }else{
+            $module='';
+            $action='';
+        }
 
-        list($module, $action) = explode('.',$requestobj['method']);
         // Définition de l'action a executer et des paramètres
         $this->params['module'] = $module;
         $this->params['action'] = $action;
@@ -50,7 +55,7 @@ class jJsonRpcRequest extends jRequest {
         $this->url  = new jUrl($_SERVER['SCRIPT_NAME']);
     }
 
-    public function allowedResponses(){ return array('jResponseJsonRpc');}
+    public function allowedResponses(){ return array('jResponseJsonrpc');}
 
 }
 ?>

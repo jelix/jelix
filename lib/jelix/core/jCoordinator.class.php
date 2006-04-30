@@ -210,7 +210,7 @@ class jCoordinator {
             trigger_error(jLocale::get('jelix~errors.ad.controller.file.unknow',array($this->actionName,$ctrlpath)),E_USER_ERROR);
             return;
         }
-        require($ctrlpath);
+        require_once($ctrlpath);
         if(!class_exists($class,false)){
             trigger_error(jLocale::get('jelix~errors.ad.controller.class.unknow',array($this->actionName,$class, $ctrlpath)),E_USER_ERROR);
             return;
