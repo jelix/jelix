@@ -22,7 +22,8 @@ class createctrlCommand extends JelixScriptCommand {
 
     MODULE : le nom du module concerné.
     NOM_CONTROLEUR :  nom du controleur que vous voulez créer.
-    NOM_METHOD (facultatif) : nom de la première méthode. Par défaut, elle a le nom index.";
+    NOM_METHOD (facultatif) : nom de la première méthode. Par défaut, elle a
+                              le nom index.";
 
 
     public function run(){

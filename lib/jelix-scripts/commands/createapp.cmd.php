@@ -17,14 +17,16 @@ class createappCommand extends JelixScriptCommand {
     public  $allowed_parameters=array();
 
     public  $syntaxhelp = "[-withdefaultmodule]";
-    public  $help="Créer une nouvelle application avec tous les répertoires nécessaires.
+    public  $help="
+    Créer une nouvelle application avec tous les répertoires nécessaires.
 
-    Si l'option -withdefaultmodule est présente, créer également un module du même nom
-    que l'application.
+    Si l'option -withdefaultmodule est présente, créer également un module du
+    même nom que l'application.
 
-    Le nom de l'application doit être indiqué soit en premier paramètre du script jelix.php
-       jelix.php --helloApp
-    soit dans une variable d'environnement JELIX_APP_NAME.
+    Le nom de l'application doit être indiqué
+    1) soit en premier paramètre du script jelix.php
+          jelix.php --helloApp
+    2) soit dans une variable d'environnement JELIX_APP_NAME.
     ";
 
 

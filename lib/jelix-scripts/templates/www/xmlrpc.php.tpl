@@ -8,9 +8,9 @@
 * @copyright
 */
 
-require_once ('{$rp_jelix}/init.php');
+require_once ('{$rp_jelix}init.php');
 
-require_once ('{$rp_app}/application.init.php');
+require_once ('{$rp_app}application.init.php');
 
 $config_file = 'config.xmlrpc.ini.php';
 

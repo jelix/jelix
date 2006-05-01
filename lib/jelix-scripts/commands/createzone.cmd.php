@@ -21,8 +21,9 @@ class createzoneCommand extends JelixScriptCommand {
 
     -notpl : indique qu'il ne faut pas créer de template associé
     MODULE : le nom du module concerné.
-    ZONE : nom de la zone à créer.
-    TEMPLATE (facultatif) : nom du template associé à créer (par defaut, à le nom de la zone).";
+    ZONE   : nom de la zone à créer.
+    TEMPLATE (facultatif) : nom du template associé à créer (par defaut, à
+                            le nom de la zone).";
 
 
     public function run(){

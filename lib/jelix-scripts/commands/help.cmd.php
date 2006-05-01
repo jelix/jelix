@@ -17,7 +17,7 @@ class helpCommand extends JelixScriptCommand {
     public  $allowed_parameters=array('command'=>false);
 
     public  $syntaxhelp ="[COMMANDE]";
-    public  $help="      COMMANDE est le nom de la commande dont vous voulez l'aide (paramètre facultatif)";
+    public  $help="      COMMANDE : nom de la commande dont vous voulez l'aide (paramètre facultatif)";
 
 
     public function run(){
@@ -31,14 +31,17 @@ class helpCommand extends JelixScriptCommand {
           $this->disp("# php jelix.php  [--NOM_APP] ".$this->_parameters['command']." ". $command->syntaxhelp."\n\n");
           $this->disp($command->help."\n\n");
        }else{
-          $this->disp("\nUtilisation générale : php jelix.php [--NOM_APP] COMMANDE [OPTIONS] [PARAMETRES]
+          $this->disp("
+Utilisation générale :
+    php jelix.php [--NOM_APP] COMMANDE [OPTIONS] [PARAMETRES]
 
-    NOM_APP : nom de l'application concernée. Si non présent, le nom de l'application doit
-             être dans une variable d'environnement JELIX_APP_NAME
+    NOM_APP  : nom de l'application concernée. Si non présent, le nom de
+               l'application doit être dans une variable d'environnement
+               JELIX_APP_NAME
     COMMANDE : nom de la commande à executer
-    OPTIONS : une ou plusieurs options. Le nom d'une option commence par un tiret
-              et peut être suivi par une valeur.
-              exemple :
+    OPTIONS  : une ou plusieurs options. Le nom d'une option commence par un
+               tiret et peut être suivi par une valeur.
+               exemple :
                  -override
                  -project-path /foo/bar
     PARAMETRES : une ou plusieurs valeurs qui se suivent
@@ -57,7 +60,7 @@ Liste des commandes disponibles :\n\t");
 
        }
     }
-    
+
     protected function disp($str){
        if( DISPLAY_HELP_UTF_8){
          echo utf8_encode($str);

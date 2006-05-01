@@ -99,8 +99,8 @@ function jxs_getPathSeparator(){
     }else{
         $os=PHP_OS;
     }
-    if(strtolower($os) == 'win')
-        return array("\\","![/\\]!");
+    if(strpos(strtolower($os),'win')!== false)
+        return array("\\","![/\\\\]!");
     else
        return array('/','!/!');
 }
@@ -108,9 +108,9 @@ function jxs_getPathSeparator(){
 
 function jxs_getRelativePath($path, $targetPath){
     list($sep, $cut) = jxs_getPathSeparator();
-
     $path = preg_split($cut,$path);
     $targetPath = preg_split($cut,$targetPath);
+
 
     $dir='';
     $targetdir='';
@@ -121,11 +121,18 @@ function jxs_getRelativePath($path, $targetPath){
         if($dir != $targetdir)
             break;
     }
-    $relativePath=str_repeat('..'.$sep,count($path));
-    if($targetdir != '' && $dir != $targetdir)
-        $relativePath.= $targetdir.$sep.implode($sep,$targetPath);
-    else
-        $relativePath.='.';
+    if(count($path)){
+      $relativePath=str_repeat('..'.$sep,count($path));
+    }else{
+      $relativePath='.'.$sep;
+    }
+    if(count($targetPath) && $dir != $targetdir){
+       $relativePath.= $targetdir.$sep.implode($sep,$targetPath);
+    }elseif(count($targetPath) ){
+        $relativePath.= implode($sep,$targetPath);
+    }
+    if(substr($relativePath,-1) != $sep)
+       $relativePath.=$sep;
     return $relativePath;
 }
 

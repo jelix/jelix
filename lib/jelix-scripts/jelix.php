@@ -25,7 +25,7 @@ $commandName = array_shift($argv); // get the command name
 if(preg_match('/^\-\-([\w\-\.]+)$/',$commandName,$m)){
     $APPNAME=$m[1];
     if($_SERVER['argc'] < 3){
-       die("Error: command is missing\n");
+       die("Error: command is missing. Try 'jelix.php help'.\n");
     }
     $commandName = array_shift($argv);
 }else{

@@ -29,8 +29,8 @@ class createdaoCommand extends JelixScriptCommand {
     MODULE : le nom du module concerné.
     DAO :  nom du dao à créer.
     TABLEPRINCIPALE : nom de la table principale sur laquelle s'appuie le dao
-                      (cette commande ne permet pas de générer un dao s'appuyant
-                      sur de multiple table)";
+                      (cette commande ne permet pas de générer un dao
+                      s'appuyant sur de multiple table)";
 
 
     public function run(){
