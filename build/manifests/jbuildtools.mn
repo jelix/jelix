@@ -1,0 +1,8 @@
+cd .
+  mkdist.php
+  mkmanifest.php
+  preprocessor.lib.php
+  preprocess.php
+  VERSION
+  LICENCE
+  README.TXT
