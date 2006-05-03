@@ -51,7 +51,7 @@ after_logout = auth~login_out
 login_template = auth~login.form
 
 ; paramètres pour le driver db
-[db]
+[Db]
 dao = auth~jelixuser
 
 ; paramètres pour le driver ldap

@@ -318,12 +318,12 @@ class jDAOGenerator {
                break;
                case 'count':
                   $src[] = '    $dbw = new jDbWidget ($this->_conn);';
-                  $src[] = '    $res = $dbw->fetchFirst ($query, \''.$this->_compiler->getDAOId().'\');';
+                  $src[] = '    $res = $dbw->fetchFirst ($query);';
                   $src[] = '    return $res->c;';
                   break;
                case 'selectfirst':
                   $src[] = '    $dbw = new jDbWidget ($this->_conn);';
-                  $src[] = '    return $dbw->fetchFirst ($query, \''.$this->_compiler->getDAOId().'\');';
+                  $src[] = '    return $dbw->fetchFirstInto ($query, \''.$this->_DAORecordClassName.'\');';
                   break;
                case 'select':
                default:

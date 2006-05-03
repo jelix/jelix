@@ -93,7 +93,7 @@ class jCoordinator {
                 if($conf=='1')
                     $conf=$name.'.plugin.ini.php';
                 if(file_exists(JELIX_APP_CONFIG_PATH.$conf)){
-                   $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.$conf);
+                   $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.$conf,true);
                 }else{
                     $conf = array();
                 }
@@ -160,12 +160,12 @@ class jCoordinator {
         $ctrl = $this->getController($this->action);
 
         $pluginparams = array();
-        if(isset($ctrl->pluginsParam['*'])){
-            $pluginparams = $ctrl->pluginsParam['*'];
+        if(isset($ctrl->pluginParams['*'])){
+            $pluginparams = $ctrl->pluginParams['*'];
         }
 
-        if(isset($ctrl->pluginsParam[$this->action->method])){
-            $pluginparams = array_merge($pluginparams, $ctrl->pluginsParam[$this->action->method]);
+        if(isset($ctrl->pluginParams[$this->action->method])){
+            $pluginparams = array_merge($pluginparams, $ctrl->pluginParams[$this->action->method]);
         }
 
         foreach ($this->plugins as $name => $obj){
