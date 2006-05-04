@@ -54,10 +54,14 @@ class AuthPlugin implements jIPlugin {
             $notLogged = ! jAuth::isConnected();
         }
         if(!$notLogged && $this->config['timeout']){
-            if(!isset($_SESSION['JELIX_AUTH_LASTTIME'])
-            || (mktime() - $_SESSION['JELIX_AUTH_LASTTIME'] )> ($this->config['timeout'] *60)){
-                $notLogged = true;
-                jAuth::logout();
+            if(isset($_SESSION['JELIX_AUTH_LASTTIME'])){
+                if((mktime() - $_SESSION['JELIX_AUTH_LASTTIME'] )> ($this->config['timeout'] *60)){
+                    $notLogged = true;
+                    jAuth::logout();
+                    unset($_SESSION['JELIX_AUTH_LASTTIME']);
+                }else{
+                    $_SESSION['JELIX_AUTH_LASTTIME'] =mktime();
+                }
             }else{
                 $_SESSION['JELIX_AUTH_LASTTIME'] =mktime();
             }
