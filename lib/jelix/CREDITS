@@ -12,7 +12,11 @@ sous copyright 2001-2005 Copix Team (http://www.copix.org)
 
 Contributeurs
 -------------
-
+Loic Mathaud (bballizlife) : 
+    testeur, corrections de bugs, 
+    corrections orthographiques dans la documentation
+    contributions jTpl : version standalone du moteur de template
+    driver sqlite pour jDb
+    adaptation du framework pour la réalisation d'applications fonctionnant en ligne de commande
 Gildas Givaja (Giviz) : testeur, corrections de bugs
-Loic Mathaud (bballizlife) : testeur, corrections de bugs, corrections orthographiques dans la documentation, contributions jTpl
 Olivier Gambier (d-m-p) : review de code, corrections de bugs
