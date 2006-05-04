@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @version     $Id$
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Loic Mathaud
 * @copyright   2005-2006 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -79,6 +79,7 @@ if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
    define ('JELIX_APP_LOG_PATH',     JELIXS_APPTPL_LOG_PATH);
    define ('JELIX_APP_CONFIG_PATH',  JELIXS_APPTPL_CONFIG_PATH);
    define ('JELIX_APP_WWW_PATH',     JELIXS_APPTPL_WWW_PATH);
+   define ('JELIX_APP_CMD_PATH',     JELIXS_APPTPL_CMD_PATH);
 }
 
 include('includes/command.class.php');

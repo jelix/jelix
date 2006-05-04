@@ -21,6 +21,9 @@ cd lib/jelix/acl
   jAcl.class.php
   jAclUserGroup.class.php
   jAclManager.class.php
+  
+cd lib/jelix/controllers
+  jControllerCmdLine.class.php
 
 cd lib/jelix/core
   jConfig.class.php
@@ -148,6 +151,7 @@ cd lib/jelix/utils/
   jXmlRpc.class.php
   jZone.class.php
   jDatatype.class.php
+  jCmdUtils.class.php
 
 cd lib/json
   JSON.php

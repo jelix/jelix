@@ -17,6 +17,6 @@ define ('JELIX_APP_VAR_PATH',     realpath(JELIX_APP_PATH.'{$rp_var}').'/');
 define ('JELIX_APP_LOG_PATH',     realpath(JELIX_APP_PATH.'{$rp_log}').'/');
 define ('JELIX_APP_CONFIG_PATH',  realpath(JELIX_APP_PATH.'{$rp_conf}').'/');
 define ('JELIX_APP_WWW_PATH',     realpath(JELIX_APP_PATH.'{$rp_www}').'/');
-
+define ('JELIX_APP_CMD_PATH',     realpath(JELIX_APP_PATH.'{$rp_cmd}').'/');
 
 ?>

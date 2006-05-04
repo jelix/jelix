@@ -125,10 +125,14 @@ cd lib/jelix-scripts/templates
   application.init.php.tpl
   dbprofils.ini.php.tpl
   config.classic.ini.php.tpl
+  config.cmdline.ini.php.tpl
+  controller.cmdline.tpl
 cd lib/jelix-scripts/templates/www
   xmlrpc.php.tpl
   index.php.tpl
   jsonrpc.php.tpl
+cd lib/jelix-scripts/templates/scripts
+  cmdline.php.tpl
 cd lib/jelix/docs/ns
   dao.rng
   events.rng

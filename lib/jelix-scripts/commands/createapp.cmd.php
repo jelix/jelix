@@ -4,7 +4,7 @@
 * @package     jelix-scripts
 * @version     $Id$
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Loic Mathaud
 * @copyright   2005-2006 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -13,15 +13,18 @@
 class createappCommand extends JelixScriptCommand {
 
     public  $name = 'createapp';
-    public  $allowed_options=array('-withdefaultmodule'=>false);
+    public  $allowed_options=array('-withdefaultmodule'=>false, '-withcmdline'=>false);
     public  $allowed_parameters=array();
 
-    public  $syntaxhelp = "[-withdefaultmodule]";
+    public  $syntaxhelp = "[-withdefaultmodule] [-withcmdline]";
     public  $help="
     Créer une nouvelle application avec tous les répertoires nécessaires.
 
     Si l'option -withdefaultmodule est présente, créer également un module du
     même nom que l'application.
+    
+    Si l'option -withcmdline est présente, créer un point d'entrée afin de développer des
+    scripts en ligne de commande.
 
     Le nom de l'application doit être indiqué
     1) soit en premier paramètre du script jelix.php
@@ -77,6 +80,13 @@ class createappCommand extends JelixScriptCommand {
             $cmd = jxs_load_command('createmodule');
             $cmd->init(array(),array('module'=>$GLOBALS['APPNAME']));
             $cmd->run();
+       }
+       
+       if ($this->getOption('-withcmdline')) {
+            $this->createDir(JELIX_APP_CMD_PATH);
+            $this->createFile(JELIX_APP_CONFIG_PATH.'config.cmdline.ini.php','config.cmdline.ini.php.tpl',$param);
+            $param['rp_cmd'] =jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH);
+            $this->createFile(JELIX_APP_CMD_PATH.'cmdline.php','scripts/cmdline.php.tpl',$param);
        }
 
     }

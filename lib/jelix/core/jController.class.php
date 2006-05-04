@@ -4,7 +4,7 @@
 * @subpackage core
 * @version    $Id:$
 * @author     Laurent Jouanneau
-* @contributor
+* @contributor Loic Mathaud
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -25,7 +25,7 @@ interface jIRestController{
 class jController{
 
     public $pluginParams=array();
-    private $request;
+    protected $request;
 
     /**
     *
