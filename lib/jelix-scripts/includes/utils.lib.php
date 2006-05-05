@@ -93,21 +93,11 @@ function jxs_commandlist(){
 }
 
 
-function jxs_getPathSeparator(){
-    if(preg_match("/^(\w+).*$/", PHP_OS, $m)){
-        $os=$m[1];
-    }else{
-        $os=PHP_OS;
-    }
-    if(strpos(strtolower($os),'win')!== false)
-        return array("\\","![/\\\\]!");
-    else
-       return array('/','!/!');
-}
 
 
-function jxs_getRelativePath($path, $targetPath){
-    list($sep, $cut) = jxs_getPathSeparator();
+function jxs_getRelativePath($path, $targetPath, $intoString=false){
+    $cut = (DIRECTORY_SEPARATOR == '/'? '!/!': "![/\\\\]!");
+    $sep = DIRECTORY_SEPARATOR;
     $path = preg_split($cut,$path);
     $targetPath = preg_split($cut,$targetPath);
 
@@ -133,6 +123,8 @@ function jxs_getRelativePath($path, $targetPath){
     }
     if(substr($relativePath,-1) != $sep)
        $relativePath.=$sep;
+    if($intoString && $sep =='\\')
+      $relativePath = str_replace('\\','\\\\', $relativePath);
     return $relativePath;
 }
 

@@ -136,10 +136,11 @@ class jTplCompiler
         } else {
             $os = PHP_OS;
         }
-        $isWindows = (strtolower($os) == 'win');
+        $isWindows = (strpos(strtolower($os),'win')!== false);
         if ($isWindows && file_exists($cachefile)) {
             @unlink($cachefile);
         }
+
         @rename($_tmp_file, $cachefile);
         @chmod($cachefile, 0664);
 #else
@@ -177,7 +178,7 @@ class jTplCompiler
                 $m[2] = $m[3];
             }
             if(!isset($m[2])) $m[2]='';
-            
+
             return '<?php '.$this->_parseFunction($m[1],$m[2]).'?>';
         }
     }
@@ -195,7 +196,7 @@ class jTplCompiler
 #endif
                 return '';
             }
-            
+
             $targs=array($res);
 
             if( ! $path = $this->_getPlugin('modifier',$m[1])){
@@ -206,7 +207,7 @@ class jTplCompiler
                     trigger_error(sprintf($this->_locales['errors.tpl.tag.modifier.unknow'], $this->_currentTag, $m[1], $this->_sourceFile),E_USER_ERROR);
 #else
                     trigger_error(jLocale::get('jelix~errors.tpl.tag.modifier.unknow',array($this->_currentTag,$m[1],$this->_sourceFile)),E_USER_ERROR);
-#endif               
+#endif
                     return '';
                 }
             } else {
