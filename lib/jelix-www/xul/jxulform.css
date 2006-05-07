@@ -29,4 +29,9 @@ jxf|submit[loading=true]:not([nothrobber]) {
 
 textbox[invalid] html|input {background-color:#ffc0c0;}
 
+
+vbox[submit], hbox[submit], box[submit] {
+    -moz-binding: url("jxulform.xml#submit-activate");
+}
+
 /**[invalid] { background-color:red; border:1px solid red; -moz-appearance:none; }*/

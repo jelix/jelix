@@ -532,5 +532,29 @@
     </handlers>
 </binding>
 
+<binding id="submit-activate">
+    <content>
+        <children/>
+    </content>
+    <handlers>
+        <handler event="keypress" keycode="VK_RETURN">
+            var submit= this.getAttribute("submit");
+            submit = document.getElementById(submit);
+            if(submit){
+                if(submit.hasAttribute('loading') || submit.hasAttribute('disabled')){
+                    return;
+                }
+                var submission= submit.getAttribute("form");
+                submission = document.getElementById(submission);
+                if(submission){
+                    var evt = document.createEvent("HTMLEvents");
+                    evt.button = submit;
+                    evt.initEvent("submit", true, true);
+                    submission.dispatchEvent(evt);
+                }
+            }
+        </handler>
+    </handlers>
+</binding>
 
 </bindings>
