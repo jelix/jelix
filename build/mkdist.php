@@ -26,7 +26,7 @@ if(substr($_SERVER['argv'][0],0,1) == '-'){
   $options['verbose'] = (strpos('v', $sw) !== false);
 
 }
-/*$env = $_ENV;
+/*$env = $_SERVER;
 $options = array('verbose'=>false);
 $arrargv = $_SERVER['argv'];
 foreach($arrargv as $argv){
@@ -96,7 +96,7 @@ foreach($script as $nbline=>$line){
             echo "process  ".$sourcedir.$currentsrcdir.$m[2]."\tto\t".$destfile."\n";
         }
 
-        $preproc->setVars($_ENV);
+        $preproc->setVars($_SERVER);
         $contents = $preproc->run(file_get_contents($sourcedir.$currentsrcdir.$m[2]));
         if($contents===false){
             echo "$ficlist : line $nbline, cannot process file ".$m[2]." (error code=".$preproc->errorCode."  line=".$preproc->errorLine.")\n";

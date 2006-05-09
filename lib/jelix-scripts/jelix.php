@@ -30,14 +30,14 @@ if(preg_match('/^\-\-([\w\-\.]+)$/',$commandName,$m)){
     $commandName = array_shift($argv);
 }else{
 
-    if(!isset($_ENV['JELIX_APP_NAME'])||$_ENV['JELIX_APP_NAME'] == ''){
+    if(!isset($_SERVER['JELIX_APP_NAME'])||$_SERVER['JELIX_APP_NAME'] == ''){
         if($commandName != 'help'){
             die("Error: JELIX_APP_NAME environnement variable doesn't exists \n");
         }else{
             $APPNAME='';
         }
     }else{
-        $APPNAME = $_ENV['JELIX_APP_NAME'];
+        $APPNAME = $_SERVER['JELIX_APP_NAME'];
     }
 
 }
@@ -46,16 +46,16 @@ if(preg_match('/^\-\-([\w\-\.]+)$/',$commandName,$m)){
  * recupération de la config
  */
 
-if(!isset($_ENV['JELIX_CONFIG'])){
+if(!isset($_SERVER['JELIX_CONFIG'])){
 
    $jelix_config=dirname(__FILE__).'/scripts.conf.php';
 
-}elseif(!file_exists($_ENV['JELIX_CONFIG'])){
+}elseif(!file_exists($_SERVER['JELIX_CONFIG'])){
 
-   die("Error: path given by the JELIX_CONFIG environnement variable doesn't exists (".$_ENV['JELIX_CONFIG']." )\n");
+   die("Error: path given by the JELIX_CONFIG environnement variable doesn't exists (".$_SERVER['JELIX_CONFIG']." )\n");
 
 }else{
-  $jelix_config = $_ENV['JELIX_CONFIG'];
+  $jelix_config = $_SERVER['JELIX_CONFIG'];
 }
 
 require($jelix_config);
