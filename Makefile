@@ -37,7 +37,7 @@ endif
 DISTJELIX="$(DIST)/jelix-$(LIB_VERSION)"
 DISTHACKER="$(DEV)"
 DISTJTPL="$(DIST)/jtpl"
-DEVJTPL="$(DEV)"
+DEVJTPL="$(DEV)/jtpl"
 DISTJBT="$(DIST)/jbuildtools"
 
 default:
