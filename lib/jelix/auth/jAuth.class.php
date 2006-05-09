@@ -144,7 +144,7 @@ class jAuth {
         $password = self::cryptPassword($password);
         if($user = $dr->verifyPassword($login, $password)){
 
-            $eventresp = jEvent::notify ('AuthCanLogin', array('login'=>$login));
+            $eventresp = jEvent::notify ('AuthCanLogin', array('login'=>$login, 'user'=>$user));
             foreach($eventresp->getResponse() as $rep){
                 if(!isset($rep['canlogin']) || $rep['canlogin'] === false){
                     return false;

@@ -126,7 +126,7 @@ class jUrl {
                $urlobj->requestType = $gJCoord->request->type;
             }
 
-            $engine = & self::getEngine();
+            $engine = self::getEngine();
             $engine->create($urlobj); // set path info
         }
         if (count ($urlobj->params)>0){

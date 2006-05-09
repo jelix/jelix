@@ -21,7 +21,7 @@ cd lib/jelix/acl
   jAcl.class.php
   jAclUserGroup.class.php
   jAclManager.class.php
-  
+
 cd lib/jelix/controllers
   jControllerCmdLine.class.php
 
@@ -56,6 +56,9 @@ cd lib/jelix/core/response
   jResponseText.class.php
   jResponseXmlrpc.class.php
   jResponseXul.class.php
+  jResponseXulOverlay.class.php
+  jResponseXulDialog.class.php
+  jResponseXulPage.class.php
 
 cd lib/jelix/core/url
   jUrl.class.php

@@ -58,6 +58,7 @@ class jResponseXul extends jResponse {
      */
     public $bodyErrorTpl = 'myapp~errorxul';
 
+    public $fetchOverlays=false;
 
     protected $_bodyTop = array();
     protected $_bodyBottom = array();
@@ -159,7 +160,7 @@ class jResponseXul extends jResponse {
 
 
     function addOverlay ($src){
-        $this->_overlays[] = $src;
+        $this->_overlays[$src] = true;
     }
     function addJSLink ($src, $params=array()){
         if (!isset ($this->_JSLink[$src])){
@@ -189,7 +190,7 @@ class jResponseXul extends jResponse {
         }
         $this->_otherthings();
 
-        echo '<',$this->_root,' title="',htmlspecialchars($this->title,ENT_COMPAT, $charset),'"';
+        echo '<',$this->_root;
         foreach($this->rootAttributes as $name=>$value){
             echo ' ',$name,'="',htmlspecialchars($value,ENT_COMPAT, $charset),'"';
         }
@@ -212,11 +213,24 @@ class jResponseXul extends jResponse {
         }
     }
 
-    function _otherthings(){
+    protected function _otherthings(){
         // overlays
-        foreach ($this->_overlays as $src){
-            echo  '<?xul-overlay href="',htmlspecialchars($src,ENT_COMPAT, $GLOBALS['gJConfig']->defaultCharset),'" ?>',"\n";
+        if($this->fetchOverlays){
+            $eventresp = jEvent::notify ('FetchXulOverlay', array('tpl'=>$this->bodyTpl));
+            foreach($eventresp->getResponse() as $rep){
+                if(is_array($rep)){
+                    $this->_overlays[jUrl::get($rep[0],$rep[1])]=true;
+                }elseif(is_string($rep)){
+                    $this->_overlays[jUrl::get($rep)]=true;
+                }
+            }
         }
+
+        foreach ($this->_overlays as $src=>$ok){
+            echo  '<?xul-overlay href="',$src,'" ?>',"\n";
+        }
+
+        $this->rootAttributes['title']=$this->title;
     }
 
 
@@ -229,22 +243,6 @@ class jResponseXul extends jResponse {
             }
         }
     }
-}
-
-
-class jResponseXulOverlay extends jResponseXul {
-    var $id = 'xuloverlay';
-    var $_root = 'overlay';
-    function _otherthings(){ } // pas d'overlay dans un overlay
-}
-
-class jResponseXulDialog extends jResponseXul {
-    var $id = 'xuldialog';
-    var $_root = 'dialog';
-}
-class jResponseXulPage extends jResponseXul {
-    var $id = 'xulpage';
-    var $_root = 'page';
 }
 
 ?>
