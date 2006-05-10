@@ -406,7 +406,7 @@
                     return false;
                 }
             }
-            if(event.button) this.submitButton = event.button; else this.submitButton = null;
+            //if(event.submitbutton) this.submitButton = event.submitbutton; else this.submitButton = null;
             this._submit(this.method, this.contentType, this._prepareContent());
             return true;
 
@@ -523,8 +523,9 @@
             var submission= this.getAttribute("form");
             submission = document.getElementById(submission);
             if(submission){
+            
                 var evt = document.createEvent("HTMLEvents");
-                evt.button = this;
+                submission.submitButton = this;
                 evt.initEvent("submit", true, true);
                 submission.dispatchEvent(evt);
             }
@@ -548,7 +549,7 @@
                 submission = document.getElementById(submission);
                 if(submission){
                     var evt = document.createEvent("HTMLEvents");
-                    evt.button = submit;
+                    submission.submitButton = submit;
                     evt.initEvent("submit", true, true);
                     submission.dispatchEvent(evt);
                 }
