@@ -131,6 +131,7 @@ cd lib/jelix-scripts/templates/www
   xmlrpc.php.tpl
   index.php.tpl
   jsonrpc.php.tpl
+  rdf.php.tpl
 cd lib/jelix-scripts/templates/scripts
   cmdline.php.tpl
 cd lib/jelix/docs/ns

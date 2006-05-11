@@ -85,7 +85,7 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     }
 
     if(strpos($action , 'EXIT') !== false){
-        $gJCoord->response->outputErrors();
+        if($gJCoord->response) $gJCoord->response->outputErrors();
         exit;
     }
 }

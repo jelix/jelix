@@ -243,6 +243,8 @@ class jResponseXul extends jResponse {
             }
         }
     }
+
+    public function getFormatType(){ return 'xul';}
 }
 
 ?>

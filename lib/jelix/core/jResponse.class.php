@@ -58,6 +58,7 @@ abstract class jResponse {
 
 
     public final function getType(){ return $this->_type;}
+    public function getFormatType(){ return $this->_type;}
     public final function acceptSeveralErrors(){ return $this->_acceptSeveralErrors;}
     public final function hasErrors(){ return count($GLOBALS['gJCoord']->errorMessages)>0;}
 

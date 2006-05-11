@@ -46,6 +46,7 @@ cd lib/jelix/core/request
   jJsonRpcRequest.class.php
   jXmlRpcRequest.class.php
   jXulRequest.class.php
+  jRdfRequest.class.php
 
 cd lib/jelix/core/response
   jResponseBinary.class.php
@@ -59,6 +60,7 @@ cd lib/jelix/core/response
   jResponseXulOverlay.class.php
   jResponseXulDialog.class.php
   jResponseXulPage.class.php
+  jResponseRdf.class.php
 
 cd lib/jelix/core/url
   jUrl.class.php

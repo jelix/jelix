@@ -89,6 +89,7 @@ IISStripslashes_path_key = on
 index = "@classic"
 xmlrpc = "@xmlrpc"
 jsonrpc = "@jsonrpc"
+rdf = "@rdf"
 
 
 [logfiles]

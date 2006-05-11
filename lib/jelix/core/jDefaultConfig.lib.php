@@ -40,7 +40,8 @@ $gDefaultConfig = array (
      'xul'=>'jResponseXul',
      'xuloverlay'=>'jResponseXulOverlay',
      'xuldialog'=>'jResponseXulDialog',
-     'xulpage'=>'jResponseXulPage'
+     'xulpage'=>'jResponseXulPage',
+     'rdf'=>'jResponseRdf'
   ),
   'error_handling'=> array (
         'messageLogFormat' => '%date%\\t[%code%]\\t%msg%\\t%file%\\t%line%\\n',

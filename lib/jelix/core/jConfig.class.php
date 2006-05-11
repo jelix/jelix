@@ -22,7 +22,8 @@ class jConfig {
     static public function load($configFile){
         global $gDefaultConfig;
 
-        $config = parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true);
+        if(! $config = parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true))
+            die(" fichier de configuration manquant !");
 
         // traitement spécial pour la liste des réponses.
         if(isset($config['responses'])){

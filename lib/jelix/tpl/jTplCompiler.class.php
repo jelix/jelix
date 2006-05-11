@@ -441,7 +441,7 @@ class jTplCompiler
         $treq = 'html';
 #else
         global $gJCoord, $gJConfig;
-        $treq = $gJCoord->response->getType();
+        $treq = $gJCoord->response->getFormatType();
 #endif
         $foundPath='';
 
