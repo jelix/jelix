@@ -23,6 +23,7 @@ interface jIAuthDriver {
 
     function __construct($params);
     public function createUser($login, $password);
+    public function saveNewUser($user);
     public function removeUser($login);
     public function updateUser($user);
     public function getUser($login);
