@@ -138,6 +138,7 @@ cd lib/jelix/tpl/plugins/html
   function.jlocale.php
   function.jurl.php
   modifier.nl2br.php
+  meta.html.php
 
 cd lib/jelix/tpl/plugins/text
   function.jlocale.php
@@ -146,6 +147,7 @@ cd lib/jelix/tpl/plugins/text
 cd lib/jelix/tpl/plugins/xul
   function.jlocale.php
   function.jurl.php
+  meta.xul.php
 
 cd lib/jelix/utils/
   jClasses.class.php

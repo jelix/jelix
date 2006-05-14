@@ -38,6 +38,7 @@ class jTplCompiler
     private $_allowedAssign;
 
     private $_pluginPath=array();
+    private $_metaBody = '';
 
     private $_modifier = array('upper'=>'strtoupper', 'lower'=>'strtolower',
         'escxml'=>'htmlspecialchars', 'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
@@ -59,6 +60,10 @@ class jTplCompiler
 #endif
     }
 
+
+    /**
+     * compilation d'un template en fichier php
+     */
 #ifdef JTPL_STANDALONE
     public function compile($tplFile){
         $this->_sourceFile = $tplFile;
@@ -94,6 +99,14 @@ class jTplCompiler
         foreach($this->_pluginPath as $path=>$ok){
             $header.=' require_once(\''.$path."');\n";
         }
+
+#ifdef JTPL_STANDALONE
+        $header.='function template_meta_'.md5($tplFile).'($t){';
+#else
+        $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource).'($t){';
+#endif
+        $header .="\n".$this->_metaBody."\nreturn \$t->_meta;\n}\n";
+
 #ifdef JTPL_STANDALONE
         $header.='function template_'.md5($tplFile).'($t){'."\n?>";
 #else
@@ -152,8 +165,13 @@ class jTplCompiler
         return true;
     }
 
+    /**
+     * fonction appelée sur chaque balise de template {xxxx }
+     */
     public function _callback($matches){
         list(,$tag, $firstcar) = $matches;
+
+        // test du premier caractère
         if (!preg_match('/^\$|@|[a-zA-Z\/]$/',$firstcar)) {
 #ifdef JTPL_STANDALONE
             trigger_error(sprintf($this->_locales['errors.tpl.tag.syntax.invalid'], $tag, $this->_sourceFile),E_USER_ERROR);
@@ -183,6 +201,10 @@ class jTplCompiler
         }
     }
 
+    /**
+    * analyse une balise qui commence par $ ou @, indiquant donc un affichage de variable
+    *
+    */
     private function _parseVariable($expr){
         $tok = explode('|',$expr);
         $res = $this->_parseFinal(array_shift($tok),$this->_allowedInVar);
@@ -225,6 +247,9 @@ class jTplCompiler
         return $res;
     }
 
+    /**
+     * analyse les balises ayant un nom "normal" (ne commençant pas par $ ou @)
+     */
     private function _parseFunction($name,$args){
 
         switch($name) {
@@ -304,8 +329,24 @@ class jTplCompiler
                 trigger_error(jLocale::get('jelix~errors.tpl.tag.block.begin.missing',array('literal',$this->_sourceFile)),E_USER_ERROR);
 #endif
                 break;
+            case 'meta':
+                $this->_parseMeta($args);
+                $res='';
+                break;
             default:
-                if ( ! $path = $this->_getPlugin('function',$name)) {
+                if(preg_match('/^meta_(\w+)$/',$name,$m)){
+                     if ( ! $path = $this->_getPlugin('meta',$m[1])) {
+#ifdef JTPL_STANDALONE
+                        trigger_error(sprintf($this->_locales['errors.tpl.tag.meta.unknow'], $m[1], $this->_sourceFile),E_USER_ERROR);
+#else
+                        trigger_error(jLocale::get('jelix~errors.tpl.tag.meta.unknow',array($m[1],$this->_sourceFile)),E_USER_ERROR);
+#endif
+                    }else{
+                        $this->_parseMeta($args,$m[1]);
+                        $this->_pluginPath[$path] = true;
+                    }
+                    $res='';
+                }else if ( ! $path = $this->_getPlugin('function',$name)) {
 #ifdef JTPL_STANDALONE
                     trigger_error(sprintf($this->_locales['errors.tpl.tag.function.unknow'], $name, $this->_sourceFile),E_USER_ERROR);
 #else
@@ -321,8 +362,12 @@ class jTplCompiler
         return $res;
     }
 
-    /*
+    /**
+     * analyse un argument de balise, et le transforme en code php
+     *
+     */
 
+    /*
     -------
     if:        op, autre, var
     foreach:   T_AS, T_DOUBLE_ARROW, T_VARIABLE, @locale@
@@ -434,6 +479,23 @@ class jTplCompiler
         }
 
         return $result;
+    }
+
+    private function _parseMeta($args, $fct=''){
+        if(preg_match("/^(\w+)\s+(.*)$/",$args,$m)){
+            $argfct=$this->_parseFinal($m[2],$this->_allowedInExpr);
+            if($fct!=''){
+                $this->_metaBody.= 'jtpl_meta_'.$fct.'( $t,'."'".$m[1]."',".$argfct.");\n";
+            }else{
+                $this->_metaBody.= "\$t->_meta['".$m[1]."']=".$argfct.";\n";
+            }
+        }else{
+#ifdef JTPL_STANDALONE
+            trigger_error(sprintf($this->_locales['errors.tpl.tag.meta.invalid'], $this->_currentTag, $this->_sourceFile),E_USER_ERROR);
+#else
+            trigger_error(jLocale::get('jelix~errors.tpl.tag.meta.invalid',array($this->_currentTag,$this->_sourceFile)),E_USER_ERROR);
+#endif
+        }
     }
 
     private function _getPlugin($type, $name){

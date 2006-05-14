@@ -113,6 +113,11 @@ class jZone {
         if ($this->_useCache){
             $f = $this->_getCacheFile();
             if(file_exists($f)){
+                if($this->_tplname != ''){
+                    $this->_tpl = new jTpl();
+                    $this->_tpl->assign($this->_params);
+                    $this->_tpl->meta($this->_tplname);
+                }
                 $content=file_get_contents($f);
             }else{
                 $this->_cancelCache=false;
@@ -148,6 +153,7 @@ class jZone {
             $this->_tpl = new jTpl();
             $this->_tpl->assign($this->_params);
             $this->_prepareTpl();
+            $this->_tpl->meta($this->_tplname);
             return $this->_tpl->fetch($this->_tplname);
         }
         return '';

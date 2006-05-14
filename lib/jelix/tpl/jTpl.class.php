@@ -13,6 +13,7 @@
 class jTpl {
 
     public $_vars = array ();
+    public $_meta = array();
 
     public function __construct(){
 
@@ -87,12 +88,19 @@ class jTpl {
         }
     }
 
-    function getTemplateVars (){
+    public function getTemplateVars (){
         return $this->_vars;
     }
 
+    public function meta($tpl){
+        $this->getTemplate($tpl,'template_meta_');
+    }
 
-    function display ($tpl){
+    public function display ($tpl){
+        $this->getTemplate($tpl,'template_');
+    }
+
+    protected function  getTemplate($tpl,$fctname){
 #ifndef JTPL_STANDALONE
         $sel = new jSelectorTpl($tpl);
         if(!$sel->isValid()){
@@ -100,35 +108,35 @@ class jTpl {
             return;
         }
         jIncluder::inc($sel);
-        $fct = 'template_'.md5($sel->module.'_'.$sel->resource);
+        $fct = $fctname.md5($sel->module.'_'.$sel->resource);
 #else
         $tpl = JTPL_TEMPLATES_PATH . $tpl;
-      $filename = basename($tpl);
-      $cachefile = JTPL_CACHE_PATH . $filename;
+        $filename = basename($tpl);
+        $cachefile = JTPL_CACHE_PATH . $filename;
 
-      $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
-      if (!$mustCompile) {
-         if (filemtime($tpl) > filemtime($cachefile)) {
+        $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
+        if (!$mustCompile) {
+            if (filemtime($tpl) > filemtime($cachefile)) {
             $mustCompile = true;
-         }
-      }
+            }
+        }
 
-      if ($mustCompile) {
+        if ($mustCompile) {
             include_once(JTPL_PATH . 'jTplCompiler.class.php');
 
-         $compiler = new jTplCompiler();
-         $compiler->compile($tpl);
-      }
-      require_once($cachefile);
-      $fct = 'template_'.md5($tpl);
+            $compiler = new jTplCompiler();
+            $compiler->compile($tpl);
+        }
+        require_once($cachefile);
+        $fct = $fctname.md5($tpl);
 #endif
         $fct($this);
     }
 
-    function fetch ($tpl){
+    public function fetch ($tpl){
         ob_start ();
         try{
-           $this->display($tpl);
+           $this->getTemplate($tpl,'template_');
            $content = ob_get_clean();
         }catch(Exception $e){
            ob_end_clean();

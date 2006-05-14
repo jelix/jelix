@@ -51,12 +51,12 @@ class jResponseXul extends jResponse {
      * selecteur du template principal
      * le contenu du template principal concerne le contenu de <body>
      */
-    public $bodyTpl = 'myapp~mainxul';
+    public $bodyTpl = '';
 
     /**
      * template principal à afficher en cas d'erreur
      */
-    public $bodyErrorTpl = 'myapp~errorxul';
+    public $bodyErrorTpl = '';
 
     public $fetchOverlays=false;
 
@@ -80,14 +80,19 @@ class jResponseXul extends jResponse {
      */
     function output(){
         $this->_headSent = false;
+
         $this->_httpHeaders['Content-Type']='application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset;
         if($this->_sendHttpHeader){
             $this->sendHttpHeaders();
         }
+        $this->_commonProcess();
+        if($this->bodyTpl != '')
+           $this->body->meta($this->bodyTpl);
         $this->outputHeader();
         $this->_headSent = true;
         echo implode('',$this->_bodyTop);
-        $this->body->display($this->bodyTpl);
+        if($this->bodyTpl != '')
+            $this->body->display($this->bodyTpl);
         if($this->hasErrors()){
             echo '<vbox id="copixerror" style="border:3px solid red; background-color:#f39999;color:black;">';
             echo $this->getFormatedErrorMsg();
@@ -184,7 +189,7 @@ class jResponseXul extends jResponse {
         // css link
         foreach ($this->_CSSLink as $src=>$param){
             if(is_string($param))
-                echo  '<?xml-stylesheet type="text/css" href="',htmlspecialchars($param,ENT_COMPAT, $charset),'" ?>',"\n";
+                echo  '<?xml-stylesheet type="text/css" href="',htmlspecialchars($src,ENT_COMPAT, $charset),'" '.$param.'?>',"\n";
             else
                 echo  '<?xml-stylesheet type="text/css" href="',htmlspecialchars($src,ENT_COMPAT, $charset),'" ?>',"\n";
         }
@@ -211,6 +216,11 @@ class jResponseXul extends jResponse {
 ]]>
 </script>';
         }
+    }
+
+    // à surcharger dans les classes héritières
+    protected function _commonProcess(){
+
     }
 
     protected function _otherthings(){

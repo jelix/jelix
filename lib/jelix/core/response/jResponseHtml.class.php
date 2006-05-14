@@ -113,7 +113,8 @@ class jResponseHtml extends jResponse {
             echo '<html lang="',$this->_lang,'">';
         }
         $this->_commonProcess();
-
+        if($this->bodyTpl != '')
+           $this->body->meta($this->bodyTpl);
         $this->outputHtmlHeader();
         echo '<body ';
         foreach($this->bodyTagAttributes as $attr=>$value){
