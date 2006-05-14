@@ -256,6 +256,7 @@ cd lib/jelix-www
 cd lib/jelix-www/design
   jelix.css
   tooltip.css
+  xulpage.css
 cd lib/jelix-www/js
   tooltip.js
 cd lib/jelix-www/xul

@@ -67,10 +67,10 @@ class jAuth {
     /**
      *
      */
-    public static function createUser($login, $password){
+    public static function saveNewUser($user){
         $dr = self::_getDriver();
-        if($user = $dr->createUser($login, $password)){
-            jEvent::notify ('AuthAddUser', array('login'=>$login));
+        if($dr->saveNewUser($user)){
+            jEvent::notify ('AuthNewUser', array('login'=>$login));
         }
         return $user;
     }
@@ -108,6 +108,12 @@ class jAuth {
         $dr = self::_getDriver();
         return $dr->getUser($login);
     }
+
+    public static function createUser($login,$password){
+        $dr = self::_getDriver();
+        return $dr->createUser($login, self::cryptPassword($password));
+    }
+
 
     /**
      *

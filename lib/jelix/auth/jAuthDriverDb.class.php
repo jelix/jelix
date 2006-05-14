@@ -27,12 +27,9 @@ class jAuthDriverDb implements jIAuthDriver {
         $this->_params = $params;
     }
 
-    public function createUser($login, $password){
+    public function saveNewUser($user){
         $dao = jDAO::get($this->_params['dao']);
-        $user = jDAO::createRecord($this->_params['dao']);
-        $user->login = $login;
         $dao->insert($user);
-        $dao->updatePassword($login, $password);
         return true;
     }
 
@@ -51,6 +48,13 @@ class jAuthDriverDb implements jIAuthDriver {
     public function getUser($login){
         $dao = jDAO::get($this->_params['dao']);
         return $dao->getByLogin($login);
+    }
+
+    public function createUser($login,$password){
+        $user = jDAO::createRecord($this->_params['dao']);
+        $user->login = $login;
+        $user->password = $password;
+        return $user;
     }
 
     public function getUserList($pattern){
