@@ -43,7 +43,7 @@ class jJsonRpc {
      */
     public static function encodeRequest($methodname, $params, $id=1){
         $json = new JSON();
-        $request = '{method:"'.$methodname.'",params:'.$json->encode($params).',id:'.$json->encode($id).'}';
+        $request = '{"method":"'.$methodname.'","params":'.$json->encode($params).',"id":'.$json->encode($id).'}';
         return $request;
     }
 
@@ -67,7 +67,7 @@ class jJsonRpc {
      */
     public static function encodeResponse($params, $id=1){
         $json = new JSON();
-        $request = '{result:'.$json->encode($params).',error:null,id:'.$json->encode($id).'}';
+        $request = '{"result":'.$json->encode($params).',"error":null,"id":'.$json->encode($id).'}';
         return $request;
     }
 
@@ -78,7 +78,7 @@ class jJsonRpc {
      */
     public static function encodeFaultResponse($code, $message, $id=1){
         $json = new JSON();
-        $request = '{result:null,error:{code: '.$json->encode($code).', string:'.$json->encode($message).' },id:'.$json->encode($id).'}';
+        $request = '{"result":null,"error":{"code": '.$json->encode($code).', "string":'.$json->encode($message).' },"id":'.$json->encode($id).'}';
         return $request;
     }
 }
