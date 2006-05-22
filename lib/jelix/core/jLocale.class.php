@@ -163,14 +163,14 @@ class jLocale {
     * gets the current lang
     */
     function getCurrentLang(){
-        $s=$GLOBALS['gJconfig']->defaultLocale;
+        $s=$GLOBALS['gJConfig']->defaultLocale;
         return substr($s,0, strpos($s,'_'));
     }
     /**
     * gets the current country.
     */
     function getCurrentCountry (){
-        $s=$GLOBALS['gJconfig']->defaultLocale;
+        $s=$GLOBALS['gJConfig']->defaultLocale;
         return substr($s,strpos($s,'_')+1);
     }
 
