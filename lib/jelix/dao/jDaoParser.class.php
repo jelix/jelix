@@ -19,11 +19,11 @@
 /**
 * Analyse un fichier xml de dao
 */
-class jDAOParser {
+class jDaoParser {
     /**
     * the properties list.
     * keys = field code name
-    * values = jDAOProperty
+    * values = jDaoProperty
     */
     private $_properties = array ();
 
@@ -57,7 +57,7 @@ class jDAOParser {
 
     /**
     * Constructor
-    * @param jDAOCompiler compiler the compiler object
+    * @param jDaoCompiler compiler the compiler object
     */
     function __construct($compiler){
         $this->_compiler= $compiler;
@@ -87,7 +87,7 @@ class jDAOParser {
         //add the record properties
         if(isset($xml->record) && isset($xml->record[0]->property)){
             foreach ($xml->record[0]->property as $prop){
-               $p = new jDAOProperty ($prop->attributes(), $this);
+               $p = new jDaoProperty ($prop->attributes(), $this);
                $this->_properties[$p->name] = $p;
                $this->_tables[$p->table]['fields'][] = $p->name;
             }
@@ -97,7 +97,7 @@ class jDAOParser {
         // get additionnal methods definition
         if(isset ($xml->factory) && isset ($xml->factory[0]->method)){
            foreach($xml->factory[0]->method as $method){
-               $m = new jDAOMethod ($method, $this);
+               $m = new jDaoMethod ($method, $this);
                if(isset ($this->_methods[$m->name])){
                   $this->_compiler->doDefError ('method.duplicate',$m->name);
                }
@@ -188,7 +188,7 @@ class jDAOParser {
 * objet comportant les données d'une propriété d'un record DAO
 */
 
-class jDAOProperty {
+class jDaoProperty {
     /**
     * the name of the property of the object
     */
@@ -328,7 +328,7 @@ class jDAOProperty {
 /**
 * objet décrivant une méthode DAO
 */
-class jDAOMethod {
+class jDaoMethod {
    public $name;
    public $type;
    public $distinct='';
@@ -384,10 +384,10 @@ class jDAOMethod {
       }
 
       if (isset ($method->conditions)){
-         $this->_conditions = new jDAOConditions();
+         $this->_conditions = new jDaoConditions();
          $this->_parseConditions($method,false);
       }else{
-         $this->_conditions = new jDAOConditions();
+         $this->_conditions = new jDaoConditions();
       }
 
       if($this->type == 'update'){

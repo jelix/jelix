@@ -20,18 +20,18 @@
 /**
 * Factory to create automatic DAO.
 */
-class jDAO {
+class jDao {
 
     /**
     * creates a DAO from its Id.
     * If no dao is founded, try to compile a DAO from the user definitions.
     */
-    public static function create ($DAOid, $profil=''){
-        $sel = new jSelectorDao($DAOid, $profil);
+    public static function create ($DaoId, $profil=''){
+        $sel = new jSelectorDao($DaoId, $profil);
         if(!$sel->isValid())
            throw new jException('jelix~errors.selector.invalid',$sel->toString(true));
 
-        $c = $sel->getDAOClass();
+        $c = $sel->getDaoClass();
         if(!class_exists($c,false)){
             $results = jIncluder::inc($sel);
         }
@@ -43,34 +43,34 @@ class jDAO {
     /**
     * Creates a DAO from its ID. Handles a singleton of the DAO.
     */
-    public static function get ($DAOid, $profil='') {
+    public static function get ($DaoId, $profil='') {
        static $_daoSingleton=array();
 
-       $sel = new jSelectorDao($DAOid, $profil);
-       $DAOid    = $sel->toString ();
+       $sel = new jSelectorDao($DaoId, $profil);
+       $DaoId    = $sel->toString ();
 
-        if (! isset ($_daoSingleton[$DAOid])){
-            $_daoSingleton[$DAOid] = self::create ($DAOid,$profil);
+        if (! isset ($_daoSingleton[$DaoId])){
+            $_daoSingleton[$DaoId] = self::create ($DaoId,$profil);
         }
-        return $_daoSingleton[$DAOid];
+        return $_daoSingleton[$DaoId];
     }
 
     /**
     * creates a record object
     */
-    public static function createRecord ($DAOid, $profil=''){
-        $sel = new jSelectorDao($DAOid, $profil);
-        $c = $sel->getDAOClass();
+    public static function createRecord ($DaoId, $profil=''){
+        $sel = new jSelectorDao($DaoId, $profil);
+        $c = $sel->getDaoClass();
         if(!class_exists($c,false)){
             $results = jIncluder::inc($sel);
         }
-        $c = $sel->getDAORecordClass();
+        $c = $sel->getDaoRecordClass();
         $obj = new $c();
         return $obj;
     }
 
     public static function createConditions ($glueOp = 'AND'){
-        $obj = new jDAOConditions ($glueOp);
+        $obj = new jDaoConditions ($glueOp);
         return $obj;
     }
 

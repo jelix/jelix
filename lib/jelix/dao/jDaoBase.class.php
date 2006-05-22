@@ -10,7 +10,7 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-abstract class jDAORecordBase {
+abstract class jDaoRecordBase {
 
    const ERROR_REQUIRED=1;
    const ERROR_BAD_TYPE=2;
@@ -99,7 +99,7 @@ abstract class jDAORecordBase {
 
 /**
  */
-abstract class jDAOFactoryBase  {
+abstract class jDaoFactoryBase  {
 
    protected $_tables;
    protected $_primaryTable;
@@ -107,7 +107,7 @@ abstract class jDAOFactoryBase  {
    protected $_selectClause;
    protected $_fromClause;
    protected $_whereClause;
-   protected $_DAORecordClassName;
+   protected $_DaoRecordClassName;
    protected $_pkFields;
 
 
@@ -117,7 +117,7 @@ abstract class jDAOFactoryBase  {
 
    public function findAll(){
       $dbw = new jDbWidget($this->_conn);
-      return $dbw->fetchAllInto($this->_selectClause.$this->_fromClause.$this->_whereClause , $this->_DAORecordClassName);
+      return $dbw->fetchAllInto($this->_selectClause.$this->_fromClause.$this->_whereClause , $this->_DaoRecordClassName);
    }
 
    public function countAll(){
@@ -142,7 +142,7 @@ abstract class jDAOFactoryBase  {
       $q = $this->_selectClause.$this->_fromClause.$this->_whereClause;
       $q .= $this->_getPkWhereClauseForSelect($keys);
 
-      $record = $dbw->fetchFirstInto($q, $this->_DAORecordClassName);
+      $record = $dbw->fetchFirstInto($q, $this->_DaoRecordClassName);
       return $record;
    }
 
@@ -165,7 +165,7 @@ abstract class jDAOFactoryBase  {
 
 
    /**
-    * @param jDAOConditions $searchcond
+    * @param jDaoConditions $searchcond
     */
    public function findBy ($searchcond){
       $query = $this->_selectClause.$this->_fromClause.$this->_whereClause;
@@ -174,7 +174,7 @@ abstract class jDAOFactoryBase  {
          $query .= $this->_createConditionsClause($searchcond);
       }
       $dbw = new jDBWidget ($this->_conn);
-      return $dbw->fetchAllInto ($query, $this->_DAORecordClassName);
+      return $dbw->fetchAllInto ($query, $this->_DaoRecordClassName);
    }
 
    abstract protected function _getPkWhereClauseForSelect($pk);
@@ -185,7 +185,7 @@ abstract class jDAOFactoryBase  {
     */
    protected function _createConditionsClause($daocond){
 
-      $c = $this->_DAORecordClassName;
+      $c = $this->_DaoRecordClassName;
       $rec= new $c();
       $fields = & $rec->getProperties();
 

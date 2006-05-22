@@ -21,42 +21,42 @@
 * de définition
 */
 
-class jDAOGenerator {
+class jDaoGenerator {
 
    /**
    * The compiler object
-   * @var jDAOCompiler
+   * @var jDaoCompiler
    */
    private $_compiler=null;
 
    /**
    * the dao definition.
-   * @var jDAOParser
+   * @var jDaoParser
    */
    private $_datasParser = null;
 
    /**
-   * The DAORecord ClassName
+   * The DaoRecord ClassName
    * @var string
    */
-   private $_DAORecordClassName = null;
+   private $_DaoRecordClassName = null;
 
    /**
    * the DAO classname
    * @var string
    */
-   private $_DAOClassName=null;
+   private $_DaoClassName=null;
 
    /**
    * constructor
-   * @param jDAOCompiler $compiler
-   * @param jDAOParser $daoDefinition
+   * @param jDaoCompiler $compiler
+   * @param jDaoParser $daoDefinition
    */
    function __construct($compiler, $daoDefinition){
       $this->_compiler = $compiler;
       $this->_datasParser = $daoDefinition;
-      $this->_DAOClassName = $compiler->getSelector()->getDAOClass();
-      $this->_DAORecordClassName = $compiler->getSelector()->getDAORecordClass();
+      $this->_DaoClassName = $compiler->getSelector()->getDaoClass();
+      $this->_DaoRecordClassName = $compiler->getSelector()->getDaoRecordClass();
    }
 
    /**
@@ -65,14 +65,14 @@ class jDAOGenerator {
    public function buildClasses () {
 
       $src = array();
-      $src[] = ' require_once ( JELIX_LIB_DAO_PATH .\'jDAOBase.class.php\');';
+      $src[] = ' require_once ( JELIX_LIB_DAO_PATH .\'jDaoBase.class.php\');';
       $src[] = ' require_once ( JELIX_LIB_DB_PATH .\'jDbWidget.class.php\');';
 
       //-----------------------
       // Build the record class
       //-----------------------
 
-      $src[] = "\nclass ".$this->_DAORecordClassName.' extends jDAORecordBase {';
+      $src[] = "\nclass ".$this->_DaoRecordClassName.' extends jDaoRecordBase {';
 
       $properties=array();
 
@@ -103,13 +103,13 @@ class jDAOGenerator {
          $sqlPkCondition= ($sqlWhereClause !='' ? ' AND ':' WHERE ').$sqlPkCondition;
       }
 
-      $src[] = "\nclass ".$this->_DAOClassName.' extends jDAOFactoryBase {';
+      $src[] = "\nclass ".$this->_DaoClassName.' extends jDaoFactoryBase {';
       $src[] ='   protected $_tables = '.var_export($tables, true).';';
       $src[] ='   protected $_primaryTable = \''.$this->_datasParser->getPrimaryTable().'\';';
       $src[] ='   protected $_selectClause=\''.$sqlSelectClause.'\';';
       $src[] ='   protected $_fromClause=\''.$sqlFromClause.'\';';
       $src[] ='   protected $_whereClause=\''.$sqlWhereClause.'\';';
-      $src[] ='   protected $_DAORecordClassName=\''.$this->_DAORecordClassName.'\';';
+      $src[] ='   protected $_DaoRecordClassName=\''.$this->_DaoRecordClassName.'\';';
       $src[] ='   protected $_pkFields = array('.$this->_writeFieldNamesWith ($start = '\'', $end='\'', $beetween = ',', $pkFields).');';
 
 
@@ -323,12 +323,12 @@ class jDAOGenerator {
                   break;
                case 'selectfirst':
                   $src[] = '    $dbw = new jDbWidget ($this->_conn);';
-                  $src[] = '    return $dbw->fetchFirstInto ($query, \''.$this->_DAORecordClassName.'\');';
+                  $src[] = '    return $dbw->fetchFirstInto ($query, \''.$this->_DaoRecordClassName.'\');';
                   break;
                case 'select':
                default:
                   $src[] = '    $dbw = new jDbWidget ($this->_conn);';
-                  $src[] = '    return $dbw->fetchAllInto ($query, \''.$this->_DAORecordClassName.'\''.$limit.');';
+                  $src[] = '    return $dbw->fetchAllInto ($query, \''.$this->_DaoRecordClassName.'\''.$limit.');';
          }
          $src[] = '}';
       }
@@ -463,7 +463,7 @@ class jDAOGenerator {
     * @param string   $end     string to add after the info
     * @param string   $beetween string to add between each info
     * @param array    $using     list of CopixPropertiesForDAO object. if null, get default fields list
-    * @see  jDAOProperty
+    * @see  jDaoProperty
     */
     private function _writeFieldsInfoWith ($info, $start = '', $end='', $beetween = '', $using = null){
         $result = array();
@@ -598,7 +598,7 @@ class jDAOGenerator {
 
     /**
      *
-     * @param jDAOConditions
+     * @param jDaoConditions
      * @param array
      */
     private function _buildConditions ($cond, $fields, $params=array(), $withPrefix=true){
@@ -631,7 +631,7 @@ class jDAOGenerator {
 
 
     /**
-     * @param jDAOCondition
+     * @param jDaoCondition
      */
     function _buildSQLCondition ($condition, $fields, $params, $withPrefix, $principal=false){
         $r = ' ';

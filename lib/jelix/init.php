@@ -54,13 +54,13 @@ $gJCoord = null;
 $gJConfig = array();
 $gJContext = array();
 
-$gLibPath=array('Db'=>JELIX_LIB_DB_PATH, 'DAO'=>JELIX_LIB_DAO_PATH,
+$gLibPath=array('Db'=>JELIX_LIB_DB_PATH, 'Dao'=>JELIX_LIB_DAO_PATH,
  'Forms'=>JELIX_LIB_FORMS_PATH, 'Event'=>JELIX_LIB_EVENTS_PATH, 'Auth'=>JELIX_LIB_AUTH_PATH,
  'Tpl'=>JELIX_LIB_TPL_PATH, 'Acl'=>JELIX_LIB_ACL_PATH, 'Controller'=>JELIX_LIB_CTRL_PATH);
 
 
 function __autoload($class){
-   if(preg_match('/^j(Acl|Controller|DAO|Db|Forms|Event|Auth|Tpl).*$/', $class, $m)){
+   if(preg_match('/^j(Acl|Controller|Dao|Db|Forms|Event|Auth|Tpl).*$/', $class, $m)){
        $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
    }elseif(preg_match('/^cDAO(?:Record)?_(.*)_(.*)_(.*)$/', $class, $m)){
        // pour les dao stockés en sessions notament

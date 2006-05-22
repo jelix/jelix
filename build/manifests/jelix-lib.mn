@@ -69,12 +69,12 @@ cd lib/jelix/core/url
   jUrlEngine.simple.class.php
 
 cd lib/jelix/dao
-  jDAOBase.class.php
-  jDAO.class.php
-  jDAOCompiler.class.php
-  jDAOConditions.class.php
-  jDAOGenerator.class.php
-  jDAOParser.class.php
+  jDaoBase.class.php
+  jDao.class.php
+  jDaoCompiler.class.php
+  jDaoConditions.class.php
+  jDaoGenerator.class.php
+  jDaoParser.class.php
 
 cd lib/jelix/db
   jDb.class.php

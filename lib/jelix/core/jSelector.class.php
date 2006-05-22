@@ -263,7 +263,7 @@ class jSelectorDao extends jSelectorModule {
             $this->driver=$driver;
         }
         $this->_compiler='jDAOCompiler';
-        $this->_compilerPath=JELIX_LIB_DAO_PATH.'jDAOCompiler.class.php';
+        $this->_compilerPath=JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php';
         parent::__construct($sel);
     }
 

@@ -9,7 +9,7 @@
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
-* Une partie du code est issue de la classe CopixDAOCompiler
+* Une partie du code est issue de la classe CopixDaoCompiler
 * du framework Copix 2.3dev20050901. http://www.copix.org
 * il est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
@@ -21,11 +21,11 @@
 * The compiler for the DAO classes.
 * it is used by jIncluder
 */
-class jDAOCompiler  implements jISimpleCompiler {
+class jDaoCompiler  implements jISimpleCompiler {
     /**
     * the current DAO id.
     */
-    private $_DAOid ='';
+    private $_DaoId ='';
 
     /**
     * the base name of dao object.
@@ -44,7 +44,7 @@ class jDAOCompiler  implements jISimpleCompiler {
 
         // recuperation du chemin et nom de fichier de definition xml de la dao
         $this->_selector = $selector;
-        $this->_DAOid = $selector->toString();
+        $this->_DaoId = $selector->toString();
         $this->_baseName = $selector->resource;
 
         // chargement du fichier XML
@@ -57,12 +57,12 @@ class jDAOCompiler  implements jISimpleCompiler {
         if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0'){
            throw new jException('jelix~daoxml.namespace.wrong',array($selector->getPath(), $doc->namespaceURI));
         }
-        require_once (JELIX_LIB_DAO_PATH.'jDAOParser.class.php');
-        $parser = new jDAOParser ($this);
+        require_once (JELIX_LIB_DAO_PATH.'jDaoParser.class.php');
+        $parser = new jDaoParser ($this);
         $parser->parse(simplexml_import_dom($doc));
 
-        require_once (JELIX_LIB_DAO_PATH.'jDAOGenerator.class.php');
-        $generator = new jDAOGenerator($this, $parser);
+        require_once (JELIX_LIB_DAO_PATH.'jDaoGenerator.class.php');
+        $generator = new jDaoGenerator($this, $parser);
 
         // génération des classes PHP correspondant à la définition de la DAO
         $compiled = '<?php '.$generator->buildClasses ()."\n?>";
@@ -71,7 +71,7 @@ class jDAOCompiler  implements jISimpleCompiler {
         return true;
     }
 
-    public function getDAOId(){ return  $this->_DAOid;}
+    public function getDaoId(){ return  $this->_DaoId;}
     public function getSelector(){ return  $this->_selector;}
     public function getDbDriver(){ return  $this->_selector->driver;}
 
