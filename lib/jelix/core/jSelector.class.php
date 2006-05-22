@@ -262,7 +262,7 @@ class jSelectorDao extends jSelectorModule {
         }else{
             $this->driver=$driver;
         }
-        $this->_compiler='jDAOCompiler';
+        $this->_compiler='jDaoCompiler';
         $this->_compilerPath=JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php';
         parent::__construct($sel);
     }
@@ -299,10 +299,10 @@ class jSelectorDao extends jSelectorModule {
     }
 
     public function getDaoClass(){
-        return 'cDAO_'.$this->module.'_'.$this->resource.'_'.$this->driver;
+        return 'cDao_'.$this->module.'_'.$this->resource.'_'.$this->driver;
     }
     public function getDaoRecordClass(){
-        return 'cDAORecord_'.$this->module.'_'.$this->resource.'_'.$this->driver;
+        return 'cDaoRecord_'.$this->module.'_'.$this->resource.'_'.$this->driver;
     }
 }
 

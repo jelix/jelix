@@ -62,7 +62,7 @@ $gLibPath=array('Db'=>JELIX_LIB_DB_PATH, 'Dao'=>JELIX_LIB_DAO_PATH,
 function __autoload($class){
    if(preg_match('/^j(Acl|Controller|Dao|Db|Forms|Event|Auth|Tpl).*$/', $class, $m)){
        $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
-   }elseif(preg_match('/^cDAO(?:Record)?_(.*)_(.*)_(.*)$/', $class, $m)){
+   }elseif(preg_match('/^cDao(?:Record)?_(.*)_(.*)_(.*)$/', $class, $m)){
        // pour les dao stockés en sessions notament
        $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
        $f = $s->getCompiledFilePath ();
