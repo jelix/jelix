@@ -1,0 +1,11 @@
+
+@namespace jx url("http://jelix.org/ns/xbl/1.0");
+@namespace xul url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+@namespace html url("http://www.w3.org/1999/xhtml");
+
+
+jx|remotetreecriterion {
+    display:-moz-box;
+    -moz-orient:horizontal;
+    -moz-binding: url("jxbl.xml#remotetreecriterion");
+}

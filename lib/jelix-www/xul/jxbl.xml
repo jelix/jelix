@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+ @package     jelix
+ @subpackage  xul
+ @version  $Id$
+ @author   Jouanneau Laurent
+ @contributor
+ @copyright 2006 Jouanneau laurent
+ @link     http://www.jelix.org
+ @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+-->
+
+<bindings xmlns="http://www.mozilla.org/xbl"
+          xmlns:xbl="http://www.mozilla.org/xbl"
+          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+          xmlns:html="http://www.w3.org/1999/xhtml"
+>
+
+<binding id="remotetreecriterion">
+    <content>
+        <children/>
+        <xul:button label="Afficher" xbl:inherits="label=buttonlabel" oncommand="this.parentNode.show()"/>
+    </content>
+    <implementation>
+        <constructor><![CDATA[
+
+        ]]>
+        </constructor>
+        <method name="show">
+            <body><![CDATA[
+                var tf = {
+                    acceptNode : function( node){
+                        if(node.hasAttribute('name')){
+                             return NodeFilter.FILTER_ACCEPT;
+                        }else
+                             return NodeFilter.FILTER_SKIP;
+                    }
+                }
+                var tw = document.createTreeWalker ( this , NodeFilter.SHOW_ELEMENT , tf , false );
+                var node;
+                var query='', value;
+                node=tw.nextNode()
+                while(node){
+                    value=null;
+                    switch(node.localName){
+                        case 'checkbox': value= (node.checked?'1':'0'); break;
+                        case 'textbox': value= node.value; break;
+                        case 'listbox':
+                        case 'radiogroup':
+                        case 'menulist':
+                            value = node.selectedItem.value; break;
+                    }
+                    if(value !== null){
+                        if(query != '') query+='&';
+                        query += node.getAttribute('name') +'='+value;
+                    }
+                    node=tw.nextNode();
+                }
+                var uri = this.getAttribute('uri');
+                if(uri.indexOf('?') != -1){
+                    uri += '&'+query;
+                }else{
+                    uri += '?'+query;
+                }
+                uri+='&rnd='+Math.random();
+
+                var tree = document.getElementById(this.getAttribute('tree'));
+
+                tree.setAttribute('datasources', '');
+                tree.setAttribute('datasources', uri);
+            ]]></body>
+        </method>
+        <method name="abort">
+            <body><![CDATA[
+
+            ]]></body>
+        </method>
+
+
+
+    </implementation>
+    <handlers>
+
+    </handlers>
+
+</binding>
+
+
+</bindings>

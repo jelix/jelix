@@ -264,6 +264,7 @@ cd lib/jelix-www/xul
   jxulform.xml
   throbber.gif
   jsonrpc.js
-
+  jxbl.xml
+  jxbl.css
 
 cd temp
