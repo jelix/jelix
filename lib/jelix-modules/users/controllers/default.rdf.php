@@ -18,7 +18,7 @@ class CTdefault extends jController {
         $rep = $this->getResponse('rdf');
         $letter = $this->param('letter');
 
-        $dao = jDAO::get('auth~jelixuser');
+        $dao = jDao::get('auth~jelixuser');
         if($letter =='')
             $rep->datas = array(); //$dao->findAll();
         else{

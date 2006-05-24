@@ -19,7 +19,7 @@
 /**
 * structure stockant les données d'une condition
 */
-class jDAOCondition {
+class jDaoCondition {
     /**
     * the parent group if any
     */
@@ -49,9 +49,9 @@ class jDAOCondition {
 /**
 * conteneur d'un ensemble de conditions
 */
-class jDAOConditions {
+class jDaoConditions {
     /**
-    * var jDAOCondition
+    * var jDaoCondition
     */
     public $condition;
 
@@ -71,7 +71,7 @@ class jDAOConditions {
     private $_currentCondition;
 
     function __construct ($glueOp = 'AND'){
-        $this->condition = new jDAOCondition ($glueOp);
+        $this->condition = new jDaoCondition ($glueOp);
         $this->_currentCondition = $this->condition;
     }
 
@@ -92,7 +92,7 @@ class jDAOConditions {
     * starts a condition group
     */
     function startGroup ($glueOp = 'AND'){
-        $cond= new jDAOCondition ($glueOp, $this->_currentCondition);
+        $cond= new jDaoCondition ($glueOp, $this->_currentCondition);
         $this->_currentCondition->group[] = $cond;
         $this->_currentCondition = $cond;
     }

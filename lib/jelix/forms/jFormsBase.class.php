@@ -60,7 +60,7 @@ abstract class jFormsBase {
    }
 
    public function initFromDao($daoSelector){
-      $dao = jDAO::create($daoSelector);
+      $dao = jDao::create($daoSelector);
       $daorec = $dao->get($this->_container->userId);
       foreach($this->_controls as $name=>$ctrl){
           $this->_container->datas[$name] = $daorec->$name;
@@ -68,8 +68,8 @@ abstract class jFormsBase {
    }
 
    public function saveToDao($daoSelector){
-      $dao = jDAO::create($daoSelector);
-      $daorec = jDAO::createRecord($daoSelector);
+      $dao = jDao::create($daoSelector);
+      $daorec = jDao::createRecord($daoSelector);
       foreach($this->_controls as $name=>$ctrl){
           $daorec->$name = $this->_container->datas[$name];
       }
