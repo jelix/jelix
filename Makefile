@@ -42,8 +42,8 @@ DISTJBT="$(DIST)/jbuildtools"
 
 default:
 	@echo "target:  "
-	@echo "   dist-all dist-jelix dist-testapp dist-myapp"
-	@echo "   dev-all dev-jelix dev-jelix-lib dev-myapp dev-testapp"
+	@echo "   dist-all dist-jelix dist-testapp dist-myapp dist-modules"
+	@echo "   dev-all dev-jelix dev-jelix-lib dev-myapp dev-testapp dev-modules"
 	@echo "   jtpl jtpl-dist"
 	@echo "   jbt-dist"
 	@echo "paramètres facultatifs (valeurs actuelles) :"
@@ -56,9 +56,9 @@ default:
 	@echo "   developpement jelix testapp myapp : " $(DISTHACKER)
 	@echo "   distribution jtpl : " $(DISTJTPL)
 
-dist-all: dist-jelix dist-testapp dist-myapp jtpl-dist jbt-dist
+dist-all: dist-jelix dist-testapp dist-myapp jtpl-dist jbt-dist dist-modules
 
-dev-all: dev-jelix dev-myapp dev-testapp jtpl
+dev-all: dev-jelix dev-modules dev-myapp dev-testapp jtpl
 
 dist-jelix: common-dist
 	export LIB_VERSION=$(LIB_VERSION) \
@@ -75,31 +75,40 @@ dist-myapp: common-dist
 	$(PHP) build/mkdist.php build/manifests/myapp.mn . $(DISTJELIX)
 	tar czf $(DIST)/myapp-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) myapp/ temp/myapp/
 
+dist-modules: common-dist
+	export LIB_VERSION=$(LIB_VERSION) \
+	&& $(PHP) build/mkdist.php build/manifests/jelix-modules.mn lib/jelix-modules/ $(DIST)/additional-modules/
+	tar czf $(DIST)/jelix-additional-modules.tar.gz  -C $(DIST) additional-modules/
+
 common-dist:
 	if [ ! -d "$(DIST)" ] ; then mkdir $(DIST) ; fi
 	if [ ! -d "$(DISTJELIX)" ] ; then mkdir $(DISTJELIX) ; fi
+	if [ ! -d "$(DIST)/additional-modules/" ] ; then mkdir $(DIST)/additional-modules/ ; fi
 
-dev-jelix: 
-	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
+dev-jelix: common-dev
 	export LIB_VERSION=$(LIB_VERSION) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTHACKER) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(DISTHACKER) \
 	&& echo "$(LIB_VERSION)" > "$(DISTHACKER)/lib/jelix/VERSION"
 
-dev-jelix-lib:
-	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
+dev-jelix-lib: common-dev
 	export LIB_VERSION=$(LIB_VERSION) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTHACKER) \
 	&& echo "$(LIB_VERSION)" > "$(DISTHACKER)/lib/jelix/VERSION"
 
-dev-testapp: 
-	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
+dev-modules: common-dev
+	export LIB_VERSION=$(LIB_VERSION) \
+	&& $(PHP) build/mkdist.php build/manifests/jelix-modules.mn lib/jelix-modules/ $(DISTHACKER)/lib/jelix-modules/
+
+dev-testapp: common-dev
 	$(PHP) build/mkdist.php build/manifests/testapp.mn . $(DISTHACKER)
 
-dev-myapp: 
-	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
+dev-myapp: common-dev
 	$(PHP) build/mkdist.php build/manifests/myapp.mn . $(DISTHACKER)
-	
+
+common-dev:
+	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
+
 jtpl:
 	if [ ! -d "$(DEVJTPL)" ] ; then mkdir $(DEVJTPL) ; fi
 	export JTPL_STANDALONE=1 \
