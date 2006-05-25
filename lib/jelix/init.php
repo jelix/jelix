@@ -65,7 +65,19 @@ function __autoload($class){
    }elseif(preg_match('/^cDao(?:Record)?_(.*)_(.*)_(.*)$/', $class, $m)){
        // pour les dao stockés en sessions notament
        $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
-       $f = $s->getCompiledFilePath ();
+       if($GLOBALS['gJConfig']->compilation['checkCacheFiletime']){
+           // si il faut verifier le filetime, alors on inclus via le jIncluder
+           // au cas où il faudrait recompiler le dao avant l'inclusion de la classe
+           jIncluder::inc($s);
+           return;
+       }else{
+          $f = $s->getCompiledFilePath ();
+          // on verifie que le fichier est là (dans le cas d'un temp purgé, cf bug #6062)
+          if(!file_exists($f)){ // si absent, on recompile
+            jIncluder::inc($s);
+            return;
+          }
+       }
    }else{
       $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
    }

@@ -6,6 +6,6 @@
 
 jx|remotetreecriterion {
     display:-moz-box;
-    -moz-orient:horizontal;
+    -moz-box-orient:horizontal;
     -moz-binding: url("jxbl.xml#remotetreecriterion");
 }

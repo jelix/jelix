@@ -119,7 +119,7 @@ class jAuth {
     /**
      *
      */
-    public function getUserList($pattern = '%'){
+    public static function getUserList($pattern = '%'){
         $dr = self::_getDriver();
         return $dr->getUserlist($pattern);
     }

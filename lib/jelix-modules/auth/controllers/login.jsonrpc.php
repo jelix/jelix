@@ -21,9 +21,11 @@ class CTLogin extends jController {
     *
     */
     function in (){
-        $conf = $GLOBALS['gJCoord']->getPlugin('auth')->config;
-        $p = $this->param('params');
-        if (!isset($p['login']) || !isset($p['password']) || !jAuth::login($p['login'], $p['password'])){
+        //$conf = $GLOBALS['gJCoord']->getPlugin('auth')->config;
+        $l = $this->param('login');
+        $p = $this->param('password');
+
+        if (!$l || !$p || !jAuth::login($l, $p)){
             sleep (intval($conf['on_error_sleep']));
             $result='BAD';
         }else{

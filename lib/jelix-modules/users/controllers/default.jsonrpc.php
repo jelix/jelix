@@ -14,9 +14,19 @@ class CTdefault extends jController {
     /**
     *
     */
-    function index() {
-        $rep = $this->getResponse('jsonrpc');
+    function saveuser() {
+        $user = jAuth::getUser($this->param('login'));
+        if($user){
+            $user->email = $this->param('email');
+            jAuth::updateUser($user);
+        }
+        return $this->getResponse('jsonrpc');
+    }
 
+    function newpwd() {
+        jAuth::changePassword($this->param('login'), $this->param('pwd'));
+
+        $rep = $this->getResponse('jsonrpc');
         return $rep;
     }
 

@@ -40,10 +40,16 @@ class jXmlRpcRequest extends jRequest {
             // Décodage de la requete
             list($nom,$vars) = CopixXmlRpc::decodeRequest($requestXml);
             list($module, $action) = explode('.',$nom);
+
+            if(is_array($vars)){
+                $this->params = $vars;
+            }else
+                $this->params['params'] = $vars;
+
             // Définition de l'action a executer et des paramètres
             $this->params['module'] = $module;
             $this->params['action'] = $action;
-            $this->params['params'] = $vars;
+
             $this->url  = new jUrl($_SERVER['SCRIPT_NAME']);
     }
 

@@ -60,6 +60,24 @@
              <orderitem property="login" way="asc" />
           </order>
      </method>
+
+     <method name="findByLoginNumber" type="select">
+         <conditions logic="OR">
+             <like property="login" value="0%" />
+             <like property="login" value="1%" />
+             <like property="login" value="2%" />
+             <like property="login" value="3%" />
+             <like property="login" value="4%" />
+             <like property="login" value="5%" />
+             <like property="login" value="6%" />
+             <like property="login" value="7%" />
+             <like property="login" value="8%" />
+             <like property="login" value="9%" />
+         </conditions>
+         <order>
+             <orderitem property="login" way="asc" />
+         </order>
+     </method>
      <method name="findAll" type="select">
          <order>
              <orderitem property="login" way="asc" />

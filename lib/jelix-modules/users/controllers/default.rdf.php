@@ -18,12 +18,10 @@ class CTdefault extends jController {
         $rep = $this->getResponse('rdf');
         $letter = $this->param('letter');
 
-        $dao = jDao::get('auth~jelixuser');
-        if($letter =='')
-            $rep->datas = array(); //$dao->findAll();
-        else{
-            $pattern=$letter.'%';
-            $rep->datas = $dao->findByLogin($pattern);
+        if($letter ==''){
+            $rep->datas = array();
+        }else{
+            $rep->datas = jAuth::getUserList($letter.'%');
         }
         $rep->resNs="http://jelix.org/ns/users#";
         $rep->resNsPrefix='user';

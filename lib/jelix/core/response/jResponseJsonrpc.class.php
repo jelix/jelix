@@ -23,7 +23,7 @@ final class jResponseJsonRpc extends jResponse {
     */
     protected $_type = 'jsonrpc';
     protected $_acceptSeveralErrors=false;
-    
+
     public $response = null;
 
 
@@ -31,8 +31,8 @@ final class jResponseJsonRpc extends jResponse {
         global $gJCoord;
         if($this->hasErrors()) return false;
         header("Content-Type: text/plain");
-        if($gJCoord->request->params['id'] !== null){
-            $content = jJsonRpc::encodeResponse($this->response, $gJCoord->request->params['id']);
+        if($gJCoord->request->jsonRequestId !== null){
+            $content = jJsonRpc::encodeResponse($this->response, $gJCoord->request->jsonRequestId);
             header("Content-length: ".strlen($content));
             echo $content;
         }else{
@@ -45,8 +45,8 @@ final class jResponseJsonRpc extends jResponse {
         global $gJCoord;
         if($this->hasErrors()) return false;
 
-        if($gJCoord->request->params['id'] !== null)
-            return jJsonRpc::encodeResponse($this->response, $gJCoord->request->params['id']);
+        if($gJCoord->request->jsonRequestId !== null)
+            return jJsonRpc::encodeResponse($this->response, $gJCoord->request->jsonRequestId);
         else
             return ''; // dans le cas où la requete n'était qu'une notification
     }
@@ -54,7 +54,7 @@ final class jResponseJsonRpc extends jResponse {
     public function outputErrors(){
         global $gJCoord;
         if(count($gJCoord->errorMessages)){
-           $e = $gJCoord->errorMessages[0];            
+           $e = $gJCoord->errorMessages[0];
            $errorCode = $e[1];
            $errorMessage = '['.$e[0].'] '.$e[2].' (file: '.$e[3].', line: '.$e[4].')';
         }else{
@@ -62,7 +62,7 @@ final class jResponseJsonRpc extends jResponse {
             $errorCode = -1;
         }
         header("Content-Type: text/plain");
-        $content = jJsonRpc::encodeFaultResponse($errorCode,$errorMessage, $gJCoord->request->params['id']);
+        $content = jJsonRpc::encodeFaultResponse($errorCode,$errorMessage, $gJCoord->request->jsonRequestId);
         header("Content-length: ".strlen($content));
         echo $content;
     }

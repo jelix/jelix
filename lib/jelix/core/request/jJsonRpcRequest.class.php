@@ -26,6 +26,8 @@ class jJsonRpcRequest extends jRequest {
 
     public $defaultResponseType = 'jsonrpc';
 
+    public $jsonRequestId=null;
+
     /**
      * initialisation du tableau de parametres vars
      */
@@ -46,12 +48,17 @@ class jJsonRpcRequest extends jRequest {
             $module='';
             $action='';
         }
+        if(isset( $requestobj['id']))
+            $this->jsonRequestId = $requestobj['id'];
+
+        if(is_array($requestobj['params']))
+            $this->params = $requestobj['params'];
+        else
+            $this->params['params'] = $requestobj['params'];
 
         // Définition de l'action a executer et des paramètres
         $this->params['module'] = $module;
         $this->params['action'] = $action;
-        $this->params['params'] = $requestobj['params'];
-        $this->params['id']  = $requestobj['id'];
         $this->url  = new jUrl($_SERVER['SCRIPT_NAME']);
     }
 

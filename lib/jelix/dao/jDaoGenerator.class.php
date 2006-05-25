@@ -247,11 +247,11 @@ class jDaoGenerator {
                   foreach($method->getValues() as $propname=>$value){
                      if($value[1]){
                         foreach($method->getParameters() as $param){
-                           $value[0] = str_replace('$'.$param, '\'.'.$this->_preparePHPValue('$'.$param, $updatefields[$propname]->datatype,false).'.\'',$value[0]);
+                           $value[0] = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $updatefields[$propname]->datatype,false).'.\'',$value[0]);
                         }
                         $sqlSet.= ', '.$updatefields[$propname]->fieldName. '= '. $value[0];
                      }else{
-                        $sqlSet.= ', '.$updatefields[$propname]->fieldName. '= '. $value[0];
+                        $sqlSet.= ', '.$updatefields[$propname]->fieldName. '= '. $this->_preparePHPValue($value[0],$updatefields[$propname]->datatype,false);
                      }
                   }
                   $src[] =substr($sqlSet,1).'\';';
@@ -565,7 +565,7 @@ class jDaoGenerator {
             }
 
             $var = '$'.$fieldPrefix.$field->name;
-            $value = $this->_preparePHPValue($var,$field->datatype,false);
+            $value = $this->_preparePHPExpr($var,$field->datatype,false);
 
             $r .= $condition.'\'.('.$var.'===null ? \' IS NULL \' : \' = \'.'.$value.').\'';
         }
@@ -582,7 +582,7 @@ class jDaoGenerator {
                continue;
          }
 
-         $value = $this->_preparePHPValue('$'.$prefixfield.$fieldName, $field->datatype, true);
+         $value = $this->_preparePHPExpr('$'.$prefixfield.$fieldName, $field->datatype, true);
 
          if($motif != ''){
                $values[$field->name] = sprintf($field->$motif,'\'.'.$value.'.\'');
@@ -656,7 +656,7 @@ class jDaoGenerator {
 
             if($cond['operator'] == 'IN' || $cond['operator'] == 'NOT IN'){
                if($cond['expr']){
-                  $phpvalue= $this->_preparePHPValue('$e', $prop->datatype, false);
+                  $phpvalue= $this->_preparePHPExpr('$e', $prop->datatype, false);
                   if(strpos($phpvalue,'$this->_conn->quote')===0){
                      $phpvalue = str_replace('$this->_conn->quote(',"'\''.str_replace('\\'','\\\\\\'',",$phpvalue).".'\''";
                      $phpvalue = str_replace('\\','\\\\', $phpvalue);
@@ -673,10 +673,10 @@ class jDaoGenerator {
                if($cond['expr']){
                   $value=$cond['value'];
                   foreach($params as $param){
-                     $value = str_replace('$'.$param, '\'.'.$this->_preparePHPValue('$'.$param, $prop->datatype, false).'.\'',$value);
+                     $value = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $prop->datatype, false).'.\'',$value);
                   }
                }else{
-                  $value= '\'.'.$this->_preparePHPValue('\''.$cond['value'].'\'', $prop->datatype,false).'.\'';
+                  $value= $this->_preparePHPValue($cond['value'], $prop->datatype,false);
                }
             }
             $r.=$value;
@@ -708,38 +708,65 @@ class jDaoGenerator {
    *   (we do break "simple quoted strings")
    */
    function _preparePHPValue($value, $fieldType, $checknull=true){
+      if($checknull){
+        if($value == 'null' || $value == 'NULL' || $value === null)
+            return 'NULL';
+      }
+      switch(strtolower($fieldType)){
+         case 'int':
+         case 'integer':
+         case 'autoincrement':
+            return intval($value);
+         case 'double':
+         case 'float':
+            return doubleval($value);
+         case 'numeric': //usefull for bigint and stuff
+         case 'bigautoincrement':
+            if(is_numeric($value))
+                return $value;
+            else
+                return intval($value);
+            break;
+         default:
+            if(strpos($value,"'") !== false){
+                return '\'.$this->_conn->quote(\''.str_replace('\'','\\\'',$value).'\').\'';
+            }else{
+                return "\\'".$value."\\'";
+            }
+      }
+   }
+
+   function _preparePHPExpr($expr, $fieldType, $checknull=true){
       switch(strtolower($fieldType)){
          case 'int':
          case 'integer':
          case 'autoincrement':
             if($checknull){
-               $value= '('.$value.' === null ? \'NULL\' : intval('.$value.'))';
+               $expr= '('.$expr.' === null ? \'NULL\' : intval('.$expr.'))';
             }else{
-               $value= 'intval('.$value.')';
+               $expr= 'intval('.$expr.')';
             }
             break;
          case 'double':
          case 'float':
             if($checknull){
-               $value= '('.$value.' === null ? \'NULL\' : doubleval('.$value.'))';
+               $expr= '('.$expr.' === null ? \'NULL\' : doubleval('.$expr.'))';
             }else{
-               $value= 'doubleval('.$value.')';
+               $expr= 'doubleval('.$expr.')';
             }
             break;
          case 'numeric': //usefull for bigint and stuff
          case 'bigautoincrement':
             if($checknull){
-               $value='('.$value.' === null ? \'NULL\' : (is_numeric ('.$value.') ? '.$value.' : intval('.$value.')))';
+               $expr='('.$expr.' === null ? \'NULL\' : (is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.')))';
             }else{
-               $value='(is_numeric ('.$value.') ? '.$value.' : intval('.$value.'))';
+               $expr='(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
             }
             break;
          default:
-            $value ='$this->_conn->quote('.$value.')';
+            $expr ='$this->_conn->quote('.$expr.')';
       }
-      return $value;
+      return $expr;
    }
-
-
 }
 ?>
