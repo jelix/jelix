@@ -125,6 +125,7 @@ cd lib/jelix/tpl/plugins/common
   modifier.count_paragraphs.php
   modifier.count_sentences.php
   modifier.count_words.php
+  modifier.date_format.php
   modifier.indent.php
   modifier.jdatetime.php
   modifier.regex_replace.php

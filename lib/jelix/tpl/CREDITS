@@ -9,3 +9,4 @@ Laurent Jouanneau : Concepteur et développeur principal de jTpl
 Contributeurs
 -------------
 Loic Mathaud (bballizlife) : testeur, adaptation jTpl en standalone, instruction {for}.
+Yannick Le Guédart (Torgan) : adaptation de plugins smarty pour jtpl.
