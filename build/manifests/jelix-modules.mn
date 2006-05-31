@@ -1,17 +1,3 @@
-cd users
-  module.xml
-  events.xml
-cd users/classes
-  auth.listener.php
-cd users/controllers
-  default.classic.php
-  default.rdf.php
-  default.jsonrpc.php
-cd users/templates
-  xaovlay.tpl
-  adminusers.tpl
-cd users/install/var/overloads/auth/daos
-  jelixuser.dao.xml
 cd xulapp
   module.xml
 cd xulapp/controllers

@@ -80,7 +80,9 @@
 
     </implementation>
     <handlers>
-
+        <handler event="keypress" keycode="VK_RETURN">
+            this.show();
+        </handler>
     </handlers>
 
 </binding>

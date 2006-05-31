@@ -7,6 +7,8 @@
 
       <property name="id_aclgrp" fieldname="id_aclgrp" datatype="autoincrement" required="yes"/>
       <property name="name" fieldname="name" datatype="string" required="yes"/>
+
+      <!-- 0=normal 1=default 2=privé -->
       <property name="grouptype" fieldname="grouptype" datatype="int" required="yes"/>
       <property name="ownerlogin" fieldname="ownerlogin" datatype="string" />
 
@@ -25,7 +27,7 @@
         <method name="getPrivateGroup" type="selectfirst">
            <parameter name="login" />
            <conditions>
-              <eq property="grouptype" value="1" />
+              <eq property="grouptype" value="2" />
               <eq property="ownerlogin" expr="$login" />
            </conditions>
         </method>

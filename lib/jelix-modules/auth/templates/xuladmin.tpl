@@ -7,7 +7,7 @@
 <script type="application/x-javascript"><![CDATA[
 
   var tree;
-  var dsUrl =  '{jurl 'users~default_userslist@rdf',array(),false}';
+  var dsUrl =  '{jurl 'auth~admin_userslist@rdf',array(),false}';
 
   {literal}
   function init()
@@ -51,7 +51,7 @@
 <description class="title-page">Gestion des utilisateurs</description>
 
 <vbox flex="1">
-    <jx:remotetreecriterion uri="{jurl 'users~default_userslist@rdf'}" tree="userslist" id="criteres">
+    <jx:remotetreecriterion uri="{jurl 'auth~admin_userslist@rdf'}" tree="userslist" id="criteres">
         <label control="letter" value="Login commençant par"/>
         <textbox id="letter" name="letter" />
     </jx:remotetreecriterion>
@@ -87,7 +87,7 @@
                 <vbox submit="userdata">
 
                 <jxf:submission id="userform" action="jsonrpc.php5" method="POST"
-                                format="json-rpc" rpcmethod="users~default_saveuser"
+                                format="json-rpc" rpcmethod="auth~admin_saveuser"
                                 onsubmit=""
                                 onresult="document.getElementById('criteres').show()"
                                 onhttperror="alert('erreur http :' + event.errorCode)"
@@ -118,7 +118,7 @@
                 <caption label="Changement du mot de passe"/>
                 <vbox submit="userpwd">
                 <jxf:submission id="pwdform" action="jsonrpc.php5" method="POST"
-                                format="json-rpc" rpcmethod="users~default_newpwd"
+                                format="json-rpc" rpcmethod="auth~admin_newpwd"
                                 onsubmit="return verifPwd()"
                                 onresult="alert('mot de passe modifié');resetPwdForm();"
                                 onhttperror="alert('erreur http :' + event.errorCode)"
