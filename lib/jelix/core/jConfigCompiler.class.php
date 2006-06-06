@@ -21,14 +21,14 @@ class jConfigCompiler {
     static public function read($configFile){
         $config = parse_ini_file(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php', true);
 
-        if( $commonConfig = parse_ini_file(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',true)){
-            self::_MergeConfig($config, $commonConfig);
+        if( $commonConfig = @parse_ini_file(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',true)){
+            self::_mergeConfig($config, $commonConfig);
         }
 
         if($configFile !='defaultconfig.ini.php'){
-            if(! $userConfig = parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true))
+            if(! $userConfig = @parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true))
                 die(" fichier de configuration manquant !");
-            self::_MergeConfig($config, $userConfig);
+            self::_mergeConfig($config, $userConfig);
         }
 
         if(preg_match("/^(\w+).*$/", PHP_OS, $m)){
@@ -103,7 +103,7 @@ class jConfigCompiler {
         }
     }
 
-    static private function _MergeConfig(&$array, $tomerge){
+    static private function _mergeConfig(&$array, $tomerge){
 
         foreach($tomerge as $k=>$v){
             if(!isset($array[$k])){

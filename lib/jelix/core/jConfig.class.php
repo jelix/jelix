@@ -28,7 +28,8 @@ class jConfig {
             $compil=true;
         }else{
             $t = filemtime($file);
-            if(filemtime(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php')>$t
+            $dc = JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php';
+            if( (file_exists($dc) && filemtime($dc)>$t)
                 || filemtime(JELIX_APP_CONFIG_PATH.$configFile)>$t){
                 $compil=true;
             }else{
