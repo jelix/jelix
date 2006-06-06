@@ -102,17 +102,17 @@ abstract class jRequest {
     }
 
     public function getResponse($type='', $useOriginal = false){
-        global $gJCoord, $gJConfig, $gDefaultConfig;
+        global $gJCoord, $gJConfig;
         if($type == ''){
             $type = $this->defaultResponseType;
         }
 
         if($useOriginal){
-            if(!isset($gDefaultConfig['responses'][$type])){
+            if(!isset($gJConfig->_coreResponses[$type])){
                trigger_error(jLocale::get('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
                return null;
             }
-            $respclass = $gDefaultConfig['responses'][$type];
+            $respclass = $gJConfig->_coreResponses[$type];
         }else{
             if(!isset($gJConfig->responses[$type])){
                trigger_error(jLocale::get('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);

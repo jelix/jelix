@@ -124,6 +124,7 @@ cd lib/jelix-scripts/templates
   project.xml.tpl
   application.init.php.tpl
   dbprofils.ini.php.tpl
+  defaultconfig.ini.php.tpl
   config.classic.ini.php.tpl
   config.cmdline.ini.php.tpl
   controller.cmdline.tpl

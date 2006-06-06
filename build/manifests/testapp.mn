@@ -69,6 +69,7 @@ cd testapp/var
 cd testapp/var/log
 cd testapp/var/config
   config.classic.ini.php.dist
+  defaultconfig.ini.php.dist
   dbprofils.ini.php.dist
   urls.xml
 cd testapp/var/themes/default/testapp

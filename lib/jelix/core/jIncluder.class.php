@@ -115,7 +115,7 @@ class jIncluder {
 
         if(!$mustCompile && $checkCompile){
             $compiledate = filemtime($cachefile);
-            foreach($gJConfig->modulesPathList as $module=>$path){
+            foreach($gJConfig->_modulesPathList as $module=>$path){
                 $sourcefile = $path.$aType[2];
                 if (is_readable ($sourcefile)){
                     if( filemtime($sourcefile) > $compiledate){
@@ -131,7 +131,7 @@ class jIncluder {
             require_once(JELIX_LIB_PATH.$aType[1]);
             $compiler = new $aType[0];
 
-            foreach($gJConfig->modulesPathList as $module=>$path){
+            foreach($gJConfig->_modulesPathList as $module=>$path){
                 $compileok=$compiler->compileItem($path.$aType[2], $module);
                 if(!$compileok) break;
             }

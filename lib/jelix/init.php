@@ -36,7 +36,6 @@ define ('JELIX_MODULE_PATH',  LIB_PATH.'jelix-modules/');
 // chargement du coeur
 require_once (JELIX_LIB_CORE_PATH . 'jErrorHandler.lib.php');
 require_once (JELIX_LIB_CORE_PATH . 'jException.lib.php');
-require_once (JELIX_LIB_CORE_PATH . 'jDefaultConfig.lib.php');
 require_once (JELIX_LIB_CORE_PATH . 'jContext.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jSelector.class.php');

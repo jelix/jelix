@@ -511,8 +511,8 @@ class jTplCompiler
         if(isset($GLOBALS['jTplConfig']['tplpluginsPathList'][$treq])){
             foreach($GLOBALS['jTplConfig']['tplpluginsPathList'][$treq] as $path){
 #else
-        if(isset($gJConfig->tplpluginsPathList[$treq])){
-            foreach($gJConfig->tplpluginsPathList[$treq] as $path){
+        if(isset($gJConfig->{'_tplpluginsPathList_'.$treq})){
+            foreach($gJConfig->{'_tplpluginsPathList_'.$treq} as $path){
 #endif
                 $foundPath=$path.$type.'.'.$name.'.php';
 
@@ -525,8 +525,8 @@ class jTplCompiler
         if(isset($GLOBALS['jTplConfig']['tplpluginsPathList']['common'])){
             foreach($GLOBALS['jTplConfig']['tplpluginsPathList']['common'] as $path){
 #else
-        if(isset($gJConfig->tplpluginsPathList['common'])){
-            foreach($gJConfig->tplpluginsPathList['common'] as $path){
+        if(isset($gJConfig->_tplpluginsPathList_common)){
+            foreach($gJConfig->_tplpluginsPathList_common as $path){
 #endif
                 $foundPath=$path.$type.'.'.$name.'.php';
                 if(file_exists($foundPath)){
@@ -538,10 +538,12 @@ class jTplCompiler
     }
 }
 
-/*
+
+
+#ifdef DEBUGJTPL
+
 function showtokens($arr){
 
-return;
 echo '<table border="1" style="font-size:0.7em">';
 foreach($arr as $tok){
 
@@ -556,7 +558,6 @@ echo '</table><hr/>';
 }
 
 function showtoken($tok){
-return;
 
 echo '<table border="1" style="font-size:0.7em">';
    if(is_array($tok)){
@@ -566,7 +567,7 @@ echo '<table border="1" style="font-size:0.7em">';
 echo '</table><hr/>';
 
 }
-*/
 
+#endif
 
 ?>

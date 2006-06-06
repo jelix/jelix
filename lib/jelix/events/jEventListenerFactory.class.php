@@ -78,7 +78,7 @@ class jEventListenerFactory {
     protected static function  _createListener ($module, $listenerName){
         if (! isset (self::$_listenersSingleton[$module][$listenerName])){
             global $gJConfig;
-            require_once ($gJConfig->modulesPathList[$module].'classes/'.strtolower ($listenerName).'.listener.php');
+            require_once ($gJConfig->_modulesPathList[$module].'classes/'.strtolower ($listenerName).'.listener.php');
             $className = 'Listener'.$listenerName;
             self::$_listenersSingleton[$module][$listenerName] =  new $className ();
         }

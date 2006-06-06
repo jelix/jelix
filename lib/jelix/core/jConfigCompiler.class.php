@@ -13,13 +13,12 @@
 
 class jConfigCompiler {
 
-
     private function __construct (){ }
 
     /**
      * lecture de la configuration du framework
      */
-    static public function load($configFile){
+    static public function read($configFile){
         $config = parse_ini_file(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php', true);
 
         if( $commonConfig = parse_ini_file(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',true)){
@@ -66,12 +65,16 @@ class jConfigCompiler {
         $result=array();
         foreach($list as $path){
             $path = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
+            if(!file_exists($path)){
+                trigger_error($path.' path given in the config doesn\'t exist',E_USER_ERROR);
+                exit;
+            }
             if ($handle = opendir($path)) {
-                    while (false !== ($f = readdir($handle))) {
-                        if ($f{0} != '.' && is_dir($path.$f)) {
-                            $result[$f]=$path.$f;
-                        }
+                while (false !== ($f = readdir($handle))) {
+                    if ($f{0} != '.' && is_dir($path.$f)) {
+                        $result[$f]=$path.$f.'/';
                     }
+                }
                 closedir($handle);
             }
         }
@@ -81,16 +84,20 @@ class jConfigCompiler {
     /**
      * compilation et mise en cache de liste de chemins des plugins de templates
      */
-    static private function _loadTplPathList(&$config,  $var){       
+    static private function _loadTplPathList(&$config,  $var){
         $list = split(' *, *',$config[$var]);
         foreach($list as $path){
             $path = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
+            if(!file_exists($path)){
+                trigger_error($path.' path given in the config doesn\'t exist',E_USER_ERROR);
+                exit;
+            }
             if ($handle = opendir($path)) {
-                    while (false !== ($f = readdir($handle))) {
-                        if ($f{0} != '.' && is_dir($path.$f)) {
-                            $config['_tplpluginsPathList_'.$f][] = $path.$f.'/';
-                        }
+                while (false !== ($f = readdir($handle))) {
+                    if ($f{0} != '.' && is_dir($path.$f)) {
+                        $config['_tplpluginsPathList_'.$f][] = $path.$f.'/';
                     }
+                }
                 closedir($handle);
             }
         }

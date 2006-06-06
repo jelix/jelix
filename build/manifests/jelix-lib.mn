@@ -26,11 +26,12 @@ cd lib/jelix/controllers
   jControllerCmdLine.class.php
 
 cd lib/jelix/core
+  defaultconfig.ini.php
   jConfig.class.php
+  jConfigCompiler.class.php
   jContext.class.php
   jController.class.php
   jCoordinator.class.php
-  jDefaultConfig.lib.php
   jErrorHandler.lib.php
   jException.lib.php
   jIncluder.class.php

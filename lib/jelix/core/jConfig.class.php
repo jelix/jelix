@@ -19,110 +19,53 @@ class jConfig {
     /**
      * lecture de la configuration du framework
      */
+
     static public function load($configFile){
-        global $gDefaultConfig;
-
-        if(! $config = parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true))
-            die(" fichier de configuration manquant !");
-
-        // traitement spécial pour la liste des réponses.
-        if(isset($config['responses'])){
-           $resplist = array_merge($gDefaultConfig['responses'],$config['responses']) ;
-        }else{
-           $resplist = $gDefaultConfig['responses'];
-        }
-
-        $config = array_merge($gDefaultConfig,$config);
-        $config['responses'] = $resplist;
-        $config = (object) $config;
-
-        if(preg_match("/^(\w+).*$/", PHP_OS, $m)){
-            $os=$m[1];
-        }else{
-            $os=PHP_OS;
-        }
-        $config->OS = $os;
-        $config->isWindows = (strpos(strtolower($os),'win')!== false);
-        if(trim( $config->defaultAction) == '')
-             $config->defaultAction = '_';
-
-        $config->pluginsPathList = self::_loadPathList($config, $configFile,'plugins');
-        $config->modulesPathList = self::_loadPathList($config, $configFile, 'modules');
-        $config->tplpluginsPathList = self::_loadPathList($config, $configFile, 'tplplugins',true);
-
-        if($config->checkTrustedModules){
-            $config->trustedModules = explode(',',$config->trustedModules);
-        }else{
-            $config->trustedModules = array_keys($config->modulesPathList);
-        }
-
-        return $config;
-    }
-
-    /**
-     * compilation et mise en cache de liste de chemins
-     */
-    static private function _loadPathList($config, $configFile, $dir, $tplp=false){
-
-        $file = JELIX_APP_TEMP_PATH.$configFile.'.'.$dir.'list.ini.php';
+        $config=array();
+        $file = JELIX_APP_TEMP_PATH.$configFile.'.resultini.php';
         $compil=false;
         if(!file_exists($file)){
             $compil=true;
-        }else if($config->compilation['checkCacheFiletime']){
+        }else{
             $t = filemtime($file);
-            if(filemtime(JELIX_APP_CONFIG_PATH.$configFile)>$t){
+            if(filemtime(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php')>$t
+                || filemtime(JELIX_APP_CONFIG_PATH.$configFile)>$t){
                 $compil=true;
             }else{
-
-                $list = split(' *, *',$config->{$dir.'Path'});
-                foreach($list as $p){
-                    $path = str_replace(array('lib:','app:'), array(LIB_PATH,JELIX_APP_PATH), $p);
-                    if(!file_exists($path)){
-                        trigger_error($p.' path doesn\'t exist',E_USER_ERROR);
-                        exit;
-                    }
-                    if(filemtime($path)>$t){
-                        $compil=true;
-                        break;
+                $config = parse_ini_file($file,true);
+                $config = (object) $config;
+                if($config->compilation['checkCacheFiletime']){
+                    $compil = self::_verifpath($config->modulesPath,$t);
+                    if(!$compil){
+                        $compil = self::_verifpath($config->pluginsPath,$t);
+                        if(!$compil){
+                            $compil = self::_verifpath($config->tplpluginsPath,$t);
+                        }
                     }
                 }
             }
         }
         if($compil){
-            $list = split(' *, *',$config->{$dir.'Path'});
-            $result='';
-            foreach($list as $path){
-                $path = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
-                if ($handle = opendir($path)) {
-                     while (false !== ($f = readdir($handle))) {
-                        if ($f{0} != '.' && is_dir($path.$f)) {
-                           if($tplp){
-                              $result[$f][] = $path.$f.'/';
-                           }else{
-                              $result.=$f.'='.$path.$f."/\n";
-                           }
-                        }
-                     }
-                    closedir($handle);
-                }
-            }
-            if($f = @fopen($file, 'wb')){
-                if($tplp){
-                   $result = serialize($result);
-                }
-                fwrite($f, $result);
-                fclose($f);
-            }else{
-                trigger_error('Can\'t write '.$file.' file',E_USER_ERROR);
-            }
-        }
-        if($tplp){
-           return unserialize(file_get_contents($file));
-        }else{
-           return parse_ini_file($file);
-        }
+            require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
+            return jConfigCompiler::read($configFile);
+        }else
+            return $config;
     }
 
+    private static function _verifpath($list, $time){
+        $list = split(' *, *',$list);
+        foreach($list as $path){
+            $path = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
+            if(!file_exists($path)){
+                trigger_error($path.' path given in the config doesn\'t exist',E_USER_ERROR);
+                exit;
+            }
+            if(filemtime($path)>$time){
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 

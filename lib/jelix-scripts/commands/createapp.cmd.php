@@ -55,6 +55,7 @@ class createappCommand extends JelixScriptCommand {
 
 
        $this->createFile(JELIX_APP_PATH.'project.xml','project.xml.tpl',$param);
+       $this->createFile(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php','defaultconfig.ini.php.tpl',$param);
        $this->createFile(JELIX_APP_CONFIG_PATH.'config.classic.ini.php','config.classic.ini.php.tpl',$param);
        $this->createFile(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php','dbprofils.ini.php.tpl',$param);
 

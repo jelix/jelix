@@ -112,12 +112,11 @@ abstract class jSelectorModule implements jISelector {
 
     protected function _createPath(){
         global $gJConfig;
-        if(!isset($gJConfig->modulesPathList[$this->module])){
+        if(!isset($gJConfig->_modulesPathList[$this->module])){
             $this->_valid = false;
             return;
         }
-        $this->_path = $gJConfig->modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
-
+        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
         if (!is_readable ($this->_path)){
             $this->_path=='';
             $this->_valid = false;
@@ -182,11 +181,11 @@ class jSelectorAct extends jSelectorModule {
 
     protected function _createPath(){
         global $gJConfig;
-        if(!isset($gJConfig->modulesPathList[$this->module])){
+        if(!isset($gJConfig->_modulesPathList[$this->module])){
             $this->_path=='';
             $this->_valid = false;
         }else{
-            $this->_path = $gJConfig->modulesPathList[$this->module].'controllers/'.$this->controller.'.'.$this->request.'.php';
+            $this->_path = $gJConfig->_modulesPathList[$this->module].'controllers/'.$this->controller.'.'.$this->request.'.php';
         }
     }
 
@@ -269,7 +268,7 @@ class jSelectorDao extends jSelectorModule {
 
     protected function _createPath(){
         global $gJConfig;
-        if(!isset($gJConfig->modulesPathList[$this->module])){
+        if(!isset($gJConfig->_modulesPathList[$this->module])){
             $this->_valid = false;
             return;
         }
@@ -282,7 +281,7 @@ class jSelectorDao extends jSelectorModule {
            return;
         }
         // et sinon, on regarde si le dao existe dans le module en question
-        $this->_path = $gJConfig->modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
+        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
 
         if (!is_readable ($this->_path)){
             $this->_path=='';
@@ -323,7 +322,7 @@ class jSelectorTpl extends jSelectorModule {
 
     protected function _createPath(){
         global $gJConfig;
-        if(!isset($gJConfig->modulesPathList[$this->module])){
+        if(!isset($gJConfig->_modulesPathList[$this->module])){
             $this->_valid = false;
             return;
         }
@@ -343,7 +342,7 @@ class jSelectorTpl extends jSelectorModule {
         }
 
         // et sinon, on regarde si le template existe dans le module en question
-        $this->_path = $gJConfig->modulesPathList[$this->module].$this->_dirname.$this->resource.'.tpl';
+        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.'.tpl';
 
         if (!is_readable ($this->_path)){
             $this->_path=='';
@@ -414,7 +413,7 @@ class jSelectorPlugin implements jISelector {
         if(preg_match("/^([\w\.]+)~([\w\.]+)$/", $sel, $m)){
             $this->plugin = $m[1];
             $this->file = $m[2];
-            if(isset($gJConfig->pluginsPathList[$this->plugin])){
+            if(isset($gJConfig->_pluginsPathList[$this->plugin])){
                 $this->_valid = true;
             }else{
                 $this->_valid=false;
@@ -426,8 +425,8 @@ class jSelectorPlugin implements jISelector {
 
     public function getPath (){
         global $gJConfig;
-        if(isset($gJConfig->pluginsPathList[$this->plugin])){
-            return $gJConfig->pluginsPathList[$this->plugin].$this->file;
+        if(isset($gJConfig->_pluginsPathList[$this->plugin])){
+            return $gJConfig->_pluginsPathList[$this->plugin].$this->file;
         }else{
             return '';
         }

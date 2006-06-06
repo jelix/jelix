@@ -89,7 +89,7 @@ class jCoordinator {
     private function _loadPlugins(){
 
         foreach($GLOBALS['gJConfig']->plugins as $name=>$conf){
-            if($conf && isset($GLOBALS['gJConfig']->pluginsPathList[$name])){
+            if($conf && isset($GLOBALS['gJConfig']->_pluginsPathList[$name])){
                 if($conf=='1')
                     $conf=$name.'.plugin.ini.php';
                 if(file_exists(JELIX_APP_CONFIG_PATH.$conf)){
@@ -97,7 +97,7 @@ class jCoordinator {
                 }else{
                     $conf = array();
                 }
-                include( $GLOBALS['gJConfig']->pluginsPathList[$name].$name.".plugin.php");
+                include( $GLOBALS['gJConfig']->_pluginsPathList[$name].$name.".plugin.php");
                 $class= $name.'Plugin';
                 $this->plugins[strtolower($name)] = new $class($conf);
             }
@@ -148,7 +148,7 @@ class jCoordinator {
 
 
         // verification du module
-        if(!in_array($this->moduleName,$gJConfig->trustedModules)){
+        if(!in_array($this->moduleName,$gJConfig->_trustedModules)){
             trigger_error(jLocale::get('jelix~errors.module.untrusted',$this->moduleName), E_USER_ERROR);
             return;
         }
@@ -301,7 +301,7 @@ class jCoordinator {
     * @return boolean true : plugin is ok
     */
     public function isModuleEnabled ($moduleName){
-        return in_array($moduleName, $GLOBALS['gJConfig']->trustedModules);
+        return in_array($moduleName, $GLOBALS['gJConfig']->_trustedModules);
     }
 
 }

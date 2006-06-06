@@ -200,7 +200,7 @@ class jLocale {
 
         if (!$file->isValid()){
             if($key == 'jelix~errors.locale.key.selector.invalid'){
-                return '(200)The given locale key "'.$args[0].'" is invalid  (for module '.$args[1].', charset '.$args[2].', lang '.$args[3].')';
+                return '(200)The given locale key "'.$args[0].'" is invalid  (for module '.$args[1].', charset '.$args[2].', lang '.$args[3].') (internal error ?)';
             }else{
                 trigger_error (jLocale::get ('jelix~errors.locale.key.selector.invalid', array($key,$file->module, $charset, $locale)), E_USER_ERROR);
             }

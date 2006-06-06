@@ -27,6 +27,15 @@ class jResponseText extends jResponse {
      */
     public $content = '';
 
+    protected $_charset;
+
+    /**
+    * Contruction et initialisation
+    */
+    function __construct ($attributes=array()){
+        $this->_charset = $GLOBALS['gJConfig']->defaultCharset;
+        parent::__construct($attributes);
+    }
 
     /**
      * génère le contenu et l'envoi au navigateur.
