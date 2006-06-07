@@ -24,17 +24,21 @@ class jDBResultSetPostgreSQL extends jDbResultSet {
         $this->_stmtId=$stmtId;
         $this->_cnt = $cnt;
 	}
-   protected function _fetch(){
-      $toReturn = pg_fetch_object ($this->_idResult);
-      return $toReturn;
-   }
-   protected function _free (){
-      return pg_free_result ($this->_idResult);
+    protected function _fetch(){
+        $toReturn = pg_fetch_object ($this->_idResult);
+        return $toReturn;
+    }
+    protected function _free (){
+        return pg_free_result ($this->_idResult);
+    }
 
-   }
-   public  function rowCount(){
-      return pg_num_rows($this->_idResult);
-   }
+    protected function _rewind (){
+        return pg_result_seek ( $this->_idResult, 0 );
+    }
+
+    public  function rowCount(){
+        return pg_num_rows($this->_idResult);
+    }
 
     public function bindColumn($column, &$param , $type=null )
       {throw new JException('jelix~db.error.feature.unsupported', array('pgsql','bindColumn')); }
@@ -42,14 +46,14 @@ class jDBResultSetPostgreSQL extends jDbResultSet {
        {throw new JException('jelix~db.error.feature.unsupported', array('pgsql','bindParam')); }
     public function bindValue($parameter, $value, $data_type)
        {throw new JException('jelix~db.error.feature.unsupported', array('pgsql','bindValue')); }
+
     public function columnCount(){
       return pg_num_fields($this->_idResult);
-   }
+    }
+
     public function execute($parameters=array()){
         $this->_idResult= pg_execute($this->_cnt,$this->_stmtId, $parameters);
         return true;
     }
-
-
 }
 ?>

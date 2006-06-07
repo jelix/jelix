@@ -4,7 +4,7 @@
 * @subpackage db
 * @version    $Id:$
 * @author     Loic Mathaud
-* @contributor 
+* @contributor
 * @copyright  2006 Loic Mathaud
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -22,6 +22,10 @@ class jDbResultSetSqlite extends jDbResultSet {
     }
     protected function _free (){
         return;
+    }
+
+    protected function _rewind (){
+        return sqlite_rewind ( $this->_idResult );
     }
 
     public function rowCount(){

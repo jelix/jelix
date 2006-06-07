@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage dao
 * @version    $Id:$
-* @author     Croes Gï¿½ald, Laurent Jouanneau
+* @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
@@ -13,12 +13,12 @@
 * du framework Copix 2.3dev20050901. http://www.copix.org
 * il est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptï¿½ et amï¿½iorï¿½ pour Jelix par Laurent Jouanneau
+* Adaptée et amélioré pour Jelix par Laurent Jouanneau
 */
 
 /**
-* Gï¿½ï¿½ateur d'une classe PHP correspondant ï¿½un objet DAO dï¿½init dans une fichier xml
-* de dï¿½inition
+* Générateur d'une classe PHP correspondant à un objet DAO définit dans une fichier xml
+* de définition
 */
 
 class jDaoGenerator {
@@ -66,7 +66,6 @@ class jDaoGenerator {
 
       $src = array();
       $src[] = ' require_once ( JELIX_LIB_DAO_PATH .\'jDaoBase.class.php\');';
-      $src[] = ' require_once ( JELIX_LIB_DB_PATH .\'jDbWidget.class.php\');';
 
       //-----------------------
       // Build the record class
@@ -317,18 +316,23 @@ class jDaoGenerator {
                   $src[] = '    return $this->_conn->exec ($query);';
                break;
                case 'count':
-                  $src[] = '    $dbw = new jDbWidget ($this->_conn);';
-                  $src[] = '    $res = $dbw->fetchFirst ($query);';
+                  $src[] = '    $rs = $this->_conn->query($query);';
+                  $src[] = '    $res = $rs->fetch();';
                   $src[] = '    return $res->c;';
                   break;
                case 'selectfirst':
-                  $src[] = '    $dbw = new jDbWidget ($this->_conn);';
-                  $src[] = '    return $dbw->fetchFirstInto ($query, \''.$this->_DaoRecordClassName.'\');';
+                  $src[] = '    $rs = $this->_conn->query($query);';
+                  $src[] = '    $rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
+                  $src[] = '    return $rs->fetch();';
                   break;
                case 'select':
                default:
-                  $src[] = '    $dbw = new jDbWidget ($this->_conn);';
-                  $src[] = '    return $dbw->fetchAllInto ($query, \''.$this->_DaoRecordClassName.'\''.$limit.');';
+                  if($limit)
+                      $src[] = '    $rs = $this->_conn->limitQuery($query'.$limit.');';
+                  else
+                      $src[] = '    $rs = $this->_conn->query($query);';
+                  $src[] = '    $rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
+                  $src[] = '    return $rs;';
          }
          $src[] = '}';
       }

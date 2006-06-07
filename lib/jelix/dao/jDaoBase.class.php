@@ -19,7 +19,7 @@ abstract class jDaoRecordBase {
    const ERROR_MINLENGTH = 5;
 
 
-   protected $_properties;
+   protected $_properties=array();
 
    public function getProperties(){ return $this->_properties; }
 
@@ -116,14 +116,15 @@ abstract class jDaoFactoryBase  {
    }
 
    public function findAll(){
-      $dbw = new jDbWidget($this->_conn);
-      return $dbw->fetchAllInto($this->_selectClause.$this->_fromClause.$this->_whereClause , $this->_DaoRecordClassName);
+      $rs =  $this->_conn->query ($this->_selectClause.$this->_fromClause.$this->_whereClause);
+      $rs->setFetchMode(8,$this->_DaoRecordClassName);
+      return $rs;
    }
 
    public function countAll(){
      $query = 'SELECT COUNT(*) as c '.$this->_fromClause.$this->_whereClause;
-     $dbw = new jDbWidget ($this->_conn);
-     $res = $dbw->fetchFirst ($query, 'testapp~config');
+     $rs  =  $this->_conn->query ($query);
+     $res =  $rs->fetch ();
      return $res->c;
    }
 
@@ -138,11 +139,12 @@ abstract class jDaoFactoryBase  {
          throw new jException('jelix~dao.error.keys.missing');
       }
 
-      $dbw =  new jDbWidget ($this->_conn);
       $q = $this->_selectClause.$this->_fromClause.$this->_whereClause;
       $q .= $this->_getPkWhereClauseForSelect($keys);
 
-      $record = $dbw->fetchFirstInto($q, $this->_DaoRecordClassName);
+      $rs  =  $this->_conn->query ($q);
+      $rs->setFetchMode(8,$this->_DaoRecordClassName);
+      $record =  $rs->fetch ();
       return $record;
    }
 
@@ -173,8 +175,10 @@ abstract class jDaoFactoryBase  {
          $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
          $query .= $this->_createConditionsClause($searchcond);
       }
-      $dbw = new jDBWidget ($this->_conn);
-      return $dbw->fetchAllInto ($query, $this->_DaoRecordClassName);
+
+      $rs  =  $this->_conn->query ($query);
+      $rs->setFetchMode(8,$this->_DaoRecordClassName);
+      return $rs;
    }
 
    abstract protected function _getPkWhereClauseForSelect($pk);
@@ -187,7 +191,7 @@ abstract class jDaoFactoryBase  {
 
       $c = $this->_DaoRecordClassName;
       $rec= new $c();
-      $fields = & $rec->getProperties();
+      $fields = $rec->getProperties();
 
       $sql = $this->_generateCondition ($daocond->condition, $fields, true);
 

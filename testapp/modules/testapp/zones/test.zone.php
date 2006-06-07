@@ -16,14 +16,14 @@ class ZoneTest extends jZone {
 
     protected function _prepareTpl(){
 
-        $dao = jDAO::get('config');
+        $dao = jDao::get('config');
 
         $this->_tpl->assign('config',$dao->findAll());
         $this->_tpl->assign('oneconf',$dao->get('foo'));
         $this->_tpl->assign('nombre',$dao->countAll());
         $this->_tpl->assign('nombrevalue',$dao->getCountValue());
 
-        $cond = new jDAOConditions('or');
+        $cond = new jDaoConditions('or');
         $cond->addCondition('ckey','=','foo');
         $cond->addCondition('ckey','=','bar');
 

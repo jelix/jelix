@@ -10,9 +10,13 @@
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-abstract class jDbResultSet {
+abstract class jDbResultSet implements Iterator {
+
+    const FETCH_CLASS = 8;
 
 	protected $_idResult=null;
+	protected $_fetchMode = 0;
+	protected $_fetchModeParam = '';
 
 	function __construct (  $idResult){
 		$this->_idResult = $idResult;
@@ -25,44 +29,35 @@ abstract class jDbResultSet {
 		}
     }
 
-  /**
-    * fetch et renvoi les resultats sous forme d'un objet
-    * @return object l'objet contenant les champs récupérés, ou false si le curseur est à la fin
-    */
+    public function setFetchMode($fetchmode, $param=null){
+        $this->_fetchMode = $fetchmode;
+        $this->_fetchModeParam =$param;
+    }
+    /**
+     * fetch et renvoi les resultats sous forme d'un objet
+     * @return object l'objet contenant les champs récupérés, ou false si le curseur est à la fin
+     */
 	public function fetch(){
 		$result = $this->_fetch ();
+		if($result && $this->_fetchMode == self::FETCH_CLASS){
+		    $object = $this->_fetchModeParam;
+		    $object = new $object();
+            foreach (get_object_vars ($result) as $k=>$value){
+                $object->$k = $value;
+            }
+            $result = $object;
+		}
 		return $result;
 	}
 
 
     public function fetchAll(){
         $result=array();
-        while($res =  $this->_fetch ()){
+        while($res =  $this->fetch ()){
             $result[] = $res;
         }
         return $result;
     }
-
-	/**
-    * recupere un enregistrement et rempli les propriétes d'un objet existant avec
-    * les valeurs récupérées.
-    * @param object/string  $object ou nom de la classe
-    * @return  boolean  indique si il y a eu des resultats ou pas.
-    */
-	public function fetchInto ( $object){
-
-      if ($result = $this->_fetch ()){
-         if(is_string($object)){
-            $object = new $object();
-         }
-         foreach (get_object_vars ($result) as $k=>$value){
-            $object->$k = $value;
-         }
-			return $object;
-		}else{
-			return false;
-		}
-	}
 
     public function getAttribute($attr){return null;}
     public function setAttribute($attr, $value){}
@@ -85,6 +80,36 @@ abstract class jDbResultSet {
 
     abstract protected function _free ();
     abstract protected function _fetch ();
+    abstract protected function _rewind ();
+
+    //--------------- interface Iterator
+    protected $_currentRecord = false;
+    protected $_recordIndex = 0;
+
+    public function current () {
+        return $this->_currentRecord;
+    }
+
+ 	public function key () {
+ 	  return $this->_recordIndex;
+ 	}
+
+ 	public function next () {
+ 	  $this->_currentRecord =  $this->fetch ();
+ 	  if($this->_currentRecord)
+ 	      $this->_recordIndex++;
+ 	}
+
+ 	public function rewind () {
+ 	  $this->_rewind();
+ 	  $this->_recordIndex = 0;
+ 	  $this->_currentRecord =  $this->fetch ();
+ 	}
+
+ 	public function valid () {
+ 	  return ($this->_currentRecord != false);
+ 	}
+
 
 }
 ?>

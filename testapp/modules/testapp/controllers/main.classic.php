@@ -47,11 +47,11 @@ class CTMain extends jController {
    }
 
    function testdao(){
-    $dao = jDAO::get('testnews');
+    $dao = jDao::get('testnews');
 
     if( $id=$this->param('newid')){
-        $dao = jDAO::get('config');
-        $rec = jDAO::createRecord('config');
+        $dao = jDao::get('config');
+        $rec = jDao::createRecord('config');
 
         $rec->ckey = $id;
         $rec->cvalue=$this->param('newvalue','');
