@@ -96,6 +96,7 @@ cd lib/simpletest/docs/fr
   form_testing_documentation.html
   authentication_documentation.html
   browser_documentation.html
+
 cd lib/jelix-scripts
   scripts.conf.php
   jelix.php
@@ -135,6 +136,7 @@ cd lib/jelix-scripts/templates/www
   rdf.php.tpl
 cd lib/jelix-scripts/templates/scripts
   cmdline.php.tpl
+
 cd lib/jelix/docs/ns
   dao.rng
   events.rng
@@ -142,6 +144,7 @@ cd lib/jelix/docs/ns
   plugin.rng
   project.rng
   urls.rng
+
 cd lib/jelix-www/xul/test/
   testxulform.php
   testxulform_jsonrpc.php

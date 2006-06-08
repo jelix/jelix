@@ -40,6 +40,14 @@ DISTJTPL="$(DIST)/jtpl"
 DEVJTPL="$(DEV)/jtpl"
 DISTJBT="$(DIST)/jbuildtools"
 
+ifndef J_TEMP
+J_TEMP=$(DISTHACKER)
+endif
+
+ifndef J_LIB
+J_LIB=$(DISTHACKER)
+endif
+
 default:
 	@echo "target:  "
 	@echo "   dist-all dist-jelix dist-testapp dist-myapp dist-modules"
@@ -64,6 +72,7 @@ dist-jelix: common-dist
 	export LIB_VERSION=$(LIB_VERSION) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTJELIX) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(DISTJELIX) \
+	&& $(PHP) build/mkdist.php build/manifests/jelix-others.mn . $(DISTJELIX) \
 	&& echo "$(LIB_VERSION)" > "$(DISTJELIX)/lib/jelix/VERSION"
 	tar czf $(DIST)/jelix-lib-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) lib/ temp/
 
@@ -87,9 +96,10 @@ common-dist:
 
 dev-jelix: common-dev
 	export LIB_VERSION=$(LIB_VERSION) \
-	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTHACKER) \
-	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(DISTHACKER) \
-	&& echo "$(LIB_VERSION)" > "$(DISTHACKER)/lib/jelix/VERSION"
+	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(J_LIB) \
+	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(J_LIB) \
+	&& $(PHP) build/mkdist.php build/manifests/jelix-others.mn . $(J_TEMP) \
+	&& echo "$(LIB_VERSION)" > "$(J_LIB)/lib/jelix/VERSION"
 
 dev-jelix-lib: common-dev
 	export LIB_VERSION=$(LIB_VERSION) \
