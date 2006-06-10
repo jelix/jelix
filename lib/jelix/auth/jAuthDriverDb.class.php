@@ -60,7 +60,7 @@ class jAuthDriverDb implements jIAuthDriver {
     public function getUserList($pattern){
         $dao = jDao::get($this->_params['dao']);
         if($pattern == '%' || $pattern == ''){
-            return $dao->findAllOrdered();
+            return $dao->findAll();
         }else{
             return $dao->findByLogin($pattern);
         }

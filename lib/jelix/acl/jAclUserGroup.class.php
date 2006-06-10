@@ -58,7 +58,7 @@ class jAclUserGroup {
 
     function removeUserFromGroup($login,$groupid){
       $daousergroup = jDao::get('acl~jaclusergroup');
-      $daousergroup->del($login,$groupid);
+      $daousergroup->delete($login,$groupid);
     }
 
     function removeUser($login){
@@ -74,7 +74,7 @@ class jAclUserGroup {
       $daoright->deleteByGroup($privategrp->id_aclgrp);
 
       // supprime le groupe personnel du user (jacl_group)
-      $daogroup->del($privategrp->id_aclgrp);
+      $daogroup->delete($privategrp->id_aclgrp);
 
       // l'enleve de tous les groupes (jacl_users_group)
       $daousergroup->deleteByUser($login);
@@ -112,7 +112,7 @@ class jAclUserGroup {
        // enlever les utilisateurs du groupe
        $daousergroup->deleteByGroup($groupid);
        // suppression du groupe
-       $daogroup->del($groupid);
+       $daogroup->delete($groupid);
     }
 
     // renvoi liste de groupe non personnel

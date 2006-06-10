@@ -75,7 +75,7 @@ class jAclManager {
       $daoright = jDao::get('acl~jaclrights');
       $daoright->deleteBySubject($subject);
       $daosbj = jDao::get('acl~jaclsubject');
-      $daosbj->del($subject);
+      $daosbj->delete($subject);
     }
 
 

@@ -34,20 +34,21 @@ class jDBWidget {
     * @return  object  objet contenant les champs  sous forme de propriétés, de la ligne sélectionnée
     */
     public function  fetchFirst($query){
-        $rs     =  $this->_conn->query ($query);
-        $result =  $rs->fetch ();
+        $rs     = $this->_conn->query ($query);
+        $result = $rs->fetch ();
         return $result;
     }
 
     /**
     * Effectue une requête, et met à jour les propriétes de l'objet passé en paramètre
-    * @param   string   $query   requète SQL
-    * @param   object ou string  object à remplir ou nom de la classe de l'objet à remplir
+    * @param   string  $query     requète SQL
+    * @param   string  $classname nom de la classe de l'objet à remplir
     * @return  object  objet initialisé rempli
     */
-    public function fetchFirstInto ($query, $object){
-        $rs     =  $this->_conn->query   ($query);
-        $result =  $rs->fetchInto ($object);
+    public function fetchFirstInto ($query, $classname){
+        $rs     = $this->_conn->query   ($query);
+        $rs->setFetchMode(8, $classname);
+        $result = $rs->fetch ();
         return $result;
     }
 
@@ -58,9 +59,9 @@ class jDBWidget {
     */
     public function fetchAll($query, $limitOffset=null, $limitCount=null){
         if($limitOffset===null || $limitCount===null){
-            $rs =  $this->_conn->query ($query);
+            $rs = $this->_conn->query ($query);
         }else{
-            $rs =  $this->_conn->limitQuery ($query, $limitOffset, $limitCount);
+            $rs = $this->_conn->limitQuery ($query, $limitOffset, $limitCount);
         }
         return $rs->fetchAll ();
     }
@@ -68,19 +69,20 @@ class jDBWidget {
     /**
     * Récupère tout les enregistrements d'un select dans un tableau (d'objets)
     * @param   string   $query   requète SQL
-    * @param   object ou string  $className object à remplir ou nom de la classe de l'objet à remplir
+    * @param   string  $className nom de la classe de l'objet à remplir
     * @return  array    tableau d'objets
     */
     public function fetchAllInto($query, $className, $limitOffset=null, $limitCount=null){
         if($limitOffset===null || $limitCount===null){
-            $rs =  $this->_conn->query ($query);
+            $rs = $this->_conn->query ($query);
         }else{
-            $rs =  $this->_conn->limitQuery ($query, $limitOffset, $limitCount);
+            $rs = $this->_conn->limitQuery ($query, $limitOffset, $limitCount);
         }
         $result = array();
         if ($rs){
-            while($res = $rs->fetchInto ($className)){
-                $result[] =  $res;
+            $rs->setFetchMode(8, $classname);
+            while($res = $rs->fetch()){
+                $result[] = $res;
             }
         }
         return $result;
