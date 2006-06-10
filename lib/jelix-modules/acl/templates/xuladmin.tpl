@@ -7,21 +7,30 @@
 <script type="application/x-javascript"><![CDATA[
   {literal}
 
+
+
   {/literal}
 ]]></script>
+
+<commandset id="xuladmin-cmd-set">
+    <command id="cmdx_grp_rename" />
+    <command id="cmdx_grp_suppr" {if $groups->rowCount() <=1}disabled="true"{/if} />
+    <command id="cmdx_grp_new" />
+</commandset>
+
+
+
 <description class="title-page">Gestion des droits</description>
 <hbox>
-    <menulist>
+    <menulist id="grouplist">
         <menupopup>
-            <menuitem label="groupe 1" />
-            <menuitem label="groupe 2" />
-            <menuitem label="groupe 3" />
+            {foreach $groups as $grp}
+            <menuitem label="{$grp->name|escxml}" value="{$grp->id_aclgrp}"/>
+            {/foreach}
         </menupopup>
     </menulist>
-    <button label="Renommer" />
-    <button label="Supprimer" />
+
     <button label="Nouveau groupe" />
-    <spacer flex="1" />
 
 </hbox>
 
@@ -40,6 +49,7 @@
         <tabs>
             <tab label="Droits" />
             <tab label="Utilisateurs" />
+            <tab label="Propriétés" />
         </tabs>
         <tabpanels flex="1">
             <tabpanel>
@@ -97,12 +107,15 @@
                 </tree>
 
             </tabpanel>
+            <tabpanel>
+                <button label="Renommer" />
+             <button label="Supprimer" />
+            </tabpanel>
         </tabpanels>
     </tabbox>
     <vbox id="rightsedit"> <!--  collapsed="true" -->
-        <groupbox>
+        <groupbox submit="rightdata">
             <caption label="Édition des droits"/>
-            <vbox submit="rightdata">
 
                 <jxf:submission id="rightsform" action="jsonrpc.php5" method="POST"
                                 format="json-rpc" rpcmethod="acl~"
@@ -117,7 +130,6 @@
                 <checkbox label="bar" />
                 <checkbox label="baz" />
                 <jxf:submit id="rightdata" form="rightsform" label="Sauvegarder"/>
-            </vbox>
         </groupbox>
         <groupbox>
             <caption label="Édition des droits"/>

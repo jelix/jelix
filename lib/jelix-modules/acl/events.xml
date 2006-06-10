@@ -2,5 +2,7 @@
 <events xmlns="http://jelix.org/ns/events/1.0">
    <listener name="acl">
        <event name="FetchXulOverlay" />
+       <event name="AuthNewUser" />
+       <event name="AuthRemoveUser" />
    </listener>
 </events>

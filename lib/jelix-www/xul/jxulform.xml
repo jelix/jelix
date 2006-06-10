@@ -523,7 +523,7 @@
             var submission= this.getAttribute("form");
             submission = document.getElementById(submission);
             if(submission){
-            
+
                 var evt = document.createEvent("HTMLEvents");
                 submission.submitButton = this;
                 evt.initEvent("submit", true, true);
@@ -553,6 +553,28 @@
                     evt.initEvent("submit", true, true);
                     submission.dispatchEvent(evt);
                 }
+            }
+        </handler>
+    </handlers>
+</binding>
+
+<binding id="grpbox-submit-activate" extends="chrome://global/content/bindings/groupbox.xml#groupbox">
+    <handlers>
+        <handler event="keypress" keycode="VK_RETURN">
+            var submit= this.getAttribute("submit");
+            submit = document.getElementById(submit);
+            if(submit){
+            if(submit.hasAttribute('loading') || submit.hasAttribute('disabled')){
+            return;
+            }
+            var submission= submit.getAttribute("form");
+            submission = document.getElementById(submission);
+            if(submission){
+            var evt = document.createEvent("HTMLEvents");
+            submission.submitButton = submit;
+            evt.initEvent("submit", true, true);
+            submission.dispatchEvent(evt);
+            }
             }
         </handler>
     </handlers>

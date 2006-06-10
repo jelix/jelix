@@ -14,7 +14,7 @@ class CTxul extends jController {
     /**
     *
     */
-    function index() {
+    /*function index() {
         $rep = $this->getResponse('xulpage');
         $rep->bodyTpl='acl~adminacl';
         return $rep;
@@ -27,6 +27,6 @@ class CTxul extends jController {
         return $rep;
 
     }
-
+*/
 }
 ?>

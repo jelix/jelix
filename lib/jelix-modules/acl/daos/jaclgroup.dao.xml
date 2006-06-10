@@ -19,11 +19,16 @@
                <eq property="grouptype" value="1" />
             </conditions>
         </method>
+
         <method name="findAllPublicGroup" type="select">
            <conditions>
               <neq property="grouptype" value="2" />
            </conditions>
+           <order>
+               <orderitem property="name" way="asc" />
+           </order>
         </method>
+
         <method name="getPrivateGroup" type="selectfirst">
            <parameter name="login" />
            <conditions>
@@ -31,6 +36,7 @@
               <eq property="ownerlogin" expr="$login" />
            </conditions>
         </method>
+
         <method name="setToDefault" type="update">
            <parameter name="group" />
            <values>
@@ -40,6 +46,7 @@
               <eq property="id_aclgrp" expr="$group" />
            </conditions>
         </method>
+
         <method name="setToNormal" type="update">
            <parameter name="group" />
            <values>
@@ -49,6 +56,7 @@
               <eq property="id_aclgrp" expr="$group" />
            </conditions>
         </method>
+
         <method name="changeName" type="update">
            <parameter name="group" />
            <parameter name="name" />

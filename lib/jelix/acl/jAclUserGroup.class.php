@@ -16,12 +16,14 @@
  */
 class jAclUserGroup {
 
-    function getUsersList($groupid){
+    private function __construct (){ }
+
+    public static function getUsersList($groupid){
       $dao = jDao::get('acl~jaclusergroup');
       return $dao->getUsersGroup($groupid);
     }
 
-    function createUser($login, $defaultGroup=true){
+    public static function createUser($login, $defaultGroup=true){
       $daousergroup = jDao::get('acl~jaclusergroup');
       $daogroup = jDao::get('acl~jaclgroup');
       $usergrp = jDao::createRecord('acl~jaclusergroup');
@@ -48,7 +50,7 @@ class jAclUserGroup {
     }
 
 
-    function addUserToGroup($login, $groupid){
+    public static function addUserToGroup($login, $groupid){
       $daousergroup = jDao::get('acl~jaclusergroup');
       $usergrp = jDao::createRecord('acl~jaclusergroup');
       $usergrp->login =$login;
@@ -56,12 +58,12 @@ class jAclUserGroup {
       $daousergroup->insert($usergrp);
     }
 
-    function removeUserFromGroup($login,$groupid){
+    public static function removeUserFromGroup($login,$groupid){
       $daousergroup = jDao::get('acl~jaclusergroup');
       $daousergroup->delete($login,$groupid);
     }
 
-    function removeUser($login){
+    public static function removeUser($login){
       $daogroup = jDao::get('acl~jaclgroup');
       $daoright = jDao::get('acl~jaclrights');
       $daousergroup = jDao::get('acl~jaclusergroup');
@@ -81,7 +83,7 @@ class jAclUserGroup {
     }
 
      // renvoi group id
-    function createGroup($name){
+    public static function createGroup($name){
         $group = jDao::createRecord('acl~jaclgroup');
         $group->name=$name;
         $group->grouptype=0;
@@ -90,7 +92,7 @@ class jAclUserGroup {
         return $group->id_aclgrp;
     }
 
-    function setDefaultGroup($groupid, $default=true){
+    public static function setDefaultGroup($groupid, $default=true){
        $daogroup = jDao::get('acl~jaclgroup');
        if($default)
          $daogroup->setToDefault($groupid);
@@ -98,12 +100,12 @@ class jAclUserGroup {
          $daogroup->setToNormal($groupid);
     }
 
-    function updateGroup($groupid, $name){
+    public static function updateGroup($groupid, $name){
        $daogroup = jDao::get('acl~jaclgroup');
        $daogroup->changeName($groupid,$name);
     }
 
-    function removeGroup($groupid){
+    public static function removeGroup($groupid){
        $daogroup = jDao::get('acl~jaclgroup');
        $daoright = jDao::get('acl~jaclrights');
        $daousergroup = jDao::get('acl~jaclusergroup');
@@ -116,9 +118,14 @@ class jAclUserGroup {
     }
 
     // renvoi liste de groupe non personnel
-    function getGroupList(){
-       $daogroup = jDao::get('acl~jaclgroup');
-       return $daogroup->findAllPublicGroup();
+    public static function getGroupList($login=''){
+        if ($login === '') {
+            $daogroup = jDao::get('acl~jaclgroup');
+            return $daogroup->findAllPublicGroup();
+        }else{
+            $daogroup = jDao::get('acl~jaclgroupsofuser');
+            return $daogroup->getGroupsUser($login);
+        }
     }
 
 }

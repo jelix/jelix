@@ -127,6 +127,7 @@ cd lib/jelix/tpl/plugins/common
   modifier.count_sentences.php
   modifier.count_words.php
   modifier.date_format.php
+  modifier.escxml.php
   modifier.indent.php
   modifier.jdatetime.php
   modifier.regex_replace.php
@@ -255,6 +256,7 @@ cd lib/jelix-modules/acl/daos
    jaclrightvaluesgroup.dao.xml
    jaclsubject.dao.xml
    jaclusergroup.dao.xml
+   jaclgroupsofuser.dao.xml
 cd lib/jelix-modules/acl/install/sql
   delete.mysql.sql
   install.mysql.sql

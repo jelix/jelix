@@ -16,7 +16,9 @@
  */
 class jAclManager {
 
-    function setRight($group, $subject, $value , $resource=null){
+    private function __construct (){ }
+
+    public static function setRight($group, $subject, $value , $resource=null){
 
        //  récupère le groupe de valeur correspondant au subject
        //  récupère la liste des valeurs du groupe de valeur
@@ -52,13 +54,13 @@ class jAclManager {
        }
     }
 
-    function removeResourceRight($subject, $resource){
+    public static function removeResourceRight($subject, $resource){
         $daoright = jDao::get('acl~jaclrights');
         $daoright->deleteBySubjRes($subject, $resource);
     }
 
 
-    function addSubject($subject, $id_aclvalgrp, $label_key){
+    public static function addSubject($subject, $id_aclvalgrp, $label_key){
          // ajoute un sujet dans la table jacl_subject
          $daosbj = jDao::get('acl~jaclsubject');
          $subj = jDao::createRecord('acl~jaclsubject');
@@ -69,7 +71,7 @@ class jAclManager {
 
     }
 
-    function removeSubject($subject){
+    public static function removeSubject($subject){
       // supprime dans jacl_rights
       // supprime dans jacl_subject
       $daoright = jDao::get('acl~jaclrights');

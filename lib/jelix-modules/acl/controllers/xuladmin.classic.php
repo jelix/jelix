@@ -15,8 +15,13 @@ class CTxuladmin extends jController {
     *
     */
     function index() {
+        $daogroup = jDao::get('jaclgroup');
+
         $rep = $this->getResponse('xulpage');
         $rep->bodyTpl='acl~xuladmin';
+
+
+        $rep->body->assign('groups', $daogroup->findAllPublicGroup());
         return $rep;
     }
 
