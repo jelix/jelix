@@ -15,7 +15,7 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
-class jDBWidget {
+class jDbWidget {
     /**
     * a jDbConnection object
     */
@@ -80,7 +80,7 @@ class jDBWidget {
         }
         $result = array();
         if ($rs){
-            $rs->setFetchMode(8, $classname);
+            $rs->setFetchMode(8, $className);
             while($res = $rs->fetch()){
                 $result[] = $res;
             }

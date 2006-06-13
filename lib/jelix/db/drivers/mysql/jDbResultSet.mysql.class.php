@@ -29,7 +29,7 @@ class jDbResultSetMySQL extends jDbResultSet {
         return mysql_free_result ($this->_idResult);
     }
     protected function _rewind (){
-        return mysql_data_seek ( $this->_idResult, 0);
+        return @mysql_data_seek ( $this->_idResult, 0);
     }
 
     public function rowCount(){

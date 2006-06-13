@@ -15,7 +15,7 @@
 * Adaptée pour Jelix par Laurent Jouanneau
 */
 
-class jDBToolsPostgreSQL extends jDbTools {
+class jDbToolsPostgreSQL extends jDbTools {
 
    function __construct($connector){
       parent::__construct($connector);

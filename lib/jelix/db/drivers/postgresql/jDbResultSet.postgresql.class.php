@@ -15,7 +15,7 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
-class jDBResultSetPostgreSQL extends jDbResultSet {
+class jDbResultSetPostgreSQL extends jDbResultSet {
 	protected $_stmtId;
     protected $_cnt;
 
