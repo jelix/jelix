@@ -18,13 +18,20 @@ class jCmdLineRequest extends jRequest {
     public $defaultResponseType = 'text';
 
     protected function _initParams(){
-        if($_SERVER['argc'] < 2){
-            die("Error: selector is missing\n");
-        }
+        global $gJConfig;
+        
         $argv = $_SERVER['argv'];
-
         $scriptName = array_shift($argv); // shift the script name
-        $argsel = array_shift($argv); // get the module~action selector
+         
+        if ($_SERVER['argc'] == 1) {
+            $argsel = $gJConfig->defaultModule.'~'.$gJConfig->defaultAction;
+        } else {
+            $argsel = array_shift($argv); // get the module~action selector
+            if ($argsel == 'help') {
+                $argsel = 'jelix~help_index';
+            }
+        }
+
         $selector = new jSelectorAct($argsel);
 
         $this->params = $argv;

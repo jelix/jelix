@@ -203,7 +203,8 @@ cd lib/jelix-modules/jelix/locales/fr_FR
   errors.UTF-8.properties
   ui.UTF-8.properties
   auth.UTF-8.properties
-
+cd lib/jelix-modules/jelix/controllers
+  help.cmdline.php
 cd lib/jelix-modules/auth
   module.xml
   events.xml
