@@ -24,10 +24,10 @@ function jtpl_meta_html($tpl, $method, $param)
         case 'css':
             $gJCoord->response->addCSSLink($param);
             break;
-        case 'rootattr':
+        case 'bodyattr':
             if(is_array($param)){
                 foreach($param as $p1=>$p2){
-                    if(!is_numeric($p1)) $gJCoord->response->rootAttributes[$p1]=$p2;
+                    if(!is_numeric($p1)) $gJCoord->response->bodyTagAttributes[$p1]=$p2;
                 }
             }
             break;
