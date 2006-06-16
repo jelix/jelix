@@ -36,7 +36,7 @@ function jtpl_meta_xul($tpl, $method, $param)
             break;
         case 'ns':
             if(is_array($param)){
-                $ns=array('jxulform'=>"http://jelix.org/ns/jxulform/1.0");
+                $ns=array('jxbl'=>"http://jelix.org/ns/jxbl/1.0");
                 foreach($param as $p1=>$p2){
                     if(isset($ns[$p2])) $p2=$ns[$p2];
                     if(!is_numeric($p1)) $gJCoord->response->rootAttributes['xmlns:'.$p1]=$p2;

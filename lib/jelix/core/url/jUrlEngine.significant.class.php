@@ -93,7 +93,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
       if(strpos($script, $gJConfig->urlengine['entrypointExtension']) !== false){
          $script=substr($script,0,- (strlen($gJConfig->urlengine['entrypointExtension'])));
       }*/
-      
+
       if(substr($url->pathInfo,-1) == '/' && $url->pathInfo != '/'){
             $pathinfo = substr($url->pathInfo,0,-1);
       }else{
@@ -234,7 +234,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
             array(2,'entrypoint'); pour les clés du type "@request" ou "module~@request"
          */
 
-         $url->scriptName = $urlinfo[1];
+         $url->scriptName = $GLOBALS['gJConfig']->urlengine['basePath'].$urlinfo[1];
          if(!$GLOBALS['gJConfig']->urlengine['multiview']){
             $url->scriptName.=$GLOBALS['gJConfig']->urlengine['entrypointExtension'];
          }

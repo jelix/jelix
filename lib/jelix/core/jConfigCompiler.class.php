@@ -51,7 +51,12 @@ class jConfigCompiler {
         }else{
             $config['_trustedModules'] = array_keys($config['_modulesPathList']);
         }
-
+        $path=$config['urlengine']['basePath'];
+        if($path!='/'){
+            if($path{0} != '/') $path='/'.$path;
+            if(substr($path,-1) != '/') $path.='/';
+            $config['urlengine']['basePath'] = $path;
+        }
         self::_saveToIni($config, JELIX_APP_TEMP_PATH.$configFile.'.resultini.php');
         $config = (object) $config;
         return $config;

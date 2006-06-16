@@ -1,10 +1,10 @@
 {meta_xul css 'chrome://global/skin/'}
 {meta_xul css '/jelix/xul/jxulform.css'}
-{meta_xul ns array('jxf'=>'jxulform')}
+{meta_xul ns array('jx'=>'jxbl')}
 
 <script type="application/x-javascript" src="/xulapp/login.js" />
 
-<jxf:submission id="loginform" action="jsonrpc.php5" method="POST"
+<jx:submission id="loginform" action="jsonrpc.php5" method="POST"
         format="json-rpc"
         onsubmit=""
         rpcmethod="auth~login_in"
@@ -34,5 +34,5 @@
             </row>
         </rows>
     </grid>
-    <jxf:submit id="ident" form="loginform" label="Identification"/>
+    <jx:submit id="ident" form="loginform" label="Identification"/>
 </vbox>

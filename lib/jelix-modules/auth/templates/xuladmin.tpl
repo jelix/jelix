@@ -2,7 +2,7 @@
 {meta_xul css '/jelix/xul/jxulform.css'}
 {meta_xul css '/jelix/design/xulpage.css'}
 {meta_xul css '/jelix/xul/jxbl.css'}
-{meta_xul ns array('jxf'=>'jxulform', 'jx'=>'http://jelix.org/ns/xbl/1.0')}
+{meta_xul ns array('jx'=>'jxbl')}
 
 <script type="application/x-javascript"><![CDATA[
 
@@ -86,7 +86,7 @@
             <caption label="Détails sur l'utilisateur"/>
                 <vbox submit="userdata">
 
-                <jxf:submission id="userform" action="jsonrpc.php5" method="POST"
+                <jx:submission id="userform" action="jsonrpc.php5" method="POST"
                                 format="json-rpc" rpcmethod="auth~admin_saveuser"
                                 onsubmit=""
                                 onresult="document.getElementById('criteres').show()"
@@ -111,13 +111,13 @@
                         </row>
                     </rows>
                 </grid>
-                <jxf:submit id="userdata" form="userform" label="Sauvegarder"/>
+                <jx:submit id="userdata" form="userform" label="Sauvegarder"/>
                 </vbox>
             </groupbox>
             <groupbox>
                 <caption label="Changement du mot de passe"/>
                 <vbox submit="userpwd">
-                <jxf:submission id="pwdform" action="jsonrpc.php5" method="POST"
+                <jx:submission id="pwdform" action="jsonrpc.php5" method="POST"
                                 format="json-rpc" rpcmethod="auth~admin_newpwd"
                                 onsubmit="return verifPwd()"
                                 onresult="alert('mot de passe modifié');resetPwdForm();"
@@ -142,7 +142,7 @@
                         </row>
                     </rows>
                 </grid>
-                <jxf:submit id="userpwd" form="pwdform" label="Changer"/>
+                <jx:submit id="userpwd" form="pwdform" label="Changer"/>
 
                 </vbox>
             </groupbox>

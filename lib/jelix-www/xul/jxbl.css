@@ -1,5 +1,5 @@
 
-@namespace jx url("http://jelix.org/ns/xbl/1.0");
+@namespace jx url("http://jelix.org/ns/jxbl/1.0");
 @namespace xul url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 @namespace html url("http://www.w3.org/1999/xhtml");
 
@@ -9,3 +9,7 @@ jx|remotetreecriterion {
     -moz-box-orient:horizontal;
     -moz-binding: url("jxbl.xml#remotetreecriterion");
 }
+
+
+
+xul|command#foo { -moz-binding:url("jxbl.xml#task") }

@@ -166,6 +166,7 @@ class jSelectorAct extends jSelectorModule {
                 $this->controller = $r[0]=='' ? 'default':$r[0];
                 $this->method = $r[1]==''?'index':$r[1];
             }
+            $this->resource = $this->controller.'_'.$this->method;
 
             if(isset($m[3]) && $m[3] != '')
                 $this->request = $m[3];
@@ -176,7 +177,6 @@ class jSelectorAct extends jSelectorModule {
         }else{
             $this->_valid = false;
         }
-        parent::__construct($sel);
     }
 
     protected function _createPath(){

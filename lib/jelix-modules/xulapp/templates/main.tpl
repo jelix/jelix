@@ -1,5 +1,4 @@
 {meta_xul css 'chrome://global/skin/'}
-<script type="application/x-javascript" src="/jelix/xul/commandUpdater.js" />
 <script type="application/x-javascript" src="/xulapp/main.js" />
 
 

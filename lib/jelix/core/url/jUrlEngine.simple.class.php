@@ -59,13 +59,12 @@ class jUrlEngineSimple implements jIUrlEngine {
            }
            if(!$found && isset($urlspe['@'.$requestType])){
                $script = $urlspe['@'.$requestType];
-                $found = true;
            }
         }
         if(!$gJConfig->urlengine['multiview']){
             $script.=$gJConfig->urlengine['entrypointExtension'];
         }
-        return $script;
+        return $gJConfig->urlengine['basePath'].$script;
     }
 }
 

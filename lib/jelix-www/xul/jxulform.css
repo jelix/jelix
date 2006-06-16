@@ -1,29 +1,29 @@
 
-@namespace jxf url("http://jelix.org/ns/jxulform/1.0");
+@namespace jx url("http://jelix.org/ns/jxbl/1.0");
 @namespace xul url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 @namespace html url("http://www.w3.org/1999/xhtml");
 
-jxf|submission {
+jx|submission {
   display: -moz-box;
   visibility:collapse;
   -moz-binding: url("jxulform.xml#submission");
 }
-jxf|submission[format="json-rpc"] {
+jx|submission[format="json-rpc"] {
   display: -moz-box;
   -moz-binding: url("jxulform.xml#submission-json-rpc");
 }
-/*jxf|submission[format="urlencoded-post-php"] {
+/*jx|submission[format="urlencoded-post-php"] {
   display: -moz-box;
   -moz-binding: url("jxulform.xml#submission-post-php");
 }*/
 
-jxf|submit {
+jx|submit {
   display: -moz-box;
   -moz-binding: url("jxulform.xml#submit");
 
 }
 
-jxf|submit[loading=true]:not([nothrobber]) {
+jx|submit[loading=true]:not([nothrobber]) {
   list-style-image:url(throbber.gif);
 }
 

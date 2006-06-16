@@ -73,12 +73,12 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
 
       $trueResult=array(
-          "index.php?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
-          "testnews.php?mois=05&annee=2004&module=unittest&action=urlsig_url2",
-          "testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
-          "foo/bar.php?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
-          "index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
-          "xmlrpc.php",
+          "/index.php?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
+          "/testnews.php?mois=05&annee=2004&module=unittest&action=urlsig_url2",
+          "/testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
+          "/foo/bar.php?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
+          "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          "/xmlrpc.php",
        );
 
       $this->sendMessage("simple, multiview = false");
@@ -91,12 +91,12 @@ class UTCreateUrls extends UnitTestCase {
       $this->sendMessage("simple, multiview = true");
       $gJConfig->urlengine['multiview']=true;
       $trueResult=array(
-          "index?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
-          "testnews?mois=05&annee=2004&module=unittest&action=urlsig_url2",
-          "testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
-          "foo/bar?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
-          "index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
-          "xmlrpc",
+          "/index?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
+          "/testnews?mois=05&annee=2004&module=unittest&action=urlsig_url2",
+          "/testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
+          "/foo/bar?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
+          "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          "/xmlrpc",
        );
 
       foreach($urlList as $k=>$urldata){
@@ -139,13 +139,13 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('news~bar', array('aaa'=>'bbb'));
 
       $trueResult=array(
-          "index.php/test/news/2005/10/35",
-          "testnews.php/2004/05",
-          "index.php/test/cms/actualite/65-c-est-la-fete-au-village",
-          "foo/bar.php/withhandler/premier/deuxieme",
-          "index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
-          "xmlrpc.php",
-          "news.php?aaa=bbb&action=bar"
+          "/index.php/test/news/2005/10/35",
+          "/testnews.php/2004/05",
+          "/index.php/test/cms/actualite/65-c-est-la-fete-au-village",
+          "/foo/bar.php/withhandler/premier/deuxieme",
+          "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          "/xmlrpc.php",
+          "/news.php?aaa=bbb&action=default_bar"
        );
 
       $this->sendMessage("significant, multiview = false");
@@ -158,13 +158,13 @@ class UTCreateUrls extends UnitTestCase {
       $this->sendMessage("significant, multiview = true");
       $gJConfig->urlengine['multiview']=true;
       $trueResult=array(
-          "index/test/news/2005/10/35",
-          "testnews/2004/05",
-          "index/test/cms/actualite/65-c-est-la-fete-au-village",
-          "foo/bar/withhandler/premier/deuxieme",
-          "index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
-          "xmlrpc",
-          "news?aaa=bbb&action=bar"
+          "/index/test/news/2005/10/35",
+          "/testnews/2004/05",
+          "/index/test/cms/actualite/65-c-est-la-fete-au-village",
+          "/foo/bar/withhandler/premier/deuxieme",
+          "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          "/xmlrpc",
+          "/news?aaa=bbb&action=default_bar"
        );
 
       foreach($urlList as $k=>$urldata){

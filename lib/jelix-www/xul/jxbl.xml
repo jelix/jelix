@@ -86,6 +86,25 @@
     </handlers>
 
 </binding>
+<binding id="task">
+    <content><children/></content>
+    <implementation>
+        <constructor><![CDATA[
+                      alert("ouai");
+                              ]]>
+        </constructor>
+        <method name="show">
+            <body><![CDATA[
+                               alert(this.firstChild.getAttribute('label'));
+                               ]]></body>
+        </method>
+    </implementation>
+    <handlers>
+        <handler event="command">
+            this.show();
+        </handler>
+    </handlers>
 
+    </binding>
 
 </bindings>

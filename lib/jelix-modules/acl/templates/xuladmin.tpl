@@ -2,7 +2,7 @@
 {meta_xul css '/jelix/xul/jxulform.css'}
 {meta_xul css '/jelix/design/xulpage.css'}
 {meta_xul css '/jelix/xul/jxbl.css'}
-{meta_xul ns array('jxf'=>'jxulform', 'jx'=>'http://jelix.org/ns/xbl/1.0')}
+{meta_xul ns array('jx'=>'jxbl')}
 
 <script type="application/x-javascript"><![CDATA[
   {literal}
@@ -12,28 +12,35 @@
   {/literal}
 ]]></script>
 
+
 <commandset id="xuladmin-cmd-set">
     <command id="cmdx_grp_rename" />
     <command id="cmdx_grp_suppr" {if $groups->rowCount() <=1}disabled="true"{/if} />
     <command id="cmdx_grp_new" />
+    <command id="foo" ><jx:foo label="hello"/></command>
 </commandset>
 
 
 
 <description class="title-page">Gestion des droits</description>
 <hbox>
-    <menulist id="grouplist">
+<jx:remotetreecriterion uri="{jurl 'auth~admin_userslist@rdf'}" tree="userslist" id="criteres">
+
+    <menulist id="grouplist" name="idgroup" form="renameform" command="foo">
         <menupopup>
+            <menuitem label="--" value="" />
             {foreach $groups as $grp}
             <menuitem label="{$grp->name|escxml}" value="{$grp->id_aclgrp}"/>
             {/foreach}
         </menupopup>
     </menulist>
 
-    <button label="Nouveau groupe" />
 
+
+</jx:remotetreecriterion>
+
+<button label="Nouveau groupe" />
 </hbox>
-
 <!--
 <vbox flex="1">
   <hbox flex="1">
@@ -84,6 +91,49 @@
                         </treechildren>
                     </template>
                 </tree>
+                <vbox id="rightsedit"> <!--  collapsed="true" -->
+                    <groupbox submit="rightdata">
+                        <caption label="Édition des droits"/>
+
+                        <jx:submission id="rightsform" action="jsonrpc.php5" method="POST"
+                                        format="json-rpc" rpcmethod="acl~"
+                                        onsubmit=""
+                                        onresult=""
+                                        onhttperror="alert('erreur http :' + event.errorCode)"
+                                        oninvalidate="alert('Saisissez correctement le login et l\'email')"
+                                        onrpcerror="alert(this.jsonResponse.error.toSource())"
+                                        onerror="alert(this.httpreq.responseText);"
+                                        />
+                        <checkbox label="foo" />
+                        <checkbox label="bar" />
+                        <checkbox label="baz" />
+                        <jx:submit id="rightdata" form="rightsform" label="Sauvegarder"/>
+                    </groupbox>
+                    <groupbox>
+                        <caption label="Édition des droits"/>
+                        <vbox submit="rightdata2">
+
+                            <jx:submission id="rightsform2" action="jsonrpc.php5" method="POST"
+                                            format="json-rpc" rpcmethod="acl~"
+                                            onsubmit=""
+                                            onresult=""
+                                            onhttperror="alert('erreur http :' + event.errorCode)"
+                                            oninvalidate="alert('Saisissez correctement le login et l\'email')"
+                                            onrpcerror="alert(this.jsonResponse.error.toSource())"
+                                            onerror="alert(this.httpreq.responseText);"
+                                            />
+                            <radiogroup>
+                                <radio label="foo" />
+                                <radio label="bar" />
+                                <radio label="baz" />
+                            </radiogroup>
+                            <jx:submit id="rightdata2" form="rightsform2" label="Sauvegarder"/>
+                        </vbox>
+                    </groupbox>
+
+                </vbox>
+
+
             </tabpanel>
             <tabpanel>
                 <tree id="users" flex="1" flags="dont-build-content" ref="urn:data:row" datasources="rdf:null"
@@ -107,51 +157,39 @@
                 </tree>
 
             </tabpanel>
-            <tabpanel>
-                <button label="Renommer" />
-             <button label="Supprimer" />
+            <tabpanel orient="horizontal" align="start">
+
+                <groupbox submit="renamesubmit">
+                    <caption label="Renommage"/>
+                    <jx:submission id="renameform" action="jsonrpc.php5" method="POST"
+                                    format="json-rpc" rpcmethod="acl~"
+                                    onsubmit=""
+                                    onresult=""
+                                    onhttperror="alert('erreur http :' + event.errorCode)"
+                                    oninvalidate="alert('Saisissez correctement le login et l\'email')"
+                                    onrpcerror="alert(this.jsonResponse.error.toSource())"
+                                    onerror="alert(this.httpreq.responseText);"
+                                    />
+                    <label control="newname" value="Nouveau nom"/>
+                    <textbox id="newname" name="newname" value="" required="true" form="renameform" />
+                    <jx:submit id="renamesubmit" form="renameform" label="Renommer"/>
+                </groupbox>
+                <groupbox submit="deletesubmit">
+                    <caption label="Suppression du groupe"/>
+                    <jx:submission id="deleteform" action="jsonrpc.php5" method="POST"
+                                    format="json-rpc" rpcmethod="acl~"
+                                    onsubmit="return confirm('Etes vous sûr de vouloir supprimer ce groupe ?')"
+                                    onresult=""
+                                    onhttperror="alert('erreur http :' + event.errorCode)"
+                                    oninvalidate="alert('Saisissez correctement le login et l\'email')"
+                                    onrpcerror="alert(this.jsonResponse.error.toSource())"
+                                    onerror="alert(this.httpreq.responseText);"
+                                    />
+                    <jx:submit id="deletesubmit" form="deleteform" label="Supprimer"/>
+                </groupbox>
+
             </tabpanel>
         </tabpanels>
     </tabbox>
-    <vbox id="rightsedit"> <!--  collapsed="true" -->
-        <groupbox submit="rightdata">
-            <caption label="Édition des droits"/>
 
-                <jxf:submission id="rightsform" action="jsonrpc.php5" method="POST"
-                                format="json-rpc" rpcmethod="acl~"
-                                onsubmit=""
-                                onresult=""
-                                onhttperror="alert('erreur http :' + event.errorCode)"
-                                oninvalidate="alert('Saisissez correctement le login et l\'email')"
-                                onrpcerror="alert(this.jsonResponse.error.toSource())"
-                                onerror="alert(this.httpreq.responseText);"
-                                />
-                <checkbox label="foo" />
-                <checkbox label="bar" />
-                <checkbox label="baz" />
-                <jxf:submit id="rightdata" form="rightsform" label="Sauvegarder"/>
-        </groupbox>
-        <groupbox>
-            <caption label="Édition des droits"/>
-            <vbox submit="rightdata2">
-
-                <jxf:submission id="rightsform2" action="jsonrpc.php5" method="POST"
-                                format="json-rpc" rpcmethod="acl~"
-                                onsubmit=""
-                                onresult=""
-                                onhttperror="alert('erreur http :' + event.errorCode)"
-                                oninvalidate="alert('Saisissez correctement le login et l\'email')"
-                                onrpcerror="alert(this.jsonResponse.error.toSource())"
-                                onerror="alert(this.httpreq.responseText);"
-                                />
-                <radiogroup>
-                <radio label="foo" />
-                <radio label="bar" />
-                <radio label="baz" />
-            </radiogroup>
-                <jxf:submit id="rightdata2" form="rightsform2" label="Sauvegarder"/>
-            </vbox>
-        </groupbox>
-
-    </vbox>
 </hbox>
