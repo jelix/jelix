@@ -485,10 +485,11 @@ class jDaoMethod {
 
 
    private $_op = array('eq'=>'=', 'neq'=>'<>', 'lt'=>'<', 'gt'=>'>', 'lteq'=>'<=', 'gteq'=>'>=',
-        'like'=>'LIKE', 'isnull'=>'IS NULL', 'isnotnull'=>'IS NOT NULL','in'=>'IN', 'notin'=>'NOT IN');
+        'like'=>'LIKE', 'isnull'=>'IS NULL', 'isnotnull'=>'IS NOT NULL','in'=>'IN', 'notin'=>'NOT IN',
+        'binary_op'=>'dummy');
       // 'between'=>'BETWEEN',  'notbetween'=>'NOT BETWEEN',
 
-   private $_attrcond = array('property', 'value', 'expr'); //, 'min', 'max', 'exprmin', 'exprmax'
+   private $_attrcond = array('property', 'value', 'expr', 'operator', 'driver'); //, 'min', 'max', 'exprmin', 'exprmax'
 
    private function _addCondition($op, $cond){
 
@@ -520,6 +521,17 @@ class jDaoMethod {
          if($op == 'isnull' || $op =='isnotnull'){
             $this->_def->_compiler->doDefError('method.condition.valueexpr.notallowed', array($this->name, $op,$field_id));
          }
+         if($op == 'binary_op') {
+            if (!isset($attr['operator']) || empty($attr['operator'])) {
+                $this->_def->_compiler->doDefError('method.condition.operator.missing', array($this->name, $op,$field_id));
+            }
+            if (isset($attr['driver']) && !empty($attr['driver'])) {
+                if ($this->_def->_compiler->getDbDriver() != $attr['driver']) {
+                    $this->_def->_compiler->doDefError('method.condition.driver.notallowed', array($this->name, $op,$field_id));    
+                }
+            }
+            $operator = $attr['operator'];
+         }
          $this->_conditions->addCondition ($field_id, $operator, $attr['value']);
       }else if($attr['expr']!==null){
          if($op == 'isnull' || $op =='isnotnull'){
@@ -527,6 +539,17 @@ class jDaoMethod {
          }
          if(($op == 'in' || $op =='notin')&& !preg_match('/^\$[a-zA-Z0-9]+$/', $attr['expr'])){
             $this->_def->_compiler->doDefError('method.condition.innotin.bad.expr', array($this->name, $op, $field_id));
+         }
+         if($op == 'binary_op') {
+            if (!isset($attr['operator']) || empty($attr['operator'])) {
+                $this->_def->_compiler->doDefError('method.condition.operator.missing', array($this->name, $op,$field_id));
+            }
+            if (isset($attr['driver']) && !empty($attr['driver'])) {
+                if ($this->_def->_compiler->getDbDriver() != $attr['driver']) {
+                    $this->_def->_compiler->doDefError('method.condition.driver.notallowed', array($this->name, $op,$field_id));    
+                }
+            }
+            $operator = $attr['operator'];
          }
          $this->_conditions->addCondition ($field_id, $operator, $attr['expr'], true);
       }else{

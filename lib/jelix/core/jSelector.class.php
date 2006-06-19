@@ -167,7 +167,6 @@ class jSelectorAct extends jSelectorModule {
                 $this->method = $r[1]==''?'index':$r[1];
             }
             $this->resource = $this->controller.'_'.$this->method;
-
             if(isset($m[3]) && $m[3] != '')
                 $this->request = $m[3];
             else
