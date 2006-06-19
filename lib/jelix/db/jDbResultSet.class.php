@@ -14,20 +14,22 @@ abstract class jDbResultSet implements Iterator {
 
     const FETCH_CLASS = 8;
 
-	protected $_idResult=null;
-	protected $_fetchMode = 0;
-	protected $_fetchModeParam = '';
+    protected $_idResult=null;
+    protected $_fetchMode = 0;
+    protected $_fetchModeParam = '';
 
-	function __construct (  $idResult){
-		$this->_idResult = $idResult;
-	}
+    function __construct (  $idResult){
+        $this->_idResult = $idResult;
+    }
 
     function __destruct(){
         if ($this->_idResult){
-			$this->_free ();
-			$this->_idResult = null;
-		}
+            $this->_free ();
+            $this->_idResult = null;
+        }
     }
+
+    public function id() { return $this->idResult; }
 
     public function setFetchMode($fetchmode, $param=null){
         $this->_fetchMode = $fetchmode;
@@ -37,19 +39,18 @@ abstract class jDbResultSet implements Iterator {
      * fetch et renvoi les resultats sous forme d'un objet
      * @return object l'objet contenant les champs récupérés, ou false si le curseur est à la fin
      */
-	public function fetch(){
-		$result = $this->_fetch ();
-		if($result && $this->_fetchMode == self::FETCH_CLASS){
-		    $object = $this->_fetchModeParam;
-		    $object = new $object();
+    public function fetch(){
+        $result = $this->_fetch ();
+        if($result && $this->_fetchMode == self::FETCH_CLASS){
+            $object = $this->_fetchModeParam;
+            $object = new $object();
             foreach (get_object_vars ($result) as $k=>$value){
                 $object->$k = $value;
             }
             $result = $object;
-		}
-		return $result;
-	}
-
+        }
+        return $result;
+    }
 
     public function fetchAll(){
         $result=array();

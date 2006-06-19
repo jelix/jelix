@@ -80,7 +80,7 @@ class jDbConnectionPostgreSQL extends jDbConnection {
 
    protected function _doExec($query){
      if($rs = $this->_doQuery($query)){
-        return pg_affected_rows($rs);
+        return pg_affected_rows($rs->id());
      }else
         return 0;
    }
