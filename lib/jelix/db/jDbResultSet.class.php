@@ -29,7 +29,7 @@ abstract class jDbResultSet implements Iterator {
         }
     }
 
-    public function id() { return $this->idResult; }
+    public function id() { return $this->_idResult; }
 
     public function setFetchMode($fetchmode, $param=null){
         $this->_fetchMode = $fetchmode;
