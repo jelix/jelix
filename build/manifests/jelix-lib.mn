@@ -220,11 +220,13 @@ cd lib/jelix-modules/auth/locales/fr_FR
   autherror.ISO-8859-1.properties
   auth.UTF-8.properties
   autherror.UTF-8.properties
+  dbacl.ISO-8859-1.properties
 cd lib/jelix-modules/auth/install/scripts
   delete.postgresql.sql
   install.postgresql.sql
   delete.mysql.sql
-  install.mysql.sql
+  install.schema.mysql.sql
+  install.datas.mysql.sql
 cd lib/jelix-modules/auth/classes
   auth.listener.php
 cd lib/jelix-modules/auth/controllers
@@ -260,7 +262,10 @@ cd lib/jelix-modules/acl/daos
    jaclgroupsofuser.dao.xml
 cd lib/jelix-modules/acl/install/sql
   delete.mysql.sql
-  install.mysql.sql
+  install.schema.mysql.sql
+  install.datas.mysql.sql
+cd lib/jelix-modules/acl/locales/fr_FR
+  db.ISO-8859-1.properties
 cd lib/jelix-modules/acl/templates
   xaovlay.tpl
   xuladmin.tpl

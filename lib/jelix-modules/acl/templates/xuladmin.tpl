@@ -6,7 +6,17 @@
 
 <script type="application/x-javascript"><![CDATA[
   {literal}
+    function changeGroup( select ){
 
+        if(select.value != ''){
+
+
+        }else{
+
+
+        }
+
+    }
 
 
   {/literal}
@@ -17,16 +27,14 @@
     <command id="cmdx_grp_rename" />
     <command id="cmdx_grp_suppr" {if $groups->rowCount() <=1}disabled="true"{/if} />
     <command id="cmdx_grp_new" />
-    <command id="foo" ><jx:foo label="hello"/></command>
 </commandset>
 
 
 
 <description class="title-page">Gestion des droits</description>
 <hbox>
-<jx:remotetreecriterion uri="{jurl 'auth~admin_userslist@rdf'}" tree="userslist" id="criteres">
 
-    <menulist id="grouplist" name="idgroup" form="renameform" command="foo">
+    <menulist id="grouplist" name="idgroup" form="renameform" onselect="changeGroup(this)">
         <menupopup>
             <menuitem label="--" value="" />
             {foreach $groups as $grp}
@@ -34,12 +42,9 @@
             {/foreach}
         </menupopup>
     </menulist>
+    <spacer flex="1"/>
+    <button label="Nouveau groupe" />
 
-
-
-</jx:remotetreecriterion>
-
-<button label="Nouveau groupe" />
 </hbox>
 <!--
 <vbox flex="1">
@@ -60,11 +65,11 @@
         </tabs>
         <tabpanels flex="1">
             <tabpanel>
-                <tree id="rights" flex="1" flags="dont-build-content" ref="urn:data:row" datasources="rdf:null"
-                    onselect="" seltype="single"
+                <tree id="rights" flex="1" flags="dont-build-content" ref="urn:data:row"
+                      datasources="rdf:null"  onselect="" seltype="single"
                     >
                     <treecols>
-                        <treecol id="subject-col" label="Sujets" primary="true" flex="1"
+                        <treecol id="subject-col" label="Sujets" primary="true" flex="2"
                                 class="sortDirectionIndicator" sortActive="false"
                                 sortDirection="ascending"
                                 sort="rdf:http://jelix.org/ns/rights#subject"/>
@@ -74,7 +79,7 @@
                                  sortDirection="ascending"
                                  sort="rdf:http://jelix.org/ns/rights#res"/>
                         <splitter class="tree-splitter"/>
-                        <treecol id="values-col" label="Droits" flex="1"
+                        <treecol id="values-col" label="Droits" flex="3"
                                 class="sortDirectionIndicator" sortActive="true"
                                 sortDirection="ascending"
                                 sort="rdf:http://jelix.org/ns/rights#values"/>
