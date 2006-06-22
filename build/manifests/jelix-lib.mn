@@ -250,8 +250,10 @@ cd lib/jelix-modules/acl
    events.xml
 cd lib/jelix-modules/acl/classes
    acl.listener.php
+   aclservice.class.php
 cd lib/jelix-modules/acl/controllers
    xuladmin.classic.php
+   admin.rdf.php
 cd lib/jelix-modules/acl/daos
    jaclgroup.dao.xml
    jaclrights.dao.xml

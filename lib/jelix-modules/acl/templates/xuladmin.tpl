@@ -5,17 +5,30 @@
 {meta_xul ns array('jx'=>'jxbl')}
 
 <script type="application/x-javascript"><![CDATA[
+   var dsUrl =  '{jurl 'acl~admin_rightslist@rdf',array(),false}';
+
+
   {literal}
     function changeGroup( select ){
-
-        if(select.value != ''){
-
+        var val = select.selectedItem.value;
+        if( val!= ''){
+        var url=dsUrl+"&grpid="+val;
+            alert(url);
+            document.getElementById('rights').setAttribute("datasources",url);
 
         }else{
-
-
+        alert(val);
+            disableAll();
         }
+    }
 
+    function disableAll(){
+        document.getElementById('rights').setAttribute("datasources","");
+        document.getElementById('rightsedit').collapsed=true;
+        document.getElementById('users').setAttribute("datasources","");
+        document.getElementById('renamesubmit').disabled=true;
+        document.getElementById('deletesubmit').disabled=true;
+        document.getElementById('newname').disabled=true;
     }
 
 
@@ -24,8 +37,6 @@
 
 
 <commandset id="xuladmin-cmd-set">
-    <command id="cmdx_grp_rename" />
-    <command id="cmdx_grp_suppr" {if $groups->rowCount() <=1}disabled="true"{/if} />
     <command id="cmdx_grp_new" />
 </commandset>
 
@@ -34,7 +45,7 @@
 <description class="title-page">Gestion des droits</description>
 <hbox>
 
-    <menulist id="grouplist" name="idgroup" form="renameform" onselect="changeGroup(this)">
+    <menulist id="grouplist" name="idgroup" form="renameform" oncommand="changeGroup(this)">
         <menupopup>
             <menuitem label="--" value="" />
             {foreach $groups as $grp}
@@ -43,7 +54,7 @@
         </menupopup>
     </menulist>
     <spacer flex="1"/>
-    <button label="Nouveau groupe" />
+    <button label="Nouveau groupe" command="cmdx_grp_new" />
 
 </hbox>
 <!--
@@ -72,25 +83,25 @@
                         <treecol id="subject-col" label="Sujets" primary="true" flex="2"
                                 class="sortDirectionIndicator" sortActive="false"
                                 sortDirection="ascending"
-                                sort="rdf:http://jelix.org/ns/rights#subject"/>
+                                sort="rdf:http://jelix.org/ns/rights#label"/>
                         <splitter class="tree-splitter"/>
                         <treecol id="res-col" label="Ressources" flex="1"
                                  class="sortDirectionIndicator" sortActive="true"
                                  sortDirection="ascending"
-                                 sort="rdf:http://jelix.org/ns/rights#res"/>
+                                 sort="rdf:http://jelix.org/ns/rights#id_aclres"/>
                         <splitter class="tree-splitter"/>
                         <treecol id="values-col" label="Droits" flex="3"
                                 class="sortDirectionIndicator" sortActive="true"
                                 sortDirection="ascending"
-                                sort="rdf:http://jelix.org/ns/rights#values"/>
+                                sort="rdf:http://jelix.org/ns/rights#value_label"/>
                     </treecols>
                     <template>
                         <treechildren>
                             <treeitem uri="rdf:*">
                                 <treerow>
-                                    <treecell label="rdf:http://jelix.org/ns/rights#subject"/>
-                                    <treecell label="rdf:http://jelix.org/ns/rights#res"/>
-                                    <treecell label="rdf:http://jelix.org/ns/rights#values"/>
+                                    <treecell label="rdf:http://jelix.org/ns/rights#label"/>
+                                    <treecell label="rdf:http://jelix.org/ns/rights#id_aclres"/>
+                                    <treecell label="rdf:http://jelix.org/ns/rights#value_label"/>
                                 </treerow>
                             </treeitem>
                         </treechildren>

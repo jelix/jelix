@@ -29,6 +29,8 @@ final class jResponseRdf extends jResponse {
     public $resUriPrefix = "urn:data:row:";
     public $resUriRoot = "urn:data:row";
     public $datas;
+    public $asAttribute=array();
+    public $asElement=array();
 
     public function output(){
         if($this->hasErrors()) return false;
@@ -55,12 +57,24 @@ final class jResponseRdf extends jResponse {
         echo '<Bag about="'.$this->resUriRoot.'">'.$EOL;
         foreach($this->datas as $dt){
             echo "<li>\n";
-            echo "<Description>\n";
+            echo "<Description ";
             // NC:parseType="Integer"
             if(is_object($dt))
                 $dt=get_object_vars ($dt);
-            foreach($dt as $name=>$val){
-                echo '<'.$this->resNsPrefix.':'.$name.'>'.$this->xmlEntities($val).'</'.$this->resNsPrefix.':'.$name.">\n";
+            if(count($this->asAttribute) || count($this->asElement)){
+                foreach($this->asAttribute as $name){
+                    echo $this->resNsPrefix.':'.$name.'="'.$this->xmlEntities($dt[$name]).'" ';
+                }
+                echo ">\n";
+                foreach($this->asElement as $name){
+                    echo '<'.$this->resNsPrefix.':'.$name.'>'.$this->xmlEntities($dt[$name]).'</'.$this->resNsPrefix.':'.$name.">\n";
+                }
+
+            }else{
+                echo ">\n";
+                foreach($dt as $name=>$val){
+                    echo '<'.$this->resNsPrefix.':'.$name.'>'.$this->xmlEntities($val).'</'.$this->resNsPrefix.':'.$name.">\n";
+                }
             }
             echo "</Description>\n";
             echo "</li>\n";
