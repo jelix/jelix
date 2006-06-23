@@ -141,6 +141,7 @@ cd lib/jelix/tpl/plugins/common
 cd lib/jelix/tpl/plugins/html
   function.jlocale.php
   function.jurl.php
+  function.urljsstring.php
   modifier.nl2br.php
   meta.html.php
 
@@ -151,6 +152,7 @@ cd lib/jelix/tpl/plugins/text
 cd lib/jelix/tpl/plugins/xul
   function.jlocale.php
   function.jurl.php
+  function.urljsstring.php
   meta.xul.php
 
 cd lib/jelix/utils/
@@ -259,6 +261,7 @@ cd lib/jelix-modules/acl/daos
    jaclrights.dao.xml
    jaclrightvalues.dao.xml
    jaclrightvaluesgroup.dao.xml
+   jaclrightvaluesandgroup.dao.xml
    jaclsubject.dao.xml
    jaclusergroup.dao.xml
    jaclgroupsofuser.dao.xml

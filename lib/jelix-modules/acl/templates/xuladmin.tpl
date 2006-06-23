@@ -5,21 +5,20 @@
 {meta_xul ns array('jx'=>'jxbl')}
 
 <script type="application/x-javascript"><![CDATA[
-   var dsUrl =  '{jurl 'acl~admin_rightslist@rdf',array(),false}';
-
 
   {literal}
     function changeGroup( select ){
         var val = select.selectedItem.value;
         if( val!= ''){
-        var url=dsUrl+"&grpid="+val;
-            alert(url);
+            {/literal}
+            var url={urljsstring 'acl~admin_rightslist@rdf',array(),array('grpid'=>'val')};
+            {literal}
             document.getElementById('rights').setAttribute("datasources",url);
 
         }else{
-        alert(val);
             disableAll();
         }
+
     }
 
     function disableAll(){
@@ -29,8 +28,52 @@
         document.getElementById('renamesubmit').disabled=true;
         document.getElementById('deletesubmit').disabled=true;
         document.getElementById('newname').disabled=true;
+        document.getElementById("rightsforms").selectedIndex=0;
     }
 
+
+    function onSubjectSelect(tree){
+        var idx = tree.view.selection.currentIndex;
+        if(idx == -1){
+            selectRightForm("0",0);
+        }else{
+            var colvalue = tree.columns.getNamedColumn ( "value-col");
+            var colvalgrp = tree.columns.getNamedColumn ( "valgrp-col");
+
+            var rightvalue= tree.view.getCellText(idx, colvalue);
+            var valgrp =  tree.view.getCellText(idx, colvalgrp);
+            selectRightForm(valgrp, rightvalue);
+        }
+    }
+
+
+    function selectRightForm(idvalgrp, rightvalue){
+        var deck=document.getElementById("rightsforms");
+        if(idvalgrp == "0"){
+            deck.selectedIndex=0;
+
+        }else{
+            deck.selectedIndex=0;
+            var grpbox = deck.getElementsByTagName("groupbox");
+            for(var i =0; i < grpbox.length; i++){
+               if(grpbox[i].getAttribute("valgrp") == idvalgrp){
+                    deck.selectedIndex=i+1;
+                    break;
+               }
+            }
+            if(deck.selectedIndex!=0){
+                var chks = grpbox[i].getElementsByTagName("checkbox");
+                var chkvalue, value=parseInt(rightvalue);
+                for(var j=0; j < chks.length; j++){
+                    chkvalue=parseInt(chks[j].getAttribute('rightvalue'));
+                    if((chkvalue & value) == chkvalue)
+                        chks[j].checked=true;
+                    else
+                        chks[j].checked=false;
+                }
+            }
+        }
+    }
 
   {/literal}
 ]]></script>
@@ -57,16 +100,7 @@
     <button label="Nouveau groupe" command="cmdx_grp_new" />
 
 </hbox>
-<!--
-<vbox flex="1">
-  <hbox flex="1">
 
-  </hbox>
-
-  <hbox>
-
-  </hbox>
-</vbox>-->
 <hbox flex="1">
     <tabbox flex="1">
         <tabs>
@@ -77,7 +111,7 @@
         <tabpanels flex="1">
             <tabpanel>
                 <tree id="rights" flex="1" flags="dont-build-content" ref="urn:data:row"
-                      datasources="rdf:null"  onselect="" seltype="single"
+                      datasources="rdf:null"  onselect="onSubjectSelect(this)" seltype="single"
                     >
                     <treecols>
                         <treecol id="subject-col" label="Sujets" primary="true" flex="2"
@@ -94,6 +128,8 @@
                                 class="sortDirectionIndicator" sortActive="true"
                                 sortDirection="ascending"
                                 sort="rdf:http://jelix.org/ns/rights#value_label"/>
+                        <treecol id="value-col" label="" flex="0" ignoreincolumnpicker="true" hidden="true" />
+                        <treecol id="valgrp-col" label="" flex="0" ignoreincolumnpicker="true" hidden="true" />
                     </treecols>
                     <template>
                         <treechildren>
@@ -102,51 +138,49 @@
                                     <treecell label="rdf:http://jelix.org/ns/rights#label"/>
                                     <treecell label="rdf:http://jelix.org/ns/rights#id_aclres"/>
                                     <treecell label="rdf:http://jelix.org/ns/rights#value_label"/>
+                                    <treecell label="rdf:http://jelix.org/ns/rights#value"/>
+                                    <treecell label="rdf:http://jelix.org/ns/rights#id_aclvalgrp"/>
                                 </treerow>
                             </treeitem>
                         </treechildren>
                     </template>
                 </tree>
                 <vbox id="rightsedit"> <!--  collapsed="true" -->
-                    <groupbox submit="rightdata">
-                        <caption label="Édition des droits"/>
 
-                        <jx:submission id="rightsform" action="jsonrpc.php5" method="POST"
-                                        format="json-rpc" rpcmethod="acl~"
-                                        onsubmit=""
-                                        onresult=""
-                                        onhttperror="alert('erreur http :' + event.errorCode)"
-                                        oninvalidate="alert('Saisissez correctement le login et l\'email')"
-                                        onrpcerror="alert(this.jsonResponse.error.toSource())"
-                                        onerror="alert(this.httpreq.responseText);"
-                                        />
-                        <checkbox label="foo" />
-                        <checkbox label="bar" />
-                        <checkbox label="baz" />
-                        <jx:submit id="rightdata" form="rightsform" label="Sauvegarder"/>
+                    <jx:submission id="rightsform" action="jsonrpc.php5" method="POST"
+                                   format="json-rpc" rpcmethod="acl~"
+                                   onsubmit=""
+                                   onresult=""
+                                   onhttperror="alert('erreur http :' + event.errorCode)"
+                                   oninvalidate="alert('erreur de saisie')"
+                                   onrpcerror="alert(this.jsonResponse.error.toSource())"
+                                   onerror="alert(this.httpreq.responseText);"
+                                   />
+                    <deck id="rightsforms">
+                     <description>modifier un droit</description>
+                    {assign $valgrp=0}
+                    {foreach $valuegroups as $i=>$vg}
+                        {if $valgrp != $vg->id_aclvalgrp}
+                           {if $valgrp !=0}
+                                <jx:submit id="rightdata{$valgrp}" form="rightsform" label="Sauvegarder"/>
+                                </groupbox>
+                           {/if}
+                           <groupbox submit="rightdata{$vg->id_aclvalgrp}" valgrp="{$vg->id_aclvalgrp}">
+                             {assign $label=$vg->group_label_key}
+                             <caption label="{@$label@}"/>
+                           {assign $valgrp=$vg->id_aclvalgrp}
+                        {/if}
+
+                        {assign $label=$vg->label_key}
+                        <checkbox label="{@$label@}" rightvalue="{$vg->value}" />
+                    {/foreach}
+                    {if $valgrp !=0}
+                         <jx:submit id="rightdata{$valgrp}" form="rightsform" label="Sauvegarder"/>
                     </groupbox>
-                    <groupbox>
-                        <caption label="Édition des droits"/>
-                        <vbox submit="rightdata2">
+                    {/if}
 
-                            <jx:submission id="rightsform2" action="jsonrpc.php5" method="POST"
-                                            format="json-rpc" rpcmethod="acl~"
-                                            onsubmit=""
-                                            onresult=""
-                                            onhttperror="alert('erreur http :' + event.errorCode)"
-                                            oninvalidate="alert('Saisissez correctement le login et l\'email')"
-                                            onrpcerror="alert(this.jsonResponse.error.toSource())"
-                                            onerror="alert(this.httpreq.responseText);"
-                                            />
-                            <radiogroup>
-                                <radio label="foo" />
-                                <radio label="bar" />
-                                <radio label="baz" />
-                            </radiogroup>
-                            <jx:submit id="rightdata2" form="rightsform2" label="Sauvegarder"/>
-                        </vbox>
-                    </groupbox>
 
+                    </deck>
                 </vbox>
 
 
