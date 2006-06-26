@@ -4,7 +4,7 @@
 
 <script type="application/x-javascript" src="/xulapp/login.js" />
 
-<jx:submission id="loginform" action="jsonrpc.php5" method="POST"
+<jx:submission id="loginform" action="{jurl '@jsonrpc'}" method="POST"
         format="json-rpc"
         onsubmit=""
         rpcmethod="auth~login_in"

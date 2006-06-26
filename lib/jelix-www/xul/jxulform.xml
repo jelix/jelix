@@ -232,9 +232,13 @@
                if (aNode.namespaceURI == "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul") {
                    switch (aNode.localName) {
                        case "textbox":
-                       case "menulist":
-                            this._checkConstraint(aNode);
                             value = aNode.value;
+                            this._checkConstraint(aNode,value);
+                            break;
+                       case "menulist":
+                            if(aNode.selectedIndex > -1)
+                                value = aNode.selectedItem.value;
+                            this._checkConstraint(aNode,value);
                             break;
                        case "radiogroup":
                            value = aNode.value;
@@ -263,8 +267,8 @@
                                 case "text":
                                 case "password":
                                 case "hidden":
-                                    this._checkConstraint(aNode);
                                     value = aNode.value;
+                                    this._checkConstraint(aNode,value);
                                     break;
                                 case "checkbox":
                                 case "radio":
@@ -276,8 +280,9 @@
                            break;
 
                       case "textarea":
-                           this._checkConstraint(aNode);
-                           value= aNode.value;
+                            value= aNode.value;
+                            this._checkConstraint(aNode,value);
+
                            break;
                       case "select":
                             if(aNode.hasAttribute("required") && aNode.getAttribute("required") == true && aNode.selectedItem == null){
@@ -307,10 +312,10 @@
         </method>
         <method name="_checkConstraint">
             <parameter name="aNode" />
+            <parameter name="aValue" />
             <body><![CDATA[
-              var value = aNode.value;
-              var valuews = value.replace(/^(\b)+/,'');
-              valuews = value.replace(/(\b)+$/,'');
+              var valuews = aValue.replace(/^(\b)+/,'');
+              valuews = aValue.replace(/(\b)+$/,'');
 
               if(aNode.hasAttribute("required") && aNode.getAttribute("required") == "true" && valuews == ''){
                     aNode.setAttribute("invalid","true");
@@ -359,7 +364,7 @@
               var constr = aNode.getAttribute("constraint");
               if(constr){
                 var func = new Function("val", constr+"\n return true;");
-                if(!func.call(this, value)){
+                if(!func.call(this, aValue)){
                     this.invalidDatas[aNode.getAttribute("name")]=this.INVALID_CONSTRAINT;
                     this.hasInvalidDatas = true;
                     aNode.setAttribute("invalid","true");
@@ -457,6 +462,7 @@
         <property name="rpcmethod"
                   onget="return this.getAttribute('rpcmethod');"
                   onset="this.setAttribute('rpcmethod', val); return val;"/>
+        <property name="method" onget="return 'POST';" onset="return val;" />
         <method name="_prepareContent">
             <body><![CDATA[
                 this.jsonReponse = null;

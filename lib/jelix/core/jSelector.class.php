@@ -142,7 +142,8 @@ class jSelectorAct extends jSelectorModule {
     function __construct($sel){
         global $gJCoord;
 
-        if(preg_match("/^(?:([\w\.]+|\#)~)?([\w\.]+|\#)(?:@([\w\.]+))?$/", $sel, $m)){
+        if(preg_match("/^(?:([\w\.]+|\#)~)?([\w\.]+|\#)?(?:@([\w\.]+))?$/", $sel, $m)){
+            $m=array_pad($m,4,'');
             $this->_valid = true;
             if($m[1]!=''){
                 if($m[1] == '#')
@@ -167,7 +168,7 @@ class jSelectorAct extends jSelectorModule {
                 $this->method = $r[1]==''?'index':$r[1];
             }
             $this->resource = $this->controller.'_'.$this->method;
-            if(isset($m[3]) && $m[3] != '')
+            if($m[3] != '')
                 $this->request = $m[3];
             else
                 $this->request = $gJCoord->request->type;

@@ -232,7 +232,7 @@ class jUrl {
         if (count ($params)>0){
             foreach ($params as $k=>$v){
                 if ($url == ''){
-                    $url = $k.'='.$v;
+                    $url = $k.'='.urlencode($v);
                 }else{
                     $url .= ($forxml ? '&amp;' : '&').$k.'='.urlencode($v);
                 }

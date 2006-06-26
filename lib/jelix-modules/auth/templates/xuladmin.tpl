@@ -86,7 +86,7 @@
             <caption label="Détails sur l'utilisateur"/>
                 <vbox submit="userdata">
 
-                <jx:submission id="userform" action="jsonrpc.php5" method="POST"
+                    <jx:submission id="userform" action="{jurl '@jsonrpc'}" method="POST"
                                 format="json-rpc" rpcmethod="auth~admin_saveuser"
                                 onsubmit=""
                                 onresult="document.getElementById('criteres').show()"
@@ -117,7 +117,7 @@
             <groupbox>
                 <caption label="Changement du mot de passe"/>
                 <vbox submit="userpwd">
-                <jx:submission id="pwdform" action="jsonrpc.php5" method="POST"
+                    <jx:submission id="pwdform" action="{jurl '@jsonrpc'}" method="POST"
                                 format="json-rpc" rpcmethod="auth~admin_newpwd"
                                 onsubmit="return verifPwd()"
                                 onresult="alert('mot de passe modifié');resetPwdForm();"

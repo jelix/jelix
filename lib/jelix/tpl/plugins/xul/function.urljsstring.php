@@ -24,9 +24,10 @@ function jtpl_function_urljsstring($tpl, $selector, $params=array(), $jsparams=a
     $repl =array();
     foreach($jsparams as $par=>$var){
         $params[$par] = '__@@'.$var.'@@__';
-        $search[] = $params[$par];
+        $search[] = urlencode($params[$par]);
         $repl[] = '"+encodeURIComponent('.$var.')+"';
     }
+
     $url = jUrl::get($selector, $params, false);
 
     echo '"'.str_replace($search, $repl, $url).'"';

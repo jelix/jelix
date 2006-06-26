@@ -7,18 +7,35 @@
 <script type="application/x-javascript"><![CDATA[
 
   {literal}
-    function changeGroup( select ){
-        var val = select.selectedItem.value;
-        if( val!= ''){
-            {/literal}
-            var url={urljsstring 'acl~admin_rightslist@rdf',array(),array('grpid'=>'val')};
-            {literal}
-            document.getElementById('rights').setAttribute("datasources",url);
+    var gCurrentRight = {};
+    var gGroupList;
 
+    function init(ev){
+        disableAll();
+        gGroupList = document.getElementById('groupid');
+    }
+
+    window.addEventListener("load", init, false);
+
+    function changeGroup( idgroup ){
+        if( idgroup!= ''){
+            {/literal}
+            var url={urljsstring 'acl~admin_rightslist@rdf',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
+            {literal}
+            document.getElementById('rights').setAttribute("datasources","");
+            document.getElementById('rights').setAttribute("datasources",url);
+            document.getElementById('rightsedit').collapsed=false;
+            document.getElementById('renamesubmit').disabled=false;
+            document.getElementById('deletesubmit').disabled=false;
+            document.getElementById('newname').disabled=false;
         }else{
             disableAll();
         }
+    }
 
+    function reloadRights(){
+        document.getElementById('rights').setAttribute("datasources","");
+        changeGroup(document.getElementById('groupid').selectedItem.value);
     }
 
     function disableAll(){
@@ -36,13 +53,15 @@
         var idx = tree.view.selection.currentIndex;
         if(idx == -1){
             selectRightForm("0",0);
+            gCurrentRight = {};
         }else{
-            var colvalue = tree.columns.getNamedColumn ( "value-col");
-            var colvalgrp = tree.columns.getNamedColumn ( "valgrp-col");
 
-            var rightvalue= tree.view.getCellText(idx, colvalue);
-            var valgrp =  tree.view.getCellText(idx, colvalgrp);
-            selectRightForm(valgrp, rightvalue);
+            gCurrentRight.rightvalue= tree.view.getCellText(idx, tree.columns.getNamedColumn ( "value-col"));
+            gCurrentRight.id_aclvalgrp =  tree.view.getCellText(idx, tree.columns.getNamedColumn ( "id_aclvalgrp-col"));
+            gCurrentRight.id_aclsbj =  tree.view.getCellText(idx, tree.columns.getNamedColumn ( "id_aclsbj-col"));
+            gCurrentRight.id_aclres =  tree.view.getCellText(idx, tree.columns.getNamedColumn ( "res-col"));
+
+            selectRightForm(gCurrentRight.id_aclvalgrp, gCurrentRight.rightvalue);
         }
     }
 
@@ -75,20 +94,66 @@
         }
     }
 
+    function onRightsFormSubmit(form){
+        var deck=document.getElementById("rightsforms");
+        if(deck.selectedIndex!=0){
+            var chks = deck.selectedPanel.getElementsByTagName("checkbox");
+            var chkvalue, value=0;
+            for(var j=0; j < chks.length; j++){
+                if(chks[j].checked){
+                    value = value | parseInt(chks[j].getAttribute('rightvalue'));
+                }
+            }
+            form.formDatas.rightvalue=value;
+            form.formDatas.subject= gCurrentRight.id_aclsbj;
+            form.formDatas.ressource= gCurrentRight.id_aclres;
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
+    function onCreateNewGroup(form){
+        gGroupList.selectedItem=gGroupList.appendItem(form.formDatas.groupname, form.jsonResponse.result.id);
+        changeGroup(form.jsonResponse.result.id);
+        document.getElementById('newgroup').value='';
+    }
+
+    function onDeleteGroup(form){
+        var i=gGroupList.selectedIndex;
+        gGroupList.selectedIndex=0;
+        gGroupList.removeItemAt(i);
+        disableAll();
+    }
+
+    function onRenameGroup(form){
+        gGroupList.selectedItem.label=form.formDatas.newname;
+        gGroupList.setAttribute('label',form.formDatas.newname);
+    }
+
+
+
   {/literal}
 ]]></script>
 
 
-<commandset id="xuladmin-cmd-set">
-    <command id="cmdx_grp_new" />
-</commandset>
-
-
+<jx:submission id="newgrpform" action="{jurl '@jsonrpc'}" method="POST"
+               format="json-rpc" rpcmethod="acl~admin_newgrp"
+               onsubmit=""
+               onresult="onCreateNewGroup(this)"
+               onhttperror="alert('erreur http :' + event.errorCode)"
+               oninvalidate="alert('Saisissez correctement le nom du nouveau groupe')"
+               onrpcerror="alert(this.jsonResponse.error.toSource())"
+               onerror="alert(this.httpreq.responseText);"
+               />
 
 <description class="title-page">Gestion des droits</description>
 <hbox>
 
-    <menulist id="grouplist" name="idgroup" form="renameform" oncommand="changeGroup(this)">
+    <menulist id="groupid" name="groupid" form="renameform,deleteform,rightsform" required="true"
+              oncommand="changeGroup(this.selectedItem.value)">
         <menupopup>
             <menuitem label="--" value="" />
             {foreach $groups as $grp}
@@ -97,8 +162,10 @@
         </menupopup>
     </menulist>
     <spacer flex="1"/>
-    <button label="Nouveau groupe" command="cmdx_grp_new" />
 
+    <label control="newgroup" value="Nouveau groupe :"/>
+    <textbox id="newgroup" name="groupname" value="" required="true" form="newgrpform" />
+    <jx:submit id="newgrpsubmit" form="newgrpform" label="Créer"/>
 </hbox>
 
 <hbox flex="1">
@@ -129,7 +196,8 @@
                                 sortDirection="ascending"
                                 sort="rdf:http://jelix.org/ns/rights#value_label"/>
                         <treecol id="value-col" label="" flex="0" ignoreincolumnpicker="true" hidden="true" />
-                        <treecol id="valgrp-col" label="" flex="0" ignoreincolumnpicker="true" hidden="true" />
+                        <treecol id="id_aclvalgrp-col" label="" flex="0" ignoreincolumnpicker="true" hidden="true" />
+                        <treecol id="id_aclsbj-col" label="" flex="0" ignoreincolumnpicker="true" hidden="true" />
                     </treecols>
                     <template>
                         <treechildren>
@@ -140,6 +208,7 @@
                                     <treecell label="rdf:http://jelix.org/ns/rights#value_label"/>
                                     <treecell label="rdf:http://jelix.org/ns/rights#value"/>
                                     <treecell label="rdf:http://jelix.org/ns/rights#id_aclvalgrp"/>
+                                    <treecell label="rdf:http://jelix.org/ns/rights#id_aclsbj"/>
                                 </treerow>
                             </treeitem>
                         </treechildren>
@@ -147,14 +216,14 @@
                 </tree>
                 <vbox id="rightsedit"> <!--  collapsed="true" -->
 
-                    <jx:submission id="rightsform" action="jsonrpc.php5" method="POST"
-                                   format="json-rpc" rpcmethod="acl~"
-                                   onsubmit=""
-                                   onresult=""
+                    <jx:submission id="rightsform" action="{jurl '@jsonrpc'}" method="POST"
+                                   format="json-rpc" rpcmethod="acl~admin_saveright"
+                                   onsubmit="onRightsFormSubmit(this)"
+                                   onresult="reloadRights()"
                                    onhttperror="alert('erreur http :' + event.errorCode)"
                                    oninvalidate="alert('erreur de saisie')"
-                                   onrpcerror="alert(this.jsonResponse.error.toSource())"
-                                   onerror="alert(this.httpreq.responseText);"
+                                   onrpcerror="alert('rpcerror:\n'+this.jsonResponse.error.toSource())"
+                                   onerror="alert('error:\n'+this.httpreq.responseText);"
                                    />
                     <deck id="rightsforms">
                      <description>modifier un droit</description>
@@ -211,12 +280,12 @@
 
                 <groupbox submit="renamesubmit">
                     <caption label="Renommage"/>
-                    <jx:submission id="renameform" action="jsonrpc.php5" method="POST"
-                                    format="json-rpc" rpcmethod="acl~"
+                    <jx:submission id="renameform" action="{jurl '@jsonrpc'}" method="POST"
+                                    format="json-rpc" rpcmethod="acl~admin_renamegrp"
                                     onsubmit=""
-                                    onresult=""
+                                    onresult="onRenameGroup(this)"
                                     onhttperror="alert('erreur http :' + event.errorCode)"
-                                    oninvalidate="alert('Saisissez correctement le login et l\'email')"
+                                    oninvalidate="alert('Saisissez correctement le nouveau nom')"
                                     onrpcerror="alert(this.jsonResponse.error.toSource())"
                                     onerror="alert(this.httpreq.responseText);"
                                     />
@@ -226,12 +295,12 @@
                 </groupbox>
                 <groupbox submit="deletesubmit">
                     <caption label="Suppression du groupe"/>
-                    <jx:submission id="deleteform" action="jsonrpc.php5" method="POST"
-                                    format="json-rpc" rpcmethod="acl~"
+                    <jx:submission id="deleteform" action="{jurl '@jsonrpc'}" method="POST"
+                                    format="json-rpc" rpcmethod="acl~admin_deletegrp"
                                     onsubmit="return confirm('Etes vous sûr de vouloir supprimer ce groupe ?')"
-                                    onresult=""
+                                    onresult="onDeleteGroup(this)"
                                     onhttperror="alert('erreur http :' + event.errorCode)"
-                                    oninvalidate="alert('Saisissez correctement le login et l\'email')"
+                                    oninvalidate="alert('erreur de saisie')"
                                     onrpcerror="alert(this.jsonResponse.error.toSource())"
                                     onerror="alert(this.httpreq.responseText);"
                                     />

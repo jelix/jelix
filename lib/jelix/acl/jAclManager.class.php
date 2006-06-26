@@ -18,28 +18,34 @@ class jAclManager {
 
     private function __construct (){ }
 
-    public static function setRight($group, $subject, $value , $resource=null){
+    /**
+     * @return boolean  vrai si tout est ok
+     */
+    public static function setRight($group, $subject, $value , $resource=''){
 
        //  récupère le groupe de valeur correspondant au subject
-       //  récupère la liste des valeurs du groupe de valeur
-       //  fait un & avec $value
-       //  met à jour la table jacl_rights
 
        $daosbj = jDao::get('acl~jaclsubject');
        $daorightval = jDao::get('acl~jaclrightvalues');
        $daoright = jDao::get('acl~jaclrights');
 
        $sbj = $daosbj->get($subject);
-       if(!$sbj) return;
+       if(!$sbj) return false;
 
+       //  récupère la liste des valeurs du groupe de valeur
        $vallist = $daorightval->findByValGroup($sbj->id_aclvalgrp);
+
+       // fait un & avec $value, pour être sûr que la valeur correspondent bien
+       // à une valeur possible
        $val = 0;
        foreach($vallist as $valgrp){
           $val |= $valgrp->value;
        }
        $value &= $val;
-       if(!$value) return;
+       if(!$value) return false;
 
+       if($resource === null) $resource='';
+       //  met à jour la table jacl_rights
        $right = $daoright->get($subject,$group,$resource);
        if($right){
           $right->value = $value;
@@ -52,6 +58,7 @@ class jAclManager {
           $right->value = $value;
           $daoright->insert($right);
        }
+       return true;
     }
 
     public static function removeResourceRight($subject, $resource){
