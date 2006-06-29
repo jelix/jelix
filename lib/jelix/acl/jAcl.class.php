@@ -40,7 +40,7 @@ class jAcl {
             return $aclres[$subject][$resource];
          }
       }
-      if(!isset($_SESSION['JELIX_USER']->login))
+      if(!jAuth::isConnected())
          return 0;
 
       $groups = self::getGroups();
