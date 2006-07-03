@@ -514,7 +514,7 @@
 
 
 
-<binding id="submit">
+<binding id="submit" extends="chrome://global/content/bindings/general.xml#basetext">
     <content>
         <xul:button xbl:inherits="accesskey,command,crop,dir,disabled,icon,image,label,orient,tabindex" />
     </content>

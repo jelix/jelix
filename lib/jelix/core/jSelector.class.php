@@ -284,7 +284,7 @@ class jSelectorDao extends jSelectorModule {
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
 
         if (!is_readable ($this->_path)){
-            $this->_path=='';
+            $this->_path='';
             $this->_valid = false;
         }
         $this->_where = 0;
@@ -298,10 +298,10 @@ class jSelectorDao extends jSelectorModule {
     }
 
     public function getDaoClass(){
-        return 'cDao_'.$this->module.'_'.$this->resource.'_'.$this->driver;
+        return 'cDao°'.$this->module.'°'.$this->resource.'°'.$this->driver;
     }
     public function getDaoRecordClass(){
-        return 'cDaoRecord_'.$this->module.'_'.$this->resource.'_'.$this->driver;
+        return 'cDaoRecord°'.$this->module.'°'.$this->resource.'°'.$this->driver;
     }
 }
 
@@ -391,7 +391,7 @@ class jSelectorForm extends jSelectorModule {
     }
 
     public function getClass(){
-        return 'cForm_'.$this->module.'_'.$this->resource;
+        return 'cForm°'.$this->module.'°'.$this->resource;
     }
 
 }
