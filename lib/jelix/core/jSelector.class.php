@@ -298,10 +298,10 @@ class jSelectorDao extends jSelectorModule {
     }
 
     public function getDaoClass(){
-        return 'cDao°'.$this->module.'°'.$this->resource.'°'.$this->driver;
+        return 'cDao_'.$this->module.'_Jx_'.$this->resource.'_Jx_'.$this->driver;
     }
     public function getDaoRecordClass(){
-        return 'cDaoRecord°'.$this->module.'°'.$this->resource.'°'.$this->driver;
+        return 'cDaoRecord_'.$this->module.'_Jx_'.$this->resource.'_Jx_'.$this->driver;
     }
 }
 
@@ -391,7 +391,7 @@ class jSelectorForm extends jSelectorModule {
     }
 
     public function getClass(){
-        return 'cForm°'.$this->module.'°'.$this->resource;
+        return 'cForm_'.$this->module.'_Jx_'.$this->resource;
     }
 
 }
