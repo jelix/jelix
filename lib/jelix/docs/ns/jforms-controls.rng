@@ -1,60 +1,51 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
   ns="http://jelix.org/ns/forms/1.0">
-
-  <define name="Linking.Attributes">
-    <attribute name="src" />
-  </define>
-
-  <define name="selector">
-    <optional><attribute name="ref" /></optional>  <!--  donnée -->
-  </define>
-
-  <define name="UI.Common.Attrs">
-      <optional>
-         <attribute name="appearance">
-            <choice>
-               <value>full</value>
-               <value>compact</value>
-               <value>minimal</value>
-            </choice>
-         </attribute>
-      </optional>
-  </define>
-
-   <define name="UI.inline">
-      <zeroOrMore>
-        <ref name="output" />
-      </zeroOrMore>
-  </define>
-
+  
   <define name="UI.Common">
+     <attribute name="ref" />
      <ref name="label" />
-     <ref name="selector" />
-     <ref name="datatypes" />
      <zeroOrMore>
         <choice>
            <ref name="help" />
            <ref name="hint" />
            <ref name="alert" />
-           <ref name="actions" />
+           <!--<ref name="actions" />-->
         </choice>
      </zeroOrMore>
   </define>
+  
+  <define name="UI.Common.Attrs">
+      
+  </define>
+  
+  
+  <define name="UI.Common.data">
+      <optional><ref name="datatypes" /></optional>
+      <optional><attribute name="readonly"><choice><value>true</value><value>false</value></choice></attribute></optional>
+      <optional><attribute name="required"><choice><value>true</value><value>false</value></choice></attribute></optional>
+  </define>
 
   <define name="List.UI.Common">
-     <choice>
-       <ref name="item" />
-       <ref name="itemset" />
-       <ref name="choices" />
-     </choice>
+     <oneOrMore>
+        <ref name="item" />
+     </oneOrMore>
+     <optional>
+         <attribute name="appearance">
+             <choice>
+                 <value>full</value>
+                 <value>compact</value>
+                 <value>minimal</value>
+             </choice>
+         </attribute>
+      </optional>
   </define>
 
   <define name="datatypes">
      <choice>
-        <attribute name="datatype" />
+        <ref name="datatype.attr"/>
         <element name="datatype">
-           <attribute name="type" />
+           <ref name="datatype.attr"/>
            <optional><attribute name="length" /></optional>
            <optional><attribute name="minLength" /></optional>
            <optional><attribute name="maxLength" /></optional>
@@ -67,9 +58,28 @@
         </element>
   </define>
 
+  <define ref="datatype.attr">
+      <attribute name="type">
+          <choice>
+              <value>string</value>
+              <value>boolean</value>
+              <value>decimal</value>
+              <value>integer</value>
+              <value>datetime</value>
+              <value>date</value>
+              <value>time</value>
+              <value>localedatetime</value>
+              <value>localedate</value>
+              <value>localetime</value>
+         </choice>
+      </attribute>
+  </define>
+  
+
+  <!--  Controls       -->
 
 
-   <define name="commands">
+   <define name="controls">
       <oneOrMore>
         <choice>
             <ref name="input" />
@@ -79,12 +89,15 @@
             <ref name="upload" />
             <ref name="select1" />
             <ref name="select" />
-            <ref name="range" />
             <ref name="submit" />
+            <!--
+            <ref name="range" />
             <ref name="trigger" />
+            -->
         </choice>
       </oneOrMore>
   </define>
+
 
 
   <define name="input">
@@ -115,56 +128,35 @@
 
   <define name="select1">
      <element name="select1">
-       <oneOrMore>
-         <ref name="List.UI.Common" />
-       </oneOrMore>
        <ref name="UI.Common" />
        <ref name="UI.Common.Attrs" />
-       <optional>
-           <attribute name="selection">
-             <choice>
-                 <value>open</value><!-- saisie libre autorisée -->
-                 <value>close</value>
-              </choice>
-           </attribute>
-       </optional>
-     </element>
-  </define>
-
-
-  <define name="select">
-     <element name="select">
-       <oneOrMore>
-         <ref name="List.UI.Common" />
-       </oneOrMore>
-       <ref name="UI.Common" />
-       <ref name="UI.Common.Attrs" />
-       <optional>
+       <ref name="List.UI.Common" />
+       <!-- saisie libre autorisée -->
+       <!--<optional>
            <attribute name="selection">
              <choice>
                  <value>open</value>
                  <value>close</value>
               </choice>
            </attribute>
-       </optional>
+       </optional>-->
      </element>
   </define>
 
-  <define name="range">
-     <element name="range">
-       <ref name="UI.Common" />
-       <ref name="UI.Common.Attrs" />
-       <optional><attribute name="start"/></optional>
-       <optional><attribute name="end"/></optional>
-       <optional><attribute name="step"/></optional>
-       <optional><attribute name="incremental"><data type="boolean" /></attribute></optional>
-     </element>
-  </define>
 
-  <define name="trigger">
-     <element name="trigger">
+  <define name="select">
+     <element name="select">
        <ref name="UI.Common" />
        <ref name="UI.Common.Attrs" />
+       <ref name="List.UI.Common" />
+       <!--<optional>
+           <attribute name="selection">
+             <choice>
+                 <value>open</value>
+                 <value>close</value>
+              </choice>
+           </attribute>
+       </optional>-->
      </element>
   </define>
 
@@ -172,7 +164,6 @@
      <element name="output">
        <ref name="UI.Common" />
        <ref name="UI.Common.Attrs" />
-       <optional><attribute name="appearance"/></optional>
        <optional><attribute name="value"/></optional>
      </element>
   </define>
@@ -181,12 +172,31 @@
      <element name="submit">
        <ref name="UI.Common" />
        <ref name="UI.Common.Attrs" />
-       <optional><attribute name="appearance"/></optional>
        <optional><attribute name="value"/></optional>
-       <attribute name="submission" />
      </element>
   </define>
 
+  
+  <!--
+      <define name="range">
+          <element name="range">
+              <ref name="UI.Common" />
+              <ref name="UI.Common.Attrs" />
+              <optional><attribute name="start"/></optional>
+              <optional><attribute name="end"/></optional>
+              <optional><attribute name="step"/></optional>
+              <optional><attribute name="incremental"><data type="boolean" /></attribute></optional>
+          </element>
+      </define>
+      
+      <define name="trigger">
+          <element name="trigger">
+              <ref name="UI.Common" />
+              <ref name="UI.Common.Attrs" />
+          </element>
+      </define>
+  -->
+  
 
   <define name="message.content">
       <choice>
@@ -198,7 +208,10 @@
 
   <define name="label">
      <element name="label">
-        <ref name="message.content" />
+        <choice>
+            <ref name="message.content" />
+            <attribute name="locale" />
+        </choice>
      </element>
   </define>
 
@@ -220,28 +233,6 @@
      </element>
   </define>
 
-
-
-
-  <define name="choices">
-     <element name="choices">
-       <optional> <ref name="label" /></optional>
-       <oneOrMore>
-         <choice>
-           <ref name="choices" />
-           <ref name="item" />
-          </choice>
-       </oneOrMore>
-       <ref name="Common.Attributes" />
-     </element>
-  </define>
-
-  <define name="value">
-     <element name="value">
-       <text />
-     </element>
-  </define>
-
   <define name="item">
      <element name="item">
          <choice>
@@ -249,10 +240,7 @@
              <attribute name="label" />
              <attribute name="labellocale" />
          </choice>
-        <choice>
-            <ref name="value" />
-            <attribute name="value" />
-         </choice>
+         <attribute name="value" />
      </element>
   </define>
 

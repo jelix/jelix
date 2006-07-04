@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0"
-  ns="http://jelix.org/ns/forms/1.0"
-  xmlns:ev="http://www.w3.org/2001/xml-events">
+<grammar 
+  xmlns="http://relaxng.org/ns/structure/1.0"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  ns="http://jelix.org/ns/forms/1.0">
 
-
-   <!--<include href="jforms-model.rng" />-->
    <include href="jforms-controls.rng" />
-   <!--<include href="jforms-actions.rng" />-->
 
    <start>
       <element name="forms">
-         <!--<ref name="model" />-->
          <ref name="controls" />
       </element>
    </start>
+
+  <define name="Common.Attributes">
+
+  </define>
+
+
 
    <define name="any">
       <element>
@@ -29,22 +32,5 @@
          </zeroOrMore>
       </element>
    </define>
-
-  <define name="Common.Attributes">
-
-  </define>
-
-  <define name="xml.events">
-      <attribute ref="ev:event"/>
-      <attribute ref="ev:observer"/>
-      <attribute ref="ev:target"/>
-      <attribute ref="ev:handler"/>
-      <attribute ref="ev:phase"/>
-      <attribute ref="ev:propagate"/>
-      <attribute ref="ev:defaultAction"/>
-  </define>
-
-
-
 
 </grammar>
