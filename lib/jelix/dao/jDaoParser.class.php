@@ -537,7 +537,7 @@ class jDaoMethod {
          if($op == 'isnull' || $op =='isnotnull'){
             $this->_def->_compiler->doDefError('method.condition.valueexpr.notallowed', array($this->name, $op, $field_id));
          }
-         if(($op == 'in' || $op =='notin')&& !preg_match('/^\$[a-zA-Z0-9]+$/', $attr['expr'])){
+         if(($op == 'in' || $op =='notin')&& !preg_match('/^\$[a-zA-Z0-9_]+$/', $attr['expr'])){
             $this->_def->_compiler->doDefError('method.condition.innotin.bad.expr', array($this->name, $op, $field_id));
          }
          if($op == 'binary_op') {
