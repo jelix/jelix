@@ -78,11 +78,7 @@ class jTplCompiler
 #endif
 
         if(!file_exists($this->_sourceFile)){
-#ifdef JTPL_STANDALONE
-            trigger_error(sprintf($this->_locales['errors.tpl.not.found'], $this->_sourceFile), E_USER_ERROR);
-#else
-            trigger_error(jLocale::get('jelix~errors.tpl.not.found',array($this->_sourceFile)),E_USER_ERROR);
-#endif
+            $this->doError0('errors.tpl.not.found');
         }
 
         $tplcontent = file_get_contents ( $this->_sourceFile);
@@ -115,6 +111,8 @@ class jTplCompiler
         $result = $header.$result."<?php \n}\n?>";
 
         $result = preg_replace('/\?>\n?<\?php/', '', $result);
+        //$result = preg_replace('/<\?php\b+\? >/', '', $result);
+
 #ifdef JTPL_STANDALONE
         $_dirname = dirname($cachefile);
         if (!@is_writable($_dirname)) {
@@ -213,11 +211,7 @@ class jTplCompiler
 
         foreach($tok as $modifier){
             if(!preg_match('/^(\w+)(?:\:(.*))?$/',$modifier,$m)){
-#ifdef JTPL_STANDALONE
-                trigger_error(sprintf($this->_locales['errors.tpl.tag.modifier.invalid'], $this->_currentTag, $modifier, $this->_sourceFile),E_USER_ERROR);
-#else
-                trigger_error(jLocale::get('jelix~errors.tpl.tag.modifier.invalid',array($this->_currentTag,$modifier,$this->_sourceFile)),E_USER_ERROR);
-#endif
+                $this->doError2('errors.tpl.tag.modifier.invalid',$this->_currentTag, $modifier);
                 return '';
             }
 
@@ -227,11 +221,7 @@ class jTplCompiler
                 if(isset($this->_modifier[$m[1]])){
                     $res = $this->_modifier[$m[1]].'('.$res.')';
                 } else {
-#ifdef JTPL_STANDALONE
-                    trigger_error(sprintf($this->_locales['errors.tpl.tag.modifier.unknow'], $this->_currentTag, $m[1], $this->_sourceFile),E_USER_ERROR);
-#else
-                    trigger_error(jLocale::get('jelix~errors.tpl.tag.modifier.unknow',array($this->_currentTag,$m[1],$this->_sourceFile)),E_USER_ERROR);
-#endif
+                    $this->doError2('errors.tpl.tag.modifier.unknow',$this->_currentTag, $m[1]);
                     return '';
                 }
             } else {
@@ -253,7 +243,7 @@ class jTplCompiler
      * analyse les balises ayant un nom "normal" (ne commençant pas par $ ou @)
      */
     private function _parseFunction($name,$args){
-
+        $res='';
         switch($name) {
             case 'if':
                 $res = 'if('.$this->_parseFinal($args,$this->_allowedInExpr).'):';
@@ -261,23 +251,15 @@ class jTplCompiler
                 break;
             case 'else':
                 if (end($this->_blockStack) !='if') {
-#ifdef JTPL_STANDALONE
-                    trigger_error(sprintf($this->_locales['errors.tpl.tag.block.end.missing'], end($this->_blockStack), $this->_sourceFile),E_USER_ERROR);
-#else
-                    trigger_error(jLocale::get('jelix~errors.tpl.tag.block.end.missing',array(end($this->_blockStack),$this->_sourceFile)),E_USER_ERROR);
-#endif
-                }
-                $res = 'else:';
+                    $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
+                }else
+                    $res = 'else:';
                 break;
             case 'elseif':
                 if (end($this->_blockStack) !='if') {
-#ifdef JTPL_STANDALONE
-                    trigger_error(sprintf($this->_locales['errors.tpl.tag.block.end.missing'], end($this->_blockStack), $this->_sourceFile),E_USER_ERROR);
-#else
-                    trigger_error(jLocale::get('jelix~errors.tpl.tag.block.end.missing',array(end($this->_blockStack),$this->_sourceFile)),E_USER_ERROR);
-#endif
-                }
-                $res = 'elseif('.$this->_parseFinal($args,$this->_allowedInExpr).'):';
+                    $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
+                }else
+                    $res = 'elseif('.$this->_parseFinal($args,$this->_allowedInExpr).'):';
                 break;
             case 'foreach':
                 $res = 'foreach('.$this->_parseFinal($args,array(T_AS, T_DOUBLE_ARROW,T_STRING, T_OBJECT_OPERATOR), array(';','!')).'):';
@@ -298,14 +280,11 @@ class jTplCompiler
             case '/while':
                 $short = substr($name,1);
                 if (end($this->_blockStack) !=$short) {
-#ifdef JTPL_STANDALONE
-                    trigger_error(sprintf($this->_locales['errors.tpl.tag.block.end.missing'], end($this->_blockStack), $this->_sourceFile),E_USER_ERROR);
-#else
-                    trigger_error(jLocale::get('jelix~errors.tpl.tag.block.end.missing',array(end($this->_blockStack),$this->_sourceFile)),E_USER_ERROR);
-#endif
+                    $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
+                 }else{
+                    array_pop($this->_blockStack);
+                    $res='end'.$short.';';
                  }
-                array_pop($this->_blockStack);
-                $res='end'.$short.';';
                 break;
 
             case 'assign':
@@ -317,75 +296,66 @@ class jTplCompiler
                 if (count($this->_literals)) {
                     $res = '?>'.array_shift($this->_literals).'<?php ';
                 } else {
-#ifdef JTPL_STANDALONE
-                    trigger_error(sprintf($this->_locales['errors.tpl.tag.block.end.missing'], 'literal', $this->_sourceFile),E_USER_ERROR);
-#else
-                    trigger_error(jLocale::get('jelix~errors.tpl.tag.block.end.missing',array('literal',$this->_sourceFile)),E_USER_ERROR);
-#endif
+                    $this->doError1('errors.tpl.tag.block.end.missing','literal');
                 }
                 break;
             case '/literal':
-#ifdef JTPL_STANDALONE
-                trigger_error(sprintf($this->_locales['errors.tpl.tag.block.begin.missing'], 'literal', $this->_sourceFile),E_USER_ERROR);
-#else
-                trigger_error(jLocale::get('jelix~errors.tpl.tag.block.begin.missing',array('literal',$this->_sourceFile)),E_USER_ERROR);
-#endif
+                $this->doError1('errors.tpl.tag.block.begin.missing','literal');
                 break;
             case 'meta':
                 $this->_parseMeta($args);
                 $res='';
                 break;
             default:
-                if(preg_match('/^meta_(\w+)$/',$name,$m)){
+                if(preg_match('!^/(\w+)$!',$name,$m)){
+                    if (end($this->_blockStack) !=$m[1]) {
+                        $this->doError1('errors.tpl.tag.block.end.missing',end($this->_blockStack));
+                    }else{
+                        array_pop($this->_blockStack);
+                        $fct = 'jtpl_block_'.$m[1];
+                        if(!function_exists($fct)){
+                            $this->doError1('errors.tpl.tag.block.begin.missing',$m[1]);
+                        }else
+                            $res = $fct($this,false,null);
+                    }
+                }else if(preg_match('/^meta_(\w+)$/',$name,$m)){
                      if ( ! $path = $this->_getPlugin('meta',$m[1])) {
-#ifdef JTPL_STANDALONE
-                        trigger_error(sprintf($this->_locales['errors.tpl.tag.meta.unknow'], $m[1], $this->_sourceFile),E_USER_ERROR);
-#else
-                        trigger_error(jLocale::get('jelix~errors.tpl.tag.meta.unknow',array($m[1],$this->_sourceFile)),E_USER_ERROR);
-#endif
+                        $this->doError1('errors.tpl.tag.meta.unknow',$m[1]);
                     }else{
                         $this->_parseMeta($args,$m[1]);
                         $this->_pluginPath[$path] = true;
                     }
                     $res='';
-                }else if ( ! $path = $this->_getPlugin('function',$name)) {
-#ifdef JTPL_STANDALONE
-                    trigger_error(sprintf($this->_locales['errors.tpl.tag.function.unknow'], $name, $this->_sourceFile),E_USER_ERROR);
-#else
-                    trigger_error(jLocale::get('jelix~errors.tpl.tag.function.unknow',array($name,$this->_sourceFile)),E_USER_ERROR);
-#endif
-                    $res='';
-                } else {
+
+                }else if ( $path = $this->_getPlugin('block',$name)) {
+                    require_once($path);
+                    $argfct=$this->_parseFinal($args,$this->_allowedAssign, array(';'),true);
+                    $fct = 'jtpl_block_'.$name;
+                    $res = $fct($this,true,$argfct);
+                    array_push($this->_blockStack,$name);
+
+                }else if ( $path = $this->_getPlugin('function',$name)) {
+
                     $argfct=$this->_parseFinal($args,$this->_allowedAssign);
                     $res = 'jtpl_function_'.$name.'( $t'.(trim($argfct)!=''?','.$argfct:'').');';
                     $this->_pluginPath[$path] = true;
+
+                } else {
+                    $this->doError1('errors.tpl.tag.function.unknow',$name);
                 }
         }
         return $res;
     }
 
+
     /**
-     * analyse un argument de balise, et le transforme en code php
-     *
+     * analyse les arguments de balise (tout ce qui est aprés le nom d'une balise)
+     * ou les arguments d'un modificateur, et le transforme en code php
      */
-
-    /*
-    -------
-    if:        op, autre, var
-    foreach:   T_AS, T_DOUBLE_ARROW, T_VARIABLE, @locale@
-    for:       autre, fin_instruction
-    while:     op, autre, var
-    assign:    T_VARIABLE puis assign puis autre, ponctuation, T_STRING
-    echo:      T_VARIABLE/@locale@ puis autre + ponctuation
-    modificateur: serie de autre séparé par une virgule
-
-    tous : T_VARIABLE, @locale@
-
-    */
-
-    private function _parseFinal($string, $allowed=array(), $exceptchar=array(';')){
+    private function _parseFinal($string, $allowed=array(), $exceptchar=array(';'), $splitArgIntoArray=false){
         $tokens = token_get_all('<?php '.$string.'?>');
 
+        $results=array();
         $result ='';
         $first = true;
         $inLocale = false;
@@ -405,7 +375,6 @@ class jTplCompiler
                 list($type,$str)= $tok;
                 $first=false;
                 if ($type== T_CLOSE_TAG) {
-
                     continue;
                 }
 
@@ -418,11 +387,7 @@ class jTplCompiler
                 }elseif($type == T_WHITESPACE || in_array($type, $allowed)){
                     $result.=$str;
                 }else{
-#ifdef JTPL_STANDALONE
-                    trigger_error(sprintf($this->_locales['errors.tpl.tag.phpsyntax.invalid'], $this->_currentTag, $str, $this->_sourceFile),E_USER_ERROR);
-#else
-                    trigger_error(jLocale::get('jelix~errors.tpl.tag.phpsyntax.invalid',array($this->_currentTag,$str,$this->_sourceFile)),E_USER_ERROR);
-#endif
+                    $this->doError2('errors.tpl.tag.phpsyntax.invalid', $this->_currentTag, $str);
                     return '';
                 }
             } else {
@@ -430,11 +395,7 @@ class jTplCompiler
                     if ($inLocale) {
                         $inLocale = false;
                         if ($locale=='') {
-#ifdef JTPL_STANDALONE
-                            trigger_error(sprintf($this->_locales['errors.tpl.tag.locale.invalid'], $this->_currentTag, $this->_sourceFile),E_USER_ERROR);
-#else
-                            trigger_error(jLocale::get('jelix~errors.tpl.tag.locale.invalid',array($this->_currentTag,$this->_sourceFile)),E_USER_ERROR);
-#endif
+                            $this->doError1('errors.tpl.tag.locale.invalid', $this->_currentTag);
                             return '';
                         } else {
 #ifdef JTPL_STANDALONE
@@ -450,11 +411,7 @@ class jTplCompiler
                 } elseif ($inLocale && ($tok=='.' || $tok =='~') ) {
                     $locale.=$tok;
                 } elseif ($inLocale || in_array($tok,$exceptchar) || ($first && $tok !='!')) {
-#ifdef JTPL_STANDALONE
-                    trigger_error(sprintf($this->_locales['errors.tpl.tag.character.invalid'], $this->_currentTag, $tok, $this->_sourceFile),E_USER_ERROR);
-#else
-                    trigger_error(jLocale::get('jelix~errors.tpl.tag.character.invalid',array($this->_currentTag,$tok,$this->_sourceFile)),E_USER_ERROR);
-#endif
+                    $this->doError2('errors.tpl.tag.character.invalid', $this->_currentTag, $tok);
                     return '';
                 } elseif ($tok =='(') {
                     $bracketcount++;$result.=$tok;
@@ -464,6 +421,9 @@ class jTplCompiler
                     $sqbracketcount++;$result.=$tok;
                 } elseif ($tok ==']') {
                     $sqbracketcount--;$result.=$tok;
+                } elseif( $splitArgIntoArray && $tok ==',' && $bracketcount==0 && $sqbracketcount==0){
+                   $results[]=$result;
+                   $result='';
                 } else {
                     $result.=$tok;
                 }
@@ -473,14 +433,15 @@ class jTplCompiler
         }
 
         if ($bracketcount != 0 || $sqbracketcount !=0) {
-#ifdef JTPL_STANDALONE
-            trigger_error(sprintf($this->_locales['errors.tpl.tag.bracket.error'], $this->_currentTag, $this->_sourceFile),E_USER_ERROR);
-#else
-            trigger_error(jLocale::get('jelix~errors.tpl.tag.bracket.error',array($this->_currentTag,$this->_sourceFile)),E_USER_ERROR);
-#endif
+            $this->doError1('errors.tpl.tag.bracket.error', $this->_currentTag);
         }
 
-        return $result;
+        if( $splitArgIntoArray){
+            $results[]=$result;
+            return $results;
+        }else{
+            return $result;
+        }
     }
 
     private function _parseMeta($args, $fct=''){
@@ -492,14 +453,13 @@ class jTplCompiler
                 $this->_metaBody.= "\$t->_meta['".$m[1]."']=".$argfct.";\n";
             }
         }else{
-#ifdef JTPL_STANDALONE
-            trigger_error(sprintf($this->_locales['errors.tpl.tag.meta.invalid'], $this->_currentTag, $this->_sourceFile),E_USER_ERROR);
-#else
-            trigger_error(jLocale::get('jelix~errors.tpl.tag.meta.invalid',array($this->_currentTag,$this->_sourceFile)),E_USER_ERROR);
-#endif
+            $this->doError1('errors.tpl.tag.meta.invalid', $this->_currentTag);
         }
     }
 
+    /**
+     * Récupère un plugin 
+     */
     private function _getPlugin($type, $name){
 #ifdef JTPL_STANDALONE
         $treq = 'html';
@@ -538,6 +498,31 @@ class jTplCompiler
         }
         return '';
     }
+
+    public function doError0($err){
+#ifdef JTPL_STANDALONE
+        trigger_error(sprintf($this->_locales[$err], $this->_sourceFile),E_USER_ERROR);
+#else
+        trigger_error(jLocale::get('jelix~'.$err,array($this->_sourceFile)),E_USER_ERROR);
+#endif
+    }
+
+    public function doError1($err, $arg){
+#ifdef JTPL_STANDALONE
+        trigger_error(sprintf($this->_locales[$err], $arg, $this->_sourceFile),E_USER_ERROR);
+#else
+        trigger_error(jLocale::get('jelix~'.$err,array($arg, $this->_sourceFile)),E_USER_ERROR);
+#endif
+    }
+
+    public function doError2($err, $arg1, $arg2){
+#ifdef JTPL_STANDALONE
+        trigger_error(sprintf($this->_locales[$err], $arg1, $arg2, $this->_sourceFile),E_USER_ERROR);
+#else
+        trigger_error(jLocale::get('jelix~'.$err,array($arg1, $arg2, $this->_sourceFile)),E_USER_ERROR);
+#endif
+    }
+
 }
 
 

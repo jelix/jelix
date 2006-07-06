@@ -120,6 +120,10 @@ cd lib/jelix/tpl/
 
 
 cd lib/jelix/tpl/plugins/common
+  block.ifacl.php
+  block.ifnotacl.php
+  block.ifuserconnected.php
+  block.ifusernotconnected.php
   function.zone.php
   modifier.cat.php
   modifier.count_characters.php

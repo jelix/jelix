@@ -17,7 +17,11 @@ $GLOBALS['jTplConfig']['locales'] =array(
     'errors.tpl.tag.phpsyntax.invalid'=>'Dans le tag %s du template %3$s, le code php %2$s n\'est pas autorisé',
     'errors.tpl.tag.locale.invalid'=>'Dans le tag %s du template %s, clef de localisation vide',
     'errors.tpl.tag.character.invalid'=>'Dans le tag %s du template %3$s, le caractère  %2$s n\'est pas autorisé',
-    'errors.tpl.tag.bracket.error'=>'Dans le tag %s du template %s, il y a des erreurs au niveau des parenthèses'
+    'errors.tpl.tag.bracket.error'=>'Dans le tag %s du template %s, il y a des erreurs au niveau des parenthèses',
+    'errors.tplplugin.block.too.few.arguments'=>'Dans le tag %s du template %s, arguments manquants',
+    'errors.tplplugin.block.too.many.arguments'=>'Dans le tag %s du template %s, arguments en trop',
+    'errors.tplplugin.block.bad.argument.number'=>'Dans le tag %s du template %3$s, nombre d\'arguments incorrect (%2$s attendus)',
+
 );
 
 ?>
