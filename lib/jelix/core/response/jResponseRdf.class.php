@@ -39,48 +39,36 @@ final class jResponseRdf extends jResponse {
         return true;
     }
 
-    public  function fetch(){
-        if($this->hasErrors()) return false;
-        ob_start();
-        $this->generateContent();
-        $content= ob_get_contents();
-        ob_end_clean();
-        return $content;
-    }
-
     protected function generateContent(){
         $EOL="\n";
         echo '<?xml version="1.0" encoding="ISO-8859-1"?>'.$EOL;
         echo '<RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'.$EOL;
-        echo '  xmlns:'.$this->resNsPrefix.'="'.$this->resNs.'"  xmlns:NC="http://home.netscape.com/NC-rdf#">'.$EOL;
+        echo '  xmlns:',$this->resNsPrefix,'="',$this->resNs,'"  xmlns:NC="http://home.netscape.com/NC-rdf#">',$EOL;
 
         echo '<Bag about="'.$this->resUriRoot.'">'.$EOL;
         foreach($this->datas as $dt){
-            echo "<li>\n";
-            echo "<Description ";
+            echo "<li>\n<Description ";
             // NC:parseType="Integer"
             if(is_object($dt))
                 $dt=get_object_vars ($dt);
             if(count($this->asAttribute) || count($this->asElement)){
                 foreach($this->asAttribute as $name){
-                    echo $this->resNsPrefix.':'.$name.'="'.$this->xmlEntities($dt[$name]).'" ';
+                    echo $this->resNsPrefix,':',$name,'="',htmlspecialchars($dt[$name]),'" ';
                 }
                 echo ">\n";
                 foreach($this->asElement as $name){
-                    echo '<'.$this->resNsPrefix.':'.$name.'>'.$this->xmlEntities($dt[$name]).'</'.$this->resNsPrefix.':'.$name.">\n";
+                    echo '<',$this->resNsPrefix,':',$name,'>',htmlspecialchars($dt[$name]),'</',$this->resNsPrefix,':',$name,">\n";
                 }
 
             }else{
                 echo ">\n";
                 foreach($dt as $name=>$val){
-                    echo '<'.$this->resNsPrefix.':'.$name.'>'.$this->xmlEntities($val).'</'.$this->resNsPrefix.':'.$name.">\n";
+                    echo '<',$this->resNsPrefix,':',$name,'>',htmlspecialchars($val),'</',$this->resNsPrefix,':',$name,">\n";
                 }
             }
-            echo "</Description>\n";
-            echo "</li>\n";
-        }
-        echo "</Bag>\n";
-        echo "</RDF>\n";
+            echo "</Description>\n</li>\n";
+           }
+        echo "</Bag>\n</RDF>\n";
     }
 
 
@@ -98,7 +86,7 @@ final class jResponseRdf extends jResponse {
            foreach($gJCoord->errorMessages as $e){
                 echo "<li>\n";
                 echo '<Description err:code="'.$e[1].'" err:type="'.$e[0].'" err:file="'.$e[3].'" err:line="'.$e[4].'">';
-                echo '<err:message>'.$this->xmlEntities($e[2]).'</err:message>';
+                echo '<err:message>'.htmlspecialchars($e[2]).'</err:message>';
                 echo "</Description>\n";
                 echo "</li>\n";
            }
@@ -112,13 +100,5 @@ final class jResponseRdf extends jResponse {
         echo "</Bag>\n";
         echo "</RDF>\n";
     }
-
-    protected function xmlEntities($str){
-        return preg_replace(array("'&'", "'\"'", "'<'", "'>'"), array('&#38;', '&#34;','&lt;', '&gt;'), $str);
-    }
-
-
-
 }
-
 ?>

@@ -379,7 +379,6 @@ class jSelectorForm extends jSelectorModule {
     public $type = 'form';
 
     function __construct($sel){
-        global $gJConfig;
 
         $this->_dirname =  'forms/';
         $this->_suffix = '.form.xml';

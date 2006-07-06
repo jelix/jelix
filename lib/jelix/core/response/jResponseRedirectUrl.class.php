@@ -29,15 +29,6 @@ final class jResponseRedirectUrl extends jResponse {
         return true;
     }
 
-    /**
-     * génère le contenu sans l'envoyer au navigateur
-     * @return    string    contenu généré, ou false si il y a une erreur de génération
-     */
-    public function fetch(){
-       if($this->hasErrors()) return false;
-       return 'location: '.$this->url;
-    }
-
     public function outputErrors(){
          include_once(JELIX_LIB_RESPONSE_PATH.'jResponseHtml.class.php');
          $resp = new jResponseHtml();

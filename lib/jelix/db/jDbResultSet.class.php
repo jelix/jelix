@@ -42,12 +42,12 @@ abstract class jDbResultSet implements Iterator {
     public function fetch(){
         $result = $this->_fetch ();
         if($result && $this->_fetchMode == self::FETCH_CLASS){
-            $object = $this->_fetchModeParam;
-            $object = new $object();
-            foreach (get_object_vars ($result) as $k=>$value){
-                $object->$k = $value;
+            $values = get_object_vars ($result);
+            $o = $this->_fetchModeParam;
+            $result = new $o();
+            foreach ( $values as $k=>$value){
+                $result->$k = $value;
             }
-            $result = $object;
         }
         return $result;
     }

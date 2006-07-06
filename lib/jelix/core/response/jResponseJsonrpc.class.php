@@ -41,16 +41,6 @@ final class jResponseJsonRpc extends jResponse {
         return true;
     }
 
-    public function fetch(){
-        global $gJCoord;
-        if($this->hasErrors()) return false;
-
-        if($gJCoord->request->jsonRequestId !== null)
-            return jJsonRpc::encodeResponse($this->response, $gJCoord->request->jsonRequestId);
-        else
-            return ''; // dans le cas où la requete n'était qu'une notification
-    }
-
     public function outputErrors(){
         global $gJCoord;
         if(count($gJCoord->errorMessages)){

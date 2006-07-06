@@ -15,6 +15,8 @@
 * Contributeur de la version experimentale : Laurent Jouanneau
 * Adaptée pour Jelix par Laurent Jouanneau
 */
+require_once(JELIX_LIB_AUTH_PATH.'jAuth.class.php');
+require_once(JELIX_LIB_AUTH_PATH.'jAuthUser.class.php');
 
 class AuthPlugin implements jIPlugin {
     public $config;

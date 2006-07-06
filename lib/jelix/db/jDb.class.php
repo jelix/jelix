@@ -12,6 +12,10 @@
 * API inspirée de la classe CopixDbFactory issue du framework Copix 2.3dev20050901. http://www.copix.org
 */
 
+require_once(JELIX_LIB_DB_PATH.'jDbConnection.class.php');
+require_once(JELIX_LIB_DB_PATH.'jDbResultSet.class.php');
+
+
 /**
 * instancie les differents objets pour jDb
 */

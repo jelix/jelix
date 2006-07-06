@@ -15,7 +15,6 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 *
 */
-require_once (JELIX_LIB_EVENTS_PATH . 'jEventListener.class.php');
 
 /**
 * Listener Factory.

@@ -46,12 +46,6 @@ abstract class jResponse {
     abstract public function output();
 
     /**
-     * génère le contenu sans l'envoyer au navigateur
-     * @return    string    contenu généré ou false si il y a une erreur de génération
-     */
-    abstract public function fetch();
-
-    /**
      * affiche les erreurs graves
      */
     abstract public function outputErrors();
@@ -63,6 +57,7 @@ abstract class jResponse {
     public final function hasErrors(){ return count($GLOBALS['gJCoord']->errorMessages)>0;}
 
     public function addHttpHeader($htype, $hcontent){ $this->_httpHeaders[$htype]=$hcontent;}
+
     protected function sendHttpHeaders(){
         foreach($this->_httpHeaders as $ht=>$hc){
             header($ht.': '.$hc);

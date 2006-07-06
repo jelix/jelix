@@ -50,15 +50,6 @@ class jResponseText extends jResponse {
         return true;
     }
 
-    /**
-     * génère le contenu sans l'envoyer au navigateur
-     * @return    string    contenu généré ou false si il y a une erreur de génération
-     */
-    public function fetch(){
-        return $this->content;
-    }
-
-
     public function outputErrors(){
         global $gJConfig;
         header('Content-Type: text/plain;charset='.$gJConfig->defaultCharset);

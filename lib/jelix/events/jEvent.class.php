@@ -16,6 +16,9 @@
 *
 */
 
+require_once (JELIX_LIB_EVENTS_PATH . 'jEventListener.class.php');
+require_once (JELIX_LIB_EVENTS_PATH . 'jEventListenerFactory.class.php');
+
 /**
 * classe des évènements passés aux listeners
 */

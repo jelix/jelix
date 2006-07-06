@@ -10,6 +10,8 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
+
 /**
 * Genérateur de réponse XUL
 * @see jResponse
@@ -63,7 +65,6 @@ class jResponseXul extends jResponse {
     protected $_bodyTop = array();
     protected $_bodyBottom = array();
     protected $_headSent = false;
-    protected $_sendHttpHeader=true;
 
     /**
     * Contruction et initialisation
@@ -82,9 +83,7 @@ class jResponseXul extends jResponse {
         $this->_headSent = false;
 
         $this->_httpHeaders['Content-Type']='application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset;
-        if($this->_sendHttpHeader){
-            $this->sendHttpHeaders();
-        }
+        $this->sendHttpHeaders();
         $this->_commonProcess();
         if($this->bodyTpl != '')
            $this->body->meta($this->bodyTpl);
@@ -103,25 +102,9 @@ class jResponseXul extends jResponse {
         return true;
     }
 
-    /**
-     * génère le contenu sans l'envoyer au navigateur
-     * @return    string    contenu généré ou false si il y a une erreur de génération
-     */
-    function fetch(){
-        $this->_sendHttpHeader = false;
-        ob_start();
-        $ok = $this->output();
-        $content= ob_get_contents();
-        ob_end_clean();
-        $this->_sendHttpHeader = true;
-        if($ok) return $content;
-        else return false;
-    }
-
-
     function outputErrors(){
         if(!$this->_headSent){
-            if($this->_sendHttpHeader) header('Content-Type: application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset);
+            header('Content-Type: application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset);
             echo '<?xml version="1.0" encoding="'.$GLOBALS['gJConfig']->defaultCharset.'" ?>'."\n";
             echo '<',$this->_root,' title="Erreurs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">';
         }

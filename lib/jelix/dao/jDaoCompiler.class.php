@@ -16,6 +16,8 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
+require_once (JELIX_LIB_DAO_PATH.'jDaoParser.class.php');
+require_once (JELIX_LIB_DAO_PATH.'jDaoGenerator.class.php');
 
 /**
 * The compiler for the DAO classes.
@@ -57,11 +59,10 @@ class jDaoCompiler  implements jISimpleCompiler {
         if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0'){
            throw new jException('jelix~daoxml.namespace.wrong',array($selector->getPath(), $doc->namespaceURI));
         }
-        require_once (JELIX_LIB_DAO_PATH.'jDaoParser.class.php');
+
         $parser = new jDaoParser ($this);
         $parser->parse(simplexml_import_dom($doc));
 
-        require_once (JELIX_LIB_DAO_PATH.'jDaoGenerator.class.php');
         $generator = new jDaoGenerator($this, $parser);
 
         // génération des classes PHP correspondant à la définition de la DAO

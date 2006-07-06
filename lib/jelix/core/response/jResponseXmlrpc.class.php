@@ -36,15 +36,10 @@ final class jResponseXmlRpc extends jResponse {
         return true;
     }
 
-    public  function fetch(){
-        if($this->hasErrors()) return false;
-        return jXmlRpc::encodeResponse($this->response, $GLOBALS['gJConfig']->defaultCharset);
-    }
-
     public function outputErrors(){
         global $gJCoord;
         if(count($gJCoord->errorMessages)){
-           $e = $gJCoord->errorMessages[0];            
+           $e = $gJCoord->errorMessages[0];
            $errorCode = $e[1];
            $errorMessage = '['.$e[0].'] '.$e[2].' (file: '.$e[3].', line: '.$e[4].')';
         }else{

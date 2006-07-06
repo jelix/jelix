@@ -16,6 +16,8 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
+require_once(JELIX_LIB_DB_PATH.'jDb.class.php');
+require_once(JELIX_LIB_DAO_PATH.'jDaoBase.class.php');
 
 /**
 * Factory to create automatic DAO.

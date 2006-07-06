@@ -13,6 +13,8 @@
 * Some line of code are copyrighted CopixTeam http://www.copix.org
 */
 
+require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
+
 /**
 * Générateur de réponse HTML
 */
@@ -25,7 +27,6 @@ class jResponseHtml extends jResponse {
     protected $_type = 'html';
 
 
-    protected $_sendHttpHeader=true;
     public $title = '';
 
     /**
@@ -98,17 +99,12 @@ class jResponseHtml extends jResponse {
         $this->_headSent = false;
         $this->_httpHeaders['Content-Type']='text/html;charset='.$this->_charset;
 
+        $this->sendHttpHeaders();
         if($this->_isXhtml){
-            if($this->_sendHttpHeader){
-               $this->sendHttpHeaders();
-            }
             echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$this->_lang,'" lang="',$this->_lang,'">
 ';
         }else{
-            if($this->_sendHttpHeader){
-                $this->sendHttpHeaders();
-            }
             echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n";
             echo '<html lang="',$this->_lang,'">';
         }
@@ -140,22 +136,6 @@ class jResponseHtml extends jResponse {
     protected function _commonProcess(){
 
     }
-
-    /**
-     * génère le contenu sans l'envoyer au navigateur
-     * @return    string    contenu généré ou false si il y a une erreur de génération
-     */
-    final public function fetch(){
-        ob_start();
-        $this->_sendHttpHeader = false;
-        $ok = $this->output();
-        $content= ob_get_contents();
-        ob_end_clean();
-        $this->_sendHttpHeader = true;
-        if($ok) return $content;
-        else return false;
-    }
-
 
     final public function outputErrors(){
         if(!$this->_headSent){

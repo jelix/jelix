@@ -36,11 +36,6 @@ final class jResponseRedirect extends jResponse {
         return true;
     }
 
-    public function fetch(){
-       if($this->hasErrors()) return false;
-       return 'location: '.jUrl::get($this->action, $this->params);
-    }
-
     public function outputErrors(){
          include_once(JELIX_LIB_RESPONSE_PATH.'jResponseHtml.class.php');
          $resp = new jResponseHtml();

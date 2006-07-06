@@ -90,23 +90,6 @@ final class jResponseBinary  extends jResponse {
         header("Expires: 0");
     }
 
-    /**
-     * génère le contenu sans l'envoyer au navigateur
-     * @return    string    contenu généré ou false si il y a une erreur de génération
-     */
-    public function fetch(){
-        if($this->hasErrors()) return false;
-        if($this->content === null){
-            if (is_readable ($this->fileName) && is_file ($this->fileName)){
-                return file_get_contents ($this->fileName);
-            }else
-                return false;
-        }else{
-            return $this->content;
-        }
-    }
-
-
     public function outputErrors(){
 
     }

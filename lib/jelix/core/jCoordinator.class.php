@@ -204,7 +204,6 @@ class jCoordinator {
 
         $ctrlpath = $selector->getPath();
         $class = $selector->getClass();
-        $method = $selector->method;
 
         if(!file_exists($ctrlpath)){
             trigger_error(jLocale::get('jelix~errors.ad.controller.file.unknow',array($this->actionName,$ctrlpath)),E_USER_ERROR);
@@ -219,8 +218,8 @@ class jCoordinator {
         $ctrl = new $class($this->request);
         if($ctrl instanceof jIRestController){
             $method = $selector->method = strtolower($_SERVER['REQUEST_METHOD']);
-        }elseif(!method_exists($ctrl,$method)){
-            trigger_error(jLocale::get('jelix~errors.ad.controller.method.unknow',array($this->actionName,$method, $class, $ctrlpath)),E_USER_ERROR);
+        }elseif(!method_exists($ctrl,$selector->method)){
+            trigger_error(jLocale::get('jelix~errors.ad.controller.method.unknow',array($this->actionName,$selector->method, $class, $ctrlpath)),E_USER_ERROR);
             return;
         }
         return $ctrl;
