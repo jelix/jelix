@@ -24,9 +24,18 @@ class jDbResultSetPostgreSQL extends jDbResultSet {
         $this->_stmtId=$stmtId;
         $this->_cnt = $cnt;
 	}
+
+    public function fetch(){
+        return $this->_fetch();
+    }
     protected function _fetch(){
-        $toReturn = pg_fetch_object ($this->_idResult);
-        return $toReturn;
+        if($this->_fetchMode == self::FETCH_CLASS){
+            $res = pg_fetch_object ($this->_idResult, -1 , $this->_fetchModeParam);
+        }else{
+            $res = pg_fetch_object ($this->_idResult);
+        }
+
+        return $res;
     }
     protected function _free (){
         return pg_free_result ($this->_idResult);
