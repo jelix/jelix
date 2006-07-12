@@ -43,6 +43,7 @@ class CTDefault extends jController {
 
       return $rep;
    }
+
    function testurlparse(){
       $rep = $this->getResponse('unittest');
       $rep->title = 'test unitaires sur le parsing d\'url avec jUrl';
@@ -53,5 +54,18 @@ class CTDefault extends jController {
 
       return $rep;
    }
+
+   function testselectoract(){
+      $rep = $this->getResponse('unittest');
+      $rep->title = 'test unitaires sur le selecteur d\'action';
+
+      $ut = jClasses::create("unittestservice");
+      $ut->init($rep);
+      $ut->selectorActTest();
+
+      return $rep;
+   }
+
+
 }
 ?>

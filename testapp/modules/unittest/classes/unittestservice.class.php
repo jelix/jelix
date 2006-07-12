@@ -39,5 +39,12 @@ class UnitTestService {
       $test = jClasses::create("utparseurls");
       $test->run(new jHtmlRespReporter($this->_rep));
    }
+
+   function selectorActTest(){
+      $test = jClasses::create("utselectoract");
+      $test->run(new jHtmlRespReporter($this->_rep));
+   }
+
+
 }
 ?>

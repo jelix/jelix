@@ -232,7 +232,7 @@ class jResponseHtml extends jResponse {
 
         // styles
         if(count($this->_Styles)){
-            echo '<style type="text/css"><!--
+            echo '<style type="text/css">
             ';
             foreach ($this->_Styles as $selector=>$value){
                 if (strlen ($value)){
@@ -244,7 +244,7 @@ class jResponseHtml extends jResponse {
                     echo $selector, "\n";
                 }
             }
-            echo "\n //--></style>\n";
+            echo "\n </style>\n";
         }
         // js code
         if(count($this->_JSCode)){

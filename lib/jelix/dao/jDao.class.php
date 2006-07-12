@@ -29,7 +29,10 @@ class jDao {
     * If no dao is founded, try to compile a DAO from the user definitions.
     */
     public static function create ($DaoId, $profil=''){
-        $sel = new jSelectorDao($DaoId, $profil);
+        if(!is_object($DaoId))
+            $sel = new jSelectorDao($DaoId, $profil);
+        else $sel = $DaoId;
+
         if(!$sel->isValid())
            throw new jException('jelix~errors.selector.invalid',$sel->toString(true));
 
@@ -52,7 +55,7 @@ class jDao {
        $DaoId    = $sel->toString ();
 
         if (! isset ($_daoSingleton[$DaoId])){
-            $_daoSingleton[$DaoId] = self::create ($DaoId,$profil);
+            $_daoSingleton[$DaoId] = self::create ($sel,$profil);
         }
         return $_daoSingleton[$DaoId];
     }
