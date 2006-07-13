@@ -62,6 +62,7 @@ cd lib/jelix/core/response
   jResponseXulDialog.class.php
   jResponseXulPage.class.php
   jResponseRdf.class.php
+  jResponseXml.class.php
 
 cd lib/jelix/core/url
   jUrl.class.php

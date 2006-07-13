@@ -40,6 +40,7 @@ xuloverlay = jResponseXulOverlay
 xuldialog = jResponseXulDialog
 xulpage = jResponseXulPage
 rdf = jResponseRdf
+xml = jResponseXml
 
 
 [_coreResponses]
@@ -55,6 +56,7 @@ xuloverlay = jResponseXulOverlay
 xuldialog = jResponseXulDialog
 xulpage = jResponseXulPage
 rdf = jResponseRdf
+xml = jResponseXml
 
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
