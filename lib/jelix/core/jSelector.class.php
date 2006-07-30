@@ -52,7 +52,7 @@ abstract class jSelectorModule implements jISelector {
     public $module = null;
     public $resource = null;
 
-    private $_valid;
+    protected $_valid;
     protected $_dirname='';
     protected $_suffix='';
     protected $_cacheSuffix='.php';
@@ -182,7 +182,7 @@ class jSelectorAct extends jSelectorModule {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            $this->_path=='';
+            $this->_path='';
             $this->_valid = false;
         }else{
             $this->_path = $gJConfig->_modulesPathList[$this->module].'controllers/'.$this->controller.'.'.$this->request.'.php';

@@ -1,4 +1,9 @@
 <h2>Tests unitaires</h2>
+<h3>Core</h3>
+<ul>
+    <li><a href="?module=unittest&amp;action=testselectoract">selecteurs d'action</a></li>
+
+</ul>
 <h3>jEvent</h3>
 <ul>
     <li><a href="?module=unittest&amp;action=testevent">lancer deux évènements</a></li>

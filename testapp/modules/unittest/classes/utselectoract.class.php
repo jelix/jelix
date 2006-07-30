@@ -10,63 +10,101 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTEvents extends UnitTestCase {
+class UTSelectorAct extends UnitTestCase {
 
-    function testEvents() {
+    function testWithModule() {
         $sels=array(
-"module~ctrl_meth@truc"=>array('module','ctrl','meth','truc'),
-"module~_meth@truc"=>array('module','ctrl','meth','truc'),
-"module~ctrl_@truc"=>array('module','ctrl','meth','truc'),
-"module~@truc"=>array('module','ctrl','meth','truc'),
-"module~#@truc"=>array('module','ctrl','meth','truc'),
-"module~ctrl_meth"=>array('module','ctrl','meth','truc'),
-"module~_meth"=>array('module','ctrl','meth','truc'),
-"module~ctrl_"=>array('module','ctrl','meth','truc'),
-"module~"=>array('module','ctrl','meth','truc'),
-"module~#"=>array('module','ctrl','meth','truc'),
-"~ctrl_meth@truc"=>array('module','ctrl','meth','truc'),
-"~_meth@truc"=>array('module','ctrl','meth','truc'),
-"~ctrl_@truc"=>array('module','ctrl','meth','truc'),
-"~@truc"=>array('module','ctrl','meth','truc'),
-"~#@truc"=>array('module','ctrl','meth','truc'),
-"~ctrl_meth"=>array('module','ctrl','meth','truc'),
-"~_meth"=>array('module','ctrl','meth','truc'),
-"~ctrl_"=>array('module','ctrl','meth','truc'),
-"~"=>array('module','ctrl','meth','truc'),
-"~#"=>array('module','ctrl','meth','truc'),
-"#~ctrl_meth@truc"=>array('module','ctrl','meth','truc'),
-"#~_meth@truc"=>array('module','ctrl','meth','truc'),
-"#~ctrl_@truc"=>array('module','ctrl','meth','truc'),
-"#~@truc"=>array('module','ctrl','meth','truc'),
-"#~#@truc"=>array('module','ctrl','meth','truc'),
-"#~ctrl_meth"=>array('module','ctrl','meth','truc'),
-"#~_meth"=>array('module','ctrl','meth','truc'),
-"#~ctrl_"=>array('module','ctrl','meth','truc'),
-"#~"=>array('module','ctrl','meth','truc'),
-"#~#"=>array('module','ctrl','meth','truc'),
-"ctrl_meth@truc"=>array('module','ctrl','meth','truc'),
-"_meth@truc"=>array('module','ctrl','meth','truc'),
-"ctrl_@truc"=>array('module','ctrl','meth','truc'),
-"@truc"=>array('module','ctrl','meth','truc'),
-"#@truc"=>array('module','ctrl','meth','truc'),
-"ctrl_meth"=>array('module','ctrl','meth','truc'),
-"_meth"=>array('module','ctrl','meth','truc'),
-"ctrl_"=>array('module','ctrl','meth','truc'),
-""=>array('module','ctrl','meth','truc'),
-"#"=>array('module','ctrl','meth','truc'),
+"testapp~ctrl_meth@truc"=>array('testapp','ctrl','meth','truc'),
+"testapp~_meth@truc"=>array('testapp','default','meth','truc'),
+"testapp~ctrl_@truc"=>array('testapp','ctrl','index','truc'),
+"testapp~@truc"=>array('testapp','default','index','truc'),
+"testapp~#@truc"=>array('testapp','default','testselectoract','truc'),
+"testapp~ctrl_meth"=>array('testapp','ctrl','meth','classic'),
+"testapp~_meth"=>array('testapp','default','meth','classic'),
+"testapp~ctrl_"=>array('testapp','ctrl','index','classic'),
+"testapp~"=>array('testapp','default','index','classic'),
+"testapp~#"=>array('testapp','default','testselectoract','classic'),
+        );
+        $this->runtest($sels);
 
-);
+    }
 
-        foreach($sels as $sel=>$res){
+
+    function testWithoutModule() {
+        $sels=array(
+"~ctrl_meth@truc"=>false,
+"~_meth@truc"=>false,
+"~ctrl_@truc"=>false,
+"~@truc"=>false,
+"~#@truc"=>false,
+"~ctrl_meth"=>false,
+"~_meth"=>false,
+"~ctrl_"=>false,
+"~"=>false,
+"~#"=>false,
+        );
+        $this->runtest($sels);
+    }
+
+
+
+    function testWithModuleWildcard() {
+        $sels=array(
+"#~ctrl_meth@truc"=>array('unittest','ctrl','meth','truc'),
+"#~_meth@truc"=>array('unittest','default','meth','truc'),
+"#~ctrl_@truc"=>array('unittest','ctrl','index','truc'),
+"#~@truc"=>array('unittest','default','index','truc'),
+"#~#@truc"=>array('unittest','default','testselectoract','truc'),
+"#~ctrl_meth"=>array('unittest','ctrl','meth','classic'),
+"#~_meth"=>array('unittest','default','meth','classic'),
+"#~ctrl_"=>array('unittest','ctrl','index','classic'),
+"#~"=>array('unittest','default','index','classic'),
+"#~#"=>array('unittest','default','testselectoract','classic'),
+
+        );
+        $this->runtest($sels);
+    }
+
+   function testMisc() {
+        $sels=array(
+"ctrl_meth@truc"=>array('unittest','ctrl','meth','truc'),
+"_meth@truc"=>array('unittest','default','meth','truc'),
+"ctrl_@truc"=>array('unittest','ctrl','index','truc'),
+"@truc"=>array('unittest','default','index','truc'),
+"#@truc"=>array('unittest','default','testselectoract','truc'),
+"ctrl_meth"=>array('unittest','ctrl','meth','classic'),
+"_meth"=>array('unittest','default','meth','classic'),
+"ctrl_"=>array('unittest','ctrl','index','classic'),
+""=>array('unittest','default','index','classic'),
+"#"=>array('unittest','default','testselectoract','classic'),
+        );
+        $this->runtest($sels);
+    }
+
+
+    protected function runtest($list){
+
+
+        foreach($list as $sel=>$res){
             $s = new jSelectorAct($sel);
-            $this->assertTrue(($s->isValid() == true && $res !== false) || ( $s->isValid() == false && $res === false), ' test validité de '.$sel);
+            $msg='';
+            $ok = ($s->isValid() == true && $res !== false) || ( $s->isValid() == false && $res === false);
             if($s->isValid() &&  $res !== false){
-                
+                $ok = $ok
+                && $s->module == $res[0]
+                && $s->controller == $res[1]
+                && $s->method == $res[2]
+                && $s->request == $res[3];
+                if(!$ok)
+                    $msg=' contient ces données inattendues ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
             }
+
+            $this->assertTrue($ok , ' test de '.$sel);
+            if($msg)
+                $this->sendMessage($msg);
+            //if(!$ok) $this->dump($s);
         }
 
-         $temoin == $response, 'évnement simple');
-         $this->assertTrue(($response[0]['params'] == 'world'), 'ï¿½enement avec paramï¿½res');
     }
 }
 
