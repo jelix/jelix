@@ -39,7 +39,7 @@ class jDbConnectionMySQL extends jDbConnection {
    /**
    * Rollback since the last BEGIN
    */
-   public function rollBack (){
+   public function rollback (){
       $this->_doQuery ('ROLLBACK');
       $this->_doQuery ('SET AUTOCOMMIT=1');
    }

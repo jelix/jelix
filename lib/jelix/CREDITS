@@ -13,10 +13,19 @@ sous copyright 2001-2005 Copix Team (http://www.copix.org)
 Contributeurs
 -------------
 Loic Mathaud (bballizlife) : 
-    testeur, corrections de bugs, 
-    corrections orthographiques dans la documentation
-    contributions jTpl : version standalone du moteur de template
+    testeur, nombreuses corrections de bugs
+    contributions jTpl : version standalone du moteur de template, commentaires
     driver sqlite pour jDb
+    opérateurs supplementaires dans les daos
     adaptation du framework pour la réalisation d'applications fonctionnant en ligne de commande
+    reponse XML
+    corrections orthographiques dans la documentation
+    autres petites améliorations diverses
+
+Yannick Le Guédart (Torgan)
+    jAuthDriverClass
+    plugin jtpl date_format
+    Divers bug fix et petites améliorations
+
 Gildas Givaja (Giviz) : testeur, corrections de bugs
 Olivier Gambier (d-m-p) : review de code, corrections de bugs

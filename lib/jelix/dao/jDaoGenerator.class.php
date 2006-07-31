@@ -142,11 +142,11 @@ class jDaoGenerator {
 
          $src[] = '}else{';
 
-         if (($driverName=='mysql') || ($driverName=='sqlserver')) {
+         if (($driverName=='mysql') || ($driverName=='sqlserver') || ($driverName=='postgresql')) {
             $fields = $this->_getPropertiesBy('PrimaryFieldsExcludeAutoIncrement');
-         }elseif ($pkai->sequenceName != ''){
+         /*}elseif ($pkai->sequenceName != ''){
             $src[] = '    $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
-            $fields = $this->_getPropertiesBy('PrimaryTable');
+            $fields = $this->_getPropertiesBy('PrimaryTable');*/
          }else{
             $fields = $this->_getPropertiesBy('PrimaryTable');
          }
@@ -175,6 +175,8 @@ class jDaoGenerator {
             $src[] = '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
          }else if ($driverName=='sqlserver') {
             $src[] = '      if($record->'.$pkai->name.' < 1 ) $record->'.$pkai->name.'= $this->_conn->lastIdInTable(\''.$pkai->fieldName.'\',\''.$pTableRealName.'\');';
+         }else if ($driverName=='postgresql') {
+            $src[] = '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
          }
          $src[] = '    return $result;';
          $src[] = ' }else return false;';
@@ -542,7 +544,7 @@ class jDaoGenerator {
         foreach ($using as $id=>$field) {
             if ($field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement') {
                if($driverName=="postgresql" && !strlen($field->sequenceName)){
-                  $field->sequenceName=$tb.'_'.$field->name.'_seq';
+                  $field->sequenceName = $tb.'_'.$field->name.'_seq';
                }
                return $field;
             }
@@ -551,7 +553,7 @@ class jDaoGenerator {
     }
 
 
-   private function _buildSimpleConditions (&$fields, $fieldPrefix='', $forSelect=true){
+    private function _buildSimpleConditions (&$fields, $fieldPrefix='', $forSelect=true){
         $r = ' ';
 
         $first = true;
@@ -559,13 +561,13 @@ class jDaoGenerator {
             if (!$first){
                 $r .= ' AND ';
             }else{
-               $first = false;
+                $first = false;
             }
 
             if($forSelect){
-               $condition = $field->table.'.'.$field->fieldName;
+                $condition = $field->table.'.'.$field->fieldName;
             }else{
-               $condition = $field->fieldName;
+                $condition = $field->fieldName;
             }
 
             $var = '$'.$fieldPrefix.$field->name;
@@ -578,26 +580,26 @@ class jDaoGenerator {
     }
 
 
-   function _prepareValues ($fieldList, $motif='', $prefixfield=''){
-      $values = $fields = array();
-
-      foreach ((array)$fieldList as $fieldName=>$field) {
-         if ($motif != '' && $field->$motif == ''){
-               continue;
-         }
-
-         $value = $this->_preparePHPExpr('$'.$prefixfield.$fieldName, $field->datatype, true);
-
-         if($motif != ''){
-               $values[$field->name] = sprintf($field->$motif,'\'.'.$value.'.\'');
-         }else{
-               $values[$field->name] = '\'.'.$value.'.\'';
-         }
-
-         $fields[$field->name] = $field->fieldName;
-      }
-      return array($fields, $values);
-   }
+    function _prepareValues ($fieldList, $motif='', $prefixfield=''){
+        $values = $fields = array();
+    
+        foreach ((array)$fieldList as $fieldName=>$field) {
+            if ($motif != '' && $field->$motif == ''){
+                continue;
+            }
+    
+            $value = $this->_preparePHPExpr('$'.$prefixfield.$fieldName, $field->datatype, true);
+    
+            if($motif != ''){
+                $values[$field->name] = sprintf($field->$motif,'\'.'.$value.'.\'');
+            }else{
+                $values[$field->name] = '\'.'.$value.'.\'';
+            }
+    
+            $fields[$field->name] = $field->fieldName;
+        }
+        return array($fields, $values);
+    }
 
 
     /**

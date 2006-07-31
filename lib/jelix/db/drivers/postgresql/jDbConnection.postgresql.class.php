@@ -5,6 +5,7 @@
 * @version    $Id:$
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
+* @contributor Yannick Le Guédart
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -26,7 +27,7 @@ class jDbConnectionPostgreSQL extends jDbConnection {
         return $this->_doQuery('COMMIT');
     }
     
-    public function rollBack (){
+    public function rollback (){
         return $this->_doQuery('ROLLBACK');
     }
     
@@ -105,7 +106,7 @@ class jDbConnectionPostgreSQL extends jDbConnection {
             trigger_error(get_class($this).'::lastInstertId invalide sequence name',E_USER_WARNING);
             return false;
         }
-        $cur=$this->query(" select setval('$seqname',    nextval('$seqname')) as id");
+        $cur=$this->query("select currval('$seqname') as id");
         if($cur){
             $res=$cur->fetch();
             if($res)
