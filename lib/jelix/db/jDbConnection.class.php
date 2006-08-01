@@ -119,7 +119,7 @@ abstract class jDbConnection {
 
     abstract public function beginTransaction ();
     abstract public function commit ();
-    abstract public function rollBack ();
+    abstract public function rollback ();
     abstract public function prepare ($query);
     abstract public function errorInfo();
     abstract public function errorCode();
@@ -156,7 +156,7 @@ abstract class jDbConnection {
     abstract protected function _connect ();
 
     /**
-    * effectue la deconnection (pas besoin de faire le test sur l'id de connection
+    * effectue la deconnection (pas besoin de faire le test sur l'id de connection)
     * @abstract
     */
     abstract protected function _disconnect ();

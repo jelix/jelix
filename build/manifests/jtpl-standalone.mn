@@ -24,6 +24,7 @@ dd plugins/common
   modifier.spacify.php
   modifier.sprintf.php
   modifier.strip.php
+  modifier.strip_tags.php
   modifier.truncate.php
   modifier.wordwrap.php
 
