@@ -1,18 +1,24 @@
 <?php
+/**
+* @package    jelix
+* @subpackage jtpl_plugin
+* @version    $Id$
+* @author     Jouanneau Laurent
+* @copyright   2006 Jouanneau laurent
+* @link        http://www.jelix.org
+* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+*/
 
 /**
- * jTpl jdatetime modifier plugin
- *
- * Type:     modifier<br>
- * Name:     jdatetime<br>
- * Purpose:  change the format of a date
+ * modifier plugin : change the format of a date
  *
  * @param string
  * @param string
  * @param string
  * @return string
+ * @see jDateTime
  */
-function jtpl_modifier_jdatetime($date, $format_in = 'db_datetime', 
+function jtpl_modifier_jdatetime($date, $format_in = 'db_datetime',
                                  $format_out = 'lang_date') {
     $formats = array(
         'lang_date' => jDateTime::LANG_DFORMAT,

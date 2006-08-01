@@ -1,21 +1,23 @@
 <?php
-
 /**
- * jTpl date_format modifier plugin
- * adapted from date_format plugin of Smarty
- * 
- * Input:
- *		 - string: input date string
- *		 - format: strftime format for output
- *		 - default_date: default date if $string is empty
- * 
+ * Plugin from smarty project and adapted for jtpl
+ * @package    jelix
+ * @subpackage jtpl_plugin
+ * @version    $Id$
  * @author        Smarty team
  * @contributor   Yannick Le Guédart <yannick at over-blog dot com>
- * @copyright     Smarty team, Yannick Le Guédart
- * @link          http://smarty.php.net
- * @param string
- * @param string
- * @param string
+ * @copyright  2001-2003 ispi of Lincoln, Inc., Yannick Le Guédart
+ * @link http://smarty.php.net/
+ * @link http://jelix.org/
+ * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+
+/**
+ * modifier plugin : format a date
+ *
+ * @param string $string input date string
+ * @param string $format strftime format for output
+ * @param string $default_date default date if $string is empty
  * @return string|void
  */
 function jtpl_modifier_date_format( $string, $format="%b %e, %Y",

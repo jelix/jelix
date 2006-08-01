@@ -4,7 +4,6 @@
 * @subpackage  acl
 * @version     $Id:$
 * @author      Laurent Jouanneau
-* @contributor
 * @copyright   2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -12,14 +11,22 @@
 
 
 /**
- * Classe pour modifier les droits
+ * This class is used to manage rights
+ * It needs the acl module.
+ * @package     jelix
+ * @subpackage  acl
+ * @static
  */
 class jAclManager {
 
+    /**
+     * @internal The constructor is private, because all methods are static
+     */
     private function __construct (){ }
 
     /**
-     * @return boolean  vrai si tout est ok
+     * specify the value of a right on the given subject/group/resource
+     * @return boolean  true if the right is set
      */
     public static function setRight($group, $subject, $value , $resource=''){
 
@@ -61,12 +68,22 @@ class jAclManager {
        return true;
     }
 
+    /**
+     * remove the right on the given subject/resource, for all groups
+     * @param string  $subject the key of the subject
+     * @param string $resource the id of a resource
+     */
     public static function removeResourceRight($subject, $resource){
         $daoright = jDao::get('acl~jaclrights');
         $daoright->deleteBySubjRes($subject, $resource);
     }
 
-
+    /**
+     * create a new subject
+     * @param string  $subject the key of the subject
+     * @param int $id_aclvalgrp the id of the values group with which the right can be set
+     * @param string $label_key the key of a locale which represents the label of the subject
+     */
     public static function addSubject($subject, $id_aclvalgrp, $label_key){
          // ajoute un sujet dans la table jacl_subject
          $daosbj = jDao::get('acl~jaclsubject');
@@ -78,6 +95,10 @@ class jAclManager {
 
     }
 
+    /**
+     * Delete the given subject
+     * @param string  $subject the key of the subject
+     */
     public static function removeSubject($subject){
       // supprime dans jacl_rights
       // supprime dans jacl_subject

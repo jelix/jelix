@@ -1,27 +1,19 @@
 <?php
 /**
- * Smarty plugin
- * @package Smarty
- * @subpackage plugins
+ * Plugin from smarty project and adapted for jtpl
+ * @package    jelix
+ * @subpackage jtpl_plugin
+ * @version    $Id$
+ * @author      Monte Ohrt <monte at ohrt dot com>
+ * @copyright  2001-2003 ispi of Lincoln, Inc.
+ * @link http://smarty.php.net/
+ * @link http://jelix.org/
+ * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-
 /**
- * Smarty plugin
- *
- * Type:     modifier<br>
- * Name:     nl2br<br>
- * Date:     Feb 26, 2003
- * Purpose:  convert \r\n, \r or \n to <<br>>
- * Input:<br>
- *         - contents = contents to replace
- *         - preceed_test = if true, includes preceeding break tags
- *           in replacement
+ * modifier plugin : convert \r\n, \r or \n to <<br/>>
  * Example:  {$text|nl2br}
- * @link http://smarty.php.net/manual/en/language.modifier.nl2br.php
- *          nl2br (Smarty online manual)
- * @version  1.0
- * @author   Monte Ohrt <monte at ohrt dot com>
  * @param string
  * @return string
  */

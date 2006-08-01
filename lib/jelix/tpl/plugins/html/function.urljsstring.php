@@ -1,23 +1,25 @@
 <?php
 /**
 * @package    jelix
-* @subpackage template plugins
+* @subpackage jtpl_plugin
 * @version    $Id$
 * @author     Jouanneau Laurent
-* @contributor
 * @copyright  2005-2006 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
+ * function plugin :  write the url corresponding to the given jelix action for javascript
  *
- * @param $tpl jtpl
- * @param $selector string     the action selector
- * @param $params   array      paramètres url et leurs valeurs
- * @param $jsparam  array      paramètres url dynamique et le nom de leur variable js correspondante
+ * it creates a javascript string, that contains the url, with dynamic javasript parameters<br/>
+ * example : {urljsstring 'acl~admin_rightslist',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};<br/>
+ * it will produce: "index.php?module=acl&action=admin_rightslist&grpid="+idgroup+"&__rnd="+ Math.random();
+ * @param jTpl $tpl template engine
+ * @param string $selector selector action
+ * @param array $params parameters for the url
+ * @param array $jsparam array : key=name of a url parameter, value=piece of javascript code ( variable name for example)
  */
-
 function jtpl_function_urljsstring($tpl, $selector, $params=array(), $jsparams=array())
 {
     $search = array();

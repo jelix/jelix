@@ -1,24 +1,20 @@
 <?php
 /**
- * Smarty plugin
- * @package Smarty
- * @subpackage plugins
+ * Plugin from smarty project and adapted for jtpl
+ * @package    jelix
+ * @subpackage jtpl_plugin
+ * @version    $Id$
+ * @author      Monte Ohrt <monte at ohrt dot com>
+ * @copyright  2001-2003 ispi of Lincoln, Inc.
+ * @link http://smarty.php.net/
+ * @link http://jelix.org/
+ * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-
 /**
- * Smarty strip modifier plugin
+ * modifier plugin :  Replace all repeated spaces, newlines, tabs with a single space or supplied replacement string
  *
- * Type:     modifier<br>
- * Name:     strip<br>
- * Purpose:  Replace all repeated spaces, newlines, tabs
- *           with a single space or supplied replacement string.<br>
  * Example:  {$var|strip} {$var|strip:"&nbsp;"}
- * Date:     September 25th, 2002
- * @link http://smarty.php.net/manual/en/language.modifier.strip.php
- *          strip (Smarty online manual)
- * @author   Monte Ohrt <monte at ohrt dot com>
- * @version  1.0
  * @param string
  * @param string
  * @return string

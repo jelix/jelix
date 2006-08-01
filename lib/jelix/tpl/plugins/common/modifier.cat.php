@@ -1,26 +1,22 @@
 <?php
 /**
- * Smarty plugin
- * @package Smarty
- * @subpackage plugins
+ * Plugin from smarty project and adapted for jtpl
+ * @package    jelix
+ * @subpackage jtpl_plugin
+ * @version    $Id$
+ * @author     Monte Ohrt <monte at ohrt dot com>
+ * @copyright 2001-2003 ispi of Lincoln, Inc.
+ * @link http://smarty.php.net/
+ * @link http://jelix.org/
+ * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-
 /**
- * Smarty cat modifier plugin
+ * Modifier plugin : catenate a value to a variable
  *
- * Type:     modifier<br>
- * Name:     cat<br>
- * Date:     Feb 24, 2003
- * Purpose:  catenate a value to a variable
- * Input:    string to catenate
- * Example:  {$var|cat:"foo"}
- * @link http://smarty.php.net/manual/en/language.modifier.cat.php cat
- *          (Smarty online manual)
- * @author   Monte Ohrt <monte at ohrt dot com>
- * @version 1.0
- * @param string
- * @param string
+ * Example:  {$var|cat:"foo"}  {$var|cat:$othervar}
+ * @param string $string the string to be modified
+ * @param string $cat the string to concat to $string
  * @return string
  */
 function jtpl_modifier_cat($string, $cat)

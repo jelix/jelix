@@ -146,4 +146,4 @@ jbt-dist:
 	tar czf $(DIST)/jbuildtools-$(JBT_VERSION).tar.gz  -C $(DIST) jbuildtools/
 
 docs: dev-jelix-lib
-	$(PHPDOC) -d $(DISTHACKER)/lib/jelix/ -o HTML:Smarty:jelix -t $(DOCS) -ti "Jelix API Reference"
+	$(PHPDOC) -d $(DISTHACKER)/lib/jelix/ -o HTML:Smarty:jelix -t $(DOCS) -ct "contributor,licence" -i *.ini.php -ti "Jelix API Reference"

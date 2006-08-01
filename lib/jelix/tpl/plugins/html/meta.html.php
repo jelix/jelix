@@ -1,15 +1,22 @@
 <?php
 /**
 * @package    jelix
-* @subpackage template plugins
+* @subpackage jtpl_plugin
 * @version    $Id$
 * @author     Jouanneau Laurent
-* @contributor
 * @copyright  2005-2006 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+/**
+ * meta plugin :  modify an html response object
+ *
+ * @see jResponseHtml
+ * @param jTpl $tpl template engine
+ * @param string $method indicates what you want to specify (possible values : js,css,bodyattr)
+ * @param mixed $param parameter (a css style sheet for "css" for example)
+ */
 function jtpl_meta_html($tpl, $method, $param)
 {
     global $gJCoord;

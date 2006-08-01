@@ -1,19 +1,18 @@
 <?php
 /**
- * Smarty plugin
- * @package Smarty
- * @subpackage plugins
+ * Plugin from smarty project and adapted for jtpl
+ * @package    jelix
+ * @subpackage jtpl_plugin
+ * @version    $Id$
+ * @author
+ * @copyright  2001-2003 ispi of Lincoln, Inc.
+ * @link http://smarty.php.net/
+ * @link http://jelix.org/
+ * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-
 /**
- * Smarty count_characters modifier plugin
- *
- * Type:     modifier<br>
- * Name:     count_characteres<br>
- * Purpose:  count the number of characters in a text
- * @link http://smarty.php.net/manual/en/language.modifier.count.characters.php
- *          count_characters (Smarty online manual)
+ * Modifier plugin : count the number of characters in a text
  * @param string
  * @param boolean include whitespace in the character count
  * @return integer

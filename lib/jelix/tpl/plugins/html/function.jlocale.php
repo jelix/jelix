@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage template plugins
+* @subpackage jtpl_plugin
 * @version    $Id$
 * @author     Jouanneau Laurent
 * @contributor
@@ -10,6 +10,13 @@
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+/**
+ * function plugin :  write the localized string corresponding to the given locale key
+ *
+ * example : {jlocale 'myModule~my.locale.key'}
+ * @param jTpl $tpl template engine
+ * @param string $locale the locale key
+ */
 function jtpl_function_jlocale($tpl, $locale)
 {
      if(func_num_args() == 3 && is_array(func_get_arg(2))){
