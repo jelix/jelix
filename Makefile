@@ -1,5 +1,6 @@
 SHELL=/bin/sh
 PHP=/usr/bin/php
+PHPDOC=../../phpdoc/phpdoc
 
 ifndef LIB_VERSION
 LIB_VERSION = $(shell cat lib/jelix/VERSION)
@@ -33,6 +34,11 @@ endif
 ifndef DEV
 DEV=_dev
 endif
+ifndef DOCS
+DOCS=_docs
+endif
+
+
 
 DISTJELIX="$(DIST)/jelix-$(LIB_VERSION)"
 DISTHACKER="$(DEV)"
@@ -54,6 +60,7 @@ default:
 	@echo "   dev-all dev-jelix dev-jelix-lib dev-myapp dev-testapp dev-modules"
 	@echo "   jtpl jtpl-dist"
 	@echo "   jbt-dist"
+	@echo "   docs"
 	@echo "paramètres facultatifs (valeurs actuelles) :"
 	@echo "   DIST : repertoire cible pour les distributions (" $(DIST) ")"
 	@echo "   DEV : repertoire cible pour developper (" $(DEV) ")"
@@ -138,4 +145,5 @@ jbt-dist:
 	&& echo "$(JBT_VERSION)" > "$(DISTJBT)/VERSION"
 	tar czf $(DIST)/jbuildtools-$(JBT_VERSION).tar.gz  -C $(DIST) jbuildtools/
 
-
+docs: dev-jelix-lib
+	$(PHPDOC) -d $(DISTHACKER)/lib/jelix/ -o HTML:Smarty:jelix -t $(DOCS) -ti "Jelix API Reference"

@@ -1,5 +1,7 @@
 <?php
 /**
+* Initialize all defines and includes necessary files
+* 
 * @package  jelix
 * @subpackage core
 * @version  $Id$
@@ -10,10 +12,19 @@
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+/**
+ * Version number of Jelix
+ * @name  JELIX_VERSION
+ */
 #expand define ('JELIX_VERSION', '__LIB_VERSION__');
+
+/**
+ * base of namespace path used in xml files of jelix
+ * @name  JELIX_NAMESPACE_BASE
+ */
 define ('JELIX_NAMESPACE_BASE' , 'http://jelix.org/ns/');
 
-// all path needed by jelix
+
 define ('JELIX_LIB_PATH',         dirname (__FILE__).'/');
 define ('JELIX_LIB_CORE_PATH',    JELIX_LIB_PATH.'core/');
 define ('JELIX_LIB_UTILS_PATH',   JELIX_LIB_PATH.'utils/');
@@ -48,16 +59,41 @@ require_once (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jIPlugin.iface.php');
 
-// global variables
+/**
+ * The main object of Jelix which process all things
+ * @global jCoordinator $gJCoord
+ * @name $gJCoord
+ */
 $gJCoord = null;
-$gJConfig = array();
+
+/**
+ * Object that contains all configuration values
+ * @global stdobject $gJConfig
+ * @name $gJConfig
+ */
+$gJConfig = null;
+
+
+/**
+ * array used as a stack to store module context
+ * @global array $gJContext
+ * @name $gJContext
+ */
 $gJContext = array();
 
+/**
+ * contains path for __autoload function
+ * @global array $gLibPath
+ * @name $gLibPath
+ * @see __autoload()
+ */
 $gLibPath=array('Db'=>JELIX_LIB_DB_PATH, 'Dao'=>JELIX_LIB_DAO_PATH,
  'Forms'=>JELIX_LIB_FORMS_PATH, 'Event'=>JELIX_LIB_EVENTS_PATH,
  'Tpl'=>JELIX_LIB_TPL_PATH, 'Acl'=>JELIX_LIB_ACL_PATH, 'Controller'=>JELIX_LIB_CTRL_PATH);
 
-
+/** 
+ * __autoload function used by php to try to load an unknown class
+ */
 function __autoload($class){
    if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms).*$/', $class, $m)){
        $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
