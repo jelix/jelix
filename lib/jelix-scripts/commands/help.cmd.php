@@ -33,7 +33,7 @@ class helpCommand extends JelixScriptCommand {
        }else{
           $this->disp("
 Utilisation générale :
-    php jelix.php [--NOM_APP] COMMANDE [OPTIONS] [PARAMETRES]
+    ".$_SERVER['argv'][0]." [--NOM_APP] COMMANDE [OPTIONS] [PARAMETRES]
 
     NOM_APP  : nom de l'application concernée. Si non présent, le nom de
                l'application doit être dans une variable d'environnement
@@ -49,7 +49,7 @@ Utilisation générale :
     Les options et paramètres à indiquer dépendent de la commande. Les options
     sont toujours facultatives, ainsi que certains paramètres.
     Consulter l'aide d'une commande en faisant :
-       php jelix help COMMANDE
+       ".$_SERVER['argv'][0]." help COMMANDE
 
 Liste des commandes disponibles :\n\t");
 

@@ -27,8 +27,8 @@ class createappCommand extends JelixScriptCommand {
     scripts en ligne de commande.
 
     Le nom de l'application doit être indiqué
-    1) soit en premier paramètre du script jelix.php
-          jelix.php --helloApp
+    1) soit en premier paramètre du script jelix
+          ".$_SERVER['argv'][0]." --helloApp
     2) soit dans une variable d'environnement JELIX_APP_NAME.
     ";
 
