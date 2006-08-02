@@ -9,7 +9,3 @@ jx|remotetreecriterion {
     -moz-box-orient:horizontal;
     -moz-binding: url("jxbl.xml#remotetreecriterion");
 }
-
-
-
-xul|command#foo { -moz-binding:url("jxbl.xml#task") }
