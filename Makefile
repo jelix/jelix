@@ -2,6 +2,8 @@ SHELL=/bin/sh
 PHP=/usr/bin/php
 PHPDOC=../../phpdoc/phpdoc
 
+CURRENT_PATH = $(shell pwd)
+
 ifndef LIB_VERSION
 LIB_VERSION = $(shell cat lib/jelix/VERSION)
 endif
@@ -146,4 +148,6 @@ jbt-dist:
 	tar czf $(DIST)/jbuildtools-$(JBT_VERSION).tar.gz  -C $(DIST) jbuildtools/
 
 docs: dev-jelix-lib
-	$(PHPDOC) -d $(DISTHACKER)/lib/jelix/ -o HTML:Smarty:jelix -t $(DOCS) -ct "contributor,licence" -i *.ini.php -ti "Jelix API Reference"
+	$(PHPDOC) -tb $(CURRENT_PATH)/build/phpdoc/ -d $(DISTHACKER)/lib/jelix/ -t $(DOCS) \
+	-o "HTML:Smarty:jelix" -s on -ct "contributor,licence" -i *.ini.php \
+	-ti "Jelix API Reference" -ric "README,INSTALL,CHANGELOG,CREDITS,LICENCE,VERSION"
