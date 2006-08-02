@@ -97,7 +97,7 @@ foreach($script as $nbline=>$line){
         }
 
         $preproc->setVars($_SERVER);
-        $contents = $preproc->run(file_get_contents($sourcedir.$currentsrcdir.$m[2]));
+        $contents = $preproc->parseFile($sourcedir.$currentsrcdir.$m[2]);
         if($contents===false){
             echo "$ficlist : line $nbline, cannot process file ".$m[2]." (error code=".$preproc->errorCode."  line=".$preproc->errorLine.")\n";
             $hasError=true;

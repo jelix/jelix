@@ -31,6 +31,7 @@ class jPreProcessor{
   
   const ERR_SYNTAX     = 1;
   const ERR_IF_MISSING = 2;
+  const ERR_ENDIF_MISSING = 2;
 
 
   public function __construct(){
@@ -49,19 +50,26 @@ class jPreProcessor{
      $this->_variables = $arr;
   }
 
-  public function run($sourceContent){
+  public function parseFile($filename){
    $this->errorCode=0;
    $this->errorLine=0;
+   $this->_blockstack = array();
+
+   // on sauve les variables pour les retrouver intact aprés le parsing
+   // de façon à pouvoir rééxecuter plusieurs fois run sur des contenus différents
    $this->_savedVariables= $this->_variables;
-   $source =explode("\n",$sourceContent);
+
+   $source =explode("\n",file_get_contents($filename));
 
    $result='';
+   // on parcours chaque ligne du source
    foreach($source as $nb=>$line){
-     if(preg_match('/^\#(ifdef|expand|define|ifndef|elifdef)\s+([^\s]*)\s*$/m',$line,$m)){
+     $isOpen = !(end($this->_blockstack) & self::BLOCK_NO);
+
+     if(preg_match('/^\#(ifdef|define|ifndef|elifdef|undef)\s+(\w+)\s*$/m',$line,$m)){
        switch($m[1]){
            case 'ifdef':
-              $end = end($this->_blockstack);
-              if( $end &  self::BLOCK_NO ){
+              if( !$isOpen ){
                    array_push($this->_blockstack, self::BLOCK_IF_NO);
               }else{
                   if(isset($this->_variables[$m[2]])){
@@ -72,17 +80,20 @@ class jPreProcessor{
               }
               $source[$nb]=false;
               break;
-           case 'define':
-              /*if(preg_match('/^(\w+)(?:\s+(\w+))?$/m',$m[2],$m2)){
-
-              }else{
-
-
-              }*/
+           case 'define': // define avec un seul argument.
+              if($isOpen ){
+                $this->_variables[$m[2]] = '';
+              }
+              $source[$nb]=false;
+              break;
+           case 'undef':
+              if($isOpen ){
+                unset($this->_variables[$m[2]]);
+              }
               $source[$nb]=false;
               break;
            case 'ifndef':
-              if(end($this->_blockstack) &  self::BLOCK_NO){
+              if(!$isOpen){
                    array_push($this->_blockstack, self::BLOCK_IF_NO);
               }else{
                   if(isset($this->_variables[$m[2]])){
@@ -115,14 +126,20 @@ class jPreProcessor{
        /*echo $m[1],':';
        var_dump($this->_blockstack);
        echo "\n";*/
-       
+
+     }elseif(preg_match('/^\#(define)\s+(\w+)\s+(.+)$/m',$line,$m)){
+        // define avec deux arguments
+        if($isOpen){
+            $this->_variables[$m[2]] = trim($m[3]);
+        }
+        $source[$nb]=false;
+
      }elseif(preg_match('/^\#(expand)\s(.*)$/m',$line,$m)){
-        if(! (end($this->_blockstack) & self::BLOCK_NO)){
+        if($isOpen){
             $source[$nb]=preg_replace('/\_\_(\w*)\_\_/e', '(isset($this->_variables["\\1"])?$this->_variables["\\1"]:"__\\1__")',$m[2]);
         }else{
             $source[$nb]=false;
         }
-
      
      }elseif(preg_match('/^\#(endif|else)\s*$/m',$line,$m)){
         if($m[1] == 'endif'){
@@ -150,7 +167,7 @@ class jPreProcessor{
             $source[$nb]=false;
         }
      }else{
-         if(end($this->_blockstack) &  self::BLOCK_NO){
+         if(!$isOpen){
             $source[$nb]=false;
          }
      }
@@ -162,10 +179,12 @@ class jPreProcessor{
      }
    }
 
+   if(count($this->_blockstack))
+     return $this->doError($nb,self::ERR_ENDIF_MISSING);
+
    $this->_variables = $this->_savedVariables;
    
    return $result;
-   //return implode("\n",$source);
  }
 
  protected function doError($line,$code){

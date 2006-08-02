@@ -55,6 +55,12 @@ class PreProcTestCase extends UnitTestCase {
            'result7_4.txt'=>array('BAZ'=>true),
            'result7_5.txt'=>array('BAZ'=>true, 'BAR'=>true),
           ),
+      'source_define.txt'=>array(
+            'result_define.txt'=>array('FOO'=>true),
+          ),
+      'source_define2.txt'=>array(
+            'result_define2.txt'=>array('FOO'=>'ok'),
+          ),
     );
     
     function __construct() {
@@ -71,10 +77,9 @@ class PreProcTestCase extends UnitTestCase {
     function testSimple(){
       $proc = new jPreProcessor();
       foreach($this->testcase as $source=>$datas){
-         $contents = file_get_contents(PP_DATA_DIR.$source);
          foreach($datas as $result=>$vars){          
            $proc->setVars($vars);
-           $res = $proc->run($contents);
+           $res = $proc->parseFile(PP_DATA_DIR.$source);
            $this->assertEqual($res, file_get_contents(PP_DATA_DIR.$result));
          }
       }

@@ -1,0 +1,15 @@
+aaaaa
+
+bbbbb
+
+#expand ccc __FOO__ ccc
+
+#undef FOO
+
+#expand ddd __FOO__ ddd
+
+#define FOO jelix c'est cool
+
+#expand il a dit : __FOO__
+
+ffffff

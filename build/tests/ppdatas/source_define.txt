@@ -1,0 +1,21 @@
+aaaaa
+
+bbbbb
+
+#ifdef FOO
+ccccc
+#endif
+
+#undef FOO
+
+#ifdef FOO
+dddddd
+#endif
+
+#define FOO
+
+#ifdef FOO
+eeeeee
+#endif
+
+ffffff

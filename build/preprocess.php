@@ -54,11 +54,9 @@ function normalizeDir($dirpath){
 }
 
 
-$source = file_get_contents($sourcefile);
-
 $proc = new jPreProcessor();
 $proc->setVars($_SERVER);
-$dist = $proc->run($source);
+$dist = $proc->parseFile($sourcefile);
 
 
 if($dist === false){
