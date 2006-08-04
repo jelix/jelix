@@ -254,7 +254,7 @@ class jCoordinator {
     }
 
 
-    /**
+    /*
     * permet à un traitement exterieur (page, zone) de recuperer un element de configuration d'un plugin
     * @param string   $plugin_name   nom du plugin
     * @param string   $plugin_parameter_name   nom de la propriete de l'objet de configuration du plugin

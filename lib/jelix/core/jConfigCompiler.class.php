@@ -26,8 +26,10 @@ class jConfigCompiler {
         }
 
         if($configFile !='defaultconfig.ini.php'){
-            if( false === ($userConfig = @parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true)))
+            if(!file_exists(JELIX_APP_CONFIG_PATH.$configFile))
                 die(" fichier de configuration manquant !");
+            if( false === ($userConfig = @parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true)))
+                die(" Erreur dans le fichier de configuration !");
             self::_mergeConfig($config, $userConfig);
         }
 

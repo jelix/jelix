@@ -254,11 +254,7 @@ class jUrl {
             return $gJCoord->request->url->params;
         }
         $sel = new JSelectorAct($actionSelector);
-        if($sel->isValid()){
-           return array('module'=>$sel->module, 'action'=>$sel->resource, 'request'=>$sel->request);
-        }else{
-          return false;
-        }
+        return array('module'=>$sel->module, 'action'=>$sel->resource, 'request'=>$sel->request);
     }
 
 

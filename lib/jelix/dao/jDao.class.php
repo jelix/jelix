@@ -33,9 +33,6 @@ class jDao {
             $sel = new jSelectorDao($DaoId, $profil);
         else $sel = $DaoId;
 
-        if(!$sel->isValid())
-           throw new jException('jelix~errors.selector.invalid',$sel->toString(true));
-
         $c = $sel->getDaoClass();
         if(!class_exists($c,false)){
             $results = jIncluder::inc($sel);

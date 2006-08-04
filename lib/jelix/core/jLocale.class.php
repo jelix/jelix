@@ -195,14 +195,15 @@ class jLocale {
         $pos = strpos ($key, '.');
         $keySelector = substr ($key, 0, $pos);
         $messageKey = substr($key, $pos+1);
-
-        $file = new jSelectorLoc($keySelector, $locale, $charset);
-
-        if (!$file->isValid()){
+        
+        try{
+            $file = new jSelectorLoc($keySelector, $locale, $charset);
+        }catch(jExceptionSelector $e){
             if($key == 'jelix~errors.locale.key.selector.invalid'){
                 return '(200)The given locale key "'.$args[0].'" is invalid  (for module '.$args[1].', charset '.$args[2].', lang '.$args[3].') (internal error ?)';
             }else{
                 trigger_error (jLocale::get ('jelix~errors.locale.key.selector.invalid', array($key,$file->module, $charset, $locale)), E_USER_ERROR);
+                return '(200)Invalid Local Key "'.$args[0].'"'; // au cas où le trigger error n'était pas trappé
             }
         }
 

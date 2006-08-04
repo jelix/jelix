@@ -15,6 +15,7 @@ class UTCreateUrls extends UnitTestCase {
     protected $oldParams;
     protected $oldRequestType;
     protected $oldUrlengineConf;
+    protected $oldModule;
     protected $simple_urlengine_entrypoints;
 
 
@@ -26,6 +27,7 @@ class UTCreateUrls extends UnitTestCase {
       $this->oldRequestType = $gJCoord->request->type;
       $this->oldUrlengineConf = $gJConfig->urlengine;
       $this->simple_urlengine_entrypoints = $gJConfig->simple_urlengine_entrypoints;
+      $this->oldModule = $gJConfig->_modulesPathList;
     }
 
     function tearDown() {
@@ -36,6 +38,7 @@ class UTCreateUrls extends UnitTestCase {
       $gJCoord->request->type=$this->oldRequestType;
       $gJConfig->urlengine = $this->oldUrlengineConf;
       $gJConfig->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
+      $gJConfig->_modulesPathList=$this->oldModule ;
     }
 
 
@@ -71,6 +74,7 @@ class UTCreateUrls extends UnitTestCase {
       // celle ci n'a pas de définition dans urls.xml *exprés*
       $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
+      $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
 
       $trueResult=array(
           "/index.php?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
@@ -78,12 +82,17 @@ class UTCreateUrls extends UnitTestCase {
           "/testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
           "/foo/bar.php?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
           "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          false,
           "/xmlrpc.php",
        );
 
       $this->sendMessage("simple, multiview = false");
       foreach($urlList as $k=>$urldata){
-         $url = jUrl::get ($urldata[0], $urldata[1]);
+          try{
+            $url = jUrl::get ($urldata[0], $urldata[1]);
+         }catch(jExceptionSelector $e){
+            $url = false;
+         }
          $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
       }
 
@@ -96,11 +105,16 @@ class UTCreateUrls extends UnitTestCase {
           "/testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
           "/foo/bar?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
           "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          false,
           "/xmlrpc",
        );
 
       foreach($urlList as $k=>$urldata){
-         $url = jUrl::get ($urldata[0], $urldata[1]);
+          try{
+            $url = jUrl::get ($urldata[0], $urldata[1]);
+         }catch(jExceptionSelector $e){
+            $url = false;
+         }
          $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
       }
 
@@ -125,6 +139,8 @@ class UTCreateUrls extends UnitTestCase {
          'notfoundAct'=>'jelix~notfound'
        );
 
+      $gJConfig->_modulesPathList['news']='/';
+
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
 
 
@@ -136,6 +152,7 @@ class UTCreateUrls extends UnitTestCase {
       // celle ci n'a pas de définition dans urls.xml *exprés*
       $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
+      $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('news~bar', array('aaa'=>'bbb'));
 
       $trueResult=array(
@@ -144,16 +161,20 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php/test/cms/actualite/65-c-est-la-fete-au-village",
           "/foo/bar.php/withhandler/premier/deuxieme",
           "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          false,
           "/xmlrpc.php",
           "/news.php?aaa=bbb&action=default_bar"
        );
 
       $this->sendMessage("significant, multiview = false");
       foreach($urlList as $k=>$urldata){
-         $url = jUrl::get ($urldata[0], $urldata[1]);
+         try{
+            $url = jUrl::get ($urldata[0], $urldata[1]);
+         }catch(jExceptionSelector $e){
+            $url = false;
+         }
          $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
       }
-
 
       $this->sendMessage("significant, multiview = true");
       $gJConfig->urlengine['multiview']=true;
@@ -163,14 +184,21 @@ class UTCreateUrls extends UnitTestCase {
           "/index/test/cms/actualite/65-c-est-la-fete-au-village",
           "/foo/bar/withhandler/premier/deuxieme",
           "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          false,
           "/xmlrpc",
           "/news?aaa=bbb&action=default_bar"
        );
 
       foreach($urlList as $k=>$urldata){
-         $url = jUrl::get ($urldata[0], $urldata[1]);
+         try{
+            $url = jUrl::get ($urldata[0], $urldata[1]);
+         }catch(jExceptionSelector $e){
+            $url = false;
+         }
          $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
       }
+
     }
+
 }
 ?>

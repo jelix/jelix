@@ -1,5 +1,12 @@
 <?php
 /**
+* Declare all differents classes corresponding to main jelix selectors
+*
+* a selector is a string refering to a file or a ressource, by indicating its module and its name.
+* For example : "moduleName~resourceName". There are several type of selector, depending on the
+* resource type. Selector objects get the real path of the corresponding file, the name of the
+* compiler (if the file has to be compile) etc.
+* So here, there is a selector class for each selector type.
 * @package    jelix
 * @subpackage core
 * @version    $Id$
@@ -8,51 +15,84 @@
 * @copyright  2005-2006 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-* inspiré des selecteurs de Copix http://www.copix.org
 */
 
 /**
-* Instancie un objet jISelector en fonction du selecteur donné
-* @param string $id  le selecteur au format : "type:module|fichier"
-* @return jISelector    l'objet selecteur correspondant
+* Create instance of selectors object
+* @package    jelix
+* @subpackage core
 */
 class jSelectorFactory {
-    function create ($id){
-        if(preg_match("/^([a-z]{3,5})\:([\w~\/\.]+)$/", $id, $m)){
+    private function __construct(){}
+
+    /**
+     * Create an instance of a selector object corresponding to the given selector
+     * @param string $selstr  the selector. It should be a full selector : "type:module~resource" (not "module~resource")
+     * @return jISelector the corresponding selector
+     */
+    static public function create ($selstr){
+        if(preg_match("/^([a-z]{3,5})\:([\w~\/\.]+)$/", $selstr, $m)){
             $cname='jSelector'.$m[1];
             if(class_exists($cname)){
                 $sel = new $cname($m[2]);
-                if($sel->isValid())
-                    return $sel;
+                return $sel;
             }
         }
-        trigger_error (jLocale::get ('jelix~errors.selector.unknown', $id));
-        $ret = null;
-        return $ret;
+        throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', $id);
     }
 }
 
 /**
- * interface d'un objet selecteur
+ * interface of selector classes
+ * @package    jelix
+ * @subpackage core
  */
 interface jISelector {
+    /**
+     * @return string file path corresponding to the resource pointing by the selector
+     */
     public function getPath ();
-    public function isValid();
+    /**
+     * @return string file path of the compiled file (if the main file should be compiled by jelix)
+     */
     public function getCompiledFilePath ();
+    /**
+     * @return jICompiler the compiler used to compile file
+     */
     public function getCompiler();
+    /**
+     * @return boolean true if the compiler compile many file at one time
+     */
     public function useMultiSourceCompiler();
+    /**
+     * @param boolean $full true if you want a full selector ("type:...")
+     * @return string the selector
+     */
     public function toString($full=false);
 }
 
+
 /**
-* classe de base pour les selecteurs des fichiers de modules
-*/
+ * Exception for selector errors
+ * @package    jelix
+ * @subpackage core
+ */
+class jExceptionSelector extends jException { }
+
+/**
+ * base class for all selector concerning module files
+ *
+ * General syntax for them : "module~resource".
+ * Syntax of resource depend on the selector type.
+ * module is optional.
+ * @package    jelix
+ * @subpackage core
+ */
 abstract class jSelectorModule implements jISelector {
-    public $type = '_module';
     public $module = null;
     public $resource = null;
 
-    protected $_valid;
+    protected $type = '_module';
     protected $_dirname='';
     protected $_suffix='';
     protected $_cacheSuffix='.php';
@@ -64,7 +104,6 @@ abstract class jSelectorModule implements jISelector {
 
     function __construct($sel){
         if(preg_match("/^(([\w\.]+)~)?([\w\.]+)$/", $sel, $m)){
-            $this->_valid = true;
             if($m[1]!='' && $m[2]!=''){
                 $this->module = $m[2];
             }else{
@@ -72,22 +111,17 @@ abstract class jSelectorModule implements jISelector {
             }
             $this->resource = $m[3];
             $this->_createPath();
+            $this->_createCachePath();
         }else{
-            $this->_valid = false;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', $sel);
         }
     }
 
     public function getPath (){
-        $this->_createPath();
         return $this->_path;
     }
 
-    public function isValid(){
-        return $this->_valid;
-    }
-
     public function getCompiledFilePath (){
-        $this->_createCachePath();
         return $this->_cachePath;
     }
 
@@ -113,13 +147,11 @@ abstract class jSelectorModule implements jISelector {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            $this->_valid = false;
-            return;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
         }
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
         if (!is_readable ($this->_path)){
-            $this->_path=='';
-            $this->_valid = false;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
         }
     }
 
@@ -130,10 +162,16 @@ abstract class jSelectorModule implements jISelector {
 
 
 /**
- * sélecteur d'action
+ * Action selector
+ *
+ * main syntax: "module~action:requestType". module should be a valid module name or # (#=says to get
+ * the module of the current request). action should be an action name (controller_method).
+ * all part are optional, but it should have one part at least.
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorAct extends jSelectorModule {
-    public $type = 'act';
+    protected $type = 'act';
     public $request = '';
     public $controller = '';
     public $method='';
@@ -144,7 +182,6 @@ class jSelectorAct extends jSelectorModule {
 
         if(preg_match("/^(?:([\w\.]+|\#)~)?([\w\.]+|\#)?(?:@([\w\.]+))?$/", $sel, $m)){
             $m=array_pad($m,4,'');
-            $this->_valid = true;
             if($m[1]!=''){
                 if($m[1] == '#')
                     $this->module = $gJCoord->moduleName;
@@ -175,15 +212,14 @@ class jSelectorAct extends jSelectorModule {
 
             $this->_createPath();
         }else{
-            $this->_valid = false;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', $sel);
         }
     }
 
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            $this->_path='';
-            $this->_valid = false;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
         }else{
             $this->_path = $gJConfig->_modulesPathList[$this->module].'controllers/'.$this->controller.'.'.$this->request.'.php';
         }
@@ -207,10 +243,15 @@ class jSelectorAct extends jSelectorModule {
 }
 
 /**
- * sélecteur de classes métiers
+ * selector for business class 
+ *
+ * business class is a class stored in the classes/classname.class.php file in a module.
+ * syntax : "module~classname".
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorClass extends jSelectorModule {
-    public $type = 'class';
+    protected $type = 'class';
     protected $_dirname = 'classes/';
     protected $_suffix = '.class.php';
 
@@ -220,10 +261,18 @@ class jSelectorClass extends jSelectorModule {
 }
 
 /**
- * sélecteur de fichier de localisation
+ * selector for localisation string
+ * 
+ * localisation string are stored in file properties.
+ * syntax : "module~prefixFile.keyString".
+ * Corresponding file : locales/xx_XX/prefixFile.CCC.properties.
+ * xx_XX and CCC are lang and charset set in the configuration
+ *
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorLoc extends jSelectorModule {
-    public $type = 'loc';
+    protected $type = 'loc';
 
     function __construct($sel, $locale=null, $charset=null){
         global $gJConfig;
@@ -245,10 +294,14 @@ class jSelectorLoc extends jSelectorModule {
 }
 
 /**
- * sélecteur de fichier dao xml
+ * Selector for dao file
+ * syntax : "module~daoName".
+ * file : daos/daoName.dao.xml
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorDao extends jSelectorModule {
-    public $type = 'dao';
+    protected $type = 'dao';
     public $driver;
     protected $_dirname = 'daos/';
     protected $_suffix = '.dao.xml';
@@ -269,8 +322,7 @@ class jSelectorDao extends jSelectorModule {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            $this->_valid = false;
-            return;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
         }
 
         // on regarde si le dao a été redéfini
@@ -284,8 +336,7 @@ class jSelectorDao extends jSelectorModule {
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
 
         if (!is_readable ($this->_path)){
-            $this->_path='';
-            $this->_valid = false;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
         }
         $this->_where = 0;
     }
@@ -306,10 +357,15 @@ class jSelectorDao extends jSelectorModule {
 }
 
 /**
- * sélecteur de fichier de template
+ * Template selector
+ *
+ * syntax : "module~tplName".
+ * file : templates/tplName.tpl .
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorTpl extends jSelectorModule {
-    public $type = 'tpl';
+    protected $type = 'tpl';
     protected $_dirname = 'templates/';
     protected $_suffix = '.tpl';
     protected $_where;
@@ -323,8 +379,7 @@ class jSelectorTpl extends jSelectorModule {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            $this->_valid = false;
-            return;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
         }
 
         // on regarde si il y a un template redéfinie pour le theme courant
@@ -345,8 +400,7 @@ class jSelectorTpl extends jSelectorModule {
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.'.tpl';
 
         if (!is_readable ($this->_path)){
-            $this->_path=='';
-            $this->_valid = false;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
         }
         $this->_where = 0;
     }
@@ -360,10 +414,15 @@ class jSelectorTpl extends jSelectorModule {
 }
 
 /**
- * sélecteur de zone
+ * Zone selector
+ *
+ * syntax : "module~zoneName".
+ * file : zones/zoneName.zone.php .
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorZone extends jSelectorModule {
-    public $type = 'zone';
+    protected $type = 'zone';
     protected $_dirname = 'zones/';
     protected $_suffix = '.zone.php';
 
@@ -373,10 +432,15 @@ class jSelectorZone extends jSelectorModule {
 }
 
 /**
- * sélecteur de fichier de formulaire
+ * Form selector
+ *
+ * syntax : "module~formName".
+ * file : forms/formName.form.xml .
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorForm extends jSelectorModule {
-    public $type = 'form';
+    protected $type = 'form';
 
     function __construct($sel){
 
@@ -397,14 +461,11 @@ class jSelectorForm extends jSelectorModule {
 
 
 
-/**
-* sélecteurs de plugins
-*/
+/*
 class jSelectorPlugin implements jISelector {
-    public $type = 'plug';
+    protected $type = 'plug';
     public $plugin='';
     public $file = '';
-    private $_valid;
     private $_path;
 
     function __construct($sel){
@@ -412,13 +473,11 @@ class jSelectorPlugin implements jISelector {
         if(preg_match("/^([\w\.]+)~([\w\.]+)$/", $sel, $m)){
             $this->plugin = $m[1];
             $this->file = $m[2];
-            if(isset($gJConfig->_pluginsPathList[$this->plugin])){
-                $this->_valid = true;
-            }else{
-                $this->_valid=false;
+            if(!isset($gJConfig->_pluginsPathList[$this->plugin])){
+                throw new jExceptionSelector('jelix~errors.selector.invalid.target', $sel);
             }
         }else{
-            $this->_valid=false;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', $sel);
         }
     }
 
@@ -427,12 +486,8 @@ class jSelectorPlugin implements jISelector {
         if(isset($gJConfig->_pluginsPathList[$this->plugin])){
             return $gJConfig->_pluginsPathList[$this->plugin].$this->file;
         }else{
-            return '';
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
         }
-    }
-
-    public function isValid(){
-        return $this->_valid;
     }
 
     public function toString($full=false){
@@ -447,14 +502,16 @@ class jSelectorPlugin implements jISelector {
     public function getCompiledFilePath (){ return '';}
 
 }
+*/
 
 /**
-* sélecteur de fichier quelconque
-*/
+ * base class for simple file selector
+ * @package    jelix
+ * @subpackage core
+ */
 class jSelectorSimpleFile implements jISelector {
-    public $type = 'simplefile';
+    protected $type = 'simplefile';
     public $file = '';
-    protected $_valid;
     protected $_path;
     protected $_basePath='';
 
@@ -462,18 +519,13 @@ class jSelectorSimpleFile implements jISelector {
         if(preg_match("/^([\w\.\/]+)$/", $sel, $m)){
             $this->file = $m[1];
             $this->_path = $this->_basePath.$m[1];
-            $this->_valid = true;
         }else{
-            $this->_valid = false;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', $sel);
         }
     }
 
     public function getPath (){
         return $this->_path;
-    }
-
-    public function isValid(){
-        return $this->_valid;
     }
 
     public function toString($full=false){
@@ -488,10 +540,13 @@ class jSelectorSimpleFile implements jISelector {
 }
 
 /**
- * sélecteur de fichier stocké dans le répertoire var
+ * Selector for files stored in the var directory
+ * 
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorVar extends jSelectorSimpleFile {
-    public $type = 'var';
+    protected $type = 'var';
     function __construct($sel){
         $this->_basePath = JELIX_APP_VAR_PATH;
         parent::__construct($sel);
@@ -499,10 +554,13 @@ class jSelectorVar extends jSelectorSimpleFile {
 }
 
 /**
- * sélecteur de fichier stocké dans le répertoire config
+ * Selector for files stored in the config directory
+ * 
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorCfg extends jSelectorSimpleFile {
-    public $type = 'cfg';
+    protected $type = 'cfg';
     function __construct($sel){
         $this->_basePath = JELIX_APP_CONFIG_PATH;
         parent::__construct($sel);
@@ -510,10 +568,13 @@ class jSelectorCfg extends jSelectorSimpleFile {
 }
 
 /**
- * sélecteur de fichier stocké dans le répertoire temp
+ * Selector for files stored in the temp directory
+ * 
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorTmp extends jSelectorSimpleFile {
-    public $type = 'tmp';
+    protected $type = 'tmp';
     function __construct($sel){
         $this->_basePath = JELIX_APP_TEMP_PATH;
         parent::__construct($sel);
@@ -521,10 +582,13 @@ class jSelectorTmp extends jSelectorSimpleFile {
 }
 
 /**
- * sélecteur de fichier stocké dans le répertoire  log
+ * Selector for files stored in the log directory
+ * 
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorLog extends jSelectorSimpleFile {
-    public $type = 'log';
+    protected $type = 'log';
     function __construct($sel){
         $this->_basePath = JELIX_APP_LOG_PATH;
         parent::__construct($sel);
@@ -532,10 +596,13 @@ class jSelectorLog extends jSelectorSimpleFile {
 }
 
 /**
- * sélecteur de fichier stocké dans le répertoire lib
+ * Selector for files stored in the lib directory
+ * 
+ * @package    jelix
+ * @subpackage core
  */
 class jSelectorLib extends jSelectorSimpleFile {
-    public $type = 'lib';
+    protected $type = 'lib';
     function __construct($sel){
         $this->_basePath = LIB_PATH;
         parent::__construct($sel);

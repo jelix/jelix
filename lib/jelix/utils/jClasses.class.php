@@ -28,11 +28,12 @@ class jClasses {
 
     static public function getService($selector){
         $sel = new jSelectorClass($selector);
-        if (isset(self::$_instances[$sel->toString()])) {
-            return self::$_instances[$sel->toString()];
+        $s = $sel->toString();
+        if (isset(self::$_instances[$s])) {
+            return self::$_instances[$s];
         } else {
             $o = self::create($selector);
-            self::$_instances[$sel->toString()]=$o;
+            self::$_instances[$s]=$o;
             return $o;
         }
     }
@@ -43,13 +44,9 @@ class jClasses {
 
     static protected function _include($selector) {
         $sel = new jSelectorClass($selector);
-        if ($sel->isValid()) {
-            $p = $sel->getPath();
-            require_once($p);
-            return $sel;
-        } else {
-            trigger_error(jLocale::get ('jelix~errors.selector.invalid', array ($selector)),E_USER_ERROR);
-        }
+        $p = $sel->getPath();
+        require_once($p);
+        return $sel;
     }
 }
 

@@ -49,11 +49,11 @@ class jIncluder {
        global $gJConfig,$gJCoord;
 
         if(is_string($aSelector)){
-            $aSelector = jSelectorFactory::create($aSelector);
-        }
-
-        if(!$aSelector->isValid()){
-            return array('selector'=>$aSelector, 'compilation'=>false, 'compileok'=>false);
+            try{
+                $aSelector = jSelectorFactory::create($aSelector);
+            }catch(jExceptionSelector $e){
+                return array('selector'=>$aSelector, 'compilation'=>false, 'compileok'=>false);
+            }
         }
 
         $cachefile = $aSelector->getCompiledFilePath();

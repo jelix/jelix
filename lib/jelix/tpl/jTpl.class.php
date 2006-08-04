@@ -63,17 +63,6 @@ class jTpl {
         $this->_vars[$name] = jZone::processZone ($zoneName, $params);
     }
 #endif
-    /*
-    function assignStatic($varName, $select){
-        $this->_vars[$varName] =  $GLOBALS['COPIX']['COORD']->includeStatic ($select);
-    }
-
-    function assignTpl($varName, $select, $params=array()){
-        $tpl = new CopixTpl();
-        $tpl->_vars = $params;
-        $this->_vars[$varName] =  $tpl->fetch($select);
-    }
-    */
 
     public function isAssigned ($name){
         return isset ($this->_vars[$name]);
@@ -103,10 +92,6 @@ class jTpl {
     protected function  getTemplate($tpl,$fctname){
 #ifndef JTPL_STANDALONE
         $sel = new jSelectorTpl($tpl);
-        if(!$sel->isValid()){
-            trigger_error (jLocale::get('jelix~errors.selector.invalid',$sel->toString(true)), E_USER_ERROR);
-            return;
-        }
         jIncluder::inc($sel);
         $fct = $fctname.md5($sel->module.'_'.$sel->resource);
 #else

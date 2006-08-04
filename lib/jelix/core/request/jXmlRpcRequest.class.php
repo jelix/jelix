@@ -38,7 +38,7 @@ class jXmlRpcRequest extends jRequest {
             }
 
             // Décodage de la requete
-            list($nom,$vars) = CopixXmlRpc::decodeRequest($requestXml);
+            list($nom,$vars) = jXmlRpc::decodeRequest($requestXml);
             list($module, $action) = explode('.',$nom);
 
             if(is_array($vars)){

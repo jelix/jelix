@@ -86,10 +86,15 @@ class UTSelectorAct extends UnitTestCase {
 
 
         foreach($list as $sel=>$res){
-            $s = new jSelectorAct($sel);
+            $valid=true;
+            try{
+                $s = new jSelectorAct($sel);
+            }catch(jExceptionSelector $e){
+                $valid=false;
+            }
             $msg='';
-            $ok = ($s->isValid() == true && $res !== false) || ( $s->isValid() == false && $res === false);
-            if($s->isValid() &&  $res !== false){
+            $ok = ($valid == true && $res !== false) || ( $valid == false && $res === false);
+            if($valid &&  $res !== false){
                 $ok = $ok
                 && $s->module == $res[0]
                 && $s->controller == $res[1]
@@ -102,7 +107,6 @@ class UTSelectorAct extends UnitTestCase {
             $this->assertTrue($ok , ' test de '.$sel);
             if($msg)
                 $this->sendMessage($msg);
-            //if(!$ok) $this->dump($s);
         }
 
     }

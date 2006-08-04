@@ -172,8 +172,12 @@ class jUrlEngineSignificant implements jIUrlEngine {
       }
       if(!$foundurl && !$isDefault){
          $url->pathInfo='';
-         $url->params = $url->getAction($gJConfig->urlengine['notfoundAct']);
-         $foundurl = true;
+         try{
+            $url->params = $url->getAction($gJConfig->urlengine['notfoundAct']);
+            $foundurl = true;
+         }catch(Exception $e){
+            $foundurl = false;
+         }
       }
 
       return ($isDefault?true:$foundurl);

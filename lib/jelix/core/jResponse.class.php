@@ -30,6 +30,7 @@ abstract class jResponse {
     protected $_acceptSeveralErrors=true;
 
     protected $_httpHeaders = array();
+    protected $_httpHeadersSent = false;
 
     /**
     * Contruction et initialisation
@@ -62,7 +63,7 @@ abstract class jResponse {
         foreach($this->_httpHeaders as $ht=>$hc){
             header($ht.': '.$hc);
         }
-
+        $this->_httpHeadersSent=true;
         /*
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
