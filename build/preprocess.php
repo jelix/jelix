@@ -54,17 +54,19 @@ function normalizeDir($dirpath){
 }
 
 
-$proc = new jPreProcessor();
-$proc->setVars($_SERVER);
-$dist = $proc->parseFile($sourcefile);
+try{
 
+    $proc = new jPreProcessor();
+    $proc->setVars($_SERVER);
+    $dist = $proc->parseFile($sourcefile);
 
-if($dist === false){
-  echo 'Error : code='.$proc->errorCode.' line='.$proc->errorLine."\n";
+}catch(Exception $e){
+  echo $e;
   exit(1);
-}else{
-  createDir(dirname($distfile));
-  file_put_contents($distfile, $dist);
-  exit(0);
 }
+
+createDir(dirname($distfile));
+file_put_contents($distfile, $dist);
+exit(0);
+
 ?>

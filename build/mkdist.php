@@ -97,14 +97,14 @@ foreach($script as $nbline=>$line){
         }
 
         $preproc->setVars($_SERVER);
-        $contents = $preproc->parseFile($sourcedir.$currentsrcdir.$m[2]);
-        if($contents===false){
-            echo "$ficlist : line $nbline, cannot process file ".$m[2]." (error code=".$preproc->errorCode."  line=".$preproc->errorLine.")\n";
+        try{
+            $contents = $preproc->parseFile($sourcedir.$currentsrcdir.$m[2]);
+        }catch(Exception $e){
+            echo "$ficlist : line $nbline, cannot process file ".$m[2]." (", $e ,")\n";
             $hasError=true;
             break;
-        }else{
-          file_put_contents($destfile,$contents);
         }
+        file_put_contents($destfile,$contents);
       }else{
         if($options['verbose'])
           echo "copy  ".$sourcedir.$currentsrcdir.$m[2]."\tto\t".$destfile."\n";

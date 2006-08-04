@@ -1,0 +1,11 @@
+
+#define BAR toto
+ggggg
+
+hhhhhh
+#ifdef FOO
+iiiiiii
+#endif
+
+kkkkkkk
+#include ../source_inc2.txt

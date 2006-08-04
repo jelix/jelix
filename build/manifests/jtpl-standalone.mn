@@ -10,7 +10,6 @@ sd lib/jelix/tpl/
 sd lib/jelix/tpl/plugins/common
 dd plugins/common
   function.include.php
-  function.zone.php
   modifier.cat.php
   modifier.count_characters.php
   modifier.count_paragraphs.php
@@ -35,7 +34,7 @@ dd plugins/html
 sd lib/jelix/tpl/plugins/text
 dd plugins/text
 
-cd lib/jelix/tpl/plugins/xul
+sd lib/jelix/tpl/plugins/xul
 dd plugins/xul
 
 sd lib/jelix/tpl/locales/

@@ -1,0 +1,13 @@
+aaaaa
+
+bbbbb
+
+#elifdef FOO
+ccccc
+#endif
+
+dddddd
+
+eeeeee
+
+ffffff
