@@ -1,4 +1,4 @@
-
+<?php
 kkkkk
 
 lllll
@@ -6,3 +6,4 @@ lllll
 #undef FOO
 
 mmmmm
+?>

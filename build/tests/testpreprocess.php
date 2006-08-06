@@ -64,6 +64,9 @@ class PreProcTestCase extends UnitTestCase {
       'source_include1.txt'=>array(
             'result_include1.txt'=>array('FOO'=>'ok'),
           ),
+      'source_include2.txt'=>array(
+            'result_include2.txt'=>array('FOO'=>'ok'),
+          ),
 
     );
 

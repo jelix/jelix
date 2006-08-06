@@ -6,14 +6,14 @@ ccccc
 
 dddddd
 
-<?php
+
 kkkkk
 
 lllll
 
 
 mmmmm
-?>
+
 
 
 ggggg
