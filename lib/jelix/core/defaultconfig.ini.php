@@ -20,12 +20,7 @@ dbProfils = dbprofils.ini.php
 defaultTheme = default
 use_error_handler = on
 
-
-
-
-
 [plugins]
-auth = auth.plugin.ini.php
 
 [responses]
 html = jResponseHtml
@@ -41,6 +36,7 @@ xuldialog = jResponseXulDialog
 xulpage = jResponseXulPage
 rdf = jResponseRdf
 xml = jResponseXml
+zip = jResponseZip
 
 
 [_coreResponses]
@@ -57,6 +53,7 @@ xuldialog = jResponseXulDialog
 xulpage = jResponseXulPage
 rdf = jResponseRdf
 xml = jResponseXml
+zip = jResponseZip
 
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
