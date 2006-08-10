@@ -17,9 +17,8 @@
 */
 
 
-/*
-* Contient un ensemble de chaines concernant une locale donnée
-* et pour tous les charsets
+/**
+* a bundle content all readed properties ina a given langage, and for all charsets
 */
 class jBundle {
     var $fic;
@@ -30,8 +29,8 @@ class jBundle {
 
     /**
     * constructor
-    * @param jSelector   $file
-    * @param string      $locale
+    * @param jSelector   $file selector of a properties file
+    * @param string      $locale    the code lang
     */
     function __construct ($file, $locale){
         $this->fic  = $file;
@@ -139,37 +138,41 @@ class jBundle {
                             $this->_strings[$charset][$key] =$value;
                         }else{
                             if($match[4] != '' && substr($match[4],0,1) != '#'){
-                                trigger_error('Syntaxe error in file properties '.$fichier.' line '.$linenumber, E_USER_NOTICE);
+                                throw new Exception('Syntaxe error in file properties '.$fichier.' line '.$linenumber);
                             }
                         }
                     }else {
-                        trigger_error('Syntaxe error in file properties '.$fichier.' line '.$linenumber, E_USER_NOTICE);
+                        throw new Exception('Syntaxe error in file properties '.$fichier.' line '.$linenumber);
                     }
                 }
             }
             fclose ($f);
         }else{
-            trigger_error ('Cannot load the resource '.$fichier, E_USER_ERROR);
+            throw new Exception('Cannot load the resource '.$fichier);
         }
     }
 }
 
 
-
+/**
+ * static class to get a localized string
+ */
 class jLocale {
     static $bundles = array();
 
     /**
-    * gets the current lang
-    */
-    function getCurrentLang(){
+     * gets the current lang
+     * @return string
+     */
+    static function getCurrentLang(){
         $s=$GLOBALS['gJConfig']->defaultLocale;
         return substr($s,0, strpos($s,'_'));
     }
     /**
-    * gets the current country.
-    */
-    function getCurrentCountry (){
+     * gets the current country.
+     * @return string
+     */
+    static function getCurrentCountry (){
         $s=$GLOBALS['gJConfig']->defaultLocale;
         return substr($s,strpos($s,'_')+1);
     }
@@ -178,7 +181,12 @@ class jLocale {
     * gets the correct string, for a given language.
     *   if it can't get the correct language, it will try to gets the string
     *   from the default language.
-    *   if both fails, it will raise a fatal_error.
+    *   if both fails, it will raise an exception.
+    * @param string $key the key of the localized string
+    * @param array $args arguments to apply to the localized string with sprintf
+    * @param string $locale  the lang code. if null, use the default language
+    * @param string $charset the charset code. if null, use the default charset
+    * @return string the localized string
     */
     static function get ($key, $args=null, $locale=null, $charset=null) {
         global $gJConfig;
@@ -200,10 +208,9 @@ class jLocale {
             $file = new jSelectorLoc($keySelector, $locale, $charset);
         }catch(jExceptionSelector $e){
             if($key == 'jelix~errors.locale.key.selector.invalid'){
-                return '(200)The given locale key "'.$args[0].'" is invalid  (for module '.$args[1].', charset '.$args[2].', lang '.$args[3].') (internal error ?)';
+                throw new Exception('(200)The given locale key "'.$args[0].'" is invalid  (for module '.$args[1].', charset '.$args[2].', lang '.$args[3].') (internal error ?)');
             }else{
-                trigger_error (jLocale::get ('jelix~errors.locale.key.selector.invalid', array($key,$file->module, $charset, $locale)), E_USER_ERROR);
-                return '(200)Invalid Local Key "'.$args[0].'"'; // au cas où le trigger error n'était pas trappé
+                throw new jException('jelix~errors.locale.key.selector.invalid', array($key,$file->module, $charset, $locale));
             }
         }
 
@@ -219,12 +226,10 @@ class jLocale {
             //use the default language and country.
             if ($locale    == $gJConfig->defaultLocale){
                 if ($key == 'jelix~errors.locale.key.unknow'){
-                    $msg = 'Can\'t find message key (which should actually be THIS message): '.$key;
+                    throw new Exception('(210)The given locale key "'.$args[0].'" from module "'.$args[1].'" does not exists in the default lang for the '.$args[2].' charset (and the jelix~errors.locale.key.unknow key cannot be found too)');
                 }else{
-                    $msg = jLocale::get ('jelix~errors.locale.key.unknow',array($key,$file->module, $charset, $locale));
+                    throw new jException('jelix~errors.locale.key.unknow',array($key,$file->module, $charset, $locale));
                 }
-                trigger_error ($msg, E_USER_ERROR);
-                return null;
             }
             return jLocale::get ($key, $args, $gJConfig->defaultLocale);
         }else{

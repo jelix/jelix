@@ -10,40 +10,47 @@
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
+/**
+ * the main class of the jelix core
+ *
+ * this is the "chief orchestra" of the framework. It's goal is
+ * to load the configuration, to get the request parameters
+ * used to instancie the correspondant controllers and to run the right method.
+ */
 class jCoordinator {
 
    /**
-    * liste des plugins utilisés
+    * plugin list
     * @var  array
     */
     public $plugins=array();
 
     /**
-     * Reponse courante
+     * current response object
      * @var jResponse
      */
     public $response = null;
 
     /**
+     * current request object
      * @var jRequest
      */
     public $request = null;
 
     /**
-     * @var jActionDesc
+     * the selector of the current action
+     * @var jSelectorAct
      */
     public $action = null;
-    /**
-     * @var string
-     */
-    private $configFile;
 
     /**
+     * the current module name
      * @var string
      */
     public $moduleName;
+
     /**
+     * the current action name
      * @var string
      */
     public $actionName;
@@ -69,7 +76,6 @@ class jCoordinator {
             die('Jelix Error: Application temp directory is not writable');
         }
         // load configuration data
-        $this->configFile = $configFile;
         $gJConfig = jConfig::load($configFile);
 
 
@@ -84,7 +90,7 @@ class jCoordinator {
     }
 
     /**
-     * instanciation des plugins
+     * load the plugins and their configuration file
      */
     private function _loadPlugins(){
 
@@ -105,13 +111,14 @@ class jCoordinator {
     }
 
     /**
-     * stocke un message d'erreur/warning/notice à prendre en compte par les réponses
-     * @param  string $type  type d'erreur 'error', 'warning', 'notice'
-     * @param  integer $code  code d'erreur
-     * @param  string $message le message d'erreur
-     * @param  string $file  nom du fichier où s'est produite l'erreur
-     * @param  integer $line  ligne où s'est produite l'erreur
-     * @return boolean    true= arret immediat ordonné, false = on laisse le gestionnaire d'erreur agir en conséquence
+     * Store an error/warning/notice message. Responses object should take care
+     * of the errorMessages properties to display them.
+     * @param  string $type  error type : 'error', 'warning', 'notice'
+     * @param  integer $code  error code
+     * @param  string $message error message
+     * @param  string $file    the file name where the error appear
+     * @param  integer $line  the line number where the error appear
+     * @return boolean    true= the process should stop now, false = the error manager do its job
      */
     public function addErrorMsg($type, $code, $message, $file, $line){
         $this->errorMessages[] = array($type, $code, $message, $file, $line);
@@ -123,9 +130,10 @@ class jCoordinator {
     }
 
     /**
-    * Fonction principale du coordinateur à appeler dans le index.php pour démarrer
-    * le traitement de l'action
-    * @param  jRequest  $request the request data
+    * main method : launch the execution of the action.
+    *
+    * This method should be called in a entry point.
+    * @param  jRequest  $request the request object
     */
     public function process ($request){
         global $gJConfig;
@@ -180,8 +188,7 @@ class jCoordinator {
         $this->response = $ctrl->{$this->action->method}();
 
         if($this->response == null){
-            trigger_error(jLocale::get('jelix~errors.response.missing',$this->action->toString()), E_USER_ERROR);
-            return;
+            throw new jException('jelix~errors.response.missing',$this->action->toString());
         }
 
         foreach ($this->plugins as $name => $obj){
@@ -200,35 +207,37 @@ class jCoordinator {
         jContext::pop();
     }
 
+    /**
+     * get the controller corresponding to the selector
+     * @param jSelectorAct $selector
+     */
     private function getController($selector){
 
         $ctrlpath = $selector->getPath();
         $class = $selector->getClass();
 
         if(!file_exists($ctrlpath)){
-            trigger_error(jLocale::get('jelix~errors.ad.controller.file.unknow',array($this->actionName,$ctrlpath)),E_USER_ERROR);
-            return;
+            throw new jException('jelix~errors.ad.controller.file.unknow',array($this->actionName,$ctrlpath));
         }
         require_once($ctrlpath);
         if(!class_exists($class,false)){
-            trigger_error(jLocale::get('jelix~errors.ad.controller.class.unknow',array($this->actionName,$class, $ctrlpath)),E_USER_ERROR);
-            return;
+            throw new jException('jelix~errors.ad.controller.class.unknow',array($this->actionName,$class, $ctrlpath));
         }
 
         $ctrl = new $class($this->request);
         if($ctrl instanceof jIRestController){
             $method = $selector->method = strtolower($_SERVER['REQUEST_METHOD']);
         }elseif(!method_exists($ctrl,$selector->method)){
-            trigger_error(jLocale::get('jelix~errors.ad.controller.method.unknow',array($this->actionName,$selector->method, $class, $ctrlpath)),E_USER_ERROR);
-            return;
+            throw new jException('jelix~errors.ad.controller.method.unknow',array($this->actionName,$selector->method, $class, $ctrlpath));
         }
         return $ctrl;
     }
 
 
     /**
-     *
-     * @param string $name
+     * instancy a response object corresponding to the default response type
+     * of the current resquest
+     * @return mixed  error string or false
      */
     public function initDefaultResponseOfRequest(){
         global $gJConfig;
@@ -253,24 +262,11 @@ class jCoordinator {
         return false;
     }
 
-
-    /*
-    * permet à un traitement exterieur (page, zone) de recuperer un element de configuration d'un plugin
-    * @param string   $plugin_name   nom du plugin
-    * @param string   $plugin_parameter_name   nom de la propriete de l'objet de configuration du plugin
-    */
-    /*function getPluginConf ($pluginName , $plugin_parameter_name){
-        $pluginName = strtolower ($pluginName);
-        if (isset ($this->plugins[$pluginName])&& isset($this->plugins[$pluginName]->config->$plugin_parameter_name) ) {
-               return $this->plugins[$pluginName]->config->$plugin_parameter_name;
-        }
-        return null;
-    }*/
-
     /**
     * gets a given plugin if registered
-    * @param string   $plugin_name   nom du plugin
-    * @param boolean  $required  if the plugin is required or not. If true, will trigger a fatal_error if the plugin is not registered.
+    * @param string   $pluginName   the name of the plugin
+    * @param boolean  $required  says if the plugin is required or not. If true, will generate an exception if the plugin is not registered.
+    * @return jIPlugin
     */
     function getPlugin ($pluginName, $required = true){
         $pluginName = strtolower ($pluginName);
@@ -278,7 +274,7 @@ class jCoordinator {
             $plugin = $this->plugins[$pluginName];
         }else{
             if ($required){
-                trigger_error (jLocale::get ('jelix~errors.plugin.unregister', $pluginName), E_USER_ERROR);
+                throw new jException('jelix~errors.plugin.unregister', $pluginName);
             }
             $plugin = null;
         }
@@ -297,7 +293,7 @@ class jCoordinator {
     /**
     * Says if the given module $name is enabled
     * @param string $moduleName
-    * @return boolean true : plugin is ok
+    * @return boolean true : module is ok
     */
     public function isModuleEnabled ($moduleName){
         return in_array($moduleName, $GLOBALS['gJConfig']->_trustedModules);

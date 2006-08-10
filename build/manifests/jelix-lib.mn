@@ -63,6 +63,7 @@ cd lib/jelix/core/response
   jResponseXulPage.class.php
   jResponseRdf.class.php
   jResponseXml.class.php
+  jResponseZip.class.php
 
 cd lib/jelix/core/url
   jUrl.class.php
@@ -171,6 +172,7 @@ cd lib/jelix/utils/
   jZone.class.php
   jDatatype.class.php
   jCmdUtils.class.php
+  jZipCreator.class.php
 
 cd lib/json
   JSON.php

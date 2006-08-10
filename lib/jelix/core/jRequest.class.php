@@ -9,43 +9,82 @@
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 *
-* Some parts of this file are took from Copix Framework v2.3dev20050901, CopixCoordinator.class.php,
-* copyrighted by CopixTeam and released under GNU Lesser General Public Licence
-* author : Gerald Croes, Laurent Jouanneau
-* http://www.copix.org
 */
 
 
-
+/**
+ * base class for object which retrieve all parameters of an http request. The
+ * process depends on the type of request (ex: xmlrpc..)
+ * 
+ * @copyright line codes which set the url_* properties are took from Copix Framework v2.3dev20050901, CopixCoordinator.class.php,
+ * copyrighted by CopixTeam and released under GNU Lesser General Public Licence
+ * author : Gerald Croes, Laurent Jouanneau
+ * http://www.copix.org
+ */
 abstract class jRequest {
 
    /**
-    * liste des paramètres en entrée
+    * request parameters
+    * could set from $_GET, $_POST, or from data processing of $HTTP_RAW_POST_DATA
     * @var array
     */
     public $params;
 
+    /**
+     * the request type code
+     * @var string
+     */
     public $type;
 
+    /**
+     * the type of the default response
+     * @var string
+     */
     public $defaultResponseType = '';
 
-    /*  paramètres de l'url courante */
+    /**
+     * the path to the entry point in the url
+     * @var string
+     */
     public $url_script_path;
+
+    /**
+     * the name of the entry point
+     * @var string
+     */
     public $url_script_name;
+
+    /**
+     * the pathinfo part of the url
+     * @var string
+     */
     public $url_path_info;
 
+
+    /**
+     * 
+     * @var jUrl
+     */
     public $url;
 
     function __construct(){  }
 
-    function init(){
+    /**
+     * initialize the request : analyse of http request etc..
+     */
+    public function init(){
         $this->_initUrlDatas();
         $this->_initParams();
     }
 
-
+    /**
+     * analyse the http request and set the params property
+     */
     abstract protected function _initParams();
 
+    /**
+     * inits the url_* properties
+     */
     protected function _initUrlDatas(){
         global $gJConfig;
 
@@ -74,6 +113,13 @@ abstract class jRequest {
         $this->url_path_info = $pathinfo;
     }
 
+    /**
+    * Gets the value of a request parameter. If not defined, gets its default value.
+    * @param string  $name           the name of the request parameter
+    * @param mixed   $defaultValue   the default returned value if the parameter doesn't exists
+    * @param boolean $useDefaultIfEmpty true: says to return the default value the value is ""
+    * @return mixed the request parameter value
+    */
     public function getParam($name, $defaultValue=null, $useDefaultIfEmpty=false){
 
         if(isset($this->params[$name])){
@@ -88,12 +134,15 @@ abstract class jRequest {
     }
 
     /**
-     * indique la liste des classes de reponses autorisées pour le type de requete
-     * si renvoi false : autorise n'importe quoi
-     * @see jActionDesc::getResponse
+     * return a list of class name of allowed response corresponding to the request
+     * @return array the list, or false which means everything
+     * @see jRequest::getResponse()
      */
     public function allowedResponses(){ return false;}
 
+    /**
+     * @param string $respclass the name of a response class
+     */
     public function isAllowedResponse($respclass){
         if($ar=$this->allowedResponses()){
             return in_array($respclass, $ar);
@@ -101,6 +150,12 @@ abstract class jRequest {
             return true;
     }
 
+    /**
+     * get a response object.
+     * @param string $name the name of the response type (ex: "html")
+     * @param boolean $useOriginal true:don't use the response object redefined by the application
+     * @return jResponse the response object
+     */
     public function getResponse($type='', $useOriginal = false){
         global $gJCoord, $gJConfig;
         if($type == ''){
@@ -109,14 +164,12 @@ abstract class jRequest {
 
         if($useOriginal){
             if(!isset($gJConfig->_coreResponses[$type])){
-               trigger_error(jLocale::get('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
-               return null;
+               throw new jException('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
             }
             $respclass = $gJConfig->_coreResponses[$type];
         }else{
             if(!isset($gJConfig->responses[$type])){
-               trigger_error(jLocale::get('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
-               return null;
+               throw new jException('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
             }
             $respclass = $gJConfig->responses[$type];
         }
@@ -125,13 +178,11 @@ abstract class jRequest {
         }elseif(file_exists($path=JELIX_APP_PATH.'responses/'.$respclass.'.class.php')){
            require_once ($path);
         }else{
-           trigger_error(jLocale::get('jelix~errors.ad.response.not.loaded',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
-           return null;
+           throw new jException('jelix~errors.ad.response.not.loaded',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
         }
 
         if(!$this->isAllowedResponse($respclass)){
-           trigger_error(jLocale::get('jelix~errors.ad.response.type.notallowed',array($gJCoord->action->resource,$type,$gJCoord->action->getPath())),E_USER_ERROR);
-           return null;
+           throw new jException('jelix~errors.ad.response.type.notallowed',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
         }
 
         $response = new $respclass();
