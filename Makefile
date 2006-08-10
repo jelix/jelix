@@ -149,5 +149,5 @@ jbt-dist:
 
 docs: dev-jelix-lib
 	$(PHPDOC) -tb $(CURRENT_PATH)/build/phpdoc/ -d $(DISTHACKER)/lib/jelix/ -t $(DOCS) \
-	-o "HTML:Smarty:jelix" -s on -ct "contributor,licence" -i *.ini.php \
+	-o "HTML:frames:DOM/jelix" -s on -ct "contributor,licence" -i *.ini.php \
 	-ti "Jelix API Reference" -ric "README,INSTALL,CHANGELOG,CREDITS,LICENCE,VERSION"
