@@ -11,16 +11,14 @@
 *
 * Une partie du code est issue de la classe CopixDAOGeneratorV1
 * du framework Copix 2.3dev20050901. http://www.copix.org
-* il est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et amélioré pour Jelix par Laurent Jouanneau
+* il est sous Copyright 2001-2005 CopixTeam (licence LGPL).
+* Auteurs initiaux : Gerald Croes et Laurent Jouanneau.
+* Adaptée et amélioré pour Jelix par Laurent Jouanneau.
 */
 
 /**
-* Générateur d'une classe PHP correspondant à un objet DAO définit dans une fichier xml
-* de définition
+* This is a generator which creates php class from dao xml file
 */
-
 class jDaoGenerator {
 
    /**
@@ -372,13 +370,14 @@ class jDaoGenerator {
          else
             $r =$table['realname'];
 
+         $fieldjoin='';
          if ($driverName == 'oci8') {
             if($tablejoin[1] == 0){
                $operand='='; $opafter='(+)';
             }elseif($tablejoin[1] == 1){
                $operand='(+)='; $opafter='';
             }
-            $fieldjoin='';
+
             foreach($table['fk'] as $k => $fk){
                $fieldjoin.=' AND '.$primarytable['name'].'.'.$fk.$operand.$table['name'].'.'.$table['pk'][$k].$opafter;
             }
@@ -582,20 +581,20 @@ class jDaoGenerator {
 
     function _prepareValues ($fieldList, $motif='', $prefixfield=''){
         $values = $fields = array();
-    
+
         foreach ((array)$fieldList as $fieldName=>$field) {
             if ($motif != '' && $field->$motif == ''){
                 continue;
             }
-    
+
             $value = $this->_preparePHPExpr('$'.$prefixfield.$fieldName, $field->datatype, true);
-    
+
             if($motif != ''){
                 $values[$field->name] = sprintf($field->$motif,'\'.'.$value.'.\'');
             }else{
                 $values[$field->name] = '\'.'.$value.'.\'';
             }
-    
+
             $fields[$field->name] = $field->fieldName;
         }
         return array($fields, $values);

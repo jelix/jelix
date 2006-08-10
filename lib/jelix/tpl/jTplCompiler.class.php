@@ -11,6 +11,9 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+/**
+ * This is the compiler of templates : converts a template into a php file.
+ */
 class jTplCompiler
 #ifndef JTPL_STANDALONE
     implements jISimpleCompiler {
@@ -36,6 +39,7 @@ class jTplCompiler
     private $_allowedInVar;
     private $_allowedInExpr;
     private $_allowedAssign;
+    private $_allowedInForeach;
 
     private $_pluginPath=array();
     private $_metaBody = '';
@@ -50,10 +54,15 @@ class jTplCompiler
     private $_sourceFile;
     private $_currentTag;
 
+    /**
+     * Initialize some properties
+     */
     function __construct(){
         $this->_allowedInVar = array_merge($this->_vartype, $this->_op);
         $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
         $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
+        $this->_allowedInForeach = array_merge($this->_vartype, array(T_AS, T_DOUBLE_ARROW));
+
 #ifdef JTPL_STANDALONE
         require_once(JTPL_LOCALES_PATH.$GLOBALS['jTplConfig']['lang'].'.php');
         $this->_locales = $GLOBALS['jTplConfig']['locales'];
@@ -61,15 +70,26 @@ class jTplCompiler
     }
 
 
-    /**
-     * compilation d'un template en fichier php
-     */
 #ifdef JTPL_STANDALONE
+    /**
+     * Launch the compilation of a template
+     *
+     * Store the result (a php content) into a cache file inside the cache directory
+     * @param string $tplfile the file name that contains the template
+     * @return boolean true if ok
+     */
     public function compile($tplFile){
         $this->_sourceFile = $tplFile;
         $cachefile = JTPL_CACHE_PATH . basename($tplFile);
 
 #else
+    /**
+     * Launch the compilation of a template
+     *
+     * Store the result (a php content) into a cache file given by the selector.
+     * @param jSelectorTpl $selector the template selector
+     * @return boolean true if ok
+     */
     public function compile($selector){
         $this->_sourceFile = $selector->getPath();
         $cachefile = $selector->getCompiledFilePath();
@@ -164,7 +184,10 @@ class jTplCompiler
     }
 
     /**
-     * fonction appelée sur chaque balise de template {xxxx }
+     * function called during the parsing of the template by a preg_replace_callback function
+     * It is called on each template tag {xxxx }
+     * @param array $matches a matched item
+     * @return string the corresponding php code of the tag (with php tag).
      */
     public function _callback($matches){
         list(,$tag, $firstcar) = $matches;
@@ -173,10 +196,10 @@ class jTplCompiler
         if (!preg_match('/^\$|@|\*|[a-zA-Z\/]$/',$firstcar)) {
 #ifdef JTPL_STANDALONE
             trigger_error(sprintf($this->_locales['errors.tpl.tag.syntax.invalid'], $tag, $this->_sourceFile),E_USER_ERROR);
-#else
-            trigger_error(jLocale::get('jelix~errors.tpl.tag.syntax.invalid',array($tag,$this->_sourceFile)),E_USER_ERROR);
-#endif
             return '';
+#else
+            throw new jException('jelix~errors.tpl.tag.syntax.invalid',array($tag,$this->_sourceFile));
+#endif
         }
         $this->_currentTag = $tag;
         if ($firstcar == '$' || $firstcar == '@') {
@@ -187,10 +210,10 @@ class jTplCompiler
             if (!preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/',$tag,$m)) {
 #ifdef JTPL_STANDALONE
                 trigger_error(sprintf($this->_locales['errors.tpl.tag.function.invalid'], $tag, $this->_sourceFile),E_USER_ERROR);
-#else
-                trigger_error(jLocale::get('jelix~errors.tpl.tag.function.invalid',array($tag,$this->_sourceFile)),E_USER_ERROR);
-#endif
                 return '';
+#else
+                throw new jException('jelix~errors.tpl.tag.function.invalid',array($tag,$this->_sourceFile));
+#endif
             }
             if(count($m) == 4){
                 $m[2] = $m[3];
@@ -202,8 +225,9 @@ class jTplCompiler
     }
 
     /**
-    * analyse une balise qui commence par $ ou @, indiquant donc un affichage de variable
-    *
+    * analyse an "echo" tag : {$..} or {@..}
+    * @param string $expr the content of the tag
+    * @return string the corresponding php instruction
     */
     private function _parseVariable($expr){
         $tok = explode('|',$expr);
@@ -240,7 +264,10 @@ class jTplCompiler
     }
 
     /**
-     * analyse les balises ayant un nom "normal" (ne commençant pas par $ ou @)
+     * analyse the tag which have a name
+     * @param string $name the name of the tag
+     * @param string $args the content that follow the name in the tag
+     * @return string the corresponding php instructions
      */
     private function _parseFunction($name,$args){
         $res='';
@@ -262,7 +289,7 @@ class jTplCompiler
                     $res = 'elseif('.$this->_parseFinal($args,$this->_allowedInExpr).'):';
                 break;
             case 'foreach':
-                $res = 'foreach('.$this->_parseFinal($args,array(T_AS, T_DOUBLE_ARROW,T_STRING, T_OBJECT_OPERATOR), array(';','!')).'):';
+                $res = 'foreach('.$this->_parseFinal($args,$this->_allowedInForeach, array(';','!')).'):';
                 array_push($this->_blockStack,'foreach');
                 break;
             case 'while':
@@ -349,8 +376,12 @@ class jTplCompiler
 
 
     /**
-     * analyse les arguments de balise (tout ce qui est aprés le nom d'une balise)
-     * ou les arguments d'un modificateur, et le transforme en code php
+     * sub-function which analyse an expression
+     * @param string $string the expression
+     * @param array $allowed list of allowed php token
+     * @param array $exceptchar list of forbidden characters
+     * @param boolean $splitArgIntoArray true: split the results on coma
+     * @return array|string
      */
     private function _parseFinal($string, $allowed=array(), $exceptchar=array(';'), $splitArgIntoArray=false){
         $tokens = token_get_all('<?php '.$string.'?>');
@@ -458,7 +489,10 @@ class jTplCompiler
     }
 
     /**
-     * Récupère un plugin 
+     * try to find a plugin
+     * @param string $type type of plugin (function, modifier...)
+     * @param string $name the plugin name
+     * @return string the path of the plugin, or '' if not found
      */
     private function _getPlugin($type, $name){
 #ifdef JTPL_STANDALONE
@@ -503,7 +537,7 @@ class jTplCompiler
 #ifdef JTPL_STANDALONE
         trigger_error(sprintf($this->_locales[$err], $this->_sourceFile),E_USER_ERROR);
 #else
-        trigger_error(jLocale::get('jelix~'.$err,array($this->_sourceFile)),E_USER_ERROR);
+        throw new jException('jelix~'.$err,array($this->_sourceFile));
 #endif
     }
 
@@ -511,7 +545,7 @@ class jTplCompiler
 #ifdef JTPL_STANDALONE
         trigger_error(sprintf($this->_locales[$err], $arg, $this->_sourceFile),E_USER_ERROR);
 #else
-        trigger_error(jLocale::get('jelix~'.$err,array($arg, $this->_sourceFile)),E_USER_ERROR);
+        throw new jException('jelix~'.$err,array($arg, $this->_sourceFile));
 #endif
     }
 
@@ -519,7 +553,7 @@ class jTplCompiler
 #ifdef JTPL_STANDALONE
         trigger_error(sprintf($this->_locales[$err], $arg1, $arg2, $this->_sourceFile),E_USER_ERROR);
 #else
-        trigger_error(jLocale::get('jelix~'.$err,array($arg1, $arg2, $this->_sourceFile)),E_USER_ERROR);
+        throw new jException('jelix~'.$err,array($arg1, $arg2, $this->_sourceFile));
 #endif
     }
 
