@@ -100,6 +100,7 @@ cd lib/simpletest/docs/fr
 cd lib/jelix-scripts
   scripts.conf.php
   jelix.php
+  jelix
   LICENCE
   init
   INSTALL

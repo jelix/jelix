@@ -299,5 +299,18 @@ class jCoordinator {
         return in_array($moduleName, $GLOBALS['gJConfig']->_trustedModules);
     }
 
+    /**
+     * return the real path of a module
+     * @param string $module a module name
+     * @return string the corresponding path
+     */
+
+    public function getModulePath($module){
+        global $gJConfig;
+        if(!isset($gJConfig->_modulesPathList[$module])){
+            throw new Exception('getModulePath : invalid module name');
+        }
+        return $gJConfig->_modulesPathList[$module];
+    }
 }
 ?>
