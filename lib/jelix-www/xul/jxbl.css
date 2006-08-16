@@ -4,8 +4,15 @@
 @namespace html url("http://www.w3.org/1999/xhtml");
 
 
-jx|remotetreecriterion {
+jx|templatecriterion {
     display:-moz-box;
     -moz-box-orient:horizontal;
-    -moz-binding: url("jxbl.xml#remotetreecriterion");
+    -moz-binding: url("jxbl.xml#templatecriterion");
 }
+
+jx|templatepager {
+    display:-moz-box;
+    -moz-box-orient:horizontal;
+    -moz-binding: url("jxbl.xml#templatepager");
+}
+

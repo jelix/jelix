@@ -69,14 +69,14 @@
                 if (this.mTimeout === null ) {
                    var t = this.getAttribute("timeout");
                    if(t)
-                      this.mTimeout = ParseInt(t);
+                      this.mTimeout = parseInt(t);
                    else
                       this.mTimeout = 0;
                 }
                 return this.mTimeout;
             </getter>
             <setter>
-                this.mTimeout = ParseInt(val);
+                this.mTimeout = parseInt(val);
                 return this.mTimeout;
             </setter>
         </property>

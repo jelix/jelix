@@ -51,10 +51,10 @@
 <description class="title-page">Gestion des utilisateurs</description>
 
 <vbox flex="1">
-    <jx:remotetreecriterion uri="{jurl 'auth~admin_userslist@rdf'}" tree="userslist" id="criteres">
+    <jx:templatecriterion uri="{jurl 'auth~admin_userslist@rdf'}" target="userslist" id="criteres">
         <label control="letter" value="Login commençant par"/>
         <textbox id="letter" name="letter" />
-    </jx:remotetreecriterion>
+    </jx:templatecriterion>
     <hbox flex="1">
         <tree id="userslist" flex="1" flags="dont-build-content" ref="urn:data:row" datasources="rdf:null"
             onselect="setUser()" seltype="single"
