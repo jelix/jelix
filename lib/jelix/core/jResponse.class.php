@@ -18,7 +18,7 @@
 
 abstract class jResponse {
     /**
-    * identifiant du générateur de sortie
+    * ident of the response type
     * @var string
     */
     protected  $_type = null;
@@ -30,24 +30,32 @@ abstract class jResponse {
     protected $_acceptSeveralErrors=true;
 
     protected $_httpHeaders = array();
+
     protected $_httpHeadersSent = false;
+    
+    protected $_httpStatusCode ='200';
+
+    protected $_httpStatusMsg ='OK';
 
     /**
-    * Contruction et initialisation
+    * constructor
     */
     function __construct ($attributes=array()){
        $this->_attributes = $attributes;
     }
 
     /**
-     * génère le contenu et l'envoi au navigateur.
-     * Il doit tenir compte des erreurs
-     * @return boolean    true si la génération est ok, false sinon
+     * Send the response in the correct format.
+     * 
+     * @return boolean    true if the output is ok
+     * @internal should take care about errors
      */
     abstract public function output();
 
     /**
-     * affiche les erreurs graves
+     * Send a response with only error messages which appears during the action
+     * (errors, warning, notice, exceptions...). Type and error details 
+     *  depend on the application configuration
      */
     abstract public function outputErrors();
 
@@ -59,7 +67,18 @@ abstract class jResponse {
 
     public function addHttpHeader($htype, $hcontent){ $this->_httpHeaders[$htype]=$hcontent;}
 
+    /**
+     * set the http status code for the http header
+     * @param string $code  the status code (200, 404...)
+     * @param string $msg the message following the status code ("OK", "Not Found"..)
+     */
+    public function setHttpStatus($code, $msg){ $this->_httpStatusCode=$code; $this->_httpStatusMsg=$msg;}
+
+    /**
+     *
+     */
     protected function sendHttpHeaders(){
+        header("HTTP/1.0 ".$this->_httpStatusCode.' '.$this->_httpStatusMsg);
         foreach($this->_httpHeaders as $ht=>$hc){
             header($ht.': '.$hc);
         }
