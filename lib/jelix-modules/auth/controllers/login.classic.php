@@ -49,7 +49,7 @@ class CTLogin extends jController {
         jAuth::logout();
         $conf = $GLOBALS['gJCoord']->getPlugin ('auth')->config;
 
-        if (!($conf['enable_after_login_override'] && $url_return= $this->param('auth_url_return'))){
+        if (!($conf['enable_after_logout_override'] && $url_return= $this->param('auth_url_return'))){
             $url_return =  jUrl::get($conf['after_logout']);
         }
         $rep = $this->getResponse('redirectUrl');
