@@ -17,7 +17,10 @@ class createappCommand extends JelixScriptCommand {
     public  $allowed_parameters=array();
 
     public  $syntaxhelp = "[-withdefaultmodule] [-withcmdline]";
-    public  $help="
+    public  $help='';
+
+    function __construct(){
+        $this->help="
     Créer une nouvelle application avec tous les répertoires nécessaires.
 
     Si l'option -withdefaultmodule est présente, créer également un module du
@@ -31,7 +34,7 @@ class createappCommand extends JelixScriptCommand {
           ".$_SERVER['argv'][0]." --helloApp
     2) soit dans une variable d'environnement JELIX_APP_NAME.
     ";
-
+    }
 
     public function run(){
        if(file_exists(JELIX_APP_PATH)){
