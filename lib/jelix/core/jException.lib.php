@@ -29,14 +29,31 @@ function jExceptionHandler($exception){
         '%code%' => $exception->getCode(),
         '%msg%'  => $msg,
         '%file%' => $exception->getFile(),
-        '%line%' => $exception->getLine()
+        '%line%' => $exception->getLine(),
+        '%typeerror%'=>'exception',
+        '\t' =>"\t",
+        '\n' => "\n"
     ));
     if($gJCoord->response == null){
       $gJCoord->initDefaultResponseOfRequest();
     }
 
+    if(strpos($action , 'TRACE') !== false){
+        $arr = debug_backtrace();
+        $messageLog.="\ttrace:";
+        array_shift($arr);
+        foreach($arr as $k=>$t){
+            $messageLog.="\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
+            $messageLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
+        }
+        $messageLog.="\n";
+    }
+
     // traitement du message
-    if(strpos($action , 'ECHO') !== false){
+    if(strpos($action , 'ECHOQUIET') !== false){
+        if($gJCoord->addErrorMsg('error', $exception->getCode(), $conf['quietMessage'], '', ''))
+            $action.=' EXIT';
+    }elseif(strpos($action , 'ECHO') !== false){
        $gJCoord->addErrorMsg('error', $exception->getCode(), $msg, $exception->getFile(), $exception->getLine());
     }
     if(strpos($action , 'LOGFILE') !== false){

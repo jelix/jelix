@@ -69,8 +69,21 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         '\n' => "\n"
     ));
 
+    if(strpos($action , 'TRACE') !== false){
+        $arr = debug_backtrace();
+        $messageLog.="\ttrace:";
+        array_shift($arr);
+        foreach($arr as $k=>$t){
+            $messageLog.="\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
+            $messageLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
+        }
+        $messageLog.="\n";
+    }
     // traitement du message
-    if(strpos($action , 'ECHO') !== false){
+    if(strpos($action , 'ECHOQUIET') !== false){
+        if($gJCoord->addErrorMsg($codeString[$errno], $code, $conf['quietMessage'], '', ''))
+            $action.=' EXIT';
+    }elseif(strpos($action , 'ECHO') !== false){
         if($gJCoord->addErrorMsg($codeString[$errno], $code, $errmsg, $filename, $linenum))
             $action.=' EXIT';
     }

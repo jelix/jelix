@@ -60,8 +60,9 @@ messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
 logFile = error.log
 email = root@localhost
 emailHeaders = "From: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
+quietMessage="Une erreur technique est survenue. Désolé pour ce désagrément."
 
-; mots clés que vous pouvez utiliser : ECHO, EXIT, LOGFILE, SYSLOG, MAIL
+; mots clés que vous pouvez utiliser : ECHO, ECHOQUIET, EXIT, LOGFILE, SYSLOG, MAIL, TRACE
 default      = ECHO EXIT
 error        = ECHO EXIT
 warning      = ECHO
