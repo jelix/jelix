@@ -36,12 +36,11 @@ Utilisation générale :
                'action' en fonction de la configuration de l'application
 ";
         } else {
+            if (!preg_match('/(?:([\w\.]+)~)/', $cmd_name)) {
+                $cmd_name = $gJConfig->defaultModule.'~'.$cmd_name;
+            }
             $selector = new jSelectorAct($cmd_name);
 
-            if ($selector->module == 'jelix') {
-                $selector->module = $gJConfig->defaultModule;
-            }
-            
             include($selector->getPath());
             $ctrl = $selector->getClass();
             $ctrl = new $ctrl();

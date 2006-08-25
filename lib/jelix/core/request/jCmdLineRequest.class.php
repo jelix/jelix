@@ -30,6 +30,9 @@ class jCmdLineRequest extends jRequest {
             if ($argsel == 'help') {
                 $argsel = 'jelix~help_index';
             }
+            if (!preg_match('/(?:([\w\.]+)~)/', $argsel)) {
+                $argsel = $gJConfig->defaultModule.'~'.$argsel;
+            }
         }
 
         $selector = new jSelectorAct($argsel);
