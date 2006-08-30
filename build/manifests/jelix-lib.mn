@@ -151,6 +151,8 @@ cd lib/jelix/tpl/plugins/html
   function.urljsstring.php
   modifier.nl2br.php
   meta.html.php
+  function.formurl.php
+  function.formurlparam.php
 
 cd lib/jelix/tpl/plugins/text
   function.jlocale.php

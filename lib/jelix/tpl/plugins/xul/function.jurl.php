@@ -19,7 +19,7 @@
  */
 function jtpl_function_jurl($tpl, $selector, $params=array(),$escape=true)
 {
-     echo jUrl::get($selector, $params, $escape);
+     echo jUrl::getStr($selector, $params, $escape);
 }
 
 ?>

@@ -212,9 +212,9 @@ class jResponseXul extends jResponse {
             $eventresp = jEvent::notify ('FetchXulOverlay', array('tpl'=>$this->bodyTpl));
             foreach($eventresp->getResponse() as $rep){
                 if(is_array($rep)){
-                    $this->_overlays[jUrl::get($rep[0],$rep[1])]=true;
+                    $this->_overlays[jUrl::getStr($rep[0],$rep[1])]=true;
                 }elseif(is_string($rep)){
-                    $this->_overlays[jUrl::get($rep)]=true;
+                    $this->_overlays[jUrl::getStr($rep)]=true;
                 }
             }
         }

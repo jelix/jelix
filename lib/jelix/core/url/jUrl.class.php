@@ -185,7 +185,7 @@ class jUrl {
     }
 
     /**
-    * Gets the url string from parameters
+    * Gets the url object from parameters
     * @param string $actSel  action selector. if null we get the script path
     * @param array $params associative array with the parameters
     */
@@ -203,9 +203,20 @@ class jUrl {
             $url = new jUrl('',$params);
             $url->requestType= $sel->request;
         }
-
-        return $url->toString($forxml,true);
+        return $url;
     }
+    
+    /**
+    * Gets the url string from parameters
+    * @param string $actSel  action selector. if null we get the script path
+    * @param array $params associative array with the parameters
+    */
+    static function getStr ($actSel = null, $params = array (), $forxml = false) {
+        $url = jUrl::get($actSel, $params, $forxml);
+        
+        return $url->toString($forxml, true);
+    }
+    
 
     /**
      * Parse a url

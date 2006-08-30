@@ -89,7 +89,7 @@ class UTCreateUrls extends UnitTestCase {
       $this->sendMessage("simple, multiview = false");
       foreach($urlList as $k=>$urldata){
           try{
-            $url = jUrl::get ($urldata[0], $urldata[1]);
+            $url = jUrl::getStr ($urldata[0], $urldata[1]);
          }catch(jExceptionSelector $e){
             $url = false;
          }
@@ -111,7 +111,7 @@ class UTCreateUrls extends UnitTestCase {
 
       foreach($urlList as $k=>$urldata){
           try{
-            $url = jUrl::get ($urldata[0], $urldata[1]);
+            $url = jUrl::getStr ($urldata[0], $urldata[1]);
          }catch(jExceptionSelector $e){
             $url = false;
          }
@@ -169,7 +169,7 @@ class UTCreateUrls extends UnitTestCase {
       $this->sendMessage("significant, multiview = false");
       foreach($urlList as $k=>$urldata){
          try{
-            $url = jUrl::get ($urldata[0], $urldata[1]);
+            $url = jUrl::getStr ($urldata[0], $urldata[1]);
          }catch(jExceptionSelector $e){
             $url = false;
          }
@@ -191,7 +191,7 @@ class UTCreateUrls extends UnitTestCase {
 
       foreach($urlList as $k=>$urldata){
          try{
-            $url = jUrl::get ($urldata[0], $urldata[1]);
+            $url = jUrl::getStr ($urldata[0], $urldata[1]);
          }catch(jExceptionSelector $e){
             $url = false;
          }
