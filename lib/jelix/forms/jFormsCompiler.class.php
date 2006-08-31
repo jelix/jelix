@@ -110,10 +110,7 @@ class jFormsCompiler implements jISimpleCompiler {
 
       $source[]='} ?>';
 
-
-
-      $file = new jFile();
-      $file->write($cachefile, implode("\n", $source));
+      jFile::write($cachefile, implode("\n", $source));
       return true;
    }
 

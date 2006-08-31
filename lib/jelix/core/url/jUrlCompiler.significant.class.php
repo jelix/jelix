@@ -79,7 +79,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
         $createUrlInfos=array();
         $createUrlContent="<?php \n";
         $defaultEntrypoints=array();
-        $file = new jFile();
+
         foreach($xml->children() as $name=>$tag){
            if(!preg_match("/^(.*)entrypoint$/", $name,$m)){
                //TODO : erreur
@@ -198,10 +198,10 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
 
            $parseContent.='$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($entryPoint).'\'] = '.var_export($parseInfos, true).";\n?>";
 
-           $file->write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($entryPoint).'.entrypoint.php',$parseContent);
+           jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($entryPoint).'.entrypoint.php',$parseContent);
         }
         $createUrlContent .='$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($createUrlInfos, true).";\n?>";
-        $file->write(JELIX_APP_TEMP_PATH.'compiled/urlsig/creationinfos.php',$createUrlContent);
+        jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/creationinfos.php',$createUrlContent);
         return true;
     }
 

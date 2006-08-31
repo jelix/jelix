@@ -67,8 +67,7 @@ class jDaoCompiler  implements jISimpleCompiler {
 
         // génération des classes PHP correspondant à la définition de la DAO
         $compiled = '<?php '.$generator->buildClasses ()."\n?>";
-        $objectWriter = new jFile ();
-        $objectWriter->write ($selector->getCompiledFilePath(), $compiled);
+        jFile::write ($selector->getCompiledFilePath(), $compiled);
         return true;
     }
 

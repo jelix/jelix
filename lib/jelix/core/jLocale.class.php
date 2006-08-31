@@ -95,8 +95,7 @@ class jBundle {
         if(isset($this->_strings[$charset])){
             $content = '<?php $_loaded= '.var_export($this->_strings[$charset], true).' ?>';
 
-            $file = new jFile();
-            $file->write($cache, $content);
+            jFile::write($cache, $content);
         }
     }
 
@@ -203,7 +202,7 @@ class jLocale {
         $pos = strpos ($key, '.');
         $keySelector = substr ($key, 0, $pos);
         $messageKey = substr($key, $pos+1);
-        
+
         try{
             $file = new jSelectorLoc($keySelector, $locale, $charset);
         }catch(jExceptionSelector $e){

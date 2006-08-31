@@ -175,8 +175,7 @@ class jTplCompiler
         @rename($_tmp_file, $cachefile);
         @chmod($cachefile, 0664);
 #else
-        $file = new jFile();
-        $file->write($cachefile, $result);
+        jFile::write($cachefile, $result);
 
         jContext::pop();
 #endif

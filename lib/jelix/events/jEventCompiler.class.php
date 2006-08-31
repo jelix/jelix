@@ -41,8 +41,7 @@ class jEventCompiler implements jIMultiFileCompiler {
     public function endCompile($cachefile){
         $content = '<?php $GLOBALS["JELIX_EVENTS"] = '.var_export($this->eventList,true).";\n?>";
 
-        $file = new jFile();
-        $file->write($cachefile, $content);
+        jFile::write($cachefile, $content);
     }
 }
 
