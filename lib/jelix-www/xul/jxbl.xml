@@ -124,12 +124,14 @@
            ]]>
           </constructor>
           <field name="offset">0</field>
+          <field name="count" >0</field>
+
           <field name="firstbutton">null</field>
           <field name="previousbutton">null</field>
           <field name="nextbutton">null</field>
           <field name="lastbutton">null</field>
           <field name="httpreq" >null</field>
-          <field name="count" >0</field>
+
           <property name="increment">
               <getter>return parseInt(this.getAttribute('increment'));</getter>
               <setter>this.setAttribute('increment',val);</setter>
@@ -161,21 +163,34 @@
           </method>
           <method name="first">
               <body><![CDATA[
+                 this.offset = 0;
                  this.show();
+
               ]]></body>
           </method>
           <method name="previous">
               <body><![CDATA[
+
+                 if(this.offset > this.increment){
+                    this.offset -= this.increment;
+                 }else{
+                    this.offset = 0;
+                 }
                  this.show();
               ]]></body>
           </method>
           <method name="next">
               <body><![CDATA[
-                 this.show();
+                 if(this.offset + this.increment <= this.count){
+                     this.offset += this.increment;
+                     this.show();
+                  }
+
               ]]></body>
           </method>
           <method name="last">
               <body><![CDATA[
+                 this.offset=this.count - this.increment;
                  this.show();
               ]]></body>
           </method>

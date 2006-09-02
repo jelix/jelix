@@ -18,7 +18,7 @@
  */
 function jtpl_function_jurl($tpl, $selector, $params=array())
 {
-     echo jUrl::getStr($selector, $params, false);
+     echo jUrl::get($selector, $params, 0);
 }
 
 ?>

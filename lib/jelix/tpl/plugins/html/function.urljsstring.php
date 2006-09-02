@@ -30,7 +30,7 @@ function jtpl_function_urljsstring($tpl, $selector, $params=array(), $jsparams=a
         $repl[] = '"+encodeURIComponent('.$var.')+"';
     }
 
-    $url = jUrl::getStr($selector, $params, false);
+    $url = jUrl::get($selector, $params);
 
     echo '"'.str_replace($search, $repl, $url).'"';
 }

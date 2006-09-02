@@ -23,7 +23,7 @@ class UTCreateUrls extends UnitTestCase {
       global $gJCoord, $gJConfig;
 
       $this->oldUrlScriptPath = $gJCoord->request->url_script_path;
-      $this->oldParams = $gJCoord->request->url->params;
+      $this->oldParams = $gJCoord->request->params;
       $this->oldRequestType = $gJCoord->request->type;
       $this->oldUrlengineConf = $gJConfig->urlengine;
       $this->simple_urlengine_entrypoints = $gJConfig->simple_urlengine_entrypoints;
@@ -34,7 +34,7 @@ class UTCreateUrls extends UnitTestCase {
       global $gJCoord, $gJConfig;
 
       $gJCoord->request->url_script_path=$this->oldUrlScriptPath;
-      $gJCoord->request->url->params=$this->oldParams;
+      $gJCoord->request->params=$this->oldParams;
       $gJCoord->request->type=$this->oldRequestType;
       $gJConfig->urlengine = $this->oldUrlengineConf;
       $gJConfig->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
@@ -42,11 +42,51 @@ class UTCreateUrls extends UnitTestCase {
     }
 
 
+    protected function _doCompareUrl($title, $urlList,$trueResult ){
+        $this->sendMessage($title);
+        foreach($urlList as $k=>$urldata){
+            try{
+                $url = jUrl::get($urldata[0], $urldata[1]);
+                $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
+            }catch(jExceptionSelector $e){
+                $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage());
+            }catch(jException $e){
+                $this->assertTrue(false,'jException: '.$e->getMessage());
+            }
+        }
+    }
+    protected function _doCompareError($title, $urlList,$trueResult ){
+        $this->sendMessage($title);
+
+        $labels = array('Exception','jException','jExceptionSelector');
+
+        foreach($urlList as $k=>$urldata){
+            $res = $trueResult[$k];
+            $msg = 'Attendu : exception='.$labels[$res[0]].' code='.$res[1];
+            $msg2 = $msg.' localkey='.$res[2];
+
+            try{
+                $url = jUrl::get($urldata[0], $urldata[1]);
+                $this->assertTrue( false, ($res[0]?$msg2:$msg).'<br>Survenue : aucune !!!');
+            }catch(jExceptionSelector $e){
+                $msgerr = '<br>Survenue : exception=jExceptionSelector code='.$e->getCode().' localkey='.$e->getMessage();
+                $this->assertTrue( ($res[0]==2) ,$msg2.$msgerr);
+            }catch(jException $e){
+                $msgerr = '<br>Survenue : exception=jException code='.$e->getCode().' localkey='.$e->getMessage();
+                $this->assertTrue( ($res[0]==1) ,$msg2.$msgerr);
+            }catch(Exception $e){
+                $msgerr = '<br>Survenue : exception=Exception code='.$e->getCode();
+                $this->assertTrue( ($res[0]==0) ,$msg.$msgerr);
+
+            }
+        }
+    }
+
     function testSimpleEngine() {
        global $gJConfig, $gJCoord;
 
        $gJCoord->request->url_script_path='/';
-       $gJCoord->request->url->params=array();
+       $gJCoord->request->params=array();
        //$gJCoord->request->type=;
        $gJConfig->urlengine = array(
          'engine'=>'simple',
@@ -73,7 +113,6 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('unittest~urlsig_url4', array('first'=>'premier',  'second'=>'deuxieme'));
       // celle ci n'a pas de définition dans urls.xml *exprés*
       $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
-      $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
 
       $trueResult=array(
@@ -82,22 +121,11 @@ class UTCreateUrls extends UnitTestCase {
           "/testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
           "/foo/bar.php?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
           "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
-          false,
           "/xmlrpc.php",
        );
 
-      $this->sendMessage("simple, multiview = false");
-      foreach($urlList as $k=>$urldata){
-          try{
-            $url = jUrl::getStr ($urldata[0], $urldata[1]);
-         }catch(jExceptionSelector $e){
-            $url = false;
-         }
-         $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
-      }
+      $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
 
-
-      $this->sendMessage("simple, multiview = true");
       $gJConfig->urlengine['multiview']=true;
       $trueResult=array(
           "/index?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
@@ -105,29 +133,59 @@ class UTCreateUrls extends UnitTestCase {
           "/testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
           "/foo/bar?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
           "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
-          false,
           "/xmlrpc",
        );
+      $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
 
-      foreach($urlList as $k=>$urldata){
-          try{
-            $url = jUrl::getStr ($urldata[0], $urldata[1]);
-         }catch(jExceptionSelector $e){
-            $url = false;
-         }
-         $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
-      }
-
-      //$this->sendMessage("évenement simple");
-      //$this->assertTrue($temoin == $response, 'Premier evènement');
     }
+
+
+
+    function testSimpleEngineError(){
+       global $gJConfig, $gJCoord;
+
+       $gJCoord->request->url_script_path='/';
+       $gJCoord->request->params=array();
+       //$gJCoord->request->type=;
+       $gJConfig->urlengine = array(
+         'engine'=>'simple',
+         'enableParser'=>true,
+         'multiview'=>false,
+         'basePath'=>'/',
+         'defaultEntrypoint'=>'index',
+         'entrypointExtension'=>'.php',
+         'notfoundAct'=>'jelix~notfound'
+       );
+
+      $urlList=array();
+      $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
+
+      $trueResult=array(
+          // type exception : 0 Exception, 1 jException, 2 jExceptionSelector
+          // code
+          // local key
+          array(2,11,'jelix~errors.selector.invalid.target'),
+       );
+
+      $this->_doCompareError("simple, errors, multiview = false", $urlList,$trueResult);
+
+      $gJConfig->urlengine['multiview']=true;
+      $trueResult=array(
+          array(2,11,'jelix~errors.selector.invalid.target'),
+       );
+      $this->_doCompareError("simple, errors multiview = true", $urlList,$trueResult);
+
+
+    }
+
+
 
 
     function testSignificantEngine() {
        global $gJConfig, $gJCoord;
 
        $gJCoord->request->url_script_path='/';
-       $gJCoord->request->url->params=array();
+       $gJCoord->request->params=array();
        //$gJCoord->request->type=;
        $gJConfig->urlengine = array(
          'engine'=>'significant',
@@ -151,7 +209,6 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('unittest~urlsig_url4', array('first'=>'premier',  'second'=>'deuxieme'));
       // celle ci n'a pas de définition dans urls.xml *exprés*
       $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
-      $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('news~bar', array('aaa'=>'bbb'));
 
@@ -161,22 +218,13 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php/test/cms/actualite/65-c-est-la-fete-au-village",
           "/foo/bar.php/withhandler/premier/deuxieme",
           "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
-          false,
           "/xmlrpc.php",
           "/news.php?aaa=bbb&action=default_bar"
        );
 
-      $this->sendMessage("significant, multiview = false");
-      foreach($urlList as $k=>$urldata){
-         try{
-            $url = jUrl::getStr ($urldata[0], $urldata[1]);
-         }catch(jExceptionSelector $e){
-            $url = false;
-         }
-         $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
-      }
+      $this->_doCompareUrl("significant, multiview = false", $urlList,$trueResult);
 
-      $this->sendMessage("significant, multiview = true");
+
       $gJConfig->urlengine['multiview']=true;
       $trueResult=array(
           "/index/test/news/2005/10/35",
@@ -184,21 +232,58 @@ class UTCreateUrls extends UnitTestCase {
           "/index/test/cms/actualite/65-c-est-la-fete-au-village",
           "/foo/bar/withhandler/premier/deuxieme",
           "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
-          false,
           "/xmlrpc",
           "/news?aaa=bbb&action=default_bar"
        );
-
-      foreach($urlList as $k=>$urldata){
-         try{
-            $url = jUrl::getStr ($urldata[0], $urldata[1]);
-         }catch(jExceptionSelector $e){
-            $url = false;
-         }
-         $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
-      }
+      $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
 
     }
+
+
+    function testSignificantEngineError(){
+       global $gJConfig, $gJCoord;
+
+       $gJCoord->request->url_script_path='/';
+       $gJCoord->request->params=array();
+       //$gJCoord->request->type=;
+       $gJConfig->urlengine = array(
+         'engine'=>'significant',
+         'enableParser'=>true,
+         'multiview'=>false,
+         'basePath'=>'/',
+         'defaultEntrypoint'=>'index',
+         'entrypointExtension'=>'.php',
+         'notfoundAct'=>'jelix~notfound'
+       );
+
+      $gJConfig->_modulesPathList['news']='/';
+
+      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+
+
+      $urlList=array();
+      $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
+
+      $trueResult=array(
+          // type exception : 0 Exception, 1 jException, 2 jExceptionSelector
+          // code
+          // local key
+          array(2,11,'jelix~errors.selector.invalid.target'),
+       );
+
+      $this->_doCompareError("significant, errors, multiview = false", $urlList,$trueResult);
+
+      $gJConfig->urlengine['multiview']=true;
+      $trueResult=array(
+          array(2,11,'jelix~errors.selector.invalid.target'),
+       );
+      $this->_doCompareError("significant, errors multiview = true", $urlList,$trueResult);
+
+
+    }
+
+
+
 
 }
 ?>

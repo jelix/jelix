@@ -10,16 +10,15 @@ class URLSurlsig implements jIUrlSignificantHandler {
 
     function parse($url){
         if(preg_match("/^\/withhandler\/(.*)\/(.*)$/",$url->pathInfo,$match)){
-
-            $url->pathInfo='';
-            $url->setParam('first',$match[1]);
-            $url->setParam('second',$match[2]);
-            return true;
+            $urlact = new jUrlAction($url->params);
+            $urlact->setParam('first',$match[1]);
+            $urlact->setParam('second',$match[2]);
+            return $urlact;
         }else
             return false;
     }
 
-    function create($url){
+    function create($urlact, $url){
 
         $f=$url->getParam('first');
         $s=$url->getParam('second');

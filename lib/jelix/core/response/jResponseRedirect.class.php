@@ -32,7 +32,7 @@ final class jResponseRedirect extends jResponse {
     public function output(){
        if($this->hasErrors()) return false;
 
-        header ('location: '.jUrl::getStr($this->action, $this->params));
+        header ('location: '.jUrl::get($this->action, $this->params));
         return true;
     }
 

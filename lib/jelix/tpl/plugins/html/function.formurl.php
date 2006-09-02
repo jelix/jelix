@@ -15,11 +15,10 @@
  * @param jTpl $tpl template engine
  * @param string $selector selector action
  * @param array $params parameters for the url
- * @param boolean $escape if true, then escape the string for html
  */
-function jtpl_function_formurl($tpl, $selector, $params=array(),$escape=true)
+function jtpl_function_formurl($tpl, $selector, $params=array())
 {
-    $url = jUrl::get($selector, $params, $escape);
+    $url = jUrl::get($selector, $params, 2); // retourne le jurl correspondant
     echo $url->scriptName . $url->pathInfo;
 }
 

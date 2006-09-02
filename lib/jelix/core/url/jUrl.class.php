@@ -15,90 +15,65 @@
 * http://www.copix.org
 */
 
+/**
+ * interface for url engines
+ */
 interface jIUrlEngine {
   /**
-    * Parse une chaine url
+    * Parse some url components
     * @param string $scriptNamePath    /path/index.php
-    * @param string $pathinfo the path info of the url.
-    * @param array  $params  url parameter ($_REQUEST)
-    * @return jUrl l'objet url resultant
+    * @param string $pathinfo          the path info part of the url (part between script name and query)
+    * @param array  $params            url parameters (query part e.g. $_REQUEST)
+    * @return jUrlAction
     */
   public function parse($scriptNamePath, $pathinfo, $params );
 
   /**
-   * Modifie les données de l'url selon le type d'url proposé par le moteur d'url
-   * (notament le pathinfo etc..)
-   * @param jUrl $url l'url à transformer
-   * @return void
+   * Create a jurl object with the given action datas
+   * @param jUrlAction $url  information about the action
+   * @return jUrl the url correspondant to the action
    */
-  public function create($url);
+  public function create($urlact);
 
 }
 
-
 /**
-* Objet url permettant de manipuler facilement une url
-*/
-class jUrl {
-    /**
-    * nom du script
-    * @var string
-    */
-    public $scriptName;
+ * base class for jUrl and jUrlAction
+ */
+
+abstract class jUrlBase {
 
     /**
-    * paramètres de l'url
-    * @var array
-    */
-    public $params;
+     * parameters
+     */
+    public $params=array();
 
     /**
-    * info path, partie du path situé aprés le nom du script dans le path
-    * @var string
-    */
-    public $pathInfo = '';
-
-
-    public $requestType ='';
-    /**
-    * initialise l'objet
-    * @param    string    $scriptname    nom du script
-    * @param    array    $params    parametres
-    */
-    function __construct ($scriptname='', $params=array (), $pathInfo=''){
-        $this->params      = $params;
-        $this->scriptName  = $scriptname;
-        $this->pathInfo    = $pathInfo;
-    }
-
-    /**
-    * ajoute ou redefini un paramètre url
-    * @param    string    $name    nom du paramètre
-    * @param    string    $value    valeur du paramètre
+    * add or change the value of a parameter
+    * @param    string    $name    parameter name
+    * @param    string    $value   parameter value
     */
     public function setParam ($name, $value){
         $this->params[$name] = $value;
     }
 
     /**
-    * supprime un paramètre
-    * @param    string    $name    nom du paramètre
+    * delete a parameter
+    * @param    string    $name    parameter name
     */
     public function delParam ($name){
-        if (isset($this->params[$name]))
-        unset ($this->params[$name]);
+        if (array_key_exists($name, $this->params))
+            unset ($this->params[$name]);
     }
 
     /**
-    * récupère un paramètre
-    * @param    string    $name    nom du paramètre
-    * @param    string    $defaultValue   nom de la valeur par défaut renvoyé si le paramètre n'existe pas.
+    * get a parameter value
+    * @param string  $name    parameter name
+    * @param string  $defaultValue   the default value returned if the parameter doesn't exists
+    * @return string the value
     */
     public function getParam ($name, $defaultValue=null){
-        if (isset($this->params[$name]))
-          return $this->params[$name];
-        else
-          return $defaultValue;
+        return array_key_exists($name, $this->params)? $this->params[$name] :$defaultValue;
     }
 
     /**
@@ -108,53 +83,127 @@ class jUrl {
         $this->params = array ();
     }
 
+
     /**
-    * renvoi l'url sous forme de chaine.
-    * @param    boolean    $forxml indique si l'url est destiné à être intégré dans du code HTML/XML ou non
-    * @param    boolean    $isUrlForApp indique si l'url est une url pour l'appli, ou pour un lien externe
-    * @return    string    l'url formée
-    */
-    public function toString ($forxml = false, $isUrlForApp=true){
-        global $gJCoord;
-        $urlobj=$this;
-        if($isUrlForApp){
-            // dans le cas d'une url pour jelix, on passe par le moteur d'url spécifique
+     * get the url string corresponding to the url/action
+     * @param boolean $forxml  true: some characters will be escaped
+     * @return string
+     */
+    abstract public function toString($forxml = false);
 
-            // on ne doit pas modifier les données de l'url, il nous faut donc un clone
-            $urlobj= clone $this;
-            if($urlobj->requestType == ''){
-               $urlobj->requestType = $gJCoord->request->type;
-            }
 
-            $engine = self::getEngine();
-            $engine->create($urlobj); // set path info
-        }
-        if (count ($urlobj->params)>0){
-            $url = $urlobj->scriptName.$urlobj->pathInfo.'?'.$urlobj->collapseParams ($forxml);
-        }else{
-            $url = $urlobj->scriptName.$urlobj->pathInfo;
-        }
-
-        return $url;
-    }
-
+    /**
+     * magic method for echo and others...
+     */
     public function __toString(){
         return $this->toString();
     }
 
 
+}
+
+
+
+
+/**
+ * A container to store url datas for an action
+ */
+class jUrlAction extends jUrlBase {
+
     /**
-    * Transforms
-    * @param boolean $forxml if the output must be HTML/XML compliant
-    * @return string
+     * the request type
+     * @var string
+     */
+    public $requestType='';
+
+    /**
+     * constructor...
+     */
+    function __construct ($params=array(),$request=''){
+        $this->params=$params;
+        $this->requestType=$request;
+        if($this->requestType == ''){
+            $this->requestType = $GLOBALS['gJCoord']->request->type;
+        }
+    }
+
+    /**
+     * get the url string corresponding to the action
+     * @param boolean $forxml  true: some characters will be escaped
+     * @return string
+     */
+    public function toString($forxml = false){
+        return $this->toUrl()->toString($forxml);
+    }
+
+    /**
+     * get the jUrl object corresponding to the action
+     * @return jUrl
+     */
+    public function toUrl() {
+        return jUrl::getEngine()->create($this);
+    }
+}
+
+
+/**
+* Object that contains url datas, and which provides static method helpers
+*/
+class jUrl extends jUrlBase {
+
+    const STRING=0;
+    const XMLSTRING=1;
+    const JURL=2;
+    const JURLACTION=3;
+    /**
+    * script name including its path
+    * @var string
     */
-    public function collapseParams ($forxml = false) {
-        return $this->_collapseParams($this->params, $forxml);
+    public $scriptName;
+
+    /**
+    * path info part of the url
+    * @var string
+    */
+    public $pathInfo = '';
+
+    /**
+    * constructor
+    * @param    string    $scriptname    script name
+    * @param    array    $params    parameters
+    * @param    string    $pathInfo    path info contents
+    */
+    function __construct ($scriptname='', $params=array (), $pathInfo=''){
+        $this->params      = $params;
+        $this->scriptName  = $scriptname;
+        $this->pathInfo    = $pathInfo;
     }
 
 
+    /**
+    * converts the url to a string
+    * @param boolean $forxml  true: some characters will be escaped
+    * @return string
+    */
+    public function toString ($forxml = false){
+        $url = $this->scriptName.$this->pathInfo;
+        if (count ($this->params)>0){
+            $url .='?'.self::_collapseParams($this->params, $forxml);
+        }
+        return $url;
+    }
 
-    //============================== other methods that can be called without instanciation
+    /**
+    * construct query part of the url
+    * @param boolean $forxml if the output must be HTML/XML compliant
+    * @return string
+    * @deprecated
+    */
+    public function collapseParams ($forxml = false) {
+        return self::_collapseParams($this->params, $forxml);
+    }
+
+    //============================== static helper methods
 
     /**
     * get current Url
@@ -185,49 +234,37 @@ class jUrl {
     }
 
     /**
-    * Gets the url object from parameters
-    * @param string $actSel  action selector. if null we get the script path
+    * Gets the url corresponding to an action
+    * @param string $actSel  action selector.
     * @param array $params associative array with the parameters
+    * @param integer $what one of the jUrl const : STRING XMLSTRING JURL JURLACTION
+    * @return mixed a value, depending of the $what parameter
     */
-    static function get ($actSel = null, $params = array (), $forxml = false) {
+    static function get ($actSel, $params = array (), $what=0) {
 
-        if ($actSel === null){
-            return '/'.$GLOBALS['gJCoord']->request->url_script_path;
-        }
-        if($actSel == '@'){
-            $url = new jUrl('',array_merge($GLOBALS['gJCoord']->request->url->params,$params));
-        }else{
-            $sel = new JSelectorAct($actSel);
-            $params['module'] = $sel->module;
-            $params['action'] = $sel->resource;
-            $url = new jUrl('',$params);
-            $url->requestType= $sel->request;
-        }
-        return $url;
+        $sel = new JSelectorAct($actSel);
+        $params['module'] = $sel->module;
+        $params['action'] = $sel->resource;
+        $ua = new jUrlAction($params, $sel->request);
+
+        if($what == 3) return $ua;
+
+        $url = jUrl::getEngine()->create($ua);
+
+        if($what == 2) return $url;
+
+        return $url->toString($what != 0);
     }
-    
-    /**
-    * Gets the url string from parameters
-    * @param string $actSel  action selector. if null we get the script path
-    * @param array $params associative array with the parameters
-    */
-    static function getStr ($actSel = null, $params = array (), $forxml = false) {
-        $url = jUrl::get($actSel, $params, $forxml);
-        
-        return $url->toString($forxml, true);
-    }
-    
 
     /**
      * Parse a url
      * @param string $scriptNamePath    /path/index.php
-     * @param string $pathinfo the path info of the url.
-     * @param array  $params  url parameter ($_REQUEST)
-     * @return jUrl
+     * @param string $pathinfo          the path info of the url.
+     * @param array  $params            url parameter ($_REQUEST)
+     * @return jUrlAction
      */
     static function parse($scriptNamePath, $pathinfo, $params ){
-         $engine = jUrl::getEngine();
-         return $engine->parse($scriptNamePath,$pathinfo, $params);
+         return jUrl::getEngine()->parse($scriptNamePath,$pathinfo, $params);
     }
 
 
@@ -236,17 +273,15 @@ class jUrl {
     * @param array $params array of parameters
     * @param boolean $forxml if the string has to be html compliant (&amp; for &)
     * @return string the url
-    * @access private
     */
     static private function _collapseParams ($params, $forxml = false) {
         $url = '';
-        if (count ($params)>0){
-            foreach ($params as $k=>$v){
-                if ($url == ''){
-                    $url = $k.'='.urlencode($v);
-                }else{
-                    $url .= ($forxml ? '&amp;' : '&').$k.'='.urlencode($v);
-                }
+        $amp = ($forxml ? '&amp;' : '&');
+        foreach ($params as $k=>$v){
+            if ($url == ''){
+                $url = $k.'='.urlencode($v);
+            }else{
+                $url .= $amp.$k.'='.urlencode($v);
             }
         }
         return $url;
@@ -256,20 +291,21 @@ class jUrl {
     * gets the module/action parameters from the destination string.
     * @param string $dest the destination to parse
     * @return assocative array where keys are module and action
+    * @deprecated
     */
     static function getAction ($actionSelector){
-        global $gJCoord, $gJConfig;
-
-        if($actionSelector == '@'){
-            // we get the current url
-            return $gJCoord->request->url->params;
-        }
         $sel = new JSelectorAct($actionSelector);
         return array('module'=>$sel->module, 'action'=>$sel->resource, 'request'=>$sel->request);
     }
 
 
-
+    /**
+     * escape and simplier a string to be a part of an url path
+     * remove or replace not allowed characters etc..
+     * @param string $str the string to escape
+     * @param boolean $highlevel false : just to a urlencode. true, replace some characters
+     * @return string escaped string
+     */
     static function escape($str, $highlevel=false){
         if($highlevel){
             $str=strtr($str,'àâäéèêëïîôöùüû','aaaeeeeiioouuu'); // supprime les caractères accentués, et les quotes, doubles quotes
@@ -283,10 +319,20 @@ class jUrl {
         }
     }
 
+    /**
+     * perform the opposit of escape
+     * @param string $str the string to escape
+     * @return string
+     */
     static function unescape($str){
         return strtr ($str, array ('--'=>'-', '-'=>' '));
     }
 
+    /**
+     * return the current url engine
+     * @return jIUrlEngine
+     * @internal call with true parameter, to force to re-instancy the engine. usefull for test suite
+     */
     static function getEngine($reset=false){
         static $engine = null;
 

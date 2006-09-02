@@ -29,12 +29,12 @@ class CTLogin extends jController {
         $conf = $GLOBALS['gJCoord']->getPlugin ('auth')->config;
 
         if (!($conf['enable_after_login_override'] && $url_return= $this->param('auth_url_return'))){
-            $url_return =  jUrl::getStr($conf['after_login']);
+            $url_return =  jUrl::get($conf['after_login']);
         }
 
         if (!jAuth::login($this->param('login'), $this->param('password'))){
             sleep (intval($conf['on_error_sleep']));
-            $url_return = jUrl::getStr('auth~login_form',array ('login'=>$this->param('login'), 'failed'=>1));
+            $url_return = jUrl::get('auth~login_form',array ('login'=>$this->param('login'), 'failed'=>1));
         }
 
         $rep = $this->getResponse('redirectUrl');
@@ -50,7 +50,7 @@ class CTLogin extends jController {
         $conf = $GLOBALS['gJCoord']->getPlugin ('auth')->config;
 
         if (!($conf['enable_after_logout_override'] && $url_return= $this->param('auth_url_return'))){
-            $url_return =  jUrl::getStr($conf['after_logout']);
+            $url_return =  jUrl::get($conf['after_logout']);
         }
         $rep = $this->getResponse('redirectUrl');
         $rep->url = $url_return;

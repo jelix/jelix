@@ -22,7 +22,7 @@ class UTParseUrls extends UnitTestCase {
       global $gJCoord, $gJConfig;
 
       $this->oldUrlScriptPath = $gJCoord->request->url_script_path;
-      $this->oldParams = $gJCoord->request->url->params;
+      $this->oldParams = $gJCoord->request->params;
       $this->oldRequestType = $gJCoord->request->type;
       $this->oldUrlengineConf = $gJConfig->urlengine;
       $this->simple_urlengine_entrypoints = $gJConfig->simple_urlengine_entrypoints;
@@ -32,7 +32,7 @@ class UTParseUrls extends UnitTestCase {
       global $gJCoord, $gJConfig;
 
       $gJCoord->request->url_script_path=$this->oldUrlScriptPath;
-      $gJCoord->request->url->params=$this->oldParams;
+      $gJCoord->request->params=$this->oldParams;
       $gJCoord->request->type=$this->oldRequestType;
       $gJConfig->urlengine = $this->oldUrlengineConf;
       $gJConfig->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
@@ -42,7 +42,7 @@ class UTParseUrls extends UnitTestCase {
        global $gJConfig, $gJCoord;
 
        $gJCoord->request->url_script_path='/';
-       $gJCoord->request->url->params=array();
+       $gJCoord->request->params=array();
        //$gJCoord->request->type=;
        $gJConfig->urlengine = array(
          'engine'=>'significant',

@@ -19,8 +19,8 @@ class jClassicRequest extends jRequest {
 
     protected function _initParams(){
 
-        $this->url  = jUrl::parse($_SERVER['SCRIPT_NAME'], $this->url_path_info, $_GET);
-        $this->params = array_merge($this->url->params, $_POST);
+        $url  = jUrl::parse($_SERVER['SCRIPT_NAME'], $this->url_path_info, $_GET);
+        $this->params = array_merge($url->params, $_POST);
     }
 
 

@@ -59,7 +59,6 @@ class jJsonRpcRequest extends jRequest {
         // Définition de l'action a executer et des paramètres
         $this->params['module'] = $module;
         $this->params['action'] = $action;
-        $this->url  = new jUrl($_SERVER['SCRIPT_NAME']);
     }
 
     public function allowedResponses(){ return array('jResponseJsonrpc');}

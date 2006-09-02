@@ -15,6 +15,5 @@
 <li> "testapp~main_" : {jurl "testapp~main_"}</li>
 <li> "testapp~#" : {jurl "testapp~#"}</li>
 <li> "#~#" : {jurl "#~#"}</li>
-<li> "@" : {jurl "@"}</li>
 </ul>
 -->

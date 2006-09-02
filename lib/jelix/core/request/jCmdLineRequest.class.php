@@ -10,7 +10,9 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
+/**
+ * a request object for scripts used in a command line
+ */
 class jCmdLineRequest extends jRequest {
 
     public $type = 'cmdline';
@@ -19,10 +21,10 @@ class jCmdLineRequest extends jRequest {
 
     protected function _initParams(){
         global $gJConfig;
-        
+
         $argv = $_SERVER['argv'];
         $scriptName = array_shift($argv); // shift the script name
-         
+
         if ($_SERVER['argc'] == 1) {
             $argsel = $gJConfig->defaultModule.'~'.$gJConfig->defaultAction;
         } else {
@@ -39,8 +41,7 @@ class jCmdLineRequest extends jRequest {
 
         $this->params = $argv;
         $this->params['module'] = $selector->module;
-        $this->params['action'] = $selector->controller .'_'. $selector->method;
-        $this->url  = null; // no URL in command line mode
+        $this->params['action'] = $selector->ressource;
     }
 }
 ?>

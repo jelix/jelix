@@ -217,6 +217,15 @@ cd lib/jelix-modules/jelix/locales/fr_FR
   auth.UTF-8.properties
 cd lib/jelix-modules/jelix/controllers
   help.cmdline.php
+  error.classic.php
+  error.xul.php
+  error.jsonrpc.php
+  error.xmlrpc.php
+  error.rdf.php
+cd lib/jelix-modules/jelix/templates
+  404.xul.tpl
+  404.html.tpl
+
 cd lib/jelix-modules/auth
   module.xml
   events.xml

@@ -78,6 +78,9 @@ class jCoordinator {
         // load configuration data
         $gJConfig = jConfig::load($configFile);
 
+        //make sure that the session cookie is only for the current application
+        if(!$gJConfig->shared_session)
+            session_set_cookie_params ( 0 , $gJConfig->urlengine['basePath']);
 
         // set Error and exception handler
         // ne devrait être désactivé que lors de certains tests de jelix

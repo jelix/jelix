@@ -15,7 +15,7 @@
 /**
  * base class for object which retrieve all parameters of an http request. The
  * process depends on the type of request (ex: xmlrpc..)
- * 
+ *
  * @copyright line codes which set the url_* properties are took from Copix Framework v2.3dev20050901, CopixCoordinator.class.php,
  * copyrighted by CopixTeam and released under GNU Lesser General Public Licence
  * author : Gerald Croes, Laurent Jouanneau
@@ -59,13 +59,6 @@ abstract class jRequest {
      * @var string
      */
     public $url_path_info;
-
-
-    /**
-     * 
-     * @var jUrl
-     */
-    public $url;
 
     function __construct(){  }
 
