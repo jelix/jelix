@@ -12,6 +12,8 @@
 
 /**
 * Genérateur de réponse jsonrpc
+* @package  jelix
+* @subpackage core
 * @see jResponse
 * @see http://json-rpc.org/specs.xhtml
 */

@@ -10,7 +10,11 @@
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
+/**
+* Exception handler for the framework.
+* Replace the default PHP Exception handler
+* @param   Exception   $exception  the exception object
+*/
 function jExceptionHandler($exception){
     global $gJConfig, $gJCoord;
 
@@ -70,36 +74,62 @@ function jExceptionHandler($exception){
 }
 
 
-
+/**
+ * Jelix Exception
+ * It handles locale messages.
+ * message property contains the locale key, and a new property
+ * contains the localized message
+ * @package  jelix
+ * @subpackage core
+ */
 class jException extends Exception {
-   public $localeParams = array();
-   public $localizedMessage = '';
 
-   public function __construct($localekey, $localeParams=array(), $code = 1) {
-      try{
-         $this->localizedMessage = jLocale::get($localekey, $localeParams);
-      }catch(Exception $e){
-         $this->localizedMessage = $localekey;
-      }
-      if(preg_match('/^\s*\((\d+)\)(.+)$/',$this->localizedMessage,$m)){
-          $code = $m[1];
-          $this->localizedMessage = $m[2];
-      }
-      parent::__construct($localekey, $code);
-      $this->localeParams=$localeParams;
+    /**
+     * parameters for the locale key
+     */
+    public $localeParams = array();
 
-   }
+    /**
+     * the localized message
+     * @var string
+     */
+    public $localizedMessage = '';
 
-   public function __toString() {
-      return $this->localizedMessage;
-   }
+    /**
+     * @param string $localekey a locale key
+     * @param array $localeParams parameters for the message (for sprintf)
+     * @param integer $code error code (can be provided by the localized message)
+     */
+    public function __construct($localekey, $localeParams=array(), $code = 1) {
+        try{
+            $this->localizedMessage = jLocale::get($localekey, $localeParams);
+        }catch(Exception $e){
+            $this->localizedMessage = $localekey;
+        }
+        if(preg_match('/^\s*\((\d+)\)(.+)$/',$this->localizedMessage,$m)){
+            $code = $m[1];
+            $this->localizedMessage = $m[2];
+        }
+        parent::__construct($localekey, $code);
+        $this->localeParams=$localeParams;
+    }
 
-   public function getLocaleMessage(){
-      return $this->localizedMessage;
-   }
+    /**
+     * magic function for echo
+     * @return string localized message
+     */
+    public function __toString() {
+        return $this->localizedMessage;
+    }
+
+    /**
+     * getter for the localized message
+     * @return string
+     */
+    public function getLocaleMessage(){
+        return $this->localizedMessage;
+    }
 
 }
-
-
 
 ?>

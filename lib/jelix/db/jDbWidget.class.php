@@ -15,6 +15,11 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
+/**
+ *
+ * @package  jelix
+ * @subpackage db
+ */
 class jDbWidget {
     /**
     * a jDbConnection object

@@ -10,22 +10,43 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+/**
+* This object is responsible to include and instancy some classes stored in the classes directory of modules.
+* @package     jelix
+* @subpackage  utils
+* @static
+*/
 class jClasses {
 
     static protected $_instances = array();
 
     private function __construct(){}
 
+    /**
+     * include the given class and return an instance
+     * @param string $selector the jelix selector correponding to the class
+     * @return object an instance of the classe
+     */
     static public function create($selector){
         $sel = self::_include($selector);
         $class = $sel->resource;
         return new $class ();
     }
 
+    /**
+     * alias of create method
+     * @see jClasses::create()
+     */
     static public function createInstance($selector){
         return self::create($selector);
     }
 
+    /**
+     * include the given class and return always the same instance
+     *
+     * @param string $selector the jelix selector correponding to the class
+     * @return object an instance of the classe
+     */
     static public function getService($selector){
         $sel = new jSelectorClass($selector);
         $s = $sel->toString();
@@ -38,10 +59,17 @@ class jClasses {
         }
     }
 
+    /**
+     * only include a class
+     * @param string $selector the jelix selector correponding to the class
+     */
     static public function inc($selector) {
         self::_include($selector);
     }
 
+    /**
+     * include a file class
+     */
     static protected function _include($selector) {
         $sel = new jSelectorClass($selector);
         $p = $sel->getPath();

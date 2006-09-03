@@ -9,8 +9,14 @@
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-// pas de méthode pour cet objet, car le user peut ne pas etre
-// une instance de jAuthUser, tout dépend du driver..
+/**
+ * default object to represent a user
+ *
+ * this is only a data container. In fact, auth drivers can provide
+ * other object to embed user data.
+ * @package    jelix
+ * @subpackage auth
+ */
 class jAuthUser {
     public $login = '';
     public $level = 0;

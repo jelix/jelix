@@ -16,12 +16,17 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
+/**
+ *
+ */
 require_once(JELIX_LIB_DB_PATH.'jDb.class.php');
 require_once(JELIX_LIB_DAO_PATH.'jDaoBase.class.php');
 
 /**
-* Factory to create automatic DAO.
-*/
+ * Factory to create automatic DAO.
+ * @package  jelix
+ * @subpackage dao
+ */
 class jDao {
 
     /**
@@ -35,7 +40,7 @@ class jDao {
 
         $c = $sel->getDaoClass();
         if(!class_exists($c,false)){
-            $results = jIncluder::inc($sel);
+            jIncluder::inc($sel);
         }
         $conn = jDb::getConnection ($profil);
         $obj = new $c ($conn);
@@ -64,7 +69,7 @@ class jDao {
         $sel = new jSelectorDao($DaoId, $profil);
         $c = $sel->getDaoClass();
         if(!class_exists($c,false)){
-            $results = jIncluder::inc($sel);
+            jIncluder::inc($sel);
         }
         $c = $sel->getDaoRecordClass();
         $obj = new $c();

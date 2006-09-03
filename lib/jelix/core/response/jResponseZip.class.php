@@ -17,6 +17,8 @@ include JELIX_LIB_UTILS_PATH.'jZipCreator.class.php';
 
 /**
 * Générateur de réponse d'un fichier Zip
+* @package  jelix
+* @subpackage core
 */
 class jResponseZip extends jResponse {
     /**

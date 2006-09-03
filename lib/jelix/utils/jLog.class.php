@@ -10,6 +10,11 @@
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+/**
+ *
+ * @package    jelix
+ * @subpackage utils
+ */
 class jLog {
 
    private function __construct(){}

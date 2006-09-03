@@ -18,8 +18,17 @@
 
 /**
 * Listener Factory.
+* @package     jelix
+* @subpackage  events
 */
 class jEventListenerFactory {
+
+    public static $compilerDatas = array('jEventCompiler',
+                    'events/jEventCompiler.class.php',
+                    'events.xml',
+                    'events.php'
+                    );
+
     /**
     * handles the listeners singleton (all listeners will be stored in here)
     *    events are stored by events listened
@@ -40,7 +49,7 @@ class jEventListenerFactory {
     */
     public static function create ($module, $listenerName){
 
-        jIncluder::incAll(jIncluder::EVENTS());
+        jIncluder::incAll(jEventListenerFactory::$compilerDatas);
         return self::_createListener ($module, $listenerName);
     }
 
@@ -50,7 +59,7 @@ class jEventListenerFactory {
     * @return array of objects
     */
     public static function getListenersOf ($eventName) {
-        jIncluder::incAll(jIncluder::EVENT());
+        jIncluder::incAll(jEventListenerFactory::$compilerDatas);
         self::_createForEvent ($eventName);
         return self::$_hashListened[$eventName];
     }

@@ -16,27 +16,84 @@
 */
 
 /**
- * interface pour les classes de drivers d'authentification
+ * interface for auth drivers
+ * @package    jelix
+ * @subpackage auth
  */
-
 interface jIAuthDriver {
-
+    /**
+     * constructor
+     * @param array $params driver parameters, written in the ini file of the auth plugin
+     */
     function __construct($params);
+
+    /**
+     * creates a new user object, with some first datas..
+     * @param string $login the user login
+     * @param string $password the user password
+     * @return jAuthUser|object the returned object depends on the driver
+     */
     public function createUser($login, $password);
+
+    /**
+    * store a new user.
+    *
+    * should be call after a call of createUser and after settinfg some of its properties...
+    * @param jAuthUser|object $user the user data container
+    */
     public function saveNewUser($user);
+
+    /**
+     * Erase user datas of the user $login
+     * @param string $login the login of the user to remove
+     */
     public function removeUser($login);
+
+    /**
+    * save updated datas of a user
+    * warning : should not save the password !
+    * @param jAuthUser|object $user the user data container
+    */
     public function updateUser($user);
+
+    /**
+     * return user data corresponding to the given login
+     * @param string $login the login of the user
+     * @return jAuthUser|object the user data container
+     */
     public function getUser($login);
+
+    /**
+     * construct the user list
+     * @param string $pattern '' for all users
+     * @return array array of jAuthUser|object
+     */
     public function getUserList($pattern);
+
+    /**
+     * change a user password
+     *
+     * @param string $login the login of the user
+     * @param string $newpassword
+     */
     public function changePassword($login, $newpassword);
+
+    /**
+     * verify that the password correspond to the login
+     * @param string $login the login of the user
+     * @param string $password the password to test
+     * @return boolean
+     */
     public function verifyPassword($login, $password);
 }
 
 
 
 /**
-* This is the main class for authentification process
-*/
+ * This is the main class for authentification process
+ * @package    jelix
+ * @subpackage auth
+ */
 class jAuth {
 
     protected static function  _getConfig(){
@@ -110,6 +167,9 @@ class jAuth {
         return $dr->getUser($login);
     }
 
+    /**
+     *
+     */
     public static function createUser($login,$password){
         $dr = self::_getDriver();
         return $dr->createUser($login, self::cryptPassword($password));

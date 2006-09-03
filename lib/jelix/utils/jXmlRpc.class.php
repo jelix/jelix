@@ -22,6 +22,8 @@
 /**
  * objet permettant d'encoder/décoder des request/responses XMl-RPC
  * pour les specs, voir http://www.xmlrpc.com/spec
+ * @package    jelix
+ * @subpackage utils
  */
 class jXmlRpc {
 
@@ -167,7 +169,7 @@ class jXmlRpc {
                     $value->setFromString((string)$valuetag->{'dateTime.iso8601'}, jDateTime::ISO8601_FORMAT);
                     break;
             }else if(isset($valuetag->base64)){
-                    $value = new CopixBinary();
+                    $value = new jBinaryData();
                     $value->setFromBase64String((string)$valuetag->base64);
                     break;
             }
@@ -221,7 +223,7 @@ class jXmlRpc {
                 case 'jdatetime':
                     $response .= '<dateTime.iso8601>'.$value->toString(jDateTime::ISO8601_FORMAT).'</dateTime.iso8601>';
                     break;
-                case 'copixbinary':
+                case 'jbinarydata':
                     $response .= '<base64>'.$value->toBase64String().'</base64>';
                     break;
             }
@@ -230,8 +232,12 @@ class jXmlRpc {
     }
 }
 
-
-class Copixbinary  {
+/**
+ *
+ * @package    jelix
+ * @subpackage utils
+ */
+class jBinaryData  {
     private $data;
 
     public function toBase64String(){

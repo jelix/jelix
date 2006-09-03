@@ -4,7 +4,7 @@
 * @subpackage db
 * @version    $Id:$
 * @author     Loic Mathaud
-* @contributor 
+* @contributor
 * @copyright  2006 Loic Mathaud
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -12,6 +12,8 @@
 
 /**
  * classe d'outils pour gérer une base de données
+ * @package    jelix
+ * @subpackage db
  */
 class jDbToolsSqlite extends jDbTools {
     function __construct($connector){
@@ -26,11 +28,11 @@ class jDbToolsSqlite extends jDbTools {
         $results = array ();
 
         $rs = $this->_connector->query('SELECT name FROM sqlite_master WHERE type="table"');
-        
+
         while ($line = $rs->fetch ()){
             $results[] = $line->name;
         }
-        
+
         return $results;
     }
 
@@ -40,20 +42,20 @@ class jDbToolsSqlite extends jDbTools {
     */
     function _getFieldList ($tableName){
         $results = array ();
-        
+
         $query = "SELECT sql FROM sqlite_master WHERE tbl_name= '". $tableName ."'";
         $rs = $this->_connector->query($query);
         $rs_line = $rs->fetch();
         $create_table = $rs_line->sql;
-        
+
         $query = "PRAGMA table_info(". sqlite_escape_string($tableName) .")";
         $rs = $this->_connector->query($query);
-                
+
         while ($result_line = $rs->fetch()){
             $field = new jDbFieldProperties();
 
             $type = $result_line->type;
-            
+
             /**
             * récupéré depuis phpMyAdmin
             */
@@ -84,7 +86,7 @@ class jDbToolsSqlite extends jDbTools {
             //$p_result_line->length    = $length;
             $field->not_null   = ($result_line->notnull != 1);
             $field->primary  = ($result_line->pk == 1);
-            
+
             if (preg_match('/^int/i', $field->type)) {
                 if ($field->primary) {
                     $field->auto_increment = true;

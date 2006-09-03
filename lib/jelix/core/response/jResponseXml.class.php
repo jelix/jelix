@@ -17,8 +17,9 @@ require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
 
 /**
 * Générateur de réponse HTML
+* @package  jelix
+* @subpackage core
 */
-
 class jResponseXml extends jResponse {
     /**
     * identifiant du générateur de sortie
@@ -59,19 +60,19 @@ class jResponseXml extends jResponse {
     final public function output(){
         $this->_httpHeaders['Content-Type']='text/xml;charset='.$this->_charset;
         $this->sendHttpHeaders();
-        
+
         echo '<?xml version="1.0" encoding="'. $this->_charset .'"?>', "\n";
         $this->_headSent = true;
-        
+
         // utilisation d'un template
         if (!empty($this->contentTpl)) {
             $xml_string = $this->content->fetch($this->contentTpl);
-        
+
         // utilisation chaine de caractères xml
         } else {
             $xml_string = $this->content;
         }
-        
+
         if (simplexml_load_string($xml_string)) {
             echo $xml_string;
         } else {
@@ -94,7 +95,7 @@ class jResponseXml extends jResponse {
              }
              echo '<?xml version="1.0" encoding="iso-8859-1"?>';
         }
-        
+
         echo '<errors xmlns="http://jelix.org/ns/xmlerror/1.0">';
         if ($this->hasErrors()) {
             echo $this->getFormatedErrorMsg();

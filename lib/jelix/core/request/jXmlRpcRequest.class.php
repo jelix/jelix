@@ -11,11 +11,14 @@
 */
 
 
+/**
+*
+*/
 require_once (JELIX_LIB_UTILS_PATH    . 'jXmlRpc.class.php');
 
 
 /**
-* analyseur  pour les requêtes XmlRpc
+* handle XML-rpc call. The response has to be a xml-rpc response.
 * @package  jelix
 * @subpackage core
 */

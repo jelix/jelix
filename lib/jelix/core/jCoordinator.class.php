@@ -16,6 +16,8 @@
  * this is the "chief orchestra" of the framework. It's goal is
  * to load the configuration, to get the request parameters
  * used to instancie the correspondant controllers and to run the right method.
+ * @package  jelix
+ * @subpackage core
  */
 class jCoordinator {
 

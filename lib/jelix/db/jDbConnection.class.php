@@ -16,6 +16,10 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
+/**
+ * @package  jelix
+ * @subpackage db
+ */
 abstract class jDbConnection {
 
     /**
@@ -54,7 +58,7 @@ abstract class jDbConnection {
 
 
     /**
-    * @constructor
+    *
     */
     function __construct($profil){
        $this->profil = & $profil;

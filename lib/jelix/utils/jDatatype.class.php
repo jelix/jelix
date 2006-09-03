@@ -10,6 +10,11 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+/**
+ *
+ * @package     jelix
+ * @subpackage  utils
+ */
 abstract class jDatatype {
 
   protected $length=null;
@@ -106,12 +111,16 @@ abstract class jDatatype {
 
 /**
  * Datatype String
+ * @package     jelix
+ * @subpackage  utils
  */
 class jDatatypeString extends jDatatype {
 }
 
 /**
  * Datatype Booléen
+ * @package     jelix
+ * @subpackage  utils
  */
 class jDatatypeBoolean extends jDatatype {
   protected function _checkType($value) { return ($value == 'true' || $value=='false'); }
@@ -121,6 +130,8 @@ class jDatatypeBoolean extends jDatatype {
 
 /**
  * Datatype Decimal
+ * @package     jelix
+ * @subpackage  utils
  */
 class jDatatypeDecimal extends jDatatype {
  // xxxx.yyyyy
@@ -137,6 +148,8 @@ class jDatatypeDecimal extends jDatatype {
 
 /**
  * Datatype Integer
+ * @package     jelix
+ * @subpackage  utils
  */
 class jDatatypeInteger extends jDatatype {
   protected function _checkType($value) {
@@ -154,7 +167,9 @@ class jDatatypeInteger extends jDatatype {
 }
 
 /**
- * Datatype datatime
+ * Datatype datetime
+ * @package     jelix
+ * @subpackage  utils
  */
 class jDatatypeDateTime extends jDatatype {
   private $dt;
@@ -195,18 +210,46 @@ class jDatatypeDateTime extends jDatatype {
 
 }
 
+/**
+ * Datatype time
+ * @package     jelix
+ * @subpackage  utils
+ */
 class jDatatypeTime extends jDatatypeDateTime {
    protected $format=22;
 }
+/**
+ * Datatype date
+ * @package     jelix
+ * @subpackage  utils
+ */
 class jDatatypeDate extends jDatatypeDateTime {
    protected $format=20;
 }
+
+/**
+ * Datatype localedatetime
+ * @package     jelix
+ * @subpackage  utils
+ */
 class jDatatypeLocaleDateTime extends jDatatypeDateTime {
    protected $format=11;
 }
+
+/**
+ * Datatype localedate
+ * @package     jelix
+ * @subpackage  utils
+ */
 class jDatatypeLocaleDate extends jDatatypeDateTime {
    protected $format=10;
 }
+
+/**
+ * Datatype localetime
+ * @package     jelix
+ * @subpackage  utils
+ */
 class jDatatypeLocaleTime extends jDatatypeDateTime {
    protected $format=12;
 }

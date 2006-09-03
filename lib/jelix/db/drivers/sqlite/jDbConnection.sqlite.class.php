@@ -4,7 +4,7 @@
 * @subpackage db
 * @version    $Id:$
 * @author     Loic Mathaud
-* @contributor 
+* @contributor
 * @copyright  2006 Loic Mathaud
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -12,6 +12,8 @@
 
 /**
  *
+ * @package    jelix
+ * @subpackage db
  */
 class jDbConnectionSqlite extends jDbConnection {
 
@@ -50,7 +52,7 @@ class jDbConnectionSqlite extends jDbConnection {
     public function errorCode(){
         return sqlite_last_error($this->_connection);
     }
-    
+
     protected function _connect (){
         $funcconnect= ($this->profil['persistent']? 'sqlite_popen':'sqlite_open');
         if ($cnx = @$funcconnect(JELIX_APP_VAR_PATH. 'db/sqlite/'.$this->profil['database'])) {
@@ -75,7 +77,7 @@ class jDbConnectionSqlite extends jDbConnection {
     protected function _doExec($query){
         if ($qI = sqlite_query($query, $this->_connection)){
             return sqlite_changes($this->_connection);
-        } else { 
+        } else {
             throw new JException('jelix~db.error.query.bad', sqlite_error_string($this->_connection).'('.$query.')');
         }
         exit;

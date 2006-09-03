@@ -17,6 +17,8 @@
 
 /**
  * interface for url engines
+ * @package  jelix
+ * @subpackage core
  */
 interface jIUrlEngine {
   /**
@@ -39,8 +41,9 @@ interface jIUrlEngine {
 
 /**
  * base class for jUrl and jUrlAction
+ * @package  jelix
+ * @subpackage core
  */
-
 abstract class jUrlBase {
 
     /**
@@ -107,6 +110,8 @@ abstract class jUrlBase {
 
 /**
  * A container to store url datas for an action
+ * @package  jelix
+ * @subpackage core
  */
 class jUrlAction extends jUrlBase {
 
@@ -147,8 +152,10 @@ class jUrlAction extends jUrlBase {
 
 
 /**
-* Object that contains url datas, and which provides static method helpers
-*/
+ * Object that contains url datas, and which provides static method helpers
+ * @package  jelix
+ * @subpackage core
+ */
 class jUrl extends jUrlBase {
 
     const STRING=0;

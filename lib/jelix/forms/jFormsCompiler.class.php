@@ -10,8 +10,16 @@
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+/**
+ *
+ */
 require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
 
+/**
+ * generates form class from an xml file describing the form
+ * @package     jelix
+ * @subpackage  forms
+ */
 class jFormsCompiler implements jISimpleCompiler {
 
    public function compile($selector){
@@ -117,7 +125,11 @@ class jFormsCompiler implements jISimpleCompiler {
 }
 
 
-
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ */
 interface jIFormGenerator {
 
    // on indique un objet form

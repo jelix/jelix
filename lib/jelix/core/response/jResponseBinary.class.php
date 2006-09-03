@@ -13,6 +13,8 @@
 
 /**
 * générateur de sortie pour renvoyer des fichiers en download ou direct au navigateur
+* @package  jelix
+* @subpackage core
 */
 
 final class jResponseBinary  extends jResponse {

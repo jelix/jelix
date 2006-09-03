@@ -18,6 +18,8 @@
 
 /**
  * A class helper to read or create files
+ * @package    jelix
+ * @subpackage utils
  */
 class jFile {
     /**

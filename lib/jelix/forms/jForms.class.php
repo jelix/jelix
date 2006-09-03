@@ -10,12 +10,18 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+/**
+ *
+ */
 define('JFORMS_ID_PARAM','__forms_id__');
 require_once(JELIX_LIB_FORMS_PATH.'jFormsBase.class.php');
 require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
 require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
+
 /**
- * Classe abstraite pour gérer un formulaire
+ * static class to manage and call a form
+ * @package     jelix
+ * @subpackage  forms
  */
 class jForms {
 

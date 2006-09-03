@@ -12,6 +12,8 @@
 
 /**
 * Générateur de réponse Text
+* @package  jelix
+* @subpackage core
 */
 
 class jResponseText extends jResponse {

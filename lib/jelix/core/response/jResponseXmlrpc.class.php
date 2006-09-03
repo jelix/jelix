@@ -13,6 +13,8 @@
 
 /**
 * Genérateur de réponse xmlrpc
+* @package  jelix
+* @subpackage core
 * @see jResponse
 */
 

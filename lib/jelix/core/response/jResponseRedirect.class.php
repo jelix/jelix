@@ -12,6 +12,8 @@
 
 /**
 * Genérateur de réponse pour la redirection
+* @package  jelix
+* @subpackage core
 * @see jResponse
 */
 

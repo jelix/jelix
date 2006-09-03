@@ -9,11 +9,17 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
+/**
+ *
+ */
 require_once (LIB_PATH.'json/JSON.php');
 
 /**
  * objet permettant d'encoder/décoder des request/responses Json-RPC
  * pour les specs, voir http://json-rpc.org/index.xhtml
+ * @package    jelix
+ * @subpackage utils
  */
 class jJsonRpc {
 
@@ -21,8 +27,8 @@ class jJsonRpc {
 
     /**
      *
-     * @param
-     * @return
+     * @param string $content
+     * @return mixed
      */
     public static function decodeRequest($content){
         // {method:.. , params:.. , id:.. }
@@ -38,8 +44,9 @@ class jJsonRpc {
 
     /**
      *
-     * @param
-     * @return
+     * @param string $methodname
+     * @param array $params
+     * @return string
      */
     public static function encodeRequest($methodname, $params, $id=1){
         $json = new JSON();

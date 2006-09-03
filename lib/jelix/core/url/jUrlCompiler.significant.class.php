@@ -13,7 +13,9 @@
 
 
 /**
-* Compilateur pour le moteur d'url significatifs
+* Compiler for significant url engine
+* @package  jelix
+* @subpackage core
 */
 class jUrlCompilerSignificant implements jISimpleCompiler{
 

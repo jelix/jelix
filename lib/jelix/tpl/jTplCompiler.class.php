@@ -13,6 +13,8 @@
 
 /**
  * This is the compiler of templates : converts a template into a php file.
+ * @package     jelix
+ * @subpackage  jtpl
  */
 class jTplCompiler
 #ifndef JTPL_STANDALONE

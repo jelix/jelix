@@ -13,6 +13,8 @@
 /**
  * simple url engine
  * generated url are "dirty" jelix url, with full of parameter in the query (module, action etc..)
+ * @package  jelix
+ * @subpackage core
  * @see jIUrlEngine
  */
 class jUrlEngineSimple implements jIUrlEngine {

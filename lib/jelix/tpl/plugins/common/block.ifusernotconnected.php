@@ -13,8 +13,6 @@
  * a special if block to test easily if the current user is not connected
  *
  * usage : {ifusernotconnected} ..here generated content if the user is NOTconnected  {/ifusernotconnected}
- * @package    jelix
- * @subpackage jtpl_plugin
  * @param jTplCompiler $compiler the template compiler
  * @param boolean true if it is the begin of block, else false
  * @param array $params no parameters. array should be empty

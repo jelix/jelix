@@ -8,16 +8,21 @@
 * @copyright  2006 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
 */
+
+/**
+ *
+ * @package    jelix
+ * @subpackage utils
+ */
 class jCmdUtils {
-    
+
     private function __construct() {}
 
     public static function getOptionsAndParams($argv, $sws, $params) {
         $switches = array();
         $parameters = array();
-        
+
         //---------- get the switches
         while (count($argv) && $argv[0]{0} == '-') {
             if (isset($sws[$argv[0]])) {
@@ -36,7 +41,7 @@ class jCmdUtils {
                 die("Error: unknow option '".$argv[0]."' \n");
             }
         }
-        
+
         //---------- get the parameters
         foreach ($params as $pname => $needed) {
             if (count($argv) == 0) {
@@ -52,10 +57,10 @@ class jCmdUtils {
         if (count($argv)) {
             die("Error: two many parameters\n");
         }
-        
+
         return array($switches , $parameters);
     }
-    
+
 }
 
 ?>

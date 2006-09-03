@@ -16,7 +16,11 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
-
+/**
+ *
+ * @package    jelix
+ * @subpackage db
+ */
 class jDbConnectionPostgreSQL extends jDbConnection {
 
     public function beginTransaction (){
@@ -26,11 +30,11 @@ class jDbConnectionPostgreSQL extends jDbConnection {
     public function commit (){
         return $this->_doQuery('COMMIT');
     }
-    
+
     public function rollback (){
         return $this->_doQuery('ROLLBACK');
     }
-    
+
     public function prepare ($query){
         $id=(string)mktime();
         $res = pg_prepare($this->_connection, $id, $query);
@@ -45,20 +49,20 @@ class jDbConnectionPostgreSQL extends jDbConnection {
     public function errorInfo(){
         return array( 'HY000' ,pg_last_error($this->_connection), pg_last_error($this->_connection));
     }
-    
+
     public function errorCode(){
         return pg_last_error($this->_connection);
     }
 
     protected function _connect (){
         $funcconnect= ($this->profil['persistent'] ? 'pg_pconnect':'pg_connect');
-    
+
         $str = 'dbname='.$this->profil['database'].' user='.$this->profil['user'].' password='.$this->profil['password'];
-    
+
         // on fait une distinction car si host indiqué -> connection TCP/IP, sinon socket unix
         if($this->profil['host'] != '')
             $str = 'host='.$this->profil['host'].' '.$str;
-        
+
         // Si le port est défini on le rajoute à la chaine de connexion
         if (isset($this->profil['port'])) {
             $str .= ' port='.$this->profil['port'];
@@ -70,7 +74,7 @@ class jDbConnectionPostgreSQL extends jDbConnection {
     protected function _disconnect (){
         return pg_close ($this->_connection);
     }
-    
+
     protected function _doQuery ($queryString){
         if ($qI = pg_query ($this->_connection, $queryString)){
             $rs= new jDbResultSetPostgreSQL ($qI);
@@ -81,14 +85,14 @@ class jDbConnectionPostgreSQL extends jDbConnection {
         }
         return $rs;
     }
-    
+
     protected function _doExec($query){
         if($rs = $this->_doQuery($query)){
             return pg_affected_rows($rs->id());
         }else
             return 0;
     }
-    
+
     protected function _doLimitQuery ($queryString, $offset, $number){
         if($number < 0)
             $number='ALL';
@@ -101,7 +105,7 @@ class jDbConnectionPostgreSQL extends jDbConnection {
 
 
     public function lastInsertId($seqname=''){
-    
+
         if($seqname == ''){
             trigger_error(get_class($this).'::lastInstertId invalide sequence name',E_USER_WARNING);
             return false;
@@ -118,12 +122,12 @@ class jDbConnectionPostgreSQL extends jDbConnection {
             return false;
         }
     }
-    
+
     protected function _autoCommitNotify ($state){
-    
+
         $this->query ('SET AUTOCOMMIT='.$state ? 'on' : 'off');
     }
-    
+
     protected function _quote($text){
         return pg_escape_string($text);
     }

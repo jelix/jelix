@@ -11,6 +11,8 @@
 
 /**
  * Class to create a zip file.
+ * @package    jelix
+ * @subpackage utils
  * @link http://www.pkware.com/business_and_developers/developer/appnote/ Official ZIP file format
  */
 class jZipCreator {

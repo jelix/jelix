@@ -12,10 +12,11 @@
 
 
 /**
-* classe de base pour l'objet  chargé de controler et de formater
-* la réponse renvoyée au navigateur
+* class base for response object
+* A response object is responsible to generate a content in a specific format.
+* @package  jelix
+* @subpackage core
 */
-
 abstract class jResponse {
     /**
     * ident of the response type
@@ -32,7 +33,7 @@ abstract class jResponse {
     protected $_httpHeaders = array();
 
     protected $_httpHeadersSent = false;
-    
+
     protected $_httpStatusCode ='200';
 
     protected $_httpStatusMsg ='OK';
@@ -46,7 +47,7 @@ abstract class jResponse {
 
     /**
      * Send the response in the correct format.
-     * 
+     *
      * @return boolean    true if the output is ok
      * @internal should take care about errors
      */
@@ -54,7 +55,7 @@ abstract class jResponse {
 
     /**
      * Send a response with only error messages which appears during the action
-     * (errors, warning, notice, exceptions...). Type and error details 
+     * (errors, warning, notice, exceptions...). Type and error details
      *  depend on the application configuration
      */
     abstract public function outputErrors();

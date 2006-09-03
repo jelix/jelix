@@ -18,6 +18,8 @@
 
 /**
  * a specific selector for the xml files which contains the configuration of the engine
+ * @package  jelix
+ * @subpackage core
  */
 class jSelectorUrlCfgSig extends jSelectorCfg {
     public $type = 'urlcfgsig';
@@ -32,6 +34,8 @@ class jSelectorUrlCfgSig extends jSelectorCfg {
 
 /**
  * a specific selector for user url handler
+ * @package  jelix
+ * @subpackage core
  */
 class jSelectorUrlHandler extends jSelectorClass {
     public $type = 'urlhandler';
@@ -40,6 +44,8 @@ class jSelectorUrlHandler extends jSelectorClass {
 
 /**
  * interface for user url handler
+ * @package  jelix
+ * @subpackage core
  */
 interface jIUrlSignificantHandler {
     /**
@@ -60,6 +66,8 @@ interface jIUrlSignificantHandler {
 /**
  * an url engine to parse,analyse and create significant url
  * it needs an urls.xml file in the config directory (see documentation)
+ * @package  jelix
+ * @subpackage core
  */
 class jUrlEngineSignificant implements jIUrlEngine {
 

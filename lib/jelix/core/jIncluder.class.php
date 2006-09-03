@@ -16,58 +16,89 @@
 */
 
 
-// pour les compilations avec 1 fichier source
+/**
+ * interface for compiler which needs only one source file
+ * @package  jelix
+ * @subpackage core
+ */
 interface jISimpleCompiler {
+    /**
+     * parse the given file, and store the result in a cache file
+     * @param jSelector $aSelector the file selector
+     * @return boolean true : process ok
+     */
     public function compile($aSelector);
 }
 
-//  pour les compilations avec plusieurs fichiers sources
+/**
+ * interface for compiler which needs many source files
+ * @package  jelix
+ * @subpackage core
+ */
 interface jIMultiFileCompiler {
+
+    /**
+     * parse one of needed file
+     * @param string $sourceFile the file selector
+     * @param string $module    the module name of the file
+     * @return boolean true : process ok
+     */
     public function compileItem($sourceFile, $module);
+
+    /**
+     * save the results in a temporary file
+     * called at the end of the compilation.
+     * @param string $cachefile the name of cache file
+     */
     public function endCompile($cachefile);
 }
 
-
+/**
+ * This object is responsible to load cache files
+ * Some jelix files needs to be compiled in PHP (templates, daos etc..) and their
+ * correspondant php content are stored in a cache file.
+ * jIncluder verify that cache file exists, is not obsolete, and if not,
+ * it calls the correspondant compiler.
+ * And then include the cache.
+ * @package  jelix
+ * @subpackage core
+ */
 class jIncluder {
+    /**
+     * list of loaded cache file.
+     * It avoids to do all verification when a file is include many time
+     * @var array
+     */
     protected static $_includedFiles = array();
 
-    public static function EVENT(){
-        return  array('jEventCompiler',
-                    'events/jEventCompiler.class.php',
-                    'events.xml',
-                    'events.php'
-        );
-    }
-
+    /**
+     * This is a static class, so private constructor
+     */
     private function __construct(){}
 
     /**
-     * @param    jISelector   $aSelectorId    selecteur du fichier à compiler
-     * @return   array    contenant l'objet selecteur correspondant à $aSelectorId, et 2 booleans indiquant si il a fallu compiler et si la compilation s'est bien passée
+     * includes cache of the correspondant file selector
+     * check the cache, compile if needed, and include the cache
+     * @param    jISelector   $aSelectorId    the selector corresponding to the file
     */
     public static function inc($aSelector=''){
        global $gJConfig,$gJCoord;
 
         if(is_string($aSelector)){
-            try{
-                $aSelector = jSelectorFactory::create($aSelector);
-            }catch(jExceptionSelector $e){
-                return array('selector'=>$aSelector, 'compilation'=>false, 'compileok'=>false);
-            }
+            $aSelector = jSelectorFactory::create($aSelector);
         }
 
         $cachefile = $aSelector->getCompiledFilePath();
 
         if($cachefile == '' || isset(jIncluder::$_includedFiles[$cachefile])){
-            return array('selector'=>$aSelector, 'compilation'=>false, 'compileok'=>true);
+            return;
         }
 
         $mustCompile = $gJConfig->compilation['force'] || !file_exists($cachefile);
         $sourcefile = $aSelector->getPath();
 
         if($sourcefile == '' || !file_exists($sourcefile)){
-           trigger_error(jLocale::get('jelix~errors.includer.source.missing',array( $aSelector->toString(true))), E_USER_ERROR);
-           return array('selector'=>$aSelector, 'compilation'=>false, 'compileok'=>false);
+            throw new jException('jelix~errors.includer.source.missing',array( $aSelector->toString(true)));
         }
 
         if($gJConfig->compilation['checkCacheFiletime'] && !$mustCompile){
@@ -89,25 +120,24 @@ class jIncluder {
             jIncluder::$_includedFiles[$cachefile]=true;
         }
 
-        return array('selector'=>$aSelector, 'compilation'=>$mustCompile, 'compileok'=>$compileok);
     }
 
-        /**
-         * @param    array    aType
-            = array(
-            'nom classe compilateur',
-            'chemin compilateur relatif à lib/jelix/',
-            'foo.xml', // nom du fichier à compiler
-            'foo.php',  //fichier cache
-            );
-        * @return   array    contenant 2 booleans indiquant si il a fallu compiler et si la compilation s'est bien passée
-        */
+    /**
+     * include a cache file which is the results of the compilation of multiple file sotred in multiple modules
+    * @param    array    aType
+    *    = array(
+    *    'compilator class name',
+    *    'relative path of the compilator class file to lib/jelix/',
+    *    'foo.xml', // file name to compile (in each modules)
+    *    'foo.php',  //cache filename
+    *    );
+    */
     public static function incAll($aType){
 
         global $gJConfig,$gJCoord;
         $cachefile = JELIX_APP_TEMP_PATH.'compiled/'.$aType[3];
         if(isset(jIncluder::$_includedFiles[$cachefile])){
-            return array('compilation'=>false, 'compileok'=>true);
+            return;
         }
 
         $mustCompile = $gJConfig->compilation['force'] || !file_exists($cachefile);
@@ -145,7 +175,6 @@ class jIncluder {
             require_once($cachefile);
             jIncluder::$_includedFiles[$cachefile]=true;
         }
-        return array('compilation'=>$mustCompile, 'compileok'=>$compileok);
     }
 }
 

@@ -10,13 +10,21 @@
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
+/**
+ * jConfigCompiler merge two ini file in a single array and store it in a temporary file
+ * This is a static class
+ * @package  jelix
+ * @subpackage core
+ */
 class jConfigCompiler {
 
     private function __construct (){ }
 
     /**
-     * lecture de la configuration du framework
+     * read the given ini file. Merge it with the content of defaultconfig.ini.php
+     * It also calculates some options. It stores the result in a temporary file
+     * @param string $configFile the config file name
+     * @return object an object which contains configuration values
      */
     static public function read($configFile){
         $config = parse_ini_file(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php', true);
@@ -65,7 +73,9 @@ class jConfigCompiler {
     }
 
     /**
-     * compilation et mise en cache de liste de chemins
+     * Analyse and check the "lib:" and "app:" path.
+     * @param array $list list of "lib:*" and "app:*" path
+     * @return array list of full path
      */
     static private function _loadPathList($list){
         $list = split(' *, *',$list);
@@ -89,7 +99,9 @@ class jConfigCompiler {
     }
 
     /**
-     * compilation et mise en cache de liste de chemins des plugins de templates
+     * Analyse and check the "lib:" and "app:" path for plugins
+     * @param array $list list of "lib:*" and "app:*" path
+     * @return array list of full path
      */
     static private function _loadTplPathList(&$config,  $var){
         $list = split(' *, *',$config[$var]);
@@ -110,6 +122,11 @@ class jConfigCompiler {
         }
     }
 
+    /**
+     * merge two array which are the result of a parse_ini_file call
+     * @param $array the main array
+     * @param $tomerge the array to merge in the first one
+     */
     static private function _mergeConfig(&$array, $tomerge){
 
         foreach($tomerge as $k=>$v){
@@ -128,6 +145,11 @@ class jConfigCompiler {
 
     }
 
+    /**
+     * store an ini array in a file (contrary of parse_ini_file)
+     * @param $array the array to store
+     * @param $filename the file name
+     */
     static private function _saveToIni($array,$filename){
 
         $result='';
@@ -151,6 +173,11 @@ class jConfigCompiler {
         }
     }
 
+    /**
+     * format a value to store in a ini file
+     * @param string $value the value
+     * @return string the formated value
+     */
     static private function _iniValue($value){
         if($value=='' || is_numeric($value) || preg_match("/^[\w]*$/", $value))
             return $value;
@@ -158,6 +185,5 @@ class jConfigCompiler {
             return '"'.$value.'"';
     }
 }
-
 
 ?>

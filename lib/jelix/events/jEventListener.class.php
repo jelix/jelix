@@ -17,6 +17,8 @@
 
 /**
 * base class for event listeners
+* @package     jelix
+* @subpackage  events
 */
 class jEventListener {
    /**

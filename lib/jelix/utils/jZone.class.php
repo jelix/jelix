@@ -18,6 +18,8 @@
 /**
  * jZone is a representation of a zone in an response content, in a html page
  * A user zone should inherits from jZone. jZone provide a cache mecanism.
+ * @package    jelix
+ * @subpackage utils
  */
 class jZone {
     /**

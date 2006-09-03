@@ -147,7 +147,9 @@ jbt-dist:
 	&& echo "$(JBT_VERSION)" > "$(DISTJBT)/VERSION"
 	tar czf $(DIST)/jbuildtools-$(JBT_VERSION).tar.gz  -C $(DIST) jbuildtools/
 
+
 docs: dev-jelix-lib
-	$(PHPDOC) -tb $(CURRENT_PATH)/build/phpdoc/ -d $(DISTHACKER)/lib/jelix/ -t $(DOCS) \
+	$(PHPDOC)  -d $(DISTHACKER)/lib/jelix/ -t $(DOCS) \
 	-o "HTML:frames:DOM/jelix" -s on -ct "contributor,licence" -i *.ini.php \
 	-ti "Jelix API Reference" -ric "README,INSTALL,CHANGELOG,CREDITS,LICENCE,VERSION"
+	# -tb $(CURRENT_PATH)/build/phpdoc/

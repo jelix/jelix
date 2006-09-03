@@ -20,6 +20,8 @@
  * copyrighted by CopixTeam and released under GNU Lesser General Public Licence
  * author : Gerald Croes, Laurent Jouanneau
  * http://www.copix.org
+ * @package  jelix
+ * @subpackage core
  */
 abstract class jRequest {
 

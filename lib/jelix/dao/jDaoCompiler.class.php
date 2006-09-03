@@ -20,9 +20,10 @@ require_once (JELIX_LIB_DAO_PATH.'jDaoParser.class.php');
 require_once (JELIX_LIB_DAO_PATH.'jDaoGenerator.class.php');
 
 /**
-* The compiler for the DAO classes.
-* it is used by jIncluder
-*/
+ * The compiler for the DAO classes. it is used by jIncluder
+ * @package  jelix
+ * @subpackage dao
+ */
 class jDaoCompiler  implements jISimpleCompiler {
     /**
     * the current DAO id.

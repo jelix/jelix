@@ -18,6 +18,8 @@
 /**
  *
  * Couche d'encapsulation des resultset mysql.
+ * @package    jelix
+ * @subpackage db
  */
 class jDbResultSetMySQL extends jDbResultSet {
 

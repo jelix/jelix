@@ -15,16 +15,14 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
-error_reporting (E_ALL);
-
 /**
-* Gestionnaire d'erreur du framework
-* Remplace le gestionnaire par defaut du moteur PHP
-* @param   integer     $errno      code erreur
-* @param   string      $errmsg     message d'erreur
-* @param   string      $filename   nom du fichier où s'est produit l'erreur
-* @param   integer     $linenum    numero de ligne
-* @param   array       $vars       variables de contexte
+* Error handler for the framework.
+* Replace the default PHP error handler
+* @param   integer     $errno      error code
+* @param   string      $errmsg     error message
+* @param   string      $filename   filename where the error appears
+* @param   integer     $linenum    line number where the error appears
+* @param   array       $errcontext
 */
 function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     global $gJConfig, $gJCoord;

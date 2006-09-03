@@ -15,16 +15,21 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
+/**
+ *
+ * @package    jelix
+ * @subpackage db
+ */
 class jDbResultSetPostgreSQL extends jDbResultSet {
     protected $_stmtId;
     protected $_cnt;
-    
+
     function __construct (  $idResult, $stmtId = null, $cnt=null){
         $this->_idResult = $idResult;
         $this->_stmtId=$stmtId;
         $this->_cnt = $cnt;
         }
-    
+
     public function fetch(){
         return $this->_fetch();
     }
@@ -34,7 +39,7 @@ class jDbResultSetPostgreSQL extends jDbResultSet {
         }else{
             $res = pg_fetch_object ($this->_idResult);
         }
-    
+
         return $res;
     }
     protected function _free (){

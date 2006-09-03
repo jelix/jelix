@@ -10,13 +10,17 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+/**
+*
+*/
 require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
 
 /**
 * Genérateur de réponse XUL
+* @package  jelix
+* @subpackage core
 * @see jResponse
 */
-
 class jResponseXul extends jResponse {
     /**
     * identifiant du générateur

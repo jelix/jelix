@@ -10,13 +10,15 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
+/**
+ *
+ */
 require_once (JELIX_LIB_UTILS_PATH    . 'jJsonRpc.class.php');
 
 
 
 /**
-* Analyseur pour les requêtes JSON-RPC
+* handle a JSON-rpc call. The response has to be a json rpc response.
 * @package  jelix
 * @subpackage core
 */

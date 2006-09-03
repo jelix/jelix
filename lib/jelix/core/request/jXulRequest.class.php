@@ -11,7 +11,11 @@
 */
 
 
-
+/**
+ * Handle a request which needs absolutely a XUL content as response.
+ * @package     jelix
+ * @subpackage  core
+ */
 class jXulRequest extends jRequest {
 
     public $type = 'xul';

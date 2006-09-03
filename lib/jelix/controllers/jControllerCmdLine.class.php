@@ -11,17 +11,22 @@
 *
 */
 
+/**
+ *
+ * @package    jelix
+ * @subpackage controllers
+ */
 class jControllerCmdLine extends jController {
-    
+
     protected $_options;
     protected $_parameters;
-    
+
     protected $allowed_options;
     protected $allowed_parameters;
 
     /**
     *
-    * @param
+    * @param jRequest $request
     */
     function __construct ($request){
         $this->request = $request;
@@ -30,7 +35,7 @@ class jControllerCmdLine extends jController {
         unset($params['action']);
         $action = new jSelectorAct($this->request->params['action']);
         list($this->_options,$this->_parameters) = jCmdUtils::getOptionsAndParams($params,$this->allowed_options[$action->method] , $this->allowed_parameters[$action->method]);
-        
+
     }
 
     protected function param($param, $defaultValue=null){
@@ -40,7 +45,7 @@ class jControllerCmdLine extends jController {
             return $defaultValue;
         }
     }
-    
+
     protected function option($name) {
         if (isset($this->_options[$name])) {
             return $this->_options[$name];

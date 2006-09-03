@@ -20,10 +20,11 @@
 
 
 if(!function_exists('strptime')){
-
-    /* c'est pas une compatibilité 100% avec strptime de PHP 5.1 mais c'est suffisant pour nos besoins */
+    /**
+     * @ignore
+     */
     function strptime ( $strdate, $format ){
-
+        // c'est pas une compatibilité 100% avec strptime de PHP 5.1 mais c'est suffisant pour nos besoins
         $plop = array( 's'=>'tm_sec', 'i'=>'tm_min', 'H'=>'tm_hour',
         'd'=>'tm_mday', 'm'=>'tm_mon', 'Y'=>'tm_year');
 
@@ -48,6 +49,12 @@ if(!function_exists('strptime')){
     }
 }
 
+
+/**
+ *
+ * @package     jelix
+ * @subpackage  utils
+ */
 class jDateTime{
     public $day;
     public $month;

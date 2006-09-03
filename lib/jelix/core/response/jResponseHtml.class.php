@@ -16,9 +16,10 @@
 require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
 
 /**
-* Générateur de réponse HTML
+* HTML response
+* @package  jelix
+* @subpackage core
 */
-
 class jResponseHtml extends jResponse {
     /**
     * identifiant du générateur de sortie
@@ -38,6 +39,7 @@ class jResponseHtml extends jResponse {
     /**
      * selecteur du template principal
      * le contenu du template principal concerne le contenu de <body>
+     * @var string
      */
     public $bodyTpl = '';
 

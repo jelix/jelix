@@ -10,6 +10,11 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ */
 class jFormsDataContainer {
    public $datas = array();
    public $internalId;

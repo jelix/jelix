@@ -17,6 +17,8 @@
 
 /**
  * classe d'outils pour gérer une base de données
+ * @package    jelix
+ * @subpackage db
  */
 class jDbToolsMySQL extends jDbTools {
    function __construct($connector){

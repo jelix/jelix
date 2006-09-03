@@ -10,11 +10,21 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ */
 interface jIFormDatasource {
    public function getDatas();
 
 }
 
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ */
 class jFormStaticDatasource implements jIFormDatasource {
    public $datas = array();
    public function getDatas(){
@@ -23,6 +33,11 @@ class jFormStaticDatasource implements jIFormDatasource {
 }
 
 
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ */
 class jFormDaoDatasource implements jIFormDatasource {
 
    protected $daoselector;

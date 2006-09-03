@@ -12,7 +12,9 @@
 
 /**
  *
- * Couche d'encapsulation des resultset mysql.
+ * Couche d'encapsulation des resultset sqlite.
+ * @package    jelix
+ * @subpackage db
  */
 class jDbResultSetSqlite extends jDbResultSet {
 

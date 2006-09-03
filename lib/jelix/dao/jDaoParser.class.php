@@ -17,8 +17,11 @@
 */
 
 /**
-* Analyse un fichier xml de dao
-*/
+ * Analyse un fichier xml de dao
+ * @package  jelix
+ * @subpackage dao
+ * @see jDaoCompiler
+ */
 class jDaoParser {
     /**
     * the properties list.
@@ -182,11 +185,11 @@ class jDaoParser {
 
 
 
-
-//--------------------------------------------------------
 /**
-* objet comportant les données d'une propriété d'un record DAO
-*/
+ * objet comportant les données d'une propriété d'un record DAO
+ * @package  jelix
+ * @subpackage dao
+ */
 
 class jDaoProperty {
     /**
@@ -326,8 +329,10 @@ class jDaoProperty {
 
 //--------------------------------------------------------
 /**
-* objet décrivant une méthode DAO
-*/
+ * objet décrivant une méthode DAO
+ * @package  jelix
+ * @subpackage dao
+ */
 class jDaoMethod {
    public $name;
    public $type;
@@ -527,7 +532,7 @@ class jDaoMethod {
             }
             if (isset($attr['driver']) && !empty($attr['driver'])) {
                 if ($this->_def->_compiler->getDbDriver() != $attr['driver']) {
-                    $this->_def->_compiler->doDefError('method.condition.driver.notallowed', array($this->name, $op,$field_id));    
+                    $this->_def->_compiler->doDefError('method.condition.driver.notallowed', array($this->name, $op,$field_id));
                 }
             }
             $operator = $attr['operator'];
@@ -546,7 +551,7 @@ class jDaoMethod {
             }
             if (isset($attr['driver']) && !empty($attr['driver'])) {
                 if ($this->_def->_compiler->getDbDriver() != $attr['driver']) {
-                    $this->_def->_compiler->doDefError('method.condition.driver.notallowed', array($this->name, $op,$field_id));    
+                    $this->_def->_compiler->doDefError('method.condition.driver.notallowed', array($this->name, $op,$field_id));
                 }
             }
             $operator = $attr['operator'];

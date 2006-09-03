@@ -13,6 +13,8 @@
 
 /**
  * interface for controllers used for RESTFull request/response
+ * @package  jelix
+ * @subpackage core
  */
 interface jIRestController{
     public function get();
@@ -24,8 +26,10 @@ interface jIRestController{
 
 /**
  * class base for controllers
- * 
+ *
  * A controller is used to implement one or many actions, one method for each action.
+ * @package  jelix
+ * @subpackage core
  */
 abstract class jController{
 
@@ -84,7 +88,7 @@ abstract class jController{
     */
     protected function intParam ($parName, $parDefaultValue=null, $useDefaultIfEmpty=false){
        $value = $this->request->getParam($parName, $parDefaultValue, $useDefaultIfEmpty);
-       if(is_numeric($value)) 
+       if(is_numeric($value))
             return intval($value);
        else
             return null;
@@ -100,7 +104,7 @@ abstract class jController{
     */
     protected function floatParam ($parName, $parDefaultValue=null, $useDefaultIfEmpty=false){
        $value = $this->request->getParam($parName, $parDefaultValue, $useDefaultIfEmpty);
-       if(is_numeric($value)) 
+       if(is_numeric($value))
             return floatval($value);
        else
             return null;
@@ -116,9 +120,9 @@ abstract class jController{
     */
     protected function boolParam ($parName, $parDefaultValue=null, $useDefaultIfEmpty=false){
        $value = $this->request->getParam($parName, $parDefaultValue, $useDefaultIfEmpty);
-       if($value=="true" || $value == "1" || $value=="on" || $value=="yes") 
+       if($value=="true" || $value == "1" || $value=="on" || $value=="yes")
             return true;
-       elseif($value=="false" || $value == "0" || $value=="off" || $value=="no") 
+       elseif($value=="false" || $value == "0" || $value=="off" || $value=="no")
             return false;
        else
             return null;

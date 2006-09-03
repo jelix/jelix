@@ -11,7 +11,11 @@
 */
 
 
-
+/**
+ * Handle a request which needs a RDF content as response.
+ * @package     jelix
+ * @subpackage  core
+ */
 class jRdfRequest extends jRequest {
 
     public $type = 'rdf';

@@ -1,7 +1,7 @@
 <?php
 /**
 * Initialize all defines and includes necessary files
-* 
+*
 * @package  jelix
 * @subpackage core
 * @version  $Id$
@@ -44,6 +44,8 @@ define ('LIB_PATH',           realpath(dirname (__FILE__).'/../').'/');
 define ('JELIX_PLUGINS_PATH', LIB_PATH.'jelix-plugins/');
 define ('JELIX_MODULE_PATH',  LIB_PATH.'jelix-modules/');
 
+error_reporting (E_ALL);
+
 // chargement du coeur
 require_once (JELIX_LIB_CORE_PATH . 'jErrorHandler.lib.php');
 require_once (JELIX_LIB_CORE_PATH . 'jException.lib.php');
@@ -73,14 +75,6 @@ $gJCoord = null;
  */
 $gJConfig = null;
 
-
-/**
- * array used as a stack to store module context
- * @global array $gJContext
- * @name $gJContext
- */
-$gJContext = array();
-
 /**
  * contains path for __autoload function
  * @global array $gLibPath
@@ -91,7 +85,7 @@ $gLibPath=array('Db'=>JELIX_LIB_DB_PATH, 'Dao'=>JELIX_LIB_DAO_PATH,
  'Forms'=>JELIX_LIB_FORMS_PATH, 'Event'=>JELIX_LIB_EVENTS_PATH,
  'Tpl'=>JELIX_LIB_TPL_PATH, 'Acl'=>JELIX_LIB_ACL_PATH, 'Controller'=>JELIX_LIB_CTRL_PATH);
 
-/** 
+/**
  * __autoload function used by php to try to load an unknown class
  */
 function __autoload($class){

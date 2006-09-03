@@ -17,7 +17,12 @@
 */
 
 /**
-* This is a generator which creates php class from dao xml file
+* This is a generator which creates php class from dao xml file.
+*
+* It is called by jDaoCompiler
+* @package  jelix
+* @subpackage dao
+* @see jDaoCompiler
 */
 class jDaoGenerator {
 

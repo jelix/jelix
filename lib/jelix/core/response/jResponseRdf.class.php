@@ -13,6 +13,8 @@
 
 /**
 * Genérateur de réponse RDF
+* @package  jelix
+* @subpackage core
 * @see jResponse
 */
 

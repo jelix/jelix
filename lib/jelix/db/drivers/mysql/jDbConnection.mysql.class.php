@@ -17,6 +17,8 @@
 
 /**
  *
+ * @package    jelix
+ * @subpackage db
  */
 class jDbConnectionMySQL extends jDbConnection {
 

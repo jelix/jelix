@@ -18,6 +18,8 @@
 
 /**
 * structure stockant les données d'une condition
+* @package  jelix
+ * @subpackage dao
 */
 class jDaoCondition {
     /**
@@ -48,6 +50,8 @@ class jDaoCondition {
 
 /**
 * conteneur d'un ensemble de conditions
+* @package  jelix
+ * @subpackage dao
 */
 class jDaoConditions {
     /**

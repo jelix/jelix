@@ -13,8 +13,6 @@
  * a special if block to test easily a right value
  *
  * usage : {ifacl array('subject',54)} ..here generated content if the user has the right  {/ifacl}
- * @package    jelix
- * @subpackage jtpl_plugin
  * @param jTplCompiler $compiler the template compiler
  * @param boolean true if it is the begin of block, else false
  * @param $params array  1=>subject 2=>right value 3=>optional resource

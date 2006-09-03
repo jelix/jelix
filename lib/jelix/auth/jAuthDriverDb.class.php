@@ -18,6 +18,8 @@
 
 /**
 * driver base de donnée pour l'authentification
+* @package    jelix
+* @subpackage auth
 */
 class jAuthDriverDb implements jIAuthDriver {
 

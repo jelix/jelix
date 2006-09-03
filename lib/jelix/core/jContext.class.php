@@ -15,37 +15,45 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
+/**
+ * Module context manager
+ * Its goal is to manage a stack of module context
+ * @package  jelix
+ * @subpackage core
+ */
 class jContext {
 
+    static protected $context = array();
+
     /**
-    * Empilement d'un contexte.
-    * @param string $module  le nom du module dont on empile le contexte
+    * set the context to the given module
+    * @param string $module  the module name
     */
     static function push ($module){
-        array_push ($GLOBALS['gJContext'], $module);
+        array_push (self::$context, $module);
     }
 
     /**
-    * Dépilement d'un contexte.
-    * @return string element dépilé. (le contexte qui n'est plus d'actualité.)
+    * cancel the current context and set the context to the previous module
+    * @return string the obsolet module name
     */
     static function pop (){
-       return array_pop ($GLOBALS['gJContext']);
+       return array_pop (self::$context);
     }
 
     /**
-    * récupère le contexte actuel
-    * @return string le nom du contexte actuel si défini, sinon retourne false
+    * get the module name of the current context
+    * @return string name of the current module
     */
     static function get (){
-        return end($GLOBALS['gJContext']);
+        return end(self::$context);
     }
 
     /**
-    * réinitialise le contexte.
+    * clear the context
     */
     static function clear (){
-        $GLOBALS['gJContext'] = array ();
+        self::$context = array ();
     }
 }
 ?>

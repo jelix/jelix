@@ -10,16 +10,28 @@
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
+/**
+ * static class which loads the configuration
+ * @package  jelix
+ * @subpackage core
+ */
 class jConfig {
 
-
+    /**
+     * this is a static class, so private constructor
+     */
     private function __construct (){ }
 
     /**
-     * lecture de la configuration du framework
+     * load and read the configuration of the application
+     * The combination of all configuration files (the given file
+     * and the defaultconfig.ini.php) is stored
+     * in a single temporary file. So it calls the jConfigCompiler
+     * class if needed
+     * @param string $configFile the config file name
+     * @return object it contains all configuration options
+     * @see jConfigCompiler
      */
-
     static public function load($configFile){
         $config=array();
         $file = JELIX_APP_TEMP_PATH.$configFile.'.resultini.php';
@@ -53,6 +65,9 @@ class jConfig {
             return $config;
     }
 
+    /**
+     * verify the existance of a path
+     */
     private static function _verifpath($list, $time){
         $list = split(' *, *',$list);
         foreach($list as $path){

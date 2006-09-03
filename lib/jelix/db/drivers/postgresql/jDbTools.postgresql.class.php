@@ -15,6 +15,11 @@
 * Adaptée pour Jelix par Laurent Jouanneau
 */
 
+/**
+ *
+ * @package    jelix
+ * @subpackage db
+ */
 class jDbToolsPostgreSQL extends jDbTools {
 
    function __construct($connector){

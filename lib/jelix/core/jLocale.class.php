@@ -18,7 +18,9 @@
 
 
 /**
-* a bundle content all readed properties ina a given langage, and for all charsets
+* a bundle contains all readed properties in a given language, and for all charsets
+* @package  jelix
+* @subpackage core
 */
 class jBundle {
     var $fic;
@@ -39,6 +41,9 @@ class jBundle {
 
     /**
     * get the translation
+    * @param string $key the locale key
+    * @param string $charset
+    * @return string the localized string
     */
     public function get ($key, $charset = null){
 
@@ -103,7 +108,7 @@ class jBundle {
     /**
     * loads a given resource from its path.
     */
-    function _loadResources ($fichier, $charset){
+    private function _loadResources ($fichier, $charset){
 
         if (($f = fopen ($fichier, 'r')) !== false) {
             $multiline=false;
@@ -155,9 +160,19 @@ class jBundle {
 
 /**
  * static class to get a localized string
+ * @package  jelix
+ * @subpackage core
  */
 class jLocale {
+    /**
+     *
+     */
     static $bundles = array();
+
+    /**
+     * static class...
+     */
+    private function __construct(){}
 
     /**
      * gets the current lang

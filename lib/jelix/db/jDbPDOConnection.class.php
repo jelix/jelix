@@ -11,8 +11,10 @@
 *
 */
 
-// les noms des constantes de PDO ont changés entre php 5.0 et 5.1
-// on utilise alors les notres
+/**
+ * les noms des constantes de PDO ont changés entre php 5.0 et 5.1. on utilise alors les notres
+ *
+ */
 define('JPDO_FETCH_OBJ',5); // PDO::FETCH_OBJ
 define('JPDO_FETCH_ORI_NEXT',0); // PDO::FETCH_ORI_NEXT
 define('JPDO_FETCH_ORI_FIRST',3);
@@ -22,6 +24,10 @@ define('JPDO_ATTR_AUTOCOMMIT',0); //PDO::ATTR_AUTOCOMMIT
 define('JPDO_ATTR_CURSOR',10); // PDO::ATTR_CURSOR
 define('JPDO_CURSOR_SCROLL',1); //PDO::CURSOR_SCROLL
 
+/**
+ * @package  jelix
+ * @subpackage db
+ */
 class jDbPDOResultSet extends PDOStatement implements Iterator {
 
     const FETCH_CLASS = 8;
@@ -79,7 +85,11 @@ class jDbPDOResultSet extends PDOStatement implements Iterator {
 }
 
 
-
+/**
+ *
+ * @package  jelix
+ * @subpackage db
+ */
 class jDbPDOConnection extends PDO {
 
     /**
@@ -90,7 +100,7 @@ class jDbPDOConnection extends PDO {
     public $dbms;
 
     /**
-    * @constructor
+    *
     */
     function __construct($profil){
        $this->profil = $profil;

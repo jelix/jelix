@@ -15,7 +15,12 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
-class jDbFieldProperties {
+/**
+ *
+ * @package  jelix
+ * @subpackage db
+ */
+ class jDbFieldProperties {
     public $type;
     public $name;
     public $not_null=true;
@@ -27,11 +32,13 @@ class jDbFieldProperties {
 
 /**
  * classe d'outils pour gérer une base de données
+ * @package  jelix
+ * @subpackage db
  */
 abstract class jDbTools {
    protected $_connector;
     /**
-    * @constructor
+    *
     */
    function __construct( $connector){
       $this->_connector = $connector;
