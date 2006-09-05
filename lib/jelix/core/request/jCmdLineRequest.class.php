@@ -43,7 +43,7 @@ class jCmdLineRequest extends jRequest {
 
         $this->params = $argv;
         $this->params['module'] = $selector->module;
-        $this->params['action'] = $selector->ressource;
+        $this->params['action'] = $selector->resource;
     }
 }
 ?>
