@@ -27,12 +27,6 @@
 class jDaoGenerator {
 
    /**
-   * The compiler object
-   * @var jDaoCompiler
-   */
-   private $_compiler=null;
-
-   /**
    * the dao definition.
    * @var jDaoParser
    */
@@ -52,14 +46,12 @@ class jDaoGenerator {
 
    /**
    * constructor
-   * @param jDaoCompiler $compiler
    * @param jDaoParser $daoDefinition
    */
-   function __construct($compiler, $daoDefinition){
-      $this->_compiler = $compiler;
+   function __construct($factoryClassName, $recordClassName, $daoDefinition){
       $this->_datasParser = $daoDefinition;
-      $this->_DaoClassName = $compiler->getSelector()->getDaoClass();
-      $this->_DaoRecordClassName = $compiler->getSelector()->getDaoRecordClass();
+      $this->_DaoClassName = $factoryClassName;
+      $this->_DaoRecordClassName = $recordClassName;
    }
 
    /**
@@ -98,7 +90,7 @@ class jDaoGenerator {
       $sqlSelectClause   = $this->_getSelectClause();
       $pkFields          = $this->_getPropertiesBy('PkFields');
       $pTableRealName    = $tables[$this->_datasParser->getPrimaryTable()]['realname'];
-      $driverName        = $this->_compiler->getDbDriver();
+      $driverName        = jDaoCompiler::$dbDriver;
       $pkai              = $this->_getAutoIncrementField();
       $sqlPkCondition    = $this->_buildSimpleConditions($pkFields);
       if($sqlPkCondition != ''){
@@ -184,7 +176,7 @@ class jDaoGenerator {
          $src[] = '    return $result;';
          $src[] = ' }else return false;';
       }else{
-          $src[] = '  return $result;';
+         $src[] = '    return $result;';
       }
       $src[] = '}';
 
@@ -355,7 +347,7 @@ class jDaoGenerator {
     */
     private function _getFromClause(){
 
-      $driverName = $this->_compiler->getDbDriver();
+      $driverName = jDaoCompiler::$dbDriver;
       $aliaslink = ($driverName == 'oci8'?' ':' AS ');
 
       $sqlWhere = '';
@@ -425,7 +417,7 @@ class jDaoGenerator {
    private function _getSelectClause ($distinct=''){
       $result = array();
 
-      $driverName = $this->_compiler->getDbDriver();
+      $driverName = jDaoCompiler::$dbDriver;
 
       $tables = $this->_datasParser->getTables();
       foreach ($this->_datasParser->getProperties () as $id=>$prop){
@@ -541,7 +533,7 @@ class jDaoGenerator {
             $using = $this->_datasParser->getProperties ();
         }
 
-        $driverName = $this->_compiler->getDbDriver();
+        $driverName = jDaoCompiler::$dbDriver;
         $tb = $this->_datasParser->getTables();
         $tb = $tb[$this->_datasParser->getPrimaryTable()]['realname'];
 

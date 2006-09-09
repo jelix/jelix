@@ -13,6 +13,9 @@
 * Some line of code are copyrighted CopixTeam http://www.copix.org
 */
 
+/**
+*
+*/
 require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
 
 /**

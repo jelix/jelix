@@ -20,51 +20,54 @@ require_once (JELIX_LIB_DAO_PATH.'jDaoParser.class.php');
 require_once (JELIX_LIB_DAO_PATH.'jDaoGenerator.class.php');
 
 /**
- * The compiler for the DAO classes. it is used by jIncluder
+ * The compiler for the DAO xml files. it is used by jIncluder
+ * It produces some php classes
  * @package  jelix
  * @subpackage dao
  */
 class jDaoCompiler  implements jISimpleCompiler {
     /**
     * the current DAO id.
+    * @var string
     */
-    private $_DaoId ='';
+    static public $daoId = '';
 
     /**
-    * the base name of dao object.
-    */
-    private $_baseName= '';
+     * the current DAO file path
+     * @var string
+     */
+    static public $daoPath = '';
 
     /**
-    *
-    */
-    private $_selector;
+     * The db driver name
+     * @var string
+     */
+    static public $dbDriver='';
 
     /**
     * compile the given class id.
     */
     public function compile ($selector) {
 
-        // recuperation du chemin et nom de fichier de definition xml de la dao
-        $this->_selector = $selector;
-        $this->_DaoId = $selector->toString();
-        $this->_baseName = $selector->resource;
+        jDaoCompiler::$daoId = $selector->toString();
+        jDaoCompiler::$daoPath = $selector->getPath();
+        jDaoCompiler::$dbDriver = $selector->driver;
 
         // chargement du fichier XML
         $doc = new DOMDocument();
 
-        if(!$doc->load($selector->getPath())){
-           throw new jException('jelix~daoxml.file.unknow', $selector->getPath());
+        if(!$doc->load(jDaoCompiler::$daoPath)){
+           throw new jException('jelix~daoxml.file.unknow', jDaoCompiler::$daoPath);
         }
 
         if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0'){
-           throw new jException('jelix~daoxml.namespace.wrong',array($selector->getPath(), $doc->namespaceURI));
+           throw new jException('jelix~daoxml.namespace.wrong',array(jDaoCompiler::$daoPath, $doc->namespaceURI));
         }
 
-        $parser = new jDaoParser ($this);
+        $parser = new jDaoParser ();
         $parser->parse(simplexml_import_dom($doc));
 
-        $generator = new jDaoGenerator($this, $parser);
+        $generator = new jDaoGenerator($selector->getDaoClass(), $selector->getDaoRecordClass(), $parser);
 
         // génération des classes PHP correspondant à la définition de la DAO
         $compiled = '<?php '.$generator->buildClasses ()."\n?>";
@@ -72,18 +75,31 @@ class jDaoCompiler  implements jISimpleCompiler {
         return true;
     }
 
-    public function getDaoId(){ return  $this->_DaoId;}
-    public function getSelector(){ return  $this->_selector;}
-    public function getDbDriver(){ return  $this->_selector->driver;}
+}
 
-    public function doDefError($message, $arg1=null){
-        $arg=array($this->_selector->toString(true),$this->_selector->getPath());
-        if(is_array($arg1)){
-            $arg=array_merge($arg, $arg1);
+/**
+ * Exception for Dao compiler
+ * @package  jelix
+ * @subpackage dao
+ */
+class jDaoXmlException extends jException {
+
+    /**
+     * @param string $localekey a locale key
+     * @param array $localeParams parameters for the message (for sprintf)
+     */
+    public function __construct($localekey, $localeParams=array()) {
+        $localekey= 'jelix~daoxml.'.$localekey;
+
+        $arg=array(jDaoCompiler::$daoId, jDaoCompiler::$daoPath);
+        if(is_array($localeParams)){
+            $arg=array_merge($arg, $localeParams);
         }else{
-            $arg[]=$arg1;
+            $arg[]=$localeParams;
         }
-        throw new jException('jelix~daoxml.'.$message,$arg);
+        parent::__construct($localekey, $arg);
     }
 }
+
+
 ?>

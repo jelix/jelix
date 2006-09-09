@@ -17,7 +17,7 @@
 */
 
 /**
- * Analyse un fichier xml de dao
+ * extract datas from a dao xml content
  * @package  jelix
  * @subpackage dao
  * @see jDaoCompiler
@@ -34,8 +34,10 @@ class jDaoParser {
     * all tables with their properties, and their own fields
     * keys = table code name
     * values = array()
-    *          'name'=> table code name, 'tablename'=>'real table name', 'JOIN'=>'join type',
-    *          'primary'=>'bool', 'fields'=>array(list of field code name)
+    *          'name'=> table code name, 'realname'=>'real table name',
+    *          'primarykey'=> attribute , 'pk'=> primary keys list
+    *          'onforeignkey'=> attribute, 'fk'=> foreign keys list
+    *          'fields'=>array(list of field code name)
     */
     private $_tables = array();
 
@@ -45,37 +47,40 @@ class jDaoParser {
     private $_primaryTable = '';
 
     /**
-    * liste des jointures, entre toutes les tables
-    * values = array('join'=>'type jointure', 'left'=>'table name', 'right'=>'table name',
-    *               'leftfield'=>'real field name', 'rightfield'=>'real field name');
+    * code name of foreign table with a outer join
+    * @var array  of table code name
     */
     private $_ojoins = array ();
+
+    /**
+    * code name of foreign table with a inner join
+    * @var array  of array(table code name, 0)
+    */
     private $_ijoins = array ();
 
-
+    /**
+     * @var array list of jDaoMethod objects
+     */
     private $_methods = array();
-
-
-    public $_compiler;
 
     /**
     * Constructor
-    * @param jDaoCompiler compiler the compiler object
     */
-    function __construct($compiler){
-        $this->_compiler= $compiler;
+    function __construct(){
     }
 
     /**
-    * loads an XML file if given.
+    * parse a dao xml content
+    * @param SimpleXmlElement $xml
+    * @param int $debug  for debug only 0:parse all, 1:parse only datasource+record, 2;parse only datasource
     */
-    public function parse( $xml){
+    public function parse( $xml, $debug=0){
         // -- tables
         if(isset ($xml->datasources) && isset ($xml->datasources[0]->primarytable)){
             $t = $this->_parseTable (0, $xml->datasources[0]->primarytable[0]);
             $this->_primaryTable = $t['name'];
             if(isset($xml->datasources[0]->primarytable[1])){
-               $this->_compiler->doDefError ('table.two.many');
+               throw new jDaoXmlException ('table.two.many');
             }
             foreach($xml->datasources[0]->foreigntable as $table){
                 $this->_parseTable (1, $table);
@@ -84,28 +89,32 @@ class jDaoParser {
                 $this->_parseTable (2, $table);
             }
         }else{
-            $this->_compiler->doDefError ('datasource.missing');
+            throw new jDaoXmlException ('datasource.missing');
         }
+
+        if($debug == 2) return;
 
         //add the record properties
         if(isset($xml->record) && isset($xml->record[0]->property)){
             foreach ($xml->record[0]->property as $prop){
-               $p = new jDaoProperty ($prop->attributes(), $this);
-               $this->_properties[$p->name] = $p;
-               $this->_tables[$p->table]['fields'][] = $p->name;
+            $p = new jDaoProperty ($prop->attributes(), $this);
+            $this->_properties[$p->name] = $p;
+            $this->_tables[$p->table]['fields'][] = $p->name;
             }
         }else
-           $this->_compiler->doDefError ('properties.missing');
+            throw new jDaoXmlException ('properties.missing');
+
+        if($debug == 1) return;
 
         // get additionnal methods definition
         if(isset ($xml->factory) && isset ($xml->factory[0]->method)){
-           foreach($xml->factory[0]->method as $method){
-               $m = new jDaoMethod ($method, $this);
-               if(isset ($this->_methods[$m->name])){
-                  $this->_compiler->doDefError ('method.duplicate',$m->name);
-               }
-               $this->_methods[$m->name] = $m;
-           }
+            foreach($xml->factory[0]->method as $method){
+                $m = new jDaoMethod ($method, $this);
+                if(isset ($this->_methods[$m->name])){
+                    throw new jDaoXmlException ('method.duplicate',$m->name);
+                }
+                $this->_methods[$m->name] = $m;
+            }
         }
     }
 
@@ -116,29 +125,29 @@ class jDaoParser {
       $infos = $this->getAttr($tabletag, array('name','realname','primarykey','onforeignkey'));
 
       if ($infos['name'] === null )
-         $this->_compiler->doDefError('table.name');
+         throw new jDaoXmlException ('table.name');
 
       if($infos['realname'] === null)
          $infos['realname'] = $infos['name'];
 
       if($infos['primarykey'] === null)
-          $this->_compiler->doDefError ('primarykey.missing');
+          throw new jDaoXmlException ('primarykey.missing');
 
       $infos['pk']=explode(',',$infos['primarykey']);
       unset($infos['primarykey']);
 
       if(count($infos['pk']) == 0 || $infos['pk'][0] == '')
-          $this->_compiler->doDefError ('primarykey.missing');
+          throw new jDaoXmlException ('primarykey.missing');
 
       if($typetable){ // pour les foreigntable et optionalforeigntable
           if($infos['onforeignkey'] === null)
-              $this->_compiler->doDefError ('foreignkey.missing');
+             throw new jDaoXmlException ('foreignkey.missing');
           $infos['fk']=explode(',',$infos['onforeignkey']);
           unset($infos['onforeignkey']);
           if(count($infos['fk']) == 0 || $infos['fk'][0] == '')
-             $this->_compiler->doDefError ('foreignkey.missing');
+             throw new jDaoXmlException ('foreignkey.missing');
           if(count($infos['fk']) != count($infos['pk']))
-             $this->_compiler->doDefError ('foreignkey.missing');
+             throw new jDaoXmlException ('foreignkey.missing');
           if($typetable == 1){
              $this->_ijoins[]=$infos['name'];
           }else{
@@ -166,9 +175,9 @@ class jDaoParser {
     }
 
     /**
-    * just a quick way to retriveve boolean values from a string.
+    * just a quick way to retrieve boolean values from a string.
     *  will accept yes, true, 1 as "true" values
-    *  the rest will be considered as false values.
+    *  all other values will be considered as false.
     * @return boolean true / false
     */
     public function getBool ($value) {
@@ -265,7 +274,7 @@ class jDaoProperty {
         $params = $def->getAttr($params, $needed);
 
         if ($params['name']===null){
-            $def->_compiler->doDefError('missing.attr', array('name', 'property'));
+            throw new jDaoXmlException ('missing.attr', array('name', 'property'));
         }
         $this->name       = $params['name'];
         $this->fieldName  = $params['fieldname'] !==null ? $params['fieldname'] : $this->name;
@@ -274,7 +283,7 @@ class jDaoProperty {
         $tables = $def->getTables();
 
         if(!isset( $tables[$this->table])){
-            $def->_compiler->doDefError('property.unknow.table', $this->name);
+            throw new jDaoXmlException ('property.unknow.table', $this->name);
         }
 
         $this->required   = $def->getBool ($params['required']);
@@ -289,14 +298,14 @@ class jDaoProperty {
         }
 
         if ($params['datatype']===null){
-            $def->_compiler->doDefError('missing.attr', array('type', 'field'));
+            throw new jDaoXmlException ('missing.attr', array('type', 'field'));
         }
         $params['datatype']=trim(strtolower($params['datatype']));
         $this->needsQuotes = in_array ($params['datatype'], array ('string', 'date', 'datetime', 'time'));
 
         if (!in_array ($params['datatype'], array ('autoincrement', 'bigautoincrement', 'int', 'datetime', 'time',
                                     'integer', 'varchar', 'string', 'varchardate', 'date', 'numeric', 'double', 'float'))){
-           $def->_compiler->doDefError('wrong.attr', array($params['datatype'], $this->fieldName));
+           throw new jDaoXmlException ('wrong.attr', array($params['datatype'], $this->fieldName));
         }
         $this->datatype = strtolower($params['datatype']);
 
@@ -351,7 +360,7 @@ class jDaoMethod {
       $params = $def->getAttr($method, array('name', 'type', 'call','distinct'));
 
       if ($params['name']===null){
-         $def->_compiler->doDefError ('missing.attr', array('name', 'method'));
+         throw new jDaoXmlException  ('missing.attr', array('name', 'method'));
       }
 
       $this->name  = $params['name'];
@@ -362,7 +371,7 @@ class jDaoMethod {
             $attr = $param->attributes();
 
             if (!isset ($attr['name'])){
-                  $this->_def->_compiler->doDefError('method.parameter.unknowname', array($this->name));
+                  throw new jDaoXmlException ('method.parameter.unknowname', array($this->name));
             }
             $this->_parameters[]=(string)$attr['name'];
             if (isset ($attr['default'])){
@@ -373,7 +382,7 @@ class jDaoMethod {
 
       if($this->type == 'sql'){
          if($params['call'] === null){
-            $def->_compiler->doDefError ('method.procstock.name.missing');
+            throw new jDaoXmlException  ('method.procstock.name.missing');
          }
          $this->_procstock=$params['call'];
          return;
@@ -383,7 +392,7 @@ class jDaoMethod {
          if (isset ($method->body)){
             $this->_body = (string)$method->body;
          }else{
-            $def->_compiler->doDefError ('method.body.missing');
+            throw new jDaoXmlException  ('method.body.missing');
          }
          return;
       }
@@ -401,7 +410,7 @@ class jDaoMethod {
                $this->_addValue($val);
             }
          }else{
-               $def->_compiler->doDefError('method.values.undefine',array($this->name));
+               throw new jDaoXmlException ('method.values.undefine',array($this->name));
          }
          return;
       }
@@ -410,7 +419,7 @@ class jDaoMethod {
         $props = $this->_def->getProperties();
 
         if (!isset ($props[$params['distinct']])){
-            $this->_def->_compiler->doDefError('method.property.unknown', array($this->name, $params['distinct']));
+            throw new jDaoXmlException ('method.property.unknown', array($this->name, $params['distinct']));
         }
         $this->distinct=$params['distinct'];
       }
@@ -426,12 +435,12 @@ class jDaoMethod {
 
       if (isset($method->limit)){
          if(isset($method->limit[1])){
-               $def->_compiler->doDefError('tag.duplicate', array('limit', $this->name));
+               throw new jDaoXmlException ('tag.duplicate', array('limit', $this->name));
          }
          if($this->type == 'select' || $this->type == 'selectfirst'){
             $this->_addLimit($method->limit[0]);
          }else{
-            $def->_compiler->doDefError('method.limit.forbidden', $this->name);
+            throw new jDaoXmlException ('method.limit.forbidden', $this->name);
          }
       }
    }
@@ -503,7 +512,7 @@ class jDaoMethod {
       $field_id = ($attr['property']!==null? $attr['property']:'');
 
       if(!isset($this->_op[$op])){
-         $this->_def->_compiler->doDefError('method.condition.unknown', array($this->name, $op));
+         throw new jDaoXmlException ('method.condition.unknown', array($this->name, $op));
       }
 
       $operator = $this->_op[$op];
@@ -511,28 +520,28 @@ class jDaoMethod {
       $props = $this->_def->getProperties();
 
       if (!isset ($props[$field_id])){
-         $this->_def->_compiler->doDefError('method.property.unknown', array($this->name, $field_id));
+         throw new jDaoXmlException ('method.property.unknown', array($this->name, $field_id));
       }
 
       if($this->type=='update'){
          if($props[$field_id]->table != $this->_def->getPrimaryTable()){
-            $this->_def->_compiler->doDefError('method.property.forbidden', array($this->name, $field_id));
+            throw new jDaoXmlException ('method.property.forbidden', array($this->name, $field_id));
          }
       }
 
       if($attr['value']!==null && $attr['expr']!==null){
-         $this->_def->_compiler->doDefError('method.condition.valueexpr.together', array($this->name, $op));
+         throw new jDaoXmlException ('method.condition.valueexpr.together', array($this->name, $op));
       }else if($attr['value']!==null){
          if($op == 'isnull' || $op =='isnotnull'){
-            $this->_def->_compiler->doDefError('method.condition.valueexpr.notallowed', array($this->name, $op,$field_id));
+            throw new jDaoXmlException ('method.condition.valueexpr.notallowed', array($this->name, $op,$field_id));
          }
          if($op == 'binary_op') {
             if (!isset($attr['operator']) || empty($attr['operator'])) {
-                $this->_def->_compiler->doDefError('method.condition.operator.missing', array($this->name, $op,$field_id));
+                throw new jDaoXmlException ('method.condition.operator.missing', array($this->name, $op,$field_id));
             }
             if (isset($attr['driver']) && !empty($attr['driver'])) {
-                if ($this->_def->_compiler->getDbDriver() != $attr['driver']) {
-                    $this->_def->_compiler->doDefError('method.condition.driver.notallowed', array($this->name, $op,$field_id));
+                if (jDaoCompiler::$dbDriver != $attr['driver']) {
+                    throw new jDaoXmlException ('method.condition.driver.notallowed', array($this->name, $op,$field_id));
                 }
             }
             $operator = $attr['operator'];
@@ -540,18 +549,18 @@ class jDaoMethod {
          $this->_conditions->addCondition ($field_id, $operator, $attr['value']);
       }else if($attr['expr']!==null){
          if($op == 'isnull' || $op =='isnotnull'){
-            $this->_def->_compiler->doDefError('method.condition.valueexpr.notallowed', array($this->name, $op, $field_id));
+            throw new jDaoXmlException ('method.condition.valueexpr.notallowed', array($this->name, $op, $field_id));
          }
          if(($op == 'in' || $op =='notin')&& !preg_match('/^\$[a-zA-Z0-9_]+$/', $attr['expr'])){
-            $this->_def->_compiler->doDefError('method.condition.innotin.bad.expr', array($this->name, $op, $field_id));
+            throw new jDaoXmlException ('method.condition.innotin.bad.expr', array($this->name, $op, $field_id));
          }
          if($op == 'binary_op') {
             if (!isset($attr['operator']) || empty($attr['operator'])) {
-                $this->_def->_compiler->doDefError('method.condition.operator.missing', array($this->name, $op,$field_id));
+                throw new jDaoXmlException ('method.condition.operator.missing', array($this->name, $op,$field_id));
             }
             if (isset($attr['driver']) && !empty($attr['driver'])) {
-                if ($this->_def->_compiler->getDbDriver() != $attr['driver']) {
-                    $this->_def->_compiler->doDefError('method.condition.driver.notallowed', array($this->name, $op,$field_id));
+                if (jDaoCompiler::$dbDriver != $attr['driver']) {
+                    throw new jDaoXmlException ('method.condition.driver.notallowed', array($this->name, $op,$field_id));
                 }
             }
             $operator = $attr['operator'];
@@ -559,7 +568,7 @@ class jDaoMethod {
          $this->_conditions->addCondition ($field_id, $operator, $attr['expr'], true);
       }else{
           if($op != 'isnull' && $op !='isnotnull'){
-              $this->_def->_compiler->doDefError('method.condition.valueexpr.missing', array($this->name, $op, $field_id));
+              throw new jDaoXmlException ('method.condition.valueexpr.missing', array($this->name, $op, $field_id));
           }
       }
    }
@@ -574,10 +583,10 @@ class jDaoMethod {
          if(isset($prop[$attr['property']])){
                $this->_conditions->addItemOrder($attr['property'], $way);
          }else{
-               $this->_def->_compiler->doDefError('method.orderitem.bad', array($attr['property'], $this->name));
+               throw new jDaoXmlException ('method.orderitem.bad', array($attr['property'], $this->name));
          }
       }else{
-         $this->_def->_compiler->doDefError('method.orderitem.property.missing', array($this->name));
+         throw new jDaoXmlException ('method.orderitem.property.missing', array($this->name));
       }
    }
 
@@ -588,26 +597,26 @@ class jDaoMethod {
       $props =$this->_def->getProperties();
 
       if ($prop === null){
-         $this->_def->_compiler->doDefError('method.values.property.unknow', array($this->name, $prop));
+         throw new jDaoXmlException ('method.values.property.unknow', array($this->name, $prop));
          return false;
       }
 
       if(!isset($props[$prop])){
-         $this->_def->_compiler->doDefError('method.values.property.unknow', array($this->name, $prop));
+         throw new jDaoXmlException ('method.values.property.unknow', array($this->name, $prop));
          return false;
       }
 
       if($props[$prop]->table != $this->_def->getPrimaryTable()){
-         $this->_def->_compiler->doDefError('method.values.property.bad', array($this->name,$prop ));
+         throw new jDaoXmlException ('method.values.property.bad', array($this->name,$prop ));
          return false;
       }
       if($props[$prop]->isPK){
-         $this->_def->_compiler->doDefError('method.values.property.pkforbidden', array($this->name,$prop ));
+         throw new jDaoXmlException ('method.values.property.pkforbidden', array($this->name,$prop ));
          return false;
       }
 
       if($attr['value']!==null && $attr['expr']!==null){
-         $this->_def->_compiler->doDefError('method.values.valueexpr', array($this->name, $prop));
+         throw new jDaoXmlException ('method.values.valueexpr', array($this->name, $prop));
       }else if($attr['value']!==null){
          $this->_values [$prop]= array( $attr['value'], false);
       }else if($attr['expr']!==null){
@@ -622,24 +631,24 @@ class jDaoMethod {
       extract($attr);
 
       if( $offset === null){
-         $this->_def->_compiler->doDefError('missing.attr',array('offset','limit'));
+         throw new jDaoXmlException ('missing.attr',array('offset','limit'));
       }
       if($count === null){
-         $this->_def->_compiler->doDefError('missing.attr',array('count','limit'));
+         throw new jDaoXmlException ('missing.attr',array('count','limit'));
       }
 
       if(substr ($offset,0,1) == '$'){
          if(in_array (substr ($offset,1),$this->_parameters)){
             $offsetparam=true;
          }else{
-            $this->_def->_compiler->doDefError('method.limit.parameter.unknow', array($this->name, $offset));
+            throw new jDaoXmlException ('method.limit.parameter.unknow', array($this->name, $offset));
          }
       }else{
          if(is_numeric ($offset)){
             $offsetparam=false;
             $offset = intval ($offset);
          }else{
-            $this->_def->_compiler->doDefError('method.limit.badvalue', array($this->name, $offset));
+            throw new jDaoXmlException ('method.limit.badvalue', array($this->name, $offset));
          }
       }
 
@@ -647,14 +656,14 @@ class jDaoMethod {
          if(in_array (substr ($count,1),$this->_parameters)){
             $countparam=true;
          }else{
-            $this->_def->_compiler->doDefError('method.limit.parameter.unknow', array($this->name, $count));
+            throw new jDaoXmlException ('method.limit.parameter.unknow', array($this->name, $count));
          }
       }else{
          if(is_numeric($count)){
             $countparam=false;
             $count=intval($count);
          }else{
-            $this->_def->_compiler->doDefError('method.limit.badvalue', array($this->name, $count));
+            throw new jDaoXmlException ('method.limit.badvalue', array($this->name, $count));
          }
       }
       $this->_limit= compact('offset', 'count', 'offsetparam','countparam');

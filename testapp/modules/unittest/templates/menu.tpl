@@ -16,4 +16,12 @@
     <li><a href="?module=unittest&amp;action=testurlparse">Tester l'analyse d'url</a></li>
 </ul>
 
+<h3>jDao</h3>
+<ul>
+    <li><a href="?module=unittest&amp;action=dao_parser">Parser</a></li>
+
+</ul>
+
+
+
 <p><a href="?">Retour à l'accueil</a></p>
