@@ -1,14 +1,17 @@
 <h2>Sommaire</h2>
 
+<h3>Tests simples</h3>
 <ul>
    <li><a href="{jurl 'main_hello'}">Hello world en html</a></li>
    <li><a href="{jurl 'main_hello', array('output'=>'text')}">Hello world en texte</a></li>
    <li><a href="{jurl 'main_hello2'}">Template Hello world surchargé</a></li>
-   <li><a href="{jurl 'unittest~default_index'}">Tests unitaires</a></li>
-
    <li><a href="{jurl 'main_testdao'}">test dao</a></li>
 </ul>
 
+<h3>Tests Unitaires</h3>
+<ul>
+<li><a href="{jurl 'unittest~default_index'}">sommaire Tests unitaires</a></li>
+</ul>
 
 <h3>Formulaires</h3>
 <ul>

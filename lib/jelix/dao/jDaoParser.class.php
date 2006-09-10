@@ -224,12 +224,6 @@ class jDaoProperty {
     public $required = false;
 
     /**
-    * Is it a string ?
-    * @var boolean
-    */
-    public $isString = true;
-
-    /**
     * Says if it's a primary key.
     * @var boolean
     */
@@ -256,16 +250,16 @@ class jDaoProperty {
     public $maxlength = null;
     public $minlength = null;
 
+    /**
+    * Is it a string ?
+    * @var boolean
+    */
     public $needQuotes = true;
+
     public $ofPrimaryTable = true;
 
     /**
     * constructor.
-    <property name="nom simplifié" field="nom du champs" table="alias de la table"
-      datatype=""   required="true/false"
-      minlength="" maxlength="" regexp="" sequence="nom de la sequence"
-      updatemotif="" insertmotif="" selectmotif=""
-     />
     */
     function __construct ($params, $def){
         $needed = array('name', 'fieldname', 'table', 'datatype', 'required', 'minlength',

@@ -137,10 +137,52 @@ class UTDao extends jUnitTestCase {
     <string method="getPrimaryTable()" value="news"/>
     <array method="getMethods()">array()</array>
     <array method="getOuterJoins()">array(\'news_rubriques\')</array>
-    <array method="getInnerJoins()"></array>
+    <array method="getInnerJoins()">array()</array>
 </object>'
 ),
 
+
+ array('<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+  <datasources>
+     <primarytable name="news"           primarykey="news_id" />
+     <optionalforeigntable name="news_rubriques" primarykey="news_rubriques_id" onforeignkey="news_rubrique" />
+     <foreigntable name="news_author" realname="jx_authors_news" primarykey="author_id" onforeignkey="author_id" />
+  </datasources>
+</dao>',
+
+'<?xml version="1.0"?>
+<object class="jDaoParser">
+    <array method="getProperties()">array()</array>
+    <array method="getTables()">
+        <array key="news">
+            <string key="name" value="news" />
+            <string key="realname" value="news" />
+            <array key="pk" value="">array(\'news_id\')</array>
+            <!-- <array key="fk" value="">array()</array>-->
+            <array key="fields">array()</array>
+        </array>
+        <array key="news_rubriques">
+            <string key="name" value="news_rubriques" />
+            <string key="realname" value="news_rubriques" />
+            <array key="pk" value="">array(\'news_rubriques_id\')</array>
+            <array key="fk" value="">array(\'news_rubrique\')</array>
+            <array key="fields">array()</array>
+        </array>
+        <array key="news_author">
+            <string key="name" value="news_author" />
+            <string key="realname" value="jx_authors_news" />
+            <array key="pk" value="">array(\'author_id\')</array>
+            <array key="fk" value="">array(\'author_id\')</array>
+            <array key="fields">array()</array>
+        </array>
+    </array>
+    <string method="getPrimaryTable()" value="news"/>
+    <array method="getMethods()">array()</array>
+    <array method="getOuterJoins()">array(\'news_rubriques\')</array>
+    <array method="getInnerJoins()">array(array(\'news_rubriques\',0))</array>
+</object>'
+),
 
       );
 
@@ -217,6 +259,44 @@ array('','')
 
 ),
 
+        array('<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+  <datasources>
+    <primarytable name="news"           primarykey="news_id" />
+    <foreigntable name="news_author" realname="jx_authors_news" primarykey="author_id" />
+
+  </datasources>
+</dao>',
+'jelix~daoxml.foreignkey.missing',
+array('','')
+
+),
+
+        array('<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+  <datasources>
+    <primarytable name="news"           primarykey="news_id" />
+    <foreigntable name="news_author" realname="jx_authors_news" primarykey="author_id" onforeignkey="" />
+
+  </datasources>
+</dao>',
+'jelix~daoxml.foreignkey.missing',
+array('','')
+
+),
+
+        array('<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+  <datasources>
+    <primarytable name="news"           primarykey="news_id" />
+    <foreigntable name="news_author" realname="jx_authors_news" primarykey="author_id" onforeignkey="author_id,foo_id" />
+
+  </datasources>
+</dao>',
+'jelix~daoxml.foreignkey.missing',
+array('','')
+
+),
 
       );
 
@@ -237,6 +317,113 @@ array('','')
             }
         }
     }
+
+
+    protected $propDatas=array(
+        array(
+        '<?xml version="1.0"?>
+        <property name="label" datatype="string" />',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="label"/>
+            <string p="fieldName" value="label"/>
+            <string p="table" value="news"/>
+            <string p="datatype" value="string"/>
+            <null p="regExp"/>
+            <boolean p="required" value="false"/>
+            <boolean p="isPK" value="false" />
+            <boolean p="isFK" value="false" />
+            <string p="updateMotif" value="%s" />
+            <string p="insertMotif" value="%s" />
+            <string p="selectMotif" value="%s" />
+            <string p="sequenceName" value="" />
+            <null p="maxlength"/>
+            <null p="minlength"/>
+            <boolean p="needQuotes" value="true" />
+            <boolean p="ofPrimaryTable" value="true" />
+        </object>'
+        ),/*
+        array(
+        '<?xml version="1.0"?>
+        <property name="" field="nom du champs" table="alias de la table"
+                    datatype=""   required=""  minlength="" maxlength=""
+                    regExp="" sequence="nom de la sequence"
+                    updatemotif="" insertmotif="" selectmotif=""/>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value=""/>
+            <string p="fieldName" value=""/>
+            <string p="table" value=""/>
+            <string p="datatype" value=""/>
+            <null p="regExp"/>
+            <boolean p="required" value="false"/>
+            <boolean p="isPK" value="false" />
+            <boolean p="isFK" value="false" />
+            <string p="updateMotif" value="%s" />
+            <string p="insertMotif" value="%s" />
+            <string p="selectMotif" value="%s" />
+            <string p="sequenceName" value="" />
+            <int p="maxlength" value="0"/> <null p="maxlength"/>
+            <int p="minlength" value="0"/> <null p="minlength"/>
+            <boolean p="needQuotes" value="true" />
+            <boolean p="ofPrimaryTable" value="true" />
+        </object>'
+        ),
+        array(
+        '<?xml version="1.0"?>
+        <property name="" field="nom du champs" table="alias de la table"
+                    datatype=""   required=""  minlength="" maxlength=""
+                    regExp="" sequence="nom de la sequence"
+                    updatemotif="" insertmotif="" selectmotif=""/>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value=""/>
+            <string p="fieldName" value=""/>
+            <string p="table" value=""/>
+            <string p="datatype" value=""/>
+            <null p="regExp"/>
+            <boolean p="required" value="false"/>
+            <boolean p="isPK" value="false" />
+            <boolean p="isFK" value="false" />
+            <string p="updateMotif" value="%s" />
+            <string p="insertMotif" value="%s" />
+            <string p="selectMotif" value="%s" />
+            <string p="sequenceName" value="" />
+            <int p="maxlength" value="0"/> <null p="maxlength"/>
+            <int p="minlength" value="0"/> <null p="minlength"/>
+            <boolean p="needQuotes" value="true" />
+            <boolean p="ofPrimaryTable" value="true" />
+        </object>'
+        ),
+*/
+    );
+
+    function testProperties() {
+        $dao ='<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+  <datasources>
+    <primarytable name="news" primarykey="news_id" />
+    <foreigntable name="news_author" primarykey="author_id" onforeignkey="author_id" />
+  </datasources>
+</dao>';
+
+        $parser = new jDaoParser();
+        $parser->parse(simplexml_load_string($dao),2);
+
+        foreach($this->propDatas as $k=>$t){
+            $this->sendMessage("test good property ".$k);
+            $xml= simplexml_load_string($t[0]);
+            try{
+                $p = new jDaoProperty($xml, $parser);
+                $this->assertComplexIdenticalStr($p, $t[1]);
+            }catch(jDaoXmlException $e){
+                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage());
+            }catch(Exception $e){
+                $this->fail("Exception inconnue : ".$e->getMessage());
+            }
+        }
+    }
+
 
 }
 

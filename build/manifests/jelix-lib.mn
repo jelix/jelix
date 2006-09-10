@@ -303,6 +303,10 @@ cd lib/jelix-plugins
 cd lib/jelix-plugins/magicquotes
   magicquotes.plugin.php
   plugin.xml
+cd lib/jelix-plugins/autolocale
+  autolocale.plugin.ini.php.dist
+  autolocale.plugin.php
+  plugin.xml
 
 
 cd lib/jelix-www
