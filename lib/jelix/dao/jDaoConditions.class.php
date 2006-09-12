@@ -65,11 +65,6 @@ class jDaoConditions {
     public $order = array ();
 
     /**
-    * the field list we wants to get.
-    */
-    public $fields = array ();
-
-    /**
     * the condition we actually are browsing
     */
     private $_currentCondition;

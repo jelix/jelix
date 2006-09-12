@@ -36,7 +36,6 @@ class UTDao2 extends jUnitTestCase {
                     <array p="group">array()</array>
                 </object>
                 <array p="order">array("publishdate"=>"desc")</array>
-                <array p="fields">array()</array>
             </object>
             <array m="getParameters ()">array()</array>
             <array m="getParametersDefaultValues ()">array()</array>
@@ -64,7 +63,6 @@ class UTDao2 extends jUnitTestCase {
                     <array p="group">array()</array>
                 </object>
                 <array p="order">array("publishdate"=>"$aWay")</array>
-                <array p="fields">array()</array>
             </object>
             <array m="getParameters ()">array("aWay")</array>
             <array m="getParametersDefaultValues ()">array()</array>
@@ -89,7 +87,6 @@ class UTDao2 extends jUnitTestCase {
                     <array p="group">array()</array>
                 </object>
                 <array p="order">array()</array>
-                <array p="fields">array()</array>
             </object>
             <array m="getParameters ()">array()</array>
             <array m="getParametersDefaultValues ()">array()</array>
@@ -98,6 +95,161 @@ class UTDao2 extends jUnitTestCase {
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
+        array('<?xml version="1.0"?>
+          <method name="foo" type="select">
+            <parameter name="aOffset" />
+            <parameter name="aCount" />
+            <limit offset="$aOffset" count="$aCount" />
+          </method>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="foo"/>
+            <string p="type" value="select"/>
+            <string p="distinct" value=""/>
+            <object m="getConditions()" class="jDaoConditions">
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array()</array>
+                    <array p="group">array()</array>
+                </object>
+                <array p="order">array()</array>
+            </object>
+            <array m="getParameters ()">array()</array>
+            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getLimit ()">array("$aOffset","$aCount",true,true)</array>
+            <array m="getValues ()">array()</array>
+            <null m="getProcStock ()"/>
+            <null m="getBody ()"/>
+        </object>'),
+
+        array('<?xml version="1.0"?>
+          <method name="foo" type="select">
+            <conditions>
+                <eq property="subject" value="bar" />
+                <eq property="texte" value="machine" />
+            </conditions>
+          </method>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="foo"/>
+            <string p="type" value="select"/>
+            <string p="distinct" value=""/>
+            <object m="getConditions()" class="jDaoConditions">
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array(
+                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "expr"=>""),
+                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "expr"=>""))</array>
+                    <array p="group">array()</array>
+                    <string p="glueOp" value="AND"/>
+                </object>
+                <array p="order">array()</array>
+            </object>
+            <array m="getParameters ()">array()</array>
+            <array m="getParametersDefaultValues ()">array()</array>
+            <null m="getLimit ()"/>
+            <array m="getValues ()">array()</array>
+            <null m="getProcStock ()"/>
+            <null m="getBody ()"/>
+        </object>'),
+
+        array('<?xml version="1.0"?>
+          <method name="foo" type="select">
+            <conditions logic="or">
+                <eq property="subject" value="bar" />
+                <eq property="texte" value="machine" />
+            </conditions>
+          </method>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="foo"/>
+            <string p="type" value="select"/>
+            <string p="distinct" value=""/>
+            <object m="getConditions()" class="jDaoConditions">
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array(
+                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "expr"=>""),
+                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "expr"=>""))</array>
+                    <array p="group">array()</array>
+                    <string p="glueOp" value="OR"/>
+                </object>
+                <array p="order">array()</array>
+            </object>
+            <array m="getParameters ()">array()</array>
+            <array m="getParametersDefaultValues ()">array()</array>
+            <null m="getLimit ()"/>
+            <array m="getValues ()">array()</array>
+            <null m="getProcStock ()"/>
+            <null m="getBody ()"/>
+        </object>'),
+
+
+        array('<?xml version="1.0"?>
+          <method name="foo" type="select">
+            <conditions logic="or">
+                <conditions>
+                    <eq property="subject" value="bar" />
+                    <eq property="texte" value="machine" />
+                </conditions>
+                <conditions>
+                    <eq property="subject" value="bar2" />
+                    <conditions logic="or">
+                        <eq property="texte" value="machine2" />
+                        <eq property="texte" value="truc" />
+                    </conditions>
+                </conditions>
+            </conditions>
+          </method>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="foo"/>
+            <string p="type" value="select"/>
+            <string p="distinct" value=""/>
+            <object m="getConditions()" class="jDaoConditions">
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array(
+                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "expr"=>""),
+                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "expr"=>""))</array>
+                    <array p="group">
+                        <object p="condition" class="jDaoCondition">
+                            <notnull p="parent" />
+                            <array p="conditions">array(
+                            array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "expr"=>""),
+                            array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "expr"=>""))</array>
+                            <array p="group">array()</array>
+                            <string p="glueOp" value="AND"/>
+                        </object>
+                        <object p="condition" class="jDaoCondition">
+                            <object p="parent" class="jDaoCondition" />
+                            <array p="conditions">array(
+                            array("field_id"=>"subject","value"=>"bar2", "operator"=>"=", "expr"=>""))</array>
+                            <array p="group">
+                                <object p="condition" class="jDaoCondition">
+                                    <notnull p="parent" />
+                                    <array p="conditions">array(
+                                    array("field_id"=>"texte","value"=>"machine2", "operator"=>"=", "expr"=>""),
+                                    array("field_id"=>"texte","value"=>"truc", "operator"=>"=", "expr"=>""))</array>
+                                    <array p="group">array()</array>
+                                    <string p="glueOp" value="OR"/>
+                                </object>
+                            </array>
+                            <string p="glueOp" value="AND"/>
+                        </object>
+                    </array>
+                    <string p="glueOp" value="OR"/>
+                </object>
+                <array p="order">array()</array>
+            </object>
+            <array m="getParameters ()">array()</array>
+            <array m="getParametersDefaultValues ()">array()</array>
+            <null m="getLimit ()"/>
+            <array m="getValues ()">array()</array>
+            <null m="getProcStock ()"/>
+            <null m="getBody ()"/>
+        </object>'),
+
  /*       array('<?xml version="1.0"?>
           <method name="foo" type="select">
             <limit >

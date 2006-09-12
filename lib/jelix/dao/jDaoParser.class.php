@@ -386,11 +386,9 @@ class jDaoMethod {
          return;
       }
 
+      $this->_conditions = new jDaoConditions();
       if (isset ($method->conditions)){
-         $this->_conditions = new jDaoConditions();
-         $this->_parseConditions($method,false);
-      }else{
-         $this->_conditions = new jDaoConditions();
+         $this->_parseConditions($method->conditions[0],false);
       }
 
       if($this->type == 'update'){
@@ -442,33 +440,31 @@ class jDaoMethod {
    public function getProcStock (){ return $this->_procstock;}
    public function getBody (){ return $this->_body;}
 
-   private function _parseConditions($node, $subcond=true){
-      if (isset ($node->conditions)){
-         if (isset ($node->conditions['logic'])){
-            $kind = (string)$node->conditions['logic'];
-         }else{
+    private function _parseConditions($conditions, $subcond=true){
+        if (isset ($conditions['logic'])){
+            $kind = strtoupper((string)$conditions['logic']);
+        }else{
             $kind = 'AND';
-         }
+        }
 
-         if ($subcond){
+        if ($subcond){
             $this->_conditions->startGroup ($kind);
-         }else{
+        }else{
             $this->_conditions->condition->glueOp =$kind;
-         }
+        }
 
-         foreach ($node->conditions as $conds){
-
-            foreach($conds->children() as $op=>$cond){
+        foreach($conditions->children() as $op=>$cond){
+            if($op !='conditions')
                 $this->_addCondition ($op,$cond);
-            }
-            $this->_parseConditions ($conds);
-         }
+            else
+                $this->_parseConditions ($cond);
+        }
 
-         if ($subcond) {
-               $this->_conditions->endGroup();
-         }
-      }
-   }
+        if ($subcond) {
+            $this->_conditions->endGroup();
+        }
+
+    }
 
 
     /*

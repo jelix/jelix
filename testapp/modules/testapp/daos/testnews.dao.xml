@@ -47,7 +47,52 @@
             <eq property="valider" value="3" />
         </conditions>
     </method>
-
+    <method name="testor" type="select">
+        <parameter name="limit" />
+        <conditions logic="or">
+            <eq property="valider" value="3" />
+            <eq property="valider" value="2" />
+        </conditions>
+        <order>
+            <orderitem property="date" way="desc" />
+        </order>
+        <limit offset="0" count="$limit" />
+    </method>
+    <method name="testor2" type="select">
+        <parameter name="limit" />
+        <conditions logic="or">
+            <conditions>
+                <eq property="valider" value="3" />
+                <eq property="auteur" value="foo"/>
+            </conditions>
+            <conditions>
+                <eq property="valider" value="2" />
+                <conditions logic="or">
+                    <eq property="auteur" value="bar"/>
+                    <eq property="auteur" value="toto"/>
+                </conditions>
+            </conditions>
+        </conditions>
+        <order>
+            <orderitem property="date" way="desc" />
+        </order>
+        <limit offset="0" count="$limit" />
+    </method>
+    <method name="testor3" type="select">
+        <conditions>
+            <conditions>
+                <eq property="valider" value="3" />
+                <eq property="auteur" value="foo"/>
+            </conditions>
+            <conditions>
+                <eq property="valider" value="2" />
+                <conditions logic="or">
+                    <eq property="auteur" value="bar"/>
+                    <eq property="auteur" value="toto"/>
+                </conditions>
+            </conditions>
+        </conditions>
+    </method>
 
   </factory>
 </dao>

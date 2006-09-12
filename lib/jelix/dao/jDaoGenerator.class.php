@@ -636,6 +636,7 @@ class jDaoGenerator {
      * @param jDaoCondition
      */
     function _buildSQLCondition ($condition, $fields, $params, $withPrefix, $principal=false){
+
         $r = ' ';
 
         //direct conditions for the group
@@ -694,7 +695,7 @@ class jDaoGenerator {
         }
 
         //adds parenthesis around the sql if needed (non empty)
-        if (strlen (trim ($r)) > 0 && !$principal){
+        if (strlen (trim ($r)) > 0 && (!$principal ||($principal && $condition->glueOp != 'AND'))){
             $r = '('.$r.')';
         }
         return $r;

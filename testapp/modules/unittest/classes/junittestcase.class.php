@@ -127,7 +127,9 @@ class jUnitTestCase extends UnitTestCase {
                 }else
                     return true;
             case 'null':
-                return $this->assertNull($value,'string', $name.': not null');
+                return $this->assertNull($value, $name.': not null');
+            case 'notnull':
+                return $this->assertNotNull($value, $name.' is null');
             case 'resource':
                 return $this->assertIsA($value,'resource', $name.': not a resource');
             default:
