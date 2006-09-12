@@ -196,7 +196,7 @@ class UTDao extends jUnitTestCase {
                 $p->parse($xml,2);
                 $this->assertComplexIdenticalStr($p, $t[1]);
             }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage());
+                $this->fail("Exception sur le contenu xml inattendue : ".$e->getLocaleMessage().' ('.$e->getMessage().')');
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }
@@ -339,63 +339,55 @@ array('','')
             <string p="sequenceName" value="" />
             <null p="maxlength"/>
             <null p="minlength"/>
-            <boolean p="needQuotes" value="true" />
-            <boolean p="ofPrimaryTable" value="true" />
-        </object>'
-        ),/*
-        array(
-        '<?xml version="1.0"?>
-        <property name="" field="nom du champs" table="alias de la table"
-                    datatype=""   required=""  minlength="" maxlength=""
-                    regExp="" sequence="nom de la sequence"
-                    updatemotif="" insertmotif="" selectmotif=""/>',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value=""/>
-            <string p="fieldName" value=""/>
-            <string p="table" value=""/>
-            <string p="datatype" value=""/>
-            <null p="regExp"/>
-            <boolean p="required" value="false"/>
-            <boolean p="isPK" value="false" />
-            <boolean p="isFK" value="false" />
-            <string p="updateMotif" value="%s" />
-            <string p="insertMotif" value="%s" />
-            <string p="selectMotif" value="%s" />
-            <string p="sequenceName" value="" />
-            <int p="maxlength" value="0"/> <null p="maxlength"/>
-            <int p="minlength" value="0"/> <null p="minlength"/>
-            <boolean p="needQuotes" value="true" />
             <boolean p="ofPrimaryTable" value="true" />
         </object>'
         ),
         array(
         '<?xml version="1.0"?>
-        <property name="" field="nom du champs" table="alias de la table"
-                    datatype=""   required=""  minlength="" maxlength=""
-                    regExp="" sequence="nom de la sequence"
-                    updatemotif="" insertmotif="" selectmotif=""/>',
+        <property name="author_firstname" fieldname="firstname" datatype="string" table="news_author" />',
         '<?xml version="1.0"?>
         <object>
-            <string p="name" value=""/>
-            <string p="fieldName" value=""/>
-            <string p="table" value=""/>
-            <string p="datatype" value=""/>
+            <string p="name" value="author_firstname"/>
+            <string p="fieldName" value="firstname"/>
+            <string p="table" value="news_author"/>
+            <string p="datatype" value="string"/>
             <null p="regExp"/>
             <boolean p="required" value="false"/>
             <boolean p="isPK" value="false" />
+            <boolean p="isFK" value="false" />
+            <string p="updateMotif" value="" />
+            <string p="insertMotif" value="" />
+            <string p="selectMotif" value="%s" />
+            <string p="sequenceName" value="" />
+            <null p="maxlength"/>
+            <null p="minlength"/>
+            <boolean p="ofPrimaryTable" value="false" />
+        </object>'
+        ),
+
+    array(
+        '<?xml version="1.0"?>
+        <property name="id" fieldname="news_id" datatype="autoincrement" />',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="id"/>
+            <string p="fieldName" value="news_id"/>
+            <string p="table" value="news"/>
+            <string p="datatype" value="autoincrement"/>
+            <null p="regExp"/>
+            <boolean p="required" value="false"/>
+            <boolean p="isPK" value="true" />
             <boolean p="isFK" value="false" />
             <string p="updateMotif" value="%s" />
             <string p="insertMotif" value="%s" />
             <string p="selectMotif" value="%s" />
             <string p="sequenceName" value="" />
-            <int p="maxlength" value="0"/> <null p="maxlength"/>
-            <int p="minlength" value="0"/> <null p="minlength"/>
-            <boolean p="needQuotes" value="true" />
+            <null p="maxlength"/>
+            <null p="minlength"/>
             <boolean p="ofPrimaryTable" value="true" />
         </object>'
         ),
-*/
+
     );
 
     function testProperties() {
@@ -417,16 +409,14 @@ array('','')
                 $p = new jDaoProperty($xml, $parser);
                 $this->assertComplexIdenticalStr($p, $t[1]);
             }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage());
+                $this->fail("Exception sur le contenu xml inattendue : ".$e->getLocaleMessage().' ('.$e->getMessage().')');
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }
         }
     }
 
-
 }
-
 
 
 ?>

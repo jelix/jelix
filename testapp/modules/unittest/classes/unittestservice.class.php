@@ -50,6 +50,11 @@ class UnitTestService {
       $test->run(new jHtmlRespReporter($this->_rep));
    }
 
+   function daoParser2Test(){
+      $test = jClasses::create("utdao2");
+      $test->run(new jHtmlRespReporter($this->_rep));
+   }
+
 
    function simpleTestTest(){
       $test = jClasses::create("utsimpletest");

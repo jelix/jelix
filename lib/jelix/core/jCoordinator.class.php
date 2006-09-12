@@ -102,9 +102,10 @@ class jCoordinator {
         foreach($GLOBALS['gJConfig']->plugins as $name=>$conf){
             if($conf && isset($GLOBALS['gJConfig']->_pluginsPathList[$name])){
                 if($conf=='1')
-                    $conf=$name.'.plugin.ini.php';
-                if(file_exists(JELIX_APP_CONFIG_PATH.$conf)){
-                   $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.$conf,true);
+                    $conff=$name.'.plugin.ini.php';
+                if(file_exists(JELIX_APP_CONFIG_PATH.$conff)){
+                   if( false === ($conf = @parse_ini_file(JELIX_APP_CONFIG_PATH.$conff,true)))
+                        die("Erreur dans le fichier de configuration du plugin $name ($conff)!");
                 }else{
                     $conf = array();
                 }
@@ -162,13 +163,19 @@ class jCoordinator {
 
         // verification du module
         if(!in_array($this->moduleName,$gJConfig->_trustedModules)){
-            trigger_error(jLocale::get('jelix~errors.module.untrusted',$this->moduleName), E_USER_ERROR);
-            return;
+            throw new jException('jelix~errors.module.untrusted',$this->moduleName);
         }
 
         jContext::push ($this->moduleName);
-
-        $this->action = new jSelectorAct($this->actionName);
+        try{
+            $this->action = new jSelectorAct($this->actionName);
+        }catch(jExceptionSelector $e){
+            if($e->getCode() == 12){
+                throw new jException('jelix~errors.module.unknow',$this->moduleName);
+            }elseif($e->getCode() == 10){
+                throw new jException('jelix~errors.action.unknow',$this->actionName);
+            }
+        }
 
         $ctrl = $this->getController($this->action);
 
@@ -200,7 +207,7 @@ class jCoordinator {
            $this->plugins[$name]->beforeOutput ();
         }
 
-        // envoie de la réponse
+        // envoi de la réponse
         if(!$this->response->output()){
            $this->response->outputErrors();
         }

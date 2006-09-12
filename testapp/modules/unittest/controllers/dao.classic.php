@@ -18,10 +18,18 @@ class CTDao extends jController {
       $ut = jClasses::create("unittestservice");
       $ut->init($rep);
       $ut->daoParserTest();
-
-
       return $rep;
    }
+
+   function parser2() {
+      $rep = $this->getResponse('unittest');
+      $rep->title = 'test unitaires sur parser jDao (2)';
+      $ut = jClasses::create("unittestservice");
+      $ut->init($rep);
+      $ut->daoParser2Test();
+      return $rep;
+   }
+
 
 }
 ?>

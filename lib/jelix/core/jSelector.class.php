@@ -38,7 +38,7 @@ class jSelectorFactory {
                 return $sel;
             }
         }
-        throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', $id);
+        throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($selstr,''));
     }
 }
 
@@ -113,7 +113,7 @@ abstract class jSelectorModule implements jISelector {
             $this->_createPath();
             $this->_createCachePath();
         }else{
-            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', $sel);
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
     }
 
@@ -147,7 +147,7 @@ abstract class jSelectorModule implements jISelector {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
+            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         }
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
         if (!is_readable ($this->_path)){
@@ -212,14 +212,14 @@ class jSelectorAct extends jSelectorModule {
 
             $this->_createPath();
         }else{
-            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', $sel);
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
     }
 
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
+            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         }else{
             $this->_path = $gJConfig->_modulesPathList[$this->module].'controllers/'.$this->controller.'.'.$this->request.'.php';
         }
@@ -322,7 +322,7 @@ class jSelectorDao extends jSelectorModule {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
+            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         }
 
         // on regarde si le dao a été redéfini
@@ -379,7 +379,7 @@ class jSelectorTpl extends jSelectorModule {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
+            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         }
 
         // on regarde si il y a un template redéfinie pour le theme courant
@@ -477,7 +477,7 @@ class jSelectorPlugin implements jISelector {
                 throw new jExceptionSelector('jelix~errors.selector.invalid.target', $sel);
             }
         }else{
-            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', $sel);
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
     }
 
@@ -520,7 +520,7 @@ class jSelectorSimpleFile implements jISelector {
             $this->file = $m[1];
             $this->_path = $this->_basePath.$m[1];
         }else{
-            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', $sel);
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
     }
 

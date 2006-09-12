@@ -95,17 +95,17 @@ class jDateTime{
            case self::LANG_DFORMAT:
                $t = mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
                $lf = jLocale::get('jelix~format.date');
-               $str = strftime($lf, $t);
+               $str = date($lf, $t);
                break;
            case self::LANG_DTFORMAT:
                $t = mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
                $lf = jLocale::get('jelix~format.datetime');
-               $str = strftime($lf, $t);
+               $str = date($lf, $t);
                break;
            case self::LANG_TFORMAT:
                $t = mktime ( $this->hour, $this->minute,$this->second , 0 , 0, 0 );
                $lf = jLocale::get('jelix~format.time');
-               $str = strftime($lf, $t);
+               $str = date($lf, $t);
                break;
            case self::BD_DFORMAT:
                $str = sprintf('%04d-%02d-%02d', $this->year, $this->month, $this->day);

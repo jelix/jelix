@@ -250,12 +250,6 @@ class jDaoProperty {
     public $maxlength = null;
     public $minlength = null;
 
-    /**
-    * Is it a string ?
-    * @var boolean
-    */
-    public $needQuotes = true;
-
     public $ofPrimaryTable = true;
 
     /**
@@ -292,7 +286,7 @@ class jDaoProperty {
         }
 
         if ($params['datatype']===null){
-            throw new jDaoXmlException ('missing.attr', array('type', 'field'));
+            throw new jDaoXmlException ('missing.attr', array('datatype', 'property'));
         }
         $params['datatype']=trim(strtolower($params['datatype']));
         $this->needsQuotes = in_array ($params['datatype'], array ('string', 'date', 'datetime', 'time'));
@@ -347,6 +341,7 @@ class jDaoMethod {
    private $_values = array();
    private $_def = null;
    private $_procstock=null;
+   private $_body=null;
 
    function __construct ($method, $def){
       $this->_def = $def;
@@ -572,6 +567,12 @@ class jDaoMethod {
 
       $way  = ($attr['way'] !== null ? $attr['way']:'ASC');
 
+      if(substr ($way,0,1) == '$'){
+         if(!in_array (substr ($way,1),$this->_parameters)){
+            throw new jDaoXmlException ('method.orderitem.parameter.unknow', array($this->name, $way));
+         }
+      }
+
       if ($attr['property'] != ''){
           $prop =$this->_def->getProperties();
          if(isset($prop[$attr['property']])){
@@ -582,6 +583,10 @@ class jDaoMethod {
       }else{
          throw new jDaoXmlException ('method.orderitem.property.missing', array($this->name));
       }
+
+
+
+
    }
 
    private function _addValue($attr){
