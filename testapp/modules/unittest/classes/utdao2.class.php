@@ -28,7 +28,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -55,7 +55,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -79,7 +79,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -105,7 +105,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -133,7 +133,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -154,7 +154,7 @@ class UTDao2 extends jUnitTestCase {
         </object>'),
 
         array('<?xml version="1.0"?>
-          <method name="foo" type="select">
+          <method name="foo" type="select" distinct="true">
             <conditions logic="or">
                 <eq property="subject" value="bar" />
                 <eq property="texte" value="machine" />
@@ -164,7 +164,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="true"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -205,7 +205,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -260,7 +260,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
              <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -288,7 +288,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -316,7 +316,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -343,7 +343,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
              <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+           <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -370,7 +370,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -398,7 +398,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
@@ -427,7 +427,7 @@ class UTDao2 extends jUnitTestCase {
         <object>
             <string p="name" value="foo"/>
             <string p="type" value="select"/>
-            <string p="distinct" value=""/>
+            <boolean p="distinct" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />

@@ -118,60 +118,66 @@ class jDaoParser {
         }
     }
 
-   /**
-   * parse a join definition
-   */
-   private function _parseTable ($typetable, $tabletag){
-      $infos = $this->getAttr($tabletag, array('name','realname','primarykey','onforeignkey'));
-
-      if ($infos['name'] === null )
-         throw new jDaoXmlException ('table.name');
-
-      if($infos['realname'] === null)
-         $infos['realname'] = $infos['name'];
-
-      if($infos['primarykey'] === null)
-          throw new jDaoXmlException ('primarykey.missing');
-
-      $infos['pk']=explode(',',$infos['primarykey']);
-      unset($infos['primarykey']);
-
-      if(count($infos['pk']) == 0 || $infos['pk'][0] == '')
-          throw new jDaoXmlException ('primarykey.missing');
-
-      if($typetable){ // pour les foreigntable et optionalforeigntable
-          if($infos['onforeignkey'] === null)
-             throw new jDaoXmlException ('foreignkey.missing');
-          $infos['fk']=explode(',',$infos['onforeignkey']);
-          unset($infos['onforeignkey']);
-          if(count($infos['fk']) == 0 || $infos['fk'][0] == '')
-             throw new jDaoXmlException ('foreignkey.missing');
-          if(count($infos['fk']) != count($infos['pk']))
-             throw new jDaoXmlException ('foreignkey.missing');
-          if($typetable == 1){
-             $this->_ijoins[]=$infos['name'];
-          }else{
-             $this->_ojoins[]=array($infos['name'],0);
-          }
-      }else{
-          unset($infos['onforeignkey']);
-      }
-
-      $infos['fields'] = array ();
-      $this->_tables[$infos['name']] = $infos;
-
-      return $infos;
-   }
-
+    /**
+    * parse a join definition
+    */
+    private function _parseTable ($typetable, $tabletag){
+        $infos = $this->getAttr($tabletag, array('name','realname','primarykey','onforeignkey'));
+    
+        if ($infos['name'] === null )
+            throw new jDaoXmlException ('table.name');
+    
+        if($infos['realname'] === null)
+            $infos['realname'] = $infos['name'];
+    
+        if($infos['primarykey'] === null)
+            throw new jDaoXmlException ('primarykey.missing');
+    
+        $infos['pk']=explode(',',$infos['primarykey']);
+        unset($infos['primarykey']);
+    
+        if(count($infos['pk']) == 0 || $infos['pk'][0] == '')
+            throw new jDaoXmlException ('primarykey.missing');
+    
+        if($typetable){ // pour les foreigntable et optionalforeigntable
+            if($infos['onforeignkey'] === null)
+                throw new jDaoXmlException ('foreignkey.missing');
+            $infos['fk']=explode(',',$infos['onforeignkey']);
+            unset($infos['onforeignkey']);
+            if(count($infos['fk']) == 0 || $infos['fk'][0] == '')
+                throw new jDaoXmlException ('foreignkey.missing');
+            if(count($infos['fk']) != count($infos['pk']))
+                throw new jDaoXmlException ('foreignkey.missing');
+            if($typetable == 1){
+                $this->_ijoins[]=$infos['name'];
+            }else{
+                $this->_ojoins[]=array($infos['name'],0);
+            }
+        }else{
+            unset($infos['onforeignkey']);
+        }
+    
+        $infos['fields'] = array ();
+        $this->_tables[$infos['name']] = $infos;
+    
+        return $infos;
+    }
+    
+    /**
+    * try to read all given attributes
+    * @param SimpleXmlElement $tag
+    * @param array $requiredattr attributes list
+    * @return array attributes and their values
+    */
     public function getAttr($tag, $requiredattr){
-       $res=array();
-       foreach($requiredattr as $attr){
-          if(isset($tag[$attr]) && trim((string)$tag[$attr]) != '')
-             $res[$attr]=(string)$tag[$attr];
-          else
-             $res[$attr]=null;
-       }
-       return $res;
+        $res=array();
+        foreach($requiredattr as $attr){
+            if(isset($tag[$attr]) && trim((string)$tag[$attr]) != '')
+                $res[$attr]=(string)$tag[$attr];
+            else
+                $res[$attr]=null;
+        }
+        return $res;
     }
 
     /**
@@ -195,7 +201,7 @@ class jDaoParser {
 
 
 /**
- * objet comportant les données d'une propriété d'un record DAO
+ * Container for properties of a dao property
  * @package  jelix
  * @subpackage dao
  */
@@ -323,122 +329,124 @@ class jDaoProperty {
 
 
 
-
-//--------------------------------------------------------
 /**
- * objet décrivant une méthode DAO
+ * containers for properties of dao method
  * @package  jelix
  * @subpackage dao
  */
 class jDaoMethod {
-   public $name;
-   public $type;
-   public $distinct='';
-   private $_conditions = null;
-   private $_parameters   = array();
-   private $_parametersDefaultValues = array();
-   private $_limit = null;
-   private $_values = array();
-   private $_def = null;
-   private $_procstock=null;
-   private $_body=null;
+    public $name;
+    public $type;
+    public $distinct=false;
+    private $_conditions = null;
+    private $_parameters   = array();
+    private $_parametersDefaultValues = array();
+    private $_limit = null;
+    private $_values = array();
+    private $_def = null;
+    private $_procstock=null;
+    private $_body=null;
 
-   function __construct ($method, $def){
-      $this->_def = $def;
-
-      $params = $def->getAttr($method, array('name', 'type', 'call','distinct'));
-
-      if ($params['name']===null){
-         throw new jDaoXmlException  ('missing.attr', array('name', 'method'));
-      }
-
-      $this->name  = $params['name'];
-      $this->type  = $params['type'] ? strtolower($params['type']) : 'select';
-
-      if (isset ($method->parameter)){
-         foreach ($method->parameter as $param){
-            $attr = $param->attributes();
-
-            if (!isset ($attr['name'])){
-                  throw new jDaoXmlException ('method.parameter.unknowname', array($this->name));
-            }
-            $this->_parameters[]=(string)$attr['name'];
-            if (isset ($attr['default'])){
-               $this->_parametersDefaultValues[(string)$attr['name']]=(string)$attr['default'];
-            }
-         }
-      }
-
-      if($this->type == 'sql'){
-         if($params['call'] === null){
-            throw new jDaoXmlException  ('method.procstock.name.missing');
-         }
-         $this->_procstock=$params['call'];
-         return;
-      }
-
-      if($this->type == 'php'){
-         if (isset ($method->body)){
-            $this->_body = (string)$method->body;
-         }else{
-            throw new jDaoXmlException  ('method.body.missing');
-         }
-         return;
-      }
-
-      $this->_conditions = new jDaoConditions();
-      if (isset ($method->conditions)){
-         $this->_parseConditions($method->conditions[0],false);
-      }
-
-      if($this->type == 'update'){
-         if(isset($method->values) && isset($method->values[0]->value)){
-            foreach ($method->values[0]->value as $val){
-               $this->_addValue($val);
-            }
-         }else{
-               throw new jDaoXmlException ('method.values.undefine',array($this->name));
-         }
-         return;
-      }
-
-      if(($this->type == 'select' || $this->type == 'count') && strlen($params['distinct'])){
-        $props = $this->_def->getProperties();
-
-        if (!isset ($props[$params['distinct']])){
-            throw new jDaoXmlException ('method.property.unknown', array($this->name, $params['distinct']));
+    function __construct ($method, $def){
+        $this->_def = $def;
+    
+        $params = $def->getAttr($method, array('name', 'type', 'call','distinct'));
+    
+        if ($params['name']===null){
+            throw new jDaoXmlException ('missing.attr', array('name', 'method'));
         }
-        $this->distinct=$params['distinct'];
-      }
+    
+        $this->name = $params['name'];
+        $this->type = $params['type'] ? strtolower($params['type']) : 'select';
+    
+        if (isset ($method->parameter)){
+            foreach ($method->parameter as $param){
+                $attr = $param->attributes();
+                if (!isset ($attr['name'])){
+                    throw new jDaoXmlException ('method.parameter.unknowname', array($this->name));
+                }
+                $this->_parameters[]=(string)$attr['name'];
+                if (isset ($attr['default'])){
+                    $this->_parametersDefaultValues[(string)$attr['name']]=(string)$attr['default'];
+                }
+            }
+        }
 
-      if($this->type == 'count')
-         return;
+        if($this->type == 'sql'){
+            if($params['call'] === null){
+                throw new jDaoXmlException  ('method.procstock.name.missing');
+            }
+            $this->_procstock=$params['call'];
+            return;
+        }
 
-      if (isset ($method->order) && isset($method->order[0]->orderitem)){
-         foreach($method->order[0]->orderitem as $item){
-            $this->_addOrder ($item);
-         }
-      }
+        if($this->type == 'php'){
+            if (isset ($method->body)){
+                $this->_body = (string)$method->body;
+            }else{
+                throw new jDaoXmlException  ('method.body.missing');
+            }
+            return;
+        }
 
-      if (isset($method->limit)){
-         if(isset($method->limit[1])){
-               throw new jDaoXmlException ('tag.duplicate', array('limit', $this->name));
-         }
-         if($this->type == 'select' || $this->type == 'selectfirst'){
-            $this->_addLimit($method->limit[0]);
-         }else{
-            throw new jDaoXmlException ('method.limit.forbidden', $this->name);
-         }
-      }
-   }
+        $this->_conditions = new jDaoConditions();
+        if (isset ($method->conditions)){
+            $this->_parseConditions($method->conditions[0],false);
+        }
+    
+        if($this->type == 'update'){
+            if(isset($method->values) && isset($method->values[0]->value)){
+                foreach ($method->values[0]->value as $val){
+                    $this->_addValue($val);
+                }
+            }else{
+                throw new jDaoXmlException ('method.values.undefine',array($this->name));
+            }
+            return;
+        }
 
-   public function getConditions (){ return $this->_conditions;}
-   public function getParameters (){ return $this->_parameters;}
-   public function getParametersDefaultValues (){ return $this->_parametersDefaultValues;}
-   public function getLimit (){ return $this->_limit;}
-   public function getValues (){ return $this->_values;}
-   public function getProcStock (){ return $this->_procstock;}
-   public function getBody (){ return $this->_body;}
+        if(strlen($params['distinct'])){
+            if($this->type == 'select'){
+                $this->distinct=$this->_def->getBool($params['distinct']);
+            }elseif($this->type == 'count'){
+                $props = $this->_def->getProperties();
+                if (!isset ($props[$params['distinct']])){
+                    throw new jDaoXmlException ('method.property.unknown', array($this->name, $params['distinct']));
+                }
+                $this->distinct=$params['distinct'];
+            }else{
+                throw new jDaoXmlException ('forbidden.attr.context', array('distinct', '<method name="'.$this->name.'"'));
+            }
+        }
+
+        if($this->type == 'count')
+            return;
+    
+        if (isset ($method->order) && isset($method->order[0]->orderitem)){
+            foreach($method->order[0]->orderitem as $item){
+                $this->_addOrder ($item);
+            }
+        }
+
+        if (isset($method->limit)){
+            if(isset($method->limit[1])){
+                throw new jDaoXmlException ('tag.duplicate', array('limit', $this->name));
+            }
+            if($this->type == 'select' || $this->type == 'selectfirst'){
+                $this->_addLimit($method->limit[0]);
+            }else{
+                throw new jDaoXmlException ('method.limit.forbidden', $this->name);
+            }
+        }
+    }
+
+    public function getConditions (){ return $this->_conditions;}
+    public function getParameters (){ return $this->_parameters;}
+    public function getParametersDefaultValues (){ return $this->_parametersDefaultValues;}
+    public function getLimit (){ return $this->_limit;}
+    public function getValues (){ return $this->_values;}
+    public function getProcStock (){ return $this->_procstock;}
+    public function getBody (){ return $this->_body;}
 
     private function _parseConditions($conditions, $subcond=true){
         if (isset ($conditions['logic'])){
@@ -484,7 +492,7 @@ class jDaoMethod {
 
 
    private $_op = array('eq'=>'=', 'neq'=>'<>', 'lt'=>'<', 'gt'=>'>', 'lteq'=>'<=', 'gteq'=>'>=',
-        'like'=>'LIKE', 'isnull'=>'IS NULL', 'isnotnull'=>'IS NOT NULL','in'=>'IN', 'notin'=>'NOT IN',
+        'like'=>'LIKE', 'notlike'=>'NOT LIKE', 'isnull'=>'IS NULL', 'isnotnull'=>'IS NOT NULL','in'=>'IN', 'notin'=>'NOT IN',
         'binary_op'=>'dummy');
       // 'between'=>'BETWEEN',  'notbetween'=>'NOT BETWEEN',
 

@@ -414,7 +414,7 @@ class jDaoGenerator {
     /**
     * build SELECT clause for all SELECT queries
     */
-   private function _getSelectClause ($distinct=''){
+   private function _getSelectClause ($distinct=false){
       $result = array();
 
       $driverName = jDaoCompiler::$dbDriver;
@@ -445,14 +445,11 @@ class jDaoGenerator {
                }
             }
 
-            if($distinct == $prop->name)
-                array_unshift($result, $field);
-            else
-                $result[]=$field;
+            $result[]=$field;
          }
       }
 
-      return 'SELECT '.($distinct!=''?'DISTINCT ':'').(implode (', ',$result));
+      return 'SELECT '.($distinct?'DISTINCT ':'').(implode (', ',$result));
     }
 
     /**
