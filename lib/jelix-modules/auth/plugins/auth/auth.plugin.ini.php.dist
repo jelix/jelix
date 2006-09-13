@@ -32,7 +32,7 @@ timeout = 0
 auth_required = on
 
 ; indique quoi faire en cas de défaut d'authentification
-; 1 = erreur. Valeur à mettre impérativement pour les web services
+; 1 = erreur. Valeur à mettre impérativement pour les web services (xmlrpc, jsonrpc...)
 ; 2 = redirection vers une action
 on_error = 1
 

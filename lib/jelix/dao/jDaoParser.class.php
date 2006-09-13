@@ -474,23 +474,6 @@ class jDaoMethod {
 
     }
 
-
-    /*
-      <eq         property="foo" value="" expr=""/>
-      <noteq      property="foo" value="" expr=""/>
-      <lt         property="foo" value="" expr=""/>
-      <gt         property="foo" value="" expr=""/>
-      <lteq       property="foo" value="" expr=""/>
-      <gteq       property="foo" value="" expr=""/>
-      <in         property="foo" value="" expr=""/>
-      <notin      property="foo" value="" expr=""/>
-      <between    property="foo" min="" max="" exprmin="" exprmax=""/>
-      <notbetween property="foo" min="" max="" exprmin="" exprmax=""/>
-      <isnull     property="foo"/>
-      <notisnull  property="foo"/>
-    */
-
-
    private $_op = array('eq'=>'=', 'neq'=>'<>', 'lt'=>'<', 'gt'=>'>', 'lteq'=>'<=', 'gteq'=>'>=',
         'like'=>'LIKE', 'notlike'=>'NOT LIKE', 'isnull'=>'IS NULL', 'isnotnull'=>'IS NOT NULL','in'=>'IN', 'notin'=>'NOT IN',
         'binary_op'=>'dummy');
@@ -566,27 +549,32 @@ class jDaoMethod {
       }
    }
 
-   private function _addOrder($order){
-      $attr = $this->_def->getAttr($order, array('property','way'));
+    private function _addOrder($order){
+        $attr = $this->_def->getAttr($order, array('property','way'));
+    
+        $way  = ($attr['way'] !== null ? $attr['way']:'ASC');
+    
+        if(substr ($way,0,1) == '$'){
+            if(!in_array (substr ($way,1),$this->_parameters)){
+                throw new jDaoXmlException ('method.orderitem.parameter.unknow', array($this->name, $way));
+            }
+        }
 
-      $way  = ($attr['way'] !== null ? $attr['way']:'ASC');
-
-      if(substr ($way,0,1) == '$'){
-         if(!in_array (substr ($way,1),$this->_parameters)){
-            throw new jDaoXmlException ('method.orderitem.parameter.unknow', array($this->name, $way));
-         }
-      }
-
-      if ($attr['property'] != ''){
-          $prop =$this->_def->getProperties();
-         if(isset($prop[$attr['property']])){
-               $this->_conditions->addItemOrder($attr['property'], $way);
-         }else{
-               throw new jDaoXmlException ('method.orderitem.bad', array($attr['property'], $this->name));
-         }
-      }else{
-         throw new jDaoXmlException ('method.orderitem.property.missing', array($this->name));
-      }
+        if ($attr['property'] != ''){
+            $prop =$this->_def->getProperties();
+            if(isset($prop[$attr['property']])){
+                $this->_conditions->addItemOrder($attr['property'], $way);
+            }elseif(substr ($attr['property'],0,1) == '$'){
+                if(!in_array (substr ($attr['property'],1),$this->_parameters)){
+                    throw new jDaoXmlException ('method.orderitem.parameter.unknow', array($this->name, $way));
+                }
+                $this->_conditions->addItemOrder($attr['property'], $way);
+            }else{
+                throw new jDaoXmlException ('method.orderitem.bad', array($attr['property'], $this->name));
+            }
+        }else{
+            throw new jDaoXmlException ('method.orderitem.property.missing', array($this->name));
+        }
 
 
 

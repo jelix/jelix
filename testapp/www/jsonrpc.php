@@ -16,7 +16,7 @@ require_once ('../../lib/jelix/init.php');
 require_once ('../../testapp/application.init.php');
 //require_once ('/usr/share/jelix/myapp/application.init.php');
 
-$config_file = 'config.jsonrpc.ini.php';
+$config_file = 'jsonrpc/config.ini.php';
 
 require_once (JELIX_LIB_CORE_PATH.'request/jJsonRpcRequest.class.php');
 

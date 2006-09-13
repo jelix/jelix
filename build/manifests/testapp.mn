@@ -72,14 +72,20 @@ cd testapp/modules/unittest/controllers
   default.classic.php
   urlsig.classic.php
   dao.classic.php
+
 cd testapp/var
   .htaccess
 cd testapp/var/log
 cd testapp/var/config
-  config.classic.ini.php.dist
   defaultconfig.ini.php.dist
   dbprofils.ini.php.dist
   urls.xml
+cd testapp/var/config/index
+  config.ini.php.dist
+cd testapp/var/config/xmlrpc
+  config.ini.php.dist
+cd testapp/var/config/jsonrpc
+  config.ini.php.dist
 cd testapp/var/themes/default/testapp
   hello2.tpl
 cd testapp/var/overloads/testapp/daos

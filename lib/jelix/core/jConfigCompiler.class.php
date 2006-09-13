@@ -67,7 +67,7 @@ class jConfigCompiler {
             if(substr($path,-1) != '/') $path.='/';
             $config['urlengine']['basePath'] = $path;
         }
-        self::_saveToIni($config, JELIX_APP_TEMP_PATH.$configFile.'.resultini.php');
+        self::_saveToIni($config, JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php');
         $config = (object) $config;
         return $config;
     }

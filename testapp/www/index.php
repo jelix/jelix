@@ -18,7 +18,7 @@ require_once ('../../testapp/application.init.php');
 
 require_once (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
 
-$config_file = 'config.classic.ini.php';
+$config_file = 'index/config.ini.php';
 
 $jelix = new jCoordinator($config_file);
 $jelix->process(new jClassicRequest());

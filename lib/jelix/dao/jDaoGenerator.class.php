@@ -607,7 +607,7 @@ class jDaoGenerator {
         foreach ($cond->order as $name => $way){
             $ord='';
             if (isset($fields[$name])){
-               $ord = $name;
+               $ord = $fields[$name]->table.'.'.$fields[$name]->fieldName;
             }elseif($name{0} == '$'){
                $ord = '\'.'.$name.'.\'';
             }else{

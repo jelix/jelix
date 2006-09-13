@@ -98,18 +98,18 @@ class jCoordinator {
      * load the plugins and their configuration file
      */
     private function _loadPlugins(){
+        global $gJConfig;
 
-        foreach($GLOBALS['gJConfig']->plugins as $name=>$conf){
-            if($conf && isset($GLOBALS['gJConfig']->_pluginsPathList[$name])){
-                if($conf=='1')
-                    $conff=$name.'.plugin.ini.php';
+        foreach($gJConfig->plugins as $name=>$conf){
+            if($conf && isset($gJConfig->_pluginsPathList[$name])){
+                $conff= $conf=='1' ? $name.'.plugin.ini.php': $conf;
                 if(file_exists(JELIX_APP_CONFIG_PATH.$conff)){
                    if( false === ($conf = @parse_ini_file(JELIX_APP_CONFIG_PATH.$conff,true)))
                         die("Erreur dans le fichier de configuration du plugin $name ($conff)!");
                 }else{
                     $conf = array();
                 }
-                include( $GLOBALS['gJConfig']->_pluginsPathList[$name].$name.".plugin.php");
+                include( $gJConfig->_pluginsPathList[$name].$name.".plugin.php");
                 $class= $name.'Plugin';
                 $this->plugins[strtolower($name)] = new $class($conf);
             }
