@@ -276,6 +276,7 @@ cd lib/jelix-modules/acl/controllers
    xuladmin.classic.php
    admin.rdf.php
    admin.jsonrpc.php
+   admin.classic.php
 cd lib/jelix-modules/acl/daos
    jaclgroup.dao.xml
    jaclrights.dao.xml

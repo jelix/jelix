@@ -20,14 +20,18 @@
     function changeGroup( idgroup ){
         if( idgroup!= ''){
             {/literal}
-            var url={urljsstring 'acl~admin_rightslist@rdf',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
+            var righturl={urljsstring 'acl~admin_rightslist@rdf',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
+            var usersurl={urljsstring 'acl~admin_userslist@rdf',array('offset'=>'__OFFSET__','count'=>'__COUNT__'),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
+            var counturl={urljsstring 'acl~admin_usersgcount@classic',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
             {literal}
             document.getElementById('rights').setAttribute("datasources","");
-            document.getElementById('rights').setAttribute("datasources",url);
+            document.getElementById('rights').setAttribute("datasources",righturl);
             document.getElementById('rightsedit').collapsed=false;
-            document.getElementById('renamesubmit').disabled=false;
-            document.getElementById('deletesubmit').disabled=false;
-            document.getElementById('newname').disabled=false;
+            document.getElementById('groupstatus').removeAttribute('disabled');
+            var pager = document.getElementById('userspager');
+            pager.setAttribute('counturl',counturl);
+            pager.setAttribute('datasourceurl',usersurl);
+            pager.loadCount();
         }else{
             disableAll();
         }
@@ -42,10 +46,8 @@
         document.getElementById('rights').setAttribute("datasources","");
         document.getElementById('rightsedit').collapsed=true;
         document.getElementById('users').setAttribute("datasources","");
-        document.getElementById('renamesubmit').disabled=true;
-        document.getElementById('deletesubmit').disabled=true;
-        document.getElementById('newname').disabled=true;
         document.getElementById("rightsforms").selectedIndex=0;
+        document.getElementById('groupstatus').setAttribute('disabled','true');
     }
 
 
@@ -137,6 +139,10 @@
 
   {/literal}
 ]]></script>
+
+<broadcasterset>
+    <broadcaster id="groupstatus" />
+</broadcasterset>
 
 
 <jx:submission id="newgrpform" action="{jurl '@jsonrpc'}" method="POST"
@@ -254,7 +260,8 @@
 
 
             </tabpanel>
-            <tabpanel>
+            <tabpanel orient="vertical">
+                <jx:templatepager id="userspager" target="users" increment="20" datasourceurl="" counturl="" />
                 <tree id="users" flex="1" flags="dont-build-content" ref="urn:data:row" datasources="rdf:null"
                     onselect="" seltype="single"
                     >
@@ -290,8 +297,8 @@
                                     onerror="alert(this.httpreq.responseText);"
                                     />
                     <label control="newname" value="Nouveau nom"/>
-                    <textbox id="newname" name="newname" value="" required="true" form="renameform" />
-                    <jx:submit id="renamesubmit" form="renameform" label="Renommer"/>
+                    <textbox id="newname" name="newname" value="" required="true" form="renameform" observes="groupstatus" />
+                    <jx:submit id="renamesubmit" form="renameform" label="Renommer" observes="groupstatus"/>
                 </groupbox>
                 <groupbox submit="deletesubmit">
                     <caption label="Suppression du groupe"/>
@@ -304,7 +311,7 @@
                                     onrpcerror="alert(this.jsonResponse.error.toSource())"
                                     onerror="alert(this.httpreq.responseText);"
                                     />
-                    <jx:submit id="deletesubmit" form="deleteform" label="Supprimer"/>
+                    <jx:submit id="deletesubmit" form="deleteform" label="Supprimer" observes="groupstatus"/>
                 </groupbox>
 
             </tabpanel>

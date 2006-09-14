@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix-modules
-* @subpackage  users
+* @subpackage  acl
 * @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
@@ -16,7 +16,7 @@ class CTadmin extends jController {
     */
     function rightslist() {
         $rep = $this->getResponse('rdf');
-        $grpid = $this->param('grpid');
+        $grpid = $this->intParam('grpid');
 
         $srv= jClasses::getService('aclservice');
 
@@ -31,6 +31,29 @@ class CTadmin extends jController {
 
         return $rep;
     }
+
+    /**
+    *
+    */
+    function userslist() {
+        $rep = $this->getResponse('rdf');
+        $grpid = $this->intParam('grpid');
+        $offset = $this->intParam('offset');
+        $count= $this->intParam('count');
+
+        $dao = jDao::create('acl~jaclusergroup');
+        $rep->datas = $dao->getUsersGroupLimit($grpid, $offset, $count);
+
+        $rep->asAttribute = array('login');
+
+        $rep->resNs="http://jelix.org/ns/usersgroup#";
+        $rep->resNsPrefix='ug';
+        $rep->resUriPrefix = "urn:data:row:";
+        $rep->resUriRoot = "urn:data:row";
+
+        return $rep;
+    }
+
 
 }
 ?>

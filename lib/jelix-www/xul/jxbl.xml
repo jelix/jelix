@@ -115,21 +115,20 @@
       </content>
       <implementation>
           <constructor><![CDATA[
-              this.firstbutton = document.getAnonymousElementByAttribute(this,"anonid","first");
-              this.previousbutton = document.getAnonymousElementByAttribute(this,"anonid","previous");
-              this.nextbutton = document.getAnonymousElementByAttribute(this,"anonid","next");
-              this.lastbutton = document.getAnonymousElementByAttribute(this,"anonid","last");
-
-              this.showCount();
+              this.firstButton = document.getAnonymousElementByAttribute(this,"anonid","first");
+              this.previousButton = document.getAnonymousElementByAttribute(this,"anonid","previous");
+              this.nextButton = document.getAnonymousElementByAttribute(this,"anonid","next");
+              this.lastButton = document.getAnonymousElementByAttribute(this,"anonid","last");
+              this.loadCount();
            ]]>
           </constructor>
           <field name="offset">0</field>
           <field name="count" >0</field>
 
-          <field name="firstbutton">null</field>
-          <field name="previousbutton">null</field>
-          <field name="nextbutton">null</field>
-          <field name="lastbutton">null</field>
+          <field name="firstButton">null</field>
+          <field name="previousButton">null</field>
+          <field name="nextButton">null</field>
+          <field name="lastButton">null</field>
           <field name="httpreq" >null</field>
 
           <property name="increment">
@@ -139,6 +138,7 @@
           <method name="show">
               <body><![CDATA[
                 this.disableButtons();
+                this.showCount();
                 if(this.count == 0){
 
                     return;
@@ -154,7 +154,8 @@
                 }
 
                 var uri = this.getAttribute('datasourceurl');
-
+                uri=uri.replace(/__OFFSET__/, this.offset);
+                uri=uri.replace(/__COUNT__/, this.count);
                 var target = document.getElementById(this.getAttribute('target'));
 
                 target.setAttribute('datasources', '');
@@ -170,7 +171,6 @@
           </method>
           <method name="previous">
               <body><![CDATA[
-
                  if(this.offset > this.increment){
                     this.offset -= this.increment;
                  }else{
@@ -204,21 +204,25 @@
               <body><![CDATA[
                     this.disableButtons();
                     var url = this.getAttribute("counturl");
+alert("loadcount url="+url+"\n");
                     if(url == '') return;
 
                     this.httpreq = new XMLHttpRequest();
                     this.httpreq.pager = this;
 
                     this.httpreq.onload = function() {
-                        this.pager._UIendofload();
+alert("loadcount onload status="+this.status+"\n");
                         if(this.status >=200 && this.status < 300)
-                            this.pager._count = parseInt(this.responseText);
+                            this.pager.count = parseInt(this.responseText);
+alert("loadcount show\n");
                             this.pager.show();
                         }
                     }
                     this.httpreq.onerror = function() {
+                    alert("loadcount error\n");
                     }
                     this.httpreq.onprogress = function() {
+                    alert("loadcount progress\n");
                     }
 
                     this.httpreq.open("GET", url, true);
@@ -235,7 +239,24 @@
             ]]></body>
         </method>
       </implementation>
-
+      <!--<handlers>
+         <handler event="DOMAttrModified" phase="target">
+         <![CDATA[
+           var attrName = event.attrName.toLowerCase();
+           var oldValue = event.prevValue.toLowerCase();
+           var newValue = event.newValue.toLowerCase();
+           if (oldValue != newValue && newValue) {
+               if (attrName == "counturl") {
+                    this.loadCount();
+                } else if (attrName == "datasourceurl") {
+                    this.loadCount();
+                } else if (attrName == "increment") {
+                    this.show();
+               }
+           }
+        ]]>
+       </handler>
+    </handlers>-->
 
   </binding>
 

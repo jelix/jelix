@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix-modules
-* @subpackage  users
+* @subpackage  acl
 * @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
