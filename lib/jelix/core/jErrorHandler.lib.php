@@ -55,6 +55,18 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         $action = $conf['default'];
     }
 
+    $doecho=true;
+    if($gJCoord->request == null){
+        $errmsg = 'JELIX PANIC ! Error during initialization !! '.$errmsg;
+        $doecho = false;
+        $action.= ' EXIT';
+    }elseif($gJCoord->response == null){
+        $ret = $gJCoord->initDefaultResponseOfRequest();
+        if(is_string($ret)){
+            $errmsg = 'Double error ! 1)'. $ret.'; 2)'.$errmsg;
+        }
+    }
+
     // formatage du message
     $messageLog = strtr($conf['messageLogFormat'], array(
         '%date%' => date("Y-m-d H:i:s"),
@@ -79,11 +91,18 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     }
     // traitement du message
     if(strpos($action , 'ECHOQUIET') !== false){
-        if($gJCoord->addErrorMsg($codeString[$errno], $code, $conf['quietMessage'], '', ''))
+        if(!$doecho){
+            header('Content-type: text/plain');
+            echo 'JELIX PANIC ! Error during initialization !! ';
+        }elseif($gJCoord->addErrorMsg($codeString[$errno], $code, $conf['quietMessage'], '', ''))
             $action.=' EXIT';
     }elseif(strpos($action , 'ECHO') !== false){
-        if($gJCoord->addErrorMsg($codeString[$errno], $code, $errmsg, $filename, $linenum))
+        if(!$doecho){
+            header('Content-type: text/plain');
+            echo $messageLog;
+        }elseif($gJCoord->addErrorMsg($codeString[$errno], $code, $errmsg, $filename, $linenum)){
             $action.=' EXIT';
+        }
     }
     if(strpos($action , 'LOGFILE') !== false){
         error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);
@@ -96,7 +115,8 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     }
 
     if(strpos($action , 'EXIT') !== false){
-        if($gJCoord->response) $gJCoord->response->outputErrors();
+        if($doecho && $gJCoord->response) 
+            $gJCoord->response->outputErrors();
         exit;
     }
 }

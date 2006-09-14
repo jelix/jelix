@@ -27,6 +27,18 @@ function jExceptionHandler($exception){
     $conf = $gJConfig->error_handling;
     $action = $conf['exception'];
 
+    $doecho=true;
+    if($gJCoord->request == null){
+        $msg = 'JELIX PANIC ! Error during initialization !! '.$msg;
+        $doecho = false;
+    }elseif($gJCoord->response == null){
+        $ret = $gJCoord->initDefaultResponseOfRequest();
+        if(is_string($ret)){
+            $errmsg = 'Double error ! 1)'. $ret.'; 2)'.$errmsg;
+        }
+
+    }
+
     // formatage du message de log
     $messageLog = strtr($conf['messageLogFormat'], array(
         '%date%' => date("Y-m-d H:i:s"),
@@ -38,9 +50,6 @@ function jExceptionHandler($exception){
         '\t' =>"\t",
         '\n' => "\n"
     ));
-    if($gJCoord->response == null){
-      $gJCoord->initDefaultResponseOfRequest();
-    }
 
     if(strpos($action , 'TRACE') !== false){
         $arr = debug_backtrace();
@@ -55,10 +64,18 @@ function jExceptionHandler($exception){
 
     // traitement du message
     if(strpos($action , 'ECHOQUIET') !== false){
-        if($gJCoord->addErrorMsg('error', $exception->getCode(), $conf['quietMessage'], '', ''))
-            $action.=' EXIT';
+        if(!$doecho){
+            header('Content-type: text/plain');
+            echo 'JELIX PANIC ! Error during initialization !! ';
+        }else
+            $gJCoord->addErrorMsg('error', $exception->getCode(), $conf['quietMessage'], '', '');
     }elseif(strpos($action , 'ECHO') !== false){
-       $gJCoord->addErrorMsg('error', $exception->getCode(), $msg, $exception->getFile(), $exception->getLine());
+        if($doecho)
+            $gJCoord->addErrorMsg('error', $exception->getCode(), $msg, $exception->getFile(), $exception->getLine());
+        else{
+            header('Content-type: text/plain');
+            echo $messageLog;
+        }
     }
     if(strpos($action , 'LOGFILE') !== false){
         error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);
@@ -70,7 +87,9 @@ function jExceptionHandler($exception){
         error_log($messageLog,0);
     }
 
-    $gJCoord->response->outputErrors();
+    if($doecho)
+        $gJCoord->response->outputErrors();
+    exit;
 }
 
 

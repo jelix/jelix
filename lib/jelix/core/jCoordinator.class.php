@@ -129,8 +129,7 @@ class jCoordinator {
     public function addErrorMsg($type, $code, $message, $file, $line){
         $this->errorMessages[] = array($type, $code, $message, $file, $line);
         if(!$this->response){
-            if($this->initDefaultResponseOfRequest())
-                return true;
+            return $this->initDefaultResponseOfRequest();
         }
         return !$this->response->acceptSeveralErrors();
     }

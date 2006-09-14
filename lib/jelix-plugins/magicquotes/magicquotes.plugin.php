@@ -15,27 +15,41 @@
 * http://www.copix.org
 */
 
+/**
+ * This is a plugin which cancel magic quotes effect. Magic quotes should be off
+ * with jelix.
+ * @package    jelix
+ * @subpackage plugins
+ */
 class MagicQuotesPlugin implements jIPlugin {
 
-   /**
+    /**
     *
     */
-   function __construct($config){
-      if(get_magic_quotes_gpc()){
-        $req = $GLOBALS['gJCoord']->request;
-        foreach ($req->params as $key=>$elem){
-                $req->params[$key] = $this->_stripSlashes ($elem);
+    function __construct($config){
+        if(get_magic_quotes_gpc()){
+            foreach ($_GET as $key=>$elem){
+                $_GET[$key] = $this->_stripSlashes ($elem);
+            }
+            foreach ($_POST as $key=>$elem){
+                $_POST[$key] = $this->_stripSlashes ($elem);
+            }
+            foreach ($_COOKIE as $key=>$elem){
+                $_COOKIE[$key] = $this->_stripSlashes ($elem);
+            }
+            foreach ($_REQUEST as $key=>$elem){
+                $_REQUEST[$key] = $this->_stripSlashes ($elem);
+            }
         }
-      }
-      set_magic_quotes_runtime(0);
-   }
+        set_magic_quotes_runtime(0);
+    }
 
-   /**
-   * enleve tout les slashes d'une chaine ou d'un tableau de chaine
-   * @param string/array   $string
-   * @return string/array   l'objet transformé
-   */
-   function _stripSlashes ($string){
+    /**
+    * enleve tout les slashes d'une chaine ou d'un tableau de chaine
+    * @param string/array   $string
+    * @return string/array   l'objet transformé
+    */
+    protected function _stripSlashes ($string){
         if (is_array ($string)){
             $toReturn = array ();
             // c'est un tableau, on traite un à un tout les elements du tableau
@@ -46,14 +60,22 @@ class MagicQuotesPlugin implements jIPlugin {
         }else{
             return stripslashes ($string);
         }
-   }
+    }
+
     /**
      * @param    array  $params   plugin parameters for the current action
      * @return null or jSelectorAct  if action should change
      */
     public function beforeAction($params){ return null;}
+
+    /**
+    *
+    */
     public function beforeOutput() {}
 
+    /**
+    *
+    */
     public function afterProcess (){}
 }
 ?>
