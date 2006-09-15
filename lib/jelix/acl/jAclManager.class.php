@@ -32,9 +32,9 @@ class jAclManager {
 
        //  récupère le groupe de valeur correspondant au subject
 
-       $daosbj = jDao::get('acl~jaclsubject');
-       $daorightval = jDao::get('acl~jaclrightvalues');
-       $daoright = jDao::get('acl~jaclrights');
+       $daosbj = jDao::get('jxacl~jaclsubject');
+       $daorightval = jDao::get('jxacl~jaclrightvalues');
+       $daoright = jDao::get('jxacl~jaclrights');
 
        $sbj = $daosbj->get($subject);
        if(!$sbj) return false;
@@ -58,7 +58,7 @@ class jAclManager {
           $right->value = $value;
           $daoright->update($right);
        }else{
-          $right = jDao::createRecord('acl~jaclrights');
+          $right = jDao::createRecord('jxacl~jaclrights');
           $right->id_aclsbj = $subject;
           $right->id_aclgrp = $group;
           $right->id_aclres = $resource;
@@ -74,7 +74,7 @@ class jAclManager {
      * @param string $resource the id of a resource
      */
     public static function removeResourceRight($subject, $resource){
-        $daoright = jDao::get('acl~jaclrights');
+        $daoright = jDao::get('jxacl~jaclrights');
         $daoright->deleteBySubjRes($subject, $resource);
     }
 
@@ -86,8 +86,8 @@ class jAclManager {
      */
     public static function addSubject($subject, $id_aclvalgrp, $label_key){
          // ajoute un sujet dans la table jacl_subject
-         $daosbj = jDao::get('acl~jaclsubject');
-         $subj = jDao::createRecord('acl~jaclsubject');
+         $daosbj = jDao::get('jxacl~jaclsubject');
+         $subj = jDao::createRecord('jxacl~jaclsubject');
          $subj->id_aclsbj=$subject;
          $subj->id_aclvalgrp=$id_aclvalgrp;
          $subj->label_key =$label_key;
@@ -102,9 +102,9 @@ class jAclManager {
     public static function removeSubject($subject){
       // supprime dans jacl_rights
       // supprime dans jacl_subject
-      $daoright = jDao::get('acl~jaclrights');
+      $daoright = jDao::get('jxacl~jaclrights');
       $daoright->deleteBySubject($subject);
-      $daosbj = jDao::get('acl~jaclsubject');
+      $daosbj = jDao::get('jxacl~jaclsubject');
       $daosbj->delete($subject);
     }
 

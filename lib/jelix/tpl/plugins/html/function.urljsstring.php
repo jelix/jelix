@@ -13,7 +13,7 @@
  * function plugin :  write the url corresponding to the given jelix action for javascript
  *
  * it creates a javascript string, that contains the url, with dynamic javasript parameters<br/>
- * example : {urljsstring 'acl~admin_rightslist',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};<br/>
+ * example : {urljsstring 'jxacl~admin_rightslist',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};<br/>
  * it will produce: "index.php?module=acl&action=admin_rightslist&grpid="+idgroup+"&__rnd="+ Math.random();
  * @param jTpl $tpl template engine
  * @param string $selector selector action

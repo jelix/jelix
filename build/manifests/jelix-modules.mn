@@ -1,11 +1,11 @@
-cd xulapp
+cd jxxulapp
   module.xml
-cd xulapp/controllers
+cd jxxulapp/controllers
   default.classic.php
-cd xulapp/templates
+cd jxxulapp/templates
   main.tpl
   login.tpl
-cd xulapp/install/var/config
+cd jxxulapp/install/var/config
   auth.plugin.ini.php
   auth.plugin.jsonrpc.ini.php
   config.classic.ini.php
@@ -14,12 +14,12 @@ cd xulapp/install/var/config
   config.jsonrpc.ini.php
   config.rdf.ini.php
   configxul.classic.ini.php
-cd xulapp/install/www
+cd jxxulapp/install/www
   jsonrpc.php
   rdf.php
   xmlrpc.php
   xul.php
   index.php
-cd xulapp/install/www/xulapp
+cd jxxulapp/install/www/xulapp
   main.js
   login.js

@@ -76,7 +76,7 @@ class jAcl {
         //   avec le sujet et ressource indiqué
         // droit = OU entre ces valeurs
 
-        $dao = jDao::get('acl~jaclrights');
+        $dao = jDao::get('jxacl~jaclrights');
         if($resource === null){
             $list=$dao->getAllGroupRights($subject, $groups);
         }else{
@@ -107,7 +107,7 @@ class jAcl {
 
         // chargement des groupes
         if($groups === null){
-            $dao = jDao::get('acl~jaclusergroup');
+            $dao = jDao::get('jxacl~jaclusergroup');
             $gp = $dao->getGroupsUser($_SESSION['JELIX_USER']->login);
             $groups = array();
             foreach($gp as $g){
