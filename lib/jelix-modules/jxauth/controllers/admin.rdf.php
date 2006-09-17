@@ -23,6 +23,7 @@ class CTadmin extends jController {
         }else{
             $rep->datas = jAuth::getUserList($letter.'%');
         }
+        $rep->asAttribute = array('login', 'email');
         $rep->resNs="http://jelix.org/ns/users#";
         $rep->resNsPrefix='user';
         $rep->resUriPrefix = "urn:data:row:";

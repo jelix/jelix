@@ -97,19 +97,19 @@
 
   <binding id="templatepager">
       <content>
-          <xul:button label="Première" xbl:inherits="label=firstlabel"
+          <xul:button label="Premier" xbl:inherits="label=firstlabel"
                       oncommand="this.parentNode.first()"
                       anonid="first" disabled="true"/>
-          <xul:button label="Précédente" xbl:inherits="label=previouslabel"
+          <xul:button label="Précédent" xbl:inherits="label=previouslabel"
                       oncommand="this.parentNode.previous()"
                       anonid="previous" disabled="true"/>
           <xul:hbox flex="1" pack="center">
-              <xul:description anonid="count" />
+             <xul:description anonid="count" />
           </xul:hbox>
-          <xul:button label="Suivante" xbl:inherits="label=nextlabel"
+          <xul:button label="Suivant" xbl:inherits="label=nextlabel"
                       oncommand="this.parentNode.next()"
                       anonid="next" disabled="true"/>
-          <xul:button label="Dernière" xbl:inherits="label=lastlabel"
+          <xul:button label="Dernier" xbl:inherits="label=lastlabel"
                       oncommand="this.parentNode.last()"
                       anonid="last" disabled="true"/>
       </content>
@@ -123,7 +123,7 @@
            ]]>
           </constructor>
           <field name="offset">0</field>
-          <field name="count" >0</field>
+          <field name="totalcount" >0</field>
 
           <field name="firstButton">null</field>
           <field name="previousButton">null</field>
@@ -139,12 +139,14 @@
               <body><![CDATA[
                 this.disableButtons();
                 this.showCount();
-                if(this.count == 0){
+                var target = document.getElementById(this.getAttribute('target'));
+                target.setAttribute('datasources', '');
 
+                if(this.totalcount == 0){
                     return;
                 }
 
-                if(this.offset + this.increment < this.count){
+                if(this.offset + this.increment < this.totalcount){
                     this.lastButton.removeAttribute("disabled");
                     this.nextButton.removeAttribute("disabled");
                 }
@@ -155,10 +157,7 @@
 
                 var uri = this.getAttribute('datasourceurl');
                 uri=uri.replace(/__OFFSET__/, this.offset);
-                uri=uri.replace(/__COUNT__/, this.count);
-                var target = document.getElementById(this.getAttribute('target'));
-
-                target.setAttribute('datasources', '');
+                uri=uri.replace(/__COUNT__/, this.increment);
                 target.setAttribute('datasources', uri);
                 ]]></body>
           </method>
@@ -181,7 +180,7 @@
           </method>
           <method name="next">
               <body><![CDATA[
-                 if(this.offset + this.increment <= this.count){
+                 if(this.offset + this.increment <= this.totalcount){
                      this.offset += this.increment;
                      this.show();
                   }
@@ -190,13 +189,13 @@
           </method>
           <method name="last">
               <body><![CDATA[
-                 this.offset=this.count - this.increment;
+                 this.offset=this.totalcount - this.increment;
                  this.show();
               ]]></body>
           </method>
           <method name="showCount">
               <body><![CDATA[
-                 var str = this.offset + "/" + this.count;
+                 var str = this.offset + "/" + this.totalcount;
                  document.getAnonymousElementByAttribute(this,"anonid","count").value=str;
                ]]></body>
           </method>
@@ -204,30 +203,25 @@
               <body><![CDATA[
                     this.disableButtons();
                     var url = this.getAttribute("counturl");
-alert("loadcount url="+url+"\n");
                     if(url == '') return;
 
                     this.httpreq = new XMLHttpRequest();
                     this.httpreq.pager = this;
 
                     this.httpreq.onload = function() {
-alert("loadcount onload status="+this.status+"\n");
-                        if(this.status >=200 && this.status < 300)
-                            this.pager.count = parseInt(this.responseText);
-alert("loadcount show\n");
+                        if(this.status >=200 && this.status < 300){
+                            this.pager.totalcount = parseInt(this.responseText);
                             this.pager.show();
                         }
                     }
                     this.httpreq.onerror = function() {
-                    alert("loadcount error\n");
                     }
                     this.httpreq.onprogress = function() {
-                    alert("loadcount progress\n");
                     }
 
                     this.httpreq.open("GET", url, true);
                     this.httpreq.send(null);
-             ]]>
+                    ]]>
              </body>
         </method>
         <method name="disableButtons">

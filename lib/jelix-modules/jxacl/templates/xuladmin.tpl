@@ -156,8 +156,8 @@
                />
 
 <description class="title-page">Gestion des droits</description>
-<hbox>
-
+<hbox align="baseline">
+    <label control="groupid" value="Groupe :"/>
     <menulist id="groupid" name="groupid" form="renameform,deleteform,rightsform" required="true"
               oncommand="changeGroup(this.selectedItem.value)">
         <menupopup>
@@ -261,7 +261,8 @@
 
             </tabpanel>
             <tabpanel orient="vertical">
-                <jx:templatepager id="userspager" target="users" increment="20" datasourceurl="" counturl="" />
+                <jx:templatepager id="userspager" target="users" increment="100"
+                                  datasourceurl="" counturl="" />
                 <tree id="users" flex="1" flags="dont-build-content" ref="urn:data:row" datasources="rdf:null"
                     onselect="" seltype="single"
                     >
