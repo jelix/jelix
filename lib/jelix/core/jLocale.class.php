@@ -222,9 +222,9 @@ class jLocale {
             $file = new jSelectorLoc($keySelector, $locale, $charset);
         }catch(jExceptionSelector $e){
             if($key == 'jelix~errors.locale.key.selector.invalid'){
-                throw new Exception('(200)The given locale key "'.$args[0].'" is invalid  (for module '.$args[1].', charset '.$args[2].', lang '.$args[3].') (internal error ?)');
+                throw new Exception('(200)The given locale key "'.$args[0].'" is invalid  (for charset '.$args[2].', lang '.$args[3].') (internal error ?)');
             }else{
-                throw new jException('jelix~errors.locale.key.selector.invalid', array($key,$file->module, $charset, $locale));
+                throw new jException('jelix~errors.locale.key.selector.invalid', array($key, $charset, $locale));
             }
         }
 

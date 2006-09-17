@@ -35,9 +35,9 @@ class jConfigCompiler {
 
         if($configFile !='defaultconfig.ini.php'){
             if(!file_exists(JELIX_APP_CONFIG_PATH.$configFile))
-                die(" fichier de configuration manquant !");
+                die("Jelix config file $configFile is missing !");
             if( false === ($userConfig = @parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true)))
-                die(" Erreur dans le fichier de configuration !");
+                die("Syntax error in the Jelix config file $configFile !");
             self::_mergeConfig($config, $userConfig);
         }
 
@@ -81,15 +81,15 @@ class jConfigCompiler {
         $list = split(' *, *',$list);
         $result=array();
         foreach($list as $path){
-            $path = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
-            if(!file_exists($path)){
-                trigger_error($path.' path given in the config doesn\'t exist',E_USER_ERROR);
+            $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
+            if(!file_exists($p)){
+                trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
                 exit;
             }
-            if ($handle = opendir($path)) {
+            if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
-                    if ($f{0} != '.' && is_dir($path.$f)) {
-                        $result[$f]=$path.$f.'/';
+                    if ($f{0} != '.' && is_dir($p.$f)) {
+                        $result[$f]=$p.$f.'/';
                     }
                 }
                 closedir($handle);
@@ -106,15 +106,15 @@ class jConfigCompiler {
     static private function _loadTplPathList(&$config,  $var){
         $list = split(' *, *',$config[$var]);
         foreach($list as $path){
-            $path = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
-            if(!file_exists($path)){
-                trigger_error($path.' path given in the config doesn\'t exist',E_USER_ERROR);
+            $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
+            if(!file_exists($p)){
+                trigger_error('The path '.$path.' for tpl plugins, given in the jelix config, doesn\'t exists !',E_USER_ERROR);
                 exit;
             }
-            if ($handle = opendir($path)) {
+            if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
-                    if ($f{0} != '.' && is_dir($path.$f)) {
-                        $config['_tplpluginsPathList_'.$f][] = $path.$f.'/';
+                    if ($f{0} != '.' && is_dir($p.$f)) {
+                        $config['_tplpluginsPathList_'.$f][] = $p.$f.'/';
                     }
                 }
                 closedir($handle);

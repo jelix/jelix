@@ -57,19 +57,27 @@ final class jResponseRdf extends jResponse {
                 foreach($this->asAttribute as $name){
                     echo $this->resNsPrefix,':',$name,'="',htmlspecialchars($dt[$name]),'" ';
                 }
-                echo ">\n";
-                foreach($this->asElement as $name){
-                    echo '<',$this->resNsPrefix,':',$name,'>',htmlspecialchars($dt[$name]),'</',$this->resNsPrefix,':',$name,">\n";
-                }
+                if(count($this->asElement)){
+                    echo ">\n";
+                    foreach($this->asElement as $name){
+                        echo '<',$this->resNsPrefix,':',$name,'>',htmlspecialchars($dt[$name]),'</',$this->resNsPrefix,':',$name,">\n";
+                    }
+                    echo "</Description>\n</li>\n";
+                }else
+                    echo "/>\n</li>\n";
 
             }else{
-                echo ">\n";
-                foreach($dt as $name=>$val){
-                    echo '<',$this->resNsPrefix,':',$name,'>',htmlspecialchars($val),'</',$this->resNsPrefix,':',$name,">\n";
+                if(count($dt)){
+                    echo ">\n";
+                    foreach($dt as $name=>$val){
+                        echo '<',$this->resNsPrefix,':',$name,'>',htmlspecialchars($val),'</',$this->resNsPrefix,':',$name,">\n";
+                    }
+                    echo "</Description>\n</li>\n";
+                }else{
+                    echo "/>\n</li>\n";
                 }
             }
-            echo "</Description>\n</li>\n";
-           }
+        }
         echo "</Bag>\n</RDF>\n";
     }
 
