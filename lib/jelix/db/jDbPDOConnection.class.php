@@ -28,7 +28,7 @@ define('JPDO_CURSOR_SCROLL',1); //PDO::CURSOR_SCROLL
  * @package  jelix
  * @subpackage db
  */
-class jDbPDOResultSet extends PDOStatement implements Iterator {
+class jDbPDOResultSet extends PDOStatement {
 
     const FETCH_CLASS = 8;
 
@@ -54,34 +54,6 @@ class jDbPDOResultSet extends PDOStatement implements Iterator {
         $this->_fetchMode = $mode;
         return parent::setFetchMode($mode, $param);
     }
-
-    //--------------- interface Iterator
-    protected $_currentRecord = false;
-    protected $_recordIndex = 0;
-
-    function current () {
-        return $this->_currentRecord;
-    }
- 	function key () {
- 	  return $this->_recordIndex;
- 	}
-
- 	function next () {
- 	  $this->_currentRecord =  $this->fetch(JPDO_FETCH_OBJ,JPDO_FETCH_ORI_NEXT);
- 	  if($this->_currentRecord)
- 	      $this->_recordIndex++;
- 	}
-
- 	function rewind () {
- 	  $this->_rewind();
- 	  $this->_recordIndex = 0;
- 	  $this->_currentRecord =  $this->fetch(JPDO_FETCH_OBJ,JPDO_FETCH_ORI_FIRST);
- 	}
-
- 	function valid () {
- 	  return ($this->_currentRecord != false);
- 	}
-
 }
 
 
