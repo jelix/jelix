@@ -19,7 +19,7 @@
 
 
 
-if(!function_exists('strptime')){
+if(!function_exists('strptime')){ // existe depuis php 5.1
     /**
      * @ignore
      */

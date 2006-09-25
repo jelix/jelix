@@ -5,6 +5,7 @@ defaultModule = "jelix"
 defaultAction = "default_index"
 defaultLocale = "fr_FR"
 defaultCharset = "ISO-8859-1"
+defaultTimeZone = "Europe/Paris"
 
 checkTrustedModules = off
 
