@@ -47,8 +47,8 @@ dd { margin-left: 0px; padding-left: 1em; }
 .tutorial { border-width: thin; border-color: #0066ff }
 .tutorial-nav-box { width: 100%; border: 2px solid #999999; background-color: #DDDDDD }
 .nav-button-disabled { color: #999999; }
-.nav-button:active, 
-.nav-button:focus, 
+.nav-button:active,
+.nav-button:focus,
 .nav-button:hover { background-color: #AAAAAA; outline: 1px solid #666666; text-decoration: none }
 .folder-title { font-style: italic }
 
@@ -94,7 +94,7 @@ dd { margin-left: 0px; padding-left: 1em; }
 
 /* Syntax highlighting */
 
-pre {
+pre, div.src-code {
   padding-left:1em;
   border-left:4px solid /*#c66464;*/#efe03b;
   background-image:url(fond_horizontale.png);
@@ -102,7 +102,7 @@ pre {
   background-color:white;
   color:black;
   overflow:auto;
-  font-family: 'Courier New', Courier, monospace; 
+  font-family: 'Courier New', Courier, monospace;
   font-weight: normal;
 }
 
@@ -123,7 +123,7 @@ margin-bottom:0;
 
 .src-php { font-weight: bold; }
 
-.src-doc { color: #009999 }
+.src-doc { color: #009999 ;}
 .src-doc-close-template { color: #0000FF }
 .src-doc-coretag { color: #0099FF; font-weight: bold }
 .src-doc-inlinetag { color: #0099FF }
@@ -183,10 +183,10 @@ margin-bottom:0;
 	text-decoration: none;
 }
 
-.webfx-tree-item a:hover, .webfx-tree-item a:active { 
-	color: white; 
-	background: red; 
-	text-decoration: none 
+.webfx-tree-item a:hover, .webfx-tree-item a:active {
+	color: white;
+	background: red;
+	text-decoration: none
 }
 
 .webfx-tree-item img {

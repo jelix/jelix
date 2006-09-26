@@ -16,7 +16,7 @@ ifndef JBT_VERSION
 JBT_VERSION = $(shell cat build/VERSION)
 endif
 
-SVN_REVISION = $(shell svn info | grep -E "Revision|Révision" -m 1 | cut -d ":" -f 2 | cut -d " " -f 2)
+SVN_REVISION = $(shell svn info | grep -E "vision" -m 1 | cut -d ":" -f 2 | cut -d " " -f 2)
 
 ifeq ($(LIB_VERSION),SVN)
 LIB_VERSION=SVN-$(SVN_REVISION)
