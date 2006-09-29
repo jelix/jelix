@@ -63,15 +63,16 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
 
             $CREATE_URL = array(
                'news~show@classic' =>
-                  array(0,'entrypoint','handler')
+                  array(0,'entrypoint', https true/false, entrypoint true/false, 'handler')
                   ou
-                  array(1,'entrypoint',
+                  array(1,'entrypoint', https true/false, entrypoint true/false,
                         array('annee','mois','jour','id','titre'), // liste des paramètres de l'url à prendre en compte
                         array(true, false..), // valeur des escapes
                         "/news/%1/%2/%3/%4-%5", // forme de l'url
                         )
                   ou
-                  array(2,'entrypoint'); pour les clés du type "@request" ou "module~@request"
+                  array(2,'entrypoint', https true/false, entrypoint true/false ); pour les clés du type "@request"
+                  array(3,'entrypoint', https true/false, entrypoint true/false );  pour les clés du type  "module~@request"
 
         */
         $typeparam = array('string'=>'([^\/]+)','char'=>'([^\/])', 'letter'=>'(\w)',
@@ -90,25 +91,38 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
            $requestType= $m[1];
            $entryPoint = (string)$tag['name'];
            $isDefault =  (isset($tag['default']) ? (((string)$tag['default']) == 'true'):false);
+           $isHttps = (isset($tag['https']) ? (((string)$tag['https']) == 'true'):false);
+           $generatedentrypoint =$entryPoint;
+           if(isset($tag['noentrypoint']) && (string)$tag['noentrypoint'] == 'true')
+                $generatedentrypoint = '';
            $parseInfos = array($isDefault);
 
            // si c'est le point d'entrée par défaut pour le type de requet indiqué
            // alors on indique une regle supplementaire que matcherons
            // toutes les urls qui ne correspondent pas aux autres rêgles
            if($isDefault){
-             $createUrlInfos['@'.$requestType]=array(2,$entryPoint);
+             $createUrlInfos['@'.$requestType]=array(2,$entryPoint, $isHttps);
            }
 
            $parseContent = "<?php \n";
            foreach($tag->url as $url){
                $module = (string)$url['module'];
-
+               if(isset($url['https'])){
+                   $urlhttps=(((string)$url['https']) == 'true');
+               }else{
+                   $urlhttps=$isHttps;
+               }
+               if(isset($url['noentrypoint']) && ((string)$url['noentrypoint']) == 'true'){
+                   $urlep='';
+               }else{
+                   $urlep=$generatedentrypoint;
+               }
                // dans le cas d'un point d'entrée qui n'est pas celui par défaut pour le type de requete indiqué
                // si il y a juste un module indiqué alors on sait que toutes les actions
                // concernant ce module passeront par ce point d'entrée.
                if(!$isDefault && !isset($url['action']) && !isset($url['handler'])){
                  $parseInfos[]=array($module, '', '/.*/', array(), array(), array(), false );
-                 $createUrlInfos[$module.'~*@'.$requestType] = array(3,$entryPoint);
+                 $createUrlInfos[$module.'~*@'.$requestType] = array(3,$urlep, $urlhttps);
                  continue;
                }
 
@@ -126,10 +140,10 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                   $s= new jSelectorUrlHandler($module.'~'.$class);
                   $createUrlContent.="include_once('".$s->getPath()."');\n";
                   $parseInfos[]=array($module, $action, $class, $actionOverride );
-                  $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$entryPoint, $class);
+                  $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$urlep, $urlhttps, $class);
                   if($actionOverride){
                      foreach($actionOverride as $ao){
-                        $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(0,$entryPoint, $class);
+                        $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(0,$urlep,$urlhttps, $class);
                      }
                   }
                   continue;
@@ -190,10 +204,10 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                   $liststatics[(string)$var['name']] =(string)$var['value'];
                }
                $parseInfos[]=array($module, $action, '!^'.$regexppath.'$!', $listparam, $escapes, $liststatics, $actionOverride );
-               $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(1,$entryPoint, $listparam, $escapes,$path);
+               $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(1,$urlep, $urlhttps, $listparam, $escapes,$path);
                if($actionOverride){
                   foreach($actionOverride as $ao){
-                     $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(1,$entryPoint, $listparam, $escapes,$path);
+                     $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(1,$urlep, $urlhttps, $listparam, $escapes,$path);
                   }
                }
            }

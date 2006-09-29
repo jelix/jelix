@@ -284,20 +284,24 @@ class jUrlEngineSignificant implements jIUrlEngine {
         }
         /*
         urlinfo =
-            array(0,'entrypoint','handler')
+            array(0,'entrypoint', https true/false, entrypoint true/false,'handler')
             ou
-            array(1,'entrypoint',
+            array(1,'entrypoint', https true/false, entrypoint true/false
                     array('annee','mois','jour','id','titre'), // liste des paramètres de l'url à prendre en compte
                     array(true, false..), // valeur des escapes
                     "/news/%1/%2/%3/%4-%5", // forme de l'url
                     )
             ou
-            array(2,'entrypoint'); pour les clés du type "@request" ou "module~@request"
+            array(2,'entrypoint', https true/false, entrypoint true/false); pour les clés du type "@request"
+            array(3,'entrypoint', https true/false, entrypoint true/false); pour les clés du type "module~@request"
 
         */
 
         $url->scriptName = $GLOBALS['gJConfig']->urlengine['basePath'].$urlinfo[1];
-        if(!$GLOBALS['gJConfig']->urlengine['multiview']){
+        if($urlinfo[2])
+            $url->scriptName = 'https://'.$_SERVER['HTTP_HOST'].$url->scriptName;
+
+        if($urlinfo[1] && !$GLOBALS['gJConfig']->urlengine['multiview']){
             $url->scriptName.=$GLOBALS['gJConfig']->urlengine['entrypointExtension'];
         }
         // pour certains types de requete, les paramètres ne sont pas dans l'url
@@ -310,22 +314,25 @@ class jUrlEngineSignificant implements jIUrlEngine {
         }
 
         if($urlinfo[0]==0){
-            $s = new jSelectorUrlHandler($urlinfo[2]);
+            $s = new jSelectorUrlHandler($urlinfo[3]);
             $c ='URLS'.$s->resource;
             $handler =new $c();
             $handler->create($urlact, $url);
         }elseif($urlinfo[0]==1){
-            $result = $urlinfo[4];
-            foreach ($urlinfo[2] as $k=>$param){
-                if($urlinfo[3][$k]){
+            $result = $urlinfo[5];
+            foreach ($urlinfo[3] as $k=>$param){
+                if($urlinfo[4][$k]){
                     $result=str_replace(':'.$param, jUrl::escape($url->getParam($param,''),true), $result);
                 }else{
                     $result=str_replace(':'.$param, $url->getParam($param,''), $result);
                 }
                 $url->delParam($param);
             }
+            if($urlinfo[1])
+                $url->pathInfo = $result;
+            else
+                $url->pathInfo = substr($result,1);
 
-            $url->pathInfo = $result;
         }elseif($urlinfo[0]==3){
             $url->delParam('module');
         }

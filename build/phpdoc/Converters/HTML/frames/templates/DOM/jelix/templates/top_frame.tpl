@@ -9,17 +9,17 @@
     </head>
     <body>
         <div id="header">
-            
+
             <div id="introduction">
                 <h1><a href="{$subdir}index.html" >Documentation API Reference</a></h1>
             </div>
             <div id="telechargement">
-                
-                
+
+
             </div>
             <div>
             </div>
-            <div id="chemin"> 
+            <div id="chemin">
                 {if count($packages) > 1}
                    {assign var="last_p" value=""}
                 <span class="field">Packages</span> :
@@ -30,7 +30,7 @@
                     {/section}
                 <br/>
                 {/if}
-                
+
                 {if count($ric) >= 1}
                     {assign var="last_ric_name" value=""}
                     {section name=ric loop=$ric}
@@ -42,10 +42,10 @@
 
             </div>
     </div>
-    
+
     <div id="sidemenu">
-        <h1><a href="http://jelix.org" title="retour sur la page d'accueil du site"><img src="{$subdir}media/logo_jelix_moyen.png" alt="Jelix" /></a></h1>
+        <h1><a href="http://jelix.org" target="_top" title="retour sur la page d'accueil du site"><img src="{$subdir}media/logo_jelix_moyen.png" alt="Jelix" /></a></h1>
     </div>
-        
+
     </body>
 </html>

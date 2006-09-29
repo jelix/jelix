@@ -19,6 +19,15 @@
            <param name="article" escape="true" type="string"/>
         </url>
 
+        <url pathinfo="/test/cms2/:rubrique/:id_art" module="unittest" action="urlsig_url6" noentrypoint="true">
+           <param name="rubrique" />
+           <param name="id_art" regexp="\d+"/>
+        </url>
+
+        <url pathinfo="/shop/:rubrique/:id_article" module="unittest" https="true" action="urlsig_url8">
+           <param name="rubrique" />
+           <param name="id_article" type="int"/>
+        </url>
     </classicentrypoint>
     <classicentrypoint name="testnews">
        <url pathinfo="/:annee/:mois" module="unittest" action="urlsig_url2">

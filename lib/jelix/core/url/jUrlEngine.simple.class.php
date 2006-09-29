@@ -61,9 +61,30 @@ class jUrlEngineSimple implements jIUrlEngine {
      */
     protected function getScript($requestType, $module=null, $action=null){
         static $urlspe = null;
+        static $urlhttps = null;
         global $gJConfig;
 
         $script = $gJConfig->urlengine['defaultEntrypoint'];
+
+        if($urlhttps == null){
+            $urlhttps=array();
+            $selectors = preg_split("/[\s,]+/", $gJConfig->urlengine['simple_urlengine_https']);
+            foreach($selectors as $sel2){
+                $urlhttps[$sel2]= true;
+            }
+        }
+
+        $usehttps= false;
+        if($action && $action !='' && isset($urlhttps[$module.'~'.$action.'@'.$requestType])){
+            $usehttps = true;
+        }
+        if($module && $module !='' && !$usehttps &&  isset($urlhttps[$module.'~*@'.$requestType])){
+            $usehttps = true;
+        }
+        if(!$usehttps && isset($urlhttps['@'.$requestType])){
+            $usehttps = true;
+        }
+
 
         if(count($gJConfig->simple_urlengine_entrypoints)){
            if($urlspe == null){
@@ -91,7 +112,12 @@ class jUrlEngineSimple implements jIUrlEngine {
         if(!$gJConfig->urlengine['multiview']){
             $script.=$gJConfig->urlengine['entrypointExtension'];
         }
-        return $gJConfig->urlengine['basePath'].$script;
+
+        if($usehttps){
+            return 'https://'.$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'].$script;
+        }else{
+            return $gJConfig->urlengine['basePath'].$script;
+        }
     }
 }
 

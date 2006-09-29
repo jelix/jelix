@@ -75,6 +75,8 @@ IISPathKey = __JELIX_URL__
 ;indique si il faut stripslashé le path_info récupéré par le biais de IISPathKey
 IISStripslashesPathKey = on
 
+; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur d'url simple
+simple_urlengine_https = "unittest~urlsig_url8@classic @xmlrpc"
 
 [simple_urlengine_entrypoints]
 ; paramètres pour le moteur d'url simple : liste des points d'entrées avec les actions
@@ -92,6 +94,8 @@ jsonrpc = "@jsonrpc"
 testnews = "unittest~urlsig_url2@classic unittest~urlsig_url3@classic"
 foo/bar = "unittest~urlsig_url4@classic"
 news = "new~*@classic"
+
+__https=
 
 [logfiles]
 default=messages.log

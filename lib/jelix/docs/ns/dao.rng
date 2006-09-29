@@ -61,7 +61,6 @@
                <optional><attribute name="required"><data type="boolean" /></attribute></optional>
                <optional><attribute name="minlength"><data type="int" /></attribute></optional>
                <optional><attribute name="maxlength"><data type="int" /></attribute></optional>
-               <optional><attribute name="required"><data type="boolean" /></attribute></optional>
                <optional><attribute name="regexp" /></optional>
                <optional><attribute name="sequence" /></optional>
                <optional><attribute name="updatemotif" /></optional>
@@ -143,6 +142,7 @@
       <zeroOrMore>
          <element name="parameter">
             <attribute name="name" />
+            <optional><attribute name="default" /></optional>
             <empty/>
          </element>
       </zeroOrMore>
@@ -155,21 +155,27 @@
                 <choice>
                    <value>and</value>
                    <value>or</value>
+                   <value>AND</value>
+                   <value>OR</value>
                 </choice>
              </attribute>
           </optional>
          <oneOrMore>
             <choice>
                <element name="eq"><ref name="method.condition.attr" /></element>
-               <element name="noteq"><ref name="method.condition.attr" /></element>
+               <element name="neq"><ref name="method.condition.attr" /></element>
                <element name="lt"><ref name="method.condition.attr" /></element>
                <element name="gt"><ref name="method.condition.attr" /></element>
                <element name="lteq"><ref name="method.condition.attr" /></element>
                <element name="gteq"><ref name="method.condition.attr" /></element>
+               <element name="like"><ref name="method.condition.attr" /></element>
+               <element name="notlike"><ref name="method.condition.attr" /></element>
                <element name="isnull"><ref name="method.condition.attr.null" /></element>
-               <element name="notisnull"><ref name="method.condition.attr.null" /></element>
+               <element name="isnotnull"><ref name="method.condition.attr.null" /></element>
                <element name="in"><ref name="method.condition.attr" /></element>
                <element name="notin"><ref name="method.condition.attr" /></element>
+               <element name="binary_op"><ref name="method.condition.attr.binaryop" /></element>
+
                <ref name="method.conditions" />
             </choice>
          </oneOrMore>
@@ -191,7 +197,16 @@
       <empty />
    </define>
 
-
+   <define name="method.condition.attr.binaryop">
+       <attribute name="property" />
+       <choice>
+           <attribute name="value" />
+           <attribute name="expr" />
+       </choice>
+       <attribute name="operator" />
+       <optional><attribute name="driver" /></optional>
+       <empty />
+   </define>
 
    <define name="method.values">
       <optional>
@@ -221,6 +236,8 @@
                         <choice>
                            <value>ASC</value>
                            <value>DESC</value>
+                           <value>asc</value>
+                           <value>desc</value>
                         </choice>
                      </attribute>
                   </optional>

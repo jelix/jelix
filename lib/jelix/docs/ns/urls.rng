@@ -19,9 +19,15 @@
             <name>classicentrypoint</name>
             <name>xmlrpcentrypoint</name>
             <name>jsonrpcentrypoint</name>
+            <name>rdfentrypoint</name>
+            <name>xmlentrypoint</name>
+            <name>xulentrypoint</name>
          </choice>
 
          <optional><attribute name="default"><data type="boolean"/></attribute></optional>
+         <optional> <attribute name="noentrypoint"><data type="boolean"/></attribute> </optional>
+         <optional> <attribute name="https"><data type="boolean"/></attribute> </optional>
+
          <attribute name="name"/>
          <zeroOrMore>
             <choice>
@@ -35,6 +41,8 @@
    <define name="url">
       <element name="url">
          <attribute name="module" />
+         <optional> <attribute name="noentrypoint"><data type="boolean"/></attribute> </optional>
+         <optional> <attribute name="https"><data type="boolean"/></attribute> </optional>
          <optional>
              <attribute name="action" />
              <optional>
@@ -55,8 +63,10 @@
 
    <define name="url.handler">
       <element name="url">
-         <attribute name="handler" />
          <attribute name="module" />
+         <optional> <attribute name="noentrypoint"><data type="boolean"/></attribute> </optional>
+         <optional> <attribute name="https"><data type="boolean"/></attribute> </optional>
+         <attribute name="handler" />
          <optional>
             <attribute name="action" />
             <optional>

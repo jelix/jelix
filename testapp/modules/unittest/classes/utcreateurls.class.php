@@ -95,7 +95,8 @@ class UTCreateUrls extends UnitTestCase {
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
          'entrypointExtension'=>'.php',
-         'notfoundAct'=>'jelix~notfound'
+         'notfoundAct'=>'jelix~notfound',
+         'simple_urlengine_https'=>'unittest~urlsig_url8@classic @xmlrpc',
        );
       /* $gJConfig->simple_urlengine_entrypoints = array(
           'index' => "@classic",
@@ -114,6 +115,7 @@ class UTCreateUrls extends UnitTestCase {
       // celle ci n'a pas de définition dans urls.xml *exprés*
       $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
+      $urlList[]= array('unittest~urlsig_url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
 
       $trueResult=array(
           "/index.php?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
@@ -122,8 +124,12 @@ class UTCreateUrls extends UnitTestCase {
           "/foo/bar.php?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
           "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "/xmlrpc.php",
+          "/index.php?rubrique=vetements&id_article=98&module=unittest&action=urlsig_url8",
        );
 
+
+      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
+      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
       $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
 
       $gJConfig->urlengine['multiview']=true;
@@ -134,7 +140,10 @@ class UTCreateUrls extends UnitTestCase {
           "/foo/bar?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
           "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "/xmlrpc",
+          "/index?rubrique=vetements&id_article=98&module=unittest&action=urlsig_url8",
        );
+      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
+      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
       $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
 
     }
@@ -154,7 +163,8 @@ class UTCreateUrls extends UnitTestCase {
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
          'entrypointExtension'=>'.php',
-         'notfoundAct'=>'jelix~notfound'
+         'notfoundAct'=>'jelix~notfound',
+         'simple_urlengine_https'=>'unittest~urlsig_url8@classic @xmlrpc',
        );
 
       $urlList=array();
@@ -206,22 +216,28 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('urlsig_url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
       $urlList[]= array('urlsig_url2', array('mois'=>'05',  'annee'=>'2004'));
       $urlList[]= array('unittest~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
+      $urlList[]= array('unittest~urlsig_url6', array('rubrique'=>'actualite',  'id_art'=>'65'));
       $urlList[]= array('unittest~urlsig_url4', array('first'=>'premier',  'second'=>'deuxieme'));
       // celle ci n'a pas de définition dans urls.xml *exprés*
       $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('news~bar', array('aaa'=>'bbb'));
+      $urlList[]= array('unittest~urlsig_url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
 
       $trueResult=array(
           "/index.php/test/news/2005/10/35",
           "/testnews.php/2004/05",
           "/index.php/test/cms/actualite/65-c-est-la-fete-au-village",
+          "/test/cms2/actualite/65",
           "/foo/bar.php/withhandler/premier/deuxieme",
           "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "/xmlrpc.php",
-          "/news.php?aaa=bbb&action=default_bar"
+          "/news.php?aaa=bbb&action=default_bar",
+          "/index.php/shop/vetements/98"
+
        );
 
+      $trueResult[8]='https://'.$_SERVER['HTTP_HOST'].$trueResult[8];
       $this->_doCompareUrl("significant, multiview = false", $urlList,$trueResult);
 
 
@@ -230,11 +246,14 @@ class UTCreateUrls extends UnitTestCase {
           "/index/test/news/2005/10/35",
           "/testnews/2004/05",
           "/index/test/cms/actualite/65-c-est-la-fete-au-village",
+          "/test/cms2/actualite/65",
           "/foo/bar/withhandler/premier/deuxieme",
           "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "/xmlrpc",
-          "/news?aaa=bbb&action=default_bar"
+          "/news?aaa=bbb&action=default_bar",
+          "/index/shop/vetements/98"
        );
+      $trueResult[8]='https://'.$_SERVER['HTTP_HOST'].$trueResult[8];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
 
     }

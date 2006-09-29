@@ -169,7 +169,7 @@ class jConfigCompiler {
             fwrite($f, $result);
             fclose($f);
         }else{
-            trigger_error('Can\'t write '.$filename.' file',E_USER_ERROR);
+            trigger_error('Jelix can\'t write '.$filename.' file. Set correctly rights in the temp directory',E_USER_ERROR);
         }
     }
 
