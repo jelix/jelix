@@ -38,6 +38,9 @@ function jtpl_meta_html($tpl, $method, $param)
                 }
             }
             break;
+        case 'others':
+            $gJCoord->response->addOthers($param);
+            break;
     }
 }
 ?>
