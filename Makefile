@@ -30,6 +30,16 @@ ifeq ($(JBT_VERSION),SVN)
 JBT_VERSION=SVN-$(SVN_REVISION)
 endif
 
+ifndef LIB_NAME
+LIB_NAME=$(LIB_VERSION)
+endif
+ifndef JTPL_NAME
+JTPL_NAME=$(LIB_VERSION)
+endif
+ifndef JBT_NAME
+JBT_NAME=$(LIB_VERSION)
+endif
+
 ifndef DIST
 DIST=_dist
 endif
@@ -83,20 +93,20 @@ dist-jelix: common-dist
 	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(DISTJELIX) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-others.mn . $(DISTJELIX) \
 	&& echo "$(LIB_VERSION)" > "$(DISTJELIX)/lib/jelix/VERSION"
-	tar czf $(DIST)/jelix-lib-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) lib/ temp/
+	tar czf $(DIST)/jelix-lib-$(LIB_NAME).tar.gz  -C $(DISTJELIX) lib/ temp/
 
 dist-testapp: common-dist
 	$(PHP) build/mkdist.php build/manifests/testapp.mn . $(DISTJELIX)
-	tar czf $(DIST)/testapp-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) testapp/ temp/testapp/
+	tar czf $(DIST)/testapp-$(LIB_NAME).tar.gz  -C $(DISTJELIX) testapp/ temp/testapp/
 
 dist-myapp: common-dist
 	$(PHP) build/mkdist.php build/manifests/myapp.mn . $(DISTJELIX)
-	tar czf $(DIST)/myapp-$(LIB_VERSION).tar.gz  -C $(DISTJELIX) myapp/ temp/myapp/
+	tar czf $(DIST)/myapp-$(LIB_NAME).tar.gz  -C $(DISTJELIX) myapp/ temp/myapp/
 
 dist-modules: common-dist
 	export LIB_VERSION=$(LIB_VERSION) \
 	&& $(PHP) build/mkdist.php build/manifests/jelix-modules.mn lib/jelix-modules/ $(DIST)/additional-modules/
-	tar czf $(DIST)/jelix-additional-modules.tar.gz  -C $(DIST) additional-modules/
+	tar czf $(DIST)/jelix-additional-modules-$(LIB_NAME).tar.gz  -C $(DIST) additional-modules/
 
 common-dist:
 	if [ ! -d "$(DIST)" ] ; then mkdir $(DIST) ; fi
@@ -139,13 +149,13 @@ jtpl-dist:
 	export JTPL_STANDALONE=1 \
 	&& $(PHP) build/mkdist.php build/manifests/jtpl-standalone.mn . $(DISTJTPL) \
 	&& echo "$(JTPL_VERSION)" > "$(DISTJTPL)/VERSION"
-	tar czf $(DIST)/jtpl-$(JTPL_VERSION).tar.gz  -C $(DIST) jtpl/
+	tar czf $(DIST)/jtpl-$(JTPL_NAME).tar.gz  -C $(DIST) jtpl/
 
 jbt-dist:
 	if [ ! -d "$(DISTJBT)" ] ; then mkdir $(DISTJBT) ; fi
 	$(PHP) build/mkdist.php build/manifests/jbuildtools.mn build/ $(DISTJBT) \
 	&& echo "$(JBT_VERSION)" > "$(DISTJBT)/VERSION"
-	tar czf $(DIST)/jbuildtools-$(JBT_VERSION).tar.gz  -C $(DIST) jbuildtools/
+	tar czf $(DIST)/jbuildtools-$(JBT_NAME).tar.gz  -C $(DIST) jbuildtools/
 
 
 docs: dev-jelix-lib
