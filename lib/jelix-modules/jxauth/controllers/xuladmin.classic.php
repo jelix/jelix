@@ -17,6 +17,7 @@ class CTxuladmin extends jController {
     function index() {
         $rep = $this->getResponse('xulpage');
         $rep->bodyTpl='jxauth~xuladmin';
+        $rep->fetchOverlays = true;
         return $rep;
     }
 

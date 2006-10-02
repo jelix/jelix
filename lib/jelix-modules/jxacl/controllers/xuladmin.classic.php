@@ -21,7 +21,6 @@ class CTxuladmin extends jController {
         $rep = $this->getResponse('xulpage');
         $rep->bodyTpl='jxacl~xuladmin';
 
-
         $rep->body->assign('groups', $daogroup->findAllPublicGroup());
         $rep->body->assign('valuegroups', $daovaluegroups->findAll());
         return $rep;
@@ -32,7 +31,14 @@ class CTxuladmin extends jController {
         $rep = $this->getResponse('xuloverlay');
         $rep->bodyTpl = 'jxacl~xaovlay';
         return $rep;
+    }
 
+    function jxauthovlay(){
+        $rep = $this->getResponse('xuloverlay');
+        $rep->bodyTpl = 'jxacl~jxauthovlay';
+        $daogroup = jDao::get('jaclgroup');
+        $rep->body->assign('groups', $daogroup->findAllPublicGroup());
+        return $rep;
     }
 
 }

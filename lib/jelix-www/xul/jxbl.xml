@@ -203,7 +203,12 @@
               <body><![CDATA[
                     this.disableButtons();
                     var url = this.getAttribute("counturl");
-                    if(url == '') return;
+                    if(url == '') {
+                        this.offset=0;
+                        this.totalcount=0;
+                        this.show();
+                        return;
+                    }
 
                     this.httpreq = new XMLHttpRequest();
                     this.httpreq.pager = this;

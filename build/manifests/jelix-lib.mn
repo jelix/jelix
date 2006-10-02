@@ -15,6 +15,7 @@ cd lib/jelix
 cd lib/jelix/auth
   jAuth.class.php
   jAuthDriverDb.class.php
+  jAuthDriverClass.class.php
   jAuthUser.class.php
 
 cd lib/jelix/acl
@@ -295,6 +296,7 @@ cd lib/jelix-modules/jxacl/locales/fr_FR
 cd lib/jelix-modules/jxacl/templates
   xaovlay.tpl
   xuladmin.tpl
+  jxauthovlay.tpl
 
 
 cd lib/jelix-plugins

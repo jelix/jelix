@@ -48,6 +48,10 @@
         document.getElementById('users').setAttribute("datasources","");
         document.getElementById("rightsforms").selectedIndex=0;
         document.getElementById('groupstatus').setAttribute('disabled','true');
+        var pager = document.getElementById('userspager');
+        pager.setAttribute('counturl','');
+        pager.setAttribute('datasourceurl','');
+        pager.loadCount();
     }
 
 
@@ -261,7 +265,7 @@
 
             </tabpanel>
             <tabpanel orient="vertical">
-                <jx:templatepager id="userspager" target="users" increment="100"
+                <jx:templatepager id="userspager" target="users" increment="200"
                                   datasourceurl="" counturl="" />
                 <tree id="users" flex="1" flags="dont-build-content" ref="urn:data:row" datasources="rdf:null"
                     onselect="" seltype="single"

@@ -13,8 +13,11 @@
 class ListenerAcl extends jEventListener{
 
    function onFetchXulOverlay($event){
-        if($event->getParam('tpl') == 'jxxulapp~main'){
+        $tpl = $event->getParam('tpl');
+        if($tpl == 'jxxulapp~main'){
             $event->Add('jxacl~xuladmin_xaovlay');
+        }elseif($tpl == 'jxauth~xuladmin'){
+            $event->Add('jxacl~xuladmin_jxauthovlay');
         }
    }
 
