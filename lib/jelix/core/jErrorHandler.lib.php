@@ -105,7 +105,7 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         }
     }
     if(strpos($action , 'LOGFILE') !== false){
-        error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);
+        @error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);
     }
     if(strpos($action , 'MAIL') !== false){
         error_log($messageLog,1, $conf['email'], $conf['emailHeaders']);
@@ -115,7 +115,7 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     }
 
     if(strpos($action , 'EXIT') !== false){
-        if($doecho && $gJCoord->response) 
+        if($doecho && $gJCoord->response)
             $gJCoord->response->outputErrors();
         exit;
     }

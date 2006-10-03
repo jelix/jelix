@@ -4,12 +4,10 @@
 
 ;============= Paramètres généraux
 
-; Db ou Ldap  ( respecter la casse des caractères)
+; Db ou Class  ( respecter la casse des caractères)
 driver = Db
 
-; nom de la fonction globale qui sert à crypter le mot de passe
-; peut être vide, dans le cas où le driver prend en charge le cryptage
-password_crypt_function = md5
+
 
 ;============ Paramètres pour le plugin
 ; indique si on effectue un contrôle sur l'adresse ip
@@ -61,14 +59,10 @@ after_logout = "jxauth~login_form"
 [Db]
 dao = "jxauth~jelixuser"
 
-; paramètres pour le driver ldap
-;[Ldap]
-;query_user = (cn=%s)
-;query_list = (cn=*)
-;login_field = uid
-;password_field = userPassword
+; nom de la fonction globale qui sert à crypter le mot de passe
+password_crypt_function = md5
 
-;[Ldapfields]
-;// champs ldap =  proprieté de jUser
-;cn = name
-;sn = firstname
+; paramètres pour le driver class
+;[Class]
+;class = ""
+;password_crypt_function = md5

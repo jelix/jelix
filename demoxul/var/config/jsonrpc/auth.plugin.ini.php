@@ -1,12 +1,8 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-; Db ou Ldap
+; Db ou Class
 driver = Db
-
-; nom de la fonction globale qui sert à crypter le mot de passe
-; peut être vide, dans le cas où le driver prend en charge le cryptage
-password_crypt_function = md5
 
 ; indique si il faut absolument ou non une authentification
 ; on = authentification necessaire pour toute action
@@ -54,4 +50,6 @@ login_template = "jxauth~login.form"
 [Db]
 dao = "jxauth~jelixuser"
 
+; nom de la fonction globale qui sert à crypter le mot de passe
+password_crypt_function = md5
 

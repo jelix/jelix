@@ -68,8 +68,8 @@ endif
 
 default:
 	@echo "target:  "
-	@echo "   dist-all dist-jelix dist-testapp dist-myapp dist-modules"
-	@echo "   dev-all dev-jelix dev-jelix-lib dev-myapp dev-testapp dev-modules"
+	@echo "   dist-all dist-jelix dist-testapp dist-myapp dist-modules dist-demoxul"
+	@echo "   dev-all dev-jelix dev-jelix-lib dev-myapp dev-testapp dev-modules dev-demoxul"
 	@echo "   jtpl jtpl-dist"
 	@echo "   jbt-dist"
 	@echo "   docs"
@@ -79,8 +79,8 @@ default:
 	@echo "   LIB_VERSION : numéro de version de Jelix (" $(LIB_VERSION) ")"
 	@echo "   JTPL_VERSION : numéro de version de jtpl standalone (" $(JTPL_VERSION) ")"
 	@echo "répertoire de construction des projets:"
-	@echo "   distributions jelix testapp myapp : " $(DISTJELIX)
-	@echo "   developpement jelix testapp myapp : " $(DISTHACKER)
+	@echo "   distributions jelix testapp myapp demoxul : " $(DISTJELIX)
+	@echo "   developpement jelix testapp myapp demoxul : " $(DISTHACKER)
 	@echo "   distribution jtpl : " $(DISTJTPL)
 
 dist-all: dist-jelix dist-testapp dist-myapp jtpl-dist jbt-dist dist-modules
@@ -98,6 +98,10 @@ dist-jelix: common-dist
 dist-testapp: common-dist
 	$(PHP) build/mkdist.php build/manifests/testapp.mn . $(DISTJELIX)
 	tar czf $(DIST)/testapp-$(LIB_NAME).tar.gz  -C $(DISTJELIX) testapp/ temp/testapp/
+
+dist-demoxul: common-dist
+	$(PHP) build/mkdist.php build/manifests/demoxul.mn . $(DISTJELIX)
+	tar czf $(DIST)/demoxul-$(LIB_NAME).tar.gz  -C $(DISTJELIX) demoxul/ temp/demoxul/
 
 dist-myapp: common-dist
 	$(PHP) build/mkdist.php build/manifests/myapp.mn . $(DISTJELIX)
@@ -134,6 +138,9 @@ dev-testapp: common-dev
 
 dev-myapp: common-dev
 	$(PHP) build/mkdist.php build/manifests/myapp.mn . $(DISTHACKER)
+
+dev-demoxul: common-dev
+	$(PHP) build/mkdist.php build/manifests/demoxul.mn . $(DISTHACKER)
 
 common-dev:
 	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi

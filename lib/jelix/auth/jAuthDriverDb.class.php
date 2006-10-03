@@ -55,7 +55,7 @@ class jAuthDriverDb implements jIAuthDriver {
     public function createUser($login,$password){
         $user = jDao::createRecord($this->_params['dao']);
         $user->login = $login;
-        $user->password = $password;
+        $user->password = $this->cryptPassword($password);
         return $user;
     }
 
@@ -70,14 +70,21 @@ class jAuthDriverDb implements jIAuthDriver {
 
     public function changePassword($login, $newpassword){
         $dao = jDao::get($this->_params['dao']);
-        return $dao->updatePassword($login, $newpassword);
+        return $dao->updatePassword($login, $this->cryptPassword($newpassword));
     }
 
     public function verifyPassword($login, $password){
         $daouser = jDao::get($this->_params['dao']);
-        $user = $daouser->getByLoginPassword($login, $password);
+        $user = $daouser->getByLoginPassword($login, $this->cryptPassword($password));
         return ($user?$user:false);
     }
 
+
+    protected function cryptPassword($password){
+        $f=$this->_params['password_crypt_function'];
+        if( $f != '')
+           $password = $f($password);
+        return $password;
+    }
 }
 ?>

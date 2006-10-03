@@ -53,7 +53,7 @@ class jAuthDriverClass implements jIAuthDriver {
     public function createUser($login,$password){
         $user = jClasses::createRecord($this->_params['class']);
         $user->login = $login;
-        $user->password = $password;
+        $user->password = $this->cryptPassword($password);
         return $user;
     }
 
@@ -68,16 +68,22 @@ class jAuthDriverClass implements jIAuthDriver {
 
     public function changePassword($login, $newpassword){
         $class = jClasses::create($this->_params['class']);
-        return $class->updatePassword($login, $newpassword);
+        return $class->updatePassword($login, $this->cryptPassword($newpassword));
     }
 
     public function verifyPassword($login, $password){
         $classuser = jClasses::create($this->_params['class']);
 
-        $user = $classuser->getByLoginPassword($login, $password);
+        $user = $classuser->getByLoginPassword($login, $this->cryptPassword($password));
 
         return ($user?$user:false);
     }
 
+    protected function cryptPassword($password){
+        $f=$this->_params['password_crypt_function'];
+        if( $f != '')
+           $password = $f($password);
+        return $password;
+    }
 }
 ?>

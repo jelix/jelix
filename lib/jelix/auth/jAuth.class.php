@@ -172,7 +172,7 @@ class jAuth {
      */
     public static function createUser($login,$password){
         $dr = self::_getDriver();
-        return $dr->createUser($login, self::cryptPassword($password));
+        return $dr->createUser($login,$password);
     }
 
 
@@ -188,7 +188,6 @@ class jAuth {
      *
      */
     public static function changePassword($login, $newpassword){
-        $newpassword = self::cryptPassword($newpassword);
         $dr = self::_getDriver();
         return $dr->changePassword($login, $newpassword);
     }
@@ -197,7 +196,6 @@ class jAuth {
      *
      */
     public static function verifyPassword($login, $password){
-        $password = self::cryptPassword($password);
         $dr = self::_getDriver();
         return $dr->verifyPassword($login, $password);
     }
@@ -208,7 +206,6 @@ class jAuth {
     public static function login($login, $password){
 
         $dr = self::_getDriver();
-        $password = self::cryptPassword($password);
         if($user = $dr->verifyPassword($login, $password)){
 
             $eventresp = jEvent::notify ('AuthCanLogin', array('login'=>$login, 'user'=>$user));
@@ -240,15 +237,7 @@ class jAuth {
         return (isset($_SESSION['JELIX_USER']) && $_SESSION['JELIX_USER']->login != '');
     }
 
-    public static function cryptPassword($password){
-        $conf = self::_getConfig();
-        $f=$conf['password_crypt_function'];
-        if( $f != '')
-           $password = $f($password);
-        return $password;
-    }
-
- /**
+   /**
     * Récupération de l'objet utilisateur.
     */
     public static function getUserSession (){

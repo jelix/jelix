@@ -16,6 +16,7 @@
 //               on l'indique ici
 
 if($_SERVER['argc'] < 2){
+   echo "too few arguments\n   repertoire1 [repertoire2] fichier.mn";
    exit(1);
 }
 array_shift($_SERVER['argv']); // shift the script name
