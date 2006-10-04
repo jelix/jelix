@@ -10,7 +10,7 @@
 /**
  * plugin for language auto detection
  */
-class AutoLocalePlugin implements jPlugin {
+class AutoLocalePlugin implements jIPlugin {
 
     public $config;
 
