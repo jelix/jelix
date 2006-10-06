@@ -1,4 +1,6 @@
 <h2>Tests unitaires</h2>
+Version php : {$versionphp}<br/>
+Version Jelix: {$versionjelix}<br/>
 <h3>Core</h3>
 <ul>
     <li><a href="?module=unittest&amp;action=testselectoract">selecteurs d'action</a></li>

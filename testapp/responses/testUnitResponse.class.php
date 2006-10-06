@@ -22,6 +22,8 @@ class testUnitResponse extends jResponseHtml {
        $this->title .= ($this->title !=''?' - ':'').' Test unitaires';
 
        $tpl = new jTpl();
+       $tpl->assign('versionphp',phpversion());
+       $tpl->assign('versionjelix',JELIX_VERSION);
        $this->body->assign('menu',$tpl->fetch('unittest~menu'));
        $this->body->assignIfNone('MAIN','<p></p>');
        $this->body->assign('page_title', 'Test unitaires sur Jelix');
