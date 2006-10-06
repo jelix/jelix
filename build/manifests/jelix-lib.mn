@@ -176,6 +176,7 @@ cd lib/jelix/utils/
   jDatatype.class.php
   jCmdUtils.class.php
   jZipCreator.class.php
+  jIniFile.class.php
 
 cd lib/json
   JSON.php

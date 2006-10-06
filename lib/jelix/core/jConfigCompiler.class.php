@@ -27,7 +27,7 @@ class jConfigCompiler {
      * @return object an object which contains configuration values
      */
     static public function read($configFile){
-        $config = parse_ini_file(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php', true);
+        $config = jIniFile::read(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
 
         if( $commonConfig = @parse_ini_file(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',true)){
             self::_mergeConfig($config, $commonConfig);
@@ -67,7 +67,7 @@ class jConfigCompiler {
             if(substr($path,-1) != '/') $path.='/';
             $config['urlengine']['basePath'] = $path;
         }
-        self::_saveToIni($config, JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php');
+        jIniFile::write($config, JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php');
         $config = (object) $config;
         return $config;
     }
@@ -143,46 +143,6 @@ class jConfigCompiler {
             }
         }
 
-    }
-
-    /**
-     * store an ini array in a file (contrary of parse_ini_file)
-     * @param $array the array to store
-     * @param $filename the file name
-     */
-    static private function _saveToIni($array,$filename){
-
-        $result='';
-        foreach($array as $k=>$v){
-            if(is_array($v)){
-                $result.='['.$k."]\n";
-                foreach($v as $k2=>$v2){
-                    $result .= $k2.'='.self::_iniValue($v2)."\n";
-                }
-            }else{
-                // on met les valeurs simples en debut de fichier
-                $result = $k.'='.self::_iniValue($v)."\n".$result;
-            }
-        }
-
-        if($f = @fopen($filename, 'wb')){
-            fwrite($f, $result);
-            fclose($f);
-        }else{
-            trigger_error('Jelix can\'t write '.$filename.' file. Set correctly rights in the temp directory',E_USER_ERROR);
-        }
-    }
-
-    /**
-     * format a value to store in a ini file
-     * @param string $value the value
-     * @return string the formated value
-     */
-    static private function _iniValue($value){
-        if($value=='' || is_numeric($value) || preg_match("/^[\w]*$/", $value))
-            return $value;
-        else
-            return '"'.$value.'"';
     }
 }
 
