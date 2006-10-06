@@ -22,6 +22,7 @@ Version Jelix: {$versionjelix}<br/>
 <ul>
     <li><a href="?module=unittest&amp;action=dao_parser">Parser</a></li>
     <li><a href="?module=unittest&amp;action=dao_parser2">Parser (2)</a></li>
+    <li><a href="?module=unittest&amp;action=dao_conditions">jDaoConditions</a></li>
 
 </ul>
 

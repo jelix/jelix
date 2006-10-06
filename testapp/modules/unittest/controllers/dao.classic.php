@@ -30,6 +30,14 @@ class CTDao extends jController {
       return $rep;
    }
 
+   function conditions() {
+      $rep = $this->getResponse('unittest');
+      $rep->title = 'test unitaires sur jDaoConditions';
+      $ut = jClasses::create("unittestservice");
+      $ut->init($rep);
+      $ut->daoConditionsTest();
+      return $rep;
+   }
 
 }
 ?>

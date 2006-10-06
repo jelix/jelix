@@ -18,7 +18,7 @@
 	 *	  @subpackage UnitTester
      */
     class SimpleShell {
-        var $_output;
+        protected $_output;
 
         /**
          *    Executes the shell comand and stashes the output.
@@ -69,9 +69,9 @@
 	 *	  @subpackage UnitTester
      */
     class ShellTestCase extends SimpleTestCase {
-        var $_current_shell;
-        var $_last_status;
-        var $_last_command;
+        protected $_current_shell;
+        protected $_last_status;
+        protected $_last_command;
 
         /**
          *    Creates an empty test case. Should be subclassed
@@ -127,7 +127,7 @@
             $shell = &$this->_getShell();
             return $shell->getOutputAsList();
 		}
-        
+
         /**
          *    Will trigger a pass if the two parameters have
          *    the same value only. Otherwise a fail. This
@@ -144,7 +144,7 @@
                     $second,
                     $message);
         }
-        
+
         /**
          *    Will trigger a pass if the two parameters have
          *    a different value. Otherwise a fail. This

@@ -19,7 +19,7 @@
 	 *	  @subpackage UnitTester
      */
     class HtmlReporter extends SimpleReporter {
-        var $_character_set;
+        protected $_character_set;
 
         /**
          *    Does nothing yet. The first output will
@@ -245,9 +245,9 @@
 	 *	  @subpackage UnitTester
      */
     class SelectiveReporter extends SimpleReporterDecorator {
-        var $_just_this_case =false;
-        var $_just_this_test = false;
-        var $_within_test_case = true;
+        protected $_just_this_case =false;
+        protected $_just_this_test = false;
+        protected $_within_test_case = true;
 
         /**
          *    Selects the test case or group to be run,

@@ -45,6 +45,12 @@ class UnitTestService {
       $test->run(new jHtmlRespReporter($this->_rep));
    }
 
+   function daoConditionsTest(){
+      $test = jClasses::create("utdao_conditions");
+      $test->run(new jHtmlRespReporter($this->_rep));
+   }
+
+
    function daoParserTest(){
       $test = jClasses::create("utdao");
       $test->run(new jHtmlRespReporter($this->_rep));

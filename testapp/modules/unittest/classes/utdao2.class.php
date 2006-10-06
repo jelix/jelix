@@ -62,7 +62,7 @@ class UTDao2 extends jUnitTestCase {
                     <array p="conditions">array()</array>
                     <array p="group">array()</array>
                 </object>
-                <array p="order">array("publishdate"=>"$aWay")</array>
+                <array p="order">array("publishdate"=>\'$aWay\')</array>
             </object>
             <array m="getParameters ()">array("aWay")</array>
             <array m="getParametersDefaultValues ()">array()</array>
@@ -90,7 +90,7 @@ class UTDao2 extends jUnitTestCase {
             </object>
             <array m="getParameters ()">array()</array>
             <array m="getParametersDefaultValues ()">array()</array>
-            <array m="getLimit ()">array(10,5,false,false)</array>
+            <array m="getLimit ()">array("offset"=>10, "count"=>5, "offsetparam"=>false,"countparam"=>false)</array>
             <array m="getValues ()">array()</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
@@ -114,9 +114,9 @@ class UTDao2 extends jUnitTestCase {
                 </object>
                 <array p="order">array()</array>
             </object>
-            <array m="getParameters ()">array()</array>
+            <array m="getParameters ()">array("aOffset","aCount")</array>
             <array m="getParametersDefaultValues ()">array()</array>
-            <array m="getLimit ()">array("$aOffset","$aCount",true,true)</array>
+            <array m="getLimit ()">array("offset"=>\'$aOffset\', "count"=>\'$aCount\', "offsetparam"=>true,"countparam"=>true)</array>
             <array m="getValues ()">array()</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
@@ -209,9 +209,7 @@ class UTDao2 extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(
-                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "expr"=>""),
-                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "expr"=>""))</array>
+                    <array p="conditions">array()</array>
                     <array p="group">
                         <object p="condition" class="jDaoCondition">
                             <notnull p="parent" />
@@ -249,202 +247,6 @@ class UTDao2 extends jUnitTestCase {
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
-
- /*       array('<?xml version="1.0"?>
-          <method name="foo" type="select">
-            <limit >
-                <orderitem property="publishdate" way="desc"/>
-            </order>
-          </method>',
-        '<?xml version="1.0"?>
-        <object>
-             <string p="name" value="foo"/>
-            <string p="type" value="select"/>
-            <boolean p="distinct" value="false"/>
-            <object m="getConditions()" class="jDaoConditions">
-                <object p="condition" class="jDaoCondition">
-                    <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
-                </object>
-                <array p="order">array("publishdate"=>"desc")</array>
-                <array p="fields">array()</array>
-            </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
-            <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
-            <null m="getProcStock ()"/>
-            <null m="getBody ()"/>
-        </object>'),
-                array('<?xml version="1.0"?>
-          <method type="select">
-     <parameter />
-     <conditions />
-     <order />
-     <limit />
-  </method>',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value="foo"/>
-            <string p="type" value="select"/>
-            <boolean p="distinct" value="false"/>
-            <object m="getConditions()" class="jDaoConditions">
-                <object p="condition" class="jDaoCondition">
-                    <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
-                </object>
-                <array p="order">array("publishdate"=>"desc")</array>
-                <array p="fields">array()</array>
-            </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
-            <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
-            <null m="getProcStock ()"/>
-            <null m="getBody ()"/>
-        </object>'),
-        array('<?xml version="1.0"?>
-          <method type="selectfirst">
-     <parameter />
-     <conditions />
-     <order />
-     <limit />
-  </method>',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value="foo"/>
-            <string p="type" value="select"/>
-            <boolean p="distinct" value="false"/>
-            <object m="getConditions()" class="jDaoConditions">
-                <object p="condition" class="jDaoCondition">
-                    <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
-                </object>
-                <array p="order">array("publishdate"=>"desc")</array>
-                <array p="fields">array()</array>
-            </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
-            <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
-            <null m="getProcStock ()"/>
-            <null m="getBody ()"/>
-        </object>'),
-
-        array('<?xml version="1.0"?>
-          <method type="count">
-     <parameter />
-     <conditions />
-  </method>',
-        '<?xml version="1.0"?>
-        <object>
-             <string p="name" value="foo"/>
-            <string p="type" value="select"/>
-           <boolean p="distinct" value="false"/>
-            <object m="getConditions()" class="jDaoConditions">
-                <object p="condition" class="jDaoCondition">
-                    <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
-                </object>
-                <array p="order">array("publishdate"=>"desc")</array>
-                <array p="fields">array()</array>
-            </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
-            <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
-            <null m="getProcStock ()"/>
-            <null m="getBody ()"/>
-        </object>'),
-
-        array('<?xml version="1.0"?>
-         <method type="delete">
-     <parameter />
-     <conditions />
-  </method>',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value="foo"/>
-            <string p="type" value="select"/>
-            <boolean p="distinct" value="false"/>
-            <object m="getConditions()" class="jDaoConditions">
-                <object p="condition" class="jDaoCondition">
-                    <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
-                </object>
-                <array p="order">array("publishdate"=>"desc")</array>
-                <array p="fields">array()</array>
-            </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
-            <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
-            <null m="getProcStock ()"/>
-            <null m="getBody ()"/>
-        </object>'),
-
-        array('<?xml version="1.0"?>
-        <method type="update">
-     <parameter />
-     <conditions />
-     <values />
-  </method>',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value="foo"/>
-            <string p="type" value="select"/>
-            <boolean p="distinct" value="false"/>
-            <object m="getConditions()" class="jDaoConditions">
-                <object p="condition" class="jDaoCondition">
-                    <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
-                </object>
-                <array p="order">array("publishdate"=>"desc")</array>
-                <array p="fields">array()</array>
-            </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
-            <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
-            <null m="getProcStock ()"/>
-            <null m="getBody ()"/>
-        </object>'),
-
-        array('<?xml version="1.0"?>
-          <method type="php">
-    <parameter />
-    <body><![CDATA[
-        ici le code php de la méthode
-    ]]></body>
-  </method>',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value="foo"/>
-            <string p="type" value="select"/>
-            <boolean p="distinct" value="false"/>
-            <object m="getConditions()" class="jDaoConditions">
-                <object p="condition" class="jDaoCondition">
-                    <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
-                </object>
-                <array p="order">array("publishdate"=>"desc")</array>
-                <array p="fields">array()</array>
-            </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
-            <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
-            <null m="getProcStock ()"/>
-            <null m="getBody ()"/>
-        </object>'),
-*/
 
     );
 

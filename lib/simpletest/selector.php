@@ -20,7 +20,7 @@
 	 *    @subpackage WebTester
      */
     class SimpleByName {
-        var $_name;
+        protected $_name;
 
         /**
          *    Stashes the name for later comparison.
@@ -47,7 +47,7 @@
 	 *    @subpackage WebTester
      */
     class SimpleByLabel {
-        var $_label;
+        protected $_label;
 
         /**
          *    Stashes the name for later comparison.
@@ -78,7 +78,7 @@
 	 *    @subpackage WebTester
      */
     class SimpleById {
-        var $_id;
+        protected $_id;
 
         /**
          *    Stashes the name for later comparison.
@@ -105,7 +105,7 @@
 	 *    @subpackage WebTester
      */
     class SimpleByLabelOrName {
-        var $_label;
+        protected $_label;
 
         /**
          *    Stashes the name/label for later comparison.

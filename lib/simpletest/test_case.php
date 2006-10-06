@@ -40,9 +40,9 @@
 	 *    @subpackage	UnitTester
      */
     class SimpleTestCase {
-        var $_label = false;
-        var $_reporter;
-        var $_observers;
+        protected $_label = false;
+        protected $_reporter;
+        protected $_observers;
 
         /**
          *    Sets up the test with no display.
@@ -71,9 +71,9 @@
          *    @access public
          */
         function &createInvoker() {
-            $invoker = &new SimpleErrorTrappingInvoker(new SimpleInvoker($this));
+            $invoker = new SimpleErrorTrappingInvoker(new SimpleInvoker($this));
             if (version_compare(phpversion(), '5') >= 0) {
-                $invoker = &new SimpleExceptionTrappingInvoker($invoker);
+                $invoker = new SimpleExceptionTrappingInvoker($invoker);
             }
             return $invoker;
         }
@@ -391,10 +391,10 @@
 	 *    @subpackage	UnitTester
      */
     class GroupTest {
-        var $_label;
-        var $_test_cases;
-        var $_old_track_errors;
-        var $_xdebug_is_enabled;
+        protected $_label;
+        protected $_test_cases;
+        protected $_old_track_errors;
+        protected $_xdebug_is_enabled;
 
         /**
          *    Sets the name of the test suite.
@@ -441,7 +441,7 @@
          */
         function addTestClass($class) {
             if ($this->_getBaseTestCase($class) == 'grouptest') {
-                $this->_test_cases[] = &new $class();
+                $this->_test_cases[] = new $class();
             } else {
                 $this->_test_cases[] = $class;
             }
@@ -554,7 +554,7 @@
          */
         function &_createGroupFromClasses($title, $classes) {
             SimpleTest::ignoreParentsIfIgnored($classes);
-            $group = &new GroupTest($title);
+            $group = new GroupTest($title);
             foreach ($classes as $class) {
                 if (! SimpleTest::isIgnored($class)) {
                     $group->addTestClass($class);
@@ -601,7 +601,7 @@
             for ($i = 0, $count = count($this->_test_cases); $i < $count; $i++) {
                 if (is_string($this->_test_cases[$i])) {
                     $class = $this->_test_cases[$i];
-                    $test = &new $class();
+                    $test = new $class();
                     $test->run($reporter);
                 } else {
                     $this->_test_cases[$i]->run($reporter);
@@ -636,8 +636,8 @@
 	 *    @subpackage	UnitTester
      */
     class BadGroupTest {
-        var $_label;
-        var $_error;
+        protected $_label;
+        protected $_error;
 
         /**
          *    Sets the name of the test suite and error message.

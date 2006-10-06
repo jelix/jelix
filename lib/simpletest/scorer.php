@@ -19,10 +19,10 @@
      *    @abstract
      */
     class SimpleScorer {
-        var $_passes;
-        var $_fails;
-        var $_exceptions;
-        var $_is_dry_run;
+        protected $_passes;
+        protected $_fails;
+        protected $_exceptions;
+        protected $_is_dry_run;
 
         /**
          *    Starts the test run with no results.
@@ -223,9 +223,9 @@
 	 *	  @subpackage UnitTester
      */
     class SimpleReporter extends SimpleScorer {
-        var $_test_stack;
-        var $_size;
-        var $_progress;
+        protected $_test_stack;
+        protected $_size;
+        protected $_progress;
 
         /**
          *    Starts the display with no results in.
@@ -390,7 +390,7 @@
 	 *	  @subpackage UnitTester
      */
     class SimpleReporterDecorator {
-        var $_reporter;
+        protected $_reporter;
 
         /**
          *    Mediates between teh reporter and the test case.
@@ -566,7 +566,7 @@
 	 *	  @subpackage UnitTester
      */
     class MultipleReporter {
-        var $_reporters = array();
+        protected $_reporters = array();
 
         /**
          *    Adds a reporter to the subscriber list.

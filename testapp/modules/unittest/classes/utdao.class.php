@@ -33,7 +33,6 @@ class UTDao extends jUnitTestCase {
             <string key="name" value="news" />
             <string key="realname" value="news" />
             <array key="pk" value="">array(\'news_id\')</array>
-            <!--<array key="fk" value="">array()</array>-->
             <array key="fields">array()</array>
         </array>
     </array>
@@ -59,7 +58,6 @@ class UTDao extends jUnitTestCase {
             <string key="name" value="news" />
             <string key="realname" value="foo_news" />
             <array key="pk" value="">array(\'news_id\')</array>
-            <!--<array key="fk" value="">array()</array>-->
             <array key="fields">array()</array>
         </array>
     </array>
@@ -88,7 +86,6 @@ class UTDao extends jUnitTestCase {
             <string key="name" value="news" />
             <string key="realname" value="news" />
             <array key="pk" value="">array(\'news_id\')</array>
-            <!-- <array key="fk" value="">array()</array>-->
             <array key="fields">array()</array>
         </array>
         <array key="news_rubriques">
@@ -102,7 +99,7 @@ class UTDao extends jUnitTestCase {
     <string method="getPrimaryTable()" value="news"/>
     <array method="getMethods()">array()</array>
     <array method="getOuterJoins()">array()</array>
-    <array method="getInnerJoins()">array(array(\'news_rubriques\',0))</array>
+    <array method="getInnerJoins()">array(\'news_rubriques\')</array>
 </object>'
 ),
 
@@ -136,7 +133,7 @@ class UTDao extends jUnitTestCase {
     </array>
     <string method="getPrimaryTable()" value="news"/>
     <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array(\'news_rubriques\')</array>
+    <array method="getOuterJoins()">array(array(\'news_rubriques\',0))</array>
     <array method="getInnerJoins()">array()</array>
 </object>'
 ),
@@ -179,8 +176,8 @@ class UTDao extends jUnitTestCase {
     </array>
     <string method="getPrimaryTable()" value="news"/>
     <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array(\'news_rubriques\')</array>
-    <array method="getInnerJoins()">array(array(\'news_rubriques\',0))</array>
+    <array method="getOuterJoins()">array(array(\'news_rubriques\',0))</array>
+    <array method="getInnerJoins()">array(\'news_author\')</array>
 </object>'
 ),
 

@@ -69,10 +69,16 @@ class jUnitTestCase extends UnitTestCase {
             case 'array':
                 $ok = $this->assertIsA($value,'array', $name.': not an array');
                 if(!$ok) return false;
-                $children = $xml->children();
-                if(count($children)){
+
+                if(trim((string)$xml) != ''){
+                    if( false === eval('$v='.(string)$xml.';')){
+                        $this->fail("invalid php array syntax");
+                        return false;
+                    }
+                    return $this->assertEqual($value,$v,'negative test on '.$name.': %s');
+                }else{
                     $key=0;
-                    foreach ($children as $child) {
+                    foreach ($xml->children() as $child) {
                         if(isset($child['key'])){
                             $n = (string)$child['key'];
                             if(is_numeric($n))
@@ -86,12 +92,6 @@ class jUnitTestCase extends UnitTestCase {
                         }else $ok= false;
                     }
                     return $ok;
-                }else{
-                    if( false === eval('$v='.(string)$xml.';')){
-                        $this->fail("invalid php array syntax");
-                        return false;
-                    }
-                    return $this->assertEqual($value,$v,'negative test on '.$name.': %s');
                 }
                 break;
 
