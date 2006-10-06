@@ -1,32 +1,35 @@
 <?php
     /**
-     *   Base include file for SimpleTest
-     *   @package SimpleTest
-     *   @subpackage WebTester
-     *   @version $Id: browser.php,v 1.141 2005/02/22 02:39:21 lastcraft Exp $
+     *	Base include file for SimpleTest
+     *	@package	SimpleTest
+     *	@subpackage	WebTester
+     *	@version	$Id: browser.php,v 1.162 2006/02/05 01:07:49 lastcraft Exp $
      */
 
     /**#@+
-     *   include other SimpleTest class files
+     *	include other SimpleTest class files
      */
-    require_once(dirname(__FILE__) . '/options.php');
+    require_once(dirname(__FILE__) . '/simpletest.php');
     require_once(dirname(__FILE__) . '/http.php');
     require_once(dirname(__FILE__) . '/encoding.php');
     require_once(dirname(__FILE__) . '/page.php');
+    require_once(dirname(__FILE__) . '/selector.php');
     require_once(dirname(__FILE__) . '/frames.php');
     require_once(dirname(__FILE__) . '/user_agent.php');
     /**#@-*/
 
-    define('DEFAULT_MAX_NESTED_FRAMES', 3);
+    if (!defined('DEFAULT_MAX_NESTED_FRAMES')) {
+        define('DEFAULT_MAX_NESTED_FRAMES', 3);
+    }
 
     /**
      *    Browser history list.
-    *    @package SimpleTest
-    *    @subpackage WebTester
+	 *    @package SimpleTest
+	 *    @subpackage WebTester
      */
     class SimpleBrowserHistory {
-        protected $_sequence;
-        protected $_position;
+        var $_sequence;
+        var $_position;
 
         /**
          *    Starts empty.
@@ -66,31 +69,16 @@
 
         /**
          *    Adds a successfully fetched page to the history.
-         *    @param string $method                 GET or POST.
          *    @param SimpleUrl $url                 URL of fetch.
-         *    @param SimpleFormEncoding $parameters Any post data with the fetch.
+         *    @param SimpleEncoding $parameters     Any post data with the fetch.
          *    @access public
          */
-        function recordEntry($method, $url, $parameters) {
+        function recordEntry($url, $parameters) {
             $this->_dropFuture();
             array_push(
                     $this->_sequence,
-                    array('method' => $method, 'url' => $url, 'parameters' => $parameters));
+                    array('url' => $url, 'parameters' => $parameters));
             $this->_position++;
-        }
-
-        /**
-         *    Last fetching method for current history
-         *    position.
-         *    @return string      GET or POST for this point in
-         *                        the history.
-         *    @access public
-         */
-        function getMethod() {
-            if ($this->_isEmpty()) {
-                return false;
-            }
-            return $this->_sequence[$this->_position]['method'];
         }
 
         /**
@@ -166,15 +154,15 @@
      *    Simulated web browser. This is an aggregate of
      *    the user agent, the HTML parsing, request history
      *    and the last header set.
-    *    @package SimpleTest
-    *    @subpackage WebTester
+	 *    @package SimpleTest
+	 *    @subpackage WebTester
      */
     class SimpleBrowser {
-        protected $_user_agent;
-        protected $_page;
-        protected $_history;
-        protected $_ignore_frames;
-        protected $_maximum_nested_frames;
+        var $_user_agent;
+        var $_page;
+        var $_history;
+        var $_ignore_frames;
+        var $_maximum_nested_frames;
 
         /**
          *    Starts with a fresh browser with no
@@ -186,10 +174,10 @@
         function SimpleBrowser() {
             $this->_user_agent = &$this->_createUserAgent();
             $this->_user_agent->useProxy(
-                    SimpleTestOptions::getDefaultProxy(),
-                    SimpleTestOptions::getDefaultProxyUsername(),
-                    SimpleTestOptions::getDefaultProxyPassword());
-            $this->_page = new SimplePage();
+                    SimpleTest::getDefaultProxy(),
+                    SimpleTest::getDefaultProxyUsername(),
+                    SimpleTest::getDefaultProxyPassword());
+            $this->_page = &new SimplePage();
             $this->_history = &$this->_createHistory();
             $this->_ignore_frames = false;
             $this->_maximum_nested_frames = DEFAULT_MAX_NESTED_FRAMES;
@@ -201,7 +189,8 @@
          *    @access protected
          */
         function &_createUserAgent() {
-            return new SimpleUserAgent();
+            $user_agent = &new SimpleUserAgent();
+            return $user_agent;
         }
 
         /**
@@ -210,7 +199,8 @@
          *    @access protected
          */
         function &_createHistory() {
-            return new SimpleBrowserHistory();
+            $history = &new SimpleBrowserHistory();
+            return $history;
         }
 
         /**
@@ -230,6 +220,22 @@
         function useFrames() {
             $this->_ignore_frames = false;
         }
+        
+        /**
+         *    Switches off cookie sending and recieving.
+         *    @access public
+         */
+        function ignoreCookies() {
+            $this->_user_agent->ignoreCookies();
+        }
+        
+        /**
+         *    Switches back on the cookie sending and recieving.
+         *    @access public
+         */
+        function useCookies() {
+            $this->_user_agent->useCookies();
+        }
 
         /**
          *    Parses the raw content into a page. Will load further
@@ -237,68 +243,82 @@
          *    @param SimpleHttpResponse $response    Response from fetch.
          *    @param integer $depth                  Nested frameset depth.
          *    @return SimplePage                     Parsed HTML.
-         *    @access protected
+         *    @access private
          */
         function &_parse($response, $depth = 0) {
-            $builder = new SimplePageBuilder();
-            $page = &$builder->parse($response);
+            $page = &$this->_buildPage($response);
             if ($this->_ignore_frames || ! $page->hasFrames() || ($depth > $this->_maximum_nested_frames)) {
                 return $page;
             }
-            $frameset = new SimpleFrameset($page);
+            $frameset = &new SimpleFrameset($page);
             foreach ($page->getFrameset() as $key => $url) {
-                $frame = &$this->_fetch('GET', $url, array(), $depth + 1);
+                $frame = &$this->_fetch($url, new SimpleGetEncoding(), $depth + 1);
                 $frameset->addFrame($frame, $key);
             }
             return $frameset;
         }
+        
+        /**
+         *    Assembles the parsing machinery and actually parses
+         *    a single page. Frees all of the builder memory and so
+         *    unjams the PHP memory management.
+         *    @param SimpleHttpResponse $response    Response from fetch.
+         *    @return SimplePage                     Parsed top level page.
+         *    @access protected
+         */
+        function &_buildPage($response) {
+            $builder = &new SimplePageBuilder();
+            $page = &$builder->parse($response);
+            $builder->free();
+            unset($builder);
+            return $page;
+        }
 
         /**
-         *    Fetches a page.
-         *    @param string $method                   GET or POST.
-         *    @param string/SimpleUrl $url            Target to fetch as string.
-         *    @param SimpleFormEncoding $parameters   POST parameters.
-         *    @param integer $depth                   Nested frameset depth protection.
-         *    @return SimplePage                      Parsed page.
+         *    Fetches a page. Jointly recursive with the _parse()
+         *    method as it descends a frameset.
+         *    @param string/SimpleUrl $url          Target to fetch.
+         *    @param SimpleEncoding $encoding       GET/POST parameters.
+         *    @param integer $depth                 Nested frameset depth protection.
+         *    @return SimplePage                    Parsed page.
          *    @access private
          */
-        function &_fetch($method, $url, $parameters, $depth = 0) {
-            $response = &$this->_user_agent->fetchResponse($method, $url, $parameters);
+        function &_fetch($url, $encoding, $depth = 0) {
+            $response = &$this->_user_agent->fetchResponse($url, $encoding);
             if ($response->isError()) {
-                return new SimplePage($response);
+                $page = &new SimplePage($response);
+            } else {
+                $page = &$this->_parse($response, $depth);
             }
-            return $this->_parse($response, $depth);
+            return $page;
         }
 
         /**
          *    Fetches a page or a single frame if that is the current
          *    focus.
-         *    @param string $method                   GET or POST.
-         *    @param string/SimpleUrl $url            Target to fetch as string.
-         *    @param SimpleFormEncoding $parameters   POST parameters.
+         *    @param SimpleUrl $url                   Target to fetch.
+         *    @param SimpleEncoding $parameters       GET/POST parameters.
          *    @return string                          Raw content of page.
          *    @access private
          */
-        function _load($method, $url, $parameters = false) {
+        function _load($url, $parameters) {
             $frame = $url->getTarget();
             if (! $frame || ! $this->_page->hasFrames() || (strtolower($frame) == '_top')) {
-                return $this->_loadPage($method, $url, $parameters);
+                return $this->_loadPage($url, $parameters);
             }
-            return $this->_loadFrame(array($frame), $method, $url, $parameters);
+            return $this->_loadFrame(array($frame), $url, $parameters);
         }
 
         /**
          *    Fetches a page and makes it the current page/frame.
-         *    @param string $method                   GET or POST.
          *    @param string/SimpleUrl $url            Target to fetch as string.
-         *    @param SimpleFormEncoding $parameters   POST parameters.
+         *    @param SimplePostEncoding $parameters   POST parameters.
          *    @return string                          Raw content of page.
          *    @access private
          */
-        function _loadPage($method, $url, $parameters = false) {
-            $this->_page = &$this->_fetch(strtoupper($method), $url, $parameters);
+        function _loadPage($url, $parameters) {
+            $this->_page = &$this->_fetch($url, $parameters);
             $this->_history->recordEntry(
-                    $this->_page->getMethod(),
                     $this->_page->getUrl(),
                     $this->_page->getRequestData());
             return $this->_page->getRaw();
@@ -308,14 +328,13 @@
          *    Fetches a frame into the existing frameset replacing the
          *    original.
          *    @param array $frames                    List of names to drill down.
-         *    @param string $method                   GET or POST.
          *    @param string/SimpleUrl $url            Target to fetch as string.
          *    @param SimpleFormEncoding $parameters   POST parameters.
          *    @return string                          Raw content of page.
          *    @access private
          */
-        function _loadFrame($frames, $method, $url, $parameters = false) {
-            $page = &$this->_fetch(strtoupper($method), $url, $parameters);
+        function _loadFrame($frames, $url, $parameters) {
+            $page = &$this->_fetch($url, $parameters);
             $this->_page->setFrame($frames, $page);
         }
 
@@ -435,7 +454,7 @@
          *    Fetches the page content with a HEAD request.
          *    Will affect cookies, but will not change the base URL.
          *    @param string/SimpleUrl $url                Target to fetch as string.
-         *    @param hash/SimpleFormEncoding $parameters  Additional parameters for
+         *    @param hash/SimpleHeadEncoding $parameters  Additional parameters for
          *                                                HEAD request.
          *    @return boolean                             True if successful.
          *    @access public
@@ -444,16 +463,10 @@
             if (! is_object($url)) {
                 $url = new SimpleUrl($url);
             }
-            if (is_array($parameters)) {
-                $parameters = new SimpleFormEncoding($parameters);
-            }
             if ($this->getUrl()) {
                 $url = $url->makeAbsolute($this->getUrl());
             }
-            $response = &$this->_user_agent->fetchResponse(
-                    'HEAD',
-                    $url,
-                    $parameters);
+            $response = &$this->_user_agent->fetchResponse($url, new SimpleHeadEncoding($parameters));
             return ! $response->isError();
         }
 
@@ -469,13 +482,10 @@
             if (! is_object($url)) {
                 $url = new SimpleUrl($url);
             }
-            if (is_array($parameters)) {
-                $parameters = new SimpleFormEncoding($parameters);
-            }
             if ($this->getUrl()) {
                 $url = $url->makeAbsolute($this->getUrl());
             }
-            return $this->_load('GET', $url, $parameters);
+            return $this->_load($url, new SimpleGetEncoding($parameters));
         }
 
         /**
@@ -489,13 +499,10 @@
             if (! is_object($url)) {
                 $url = new SimpleUrl($url);
             }
-            if (is_array($parameters)) {
-                $parameters = new SimpleFormEncoding($parameters);
-            }
             if ($this->getUrl()) {
                 $url = $url->makeAbsolute($this->getUrl());
             }
-            return $this->_load('POST', $url, $parameters);
+            return $this->_load($url, new SimplePostEncoding($parameters));
         }
 
         /**
@@ -511,16 +518,12 @@
             if (count($frames) > 0) {
                 $this->_loadFrame(
                         $frames,
-                        $this->_page->getMethod(),
                         $this->_page->getUrl(),
                         $this->_page->getRequestData());
                 return $this->_page->getRaw();
             }
-            if ($method = $this->_history->getMethod()) {
-                $this->_page = &$this->_fetch(
-                        $method,
-                        $this->_history->getUrl(),
-                        $this->_history->getParameters());
+            if ($url = $this->_history->getUrl()) {
+                $this->_page = &$this->_fetch($url, $this->_history->getParameters());
                 return $this->_page->getRaw();
             }
             return false;
@@ -529,7 +532,8 @@
         /**
          *    Equivalent to hitting the back button on the
          *    browser. The browser history is unchanged on
-         *    failure.
+         *    failure. The page content is refetched as there
+         *    is no concept of content caching in SimpleTest.
          *    @return boolean     True if history entry and
          *                        fetch succeeded
          *    @access public
@@ -548,7 +552,8 @@
         /**
          *    Equivalent to hitting the forward button on the
          *    browser. The browser history is unchanged on
-         *    failure.
+         *    failure. The page content is refetched as there
+         *    is no concept of content caching in SimpleTest.
          *    @return boolean     True if history entry and
          *                        fetch succeeded
          *    @access public
@@ -765,13 +770,25 @@
 
         /**
          *    Sets all form fields with that name.
+         *    @param string $label   Name or label of field in forms.
+         *    @param string $value   New value of field.
+         *    @return boolean        True if field exists, otherwise false.
+         *    @access public
+         */
+        function setField($label, $value) {
+            return $this->_page->setField(new SimpleByLabelOrName($label), $value);
+        }
+
+        /**
+         *    Sets all form fields with that name. Will use label if
+         *    one is available (not yet implemented).
          *    @param string $name    Name of field in forms.
          *    @param string $value   New value of field.
          *    @return boolean        True if field exists, otherwise false.
          *    @access public
          */
-        function setField($name, $value) {
-            return $this->_page->setField($name, $value);
+        function setFieldByName($name, $value) {
+            return $this->_page->setField(new SimpleByName($name), $value);
         }
 
         /**
@@ -782,7 +799,20 @@
          *    @access public
          */
         function setFieldById($id, $value) {
-            return $this->_page->setFieldById($id, $value);
+            return $this->_page->setField(new SimpleById($id), $value);
+        }
+
+        /**
+         *    Accessor for a form element value within the page.
+         *    Finds the first match.
+         *    @param string $label       Field label.
+         *    @return string/boolean     A value if the field is
+         *                               present, false if unchecked
+         *                               and null if missing.
+         *    @access public
+         */
+        function getField($label) {
+            return $this->_page->getField(new SimpleByLabelOrName($label));
         }
 
         /**
@@ -794,8 +824,8 @@
          *                               and null if missing.
          *    @access public
          */
-        function getField($name) {
-            return $this->_page->getField($name);
+        function getFieldByName($name) {
+            return $this->_page->getField(new SimpleByName($name));
         }
 
         /**
@@ -807,7 +837,7 @@
          *    @access public
          */
         function getFieldById($id) {
-            return $this->_page->getFieldById($id);
+            return $this->_page->getField(new SimpleById($id));
         }
 
         /**
@@ -820,13 +850,12 @@
          *    @access public
          */
         function clickSubmit($label = 'Submit', $additional = false) {
-            if (! ($form = &$this->_page->getFormBySubmitLabel($label))) {
+            if (! ($form = &$this->_page->getFormBySubmit(new SimpleByLabel($label)))) {
                 return false;
             }
             $success = $this->_load(
-                    $form->getMethod(),
                     $form->getAction(),
-                    $form->submitButtonByLabel($label, $additional));
+                    $form->submitButton(new SimpleByLabel($label), $additional));
             return ($success ? $this->getContent() : $success);
         }
 
@@ -839,13 +868,12 @@
          *    @access public
          */
         function clickSubmitByName($name, $additional = false) {
-            if (! ($form = &$this->_page->getFormBySubmitName($name))) {
+            if (! ($form = &$this->_page->getFormBySubmit(new SimpleByName($name)))) {
                 return false;
             }
             $success = $this->_load(
-                    $form->getMethod(),
                     $form->getAction(),
-                    $form->submitButtonByName($name, $additional));
+                    $form->submitButton(new SimpleByName($name), $additional));
             return ($success ? $this->getContent() : $success);
         }
 
@@ -858,13 +886,12 @@
          *    @access public
          */
         function clickSubmitById($id, $additional = false) {
-            if (! ($form = &$this->_page->getFormBySubmitId($id))) {
+            if (! ($form = &$this->_page->getFormBySubmit(new SimpleById($id)))) {
                 return false;
             }
             $success = $this->_load(
-                    $form->getMethod(),
                     $form->getAction(),
-                    $form->submitButtonById($id, $additional));
+                    $form->submitButton(new SimpleById($id), $additional));
             return ($success ? $this->getContent() : $success);
         }
 
@@ -882,13 +909,12 @@
          *    @access public
          */
         function clickImage($label, $x = 1, $y = 1, $additional = false) {
-            if (! ($form = &$this->_page->getFormByImageLabel($label))) {
+            if (! ($form = &$this->_page->getFormByImage(new SimpleByLabel($label)))) {
                 return false;
             }
             $success = $this->_load(
-                    $form->getMethod(),
                     $form->getAction(),
-                    $form->submitImageByLabel($label, $x, $y, $additional));
+                    $form->submitImage(new SimpleByLabel($label), $x, $y, $additional));
             return ($success ? $this->getContent() : $success);
         }
 
@@ -906,13 +932,12 @@
          *    @access public
          */
         function clickImageByName($name, $x = 1, $y = 1, $additional = false) {
-            if (! ($form = &$this->_page->getFormByImageName($name))) {
+            if (! ($form = &$this->_page->getFormByImage(new SimpleByName($name)))) {
                 return false;
             }
             $success = $this->_load(
-                    $form->getMethod(),
                     $form->getAction(),
-                    $form->submitImageByName($name, $x, $y, $additional));
+                    $form->submitImage(new SimpleByName($name), $x, $y, $additional));
             return ($success ? $this->getContent() : $success);
         }
 
@@ -929,13 +954,12 @@
          *    @access public
          */
         function clickImageById($id, $x = 1, $y = 1, $additional = false) {
-            if (! ($form = &$this->_page->getFormByImageId($id))) {
+            if (! ($form = &$this->_page->getFormByImage(new SimpleById($id)))) {
                 return false;
             }
             $success = $this->_load(
-                    $form->getMethod(),
                     $form->getAction(),
-                    $form->submitImageById($id, $x, $y, $additional));
+                    $form->submitImage(new SimpleById($id), $x, $y, $additional));
             return ($success ? $this->getContent() : $success);
         }
 
@@ -951,7 +975,6 @@
                 return false;
             }
             $success = $this->_load(
-                    $form->getMethod(),
                     $form->getAction(),
                     $form->submit());
             return ($success ? $this->getContent() : $success);
@@ -975,7 +998,7 @@
             if (count($urls) < $index + 1) {
                 return false;
             }
-            $this->_load('GET', $urls[$index]);
+            $this->_load($urls[$index], new SimpleGetEncoding());
             return $this->getContent();
         }
 
@@ -999,7 +1022,7 @@
             if (! ($url = $this->_page->getUrlById($id))) {
                 return false;
             }
-            $this->_load('GET', $url);
+            $this->_load($url, new SimpleGetEncoding());
             return $this->getContent();
         }
 
@@ -1011,6 +1034,24 @@
          */
         function isLinkById($id) {
             return (boolean)$this->_page->getUrlById($id);
+        }
+
+        /**
+         *    Clicks a visible text item. Will first try buttons,
+         *    then links and then images.
+         *    @param string $label        Visible text or alt text.
+         *    @return string/boolean      Raw page or false.
+         *    @access public
+         */
+        function click($label) {
+            $raw = $this->clickSubmit($label);
+            if (! $raw) {
+                $raw = $this->clickLink($label);
+            }
+            if (! $raw) {
+                $raw = $this->clickImage($label);
+            }
+            return $raw;
         }
     }
 ?>

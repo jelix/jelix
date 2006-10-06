@@ -1,16 +1,15 @@
 <?php
     /**
-     *   base include file for SimpleTest
-     *   @package SimpleTest
-     *   @subpackage UnitTester
-     *   @version $Id: unit_tester.php,v 1.24 2005/01/13 01:31:53 lastcraft Exp $
+     *	base include file for SimpleTest
+     *	@package	SimpleTest
+     *	@subpackage	UnitTester
+     *	@version	$Id: unit_tester.php,v 1.31 2006/02/06 06:05:18 lastcraft Exp $
      */
 
     /**#@+
-     *   include other SimpleTest class files
+     *	include other SimpleTest class files
      */
-    require_once(dirname(__FILE__) . '/simple_test.php');
-    require_once(dirname(__FILE__) . '/errors.php');
+    require_once(dirname(__FILE__) . '/test_case.php');
     require_once(dirname(__FILE__) . '/dumper.php');
     /**#@-*/
 
@@ -18,8 +17,8 @@
      *    Standard unit test class for day to day testing
      *    of PHP code XP style. Adds some useful standard
      *    assertions.
-    *   @package  SimpleTest
-    *   @subpackage  UnitTester
+	 *	  @package	SimpleTest
+	 *	  @subpackage	UnitTester
      */
     class UnitTestCase extends SimpleTestCase {
 
@@ -45,7 +44,7 @@
          *    @access public
          */
         function assertNull($value, $message = "%s") {
-            $dumper = new SimpleDumper();
+            $dumper = &new SimpleDumper();
             $message = sprintf(
                     $message,
                     "[" . $dumper->describeValue($value) . "] should be null");
@@ -60,7 +59,7 @@
          *    @access public
          */
         function assertNotNull($value, $message = "%s") {
-            $dumper = new SimpleDumper();
+            $dumper = &new SimpleDumper();
             $message = sprintf(
                     $message,
                     "[" . $dumper->describeValue($value) . "] should not be null");
@@ -78,7 +77,7 @@
          *    @access public
          */
         function assertIsA($object, $type, $message = "%s") {
-            return $this->assertExpectation(
+            return $this->assert(
                     new IsAExpectation($type),
                     $object,
                     $message);
@@ -95,7 +94,7 @@
          *    @access public
          */
         function assertNotA($object, $type, $message = "%s") {
-            return $this->assertExpectation(
+            return $this->assert(
                     new NotAExpectation($type),
                     $object,
                     $message);
@@ -111,7 +110,7 @@
          *    @access public
          */
         function assertEqual($first, $second, $message = "%s") {
-            return $this->assertExpectation(
+            return $this->assert(
                     new EqualExpectation($first),
                     $second,
                     $message);
@@ -127,8 +126,42 @@
          *    @access public
          */
         function assertNotEqual($first, $second, $message = "%s") {
-            return $this->assertExpectation(
+            return $this->assert(
                     new NotEqualExpectation($first),
+                    $second,
+                    $message);
+        }
+
+        /**
+         *    Will trigger a pass if the if the first parameter
+         *    is near enough to the second by the margin.
+         *    @param mixed $first          Value to compare.
+         *    @param mixed $second         Value to compare.
+         *    @param mixed $margin         Fuzziness of match.
+         *    @param string $message       Message to display.
+         *    @return boolean              True on pass
+         *    @access public
+         */
+        function assertWithinMargin($first, $second, $margin, $message = "%s") {
+            return $this->assert(
+                    new WithinMarginExpectation($first, $margin),
+                    $second,
+                    $message);
+        }
+
+        /**
+         *    Will trigger a pass if the two parameters differ
+         *    by more than the margin.
+         *    @param mixed $first          Value to compare.
+         *    @param mixed $second         Value to compare.
+         *    @param mixed $margin         Fuzziness of match.
+         *    @param string $message       Message to display.
+         *    @return boolean              True on pass
+         *    @access public
+         */
+        function assertOutsideMargin($first, $second, $margin, $message = "%s") {
+            return $this->assert(
+                    new OutsideMarginExpectation($first, $margin),
                     $second,
                     $message);
         }
@@ -143,7 +176,7 @@
          *    @access public
          */
         function assertIdentical($first, $second, $message = "%s") {
-            return $this->assertExpectation(
+            return $this->assert(
                     new IdenticalExpectation($first),
                     $second,
                     $message);
@@ -159,7 +192,7 @@
          *    @access public
          */
         function assertNotIdentical($first, $second, $message = "%s") {
-            return $this->assertExpectation(
+            return $this->assert(
                     new NotIdenticalExpectation($first),
                     $second,
                     $message);
@@ -175,7 +208,7 @@
          *    @access public
          */
         function assertReference(&$first, &$second, $message = "%s") {
-            $dumper = new SimpleDumper();
+            $dumper = &new SimpleDumper();
             $message = sprintf(
                     $message,
                     "[" . $dumper->describeValue($first) .
@@ -188,15 +221,33 @@
 
         /**
          *    Will trigger a pass if both parameters refer
-         *    to different objects. Fail otherwise.
+         *    to different objects. Fail otherwise. The objects
+         *    have to be identical though.
          *    @param mixed $first           Object reference to check.
          *    @param mixed $second          Hopefully not the same object.
          *    @param string $message        Message to display.
          *    @return boolean               True on pass
          *    @access public
          */
+        function assertClone(&$first, &$second, $message = "%s") {
+            $dumper = &new SimpleDumper();
+            $message = sprintf(
+                    $message,
+                    "[" . $dumper->describeValue($first) .
+                            "] and [" . $dumper->describeValue($second) .
+                            "] should not be the same object");
+            $identical = &new IdenticalExpectation($first);
+            return $this->assertTrue(
+                    $identical->test($second) &&
+                            ! SimpleTestCompatibility::isReference($first, $second),
+                    $message);
+        }
+
+        /**
+         *    @deprecated
+         */
         function assertCopy(&$first, &$second, $message = "%s") {
-            $dumper = new SimpleDumper();
+            $dumper = &new SimpleDumper();
             $message = sprintf(
                     $message,
                     "[" . $dumper->describeValue($first) .
@@ -217,11 +268,18 @@
          *    @return boolean           True on pass
          *    @access public
          */
-        function assertWantedPattern($pattern, $subject, $message = "%s") {
-            return $this->assertExpectation(
-                    new WantedPatternExpectation($pattern),
+        function assertPattern($pattern, $subject, $message = "%s") {
+            return $this->assert(
+                    new PatternExpectation($pattern),
                     $subject,
                     $message);
+        }
+
+        /**
+         *	  @deprecated
+         */
+        function assertWantedPattern($pattern, $subject, $message = "%s") {
+        	return $this->assertPattern($pattern, $subject, $message);
         }
 
         /**
@@ -234,11 +292,18 @@
          *    @return boolean           True on pass
          *    @access public
          */
-        function assertNoUnwantedPattern($pattern, $subject, $message = "%s") {
-            return $this->assertExpectation(
-                    new UnwantedPatternExpectation($pattern),
+        function assertNoPattern($pattern, $subject, $message = "%s") {
+            return $this->assert(
+                    new NoPatternExpectation($pattern),
                     $subject,
                     $message);
+        }
+
+        /**
+         *	  @deprecated
+         */
+        function assertNoUnwantedPattern($pattern, $subject, $message = "%s") {
+        	return $this->assertNoPattern($pattern, $subject, $message);
         }
 
         /**
@@ -272,32 +337,37 @@
             }
             list($severity, $content, $file, $line, $globals) = $queue->extract();
             $severity = SimpleErrorQueue::getSeverityAsString($severity);
-            return $this->assertTrue(
-                    ! $expected || ($expected == $content),
-                    "Expected [$expected] in PHP error [$content] severity [$severity] in [$file] line [$line]");
+            if (! $expected) {
+                return $this->pass(
+                        "Captured a PHP error of [$content] severity [$severity] in [$file] line [$line] -> %s");
+            }
+            $expected = $this->_coerceToExpectation($expected);
+            return $this->assert(
+                    $expected,
+                    $content,
+                    "Expected PHP error [$content] severity [$severity] in [$file] line [$line] -> %s");
         }
 
         /**
-         *    Confirms that an error has occoured and
-         *    that the error text matches a Perl regular
-         *    expression.
-         *    @param string $pattern   Perl regular expresion to
-         *                              match against.
-         *    @param string $message    Message to display.
-         *    @return boolean           True on pass
-         *    @access public
+         *    Creates an equality expectation if the
+         *    object/value is not already some type
+         *    of expectation.
+         *    @param mixed $expected      Expected value.
+         *    @return SimpleExpectation   Expectation object.
+         *    @access private
+         */
+        function _coerceToExpectation($expected) {
+            if (SimpleTestCompatibility::isA($expected, 'SimpleExpectation')) {
+                return $expected;
+            }
+            return new EqualExpectation($expected);
+        }
+
+        /**
+         *    @deprecated
          */
         function assertErrorPattern($pattern, $message = "%s") {
-            $queue = &SimpleErrorQueue::instance();
-            if ($queue->isEmpty()) {
-                $this->fail(sprintf($message, "Expected error not found"));
-                return;
-            }
-            list($severity, $content, $file, $line, $globals) = $queue->extract();
-            $severity = SimpleErrorQueue::getSeverityAsString($severity);
-            return $this->assertTrue(
-                    (boolean)preg_match($pattern, $content),
-                    "Expected pattern match [$pattern] in PHP error [$content] severity [$severity] in [$file] line [$line]");
+            return $this->assertError(new PatternExpectation($pattern), $message);
         }
     }
 ?>

@@ -1,13 +1,13 @@
 <?php
     /**
-     *   Base include file for SimpleTest
-     *   @package SimpleTest
-     *   @subpackage WebTester
-     *   @version $Id: frames.php,v 1.29 2004/11/30 05:33:56 lastcraft Exp $
+     *	Base include file for SimpleTest
+     *	@package	SimpleTest
+     *	@subpackage	WebTester
+     *	@version	$Id: frames.php,v 1.39 2005/09/09 01:42:29 lastcraft Exp $
      */
 
     /**#@+
-     *   include other SimpleTest class files
+     *	include other SimpleTest class files
      */
     require_once(dirname(__FILE__) . '/page.php');
     require_once(dirname(__FILE__) . '/user_agent.php');
@@ -18,14 +18,14 @@
      *    adds subframes. The original page will be
      *    mostly ignored. Implements the SimplePage
      *    interface so as to be interchangeable.
-    *    @package SimpleTest
-    *    @subpackage WebTester
+	 *    @package SimpleTest
+	 *    @subpackage WebTester
      */
     class SimpleFrameset {
-        protected $_frameset;
-        protected $_frames;
-        protected $_focus;
-        protected $_names;
+        var $_frameset;
+        var $_frames;
+        var $_focus;
+        var $_names;
 
         /**
          *    Stashes the frameset page. Will make use of the
@@ -459,80 +459,30 @@
 
         /**
          *    Finds a held form by button label. Will only
-         *    search correctly built forms. The first form found
-         *    either within the focused frame, or across frames,
-         *    will be the one returned.
-         *    @param string $label       Button label, default 'Submit'.
-         *    @return SimpleForm         Form object containing the button.
+         *    search correctly built forms.
+         *    @param SimpleSelector $selector       Button finder.
+         *    @return SimpleForm                    Form object containing
+         *                                          the button.
          *    @access public
          */
-        function &getFormBySubmitLabel($label) {
-            return $this->_findForm('getFormBySubmitLabel', $label);
+        function &getFormBySubmit($selector) {
+            $form = &$this->_findForm('getFormBySubmit', $selector);
+            return $form;
         }
 
         /**
-         *    Finds a held form by button label. Will only
-         *    search correctly built forms. The first form found
-         *    either within the focused frame, or across frames,
-         *    will be the one returned.
-         *    @param string $name        Button name attribute.
-         *    @return SimpleForm         Form object containing the button.
+         *    Finds a held form by image using a selector.
+         *    Will only search correctly built forms. The first
+         *    form found either within the focused frame, or
+         *    across frames, will be the one returned.
+         *    @param SimpleSelector $selector  Image finder.
+         *    @return SimpleForm               Form object containing
+         *                                     the image.
          *    @access public
          */
-        function &getFormBySubmitName($name) {
-            return $this->_findForm('getFormBySubmitName', $name);
-        }
-
-        /**
-         *    Finds a held form by button id. Will only
-         *    search correctly built forms. The first form found
-         *    either within the focused frame, or across frames,
-         *    will be the one returned.
-         *    @param string $id          Button ID attribute.
-         *    @return SimpleForm         Form object containing the button.
-         *    @access public
-         */
-        function &getFormBySubmitId($id) {
-            return $this->_findForm('getFormBySubmitId', $id);
-        }
-
-        /**
-         *    Finds a held form by image label. Will only
-         *    search correctly built forms. The first form found
-         *    either within the focused frame, or across frames,
-         *    will be the one returned.
-         *    @param string $label       Usually the alt attribute.
-         *    @return SimpleForm         Form object containing the image.
-         *    @access public
-         */
-        function &getFormByImageLabel($label) {
-            return $this->_findForm('getFormByImageLabel', $label);
-        }
-
-        /**
-         *    Finds a held form by image button id. Will only
-         *    search correctly built forms. The first form found
-         *    either within the focused frame, or across frames,
-         *    will be the one returned.
-         *    @param string $name        Image name.
-         *    @return SimpleForm         Form object containing the image.
-         *    @access public
-         */
-        function &getFormByImageName($name) {
-            return $this->_findForm('getFormByImageName', $name);
-        }
-
-        /**
-         *    Finds a held form by image button id. Will only
-         *    search correctly built forms. The first form found
-         *    either within the focused frame, or across frames,
-         *    will be the one returned.
-         *    @param string $id          Image ID attribute.
-         *    @return SimpleForm         Form object containing the image.
-         *    @access public
-         */
-        function &getFormByImageId($id) {
-            return $this->_findForm('getFormByImageId', $id);
+        function &getFormByImage($selector) {
+            $form = &$this->_findForm('getFormByImage', $selector);
+            return $form;
         }
 
         /**
@@ -546,7 +496,8 @@
          *    @access public
          */
         function &getFormById($id) {
-            return $this->_findForm('getFormById', $id);
+            $form = &$this->_findForm('getFormById', $id);
+            return $form;
         }
 
         /**
@@ -559,11 +510,12 @@
          */
         function &_findForm($method, $attribute) {
             if (is_integer($this->_focus)) {
-                return $this->_findFormInFrame(
+                $form = &$this->_findFormInFrame(
                         $this->_frames[$this->_focus],
                         $this->_focus,
                         $method,
                         $attribute);
+                return $form;
             }
             for ($i = 0; $i < count($this->_frames); $i++) {
                 $form = &$this->_findFormInFrame(
@@ -575,7 +527,8 @@
                     return $form;
                 }
             }
-            return null;
+            $null = null;
+            return $null;
         }
 
         /**
@@ -599,70 +552,32 @@
         /**
          *    Sets a field on each form in which the field is
          *    available.
-         *    @param string $name        Field name.
-         *    @param string $value       Value to set field to.
-         *    @return boolean            True if value is valid.
+         *    @param SimpleSelector $selector    Field finder.
+         *    @param string $value               Value to set field to.
+         *    @return boolean                    True if value is valid.
          *    @access public
          */
-        function setField($name, $value) {
+        function setField($selector, $value) {
             if (is_integer($this->_focus)) {
-                $this->_frames[$this->_focus]->setField($name, $value);
+                $this->_frames[$this->_focus]->setField($selector, $value);
             } else {
                 for ($i = 0; $i < count($this->_frames); $i++) {
-                    $this->_frames[$i]->setField($name, $value);
+                    $this->_frames[$i]->setField($selector, $value);
                 }
             }
-        }
-
-        /**
-         *    Sets a field on the form in which the unique field is
-         *    available.
-         *    @param string/integer $id  Field ID attribute.
-         *    @param string $value       Value to set field to.
-         *    @return boolean            True if value is valid.
-         *    @access public
-         */
-        function setFieldById($id, $value) {
-            if (is_integer($this->_focus)) {
-                $this->_frames[$this->_focus]->setFieldById($id, $value);
-            } else {
-                for ($i = 0; $i < count($this->_frames); $i++) {
-                    $this->_frames[$i]->setFieldById($id, $value);
-                }
-            }
-        }
-
-        /**
-         *    Accessor for a form element value within a frameset.
-         *    Finds the first match amongst the frames.
-         *    @param string $name        Field name.
-         *    @return string/boolean     A string if the field is
-         *                               present, false if unchecked
-         *                               and null if missing.
-         *    @access public
-         */
-        function getField($name) {
-            for ($i = 0; $i < count($this->_frames); $i++) {
-                $value = $this->_frames[$i]->getField($name);
-                if (isset($value)) {
-                    return $value;
-                }
-            }
-            return null;
         }
 
         /**
          *    Accessor for a form element value within a page.
-         *    Finds the first match.
-         *    @param string/integer $id  Field ID attribute.
-         *    @return string/boolean     A string if the field is
-         *                               present, false if unchecked
-         *                               and null if missing.
+         *    @param SimpleSelector $selector    Field finder.
+         *    @return string/boolean             A string if the field is
+         *                                       present, false if unchecked
+         *                                       and null if missing.
          *    @access public
          */
-        function getFieldById($id) {
+        function getField($selector) {
             for ($i = 0; $i < count($this->_frames); $i++) {
-                $value = $this->_frames[$i]->getFieldById($id);
+                $value = $this->_frames[$i]->getField($selector);
                 if (isset($value)) {
                     return $value;
                 }

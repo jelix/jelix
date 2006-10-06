@@ -1,6 +1,0 @@
-This version 1.0 has been hacked : it runs only with PHP5 because of some
-modifications that remove all "strict" errors :
-
-- replacement of all "var" keywords by "protected", "public" or "private"
-- replacement of all &new by new
-- replacement of few function &foo by function foo

@@ -1,101 +1,94 @@
 cd lib/simpletest
-  errors.php
-  options.php
-  dumper.php
-  expectation.php
-  socket.php
-  encoding.php
-  url.php
-  http.php
   authentication.php
-  user_agent.php
   browser.php
-  parser.php
-  tag.php
+  collector.php
+  compatibility.php
+  cookies.php
+  detached.php
+  dumper.php
+  encoding.php
+  errors.php
+  exceptions.php
+  expectation.php
   form.php
   frames.php
-  page.php
-  remote.php
-  runner.php
-  scorer.php
-  reporter.php
-  mock_objects.php
-  simple_test.php
-  unit_tester.php
-  web_tester.php
-  shell_tester.php
-  xml.php
-  README
-  VERSION
-  LICENSE
   HELP_MY_TESTS_DONT_WORK_ANYMORE
-  README_JELIX
+  http.php
+  invoker.php
+  LICENSE
+  mock_objects.php
+  page.php
+  parser.php
+  README
+  reflection_php4.php
+  reflection_php5.php
+  remote.php
+  reporter.php
+  scorer.php
+  selector.php
+  shell_tester.php
+  simpletest.php
+  socket.php
+  tag.php
+  test_case.php
+  unit_tester.php
+  url.php
+  user_agent.php
+  VERSION
+  web_tester.php
+  xml.php
 cd lib/simpletest/extensions
   pear_test_case.php
   phpunit_test_case.php
 cd lib/simpletest/test
-  all_tests.php
-  unit_tests.php
   acceptance_test.php
-  errors_test.php
-  options_test.php
-  dumper_test.php
-  expectation_test.php
   adapter_test.php
-  socket_test.php
-  url_test.php
-  encoding_test.php
-  http_test.php
+  all_tests.php
   authentication_test.php
-  user_agent_test.php
   browser_test.php
-  parser_test.php
-  tag_test.php
+  collector_test.php
+  compatibility_test.php
+  cookies_test.php
+  detached_test.php
+  dumper_test.php
+  encoding_test.php
+  errors_test.php
+  expectation_test.php
   form_test.php
   frames_test.php
-  page_test.php
-  remote_test.php
-  simple_mock_test.php
-  visual_test.php
-  shell_test.php
-  web_tester_test.php
-  unit_tester_test.php
-  shell_tester_test.php
-  xml_test.php
+  http_test.php
+  interfaces_test.php
   live_test.php
-  real_sites_test.php
+  mock_objects_test.php
+  page_test.php
   parse_error_test.php
+  parser_test.php
+  real_sites_test.php
+  reflection_php4_test.php
+  reflection_php5_test.php
+  remote_test.php
+  shell_tester_test.php
+  shell_test.php
+  simpletest_test.php
+  socket_test.php
+  tag_test.php
+  test_groups.php
   test_with_parse_error.php
-cd lib/simpletest/docs/en
-  docs.css
-  index.html
-  overview.html
-  unit_test_documentation.html
-  group_test_documentation.html
-  server_stubs_documentation.html
-  mock_objects_documentation.html
-  partial_mocks_documentation.html
-  reporter_documentation.html
-  expectation_documentation.html
-  web_tester_documentation.html
-  form_testing_documentation.html
-  authentication_documentation.html
-  browser_documentation.html
-cd lib/simpletest/docs/fr
-  docs.css
-  index.html
-  overview.html
-  unit_test_documentation.html
-  group_test_documentation.html
-  server_stubs_documentation.html
-  mock_objects_documentation.html
-  partial_mocks_documentation.html
-  reporter_documentation.html
-  expectation_documentation.html
-  web_tester_documentation.html
-  form_testing_documentation.html
-  authentication_documentation.html
-  browser_documentation.html
+  unit_tester_test.php
+  unit_tests.php
+  url_test.php
+  user_agent_test.php
+  visual_test.php
+  web_tester_test.php
+  xml_test.php
+cd lib/simpletest/test/support
+  latin1_sample
+  spl_examples.php
+  supplementary_upload_sample.txt
+  upload_sample.txt
+cd lib/simpletest/test/support/collector
+  collectable.1
+  collectable.2
 
 cd lib/jelix-scripts
   scripts.conf.php

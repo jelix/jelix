@@ -1,25 +1,25 @@
 <?php
     /**
-     *   base include file for SimpleTest
-     *   @package SimpleTest
-     *   @subpackage MockObjects
-     *   @version $Id: socket.php,v 1.23 2004/09/30 16:46:31 lastcraft Exp $
+     *	base include file for SimpleTest
+     *	@package	SimpleTest
+     *	@subpackage	MockObjects
+     *	@version	$Id: socket.php,v 1.26 2005/08/29 00:57:48 lastcraft Exp $
      */
 
     /**#@+
      * include SimpleTest files
      */
-    require_once(dirname(__FILE__) . '/options.php');
+    require_once(dirname(__FILE__) . '/compatibility.php');
     /**#@-*/
 
     /**
      *    Stashes an error for later. Useful for constructors
      *    until PHP gets exceptions.
-    *    @package SimpleTest
-    *    @subpackage WebTester
+	 *    @package SimpleTest
+	 *    @subpackage WebTester
      */
     class SimpleStickyError {
-        protected $_error = 'Constructor not chained';
+        var $_error = 'Constructor not chained';
 
         /**
          *    Sets the error to empty.
@@ -72,26 +72,27 @@
      *    @subpackage WebTester
      */
     class SimpleSocket extends SimpleStickyError {
-        protected $_handle;
-        protected $_is_open;
-        protected $_sent;
+        var $_handle;
+        var $_is_open = false;
+        var $_sent = '';
+        var $lock_size;
 
         /**
          *    Opens a socket for reading and writing.
-         *    @param string $host      Hostname to send request to.
-         *    @param integer $port     Port on remote machine to open.
-         *    @param integer $timeout  Connection timeout in seconds.
+         *    @param string $host          Hostname to send request to.
+         *    @param integer $port         Port on remote machine to open.
+         *    @param integer $timeout      Connection timeout in seconds.
+         *    @param integer $block_size   Size of chunk to read.
          *    @access public
          */
-        function SimpleSocket($host, $port, $timeout) {
+        function SimpleSocket($host, $port, $timeout, $block_size = 255) {
             $this->SimpleStickyError();
-            $this->_is_open = false;
-            $this->_sent = '';
             if (! ($this->_handle = $this->_openSocket($host, $port, $error_number, $error, $timeout))) {
                 $this->_setError("Cannot open [$host:$port] with [$error] within [$timeout] seconds");
                 return;
             }
             $this->_is_open = true;
+            $this->_block_size = $block_size;
             SimpleTestCompatibility::setTimeout($this->_handle, $timeout);
         }
 
@@ -122,16 +123,15 @@
          *    Reads data from the socket. The error suppresion
          *    is a workaround for PHP4 always throwing a warning
          *    with a secure socket.
-         *    @param integer $block_size       Size of chunk to read.
-         *    @return integer                  Incoming bytes. False
+         *    @return integer/boolean           Incoming bytes. False
          *                                     on error.
          *    @access public
          */
-        function read($block_size = 255) {
+        function read() {
             if ($this->isError() || ! $this->isOpen()) {
                 return false;
             }
-            $raw = @fread($this->_handle, $block_size);
+            $raw = @fread($this->_handle, $this->_block_size);
             if ($raw === false) {
                 $this->_setError('Cannot read from socket');
                 $this->close();
@@ -184,8 +184,8 @@
 
     /**
      *    Wrapper for TCP/IP socket over TLS.
-    *    @package SimpleTest
-    *    @subpackage WebTester
+	 *    @package SimpleTest
+	 *    @subpackage WebTester
      */
     class SimpleSecureSocket extends SimpleSocket {
 

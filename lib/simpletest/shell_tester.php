@@ -1,24 +1,24 @@
 <?php
     /**
-     *   base include file for SimpleTest
-     *   @package SimpleTest
-     *   @subpackage UnitTester
-     *   @version $Id: shell_tester.php,v 1.14 2004/08/17 18:18:32 lastcraft Exp $
+     *	base include file for SimpleTest
+     *	@package	SimpleTest
+     *	@subpackage	UnitTester
+     *	@version	$Id: shell_tester.php,v 1.19 2005/08/03 17:26:55 lastcraft Exp $
      */
 
     /**#@+
-     *   include other SimpleTest class files
+     *	include other SimpleTest class files
      */
-    require_once(dirname(__FILE__) . '/simple_test.php');
+    require_once(dirname(__FILE__) . '/test_case.php');
     /**#@-*/
 
     /**
      *    Wrapper for exec() functionality.
-    *   @package SimpleTest
-    *   @subpackage UnitTester
+	 *	  @package SimpleTest
+	 *	  @subpackage UnitTester
      */
     class SimpleShell {
-        protected $_output;
+        var $_output;
 
         /**
          *    Executes the shell comand and stashes the output.
@@ -56,22 +56,22 @@
          *    @return array         Output as array of lines.
          *    @access public
          */
-      function getOutputAsList() {
-         return $this->_output;
-      }
+		function getOutputAsList() {
+			return $this->_output;
+		}
     }
 
     /**
      *    Test case for testing of command line scripts and
      *    utilities. Usually scripts taht are external to the
      *    PHP code, but support it in some way.
-    *   @package SimpleTest
-    *   @subpackage UnitTester
+	 *	  @package SimpleTest
+	 *	  @subpackage UnitTester
      */
     class ShellTestCase extends SimpleTestCase {
-        protected $_current_shell;
-        protected $_last_status;
-        protected $_last_command;
+        var $_current_shell;
+        var $_last_status;
+        var $_last_command;
 
         /**
          *    Creates an empty test case. Should be subclassed
@@ -113,20 +113,54 @@
          *    @return string        Output as text.
          *    @access public
          */
-      function getOutput() {
+		function getOutput() {
             $shell = &$this->_getShell();
             return $shell->getOutput();
-      }
+		}
 
         /**
          *    Accessor for the last output.
          *    @return array         Output as array of lines.
          *    @access public
          */
-      function getOutputAsList() {
+		function getOutputAsList() {
             $shell = &$this->_getShell();
             return $shell->getOutputAsList();
-      }
+		}
+        
+        /**
+         *    Will trigger a pass if the two parameters have
+         *    the same value only. Otherwise a fail. This
+         *    is for testing hand extracted text, etc.
+         *    @param mixed $first          Value to compare.
+         *    @param mixed $second         Value to compare.
+         *    @param string $message       Message to display.
+         *    @return boolean              True on pass
+         *    @access public
+         */
+        function assertEqual($first, $second, $message = "%s") {
+            return $this->assert(
+                    new EqualExpectation($first),
+                    $second,
+                    $message);
+        }
+        
+        /**
+         *    Will trigger a pass if the two parameters have
+         *    a different value. Otherwise a fail. This
+         *    is for testing hand extracted text, etc.
+         *    @param mixed $first           Value to compare.
+         *    @param mixed $second          Value to compare.
+         *    @param string $message        Message to display.
+         *    @return boolean               True on pass
+         *    @access public
+         */
+        function assertNotEqual($first, $second, $message = "%s") {
+            return $this->assert(
+                    new NotEqualExpectation($first),
+                    $second,
+                    $message);
+        }
 
         /**
          *    Tests the last status code from the shell.
@@ -153,7 +187,7 @@
          */
         function assertOutput($expected, $message = "%s") {
             $shell = &$this->_getShell();
-            return $this->assertExpectation(
+            return $this->assert(
                     new EqualExpectation($expected),
                     $shell->getOutput(),
                     $message);
@@ -169,8 +203,8 @@
          */
         function assertOutputPattern($pattern, $message = "%s") {
             $shell = &$this->_getShell();
-            return $this->assertExpectation(
-                    new WantedPatternExpectation($pattern),
+            return $this->assert(
+                    new PatternExpectation($pattern),
                     $shell->getOutput(),
                     $message);
         }
@@ -185,8 +219,8 @@
          */
         function assertNoOutputPattern($pattern, $message = "%s") {
             $shell = &$this->_getShell();
-            return $this->assertExpectation(
-                    new UnwantedPatternExpectation($pattern),
+            return $this->assert(
+                    new NoPatternExpectation($pattern),
                     $shell->getOutput(),
                     $message);
         }
@@ -226,8 +260,8 @@
          */
         function assertFilePattern($pattern, $path, $message = "%s") {
             $shell = &$this->_getShell();
-            return $this->assertExpectation(
-                    new WantedPatternExpectation($pattern),
+            return $this->assert(
+                    new PatternExpectation($pattern),
                     implode('', file($path)),
                     $message);
         }
@@ -243,8 +277,8 @@
          */
         function assertNoFilePattern($pattern, $path, $message = "%s") {
             $shell = &$this->_getShell();
-            return $this->assertExpectation(
-                    new UnwantedPatternExpectation($pattern),
+            return $this->assert(
+                    new NoPatternExpectation($pattern),
                     implode('', file($path)),
                     $message);
         }
@@ -265,7 +299,8 @@
          *    @access protected
          */
         function &_createShell() {
-            return new SimpleShell();
+            $shell = &new SimpleShell();
+            return $shell;
         }
     }
 ?>

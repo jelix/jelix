@@ -1,13 +1,13 @@
 <?php
     /**
-     *   base include file for SimpleTest
-     *   @package SimpleTest
-     *   @subpackage UnitTester
-     *   @version $Id: xml.php,v 1.20 2004/08/04 22:09:39 lastcraft Exp $
+     *	base include file for SimpleTest
+     *	@package	SimpleTest
+     *	@subpackage	UnitTester
+     *	@version	$Id: xml.php,v 1.22 2006/02/06 06:05:18 lastcraft Exp $
      */
 
     /**#@+
-     *   include other SimpleTest class files
+     *	include other SimpleTest class files
      */
     require_once(dirname(__FILE__) . '/scorer.php');
     /**#@-*/
@@ -15,12 +15,12 @@
     /**
      *    Creates the XML needed for remote communication
      *    by SimpleTest.
-    *   @package SimpleTest
-    *   @subpackage UnitTester
+	 *	  @package SimpleTest
+	 *	  @subpackage UnitTester
      */
     class XmlReporter extends SimpleReporter {
-        protected $_indent;
-        protected $_namespace;
+        var $_indent;
+        var $_namespace;
 
         /**
          *    Does nothing yet.
@@ -171,8 +171,8 @@
          *    @access public
          *    @abstract
          */
-        function paintException($message) {
-            parent::paintException($message);
+        function paintError($message) {
+            parent::paintError($message);
             print $this->_getIndent(1);
             print "<" . $this->_namespace . "exception>";
             print $this->toParsedXml($message);
@@ -255,12 +255,12 @@
      *    Accumulator for incoming tag. Holds the
      *    incoming test structure information for
      *    later dispatch to the reporter.
-    *   @package SimpleTest
-    *   @subpackage UnitTester
+	 *	  @package SimpleTest
+	 *	  @subpackage UnitTester
      */
     class NestingXmlTag {
-        protected $_name;
-        protected $_attributes;
+        var $_name;
+        var $_attributes;
 
         /**
          *    Sets the basic test information except
@@ -305,8 +305,8 @@
      *    Accumulator for incoming method tag. Holds the
      *    incoming test structure information for
      *    later dispatch to the reporter.
-    *   @package SimpleTest
-    *   @subpackage UnitTester
+	 *	  @package SimpleTest
+	 *	  @subpackage UnitTester
      */
     class NestingMethodTag extends NestingXmlTag {
 
@@ -345,8 +345,8 @@
      *    Accumulator for incoming case tag. Holds the
      *    incoming test structure information for
      *    later dispatch to the reporter.
-    *   @package SimpleTest
-    *   @subpackage UnitTester
+	 *	  @package SimpleTest
+	 *	  @subpackage UnitTester
      */
     class NestingCaseTag extends NestingXmlTag {
 
@@ -385,8 +385,8 @@
      *    Accumulator for incoming group tag. Holds the
      *    incoming test structure information for
      *    later dispatch to the reporter.
-    *   @package SimpleTest
-    *   @subpackage UnitTester
+	 *	  @package SimpleTest
+	 *	  @subpackage UnitTester
      */
     class NestingGroupTag extends NestingXmlTag {
 
@@ -437,16 +437,16 @@
     /**
      *    Parser for importing the output of the XmlReporter.
      *    Dispatches that output to another reporter.
-    *   @package SimpleTest
-    *   @subpackage UnitTester
+	 *	  @package SimpleTest
+	 *	  @subpackage UnitTester
      */
     class SimpleTestXmlParser {
-        protected $_listener;
-        protected $_expat;
-        protected $_tag_stack;
-        protected $_in_content_tag;
-        protected $_content;
-        protected $_attributes;
+        var $_listener;
+        var $_expat;
+        var $_tag_stack;
+        var $_in_content_tag;
+        var $_content;
+        var $_attributes;
 
         /**
          *    Loads a listener with the SimpleReporter
@@ -530,9 +530,8 @@
          *    @private
          */
         function _isLeaf($tag) {
-            return in_array(
-                    $tag,
-                    array('NAME', 'PASS', 'FAIL', 'EXCEPTION', 'MESSAGE', 'FORMATTED', 'SIGNAL'));
+            return in_array($tag, array(
+                    'NAME', 'PASS', 'FAIL', 'EXCEPTION', 'MESSAGE', 'FORMATTED', 'SIGNAL'));
         }
 
         /**
@@ -578,7 +577,7 @@
             } elseif ($tag == 'FAIL') {
                 $this->_listener->paintFail($this->_content);
             } elseif ($tag == 'EXCEPTION') {
-                $this->_listener->paintException($this->_content);
+                $this->_listener->paintError($this->_content);
             } elseif ($tag == 'SIGNAL') {
                 $this->_listener->paintSignal(
                         $this->_attributes['TYPE'],

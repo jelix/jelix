@@ -1,23 +1,64 @@
 <?php
     /**
-     *   base include file for SimpleTest
-     *   @package SimpleTest
-     *   @subpackage UnitTester
-     *   @version $Id: errors.php,v 1.13 2005/01/08 03:48:39 lastcraft Exp $
+     *	base include file for SimpleTest
+     *	@package	SimpleTest
+     *	@subpackage	UnitTester
+     *	@version	$Id: errors.php,v 1.14 2006/02/06 06:05:18 lastcraft Exp $
      */
+
     /** @ignore - PHP5 compatibility fix. */
     if (! defined('E_STRICT')) {
         define('E_STRICT', 2048);
     }
 
+    /**#@+
+     * Includes SimpleTest files.
+     */
+    require_once(dirname(__FILE__) . '/invoker.php');
+
+    /**
+     *    Extension that traps errors into an error queue.
+	 *	  @package SimpleTest
+	 *	  @subpackage UnitTester
+     */
+    class SimpleErrorTrappingInvoker extends SimpleInvokerDecorator {
+
+        /**
+         *    Stores the invoker to wrap.
+         *    @param SimpleInvoker $invoker  Test method runner.
+         */
+        function SimpleErrorTrappingInvoker(&$invoker) {
+            $this->SimpleInvokerDecorator($invoker);
+        }
+
+        /**
+         *    Invokes a test method and dispatches any
+         *    untrapped errors. Called back from
+         *    the visiting runner.
+         *    @param string $method    Test method to call.
+         *    @access public
+         */
+        function invoke($method) {
+            set_error_handler('simpleTestErrorHandler');
+            parent::invoke($method);
+            $queue = &SimpleErrorQueue::instance();
+            while (list($severity, $message, $file, $line, $globals) = $queue->extract()) {
+                $severity = SimpleErrorQueue::getSeverityAsString($severity);
+                $test_case = &$this->getTestCase();
+                $test_case->error($severity, $message, $file, $line);
+            }
+            restore_error_handler();
+        }
+    }
+
     /**
      *    Singleton error queue used to record trapped
      *    errors.
-    *   @package  SimpleTest
-    *   @subpackage  UnitTester
+	 *	  @package	SimpleTest
+	 *	  @subpackage	UnitTester
      */
     class SimpleErrorQueue {
-        protected $_queue;
+        var $_queue;
 
         /**
          *    Starts with an empty queue.
@@ -58,9 +99,6 @@
             return false;
         }
 
-        function getCount(){
-            return count($this->_queue);
-        }
         /**
          *    Discards the contents of the error queue.
          *    @access public
@@ -83,7 +121,7 @@
          *    @access public
          *    @static
          */
-        static function instance() {
+        function &instance() {
             static $queue = false;
             if (! $queue) {
                 $queue = new SimpleErrorQueue();

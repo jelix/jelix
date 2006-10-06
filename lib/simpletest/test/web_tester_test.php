@@ -1,5 +1,5 @@
 <?php
-    // $Id: web_tester_test.php,v 1.10 2004/11/30 05:34:00 lastcraft Exp $
+    // $Id: web_tester_test.php,v 1.15 2005/11/25 01:54:27 lastcraft Exp $
     
     class TestOfFieldExpectation extends UnitTestCase {
         
@@ -65,6 +65,14 @@
             $this->assertIdentical($expectation->test(' a : AB '), false);
         }
         
+        function testHeaderValueWithColons() {
+            $expectation = new HttpHeaderExpectation('a', 'A:B:C');
+            $this->assertIdentical($expectation->test('a: A'), false);
+            $this->assertIdentical($expectation->test('a: A:B'), false);
+            $this->assertIdentical($expectation->test('a: A:B:C'), true);
+            $this->assertIdentical($expectation->test('a: A:B:C:D'), false);
+        }
+        
         function testMultilineSearch() {
             $expectation = new HttpHeaderExpectation('a', 'A');
             $this->assertIdentical($expectation->test("aa: A\r\nb: B\r\nc: C"), false);
@@ -78,7 +86,7 @@
         }
         
         function testPatternMatching() {
-            $expectation = new HttpHeaderPatternExpectation('a', '/A/');
+            $expectation = new HttpHeaderExpectation('a', new PatternExpectation('/A/'));
             $this->assertIdentical($expectation->test('a: A'), true);
             $this->assertIdentical($expectation->test('A: A'), true);
             $this->assertIdentical($expectation->test('A: a'), false);
@@ -88,7 +96,7 @@
         }
         
         function testCaseInsensitivePatternMatching() {
-            $expectation = new HttpHeaderPatternExpectation('a', '/A/i');
+            $expectation = new HttpHeaderExpectation('a', new PatternExpectation('/A/i'));
             $this->assertIdentical($expectation->test('a: a'), true);
             $this->assertIdentical($expectation->test('a: B'), false);
             $this->assertIdentical($expectation->test(' a : A '), true);
@@ -97,7 +105,7 @@
         }
         
         function testUnwantedHeader() {
-            $expectation = new HttpUnwantedHeaderExpectation('a');
+            $expectation = new NoHttpHeaderExpectation('a');
             $this->assertIdentical($expectation->test(''), true);
             $this->assertIdentical($expectation->test('stuff'), true);
             $this->assertIdentical($expectation->test('b: B'), true);
@@ -106,16 +114,21 @@
         }
         
         function testMultilineUnwantedSearch() {
-            $expectation = new HttpUnwantedHeaderExpectation('a');
+            $expectation = new NoHttpHeaderExpectation('a');
             $this->assertIdentical($expectation->test("aa:A\r\nb:B\r\nc:C"), true);
             $this->assertIdentical($expectation->test("aa:A\r\na:A\r\nb:B"), false);
+        }
+        
+        function testLocationHeaderSplitsCorrectly() {
+            $expectation = new HttpHeaderExpectation('Location', 'http://here/');
+            $this->assertIdentical($expectation->test('Location: http://here/'), true);
         }
     }
     
     class TestOfTextExpectations extends UnitTestCase {
         
         function testMatchingSubString() {
-            $expectation = new WantedTextExpectation('wanted');
+            $expectation = new TextExpectation('wanted');
             $this->assertIdentical($expectation->test(''), false);
             $this->assertIdentical($expectation->test('Wanted'), false);
             $this->assertIdentical($expectation->test('wanted'), true);
@@ -123,11 +136,19 @@
         }
         
         function testNotMatchingSubString() {
-            $expectation = new UnwantedTextExpectation('wanted');
+            $expectation = new NoTextExpectation('wanted');
             $this->assertIdentical($expectation->test(''), true);
             $this->assertIdentical($expectation->test('Wanted'), true);
             $this->assertIdentical($expectation->test('wanted'), false);
             $this->assertIdentical($expectation->test('the wanted text is here'), false);
+        }
+    }
+    
+    class TestOfGenericAssertionsInWebTester extends WebTestCase {
+        
+        function testEquality() {
+            $this->assertEqual('a', 'a');
+            $this->assertNotEqual('a', 'A');
         }
     }
 ?>

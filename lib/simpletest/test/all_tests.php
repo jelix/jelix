@@ -1,31 +1,15 @@
 <?php
-    // $Id: all_tests.php,v 1.20 2005/02/05 04:51:31 lastcraft Exp $
-    define('TEST', __FILE__);
-    require_once('../unit_tester.php');
-    require_once('../shell_tester.php');
-    require_once('../reporter.php');
-    require_once('../mock_objects.php');
-    require_once('unit_tests.php');
-
-    // Uncomment and modify the following line if you are accessing
-    // the net via a proxy server.
-    //
-    // SimpleTestOptions::useProxy('http://my-proxy', 'optional username', 'optional password');
-
-    class AllTests extends GroupTest {
-        function AllTests() {
-            $this->GroupTest('All tests for SimpleTest ' . SimpleTestOptions::getVersion());
-            $this->addTestCase(new UnitTests());
-            $this->addTestFile('shell_test.php');
-            $this->addTestFile('live_test.php');
-            //$this->addTestFile('acceptance_test.php');
-            //$this->addTestFile('real_sites_test.php');
-        }
+    // $Id: all_tests.php,v 1.24 2005/11/28 00:48:54 lastcraft Exp $
+    if (! defined('TEST')) {
+        define('TEST', __FILE__);
     }
-
-    $test = new AllTests();
+    require_once(dirname(__FILE__) . '/test_groups.php');
+    require_once(dirname(__FILE__) . '/../reporter.php');
+    
+    $test = &new AllTests();
     if (SimpleReporter::inCli()) {
-        exit ($test->run(new TextReporter()) ? 0 : 1);
+        $result = $test->run(new SelectiveReporter(new TextReporter(), @$argv[1], @$argv[2]));
+        return ($result ? 0 : 1);
     }
-    $test->run(new HtmlReporter());
+    $test->run(new SelectiveReporter(new HtmlReporter(), @$_GET['c'], @$_GET['t']));
 ?>

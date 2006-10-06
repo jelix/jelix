@@ -1,5 +1,5 @@
 <?php
-    // $Id: visual_test.php,v 1.29 2004/11/22 19:20:00 lastcraft Exp $
+    // $Id: visual_test.php,v 1.38 2006/02/06 06:13:43 lastcraft Exp $
 
     // NOTE:
     // Some of these tests are designed to fail! Do not be alarmed.
@@ -43,9 +43,9 @@
         }
 
         function testExpectation() {
-            $expectation = new EqualExpectation(25, 'My expectation message: %s');
-            $this->assertExpectation($expectation, 25, 'My assert message : %s');
-            $this->assertExpectation($expectation, 24, 'My assert message : %s');        // Fail.
+            $expectation = &new EqualExpectation(25, 'My expectation message: %s');
+            $this->assert($expectation, 25, 'My assert message : %s');
+            $this->assert($expectation, 24, 'My assert message : %s');        // Fail.
         }
 
         function testNull() {
@@ -93,6 +93,16 @@
             $this->assertEqual(array("a" => "A", "b" => "B"), array("b" => "B", "a" => "Z"), "%s -> Pass");
         }
 
+        function testWithin() {
+            $this->assertWithinMargin(5, 5.4, 0.5, "%s -> Pass");
+            $this->assertWithinMargin(5, 5.6, 0.5, "%s -> Fail");   // Fail.
+        }
+
+        function testOutside() {
+            $this->assertOutsideMargin(5, 5.4, 0.5, "%s -> Fail");   // Fail.
+            $this->assertOutsideMargin(5, 5.6, 0.5, "%s -> Pass");
+        }
+
         function testStringIdentity() {
             $a = "fred";
             $b = $a;
@@ -136,17 +146,22 @@
             $a = "fred";
             $b = &$a;
             $this->assertReference($a, $b, "%s -> Pass");
-            $this->assertCopy($a, $b, "%s -> Fail");        // Fail.
+            $this->assertClone($a, $b, "%s -> Fail");        // Fail.
+        }
+
+        function testCloneOnDifferentObjects() {
+            $a = "fred";
+            $b = $a;
             $c = "Hello";
-            $this->assertReference($a, $c, "%s -> Fail");        // Fail.
-            $this->assertCopy($a, $c, "%s -> Pass");
+            $this->assertClone($a, $b, "%s -> Pass");
+            $this->assertClone($a, $c, "%s -> Fail");        // Fail.
         }
 
         function testPatterns() {
-            $this->assertWantedPattern('/hello/i', "Hello there", "%s -> Pass");
-            $this->assertNoUnwantedPattern('/hello/', "Hello there", "%s -> Pass");
-            $this->assertWantedPattern('/hello/', "Hello there", "%s -> Fail");            // Fail.
-            $this->assertNoUnwantedPattern('/hello/i', "Hello there", "%s -> Fail");      // Fail.
+            $this->assertPattern('/hello/i', "Hello there", "%s -> Pass");
+            $this->assertNoPattern('/hello/', "Hello there", "%s -> Pass");
+            $this->assertPattern('/hello/', "Hello there", "%s -> Fail");            // Fail.
+            $this->assertNoPattern('/hello/i', "Hello there", "%s -> Fail");      // Fail.
         }
 
         function testLongStrings() {
@@ -172,6 +187,12 @@
             $this->assertNoErrors("%s -> Fail");        // Fail.
             $this->assertError();
             $this->assertNoErrors("%s -> Pass at end");
+        }
+
+        function testExceptionTrap() {
+            if (version_compare(phpversion(), '5') >= 0) {
+                eval('throw new Exception("Ouch!");');
+            }
         }
 
         function testErrorText() {
@@ -210,74 +231,70 @@
     class TestOfMockObjectsOutput extends UnitTestCase {
 
         function testCallCounts() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectCallCount('a', 1, 'My message: %s');
             $dummy->a();
-            $dummy->tally();
             $dummy->a();
-            $dummy->tally();
         }
 
         function testMinimumCallCounts() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectMinimumCallCount('a', 2, 'My message: %s');
             $dummy->a();
-            $dummy->tally();
             $dummy->a();
-            $dummy->tally();
         }
 
         function testEmptyMatching() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments('a', array());
             $dummy->a();
             $dummy->a(null);        // Fail.
         }
 
         function testEmptyMatchingWithCustomMessage() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments('a', array(), 'My expectation message: %s');
             $dummy->a();
             $dummy->a(null);        // Fail.
         }
 
         function testNullMatching() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments('a', array(null));
             $dummy->a(null);
             $dummy->a();        // Fail.
         }
 
         function testBooleanMatching() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments('a', array(true, false));
             $dummy->a(true, false);
             $dummy->a(true, true);        // Fail.
         }
 
         function testIntegerMatching() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments('a', array(32, 33));
             $dummy->a(32, 33);
             $dummy->a(32, 34);        // Fail.
         }
 
         function testFloatMatching() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments('a', array(3.2, 3.3));
             $dummy->a(3.2, 3.3);
             $dummy->a(3.2, 3.4);        // Fail.
         }
 
         function testStringMatching() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments('a', array('32', '33'));
             $dummy->a('32', '33');
             $dummy->a('32', '34');        // Fail.
         }
 
         function testEmptyMatchingWithCustomExpectationMessage() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments(
                     'a',
                     array(new EqualExpectation('A', 'My part expectation message: %s')),
@@ -287,7 +304,7 @@
         }
 
         function testArrayMatching() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments('a', array(array(32), array(33)));
             $dummy->a(array(32), array(33));
             $dummy->a(array(32), array('33'));        // Fail.
@@ -298,14 +315,14 @@
             $a->a = 'a';
             $b = new Dummy();
             $b->b = 'b';
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments('a', array($a, $b));
             $dummy->a($a, $b);
             $dummy->a($a, $a);        // Fail.
         }
 
         function testBigList() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments('a', array(false, 0, 1, 1.0));
             $dummy->a(false, 0, 1, 1.0);
             $dummy->a(true, false, 2, 2.0);        // Fail.
@@ -320,7 +337,7 @@
         }
 
         function testMockWildcards() {
-            $dummy = new MockDummy($this);
+            $dummy = &new MockDummy();
             $dummy->expectArguments('a', array('*', array(33)));
             $dummy->a(array(32), array(33));
             $dummy->a(array(32), array('33'));        // Fail.
@@ -342,7 +359,7 @@
         }
     }
 
-    class AllOutputReporter extends HtmlReporter {
+    class PassesAsWellReporter extends HtmlReporter {
 
         function _getCss() {
             return parent::_getCss() . ' .pass { color: darkgreen; }';
@@ -366,18 +383,18 @@
         }
     }
 
-    $test = new GroupTest("Visual test with 49 passes, 49 fails and 4 exceptions");
+    $test = &new GroupTest("Visual test with 50 passes, 50 fails and 5 exceptions");
     $test->addTestCase(new TestOfUnitTestCaseOutput());
     $test->addTestCase(new TestOfMockObjectsOutput());
     $test->addTestCase(new TestOfPastBugs());
     $test->addTestCase(new TestOfVisualShell());
 
     if (isset($_GET['xml']) || in_array('xml', (isset($argv) ? $argv : array()))) {
-        $reporter = new XmlReporter();
-    } elseif(SimpleReporter::inCli()) {
-        $reporter = new TextReporter();
+        $reporter = &new XmlReporter();
+    } elseif (TextReporter::inCli()) {
+        $reporter = &new TextReporter();
     } else {
-        $reporter = new AllOutputReporter();
+        $reporter = &new PassesAsWellReporter();
     }
     if (isset($_GET['dry']) || in_array('dry', (isset($argv) ? $argv : array()))) {
         $reporter->makeDry();
