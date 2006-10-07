@@ -12,7 +12,7 @@ sous copyright 2001-2005 Copix Team (http://www.copix.org)
 
 Contributeurs
 -------------
-Loic Mathaud (bballizlife) : 
+Loic Mathaud (bballizlife) :
     testeur, nombreuses corrections de bugs
     contributions jTpl : version standalone du moteur de template, commentaires
     driver sqlite pour jDb
@@ -26,6 +26,10 @@ Yannick Le Guédart (Torgan)
     jAuthDriverClass
     plugin jtpl date_format
     Divers bug fix et petites améliorations
+
+M. Thiriot (Doubleface)
+    testeur
+    bug fixs sur le support de PDO dans jDb
 
 Gildas Givaja (Giviz) : testeur, corrections de bugs
 Olivier Gambier (d-m-p) : review de code, corrections de bugs
