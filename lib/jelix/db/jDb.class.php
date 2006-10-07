@@ -105,7 +105,7 @@ class jDb {
      */
     public function testProfil($profil){
         try{
-            $this->_createConnector ($profil);
+            self::_createConnector ($profil);
             $ok = true;
         }catch(Exception $e){
            $ok = false;

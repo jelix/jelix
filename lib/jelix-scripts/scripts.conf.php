@@ -34,7 +34,7 @@ define ('JELIXS_APPTPL_CONFIG_PATH' , JELIXS_APPTPL_VAR_PATH."config/");
 define ('JELIXS_INIT_PATH'          , '/usr/local/lib/jelix/init.php');
 */
 
-define ('JELIXS_APP_CONFIG_FILE'    , 'config.classic.ini.php');
+define('JELIXS_APP_CONFIG_FILE'    , 'index/config.ini.php');
 define('DO_CHMOD',false); // indique si lors de la création des fichiers, il faut faire un chmod
 define('CHMOD_FILE_VALUE',0644);
 define('CHMOD_DIR_VALUE',0755);
