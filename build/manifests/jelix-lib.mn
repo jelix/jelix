@@ -144,6 +144,7 @@ cd lib/jelix/tpl/plugins/common
   modifier.strip.php
   modifier.strip_tags.php
   modifier.truncate.php
+  modifier.wiki.php
   modifier.wordwrap.php
 
 cd lib/jelix/tpl/plugins/html
@@ -168,16 +169,17 @@ cd lib/jelix/tpl/plugins/xul
 
 cd lib/jelix/utils/
   jClasses.class.php
+  jCmdUtils.class.php
+  jDatatype.class.php
   jDateTime.class.php
   jFile.class.php
+  jIniFile.class.php
   jJsonRpc.class.php
   jLog.class.php
+  jWiki.class.php
   jXmlRpc.class.php
-  jZone.class.php
-  jDatatype.class.php
-  jCmdUtils.class.php
   jZipCreator.class.php
-  jIniFile.class.php
+  jZone.class.php
 
 cd lib/json
   JSON.php
@@ -335,3 +337,16 @@ cd lib/diff
   difflib.php
   diffhtml.php
   README
+
+cd lib/wikirenderer
+  CHANGELOG
+  CREDITS
+  LICENCE
+  WikiRenderer.lib.php
+
+cd lib/wikirenderer/rules
+  wr3_to_xhtml.php
+  classicwr_to_text.php
+  classicwr_to_xhtml.php
+  classicwr_to_wr3.php
+  wr3_to_text.php

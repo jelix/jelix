@@ -10,13 +10,13 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-// arguments :  repertoire1 [repertoire2] fichier.mn
+// arguments :  repertoire1 [repertoire2]
 // repertoire1 : le chemin du repertoire duquel on veut la liste
 // repertoire2 : si on veut une base de chemin différente de repertoire1 dans le fichier de sortie
 //               on l'indique ici
 
 if($_SERVER['argc'] < 2){
-   echo "too few arguments\n   repertoire1 [repertoire2] fichier.mn";
+   echo "too few arguments\n   repertoire1 [repertoire2]\n";
    exit(1);
 }
 array_shift($_SERVER['argv']); // shift the script name

@@ -57,7 +57,7 @@ class jFormDaoDatasource implements jIFormDatasource {
       $found = $dao->${$this->daomethod}();
       $result=array();
       foreach($found as $obj){
-          $result[$obj->${$this->daovalue}] = $obj->${$this->daolabel}
+          $result[$obj->${$this->daovalue}] = $obj->${$this->daolabel};
       }
       return $result;
    }
