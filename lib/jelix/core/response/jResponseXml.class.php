@@ -44,6 +44,9 @@ class jResponseXml extends jResponse {
 
 
     protected $_charset;
+    
+    private $_css = array();
+    private $_xsl = array();
 
 
     /**
@@ -65,6 +68,7 @@ class jResponseXml extends jResponse {
         $this->sendHttpHeaders();
 
         echo '<?xml version="1.0" encoding="'. $this->_charset .'"?>', "\n";
+        $this->outputXmlHeader();
         $this->_headSent = true;
 
         // utilisation d'un template
@@ -120,5 +124,40 @@ class jResponseXml extends jResponse {
         }
         return $errors;
     }
+    
+    public function addCSSStyleSheet($src, $params = array()) {
+        if (!isset($this->_css[$src])) {
+            $this->_css[$src] = $params;
+        }
+    }
+    
+    public function addXSLStyleSheet($src, $params = array()) {
+        if (!isset($this->_xsl[$src])) {
+            $this->_xsl[$src] = $params;
+        }    
+    }
+    
+    protected function outputXmlHeader() {
+        // XSL stylesheet
+        foreach ($this->_xsl as $src => $params) {
+            //the extra params we may found in there.
+            $more = '';
+            foreach ($params as $param_name => $param_value) {
+                $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
+            }
+            echo ' <?xml-stylesheet type="text/xsl" href="', $src,'" ', $more,' ?>';
+        }
+
+        // CSS stylesheet
+        foreach ($this->_css as $src => $params) {
+            //the extra params we may found in there.
+            $more = '';
+            foreach ($params as $param_name => $param_value) {
+                $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
+            }
+            echo ' <?xml-stylesheet type="text/css" href="', $src,'" ', $more,' ?>';
+        }
+    }
 }
+
 ?>
