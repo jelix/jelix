@@ -180,6 +180,7 @@ cd lib/jelix/utils/
   jXmlRpc.class.php
   jZipCreator.class.php
   jZone.class.php
+  jAppManager.class.php
 
 cd lib/json
   JSON.php

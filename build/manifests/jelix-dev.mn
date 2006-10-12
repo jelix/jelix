@@ -106,7 +106,7 @@ cd lib/jelix-scripts/commands
   createctrl.cmd.php
   createzone.cmd.php
   createaction.cmd.php
-  clearcache.cmd.php
+  cleartemp.cmd.php
 cd lib/jelix-scripts/includes
   command.class.php
   utils.lib.php

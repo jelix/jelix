@@ -5,7 +5,9 @@
 * @version    $Id:$
 * @author     Croes Gérald
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @contributor Thiriot Christophe
+* @contributor Loic Mathaud
+* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2006 Thiriot Christophe
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
@@ -91,6 +93,31 @@ class jFile {
         if (!file_exists($dir)) {
             self::createDir(dirname($dir));
             mkdir($dir, 0775);
+        }
+    }
+    
+    /**
+     * Recursive function deleting a directory
+     *
+     * @param string $path The path of the directory to remove recursively
+     * @param boolean $deleteParent If the path must be deleted too
+     */
+    public static function removeDir($path, $deleteParent=true) {
+        $dir = new DirectoryIterator($path);
+        foreach ($dir as $dirContent) {
+        	// file deletion
+            if ($dirContent->isFile()) {
+        		unlink($dirContent->getPathName());
+        	} else {
+        		// recursive directory deletion
+                if (!$dirContent->isDot() && $dirContent->isDir()) {
+                    self::removeDir($dirContent->getPathName());
+        		}
+        	}
+        }
+        // removes the parent directory
+        if ($deleteParent) {
+            rmdir($path);
         }
     }
 }
