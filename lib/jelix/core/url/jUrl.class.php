@@ -316,6 +316,7 @@ class jUrl extends jUrlBase {
     static function escape($str, $highlevel=false){
         if($highlevel){
             $str=strtr($str,'àâäéèêëïîôöùüû','aaaeeeeiioouuu'); // supprime les caractères accentués, et les quotes, doubles quotes
+            $str=strtr($str,'ÀÂÄÉÈÊËÏÎÔÖÙÜÛ','AAAEEEEIIOOUUU');
             $str=preg_replace("/([^\w])/"," ",$str); // remplace tout ce qui n'est pas lettre par un espace
             //$str=preg_replace("/(?<=\s)\w{1,2}(?=\s)/"," ",$str); // enleve les mots de moins de 2 lettres
             $str=preg_replace("/( +)/","-",trim($str)); // on remplace les espaces et groupes d'espaces par -
