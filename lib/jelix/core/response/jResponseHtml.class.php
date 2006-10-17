@@ -212,9 +212,10 @@ class jResponseHtml extends jResponse {
     }
 
     final protected function outputHtmlHeader (){
-        echo '<head><title>'.$this->title."</title>\n";
+        echo '<head>'."\n";
         echo '<meta content="text/html; charset='.$this->_charset.'" http-equiv="content-type"'.$this->_endTag;
-
+        echo '<title>'.$this->title."</title>\n";
+        
         // css link
         foreach ($this->_CSSLink as $src=>$params){
             //the extra params we may found in there.
