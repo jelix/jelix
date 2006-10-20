@@ -65,6 +65,7 @@ cd lib/jelix/core/response
   jResponseRdf.class.php
   jResponseXml.class.php
   jResponseZip.class.php
+  jResponseRss20.class.php
 
 cd lib/jelix/core/url
   jUrl.class.php
@@ -181,6 +182,7 @@ cd lib/jelix/utils/
   jZipCreator.class.php
   jZone.class.php
   jAppManager.class.php
+  jRss20Item.class.php
 
 cd lib/json
   JSON.php
@@ -231,6 +233,7 @@ cd lib/jelix-modules/jelix/controllers
 cd lib/jelix-modules/jelix/templates
   404.xul.tpl
   404.html.tpl
+  rss20items.tpl
 
 cd lib/jelix-modules/jxauth
   module.xml

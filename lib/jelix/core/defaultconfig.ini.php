@@ -39,6 +39,7 @@ xulpage = jResponseXulPage
 rdf = jResponseRdf
 xml = jResponseXml
 zip = jResponseZip
+rss2.0 = jResponseRss20
 
 
 [_coreResponses]
@@ -56,6 +57,7 @@ xulpage = jResponseXulPage
 rdf = jResponseRdf
 xml = jResponseXml
 zip = jResponseZip
+rss2.0 = jResponseRss20
 
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
