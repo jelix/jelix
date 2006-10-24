@@ -7,8 +7,6 @@
 ; Db ou Class  ( respecter la casse des caractères)
 driver = Db
 
-
-
 ;============ Paramètres pour le plugin
 ; indique si on effectue un contrôle sur l'adresse ip
 ; qui a démarré la session.
@@ -20,7 +18,6 @@ bad_ip_action = "jxauth~login_out"
 ;Timeout. Permet de forcer une authentification aprés un certain temps écoulé
 ;sans action . temps en minutes. 0 = pas de timeout.
 timeout = 0
-
 
 ; indique si il faut absolument ou non une authentification pour chaque action
 ; on = authentification necessaire pour toute action
@@ -41,7 +38,7 @@ on_error_action = "jxauth~login_out"
 error_message = "jxauth~autherror.notlogged"
 
 
-;=========== Paramètres pour le module auth
+;=========== Paramètres pour le module jxauth
 
 ; nombre de secondes d'attentes aprés un défaut d'authentification
 on_error_sleep = 3
