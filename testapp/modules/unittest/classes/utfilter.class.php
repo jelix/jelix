@@ -82,6 +82,61 @@ class UTfilter extends UnitTestCase {
         $this->assertFalse(jFilter::isFloat('11',5,9), "isFloat('11',5,9)");
     }
 
+    public function testIsUrl(){
+        $this->assertTrue(jFilter::isUrl('http://foo.com/bar.html?a=b&c=d'),
+                                  "isUrl('http://foo.com/bar.html?a=b&c=d')");
+        $this->assertTrue(jFilter::isUrl('http://foo.com/bar.html'),
+                                  "isUrl('http://foo.com/bar.html')");
+        $this->assertTrue(jFilter::isUrl('http://foo.com'),
+                                  "isUrl('http://foo.com')");
+        $this->assertTrue(jFilter::isUrl('foo.com'),
+                                  "isUrl('foo.com')");
+        $this->assertTrue(jFilter::isUrl('abcdfeh'),
+                                  "isUrl('abcdfeh')");
+        $this->assertTrue(jFilter::isUrl('bar.html?a=b&c=d'),
+                                  "isUrl('bar.html?a=b&c=d')");
+        $this->assertTrue(jFilter::isUrl('foo.com/bar.html?a=b&c=d'),
+                                  "isUrl('foo.com/bar.html?a=b&c=d')");
+        $this->assertTrue(jFilter::isUrl('foo$^.com/bar.html?a=b&c=d'),
+                                  "isUrl('foo$^.com/bar.html?a=b&c=d')");
+        $this->assertFalse(jFilter::isUrl('http://foo$^.com/bar.html?a=b&c=d'),
+                                  "isUrl('http://foo$^.com/bar.html?a=b&c=d')");
+        $this->assertFalse(jFilter::isUrl('http://'),
+                                  "isUrl('http://')");
+
+/*        $this->assertTrue(jFilter::isUrl(''),
+                                  "isUrl('')");
+        $this->assertTrue(jFilter::isUrl(''),
+                                  "isUrl('')");
+        $this->assertTrue(jFilter::isUrl(''),
+                                  "isUrl('')");
+        $this->assertTrue(jFilter::isUrl(''),
+                                  "isUrl('')");
+        $this->assertTrue(jFilter::isUrl(''),
+                                  "isUrl('')");*/
+    }
+
+    public function testIsIpv4(){
+        $this->assertTrue(jFilter::isIPv4('0.0.0.0'), "isIPv4('0.0.0.0')");
+        $this->assertTrue(jFilter::isIPv4('127.0.0.1'), "isIPv4('127.0.0.1')");
+        $this->assertTrue(jFilter::isIPv4('65.98.1.255'), "isIPv4('65.98.1.255')");
+        $this->assertTrue(jFilter::isIPv4('255.255.255.255'), "isIPv4('255.255.255.255')");
+        $this->assertFalse(jFilter::isIPv4('0'), "isIPv4('0')");
+        $this->assertFalse(jFilter::isIPv4('0.0.0'), "isIPv4('0.0.0')");
+        $this->assertFalse(jFilter::isIPv4('0.0.'), "isIPv4('0.0.')");
+        $this->assertFalse(jFilter::isIPv4('289.127.54.387'), "isIPv4('289.127.54.387')");
+        $this->assertFalse(jFilter::isIPv4('1111.1111.22222.3333'), "isIPv4('1111.1111.22222.3333')");
+    }
+
+    public function testIsIpv6(){
+        $this->assertTrue(jFilter::isIPv6('0:0:0:0:0:0:0:0'), "isIPv6('0:0:0:0:0:0:0:0')");
+        $this->assertTrue(jFilter::isIPv6('023:01:A0:cd0:8be0:ffff:0:0'), "isIPv6('023:01:A0:cd0:8be0:ffff:0:0')");
+        $this->assertFalse(jFilter::isIPv6('0'), "isIPv6('0')");
+        $this->assertFalse(jFilter::isIPv6('023:er1:A0:cd0:8be0:ffff:0:0'), "isIPv6('023:er1:A0:cd0:8be0:ffff:0:0')");
+        $this->assertFalse(jFilter::isIPv6('023:8be0:ffff:0:0'), "isIPv6('023:8be0:ffff:0:0')");
+        $this->assertFalse(jFilter::isIPv6('023:01:A0:cd0:8be0:ffff:0:0:98'), "isIPv6('023:01:A0:cd0:8be0:ffff:0:0:98')");
+    }
+
 }
 
 ?>

@@ -102,35 +102,65 @@ class jFilter {
 
     /**
      * check if the given value is
-     * @param string $val the value
+     * @param string $url the url
      * @return boolean true if it is valid
      */
 
-    static public function isUrl ($val, $schemeRequired=true ){
+    static public function isUrl ($url, $schemeRequired=false,
+                            $hostRequired=false, $pathRequired=false,
+                            $queryRequired=false ){
 #ifdef PHP52
-        return filter_var($var, FILTER_VALIDATE_);
+        $flag=0;
+        if($schemeRequired) $flag |= FILTER_FLAG_SCHEME_REQUIRED;
+        if($hostRequired) $flag |= FILTER_FLAG_HOST_REQUIRED;
+        if($pathRequired) $flag |= FILTER_FLAG_PATH_REQUIRED;
+        if($queryRequired) $flag |= FILTER_FLAG_QUERY_REQUIRED;
+        return filter_var($url, FILTER_VALIDATE_URL, $flag);
 #else
-        return false;
+        //$re = '/^(([a-z]):\/\/)?((([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?)?';
+        //$re .= '((\/'
+        //if (!preg_match('/^(([a-z]):\/\/)?((([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?)?\//i', $url, $m)) {
+
+        $res=@parse_url($url);
+        if($res === false) return false;
+        if($schemeRequired && $res['scheme'] == '') return false;
+        if($hostRequired && $res['host'] == '') return false;
+        if($pathRequired && $res['path'] == '') return false;
+        if($queryRequired && $res['query'] == '') return false;
+        return true;
 #endif
     }
 
-
     /**
-     * check if the given value is
+     * check if the given value is an IP version 4
      * @param string $val the value
      * @return boolean true if it is valid
      */
-     /*
-    static public function is ($val){
+    static public function isIPv4 ($val){
 #ifdef PHP52
-        return filter_var($var, FILTER_VALIDATE_);
+        return filter_var($var, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
 #else
-        return false;
+        if(!preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/',$val,$m)) return false;
+        if(intval($m[1]) > 255) return false;
+        if(intval($m[2]) > 255) return false;
+        if(intval($m[3]) > 255) return false;
+        if(intval($m[4]) > 255) return false;
+        return true;
 #endif
-    }*/
+    }
 
-
-
+    /**
+     * check if the given value is an IP version 6
+     * @param string $val the value
+     * @return boolean true if it is valid
+     */
+    static public function isIPv6 ($val){
+#ifdef PHP52
+        return filter_var($var, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+#else
+        return preg_match('/^([a-f0-9]{1,4})(:([a-f0-9]{1,4})){7}$/i',$val,$m);
+#endif
+    }
 
 }
 
