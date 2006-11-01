@@ -26,9 +26,12 @@ Loic Mathaud (bballizlife) :
 
 
 Yannick Le Guédart (Torgan)
-    jAuthDriverClass
+    driver auth jAuthDriverClass
     plugin jtpl date_format
     Divers bug fix et petites améliorations
+
+Nicolas Jeudy
+    driver auth jAuthDriverLDS (pour les annuaires ldap LDS)
 
 M. Thiriot (Doubleface)
     testeur

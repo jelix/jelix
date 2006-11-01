@@ -29,6 +29,7 @@ interface jIAuthDriver {
 
     /**
      * creates a new user object, with some first datas..
+     * Careful : it doesn't create a user in a database for example. Just an object.
      * @param string $login the user login
      * @param string $password the user password
      * @return jAuthUser|object the returned object depends on the driver
@@ -38,7 +39,8 @@ interface jIAuthDriver {
     /**
     * store a new user.
     *
-    * should be call after a call of createUser and after settinfg some of its properties...
+    * It create the user in a database for example
+    * should be call after a call of createUser and after setting some of its properties...
     * @param jAuthUser|object $user the user data container
     */
     public function saveNewUser($user);
@@ -82,7 +84,7 @@ interface jIAuthDriver {
      * verify that the password correspond to the login
      * @param string $login the login of the user
      * @param string $password the password to test
-     * @return boolean
+     * @return jAuthUser|false
      */
     public function verifyPassword($login, $password);
 }
@@ -96,6 +98,10 @@ interface jIAuthDriver {
  */
 class jAuth {
 
+    /**
+     * Load the configuration of authentification, stored in the auth plugin config
+     * @return array
+     */
     protected static function  _getConfig(){
         static $config = null;
         if($config == null){
@@ -110,7 +116,10 @@ class jAuth {
         return $config;
     }
 
-
+    /**
+     * load the auth driver
+     * @return jIAuthDriver
+     */
     protected static function _getDriver(){
         static $driver = null;
         if($driver == null){
@@ -123,7 +132,9 @@ class jAuth {
     }
 
     /**
-     *
+     * Save a new user and send the AuthNewUser event
+     * @param jAuthUser $user the user data (can be an other type object, depending on the driver)
+     * @return jAuthUser the user (eventually, with additional datas)
      */
     public static function saveNewUser($user){
         $dr = self::_getDriver();
@@ -134,7 +145,11 @@ class jAuth {
     }
 
     /**
-     *
+     * remove a user
+     * send first AuthCanRemoveUser event, then if ok, send AuthRemoveUser
+     * and then remove the user
+     * @param string $login the user login
+     * @return boolean true if ok
      */
     public static function removeUser($login){
         $dr = self::_getDriver();
@@ -149,7 +164,8 @@ class jAuth {
     }
 
     /**
-     *
+     * save user datas and send AuthUpdateUser event
+     * @param jAuthUser $user
      */
     public static function updateUser(&$user){
         $dr = self::_getDriver();
@@ -160,7 +176,9 @@ class jAuth {
 
 
     /**
-     *
+     * load user data
+     * @param string $login
+     * @return jAuthUser the user
      */
     public static function getUser($login){
         $dr = self::_getDriver();
@@ -168,7 +186,10 @@ class jAuth {
     }
 
     /**
-     *
+     * Create a new user object
+     * @param string $login the user login
+     * @param string $password the user password
+     * @return jAuthUser|object the returned object depends on the driver
      */
     public static function createUser($login,$password){
         $dr = self::_getDriver();
@@ -177,7 +198,9 @@ class jAuth {
 
 
     /**
-     *
+     * construct the user list
+     * @param string $pattern '' for all users
+     * @return array array of jAuthUser|object
      */
     public static function getUserList($pattern = '%'){
         $dr = self::_getDriver();
@@ -185,7 +208,10 @@ class jAuth {
     }
 
     /**
+     * change a user password
      *
+     * @param string $login the login of the user
+     * @param string $newpassword
      */
     public static function changePassword($login, $newpassword){
         $dr = self::_getDriver();
@@ -193,7 +219,10 @@ class jAuth {
     }
 
     /**
-     *
+     * verify that the password correspond to the login
+     * @param string $login the login of the user
+     * @param string $password the password to test
+     * @return jAuthUser|false
      */
     public static function verifyPassword($login, $password){
         $dr = self::_getDriver();
@@ -201,7 +230,10 @@ class jAuth {
     }
 
     /**
-     *
+     * authentificate a user, and create a user in the php session
+     * @param string $login the login of the user
+     * @param string $password the password to test
+     * @return boolean true if authentification is ok
      */
     public static function login($login, $password){
 
@@ -223,7 +255,7 @@ class jAuth {
     }
 
     /**
-     *
+     * logout a user and delete the user in the php session
      */
     public static function logout(){
         jEvent::notify ('AuthLogout', array('login'=>$_SESSION['JELIX_USER']->login));
@@ -232,13 +264,15 @@ class jAuth {
 
     /**
      * Says if the user is connected
+     * @return boolean
      */
     public static function isConnected(){
         return (isset($_SESSION['JELIX_USER']) && $_SESSION['JELIX_USER']->login != '');
     }
 
    /**
-    * Récupération de l'objet utilisateur.
+    * return the user stored in the php session
+    * @return jAuthUser the user datas
     */
     public static function getUserSession (){
       if (! isset ($_SESSION['JELIX_USER'])){
