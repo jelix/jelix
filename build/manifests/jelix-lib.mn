@@ -183,6 +183,8 @@ cd lib/jelix/utils/
   jZone.class.php
   jAppManager.class.php
   jRss20Item.class.php
+  jMailer.class.php
+  jSmtp.class.php
 
 cd lib/json
   JSON.php

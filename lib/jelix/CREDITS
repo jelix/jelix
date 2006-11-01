@@ -12,15 +12,18 @@ sous copyright 2001-2005 Copix Team (http://www.copix.org)
 
 Contributeurs
 -------------
+(liste mise à jour à svn-286)
+
 Loic Mathaud (bballizlife) :
-    testeur, nombreuses corrections de bugs
-    contributions jTpl : version standalone du moteur de template, commentaires
+    testeur, nombreuses corrections de bugs dans jelix
+    contributions jTpl : version standalone du moteur de template, commentaires, {for}
     driver sqlite pour jDb
-    opérateurs supplementaires dans les daos
+    daos : opérateurs supplementaires
     adaptation du framework pour la réalisation d'applications fonctionnant en ligne de commande
-    reponse XML
+    implementation de jResponseXML, jResponseRss20
     corrections orthographiques dans la documentation
-    autres petites améliorations diverses
+    Diverses améliorations (jClasses::inc(), jIniFile, jAppManager, dans jelix-scripts etc. )
+
 
 Yannick Le Guédart (Torgan)
     jAuthDriverClass
@@ -33,3 +36,8 @@ M. Thiriot (Doubleface)
 
 Gildas Givaja (Giviz) : testeur, corrections de bugs
 Olivier Gambier (d-m-p) : review de code, corrections de bugs
+
+Contributeurs involontaires ;-)
+-------------------------------
+Brent R. Matzelle pour sa classe PHPMailer (jMailer dans Jelix)
+Chris Ryan  pour sa classe SMTP (jSmtp dans Jelix)

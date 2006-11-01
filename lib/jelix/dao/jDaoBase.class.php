@@ -22,23 +22,23 @@ abstract class jDaoRecordBase {
     const ERROR_BAD_FORMAT=3;
     const ERROR_MAXLENGTH = 4;
     const ERROR_MINLENGTH = 5;
-    
-    
+
+
     protected $_properties=array();
-    
+
     public function getProperties(){ return $this->_properties; }
 
     public function check(){
         $errors=array();
         foreach($this->_properties as $prop=>$infos){
             $value = $this->$prop;
-    
+
             // test required
             if($infos['required'] && $value === null && $infos['datatype'] != 'autoincrement' && $infos['datatype'] != 'bigautoincrement'){
                 $errors[$prop][] = self::ERROR_REQUIRED;
                 continue;
             }
-    
+
             if($infos['datatype']=='varchar' || $infos['datatype']=='string'){
                 if(!is_string($value) && $value !== null){
                     $errors[$prop][] = self::ERROR_BAD_TYPE;
@@ -49,18 +49,18 @@ abstract class jDaoRecordBase {
                     $errors[$prop][] = self::ERROR_BAD_FORMAT;
                     continue;
                 }
-    
+
                 //  test maxlength et minlength
                 $len = strlen($value);
                 if($infos['maxlength'] !== null && $len > intval($infos['maxlength'])){
                     $errors[$prop][] = self::ERROR_MAXLENGTH;
                 }
-    
+
                 if($infos['minlength'] !== null && $len < intval($infos['minlength'])){
                     $errors[$prop][] = self::ERROR_MINLENGTH;
                 }
-    
-    
+
+
             }elseif( in_array($infos['datatype'], array('int','integer','numeric', 'double', 'float'))) {
                 // test datatype
                 if($value !== null && !is_numeric($value)){
@@ -113,8 +113,8 @@ abstract class jDaoFactoryBase  {
     protected $_whereClause;
     protected $_DaoRecordClassName;
     protected $_pkFields;
-    
-    
+
+
     function  __construct($conn){
         $this->_conn = $conn;
     }
@@ -124,12 +124,12 @@ abstract class jDaoFactoryBase  {
         $rs->setFetchMode(8,$this->_DaoRecordClassName);
         return $rs;
     }
-    
+
     public function countAll(){
         $query = 'SELECT COUNT(*) as c '.$this->_fromClause.$this->_whereClause;
         $rs  =  $this->_conn->query ($query);
         $res =  $rs->fetch ();
-        return $res->c;
+        return intval($res->c);
     }
 
     public function get(){
@@ -138,14 +138,14 @@ abstract class jDaoFactoryBase  {
             $args=$args[0];
         }
         $keys = array_combine($this->_pkFields,$args );
-    
+
         if($keys === false){
             throw new jException('jelix~dao.error.keys.missing');
         }
-    
+
         $q = $this->_selectClause.$this->_fromClause.$this->_whereClause;
         $q .= $this->_getPkWhereClauseForSelect($keys);
-    
+
         $rs  =  $this->_conn->query ($q);
         $rs->setFetchMode(8,$this->_DaoRecordClassName);
         $record =  $rs->fetch ();
@@ -165,10 +165,10 @@ abstract class jDaoFactoryBase  {
         $q.= $this->_getPkWhereClauseForNonSelect($keys);
         return $this->_conn->exec ($q);
     }
-    
+
     abstract public function insert ($record);
     abstract public function update ($record);
-    
+
 
     /**
         * @param jDaoConditions $searchcond
@@ -179,7 +179,7 @@ abstract class jDaoFactoryBase  {
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
             $query .= $this->_createConditionsClause($searchcond);
         }
-    
+
         if($limitCount != 0){
             $rs  =  $this->_conn->limitQuery ($query, $limitOffset, $limitCount);
         }else{
@@ -196,13 +196,13 @@ abstract class jDaoFactoryBase  {
         *
         */
     protected function _createConditionsClause($daocond){
-    
+
         $c = $this->_DaoRecordClassName;
         $rec= new $c();
         $fields = $rec->getProperties();
-    
+
         $sql = $this->_generateCondition ($daocond->condition, $fields, true);
-    
+
         $order = array ();
         foreach ($daocond->order as $name => $way){
             if (isset($fields[$name])){
@@ -227,12 +227,12 @@ abstract class jDaoFactoryBase  {
                 $r .= ' '.$condition->glueOp.' ';
             }else
                 $notfirst = true;
-    
+
             $prop=$fields[$cond['field_id']];
-    
+
             $prefixNoCondition = $this->_tables[$prop['table']]['name'].'.'.$prop['fieldName'];
             $prefix=$prefixNoCondition.' '.$cond['operator'].' '; // ' ' pour les like..
-    
+
             if (!is_array ($cond['value'])){
                 $value = $this->_prepareValue($cond['value'],$prop['datatype']);
                 if ($value === 'NULL'){
@@ -275,7 +275,7 @@ abstract class jDaoFactoryBase  {
             }
             $r .= $this->_generateCondition($conditionDetail, $fields, false);
         }
-    
+
         //adds parenthesis around the sql if needed (non empty)
         if (strlen (trim ($r)) > 0 && !$principal){
             $r = '('.$r.')';

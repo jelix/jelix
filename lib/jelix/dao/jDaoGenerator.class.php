@@ -315,7 +315,7 @@ class jDaoGenerator {
                case 'count':
                   $src[] = '    $rs = $this->_conn->query($query);';
                   $src[] = '    $res = $rs->fetch();';
-                  $src[] = '    return $res->c;';
+                  $src[] = '    return intval($res->c);';
                   break;
                case 'selectfirst':
                   $src[] = '    $rs = $this->_conn->query($query);';
