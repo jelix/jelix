@@ -76,5 +76,15 @@ class CTDefault extends jController {
       return $rep;
    }
 
+   function testfilter(){
+      $rep = $this->getResponse('unittest');
+      $rep->title = 'test unitaires sur jfilter';
+
+      $ut = jClasses::create("unittestservice");
+      $ut->init($rep);
+      $ut->filterTest();
+
+      return $rep;
+   }
 }
 ?>

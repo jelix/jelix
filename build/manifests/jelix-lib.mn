@@ -186,6 +186,7 @@ cd lib/jelix/utils/
   jRss20Item.class.php
   jMailer.class.php
   jSmtp.class.php
+* jFilter.class.php
 
 cd lib/json
   JSON.php

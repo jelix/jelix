@@ -586,7 +586,7 @@
          *    @access public
          *    @static
          */
-        function &createLexer(&$parser) {
+        static function &createLexer(&$parser) {
             $lexer = &new SimpleHtmlLexer($parser);
             return $lexer;
         }
@@ -696,7 +696,7 @@
          *    @access public
          *    @static
          */
-        function decodeHtml($html) {
+        static function decodeHtml($html) {
             static $translations;
             if (! isset($translations)) {
                 $translations = array_flip(get_html_translation_table(HTML_ENTITIES));
@@ -713,7 +713,7 @@
          *    @access public
          *    @static
          */
-        function normalise($html) {
+        static function normalise($html) {
             $text = preg_replace('|<!--.*?-->|', '', $html);
             $text = preg_replace('|<img.*?alt\s*=\s*"(.*?)".*?>|', ' \1 ', $text);
             $text = preg_replace('|<img.*?alt\s*=\s*\'(.*?)\'.*?>|', ' \1 ', $text);

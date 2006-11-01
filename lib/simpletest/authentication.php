@@ -228,7 +228,7 @@
          *    @access public
          *    @static
          */
-        function addBasicHeaders(&$request, $username, $password) {
+        static function addBasicHeaders(&$request, $username, $password) {
             if ($username && $password) {
                 $request->addHeaderLine(
                         'Authorization: Basic ' . base64_encode("$username:$password"));

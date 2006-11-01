@@ -195,7 +195,7 @@ class jUrl extends jUrlBase {
     public function toString ($forxml = false){
         $url = $this->scriptName.$this->pathInfo;
         if (count ($this->params)>0){
-            $url .='?'.self::_collapseParams($this->params, $forxml);
+            $url .='?'.http_build_query($this->params, '', ($forxml?'&amp;':'&'));
         }
         return $url;
     }
@@ -207,7 +207,7 @@ class jUrl extends jUrlBase {
     * @deprecated
     */
     public function collapseParams ($forxml = false) {
-        return self::_collapseParams($this->params, $forxml);
+        return http_build_query($this->params, '', ($forxml?'&amp;':'&'));
     }
 
     //============================== static helper methods
@@ -222,7 +222,7 @@ class jUrl extends jUrlBase {
         static $url = false;
         if ($url === false){
            $url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].$GLOBALS['gJCoord']->request->url_path_info.'?';
-           $url.= self::_collapseParams($_GET,$forxml);
+           $url.= http_build_query($_GET, '', ($forxml?'&amp;':'&'));
         }
         return $url;
     }
@@ -234,9 +234,9 @@ class jUrl extends jUrlBase {
     */
     static function appendToUrlString ($url, $params = array (), $forxml = false){
         if ((($pos = strpos ( $url, '?')) !== false) && ($pos !== (strlen ($url)-1))){
-            return $url . ($forxml ? '&amp;' : '&').jUrl::_collapseParams ($params, $forxml);
+            return $url . ($forxml ? '&amp;' : '&').http_build_query($params, '', ($forxml?'&amp;':'&'));
         }else{
-            return $url . '?'.jUrl::_collapseParams ($params, $forxml);
+            return $url . '?'.http_build_query($params, '', ($forxml?'&amp;':'&'));
         }
     }
 
@@ -272,26 +272,6 @@ class jUrl extends jUrlBase {
      */
     static function parse($scriptNamePath, $pathinfo, $params ){
          return jUrl::getEngine()->parse($scriptNamePath,$pathinfo, $params);
-    }
-
-
-    /**
-    * collapse parameters to generate an url parameters string
-    * @param array $params array of parameters
-    * @param boolean $forxml if the string has to be html compliant (&amp; for &)
-    * @return string the url
-    */
-    static private function _collapseParams ($params, $forxml = false) {
-        $url = '';
-        $amp = ($forxml ? '&amp;' : '&');
-        foreach ($params as $k=>$v){
-            if ($url == ''){
-                $url = $k.'='.urlencode($v);
-            }else{
-                $url .= $amp.$k.'='.urlencode($v);
-            }
-        }
-        return $url;
     }
 
     /**

@@ -67,5 +67,10 @@ class UnitTestService {
       $test->run(new jHtmlRespReporter($this->_rep));
    }
 
+   function filterTest(){
+      $test = jClasses::create("utfilter");
+      $test->run(new jHtmlRespReporter($this->_rep));
+   }
+
 }
 ?>
