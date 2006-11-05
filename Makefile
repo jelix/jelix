@@ -80,6 +80,13 @@ modules-dist:
 modules-test:
 	$(PHP) build/buildmodules.php $(TESTPATHSWITCH) build/config/modules-test.ini
 
+nightlies:
+	$(PHP) build/buildjelix.php $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jelix-dist-dev.ini
+	$(PHP) build/buildjelix.php $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jelix-dist-opt.ini
+	$(PHP) build/buildapp.php $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/testapp-dist.ini
+	$(PHP) build/buildjbt.php $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jbt-dist.ini
+	$(PHP) build/buildjtpl.php $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jtpl-dist.ini
+	$(PHP) build/buildapp.php $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/myapp-dist.ini
 
 docs: jelix-test
 	$(PHPDOC)  -d $(TESTPATH)/lib/jelix/ -t $(DOCSPATH) \

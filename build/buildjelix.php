@@ -36,6 +36,7 @@ Env::initBool(array(
 'PACKAGE_ZIP', // indique de créer un paquet zip
 //'PACKAGE_DEB',
 'STRIP_COMMENT',
+'NIGHTLY_NAME',
 ));
 
 //----------------- Preparation des variables d'environnement
@@ -71,7 +72,10 @@ if(!$ENABLE_OPTIMIZE)
     $STRIP_COMMENT='';
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-    $PACKAGE_NAME='jelix-'.$LIB_VERSION;
+    if($NIGHTLY_NAME)
+        $PACKAGE_NAME='jelix-nightly';
+    else
+        $PACKAGE_NAME='jelix-'.$LIB_VERSION;
 
     if($PHP_VERSION_TARGET)
         $PACKAGE_NAME.='-php'.$PHP_VERSION_TARGET;

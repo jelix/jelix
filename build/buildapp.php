@@ -19,6 +19,7 @@ Env::init(array(
 Env::initBool(array(
 'PACKAGE_TAR_GZ', // indique de créer un paquet tar.gz
 'PACKAGE_ZIP', // indique de créer un paquet zip
+'NIGHTLY_NAME',
 ));
 
 //----------------- Preparation des variables d'environnement
@@ -39,7 +40,10 @@ Env::set('MAIN_TARGET_PATH', '_dist', true);
 
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-    $PACKAGE_NAME=$APPNAME.'-'.$VERSION;
+    if($NIGHTLY_NAME)
+        $PACKAGE_NAME=$APPNAME.'-nightly';
+    else
+        $PACKAGE_NAME=$APPNAME.'-'.$VERSION;
     //$MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME;
 }
 

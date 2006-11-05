@@ -18,6 +18,7 @@ Env::init(array(
 Env::initBool(array(
 'PACKAGE_TAR_GZ', // indique de créer un paquet tar.gz
 'PACKAGE_ZIP', // indique de créer un paquet zip
+'NIGHTLY_NAME',
 ));
 
 //----------------- Preparation des variables d'environnement
@@ -32,7 +33,10 @@ Env::set('MAIN_TARGET_PATH', '_dist', true);
 Env::set('JTPL_STANDALONE','1');
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-    $PACKAGE_NAME = 'jtpl-'.$VERSION;
+    if($NIGHTLY_NAME)
+        $PACKAGE_NAME = 'jtpl-nightly';
+    else
+        $PACKAGE_NAME = 'jtpl-'.$VERSION;
 
     $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME.'/';
 }else{
