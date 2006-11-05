@@ -1,8 +1,15 @@
 cd .
   mkdist.php
   mkmanifest.php
-  preprocessor.lib.php
   preprocess.php
   VERSION
   LICENCE
   README.TXT
+  CREDITS
+
+cd lib
+   jBuild.inc.php
+   jBuildUtils.lib.php
+   preprocessor.lib.php
+   jManifest.class.php
+   jCmdUtils.class.php

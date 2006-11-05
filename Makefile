@@ -1,172 +1,88 @@
+
 SHELL=/bin/sh
 PHP=/usr/bin/php
 PHPDOC=../../phpdoc/phpdoc
 
 CURRENT_PATH = $(shell pwd)
 
-ifndef LIB_VERSION
-LIB_VERSION = $(shell cat lib/jelix/VERSION)
+ifdef DISTPATH
+DISTPATHSWITCH="-D MAIN_TARGET_PATH=$(DISTPATH)"
+else
+DISTPATH=_dist
+DISTPATHSWITCH=
 endif
-
-ifndef JTPL_VERSION
-JTPL_VERSION = $(shell cat lib/jelix/tpl/VERSION)
+ifdef TESTPATH
+TESTPATHSWITCH="-D MAIN_TARGET_PATH=$(TESTPATH)"
+else
+TESTPATH=_dev
+TESTPATHSWITCH=
 endif
-
-ifndef JBT_VERSION
-JBT_VERSION = $(shell cat build/VERSION)
-endif
-
-SVN_REVISION = $(shell svn info | grep -E "vision" -m 1 | cut -d ":" -f 2 | cut -d " " -f 2)
-
-ifeq ($(LIB_VERSION),SVN)
-LIB_VERSION=SVN-$(SVN_REVISION)
-endif
-
-ifeq ($(JTPL_VERSION),SVN)
-JTPL_VERSION=SVN-$(SVN_REVISION)
-endif
-
-ifeq ($(JBT_VERSION),SVN)
-JBT_VERSION=SVN-$(SVN_REVISION)
-endif
-
-ifndef LIB_NAME
-LIB_NAME=$(LIB_VERSION)
-endif
-ifndef JTPL_NAME
-JTPL_NAME=$(LIB_VERSION)
-endif
-ifndef JBT_NAME
-JBT_NAME=$(LIB_VERSION)
-endif
-
-ifndef DIST
-DIST=_dist
-endif
-ifndef DEV
-DEV=_dev
-endif
-ifndef DOCS
-DOCS=_docs
-endif
-
-
-
-DISTJELIX="$(DIST)/jelix-$(LIB_VERSION)"
-DISTHACKER="$(DEV)"
-DISTJTPL="$(DIST)/jtpl"
-DEVJTPL="$(DEV)/jtpl"
-DISTJBT="$(DIST)/jbuildtools"
-
-ifndef J_TEMP
-J_TEMP=$(DISTHACKER)
-endif
-
-ifndef J_LIB
-J_LIB=$(DISTHACKER)
+ifndef DOCSPATH
+DOCSPATH=_docs
 endif
 
 default:
-	@echo "target:  "
-	@echo "   dist-all dist-jelix dist-testapp dist-myapp dist-modules dist-demoxul"
-	@echo "   dev-all dev-jelix dev-jelix-lib dev-myapp dev-testapp dev-modules dev-demoxul"
-	@echo "   jtpl jtpl-dist"
-	@echo "   jbt-dist"
-	@echo "   docs"
+	@echo "target:"
+	@echo " tests editions : "
+	@echo "     jelix-test, jtpl-test, testapp-test, myapp-test, all-test"
+	@echo " developers editions : (generate package for users)"
+	@echo "     jelix-dist, testapp-dist, myapp-dist, jtpl-dist, jbt-dist, docs-dist, all-dist"
+	@echo " productions serveur editions : (generate optimized version with package)"
+	@echo "     jelix-dist-opt all-dist-opt"
+	@echo " Génération de la doc: "
+	@echo "     docs"
 	@echo "paramètres facultatifs (valeurs actuelles) :"
-	@echo "   DIST : repertoire cible pour les distributions (" $(DIST) ")"
-	@echo "   DEV : repertoire cible pour developper (" $(DEV) ")"
-	@echo "   LIB_VERSION : numéro de version de Jelix (" $(LIB_VERSION) ")"
-	@echo "   JTPL_VERSION : numéro de version de jtpl standalone (" $(JTPL_VERSION) ")"
-	@echo "répertoire de construction des projets:"
-	@echo "   distributions jelix testapp myapp demoxul : " $(DISTJELIX)
-	@echo "   developpement jelix testapp myapp demoxul : " $(DISTHACKER)
-	@echo "   distribution jtpl : " $(DISTJTPL)
+	@echo "   DISTPATH : repertoire cible pour les distributions (" $(DISTPATH) ")"
+	@echo "   TESTPATH : repertoire cible pour developper (" $(TESTPATH) ")"
 
-dist-all: dist-jelix dist-testapp dist-myapp jtpl-dist jbt-dist dist-modules
+all-dist: jelix-dist testapp-dist myapp-dist jtpl-dist jbt-dist
 
-dev-all: dev-jelix dev-modules dev-myapp dev-testapp jtpl
+all-dist-opt: jelix-dist-opt
 
-dist-jelix: common-dist
-	export LIB_VERSION=$(LIB_VERSION) \
-	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTJELIX) \
-	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(DISTJELIX) \
-	&& $(PHP) build/mkdist.php build/manifests/jelix-others.mn . $(DISTJELIX) \
-	&& echo "$(LIB_VERSION)" > "$(DISTJELIX)/lib/jelix/VERSION"
-	tar czf $(DIST)/jelix-lib-$(LIB_NAME).tar.gz  -C $(DISTJELIX) lib/ temp/
+all-test: jelix-test  myapp-test testapp-test jtpl-test
 
-dist-testapp: common-dist
-	$(PHP) build/mkdist.php build/manifests/testapp.mn . $(DISTJELIX)
-	tar czf $(DIST)/testapp-$(LIB_NAME).tar.gz  -C $(DISTJELIX) testapp/ temp/testapp/
+jelix-dist:
+	$(PHP) build/buildjelix.php $(DISTPATHSWITCH) build/config/jelix-dist-dev.ini
 
-dist-demoxul: common-dist
-	$(PHP) build/mkdist.php build/manifests/demoxul.mn . $(DISTJELIX)
-	tar czf $(DIST)/demoxul-$(LIB_NAME).tar.gz  -C $(DISTJELIX) demoxul/ temp/demoxul/
+jelix-dist-opt:
+	$(PHP) build/buildjelix.php $(DISTPATHSWITCH) build/config/jelix-dist-opt.ini
 
-dist-myapp: common-dist
-	$(PHP) build/mkdist.php build/manifests/myapp.mn . $(DISTJELIX)
-	tar czf $(DIST)/myapp-$(LIB_NAME).tar.gz  -C $(DISTJELIX) myapp/ temp/myapp/
+jelix-test:
+	$(PHP) build/buildjelix.php $(TESTPATHSWITCH) build/config/jelix-test.ini
 
-dist-modules: common-dist
-	export LIB_VERSION=$(LIB_VERSION) \
-	&& $(PHP) build/mkdist.php build/manifests/jelix-modules.mn lib/jelix-modules/ $(DIST)/additional-modules/
-	tar czf $(DIST)/jelix-additional-modules-$(LIB_NAME).tar.gz  -C $(DIST) additional-modules/
+testapp-dist:
+	$(PHP) build/buildapp.php $(DISTPATHSWITCH) build/config/testapp-dist.ini
 
-common-dist:
-	if [ ! -d "$(DIST)" ] ; then mkdir $(DIST) ; fi
-	if [ ! -d "$(DISTJELIX)" ] ; then mkdir $(DISTJELIX) ; fi
-	if [ ! -d "$(DIST)/additional-modules/" ] ; then mkdir $(DIST)/additional-modules/ ; fi
+testapp-test:
+	$(PHP) build/buildapp.php $(TESTPATHSWITCH) build/config/testapp-test.ini
 
-dev-jelix: common-dev
-	export LIB_VERSION=$(LIB_VERSION) \
-	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(J_LIB) \
-	&& $(PHP) build/mkdist.php build/manifests/jelix-dev.mn . $(J_LIB) \
-	&& $(PHP) build/mkdist.php build/manifests/jelix-others.mn . $(J_TEMP) \
-	&& echo "$(LIB_VERSION)" > "$(J_LIB)/lib/jelix/VERSION"
+myapp-dist:
+	$(PHP) build/buildapp.php $(DISTPATHSWITCH) build/config/myapp-dist.ini
 
-dev-jelix-lib: common-dev
-	export LIB_VERSION=$(LIB_VERSION) \
-	&& $(PHP) build/mkdist.php build/manifests/jelix-lib.mn . $(DISTHACKER) \
-	&& echo "$(LIB_VERSION)" > "$(DISTHACKER)/lib/jelix/VERSION"
-
-dev-modules: common-dev
-	export LIB_VERSION=$(LIB_VERSION) \
-	&& $(PHP) build/mkdist.php build/manifests/jelix-modules.mn lib/jelix-modules/ $(DISTHACKER)/lib/jelix-modules/
-
-dev-testapp: common-dev
-	$(PHP) build/mkdist.php build/manifests/testapp.mn . $(DISTHACKER)
-
-dev-myapp: common-dev
-	$(PHP) build/mkdist.php build/manifests/myapp.mn . $(DISTHACKER)
-
-dev-demoxul: common-dev
-	$(PHP) build/mkdist.php build/manifests/demoxul.mn . $(DISTHACKER)
-
-common-dev:
-	if [ ! -d "$(DISTHACKER)" ] ; then mkdir $(DISTHACKER) ; fi
-
-jtpl:
-	if [ ! -d "$(DEVJTPL)" ] ; then mkdir $(DEVJTPL) ; fi
-	export JTPL_STANDALONE=1 \
-	&& $(PHP) build/mkdist.php build/manifests/jtpl-standalone.mn . $(DEVJTPL) \
-	&& echo "$(JTPL_VERSION)" > "$(DEVJTPL)/VERSION"
+myapp-test:
+	$(PHP) build/buildapp.php $(TESTPATHSWITCH) build/config/myapp-test.ini
 
 jtpl-dist:
-	if [ ! -d "$(DISTJTPL)" ] ; then mkdir $(DISTJTPL) ; fi
-	export JTPL_STANDALONE=1 \
-	&& $(PHP) build/mkdist.php build/manifests/jtpl-standalone.mn . $(DISTJTPL) \
-	&& echo "$(JTPL_VERSION)" > "$(DISTJTPL)/VERSION"
-	tar czf $(DIST)/jtpl-$(JTPL_NAME).tar.gz  -C $(DIST) jtpl/
+	$(PHP) build/buildjtpl.php $(DISTPATHSWITCH) build/config/jtpl-dist.ini
+
+jtpl-test:
+	$(PHP) build/buildjtpl.php $(TESTPATHSWITCH) build/config/jtpl-test.ini
 
 jbt-dist:
-	if [ ! -d "$(DISTJBT)" ] ; then mkdir $(DISTJBT) ; fi
-	$(PHP) build/mkdist.php build/manifests/jbuildtools.mn build/ $(DISTJBT) \
-	&& echo "$(JBT_VERSION)" > "$(DISTJBT)/VERSION"
-	tar czf $(DIST)/jbuildtools-$(JBT_NAME).tar.gz  -C $(DIST) jbuildtools/
+	$(PHP) build/buildjbt.php $(DISTPATHSWITCH) build/config/jbt-dist.ini
+
+jbt-test:
+	$(PHP) build/buildjbt.php $(TESTPATHSWITCH) build/config/jbt-test.ini
+
+modules-dist:
+	$(PHP) build/buildmodules.php $(DISTPATHSWITCH) build/config/modules-dist.ini
+
+modules-test:
+	$(PHP) build/buildmodules.php $(TESTPATHSWITCH) build/config/modules-test.ini
 
 
-docs: dev-jelix-lib
-	$(PHPDOC)  -d $(DISTHACKER)/lib/jelix/ -t $(DOCS) \
+docs: jelix-test
+	$(PHPDOC)  -d $(TESTPATH)/lib/jelix/ -t $(DOCSPATH) \
 	-o "HTML:frames:DOM/jelix" -s on -ct "contributor,licence" -i *.ini.php \
 	-ti "Jelix API Reference" -ric "README,INSTALL,CHANGELOG,CREDITS,LICENCE,VERSION"
 	# -tb $(CURRENT_PATH)/build/phpdoc/

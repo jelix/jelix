@@ -10,7 +10,8 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-require_once(dirname(__FILE__).'/preprocessor.lib.php');
+require_once(dirname(__FILE__).'/lib/preprocessor.lib.php');
+require_once(dirname(__FILE__).'/lib/jBuildUtils.lib.php');
 
 // arguments :  chemin_source chemin_dist
 
@@ -38,22 +39,6 @@ if($restrictedDirectory !=''){
       exit(1);
    }
 }
-
-function createDir ($dir){
-    if (!file_exists($dir)) {
-        createDir(dirname($dir));
-        mkdir($dir, 0775);
-    }
-}
-
-function normalizeDir($dirpath){
-  if(substr($dirpath,-1) != '/'){
-    $dirpath.='/';
-  }
-  return $dirpath;
-}
-
-
 try{
 
     $proc = new jPreProcessor();
@@ -65,7 +50,7 @@ try{
   exit(1);
 }
 
-createDir(dirname($distfile));
+jBuildUtils::createDir(dirname($distfile));
 file_put_contents($distfile, $dist);
 exit(0);
 

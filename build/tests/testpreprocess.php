@@ -10,7 +10,7 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-require_once(dirname(__FILE__).'/../preprocessor.lib.php');
+require_once(dirname(__FILE__).'/../lib/preprocessor.lib.php');
 
 require_once(dirname(__FILE__).'/../../lib/simpletest/unit_tester.php');
 require_once(dirname(__FILE__).'/../../lib/simpletest/reporter.php');
