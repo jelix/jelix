@@ -14,7 +14,7 @@ require_once ('{$rp_app}application.init.php');
 
 require_once (JELIX_LIB_CORE_PATH.'request/jRdfRequest.class.php');
 
-$config_file = 'config.rdf.ini.php';
+$config_file = 'rdf/config.ini.php';
 
 $jelix = new jCoordinator($config_file);
 $jelix->process(new jRdfRequest());
