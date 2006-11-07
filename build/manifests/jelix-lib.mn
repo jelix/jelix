@@ -276,6 +276,7 @@ cd lib/jelix-modules/jxauth/templates
   login.form.tpl
   xaovlay.tpl
   xuladmin.tpl
+  index.tpl
 cd lib/jelix-modules/jxauth/daos
   jelixuser.dao.xml
 

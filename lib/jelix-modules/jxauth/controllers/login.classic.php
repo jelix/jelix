@@ -63,7 +63,8 @@ class CTLogin extends jController {
     function form() {
         $rep = $this->getResponse('html');
 
-        $rep->title =  jLocale::get ('jxauth.titlePage.login');
+        $rep->title =  jLocale::get ('auth.titlePage.login');
+        $rep->bodyTpl = 'jxauth~index';
         $rep->body->assignZone ('MAIN', 'jxauth~loginform', array ('login'=>$this->param('login'), 'failed'=>$this->param('failed')));
 
         return $rep;
