@@ -28,20 +28,8 @@ cd lib/jelix/controllers
   jControllerCmdLine.class.php
 
 cd lib/jelix/core
-  defaultconfig.ini.php
-  jConfig.class.php
+! defaultconfig.ini.php
   jConfigCompiler.class.php
-  jContext.class.php
-  jController.class.php
-  jCoordinator.class.php
-  jErrorHandler.lib.php
-  jException.lib.php
-  jIncluder.class.php
-  jIPlugin.iface.php
-  jLocale.class.php
-  jRequest.class.php
-  jResponse.class.php
-  jSelector.class.php
 
 cd lib/jelix/core/request
   jClassicRequest.class.php
@@ -69,7 +57,6 @@ cd lib/jelix/core/response
   jResponseRss20.class.php
 
 cd lib/jelix/core/url
-  jUrl.class.php
   jUrlCompiler.significant.class.php
   jUrlEngine.significant.class.php
   jUrlEngine.simple.class.php
@@ -112,12 +99,12 @@ cd lib/jelix/events
   jEventListenerFactory.class.php
 
 cd lib/jelix/forms
-   jForms.class.php
-   jFormsBase.class.php
-   jFormsCompiler.class.php
-   jFormsControl.class.php
-   jFormsDataContainer.class.php
-   jFormsDatasource.class.php
+  jForms.class.php
+  jFormsBase.class.php
+  jFormsCompiler.class.php
+  jFormsControl.class.php
+  jFormsDataContainer.class.php
+  jFormsDatasource.class.php
 
 cd lib/jelix/tpl/
 *  jTpl.class.php
@@ -176,7 +163,7 @@ cd lib/jelix/utils/
   jDateTime.class.php
   jFile.class.php
   jIniFile.class.php
-  jJsonRpc.class.php
+* jJsonRpc.class.php
   jLog.class.php
   jWiki.class.php
   jXmlRpc.class.php
@@ -187,10 +174,6 @@ cd lib/jelix/utils/
   jMailer.class.php
   jSmtp.class.php
 * jFilter.class.php
-
-cd lib/json
-  JSON.php
-  LICENSE
 
 cd lib/jelix-modules
   LICENCE
@@ -228,12 +211,12 @@ cd lib/jelix-modules/jelix/locales/fr_FR
   ui.UTF-8.properties
   auth.UTF-8.properties
 cd lib/jelix-modules/jelix/controllers
-  help.cmdline.php
-  error.classic.php
-  error.xul.php
-  error.jsonrpc.php
-  error.xmlrpc.php
-  error.rdf.php
+! help.cmdline.php
+! error.classic.php
+! error.xul.php
+! error.jsonrpc.php
+! error.xmlrpc.php
+! error.rdf.php
 cd lib/jelix-modules/jelix/templates
   404.xul.tpl
   404.html.tpl
@@ -243,7 +226,7 @@ cd lib/jelix-modules/jxauth
   module.xml
   events.xml
 cd lib/jelix-modules/jxauth/plugins/auth
-  auth.plugin.php
+! auth.plugin.php
   plugin.xml
   auth.plugin.ini.php.dist
 cd lib/jelix-modules/jxauth/locales/en_US
@@ -262,16 +245,16 @@ cd lib/jelix-modules/jxauth/install/scripts
   install.schema.mysql.sql
   install.datas.mysql.sql
 cd lib/jelix-modules/jxauth/classes
-  auth.listener.php
+!  auth.listener.php
 cd lib/jelix-modules/jxauth/controllers
-  login.classic.php
-  loginsw.classic.php
-  login.jsonrpc.php
-  xuladmin.classic.php
-  admin.jsonrpc.php
-  admin.rdf.php
+! login.classic.php
+! loginsw.classic.php
+! login.jsonrpc.php
+! xuladmin.classic.php
+! admin.jsonrpc.php
+! admin.rdf.php
 cd lib/jelix-modules/jxauth/zones
-  loginform.zone.php
+! loginform.zone.php
 cd lib/jelix-modules/jxauth/templates
   login.form.tpl
   xaovlay.tpl
@@ -284,13 +267,13 @@ cd lib/jelix-modules/jxacl
    module.xml
    events.xml
 cd lib/jelix-modules/jxacl/classes
-   acl.listener.php
-   aclservice.class.php
+!  acl.listener.php
+!  aclservice.class.php
 cd lib/jelix-modules/jxacl/controllers
-   xuladmin.classic.php
-   admin.rdf.php
-   admin.jsonrpc.php
-   admin.classic.php
+!  xuladmin.classic.php
+!  admin.rdf.php
+!  admin.jsonrpc.php
+!  admin.classic.php
 cd lib/jelix-modules/jxacl/daos
    jaclgroup.dao.xml
    jaclrights.dao.xml
@@ -317,11 +300,11 @@ cd lib/jelix-plugins
   INSTALL
   CREDITS
 cd lib/jelix-plugins/magicquotes
-  magicquotes.plugin.php
+! magicquotes.plugin.php
   plugin.xml
 cd lib/jelix-plugins/autolocale
   autolocale.plugin.ini.php.dist
-  autolocale.plugin.php
+! autolocale.plugin.php
   plugin.xml
 
 
@@ -343,19 +326,19 @@ cd lib/jelix-www/xul
 
 
 cd lib/diff
-  difflib.php
-  diffhtml.php
+! difflib.php
+! diffhtml.php
   README
 
 cd lib/wikirenderer
   CHANGELOG
   CREDITS
   LICENCE
-  WikiRenderer.lib.php
+! WikiRenderer.lib.php
 
 cd lib/wikirenderer/rules
-  wr3_to_xhtml.php
-  classicwr_to_text.php
-  classicwr_to_xhtml.php
-  classicwr_to_wr3.php
-  wr3_to_text.php
+! wr3_to_xhtml.php
+! classicwr_to_text.php
+! classicwr_to_xhtml.php
+! classicwr_to_wr3.php
+! wr3_to_text.php

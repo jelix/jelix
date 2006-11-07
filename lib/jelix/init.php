@@ -46,6 +46,24 @@ define ('JELIX_MODULE_PATH',  LIB_PATH.'jelix-modules/');
 
 error_reporting (E_ALL);
 
+#ifdef ENABLE_OPTIMIZE
+
+#includephp core/jErrorHandler.lib.php
+#includephp core/jException.lib.php
+#includephp core/jContext.class.php
+#includephp core/jConfig.class.php
+#includephp core/jSelector.class.php
+#includephp core/url/jUrl.class.php
+#includephp core/jCoordinator.class.php
+#includephp core/jController.class.php
+#includephp core/jRequest.class.php
+#includephp core/jResponse.class.php
+#includephp core/jLocale.class.php
+#includephp core/jIncluder.class.php
+#includephp core/jIPlugin.iface.php
+
+#else
+
 // chargement du coeur
 require_once (JELIX_LIB_CORE_PATH . 'jErrorHandler.lib.php');
 require_once (JELIX_LIB_CORE_PATH . 'jException.lib.php');
@@ -60,6 +78,9 @@ require_once (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jIPlugin.iface.php');
+
+#endif
+
 
 /**
  * The main object of Jelix which process all things
@@ -111,9 +132,15 @@ function __autoload($class){
       $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
    }
 
-   //if(file_exists($f)){
-      require_once($f);
-   //}
+#ifdef ENABLE_OPTIMIZE
+    require_once($f);
+#else
+    if(file_exists($f)){
+        require_once($f);
+    }else{
+        throw new Exception("Jelix fatal error : Unknow class $class");
+    }
+#endif
 
 }
 

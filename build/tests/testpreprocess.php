@@ -14,6 +14,7 @@ require_once(dirname(__FILE__).'/../lib/preprocessor.lib.php');
 
 require_once(dirname(__FILE__).'/../../lib/simpletest/unit_tester.php');
 require_once(dirname(__FILE__).'/../../lib/simpletest/reporter.php');
+require_once(dirname(__FILE__).'/../../lib/diff/difflib.php');
 
 define('PP_DATA_DIR','ppdatas/');
 
@@ -71,6 +72,42 @@ class PreProcTestCase extends UnitTestCase {
     );
 
 
+    protected $testcase2 = array(
+      'source2.txt'=>array(
+           'result2_1.txt'=>array('FOO'=>''),
+           'result2_2.txt'=>array('FOO'=>true),
+          ),
+      'source3.txt'=>array(
+           'result3_1.txt'=>array('FOO'=>''),
+           'result3_2.txt'=>array('FOO'=>true),
+          ),
+      'source4.txt'=>array(
+           'result4_1.txt'=>array('FOO'=>'', 'BAR'=>''),
+           'result4_2.txt'=>array('FOO'=>true, 'BAR'=>''),
+           'result4_3.txt'=>array('BAR'=>true, 'FOO'=>''),
+           'result4_4.txt'=>array('FOO'=>true, 'BAR'=>true),
+          ),
+      'source5.txt' =>array(
+           'result5_1.txt'=>array('FOO'=>'', 'BAR'=>''),
+           'result5_2.txt'=>array('FOO'=>"une variable foo", "BAR"=>"le bar est ouvert"),
+          ),
+      'source6.txt'=>array(
+           'result6_1.txt'=>array('FOO'=>'', 'BAR'=>''),
+           'result6_2.txt'=>array('FOO'=>true),
+           'result6_3.txt'=>array('BAR'=>true),
+           'result6_4.txt'=>array('FOO'=>true, 'BAR'=>true),
+          ),
+      'source7.txt'=>array(
+           'result7_1.txt'=>array('FOO'=>'', 'BAR'=>'', 'BAZ'=>''),
+           'result7_2.txt'=>array('FOO'=>true, 'BAR'=>'', 'BAZ'=>''),
+           'result7_3.txt'=>array('BAR'=>true, 'FOO'=>''),
+           'result7_4.txt'=>array('BAZ'=>true),
+           'result7_5.txt'=>array('BAZ'=>true, 'BAR'=>true),
+          ),
+    );
+
+
+
     function __construct() {
         $this->UnitTestCase();
     }
@@ -88,7 +125,22 @@ class PreProcTestCase extends UnitTestCase {
          foreach($datas as $result=>$vars){
            $proc->setVars($vars);
            $res = $proc->parseFile(PP_DATA_DIR.$source);
-           $this->assertEqual($res, file_get_contents(PP_DATA_DIR.$result));
+           if(!$this->assertEqual($res, file_get_contents(PP_DATA_DIR.$result), "test $source / $result ")){
+                $this->showDiff(file_get_contents(PP_DATA_DIR.$result), $res);
+           }
+         }
+      }
+    }
+
+    function testSimple2(){
+      $proc = new jPreProcessor();
+      foreach($this->testcase2 as $source=>$datas){
+         foreach($datas as $result=>$vars){
+           $proc->setVars($vars);
+           $res = $proc->parseFile(PP_DATA_DIR.$source);
+           if(!$this->assertEqual($res, file_get_contents(PP_DATA_DIR.$result), "test $source / $result ")){
+                $this->showDiff(file_get_contents(PP_DATA_DIR.$result), $res);
+           }
          }
       }
     }
@@ -141,7 +193,16 @@ class PreProcTestCase extends UnitTestCase {
       }
     }
 
+    protected function showDiff($str1, $str2){
+        $diff = new Diff(explode("\n",$str1),explode("\n",$str2));
 
+        if($diff->isEmpty()) {
+            $this->fail("No difference ???");
+        }else{
+            $fmt = new UnifiedDiffFormatter();
+            $this->fail($fmt->format($diff));
+        }
+    }
 
 }
 

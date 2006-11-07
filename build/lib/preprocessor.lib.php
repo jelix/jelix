@@ -102,7 +102,7 @@ class jPreProcessor{
                         if( !$isOpen ){
                             array_push($this->_blockstack, self::BLOCK_IF_NO);
                         }else{
-                            if(isset($this->_variables[$m[2]])){
+                            if(isset($this->_variables[$m[2]]) && $this->_variables[$m[2]] !==''){
                                 array_push($this->_blockstack, self::BLOCK_IF_YES);
                             }else{
                                 array_push($this->_blockstack, self::BLOCK_IF_NO);
@@ -112,7 +112,7 @@ class jPreProcessor{
                         break;
                     case 'define': // define avec un seul argument.
                         if($isOpen ){
-                            $this->_variables[$m[2]] = '';
+                            $this->_variables[$m[2]] = true;
                         }
                         $source[$nb]=false;
                         break;
@@ -126,7 +126,7 @@ class jPreProcessor{
                         if(!$isOpen){
                             array_push($this->_blockstack, self::BLOCK_IF_NO);
                         }else{
-                            if(isset($this->_variables[$m[2]])){
+                            if(isset($this->_variables[$m[2]]) && $this->_variables[$m[2]] !==''){
                                 array_push($this->_blockstack, self::BLOCK_IF_NO);
                             }else{
                                 array_push($this->_blockstack, self::BLOCK_IF_YES);
@@ -144,7 +144,7 @@ class jPreProcessor{
                         }elseif(($end & self::BLOCK_YES) || ($end & self::BLOCK_YES_PREVIOUS)){
                             array_push($this->_blockstack, (self::BLOCK_IF_NO + self::BLOCK_YES_PREVIOUS));
                         }else{
-                            if(isset($this->_variables[$m[2]])){
+                            if(isset($this->_variables[$m[2]]) && $this->_variables[$m[2]] !==''){
                                 array_push($this->_blockstack, self::BLOCK_IF_YES);
                             }else{
                                 array_push($this->_blockstack, self::BLOCK_IF_NO);
@@ -166,7 +166,7 @@ class jPreProcessor{
 
             }elseif(preg_match('/^\#(expand)\s(.*)$/m',$line,$m)){
                 if($isOpen){
-                    $source[$nb]=preg_replace('/\_\_(\w*)\_\_/e', '(isset($this->_variables["\\1"])?$this->_variables["\\1"]:"__\\1__")',$m[2]);
+                    $source[$nb]=preg_replace('/\_\_(\w*)\_\_/e', '(isset($this->_variables["\\1"])&&$this->_variables["\\1"]!==\'\'?$this->_variables["\\1"]:"__\\1__")',$m[2]);
                 }else{
                     $source[$nb]=false;
                 }
@@ -216,7 +216,7 @@ class jPreProcessor{
                         throw new jExceptionPreProc($filename,$nb,self::ERR_INVALID_FILENAME);
                     }
                     if($m[1] == 'php'){
-                        if(preg_match('/^\s*\<\?(?:php)?((?:.|\n)*)\?\>\s*$/m',$source[$nb],$ms)){
+                        if(preg_match('/^\s*\<\?(?:php)?(.*)\?\>\s*$/sm',$source[$nb],$ms)){
                             $source[$nb] = $ms[1];
                         }
                     }

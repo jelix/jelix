@@ -99,9 +99,15 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
 jBuildUtils::createDir($BUILD_TARGET_PATH);
 
 //... execution des manifests
-jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, $GLOBALS);
+jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, $GLOBALS, $STRIP_COMMENT);
+if(!$ENABLE_OPTIMIZE){
+    jManifest::process('build/manifests/jelix-no-opt.mn', '.', $BUILD_TARGET_PATH , $GLOBALS, $STRIP_COMMENT);
+}
 if($ENABLE_DEVELOPER){
     jManifest::process('build/manifests/jelix-dev.mn', '.', $BUILD_TARGET_PATH , $GLOBALS);
+}
+if($ENABLE_PHP_JSON){
+    jManifest::process('build/manifests/lib-json.mn', '.', $BUILD_TARGET_PATH , $GLOBALS);
 }
 jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , $GLOBALS);
 

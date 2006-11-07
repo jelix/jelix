@@ -82,6 +82,7 @@ modules-test:
 
 nightlies:
 	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jelix-dist-dev.ini
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jelix-dist-opt.ini
 	$(PHP) build/buildapp.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/testapp-dist.ini
 	$(PHP) build/buildjbt.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jbt-dist.ini
 	$(PHP) build/buildjtpl.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jtpl-dist.ini

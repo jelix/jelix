@@ -13,16 +13,16 @@ cd demoxul/var/config
   defaultconfig.ini.php.dist
   dbprofils.ini.php.dist
 cd demoxul/var/config/index
-  auth.plugin.ini.php
+! auth.plugin.ini.php
   config.ini.php
 cd demoxul/var/config/jsonrpc
-  config.ini.php
-  auth.plugin.ini.php
+! config.ini.php
+! auth.plugin.ini.php
 cd demoxul/var/config/rdf
-  config.ini.php
-  auth.plugin.ini.php
+! config.ini.php
+! auth.plugin.ini.php
 cd demoxul/var/config/xmlrpc
-  auth.plugin.ini.php
-  config.ini.php
+! auth.plugin.ini.php
+! config.ini.php
 
 cd temp/demoxul
