@@ -16,14 +16,12 @@ dd plugins/common
   modifier.count_sentences.php
   modifier.count_words.php
   modifier.date_format.php
-  modifier.escxml.php
   modifier.indent.php
   modifier.regex_replace.php
   modifier.replace.php
   modifier.spacify.php
   modifier.sprintf.php
   modifier.strip.php
-  modifier.strip_tags.php
   modifier.truncate.php
   modifier.wordwrap.php
 

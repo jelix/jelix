@@ -48,7 +48,7 @@ class jTplCompiler
 
     private $_modifier = array('upper'=>'strtoupper', 'lower'=>'strtolower',
         'escxml'=>'htmlspecialchars', 'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
-        'capitalize'=>'ucwords'
+        'capitalize'=>'ucwords', 'stripslashes'=>'stripslashes'
     );
 
     private $_blockStack=array();
