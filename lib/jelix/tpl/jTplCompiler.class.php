@@ -220,7 +220,8 @@ class jTplCompiler
                 $m[2] = $m[3];
             }
             if(!isset($m[2])) $m[2]='';
-
+            if($m[1] == 'ldelim') return '{';
+            if($m[1] == 'rdelim') return '}';
             return '<?php '.$this->_parseFunction($m[1],$m[2]).'?>';
         }
     }
@@ -318,8 +319,6 @@ class jTplCompiler
             case 'assign':
                 $res = $this->_parseFinal($args,$this->_allowedAssign);
                 break;
-            case 'ldelim': $res ='{'; break;
-            case 'rdelim': $res ='}'; break;
             case 'literal':
                 if (count($this->_literals)) {
                     $res = '?>'.array_shift($this->_literals).'<?php ';
