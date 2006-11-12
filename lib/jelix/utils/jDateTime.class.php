@@ -18,7 +18,7 @@
 
 
 
-
+#ifdef PHP50
 if(!function_exists('strptime')){ // existe depuis php 5.1
     /**
      * @ignore
@@ -48,7 +48,7 @@ if(!function_exists('strptime')){ // existe depuis php 5.1
         }
     }
 }
-
+#endif
 
 /**
  *
@@ -73,6 +73,7 @@ class jDateTime{
     const BD_TFORMAT=22;
     const ISO8601_FORMAT=40;
     const TIMESTAMP_FORMAT=50;
+    const RFC822_FORMAT=60;
 
 
     function __construct($year=0, $month=0, $day=0, $hour=0, $minute=0, $second=0){
@@ -117,10 +118,13 @@ class jDateTime{
                $str = sprintf('%02d:%02d:%02d', $this->hour, $this->minute, $this->second);
                break;
            case self::ISO8601_FORMAT:
-               $str = sprintf('%04d%02d%02dT%02d:%02d:%02d', $this->year, $this->month, $this->day, $this->hour, $this->minute, $this->second);
+               $str = sprintf('%04d-%02d-%02dT%02d:%02d:%02dZ', $this->year, $this->month, $this->day, $this->hour, $this->minute, $this->second);
                break;
            case self::TIMESTAMP_FORMAT:
                $str =(string) mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
+               break;
+           case self::RFC822_FORMAT:
+               $str = date('r', mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year ));
                break;
         }
        return $str;
@@ -144,9 +148,6 @@ class jDateTime{
                    $this->year = $res['tm_year']+1900;
                    $this->month = $res['tm_mon'];
                    $this->day = $res['tm_mday'];
-                   $this->hour = 0;
-                   $this->minute =0;
-                   $this->second = 0;
                }
                break;
            case self::LANG_DTFORMAT:
@@ -165,9 +166,6 @@ class jDateTime{
                $lf = jLocale::get('jelix~format.time');
                if($res = strptime ( $str, $lf )){
                    $ok=true;
-                   $this->year = 0;
-                   $this->month = 0;
-                   $this->day = 0;
                    $this->hour = $res['tm_hour'];
                    $this->minute = $res['tm_min'];
                    $this->second = $res['tm_sec'];
@@ -178,9 +176,6 @@ class jDateTime{
                     $this->year = $match[1];
                     $this->month = $match[2];
                     $this->day = $match[3];
-                    $this->hour = 0;
-                    $this->minute = 0;
-                    $this->second = 0;
                }
                break;
            case self::BD_DTFORMAT:
@@ -195,22 +190,30 @@ class jDateTime{
                break;
            case self::BD_TFORMAT:
                if($ok=preg_match('/^(\d{2}):(\d{2}):(\d{2})$/', $str, $match)){
-                    $this->year = 0;
-                    $this->month = 0;
-                    $this->day = 0;
                     $this->hour = $match[1];
                     $this->minute = $match[2];
                     $this->second = $match[3];
                }
                break;
            case self::ISO8601_FORMAT:
-               if($ok=preg_match('/^(\d{4})(\d{2})(\d{2})T(\d{2}):(\d{2}):(\d{2})$/', $str, $match)){
+               if($ok=preg_match('/^(\d{4})(?:\-(\d{2})(?:\-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{2}))?)?(Z|[+\-]\d{2}:\d{2}))?)?)?$/', $str, $match)){
+                    $c = count($match)-1;
                     $this->year = $match[1];
+                    if($c<2) break;
                     $this->month = $match[2];
+                    if($c<3) break;
                     $this->day = $match[3];
+                    if($c<4) break;
                     $this->hour = $match[4];
                     $this->minute = $match[5];
-                    $this->second = $match[6];
+                    if($match[6] != '') $this->second = $match[6];
+                    if($match[8] != 'Z'){
+                        $d = new jDateTime(0,0,0,$match[10],$match[11]);
+                        if($match[9] == '+')
+                            $this->add($d);
+                        else
+                            $this->sub($d);
+                    }
                }
                break;
            case self::TIMESTAMP_FORMAT:
@@ -223,6 +226,8 @@ class jDateTime{
                $this->minute = $t['minutes'];
                $this->second = $t['seconds'];
                break;
+           case self::RFC822_FORMAT:
+               throw new Exception ('jDatetime::setFromString : RFC822_FORMAT not implemented');
         }
         return $ok;
     }

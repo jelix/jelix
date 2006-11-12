@@ -54,7 +54,9 @@ cd lib/jelix/core/response
   jResponseRdf.class.php
   jResponseXml.class.php
   jResponseZip.class.php
+  jResponseXmlFeed.class.php
   jResponseRss20.class.php
+  jResponseAtom10.class.php
 
 cd lib/jelix/core/url
   jUrlCompiler.significant.class.php
@@ -218,7 +220,8 @@ cd lib/jelix-modules/jelix/controllers
 cd lib/jelix-modules/jelix/templates
   404.xul.tpl
   404.html.tpl
-  rss20items.tpl
+  rss20.tpl
+  atom10.tpl
 
 cd lib/jelix-modules/jxauth
   module.xml

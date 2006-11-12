@@ -25,10 +25,17 @@
    <li><a href="{jurl 'sampleform_destroy'}">détruire le formulaire</a></li>
 </ul>
 
+<!--
 <p>formulaire différencié (multiples instances)</p>
-<!--<ul>
+<ul>
    <li><a href="{jurl 'productform_newform'}">Nouveau produit</a></li>
    <li><a href="{jurl 'productform_show'}">voir le formulaire</a></li>
    <li><a href="{jurl 'productform_ok'}">Resultats</a></li>
    <li><a href="{jurl 'productform_destroy'}">détruire le formulaire</a></li>
 </ul>-->
+
+<h3>Tests syndication</h3>
+<ul>
+   <li><a href="{jurl 'syndication_rss'}">Rss 2.0</a></li>
+   <li><a href="{jurl 'syndication_atom'}">Atom 1.0</a></li>
+</ul>

@@ -28,7 +28,8 @@ function jtpl_modifier_jdatetime($date, $format_in = 'db_datetime',
         'db_datetime' => jDateTime::BD_DTFORMAT,
         'db_time' => jDateTime::BD_TFORMAT,
         'iso8601' => jDateTime::ISO8601_FORMAT,
-        'timestamp' => jDateTime::TIMESTAMP_FORMAT);
+        'timestamp' => jDateTime::TIMESTAMP_FORMAT,
+        'rfc822'=> jDateTime::RFC822_FORMAT);
 
     $dt = new jDateTime();
     $dt->setFromString($date, $formats[$format_in]);

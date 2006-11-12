@@ -40,7 +40,7 @@ rdf = jResponseRdf
 xml = jResponseXml
 zip = jResponseZip
 rss2.0 = jResponseRss20
-
+atom1.0 = jResponseAtom10
 
 [_coreResponses]
 html = jResponseHtml
@@ -58,6 +58,7 @@ rdf = jResponseRdf
 xml = jResponseXml
 zip = jResponseZip
 rss2.0 = jResponseRss20
+atom1.0 = jResponseAtom10
 
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"

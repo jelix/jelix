@@ -66,6 +66,9 @@ if($PHP_VERSION_TARGET){
 
     if($PHP_VERSION_TARGET == '5.1') $PHP51=1;
     if($PHP_VERSION_TARGET == '5.0') $PHP50=1;
+}else{
+    // pas de target définie : donc php 5.0
+    $PHP50=1;
 }
 
 if(!$ENABLE_OPTIMIZE)

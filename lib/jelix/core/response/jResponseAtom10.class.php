@@ -3,10 +3,8 @@
 * @package     jelix
 * @subpackage  core
 * @version     $Id$
-* @author      Loic Mathaud
 * @author      Yannick Le Guédart
 * @contributor Laurent Jouanneau
-* @copyright   2005-2006 Loic Mathaud
 * @copyright   2006 Yannick Le Guédart
 * @copyright   2006 Laurent Jouanneau
 * @link        http://www.jelix.org
@@ -20,14 +18,16 @@ require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
 require_once(JELIX_LIB_RESPONSE_PATH.'jResponseXmlFeed.class.php');
 
 /**
-* Rss2.0 response
+* Atom 1.0 response
+*
+* Known limitations : only text in the title, and only name in categories
 * @package  jelix
 * @subpackage core
-* @link http://blogs.law.harvard.edu/tech/rss
-* @link http://www.stervinou.com/projets/rss/
+* @link http://tools.ietf.org/html/rfc4287
 */
-class jResponseRss20 extends jResponseXMLFeed {
-    protected $_type = 'rss2.0';
+class jResponseAtom10 extends jResponseXMLFeed {
+
+    protected $_type = 'atom1.0';
 
     /**
      * Class constructor
@@ -35,15 +35,13 @@ class jResponseRss20 extends jResponseXMLFeed {
      * @param  array
      * @return void
      */
-    function __construct ($attributes = array()) {
+    function __construct ($attributes = array()){
         $this->_template 	= new jTpl();
-        $this->_mainTpl 	= 'jelix~rss20';
+        $this->_mainTpl 	= 'jelix~atom10';
 
-        $this->infos = new jRSS20Info ();
-
+        $this->infos = new jAtom10Info ();
 
         parent::__construct ($attributes);
-        $this->infos->language = $this->lang;
     }
 
     /**
@@ -55,7 +53,7 @@ class jResponseRss20 extends jResponseXMLFeed {
         $this->_headSent = false;
 
         $this->_httpHeaders['Content-Type'] =
-                'application/xml;charset=' . $this->charset;
+                'application/atom+xml;charset=' . $this->charset;
 
         $this->sendHttpHeaders ();
         $this->_outputXmlHeader ();
@@ -64,26 +62,30 @@ class jResponseRss20 extends jResponseXMLFeed {
 
         $this->_headSent = true;
 
+        if(!$this->infos->updated){
+            $this->infos->updated = date("Y-m-d H:i:s");
+        }
+
         // $this->_outputOptionals();
 
-        $this->_template->assign ('rss', $this->infos);
+        $this->_template->assign ('atom', $this->infos);
         $this->_template->assign ('items', $this->itemList);
-
+        $this->_template->assign ('lang',$this->lang);
         $this->_template->display ($this->_mainTpl);
 
         if ($this->hasErrors ()) {
             echo $this->getFormatedErrorMsg ();
         }
-        echo '</rss>';
+        echo '</feed>';
         return true;
     }
 
     final public function outputErrors() {
         if (!$this->_headSent) {
-             if ($this->_sendHttpHeader) {
+            if ($this->_sendHttpHeader) {
                 header('Content-Type: text/xml;charset='.$this->charset);
-             }
-             echo '<?xml version="1.0" encoding="'. $this->charset .'"?>';
+            }
+            echo '<?xml version="1.0" encoding="'. $this->charset .'"?>';
         }
 
         echo '<errors xmlns="http://jelix.org/ns/xmlerror/1.0">';
@@ -116,116 +118,71 @@ class jResponseRss20 extends jResponseXMLFeed {
      * @return jXMLFeedItem
      */
     public function createItem($title,$link, $date){
-        $item = new jRSSItem();
+        $item = new jAtom10Item();
         $item->title = $title;
         $item->id = $item->link = $link;
         $item->published = $date;
         return $item;
     }
 
-
 }
-
-// dates au format RFC822: Sat, 07 Sep 2002 00:00:01 GMT
 
 /**
  * meta data of the channel
  * @package    jelix
  * @subpackage core
  */
-class jRSS20Info extends jXMLFeedInfo{
+class jAtom10Info extends jXMLFeedInfo{
     /**
-     * lang of the channel
+     * unique id of the channel
      * @var string
      */
-    public $language;
+    public $id;
     /**
-     * email of the content manager
+     * channel url
      * @var string
      */
-    public $managingEditor;
+    public $selfLink;
     /**
-     * email of technical responsible
+     * author's list
+     * each author is an array('name'=>'','email'=>'','uri'=>'')
+     * @var array
+     */
+    public $authors = array();
+    /**
+     * related links to the channel
+     * each link is an array with this keys : href rel type hreflang title length
+     * @var array
+     */
+    public $otherLinks = array();
+    /**
+     * list of contributors
+     * each contributor is an array('name'=>'','email'=>'','uri'=>'')
+     * @var array
+     */
+    public $contributors= array();
+    /**
+     * icon url
      * @var string
      */
-    public $webMaster;
-    /**
-     * publication date
-     * format:  yyyy-mm-dd hh:mm:ss
-     * @var string
-     */
-    public $published;
-    /**
-     * specification url
-     * example : http://blogs.law.harvard.edu/tech/rss
-     * @var string
-     */
-    public $docs='';
-    /**
-     * not implemented
-     * @var string
-     */
-    public $cloud; // indique un webservice par lequel le client peut s'enregistrer auprés du serveur
-                  // pour être tenu au courant des modifs
-                  //=array('domain'=>'','path'=>'','port'=>'','registerProcedure'=>'', 'protocol'=>'');
-    /**
-     * time to live of the cache, in minutes
-     * @var string
-     */
-    public $ttl;
-    /**
-     * image title
-     * @var string
-     */
-    public $imageTitle;
-    /**
-     * web site url corresponding to the image
-     * @var string
-     */
-    public $imageLink;
-    /**
-     * width of the image
-     * @var string
-     */
-    public $imageWidth;
-    /**
-     * height of the image
-     * @var string
-     */
-    public $imageHeight;
-    /**
-     * Description of the image (= title attribute for the img tag)
-     * @var string
-     */
-    public $imageDescription;
+    public $icon;
 
     /**
-     * Pics rate for this channel
+     * version of the generator
      * @var string
+     * @see $generator
      */
-    public $rating;
+    public $generatorVersion;
     /**
-     * field form for the channel
-     * it is an array('title'=>'','description'=>'','name'=>'','link'=>'')
-     * @var array
+     * url of the generator
+     * @var string
+     * @see $generator
      */
-    public $textInput;
-    /**
-     * list of hours that agregator should ignore
-     * ex (10, 21)
-     * @var array
-     */
-    public $skipHours;
-    /**
-     * list of day that agregator should ignore
-     * ex ('monday', 'tuesday')
-     * @var array
-     */
-    public $skipDays;
+    public $generatorUrl;
 
     function __construct ()
     {
-            $this->_mandatory = array ( 'title', 'webSiteUrl', 'description');
+        $this->_mandatory = array ('title', 'id', 'updated');
     }
 }
 
@@ -234,35 +191,58 @@ class jRSS20Info extends jXMLFeedInfo{
  * @package    jelix
  * @subpackage core
  */
-
-class jRSSItem extends jXMLFeedItem {
-
+class jAtom10Item extends jXMLFeedItem {
     /**
-     * comments url
+     * the url of the main author
      * @var string
      */
-    public $comments;
+    public $authorUri;
     /**
-     * media description, attached to the item
-     * the array should contain this keys :  'url', 'size', 'mimetype'
+     * list of other authors
+     * each author is an array('name'=>'','email'=>'','uri'=>'')
      * @var array
      */
-    public $enclosure;
+    public $otherAuthors = array();
     /**
-     * says if the id is a permanent link
-     * @var boolean
-     */
-    public $idIsPermalink;
-    /**
-     * url of  rss channel of the information source
+     * list of contributors
+     * each contributor is an array('name'=>'','email'=>'','uri'=>'')
      * @var string
      */
-    public $sourceUrl;
+    public $contributors= array();
     /**
-     * Title of the information source
+     * related links to the item
+     * each link is an array with this keys : href rel type hreflang title length
+     * @var array
+     */
+    public $otherLinks= array();
+    /**
+     * summary of the content
      * @var string
      */
-    public $sourceTitle;
+    public $summary;
+    /**
+     * type of the summary
+     * possible values are 'text', 'html', 'xhtml'
+     * @var string
+     */
+    public $summaryType;
+    /**
+     * atom content of the source of the item
+     * @var xml
+     */
+    public $source;
+    /**
+     * Copyright
+     * @var string
+     */
+    public $copyright;
+    /**
+     * date of the last update of the item
+     * date format is yyyy-mm-dd hh:mm:ss
+     * @var string
+     */
+    public $updated;
+
 }
 
 ?>
