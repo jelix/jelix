@@ -977,9 +977,7 @@ class jMailer
     protected function EncodeFile ($path, $encoding = "base64") {
         if(!@$fd = fopen($path, "rb"))
         {
-            $this->SetError($this->Lang("") . );
             throw new jException('jelix~errors.mail.file_open',$path);
-            return "";
         }
         $magic_quotes = get_magic_quotes_runtime();
         set_magic_quotes_runtime(0);
