@@ -87,6 +87,8 @@ nightlies:
 	$(PHP) build/buildjbt.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jbt-dist.ini
 	$(PHP) build/buildjtpl.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jtpl-dist.ini
 	$(PHP) build/buildapp.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/myapp-dist.ini
+	$(PHP) build/buildmodules.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/modules-dist.ini
+
 
 docs: jelix-test
 	cp -R -f build/phpdoc/Converters/HTML/frames $(PHPDOC)phpDocumentor/Converters/HTML/

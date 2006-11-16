@@ -109,7 +109,7 @@ if(!$ENABLE_OPTIMIZE){
 if($ENABLE_DEVELOPER){
     jManifest::process('build/manifests/jelix-dev.mn', '.', $BUILD_TARGET_PATH , $GLOBALS);
 }
-if($ENABLE_PHP_JSON){
+if(!$ENABLE_PHP_JSON){
     jManifest::process('build/manifests/lib-json.mn', '.', $BUILD_TARGET_PATH , $GLOBALS);
 }
 jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , $GLOBALS);

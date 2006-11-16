@@ -1,14 +1,16 @@
 cd demoxul
   project.xml
+  VERSION
   application.init.php
+  .htaccess
 cd demoxul/www
+  .htaccess
   rdf.php
   jsonrpc.php
   index.php
   xmlrpc.php
 cd demoxul/www/xulapp
   main.js
-  login.js
 cd demoxul/var/config
   defaultconfig.ini.php.dist
   dbprofils.ini.php.dist
@@ -24,5 +26,13 @@ cd demoxul/var/config/rdf
 cd demoxul/var/config/xmlrpc
 ! auth.plugin.ini.php
 ! config.ini.php
+
+cd demoxul/var/log
+cd demoxul/var/overloads
+cd demoxul/var/themes
+cd demoxul/var/themes/default
+cd demoxul/modules
+cd demoxul/plugins
+cd demoxul/responses
 
 cd temp/demoxul
