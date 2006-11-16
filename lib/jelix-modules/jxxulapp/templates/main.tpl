@@ -1,5 +1,5 @@
 {meta_xul css 'chrome://global/skin/'}
-<script type="application/x-javascript" src="/xulapp/main.js" />
+<script type="application/x-javascript" src="xulapp/main.js" />
 
 
 <commandset id="commandset-main">

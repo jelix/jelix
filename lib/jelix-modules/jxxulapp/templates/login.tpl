@@ -1,14 +1,32 @@
 {meta_xul css 'chrome://global/skin/'}
-{meta_xul css '/jelix/xul/jxulform.css'}
+{meta_xul css 'jelix/xul/jxulform.css'}
 {meta_xul ns array('jx'=>'jxbl')}
 
-<script type="application/x-javascript" src="/xulapp/login.js" />
+<script type="application/x-javascript"><![CDATA[
+
+function onLoginResult(form){ldelim}
+    if(form.jsonResponse.result == 'OK')
+        window.location.href='{jurl 'jxxulapp~default_index'}';
+    else
+        alert('login ou mot de passe érroné');
+
+{literal}
+}
+
+function onTheLoad(){
+    document.getElementById('login').focus();
+}
+
+
+window.addEventListener('load', onTheLoad ,false);
+{/literal}
+]]></script>
 
 <jx:submission id="loginform" action="{jurl '@jsonrpc'}" method="POST"
         format="json-rpc"
         onsubmit=""
         rpcmethod="jxauth~login_in"
-        onresult="onResult(this)"
+        onresult="onLoginResult(this)"
         onhttperror="alert('erreur http :' + event.errorCode)"
         oninvalidate="alert('Saisissez un login et mot de passe')"
         onrpcerror="alert(this.jsonResponse.error.toSource())"
