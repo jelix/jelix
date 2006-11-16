@@ -19,7 +19,7 @@
  */
 function jtpl_meta_xul($tpl, $method, $param)
 {
-    global $gJCoord;
+    global $gJCoord, $gJConfig;
 
     if($gJCoord->response->getFormatType() != 'xul'){
         return;
@@ -33,6 +33,9 @@ function jtpl_meta_xul($tpl, $method, $param)
             break;
         case 'css':
             $gJCoord->response->addCSSLink($param);
+            break;
+        case 'csstheme':
+            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->defaultTheme.'/'.$param);
             break;
         case 'rootattr':
             if(is_array($param)){

@@ -19,7 +19,7 @@
  */
 function jtpl_meta_html($tpl, $method, $param)
 {
-    global $gJCoord;
+    global $gJCoord,$gJConfig;
 
     if($gJCoord->response->getFormatType() != 'html'){
         return;
@@ -30,6 +30,9 @@ function jtpl_meta_html($tpl, $method, $param)
             break;
         case 'css':
             $gJCoord->response->addCSSLink($param);
+            break;
+        case 'csstheme':
+            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->defaultTheme.'/'.$param);
             break;
         case 'bodyattr':
             if(is_array($param)){
