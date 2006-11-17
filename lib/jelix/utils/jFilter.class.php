@@ -36,7 +36,7 @@ class jFilter {
     static public function isInt ($val, $min=null, $max=null){
 #ifdef ENABLE_PHP_FILTER
         // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
-        if(!filter_var($var, FILTER_VALIDATE_INT)) return false;
+        if(!filter_var($val, FILTER_VALIDATE_INT)) return false;
 #else
         // @FIXME : trouver une solution plus performante ?
         if(!preg_match("/^\\-?\d+$/", $val)) return false;
@@ -56,7 +56,7 @@ class jFilter {
     static public function isHexInt ($val, $min=null, $max=null){
 #ifdef ENABLE_PHP_FILTER
         // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
-        if(!filter_var($var, FILTER_VALIDATE_INT, FILTER_FLAG_ALLOW_HEX)) return false;
+        if(!filter_var($val, FILTER_VALIDATE_INT, FILTER_FLAG_ALLOW_HEX)) return false;
 #else
         // @FIXME : trouver une solution plus performante ?
         if(!preg_match("/^0x[a-f0-9A-F]+$/", $val)) return false;
@@ -74,7 +74,7 @@ class jFilter {
      */
     static public function isBool ($val){
 #ifdef ENABLE_PHP_FILTER
-        return filter_var($var, FILTER_VALIDATE_BOOLEAN);
+        return filter_var($val, FILTER_VALIDATE_BOOLEAN);
 #else
         return in_array($val, array('true','false','1','0','TRUE', 'FALSE','on','off'));
 #endif
@@ -91,7 +91,7 @@ class jFilter {
     static public function isFloat ($val, $min=null, $max=null){
 #ifdef ENABLE_PHP_FILTER
         // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
-        if(!filter_var($var, FILTER_VALIDATE_FLOAT)) return false;
+        if(!filter_var($val, FILTER_VALIDATE_FLOAT)) return false;
 #else
         if(!is_numeric($val)) return false;
 #endif
@@ -138,7 +138,7 @@ class jFilter {
      */
     static public function isIPv4 ($val){
 #ifdef ENABLE_PHP_FILTER
-        return filter_var($var, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+        return filter_var($val, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
 #else
         if(!preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/',$val,$m)) return false;
         if(intval($m[1]) > 255) return false;
@@ -156,11 +156,25 @@ class jFilter {
      */
     static public function isIPv6 ($val){
 #ifdef ENABLE_PHP_FILTER
-        return filter_var($var, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+        return filter_var($val, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
 #else
         return preg_match('/^([a-f0-9]{1,4})(:([a-f0-9]{1,4})){7}$/i',$val,$m);
 #endif
     }
+
+    /**
+     * check if the given value is an email
+     * @param string $val the value
+     * @return boolean true if it is valid
+     */
+    static public function isEmail ($val){
+#ifdef ENABLE_PHP_FILTER
+        return filter_var($val, FILTER_VALIDATE_EMAIL);
+#else
+        return preg_match('/^[A-Z0-9][A-Z0-9_-]*(\.[A-Z0-9][A-Z0-9_-]*)*@[A-Z0-9][A-Z0-9_-]*(\.[A-Z0-9][A-Z0-9_-])+$/i',$val);
+#endif
+    }
+
 
 }
 
