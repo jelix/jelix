@@ -19,7 +19,7 @@
 <binding id="templatecriterion">
     <content>
         <children/>
-        <xul:button label="Afficher" xbl:inherits="label=buttonlabel" oncommand="this.parentNode.show()"/>
+        <xul:button label="Afficher" xbl:inherits="label=buttonlabel,disabled" oncommand="this.parentNode.show()"/>
     </content>
     <implementation>
         <constructor><![CDATA[
@@ -258,5 +258,17 @@
     </handlers>-->
 
   </binding>
+
+    <binding id="jbox" extends="xul:box">
+        <content>
+            <xul:hbox class="jbox-title" align="center">
+                <xul:label class="jbox-title-label" xbl:inherits="value=title"/>
+            </xul:hbox>
+            <xul:box  class="jbox-content" orient="vertical" xbl:inherits="orient,align,pack" pack="start" flex="1">
+                <children/>
+            </xul:box>
+        </content>
+    </binding>
+
 
 </bindings>

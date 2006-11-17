@@ -1,6 +1,23 @@
 {meta_xul css 'chrome://global/skin/'}
 <script type="application/x-javascript" src="xulapp/main.js" />
+<script type="application/x-javascript"><![CDATA[
+var gUrlQuit = '{jurl 'jxauth~login_out',array(),false}';
 
+{literal}
+function XulAppOnLoad(ev){
+  // pour le bug du load qui se propage au fenêtre parentes..
+  if(ev.target != document)
+    return;
+}
+
+document.addEventListener("load", XulAppOnLoad, false);
+
+function CmdxQuit(){
+    if(confirm("Étes vous sûr de vouloir quitter l'application ?"))
+          window.location.href= gUrlQuit;
+}
+{/literal}
+]]></script>
 
 <commandset id="commandset-main">
     <command id="cmdx_quit" oncommand="CmdxQuit()" />

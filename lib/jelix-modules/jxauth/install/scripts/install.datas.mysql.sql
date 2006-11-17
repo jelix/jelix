@@ -10,3 +10,5 @@ INSERT INTO `jacl_right_values` VALUES (4, 'jxauth~dbacl.valgrp.users.management
 INSERT INTO `jacl_right_values` VALUES (8, 'jxauth~dbacl.valgrp.users.management.create', 30);
 INSERT INTO `jacl_right_values` VALUES (16, 'jxauth~dbacl.valgrp.users.management.delete', 30);
 INSERT INTO `jacl_right_values` VALUES (32, 'jxauth~dbacl.valgrp.users.management.password', 30);
+
+INSERT INTO `jacl_group` VALUES ( '1', 'Administrateurs', '0', NULL);

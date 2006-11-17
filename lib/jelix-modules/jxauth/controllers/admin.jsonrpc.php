@@ -19,15 +19,19 @@ class CTadmin extends jController {
         if($user){
             $user->email = $this->param('email');
             jAuth::updateUser($user);
+            if($this->param('pwd') != '')
+                jAuth::changePassword($this->param('login'), $this->param('pwd'));
         }
         return $this->getResponse('jsonrpc');
     }
 
-    function newpwd() {
-        jAuth::changePassword($this->param('login'), $this->param('pwd'));
-
-        $rep = $this->getResponse('jsonrpc');
-        return $rep;
+    function createUser(){
+        $user = jAuth::createUser($this->param('login'),$this->param('pwd'));
+        if($user){
+            $user->email = $this->param('email');
+            jAuth::saveNewUser($user);
+        }
+        return $this->getResponse('jsonrpc');
     }
 
 }

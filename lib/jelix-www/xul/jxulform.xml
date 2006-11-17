@@ -229,6 +229,9 @@
             <body><![CDATA[
                var value=null;
                aNode.removeAttribute("invalid");
+
+               if(aNode.getAttribute('disabled') == 'true') return null;
+
                if (aNode.namespaceURI == "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul") {
                    switch (aNode.localName) {
                        case "textbox":
