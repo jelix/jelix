@@ -116,7 +116,7 @@ class jAuthDriverLDS implements jIAuthDriver {
 
         $output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "UTF-8" );
 
-#$output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "iso-8859-1" );
+       //$output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "iso-8859-1" );
 
         if ($params==null) {
             $request = xmlrpc_encode_request($method,null,$output_options);
@@ -142,10 +142,7 @@ class jAuthDriverLDS implements jIAuthDriver {
         if ($this->_params['scheme']=="https") {
             $prot="ssl://";
         }
-        $errLevel = error_reporting();
-        error_reporting(0);
-        $sock = fsockopen($prot.$this->_params['host'],$this->_params['port'], $errNo, $errString);
-        error_reporting($errLevel);
+        $sock = @fsockopen($prot.$this->_params['host'],$this->_params['port'], $errNo, $errString);
 
         if ( !$sock ) {
             jLog::log('Erreur de connexion XMLRPC');
@@ -155,11 +152,11 @@ class jAuthDriverLDS implements jIAuthDriver {
             jLOG::dump(strlen($httpQuery));
             jLOG::dump($errNo);
             jLOG::dump($errString);
+            throw new jException('jelix~auth.error.lds.unreachable.server');
         }
 
         if ( !fwrite($sock, $httpQuery, strlen($httpQuery)) ) {
-            echo 'Error while trying to send request';
-            return FALSE;
+            throw new jException('jelix~auth.error.lds.request.not.send');
         }
 
         fflush($sock);
