@@ -317,7 +317,7 @@ class jTplCompiler
                 break;
 
             case 'assign':
-                $res = $this->_parseFinal($args,$this->_allowedAssign);
+                $res = $this->_parseFinal($args,$this->_allowedAssign).';';
                 break;
             case 'literal':
                 if (count($this->_literals)) {

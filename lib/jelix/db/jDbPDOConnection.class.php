@@ -16,7 +16,7 @@
  */
 define('JPDO_FETCH_OBJ',5); // PDO::FETCH_OBJ
 define('JPDO_FETCH_ORI_NEXT',0); // PDO::FETCH_ORI_NEXT
-define('JPDO_FETCH_ORI_FIRST',3);
+define('JPDO_FETCH_ORI_FIRST',2);
 define('JPDO_FETCH_COLUMN',7); // PDO::FETCH_COLUMN
 define('JPDO_FETCH_CLASS',8); // PDO::FETCH_CLASS
 define('JPDO_ATTR_STATEMENT_CLASS',13); //PDO::ATTR_STATEMENT_CLASS
@@ -104,7 +104,7 @@ class jDbPDOConnection extends PDO {
     */
     function __construct($profil){
        $this->profil = $profil;
-       $this->dbms=substr($profil['dsn'],0,strpos(':',$profil['dsn']));
+       $this->dbms=substr($profil['dsn'],0,strpos($profil['dsn'],':'));
        $prof=$profil;
        $user= '';
        $password='';
@@ -122,6 +122,7 @@ class jDbPDOConnection extends PDO {
        $this->setAttribute(JPDO_ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
     }
 
+    /*
     public function query ($queryString, $opt=false){
         if($opt) return parent::query($queryString);
         // on passe par prepare, pour pouvoir specifier JPDO_CURSOR_SCROLL à cause de l'iterateur
@@ -129,6 +130,7 @@ class jDbPDOConnection extends PDO {
         $sth->execute();
         return $sth;
     }
+    */
 
     public function limitQuery ($queryString, $limitOffset = null, $limitCount = null){
         if ($limitOffset !== null && $limitCount !== null){
