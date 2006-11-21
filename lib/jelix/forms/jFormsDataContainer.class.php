@@ -11,29 +11,43 @@
 */
 
 /**
- *
+ * this object is a container for form datas
  * @package     jelix
  * @subpackage  forms
  */
 class jFormsDataContainer {
-   public $datas = array();
-   public $internalId;
-   public $userId;
-   public $formSelector;
+    /**
+     * @var array
+     */
+    public $datas = array();
+    /**
+     * the instance id of the form
+     * @var string 
+     */
+    public $formId;
+    /**
+     * the selector of the xml file of the form
+     * @var jSelectorForm
+     */
+    public $formSelector;
 
-   function __construct($formSelector,$internalId, $userId){
-      $this->internalId = $internalId;
-      $this->userId = $userId;
-      $this->formSelector =$formSelector;
-   }
-
-   function unsetData($name){
-      unset($this->datas[$name]);
-   }
-
-   function clear(){
-      $this->datas=array();
-   }
+    /**
+     *
+     * @param jSelectorForm $formSelector
+     * @param string $formId
+     */
+    function __construct($formSelector,$formId){
+        $this->formId = $formId;
+        $this->formSelector =$formSelector;
+    }
+    
+    function unsetData($name){
+        unset($this->datas[$name]);
+    }
+    
+    function clear(){
+        $this->datas=array();
+    }
 
 }
 

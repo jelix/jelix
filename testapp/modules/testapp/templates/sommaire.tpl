@@ -25,14 +25,11 @@
    <li><a href="{jurl 'sampleform_destroy'}">détruire le formulaire</a></li>
 </ul>
 
-<!--
-<p>formulaire différencié (multiples instances)</p>
+<p>formulaire à instances multiples</p>
 <ul>
-   <li><a href="{jurl 'productform_newform'}">Nouveau produit</a></li>
-   <li><a href="{jurl 'productform_show'}">voir le formulaire</a></li>
-   <li><a href="{jurl 'productform_ok'}">Resultats</a></li>
-   <li><a href="{jurl 'productform_destroy'}">détruire le formulaire</a></li>
-</ul>-->
+   <li><a href="{jurl 'forms_newform'}">Nouveau formulaire</a></li>
+   <li><a href="{jurl 'forms_listform'}">liste des instances</a></li>
+</ul>
 
 <h3>Tests syndication</h3>
 <ul>

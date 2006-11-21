@@ -41,6 +41,9 @@ cd testapp/modules/testapp/templates
   sommaire.tpl
   sampleform.tpl
   sampleformresult.tpl
+  forms_edit.tpl
+  forms_liste.tpl
+  forms_view.tpl
 cd testapp/modules/testapp/zones
   test.zone.php
   sommaire.zone.php

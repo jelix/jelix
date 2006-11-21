@@ -1,5 +1,5 @@
 <h1>Test de formulaire</h1>
-<p>Ce que vous avez tapé :</p>
+<p>Contenu du formulaire :</p>
 <dl>
    <dt>Nom :</dt>
    <dd>{$nom}</dd>

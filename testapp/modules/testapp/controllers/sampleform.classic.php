@@ -23,7 +23,9 @@ class CTSampleForm extends jController {
   function show(){
       // recupère les données du formulaire
       $form = jForms::get('sample');
-
+      if($form == null){
+          $form = jForms::create('sample');
+      }
       $rep = $this->getResponse('html');
       $rep->title = 'Edition d\'un formulaire';
 
@@ -47,16 +49,20 @@ class CTSampleForm extends jController {
 
    function ok(){
       $form = jForms::get('sample');
-      $datas=$form->getContainer()->datas;
-
       $rep = $this->getResponse('html');
       $rep->title = 'Edition d\'un formulaire';
-      $tpl = new jTpl();
-      $tpl->assign('nom', $datas['nom']);
-      $tpl->assign('prenom', $datas['prenom']);
 
+      if($form){
+        $datas=$form->getContainer()->datas;
+        
+        $tpl = new jTpl();
+        $tpl->assign('nom', $datas['nom']);
+        $tpl->assign('prenom', $datas['prenom']);
+        $rep->body->assign('MAIN',$tpl->fetch('sampleformresult'));
+      }else{
+        $rep->body->assign('MAIN','<p>le formulaire n\'existe pas</p>');
+      }
       $rep->body->assign('page_title','formulaires');
-      $rep->body->assign('MAIN',$tpl->fetch('sampleformresult'));
       return $rep;
    }
 
@@ -74,7 +80,11 @@ class CTSampleForm extends jController {
       $rep->body->assign('page_title','formulaires');
 
       $content='<h1>Données en session des formulaires</h1>';
-      $content.='<pre>'.htmlspecialchars(var_export($_SESSION['JFORMS'],true)).'</pre>';
+      if(isset($_SESSION['JFORMS'])){
+          $content.='<pre>'.htmlspecialchars(var_export($_SESSION['JFORMS'],true)).'</pre>';
+      }else{
+          $content.='<p>Il n\'y a pas de formulaires...</p>';
+      }
       $rep->body->assign('MAIN',$content);
       return $rep;
    }
