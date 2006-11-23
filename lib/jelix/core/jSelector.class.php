@@ -147,11 +147,17 @@ abstract class jSelectorModule implements jISelector {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
+            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString(true));
         }
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
         if (!is_readable ($this->_path)){
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
+            if($this->type == 'loc'){
+                throw new Exception('(202) The file of the locale key "'.$this->toString().'" (charset '.$this->charset.', lang '.$this->locale.') does not exist');
+            }elseif($this->toString() == 'jelix~errors.selector.invalid.target'){
+                throw new Exception("Jelix Panic ! don't find localization files to show you an other error message !");
+            }else{
+                throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
+            }
         }
     }
 
@@ -273,6 +279,10 @@ class jSelectorClass extends jSelectorModule {
  */
 class jSelectorLoc extends jSelectorModule {
     protected $type = 'loc';
+    public $fileKey = '';
+    public $messageKey = '';
+    public $locale ='';
+    public $charset='';
 
     function __construct($sel, $locale=null, $charset=null){
         global $gJConfig;
@@ -282,14 +292,38 @@ class jSelectorLoc extends jSelectorModule {
         if ($charset === null){
             $charset = $gJConfig->defaultCharset;
         }
-
+        if(strpos($locale,'_') === false){
+            $locale.='_'.strtoupper($locale);
+        }
+        $this->locale = $locale;
+        $this->charset = $charset;
         $this->_dirname =  'locales/' .$locale.'/';
         $this->_suffix = '.'.$charset.'.properties';
         $this->_cacheSuffix = '.'.$charset.'.php';
         $this->_compiler='jLocalesCompiler';
         $this->_compilerPath=JELIX_LIB_CORE_PATH.'jLocalesCompiler.class.php';
 
-        parent::__construct($sel);
+        if(preg_match("/^(([\w\.]+)~)?(\w+)\.([\w\.]+)$/", $sel, $m)){
+            if($m[1]!='' && $m[2]!=''){
+                $this->module = $m[2];
+            }else{
+                $this->module = jContext::get ();
+            }
+            $this->resource = $m[3];
+            $this->fileKey = $m[3];
+            $this->messageKey = $m[4];
+            $this->_createPath();
+            $this->_createCachePath();
+        }else{
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
+        }
+    }
+
+    public function toString($full=false){
+        if($full)
+            return $this->type.':'.$this->module.'~'.$this->fileKey.'.'.$this->messageKey;
+        else
+            return $this->module.'~'.$this->fileKey.'.'.$this->messageKey;
     }
 }
 

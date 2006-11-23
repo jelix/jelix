@@ -123,7 +123,7 @@ class jException extends Exception {
         try{
             $this->localizedMessage = jLocale::get($localekey, $localeParams);
         }catch(Exception $e){
-            $this->localizedMessage = $localekey;
+            $this->localizedMessage = $e->getMessage();
         }
         if(preg_match('/^\s*\((\d+)\)(.+)$/',$this->localizedMessage,$m)){
             $code = $m[1];

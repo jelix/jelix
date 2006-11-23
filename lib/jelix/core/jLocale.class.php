@@ -204,46 +204,29 @@ class jLocale {
     */
     static function get ($key, $args=null, $locale=null, $charset=null) {
         global $gJConfig;
-        if ($locale === null){
-            $locale = $gJConfig->defaultLocale;
-        }
-        if ($charset === null){
-            $charset = $gJConfig->defaultCharset;
-        }
-        if(strpos($locale,'_') === false){
-            $locale.='_'.strtoupper($locale);
-        }
-        //Gets the bundle for the given language.
-        $pos = strpos ($key, '.');
-        $keySelector = substr ($key, 0, $pos);
-        $messageKey = substr($key, $pos+1);
-
         try{
-            $file = new jSelectorLoc($keySelector, $locale, $charset);
+            $file = new jSelectorLoc($key, $locale, $charset);
         }catch(jExceptionSelector $e){
-            if($key == 'jelix~errors.locale.key.selector.invalid'){
-                throw new Exception('(200)The given locale key "'.$args[0].'" is invalid  (for charset '.$args[2].', lang '.$args[3].') (internal error ?)');
-            }else{
-                throw new jException('jelix~errors.locale.key.selector.invalid', array($key, $charset, $locale));
-            }
+            if($e->getCode() == 12) throw $e;
+            if ($locale === null)  $locale = $gJConfig->defaultLocale;
+            if ($charset === null) $charset = $gJConfig->defaultCharset;
+            throw new Exception('(200)The given locale key "'.$key.'" is invalid  (for charset '.$charset.', lang '.$locale.')');
         }
 
+        $locale = $file->locale;
+        $keySelector = $file->module.'~'.$file->fileKey;
         if (!isset (self::$bundles[$keySelector][$locale])){
             self::$bundles[$keySelector][$locale] =  new jBundle ($file, $locale);
         }
         $bundle = self::$bundles[$keySelector][$locale];
 
         //try to get the message from the bundle.
-        $string = $bundle->get ($messageKey, $charset);
+        $string = $bundle->get ($file->messageKey, $file->charset);
         if ($string === null){
             //if the message was not found, we're gonna
             //use the default language and country.
             if ($locale    == $gJConfig->defaultLocale){
-                if ($key == 'jelix~errors.locale.key.unknow'){
-                    throw new Exception('(210)The given locale key "'.$args[0].'" from module "'.$args[1].'" does not exists in the default lang for the '.$args[2].' charset (and the jelix~errors.locale.key.unknow key cannot be found too)');
-                }else{
-                    throw new jException('jelix~errors.locale.key.unknow',array($key,$file->module, $charset, $locale));
-                }
+                throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang for the '.$file->charset.' charset ');
             }
             return jLocale::get ($key, $args, $gJConfig->defaultLocale);
         }else{
