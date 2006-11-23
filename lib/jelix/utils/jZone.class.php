@@ -194,7 +194,7 @@ class jZone {
     * If you don't want a template, override it in your class
     * @return string generated content
     */
-    function _createContent (){
+    protected function _createContent (){
         if($this->_tplname != ''){
             $this->_tpl = new jTpl();
             $this->_tpl->assign($this->_params);

@@ -30,29 +30,33 @@ Env::set('MAIN_TARGET_PATH', '_dist/modules/', true);
 
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
+    $BUILD_SUBPATH = 'additionnal-modules/';
     if($NIGHTLY_NAME)
-        $PACKAGE_NAME=$APPNAME.'-nightly';
+        $PACKAGE_NAME='additionnal-modules-nightly';
     else
-        $PACKAGE_NAME=$APPNAME.'-SVN-'.$SVN_REVISION;
+        $PACKAGE_NAME='additionnal-modules-SVN-'.$SVN_REVISION;
+}else{
+    $BUILD_SUBPATH = 'lib/jelix-modules/';
+
 }
 
 //----------------- Génération des sources
 
 //... creation des repertoires
-jBuildUtils::createDir($MAIN_TARGET_PATH);
+jBuildUtils::createDir($MAIN_TARGET_PATH.$BUILD_SUBPATH);
 
 //... execution des manifests
-jManifest::process('build/manifests/jelix-modules.mn', 'lib/jelix-modules/', $MAIN_TARGET_PATH, $GLOBALS);
+jManifest::process('build/manifests/jelix-modules.mn', 'lib/jelix-modules/', $MAIN_TARGET_PATH.$BUILD_SUBPATH, $GLOBALS);
 
 //... packages
 
 if($PACKAGE_TAR_GZ){
-    exec('tar czf '.$MAIN_TARGET_PATH.$PACKAGE_NAME.'.tar.gz -C '.$MAIN_TARGET_PATH.' '.$APPNAME);
+    exec('tar czf '.$MAIN_TARGET_PATH.$PACKAGE_NAME.'.tar.gz -C '.$MAIN_TARGET_PATH.' '.$BUILD_SUBPATH);
 }
 
 if($PACKAGE_ZIP){
     chdir($MAIN_TARGET_PATH);
-    exec('zip -r '.$PACKAGE_NAME.'.zip '.$APPNAME);
+    exec('zip -r '.$PACKAGE_NAME.'.zip '.$BUILD_SUBPATH);
     chdir(dirname(__FILE__));
 }
 

@@ -38,8 +38,11 @@ if(!function_exists('strptime')){ // existe depuis php 5.1
             $result=array('tm_sec'=>0,'tm_min'=>0,'tm_hour'=>0,'tm_mday'=>0,'tm_mon'=>0,'tm_year'=>0,'tm_wday'=>0,'tm_yday'=>0,'unparsed'=>'');
             preg_match_all('/%(\w)/',$format,$patt);
             foreach($patt[1] as $k=>$v){
-                if(isset($plop[$v]))
-                    $result[$plop[$v]]= intval($m[$k+1]);
+                if(!isset($plop[$v])) continue;
+                $result[$plop[$v]] = intval($m[$k+1]);
+                if($plop[$v] == 'tm_mon'){
+                    $result[$plop[$v]] -= 1;
+                }
             }
             $result['tm_year'] -= 1900;
             return $result;
@@ -142,20 +145,20 @@ class jDateTime{
         $ok=false;
         switch($format){
            case self::LANG_DFORMAT:
-               $lf = jLocale::get('jelix~format.date');
+               $lf = jLocale::get('jelix~format.date_st');
                if($res = strptime ( $str, $lf )){
                    $ok=true;
                    $this->year = $res['tm_year']+1900;
-                   $this->month = $res['tm_mon'];
+                   $this->month = $res['tm_mon'] +1;
                    $this->day = $res['tm_mday'];
                }
                break;
            case self::LANG_DTFORMAT:
-               $lf = jLocale::get('jelix~format.datetime');
+               $lf = jLocale::get('jelix~format.datetime_st');
                if($res = strptime ( $str, $lf )){
                    $ok=true;
                    $this->year = $res['tm_year']+1900;
-                   $this->month = $res['tm_mon'];
+                   $this->month = $res['tm_mon'] +1;
                    $this->day = $res['tm_mday'];
                    $this->hour = $res['tm_hour'];
                    $this->minute = $res['tm_min'];
@@ -163,7 +166,7 @@ class jDateTime{
                }
                break;
            case self::LANG_TFORMAT:
-               $lf = jLocale::get('jelix~format.time');
+               $lf = jLocale::get('jelix~format.time_st');
                if($res = strptime ( $str, $lf )){
                    $ok=true;
                    $this->hour = $res['tm_hour'];

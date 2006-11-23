@@ -357,7 +357,7 @@ function onRemoveUserGroup(form,idgroup){
             <tabpanel orient="vertical">
                 <popupset>
                     <popup id="addUserMenu">
-                            <menuitem label="Ajouter un Utilisateur" onclick="openModal('jxaclNotifyBox1','jxaclModalBox2')"/>
+                            <menuitem label="Ajouter un Utilisateur" onclick="document.getElementById('user').focus();"/>
                             <menuitem label="Supprimer cet Utilisateur" onclick="removeUserFromGrp(document.getElementById('users'));"/>
                     </popup>
                 </popupset>

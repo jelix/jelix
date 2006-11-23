@@ -12,7 +12,7 @@
 /**
  * a special if block to test easily a right value
  *
- * usage : {ifnotacl array('subject',54)} ..here generated content if the user has NOT the right  {/ifnotacl}
+ * usage : {ifnotacl 'subject',54} ..here generated content if the user has NOT the right  {/ifnotacl}
  * @param jTplCompiler $compiler the template compiler
  * @param boolean true if it is the begin of block, else false
  * @param $params array  1=>subject 2=>right value 3=>optional resource
@@ -21,10 +21,10 @@
 function jtpl_block_ifnotacl($compiler, $begin, $params=array())
 {
     if($begin){
-        if(count($param) == 2){
-            $content = ' if(!jAcl::check('.$param[1].','.$param[2].')){';
-        }elseif(count($param) == 3){
-            $content = ' if(!jAcl::check('.$param[1].','.$param[2].','.$param[3].')){';
+        if(count($params) == 2){
+            $content = ' if(!jAcl::check('.$params[0].','.$params[1].')){';
+        }elseif(count($params) == 3){
+            $content = ' if(!jAcl::check('.$param[0].','.$params[1].','.$params[2].')){';
         }else{
             $content='';
             $compiler->doError2('errors.tplplugin.block.bad.argument.number','ifnotacl',2);

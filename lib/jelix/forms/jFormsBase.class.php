@@ -67,8 +67,9 @@ abstract class jFormsBase {
         $req = $GLOBALS['gJCoord']->request;
         foreach($this->_controls as $name=>$ctrl){
             $value = $req->getParam($name);
-            if($value !== null)
-                $this->_container->datas[$name]= $value;
+            //if($value !== null) on commente pour le moment,
+            // à prevoir un meilleur test, pour les formulaires sur plusieurs pages
+            $this->_container->datas[$name]= $value;
         }
     }
 
