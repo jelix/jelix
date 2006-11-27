@@ -22,6 +22,8 @@ defaultTheme = default
 use_error_handler = on
 shared_session = off
 
+enableOldClassNaming = on
+
 [plugins]
 
 [responses]

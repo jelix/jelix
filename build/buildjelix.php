@@ -23,6 +23,9 @@ Env::init(array(
 'LIB_VERSION', // version de lib jelix si on veut forcer un numero de version spécifique
 ));
 
+if(!isset($GLOBALS['ENABLE_OLD_CLASS_NAMING'])) //TODO à enlever pour la 1.0 finale
+    $GLOBALS['ENABLE_OLD_CLASS_NAMING']= '1';
+
 Env::initBool(array(
 'ENABLE_OPTIMIZE', // indique que l'on veut une version optimisée pour un serveur de production
 
@@ -37,6 +40,9 @@ Env::initBool(array(
 //'PACKAGE_DEB',
 'STRIP_COMMENT',
 'NIGHTLY_NAME',
+
+'ENABLE_OLD_CLASS_NAMING', // indique si on veut activer l'ancien nommage de certaines classes dans 
+                     // jelix < 1.0beta1
 ));
 
 //----------------- Preparation des variables d'environnement

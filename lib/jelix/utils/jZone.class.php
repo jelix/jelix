@@ -242,9 +242,15 @@ class jZone {
 
         $fileName = $sel->getPath();
         require_once($fileName);
-
-        $objName = 'Zone'.$sel->resource;
-        $zone = new $objName ($params);
+#ifdef ENABLE_OLD_CLASS_NAMING
+        $className = $sel->resource.'Zone';
+        if($GLOBALS['gJConfig']->enableOldClassNaming && !class_exists($className,false)){
+            $className = 'Zone'.$sel->resource;
+        }
+#else
+        $className = $sel->resource.'Zone';
+#endif
+        $zone = new $className ($params);
         $toReturn = $zone->$method ();
 
         jContext::pop ();

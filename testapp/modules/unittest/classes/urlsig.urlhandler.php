@@ -1,6 +1,6 @@
 <?php
 
-class URLSurlsig implements jIUrlSignificantHandler {
+class urlsigUrlsHandler implements jIUrlSignificantHandler {
 
     // exemple de handler.
     // ici les traitements sont simples, c'est juste pour montrer le principe

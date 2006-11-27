@@ -11,7 +11,7 @@
 */
 
 
-class CTUrlsig extends jController {
+class urlsigCtrl extends jController {
 
    function url1() {
       return $this->getResponse('testunit');

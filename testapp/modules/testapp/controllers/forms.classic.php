@@ -10,7 +10,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class CTForms extends jController {
+class formsCtrl extends jController {
 
     function listform(){
         $rep = $this->getResponse('html');
@@ -19,7 +19,10 @@ class CTForms extends jController {
 
         $tpl = new jTpl();
         // on triche ici, il n'y a pas d'api car inutile en temps normal
-        $tpl->assign('liste', $_SESSION['JFORMS']['sample']); 
+        if(isset($_SESSION['JFORMS']['sample']))
+            $tpl->assign('liste', $_SESSION['JFORMS']['sample']); 
+        else
+            $tpl->assign('liste', array()); 
         $rep->body->assign('MAIN',$tpl->fetch('forms_liste'));
         return $rep;
     }

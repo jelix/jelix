@@ -10,7 +10,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class ZoneTest extends jZone {
+class testZone extends jZone {
    protected $_tplname='testzone';
 
 

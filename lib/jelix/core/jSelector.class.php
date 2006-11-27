@@ -243,7 +243,15 @@ class jSelectorAct extends jSelectorModule {
     }
 
     public function getClass(){
-        return 'CT'.$this->controller;
+#ifdef ENABLE_OLD_CLASS_NAMING
+        $className = $this->controller.'Ctrl';
+        if($GLOBALS['gJConfig']->enableOldClassNaming && !class_exists($className,false)){
+            $className = 'CT'.$this->controller;
+        }
+#else
+        $className = $this->controller.'Ctrl';
+#endif
+        return $className;
     }
 
 }

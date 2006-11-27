@@ -60,7 +60,7 @@ cd lib/jelix/core/response
 
 cd lib/jelix/core/url
   jUrlCompiler.significant.class.php
-  jUrlEngine.significant.class.php
+* jUrlEngine.significant.class.php
   jUrlEngine.simple.class.php
 
 cd lib/jelix/dao
@@ -98,7 +98,7 @@ cd lib/jelix/events
   jEvent.class.php
   jEventCompiler.class.php
   jEventListener.class.php
-  jEventListenerFactory.class.php
+* jEventListenerFactory.class.php
 
 cd lib/jelix/forms
   jForms.class.php
@@ -168,7 +168,7 @@ cd lib/jelix/utils/
   jWiki.class.php
   jXmlRpc.class.php
   jZipCreator.class.php
-  jZone.class.php
+* jZone.class.php
   jAppManager.class.php
   jRss20Item.class.php
   jMailer.class.php

@@ -10,7 +10,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class CTDao extends jController {
+class daoCtrl extends jController {
 
    function parser() {
       $rep = $this->getResponse('unittest');

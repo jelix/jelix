@@ -10,7 +10,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class CTSampleForm extends jController {
+class sampleFormCtrl extends jController {
 
   function newform(){
       // création d'un formulaire vierge
