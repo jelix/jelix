@@ -1,0 +1,13 @@
+aaaaa
+
+bbbbb
+
+#if FOO == BAR
+ccccc
+#endif
+
+dddddd
+
+eeeeee
+
+ffffff

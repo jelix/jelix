@@ -104,6 +104,22 @@ class PreProcTestCase extends UnitTestCase {
            'result7_4.txt'=>array('BAZ'=>true),
            'result7_5.txt'=>array('BAZ'=>true, 'BAR'=>true),
           ),
+       'source_if1.txt'=>array(
+           'result2_1.txt'=>array('FOO'=>''),
+           'result2_2.txt'=>array('FOO'=>true),
+        ),
+       'source_if2.txt'=>array(
+           'result2_1.txt'=>array('FOO'=>''),
+           'result2_2.txt'=>array('FOO'=>14),
+        ),
+       'source_if3.txt'=>array(
+           'result2_1.txt'=>array('FOO'=>'', 'BAR'=>'toto'),
+           'result2_2.txt'=>array('FOO'=>'toto',  'BAR'=>'toto'),
+        ),
+       'source_if4.txt'=>array(
+           'result2_1.txt'=>array('FOO'=>true),
+           'result2_2.txt'=>array('FOO'=>false),
+        ),
     );
 
 
@@ -153,6 +169,8 @@ class PreProcTestCase extends UnitTestCase {
         'source_err4.txt'=>array(3,'source_err4.txt',13), // err endif missing
         'source_err5.txt'=>array(4,'source_err5.txt',7), // err invalid filename
         'source_err6.txt'=>array(4,'subdir/inc_err.txt',11), // err invalid filename
+        'source_if_err1.txt'=>array(5,'source_if_err1.txt',5), // err syntax err expression
+        'source_if_err2.txt'=>array(6,'source_if_err2.txt',5), // err syntax err expression tok
 
     );
     function testErreurs(){

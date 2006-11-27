@@ -19,14 +19,21 @@ class jExceptionPreProc extends Exception {
         'syntax error',
         '#ifxx statement is missing',
         '#endif statement is missing',
-        'cannot include file',
+        'Cannot include file %s',
+        'Syntax error in the expression : %s',
+        'Syntax error in an expression : "%s" is not allowed'
     );
 
-    public function __construct($sourceFilename, $sourceLine, $code=0) {
+    public function __construct($sourceFilename, $sourceLine, $code=0, $param=null) {
         $this->sourceFilename = $sourceFilename;
         $this->sourceLine = $sourceLine+1;
         if($code > count($this->errmessages)) $code = 0;
-        parent::__construct($this->errmessages[$code], $code);
+        if($param != null){
+            $err = sprintf($this->errmessages[$code], $param);
+        }else{
+            $err = $this->errmessages[$code];
+        }
+        parent::__construct($err, $code);
     }
 
     public function __toString() {
@@ -62,6 +69,8 @@ class jPreProcessor{
     const ERR_IF_MISSING = 2;
     const ERR_ENDIF_MISSING = 3;
     const ERR_INVALID_FILENAME = 4;
+    const ERR_EXPR_SYNTAX = 5;
+    const ERR_EXPR_SYNTAX_TOK = 6;
 
     public function __construct(){
     }
@@ -170,6 +179,18 @@ class jPreProcessor{
                 }else{
                     $source[$nb]=false;
                 }
+            }elseif(preg_match('/^\#if\s(.*)$/m',$line,$m)){
+                if( !$isOpen ){
+                    array_push($this->_blockstack, self::BLOCK_IF_NO);
+                }else{
+                    $val = $this->evalExpression($m[1], $filename,$nb);
+                    if($val){
+                        array_push($this->_blockstack, self::BLOCK_IF_YES);
+                    }else{
+                        array_push($this->_blockstack, self::BLOCK_IF_NO);
+                    }
+                }
+                $source[$nb]=false;
 
             }elseif(preg_match('/^\#(endif|else)\s*$/m',$line,$m)){
                 if($m[1] == 'endif'){
@@ -203,7 +224,7 @@ class jPreProcessor{
                     if(!($path{0} == '/' || preg_match('/^\w\:\\.+$/',$path))){
                         $path = realpath(dirname($filename).'/'.$path);
                         if($path == ''){
-                            throw new jExceptionPreProc($filename,$nb,self::ERR_INVALID_FILENAME);
+                            throw new jExceptionPreProc($filename,$nb,self::ERR_INVALID_FILENAME, $m[2]);
                         }
                     }
                     if(file_exists($path) && !is_dir($path)){
@@ -213,7 +234,7 @@ class jPreProcessor{
                         $source[$nb] = $preproc->parseFile($path);
                         $this->_variables = $preproc->_variables;
                     }else{
-                        throw new jExceptionPreProc($filename,$nb,self::ERR_INVALID_FILENAME);
+                        throw new jExceptionPreProc($filename,$nb,self::ERR_INVALID_FILENAME,$m[2] );
                     }
                     if($m[1] == 'php'){
                         if(preg_match('/^\s*\<\?(?:php)?(.*)\?\>\s*$/sm',$source[$nb],$ms)){
@@ -253,6 +274,51 @@ class jPreProcessor{
             $this->_variables = $this->_savedVariables;
 
         return $result;
+    }
+
+    protected $authorizedToken=array(T_DNUMBER, T_BOOLEAN_AND, T_BOOLEAN_OR, T_CHARACTER,
+        T_IS_EQUAL,T_IS_GREATER_OR_EQUAL,T_IS_IDENTICAL,T_IS_NOT_EQUAL,T_IS_NOT_IDENTICAL,
+        T_IS_SMALLER_OR_EQUAL, T_LOGICAL_AND, T_LOGICAL_OR, T_LOGICAL_XOR, T_LNUMBER, 
+        T_CONSTANT_ENCAPSED_STRING, T_WHITESPACE);
+
+    protected $authorizedChar = array('.', '+', '-', '/', '*','<','>', '!');
+
+    protected function evalExpression($expression, $filename,$nb){
+
+        $arr = token_get_all('<?php '.$expression.' ?>');
+        $expr ='';
+        foreach($arr as $k=>$c){
+            if(is_array($c)){
+                if($c[0] == T_OPEN_TAG){
+                    if($k != 0) throw new jExceptionPreProc($filename,$nb,self::ERR_EXPR_SYNTAX_TOK, $c[1]);
+                }elseif($c[0] == T_CLOSE_TAG){
+                    if($k != count($arr) -1) throw new jExceptionPreProc($filename,$nb,self::ERR_EXPR_SYNTAX_TOK, $c[1]);
+                }elseif($c[0] == T_STRING){
+                    if(isset($this->_variables[$c[1]]))
+                        $expr.='$this->_variables[\''.$c[1].'\']';
+                    else
+                        $expr.='""';
+                }elseif(in_array($c[0], $this->authorizedToken)){
+                    $expr .= $c[1];
+                }else{
+                    throw new jExceptionPreProc($filename,$nb,self::ERR_EXPR_SYNTAX_TOK, $c[1]);
+                }
+            }else{
+                if(in_array($c, $this->authorizedChar)){
+                    $expr .= $c;
+                }else{
+                    throw new jExceptionPreProc($filename,$nb,self::ERR_EXPR_SYNTAX_TOK, $c);
+                }
+            }
+        }
+
+        $val = null;
+
+        if(false === @eval('$val='.$expr.';')){
+            throw new jExceptionPreProc($filename,$nb,self::ERR_EXPR_SYNTAX, $expression);
+        }else{
+            return $val;
+        }
     }
 }
 
