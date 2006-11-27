@@ -30,11 +30,7 @@ class jFile {
     * @return string the content of the file. false if cannot read the file
     */
     public static function read ($filename){
-        if ( file_exists ($filename) ) {
-            return file_get_contents ($filename, false);
-        } else {
-            return false;
-        }
+        return @file_get_contents ($filename, false);
     }
 
     /**

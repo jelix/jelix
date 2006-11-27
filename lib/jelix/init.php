@@ -44,7 +44,13 @@ define ('LIB_PATH',           realpath(dirname (__FILE__).'/../').'/');
 define ('JELIX_PLUGINS_PATH', LIB_PATH.'jelix-plugins/');
 define ('JELIX_MODULE_PATH',  LIB_PATH.'jelix-modules/');
 
+#if PHP50 || PHP51
+if(!defined('E_RECOVERABLE_ERROR'))
+    define ('E_RECOVERABLE_ERROR',4096);
+error_reporting (E_ALL | E_RECOVERABLE_ERROR);
+#else 
 error_reporting (E_ALL);
+#endif
 
 #ifdef ENABLE_OPTIMIZE
 

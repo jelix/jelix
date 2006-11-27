@@ -15,6 +15,7 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
+
 /**
 * Error handler for the framework.
 * Replace the default PHP error handler
@@ -32,6 +33,7 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
 
     $codeString = array(
         E_ERROR         => 'error',
+        E_RECOVERABLE_ERROR => 'error',
         E_WARNING       => 'warning',
         E_NOTICE        => 'notice',
         E_USER_ERROR    => 'error',
