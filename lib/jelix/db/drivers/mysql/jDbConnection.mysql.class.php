@@ -26,24 +26,24 @@ class jDbConnectionMySQL extends jDbConnection {
    * begin a transaction
    */
    public function beginTransaction (){
-      $this->_doQuery ('SET AUTOCOMMIT=0');
-      $this->_doQuery ('BEGIN');
+      $this->_doExec ('SET AUTOCOMMIT=0');
+      $this->_doExec ('BEGIN');
    }
 
    /**
    * Commit since the last begin
    */
    public function commit (){
-      $this->_doQuery ('COMMIT');
-      $this->_doQuery ('SET AUTOCOMMIT=1');
+      $this->_doExec ('COMMIT');
+      $this->_doExec ('SET AUTOCOMMIT=1');
    }
 
    /**
    * Rollback since the last BEGIN
    */
    public function rollback (){
-      $this->_doQuery ('ROLLBACK');
-      $this->_doQuery ('SET AUTOCOMMIT=1');
+      $this->_doExec ('ROLLBACK');
+      $this->_doExec ('SET AUTOCOMMIT=1');
    }
 
    /**

@@ -21,21 +21,21 @@ class jDbConnectionSqlite extends jDbConnection {
     * begin a transaction
     */
     public function beginTransaction (){
-        $this->_doQuery ('BEGIN');
+        $this->_doExec ('BEGIN');
     }
 
     /**
     * Commit since the last begin
     */
     public function commit (){
-        $this->_doQuery ('COMMIT');
+        $this->_doExec ('COMMIT');
     }
 
     /**
     * Rollback since the last BEGIN
     */
     public function rollback (){
-        $this->_doQuery ('ROLLBACK');
+        $this->_doExec ('ROLLBACK');
     }
 
     /**

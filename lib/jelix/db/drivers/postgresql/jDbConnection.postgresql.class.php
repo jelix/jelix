@@ -24,15 +24,15 @@
 class jDbConnectionPostgreSQL extends jDbConnection {
 
     public function beginTransaction (){
-        return $this->_doQuery('BEGIN');
+        return $this->_doExec('BEGIN');
     }
 
     public function commit (){
-        return $this->_doQuery('COMMIT');
+        return $this->_doExec('COMMIT');
     }
 
     public function rollback (){
-        return $this->_doQuery('ROLLBACK');
+        return $this->_doExec('ROLLBACK');
     }
 
     public function prepare ($query){
