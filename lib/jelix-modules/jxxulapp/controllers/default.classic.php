@@ -10,7 +10,7 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-class CTdefault extends jController {
+class defaultCtrl extends jController {
     /**
     *
     */

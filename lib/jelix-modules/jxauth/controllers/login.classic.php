@@ -16,7 +16,7 @@
 */
 
 
-class CTLogin extends jController {
+class loginCtrl extends jController {
 
     public $pluginParams = array(
       '*'=>array('auth.required'=>false)

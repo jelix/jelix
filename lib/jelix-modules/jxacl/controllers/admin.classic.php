@@ -10,7 +10,7 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-class CTadmin extends jController {
+class adminCtrl extends jController {
 
     /**
     *

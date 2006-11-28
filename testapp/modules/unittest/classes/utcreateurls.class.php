@@ -52,6 +52,10 @@ class UTCreateUrls extends UnitTestCase {
                 $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage());
             }catch(jException $e){
                 $this->assertTrue(false,'jException: '.$e->getMessage());
+            }catch(Exception $e){
+                $msgerr = '<br>Survenue : exception=Exception code='.$e->getCode().' msg='.$e->getMessage();
+                $this->sendMessage($msgerr);
+                throw $e;
             }
         }
     }

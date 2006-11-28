@@ -16,7 +16,7 @@
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
-class ZoneLoginForm extends jZone {
+class LoginFormZone extends jZone {
    protected $_tplname='login.form';
 
 

@@ -69,6 +69,16 @@ class jHtmlRespReporter extends SimpleReporter {
       $this->_response->body->append('MAIN',$str);
    }
 
+    function paintError($message) {
+        parent::paintError($message);
+        $str = "<span class=\"fail\">Exception</span>: ";
+        $breadcrumb = $this->getTestList();
+        array_shift($breadcrumb);
+        $str .= implode(" -&gt; ", $breadcrumb);
+        $str .= " -&gt; <strong>" . $this->_htmlEntities($message) . "</strong><br />\n";
+        $this->_response->body->append('MAIN',$str);
+    }
+
    function paintMessage($message) {
       $this->_response->body->append('MAIN','<p>'.$message.'</p>');
    }

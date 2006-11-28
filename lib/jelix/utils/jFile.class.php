@@ -7,6 +7,7 @@
 * @contributor Laurent Jouanneau
 * @contributor Thiriot Christophe
 * @contributor Loic Mathaud
+* @contributor Cedric (fix bug ticket 56)
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2006 Thiriot Christophe
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file

@@ -112,7 +112,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
             $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($snp).'.entrypoint.php';
             if(file_exists($file)){
                 require_once($file);
-                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
+                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 101
                 $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][rawurlencode($snp)];
                 $urlact = $this->_parse($scriptNamePath, $pathinfo, $params);
                 if(!$urlact ){
@@ -322,7 +322,14 @@ class jUrlEngineSignificant implements jIUrlEngine {
 
         if($urlinfo[0]==0){
             $s = new jSelectorUrlHandler($urlinfo[3]);
-            $c ='URLS'.$s->resource;
+#ifdef ENABLE_OLD_CLASS_NAMING
+            $c =$s->resource.'UrlsHandler';
+            if($GLOBALS['gJConfig']->enableOldClassNaming && !class_exists($c,false)){
+                $c ='URLS'.$s->resource;
+            }
+#else
+            $c =$s->resource.'UrlsHandler';
+#endif
             $handler =new $c();
             $handler->create($urlact, $url);
         }elseif($urlinfo[0]==1){

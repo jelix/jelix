@@ -9,7 +9,7 @@
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-class Zone{$name} extends jZone {
+class {$name}Zone extends jZone {
     protected $_tplname='{$template}';
 
     

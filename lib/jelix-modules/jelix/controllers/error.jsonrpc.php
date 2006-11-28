@@ -9,7 +9,7 @@
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-class CTError extends jController {
+class errorCtrl extends jController {
 
     /**
     * 404 error page

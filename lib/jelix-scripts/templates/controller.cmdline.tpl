@@ -9,7 +9,7 @@
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-class CT{$name} extends jControllerCmdLine {
+class {$name}Ctrl extends jControllerCmdLine {
     protected $allowed_options = array(
             '{$method}' => array());
     
