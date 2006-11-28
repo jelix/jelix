@@ -2,17 +2,16 @@
 /**
 * @package    jelix
 * @subpackage db
-* @version    $Id:$
 * @author     Laurent Jouanneau
 * @contributor
 * @copyright  2005-2006 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
 */
 
 /**
  * PDO constant name have been change between php 5.0 and 5.1. So we use our own constant.
+ * @link http://lxr.php.net/source/php-src/ext/pdo/php_pdo_driver.h
  */
 define('JPDO_FETCH_OBJ',5); // PDO::FETCH_OBJ
 define('JPDO_FETCH_ORI_NEXT',0); // PDO::FETCH_ORI_NEXT
@@ -23,6 +22,9 @@ define('JPDO_ATTR_STATEMENT_CLASS',13); //PDO::ATTR_STATEMENT_CLASS
 define('JPDO_ATTR_AUTOCOMMIT',0); //PDO::ATTR_AUTOCOMMIT
 define('JPDO_ATTR_CURSOR',10); // PDO::ATTR_CURSOR
 define('JPDO_CURSOR_SCROLL',1); //PDO::CURSOR_SCROLL
+define('JPDO_ATTR_ERRMODE',3); // PDO::ATTR_ERRMODE
+define('JPDO_ERRMODE_EXCEPTION',2); // PDO::ERRMODE_EXCEPTION
+define('JPDO_MYSQL_ATTR_USE_BUFFERED_QUERY',1000); // PDO::MYSQL_ATTR_USE_BUFFERED_QUERY
 
 /**
  * a resultset based on PDOStatement
@@ -120,17 +122,12 @@ class jDbPDOConnection extends PDO {
        unset($prof['driver']);
        parent::__construct($profil['dsn'], $user, $password, $prof);
        $this->setAttribute(JPDO_ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
+       $this->setAttribute(JPDO_ATTR_ERRMODE, JPDO_ERRMODE_EXCEPTION);
+       // on ne peut pas lancer deux query en même temps avec PDO ! sauf si on utilise mysql
+       // et que l'on utilise cet attribut...
+       if($this->dbms == 'mysql')
+            $this->setAttribute(JPDO_MYSQL_ATTR_USE_BUFFERED_QUERY, true);
     }
-
-    /*
-    public function query ($queryString, $opt=false){
-        if($opt) return parent::query($queryString);
-        // on passe par prepare, pour pouvoir specifier JPDO_CURSOR_SCROLL à cause de l'iterateur
-        $sth = $this->prepare($queryString, array(JPDO_ATTR_CURSOR=> JPDO_CURSOR_SCROLL));
-        $sth->execute();
-        return $sth;
-    }
-    */
 
     public function limitQuery ($queryString, $limitOffset = null, $limitCount = null){
         if ($limitOffset !== null && $limitCount !== null){

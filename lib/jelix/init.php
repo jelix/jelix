@@ -2,12 +2,24 @@
 /**
 * Initialize all defines and includes necessary files
 *
+#ifdef ENABLE_OPTIMIZE
+* Some line of code come from php framework Copix 2.3dev20050901
+* They are copyrighted 2001-2005 CopixTeam (LGPL Licence)
+#endif
 * @package  jelix
 * @subpackage core
-* @version  $Id$
 * @author   Jouanneau Laurent
+#ifdef ENABLE_OPTIMIZE
+* @author Croes Gerald
 * @contributor Loic Mathaud
 * @copyright 2005-2006 Jouanneau laurent
+* @copyright 2001-2005 CopixTeam
+* @copyright 2006 Mathaud Loic
+* @link http://www.copix.org
+#else
+* @contributor Loic Mathaud
+* @copyright 2005-2006 Jouanneau laurent
+#endif
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
