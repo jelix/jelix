@@ -16,7 +16,7 @@ Contributeurs
 
 Loic Mathaud (bballizlife) :
     testeur, nombreuses corrections de bugs dans jelix
-    contributions jTpl : version standalone du moteur de template, commentaires, {for}
+    contributions jTpl : version standalone du moteur de template, commentaires, {for}, modifier stripslashes
     driver sqlite pour jDb
     daos : opérateurs supplementaires
     adaptation du framework pour la réalisation d'applications fonctionnant en ligne de commande
@@ -29,12 +29,14 @@ Yannick Le Guédart (Torgan)
     driver auth jAuthDriverClass
     plugin jtpl date_format
     Divers bug fix et petites améliorations
+    Contributions sur jResponseRss et jResponseAtom
 
 Yann
     Petite amélioration sur jResponseHtml (description et keywords)
 
 Nicolas Jeudy
     driver auth jAuthDriverLDS (pour les annuaires ldap LDS)
+    jResponseCss
 
 M. Thiriot (Doubleface)
     testeur
