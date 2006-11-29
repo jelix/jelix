@@ -11,8 +11,8 @@ class urlsigUrlsHandler implements jIUrlSignificantHandler {
     function parse($url){
         if(preg_match("/^\/withhandler\/(.*)\/(.*)$/",$url->pathInfo,$match)){
             $urlact = new jUrlAction($url->params);
-            $urlact->setParam('first',$match[1]);
-            $urlact->setParam('second',$match[2]);
+            $urlact->setParam('first',jUrl::unescape($match[1]));
+            $urlact->setParam('second',jUrl::unescape($match[2]));
             return $urlact;
         }else
             return false;
@@ -20,8 +20,8 @@ class urlsigUrlsHandler implements jIUrlSignificantHandler {
 
     function create($urlact, $url){
 
-        $f=$url->getParam('first');
-        $s=$url->getParam('second');
+        $f=jUrl::escape($url->getParam('first'));
+        $s=jUrl::escape($url->getParam('second'));
 
         $url->pathInfo = "/withhandler/$f/$s";
 

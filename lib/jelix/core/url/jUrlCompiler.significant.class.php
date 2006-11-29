@@ -50,7 +50,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
             où
             $isDefault : indique si c'est un point d'entrée par défaut, et donc si le parser ne trouve rien, si il ignore ou fait une erreur
 
-            $infoparser = array('module','action','nom handler')
+            $infoparser = array('module','action','selecteur handler')
             ou
             $infoparser = array( 'module','action', 'regexp_pathinfo',
                array('annee','mois'), // tableau des valeurs dynamiques, classées par ordre croissant
@@ -63,7 +63,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
 
             $CREATE_URL = array(
                'news~show@classic' =>
-                  array(0,'entrypoint', https true/false, entrypoint true/false, 'handler')
+                  array(0,'entrypoint', https true/false, entrypoint true/false, 'selecteur handler')
                   ou
                   array(1,'entrypoint', https true/false, entrypoint true/false,
                         array('annee','mois','jour','id','titre'), // liste des paramètres de l'url à prendre en compte
@@ -137,13 +137,22 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                // il faut passer par cette classe handler pour le parsing et la creation de l'url
                if(isset($url['handler'])){
                   $class = (string)$url['handler'];
-                  $s= new jSelectorUrlHandler($module.'~'.$class);
+                  // il faut absolument un nom de module dans le selecteur, car lors de l'analyse de l'url
+                  // dans le request, il n'y a pas de module connu dans le context (normal...)
+                  $p= strpos($class,'~');
+                  if($p === false)
+                    $selclass = $module.'~'.$class;
+                  elseif( $p == 0)
+                    $selclass = $module.$class;
+                  else
+                    $selclass = $class;
+                  $s= new jSelectorUrlHandler($selclass);
                   $createUrlContent.="include_once('".$s->getPath()."');\n";
-                  $parseInfos[]=array($module, $action, $class, $actionOverride );
-                  $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$urlep, $urlhttps, $class);
+                  $parseInfos[]=array($module, $action, $selclass, $actionOverride );
+                  $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$urlep, $urlhttps, $selclass);
                   if($actionOverride){
                      foreach($actionOverride as $ao){
-                        $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(0,$urlep,$urlhttps, $class);
+                        $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(0,$urlep,$urlhttps, $selclass);
                      }
                   }
                   continue;
@@ -204,10 +213,10 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                   $liststatics[(string)$var['name']] =(string)$var['value'];
                }
                $parseInfos[]=array($module, $action, '!^'.$regexppath.'$!', $listparam, $escapes, $liststatics, $actionOverride );
-               $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(1,$urlep, $urlhttps, $listparam, $escapes,$path);
+               $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(1,$urlep, $urlhttps, $listparam, $escapes,$path, false);
                if($actionOverride){
                   foreach($actionOverride as $ao){
-                     $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(1,$urlep, $urlhttps, $listparam, $escapes,$path);
+                     $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(1,$urlep, $urlhttps, $listparam, $escapes,$path, true);
                   }
                }
            }

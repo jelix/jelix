@@ -16,8 +16,9 @@ password=
 persistent= on
 
 
+[testapppdo]
 ; pour pdo :
-;driver=pdo
-;dsn=mysql:host=localhost;dbname=test
-;user=
-;password=
+driver=pdo
+dsn= "mysql:host=localhost;dbname=testapp"
+user=root
+password=

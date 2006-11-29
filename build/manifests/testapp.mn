@@ -13,6 +13,9 @@ cd testapp/www
   .htaccess
   xmlrpc.php
   index.php
+  testnews.php
+cd testapp/www/foo
+  bar.php
 cd testapp/www/design
   screen.css
 cd testapp/modules

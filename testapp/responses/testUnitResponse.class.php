@@ -24,10 +24,11 @@ class testUnitResponse extends jResponseHtml {
        $tpl = new jTpl();
        $tpl->assign('versionphp',phpversion());
        $tpl->assign('versionjelix',JELIX_VERSION);
+       $tpl->assign('isurlsig', $GLOBALS['gJConfig']->urlengine['engine'] == 'significant');
        $this->body->assign('menu',$tpl->fetch('unittest~menu'));
        $this->body->assignIfNone('MAIN','<p></p>');
        $this->body->assign('page_title', 'Test unitaires sur Jelix');
-       $this->addCSSLink('design/screen.css');
+       $this->addCSSLink($GLOBALS['gJConfig']->urlengine['basePath'].'design/screen.css');
    }
 
 

@@ -110,7 +110,7 @@ class UTCreateUrls extends UnitTestCase {
           'jsonrpc' => "@jsonrpc"
        );*/
 
-
+      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
       $urlList=array();
       $urlList[]= array('urlsig_url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
       $urlList[]= array('urlsig_url2', array('mois'=>'05',  'annee'=>'2004'));
@@ -137,6 +137,7 @@ class UTCreateUrls extends UnitTestCase {
       $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
 
       $gJConfig->urlengine['multiview']=true;
+      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
       $trueResult=array(
           "/index?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
           "/testnews?mois=05&annee=2004&module=unittest&action=urlsig_url2",
@@ -217,7 +218,9 @@ class UTCreateUrls extends UnitTestCase {
 
 
       $urlList=array();
-      $urlList[]= array('urlsig_url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
+      $urlList[]= array('urlsig_url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'01'));
+      $urlList[]= array('urlsig_url9', array('mois'=>'10',  'annee'=>'2005', 'id'=>'09'));
+      $urlList[]= array('urlsig_url10', array('mois'=>'10',  'annee'=>'2005', 'id'=>'10'));
       $urlList[]= array('urlsig_url2', array('mois'=>'05',  'annee'=>'2004'));
       $urlList[]= array('unittest~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
       $urlList[]= array('unittest~urlsig_url6', array('rubrique'=>'actualite',  'id_art'=>'65'));
@@ -229,7 +232,9 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('unittest~urlsig_url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
 
       $trueResult=array(
-          "/index.php/test/news/2005/10/35",
+          "/index.php/test/news/2005/10/01",
+          "/index.php/test/news/2005/10/09?action=urlsig_url9",
+          "/index.php/test/news/2005/10/10?action=urlsig_url10",
           "/testnews.php/2004/05",
           "/index.php/test/cms/actualite/65-c-est-la-fete-au-village",
           "/test/cms2/actualite/65",
@@ -241,13 +246,15 @@ class UTCreateUrls extends UnitTestCase {
 
        );
 
-      $trueResult[8]='https://'.$_SERVER['HTTP_HOST'].$trueResult[8];
+      $trueResult[10]='https://'.$_SERVER['HTTP_HOST'].$trueResult[10];
       $this->_doCompareUrl("significant, multiview = false", $urlList,$trueResult);
 
 
       $gJConfig->urlengine['multiview']=true;
       $trueResult=array(
-          "/index/test/news/2005/10/35",
+          "/index/test/news/2005/10/01",
+          "/index/test/news/2005/10/09?action=urlsig_url9",
+          "/index/test/news/2005/10/10?action=urlsig_url10",
           "/testnews/2004/05",
           "/index/test/cms/actualite/65-c-est-la-fete-au-village",
           "/test/cms2/actualite/65",
@@ -257,7 +264,7 @@ class UTCreateUrls extends UnitTestCase {
           "/news?aaa=bbb&action=default_bar",
           "/index/shop/vetements/98"
        );
-      $trueResult[8]='https://'.$_SERVER['HTTP_HOST'].$trueResult[8];
+      $trueResult[10]='https://'.$_SERVER['HTTP_HOST'].$trueResult[10];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
 
     }

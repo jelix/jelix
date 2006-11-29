@@ -154,7 +154,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
 
             if(count($infoparsing) < 5){
                 // on a un tableau du style
-                // array( 0=> 'module', 1=>'action', 2=>'handler', 3=>array('actions','secondaires'))
+                // array( 0=> 'module', 1=>'action', 2=>'selecteur handler', 3=>array('actions','secondaires'))
                 $s = new jSelectorUrlHandler($infoparsing[2]);
 #ifdef ENABLE_OLD_CLASS_NAMING
                 $c =$s->resource.'UrlsHandler';
@@ -291,12 +291,13 @@ class jUrlEngineSignificant implements jIUrlEngine {
         }
         /*
         urlinfo =
-            array(0,'entrypoint', https true/false, entrypoint true/false,'handler')
+            array(0,'entrypoint', https true/false, entrypoint true/false,'selecteur handler')
             ou
             array(1,'entrypoint', https true/false, entrypoint true/false
                     array('annee','mois','jour','id','titre'), // liste des paramètres de l'url à prendre en compte
                     array(true, false..), // valeur des escapes
                     "/news/%1/%2/%3/%4-%5", // forme de l'url
+                    false, //indique si  c'est une action surchargeante
                     )
             ou
             array(2,'entrypoint', https true/false, entrypoint true/false); pour les clés du type "@request"
@@ -346,6 +347,8 @@ class jUrlEngineSignificant implements jIUrlEngine {
                 $url->pathInfo = $result;
             else
                 $url->pathInfo = substr($result,1);
+            if($urlinfo[6])
+                $url->setParam('action',$action);
 
         }elseif($urlinfo[0]==3){
             $url->delParam('module');
