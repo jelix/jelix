@@ -21,6 +21,7 @@ cd myapp/var
   .htaccess
 cd myapp/var/config
   defaultconfig.ini.php.dist
-  config.classic.ini.php.dist
   dbprofils.ini.php.dist
+cd myapp/var/config/index
+  config.ini.php.dist
 cd temp/myapp

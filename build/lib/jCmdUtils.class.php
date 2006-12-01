@@ -19,9 +19,29 @@ class jCmdUtils {
 
     private function __construct() {}
 
-    public static function getOptionsAndParams($argv, $sws, $params) {
+    /**
+     *
+     * a list of options is a list of switches, a word or letter beginning by a "-"
+     * and following by an optionnal value.
+     * $sws is the list of switches : key = the switch name (ex: "-d") and the value is :
+     *   false if the switch doesn't expected a value
+     *   1 if a value is expected
+     *   2 if the switch can be repeated many times with different values
+     * 
+     * a list of parameters is an array :
+     *    key = the parameter name
+     *    value : false if it is optionnal
+     * @param array $argv list of command line parameter (most of time, should be $_SERVER['argv'])
+     * @param array $sws list of possible switches
+     * @param array $params list of possible parameters
+     * @param boolean $fromArgv  true it $argv is $_SERVER['argv']
+     */
+    public static function getOptionsAndParams($argv, $sws, $params, $fromArgv=true) {
         $switches = array();
         $parameters = array();
+
+        if($fromArgv)
+            array_shift($argv); // shift the script name
 
         //---------- get the switches
         while (count($argv) && $argv[0]{0} == '-') {
@@ -59,6 +79,7 @@ class jCmdUtils {
         }
 
         if (count($argv)) {
+var_dump($argv);
             throw new Exception("Error: two many parameters\n");
         }
 

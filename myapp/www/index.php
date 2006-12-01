@@ -11,14 +11,10 @@
 */
 
 require_once ('../../lib/jelix/init.php');
-//require_once ('/usr/lib/jelix/1.0/jelix/init.php');
-
-require_once ('../../myapp/application.init.php');
-//require_once ('/usr/share/jelix/myapp/application.init.php');
-
+require_once ('../application.init.php');
 require_once (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
 
-$config_file = 'config.classic.ini.php';
+$config_file = 'index/config.ini.php';
 
 $jelix = new jCoordinator($config_file);
 $jelix->process(new jClassicRequest());

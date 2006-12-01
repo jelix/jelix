@@ -112,8 +112,6 @@ class Subversion {
 
 
 function init(){
-    array_shift($_SERVER['argv']); // shift the script name
-
     $sws = array('-v'=>false, '-D'=>2);
     $params = array('ini'=>true);
 

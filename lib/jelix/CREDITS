@@ -12,7 +12,7 @@ sous copyright 2001-2005 Copix Team (http://www.copix.org)
 
 Contributeurs
 -------------
-(liste mise à jour à svn-286)
+(liste mise à jour à svn-320)
 
 Loic Mathaud (bballizlife) :
     testeur, nombreuses corrections de bugs dans jelix
@@ -24,15 +24,11 @@ Loic Mathaud (bballizlife) :
     corrections orthographiques dans la documentation
     Diverses améliorations (jClasses::inc(), jIniFile, jAppManager, dans jelix-scripts etc. )
 
-
 Yannick Le Guédart (Torgan)
     driver auth jAuthDriverClass
     plugin jtpl date_format
     Divers bug fix et petites améliorations
     Contributions sur jResponseRss et jResponseAtom
-
-Yann
-    Petite amélioration sur jResponseHtml (description et keywords)
 
 Nicolas Jeudy
     driver auth jAuthDriverLDS (pour les annuaires ldap LDS)
@@ -41,6 +37,13 @@ Nicolas Jeudy
 M. Thiriot (Doubleface)
     testeur
     bug fixs sur le support de PDO dans jDb
+
+Yann
+    Petite amélioration sur jResponseHtml (description et keywords)
+
+Cedric 
+    patch correctif sur jFile::read
+
 
 Gildas Givaja (Giviz) : testeur, corrections de bugs
 Olivier Gambier (d-m-p) : review de code, corrections de bugs
