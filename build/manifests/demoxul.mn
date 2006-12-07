@@ -11,6 +11,11 @@ cd demoxul/www
   xmlrpc.php
 cd demoxul/www/xulapp
   main.js
+cd demoxul/www/themes/default
+  jxacl.css
+  no_right.png
+  right_ok.png
+  xulpage.css
 cd demoxul/var/config
   defaultconfig.ini.php.dist
   dbprofils.ini.php.dist

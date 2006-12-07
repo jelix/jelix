@@ -1,7 +1,7 @@
 {meta_xul css 'chrome://global/skin/'}
 {meta_xul css 'jelix/xul/jxulform.css'}
-{meta_xul css 'jelix/design/xulpage.css'}
 {meta_xul css 'jelix/xul/jxbl.css'}
+{meta_xul csstheme 'xulpage.css'}
 {meta_xul ns array('jx'=>'jxbl')}
 
 <script type="application/x-javascript"><![CDATA[

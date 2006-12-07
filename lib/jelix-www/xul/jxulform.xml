@@ -248,7 +248,10 @@
                            break;
                        case "checkbox":
                            if (aNode.checked) {
-                              value="on";
+                              if(aNode.hasAttribute('value'))
+                                  value = aNode.getAttribute('value')
+                              else
+                                  value="on";
                            }
                            break;
                        case "radio":

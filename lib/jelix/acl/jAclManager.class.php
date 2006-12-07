@@ -26,46 +26,57 @@ class jAclManager {
 
     /**
      * specify the value of a right on the given subject/group/resource
+     * @param int    $group the group id.
+     * @param string $subject the key of the subject to check
+     * @param string|array  $value the value of the right
+     * @param string $resource the id of a resource
      * @return boolean  true if the right is set
      */
     public static function setRight($group, $subject, $value , $resource=''){
 
-       //  récupère le groupe de valeur correspondant au subject
+        //  récupère le groupe de valeur correspondant au subject
+    
+        $daosbj = jDao::get('jxacl~jaclsubject');
+        $daorightval = jDao::get('jxacl~jaclrightvalues');
+        $daoright = jDao::get('jxacl~jaclrights');
+    
+        $sbj = $daosbj->get($subject);
+        if(!$sbj) return false;
 
-       $daosbj = jDao::get('jxacl~jaclsubject');
-       $daorightval = jDao::get('jxacl~jaclrightvalues');
-       $daoright = jDao::get('jxacl~jaclrights');
+        //  récupère la liste des valeurs du groupe de valeur
+        $vallist = $daorightval->findByValGroup($sbj->id_aclvalgrp);
+    
+        if($resource === null) $resource='';
+    
+        //  met à jour la table jacl_rights
+        $right = $daoright->get($subject,$group,$resource);
+        if($right){
+            if(is_array($value)){
+                foreach($value as $val){
+                    $right->value = $val;
+                    $daoright->update($right);
+                }
+            }else{
+                $right->value = $value;
+                $daoright->update($right);
+            }
+        }else{
+            $right = jDao::createRecord('jxacl~jaclrights');
+            $right->id_aclsbj = $subject;
+            $right->id_aclgrp = $group;
+            $right->id_aclres = $resource;
 
-       $sbj = $daosbj->get($subject);
-       if(!$sbj) return false;
-
-       //  récupère la liste des valeurs du groupe de valeur
-       $vallist = $daorightval->findByValGroup($sbj->id_aclvalgrp);
-
-       // fait un & avec $value, pour être sûr que la valeur correspondent bien
-       // à une valeur possible
-       $val = 0;
-       foreach($vallist as $valgrp){
-          $val |= $valgrp->value;
-       }
-       $value &= $val;
-       if(!$value) return false;
-
-       if($resource === null) $resource='';
-       //  met à jour la table jacl_rights
-       $right = $daoright->get($subject,$group,$resource);
-       if($right){
-          $right->value = $value;
-          $daoright->update($right);
-       }else{
-          $right = jDao::createRecord('jxacl~jaclrights');
-          $right->id_aclsbj = $subject;
-          $right->id_aclgrp = $group;
-          $right->id_aclres = $resource;
-          $right->value = $value;
-          $daoright->insert($right);
-       }
-       return true;
+            if(is_array($value)){
+                foreach($value as $val){
+                    $right->value = $val;
+                    $daoright->insert($right);
+                }
+            }else{
+                $right->value = $value;
+                $daoright->insert($right);
+            }
+        }
+        return true;
     }
 
     /**

@@ -22,3 +22,5 @@ cd jxxulapp/install/www
   index.php
 cd jxxulapp/install/www/xulapp
   main.js
+cd jxxulapp/install/www/themes/default/
+  xulpage.css

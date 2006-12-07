@@ -19,17 +19,19 @@ CREATE TABLE `jacl_user_group` (
 
 
 --- groupes de valeurs de droits
+--- type_aclvalgrp : 0 = valeurs pouvant être combinées, 1= valeurs exclusives
 DROP TABLE IF EXISTS `jacl_right_values_group`;
 CREATE TABLE `jacl_right_values_group` (
   `id_aclvalgrp` int(11) NOT NULL default '0',
   `label_key` varchar(50) NOT NULL default '',
+  `type_aclvalgrp` tinyint(4) NOT NULL default '0', 
   PRIMARY KEY  (`id_aclvalgrp`)
 ) TYPE=MyISAM;
 
 --- liste des valeurs possibles dans chaque groupe de valeurs de droits
 DROP TABLE IF EXISTS `jacl_right_values`;
 CREATE TABLE `jacl_right_values` (
-  `value` int(11) NOT NULL default '0',
+  `value` varchar(20) NOT NULL default '',
   `label_key` varchar(50) NOT NULL default '',
   `id_aclvalgrp` int(11) NOT NULL default '0',
   PRIMARY KEY  (`value`,`id_aclvalgrp`)
@@ -53,6 +55,6 @@ CREATE TABLE `jacl_rights` (
   `id_aclsbj` varchar(255) NOT NULL default '',
   `id_aclgrp` int(11) NOT NULL default '0',
   `id_aclres` varchar(100) NOT NULL default '',
-  `value` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`id_aclsbj`,`id_aclgrp`,`id_aclres`)
+  `value` varchar(20) NOT NULL default '',
+  PRIMARY KEY  (`id_aclsbj`,`id_aclgrp`,`id_aclres`, `value`)
 ) TYPE=MyISAM;

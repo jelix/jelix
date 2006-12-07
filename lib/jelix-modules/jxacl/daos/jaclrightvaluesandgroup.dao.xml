@@ -8,9 +8,9 @@
 
       <property name="id_aclvalgrp" fieldname="id_aclvalgrp" datatype="int" required="yes"/>
       <property name="label_key" fieldname="label_key" datatype="string" required="yes"/>
-      <property name="value" fieldname="value" datatype="int" required="yes"/>
+      <property name="value" fieldname="value" datatype="string" required="yes"/>
       <property name="group_label_key" fieldname="label_key" table="g" datatype="string" required="yes"/>
-
+      <property name="type_group" fieldname="type_aclvalgrp" table="g" datatype="int"/>
     </record>
     <factory>
         <method name="findAll" type="select">

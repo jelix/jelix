@@ -6,7 +6,7 @@
 
 function onLoginResult(form){ldelim}
     if(form.jsonResponse.result == 'OK')
-        window.location.href='{jurl 'jxxulapp~default_index'}';
+        window.location.href='{jurl 'jxxulapp~default_index',array(),false}';
     else
         alert('login ou mot de passe érroné');
 

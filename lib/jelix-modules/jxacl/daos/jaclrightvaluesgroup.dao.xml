@@ -7,7 +7,7 @@
 
       <property name="id_aclvalgrp" fieldname="id_aclvalgrp" datatype="int" required="yes"/>
       <property name="label_key" fieldname="label_key" datatype="string" required="yes"/>
-
+      <property name="type" fieldname="type_aclvalgrp" datatype="int"/>
     </record>
     <!--<factory>
         <method name="findByStage" type="select/selectfirst/delete/update/php">

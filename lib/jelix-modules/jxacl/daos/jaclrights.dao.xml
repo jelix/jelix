@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
     <datasources>
-        <primarytable name="r" realname="jacl_rights" primarykey="id_aclsbj,id_aclgrp,id_aclres" />
+        <primarytable name="r" realname="jacl_rights" primarykey="id_aclsbj,id_aclgrp,id_aclres,value" />
     </datasources>
     <record>
       <property name="id_aclsbj" fieldname="id_aclsbj" datatype="string" required="yes"/>
       <property name="id_aclgrp" fieldname="id_aclgrp" datatype="int" required="yes"/>
       <property name="id_aclres" fieldname="id_aclres" datatype="string" required="yes"/>
-      <property name="value" fieldname="value" datatype="int" required="yes"/>
+      <property name="value" fieldname="value" datatype="string" required="yes"/>
     </record>
     <factory>
         <method name="getAllGroupRights" type="select">

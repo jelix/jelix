@@ -2,7 +2,6 @@
 /**
 * @package     jelix-modules
 * @subpackage  jxacl
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006 Jouanneau laurent
@@ -21,13 +20,14 @@ class adminCtrl extends jController {
         $srv= jClasses::getService('aclservice');
 
         $rep->datas = $srv->getGroupRights($grpid);
-        $rep->asAttribute = array('id_aclsbj','id_aclvalgrp','value','id_aclres');
+        /*$rep->asAttribute = array('id_aclsbj','id_aclvalgrp','value','id_aclres');
         $rep->asElement = array('label','value_label');
 
         $rep->resNs="http://jelix.org/ns/rights#";
         $rep->resNsPrefix='r';
         $rep->resUriPrefix = "urn:data:row:";
-        $rep->resUriRoot = "urn:data:row";
+        $rep->resUriRoot = "urn:data:row";*/
+        $rep->template='rights.rdf';
 
         return $rep;
     }

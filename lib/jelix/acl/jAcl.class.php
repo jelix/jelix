@@ -38,61 +38,56 @@ class jAcl {
 
     /**
      * call this method to know if the current user has the right with the given value
-     * @param string  $subject the key of the subject to check
-     * @param int $value the value to test against
+     * @param string $subject the key of the subject to check
+     * @param string $value the value to test against
      * @param string $resource the id of a resource
      * @return boolean true if yes
      */
     public static function check($subject, $value, $resource=null){
         $val = self::getRight($subject, $resource);
-        return ($val & $value)?true:false;
+        return in_array($value,$val);
     }
 
     /**
      * return the value of the right on the given subject (and on the optional resource)
-     * @param string  $subject the key of the subject
+     * @param string $subject the key of the subject
      * @param string $resource the id of a resource
-     * @return int the value of the right
+     * @return array list of values corresponding to the right
      */
     public static function getRight($subject, $resource=null){
         static $aclres = array();
         static $acl = array();
 
-        if($resource === null){
-            if(isset($acl[$subject])){
-                return $acl[$subject];
-            }
-        }else{
-            if(isset($aclres[$subject][$resource])){
-                return $aclres[$subject][$resource];
-            }
+        if($resource === null && isset($acl[$subject])){
+            return $acl[$subject];
+        }elseif(isset($aclres[$subject][$resource])){
+            return $aclres[$subject][$resource];
         }
-        if(!jAuth::isConnected())
-            return 0;
+
+        if(!jAuth::isConnected()) // not authificated = no rights
+            return array();
 
         $groups = self::getGroups();
 
         // recupère toutes les valeurs correspondant aux groupes auquel appartient le user,
         //   avec le sujet et ressource indiqué
-        // droit = OU entre ces valeurs
-
+        $values= array();
         $dao = jDao::get('jxacl~jaclrights');
-        if($resource === null){
-            $list=$dao->getAllGroupRights($subject, $groups);
-        }else{
-            $list=$dao->getAllGroupRightsWithRes($subject, $groups, $resource);
-        }
-        $value=0;
+        $list = $dao->getAllGroupRights($subject, $groups);
         foreach($list as $right){
-            $value |= intval($right->value);
+            $values [] = $right->value;
+        }
+        $acl[$subject] = $values;
+
+        if($resource !== null){
+            $list = $dao->getAllGroupRightsWithRes($subject, $groups, $resource);
+            foreach($list as $right){
+                $values [] = $right->value;
+            }
+            $aclres[$subject][$resource] = $values = array_unique($values);
         }
 
-        if($resource === null){
-            $aclres[$subject][$resource] =$value;
-        }else{
-            $acl[$subject] = $value;
-        }
-        return $value;
+        return $values;
     }
 
     /**
@@ -102,7 +97,7 @@ class jAcl {
     protected static function getGroups(){
         static $groups = null;
 
-        if(!isset($_SESSION['JELIX_USER']->login))
+        if(!jAuth::isConnected())
             return array();
 
         // chargement des groupes

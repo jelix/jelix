@@ -79,7 +79,7 @@ class jCmdUtils {
         }
 
         if (count($argv)) {
-var_dump($argv);
+
             throw new Exception("Error: two many parameters\n");
         }
 

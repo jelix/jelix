@@ -31,23 +31,34 @@ final class jResponseRdf extends jResponse {
     public $resUriPrefix = "urn:data:row:";
     public $resUriRoot = "urn:data:row";
     public $datas;
+    public $template;
     public $asAttribute=array();
     public $asElement=array();
+    protected $prologSent=false;
 
     public function output(){
         if($this->hasErrors()) return false;
-        header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset);
-        $this->generateContent();
+        $this->_httpHeaders['Content-Type']='text/xml;charset='.$GLOBALS['gJConfig']->defaultCharset;
+        $this->sendHttpHeaders();
+
+        echo '<?xml version="1.0" encoding="'.$GLOBALS['gJConfig']->defaultCharset.'"?>';
+        $this->prologSent = true;
+        if($this->template !=''){
+            $tpl= new jTpl();
+            $tpl->assign('datas',$this->datas);
+            $tpl->display($this->template);
+        }else{
+            $this->generateContent();
+        }
         return true;
     }
 
     protected function generateContent(){
         $EOL="\n";
-        echo '<?xml version="1.0" encoding="ISO-8859-1"?>'.$EOL;
         echo '<RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'.$EOL;
         echo '  xmlns:',$this->resNsPrefix,'="',$this->resNs,'"  xmlns:NC="http://home.netscape.com/NC-rdf#">',$EOL;
 
-        echo '<Bag about="'.$this->resUriRoot.'">'.$EOL;
+        echo '<Bag RDF:about="'.$this->resUriRoot.'">'.$EOL;
         foreach($this->datas as $dt){
             echo "<li>\n<Description ";
             // NC:parseType="Integer"
@@ -84,14 +95,17 @@ final class jResponseRdf extends jResponse {
 
     public function outputErrors(){
         global $gJCoord;
-
-        header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset);
         $EOL="\n";
-        echo '<?xml version="1.0" encoding="ISO-8859-1"?>'.$EOL;
+        if(!$this->_httpHeadersSent){
+            header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset);
+        }
+        if(!$this->prologSent){
+            echo '<?xml version="1.0" encoding="ISO-8859-1"?>'.$EOL;
+        }
         echo '<RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'.$EOL;
         echo '  xmlns:err="http://jelix.org/ns/rdferr#"  xmlns:NC="http://home.netscape.com/NC-rdf#">'.$EOL;
 
-        echo '<Bag about="urn:jelix:error">'.$EOL;
+        echo '<Bag RDF:about="urn:jelix:error">'.$EOL;
         if(count($gJCoord->errorMessages)){
            foreach($gJCoord->errorMessages as $e){
                 echo "<li>\n";

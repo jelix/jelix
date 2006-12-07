@@ -11,9 +11,10 @@
 
 {meta_xul css 'chrome://global/skin/'}
 {meta_xul css 'jelix/xul/jxulform.css'}
-{meta_xul css 'jelix/design/xulpage.css'}
 {meta_xul css 'jelix/xul/jxbl.css'}
+{meta_xul csstheme 'jxacl.css'}
 {meta_xul ns array('jx'=>'jxbl')}
+{meta_xul csstheme 'xulpage.css'}
 
 <script type="application/x-javascript"><![CDATA[
 
@@ -31,7 +32,6 @@
     function disableAll(){
         document.getElementById('rights').setAttribute("datasources","");
         document.getElementById('users').setAttribute("datasources","");
-        document.getElementById('rightsvalues').selectedIndex=0;
         document.getElementById('groupstatus').setAttribute('disabled','true');
         var pager = document.getElementById('userspager');
         pager.setAttribute('counturl','');
@@ -40,28 +40,7 @@
     }
 
     function selectRightForm(idvalgrp, rightvalue){
-        var deck=document.getElementById('rightsvalues');
-        deck.selectedIndex=0;
-        if(idvalgrp != '0'){
-            var grpbox = deck.getElementsByTagName("groupbox");
-            for(var i =0; i < grpbox.length; i++){
-               if(grpbox[i].getAttribute("valgrp") == idvalgrp){
-                    deck.selectedIndex=i+1;
-                    break;
-               }
-            }
-            if(deck.selectedIndex!=0){
-                var chks = grpbox[i].getElementsByTagName("checkbox");
-                var chkvalue, value=parseInt(rightvalue);
-                for(var j=0; j < chks.length; j++){
-                    chkvalue=parseInt(chks[j].getAttribute('rightvalue'));
-                    if((chkvalue & value) == chkvalue)
-                        chks[j].checked=true;
-                    else
-                        chks[j].checked=false;
-                }
-            }
-        }
+
     }
 
     function changeGroup( idgroup ){
@@ -82,7 +61,6 @@
             disableAll();
         }
         document.getElementById('groupname').setAttribute('value',gGroupList.selectedItem.label);
-        selectRightForm("0",0);
         gCurrentRight = {};
     }
 
@@ -103,8 +81,7 @@
 
     function onSubjectSelect(tree){
         var idx = tree.view.selection.currentIndex;
-        if(idx == -1){
-            selectRightForm("0",0);
+        /*if(idx == -1){
             gCurrentRight = {};
         }else{
 
@@ -112,15 +89,13 @@
             gCurrentRight.id_aclvalgrp =  tree.view.getCellText(idx, tree.columns.getNamedColumn ( "id_aclvalgrp-col"));
             gCurrentRight.id_aclsbj =  tree.view.getCellText(idx, tree.columns.getNamedColumn ( "id_aclsbj-col"));
             gCurrentRight.id_aclres =  tree.view.getCellText(idx, tree.columns.getNamedColumn ( "res-col"));
-
-            selectRightForm(gCurrentRight.id_aclvalgrp, gCurrentRight.rightvalue);
-        }
+        }*/
     }
 
 
 
     function onRightsFormSubmit(form){
-        var deck=document.getElementById("rightsforms");
+        /*var deck=document.getElementById("rightsforms");
         if(deck.selectedIndex!=0){
             var chks = deck.selectedPanel.getElementsByTagName("checkbox");
             var chkvalue, value=0;
@@ -135,10 +110,9 @@
             return true;
         }else{
             return false;
-        }
+        }*/
 
     }
-
 
     function onCreateNewGroup(form){
         gGroupList.selectedItem=gGroupList.appendItem(form.formDatas.groupname, form.jsonResponse.result.id);
@@ -158,34 +132,32 @@
         gGroupList.setAttribute('label',form.formDatas.newname);
     }
 
-
-
-function onAddUserGroup(form,idgroup){
-	document.getElementById('user').value='';
-	document.getElementById('user2').value='';
-	{/literal}
-	var usersurl={urljsstring 'jxacl~admin_userslist@rdf',array('offset'=>'0','count'=>'10'),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
-	var counturl={urljsstring 'jxacl~admin_usersgcount@classic',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
-	{literal}
-	var pager = document.getElementById('userspager');
-   pager.setAttribute('counturl',counturl);
-   pager.setAttribute('datasourceurl','');
-	pager.setAttribute('datasourceurl',usersurl);
-	pager.loadCount();
-}
-
-function onRemoveUserGroup(form,idgroup){
-	document.getElementById('user').value='';
-	{/literal}
-	var usersurl={urljsstring 'jxacl~admin_userslist@rdf',array('offset'=>'0','count'=>'10'),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
-	var counturl={urljsstring 'jxacl~admin_usersgcount@classic',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
-	{literal}
-	var pager = document.getElementById('userspager');
-   pager.setAttribute('counturl',counturl);
-   pager.setAttribute('datasourceurl','');
-	pager.setAttribute('datasourceurl',usersurl);
-	pager.loadCount();
-}
+    function onAddUserGroup(form,idgroup){
+        document.getElementById('user').value='';
+        document.getElementById('user2').value='';
+        {/literal}
+        var usersurl={urljsstring 'jxacl~admin_userslist@rdf',array('offset'=>'0','count'=>'10'),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
+        var counturl={urljsstring 'jxacl~admin_usersgcount@classic',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
+        {literal}
+        var pager = document.getElementById('userspager');
+        pager.setAttribute('counturl',counturl);
+        pager.setAttribute('datasourceurl','');
+        pager.setAttribute('datasourceurl',usersurl);
+        pager.loadCount();
+    }
+    
+    function onRemoveUserGroup(form,idgroup){
+        document.getElementById('user').value='';
+        {/literal}
+        var usersurl={urljsstring 'jxacl~admin_userslist@rdf',array('offset'=>'0','count'=>'10'),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
+        var counturl={urljsstring 'jxacl~admin_usersgcount@classic',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
+        {literal}
+        var pager = document.getElementById('userspager');
+        pager.setAttribute('counturl',counturl);
+        pager.setAttribute('datasourceurl','');
+        pager.setAttribute('datasourceurl',usersurl);
+        pager.loadCount();
+    }
   {/literal}
 ]]></script>
 
@@ -222,7 +194,7 @@ function onRemoveUserGroup(form,idgroup){
         onrpcerror="alert(this.jsonResponse.error.toSource())"
         onerror="alert(this.httpreq.responseText);"
         />
-<jx:submission id="rightsform" action="{jurl '@jsonrpc'}" method="POST"
+<!--<jx:submission id="rightsform" action="{jurl '@jsonrpc'}" method="POST"
         format="json-rpc" rpcmethod="jxacl~admin_saveright"
         onsubmit="onRightsFormSubmit(this)"
         onresult="reloadRights()"
@@ -230,7 +202,7 @@ function onRemoveUserGroup(form,idgroup){
         oninvalidate="alert('erreur de saisie')"
         onrpcerror="alert('rpcerror:\n'+this.jsonResponse.error.toSource())"
         onerror="alert('error:\n'+this.httpreq.responseText);"
-        />
+        />-->
 <jx:submission id="addusertogrpform" 
         action="{jurl '@jsonrpc'}" 
         method="POST"
@@ -279,32 +251,7 @@ function onRemoveUserGroup(form,idgroup){
             </groupbox>
 
         </jx:jbox>
-        <jx:jbox title="Droits associés">
-            <deck id="rightsvalues">
-                <description></description>
-                {assign $valgrp=0}
-                {foreach $valuegroups as $i=>$vg}
-                    {if $valgrp != $vg->id_aclvalgrp}
-                        {if $valgrp !=0}
-                            <jx:submit id="rightdata{$valgrp}" form="rightsform" label="Sauvegarder"/>
-                            </groupbox>
-                        {/if}
-                        <groupbox submit="rightdata{$vg->id_aclvalgrp}" valgrp="{$vg->id_aclvalgrp}">
-                            {assign $label=$vg->group_label_key}
-                            <caption label="{@$label@}"/>
-                        {assign $valgrp=$vg->id_aclvalgrp}
-                    {/if}
-
-                    {assign $label=$vg->label_key}
-                    <checkbox label="{@$label@}" rightvalue="{$vg->value}" />
-                {/foreach}
-                {if $valgrp !=0}
-                        <jx:submit id="rightdata{$valgrp}" form="rightsform" label="Sauvegarder"/>
-                </groupbox>
-                {/if}
-            </deck>
-
-        </jx:jbox>
+        
     </vbox>
 
 
@@ -316,41 +263,56 @@ function onRemoveUserGroup(form,idgroup){
             </tabs>
         <tabpanels flex="1">
             <tabpanel>
-                <tree id="rights" flex="1" flags="dont-build-content" ref="urn:data:row"
-                      datasources="rdf:null"  onselect="onSubjectSelect(this)" seltype="single"
-                    >
+                <tree id="rights" ref="urn:data:row" width="500" datasources="rdf:null"
+                    onselect="onSubjectSelect(this)" seltype="single" editable="true">
                     <treecols>
-                        <treecol id="subject-col" label="Sujets" primary="true" flex="2"
+                        <treecol id="rights-col" label="Droits" primary="true" flex="2"
                                 class="sortDirectionIndicator" sortActive="false"
                                 sortDirection="ascending"
                                 sort="rdf:http://jelix.org/ns/rights#label"/>
+
                         <splitter class="tree-splitter"/>
+                        
+                        <treecol id="enable-col" label="Actif" width="50"
+                                 type="checkbox" editable="true" />
+                        
+                        <splitter class="tree-splitter"/>
+                        
                         <treecol id="res-col" label="Ressources" flex="1"
-                                 class="sortDirectionIndicator" sortActive="true"
-                                 sortDirection="ascending"
+                                 class="sortDirectionIndicator" sortActive="true" sortDirection="ascending"
                                  sort="rdf:http://jelix.org/ns/rights#id_aclres"/>
-                        <splitter class="tree-splitter"/>
-                        <treecol id="values-col" label="Droits" flex="3"
-                                class="sortDirectionIndicator" sortActive="true"
-                                sortDirection="ascending"
-                                sort="rdf:http://jelix.org/ns/rights#value_label"/>
+                        
                         <treecol id="value-col" label="" flex="0" ignoreincolumnpicker="true" hidden="true" />
+                        
                         <treecol id="id_aclvalgrp-col" label="" flex="0" ignoreincolumnpicker="true" hidden="true" />
+                        
                         <treecol id="id_aclsbj-col" label="" flex="0" ignoreincolumnpicker="true" hidden="true" />
+                        
                     </treecols>
                     <template>
-                        <treechildren alternatingbackground="true">
-                            <treeitem uri="rdf:*">
-                                <treerow>
-                                    <treecell label="rdf:http://jelix.org/ns/rights#label"/>
-                                    <treecell label="rdf:http://jelix.org/ns/rights#id_aclres"/>
-                                    <treecell label="rdf:http://jelix.org/ns/rights#value_label"/>
-                                    <treecell label="rdf:http://jelix.org/ns/rights#value"/>
-                                    <treecell label="rdf:http://jelix.org/ns/rights#id_aclvalgrp"/>
-                                    <treecell label="rdf:http://jelix.org/ns/rights#id_aclsbj"/>
-                                </treerow>
-                            </treeitem>
-                        </treechildren>
+                        <rule iscontainer="true">
+                            <treechildren>
+                                <treeitem uri="rdf:*">
+                                    <treerow properties="subject">
+                                        <treecell label="rdf:http://jelix.org/ns/rights#label"/>
+                                    </treerow>
+                                </treeitem>
+                            </treechildren>
+                        </rule>
+                        <rule iscontainer="false">
+                            <treechildren>
+                                <treeitem uri="rdf:*">
+                                    <treerow properties="right">
+                                        <treecell label="rdf:http://jelix.org/ns/rights#label"/>
+                                        <treecell value="rdf:http://jelix.org/ns/rights#enabled"/>
+                                        <treecell label="rdf:http://jelix.org/ns/rights#id_aclres"/>
+                                        <treecell label="rdf:http://jelix.org/ns/rights#value"/>
+                                        <treecell label="rdf:http://jelix.org/ns/rights#id_aclvalgrp"/>
+                                        <treecell label="rdf:http://jelix.org/ns/rights#id_aclsbj"/>
+                                    </treerow>
+                                </treeitem>
+                            </treechildren>
+                        </rule>
                     </template>
                 </tree>
             </tabpanel>
@@ -386,7 +348,7 @@ function onRemoveUserGroup(form,idgroup){
                     <caption label="Ajouter un Utilisateur :"/>
                     <textbox id="user" name="user" value="" required="true" form="addusertogrpform" observes="groupstatus"/>
                     <jx:submit id="addusersubmit" form="addusertogrpform" label="Ajouter" observes="groupstatus"/>
-	       </groupbox>
+	               </groupbox>
 
             </tabpanel>
         </tabpanels>
