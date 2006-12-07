@@ -2,7 +2,6 @@
 /**
 * @package     jelix
 * @subpackage  forms
-* @version     $Id:$
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2006 Laurent Jouanneau
@@ -14,6 +13,7 @@
  *
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 abstract class jFormsControl {
    public $type = null;
@@ -37,6 +37,7 @@ abstract class jFormsControl {
  *
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormsControlInput extends jFormsControl {
    public $type='input';
@@ -47,16 +48,21 @@ class jFormsControlInput extends jFormsControl {
  *
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormsControlSelect1 extends jFormsControl {
-   public $type="select1";
-   public $datasource; // jIFormDatasource
+    public $type="select1";
+    /**
+     * @var jIFormDatasource
+     */
+    public $datasource;
 }
 
 /**
  *
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormsControlSelect extends jFormsControlSelect1 {
    public $type="select";
@@ -66,6 +72,7 @@ class jFormsControlSelect extends jFormsControlSelect1 {
  *
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormsControlTextarea extends jFormsControl {
    public $type='textarea';
@@ -75,6 +82,7 @@ class jFormsControlTextarea extends jFormsControl {
  *
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormsControlSecret extends jFormsControl {
    public $type='secret';
@@ -84,6 +92,7 @@ class jFormsControlSecret extends jFormsControl {
  *
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormsControlOutput extends jFormsControl {
    public $type='output';
@@ -93,6 +102,7 @@ class jFormsControlOutput extends jFormsControl {
  *
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormsControlUpload extends jFormsControl {
    public $type='upload';
@@ -102,6 +112,7 @@ class jFormsControlUpload extends jFormsControl {
  *
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormsControlSubmit extends jFormsControl {
    public $type='submit';

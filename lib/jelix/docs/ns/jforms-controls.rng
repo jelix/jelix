@@ -27,9 +27,12 @@
   </define>
 
   <define name="List.UI.Common">
-     <oneOrMore>
-        <ref name="item" />
-     </oneOrMore>
+     <choice>
+        <oneOrMore>
+            <ref name="item" />
+        </oneOrMore>
+        <ref name="daodatasource" />
+    </choice>
      <optional>
          <attribute name="appearance">
              <choice>
@@ -47,13 +50,11 @@
         <element name="datatype">
            <ref name="datatype.attr"/>
            <optional><attribute name="length" /></optional>
-           <optional><attribute name="minLength" /></optional>
-           <optional><attribute name="maxLength" /></optional>
+           <optional><attribute name="minlength" /></optional>
+           <optional><attribute name="maxlength" /></optional>
            <optional><attribute name="pattern" /></optional>
-           <optional><attribute name="maxInclusive" /></optional>
-           <optional><attribute name="minInclusive" /></optional>
-           <optional><attribute name="maxExclusive" /></optional>
-           <optional><attribute name="minExclusive" /></optional>
+           <optional><attribute name="maxvalue" /></optional>
+           <optional><attribute name="minvalue" /></optional>
            <empty />
         </element>
   </define>
@@ -76,6 +77,13 @@
   </define>
   
 
+  <define name="daodatasource">
+      <attribute name="dao" />
+      <attribute name="daomethod" />
+      <attribute name="daolabelproperty" />
+      <attribute name="daovalueproperty" />
+  </define>
+  
   <!--  Controls       -->
 
 

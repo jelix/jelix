@@ -34,7 +34,7 @@ function jExceptionHandler($exception){
     }elseif($gJCoord->response == null){
         $ret = $gJCoord->initDefaultResponseOfRequest();
         if(is_string($ret)){
-            $errmsg = 'Double error ! 1)'. $ret.'; 2)'.$errmsg;
+            $msg = 'Double error ! 1)'. $ret.'; 2)'.$msg;
         }
 
     }

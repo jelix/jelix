@@ -19,6 +19,7 @@ require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
  * generates form class from an xml file describing the form
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormsCompiler implements jISimpleCompiler {
 
@@ -50,21 +51,17 @@ class jFormsCompiler implements jISimpleCompiler {
          $class = 'jFormsControl'.$controltype;
 
          if(!class_exists($class,false)){
-            trigger_error(jLocale::get('jelix~formserr.unknow.tag',array($controltype,$sourceFile)), E_USER_ERROR);
-            return false;
+            throw new jException('jelix~formserr.unknow.tag',array($controltype,$sourceFile));
          }
 
-
          if(!isset($control['ref'])){
-            trigger_error(jLocale::get('jelix~formserr.attribute.missing',array('ref',$controltype,$sourceFile)), E_USER_ERROR);
-            return false;
+            throw new jException('jelix~formserr.attribute.missing',array('ref',$controltype,$sourceFile));
          }
          $source[]='$ctrl= new '.$class.'(\''.(string)$control['ref'].'\');';
          if(isset($control['type'])){
             $dt = (string)$control['type'];
-            if(!in_array(strtolower($dt), array('string','boolean','decimal','integer','datetime','date','time','localedatetime','localedate','localetime'))){
-               trigger_error(jLocale::get('jelix~formserr.datatype.unknow',array($dt,$controltype,$sourceFile)), E_USER_ERROR);
-               return false;
+            if(!in_array(strtolower($dt), array('string','boolean','decimal','integer','hexadecimal','datetime','date','time','localedatetime','localedate','localetime', 'url','email','ipv4','ipv6'))){
+               throw new jException('jelix~formserr.datatype.unknow',array($dt,$controltype,$sourceFile));
             }
             $source[]='$ctrl->datatype= new jDatatype'.$dt.'();';
          }else{
@@ -81,16 +78,14 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$ctrl->required='.($required=='true'?'true':'false').';';
          }
 
-
          if(!isset($control->label)){
-            trigger_error(jLocale::get('jelix~formserr.tag.missing',array('label',$controltype,$sourceFile)), E_USER_ERROR);
-            return false;
+            throw new jException('jelix~formserr.tag.missing',array('label',$controltype,$sourceFile));
          }
 
          if(isset($control->label['locale'])){
              $source[]='$ctrl->labellocale=\''.(string)$control->label['locale'].'\';';
          }else{
-             $source[]='$ctrl->label=\''.(string)$control->label.'\';';
+             $source[]='$ctrl->label=\''.str_replace("'","\\'",(string)$control->label).'\';';
          }
          switch($controltype){
             case 'input':
@@ -100,13 +95,41 @@ class jFormsCompiler implements jISimpleCompiler {
             case 'secret':
                break;
             case 'output':
+                //attr value
                break;
-            case 'upload':
+            case 'upload': 
+                // attr mediatype
                break;
             case 'select1':
-            case 'select':
+            case 'select': 
+                // recuperer les <items> attr label|labellocale value
+                if(isset($control['dao'])){
+                    $daoselector = (string)$control['dao'];
+                    $daomethod = (string)$control['daomethod'];
+                    $daolabel = (string)$control['daolabelproperty'];
+                    $daovalue = (string)$control['daovalueproperty'];
+                    $source[]='$ctrl->datasource= new jFormDaoDatasource(\''.$daoselector.'\',\''.
+                        $daomethod.'\',\''.$daolabel.'\',\''.$daovalue.'\',);';
+
+                }else{
+                    $source[]='$ctrl->datasource= new jFormStaticDatasource();';
+                    $source[]='$ctrl->datasource->array(';
+
+                    foreach($control->item as $item){
+                        $value ="'".str_replace("'","\\'",(string)$item['value'])."'=>";
+                        if(isset($item['label'])){
+                            $source[] = $value."'".str_replace("'","\\'",(string)$item['label'])."',";
+                        }elseif(isset($item['labellocale'])){
+                            $source[] = $value."jLocale::get('".(string)$item['labellocale']."'),";
+                        }else{
+                            $source[] = $value."'".str_replace("'","\\'",(string)$item['value'])."',";
+                        }
+                    }
+                    $source[]=");";
+                }
                break;
             case 'submit':
+                // attr value
                break;
          }
          $source[]='$this->addControl($ctrl);';
@@ -129,6 +152,7 @@ class jFormsCompiler implements jISimpleCompiler {
  *
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 interface jIFormGenerator {
 

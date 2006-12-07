@@ -2,7 +2,6 @@
 /**
 * @package     jelix
 * @subpackage  forms
-* @version     $Id:$
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2006 Laurent Jouanneau
@@ -14,6 +13,7 @@
  * this object is a container for form datas
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormsDataContainer {
     /**

@@ -2,7 +2,6 @@
 /**
 * @package     jelix
 * @subpackage  forms
-* @version     $Id:$
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2006 Laurent Jouanneau
@@ -11,9 +10,10 @@
 */
 
 /**
- * EXPERIMENTAL / NON UTILISE
+ * EXPERIMENTAL
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 interface jIFormDatasource {
    public function getDatas();
@@ -21,9 +21,10 @@ interface jIFormDatasource {
 }
 
 /**
- * EXPERIMENTAL / NON UTILISE
+ * EXPERIMENTAL
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormStaticDatasource implements jIFormDatasource {
    public $datas = array();
@@ -34,9 +35,10 @@ class jFormStaticDatasource implements jIFormDatasource {
 
 
 /**
- * EXPERIMENTAL / NON UTILISE
+ * EXPERIMENTAL
  * @package     jelix
  * @subpackage  forms
+ * @experimental
  */
 class jFormDaoDatasource implements jIFormDatasource {
 

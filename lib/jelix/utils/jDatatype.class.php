@@ -2,7 +2,6 @@
 /**
 * @package     jelix
 * @subpackage  utils
-* @version     $Id:$
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2006 Laurent Jouanneau
@@ -17,96 +16,36 @@
  */
 abstract class jDatatype {
 
-  protected $length=null;
-  protected $minLength=null;
-  protected $maxLength=null;
-  protected $pattern=null;
-  protected $whitespace=null;
-  protected $maxInclusive=null;
-  protected $minInclusive=null;
-  protected $maxExclusive=null;
-  protected $minExclusive=null;
-  protected $totalDigits=null;
-  protected $fractionDigits=null;
+    protected $hasFacets= false;
+    protected $facets = array();
 
-  protected $hasFacets= false;
+    function __construct(){
+    }
 
-  protected $facets = array('length','minLength','maxLength', 'pattern', 'whitespace', 'maxInclusive',
-            'minInclusive', 'maxExclusive', 'minExclusive', 'totalDigits', 'fractionDigits');
+    /**
+    * permet d'indiquer des restrictions sur les valeurs
+    * @param string $type
+    * @param string $value
+    */
+    public function addFacet($type,$value=null){
+        
+        if(in_array($type, $this->facets)){
+            $this->hasFacets = true;
+            $this->_addFacet($type,$value);
+        }
+    }
 
-  function __construct(){
-  }
+    protected function _addFacet($type,$value){
+        $this->$type = $value;
+    }
 
-  /**
-   * permet d'indiquer des restrictions sur les valeurs
-   * @param array/string $type
-   */
-  public function addFacets($type,$value=null){
-     $this->hasFacets = true;
-     if(is_array($type)){
-       foreach($type as $t=>$v){
-          if(in_array($t, $this->facets)){
-             $this->_addFacet($t,$v);
-          }
-       }
-     }else{
-       if(in_array($type, $this->facets)){
-           $this->_addFacet($type,$value);
-       }
-     }
-  }
-
-  protected function _addFacet($type,$value){
-      $this->$type = $value;
-  }
-
-  /**
-   * vérifie qu'une valeur correspond bien au datatype
-   * @param string   $value
-   */
-  public function check($value){
-    if($this->_checkType($value)){
-      if($this->hasFacets)
-        return $this->_checkFacets($value) && $this->_checkValueFacets($value);
-      else
-        return false;
-    }else
-      return false;
-  }
-
-  /**
-   * verifie le type de la valeur
-   */
-  protected function _checkType($value) { return true; }
-
-  /**
-   * verifie les restrictions sur la chaine contenant la valeur
-   */
-  protected function _checkFacets($value){
-    if($this->length !== null && strlen($value) > $this->length)
-        return false;
-    if($this->minLength !== null && strlen($value) < $this->minLength)
-        return false;
-    if($this->maxLength !== null && strlen($value) > $this->maxLength)
-        return false;
-    if($this->pattern !== null && !preg_match($this->pattern,$value))
-        return false;
-    return true;
-  }
-  /**
-   * verifie les restrictions sur la valeur
-   */
-  protected function _checkValueFacets($value){
-    if($this->maxInclusive !== null && $value > $this->maxInclusive)
-        return false;
-    if($this->minInclusive !== null && $value < $this->minInclusive)
-        return false;
-    if($this->maxExclusive !== null && $value >= $this->maxExclusive)
-        return false;
-    if($this->minExclusive !== null && $value <= $this->minExclusive)
-        return false;
-    return true;
-  }
+    /**
+    * vérifie qu'une valeur correspond bien au datatype
+    * @param string   $value
+    */
+    public function check($value){
+        return true;
+    }
 }
 
 /**
@@ -115,6 +54,27 @@ abstract class jDatatype {
  * @subpackage  utils
  */
 class jDatatypeString extends jDatatype {
+    protected $length=null;
+    protected $minLength=null;
+    protected $maxLength=null;
+    protected $pattern=null;
+    protected $whitespace=null;
+    
+    protected $facets = array('length','minLength','maxLength', 'pattern', 'whitespace');
+
+    public function check($value){
+        if($this->hasFacets){
+            if($this->length !== null && strlen($value) > $this->length)
+                return false;
+            if($this->minLength !== null && strlen($value) < $this->minLength)
+                return false;
+            if($this->maxLength !== null && strlen($value) > $this->maxLength)
+                return false;
+            if($this->pattern !== null && !preg_match($this->pattern,$value))
+                return false;
+        }
+        return true;
+    }
 }
 
 /**
@@ -123,9 +83,7 @@ class jDatatypeString extends jDatatype {
  * @subpackage  utils
  */
 class jDatatypeBoolean extends jDatatype {
-  protected function _checkType($value) { return ($value == 'true' || $value=='false'); }
-  protected function _checkValueFacets($value){ return true; }
-  protected function _checkFacets($value){ return true; }
+  public function check($value) { return jFilter::isBool($value); }
 }
 
 /**
@@ -134,16 +92,18 @@ class jDatatypeBoolean extends jDatatype {
  * @subpackage  utils
  */
 class jDatatypeDecimal extends jDatatype {
- // xxxx.yyyyy
-  protected function _checkType($value) { return is_numeric($value); }
-  protected function _checkValueFacets($value){ return parent::_checkValueFacets(floatval($value)); }
-  protected function _addFacet($type,$value){
-       if(in_array($type, array('maxInclusive', 'minInclusive', 'maxExclusive', 'minExclusive'))){
-           $this->$type = floatval($value);
-       }else{
-          parent::_addFacet($type,$value);
-       }
-  }
+    // xxxx.yyyyy
+    protected $maxValue=null;
+    protected $minValue=null;
+    protected $totalDigits=null;
+    protected $fractionDigits=null;
+    protected $facets = array('maxValue', 'minValue', 'totalDigits', 'fractionDigits');
+    public function check($value) { return jFilter::isFloat($value, $this->minValue, $this->maxValue); }
+    protected function _addFacet($type,$value){
+        if($type == 'maxValue' || $type == 'minValue'){
+            $this->$type = floatval($value);
+        }
+    }
 }
 
 /**
@@ -151,20 +111,35 @@ class jDatatypeDecimal extends jDatatype {
  * @package     jelix
  * @subpackage  utils
  */
-class jDatatypeInteger extends jDatatype {
-  protected function _checkType($value) {
-      if(!is_numeric($value)) return false;
-      return intval($value) == floatval($value);
-  }
-  protected function _checkValueFacets($value){ return parent::_checkValueFacets(intval($value)); }
-  protected function _addFacet($type,$value){
-       if(in_array($type, array('maxInclusive', 'minInclusive', 'maxExclusive', 'minExclusive'))){
-           $this->$type = intval($value);
-       }else{
-          parent::_addFacet($type,$value);
-       }
-  }
+class jDatatypeInteger extends jDatatypeDecimal {
+    protected $facets = array('maxValue', 'minValue', 'totalDigits');
+    public function check($value) { return jFilter::isInt($value, $this->minValue, $this->maxValue); }
+    protected function _addFacet($type,$value){
+        if($type == 'maxValue' || $type == 'minValue'){
+            $this->$type = intval($value);
+        }
+    }
 }
+
+
+/**
+ * Datatype Hexa
+ * @package     jelix
+ * @subpackage  utils
+ */
+class jDatatypeHexadecimal extends jDatatypeDecimal {
+    protected $facets = array('maxValue', 'minValue', 'totalDigits');
+    public function check($value) { 
+        if(substr($value,0,2) != '0x') $value='0x'.$value;
+        return jFilter::isHexInt($value, $this->minValue, $this->maxValue);
+    }
+    protected function _addFacet($type,$value){
+        if($type == 'maxValue' || $type == 'minValue'){
+            $this->$type = intval($value,16);
+        }
+    }
+}
+
 
 /**
  * Datatype datetime
@@ -172,42 +147,30 @@ class jDatatypeInteger extends jDatatype {
  * @subpackage  utils
  */
 class jDatatypeDateTime extends jDatatype {
-  private $dt;
-  protected $format=21;
-  protected function _checkType($value) {
-      $this->dt = new JDateTime();
-      return $this->dt->setFromString($value,$this->format);
-  }
-
-  protected function _addFacet($type,$value){
-      if(in_array($type, array('maxInclusive', 'minInclusive', 'maxExclusive', 'minExclusive'))){
-         $this->$type = new JDateTime();
-         $this->$type->setFromString($value,$this->format);
-      }else{
-         parent::_addFacet($type,$value);
-      }
-  }
-
-  protected function _checkFacets($value){
-    return true;
-  }
-
-  protected function _checkValueFacets($value){
-    if($this->maxInclusive !== null){
-        if($this->dt->compareTo($this->maxInclusive) == 1) return false;
+    protected $facets = array('maxValue', 'minValue');
+    
+    private $dt;
+    protected $format=21;
+    public function check($value) {
+        $this->dt = new jDateTime();
+        if(!$this->dt->setFromString($value,$this->format)) return false;
+        if($this->maxValue !== null){
+            if($this->dt->compareTo($this->maxValue) != -1) return false;
+        }
+        if($this->minValue !== null){
+            if($this->dt->compareTo($this->minValue) != 1) return false;
+        }
+        return true;
     }
-    if($this->minInclusive !== null){
-        if($this->dt->compareTo($this->minInclusive) == -1) return false;
-    }
-    if($this->maxExclusive !== null){
-        if($this->dt->compareTo($this->maxExclusive) != -1) return false;
-    }
-    if($this->minExclusive !== null){
-        if($this->dt->compareTo($this->minExclusive) != 1) return false;
-    }
-    return true;
-  }
 
+    protected function _addFacet($type,$value){
+        if($type == 'maxValue' || $type == 'minValue'){
+            $this->$type = new jDateTime();
+            $this->$type->setFromString($value,$this->format);
+        }else{
+            parent::_addFacet($type,$value);
+        }
+    }
 }
 
 /**
@@ -255,26 +218,35 @@ class jDatatypeLocaleTime extends jDatatypeDateTime {
 }
 
 
-/*class jDatatypeLong extends jDatatype {
+class jDatatypeUrl extends jDatatype {
+    protected $schemeRequired=null;
+    protected $hostRequired=null;
+    protected $pathRequired=null;
+    protected $queryRequired=null;
+    
+    protected $facets = array('schemeRequired','hostRequired','pathRequired', 'queryRequired');
+
+    public function check($value){
+        return jFilter::isUrl($value, $this->schemeRequired, $this->hostRequired, $this->pathRequired, $this->queryRequired);
+    }
 }
 
-class jDatatypeInt extends jDatatype {
+class jDatatypeIPv4 extends jDatatype {
+    public function check($value){
+        return jFilter::isIPv4($value);
+    }
+}
+class jDatatypeIPv6 extends jDatatype {
+    public function check($value){
+        return jFilter::isIPv6($value);
+    }
 }
 
-class jDatatypeShort extends jDatatype {
+class jDatatypeMail extends jDatatype {
+    public function check($value){
+        return jFilter::isEmail($value);
+    }
 }
 
-class jDatatypeByte extends jDatatype {
-}
-
-class jDatatypeFloat extends jDatatype {
-//m × 2^e, avec m < 2^24, et -149 <= e <= 104
-//1E4, 1267.43233E12, 12.78e-2, 12 , -0, 0 INF
-}
-
-class jDatatypeDouble extends jDatatype {
-//m × 2^e, avec m < 2^53, et -1075 <= e<= 970
-
-}*/
 
 ?>
