@@ -27,7 +27,7 @@ class loginCtrl extends jController {
     */
     function in (){
         $conf = $GLOBALS['gJCoord']->getPlugin ('auth')->config;
-
+        $url_return = '/';
         if (!($conf['enable_after_login_override'] && $url_return= $this->param('auth_url_return'))){
             $url_return =  jUrl::get($conf['after_login']);
         }

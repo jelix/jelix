@@ -25,59 +25,65 @@ class jAclManager {
     private function __construct (){ }
 
     /**
-     * specify the value of a right on the given subject/group/resource
+     * add a right on the given subject/group/resource
      * @param int    $group the group id.
-     * @param string $subject the key of the subject to check
-     * @param string|array  $value the value of the right
+     * @param string $subject the key of the subject
+     * @param string  $value the value of the right
      * @param string $resource the id of a resource
      * @return boolean  true if the right is set
      */
-    public static function setRight($group, $subject, $value , $resource=''){
+    public static function addRight($group, $subject, $value , $resource=''){
 
-        //  récupère le groupe de valeur correspondant au subject
-    
         $daosbj = jDao::get('jxacl~jaclsubject');
         $daorightval = jDao::get('jxacl~jaclrightvalues');
-        $daoright = jDao::get('jxacl~jaclrights');
-    
+
         $sbj = $daosbj->get($subject);
         if(!$sbj) return false;
 
         //  récupère la liste des valeurs du groupe de valeur
         $vallist = $daorightval->findByValGroup($sbj->id_aclvalgrp);
-    
+
         if($resource === null) $resource='';
-    
-        //  met à jour la table jacl_rights
-        $right = $daoright->get($subject,$group,$resource);
-        if($right){
-            if(is_array($value)){
-                foreach($value as $val){
-                    $right->value = $val;
-                    $daoright->update($right);
-                }
-            }else{
-                $right->value = $value;
-                $daoright->update($right);
+
+        // on verifie que la valeur est autorisée
+        $ok=false;
+        foreach($vallist as $valueok){
+            if($valueok->value == $value){
+                $ok = true;
+                break;
             }
-        }else{
+        }
+        if(!$ok) return false;
+
+        //  ajoute la nouvelle valeur
+        $daoright = jDao::get('jxacl~jaclrights');
+        $right = $daoright->get($subject,$group,$resource,$value);
+        if(!$right){
             $right = jDao::createRecord('jxacl~jaclrights');
             $right->id_aclsbj = $subject;
             $right->id_aclgrp = $group;
             $right->id_aclres = $resource;
-
-            if(is_array($value)){
-                foreach($value as $val){
-                    $right->value = $val;
-                    $daoright->insert($right);
-                }
-            }else{
-                $right->value = $value;
-                $daoright->insert($right);
-            }
+            $right->value = $value;
+            $daoright->insert($right);
         }
+
         return true;
     }
+
+    /**
+     * remove a right on the given subject/group/resource
+     * @param int    $group the group id.
+     * @param string $subject the key of the subject
+     * @param string  $value the value of the right
+     * @param string $resource the id of a resource
+     */
+    public static function removeRight($group, $subject, $value , $resource=''){
+        $daoright = jDao::get('jxacl~jaclrights');
+        if($resource === null) $resource='';
+        $daoright->delete($subject,$group,$resource,$value);
+    }
+
+
 
     /**
      * remove the right on the given subject/resource, for all groups
@@ -118,8 +124,6 @@ class jAclManager {
       $daosbj = jDao::get('jxacl~jaclsubject');
       $daosbj->delete($subject);
     }
-
-
 }
 
 ?>

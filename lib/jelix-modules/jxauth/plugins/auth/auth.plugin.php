@@ -73,7 +73,8 @@ class AuthPlugin implements jIPlugin {
 
         if($needAuth){
             if($notLogged){
-                if($this->config['on_error'] == 1 || !$GLOBALS['gJCoord']->request->isAllowedResponse('jResponseRedirect')){
+                if($this->config['on_error'] == 1 
+                    || !$GLOBALS['gJCoord']->request->isAllowedResponse('jResponseRedirect')){
                     trigger_error(jLocale::get($this->config['error_message']), E_USER_ERROR);
                     exit;
                 }else{

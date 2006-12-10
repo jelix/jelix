@@ -238,26 +238,7 @@
             ]]></body>
         </method>
       </implementation>
-      <!--<handlers>
-         <handler event="DOMAttrModified" phase="target">
-         <![CDATA[
-           var attrName = event.attrName.toLowerCase();
-           var oldValue = event.prevValue.toLowerCase();
-           var newValue = event.newValue.toLowerCase();
-           if (oldValue != newValue && newValue) {
-               if (attrName == "counturl") {
-                    this.loadCount();
-                } else if (attrName == "datasourceurl") {
-                    this.loadCount();
-                } else if (attrName == "increment") {
-                    this.show();
-               }
-           }
-        ]]>
-       </handler>
-    </handlers>-->
-
-  </binding>
+    </binding>
 
     <binding id="jbox" extends="xul:box">
         <content>

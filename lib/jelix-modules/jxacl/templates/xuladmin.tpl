@@ -17,9 +17,7 @@
 {meta_xul csstheme 'xulpage.css'}
 
 <script type="application/x-javascript"><![CDATA[
-
-  {literal}
-    var gCurrentRight = {};
+{literal}
     var gGroupList;
 
     function init(ev){
@@ -37,31 +35,23 @@
         pager.setAttribute('counturl','');
         pager.setAttribute('datasourceurl','');
         pager.loadCount();
-    }
-
-    function selectRightForm(idvalgrp, rightvalue){
-
+        document.getElementById('newname').setAttribute('value','');
     }
 
     function changeGroup( idgroup ){
         if( idgroup!= ''){
-            {/literal}
+{/literal}
             var righturl={urljsstring 'jxacl~admin_rightslist@rdf',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
-            var usersurl={urljsstring 'jxacl~admin_userslist@rdf',array('offset'=>'__OFFSET__','count'=>'__COUNT__'),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
-            var counturl={urljsstring 'jxacl~admin_usersgcount@classic',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
-            {literal}
+{literal}
             document.getElementById('rights').setAttribute("datasources","");
             document.getElementById('rights').setAttribute("datasources",righturl);
             document.getElementById('groupstatus').removeAttribute('disabled');
-            var pager = document.getElementById('userspager');
-            pager.setAttribute('counturl',counturl);
-            pager.setAttribute('datasourceurl',usersurl);
-            pager.loadCount();
+            document.getElementById('newname').setAttribute('value','');
+            refreshUserList(idgroup);
         }else{
             disableAll();
         }
         document.getElementById('groupname').setAttribute('value',gGroupList.selectedItem.label);
-        gCurrentRight = {};
     }
 
     function reloadRights(){
@@ -69,49 +59,58 @@
         changeGroup(document.getElementById('groupid').selectedItem.value);
     }
 
-    function removeUserFromGrp (tree) {
+    function removeUserFromGrp () {
         if (confirm('Etes vous sûr de vouloir supprimer cet Utilisateur ?')) {
+            var tree = document.getElementById('users');
             var idx = tree.view.selection.currentIndex;
-            myuser = tree.view.getCellText(idx, tree.columns.getNamedColumn ( "logins-col"));
-            document.getElementById('deluser').setAttribute('value',myuser);
-            document.getElementById('removeuserfromgrp').submit();
+            var myuser = tree.view.getCellText(idx, tree.columns.getNamedColumn ( "logins-col"));
+            document.getElementById('userdel').setAttribute('value', myuser);
+            var frm = document.getElementById('removeuserfromgrp');
+            frm.submit();
         }
     }
 
 
     function onSubjectSelect(tree){
-        var idx = tree.view.selection.currentIndex;
-        /*if(idx == -1){
-            gCurrentRight = {};
-        }else{
-
-            gCurrentRight.rightvalue= tree.view.getCellText(idx, tree.columns.getNamedColumn ( "value-col"));
-            gCurrentRight.id_aclvalgrp =  tree.view.getCellText(idx, tree.columns.getNamedColumn ( "id_aclvalgrp-col"));
-            gCurrentRight.id_aclsbj =  tree.view.getCellText(idx, tree.columns.getNamedColumn ( "id_aclsbj-col"));
-            gCurrentRight.id_aclres =  tree.view.getCellText(idx, tree.columns.getNamedColumn ( "res-col"));
-        }*/
     }
 
+    var gModifiedRights = [];
+    
+    function onRightChange(ev, tree){
+    
+        var row = {}, col = {}, childElt = {};
+        
+        tree.treeBoxObject.getCellAt(ev.clientX, ev.clientY, row,  col, childElt);
+    
+        row = row.value;
+        col = col.value;
+        childElt = childElt.value;
+        if(col == null || row == null || childElt == null) return;
 
+        if(col.type == Components.interfaces.nsITreeColumn.TYPE_CHECKBOX) {
+            if(tree.view.getLevel(row) == 1){
+                var resCol = tree.view.getCellText(row,tree.treeBoxObject.columns.getNamedColumn ("res-col"));
+                var valueCol = tree.view.getCellText(row,tree.treeBoxObject.columns.getNamedColumn ("value-col"));
+                var idAclValGrpCol = tree.view.getCellText(row,tree.treeBoxObject.columns.getNamedColumn ("id_aclvalgrp-col"));
+                var idAclSbjCol = tree.view.getCellText(row,tree.treeBoxObject.columns.getNamedColumn ("id_aclsbj-col"));
+                var etat = tree.view.getCellValue(row, col);
+                for(var i=0; i < gModifiedRights.length; i++){
+                    var e = gModifiedRights[i];
+                    if(e.res == resCol
+                    && e.right == valueCol
+                    && e.subject == idAclSbjCol){
+                            gModifiedRights.splice(i,1);
+                            return;
+                    }
+                }
+                gModifiedRights.push({ res: resCol, right: valueCol, subject: idAclSbjCol, newvalue: etat });
+            }
+        }
+    }
 
     function onRightsFormSubmit(form){
-        /*var deck=document.getElementById("rightsforms");
-        if(deck.selectedIndex!=0){
-            var chks = deck.selectedPanel.getElementsByTagName("checkbox");
-            var chkvalue, value=0;
-            for(var j=0; j < chks.length; j++){
-                if(chks[j].checked){
-                    value = value | parseInt(chks[j].getAttribute('rightvalue'));
-                }
-            }
-            form.formDatas.rightvalue=value;
-            form.formDatas.subject= gCurrentRight.id_aclsbj;
-            form.formDatas.ressource= gCurrentRight.id_aclres;
-            return true;
-        }else{
-            return false;
-        }*/
-
+        form.formDatas.rightvalues=gModifiedRights;
+        return true;
     }
 
     function onCreateNewGroup(form){
@@ -124,7 +123,7 @@
         var i=gGroupList.selectedIndex;
         gGroupList.selectedIndex=0;
         gGroupList.removeItemAt(i);
-        disableAll();
+        changeGroup('');
     }
 
     function onRenameGroup(form){
@@ -132,33 +131,26 @@
         gGroupList.setAttribute('label',form.formDatas.newname);
     }
 
-    function onAddUserGroup(form,idgroup){
+    function onAddUserGroup(){
         document.getElementById('user').value='';
-        document.getElementById('user2').value='';
-        {/literal}
-        var usersurl={urljsstring 'jxacl~admin_userslist@rdf',array('offset'=>'0','count'=>'10'),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
-        var counturl={urljsstring 'jxacl~admin_usersgcount@classic',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
-        {literal}
-        var pager = document.getElementById('userspager');
-        pager.setAttribute('counturl',counturl);
-        pager.setAttribute('datasourceurl','');
-        pager.setAttribute('datasourceurl',usersurl);
-        pager.loadCount();
+        refreshUserList(gGroupList.selectedItem.value);
     }
     
-    function onRemoveUserGroup(form,idgroup){
-        document.getElementById('user').value='';
-        {/literal}
-        var usersurl={urljsstring 'jxacl~admin_userslist@rdf',array('offset'=>'0','count'=>'10'),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
+    function onRemoveUserGroup(){
+        refreshUserList(gGroupList.selectedItem.value);
+    }
+
+    function refreshUserList(idgroup){
+{/literal}
         var counturl={urljsstring 'jxacl~admin_usersgcount@classic',array(),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
-        {literal}
+        var usersurl={urljsstring 'jxacl~admin_userslist@rdf',array('offset'=>'__OFFSET__','count'=>'__COUNT__'),array('grpid'=>'idgroup','__rnd'=>'Math.random()')};
+{literal}
         var pager = document.getElementById('userspager');
         pager.setAttribute('counturl',counturl);
-        pager.setAttribute('datasourceurl','');
         pager.setAttribute('datasourceurl',usersurl);
         pager.loadCount();
     }
-  {/literal}
+{/literal}
 ]]></script>
 
 <broadcasterset>
@@ -194,66 +186,74 @@
         onrpcerror="alert(this.jsonResponse.error.toSource())"
         onerror="alert(this.httpreq.responseText);"
         />
-<!--<jx:submission id="rightsform" action="{jurl '@jsonrpc'}" method="POST"
+<jx:submission id="rightsform" action="{jurl '@jsonrpc'}" method="POST"
         format="json-rpc" rpcmethod="jxacl~admin_saveright"
         onsubmit="onRightsFormSubmit(this)"
-        onresult="reloadRights()"
+        onresult="gModifiedRights = []"
         onhttperror="alert('erreur http :' + event.errorCode)"
         oninvalidate="alert('erreur de saisie')"
         onrpcerror="alert('rpcerror:\n'+this.jsonResponse.error.toSource())"
         onerror="alert('error:\n'+this.httpreq.responseText);"
-        />-->
+        />
 <jx:submission id="addusertogrpform" 
         action="{jurl '@jsonrpc'}" 
         method="POST"
         format="json-rpc" 
         rpcmethod="jxacl~admin_addusertogrp"
         onsubmit=""
-        onresult="onAddUserGroup(this,document.getElementById('groupid').selectedItem.value)"
+        onresult="onAddUserGroup()"
         onhttperror="alert('erreur http :' + event.errorCode)"
         oninvalidate="alert('Saisissez correctement le nouveau nom')"
         onrpcerror="alert(this.jsonResponse.error.toSource())"
         onerror="alert(this.httpreq.responseText);"/>
 
+<jx:submission id="removeuserfromgrp" 
+        action="{jurl '@jsonrpc'}" 
+        method="POST"
+        format="json-rpc" 
+        rpcmethod="jxacl~admin_removeuserfromgrp"
+        onsubmit=""
+        onresult="onRemoveUserGroup()"
+        onhttperror="alert('erreur http :' + event.errorCode)"
+        oninvalidate="alert('Utilisateur Incorrect')"
+        onrpcerror="alert(this.jsonResponse.error.toSource())"
+        onerror="alert(this.httpreq.responseText);"/>
+
+
 <description class="title-page">Gestion des droits</description>
 <hbox flex="1" align="stretch" >
     <vbox class="content-cols" style="width: 200px;">
-        <jx:jbox title="Traitement des Groupes:">
-            <label control="groupid" value="Séléctionner un groupe :"/>
-            <menulist id="groupid" name="groupid" required="true"
-                    form="renameform,deleteform,rightsform,addusertogrp,removeuserfromgrp,addusertogrpform"
-                    oncommand="changeGroup(this.selectedItem.value)">
-                <menupopup>
-                    <menuitem label="--" value="" />
-                    {foreach $groups as $grp}
-                    <menuitem label="{$grp->name|escxml}" value="{$grp->id_aclgrp}"/>
-                    {/foreach}
-                </menupopup>
-            </menulist>
-    
-            <groupbox submit="newgrpsubmit">
-                <label control="newgroup" value="Ajouter un groupe :"/>
-                <textbox id="newgroup" name="groupname" value="" required="true" form="newgrpform" />
-                <jx:submit id="newgrpsubmit" form="newgrpform" label="Créer"/>
-            </groupbox>
+        <label control="groupid" value="Séléctionner un groupe :"/>
+        <menulist id="groupid" name="groupid" required="true"
+                form="renameform,deleteform,rightsform,addusertogrp,removeuserfromgrp,addusertogrpform"
+                oncommand="changeGroup(this.selectedItem.value)">
+            <menupopup>
+                <menuitem label="--" value="" />
+                {foreach $groups as $grp}
+                <menuitem label="{$grp->name|escxml}" value="{$grp->id_aclgrp}"/>
+                {/foreach}
+            </menupopup>
+        </menulist>
 
-            <groupbox submit="deletesubmit">
-                <caption label="Suppression du groupe"/>
-                <label observes="groupname"/>
-                <jx:submit id="deletesubmit" form="deleteform" label="Supprimer" observes="groupstatus"/>
-            </groupbox>
+        <groupbox submit="newgrpsubmit">
+            <label control="newgroup" value="Ajouter un groupe :"/>
+            <textbox id="newgroup" name="groupname" value="" required="true" form="newgrpform" />
+            <jx:submit id="newgrpsubmit" form="newgrpform" label="Créer"/>
+        </groupbox>
 
-            <groupbox submit="renamesubmit">
-                <caption label="Renommage du groupe"/><label observes="groupname"/>
-                <hbox align="center" pack="start"><label control="newname" value="Nouveau nom:"/>
-                <textbox id="newname" name="newname" value="" required="true" form="renameform" observes="groupstatus" />
-                <jx:submit id="renamesubmit" form="renameform" label="Renommer" observes="groupstatus"/></hbox>
-            </groupbox>
+        <groupbox submit="deletesubmit">
+            <caption label="Suppression du groupe"/>
+            <label observes="groupname"/>
+            <jx:submit id="deletesubmit" form="deleteform" label="Supprimer" observes="groupstatus"/>
+        </groupbox>
 
-        </jx:jbox>
-        
+        <groupbox submit="renamesubmit">
+            <caption label="Renommage du groupe"/><label observes="groupname"/>
+            <hbox align="center" pack="start"><label control="newname" value="Nouveau nom:"/>
+            <textbox id="newname" name="newname" value="" required="true" form="renameform" observes="groupstatus" />
+            <jx:submit id="renamesubmit" form="renameform" label="Renommer" observes="groupstatus"/></hbox>
+        </groupbox>
     </vbox>
-
 
     <vbox class="content-cols" flex="1">
         <tabbox flex="1">
@@ -262,9 +262,9 @@
                 <tab label="Utilisateurs" />
             </tabs>
         <tabpanels flex="1">
-            <tabpanel>
-                <tree id="rights" ref="urn:data:row" width="500" datasources="rdf:null"
-                    onselect="onSubjectSelect(this)" seltype="single" editable="true">
+            <tabpanel orient="vertical">
+                <tree id="rights" ref="urn:data:row" flex="1" width="500" datasources="rdf:null"
+                    onclick="onRightChange(event,this)" seltype="single" editable="true">
                     <treecols>
                         <treecol id="rights-col" label="Droits" primary="true" flex="2"
                                 class="sortDirectionIndicator" sortActive="false"
@@ -315,12 +315,13 @@
                         </rule>
                     </template>
                 </tree>
+                <hbox><jx:submit form="rightsform" label="Enregistrer" observes="groupstatus"/></hbox>
             </tabpanel>
             <tabpanel orient="vertical">
                 <popupset>
                     <popup id="addUserMenu">
-                            <menuitem label="Ajouter un Utilisateur" onclick="document.getElementById('user').focus();"/>
-                            <menuitem label="Supprimer cet Utilisateur" onclick="removeUserFromGrp(document.getElementById('users'));"/>
+                        <menuitem label="Ajouter un Utilisateur" oncommand="document.getElementById('user').focus();"/>
+                        <menuitem label="Supprimer cet Utilisateur" oncommand="removeUserFromGrp();"/>
                     </popup>
                 </popupset>
 
@@ -346,36 +347,14 @@
                 </tree>
                 <groupbox submit="addusersubmit">
                     <caption label="Ajouter un Utilisateur :"/>
-                    <textbox id="user" name="user" value="" required="true" form="addusertogrpform" observes="groupstatus"/>
-                    <jx:submit id="addusersubmit" form="addusertogrpform" label="Ajouter" observes="groupstatus"/>
-	               </groupbox>
-
+                    <hbox>
+                        <textbox id="user" name="user" value="" required="true" form="addusertogrpform" observes="groupstatus"/>
+                        <jx:submit id="addusersubmit" form="addusertogrpform" label="Ajouter" observes="groupstatus"/>
+                    </hbox>
+	            </groupbox>
+                <html:input type="hidden" id="userdel" name="userdel"  required="true" form="removeuserfromgrp" />
             </tabpanel>
         </tabpanels>
     </tabbox>
    </vbox>
 </hbox>
-
-<!--
-<jx:modalboxes>
-
-    <jx:modalbox id="jxaclModalBox2" pack="center" orient="vertical" align="center" hidden="true">
-        <box class="notifyBox" orient="horizontal" align="stretch" pack="start" njFormBoxParent="jxaclNotifyBox1">
-                    <jx:submission id="removeuserfromgrp" 
-                                action="{jurl '@jsonrpc'}" 
-                                method="POST"
-                        format="json-rpc" 
-                        rpcmethod="jxacl~admin_removeuserfromgrp"
-                        onsubmit="return confirm('Etes vous sÃ»r de vouloir supprimer cet Utilisateur ?')"
-                        onresult="onRemoveUserGroup(this,document.getElementById('groupid').selectedItem.value)"
-                        onhttperror="alert('erreur http :' + event.errorCode)"
-                        oninvalidate="alert('Utilisateur Incorrect')"
-                        onrpcerror="alert(this.jsonResponse.error.toSource())"
-                        onerror="alert(this.httpreq.responseText);"/>
-                    <textbox id="deluser" name="deluser" value="" required="true" form="removeuserfromgrp"/>
-        <jx:submit id="removeusersubmit" form="removeuserfromgrp" label="Supprimer" observes="groupstatus"/>
-            </box>
-    </box>
-
-</jx:modalboxes>
--->

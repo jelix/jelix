@@ -2,7 +2,6 @@
 /**
 * @package     jelix-modules
 * @subpackage  jxacl
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006 Jouanneau laurent
@@ -16,11 +15,16 @@ class adminCtrl extends jController {
     */
     function saveright() {
         $rep = $this->getResponse('jsonrpc');
-        if(!jAclManager::setRight($this->param('groupid'), $this->param('subject'),
-                            $this->param('rightvalue') , $this->param('ressource'))){
-            $rep->response='BAD';
-        }else
-            $rep->response='OK';
+        $idgroup = $this->param('groupid');
+        $rights = $this->param('rightvalues');
+        foreach($rights as $r){
+            if($r['newvalue'] == 'true'){
+                jAclManager::addRight($idgroup, $r['subject'], $r['right'], $r['res']);
+            }else{
+                jAclManager::removeRight($idgroup, $r['subject'], $r['right'], $r['res']);
+            }
+        }
+        $rep->response='OK';
         return $rep;
     }
 
@@ -62,5 +66,43 @@ class adminCtrl extends jController {
         return $rep;
     }
 
+    function addusertogrp(){
+        $rep = $this->getResponse('jsonrpc');
+        $id=$this->param('groupid');
+        $login=$this->param('user');
+        $user= jAuth::getUser($login);
+        if($user === null){
+            $rep->response = 'UNKNOW_LOGIN';
+            return $rep;
+        }
+        if($id ==''){
+           $rep->response = 'NOID';
+           return $rep;
+        }
+        try {
+            $id = jAclUserGroup::addUserToGroup($login, $id);
+            $rep->response = 'OK';
+        }catch(Exception $e){
+            $rep->response = 'BADLOGIN';
+        }
+        return $rep;
+    }
+
+    function removeuserfromgrp(){
+        $rep = $this->getResponse('jsonrpc');
+        $id=$this->param('groupid');
+        $login=$this->param('userdel');
+        if($id ==''){
+            $rep->response = 'NOID';
+            return $rep;
+        }
+        try {
+            $id = jAclUserGroup::removeUserFromGroup($login, $id);
+            $rep->response = 'OK';
+        }catch(Exception $e){
+            $rep->response = 'BADLOGIN';
+        }
+        return $rep;
+    }
 }
 ?>

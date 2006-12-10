@@ -17,9 +17,11 @@ class AclService {
         $rv_dao = jDao::get('jxacl~jaclrightvalues');
         $sql = 'SELECT s.id_aclsbj, s.id_aclvalgrp, s.label_key, r.value as right_value, r.id_aclres, 
                         rv.label_key label_value, rv.value value
-                FROM jacl_right_values rv, jacl_subject s LEFT JOIN jacl_rights r
-                ON (s.id_aclsbj = r.id_aclsbj AND r.id_aclgrp ='.intval($grpid).' AND rv.value=r.value)
-                WHERE rv.id_aclvalgrp = s.id_aclvalgrp';
+                FROM jacl_right_values rv
+                   INNER JOIN jacl_subject s  ON rv.id_aclvalgrp = s.id_aclvalgrp 
+                   LEFT JOIN jacl_rights r
+                    ON (s.id_aclsbj = r.id_aclsbj AND r.id_aclgrp ='.intval($grpid).' AND rv.value=r.value)
+                ORDER BY s.id_aclsbj';
         $cnx = jDb::getConnection();
 
         $list=array();
