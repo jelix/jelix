@@ -80,9 +80,11 @@ class jAuthDriverClass implements jIAuthDriver {
     }
 
     protected function cryptPassword($password){
-        $f=$this->_params['password_crypt_function'];
-        if( $f != '')
-           $password = $f($password);
+        if(isset($this->_params['password_crypt_function'])){
+            $f=$this->_params['password_crypt_function'];
+            if( $f != '')
+               $password = $f($password);
+        }
         return $password;
     }
 }
