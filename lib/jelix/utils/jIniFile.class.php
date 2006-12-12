@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage utils
-* @version    $Id:$
 * @author     Loic Mathaud
 * @contributor
 * @copyright  2006 Loic Mathaud
@@ -11,12 +10,17 @@
 */
 
 /**
-*
+* utility class to read and write an ini file
 * @package    jelix
 * @subpackage utils
 */
 class jIniFile {
 
+    /**
+     * read an ini file
+     * @param string $filename the path and the name of the file to read
+     * @return array the content of the file or false
+     */
     public static function read($filename) {
         if ( file_exists ($filename) ) {
             return parse_ini_file($filename, true);
@@ -25,6 +29,13 @@ class jIniFile {
         }
     }
     
+    /**
+     * write some datas in an ini file
+     * the datas array should follow the same structure returned by
+     * the read method (or parse_ini_file)
+     * @param array $array the content of an ini file
+     * @param string $filename the path and the name of the file use to store the content
+     */
     public static function write($array, $filename) {
         $result='';
         foreach ($array as $k => $v) {
@@ -43,7 +54,14 @@ class jIniFile {
             fwrite($f, $result);
             fclose($f);
         } else {
-            throw new jException('jelix~errors.inifile.write.error', array ($filename));
+            // jIniFile est utilisé par le compilateur des configs
+            // il n'y a alors pas de $gJConfig dans de cas : 
+            // il faut générer alors une erreur sans passer par jLocale
+            if(isset($GLOBALS['gJConfig'])){
+                throw new jException('jelix~errors.inifile.write.error', array ($filename));
+            }else{
+                throw new Exception('(24)Error while writing ini file '.$filename);
+            }
         }
     }
     

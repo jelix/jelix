@@ -2,18 +2,11 @@
 /**
 * @package    jelix
 * @subpackage dao
-* @version    $Id:$
-* @author     Croes Gérald, Laurent Jouanneau
-* @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @author     Laurent Jouanneau
+* @contributor
+* @copyright   2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-* Une partie du code est issue de la classe CopixDAOFactory
-* du framework Copix 2.3dev20050901. http://www.copix.org
-* il est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
 /**
@@ -23,15 +16,19 @@ require_once(JELIX_LIB_DB_PATH.'jDb.class.php');
 require_once(JELIX_LIB_DAO_PATH.'jDaoBase.class.php');
 
 /**
- * Factory to create automatic DAO.
+ * Factory to create DAO objects
  * @package  jelix
  * @subpackage dao
  */
 class jDao {
 
     /**
-    * creates a DAO from its Id.
-    * If no dao is founded, try to compile a DAO from the user definitions.
+    * creates a new instance of a DAO.
+    * If no dao is founded, try to compile a DAO from the dao xml file
+    * @param string|jSelectorDao $Daoid the dao selector
+    * @param string $profil the db profil name to use for the connection. 
+    *   If empty, use the default profil
+    * @return jDaoFactoryBase  the dao object
     */
     public static function create ($DaoId, $profil=''){
         if(!is_object($DaoId))
@@ -48,7 +45,12 @@ class jDao {
     }
 
     /**
-    * Creates a DAO from its ID. Handles a singleton of the DAO.
+    * return a DAO instance. It Handles a singleton of the DAO.
+    * If no dao is founded, try to compile a DAO from the dao xml file
+    * @param string|jSelectorDao $Daoid the dao selector
+    * @param string $profil the db profil name to use for the connection. 
+    *   If empty, use the default profil
+    * @return jDaoFactoryBase  the dao object
     */
     public static function get ($DaoId, $profil='') {
        static $_daoSingleton=array();
@@ -63,7 +65,11 @@ class jDao {
     }
 
     /**
-    * creates a record object
+    * creates a record object for the given dao
+    * @param string $Daoid the dao selector
+    * @param string $profil the db profil name to use for the connection. 
+    *   If empty, use the default profil
+    * @return jDaoRecordBase  a dao record object
     */
     public static function createRecord ($DaoId, $profil=''){
         $sel = new jSelectorDao($DaoId, $profil);
@@ -76,6 +82,13 @@ class jDao {
         return $obj;
     }
 
+    /**
+     * return an instance of a jDaoConditions object, to use with
+     * a findby method of a jDaoFactoryBase object.
+     * @param string $glueOp value should be AND or OR
+     * @return jDaoConditions
+     * @see jDaoFactoryBase::findby
+     */
     public static function createConditions ($glueOp = 'AND'){
         $obj = new jDaoConditions ($glueOp);
         return $obj;

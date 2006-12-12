@@ -137,9 +137,9 @@ class jUrlEngineSignificant implements jIUrlEngine {
     protected function _parse($scriptNamePath, $pathinfo, $params){
         global $gJConfig;
 
-        if(substr($pathinfo,-1) == '/' && $pathinfo != '/'){
+        /*if(substr($pathinfo,-1) == '/' && $pathinfo != '/'){
                 $pathinfo = substr($pathinfo,0,-1);
-        }
+        }*/
 
         $urlact = null;
         $isDefault = false;
@@ -235,7 +235,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
                 $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error_notfound'));
             }
         }else if(!$urlact && $isDefault){
-            // si on a pas trouver de correspondance, mais que c'est l'entry point
+            // si on n'a pas trouvé de correspondance, mais que c'est l'entry point
             // par defaut pour le type de request courant, alors on laisse passer..
             $urlact = new jUrlAction($params);
         }

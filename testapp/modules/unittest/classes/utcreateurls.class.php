@@ -229,7 +229,10 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('news~bar', array('aaa'=>'bbb'));
-      $urlList[]= array('unittest~urlsig_url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
+      $urlList[]= array('unittest~urlsig_url8', array('mois'=>'23',  'annee'=>'2007', 'id'=>'74'));
+      $urlList[]= array('unittest~urlsig_url11', array('rubrique'=>'vetements',  'id_article'=>'98'));
+      $urlList[]= array('unittest~urlsig_url12', array('rubrique'=>'bricolage',  'id_article'=>'53'));
+      $urlList[]= array('unittest~urlsig_url13', array('rubrique'=>'alimentation',  'id_article'=>'26'));
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -242,11 +245,13 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "/xmlrpc.php",
           "/news.php?aaa=bbb&action=default_bar",
-          "/index.php/shop/vetements/98"
-
+          "/index.php/test/news/2007/23/74?action=urlsig_url8",
+          "/index.php/shop/vetements/98",
+          "/index.php/shop/bricolage/53/",
+          "/index.php/supershop/alimentation?id_article=26",
        );
 
-      $trueResult[10]='https://'.$_SERVER['HTTP_HOST'].$trueResult[10];
+      $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
       $this->_doCompareUrl("significant, multiview = false", $urlList,$trueResult);
 
 
@@ -262,9 +267,12 @@ class UTCreateUrls extends UnitTestCase {
           "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "/xmlrpc",
           "/news?aaa=bbb&action=default_bar",
-          "/index/shop/vetements/98"
+          "/index/test/news/2007/23/74?action=urlsig_url8",
+          "/index/shop/vetements/98",
+          "/index/shop/bricolage/53/",
+          "/index/supershop/alimentation?id_article=26",
        );
-      $trueResult[10]='https://'.$_SERVER['HTTP_HOST'].$trueResult[10];
+      $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
 
     }

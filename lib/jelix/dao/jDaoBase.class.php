@@ -1,13 +1,12 @@
 <?php
 /**
- * @package    jelix
- * @subpackage dao
- * @version    $Id:$
- * @author     Laurent Jouanneau
+ * @package     jelix
+ * @subpackage  dao
+ * @author      Laurent Jouanneau
  * @contributor
- * @copyright  2005-2006 Laurent Jouanneau
+ * @copyright   2005-2006 Laurent Jouanneau
  * @link        http://www.jelix.org
- * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
 /**
@@ -24,10 +23,21 @@ abstract class jDaoRecordBase {
     const ERROR_MINLENGTH = 5;
 
 
+    /**
+     * informations on all properties
+     * @var array 
+     */
     protected $_properties=array();
 
+    /**
+     * @return array informations on all properties
+     */
     public function getProperties(){ return $this->_properties; }
 
+    /**
+     * check values in the properties of the record, according on the dao definition
+     * @return array list of errors
+     */
     public function check(){
         $errors=array();
         foreach($this->_properties as $prop=>$infos){
@@ -77,6 +87,11 @@ abstract class jDaoRecordBase {
         return $errors;
     }
 
+    /**
+     * set values on the properties which correspond to the primary
+     * key of the record
+     * This method accept a single or many values as parameter
+     */
     public function setPk(){
         $args=func_get_args();
         if(count($args) == 0) throw new jException('jelix~dao.error.keys.missing');
@@ -104,27 +119,68 @@ abstract class jDaoRecordBase {
  * @subpackage dao
  */
 abstract class jDaoFactoryBase  {
-
+    /**
+     * informations on tables
+     * @var array
+     */
     protected $_tables;
+    /**
+     * the id of the primary table
+     * @var string
+     */
     protected $_primaryTable;
+
+    /**
+     * the database connector
+     * @var jDbConnection
+     */
     protected $_conn;
+    /**
+     * the select clause you can reuse for a specific SELECT query
+     * @var string
+     */
     protected $_selectClause;
+    /**
+     * the from clause you can reuse for a specific SELECT query
+     * @var string
+     */
     protected $_fromClause;
+    /**
+     * the where clause you can reuse for a specific SELECT query
+     * @var string
+     */
     protected $_whereClause;
+    /**
+     * the class name of a dao record for this dao factory
+     * @var string
+     */
     protected $_DaoRecordClassName;
+    /**
+     * list of id of primary properties
+     * @var array
+     */
     protected $_pkFields;
 
-
+    /**
+     * @param jDbConnection $conn the database connection
+     */
     function  __construct($conn){
         $this->_conn = $conn;
     }
 
+    /**
+     * return all records
+     * @return jDbResultSet
+     */
     public function findAll(){
         $rs =  $this->_conn->query ($this->_selectClause.$this->_fromClause.$this->_whereClause);
         $rs->setFetchMode(8,$this->_DaoRecordClassName);
         return $rs;
     }
-
+    /**
+     * return the number of all records
+     * @return int the count
+     */
     public function countAll(){
         $query = 'SELECT COUNT(*) as c '.$this->_fromClause.$this->_whereClause;
         $rs  =  $this->_conn->query ($query);
@@ -132,6 +188,11 @@ abstract class jDaoFactoryBase  {
         return intval($res->c);
     }
 
+    /**
+     * return the record corresponding to the given key
+     * @param string  one or more primary key
+     * @return jDaoRecordBase
+     */
     public function get(){
         $args=func_get_args();
         if(count($args)==1 && is_array($args[0])){
@@ -152,6 +213,11 @@ abstract class jDaoFactoryBase  {
         return $record;
     }
 
+    /**
+     * delete a record corresponding to the given key
+     * @param string  one or more primary key
+     * @return int the number of deleted record
+     */
     public function delete(){
         $args=func_get_args();
         if(count($args)==1 && is_array($args[0])){
@@ -166,13 +232,29 @@ abstract class jDaoFactoryBase  {
         return $this->_conn->exec ($q);
     }
 
+    /**
+     * save a new record into the database
+     * if the dao record has an autoincrement key, its corresponding property is updated
+     * @param jDaoRecordBase $record the record to save
+     */
     abstract public function insert ($record);
+
+    /**
+     * save a modified record into the database
+     * @param jDaoRecordBase $record the record to save
+     */
     abstract public function update ($record);
 
 
     /**
-        * @param jDaoConditions $searchcond
-        */
+     * return all record corresponding to the conditions stored into the
+     * jDaoConditions object.
+     * you can limit the number of results by given an offset and a count
+     * @param jDaoConditions $searchcond
+     * @param int $limitOffset 
+     * @param int $limitCount 
+     * @return jDbResultSet
+     */
     public function findBy ($searchcond, $limitOffset=0, $limitCount=0){
         $query = $this->_selectClause.$this->_fromClause.$this->_whereClause;
         if (!$searchcond->isEmpty ()){
@@ -193,8 +275,8 @@ abstract class jDaoFactoryBase  {
     abstract protected function _getPkWhereClauseForNonSelect($pk);
 
     /**
-        *
-        */
+    * 
+    */
     protected function _createConditionsClause($daocond){
 
         $c = $this->_DaoRecordClassName;
@@ -218,7 +300,9 @@ abstract class jDaoFactoryBase  {
         return $sql;
     }
 
-
+    /**
+     * @internal
+     */
     protected function _generateCondition($condition, &$fields, $principal=true){
         $r = ' ';
         $notfirst = false;
@@ -283,8 +367,8 @@ abstract class jDaoFactoryBase  {
         return $r;
     }
     /**
-        * prepare the value ready to be used in a dynamic evaluation
-        */
+     * prepare the value ready to be used in a dynamic evaluation
+     */
     protected function _prepareValue($value, $fieldType){
         switch(strtolower($fieldType)){
             case 'int':

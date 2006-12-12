@@ -24,9 +24,16 @@
            <param name="id_art" regexp="\d+"/>
         </url>
 
-        <url pathinfo="/shop/:rubrique/:id_article" module="unittest" https="true" action="urlsig_url8">
+        <url pathinfo="/shop/:rubrique/:id_article" module="unittest" https="true" action="urlsig_url11">
            <param name="rubrique" />
            <param name="id_article" type="int"/>
+        </url>
+        <url pathinfo="/shop/:rubrique/:id_article/" module="unittest" action="urlsig_url12">
+           <param name="rubrique" />
+           <param name="id_article" type="int"/>
+        </url>
+        <url pathinfo="/supershop/:rubrique" module="unittest" action="urlsig_url13" optionalTrailingSlash="true">
+           <param name="rubrique" />
         </url>
     </classicentrypoint>
     <classicentrypoint name="testnews">

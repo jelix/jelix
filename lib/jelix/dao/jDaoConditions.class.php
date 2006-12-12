@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage dao
-* @version    $Id:$
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
@@ -17,10 +16,10 @@
 */
 
 /**
-* structure stockant les données d'une condition
-* @package  jelix
+ * content a sub group of conditions
+ * @package  jelix
  * @subpackage dao
-*/
+ */
 class jDaoCondition {
     /**
     * the parent group if any
@@ -49,13 +48,13 @@ class jDaoCondition {
 }
 
 /**
-* conteneur d'un ensemble de conditions
-* @package  jelix
+ * container for all criteria of a query
+ * @package  jelix
  * @subpackage dao
 */
 class jDaoConditions {
     /**
-    * var jDaoCondition
+    * @var jDaoCondition
     */
     public $condition;
 

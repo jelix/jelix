@@ -67,6 +67,10 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url5', 'foo'=>'oof',  'bar'=>'rab');
       $resultList[]= array();
       $resultList[]= array('module'=>'news', 'action'=>'main_bar', 'aaa'=>'bbb');
+      $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url11', 'rubrique'=>'vetements',  'id_article'=>'65');
+      $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url12', 'rubrique'=>'bricolage',  'id_article'=>'34');
+      $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url13', 'rubrique'=>'alimentation');
+      $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url13', 'rubrique'=>'chaussures');
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -76,7 +80,12 @@ class UTParseUrls extends UnitTestCase {
           array("foo/bar.php","/withhandler/premier/deuxieme",array()),
           array("index.php",'',array('module'=>'unittest', 'action'=>'urlsig_url5', 'foo'=>'oof',  'bar'=>'rab')),
           array("xmlrpc.php","",array()),
-          array("news.php","",array('aaa'=>'bbb','action'=>'main_bar'))
+          array("news.php","",array('aaa'=>'bbb','action'=>'main_bar')),
+          array("index.php","/shop/vetements/65",array()),
+          array("index.php","/shop/bricolage/34/",array()),
+          array("index.php","/supershop/alimentation",array()),
+          array("index.php","/supershop/chaussures",array()),
+
        );
 
       $this->sendMessage("significant, multiview = false");
@@ -100,7 +109,11 @@ class UTParseUrls extends UnitTestCase {
           array("foo/bar","/withhandler/premier/deuxieme",array()),
           array("index",'',array('module'=>'unittest', 'action'=>'urlsig_url5', 'foo'=>'oof',  'bar'=>'rab')),
           array("xmlrpc","",array()),
-          array("news","",array('aaa'=>'bbb','action'=>'main_bar'))
+          array("news","",array('aaa'=>'bbb','action'=>'main_bar')),
+          array("index","/shop/vetements/65",array()),
+          array("index","/shop/bricolage/34/",array()),
+          array("index","/supershop/alimentation",array()),
+          array("index","/supershop/chaussures",array()),
        );
       foreach($request as $k=>$urldata){
          $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);

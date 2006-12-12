@@ -208,6 +208,14 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                  $regexppath='.*';
                  $path='';
                }
+               if(isset($url['optionalTrailingSlash']) && $url['optionalTrailingSlash'] == 'true'){
+                    if(substr($regexppath, -1) == '/'){
+                        $regexppath.='?';
+                    }else{
+                        $regexppath.='\/?';
+                    }
+               }
+
                $liststatics = array();
                foreach($url->static as $var){
                   $liststatics[(string)$var['name']] =(string)$var['value'];
