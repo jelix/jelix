@@ -94,5 +94,5 @@ docs: jelix-test
 	cp -R -f build/phpdoc/Converters/HTML/frames $(PHPDOC)phpDocumentor/Converters/HTML/
 	$(PHPDOC)phpdoc  -d $(TESTPATH)/lib/jelix/ -t $(DOCSPATH) \
 	-o "HTML:frames:DOM/jelix" -s on -ct "contributor,licence" -i *.ini.php \
-	-ti "Jelix API Reference" -ric "README,INSTALL,CHANGELOG,CREDITS,LICENCE,VERSION"
+	-ti "Jelix API Reference" -ric "README,INSTALL,CHANGELOG,CREDITS,LICENCE,VERSION,BUILD"
 	# -tb $(CURRENT_PATH)/build/phpdoc/

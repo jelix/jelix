@@ -123,6 +123,21 @@ jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , $
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
+// creation du fichier d'infos sur le build
+
+$infos = 'PHP_VERSION_TARGET="'.($PHP_VERSION_TARGET?$PHP_VERSION_TARGET:'5.x')."\"\n";
+$infos .= 'LIB_VERSION="'.$LIB_VERSION."\"\n";
+$infos .= 'SVN_REVISION='.$SVN_REVISION."\n";
+$infos .= 'ENABLE_OLD_CLASS_NAMING='.$ENABLE_OLD_CLASS_NAMING."\n";
+$infos .= 'ENABLE_OPTIMIZE='.($ENABLE_OPTIMIZE?'1':'0')."\n";
+$infos .= 'ENABLE_PHP_FILTER='.($ENABLE_PHP_FILTER?'1':'0')."\n";
+$infos .= 'ENABLE_PHP_JSON='.($ENABLE_PHP_JSON?'1':'0')."\n";
+$infos .= 'ENABLE_PHP_XMLRPC='.($ENABLE_PHP_XMLRPC?'1':'0')."\n";
+$infos .= 'ENABLE_DEVELOPER='.($ENABLE_DEVELOPER?'1':'0')."\n";
+$infos .= 'STRIP_COMMENT='.($STRIP_COMMENT?'1':'0')."\n";
+
+file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
+
 //... packages
 
 if($PACKAGE_TAR_GZ){
