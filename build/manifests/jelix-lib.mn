@@ -44,6 +44,7 @@ cd lib/jelix/core/response
   jResponseBinary.class.php
   jResponseHtml.class.php
   jResponseJsonrpc.class.php
+* jResponseJson.class.php
   jResponseRedirect.class.php
   jResponseRedirectUrl.class.php
   jResponseText.class.php

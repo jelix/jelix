@@ -23,8 +23,8 @@
 * @subpackage core
 */
 class jBundle {
-    var $fic;
-    var $locale;
+    public $fic;
+    public $locale;
 
     private $_loadedCharset = array ();
     private $_strings = array();
@@ -113,6 +113,7 @@ class jBundle {
         if (($f = fopen ($fichier, 'r')) !== false) {
             $multiline=false;
             $linenumber=0;
+            $key='';
             while (!feof($f)) {
                 if($line=fgets($f)){
                     $linenumber++;

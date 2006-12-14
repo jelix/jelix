@@ -24,7 +24,7 @@ function jtpl_block_ifnotacl($compiler, $begin, $params=array())
         if(count($params) == 2){
             $content = ' if(!jAcl::check('.$params[0].','.$params[1].')){';
         }elseif(count($params) == 3){
-            $content = ' if(!jAcl::check('.$param[0].','.$params[1].','.$params[2].')){';
+            $content = ' if(!jAcl::check('.$params[0].','.$params[1].','.$params[2].')){';
         }else{
             $content='';
             $compiler->doError2('errors.tplplugin.block.bad.argument.number','ifnotacl',2);

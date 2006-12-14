@@ -80,7 +80,7 @@ class cwrxhtml_cite extends WikiTagXhtml {
 }
 
 class cwrxhtml_acronym extends WikiTagXhtml {
-    var $name='acronym';
+    protected $name='acronym';
     public $beginTag='??';
     public $endTag='??';
     protected $attribute=array('$$','title');

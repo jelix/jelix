@@ -90,7 +90,6 @@ class wr3text_cite extends WikiTag {
 }
 
 class wr3text_acronym extends WikiTag {
-    var $name='acronym';
     public $beginTag='??';
     public $endTag='??';
     protected $attribute=array('$$','title');

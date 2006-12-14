@@ -108,7 +108,7 @@ class wr3xhtml_cite extends WikiTagXhtml {
 }
 
 class wr3xhtml_acronym extends WikiTagXhtml {
-    var $name='acronym';
+    protected $name='acronym';
     public $beginTag='??';
     public $endTag='??';
     protected $attribute=array('$$','title');

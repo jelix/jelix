@@ -123,7 +123,7 @@ class WordLevelDiff extends MappedDiff
  */
 class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
 {
-    var $result;
+    public $result;
 
     function __construct($context_lines = 4) {
         parent::__construct($context_lines);

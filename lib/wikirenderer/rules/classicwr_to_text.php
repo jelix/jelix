@@ -89,7 +89,6 @@ class cwrtext_cite extends WikiTag {
 }
 
 class cwrtext_acronym extends WikiTag {
-    var $name='acronym';
     public $beginTag='??';
     public $endTag='??';
     protected $attribute=array('$$','title');
@@ -130,7 +129,6 @@ class cwrtext_link extends WikiTag {
 
 
 class cwrtext_image extends WikiTag {
-    protected $name='image';
     public $beginTag='((';
     public $endTag='))';
     protected $attribute=array('src','alt','align','longdesc');

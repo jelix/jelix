@@ -703,6 +703,7 @@ class DiffFormatter
     function format($diff) {
 
         $xi = $yi = 1;
+        $x0 = $y0 = 0;
         $block = false;
         $context = array();
 

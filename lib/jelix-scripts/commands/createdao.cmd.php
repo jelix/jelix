@@ -117,7 +117,7 @@ class createdaoCommand extends JelixScriptCommand {
                   else
                      $primarykeys.=$fieldname;
                }
-               if($prop->not_null)
+               if($prop->not_null && $type != 'autoincrement')
                   $properties.=' required="yes"';
                $properties.='/>';
             }

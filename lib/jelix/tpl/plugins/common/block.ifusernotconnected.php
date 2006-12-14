@@ -21,7 +21,7 @@
 function jtpl_block_ifusernotconnected($compiler, $begin, $params=array())
 {
     if($begin){
-        if(count($param)){
+        if(count($params)){
             $content='';
             $compiler->doError1('errors.tplplugin.block.too.many.arguments','ifuserconnected');
         }else{

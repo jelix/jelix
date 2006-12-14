@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage utils
-* @version    $Id$
 * @author     Jouanneau Laurent
 * @contributor
 * @copyright  2006 Jouanneau laurent
@@ -21,16 +20,6 @@ require_once(LIB_PATH.'wikirenderer/WikiRenderer.lib.php');
 class jWiki extends  WikiRenderer {
     // rien à surcharger pour le moment
     // Profitons surtout de l'autoload :-)
-
-
-    static function getConfig($name){
-        $f = WIKIRENDERER_PATH.'rules/'.basename($config).'.php';
-        if(file_exists($f)){
-            require_once($f);
-            return new $config();
-        }else
-            throw new Exception('Wikirenderer : bad config name');
-    }
 
 }
 ?>

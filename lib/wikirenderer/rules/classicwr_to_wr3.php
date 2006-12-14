@@ -136,7 +136,6 @@ class cwrwr3_link extends WikiTag {
 
 
 class cwrwr3_image extends WikiTag {
-    protected $name='image';
     public $beginTag='((';
     public $endTag='))';
     protected $attribute=array('src','alt','align','longdesc');
