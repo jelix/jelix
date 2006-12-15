@@ -171,7 +171,6 @@ cd lib/jelix/utils/
   jZipCreator.class.php
 * jZone.class.php
   jAppManager.class.php
-  jRss20Item.class.php
   jMailer.class.php
   jSmtp.class.php
 * jFilter.class.php
