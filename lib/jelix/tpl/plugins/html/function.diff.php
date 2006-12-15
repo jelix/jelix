@@ -2,13 +2,15 @@
 /**
 * @package    jelix
 * @subpackage jtpl_plugin
-* @version    $Id$
 * @author     Laurent Jouanneau
 * @copyright  2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+/**
+ * load the diff library
+ */
 require_once(LIB_PATH.'diff/diffhtml.php');
 
 /**

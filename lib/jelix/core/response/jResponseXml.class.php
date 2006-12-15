@@ -3,14 +3,11 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
 * @author      Loic Mathaud
 * @contributor
 * @copyright   2005-2006 loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*
-* Some line of code are copyrighted CopixTeam http://www.copix.org
 */
 
 /**
@@ -19,38 +16,42 @@
 require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
 
 /**
-* Générateur de réponse HTML
+* XML response generator
 * @package  jelix
 * @subpackage core
 */
 class jResponseXml extends jResponse {
     /**
-    * identifiant du générateur de sortie
+    * Id of the response
     * @var string
     */
     protected $_type = 'xml';
 
 
     /**
+     * the template container
      * @var jTpl
      */
     public $content = null;
 
     /**
-     * selecteur du template principal
-     * le contenu du template principal concerne le contenu
+     * selector of the template file
+     * @var string
      */
     public $contentTpl = '';
 
-
+    /**
+     * The charset
+     * @var string
+     */
     protected $_charset;
-    
+
     private $_css = array();
     private $_xsl = array();
 
 
     /**
-    * Contruction et initialisation
+    * constructor..
     */
     function __construct (){
         global $gJConfig;
@@ -59,9 +60,8 @@ class jResponseXml extends jResponse {
     }
 
     /**
-     * génère le contenu et l'envoi au navigateur.
-     * Il doit tenir compte des erreurs
-     * @return boolean    true si la génération est ok, false sinon
+     * generate the xml content and send it to the browser
+     * @return boolean    true if ok
      */
     final public function output(){
         $this->_httpHeaders['Content-Type']='text/xml;charset='.$this->_charset;
@@ -94,7 +94,9 @@ class jResponseXml extends jResponse {
         return true;
     }
 
-
+    /**
+     * output errors if any
+     */
     final public function outputErrors() {
         if (!$this->_headSent) {
              if ($this->_sendHttpHeader) {
@@ -113,8 +115,8 @@ class jResponseXml extends jResponse {
     }
 
     /**
-     * formate les messages d'erreurs
-     * @return string les erreurs formatées
+     * format error message
+     * @return string xml which contains errors description
      */
     protected function getFormatedErrorMsg(){
         $errors = '';
@@ -124,19 +126,27 @@ class jResponseXml extends jResponse {
         }
         return $errors;
     }
-    
+
+    /**
+     * to add a link to css stylesheet
+     * @since 1.0b1
+     */
     public function addCSSStyleSheet($src, $params = array()) {
         if (!isset($this->_css[$src])) {
             $this->_css[$src] = $params;
         }
     }
-    
+
+    /**
+     * to add a link to an xsl stylesheet
+     * @since 1.0b1
+     */
     public function addXSLStyleSheet($src, $params = array()) {
         if (!isset($this->_xsl[$src])) {
             $this->_xsl[$src] = $params;
-        }    
+        }
     }
-    
+
     protected function outputXmlHeader() {
         // XSL stylesheet
         foreach ($this->_xsl as $src => $params) {

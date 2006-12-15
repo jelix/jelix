@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage auth
-* @version    $Id:$
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud
 * @copyright  2006 Laurent Jouanneau

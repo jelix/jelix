@@ -13,6 +13,7 @@
 * utility class to read and write an ini file
 * @package    jelix
 * @subpackage utils
+* @since 1.0b1
 */
 class jIniFile {
 
@@ -28,7 +29,7 @@ class jIniFile {
             return false;
         }
     }
-    
+
     /**
      * write some datas in an ini file
      * the datas array should follow the same structure returned by
@@ -55,7 +56,7 @@ class jIniFile {
             fclose($f);
         } else {
             // jIniFile est utilisé par le compilateur des configs
-            // il n'y a alors pas de $gJConfig dans de cas : 
+            // il n'y a alors pas de $gJConfig dans de cas :
             // il faut générer alors une erreur sans passer par jLocale
             if(isset($GLOBALS['gJConfig'])){
                 throw new jException('jelix~errors.inifile.write.error', array ($filename));
@@ -64,7 +65,7 @@ class jIniFile {
             }
         }
     }
-    
+
     /**
      * format a value to store in a ini file
      * @param string $value the value

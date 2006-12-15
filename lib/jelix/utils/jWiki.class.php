@@ -16,6 +16,7 @@ require_once(LIB_PATH.'wikirenderer/WikiRenderer.lib.php');
  * @package    jelix
  * @subpackage utils
  * @link http://wikirenderer.berlios.de/
+ * @since 1.0b1
  */
 class jWiki extends  WikiRenderer {
     // rien à surcharger pour le moment

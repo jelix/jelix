@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage auth
-* @version    $Id:$
 * @author     Laurent Jouanneau
 * @contributor
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
@@ -17,7 +16,7 @@
 
 
 /**
-* driver base de donnée pour l'authentification
+* authentification driver for authentification information stored in a database
 * @package    jelix
 * @subpackage auth
 */

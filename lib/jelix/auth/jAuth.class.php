@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage auth
-* @version    $Id:$
 * @author     Laurent Jouanneau
 * @contributor
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau

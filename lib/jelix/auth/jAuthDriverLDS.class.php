@@ -2,17 +2,21 @@
 /**
 * @package    jelix
 * @subpackage auth
-* @version    $Id:$
 * @author     Nicolas JEUDY
 * @contributor
 * @copyright  2006 Nicolas JEUDY
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-
 /**
-* driver base de donnée pour l'authentification
-*/
+ * authentification driver, which communicate with a LDS server
+ * LDS = Linbox Directory Server
+ * @package    jelix
+ * @subpackage auth
+ * @link http://lds.linbox.org/
+ * @see jAuth
+ * @since 1.0b1
+ */
 class jAuthDriverLDS implements jIAuthDriver {
 
     protected $_params;

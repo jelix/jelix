@@ -13,6 +13,7 @@
  *
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 abstract class jDatatype {
 
@@ -28,7 +29,7 @@ abstract class jDatatype {
     * @param string $value
     */
     public function addFacet($type,$value=null){
-        
+
         if(in_array($type, $this->facets)){
             $this->hasFacets = true;
             $this->_addFacet($type,$value);
@@ -52,6 +53,7 @@ abstract class jDatatype {
  * Datatype String
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 class jDatatypeString extends jDatatype {
     protected $length=null;
@@ -59,7 +61,7 @@ class jDatatypeString extends jDatatype {
     protected $maxLength=null;
     protected $pattern=null;
     protected $whitespace=null;
-    
+
     protected $facets = array('length','minLength','maxLength', 'pattern', 'whitespace');
 
     public function check($value){
@@ -81,6 +83,7 @@ class jDatatypeString extends jDatatype {
  * Datatype Booléen
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 class jDatatypeBoolean extends jDatatype {
   public function check($value) { return jFilter::isBool($value); }
@@ -90,6 +93,7 @@ class jDatatypeBoolean extends jDatatype {
  * Datatype Decimal
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 class jDatatypeDecimal extends jDatatype {
     // xxxx.yyyyy
@@ -110,6 +114,7 @@ class jDatatypeDecimal extends jDatatype {
  * Datatype Integer
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 class jDatatypeInteger extends jDatatypeDecimal {
     protected $facets = array('maxValue', 'minValue', 'totalDigits');
@@ -126,10 +131,11 @@ class jDatatypeInteger extends jDatatypeDecimal {
  * Datatype Hexa
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 class jDatatypeHexadecimal extends jDatatypeDecimal {
     protected $facets = array('maxValue', 'minValue', 'totalDigits');
-    public function check($value) { 
+    public function check($value) {
         if(substr($value,0,2) != '0x') $value='0x'.$value;
         return jFilter::isHexInt($value, $this->minValue, $this->maxValue);
     }
@@ -145,10 +151,11 @@ class jDatatypeHexadecimal extends jDatatypeDecimal {
  * Datatype datetime
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 class jDatatypeDateTime extends jDatatype {
     protected $facets = array('maxValue', 'minValue');
-    
+
     private $dt;
     protected $format=21;
     public function check($value) {
@@ -177,6 +184,7 @@ class jDatatypeDateTime extends jDatatype {
  * Datatype time
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 class jDatatypeTime extends jDatatypeDateTime {
    protected $format=22;
@@ -185,6 +193,7 @@ class jDatatypeTime extends jDatatypeDateTime {
  * Datatype date
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 class jDatatypeDate extends jDatatypeDateTime {
    protected $format=20;
@@ -194,6 +203,7 @@ class jDatatypeDate extends jDatatypeDateTime {
  * Datatype localedatetime
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 class jDatatypeLocaleDateTime extends jDatatypeDateTime {
    protected $format=11;
@@ -203,6 +213,7 @@ class jDatatypeLocaleDateTime extends jDatatypeDateTime {
  * Datatype localedate
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 class jDatatypeLocaleDate extends jDatatypeDateTime {
    protected $format=10;
@@ -212,18 +223,25 @@ class jDatatypeLocaleDate extends jDatatypeDateTime {
  * Datatype localetime
  * @package     jelix
  * @subpackage  utils
+ * @experimental
  */
 class jDatatypeLocaleTime extends jDatatypeDateTime {
    protected $format=12;
 }
 
 
+/**
+ * Datatype url
+ * @package     jelix
+ * @subpackage  utils
+ * @experimental
+ */
 class jDatatypeUrl extends jDatatype {
     protected $schemeRequired=null;
     protected $hostRequired=null;
     protected $pathRequired=null;
     protected $queryRequired=null;
-    
+
     protected $facets = array('schemeRequired','hostRequired','pathRequired', 'queryRequired');
 
     public function check($value){
@@ -231,17 +249,36 @@ class jDatatypeUrl extends jDatatype {
     }
 }
 
+/**
+ * Datatype ipv4
+ * @package     jelix
+ * @subpackage  utils
+ * @experimental
+ */
 class jDatatypeIPv4 extends jDatatype {
     public function check($value){
         return jFilter::isIPv4($value);
     }
 }
+
+/**
+ * Datatype ipv6
+ * @package     jelix
+ * @subpackage  utils
+ * @experimental
+ */
 class jDatatypeIPv6 extends jDatatype {
     public function check($value){
         return jFilter::isIPv6($value);
     }
 }
 
+/**
+ * Datatype mail
+ * @package     jelix
+ * @subpackage  utils
+ * @experimental
+ */
 class jDatatypeMail extends jDatatype {
     public function check($value){
         return jFilter::isEmail($value);

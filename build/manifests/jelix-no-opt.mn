@@ -14,3 +14,7 @@ cd lib/jelix/core
 
 cd lib/jelix/core/url
   jUrl.class.php
+
+cd lib/jelix/db
+  jDbConnection.class.php
+  jDbResultSet.class.php

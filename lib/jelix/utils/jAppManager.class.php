@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage utils
-* @version    $Id:$
 * @author     Loic Mathaud
 * @contributor
 * @copyright  2006 Loic Mathaud
@@ -14,6 +13,7 @@
 *
 * @package    jelix
 * @subpackage utils
+* @since 1.0b1
 */
 class jAppManager {
 

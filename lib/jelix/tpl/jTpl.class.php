@@ -2,7 +2,6 @@
 /**
 * @package     jelix
 * @subpackage  jtpl
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2005-2006 Jouanneau laurent
@@ -69,7 +68,7 @@ class jTpl {
     }
 
     /**
-     * assign a value in a template variable, only if the template variable doesn't still exist 
+     * assign a value in a template variable, only if the template variable doesn't still exist
      * @param string|array $name the variable name, or an associative array 'name'=>'value'
      * @param mixed  $value the value (or null if $name is an array)
      */
@@ -201,6 +200,7 @@ class jTpl {
      * optimized version of meta() + fetch()
      * @param string $tpl template selector
      * @return string the generated content
+     * @since 1.0b1
      */
     public function metaFetch ($tpl){
         ob_start ();
@@ -213,7 +213,7 @@ class jTpl {
             $tpl = JTPL_TEMPLATES_PATH . $tpl;
             $filename = basename($tpl);
             $cachefile = JTPL_CACHE_PATH . $filename;
-    
+
             $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
             if (!$mustCompile) {
                 if (filemtime($tpl) > filemtime($cachefile)) {

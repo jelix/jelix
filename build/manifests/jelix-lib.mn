@@ -75,10 +75,8 @@ cd lib/jelix/dao
   jDaoParser.class.php
 
 cd lib/jelix/db
-  jDb.class.php
-  jDbConnection.class.php
+* jDb.class.php
   jDbPDOConnection.class.php
-  jDbResultSet.class.php
   jDbTools.class.php
   jDbWidget.class.php
 

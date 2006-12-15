@@ -13,6 +13,7 @@
  *
  * @package     jelix
  * @subpackage  utils
+ * @since 1.0b1
  */
 class jFilter {
 

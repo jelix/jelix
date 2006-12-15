@@ -10,7 +10,6 @@
 *
 * @package     jelix
 * @subpackage  utils
-* @version     $Id$
 * @author      Brent R. Matzelle
 * @contributor Jouanneau Laurent
 * @copyright   2001 - 2003  Brent R. Matzelle, 2006 Jouanneau laurent
@@ -25,6 +24,7 @@
  * @author Brent R. Matzelle
  * @contributor Jouanneau Laurent
  * @copyright 2001 - 2003 Brent R. Matzelle,  2006 Jouanneau laurent
+ * @since 1.0b1
  */
 class jMailer
 {

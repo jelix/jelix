@@ -24,6 +24,7 @@ require_once(JELIX_LIB_RESPONSE_PATH.'jResponseXmlFeed.class.php');
 * @package  jelix
 * @subpackage core
 * @link http://tools.ietf.org/html/rfc4287
+* @since 1.0b1
 */
 class jResponseAtom10 extends jResponseXMLFeed {
 
@@ -131,6 +132,7 @@ class jResponseAtom10 extends jResponseXMLFeed {
  * meta data of the channel
  * @package    jelix
  * @subpackage core
+ * @since 1.0b1
  */
 class jAtom10Info extends jXMLFeedInfo{
     /**
@@ -190,6 +192,7 @@ class jAtom10Info extends jXMLFeedInfo{
  * content of an item in a syndication channel
  * @package    jelix
  * @subpackage core
+ * @since 1.0b1
  */
 class jAtom10Item extends jXMLFeedItem {
     /**

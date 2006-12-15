@@ -2,20 +2,13 @@
 /**
 * @package    jelix
 * @subpackage utils
-* @version    $Id:$
-* @author     Croes Gérald
-* @contributor Laurent Jouanneau
+* @author Laurent Jouanneau
 * @contributor Thiriot Christophe
 * @contributor Loic Mathaud
 * @contributor Cedric (fix bug ticket 56)
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2006 Thiriot Christophe
+* @copyright   2005-2006 Laurent Jouanneau, 2006 Thiriot Christophe, 2006 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-* Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixFile)
-* Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteurs initiaux : Gerald Croes
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
 
@@ -39,6 +32,10 @@ class jFile {
     * This function is heavily based on the way smarty process its own files.
     * Is using a temporary file and then rename the file. We guess the file system will be smarter than us, avoiding a writing / reading
     *  while renaming the file.
+    * This method comes from CopixFile class of Copix framework
+    * @author     Croes Gérald
+    * @copyright  2001-2005 CopixTeam
+    * @link http://www.copix.org
     */
     public static function write ($file, $data){
         $_dirname = dirname($file);
@@ -92,12 +89,14 @@ class jFile {
             mkdir($dir, 0775);
         }
     }
-    
+
     /**
      * Recursive function deleting a directory
      *
      * @param string $path The path of the directory to remove recursively
      * @param boolean $deleteParent If the path must be deleted too
+     * @since 1.0b1
+     * @author Loic Mathaud
      */
     public static function removeDir($path, $deleteParent=true) {
         $dir = new DirectoryIterator($path);

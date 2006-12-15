@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage db
-* @version    $Id:$
 * @author     Laurent Jouanneau
 * @contributor
 * @copyright  2005-2006 Laurent Jouanneau
@@ -11,25 +10,31 @@
 *
 * API inspirée de la classe CopixDbFactory issue du framework Copix 2.3dev20050901. http://www.copix.org
 */
+#ifdef ENABLE_OPTIMIZE
+
+#includephp jDbConnection.class.php
+#includephp jDbResultSet.class.php
+
+#else
 
 /**
  *
  */
 require_once(JELIX_LIB_DB_PATH.'jDbConnection.class.php');
 require_once(JELIX_LIB_DB_PATH.'jDbResultSet.class.php');
-
+#endif
 
 /**
- * instancie les differents objets pour jDb
+ * factory for database connector and other db utilities
  * @package  jelix
  * @subpackage db
  */
 class jDb {
     /**
-    * Récupération d'une connection.
-    * Utilise un pool local de connection
-    * @param string  $name  nom du profil de connection définie dans la configuration
-    * @return jDbConnection  objet de connexion vers la base de donnée
+    * return a database connector
+    * Use a local pool.
+    * @param string  $name  profil name to use. if empty, use the default one
+    * @return jDbConnection  connector
     */
     public static function getConnection ($name = null){
         static $cnxPool = array();
@@ -43,7 +48,9 @@ class jDb {
     }
 
     /**
-     * création d'un objet jDBWidget
+     * create a new jDbWidget
+     * @param string  $name  profil name to use. if empty, use the default one
+     * @return jDbWidget
      */
     public static function getDbWidget($name=null){
         $dbw = new jDbWidget(self::getConnection($name));
@@ -51,8 +58,8 @@ class jDb {
     }
 
     /**
-    * Récupération des outils de base de données
-    * @param string $name Connection name to use
+    * instancy a jDbTools object
+    * @param string $name profil name to use. if empty, use the default one
     * @return jDbTools
     */
     public static function getTools ($name=null){
@@ -76,9 +83,9 @@ class jDb {
     }
 
     /**
-    * récupération d'un profil de connexion à une base de données.
-    * @param string  $name  nom du profil de connexion
-    * @return    array   profil de connexion
+    * load properties of a connector profil
+    * @param string  $name  profil name to load. if empty, use the default one
+    * @return array  properties
     */
     public static function getProfil ($name=null){
         static $profils = null;
@@ -101,7 +108,9 @@ class jDb {
 
 
     /**
-     * pour tester les paramètres d'un profil (lors d'une installation par exemple)
+     * call it to test a profil (during an install for example)
+     * @param array  $profil  profil properties
+     * @return boolean  true if properties are ok
      */
     public function testProfil($profil){
         try{
@@ -114,10 +123,9 @@ class jDb {
     }
 
     /**
-    * création d'une connection.
-    * @access private
-    * @param string  $profil  nom du profil de connection
-    * @return jDbConnection / PDO  l'objet de connection
+    * create a connector
+    * @param array  $profil  profil properties
+    * @return jDbConnection|jDbPDOConnection  database connector
     */
     private static function _createConnector ($profil){
         if($profil['driver'] == 'pdo'){

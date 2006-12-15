@@ -26,6 +26,7 @@
  * @package jelix
  * @subpackage  utils
  * @author Chris Ryan
+ * @since 1.0b1
  */
 class jSmtp
 {

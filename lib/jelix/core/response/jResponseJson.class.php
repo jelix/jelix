@@ -22,15 +22,15 @@ require_once (LIB_PATH.'json/JSON.php');
 * @package  jelix
 * @subpackage core
 * @see jResponse
+* @since 1.0b1
 */
-
 final class jResponseJson extends jResponse {
     protected $_acceptSeveralErrors=false;
 
     /**
      * datas in PHP you want to send
      * @var mixed
-     */ 
+     */
     public $datas = null;
 
 

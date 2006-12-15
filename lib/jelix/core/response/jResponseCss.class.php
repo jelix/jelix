@@ -10,10 +10,11 @@
 */
 
 /**
-* Générateur de réponse Css
-* @package  jelix
-* @subpackage core
-*/
+ * Générateur de réponse Css
+ * @package  jelix
+ * @subpackage core
+ * @since 1.0b1
+ */
 class jResponseCss extends jResponse {
 
     /**

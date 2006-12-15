@@ -2,7 +2,6 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2005-2006 Jouanneau laurent
@@ -14,6 +13,7 @@
  * handle classical request but only to control and produce css content
  * @package     jelix
  * @subpackage  core
+ * @since 1.0b1
  */
 class jCssRequest extends jRequest {
 
