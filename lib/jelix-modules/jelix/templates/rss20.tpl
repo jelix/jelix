@@ -27,7 +27,7 @@
     {if $rss->copyright}<copyright>{$rss->copyright|escxml}</copyright>{/if}
     {if $rss->managingEditor}<managingEditor>{$rss->managingEditor|escxml}</managingEditor>{/if}
     {if $rss->webMaster}<webMaster>{$rss->webMaster|escxml}</webMaster>{/if}
-    {if $rss->categories}<category>{foreach $rss->categories as $cat}{$cat|escxml} {/foreach}</category>{/if}
+    {if $rss->categories}{foreach $rss->categories as $cat}<category>{$cat|escxml}</category>{/foreach}{/if}
     {if $rss->docs}<docs>{$rss->docs|escxml}</docs>{/if}
     {if $rss->cloud}<cloud domain="" port="" path="" registerProcedure="" protocol="" />{/if}
     {if $rss->ttl}<ttl>{$rss->ttl|escxml}</ttl>{/if}
@@ -49,7 +49,7 @@
         {if $item->published}<pubDate>{$item->published|jdatetime:'db_datetime':'rfc822'}</pubDate>{/if}
         <guid {if $item->idIsPermalink}isPermaLink="true"{/if}>{if $item->id}{$item->id|escxml}{else}{$item->link|escxml}{/if}</guid>
         {if $item->authorName || $item->authorEmail}<author>{$item->authorName|escxml} {$item->authorEmail|escxml}</author>{/if}
-        {if $item->categories}<category>{foreach $item->categories as $cat}{$cat|escxml} {/foreach}</category>{/if}
+        {if $item->categories}{foreach $item->categories as $cat}<category>{$cat|escxml}</category>{/foreach}{/if}
         {if $item->comments}<comments>{$item->comments|escxml}</comments>{/if}
         {if $item->enclosure}<enclosure url="{$item->enclosure['url']|escxml}" length="{$item->enclosure['size']|escxml}" type="{$item->enclosure['mimetype']|escxml}"/>{/if}
         {if $item->sourceUrl}<source url="{$item->sourceUrl|escxml}">{$item->sourceTitle|escxml}</source>{/if}

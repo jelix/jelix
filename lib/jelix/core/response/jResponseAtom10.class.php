@@ -57,10 +57,10 @@ class jResponseAtom10 extends jResponseXMLFeed {
                 'application/atom+xml;charset=' . $this->charset;
 
         $this->sendHttpHeaders ();
-        $this->_outputXmlHeader ();
 
         echo '<?xml version="1.0" encoding="'. $this->charset .'"?>', "\n";
-
+        $this->_outputXmlHeader ();
+        
         $this->_headSent = true;
 
         if(!$this->infos->updated){
