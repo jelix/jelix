@@ -2,16 +2,15 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
- *
+ * the jJsonRpcRequest require jJsonRpc class
  */
 require_once (JELIX_LIB_UTILS_PATH    . 'jJsonRpc.class.php');
 
@@ -31,7 +30,7 @@ class jJsonRpcRequest extends jRequest {
     public $jsonRequestId=null;
 
     /**
-     * initialisation du tableau de parametres vars
+     * analyse the http request and set the params property
      */
     protected function _initParams(){
         global $HTTP_RAW_POST_DATA;

@@ -18,7 +18,6 @@
  */
 class jAuthUser {
     public $login = '';
-    public $level = 0;
     public $email ='';
 }
 

@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage controllers
-* @version    $Id:$
 * @author     Loic Mathaud
 * @contributor
 * @copyright  2006 Loic Mathaud
@@ -12,9 +11,10 @@
 */
 
 /**
- *
+ * a base class for controllers used in command line application
  * @package    jelix
  * @subpackage controllers
+ * @since 1.0a3
  */
 class jControllerCmdLine extends jController {
 

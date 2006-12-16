@@ -18,6 +18,7 @@
  * interface for auth drivers
  * @package    jelix
  * @subpackage auth
+ * @static
  */
 interface jIAuthDriver {
     /**

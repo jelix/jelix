@@ -9,10 +9,9 @@
 * So here, there is a selector class for each selector type.
 * @package    jelix
 * @subpackage core
-* @version    $Id$
-* @author     Jouanneau Laurent
+* @author     Laurent Jouanneau
 * @contributor
-* @copyright  2005-2006 Jouanneau laurent
+* @copyright  2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -257,7 +256,7 @@ class jSelectorAct extends jSelectorModule {
 }
 
 /**
- * selector for business class 
+ * selector for business class
  *
  * business class is a class stored in the classes/classname.class.php file in a module.
  * syntax : "module~classname".
@@ -276,7 +275,7 @@ class jSelectorClass extends jSelectorModule {
 
 /**
  * selector for localisation string
- * 
+ *
  * localisation string are stored in file properties.
  * syntax : "module~prefixFile.keyString".
  * Corresponding file : locales/xx_XX/prefixFile.CCC.properties.
@@ -583,7 +582,7 @@ class jSelectorSimpleFile implements jISelector {
 
 /**
  * Selector for files stored in the var directory
- * 
+ *
  * @package    jelix
  * @subpackage core
  */
@@ -597,7 +596,7 @@ class jSelectorVar extends jSelectorSimpleFile {
 
 /**
  * Selector for files stored in the config directory
- * 
+ *
  * @package    jelix
  * @subpackage core
  */
@@ -611,7 +610,7 @@ class jSelectorCfg extends jSelectorSimpleFile {
 
 /**
  * Selector for files stored in the temp directory
- * 
+ *
  * @package    jelix
  * @subpackage core
  */
@@ -625,7 +624,7 @@ class jSelectorTmp extends jSelectorSimpleFile {
 
 /**
  * Selector for files stored in the log directory
- * 
+ *
  * @package    jelix
  * @subpackage core
  */
@@ -639,7 +638,7 @@ class jSelectorLog extends jSelectorSimpleFile {
 
 /**
  * Selector for files stored in the lib directory
- * 
+ *
  * @package    jelix
  * @subpackage core
  */

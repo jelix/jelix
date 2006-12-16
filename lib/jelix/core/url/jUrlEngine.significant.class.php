@@ -1,25 +1,19 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  core
-* @version     $Id$
-* @author      Jouanneau Laurent
-* @contributor
-* @copyright   2005-2006 Jouanneau laurent
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*
-* Some parts of this file are took from an experimental version of Copix Framework v2.3dev20050901,
-* CopixUrlEngine.significant.class.php,
-* copyrighted by CopixTeam and released under GNU Lesser General Public Licence
-* author : Laurent Jouanneau
-* http://www.copix.org
-*/
+ * @package     jelix
+ * @subpackage  core
+ * @author      Laurent Jouanneau
+ * @contributor
+ * @link        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
 
 /**
  * a specific selector for the xml files which contains the configuration of the engine
  * @package  jelix
  * @subpackage core
+ * @author      Laurent Jouanneau
+ * @copyright   2005-2006 Laurent Jouanneau
  */
 class jSelectorUrlCfgSig extends jSelectorCfg {
     public $type = 'urlcfgsig';
@@ -36,6 +30,8 @@ class jSelectorUrlCfgSig extends jSelectorCfg {
  * a specific selector for user url handler
  * @package  jelix
  * @subpackage core
+ * @author      Laurent Jouanneau
+ * @copyright   2005-2006 Laurent Jouanneau
  */
 class jSelectorUrlHandler extends jSelectorClass {
     public $type = 'urlhandler';
@@ -46,6 +42,8 @@ class jSelectorUrlHandler extends jSelectorClass {
  * interface for user url handler
  * @package  jelix
  * @subpackage core
+ * @author      Laurent Jouanneau
+ * @copyright   2005-2006 Laurent Jouanneau
  */
 interface jIUrlSignificantHandler {
     /**
@@ -68,6 +66,8 @@ interface jIUrlSignificantHandler {
  * it needs an urls.xml file in the config directory (see documentation)
  * @package  jelix
  * @subpackage core
+ * @author      Laurent Jouanneau
+ * @copyright   2005-2006 Laurent Jouanneau
  */
 class jUrlEngineSignificant implements jIUrlEngine {
 
@@ -248,6 +248,12 @@ class jUrlEngineSignificant implements jIUrlEngine {
     * Create a jurl object with the given action datas
     * @param jUrlAction $url  information about the action
     * @return jUrl the url correspondant to the action
+    * @author      Laurent Jouanneau
+    * @copyright   2005 CopixTeam, 2005-2006 Laurent Jouanneau
+    *   very few lines of code are copyrighted by CopixTeam, written by Laurent Jouanneau
+    *   and released under GNU Lesser General Public Licence,
+    *   in an experimental version of Copix Framework v2.3dev20050901,
+    *   http://www.copix.org.
     */
     public function create( $urlact){
 

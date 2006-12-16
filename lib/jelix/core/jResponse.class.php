@@ -2,17 +2,16 @@
 /**
 * @package    jelix
 * @subpackage core
-* @version    $Id$
-* @author     Jouanneau Laurent
+* @author     Laurent Jouanneau
 * @contributor
-* @copyright  2005-2006 Jouanneau laurent
+* @copyright  2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 
 /**
-* class base for response object
+* base class for response object
 * A response object is responsible to generate a content in a specific format.
 * @package  jelix
 * @subpackage core
@@ -60,12 +59,35 @@ abstract class jResponse {
      */
     abstract public function outputErrors();
 
-
+    /**
+     * return the response type name
+     * @return string the name
+     */
     public final function getType(){ return $this->_type;}
+
+    /**
+     * return the format type name (eg the family type name)
+     * @return string the name
+     */
     public function getFormatType(){ return $this->_type;}
+
+    /**
+     * says if the response can embed more than one error message
+     * @return boolean true if many
+     */
     public final function acceptSeveralErrors(){ return $this->_acceptSeveralErrors;}
+
+    /**
+     *
+     */
     public final function hasErrors(){ return count($GLOBALS['gJCoord']->errorMessages)>0;}
 
+    /**
+     * add an http header to the response.
+     * will be send during the output of the response
+     * @param string $htype the header type ("Content-Type", "Date-modified"...)
+     * @param string $hcontent value of the header type
+     */
     public function addHttpHeader($htype, $hcontent){ $this->_httpHeaders[$htype]=$hcontent;}
 
     /**
@@ -76,7 +98,7 @@ abstract class jResponse {
     public function setHttpStatus($code, $msg){ $this->_httpStatusCode=$code; $this->_httpStatusMsg=$msg;}
 
     /**
-     *
+     * send http headers
      */
     protected function sendHttpHeaders(){
         header("HTTP/1.0 ".$this->_httpStatusCode.' '.$this->_httpStatusMsg);

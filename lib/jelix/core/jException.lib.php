@@ -2,10 +2,9 @@
 /**
 * @package    jelix
 * @subpackage core
-* @version    $Id$
-* @author     Jouanneau Laurent
+* @author     Laurent Jouanneau
 * @contributor
-* @copyright  2005-2006 Jouanneau laurent
+* @copyright  2005-2006 laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -65,6 +64,7 @@ function jExceptionHandler($exception){
     // traitement du message
     if(strpos($action , 'ECHOQUIET') !== false){
         if(!$doecho){
+            header("HTTP/1.1 500 Internal jelix error");
             header('Content-type: text/plain');
             echo 'JELIX PANIC ! Error during initialization !! ';
         }else
@@ -73,6 +73,7 @@ function jExceptionHandler($exception){
         if($doecho)
             $gJCoord->addErrorMsg('error', $exception->getCode(), $msg, $exception->getFile(), $exception->getLine());
         else{
+            header("HTTP/1.1 500 Internal jelix error");
             header('Content-type: text/plain');
             echo $messageLog;
         }
@@ -95,9 +96,9 @@ function jExceptionHandler($exception){
 
 /**
  * Jelix Exception
- * It handles locale messages.
- * message property contains the locale key, and a new property
- * contains the localized message
+ *
+ * It handles locale messages. Message property contains the locale key,
+ * and a new property contains the localized message.
  * @package  jelix
  * @subpackage core
  */

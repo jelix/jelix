@@ -2,13 +2,11 @@
 /**
 * @package    jelix
 * @subpackage core
-* @version    $Id$
-* @author     Jouanneau Laurent
+* @author     Laurent Jouanneau
 * @contributor
-* @copyright  2005-2006 Jouanneau laurent
+* @copyright  2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*
 */
 
 
@@ -16,10 +14,7 @@
  * base class for object which retrieve all parameters of an http request. The
  * process depends on the type of request (ex: xmlrpc..)
  *
- * @copyright line codes which set the url_* properties are took from Copix Framework v2.3dev20050901, CopixCoordinator.class.php,
- * copyrighted by CopixTeam and released under GNU Lesser General Public Licence
- * author : Gerald Croes, Laurent Jouanneau
- * http://www.copix.org
+
  * @package  jelix
  * @subpackage core
  */
@@ -79,6 +74,11 @@ abstract class jRequest {
 
     /**
      * inits the url_* properties
+     * @copyright 2003-2005 CopixTeam
+     *  method took from Copix Framework v2.3dev20050901, CopixCoordinator.class.php,
+     *  released under GNU Lesser General Public Licence.
+     * @author Gerald Croes
+     * @contributor Laurent Jouanneau
      */
     protected function _initUrlDatas(){
         global $gJConfig;

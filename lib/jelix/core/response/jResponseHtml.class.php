@@ -2,13 +2,12 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Yann (description and keywords)
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2006 Laurent Jouanneau, 2006 Yann
+*   few lines of code are copyrighted CopixTeam http://www.copix.org
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*
-* few lines of code are copyrighted CopixTeam http://www.copix.org
 */
 
 /**
@@ -269,6 +268,7 @@ class jResponseHtml extends jResponse {
 
     /**
      * add some keywords in a keywords meta tag
+     * @author Yann
      * @param string $content keywords
      * @since 1.0b1
      */
@@ -277,6 +277,7 @@ class jResponseHtml extends jResponse {
     }
     /**
      * add a description in a description meta tag
+     * @author Yann
      * @param string $content a description
      * @since 1.0b1
      */

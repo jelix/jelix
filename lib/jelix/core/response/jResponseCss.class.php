@@ -10,7 +10,7 @@
 */
 
 /**
- * Générateur de réponse Css
+ * Send CSS content
  * @package  jelix
  * @subpackage core
  * @since 1.0b1
@@ -18,28 +18,20 @@
 class jResponseCss extends jResponse {
 
     /**
-    * identifiant du générateur de sortie
     * @var string
     */
     protected $_type = 'css';
 
     /**
-     * contenu
+     * CSS content
      * @var string
      */
     public $content = '';
 
 
     /**
-    * Contruction et initialisation
-    */
-    function __construct ($attributes=array()){
-        parent::__construct($attributes);
-    }
-
-    /**
-     * génère le contenu et l'envoi au navigateur.
-     * @return boolean    true si la génération est ok, false sinon
+     * send the css content
+     * @return boolean    true if it's ok
      */
     public function output(){
         global $gJConfig;

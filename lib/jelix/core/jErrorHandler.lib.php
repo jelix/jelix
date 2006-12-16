@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage core
-* @version    $Id:$
 * @author     Laurent Jouanneau
 * @contributor
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
@@ -94,12 +93,14 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     // traitement du message
     if(strpos($action , 'ECHOQUIET') !== false){
         if(!$doecho){
+            header("HTTP/1.1 500 Internal jelix error");
             header('Content-type: text/plain');
             echo 'JELIX PANIC ! Error during initialization !! ';
         }elseif($gJCoord->addErrorMsg($codeString[$errno], $code, $conf['quietMessage'], '', ''))
             $action.=' EXIT';
     }elseif(strpos($action , 'ECHO') !== false){
         if(!$doecho){
+            header("HTTP/1.1 500 Internal jelix error");
             header('Content-type: text/plain');
             echo $messageLog;
         }elseif($gJCoord->addErrorMsg($codeString[$errno], $code, $errmsg, $filename, $linenum)){

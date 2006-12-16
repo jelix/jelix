@@ -2,7 +2,6 @@
 /**
 * @package  jelix
 * @subpackage core
-* @version  $Id$
 * @author   Jouanneau Laurent
 * @contributor
 * @copyright 2005-2006 Jouanneau laurent
@@ -14,6 +13,7 @@
  * static class which loads the configuration
  * @package  jelix
  * @subpackage core
+ * @static
  */
 class jConfig {
 

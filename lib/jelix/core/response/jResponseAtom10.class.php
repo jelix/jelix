@@ -2,7 +2,6 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
 * @author      Yannick Le Guédart
 * @contributor Laurent Jouanneau
 * @copyright   2006 Yannick Le Guédart
@@ -60,7 +59,7 @@ class jResponseAtom10 extends jResponseXMLFeed {
 
         echo '<?xml version="1.0" encoding="'. $this->charset .'"?>', "\n";
         $this->_outputXmlHeader ();
-        
+
         $this->_headSent = true;
 
         if(!$this->infos->updated){

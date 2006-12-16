@@ -2,10 +2,9 @@
 /**
 * @package    jelix
 * @subpackage core
-* @version    $Id:$
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2006 Laurent Jouanneau, 2006 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *

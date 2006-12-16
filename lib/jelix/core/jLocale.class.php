@@ -1,19 +1,17 @@
 <?php
-
 /**
 * @package    jelix
 * @subpackage core
-* @version    $Id$
-* @author     Jouanneau Laurent
+* @author     Laurent Jouanneau
+* @author     Gerald Croes
 * @contributor
-* @copyright  2005-2006 Jouanneau laurent
+* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*
-* Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php,
-* copyrighted by CopixTeam and released under GNU Lesser General Public Licence
-* author : Gerald Croes, Laurent Jouanneau
-* http://www.copix.org
+* Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
+* copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
+* initial authors : Gerald Croes, Laurent Jouanneau.
+* enhancement by Laurent Jouanneau for Jelix.
 */
 
 

@@ -2,56 +2,53 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 
 /**
-* générateur de sortie pour renvoyer des fichiers en download ou direct au navigateur
+* Response use to send a binary file to the browser
 * @package  jelix
 * @subpackage core
 */
 
 final class jResponseBinary  extends jResponse {
     /**
-    * identifiant du générateur de sortie
     * @var string
     */
     protected $_type = 'binary';
 
     /**
-     * Chemin vers le fichier à envoyer. Vide si on envoie un contenu
+     * The path of the file you want to send. Keep empty if you provide the content
      * @var string
      */
     public $fileName ='';
     /**
-     * nom de fichier sous lequel il faut envoyer le contenu
+     * name of the file under which the content will be send to the user
      * @var string
      */
     public $outputFileName ='';
 
     /**
-     * contenu à envoyer. Vide si on veut envoyer un fichier
+     * the content you want to send. Keep empty if you indicate a filename
      * @var string
      */
     public $content = null;
 
     /**
-     * Indique si on veut forcer un téléchargement/"enregistrer sous" coté navigateur ou pas
-     * si false, indiquer le bon type mime dans $mimetype
+     * Says if the "save as" dialog appear or not to the user.
+     * if false, specify the mime type in $mimetype
      * @var boolean
      */
     public $doDownload = true;
 
     /**
-     * génère le contenu et l'envoi au navigateur.
-     * Il doit tenir compte des erreurs
-     * @return boolean    true si la génération est ok, false sinon
+     * send the content or the file to the browser.
+     * @return boolean    true it it's ok
      */
     public function output(){
         if($this->doDownload){
@@ -92,12 +89,11 @@ final class jResponseBinary  extends jResponse {
         header("Expires: 0");
     }
 
+    /**
+     * @todo do this method
+     */
     public function outputErrors(){
 
     }
-
-
 }
-
-
 ?>

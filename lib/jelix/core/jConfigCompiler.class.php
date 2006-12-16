@@ -2,7 +2,6 @@
 /**
 * @package  jelix
 * @subpackage core
-* @version  $Id$
 * @author   Jouanneau Laurent
 * @contributor
 * @copyright   2006 Jouanneau laurent
@@ -15,6 +14,7 @@
  * This is a static class
  * @package  jelix
  * @subpackage core
+ * @static
  */
 class jConfigCompiler {
 

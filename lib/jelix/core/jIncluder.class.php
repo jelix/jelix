@@ -1,19 +1,16 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
-* @version    $Id$
-* @author     Jouanneau Laurent
-* @contributor
-* @copyright  2005-2006 Jouanneau laurent
-* @link        http://www.jelix.org
-* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*
-* Quelques lignes de codes sont sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* et sont issues de la classe CopixInclude de Copix 2.3dev20050901.
-* Auteur initial : Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
-*/
+ * @package    jelix
+ * @subpackage core
+ * @author     Laurent Jouanneau
+ * @contributor
+ * @copyright  2005-2006 Laurent Jouanneau
+ * @link       http://www.jelix.org
+ * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ * few line of code of jInclude are copyrighted Copyright 2001-2005 CopixTeam (LGPL licence)
+ * and piked from CopixInclude class of Copix 2.3dev20050901 framework.
+ * initial author : Laurent Jouanneau
+ */
 
 
 /**
@@ -54,7 +51,7 @@ interface jIMultiFileCompiler {
 }
 
 /**
- * This object is responsible to load cache files
+ * This object is responsible to load cache files.
  * Some jelix files needs to be compiled in PHP (templates, daos etc..) and their
  * correspondant php content are stored in a cache file.
  * jIncluder verify that cache file exists, is not obsolete, and if not,
@@ -62,6 +59,12 @@ interface jIMultiFileCompiler {
  * And then include the cache.
  * @package  jelix
  * @subpackage core
+ * @author     Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+ * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html .
+ * few line of code are copyrighted Copyright 2001-2005 CopixTeam (LGPL licence)
+ * and piked from CopixInclude class of Copix 2.3dev20050901 framework.
+ * initial author : Laurent Jouanneau
  */
 class jIncluder {
     /**

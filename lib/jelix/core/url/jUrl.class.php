@@ -2,16 +2,15 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 *
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixUrl.class.php,
-* copyrighted by CopixTeam and released under GNU Lesser General Public Licence
-* author : Gerald Croes, Laurent Jouanneau
+* copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
+* author : Gerald Croes, Laurent Jouanneau.
 * http://www.copix.org
 */
 
@@ -19,6 +18,8 @@
  * interface for url engines
  * @package  jelix
  * @subpackage core
+ * @author      Laurent Jouanneau
+ * @copyright   2005 CopixTeam, 2005-2006 Laurent Jouanneau
  */
 interface jIUrlEngine {
   /**
@@ -43,6 +44,8 @@ interface jIUrlEngine {
  * base class for jUrl and jUrlAction
  * @package  jelix
  * @subpackage core
+ * @author      Laurent Jouanneau
+ * @copyright   2005-2006 Laurent Jouanneau
  */
 abstract class jUrlBase {
 
@@ -112,6 +115,8 @@ abstract class jUrlBase {
  * A container to store url datas for an action
  * @package  jelix
  * @subpackage core
+ * @author      Laurent Jouanneau
+ * @copyright   2005-2006 Laurent Jouanneau
  */
 class jUrlAction extends jUrlBase {
 
@@ -155,6 +160,9 @@ class jUrlAction extends jUrlBase {
  * Object that contains url datas, and which provides static method helpers
  * @package  jelix
  * @subpackage core
+ * @author      Laurent Jouanneau (for the original code from Copix and enhancement for jelix)
+ * @author      Gerald Croes (for the original code from Copix)
+ * @copyright   2005 CopixTeam, 2005-2006 Laurent Jouanneau
  */
 class jUrl extends jUrlBase {
 

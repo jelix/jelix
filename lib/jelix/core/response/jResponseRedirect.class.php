@@ -2,16 +2,15 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
-* Genérateur de réponse pour la redirection
+* Redirecting Response
 * @package  jelix
 * @subpackage core
 * @see jResponse
@@ -19,16 +18,20 @@
 
 final class jResponseRedirect extends jResponse {
     /**
-    * identifiant du générateur
     * @var string
     */
     protected $_type = 'redirect';
 
     /**
-     * selecteur d'action vers lequel rediriger
+     * selector of the action where you want to redirect.
+     * jUrl will be used to get the real url
+     * @var string
      */
     public $action = '';
 
+    /**
+     * parameters for the action/url
+     */
     public $params = array();
 
     public function output(){
