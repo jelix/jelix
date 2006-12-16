@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage dao
-* @version    $Id:$
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
@@ -123,22 +122,22 @@ class jDaoParser {
     */
     private function _parseTable ($typetable, $tabletag){
         $infos = $this->getAttr($tabletag, array('name','realname','primarykey','onforeignkey'));
-    
+
         if ($infos['name'] === null )
             throw new jDaoXmlException ('table.name');
-    
+
         if($infos['realname'] === null)
             $infos['realname'] = $infos['name'];
-    
+
         if($infos['primarykey'] === null)
             throw new jDaoXmlException ('primarykey.missing');
-    
+
         $infos['pk']=explode(',',$infos['primarykey']);
         unset($infos['primarykey']);
-    
+
         if(count($infos['pk']) == 0 || $infos['pk'][0] == '')
             throw new jDaoXmlException ('primarykey.missing');
-    
+
         if($typetable){ // pour les foreigntable et optionalforeigntable
             if($infos['onforeignkey'] === null)
                 throw new jDaoXmlException ('foreignkey.missing');
@@ -156,13 +155,13 @@ class jDaoParser {
         }else{
             unset($infos['onforeignkey']);
         }
-    
+
         $infos['fields'] = array ();
         $this->_tables[$infos['name']] = $infos;
-    
+
         return $infos;
     }
-    
+
     /**
     * try to read all given attributes
     * @param SimpleXmlElement $tag
@@ -349,16 +348,16 @@ class jDaoMethod {
 
     function __construct ($method, $def){
         $this->_def = $def;
-    
+
         $params = $def->getAttr($method, array('name', 'type', 'call','distinct'));
-    
+
         if ($params['name']===null){
             throw new jDaoXmlException ('missing.attr', array('name', 'method'));
         }
-    
+
         $this->name = $params['name'];
         $this->type = $params['type'] ? strtolower($params['type']) : 'select';
-    
+
         if (isset ($method->parameter)){
             foreach ($method->parameter as $param){
                 $attr = $param->attributes();
@@ -393,7 +392,7 @@ class jDaoMethod {
         if (isset ($method->conditions)){
             $this->_parseConditions($method->conditions[0],false);
         }
-    
+
         if($this->type == 'update'){
             if(isset($method->values) && isset($method->values[0]->value)){
                 foreach ($method->values[0]->value as $val){
@@ -421,7 +420,7 @@ class jDaoMethod {
 
         if($this->type == 'count')
             return;
-    
+
         if (isset ($method->order) && isset($method->order[0]->orderitem)){
             foreach($method->order[0]->orderitem as $item){
                 $this->_addOrder ($item);
@@ -551,9 +550,9 @@ class jDaoMethod {
 
     private function _addOrder($order){
         $attr = $this->_def->getAttr($order, array('property','way'));
-    
+
         $way  = ($attr['way'] !== null ? $attr['way']:'ASC');
-    
+
         if(substr ($way,0,1) == '$'){
             if(!in_array (substr ($way,1),$this->_parameters)){
                 throw new jDaoXmlException ('method.orderitem.parameter.unknow', array($this->name, $way));

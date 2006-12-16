@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage events
-* @version    $Id:$
 * @author     Croes Gérald
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau

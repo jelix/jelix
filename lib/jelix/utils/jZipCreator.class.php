@@ -2,7 +2,6 @@
 /**
  * @package    jelix
  * @subpackage utils
- * @version    $Id:$
  * @author     Laurent Jouanneau
  * @copyright  2006 Laurent Jouanneau
  * @link       http://www.jelix.org

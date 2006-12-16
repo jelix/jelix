@@ -1,5 +1,4 @@
 <?php
-
 /**
 * @package     jelix
 * @subpackage  core
@@ -147,6 +146,9 @@ class jResponseXml extends jResponse {
         }
     }
 
+    /**
+     * output all processing instructions (stylesheet, xsl..) before the XML content
+     */
     protected function outputXmlHeader() {
         // XSL stylesheet
         foreach ($this->_xsl as $src => $params) {

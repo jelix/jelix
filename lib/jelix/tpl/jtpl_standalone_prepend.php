@@ -1,7 +1,6 @@
 <?php
 /**
 * @package     jTpl Standalone
-* @version     $Id$
 * @author      Mathaud Loic
 * @contributor Laurent Jouanneau
 * @copyright   2006 Mathaud Loic
@@ -18,7 +17,7 @@ if(!defined('JTPL_PLUGIN_PATH'))
 if(!defined('JTPL_LOCALES_PATH'))
     define('JTPL_LOCALES_PATH', realpath(JTPL_PATH.'locales/') . '/');
 if(!defined('JTPL_TEMPLATES_PATH'))
-    define('JTPL_TEMPLATES_PATH', realpath(JTPL_PATH.'templates/') . '/'); 
+    define('JTPL_TEMPLATES_PATH', realpath(JTPL_PATH.'templates/') . '/');
 
 $GLOBALS['jTplConfig'] = array(
     'tplpluginsPathList'=> array(

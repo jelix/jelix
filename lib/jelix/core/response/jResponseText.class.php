@@ -2,44 +2,33 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
-* Générateur de réponse Text
+* plain Text response
 * @package  jelix
 * @subpackage core
 */
-
 class jResponseText extends jResponse {
     /**
-    * identifiant du générateur de sortie
     * @var string
     */
     protected $_type = 'text';
 
     /**
-     * contenu
+     * text content
      * @var string
      */
     public $content = '';
 
-
     /**
-    * Contruction et initialisation
-    */
-    function __construct ($attributes=array()){
-        parent::__construct($attributes);
-    }
-
-    /**
-     * génère le contenu et l'envoi au navigateur.
-     * @return boolean    true si la génération est ok, false sinon
+     * output the content with the text/plain mime type
+     * @return boolean    true si it's ok
      */
     public function output(){
         global $gJConfig;

@@ -2,8 +2,7 @@
 /**
 * @package     jelix
 * @subpackage  utils
-* @version     $Id:$
-* @author      Croes Gérald, Jouanneau Laurent
+* @author      Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright   2001-2005 CopixTeam 2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
@@ -54,7 +53,7 @@ if(!function_exists('strptime')){ // existe depuis php 5.1
 #endif
 
 /**
- *
+ * Utility to manipulate dates and convert date format
  * @package     jelix
  * @subpackage  utils
  */
@@ -89,7 +88,11 @@ class jDateTime{
 
     }
 
-
+    /**
+     * convert the date to a string format
+     * @param int $format one of the class constant, or -1 if it is a default format
+     * @return string the string date
+     */
     function toString($format=-1){
         if($format==-1)
             $format = $this->defaultFormat;
@@ -133,6 +136,11 @@ class jDateTime{
        return $str;
     }
 
+    /**
+     * read a string to extract date values
+     * @param string $str the string date
+     * @param int $format one of the class constant, or -1 if it is a default format
+     */
     function setFromString($str,$format=-1){
         if($format==-1)
             $format = $this->defaultFormat;
@@ -236,7 +244,8 @@ class jDateTime{
     }
 
     /**
-     * @param jDateTime $dt la durée à ajouter
+     * add a duration to the date
+     * @param jDateTime $dt the duration value
      */
     public function add($dt){
 
@@ -253,7 +262,8 @@ class jDateTime{
     }
 
     /**
-     * @param jDateTime $dt la durée à enlever
+     * substract a duration to the date
+     * @param jDateTime $dt the duration value
      */
     public function sub($dt){
         $t = mktime ( $this->hour -  $dt->hour, $this->minute - $dt->minute, $this->second - $dt->second ,
@@ -269,7 +279,7 @@ class jDateTime{
     }
 
     /**
-     * pour connaître la durée entre deux dates.
+     * to know the duration between two dates
      */
     public function durationTo($dt){
        $t = mktime ( $dt->hour, $dt->minute,$dt->second , $dt->month, $dt->day, $dt->year )
@@ -279,7 +289,8 @@ class jDateTime{
     }
 
     /**
-     * compare la date avec une autre
+     * compare two date
+     * @param jDateTime $dt the date to compare
      * @return integer -1 si $dt >, 0 si =, 1 si $dt <
      */
     public function compareTo($dt){

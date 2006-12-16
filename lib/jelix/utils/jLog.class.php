@@ -2,23 +2,29 @@
 /**
 * @package    jelix
 * @subpackage utils
-* @version    $Id$
-* @author     Jouanneau Laurent
+* @author     Laurent Jouanneau
 * @contributor
-* @copyright  2006 Jouanneau laurent
+* @copyright  2006 Laurent Jouanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
- *
+ * utility class to log some message into a file into yourapp/var/log
  * @package    jelix
  * @subpackage utils
+ * @static
  */
 class jLog {
 
-   private function __construct(){}
+    private function __construct(){}
 
+   /**
+    * log a dump of a php value (object or else)
+    * @param mixed $obj the value to dump
+    * @param string $label a label
+    * @param string $type the log type
+    */
    public static function dump($obj, $label='', $type='default'){
       if($label!=''){
          $message = $label.': '.var_export($obj,true);
@@ -28,6 +34,11 @@ class jLog {
       self::log($message, $type);
    }
 
+   /**
+    * log a message
+    * @param mixed $message
+    * @param string $type the log type
+    */
    public static function log($message, $type='default'){
       global $gJConfig;
       $f = $gJConfig->logfiles[$type];

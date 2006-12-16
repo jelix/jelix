@@ -37,7 +37,7 @@ class jForms {
      * Call it to create a new form, before to display it.
      * Datas of the form are stored in the php session in a jFormsDataContainer object.
      * If a form with same id exists, datas are erased.
-     * 
+     *
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the new instance (an id of a record for example)
      * @return jFormBase the object representing the form
@@ -58,7 +58,7 @@ class jForms {
      * get an existing instance of a form
      *
      * In your controller, call it before to re-display a form with existing datas.
-     * 
+     *
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      * @return jFormBase the object representing the form. Return null if there isn't an existing form
@@ -83,7 +83,7 @@ class jForms {
      * get an existing instance of a form, and fill it with datas provided by the request
      *
      * use it in the action called to submit a webform.
-     * 
+     *
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      * @return jFormBase the object representing the form. Return null if there isn't an existing form
@@ -100,10 +100,9 @@ class jForms {
      * destroy a form in the session
      *
      * use it after saving datas of a form, and if you don't want to re-display the form.
-     * 
+     *
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the form (if you use multiple instance of a form)
-     * @return
      */
    static public function destroy($formSel,$formId=JFORMS_DEFAULT_ID){
       global $gJCoord;

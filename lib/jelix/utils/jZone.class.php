@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage utils
-* @version    $Id:$
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
@@ -16,7 +15,7 @@
 */
 
 /**
- * jZone is a representation of a zone in an response content, in a html page
+ * jZone is a representation of a zone in an response content, in a html page.
  * A user zone should inherits from jZone. jZone provide a cache mecanism.
  * @package    jelix
  * @subpackage utils

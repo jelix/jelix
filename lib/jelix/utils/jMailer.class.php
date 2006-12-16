@@ -11,8 +11,8 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Brent R. Matzelle
-* @contributor Jouanneau Laurent
-* @copyright   2001 - 2003  Brent R. Matzelle, 2006 Jouanneau laurent
+* @contributor Laurent Jouanneau
+* @copyright   2001 - 2003  Brent R. Matzelle, 2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -22,8 +22,8 @@
  * @package jelix
  * @subpackage  utils
  * @author Brent R. Matzelle
- * @contributor Jouanneau Laurent
- * @copyright 2001 - 2003 Brent R. Matzelle,  2006 Jouanneau laurent
+ * @contributor Laurent Jouanneau
+ * @copyright 2001 - 2003 Brent R. Matzelle,  2006 Laurent Jouanneau
  * @since 1.0b1
  */
 class jMailer

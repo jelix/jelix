@@ -2,17 +2,16 @@
 /**
 * @package     jelix
 * @subpackage  jtpl
-* @version     $Id$
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Mathaud Loic (version standalone)
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2006 Laurent Jouanneau
 * @copyright   2006 Mathaud Loic
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
- * This is the compiler of templates : converts a template into a php file.
+ * This is the compiler of templates: it converts a template into a php file.
  * @package     jelix
  * @subpackage  jtpl
  */

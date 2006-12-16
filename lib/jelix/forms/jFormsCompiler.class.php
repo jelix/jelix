@@ -1,11 +1,10 @@
 <?php
 /**
 * @package    jelix
-* @subpackage jforms
-* @version    $Id$
-* @author     Jouanneau Laurent
+* @subpackage forms
+* @author     Laurent Jouanneau
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -97,11 +96,11 @@ class jFormsCompiler implements jISimpleCompiler {
             case 'output':
                 //attr value
                break;
-            case 'upload': 
+            case 'upload':
                 // attr mediatype
                break;
             case 'select1':
-            case 'select': 
+            case 'select':
                 // recuperer les <items> attr label|labellocale value
                 if(isset($control['dao'])){
                     $daoselector = (string)$control['dao'];

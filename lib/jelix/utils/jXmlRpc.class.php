@@ -2,9 +2,8 @@
 /**
 * @package     jelix
 * @subpackage  utils
-* @version     $Id:$
-* @author      Jouanneau Laurent
-* @contributor Jouanneau Laurent for jelix
+* @author      Laurent Jouanneau
+* @contributor Laurent Jouanneau for jelix
 * @copyright   2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -20,19 +19,20 @@
 
 
 /**
- * objet permettant d'encoder/décoder des request/responses XMl-RPC
- * pour les specs, voir http://www.xmlrpc.com/spec
+ * object to encode decode some XMl-RPC request and XMl-RPC response
  * @package    jelix
  * @subpackage utils
+ * @see http://www.xmlrpc.com/spec
  */
 class jXmlRpc {
 
      private function __construct(){}
 
     /**
-     *
-     * @param
-     * @return
+     * decode an xmlrpc request
+     * @param string $xmlcontent the content of the request, in xmlrpc format
+     * @return array first element content the method name to execute
+     *               second element content parameters
      */
     public static function decodeRequest($xmlcontent){
         $xml = simplexml_load_string($xmlcontent);
@@ -55,26 +55,27 @@ class jXmlRpc {
     }
 
     /**
-     *
-     * @param
-     * @return
+     * encode an xmlrpc request
+     * @param string $methodname
+     * @param array $params method parameters
+     * @param string $charset
+     * @return string xmlrpc request
      */
     public static function encodeRequest($methodname, $params, $charset=''){
-          $request =  '<?xml version="1.0" '.($charset?'encoding="'.$charset.'"':'').'?>
+        $request =  '<?xml version="1.0" '.($charset?'encoding="'.$charset.'"':'').'?>
 <methodCall><methodName>'.htmlspecialchars($methodname).'</methodName><params>';
-           foreach($params as $param){
-               $request.= '<param>'.self::_encodeValue($param).'</param>';
-           }
-
+        foreach($params as $param){
+            $request.= '<param>'.self::_encodeValue($param).'</param>';
+        }
         $request.='</params></methodCall>';
         return $request;
 
     }
 
     /**
-     *
-     * @param
-     * @return
+     * decode an xmlrpc response
+     * @param string $xmlcontent the content of the response, in xmlrpc format
+     * @return mixed datas stored into the response
      */
     public static function decodeResponse($xmlcontent){
         $xml = simplexml_load_string($xmlcontent);
@@ -105,9 +106,10 @@ class jXmlRpc {
     }
 
     /**
-     *
-     * @param
-     * @return
+     * encode an xmlrpc response
+     * @param mixed $params the value to stored into the response
+     * @param string $charset the charset to use
+     * @return string the xmlrpc response
      */
     public static function encodeResponse($params, $charset=''){
         return '<?xml version="1.0" '.($charset?'encoding="'.$charset.'"':'').'?>
@@ -115,9 +117,11 @@ class jXmlRpc {
     }
 
     /**
-     *
-     * @param
-     * @return
+     * encode an xmlrpc error response
+     * @param string $code the error code
+     * @param string $message
+     * @param string $charset the charset to use
+     * @return string the xmlrpc response
      */
     public static function encodeFaultResponse($code, $message, $charset=''){
         return '<?xml version="1.0" '.($charset?'encoding="'.$charset.'"':'').'?>
@@ -128,10 +132,9 @@ class jXmlRpc {
     }
 
     /**
-     *
-     * @param
-     * @return
-     * @access private
+     * deserialize a xmlrpc content to a php value
+     * @param string $valuetag xmlrpc content
+     * @return mixed the php value
      */
     private static function _decodeValue($valuetag){
         $children= $valuetag->children();
@@ -181,10 +184,9 @@ class jXmlRpc {
     }
 
     /**
-     *
-     * @param
-     * @return
-     * @access private
+     * serialize a php value into xmlrpc format
+     * @param mixed $value a value
+     * @return string xmlrpc content
      */
     private static function _encodeValue($value){
         $response='<value>';

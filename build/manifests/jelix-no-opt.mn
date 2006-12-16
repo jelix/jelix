@@ -18,3 +18,11 @@ cd lib/jelix/core/url
 cd lib/jelix/db
   jDbConnection.class.php
   jDbResultSet.class.php
+
+cd lib/jelix/events
+  jEventListener.class.php
+* jEventListenerFactory.class.php
+
+cd lib/jelix/dao
+  jDaoGenerator.class.php
+  jDaoParser.class.php

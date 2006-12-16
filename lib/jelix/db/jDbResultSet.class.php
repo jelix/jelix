@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage db
-* @version    $Id:$
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright  2005-2006 Laurent Jouanneau
@@ -11,7 +10,7 @@
 */
 
 /**
- *
+ * represent a statement
  * @package  jelix
  * @subpackage db
  */
@@ -41,8 +40,8 @@ abstract class jDbResultSet implements Iterator {
         $this->_fetchModeParam =$param;
     }
     /**
-     * fetch et renvoi les resultats sous forme d'un objet
-     * @return object l'objet contenant les champs récupérés, ou false si le curseur est à la fin
+     * fetch a result. The result is returned as an object.
+     * @return object|boolean result object or false if ther is no more result
      */
     public function fetch(){
         $result = $this->_fetch ();
@@ -57,6 +56,10 @@ abstract class jDbResultSet implements Iterator {
         return $result;
     }
 
+    /**
+     * Return all results in an array. Each result is an object.
+     * @return array
+     */
     public function fetchAll(){
         $result=array();
         while($res =  $this->fetch ()){
@@ -65,23 +68,37 @@ abstract class jDbResultSet implements Iterator {
         return $result;
     }
 
+    /**
+     * @notimplemented
+     */
     public function getAttribute($attr){return null;}
+    /**
+     * @notimplemented
+     */
     public function setAttribute($attr, $value){}
 
+    /**
+     * @notimplemented
+     */
     abstract public function bindColumn($column, &$param , $type=null );
+    /**
+     * @notimplemented
+     */
     abstract public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null);
+    /**
+     * @notimplemented
+     */
     abstract public function bindValue($parameter, $value, $data_type);
-    //abstract public function closeCursor();
+    /**
+     * @notimplemented
+     */
     abstract public function columnCount();
-    //abstract public function errorCode();
-    //abstract public function errorInfo();
 
+    /**
+     * @notimplemented
+     */
     abstract public function execute($parameters=null);
-    //abstract public function fetchColumn();
 
-
-    //abstract public function getColumnMeta();
-    //abstract public function nextRowset();
     abstract public function rowCount();
 
     abstract protected function _free ();

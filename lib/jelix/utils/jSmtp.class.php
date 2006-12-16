@@ -10,10 +10,9 @@
 *
 * @package     jelix
 * @subpackage  utils
-* @version     $Id$
 * @author      Chris Ryan
-* @contributor Jouanneau Laurent
-* @copyright   Chris Ryan,  2006 Jouanneau laurent
+* @contributor Laurent Jouanneau
+* @copyright   Chris Ryan,  2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -1027,6 +1026,4 @@ class jSmtp
     }
 
 }
-
-
- ?>
+?>

@@ -10,7 +10,7 @@
 */
 
 /**
-* Redirecting Response
+* Response To redirect to an action
 * @package  jelix
 * @subpackage core
 * @see jResponse

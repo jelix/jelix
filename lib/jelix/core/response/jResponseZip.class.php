@@ -2,10 +2,9 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -16,30 +15,29 @@
 include JELIX_LIB_UTILS_PATH.'jZipCreator.class.php';
 
 /**
-* Générateur de réponse d'un fichier Zip
+* generate a zip content and send it to the browser
 * @package  jelix
 * @subpackage core
 */
 class jResponseZip extends jResponse {
     /**
-    * identifiant du générateur de sortie
     * @var string
     */
     protected $_type = 'zip';
 
     /**
-     * objet contenu zip
+     * the zip content. Manipulates it to add files into it
      * @var jZipCreator
      */
     public $content = null;
 
     /**
-     * file name of the zip file
+     * file name which appear in the browser
      */
     public $zipFilename='';
 
     /**
-    * Contruction et initialisation
+    * constructor
     */
     function __construct ($attributes=array()){
         $this->content = new jZipCreator();
@@ -47,8 +45,8 @@ class jResponseZip extends jResponse {
     }
 
     /**
-     * génère le contenu et l'envoi au navigateur.
-     * @return boolean    true si la génération est ok, false sinon
+     * construct the zip content into zip format, and send it to the browser
+     * @return boolean    true  if it's ok
      */
     public function output(){
         $zipContent = $this->content->getContent();

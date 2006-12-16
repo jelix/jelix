@@ -2,9 +2,9 @@
 /**
 * @package     jelix
 * @subpackage  utils
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -52,7 +52,7 @@ class jJsonRpc {
      * @return string jsonrcp request content
      */
     public static function encodeRequest($methodname, $params, $id=1){
-        
+
 #ifdef ENABLE_PHP_JSON
         return '{"method":"'.$methodname.'","params":'.json_encode($params).',"id":'.json_encode($id).'}';
 #else
@@ -79,7 +79,7 @@ class jJsonRpc {
     }
 
     /**
-     * encode a jsonrpc response 
+     * encode a jsonrpc response
      * @param array $params  returned value
      * @return string encoded response
      */

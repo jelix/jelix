@@ -10,7 +10,7 @@
 */
 
 /**
- *
+ * utility class to check values
  * @package     jelix
  * @subpackage  utils
  * @since 1.0b1

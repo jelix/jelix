@@ -2,7 +2,6 @@
 /**
 * @package     jelix
 * @subpackage  events
-* @version     $Id:$
 * @author      Laurent Jouanneau
 * @copyright 2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org

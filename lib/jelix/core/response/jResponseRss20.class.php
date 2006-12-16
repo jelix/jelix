@@ -2,7 +2,6 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
 * @author      Loic Mathaud
 * @author      Yannick Le Guédart
 * @contributor Laurent Jouanneau
@@ -48,7 +47,7 @@ class jResponseRss20 extends jResponseXMLFeed {
     }
 
     /**
-     * Generate the content and send it
+     * Generate the content and send it.
      * Errors are managed
      * @return boolean true if generation is ok, else false
      */
@@ -59,13 +58,11 @@ class jResponseRss20 extends jResponseXMLFeed {
                 'application/xml;charset=' . $this->charset;
 
         $this->sendHttpHeaders ();
-        
+
         echo '<?xml version="1.0" encoding="'. $this->charset .'"?>', "\n";
         $this->_outputXmlHeader ();
-        
-        $this->_headSent = true;
 
-        // $this->_outputOptionals();
+        $this->_headSent = true;
 
         $this->_template->assign ('rss', $this->infos);
         $this->_template->assign ('items', $this->itemList);
@@ -126,8 +123,6 @@ class jResponseRss20 extends jResponseXMLFeed {
 
 
 }
-
-// dates au format RFC822: Sat, 07 Sep 2002 00:00:01 GMT
 
 /**
  * meta data of the channel

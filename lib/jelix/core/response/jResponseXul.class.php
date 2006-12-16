@@ -2,10 +2,9 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -16,54 +15,78 @@
 require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
 
 /**
-* Genérateur de réponse XUL
+* Generate a XUL window
 * @package  jelix
 * @subpackage core
 * @see jResponse
 */
 class jResponseXul extends jResponse {
     /**
-    * identifiant du générateur
     * @var string
     */
     protected $_type = 'xul';
 
     /**
-     * contenu pour le header
+     * header content : list of overlay links
+     * @var array
      */
     protected $_overlays  = array ();
+    /**
+     * header content : list of css file links
+     * @var array
+     */
     protected $_CSSLink = array ();
+    /**
+     * header content : list of javascript file links
+     * @var array
+     */
     protected $_JSLink  = array ();
+    /**
+     * header content : list of piece of javascript code
+     * @var array
+     */
     protected $_JSCode  = array ();
 
     /**
-     * nom de la balise racine
+     * root tag name.
+     * could be override into child class for other xul document
      */
     protected $_root = 'window';
+
     /**
-     * attribut de la balise racine
+     * list of attributes and their values for the root element
+     * @var array
      */
     public $rootAttributes= array();
 
+    /**
+     * Title of the window
+     * @var string
+     */
     public $title = '';
 
     /**
+     * template engine to generate the window content
      * @var jTpl
      */
-
     public $body = null;
 
     /**
-     * selecteur du template principal
-     * le contenu du template principal concerne le contenu de <body>
+     * selector of the template to use
+     * @var string
      */
     public $bodyTpl = '';
 
     /**
-     * template principal à afficher en cas d'erreur
+     * selector of the template to use for errors
+     * @var string
      */
     public $bodyErrorTpl = '';
 
+    /**
+     * says if an event is sent to retrieve overlays url for the xul content
+     * @var boolean
+     */
     public $fetchOverlays=false;
 
     protected $_bodyTop = array();
@@ -71,7 +94,7 @@ class jResponseXul extends jResponse {
     protected $_headSent = false;
 
     /**
-    * Contruction et initialisation
+    * constructor
     */
     function __construct ($attributes=array()){
         $this->body = new jTpl();
@@ -79,11 +102,10 @@ class jResponseXul extends jResponse {
     }
 
     /**
-     * génère le contenu et l'envoi au navigateur.
-     * Il doit tenir compte des erreurs
-     * @return boolean    true si la génération est ok, false sinon
+     * generate the xul content.
+     * @return boolean    true if it's ok
      */
-    function output(){
+    public function output(){
         $this->_headSent = false;
 
         $this->_httpHeaders['Content-Type']='application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset;
@@ -106,7 +128,7 @@ class jResponseXul extends jResponse {
         return true;
     }
 
-    function outputErrors(){
+    public function outputErrors(){
         if(!$this->_headSent){
             header('Content-Type: application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset);
             echo '<?xml version="1.0" encoding="'.$GLOBALS['gJConfig']->defaultCharset.'" ?>'."\n";
@@ -122,8 +144,8 @@ class jResponseXul extends jResponse {
     }
 
     /**
-     * formate les messages d'erreurs
-     * @return string les erreurs formatées
+     *
+     * @return string formated errors
      */
     protected function getFormatedErrorMsg(){
         $errors='';
@@ -135,9 +157,10 @@ class jResponseXul extends jResponse {
     }
 
     /**
-     * methode pour ajouter du contenu avant/aprés le contenu principal
+     * call it to add manually content before or after the main content
+     * @param string $content xul content
+     * @param boolean $beforeTpl true if you want to add before, false for after
      */
-
     function addContent($content, $beforeTpl = false){
       if($beforeTpl){
         $this->_bodyTop[]=$content;
@@ -147,28 +170,40 @@ class jResponseXul extends jResponse {
     }
 
     /**
-     * méthodes pour manipuler les processing instructions
+     * add a link to a xul overlay for the xul page
+     * @param string $src url of a xul overlay
      */
-
-
     function addOverlay ($src){
         $this->_overlays[$src] = true;
     }
+    /**
+     * add a link to a javascript file
+     * @param string $src url
+     */
     function addJSLink ($src, $params=array()){
         if (!isset ($this->_JSLink[$src])){
             $this->_JSLink[$src] = $params;
         }
     }
+    /**
+     * add a link to a css stylesheet
+     * @param string $src url
+     */
     function addCSSLink ($src, $params=array ()){
         if (!isset ($this->_CSSLink[$src])){
             $this->_CSSLink[$src] = $params;
         }
     }
+
+    /**
+     * add a piece of javascript code
+     * @param string $code javascript source code
+     */
     function addJSCode ($code){
         $this->_JSCode[] = $code;
     }
 
-    function outputHeader (){
+    protected function outputHeader (){
         $charset = $GLOBALS['gJConfig']->defaultCharset;
 
         echo '<?xml version="1.0" encoding="'.$charset.'" ?>'."\n";
@@ -205,11 +240,17 @@ class jResponseXul extends jResponse {
         }
     }
 
-    // à surcharger dans les classes héritières
+    /**
+     * override it into your own xul response object, to do
+     * all things commons to all xul actions
+     */
     protected function _commonProcess(){
 
     }
 
+    /**
+     *
+     */
     protected function _otherthings(){
         // overlays
         if($this->fetchOverlays){
@@ -230,8 +271,11 @@ class jResponseXul extends jResponse {
         $this->rootAttributes['title']=$this->title;
     }
 
-
-    function clearHeader ($what){
+    /**
+     * clear all header informations
+     * @var array list of keyword
+     */
+    public function clearHeader ($what){
         $cleanable = array ('CSSLink', 'JSLink', 'JSCode', 'overlays');
         foreach ($what as $elem){
             if (in_array ($elem, $cleanable)){

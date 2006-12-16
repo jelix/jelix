@@ -10,10 +10,11 @@
 */
 
 /**
-*
+* utilities to manage a jelix application
 * @package    jelix
 * @subpackage utils
 * @since 1.0b1
+* @static
 */
 class jAppManager {
 

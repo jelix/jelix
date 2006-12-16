@@ -24,7 +24,7 @@ abstract class jDatatype {
     }
 
     /**
-    * permet d'indiquer des restrictions sur les valeurs
+    * call it ot add restriction on possible values
     * @param string $type
     * @param string $value
     */
@@ -41,8 +41,9 @@ abstract class jDatatype {
     }
 
     /**
-    * vérifie qu'une valeur correspond bien au datatype
+    * verify a value : it should correspond to the datatype
     * @param string   $value
+    * @return boolean true if the value is ok
     */
     public function check($value){
         return true;

@@ -2,30 +2,30 @@
 /**
 * @package     jelix
 * @subpackage  core
-* @version     $Id$
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 
 /**
-* Genérateur de réponse xmlrpc
+* xmlrpc response
 * @package  jelix
 * @subpackage core
 * @see jResponse
 */
-
 final class jResponseXmlRpc extends jResponse {
     /**
-    * identifiant du générateur
     * @var string
     */
     protected $_type = 'xmlrpc';
     protected $_acceptSeveralErrors=false;
 
+    /**
+     * PHP Datas to send into the response
+     */
     public $response = null;
 
     public function output(){

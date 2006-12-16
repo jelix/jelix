@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage db
-* @version    $Id:$
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright  2005-2006 Laurent Jouanneau
@@ -23,7 +22,7 @@
 abstract class jDbConnection {
 
     /**
-    * the profil the connection is using
+    * profil properties used by the connector
     * @var array
     */
     public $profil;
@@ -39,6 +38,9 @@ abstract class jDbConnection {
     */
     public $msgError = '';
 
+    /**
+     * last executed query
+     */
     public $lastQuery;
 
     /**
@@ -48,20 +50,13 @@ abstract class jDbConnection {
     private $_autocommit = true;
 
     /**
-    * indique si les requètes doivent être envoyée sur le debugger
-    * @var boolean
-    */
-    //protected $_debugQuery = false;
-
-    /**
     * the internal connection.
     */
     protected $_connection = null;
 
-
-
     /**
-    * Use a profil to do the connection
+    * do a connection to the database, using properties of the given profil
+    * @param array $profil  profil properties
     */
     function __construct($profil){
        $this->profil = & $profil;
@@ -75,11 +70,10 @@ abstract class jDbConnection {
         }
     }
 
-
     /**
-    * Launch a SQL Query which returns rows
+    * Launch a SQL Query which returns rows (typically, a SELECT statement)
     * @param   string   $queryString   the SQL query
-    * @return  jDbResultSet  False if the query has failed.
+    * @return  jDbResultSet|boolean  False if the query has failed.
     */
     public function query ($queryString){
         $this->lastQuery = $queryString;
@@ -93,9 +87,7 @@ abstract class jDbConnection {
     * @param   string   $queryString   the SQL query
     * @param   integer  $limitOffset   the offset of the first row to return
     * @param   integer  $limitCount    the maximum of number of rows to return
-    * @return  jDbResultSet  if SQL Select.
-    *          boolean if update / insert / delete.
-    *          False if the query has failed.
+    * @return  jDbResultSet|boolean  SQL Select. False if the query has failed.
     */
     public function limitQuery ($queryString, $limitOffset, $limitCount){
         $this->lastQuery = $queryString;
@@ -104,7 +96,7 @@ abstract class jDbConnection {
     }
 
     /**
-    * Launch a SQL Query (update, delete..)
+    * Launch a SQL Query (update, delete..) which doesn't return rows
     * @param   string   $query   the SQL query
     * @return  integer  the number of affected rows. False if the query has failed.
     */
@@ -117,6 +109,7 @@ abstract class jDbConnection {
     /**
     * Escape and quotes strings. if null, will only return the text "NULL"
     * @param string $text   string to quote
+    * @param boolean $checknull if true, check if $text is a null value, and then return NULL
     * @return string escaped string
     */
     public function quote($text, $checknull=true){
@@ -136,7 +129,8 @@ abstract class jDbConnection {
     }
 
     /**
-     * begin a transaction. Call after it doQuery, doLimitQuery, doExec. And then commit() or rollback()
+     * begin a transaction. Call it after doQuery, doLimitQuery, doExec,
+     * And then commit() or rollback()
      */
     abstract public function beginTransaction ();
 
@@ -179,6 +173,7 @@ abstract class jDbConnection {
      * Not implemented
      * @param integer $id the attribut id
      * @return string the attribute value
+     * @notimplemented
      */
     public function getAttribute($id){ return '';}
 
@@ -186,11 +181,14 @@ abstract class jDbConnection {
      * Not implemented
      * @param integer $id the attribut id
      * @param string $value the attribute value
+     * @notimplemented
      */
     public function setAttribute($id, $value){ }
 
 
-
+    /**
+     *
+     */
     public function lastIdInTable($fieldName, $tableName){
       $rs = $this->query ('SELECT MAX('.$fieldName.') as ID FROM '.$tableName);
       if (($rs !== null) && $r = $rs->fetch ()){
@@ -220,21 +218,25 @@ abstract class jDbConnection {
     abstract protected function _disconnect ();
 
     /**
-    * do a query
-    * @return jDbResultSet/boolean    selon la requete, un recordset/true ou false/null si il y a une erreur
+    * do a query which return results
+    * @return jDbResultSet/boolean
     */
     abstract protected function _doQuery ($queryString);
+    /**
+    * do a query which return nothing
+    * @return jDbResultSet/boolean
+    */
     abstract protected function _doExec ($queryString);
 
     /**
-    * effectue une requete avec liste de résultats limités
-    * @return jDbResultSet/boolean    selon la requete, un recordset/true ou false/null si il y a une erreur
+    * do a query which return a limited number of results
+    * @return jDbResultSet/boolean
     */
     abstract protected function _doLimitQuery ($queryString, $offset, $number);
 
     /**
-    * renvoi une chaine avec les caractères spéciaux échappés
-    * à surcharger pour tenir compte des fonctions propres à la base (mysql_escape_string etC...)
+    * do the escaping of a string.
+    * you should override it into the driver
     */
     protected function _quote($text){
         return addslashes($text);

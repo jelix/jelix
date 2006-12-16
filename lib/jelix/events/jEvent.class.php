@@ -2,7 +2,6 @@
 /**
 * @package     jelix
 * @subpackage  events
-* @version     $Id:$
 * @author      Croes Gérald, Patrice Ferlet
 * @contributor Laurent Jouanneau
 * @copyright 2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
@@ -16,11 +15,19 @@
 *
 */
 
+#ifdef ENABLE_OPTIMIZE
+
+#includephp jEventListener.class.php
+#includephp jEventListenerFactory.class.php
+
+#else
 /**
  *
  */
 require_once (JELIX_LIB_EVENTS_PATH . 'jEventListener.class.php');
 require_once (JELIX_LIB_EVENTS_PATH . 'jEventListenerFactory.class.php');
+#endif
+
 
 /**
 * classe des évènements passés aux listeners

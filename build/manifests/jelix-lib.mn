@@ -69,10 +69,8 @@ cd lib/jelix/core/url
 cd lib/jelix/dao
   jDaoBase.class.php
   jDao.class.php
-  jDaoCompiler.class.php
+* jDaoCompiler.class.php
   jDaoConditions.class.php
-  jDaoGenerator.class.php
-  jDaoParser.class.php
 
 cd lib/jelix/db
 * jDb.class.php
@@ -96,10 +94,9 @@ cd lib/jelix/db/drivers/sqlite
   jDbTools.sqlite.class.php
 
 cd lib/jelix/events
-  jEvent.class.php
+* jEvent.class.php
   jEventCompiler.class.php
-  jEventListener.class.php
-* jEventListenerFactory.class.php
+
 
 cd lib/jelix/forms
   jForms.class.php

@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage utils
-* @version    $Id:$
 * @author     Loic Mathaud
 * @contributor
 * @copyright  2006 Loic Mathaud
@@ -11,9 +10,10 @@
 */
 
 /**
- *
+ * utilities functions for command line
  * @package    jelix
  * @subpackage utils
+ * @static
  */
 class jCmdUtils {
 
