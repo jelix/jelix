@@ -169,7 +169,7 @@ abstract class jSelectorModule implements jISelector {
 /**
  * Action selector
  *
- * main syntax: "module~action:requestType". module should be a valid module name or # (#=says to get
+ * main syntax: "module~action@requestType". module should be a valid module name or # (#=says to get
  * the module of the current request). action should be an action name (controller_method).
  * all part are optional, but it should have one part at least.
  * @package    jelix
@@ -182,7 +182,11 @@ class jSelectorAct extends jSelectorModule {
     public $method='';
     protected $_dirname='actions/';
 
-    function __construct($sel){
+    /**
+     * @param string $sel  the selector
+     * @param boolean $enableRequestPart true if the selector can contain the request part
+     */
+    function __construct($sel, $enableRequestPart = false){
         global $gJCoord;
 
         if(preg_match("/^(?:([\w\.]+|\#)~)?([\w\.]+|\#)?(?:@([\w\.]+))?$/", $sel, $m)){
@@ -210,7 +214,7 @@ class jSelectorAct extends jSelectorModule {
                 $this->method = $r[1]==''?'index':$r[1];
             }
             $this->resource = $this->controller.'_'.$this->method;
-            if($m[3] != '')
+            if($m[3] != '' && $enableRequestPart)
                 $this->request = $m[3];
             else
                 $this->request = $gJCoord->request->type;

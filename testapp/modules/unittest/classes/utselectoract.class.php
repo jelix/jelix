@@ -88,7 +88,7 @@ class UTSelectorAct extends UnitTestCase {
         foreach($list as $sel=>$res){
             $valid=true;
             try{
-                $s = new jSelectorAct($sel);
+                $s = new jSelectorAct($sel, true);
             }catch(jExceptionSelector $e){
                 $valid=false;
             }

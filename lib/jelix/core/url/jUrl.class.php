@@ -257,7 +257,7 @@ class jUrl extends jUrlBase {
     */
     static function get ($actSel, $params = array (), $what=0) {
 
-        $sel = new JSelectorAct($actSel);
+        $sel = new jSelectorAct($actSel,true);
         $params['module'] = $sel->module;
         $params['action'] = $sel->resource;
         $ua = new jUrlAction($params, $sel->request);
@@ -289,7 +289,7 @@ class jUrl extends jUrlBase {
     * @deprecated
     */
     static function getAction ($actionSelector){
-        $sel = new JSelectorAct($actionSelector);
+        $sel = new jSelectorAct($actionSelector,true);
         return array('module'=>$sel->module, 'action'=>$sel->resource, 'request'=>$sel->request);
     }
 
