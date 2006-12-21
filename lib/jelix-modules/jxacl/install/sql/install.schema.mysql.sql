@@ -52,7 +52,7 @@ CREATE TABLE `jacl_subject` (
 --- valeurs du droit pour chaque couple sujet/groupe ou triplet sujet/groupe/ressource
 DROP TABLE IF EXISTS `jacl_rights`;
 CREATE TABLE `jacl_rights` (
-  `id_aclsbj` varchar(255) NOT NULL default '',
+  `id_aclsbj` varchar(100) NOT NULL default '',
   `id_aclgrp` int(11) NOT NULL default '0',
   `id_aclres` varchar(100) NOT NULL default '',
   `value` varchar(20) NOT NULL default '',
