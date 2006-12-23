@@ -4,7 +4,7 @@
 
 ;============= Paramètres généraux
 
-; Db ou Class  ( respecter la casse des caractères)
+; Db, Class ou LDS ( respecter la casse des caractères)
 driver = Db
 
 ;============ Paramètres pour le plugin
@@ -43,13 +43,6 @@ error_message = "jxauth~autherror.notlogged"
 ; nombre de secondes d'attentes aprés un défaut d'authentification
 on_error_sleep = 3
 
-enable_after_login_override = off
-after_login =
-
-enable_after_logout_override = off
-after_logout = "jxauth~login_form"
-
-
 ;=========== Paramètres pour les drivers
 
 ; paramètres pour le driver db
@@ -60,6 +53,8 @@ dao = "jxauth~jelixuser"
 password_crypt_function = md5
 
 ; paramètres pour le driver class
-;[Class]
-;class = ""
-;password_crypt_function = md5
+[Class]
+class = ""
+password_crypt_function = md5
+
+[LDS]

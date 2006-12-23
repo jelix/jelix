@@ -2,7 +2,6 @@
 /**
 * @package     jelix-modules
 * @subpackage  jxacl
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006 Jouanneau laurent
@@ -15,8 +14,8 @@ class xuladminCtrl extends jController {
     *
     */
     function index() {
-        $daogroup = jDao::get('jaclgroup');
-        $daovaluegroups = jDao::get('jaclrightvaluesandgroup');
+        $daogroup = jDao::get('jelix~jaclgroup');
+        $daovaluegroups = jDao::get('jelix~jaclrightvaluesandgroup');
 
         $rep = $this->getResponse('xulpage');
         $rep->bodyTpl='jxacl~xuladmin';
@@ -36,7 +35,7 @@ class xuladminCtrl extends jController {
     function jxauthovlay(){
         $rep = $this->getResponse('xuloverlay');
         $rep->bodyTpl = 'jxacl~jxauthovlay';
-        $daogroup = jDao::get('jaclgroup');
+        $daogroup = jDao::get('jelix~jaclgroup');
         $rep->body->assign('groups', $daogroup->findAllPublicGroup());
         return $rep;
     }

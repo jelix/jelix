@@ -2,7 +2,6 @@
 /**
 * @package     jelix-modules
 * @subpackage  jxxulapp
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006 Jouanneau laurent

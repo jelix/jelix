@@ -2,7 +2,6 @@
 /**
 * @package     jelix-modules
 * @subpackage  jxauth
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006 Jouanneau laurent
@@ -26,7 +25,6 @@ class xuladminCtrl extends jController {
         $rep = $this->getResponse('xuloverlay');
         $rep->bodyTpl = 'jxauth~xaovlay';
         return $rep;
-
     }
 
 }

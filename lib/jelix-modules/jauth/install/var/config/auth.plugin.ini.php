@@ -1,7 +1,9 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
+
 ;============= Paramètres généraux
+
 ; Db, Class ou LDS  ( respecter la casse des caractères)
 driver = Db
 
@@ -11,7 +13,7 @@ driver = Db
 secure_with_ip = 0
 
 ; action en cas de piratage de la session et si onError = 2
-bad_ip_action = "jxxulapp~xul_badlogin"
+bad_ip_action = "jauth~login_out"
 
 ;Timeout. Permet de forcer une authentification aprés un certain temps écoulé
 ;sans action . temps en minutes. 0 = pas de timeout.
@@ -30,10 +32,10 @@ auth_required = on
 on_error = 2
 
 ; action à executer en cas de défaut d'authentification quand on_error = 2
-on_error_action = "jxxulapp~xul_badlogin"
+on_error_action = "jauth~login_out"
 
 ;selecteur de la clé de locale du message d'erreur
-error_message = "jxauth~autherror.notlogged"
+error_message = "jauth~autherror.notlogged"
 
 
 ;=========== Paramètres pour le module jauth
@@ -45,13 +47,13 @@ enable_after_login_override = off
 after_login = ""
 
 enable_after_logout_override = off
-after_logout = "jxxulapp~xul_badlogin"
+after_logout = "jauth~login_form"
 
 ;=========== Paramètres pour les drivers
 
 ; paramètres pour le driver db
 [Db]
-dao = "jxauth~jelixuser"
+dao = ""
 
 ; nom de la fonction globale qui sert à crypter le mot de passe
 password_crypt_function = md5

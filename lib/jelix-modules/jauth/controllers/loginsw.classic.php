@@ -1,8 +1,7 @@
 <?php
 /**
-* @package    jelix
-* @subpackage jxauth
-* @version    $Id:$
+* @package    jelix-modules
+* @subpackage jauth
 * @author     Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Jouanneau laurent
@@ -10,7 +9,9 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
+/**
+ *
+ */
 class loginswCtrl extends jController {
 
     public $pluginParams = array(
@@ -40,9 +41,8 @@ class loginswCtrl extends jController {
     */
     function out (){
         jAuth::logout();
-
         $rep = $this->getResponse('text');
-        $rep->content = 'OK';
+        $rep->content = 'LOGOUT';
         return $rep;
     }
 }

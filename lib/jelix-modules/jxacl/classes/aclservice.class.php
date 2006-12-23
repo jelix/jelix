@@ -14,7 +14,7 @@ class AclService {
 
 
     function getGroupRights($grpid){
-        $rv_dao = jDao::get('jxacl~jaclrightvalues');
+        $rv_dao = jDao::get('jelix~jaclrightvalues');
         $sql = 'SELECT s.id_aclsbj, s.id_aclvalgrp, s.label_key, r.value as right_value, r.id_aclres, 
                         rv.label_key label_value, rv.value value
                 FROM jacl_right_values rv

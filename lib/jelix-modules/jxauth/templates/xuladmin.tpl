@@ -13,7 +13,8 @@
     var gLoginTb;
     var gEmailTb;
     var dsUrl =  '{jurl 'jxauth~admin_userslist@rdf',array(),false}';
-
+    var gFormErrorMsg = "{@jxauth~auth.form.error@}"
+    
 {literal}
     function init(){
         gTree = document.getElementById("userslist");
@@ -104,21 +105,21 @@
 
 {/literal}
 ]]></script>
-<description class="title-page">Gestion des utilisateurs</description>
+<description class="title-page">{@jxauth~auth.page.title@}</description>
 
 <jx:submission id="userform" action="{jurl '@jsonrpc'}" method="POST"
     format="json-rpc" rpcmethod="jxauth~admin_saveuser"
     onsubmit="return verifPwd()"
     onresult="onUserFormSaved()"
-    onhttperror="alert('erreur http :' + event.errorCode)"
-    oninvalidate="alert('Saisissez correctement le login, l\'email et éventuellement le mot de passe')"
+    onhttperror="alert('http error :' + event.errorCode)"
+    oninvalidate="alert(gFormErrorMsg)"
     onrpcerror="alert(this.jsonResponse.error.toSource())"
     onerror="alert(this.httpreq.responseText);"
 />
 
 <vbox flex="1">
     <jx:templatecriterion uri="{jurl 'jxauth~admin_userslist@rdf'}" target="userslist" id="criteres">
-        <label control="letter" value="Login commençant par"/>
+        <label control="letter" value="{@jxauth~auth.search.label@}"/>
         <textbox id="letter" name="letter" />
     </jx:templatecriterion>
     <hbox flex="1">
@@ -126,12 +127,12 @@
             onselect="changeUser()" seltype="single"
             >
             <treecols>
-                <treecol id="login-col" label="Login" primary="true" flex="1"
+                <treecol id="login-col" label="{@jxauth~auth.userlist.logincol@}" primary="true" flex="1"
                         class="sortDirectionIndicator" sortActive="false"
                         sortDirection="ascending"
                         sort="rdf:http://jelix.org/ns/users#login"/>
                 <splitter class="tree-splitter"/>
-                <treecol id="email-col" label="Email" flex="1"
+                <treecol id="email-col" label="{@jxauth~auth.userlist.emailcol@}" flex="1"
                         class="sortDirectionIndicator" sortActive="true"
                         sortDirection="ascending"
                         sort="rdf:http://jelix.org/ns/users#email"/>
@@ -150,7 +151,7 @@
         <vbox id="userpanel" submit="userdata">
             <!--<hbox pack="right"><button id="createuser-btn" label="Nouvel Utilisateur" oncommand="prepareNewUser()" /></hbox>-->
             <groupbox>
-                <caption label="Détails sur l'utilisateur"/>
+                <caption label="{@jxauth~auth.userform.title@}"/>
                 <grid>
                     <columns>
                         <column/>
@@ -158,12 +159,12 @@
                     </columns>
                     <rows id="userdata-rows" oninput="modificationUserForm()">
                         <row>
-                            <label control="login" value="Login"  style="text-align:right;"/>
+                            <label control="login" value="{@jxauth~auth.userform.login@}"  style="text-align:right;"/>
                             <textbox id="login" name="login" flex="1" form="userform pwdform" 
                                         required="true" readonly="true"/>
                         </row>
                         <row>
-                            <label control="email" value="Email"  style="text-align:right;"/>
+                            <label control="email" value="{@jxauth~auth.userform.email@}"  style="text-align:right;"/>
                             <textbox id="email" name="email" flex="1" form="userform" 
                                         required="true"/>
                         </row>
@@ -171,7 +172,7 @@
                 </grid>
             </groupbox>
             <groupbox>
-                <caption label="Mot de passe"/>
+                <caption label="{@jxauth~auth.userform.password@}"/>
                 <grid>
                     <columns>
                         <column/>
@@ -179,19 +180,19 @@
                     </columns>
                     <rows  oninput="modificationUserForm()">
                         <row>
-                            <label control="pwd1" value="Nouveau"  style="text-align:right;"/>
+                            <label control="pwd1" value="{@jxauth~auth.userform.password.new@}"  style="text-align:right;"/>
                             <textbox id="pwd" name="pwd" flex="1" type="password" 
                                         form="userform" />
                         </row>
                         <row>
-                            <label control="pwd2" value="Répétez"  style="text-align:right;"/>
+                            <label control="pwd2" value="{@jxauth~auth.userform.password.repeat@}"  style="text-align:right;"/>
                             <textbox id="pwd2" flex="1" type="password" />
                         </row>
                     </rows>
                 </grid>
             </groupbox>
-            <hbox><jx:submit id="userdata" form="userform" label="Sauvegarder"/>
-                    <button id="userdata-cancel" label="Annuler" oncommand="loadUserForm()" /></hbox>
+            <hbox><jx:submit id="userdata" form="userform" label="{@jxauth~auth.userform.save@}"/>
+                    <button id="userdata-cancel" label="{@jxauth~auth.userform.cancel@}" oncommand="loadUserForm()" /></hbox>
         </vbox>
     </hbox>
 </vbox>

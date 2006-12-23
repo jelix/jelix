@@ -1,8 +1,7 @@
 <?php
 /**
 * @package     jelix-modules
-* @subpackage  jxauth
-* @version     $Id$
+* @subpackage  jauth
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006 Jouanneau laurent
@@ -10,7 +9,7 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-class authListener extends jEventListener{
+class jauthListener extends jEventListener{
 
    /**
    *
@@ -26,12 +25,6 @@ class authListener extends jEventListener{
 
         $event->Add(array('canlogin'=>$ok));
 
-   }
-
-   function onFetchXulOverlay($event){
-        if($event->getParam('tpl') == 'jxxulapp~main'){
-            $event->Add('jxauth~xuladmin_xaovlay');
-        }
    }
 }
 ?>

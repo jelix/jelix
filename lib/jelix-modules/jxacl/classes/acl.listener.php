@@ -2,7 +2,6 @@
 /**
 * @package     jelix-modules
 * @subpackage  jxacl
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor neolao
 * @copyright   2006 Jouanneau laurent, neolao

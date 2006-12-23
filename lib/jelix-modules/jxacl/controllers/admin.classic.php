@@ -2,7 +2,6 @@
 /**
 * @package     jelix-modules
 * @subpackage  jxacl
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006 Jouanneau laurent
@@ -18,7 +17,7 @@ class adminCtrl extends jController {
     function usersgcount() {
         $grpid = $this->intParam('grpid');
 
-        $dao = jDao::create('jaclusergroup');
+        $dao = jDao::create('jelix~jaclusergroup');
 
         $rep = $this->getResponse('text');
         $rep->content= $dao->getUsersGroupCount($grpid);

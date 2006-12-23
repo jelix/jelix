@@ -12,7 +12,7 @@ checkTrustedModules = off
 ; list of modules : module,module,module
 trustedModules =
 
-pluginsPath = lib:jelix-plugins/,app:plugins/,lib:jelix-modules/jxauth/plugins/
+pluginsPath = lib:jelix-plugins/,app:plugins/,lib:jelix-modules/jelix/plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 tplpluginsPath = lib:jelix/tpl/plugins/
 

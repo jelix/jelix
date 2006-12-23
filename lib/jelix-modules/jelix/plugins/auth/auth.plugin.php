@@ -1,19 +1,18 @@
 <?php
 /**
-* @package    jelix
-* @subpackage jxauth
-* @version    $Id:$
+* @package    jelix-modules
+* @subpackage jelix
 * @author     Croes Gérald
 * @contributor  Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
 * Une partie du code est issue d'une version experimentale de la classe
 * PluginAuth issue du framework Copix 2.3dev20050901.
 * et est sous Copyright 2001-2005 CopixTeam (licence LGPL) http://www.copix.org
 * Auteur initial : Croes Gérald
 * Contributeur de la version experimentale : Laurent Jouanneau
 * Adaptée pour Jelix par Laurent Jouanneau
+* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+*
 */
 require_once(JELIX_LIB_AUTH_PATH.'jAuth.class.php');
 require_once(JELIX_LIB_AUTH_PATH.'jAuthUser.class.php');
@@ -75,8 +74,7 @@ class AuthPlugin implements jIPlugin {
             if($notLogged){
                 if($this->config['on_error'] == 1 
                     || !$GLOBALS['gJCoord']->request->isAllowedResponse('jResponseRedirect')){
-                    trigger_error(jLocale::get($this->config['error_message']), E_USER_ERROR);
-                    exit;
+                    throw new jException($this->config['error_message']);
                 }else{
                     if(!$badip){
                         $selector= new jSelectorAct($this->config['on_error_action']);

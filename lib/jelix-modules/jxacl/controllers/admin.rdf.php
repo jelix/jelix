@@ -41,7 +41,7 @@ class adminCtrl extends jController {
         $offset = $this->intParam('offset');
         $count= $this->intParam('count');
 
-        $dao = jDao::create('jaclusergroup');
+        $dao = jDao::create('jelix~jaclusergroup');
         $rep->datas = $dao->getUsersGroupLimit($grpid, $offset, $count);
 
         $rep->asAttribute = array('login');

@@ -1,8 +1,7 @@
 <?php
 /**
-* @package    jelix
+* @package    jelix-modules
 * @subpackage jxauth
-* @version    $Id:$
 * @author     Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Jouanneau laurent
@@ -45,7 +44,7 @@ class loginCtrl extends jController {
         jAuth::logout();
 
         $rep = $this->getResponse('jsonrpc');
-        $rep->response = 'OK';
+        $rep->response = 'LOGOUT';
         return $rep;
     }
 }
