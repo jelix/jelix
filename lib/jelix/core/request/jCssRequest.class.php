@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
@@ -12,7 +12,7 @@
 /**
  * handle classical request but only to control and produce css content
  * @package     jelix
- * @subpackage  core
+ * @subpackage  core_request
  * @since 1.0b1
  */
 class jCssRequest extends jRequest {

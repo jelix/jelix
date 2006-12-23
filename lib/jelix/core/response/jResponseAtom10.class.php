@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Yannick Le Guédart
 * @contributor Laurent Jouanneau
 * @copyright   2006 Yannick Le Guédart
@@ -21,7 +21,7 @@ require_once(JELIX_LIB_RESPONSE_PATH.'jResponseXmlFeed.class.php');
 *
 * Known limitations : only text in the title, and only name in categories
 * @package  jelix
-* @subpackage core
+* @subpackage core_response
 * @link http://tools.ietf.org/html/rfc4287
 * @since 1.0b1
 */
@@ -130,7 +130,7 @@ class jResponseAtom10 extends jResponseXMLFeed {
 /**
  * meta data of the channel
  * @package    jelix
- * @subpackage core
+ * @subpackage core_response
  * @since 1.0b1
  */
 class jAtom10Info extends jXMLFeedInfo{
@@ -190,7 +190,7 @@ class jAtom10Info extends jXMLFeedInfo{
 /**
  * content of an item in a syndication channel
  * @package    jelix
- * @subpackage core
+ * @subpackage core_response
  * @since 1.0b1
  */
 class jAtom10Item extends jXMLFeedItem {

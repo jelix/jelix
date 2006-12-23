@@ -8,7 +8,7 @@
 * compiler (if the file has to be compile) etc.
 * So here, there is a selector class for each selector type.
 * @package    jelix
-* @subpackage core
+* @subpackage core_selector
 * @author     Laurent Jouanneau
 * @contributor
 * @copyright  2005-2006 Laurent Jouanneau
@@ -19,7 +19,7 @@
 /**
 * Create instance of selectors object
 * @package    jelix
-* @subpackage core
+* @subpackage core_selector
 */
 class jSelectorFactory {
     private function __construct(){}
@@ -44,7 +44,7 @@ class jSelectorFactory {
 /**
  * interface of selector classes
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 interface jISelector {
     /**
@@ -74,7 +74,7 @@ interface jISelector {
 /**
  * Exception for selector errors
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jExceptionSelector extends jException { }
 
@@ -85,7 +85,7 @@ class jExceptionSelector extends jException { }
  * Syntax of resource depend on the selector type.
  * module is optional.
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 abstract class jSelectorModule implements jISelector {
     public $module = null;
@@ -173,7 +173,7 @@ abstract class jSelectorModule implements jISelector {
  * the module of the current request). action should be an action name (controller_method).
  * all part are optional, but it should have one part at least.
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorAct extends jSelectorModule {
     protected $type = 'act';
@@ -265,7 +265,7 @@ class jSelectorAct extends jSelectorModule {
  * business class is a class stored in the classes/classname.class.php file in a module.
  * syntax : "module~classname".
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorClass extends jSelectorModule {
     protected $type = 'class';
@@ -286,7 +286,7 @@ class jSelectorClass extends jSelectorModule {
  * xx_XX and CCC are lang and charset set in the configuration
  *
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorLoc extends jSelectorModule {
     protected $type = 'loc';
@@ -343,7 +343,7 @@ class jSelectorLoc extends jSelectorModule {
  * syntax : "module~daoName".
  * file : daos/daoName.dao.xml
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorDao extends jSelectorModule {
     protected $type = 'dao';
@@ -407,7 +407,7 @@ class jSelectorDao extends jSelectorModule {
  * syntax : "module~tplName".
  * file : templates/tplName.tpl .
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorTpl extends jSelectorModule {
     protected $type = 'tpl';
@@ -464,7 +464,7 @@ class jSelectorTpl extends jSelectorModule {
  * syntax : "module~zoneName".
  * file : zones/zoneName.zone.php .
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorZone extends jSelectorModule {
     protected $type = 'zone';
@@ -482,7 +482,7 @@ class jSelectorZone extends jSelectorModule {
  * syntax : "module~formName".
  * file : forms/formName.form.xml .
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorForm extends jSelectorModule {
     protected $type = 'form';
@@ -552,7 +552,7 @@ class jSelectorPlugin implements jISelector {
 /**
  * base class for simple file selector
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorSimpleFile implements jISelector {
     protected $type = 'simplefile';
@@ -588,7 +588,7 @@ class jSelectorSimpleFile implements jISelector {
  * Selector for files stored in the var directory
  *
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorVar extends jSelectorSimpleFile {
     protected $type = 'var';
@@ -602,7 +602,7 @@ class jSelectorVar extends jSelectorSimpleFile {
  * Selector for files stored in the config directory
  *
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorCfg extends jSelectorSimpleFile {
     protected $type = 'cfg';
@@ -616,7 +616,7 @@ class jSelectorCfg extends jSelectorSimpleFile {
  * Selector for files stored in the temp directory
  *
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorTmp extends jSelectorSimpleFile {
     protected $type = 'tmp';
@@ -630,7 +630,7 @@ class jSelectorTmp extends jSelectorSimpleFile {
  * Selector for files stored in the log directory
  *
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorLog extends jSelectorSimpleFile {
     protected $type = 'log';
@@ -644,7 +644,7 @@ class jSelectorLog extends jSelectorSimpleFile {
  * Selector for files stored in the lib directory
  *
  * @package    jelix
- * @subpackage core
+ * @subpackage core_selector
  */
 class jSelectorLib extends jSelectorSimpleFile {
     protected $type = 'lib';

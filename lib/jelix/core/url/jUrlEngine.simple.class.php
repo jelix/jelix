@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_url
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
@@ -13,7 +13,7 @@
  * simple url engine
  * generated url are "dirty" jelix url, with full of parameter in the query (module, action etc..)
  * @package  jelix
- * @subpackage core
+ * @subpackage core_url
  * @see jIUrlEngine
  */
 class jUrlEngineSimple implements jIUrlEngine {

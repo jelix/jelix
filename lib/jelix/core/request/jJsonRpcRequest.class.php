@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
@@ -19,7 +19,7 @@ require_once (JELIX_LIB_UTILS_PATH    . 'jJsonRpc.class.php');
 /**
 * handle a JSON-rpc call. The response has to be a json rpc response.
 * @package  jelix
-* @subpackage core
+* @subpackage core_request
 */
 class jJsonRpcRequest extends jRequest {
 

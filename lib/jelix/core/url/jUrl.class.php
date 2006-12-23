@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_url
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
@@ -17,7 +17,7 @@
 /**
  * interface for url engines
  * @package  jelix
- * @subpackage core
+ * @subpackage core_url
  * @author      Laurent Jouanneau
  * @copyright   2005 CopixTeam, 2005-2006 Laurent Jouanneau
  */
@@ -43,7 +43,7 @@ interface jIUrlEngine {
 /**
  * base class for jUrl and jUrlAction
  * @package  jelix
- * @subpackage core
+ * @subpackage core_url
  * @author      Laurent Jouanneau
  * @copyright   2005-2006 Laurent Jouanneau
  */
@@ -114,7 +114,7 @@ abstract class jUrlBase {
 /**
  * A container to store url datas for an action
  * @package  jelix
- * @subpackage core
+ * @subpackage core_url
  * @author      Laurent Jouanneau
  * @copyright   2005-2006 Laurent Jouanneau
  */
@@ -159,7 +159,7 @@ class jUrlAction extends jUrlBase {
 /**
  * Object that contains url datas, and which provides static method helpers
  * @package  jelix
- * @subpackage core
+ * @subpackage core_url
  * @author      Laurent Jouanneau (for the original code from Copix and enhancement for jelix)
  * @author      Gerald Croes (for the original code from Copix)
  * @copyright   2005 CopixTeam, 2005-2006 Laurent Jouanneau

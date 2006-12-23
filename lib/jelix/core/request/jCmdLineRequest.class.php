@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
 * @copyright   2005-2006 Laurent Jouanneau, 2006 Loic Mathaud
@@ -12,7 +12,7 @@
 /**
  * a request object for scripts used in a command line
  * @package     jelix
- * @subpackage  core
+ * @subpackage  core_request
  */
 class jCmdLineRequest extends jRequest {
 

@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
@@ -14,7 +14,7 @@
  * it just gets parameters from the url query and the post content. And responses can
  * be in many format : text, html, xml...
  * @package     jelix
- * @subpackage  core
+ * @subpackage  core_request
  */
 class jClassicRequest extends jRequest {
 

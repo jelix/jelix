@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Loic Mathaud
 * @author      Yannick Le Guédart
 * @contributor Laurent Jouanneau
@@ -21,7 +21,7 @@ require_once(JELIX_LIB_RESPONSE_PATH.'jResponseXmlFeed.class.php');
 /**
 * Rss2.0 response
 * @package  jelix
-* @subpackage core
+* @subpackage core_response
 * @link http://blogs.law.harvard.edu/tech/rss
 * @link http://www.stervinou.com/projets/rss/
 * @since 1.0b1
@@ -127,7 +127,7 @@ class jResponseRss20 extends jResponseXMLFeed {
 /**
  * meta data of the channel
  * @package    jelix
- * @subpackage core
+ * @subpackage core_response
  * @since 1.0b1
  */
 class jRSS20Info extends jXMLFeedInfo{
@@ -229,7 +229,7 @@ class jRSS20Info extends jXMLFeedInfo{
 /**
  * content of an item in a syndication channel
  * @package    jelix
- * @subpackage core
+ * @subpackage core_response
  * @since 1.0b1
  */
 class jRSSItem extends jXMLFeedItem {

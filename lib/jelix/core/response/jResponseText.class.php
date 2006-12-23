@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
@@ -12,7 +12,7 @@
 /**
 * plain Text response
 * @package  jelix
-* @subpackage core
+* @subpackage core_response
 */
 class jResponseText extends jResponse {
     /**

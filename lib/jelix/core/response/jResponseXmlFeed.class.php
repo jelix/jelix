@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage core
+* @subpackage core_response
 * @author     Yannick Le Guédart
 * @contributor Laurent Jouanneau
 * @copyright  2006 Yannick Le Guédart
@@ -13,7 +13,7 @@
 /**
  * Responses for Syndication  should inherits from jResponseXMLFeed
  * @package    jelix
- * @subpackage core
+ * @subpackage core_response
  * @since 1.0b1
  */
 abstract class jResponseXMLFeed extends jResponse {
@@ -128,7 +128,7 @@ abstract class jResponseXMLFeed extends jResponse {
 /**
  * meta data of the channel
  * @package    jelix
- * @subpackage core
+ * @subpackage core_response
  * @since 1.0b1
  */
 abstract class jXMLFeedInfo {
@@ -187,7 +187,7 @@ abstract class jXMLFeedInfo {
 /**
  * content of an item in a syndication channel
  * @package    jelix
- * @subpackage core
+ * @subpackage core_response
  * @since 1.0b1
  */
 abstract class jXMLFeedItem {

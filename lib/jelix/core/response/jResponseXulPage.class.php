@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
@@ -17,7 +17,7 @@ require_once(JELIX_LIB_RESPONSE_PATH.'jResponseXul.class.php');
 /**
 * Generate a XUL page (to display inside a xul iframe...)
 * @package  jelix
-* @subpackage core
+* @subpackage core_response
 * @see jResponseXul
 */
 class jResponseXulPage extends jResponseXul {

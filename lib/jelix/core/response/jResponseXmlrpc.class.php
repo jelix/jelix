@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
@@ -13,7 +13,7 @@
 /**
 * xmlrpc response
 * @package  jelix
-* @subpackage core
+* @subpackage core_response
 * @see jResponse
 */
 final class jResponseXmlRpc extends jResponse {

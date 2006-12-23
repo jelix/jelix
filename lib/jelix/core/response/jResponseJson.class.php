@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2006 Laurent Jouanneau
@@ -20,7 +20,7 @@ require_once (LIB_PATH.'json/JSON.php');
 /**
 * Json response
 * @package  jelix
-* @subpackage core
+* @subpackage core_response
 * @see jResponse
 * @since 1.0b1
 */

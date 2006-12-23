@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Loic Mathaud
 * @contributor
 * @copyright   2005-2006 loic Mathaud
@@ -17,7 +17,7 @@ require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
 /**
 * XML response generator
 * @package  jelix
-* @subpackage core
+* @subpackage core_response
 */
 class jResponseXml extends jResponse {
     /**

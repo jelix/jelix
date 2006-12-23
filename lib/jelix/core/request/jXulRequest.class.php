@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
@@ -13,7 +13,7 @@
 /**
  * Handle a request which needs absolutely a XUL content as response.
  * @package     jelix
- * @subpackage  core
+ * @subpackage  core_request
  */
 class jXulRequest extends jRequest {
 

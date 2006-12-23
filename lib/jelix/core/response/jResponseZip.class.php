@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2006 Laurent Jouanneau
@@ -17,7 +17,7 @@ include JELIX_LIB_UTILS_PATH.'jZipCreator.class.php';
 /**
 * generate a zip content and send it to the browser
 * @package  jelix
-* @subpackage core
+* @subpackage core_response
 */
 class jResponseZip extends jResponse {
     /**

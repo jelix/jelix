@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Nicolas Jeudy
 * @contributor
 * @copyright   2006 Nicolas Jeudy
@@ -12,7 +12,7 @@
 /**
  * Send CSS content
  * @package  jelix
- * @subpackage core
+ * @subpackage core_response
  * @since 1.0b1
  */
 class jResponseCss extends jResponse {

@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2006 Laurent Jouanneau
@@ -15,7 +15,7 @@
 * This is a basic RDF generator, which generates content from
 * an array of datas.
 * @package  jelix
-* @subpackage core
+* @subpackage core_response
 * @see jResponse
 */
 

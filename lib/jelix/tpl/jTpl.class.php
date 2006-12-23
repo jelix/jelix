@@ -68,7 +68,7 @@ class jTpl {
     }
 
     /**
-     * assign a value in a template variable, only if the template variable doesn't still exist
+     * assign a value in a template variable, only if the template variable doesn't exist
      * @param string|array $name the variable name, or an associative array 'name'=>'value'
      * @param mixed  $value the value (or null if $name is an array)
      */
@@ -95,6 +95,17 @@ class jTpl {
      */
     function assignZone($name, $zoneName, $params=array()){
         $this->_vars[$name] = jZone::processZone ($zoneName, $params);
+    }
+    /**
+     * assign a zone content to a template variable only if this variable doesn't exist
+     * @param string $name the variable name
+     * @param string $zoneName  a zone selector
+     * @param array  $params  parameters for the zone
+     * @see jZone
+     */
+    function assignZoneIfNone($name, $zoneName, $params=array()){
+        if(!isset($this->_vars[$name]))
+            $this->_vars[$name] = jZone::processZone ($zoneName, $params);
     }
 #endif
 

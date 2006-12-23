@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Yann (description and keywords)
 * @copyright   2005-2006 Laurent Jouanneau, 2006 Yann
@@ -18,7 +18,7 @@ require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
 /**
 * HTML response
 * @package  jelix
-* @subpackage core
+* @subpackage core_response
 */
 class jResponseHtml extends jResponse {
     /**
@@ -60,10 +60,10 @@ class jResponseHtml extends jResponse {
     public $bodyTagAttributes= array();
 
     /**
-     * says that the <head> content has been send
-     * @var boolean
+     * says what part of the html head has been send
+     * @var integer
      */
-    protected $_headSent = false;
+    protected $_headSent = 0;
 
     /**
      * the charset of the document
@@ -80,24 +80,40 @@ class jResponseHtml extends jResponse {
     /**
      * properties of the head content
      */
-    private $_CSSLink = array ();
-    private $_Styles  = array ();
-    private $_JSLink  = array ();
-    private $_JSCode  = array ();
-    private $_Others  = array ();
-    private $_MetaKeywords = array();
-    private $_MetaDescription = array();
-    /**
-     * content for the body
+
+    /**#@+
+     * content for the head
+     * @var array 
      */
-    private $_bodyTop = array();
-    private $_bodyBottom = array();
+    protected $_CSSLink = array ();
+    protected $_Styles  = array ();
+    protected $_JSLink  = array ();
+    protected $_JSCode  = array ();
+    protected $_Others  = array ();
+    protected $_MetaKeywords = array();
+    protected $_MetaDescription = array();
+    /**#@-*/
+
+    /**#@+
+     * content for the body
+     * @var array 
+     */
+    protected $_bodyTop = array();
+    protected $_bodyBottom = array();
+    /**#@-*/
 
     /**
      * says if the document is in xhtml or html
      */
     protected $_isXhtml = true;
     protected $_endTag="/>\n";
+
+    /**
+     * says if xhtml content type should be send or not.
+     * it true, a verification of HTTP_ACCEPT is done.
+     * @var boolean
+     */
+    public $xhtmlContentType = false;
 
 
     /**
@@ -118,8 +134,12 @@ class jResponseHtml extends jResponse {
      * @return boolean    true if the generated content is ok
      */
     final public function output(){
-        $this->_headSent = false;
-        $this->_httpHeaders['Content-Type']='text/html;charset='.$this->_charset;
+        $this->_headSent = 0;
+        if($this->_isXhtml && $this->xhtmlContentType && strstr($_SERVER['HTTP_ACCEPT'],'application/xhtml+xml')){
+            $this->_httpHeaders['Content-Type']='application/xhtml+xml;charset='.$this->_charset;
+        }else{
+            $this->_httpHeaders['Content-Type']='text/html;charset='.$this->_charset;
+        }
 
         $this->sendHttpHeaders();
         if($this->_isXhtml){
@@ -130,6 +150,7 @@ class jResponseHtml extends jResponse {
             echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n";
             echo '<html lang="',$this->_lang,'">';
         }
+        $this->_headSent = 1;
         $this->_commonProcess();
         if($this->bodyTpl != '')
            $this->body->meta($this->bodyTpl);
@@ -139,7 +160,7 @@ class jResponseHtml extends jResponse {
            echo $attr,'="', htmlspecialchars($value),'" ';
         }
         echo ">\n";
-        $this->_headSent = true;
+        $this->_headSent = 2;
         echo implode("\n",$this->_bodyTop);
         if($this->bodyTpl != '')
            $this->body->display($this->bodyTpl);
@@ -167,10 +188,12 @@ class jResponseHtml extends jResponse {
      * output errors
      */
     final public function outputErrors(){
-        if(!$this->_headSent){
+        if($this->_headSent < 1){
              if(!$this->_httpHeadersSent) header('Content-Type: text/html;charset='.$this->_charset);
-            echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n";
-            echo '<html><head><title>Errors</title></head><body>';
+            echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n<html>";
+        }
+        if($this->_headSent < 2){
+            echo '<head><title>Errors</title></head><body>';
         }
         if($this->hasErrors()){
             echo $this->getFormatedErrorMsg();

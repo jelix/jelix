@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core
+* @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
@@ -17,7 +17,7 @@ require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
 /**
 * Generate a XUL window
 * @package  jelix
-* @subpackage core
+* @subpackage core_response
 * @see jResponse
 */
 class jResponseXul extends jResponse {
