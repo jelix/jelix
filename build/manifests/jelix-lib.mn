@@ -227,10 +227,6 @@ cd lib/jelix-modules/jelix/locales/fr_FR
   errors.UTF-8.properties
   ui.UTF-8.properties
   auth.UTF-8.properties
-cd lib/jelix-modules/jelix/plugins/auth
-! auth.plugin.php
-  plugin.xml
-  auth.plugin.ini.php.dist
 cd lib/jelix-modules/jelix/templates
   404.xul.tpl
   404.html.tpl
@@ -273,6 +269,10 @@ cd lib/jelix-plugins/autolocale
   autolocale.plugin.ini.php.dist
 ! autolocale.plugin.php
   plugin.xml
+cd lib/jelix-plugins/auth
+! auth.plugin.php
+  plugin.xml
+  auth.plugin.ini.php.dist
 
 
 cd lib/jelix-www

@@ -472,7 +472,7 @@ class jTplCompiler
         }
 
         if( $splitArgIntoArray){
-            $results[]=$result;
+            if($result !='') $results[]=$result;
             return $results;
         }else{
             return $result;
