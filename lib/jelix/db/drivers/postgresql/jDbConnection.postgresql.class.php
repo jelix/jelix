@@ -2,18 +2,16 @@
 /**
 * @package    jelix
 * @subpackage db
-* @version    $Id:$
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Yannick Le Guédart
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
 * Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixDBConnectionPostgreSQL)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
 * Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* @link        http://www.jelix.org
+* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
 /**
@@ -41,7 +39,7 @@ class jDbConnectionPostgreSQL extends jDbConnection {
         if($res){
             $rs= new jDbResultSetPostgreSQL ($res, $id, $this->_connection );
         }else{
-            throw new JException('jelix~db.error.query.bad',  pg_last_error($this->_connection).'('.$query.')');
+            throw new jException('jelix~db.error.query.bad',  pg_last_error($this->_connection).'('.$query.')');
         }
         return $rs;
     }
@@ -68,7 +66,11 @@ class jDbConnectionPostgreSQL extends jDbConnection {
             $str .= ' port='.$this->profil['port'];
         }
 
-        return $funcconnect ($str);
+        if($cnx=@$funcconnect ($str)){
+            return $cnx;
+        }else{
+            throw new jException('jelix~db.error.connection',$this->profil['host']);
+        }
     }
 
     protected function _disconnect (){
@@ -81,7 +83,7 @@ class jDbConnectionPostgreSQL extends jDbConnection {
             $rs->_connector = $this;
         }else{
             $rs = false;
-            throw new JException('jelix~db.error.query.bad',  pg_last_error($this->_connection).'('.$queryString.')');
+            throw new jException('jelix~db.error.query.bad',  pg_last_error($this->_connection).'('.$queryString.')');
         }
         return $rs;
     }
