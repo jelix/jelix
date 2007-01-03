@@ -47,7 +47,8 @@ class jConfigCompiler {
             $os=PHP_OS;
         }
         $config['OS'] = $os;
-        $config['isWindows'] = (strpos(strtolower($os),'win')!== false);
+        $os=strtolower($os);
+        $config['isWindows'] = ((strpos($os,'win')!== false) && (strpos($os,'darwin')=== false));
         if(trim( $config['defaultAction']) == '')
              $config['defaultAction'] = '_';
 
