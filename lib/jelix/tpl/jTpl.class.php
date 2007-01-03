@@ -94,7 +94,7 @@ class jTpl {
      * @see jZone
      */
     function assignZone($name, $zoneName, $params=array()){
-        $this->_vars[$name] = jZone::processZone ($zoneName, $params);
+        $this->_vars[$name] = jZone::get ($zoneName, $params);
     }
     /**
      * assign a zone content to a template variable only if this variable doesn't exist
@@ -105,7 +105,7 @@ class jTpl {
      */
     function assignZoneIfNone($name, $zoneName, $params=array()){
         if(!isset($this->_vars[$name]))
-            $this->_vars[$name] = jZone::processZone ($zoneName, $params);
+            $this->_vars[$name] = jZone::get ($zoneName, $params);
     }
 #endif
 

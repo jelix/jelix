@@ -19,7 +19,7 @@
  */
 function jtpl_function_zone($tpl, $name, $params=array())
 {
-     echo jZone::processZone($name, $params);
+     echo jZone::get($name, $params);
 }
 
 ?>
