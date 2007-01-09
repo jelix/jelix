@@ -4,7 +4,7 @@
 * @subpackage core
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2006 Laurent Jouanneau, 2006 Loic Mathaud
+* @copyright   2005-2007 Laurent Jouanneau, 2006 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
@@ -58,12 +58,12 @@ abstract class jController{
     }
 
     /**
-    * jZone::processZone alias
+    * jZone::get alias
     * @param string $name zone selector
     * @param array $params associative array, parameters
     */
     protected function processZone($name, $params=array ()){
-        return jZone::processZone ($name, $params);
+        return jZone::get ($name, $params);
     }
 
     /**

@@ -11,7 +11,7 @@
 * @subpackage core_selector
 * @author     Laurent Jouanneau
 * @contributor
-* @copyright  2005-2006 Laurent Jouanneau
+* @copyright  2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -246,7 +246,7 @@ class jSelectorAct extends jSelectorModule {
     }
 
     public function getClass(){
-#ifdef ENABLE_OLD_CLASS_NAMING
+#if ENABLE_OLD_CLASS_NAMING
         $className = $this->controller.'Ctrl';
         if($GLOBALS['gJConfig']->enableOldClassNaming && !class_exists($className,false)){
             $className = 'CT'.$this->controller;
@@ -502,6 +502,9 @@ class jSelectorForm extends jSelectorModule {
         return 'cForm_'.$this->module.'_Jx_'.$this->resource;
     }
 
+    public function getCompiledBuildFilePath (){
+        return JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->module.'~'.$this->resource.'_htmlbuilder'.$this->_cacheSuffix;;
+    }
 }
 
 

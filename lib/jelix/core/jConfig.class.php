@@ -4,7 +4,7 @@
 * @subpackage core
 * @author   Jouanneau Laurent
 * @contributor
-* @copyright 2005-2006 Jouanneau laurent
+* @copyright 2005-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -34,7 +34,16 @@ class jConfig {
      */
     static public function load($configFile){
         $config=array();
-        $file = JELIX_APP_TEMP_PATH.$configFile.'.resultini.php';
+#if WITH_BYTECODE_CACHE == 'auto'
+        if(BYTECODE_CACHE_EXISTS)
+            $file = JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.conf.php';
+        else
+            $file = JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php';
+#elseif WITH_BYTECODE_CACHE 
+        $file = JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.conf.php';
+#else
+        $file = JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php';
+#endif
         $compil=false;
         if(!file_exists($file)){
             $compil=true;
@@ -45,8 +54,19 @@ class jConfig {
                 || filemtime(JELIX_APP_CONFIG_PATH.$configFile)>$t){
                 $compil=true;
             }else{
+#if WITH_BYTECODE_CACHE == 'auto'
+                if(BYTECODE_CACHE_EXISTS){
+                    include($file);
+                }else{
+                    $config = parse_ini_file($file,true);
+                }
+#elseif WITH_BYTECODE_CACHE 
+                include($file);
+#else
                 $config = parse_ini_file($file,true);
+#endif
                 $config = (object) $config;
+
                 if($config->compilation['checkCacheFiletime']){
                     $compil = self::_verifpath($config->modulesPath,$t);
                     if(!$compil){

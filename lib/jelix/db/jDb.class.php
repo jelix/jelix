@@ -4,13 +4,13 @@
 * @subpackage db
 * @author     Laurent Jouanneau
 * @contributor
-* @copyright  2005-2006 Laurent Jouanneau
+* @copyright  2005-2007 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
 * API inspirée de la classe CopixDbFactory issue du framework Copix 2.3dev20050901. http://www.copix.org
 */
-#ifdef ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZE
 
 #includephp jDbConnection.class.php
 #includephp jDbResultSet.class.php

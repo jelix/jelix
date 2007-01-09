@@ -17,7 +17,7 @@
 
 
 
-#ifdef PHP50
+#if PHP50
 if(!function_exists('strptime')){ // existe depuis php 5.1
     /**
      * @ignore

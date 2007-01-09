@@ -16,7 +16,7 @@
  * @subpackage  jtpl
  */
 class jTplCompiler
-#ifndef JTPL_STANDALONE
+#ifnot JTPL_STANDALONE
     implements jISimpleCompiler {
 #else
     {
@@ -70,14 +70,14 @@ class jTplCompiler
         $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
         $this->_allowedInForeach = array_merge($this->_vartype, array(T_AS, T_DOUBLE_ARROW));
 
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
         require_once(JTPL_LOCALES_PATH.$GLOBALS['jTplConfig']['lang'].'.php');
         $this->_locales = $GLOBALS['jTplConfig']['locales'];
 #endif
     }
 
 
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
     /**
      * Launch the compilation of a template
      *
@@ -123,14 +123,14 @@ class jTplCompiler
             $header.=' require_once(\''.$path."');\n";
         }
 
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
         $header.='function template_meta_'.md5($tplFile).'($t){';
 #else
         $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource).'($t){';
 #endif
         $header .="\n".$this->_metaBody."\nreturn \$t->_meta;\n}\n";
 
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
         $header.='function template_'.md5($tplFile).'($t){'."\n?>";
 #else
         $header.='function template_'.md5($selector->module.'_'.$selector->resource).'($t){'."\n?>";
@@ -140,7 +140,7 @@ class jTplCompiler
         $result = preg_replace('/\?>\n?<\?php/', '', $result);
         //$result = preg_replace('/<\?php\b+\? >/', '', $result);
 
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
         $_dirname = dirname($cachefile);
         if (!@is_writable($_dirname)) {
             // cache_dir not writable, see if it exists
@@ -200,7 +200,7 @@ class jTplCompiler
 
         // test du premier caractère
         if (!preg_match('/^\$|@|\*|[a-zA-Z\/]$/',$firstcar)) {
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
             trigger_error(sprintf($this->_locales['errors.tpl.tag.syntax.invalid'], $tag, $this->_sourceFile),E_USER_ERROR);
             return '';
 #else
@@ -214,7 +214,7 @@ class jTplCompiler
             return '';
         } else {
             if (!preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/',$tag,$m)) {
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
                 trigger_error(sprintf($this->_locales['errors.tpl.tag.function.invalid'], $tag, $this->_sourceFile),E_USER_ERROR);
                 return '';
 #else
@@ -433,7 +433,7 @@ class jTplCompiler
                             $this->doError1('errors.tpl.tag.locale.invalid', $this->_currentTag);
                             return '';
                         } else {
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
                             $result.='${$GLOBALS[\'jTplConfig\'][\'localesGetter\']}(\''.$locale.'\')';
 #else
                             $result.='jLocale::get(\''.$locale.'\')';
@@ -499,7 +499,7 @@ class jTplCompiler
      * @return string the path of the plugin, or '' if not found
      */
     private function _getPlugin($type, $name){
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
         $treq = 'html';
 #else
         global $gJCoord, $gJConfig;
@@ -507,7 +507,7 @@ class jTplCompiler
 #endif
         $foundPath='';
 
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
         if(isset($GLOBALS['jTplConfig']['tplpluginsPathList'][$treq])){
             foreach($GLOBALS['jTplConfig']['tplpluginsPathList'][$treq] as $path){
 #else
@@ -521,7 +521,7 @@ class jTplCompiler
                 }
             }
         }
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
         if(isset($GLOBALS['jTplConfig']['tplpluginsPathList']['common'])){
             foreach($GLOBALS['jTplConfig']['tplpluginsPathList']['common'] as $path){
 #else
@@ -538,7 +538,7 @@ class jTplCompiler
     }
 
     public function doError0($err){
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
         trigger_error(sprintf($this->_locales[$err], $this->_sourceFile),E_USER_ERROR);
 #else
         throw new jException('jelix~'.$err,array($this->_sourceFile));
@@ -546,7 +546,7 @@ class jTplCompiler
     }
 
     public function doError1($err, $arg){
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
         trigger_error(sprintf($this->_locales[$err], $arg, $this->_sourceFile),E_USER_ERROR);
 #else
         throw new jException('jelix~'.$err,array($arg, $this->_sourceFile));
@@ -554,7 +554,7 @@ class jTplCompiler
     }
 
     public function doError2($err, $arg1, $arg2){
-#ifdef JTPL_STANDALONE
+#if JTPL_STANDALONE
         trigger_error(sprintf($this->_locales[$err], $arg1, $arg2, $this->_sourceFile),E_USER_ERROR);
 #else
         throw new jException('jelix~'.$err,array($arg1, $arg2, $this->_sourceFile));
@@ -565,7 +565,7 @@ class jTplCompiler
 
 
 
-#ifdef DEBUGJTPL
+#if DEBUGJTPL
 
 function showtokens($arr){
 

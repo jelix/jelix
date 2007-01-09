@@ -3,22 +3,34 @@
 * @package     jelix
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
+$BUILD_OPTIONS = array(
+'MAIN_TARGET_PATH'=> array(
+    "main directory where sources will be copied",  // signification (false = option cachée)
+    '_dist',                                        // valeur par défaut (boolean = option booleene)
+    '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
+    ), 
+'PACKAGE_TAR_GZ'=>array(
+    "create a tar.gz package",
+    false,
+    ),
+'PACKAGE_ZIP'=>array(
+    "create a zip package",
+    false,
+    ),
+'NIGHTLY_NAME'=>array(
+    "",
+    true,
+    ),
+'SVN_REVISION'=> array(
+    false,
+    ),
+);
 
 include(dirname(__FILE__).'/lib/jBuild.inc.php');
-
-Env::init(array(
-'MAIN_TARGET_PATH', // repertoire où les sources seront déposées
-));
-
-Env::initBool(array(
-'PACKAGE_TAR_GZ', // indique de créer un paquet tar.gz
-'PACKAGE_ZIP', // indique de créer un paquet zip
-'NIGHTLY_NAME',
-));
 
 //----------------- Preparation des variables d'environnement
 
@@ -46,7 +58,7 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
 jBuildUtils::createDir($MAIN_TARGET_PATH.$BUILD_SUBPATH);
 
 //... execution des manifests
-jManifest::process('build/manifests/jelix-modules.mn', 'lib/jelix-modules/', $MAIN_TARGET_PATH.$BUILD_SUBPATH, $GLOBALS);
+jManifest::process('build/manifests/jelix-modules.mn', 'lib/jelix-modules/', $MAIN_TARGET_PATH.$BUILD_SUBPATH, ENV::getAll());
 
 //... packages
 

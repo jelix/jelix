@@ -1,10 +1,9 @@
 <?php
 /**
 * @package     jBuildTools
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -192,6 +191,36 @@ class jPreProcessor{
                 }
                 $source[$nb]=false;
 
+            }elseif(preg_match('/^\#ifnot\s(.*)$/m',$line,$m)){
+                if( !$isOpen ){
+                    array_push($this->_blockstack, self::BLOCK_IF_NO);
+                }else{
+                    $val = $this->evalExpression($m[1], $filename,$nb);
+                    if($val){
+                        array_push($this->_blockstack, self::BLOCK_IF_NO);
+                    }else{
+                        array_push($this->_blockstack, self::BLOCK_IF_YES);
+                    }
+                }
+                $source[$nb]=false;
+            }elseif(preg_match('/^\#elseif\s(.*)$/m',$line,$m)){
+                $end = array_pop($this->_blockstack);
+                if(!($end & self::BLOCK_IF)){
+                    throw new jExceptionPreProc($filename,$nb,self::ERR_IF_MISSING);
+                }
+                if(end($this->_blockstack) &  self::BLOCK_NO){
+                    array_push($this->_blockstack, self::BLOCK_IF_NO);
+                }elseif(($end & self::BLOCK_YES) || ($end & self::BLOCK_YES_PREVIOUS)){
+                    array_push($this->_blockstack, (self::BLOCK_IF_NO + self::BLOCK_YES_PREVIOUS));
+                }else{
+                    $val = $this->evalExpression($m[1], $filename,$nb);
+                    if($val){
+                        array_push($this->_blockstack, self::BLOCK_IF_YES);
+                    }else{
+                        array_push($this->_blockstack, self::BLOCK_IF_NO);
+                    }
+                }
+                $source[$nb]=false;
             }elseif(preg_match('/^\#(endif|else)\s*$/m',$line,$m)){
                 if($m[1] == 'endif'){
                     $end = array_pop($this->_blockstack);

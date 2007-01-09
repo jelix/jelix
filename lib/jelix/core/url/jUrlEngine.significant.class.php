@@ -156,7 +156,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
                 // on a un tableau du style
                 // array( 0=> 'module', 1=>'action', 2=>'selecteur handler', 3=>array('actions','secondaires'))
                 $s = new jSelectorUrlHandler($infoparsing[2]);
-#ifdef ENABLE_OLD_CLASS_NAMING
+#if ENABLE_OLD_CLASS_NAMING
                 $c =$s->resource.'UrlsHandler';
                 if($gJConfig->enableOldClassNaming && !class_exists($c,false)){
                     $c ='URLS'.$s->resource;
@@ -329,7 +329,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
 
         if($urlinfo[0]==0){
             $s = new jSelectorUrlHandler($urlinfo[3]);
-#ifdef ENABLE_OLD_CLASS_NAMING
+#if ENABLE_OLD_CLASS_NAMING
             $c =$s->resource.'UrlsHandler';
             if($GLOBALS['gJConfig']->enableOldClassNaming && !class_exists($c,false)){
                 $c ='URLS'.$s->resource;

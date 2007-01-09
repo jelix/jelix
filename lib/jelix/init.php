@@ -2,23 +2,23 @@
 /**
 * Initialize all defines and includes necessary files
 *
-#ifdef ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZE
 * Some line of code come from php framework Copix 2.3dev20050901
 * They are copyrighted 2001-2005 CopixTeam (LGPL Licence)
 #endif
 * @package  jelix
 * @subpackage core
 * @author   Jouanneau Laurent
-#ifdef ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZE
 * @author Croes Gerald
 * @contributor Loic Mathaud
-* @copyright 2005-2006 Jouanneau laurent
+* @copyright 2005-2007 Jouanneau laurent
 * @copyright 2001-2005 CopixTeam
 * @copyright 2006 Mathaud Loic
 * @link http://www.copix.org
 #else
 * @contributor Loic Mathaud
-* @copyright 2005-2006 Jouanneau laurent
+* @copyright 2005-2007 Jouanneau laurent
 #endif
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -48,13 +48,17 @@ define ('JELIX_LIB_EVENTS_PATH',  JELIX_LIB_PATH.'events/');
 define ('JELIX_LIB_FORMS_PATH',   JELIX_LIB_PATH.'forms/');
 define ('JELIX_LIB_REQUEST_PATH', JELIX_LIB_PATH.'core/request/');
 define ('JELIX_LIB_RESPONSE_PATH',JELIX_LIB_PATH.'core/response/');
-define ('JELIX_LIB_TPL_PATH',      JELIX_LIB_PATH.'tpl/');
-define ('JELIX_LIB_CTRL_PATH',      JELIX_LIB_PATH.'controllers/');
+define ('JELIX_LIB_TPL_PATH',     JELIX_LIB_PATH.'tpl/');
+define ('JELIX_LIB_CTRL_PATH',    JELIX_LIB_PATH.'controllers/');
 
 // all path of libs
 define ('LIB_PATH',           realpath(dirname (__FILE__).'/../').'/');
 define ('JELIX_PLUGINS_PATH', LIB_PATH.'jelix-plugins/');
 define ('JELIX_MODULE_PATH',  LIB_PATH.'jelix-modules/');
+
+#if WITH_BYTECODE_CACHE == 'auto'
+define ('BYTECODE_CACHE_EXISTS', function_exists('apc_cache_info')|| function_exists('eaccelerator_info'));
+#endif
 
 #if PHP50 || PHP51
 if(!defined('E_RECOVERABLE_ERROR'))
@@ -64,7 +68,7 @@ error_reporting (E_ALL | E_RECOVERABLE_ERROR);
 error_reporting (E_ALL);
 #endif
 
-#ifdef ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZE
 
 #includephp core/jErrorHandler.lib.php
 #includephp core/jException.lib.php
@@ -150,7 +154,7 @@ function __autoload($class){
       $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
    }
 
-#ifdef ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZE
     require_once($f);
 #else
     if(file_exists($f)){

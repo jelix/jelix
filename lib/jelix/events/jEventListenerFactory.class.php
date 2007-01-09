@@ -4,7 +4,7 @@
 * @subpackage  events
 * @author      Croes Gérald, Patrice Ferlet
 * @contributor Laurent Jouanneau
-* @copyright 2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright 2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
@@ -86,7 +86,7 @@ class jEventListenerFactory {
         if (! isset (self::$_listenersSingleton[$module][$listenerName])){
             global $gJConfig;
             require_once ($gJConfig->_modulesPathList[$module].'classes/'.strtolower ($listenerName).'.listener.php');
-#ifdef ENABLE_OLD_CLASS_NAMING
+#if ENABLE_OLD_CLASS_NAMING
             $className = $listenerName.'Listener';
             if($gJConfig->enableOldClassNaming && !class_exists($className,false)){
                 $className = 'Listener'.$listenerName;

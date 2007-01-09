@@ -4,7 +4,7 @@
 * @subpackage core
 * @author   Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -68,7 +68,29 @@ class jConfigCompiler {
             if(substr($path,-1) != '/') $path.='/';
             $config['urlengine']['basePath'] = $path;
         }
+#if WITH_BYTECODE_CACHE == 'auto'
+        if(BYTECODE_CACHE_EXISTS){
+            $filename=JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.conf.php';
+            if ($f = @fopen($filename, 'wb')) {
+                fwrite($f, '<?php $config = '.var_export($config,true).";\n?>");
+                fclose($f);
+            } else {
+                throw new Exception('(24)Error while writing config cache file '.$filename);
+            }
+        }else{
+            jIniFile::write($config, JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php');
+        }
+#elseif WITH_BYTECODE_CACHE 
+        $filename=JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.conf.php';
+        if ($f = @fopen($filename, 'wb')) {
+            fwrite($f, '<?php $config = '.var_export($config,true).";\n?>");
+            fclose($f);
+        } else {
+            throw new Exception('(24)Error while writing config cache file '.$filename);
+        }
+#else
         jIniFile::write($config, JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php');
+#endif
         $config = (object) $config;
         return $config;
     }

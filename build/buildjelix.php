@@ -3,47 +3,95 @@
 * @package     jelix
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
+$BUILD_OPTIONS = array(
+'MAIN_TARGET_PATH'=> array(
+    "main directory where sources will be copied",  // signification (false = option cachée)
+    '_dist',                                        // valeur par défaut (boolean = option booleene)
+    '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
+    ), 
+'PHP_VERSION_TARGET'=> array(
+    "PHP5 version for which jelix will be generated (by default, for all PHP5 version)",
+    '5.0'
+    ),
+'LIB_VERSION'=> array(
+    "Version of jelix you want to declare (default : SVN)",
+    'SVN',
+    ),
+'ENABLE_PHP_FILTER'=>array(
+    "true if jelix can use php filter api (api included in PHP>=5.2)",
+    false,
+    ),
+'ENABLE_PHP_JSON'=>array(
+    "true if jelix can use php json api (api included in PHP>=5.2)",
+    false,
+    ),
+'ENABLE_PHP_XMLRPC'=>array(
+    "true if jelix can use php xmlrpc api",
+    false,
+    ),
+'WITH_BYTECODE_CACHE'=> array(
+    "says which bytecode cache engine will be recognized by jelix. Possible values :  'auto' (automatic detection), 'apc', 'eaccelerator' or '' for  none",
+    'auto',
+    '/^(auto|apc|eaccelerator)?$/',
+    ),
+'ENABLE_DEVELOPER'=>array(
+    "include all developers tools in the distribution (simpletest &cie)",
+    true,
+    ),
+'ENABLE_OPTIMIZE'=>array(
+    "true if you want on optimized version of jelix, for production server",
+    false,
+    ),
+'STRIP_COMMENT'=>array(
+    "true if you want sources with PHP comments deleted (valid only if ENABLE_OPTIMIZE is true)",
+    false,
+    ),
+'NIGHTLY_NAME'=>array(
+    "",
+    true,
+    ),
+'ENABLE_OLD_CLASS_NAMING'=>array(
+    "old module class naming (jelix <= 1.0a5) can be used",
+    true, //TODO false pour la 1.0 finale
+    ),
+'PACKAGE_TAR_GZ'=>array(
+    "create a tar.gz package",
+    false,
+    ),
+'PACKAGE_ZIP'=>array(
+    "create a zip package",
+    false,
+    ),
+'PHP50'=> array(
+    false,   // hidden option
+    false,
+    ),
+'PHP51'=> array(
+    false,
+    false,
+    ),
+'PHP52'=> array(
+    false,
+    false,
+    ),
+'SVN_REVISION'=> array(
+    false,
+    ),
+/*''=> array(
+    "",
+    '',
+    '',
+    ),*/
+);
+
+
+
 include(dirname(__FILE__).'/lib/jBuild.inc.php');
-
-Env::init(array(
-'MAIN_TARGET_PATH', // repertoire où les sources seront déposées
-/*
-'LIB_PATH', // plus tard
-'TEMP_PATH', // plus tard
-'APP_PATH', // plus tard
-'WWW_PATH', // plus tard
-'SCRIPT_PATH', // plus tard
-*/
-'PHP_VERSION_TARGET', // version de php pour laquelle il faut générer jelix (5.x)
-'LIB_VERSION', // version de lib jelix si on veut forcer un numero de version spécifique
-));
-
-if(!isset($GLOBALS['ENABLE_OLD_CLASS_NAMING'])) //TODO à enlever pour la 1.0 finale
-    $GLOBALS['ENABLE_OLD_CLASS_NAMING']= '1';
-
-Env::initBool(array(
-'ENABLE_OPTIMIZE', // indique que l'on veut une version optimisée pour un serveur de production
-
-// indique les api de php que l'on dispose (jelix n'utilisera alors pas ses propres implementations)
-'ENABLE_PHP_FILTER', // indique à jelix d'utiliser l'api filter de php (en standard dans >=5.2)
-'ENABLE_PHP_JSON', // indique à jelix d'utiliser l'api json de php  (en standard dans >=5.2)
-'ENABLE_PHP_XMLRPC', // indique à jelix d'utiliser l'api xmlrpc de php
-
-'ENABLE_DEVELOPER', // indique de créer une version avec les outils de tests (simpletest &co)
-'PACKAGE_TAR_GZ', // indique de créer un paquet tar.gz
-'PACKAGE_ZIP', // indique de créer un paquet zip
-//'PACKAGE_DEB',
-'STRIP_COMMENT',
-'NIGHTLY_NAME',
-
-'ENABLE_OLD_CLASS_NAMING', // indique si on veut activer l'ancien nommage de certaines classes dans 
-                     // jelix < 1.0beta1
-));
 
 //----------------- Preparation des variables d'environnement
 
@@ -53,25 +101,17 @@ $SVN_REVISION = Subversion::revision();
 if($LIB_VERSION == 'SVN')
     $LIB_VERSION = 'SVN-'.$SVN_REVISION;
 
-Env::set('MAIN_TARGET_PATH', '_dist', true);
-/*
-Env::set('LIB_PATH' , $MAIN_TARGET_PATH, true);
-Env::set('TEMP_PATH', $MAIN_TARGET_PATH, true);
-Env::set('APP_PATH' , $MAIN_TARGET_PATH, true);
-Env::set('WWW_PATH' , $MAIN_TARGET_PATH, true);
-Env::set('SCRIPT_PATH', $MAIN_TARGET_PATH, true);
-*/
-
 if($PHP_VERSION_TARGET){
     if(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
         // filter et json sont en standard dans >=5.2 : on le force
         $ENABLE_PHP_FILTER = 1;
         $ENABLE_PHP_JSON = 1;
         $PHP52 = 1;
+    }elseif(version_compare($PHP_VERSION_TARGET, '5.1') > -1){
+        $PHP51=1;
+    }else{
+        $PHP50=1;
     }
-
-    if($PHP_VERSION_TARGET == '5.1') $PHP51=1;
-    if($PHP_VERSION_TARGET == '5.0') $PHP50=1;
 }else{
     // pas de target définie : donc php 5.0
     $PHP50=1;
@@ -108,33 +148,23 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
 jBuildUtils::createDir($BUILD_TARGET_PATH);
 
 //... execution des manifests
-jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, $GLOBALS, $STRIP_COMMENT);
+jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), $STRIP_COMMENT);
 if(!$ENABLE_OPTIMIZE){
-    jManifest::process('build/manifests/jelix-no-opt.mn', '.', $BUILD_TARGET_PATH , $GLOBALS, $STRIP_COMMENT);
+    jManifest::process('build/manifests/jelix-no-opt.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), $STRIP_COMMENT);
 }
 if($ENABLE_DEVELOPER){
-    jManifest::process('build/manifests/jelix-dev.mn', '.', $BUILD_TARGET_PATH , $GLOBALS);
+    jManifest::process('build/manifests/jelix-dev.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
 if(!$ENABLE_PHP_JSON){
-    jManifest::process('build/manifests/lib-json.mn', '.', $BUILD_TARGET_PATH , $GLOBALS);
+    jManifest::process('build/manifests/lib-json.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
-jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , $GLOBALS);
+jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , ENV::getAll());
 
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // creation du fichier d'infos sur le build
-
-$infos = 'PHP_VERSION_TARGET="'.($PHP_VERSION_TARGET?$PHP_VERSION_TARGET:'5.x')."\"\n";
-$infos .= 'LIB_VERSION="'.$LIB_VERSION."\"\n";
-$infos .= 'SVN_REVISION='.$SVN_REVISION."\n";
-$infos .= 'ENABLE_OLD_CLASS_NAMING='.$ENABLE_OLD_CLASS_NAMING."\n";
-$infos .= 'ENABLE_OPTIMIZE='.($ENABLE_OPTIMIZE?'1':'0')."\n";
-$infos .= 'ENABLE_PHP_FILTER='.($ENABLE_PHP_FILTER?'1':'0')."\n";
-$infos .= 'ENABLE_PHP_JSON='.($ENABLE_PHP_JSON?'1':'0')."\n";
-$infos .= 'ENABLE_PHP_XMLRPC='.($ENABLE_PHP_XMLRPC?'1':'0')."\n";
-$infos .= 'ENABLE_DEVELOPER='.($ENABLE_DEVELOPER?'1':'0')."\n";
-$infos .= 'STRIP_COMMENT='.($STRIP_COMMENT?'1':'0')."\n";
+$infos = 'BUILD_DATE= "'.date('Y-m-d H:i')."\"\n".ENV::getIniContent(array('SVN_REVISION'));
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
 

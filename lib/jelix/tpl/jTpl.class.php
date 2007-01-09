@@ -85,7 +85,7 @@ class jTpl {
     }
 
 
-#ifndef JTPL_STANDALONE
+#ifnot JTPL_STANDALONE
     /**
      * assign a zone content to a template variable
      * @param string $name the variable name
@@ -162,7 +162,7 @@ class jTpl {
      * @param string $fctname the internal function name (meta or content)
      */
     protected function  getTemplate($tpl,$fctname){
-#ifndef JTPL_STANDALONE
+#ifnot JTPL_STANDALONE
         $sel = new jSelectorTpl($tpl);
         jIncluder::inc($sel);
         $fct = $fctname.md5($sel->module.'_'.$sel->resource);
@@ -216,7 +216,7 @@ class jTpl {
     public function metaFetch ($tpl){
         ob_start ();
         try{
-#ifndef JTPL_STANDALONE
+#ifnot JTPL_STANDALONE
             $sel = new jSelectorTpl($tpl);
             jIncluder::inc($sel);
             $md = md5($sel->module.'_'.$sel->resource);

@@ -4,12 +4,12 @@
 * @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-#ifndef ENABLE_PHP_JSON
+#ifnot ENABLE_PHP_JSON
 /**
  *
  */
@@ -32,7 +32,7 @@ class jJsonRpc {
      */
     public static function decodeRequest($content){
         // {method:.. , params:.. , id:.. }
-#ifdef ENABLE_PHP_JSON
+#if ENABLE_PHP_JSON
         $obj = json_decode($content);
 #else
         $json = new JSON(JSON_LOOSE_TYPE);
@@ -53,7 +53,7 @@ class jJsonRpc {
      */
     public static function encodeRequest($methodname, $params, $id=1){
 
-#ifdef ENABLE_PHP_JSON
+#if ENABLE_PHP_JSON
         return '{"method":"'.$methodname.'","params":'.json_encode($params).',"id":'.json_encode($id).'}';
 #else
         $json = new JSON();
@@ -69,7 +69,7 @@ class jJsonRpc {
      */
     public static function decodeResponse($content){
         // {result:.. , error:.. , id:.. }
-#ifdef ENABLE_PHP_JSON
+#if ENABLE_PHP_JSON
         return json_decode($content);
 #else
         $json = new JSON(JSON_LOOSE_TYPE);
@@ -84,7 +84,7 @@ class jJsonRpc {
      * @return string encoded response
      */
     public static function encodeResponse($params, $id=1){
-#ifdef ENABLE_PHP_JSON
+#if ENABLE_PHP_JSON
         return '{"result":'.json_encode($params).',"error":null,"id":'.json_encode($id).'}';
 #else
         $json = new JSON();
@@ -99,7 +99,7 @@ class jJsonRpc {
      * @return string encoded response
      */
     public static function encodeFaultResponse($code, $message, $id=1){
-#ifdef ENABLE_PHP_JSON
+#if ENABLE_PHP_JSON
         return '{"result":null,"error":{"code": '.json_encode($code).', "string":'.json_encode($message).' },"id":'.json_encode($id).'}';
 #else
         $json = new JSON();

@@ -29,7 +29,7 @@ cd lib/jelix/controllers
 
 cd lib/jelix/core
 ! defaultconfig.ini.php
-  jConfigCompiler.class.php
+* jConfigCompiler.class.php
 
 cd lib/jelix/core/request
   jClassicRequest.class.php

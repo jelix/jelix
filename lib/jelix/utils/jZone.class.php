@@ -271,7 +271,7 @@ class jZone {
 
         $fileName = $sel->getPath();
         require_once($fileName);
-#ifdef ENABLE_OLD_CLASS_NAMING
+#if ENABLE_OLD_CLASS_NAMING
         $className = $sel->resource.'Zone';
         if($GLOBALS['gJConfig']->enableOldClassNaming && !class_exists($className,false)){
             $className = 'Zone'.$sel->resource;
