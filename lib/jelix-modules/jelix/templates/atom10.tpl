@@ -21,7 +21,7 @@
     <link rel="self" type="application/atom+xml"  href="{$atom->selfLink|escxml}"/>
   {/if}
   {foreach $atom->otherLinks as $link}
-    <link href="{$link['href']|escxml}" rel="{$link['rel']}" type="{$link['type']}" hreflang="{$link['hreflang']}" title="{$link['href']|escxml}" length="{$link['length']}"/>
+    <link href="{$link['href']|escxml}" rel="{$link['rel']}" type="{$link['type']}" hreflang="{$link['hreflang']}" title="{$link['title']|escxml}" length="{$link['length']}"/>
   {/foreach}
   {foreach $atom->categories as $cat}
      <category term="{$cat|escxml}"/>
@@ -71,7 +71,7 @@
      <category term="{$cat|escxml}"/>
   {/foreach}
    {foreach $item->otherLinks as $link}
-        <link href="{$link['href']|escxml}" rel="{$link['rel']}" type="{$link['type']}" hreflang="{$link['hreflang']}" title="{$link['href']|escxml}" length="{$link['length']}"/>
+        <link href="{$link['href']|escxml}" rel="{$link['rel']}" type="{$link['type']}" hreflang="{$link['hreflang']}" title="{$link['title']|escxml}" length="{$link['length']}"/>
   {/foreach}
    {if $item->copyright}<rights>{$item->copyright|escxml}</rights>{/if }
    {if $item->summary}<content type="{$item->summaryType}">{if $item->summaryType=='xhtml'}
