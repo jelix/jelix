@@ -83,7 +83,7 @@ class Env {
         }else{
             self::storeValue($name,file_get_contents($file));
         }
-        
+
     }
 
     static protected function verifyName($name, $verbose=true){
@@ -130,7 +130,7 @@ class Env {
                 continue;
             }
             $help.=$name."\n";
-            if($def[0] != '') 
+            if($def[0] != '')
                 $help.="\t".$def[0]."\n";
             // type
             if(is_bool($def[1])){
@@ -143,14 +143,14 @@ class Env {
         return $help;
     }
 
-    static public function getIniContent($showHiddenOption = false){
+    static public function getIniContent($list = null){
         $ini='';
         foreach(self::$variables_def as $name=>$def){
-            if($def[0] === false && $showHiddenOption === false){
+            if($def[0] === false && $list === null){
                 continue;
             }
-            if($def[0] === false && is_array($showHiddenOption)){
-                if(!in_array($name,$showHiddenOption))
+            if($list !== null && is_array($list)){
+                if(!in_array($name,$list))
                     continue;
             }
             if(is_bool($def[1])){

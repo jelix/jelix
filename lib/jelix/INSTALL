@@ -1,4 +1,29 @@
-Installation de jelix
-=====================
+Jelix Installation
+==================
 
-Voir http://jelix.org/articles/manuel/installation
+Server configuration
+---------------------
+
+Jelix worked only on PHP 5.0 and upper.
+
+This php extensions should be installed : dom, simplexml, pcre, session, spl, tokenizer.
+
+Jelix supports mysql 4.0+ and postgresql 8.0+.
+
+php.ini : magic_quotes_gpc, magic_quotes_runtime,
+and session_auto_start should be off. It is recommanded to set register_globals, asp_tags and short_open_tag to off. Jelix has not been tested with safe_mode.
+
+installation
+------------
+
+- unzip the archive
+- set write access on temp directory, for apache
+- install or create an application with lib/jelix-scripts/jelix
+
+
+
+Details
+-------
+
+see http://jelix.org/articles/manuel/installation
+or http://jelix.org/articles/en/manuel/installation

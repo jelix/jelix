@@ -4,8 +4,8 @@ Crédits
 Développeurs
 ------------
 
-Laurent Jouanneau (laurentj) : 
-    Concepteur et développeur principal du code original à Jelix
+Laurent Jouanneau (laurentj) :
+    Concepteur et développeur principal de Jelix
 
 Loic Mathaud (bballizlife) :
     testeur, nombreuses corrections de bugs dans jelix
@@ -37,7 +37,7 @@ M. Thiriot (Doubleface)
 Yann
     Petite amélioration sur jResponseHtml (description et keywords)
 
-Cedric 
+Cedric
     patch correctif sur jFile::read
 
 Olivier Gambier (d-m-p)
@@ -50,14 +50,14 @@ Gildas Givaja (Giviz)
 Contributeurs involontaires ;-)
 -------------------------------
 
-Brent R. Matzelle 
+Brent R. Matzelle
     pour sa classe PHPMailer (jMailer dans Jelix)
-Chris Ryan  
+Chris Ryan
     pour sa classe SMTP (jSmtp dans Jelix)
 Copix Team
-    en particulier Gerald Croes, co-auteur des parties du code qui issues du projet 
-    Copix version 2.3dev20050901 et qui sont sous copyright 2001-2005 Copix Team 
+    en particulier Gerald Croes, co-auteur des parties du code qui issues du projet
+    Copix version 2.3dev20050901 et qui sont sous copyright 2001-2005 Copix Team
     (http://www.copix.org)
 
 
-(mise à jour à svn-337)
+(mise à jour à svn-346)

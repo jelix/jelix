@@ -13,7 +13,7 @@ $BUILD_OPTIONS = array(
     "main directory where sources will be copied",  // signification (false = option cachée)
     '_dist',                                        // valeur par défaut (boolean = option booleene)
     '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
-    ), 
+    ),
 'PHP_VERSION_TARGET'=> array(
     "PHP5 version for which jelix will be generated (by default, for all PHP5 version)",
     '5.0'
@@ -164,7 +164,11 @@ jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , E
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // creation du fichier d'infos sur le build
-$infos = 'BUILD_DATE= "'.date('Y-m-d H:i')."\"\n".ENV::getIniContent(array('SVN_REVISION'));
+$view = array('PHP_VERSION_TARGET', 'LIB_VERSION', 'SVN_REVISION', 'ENABLE_PHP_FILTER',
+    'ENABLE_PHP_JSON', 'ENABLE_PHP_XMLRPC', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
+    'ENABLE_OPTIMIZE', 'STRIP_COMMENT', 'ENABLE_OLD_CLASS_NAMING' );
+
+$infos = 'BUILD_DATE= "'.date('Y-m-d H:i')."\"\n".ENV::getIniContent($view);
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
 
