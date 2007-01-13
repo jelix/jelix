@@ -20,7 +20,7 @@ $BUILD_OPTIONS = array(
     ),
 'LIB_VERSION'=> array(
     "Version of jelix you want to declare (default : SVN)",
-    'SVN',
+    '',
     ),
 'ENABLE_PHP_FILTER'=>array(
     "true if jelix can use php filter api (api included in PHP>=5.2)",

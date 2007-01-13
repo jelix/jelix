@@ -15,7 +15,7 @@ $BUILD_OPTIONS = array(
     ), 
 'VERSION'=> array(
     "Version number you want to set for this package",
-    'SVN',
+    '',
     '',
     ),
 'APPNAME'=> array(
