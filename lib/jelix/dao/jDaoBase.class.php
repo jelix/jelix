@@ -3,8 +3,9 @@
  * @package     jelix
  * @subpackage  dao
  * @author      Laurent Jouanneau
- * @contributor
+ * @contributor Loic Mathaud
  * @copyright   2005-2006 Laurent Jouanneau
+ * @copyright   2007 Loic Mathaud
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -271,6 +272,26 @@ abstract class jDaoFactoryBase  {
         return $rs;
     }
 
+    /**
+     * return the number of records corresponding to the conditions stored into the
+     * jDaoConditions object.
+     * @author Loic Mathaud
+     * @copyright 2007 Loic Mathaud
+     * @since 1.0b2
+     * @param jDaoConditions $searchcond
+     * @return int the count
+     */
+    public function countBy($searchcond) {
+        $query = 'SELECT COUNT(*) as c '.$this->_fromClause.$this->_whereClause;
+        if (!$searchcond->isEmpty ()){
+            $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
+            $query .= $this->_createConditionsClause($searchcond);
+        }
+        $rs  =  $this->_conn->query ($query);
+        $res =  $rs->fetch();
+        return intval($res->c);
+    }
+    
     abstract protected function _getPkWhereClauseForSelect($pk);
     abstract protected function _getPkWhereClauseForNonSelect($pk);
 
