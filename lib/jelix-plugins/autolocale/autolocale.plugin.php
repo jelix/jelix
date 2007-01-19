@@ -50,7 +50,7 @@ class AutoLocalePlugin implements jIPlugin {
                     // pour les user-agents qui livrent un code internationnal
                     if(preg_match("/^([a-zA-Z]{2})(?:[-_]([a-zA-Z]{2}))?(;q=[0-9]\\.[0-9])?$/",$bl,$match)){
                         if(isset($match[2]))
-                            $l=$match[1].'_'.$match[2];
+                            $l=$match[1].'_'.strtoupper($match[2]);
                         else
                             $l=$match[1].'_'.strtoupper($match[1]);
                         if(in_array($l, $availableLang)){

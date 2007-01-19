@@ -64,7 +64,7 @@ defaultEntrypoint= index
 
 entrypointExtension= .php
 
-notfoundAct = "jelix~notfound"
+notfoundAct = "jelix~error_notfound"
 
 ;indique si vous utilisez IIS comme serveur
 useIIS = off
