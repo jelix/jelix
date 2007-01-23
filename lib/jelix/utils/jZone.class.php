@@ -176,7 +176,7 @@ class jZone {
             if(file_exists($f)){
                 if($this->_cacheTimeout > 0){
                     clearstatcache();
-                    if(mktime() - filemtime($f) > $this->_cacheTimeout){
+                    if(time() - filemtime($f) > $this->_cacheTimeout){
                         // timeout : regenerate the cache
                         unlink($f);
                         $this->_cancelCache=false;
