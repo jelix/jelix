@@ -5,7 +5,7 @@
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Yannick Le Guédart
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixDBConnectionPostgreSQL)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
@@ -20,6 +20,7 @@
  * @subpackage db
  */
 class jDbConnectionPostgreSQL extends jDbConnection {
+    protected $_charsets =array( 'UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');
 
     public function beginTransaction (){
         return $this->_doExec('BEGIN');
@@ -67,6 +68,10 @@ class jDbConnectionPostgreSQL extends jDbConnection {
         }
 
         if($cnx=@$funcconnect ($str)){
+            if(isset($this->profil['force_encoding']) && $this->profil['force_encoding'] == true
+               && isset($this->_charsets[$GLOBALS['gJConfig']->defaultCharset])){
+                pg_set_client_encoding($cnx, $this->_charsets[$GLOBALS['gJConfig']->defaultCharset]);
+            }
             return $cnx;
         }else{
             throw new jException('jelix~db.error.connection',$this->profil['host']);

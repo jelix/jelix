@@ -90,6 +90,8 @@ class jDbPDOResultSet extends PDOStatement {
  */
 class jDbPDOConnection extends PDO {
 
+    private $_mysqlCharsets =array( 'UTF-8'=>'utf8', 'ISO-8859-1'=>'latin1');
+    private $_pgsqlCharsets =array( 'UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');
     /**
     * the profil the connection is using
     * @var array
@@ -105,28 +107,36 @@ class jDbPDOConnection extends PDO {
     * Use a profil to do the connection
     */
     function __construct($profil){
-       $this->profil = $profil;
-       $this->dbms=substr($profil['dsn'],0,strpos($profil['dsn'],':'));
-       $prof=$profil;
-       $user= '';
-       $password='';
-       unset($prof['dsn']);
-       if(isset($prof['user'])){ // sqlite par ex n'a pas besoin de user/password -> on test alors leur presence
-          $user =$prof['user'];
-          unset($prof['user']);
-       }
-       if(isset($prof['password'])){
-          $password = $profil['password'];
-          unset($prof['password']);
-       }
-       unset($prof['driver']);
-       parent::__construct($profil['dsn'], $user, $password, $prof);
-       $this->setAttribute(JPDO_ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
-       $this->setAttribute(JPDO_ATTR_ERRMODE, JPDO_ERRMODE_EXCEPTION);
-       // on ne peut pas lancer deux query en même temps avec PDO ! sauf si on utilise mysql
-       // et que l'on utilise cet attribut...
-       if($this->dbms == 'mysql')
+        $this->profil = $profil;
+        $this->dbms=substr($profil['dsn'],0,strpos($profil['dsn'],':'));
+        $prof=$profil;
+        $user= '';
+        $password='';
+        unset($prof['dsn']);
+        if(isset($prof['user'])){ // sqlite par ex n'a pas besoin de user/password -> on test alors leur presence
+            $user =$prof['user'];
+            unset($prof['user']);
+        }
+        if(isset($prof['password'])){
+            $password = $profil['password'];
+            unset($prof['password']);
+        }
+        unset($prof['driver']);
+        parent::__construct($profil['dsn'], $user, $password, $prof);
+        $this->setAttribute(JPDO_ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
+        $this->setAttribute(JPDO_ATTR_ERRMODE, JPDO_ERRMODE_EXCEPTION);
+        // on ne peut pas lancer deux query en même temps avec PDO ! sauf si on utilise mysql
+        // et que l'on utilise cet attribut...
+        if($this->dbms == 'mysql')
             $this->setAttribute(JPDO_MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+    
+        if(isset($prof['force_encoding']) && $prof['force_encoding']==true){
+            if($this->dbms == 'mysql' && isset($this->_mysqlCharsets[$GLOBALS['gJConfig']->defaultCharset])){
+                $this->exec("SET CHARACTER SET '".$this->_mysqlCharsets[$GLOBALS['gJConfig']->defaultCharset]."'");
+            }elseif($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[$GLOBALS['gJConfig']->defaultCharset])){
+                $this->exec("SET client_encoding to '".$this->_pgsqlCharsets[$GLOBALS['gJConfig']->defaultCharset]."'");
+            }
+        }
     }
 
     public function limitQuery ($queryString, $limitOffset = null, $limitCount = null){

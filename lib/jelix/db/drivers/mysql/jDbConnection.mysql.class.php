@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage db
-* @version    $Id:$
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
@@ -21,6 +20,8 @@
  * @subpackage db
  */
 class jDbConnectionMySQL extends jDbConnection {
+
+   protected $_charsets =array( 'UTF-8'=>'utf8', 'ISO-8859-1'=>'latin1');
 
    /**
    * begin a transaction
@@ -64,6 +65,10 @@ class jDbConnectionMySQL extends jDbConnection {
    protected function _connect (){
       $funcconnect= ($this->profil['persistent']? 'mysql_pconnect':'mysql_connect');
       if($cnx = @$funcconnect ($this->profil['host'], $this->profil['user'], $this->profil['password'])){
+         if(isset($this->profil['force_encoding']) && $this->profil['force_encoding'] == true
+            && isset($this->_charsets[$GLOBALS['gJConfig']->defaultCharset])){
+             mysql_query("SET CHARACTER SET '".$this->_charsets[$GLOBALS['gJConfig']->defaultCharset]."'", $cnx);
+         }
          return $cnx;
       }else{
          throw new JException('jelix~db.error.connection',$this->profil['host']);
