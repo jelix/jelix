@@ -208,6 +208,34 @@ cd lib/jelix-modules/jelix/locales/en_US
   errors.ISO-8859-1.properties
   ui.ISO-8859-1.properties
   auth.ISO-8859-1.properties
+  dao.UTF-8.properties
+  daoxml.UTF-8.properties
+  db.UTF-8.properties
+  common.UTF-8.properties
+  format.UTF-8.properties
+  jelix.UTF-8.properties
+  errors.UTF-8.properties
+  ui.UTF-8.properties
+  auth.ISO-8859-1.properties
+cd lib/jelix-modules/jelix/locales/en_EN
+  dao.ISO-8859-1.properties
+  daoxml.ISO-8859-1.properties
+  db.ISO-8859-1.properties
+  common.ISO-8859-1.properties
+  format.ISO-8859-1.properties
+  jelix.ISO-8859-1.properties
+  errors.ISO-8859-1.properties
+  ui.ISO-8859-1.properties
+  auth.ISO-8859-1.properties
+  dao.UTF-8.properties
+  daoxml.UTF-8.properties
+  db.UTF-8.properties
+  common.UTF-8.properties
+  format.UTF-8.properties
+  jelix.UTF-8.properties
+  errors.UTF-8.properties
+  ui.UTF-8.properties
+  auth.ISO-8859-1.properties
 cd lib/jelix-modules/jelix/locales/fr_FR
   dao.ISO-8859-1.properties
   daoxml.ISO-8859-1.properties
