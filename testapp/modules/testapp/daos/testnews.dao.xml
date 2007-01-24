@@ -93,6 +93,11 @@
             </conditions>
         </conditions>
     </method>
-
+    <method name="testornull" type="select">
+        <conditions logic="or">
+            <isnull property="auteur" />
+            <isnotnull property="description" />
+        </conditions>
+    </method>
   </factory>
 </dao>

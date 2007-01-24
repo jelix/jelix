@@ -572,7 +572,7 @@ class jDaoGenerator {
     }
 
 
-    function _prepareValues ($fieldList, $motif='', $prefixfield=''){
+    private function _prepareValues ($fieldList, $motif='', $prefixfield=''){
         $values = $fields = array();
 
         foreach ((array)$fieldList as $fieldName=>$field) {
@@ -631,7 +631,7 @@ class jDaoGenerator {
     /**
      * @param jDaoCondition
      */
-    function _buildSQLCondition ($condition, $fields, $params, $withPrefix, $principal=false){
+    private function _buildSQLCondition ($condition, $fields, $params, $withPrefix, $principal=false){
 
         $r = ' ';
 
@@ -667,7 +667,8 @@ class jDaoGenerator {
                }else{
                   $value= '(\'.'.$cond['value'].'.\')';
                }
-            }else{
+               $r.=$value;
+            }elseif($cond['operator'] != 'IS NULL' && $cond['operator'] != 'IS NOT NULL'){
 
                if($cond['expr']){
                   $value=str_replace("'","\\'",$cond['value']);
@@ -677,9 +678,8 @@ class jDaoGenerator {
                }else{
                   $value= $this->_preparePHPValue($cond['value'], $prop->datatype,false);
                }
+               $r.=$value;
             }
-            $r.=$value;
-
         }
         //sub conditions
         foreach ($condition->group as $conditionDetail){
@@ -735,7 +735,7 @@ class jDaoGenerator {
       }
    }
 
-   function _preparePHPExpr($expr, $fieldType, $checknull=true){
+   private function _preparePHPExpr($expr, $fieldType, $checknull=true){
       switch(strtolower($fieldType)){
          case 'int':
          case 'integer':

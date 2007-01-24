@@ -545,6 +545,7 @@ class jDaoMethod {
           if($op != 'isnull' && $op !='isnotnull'){
               throw new jDaoXmlException ('method.condition.valueexpr.missing', array($this->name, $op, $field_id));
           }
+          $this->_conditions->addCondition ($field_id, $operator, '', false);
       }
    }
 
