@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Yann (description and keywords)
-* @copyright   2005-2006 Laurent Jouanneau, 2006 Yann
+* @copyright   2005-2007 Laurent Jouanneau, 2006 Yann
 *   few lines of code are copyrighted CopixTeam http://www.copix.org
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -32,6 +32,13 @@ class jResponseHtml extends jResponse {
      * @var string
      */
     public $title = '';
+
+    /**
+     * favicon url linked to the document
+     * @var string
+     * @since 1.0b2
+     */
+    public $favicon = '';
 
     /**
      * The template engine used to generate the body content
@@ -336,6 +343,12 @@ class jResponseHtml extends jResponse {
                 $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
             }
             echo  '<link rel="stylesheet" type="text/css" href="',$src,'" ',$more,$this->_endTag;
+        }
+
+        if($this->favicon != ''){
+            $fav = htmlspecialchars($this->favicon);
+            echo '<link rel="icon" type="image/x-icon" href="'.$fav.'" />';
+            echo '<link rel="shortcut icon" type="image/x-icon" href="'.$fav.'" />';
         }
 
         // js link
