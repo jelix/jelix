@@ -9,7 +9,7 @@
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
 */
-
+#ifnot ENABLE_PHP_JELIX
 /**
  * interface for controllers used for RESTFull request/response
  * @package  jelix
@@ -21,7 +21,7 @@ interface jIRestController{
     public function put();
     public function delete();
 }
-
+#endif
 
 /**
  * class base for controllers

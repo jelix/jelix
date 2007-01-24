@@ -10,7 +10,7 @@
 *
 * API inspirée de la classe CopixDbFactory issue du framework Copix 2.3dev20050901. http://www.copix.org
 */
-#if ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZED_SOURCE
 
 #includephp jDbConnection.class.php
 #includephp jDbResultSet.class.php

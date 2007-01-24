@@ -13,7 +13,7 @@
 * author : Gerald Croes, Laurent Jouanneau.
 * http://www.copix.org
 */
-
+#ifnot ENABLE_PHP_JELIX
 /**
  * interface for url engines
  * @package  jelix
@@ -39,7 +39,7 @@ interface jIUrlEngine {
   public function create($urlact);
 
 }
-
+#endif
 /**
  * base class for jUrl and jUrlAction
  * @package  jelix

@@ -13,7 +13,7 @@ cd lib/jelix
   VERSION
 
 cd lib/jelix/auth
-  jAuth.class.php
+* jAuth.class.php
   jAuthDriverDb.class.php
   jAuthDriverClass.class.php
   jAuthDriverLDS.class.php

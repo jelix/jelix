@@ -1,19 +1,18 @@
 cd lib/jelix/core
 * jConfig.class.php
   jContext.class.php
-  jController.class.php
+* jController.class.php
   jCoordinator.class.php
   jErrorHandler.lib.php
   jException.lib.php
-  jIncluder.class.php
-  jIPlugin.iface.php
+* jIncluder.class.php
   jLocale.class.php
   jRequest.class.php
   jResponse.class.php
 * jSelector.class.php
 
 cd lib/jelix/core/url
-  jUrl.class.php
+*  jUrl.class.php
 
 cd lib/jelix/db
   jDbConnection.class.php

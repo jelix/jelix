@@ -12,7 +12,7 @@
  * initial author : Laurent Jouanneau
  */
 
-
+#ifnot ENABLE_PHP_JELIX
 /**
  * interface for compiler which needs only one source file
  * @package  jelix
@@ -49,7 +49,7 @@ interface jIMultiFileCompiler {
      */
     public function endCompile($cachefile);
 }
-
+#endif
 /**
  * This object is responsible to load cache files.
  * Some jelix files needs to be compiled in PHP (templates, daos etc..) and their

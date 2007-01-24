@@ -2,14 +2,14 @@
 /**
 * Initialize all defines and includes necessary files
 *
-#if ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZED_SOURCE
 * Some line of code come from php framework Copix 2.3dev20050901
 * They are copyrighted 2001-2005 CopixTeam (LGPL Licence)
 #endif
 * @package  jelix
 * @subpackage core
 * @author   Jouanneau Laurent
-#if ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZED_SOURCE
 * @author Croes Gerald
 * @contributor Loic Mathaud
 * @copyright 2005-2007 Jouanneau laurent
@@ -23,6 +23,12 @@
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
+#if ENABLE_PHP_JELIX
+if(!function_exists('jelix_version')){
+    die('this edition of Jelix needs jelix php extension.');
+}
+#endif
 
 /**
  * Version number of Jelix
@@ -68,7 +74,7 @@ error_reporting (E_ALL | E_RECOVERABLE_ERROR);
 error_reporting (E_ALL);
 #endif
 
-#if ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZED_SOURCE
 
 #includephp core/jErrorHandler.lib.php
 #includephp core/jException.lib.php
@@ -82,8 +88,9 @@ error_reporting (E_ALL);
 #includephp core/jResponse.class.php
 #includephp core/jLocale.class.php
 #includephp core/jIncluder.class.php
+#ifnot ENABLE_PHP_JELIX
 #includephp core/jIPlugin.iface.php
-
+#endif
 #else
 
 // chargement du coeur
@@ -99,8 +106,9 @@ require_once (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
+#ifnot ENABLE_PHP_JELIX
 require_once (JELIX_LIB_CORE_PATH . 'jIPlugin.iface.php');
-
+#endif
 #endif
 
 
@@ -154,7 +162,7 @@ function __autoload($class){
       $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
    }
 
-#if ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZED_SOURCE
     require_once($f);
 #else
     if(file_exists($f)){

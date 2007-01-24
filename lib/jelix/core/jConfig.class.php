@@ -57,15 +57,26 @@ class jConfig {
 #if WITH_BYTECODE_CACHE == 'auto'
                 if(BYTECODE_CACHE_EXISTS){
                     include($file);
+                    $config = (object) $config;
                 }else{
+#if ENABLE_PHP_JELIX
+                    $config = jelix_read_ini($file);
+#else
                     $config = parse_ini_file($file,true);
+                    $config = (object) $config;
+#endif
                 }
 #elseif WITH_BYTECODE_CACHE 
                 include($file);
+                $config = (object) $config;
+#else
+#if ENABLE_PHP_JELIX
+                $config = jelix_read_ini($file);
 #else
                 $config = parse_ini_file($file,true);
-#endif
                 $config = (object) $config;
+#endif
+#endif
 
                 if($config->compilation['checkCacheFiletime']){
                     $compil = self::_verifpath($config->modulesPath,$t);

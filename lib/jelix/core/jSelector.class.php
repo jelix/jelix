@@ -40,7 +40,7 @@ class jSelectorFactory {
         throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($selstr,''));
     }
 }
-
+#ifnot ENABLE_PHP_JELIX
 /**
  * interface of selector classes
  * @package    jelix
@@ -69,7 +69,7 @@ interface jISelector {
      */
     public function toString($full=false);
 }
-
+#endif
 
 /**
  * Exception for selector errors
@@ -249,7 +249,8 @@ class jSelectorAct extends jSelectorModule {
 #if ENABLE_OLD_CLASS_NAMING
         $className = $this->controller.'Ctrl';
         if($GLOBALS['gJConfig']->enableOldClassNaming && !class_exists($className,false)){
-            $className = 'CT'.$this->controller;
+            if(class_exists('CT'.$this->controller,false))
+                $className = 'CT'.$this->controller;
         }
 #else
         $className = $this->controller.'Ctrl';

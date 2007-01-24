@@ -13,7 +13,7 @@
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
 */
-
+#ifnot ENABLE_PHP_JELIX
 /**
  * interface for auth drivers
  * @package    jelix
@@ -89,7 +89,7 @@ interface jIAuthDriver {
     public function verifyPassword($login, $password);
 }
 
-
+#endif
 
 /**
  * This is the main class for authentification process

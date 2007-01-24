@@ -34,6 +34,10 @@ $BUILD_OPTIONS = array(
     "true if jelix can use php xmlrpc api",
     false,
     ),
+'ENABLE_PHP_JELIX'=>array(
+    "true if jelix can use jelix php extension. WARNING ! EXPERIMENTAL !",
+    false,
+    ),
 'WITH_BYTECODE_CACHE'=> array(
     "says which bytecode cache engine will be recognized by jelix. Possible values :  'auto' (automatic detection), 'apc', 'eaccelerator' or '' for  none",
     'auto',
@@ -43,8 +47,8 @@ $BUILD_OPTIONS = array(
     "include all developers tools in the distribution (simpletest &cie)",
     true,
     ),
-'ENABLE_OPTIMIZE'=>array(
-    "true if you want on optimized version of jelix, for production server",
+'ENABLE_OPTIMIZED_SOURCE'=>array(
+    "true if you want on optimized version of source code, for production server",
     false,
     ),
 'STRIP_COMMENT'=>array(
@@ -117,7 +121,7 @@ if($PHP_VERSION_TARGET){
     $PHP50=1;
 }
 
-if(!$ENABLE_OPTIMIZE)
+if(!$ENABLE_OPTIMIZED_SOURCE)
     $STRIP_COMMENT='';
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
@@ -129,9 +133,9 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
     if($PHP_VERSION_TARGET)
         $PACKAGE_NAME.='-php'.$PHP_VERSION_TARGET;
 
-    if($ENABLE_OPTIMIZE && $ENABLE_DEVELOPER)
+    if($ENABLE_OPTIMIZED_SOURCE && $ENABLE_DEVELOPER)
         $PACKAGE_NAME.='-optdev';
-    elseif($ENABLE_OPTIMIZE)
+    elseif($ENABLE_OPTIMIZED_SOURCE)
         $PACKAGE_NAME.='-opt';
     elseif($ENABLE_DEVELOPER)
         $PACKAGE_NAME.='-dev';
@@ -149,9 +153,13 @@ jBuildUtils::createDir($BUILD_TARGET_PATH);
 
 //... execution des manifests
 jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), $STRIP_COMMENT);
-if(!$ENABLE_OPTIMIZE){
+if(!$ENABLE_OPTIMIZED_SOURCE){
     jManifest::process('build/manifests/jelix-no-opt.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), $STRIP_COMMENT);
 }
+if(!$ENABLE_PHP_JELIX && !$ENABLE_OPTIMIZED_SOURCE){
+    jManifest::process('build/manifests/jelix-no-ext.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), $STRIP_COMMENT);
+}
+
 if($ENABLE_DEVELOPER){
     jManifest::process('build/manifests/jelix-dev.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
@@ -166,7 +174,7 @@ file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 // creation du fichier d'infos sur le build
 $view = array('PHP_VERSION_TARGET', 'LIB_VERSION', 'SVN_REVISION', 'ENABLE_PHP_FILTER',
     'ENABLE_PHP_JSON', 'ENABLE_PHP_XMLRPC', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
-    'ENABLE_OPTIMIZE', 'STRIP_COMMENT', 'ENABLE_OLD_CLASS_NAMING' );
+    'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT', 'ENABLE_OLD_CLASS_NAMING' );
 
 $infos = 'BUILD_DATE= "'.date('Y-m-d H:i')."\"\n".ENV::getIniContent($view);
 

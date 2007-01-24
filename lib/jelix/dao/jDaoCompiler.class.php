@@ -8,7 +8,7 @@
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
-#if ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZED_SOURCE
 * Une partie du code est issue des classes CopixDaoCompiler, CopixDAOGeneratorV1, CopixDAODefinitionV1
 * du framework Copix 2.3dev20050901. http://www.copix.org
 * il est sous Copyright 2001-2005 CopixTeam (licence LGPL)

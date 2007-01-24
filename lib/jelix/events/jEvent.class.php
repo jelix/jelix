@@ -15,7 +15,7 @@
 *
 */
 
-#if ENABLE_OPTIMIZE
+#if ENABLE_OPTIMIZED_SOURCE
 
 #includephp jEventListener.class.php
 #includephp jEventListenerFactory.class.php

@@ -68,7 +68,7 @@ class Env {
                 if(self::verifyName($k)){
                     self::storeValue($k,$v);
                 }else{
-                    echo "warning: unknow option name ($name) in the ini file\n";
+                    echo "warning: unknow option name ($k) in the ini file\n";
                 }
             }
         }else{
