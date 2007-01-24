@@ -42,7 +42,7 @@ class jConfigCompiler {
         if($configFile !='defaultconfig.ini.php'){
             if(!file_exists(JELIX_APP_CONFIG_PATH.$configFile))
                 die("Jelix config file $configFile is missing !");
-            if( false === @jelix_read_ini(JELIX_APP_CONFIG_PATH.$configFile,$config)))
+            if( false === @jelix_read_ini(JELIX_APP_CONFIG_PATH.$configFile,$config))
                 die("Syntax error in the Jelix config file $configFile !");
         }
         $config->OS = $os;
@@ -199,7 +199,7 @@ class jConfigCompiler {
                     if ($f{0} != '.' && is_dir($p.$f)) {
 #if ENABLE_PHP_JELIX
                         $prop = '_tplpluginsPathList_'.$f;
-                        $config->$prop[] = $p.$f.'/';
+                        $config->{$prop}[] = $p.$f.'/';
 #else
                         $config['_tplpluginsPathList_'.$f][] = $p.$f.'/';
 #endif
