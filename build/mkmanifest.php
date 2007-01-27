@@ -2,50 +2,39 @@
 
 /**
 * @package     jBuildTools
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
+
+require_once(dirname(__FILE__).'/lib/jCmdUtils.class.php');
 
 // arguments :  repertoire1 [repertoire2]
 // repertoire1 : le chemin du repertoire duquel on veut la liste
 // repertoire2 : si on veut une base de chemin différente de repertoire1 dans le fichier de sortie
 //               on l'indique ici
 
-if($_SERVER['argc'] < 2){
-   echo "too few arguments\n   repertoire1 [repertoire2]\n";
-   exit(1);
-}
-array_shift($_SERVER['argv']); // shift the script name
-$nbarg=$_SERVER['argc'] -1;
+try{
+    $sws = array('-e'=>false);
+    $params = array('dirpath'=>true, 'basepath'=>false);
+    
+    list($switches, $parameters) = jCmdUtils::getOptionsAndParams($_SERVER['argv'], $sws, $params);
 
-$options = array('verbose'=>false);
-
-if(substr($_SERVER['argv'][0],0,1) == '-'){
-  $nbarg--;
-  $sw = substr(array_shift($_SERVER['argv']),1);
-  $options['verbose'] = (strpos('v', $sw) !== false);
+}catch(Exception $e){
+    echo "\nmkmanifest error : " , $e->getMessage(),"\n";
+    echo "  options : [-e] dirpath [basepath]
+      -e  : include empty directory\n";
+    exit(1);
 }
 
-if($nbarg == 1){
-   list($dirpath) = $_SERVER['argv'];
-   $basepath='';
-}elseif($nbarg == 2){
-   list($dirpath, $basepath) = $_SERVER['argv'];
-}else{
-   echo "too few arguments\n";
-   exit(1);
-}
-
-$hasError =false;
+$dirpath = $parameters['dirpath'];
+$basepath = $parameters['basepath'];
 
 if(substr($dirpath,-1) == '/'){
    $dirpath=substr($dirpath,0,-1);
 }
-
 if($basepath == ''){
    $basepath = $dirpath;
 }else{
@@ -54,7 +43,10 @@ if($basepath == ''){
    }
 }
 
+
+
 function mkpath($dir, $basepath){
+   global $switches;
    $output='';
    if ($dh = opendir($dir)) {
       $dirlist=array();
@@ -64,8 +56,9 @@ function mkpath($dir, $basepath){
             continue;
          $type= filetype($dir.'/'.$file);
          if($type == 'dir'){
-            if($file != '.' && $file !='..' )
+            if($file != '.' && $file !='..' ){
                $dirlist[]=$file;
+            }
          }else{
             if(!$cdok){
                $output.="cd ".$basepath."\n";
@@ -76,11 +69,16 @@ function mkpath($dir, $basepath){
       }
       closedir($dh);
 
+      if(!$cdok && count($dirlist) == 0 && isset($switches['-e'])){
+          $output.="cd ".$basepath."\n";
+      }
+
       foreach($dirlist as $d){
          $output.=mkpath( $dir.'/'.$d, $basepath.'/'.$d);
       }
    }else{
-      //echo "erreur ouverture repertoire $dir\n";
+      echo "erreur ouverture repertoire $dir\n";
+       exit(1);
    }
    return $output;
 }
@@ -91,13 +89,10 @@ $output='';
 if (is_dir($dirpath)) {
    $output=mkpath($dirpath,$basepath);
 }else{
-     //echo "mauvais repertoire $dir\n";
+     echo "mauvais repertoire $dirpath\n";
+    exit(1);
 }
 
 echo $output;
-
-if($hasError)
-  exit(1);
-else
-  exit(0);
+exit(0);
 ?>
