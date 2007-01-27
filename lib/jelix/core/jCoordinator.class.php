@@ -192,6 +192,10 @@ class jCoordinator {
             $result = $this->plugins[$name]->beforeAction ($pluginparams);
             if($result){
                $this->action = $result;
+               jContext::pop();
+               jContext::push($result->module);
+               $this->moduleName = $result->module;
+               $this->actionName = $result->ressource;
                $ctrl = $this->getController($this->action);
                break;
             }

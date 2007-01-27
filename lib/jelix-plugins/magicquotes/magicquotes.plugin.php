@@ -2,17 +2,16 @@
 /**
 * @package    jelix
 * @subpackage plugins
-* @version    $Id$
 * @author     Gerald Croes, Jouanneau Laurent
 * @contributor
-* @copyright  2001-2005 CopixTeam, 2005-2006 Jouanneau laurent
-* @link        http://www.jelix.org
-* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*
+* @copyright  2001-2005 CopixTeam, 2005-2007 Jouanneau laurent
 * Some parts of this file are took from Copix Framework v2.3dev20050901, magicquotes.plugin.php,
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence
 * author : Gerald Croes, Laurent Jouanneau
 * http://www.copix.org
+* @link        http://www.jelix.org
+* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+*
 */
 
 /**

@@ -4,7 +4,8 @@
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
 * @contributor Loic Mathaud
-* @copyright   2005-2006 Jouanneau laurent
+* @contributor Gildas Givaja (bug #83)
+* @copyright   2005-2007 Jouanneau laurent, 2006 Loic Mathaud, 2007 Gildas Givaja
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -58,7 +59,6 @@ class createappCommand extends JelixScriptCommand {
 
        $param = array('appname'=>$GLOBALS['APPNAME']);
 
-
        $this->createFile(JELIX_APP_PATH.'project.xml','project.xml.tpl',$param);
        $this->createFile(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php','var/config/defaultconfig.ini.php.tpl',$param);
        $this->createFile(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php','var/config/dbprofils.ini.php.tpl',$param);
@@ -75,7 +75,6 @@ class createappCommand extends JelixScriptCommand {
 
        $this->createFile(JELIX_APP_PATH.'application.init.php','application.init.php.tpl',$param);
 
-
        $param = array('appname'=>$GLOBALS['APPNAME']);
        $param['rp_jelix']=jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_LIB_PATH ,true);
        $param['rp_app']=jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH,true );
@@ -83,7 +82,6 @@ class createappCommand extends JelixScriptCommand {
        $this->createFile(JELIX_APP_WWW_PATH.'index.php','www/index.php.tpl',$param);
        $this->createFile(JELIX_APP_WWW_PATH.'jsonrpc.php','www/jsonrpc.php.tpl',$param);
        $this->createFile(JELIX_APP_WWW_PATH.'xmlrpc.php','www/xmlrpc.php.tpl',$param);
-
 
        if($this->getOption('-withdefaultmodule')){
             $cmd = jxs_load_command('createmodule');
@@ -93,14 +91,12 @@ class createappCommand extends JelixScriptCommand {
 
        if ($this->getOption('-withcmdline')) {
             $this->createDir(JELIX_APP_CMD_PATH);
+            $this->createDir(JELIX_APP_CONFIG_PATH.'cmdline');
             $this->createFile(JELIX_APP_CONFIG_PATH.'cmdline/config.ini.php','var/config/cmdline/config.ini.php.tpl',$param);
             $param['rp_cmd'] =jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,true);
             $this->createFile(JELIX_APP_CMD_PATH.'cmdline.php','scripts/cmdline.php.tpl',$param);
        }
-
     }
 }
-
-
 
 ?>

@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage plugins
 * @author   Jouanneau Laurent
-* @copyright 2006 Laurent Jouanneau
+* @copyright 2006-2007 Laurent Jouanneau
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
@@ -22,9 +22,10 @@ class AutoLocalePlugin implements jIPlugin {
     }
 
     /**
-     * @param    jAction  $action  action that will be executed
+     * @param    array  $params   plugin parameters for the current action
+     * @return null or jSelectorAct  if action should change
      */
-    public function beforeAction($action){
+    public function beforeAction($params){
 
         global $gJCoord, $gJConfig;
 
@@ -74,6 +75,7 @@ class AutoLocalePlugin implements jIPlugin {
             $_SESSION['JX_LANG']=$lang;
             $gJConfig->defaultLocale = $lang;
         }
+        return null;
     }
 
     /**
