@@ -155,7 +155,7 @@ abstract class jSelectorModule implements jISelector {
             }elseif($this->toString() == 'jelix~errors.selector.invalid.target'){
                 throw new Exception("Jelix Panic ! don't find localization files to show you an other error message !");
             }else{
-                throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
+                throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), $this->type));
             }
         }
     }
@@ -382,7 +382,7 @@ class jSelectorDao extends jSelectorModule {
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
 
         if (!is_readable ($this->_path)){
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "dao"));
         }
         $this->_where = 0;
     }
@@ -446,7 +446,7 @@ class jSelectorTpl extends jSelectorModule {
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.'.tpl';
 
         if (!is_readable ($this->_path)){
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "template"));
         }
         $this->_where = 0;
     }
@@ -507,51 +507,6 @@ class jSelectorForm extends jSelectorModule {
         return JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->module.'~'.$this->resource.'_htmlbuilder'.$this->_cacheSuffix;;
     }
 }
-
-
-
-/*
-class jSelectorPlugin implements jISelector {
-    protected $type = 'plug';
-    public $plugin='';
-    public $file = '';
-    private $_path;
-
-    function __construct($sel){
-        global $gJConfig;
-        if(preg_match("/^([\w\.]+)~([\w\.]+)$/", $sel, $m)){
-            $this->plugin = $m[1];
-            $this->file = $m[2];
-            if(!isset($gJConfig->_pluginsPathList[$this->plugin])){
-                throw new jExceptionSelector('jelix~errors.selector.invalid.target', $sel);
-            }
-        }else{
-            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
-        }
-    }
-
-    public function getPath (){
-        global $gJConfig;
-        if(isset($gJConfig->_pluginsPathList[$this->plugin])){
-            return $gJConfig->_pluginsPathList[$this->plugin].$this->file;
-        }else{
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', $this->toString());
-        }
-    }
-
-    public function toString($full=false){
-        if($full)
-            return $this->type.':'.$this->plugin.'~'.$this->file;
-        else
-            return $this->plugin.'~'.$this->file;
-    }
-
-    public function getCompiler(){ return null;}
-    public function useMultiSourceCompiler() { return false;}
-    public function getCompiledFilePath (){ return '';}
-
-}
-*/
 
 /**
  * base class for simple file selector
