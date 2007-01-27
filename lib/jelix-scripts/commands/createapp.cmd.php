@@ -2,7 +2,6 @@
 
 /**
 * @package     jelix-scripts
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor Loic Mathaud
 * @copyright   2005-2006 Jouanneau laurent

@@ -2,9 +2,9 @@
 /**
 * @package    jelix
 * @subpackage db
-* @version    $Id:$
 * @author     Croes Gérald, Ferlet Patrice, Laurent Jouanneau
 * @contributor Laurent Jouanneau
+* @contributor Nicolas Jeudy (patch ticket #99)
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -58,7 +58,7 @@ class jDbToolsPostgreSQL extends jDbTools {
           c.relname = '{$tableName}' AND a.attnum > 0 AND a.attrelid = c.oid AND a.atttypid = t.oid
         ORDER BY a.attnum";
 
-        $rs = $this->connector->query ($sql_get_fields);
+        $rs = $this->_connector->query ($sql_get_fields);
         $toReturn=array();
         while ($result_line = $rs->fetch ()){
             $field = new jDbFieldProperties();
@@ -74,7 +74,7 @@ class jDbToolsPostgreSQL extends jDbTools {
             else
                 $field->length=$result_line->length;
             $field->name = $result_line->field;
-            // TODO : $field->primary = ?;
+             $field->primary = ($result_line->atthasdef == 't');
 
             $toReturn[$result_line->field]=$field;
         }

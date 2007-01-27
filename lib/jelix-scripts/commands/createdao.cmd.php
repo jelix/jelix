@@ -1,9 +1,8 @@
 <?php
 /**
 * @package     jelix-scripts
-* @version     $Id$
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Nicolas Jeudy (patch ticket #99)
 * @copyright   2005-2006 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -69,6 +68,7 @@ class createdaoCommand extends JelixScriptCommand {
                case 'tinytext':
                case 'char':
                case 'enum':
+               case 'bpchar':
                case 'set':
                   $type='string';
                   break;
