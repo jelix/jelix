@@ -270,6 +270,12 @@ class jDaoProperty {
             throw new jDaoXmlException ('missing.attr', array('name', 'property'));
         }
         $this->name       = $params['name'];
+
+        if(!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $this->name)){
+            throw new jDaoXmlException ('property.invalid.name', $this->name);
+        }
+
+
         $this->fieldName  = $params['fieldname'] !==null ? $params['fieldname'] : $this->name;
         $this->table      = $params['table'] !==null ? $params['table'] : $def->getPrimaryTable();
 

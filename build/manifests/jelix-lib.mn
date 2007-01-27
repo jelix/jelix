@@ -269,6 +269,8 @@ cd lib/jelix-modules/jauth/classes
 cd lib/jelix-modules/jauth/controllers
 ! login.classic.php
 ! loginsw.classic.php
+cd lib/jelix-modules/jauth/daos
+  jelixuser.dao.xml
 cd lib/jelix-modules/jauth/install/var/config
   auth.plugin.ini.php
   authsw.plugin.ini.php
