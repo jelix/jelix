@@ -47,7 +47,7 @@ class jAuthDriverClass implements jIAuthDriver {
         return $class->getByLogin($login);
     }
 
-    public function createUser($login,$password){
+    public function createUserObject($login,$password){
         $user = jClasses::createRecord($this->_params['class']);
         $user->login = $login;
         $user->password = $this->cryptPassword($password);

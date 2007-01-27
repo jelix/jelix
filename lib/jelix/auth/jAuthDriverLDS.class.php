@@ -61,7 +61,7 @@ class jAuthDriverLDS implements jIAuthDriver {
         return $user;
     }
 
-    public function createUser($login,$password){
+    public function createUserObject($login,$password){
         $user = new jAuthUser();
         $user->login = $login;
         $user->password = $password;

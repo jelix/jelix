@@ -51,7 +51,7 @@ class jAuthDriverDb implements jIAuthDriver {
         return $dao->getByLogin($login);
     }
 
-    public function createUser($login,$password){
+    public function createUserObject($login,$password){
         $user = jDao::createRecord($this->_params['dao']);
         $user->login = $login;
         $user->password = $this->cryptPassword($password);

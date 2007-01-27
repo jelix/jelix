@@ -34,7 +34,7 @@ interface jIAuthDriver {
      * @param string $password the user password
      * @return jAuthUser|object the returned object depends on the driver
      */
-    public function createUser($login, $password);
+    public function createUserObject($login, $password);
 
     /**
     * store a new user.
@@ -186,14 +186,26 @@ class jAuth {
     }
 
     /**
+     * deprecated method. see CreateUserObject
+     * @param string $login the user login
+     * @param string $password the user password
+     * @return jAuthUser|object the returned object depends on the driver
+     * @deprecated
+     */
+    public static function createUser($login,$password){
+        return self::createUserObject($login,$password);
+    }
+
+    /**
      * Create a new user object
      * @param string $login the user login
      * @param string $password the user password
      * @return jAuthUser|object the returned object depends on the driver
+     * @since 1.0b2
      */
-    public static function createUser($login,$password){
+    public static function createUserObject($login,$password){
         $dr = self::_getDriver();
-        return $dr->createUser($login,$password);
+        return $dr->createUserObject($login,$password);
     }
 
 

@@ -25,7 +25,7 @@ class adminCtrl extends jController {
     }
 
     function createUser(){
-        $user = jAuth::createUser($this->param('login'),$this->param('pwd'));
+        $user = jAuth::createUserObject($this->param('login'),$this->param('pwd'));
         if($user){
             $user->email = $this->param('email');
             jAuth::saveNewUser($user);
