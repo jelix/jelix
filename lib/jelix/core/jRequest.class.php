@@ -4,7 +4,7 @@
 * @subpackage core
 * @author     Laurent Jouanneau
 * @contributor
-* @copyright  2005-2006 Laurent Jouanneau
+* @copyright  2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -85,16 +85,20 @@ abstract class jRequest {
 
         $lastslash = strrpos ($_SERVER['SCRIPT_NAME'], '/');
         $this->url_script_path = substr ($_SERVER['SCRIPT_NAME'], 0,$lastslash ).'/';//following is subdir/
+        if(strpos($this->url_script_path,$gJConfig->urlengine['basePath']) !== 0){
+            die('Jelix Error: basePath in config file doesn\'t correspond to current base path');
+        }
+
         $this->url_script_name = substr ($_SERVER['SCRIPT_NAME'], $lastslash+1);//following is index.php
 
         if(isset($_SERVER['PATH_INFO'])){
             $pathinfo = $_SERVER['PATH_INFO'];
-            if (strpos ($_SERVER['PATH_INFO'], $_SERVER['SCRIPT_NAME']) !== false){
+            if ($gJConfig->isWindows && strpos ($_SERVER['PATH_INFO'], $_SERVER['SCRIPT_NAME']) !== false){
                 //under IIS, we may get as PATH_INFO /subdir/index.php/mypath/myaction (which is incorrect)
                 $pathinfo = substr ($_SERVER['PATH_INFO'], strlen ($_SERVER['SCRIPT_NAME']));
             }
         }else{
-            if($gJConfig->urlengine['useIIS'] && isset ($_GET[$gJConfig->urlengine['IISPathKey']])){
+            if($gJConfig->isWindows && $gJConfig->urlengine['useIIS'] && isset ($_GET[$gJConfig->urlengine['IISPathKey']])){
                 $pathinfo = $_GET[$gJConfig->urlengine['IISPathKey']];
                 $pathinfo = $gJConfig->urlengine['IISStripslashesPathKey'] === true ? stripslashes($pathinfo) : $pathinfo;
             }else{
