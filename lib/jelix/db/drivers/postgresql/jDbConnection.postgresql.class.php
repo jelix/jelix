@@ -22,6 +22,13 @@
 class jDbConnectionPostgreSQL extends jDbConnection {
     protected $_charsets =array( 'UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');
 
+    function __construct($profil){
+        if(!function_exists('pg_connect')){
+            throw new JException('jelix~db.error.nofunction','posgresql');
+        }
+        parent::__construct($profil);
+    }
+
     public function beginTransaction (){
         return $this->_doExec('BEGIN');
     }

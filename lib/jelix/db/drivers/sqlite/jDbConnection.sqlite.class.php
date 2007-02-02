@@ -2,10 +2,9 @@
 /**
 * @package    jelix
 * @subpackage db
-* @version    $Id:$
 * @author     Loic Mathaud
-* @contributor
-* @copyright  2006 Loic Mathaud
+* @contributor Laurent Jouanneau
+* @copyright  2006 Loic Mathaud, 2007 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -16,6 +15,13 @@
  * @subpackage db
  */
 class jDbConnectionSqlite extends jDbConnection {
+
+    function __construct($profil){
+        if(!function_exists('sqlite_open')){
+            throw new JException('jelix~db.error.nofunction','sqlite');
+        }
+        parent::__construct($profil);
+    }
 
     /**
     * begin a transaction

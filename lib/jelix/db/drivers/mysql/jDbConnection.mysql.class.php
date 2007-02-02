@@ -4,7 +4,7 @@
 * @subpackage db
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
@@ -22,6 +22,15 @@
 class jDbConnectionMySQL extends jDbConnection {
 
    protected $_charsets =array( 'UTF-8'=>'utf8', 'ISO-8859-1'=>'latin1');
+
+   function __construct($profil){
+      // à cause du @, on est obligé de tester l'existence de mysql, sinon en cas d'absence
+      // on a droit à un arret sans erreur 
+      if(!function_exists('mysql_connect')){
+         throw new JException('jelix~db.error.nofunction','mysql');
+      }
+      parent::__construct($profil);
+   }
 
    /**
    * begin a transaction
