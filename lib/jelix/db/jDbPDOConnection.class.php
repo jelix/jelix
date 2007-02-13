@@ -8,7 +8,7 @@
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
-
+#ifnot ENABLE_PHP_JELIX
 /**
  * PDO constant name have been change between php 5.0 and 5.1. So we use our own constant.
  * @link http://lxr.php.net/source/php-src/ext/pdo/php_pdo_driver.h
@@ -25,7 +25,7 @@ define('JPDO_CURSOR_SCROLL',1); //PDO::CURSOR_SCROLL
 define('JPDO_ATTR_ERRMODE',3); // PDO::ATTR_ERRMODE
 define('JPDO_ERRMODE_EXCEPTION',2); // PDO::ERRMODE_EXCEPTION
 define('JPDO_MYSQL_ATTR_USE_BUFFERED_QUERY',1000); // PDO::MYSQL_ATTR_USE_BUFFERED_QUERY
-
+#endif
 /**
  * a resultset based on PDOStatement
  * @package  jelix

@@ -36,12 +36,13 @@ if(!function_exists('jelix_version')){
  */
 #expand define ('JELIX_VERSION', '__LIB_VERSION__');
 
+#ifnot ENABLE_PHP_JELIX
 /**
  * base of namespace path used in xml files of jelix
  * @name  JELIX_NAMESPACE_BASE
  */
 define ('JELIX_NAMESPACE_BASE' , 'http://jelix.org/ns/');
-
+#endif
 
 define ('JELIX_LIB_PATH',         dirname (__FILE__).'/');
 define ('JELIX_LIB_CORE_PATH',    JELIX_LIB_PATH.'core/');

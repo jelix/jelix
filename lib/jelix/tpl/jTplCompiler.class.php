@@ -167,15 +167,9 @@ class jTplCompiler
         fwrite($fd, $result);
         fclose($fd);
 
-        // Delete the file if it allready exists (this is needed on Win,
+        // Delete the file if it already exists (this is needed on Win,
         // because it cannot overwrite files with rename()
-        if (preg_match("/^(\w+).*$/", PHP_OS, $m)) {
-            $os=$m[1];
-        } else {
-            $os = PHP_OS;
-        }
-        $isWindows = (strpos(strtolower($os),'win')!== false);
-        if ($isWindows && file_exists($cachefile)) {
+        if (substr(PHP_OS,0,3) == 'WIN' && file_exists($cachefile)) {
             @unlink($cachefile);
         }
 

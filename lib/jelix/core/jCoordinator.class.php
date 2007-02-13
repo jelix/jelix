@@ -89,9 +89,13 @@ class jCoordinator {
             set_error_handler('jErrorHandler');
             set_exception_handler('JExceptionHandler');
         }
-        if(function_exists('date_default_timezone_set')){ // depuis php 5.1
+#if PHP50
+        if(function_exists('date_default_timezone_set')){
             date_default_timezone_set($gJConfig->defaultTimeZone);
         }
+#else
+        date_default_timezone_set($gJConfig->defaultTimeZone);
+#endif
         $this->_loadPlugins();
     }
 

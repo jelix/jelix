@@ -2,7 +2,7 @@ cd lib/jelix/core
 * jConfig.class.php
   jContext.class.php
 * jController.class.php
-  jCoordinator.class.php
+* jCoordinator.class.php
   jErrorHandler.lib.php
   jException.lib.php
 * jIncluder.class.php

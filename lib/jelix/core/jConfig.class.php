@@ -46,14 +46,18 @@ class jConfig {
 #endif
         $compil=false;
         if(!file_exists($file)){
+            // pas de cache, on compile
             $compil=true;
         }else{
             $t = filemtime($file);
             $dc = JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php';
             if( (file_exists($dc) && filemtime($dc)>$t)
                 || filemtime(JELIX_APP_CONFIG_PATH.$configFile)>$t){
+                // le fichier de conf ou le fichier defaultconfig.ini.php ont ete modifié : on compile
                 $compil=true;
             }else{
+
+                // on lit le fichier de conf du cache
 #if WITH_BYTECODE_CACHE == 'auto'
                 if(BYTECODE_CACHE_EXISTS){
                     include($file);
@@ -77,13 +81,12 @@ class jConfig {
                 $config = (object) $config;
 #endif
 #endif
-
+                // on va verifier tous les chemins
                 if($config->compilation['checkCacheFiletime']){
-                    $compil = self::_verifpath($config->modulesPath,$t);
-                    if(!$compil){
-                        $compil = self::_verifpath($config->pluginsPath,$t);
-                        if(!$compil){
-                            $compil = self::_verifpath($config->tplpluginsPath,$t);
+                    foreach($config->_allBasePath as $path){
+                        if(!file_exists($path) || filemtime($path)>$t){
+                            $compil = true;
+                            break;
                         }
                     }
                 }
@@ -94,24 +97,6 @@ class jConfig {
             return jConfigCompiler::read($configFile);
         }else
             return $config;
-    }
-
-    /**
-     * verify the existance of a path
-     */
-    private static function _verifpath($list, $time){
-        $list = split(' *, *',$list);
-        foreach($list as $path){
-            $path = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
-            if(!file_exists($path)){
-                trigger_error($path.' path given in the config doesn\'t exist',E_USER_ERROR);
-                exit;
-            }
-            if(filemtime($path)>$time){
-                return true;
-            }
-        }
-        return false;
     }
 }
 

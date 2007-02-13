@@ -28,12 +28,6 @@ class jConfigCompiler {
      */
     static public function read($configFile){
 
-        if(preg_match("/^(\w+).*$/", PHP_OS, $m)){
-            $os=$m[1];
-        }else{
-            $os=PHP_OS;
-        }
-
 #if ENABLE_PHP_JELIX
         $config = jelix_read_ini(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
 
@@ -45,14 +39,14 @@ class jConfigCompiler {
             if( false === @jelix_read_ini(JELIX_APP_CONFIG_PATH.$configFile,$config))
                 die("Syntax error in the Jelix config file $configFile !");
         }
-        $config->OS = $os;
-        $os=strtolower($os);
-        $config->isWindows = ((strpos($os,'win')!== false) && (strpos($os,'darwin')=== false));
+        $config->isWindows = (substr(PHP_OS,0,3) == 'WIN');
         if(trim( $config->defaultAction) == '')
              $config->defaultAction = '_';
 
-        $config->_pluginsPathList = self::_loadPathList($config->pluginsPath);
-        $config->_modulesPathList = self::_loadPathList($config->modulesPath);
+        $config->_allBasePath = array();
+        
+        $config->_pluginsPathList = self::_loadPathList($config->pluginsPath, $config->_allBasePath);
+        $config->_modulesPathList = self::_loadPathList($config->modulesPath, $config->_allBasePath);
 
         self::_loadTplPathList($config, 'tplpluginsPath');
 
@@ -81,15 +75,13 @@ class jConfigCompiler {
                 die("Syntax error in the Jelix config file $configFile !");
             self::_mergeConfig($config, $userConfig);
         }
-
-        $config['OS'] = $os;
-        $os=strtolower($os);
-        $config['isWindows'] = ((strpos($os,'win')!== false) && (strpos($os,'darwin')=== false));
+        $config['isWindows'] = (substr(PHP_OS,0,3) == 'WIN');
         if(trim( $config['defaultAction']) == '')
              $config['defaultAction'] = '_';
 
-        $config['_pluginsPathList'] = self::_loadPathList($config['pluginsPath']);
-        $config['_modulesPathList'] = self::_loadPathList($config['modulesPath']);
+        $config['_allBasePath'] = array();
+        $config['_pluginsPathList'] = self::_loadPathList($config['pluginsPath'], $config['_allBasePath']);
+        $config['_modulesPathList'] = self::_loadPathList($config['modulesPath'], $config['_allBasePath']);
 
         self::_loadTplPathList($config, 'tplpluginsPath');
 
@@ -156,7 +148,7 @@ class jConfigCompiler {
      * @param array $list list of "lib:*" and "app:*" path
      * @return array list of full path
      */
-    static private function _loadPathList($list){
+    static private function _loadPathList($list, &$allBasePath){
         $list = split(' *, *',$list);
         $result=array();
         foreach($list as $path){
@@ -165,6 +157,7 @@ class jConfigCompiler {
                 trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
                 exit;
             }
+            $allBasePath[]=$p;
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
                     if ($f{0} != '.' && is_dir($p.$f)) {
@@ -194,6 +187,11 @@ class jConfigCompiler {
                 trigger_error('The path '.$path.' for tpl plugins, given in the jelix config, doesn\'t exists !',E_USER_ERROR);
                 exit;
             }
+#if ENABLE_PHP_JELIX
+            $config->_allBasePath[]=$p;
+#else
+            $config['_allBasePath'][]=$p;
+#endif
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
                     if ($f{0} != '.' && is_dir($p.$f)) {
