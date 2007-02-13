@@ -232,11 +232,11 @@ class jDaoGenerator {
 
          switch($method->type){
                case 'delete':
-                  $src[] = '    $query = \'DELETE FROM '.$pTableRealName.' \';';
+                  $src[] = '    $__query = \'DELETE FROM '.$pTableRealName.' \';';
                   $glueCondition =' WHERE ';
                   break;
                case 'update':
-                  $src[] = '    $query = \'UPDATE '.$pTableRealName.' SET ';
+                  $src[] = '    $__query = \'UPDATE '.$pTableRealName.' SET ';
                   $updatefields = $this->_getPropertiesBy('PrimaryFieldsExcludePk');
                   $sqlSet='';
                   foreach($method->getValues() as $propname=>$value){
@@ -267,7 +267,7 @@ class jDaoGenerator {
                   }else{
                     $count='*';
                   }
-                  $src[] = '    $query = \'SELECT COUNT('.$count.') as c \'.$this->_fromClause.$this->_whereClause;';
+                  $src[] = '    $__query = \'SELECT COUNT('.$count.') as c \'.$this->_fromClause.$this->_whereClause;';
                   $glueCondition = ($sqlWhereClause !='' ? ' AND ':' WHERE ');
                   break;
                case 'selectfirst':
@@ -278,7 +278,7 @@ class jDaoGenerator {
                   }else{
                      $select=' $this->_selectClause';
                   }
-                  $src[] = '    $query = '.$select.'.$this->_fromClause.$this->_whereClause;';
+                  $src[] = '    $__query = '.$select.'.$this->_fromClause.$this->_whereClause;';
                   $glueCondition = ($sqlWhereClause !='' ? ' AND ':' WHERE ');
                   if( ($lim = $method->getLimit ()) !==null){
                      $limit=', '.$lim['offset'].', '.$lim['count'];
@@ -299,7 +299,7 @@ class jDaoGenerator {
                $sqlCond = $this->_buildConditions($cond, $allField,$method->getParameters(),true);
 
             if(trim($sqlCond) != '')
-               $src[] = '$query .=\''.$glueCondition.$sqlCond."';";
+               $src[] = '$__query .=\''.$glueCondition.$sqlCond."';";
             /*else
                $src[] =";";*/
          }
@@ -309,26 +309,26 @@ class jDaoGenerator {
          switch($method->type){
                case 'delete':
                case 'update' :
-                  $src[] = '    return $this->_conn->exec ($query);';
+                  $src[] = '    return $this->_conn->exec ($__query);';
                break;
                case 'count':
-                  $src[] = '    $rs = $this->_conn->query($query);';
-                  $src[] = '    $res = $rs->fetch();';
-                  $src[] = '    return intval($res->c);';
+                  $src[] = '    $__rs = $this->_conn->query($__query);';
+                  $src[] = '    $__res = $__rs->fetch();';
+                  $src[] = '    return intval($__res->c);';
                   break;
                case 'selectfirst':
-                  $src[] = '    $rs = $this->_conn->query($query);';
-                  $src[] = '    $rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
-                  $src[] = '    return $rs->fetch();';
+                  $src[] = '    $__rs = $this->_conn->query($__query);';
+                  $src[] = '    $__rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
+                  $src[] = '    return $__rs->fetch();';
                   break;
                case 'select':
                default:
                   if($limit)
-                      $src[] = '    $rs = $this->_conn->limitQuery($query'.$limit.');';
+                      $src[] = '    $__rs = $this->_conn->limitQuery($__query'.$limit.');';
                   else
-                      $src[] = '    $rs = $this->_conn->query($query);';
-                  $src[] = '    $rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
-                  $src[] = '    return $rs;';
+                      $src[] = '    $__rs = $this->_conn->query($__query);';
+                  $src[] = '    $__rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
+                  $src[] = '    return $__rs;';
          }
          $src[] = '}';
       }
@@ -655,13 +655,13 @@ class jDaoGenerator {
 
             if($cond['operator'] == 'IN' || $cond['operator'] == 'NOT IN'){
                if($cond['expr']){
-                  $phpvalue= $this->_preparePHPExpr('$e', $prop->datatype, false);
+                  $phpvalue= $this->_preparePHPExpr('$__e', $prop->datatype, false);
                   if(strpos($phpvalue,'$this->_conn->quote')===0){
                      $phpvalue = str_replace('$this->_conn->quote(',"'\''.str_replace('\\'','\\\\\\'',",$phpvalue).".'\''";
                      $phpvalue = str_replace('\\','\\\\', $phpvalue);
                      $phpvalue = str_replace('\'','\\\'', $phpvalue);
                   }
-                  $phpvalue = 'implode(\',\', array_map( create_function(\'$e\',\'return '.$phpvalue.';\'), '.$cond['value'].'))';
+                  $phpvalue = 'implode(\',\', array_map( create_function(\'$__e\',\'return '.$phpvalue.';\'), '.$cond['value'].'))';
                   $value= '(\'.'.$phpvalue.'.\')';
 
                }else{
