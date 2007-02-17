@@ -17,6 +17,12 @@ Version Jelix: {$versionjelix}<br/>
     <li><a href="?module=unittest&amp;action=testurlcreate">Tester la création d'url</a></li>
     <li><a href="?module=unittest&amp;action=testurlparse">Tester l'analyse d'url</a></li>
 </ul>
+
+<h3>jLocale</h3>
+<ul>
+    <li><a href="?module=unittest&amp;action=testlocaleprop">Tester la lecture des properties</a></li>
+</ul>
+
 {if $isurlsig}
 <p>test urls :
 <a href="{jurl 'unittest~urlsig_url1',array('annee'=>'2006','mois'=>'10','id'=>'01')}">url1</a>

@@ -72,5 +72,9 @@ class UnitTestService {
       $test->run(new jHtmlRespReporter($this->_rep));
    }
 
+   function localepropTest(){
+      $test = jClasses::create("utjlocale");
+      $test->run(new jHtmlRespReporter($this->_rep));
+   }
 }
 ?>

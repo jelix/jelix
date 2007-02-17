@@ -24,15 +24,15 @@ class jBundle {
     public $fic;
     public $locale;
 
-    private $_loadedCharset = array ();
-    private $_strings = array();
+    protected $_loadedCharset = array ();
+    protected $_strings = array();
 
     /**
     * constructor
     * @param jSelector   $file selector of a properties file
     * @param string      $locale    the code lang
     */
-    function __construct ($file, $locale){
+    public function __construct ($file, $locale){
         $this->fic  = $file;
         $this->locale = $locale;
     }
@@ -64,7 +64,7 @@ class jBundle {
     * @param string $locale     the locale
     * @param string $charset    the charset
     */
-    private function _loadLocales ($locale, $charset){
+    protected function _loadLocales ($locale, $charset){
         global $gJConfig;
         $this->_loadedCharset[] = $charset;
 
@@ -106,7 +106,7 @@ class jBundle {
     /**
     * loads a given resource from its path.
     */
-    private function _loadResources ($fichier, $charset){
+    protected function _loadResources ($fichier, $charset){
 
         if (($f = fopen ($fichier, 'r')) !== false) {
             $multiline=false;

@@ -86,5 +86,16 @@ class defaultCtrl extends jController {
 
       return $rep;
    }
+
+   function testlocaleprop(){
+      $rep = $this->getResponse('unittest');
+      $rep->title = 'test unitaires sur jlocale';
+
+      $ut = jClasses::create("unittestservice");
+      $ut->init($rep);
+      $ut->localepropTest();
+
+      return $rep;
+   }
 }
 ?>
