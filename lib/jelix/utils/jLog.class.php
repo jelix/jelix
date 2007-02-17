@@ -42,6 +42,9 @@ class jLog {
    public static function log($message, $type='default'){
       global $gJConfig;
       $f = $gJConfig->logfiles[$type];
+      if(!isset($_SERVER['REMOTE_ADDR'])){ // for CLI mode (bug #111)
+          $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+      }
       $f = str_replace('%ip%', $_SERVER['REMOTE_ADDR'], $f);
       $sel = new jSelectorLog($f);
 
