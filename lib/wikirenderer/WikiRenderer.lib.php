@@ -3,7 +3,7 @@
  * Wikirenderer is a wiki text parser. It can transform a wiki text into xhtml or other formats
  * @package WikiRenderer
  * @author Laurent Jouanneau <jouanneau@netcourrier.com>
- * @copyright 2003-2006 Laurent Jouanneau
+ * @copyright 2003-2007 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *
  * This library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
  *
  */
 define('WIKIRENDERER_PATH', dirname(__FILE__).'/');
-define('WIKIRENDERER_VERSION', '3.0RC1-php5');
+define('WIKIRENDERER_VERSION', '3.0-php5');
 
 /**
  * base class to generate output from inline wiki tag
@@ -53,7 +53,7 @@ abstract class WikiTag {
     function __construct($config){
         $this->config = $config;
         $this->checkWikiWordFunction=$config->checkWikiWordFunction;
-        if($config->checkWikiWordFunction === null) $checkWikiWordIn=array();
+        if($config->checkWikiWordFunction === null) $this->checkWikiWordIn=array();
         if(count($this->separators)) $this->separator= $this->separators[0];
     }
 
@@ -67,8 +67,9 @@ abstract class WikiTag {
             $parsedContent =$this->_doEscape($wikiContent);
             if(count( $this->checkWikiWordIn)
                 && isset($this->attribute[$this->separatorCount])
-                && in_array($this->attribute[$this->separatorCount], $this->checkWikiWordIn))
+                && in_array($this->attribute[$this->separatorCount], $this->checkWikiWordIn)){
                 $parsedContent=$this->_findWikiWord($parsedContent);
+            }
         }
         $this->contents[$this->separatorCount] .= $parsedContent;
         $this->wikiContentArr[$this->separatorCount] .= $wikiContent;
@@ -165,6 +166,8 @@ class WikiTextLine extends WikiTag {
  */
 class WikiHtmlTextLine extends WikiTag {
     public $isTextLineTag=true;
+    protected $attribute=array('$$');
+    protected $checkWikiWordIn=array('$$');
 
     protected function _doEscape($string){
         return htmlspecialchars($string);
@@ -179,6 +182,7 @@ class WikiHtmlTextLine extends WikiTag {
 abstract class WikiTagXhtml extends WikiTag {
    protected $name;
    protected $attribute=array('$$');
+   protected $checkWikiWordIn=array('$$');
 
    public function getContent(){
         $attr='';
@@ -535,7 +539,7 @@ class WikiRenderer {
          $this->config=$config;
       }else{
          require_once(WIKIRENDERER_PATH . 'rules/wr3_to_xhtml.php');
-         $this->config= new classicwr_to_xhtml();
+         $this->config= new wr3_to_xhtml();
       }
 
       $this->inlineParser = new WikiInlineParser($this->config);
