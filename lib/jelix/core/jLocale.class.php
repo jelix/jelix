@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
 * @contributor
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
@@ -108,50 +108,44 @@ class jBundle {
     */
     protected function _loadResources ($fichier, $charset){
 
-        if (($f = fopen ($fichier, 'r')) !== false) {
+        if (($f = @fopen ($fichier, 'r')) !== false) {
             $multiline=false;
             $linenumber=0;
             $key='';
             while (!feof($f)) {
                 if($line=fgets($f)){
                     $linenumber++;
-
+                    $line=rtrim($line);
                     if($multiline){
-                        if(preg_match("/^([^#]+)(\#?.*)$/", $line, $match)){ // toujours vrai en fait
-                            $value=trim($match[1]);
-                            if($multiline= (substr($value,-1) =="\\"))
-                                $this->_strings[$charset][$key].=substr($value,0,-1);
-                            else
-                                $this->_strings[$charset][$key].=$value;
-                        }
-                    }elseif(preg_match("/^\s*(([^#=]+)=([^#]+))?(\#?.*)$/",$line, $match)){
-                        if($match[1] != ''){
-                            // on a bien un cle=valeur
-                            $value=trim($match[3]);
-                            if($multiline= (substr($value,-1) =="\\")){
-                                $value=substr($value,0,-1);
-                            }
-
-                            $key=trim($match[2]);
-
-                            if($value == '\w'){
-                                $value = ' ';
-                            }
-
-                            $this->_strings[$charset][$key] =$value;
+                        if(preg_match("/^\s*(.*)\s*(\\\\?)$/U", $line, $match)){
+                            $sp = preg_split('/(?<!\\\\)\#/', $match[1], -1 ,PREG_SPLIT_NO_EMPTY);
+                            $multiline= ($match[2] =="\\");
+                            $this->_strings[$charset][$key].=' '.trim(str_replace('\#','#',$sp[0]));
                         }else{
-                            if($match[4] != '' && substr($match[4],0,1) != '#'){
-                                throw new Exception('Syntaxe error in file properties '.$fichier.' line '.$linenumber);
-                            }
+                            throw new Exception('Syntaxe error in file properties '.$fichier.' line '.$linenumber,210);
                         }
+                    }elseif(preg_match("/^\s*(.+)\s*=\s*(.*)\s*(\\\\?)$/U",$line, $match)){
+                        // on a bien un cle=valeur
+                        $key=$match[1];
+                        $multiline= ($match[3] =="\\");
+                        $sp = preg_split('/(?<!\\\\)\#/', $match[2], -1 ,PREG_SPLIT_NO_EMPTY);
+                        $value=trim(str_replace('\#','#',$sp[0]));
+                        if($value == '\w'){
+                            $value = ' ';
+                        }
+
+                        $this->_strings[$charset][$key] =$value;
+
+                    }elseif(preg_match("/^\s*(\#.*)?$/",$line, $match)){
+                        // ok, juste un commentaire
                     }else {
-                        throw new Exception('Syntaxe error in file properties '.$fichier.' line '.$linenumber);
+                        throw new Exception('Syntaxe error in file properties '.$fichier.' line '.$linenumber,211);
                     }
                 }
             }
             fclose ($f);
         }else{
-            throw new Exception('Cannot load the resource '.$fichier);
+            throw new Exception('Cannot load the resource '.$fichier,212);
         }
     }
 }

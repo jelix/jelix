@@ -71,6 +71,17 @@ cd testapp/modules/unittest/classes
   utdao2.class.php
   utdao_conditions.class.php
   utfilter.class.php
+  utjlocale.class.php
+cd testapp/modules/unittest/locales/
+  test_A.properties
+  test_B.properties
+  test_C.properties
+  test_D.properties
+  test_E.properties
+  test_F.properties
+  test_G.properties
+  test_H.properties
+  test_I.properties
 cd testapp/modules/unittest/locales/fr_FR
   testunit.ISO-8859-1.properties
 cd testapp/modules/unittest/locales/en_US
