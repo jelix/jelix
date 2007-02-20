@@ -63,15 +63,15 @@ class jDbConnectionPostgreSQL extends jDbConnection {
     protected function _connect (){
         $funcconnect= ($this->profil['persistent'] ? 'pg_pconnect':'pg_connect');
 
-        $str = 'dbname='.$this->profil['database'].' user='.$this->profil['user'].' password='.$this->profil['password'];
+        $str = 'dbname=\''.$this->profil['database'].'\' user=\''.$this->profil['user'].'\' password=\''.$this->profil['password'].'\'';
 
         // on fait une distinction car si host indiqué -> connection TCP/IP, sinon socket unix
         if($this->profil['host'] != '')
-            $str = 'host='.$this->profil['host'].' '.$str;
+            $str = 'host=\''.$this->profil['host'].'\' '.$str;
 
         // Si le port est défini on le rajoute à la chaine de connexion
         if (isset($this->profil['port'])) {
-            $str .= ' port='.$this->profil['port'];
+            $str .= ' port=\''.$this->profil['port'].'\'';
         }
 
         if($cnx=@$funcconnect ($str)){
