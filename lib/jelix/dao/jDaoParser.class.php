@@ -136,7 +136,7 @@ class jDaoParser {
         if($infos['primarykey'] === null)
             throw new jDaoXmlException ('primarykey.missing');
 
-        $infos['pk']=explode(',',$infos['primarykey']);
+        $infos['pk']= preg_split("/[\s,]+/", $infos['primarykey']);
         unset($infos['primarykey']);
 
         if(count($infos['pk']) == 0 || $infos['pk'][0] == '')
@@ -145,7 +145,7 @@ class jDaoParser {
         if($typetable){ // pour les foreigntable et optionalforeigntable
             if($infos['onforeignkey'] === null)
                 throw new jDaoXmlException ('foreignkey.missing');
-            $infos['fk']=explode(',',$infos['onforeignkey']);
+            $infos['fk']=preg_split("/[\s,]+/",$infos['onforeignkey']);
             unset($infos['onforeignkey']);
             if(count($infos['fk']) == 0 || $infos['fk'][0] == '')
                 throw new jDaoXmlException ('foreignkey.missing');
