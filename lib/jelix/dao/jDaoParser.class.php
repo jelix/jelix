@@ -62,6 +62,7 @@ class jDaoParser {
      */
     private $_methods = array();
 
+    public $hasOnlyPrimaryKeys = false;
     /**
     * Constructor
     */
@@ -92,14 +93,17 @@ class jDaoParser {
         }
 
         if($debug == 2) return;
-
+        $countprop = 0;
         //add the record properties
         if(isset($xml->record) && isset($xml->record[0]->property)){
             foreach ($xml->record[0]->property as $prop){
-            $p = new jDaoProperty ($prop->attributes(), $this);
-            $this->_properties[$p->name] = $p;
-            $this->_tables[$p->table]['fields'][] = $p->name;
+                $p = new jDaoProperty ($prop->attributes(), $this);
+                $this->_properties[$p->name] = $p;
+                $this->_tables[$p->table]['fields'][] = $p->name;
+                if(($p->table == $this->_primaryTable) && !$p->isPK)
+                    $countprop ++;
             }
+            $this->hasOnlyPrimaryKeys = ($countprop == 0);
         }else
             throw new jDaoXmlException ('properties.missing');
 
@@ -400,6 +404,9 @@ class jDaoMethod {
         }
 
         if($this->type == 'update'){
+            if($this->_def->hasOnlyPrimaryKeys)
+                throw new jDaoXmlException ('method.update.forbidden',array($this->name));
+
             if(isset($method->values) && isset($method->values[0]->value)){
                 foreach ($method->values[0]->value as $val){
                     $this->_addValue($val);

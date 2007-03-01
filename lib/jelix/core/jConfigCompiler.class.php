@@ -157,6 +157,8 @@ class jConfigCompiler {
                 trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
                 exit;
             }
+            if(substr($p,-1) !='/')
+                $p.='/';
             $allBasePath[]=$p;
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
@@ -187,6 +189,8 @@ class jConfigCompiler {
                 trigger_error('The path '.$path.' for tpl plugins, given in the jelix config, doesn\'t exists !',E_USER_ERROR);
                 exit;
             }
+            if(substr($p,-1) !='/')
+                $p.='/';
 #if ENABLE_PHP_JELIX
             $config->_allBasePath[]=$p;
 #else

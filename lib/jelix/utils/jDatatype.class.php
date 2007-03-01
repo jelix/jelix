@@ -280,7 +280,7 @@ class jDatatypeIPv6 extends jDatatype {
  * @subpackage  utils
  * @experimental
  */
-class jDatatypeMail extends jDatatype {
+class jDatatypeEmail extends jDatatype {
     public function check($value){
         return jFilter::isEmail($value);
     }

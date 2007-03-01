@@ -334,7 +334,40 @@ class UTDao2 extends jUnitTestCase {
         }
     }
 
+   function testBadUpdateMethod() {
+ $dao ='<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+  <datasources>
+    <primarytable name="news" primarykey="news_id,foo_id" />
+  </datasources>
+  <record>
+    <property name="id" fieldname="news_id" datatype="autoincrement" />
+    <property name="id2" fieldname="foo_id" datatype="integer" />
+  </record>
+</dao>';
 
+        $parser = new jDaoParser();
+        $parser->parse(simplexml_load_string($dao),1);
+
+        $this->sendMessage("test bad update method ");
+        $xml= simplexml_load_string('<?xml version="1.0"?>
+          <method name="tryupdate" type="update">
+            <parameter name="something" />
+            <values>
+                <value property="foo_id" expr="$something" />
+            </values>
+          </method>');
+
+        try{
+            $p = new jDaoMethod($xml, $parser);
+            $this->fail("Pas d'exception survenue !");
+        }catch(jDaoXmlException $e){
+            $this->assertEqual($e->getMessage(), 'jelix~daoxml.method.update.forbidden');
+            $this->assertEqual($e->localeParams, array('','','tryupdate'));
+        }catch(Exception $e){
+            $this->fail("Exception inconnue : ".$e->getMessage());
+        }
+    }
 }
 
 

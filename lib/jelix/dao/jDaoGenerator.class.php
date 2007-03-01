@@ -184,25 +184,28 @@ class jDaoGenerator {
       //-----  update method
 
       $src[] = 'public function update ($record){';
-      $src[] = '   $query = \'UPDATE '.$pTableRealName.' SET ';
-
       list($fields, $values) = $this->_prepareValues($this->_getPropertiesBy('PrimaryFieldsExcludePk'),'updateMotif', 'record->');
-
-      $sqlSet='';
-      foreach($fields as $k=> $fname){
-         $sqlSet.= ', '.$fname. '= '. $values[$k];
+      if(count($fields)){
+         $src[] = '   $query = \'UPDATE '.$pTableRealName.' SET ';
+         $sqlSet='';
+         foreach($fields as $k=> $fname){
+            $sqlSet.= ', '.$fname. '= '. $values[$k];
+         }
+         $src[] = substr($sqlSet,1);
+    
+         $sqlCondition = $this->_buildSimpleConditions($pkFields, 'record->', false);
+         if($sqlCondition!='')
+            $src[] = ' where '.$sqlCondition;
+    
+         $src[] = "';";
+         $src[] = '   return $this->_conn->exec ($query);';
+         $src[] = " }";//ends the update function
+      }else{
+         //the dao is mapped on a table which contains only primary key : update is impossible
+         // so we will generate an error on update
+         $src[] = "     throw new jException('jelix~dao.error.update.impossible',array('".jDaoCompiler::$daoId."','".jDaoCompiler::$daoPath."'));";
+         $src[] = " }";
       }
-      $src[] = substr($sqlSet,1);
-
-      $sqlCondition = $this->_buildSimpleConditions($pkFields, 'record->', false);
-      if($sqlCondition!='')
-         $src[] = ' where '.$sqlCondition;
-
-      $src[] = "';";
-      $src[] = '   return $this->_conn->exec ($query);';
-      $src[] = " }";//ends the update function
-
-
       //----- other user methods
 
       $allField = $this->_getPropertiesBy('All');
