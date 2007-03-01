@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Aubanel (patch for anchor)
 * @copyright   2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -30,6 +30,11 @@ final class jResponseRedirect extends jResponse {
     public $action = '';
 
     /**
+     * the anchor you want to add to the final url. leave blank if you don't one.
+     */
+    public $anchor ='';
+
+    /**
      * parameters for the action/url
      */
     public $params = array();
@@ -37,7 +42,7 @@ final class jResponseRedirect extends jResponse {
     public function output(){
        if($this->hasErrors()) return false;
 
-        header ('location: '.jUrl::get($this->action, $this->params));
+        header ('location: '.jUrl::get($this->action, $this->params).($this->anchor!='' ? '#'.$this->anchor:''));
         return true;
     }
 
