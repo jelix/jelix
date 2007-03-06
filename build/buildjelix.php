@@ -172,11 +172,11 @@ jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , E
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // creation du fichier d'infos sur le build
-$view = array('PHP_VERSION_TARGET', 'LIB_VERSION', 'SVN_REVISION', 'ENABLE_PHP_FILTER',
+$view = array('PHP_VERSION_TARGET', 'SVN_REVISION', 'ENABLE_PHP_FILTER',
     'ENABLE_PHP_JSON', 'ENABLE_PHP_XMLRPC', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT', 'ENABLE_OLD_CLASS_NAMING' );
 
-$infos = 'BUILD_DATE= "'.date('Y-m-d H:i')."\"\n".ENV::getIniContent($view);
+$infos = '; --- build date:  '.date('Y-m-d H:i')."\n; --- lib version: ".$LIB_VERSION."\n".ENV::getIniContent($view);
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
 

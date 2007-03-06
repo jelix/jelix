@@ -129,9 +129,13 @@ class jBundle {
                         $key=$match[1];
                         $multiline= ($match[3] =="\\");
                         $sp = preg_split('/(?<!\\\\)\#/', $match[2], -1 ,PREG_SPLIT_NO_EMPTY);
-                        $value=trim(str_replace('\#','#',$sp[0]));
-                        if($value == '\w'){
-                            $value = ' ';
+                        if(count($sp)){
+                            $value=trim(str_replace('\#','#',$sp[0]));
+                            if($value == '\w'){
+                                $value = ' ';
+                            }
+                        }else{
+                            $value='';
                         }
 
                         $this->_strings[$charset][$key] =$value;

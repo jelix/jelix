@@ -43,7 +43,7 @@ class UTjlocale extends jUnitTestCase {
 
     protected $firstlist = array(
         'test_A.properties' => '<null> </null>',
-        'test_B.properties' => '<array>array("aaa"=>"bbb")</array>',
+        'test_B.properties' => '<array>array("aaa"=>"bbb","ccc"=>"")</array>',
         'test_C.properties' => '<array>array("aaa"=>"bbb","ccc"=>"ddd")</array>',
         'test_D.properties' => '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>',
         'test_E.properties' => '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>',
