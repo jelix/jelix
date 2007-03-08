@@ -17,6 +17,7 @@ define('JFORMS_DEFAULT_ID',0);
 
 require_once(JELIX_LIB_FORMS_PATH.'jFormsBase.class.php');
 require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
+require_once(JELIX_LIB_FORMS_PATH.'jFormsDatasource.class.php');
 require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 
 /**
