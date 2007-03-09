@@ -2,16 +2,16 @@
 /**
 * @package    testapp
 * @subpackage unittest
-* @version    $Id$
 * @author     Jouanneau Laurent
 * @contributor
-* @copyright  2005-2006 Jouanneau laurent
+* @copyright  2005-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 
 require_once(LIB_PATH.'/simpletest/reporter.php');
+require_once(LIB_PATH.'diff/diffhtml.php');
 
 class jHtmlRespReporter extends SimpleReporter {
    protected $_response;
@@ -61,7 +61,7 @@ class jHtmlRespReporter extends SimpleReporter {
 
    function paintException($message) {
       parent::paintException($message);
-      $str=  "<span class=\"fail\">Exception</span>: ";
+      $str=  "<span class=\"exception\">Exception</span>: ";
       $breadcrumb = $this->getTestList();
       array_shift($breadcrumb);
       $str.=  implode(" -&gt; ", $breadcrumb);
@@ -85,6 +85,16 @@ class jHtmlRespReporter extends SimpleReporter {
 
    function paintFormattedMessage($message) {
       $this->_response->body->append('MAIN','<pre>' . $this->_htmlEntities($message) . '</pre>');
+   }
+
+   function paintDiff($stringA, $stringB){
+        $diff = new Diff(explode("\n",$stringA),explode("\n",$stringB));
+        if($diff->isEmpty()) {
+            $this->_response->body->append('MAIN','<p>Erreur diff : bizarre, aucune différence d\'aprés la difflib...</p>');
+        }else{
+            $fmt = new HtmlUnifiedDiffFormatter();
+            $this->_response->body->append('MAIN',$fmt->format($diff));
+        }
    }
 
    function _htmlEntities($message) {

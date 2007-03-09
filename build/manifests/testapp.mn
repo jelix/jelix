@@ -64,6 +64,7 @@ cd testapp/modules/unittest/classes
   unittestservice.class.php
   testevents.listener.php
   utcreateurls.class.php
+  utjtplexpr.class.php
   utparseurls.class.php
   utselectoract.class.php
   utsimpletest.class.php
@@ -92,6 +93,7 @@ cd testapp/modules/unittest/controllers
   default.classic.php
   urlsig.classic.php
   dao.classic.php
+  tpl.classic.php
 
 cd testapp/var
   .htaccess

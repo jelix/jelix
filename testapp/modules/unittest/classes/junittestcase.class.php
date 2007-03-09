@@ -2,16 +2,37 @@
 /**
 * @package     testapp
 * @subpackage  unittest
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 class jUnitTestCase extends UnitTestCase {
 
+    /**
+    *    show difference between two strings
+    *    @param string $stringA  the first string
+    *    @param string $stringB  the second string
+    *    @param string $message        Message to send.
+    *    @access public
+    */
+    function diff($stringA, $stringB, $message='') {
+        if (! isset($this->_reporter)) {
+            trigger_error('Can only show diff within test methods');
+        }
+        if($message != '')
+            $this->_reporter->paintMessage($message);
+        $this->_reporter->paintDiff($stringA, $stringB);
+    }
+
+    function assertEqualOrDiff($first, $second, $message = "%s"){
+        $ret = $this->assertEqual($first, $second, $message);
+        if(!$ret && is_string($first) && is_string($second))
+            $this->diff($first, $second);
+        return $ret;
+    }
 
     function assertComplexIdentical($value, $file, $errormessage=''){
         $xml = simplexml_load_file($file);

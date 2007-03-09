@@ -43,10 +43,10 @@ class jTplCompiler
        T_INTERFACE, T_LOGICAL_AND, T_LOGICAL_OR, T_LOGICAL_XOR, T_NEW, T_PRIVATE, T_PUBLIC,
        T_PROTECTED, T_RETURN, T_STATIC, T_SWITCH, T_THROW, T_TRY, T_USE, T_VAR, T_WHILE);
 
-    private $_allowedInVar;
-    private $_allowedInExpr;
-    private $_allowedAssign;
-    private $_allowedInForeach;
+    protected $_allowedInVar;
+    protected $_allowedInExpr;
+    protected $_allowedAssign;
+    protected $_allowedInForeach;
 
     private $_pluginPath=array();
     private $_metaBody = '';
@@ -230,7 +230,7 @@ class jTplCompiler
     * @param string $expr the content of the tag
     * @return string the corresponding php instruction
     */
-    private function _parseVariable($expr){
+    protected function _parseVariable($expr){
         $tok = explode('|',$expr);
         $res = $this->_parseFinal(array_shift($tok),$this->_allowedInVar);
 
@@ -270,7 +270,7 @@ class jTplCompiler
      * @param string $args the content that follow the name in the tag
      * @return string the corresponding php instructions
      */
-    private function _parseFunction($name,$args){
+    protected function _parseFunction($name,$args){
         $res='';
         switch($name) {
             case 'if':
@@ -382,7 +382,7 @@ class jTplCompiler
      * @param boolean $splitArgIntoArray true: split the results on coma
      * @return array|string
      */
-    private function _parseFinal($string, $allowed=array(), $exceptchar=array(';'), $splitArgIntoArray=false){
+    protected function _parseFinal($string, $allowed=array(), $exceptchar=array(';'), $splitArgIntoArray=false){
         $tokens = token_get_all('<?php '.$string.'?>');
 
         $results=array();
@@ -473,7 +473,7 @@ class jTplCompiler
         }
     }
 
-    private function _parseMeta($args, $fct=''){
+    protected function _parseMeta($args, $fct=''){
         if(preg_match("/^(\w+)\s+(.*)$/",$args,$m)){
             $argfct=$this->_parseFinal($m[2],$this->_allowedInExpr);
             if($fct!=''){
@@ -492,7 +492,7 @@ class jTplCompiler
      * @param string $name the plugin name
      * @return string the path of the plugin, or '' if not found
      */
-    private function _getPlugin($type, $name){
+    protected function _getPlugin($type, $name){
 #if JTPL_STANDALONE
         $treq = 'html';
 #else

@@ -67,9 +67,25 @@ pre { background-color: lightgray; }
   padding: 8px; margin-top: 1em; background-color: green; color: white;
 }
 
+div.exception { margin-top:4px; margin-bottom:4px;
+    background-color: #ff9186;
+    border: 1px solid red; }
 
+div.exception strong {color: red;}
+div.exception p { font-size:0.9em; }
 
-
+.diff { background: white; border: 1px solid black; }
+.diff .block { background: #ccc; padding-left: 1em; }
+.diff .context { background: white; border: none; }
+.diff .block tt { font-weight: normal;  font-family: monospace;  color: black;
+        margin-left: 0;  border: none; }
+.diff del, .diff ins {  font-weight: bold; text-decoration: none; }
+.diff .original, .diff .deleted,
+.diff .final, .diff .added {  background: white; }
+.diff .original, .diff .deleted {  background: #fcc;  border: none; }
+.diff .final, .diff .added {  background: #cfc; border: none; }
+.diff del { background: #f99; }
+.diff ins { background: #9f9; }
 
 
 
