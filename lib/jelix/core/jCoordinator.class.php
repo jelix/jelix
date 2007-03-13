@@ -199,7 +199,7 @@ class jCoordinator {
                jContext::pop();
                jContext::push($result->module);
                $this->moduleName = $result->module;
-               $this->actionName = $result->ressource;
+               $this->actionName = $result->resource;
                $ctrl = $this->getController($this->action);
                break;
             }
