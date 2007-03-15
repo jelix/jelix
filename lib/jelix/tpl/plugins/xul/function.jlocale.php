@@ -2,9 +2,8 @@
 /**
 * @package    jelix
 * @subpackage jtpl_plugin
-* @version    $Id$
 * @author     Jouanneau Laurent
-* @copyright  2005-2006 Jouanneau laurent
+* @copyright  2005-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -23,7 +22,7 @@ function jtpl_function_jlocale($tpl, $locale)
      }elseif(func_num_args() > 2){
          $params = func_get_args();
          unset($params[0]);
-         unset($params[0]);
+         unset($params[1]);
          echo htmlspecialchars(jLocale::get($locale, $params));
      }else{
          echo htmlspecialchars(jLocale::get($locale));
