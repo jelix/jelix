@@ -45,14 +45,79 @@ class testJtplCompiler extends jTplCompiler {
 class UTjtplexpr extends jUnitTestCase {
 
     protected $varexpr = array(
+        'a'=>'a',
+        '"aaa"'=>'"aaa"',
+        '123'=>'123',
+        '  '=>'  ',
+        '123.456'=>'123.456',
+        '->'=>'->',
+        "'aze'"=>"'aze'",
         '$aa'=>'$t->_vars[\'aa\']',
+        '$aa.$bb'=>'$t->_vars[\'aa\'].$t->_vars[\'bb\']',
+        '$aa.PHP_VERSION'=>'$t->_vars[\'aa\'].PHP_VERSION',
+        '$aa."bbb"'=>'$t->_vars[\'aa\']."bbb"',
+        '$aa+234'=>'$t->_vars[\'aa\']+234',
+        '$aa-234'=>'$t->_vars[\'aa\']-234',
+        '$aa*234'=>'$t->_vars[\'aa\']*234',
+        '$aa/234'=>'$t->_vars[\'aa\']/234',
+        '!$aa'=>'!$t->_vars[\'aa\']',
+        'array($aa)'=>'array($t->_vars[\'aa\'])',
+        ' array(   $aa  )   '=>' array(   $t->_vars[\'aa\']  )   ',
+        ' array("e"=>$aa, "tt"=>987  )'=>' array("e"=>$t->_vars[\'aa\'], "tt"=>987  )',
+        '@aa@'=>'jLocale::get(\'aa\')',
+        '@aa.$ooo@'=>'jLocale::get(\'aa.\'.$t->_vars[\'ooo\'].\'\')',
+        '@aa~bbb@'=>'jLocale::get(\'aa~bbb\')',
+        '@aa~trc.$abcd.popo@'=>'jLocale::get(\'aa~trc.\'.$t->_vars[\'abcd\'].\'.popo\')',
+        '@$aa~trc.$abcd.popo@'=>'jLocale::get(\'\'.$t->_vars[\'aa\'].\'~trc.\'.$t->_vars[\'abcd\'].\'.popo\')',
+        '$aa.@trc.$abcd.popo@'=>'$t->_vars[\'aa\'].jLocale::get(\'trc.\'.$t->_vars[\'abcd\'].\'.popo\')',
+        '@aa~trc.234.popo@'=>'jLocale::get(\'aa~trc.234.popo\')',
+        '@aa~trc.23.4.popo@'=>'jLocale::get(\'aa~trc.23.4.popo\')',
+        '$aa*count($bb)'=>'$t->_vars[\'aa\']*count($t->_vars[\'bb\'])',
+        'isset($t[5])'=>'isset($t->_vars[\'t\'][5])',
+        '$aa && $bb'=>'$t->_vars[\'aa\'] && $t->_vars[\'bb\']',
+        '$aa || $bb'=>'$t->_vars[\'aa\'] || $t->_vars[\'bb\']',
+        '$aa & $bb'=>'$t->_vars[\'aa\'] & $t->_vars[\'bb\']',
+        '$aa | $bb'=>'$t->_vars[\'aa\'] | $t->_vars[\'bb\']',
+        '$aa and $bb'=>'$t->_vars[\'aa\'] and $t->_vars[\'bb\']',
+        '$aa or $bb'=>'$t->_vars[\'aa\'] or $t->_vars[\'bb\']',
+        '$aa xor $bb'=>'$t->_vars[\'aa\'] xor $t->_vars[\'bb\']',
+        'empty($aa)'=>'empty($t->_vars[\'aa\'])',
+        '$aa++'=>'$t->_vars[\'aa\']++',
+        '$aa--'=>'$t->_vars[\'aa\']--',
+        '$aa == 123'=>'$t->_vars[\'aa\'] == 123',
+        '$aa != 123'=>'$t->_vars[\'aa\'] != 123',
+        '$aa >= 123'=>'$t->_vars[\'aa\'] >= 123',
+        '$aa !== 123'=>'$t->_vars[\'aa\'] !== 123',
+        '$aa <= 123'=>'$t->_vars[\'aa\'] <= 123',
+        '$aa << 123'=>'$t->_vars[\'aa\'] << 123',
+        '$aa >> 123'=>'$t->_vars[\'aa\'] >> 123',
+        '$bb->bar'=>'$t->_vars[\'bb\']->bar',
+        '@abstract.as.break.case.catch.class.clone@'=>'jLocale::get(\'abstract.as.break.case.catch.class.clone\')',
+        '@const.continue.declare.default.do.echo.else.elseif.empty@'=>'jLocale::get(\'const.continue.declare.default.do.echo.else.elseif.empty\')',
+        '@exit.final.for.foreach.function.global.if.implements.instanceof@'=>'jLocale::get(\'exit.final.for.foreach.function.global.if.implements.instanceof\')',
+        '@interface.and.or.xor.new.private.public@'=>'jLocale::get(\'interface.and.or.xor.new.private.public\')',
+        '@protected.return.static.switch.throw.try.use.var.while@'=>'jLocale::get(\'protected.return.static.switch.throw.try.use.var.while\')',
+        '$aa*(234+$b)'=>'$t->_vars[\'aa\']*(234+$t->_vars[\'b\'])',
+        '$aa[$bb[4]]'=>'$t->_vars[\'aa\'][$t->_vars[\'bb\'][4]]',
+
     );
 
     protected $badvarexpr = array(
         '$'=>array('jelix~errors.tpl.tag.character.invalid',array('','$','')),
+        'foreach($a)'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','foreach','')),
+        '@aaa.bbb'=>array('jelix~errors.tpl.tag.locale.end.missing',array('','')),
+        '@aaa.b,bb@'=>array('jelix~errors.tpl.tag.character.invalid',array('',',','')),
+        '@@'=>array('jelix~errors.tpl.tag.locale.invalid',array('','')),
+        '[$aa/234]'=>array('jelix~errors.tpl.tag.character.invalid',array('','[','')),
+        '($aa/234)'=>array('jelix~errors.tpl.tag.character.invalid',array('','(','')),
+        '$b+($aa/234'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$b+(($aa/234)'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$aa/234)'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$aa/234))'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$aa[234'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$aa[[234]'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$aa234]'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
     );
-
-
 
     function testVarExpr() {
         $compil = new testJtplCompiler();
@@ -60,7 +125,9 @@ class UTjtplexpr extends jUnitTestCase {
             //$this->sendMessage("test good datasource ".$k);
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->assertEqualOrDiff($res, $t);
+                $this->assertEqualOrDiff($t, $res);
+            }catch(jException $e){
+                $this->fail("Test '$k', Exception jelix inconnue : ".$e->getLocaleMessage());
             }catch(Exception $e){
                 $this->fail("Test '$k', Exception inconnue : ".$e->getMessage());
             }
@@ -75,8 +142,9 @@ class UTjtplexpr extends jUnitTestCase {
                 $res = $compil->testParseVarExpr($k);
                 $this->fail("Exception non survenu pour le test '$k' : ".$e->getMessage());
             }catch(jException $e){
-                $this->assertEqualOrDiff($e->getMessage(), $t[0]);
-                $this->assertEqual($e->localeParams, $t[1]);
+                //$this->sendMessage($e->getLocaleMessage());
+                $this->assertEqualOrDiff($t[0], $e->getMessage());
+                $this->assertEqual($t[1], $e->localeParams);
             }catch(Exception $e){
                 $this->pass("Exception inconnue : ".$e->getMessage());
             }

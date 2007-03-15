@@ -4,7 +4,7 @@
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
 * @contributor Mathaud Loic (version standalone)
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2007 Laurent Jouanneau
 * @copyright   2006 Mathaud Loic
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -32,7 +32,7 @@ class jTplCompiler
     T_MUL_EQUAL, T_OR_EQUAL, T_PLUS_EQUAL, T_PLUS_EQUAL, T_SL_EQUAL,
     T_SR_EQUAL, T_XOR_EQUAL);
 
-    private  $_op = array(T_BOOLEAN_AND, T_BOOLEAN_OR, T_EMPTY, T_INC, T_ISSET,
+    private  $_op = array(T_BOOLEAN_AND, T_BOOLEAN_OR, T_EMPTY, T_INC, T_DEC, T_ISSET,
     T_IS_EQUAL, T_IS_GREATER_OR_EQUAL, T_IS_IDENTICAL, T_IS_NOT_EQUAL,
     T_IS_NOT_IDENTICAL, T_IS_SMALLER_OR_EQUAL, T_LOGICAL_AND,
     T_LOGICAL_OR, T_LOGICAL_XOR, T_SR, T_SL, T_DOUBLE_ARROW);
@@ -41,7 +41,8 @@ class jTplCompiler
        T_CONST, T_CONTINUE, T_DECLARE, T_DEFAULT, T_DO, T_ECHO, T_ELSE, T_ELSEIF, T_EMPTY,
        T_EXIT, T_FINAL, T_FOR, T_FOREACH, T_FUNCTION, T_GLOBAL, T_IF, T_IMPLEMENTS, T_INSTANCEOF,
        T_INTERFACE, T_LOGICAL_AND, T_LOGICAL_OR, T_LOGICAL_XOR, T_NEW, T_PRIVATE, T_PUBLIC,
-       T_PROTECTED, T_RETURN, T_STATIC, T_SWITCH, T_THROW, T_TRY, T_USE, T_VAR, T_WHILE);
+       T_PROTECTED, T_RETURN, T_STATIC, T_SWITCH, T_THROW, T_TRY, T_USE, T_VAR, T_WHILE,
+       T_DNUMBER, T_LNUMBER);
 
     protected $_allowedInVar;
     protected $_allowedInExpr;
@@ -459,6 +460,10 @@ class jTplCompiler
                 $first=false;
             }
 
+        }
+
+        if ($inLocale) {
+            $this->doError1('errors.tpl.tag.locale.end.missing', $this->_currentTag);
         }
 
         if ($bracketcount != 0 || $sqbracketcount !=0) {
