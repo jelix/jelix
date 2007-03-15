@@ -1,0 +1,38 @@
+
+Constantes
+==========
+
+
+Variables
+=========
+
+à rajouter dans $_SERVER (pour jRequest) :
+
+JX_URL_SCRIPT_PATH
+JX_URL_SCRIPT_NAME
+JX_URL_PATH_INFO
+
+$gJConfig = null;
+$gJCoord = null;
+
+Fonctions
+=========
+
+jelix_init_config($config)
+    -> rempli certains champs
+        defaultAction
+    -> check sur urlengine['basePath'] ?
+
+
+bool  jelix_write_ini(jIni);
+
+array jx_read_properties(string);
+
+string jx_url_param_escape(string);
+string jx_url_param_unescape(string);
+
+classes
+=======
+
+jContext
+jUrlBase
