@@ -45,6 +45,7 @@ zip = jResponseZip
 rss2.0 = jResponseRss20
 atom1.0 = jResponseAtom10
 css= jResponseCss
+ltx2pdf= jResponseLatexToPdf
 
 [_coreResponses]
 html = jResponseHtml
@@ -65,6 +66,7 @@ zip = jResponseZip
 rss2.0 = jResponseRss20
 atom1.0 = jResponseAtom10
 css= jResponseCss
+ltx2pdf= jResponseLatexToPdf
 
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"

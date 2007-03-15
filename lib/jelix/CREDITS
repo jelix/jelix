@@ -46,7 +46,8 @@ Olivier Gambier (d-m-p)
 Gildas Givaja (Giviz)
     testeur, corrections de bugs
 
-Aubanel
+Aubanel MONNIER
+    reponse jResponseLatexToPdf et les plugins de templates associés
     patch pour les ancres dans jResponseRedirect
 
 Contributeurs involontaires ;-)

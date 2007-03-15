@@ -39,6 +39,9 @@ class jResponseText extends jResponse {
         return true;
     }
 
+    /**
+     * output errors
+     */
     public function outputErrors(){
         global $gJConfig;
         header('Content-Type: text/plain;charset='.$gJConfig->defaultCharset);

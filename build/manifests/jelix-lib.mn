@@ -60,6 +60,7 @@ cd lib/jelix/core/response
   jResponseRss20.class.php
   jResponseAtom10.class.php
   jResponseCss.class.php
+  jResponseLatexToPdf.class.php
 
 cd lib/jelix/core/url
   jUrlCompiler.significant.class.php
@@ -143,6 +144,13 @@ cd lib/jelix/tpl/plugins/html
   function.formurl.php
   function.formurlparam.php
   function.diff.php
+
+cd lib/jelix/tpl/plugins/ltx2pdf
+  function.jlocale.php
+  function.jurl.php
+  modifier.latex.php
+  block.lenv.php
+  block.lcmd.php
 
 cd lib/jelix/tpl/plugins/text
   function.jlocale.php
