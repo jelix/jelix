@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage db
-* @author     Croes Gérald, Ferlet Patrice, Laurent Jouanneau
+* @author     Croes GÃ©rald, Ferlet Patrice, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Nicolas Jeudy (patch ticket #99)
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
@@ -12,7 +12,7 @@
 * Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixDBToolsPostgreSQL)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes, Ferlet Patrice et Laurent Jouanneau
-* Adaptée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e pour Jelix par Laurent Jouanneau
 */
 
 /**
@@ -40,7 +40,7 @@ class jDbToolsPostgreSQL extends jDbTools {
       return $results;
    }
     /**
-    * récupère la liste des champs pour une base donnée.
+    * rÃ©cupÃ¨re la liste des champs pour une base donnÃ©e.
     * @return    array    $tab[NomDuChamp] = obj avec prop (tye, length, lengthVar, notnull)
     */
     protected function _getFieldList ($tableName){

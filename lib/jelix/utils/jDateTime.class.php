@@ -2,7 +2,7 @@
 /**
 * @package     jelix
 * @subpackage  utils
-* @author      Gérald Croes, Laurent Jouanneau
+* @author      GÃ©rald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright   2001-2005 CopixTeam 2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
@@ -12,7 +12,7 @@
 * du framework Copix 2.3dev20050901. http://www.copix.org
 * et est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e et amÃ©liorÃ©e pour Jelix par Laurent Jouanneau
 */
 
 
@@ -23,7 +23,7 @@ if(!function_exists('strptime')){ // existe depuis php 5.1
      * @ignore
      */
     function strptime ( $strdate, $format ){
-        // c'est pas une compatibilité 100% avec strptime de PHP 5.1 mais c'est suffisant pour nos besoins
+        // c'est pas une compatibilitÃ© 100% avec strptime de PHP 5.1 mais c'est suffisant pour nos besoins
         $plop = array( 's'=>'tm_sec', 'i'=>'tm_min', 'H'=>'tm_hour',
         'd'=>'tm_mday', 'm'=>'tm_mon', 'Y'=>'tm_year');
 

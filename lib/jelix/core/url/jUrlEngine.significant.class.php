@@ -146,7 +146,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
         $url = new jUrl($scriptNamePath, $params, $pathinfo);
 
         foreach($this->dataParseUrl as $k=>$infoparsing){
-            // le premier paramètre indique si le point d'entré actuelle est un point d'entré par défaut ou non
+            // le premier paramÃ¨tre indique si le point d'entrÃ© actuelle est un point d'entrÃ© par dÃ©faut ou non
             if($k==0){
                 $isDefault=$infoparsing;
                 continue;
@@ -168,14 +168,14 @@ class jUrlEngineSignificant implements jIUrlEngine {
 
                 $url->params['module']=$infoparsing[0];
 
-                // si une action est présente dans l'url actuelle
+                // si une action est prÃ©sente dans l'url actuelle
                 // et qu'elle fait partie des actions secondaires, alors on la laisse
-                // sinon on prend celle indiquée dans la conf
+                // sinon on prend celle indiquÃ©e dans la conf
                 if( $infoparsing[3]
                     && isset($params['action'])
                     && in_array($params['action'], $infoparsing[3])){
 
-                    $url->params['action']=$params['action']; // action peut avoir été écrasé par une itération précédente
+                    $url->params['action']=$params['action']; // action peut avoir Ã©tÃ© Ã©crasÃ© par une itÃ©ration prÃ©cÃ©dente
                 }else{
                     $url->params['action']=$infoparsing[1];
                 }
@@ -186,18 +186,18 @@ class jUrlEngineSignificant implements jIUrlEngine {
             }else{
                 /* on a un tableau du style
                 array( 0=>'module', 1=>'action', 2=>'regexp_pathinfo',
-                3=>array('annee','mois'), // tableau des valeurs dynamiques, classées par ordre croissant
+                3=>array('annee','mois'), // tableau des valeurs dynamiques, classÃ©es par ordre croissant
                 4=>array(true, false), // tableau des valeurs escapes
                 5=>array('bla'=>'cequejeveux' ) // tableau des valeurs statiques
-                6=>false ou array('act','act'...) // autres actions secondaires autorisées
+                6=>false ou array('act','act'...) // autres actions secondaires autorisÃ©es
                 */
                 if(preg_match ($infoparsing[2], $pathinfo, $matches)){
                     if($infoparsing[0] !='')
                         $params['module']=$infoparsing[0];
 
-                    // si une action est présente dans l'url actuelle
+                    // si une action est prÃ©sente dans l'url actuelle
                     // et qu'elle fait partie des actions secondaires, alors on la laisse
-                    // sinon on prend celle indiquée dans la conf
+                    // sinon on prend celle indiquÃ©e dans la conf
                     if( !($infoparsing[6]
                         && isset($params['action'])
                         && in_array($params['action'], $infoparsing[6]))){
@@ -235,7 +235,7 @@ class jUrlEngineSignificant implements jIUrlEngine {
                 $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error_notfound'));
             }
         }else if(!$urlact && $isDefault){
-            // si on n'a pas trouvé de correspondance, mais que c'est l'entry point
+            // si on n'a pas trouvÃ© de correspondance, mais que c'est l'entry point
             // par defaut pour le type de request courant, alors on laisse passer..
             $urlact = new jUrlAction($params);
         }
@@ -265,8 +265,8 @@ class jUrlEngineSignificant implements jIUrlEngine {
 
         /*
         a) recupere module~action@request -> obtient les infos pour la creation de l'url
-        b) récupère un à un les parametres indiqués dans params à partir de jUrl
-        c) remplace la valeur récupérée dans le result et supprime le paramètre de l'url
+        b) rÃ©cupÃ¨re un Ã  un les parametres indiquÃ©s dans params Ã  partir de jUrl
+        c) remplace la valeur rÃ©cupÃ©rÃ©e dans le result et supprime le paramÃ¨tre de l'url
         d) remplace scriptname de jUrl par le resultat
         */
 
@@ -300,14 +300,14 @@ class jUrlEngineSignificant implements jIUrlEngine {
             array(0,'entrypoint', https true/false, entrypoint true/false,'selecteur handler')
             ou
             array(1,'entrypoint', https true/false, entrypoint true/false
-                    array('annee','mois','jour','id','titre'), // liste des paramètres de l'url à prendre en compte
+                    array('annee','mois','jour','id','titre'), // liste des paramÃ¨tres de l'url Ã  prendre en compte
                     array(true, false..), // valeur des escapes
                     "/news/%1/%2/%3/%4-%5", // forme de l'url
                     false, //indique si  c'est une action surchargeante
                     )
             ou
-            array(2,'entrypoint', https true/false, entrypoint true/false); pour les clés du type "@request"
-            array(3,'entrypoint', https true/false, entrypoint true/false); pour les clés du type "module~@request"
+            array(2,'entrypoint', https true/false, entrypoint true/false); pour les clÃ©s du type "@request"
+            array(3,'entrypoint', https true/false, entrypoint true/false); pour les clÃ©s du type "module~@request"
 
         */
 
@@ -318,9 +318,9 @@ class jUrlEngineSignificant implements jIUrlEngine {
         if($urlinfo[1] && !$GLOBALS['gJConfig']->urlengine['multiview']){
             $url->scriptName.=$GLOBALS['gJConfig']->urlengine['entrypointExtension'];
         }
-        // pour certains types de requete, les paramètres ne sont pas dans l'url
+        // pour certains types de requete, les paramÃ¨tres ne sont pas dans l'url
         // donc on les supprime
-        // c'est un peu crade de faire ça en dur ici, mais ce serait lourdingue
+        // c'est un peu crade de faire Ã§a en dur ici, mais ce serait lourdingue
         // de charger la classe request pour savoir si on peut supprimer ou pas
         if(in_array($urlact->requestType ,array('xmlrpc','jsonrpc','soap'))){
             $url->clearParam();

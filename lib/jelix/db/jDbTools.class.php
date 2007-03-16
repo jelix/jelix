@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage db
 * @version    $Id:$
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Croes GÃ©rald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @link      http://www.jelix.org
@@ -12,7 +12,7 @@
 * Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixDbTools)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e et amÃ©liorÃ©e pour Jelix par Laurent Jouanneau
 */
 
 /**
@@ -31,7 +31,7 @@
 
 
 /**
- * classe d'outils pour gérer une base de données
+ * classe d'outils pour gÃ©rer une base de donnÃ©es
  * @package  jelix
  * @subpackage db
  */
@@ -86,7 +86,7 @@ abstract class jDbTools {
                 $cmdSQL.=$line;
 
                 if (preg_match($style[1],$line)) {
-                    //Si on est à la ligne de fin de la commande on l'execute
+                    //Si on est Ã  la ligne de fin de la commande on l'execute
                     // On nettoie la commande du ";" de fin et on l'execute
                     $cmdSQL = preg_replace($style[1],'',$cmdSQL);
                     $this->_connector->query ($cmdSQL);

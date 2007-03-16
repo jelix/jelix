@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  @package     jelix
  @subpackage  xul
- @version  $Id$
  @author   Jouanneau Laurent
  @contributor
- @copyright 2006 Jouanneau laurent
+ @copyright 2006-2007 Jouanneau laurent
  @link     http://www.jelix.org
  @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 -->
@@ -86,13 +85,13 @@
         </constructor>
         <method name="submit">
             <body><![CDATA[
-            // récuperation des données des contrôles
+            // rï¿½uperation des donnï¿½s des contrï¿½es
             this._readDatas();
             if(this.hasInvalidDatas){
                return false;
             }
 
-            // formatage des données
+            // formatage des donnï¿½s
             var content = this._prepareContent();
             // appel de _submit
             this._submit(this.method, this.contentType, content);

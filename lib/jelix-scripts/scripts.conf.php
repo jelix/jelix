@@ -35,12 +35,12 @@ define ('JELIXS_INIT_PATH'          , '/usr/local/lib/jelix/init.php');
 */
 
 define('JELIXS_APP_CONFIG_FILE'    , 'defaultconfig.ini.php');
-define('DO_CHMOD',false); // indique si lors de la création des fichiers, il faut faire un chmod
+define('DO_CHMOD',false); // indique si lors de la crÃ©ation des fichiers, il faut faire un chmod
 define('CHMOD_FILE_VALUE',0644);
 define('CHMOD_DIR_VALUE',0755);
-define('DO_CHOWN',false); // indique si lors de la création des fichiers, il faut faire un chown
-define('CHOWN_USER','');   // indique le user qui deviendra le propriétaire d'un fichier crée par le script
-define('CHOWN_GROUP','');   // indique le groupe qui deviendra le propriétaire d'un fichier crée par le script
+define('DO_CHOWN',false); // indique si lors de la crÃ©ation des fichiers, il faut faire un chown
+define('CHOWN_USER','');   // indique le user qui deviendra le propriÃ©taire d'un fichier crÃ©e par le script
+define('CHOWN_GROUP','');   // indique le groupe qui deviendra le propriÃ©taire d'un fichier crÃ©e par le script
 
 define('DISPLAY_HELP_UTF_8', false); // affiche l'aide en utf-8 (si votre console est en utf-8)
 

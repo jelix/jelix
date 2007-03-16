@@ -63,7 +63,7 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url2', 'mois'=>'05',  'annee'=>'2004', "mystatic"=>"valeur statique");
       $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fete au village');
       $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url4', 'first'=>'premier',  'second'=>'deuxieme');
-      // celle ci n'a pas de définition dans urls.xml *exprés*
+      // celle ci n'a pas de dÃ©finition dans urls.xml *exprÃ©s*
       $resultList[]= array('module'=>'unittest', 'action'=>'urlsig_url5', 'foo'=>'oof',  'bar'=>'rab');
       $resultList[]= array();
       $resultList[]= array('module'=>'news', 'action'=>'main_bar', 'aaa'=>'bbb');
@@ -95,7 +95,7 @@ class UTParseUrls extends UnitTestCase {
          ksort($p);
          ksort($resultList[$k]);
 
-         $this->assertTrue( ($p == $resultList[$k]), 'crée:'.var_export($p,true).' attendu:'.var_export($resultList[$k],true));
+         $this->assertTrue( ($p == $resultList[$k]), 'crÃ©e:'.var_export($p,true).' attendu:'.var_export($resultList[$k],true));
       }
 
 
@@ -121,7 +121,7 @@ class UTParseUrls extends UnitTestCase {
          ksort($p);
          ksort($resultList[$k]);
 
-         $this->assertTrue( ($p == $resultList[$k]), 'crée:'.var_export($p,true).' attendu:'.var_export($resultList[$k],true));
+         $this->assertTrue( ($p == $resultList[$k]), 'crÃ©e:'.var_export($p,true).' attendu:'.var_export($resultList[$k],true));
       }
 
     }

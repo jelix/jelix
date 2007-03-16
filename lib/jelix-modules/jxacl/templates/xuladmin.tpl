@@ -60,7 +60,7 @@
     }
 
     function removeUserFromGrp () {
-        if (confirm('Etes vous sûr de vouloir supprimer cet Utilisateur ?')) {
+        if (confirm('Etes vous sÃ»r de vouloir supprimer cet Utilisateur ?')) {
             var tree = document.getElementById('users');
             var idx = tree.view.selection.currentIndex;
             var myuser = tree.view.getCellText(idx, tree.columns.getNamedColumn ( "logins-col"));
@@ -170,7 +170,7 @@
         />
 <jx:submission id="deleteform" action="{jurl '@jsonrpc'}" method="POST"
         format="json-rpc" rpcmethod="jxacl~admin_deletegrp"
-        onsubmit="return confirm('Etes vous sûr de vouloir supprimer ce groupe ?')"
+        onsubmit="return confirm('Etes vous sÃ»r de vouloir supprimer ce groupe ?')"
         onresult="onDeleteGroup(this)"
         onhttperror="alert('erreur http :' + event.errorCode)"
         oninvalidate="alert('erreur de saisie')"
@@ -223,7 +223,7 @@
 <description class="title-page">Gestion des droits</description>
 <hbox flex="1" align="stretch" >
     <vbox class="content-cols" style="width: 200px;">
-        <label control="groupid" value="Séléctionner un groupe :"/>
+        <label control="groupid" value="SÃ©lÃ©ctionner un groupe :"/>
         <menulist id="groupid" name="groupid" required="true"
                 form="renameform,deleteform,rightsform,addusertogrp,removeuserfromgrp,addusertogrpform"
                 oncommand="changeGroup(this.selectedItem.value)">
@@ -238,7 +238,7 @@
         <groupbox submit="newgrpsubmit">
             <label control="newgroup" value="Ajouter un groupe :"/>
             <textbox id="newgroup" name="groupname" value="" required="true" form="newgrpform" />
-            <jx:submit id="newgrpsubmit" form="newgrpform" label="Créer"/>
+            <jx:submit id="newgrpsubmit" form="newgrpform" label="CrÃ©er"/>
         </groupbox>
 
         <groupbox submit="deletesubmit">

@@ -74,7 +74,7 @@ class jResponseXml extends jResponse {
         if (!empty($this->contentTpl)) {
             $xml_string = $this->content->fetch($this->contentTpl);
 
-        // utilisation chaine de caractères xml
+        // utilisation chaine de caractÃ¨res xml
         } else {
             $xml_string = $this->content;
         }
@@ -82,7 +82,7 @@ class jResponseXml extends jResponse {
         if (simplexml_load_string($xml_string)) {
             echo $xml_string;
         } else {
-            // xml mal formé
+            // xml mal formÃ©
             return false;
         }
 

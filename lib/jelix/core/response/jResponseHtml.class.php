@@ -370,7 +370,7 @@ class jResponseHtml extends jResponse {
                     //il y a une paire clef valeur.
                     echo $selector.' {'.$value."}\n";
                 }else{
-                    //il n'y a pas de valeur, c'est peut être simplement une commande.
+                    //il n'y a pas de valeur, c'est peut Ãªtre simplement une commande.
                     //par exemple @import qqchose, ...
                     echo $selector, "\n";
                 }

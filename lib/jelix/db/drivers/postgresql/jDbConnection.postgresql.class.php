@@ -2,14 +2,14 @@
 /**
 * @package    jelix
 * @subpackage db
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Croes GÃ©rald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @contributor Yannick Le Guédart
+* @contributor Yannick Le GuÃ©dart
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixDBConnectionPostgreSQL)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e et amÃ©liorÃ©e pour Jelix par Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -65,11 +65,11 @@ class jDbConnectionPostgreSQL extends jDbConnection {
 
         $str = 'dbname=\''.$this->profil['database'].'\' user=\''.$this->profil['user'].'\' password=\''.$this->profil['password'].'\'';
 
-        // on fait une distinction car si host indiqué -> connection TCP/IP, sinon socket unix
+        // on fait une distinction car si host indiquÃ© -> connection TCP/IP, sinon socket unix
         if($this->profil['host'] != '')
             $str = 'host=\''.$this->profil['host'].'\' '.$str;
 
-        // Si le port est défini on le rajoute à la chaine de connexion
+        // Si le port est dÃ©fini on le rajoute Ã  la chaine de connexion
         if (isset($this->profil['port'])) {
             $str .= ' port=\''.$this->profil['port'].'\'';
         }

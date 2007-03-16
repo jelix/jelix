@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage dao
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Croes GÃ©rald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
@@ -12,7 +12,7 @@
 * du framework Copix 2.3dev20050901. http://www.copix.org
 * il est sous Copyright 2001-2005 CopixTeam (licence LGPL).
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau.
-* Adaptée et amélioré pour Jelix par Laurent Jouanneau.
+* AdaptÃ©e et amÃ©liorÃ© pour Jelix par Laurent Jouanneau.
 */
 
 /**

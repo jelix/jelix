@@ -144,16 +144,16 @@ function __autoload($class){
    if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms).*$/', $class, $m)){
        $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
    }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
-       // pour les dao stockÈs en sessions notament
+       // pour les dao stock√©s en sessions notament
        $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
        if($GLOBALS['gJConfig']->compilation['checkCacheFiletime']){
            // si il faut verifier le filetime, alors on inclus via le jIncluder
-           // au cas o˘ il faudrait recompiler le dao avant l'inclusion de la classe
+           // au cas o√π il faudrait recompiler le dao avant l'inclusion de la classe
            jIncluder::inc($s);
            return;
        }else{
           $f = $s->getCompiledFilePath ();
-          // on verifie que le fichier est l‡ (dans le cas d'un temp purgÈ, cf bug #6062)
+          // on verifie que le fichier est l√† (dans le cas d'un temp purg√©, cf bug #6062)
           if(!file_exists($f)){ // si absent, on recompile
             jIncluder::inc($s);
             return;

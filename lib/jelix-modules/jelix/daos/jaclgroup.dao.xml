@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
     <datasources>
         <primarytable name="grp" realname="jacl_group" primarykey="id_aclgrp" />
@@ -8,7 +8,7 @@
       <property name="id_aclgrp" fieldname="id_aclgrp" datatype="autoincrement" required="yes"/>
       <property name="name" fieldname="name" datatype="string" required="yes"/>
 
-      <!-- 0=normal 1=default 2=privé -->
+      <!-- 0=normal 1=default 2=privÃ© -->
       <property name="grouptype" fieldname="grouptype" datatype="int" required="yes"/>
       <property name="ownerlogin" fieldname="ownerlogin" datatype="string" />
 

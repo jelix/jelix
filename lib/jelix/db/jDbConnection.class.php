@@ -12,7 +12,7 @@
 * du framework Copix 2.3dev20050901. http://www.copix.org
 * Elles sont sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e et amÃ©liorÃ©e pour Jelix par Laurent Jouanneau
 */
 
 /**

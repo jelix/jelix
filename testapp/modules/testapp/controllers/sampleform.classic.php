@@ -13,7 +13,7 @@
 class sampleFormCtrl extends jController {
 
   function newform(){
-      // création d'un formulaire vierge
+      // crÃ©ation d'un formulaire vierge
       $form = jForms::create('sample');
       $rep= $this->getResponse("redirect");
       $rep->action="sampleform_show";
@@ -21,7 +21,7 @@ class sampleFormCtrl extends jController {
   }
 
   function show(){
-      // recupère les données du formulaire
+      // recupÃ¨re les donnÃ©es du formulaire
       $form = jForms::get('sample');
       if($form == null){
           $form = jForms::create('sample');
@@ -38,8 +38,8 @@ class sampleFormCtrl extends jController {
    }
 
    function save(){
-      // récuper le formulaire
-      // et le rempli avec les données reçues de la requête
+      // rÃ©cuper le formulaire
+      // et le rempli avec les donnÃ©es reÃ§ues de la requÃªte
       $form = jForms::fill('sample');
 
       $rep= $this->getResponse("redirect");
@@ -75,11 +75,11 @@ class sampleFormCtrl extends jController {
 
    function status(){
       $rep = $this->getResponse('html');
-      $rep->title = 'Etat des données formulaire';
+      $rep->title = 'Etat des donnÃ©es formulaire';
 
       $rep->body->assign('page_title','formulaires');
 
-      $content='<h1>Données en session des formulaires</h1>';
+      $content='<h1>DonnÃ©es en session des formulaires</h1>';
       if(isset($_SESSION['JFORMS'])){
           $content.='<pre>'.htmlspecialchars(var_export($_SESSION['JFORMS'],true)).'</pre>';
       }else{

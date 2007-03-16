@@ -12,7 +12,7 @@ enableUrlDetection= on
 urlParamNameLanguage=lang
 
 
-; utilisation du langage indiqué dans le navigateur
+; utilisation du langage indiquÃ© dans le navigateur
 useDefaultLanguageBrowser = off
 
 

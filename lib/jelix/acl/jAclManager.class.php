@@ -40,12 +40,12 @@ class jAclManager {
         $sbj = $daosbj->get($subject);
         if(!$sbj) return false;
 
-        //  récupère la liste des valeurs du groupe de valeur
+        //  rÃ©cupÃ¨re la liste des valeurs du groupe de valeur
         $vallist = $daorightval->findByValGroup($sbj->id_aclvalgrp);
 
         if($resource === null) $resource='';
 
-        // on verifie que la valeur est autorisée
+        // on verifie que la valeur est autorisÃ©e
         $ok=false;
         foreach($vallist as $valueok){
             if($valueok->value == $value){

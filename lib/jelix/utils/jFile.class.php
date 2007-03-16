@@ -33,7 +33,7 @@ class jFile {
     * Is using a temporary file and then rename the file. We guess the file system will be smarter than us, avoiding a writing / reading
     *  while renaming the file.
     * This method comes from CopixFile class of Copix framework
-    * @author     Croes Gérald
+    * @author     Croes GÃ©rald
     * @copyright  2001-2005 CopixTeam
     * @link http://www.copix.org
     */

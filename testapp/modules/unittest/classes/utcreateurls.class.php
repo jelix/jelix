@@ -47,7 +47,7 @@ class UTCreateUrls extends UnitTestCase {
         foreach($urlList as $k=>$urldata){
             try{
                 $url = jUrl::get($urldata[0], $urldata[1]);
-                $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
+                $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url crÃ©Ã©e='.$url );
             }catch(jExceptionSelector $e){
                 $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage());
             }catch(jException $e){
@@ -114,9 +114,9 @@ class UTCreateUrls extends UnitTestCase {
       $urlList=array();
       $urlList[]= array('urlsig_url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
       $urlList[]= array('urlsig_url2', array('mois'=>'05',  'annee'=>'2004'));
-      $urlList[]= array('unittest~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
+      $urlList[]= array('unittest~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fÃªte au village'));
       $urlList[]= array('unittest~urlsig_url4', array('first'=>'premier',  'second'=>'deuxieme'));
-      // celle ci n'a pas de définition dans urls.xml *exprés*
+      // celle ci n'a pas de dÃ©finition dans urls.xml *exprÃ©s*
       $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('unittest~urlsig_url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
@@ -124,7 +124,7 @@ class UTCreateUrls extends UnitTestCase {
       $trueResult=array(
           "/index.php?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
           "/testnews.php?mois=05&annee=2004&module=unittest&action=urlsig_url2",
-          "/testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
+          "/testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=unittest&action=urlsig_url3",
           "/foo/bar.php?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
           "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "/xmlrpc.php",
@@ -141,7 +141,7 @@ class UTCreateUrls extends UnitTestCase {
       $trueResult=array(
           "/index?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
           "/testnews?mois=05&annee=2004&module=unittest&action=urlsig_url2",
-          "/testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%EAte+au+village&module=unittest&action=urlsig_url3",
+          "/testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=unittest&action=urlsig_url3",
           "/foo/bar?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
           "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
           "/xmlrpc",
@@ -222,10 +222,10 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('urlsig_url9', array('mois'=>'10',  'annee'=>'2005', 'id'=>'09'));
       $urlList[]= array('urlsig_url10', array('mois'=>'10',  'annee'=>'2005', 'id'=>'10'));
       $urlList[]= array('urlsig_url2', array('mois'=>'05',  'annee'=>'2004'));
-      $urlList[]= array('unittest~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
+      $urlList[]= array('unittest~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fÃªte au village'));
       $urlList[]= array('unittest~urlsig_url6', array('rubrique'=>'actualite',  'id_art'=>'65'));
       $urlList[]= array('unittest~urlsig_url4', array('first'=>'premier',  'second'=>'deuxieme'));
-      // celle ci n'a pas de définition dans urls.xml *exprés*
+      // celle ci n'a pas de dÃ©finition dans urls.xml *exprÃ©s*
       $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('news~bar', array('aaa'=>'bbb'));

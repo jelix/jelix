@@ -2,7 +2,6 @@
 /**
 * @package  {$appname}
 * @subpackage scripts
-* @version  $Id$
 * @author
 * @contributor
 * @copyright

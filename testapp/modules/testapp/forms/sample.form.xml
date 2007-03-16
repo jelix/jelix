@@ -6,7 +6,7 @@
    </input>
 
    <input ref="prenom" >
-      <label>Votre prénom</label>
+      <label>Votre prÃ©nom</label>
    </input>
 
 </forms>

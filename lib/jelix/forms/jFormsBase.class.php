@@ -69,7 +69,7 @@ abstract class jFormsBase {
         foreach($this->_controls as $name=>$ctrl){
             $value = $req->getParam($name);
             //if($value !== null) on commente pour le moment,
-            //@todo à prevoir un meilleur test, pour les formulaires sur plusieurs pages
+            //@todo Ã  prevoir un meilleur test, pour les formulaires sur plusieurs pages
             $this->_container->datas[$name]= $value;
         }
     }

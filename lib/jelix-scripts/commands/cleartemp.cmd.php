@@ -25,7 +25,7 @@ class cleartempCommand extends JelixScriptCommand {
             jAppManager::clearTemp();
         }
         catch (Exception $e) {
-        	echo "Un ou plusieurs répertoires n'ont pas pu être supprimés.\n" .
+        	echo "Un ou plusieurs rÃ©pertoires n'ont pas pu Ãªtre supprimÃ©s.\n" .
                     "Message d'erreur :" . $e->getMessage()."\n";
         }
     }

@@ -55,9 +55,9 @@ class jIniFile {
             fwrite($f, $result);
             fclose($f);
         } else {
-            // jIniFile est utilisé par le compilateur des configs
+            // jIniFile est utilisÃ© par le compilateur des configs
             // il n'y a alors pas de $gJConfig dans de cas :
-            // il faut générer alors une erreur sans passer par jLocale
+            // il faut gÃ©nÃ©rer alors une erreur sans passer par jLocale
             if(isset($GLOBALS['gJConfig'])){
                 throw new jException('jelix~errors.inifile.write.error', array ($filename));
             }else{

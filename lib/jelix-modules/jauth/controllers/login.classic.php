@@ -2,13 +2,13 @@
 /**
 * @package    jelix-modules
 * @subpackage jauth
-* @author     Croes Gérald,  Bertrand Yan
+* @author     Croes GÃ©rald,  Bertrand Yan
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixZone)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Bertrand Yan
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e et amÃ©liorÃ©e pour Jelix par Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *

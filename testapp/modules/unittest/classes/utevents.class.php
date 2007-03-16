@@ -18,13 +18,13 @@ class UTEvents extends UnitTestCase {
       $response = serialize($response[0]);
       $temoin = serialize(array('module'=>'unittest','ok'=>true));
 
-      $this->assertTrue($temoin == $response, 'évenement simple');
+      $this->assertTrue($temoin == $response, 'Ã©venement simple');
 
       $temoin = array('hello'=>'world');
       $response = jEvent::notify('TestEventWithParams',$temoin );
       $response = $response->getResponse ();
 
-      $this->assertTrue(($response[0]['params'] == 'world'), 'évenement avec paramètres');
+      $this->assertTrue(($response[0]['params'] == 'world'), 'Ã©venement avec paramÃ¨tres');
     }
 }
 

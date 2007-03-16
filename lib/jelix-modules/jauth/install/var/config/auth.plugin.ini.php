@@ -2,45 +2,45 @@
 ;for security reasons , don't remove or modify the first line
 
 
-;============= Paramètres généraux
+;============= ParamÃ¨tres gÃ©nÃ©raux
 
-; Db, Class ou LDS  ( respecter la casse des caractères)
+; Db, Class ou LDS  ( respecter la casse des caractÃ¨res)
 driver = Db
 
-;============ Paramètres pour le plugin
-; indique si on effectue un contrôle sur l'adresse ip
-; qui a démarré la session.
+;============ ParamÃ¨tres pour le plugin
+; indique si on effectue un contrÃ´le sur l'adresse ip
+; qui a dÃ©marrÃ© la session.
 secure_with_ip = 0
 
 ; action en cas de piratage de la session et si onError = 2
 bad_ip_action = "jauth~login_out"
 
-;Timeout. Permet de forcer une authentification aprés un certain temps écoulé
+;Timeout. Permet de forcer une authentification aprÃ©s un certain temps Ã©coulÃ©
 ;sans action . temps en minutes. 0 = pas de timeout.
 timeout = 0
 
 ; indique si il faut absolument ou non une authentification pour chaque action
 ; on = authentification necessaire pour toute action
-;   sauf celles qui l'indiquent spécifiquement   (parametre action auth.required=false)
+;   sauf celles qui l'indiquent spÃ©cifiquement   (parametre action auth.required=false)
 ; off = authentification non requise pour toute action
-;   sauf celles qui l'indiquent spécifiquement   (parametre action auth.required=true)
+;   sauf celles qui l'indiquent spÃ©cifiquement   (parametre action auth.required=true)
 auth_required = on
 
-; indique quoi faire en cas de défaut d'authentification
-; 1 = erreur. Valeur à mettre impérativement pour les web services (xmlrpc, jsonrpc...)
+; indique quoi faire en cas de dÃ©faut d'authentification
+; 1 = erreur. Valeur Ã  mettre impÃ©rativement pour les web services (xmlrpc, jsonrpc...)
 ; 2 = redirection vers une action
 on_error = 2
 
-; action à executer en cas de défaut d'authentification quand on_error = 2
+; action Ã  executer en cas de dÃ©faut d'authentification quand on_error = 2
 on_error_action = "jauth~login_out"
 
-;selecteur de la clé de locale du message d'erreur
+;selecteur de la clÃ© de locale du message d'erreur
 error_message = "jauth~autherror.notlogged"
 
 
-;=========== Paramètres pour le module jauth
+;=========== ParamÃ¨tres pour le module jauth
 
-; nombre de secondes d'attentes aprés un défaut d'authentification
+; nombre de secondes d'attentes aprÃ©s un dÃ©faut d'authentification
 on_error_sleep = 3
 
 enable_after_login_override = off
@@ -49,16 +49,16 @@ after_login = ""
 enable_after_logout_override = off
 after_logout = "jauth~login_form"
 
-;=========== Paramètres pour les drivers
+;=========== ParamÃ¨tres pour les drivers
 
-; paramètres pour le driver db
+; paramÃ¨tres pour le driver db
 [Db]
 dao = ""
 
-; nom de la fonction globale qui sert à crypter le mot de passe
+; nom de la fonction globale qui sert Ã  crypter le mot de passe
 password_crypt_function = md5
 
-; paramètres pour le driver class
+; paramÃ¨tres pour le driver class
 [Class]
 class = ""
 password_crypt_function = md5

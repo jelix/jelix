@@ -10,8 +10,8 @@
     <td>{$form->datas['prenom']}</td>
     <td>
         <a href="{jurl 'forms_view',array('id'=>$id)}">voir</a>
-        <a href="{jurl 'forms_showform',array('id'=>$id)}">éditer</a>
-        <a href="{jurl 'forms_destroy',array('id'=>$id)}">détruire</a>
+        <a href="{jurl 'forms_showform',array('id'=>$id)}">Ã©diter</a>
+        <a href="{jurl 'forms_destroy',array('id'=>$id)}">dÃ©truire</a>
     </tr>
 {/foreach}
 </table>
@@ -21,8 +21,8 @@
 
 
 <ul>
-    <li><a href="{jurl 'forms_edit',array('id'=>1)}">créer une instance pour l'enregistrement 1</a></li>
-    <li><a href="{jurl 'forms_edit',array('id'=>2)}">créer une instance pour l'enregistrement 2</a></li>
-    <li><a href="{jurl 'forms_newform'}">créer une instance pour un nouvel enregistrement</a></li>
+    <li><a href="{jurl 'forms_edit',array('id'=>1)}">crÃ©er une instance pour l'enregistrement 1</a></li>
+    <li><a href="{jurl 'forms_edit',array('id'=>2)}">crÃ©er une instance pour l'enregistrement 2</a></li>
+    <li><a href="{jurl 'forms_newform'}">crÃ©er une instance pour un nouvel enregistrement</a></li>
 </ul>
 

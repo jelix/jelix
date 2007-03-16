@@ -11,7 +11,7 @@
 */
 
 /**
- * classe d'outils pour gérer une base de données
+ * classe d'outils pour gÃ©rer une base de donnÃ©es
  * @package    jelix
  * @subpackage db
  */
@@ -37,7 +37,7 @@ class jDbToolsSqlite extends jDbTools {
     }
 
     /**
-    * récupère la liste des champs pour une base donnée.
+    * rÃ©cupÃ¨re la liste des champs pour une base donnÃ©e.
     * @return   array    $tab[NomDuChamp] = obj avec prop (tye, length, lengthVar, notnull)
     */
     function _getFieldList ($tableName){
@@ -57,7 +57,7 @@ class jDbToolsSqlite extends jDbTools {
             $type = $result_line->type;
 
             /**
-            * récupéré depuis phpMyAdmin
+            * rÃ©cupÃ©rÃ© depuis phpMyAdmin
             */
             // set or enum types: slashes single quotes inside options
             $type   = str_replace('BINARY', '', $type);

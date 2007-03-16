@@ -11,5 +11,5 @@
 </div>
 
 <div id="footer">
-page HTML générée par {@jelix~jelix.framework.name@}
+page HTML gÃ©nÃ©rÃ©e par {@jelix~jelix.framework.name@}
 </div>

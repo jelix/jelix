@@ -46,12 +46,12 @@ class MagicQuotesPlugin implements jIPlugin {
     /**
     * enleve tout les slashes d'une chaine ou d'un tableau de chaine
     * @param string/array   $string
-    * @return string/array   l'objet transformé
+    * @return string/array   l'objet transformÃ©
     */
     protected function _stripSlashes ($string){
         if (is_array ($string)){
             $toReturn = array ();
-            // c'est un tableau, on traite un à un tout les elements du tableau
+            // c'est un tableau, on traite un Ã  un tout les elements du tableau
             foreach ($string as $key=>$elem){
                 $toReturn[$key] = $this->_stripSlashes ($elem);
             }

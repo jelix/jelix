@@ -5,8 +5,8 @@
  * @subpackage jtpl_plugin
  * @version    $Id$
  * @author        Smarty team
- * @contributor   Yannick Le Guédart <yannick at over-blog dot com>
- * @copyright  2001-2003 ispi of Lincoln, Inc., Yannick Le Guédart
+ * @contributor   Yannick Le GuÃ©dart <yannick at over-blog dot com>
+ * @copyright  2001-2003 ispi of Lincoln, Inc., Yannick Le GuÃ©dart
  * @link http://smarty.php.net/
  * @link http://jelix.org/
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

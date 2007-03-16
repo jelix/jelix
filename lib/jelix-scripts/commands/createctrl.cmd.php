@@ -17,15 +17,15 @@ class createctrlCommand extends JelixScriptCommand {
 
     public  $syntaxhelp = "[-cmdline] MODULE NOM_CONTROLEUR [NOM_METHOD]";
     public  $help="
-    Permet de créer un nouveau fichier d'une classe jController ou jControllerCmdLine
+    Permet de crÃ©er un nouveau fichier d'une classe jController ou jControllerCmdLine
 
-    Si l'option -cmdline est présente, créé un controller de type jControllerCmdLine,
-    pour développer des scripts en ligne de commande. Sinon, le controller créé est
+    Si l'option -cmdline est prÃ©sente, crÃ©Ã© un controller de type jControllerCmdLine,
+    pour dÃ©velopper des scripts en ligne de commande. Sinon, le controller crÃ©Ã© est
     de type jController.
     
-    MODULE : le nom du module concerné.
-    NOM_CONTROLEUR :  nom du controleur que vous voulez créer.
-    NOM_METHOD (facultatif) : nom de la première méthode. Par défaut, elle a
+    MODULE : le nom du module concernÃ©.
+    NOM_CONTROLEUR :  nom du controleur que vous voulez crÃ©er.
+    NOM_METHOD (facultatif) : nom de la premiÃ¨re mÃ©thode. Par dÃ©faut, elle a
                               le nom index.";
     
 

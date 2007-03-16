@@ -101,7 +101,7 @@ class UTSelectorAct extends UnitTestCase {
                 && $s->method == $res[2]
                 && $s->request == $res[3];
                 if(!$ok)
-                    $msg=' contient ces données inattendues ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
+                    $msg=' contient ces donnÃ©es inattendues ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
             }
 
             $this->assertTrue($ok , ' test de '.$sel);

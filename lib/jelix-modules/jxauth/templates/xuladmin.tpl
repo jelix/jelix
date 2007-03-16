@@ -81,7 +81,7 @@
         }
         
         if(gUserDataModified){
-            if(!confirm('Vous avez modifié les données de '+gLoginTb.value+'\nVoulez-vous abandonner cette modification ?')){
+            if(!confirm('Vous avez modifiÃ© les donnÃ©es de '+gLoginTb.value+'\nVoulez-vous abandonner cette modification ?')){
                 gTree.currentIndex = gUserIndex; //on remet l'ancien user
                 return;
             }

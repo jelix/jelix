@@ -19,9 +19,9 @@ require_once(LIB_PATH.'diff/diffhtml.php');
  * @param jTpl $tpl template engine
  * @param string $str1 the first string
  * @param string $str2 the second string
- * @param string $nodiffmsg message quand il n'y a pas de différence
+ * @param string $nodiffmsg message quand il n'y a pas de diffÃ©rence
  */
-function jtpl_function_diff($tpl, $str1,$str2, $nodiffmsg='Pas de différence')
+function jtpl_function_diff($tpl, $str1,$str2, $nodiffmsg='Pas de diffÃ©rence')
 {
     $diff = new Diff(explode("\n",$str1),explode("\n",$str2));
 

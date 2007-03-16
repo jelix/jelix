@@ -11,7 +11,7 @@
 error_reporting(E_ALL);
 
 /**
- * récupération du nom de la commande et éventuellement du nom de l'application
+ * rÃ©cupÃ©ration du nom de la commande et Ã©ventuellement du nom de l'application
  */
 
 if($_SERVER['argc'] < 2){
@@ -43,7 +43,7 @@ if(preg_match('/^\-\-([\w\-\.]+)$/',$commandName,$m)){
 }
 
 /**
- * recupération de la config
+ * recupÃ©ration de la config
  */
 
 if(!isset($_SERVER['JELIX_CONFIG'])){

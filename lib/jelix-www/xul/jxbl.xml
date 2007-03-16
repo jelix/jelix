@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  @package     jelix
  @subpackage  xul
- @version  $Id$
  @author   Jouanneau Laurent
  @contributor
- @copyright 2006 Jouanneau laurent
+ @copyright 2006-2007 Jouanneau laurent
  @link     http://www.jelix.org
  @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 -->
@@ -100,7 +99,7 @@
           <xul:button label="Premier" xbl:inherits="label=firstlabel"
                       oncommand="this.parentNode.first()"
                       anonid="first" disabled="true"/>
-          <xul:button label="Précédent" xbl:inherits="label=previouslabel"
+          <xul:button label="PrÃ©cÃ©dent" xbl:inherits="label=previouslabel"
                       oncommand="this.parentNode.previous()"
                       anonid="previous" disabled="true"/>
           <xul:hbox flex="1" pack="center">

@@ -10,8 +10,8 @@
 
 $BUILD_OPTIONS = array(
 'MAIN_TARGET_PATH'=> array(
-    "main directory where sources will be copied",  // signification (false = option cachée)
-    '_dist',                                        // valeur par défaut (boolean = option booleene)
+    "main directory where sources will be copied",  // signification (false = option cachÃ©e)
+    '_dist',                                        // valeur par dÃ©faut (boolean = option booleene)
     '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
     ),
 'PHP_VERSION_TARGET'=> array(
@@ -117,7 +117,7 @@ if($PHP_VERSION_TARGET){
         $PHP50=1;
     }
 }else{
-    // pas de target définie : donc php 5.0
+    // pas de target dÃ©finie : donc php 5.0
     $PHP50=1;
 }
 
@@ -146,7 +146,7 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
     $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
 }
 
-//----------------- Génération des sources
+//----------------- GÃ©nÃ©ration des sources
 
 //... creation des repertoires
 jBuildUtils::createDir($BUILD_TARGET_PATH);

@@ -36,7 +36,7 @@ class jFilter {
      */
     static public function isInt ($val, $min=null, $max=null){
 #if ENABLE_PHP_FILTER
-        // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
+        // @FIXME pas de doc sur la faÃ§on d'utiliser les min/max sur les filters
         if(!filter_var($val, FILTER_VALIDATE_INT)) return false;
 #else
         // @FIXME : trouver une solution plus performante ?
@@ -56,7 +56,7 @@ class jFilter {
      */
     static public function isHexInt ($val, $min=null, $max=null){
 #if ENABLE_PHP_FILTER
-        // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
+        // @FIXME pas de doc sur la faÃ§on d'utiliser les min/max sur les filters
         if(!filter_var($val, FILTER_VALIDATE_INT, FILTER_FLAG_ALLOW_HEX)) return false;
 #else
         // @FIXME : trouver une solution plus performante ?
@@ -91,7 +91,7 @@ class jFilter {
      */
     static public function isFloat ($val, $min=null, $max=null){
 #if ENABLE_PHP_FILTER
-        // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
+        // @FIXME pas de doc sur la faÃ§on d'utiliser les min/max sur les filters
         if(!filter_var($val, FILTER_VALIDATE_FLOAT)) return false;
 #else
         if(!is_numeric($val)) return false;

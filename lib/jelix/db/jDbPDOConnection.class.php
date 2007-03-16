@@ -125,7 +125,7 @@ class jDbPDOConnection extends PDO {
         parent::__construct($profil['dsn'], $user, $password, $prof);
         $this->setAttribute(JPDO_ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
         $this->setAttribute(JPDO_ATTR_ERRMODE, JPDO_ERRMODE_EXCEPTION);
-        // on ne peut pas lancer deux query en même temps avec PDO ! sauf si on utilise mysql
+        // on ne peut pas lancer deux query en mÃªme temps avec PDO ! sauf si on utilise mysql
         // et que l'on utilise cet attribut...
         if($this->dbms == 'mysql')
             $this->setAttribute(JPDO_MYSQL_ATTR_USE_BUFFERED_QUERY, true);

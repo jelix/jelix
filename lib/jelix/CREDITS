@@ -1,29 +1,29 @@
-Crédits
+CrÃ©dits
 =======
 
-Développeurs
+DÃ©veloppeurs
 ------------
 
 Laurent Jouanneau (laurentj) :
-    Concepteur et développeur principal de Jelix
+    Concepteur et dÃ©veloppeur principal de Jelix
 
 Loic Mathaud (bballizlife) :
     testeur, nombreuses corrections de bugs dans jelix
     contributions jTpl : version standalone du moteur de template, commentaires, {for}, modifier stripslashes
     driver sqlite pour jDb
-    daos : opérateurs supplementaires
-    adaptation du framework pour la réalisation d'applications fonctionnant en ligne de commande
+    daos : opÃ©rateurs supplementaires
+    adaptation du framework pour la rÃ©alisation d'applications fonctionnant en ligne de commande
     implementation de jResponseXML, jResponseRss20
     corrections orthographiques dans la documentation
-    Diverses améliorations (jClasses::inc(), jIniFile, jAppManager, dans jelix-scripts etc. )
+    Diverses amÃ©liorations (jClasses::inc(), jIniFile, jAppManager, dans jelix-scripts etc. )
 
 Contributeurs
 -------------
 
-Yannick Le Guédart (Torgan)
+Yannick Le GuÃ©dart (Torgan)
     driver auth jAuthDriverClass
     plugin jtpl date_format
-    Divers bug fix et petites améliorations
+    Divers bug fix et petites amÃ©liorations
     Contributions sur jResponseRss et jResponseAtom
 
 Nicolas Jeudy
@@ -35,7 +35,7 @@ M. Thiriot (Doubleface)
     bug fixs sur le support de PDO dans jDb
 
 Yann
-    Petite amélioration sur jResponseHtml (description et keywords)
+    Petite amÃ©lioration sur jResponseHtml (description et keywords)
 
 Cedric
     patch correctif sur jFile::read
@@ -47,7 +47,7 @@ Gildas Givaja (Giviz)
     testeur, corrections de bugs
 
 Aubanel MONNIER
-    reponse jResponseLatexToPdf et les plugins de templates associés
+    reponse jResponseLatexToPdf et les plugins de templates associÃ©s
     patch pour les ancres dans jResponseRedirect
 
 Contributeurs involontaires ;-)
@@ -63,4 +63,4 @@ Copix Team
     (http://www.copix.org)
 
 
-(mise à jour à svn-346)
+(mise Ã  jour Ã  svn-346)

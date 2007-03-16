@@ -2,7 +2,6 @@
 /**
 * @package  {$appname}
 * @subpackage www
-* @version  $Id$
 * @author
 * @contributor
 * @copyright

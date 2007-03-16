@@ -42,36 +42,36 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
          </classicentrypoint>
         </urls>
 
-         génère dans un fichier propre à chaque entrypoint :
+         gÃ©nÃ¨re dans un fichier propre Ã  chaque entrypoint :
 
             $PARSE_URL = array($isDefault , $infoparser,$infoparser... )
 
-            où
-            $isDefault : indique si c'est un point d'entrée par défaut, et donc si le parser ne trouve rien, si il ignore ou fait une erreur
+            oÃ¹
+            $isDefault : indique si c'est un point d'entrÃ©e par dÃ©faut, et donc si le parser ne trouve rien, si il ignore ou fait une erreur
 
             $infoparser = array('module','action','selecteur handler')
             ou
             $infoparser = array( 'module','action', 'regexp_pathinfo',
-               array('annee','mois'), // tableau des valeurs dynamiques, classées par ordre croissant
+               array('annee','mois'), // tableau des valeurs dynamiques, classÃ©es par ordre croissant
                array(true, false), // tableau des valeurs escapes
                array('bla'=>'cequejeveux' ) // tableau des valeurs statiques
             )
 
 
-         génère dans un fichier commun à tous :
+         gÃ©nÃ¨re dans un fichier commun Ã  tous :
 
             $CREATE_URL = array(
                'news~show@classic' =>
                   array(0,'entrypoint', https true/false, entrypoint true/false, 'selecteur handler')
                   ou
                   array(1,'entrypoint', https true/false, entrypoint true/false,
-                        array('annee','mois','jour','id','titre'), // liste des paramètres de l'url à prendre en compte
+                        array('annee','mois','jour','id','titre'), // liste des paramÃ¨tres de l'url Ã  prendre en compte
                         array(true, false..), // valeur des escapes
                         "/news/%1/%2/%3/%4-%5", // forme de l'url
                         )
                   ou
-                  array(2,'entrypoint', https true/false, entrypoint true/false ); pour les clés du type "@request"
-                  array(3,'entrypoint', https true/false, entrypoint true/false );  pour les clés du type  "module~@request"
+                  array(2,'entrypoint', https true/false, entrypoint true/false ); pour les clÃ©s du type "@request"
+                  array(3,'entrypoint', https true/false, entrypoint true/false );  pour les clÃ©s du type  "module~@request"
 
         */
         $typeparam = array('string'=>'([^\/]+)','char'=>'([^\/])', 'letter'=>'(\w)',
@@ -96,9 +96,9 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                 $generatedentrypoint = '';
            $parseInfos = array($isDefault);
 
-           // si c'est le point d'entrée par défaut pour le type de requet indiqué
+           // si c'est le point d'entrÃ©e par dÃ©faut pour le type de requet indiquÃ©
            // alors on indique une regle supplementaire que matcherons
-           // toutes les urls qui ne correspondent pas aux autres rêgles
+           // toutes les urls qui ne correspondent pas aux autres rÃªgles
            if($isDefault){
              $createUrlInfos['@'.$requestType]=array(2,$entryPoint, $isHttps);
            }
@@ -116,9 +116,9 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                }else{
                    $urlep=$generatedentrypoint;
                }
-               // dans le cas d'un point d'entrée qui n'est pas celui par défaut pour le type de requete indiqué
-               // si il y a juste un module indiqué alors on sait que toutes les actions
-               // concernant ce module passeront par ce point d'entrée.
+               // dans le cas d'un point d'entrÃ©e qui n'est pas celui par dÃ©faut pour le type de requete indiquÃ©
+               // si il y a juste un module indiquÃ© alors on sait que toutes les actions
+               // concernant ce module passeront par ce point d'entrÃ©e.
                if(!$isDefault && !isset($url['action']) && !isset($url['handler'])){
                  $parseInfos[]=array($module, '', '/.*/', array(), array(), array(), false );
                  $createUrlInfos[$module.'~*@'.$requestType] = array(3,$urlep, $urlhttps);
@@ -132,7 +132,7 @@ class jUrlCompilerSignificant implements jISimpleCompiler{
                   $actionOverride = false;
                }
 
-               // si il y a un handler indiqué, on sait alors que pour le module et action indiqué
+               // si il y a un handler indiquÃ©, on sait alors que pour le module et action indiquÃ©
                // il faut passer par cette classe handler pour le parsing et la creation de l'url
                if(isset($url['handler'])){
                   $class = (string)$url['handler'];

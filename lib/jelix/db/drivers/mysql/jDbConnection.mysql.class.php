@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage db
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Croes GÃ©rald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * @link      http://www.jelix.org
@@ -11,7 +11,7 @@
 * Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixDbConnectionMysql)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e et amÃ©liorÃ©e pour Jelix par Laurent Jouanneau
 */
 
 /**
@@ -24,8 +24,8 @@ class jDbConnectionMySQL extends jDbConnection {
    protected $_charsets =array( 'UTF-8'=>'utf8', 'ISO-8859-1'=>'latin1');
 
    function __construct($profil){
-      // à cause du @, on est obligé de tester l'existence de mysql, sinon en cas d'absence
-      // on a droit à un arret sans erreur 
+      // Ã  cause du @, on est obligÃ© de tester l'existence de mysql, sinon en cas d'absence
+      // on a droit Ã  un arret sans erreur 
       if(!function_exists('mysql_connect')){
          throw new JException('jelix~db.error.nofunction','mysql');
       }
@@ -91,7 +91,7 @@ class jDbConnectionMySQL extends jDbConnection {
 
    protected function _doQuery ($query){
 
-       // ici et non lors du connect, pour le cas où il y a plusieurs connexion active
+       // ici et non lors du connect, pour le cas oÃ¹ il y a plusieurs connexion active
       if(!mysql_select_db ($this->profil['database'], $this->_connection)){
          throw new JException('jelix~db.error.database.unknow',$this->profil['database']);
       }
@@ -135,7 +135,7 @@ class jDbConnectionMySQL extends jDbConnection {
    }
 
    /**
-    * renvoi une chaine avec les caractères spéciaux échappés
+    * renvoi une chaine avec les caractÃ¨res spÃ©ciaux Ã©chappÃ©s
     * @access private
     */
    protected function _quote($text){

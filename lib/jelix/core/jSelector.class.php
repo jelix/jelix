@@ -371,7 +371,7 @@ class jSelectorDao extends jSelectorModule {
             throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         }
 
-        // on regarde si le dao a été redéfini
+        // on regarde si le dao a Ã©tÃ© redÃ©fini
         $overloadedPath = JELIX_APP_VAR_PATH.'overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix;
         if (is_readable ($overloadedPath)){
            $this->_path = $overloadedPath;
@@ -389,8 +389,8 @@ class jSelectorDao extends jSelectorModule {
 
     protected function _createCachePath(){
         $d = array('modules/','overloaded/');
-        // on ne partage pas le même cache pour tous les emplacements possibles
-        // au cas où un overload était supprimé
+        // on ne partage pas le mÃªme cache pour tous les emplacements possibles
+        // au cas oÃ¹ un overload Ã©tait supprimÃ©
         $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/daos/'.$d[$this->_where].$this->module.'~'.$this->resource.'~'.$this->driver.$this->_cacheSuffix;
     }
 
@@ -428,14 +428,14 @@ class jSelectorTpl extends jSelectorModule {
             throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         }
 
-        // on regarde si il y a un template redéfinie pour le theme courant
+        // on regarde si il y a un template redÃ©finie pour le theme courant
          $this->_path = JELIX_APP_VAR_PATH.'themes/'.$gJConfig->defaultTheme.'/'.$this->module.'/'.$this->resource.'.tpl';
          if (is_readable ($this->_path)){
             $this->_where = 1;
             return;
          }
 
-        // on regarde si il y a un template redéfinie dans le theme par defaut
+        // on regarde si il y a un template redÃ©finie dans le theme par defaut
         $this->_path = JELIX_APP_VAR_PATH.'themes/default/'.$this->module.'/'.$this->resource.'.tpl';
         if (is_readable ($this->_path)){
            $this->_where = 2;
@@ -453,8 +453,8 @@ class jSelectorTpl extends jSelectorModule {
 
     protected function _createCachePath(){
        $d = array('modules/','themes/'.$GLOBALS['gJConfig']->defaultTheme.'/','themes/default/');
-       // on ne partage pas le même cache pour tous les emplacements possibles
-       // au cas où un overload était supprimé
+       // on ne partage pas le mÃªme cache pour tous les emplacements possibles
+       // au cas oÃ¹ un overload Ã©tait supprimÃ©
        $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/templates/'.$d[$this->_where].$this->module.'~'.$this->resource.$this->_cacheSuffix;
     }
 }

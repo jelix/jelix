@@ -69,7 +69,7 @@ class defaultCtrl extends jController {
 
    function testsimpletest() {
       $rep = $this->getResponse('unittest');
-      $rep->title = 'test unitaires sur évolutions simpletest';
+      $rep->title = 'test unitaires sur Ã©volutions simpletest';
       $ut = jClasses::create("unittestservice");
       $ut->init($rep);
       $ut->simpletestTest();

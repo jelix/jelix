@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage dao
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Croes GÃ©rald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
@@ -13,7 +13,7 @@
 * du framework Copix 2.3dev20050901. http://www.copix.org
 * il est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e et amÃ©liorÃ©e pour Jelix par Laurent Jouanneau
 */
 
 #includephp jDaoParser.class.php
@@ -24,7 +24,7 @@
 * du framework Copix 2.3dev20050901. http://www.copix.org
 * il est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e et amÃ©liorÃ©e pour Jelix par Laurent Jouanneau
 */
 
 /**
@@ -84,7 +84,7 @@ class jDaoCompiler  implements jISimpleCompiler {
 
         $generator = new jDaoGenerator($selector->getDaoClass(), $selector->getDaoRecordClass(), $parser);
 
-        // génération des classes PHP correspondant à la définition de la DAO
+        // gÃ©nÃ©ration des classes PHP correspondant Ã  la dÃ©finition de la DAO
         $compiled = '<?php '.$generator->buildClasses ()."\n?>";
         jFile::write ($selector->getCompiledFilePath(), $compiled);
         return true;

@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage auth
 * @author      Laurent Jouanneau
-* @contributor Yannick Le Guédart (adaptation de jAuthDriverDb pour une classe quelconque)
-* @copyright   2006 Laurent Jouanneau, 2006 Yannick Le Guédart
+* @contributor Yannick Le GuÃ©dart (adaptation de jAuthDriverDb pour une classe quelconque)
+* @copyright   2006 Laurent Jouanneau, 2006 Yannick Le GuÃ©dart
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 

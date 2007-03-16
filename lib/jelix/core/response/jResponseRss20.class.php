@@ -3,10 +3,10 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Loic Mathaud
-* @author      Yannick Le Guédart
+* @author      Yannick Le GuÃ©dart
 * @contributor Laurent Jouanneau
 * @copyright   2005-2006 Loic Mathaud
-* @copyright   2006 Yannick Le Guédart
+* @copyright   2006 Yannick Le GuÃ©dart
 * @copyright   2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -162,8 +162,8 @@ class jRSS20Info extends jXMLFeedInfo{
      * not implemented
      * @var string
      */
-    public $cloud; // indique un webservice par lequel le client peut s'enregistrer auprés du serveur
-                  // pour être tenu au courant des modifs
+    public $cloud; // indique un webservice par lequel le client peut s'enregistrer auprÃ©s du serveur
+                  // pour Ãªtre tenu au courant des modifs
                   //=array('domain'=>'','path'=>'','port'=>'','registerProcedure'=>'', 'protocol'=>'');
     /**
      * time to live of the cache, in minutes

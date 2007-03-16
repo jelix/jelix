@@ -69,8 +69,8 @@ class jAcl {
 
         $groups = self::getGroups();
 
-        // recupère toutes les valeurs correspondant aux groupes auquel appartient le user,
-        //   avec le sujet et ressource indiqué
+        // recupÃ¨re toutes les valeurs correspondant aux groupes auquel appartient le user,
+        //   avec le sujet et ressource indiquÃ©
         $values= array();
         $dao = jDao::get('jelix~jaclrights');
         $list = $dao->getAllGroupRights($subject, $groups);

@@ -1,12 +1,12 @@
 ;<?php die(''); ?>
 ;for security reasons, don't remove or modify the first line
 
-; nom de la connexion utilisée par défaut
+; nom de la connexion utilisÃ©e par dÃ©faut
 default = testapp
 
-; chaque section correspond à une connexion
-; le nom de la section est le nom de la connexion utilisé dans jDb et jDao
-; la liste des paramètres dépend du driver.
+; chaque section correspond Ã  une connexion
+; le nom de la section est le nom de la connexion utilisÃ© dans jDb et jDao
+; la liste des paramÃ¨tres dÃ©pend du driver.
 [testapp]
 driver="mysql"
 database="testapp"

@@ -9,7 +9,7 @@ CREATE TABLE `jacl_group` (
   PRIMARY KEY  (`id_aclgrp`)
 ) TYPE=MyISAM AUTO_INCREMENT=1 ;
 
---- liste des groupes associés à chaque utilisateur
+--- liste des groupes associÃ©s Ã  chaque utilisateur
 DROP TABLE IF EXISTS `jacl_user_group`;
 CREATE TABLE `jacl_user_group` (
   `login` varchar(50) NOT NULL default '',
@@ -19,7 +19,7 @@ CREATE TABLE `jacl_user_group` (
 
 
 --- groupes de valeurs de droits
---- type_aclvalgrp : 0 = valeurs pouvant être combinées, 1= valeurs exclusives
+--- type_aclvalgrp : 0 = valeurs pouvant Ãªtre combinÃ©es, 1= valeurs exclusives
 DROP TABLE IF EXISTS `jacl_right_values_group`;
 CREATE TABLE `jacl_right_values_group` (
   `id_aclvalgrp` int(11) NOT NULL default '0',
@@ -38,7 +38,7 @@ CREATE TABLE `jacl_right_values` (
 ) TYPE=MyISAM;
 
 
---- liste des sujets, avec leur appartenance à un groupe de valeurs de droits
+--- liste des sujets, avec leur appartenance Ã  un groupe de valeurs de droits
 DROP TABLE IF EXISTS `jacl_subject`;
 CREATE TABLE `jacl_subject` (
   `id_aclsbj` varchar(100) NOT NULL default '',

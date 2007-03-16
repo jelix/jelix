@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
   ns="http://jelix.org/ns/forms/1.0">
   
@@ -130,7 +130,7 @@
   <define name="upload">
      <element name="upload">
        <ref name="UI.Common" />
-       <attribute name="mediatype" /> <!-- indique les types autorisés -->
+       <attribute name="mediatype" /> <!-- indique les types autorisÃ©s -->
      </element>
   </define>
 
@@ -139,7 +139,7 @@
        <ref name="UI.Common" />
        <ref name="UI.Common.Attrs" />
        <ref name="List.UI.Common" />
-       <!-- saisie libre autorisée -->
+       <!-- saisie libre autorisÃ©e -->
        <!--<optional>
            <attribute name="selection">
              <choice>

@@ -109,7 +109,7 @@ class jDbConnectionSqlite extends jDbConnection {
     }
 
     /**
-    * renvoi une chaine avec les caractères spéciaux échappés
+    * renvoi une chaine avec les caractÃ¨res spÃ©ciaux Ã©chappÃ©s
     * @access private
     */
     protected function _quote($text){

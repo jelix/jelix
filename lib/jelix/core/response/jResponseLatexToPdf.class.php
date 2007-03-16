@@ -120,7 +120,7 @@ class jResponseLatexToPdf extends jResponse {
         $pdfFile=PDF_LATEX_RESPONSE_CACHE.$fbase.'.pdf';
 
         if (! file_exists($pdfFile)){
-            // Naïve cache: we have an md5 on the content of the tex file. If the pdf 
+            // NaÃ¯ve cache: we have an md5 on the content of the tex file. If the pdf 
             // corresponding to this content already exists, just serve it. 
             // No managment of cache deletion :o/
             jFile::write($texFile, $data);

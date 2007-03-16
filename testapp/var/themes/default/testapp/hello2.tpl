@@ -1,6 +1,6 @@
 <h1>Hello world</h1>
-<p>Ceci est un template surchargé.</p>
-<p>Il s'agit d'un template situé dans var/themes/testapp/, et qui
+<p>Ceci est un template surchargÃ©.</p>
+<p>Il s'agit d'un template situÃ© dans var/themes/testapp/, et qui
 redefinit le template hello2.tpl du module testapp.</p>
 
 

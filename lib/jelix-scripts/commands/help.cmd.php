@@ -16,7 +16,7 @@ class helpCommand extends JelixScriptCommand {
     public  $allowed_parameters=array('command'=>false);
 
     public  $syntaxhelp ="[COMMANDE]";
-    public  $help="      COMMANDE : nom de la commande dont vous voulez l'aide (paramètre facultatif)";
+    public  $help="      COMMANDE : nom de la commande dont vous voulez l'aide (paramÃ¨tre facultatif)";
 
 
     public function run(){
@@ -31,22 +31,22 @@ class helpCommand extends JelixScriptCommand {
           $this->disp($command->help."\n\n");
        }else{
           $this->disp("
-Utilisation générale :
+Utilisation gÃ©nÃ©rale :
     ".$_SERVER['argv'][0]." [--NOM_APP] COMMANDE [OPTIONS] [PARAMETRES]
 
-    NOM_APP  : nom de l'application concernée. Si non présent, le nom de
-               l'application doit être dans une variable d'environnement
+    NOM_APP  : nom de l'application concernÃ©e. Si non prÃ©sent, le nom de
+               l'application doit Ãªtre dans une variable d'environnement
                JELIX_APP_NAME
-    COMMANDE : nom de la commande à executer
+    COMMANDE : nom de la commande Ã  executer
     OPTIONS  : une ou plusieurs options. Le nom d'une option commence par un
-               tiret et peut être suivi par une valeur.
+               tiret et peut Ãªtre suivi par une valeur.
                exemple :
                  -override
                  -project-path /foo/bar
     PARAMETRES : une ou plusieurs valeurs qui se suivent
 
-    Les options et paramètres à indiquer dépendent de la commande. Les options
-    sont toujours facultatives, ainsi que certains paramètres.
+    Les options et paramÃ¨tres Ã  indiquer dÃ©pendent de la commande. Les options
+    sont toujours facultatives, ainsi que certains paramÃ¨tres.
     Consulter l'aide d'une commande en faisant :
        ".$_SERVER['argv'][0]." help COMMANDE
 

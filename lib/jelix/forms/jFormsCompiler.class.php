@@ -156,15 +156,15 @@ class jFormsCompiler implements jISimpleCompiler {
 interface jIFormGenerator {
 
    // on indique un objet form
-   // il renvoi dans un tableau le code généré correspondant
+   // il renvoi dans un tableau le code gÃ©nÃ©rÃ© correspondant
    /*
-   startform : code généré pour le debut du formulaire (balise <form> en html) Peut contenir %ATTR%
-   head : code généré à ajouter dans l'en-tête de page
-   controls : tableau assoc de chaque contrôle généré. Peuvent contenir %ATTR%
-   endform : code généré pour la fin du formulaire
+   startform : code gÃ©nÃ©rÃ© pour le debut du formulaire (balise <form> en html) Peut contenir %ATTR%
+   head : code gÃ©nÃ©rÃ© Ã  ajouter dans l'en-tÃªte de page
+   controls : tableau assoc de chaque contrÃ´le gÃ©nÃ©rÃ©. Peuvent contenir %ATTR%
+   endform : code gÃ©nÃ©rÃ© pour la fin du formulaire
 
 
-   %ATTR% : remplacés par les attributs supplémentaires indiqués par l'utilisateur dans le template
+   %ATTR% : remplacÃ©s par les attributs supplÃ©mentaires indiquÃ©s par l'utilisateur dans le template
    */
    function buildForm($formObject);
 

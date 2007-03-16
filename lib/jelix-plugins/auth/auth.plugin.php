@@ -2,15 +2,15 @@
 /**
 * @package    jelix-modules
 * @subpackage jelix
-* @author     Croes Gérald
+* @author     Croes GÃ©rald
 * @contributor  Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * Une partie du code est issue d'une version experimentale de la classe
 * PluginAuth issue du framework Copix 2.3dev20050901.
 * et est sous Copyright 2001-2005 CopixTeam (licence LGPL) http://www.copix.org
-* Auteur initial : Croes Gérald
+* Auteur initial : Croes GÃ©rald
 * Contributeur de la version experimentale : Laurent Jouanneau
-* Adaptée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e pour Jelix par Laurent Jouanneau
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
 */

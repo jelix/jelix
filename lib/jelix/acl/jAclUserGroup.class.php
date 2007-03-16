@@ -102,11 +102,11 @@ class jAclUserGroup {
       $daoright = jDao::get('jelix~jaclrights');
       $daousergroup = jDao::get('jelix~~jaclusergroup');
 
-      // recupere le groupe privé
+      // recupere le groupe privÃ©
       $privategrp = $daogroup->getPrivateGroup($login);
       if(!$privategrp) return;
 
-      // supprime les droits sur le groupe privé (jacl_rights)
+      // supprime les droits sur le groupe privÃ© (jacl_rights)
       $daoright->deleteByGroup($privategrp->id_aclgrp);
 
       // supprime le groupe personnel du user (jacl_group)
@@ -164,7 +164,7 @@ class jAclUserGroup {
        $daogroup = jDao::get('jelix~jaclgroup');
        $daoright = jDao::get('jelix~jaclrights');
        $daousergroup = jDao::get('jelix~jaclusergroup');
-       // enlever tout les droits attaché au groupe
+       // enlever tout les droits attachÃ© au groupe
        $daoright->deleteByGroup($groupid);
        // enlever les utilisateurs du groupe
        $daousergroup->deleteByGroup($groupid);

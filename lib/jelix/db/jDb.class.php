@@ -8,7 +8,7 @@
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
-* API inspirée de la classe CopixDbFactory issue du framework Copix 2.3dev20050901. http://www.copix.org
+* API inspirÃ©e de la classe CopixDbFactory issue du framework Copix 2.3dev20050901. http://www.copix.org
 */
 #if ENABLE_OPTIMIZED_SOURCE
 
@@ -72,11 +72,11 @@ class jDb {
            $driver = $m[1];
         }
 
-        //pas de vérification sur l'éventuel partage de l'élément.
+        //pas de vÃ©rification sur l'Ã©ventuel partage de l'Ã©lÃ©ment.
         require_once(JELIX_LIB_DB_PATH.'/drivers/'.$driver.'/jDbTools.'.$driver.'.class.php');
         $class = 'jDbTools'.$driver;
 
-        //Création de l'objet
+        //CrÃ©ation de l'objet
         $cnx = self::getConnection ($name);
         $tools = new $class ($cnx);
         return $tools;
@@ -138,7 +138,7 @@ class jDb {
 
           $class = 'jDbConnection'.$profil['driver'];
 
-          //Création de l'objet
+          //CrÃ©ation de l'objet
           $dbh = new $class ($profil);
           return $dbh;
         }

@@ -2,7 +2,7 @@
 Version php : {$versionphp}<br/>
 Version Jelix: {$versionjelix}<br/>
 
-<p><a href="?">Retour à l'accueil</a></p>
+<p><a href="?">Retour Ã  l'accueil</a></p>
 <h3>Core</h3>
 <ul>
     <li><a href="{jurl 'unittest~testselectoract'}">selecteurs d'action</a></li> <!--?module=unittest&amp;action=testselectoract-->
@@ -21,12 +21,12 @@ Version Jelix: {$versionjelix}<br/>
 
 <h3>jEvent</h3>
 <ul>
-    <li><a href="?module=unittest&amp;action=testevent">lancer deux évènements</a></li>
+    <li><a href="?module=unittest&amp;action=testevent">lancer deux Ã©vÃ¨nements</a></li>
 </ul>
 
 <h3>jUrl</h3>
 <ul>
-    <li><a href="?module=unittest&amp;action=testurlcreate">Tester la création d'url</a></li>
+    <li><a href="?module=unittest&amp;action=testurlcreate">Tester la crÃ©ation d'url</a></li>
     <li><a href="?module=unittest&amp;action=testurlparse">Tester l'analyse d'url</a></li>
 </ul>
 

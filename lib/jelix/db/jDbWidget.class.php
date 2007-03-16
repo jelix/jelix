@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage db
 * @version    $Id:$
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Croes GÃ©rald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @link      http://www.jelix.org
@@ -12,7 +12,7 @@
 * Methodes issues originellement de la classe  CopixDbWidget du framework Copix 2.3dev20050901. http://www.copix.org
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e et amÃ©liorÃ©e pour Jelix par Laurent Jouanneau
 */
 
 /**
@@ -34,9 +34,9 @@ class jDbWidget {
     }
 
     /**
-    * Effectue une requête, renvoi une ligne de resultat sous forme d'objet et libere les ressources.
-    * @param   string   $query   requète SQL
-    * @return  object  objet contenant les champs  sous forme de propriétés, de la ligne sélectionnée
+    * Effectue une requÃªte, renvoi une ligne de resultat sous forme d'objet et libere les ressources.
+    * @param   string   $query   requÃ¨te SQL
+    * @return  object  objet contenant les champs  sous forme de propriÃ©tÃ©s, de la ligne sÃ©lectionnÃ©e
     */
     public function  fetchFirst($query){
         $rs     = $this->_conn->query ($query);
@@ -45,10 +45,10 @@ class jDbWidget {
     }
 
     /**
-    * Effectue une requête, et met à jour les propriétes de l'objet passé en paramètre
-    * @param   string  $query     requète SQL
-    * @param   string  $classname nom de la classe de l'objet à remplir
-    * @return  object  objet initialisé rempli
+    * Effectue une requÃªte, et met Ã  jour les propriÃ©tes de l'objet passÃ© en paramÃ¨tre
+    * @param   string  $query     requÃ¨te SQL
+    * @param   string  $classname nom de la classe de l'objet Ã  remplir
+    * @return  object  objet initialisÃ© rempli
     */
     public function fetchFirstInto ($query, $classname){
         $rs     = $this->_conn->query   ($query);
@@ -58,8 +58,8 @@ class jDbWidget {
     }
 
     /**
-    * Récupère tout les enregistrements d'un select dans un tableau (d'objets)
-    * @param   string   $query   requète SQL
+    * RÃ©cupÃ¨re tout les enregistrements d'un select dans un tableau (d'objets)
+    * @param   string   $query   requÃ¨te SQL
     * @return  array    tableau d'objets
     */
     public function fetchAll($query, $limitOffset=null, $limitCount=null){
@@ -72,9 +72,9 @@ class jDbWidget {
     }
 
     /**
-    * Récupère tout les enregistrements d'un select dans un tableau (d'objets)
-    * @param   string   $query   requète SQL
-    * @param   string  $className nom de la classe de l'objet à remplir
+    * RÃ©cupÃ¨re tout les enregistrements d'un select dans un tableau (d'objets)
+    * @param   string   $query   requÃ¨te SQL
+    * @param   string  $className nom de la classe de l'objet Ã  remplir
     * @return  array    tableau d'objets
     */
     public function fetchAllInto($query, $className, $limitOffset=null, $limitCount=null){

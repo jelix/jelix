@@ -81,7 +81,7 @@ class jDatatypeString extends jDatatype {
 }
 
 /**
- * Datatype Booléen
+ * Datatype BoolÃ©en
  * @package     jelix
  * @subpackage  utils
  * @experimental

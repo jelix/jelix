@@ -2,7 +2,7 @@
 /**
 * @package     jelix
 * @subpackage  events
-* @author      Croes Gérald, Patrice Ferlet
+* @author      Croes GÃ©rald, Patrice Ferlet
 * @contributor Laurent Jouanneau
 * @copyright 2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
@@ -10,8 +10,8 @@
 *
 * Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixListenerFactory)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam
-* Auteurs initiaux : Croes Gérald, Patrice Ferlet
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* Auteurs initiaux : Croes GÃ©rald, Patrice Ferlet
+* AdaptÃ©e et amÃ©liorÃ©e pour Jelix par Laurent Jouanneau
 *
 */
 

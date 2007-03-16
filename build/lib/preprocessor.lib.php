@@ -92,8 +92,8 @@ class jPreProcessor{
         $this->errorLine=0;
         $this->_blockstack = array();
 
-        // on sauve les variables pour les retrouver intact aprés le parsing
-        // de façon à pouvoir rééxecuter plusieurs fois run sur des contenus différents
+        // on sauve les variables pour les retrouver intact aprÃ©s le parsing
+        // de faÃ§on Ã  pouvoir rÃ©Ã©xecuter plusieurs fois run sur des contenus diffÃ©rents
         if($this->_doSaveVariables)
             $this->_savedVariables= $this->_variables;
 

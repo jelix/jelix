@@ -53,7 +53,7 @@ class jConfig {
             $dc = JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php';
             if( (file_exists($dc) && filemtime($dc)>$t)
                 || filemtime(JELIX_APP_CONFIG_PATH.$configFile)>$t){
-                // le fichier de conf ou le fichier defaultconfig.ini.php ont ete modifié : on compile
+                // le fichier de conf ou le fichier defaultconfig.ini.php ont ete modifiÃ© : on compile
                 $compil=true;
             }else{
 

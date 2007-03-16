@@ -39,7 +39,7 @@ class jXmlRpcRequest extends jRequest {
                 $requestXml = implode("\n",$requestXml);
             }
 
-            // Décodage de la requete
+            // DÃ©codage de la requete
             list($nom,$vars) = jXmlRpc::decodeRequest($requestXml);
             list($module, $action) = explode('.',$nom);
 
@@ -48,7 +48,7 @@ class jXmlRpcRequest extends jRequest {
             }else
                 $this->params['params'] = $vars;
 
-            // Définition de l'action a executer et des paramètres
+            // DÃ©finition de l'action a executer et des paramÃ¨tres
             $this->params['module'] = $module;
             $this->params['action'] = $action;
     }

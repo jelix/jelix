@@ -13,7 +13,7 @@ require_once(dirname(__FILE__).'/lib/jCmdUtils.class.php');
 
 // arguments :  repertoire1 [repertoire2]
 // repertoire1 : le chemin du repertoire duquel on veut la liste
-// repertoire2 : si on veut une base de chemin différente de repertoire1 dans le fichier de sortie
+// repertoire2 : si on veut une base de chemin diffÃ©rente de repertoire1 dans le fichier de sortie
 //               on l'indique ici
 
 try{

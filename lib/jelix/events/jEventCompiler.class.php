@@ -32,7 +32,7 @@ class jEventCompiler implements jIMultiFileCompiler {
 
                     foreach ($listener->event as $eventListened){
                         $name = (string) $eventListened['name'];
-                        // clé = nom de l'event, valeur = liste des fichiers listener
+                        // clÃ© = nom de l'event, valeur = liste des fichiers listener
                         $this->eventList[$name][] = array($module,$listenerName);
                     }
                 }

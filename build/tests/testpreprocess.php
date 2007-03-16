@@ -191,7 +191,7 @@ class PreProcTestCase extends UnitTestCase {
             if($e->sourceFilename != PP_DATA_DIR.$datas[1]){
                 $s = substr($e->sourceFilename, - strlen(PP_DATA_DIR.$datas[1]));
                 if($s != PP_DATA_DIR.$datas[1]){
-                    $this->fail($source . ' : mauvais fichier source indiqué ('.$e->sourceFilename.')');
+                    $this->fail($source . ' : mauvais fichier source indiquÃ© ('.$e->sourceFilename.')');
                     $err=true;
                 }
             }

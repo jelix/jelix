@@ -19,12 +19,12 @@ class createactionCommand extends JelixScriptCommand {
     public  $help="
     Permet d'ajouter une nouvelle action
 
-    MODULE : le nom du module concerné.
+    MODULE : le nom du module concernÃ©.
     ACTION (facultatif) : nom de l'action que vous voulez ajouter
-    CONTROLLER (facultatif) :  nom du controleur concerné par l'action que
-                               vous avez spécifié.
-    METHOD (facultatif) : nom de la méthode du controleur que vous avez
-                          spécifié.";
+    CONTROLLER (facultatif) :  nom du controleur concernÃ© par l'action que
+                               vous avez spÃ©cifiÃ©.
+    METHOD (facultatif) : nom de la mÃ©thode du controleur que vous avez
+                          spÃ©cifiÃ©.";
 
 
     public function run(){

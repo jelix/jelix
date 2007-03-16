@@ -21,16 +21,16 @@ class createappCommand extends JelixScriptCommand {
 
     function __construct(){
         $this->help="
-    Créer une nouvelle application avec tous les répertoires nécessaires.
+    CrÃ©er une nouvelle application avec tous les rÃ©pertoires nÃ©cessaires.
 
-    Si l'option -withdefaultmodule est présente, créer également un module du
-    même nom que l'application.
+    Si l'option -withdefaultmodule est prÃ©sente, crÃ©er Ã©galement un module du
+    mÃªme nom que l'application.
 
-    Si l'option -withcmdline est présente, créer un point d'entrée afin de développer des
+    Si l'option -withcmdline est prÃ©sente, crÃ©er un point d'entrÃ©e afin de dÃ©velopper des
     scripts en ligne de commande.
 
-    Le nom de l'application doit être indiqué
-    1) soit en premier paramètre du script jelix
+    Le nom de l'application doit Ãªtre indiquÃ©
+    1) soit en premier paramÃ¨tre du script jelix
           ".$_SERVER['argv'][0]." --helloApp
     2) soit dans une variable d'environnement JELIX_APP_NAME.
     ";
@@ -38,7 +38,7 @@ class createappCommand extends JelixScriptCommand {
 
     public function run(){
        if(file_exists(JELIX_APP_PATH)){
-           die("Erreur : application déjà existante\n");
+           die("Erreur : application dÃ©jÃ  existante\n");
        }
 
        $this->createDir(JELIX_APP_PATH);

@@ -90,7 +90,7 @@ class jHtmlRespReporter extends SimpleReporter {
    function paintDiff($stringA, $stringB){
         $diff = new Diff(explode("\n",$stringA),explode("\n",$stringB));
         if($diff->isEmpty()) {
-            $this->_response->body->append('MAIN','<p>Erreur diff : bizarre, aucune différence d\'aprés la difflib...</p>');
+            $this->_response->body->append('MAIN','<p>Erreur diff : bizarre, aucune diffÃ©rence d\'aprÃ©s la difflib...</p>');
         }else{
             $fmt = new HtmlUnifiedDiffFormatter();
             $this->_response->body->append('MAIN',$fmt->format($diff));

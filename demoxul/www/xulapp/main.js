@@ -16,7 +16,7 @@ function OpenAppli(url){
 }
 
 function XulAppOnLoad(ev){
-  // pour le bug du load qui se propage au fenêtre parentes..
+  // pour le bug du load qui se propage au fenÃªtre parentes..
   if(ev.target != document)
     return;
 }
@@ -24,6 +24,6 @@ function XulAppOnLoad(ev){
 document.addEventListener("load", XulAppOnLoad, false);
 
 function CmdxQuit(){
-    if(confirm("Étes vous sûr de vouloir quitter l'application ?"))
+    if(confirm("Ã‰tes vous sÃ»r de vouloir quitter l'application ?"))
           window.location.href= gUrlQuit;
 }

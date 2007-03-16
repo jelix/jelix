@@ -41,7 +41,7 @@ class jJsonRpcRequest extends jRequest {
             $request = implode("\n",$request);
         }
 
-        // Décodage de la requete
+        // DÃ©codage de la requete
         $requestobj = jJsonRpc::decodeRequest($request);
         if($requestobj['method']){
             list($module, $action) = explode('~',$requestobj['method']);
@@ -57,7 +57,7 @@ class jJsonRpcRequest extends jRequest {
         else
             $this->params['params'] = $requestobj['params'];
 
-        // Définition de l'action a executer et des paramètres
+        // DÃ©finition de l'action a executer et des paramÃ¨tres
         $this->params['module'] = $module;
         $this->params['action'] = $action;
     }

@@ -193,7 +193,7 @@ class jTplCompiler
     public function _callback($matches){
         list(,$tag, $firstcar) = $matches;
 
-        // test du premier caractère
+        // test du premier caractÃ¨re
         if (!preg_match('/^\$|@|\*|[a-zA-Z\/]$/',$firstcar)) {
 #if JTPL_STANDALONE
             trigger_error(sprintf($this->_locales['errors.tpl.tag.syntax.invalid'], $tag, $this->_sourceFile),E_USER_ERROR);

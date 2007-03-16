@@ -5,7 +5,7 @@ class urlsigUrlsHandler implements jIUrlSignificantHandler {
     // exemple de handler.
     // ici les traitements sont simples, c'est juste pour montrer le principe
 
-    // on peut utiliser le même handler pour plusieurs actions
+    // on peut utiliser le mÃªme handler pour plusieurs actions
     // il suffit de tester les parametres de l'objet url
 
     function parse($url){

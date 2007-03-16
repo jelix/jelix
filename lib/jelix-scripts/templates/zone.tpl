@@ -2,7 +2,6 @@
 /**
 * @package
 * @subpackage {$module}
-* @version	$Id:$
 * @author
 * @copyright
 * @link

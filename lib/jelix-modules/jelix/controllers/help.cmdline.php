@@ -28,10 +28,10 @@ class helpCtrl extends jControllerCmdLine {
 
         if (empty($cmd_name)) {
             $rep->content = "
-Utilisation générale :
+Utilisation gÃ©nÃ©rale :
     php cmdline.php help [COMMANDE]
 
-    COMMANDE : nom de la commande à lancer
+    COMMANDE : nom de la commande Ã  lancer
                'module~controller_action' ou plus simplement
                'action' en fonction de la configuration de l'application
 ";

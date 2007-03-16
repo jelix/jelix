@@ -18,17 +18,17 @@ class createdaoCommand extends JelixScriptCommand {
 
     public  $syntaxhelp = "[-profil nom] [-empty] MODULE DAO TABLEPRINCIPALE";
     public  $help="
-    Créer un nouveau fichier de dao
+    CrÃ©er un nouveau fichier de dao
 
-    -profil (facultatif) : indique le profil à utiliser pour se connecter à
-                           la base et récupérer les informations de la table
-    -empty (facultatif) : ne se connecte pas à la base et génère un fichier
+    -profil (facultatif) : indique le profil Ã  utiliser pour se connecter Ã 
+                           la base et rÃ©cupÃ©rer les informations de la table
+    -empty (facultatif) : ne se connecte pas Ã  la base et gÃ©nÃ¨re un fichier
                           dao vide
 
-    MODULE : le nom du module concerné.
-    DAO :  nom du dao à créer.
+    MODULE : le nom du module concernÃ©.
+    DAO :  nom du dao Ã  crÃ©er.
     TABLEPRINCIPALE : nom de la table principale sur laquelle s'appuie le dao
-                      (cette commande ne permet pas de générer un dao
+                      (cette commande ne permet pas de gÃ©nÃ©rer un dao
                       s'appuyant sur de multiple table)";
 
 

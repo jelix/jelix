@@ -42,9 +42,9 @@ class jUrlEngineSimple implements jIUrlEngine {
 
          $scriptName = $this->getScript($urlact->requestType, $urlact->getParam('module'),$urlact->getParam('action'));
          $url = new jUrl($scriptName, $urlact->params, '');
-         // pour certains types de requete, les paramètres ne sont pas dans l'url
+         // pour certains types de requete, les paramÃ¨tres ne sont pas dans l'url
          // donc on les supprime
-         // c'est un peu crade de faire ça en dur ici, mais ce serait lourdingue
+         // c'est un peu crade de faire Ã§a en dur ici, mais ce serait lourdingue
          // de charger la classe request pour savoir si on peut supprimer ou pas
          if(in_array($urlact->requestType ,array('xmlrpc','jsonrpc','soap')))
             $url->clearParam();

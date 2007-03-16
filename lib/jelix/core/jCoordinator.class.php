@@ -70,7 +70,7 @@ class jCoordinator {
 
         $gJCoord =  $this;
 
-        if(JELIX_APP_TEMP_PATH=='/'){ // le realpath dans application.ini.php a renvoyé false...
+        if(JELIX_APP_TEMP_PATH=='/'){ // le realpath dans application.ini.php a renvoyÃ© false...
             die('Jelix Error: Application temp directory doesn\'t exist !');
         }
         if(!is_writable(JELIX_APP_TEMP_PATH)){
@@ -84,7 +84,7 @@ class jCoordinator {
             session_set_cookie_params ( 0 , $gJConfig->urlengine['basePath']);
 
         // set Error and exception handler
-        // ne devrait être désactivé que lors de certains tests de jelix
+        // ne devrait Ãªtre dÃ©sactivÃ© que lors de certains tests de jelix
         if($gJConfig->use_error_handler){
             set_error_handler('jErrorHandler');
             set_exception_handler('JExceptionHandler');
@@ -215,7 +215,7 @@ class jCoordinator {
            $this->plugins[$name]->beforeOutput ();
         }
 
-        // envoi de la réponse
+        // envoi de la rÃ©ponse
         if(!$this->response->output()){
            $this->response->outputErrors();
         }

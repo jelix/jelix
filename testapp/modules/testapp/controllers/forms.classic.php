@@ -32,7 +32,7 @@ class formsCtrl extends jController {
      * et redirection vers le formulaire html
      */
     function newform(){
-        // création d'un formulaire vierge
+        // crÃ©ation d'un formulaire vierge
         $form = jForms::create('sample');
         $rep= $this->getResponse("redirect");
         $rep->action="forms_showform";
@@ -41,14 +41,14 @@ class formsCtrl extends jController {
     }
 
     /**
-     * creation d'un formulaire avec des données initialisé à partir d'un enregistrement (factice)
+     * creation d'un formulaire avec des donnÃ©es initialisÃ© Ã  partir d'un enregistrement (factice)
      * et redirection vers le formulaire html
      */
     function edit(){
         $id = $this->param('id');
         $form = jForms::create('sample', $this->param('id'));
-        // remplissage du formulaire. Ici on le fait à la main, mais ça pourrait
-        // être à partir d'un dao
+        // remplissage du formulaire. Ici on le fait Ã  la main, mais Ã§a pourrait
+        // Ãªtre Ã  partir d'un dao
         if($id == 1){
             $form->setData('nom','Dupont');
             $form->setData('prenom','Laurent');
@@ -78,7 +78,7 @@ class formsCtrl extends jController {
         $rep->body->assign('page_title','formulaires');
 
 
-        // recupère les données du formulaire dont l'id est dans le paramètre id
+        // recupÃ¨re les donnÃ©es du formulaire dont l'id est dans le paramÃ¨tre id
         $form = jForms::get('sample',$this->param('id'));
         if($form){
             $tpl = new jTpl();
@@ -94,8 +94,8 @@ class formsCtrl extends jController {
 
     function save(){
 
-        // comme on laisse la possibilité dans le formulaire, de pouvoir specifier
-        // l'id du formulaire, on compare le nouvel id avec l'ancien pour créer
+        // comme on laisse la possibilitÃ© dans le formulaire, de pouvoir specifier
+        // l'id du formulaire, on compare le nouvel id avec l'ancien pour crÃ©er
         // un nouveau form en cas de new id
         $id = $this->param('id');
         $newid = $this->param('newid');
@@ -105,11 +105,11 @@ class formsCtrl extends jController {
             jForms::create('sample',$id);
         }
 
-        // récupe le formulaire et le rempli avec les données reçues de la requête
+        // rÃ©cupe le formulaire et le rempli avec les donnÃ©es reÃ§ues de la requÃªte
         $form = jForms::fill('sample',$id);
     
-        // on pourrait ici enregistrer les données aprés un $form->check()
-        // non implementé pour le moment...
+        // on pourrait ici enregistrer les donnÃ©es aprÃ©s un $form->check()
+        // non implementÃ© pour le moment...
 
         $rep= $this->getResponse("redirect");
         $rep->action="forms_listform";

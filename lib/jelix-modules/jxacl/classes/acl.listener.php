@@ -21,9 +21,9 @@ class aclListener extends jEventListener{
    }
 
    /**
-    * Création d'un nouvel utilisateur
+    * CrÃ©ation d'un nouvel utilisateur
     *
-    * @var jEvent $event L'événement
+    * @var jEvent $event L'Ã©vÃ©nement
     */
    function onAuthNewUser($event){
         $user = $event->getParam('user');
@@ -33,7 +33,7 @@ class aclListener extends jEventListener{
    /**
     * Suppression d'un utilisateur
     *
-    * @var jEvent $event L'événement
+    * @var jEvent $event L'Ã©vÃ©nement
     */
    function onAuthRemoveUser($event){
         $login = $event->getParam('login');

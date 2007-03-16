@@ -9,7 +9,7 @@
 * framework Copix 2.3dev. http://www.copix.org (jAuth)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteur initial : Laurent Jouanneau
-* Adaptée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e pour Jelix par Laurent Jouanneau
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
 */

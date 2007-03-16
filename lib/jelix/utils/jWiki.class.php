@@ -22,7 +22,7 @@ require_once(LIB_PATH.'wikirenderer/WikiRenderer.lib.php');
  * @since 1.0b1
  */
 class jWiki extends  WikiRenderer {
-    // rien à surcharger pour le moment
+    // rien Ã  surcharger pour le moment
     // Profitons surtout de l'autoload :-)
 
 }

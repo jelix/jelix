@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage db
 * @version    $Id:$
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Croes GÃ©rald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @link      http://www.jelix.org
@@ -12,11 +12,11 @@
 * Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixDbToolsMysql)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée pour Jelix par Laurent Jouanneau
+* AdaptÃ©e pour Jelix par Laurent Jouanneau
 */
 
 /**
- * classe d'outils pour gérer une base de données
+ * classe d'outils pour gÃ©rer une base de donnÃ©es
  * @package    jelix
  * @subpackage db
  */
@@ -43,7 +43,7 @@ class jDbToolsMySQL extends jDbTools {
    }
 
    /**
-   * récupère la liste des champs pour une base donnée.
+   * rÃ©cupÃ¨re la liste des champs pour une base donnÃ©e.
    * @return   array    $tab[NomDuChamp] = obj avec prop (tye, length, lengthVar, notnull)
    */
    function _getFieldList ($tableName){
@@ -57,7 +57,7 @@ class jDbToolsMySQL extends jDbTools {
          $type = $result_line->Type;
 
           /**
-          * récupéré depuis phpMyAdmin
+          * rÃ©cupÃ©rÃ© depuis phpMyAdmin
           */
           // set or enum types: slashes single quotes inside options
           $type   = str_replace('BINARY', '', $type);

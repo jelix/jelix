@@ -32,7 +32,7 @@ logFile = error.log
 email = root@localhost
 emailHeaders = "From: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
 
-; mots clÈs que vous pouvez utiliser : ECHO, EXIT, LOGFILE, SYSLOG, MAIL
+; mots cl√©s que vous pouvez utiliser : ECHO, EXIT, LOGFILE, SYSLOG, MAIL
 default      = ECHO EXIT
 error        = ECHO EXIT
 warning      = ECHO
@@ -51,13 +51,13 @@ force  = off
 ; nom du moteur d'url :  simple ou significant
 engine        = simple
 
-; active l'analyse d'url (mettre ‡ off si vous utilisez le mod_rewrite d'apache)
+; active l'analyse d'url (mettre √† off si vous utilisez le mod_rewrite d'apache)
 enableParser = on
 
 multiview = off
 
-; chemin url jusqu'au repertoire www (celui que vous tapez dans le navigateur pour accÈder ‡ index.php etc.)
-; peut Ítre Ègale ‡ "/" si vous spÈcifiez www comme Ètant le documentRoot de votre site au niveau du serveur
+; chemin url jusqu'au repertoire www (celui que vous tapez dans le navigateur pour acc√©der √† index.php etc.)
+; peut √™tre √©gale √† "/" si vous sp√©cifiez www comme √©tant le documentRoot de votre site au niveau du serveur
 basePath = "/demo/www"
 
 defaultEntrypoint= index
@@ -69,23 +69,23 @@ notfoundAct = "jelix~error_notfound"
 ;indique si vous utilisez IIS comme serveur
 useIIS = off
 
-;indique le paramËtre dans $_GET o˘ est indiquÈ le path_info
+;indique le param√®tre dans $_GET o√π est indiqu√© le path_info
 IISPathKey = __JELIX_URL__
 
-;indique si il faut stripslashÈ le path_info rÈcupÈrÈ par le biais de IISPathKey
+;indique si il faut stripslash√© le path_info r√©cup√©r√© par le biais de IISPathKey
 IISStripslashes_path_key = on
 
 
 [simple_urlengine_entrypoints]
-; paramËtres pour le moteur d'url simple : liste des points d'entrÈes avec les actions
-; qui y sont rattachÈes
+; param√®tres pour le moteur d'url simple : liste des points d'entr√©es avec les actions
+; qui y sont rattach√©es
 
 
-; nom_script_sans_suffix = "liste de selecteur d'action sÈparÈ par un espace"
+; nom_script_sans_suffix = "liste de selecteur d'action s√©par√© par un espace"
 ; selecteurs :
-;   m~a@r    -> pour action "a" du module "m" rÈpondant au type de requete "r"
-;   m~*@r    -> pour toute action du module "m" rÈpondant au type de requete "r"
-;   @r       -> toute action de tout module rÈpondant au type de requete "r"
+;   m~a@r    -> pour action "a" du module "m" r√©pondant au type de requete "r"
+;   m~*@r    -> pour toute action du module "m" r√©pondant au type de requete "r"
+;   @r       -> toute action de tout module r√©pondant au type de requete "r"
 
 index = "@classic"
 xmlrpc = "@xmlrpc"

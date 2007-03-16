@@ -9,8 +9,8 @@
 */
 $BUILD_OPTIONS = array(
 'MAIN_TARGET_PATH'=> array(
-    "main directory where sources will be copied",  // signification (false = option cachée)
-    '_dist',                                        // valeur par défaut (boolean = option booleene)
+    "main directory where sources will be copied",  // signification (false = option cachÃ©e)
+    '_dist',                                        // valeur par dÃ©faut (boolean = option booleene)
     '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
     ), 
 'VERSION'=> array(
@@ -63,7 +63,7 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
     //$MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME;
 }
 
-//----------------- Génération des sources
+//----------------- GÃ©nÃ©ration des sources
 
 //... creation des repertoires
 jBuildUtils::createDir($MAIN_TARGET_PATH);

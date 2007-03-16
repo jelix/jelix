@@ -175,7 +175,7 @@ class Subversion {
         $rev=-1;
         if(file_exists($path)){
             /* FIXME : namespace invalide dans les fichiers entries, on ne peut
-              donc pas les lire à partir de simplxml ou dom
+              donc pas les lire Ã  partir de simplxml ou dom
 
             $svninfo = simplexml_load_file ( $path);
             if(isset($svninfo->entry[0]))

@@ -17,14 +17,14 @@ class createmoduleCommand extends JelixScriptCommand {
 
     public  $syntaxhelp = "[-nosubdir] [-nocontroller] [-cmdline] MODULE";
     public  $help="
-    Créer un nouveau module, avec son fichier module.xml, et un controleur
-    par défaut, ainsi que tous les sous-repertoires courants
+    CrÃ©er un nouveau module, avec son fichier module.xml, et un controleur
+    par dÃ©faut, ainsi que tous les sous-repertoires courants
     (zones, templates, daos, locales, classes...).
 
-    -nosubdir (facultatif) : ne créer pas tous les sous-repertoires courant..
-    -nocontroller (facultatif) : ne créer pas de fichier controller par défaut
-    -cmdline (facultatif) : crée le module avec un controller pour la ligne de commande
-    MODULE : le nom du module à créer.";
+    -nosubdir (facultatif) : ne crÃ©er pas tous les sous-repertoires courant..
+    -nocontroller (facultatif) : ne crÃ©er pas de fichier controller par dÃ©faut
+    -cmdline (facultatif) : crÃ©e le module avec un controller pour la ligne de commande
+    MODULE : le nom du module Ã  crÃ©er.";
 
 
     public function run(){

@@ -16,12 +16,12 @@ class createzoneCommand extends JelixScriptCommand {
 
     public  $syntaxhelp = "[-notpl] MODULE ZONE [TEMPLATE]";
     public  $help="
-    Permet de créer un nouveau fichier de zone
+    Permet de crÃ©er un nouveau fichier de zone
 
-    -notpl : indique qu'il ne faut pas créer de template associé
-    MODULE : le nom du module concerné.
-    ZONE   : nom de la zone à créer.
-    TEMPLATE (facultatif) : nom du template associé à créer (par defaut, à
+    -notpl : indique qu'il ne faut pas crÃ©er de template associÃ©
+    MODULE : le nom du module concernÃ©.
+    ZONE   : nom de la zone Ã  crÃ©er.
+    TEMPLATE (facultatif) : nom du template associÃ© Ã  crÃ©er (par defaut, Ã 
                             le nom de la zone).";
 
 
