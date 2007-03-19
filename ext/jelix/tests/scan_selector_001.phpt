@@ -1,5 +1,5 @@
 --TEST--
-Test jelix_scan_selector with some simple selectors
+Test jelix_scan_module_sel with some simple selectors
 --SKIPIF--
 <?php if (!extension_loaded("jelix")) print "skip"; ?>
 --FILE--
@@ -16,7 +16,7 @@ $tests = array("toto", "aaa~toto", "aa_AZ123aR~toPO__etto", "foo.bar~truc.muche"
 foreach($tests as $k=>$t){
 
     $obj = new obj();
-    $ret = jelix_scan_selector($t, $obj);
+    $ret = jelix_scan_module_sel($t, $obj);
     echo $k,":";
     if($ret === true){
         echo "ok\n";

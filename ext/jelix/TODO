@@ -6,7 +6,7 @@ Constantes
 Variables
 =========
 
-à rajouter dans $_SERVER (pour jRequest) :
+Ã  rajouter dans $_SERVER (pour jRequest) :
 
 JX_URL_SCRIPT_PATH
 JX_URL_SCRIPT_NAME

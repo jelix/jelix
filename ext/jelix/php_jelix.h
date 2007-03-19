@@ -11,10 +11,6 @@
 #define PHP_JELIX_H
 
 #define JELIX_VERSION "0.1"
-#define JELIX_SELECTOR_MODULE 1
-#define JELIX_SELECTOR_ACTION 2
-#define JELIX_SELECTOR_LOCALE 3
-#define JELIX_SELECTOR_SIMPLEFILE 4
 
 extern zend_module_entry jelix_module_entry;
 #define phpext_jelix_ptr &jelix_module_entry
@@ -37,7 +33,8 @@ PHP_MINFO_FUNCTION(jelix);
 
 PHP_FUNCTION(jelix_version);
 PHP_FUNCTION(jelix_read_ini);
-PHP_FUNCTION(jelix_scan_selector);
+PHP_FUNCTION(jelix_scan_module_sel);
+PHP_FUNCTION(jelix_scan_action_sel);
 
 
 ZEND_BEGIN_MODULE_GLOBALS(jelix)

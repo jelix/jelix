@@ -30,7 +30,7 @@ PHPAPI zend_class_entry * jelix_ce_jIMultiFileCompiler;
 PHPAPI zend_class_entry * jelix_ce_jISelector;
 
 
-// declaration des arguments aux m�thodes
+// declaration des arguments aux mÃ©thodes
 
 /* -------------------------------------
 interface jIPlugin{
