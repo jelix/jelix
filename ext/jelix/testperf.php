@@ -1,7 +1,8 @@
 <?php
 
 function module_selector($foo, $obj){
-    if(preg_match("/^(([\w\.]+)~)?([\w\.]+)$/", $foo, $m)){
+    //if(preg_match("/^(([\w\.]+)~)?([\w\.]+)$/", $foo, $m)){
+    if(preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_\.]+)$/", $foo, $m)){
         if($m[1]!='' && $m[2]!=''){
             $obj->module = $m[2];
         }else{
@@ -15,7 +16,8 @@ function module_selector($foo, $obj){
 }
 
 function action_selector($foo, $obj){
-    if(preg_match("/^(?:([\w\.]+|\#)~)?([\w\.]+|\#)?(?:@([\w\.]+))?$/", $foo, $m)){
+    //if(preg_match("/^(?:([\w\.]+|\#)~)?(\w+|\#)?(?:@([\w\.]+))?$/", $foo, $m)){
+    if(preg_match("/^(?:([a-zA-Z0-9_\.]+|\#)~)?([a-zA-Z0-9_]+|\#)?(?:@([a-zA-Z0-9_\.]+))?$/", $foo, $m)){
         $m=array_pad($m,4,'');
         if($m[1]!=''){
             if($m[1] == '#')
@@ -26,7 +28,7 @@ function action_selector($foo, $obj){
             $obj->module = '';
         }
         if($m[2] == '#')
-            $obj->resource = 'index';
+            $obj->resource = 'machin_bidule';
         else
             $obj->resource = $m[2];
 
@@ -87,7 +89,7 @@ $t2 = microtime(true);
 
 for($i=0; $i < 1000; $i++){
     $o = new obj();
-    jelix_scan_action_sel("aaa~bbb@classic",$o);
+    jelix_scan_action_sel("aaa~bbb@classic",$o,"machin_bidule");
 }
 $t3 = microtime(true);
 

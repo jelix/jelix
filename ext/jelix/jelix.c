@@ -423,24 +423,25 @@ PHP_FUNCTION(jelix_scan_module_sel)
 */
 PHP_FUNCTION(jelix_scan_action_sel)
 {
-    zval **selectorStr, **objectArg;
+    zval **selectorStr, **objectArg, **defaultActionArg;
     int length;
     char * sel, *cursor, *module, *resource, *request;
 
 
-    switch (ZEND_NUM_ARGS()) {
-        case 2:
-            if (zend_get_parameters_ex(2, &selectorStr, &objectArg) == FAILURE) {
-                RETURN_FALSE;
-            }
-			break;
-		default:
-			ZEND_WRONG_PARAM_COUNT();
-			break;
-	}
+    if(ZEND_NUM_ARGS() != 3) {
+        ZEND_WRONG_PARAM_COUNT();
+    }
+    if (zend_get_parameters_ex(3, &selectorStr, &objectArg, &defaultActionArg) == FAILURE) {
+        php_error_docref(NULL TSRMLS_CC, E_WARNING, "cannot read arguments");
+        RETURN_FALSE;
+    }
 
     if(Z_TYPE_P(*objectArg) != IS_OBJECT){
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid second argument, not an object");
+        RETURN_FALSE
+	}
+    if(Z_TYPE_P(*defaultActionArg) != IS_STRING){
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid third argument, not a string");
         RETURN_FALSE
 	}
 
@@ -449,12 +450,6 @@ PHP_FUNCTION(jelix_scan_action_sel)
     int request_length=0;
     int cursor_count=0;
 
-    /*
-    JELIX_SELECTOR_MODULE           /^(([\w\.]+)~)?([\w\.]+)$/
-    JELIX_SELECTOR_ACTION           
-    JELIX_SELECTOR_LOCALE           /^(([\w\.]+)~)?(\w+)\.([\w\.]+)$/
-    JELIX_SELECTOR_SIMPLEFILE       /^([\w\.\/]+)$/
-    */
     convert_to_string_ex(selectorStr);
     length = Z_STRLEN_PP(selectorStr);
     sel = Z_STRVAL_PP(selectorStr);
@@ -465,6 +460,8 @@ PHP_FUNCTION(jelix_scan_action_sel)
     int error = 0;
     int sharpOk = 0;
     int hasRequest=0;
+    int firstDashPos = -1;
+    int hasDot = 0;
 
     // parse the module part
     while(cursor_count < length){
@@ -476,24 +473,33 @@ PHP_FUNCTION(jelix_scan_action_sel)
                 RETURN_FALSE
             }
             sharpOk=1;
+        }else if(*cursor == '.'){
+            hasDot = 1;
         }else if(!( ( *cursor >= 'a' && *cursor <= 'z')
                 || ( *cursor >= 'A' && *cursor <= 'Z')
                 || ( *cursor >= '0' && *cursor <= '9')
-                || *cursor == '_' || *cursor == '.') || sharpOk){
+                || *cursor == '_' ) || sharpOk){
                 RETURN_FALSE
         }
+        if(*cursor == '_' && firstDashPos == -1){
+            firstDashPos = module_length;
+        }
+
         module_length ++;
         cursor_count ++;
         cursor++;
     }
 
-
     if(cursor_count >= length){
         // we don't find any '~' characters, so we have parsed the resource
+        if(hasDot) RETURN_FALSE
+
         resource_length = module_length;
         module_length = 0;
     }else if( *cursor == '@'){
         // we don't find any '~' characters, so we have parsed the resource
+        if(hasDot) RETURN_FALSE
+
         resource_length = module_length;
         module_length = 0;
         hasRequest = 1;
@@ -520,7 +526,7 @@ PHP_FUNCTION(jelix_scan_action_sel)
         if(module_length == 0){
             RETURN_FALSE
         }
-
+        firstDashPos=-1;
         cursor_count++;
         cursor++;
         resource = cursor;
@@ -539,9 +545,13 @@ PHP_FUNCTION(jelix_scan_action_sel)
             }else if(!( ( *cursor >= 'a' && *cursor <= 'z')
                     || ( *cursor >= 'A' && *cursor <= 'Z')
                     || ( *cursor >= '0' && *cursor <= '9')
-                    || *cursor == '_' || *cursor == '.') || sharpOk){
+                    || *cursor == '_') || sharpOk){
                     RETURN_FALSE
             }
+            if(*cursor == '_' && firstDashPos == -1){
+                firstDashPos = resource_length;
+            }
+
             resource_length ++;
             cursor_count ++;
             cursor++;
@@ -567,12 +577,84 @@ PHP_FUNCTION(jelix_scan_action_sel)
         }
     }
 
+    // request shouldn't empty if there is a @
     if(hasRequest && request_length == 0){
         RETURN_FALSE
     }
 
+    if(resource_length == 0){
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	"default_index", sizeof("default_index")-1 TSRMLS_CC);
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	"default", sizeof("default")-1 TSRMLS_CC);
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	"index", sizeof("index")-1 TSRMLS_CC);
+    }else{
+        if(resource_length == 1 && *resource == '#'){
+           resource_length = Z_STRLEN_PP(defaultActionArg);
+           resource = Z_STRVAL_PP(defaultActionArg);
+           firstDashPos=-1;
+           int i;
+           for(i=0; i < resource_length;i++){
+                if(resource[i] == '_'){
+                    firstDashPos=i;
+                    break;
+                }
+           }
+        }
+
+        if(firstDashPos == -1){
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	"default", sizeof("default")-1 TSRMLS_CC);
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	resource, resource_length TSRMLS_CC);
+
+            char *r;
+            int ld = sizeof("default_") -1;
+            int lr = ld + resource_length+1;
+            r= emalloc(lr);
+            if (r) {
+                memcpy(r, "default_", ld);
+                memcpy(r+ld, resource, resource_length);
+                r[lr] = 0;
+                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr -1 TSRMLS_CC);
+                efree(r);
+            }
+
+        }else if(firstDashPos == 0){
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	"default", sizeof("default")-1 TSRMLS_CC);
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	resource+1, resource_length-1 TSRMLS_CC);
+
+            char *r;
+            int ld = sizeof("default") -1;
+            int lr = ld + resource_length + 1;
+            r= emalloc(lr);
+            if (r) {
+                memcpy(r, "default", ld);
+                memcpy(r+ld, resource, resource_length);
+                r[lr] = 0;
+                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr -1 TSRMLS_CC);
+                efree(r);
+            }
+
+        }else if(firstDashPos == resource_length-1){
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	resource, resource_length-1 TSRMLS_CC);
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	"index", sizeof("index")-1 TSRMLS_CC);
+            char *r;
+            int ld = sizeof("index") -1;
+            int lr = ld + resource_length +1;
+            r= emalloc(lr);
+            if (r) {
+                memcpy(r, resource, resource_length);
+                memcpy(r+resource_length, "index", ld);
+                r[lr] = 0;
+                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr -1 TSRMLS_CC);
+                efree(r);
+            }
+
+        }else{
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	resource, firstDashPos TSRMLS_CC);
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	resource+firstDashPos+1, resource_length-firstDashPos-1 TSRMLS_CC);
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	resource, resource_length TSRMLS_CC);
+        }
+    }
+
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "module", sizeof("module") - 1,	module, module_length TSRMLS_CC);
-    zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	resource, resource_length TSRMLS_CC);
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "request", sizeof("request") - 1,	request, request_length TSRMLS_CC);
 	RETURN_TRUE
 }
@@ -588,191 +670,3 @@ PHP_FUNCTION(jelix_scan_action_sel)
     JELIX_SELECTOR_LOCALE           /^(([\w\.]+)~)?(\w+)\.([\w\.]+)$/
     JELIX_SELECTOR_SIMPLEFILE       /^([\w\.\/]+)$/
     */
-/*
-
-PHP_FUNCTION(jelix_scan_action_sel)
-{
-    zval **selectorStr, **objectArg, **typeArg;
-    int length, type;
-    char * sel, *cursor, *module, *resource, *request;
-
-
-    switch (ZEND_NUM_ARGS()) {
-        case 2:
-            if (zend_get_parameters_ex(2, &selectorStr, &objectArg) == FAILURE) {
-                RETURN_FALSE;
-            }
-			type=JELIX_SELECTOR_MODULE;
-			break;
-
-		case 3:
-			if (zend_get_parameters_ex(3, &selectorStr, &objectArg, &typeArg) == FAILURE) {
-                php_error_docref(NULL TSRMLS_CC, E_WARNING, "cannot read arguments");
-				RETURN_FALSE;
-			}
-	        convert_to_long_ex(typeArg);
-            type = Z_LVAL_PP(typeArg);
-            if(type < 1 || type > 4){
-                php_error_docref(NULL TSRMLS_CC, E_WARNING, "Third argument doesn't correspond to one of JELIX_SEL_* constant");
-                RETURN_FALSE
-            }
-            break;
-		default:
-			ZEND_WRONG_PARAM_COUNT();
-			break;
-	}
-
-    if(Z_TYPE_P(*objectArg) != IS_OBJECT){
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid second argument, not an object");
-        RETURN_FALSE
-	}
-
-    int module_length=0;
-    int resource_length=0;
-    int request_length=0;
-    int cursor_count=0;
-
-  
-    convert_to_string_ex(selectorStr);
-    length = Z_STRLEN_PP(selectorStr);
-    sel = Z_STRVAL_PP(selectorStr);
-
-    cursor_count=0;
-    cursor = module = resource = sel;
-
-    int error = 0;
-    int sharpOk = 0;
-    int hasRequest=0;
-
-    // parse the module part
-    while(cursor_count < length){
-        if(*cursor == '~'){
-            break;
-        }
-        if(*cursor == '@' && type == JELIX_SELECTOR_ACTION){
-            break;
-        }
-
-        if(*cursor == '#'){
-            if(type != JELIX_SELECTOR_ACTION ){
-                RETURN_FALSE
-            }
-            if(sharpOk || module_length > 1){
-                RETURN_FALSE
-            }
-            sharpOk=1;
-        }else{
-            if(!( ( *cursor >= 'a' && *cursor <= 'z')
-                || ( *cursor >= 'A' && *cursor <= 'Z')
-                || ( *cursor >= '0' && *cursor <= '9')
-                || *cursor == '_' || *cursor == '.') || sharpOk){
-                RETURN_FALSE
-            }
-        }
-        module_length ++;
-        cursor_count ++;
-        cursor++;
-    }
-
-
-    if(cursor_count >= length){
-        // we don't find any '~' characters, so we have parsed the resource
-        resource_length = module_length;
-        module_length = 0;
-    }else if( *cursor == '@' && type == JELIX_SELECTOR_ACTION){
-        // we don't find any '~' characters, so we have parsed the resource
-        resource_length = module_length;
-        module_length = 0;
-        hasRequest = 1;
-        // now we parse the @ section
-        cursor_count ++;
-        cursor++;
-
-        request = cursor;
-        request_length = 0;
-        while(cursor_count < length){
-            if(!( ( *cursor >= 'a' && *cursor <= 'z')
-                || ( *cursor >= 'A' && *cursor <= 'Z')
-                || ( *cursor >= '0' && *cursor <= '9')
-                || *cursor == '_' || *cursor == '.')){
-                RETURN_FALSE
-            }
-            request_length ++;
-            cursor_count ++;
-            cursor++;
-        }
-    }else{
-        // the string starts by a ~ : it's not really a problem, but we generate an error
-        // to keep compatibily with php version of selectors.
-        if(module_length == 0){
-            RETURN_FALSE
-        }
-
-        cursor_count++;
-        cursor++;
-        resource = cursor;
-        resource_length = 0;
-        sharpOk = 0;
-        while(cursor_count < length){
-            if(*cursor == '@' && type == JELIX_SELECTOR_ACTION){
-                break;
-            }
-
-            if(*cursor == '#'){
-                if(type != JELIX_SELECTOR_ACTION ){
-                    RETURN_FALSE
-                }
-                if(sharpOk || resource_length > 1){
-                    RETURN_FALSE
-                }
-                sharpOk=1;
-            }else{
-                if(!( ( *cursor >= 'a' && *cursor <= 'z')
-                    || ( *cursor >= 'A' && *cursor <= 'Z')
-                    || ( *cursor >= '0' && *cursor <= '9')
-                    || *cursor == '_' || *cursor == '.') || sharpOk){
-                    RETURN_FALSE
-                }
-            }
-            resource_length ++;
-            cursor_count ++;
-            cursor++;
-        }
-
-        if(*cursor == '@' && type == JELIX_SELECTOR_ACTION){
-            hasRequest = 1;
-            cursor_count++;
-            cursor++;
-            request = cursor;
-            request_length = 0;
-            while(cursor_count < length){
-                if(!( ( *cursor >= 'a' && *cursor <= 'z')
-                    || ( *cursor >= 'A' && *cursor <= 'Z')
-                    || ( *cursor >= '0' && *cursor <= '9')
-                    || *cursor == '_' || *cursor == '.')){
-                    RETURN_FALSE
-                }
-                request_length ++;
-                cursor_count ++;
-                cursor++;
-            }
-        }
-    }
-
-    if(type == JELIX_SELECTOR_ACTION){
-        if(hasRequest && request_length == 0){
-            RETURN_FALSE
-        }
-    }else if( resource_length == 0 ){
-        RETURN_FALSE
-    }
-    
-
-    zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "module", sizeof("module") - 1,	module, module_length TSRMLS_CC);
-    zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	resource, resource_length TSRMLS_CC);
-    if(type == JELIX_SELECTOR_ACTION){
-        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "request", sizeof("request") - 1,	request, request_length TSRMLS_CC);
-    }
-	RETURN_TRUE
-}*/
-

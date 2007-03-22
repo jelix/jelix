@@ -2,10 +2,9 @@
 /**
 * @package     testapp
 * @subpackage  unittest module
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -16,17 +15,18 @@ class UTSelectorAct extends UnitTestCase {
         $sels=array(
 "testapp~ctrl_meth@truc"=>array('testapp','ctrl','meth','truc'),
 "testapp~_meth@truc"=>array('testapp','default','meth','truc'),
+"testapp~meth@truc"=>array('testapp','default','meth','truc'),
 "testapp~ctrl_@truc"=>array('testapp','ctrl','index','truc'),
 "testapp~@truc"=>array('testapp','default','index','truc'),
 "testapp~#@truc"=>array('testapp','default','testselectoract','truc'),
 "testapp~ctrl_meth"=>array('testapp','ctrl','meth','classic'),
 "testapp~_meth"=>array('testapp','default','meth','classic'),
+"testapp~meth"=>array('testapp','default','meth','classic'),
 "testapp~ctrl_"=>array('testapp','ctrl','index','classic'),
 "testapp~"=>array('testapp','default','index','classic'),
 "testapp~#"=>array('testapp','default','testselectoract','classic'),
         );
         $this->runtest($sels);
-
     }
 
 
@@ -39,9 +39,24 @@ class UTSelectorAct extends UnitTestCase {
 "~#@truc"=>false,
 "~ctrl_meth"=>false,
 "~_meth"=>false,
+"me.th"=>false,
 "~ctrl_"=>false,
 "~"=>false,
 "~#"=>false,
+"a-b~toto"=>false,
+"ab~ro-ro"=>false,
+"#aaa"=>false,
+"##"=>false,
+"aa#aa"=>false,
+"aaa#"=>false,
+"foo~#aaa"=>false, 
+"foo~aa#aa"=>false, 
+"foo~aaa#"=>false, 
+"~@classic"=>false,
+"@"=>false,
+"#@"=>false,
+"aa.bb"=>false,
+"aa~bb.cc"=>false,
         );
         $this->runtest($sels);
     }
@@ -52,15 +67,16 @@ class UTSelectorAct extends UnitTestCase {
         $sels=array(
 "#~ctrl_meth@truc"=>array('unittest','ctrl','meth','truc'),
 "#~_meth@truc"=>array('unittest','default','meth','truc'),
+"#~meth@truc"=>array('unittest','default','meth','truc'),
 "#~ctrl_@truc"=>array('unittest','ctrl','index','truc'),
 "#~@truc"=>array('unittest','default','index','truc'),
 "#~#@truc"=>array('unittest','default','testselectoract','truc'),
 "#~ctrl_meth"=>array('unittest','ctrl','meth','classic'),
 "#~_meth"=>array('unittest','default','meth','classic'),
+"#~meth"=>array('unittest','default','meth','classic'),
 "#~ctrl_"=>array('unittest','ctrl','index','classic'),
 "#~"=>array('unittest','default','index','classic'),
 "#~#"=>array('unittest','default','testselectoract','classic'),
-
         );
         $this->runtest($sels);
     }
@@ -74,13 +90,13 @@ class UTSelectorAct extends UnitTestCase {
 "#@truc"=>array('unittest','default','testselectoract','truc'),
 "ctrl_meth"=>array('unittest','ctrl','meth','classic'),
 "_meth"=>array('unittest','default','meth','classic'),
+"meth"=>array('unittest','default','meth','classic'),
 "ctrl_"=>array('unittest','ctrl','index','classic'),
 ""=>array('unittest','default','index','classic'),
 "#"=>array('unittest','default','testselectoract','classic'),
         );
         $this->runtest($sels);
     }
-
 
     protected function runtest($list){
 
