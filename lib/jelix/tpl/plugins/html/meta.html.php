@@ -32,6 +32,12 @@ function jtpl_meta_html($tpl, $method, $param)
         case 'css':
             $gJCoord->response->addCSSLink($param);
             break;
+        case 'jsie':
+            $gJCoord->response->addJSLink($param,array(),true);
+            break;
+        case 'cssie':
+            $gJCoord->response->addCSSLink($param,array(),true);
+            break;
         case 'csstheme':
             $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->defaultTheme.'/'.$param);
             break;

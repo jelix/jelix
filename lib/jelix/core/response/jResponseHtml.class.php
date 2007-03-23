@@ -93,8 +93,10 @@ class jResponseHtml extends jResponse {
      * @var array 
      */
     protected $_CSSLink = array ();
+    protected $_CSSIELink = array ();
     protected $_Styles  = array ();
     protected $_JSLink  = array ();
+    protected $_JSIELink  = array ();
     protected $_JSCode  = array ();
     protected $_Others  = array ();
     protected $_MetaKeywords = array();
@@ -242,10 +244,17 @@ class jResponseHtml extends jResponse {
      * add a link to a javascript script in the document head
      * @param string $src the link
      * @param array $params additionnals attributes for the script tag
+     * @param boolean $forIE if true, the script sheet will be only for IE browser
      */
-    final public function addJSLink ($src, $params=array()){
-        if (!isset ($this->_JSLink[$src])){
-            $this->_JSLink[$src] = $params;
+    final public function addJSLink ($src, $params=array(), $forIE=false){
+        if($forIE){
+            if (!isset ($this->_JSIELink[$src])){
+                $this->_JSIELink[$src] = $params;
+            }
+        }else{
+            if (!isset ($this->_JSLink[$src])){
+                $this->_JSLink[$src] = $params;
+            }
         }
     }
 
@@ -253,10 +262,17 @@ class jResponseHtml extends jResponse {
      * add a link to a css stylesheet in the document head
      * @param string $src the link
      * @param array $params additionnals attributes for the link tag
+     * @param boolean $forIE if true, the style sheet will be only for IE browser
      */
-    final public function addCSSLink ($src, $params=array ()){
-        if (!isset ($this->_CSSLink[$src])){
-            $this->_CSSLink[$src] = $params;
+    final public function addCSSLink ($src, $params=array (), $forIE=false){
+        if($forIE){
+            if (!isset ($this->_CSSIELink[$src])){
+                $this->_CSSIELink[$src] = $params;
+            }
+        }else{
+            if (!isset ($this->_CSSLink[$src])){
+                $this->_CSSLink[$src] = $params;
+            }
         }
     }
 
@@ -345,6 +361,19 @@ class jResponseHtml extends jResponse {
             echo  '<link rel="stylesheet" type="text/css" href="',$src,'" ',$more,$this->_endTag;
         }
 
+        if(count($this->_CSSIELink)){
+            echo '<!--[if IE]>';
+            foreach ($this->_CSSIELink as $src=>$params){
+                //the extra params we may found in there.
+                $more = '';
+                foreach ($params as $param_name=>$param_value){
+                    $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
+                }
+                echo  '<link rel="stylesheet" type="text/css" href="',$src,'" ',$more,$this->_endTag;
+            }
+            echo '<![endif]-->';
+        }
+
         if($this->favicon != ''){
             $fav = htmlspecialchars($this->favicon);
             echo '<link rel="icon" type="image/x-icon" href="'.$fav.'" />';
@@ -359,6 +388,18 @@ class jResponseHtml extends jResponse {
                 $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
             }
             echo '<script type="text/javascript" src="',$src,'" ',$more,'></script>';
+        }
+        if(count($this->_JSIELink)){
+            echo '<!--[if IE]>';
+            foreach ($this->_JSIELink as $src=>$params){
+                //the extra params we may found in there.
+                $more = '';
+                foreach ($params as $param_name=>$param_value){
+                    $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
+                }
+                echo '<script type="text/javascript" src="',$src,'" ',$more,'></script>';
+            }
+            echo '<![endif]-->';
         }
 
         // styles
