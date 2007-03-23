@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Laurent Jouanneau
-* @contributor
-* @copyright   2005-2006 Laurent Jouanneau
+* @contributor Loic Mathaud (fix bug)
+* @copyright   2005-2007 Laurent Jouanneau, 2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -26,7 +26,8 @@ final class jResponseRedirectUrl extends jResponse {
     public $url = '';
 
     public function output(){
-       if($this->hasErrors())   return false;
+        if($this->hasErrors())   return false;
+        $this->sendHttpHeaders();
         header ('location: '.$this->url);
         return true;
     }
@@ -36,7 +37,6 @@ final class jResponseRedirectUrl extends jResponse {
          $resp = new jResponseHtml();
          $resp->outputErrors();
     }
-
 }
 
 ?>
