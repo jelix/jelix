@@ -197,7 +197,6 @@ class jSelectorAct extends jSelectorModule {
         global $gJCoord;
 
 #if ENABLE_PHP_JELIX
-jLog::log("sel : ".$sel." (".$gJCoord->actionName.")");
         if(jelix_scan_action_sel($sel, $this, $gJCoord->actionName)){
             if($this->module == '#'){
                 $this->module = $gJCoord->moduleName;

@@ -308,7 +308,7 @@ class jDaoProperty {
 
         if (!in_array ($params['datatype'], array ('autoincrement', 'bigautoincrement', 'int', 'datetime', 'time',
                                     'integer', 'varchar', 'string', 'varchardate', 'date', 'numeric', 'double', 'float'))){
-           throw new jDaoXmlException ('wrong.attr', array($params['datatype'], $this->fieldName));
+           throw new jDaoXmlException ('wrong.attr', array($params['datatype'], $this->fieldName,'property'));
         }
         $this->datatype = strtolower($params['datatype']);
 
