@@ -102,13 +102,20 @@ abstract class jSelectorModule implements jISelector {
     protected $_useMultiSourceCompiler=false;
 
     function __construct($sel){
-        if(preg_match("/^(([\w\.]+)~)?([\w\.]+)$/", $sel, $m)){
+#if ENABLE_PHP_JELIX
+        if(jelix_scan_module_sel($sel, $this)){
+            if($this->module ==''){
+                $this->module = jContext::get ();
+            }
+#else
+        if(preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_\.]+)$/", $sel, $m)){
             if($m[1]!='' && $m[2]!=''){
                 $this->module = $m[2];
             }else{
                 $this->module = jContext::get ();
             }
             $this->resource = $m[3];
+#endif
             $this->_createPath();
             $this->_createCachePath();
         }else{
@@ -189,7 +196,20 @@ class jSelectorAct extends jSelectorModule {
     function __construct($sel, $enableRequestPart = false){
         global $gJCoord;
 
-        if(preg_match("/^(?:([\w\.]+|\#)~)?([\w\.]+|\#)?(?:@([\w\.]+))?$/", $sel, $m)){
+#if ENABLE_PHP_JELIX
+jLog::log("sel : ".$sel." (".$gJCoord->actionName.")");
+        if(jelix_scan_action_sel($sel, $this, $gJCoord->actionName)){
+            if($this->module == '#'){
+                $this->module = $gJCoord->moduleName;
+            }elseif($this->module ==''){
+                $this->module = jContext::get ();
+            }
+
+            if($this->request == '')
+                $this->request = $gJCoord->request->type;
+
+#else
+        if(preg_match("/^(?:([a-zA-Z0-9_\.]+|\#)~)?([a-zA-Z0-9_]+|\#)?(?:@([a-zA-Z0-9_]+))?$/", $sel, $m)){
             $m=array_pad($m,4,'');
             if($m[1]!=''){
                 if($m[1] == '#')
@@ -218,7 +238,7 @@ class jSelectorAct extends jSelectorModule {
                 $this->request = $m[3];
             else
                 $this->request = $gJCoord->request->type;
-
+#endif
             $this->_createPath();
         }else{
             throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
@@ -315,7 +335,7 @@ class jSelectorLoc extends jSelectorModule {
         $this->_compiler='jLocalesCompiler';
         $this->_compilerPath=JELIX_LIB_CORE_PATH.'jLocalesCompiler.class.php';
 
-        if(preg_match("/^(([\w\.]+)~)?(\w+)\.([\w\.]+)$/", $sel, $m)){
+        if(preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\.]+)$/", $sel, $m)){
             if($m[1]!='' && $m[2]!=''){
                 $this->module = $m[2];
             }else{

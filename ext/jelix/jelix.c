@@ -606,13 +606,13 @@ PHP_FUNCTION(jelix_scan_action_sel)
 
             char *r;
             int ld = sizeof("default_") -1;
-            int lr = ld + resource_length+1;
-            r= emalloc(lr);
+            int lr = ld + resource_length;
+            r= emalloc(lr+1);
             if (r) {
                 memcpy(r, "default_", ld);
                 memcpy(r+ld, resource, resource_length);
                 r[lr] = 0;
-                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr -1 TSRMLS_CC);
+                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr TSRMLS_CC);
                 efree(r);
             }
 
@@ -622,13 +622,13 @@ PHP_FUNCTION(jelix_scan_action_sel)
 
             char *r;
             int ld = sizeof("default") -1;
-            int lr = ld + resource_length + 1;
-            r= emalloc(lr);
+            int lr = ld + resource_length;
+            r= emalloc(lr+1);
             if (r) {
                 memcpy(r, "default", ld);
                 memcpy(r+ld, resource, resource_length);
                 r[lr] = 0;
-                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr -1 TSRMLS_CC);
+                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr TSRMLS_CC);
                 efree(r);
             }
 
@@ -637,13 +637,13 @@ PHP_FUNCTION(jelix_scan_action_sel)
             zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	"index", sizeof("index")-1 TSRMLS_CC);
             char *r;
             int ld = sizeof("index") -1;
-            int lr = ld + resource_length +1;
-            r= emalloc(lr);
+            int lr = resource_length + ld;
+            r= emalloc(lr+1);
             if (r) {
                 memcpy(r, resource, resource_length);
                 memcpy(r+resource_length, "index", ld);
                 r[lr] = 0;
-                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr -1 TSRMLS_CC);
+                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr TSRMLS_CC);
                 efree(r);
             }
 

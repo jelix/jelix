@@ -65,6 +65,15 @@ class defaultCtrl extends jController {
 
       return $rep;
    }
+   function testselectormod(){
+      $rep = $this->getResponse('unittest');
+      $rep->title = 'test unitaires sur les selecteurs normaux';
+
+      $ut = jClasses::create("unittestservice");
+      $ut->init($rep);
+      $ut->selectorModTest();
+      return $rep;
+   }
 
 
    function testsimpletest() {

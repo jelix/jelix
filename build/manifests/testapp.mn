@@ -67,6 +67,7 @@ cd testapp/modules/unittest/classes
   utjtplexpr.class.php
   utparseurls.class.php
   utselectoract.class.php
+  utselectormod.class.php
   utsimpletest.class.php
   utdao.class.php
   utdao2.class.php

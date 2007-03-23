@@ -5,7 +5,8 @@ Version Jelix: {$versionjelix}<br/>
 <p><a href="?">Retour à l'accueil</a></p>
 <h3>Core</h3>
 <ul>
-    <li><a href="{jurl 'unittest~testselectoract'}">selecteurs d'action</a></li> <!--?module=unittest&amp;action=testselectoract-->
+    <li><a href="?module=unittest&amp;action=default_testselectormod">selecteurs normaux</a></li> <!--{jurl 'unittest~testselectormod'} -->
+    <li><a href="?module=unittest&amp;action=testselectoract">selecteurs d'action</a></li> <!--{jurl 'unittest~default_testselectoract'} -->
     <li><a href="?module=unittest&amp;action=testlocaleprop">lecture .properties</a></li>
 
 {if $isurlsig}

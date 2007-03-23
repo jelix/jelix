@@ -120,7 +120,7 @@ class UTSelectorAct extends UnitTestCase {
                     $msg=' contient ces données inattendues ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
             }
 
-            $this->assertTrue($ok , ' test de '.$sel);
+            $this->assertTrue($ok , ' test de '.$sel. ' (devrait être '.($res === false ? 'invalide':'valide').')');
             if($msg)
                 $this->sendMessage($msg);
         }
