@@ -49,7 +49,7 @@
     <updated>{$item->published|jdatetime:'db_datetime':'iso8601'}</updated>
    {/if}
    <published>{$item->published|jdatetime:'db_datetime':'iso8601'}</published>
-   <link rel="alternate" type="text/html" href="{$item->link|escxml}"/>
+   {if $item->link}<link rel="alternate" type="text/html" href="{$item->link|escxml}"/>{/if}
    {if $item->authorName}<author><name>{$item->authorName|escxml}</name>
       {if $item->authorEmail}<email>{$item->authorEmail|escxml}</email>{/if}
       {if $item->authorUri}<uri>{$item->authorUri|escxml}</uri>{/if}</author>{/if}
