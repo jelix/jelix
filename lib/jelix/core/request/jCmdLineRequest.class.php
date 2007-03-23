@@ -4,7 +4,7 @@
 * @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2006 Laurent Jouanneau, 2006 Loic Mathaud
+* @copyright   2005-2006 Laurent Jouanneau, 2006-2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -19,6 +19,13 @@ class jCmdLineRequest extends jRequest {
     public $type = 'cmdline';
 
     public $defaultResponseType = 'text';
+
+    protected function _initUrlDatas(){ 
+        global $gJConfig; 
+        $this->url_script_path = '/'; 
+        $this->url_script_name = $_SERVER['SCRIPT_NAME']; 
+        $this->url_path_info = ''; 
+    }
 
     protected function _initParams(){
         global $gJConfig;
