@@ -25,6 +25,7 @@ Yannick Le Guédart (Torgan)
     plugin jtpl date_format
     Divers bug fix et petites améliorations
     Contributions sur jResponseRss et jResponseAtom
+    Driver Intuition pour jDb
 
 Nicolas Jeudy
     driver auth jAuthDriverLDS (pour les annuaires ldap LDS)

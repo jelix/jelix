@@ -81,6 +81,12 @@ cd lib/jelix/db
   jDbTools.class.php
   jDbWidget.class.php
 
+cd lib/jelix/db/drivers/intuition
+  jDbConnection.intuition.class.php
+  jDbResultSet.intuition.class.php
+  jDbTools.intuition.class.php
+
+
 cd lib/jelix/db/drivers/mysql
   jDbConnection.mysql.class.php
   jDbResultSet.mysql.class.php
