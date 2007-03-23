@@ -8,6 +8,7 @@ cd lib/jelix
   CHANGELOG
   CREDITS
 * init.php
+  checker.php
   INSTALL
   LICENCE
   VERSION
@@ -30,6 +31,7 @@ cd lib/jelix/controllers
 cd lib/jelix/core
 ! defaultconfig.ini.php
 * jConfigCompiler.class.php
+  jInstallChecker.class.php
 
 cd lib/jelix/core/request
   jClassicRequest.class.php

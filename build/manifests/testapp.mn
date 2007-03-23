@@ -14,6 +14,7 @@ cd testapp/www
   xmlrpc.php
   index.php
   testnews.php
+  check.php
 cd testapp/www/foo
   bar.php
 cd testapp/www/design
