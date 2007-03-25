@@ -848,17 +848,16 @@ class jMailer
      * @return void
      */
     protected function SetMessageType() {
-        if(count($this->attachment) < 1 && strlen($this->AltBody) < 1)
-            $this->message_type = "plain";
-        else
-        {
+        if(count($this->attachment) || strlen($this->AltBody)){
             if(count($this->attachment) > 0)
                 $this->message_type = "attachments";
             if(strlen($this->AltBody) > 0 && count($this->attachment) < 1)
                 $this->message_type = "alt";
             if(strlen($this->AltBody) > 0 && count($this->attachment) > 0)
                 $this->message_type = "alt_attachments";
-        }
+        }else
+            $this->message_type = "plain";
+
     }
 
     /**

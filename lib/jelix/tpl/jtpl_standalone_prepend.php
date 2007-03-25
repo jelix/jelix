@@ -26,6 +26,7 @@ $GLOBALS['jTplConfig'] = array(
     ),
     'compilation_force' => false,
     'lang'=>'fr',
+    'charset'=>'UTF-8',
     'localesGetter' => 'getLocales'
 );
 

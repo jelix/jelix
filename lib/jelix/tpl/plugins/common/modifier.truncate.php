@@ -3,9 +3,9 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @version    $Id$
  * @author
- * @copyright  2001-2003 ispi of Lincoln, Inc.
+ * @contributor Laurent Jouanneau (utf8 compliance)
+ * @copyright  2001-2003 ispi of Lincoln, Inc., 2007 Laurent Jouanneau
  * @link http://smarty.php.net/
  * @link http://jelix.org/
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -27,13 +27,13 @@ function jtpl_modifier_truncate($string, $length = 80, $etc = '...',
 {
     if ($length == 0)
         return '';
-
-    if (strlen($string) > $length) {
-        $length -= strlen($etc);
+    $charset = jTpl::getEncoding();
+    if (iconv_strlen($string,$charset) > $length) {
+        $length -= iconv_strlen($etc,$charset);
         if (!$break_words)
-            $string = preg_replace('/\s+?(\S+)?$/', '', substr($string, 0, $length+1));
+            $string = preg_replace('/\s+?(\S+)?$/', '', iconv_substr($string, 0, $length+1,$charset));
 
-        return substr($string, 0, $length).$etc;
+        return iconv_substr($string, 0, $length,$charset).$etc;
     } else
         return $string;
 }

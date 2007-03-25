@@ -251,5 +251,18 @@ class jTpl {
         }
         return $content;
     }
+
+
+    /**
+     * return the current encoding
+     * @return string the charset string
+     */
+    public static function getEncoding (){
+#if JTPL_STANDALONE
+        return $GLOBALS['jTplConfig']['charset'];
+#else
+        return $GLOBALS['gJConfig']->defaultCharset;
+#endif
+    }
 }
 ?>
