@@ -1,0 +1,143 @@
+<?php
+/**
+* @package     testapp
+* @subpackage  unittest
+* @author      Jouanneau Laurent
+* @contributor
+* @copyright   2007 Jouanneau laurent
+* @link        http://www.jelix.org
+* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+*/
+require_once(dirname(__FILE__).'/junittestcase.class.php');
+
+class jUnitTestCaseDb extends jUnitTestCase {
+
+    // for database management
+
+    /**
+    *   erase all record in a table
+    */
+    function emptyTable($table){
+        $db = jDb::getConnection();
+        $db->exec('DELETE FROM '.$table);
+    }
+
+    function insertRecordsIntoTable($table, $fields, $records, $emptyBefore=false){
+        
+
+    }
+
+
+    /**
+     * check if the table is empty
+     */
+    function assertTableIsEmpty($table, $message="%s"){
+        $db = jDb::getConnection();
+        $rs = $db->query('SELECT count(*) as N FROM '.$table);
+        if($r=$rs->fetch()){
+            $message = sprintf( $message, $table. " table should be empty");
+            if($r->N == 0){
+                $this->pass($message);
+                return true;
+            }else{
+                $this->fail($message);
+                return false;
+            }
+        }else{
+            $this->fail(sprintf( $message, $table. " table should be empty, but error when try to get record count"));
+            return false;
+        }
+    }
+
+    /**
+     * check if the table is not empty
+     */
+    function assertTableIsNotEmpty($table, $message="%s"){
+        $db = jDb::getConnection();
+        $rs = $db->query('SELECT count(*) as N FROM '.$table);
+        if($r=$rs->fetch()){
+            $message = sprintf( $message, $table. " table shouldn't be empty");
+            if($r->N > 0){
+                $this->pass($message);
+                return true;
+            }else{
+                $this->fail($message);
+                return false;
+            }
+        }else{
+            $this->fail(sprintf( $message, $table. " table shouldn't be empty, but error when try to get record count"));
+            return false;
+        }
+    }
+
+
+    function assertTableHasNRecords($table, $n, $message="%s"){
+        $db = jDb::getConnection();
+        $rs = $db->query('SELECT count(*) as N FROM '.$table);
+        if($r=$rs->fetch()){
+            $message = sprintf( $message, $table. " table should contains ".$n." records");
+            if($r->N == $n){
+                $this->pass($message);
+                return true;
+            }else{
+                $this->fail($message);
+                return false;
+            }
+        }else{
+            $this->fail(sprintf( $message, $table. " table shouldn't be empty, but error when try to get record count"));
+            return false;
+        }
+    }
+
+
+
+    /**
+     * check if all given record are in the table
+     */
+    function assertTableContainsRecords($table, $records, $message ="%s"){
+        $db = jDb::getConnection();
+        if(is_string($keys))
+            $keys=array($keys);
+         $message = sprintf( $message, $table. " table should contains given records.");
+
+         $sql = 'SELECT * FROM '.$table;
+         $rs = $db->query($sql);
+         if(!$rs){
+            $this->fail($message.' ( no results set)');
+            return false;
+         }
+         $results = array();
+         foreach($rs as $r){
+            $results[]=get_object_vars($r);
+         }
+        $dumper = new SimpleDumper();
+        $globalok=true;
+        $resultsSaved = $results;
+        foreach($records as $rec){
+            $ok=false;
+            foreach($results as $k=>$res){
+                if($res ==  $rec){
+                    unset($results[$k]);
+                    $ok = true;
+                    break;
+                }
+            }
+            if(!$ok){
+                $globalok = false;
+                $this->fail($message.'. Not found record : '. var_export($rec,true));
+            }
+        }
+
+        if($globalok){
+            $this->pass($message);
+            return true;
+        }else{
+            $this->dump($resultsSaved);
+            return false;
+        }
+    }
+}
+
+
+
+?>

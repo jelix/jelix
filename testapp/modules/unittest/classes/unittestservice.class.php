@@ -85,5 +85,22 @@ class UnitTestService {
       $test = jClasses::create("utjtplexpr");
       $test->run(new jHtmlRespReporter($this->_rep));
    }
+
+
+   function jaclTest(){
+      $test = jClasses::create("utjacl");
+      $test->run(new jHtmlRespReporter($this->_rep));
+   }
+
+   function jaclmanagerTest(){
+      $test = jClasses::create("utjaclmanager");
+      $test->run(new jHtmlRespReporter($this->_rep));
+   }
+
+   function jaclusergroupTest(){
+      $test = jClasses::create("utjaclusergroup");
+      $test->run(new jHtmlRespReporter($this->_rep));
+   }
+
 }
 ?>

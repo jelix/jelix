@@ -16,7 +16,6 @@ class jUnitTestCase extends UnitTestCase {
     *    @param string $stringA  the first string
     *    @param string $stringB  the second string
     *    @param string $message        Message to send.
-    *    @access public
     */
     function diff($stringA, $stringB, $message='') {
         if (! isset($this->_reporter)) {
@@ -27,12 +26,22 @@ class jUnitTestCase extends UnitTestCase {
         $this->_reporter->paintDiff($stringA, $stringB);
     }
 
+    /**
+    *    like assertEqual, but shows difference between two given strings
+    *    if it the test fail.
+    *    @param mixed $first  the first value
+    *    @param mixed $second  the second value
+    *    @param string $message        Message to send if it fail
+    *    @return boolean true if the test pass
+    */
     function assertEqualOrDiff($first, $second, $message = "%s"){
         $ret = $this->assertEqual($first, $second, $message);
         if(!$ret && is_string($first) && is_string($second))
             $this->diff($first, $second);
         return $ret;
     }
+
+    //    complex equality
 
     function assertComplexIdentical($value, $file, $errormessage=''){
         $xml = simplexml_load_file($file);
@@ -54,6 +63,37 @@ class jUnitTestCase extends UnitTestCase {
         return $this->_checkIdentical($xml, $value, '$value', $errormessage);
     }
 
+/*
+
+<object class="jDaoMethod">
+    <string property="name" value="" />
+    <string property="type" value="" />
+    <string property="distinct" value="" />
+
+    <object method="getConditions()" class="jDaoConditions">
+        <array property="order">array()</array>
+        <array property="fields">array()</array>
+        <object property="condition" class="jDaoCondition">
+            <null property="parent"/>
+            <array property="conditions"> array(...)</array>
+            <array property="group">
+                <object key="" class="jDaoConditions" test="#foo" />
+             </array>
+        </object>
+
+    </object>
+</object>
+
+
+<ressource />
+<string value="" />
+<integer value="" />
+<float value=""/>
+<null />
+<boolean value="" />
+<array>
+<object class="">
+</object>*/
 
     function _checkIdentical($xml, $value, $name, $errormessage){
         $nodename  = dom_import_simplexml($xml)->nodeName;
@@ -160,39 +200,9 @@ class jUnitTestCase extends UnitTestCase {
         }
 
     }
+
 }
 
-/*
-
-<object class="jDaoMethod">
-    <string property="name" value="" />
-    <string property="type" value="" />
-    <string property="distinct" value="" />
-
-    <object method="getConditions()" class="jDaoConditions">
-        <array property="order">array()</array>
-        <array property="fields">array()</array>
-        <object property="condition" class="jDaoCondition">
-            <null property="parent"/>
-            <array property="conditions"> array(...)</array>
-            <array property="group">
-                <object key="" class="jDaoConditions" test="#foo" />
-             </array>
-        </object>
-
-    </object>
-</object>
-
-
-<ressource />
-<string value="" />
-<integer value="" />
-<float value=""/>
-<null />
-<boolean value="" />
-<array>
-<object class="">
-</object>*/
 
 
 ?>

@@ -60,6 +60,7 @@ cd testapp/modules/unittest
 cd testapp/modules/unittest/classes
   utevents.class.php
   junittestcase.class.php
+  junittestcasedb.class.php
   jhtmlrespreporter.class.php
   urlsig.urlhandler.php
   unittestservice.class.php
@@ -75,6 +76,9 @@ cd testapp/modules/unittest/classes
   utdao_conditions.class.php
   utfilter.class.php
   utjlocale.class.php
+  utjacl.class.php
+  utjaclmanager.class.php
+  utjaclusergroup.class.php
 cd testapp/modules/unittest/locales/
   test_A.properties
   test_B.properties
@@ -96,6 +100,7 @@ cd testapp/modules/unittest/controllers
   urlsig.classic.php
   dao.classic.php
   tpl.classic.php
+  acl.classic.php
 
 cd testapp/var
   .htaccess

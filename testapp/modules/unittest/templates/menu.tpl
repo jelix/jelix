@@ -42,6 +42,12 @@ Version Jelix: {$versionjelix}<br/>
     <li><a href="?module=unittest&amp;action=dao_parser2">Parser (2)</a></li>
     <li><a href="?module=unittest&amp;action=dao_conditions">jDaoConditions</a></li>
 </ul>
+<h3>jAcl</h3>
+<ul>
+    <li><a href="?module=unittest&amp;action=acl_usergroup">jAclUserGroup</a></li>
+    <li><a href="?module=unittest&amp;action=acl_manager">jAclManager</a></li>
+    <li><a href="?module=unittest&amp;action=acl_index">jAcl</a></li>
+</ul>
 
 <h3>Utilitaires</h3>
 <ul>
