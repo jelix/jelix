@@ -192,7 +192,6 @@ abstract class jDbConnection {
     public function lastIdInTable($fieldName, $tableName){
       $rs = $this->query ('SELECT MAX('.$fieldName.') as ID FROM '.$tableName);
       if (($rs !== null) && $r = $rs->fetch ()){
-         $rs->free();
          return $r->ID;
       }
       return 0;

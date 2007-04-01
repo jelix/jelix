@@ -100,7 +100,7 @@ class jAclUserGroup {
     public static function removeUser($login){
       $daogroup = jDao::get('jelix~jaclgroup');
       $daoright = jDao::get('jelix~jaclrights');
-      $daousergroup = jDao::get('jelix~~jaclusergroup');
+      $daousergroup = jDao::get('jelix~jaclusergroup');
 
       // recupere le groupe privé
       $privategrp = $daogroup->getPrivateGroup($login);

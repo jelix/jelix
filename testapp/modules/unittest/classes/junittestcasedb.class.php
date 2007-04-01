@@ -23,8 +23,19 @@ class jUnitTestCaseDb extends jUnitTestCase {
     }
 
     function insertRecordsIntoTable($table, $fields, $records, $emptyBefore=false){
-        
+        if($emptyBefore)
+            $this->emptytable($table);
+        $db = jDb::getConnection();
 
+        $sql = 'INSERT INTO '.$table.'  ('.implode(',',$fields).') VALUES (';
+
+        foreach($records as $rec){
+            $ins='';
+            foreach($fields as $f){
+                $ins.= ','.$db->quote($rec[$f]);
+            }
+            $db->exec($sql.substr($ins,1).')');
+        }
     }
 
 
@@ -96,9 +107,8 @@ class jUnitTestCaseDb extends jUnitTestCase {
      */
     function assertTableContainsRecords($table, $records, $message ="%s"){
         $db = jDb::getConnection();
-        if(is_string($keys))
-            $keys=array($keys);
-         $message = sprintf( $message, $table. " table should contains given records.");
+
+        $message = sprintf( $message, $table. " table should contains given records.");
 
          $sql = 'SELECT * FROM '.$table;
          $rs = $db->query($sql);
@@ -136,6 +146,12 @@ class jUnitTestCaseDb extends jUnitTestCase {
             return false;
         }
     }
+
+    function getLastId($fieldName, $tableName){
+        $db = jDb::getConnection();
+        return $db->lastIdInTable($fieldName, $tableName);
+    }
+
 }
 
 
