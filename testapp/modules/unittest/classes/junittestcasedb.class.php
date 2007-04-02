@@ -105,7 +105,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
     /**
      * check if all given record are in the table
      */
-    function assertTableContainsRecords($table, $records, $message ="%s"){
+    function assertTableContainsRecords($table, $records, $onlyThem = true, $message ="%s"){
         $db = jDb::getConnection();
 
         $message = sprintf( $message, $table. " table should contains given records.");
@@ -138,11 +138,19 @@ class jUnitTestCaseDb extends jUnitTestCase {
             }
         }
 
+        if($onlyThem && count($results) != 0){
+            $globalok = false;
+            $this->fail($message.'. Other unknow records exists');
+        }
+
         if($globalok){
             $this->pass($message);
             return true;
         }else{
+            $this->sendMessage('Results from database');
             $this->dump($resultsSaved);
+            $this->sendMessage('Records we should find');
+            $this->dump($records);
             return false;
         }
     }

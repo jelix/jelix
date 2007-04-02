@@ -233,6 +233,30 @@ class UTjaclusergroup extends jUnitTestCaseDb {
 
     public function testRemoveUsedGroup(){
         // on detruit un groupe qui a des users
+        // on ajoute d'abord un user dans un groupe
+        jAclUserGroup::addUserToGroup('max', $this->grpId3);
+
+        $this->usergroups=array(
+            array('login'=>'laurent', 'id_aclgrp'=>$this->grpId5),
+            array('login'=>'max', 'id_aclgrp'=>$this->grpId6),
+            array('login'=>'max', 'id_aclgrp'=>$this->defaultGroupId),
+            array('login'=>'max', 'id_aclgrp'=> $this->grpId3),
+        );
+        $this->assertTableContainsRecords('jacl_user_group', $this->usergroups);
+
+        // ok maintenant on supprime le groupe
+
+
+        
+        jAclUserGroup::removeGroup($this->grpId3);
+        $this->usergroups=array(
+            array('login'=>'laurent', 'id_aclgrp'=>$this->grpId5),
+            array('login'=>'max', 'id_aclgrp'=>$this->grpId6),
+            array('login'=>'max', 'id_aclgrp'=>$this->defaultGroupId),
+        );
+        $this->assertTableContainsRecords('jacl_user_group', $this->usergroups);
+        unset($this->groups[2]);
+        $this->assertTableContainsRecords('jacl_group', $this->groups);
 
 
     }
