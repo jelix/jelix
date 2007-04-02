@@ -66,7 +66,7 @@ class jAclManager {
             $right->value = $value;
             $daoright->insert($right);
         }
-
+        jAcl::clearCache();
         return true;
     }
 
@@ -81,6 +81,7 @@ class jAclManager {
         $daoright = jDao::get('jelix~jaclrights');
         if($resource === null) $resource='';
         $daoright->delete($subject,$group,$resource,$value);
+        jAcl::clearCache();
     }
 
 
@@ -93,6 +94,7 @@ class jAclManager {
     public static function removeResourceRight($subject, $resource){
         $daoright = jDao::get('jelix~jaclrights');
         $daoright->deleteBySubjRes($subject, $resource);
+        jAcl::clearCache();
     }
 
     /**
@@ -102,13 +104,14 @@ class jAclManager {
      * @param string $label_key the key of a locale which represents the label of the subject
      */
     public static function addSubject($subject, $id_aclvalgrp, $label_key){
-         // ajoute un sujet dans la table jacl_subject
-         $daosbj = jDao::get('jelix~jaclsubject');
-         $subj = jDao::createRecord('jelix~jaclsubject');
-         $subj->id_aclsbj=$subject;
-         $subj->id_aclvalgrp=$id_aclvalgrp;
-         $subj->label_key =$label_key;
-         $daosbj->insert($subj);
+        // ajoute un sujet dans la table jacl_subject
+        $daosbj = jDao::get('jelix~jaclsubject');
+        $subj = jDao::createRecord('jelix~jaclsubject');
+        $subj->id_aclsbj=$subject;
+        $subj->id_aclvalgrp=$id_aclvalgrp;
+        $subj->label_key =$label_key;
+        $daosbj->insert($subj);
+        jAcl::clearCache();
 
     }
 
@@ -117,12 +120,13 @@ class jAclManager {
      * @param string  $subject the key of the subject
      */
     public static function removeSubject($subject){
-      // supprime dans jacl_rights
-      // supprime dans jacl_subject
-      $daoright = jDao::get('jelix~jaclrights');
-      $daoright->deleteBySubject($subject);
-      $daosbj = jDao::get('jelix~jaclsubject');
-      $daosbj->delete($subject);
+        // supprime dans jacl_rights
+        // supprime dans jacl_subject
+        $daoright = jDao::get('jelix~jaclrights');
+        $daoright->deleteBySubject($subject);
+        $daosbj = jDao::get('jelix~jaclsubject');
+        $daosbj->delete($subject);
+        jAcl::clearCache();
     }
 }
 

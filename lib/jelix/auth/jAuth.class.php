@@ -272,6 +272,7 @@ class jAuth {
     public static function logout(){
         jEvent::notify ('AuthLogout', array('login'=>$_SESSION['JELIX_USER']->login));
         $_SESSION['JELIX_USER'] = new jAuthUser();
+        jAcl::clearCache();
     }
 
     /**

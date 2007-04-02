@@ -15,7 +15,7 @@
             <parameter name="groups" />
             <conditions >
                <eq property="id_aclsbj" expr="$subject" />
-               <isnull property="id_aclres" />
+               <eq property="id_aclres" expr="''"/>
                <in property="id_aclgrp" expr="$groups" />
             </conditions>
         </method>

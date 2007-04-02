@@ -48,6 +48,10 @@ class jAcl {
         return in_array($value,$val);
     }
 
+
+    protected static $aclres = array();
+    protected static $acl = array();
+
     /**
      * return the value of the right on the given subject (and on the optional resource)
      * @param string $subject the key of the subject
@@ -55,13 +59,11 @@ class jAcl {
      * @return array list of values corresponding to the right
      */
     public static function getRight($subject, $resource=null){
-        static $aclres = array();
-        static $acl = array();
 
-        if($resource === null && isset($acl[$subject])){
-            return $acl[$subject];
-        }elseif(isset($aclres[$subject][$resource])){
-            return $aclres[$subject][$resource];
+        if($resource === null && isset(self::$acl[$subject])){
+            return self::$acl[$subject];
+        }elseif(isset(self::$aclres[$subject][$resource])){
+            return self::$aclres[$subject][$resource];
         }
 
         if(!jAuth::isConnected()) // not authificated = no rights
@@ -77,18 +79,27 @@ class jAcl {
         foreach($list as $right){
             $values [] = $right->value;
         }
-        $acl[$subject] = $values;
+        self::$acl[$subject] = $values;
 
         if($resource !== null){
             $list = $dao->getAllGroupRightsWithRes($subject, $groups, $resource);
             foreach($list as $right){
                 $values [] = $right->value;
             }
-            $aclres[$subject][$resource] = $values = array_unique($values);
+            self::$aclres[$subject][$resource] = $values = array_unique($values);
         }
 
         return $values;
     }
+
+    /**
+     * clear right cache
+     */
+    public static function clearCache(){
+        self::$acl = array();
+        self::$aclres = array();
+    }
+
 
     /**
      * retrieve the list of group the current user is member of

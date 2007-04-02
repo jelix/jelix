@@ -22,12 +22,9 @@ class UTjaclmanager extends jUnitTestCaseDb {
         $this->emptyTable('jacl_right_values_group');
         $this->emptyTable('jacl_subject');
 
-        $groups= array(array('id_aclgrp'=>1,
-            'name'=>'group1',
-            'grouptype'=>0,
-            'ownerlogin'=>null));
-        $this->insertRecordsIntoTable('jacl_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
+        $groups= array(array('id_aclgrp'=>1, 'name'=>'group1', 'grouptype'=>0, 'ownerlogin'=>null));
 
+        $this->insertRecordsIntoTable('jacl_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
 
         $rvg= array(
             array('id_aclvalgrp'=>1, 'label_key'=>'jxacl~db.valgrp.truefalse', 'type_aclvalgrp'=>1),
@@ -55,30 +52,78 @@ class UTjaclmanager extends jUnitTestCaseDb {
         $this->insertRecordsIntoTable('jacl_right_values', array('value','label_key','id_aclvalgrp'), $rv, true);
     }
 
+    protected $subjects;
 
     public function testAddSubject(){
-//addSubject($subject, $id_aclvalgrp, $label_key)
-    }
-    public function testRemoveSubject(){
-//removeSubject($subject)
-    }
-    public function testAddRight(){
-//addRight($group, $subject, $value , $resource='')
-    }
-    public function testRemoveRight(){
-//removeRight($group, $subject, $value , $resource='')
-    }
-    public function testAddResourceRight(){
+        jAclManager::addSubject('super.cms',2 , 'cms~rights.super.cms');
+        $this->subjects = array(
+            array('id_aclsbj'=>'super.cms', 'id_aclvalgrp'=>2, 'label_key'=>'cms~rights.super.cms'),
+        );
+        $this->assertTableContainsRecords('jacl_subject', $this->subjects);
 
+        jAclManager::addSubject('jxacl.groups.management',3 , 'jxacl~db.sbj.groups.management');
+        jAclManager::addSubject('admin.access',1 , 'admin~rights.access');
+        jAclManager::addSubject('admin.foo',1 , 'admin~rights.foo');
+
+        $this->subjects[] = array('id_aclsbj'=>'jxacl.groups.management', 'id_aclvalgrp'=>3, 'label_key'=>'jxacl~db.sbj.groups.management');
+        $this->subjects[] = array('id_aclsbj'=>'admin.access', 'id_aclvalgrp'=>1, 'label_key'=>'admin~rights.access');
+        $this->subjects[] = array('id_aclsbj'=>'admin.foo', 'id_aclvalgrp'=>1, 'label_key'=>'admin~rights.foo');
+
+        $this->assertTableContainsRecords('jacl_subject', $this->subjects);
+    }
+
+    public function testRemoveSubject(){
+        jAclManager::removeSubject('admin.foo');
+        array_pop($this->subjects);
+        $this->assertTableContainsRecords('jacl_subject', $this->subjects);
+    }
+
+    protected $rights;
+    public function testAddRight(){
+        $this->assertTrue(jAclManager::addRight(1, 'super.cms', 'LIST' ));
+        $this->rights = array(array('id_aclsbj'=>'super.cms' ,'id_aclgrp'=>1, 'id_aclres'=> null, 'value'=>'LIST'));
+        $this->assertTableContainsRecords('jacl_rights', $this->rights);
+
+        $this->assertTrue(jAclManager::addRight(1, 'admin.access', 'TRUE' ));
+        $this->rights[] = array('id_aclsbj'=>'admin.access' ,'id_aclgrp'=>1, 'id_aclres'=> null, 'value'=>'TRUE');
+        $this->assertTableContainsRecords('jacl_rights', $this->rights);
+
+        $this->assertFalse(jAclManager::addRight(1, 'admin.access', 'bla'));
+        $this->assertFalse(jAclManager::addRight(1, 'admin.dont.exist', 'TRUE'));
+        $this->assertTrue(jAclManager::addRight(1, 'super.cms', 'LIST' )); // on tente d'inserer le meme droit
+        $this->assertTableContainsRecords('jacl_rights', $this->rights);
+    }
+
+    public function testRemoveRight(){
+        jAclManager::removeRight(1, 'admin.access', 'TRUE' );
+        $r = $this->rights;
+        array_pop($r);
+        $this->assertTableContainsRecords('jacl_rights', $r);
+        $this->assertTrue(jAclManager::addRight(1, 'admin.access', 'TRUE' ));
+    }
+
+    public function testAddResourceRight(){
+        $this->assertTrue(jAclManager::addRight(1, 'super.cms', 'UPDATE' , 154));
+        $this->assertTrue(jAclManager::addRight(1, 'super.cms', 'UPDATE' , 92));
+        $this->rights[] = array('id_aclsbj'=>'super.cms' ,'id_aclgrp'=>1, 'id_aclres'=> '154', 'value'=>'UPDATE');
+        $this->rights[] = array('id_aclsbj'=>'super.cms' ,'id_aclgrp'=>1, 'id_aclres'=> '92', 'value'=>'UPDATE');
+        $this->assertTableContainsRecords('jacl_rights', $this->rights);
     }
     public function testRemoveResourceRight(){
-//removeResourceRight($subject, $resource)
-    }
-    public function testRemoveSubject2(){
-        // remove a subject when rights exists on it
-//removeSubject($subject)
+        jAclManager::removeResourceRight('super.cms', 92);
+        array_pop($this->rights);
+        $this->assertTableContainsRecords('jacl_rights', $this->rights);
     }
 
+    public function testRemoveSubject2(){
+        // remove a subject when rights exists on it
+        jAclManager::removeSubject('super.cms');
+        array_shift($this->subjects);
+        $this->assertTableContainsRecords('jacl_subject', $this->subjects);
+
+        $this->rights=  array( array('id_aclsbj'=>'admin.access' ,'id_aclgrp'=>1, 'id_aclres'=> null, 'value'=>'TRUE'));
+        $this->assertTableContainsRecords('jacl_rights', $this->rights);
+    }
 }
 
 ?>
