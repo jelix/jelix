@@ -84,9 +84,12 @@ class UTjacl extends jUnitTestCaseDb {
         jAclManager::addSubject('admin.access',1 , 'admin~rights.access');
         jAclManager::addRight(1, 'super.cms', 'LIST' );
         jAclManager::addRight(1, 'super.cms', 'UPDATE' );
+        jAclManager::addRight(1, 'super.cms', 'DELETE' , 154);
 
-        $this->assertEqual(jAcl::getRight('super.cms'), array('LIST','UPDATE'));
+        $this->assertEqual(jAcl::getRight('super.cms'), array('LIST','UPDATE')); // droit généraux sur le sujet super.cms
         $this->assertEqual(jAcl::getRight('admin.access'), array());
+        $this->assertEqual(jAcl::getRight('super.cms',154), array('LIST','UPDATE', 'DELETE')); // droit sur une ressource
+        $this->assertEqual(jAcl::getRight('super.cms',122), array('LIST','UPDATE')); // ressource non repertoriée
 
         jAclManager::addRight(1, 'admin.access', 'TRUE' );
 
@@ -106,7 +109,30 @@ class UTjacl extends jUnitTestCaseDb {
     public function testCheck(){
         //jAcl::check($subject, $value, $resource=null)
 
+        $this->assertTrue(jAcl::check('super.cms', 'LIST'));
+        $this->assertTrue(jAcl::check('super.cms', 'UPDATE'));
+        $this->assertFalse(jAcl::check('super.cms', 'CREATE'));
+        $this->assertFalse(jAcl::check('super.cms', 'READ'));
+        $this->assertFalse(jAcl::check('super.cms', 'DELETE'));
 
+        $this->assertTrue(jAcl::check('admin.access', 'TRUE'));
+        $this->assertFalse(jAcl::check('admin.access', 'FALSE'));
+
+        $this->assertTrue(jAcl::check('super.cms', 'LIST',154));
+        $this->assertTrue(jAcl::check('super.cms', 'UPDATE',154));
+        $this->assertFalse(jAcl::check('super.cms', 'CREATE',154));
+        $this->assertFalse(jAcl::check('super.cms', 'READ',154));
+        $this->assertTrue(jAcl::check('super.cms', 'DELETE',154));
+
+        // avec une ressource non repertoriée
+        $this->assertTrue(jAcl::check('super.cms', 'LIST',22));
+        $this->assertTrue(jAcl::check('super.cms', 'UPDATE',22));
+        $this->assertFalse(jAcl::check('super.cms', 'CREATE',22));
+        $this->assertFalse(jAcl::check('super.cms', 'READ',22));
+        $this->assertFalse(jAcl::check('super.cms', 'DELETE',22));
+
+        $this->assertFalse(jAcl::check('foo', 'bar'));
+        $this->assertFalse(jAcl::check('foo', 'bar','baz'));
     }
 
 
