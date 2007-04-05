@@ -283,7 +283,7 @@ class jDaoGenerator {
                   }
                   $src[] = '    $__query = '.$select.'.$this->_fromClause.$this->_whereClause;';
                   $glueCondition = ($sqlWhereClause !='' ? ' AND ':' WHERE ');
-                  if( ($lim = $method->getLimit ()) !==null){
+                  if( $method->type == 'select' && ($lim = $method->getLimit ()) !==null){
                      $limit=', '.$lim['offset'].', '.$lim['count'];
                   }
 
@@ -303,11 +303,7 @@ class jDaoGenerator {
 
             if(trim($sqlCond) != '')
                $src[] = '$__query .=\''.$glueCondition.$sqlCond."';";
-            /*else
-               $src[] =";";*/
          }
-         /*else
-            $src[] =";";*/
 
          switch($method->type){
                case 'delete':
@@ -320,7 +316,7 @@ class jDaoGenerator {
                   $src[] = '    return intval($__res->c);';
                   break;
                case 'selectfirst':
-                  $src[] = '    $__rs = $this->_conn->query($__query);';
+                  $src[] = '    $__rs = $this->_conn->limitQuery($__query,0,1);';
                   $src[] = '    $__rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
                   $src[] = '    return $__rs->fetch();';
                   break;

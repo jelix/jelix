@@ -444,7 +444,7 @@ class jDaoMethod {
             if(isset($method->limit[1])){
                 throw new jDaoXmlException ('tag.duplicate', array('limit', $this->name));
             }
-            if($this->type == 'select' || $this->type == 'selectfirst'){
+            if($this->type == 'select'){
                 $this->_addLimit($method->limit[0]);
             }else{
                 throw new jDaoXmlException ('method.limit.forbidden', $this->name);
@@ -588,10 +588,6 @@ class jDaoMethod {
         }else{
             throw new jDaoXmlException ('method.orderitem.property.missing', array($this->name));
         }
-
-
-
-
    }
 
    private function _addValue($attr){
