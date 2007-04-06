@@ -74,7 +74,7 @@ class jAcl {
         // recupère toutes les valeurs correspondant aux groupes auquel appartient le user,
         //   avec le sujet et ressource indiqué
         $values= array();
-        $dao = jDao::get('jelix~jaclrights');
+        $dao = jDao::get('jelix~jaclrights', self::getDbProfil());
         $list = $dao->getAllGroupRights($subject, $groups);
         foreach($list as $right){
             $values [] = $right->value;
@@ -114,7 +114,7 @@ class jAcl {
 
         // chargement des groupes
         if($groups === null){
-            $dao = jDao::get('jelix~jaclusergroup');
+            $dao = jDao::get('jelix~jaclusergroup', self::getDbProfil());
             $gp = $dao->getGroupsUser($_SESSION['JELIX_USER']->login);
             $groups = array();
             foreach($gp as $g){
@@ -122,6 +122,24 @@ class jAcl {
             }
         }
         return $groups;
+    }
+
+    /**
+     * return the profil name used for jacl connection
+     * @return string profil name
+     * @since 1.0b2
+     */
+    public static function getDbProfil(){
+        static $profil='';
+        if($profil== ''){
+            try{
+                $prof = jDb::getProfil ('jacl_profil', true);
+            }catch(Exception $e){
+                $prof = jDb::getProfil ();
+            }
+            $profil = $prof['name'];
+        }
+        return $profil;
     }
 }
 

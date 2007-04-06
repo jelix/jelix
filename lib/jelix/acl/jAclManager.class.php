@@ -33,9 +33,9 @@ class jAclManager {
      * @return boolean  true if the right is set
      */
     public static function addRight($group, $subject, $value , $resource=''){
-
-        $daosbj = jDao::get('jelix~jaclsubject');
-        $daorightval = jDao::get('jelix~jaclrightvalues');
+        $profil = jAcl::getDbProfil();
+        $daosbj = jDao::get('jelix~jaclsubject', $profil);
+        $daorightval = jDao::get('jelix~jaclrightvalues', $profil);
 
         $sbj = $daosbj->get($subject);
         if(!$sbj) return false;
@@ -56,10 +56,10 @@ class jAclManager {
         if(!$ok) return false;
 
         //  ajoute la nouvelle valeur
-        $daoright = jDao::get('jelix~jaclrights');
+        $daoright = jDao::get('jelix~jaclrights', $profil);
         $right = $daoright->get($subject,$group,$resource,$value);
         if(!$right){
-            $right = jDao::createRecord('jelix~jaclrights');
+            $right = jDao::createRecord('jelix~jaclrights', $profil);
             $right->id_aclsbj = $subject;
             $right->id_aclgrp = $group;
             $right->id_aclres = $resource;
@@ -78,7 +78,7 @@ class jAclManager {
      * @param string $resource the id of a resource
      */
     public static function removeRight($group, $subject, $value , $resource=''){
-        $daoright = jDao::get('jelix~jaclrights');
+        $daoright = jDao::get('jelix~jaclrights', jAcl::getDbProfil());
         if($resource === null) $resource='';
         $daoright->delete($subject,$group,$resource,$value);
         jAcl::clearCache();
@@ -92,7 +92,7 @@ class jAclManager {
      * @param string $resource the id of a resource
      */
     public static function removeResourceRight($subject, $resource){
-        $daoright = jDao::get('jelix~jaclrights');
+        $daoright = jDao::get('jelix~jaclrights', jAcl::getDbProfil());
         $daoright->deleteBySubjRes($subject, $resource);
         jAcl::clearCache();
     }
@@ -105,8 +105,9 @@ class jAclManager {
      */
     public static function addSubject($subject, $id_aclvalgrp, $label_key){
         // ajoute un sujet dans la table jacl_subject
-        $daosbj = jDao::get('jelix~jaclsubject');
-        $subj = jDao::createRecord('jelix~jaclsubject');
+        $p = jAcl::getDbProfil();
+        $daosbj = jDao::get('jelix~jaclsubject',$p);
+        $subj = jDao::createRecord('jelix~jaclsubject',$p);
         $subj->id_aclsbj=$subject;
         $subj->id_aclvalgrp=$id_aclvalgrp;
         $subj->label_key =$label_key;
@@ -122,9 +123,10 @@ class jAclManager {
     public static function removeSubject($subject){
         // supprime dans jacl_rights
         // supprime dans jacl_subject
-        $daoright = jDao::get('jelix~jaclrights');
+        $p = jAcl::getDbProfil();
+        $daoright = jDao::get('jelix~jaclrights',$p);
         $daoright->deleteBySubject($subject);
-        $daosbj = jDao::get('jelix~jaclsubject');
+        $daosbj = jDao::get('jelix~jaclsubject',$p);
         $daosbj->delete($subject);
         jAcl::clearCache();
     }

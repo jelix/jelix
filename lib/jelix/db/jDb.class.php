@@ -84,21 +84,42 @@ class jDb {
 
     /**
     * load properties of a connector profil
-    * @param string  $name  profil name to load. if empty, use the default one
+    *
+    * a profil is a section in the dbprofils.ini.php file
+    *
+    * with getProfil('myprofil') (or getProfil('myprofil', false)), you get the profil which
+    * has the name "myprofil". this name should correspond to a section name in the ini file
+    *
+    * with getProfil('myprofiltype',true), it will search a parameter named 'myprofiltype' in the ini file. 
+    * This parameter should contains a profil name, and the corresponding profil will be loaded.
+    *
+    * with getProfil(), it will load the default profil, (so the profil of "default" type)
+    *
+    * @param string   $name  profil name or profil type to load. if empty, use the default one
+    * @param boolean  $nameIsProfilType  says if the name is a profil name or a profil type. this parameter exists since 1.0b2
     * @return array  properties
     */
-    public static function getProfil ($name=null){
+    public static function getProfil ($name='', $nameIsProfilType=false){
         static $profils = null;
         global $gJConfig;
         if($profils === null){
            $profils = parse_ini_file(JELIX_APP_CONFIG_PATH.$gJConfig->dbProfils , true);
         }
 
-        if($name == '' && isset($profils['default'])){
-           $name=$profils['default'];
+        if($name == ''){
+            if(isset($profils['default']))
+                $name=$profils['default'];
+            else
+                throw new jException('jelix~db.error.default.profil.unknow');
+        }elseif($nameIsProfilType){
+            if(isset($profils[$name]) && is_string($profils[$name])){
+                $name = $profils[$name];
+            }else{
+                throw new jException('jelix~db.error.profil.type.unknow',$name);
+            }
         }
 
-        if(isset($profils[$name])){
+        if(isset($profils[$name]) && is_array($profils[$name])){
            $profils[$name]['name'] = $name;
            return $profils[$name];
         }else{

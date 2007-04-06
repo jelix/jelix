@@ -29,7 +29,7 @@ class jAclUserGroup {
      * @return array a list of users object (dao records)
      */
     public static function getUsersList($groupid){
-      $dao = jDao::get('jelix~jaclusergroup');
+      $dao = jDao::get('jelix~jaclusergroup', jAcl::getDbProfil());
       return $dao->getUsersGroup($groupid);
     }
 
@@ -43,29 +43,30 @@ class jAclUserGroup {
      * @param boolean $defaultGroup if true, the user become the member of default groups
      */
     public static function createUser($login, $defaultGroup=true){
-      $daousergroup = jDao::get('jelix~jaclusergroup');
-      $daogroup = jDao::get('jelix~jaclgroup');
-      $usergrp = jDao::createRecord('jelix~jaclusergroup');
-      $usergrp->login =$login;
+        $p = jAcl::getDbProfil();
+        $daousergroup = jDao::get('jelix~jaclusergroup',$p);
+        $daogroup = jDao::get('jelix~jaclgroup',$p);
+        $usergrp = jDao::createRecord('jelix~jaclusergroup',$p);
+        $usergrp->login =$login;
+    
+        // si $defaultGroup -> assign le user aux groupes par defaut
+        if($defaultGroup){
+            $defgrp = $daogroup->getDefaultGroups();
+            foreach($defgrp as $group){
+                $usergrp->id_aclgrp = $group->id_aclgrp;
+                $daousergroup->insert($usergrp);
+            }
+        }
 
-      // si $defaultGroup -> assign le user aux groupes par defaut
-      if($defaultGroup){
-         $defgrp = $daogroup->getDefaultGroups();
-         foreach($defgrp as $group){
-            $usergrp->id_aclgrp = $group->id_aclgrp;
-            $daousergroup->insert($usergrp);
-         }
-      }
-
-      // creation d'un groupe personnel
-      $persgrp = jDao::createRecord('jelix~jaclgroup');
-      $persgrp->name = $login;
-      $persgrp->grouptype = 2;
-      $persgrp->ownerlogin = $login;
-
-      $daogroup->insert($persgrp);
-      $usergrp->id_aclgrp = $persgrp->id_aclgrp;
-      $daousergroup->insert($usergrp);
+        // creation d'un groupe personnel
+        $persgrp = jDao::createRecord('jelix~jaclgroup',$p);
+        $persgrp->name = $login;
+        $persgrp->grouptype = 2;
+        $persgrp->ownerlogin = $login;
+    
+        $daogroup->insert($persgrp);
+        $usergrp->id_aclgrp = $persgrp->id_aclgrp;
+        $daousergroup->insert($usergrp);
     }
 
     /**
@@ -76,11 +77,12 @@ class jAclUserGroup {
      * @param int $groupid the group id
      */
     public static function addUserToGroup($login, $groupid){
-      $daousergroup = jDao::get('jelix~jaclusergroup');
-      $usergrp = jDao::createRecord('jelix~jaclusergroup');
-      $usergrp->login =$login;
-      $usergrp->id_aclgrp = $groupid;
-      $daousergroup->insert($usergrp);
+        $p = jAcl::getDbProfil();
+        $daousergroup = jDao::get('jelix~jaclusergroup',$p);
+        $usergrp = jDao::createRecord('jelix~jaclusergroup',$p);
+        $usergrp->login =$login;
+        $usergrp->id_aclgrp = $groupid;
+        $daousergroup->insert($usergrp);
     }
 
     /**
@@ -89,7 +91,7 @@ class jAclUserGroup {
      * @param int $groupid the group id
      */
     public static function removeUserFromGroup($login,$groupid){
-      $daousergroup = jDao::get('jelix~jaclusergroup');
+      $daousergroup = jDao::get('jelix~jaclusergroup',jAcl::getDbProfil());
       $daousergroup->delete($login,$groupid);
     }
 
@@ -98,22 +100,23 @@ class jAclUserGroup {
      * @param string $login the user login
      */
     public static function removeUser($login){
-      $daogroup = jDao::get('jelix~jaclgroup');
-      $daoright = jDao::get('jelix~jaclrights');
-      $daousergroup = jDao::get('jelix~jaclusergroup');
-
-      // recupere le groupe privé
-      $privategrp = $daogroup->getPrivateGroup($login);
-      if(!$privategrp) return;
-
-      // supprime les droits sur le groupe privé (jacl_rights)
-      $daoright->deleteByGroup($privategrp->id_aclgrp);
-
-      // supprime le groupe personnel du user (jacl_group)
-      $daogroup->delete($privategrp->id_aclgrp);
-
-      // l'enleve de tous les groupes (jacl_users_group)
-      $daousergroup->deleteByUser($login);
+        $p = jAcl::getDbProfil();
+        $daogroup = jDao::get('jelix~jaclgroup',$p);
+        $daoright = jDao::get('jelix~jaclrights',$p);
+        $daousergroup = jDao::get('jelix~jaclusergroup',$p);
+    
+        // recupere le groupe privé
+        $privategrp = $daogroup->getPrivateGroup($login);
+        if(!$privategrp) return;
+    
+        // supprime les droits sur le groupe privé (jacl_rights)
+        $daoright->deleteByGroup($privategrp->id_aclgrp);
+    
+        // supprime le groupe personnel du user (jacl_group)
+        $daogroup->delete($privategrp->id_aclgrp);
+    
+        // l'enleve de tous les groupes (jacl_users_group)
+        $daousergroup->deleteByUser($login);
     }
 
     /**
@@ -122,10 +125,11 @@ class jAclUserGroup {
      * @return int the id of the new group
      */
     public static function createGroup($name){
-        $group = jDao::createRecord('jelix~jaclgroup');
+        $p = jAcl::getDbProfil();
+        $group = jDao::createRecord('jelix~jaclgroup',$p);
         $group->name=$name;
         $group->grouptype=0;
-        $daogroup = jDao::get('jelix~jaclgroup');
+        $daogroup = jDao::get('jelix~jaclgroup',$p);
         $daogroup->insert($group);
         return $group->id_aclgrp;
     }
@@ -139,11 +143,11 @@ class jAclUserGroup {
      * @param boolean $default true if the group is to be default, else false
      */
     public static function setDefaultGroup($groupid, $default=true){
-       $daogroup = jDao::get('jelix~jaclgroup');
-       if($default)
-         $daogroup->setToDefault($groupid);
-       else
-         $daogroup->setToNormal($groupid);
+        $daogroup = jDao::get('jelix~jaclgroup',jAcl::getDbProfil());
+        if($default)
+            $daogroup->setToDefault($groupid);
+        else
+            $daogroup->setToNormal($groupid);
     }
 
     /**
@@ -152,8 +156,8 @@ class jAclUserGroup {
      * @param string $name the new name
      */
     public static function updateGroup($groupid, $name){
-       $daogroup = jDao::get('jelix~jaclgroup');
-       $daogroup->changeName($groupid,$name);
+        $daogroup = jDao::get('jelix~jaclgroup',jAcl::getDbProfil());
+        $daogroup->changeName($groupid,$name);
     }
 
     /**
@@ -161,15 +165,16 @@ class jAclUserGroup {
      * @param int $groupid the group id
      */
     public static function removeGroup($groupid){
-       $daogroup = jDao::get('jelix~jaclgroup');
-       $daoright = jDao::get('jelix~jaclrights');
-       $daousergroup = jDao::get('jelix~jaclusergroup');
-       // enlever tout les droits attaché au groupe
-       $daoright->deleteByGroup($groupid);
-       // enlever les utilisateurs du groupe
-       $daousergroup->deleteByGroup($groupid);
-       // suppression du groupe
-       $daogroup->delete($groupid);
+        $p = jAcl::getDbProfil();
+        $daogroup = jDao::get('jelix~jaclgroup',$p);
+        $daoright = jDao::get('jelix~jaclrights',$p);
+        $daousergroup = jDao::get('jelix~jaclusergroup',$p);
+        // enlever tout les droits attaché au groupe
+        $daoright->deleteByGroup($groupid);
+        // enlever les utilisateurs du groupe
+        $daousergroup->deleteByGroup($groupid);
+        // suppression du groupe
+        $daogroup->delete($groupid);
     }
 
     /**
@@ -182,10 +187,10 @@ class jAclUserGroup {
      */
     public static function getGroupList($login=''){
         if ($login === '') {
-            $daogroup = jDao::get('jelix~jaclgroup');
+            $daogroup = jDao::get('jelix~jaclgroup',jAcl::getDbProfil());
             return $daogroup->findAllPublicGroup();
         }else{
-            $daogroup = jDao::get('jelix~jaclgroupsofuser');
+            $daogroup = jDao::get('jelix~jaclgroupsofuser',jAcl::getDbProfil());
             return $daogroup->getGroupsUser($login);
         }
     }
