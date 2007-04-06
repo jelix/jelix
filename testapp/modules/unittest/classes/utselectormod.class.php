@@ -70,7 +70,8 @@ class UTSelectorMod extends UnitTestCase {
             "testapp~#"=>10, 
             "#~#"=>10, 
             "#"=>10, 
-            "foo"=>11
+            "foo"=>11,
+            "../../../foo"=>11,
         );
         foreach($sels as $sel=>$res){
             $valid=true;
@@ -84,6 +85,30 @@ class UTSelectorMod extends UnitTestCase {
             }
         }
     }
+
+
+    function testInterfaceSelector() {
+        $sels=array(
+            "test"=>array('unittest','test', '', 'test'),
+            "unittest~test"=>array('unittest','test', '', 'test'),
+            "unittest~tests/foo"=>array('unittest','tests/foo', 'tests/', 'foo'),
+        );
+
+        foreach($sels as $sel=>$res){
+            $s=null;
+            try{
+                $s = new jSelectorInterface($sel);
+                $valid = $s->module == $res[0] && $s->resource == $res[1] && $s->subpath == $res[2] && $s->className == $res[3];
+                $this->assertTrue($valid,  ' test de jSelectorInterface('.$sel. ') : contient ces données inattendues ('.$s->module.', '.$s->resource.','.$s->subpath.','.$s->className.')');
+            }catch(jExceptionSelector $e){
+                $this->fail( 'jExceptionSelector inattendue sur test de '.$sel. ' : '.$e->getMessage());
+            }catch(Exception $e){
+                $this->fail( 'exception inattendue sur test de '.$sel. ' : '.$e->getMessage());
+            }
+        }
+    }
+
+
 }
 
 ?>

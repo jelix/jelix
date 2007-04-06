@@ -343,6 +343,21 @@ class jSelectorClass extends jSelectorModule {
 }
 
 /**
+ * selector for business class
+ *
+ * business class is a class stored in classname.class.php file in the classes/ module directory
+ * or one of its subdirectory.
+ * syntax : "module~classname" or "module~classname.
+ * @package    jelix
+ * @subpackage core_selector
+ */
+class jSelectorInterface extends jSelectorClass {
+    protected $type = 'iface';
+    protected $_dirname = 'classes/';
+    protected $_suffix = '.iface.php';
+}
+
+/**
  * selector for localisation string
  *
  * localisation string are stored in file properties.

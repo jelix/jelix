@@ -79,8 +79,10 @@ cd testapp/modules/unittest/classes
   utjacl.class.php
   utjaclmanager.class.php
   utjaclusergroup.class.php
+  test.iface.php
 cd testapp/modules/unittest/classes/tests
   foo.class.php
+  foo.iface.php
 cd testapp/modules/unittest/locales/
   test_A.properties
   test_B.properties

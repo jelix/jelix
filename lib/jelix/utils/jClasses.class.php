@@ -4,7 +4,7 @@
 * @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -27,7 +27,8 @@ class jClasses {
      * @return object an instance of the classe
      */
     static public function create($selector){
-        $sel = self::_include($selector);
+        $sel = new jSelectorClass($selector);
+        require_once($sel->getPath());
         $class = $sel->className;
         return new $class ();
     }
@@ -63,16 +64,18 @@ class jClasses {
      * @param string $selector the jelix selector correponding to the class
      */
     static public function inc($selector) {
-        self::_include($selector);
+        $sel = new jSelectorClass($selector);
+        require_once($sel->getPath());
     }
 
     /**
-     * include a file class
+     * include an interface
+     * @param string $selector the jelix selector correponding to the interface
+     * @since 1.0b2
      */
-    static protected function _include($selector) {
-        $sel = new jSelectorClass($selector);
+    static public function incIface($selector) {
+        $sel = new jSelectorInterface($selector);
         require_once($sel->getPath());
-        return $sel;
     }
 }
 
