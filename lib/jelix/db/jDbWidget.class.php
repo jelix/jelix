@@ -2,10 +2,9 @@
 /**
 * @package    jelix
 * @subpackage db
-* @version    $Id:$
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
@@ -34,21 +33,21 @@ class jDbWidget {
     }
 
     /**
-    * Effectue une requête, renvoi une ligne de resultat sous forme d'objet et libere les ressources.
-    * @param   string   $query   requète SQL
-    * @return  object  objet contenant les champs  sous forme de propriétés, de la ligne sélectionnée
+    * Run a query, and return only the first result.
+    * @param   string   $query   SQL query (without LIMIT instruction !)
+    * @return  object  the object which contains values of the record
     */
     public function  fetchFirst($query){
-        $rs     = $this->_conn->query ($query);
+        $rs     = $this->_conn->limitQuery ($query,0,1);
         $result = $rs->fetch ();
         return $result;
     }
 
     /**
-    * Effectue une requête, et met à jour les propriétes de l'objet passé en paramètre
-    * @param   string  $query     requète SQL
-    * @param   string  $classname nom de la classe de l'objet à remplir
-    * @return  object  objet initialisé rempli
+    * Run a query, and store values of the first result, into an object which has the given class
+    * @param   string  $query     SQL query  (without LIMIT instruction !)
+    * @param   string  $classname class name of the future object
+    * @return  object the object which contains values of the record
     */
     public function fetchFirstInto ($query, $classname){
         $rs     = $this->_conn->query   ($query);
@@ -58,9 +57,11 @@ class jDbWidget {
     }
 
     /**
-    * Récupère tout les enregistrements d'un select dans un tableau (d'objets)
-    * @param   string   $query   requète SQL
-    * @return  array    tableau d'objets
+    * Get all results of a query
+    * @param  string   $query   SQL query
+    * @param  integer  $limitOffset  the first number of the results or null
+    * @param  integer  $limitCount  number of results you want, or null
+    * @return  array    array of objects which contains results values
     */
     public function fetchAll($query, $limitOffset=null, $limitCount=null){
         if($limitOffset===null || $limitCount===null){
@@ -72,10 +73,12 @@ class jDbWidget {
     }
 
     /**
-    * Récupère tout les enregistrements d'un select dans un tableau (d'objets)
-    * @param   string   $query   requète SQL
-    * @param   string  $className nom de la classe de l'objet à remplir
-    * @return  array    tableau d'objets
+    * Get all results of a query and store values into objects which have the given class
+    * @param   string   $query   SQL query
+    * @param   string  $classname class name of future objects
+    * @param  integer  $limitOffset  the first number of the results or null
+    * @param  integer  $limitCount  number of results you want, or null
+    * @return  array    array of objects which contains results values
     */
     public function fetchAllInto($query, $className, $limitOffset=null, $limitCount=null){
         if($limitOffset===null || $limitCount===null){

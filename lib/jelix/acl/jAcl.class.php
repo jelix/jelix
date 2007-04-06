@@ -94,6 +94,7 @@ class jAcl {
 
     /**
      * clear right cache
+     * @since 1.0b2
      */
     public static function clearCache(){
         self::$acl = array();

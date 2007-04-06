@@ -32,6 +32,7 @@ final class jResponseRedirect extends jResponse {
 
     /**
      * the anchor you want to add to the final url. leave blank if you don't one.
+     * @since 1.0b2
      */
     public $anchor ='';
 

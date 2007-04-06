@@ -256,6 +256,7 @@ class jTpl {
     /**
      * return the current encoding
      * @return string the charset string
+     * @since 1.0b2
      */
     public static function getEncoding (){
 #if JTPL_STANDALONE

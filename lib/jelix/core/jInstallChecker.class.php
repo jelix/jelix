@@ -9,10 +9,13 @@
 * @copyright 2007 Jouanneau laurent
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @since 1.0b2
 */
 
 /**
  * interface for objects which output result of the install check
+ * @since 1.0b2
+ * @experimental
  */
 interface jIInstallCheckReporter {
     function start();
@@ -26,6 +29,8 @@ interface jIInstallCheckReporter {
 
 /**
  * check an installation of a jelix application
+ * @since 1.0b2
+ * @experimental
  */
 class jInstallCheck {
 

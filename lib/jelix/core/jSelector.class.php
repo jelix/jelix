@@ -292,7 +292,16 @@ class jSelectorClass extends jSelectorModule {
     protected $type = 'class';
     protected $_dirname = 'classes/';
     protected $_suffix = '.class.php';
+    
+    /**
+    * subpath part in the resource content
+    * @since 1.0b2
+    */
     public $subpath ='';
+    /** 
+    * the class name specified in the selector
+    * @since 1.0b2
+    */
     public $className = '';
 
     function __construct($sel){
@@ -350,6 +359,7 @@ class jSelectorClass extends jSelectorModule {
  * syntax : "module~classname" or "module~classname.
  * @package    jelix
  * @subpackage core_selector
+ * @since 1.0b2
  */
 class jSelectorInterface extends jSelectorClass {
     protected $type = 'iface';

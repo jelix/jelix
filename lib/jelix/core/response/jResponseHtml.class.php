@@ -242,6 +242,9 @@ class jResponseHtml extends jResponse {
 
     /**
      * add a link to a javascript script in the document head
+     *
+     * $forIe parameter exists since 1.0b2
+     *
      * @param string $src the link
      * @param array $params additionnals attributes for the script tag
      * @param boolean $forIE if true, the script sheet will be only for IE browser
@@ -260,6 +263,9 @@ class jResponseHtml extends jResponse {
 
     /**
      * add a link to a css stylesheet in the document head
+     *
+     * $forIe parameter exists since 1.0b2
+     *
      * @param string $src the link
      * @param array $params additionnals attributes for the link tag
      * @param boolean $forIE if true, the style sheet will be only for IE browser

@@ -9,6 +9,7 @@
 * @copyright 2007 Jouanneau laurent
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @since 1.0b2
 */
 
 include dirname(__FILE__).'/core/jInstallChecker.class.php';

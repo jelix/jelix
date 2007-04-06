@@ -15,6 +15,7 @@ define ('PDF_LATEX_RESPONSE_CACHE', JELIX_APP_TEMP_PATH.'responseLatexToPdf/');
 * pdf response, generated from a latex content
 * @package  jelix
 * @subpackage core_response
+* @since 1.0b2
 */
 class jResponseLatexToPdf extends jResponse {
     /**
