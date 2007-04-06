@@ -79,6 +79,8 @@ cd testapp/modules/unittest/classes
   utjacl.class.php
   utjaclmanager.class.php
   utjaclusergroup.class.php
+cd testapp/modules/unittest/classes/tests
+  foo.class.php
 cd testapp/modules/unittest/locales/
   test_A.properties
   test_B.properties

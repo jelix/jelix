@@ -11,15 +11,44 @@
 
 class UTSelectorMod extends UnitTestCase {
 
-    function testGoodSel() {
+    function testZoneSelector() {
         $sels=array(
             "testapp~sommaire"=>array('testapp','sommaire'),
         );
-        $this->runtest($sels , 'jSelectorZone');
+
+        foreach($sels as $sel=>$res){
+            try{
+                $s = new jSelectorZone($sel);
+                $valid = $s->module == $res[0] && $s->resource == $res[1];
+                $this->assertTrue($valid,  ' test de jSelectorZone('.$sel. ') : contient ces données inattendues ('.$s->module.', '.$s->resource.')');
+            }catch(jExceptionSelector $e){
+                $this->fail( 'jExceptionSelector inattendue sur test de '.$sel. ' : '.$e->getMessage());
+            }catch(Exception $e){
+                $this->fail( 'exception inattendue sur test de '.$sel. ' : '.$e->getMessage());
+            }
+        }
+    }
+
+
+    function testClassSelector() {
         $sels=array(
-            "unittestservice"=>array('unittest','unittestservice'),
+            "unittestservice"=>array('unittest','unittestservice', '', 'unittestservice'),
+            "unittest~unittestservice"=>array('unittest','unittestservice', '', 'unittestservice'),
+            "unittest~tests/foo"=>array('unittest','tests/foo', 'tests/', 'foo'),
         );
-        $this->runtest($sels, 'jSelectorClass');
+
+        foreach($sels as $sel=>$res){
+            $s=null;
+            try{
+                $s = new jSelectorClass($sel);
+                $valid = $s->module == $res[0] && $s->resource == $res[1] && $s->subpath == $res[2] && $s->className == $res[3];
+                $this->assertTrue($valid,  ' test de jSelectorClass('.$sel. ') : contient ces données inattendues ('.$s->module.', '.$s->resource.','.$s->subpath.','.$s->className.')');
+            }catch(jExceptionSelector $e){
+                $this->fail( 'jExceptionSelector inattendue sur test de '.$sel. ' : '.$e->getMessage());
+            }catch(Exception $e){
+                $this->fail( 'exception inattendue sur test de '.$sel. ' : '.$e->getMessage());
+            }
+        }
     }
 
     /*
@@ -27,7 +56,7 @@ class UTSelectorMod extends UnitTestCase {
     selector.invalid.target=(11)Le sélecteur ne désigne pas une ressource du bon type
     selector.module.unknow=(12)
     */
-    function testBadSel() {
+    function testBadClassSelector() {
         $sels=array(
             "testapp~"=>10,
             ""=>10,
@@ -43,27 +72,7 @@ class UTSelectorMod extends UnitTestCase {
             "#"=>10, 
             "foo"=>11
         );
-        $this->runbadtest($sels);
-    }
-
-    protected function runtest($list, $class){
-        foreach($list as $sel=>$res){
-            $valid=true;
-            try{
-                $s = new $class($sel);
-                $valid = $s->module == $res[0] && $s->resource == $res[1];
-                $this->assertTrue($valid,  ' test de '.$sel. ' : contient ces données inattendues ('.$s->module.', '.$s->resource.')');
-            }catch(jExceptionSelector $e){
-                $this->fail( 'jExceptionSelector inattendue sur test de '.$sel. ' : '.$e->getMessage());
-            }catch(Exception $e){
-                $this->fail( 'exception inattendue sur test de '.$sel. ' : '.$e->getMessage());
-            }
-        }
-    }
-
-
-    protected function runbadtest($list){
-        foreach($list as $sel=>$res){
+        foreach($sels as $sel=>$res){
             $valid=true;
             try{
                 $s = new jSelectorClass($sel);
@@ -74,9 +83,7 @@ class UTSelectorMod extends UnitTestCase {
                 $this->fail( 'exception inattendue sur test de '.$sel. ' : '.$e->getMessage());
             }
         }
-
     }
-
 }
 
 ?>

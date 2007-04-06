@@ -28,7 +28,7 @@ class jClasses {
      */
     static public function create($selector){
         $sel = self::_include($selector);
-        $class = $sel->resource;
+        $class = $sel->className;
         return new $class ();
     }
 
@@ -71,8 +71,7 @@ class jClasses {
      */
     static protected function _include($selector) {
         $sel = new jSelectorClass($selector);
-        $p = $sel->getPath();
-        require_once($p);
+        require_once($sel->getPath());
         return $sel;
     }
 }

@@ -2,7 +2,6 @@
 /**
 * @package     testapp
 * @subpackage  unittest module
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006 Jouanneau laurent

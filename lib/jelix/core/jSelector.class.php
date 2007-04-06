@@ -7,11 +7,11 @@
 * resource type. Selector objects get the real path of the corresponding file, the name of the
 * compiler (if the file has to be compile) etc.
 * So here, there is a selector class for each selector type.
-* @package    jelix
-* @subpackage core_selector
-* @author     Laurent Jouanneau
-* @contributor
-* @copyright  2005-2007 Laurent Jouanneau
+* @package     jelix
+* @subpackage  core_selector
+* @author      Laurent Jouanneau
+* @contributor Loic Mathaud
+* @copyright   2005-2007 Laurent Jouanneau, 2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -282,8 +282,9 @@ class jSelectorAct extends jSelectorModule {
 /**
  * selector for business class
  *
- * business class is a class stored in the classes/classname.class.php file in a module.
- * syntax : "module~classname".
+ * business class is a class stored in classname.class.php file in the classes/ module directory
+ * or one of its subdirectory.
+ * syntax : "module~classname" or "module~classname.
  * @package    jelix
  * @subpackage core_selector
  */
@@ -291,9 +292,53 @@ class jSelectorClass extends jSelectorModule {
     protected $type = 'class';
     protected $_dirname = 'classes/';
     protected $_suffix = '.class.php';
+    public $subpath ='';
+    public $className = '';
+
+    function __construct($sel){
+        if(preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_\.\\/]+)$/", $sel, $m)){
+            if($m[1]!='' && $m[2]!=''){
+                $this->module = $m[2];
+            }else{
+                $this->module = jContext::get ();
+            }
+            $this->resource = $m[3];
+            if( ($p=strrpos($m[3], '/')) !== false){
+                $this->className = substr($m[3],$p+1);
+                $this->subpath = substr($m[3],0,$p+1);
+            }else{
+                $this->className = $m[3];
+                $this->subpath ='';
+            }
+            
+            $this->_createPath();
+            $this->_createCachePath();
+        }else{
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
+        }
+    }
+
+    protected function _createPath(){
+        global $gJConfig;
+        if (!isset($gJConfig->_modulesPathList[$this->module])) {
+            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
+        } 
+        $prepath = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->subpath;
+        $this->_path = $prepath.$this->className.$this->_suffix;
+        if (!file_exists($this->_path) || strpos(realpath($this->_path),$prepath) !== 0 ) { // second test for security issues
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), $this->type));
+        }
+    }
 
     protected function _createCachePath(){
         $this->_cachePath = '';
+    }
+
+    public function toString($full=false){
+        if($full)
+            return $this->type.':'.$this->module.'~'.$this->subpath.$this->className;
+        else
+            return $this->module.'~'.$this->subpath.$this->className;
     }
 }
 

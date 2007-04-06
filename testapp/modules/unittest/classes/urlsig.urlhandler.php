@@ -1,4 +1,13 @@
 <?php
+/**
+* @package    testapp
+* @subpackage unittest
+* @author     Jouanneau Laurent
+* @contributor
+* @copyright  2005-2007 Jouanneau laurent
+* @link        http://www.jelix.org
+* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+*/
 
 class urlsigUrlsHandler implements jIUrlSignificantHandler {
 
