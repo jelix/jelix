@@ -4,7 +4,7 @@
 * @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006 Laurent Jouanneau
+* @copyright   2006-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -122,6 +122,8 @@ class jFilter {
         //$re .= '((\/'
         //if (!preg_match('/^(([a-z]):\/\/)?((([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?)?\//i', $url, $m)) {
 
+        // php filter use in fact parse_url, so we use the same function to have same result.
+        // however, note that it doesn't validate all bad url...
         $res=@parse_url($url);
         if($res === false) return false;
         if($schemeRequired && $res['scheme'] == '') return false;

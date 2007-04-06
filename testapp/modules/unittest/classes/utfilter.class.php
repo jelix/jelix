@@ -99,7 +99,7 @@ class UTfilter extends UnitTestCase {
                                   "isUrl('foo.com/bar.html?a=b&c=d')");
         $this->assertTrue(jFilter::isUrl('foo$^.com/bar.html?a=b&c=d'),
                                   "isUrl('foo$^.com/bar.html?a=b&c=d')");
-        $this->assertFalse(jFilter::isUrl('http://foo$^.com/bar.html?a=b&c=d'),
+        $this->assertTrue(jFilter::isUrl('http://foo$^.com/bar.html?a=b&c=d'),
                                   "isUrl('http://foo$^.com/bar.html?a=b&c=d')");
         $this->assertFalse(jFilter::isUrl('http://'),
                                   "isUrl('http://')");
