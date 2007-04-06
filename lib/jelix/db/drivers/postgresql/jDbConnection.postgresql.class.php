@@ -63,15 +63,33 @@ class jDbConnectionPostgreSQL extends jDbConnection {
     protected function _connect (){
         $funcconnect= ($this->profil['persistent'] ? 'pg_pconnect':'pg_connect');
 
-        $str = 'dbname=\''.$this->profil['database'].'\' user=\''.$this->profil['user'].'\' password=\''.$this->profil['password'].'\'';
+        $str = '';
 
         // on fait une distinction car si host indiqué -> connection TCP/IP, sinon socket unix
         if($this->profil['host'] != '')
-            $str = 'host=\''.$this->profil['host'].'\' '.$str;
+            $str = 'host=\''.$this->profil['host'].'\''.$str;
 
         // Si le port est défini on le rajoute à la chaine de connexion
         if (isset($this->profil['port'])) {
             $str .= ' port=\''.$this->profil['port'].'\'';
+        }
+
+        // Si le nom de la base de données est spécifié, on le rajoute à la chaine de connexion
+        if ($this->profil['database'] != '') {
+            $str .= ' dbname=\''.$this->profil['database'].'\'';
+        }
+
+        // Si le nom d'utilisateur est spécifié, on le rajoute à la chaine de connexion
+        // on fait un isset et non une équivalence à chaine vide pour permettre de specifier
+        // tout en permettant aussi d'utiliser les variables d'environnements (dans ce cas, ne pas mettre de parametre user dans la conf)
+        if (isset($this->profil['user'])) {
+            $str .= ' user=\''.$this->profil['user'].'\'';
+        }
+
+        // Si le mot de passe est spécifié, on le rajoute à la chaine de connexion
+        // même remarque que pour login.
+        if (isset($this->profil['password'])) {
+            $str .= ' password=\''.$this->profil['password'].'\'';
         }
 
         if($cnx=@$funcconnect ($str)){
