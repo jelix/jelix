@@ -5,51 +5,55 @@ Développeurs
 ------------
 
 Laurent Jouanneau (laurentj) :
-    Concepteur et développeur principal de Jelix
+ - Concepteur et développeur principal de Jelix
 
 Loic Mathaud (bballizlife) :
-    testeur, nombreuses corrections de bugs dans jelix
-    contributions jTpl : version standalone du moteur de template, commentaires, {for}, modifier stripslashes
-    driver sqlite pour jDb
-    daos : opérateurs supplementaires
-    adaptation du framework pour la réalisation d'applications fonctionnant en ligne de commande
-    implementation de jResponseXML, jResponseRss20
-    corrections orthographiques dans la documentation
-    Diverses améliorations (jClasses::inc(), jIniFile, jAppManager, dans jelix-scripts etc. )
+ - testeur, nombreuses corrections de bugs et nombreux patchs dans jelix
+ - contributions jTpl : version standalone du moteur de template, commentaires, {for}, modifier stripslashes
+ - driver sqlite pour jDb
+ - daos : opérateurs supplementaires
+ - adaptation du framework pour la réalisation d'applications fonctionnant en ligne de commande
+ - implementation de jResponseXML, jResponseRss20
+ - corrections orthographiques dans la documentation
+ - Diverses améliorations (jClasses::inc(), jIniFile, jAppManager, dans jelix-scripts etc. )
 
 Contributeurs
 -------------
 
-Yannick Le Guédart (Torgan)
-    driver auth jAuthDriverClass
-    plugin jtpl date_format
-    Divers bug fix et petites améliorations
-    Contributions sur jResponseRss et jResponseAtom
-    Driver Intuition pour jDb
+Yannick Le Guédart (aka Torgan)
+ - driver auth jAuthDriverClass
+ - plugin jtpl date_format
+ - Divers bug fix et petites améliorations
+ - Contributions sur jResponseRss et jResponseAtom
+ - Driver Intuition pour jDb
 
-Nicolas Jeudy
-    driver auth jAuthDriverLDS (pour les annuaires ldap LDS)
-    jResponseCss
-
-M. Thiriot (Doubleface)
-    testeur
-    bug fixs sur le support de PDO dans jDb
-
-Yann
-    Petite amélioration sur jResponseHtml (description et keywords)
-
-Cedric
-    patch correctif sur jFile::read
-
-Olivier Gambier (d-m-p)
-    review de code, corrections de bugs
-
-Gildas Givaja (Giviz)
-    testeur, corrections de bugs
+Nicolas Jeudy (aka njeudy)
+ - driver auth jAuthDriverLDS (pour les annuaires ldap LDS)
+ - jResponseCss
 
 Aubanel MONNIER
-    reponse jResponseLatexToPdf et les plugins de templates associés
-    patch pour les ancres dans jResponseRedirect
+ - reponse jResponseLatexToPdf et les plugins de templates associés
+ - patch pour les ancres dans jResponseRedirect
+
+M. Thiriot (aka Doubleface)
+ - testeur
+ - bug fixs sur le support de PDO dans jDb
+
+Yann
+ - Petite amélioration sur jResponseHtml (description et keywords)
+
+Laurent Raufaste (aka analogue)
+ - patch sur la connexion postgresql (#123)
+
+Cedric
+ - patch correctif sur jFile::read
+
+Olivier Gambier (aka d-m-p)
+ - review de code, corrections de bugs
+
+Gildas Givaja (aka Giviz)
+ - testeur, corrections de bugs
+
 
 Contributeurs involontaires ;-)
 -------------------------------
@@ -59,9 +63,9 @@ Brent R. Matzelle
 Chris Ryan
     pour sa classe SMTP (jSmtp dans Jelix)
 Copix Team
-    en particulier Gerald Croes, co-auteur des parties du code qui issues du projet
+    en particulier Gerald Croes, co-auteur des parties du code qui sont issues du projet
     Copix version 2.3dev20050901 et qui sont sous copyright 2001-2005 Copix Team
     (http://www.copix.org)
 
 
-(mise à jour à svn-346)
+(mise à jour à svn-405)

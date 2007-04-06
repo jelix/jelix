@@ -5,7 +5,8 @@
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Yannick Le Guédart
-* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
+* @contributor Laurent Raufaste
+* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007 Laurent Raufaste
 * Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixDBConnectionPostgreSQL)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Laurent Jouanneau
