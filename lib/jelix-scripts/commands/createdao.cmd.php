@@ -3,12 +3,10 @@
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
 * @contributor Nicolas Jeudy (patch ticket #99)
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
-
-
 
 class createdaoCommand extends JelixScriptCommand {
 
@@ -16,8 +14,9 @@ class createdaoCommand extends JelixScriptCommand {
     public  $allowed_options=array('-profil'=>true, '-empty'=>false);
     public  $allowed_parameters=array('module'=>true,'name'=>true, 'table'=>false);
 
-    public  $syntaxhelp = "[-profil nom] [-empty] MODULE DAO TABLEPRINCIPALE";
-    public  $help="
+    public  $syntaxhelp = "[-profil name] [-empty] MODULE DAO TABLE";
+    public  $help=array(
+        'fr'=>"
     Créer un nouveau fichier de dao
 
     -profil (facultatif) : indique le profil à utiliser pour se connecter à
@@ -25,11 +24,24 @@ class createdaoCommand extends JelixScriptCommand {
     -empty (facultatif) : ne se connecte pas à la base et génère un fichier
                           dao vide
 
-    MODULE : le nom du module concerné.
-    DAO :  nom du dao à créer.
-    TABLEPRINCIPALE : nom de la table principale sur laquelle s'appuie le dao
-                      (cette commande ne permet pas de générer un dao
-                      s'appuyant sur de multiple table)";
+    MODULE: nom du module concerné.
+    DAO   : nom du dao à créer.
+    TABLE : nom de la table principale sur laquelle s'appuie le dao
+            (cette commande ne permet pas de générer un dao  s'appuyant sur
+             de multiple table)",
+        'en'=>"
+    Create a new dao file.
+
+    -profil (optional) : indicate the name of the profil to use for the
+                        database connection.
+    -empty (optional) : juste create an empty dao file (it doesn't connect to
+                        the database
+
+    MODULE : module name where to create the dao
+    DAO    : dao name
+    TABLE  : name of the main table on which the dao is mapped. You cannot indicates
+             multiple table, sorry..",
+    );
 
 
     public function run(){

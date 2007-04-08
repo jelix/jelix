@@ -4,7 +4,7 @@
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
 * @contributor Loic Mathaud
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -15,19 +15,28 @@ class createctrlCommand extends JelixScriptCommand {
     public  $allowed_options=array('-cmdline'=>false);
     public  $allowed_parameters=array('module'=>true,'name'=>true, 'method'=>false);
 
-    public  $syntaxhelp = "[-cmdline] MODULE NOM_CONTROLEUR [NOM_METHOD]";
-    public  $help="
-    Permet de créer un nouveau fichier d'une classe jController ou jControllerCmdLine
+    public  $syntaxhelp = "[-cmdline] MODULE CONTROLLER [METHOD]";
+    public  $help=array(
+        'fr'=>"
+    Créer un nouveau controleur de type jController ou jControllerCmdLine.
 
-    Si l'option -cmdline est présente, créé un controller de type jControllerCmdLine,
-    pour développer des scripts en ligne de commande. Sinon, le controller créé est
-    de type jController.
+    Si l'option -cmdline est présente, le controleur est de type 
+    jControllerCmdLine (pour développer des scripts en ligne de commande).
     
     MODULE : le nom du module concerné.
-    NOM_CONTROLEUR :  nom du controleur que vous voulez créer.
-    NOM_METHOD (facultatif) : nom de la première méthode. Par défaut, elle a
-                              le nom index.";
+    CONTROLLER :  nom du controleur que vous voulez créer.
+    METHOD (facultatif) : nom de la première méthode. Par défaut, elle a
+                              le nom index.",
+        'en'=>"
+    Create a new controller, either a jController or jControllerCmdLine.
     
+    To create a jControllerCmdLine (for command line script), you should 
+    provide -cmdline option
+    
+    MODULE : module name where to create the controller.
+    CONTROLLER :  name of your new controller.
+    METHOD (optional) : name of the first method ('index' by default)."
+    );
 
     public function run(){
        $path= $this->getModulePath($this->_parameters['module']);

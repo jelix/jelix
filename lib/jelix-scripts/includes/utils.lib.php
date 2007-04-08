@@ -67,7 +67,16 @@ function jxs_getOptionsAndParams($argv, $sws,$params){
             break;
          }
       }
-      $parameters[$pname]=array_shift($argv);
+      if($pname == '...'){
+        $parameters['...']=array();
+        foreach($argv as $arg){
+            $parameters['...'][]=$arg;
+        }
+        $argv=array();
+        break;
+      }else{
+         $parameters[$pname]=array_shift($argv);
+      }
    }
 
    if(count($argv)){

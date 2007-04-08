@@ -20,20 +20,36 @@ class createappCommand extends JelixScriptCommand {
     public  $help='';
 
     function __construct(){
-        $this->help="
+        $this->help= array(
+            'fr'=>"
     Créer une nouvelle application avec tous les répertoires nécessaires.
 
     Si l'option -withdefaultmodule est présente, créer également un module du
     même nom que l'application.
 
-    Si l'option -withcmdline est présente, créer un point d'entrée afin de développer des
-    scripts en ligne de commande.
+    Si l'option -withcmdline est présente, créer un point d'entrée afin de 
+    développer desscripts en ligne de commande.
 
     Le nom de l'application doit être indiqué
     1) soit en premier paramètre du script jelix
           ".$_SERVER['argv'][0]." --helloApp
     2) soit dans une variable d'environnement JELIX_APP_NAME.
-    ";
+    ",
+            'en'=>"
+    Create a new application with all directories
+
+    If you give -withdefaultmodule option, it create also a module which have 
+    the same name of the application.
+
+    If you give the -withcmdline option, it will create an entry point for
+    command line script.
+
+    The application name should be provided by either of this two ways:
+    1) by given the name as parameter. Example for a helloApp application
+          ".$_SERVER['argv'][0]." --helloApp
+    2) or by given the name in the environment variable: JELIX_APP_NAME.
+    ",
+    );
     }
 
     public function run(){

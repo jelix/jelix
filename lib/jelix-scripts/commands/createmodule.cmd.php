@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
 * @contributor Loic Mathaud
-* @copyright   2005-2006 Jouanneau laurent, 2007 Loic Mathaud
+* @copyright   2005-2007 Jouanneau laurent, 2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -16,15 +16,24 @@ class createmoduleCommand extends JelixScriptCommand {
     public  $allowed_parameters=array('module'=>true);
 
     public  $syntaxhelp = "[-nosubdir] [-nocontroller] [-withcmdline] MODULE";
-    public  $help="
+    public  $help=array(
+        'fr'=>"
     Créer un nouveau module, avec son fichier module.xml, et un controleur
     par défaut, ainsi que tous les sous-repertoires courants
     (zones, templates, daos, locales, classes...).
 
     -nosubdir (facultatif) : ne créer pas tous les sous-repertoires courant..
-    -nocontroller (facultatif) : ne créer pas de fichier controller par défaut
-    -withcmdline (facultatif) : crée le module avec un controller pour la ligne de commande
-    MODULE : le nom du module à créer.";
+    -nocontroller (facultatif) : ne créer pas de fichier controleur par défaut
+    -withcmdline (facultatif) : crée le module avec un controleur pour la ligne de commande
+    MODULE : le nom du module à créer.",
+        'en'=>"
+    Create a new module, with all necessary files and sub-directories.
+
+    -nosubdir (optional): don't create sub-directories.
+    -nocontroller (optional): don't create a default controller.
+    -withcmdline (optional): create a controller for command line (jControllerCmdLine)
+    MODULE: name of the new module."
+    );
 
 
     public function run(){
