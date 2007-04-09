@@ -21,7 +21,7 @@ $GLOBALS['jTplConfig']['locales'] =array(
     'errors.tplplugin.block.too.few.arguments'=>'Dans le tag %s du template %s, arguments manquants',
     'errors.tplplugin.block.too.many.arguments'=>'Dans le tag %s du template %s, arguments en trop',
     'errors.tplplugin.block.bad.argument.number'=>'Dans le tag %s du template %3$s, nombre d\'arguments incorrect (%2$s attendus)',
-
+    'errors.tpl.tag.constant.notallowed'=>'Dans le tag %s du template %3$s, les constantes (%2$s) sont interdites',
 );
 
 ?>

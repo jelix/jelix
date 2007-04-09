@@ -415,6 +415,9 @@ class jTplCompiler
                 }elseif($type == T_VARIABLE){
                     $result.='$t->_vars[\''.substr($str,1).'\']';
                 }elseif($type == T_WHITESPACE || in_array($type, $allowed)){
+                    if($type == T_STRING && defined($str)){
+                        $this->doError2('errors.tpl.tag.constant.notallowed', $this->_currentTag, $str);
+                    }
                     $result.=$str;
                 }else{
                     $this->doError2('errors.tpl.tag.phpsyntax.invalid', $this->_currentTag, $str);
