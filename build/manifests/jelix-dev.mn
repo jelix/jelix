@@ -107,6 +107,9 @@ cd lib/jelix-scripts/commands
   createzone.cmd.php
   createaction.cmd.php
   cleartemp.cmd.php
+  aclvalue.cmd.php
+  aclgroup.cmd.php
+  aclright.cmd.php
 cd lib/jelix-scripts/includes
   command.class.php
   utils.lib.php

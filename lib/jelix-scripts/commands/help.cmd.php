@@ -73,10 +73,10 @@ List of available commands:\n\t",
           }
           if(MESSAGE_LANG == 'fr'){
               $this->disp("\nUtilisation de la commande ".$this->_parameters['command']." :\n");
-              $this->disp("# php jelix.php  [--NOMAPP] ".$this->_parameters['command']." ". $command->syntaxhelp."\n\n");
+              $this->disp("# ".$_SERVER['argv'][0]." [--NOMAPP] ".$this->_parameters['command']." ". $command->syntaxhelp."\n\n");
           }else{
               $this->disp("\nUsage of ".$this->_parameters['command'].":\n");
-              $this->disp("# php jelix.php  [--APPNAME] ".$this->_parameters['command']." ". $command->syntaxhelp."\n\n");
+              $this->disp("# ".$_SERVER['argv'][0]." [--APPNAME] ".$this->_parameters['command']." ". $command->syntaxhelp."\n\n");
           }
           if(is_array($command->help)){
              if(isset($command->help[MESSAGE_LANG])){
