@@ -212,8 +212,8 @@ cd lib/jelix-modules/jelix/daos
    jaclgroupsofuser.dao.xml
 cd lib/jelix-modules/jelix/install/sql
   delete.mysql.sql
-  install.schema.mysql.sql
-  install.datas.mysql.sql
+  install_jacl.schema.mysql.sql
+  install_jacl.datas.mysql.sql
 cd lib/jelix-modules/jelix/locales/en_US
   dao.ISO-8859-1.properties
   daoxml.ISO-8859-1.properties
