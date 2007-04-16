@@ -13,11 +13,6 @@ $BUILD_OPTIONS = array(
     '_dist',                                        // valeur par défaut (boolean = option booleene)
     '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
     ), 
-'VERSION'=> array(
-    "Version number you want to set for this package",
-    '',
-    '',
-    ),
 'APPNAME'=> array(
     "The name of the app you want to generate (demoxul, myapp, testapp)",
     '',
@@ -31,9 +26,14 @@ $BUILD_OPTIONS = array(
     "create a zip package",
     false,
     ),
-'NIGHTLY_NAME'=>array(
-    "",
-    true,
+'VERSION'=> array(
+    false,
+    'SVN',
+    '',
+    ),
+'IS_NIGHTLY'=> array(
+    false,
+    false,
     ),
 'SVN_REVISION'=> array(
     false,
@@ -52,8 +52,13 @@ $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
 Env::setFromFile('VERSION',$APPDIR.'/VERSION', true);
 $SVN_REVISION = Subversion::revision($APPDIR);
 
-if($VERSION == 'SVN')
+if($VERSION == 'SVN'){
     $VERSION = 'SVN-'.$SVN_REVISION;
+    $IS_NIGHTLY = true;
+}else{
+    $IS_NIGHTLY = false;
+}
+
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
     if($NIGHTLY_NAME)

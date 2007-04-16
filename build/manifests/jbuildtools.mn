@@ -4,7 +4,8 @@ cd .
   preprocess.php
   VERSION
   LICENCE
-  README.TXT
+  README.txt
+  LISEZMOI.txt
   CREDITS
 
 cd lib

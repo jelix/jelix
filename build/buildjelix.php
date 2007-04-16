@@ -18,8 +18,8 @@ $BUILD_OPTIONS = array(
     "PHP5 version for which jelix will be generated (by default, for all PHP5 version)",
     '5.0'
     ),
-'LIB_VERSION'=> array(
-    "Version of jelix you want to declare (default : SVN)",
+'EDITION_NAME'=> array(
+    "The edition name of the version (optional)",
     '',
     ),
 'ENABLE_PHP_FILTER'=>array(
@@ -55,10 +55,6 @@ $BUILD_OPTIONS = array(
     "true if you want sources with PHP comments deleted (valid only if ENABLE_OPTIMIZE is true)",
     false,
     ),
-'NIGHTLY_NAME'=>array(
-    "",
-    true,
-    ),
 'ENABLE_OLD_CLASS_NAMING'=>array(
     "old module class naming (jelix <= 1.0a5) can be used",
     true, //TODO false pour la 1.0 finale
@@ -86,6 +82,22 @@ $BUILD_OPTIONS = array(
 'SVN_REVISION'=> array(
     false,
     ),
+'LIB_VERSION'=> array(
+    false,
+    '',
+    ),
+'IS_NIGHTLY'=> array(
+    false,
+    false,
+    ),
+'BUILD_FLAGS'=> array(
+    false,
+    '',
+    ),
+'EDITION_NAME_x'=> array(
+    false,
+    '',
+    ),
 /*''=> array(
     "",
     '',
@@ -102,8 +114,15 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
 $SVN_REVISION = Subversion::revision();
 
-if($LIB_VERSION == 'SVN')
+if($LIB_VERSION == 'SVN'){
     $LIB_VERSION = 'SVN-'.$SVN_REVISION;
+    $IS_NIGHTLY = true;
+}else{
+    $IS_NIGHTLY = false;
+}
+
+
+
 
 if($PHP_VERSION_TARGET){
     if(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
@@ -121,25 +140,43 @@ if($PHP_VERSION_TARGET){
     $PHP50=1;
 }
 
+$BUILD_FLAGS = '';
+if($ENABLE_PHP_JELIX)  $BUILD_FLAGS.='j';
+if($ENABLE_PHP_JSON)  $BUILD_FLAGS.='s';
+if($ENABLE_PHP_XMLRPC)  $BUILD_FLAGS.='x';
+if($ENABLE_PHP_FILTER)  $BUILD_FLAGS.='f';
+if($ENABLE_OLD_CLASS_NAMING)  $BUILD_FLAGS.='c';
+switch($WITH_BYTECODE_CACHE){
+    case 'auto': $BUILD_FLAGS.='o'; break;
+    case 'apc': $BUILD_FLAGS.='a'; break;
+    case 'eaccelerator': $BUILD_FLAGS.='e'; break;
+}
+
+if($EDITION_NAME ==''){
+    $EDITION_NAME_x='userbuild';
+    if($BUILD_FLAGS !=''){
+        $EDITION_NAME_x.='-'.$BUILD_FLAGS;
+    }
+    if($PHP_VERSION_TARGET){
+        $EDITION_NAME_x.='-p'.$PHP_VERSION_TARGET;
+    }
+}else{
+    $EDITION_NAME_x = $EDITION_NAME;
+}
+
+
+
 if(!$ENABLE_OPTIMIZED_SOURCE)
     $STRIP_COMMENT='';
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-    if($NIGHTLY_NAME)
+    if($IS_NIGHTLY)
         $PACKAGE_NAME='jelix-nightly';
     else
         $PACKAGE_NAME='jelix-'.$LIB_VERSION;
 
-    if($PHP_VERSION_TARGET)
-        $PACKAGE_NAME.='-php'.$PHP_VERSION_TARGET;
-
-    if($ENABLE_OPTIMIZED_SOURCE && $ENABLE_DEVELOPER)
-        $PACKAGE_NAME.='-optdev';
-    elseif($ENABLE_OPTIMIZED_SOURCE)
-        $PACKAGE_NAME.='-opt';
-    elseif($ENABLE_DEVELOPER)
-        $PACKAGE_NAME.='-dev';
-
+    if($EDITION_NAME_x != '')
+        $PACKAGE_NAME.='-'.$EDITION_NAME_x;
 
     $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME.'/';
 }else{
@@ -168,15 +205,18 @@ if(!$ENABLE_PHP_JSON){
 }
 jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , ENV::getAll());
 
+if($ENABLE_PHP_JELIX && ($PACKAGE_TAR_GZ || $PACKAGE_ZIP)){
+   jManifest::process('build/manifests/jelix-ext-php.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
+}
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // creation du fichier d'infos sur le build
-$view = array('PHP_VERSION_TARGET', 'SVN_REVISION', 'ENABLE_PHP_FILTER',
-    'ENABLE_PHP_JSON', 'ENABLE_PHP_XMLRPC', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
+$view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SVN_REVISION', 'ENABLE_PHP_FILTER',
+    'ENABLE_PHP_JSON', 'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT', 'ENABLE_OLD_CLASS_NAMING' );
 
-$infos = '; --- build date:  '.date('Y-m-d H:i')."\n; --- lib version: ".$LIB_VERSION."\n".ENV::getIniContent($view);
+$infos = '; --- build date:  '.date('Y-m-d H:i')."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
 

@@ -10,8 +10,10 @@ This php extensions should be installed : dom, simplexml, pcre, session, spl, to
 
 Jelix supports mysql 4.0+ and postgresql 8.0+.
 
-php.ini : magic_quotes_gpc, magic_quotes_runtime,
-and session_auto_start should be off. It is recommanded to set register_globals, asp_tags and short_open_tag to off. Jelix has not been tested with safe_mode.
+php.ini : magic_quotes_gpc, magic_quotes_runtime, and session_auto_start should be off. 
+It is recommanded to set register_globals, asp_tags and short_open_tag to off. 
+
+Jelix has not been tested with safe_mode.
 
 installation
 ------------

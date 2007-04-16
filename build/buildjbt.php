@@ -13,11 +13,6 @@ $BUILD_OPTIONS = array(
     '_dist',                                        // valeur par défaut (boolean = option booleene)
     '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
     ), 
-'VERSION'=> array(
-    "Version number you want to set for this package",
-    '',
-    '',
-    ),
 'PACKAGE_TAR_GZ'=>array(
     "create a tar.gz package",
     false,
@@ -26,9 +21,14 @@ $BUILD_OPTIONS = array(
     "create a zip package",
     false,
     ),
-'NIGHTLY_NAME'=>array(
-    "",
-    true,
+'VERSION'=> array(
+    false,
+    'SVN',
+    '',
+    ),
+'IS_NIGHTLY'=> array(
+    false,
+    false,
     ),
 'SVN_REVISION'=> array(
     false,
@@ -41,14 +41,18 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 Env::setFromFile('VERSION','build/VERSION', true);
 $SVN_REVISION = Subversion::revision('build/');
 
-if($VERSION == 'SVN')
+if($VERSION == 'SVN'){
     $VERSION = 'SVN-'.$SVN_REVISION;
+    $IS_NIGHTLY = true;
+}else{
+    $IS_NIGHTLY = false;
+}
 
 Env::set('MAIN_TARGET_PATH', '_dist', true);
 
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-    if($NIGHTLY_NAME)
+    if($IS_NIGHTLY)
         $PACKAGE_NAME='jbuildtools-nightly';
     else
         $PACKAGE_NAME='jbuildtools-'.$VERSION;

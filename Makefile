@@ -24,21 +24,22 @@ endif
 default:
 	@echo "target:"
 	@echo " nightlies : "
-	@echo "     gÈnerations des packages des nightly build"
+	@echo "     g√©n√©erations des packages des nightly build"
 	@echo " docs : "
-	@echo "     GÈnÈration de la doc"
-	@echo "paramËtres facultatifs (valeurs actuelles) :"
+	@echo "     G√©n√©ration de la doc"
+	@echo "param√®tres facultatifs (valeurs actuelles) :"
 	@echo "   DISTPATH : repertoire cible pour les distributions (" $(DISTPATH) ")"
 	@echo "   TESTPATH : repertoire cible pour developper (" $(TESTPATH) ")"
 
 nightlies:
-	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jelix-dist-dev.ini
-	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jelix-dist-opt.ini
-	$(PHP) build/buildapp.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/testapp-dist.ini
-	$(PHP) build/buildjbt.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jbt-dist.ini
-	$(PHP) build/buildjtpl.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/jtpl-dist.ini
-	$(PHP) build/buildapp.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/myapp-dist.ini
-	$(PHP) build/buildmodules.php -D $(DISTPATHSWITCH) -D NIGHTLY_NAME=1 build/config/modules-dist.ini
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) build/config/jelix-dist-dev.ini
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) build/config/jelix-dist-opt.ini
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) build/config/jelix-dist-gold.ini
+	$(PHP) build/buildapp.php -D $(DISTPATHSWITCH) build/config/testapp-dist.ini
+	$(PHP) build/buildjbt.php -D $(DISTPATHSWITCH) build/config/jbt-dist.ini
+	$(PHP) build/buildjtpl.php -D $(DISTPATHSWITCH) build/config/jtpl-dist.ini
+	$(PHP) build/buildapp.php -D $(DISTPATHSWITCH) build/config/myapp-dist.ini
+	$(PHP) build/buildmodules.php -D $(DISTPATHSWITCH) build/config/modules-dist.ini
 
 
 docs: 

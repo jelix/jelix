@@ -1,0 +1,32 @@
+jBuildTools
+===========
+
+Ce sont des scripts
+
+- pour générer des fichiers sources "finaux" à partir de fichiers sources qui ont besoin de passer par un préprocesseur
+- pour générer des paquets pour distribuer les sources
+- pour réaliser des sortes de "makefile" en PHP
+
+
+preprocess.php
+    préprocesseur de fichier texte (PHP, HTML ou autre..). Il génère un fichier source à partir d'un autre
+    qui contient des instructions pour le préprocesseur. Vous pouvez ainsi générer un fichier source
+    selon des paramètres (qui sont placés dans des variables d'environnement).
+    voir http://developer.jelix.org/wiki/fr/preprocesseur
+   usage :
+     php preprocess.php fichier_source fichier_cible
+
+
+mkdist.php
+   générateur d'arborescence de fichiers : copie des fichiers d'un endroit à un autre, selon une liste
+   contenu dans un fichier manifest, qui indique aussi si les fichiers doivent être préprocessés etc..
+   voir http://developer.jelix.org/wiki/fr/mkdist
+   usage :
+      php mkdist.php [-v] fichier_manifest.mn repertoire_source repertoire_cible
+
+mkmanifest.php
+   permet de générer un fichier manifest.
+   php mkmanifest.php [-v] repertoire_source [base_chemin] fichier.mn
+
+jBuild.inc.php
+   Bibliothèque pour réaliser un "makefile" en php

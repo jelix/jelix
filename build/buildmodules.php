@@ -43,7 +43,7 @@ Env::set('MAIN_TARGET_PATH', '_dist/modules/', true);
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
     $BUILD_SUBPATH = 'additionnal-modules/';
-    if($NIGHTLY_NAME)
+    if($IS_NIGHTLY)
         $PACKAGE_NAME='additionnal-modules-nightly';
     else
         $PACKAGE_NAME='additionnal-modules-SVN-'.$SVN_REVISION;

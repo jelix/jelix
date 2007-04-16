@@ -193,7 +193,7 @@ class Subversion {
 function init(){
 
     $sws = array('-v'=>false, '-h'=>false, '-ini'=>false, '-D'=>2);
-    $params = array('ini'=>true);
+    $params = array('ini'=>false);
 
     list($switches, $parameters) = jCmdUtils::getOptionsAndParams($_SERVER['argv'], $sws, $params);
 
@@ -216,10 +216,17 @@ function init(){
         echo ENV::help();
         exit(0);
     }
+    if(!isset($parameters['ini'])){
+        throw new Exception("ini file name forgotten\n");
+    }
+
     if(isset($switches['-ini'])){
         echo ENV::getIniContent();
         exit(0);
     }
+
+
+
 }
 
 
@@ -244,7 +251,7 @@ try{
 
 }catch(Exception $e){
     echo "\n\njBuildTools error : " , $e->getMessage(),"\n";
-    echo "  options :  [-vh] [-D foo=bar]* fichier.ini
+    echo "  options :  [-vh] [-D foo=bar]* file.ini
       -v  : verbose mode
       -D  : declare a variable and its value
       -h  : only display list of build options
