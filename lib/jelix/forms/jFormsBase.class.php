@@ -97,10 +97,10 @@ abstract class jFormsBase {
             if($value === null && $ctrl->required){
                 $this->_errors[$name]=JFORM_ERRDATA_REQUIRED;
             }elseif($ctrl->datatype->check($value)){
-                $this->_errors[$name]=JFORM_ERRDATA_VALID;
+                $this->_errors[$name]=JFORM_ERRDATA_INVALID;
             }
         }
-        return count($this->errors) == 0;
+        return count($this->_errors) == 0;
     }
 
     /**
