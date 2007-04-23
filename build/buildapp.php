@@ -28,7 +28,7 @@ $BUILD_OPTIONS = array(
     ),
 'VERSION'=> array(
     false,
-    'SVN',
+    '',
     '',
     ),
 'IS_NIGHTLY'=> array(
@@ -49,7 +49,7 @@ if(!$APPNAME){
 $APPDIR = jBuildUtils::normalizeDir($APPNAME);
 $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
 
-Env::setFromFile('VERSION',$APPDIR.'/VERSION', true);
+Env::setFromFile('VERSION',$APPDIR.'/VERSION',true);
 $SVN_REVISION = Subversion::revision($APPDIR);
 
 if($VERSION == 'SVN'){
@@ -61,7 +61,7 @@ if($VERSION == 'SVN'){
 
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-    if($NIGHTLY_NAME)
+    if($IS_NIGHTLY)
         $PACKAGE_NAME=$APPNAME.'-nightly';
     else
         $PACKAGE_NAME=$APPNAME.'-'.$VERSION;

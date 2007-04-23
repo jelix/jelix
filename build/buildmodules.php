@@ -21,12 +21,17 @@ $BUILD_OPTIONS = array(
     "create a zip package",
     false,
     ),
-'NIGHTLY_NAME'=>array(
-    "",
-    true,
+'IS_NIGHTLY'=> array(
+    false,
+    false,
     ),
 'SVN_REVISION'=> array(
     false,
+    ),
+'VERSION'=> array(
+    false,
+    'SVN',
+    '',
     ),
 );
 
@@ -38,7 +43,12 @@ $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
 
 $SVN_REVISION = Subversion::revision('lib');
 
-Env::set('MAIN_TARGET_PATH', '_dist/modules/', true);
+if($VERSION == 'SVN'){
+    $VERSION = 'SVN-'.$SVN_REVISION;
+    $IS_NIGHTLY = true;
+}else{
+    $IS_NIGHTLY = false;
+}
 
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){

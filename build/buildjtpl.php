@@ -54,9 +54,6 @@ if($VERSION == 'SVN'){
     $IS_NIGHTLY = false;
 }
 
-Env::set('MAIN_TARGET_PATH', '_dist', true);
-Env::set('JTPL_STANDALONE','1');
-
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
     if($IS_NIGHTLY)
         $PACKAGE_NAME = 'jtpl-nightly';
