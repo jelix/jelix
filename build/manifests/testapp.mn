@@ -22,6 +22,9 @@ cd testapp/www/design
 cd testapp/modules
   .htaccess
 
+cd testapp/install
+  install.mysql.sql
+
 cd testapp/modules/testapp
   module.xml
 cd testapp/modules/testapp/locales/en_US
