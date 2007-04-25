@@ -332,11 +332,9 @@ class jSelectorClass extends jSelectorModule {
         if (!isset($gJConfig->_modulesPathList[$this->module])) {
             throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         } 
-        $prepath = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->subpath;
-        if($gJConfig->isWindows)
-            $prepath = str_replace('/','\\', $prepath);
-        $this->_path = $prepath.$this->className.$this->_suffix;
-        if (!file_exists($this->_path) || strpos(realpath($this->_path),$prepath) !== 0 ) { // second test for security issues
+        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->subpath.$this->className.$this->_suffix;
+
+        if (!file_exists($this->_path) || strpos($this->subpath,'..') !== false ) { // second test for security issues
             throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), $this->type));
         }
     }
