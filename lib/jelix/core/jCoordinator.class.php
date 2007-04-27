@@ -164,7 +164,6 @@ class jCoordinator {
             $this->actionName = 'default_index';
         }
 
-
         // verification du module
         if(!in_array($this->moduleName,$gJConfig->_trustedModules)){
             throw new jException('jelix~errors.module.untrusted',$this->moduleName);
@@ -172,7 +171,7 @@ class jCoordinator {
 
         jContext::push ($this->moduleName);
         try{
-            $this->action = new jSelectorAct($this->actionName);
+            $this->action = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
         }catch(jExceptionSelector $e){
             if($e->getCode() == 12){
                 throw new jException('jelix~errors.module.unknow',$this->moduleName);

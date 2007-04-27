@@ -126,6 +126,59 @@ class UTSelectorAct extends UnitTestCase {
         }
 
     }
+
+
+    function testFastSel() {
+        $list=array(
+
+                array(
+                        array('truc', 'testapp', 'ctrl_meth'),
+                        array('testapp','ctrl','meth','truc'),
+                ),
+                array(
+                        array('truc', 'testapp', '_meth'),
+                        array('testapp','default','meth','truc'),
+                ),
+                array(
+                        array('truc', 'testapp', 'meth'),
+                        array('testapp','default','meth','truc'),
+                ),
+                array(
+                        array('truc', 'testapp', 'ctrl_'),
+                        array('testapp','ctrl','index','truc'),
+                ),
+                array(
+                        array('truc', 'testapp', 'ctrl_'),
+                        array('testapp','ctrl','index','truc'),
+                ),
+        );
+        foreach($list as $test){
+            list($sel, $res) = $test;
+            $valid=true;
+            try{
+                $s = new jSelectorActFast($sel[0], $sel[1], $sel[2]);
+            }catch(jExceptionSelector $e){
+                $valid=false;
+            }
+            $msg='';
+            if($valid){
+                $valid = $valid 
+                && $s->module == $res[0]
+                && $s->controller == $res[1]
+                && $s->method == $res[2]
+                && $s->request == $res[3];
+                if(!$valid)
+                    $msg=' contient ces données inattendues ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
+            }
+
+            $this->assertTrue($valid , ' test de '.$sel. ' (devrait être '.($res === false ? 'invalide':'valide').')');
+            if($msg)
+                $this->sendMessage($msg);
+        }
+
+    }
+
+
 }
 
 ?>
