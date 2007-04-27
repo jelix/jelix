@@ -12,7 +12,7 @@
 /**
  * the main class of the jelix core
  *
- * this is the "chief orchestra" of the framework. It's goal is
+ * this is the "chief orchestra" of the framework. Its goal is
  * to load the configuration, to get the request parameters
  * used to instancie the correspondant controllers and to run the right method.
  * @package  jelix
@@ -110,11 +110,11 @@ class jCoordinator {
                 $conff= $conf=='1' ? $name.'.plugin.ini.php': $conf;
                 if(file_exists(JELIX_APP_CONFIG_PATH.$conff)){
                    if( false === ($conf = @parse_ini_file(JELIX_APP_CONFIG_PATH.$conff,true)))
-                        die("Erreur dans le fichier de configuration du plugin $name ($conff)!");
+                        die("Jelix Error: Error in the configuration file of plugin $name ($conff)!");
                 }else{
                     $conf = array();
                 }
-                include( $gJConfig->_pluginsPathList[$name].$name.".plugin.php");
+                include( $gJConfig->_pluginsPathList[$name].$name.'.plugin.php');
                 $class= $name.'Plugin';
                 $this->plugins[strtolower($name)] = new $class($conf);
             }
@@ -288,7 +288,7 @@ class jCoordinator {
     * @param boolean  $required  says if the plugin is required or not. If true, will generate an exception if the plugin is not registered.
     * @return jIPlugin
     */
-    function getPlugin ($pluginName, $required = true){
+    public function getPlugin ($pluginName, $required = true){
         $pluginName = strtolower ($pluginName);
         if (isset ($this->plugins[$pluginName])){
             $plugin = $this->plugins[$pluginName];

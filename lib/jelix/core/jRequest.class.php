@@ -14,7 +14,6 @@
  * base class for object which retrieve all parameters of an http request. The
  * process depends on the type of request (ex: xmlrpc..)
  *
-
  * @package  jelix
  * @subpackage core
  */
@@ -68,7 +67,7 @@ abstract class jRequest {
     }
 
     /**
-     * analyse the http request and set the params property
+     * analyse the http request and sets the params property
      */
     abstract protected function _initParams();
 

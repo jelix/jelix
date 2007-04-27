@@ -74,16 +74,13 @@ class jUrlEngineSimple implements jIUrlEngine {
         }
 
         $usehttps= false;
-        if($action && $action !='' && isset($urlhttps[$module.'~'.$action.'@'.$requestType])){
+        if($action && isset($urlhttps[$module.'~'.$action.'@'.$requestType])){
+            $usehttps = true;
+        }elseif($module &&  isset($urlhttps[$module.'~*@'.$requestType])){
+            $usehttps = true;
+        }elseif(isset($urlhttps['@'.$requestType])){
             $usehttps = true;
         }
-        if($module && $module !='' && !$usehttps &&  isset($urlhttps[$module.'~*@'.$requestType])){
-            $usehttps = true;
-        }
-        if(!$usehttps && isset($urlhttps['@'.$requestType])){
-            $usehttps = true;
-        }
-
 
         if(count($gJConfig->simple_urlengine_entrypoints)){
            if($urlspe == null){
@@ -95,17 +92,12 @@ class jUrlEngineSimple implements jIUrlEngine {
                  }
                }
            }
-           $found = false;
-           if($action && $action !='' && isset($urlspe[$module.'~'.$action.'@'.$requestType])){
-                $script = $urlspe[$module.'~'.$action.'@'.$requestType];
-                $found = true;
-           }
-           if($module && $module !='' && !$found &&  isset($urlspe[$module.'~*@'.$requestType])){
-                $script = $urlspe[$module.'~*@'.$requestType];
-                $found = true;
-           }
-           if(!$found && isset($urlspe['@'.$requestType])){
-               $script = $urlspe['@'.$requestType];
+           if($action && isset($urlspe[$s1 = $module.'~'.$action.'@'.$requestType])){
+                $script = $urlspe[$s1];
+           }elseif($module &&  isset($urlspe[$s2 = $module.'~*@'.$requestType])){
+                $script = $urlspe[$s2];
+           }elseif( isset($urlspe[$s3 = '@'.$requestType])){
+               $script = $urlspe[$s3];
            }
         }
         if(!$gJConfig->urlengine['multiview']){
