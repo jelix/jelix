@@ -5,6 +5,8 @@ defaultModule = "testapp"
 defaultAction = "main_index"
 defaultLocale = "fr_FR"
 defaultCharset = "UTF-8"
+
+; see http://www.php.net/manual/en/timezones.php for supported values
 defaultTimeZone = "Europe/Paris"
 
 checkTrustedModules = off
