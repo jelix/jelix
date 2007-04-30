@@ -161,9 +161,9 @@ class jTpl {
      * @param string $tpl template selector
      * @param string $fctname the internal function name (meta or content)
      */
-    protected function  getTemplate($tpl,$fctname){
+    protected function  getTemplate($tpl,$fctname, $outputtype=''){
 #ifnot JTPL_STANDALONE
-        $sel = new jSelectorTpl($tpl);
+        $sel = new jSelectorTpl($tpl,$outputtype);
         jIncluder::inc($sel);
         $fct = $fctname.md5($sel->module.'_'.$sel->resource);
 #else
@@ -182,7 +182,7 @@ class jTpl {
             include_once(JTPL_PATH . 'jTplCompiler.class.php');
 
             $compiler = new jTplCompiler();
-            $compiler->compile($tpl);
+            $compiler->compile($tpl,$outputtype);
         }
         require_once($cachefile);
         $fct = $fctname.md5($tpl);
@@ -193,12 +193,13 @@ class jTpl {
     /**
      * return the generated content from the given template
      * @param string $tpl template selector
+     * @param string $outputtype
      * @return string the generated content
      */
-    public function fetch ($tpl){
+    public function fetch ($tpl, $outputtype=''){
         ob_start ();
         try{
-           $this->getTemplate($tpl,'template_');
+           $this->getTemplate($tpl,'template_', $outputtype);
            $content = ob_get_clean();
         }catch(Exception $e){
            ob_end_clean();

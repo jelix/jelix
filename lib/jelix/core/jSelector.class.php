@@ -532,8 +532,18 @@ class jSelectorTpl extends jSelectorModule {
     protected $_dirname = 'templates/';
     protected $_suffix = '.tpl';
     protected $_where;
+    public $outputType='';
 
-    function __construct($sel){
+    /**
+     * @param string $sel the template selector
+     * @param string $outputtype  the type of output (html, text..) By default, it take the response type
+     */
+    function __construct($sel, $outputtype=''){
+        if($outputtype == '')
+            $this->outputType = $GLOBALS['gJCoord']->response->getFormatType();
+        else
+            $this->outputType = $outputtype;
+
         $this->_compiler='jTplCompiler';
         $this->_compilerPath=JELIX_LIB_TPL_PATH.'jTplCompiler.class.php';
         parent::__construct($sel);

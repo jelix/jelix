@@ -61,6 +61,7 @@ class jTplCompiler
 
     private $_sourceFile;
     private $_currentTag;
+    private $_outputType;
 
     /**
      * Initialize some properties
@@ -86,10 +87,10 @@ class jTplCompiler
      * @param string $tplfile the file name that contains the template
      * @return boolean true if ok
      */
-    public function compile($tplFile){
+    public function compile($tplFile, $outputtype){
         $this->_sourceFile = $tplFile;
         $cachefile = JTPL_CACHE_PATH . basename($tplFile);
-
+        $this->_outputType = ($outputtype==''?'html':$outputtype);
 #else
     /**
      * Launch the compilation of a template
@@ -101,7 +102,7 @@ class jTplCompiler
     public function compile($selector){
         $this->_sourceFile = $selector->getPath();
         $cachefile = $selector->getCompiledFilePath();
-
+        $this->_outputType = $selector->outputType;
         jContext::push($selector->module);
 #endif
 
@@ -501,20 +502,15 @@ class jTplCompiler
      * @return string the path of the plugin, or '' if not found
      */
     protected function _getPlugin($type, $name){
-#if JTPL_STANDALONE
-        $treq = 'html';
-#else
-        global $gJCoord, $gJConfig;
-        $treq = $gJCoord->response->getFormatType();
-#endif
         $foundPath='';
 
 #if JTPL_STANDALONE
-        if(isset($GLOBALS['jTplConfig']['tplpluginsPathList'][$treq])){
-            foreach($GLOBALS['jTplConfig']['tplpluginsPathList'][$treq] as $path){
+        if(isset($GLOBALS['jTplConfig']['tplpluginsPathList'][$this->_outputType])){
+            foreach($GLOBALS['jTplConfig']['tplpluginsPathList'][$this->_outputType] as $path){
 #else
-        if(isset($gJConfig->{'_tplpluginsPathList_'.$treq})){
-            foreach($gJConfig->{'_tplpluginsPathList_'.$treq} as $path){
+        global $gJConfig;
+        if(isset($gJConfig->{'_tplpluginsPathList_'.$this->_outputType})){
+            foreach($gJConfig->{'_tplpluginsPathList_'.$this->_outputType} as $path){
 #endif
                 $foundPath=$path.$type.'.'.$name.'.php';
 
