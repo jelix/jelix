@@ -555,34 +555,55 @@ class jSelectorTpl extends jSelectorModule {
             throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         }
 
-        // on regarde si il y a un template redéfinie pour le theme courant
-         $this->_path = JELIX_APP_VAR_PATH.'themes/'.$gJConfig->defaultTheme.'/'.$this->module.'/'.$this->resource.'.tpl';
-         if (is_readable ($this->_path)){
-            $this->_where = 1;
-            return;
-         }
+        if($gJConfig->defaultTheme != 'default'){
+            // on regarde si il y a un template redéfinie pour le theme courant
+            $this->_where = 'themes/'.$gJConfig->defaultTheme.'/'.$this->module.'/'.$gJConfig->defaultLocale.'/'.$this->resource;
+            $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
+            if (is_readable ($this->_path)){
+                return;
+            }
+            // on regarde si il y a un template redéfinie pour le theme courant
+            $this->_where = 'themes/'.$gJConfig->defaultTheme.'/'.$this->module.'/'.$this->resource;
+            $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
+            if (is_readable ($this->_path)){
+                return;
+            }
+        }
 
         // on regarde si il y a un template redéfinie dans le theme par defaut
-        $this->_path = JELIX_APP_VAR_PATH.'themes/default/'.$this->module.'/'.$this->resource.'.tpl';
+        $this->_where = 'themes/default/'.$this->module.'/'.$gJConfig->defaultLocale.'/'.$this->resource;
+        $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
         if (is_readable ($this->_path)){
-           $this->_where = 2;
-           return;
+            return;
+        }
+
+        $this->_where = 'themes/default/'.$this->module.'/'.$this->resource;
+        $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
+        if (is_readable ($this->_path)){
+            return;
         }
 
         // et sinon, on regarde si le template existe dans le module en question
-        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.'.tpl';
-
-        if (!is_readable ($this->_path)){
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "template"));
+        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$gJConfig->defaultLocale.'/'.$this->resource.'.tpl';
+        if (is_readable ($this->_path)){
+            $this->_where = 'modules/'.$this->module.'/'.$gJConfig->defaultLocale.'/'.$this->resource;
+            return;
         }
-        $this->_where = 0;
+
+        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.'.tpl';
+        if (is_readable ($this->_path)){
+            $this->_where = 'modules/'.$this->module.'/'.$this->resource;
+            return;
+        }
+
+        throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "template"));
+
     }
 
     protected function _createCachePath(){
-       $d = array('modules/','themes/'.$GLOBALS['gJConfig']->defaultTheme.'/','themes/default/');
        // on ne partage pas le même cache pour tous les emplacements possibles
        // au cas où un overload était supprimé
-       $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/templates/'.$d[$this->_where].$this->module.'~'.$this->resource.$this->_cacheSuffix;
+       $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/templates/'.$this->_where.$this->_cacheSuffix;
     }
 }
 

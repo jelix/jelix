@@ -37,16 +37,16 @@ on_error_action = ""
 ;selecteur de la clé de locale du message d'erreur
 error_message = ""
 
-;=========== Exemples de paramètres pour un module
+;=========== Paramètres pour le module jauth
 
 ; nombre de secondes d'attentes aprés un défaut d'authentification
-;on_error_sleep = 3
+on_error_sleep = 3
 
-;enable_after_login_override = off
-;after_login =
+enable_after_login_override = off
+after_login = ""
 
-;enable_after_logout_override = off
-;after_logout = ""
+enable_after_logout_override = off
+after_logout = ""
 
 ;=========== Paramètres pour les drivers
 
