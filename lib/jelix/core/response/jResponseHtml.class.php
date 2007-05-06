@@ -90,7 +90,7 @@ class jResponseHtml extends jResponse {
 
     /**#@+
      * content for the head
-     * @var array 
+     * @var array
      */
     protected $_CSSLink = array ();
     protected $_CSSIELink = array ();
@@ -105,7 +105,7 @@ class jResponseHtml extends jResponse {
 
     /**#@+
      * content for the body
-     * @var array 
+     * @var array
      */
     protected $_bodyTop = array();
     protected $_bodyBottom = array();
@@ -364,7 +364,9 @@ class jResponseHtml extends jResponse {
             foreach ($params as $param_name=>$param_value){
                 $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
             }
-            echo  '<link rel="stylesheet" type="text/css" href="',$src,'" ',$more,$this->_endTag;
+            if(!isset($params['rel']))
+                $more .='rel="stylesheet" ';
+            echo  '<link type="text/css" href="',$src,'" ',$more,$this->_endTag;
         }
 
         if(count($this->_CSSIELink)){
@@ -375,15 +377,17 @@ class jResponseHtml extends jResponse {
                 foreach ($params as $param_name=>$param_value){
                     $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
                 }
-                echo  '<link rel="stylesheet" type="text/css" href="',$src,'" ',$more,$this->_endTag;
+                if(!isset($params['rel']))
+                    $more .='rel="stylesheet" ';
+                echo  '<link type="text/css" href="',$src,'" ',$more,$this->_endTag;
             }
             echo '<![endif]-->';
         }
 
         if($this->favicon != ''){
             $fav = htmlspecialchars($this->favicon);
-            echo '<link rel="icon" type="image/x-icon" href="'.$fav.'" />';
-            echo '<link rel="shortcut icon" type="image/x-icon" href="'.$fav.'" />';
+            echo '<link rel="icon" type="image/x-icon" href="',$fav,'" ',$this->_endTag;
+            echo '<link rel="shortcut icon" type="image/x-icon" href="',$fav,'" ',$this->_endTag;
         }
 
         // js link
@@ -437,10 +441,12 @@ class jResponseHtml extends jResponse {
 
     /**
      * used to erase some head properties
-     * @param array $what list of one or many of this strings : 'CSSLink', 'Styles', 'JSLink', 'JSCode', 'Others','MetaKeywords','MetaDescription'
+     * @param array $what list of one or many of this strings : 'CSSLink', 'CSSIELink', 'Styles', 'JSLink', 'JSIELink', 'JSCode', 'Others','MetaKeywords','MetaDescription'. If null, it cleans all values.
      */
-    final public function clearHtmlHeader ($what){
-        $cleanable = array ('CSSLink', 'Styles', 'JSLink', 'JSCode', 'Others','MetaKeywords','MetaDescription');
+    final public function clearHtmlHeader ($what=null){
+        $cleanable = array ('CSSLink', 'CSSIELink', 'Styles', 'JSLink','JSIELink', 'JSCode', 'Others','MetaKeywords','MetaDescription');
+        if($what==null)
+            $what= $cleanable;
         foreach ($what as $elem){
             if (in_array ($elem, $cleanable)){
                 $name = '_'.$elem;
