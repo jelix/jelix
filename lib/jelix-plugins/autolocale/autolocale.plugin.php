@@ -36,9 +36,25 @@ class AutoLocalePlugin implements jIPlugin {
 
         if($this->config['enableUrlDetection']){
             $l = $gJCoord->request->getParam($this->config['urlParamNameLanguage']);
-            if($l !==null && in_array($l, $availableLang)){
-                $langDetected=true;
-                $lang=$l;
+            if($l !==null){
+                if(strpos('_',$l) ===false){
+                    $lg = strtolower($l).'_'.strtoupper($l);
+                    if(in_array($lg, $availableLang)){
+                        $langDetected=true;
+                        $lang=$lg;
+                    }else{
+                        foreach($availableLang as $alang){
+                            if(strpos($alang, $l) === 0){
+                                $lang = $alang;
+                                $langDetected=true;
+                                break;
+                            }
+                        }
+                    }
+                }elseif(in_array($l, $availableLang)){
+                    $langDetected=true;
+                    $lang=$l;
+                }
             }
         }
 
@@ -50,6 +66,7 @@ class AutoLocalePlugin implements jIPlugin {
                 foreach($languages as $bl){
                     // pour les user-agents qui livrent un code internationnal
                     if(preg_match("/^([a-zA-Z]{2})(?:[-_]([a-zA-Z]{2}))?(;q=[0-9]\\.[0-9])?$/",$bl,$match)){
+                        $match[1] = strtolower($match[1]);
                         if(isset($match[2]))
                             $l=$match[1].'_'.strtoupper($match[2]);
                         else
@@ -57,14 +74,16 @@ class AutoLocalePlugin implements jIPlugin {
                         if(in_array($l, $availableLang)){
                             $lang= $l;
                             break;
-                        }
-
-                    // pour les user agent qui indique le nom en entier
-                    }elseif(preg_match("/^([a-zA-Z ]+)(;q=[0-9]\\.[0-9])?$/",$bl,$match)){
-                        $langs = array('french'=>'fr_FR', 'english'=>'en_US');
-                        if(isset($langs[$match[1]])){
-                            $lang= $langs[$match[1]];
-                            break;
+                        }else{
+                            // try to find a similary supported language
+                            foreach($availableLang as $alang){
+                                if(strpos($alang, $match[1]) === 0){
+                                    $lang = $alang;
+                                    break;
+                                }
+                            }
+                            if($lang !='')
+                                break;
                         }
                     }
                 }
