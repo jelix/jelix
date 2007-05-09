@@ -98,6 +98,9 @@ class UTjtplexpr extends jUnitTestCase {
         '@protected.return.static.switch.throw.try.use.var.while@'=>'jLocale::get(\'protected.return.static.switch.throw.try.use.var.while\')',
         '$aa*(234+$b)'=>'$t->_vars[\'aa\']*(234+$t->_vars[\'b\'])',
         '$aa[$bb[4]]'=>'$t->_vars[\'aa\'][$t->_vars[\'bb\'][4]]',
+        '$aa == false'=>'$t->_vars[\'aa\'] == false',
+        '$aa == true'=>'$t->_vars[\'aa\'] == true',
+        '$aa == null'=>'$t->_vars[\'aa\'] == null',
 
     );
 

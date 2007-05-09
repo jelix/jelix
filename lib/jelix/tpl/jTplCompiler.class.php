@@ -49,6 +49,9 @@ class jTplCompiler
     protected $_allowedAssign;
     protected $_allowedInForeach;
 
+    protected $_allowedConstants = array('TRUE','FALSE','NULL', 'M_1_PI', 'M_2_PI', 'M_2_SQRTPI', 'M_E', 
+        'M_LN10', 'M_LN2', 'M_LOG10E', 'M_LOG2E', 'M_PI','M_PI_2','M_PI_4','M_SQRT1_2','M_SQRT2');
+
     private $_pluginPath=array();
     private $_metaBody = '';
 
@@ -416,7 +419,7 @@ class jTplCompiler
                 }elseif($type == T_VARIABLE){
                     $result.='$t->_vars[\''.substr($str,1).'\']';
                 }elseif($type == T_WHITESPACE || in_array($type, $allowed)){
-                    if($type == T_STRING && defined($str)){
+                    if($type == T_STRING && defined($str) && !in_array(strtoupper($str),$this->_allowedConstants)){
                         $this->doError2('errors.tpl.tag.constant.notallowed', $this->_currentTag, $str);
                     }
                     $result.=$str;
