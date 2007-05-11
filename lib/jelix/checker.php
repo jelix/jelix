@@ -37,10 +37,23 @@ class jHtmlInstallChecker implements jIInstallCheckReporter {
         echo '</ul>';
         echo '<div class="results">';
         if($checker->nbError){
-            echo $checker->nbError, ' errors';
+            echo ' ',$checker->nbError, $checker->messages->get('number.errors');
         }
         if($checker->nbWarning){
-            echo $checker->nbWarning, ' warnings';
+            echo ' ',$checker->nbWarning, $checker->messages->get('number.warnings');
+        }
+        if($checker->nbNotice){
+            echo ' ',$checker->nbNotice, $checker->messages->get('number.notices');
+        }
+
+        if($checker->nbError){
+           echo '<p>',$checker->messages->get('conclusion.errors'),'</p>';
+        }else  if($checker->nbWarning){
+            echo '<p>',$checker->messages->get('conclusion.warnings'),'</p>';
+        }else  if($checker->nbNotice){
+            echo '<p>',$checker->messages->get('conclusion.notices'),'</p>';
+        }else{
+            echo '<p>',$checker->messages->get('conclusion.ok'),'</p>';
         }
     }
 }
@@ -51,10 +64,10 @@ header("Content-type:text/html;charset=UTF-8");
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_EN" lang="en_EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $check->messages->getLang(); ?>" lang="<?php echo $check->messages->getLang(); ?>">
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-    <title>Installation checker for jelix</title>
+    <title><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></title>
 
     <style type="text/css">
     body {font-family: verdana, sans-serif;}
@@ -76,7 +89,7 @@ header("Content-type:text/html;charset=UTF-8");
     </style>
 
 </head><body >
-    <h1>Installation checker for jelix</h1>
+    <h1><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></h1>
 
 <?php $check->run(); ?>
 </body>
