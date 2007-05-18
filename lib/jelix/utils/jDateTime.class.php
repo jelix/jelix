@@ -4,7 +4,9 @@
 * @subpackage  utils
 * @author      Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
+* @contributor Loic Mathaud
 * @copyright   2001-2005 CopixTeam 2005-2006 Laurent Jouanneau
+* @copyright   2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 
@@ -245,10 +247,19 @@ class jDateTime{
 
     /**
      * add a duration to the date
-     * @param jDateTime $dt the duration value
+     * @param jDateTime/int $year the duration value or a year with 4 digits
+     * @param int $month month with 2 digits
+     * @param int $day day with 2 digits
+     * @param int $hour hour with 2 digits
+     * @param int $minute minute with 2 digits
+     * @param int $second second with 2 digits
      */
-    public function add($dt){
-
+    public function add($year, $month=0, $day=0, $hour=0, $minute=0, $second=0) {
+        if ($year instanceof jDateTime) {
+            $dt = $year;
+        } else {
+            $dt = new jDateTime($year, $month, $day, $hour, $minute, $second);
+        }
         $t = mktime ( $this->hour +  $dt->hour, $this->minute + $dt->minute, $this->second + $dt->second ,
              $this->month + $dt->month, $this->day + $dt->day, $this->year + $dt->year);
 
@@ -263,9 +274,19 @@ class jDateTime{
 
     /**
      * substract a duration to the date
-     * @param jDateTime $dt the duration value
+     * @param jDateTime/int $year the duration value or a year with 4 digits
+     * @param int $month month with 2 digits
+     * @param int $day day with 2 digits
+     * @param int $hour hour with 2 digits
+     * @param int $minute minute with 2 digits
+     * @param int $second second with 2 digits
      */
-    public function sub($dt){
+    public function sub($year, $month=0, $day=0, $hour=0, $minute=0, $second=0) {
+        if ($year instanceof jDateTime) {
+            $dt = $year;
+        } else {
+            $dt = new jDateTime($year, $month, $day, $hour, $minute, $second);
+        }
         $t = mktime ( $this->hour -  $dt->hour, $this->minute - $dt->minute, $this->second - $dt->second ,
              $this->month - $dt->month, $this->day - $dt->day, $this->year - $dt->year);
 
@@ -304,6 +325,17 @@ class jDateTime{
       return 0;
     }
 
+    /**
+    * set date to current datetime
+    */
+    public function now() {
+        $this->year = date('Y');
+        $this->month = date('m');
+        $this->day = date('d');
+        $this->hour = date('H');
+        $this->minute = date('i');
+        $this->second = date('s');
+    }
 }
 
 ?>
