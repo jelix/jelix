@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Nicolas Lassalle <nicolas@beroot.org> (ticket #188)
 * @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2007 Nicolas Lassalle
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -45,6 +46,13 @@ final class jResponseBinary  extends jResponse {
      * @var boolean
      */
     public $doDownload = true;
+
+    /**
+    * The mimeType of the current binary file.
+    * It will be sent in the header "Content-Type".
+    * @var string
+    */
+    public $mimeType = 'application/octet-stream';
 
     /**
      * send the content or the file to the browser.
