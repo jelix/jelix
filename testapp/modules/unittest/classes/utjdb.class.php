@@ -76,9 +76,51 @@ class UTjDb extends jUnitTestCase {
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
-
     }
+
+    function testSelectClass(){
+        $db = jDb::getConnection($this->dbProfil);
+        $resultSet = $db->query('SELECT id,name,price FROM product_test');
+        $this->assertNotNull($resultSet, 'a query return null !');
+        if($this->needPDO)
+            $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
+        else
+            $this->assertTrue($resultSet instanceof jDbResultSet, 'resultset is not a jDbResultSet');
+
+        $resultSet->setFetchMode(8, 'MyProductContainer');
+
+        $list = array();
+        //foreach($resultSet as $res){
+        while($res = $resultSet->fetch()){
+            $list[] = $res;
+        }
+        $this->assertEqual(count($list), 3, 'query return bad number of results ('.count($list).')');
+
+        $structure = '<array>
+    <object class="MyProductContainer">
+        <string property="name" value="camembert" />
+        <string property="price" value="2.31" />
+    </object>
+    <object class="MyProductContainer">
+        <string property="name" value="yaourt" />
+        <string property="price" value="0.76" />
+    </object>
+    <object class="MyProductContainer">
+        <string property="name" value="gloubi-boulga" />
+        <string property="price" value="4.9" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($list, $structure, 'bad results');
+    }
+
 }
 
+
+class MyProductContainer {
+    public $id;
+    public $name;
+    public $price;
+
+}
 
 ?>
