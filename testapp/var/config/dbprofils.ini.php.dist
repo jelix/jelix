@@ -1,13 +1,20 @@
 ;<?php die(''); ?>
 ;for security reasons, don't remove or modify the first line
 
-; nom de la connexion utilisée par défaut
-default = testapp
+; WARNING: YOU MUSTN'T CHANGE MOST OF OPTIONS
+; this profiles are used to do unit test on jDb, jDao etc..
+; You can change only options preceded by a comment which indicate
+; that you can change it
+; Don't change any other options !
 
-; chaque section correspond à une connexion
-; le nom de la section est le nom de la connexion utilisé dans jDb et jDao
-; la liste des paramètres dépend du driver.
+
+default = testapp
+forward = unittest_forward
+wrong_profilname = abdsdpoipoipoer
+
 [testapp]
+; you can change following options : driver, database, host
+; user, password, according to your database configuration
 driver="mysql"
 database="testapp"
 host= "localhost"
@@ -15,10 +22,36 @@ user= "root"
 password=
 persistent= on
 
-
+; to run all test, you should install pdo on your server
+; and setup a pdo connection
 [testapppdo]
-; pour pdo :
 driver=pdo
+; you can change dsn option : use same parameters as testapp profils
 dsn= "mysql:host=localhost;dbname=testapp"
+; you can change user option : use same value as user in testapp profils
 user=root
+; you can change password option : use same value as password in testapp profils
 password=
+
+;--------------- don't remove or change following sections !!!!!!!!
+;--- used by unit tests
+;--- don't set one of this profile as default profile
+
+[unittest_mysql]
+driver="mysql"
+database="testapp_mysql"
+host= "localhost_mysql"
+user= "plop_mysql"
+password= "futchball_mysql"
+persistent= on
+force_encoding=1
+
+[unittest_forward]
+driver="mysql"
+database="unittest_forward"
+host= "localhost_forward"
+user= "plop_forward"
+password= "futchball_forward"
+persistent= on
+force_encoding=0
+

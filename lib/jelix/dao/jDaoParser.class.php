@@ -528,7 +528,7 @@ class jDaoMethod {
                 throw new jDaoXmlException ('method.condition.operator.missing', array($this->name, $op,$field_id));
             }
             if (isset($attr['driver']) && !empty($attr['driver'])) {
-                if (jDaoCompiler::$dbDriver != $attr['driver']) {
+                if (jDaoCompiler::$dbType != $attr['driver']) {
                     throw new jDaoXmlException ('method.condition.driver.notallowed', array($this->name, $op,$field_id));
                 }
             }
@@ -547,7 +547,7 @@ class jDaoMethod {
                 throw new jDaoXmlException ('method.condition.operator.missing', array($this->name, $op,$field_id));
             }
             if (isset($attr['driver']) && !empty($attr['driver'])) {
-                if (jDaoCompiler::$dbDriver != $attr['driver']) {
+                if (jDaoCompiler::$dbType != $attr['driver']) {
                     throw new jDaoXmlException ('method.condition.driver.notallowed', array($this->name, $op,$field_id));
                 }
             }

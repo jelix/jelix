@@ -4,415 +4,194 @@
 * @subpackage  unittest module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php');
-require_once(JELIX_LIB_DAO_PATH.'jDaoParser.class.php');
+require_once(dirname(__FILE__).'/junittestcasedb.class.php');
+/**
+ * CAREFULL ! DON'T CHANGE THE ORDER OF METHODS
+ */
+class UTDao extends jUnitTestCaseDb {
 
-require_once(dirname(__FILE__).'/junittestcase.class.php');
-
-class UTDao extends jUnitTestCase {
-
-    protected $dsTest=array(
-        array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-     <primarytable name="news" primarykey="news_id" />
-  </datasources>
-</dao>',
-
-'<?xml version="1.0"?>
-<object class="jDaoParser">
-    <array method="getProperties()">array()</array>
-    <array method="getTables()">
-        <array key="news">
-            <string key="name" value="news" />
-            <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <array key="fields">array()</array>
-        </array>
-    </array>
-    <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array()</array>
-    <array method="getInnerJoins()">array()</array>
-</object>'
-),
-
-        array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-     <primarytable name="news" realname="foo_news" primarykey="news_id" />
-  </datasources>
-</dao>',
-
-'<?xml version="1.0"?>
-<object class="jDaoParser">
-    <array method="getProperties()">array()</array>
-    <array method="getTables()">
-        <array key="news">
-            <string key="name" value="news" />
-            <string key="realname" value="foo_news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <array key="fields">array()</array>
-        </array>
-    </array>
-    <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array()</array>
-    <array method="getInnerJoins()">array()</array>
-</object>'
-),
-
-
-
-        array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-     <primarytable name="news"           primarykey="news_id" />
-     <foreigntable name="news_rubriques" primarykey="news_rubriques_id" onforeignkey="news_rubrique" />
-  </datasources>
-</dao>',
-
-'<?xml version="1.0"?>
-<object class="jDaoParser">
-    <array method="getProperties()">array()</array>
-    <array method="getTables()">
-        <array key="news">
-            <string key="name" value="news" />
-            <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <array key="fields">array()</array>
-        </array>
-        <array key="news_rubriques">
-            <string key="name" value="news_rubriques" />
-            <string key="realname" value="news_rubriques" />
-            <array key="pk" value="">array(\'news_rubriques_id\')</array>
-            <array key="fk" value="">array(\'news_rubrique\')</array>
-            <array key="fields">array()</array>
-        </array>
-    </array>
-    <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array()</array>
-    <array method="getInnerJoins()">array(\'news_rubriques\')</array>
-</object>'
-),
-
-
- array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-     <primarytable name="news"           primarykey="news_id" />
-     <optionalforeigntable name="news_rubriques" primarykey="news_rubriques_id" onforeignkey="news_rubrique" />
-  </datasources>
-</dao>',
-
-'<?xml version="1.0"?>
-<object class="jDaoParser">
-    <array method="getProperties()">array()</array>
-    <array method="getTables()">
-        <array key="news">
-            <string key="name" value="news" />
-            <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <!-- <array key="fk" value="">array()</array>-->
-            <array key="fields">array()</array>
-        </array>
-        <array key="news_rubriques">
-            <string key="name" value="news_rubriques" />
-            <string key="realname" value="news_rubriques" />
-            <array key="pk" value="">array(\'news_rubriques_id\')</array>
-            <array key="fk" value="">array(\'news_rubrique\')</array>
-            <array key="fields">array()</array>
-        </array>
-    </array>
-    <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array(array(\'news_rubriques\',0))</array>
-    <array method="getInnerJoins()">array()</array>
-</object>'
-),
-
-
- array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-     <primarytable name="news"           primarykey="news_id" />
-     <optionalforeigntable name="news_rubriques" primarykey="news_rubriques_id" onforeignkey="news_rubrique" />
-     <foreigntable name="news_author" realname="jx_authors_news" primarykey="author_id" onforeignkey="author_id" />
-  </datasources>
-</dao>',
-
-'<?xml version="1.0"?>
-<object class="jDaoParser">
-    <array method="getProperties()">array()</array>
-    <array method="getTables()">
-        <array key="news">
-            <string key="name" value="news" />
-            <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <!-- <array key="fk" value="">array()</array>-->
-            <array key="fields">array()</array>
-        </array>
-        <array key="news_rubriques">
-            <string key="name" value="news_rubriques" />
-            <string key="realname" value="news_rubriques" />
-            <array key="pk" value="">array(\'news_rubriques_id\')</array>
-            <array key="fk" value="">array(\'news_rubrique\')</array>
-            <array key="fields">array()</array>
-        </array>
-        <array key="news_author">
-            <string key="name" value="news_author" />
-            <string key="realname" value="jx_authors_news" />
-            <array key="pk" value="">array(\'author_id\')</array>
-            <array key="fk" value="">array(\'author_id\')</array>
-            <array key="fields">array()</array>
-        </array>
-    </array>
-    <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array(array(\'news_rubriques\',0))</array>
-    <array method="getInnerJoins()">array(\'news_author\')</array>
-</object>'
-),
-
-      );
-
-    function testGoodDatasources() {
-
-        foreach($this->dsTest as $k=>$t){
-            $this->sendMessage("test good datasource ".$k);
-            $xml= simplexml_load_string($t[0]);
-            $p = new jDaoParser();
-            try{
-                $p->parse($xml,2);
-                $this->assertComplexIdenticalStr($p, $t[1]);
-            }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getLocaleMessage().' ('.$e->getMessage().')');
-            }catch(Exception $e){
-                $this->fail("Exception inconnue : ".$e->getMessage());
-            }
-        }
+    function testStart() {
+        $this->emptyTable('product_test');
     }
 
+    function testInstanciation() {
+        $dao = jDao::create ('products');
+        $this->assertTrue($dao instanceof jDaoFactoryBase,'jDao::create doesn\'t return a jDaoFactoryBase object');
 
+        $dao = jDao::get ('products');
+        $this->assertTrue($dao instanceof jDaoFactoryBase,'jDao::get doesn\'t return a jDaoFactoryBase object');
 
+        $dao = jDao::createRecord ('products');
+        $this->assertTrue($dao instanceof jDaoRecordBase,'jDao::createRecord doesn\'t return a jDaoRecordBase object');
 
-    protected $dsTestbad=array(
-        array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-  </datasources>
-</dao>',
-'jelix~daoxml.datasource.missing',
-array('','')
-),
-
-        array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-    <primarytable />
-  </datasources>
-</dao>',
-'jelix~daoxml.table.name',
-array('','')
-
-),
-
-        array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-    <primarytable name="news" />
-  </datasources>
-</dao>',
-'jelix~daoxml.primarykey.missing',
-array('','')
-
-),
-        array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-    <primarytable name="news" primarykey=""/>
-  </datasources>
-</dao>',
-'jelix~daoxml.primarykey.missing',
-array('','')
-
-),
-        array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-    <primarytable name="news"           primarykey="news_id" />
-    <primarytable />
-  </datasources>
-</dao>',
-'jelix~daoxml.table.two.many',
-array('','')
-
-),
-
-        array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-    <primarytable name="news"           primarykey="news_id" />
-    <foreigntable name="news_author" realname="jx_authors_news" primarykey="author_id" />
-
-  </datasources>
-</dao>',
-'jelix~daoxml.foreignkey.missing',
-array('','')
-
-),
-
-        array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-    <primarytable name="news"           primarykey="news_id" />
-    <foreigntable name="news_author" realname="jx_authors_news" primarykey="author_id" onforeignkey="" />
-
-  </datasources>
-</dao>',
-'jelix~daoxml.foreignkey.missing',
-array('','')
-
-),
-
-        array('<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-    <primarytable name="news"           primarykey="news_id" />
-    <foreigntable name="news_author" realname="jx_authors_news" primarykey="author_id" onforeignkey="author_id,foo_id" />
-
-  </datasources>
-</dao>',
-'jelix~daoxml.foreignkey.missing',
-array('','')
-
-),
-
-      );
-
-    function testBadDatasources() {
-
-        foreach($this->dsTestbad as $k=>$t){
-            $this->sendMessage("test bad datasource ".$k);
-            $xml= simplexml_load_string($t[0]);
-            $p = new jDaoParser();
-            try{
-                $p->parse($xml,2);
-                $this->fail("Pas d'exception survenue !");
-            }catch(jDaoXmlException $e){
-                $this->assertEqual($e->getMessage(), $t[1]);
-                $this->assertEqual($e->localeParams, $t[2]);
-            }catch(Exception $e){
-                $this->fail("Exception inconnue : ".$e->getMessage());
-            }
-        }
     }
 
-
-    protected $propDatas=array(
-        array(
-        '<?xml version="1.0"?>
-        <property name="label" datatype="string" />',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value="label"/>
-            <string p="fieldName" value="label"/>
-            <string p="table" value="news"/>
-            <string p="datatype" value="string"/>
-            <null p="regExp"/>
-            <boolean p="required" value="false"/>
-            <boolean p="isPK" value="false" />
-            <boolean p="isFK" value="false" />
-            <string p="updateMotif" value="%s" />
-            <string p="insertMotif" value="%s" />
-            <string p="selectMotif" value="%s" />
-            <string p="sequenceName" value="" />
-            <null p="maxlength"/>
-            <null p="minlength"/>
-            <boolean p="ofPrimaryTable" value="true" />
-        </object>'
-        ),
-        array(
-        '<?xml version="1.0"?>
-        <property name="author_firstname" fieldname="firstname" datatype="string" table="news_author" />',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value="author_firstname"/>
-            <string p="fieldName" value="firstname"/>
-            <string p="table" value="news_author"/>
-            <string p="datatype" value="string"/>
-            <null p="regExp"/>
-            <boolean p="required" value="false"/>
-            <boolean p="isPK" value="false" />
-            <boolean p="isFK" value="false" />
-            <string p="updateMotif" value="" />
-            <string p="insertMotif" value="" />
-            <string p="selectMotif" value="%s" />
-            <string p="sequenceName" value="" />
-            <null p="maxlength"/>
-            <null p="minlength"/>
-            <boolean p="ofPrimaryTable" value="false" />
-        </object>'
-        ),
-
-    array(
-        '<?xml version="1.0"?>
-        <property name="id" fieldname="news_id" datatype="autoincrement" />',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value="id"/>
-            <string p="fieldName" value="news_id"/>
-            <string p="table" value="news"/>
-            <string p="datatype" value="autoincrement"/>
-            <null p="regExp"/>
-            <boolean p="required" value="false"/>
-            <boolean p="isPK" value="true" />
-            <boolean p="isFK" value="false" />
-            <string p="updateMotif" value="%s" />
-            <string p="insertMotif" value="%s" />
-            <string p="selectMotif" value="%s" />
-            <string p="sequenceName" value="" />
-            <null p="maxlength"/>
-            <null p="minlength"/>
-            <boolean p="ofPrimaryTable" value="true" />
-        </object>'
-        ),
-
-    );
-
-    function testProperties() {
-        $dao ='<?xml version="1.0"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0">
-  <datasources>
-    <primarytable name="news" primarykey="news_id" />
-    <foreigntable name="news_author" primarykey="author_id" onforeignkey="author_id" />
-  </datasources>
-</dao>';
-
-        $parser = new jDaoParser();
-        $parser->parse(simplexml_load_string($dao),2);
-
-        foreach($this->propDatas as $k=>$t){
-            $this->sendMessage("test good property ".$k);
-            $xml= simplexml_load_string($t[0]);
-            try{
-                $p = new jDaoProperty($xml, $parser);
-                $this->assertComplexIdenticalStr($p, $t[1]);
-            }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getLocaleMessage().' ('.$e->getMessage().')');
-            }catch(Exception $e){
-                $this->fail("Exception inconnue : ".$e->getMessage());
-            }
-        }
+    function testRecordCheck() {
+//TODO
     }
 
+    function testFindAllEmpty() {
+        $dao = jDao::create ('products');
+        $res = $dao->findAll();
+        $list = array();
+        foreach($res as $r){
+            $list[] = $r;
+        }
+        $this->assertTrue(count($list) == 0, 'findAll doesn\'t return an empty list');
+        $this->assertTrue($dao->countAll() == 0, 'countAll doesn\'t return 0');
+    }
+
+    protected $prod1;
+    protected $prod2;
+    protected $prod3;
+    protected $records;
+
+    function testInsert() {
+        $dao = jDao::create ('products');
+
+        $this->prod1 = jDao::createRecord ('products');
+        $this->prod1->name ='assiette';
+        $this->prod1->price = 3.87;
+        $res = $dao->insert($this->prod1);
+
+        $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
+        $this->assertNotEqual($this->prod1->id, '', 'jDaoBase::insert : id not set');
+
+        $this->prod2 = jDao::createRecord ('products');
+        $this->prod2->name ='fourchette';
+        $this->prod2->price = 1.54;
+        $res = $dao->insert($this->prod2);
+
+        $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
+        $this->assertNotEqual($this->prod2->id, '', 'jDaoBase::insert : id not set');
+
+        $this->prod3 = jDao::createRecord ('products');
+        $this->prod3->name ='verre';
+        $this->prod3->price = 2.43;
+        $res = $dao->insert($this->prod3);
+
+        $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
+        $this->assertNotEqual($this->prod3->id, '', 'jDaoBase::insert : id not set');
+
+
+        $this->records = array(
+            array('id'=>$this->prod1->id,
+            'name'=>'assiette',
+            'price'=>3.87),
+            array('id'=>$this->prod2->id,
+            'name'=>'fourchette',
+            'price'=>1.54),
+            array('id'=>$this->prod3->id,
+            'name'=>'verre',
+            'price'=>2.43),
+        );
+        $this->assertTableContainsRecords('product_test', $this->records);
+
+    }
+
+    function testGet() {
+        $dao = jDao::create ('products');
+
+        $prod = $dao->get($this->prod1->id);
+        $this->assertTrue($prod instanceof jDaoRecordBase,'jDao::get doesn\'t return a jDaoRecordBase object');
+        $this->assertEqual($prod->id, $this->prod1->id, 'jDao::get : bad id on record');
+        $this->assertEqual($prod->name,'assiette', 'jDao::get : bad name property on record');
+        $this->assertEqual($prod->price,3.87, 'jDao::get : bad price property on record');
+    }
+
+    function testUpdate(){
+        $dao = jDao::create ('products');
+        $prod = jDao::createRecord ('products');
+        $prod->name ='assiette nouvelle';
+        $prod->price = 5.90;
+        $prod->id = $this->prod1->id;
+
+        $prod = $dao->update($prod);
+        
+        $prod2 = $dao->get($this->prod1->id);
+        $this->assertTrue($prod2 instanceof jDaoRecordBase,'jDao::get doesn\'t return a jDaoRecordBase object');
+        $this->assertEqual($prod2->id, $this->prod1->id, 'jDao::get : bad id on record');
+        $this->assertEqual($prod2->name,'assiette nouvelle', 'jDao::get : bad name property on record');
+        $this->assertEqual($prod2->price,5.90, 'jDao::get : bad price property on record');
+
+    }
+
+    function testFindAllNotEmpty() {
+        $dao = jDao::create ('products');
+
+        $res = $dao->findAll();
+        $list = array();
+        foreach($res as $r){
+            $list[] = $r;
+        }
+        $this->assertEqual(count($list), 3, 'findAll doesn\'t return all products. %s ');
+        $this->assertTrue($dao->countAll() == 3, 'countAll doesn\'t return 3');
+
+    $verif='<array>
+    <object>
+        <string property="id" value="'.$this->prod1->id.'" />
+        <string property="name" value="assiette nouvelle" />
+        <string property="price" value="5.90" />
+    </object>
+    <object>
+        <string property="id" value="'.$this->prod2->id.'" />
+        <string property="name" value="fourchette" />
+        <string property="price" value="1.54" />
+    </object>
+    <object>
+        <string property="id" value="'.$this->prod3->id.'" />
+        <string property="name" value="verre" />
+        <string property="price" value="2.43" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($list, $verif);
+
+
+
+    }
+
+    function testDelete(){
+        $dao = jDao::create ('products');
+        $dao->delete($this->prod1->id);
+        $this->assertTrue($dao->countAll() == 2, 'countAll doesn\'t return 2');
+
+        $this->records = array(
+            array('id'=>$this->prod2->id,
+            'name'=>'fourchette',
+            'price'=>1.54),
+            array('id'=>$this->prod3->id,
+            'name'=>'verre',
+            'price'=>2.43),
+        );
+        $this->assertTableContainsRecords('product_test', $this->records);
+
+
+        $res = $dao->findAll();
+        $list = array();
+        foreach($res as $r){
+            $list[] = $r;
+        }
+        $this->assertEqual(count($list), 2, 'findAll doesn\'t return all products. %s ');
+
+    $verif='<array>
+    <object>
+        <string property="id" value="'.$this->prod2->id.'" />
+        <string property="name" value="fourchette" />
+        <string property="price" value="1.54" />
+    </object>
+    <object>
+        <string property="id" value="'.$this->prod3->id.'" />
+        <string property="name" value="verre" />
+        <string property="price" value="2.43" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($list, $verif);
+
+    }
 }
-
-
 ?>

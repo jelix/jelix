@@ -2,15 +2,23 @@
 /**
 * @package     testapp
 * @subpackage  unittest module
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 class daoCtrl extends jController {
+
+   function index() {
+      $rep = $this->getResponse('unittest');
+      $rep->title = 'test unitaires sur jDao';
+      $ut = jClasses::create("unittestservice");
+      $ut->init($rep);
+      $ut->daoTest();
+      return $rep;
+   }
 
    function parser() {
       $rep = $this->getResponse('unittest');

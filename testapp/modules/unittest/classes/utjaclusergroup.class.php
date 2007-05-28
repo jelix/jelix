@@ -40,6 +40,7 @@ class UTjaclusergroup extends jUnitTestCaseDb {
         // creation d'un groupe
 
         $this->grpId1 = jAclUserGroup::createGroup('group1');
+        $this->assertTrue($this->grpId1 != '', 'jAclUserGroup::createGroup failed : id is empty');
         $this->groups = array(array('id_aclgrp'=>$this->grpId1,
             'name'=>'group1',
             'grouptype'=>0,

@@ -36,11 +36,17 @@ Version Jelix: {$versionjelix}<br/>
     <li><a href="?module=unittest&amp;action=tpl_parseExpression">expressions</a></li>
 </ul>
 
+<h3>jDb</h3>
+<ul>
+    <li><a href="?module=unittest&amp;action=db_index">db</a></li>
+</ul>
+
 <h3>jDao</h3>
 <ul>
     <li><a href="?module=unittest&amp;action=dao_parser">Parser</a></li>
     <li><a href="?module=unittest&amp;action=dao_parser2">Parser (2)</a></li>
     <li><a href="?module=unittest&amp;action=dao_conditions">jDaoConditions</a></li>
+    <li><a href="?module=unittest&amp;action=dao_index">api</a></li>
 </ul>
 <h3>jAcl</h3>
 <ul>

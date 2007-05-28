@@ -54,10 +54,10 @@ class jDaoCompiler  implements jISimpleCompiler {
     static public $daoPath = '';
 
     /**
-     * The db driver name
+     * The database type
      * @var string
      */
-    static public $dbDriver='';
+    static public $dbType='';
 
     /**
     * compile the given class id.
@@ -66,7 +66,7 @@ class jDaoCompiler  implements jISimpleCompiler {
 
         jDaoCompiler::$daoId = $selector->toString();
         jDaoCompiler::$daoPath = $selector->getPath();
-        jDaoCompiler::$dbDriver = $selector->driver;
+        jDaoCompiler::$dbType = $selector->driver;
 
         // chargement du fichier XML
         $doc = new DOMDocument();

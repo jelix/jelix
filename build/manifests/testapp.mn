@@ -74,8 +74,13 @@ cd testapp/modules/unittest/classes
   utselectoract.class.php
   utselectormod.class.php
   utsimpletest.class.php
+  utjdb.class.php
+  utjdb_pdo.class.php
+  utjdb_profile.class.php
   utdao.class.php
-  utdao2.class.php
+  utdaopdo.class.php
+  utdao_parser.class.php
+  utdao_parser2.class.php
   utdao_conditions.class.php
   utfilter.class.php
   utjlocale.class.php
@@ -108,6 +113,9 @@ cd testapp/modules/unittest/controllers
   dao.classic.php
   tpl.classic.php
   acl.classic.php
+  db.classic.php
+cd testapp/modules/unittest/daos
+  products.dao.xml
 
 cd testapp/var
   .htaccess

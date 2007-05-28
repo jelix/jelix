@@ -57,23 +57,6 @@ class jDbPDOResultSet extends PDOStatement {
     }
 
     /**
-     * return next result in the resultset.
-     * Arguments are ignored. JDb don't care about it (fetch always as classes or objects)
-     * But there are here because of the compatibility of internal methods of PDOStatement
-     * @param integer $fetch_style ignored
-     * @param integer $cur_or ignored
-     * @param integer $cur_offset  ignored
-     * @return array an object which contains datas of a row
-     */
-    public function fetch( $fetch_style= null, $cur_or=JPDO_FETCH_ORI_NEXT, $cur_offset=0 ){
-        if($this->_fetchMode){
-            return parent::fetch($this->_fetchMode, $cur_or, $cur_offset);
-        }else{
-            return parent::fetch(JPDO_FETCH_OBJ,$cur_or,$cur_offset);
-        }
-    }
-
-    /**
      * Set the fetch mode.
      */
     public function setFetchMode($mode, $param=null){
@@ -138,6 +121,31 @@ class jDbPDOConnection extends PDO {
             }
         }
     }
+
+    /**
+     * @internal the implementation of Iterator on PDOStatement doesn't call fetch method of classes which inherit of PDOStatement
+     * so, we cannot indicate to fetch object directly in jDbPDOResultSet::fetch(). So we overload query() to do it.
+     */
+    public function query(){
+        $args=func_get_args();
+        switch(count($args)){
+        case 1:
+            $rs = parent::query($args[0]);
+            $rs->setFetchMode(JPDO_FETCH_OBJ);
+            return $rs;
+            break;
+        case 2:
+            return parent::query($args[0], $args[1]);
+            break;
+        case 3:
+            return parent::query($args[0], $args[1]);
+            break;
+        default:
+            trigger_error('bad argument number in query',E_USER_ERROR);
+        }
+
+    }
+
 
     public function limitQuery ($queryString, $limitOffset = null, $limitCount = null){
         if ($limitOffset !== null && $limitCount !== null){

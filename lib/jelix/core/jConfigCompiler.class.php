@@ -61,6 +61,17 @@ class jConfigCompiler {
             if(substr($path,-1) != '/') $path.='/';
             $config->urlengine['basePath'] = $path;
         }
+
+        /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config->defaultLocale,$m)){
+            if(!isset($m[2])){
+                $m[2] = $m[1];
+            }
+            $config->defaultLang = strtolower($m[1]);
+            $config->defaultCountry = strtoupper($m[2]);
+            $config->defaultLocale = $config->defaultLang.'_'.$config->defaultCountry;
+        }else{
+            die("Syntax error in the defaultLocale parameter in Jelix config file $configFile !");
+        }*/
 #else
         $config = jIniFile::read(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
 
@@ -96,6 +107,17 @@ class jConfigCompiler {
             if(substr($path,-1) != '/') $path.='/';
             $config['urlengine']['basePath'] = $path;
         }
+
+        /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config['defaultLocale'],$m)){
+            if(!isset($m[2])){
+                $m[2] = $m[1];
+            }
+            $config['defaultLang'] = strtolower($m[1]);
+            $config['defaultCountry'] = strtoupper($m[2]);
+            $config['defaultLocale'] = $config['defaultLang'].'_'.$config['defaultCountry'];
+        }else{
+            die("Syntax error in the defaultLocale parameter in Jelix config file $configFile !");
+        }*/
 #endif
 
 #if WITH_BYTECODE_CACHE == 'auto'

@@ -473,7 +473,13 @@ class jSelectorDao extends jSelectorModule {
     function __construct($sel, $driver, $isprofil=true){
         if($isprofil){
             $p = jDb::getProfil($driver);
-            $this->driver= $p['driver'];
+            if($p['driver'] == 'pdo'){
+                $this->driver=substr($p['dsn'],0,strpos($p['dsn'],':'));
+            }else{
+                $this->driver= $p['driver'];
+            }
+            if($this->driver=='pgsql')
+                $this->driver='postgresql';
         }else{
             $this->driver=$driver;
         }
@@ -536,7 +542,7 @@ class jSelectorTpl extends jSelectorModule {
 
     /**
      * @param string $sel the template selector
-     * @param string $outputtype  the type of output (html, text..) By default, it take the response type
+     * @param string $outputtype  the type of output (html, text..) By default, it takes the response type
      */
     function __construct($sel, $outputtype=''){
         if($outputtype == '')

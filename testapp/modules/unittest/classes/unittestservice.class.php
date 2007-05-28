@@ -12,8 +12,6 @@
 require_once(LIB_PATH.'/simpletest/unit_tester.php');
 require_once(dirname(__FILE__).'/jhtmlrespreporter.class.php');
 
-
-
 class UnitTestService {
    protected $_rep;
    function init($rep){
@@ -55,15 +53,29 @@ class UnitTestService {
 
 
    function daoParserTest(){
-      $test = jClasses::create("utdao");
+      $test = jClasses::create("utdao_parser");
       $test->run(new jHtmlRespReporter($this->_rep));
    }
 
    function daoParser2Test(){
-      $test = jClasses::create("utdao2");
+      $test = jClasses::create("utdao_parser2");
       $test->run(new jHtmlRespReporter($this->_rep));
    }
 
+   function daoTest(){
+      $test = jClasses::create("utdao");
+      $rep = new jHtmlRespReporter($this->_rep);
+      $test->run($rep);
+      $test = jClasses::create("utdaopdo");
+      $test->run($rep);
+      $rep->makeDry(false);
+/*      $test = jClasses::create("utdao_conditions");
+      $test->run($rep);
+      $test = jClasses::create("utdao_parser");
+      $test->run($rep);
+      $test = jClasses::create("utdao_parser2");
+      $test->run($rep);*/
+   }
 
    function simpleTestTest(){
       $test = jClasses::create("utsimpletest");
@@ -101,5 +113,14 @@ class UnitTestService {
       $test->run(new jHtmlRespReporter($this->_rep));
    }
 
+   function jdbTest(){
+      $rep =new jHtmlRespReporter($this->_rep);
+      $test = jClasses::create("utjdb_profile");
+      $test->run($rep);
+      $test = jClasses::create("utjdb");
+      $test->run($rep);
+      $test = jClasses::create("utjdb_pdo");
+      $test->run($rep);
+   }
 }
 ?>

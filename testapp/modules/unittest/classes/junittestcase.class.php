@@ -11,6 +11,32 @@
 
 class jUnitTestCase extends UnitTestCase {
 
+    // for database management
+
+    protected $dbProfil ='';
+    protected $needPDO = false;
+
+    function run(&$reporter) {
+        SimpleTest::setCurrent($this);
+        $this->_reporter = &$reporter;
+        $this->_reporter->paintCaseStart($this->getLabel());
+        if($this->needPDO){
+            $this->_reporter->makeDry(!$this->assertTrue(class_exists('PDO',false), 'PDO does not exists ! Test cannot run'));
+        }
+        foreach ($this->getTests() as $method) {
+            if ($this->_reporter->shouldInvoke($this->getLabel(), $method)) {
+                $invoker = &$this->_reporter->createInvoker($this->createInvoker());
+                $invoker->before($method);
+                $invoker->invoke($method);
+                $invoker->after($method);
+            }
+        }
+        $this->_reporter->paintCaseEnd($this->getLabel());
+        unset($this->_reporter);
+        return $reporter->getStatus();
+    }
+
+
     /**
     *    show difference between two strings
     *    @param string $stringA  the first string

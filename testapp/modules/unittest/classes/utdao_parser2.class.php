@@ -14,7 +14,7 @@ require_once(JELIX_LIB_DAO_PATH.'jDaoParser.class.php');
 
 require_once(dirname(__FILE__).'/junittestcase.class.php');
 
-class UTDao2 extends jUnitTestCase {
+class UTDao_parser2 extends jUnitTestCase {
 
     protected $methDatas=array(
         array('<?xml version="1.0"?>

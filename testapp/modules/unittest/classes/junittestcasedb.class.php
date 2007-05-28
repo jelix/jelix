@@ -12,10 +12,6 @@ require_once(dirname(__FILE__).'/junittestcase.class.php');
 
 class jUnitTestCaseDb extends jUnitTestCase {
 
-    // for database management
-
-    protected $dbProfil ='';
-
     /**
     *   erase all record in a table
     */
@@ -83,7 +79,9 @@ class jUnitTestCaseDb extends jUnitTestCase {
         }
     }
 
-
+    /**
+     * check if a table has a specific number of records
+     */
     function assertTableHasNRecords($table, $n, $message="%s"){
         $db = jDb::getConnection($this->dbProfil);
         $rs = $db->query('SELECT count(*) as N FROM '.$table);
@@ -101,8 +99,6 @@ class jUnitTestCaseDb extends jUnitTestCase {
             return false;
         }
     }
-
-
 
     /**
      * check if all given record are in the table
@@ -122,7 +118,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
          foreach($rs as $r){
             $results[]=get_object_vars($r);
          }
-        $dumper = new SimpleDumper();
+
         $globalok=true;
         $resultsSaved = $results;
         foreach($records as $rec){
@@ -136,7 +132,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
             }
             if(!$ok){
                 $globalok = false;
-                $this->fail($message.'. Not found record : '. var_export($rec,true));
+                $this->fail($message.'. No record found : '. var_export($rec,true));
             }
         }
 

@@ -89,7 +89,7 @@ class jDaoGenerator {
       $sqlSelectClause   = $this->_getSelectClause();
       $pkFields          = $this->_getPropertiesBy('PkFields');
       $pTableRealName    = $tables[$this->_datasParser->getPrimaryTable()]['realname'];
-      $driverName        = jDaoCompiler::$dbDriver;
+      $database          = jDaoCompiler::$dbType;
       $pkai              = $this->_getAutoIncrementField();
       $sqlPkCondition    = $this->_buildSimpleConditions($pkFields);
       if($sqlPkCondition != ''){
@@ -136,7 +136,7 @@ class jDaoGenerator {
 
          $src[] = '}else{';
 
-         if (($driverName=='mysql') || ($driverName=='sqlserver') || ($driverName=='postgresql')) {
+         if (($database=='mysql') || ($database=='sqlserver') || ($database=='postgresql')) {
             $fields = $this->_getPropertiesBy('PrimaryFieldsExcludeAutoIncrement');
          /*}elseif ($pkai->sequenceName != ''){
             $src[] = '    $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
@@ -165,12 +165,12 @@ class jDaoGenerator {
 
       if($pkai !== null){
          $src[] = '   if($result){';
-         if ($driverName=='mysql') {
-            $src[] = '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
-         }else if ($driverName=='sqlserver') {
+         if ($database=='sqlserver') {
             $src[] = '      if($record->'.$pkai->name.' < 1 ) $record->'.$pkai->name.'= $this->_conn->lastIdInTable(\''.$pkai->fieldName.'\',\''.$pTableRealName.'\');';
-         }else if ($driverName=='postgresql') {
+         }else if ($database=='postgresql') {
             $src[] = '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
+         }else{
+            $src[] = '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
          }
          $src[] = '    return $result;';
          $src[] = ' }else return false;';
@@ -345,8 +345,8 @@ class jDaoGenerator {
     */
     private function _getFromClause(){
 
-      $driverName = jDaoCompiler::$dbDriver;
-      $aliaslink = ($driverName == 'oci8'?' ':' AS ');
+      $database = jDaoCompiler::$dbType;
+      $aliaslink = ($database == 'oci8'?' ':' AS ');
 
       $sqlWhere = '';
       $tables = $this->_datasParser->getTables();
@@ -366,7 +366,7 @@ class jDaoGenerator {
             $r =$table['realname'];
 
          $fieldjoin='';
-         if ($driverName == 'oci8') {
+         if ($database == 'oci8') {
             if($tablejoin[1] == 0){
                $operand='='; $opafter='(+)';
             }elseif($tablejoin[1] == 1){
@@ -415,7 +415,7 @@ class jDaoGenerator {
    private function _getSelectClause ($distinct=false){
       $result = array();
 
-      $driverName = jDaoCompiler::$dbDriver;
+      $database = jDaoCompiler::$dbType;
 
       $tables = $this->_datasParser->getTables();
       foreach ($this->_datasParser->getProperties () as $id=>$prop){
@@ -424,9 +424,9 @@ class jDaoGenerator {
 
          if ($prop->selectMotif !=''){
             if ($prop->selectMotif =='%s'){
-               if ($prop->fieldName != $prop->name || $driverName == 'sqlite'){
+               if ($prop->fieldName != $prop->name || $database == 'sqlite'){
                      //in oracle we must escape name
-                  if ($driverName == 'oci8') {
+                  if ($database == 'oci8') {
                      $field = $table.$prop->fieldName.' "'.$prop->name.'"';
                   }else{
                      $field = $table.$prop->fieldName.' as '.$prop->name;
@@ -436,7 +436,7 @@ class jDaoGenerator {
                }
             }else{
                //in oracle we must escape name
-               if ($driverName == 'oci8') {
+               if ($database == 'oci8') {
                   $field = sprintf ($prop->selectMotif, $table.$prop->fieldName).' "'.$prop->name.'"';
                }else{
                   $field = sprintf ($prop->selectMotif, $table.$prop->fieldName).' as '.$prop->name;
@@ -528,13 +528,13 @@ class jDaoGenerator {
             $using = $this->_datasParser->getProperties ();
         }
 
-        $driverName = jDaoCompiler::$dbDriver;
+        $database = jDaoCompiler::$dbType;
         $tb = $this->_datasParser->getTables();
         $tb = $tb[$this->_datasParser->getPrimaryTable()]['realname'];
 
         foreach ($using as $id=>$field) {
             if ($field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement') {
-               if($driverName=="postgresql" && !strlen($field->sequenceName)){
+               if($database=="postgresql" && !strlen($field->sequenceName)){
                   $field->sequenceName = $tb.'_'.$field->name.'_seq';
                }
                return $field;
