@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Loic Mathaud
 * @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -34,13 +35,15 @@ final class jResponseJsonRpc extends jResponse {
     public function output(){
         global $gJCoord;
         if($this->hasErrors()) return false;
-        header("Content-Type: text/plain");
+        $this->_httpHeaders['Content-Type'] = "text/plain";
         if($gJCoord->request->jsonRequestId !== null){
             $content = jJsonRpc::encodeResponse($this->response, $gJCoord->request->jsonRequestId);
-            header("Content-length: ".strlen($content));
+            $this->_httpHeaders['Content-length'] = strlen($content);
+            $this->sendHttpHeaders();
             echo $content;
         }else{
-            header("Content-length: 0");
+            $this->_httpHeaders['Content-length'] = '0';
+            $this->sendHttpHeaders();
         }
         return true;
     }
@@ -55,9 +58,10 @@ final class jResponseJsonRpc extends jResponse {
             $errorMessage = 'Unknow error';
             $errorCode = -1;
         }
-        header("Content-Type: text/plain");
+        $this->_httpHeaders['Content-Type'] = "text/plain";
         $content = jJsonRpc::encodeFaultResponse($errorCode,$errorMessage, $gJCoord->request->jsonRequestId);
-        header("Content-length: ".strlen($content));
+        $this->_httpHeaders['Content-length'] = strlen($content);
+        $this->sendHttpHeaders();
         echo $content;
     }
 }

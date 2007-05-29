@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Loic Mathaud
 * @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -37,14 +38,15 @@ final class jResponseJson extends jResponse {
     public function output(){
         global $gJCoord;
         if($this->hasErrors()) return false;
-        header("Content-Type: text/plain");
+        $this->_httpHeaders['Content-Type'] = "text/plain";
 #if ENABLE_PHP_JSON
         $content = json_encode($this->datas);
 #else
         $json = new JSON(JSON_LOOSE_TYPE);
         $content = $json->encode($this->datas);
 #endif
-        header("Content-length: ".strlen($content));
+        $this->_httpHeaders['Content-length'] = strlen($content);
+        $this->sendHttpHeaders();
         echo $content;
         return true;
     }
@@ -60,14 +62,15 @@ final class jResponseJson extends jResponse {
             $message['errorMessage'] = 'Unknow error';
             $message['errorCode'] = -1;
         }
-        header("Content-Type: text/plain");
+        $this->_httpHeaders['Content-Type'] = "text/plain";
 #if ENABLE_PHP_JSON
         $content = json_encode($message);
 #else
         $json = new JSON(JSON_LOOSE_TYPE);
         $content = $json->encode($message);
 #endif
-        header("Content-length: ".strlen($content));
+        $this->_httpHeaders['Content-length'] = strlen($content);
+        $this->sendHttpHeaders();
         echo $content;
     }
 }
