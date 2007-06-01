@@ -89,17 +89,25 @@ checkCacheFiletime  = on
 force  = off
 
 [urlengine]
-; nom du moteur d'url :  simple ou significant
+; name of url engine :  "simple" or "significant"
 engine        = simple
 
-; active l'analyse d'url (mettre à off si vous utilisez le mod_rewrite d'apache)
+; enable the parsing of the url. Set it to off if the url is already parsed by another program
+; (like mod_rewrite in apache), if the rewrite of the url corresponds to a simple url, and if
+; you use the significant engine. If you use the simple url engine, you can set to off.
 enableParser = on
 
 multiview = off
 
-; chemin url jusqu'au repertoire www (celui que vous tapez dans le navigateur pour accéder à index.php etc.)
-; peut être égale à "/" si vous spécifiez www comme étant le documentRoot de votre site au niveau du serveur
-basePath = "/"
+; basePath corresponds to the path to the base directory of your application.
+; so if the url to access to your application is http://foo.com/aaa/bbb/www/index.php, you should
+; set basePath = "/aaa/bbb/www/". 
+; if it is http://foo.com/index.php, set basePath="/"
+; Jelix can guess the basePath, so you can keep basePath empty. But in the case where there are some
+; entry points which are not in the same directory (ex: you have two entry point : http://foo.com/aaa/index.php 
+; and http://foo.com/aaa/bbb/other.php ), you MUST set the basePath (ex here, the higher entry point is index.php so
+; : basePath="/aaa/" )
+basePath = ""
 
 defaultEntrypoint= index
 
@@ -107,10 +115,10 @@ entrypointExtension= .php
 
 notfoundAct = "jelix~error_notfound"
 
-;indique si vous utilisez IIS comme serveur
+;if you use IIS as a serveur set it to on
 useIIS = off
 
-;indique le paramètre dans $_GET où est indiqué le path_info
+;if you use IIS, indicate the parameter which contains the path_info
 IISPathKey = __JELIX_URL__
 
 ;indique si il faut stripslashé le path_info récupéré par le biais de IISPathKey

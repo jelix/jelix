@@ -56,7 +56,7 @@ class jConfigCompiler {
             $config->_trustedModules = array_keys($config->_modulesPathList);
         }
         $path=$config->urlengine['basePath'];
-        if($path!='/'){
+        if($path!='/' && $path!=''){
             if($path{0} != '/') $path='/'.$path;
             if(substr($path,-1) != '/') $path.='/';
             $config->urlengine['basePath'] = $path;
@@ -102,7 +102,7 @@ class jConfigCompiler {
             $config['_trustedModules'] = array_keys($config['_modulesPathList']);
         }
         $path=$config['urlengine']['basePath'];
-        if($path!='/'){
+        if($path!='/' && $path!=''){
             if($path{0} != '/') $path='/'.$path;
             if(substr($path,-1) != '/') $path.='/';
             $config['urlengine']['basePath'] = $path;
