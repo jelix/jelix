@@ -127,6 +127,7 @@ cd lib/jelix/tpl/plugins/common
   block.ifusernotconnected.php
   function.zone.php
   modifier.cat.php
+  modifier.count_array.php
   modifier.count_characters.php
   modifier.count_paragraphs.php
   modifier.count_sentences.php

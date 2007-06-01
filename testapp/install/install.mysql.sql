@@ -119,3 +119,11 @@ INSERT INTO `myconfig` (`cfg_key`, `cfg_value`) VALUES ('foo', 'foovalue'),
 ('browser', 'firefox'),
 ('33', '456ghjk'),
 ('test', '33');
+
+
+CREATE TABLE `product_test` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`name` VARCHAR( 150 ) NOT NULL ,
+`price` FLOAT NOT NULL
+) TYPE = MYISAM ;
+
