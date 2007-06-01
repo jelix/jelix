@@ -137,8 +137,8 @@ class UTDao_parser2 extends jUnitTestCase {
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
                     <array p="conditions">array(
-                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "expr"=>""),
-                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "expr"=>""))</array>
+                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "isExpr"=>false),
+                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
                     <array p="group">array()</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -168,8 +168,8 @@ class UTDao_parser2 extends jUnitTestCase {
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
                     <array p="conditions">array(
-                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "expr"=>""),
-                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "expr"=>""))</array>
+                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "isExpr"=>false),
+                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
                     <array p="group">array()</array>
                     <string p="glueOp" value="OR"/>
                 </object>
@@ -213,21 +213,21 @@ class UTDao_parser2 extends jUnitTestCase {
                         <object p="condition" class="jDaoCondition">
                             <notnull p="parent" />
                             <array p="conditions">array(
-                            array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "expr"=>""),
-                            array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "expr"=>""))</array>
+                            array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "isExpr"=>false),
+                            array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
                             <array p="group">array()</array>
                             <string p="glueOp" value="AND"/>
                         </object>
                         <object p="condition" class="jDaoCondition">
                             <object p="parent" class="jDaoCondition" />
                             <array p="conditions">array(
-                            array("field_id"=>"subject","value"=>"bar2", "operator"=>"=", "expr"=>""))</array>
+                            array("field_id"=>"subject","value"=>"bar2", "operator"=>"=", "isExpr"=>false))</array>
                             <array p="group">
                                 <object p="condition" class="jDaoCondition">
                                     <notnull p="parent" />
                                     <array p="conditions">array(
-                                    array("field_id"=>"texte","value"=>"machine2", "operator"=>"=", "expr"=>""),
-                                    array("field_id"=>"texte","value"=>"truc", "operator"=>"=", "expr"=>""))</array>
+                                    array("field_id"=>"texte","value"=>"machine2", "operator"=>"=", "isExpr"=>false),
+                                    array("field_id"=>"texte","value"=>"truc", "operator"=>"=", "isExpr"=>false))</array>
                                     <array p="group">array()</array>
                                     <string p="glueOp" value="OR"/>
                                 </object>
@@ -236,6 +236,37 @@ class UTDao_parser2 extends jUnitTestCase {
                         </object>
                     </array>
                     <string p="glueOp" value="OR"/>
+                </object>
+                <array p="order">array()</array>
+            </object>
+            <array m="getParameters ()">array()</array>
+            <array m="getParametersDefaultValues ()">array()</array>
+            <null m="getLimit ()"/>
+            <array m="getValues ()">array()</array>
+            <null m="getProcStock ()"/>
+            <null m="getBody ()"/>
+        </object>'),
+
+        array('<?xml version="1.0"?>
+          <method name="foo" type="select">
+            <conditions>
+                <eq property="subject" value="" />
+                <eq property="texte" expr="\'machine\'" />
+            </conditions>
+          </method>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="foo"/>
+            <string p="type" value="select"/>
+            <boolean p="distinct" value="false"/>
+            <object m="getConditions()" class="jDaoConditions">
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array(
+                     array("field_id"=>"subject","value"=>"", "operator"=>"=", "isExpr"=>false),
+                     array("field_id"=>"texte","value"=>"\'machine\'", "operator"=>"=", "isExpr"=>true))</array>
+                    <array p="group">array()</array>
+                    <string p="glueOp" value="AND"/>
                 </object>
                 <array p="order">array()</array>
             </object>

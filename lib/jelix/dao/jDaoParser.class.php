@@ -496,7 +496,7 @@ class jDaoMethod {
         'binary_op'=>'dummy');
       // 'between'=>'BETWEEN',  'notbetween'=>'NOT BETWEEN',
 
-   private $_attrcond = array('property', 'value', 'expr', 'operator', 'driver'); //, 'min', 'max', 'exprmin', 'exprmax'
+   private $_attrcond = array('property', 'expr', 'operator', 'driver'); //, 'min', 'max', 'exprmin', 'exprmax'
 
    private function _addCondition($op, $cond){
 
@@ -522,9 +522,14 @@ class jDaoMethod {
          }
       }
 
-      if($attr['value']!==null && $attr['expr']!==null){
+      if(isset($cond['value']))
+          $value=(string)$cond['value'];
+      else
+          $value = null;
+
+      if($value!==null && $attr['expr']!==null){
          throw new jDaoXmlException ('method.condition.valueexpr.together', array($this->name, $op));
-      }else if($attr['value']!==null){
+      }else if($value!==null){
          if($op == 'isnull' || $op =='isnotnull'){
             throw new jDaoXmlException ('method.condition.valueexpr.notallowed', array($this->name, $op,$field_id));
          }
@@ -539,7 +544,7 @@ class jDaoMethod {
             }
             $operator = $attr['operator'];
          }
-         $this->_conditions->addCondition ($field_id, $operator, $attr['value']);
+         $this->_conditions->addCondition ($field_id, $operator, $value);
       }else if($attr['expr']!==null){
          if($op == 'isnull' || $op =='isnotnull'){
             throw new jDaoXmlException ('method.condition.valueexpr.notallowed', array($this->name, $op, $field_id));
@@ -596,7 +601,12 @@ class jDaoMethod {
    }
 
    private function _addValue($attr){
-      $attr = $this->_def->getAttr($attr, array('property','value','expr'));
+      if(isset($attr['value']))
+          $value=(string)$attr['value'];
+      else
+          $value = null;
+
+      $attr = $this->_def->getAttr($attr, array('property','expr'));
 
       $prop = $attr['property'];
       $props =$this->_def->getProperties();
@@ -620,12 +630,16 @@ class jDaoMethod {
          return false;
       }
 
-      if($attr['value']!==null && $attr['expr']!==null){
+
+
+      if($value!==null && $attr['expr']!==null){
          throw new jDaoXmlException ('method.values.valueexpr', array($this->name, $prop));
-      }else if($attr['value']!==null){
-         $this->_values [$prop]= array( $attr['value'], false);
+      }else if($value!==null){
+         $this->_values [$prop]= array( $value, false);
       }else if($attr['expr']!==null){
          $this->_values [$prop]= array( $attr['expr'], true);
+      }else{
+         $this->_values [$prop]= array( '', false);
       }
 
    }

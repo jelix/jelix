@@ -68,17 +68,26 @@ class jDaoConditions {
     */
     private $_currentCondition;
 
+    /**
+     * @param string $glueOp the logical operator which links each conditions : AND or OR
+     */
     function __construct ($glueOp = 'AND'){
         $this->condition = new jDaoCondition ($glueOp);
         $this->_currentCondition = $this->condition;
     }
 
+    /**
+     * add an order clause
+     * @param string $field_id   the property name used to order results
+     * @param string $way        the order type : asc or desc
+     */
     function addItemOrder($field_id, $way='ASC'){
         $this->order[$field_id]=$way;
     }
 
     /**
     * says if the condition is empty
+    * @return boolean  false if there isn't condition
     */
     function isEmpty (){
         return (count ($this->condition->group) == 0) &&
@@ -87,7 +96,8 @@ class jDaoConditions {
     }
 
     /**
-    * starts a condition group
+    * starts a new condition group
+    * @param string $glueOp the logical operator which links each conditions in the group : AND or OR
     */
     function startGroup ($glueOp = 'AND'){
         $cond= new jDaoCondition ($glueOp, $this->_currentCondition);
@@ -106,12 +116,16 @@ class jDaoConditions {
 
     /**
     * adds a condition
+    * @param string $field_id  the property name on which the condition applies
+    * @param string $operator  the sql operator
+    * @param string $value     the value which is compared to the property
+    * @param boolean $foo      parameter for internal use : don't use it or set to false
     */
-    function addCondition ($field_id, $operator, $value, $expr = false){
+    function addCondition ($field_id, $operator, $value, $foo = false){
         $this->_currentCondition->conditions[] = array (
            'field_id'=>$field_id,
            'value'=>$value,
-           'operator'=>$operator, 'expr'=>$expr);
+           'operator'=>$operator, 'isExpr'=>$foo);
     }
 
 }

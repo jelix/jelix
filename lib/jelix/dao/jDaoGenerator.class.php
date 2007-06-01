@@ -653,7 +653,7 @@ class jDaoGenerator {
             $r .= $f.' '.$cond['operator'].' ';
 
             if($cond['operator'] == 'IN' || $cond['operator'] == 'NOT IN'){
-               if($cond['expr']){
+               if($cond['isExpr']){
                   $phpvalue= $this->_preparePHPExpr('$__e', $prop->datatype, false);
                   if(strpos($phpvalue,'$this->_conn->quote')===0){
                      $phpvalue = str_replace('$this->_conn->quote(',"'\''.str_replace('\\'','\\\\\\'',",$phpvalue).".'\''";
@@ -669,7 +669,7 @@ class jDaoGenerator {
                $r.=$value;
             }elseif($cond['operator'] != 'IS NULL' && $cond['operator'] != 'IS NOT NULL'){
 
-               if($cond['expr']){
+               if($cond['isExpr']){
                   $value=str_replace("'","\\'",$cond['value']);
                   foreach($params as $param){
                      $value = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $prop->datatype, false).'.\'',$value);

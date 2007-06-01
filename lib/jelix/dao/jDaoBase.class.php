@@ -322,7 +322,8 @@ abstract class jDaoFactoryBase  {
     }
 
     /**
-     * @internal
+     * @internal it don't support isExpr property of a condition because of security issue (SQL injection)
+     * because the value could be provided by a form, it is escaped in any case
      */
     protected function _generateCondition($condition, &$fields, $principal=true){
         $r = ' ';

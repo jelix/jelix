@@ -99,5 +99,11 @@
             <isnotnull property="description" />
         </conditions>
     </method>
+    <method name="testempty" type="select">
+        <conditions logic="or">
+            <neq property="auteur" value=""/>
+            <eq property="auteur" value="" />
+        </conditions>
+    </method>
   </factory>
 </dao>

@@ -63,7 +63,7 @@ class UTDao_Conditions extends jUnitTestCase {
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(array("field_id"=>"foo","value"=>"toto", "operator"=>"=", "expr"=>false))</array>
+                    <array p="conditions">array(array("field_id"=>"foo","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
                     <array p="group">array()</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -82,13 +82,13 @@ class UTDao_Conditions extends jUnitTestCase {
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(array("field_id"=>"foo","value"=>"toto", "operator"=>"=", "expr"=>false))</array>
+                    <array p="conditions">array(array("field_id"=>"foo","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
                     <array p="group">
                         <object p="condition" class="jDaoCondition">
                             <object p="parent" class="jDaoCondition" />
                             <array p="conditions">array(
-                             array("field_id"=>"foo1","value"=>"100", "operator"=>"&lt;", "expr"=>false),
-                             array("field_id"=>"foo1","value"=>"0", "operator"=>"&gt;", "expr"=>false))</array>
+                             array("field_id"=>"foo1","value"=>"100", "operator"=>"&lt;", "isExpr"=>false),
+                             array("field_id"=>"foo1","value"=>"0", "operator"=>"&gt;", "isExpr"=>false))</array>
                             <array p="group">array()</array>
                             <string p="glueOp" value="OR"/>
                         </object>
