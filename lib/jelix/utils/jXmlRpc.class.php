@@ -4,6 +4,8 @@
 * @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Laurent Jouanneau for jelix
+* @contributor Gildas Givaja
+* @contributor Vincent Bonnard
 * @copyright   2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -39,7 +41,7 @@ class jXmlRpc {
         if($xml == false){
 
         }
-        $methodname = (string)$xml->methodname;
+        $methodname = (string)$xml->methodName;
         if(isset($xml->params)){
             if(isset($xml->params->param)){
                 $params = array();
@@ -159,11 +161,10 @@ class jXmlRpc {
                 }
             }else if(isset($valuetag->struct)){
                 $value=array();
-                if(isset($childs[0]->member)){
-                    $listvalue = is_array($childs[0]->member)?$childs[0]->member:array($childs[0]->member);
-                    foreach($listvalue as $val){
+                if(isset($children[0]->member)){
+                    foreach($children[0]->member as $val){
                         if(isset($val->name) && isset($val->value)){
-                            $value[$val->name->content()] = self::_decodeValue($val->value);
+                            $value[(string)$val->name] = self::_decodeValue($val->value);
                         }
                     }
                 }
