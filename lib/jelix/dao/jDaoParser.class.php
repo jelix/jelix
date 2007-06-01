@@ -247,9 +247,9 @@ class jDaoProperty {
     public $datatype;
 
     public $table=null;
-    public $updateMotif='%s';
-    public $insertMotif='%s';
-    public $selectMotif='%s';
+    public $updatePattern='%s';
+    public $insertPattern='%s';
+    public $selectPattern='%s';
     public $sequenceName='';
 
     /**
@@ -266,7 +266,7 @@ class jDaoProperty {
     */
     function __construct ($params, $def){
         $needed = array('name', 'fieldname', 'table', 'datatype', 'required', 'minlength',
-        'maxlength', 'regexp', 'sequence', 'updatemotif', 'insertmotif', 'selectmotif');
+        'maxlength', 'regexp', 'sequence', 'updatemotif', 'insertmotif', 'selectmotif', 'updatepattern', 'insertpattern', 'selectpattern');
 
         $params = $def->getAttr($params, $needed);
 
@@ -317,17 +317,22 @@ class jDaoProperty {
             $this->sequenceName = $params['sequence'];
         }
 
-        // on ignore les attributs *motif sur les champs PK et FK
+        // on ignore les attributs *pattern sur les champs PK et FK
         if(!$this->isPK && !$this->isFK){
-            $this->updateMotif= $params['updatemotif']!==null ? $params['updatemotif'] :'%s';
-            $this->insertMotif= $params['insertmotif']!==null ? $params['insertmotif'] :'%s';
-            $this->selectMotif= $params['selectmotif']!==null ? $params['selectmotif'] :'%s';
+            // *motif attributes are deprecated since  1.0b3
+            // TODO: remove support of *motif attributes in jelix 1.0
+            $this->updatePattern= $params['updatemotif']!==null ? $params['updatemotif'] :'%s';
+            $this->insertPattern= $params['insertmotif']!==null ? $params['insertmotif'] :'%s';
+            $this->selectPattern= $params['selectmotif']!==null ? $params['selectmotif'] :'%s';
+            $this->updatePattern= $params['updatepattern']!==null ? $params['updatepattern'] :$this->updatePattern;
+            $this->insertPattern= $params['insertpattern']!==null ? $params['insertpattern'] :$this->insertPattern;
+            $this->selectPattern= $params['selectpattern']!==null ? $params['selectpattern'] :$this->selectPattern;
         }
 
-        // pas de motif update et insert pour les champs des tables externes
+        // no update and insert patterns for field of external tables
         if($this->table != $def->getPrimaryTable()){
-            $this->updateMotif = '';
-            $this->insertMotif = '';
+            $this->updatePattern = '';
+            $this->insertPattern = '';
             $this->required = false;
             $this->ofPrimaryTable = false;
         }else{

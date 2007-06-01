@@ -329,9 +329,9 @@ array('','')
             <boolean p="required" value="false"/>
             <boolean p="isPK" value="false" />
             <boolean p="isFK" value="false" />
-            <string p="updateMotif" value="%s" />
-            <string p="insertMotif" value="%s" />
-            <string p="selectMotif" value="%s" />
+            <string p="updatePattern" value="%s" />
+            <string p="insertPattern" value="%s" />
+            <string p="selectPattern" value="%s" />
             <string p="sequenceName" value="" />
             <null p="maxlength"/>
             <null p="minlength"/>
@@ -351,9 +351,9 @@ array('','')
             <boolean p="required" value="false"/>
             <boolean p="isPK" value="false" />
             <boolean p="isFK" value="false" />
-            <string p="updateMotif" value="" />
-            <string p="insertMotif" value="" />
-            <string p="selectMotif" value="%s" />
+            <string p="updatePattern" value="" />
+            <string p="insertPattern" value="" />
+            <string p="selectPattern" value="%s" />
             <string p="sequenceName" value="" />
             <null p="maxlength"/>
             <null p="minlength"/>
@@ -374,9 +374,9 @@ array('','')
             <boolean p="required" value="false"/>
             <boolean p="isPK" value="true" />
             <boolean p="isFK" value="false" />
-            <string p="updateMotif" value="%s" />
-            <string p="insertMotif" value="%s" />
-            <string p="selectMotif" value="%s" />
+            <string p="updatePattern" value="%s" />
+            <string p="insertPattern" value="%s" />
+            <string p="selectPattern" value="%s" />
             <string p="sequenceName" value="" />
             <null p="maxlength"/>
             <null p="minlength"/>

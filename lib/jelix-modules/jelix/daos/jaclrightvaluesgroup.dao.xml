@@ -9,21 +9,4 @@
       <property name="label_key" fieldname="label_key" datatype="string" required="yes"/>
       <property name="type" fieldname="type_aclvalgrp" datatype="int"/>
     </record>
-    <!--<factory>
-        <method name="findByStage" type="select/selectfirst/delete/update/php">
-            <parameter name="" />
-            <values>
-                <value property="" value="" />
-            </values>
-            <conditions logic="and/or">
-                <eq property="" value="" />
-            </conditions>
-            <order>
-                <orderitem property="" way="asc/desc" />
-            </order>
-            <limit offset="" count=""/>
-            <body><![CDATA[
-            ]]></body>
-        </method>
-    </factory>-->
 </dao>

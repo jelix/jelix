@@ -127,7 +127,7 @@ class jDaoGenerator {
          $src[]=' if($record->'.$pkai->name.' > 0 ){';
          $src[] = '    $query = \'INSERT INTO '.$pTableRealName.' (';
          $fields = $this->_getPropertiesBy('PrimaryTable');
-         list($fields, $values) = $this->_prepareValues($fields,'insertMotif', 'record->');
+         list($fields, $values) = $this->_prepareValues($fields,'insertPattern', 'record->');
 
          $src[] = implode(',',$fields);
          $src[] = ') VALUES (';
@@ -150,7 +150,7 @@ class jDaoGenerator {
 
       $src[] = '    $query = \'INSERT INTO '.$pTableRealName.' (';
 
-      list($fields, $values) = $this->_prepareValues($fields,'insertMotif', 'record->');
+      list($fields, $values) = $this->_prepareValues($fields,'insertPattern', 'record->');
 
       $src[] = implode(',',$fields);
       $src[] = ') VALUES (';
@@ -184,7 +184,7 @@ class jDaoGenerator {
       //-----  update method
 
       $src[] = 'public function update ($record){';
-      list($fields, $values) = $this->_prepareValues($this->_getPropertiesBy('PrimaryFieldsExcludePk'),'updateMotif', 'record->');
+      list($fields, $values) = $this->_prepareValues($this->_getPropertiesBy('PrimaryFieldsExcludePk'),'updatePattern', 'record->');
       if(count($fields)){
          $src[] = '   $query = \'UPDATE '.$pTableRealName.' SET ';
          $sqlSet='';
@@ -422,8 +422,8 @@ class jDaoGenerator {
 
          $table = $tables[$prop->table]['name'] .'.';
 
-         if ($prop->selectMotif !=''){
-            if ($prop->selectMotif =='%s'){
+         if ($prop->selectPattern !=''){
+            if ($prop->selectPattern =='%s'){
                if ($prop->fieldName != $prop->name || $database == 'sqlite'){
                      //in oracle we must escape name
                   if ($database == 'oci8') {
@@ -437,9 +437,9 @@ class jDaoGenerator {
             }else{
                //in oracle we must escape name
                if ($database == 'oci8') {
-                  $field = sprintf ($prop->selectMotif, $table.$prop->fieldName).' "'.$prop->name.'"';
+                  $field = sprintf ($prop->selectPattern, $table.$prop->fieldName).' "'.$prop->name.'"';
                }else{
-                  $field = sprintf ($prop->selectMotif, $table.$prop->fieldName).' as '.$prop->name;
+                  $field = sprintf ($prop->selectPattern, $table.$prop->fieldName).' as '.$prop->name;
                }
             }
 
@@ -571,18 +571,18 @@ class jDaoGenerator {
     }
 
 
-    private function _prepareValues ($fieldList, $motif='', $prefixfield=''){
+    private function _prepareValues ($fieldList, $pattern='', $prefixfield=''){
         $values = $fields = array();
 
         foreach ((array)$fieldList as $fieldName=>$field) {
-            if ($motif != '' && $field->$motif == ''){
+            if ($pattern != '' && $field->$pattern == ''){
                 continue;
             }
 
             $value = $this->_preparePHPExpr('$'.$prefixfield.$fieldName, $field->datatype, true);
 
-            if($motif != ''){
-                $values[$field->name] = sprintf($field->$motif,'\'.'.$value.'.\'');
+            if($pattern != ''){
+                $values[$field->name] = sprintf($field->$pattern,'\'.'.$value.'.\'');
             }else{
                 $values[$field->name] = '\'.'.$value.'.\'';
             }
