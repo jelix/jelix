@@ -7,7 +7,7 @@
 * @contributor Laurent Jouanneau
 * @copyright   2005-2006 Loic Mathaud
 * @copyright   2006 Yannick Le Guédart
-* @copyright   2006 Laurent Jouanneau
+* @copyright   2006-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -78,7 +78,8 @@ class jResponseRss20 extends jResponseXMLFeed {
 
     final public function outputErrors() {
         if (!$this->_headSent) {
-             if ($this->_sendHttpHeader) {
+             if (!$this->_httpHeadersSent) {
+                header("HTTP/1.0 500 Internal Server Error");
                 header('Content-Type: text/xml;charset='.$this->charset);
              }
              echo '<?xml version="1.0" encoding="'. $this->charset .'"?>';
@@ -101,7 +102,7 @@ class jResponseRss20 extends jResponseXMLFeed {
         $errors = '';
         foreach ($GLOBALS['gJCoord']->errorMessages  as $e) {
             // FIXME : Pourquoi utiliser htmlentities() ?
-           $errors .=  '<error type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">'.htmlentities($e[2], ENT_NOQUOTES, $this->charset). '</error>'. "\n";
+           $errors .=  '<error xmlns="http://jelix.org/ns/xmlerror/1.0" type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">'.htmlentities($e[2], ENT_NOQUOTES, $this->charset). '</error>'. "\n";
         }
         return $errors;
     }

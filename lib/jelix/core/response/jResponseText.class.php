@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -32,7 +32,7 @@ class jResponseText extends jResponse {
      */
     public function output(){
         global $gJConfig;
-        $this->_httpHeaders['Content-Type']='text/plain;charset='.$gJConfig->defaultCharset;
+        $this->addHttpHeader('Content-Type','text/plain;charset='.$gJConfig->defaultCharset,false);
         $this->_httpHeaders['Content-length']=strlen($this->content);
         $this->sendHttpHeaders();
         echo $this->content;
@@ -44,6 +44,7 @@ class jResponseText extends jResponse {
      */
     public function outputErrors(){
         global $gJConfig;
+        header("HTTP/1.0 500 Internal Server Error");
         header('Content-Type: text/plain;charset='.$gJConfig->defaultCharset);
         if($this->hasErrors()){
             foreach( $GLOBALS['gJCoord']->errorMessages  as $e){

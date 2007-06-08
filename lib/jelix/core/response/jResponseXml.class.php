@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Loic Mathaud
-* @contributor
+* @contributor Laurent Jouanneau
 * @copyright   2005-2006 loic Mathaud
+* @copyright   2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -70,26 +71,25 @@ class jResponseXml extends jResponse {
         $this->outputXmlHeader();
         $this->_headSent = true;
 
-        // utilisation d'un template
-        if (!empty($this->contentTpl)) {
-            $xml_string = $this->content->fetch($this->contentTpl);
 
-        // utilisation chaine de caractères xml
-        } else {
+        if(is_string($this->content)) {
+            // utilisation chaine de caractères xml
             $xml_string = $this->content;
+        }else if (!empty($this->contentTpl)) {
+            // utilisation d'un template
+            $xml_string = $this->content->fetch($this->contentTpl);
+        }else{
+            throw new jException('jelix~errors.repxml.no.content');
+            return false;
         }
 
         if (simplexml_load_string($xml_string)) {
             echo $xml_string;
         } else {
             // xml mal formé
+            throw new jException('jelix~errors.repxml.invalid.content');
             return false;
         }
-
-        if ($this->hasErrors()) {
-            echo $this->getFormatedErrorMsg();
-        }
-
         return true;
     }
 
@@ -98,32 +98,22 @@ class jResponseXml extends jResponse {
      */
     final public function outputErrors() {
         if (!$this->_headSent) {
-             if ($this->_sendHttpHeader) {
+             if (!$this->_httpHeadersSent) {
+                header("HTTP/1.0 500 Internal Server Error");
                 header('Content-Type: text/xml;charset='.$this->_charset);
              }
-             echo '<?xml version="1.0" encoding="iso-8859-1"?>';
+             echo '<?xml version="1.0" encoding="'. $this->_charset .'"?>';
         }
 
         echo '<errors xmlns="http://jelix.org/ns/xmlerror/1.0">';
         if ($this->hasErrors()) {
-            echo $this->getFormatedErrorMsg();
+            foreach ($GLOBALS['gJCoord']->errorMessages  as $e) {
+                echo '<error xmlns="http://jelix.org/ns/xmlerror/1.0" type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">'.htmlspecialchars($e[2], ENT_NOQUOTES, $this->_charset). '</error>'. "\n";
+            }
         } else {
             echo '<error>Unknow Error</error>';
         }
         echo '</errors>';
-    }
-
-    /**
-     * format error message
-     * @return string xml which contains errors description
-     */
-    protected function getFormatedErrorMsg(){
-        $errors = '';
-        foreach ($GLOBALS['gJCoord']->errorMessages  as $e) {
-            // FIXME : Pourquoi utiliser htmlentities() ?
-           $errors .=  '<error type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">'.htmlentities($e[2], ENT_NOQUOTES, $this->_charset). '</error>'. "\n";
-        }
-        return $errors;
     }
 
     /**

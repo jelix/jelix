@@ -87,8 +87,22 @@ abstract class jResponse {
      * will be send during the output of the response
      * @param string $htype the header type ("Content-Type", "Date-modified"...)
      * @param string $hcontent value of the header type
+     * @param boolean $overwrite false if the value should be set only if it doesn't still exist
      */
-    public function addHttpHeader($htype, $hcontent){ $this->_httpHeaders[$htype]=$hcontent;}
+    public function addHttpHeader($htype, $hcontent, $overwrite=true){ 
+        if(!$overwrite && isset($this->_httpHeaders[$htype]))
+            return;
+        $this->_httpHeaders[$htype]=$hcontent;
+    }
+
+    /**
+     * delete all http headers
+     */
+    public function clearHttpHeaders(){
+        $this->_httpHeaders = array();
+        $this->_httpStatusCode ='200';
+        $this->_httpStatusMsg ='OK';
+    }
 
     /**
      * set the http status code for the http header

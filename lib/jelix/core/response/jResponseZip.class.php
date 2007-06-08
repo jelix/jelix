@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006 Laurent Jouanneau
+* @copyright   2006-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -50,13 +50,18 @@ class jResponseZip extends jResponse {
      */
     public function output(){
         $zipContent = $this->content->getContent();
+        if($this->hasErrors()){
+            return false;
+        }
         $this->_httpHeaders['Content-Type']='application/zip';
         $this->_httpHeaders['Content-Disposition']='attachment; filename="'.$this->zipfilename.'"';
-        $this->_httpHeaders['Content-Description']='File Transfert';
-        $this->_httpHeaders['Content-Transfer-Encoding']='binary';
-        $this->_httpHeaders['Pragma']='no-cache';
-        $this->_httpHeaders['Cache-Control']='no-store, no-cache, must-revalidate, post-check=0, pre-check=0';
-        $this->_httpHeaders['Expires']='0';
+
+        $this->addHttpHeaders('Content-Description','File Transfert',false);
+        $this->addHttpHeaders('Content-Transfer-Encoding','binary',false);
+        $this->addHttpHeaders('Pragma','no-cache',false);
+        $this->addHttpHeaders('Cache-Control','no-store, no-cache, must-revalidate, post-check=0, pre-check=0',false);
+        $this->addHttpHeaders('Expires','0',false);
+
         $this->_httpHeaders['Content-length']=strlen($zipContent);
         $this->sendHttpHeaders();
         echo $zipContent;
@@ -66,6 +71,7 @@ class jResponseZip extends jResponse {
 
     public function outputErrors(){
         global $gJConfig;
+        header("HTTP/1.0 500 Internal Server Error");
         header('Content-Type: text/plain;charset='.$gJConfig->defaultCharset);
         if($this->hasErrors()){
             foreach( $GLOBALS['gJCoord']->errorMessages  as $e){

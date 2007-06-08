@@ -198,7 +198,10 @@ class jResponseHtml extends jResponse {
      */
     final public function outputErrors(){
         if($this->_headSent < 1){
-             if(!$this->_httpHeadersSent) header('Content-Type: text/html;charset='.$this->_charset);
+             if(!$this->_httpHeadersSent){
+                header("HTTP/1.0 500 Internal Server Error");
+                header('Content-Type: text/html;charset='.$this->_charset);
+             }
             echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n<html>";
         }
         if($this->_headSent < 2){

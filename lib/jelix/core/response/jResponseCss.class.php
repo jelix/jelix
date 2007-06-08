@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Nicolas Jeudy
-* @contributor
+* @contributor Laurent Jouanneau
 * @copyright   2006 Nicolas Jeudy
+* @copyright   2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -44,6 +45,7 @@ class jResponseCss extends jResponse {
 
     public function outputErrors(){
         global $gJConfig;
+        header("HTTP/1.0 500 Internal Server Error");
         header('Content-Type: text/css;charset='.$gJConfig->defaultCharset);
         echo "/*\n";
         if($this->hasErrors()){

@@ -45,6 +45,8 @@ final class jResponseJson extends jResponse {
         $json = new JSON(JSON_LOOSE_TYPE);
         $content = $json->encode($this->datas);
 #endif
+        if($this->hasErrors()) return false;
+
         $this->_httpHeaders['Content-length'] = strlen($content);
         $this->sendHttpHeaders();
         echo $content;
@@ -62,6 +64,9 @@ final class jResponseJson extends jResponse {
             $message['errorMessage'] = 'Unknow error';
             $message['errorCode'] = -1;
         }
+        $this->clearHttpHeaders();
+        $this->_httpStatusCode ='500';
+        $this->_httpStatusMsg ='Internal Server Error';
         $this->_httpHeaders['Content-Type'] = "text/plain";
 #if ENABLE_PHP_JSON
         $content = json_encode($message);

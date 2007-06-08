@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -119,7 +119,7 @@ class jResponseXul extends jResponse {
         if($this->bodyTpl != '')
             $this->body->display($this->bodyTpl);
         if($this->hasErrors()){
-            echo '<vbox id="copixerror" style="border:3px solid red; background-color:#f39999;color:black;">';
+            echo '<vbox id="jelixerror" style="border:3px solid red; background-color:#f39999;color:black;">';
             echo $this->getFormatedErrorMsg();
             echo '</vbox>';
         }
@@ -130,9 +130,10 @@ class jResponseXul extends jResponse {
 
     public function outputErrors(){
         if(!$this->_headSent){
+            header("HTTP/1.0 500 Internal Server Error");
             header('Content-Type: application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->defaultCharset);
             echo '<?xml version="1.0" encoding="'.$GLOBALS['gJConfig']->defaultCharset.'" ?>'."\n";
-            echo '<',$this->_root,' title="Erreurs" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">';
+            echo '<',$this->_root,' title="Errors" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">';
         }
         echo '<vbox>';
         if($this->hasErrors()){
@@ -150,7 +151,6 @@ class jResponseXul extends jResponse {
     protected function getFormatedErrorMsg(){
         $errors='';
         foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
-            // FIXME : Pourquoi utiliser htmlentities() ?
            $errors .=  '<description style="color:#FF0000;">['.$e[0].' '.$e[1].'] '.htmlspecialchars($e[2], ENT_NOQUOTES, $GLOBALS['gJConfig']->defaultCharset)." \t".$e[3]." \t".$e[4]."</description>\n";
         }
         return $errors;

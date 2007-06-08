@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -29,11 +29,14 @@ final class jResponseXmlRpc extends jResponse {
     public $response = null;
 
     public function output(){
+
+        $content = jXmlRpc::encodeResponse($this->response, $GLOBALS['gJConfig']->defaultCharset);
+
         if($this->hasErrors()) return false;
 
-        header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset);
-        $content = jXmlRpc::encodeResponse($this->response, $GLOBALS['gJConfig']->defaultCharset);
-        header("Content-length: ".strlen($content));
+        $this->_httpHeaders["Content-Type"]="text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset;
+        $this->_httpHeaders["Content-length"]=strlen($content);
+        $this->sendHttpHeaders();
         echo $content;
         return true;
     }
@@ -48,9 +51,11 @@ final class jResponseXmlRpc extends jResponse {
             $errorMessage = 'Unknow error';
             $errorCode = -1;
         }
-
-        header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset);
+        $this->clearHttpHeaders();
         $content = jXmlRpc::encodeFaultResponse($errorCode,$errorMessage, $GLOBALS['gJConfig']->defaultCharset);
+
+        header("HTTP/1.0 500 Internal Server Error");
+        header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset);
         header("Content-length: ".strlen($content));
         echo $content;
     }
