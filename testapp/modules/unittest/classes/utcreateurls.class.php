@@ -49,9 +49,9 @@ class UTCreateUrls extends UnitTestCase {
                 $url = jUrl::get($urldata[0], $urldata[1]);
                 $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
             }catch(jExceptionSelector $e){
-                $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage());
+                $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocalKey().')');
             }catch(jException $e){
-                $this->assertTrue(false,'jException: '.$e->getMessage());
+                $this->assertTrue(false,'jException: '.$e->getMessage().' ('.$e->getLocalKey().')');
             }catch(Exception $e){
                 $msgerr = '<br>Survenue : exception=Exception code='.$e->getCode().' msg='.$e->getMessage();
                 $this->sendMessage($msgerr);
@@ -73,10 +73,10 @@ class UTCreateUrls extends UnitTestCase {
                 $url = jUrl::get($urldata[0], $urldata[1]);
                 $this->assertTrue( false, ($res[0]?$msg2:$msg).'<br>Survenue : aucune !!!');
             }catch(jExceptionSelector $e){
-                $msgerr = '<br>Survenue : exception=jExceptionSelector code='.$e->getCode().' localkey='.$e->getMessage();
+                $msgerr = '<br>Survenue : exception=jExceptionSelector code='.$e->getCode().' localkey='.$e->getLocaleKey();
                 $this->assertTrue( ($res[0]==2) ,$msg2.$msgerr);
             }catch(jException $e){
-                $msgerr = '<br>Survenue : exception=jException code='.$e->getCode().' localkey='.$e->getMessage();
+                $msgerr = '<br>Survenue : exception=jException code='.$e->getCode().' localkey='.$e->getLocaleKey();
                 $this->assertTrue( ($res[0]==1) ,$msg2.$msgerr);
             }catch(Exception $e){
                 $msgerr = '<br>Survenue : exception=Exception code='.$e->getCode();

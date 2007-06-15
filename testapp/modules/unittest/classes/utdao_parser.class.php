@@ -192,7 +192,7 @@ class UTDao_parser extends jUnitTestCase {
                 $p->parse($xml,2);
                 $this->assertComplexIdenticalStr($p, $t[1]);
             }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getLocaleMessage().' ('.$e->getMessage().')');
+                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocalKey().')');
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }
@@ -306,8 +306,8 @@ array('','')
                 $p->parse($xml,2);
                 $this->fail("Pas d'exception survenue !");
             }catch(jDaoXmlException $e){
-                $this->assertEqual($e->getMessage(), $t[1]);
-                $this->assertEqual($e->localeParams, $t[2]);
+                $this->assertEqual($e->getLocaleKey(), $t[1]);
+                $this->assertEqual($e->getLocaleParameters(), $t[2]);
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }
@@ -405,7 +405,7 @@ array('','')
                 $p = new jDaoProperty($xml, $parser);
                 $this->assertComplexIdenticalStr($p, $t[1]);
             }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getLocaleMessage().' ('.$e->getMessage().')');
+                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocalKey().')');
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }

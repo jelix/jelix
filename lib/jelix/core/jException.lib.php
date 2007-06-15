@@ -17,20 +17,20 @@
 function jExceptionHandler($exception){
     global $gJConfig, $gJCoord;
 
-    if($exception instanceof jException){
-        $msg = $exception->getLocaleMessage();
-    }else{
-        $msg = $exception->getMessage();
-    }
+    $msg = $exception->getMessage();
 
     $conf = $gJConfig->error_handling;
     $action = $conf['exception'];
 
     $doecho=true;
+
     if($gJCoord->request == null){
+
         $msg = 'JELIX PANIC ! Error during initialization !! '.$msg;
         $doecho = false;
+
     }elseif($gJCoord->response == null){
+
         $ret = $gJCoord->initDefaultResponseOfRequest();
         if(is_string($ret)){
             $msg = 'Double error ! 1)'. $ret.'; 2)'.$msg;
@@ -105,15 +105,15 @@ function jExceptionHandler($exception){
 class jException extends Exception {
 
     /**
-     * parameters for the locale key
-     */
-    public $localeParams = array();
-
-    /**
-     * the localized message
+     * the locale key
      * @var string
      */
-    public $localizedMessage = '';
+    protected $localeKey = '';
+
+    /**
+     * parameters for the locale key
+     */
+    protected $localeParams = array();
 
     /**
      * @param string $localekey a locale key
@@ -121,33 +121,44 @@ class jException extends Exception {
      * @param integer $code error code (can be provided by the localized message)
      */
     public function __construct($localekey, $localeParams=array(), $code = 1) {
+
+        $this->localeKey = $localekey;
+        $this->localeParams = $localeParams;
+
         try{
-            $this->localizedMessage = jLocale::get($localekey, $localeParams);
+            $message = jLocale::get($localekey, $localeParams);
         }catch(Exception $e){
-            $this->localizedMessage = $e->getMessage();
+            $message = $e->getMessage();
         }
-        if(preg_match('/^\s*\((\d+)\)(.+)$/',$this->localizedMessage,$m)){
+        if(preg_match('/^\s*\((\d+)\)(.+)$/',$message,$m)){
             $code = $m[1];
-            $this->localizedMessage = $m[2];
+            $message = $m[2];
         }
-        parent::__construct($localekey, $code);
-        $this->localeParams=$localeParams;
+        parent::__construct($message, $code);
     }
 
     /**
      * magic function for echo
      * @return string localized message
      */
-    public function __toString() {
+    /*public function __toString() {
         return $this->localizedMessage;
+    }*/
+
+    /**
+     * getter for the locale parameters
+     * @return string
+     */
+    public function getLocaleParameters(){
+        return $this->localeParams;
     }
 
     /**
-     * getter for the localized message
+     * getter for the locale key
      * @return string
      */
-    public function getLocaleMessage(){
-        return $this->localizedMessage;
+    public function getLocaleKey(){
+        return $this->localeKey;
     }
 
 }

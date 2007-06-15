@@ -130,7 +130,7 @@ class UTjtplexpr extends jUnitTestCase {
                 $res = $compil->testParseVarExpr($k);
                 $this->assertEqualOrDiff($t, $res);
             }catch(jException $e){
-                $this->fail("Test '$k', Exception jelix inconnue : ".$e->getLocaleMessage());
+                $this->fail("Test '$k', Exception jelix inconnue : ".$e->getMessage().' ('.$e->getLocalKey().')');
             }catch(Exception $e){
                 $this->fail("Test '$k', Exception inconnue : ".$e->getMessage());
             }
@@ -143,11 +143,11 @@ class UTjtplexpr extends jUnitTestCase {
             //$this->sendMessage("test good datasource ".$k);
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->fail("Exception non survenu pour le test '$k' : ".$e->getMessage());
+                $this->fail("Exception non survenu pour le test '$k' ");
             }catch(jException $e){
-                //$this->sendMessage($e->getLocaleMessage());
-                $this->assertEqualOrDiff($t[0], $e->getMessage());
-                $this->assertEqual($t[1], $e->localeParams);
+                //$this->sendMessage($e->getMessage());
+                $this->assertEqualOrDiff($t[0], $e->getLocaleKey());
+                $this->assertEqual($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
                 $this->pass("Exception inconnue : ".$e->getMessage());
             }

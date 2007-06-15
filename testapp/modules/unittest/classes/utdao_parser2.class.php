@@ -307,7 +307,7 @@ class UTDao_parser2 extends jUnitTestCase {
                 $p = new jDaoMethod($xml, $parser);
                 $this->assertComplexIdenticalStr($p, $t[1]);
             }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getLocaleMessage());
+                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage());
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }
@@ -356,8 +356,8 @@ class UTDao_parser2 extends jUnitTestCase {
                 $p = new jDaoMethod($xml, $parser);
                 $this->fail("Pas d'exception survenue !");
             }catch(jDaoXmlException $e){
-                $this->assertEqual($e->getMessage(), $t[1]);
-                $this->assertEqual($e->localeParams, $t[2]);
+                $this->assertEqual($e->getLocaleKey(), $t[1]);
+                $this->assertEqual($e->getLocaleParameters(), $t[2]);
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }
@@ -392,8 +392,8 @@ class UTDao_parser2 extends jUnitTestCase {
             $p = new jDaoMethod($xml, $parser);
             $this->fail("Pas d'exception survenue !");
         }catch(jDaoXmlException $e){
-            $this->assertEqual($e->getMessage(), 'jelix~daoxml.method.update.forbidden');
-            $this->assertEqual($e->localeParams, array('','','tryupdate'));
+            $this->assertEqual($e->getLocaleKey(), 'jelix~daoxml.method.update.forbidden');
+            $this->assertEqual($e->getLocaleParameters(), array('','','tryupdate'));
         }catch(Exception $e){
             $this->fail("Exception inconnue : ".$e->getMessage());
         }

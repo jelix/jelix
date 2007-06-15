@@ -100,7 +100,7 @@ class UTDao_Conditions extends jUnitTestCase {
             $this->assertComplexIdenticalStr($cond, $check);
 
         }catch(jDaoXmlException $e){
-            $this->fail("Exception sur le contenu xml inattendue : ".$e->getLocaleMessage().' ('.$e->getMessage().')');
+            $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocalKey().')');
         }catch(Exception $e){
             $this->fail("Exception inconnue : ".$e->getMessage());
         }

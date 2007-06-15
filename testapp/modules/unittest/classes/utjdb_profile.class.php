@@ -54,21 +54,21 @@ class UTjDb_profile extends jUnitTestCase {
             $p = jDb::getProfil('abcdef'); // unknow profil
             $this->fail('getting a wrong profil doesn\'t generate an exception');
         }catch(jException $e){
-            $this->assertEqual($e->getMessage(),'jelix~db.error.profil.unknow', 'wrong exception on getting a wrong profil ('.$e->getMessage().')');
+            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profil.unknow', 'wrong exception on getting a wrong profil ('.$e->getLocaleKey().')');
         }
 
         try {
             $p = jDb::getProfil('abcdef', true); // unknow profil option
             $this->fail('getting a wrong profil option doesn\'t generate an exception');
         }catch(jException $e){
-            $this->assertEqual($e->getMessage(),'jelix~db.error.profil.type.unknow', 'wrong exception on getting a wrong profil option ('.$e->getMessage().')');
+            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profil.type.unknow', 'wrong exception on getting a wrong profil option ('.$e->getLocaleKey().')');
         }
 
         try {
             $p = jDb::getProfil('wrong_profilname', true); // unknow profil name
             $this->fail('getting a profil option with a wrong name doesn\'t generate an exception');
         }catch(jException $e){
-            $this->assertEqual($e->getMessage(),'jelix~db.error.profil.unknow', 'wrong exception on getting a profil option with a wrong name ('.$e->getMessage().')');
+            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profil.unknow', 'wrong exception on getting a profil option with a wrong name ('.$e->getLocaleKey().')');
         }
     }
 }
