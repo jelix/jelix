@@ -15,7 +15,7 @@
 * @package  jelix
 * @subpackage core_response
 * @see jResponse
-* @see http://json-rpc.org/specs.xhtml
+* @see http://json-rpc.org/wiki/specification
 */
 
 final class jResponseJsonRpc extends jResponse {

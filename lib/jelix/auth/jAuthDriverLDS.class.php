@@ -3,10 +3,24 @@
 * @package    jelix
 * @subpackage auth
 * @author     Nicolas JEUDY
-* @contributor
+* @contributor Laurent Jouanneau
 * @copyright  2006 Nicolas JEUDY
+* @copyright  2007 Laurent Jouanneau
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+
+
+/**
+ * object which represent a user
+ *
+ * @package    jelix
+ * @subpackage auth
+ */
+class jAuthUserLDS extends jAuthUser {
+}
+
+
+
 
 /**
  * authentification driver, which communicate with a LDS server
@@ -55,14 +69,14 @@ class jAuthDriverLDS implements jIAuthDriver {
     public function getUser($login){
         $login = '*'.$login.'*';
         $paramsArr = $this->xmlCall('base.getUsersLdap',$login);
-        $user = new jAuthUser();
+        $user = new jAuthUserLDS();
         $user->login = $paramsArr['uid'][0];
         $user->password = $paramsArr['userPassword'][0];
         return $user;
     }
 
     public function createUserObject($login,$password){
-        $user = new jAuthUser();
+        $user = new jAuthUserLDS();
         $user->login = $login;
         $user->password = $password;
         return $user;
@@ -72,7 +86,7 @@ class jAuthDriverLDS implements jIAuthDriver {
         $users = $this->xmlCall('base.getUsersLdap',$pattern . '*');
         $userslist = array();
         foreach ($users as $userldap) {
-            $user = new jAuthUser();
+            $user = new jAuthUserLDS();
             $user->login = $userldap['uid'];
             $userslist[] = $user;
         }
@@ -90,7 +104,7 @@ class jAuthDriverLDS implements jIAuthDriver {
         $param[]=$password;
         $ret= $this->xmlCall("base.ldapAuth",$param);
         if ( $ret == '1') {
-            $user = new jAuthUser();
+            $user = new jAuthUserLDS();
             $user->login = $login;
             $user->password = $password;
         }

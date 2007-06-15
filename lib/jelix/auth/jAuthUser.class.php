@@ -4,7 +4,7 @@
 * @subpackage auth
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright  2006 Laurent Jouanneau
+* @copyright  2006-2007 Laurent Jouanneau
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
@@ -16,9 +16,19 @@
  * @package    jelix
  * @subpackage auth
  */
-class jAuthUser {
+abstract class jAuthUser {
     public $login = '';
     public $email ='';
 }
+
+
+/**
+ * internal use
+ * @package    jelix
+ * @subpackage auth
+ */
+class jDummyAuthUser extends  jAuthUser {
+}
+
 
 ?>

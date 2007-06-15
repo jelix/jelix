@@ -50,7 +50,7 @@ class AuthPlugin implements jIPlugin {
         //Creating the user's object if needed
         if (! isset ($_SESSION['JELIX_USER'])){
             $notLogged = true;
-            $_SESSION['JELIX_USER'] = new jAuthUser();
+            $_SESSION['JELIX_USER'] = new jDummyAuthUser();
         }else{
             $notLogged = ! jAuth::isConnected();
         }

@@ -78,12 +78,6 @@ class jResponseXul extends jResponse {
     public $bodyTpl = '';
 
     /**
-     * selector of the template to use for errors
-     * @var string
-     */
-    public $bodyErrorTpl = '';
-
-    /**
      * says if an event is sent to retrieve overlays url for the xul content
      * @var boolean
      */
