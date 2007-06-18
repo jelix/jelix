@@ -159,3 +159,18 @@ cd lib/jelix-www/xul/test/
   testxulform.php
   testxulform_jsonrpc.php
   testxulform.xul
+
+
+cd lib/jelix-modules/junittests/
+  module.xml
+cd lib/jelix-modules/junittests/classes
+  jhtmlrespreporter.class.php
+  junittestcase.class.php
+  junittestcasedb.class.php
+cd lib/jelix-modules/junittests/controllers
+  default.class.php
+cd lib/jelix-modules/junittests/templates
+  main.tpl
+
+
+

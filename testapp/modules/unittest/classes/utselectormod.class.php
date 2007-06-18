@@ -22,7 +22,7 @@ class UTSelectorMod extends UnitTestCase {
                 $valid = $s->module == $res[0] && $s->resource == $res[1];
                 $this->assertTrue($valid,  ' test de jSelectorZone('.$sel. ') : contient ces données inattendues ('.$s->module.', '.$s->resource.')');
             }catch(jExceptionSelector $e){
-                $this->fail( 'jExceptionSelector inattendue sur test de '.$sel. ' : '.$e->getMessage());
+                $this->fail( 'jExceptionSelector inattendue sur test de '.$sel. ' : '.$e->getMessage().' ('.$e->getLocalKey().')');
             }catch(Exception $e){
                 $this->fail( 'exception inattendue sur test de '.$sel. ' : '.$e->getMessage());
             }
@@ -44,7 +44,7 @@ class UTSelectorMod extends UnitTestCase {
                 $valid = $s->module == $res[0] && $s->resource == $res[1] && $s->subpath == $res[2] && $s->className == $res[3];
                 $this->assertTrue($valid,  ' test de jSelectorClass('.$sel. ') : contient ces données inattendues ('.$s->module.', '.$s->resource.','.$s->subpath.','.$s->className.')');
             }catch(jExceptionSelector $e){
-                $this->fail( 'jExceptionSelector inattendue sur test de '.$sel. ' : '.$e->getMessage());
+                $this->fail( 'jExceptionSelector inattendue sur test de '.$sel. ' : '.$e->getMessage().' ('.$e->getLocalKey().')');
             }catch(Exception $e){
                 $this->fail( 'exception inattendue sur test de '.$sel. ' : '.$e->getMessage());
             }
@@ -101,7 +101,7 @@ class UTSelectorMod extends UnitTestCase {
                 $valid = $s->module == $res[0] && $s->resource == $res[1] && $s->subpath == $res[2] && $s->className == $res[3];
                 $this->assertTrue($valid,  ' test de jSelectorInterface('.$sel. ') : contient ces données inattendues ('.$s->module.', '.$s->resource.','.$s->subpath.','.$s->className.')');
             }catch(jExceptionSelector $e){
-                $this->fail( 'jExceptionSelector inattendue sur test de '.$sel. ' : '.$e->getMessage());
+                $this->fail( 'jExceptionSelector inattendue sur test de '.$sel. ' : '.$e->getMessage().' ('.$e->getLocalKey().')');
             }catch(Exception $e){
                 $this->fail( 'exception inattendue sur test de '.$sel. ' : '.$e->getMessage());
             }
