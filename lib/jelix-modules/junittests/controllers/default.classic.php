@@ -83,7 +83,7 @@ class defaultCtrl extends jController {
             jClasses::inc('junittestcasedb');
             $reporter->setResponse($rep);
 
-            $group = new GroupTest('Tests on "'.$module. '" module');
+            $group = new GroupTest('All tests in "'.$module. '" module');
             foreach($this->testsList[$module] as $test){
                 $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
             }

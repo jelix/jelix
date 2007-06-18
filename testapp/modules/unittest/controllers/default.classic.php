@@ -55,17 +55,6 @@ class defaultCtrl extends jController {
       return $rep;
    }
 
-   function testselectoract(){
-      $rep = $this->getResponse('unittest');
-      $rep->title = 'test unitaires sur le selecteur d\'action';
-
-      $ut = jClasses::create("unittestservice");
-      $ut->init($rep);
-      $ut->selectorActTest();
-
-      return $rep;
-   }
-
    function testsimpletest() {
       $rep = $this->getResponse('unittest');
       $rep->title = 'test unitaires sur évolutions simpletest';
@@ -82,17 +71,6 @@ class defaultCtrl extends jController {
       $ut = jClasses::create("unittestservice");
       $ut->init($rep);
       $ut->filterTest();
-
-      return $rep;
-   }
-
-   function testlocaleprop(){
-      $rep = $this->getResponse('unittest');
-      $rep->title = 'test unitaires sur jlocale';
-
-      $ut = jClasses::create("unittestservice");
-      $ut->init($rep);
-      $ut->localepropTest();
 
       return $rep;
    }

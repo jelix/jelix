@@ -18,13 +18,13 @@ class UTSelectorAct extends UnitTestCase {
 "testapp~meth@truc"=>array('testapp','default','meth','truc'),
 "testapp~ctrl_@truc"=>array('testapp','ctrl','index','truc'),
 "testapp~@truc"=>array('testapp','default','index','truc'),
-"testapp~#@truc"=>array('testapp','default','testselectoract','truc'),
+"testapp~#@truc"=>array('testapp',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'truc'),
 "testapp~ctrl_meth"=>array('testapp','ctrl','meth','classic'),
 "testapp~_meth"=>array('testapp','default','meth','classic'),
 "testapp~meth"=>array('testapp','default','meth','classic'),
 "testapp~ctrl_"=>array('testapp','ctrl','index','classic'),
 "testapp~"=>array('testapp','default','index','classic'),
-"testapp~#"=>array('testapp','default','testselectoract','classic'),
+"testapp~#"=>array('testapp',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'classic'),
         );
         $this->runtest($sels);
     }
@@ -64,19 +64,20 @@ class UTSelectorAct extends UnitTestCase {
 
 
     function testWithModuleWildcard() {
+        $mod = $GLOBALS['gJCoord']->action->module;
         $sels=array(
-"#~ctrl_meth@truc"=>array('unittest','ctrl','meth','truc'),
-"#~_meth@truc"=>array('unittest','default','meth','truc'),
-"#~meth@truc"=>array('unittest','default','meth','truc'),
-"#~ctrl_@truc"=>array('unittest','ctrl','index','truc'),
-"#~@truc"=>array('unittest','default','index','truc'),
-"#~#@truc"=>array('unittest','default','testselectoract','truc'),
-"#~ctrl_meth"=>array('unittest','ctrl','meth','classic'),
-"#~_meth"=>array('unittest','default','meth','classic'),
-"#~meth"=>array('unittest','default','meth','classic'),
-"#~ctrl_"=>array('unittest','ctrl','index','classic'),
-"#~"=>array('unittest','default','index','classic'),
-"#~#"=>array('unittest','default','testselectoract','classic'),
+"#~ctrl_meth@truc"=>array($mod,'ctrl','meth','truc'),
+"#~_meth@truc"=>array($mod,'default','meth','truc'),
+"#~meth@truc"=>array($mod,'default','meth','truc'),
+"#~ctrl_@truc"=>array($mod,'ctrl','index','truc'),
+"#~@truc"=>array($mod,'default','index','truc'),
+"#~#@truc"=>array($mod,$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'truc'),
+"#~ctrl_meth"=>array($mod,'ctrl','meth','classic'),
+"#~_meth"=>array($mod,'default','meth','classic'),
+"#~meth"=>array($mod,'default','meth','classic'),
+"#~ctrl_"=>array($mod,'ctrl','index','classic'),
+"#~"=>array($mod,'default','index','classic'),
+"#~#"=>array($mod,$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'classic'),
         );
         $this->runtest($sels);
     }
@@ -87,13 +88,13 @@ class UTSelectorAct extends UnitTestCase {
 "_meth@truc"=>array('unittest','default','meth','truc'),
 "ctrl_@truc"=>array('unittest','ctrl','index','truc'),
 "@truc"=>array('unittest','default','index','truc'),
-"#@truc"=>array('unittest','default','testselectoract','truc'),
+"#@truc"=>array('unittest',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'truc'),
 "ctrl_meth"=>array('unittest','ctrl','meth','classic'),
 "_meth"=>array('unittest','default','meth','classic'),
 "meth"=>array('unittest','default','meth','classic'),
 "ctrl_"=>array('unittest','ctrl','index','classic'),
 ""=>array('unittest','default','index','classic'),
-"#"=>array('unittest','default','testselectoract','classic'),
+"#"=>array('unittest',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'classic'),
         );
         $this->runtest($sels);
     }

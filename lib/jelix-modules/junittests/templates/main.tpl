@@ -13,14 +13,16 @@ Jelix version: {$versionjelix}<br/>
 <h2>Tests menu</h2>
 {if count($modules)}
     <ul>
+        <li><a href="{jurl 'junittests~default_index'}">Home</a></li>
         <li><a href="{jurl 'junittests~default_all'}">Run all tests</a></li>
     </ul>
 
     <h3>Modules</h3>
     <ul>
     {foreach $modules as $module=>$tests}
-        <li><a href="{jurl 'junittests~default_module', array('mod'=>$module)}">{$module}</a>
+        <li>{$module}
             <ul>
+                <li><a href="{jurl 'junittests~default_module', array('mod'=>$module)}">All tests</a></li>
         {foreach $tests as $test}
                 <li><a href="{jurl 'junittests~default_single', array('mod'=>$module, 'test'=>$test[1])}">{$test[1]}</a>
         {/foreach}

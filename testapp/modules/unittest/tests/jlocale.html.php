@@ -4,7 +4,7 @@
 * @subpackage  unittest module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -21,8 +21,6 @@ class bundleTest extends jBundle {
     }
 
 }
-
-require_once(dirname(__FILE__).'/junittestcase.class.php');
 
 class UTjlocale extends jUnitTestCase {
 

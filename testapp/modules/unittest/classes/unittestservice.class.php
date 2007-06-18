@@ -37,11 +37,6 @@ class UnitTestService {
       $test->run(new jHtmlRespReporter($this->_rep));
    }
 
-   function selectorActTest(){
-      $test = jClasses::create("utselectoract");
-      $test->run(new jHtmlRespReporter($this->_rep));
-   }
-
    function daoConditionsTest(){
       $test = jClasses::create("utdao_conditions");
       $test->run(new jHtmlRespReporter($this->_rep));
@@ -80,11 +75,6 @@ class UnitTestService {
 
    function filterTest(){
       $test = jClasses::create("utfilter");
-      $test->run(new jHtmlRespReporter($this->_rep));
-   }
-
-   function localepropTest(){
-      $test = jClasses::create("utjlocale");
       $test->run(new jHtmlRespReporter($this->_rep));
    }
 

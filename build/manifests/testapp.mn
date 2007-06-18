@@ -71,7 +71,6 @@ cd testapp/modules/unittest/classes
   utcreateurls.class.php
   utjtplexpr.class.php
   utparseurls.class.php
-  utselectoract.class.php
   utsimpletest.class.php
   utjdb.class.php
   utjdb_pdo.class.php
@@ -82,7 +81,6 @@ cd testapp/modules/unittest/classes
   utdao_parser2.class.php
   utdao_conditions.class.php
   utfilter.class.php
-  utjlocale.class.php
   utjacl.class.php
   utjaclmanager.class.php
   utjaclusergroup.class.php
@@ -118,6 +116,8 @@ cd testapp/modules/unittest/daos
 
 cd testapp/modules/unittest/tests/
   module_selectors.html.php
+  action_selectors.html.php
+  jlocale.html.php
 
 cd testapp/var
   .htaccess
