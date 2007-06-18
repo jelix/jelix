@@ -24,7 +24,7 @@ Jelix version: {$versionjelix}<br/>
             <ul>
                 <li><a href="{jurl 'junittests~default_module', array('mod'=>$module)}">All tests</a></li>
         {foreach $tests as $test}
-                <li><a href="{jurl 'junittests~default_single', array('mod'=>$module, 'test'=>$test[1])}">{$test[1]}</a>
+                <li><a href="{jurl 'junittests~default_single', array('mod'=>$module, 'test'=>$test[1])}">{$test[2]}</a>
         {/foreach}
             </ul>
         </li>

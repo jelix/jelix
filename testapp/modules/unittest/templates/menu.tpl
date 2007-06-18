@@ -17,27 +17,6 @@ Version Jelix: {$versionjelix}<br/>
 </ul>
 {/if}
 
-<h3>jEvent</h3>
-<ul>
-    <li><a href="?module=unittest&amp;action=testevent">lancer deux évènements</a></li>
-</ul>
-
-<h3>jUrl</h3>
-<ul>
-    <li><a href="?module=unittest&amp;action=testurlcreate">Tester la création d'url</a></li>
-    <li><a href="?module=unittest&amp;action=testurlparse">Tester l'analyse d'url</a></li>
-</ul>
-
-<h3>jTpl</h3>
-<ul>
-    <li><a href="?module=unittest&amp;action=tpl_parseExpression">expressions</a></li>
-</ul>
-
-<h3>jDb</h3>
-<ul>
-    <li><a href="?module=unittest&amp;action=db_index">db</a></li>
-</ul>
-
 <h3>jDao</h3>
 <ul>
     <li><a href="?module=unittest&amp;action=dao_parser">Parser</a></li>
@@ -50,9 +29,4 @@ Version Jelix: {$versionjelix}<br/>
     <li><a href="?module=unittest&amp;action=acl_usergroup">jAclUserGroup</a></li>
     <li><a href="?module=unittest&amp;action=acl_manager">jAclManager</a></li>
     <li><a href="?module=unittest&amp;action=acl_index">jAcl</a></li>
-</ul>
-
-<h3>Utilitaires</h3>
-<ul>
-    <li><a href="?module=unittest&amp;action=testfilter">jFilter</a></li>
 </ul>

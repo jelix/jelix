@@ -19,59 +19,12 @@ class defaultCtrl extends jController {
       return $rep;
    }
 
-   /*
-   *
-   */
-   function testevent (){
-      $rep = $this->getResponse('unittest');
-      $rep->title = 'test unitaires sur jEvent';
-
-      $ut = jClasses::create("unittestservice");
-      $ut->init($rep);
-      $ut->eventsTest();
-
-      return $rep;
-   }
-
-   function testurlcreate(){
-      $rep = $this->getResponse('unittest');
-      $rep->title = 'test unitaires sur la creation d\'url avec jUrl';
-
-      $ut = jClasses::create("unittestservice");
-      $ut->init($rep);
-      $ut->urlsCreateTest();
-
-      return $rep;
-   }
-
-   function testurlparse(){
-      $rep = $this->getResponse('unittest');
-      $rep->title = 'test unitaires sur le parsing d\'url avec jUrl';
-
-      $ut = jClasses::create("unittestservice");
-      $ut->init($rep);
-      $ut->urlsParseTest();
-
-      return $rep;
-   }
-
    function testsimpletest() {
       $rep = $this->getResponse('unittest');
       $rep->title = 'test unitaires sur évolutions simpletest';
       $ut = jClasses::create("unittestservice");
       $ut->init($rep);
       $ut->simpletestTest();
-      return $rep;
-   }
-
-   function testfilter(){
-      $rep = $this->getResponse('unittest');
-      $rep->title = 'test unitaires sur jfilter';
-
-      $ut = jClasses::create("unittestservice");
-      $ut->init($rep);
-      $ut->filterTest();
-
       return $rep;
    }
 }

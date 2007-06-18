@@ -18,25 +18,6 @@ class UnitTestService {
       $this->_rep = $rep;
    }
 
-   function eventsTest(){
-
-      $test = jClasses::create("utevents");
-      $test->run(new jHtmlRespReporter($this->_rep));
-   }
-      /*$test = &new GroupTest('All tests');
-      $test->addTestFile('log_test.php');
-      $test->run(new HtmlReporter());
-      */
-
-   function urlsCreateTest(){
-      $test = jClasses::create("utcreateurls");
-      $test->run(new jHtmlRespReporter($this->_rep));
-   }
-   function urlsParseTest(){
-      $test = jClasses::create("utparseurls");
-      $test->run(new jHtmlRespReporter($this->_rep));
-   }
-
    function daoConditionsTest(){
       $test = jClasses::create("utdao_conditions");
       $test->run(new jHtmlRespReporter($this->_rep));
@@ -73,17 +54,6 @@ class UnitTestService {
       $test->run(new jHtmlRespReporter($this->_rep));
    }
 
-   function filterTest(){
-      $test = jClasses::create("utfilter");
-      $test->run(new jHtmlRespReporter($this->_rep));
-   }
-
-   function jtplExprTest(){
-      $test = jClasses::create("utjtplexpr");
-      $test->run(new jHtmlRespReporter($this->_rep));
-   }
-
-
    function jaclTest(){
       $test = jClasses::create("utjacl");
       $test->run(new jHtmlRespReporter($this->_rep));
@@ -97,16 +67,6 @@ class UnitTestService {
    function jaclusergroupTest(){
       $test = jClasses::create("utjaclusergroup");
       $test->run(new jHtmlRespReporter($this->_rep));
-   }
-
-   function jdbTest(){
-      $rep =new jHtmlRespReporter($this->_rep);
-      $test = jClasses::create("utjdb_profile");
-      $test->run($rep);
-      $test = jClasses::create("utjdb");
-      $test->run($rep);
-      $test = jClasses::create("utjdb_pdo");
-      $test->run($rep);
    }
 }
 ?>

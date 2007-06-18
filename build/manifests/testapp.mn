@@ -61,26 +61,18 @@ cd testapp/modules/unittest
   events.xml
   module.xml
 cd testapp/modules/unittest/classes
-  utevents.class.php
   junittestcase.class.php
   junittestcasedb.class.php
   jhtmlrespreporter.class.php
   urlsig.urlhandler.php
   unittestservice.class.php
   testevents.listener.php
-  utcreateurls.class.php
-  utjtplexpr.class.php
-  utparseurls.class.php
   utsimpletest.class.php
-  utjdb.class.php
-  utjdb_pdo.class.php
-  utjdb_profile.class.php
   utdao.class.php
   utdaopdo.class.php
   utdao_parser.class.php
   utdao_parser2.class.php
   utdao_conditions.class.php
-  utfilter.class.php
   utjacl.class.php
   utjaclmanager.class.php
   utjaclusergroup.class.php
@@ -108,16 +100,22 @@ cd testapp/modules/unittest/controllers
   default.classic.php
   urlsig.classic.php
   dao.classic.php
-  tpl.classic.php
   acl.classic.php
-  db.classic.php
 cd testapp/modules/unittest/daos
   products.dao.xml
 
 cd testapp/modules/unittest/tests/
-  module_selectors.html.php
-  action_selectors.html.php
-  jlocale.html.php
+  core.jlocale.html.php
+  core.selectors_action.html.php
+  core.selectors_module.html.php
+  core.urls_generation.html.php
+  core.urls_parsing.html.php
+  events.simple_test.html.php
+  jdb.0_profiles.html.php
+  jdb.1_queries.html.php
+  jdb.2_queries_with_pdo.html.php
+  jtpl.expressions_parsing.html_cli.php
+  utils.jfilter.html_cli.php
 
 cd testapp/var
   .htaccess

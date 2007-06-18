@@ -4,7 +4,7 @@
 * @subpackage  unittest module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -13,9 +13,9 @@ class UTfilter extends UnitTestCase {
 
     public function testHeader(){
         if(jFilter::usePhpFilter()){
-            $this->sendMessage('use php filter');
+            $this->sendMessage('jfilter tests: use of php filter');
         }else{
-            $this->sendMessage('use jelix filter');
+            $this->sendMessage('jfilter tests: use of jelix filter');
         }
     }
 

@@ -10,7 +10,8 @@
 
 <h3>Tests Unitaires</h3>
 <ul>
-<li><a href="{jurl 'unittest~default_index'}">sommaire Tests unitaires</a></li>
+    <li><a href="{jurl 'unittest~default_index'}">Anciens Tests unitaires</a></li>
+    <li><a href="{jurl 'junittests~default_index'}">Nouveaux Tests unitaires</a></li>
 </ul>
 
 <h3>Formulaires</h3>

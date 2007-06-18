@@ -4,7 +4,7 @@
 * @subpackage  unittest module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -87,7 +87,7 @@ class UTParseUrls extends UnitTestCase {
 
        );
 
-      $this->sendMessage("significant, multiview = false");
+      //$this->sendMessage("significant, multiview = false");
       foreach($request as $k=>$urldata){
          $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);
          $p = $url->params;
@@ -98,7 +98,7 @@ class UTParseUrls extends UnitTestCase {
       }
 
 
-      $this->sendMessage("significant, multiview = true");
+      //$this->sendMessage("significant, multiview = true");
       $gJConfig->urlengine['multiview']=true;
       $request=array(
           array("index","/test/news/2005/10/35",array()),

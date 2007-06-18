@@ -10,7 +10,6 @@
 */
 
 require_once(JELIX_LIB_TPL_PATH.'jTplCompiler.class.php');
-require_once(dirname(__FILE__).'/junittestcase.class.php');
 
 class testJtplCompiler extends jTplCompiler {
 

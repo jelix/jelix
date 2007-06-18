@@ -2,10 +2,9 @@
 /**
 * @package     testapp
 * @subpackage  unittest module
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -43,7 +42,7 @@ class UTCreateUrls extends UnitTestCase {
 
 
     protected function _doCompareUrl($title, $urlList,$trueResult ){
-        $this->sendMessage($title);
+        //$this->sendMessage($title);
         foreach($urlList as $k=>$urldata){
             try{
                 $url = jUrl::get($urldata[0], $urldata[1]);
@@ -60,7 +59,7 @@ class UTCreateUrls extends UnitTestCase {
         }
     }
     protected function _doCompareError($title, $urlList,$trueResult ){
-        $this->sendMessage($title);
+        //$this->sendMessage($title);
 
         $labels = array('Exception','jException','jExceptionSelector');
 

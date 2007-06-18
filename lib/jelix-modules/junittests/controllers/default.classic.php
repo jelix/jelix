@@ -117,7 +117,7 @@ class defaultCtrl extends jController {
 
             foreach($this->testsList[$module] as $test){
                 if($test[1] == $testname){
-                    $group = new GroupTest('"'.$module. '" module : "'.$testname.'" Tests');
+                    $group = new GroupTest('"'.$module. '" module , '.$test[2]);
                     $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
                     jContext::push($module);
                     $group->run($reporter);
@@ -145,15 +145,21 @@ class defaultCtrl extends jController {
         $rep->body->assign('basepath',$GLOBALS['gJConfig']->urlengine['basePath']);
         $rep->body->assign('isurlsig', $GLOBALS['gJConfig']->urlengine['engine'] == 'significant');
 
-        $rep->addCSSLink($GLOBALS['gJConfig']->urlengine['basePath'].'design/screen.css');
+        $rep->addCSSLink($GLOBALS['gJConfig']->urlengine['basePath'].'tests/design.css');
 
         foreach($GLOBALS['gJConfig']->_modulesPathList as $module=>$path){
             if(file_exists($path.'tests/')){
                 $dir = new DirectoryIterator($path.'tests/');
                 foreach ($dir as $dirContent) {
                     if ($dirContent->isFile() && preg_match("/^(.+)\\.html(_cli)?\\.php$/", $dirContent->getFileName(), $m) ) {
-                        $this->testsList[$module][] = array($dirContent->getFileName(), $m[1]) ;
+                        $lib = str_replace('.',': ',$m[1]);
+                        $lib = str_replace('_',' ',$lib);
+
+                        $this->testsList[$module][] = array($dirContent->getFileName(), $m[1], $lib) ;
                     }
+                }
+                if(isset($this->testsList[$module])){
+                    usort($this->testsList[$module], array ("defaultCtrl", "compareTestName"));
                 }
             }
         }
@@ -161,6 +167,10 @@ class defaultCtrl extends jController {
         $rep->body->assign('modules', $this->testsList);
 
         return $rep;
+    }
+
+    static function compareTestName($a,$b){
+        return strcmp($a[0], $b[0]);
     }
 
 
@@ -171,7 +181,5 @@ class defaultCtrl extends jController {
         $rep->body->assignIfNone('MAIN','<p>Welcome to unit tests</p>');
         return $rep;
     }
-
-
 }
 ?>
