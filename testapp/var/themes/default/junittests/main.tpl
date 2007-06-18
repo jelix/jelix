@@ -17,7 +17,7 @@ Jelix version: {$versionjelix}<br/>
     <ul>
         <li><a href="{jurl 'junittests~default_index'}">Home of unit tests</a></li>
         <li><a href="{jurl 'junittests~default_all'}">Run all tests</a></li>
-        <li><a href="{jurl 'testapp~default_index'}">Return to testapp home</a></li>
+        <li><a href="{jurl 'testapp~main_index'}">Return to testapp home</a></li>
     </ul>
 
     <h3>Modules</h3>
