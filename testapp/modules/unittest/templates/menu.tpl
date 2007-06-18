@@ -1,9 +1,6 @@
 <h2>Tests unitaires</h2>
-Version php : {$versionphp}<br/>
-Version Jelix: {$versionjelix}<br/>
 
 <p><a href="?">Retour à l'accueil</a></p>
-<h3>Core</h3>
 {if $isurlsig}<ul>
 
 <li>test urls :
@@ -16,17 +13,3 @@ Version Jelix: {$versionjelix}<br/>
 </li>
 </ul>
 {/if}
-
-<h3>jDao</h3>
-<ul>
-    <li><a href="?module=unittest&amp;action=dao_parser">Parser</a></li>
-    <li><a href="?module=unittest&amp;action=dao_parser2">Parser (2)</a></li>
-    <li><a href="?module=unittest&amp;action=dao_conditions">jDaoConditions</a></li>
-    <li><a href="?module=unittest&amp;action=dao_index">api</a></li>
-</ul>
-<h3>jAcl</h3>
-<ul>
-    <li><a href="?module=unittest&amp;action=acl_usergroup">jAclUserGroup</a></li>
-    <li><a href="?module=unittest&amp;action=acl_manager">jAclManager</a></li>
-    <li><a href="?module=unittest&amp;action=acl_index">jAcl</a></li>
-</ul>

@@ -62,8 +62,12 @@ class jUnitTestCase extends UnitTestCase {
     */
     function assertEqualOrDiff($first, $second, $message = "%s"){
         $ret = $this->assertEqual($first, $second, $message);
-        if(!$ret && is_string($first) && is_string($second))
-            $this->diff($first, $second);
+        if(!$ret){
+            if(is_string($first) && is_string($second))
+                $this->diff($first, $second);
+            else
+                $this->diff(var_export($first,true), var_export($second,true));
+        }
         return $ret;
     }
 

@@ -10,7 +10,6 @@
 */
 
 
-require_once(dirname(__FILE__).'/junittestcasedb.class.php');
 /**
  * Tests on user and group management in jAcl
  * CAREFULL ! DON'T CHANGE THE ORDER OF METHODS

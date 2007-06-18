@@ -12,9 +12,13 @@
 require_once(JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php');
 require_once(JELIX_LIB_DAO_PATH.'jDaoParser.class.php');
 
-require_once(dirname(__FILE__).'/junittestcase.class.php');
-
 class UTDao_parser extends jUnitTestCase {
+
+    function setUp() {
+        jDaoCompiler::$daoId ='';
+        jDaoCompiler::$daoPath = '';
+    }
+
 
     protected $dsTest=array(
         array('<?xml version="1.0"?>
@@ -185,7 +189,7 @@ class UTDao_parser extends jUnitTestCase {
     function testGoodDatasources() {
 
         foreach($this->dsTest as $k=>$t){
-            $this->sendMessage("test good datasource ".$k);
+            //$this->sendMessage("test good datasource ".$k);
             $xml= simplexml_load_string($t[0]);
             $p = new jDaoParser();
             try{
@@ -299,7 +303,7 @@ array('','')
     function testBadDatasources() {
 
         foreach($this->dsTestbad as $k=>$t){
-            $this->sendMessage("test bad datasource ".$k);
+            //$this->sendMessage("test bad datasource ".$k);
             $xml= simplexml_load_string($t[0]);
             $p = new jDaoParser();
             try{
@@ -307,7 +311,7 @@ array('','')
                 $this->fail("Pas d'exception survenue !");
             }catch(jDaoXmlException $e){
                 $this->assertEqual($e->getLocaleKey(), $t[1]);
-                $this->assertEqual($e->getLocaleParameters(), $t[2]);
+                $this->assertEqualOrDiff($e->getLocaleParameters(), $t[2]);
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }
@@ -399,7 +403,7 @@ array('','')
         $parser->parse(simplexml_load_string($dao),2);
 
         foreach($this->propDatas as $k=>$t){
-            $this->sendMessage("test good property ".$k);
+            //$this->sendMessage("test good property ".$k);
             $xml= simplexml_load_string($t[0]);
             try{
                 $p = new jDaoProperty($xml, $parser);

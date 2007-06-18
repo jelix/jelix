@@ -10,8 +10,6 @@
 */
 
 
-require_once(dirname(__FILE__).'/junittestcasedb.class.php');
-
 class jAuth {
 
     static public $connect = true;

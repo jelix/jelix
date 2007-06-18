@@ -12,9 +12,12 @@
 require_once(JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php');
 require_once(JELIX_LIB_DAO_PATH.'jDaoParser.class.php');
 
-require_once(dirname(__FILE__).'/junittestcase.class.php');
-
 class UTDao_parser2 extends jUnitTestCase {
+
+    function setUp() {
+        jDaoCompiler::$daoId ='';
+        jDaoCompiler::$daoPath = '';
+    }
 
     protected $methDatas=array(
         array('<?xml version="1.0"?>
@@ -301,7 +304,7 @@ class UTDao_parser2 extends jUnitTestCase {
         $parser->parse(simplexml_load_string($dao),1);
 
         foreach($this->methDatas as $k=>$t){
-            $this->sendMessage("test good method ".$k);
+            //$this->sendMessage("test good method ".$k);
             $xml= simplexml_load_string($t[0]);
             try{
                 $p = new jDaoMethod($xml, $parser);
@@ -350,7 +353,7 @@ class UTDao_parser2 extends jUnitTestCase {
         $parser->parse(simplexml_load_string($dao),1);
 
         foreach($this->badmethDatas as $k=>$t){
-            $this->sendMessage("test bad method ".$k);
+            //$this->sendMessage("test bad method ".$k);
             $xml= simplexml_load_string($t[0]);
             try{
                 $p = new jDaoMethod($xml, $parser);
@@ -379,7 +382,7 @@ class UTDao_parser2 extends jUnitTestCase {
         $parser = new jDaoParser();
         $parser->parse(simplexml_load_string($dao),1);
 
-        $this->sendMessage("test bad update method ");
+        //$this->sendMessage("test bad update method ");
         $xml= simplexml_load_string('<?xml version="1.0"?>
           <method name="tryupdate" type="update">
             <parameter name="something" />

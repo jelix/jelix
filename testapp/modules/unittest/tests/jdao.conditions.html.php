@@ -12,7 +12,6 @@
 require_once(JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php');
 require_once(JELIX_LIB_DAO_PATH.'jDaoConditions.class.php');
 
-require_once(dirname(__FILE__).'/junittestcase.class.php');
 
 class UTDao_Conditions extends jUnitTestCase {
 

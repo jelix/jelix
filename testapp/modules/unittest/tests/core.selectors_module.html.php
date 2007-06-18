@@ -29,11 +29,10 @@ class UTSelectorMod extends UnitTestCase {
         }
     }
 
-
     function testClassSelector() {
         $sels=array(
-            "unittestservice"=>array('unittest','unittestservice', '', 'unittestservice'),
-            "unittest~unittestservice"=>array('unittest','unittestservice', '', 'unittestservice'),
+            "myclass"=>array('unittest','myclass', '', 'myclass'),
+            "unittest~myclass"=>array('unittest','myclass', '', 'myclass'),
             "unittest~tests/foo"=>array('unittest','tests/foo', 'tests/', 'foo'),
         );
 
