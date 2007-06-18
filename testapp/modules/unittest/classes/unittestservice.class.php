@@ -41,10 +41,6 @@ class UnitTestService {
       $test = jClasses::create("utselectoract");
       $test->run(new jHtmlRespReporter($this->_rep));
    }
-   function selectorModTest(){
-      $test = jClasses::create("utselectormod");
-      $test->run(new jHtmlRespReporter($this->_rep));
-   }
 
    function daoConditionsTest(){
       $test = jClasses::create("utdao_conditions");

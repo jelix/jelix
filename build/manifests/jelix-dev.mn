@@ -168,7 +168,7 @@ cd lib/jelix-modules/junittests/classes
   junittestcase.class.php
   junittestcasedb.class.php
 cd lib/jelix-modules/junittests/controllers
-  default.class.php
+  default.classic.php
 cd lib/jelix-modules/junittests/templates
   main.tpl
 

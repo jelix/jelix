@@ -22,6 +22,10 @@ dbProfils = dbprofils.ini.php
 
 defaultTheme = default
 
+; for junittests module
+enableTests = on
+
+
 [plugins]
 ;nom = nom_fichier_ini
 

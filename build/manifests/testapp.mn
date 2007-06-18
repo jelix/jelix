@@ -72,7 +72,6 @@ cd testapp/modules/unittest/classes
   utjtplexpr.class.php
   utparseurls.class.php
   utselectoract.class.php
-  utselectormod.class.php
   utsimpletest.class.php
   utjdb.class.php
   utjdb_pdo.class.php
@@ -116,6 +115,9 @@ cd testapp/modules/unittest/controllers
   db.classic.php
 cd testapp/modules/unittest/daos
   products.dao.xml
+
+cd testapp/modules/unittest/tests/
+  module_selectors.html.php
 
 cd testapp/var
   .htaccess

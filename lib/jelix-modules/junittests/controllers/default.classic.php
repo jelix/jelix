@@ -1,13 +1,13 @@
 <?php
 /**
-* @package
-* @subpackage 
-* @author
-* @copyright
-* @link
-* @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+* @package     jelix
+* @subpackage  junittests
+* @author      Jouanneau Laurent
+* @contributor
+* @copyright   2007 Jouanneau laurent
+* @link        http://www.jelix.org
+* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
 
 class defaultCtrl extends jController {
 
@@ -56,7 +56,10 @@ class defaultCtrl extends jController {
                 $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
             }
         }
+        jContext::push($module);
         $group->run($reporter);
+        jContext::pop();
+
 
         return $this->_finishResponse($rep);
     }
@@ -73,7 +76,7 @@ class defaultCtrl extends jController {
         }
         $rep = $this->_prepareResponse();
 
-        $module = $this->param('module');
+        $module = $this->param('mod');
         if(isset($this->testsList[$module])){
             $reporter = jClasses::create("jhtmlrespreporter");
             jClasses::inc('junittestcase');
@@ -84,8 +87,9 @@ class defaultCtrl extends jController {
             foreach($this->testsList[$module] as $test){
                 $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
             }
+            jContext::push($module);
             $group->run($reporter);
-
+            jContext::pop();
         }
         return $this->_finishResponse($rep);
     }
@@ -102,7 +106,7 @@ class defaultCtrl extends jController {
         }
         $rep = $this->_prepareResponse();
 
-        $module = $this->param('module');
+        $module = $this->param('mod');
         $testname = $this->param('test');
 
         if(isset($this->testsList[$module])){
@@ -111,16 +115,18 @@ class defaultCtrl extends jController {
             jClasses::inc('junittestcasedb');
             $reporter->setResponse($rep);
 
-            
             foreach($this->testsList[$module] as $test){
                 if($test[1] == $testname){
                     $group = new GroupTest('"'.$module. '" module : "'.$testname.'" Tests');
                     $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                    jContext::push($module);
                     $group->run($reporter);
+                    jContext::pop();
                     break;
                 }
             }
-        }
+        }else
+            $rep->body->assign ('MAIN','<p>no tests for "'.$module.'" module.</p>');
         return $this->_finishResponse($rep);
     }
 

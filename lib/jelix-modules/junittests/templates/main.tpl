@@ -19,10 +19,10 @@ Jelix version: {$versionjelix}<br/>
     <h3>Modules</h3>
     <ul>
     {foreach $modules as $module=>$tests}
-        <li><a href="{jurl 'junittests~default_module', array('module'=>$module)}">{$module}</a>
+        <li><a href="{jurl 'junittests~default_module', array('mod'=>$module)}">{$module}</a>
             <ul>
         {foreach $tests as $test}
-                <li><a href="{jurl 'junittests~default_single', array('module'=>$module, 'test'=>$test[1])}">{$test[1]}</a>
+                <li><a href="{jurl 'junittests~default_single', array('mod'=>$module, 'test'=>$test[1])}">{$test[1]}</a>
         {/foreach}
             </ul>
         </li>
