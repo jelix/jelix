@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  unittest module
+* @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2007 Jouanneau laurent
@@ -12,7 +12,7 @@
 class UTjDb_profile extends jUnitTestCase {
 
     function testProfil() {
-        $p = jDb::getProfil('unittest_mysql');
+        $p = jDb::getProfil('jelix_tests_mysql');
         $result= array(
             'driver'=>"mysql",
             'database'=>"testapp_mysql",
@@ -21,7 +21,7 @@ class UTjDb_profile extends jUnitTestCase {
             'password'=> "futchball_mysql",
             'persistent'=> '1',
             'force_encoding'=>1,
-            'name'=>'unittest_mysql',
+            'name'=>'jelix_tests_mysql',
         );
 
         $this->assertEqual($p, $result);
@@ -29,13 +29,13 @@ class UTjDb_profile extends jUnitTestCase {
         $p = jDb::getProfil('forward',true);
         $result= array(
             'driver'=>"mysql",
-            'database'=>"unittest_forward",
+            'database'=>"jelix_tests_forward",
             'host'=> "localhost_forward",
             'user'=> "plop_forward",
             'password'=> "futchball_forward",
             'persistent'=> '1',
             'force_encoding'=>0,
-            'name'=>'unittest_forward',
+            'name'=>'jelix_tests_forward',
         );
 
         $this->assertEqual($p, $result);

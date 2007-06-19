@@ -1,10 +1,10 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  unittest module
+* @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

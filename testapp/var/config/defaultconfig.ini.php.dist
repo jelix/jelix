@@ -106,8 +106,8 @@ simple_urlengine_https = "unittest~urlsig_url8@classic @xmlrpc"
 index = "@classic"
 xmlrpc = "@xmlrpc"
 jsonrpc = "@jsonrpc"
-testnews = "unittest~urlsig_url2@classic unittest~urlsig_url3@classic"
-foo/bar = "unittest~urlsig_url4@classic"
+testnews = "jelix_tests~urlsig_url2@classic jelix_tests~urlsig_url3@classic"
+foo/bar = "jelix_tests~urlsig_url4@classic"
 news = "new~*@classic"
 
 __https=

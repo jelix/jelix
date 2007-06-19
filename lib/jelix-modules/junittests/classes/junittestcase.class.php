@@ -21,7 +21,7 @@ class jUnitTestCase extends UnitTestCase {
         $this->_reporter = &$reporter;
         $this->_reporter->paintCaseStart($this->getLabel());
         if($this->needPDO){
-            $this->_reporter->makeDry(!$this->assertTrue(class_exists('PDO',false), 'PDO does not exists ! Test cannot run'));
+            $this->_reporter->makeDry(!$this->assertTrue(class_exists('PDO',false), 'PDO does not exists ! You should install PDO because tests need it.'));
         }
         foreach ($this->getTests() as $method) {
             if ($this->_reporter->shouldInvoke($this->getLabel(), $method)) {

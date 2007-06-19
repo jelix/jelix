@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  unittest module
+* @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006-2007 Jouanneau laurent
@@ -84,17 +84,17 @@ class UTSelectorAct extends UnitTestCase {
 
    function testMisc() {
         $sels=array(
-"ctrl_meth@truc"=>array('unittest','ctrl','meth','truc'),
-"_meth@truc"=>array('unittest','default','meth','truc'),
-"ctrl_@truc"=>array('unittest','ctrl','index','truc'),
-"@truc"=>array('unittest','default','index','truc'),
-"#@truc"=>array('unittest',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'truc'),
-"ctrl_meth"=>array('unittest','ctrl','meth','classic'),
-"_meth"=>array('unittest','default','meth','classic'),
-"meth"=>array('unittest','default','meth','classic'),
-"ctrl_"=>array('unittest','ctrl','index','classic'),
-""=>array('unittest','default','index','classic'),
-"#"=>array('unittest',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'classic'),
+"ctrl_meth@truc"=>array('jelix_tests','ctrl','meth','truc'),
+"_meth@truc"=>array('jelix_tests','default','meth','truc'),
+"ctrl_@truc"=>array('jelix_tests','ctrl','index','truc'),
+"@truc"=>array('jelix_tests','default','index','truc'),
+"#@truc"=>array('jelix_tests',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'truc'),
+"ctrl_meth"=>array('jelix_tests','ctrl','meth','classic'),
+"_meth"=>array('jelix_tests','default','meth','classic'),
+"meth"=>array('jelix_tests','default','meth','classic'),
+"ctrl_"=>array('jelix_tests','ctrl','index','classic'),
+""=>array('jelix_tests','default','index','classic'),
+"#"=>array('jelix_tests',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'classic'),
         );
         $this->runtest($sels);
     }

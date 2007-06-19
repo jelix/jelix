@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  unittest module
+* @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006-2007 Jouanneau laurent
@@ -15,7 +15,7 @@ class UTEvents extends UnitTestCase {
       $response = jEvent::notify('TestEvent');
       $response = $response->getResponse ();
       $response = serialize($response[0]);
-      $temoin = serialize(array('module'=>'unittest','ok'=>true));
+      $temoin = serialize(array('module'=>'jelix_tests','ok'=>true));
 
       $this->assertTrue($temoin == $response, 'évenement simple');
 

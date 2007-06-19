@@ -1,10 +1,10 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  unittest module
+* @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -196,7 +196,7 @@ class UTDao_parser extends jUnitTestCase {
                 $p->parse($xml,2);
                 $this->assertComplexIdenticalStr($p, $t[1]);
             }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocalKey().')');
+                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }
@@ -409,7 +409,7 @@ array('','')
                 $p = new jDaoProperty($xml, $parser);
                 $this->assertComplexIdenticalStr($p, $t[1]);
             }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocalKey().')');
+                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }

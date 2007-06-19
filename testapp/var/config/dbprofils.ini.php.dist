@@ -9,7 +9,7 @@
 
 
 default = testapp
-forward = unittest_forward
+forward = jelix_tests_forward
 wrong_profilname = abdsdpoipoipoer
 
 [testapp]
@@ -37,7 +37,7 @@ password=
 ;--- used by unit tests
 ;--- don't set one of this profile as default profile
 
-[unittest_mysql]
+[jelix_tests_mysql]
 driver="mysql"
 database="testapp_mysql"
 host= "localhost_mysql"
@@ -46,7 +46,7 @@ password= "futchball_mysql"
 persistent= on
 force_encoding=1
 
-[unittest_forward]
+[jelix_tests_forward]
 driver="mysql"
 database="unittest_forward"
 host= "localhost_forward"

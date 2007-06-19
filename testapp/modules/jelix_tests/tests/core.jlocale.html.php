@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  unittest module
+* @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006-2007 Jouanneau laurent
@@ -27,7 +27,7 @@ class UTjlocale extends jUnitTestCase {
     protected $filePath;
 
     public function testBundleUnknowFile(){
-        $this->filePath =  JELIX_APP_PATH.'modules/unittest/locales/';
+        $this->filePath =  JELIX_APP_PATH.'modules/jelix_tests/locales/';
         $b = new bundleTest('','');
         try {
             $b->readProperties($this->filePath.'unknowfile');

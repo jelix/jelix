@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  unittest module
+* @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2006-2007 Jouanneau laurent
@@ -48,9 +48,9 @@ class UTCreateUrls extends UnitTestCase {
                 $url = jUrl::get($urldata[0], $urldata[1]);
                 $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
             }catch(jExceptionSelector $e){
-                $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocalKey().')');
+                $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(jException $e){
-                $this->assertTrue(false,'jException: '.$e->getMessage().' ('.$e->getLocalKey().')');
+                $this->assertTrue(false,'jException: '.$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
                 $msgerr = '<br>Survenue : exception=Exception code='.$e->getCode().' msg='.$e->getMessage();
                 $this->sendMessage($msgerr);
@@ -99,12 +99,12 @@ class UTCreateUrls extends UnitTestCase {
          'defaultEntrypoint'=>'index',
          'entrypointExtension'=>'.php',
          'notfoundAct'=>'jelix~notfound',
-         'simple_urlengine_https'=>'unittest~urlsig_url8@classic @xmlrpc',
+         'simple_urlengine_https'=>'jelix_tests~urlsig_url8@classic @xmlrpc',
        );
       /* $gJConfig->simple_urlengine_entrypoints = array(
           'index' => "@classic",
-          'testnews'=>"unittest~url2@classic",
-          'foo/bar'=>"unittest~url4@classic",
+          'testnews'=>"jelix_tests~url2@classic",
+          'foo/bar'=>"jelix_tests~url4@classic",
           'xmlrpc' => "@xmlrpc",
           'jsonrpc' => "@jsonrpc"
        );*/
@@ -113,21 +113,21 @@ class UTCreateUrls extends UnitTestCase {
       $urlList=array();
       $urlList[]= array('urlsig_url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
       $urlList[]= array('urlsig_url2', array('mois'=>'05',  'annee'=>'2004'));
-      $urlList[]= array('unittest~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
-      $urlList[]= array('unittest~urlsig_url4', array('first'=>'premier',  'second'=>'deuxieme'));
+      $urlList[]= array('jelix_tests~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
+      $urlList[]= array('jelix_tests~urlsig_url4', array('first'=>'premier',  'second'=>'deuxieme'));
       // celle ci n'a pas de définition dans urls.xml *exprés*
       $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
-      $urlList[]= array('unittest~urlsig_url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
+      $urlList[]= array('jelix_tests~urlsig_url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
 
       $trueResult=array(
-          "/index.php?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
-          "/testnews.php?mois=05&annee=2004&module=unittest&action=urlsig_url2",
-          "/testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=unittest&action=urlsig_url3",
-          "/foo/bar.php?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
-          "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          "/index.php?mois=10&annee=2005&id=35&module=jelix_tests&action=urlsig_url1",
+          "/testnews.php?mois=05&annee=2004&module=jelix_tests&action=urlsig_url2",
+          "/testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=jelix_tests&action=urlsig_url3",
+          "/foo/bar.php?first=premier&second=deuxieme&module=jelix_tests&action=urlsig_url4",
+          "/index.php?foo=oof&bar=rab&module=jelix_tests&action=urlsig_url5",
           "/xmlrpc.php",
-          "/index.php?rubrique=vetements&id_article=98&module=unittest&action=urlsig_url8",
+          "/index.php?rubrique=vetements&id_article=98&module=jelix_tests&action=urlsig_url8",
        );
 
 
@@ -138,13 +138,13 @@ class UTCreateUrls extends UnitTestCase {
       $gJConfig->urlengine['multiview']=true;
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
       $trueResult=array(
-          "/index?mois=10&annee=2005&id=35&module=unittest&action=urlsig_url1",
-          "/testnews?mois=05&annee=2004&module=unittest&action=urlsig_url2",
-          "/testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=unittest&action=urlsig_url3",
-          "/foo/bar?first=premier&second=deuxieme&module=unittest&action=urlsig_url4",
-          "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          "/index?mois=10&annee=2005&id=35&module=jelix_tests&action=urlsig_url1",
+          "/testnews?mois=05&annee=2004&module=jelix_tests&action=urlsig_url2",
+          "/testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=jelix_tests&action=urlsig_url3",
+          "/foo/bar?first=premier&second=deuxieme&module=jelix_tests&action=urlsig_url4",
+          "/index?foo=oof&bar=rab&module=jelix_tests&action=urlsig_url5",
           "/xmlrpc",
-          "/index?rubrique=vetements&id_article=98&module=unittest&action=urlsig_url8",
+          "/index?rubrique=vetements&id_article=98&module=jelix_tests&action=urlsig_url8",
        );
       $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
       $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
@@ -168,7 +168,7 @@ class UTCreateUrls extends UnitTestCase {
          'defaultEntrypoint'=>'index',
          'entrypointExtension'=>'.php',
          'notfoundAct'=>'jelix~notfound',
-         'simple_urlengine_https'=>'unittest~urlsig_url8@classic @xmlrpc',
+         'simple_urlengine_https'=>'jelix_tests~urlsig_url8@classic @xmlrpc',
        );
 
       $urlList=array();
@@ -221,17 +221,17 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('urlsig_url9', array('mois'=>'10',  'annee'=>'2005', 'id'=>'09'));
       $urlList[]= array('urlsig_url10', array('mois'=>'10',  'annee'=>'2005', 'id'=>'10'));
       $urlList[]= array('urlsig_url2', array('mois'=>'05',  'annee'=>'2004'));
-      $urlList[]= array('unittest~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
-      $urlList[]= array('unittest~urlsig_url6', array('rubrique'=>'actualite',  'id_art'=>'65'));
-      $urlList[]= array('unittest~urlsig_url4', array('first'=>'premier',  'second'=>'deuxieme'));
+      $urlList[]= array('jelix_tests~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
+      $urlList[]= array('jelix_tests~urlsig_url6', array('rubrique'=>'actualite',  'id_art'=>'65'));
+      $urlList[]= array('jelix_tests~urlsig_url4', array('first'=>'premier',  'second'=>'deuxieme'));
       // celle ci n'a pas de définition dans urls.xml *exprés*
       $urlList[]= array('urlsig_url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('news~bar', array('aaa'=>'bbb'));
-      $urlList[]= array('unittest~urlsig_url8', array('mois'=>'23',  'annee'=>'2007', 'id'=>'74'));
-      $urlList[]= array('unittest~urlsig_url11', array('rubrique'=>'vetements',  'id_article'=>'98'));
-      $urlList[]= array('unittest~urlsig_url12', array('rubrique'=>'bricolage',  'id_article'=>'53'));
-      $urlList[]= array('unittest~urlsig_url13', array('rubrique'=>'alimentation',  'id_article'=>'26'));
+      $urlList[]= array('jelix_tests~urlsig_url8', array('mois'=>'23',  'annee'=>'2007', 'id'=>'74'));
+      $urlList[]= array('jelix_tests~urlsig_url11', array('rubrique'=>'vetements',  'id_article'=>'98'));
+      $urlList[]= array('jelix_tests~urlsig_url12', array('rubrique'=>'bricolage',  'id_article'=>'53'));
+      $urlList[]= array('jelix_tests~urlsig_url13', array('rubrique'=>'alimentation',  'id_article'=>'26'));
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -241,7 +241,7 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php/test/cms/actualite/65-c-est-la-fete-au-village",
           "/test/cms2/actualite/65",
           "/foo/bar.php/withhandler/premier/deuxieme",
-          "/index.php?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          "/index.php?foo=oof&bar=rab&module=jelix_tests&action=urlsig_url5",
           "/xmlrpc.php",
           "/news.php?aaa=bbb&action=default_bar",
           "/index.php/test/news/2007/23/74?action=urlsig_url8",
@@ -263,7 +263,7 @@ class UTCreateUrls extends UnitTestCase {
           "/index/test/cms/actualite/65-c-est-la-fete-au-village",
           "/test/cms2/actualite/65",
           "/foo/bar/withhandler/premier/deuxieme",
-          "/index?foo=oof&bar=rab&module=unittest&action=urlsig_url5",
+          "/index?foo=oof&bar=rab&module=jelix_tests&action=urlsig_url5",
           "/xmlrpc",
           "/news?aaa=bbb&action=default_bar",
           "/index/test/news/2007/23/74?action=urlsig_url8",

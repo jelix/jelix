@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  unittest module
+* @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2007 Jouanneau laurent
@@ -129,7 +129,7 @@ class UTjtplexpr extends jUnitTestCase {
                 $res = $compil->testParseVarExpr($k);
                 $this->assertEqualOrDiff($t, $res);
             }catch(jException $e){
-                $this->fail("Test '$k', Exception jelix inconnue : ".$e->getMessage().' ('.$e->getLocalKey().')');
+                $this->fail("Test '$k', Exception jelix inconnue : ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
                 $this->fail("Test '$k', Exception inconnue : ".$e->getMessage());
             }

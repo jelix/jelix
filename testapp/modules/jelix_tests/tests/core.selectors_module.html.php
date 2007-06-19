@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  unittest module
+* @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2007 Jouanneau laurent
@@ -31,9 +31,9 @@ class UTSelectorMod extends UnitTestCase {
 
     function testClassSelector() {
         $sels=array(
-            "myclass"=>array('unittest','myclass', '', 'myclass'),
-            "unittest~myclass"=>array('unittest','myclass', '', 'myclass'),
-            "unittest~tests/foo"=>array('unittest','tests/foo', 'tests/', 'foo'),
+            "myclass"=>array('jelix_tests','myclass', '', 'myclass'),
+            "jelix_tests~myclass"=>array('jelix_tests','myclass', '', 'myclass'),
+            "jelix_tests~tests/foo"=>array('jelix_tests','tests/foo', 'tests/', 'foo'),
         );
 
         foreach($sels as $sel=>$res){
@@ -88,9 +88,9 @@ class UTSelectorMod extends UnitTestCase {
 
     function testInterfaceSelector() {
         $sels=array(
-            "test"=>array('unittest','test', '', 'test'),
-            "unittest~test"=>array('unittest','test', '', 'test'),
-            "unittest~tests/foo"=>array('unittest','tests/foo', 'tests/', 'foo'),
+            "test"=>array('jelix_tests','test', '', 'test'),
+            "jelix_tests~test"=>array('jelix_tests','test', '', 'test'),
+            "jelix_tests~tests/foo"=>array('jelix_tests','tests/foo', 'tests/', 'foo'),
         );
 
         foreach($sels as $sel=>$res){
