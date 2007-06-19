@@ -9,6 +9,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+// used by a usort function
+// PHP5.1.2 generates a strict message if I put this function into defaultCtrl class, although it has the static keyword
+function JUTcompareTestName($a,$b){ 
+    return strcmp($a[0], $b[0]);
+}
+
+
 class defaultCtrl extends jController {
 
     /**
@@ -159,7 +166,7 @@ class defaultCtrl extends jController {
                     }
                 }
                 if(isset($this->testsList[$module])){
-                    usort($this->testsList[$module], array ("defaultCtrl", "compareTestName"));
+                    usort($this->testsList[$module], "JUTcompareTestName");
                 }
             }
         }
@@ -168,12 +175,6 @@ class defaultCtrl extends jController {
 
         return $rep;
     }
-
-    static function compareTestName($a,$b){
-        return strcmp($a[0], $b[0]);
-    }
-
-
 
     protected function _finishResponse($rep){
 
