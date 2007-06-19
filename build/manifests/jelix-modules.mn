@@ -75,6 +75,7 @@ cd jxacl/install/www/themes/default
   right_ok.png
 cd jxacl/locales/fr_FR
   db.ISO-8859-1.properties
+  db.UTF-8.properties
 cd jxacl/templates
   xaovlay.tpl
   xuladmin.tpl
