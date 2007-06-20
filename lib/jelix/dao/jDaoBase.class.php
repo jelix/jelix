@@ -23,15 +23,35 @@ abstract class jDaoRecordBase {
     const ERROR_MAXLENGTH = 4;
     const ERROR_MINLENGTH = 5;
 
-
     /**
      * informations on all properties
+     * 
+     * keys are property name, and values are an array like that :
+     * <pre> array (
+     *  'name' => 'name of property',
+     *  'fieldName' => 'name of fieldname',
+     *  'regExp' => NULL, // or the regular expression to test the value
+     *  'required' => true/false, 
+     *  'isPK' => true/false, //says if it is a primary key
+     *  'isFK' => true/false, //says if it is a foreign key
+     *  'datatype' => '', // type of data : string
+     *  'table' => 'grp', // alias of the table the property is attached to
+     *  'updatePattern' => '%s',
+     *  'insertPattern' => '%s',
+     *  'selectPattern' => '%s',
+     *  'sequenceName' => '', // name of the sequence when type is autoincrement
+     *  'maxlength' => NULL, // or a number
+     *  'minlength' => NULL, // or a number
+     *  'ofPrimaryTable' => true/false,
+     *  'needsQuotes' => tree/false, // says if the value need to enclosed between quotes
+     * ) </pre>
      * @var array 
      */
     protected $_properties=array();
 
     /**
      * @return array informations on all properties
+     * @see jDaoRecordBase::$_properties
      */
     public function getProperties(){ return $this->_properties; }
 
@@ -122,6 +142,15 @@ abstract class jDaoRecordBase {
 abstract class jDaoFactoryBase  {
     /**
      * informations on tables
+     *
+     * Keys of elements are the alias of the table. values are arrays like that :
+     * <pre> array (
+     *   'name' => ' the table alias',
+     *   'realname' => 'the real name of the table',
+     *   'pk' => array ( list of primary keys name ),
+     *   'fields' => array ( list of property name attached to this table )
+     * )
+     * </pre>
      * @var array
      */
     protected $_tables;
@@ -130,7 +159,6 @@ abstract class jDaoFactoryBase  {
      * @var string
      */
     protected $_primaryTable;
-
     /**
      * the database connector
      * @var jDbConnection
@@ -292,11 +320,25 @@ abstract class jDaoFactoryBase  {
         return intval($res->c);
     }
     
+    /**
+     * create a WHERE clause with conditions on primary keys with given value. This method
+     * should be used for SELECT queries. You haven't to escape values.
+     *
+     * @param array $pk  associated array : keys = primary key name, values : value of a primary key
+     * @return string a 'where' clause (WHERE mypk = 'myvalue' ...)
+     */
     abstract protected function _getPkWhereClauseForSelect($pk);
+
+    /**
+     * create a WHERE clause with conditions on primary keys with given value. This method
+     * should be used for DELETE and UPDATE queries.
+     * @param array $pk  associated array : keys = primary key name, values : value of a primary key
+     * @return string a 'where' clause (WHERE mypk = 'myvalue' ...)
+     */
     abstract protected function _getPkWhereClauseForNonSelect($pk);
 
     /**
-    * 
+    * @internal
     */
     protected function _createConditionsClause($daocond){
 

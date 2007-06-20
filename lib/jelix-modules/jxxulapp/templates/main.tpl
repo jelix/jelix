@@ -1,7 +1,7 @@
 {meta_xul css 'chrome://global/skin/'}
 <script type="application/x-javascript" src="xulapp/main.js" />
 <script type="application/x-javascript"><![CDATA[
-var gUrlQuit = '{jurl 'jxauth~login_out',array(),false}';
+var gUrlQuit = '{jurl 'jauth~login_out',array(),false}';
 ]]></script>
 
 <commandset id="commandset-main">
