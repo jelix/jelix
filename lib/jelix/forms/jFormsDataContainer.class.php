@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006 Laurent Jouanneau
+* @copyright   2006-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -32,6 +32,12 @@ class jFormsDataContainer {
     public $formSelector;
 
     /**
+     * list of errors detected in datas
+     * @var array
+     */
+    public $errors = array();
+
+    /**
      *
      * @param jSelectorForm $formSelector
      * @param string $formId
@@ -46,7 +52,8 @@ class jFormsDataContainer {
     }
     
     function clear(){
-        $this->datas=array();
+        $this->datas = array();
+        $this->errors = array();
     }
 
 }

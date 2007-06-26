@@ -110,6 +110,7 @@ cd lib/jelix/events
 cd lib/jelix/forms
   jForms.class.php
   jFormsBase.class.php
+  jFormsBuilderBase.class.php
   jFormsCompiler.class.php
   jFormsControl.class.php
   jFormsDataContainer.class.php
@@ -153,6 +154,11 @@ cd lib/jelix/tpl/plugins/html
   function.formurl.php
   function.formurlparam.php
   function.diff.php
+  block.form.php
+  block.formcontrols.php
+  function.ctrl_control.php
+  function.ctrl_label.php
+  function.ctrl_value.php
 
 cd lib/jelix/tpl/plugins/ltx2pdf
   function.jlocale.php
@@ -221,6 +227,7 @@ cd lib/jelix-modules/jelix/locales/en_US
   db.ISO-8859-1.properties
   common.ISO-8859-1.properties
   format.ISO-8859-1.properties
+  formserr.ISO-8859-1.properties
   jelix.ISO-8859-1.properties
   errors.ISO-8859-1.properties
   ui.ISO-8859-1.properties
@@ -230,6 +237,7 @@ cd lib/jelix-modules/jelix/locales/en_US
   db.UTF-8.properties
   common.UTF-8.properties
   format.UTF-8.properties
+  formserr.UTF-8.properties
   jelix.UTF-8.properties
   errors.UTF-8.properties
   ui.UTF-8.properties
@@ -240,6 +248,7 @@ cd lib/jelix-modules/jelix/locales/en_EN
   db.ISO-8859-1.properties
   common.ISO-8859-1.properties
   format.ISO-8859-1.properties
+  formserr.ISO-8859-1.properties
   jelix.ISO-8859-1.properties
   errors.ISO-8859-1.properties
   ui.ISO-8859-1.properties
@@ -249,6 +258,7 @@ cd lib/jelix-modules/jelix/locales/en_EN
   db.UTF-8.properties
   common.UTF-8.properties
   format.UTF-8.properties
+  formserr.UTF-8.properties
   jelix.UTF-8.properties
   errors.UTF-8.properties
   ui.UTF-8.properties
@@ -259,6 +269,7 @@ cd lib/jelix-modules/jelix/locales/fr_FR
   db.ISO-8859-1.properties
   common.ISO-8859-1.properties
   format.ISO-8859-1.properties
+  formserr.ISO-8859-1.properties
   jelix.ISO-8859-1.properties
   errors.ISO-8859-1.properties
   ui.ISO-8859-1.properties
@@ -268,6 +279,7 @@ cd lib/jelix-modules/jelix/locales/fr_FR
   db.UTF-8.properties
   common.UTF-8.properties
   format.UTF-8.properties
+  formserr.UTF-8.properties
   jelix.UTF-8.properties
   errors.UTF-8.properties
   ui.UTF-8.properties
@@ -329,6 +341,7 @@ cd lib/jelix-www/design
   tooltip.css
 cd lib/jelix-www/js
   tooltip.js
+  jforms.js
 cd lib/jelix-www/xul
   jxulform.css
   jxulform.xml

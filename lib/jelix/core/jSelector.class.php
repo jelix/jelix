@@ -657,8 +657,8 @@ class jSelectorForm extends jSelectorModule {
         return 'cForm_'.$this->module.'_Jx_'.$this->resource;
     }
 
-    public function getCompiledBuildFilePath (){
-        return JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->module.'~'.$this->resource.'_htmlbuilder'.$this->_cacheSuffix;;
+    public function getCompiledBuilderFilePath ($type){
+        return JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->module.'~'.$this->resource.'_builder_'.$type.$this->_cacheSuffix;
     }
 }
 

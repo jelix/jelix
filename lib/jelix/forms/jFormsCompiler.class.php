@@ -4,7 +4,7 @@
 * @subpackage forms
 * @author     Laurent Jouanneau
 * @contributor
-* @copyright   2006 Laurent Jouanneau
+* @copyright   2006-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -22,17 +22,21 @@ require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
  */
 class jFormsCompiler implements jISimpleCompiler {
 
+    protected $sourceFile;
+
+
    public function compile($selector){
       global $gJCoord;
       $sel = clone $selector;
 
-      $sourceFile = $selector->getPath();
+      $this->sourceFile = $selector->getPath();
       $cachefile = $selector->getCompiledFilePath();
+      $cacheHtmlBuilderFile = $selector->getCompiledBuilderFilePath ('html');
 
       // compilation du fichier xml
-      $xml = simplexml_load_file ( $sourceFile);
+      $xml = simplexml_load_file ( $this->sourceFile);
       if(!$xml){
-         return false;
+         throw new jException('jelix~formserr.invalid.xml.file',array($this->sourceFile));
       }
 
       /*if(!isset($xml->model)){
@@ -42,77 +46,119 @@ class jFormsCompiler implements jISimpleCompiler {
       */
 
       $source=array();
-      $source[]='<?php class '.$selector->getClass().' extends jFormsBase {';
+      $source[]='<?php ';
+      $source[]='class '.$selector->getClass().' extends jFormsBase {';
+      $source[]='    protected $_builders = array( ';
+      $source[]='    \'html\'=>array(\''.$cacheHtmlBuilderFile.'\',\''.$selector->getClass().'_builder_html\'), ';
+      $source[]='    );';
       $source[]=' public function __construct(&$container, $reset = false){';
       $source[]='          parent::__construct($container, $reset); ';
-      foreach($xml->children() as $controltype=>$control){
 
-         $class = 'jFormsControl'.$controltype;
+      $srcHtmlBuilder=array();
+      $srcHtmlBuilder[]='<?php class '.$selector->getClass().'_builder_html extends jFormsHtmlBuilderBase {';
+      $srcHtmlBuilder[]=' public function __construct($form, $action, $actionParams){';
+      $srcHtmlBuilder[]='          parent::__construct($form, $action, $actionParams); ';
+      $srcHtmlBuilder[]='  }';
+
+      $srcjs=array();
+      $srcjs[]='$js="gForm = new jFormsForm(\'".$this->_name."\');\n";';
+      $srcjs[]='$js.="gForm.setDecorator(new ".$errorDecoratorName."());\n";';
+      foreach($xml->children() as $controltype=>$control){
+            $source[] = $this->generatePHPControl($controltype, $control);
+            $srcjs[] =  $this->generateJsControl($controltype, $control);
+      }
+      $source[]='  }';
+
+      //$source[]=' public function save(){ } ';
+
+      $source[]='} ?>';
+
+      jFile::write($cachefile, implode("\n", $source));
+      $srcjs[]='$js.="jForms.declareForm(gForm);\n";';
+
+      $srcHtmlBuilder[]=' public function getJavascriptCheck($errorDecoratorName){';
+      $srcHtmlBuilder[]= implode("\n", $srcjs);
+      $srcHtmlBuilder[]=' return $js; }';
+      $srcHtmlBuilder[]='} ?>';
+
+      jFile::write($cacheHtmlBuilderFile, implode("\n", $srcHtmlBuilder));
+      return true;
+    }
+
+
+    protected function generatePHPControl($controltype, $control){
+
+        $source = array();
+        $class = 'jFormsControl'.$controltype;
 
          if(!class_exists($class,false)){
-            throw new jException('jelix~formserr.unknow.tag',array($controltype,$sourceFile));
+            throw new jException('jelix~formserr.unknow.tag',array($controltype,$this->sourceFile));
          }
 
          if(!isset($control['ref'])){
-            throw new jException('jelix~formserr.attribute.missing',array('ref',$controltype,$sourceFile));
+            throw new jException('jelix~formserr.attribute.missing',array('ref',$controltype,$this->sourceFile));
          }
+
          $source[]='$ctrl= new '.$class.'(\''.(string)$control['ref'].'\');';
          if(isset($control['type'])){
+            if($controltype != 'input'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('type',$controltype,$this->sourceFile));
+            }
+
             $dt = (string)$control['type'];
             if(!in_array(strtolower($dt), array('string','boolean','decimal','integer','hexadecimal','datetime','date','time','localedatetime','localedate','localetime', 'url','email','ipv4','ipv6'))){
-               throw new jException('jelix~formserr.datatype.unknow',array($dt,$controltype,$sourceFile));
+               throw new jException('jelix~formserr.datatype.unknow',array($dt,$controltype,$this->sourceFile));
             }
             $source[]='$ctrl->datatype= new jDatatype'.$dt.'();';
+         }else if($controltype == 'checkbox') {
+            $source[]='$ctrl->datatype= new jDatatypeBoolean();';
          }else{
             $source[]='$ctrl->datatype= new jDatatypeString();';
          }
 
          if(isset($control['readonly'])){
-            $readonly=(string)$control['readonly'];
-
-            $source[]='$ctrl->readonly='.($readonly=='true'?'true':'false').';';
+            if('true' == (string)$control['readonly'])
+                $source[]='$ctrl->readonly=true;';
          }
          if(isset($control['required'])){
-            $required=(string)$control['required'];
-            $source[]='$ctrl->required='.($required=='true'?'true':'false').';';
+            if($controltype == 'checkbox'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('required','checkbox',$this->sourceFile));
+            }
+            if('true' == (string)$control['required'])
+                $source[]='$ctrl->required=true;';
          }
 
          if(!isset($control->label)){
-            throw new jException('jelix~formserr.tag.missing',array('label',$controltype,$sourceFile));
+            throw new jException('jelix~formserr.tag.missing',array('label',$controltype,$this->sourceFile));
          }
 
          if(isset($control->label['locale'])){
-             $source[]='$ctrl->labellocale=\''.(string)$control->label['locale'].'\';';
+             $label='';
+             $labellocale=(string)$control->label['locale'];
+             $source[]='$ctrl->label=jLocale::get(\''.$labellocale.'\');';
          }else{
-             $source[]='$ctrl->label=\''.str_replace("'","\\'",(string)$control->label).'\';';
+             $label=(string)$control->label;
+             $labellocale='';
+             $source[]='$ctrl->label=\''.str_replace("'","\\'",$label).'\';';
          }
+
          switch($controltype){
-            case 'input':
-               break;
-            case 'textarea':
-               break;
-            case 'secret':
-               break;
-            case 'output':
-                //attr value
-               break;
-            case 'upload':
-                // attr mediatype
-               break;
-            case 'select1':
-            case 'select':
+            case 'checkboxes':
+            case 'radiobuttons':
+            case 'menulist':
+            case 'listbox':
                 // recuperer les <items> attr label|labellocale value
                 if(isset($control['dao'])){
                     $daoselector = (string)$control['dao'];
                     $daomethod = (string)$control['daomethod'];
                     $daolabel = (string)$control['daolabelproperty'];
                     $daovalue = (string)$control['daovalueproperty'];
-                    $source[]='$ctrl->datasource= new jFormDaoDatasource(\''.$daoselector.'\',\''.
-                        $daomethod.'\',\''.$daolabel.'\',\''.$daovalue.'\',);';
+                    $source[]='$ctrl->datasource = new jFormDaoDatasource(\''.$daoselector.'\',\''.
+                        $daomethod.'\',\''.$daolabel.'\',\''.$daovalue.'\');';
 
                 }else{
                     $source[]='$ctrl->datasource= new jFormStaticDatasource();';
-                    $source[]='$ctrl->datasource->array(';
+                    $source[]='$ctrl->datasource->datas = array(';
 
                     foreach($control->item as $item){
                         $value ="'".str_replace("'","\\'",(string)$item['value'])."'=>";
@@ -127,48 +173,108 @@ class jFormsCompiler implements jISimpleCompiler {
                     $source[]=");";
                 }
                break;
-            case 'submit':
-                // attr value
-               break;
          }
+
+         if(isset($control['multiple'])){
+            if($controltype != 'listbox'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('multiple',$controltype,$this->sourceFile));
+            }
+            if('true' == (string)$control['multiple'])
+                $source[]='$ctrl->multiple=true;';
+         }
+
          $source[]='$this->addControl($ctrl);';
-      }
+         return implode("\n", $source);
+    }
 
-      $source[]='  }';
+    protected function generateJsControl($controltype, $control){
+        $source = array();
 
-      //$source[]=' public function save(){ } ';
+        if(isset($control['type'])){
+            $dt = (string)$control['type'];
+        }else{
+            if($controltype == 'checkbox')
+                $dt = 'boolean';
+            else
+                $dt = 'string';
+        }
 
-      $source[]='} ?>';
+        if(isset($control->label['locale'])){
+            $source[]='$label = str_replace("\'","\\\'",jLocale::get(\''.(string)$control->label['locale'].'\'));';
+        }else{
+            $source[]='$label = str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->label).'\');';
+        }
+        $source[]='$js.="gControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".$label."\', \''.$dt.'\');\n";';
 
-      jFile::write($cachefile, implode("\n", $source));
-      return true;
-   }
+        if(isset($control['readonly']) && 'true' == (string)$control['readonly']){
+            $source[]='$js.="gControl.readonly = true;\n";';
+        }
+        if(isset($control['required']) && 'true' == (string)$control['required']){
+            $source[]='$js.="gControl.required = true;\n";';
+        }
 
+        $source[]='$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";';
+        $source[]='$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";';
+        if(isset($control['multiple']) && 'true' == (string)$control['multiple']){
+            $source[]='$js.="gControl.multiple = true;\n";';
+        }
+
+         $source[]='$js.="gForm.addControl( gControl);\n";';
+
+         return implode("\n", $source);
+    }
+
+
+
+        /* on génére en php, du php qui génère du javascript !  oui oui :-D
+    
+        au final, le javascript généré dans la page html doit ressembler à cela
+
+        gForm = new jFormsForm('name');
+        gForm.setDecorator(new jFormsErrorDecoratorAlert());
+        
+        gControl = new jFormsControl('name', 'a label', 'datatype');
+        gControl.required = true;
+        gControl.errInvalid='';
+        gControl.errRequired='';
+        gForm.addControl( gControl);
+        ...
+        jForms.declareForm(gForm);
+
+
+        onsubmit="return jForms.verifyForm(this)"
+
+
+        // le code php généré dans le builder
+
+        $js="gForm = new jFormsForm('".$this->getFormName()."');\n";
+        $js.="gForm.setDecorator(new jFormsErrorDecoratorAlert());\n";
+        $label = 'a label';
+        ou
+        $label = jLocale::get('mod~cle_locale_user');
+        $js.="gControl = new jFormsControl('name', '".str_replace("'","\\'", $label)."', 'datatype');\n";
+        $js.="gControl.required = true;\n";
+
+        $invalid = jLocale::get('jelix~forms.check.invalid',$label));
+        ou
+        $invalid = jLocale::get('mod~cle_locale_user');
+        ou
+        $invalid = 'bla bla';
+        $js.="gControl.errInvalid='".str_replace("'","\\'",$invalid)."';\n";
+
+
+        $required = jLocale::get('jelix~forms.check.required',$label));
+        ou
+        $required = jLocale::get('mod~cle_locale_user');
+        ou
+        $required = 'bla bla';
+
+        $js.="gControl.errRequired='".str_replace("'","\\'",$required)."';\n";
+        $js.="gForm.addControl( gControl);\n";
+        ...
+        $js.="jForms.declareForm(gForm);\n";
+
+        */
 }
-
-
-/**
- *
- * @package     jelix
- * @subpackage  forms
- * @experimental
- */
-interface jIFormGenerator {
-
-   // on indique un objet form
-   // il renvoi dans un tableau le code généré correspondant
-   /*
-   startform : code généré pour le debut du formulaire (balise <form> en html) Peut contenir %ATTR%
-   head : code généré à ajouter dans l'en-tête de page
-   controls : tableau assoc de chaque contrôle généré. Peuvent contenir %ATTR%
-   endform : code généré pour la fin du formulaire
-
-
-   %ATTR% : remplacés par les attributs supplémentaires indiqués par l'utilisateur dans le template
-   */
-   function buildForm($formObject);
-
-}
-
 
 ?>

@@ -11,13 +11,12 @@
          <ref name="controls" />
       </element>
    </start>
-
+<!--
   <define name="Common.Attributes">
 
   </define>
-
-
-
+-->
+<!--
    <define name="any">
       <element>
          <anyName/>
@@ -32,5 +31,5 @@
          </zeroOrMore>
       </element>
    </define>
-
+-->
 </grammar>

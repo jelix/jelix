@@ -1,12 +1,37 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <forms xmlns="http://jelix.org/ns/forms/1.0">
 
-   <input ref="nom" >
+   <input ref="nom" required="true">
       <label>Votre nom</label>
    </input>
 
    <input ref="prenom" >
       <label>Votre prénom</label>
    </input>
+
+   <checkbox ref="geek">
+       <label>Êtes vous un geek ?</label>
+   </checkbox>
+
+   <radiobuttons ref="sexe">
+      <label>Vous êtes </label>
+      <item value="h" label="un homme" />
+      <item value="f" label="une femme" />
+      <item value="no" label="je ne sais pas" />
+  </radiobuttons>
+
+  <menulist ref="conf" dao="testapp~config" daomethod="findAll" daolabelproperty="cvalue" daovalueproperty="ckey">
+      <label>Selectionnez une des valeurs</label>
+  </menulist>
+
+  <listbox ref="home">
+      <label>Vous habitez :</label>
+      <item value="pa" label="Paris" />
+      <item value="ma" label="Marseille" />
+      <item value="ly" label="Lyon" />
+      <item value="br" label="Brest" />
+      <item value="li" label="Lille" />
+      <item value="bo" label="Bordeaux" />
+  </listbox>
 
 </forms>

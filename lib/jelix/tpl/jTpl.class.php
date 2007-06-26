@@ -24,6 +24,13 @@ class jTpl {
     public $_vars = array ();
 
     /**
+     * temporary template variables for plugins. Public because Internal use. Don't touch it :-)
+     * @var array
+     */
+    public $_privateVars = array ();
+
+
+    /**
      * internal use
      * @var array
      */

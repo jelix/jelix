@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006 Laurent Jouanneau
+* @copyright   2006-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -22,11 +22,9 @@ abstract class jFormsControl {
    public $required=false;
    public $readonly=false;
    public $label='';
-   public $labellocale='';
 
    public $value='';
    public $defaultValue='';
-//  public $pattern =null;
 
    function __construct($ref){
       $this->ref = $ref;
@@ -50,7 +48,7 @@ class jFormsControlInput extends jFormsControl {
  * @subpackage  forms
  * @experimental
  */
-class jFormsControlSelect1 extends jFormsControl {
+abstract class jFormsBaseControlSelect1 extends jFormsControl {
     public $type="select1";
     /**
      * @var jIFormDatasource
@@ -64,8 +62,49 @@ class jFormsControlSelect1 extends jFormsControl {
  * @subpackage  forms
  * @experimental
  */
-class jFormsControlSelect extends jFormsControlSelect1 {
+/*class jFormsControlSelect extends jFormsBaseControlSelect1 {
    public $type="select";
+}*/
+
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ * @experimental
+ */
+class jFormsControlCheckboxes extends jFormsBaseControlSelect1 {
+   public $type="checkboxes";
+}
+
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ * @experimental
+ */
+class jFormsControlRadiobuttons extends jFormsBaseControlSelect1 {
+   public $type="radiobuttons";
+}
+
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ * @experimental
+ */
+class jFormsControlListbox extends jFormsBaseControlSelect1 {
+   public $type="listbox";
+   public $multiple = false;
+}
+
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ * @experimental
+ */
+class jFormsControlMenulist extends jFormsBaseControlSelect1 {
+   public $type="menulist";
 }
 
 /**
@@ -86,6 +125,16 @@ class jFormsControlTextarea extends jFormsControl {
  */
 class jFormsControlSecret extends jFormsControl {
    public $type='secret';
+}
+
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ * @experimental
+ */
+class jFormsControlCheckbox extends jFormsControl {
+   public $type='checkbox';
 }
 
 /**

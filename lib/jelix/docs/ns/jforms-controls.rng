@@ -5,27 +5,32 @@
   <define name="UI.Common">
      <attribute name="ref" />
      <ref name="label" />
-     <zeroOrMore>
+     <!--<zeroOrMore>
         <choice>
            <ref name="help" />
            <ref name="hint" />
            <ref name="alert" />
-           <!--<ref name="actions" />-->
+           <ref name="actions" />
         </choice>
-     </zeroOrMore>
+     </zeroOrMore>-->
   </define>
-  
+  <!--
   <define name="UI.Common.Attrs">
       
-  </define>
+  </define>-->
   
   
   <define name="UI.Common.data">
       <optional><ref name="datatypes" /></optional>
-      <optional><attribute name="readonly"><choice><value>true</value><value>false</value></choice></attribute></optional>
+      <ref name="UI.attr.readonly" />
       <optional><attribute name="required"><choice><value>true</value><value>false</value></choice></attribute></optional>
   </define>
+  
+  <define name="UI.attr.readonly">
+      <optional><attribute name="readonly"><choice><value>true</value><value>false</value></choice></attribute></optional>
+  </define>
 
+  
   <define name="List.UI.Common">
      <choice>
         <oneOrMore>
@@ -33,21 +38,24 @@
         </oneOrMore>
         <ref name="daodatasource" />
     </choice>
-     <optional>
-         <attribute name="appearance">
-             <choice>
-                 <value>full</value>
-                 <value>compact</value>
-                 <value>minimal</value>
-             </choice>
-         </attribute>
-      </optional>
   </define>
-
+  
+  <define name="item">
+     <element name="item">
+         <optional>
+            <choice>
+                <attribute name="label" />
+                <attribute name="labellocale" />
+             </choice>
+         </optional>
+         <attribute name="value" />
+     </element>
+  </define>
+  
   <define name="datatypes">
-     <choice>
+     <!--<choice>-->
         <ref name="datatype.attr"/>
-        <element name="datatype">
+     <!--   <element name="datatype">
            <ref name="datatype.attr"/>
            <optional><attribute name="length" /></optional>
            <optional><attribute name="minlength" /></optional>
@@ -56,7 +64,7 @@
            <optional><attribute name="maxvalue" /></optional>
            <optional><attribute name="minvalue" /></optional>
            <empty />
-        </element>
+        </element>-->
   </define>
 
   <define ref="datatype.attr">
@@ -83,10 +91,8 @@
       <attribute name="daolabelproperty" />
       <attribute name="daovalueproperty" />
   </define>
-  
+
   <!--  Controls       -->
-
-
    <define name="controls">
       <oneOrMore>
         <choice>
@@ -95,9 +101,12 @@
             <ref name="secret" />
             <ref name="output" />
             <ref name="upload" />
-            <ref name="select1" />
-            <ref name="select" />
             <ref name="submit" />
+            <ref name="checkbox" />
+            <ref name="checkboxes" />
+            <ref name="listbox" />
+            <ref name="radiobuttons"/>
+            <ref name="menulist" />
             <!--
             <ref name="range" />
             <ref name="trigger" />
@@ -111,6 +120,7 @@
   <define name="input">
      <element name="input">
        <ref name="UI.Common" />
+       <ref name="UI.Common.data" />
      </element>
   </define>
 
@@ -130,60 +140,97 @@
   <define name="upload">
      <element name="upload">
        <ref name="UI.Common" />
-       <attribute name="mediatype" /> <!-- indique les types autorisés -->
+       <!--<attribute name="mediatype" /> -->
+     </element>
+  </define>
+  
+  <define name="checkbox">
+     <element name="checkbox">
+       <ref name="UI.Common" />
+       <ref name="UI.attr.readonly" />
      </element>
   </define>
 
+<!--
   <define name="select1">
      <element name="select1">
        <ref name="UI.Common" />
-       <ref name="UI.Common.Attrs" />
        <ref name="List.UI.Common" />
-       <!-- saisie libre autorisée -->
-       <!--<optional>
-           <attribute name="selection">
+       <optional>
+         <attribute name="appearance">
              <choice>
-                 <value>open</value>
-                 <value>close</value>
-              </choice>
-           </attribute>
-       </optional>-->
+                 <value>radiobuttons</value>
+                 <value>listbox</value>
+                 <value>menulist</value>
+             </choice>
+         </attribute>
+      </optional> 
+     </element>
+  </define>
+-->
+  <define name="radiobuttons">
+     <element name="radiobuttons">
+       <ref name="UI.Common" />
+       <ref name="List.UI.Common" />
      </element>
   </define>
 
+  <define name="listbox">
+     <element name="radiobuttons">
+       <ref name="UI.Common" />
+       <ref name="List.UI.Common" />
+       <optional>
+            <attribute name="multiple">
+                <choice><value>true</value><value>false</value></choice>
+            </attribute>
+       </optional>
+     </element>
+  </define>
 
-  <define name="select">
+  <define name="menulist">
+     <element name="radiobuttons">
+       <ref name="UI.Common" />
+       <ref name="List.UI.Common" />
+     </element>
+  </define>
+
+<!--  <define name="select">
      <element name="select">
        <ref name="UI.Common" />
-       <ref name="UI.Common.Attrs" />
        <ref name="List.UI.Common" />
-       <!--<optional>
-           <attribute name="selection">
+       <optional>
+         <attribute name="appearance">
              <choice>
-                 <value>open</value>
-                 <value>close</value>
-              </choice>
-           </attribute>
-       </optional>-->
+                 <value>checkbox</value>
+                 <value>listbox</value>
+             </choice>
+         </attribute>
+      </optional> 
+     </element>
+  </define>-->
+
+  <define name="checkboxes">
+     <element name="checkboxes">
+       <ref name="UI.Common" />
+       <ref name="List.UI.Common" />
      </element>
   </define>
 
+  
   <define name="output">
      <element name="output">
        <ref name="UI.Common" />
-       <ref name="UI.Common.Attrs" />
-       <optional><attribute name="value"/></optional>
+       <!--<optional><attribute name="value"/></optional>-->
      </element>
   </define>
 
   <define name="submit">
      <element name="submit">
        <ref name="UI.Common" />
-       <ref name="UI.Common.Attrs" />
-       <optional><attribute name="value"/></optional>
+       <!--<optional><attribute name="value"/></optional>-->
      </element>
   </define>
-
+-->
   
   <!--
       <define name="range">
@@ -216,13 +263,11 @@
 
   <define name="label">
      <element name="label">
-        <choice>
-            <ref name="message.content" />
-            <attribute name="locale" />
-        </choice>
+        <ref name="message.content" />
      </element>
   </define>
 
+  <!--
   <define name="hint">
      <element name="hint">
         <ref name="message.content" />
@@ -240,16 +285,7 @@
         <ref name="message.content" />
      </element>
   </define>
+-->
 
-  <define name="item">
-     <element name="item">
-         <choice>
-             <ref name="label" />
-             <attribute name="label" />
-             <attribute name="labellocale" />
-         </choice>
-         <attribute name="value" />
-     </element>
-  </define>
 
 </grammar>

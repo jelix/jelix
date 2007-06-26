@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006 Laurent Jouanneau
+* @copyright   2006-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -45,11 +45,11 @@ abstract class jFormsBase {
     protected $_readOnly = false;
 
     /**
-     * list of errors
-     * @var array
+     * content list of available form builder
+     * @var boolean
      */
-    protected $_errors = array();
-    
+    protected $_builders = array();
+
     /**
      * @param jFormsDataContainer $container the datas container
      * @param boolean $reset says if the datas should be reset
@@ -91,16 +91,16 @@ abstract class jFormsBase {
      * @return boolean true if all is ok
      */
     public function check(){
-        $this->_errors = array();
+        $this->_container->errors = array();
         foreach($this->_controls as $name=>$ctrl){
             $value=$this->_container->datas[$name];
             if($value === null && $ctrl->required){
-                $this->_errors[$name]=JFORM_ERRDATA_REQUIRED;
-            }elseif($ctrl->datatype->check($value)){
-                $this->_errors[$name]=JFORM_ERRDATA_INVALID;
+                $this->_container->errors[$name]=JFORM_ERRDATA_REQUIRED;
+            }elseif(!$ctrl->datatype->check($value)){
+                $this->_container->errors[$name]=JFORM_ERRDATA_INVALID;
             }
         }
-        return count($this->_errors) == 0;
+        return count($this->_container->errors) == 0;
     }
 
     /**
@@ -142,13 +142,22 @@ abstract class jFormsBase {
      * @param boolean $r true if you want read only
      */
     public function setReadOnly($r = true){  $this->_readOnly = $r;  }
-    
+
     /**
      * return list of errors found during the check
      * @return array
      * @see jFormsBase::check
      */
-    public function getErrors(){  return $this->_errors;  }
+    public function getErrors(){  return $this->_container->errors;  }
+
+    /**
+     * set an error message on a specific field
+     * @param string $field the field name
+     * @param string $mesg  the error message string 
+     */
+    public function setErrorOn($field, $mesg){
+        $this->_container->errors[$field]=$mesg;
+    }
 
     /**
      *
@@ -179,11 +188,32 @@ abstract class jFormsBase {
     public function getContainer(){ return $this->_container; }
     
     /**
+     * @return array of jFormsControl objects
+     */
+    public function getControls(){ return $this->_controls; }
+
+    /**
      * @return string the formId
      */
     public function id(){ return $this->_container->formId; }
 
 
+    /**
+     * @param string $buildertype  the type name of a form builder
+     * @param string $action action selector where form will be submit
+     * @param array $actionParams  parameters for the action
+     * @return jFormsBuilderBase
+     */
+    public function getBuilder($buildertype, $action, $actionParams){
+        if(isset($this->_builders[$buildertype])){
+            include_once(JELIX_LIB_FORMS_PATH.'jFormsBuilderBase.class.php');
+            include_once ($this->_builders[$buildertype][0]);
+            $c =  $this->_builders[$buildertype][1];
+            return new $c($this, $action, $actionParams);
+        }else{
+            throw new Exception('invalid form builder type');
+        }
+    }
 
 }
 

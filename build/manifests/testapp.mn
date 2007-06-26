@@ -108,6 +108,7 @@ cd testapp/modules/jelix_tests/tests/
   jdb.0_profiles.html.php
   jdb.1_queries.html.php
   jdb.2_queries_with_pdo.html.php
+  jforms.compiler.html.php
   jtpl.expressions_parsing.html_cli.php
   utils.jfilter.html_cli.php
 

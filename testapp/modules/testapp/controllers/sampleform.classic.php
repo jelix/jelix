@@ -2,10 +2,9 @@
 /**
 * @package     testapp
 * @subpackage  testapp module
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -30,7 +29,7 @@ class sampleFormCtrl extends jController {
       $rep->title = 'Edition d\'un formulaire';
 
       $tpl = new jTpl();
-      $tpl->assign('form', $form->getContainer());
+      $tpl->assign('form', $form);
       $rep->body->assign('MAIN',$tpl->fetch('sampleform'));
       $rep->body->assign('page_title','formulaires');
 
@@ -53,11 +52,8 @@ class sampleFormCtrl extends jController {
       $rep->title = 'Edition d\'un formulaire';
 
       if($form){
-        $datas=$form->getContainer()->datas;
-        
         $tpl = new jTpl();
-        $tpl->assign('nom', $datas['nom']);
-        $tpl->assign('prenom', $datas['prenom']);
+        $tpl->assign('form', $form);
         $rep->body->assign('MAIN',$tpl->fetch('sampleformresult'));
       }else{
         $rep->body->assign('MAIN','<p>le formulaire n\'existe pas</p>');
