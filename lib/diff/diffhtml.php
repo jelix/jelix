@@ -144,7 +144,7 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
         $this->result.='</div>';
     }
 
-    function _lines($lines, $class, $prefix = '&nbsp;', $elem = false) {
+    /*function _lines($lines, $class, $prefix = '&nbsp;', $elem = false) {
 
         $div = '<div class="difftext">';
         foreach ($lines as $line) {
@@ -154,7 +154,7 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
 
         }
         $this->result.=$div."</div>\n";
-    }
+    }*/
 
     function _context($lines) {
         $div = '<div class="difftext">';

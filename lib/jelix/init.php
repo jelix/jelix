@@ -70,9 +70,9 @@ define ('BYTECODE_CACHE_EXISTS', function_exists('apc_cache_info')|| function_ex
 #if PHP50 || PHP51
 if(!defined('E_RECOVERABLE_ERROR'))
     define ('E_RECOVERABLE_ERROR',4096);
-error_reporting (E_ALL | E_RECOVERABLE_ERROR);
+error_reporting (E_ALL | E_STRICT | E_RECOVERABLE_ERROR);
 #else
-error_reporting (E_ALL);
+error_reporting (E_ALL | E_STRICT);
 #endif
 
 #if ENABLE_OPTIMIZED_SOURCE
