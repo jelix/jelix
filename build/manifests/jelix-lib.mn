@@ -61,7 +61,96 @@ cd lib/jelix/core/response
   jResponseCss.class.php
   jResponseLatexToPdf.class.php
 
-cd lib/jelix/core/url
+cd lib/jelix/core-modules/jelix
+  module.xml
+cd lib/jelix/core-modules/jelix/controllers
+! help.cmdline.php
+! error.classic.php
+! error.xul.php
+! error.jsonrpc.php
+! error.xmlrpc.php
+! error.rdf.php
+cd lib/jelix/core-modules/jelix/daos
+   jaclgroup.dao.xml
+   jaclrights.dao.xml
+   jaclrightvalues.dao.xml
+   jaclrightvaluesgroup.dao.xml
+   jaclrightvaluesandgroup.dao.xml
+   jaclsubject.dao.xml
+   jaclusergroup.dao.xml
+   jaclgroupsofuser.dao.xml
+cd lib/jelix/core-modules/jelix/install/sql
+  delete.mysql.sql
+  install_jacl.schema.mysql.sql
+  install_jacl.datas.mysql.sql
+cd lib/jelix/core-modules/jelix/locales/en_US
+  dao.ISO-8859-1.properties
+  daoxml.ISO-8859-1.properties
+  db.ISO-8859-1.properties
+  common.ISO-8859-1.properties
+  format.ISO-8859-1.properties
+  formserr.ISO-8859-1.properties
+  jelix.ISO-8859-1.properties
+  errors.ISO-8859-1.properties
+  ui.ISO-8859-1.properties
+  auth.ISO-8859-1.properties
+  dao.UTF-8.properties
+  daoxml.UTF-8.properties
+  db.UTF-8.properties
+  common.UTF-8.properties
+  format.UTF-8.properties
+  formserr.UTF-8.properties
+  jelix.UTF-8.properties
+  errors.UTF-8.properties
+  ui.UTF-8.properties
+  auth.ISO-8859-1.properties
+cd lib/jelix/core-modules/jelix/locales/en_EN
+  dao.ISO-8859-1.properties
+  daoxml.ISO-8859-1.properties
+  db.ISO-8859-1.properties
+  common.ISO-8859-1.properties
+  format.ISO-8859-1.properties
+  formserr.ISO-8859-1.properties
+  jelix.ISO-8859-1.properties
+  errors.ISO-8859-1.properties
+  ui.ISO-8859-1.properties
+  auth.ISO-8859-1.properties
+  dao.UTF-8.properties
+  daoxml.UTF-8.properties
+  db.UTF-8.properties
+  common.UTF-8.properties
+  format.UTF-8.properties
+  formserr.UTF-8.properties
+  jelix.UTF-8.properties
+  errors.UTF-8.properties
+  ui.UTF-8.properties
+  auth.ISO-8859-1.properties
+cd lib/jelix/core-modules/jelix/locales/fr_FR
+  dao.ISO-8859-1.properties
+  daoxml.ISO-8859-1.properties
+  db.ISO-8859-1.properties
+  common.ISO-8859-1.properties
+  format.ISO-8859-1.properties
+  formserr.ISO-8859-1.properties
+  jelix.ISO-8859-1.properties
+  errors.ISO-8859-1.properties
+  ui.ISO-8859-1.properties
+  auth.ISO-8859-1.properties
+  dao.UTF-8.properties
+  daoxml.UTF-8.properties
+  db.UTF-8.properties
+  common.UTF-8.properties
+  format.UTF-8.properties
+  formserr.UTF-8.properties
+  jelix.UTF-8.properties
+  errors.UTF-8.properties
+  ui.UTF-8.properties
+  auth.UTF-8.properties
+cd lib/jelix/core-modules/jelix/templates
+  404.xul.tpl
+  404.html.tpl
+  rss20.tpl
+  atom10.tpl
 
 
 cd lib/jelix/dao
@@ -116,96 +205,6 @@ cd lib/jelix-modules
   LICENCE
   INSTALL
   CREDITS
-cd lib/jelix-modules/jelix
-  module.xml
-cd lib/jelix-modules/jelix/controllers
-! help.cmdline.php
-! error.classic.php
-! error.xul.php
-! error.jsonrpc.php
-! error.xmlrpc.php
-! error.rdf.php
-cd lib/jelix-modules/jelix/daos
-   jaclgroup.dao.xml
-   jaclrights.dao.xml
-   jaclrightvalues.dao.xml
-   jaclrightvaluesgroup.dao.xml
-   jaclrightvaluesandgroup.dao.xml
-   jaclsubject.dao.xml
-   jaclusergroup.dao.xml
-   jaclgroupsofuser.dao.xml
-cd lib/jelix-modules/jelix/install/sql
-  delete.mysql.sql
-  install_jacl.schema.mysql.sql
-  install_jacl.datas.mysql.sql
-cd lib/jelix-modules/jelix/locales/en_US
-  dao.ISO-8859-1.properties
-  daoxml.ISO-8859-1.properties
-  db.ISO-8859-1.properties
-  common.ISO-8859-1.properties
-  format.ISO-8859-1.properties
-  formserr.ISO-8859-1.properties
-  jelix.ISO-8859-1.properties
-  errors.ISO-8859-1.properties
-  ui.ISO-8859-1.properties
-  auth.ISO-8859-1.properties
-  dao.UTF-8.properties
-  daoxml.UTF-8.properties
-  db.UTF-8.properties
-  common.UTF-8.properties
-  format.UTF-8.properties
-  formserr.UTF-8.properties
-  jelix.UTF-8.properties
-  errors.UTF-8.properties
-  ui.UTF-8.properties
-  auth.ISO-8859-1.properties
-cd lib/jelix-modules/jelix/locales/en_EN
-  dao.ISO-8859-1.properties
-  daoxml.ISO-8859-1.properties
-  db.ISO-8859-1.properties
-  common.ISO-8859-1.properties
-  format.ISO-8859-1.properties
-  formserr.ISO-8859-1.properties
-  jelix.ISO-8859-1.properties
-  errors.ISO-8859-1.properties
-  ui.ISO-8859-1.properties
-  auth.ISO-8859-1.properties
-  dao.UTF-8.properties
-  daoxml.UTF-8.properties
-  db.UTF-8.properties
-  common.UTF-8.properties
-  format.UTF-8.properties
-  formserr.UTF-8.properties
-  jelix.UTF-8.properties
-  errors.UTF-8.properties
-  ui.UTF-8.properties
-  auth.ISO-8859-1.properties
-cd lib/jelix-modules/jelix/locales/fr_FR
-  dao.ISO-8859-1.properties
-  daoxml.ISO-8859-1.properties
-  db.ISO-8859-1.properties
-  common.ISO-8859-1.properties
-  format.ISO-8859-1.properties
-  formserr.ISO-8859-1.properties
-  jelix.ISO-8859-1.properties
-  errors.ISO-8859-1.properties
-  ui.ISO-8859-1.properties
-  auth.ISO-8859-1.properties
-  dao.UTF-8.properties
-  daoxml.UTF-8.properties
-  db.UTF-8.properties
-  common.UTF-8.properties
-  format.UTF-8.properties
-  formserr.UTF-8.properties
-  jelix.UTF-8.properties
-  errors.UTF-8.properties
-  ui.UTF-8.properties
-  auth.UTF-8.properties
-cd lib/jelix-modules/jelix/templates
-  404.xul.tpl
-  404.html.tpl
-  rss20.tpl
-  atom10.tpl
 
 cd lib/jelix-modules/jauth
   module.xml
@@ -239,49 +238,55 @@ cd lib/jelix-plugins
   LICENCE
   INSTALL
   CREDITS
+cd lib/jelix-plugins/auth/
+cd lib/jelix-plugins/coord/
+cd lib/jelix-plugins/db/
+cd lib/jelix-plugins/urls/
+cd lib/jelix-plugins/tpl/
 
-cd lib/jelix-plugins/auth/db
+
+cd lib/jelix/plugins/auth/db
   db.auth.php
-cd lib/jelix-plugins/auth/class
+cd lib/jelix/plugins/auth/class
   class.auth.php
-cd lib/jelix-plugins/auth/lds
+cd lib/jelix/plugins/auth/lds
   lds.auth.php
 
-cd lib/jelix-plugins/coord/magicquotes
+cd lib/jelix/plugins/coord/magicquotes
 ! magicquotes.plugin.php
   plugin.xml
 
-cd lib/jelix-plugins/coord/autolocale
+cd lib/jelix/plugins/coord/autolocale
   autolocale.plugin.ini.php.dist
 ! autolocale.plugin.php
   plugin.xml
 
-cd lib/jelix-plugins/coord/auth
+cd lib/jelix/plugins/coord/auth
 ! auth.plugin.php
   plugin.xml
   auth.plugin.ini.php.dist
 
-cd lib/jelix-plugins/db/intuition
+cd lib/jelix/plugins/db/intuition
   intuition.dbconnection.php
   intuition.dbresultset.php
   intuition.dbtools.php
 
-cd lib/jelix-plugins/db/mysql
+cd lib/jelix/plugins/db/mysql
   mysql.dbconnection.php
   mysql.dbresultset.php
   mysql.dbtools.php
 
-cd lib/jelix-plugins/db/postgresql
+cd lib/jelix/plugins/db/postgresql
   postgresql.dbconnection.php
   postgresql.dbresultset.php
   postgresql.dbtools.php
 
-cd lib/jelix-plugins/db/sqlite
+cd lib/jelix/plugins/db/sqlite
   sqlite.dbconnection.php
   sqlite.dbresultset.php
   sqlite.dbtools.php
 
-cd lib/jelix-plugins/tpl/common
+cd lib/jelix/plugins/tpl/common
   block.ifacl.php
   block.ifnotacl.php
   block.ifuserconnected.php
@@ -305,7 +310,7 @@ cd lib/jelix-plugins/tpl/common
   modifier.wiki.php
   modifier.wordwrap.php
 
-cd lib/jelix-plugins/tpl/html
+cd lib/jelix/plugins/tpl/html
   function.jlocale.php
   function.jurl.php
   function.urljsstring.php
@@ -320,27 +325,27 @@ cd lib/jelix-plugins/tpl/html
   function.ctrl_label.php
   function.ctrl_value.php
 
-cd lib/jelix-plugins/tpl/ltx2pdf
+cd lib/jelix/plugins/tpl/ltx2pdf
   function.jlocale.php
   function.jurl.php
   modifier.latex.php
   block.lenv.php
   block.lcmd.php
 
-cd lib/jelix-plugins/tpl/text
+cd lib/jelix/plugins/tpl/text
   function.jlocale.php
   function.jurl.php
 
-cd lib/jelix-plugins/tpl/xul
+cd lib/jelix/plugins/tpl/xul
   function.jlocale.php
   function.jurl.php
   function.urljsstring.php
   meta.xul.php
 
-cd lib/jelix-plugins/urls/significant
+cd lib/jelix/plugins/urls/significant
   jSignificantUrlsCompiler.class.php
 * significant.urls.php
-cd lib/jelix-plugins/urls/simple
+cd lib/jelix/plugins/urls/simple
   simple.urls.php
 
 cd lib/jelix-www

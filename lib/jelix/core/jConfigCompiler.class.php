@@ -170,8 +170,9 @@ class jConfigCompiler {
      */
     static private function _loadPathList($list, &$allBasePath){
         $list = split(' *, *',$list);
+        array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $result=array();
-        foreach($list as $path){
+        foreach($list as $k=>$path){
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
             if(!file_exists($p)){
                 trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
@@ -179,7 +180,8 @@ class jConfigCompiler {
             }
             if(substr($p,-1) !='/')
                 $p.='/';
-            $allBasePath[]=$p;
+            if($k!=0) 
+                $allBasePath[]=$p;
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
                     if ($f{0} != '.' && is_dir($p.$f)) {
@@ -203,7 +205,8 @@ class jConfigCompiler {
 #else
         $list = split(' *, *',$config['pluginsPath']);
 #endif
-        foreach($list as $path){
+        array_unshift($list, JELIX_LIB_PATH.'plugins/'); 
+        foreach($list as $k=>$path){
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
             if(!file_exists($p)){
                 trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
@@ -216,12 +219,12 @@ class jConfigCompiler {
                 while (false !== ($f = readdir($handle))) {
                     if ($f{0} != '.' && is_dir($p.$f)) {
                         if($subdir = opendir($p.$f)){
+                            if($k!=0) 
 #if ENABLE_PHP_JELIX
-                            $config->_allBasePath[]=$p.$f.'/';
+                               $config->_allBasePath[]=$p.$f.'/';
 #else
-                            $config['_allBasePath'][]=$p.$f.'/';
+                               $config['_allBasePath'][]=$p.$f.'/';
 #endif
-                            $allBasePath[]=$p.$f.'/';
                             while (false !== ($subf = readdir($subdir))) {
                                 if ($subf{0} != '.' && is_dir($p.$f.'/'.$subf)) {
                                     if($f == 'tpl'){
