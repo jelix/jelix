@@ -62,9 +62,7 @@ cd lib/jelix/core/response
   jResponseLatexToPdf.class.php
 
 cd lib/jelix/core/url
-  jUrlCompiler.significant.class.php
-* jUrlEngine.significant.class.php
-  jUrlEngine.simple.class.php
+
 
 cd lib/jelix/dao
   jDaoBase.class.php
@@ -338,6 +336,12 @@ cd lib/jelix-plugins/tpl/xul
   function.jurl.php
   function.urljsstring.php
   meta.xul.php
+
+cd lib/jelix-plugins/urls/significant
+  jSignificantUrlsCompiler.class.php
+* significant.urls.php
+cd lib/jelix-plugins/urls/simple
+  simple.urls.php
 
 cd lib/jelix-www
   json.js

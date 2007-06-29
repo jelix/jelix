@@ -10,9 +10,7 @@ cd lib/jelix/core
   jRequest.class.php
   jResponse.class.php
 * jSelector.class.php
-
-cd lib/jelix/core/url
-*  jUrl.class.php
+* jUrl.class.php
 
 cd lib/jelix/db
   jDbConnection.class.php

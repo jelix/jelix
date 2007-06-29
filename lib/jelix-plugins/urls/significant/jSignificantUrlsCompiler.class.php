@@ -16,7 +16,7 @@
 * @package  jelix
 * @subpackage core_url
 */
-class jUrlCompilerSignificant implements jISimpleCompiler{
+class jSignificantUrlsCompiler implements jISimpleCompiler{
 
     public function compile($aSelector){
         global $gJCoord;

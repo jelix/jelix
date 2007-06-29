@@ -48,7 +48,7 @@ force_encoding=1
 
 [jelix_tests_forward]
 driver="mysql"
-database="unittest_forward"
+database="jelix_tests_forward"
 host= "localhost_forward"
 user= "plop_forward"
 password= "futchball_forward"

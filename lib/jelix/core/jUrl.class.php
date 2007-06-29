@@ -342,13 +342,17 @@ class jUrl extends jUrlBase {
         if($reset) $engine=null; // pour pouvoir faire les tests unitaires
 
         if($engine === null){
-            $file = JELIX_LIB_CORE_PATH.'url/jUrlEngine.'.$GLOBALS['gJConfig']->urlengine['engine'].'.class.php';
-            if(!file_exists($file)){
-                trigger_error("Url engine doesn't exist (".$GLOBALS['gJConfig']->urlengine['engine'].')',E_USER_ERROR);
-                return null;
+            global $gJConfig;
+            $name = $gJConfig->urlengine['engine'];
+            if(!isset($gJConfig->_pluginsPathList_urls) 
+                || !isset($gJConfig->_pluginsPathList_urls[$name])
+                || !file_exists($gJConfig->_pluginsPathList_urls[$name]) ){
+                    throw new jException('jelix~errors.urls.engine.notfound', $name);
             }
-            include_once($file);
-            $cl='jUrlEngine'.$GLOBALS['gJConfig']->urlengine['engine'];
+            $p = $gJConfig->_pluginsPathList_urls[$name];
+            require_once($p.$name.'.urls.php');
+
+            $cl=$name.'UrlEngine';
             $engine = new $cl();
         }
         return $engine;

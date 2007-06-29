@@ -72,20 +72,15 @@ class jDb {
            $driver = $m[1];
         }
 
-        //pas de vérification sur l'éventuel partage de l'élément.
-
-global $gJConfig;
-            if(!isset($gJConfig->_pluginsPathList_coord) 
-                || !isset($gJConfig->_pluginsPathList_coord[$config['driver']])
-                || !file_exists($gJConfig->_pluginsPathList_coord[$config['driver']]) ){
-                 throw new jException('jelix~auth.error.driver.notfound');
-            }
-            require_once($gJConfig->_pluginsPathList_coord[$config['driver']]);
-
-
-
-        require_once(JELIX_LIB_DB_PATH.'/drivers/'.$driver.'/jDbTools.'.$driver.'.class.php');
-        $class = 'jDbTools'.$driver;
+        global $gJConfig;
+        if(!isset($gJConfig->_pluginsPathList_db) 
+            || !isset($gJConfig->_pluginsPathList_db[$profil['driver']])
+            || !file_exists($gJConfig->_pluginsPathList_db[$profil['driver']]) ){
+                throw new jException('jelix~db.error.driver.notfound', $profil['driver']);
+        }
+        $p = $gJConfig->_pluginsPathList_db[$profil['driver']];
+        require_once($p.$profil['driver'].'.dbtools.php');
+        $class = $profil['driver'].'DbTools';
 
         //Création de l'objet
         $cnx = self::getConnection ($name);

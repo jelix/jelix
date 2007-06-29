@@ -82,7 +82,7 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/jContext.class.php
 #includephp core/jConfig.class.php
 #includephp core/jSelector.class.php
-#includephp core/url/jUrl.class.php
+#includephp core/jUrl.class.php
 #includephp core/jCoordinator.class.php
 #includephp core/jController.class.php
 #includephp core/jRequest.class.php
@@ -100,7 +100,7 @@ require_once (JELIX_LIB_CORE_PATH . 'jException.lib.php');
 require_once (JELIX_LIB_CORE_PATH . 'jContext.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jSelector.class.php');
-require_once (JELIX_LIB_CORE_PATH . 'url/jUrl.class.php');
+require_once (JELIX_LIB_CORE_PATH . 'jUrl.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jCoordinator.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jController.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jRequest.class.php');

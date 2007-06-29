@@ -16,7 +16,7 @@
  * @subpackage core_url
  * @see jIUrlEngine
  */
-class jUrlEngineSimple implements jIUrlEngine {
+class simpleUrlEngine implements jIUrlEngine {
 
     /**
     * Parse some url components
