@@ -5,5 +5,5 @@ defaultModule = "jxxulapp"
 defaultAction = "default_index"
 
 [plugins]
-auth = jsonrpc/auth.plugin.ini.php
+auth = jsonrpc/auth.coord.ini.php
 

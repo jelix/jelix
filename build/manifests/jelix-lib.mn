@@ -253,18 +253,18 @@ cd lib/jelix/plugins/auth/lds
   lds.auth.php
 
 cd lib/jelix/plugins/coord/magicquotes
-! magicquotes.plugin.php
+! magicquotes.coord.php
   plugin.xml
 
 cd lib/jelix/plugins/coord/autolocale
-  autolocale.plugin.ini.php.dist
-! autolocale.plugin.php
+  autolocale.coord.ini.php.dist
+! autolocale.coord.php
   plugin.xml
 
 cd lib/jelix/plugins/coord/auth
-! auth.plugin.php
+! auth.coord.php
   plugin.xml
-  auth.plugin.ini.php.dist
+  auth.coord.ini.php.dist
 
 cd lib/jelix/plugins/db/intuition
   intuition.dbconnection.php

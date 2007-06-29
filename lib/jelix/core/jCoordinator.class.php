@@ -107,15 +107,15 @@ class jCoordinator {
 
         foreach($gJConfig->plugins as $name=>$conf){
             if($conf && isset($gJConfig->_pluginsPathList_coord[$name])){
-                $conff= $conf=='1' ? $name.'.plugin.ini.php': $conf;
+                $conff= $conf=='1' ? $name.'.coord.ini.php': $conf;
                 if(file_exists(JELIX_APP_CONFIG_PATH.$conff)){
                    if( false === ($conf = @parse_ini_file(JELIX_APP_CONFIG_PATH.$conff,true)))
                         die("Jelix Error: Error in the configuration file of plugin $name ($conff)!");
                 }else{
                     $conf = array();
                 }
-                include( $gJConfig->_pluginsPathList_coord[$name].$name.'.plugin.php');
-                $class= $name.'Plugin';
+                include( $gJConfig->_pluginsPathList_coord[$name].$name.'.coord.php');
+                $class= $name.'CoordPlugin';
                 $this->plugins[strtolower($name)] = new $class($conf);
             }
         }

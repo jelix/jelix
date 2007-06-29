@@ -73,6 +73,9 @@ class createappCommand extends JelixScriptCommand {
        $this->createDir(JELIX_APP_PATH.'plugins');
        $this->createDir(JELIX_APP_PATH.'plugins/coord/');
        $this->createDir(JELIX_APP_PATH.'plugins/tpl/');
+       $this->createDir(JELIX_APP_PATH.'plugins/tpl/common');
+       $this->createDir(JELIX_APP_PATH.'plugins/tpl/html');
+       $this->createDir(JELIX_APP_PATH.'plugins/tpl/text');
        $this->createDir(JELIX_APP_PATH.'plugins/db/');
        $this->createDir(JELIX_APP_PATH.'plugins/auth/');
        $this->createDir(JELIX_APP_PATH.'responses');

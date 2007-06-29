@@ -5,5 +5,5 @@ defaultModule = "jxxulapp"
 defaultAction = "default_index"
 
 [plugins]
-auth = rdf/auth.plugin.ini.php
+auth = rdf/auth.coord.ini.php
 

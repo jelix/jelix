@@ -5,4 +5,4 @@ defaultModule = "jxxulapp"
 defaultAction = "default_index"
 
 [plugins]
-auth = index/auth.plugin.ini.php
+auth = index/auth.coord.ini.php

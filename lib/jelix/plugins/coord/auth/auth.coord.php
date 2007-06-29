@@ -17,7 +17,7 @@
 require_once(JELIX_LIB_AUTH_PATH.'jAuth.class.php');
 require_once(JELIX_LIB_AUTH_PATH.'jAuthUser.class.php');
 
-class AuthPlugin implements jICoordPlugin {
+class AuthCoordPlugin implements jICoordPlugin {
     public $config;
 
     function __construct($conf){
