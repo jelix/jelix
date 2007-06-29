@@ -1,13 +1,13 @@
 --TEST--
-check reflection of jIPlugin interface
+check reflection of jICoordPlugin interface
 --SKIPIF--
 <?php if (!extension_loaded("jelix")) print "skip"; ?>
 --FILE--
 <?php 
-Reflection::export(new ReflectionClass('jIPlugin'));
+Reflection::export(new ReflectionClass('jICoordPlugin'));
 ?>
 --EXPECT--
-Interface [ <internal:jelix> interface jIPlugin ] {
+Interface [ <internal:jelix> interface jICoordPlugin ] {
 
   - Constants [0] {
   }

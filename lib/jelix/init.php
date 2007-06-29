@@ -90,7 +90,7 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/jLocale.class.php
 #includephp core/jIncluder.class.php
 #ifnot ENABLE_PHP_JELIX
-#includephp core/jIPlugin.iface.php
+#includephp core/jICoordPlugin.iface.php
 #endif
 #else
 
@@ -108,7 +108,7 @@ require_once (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require_once (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
 #ifnot ENABLE_PHP_JELIX
-require_once (JELIX_LIB_CORE_PATH . 'jIPlugin.iface.php');
+require_once (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
 #endif
 #endif
 

@@ -37,9 +37,9 @@ cd ext/jelix/tests
   jiurlengine_002.phpt
   read_ini_003.phpt
   scan_module_sel_001.phpt
-  jiplugin_001.phpt
+  jicoordplugin_001.phpt
   jelix_const_001.phpt
-  jiplugin_002.phpt
-  jiplugin_003.phpt
+  jicoordplugin_002.phpt
+  jicoordplugin_003.phpt
   scan_module_sel_002.phpt
   scan_action_sel_001.phpt

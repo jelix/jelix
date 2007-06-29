@@ -285,7 +285,7 @@ class jCoordinator {
     * gets a given plugin if registered
     * @param string   $pluginName   the name of the plugin
     * @param boolean  $required  says if the plugin is required or not. If true, will generate an exception if the plugin is not registered.
-    * @return jIPlugin
+    * @return jICoordPlugin
     */
     public function getPlugin ($pluginName, $required = true){
         $pluginName = strtolower ($pluginName);

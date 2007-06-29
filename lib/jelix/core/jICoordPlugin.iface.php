@@ -15,7 +15,7 @@
 * @package  jelix
 * @subpackage core
 */
-interface jIPlugin {
+interface jICoordPlugin {
 
     /**
      * @param    array  $config  content of the config ini file of the plugin

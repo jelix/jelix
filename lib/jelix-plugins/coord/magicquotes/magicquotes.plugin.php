@@ -20,7 +20,7 @@
  * @package    jelix
  * @subpackage plugins
  */
-class MagicQuotesPlugin implements jIPlugin {
+class MagicQuotesPlugin implements jICoordPlugin {
 
     /**
     *

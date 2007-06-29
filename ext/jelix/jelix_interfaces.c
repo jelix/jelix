@@ -21,7 +21,7 @@
 #include "jelix_interfaces.h"
 
 
-PHPAPI zend_class_entry * jelix_ce_jIPlugin;
+PHPAPI zend_class_entry * jelix_ce_jICoordPlugin;
 PHPAPI zend_class_entry * jelix_ce_jIAuthDriver;
 PHPAPI zend_class_entry * jelix_ce_jIUrlEngine;
 PHPAPI zend_class_entry * jelix_ce_jIRestController;
@@ -30,10 +30,9 @@ PHPAPI zend_class_entry * jelix_ce_jIMultiFileCompiler;
 PHPAPI zend_class_entry * jelix_ce_jISelector;
 
 
-// declaration des arguments aux mÃ©thodes
 
 /* -------------------------------------
-interface jIPlugin{
+interface jICoordPlugin{
     public function beforeAction($param);
     public function beforeOutput();
     public function afterProcess();
@@ -41,15 +40,15 @@ interface jIPlugin{
 */
 
 static
-ZEND_BEGIN_ARG_INFO_EX(arginfo_jIPlugin_beforeAction, 0, 0, 1)
+ZEND_BEGIN_ARG_INFO_EX(arginfo_jICoordPlugin_beforeAction, 0, 0, 1)
 	ZEND_ARG_INFO(0, params)
 ZEND_END_ARG_INFO();
 
 
-zend_function_entry zend_funcs_jIPlugin[] = {
-	ZEND_ABSTRACT_ME(jIPlugin, beforeAction, arginfo_jIPlugin_beforeAction)
-	ZEND_ABSTRACT_ME(jIPlugin, beforeOutput, NULL)
-	ZEND_ABSTRACT_ME(jIPlugin, afterProcess, NULL)
+zend_function_entry zend_funcs_jICoordPlugin[] = {
+	ZEND_ABSTRACT_ME(jICoordPlugin, beforeAction, arginfo_jICoordPlugin_beforeAction)
+	ZEND_ABSTRACT_ME(jICoordPlugin, beforeOutput, NULL)
+	ZEND_ABSTRACT_ME(jICoordPlugin, afterProcess, NULL)
 	{NULL, NULL, NULL}
 };
 
@@ -231,7 +230,7 @@ PHP_MINIT_FUNCTION(jelix_interfaces)
 
 	zend_class_entry _ce;
 
-	JELIX_DECLARE_INTERFACE(jIPlugin)
+	JELIX_DECLARE_INTERFACE(jICoordPlugin)
 	JELIX_DECLARE_INTERFACE(jIAuthDriver)
 	JELIX_DECLARE_INTERFACE(jIUrlEngine)
 	JELIX_DECLARE_INTERFACE(jIRestController)

@@ -1,11 +1,11 @@
 --TEST--
-Use of jIPlugin interface
+Use of jICoordPlugin interface
 --SKIPIF--
 <?php if (!extension_loaded("jelix")) print "skip"; ?>
 --FILE--
 <?php 
 
-class myClass implements jIPlugin {
+class myClass implements jICoordPlugin {
 
 	function beforeAction($param){
 		echo "beforeAction\n";

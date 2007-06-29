@@ -14,7 +14,7 @@
 #include "php_jelix.h"
 
 
-extern PHPAPI zend_class_entry * jelix_ce_jIPlugin;
+extern PHPAPI zend_class_entry * jelix_ce_jICoordPlugin;
 extern PHPAPI zend_class_entry * jelix_ce_jIAuthDriver;
 extern PHPAPI zend_class_entry * jelix_ce_jIUrlEngine;
 extern PHPAPI zend_class_entry * jelix_ce_jIRestController;
