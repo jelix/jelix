@@ -45,10 +45,9 @@ class jConfigCompiler {
 
         $config->_allBasePath = array();
         
-        $config->_pluginsPathList = self::_loadPathList($config->pluginsPath, $config->_allBasePath);
         $config->_modulesPathList = self::_loadPathList($config->modulesPath, $config->_allBasePath);
 
-        self::_loadTplPathList($config, 'tplpluginsPath');
+        self::_loadPluginsPathList($config);
 
         if($config->checkTrustedModules){
             $config->_trustedModules = explode(',',$config->trustedModules);
@@ -91,10 +90,9 @@ class jConfigCompiler {
              $config['defaultAction'] = '_';
 
         $config['_allBasePath'] = array();
-        $config['_pluginsPathList'] = self::_loadPathList($config['pluginsPath'], $config['_allBasePath']);
         $config['_modulesPathList'] = self::_loadPathList($config['modulesPath'], $config['_allBasePath']);
 
-        self::_loadTplPathList($config, 'tplpluginsPath');
+        self::_loadPluginsPathList($config);
 
         if($config['checkTrustedModules']){
             $config['_trustedModules'] = explode(',',$config['trustedModules']);
@@ -194,45 +192,62 @@ class jConfigCompiler {
         return $result;
     }
 
+
     /**
-     * Analyse and check the "lib:" and "app:" path for plugins
-     * @param array $list list of "lib:*" and "app:*" path
-     * @return array list of full path
+     * Analyse plugin paths
+     * @param array|object $config the config container
      */
-    static private function _loadTplPathList(&$config,  $var){
+    static private function _loadPluginsPathList(&$config){
 #if ENABLE_PHP_JELIX
-        $list = split(' *, *',$config->$var);
+        $list = split(' *, *',$config->pluginsPath);
 #else
-        $list = split(' *, *',$config[$var]);
+        $list = split(' *, *',$config['pluginsPath']);
 #endif
         foreach($list as $path){
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
             if(!file_exists($p)){
-                trigger_error('The path '.$path.' for tpl plugins, given in the jelix config, doesn\'t exists !',E_USER_ERROR);
+                trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
                 exit;
             }
             if(substr($p,-1) !='/')
                 $p.='/';
-#if ENABLE_PHP_JELIX
-            $config->_allBasePath[]=$p;
-#else
-            $config['_allBasePath'][]=$p;
-#endif
+
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
                     if ($f{0} != '.' && is_dir($p.$f)) {
+                        if($subdir = opendir($p.$f)){
 #if ENABLE_PHP_JELIX
-                        $prop = '_tplpluginsPathList_'.$f;
-                        $config->{$prop}[] = $p.$f.'/';
+                            $config->_allBasePath[]=$p.$f.'/';
 #else
-                        $config['_tplpluginsPathList_'.$f][] = $p.$f.'/';
+                            $config['_allBasePath'][]=$p.$f.'/';
 #endif
+                            $allBasePath[]=$p.$f.'/';
+                            while (false !== ($subf = readdir($subdir))) {
+                                if ($subf{0} != '.' && is_dir($p.$f.'/'.$subf)) {
+                                    if($f == 'tpl'){
+#if ENABLE_PHP_JELIX
+                                        $prop = '_tplpluginsPathList_'.$subf;
+                                        $config->{$prop}[] = $p.$f.'/'.$subf.'/';
+                                    }else{
+                                        $prop = '_pluginsPathList_'.$f;
+                                        $config->{$prop}[$subf] = $p.$f.'/'.$subf.'/';
+#else
+                                        $config['_tplpluginsPathList_'.$subf][] = $p.$f.'/'.$subf.'/';
+                                    }else{
+                                        $config['_pluginsPathList_'.$f][$subf] =$p.$f.'/'.$subf.'/';
+#endif
+                                    }
+                                }
+                            }
+                            closedir($subdir);
+                        }
                     }
                 }
                 closedir($handle);
             }
         }
     }
+
 #ifnot ENABLE_PHP_JELIX
     /**
      * merge two array which are the result of a parse_ini_file call

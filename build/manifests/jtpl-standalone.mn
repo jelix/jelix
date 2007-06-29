@@ -7,7 +7,7 @@ sd lib/jelix/tpl/
    CREDITS
    LICENCE
 
-sd lib/jelix/tpl/plugins/common
+sd lib/jelix-plugins/tpl/common
 dd plugins/common
   function.include.php
   modifier.cat.php
@@ -26,14 +26,14 @@ dd plugins/common
   modifier.truncate.php
   modifier.wordwrap.php
 
-sd lib/jelix/tpl/plugins/html
+sd lib/jelix-plugins/tpl/html
 dd plugins/html
   modifier.nl2br.php
 
-sd lib/jelix/tpl/plugins/text
+sd lib/jelix-plugins/tpl/text
 dd plugins/text
 
-sd lib/jelix/tpl/plugins/xul
+sd lib/jelix-plugins/tpl/xul
 dd plugins/xul
 
 sd lib/jelix/tpl/locales/

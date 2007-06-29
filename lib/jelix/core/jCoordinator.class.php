@@ -106,7 +106,7 @@ class jCoordinator {
         global $gJConfig;
 
         foreach($gJConfig->plugins as $name=>$conf){
-            if($conf && isset($gJConfig->_pluginsPathList[$name])){
+            if($conf && isset($gJConfig->_pluginsPathList_coord[$name])){
                 $conff= $conf=='1' ? $name.'.plugin.ini.php': $conf;
                 if(file_exists(JELIX_APP_CONFIG_PATH.$conff)){
                    if( false === ($conf = @parse_ini_file(JELIX_APP_CONFIG_PATH.$conff,true)))
@@ -114,7 +114,7 @@ class jCoordinator {
                 }else{
                     $conf = array();
                 }
-                include( $gJConfig->_pluginsPathList[$name].$name.'.plugin.php');
+                include( $gJConfig->_pluginsPathList_coord[$name].$name.'.plugin.php');
                 $class= $name.'Plugin';
                 $this->plugins[strtolower($name)] = new $class($conf);
             }
