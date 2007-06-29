@@ -108,7 +108,7 @@ class jAuth {
             global $gJCoord;
             $plugin = $gJCoord->getPlugin('auth');
             if($plugin === null){
-                throw new jException('jelix~jxauth.error.plugin.missing');
+                throw new jException('jelix~auth.error.plugin.missing');
             }
             $config = & $plugin->config;
         }
@@ -122,10 +122,16 @@ class jAuth {
     protected static function _getDriver(){
         static $driver = null;
         if($driver == null){
-              $config = self::_getConfig();
-              $dname = 'jAuthDriver'.$config['driver'];
-              require_once(JELIX_LIB_AUTH_PATH.$dname.'.class.php');
-              $driver = new $dname($config[$config['driver']]);
+            $config = self::_getConfig();
+            global $gJConfig;
+            if(!isset($gJConfig->_pluginsPathList_coord) 
+                || !isset($gJConfig->_pluginsPathList_coord[$config['driver']])
+                || !file_exists($gJConfig->_pluginsPathList_coord[$config['driver']]) ){
+                 throw new jException('jelix~auth.error.driver.notfound', $config['driver']);
+            }
+            require_once($gJConfig->_pluginsPathList_coord[$config['driver']].$name.'auth.php');
+            $dname = $name.'AuthDriver';
+            $driver = new $dname($config[$config['driver']]);
         }
         return $driver;
     }

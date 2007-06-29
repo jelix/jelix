@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage db
-* @version    $Id:$
 * @author     Loic Mathaud
 * @contributor
 * @copyright  2006 Loic Mathaud
@@ -16,7 +15,7 @@
  * @package    jelix
  * @subpackage db
  */
-class jDbResultSetSqlite extends jDbResultSet {
+class sqliteDbResultSet extends jDbResultSet {
 
     protected function  _fetch (){
         $ret =  sqlite_fetch_object($this->_idResult);
@@ -35,14 +34,14 @@ class jDbResultSetSqlite extends jDbResultSet {
     }
 
     public function bindColumn($column, &$param , $type=null )
-      {throw new JException('jelix~db.error.feature.unsupported', array('sqlite','bindColumn')); }
+      {throw new jException('jelix~db.error.feature.unsupported', array('sqlite','bindColumn')); }
     public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null)
-      {throw new JException('jelix~db.error.feature.unsupported', array('sqlite','bindParam')); }
+      {throw new jException('jelix~db.error.feature.unsupported', array('sqlite','bindParam')); }
     public function bindValue($parameter, $value, $data_type)
-      {throw new JException('jelix~db.error.feature.unsupported', array('sqlite','bindValue')); }
+      {throw new jException('jelix~db.error.feature.unsupported', array('sqlite','bindValue')); }
     public function columnCount()
       { return sqlite_num_fields($this->_idResult); }
     public function execute($parameters=null)
-      {throw new JException('jelix~db.error.feature.unsupported', array('sqlite','bindColumn')); }
+      {throw new jException('jelix~db.error.feature.unsupported', array('sqlite','bindColumn')); }
 }
 ?>

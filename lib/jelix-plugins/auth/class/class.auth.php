@@ -87,7 +87,7 @@ interface jIAuthDriverClass {
 * @see jAuth
 * @since 1.0a5
 */
-class jAuthDriverClass implements jIAuthDriver {
+class classAuthDriver implements jIAuthDriver {
 
     protected $_params;
 

@@ -20,7 +20,7 @@
 * @package    jelix
 * @subpackage auth
 */
-class jAuthDriverDb implements jIAuthDriver {
+class dbAuthDriver implements jIAuthDriver {
 
     protected $_params;
 

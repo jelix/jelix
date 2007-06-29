@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage db
-* @version    $Id:$
 * @author     Loic Mathaud
 * @contributor
 * @copyright  2006 Loic Mathaud
@@ -15,7 +14,7 @@
  * @package    jelix
  * @subpackage db
  */
-class jDbToolsSqlite extends jDbTools {
+class sqliteDbTools extends jDbTools {
     function __construct($connector){
         parent::__construct($connector);
     }

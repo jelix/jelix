@@ -20,7 +20,7 @@
  * @package    jelix
  * @subpackage db
  */
-class jDbToolsMySQL extends jDbTools {
+class mysqlDbTools extends jDbTools {
    function __construct($connector){
       parent::__construct($connector);
    }

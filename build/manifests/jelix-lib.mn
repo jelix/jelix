@@ -15,9 +15,6 @@ cd lib/jelix
 
 cd lib/jelix/auth
 * jAuth.class.php
-  jAuthDriverDb.class.php
-  jAuthDriverClass.class.php
-  jAuthDriverLDS.class.php
   jAuthUser.class.php
 
 cd lib/jelix/acl
@@ -80,27 +77,6 @@ cd lib/jelix/db
 * jDbPDOConnection.class.php
   jDbTools.class.php
   jDbWidget.class.php
-
-cd lib/jelix/db/drivers/intuition
-  jDbConnection.intuition.class.php
-  jDbResultSet.intuition.class.php
-  jDbTools.intuition.class.php
-
-
-cd lib/jelix/db/drivers/mysql
-  jDbConnection.mysql.class.php
-  jDbResultSet.mysql.class.php
-  jDbTools.mysql.class.php
-
-cd lib/jelix/db/drivers/postgresql
-  jDbConnection.postgresql.class.php
-  jDbResultSet.postgresql.class.php
-  jDbTools.postgresql.class.php
-
-cd lib/jelix/db/drivers/sqlite
-  jDbConnection.sqlite.class.php
-  jDbResultSet.sqlite.class.php
-  jDbTools.sqlite.class.php
 
 cd lib/jelix/events
 * jEvent.class.php
@@ -266,6 +242,13 @@ cd lib/jelix-plugins
   INSTALL
   CREDITS
 
+cd lib/jelix-plugins/auth/db
+  db.auth.php
+cd lib/jelix-plugins/auth/class
+  class.auth.php
+cd lib/jelix-plugins/auth/lds
+  lds.auth.php
+
 cd lib/jelix-plugins/coord/magicquotes
 ! magicquotes.plugin.php
   plugin.xml
@@ -279,6 +262,26 @@ cd lib/jelix-plugins/coord/auth
 ! auth.plugin.php
   plugin.xml
   auth.plugin.ini.php.dist
+
+cd lib/jelix-plugins/db/intuition
+  intuition.dbconnection.php
+  intuition.dbresultset.php
+  intuition.dbtools.php
+
+cd lib/jelix-plugins/db/mysql
+  mysql.dbconnection.php
+  mysql.dbresultset.php
+  mysql.dbtools.php
+
+cd lib/jelix-plugins/db/postgresql
+  postgresql.dbconnection.php
+  postgresql.dbresultset.php
+  postgresql.dbtools.php
+
+cd lib/jelix-plugins/db/sqlite
+  sqlite.dbconnection.php
+  sqlite.dbresultset.php
+  sqlite.dbtools.php
 
 cd lib/jelix-plugins/tpl/common
   block.ifacl.php

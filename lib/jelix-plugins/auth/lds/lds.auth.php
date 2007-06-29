@@ -31,7 +31,7 @@ class jAuthUserLDS extends jAuthUser {
  * @see jAuth
  * @since 1.0b1
  */
-class jAuthDriverLDS implements jIAuthDriver {
+class ldsAuthDriver implements jIAuthDriver {
 
     protected $_params;
 

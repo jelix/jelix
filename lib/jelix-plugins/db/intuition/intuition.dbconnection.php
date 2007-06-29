@@ -11,7 +11,7 @@
 
 include (LIB_PATH . 'intuition/Intuition.inc');
 
-class jDbConnectionIntuition extends jDbConnection {
+class intuitionDbConnection extends jDbConnection {
     /**
     * The intuition session.
     * @access private

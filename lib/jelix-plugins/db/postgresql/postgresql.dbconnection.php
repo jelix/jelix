@@ -20,12 +20,12 @@
  * @package    jelix
  * @subpackage db
  */
-class jDbConnectionPostgreSQL extends jDbConnection {
+class postgresqlDbConnection extends jDbConnection {
     protected $_charsets =array( 'UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');
 
     function __construct($profil){
         if(!function_exists('pg_connect')){
-            throw new JException('jelix~db.error.nofunction','posgresql');
+            throw new jException('jelix~db.error.nofunction','posgresql');
         }
         parent::__construct($profil);
     }
@@ -46,7 +46,7 @@ class jDbConnectionPostgreSQL extends jDbConnection {
         $id=(string)mktime();
         $res = pg_prepare($this->_connection, $id, $query);
         if($res){
-            $rs= new jDbResultSetPostgreSQL ($res, $id, $this->_connection );
+            $rs= new postgresqlDbResultSet ($res, $id, $this->_connection );
         }else{
             throw new jException('jelix~db.error.query.bad',  pg_last_error($this->_connection).'('.$query.')');
         }
@@ -110,7 +110,7 @@ class jDbConnectionPostgreSQL extends jDbConnection {
 
     protected function _doQuery ($queryString){
         if ($qI = pg_query ($this->_connection, $queryString)){
-            $rs= new jDbResultSetPostgreSQL ($qI);
+            $rs= new postgresqlDbResultSet ($qI);
             $rs->_connector = $this;
         }else{
             $rs = false;

@@ -14,11 +14,11 @@
  * @package    jelix
  * @subpackage db
  */
-class jDbConnectionSqlite extends jDbConnection {
+class sqliteDbConnection extends jDbConnection {
 
     function __construct($profil){
         if(!function_exists('sqlite_open')){
-            throw new JException('jelix~db.error.nofunction','sqlite');
+            throw new jException('jelix~db.error.nofunction','sqlite');
         }
         parent::__construct($profil);
     }
@@ -48,7 +48,7 @@ class jDbConnectionSqlite extends jDbConnection {
     *
     */
     public function prepare ($query){
-        throw new JException('jelix~db.error.feature.unsupported', array('sqlite','prepare'));
+        throw new jException('jelix~db.error.feature.unsupported', array('sqlite','prepare'));
     }
 
     public function errorInfo(){
@@ -64,7 +64,7 @@ class jDbConnectionSqlite extends jDbConnection {
         if ($cnx = @$funcconnect(JELIX_APP_VAR_PATH. 'db/sqlite/'.$this->profil['database'])) {
             return $cnx;
         } else {
-            throw new JException('jelix~db.error.connection',$this->profil['database']);
+            throw new jException('jelix~db.error.connection',$this->profil['database']);
         }
     }
 
@@ -74,9 +74,9 @@ class jDbConnectionSqlite extends jDbConnection {
 
     protected function _doQuery($query){
         if ($qI = sqlite_query($query, $this->_connection)){
-            return new jDbResultSetSqlite($qI);
+            return new sqliteDbResultSet($qI);
         } else {
-            throw new JException('jelix~db.error.query.bad', sqlite_error_string($this->_connection).'('.$query.')');
+            throw new jException('jelix~db.error.query.bad', sqlite_error_string($this->_connection).'('.$query.')');
         }
     }
 
@@ -84,7 +84,7 @@ class jDbConnectionSqlite extends jDbConnection {
         if ($qI = sqlite_query($query, $this->_connection)){
             return sqlite_changes($this->_connection);
         } else {
-            throw new JException('jelix~db.error.query.bad', sqlite_error_string($this->_connection).'('.$query.')');
+            throw new jException('jelix~db.error.query.bad', sqlite_error_string($this->_connection).'('.$query.')');
         }
         exit;
     }

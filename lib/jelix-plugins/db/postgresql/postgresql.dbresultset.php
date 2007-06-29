@@ -20,7 +20,7 @@
  * @package    jelix
  * @subpackage db
  */
-class jDbResultSetPostgreSQL extends jDbResultSet {
+class postgresqlDbResultSet extends jDbResultSet {
     protected $_stmtId;
     protected $_cnt;
 
@@ -55,11 +55,11 @@ class jDbResultSetPostgreSQL extends jDbResultSet {
     }
 
     public function bindColumn($column, &$param , $type=null )
-      {throw new JException('jelix~db.error.feature.unsupported', array('pgsql','bindColumn')); }
+      {throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindColumn')); }
     public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null)
-       {throw new JException('jelix~db.error.feature.unsupported', array('pgsql','bindParam')); }
+       {throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindParam')); }
     public function bindValue($parameter, $value, $data_type)
-       {throw new JException('jelix~db.error.feature.unsupported', array('pgsql','bindValue')); }
+       {throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindValue')); }
 
     public function columnCount(){
         return pg_num_fields($this->_idResult);

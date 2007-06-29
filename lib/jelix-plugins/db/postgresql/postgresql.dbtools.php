@@ -20,7 +20,7 @@
  * @package    jelix
  * @subpackage db
  */
-class jDbToolsPostgreSQL extends jDbTools {
+class postgresqlDbTools extends jDbTools {
 
    function __construct($connector){
       parent::__construct($connector);

@@ -19,7 +19,7 @@
  * @package    jelix
  * @subpackage db
  */
-class jDbConnectionMySQL extends jDbConnection {
+class mysqlDbConnection extends jDbConnection {
 
    protected $_charsets =array( 'UTF-8'=>'utf8', 'ISO-8859-1'=>'latin1');
 
@@ -27,7 +27,7 @@ class jDbConnectionMySQL extends jDbConnection {
       // à cause du @, on est obligé de tester l'existence de mysql, sinon en cas d'absence
       // on a droit à un arret sans erreur 
       if(!function_exists('mysql_connect')){
-         throw new JException('jelix~db.error.nofunction','mysql');
+         throw new jException('jelix~db.error.nofunction','mysql');
       }
       parent::__construct($profil);
    }
@@ -60,7 +60,7 @@ class jDbConnectionMySQL extends jDbConnection {
    *
    */
    public function prepare ($query){
-       throw new JException('jelix~db.error.feature.unsupported', array('mysql','prepare'));
+       throw new jException('jelix~db.error.feature.unsupported', array('mysql','prepare'));
    }
 
    public function errorInfo(){
@@ -80,7 +80,7 @@ class jDbConnectionMySQL extends jDbConnection {
          }
          return $cnx;
       }else{
-         throw new JException('jelix~db.error.connection',$this->profil['host']);
+         throw new jException('jelix~db.error.connection',$this->profil['host']);
       }
    }
 
@@ -93,24 +93,24 @@ class jDbConnectionMySQL extends jDbConnection {
 
        // ici et non lors du connect, pour le cas où il y a plusieurs connexion active
       if(!mysql_select_db ($this->profil['database'], $this->_connection)){
-         throw new JException('jelix~db.error.database.unknow',$this->profil['database']);
+         throw new jException('jelix~db.error.database.unknow',$this->profil['database']);
       }
 
       if ($qI = mysql_query ($query, $this->_connection)){
-         return new jDbResultSetMySQL ($qI);
+         return new mysqlDbResultSet ($qI);
       }else{
-         throw new JException('jelix~db.error.query.bad',  mysql_error($this->_connection).'('.$query.')');
+         throw new jException('jelix~db.error.query.bad',  mysql_error($this->_connection).'('.$query.')');
       }
    }
 
    protected function _doExec($query){
       if(!mysql_select_db ($this->profil['database'], $this->_connection))
-         throw new JException('jelix~db.error.database.unknow',$this->profil['database']);
+         throw new jException('jelix~db.error.database.unknow',$this->profil['database']);
 
       if ($qI = mysql_query ($query, $this->_connection)){
          return mysql_affected_rows($this->_connection);
       }else{
-         throw new JException('jelix~db.error.query.bad',  mysql_error($this->_connection).'('.$query.')');
+         throw new jException('jelix~db.error.query.bad',  mysql_error($this->_connection).'('.$query.')');
       }
    }
 

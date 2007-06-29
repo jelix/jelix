@@ -21,7 +21,7 @@
  * @package    jelix
  * @subpackage db
  */
-class jDbResultSetMySQL extends jDbResultSet {
+class mysqlDbResultSet extends jDbResultSet {
 
     protected function  _fetch (){
         $ret =  mysql_fetch_object ($this->_idResult);
@@ -39,14 +39,14 @@ class jDbResultSetMySQL extends jDbResultSet {
     }
 
     public function bindColumn($column, &$param , $type=null )
-      {throw new JException('jelix~db.error.feature.unsupported', array('mysql','bindColumn')); }
+      {throw new jException('jelix~db.error.feature.unsupported', array('mysql','bindColumn')); }
     public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null)
-      {throw new JException('jelix~db.error.feature.unsupported', array('mysql','bindParam')); }
+      {throw new jException('jelix~db.error.feature.unsupported', array('mysql','bindParam')); }
     public function bindValue($parameter, $value, $data_type)
-      {throw new JException('jelix~db.error.feature.unsupported', array('mysql','bindValue')); }
+      {throw new jException('jelix~db.error.feature.unsupported', array('mysql','bindValue')); }
     public function columnCount()
       { return mysql_num_fields($this->_idResult); }
     public function execute($parameters=null)
-      {throw new JException('jelix~db.error.feature.unsupported', array('mysql','bindColumn')); }
+      {throw new jException('jelix~db.error.feature.unsupported', array('mysql','bindColumn')); }
 }
 ?>

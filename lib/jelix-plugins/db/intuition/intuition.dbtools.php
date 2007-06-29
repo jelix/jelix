@@ -9,7 +9,7 @@
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-class jDbToolsIntuition extends jDbTools{
+class intuitionDbTools extends jDbTools{
 
    function __construct ($connector) {
         parent::__construct ($connector);

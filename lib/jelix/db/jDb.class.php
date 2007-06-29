@@ -73,6 +73,17 @@ class jDb {
         }
 
         //pas de vérification sur l'éventuel partage de l'élément.
+
+global $gJConfig;
+            if(!isset($gJConfig->_pluginsPathList_coord) 
+                || !isset($gJConfig->_pluginsPathList_coord[$config['driver']])
+                || !file_exists($gJConfig->_pluginsPathList_coord[$config['driver']]) ){
+                 throw new jException('jelix~auth.error.driver.notfound');
+            }
+            require_once($gJConfig->_pluginsPathList_coord[$config['driver']]);
+
+
+
         require_once(JELIX_LIB_DB_PATH.'/drivers/'.$driver.'/jDbTools.'.$driver.'.class.php');
         $class = 'jDbTools'.$driver;
 
@@ -150,18 +161,23 @@ class jDb {
     */
     private static function _createConnector ($profil){
         if($profil['driver'] == 'pdo'){
-          $dbh = new jDbPDOConnection($profil);
-          return $dbh;
+            $dbh = new jDbPDOConnection($profil);
+            return $dbh;
         }else{
+            global $gJConfig;
+            if(!isset($gJConfig->_pluginsPathList_db) 
+                || !isset($gJConfig->_pluginsPathList_db[$profil['driver']])
+                || !file_exists($gJConfig->_pluginsPathList_db[$profil['driver']]) ){
+                    throw new jException('jelix~db.error.driver.notfound', $profil['driver']);
+            }
+            $p = $gJConfig->_pluginsPathList_db[$profil['driver']];
+            require_once($p.$profil['driver'].'.dbconnection.php');
+            require_once($p.$profil['driver'].'.dbresultset.php');
 
-          require_once(JELIX_LIB_DB_PATH.'/drivers/'.$profil['driver'].'/jDbConnection.'.$profil['driver'].'.class.php');
-          require_once(JELIX_LIB_DB_PATH.'/drivers/'.$profil['driver'].'/jDbResultSet.'.$profil['driver'].'.class.php');
-
-          $class = 'jDbConnection'.$profil['driver'];
-
-          //Création de l'objet
-          $dbh = new $class ($profil);
-          return $dbh;
+            //creating of the connection
+            $class = $profil['driver'].'DbConnection';
+            $dbh = new $class ($profil);
+            return $dbh;
         }
     }
 
