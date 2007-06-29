@@ -73,13 +73,13 @@ class jDb {
         }
 
         global $gJConfig;
-        if(!isset($gJConfig->_pluginsPathList_db) 
-            || !isset($gJConfig->_pluginsPathList_db[$profil['driver']])
+#ifnot ENABLE_OPTIMIZED_SOURCE
+        if(!isset($gJConfig->_pluginsPathList_db[$profil['driver']])
             || !file_exists($gJConfig->_pluginsPathList_db[$profil['driver']]) ){
                 throw new jException('jelix~db.error.driver.notfound', $profil['driver']);
         }
-        $p = $gJConfig->_pluginsPathList_db[$profil['driver']];
-        require_once($p.$profil['driver'].'.dbtools.php');
+#endif
+        require_once($gJConfig->_pluginsPathList_db[$profil['driver']].$profil['driver'].'.dbtools.php');
         $class = $profil['driver'].'DbTools';
 
         //Création de l'objet
@@ -160,14 +160,15 @@ class jDb {
             return $dbh;
         }else{
             global $gJConfig;
-            if(!isset($gJConfig->_pluginsPathList_db) 
-                || !isset($gJConfig->_pluginsPathList_db[$profil['driver']])
+#ifnot ENABLE_OPTIMIZED_SOURCE
+            if(!isset($gJConfig->_pluginsPathList_db[$profil['driver']])
                 || !file_exists($gJConfig->_pluginsPathList_db[$profil['driver']]) ){
                     throw new jException('jelix~db.error.driver.notfound', $profil['driver']);
             }
-            $p = $gJConfig->_pluginsPathList_db[$profil['driver']];
-            require_once($p.$profil['driver'].'.dbconnection.php');
-            require_once($p.$profil['driver'].'.dbresultset.php');
+#endif
+            $p = $gJConfig->_pluginsPathList_db[$profil['driver']].$profil['driver'];
+            require_once($p.'.dbconnection.php');
+            require_once($p.'.dbresultset.php');
 
             //creating of the connection
             $class = $profil['driver'].'DbConnection';

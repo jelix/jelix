@@ -52,6 +52,7 @@ class createmoduleCommand extends JelixScriptCommand {
           $this->createDir($path.'templates/');
           $this->createDir($path.'classes/');
           $this->createDir($path.'daos/');
+          $this->createDir($path.'forms/');
           $this->createDir($path.'locales/');
           $this->createDir($path.'locales/en_EN/');
           $this->createDir($path.'locales/fr_FR/');

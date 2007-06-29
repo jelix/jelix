@@ -16,7 +16,6 @@ trustedModules =
 
 pluginsPath = lib:jelix-plugins/,app:plugins/
 modulesPath = lib:jelix-modules/,app:modules/
-tplpluginsPath = lib:jelix/tpl/plugins/
 
 dbProfils = dbprofils.ini.php
 
@@ -39,8 +38,8 @@ quietMessage="Une erreur technique est survenue. Désolé pour ce désagrément.
 default      = ECHO EXIT
 error        = ECHO EXIT
 warning      = ECHO
-notice       =
-strict       =
+notice       = ECHO
+strict       = ECHO
 ; pour les exceptions, il y a implicitement un EXIT
 exception    = ECHO
 

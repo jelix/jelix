@@ -13,7 +13,7 @@ trustedModules =
 
 pluginsPath = lib:jelix-plugins/,app:plugins/,lib:jelix-modules/jxauth/plugins/
 modulesPath = lib:jelix-modules/,app:modules/
-tplpluginsPath = lib:jelix/tpl/plugins/
+
 
 dbProfils = dbprofils.ini.php
 

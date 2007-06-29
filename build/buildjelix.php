@@ -52,7 +52,7 @@ $BUILD_OPTIONS = array(
     false,
     ),
 'STRIP_COMMENT'=>array(
-    "true if you want sources with PHP comments deleted (valid only if ENABLE_OPTIMIZE is true)",
+    "true if you want sources with PHP comments deleted (valid only if ENABLE_OPTIMIZED_SOURCE is true)",
     false,
     ),
 'ENABLE_OLD_CLASS_NAMING'=>array(
@@ -166,7 +166,7 @@ if($EDITION_NAME ==''){
 
 
 
-if(!$ENABLE_OPTIMIZED_SOURCE)
+if( ! $ENABLE_OPTIMIZED_SOURCE)
     $STRIP_COMMENT='';
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
@@ -190,10 +190,10 @@ jBuildUtils::createDir($BUILD_TARGET_PATH);
 
 //... execution des manifests
 jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), $STRIP_COMMENT);
-if(!$ENABLE_OPTIMIZED_SOURCE){
+if( ! $ENABLE_OPTIMIZED_SOURCE){
     jManifest::process('build/manifests/jelix-no-opt.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), $STRIP_COMMENT);
 }
-if(!$ENABLE_PHP_JELIX && !$ENABLE_OPTIMIZED_SOURCE){
+if( ! $ENABLE_PHP_JELIX && ! $ENABLE_OPTIMIZED_SOURCE){
     jManifest::process('build/manifests/jelix-no-ext.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), $STRIP_COMMENT);
 }
 
