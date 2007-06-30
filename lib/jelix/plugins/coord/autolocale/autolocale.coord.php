@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage plugins
+* @subpackage coord_plugin
 * @author   Jouanneau Laurent
 * @copyright 2006-2007 Laurent Jouanneau
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -9,6 +9,8 @@
 
 /**
  * plugin for language auto detection
+ * @package    jelix
+ * @subpackage coord_plugin
  */
 class AutoLocaleCoordPlugin implements jICoordPlugin {
 

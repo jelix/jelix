@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  core_url
+* @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
@@ -14,7 +14,7 @@
 /**
 * Compiler for significant url engine
 * @package  jelix
-* @subpackage core_url
+* @subpackage urls_engine
 */
 class jSignificantUrlsCompiler implements jISimpleCompiler{
 

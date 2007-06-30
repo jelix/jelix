@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  core_url
+ * @subpackage  urls_engine
  * @author      Laurent Jouanneau
  * @contributor
  * @link        http://www.jelix.org
@@ -11,7 +11,7 @@
 /**
  * a specific selector for the xml files which contains the configuration of the engine
  * @package  jelix
- * @subpackage core_url
+ * @subpackage urls_engine
  * @author      Laurent Jouanneau
  * @copyright   2005-2006 Laurent Jouanneau
  */
@@ -29,7 +29,7 @@ class jSelectorUrlCfgSig extends jSelectorCfg {
 /**
  * a specific selector for user url handler
  * @package  jelix
- * @subpackage core_url
+ * @subpackage urls_engine
  * @author      Laurent Jouanneau
  * @copyright   2005-2006 Laurent Jouanneau
  */
@@ -41,7 +41,7 @@ class jSelectorUrlHandler extends jSelectorClass {
 /**
  * interface for user url handler
  * @package  jelix
- * @subpackage core_url
+ * @subpackage urls_engine
  * @author      Laurent Jouanneau
  * @copyright   2005-2006 Laurent Jouanneau
  */
@@ -65,7 +65,7 @@ interface jIUrlSignificantHandler {
  * an url engine to parse,analyse and create significant url
  * it needs an urls.xml file in the config directory (see documentation)
  * @package  jelix
- * @subpackage core_url
+ * @subpackage urls_engine
  * @author      Laurent Jouanneau
  * @copyright   2005-2006 Laurent Jouanneau
  */

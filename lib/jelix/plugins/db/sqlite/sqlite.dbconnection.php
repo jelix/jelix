@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage db
+* @subpackage db_driver
 * @author     Loic Mathaud
 * @contributor Laurent Jouanneau
 * @copyright  2006 Loic Mathaud, 2007 Laurent Jouanneau
@@ -12,7 +12,7 @@
 /**
  *
  * @package    jelix
- * @subpackage db
+ * @subpackage db_driver
  */
 class sqliteDbConnection extends jDbConnection {
 

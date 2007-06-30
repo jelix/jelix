@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage auth
+* @subpackage auth_driver
 * @author      Laurent Jouanneau
 * @contributor Yannick Le Guédart (adaptation de jAuthDriverDb pour une classe quelconque)
 * @copyright   2006-2007 Laurent Jouanneau, 2006 Yannick Le Guédart
@@ -12,7 +12,7 @@
 /**
  * interface for classes used with the jAuthDriverClass
 * @package    jelix
-* @subpackage auth
+* @subpackage auth_driver
 * @see jAuth
 * @since 1.0b2
  */
@@ -83,7 +83,7 @@ interface jIAuthDriverClass {
 /**
 * Driver for a class which implement an authentification
 * @package    jelix
-* @subpackage auth
+* @subpackage auth_driver
 * @see jAuth
 * @since 1.0a5
 */

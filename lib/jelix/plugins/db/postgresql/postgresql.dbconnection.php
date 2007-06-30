@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage db
+* @subpackage db_driver
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Yannick Le Guédart
@@ -18,7 +18,7 @@
 /**
  *
  * @package    jelix
- * @subpackage db
+ * @subpackage db_driver
  */
 class postgresqlDbConnection extends jDbConnection {
     protected $_charsets =array( 'UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');

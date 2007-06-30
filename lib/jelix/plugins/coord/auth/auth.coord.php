@@ -1,7 +1,7 @@
 <?php
 /**
-* @package    jelix-modules
-* @subpackage jelix
+* @package    jelix
+* @subpackage coord_plugin
 * @author     Croes Gérald
 * @contributor  Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
@@ -17,6 +17,10 @@
 require_once(JELIX_LIB_AUTH_PATH.'jAuth.class.php');
 require_once(JELIX_LIB_AUTH_PATH.'jAuthUser.class.php');
 
+/**
+* @package    jelix
+* @subpackage coord_plugin
+*/
 class AuthCoordPlugin implements jICoordPlugin {
     public $config;
 

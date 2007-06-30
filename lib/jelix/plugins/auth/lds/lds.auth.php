@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage auth
+* @subpackage auth_driver
 * @author     Nicolas JEUDY
 * @contributor Laurent Jouanneau
 * @copyright  2006 Nicolas JEUDY
@@ -14,7 +14,7 @@
  * object which represent a user
  *
  * @package    jelix
- * @subpackage auth
+ * @subpackage auth_driver
  */
 class jAuthUserLDS extends jAuthUser {
 }
@@ -26,7 +26,7 @@ class jAuthUserLDS extends jAuthUser {
  * authentification driver, which communicate with a LDS server
  * LDS = Linbox Directory Server
  * @package    jelix
- * @subpackage auth
+ * @subpackage auth_driver
  * @link http://lds.linbox.org/
  * @see jAuth
  * @since 1.0b1

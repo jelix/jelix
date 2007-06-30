@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage plugins
+* @subpackage coord_plugin
 * @author     Gerald Croes, Jouanneau Laurent
 * @contributor
 * @copyright  2001-2005 CopixTeam, 2005-2007 Jouanneau laurent
@@ -18,7 +18,7 @@
  * This is a plugin which cancel magic quotes effect. Magic quotes should be off
  * with jelix.
  * @package    jelix
- * @subpackage plugins
+ * @subpackage coord_plugin
  */
 class MagicQuotesCoordPlugin implements jICoordPlugin {
 

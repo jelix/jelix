@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage db
+* @subpackage db_driver
 * @author     Yannick Le Guédart
 * @copyright  2007 Over-blog, 2007 Yannick Le Guédart
 * @link       http://www.jelix.org
@@ -10,7 +10,10 @@
 */
 
 include (LIB_PATH . 'intuition/Intuition.inc');
-
+/**
+* @package    jelix
+* @subpackage db_driver
+*/
 class intuitionDbConnection extends jDbConnection {
     /**
     * The intuition session.

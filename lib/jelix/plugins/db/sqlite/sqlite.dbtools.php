@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage db
+* @subpackage db_driver
 * @author     Loic Mathaud
 * @contributor
 * @copyright  2006 Loic Mathaud
@@ -12,7 +12,7 @@
 /**
  * classe d'outils pour gérer une base de données
  * @package    jelix
- * @subpackage db
+ * @subpackage db_driver
  */
 class sqliteDbTools extends jDbTools {
     function __construct($connector){

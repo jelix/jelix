@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage db
+* @subpackage db_driver
 * @author     Croes Gérald, Ferlet Patrice, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Nicolas Jeudy (patch ticket #99)
@@ -18,7 +18,7 @@
 /**
  *
  * @package    jelix
- * @subpackage db
+ * @subpackage db_driver
  */
 class postgresqlDbTools extends jDbTools {
 

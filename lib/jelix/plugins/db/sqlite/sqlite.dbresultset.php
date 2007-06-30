@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage db
+* @subpackage db_driver
 * @author     Loic Mathaud
 * @contributor
 * @copyright  2006 Loic Mathaud
@@ -13,7 +13,7 @@
  *
  * Couche d'encapsulation des resultset sqlite.
  * @package    jelix
- * @subpackage db
+ * @subpackage db_driver
  */
 class sqliteDbResultSet extends jDbResultSet {
 

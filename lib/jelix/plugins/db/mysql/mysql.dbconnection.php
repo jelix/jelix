@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage db
+* @subpackage db_driver
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
@@ -17,7 +17,7 @@
 /**
  *
  * @package    jelix
- * @subpackage db
+ * @subpackage db_driver
  */
 class mysqlDbConnection extends jDbConnection {
 

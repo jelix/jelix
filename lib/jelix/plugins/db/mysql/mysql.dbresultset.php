@@ -1,11 +1,10 @@
 <?php
 /**
 * @package    jelix
-* @subpackage db
-* @version    $Id:$
+* @subpackage db_driver
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
@@ -16,10 +15,9 @@
 */
 
 /**
- *
  * Couche d'encapsulation des resultset mysql.
  * @package    jelix
- * @subpackage db
+ * @subpackage db_driver
  */
 class mysqlDbResultSet extends jDbResultSet {
 
