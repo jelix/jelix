@@ -31,7 +31,28 @@ class UTDao extends jUnitTestCaseDb {
     }
 
     function testRecordCheck() {
-//TODO
+
+        $record = jDao::createRecord ('products');
+        $this->assertEqual($record->id , '');
+        $record->setPk(5);
+        $this->assertEqual($record->id , 5);
+
+        $this->assertEqual($record->getPk(), 5);
+ 
+        $record = jDao::createRecord ('description');
+        $this->assertEqual($record->id , '');
+        $this->assertEqual($record->lang , '');
+
+        $record->setPk(5,'fr');
+        $this->assertEqual($record->id , 5);
+        $this->assertEqual($record->lang , 'fr');
+
+        $record->setPk(array(4,'en'));
+        $this->assertEqual($record->id , 4);
+        $this->assertEqual($record->lang , 'en');
+
+        $pk = $record->getPk();
+        $this->assertEqual($pk, array(4,'en'));
     }
 
     function testFindAllEmpty() {

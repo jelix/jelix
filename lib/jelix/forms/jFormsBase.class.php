@@ -70,6 +70,7 @@ abstract class jFormsBase {
             $value = $req->getParam($name);
             //if($value !== null) on commente pour le moment,
             //@todo à prevoir un meilleur test, pour les formulaires sur plusieurs pages
+            if($value === null) $value='';
             $this->_container->datas[$name]= $value;
         }
     }
@@ -117,10 +118,12 @@ abstract class jFormsBase {
             $this->_container->datas[$name] = $daorec->$name;
         }
     }
+
     /**
      * save datas using a dao.
      * it call insert or update depending the value of the formId stored in the container
      * @param string $daoSelector the selector of a dao file
+     * @return mixed  the primary key of the new record in a case of inserting
      * @see jDao
      */
     public function saveToDao($daoSelector){
@@ -135,6 +138,7 @@ abstract class jFormsBase {
         }else{
             $dao->insert($daorec);
         }
+        return $daorec->getPk();
     }
 
     /**

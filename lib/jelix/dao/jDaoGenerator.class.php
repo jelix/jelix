@@ -61,6 +61,20 @@ class jDaoGenerator {
       $src = array();
       $src[] = ' require_once ( JELIX_LIB_DAO_PATH .\'jDaoBase.class.php\');';
 
+      // prepare some values to generate properties and methods
+
+      list($sqlFromClause, $sqlWhereClause)= $this->_getFromClause();
+      $tables            = $this->_datasParser->getTables();
+      $sqlSelectClause   = $this->_getSelectClause();
+      $pkFields          = $this->_getPropertiesBy('PkFields');
+      $pTableRealName    = $tables[$this->_datasParser->getPrimaryTable()]['realname'];
+      $database          = jDaoCompiler::$dbType;
+      $pkai              = $this->_getAutoIncrementField();
+      $sqlPkCondition    = $this->_buildSimpleConditions($pkFields);
+      if($sqlPkCondition != ''){
+         $sqlPkCondition= ($sqlWhereClause !='' ? ' AND ':' WHERE ').$sqlPkCondition;
+      }
+
       //-----------------------
       // Build the record class
       //-----------------------
@@ -75,6 +89,7 @@ class jDaoGenerator {
       }
 
       $src[] = ' protected $_properties = '.var_export($properties, true).';';
+      $src[] = ' protected $_pkFields = array('.$this->_writeFieldNamesWith ($start = '\'', $end='\'', $beetween = ',', $pkFields).');';
 
       $src[] = '}';
 
@@ -82,19 +97,6 @@ class jDaoGenerator {
       // Build the dao class
       //--------------------
 
-      // prepare some values to generate methods
-
-      list($sqlFromClause, $sqlWhereClause)= $this->_getFromClause();
-      $tables            = $this->_datasParser->getTables();
-      $sqlSelectClause   = $this->_getSelectClause();
-      $pkFields          = $this->_getPropertiesBy('PkFields');
-      $pTableRealName    = $tables[$this->_datasParser->getPrimaryTable()]['realname'];
-      $database          = jDaoCompiler::$dbType;
-      $pkai              = $this->_getAutoIncrementField();
-      $sqlPkCondition    = $this->_buildSimpleConditions($pkFields);
-      if($sqlPkCondition != ''){
-         $sqlPkCondition= ($sqlWhereClause !='' ? ' AND ':' WHERE ').$sqlPkCondition;
-      }
 
       $src[] = "\nclass ".$this->_DaoClassName.' extends jDaoFactoryBase {';
       $src[] ='   protected $_tables = '.var_export($tables, true).';';
@@ -104,7 +106,6 @@ class jDaoGenerator {
       $src[] ='   protected $_whereClause=\''.$sqlWhereClause.'\';';
       $src[] ='   protected $_DaoRecordClassName=\''.$this->_DaoRecordClassName.'\';';
       $src[] ='   protected $_pkFields = array('.$this->_writeFieldNamesWith ($start = '\'', $end='\'', $beetween = ',', $pkFields).');';
-
 
       $src[] = ' ';
       $src[] = ' protected function _getPkWhereClauseForSelect($pk){';

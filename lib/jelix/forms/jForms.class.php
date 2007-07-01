@@ -90,7 +90,6 @@ class jForms {
      * @return jFormBase the object representing the form. Return null if there isn't an existing form
      */
     static public function fill($formSel,$formId=JFORMS_DEFAULT_ID){
-        if($formId === null) $formId=JFORMS_DEFAULT_ID;
         $form = self::get($formSel,$formId);
         if($form)
             $form->initFromRequest();
@@ -112,7 +111,6 @@ class jForms {
           unset($_SESSION['JFORMS'][$formSel][$formId]);
       }
    }
-
 }
 
 ?>

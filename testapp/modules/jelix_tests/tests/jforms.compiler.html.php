@@ -25,7 +25,7 @@ class testJFormsCompiler extends jFormsCompiler {
 }
 
 
-class UTjforms extends jUnitTestCase {
+class UTjformsCompiler extends jUnitTestCase {
 
     protected $_XmlControls = array(
 0=>'<input ref="nom" xmlns="http://jelix.org/ns/forms/1.0">

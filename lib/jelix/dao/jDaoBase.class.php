@@ -47,7 +47,13 @@ abstract class jDaoRecordBase {
      * ) </pre>
      * @var array 
      */
-    protected $_properties=array();
+    protected $_properties = array();
+
+    /**
+     * list of id of primary key properties
+     * @var array
+     */
+    protected $_pkFields = array();
 
     /**
      * @return array informations on all properties
@@ -115,19 +121,33 @@ abstract class jDaoRecordBase {
      */
     public function setPk(){
         $args=func_get_args();
-        if(count($args) == 0) throw new jException('jelix~dao.error.keys.missing');
         if(count($args)==1 && is_array($args[0])){
             $args=$args[0];
         }
-        $i=0;
-        foreach($this->_properties as $prop=>$infos){
-            if($infos['isPk']){
-                if($i>= count($args))
-                    throw new jException('jelix~dao.error.keys.missing');
-                $this->$prop = $args[$i++];
-            }
+        if(count($args) == 0 || count($args) != count($this->_pkFields) ) 
+            throw new jException('jelix~dao.error.keys.missing');
+
+        foreach($this->_pkFields as $k=>$prop){
+           $this->$prop = $args[$k];
         }
         return true;
+    }
+    
+    /**
+     * return the value of fields corresponding to the primary key
+     * @return mixed  the value or an array of values if there is several  pk
+     * @since 1.0beta3
+     */
+    public function getPk(){
+        if(count($this->_pkFields) == 1){
+            return $this->{$this->_pkFields[0]};
+        }else{
+            $list = array();
+            foreach($this->_pkFields as $k=>$prop){
+                $list[] = $this->$prop;
+            }
+            return $list;
+        }
     }
 }
 

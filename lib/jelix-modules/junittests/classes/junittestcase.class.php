@@ -156,7 +156,7 @@ class jUnitTestCase extends UnitTestCase {
                 }
 
                 if(!$ok)
-                    $this->fail($name.' : objets non identiques'.$errormessage);
+                    $this->fail($name.' : non identical objects'.$errormessage);
                 return $ok;
 
             case 'array':
@@ -179,7 +179,13 @@ class jUnitTestCase extends UnitTestCase {
                         }else{
                             $n = $key ++;
                         }
-                        if($this->assertTrue(isset($value[$n]),$name.'['.$n.'] doesn\'t exists'.$errormessage)){
+/*$this->dump($n, 'n=');
+$this->dump($value, 'value');
+if(isset($value[$n]))
+$this->dump($value[$n],'value de n OK');
+else
+$this->dump('!!!!! value de n  pas ok');*/
+                        if($this->assertTrue(array_key_exists($n,$value),$name.'['.$n.'] doesn\'t exist arrrg'.$errormessage)){
                             $v = $value[$n];
                             $ok &= $this->_checkIdentical($child, $v, $name.'['.$n.']',$errormessage);
                         }else $ok= false;

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="description_test" primarykey="id,lang" />
+   </datasources>
+   <record>
+      <property name="id"   fieldname="id" datatype="integer" required="true" />
+      <property name="lang"   fieldname="lang" datatype="string" required="true" />
+      <property name="texte" fieldname="texte" datatype="string"  required="true"/>
+   </record>
+</dao>
+
