@@ -4,7 +4,7 @@
 defaultModule = "jxxulapp"
 defaultAction = "default_index"
 defaultLocale = "fr_FR"
-defaultCharset = "ISO-8859-1"
+defaultCharset = "UTF-8"
 
 checkTrustedModules = off
 
@@ -17,10 +17,10 @@ modulesPath = lib:jelix-modules/,app:modules/
 dbProfils = dbprofils.ini.php
 
 defaultTheme = default
-use_error_handler = off
+use_error_handler = on
 
 [plugins]
-auth = auth.plugin.xul.ini.php
+auth = "jsonrpc/auth.coord.ini.php"
 
 [responses]
 

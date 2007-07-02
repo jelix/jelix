@@ -4,7 +4,7 @@
 defaultModule = "jxxulapp"
 defaultAction = "default_index"
 defaultLocale = "fr_FR"
-defaultCharset = "ISO-8859-1"
+defaultCharset = "UTF-8"
 
 checkTrustedModules = off
 
@@ -17,10 +17,10 @@ modulesPath = lib:jelix-modules/,app:modules/
 dbProfils = dbprofils.ini.php
 
 defaultTheme = default
-use_error_handler = on
+use_error_handler = off
 
 [plugins]
-auth = auth.plugin.rdf.ini.php
+auth = "xul/auth.coord.ini.php"
 
 [responses]
 
@@ -35,8 +35,8 @@ emailHeaders = "From: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Hi
 default      = ECHO EXIT
 error        = ECHO EXIT
 warning      = ECHO
-notice       = ECHO
-strict       = ECHO
+notice       =
+strict       =
 ; pour les exceptions, il y a implicitement un EXIT
 exception    = ECHO
 

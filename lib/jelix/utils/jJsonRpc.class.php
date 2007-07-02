@@ -31,9 +31,9 @@ class jJsonRpc {
      * @return mixed
      */
     public static function decodeRequest($content){
-        // {method:.. , params:.. , id:.. }
+        // {"method":.. , "params":.. , "id":.. }
 #if ENABLE_PHP_JSON
-        $obj = json_decode($content);
+        $obj = json_decode($content,true);
 #else
         $json = new JSON(JSON_LOOSE_TYPE);
         $obj = $json->decode($content);

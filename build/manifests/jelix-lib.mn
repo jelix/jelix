@@ -217,8 +217,8 @@ cd lib/jelix-modules/jauth/controllers
 cd lib/jelix-modules/jauth/daos
   jelixuser.dao.xml
 cd lib/jelix-modules/jauth/install/var/config
-  auth.plugin.ini.php
-  authsw.plugin.ini.php
+  auth.coord.ini.php
+  authsw.coord.ini.php
 cd lib/jelix-modules/jauth/locales/en_US
   auth.ISO-8859-1.properties
   autherror.ISO-8859-1.properties
@@ -348,14 +348,13 @@ cd lib/jelix/plugins/urls/significant
 cd lib/jelix/plugins/urls/simple
   simple.urls.php
 
-cd lib/jelix-www
-  json.js
 cd lib/jelix-www/design
   jelix.css
   tooltip.css
 cd lib/jelix-www/js
   tooltip.js
   jforms.js
+  json.js
 cd lib/jelix-www/xul
   jxulform.css
   jxulform.xml

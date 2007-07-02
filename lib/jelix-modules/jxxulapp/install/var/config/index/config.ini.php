@@ -4,7 +4,7 @@
 defaultModule = "jxxulapp"
 defaultAction = "default_index"
 defaultLocale = "fr_FR"
-defaultCharset = "ISO-8859-1"
+defaultCharset = "UTF-8"
 
 checkTrustedModules = off
 
@@ -21,7 +21,7 @@ defaultTheme = default
 use_error_handler = on
 
 [plugins]
-auth = auth.plugin.ini.php
+auth = "index/auth.coord.ini.php"
 
 [responses]
 

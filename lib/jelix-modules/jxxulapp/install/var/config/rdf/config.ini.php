@@ -4,7 +4,7 @@
 defaultModule = "jxxulapp"
 defaultAction = "default_index"
 defaultLocale = "fr_FR"
-defaultCharset = "ISO-8859-1"
+defaultCharset = "UTF-8"
 
 checkTrustedModules = off
 
@@ -20,7 +20,7 @@ defaultTheme = default
 use_error_handler = on
 
 [plugins]
-auth = auth.plugin.jsonrpc.ini.php
+auth = "rdf/auth.coord.ini.php"
 
 [responses]
 
@@ -35,8 +35,8 @@ emailHeaders = "From: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Hi
 default      = ECHO EXIT
 error        = ECHO EXIT
 warning      = ECHO
-notice       =
-strict       =
+notice       = ECHO
+strict       = ECHO
 ; pour les exceptions, il y a implicitement un EXIT
 exception    = ECHO
 

@@ -85,13 +85,13 @@
         </constructor>
         <method name="submit">
             <body><![CDATA[
-            // r�uperation des donn�s des contr�es
+            // récuperation des données des contrôles
             this._readDatas();
             if(this.hasInvalidDatas){
                return false;
             }
 
-            // formatage des donn�s
+            // formatage des données
             var content = this._prepareContent();
             // appel de _submit
             this._submit(this.method, this.contentType, content);
@@ -106,8 +106,24 @@
 
         <method name="_onload">
             <body><![CDATA[
+            if(this.httpreq.status >=200 && this.httpreq.status < 300) {
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent("result", true, false);
+                this.dispatchEvent(evt);
+            }else{
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent("badresult", true, false);
+                this.dispatchEvent(evt);
+            }
+            ]]>
+            </body>
+        </method>
+        <method name="_onerrorload">
+            <parameter name="httpcode"/>
+            <body><![CDATA[
             var evt = document.createEvent("HTMLEvents");
-            evt.initEvent("result", true, false);
+            evt.errorCode = httpcode;
+            evt.initEvent("httperror", true, false);
             this.dispatchEvent(evt);
             ]]>
             </body>
@@ -137,22 +153,11 @@
 
             this.httpreq.onload = function() {
                 this.submission._UIendofload();
-                if(this.status >=200 && this.status < 300)
-                     this.submission._onload();
-                else{
-                    var evt = document.createEvent("HTMLEvents");
-                    evt.errorCode = this.status ;
-                    evt.initEvent("httperror", true, false);
-                    this.submission.dispatchEvent(evt);
-                }
-
+                this.submission._onload();
             }
             this.httpreq.onerror = function() {
                 this.submission._UIendofload();
-                var evt = document.createEvent("HTMLEvents");
-                evt.errorCode = this.status ;
-                evt.initEvent("httperror", true, false);
-                this.submission.dispatchEvent(evt);
+                this.submission._onerrorload();
             }
             this.httpreq.onprogress = function() {
 
@@ -432,6 +437,17 @@
                 return true;
             }
         </handler>
+        <handler event="badresult" phase="at-target">
+            var onbadresult = this.getAttribute("onbadresult");
+            if( onbadresult){
+                var func = new Function("event", onbadresult+"\n return true;");
+                var retval = func.call(this, event);
+                this.httpreq = null;
+                return retval;
+            }else{
+                return true;
+            }
+        </handler>
         <handler event="httperror" phase="at-target">
             var onhttperror = this.getAttribute("onhttperror");
             if( onhttperror){
@@ -444,18 +460,7 @@
                 return false;
             }
         </handler>
-        <handler event="error" phase="at-target">
-            var onerror = this.getAttribute("onerror");
-            if( onerror){
-                var func = new Function("event", onerror+"\n return true;");
-                var retval = func.call(this, event);
-                this.httpreq = null;
-                return retval;
-            }else{
-                this.httpreq = null;
-                return false;
-            }
-        </handler>
+
     </handlers>
 
 </binding>
@@ -473,8 +478,8 @@
                 this.jsonReponse = null;
                 this.method="POST";
                 var datas = { method: this.rpcmethod, params:this.formDatas, id:1 };
-                var content= datas.toSource();
-                return content.substring(1, content.length -1); // on enleve les () qui entourent;
+                var content= datas.toJSONString();
+                return content;
             ]]></body>
         </method>
         <method name="_onload">
@@ -484,12 +489,13 @@
                     eval("this.jsonResponse="+this.httpreq.responseText);
                 }catch(e){
                     var evt = document.createEvent("HTMLEvents");
+                    evt.errorCode = 1;
                     evt.initEvent("error", true, false);
                     this.dispatchEvent(evt);
                     return;
                 }
                 var evtname;
-                if(this.jsonResponse.error ==null){
+                if(this.jsonResponse.error == undefined || this.jsonResponse.error ==null){
                    evtname="result";
                 }else{
                    evtname="rpcerror";
@@ -513,8 +519,19 @@
                 return true;
             }
         </handler>
+        <handler event="error" phase="at-target">
+            var onerror = this.getAttribute("onerror");
+            if( onerror){
+                var func = new Function("event", onerror+"\n return true;");
+                var retval = func.call(this, event);
+                this.httpreq = null;
+                return retval;
+            }else{
+                this.httpreq = null;
+                return false;
+            }
+        </handler>
     </handlers>
-
 </binding>
 
 
@@ -575,17 +592,17 @@
             var submit= this.getAttribute("submit");
             submit = document.getElementById(submit);
             if(submit){
-            if(submit.hasAttribute('loading') || submit.hasAttribute('disabled')){
-            return;
-            }
-            var submission= submit.getAttribute("form");
-            submission = document.getElementById(submission);
-            if(submission){
-            var evt = document.createEvent("HTMLEvents");
-            submission.submitButton = submit;
-            evt.initEvent("submit", true, true);
-            submission.dispatchEvent(evt);
-            }
+                if(submit.hasAttribute('loading') || submit.hasAttribute('disabled')){
+                    return;
+                }
+                var submission= submit.getAttribute("form");
+                submission = document.getElementById(submission);
+                if(submission){
+                    var evt = document.createEvent("HTMLEvents");
+                    submission.submitButton = submit;
+                    evt.initEvent("submit", true, true);
+                    submission.dispatchEvent(evt);
+                }
             }
         </handler>
     </handlers>

@@ -1,6 +1,7 @@
 {meta_xul css 'chrome://global/skin/'}
 {meta_xul css 'jelix/xul/jxulform.css'}
 {meta_xul ns array('jx'=>'jxbl')}
+{meta_xul js 'jelix/js/json.js'}
 
 <script type="application/x-javascript"><![CDATA[
 
@@ -23,14 +24,14 @@ window.addEventListener('load', onTheLoad ,false);
 ]]></script>
 
 <jx:submission id="loginform" action="{jurl '@jsonrpc'}" method="POST"
-        format="json-rpc"
+        format="json-rpc" rpcmethod="jxauth~login_in"
         onsubmit=""
-        rpcmethod="jxauth~login_in"
-        onresult="onLoginResult(this)"
-        onhttperror="alert('erreur http :' + event.errorCode)"
         oninvalidate="alert('Saisissez un login et mot de passe')"
-        onrpcerror="alert(this.jsonResponse.error.toSource())"
-        onerror="alert(this.httpreq.responseText);"
+
+        onresult="onLoginResult(this)"
+        onrpcerror="alert('RPC error\ncode='+this.jsonResponse.error.code + '\nmessage='+this.jsonResponse.error.string)"
+        onhttperror="alert('HTTP Error\nstatus=' + this.httpreq.status + '\nresponse='+ this.httpreq.responseText)"
+        onerror="alert('internal error, code ='+event.errorCode+'\nresponse='+ this.httpreq.responseText)"
         />
 
 
