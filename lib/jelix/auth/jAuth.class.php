@@ -124,13 +124,14 @@ class jAuth {
         if($driver == null){
             $config = self::_getConfig();
             global $gJConfig;
-            if(!isset($gJConfig->_pluginsPathList_coord) 
-                || !isset($gJConfig->_pluginsPathList_coord[$config['driver']])
-                || !file_exists($gJConfig->_pluginsPathList_coord[$config['driver']]) ){
-                 throw new jException('jelix~auth.error.driver.notfound', $config['driver']);
+            $db = strtolower($config['driver']);
+            if(!isset($gJConfig->_pluginsPathList_auth) 
+                || !isset($gJConfig->_pluginsPathList_auth[$db])
+                || !file_exists($gJConfig->_pluginsPathList_auth[$db]) ){
+                 throw new jException('jelix~auth.error.driver.notfound',$db);
             }
-            require_once($gJConfig->_pluginsPathList_coord[$config['driver']].$name.'auth.php');
-            $dname = $name.'AuthDriver';
+            require_once($gJConfig->_pluginsPathList_auth[$db].$db.'.auth.php');
+            $dname = $config['driver'].'AuthDriver';
             $driver = new $dname($config[$config['driver']]);
         }
         return $driver;
