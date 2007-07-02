@@ -25,20 +25,18 @@ class intuitionDbResultSet extends jDbResultSet {
     }
 
     public function fetch(){
-        return $this->_fetch();
-    }
-	
-    protected function _fetch(){
         $res = false;
-        
         if ($row = $this->_idResult->in_fetch_array ()){
+            $res = new stdClass();
             foreach ($row as $key => $value){
                 $res->$key = $value;
             }
         }
         return $res;
     }
-	
+
+    protected function _fetch(){ }
+
     protected function _free (){
         return $this->_idResult->close ();
     }
