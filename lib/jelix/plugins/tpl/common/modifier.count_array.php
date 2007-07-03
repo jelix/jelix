@@ -11,6 +11,8 @@
 
 /**
  * modifier plugin :  display count of an array
+ *
+ * <pre>{$myarray|count_array}</pre>
  * @param array
  * @return integer
  */

@@ -11,7 +11,7 @@
 /**
  * a special if block to test easily a right value
  *
- * usage : {ifnotacl 'subject',54} ..here generated content if the user has NOT the right  {/ifnotacl}
+ * <pre>{ifnotacl 'subject',54} ..here generated content if the user has NOT the right  {/ifnotacl}</pre>
  * @param jTplCompiler $compiler the template compiler
  * @param boolean true if it is the begin of block, else false
  * @param $params array  0=>subject 1=>right value 2=>optional resource

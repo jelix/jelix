@@ -3,7 +3,6 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @version    $Id$
  * @author
  * @copyright  2001-2003 ispi of Lincoln, Inc.
  * @link http://smarty.php.net/
@@ -13,6 +12,9 @@
 
 /**
  * modifier plugin : simple search/replace
+ * 
+ * You should provide two arguments, like the first both of str_replace
+ * <pre>{$mystring|replace:'foo':'bar'}</pre>
  * @param string
  * @param string
  * @param string

@@ -3,7 +3,6 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @version    $Id$
  * @author
  * @copyright  2001-2003 ispi of Lincoln, Inc.
  * @link http://smarty.php.net/
@@ -13,6 +12,11 @@
 
 /**
  * Modifier plugin:  indent lines of text
+ *
+ * <pre>{$mytext|indent}
+ * {$mytext|indent:$number_of_spaces}
+ * {$mytext|indent:$number_of_chars:$chars_to_repeat}
+ * </pre>
  * @param string
  * @param integer
  * @param string

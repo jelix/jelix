@@ -3,7 +3,6 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @version    $Id$
  * @author      Monte Ohrt <monte at ohrt dot com>
  * @copyright  2001-2003 ispi of Lincoln, Inc.
  * @link http://smarty.php.net/
@@ -14,7 +13,9 @@
 /**
  * modifier plugin :  Replace all repeated spaces, newlines, tabs with a single space or supplied replacement string
  *
- * Example:  {$var|strip} {$var|strip:"&nbsp;"}
+ * <pre>{$var|strip} 
+ * {$var|strip:"&nbsp;"}</pre>
+ *
  * @param string
  * @param string
  * @return string

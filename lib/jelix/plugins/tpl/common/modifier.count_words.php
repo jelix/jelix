@@ -3,7 +3,6 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @version    $Id$
  * @author
  * @copyright  2001-2003 ispi of Lincoln, Inc.
  * @link http://smarty.php.net/
@@ -13,6 +12,8 @@
 
 /**
  * modifier plugin :  count the number of words in a text
+ *
+ * <pre>{$mytext|count_words}</pre>
  * @param string
  * @return integer
  */

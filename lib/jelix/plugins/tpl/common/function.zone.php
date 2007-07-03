@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage jtpl_plugin
-* @version    $Id$
 * @author     Jouanneau Laurent
 * @copyright   2006 Jouanneau laurent
 * @link        http://www.jelix.org
@@ -12,7 +11,8 @@
 /**
  * function plugin :  include the content of a zone
  *
- * example : {zone 'myModule~myzone'} or {zone 'myModule~myzone',array('foo'=>'bar)}
+ * <pre> {zone 'myModule~myzone'}
+ * {zone 'myModule~myzone',array('foo'=>'bar)}</pre>
  * @param jTpl $tpl template engine
  * @param string $string the zone selector
  * @param array $params parameters for the zone

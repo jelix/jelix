@@ -3,7 +3,6 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @version    $Id$
  * @author     Monte Ohrt <monte at ohrt dot com>
  * @copyright 2001-2003 ispi of Lincoln, Inc.
  * @link http://smarty.php.net/
@@ -14,7 +13,10 @@
 /**
  * Modifier plugin : catenate a value to a variable
  *
- * Example:  {$var|cat:"foo"}  {$var|cat:$othervar}
+ * <pre>
+ *  {$var|cat:"foo"}  
+ *  {$var|cat:$othervar}
+ * </pre>
  * @param string $string the string to be modified
  * @param string $cat the string to concat to $string
  * @return string

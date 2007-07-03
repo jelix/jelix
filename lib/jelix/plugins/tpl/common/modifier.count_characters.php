@@ -13,8 +13,11 @@
 
 /**
  * Modifier plugin : count the number of characters in a text
+ *
+ * <pre>{$mytext|count_characters}
+ * {$mytext|count_characters:true}</pre>
  * @param string
- * @param boolean include whitespace in the character count
+ * @param boolean $include_spaces include whitespace in the character count
  * @return integer
  */
 function jtpl_modifier_count_characters($string, $include_spaces = false)

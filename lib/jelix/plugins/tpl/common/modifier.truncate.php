@@ -16,10 +16,15 @@
  *
  * Truncate a string to a certain length if necessary, optionally splitting in
  * the middle of a word, and appending the $etc string.
+ * <pre>{$mytext|truncate}
+ * {$mytext|truncate:40}
+ * {$mytext|truncate:45:'...'}
+ * {$mytext|truncate:60:'...':true}
+ * </pre>
  * @param string
- * @param integer
- * @param string
- * @param boolean
+ * @param integer $length
+ * @param string $etc
+ * @param boolean $break_words
  * @return string
  */
 function jtpl_modifier_truncate($string, $length = 80, $etc = '...',

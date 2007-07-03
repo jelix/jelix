@@ -3,7 +3,6 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @version    $Id$
  * @author
  * @copyright  2001-2003 ispi of Lincoln, Inc.
  * @link http://smarty.php.net/
@@ -13,9 +12,12 @@
 
 /**
  * modifier plugin : format strings via sprintf
+ * 
+ * <pre>{$mytext|sprintf:'my format %s'}</pre>
  * @param string
  * @param string
  * @return string
+ * @see sprintf
  */
 function jtpl_modifier_sprintf($string, $format)
 {

@@ -13,7 +13,7 @@
 /**
  * function plugin :  include a template into another template
  *
- * usage : {include 'myModule~foo'}
+ * <pre>{include 'myModule~foo'}</pre>
  * @param jTpl $t template engine
  * @param string $string the template selector
  */

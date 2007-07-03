@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage jtpl_plugin
-* @version    $Id$
 * @author     Jouanneau Laurent
 * @copyright   2006 Jouanneau laurent
 * @link        http://www.jelix.org
@@ -12,7 +11,7 @@
 /**
  * a special if block to test easily if the current user is connected
  *
- * usage : {ifuserconnected} ..here generated content if the user is connected  {/ifuserconnected}
+ * <pre>{ifuserconnected} ..here generated content if the user is connected  {/ifuserconnected}</pre>
  * @param jTplCompiler $compiler the template compiler
  * @param boolean true if it is the begin of block, else false
  * @param array $params no parameters. array should be empty

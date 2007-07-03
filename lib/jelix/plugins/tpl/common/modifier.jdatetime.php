@@ -2,7 +2,6 @@
 /**
 * @package    jelix
 * @subpackage jtpl_plugin
-* @version    $Id$
 * @author     Jouanneau Laurent
 * @copyright   2006 Jouanneau laurent
 * @link        http://www.jelix.org
@@ -12,10 +11,30 @@
 /**
  * modifier plugin : change the format of a date
  *
- * @param string
- * @param string
- * @param string
- * @return string
+ * It uses jDateTime to convert a date. It takes two optionnal arguments. 
+ * The first one is the format identifier of the given date (by default, it is db_datetime). 
+ * The second one is the format identifier of the output date (by default, it is lang_date).
+ *
+ * Availabled format identifiers are (with the equivalent constant of jDateTime)  :
+ * <ul>
+ * <li>'lang_date' (jDateTime::LANG_DFORMAT)</li>
+ * <li>'lang_datetime' => jDateTime::LANG_DTFORMAT)</li>
+ * <li>'lang_time' => jDateTime::LANG_TFORMAT)</li>
+ * <li>'db_date' => jDateTime::BD_DFORMAT)</li>
+ * <li>'db_datetime' => jDateTime::BD_DTFORMAT)</li>
+ * <li>'db_time' => jDateTime::BD_TFORMAT)</li>
+ * <li>'iso8601' => jDateTime::ISO8601_FORMAT)</li>
+ * <li>'timestamp' => jDateTime::TIMESTAMP_FORMAT)</li>
+ * <li>'rfc822'=> jDateTime::RFC822_FORMAT)</li></ul>
+ * 
+ * examples :
+ *  {$mydate|jdatetime}
+ *  {$mydate|jdatetime:'db_time':'lang_time'}
+ *
+ * @param string $date the date
+ * @param string $format_in  the format identifier of the given date
+ * @param string $format_out the format identifier of the output date
+ * @return string the converted date
  * @see jDateTime
  */
 function jtpl_modifier_jdatetime($date, $format_in = 'db_datetime',
@@ -30,6 +49,10 @@ function jtpl_modifier_jdatetime($date, $format_in = 'db_datetime',
         'iso8601' => jDateTime::ISO8601_FORMAT,
         'timestamp' => jDateTime::TIMESTAMP_FORMAT,
         'rfc822'=> jDateTime::RFC822_FORMAT);
+
+    if(!isset($formats[$format_in]) | !isset($formats[$format_out])){
+        throw new jException("tpl.tag.modifier.invalid", array('','jdatetime',''));
+    }
 
     $dt = new jDateTime();
     $dt->setFromString($date, $formats[$format_in]);

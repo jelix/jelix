@@ -11,12 +11,18 @@
 
 require_once(JELIX_LIB_UTILS_PATH.'jWiki.class.php');
 /**
- * modifier plugin :  transform a wiki text to another format (default: XHTML)
- *
- * Example:  {$var|wiki} {$var|wiki:"classicwr_to_xhtml"}
+ * modifier plugin :  transform a wiki text to another format
+ * you can use other transformations by given the name of
+ * corresponding wikirenderer rules
+ * <pre> 
+ * {$var|wiki}
+ * {$var|wiki:"classicwr_to_xhtml"}
+ * </pre>
  * @param string $text the wiki texte
  * @param string
  * @return string
+ * @see jWiki
+ * @link  http://wikirenderer.berlios.de/
  */
 function jtpl_modifier_wiki($text, $config = 'wr3_to_xhtml')
 {

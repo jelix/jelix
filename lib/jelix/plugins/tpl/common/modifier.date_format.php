@@ -3,7 +3,6 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @version    $Id$
  * @author        Smarty team
  * @contributor   Yannick Le Guédart <yannick at over-blog dot com>
  * @copyright  2001-2003 ispi of Lincoln, Inc., Yannick Le Guédart
@@ -14,7 +13,9 @@
 
 /**
  * modifier plugin : format a date
- *
+ * <pre>
+ *  {$mydate|date_format:"%b %e, %Y"}
+ * </pre>
  * @param string $string input date string
  * @param string $format strftime format for output
  * @param string $default_date default date if $string is empty
