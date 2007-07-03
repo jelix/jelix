@@ -13,7 +13,9 @@
 /**
  * modifier plugin : regular epxression search/replace
  *
- * You should provide two arguments : 
+ * You should provide two arguments, like the first both of preg_replace
+ * {$mystring|regex_replace:'/(\w+) (\d+), (\d+)/i':'${1}1,$3'}
+ *
  * @param string
  * @param string|array
  * @param string|array
