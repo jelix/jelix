@@ -18,7 +18,7 @@ class testJtplCompiler extends jTplCompiler {
    }
 
    public function testParseVarExpr($string){
-        return $this->_parseFinal($string,$this->_allowedInVar);
+        return $this->_parseFinal($string,$this->_allowedInVar, $this->_excludedInVar);
    }
 
    public function testParseForeachExpr($string){
@@ -71,24 +71,10 @@ class UTjtplexpr extends jUnitTestCase {
         '@aa~trc.234.popo@'=>'jLocale::get(\'aa~trc.234.popo\')',
         '@aa~trc.23.4.popo@'=>'jLocale::get(\'aa~trc.23.4.popo\')',
         '$aa*count($bb)'=>'$t->_vars[\'aa\']*count($t->_vars[\'bb\'])',
-        'isset($t[5])'=>'isset($t->_vars[\'t\'][5])',
-        '$aa && $bb'=>'$t->_vars[\'aa\'] && $t->_vars[\'bb\']',
-        '$aa || $bb'=>'$t->_vars[\'aa\'] || $t->_vars[\'bb\']',
         '$aa & $bb'=>'$t->_vars[\'aa\'] & $t->_vars[\'bb\']',
         '$aa | $bb'=>'$t->_vars[\'aa\'] | $t->_vars[\'bb\']',
-        '$aa and $bb'=>'$t->_vars[\'aa\'] and $t->_vars[\'bb\']',
-        '$aa or $bb'=>'$t->_vars[\'aa\'] or $t->_vars[\'bb\']',
-        '$aa xor $bb'=>'$t->_vars[\'aa\'] xor $t->_vars[\'bb\']',
-        'empty($aa)'=>'empty($t->_vars[\'aa\'])',
         '$aa++'=>'$t->_vars[\'aa\']++',
         '$aa--'=>'$t->_vars[\'aa\']--',
-        '$aa == 123'=>'$t->_vars[\'aa\'] == 123',
-        '$aa != 123'=>'$t->_vars[\'aa\'] != 123',
-        '$aa >= 123'=>'$t->_vars[\'aa\'] >= 123',
-        '$aa !== 123'=>'$t->_vars[\'aa\'] !== 123',
-        '$aa <= 123'=>'$t->_vars[\'aa\'] <= 123',
-        '$aa << 123'=>'$t->_vars[\'aa\'] << 123',
-        '$aa >> 123'=>'$t->_vars[\'aa\'] >> 123',
         '$bb->bar'=>'$t->_vars[\'bb\']->bar',
         '@abstract.as.break.case.catch.class.clone@'=>'jLocale::get(\'abstract.as.break.case.catch.class.clone\')',
         '@const.continue.declare.default.do.echo.else.elseif.empty@'=>'jLocale::get(\'const.continue.declare.default.do.echo.else.elseif.empty\')',
@@ -97,10 +83,6 @@ class UTjtplexpr extends jUnitTestCase {
         '@protected.return.static.switch.throw.try.use.var.while@'=>'jLocale::get(\'protected.return.static.switch.throw.try.use.var.while\')',
         '$aa*(234+$b)'=>'$t->_vars[\'aa\']*(234+$t->_vars[\'b\'])',
         '$aa[$bb[4]]'=>'$t->_vars[\'aa\'][$t->_vars[\'bb\'][4]]',
-        '$aa == false'=>'$t->_vars[\'aa\'] == false',
-        '$aa == true'=>'$t->_vars[\'aa\'] == true',
-        '$aa == null'=>'$t->_vars[\'aa\'] == null',
-
     );
 
     protected $badvarexpr = array(
@@ -119,6 +101,28 @@ class UTjtplexpr extends jUnitTestCase {
         '$aa[234'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
         '$aa[[234]'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
         '$aa234]'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        'isset($t[5])'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','isset','')),
+        'empty($aa)'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','empty','')),
+        '$aa == 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
+        '$aa != 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','!=','')),
+        '$aa >= 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','>=','')),
+        '$aa !== 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','!==','')),
+        '$aa <= 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','<=','')),
+        '$aa << 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','<<','')),
+        '$aa >> 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','>>','')),
+        '$aa == false'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
+        '$aa == true'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
+        '$aa == null'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
+        '$aa && $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','&&','')),
+        '$aa || $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','||','')),
+        '$aa and $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','and','')),
+        '$aa or $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','or','')),
+        '$aa xor $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','xor','')),
+        '$aa=$bb'=>array('jelix~errors.tpl.tag.character.invalid',array('','=','')),
+        '$aa+=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','+=','')),
+        '$aa-=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','-=','')),
+        '$aa/=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','/=','')),
+        '$aa*=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','*=','')),
     );
 
     function testVarExpr() {

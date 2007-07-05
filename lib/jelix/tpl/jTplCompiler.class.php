@@ -48,6 +48,7 @@ class jTplCompiler
     protected $_allowedInExpr;
     protected $_allowedAssign;
     protected $_allowedInForeach;
+    protected $_excludedInVar = array(';','=');
 
     protected $_allowedConstants = array('TRUE','FALSE','NULL', 'M_1_PI', 'M_2_PI', 'M_2_SQRTPI', 'M_E', 
         'M_LN10', 'M_LN2', 'M_LOG10E', 'M_LOG2E', 'M_PI','M_PI_2','M_PI_4','M_SQRT1_2','M_SQRT2');
@@ -70,10 +71,11 @@ class jTplCompiler
      * Initialize some properties
      */
     function __construct(){
-        $this->_allowedInVar = array_merge($this->_vartype, array(T_INC, T_DEC));
+        $this->_allowedInVar = array_merge($this->_vartype, array(T_INC, T_DEC, T_DOUBLE_ARROW));
         $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
         $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
         $this->_allowedInForeach = array_merge($this->_vartype, array(T_AS, T_DOUBLE_ARROW));
+        
 
 #if JTPL_STANDALONE
         require_once(JTPL_LOCALES_PATH.$GLOBALS['jTplConfig']['lang'].'.php');
@@ -237,7 +239,7 @@ class jTplCompiler
     */
     protected function _parseVariable($expr){
         $tok = explode('|',$expr);
-        $res = $this->_parseFinal(array_shift($tok),$this->_allowedInVar);
+        $res = $this->_parseFinal(array_shift($tok),$this->_allowedInVar, $this->_excludedInVar);
 
         foreach($tok as $modifier){
             if(!preg_match('/^(\w+)(?:\:(.*))?$/',$modifier,$m)){
@@ -259,7 +261,7 @@ class jTplCompiler
                     $args = explode(':',$m[2]);
 
                     foreach($args as $arg){
-                        $targs[] = $this->_parseFinal($arg,$this->_allowedInVar);
+                        $targs[] = $this->_parseFinal($arg,$this->_allowedInVar, $this->_excludedInVar);
                     }
                 }
                 $res = 'jtpl_modifier_'.$m[1].'('.implode(',',$targs).')';
