@@ -23,15 +23,19 @@
   <define name="UI.Common.data">
       <optional><ref name="datatypes" /></optional>
       <ref name="UI.attr.readonly" />
-      <optional><attribute name="required"><choice><value>true</value><value>false</value></choice></attribute></optional>
+      <ref name="UI.attr.required" />
   </define>
   
   <define name="UI.attr.readonly">
       <optional><attribute name="readonly"><choice><value>true</value><value>false</value></choice></attribute></optional>
   </define>
-
+  <define name="UI.attr.required">
+      <optional><attribute name="required"><choice><value>true</value><value>false</value></choice></attribute></optional>
+  </define>
   
   <define name="List.UI.Common">
+     <ref name="UI.attr.readonly" />
+     <ref name="UI.attr.required" />
      <choice>
         <oneOrMore>
             <ref name="item" />
@@ -50,6 +54,13 @@
          </optional>
          <attribute name="value" />
      </element>
+  </define>
+  
+  <define name="daodatasource">
+      <attribute name="dao" />
+      <attribute name="daomethod" />
+      <attribute name="daolabelproperty" />
+      <attribute name="daovalueproperty" />
   </define>
   
   <define name="datatypes">
@@ -74,23 +85,23 @@
               <value>boolean</value>
               <value>decimal</value>
               <value>integer</value>
+              <value>hexadecimal</value>
               <value>datetime</value>
               <value>date</value>
               <value>time</value>
               <value>localedatetime</value>
               <value>localedate</value>
               <value>localetime</value>
+              <value>url</value>
+              <value>email</value>
+              <value>ipv4</value>
+              <value>ipv6</value>
          </choice>
       </attribute>
   </define>
   
 
-  <define name="daodatasource">
-      <attribute name="dao" />
-      <attribute name="daomethod" />
-      <attribute name="daolabelproperty" />
-      <attribute name="daovalueproperty" />
-  </define>
+
 
   <!--  Controls       -->
    <define name="controls">
@@ -127,12 +138,16 @@
   <define name="textarea">
      <element name="textarea">
        <ref name="UI.Common" />
+       <ref name="UI.attr.readonly" />
+       <ref name="UI.attr.required" />
      </element>
   </define>
 
   <define name="secret">
      <element name="secret">
        <ref name="UI.Common" />
+       <ref name="UI.attr.readonly" />
+       <ref name="UI.attr.required" />
      </element>
   </define>
 
@@ -140,7 +155,15 @@
   <define name="upload">
      <element name="upload">
        <ref name="UI.Common" />
-       <!--<attribute name="mediatype" /> -->
+       <ref name="UI.attr.readonly" />
+       <ref name="UI.attr.required" />
+       <!--<attribute name="mediatype" /> 
+       <attribute name="maxsize" />
+       <element name="storage">
+           <attribute name="type"><choice><value>file</value><value>blob</value></choice></attribute>
+           <attribute name="value" /> 
+       </element>
+       -->
      </element>
   </define>
   
@@ -194,6 +217,14 @@
      </element>
   </define>
 
+  <define name="checkboxes">
+     <element name="checkboxes">
+       <ref name="UI.Common" />
+       <ref name="List.UI.Common" />
+     </element>
+  </define>
+
+  
 <!--  <define name="select">
      <element name="select">
        <ref name="UI.Common" />
@@ -208,14 +239,6 @@
       </optional> 
      </element>
   </define>-->
-
-  <define name="checkboxes">
-     <element name="checkboxes">
-       <ref name="UI.Common" />
-       <ref name="List.UI.Common" />
-     </element>
-  </define>
-
   
   <define name="output">
      <element name="output">

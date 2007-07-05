@@ -70,6 +70,13 @@ abstract class jFormsBuilderBase {
     }
 }
 
+
+/**
+ * HTML form builder
+ * @package     jelix
+ * @subpackage  forms
+ * @experimental
+ */
 abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
 
     public function outputHeader($params){
@@ -170,14 +177,14 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
             echo '<input type="password" ',$id,$readonly,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"/>';
             break;
         case 'output':
-            echo '<input type="hidden" ',$id,$readonly,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"/>';
+            echo '<input type="hidden" ',$id,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"/>';
             echo htmlspecialchars($this->_form->getData($ctrl->ref));
             break;
         case 'upload':
-            echo '<input type="file" ',$id,$readonly,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"/>';
+            echo '<input type="file" ',$id,$readonly,' value=""/>'; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
             break;
         case 'submit':
-            echo '<button type="submit" ',$id,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'">',htmlspecialchars($ctrl->label),'</button>';
+            echo '<button type="submit" ',$id,' >',htmlspecialchars($ctrl->label),'</button>';
             break;
         }
     }

@@ -91,16 +91,18 @@ class jFormsCompiler implements jISimpleCompiler {
         $source = array();
         $class = 'jFormsControl'.$controltype;
 
-         if(!class_exists($class,false)){
+        if(!class_exists($class,false)){
             throw new jException('jelix~formserr.unknow.tag',array($controltype,$this->sourceFile));
-         }
+        }
 
-         if(!isset($control['ref'])){
+        if(!isset($control['ref'])){
             throw new jException('jelix~formserr.attribute.missing',array('ref',$controltype,$this->sourceFile));
-         }
+        }
 
-         $source[]='$ctrl= new '.$class.'(\''.(string)$control['ref'].'\');';
-         if(isset($control['type'])){
+        // instancie the class
+        $source[]='$ctrl= new '.$class.'(\''.(string)$control['ref'].'\');';
+        // generating the datatype object
+        if(isset($control['type'])){
             if($controltype != 'input'){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('type',$controltype,$this->sourceFile));
             }
@@ -110,39 +112,44 @@ class jFormsCompiler implements jISimpleCompiler {
                throw new jException('jelix~formserr.datatype.unknow',array($dt,$controltype,$this->sourceFile));
             }
             $source[]='$ctrl->datatype= new jDatatype'.$dt.'();';
-         }else if($controltype == 'checkbox') {
+        }else if($controltype == 'checkbox') {
             $source[]='$ctrl->datatype= new jDatatypeBoolean();';
-         }else{
+        }else{
             $source[]='$ctrl->datatype= new jDatatypeString();';
-         }
-
-         if(isset($control['readonly'])){
+        }
+        // readonly support
+        if(isset($control['readonly'])){
+            if($controltype == 'output' || $controltype == 'submit'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('readonly',$controltype,$this->sourceFile));
+            }
             if('true' == (string)$control['readonly'])
                 $source[]='$ctrl->readonly=true;';
-         }
-         if(isset($control['required'])){
-            if($controltype == 'checkbox'){
-                throw new jException('jelix~formserr.attribute.not.allowed',array('required','checkbox',$this->sourceFile));
+        }
+        // required support
+        if(isset($control['required'])){
+            if($controltype == 'checkbox' || $controltype == 'output' || $controltype == 'submit'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('required',$controltype,$this->sourceFile));
             }
             if('true' == (string)$control['required'])
                 $source[]='$ctrl->required=true;';
-         }
+        }
 
-         if(!isset($control->label)){
+        // label support
+        if(!isset($control->label)){
             throw new jException('jelix~formserr.tag.missing',array('label',$controltype,$this->sourceFile));
-         }
+        }
 
-         if(isset($control->label['locale'])){
-             $label='';
-             $labellocale=(string)$control->label['locale'];
-             $source[]='$ctrl->label=jLocale::get(\''.$labellocale.'\');';
-         }else{
-             $label=(string)$control->label;
-             $labellocale='';
-             $source[]='$ctrl->label=\''.str_replace("'","\\'",$label).'\';';
-         }
-
-         switch($controltype){
+        if(isset($control->label['locale'])){
+            $label='';
+            $labellocale=(string)$control->label['locale'];
+            $source[]='$ctrl->label=jLocale::get(\''.$labellocale.'\');';
+        }else{
+            $label=(string)$control->label;
+            $labellocale='';
+            $source[]='$ctrl->label=\''.str_replace("'","\\'",$label).'\';';
+        }
+        // support of static datas or daos
+        switch($controltype){
             case 'checkboxes':
             case 'radiobuttons':
             case 'menulist':
@@ -173,31 +180,32 @@ class jFormsCompiler implements jISimpleCompiler {
                     $source[]=");";
                 }
                break;
-         }
+        }
 
-         if(isset($control['multiple'])){
+        if(isset($control['multiple'])){
             if($controltype != 'listbox'){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('multiple',$controltype,$this->sourceFile));
             }
             if('true' == (string)$control['multiple'])
                 $source[]='$ctrl->multiple=true;';
-         }
+        }
 
-         $source[]='$this->addControl($ctrl);';
-         return implode("\n", $source);
+        $source[]='$this->addControl($ctrl);';
+        return implode("\n", $source);
     }
 
     protected function generateJsControl($controltype, $control){
+        if($controltype == 'submit')
+            return '';
+
         $source = array();
 
         if(isset($control['type'])){
             $dt = (string)$control['type'];
-        }else{
-            if($controltype == 'checkbox')
-                $dt = 'boolean';
-            else
-                $dt = 'string';
-        }
+        }else if($controltype == 'checkbox')
+            $dt = 'boolean';
+        else
+            $dt = 'string';
 
         if(isset($control->label['locale'])){
             $source[]='$label = str_replace("\'","\\\'",jLocale::get(\''.(string)$control->label['locale'].'\'));';
@@ -219,9 +227,9 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$js.="gControl.multiple = true;\n";';
         }
 
-         $source[]='$js.="gForm.addControl( gControl);\n";';
+        $source[]='$js.="gForm.addControl( gControl);\n";';
 
-         return implode("\n", $source);
+        return implode("\n", $source);
     }
 
 
