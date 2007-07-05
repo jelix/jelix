@@ -70,7 +70,7 @@ class jTplCompiler
      * Initialize some properties
      */
     function __construct(){
-        $this->_allowedInVar = array_merge($this->_vartype, $this->_op);
+        $this->_allowedInVar = array_merge($this->_vartype, array(T_INC, T_DEC));
         $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
         $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
         $this->_allowedInForeach = array_merge($this->_vartype, array(T_AS, T_DOUBLE_ARROW));
