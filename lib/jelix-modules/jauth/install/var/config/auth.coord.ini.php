@@ -8,6 +8,9 @@
 driver = Db
 
 ;============ Paramètres pour le plugin
+; nom de la session
+session_name = "JELIX_USER"
+
 ; indique si on effectue un contrôle sur l'adresse ip
 ; qui a démarré la session.
 secure_with_ip = 0

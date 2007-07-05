@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage coord_plugin
 * @author     Croes Gérald
-* @contributor  Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @contributor  Laurent Jouanneau, Frédéric Guillot
+* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2007 Frédéric Guillot
 * Une partie du code est issue d'une version experimentale de la classe
 * PluginAuth issue du framework Copix 2.3dev20050901.
 * et est sous Copyright 2001-2005 CopixTeam (licence LGPL) http://www.copix.org
@@ -26,6 +26,12 @@ class AuthCoordPlugin implements jICoordPlugin {
 
     function __construct($conf){
         $this->config = $conf;
+
+        if (!isset($this->config['session_name'])
+            || $this->config['session_name'] == ''){
+                
+            $this->config['session_name'] = 'JELIX_USER';
+        }
     }
 
     /**
@@ -50,11 +56,11 @@ class AuthCoordPlugin implements jICoordPlugin {
                 }
             }
         }
-
+        
         //Creating the user's object if needed
-        if (! isset ($_SESSION['JELIX_USER'])){
+        if (! isset ($_SESSION[$this->config['session_name']])){
             $notLogged = true;
-            $_SESSION['JELIX_USER'] = new jDummyAuthUser();
+            $_SESSION[$this->config['session_name']] = new jDummyAuthUser();
         }else{
             $notLogged = ! jAuth::isConnected();
         }

@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage auth
 * @author     Laurent Jouanneau
-* @contributor
-* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
+* @contributor Frédéric Guillot
+* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007 Frédéric Guillot
 * Classe orginellement issue d'une branche experimentale du
 * framework Copix 2.3dev. http://www.copix.org (jAuth)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
@@ -111,6 +111,12 @@ class jAuth {
                 throw new jException('jelix~auth.error.plugin.missing');
             }
             $config = & $plugin->config;
+
+            if (!isset($config['session_name'])
+                || $config['session_name'] == ''){
+                
+                $config['session_name'] = 'JELIX_USER';
+            }
         }
         return $config;
     }
@@ -280,6 +286,8 @@ class jAuth {
     public static function login($login, $password){
 
         $dr = self::_getDriver();
+        $config = self::_getConfig();
+
         if($user = $dr->verifyPassword($login, $password)){
 
             $eventresp = jEvent::notify ('AuthCanLogin', array('login'=>$login, 'user'=>$user));
@@ -289,7 +297,7 @@ class jAuth {
                 }
             }
 
-            $_SESSION['JELIX_USER'] = $user;
+            $_SESSION[$config['session_name']] = $user;
             jEvent::notify ('AuthLogin', array('login'=>$login));
             return true;
         }else
@@ -300,8 +308,10 @@ class jAuth {
      * logout a user and delete the user in the php session
      */
     public static function logout(){
-        jEvent::notify ('AuthLogout', array('login'=>$_SESSION['JELIX_USER']->login));
-        $_SESSION['JELIX_USER'] = new jDummyAuthUser();
+
+        $config = self::_getConfig();
+        jEvent::notify ('AuthLogout', array('login'=>$_SESSION[$config['session_name']]->login));
+        $_SESSION[$config['session_name']] = new jDummyAuthUser();
         jAcl::clearCache();
     }
 
@@ -310,7 +320,9 @@ class jAuth {
      * @return boolean
      */
     public static function isConnected(){
-        return (isset($_SESSION['JELIX_USER']) && $_SESSION['JELIX_USER']->login != '');
+
+        $config = self::_getConfig();
+        return (isset($_SESSION[$config['session_name']]) && $_SESSION[$config['session_name']]->login != '');
     }
 
    /**
@@ -318,10 +330,11 @@ class jAuth {
     * @return object the user datas
     */
     public static function getUserSession (){
-      if (! isset ($_SESSION['JELIX_USER'])){
-            $_SESSION['JELIX_USER'] = new jDummyAuthUser();
-      }
-      return $_SESSION['JELIX_USER'];
+        $config = self::_getConfig();
+        if (! isset ($_SESSION[$config['session_name']])){
+            $_SESSION[$config['session_name']] = new jDummyAuthUser();
+        }
+        return $_SESSION[$config['session_name']];
     }
 
     /**

@@ -45,6 +45,9 @@ Yann
 Laurent Raufaste (aka analogue)
  - patch sur la connexion postgresql (#123)
 
+Frédéric Guillot (aka fg)
+ - patch pour authentification multiple dans une même session (#207)
+
 Cedric
  - patch correctif sur jFile::read
 
