@@ -25,8 +25,6 @@ abstract class jResponse {
 
     protected $_errorMessages=array();
 
-    protected $_attributes = array();
-
     protected $_acceptSeveralErrors=true;
 
     protected $_httpHeaders = array();
@@ -40,8 +38,7 @@ abstract class jResponse {
     /**
     * constructor
     */
-    function __construct ($attributes=array()){
-       $this->_attributes = $attributes;
+    function __construct (){
     }
 
     /**

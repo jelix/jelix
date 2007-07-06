@@ -60,16 +60,14 @@ abstract class jResponseXMLFeed extends jResponse {
 
     /**
      * Class constructor
-     * @param  array
-     * @return void
      */
-    function __construct ($attributes = array()){
+    function __construct (){
         global $gJConfig;
 
         $this->charset  = $gJConfig->defaultCharset;
         $this->lang     = $gJConfig->defaultLocale;
 
-        parent::__construct ($attributes);
+        parent::__construct ();
     }
 
     /**

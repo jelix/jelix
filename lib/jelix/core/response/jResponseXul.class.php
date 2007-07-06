@@ -90,9 +90,9 @@ class jResponseXul extends jResponse {
     /**
     * constructor
     */
-    function __construct ($attributes=array()){
+    function __construct (){
         $this->body = new jTpl();
-        parent::__construct($attributes);
+        parent::__construct();
     }
 
     /**

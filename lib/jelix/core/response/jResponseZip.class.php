@@ -39,9 +39,9 @@ class jResponseZip extends jResponse {
     /**
     * constructor
     */
-    function __construct ($attributes=array()){
+    function __construct (){
         $this->content = new jZipCreator();
-        parent::__construct($attributes);
+        parent::__construct();
     }
 
     /**

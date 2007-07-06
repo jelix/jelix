@@ -57,6 +57,7 @@ class jResponseXml extends jResponse {
         global $gJConfig;
         $this->_charset = $gJConfig->defaultCharset;
         $this->content = new jTpl();
+        parent::__construct();
     }
 
     /**

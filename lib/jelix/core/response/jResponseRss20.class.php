@@ -31,18 +31,15 @@ class jResponseRss20 extends jResponseXMLFeed {
 
     /**
      * Class constructor
-     *
-     * @param  array
-     * @return void
      */
-    function __construct ($attributes = array()) {
+    function __construct () {
         $this->_template 	= new jTpl();
         $this->_mainTpl 	= 'jelix~rss20';
 
         $this->infos = new jRSS20Info ();
 
 
-        parent::__construct ($attributes);
+        parent::__construct ();
         $this->infos->language = $this->lang;
     }
 

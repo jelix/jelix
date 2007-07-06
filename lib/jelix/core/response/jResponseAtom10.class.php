@@ -35,13 +35,13 @@ class jResponseAtom10 extends jResponseXMLFeed {
      * @param  array
      * @return void
      */
-    function __construct ($attributes = array()){
+    function __construct (){
         $this->_template 	= new jTpl();
         $this->_mainTpl 	= 'jelix~atom10';
 
         $this->infos = new jAtom10Info ();
 
-        parent::__construct ($attributes);
+        parent::__construct ();
     }
 
     /**
