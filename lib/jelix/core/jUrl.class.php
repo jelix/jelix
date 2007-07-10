@@ -166,10 +166,16 @@ class jUrlAction extends jUrlBase {
  */
 class jUrl extends jUrlBase {
 
+     /**#@+
+     * constant for get() method
+     * @var integer
+     */
     const STRING=0;
     const XMLSTRING=1;
     const JURL=2;
     const JURLACTION=3;
+    /**#@-*/
+    
     /**
     * script name including its path
     * @var string
@@ -222,6 +228,8 @@ class jUrl extends jUrlBase {
 
     /**
     * get current Url
+    * @param boolean $forxml if true, escape some characters to include the url into an html/xml document
+    * @return string the url
     */
     static function getCurrentUrl ($forxml = false) {
         if(isset($_SERVER["REQUEST_URI"])){
@@ -237,8 +245,10 @@ class jUrl extends jUrlBase {
 
     /**
     * Adds parameters to the given url
-    * @param string $url
-    * @param array $params
+    * @param string $url  an URL
+    * @param array $params some parameters to append to the url
+    * @param boolean $forxml if true, escape some characters to include the url into an html/xml document
+    * @return string the url
     */
     static function appendToUrlString ($url, $params = array (), $forxml = false){
         if ((($pos = strpos ( $url, '?')) !== false) && ($pos !== (strlen ($url)-1))){
@@ -249,10 +259,12 @@ class jUrl extends jUrlBase {
     }
 
     /**
-    * Gets the url corresponding to an action
-    * @param string $actSel  action selector.
+    * Gets the url corresponding to an action, in the given format
+    * @param string $actSel  action selector. You can use # instead of the module 
+    *                or the action name, to specify the current url.
     * @param array $params associative array with the parameters
-    * @param integer $what one of the jUrl const : STRING XMLSTRING JURL JURLACTION
+    * @param integer $what the format you want : one of the jUrl const,
+    *                                     STRING XMLSTRING JURL JURLACTION
     * @return mixed a value, depending of the $what parameter
     */
     static function get ($actSel, $params = array (), $what=0) {
