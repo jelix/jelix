@@ -58,6 +58,9 @@ Gildas Givaja (aka Giviz)
  - testeur, corrections de bugs
  - correction dans jXmlRpc.class.php (#192)
 
+Nicolas Lassalle
+ - correction d'un bug (#188)
+ 
 Vincent Bonnard
  - coquille dans jXmlRpc.class.php (#180)
 

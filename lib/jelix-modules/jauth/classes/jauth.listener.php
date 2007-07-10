@@ -21,7 +21,7 @@ class jauthListener extends jEventListener{
             $ok = ($user->actif == '1');
         }
 
-        $ok = $ok & ($user->password != '');
+        $ok = $ok && ($user->password != '');
 
         $event->Add(array('canlogin'=>$ok));
 
