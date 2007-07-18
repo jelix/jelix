@@ -415,11 +415,7 @@ $js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gForm.addControl( gControl);\n";',*/
-10=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+10=>'',
 11=>'$label = str_replace("\'","\\\'",\'Votre nom\');
 $js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
