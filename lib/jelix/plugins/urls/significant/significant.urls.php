@@ -278,18 +278,18 @@ class significantUrlEngine implements jIUrlEngine {
         $id = $module.'~'.$action.'@'.$urlact->requestType;
         $urlinfo = null;
         if (isset ($this->dataCreateUrl [$id])){
-            $urlinfo = &$this->dataCreateUrl[$id];
+            $urlinfo = $this->dataCreateUrl[$id];
             $url->delParam('module');
             $url->delParam('action');
         }else{
             $id = $module.'~*@'.$urlact->requestType;
             if (isset ($this->dataCreateUrl [$id])){
-                $urlinfo = &$this->dataCreateUrl[$id];
+                $urlinfo = $this->dataCreateUrl[$id];
                 $url->delParam('module');
             }else{
                 $id = '@'.$urlact->requestType;
                 if (isset ($this->dataCreateUrl [$id])){
-                    $urlinfo = &$this->dataCreateUrl[$id];
+                    $urlinfo = $this->dataCreateUrl[$id];
                 }else{
                     throw new Exception("Significant url engine doesn't find corresponding url to this action :".$module.'~'.$action.'@'.$urlact->requestType);
                 }
@@ -308,8 +308,30 @@ class significantUrlEngine implements jIUrlEngine {
             ou
             array(2,'entrypoint', https true/false, entrypoint true/false); pour les clés du type "@request"
             array(3,'entrypoint', https true/false, entrypoint true/false); pour les clés du type "module~@request"
-
+            array(4, array(1,..), array(1,..)...);
         */
+        if($urlinfo[0]==4){
+            $l = count($urlinfo);
+            $urlinfofound = null;
+            for($i=1; $i < $l; $i++){
+                $ok = true;
+                foreach($urlinfo[$i][7] as $n=>$v){
+                    if($url->getParam($n,'') != $v){
+                        $ok = false;
+                        break;
+                    }
+                }
+                if($ok){
+                    $urlinfofound = $urlinfo[$i];
+                    break;
+                }
+            }
+            if($urlinfofound !== null){
+                $urlinfo = $urlinfofound;
+            }else{
+                $urlinfo = $urlinfo[1];
+            }
+        }
 
         $url->scriptName = $GLOBALS['gJConfig']->urlengine['basePath'].$urlinfo[1];
         if($urlinfo[2])
@@ -355,7 +377,10 @@ class significantUrlEngine implements jIUrlEngine {
                 $url->pathInfo = substr($result,1);
             if($urlinfo[6])
                 $url->setParam('action',$action);
-
+            // removed parameters corresponding to static values
+            foreach($urlinfo[7] as $name=>$value){
+                $url->delParam($name);
+            }
         }elseif($urlinfo[0]==3){
             $url->delParam('module');
         }

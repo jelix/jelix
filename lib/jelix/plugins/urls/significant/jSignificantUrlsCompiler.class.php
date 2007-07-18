@@ -4,12 +4,11 @@
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 *
 */
-
 
 /**
 * Compiler for significant url engine
@@ -47,7 +46,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             $PARSE_URL = array($isDefault , $infoparser,$infoparser... )
 
             où
-            $isDefault : indique si c'est un point d'entrée par défaut, et donc si le parser ne trouve rien, si il ignore ou fait une erreur
+            $isDefault : indique si c'est un point d'entrée par défaut, et donc si le parser ne trouve rien,
+                            si il ignore ou fait une erreur
 
             $infoparser = array('module','action','selecteur handler')
             ou
@@ -68,7 +68,13 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                         array('annee','mois','jour','id','titre'), // liste des paramètres de l'url à prendre en compte
                         array(true, false..), // valeur des escapes
                         "/news/%1/%2/%3/%4-%5", // forme de l'url
+                        array('bla'=>'cequejeveux' ) // tableau des valeurs statiques, pour comparer 
+                                                     quand il y a plusieurs urls vers la même action
                         )
+                   quand il y a plusieurs urls vers la même action, il y a plutôt un tableau contenant
+                    plusieurs tableaux du type précédent
+                    array( 4, array(1,...), array(1,...)...)
+
                   ou
                   array(2,'entrypoint', https true/false, entrypoint true/false ); pour les clés du type "@request"
                   array(3,'entrypoint', https true/false, entrypoint true/false );  pour les clés du type  "module~@request"
@@ -76,7 +82,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         */
         $typeparam = array('string'=>'([^\/]+)','char'=>'([^\/])', 'letter'=>'(\w)',
            'number'=>'(\d+)', 'int'=>'(\d+)', 'integer'=>'(\d+)', 'digit'=>'(\d)',
-           'date'=>'([0-2]\d{3}\-(?:0[1-9]|1[0-2])\-(?:[0-2][1-9]|3[0-1]))', 'year'=>'([0-2]\d{3})', 'month'=>'(0[1-9]|1[0-2])', 'day'=>'([0-2][1-9]|[1-2]0|3[0-1])'
+           'date'=>'([0-2]\d{3}\-(?:0[1-9]|1[0-2])\-(?:[0-2][1-9]|3[0-1]))', 
+            'year'=>'([0-2]\d{3})', 'month'=>'(0[1-9]|1[0-2])', 'day'=>'([0-2][1-9]|[1-2]0|3[0-1])'
            );
         $createUrlInfos=array();
         $createUrlContent="<?php \n";
@@ -220,10 +227,30 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                   $liststatics[(string)$var['name']] =(string)$var['value'];
                }
                $parseInfos[]=array($module, $action, '!^'.$regexppath.'$!', $listparam, $escapes, $liststatics, $actionOverride );
-               $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(1,$urlep, $urlhttps, $listparam, $escapes,$path, false);
+               $cuisel = $module.'~'.$action.'@'.$requestType;
+               $arr = array(1,$urlep, $urlhttps, $listparam, $escapes,$path, false, $liststatics);
+               if(isset($createUrlInfos[$cuisel])){
+                    if($createUrlInfos[$cuisel][0] == 4){
+                        $createUrlInfos[$cuisel][] = $arr;
+                    }else{
+                        $createUrlInfos[$cuisel] = array( 4, $createUrlInfos[$cuisel] , $arr);
+                    }
+               }else{
+                   $createUrlInfos[$cuisel] = $arr;
+               }
                if($actionOverride){
                   foreach($actionOverride as $ao){
-                     $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(1,$urlep, $urlhttps, $listparam, $escapes,$path, true);
+                     $cuisel = $module.'~'.$ao.'@'.$requestType;
+                     $arr = array(1,$urlep, $urlhttps, $listparam, $escapes,$path, true, $liststatics);
+                     if(isset($createUrlInfos[$cuisel])){
+                        if($createUrlInfos[$cuisel][0] == 4){
+                            $createUrlInfos[$cuisel][] = $arr;
+                        }else{
+                            $createUrlInfos[$cuisel] = array( 4, $createUrlInfos[$cuisel] , $arr);
+                        }
+                     }else{
+                        $createUrlInfos[$cuisel] = $arr;
+                     }
                   }
                }
            }

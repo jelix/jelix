@@ -46,7 +46,7 @@ class UTCreateUrls extends UnitTestCase {
         foreach($urlList as $k=>$urldata){
             try{
                 $url = jUrl::get($urldata[0], $urldata[1]);
-                $this->assertTrue( ($url == $trueResult[$k]), 'url attendue='.$trueResult[$k].'   url créée='.$url );
+                $this->assertTrue( ($url == $trueResult[$k]), 'url '.$k.' attendue='.$trueResult[$k].'   url créée='.$url );
             }catch(jExceptionSelector $e){
                 $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(jException $e){
@@ -232,6 +232,9 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('jelix_tests~urlsig_url11', array('rubrique'=>'vetements',  'id_article'=>'98'));
       $urlList[]= array('jelix_tests~urlsig_url12', array('rubrique'=>'bricolage',  'id_article'=>'53'));
       $urlList[]= array('jelix_tests~urlsig_url13', array('rubrique'=>'alimentation',  'id_article'=>'26'));
+      $urlList[]= array('jelix_tests~urlsig_url20', array('mois'=>'08',  'annee'=>'2007','lang'=>'en_EN'));
+      $urlList[]= array('jelix_tests~urlsig_url20', array('mois'=>'08',  'annee'=>'2007','lang'=>'fr_FR'));
+      $urlList[]= array('jelix_tests~urlsig_url20', array('mois'=>'08',  'annee'=>'2007'));
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -248,6 +251,9 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php/shop/vetements/98",
           "/index.php/shop/bricolage/53/",
           "/index.php/supershop/alimentation?id_article=26",
+          "/index.php/articles/en/2007/08",
+          "/index.php/articles/fr/2007/08",
+          "/index.php/articles/fr/2007/08",
        );
 
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
@@ -270,6 +276,9 @@ class UTCreateUrls extends UnitTestCase {
           "/index/shop/vetements/98",
           "/index/shop/bricolage/53/",
           "/index/supershop/alimentation?id_article=26",
+          "/index/articles/en/2007/08",
+          "/index/articles/fr/2007/08",
+          "/index/articles/fr/2007/08",
        );
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);

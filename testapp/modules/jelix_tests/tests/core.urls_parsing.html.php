@@ -70,6 +70,8 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url12', 'rubrique'=>'bricolage',  'id_article'=>'34');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url13', 'rubrique'=>'alimentation');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url13', 'rubrique'=>'chaussures');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'en_EN');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'fr_FR');
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -84,7 +86,8 @@ class UTParseUrls extends UnitTestCase {
           array("index.php","/shop/bricolage/34/",array()),
           array("index.php","/supershop/alimentation",array()),
           array("index.php","/supershop/chaussures",array()),
-
+          array("index.php","/articles/en/2007/08",array()),
+          array("index.php","/articles/fr/2007/08",array()),
        );
 
       //$this->sendMessage("significant, multiview = false");
@@ -113,6 +116,8 @@ class UTParseUrls extends UnitTestCase {
           array("index","/shop/bricolage/34/",array()),
           array("index","/supershop/alimentation",array()),
           array("index","/supershop/chaussures",array()),
+          array("index","/articles/en/2007/08",array()),
+          array("index","/articles/fr/2007/08",array()),
        );
       foreach($request as $k=>$urldata){
          $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);

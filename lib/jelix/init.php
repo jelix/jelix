@@ -95,20 +95,20 @@ error_reporting (E_ALL | E_STRICT);
 #else
 
 // chargement du coeur
-require_once (JELIX_LIB_CORE_PATH . 'jErrorHandler.lib.php');
-require_once (JELIX_LIB_CORE_PATH . 'jException.lib.php');
-require_once (JELIX_LIB_CORE_PATH . 'jContext.class.php');
-require_once (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
-require_once (JELIX_LIB_CORE_PATH . 'jSelector.class.php');
-require_once (JELIX_LIB_CORE_PATH . 'jUrl.class.php');
-require_once (JELIX_LIB_CORE_PATH . 'jCoordinator.class.php');
-require_once (JELIX_LIB_CORE_PATH . 'jController.class.php');
-require_once (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
-require_once (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
-require_once (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
-require_once (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
+require (JELIX_LIB_CORE_PATH . 'jErrorHandler.lib.php');
+require (JELIX_LIB_CORE_PATH . 'jException.lib.php');
+require (JELIX_LIB_CORE_PATH . 'jContext.class.php');
+require (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
+require (JELIX_LIB_CORE_PATH . 'jSelector.class.php');
+require (JELIX_LIB_CORE_PATH . 'jUrl.class.php');
+require (JELIX_LIB_CORE_PATH . 'jCoordinator.class.php');
+require (JELIX_LIB_CORE_PATH . 'jController.class.php');
+require (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
+require (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
+require (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
+require (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
 #ifnot ENABLE_PHP_JELIX
-require_once (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
+require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
 #endif
 #endif
 
