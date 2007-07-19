@@ -51,6 +51,7 @@ class jDaoGenerator {
       $this->_datasParser = $daoDefinition;
       $this->_DaoClassName = $factoryClassName;
       $this->_DaoRecordClassName = $recordClassName;
+      $this->_dbtype = jDaoCompiler::$dbType;
    }
 
    /**
@@ -68,7 +69,7 @@ class jDaoGenerator {
       $sqlSelectClause   = $this->_getSelectClause();
       $pkFields          = $this->_getPropertiesBy('PkFields');
       $pTableRealName    = $tables[$this->_datasParser->getPrimaryTable()]['realname'];
-      $database          = jDaoCompiler::$dbType;
+      $pTableRealNameEsc = $this->_encloseName($pTableRealName);
       $pkai              = $this->_getAutoIncrementField();
       $sqlPkCondition    = $this->_buildSimpleConditions($pkFields);
       if($sqlPkCondition != ''){
@@ -126,7 +127,7 @@ class jDaoGenerator {
 
       if($pkai !== null){
          $src[]=' if($record->'.$pkai->name.' > 0 ){';
-         $src[] = '    $query = \'INSERT INTO '.$pTableRealName.' (';
+         $src[] = '    $query = \'INSERT INTO '.$pTableRealNameEsc.' (';
          $fields = $this->_getPropertiesBy('PrimaryTable');
          list($fields, $values) = $this->_prepareValues($fields,'insertPattern', 'record->');
 
@@ -137,7 +138,7 @@ class jDaoGenerator {
 
          $src[] = '}else{';
 
-         if (($database=='mysql') || ($database=='sqlserver') || ($database=='postgresql')) {
+         if (($this->_dbtype=='mysql') || ($this->_dbtype=='sqlserver') || ($this->_dbtype=='postgresql')) {
             $fields = $this->_getPropertiesBy('PrimaryFieldsExcludeAutoIncrement');
          /*}elseif ($pkai->sequenceName != ''){
             $src[] = '    $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
@@ -149,7 +150,7 @@ class jDaoGenerator {
          $fields = $this->_getPropertiesBy('PrimaryTable');
       }
 
-      $src[] = '    $query = \'INSERT INTO '.$pTableRealName.' (';
+      $src[] = '    $query = \'INSERT INTO '.$pTableRealNameEsc.' (';
 
       list($fields, $values) = $this->_prepareValues($fields,'insertPattern', 'record->');
 
@@ -166,9 +167,9 @@ class jDaoGenerator {
 
       if($pkai !== null){
          $src[] = '   if($result){';
-         if ($database=='sqlserver') {
+         if ($this->_dbtype=='sqlserver') {
             $src[] = '      if($record->'.$pkai->name.' < 1 ) $record->'.$pkai->name.'= $this->_conn->lastIdInTable(\''.$pkai->fieldName.'\',\''.$pTableRealName.'\');';
-         }else if ($database=='postgresql') {
+         }else if ($this->_dbtype=='postgresql') {
             $src[] = '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
          }else{
             $src[] = '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
@@ -187,7 +188,7 @@ class jDaoGenerator {
       $src[] = 'public function update ($record){';
       list($fields, $values) = $this->_prepareValues($this->_getPropertiesBy('PrimaryFieldsExcludePk'),'updatePattern', 'record->');
       if(count($fields)){
-         $src[] = '   $query = \'UPDATE '.$pTableRealName.' SET ';
+         $src[] = '   $query = \'UPDATE '.$pTableRealNameEsc.' SET ';
          $sqlSet='';
          foreach($fields as $k=> $fname){
             $sqlSet.= ', '.$fname. '= '. $values[$k];
@@ -236,11 +237,11 @@ class jDaoGenerator {
 
          switch($method->type){
                case 'delete':
-                  $src[] = '    $__query = \'DELETE FROM '.$pTableRealName.' \';';
+                  $src[] = '    $__query = \'DELETE FROM '.$pTableRealNameEsc.' \';';
                   $glueCondition =' WHERE ';
                   break;
                case 'update':
-                  $src[] = '    $__query = \'UPDATE '.$pTableRealName.' SET ';
+                  $src[] = '    $__query = \'UPDATE '.$pTableRealNameEsc.' SET ';
                   $updatefields = $this->_getPropertiesBy('PrimaryFieldsExcludePk');
                   $sqlSet='';
                   foreach($method->getValues() as $propname=>$value){
@@ -248,9 +249,9 @@ class jDaoGenerator {
                         foreach($method->getParameters() as $param){
                            $value[0] = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $updatefields[$propname]->datatype,false).'.\'',$value[0]);
                         }
-                        $sqlSet.= ', '.$updatefields[$propname]->fieldName. '= '. $value[0];
+                        $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '. $value[0];
                      }else{
-                        $sqlSet.= ', '.$updatefields[$propname]->fieldName. '= '. $this->_preparePHPValue($value[0],$updatefields[$propname]->datatype,false);
+                        $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '. $this->_preparePHPValue($value[0],$updatefields[$propname]->datatype,false);
                      }
                   }
                   $src[] =substr($sqlSet,1).'\';';
@@ -265,9 +266,9 @@ class jDaoGenerator {
 
                case 'count':
                   if($method->distinct !=''){
-                    $prop=$this->_datasParser->getProperties ();
+                    $prop = $this->_datasParser->getProperties ();
                     $prop = $prop[$method->distinct];
-                    $count=' DISTINCT '.$tables[$prop->table]['name'] .'.'.$prop->fieldName;
+                    $count=' DISTINCT '.$this->_encloseName($tables[$prop->table]['name']) .'.'.$this->_encloseName($prop->fieldName);
                   }else{
                     $count='*';
                   }
@@ -346,28 +347,31 @@ class jDaoGenerator {
     */
     private function _getFromClause(){
 
-      $database = jDaoCompiler::$dbType;
-      $aliaslink = ($database == 'oci8'?' ':' AS ');
+      $aliaslink = ($this->_dbtype == 'oci8'?' ':' AS ');
 
       $sqlWhere = '';
       $tables = $this->_datasParser->getTables();
 
       $primarytable = $tables[$this->_datasParser->getPrimaryTable()];
+      $ptrealname = $this->_encloseName($primarytable['realname']);
+      $ptname = $this->_encloseName($primarytable['name']);
+
       if($primarytable['name']!=$primarytable['realname'])
-         $sqlFrom =$primarytable['realname'].$aliaslink.$primarytable['name'];
+         $sqlFrom =$ptrealname.$aliaslink.$ptname;
       else
-         $sqlFrom =$primarytable['realname'];
+         $sqlFrom =$ptrealname;
 
       foreach($this->_datasParser->getOuterJoins() as $tablejoin){
          $table= $tables[$tablejoin[0]];
+         $tablename = $this->_encloseName($table['name']);
 
          if($table['name']!=$table['realname'])
-            $r =$table['realname'].$aliaslink.$table['name'];
+            $r =$this->_encloseName($table['realname']).$aliaslink.$tablename;
          else
-            $r =$table['realname'];
+            $r =$this->_encloseName($table['realname']);
 
          $fieldjoin='';
-         if ($database == 'oci8') {
+         if ($this->_dbtype == 'oci8') {
             if($tablejoin[1] == 0){
                $operand='='; $opafter='(+)';
             }elseif($tablejoin[1] == 1){
@@ -375,13 +379,13 @@ class jDaoGenerator {
             }
 
             foreach($table['fk'] as $k => $fk){
-               $fieldjoin.=' AND '.$primarytable['name'].'.'.$fk.$operand.$table['name'].'.'.$table['pk'][$k].$opafter;
+               $fieldjoin.=' AND '.$ptname.'.'.$this->_encloseName($fk).$operand.$tablename.'.'.$this->_encloseName($table['pk'][$k]).$opafter;
             }
             $sqlFrom.=', '.$r;
             $sqlWhere.=$fieldjoin;
          }else{
             foreach($table['fk'] as $k => $fk){
-               $fieldjoin.=' AND '.$primarytable['name'].'.'.$fk.'='.$table['name'].'.'.$table['pk'][$k];
+               $fieldjoin.=' AND '.$ptname.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
             }
             $fieldjoin=substr($fieldjoin,4);
             //$fieldjoin=$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'];
@@ -395,13 +399,14 @@ class jDaoGenerator {
 
       foreach($this->_datasParser->getInnerJoins() as $tablejoin){
          $table= $tables[$tablejoin];
+         $tablename = $this->_encloseName($table['name']);
          if($table['name']!=$table['realname'])
-            $sqlFrom .=', '.$table['realname'].$aliaslink.$table['name'];
+            $sqlFrom .=', '.$this->_encloseName($table['realname']).$aliaslink.$tablename;
         else
-            $sqlFrom .=', '.$table['realname'];
+            $sqlFrom .=', '.$this->_encloseName($table['realname']);
 
         foreach($table['fk'] as $k => $fk){
-           $sqlWhere.=' AND '.$primarytable['name'].'.'.$fk.'='.$table['name'].'.'.$table['pk'][$k];
+           $sqlWhere.=' AND '.$ptname.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
         }
          //$sqlWhere.=' AND '.$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'];
       }
@@ -416,31 +421,29 @@ class jDaoGenerator {
    private function _getSelectClause ($distinct=false){
       $result = array();
 
-      $database = jDaoCompiler::$dbType;
-
       $tables = $this->_datasParser->getTables();
       foreach ($this->_datasParser->getProperties () as $id=>$prop){
 
-         $table = $tables[$prop->table]['name'] .'.';
+         $table = $this->_encloseName($tables[$prop->table]['name']) .'.';
 
          if ($prop->selectPattern !=''){
             if ($prop->selectPattern =='%s'){
-               if ($prop->fieldName != $prop->name || $database == 'sqlite'){
+               if ($prop->fieldName != $prop->name || $this->_dbtype == 'sqlite'){
                      //in oracle we must escape name
-                  if ($database == 'oci8') {
-                     $field = $table.$prop->fieldName.' "'.$prop->name.'"';
+                  if ($this->_dbtype == 'oci8') {
+                     $field = $table.$this->_encloseName($prop->fieldName).' "'.$prop->name.'"';
                   }else{
-                     $field = $table.$prop->fieldName.' as '.$prop->name;
+                     $field = $table.$this->_encloseName($prop->fieldName).' as '.$this->_encloseName($prop->name);
                   }
                }else{
-                     $field = $table.$prop->fieldName;
+                     $field = $table.$this->_encloseName($prop->fieldName);
                }
             }else{
                //in oracle we must escape name
-               if ($database == 'oci8') {
-                  $field = sprintf ($prop->selectPattern, $table.$prop->fieldName).' "'.$prop->name.'"';
+               if ($this->_dbtype == 'oci8') {
+                  $field = sprintf ($prop->selectPattern, $table.$this->_encloseName($prop->fieldName)).' "'.$prop->name.'"';
                }else{
-                  $field = sprintf ($prop->selectPattern, $table.$prop->fieldName).' as '.$prop->name;
+                  $field = sprintf ($prop->selectPattern, $table.$this->_encloseName($prop->fieldName)).' as '.$this->_encloseName($prop->name);
                }
             }
 
@@ -529,13 +532,12 @@ class jDaoGenerator {
             $using = $this->_datasParser->getProperties ();
         }
 
-        $database = jDaoCompiler::$dbType;
         $tb = $this->_datasParser->getTables();
         $tb = $tb[$this->_datasParser->getPrimaryTable()]['realname'];
 
         foreach ($using as $id=>$field) {
             if ($field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement') {
-               if($database=="postgresql" && !strlen($field->sequenceName)){
+               if($this->_dbtype=="postgresql" && !strlen($field->sequenceName)){
                   $field->sequenceName = $tb.'_'.$field->name.'_seq';
                }
                return $field;
@@ -557,9 +559,9 @@ class jDaoGenerator {
             }
 
             if($forSelect){
-                $condition = $field->table.'.'.$field->fieldName;
+                $condition = $this->_encloseName($field->table).'.'.$this->_encloseName($field->fieldName);
             }else{
-                $condition = $field->fieldName;
+                $condition = $this->_encloseName($field->fieldName);
             }
 
             $var = '$'.$fieldPrefix.$field->name;
@@ -588,7 +590,7 @@ class jDaoGenerator {
                 $values[$field->name] = '\'.'.$value.'.\'';
             }
 
-            $fields[$field->name] = $field->fieldName;
+            $fields[$field->name] = $this->_encloseName($field->fieldName);
         }
         return array($fields, $values);
     }
@@ -606,7 +608,7 @@ class jDaoGenerator {
         foreach ($cond->order as $name => $way){
             $ord='';
             if (isset($fields[$name])){
-               $ord = $fields[$name]->table.'.'.$fields[$name]->fieldName;
+               $ord = $this->_encloseName($fields[$name]->table).'.'.$this->_encloseName($fields[$name]->fieldName);
             }elseif($name{0} == '$'){
                $ord = '\'.'.$name.'.\'';
             }else{
@@ -646,9 +648,9 @@ class jDaoGenerator {
             $prop = $fields[$cond['field_id']];
 
             if($withPrefix){
-               $f = $prop->table.'.'.$prop->fieldName;
+               $f = $this->_encloseName($prop->table).'.'.$this->_encloseName($prop->fieldName);
             }else{
-               $f = $prop->fieldName;
+               $f = $this->_encloseName($prop->fieldName);
             }
 
             $r .= $f.' '.$cond['operator'].' ';
@@ -767,5 +769,14 @@ class jDaoGenerator {
       }
       return $expr;
    }
+
+    private function _encloseName($name){
+        if($this->_dbtype == 'mysql'){
+            return '`'.$name.'`';
+        }elseif($this->_dbtype == 'postgresql'){
+            return '"'.$name.'"';
+        }else
+            return $name;
+    }
 }
 ?>
