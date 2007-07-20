@@ -32,6 +32,10 @@
   <define name="UI.attr.required">
       <optional><attribute name="required"><choice><value>true</value><value>false</value></choice></attribute></optional>
   </define>
+  <define name="UI.attr.defaultvalue">
+      <optional><attribute name="defaultvalue" /></optional>
+  </define>
+  
   
   <define name="List.UI.Common">
      <ref name="UI.attr.readonly" />
@@ -42,6 +46,16 @@
         </oneOrMore>
         <ref name="daodatasource" />
     </choice>
+    <optional>
+        <choice>
+            <attribute name="selectedvalue" />
+            <element name="selectedvalues">
+                <oneOrMore>
+                <element name="value"><text/></element>
+                </oneOrMore>
+            </element>
+        </choice>
+    </optional>
   </define>
   
   <define name="item">
@@ -52,6 +66,7 @@
                 <attribute name="labellocale" />
              </choice>
          </optional>
+         <optional><attribute name="selected"><choice><value>true</value><value>false</value></choice></attribute></optional>
          <attribute name="value" />
      </element>
   </define>
@@ -99,9 +114,6 @@
          </choice>
       </attribute>
   </define>
-  
-
-
 
   <!--  Controls       -->
    <define name="controls">
@@ -132,6 +144,7 @@
      <element name="input">
        <ref name="UI.Common" />
        <ref name="UI.Common.data" />
+       <ref name="UI.attr.defaultvalue" />
      </element>
   </define>
 
@@ -140,6 +153,7 @@
        <ref name="UI.Common" />
        <ref name="UI.attr.readonly" />
        <ref name="UI.attr.required" />
+       <ref name="UI.attr.defaultvalue" />
      </element>
   </define>
 
@@ -171,6 +185,7 @@
      <element name="checkbox">
        <ref name="UI.Common" />
        <ref name="UI.attr.readonly" />
+       <ref name="UI.attr.defaultvalue" />
      </element>
   </define>
 
@@ -243,6 +258,7 @@
   <define name="output">
      <element name="output">
        <ref name="UI.Common" />
+       <ref name="UI.attr.defaultvalue" />
        <!--<optional><attribute name="value"/></optional>-->
      </element>
   </define>

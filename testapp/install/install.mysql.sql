@@ -127,3 +127,8 @@ CREATE TABLE `product_test` (
 `price` FLOAT NOT NULL
 ) TYPE = MYISAM ;
 
+CREATE TABLE `product_tags_test` (
+`product_id` INT NOT NULL ,
+`tag` VARCHAR( 50 ) NOT NULL ,
+PRIMARY KEY ( `product_id` , `tag` )
+) ENGINE = MYISAM ;

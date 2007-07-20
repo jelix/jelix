@@ -89,6 +89,7 @@ cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php
 cd testapp/modules/jelix_tests/daos
   products.dao.xml
+  product_tags.dao.xml
   description.dao.xml
 cd testapp/modules/jelix_tests/forms
   product.form.xml

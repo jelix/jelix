@@ -62,6 +62,11 @@ abstract class jDaoRecordBase {
     public function getProperties(){ return $this->_properties; }
 
     /**
+     * @return array list of properties name which contains primary keys
+     */
+    public function getPrimaryKeyNames(){ return $this->_pkFields; }
+
+    /**
      * check values in the properties of the record, according on the dao definition
      * @return array list of errors
      */
@@ -340,6 +345,24 @@ abstract class jDaoFactoryBase  {
         return intval($res->c);
     }
     
+
+    /**
+     * delete all record corresponding to the conditions stored into the
+     * jDaoConditions object.
+     * @param jDaoConditions $searchcond
+     * @return
+     */
+    public function deleteBy ($searchcond){
+        if ($searchcond->isEmpty ()){
+            return;
+        }
+        $query = 'DELETE FROM '.$this->_tables[$this->_primaryTable]['realname'].' WHERE ';
+        $query .= $this->_createConditionsClause($searchcond, false);
+
+        return $this->_conn->exec($query);
+    }
+
+
     /**
      * create a WHERE clause with conditions on primary keys with given value. This method
      * should be used for SELECT queries. You haven't to escape values.
@@ -360,7 +383,7 @@ abstract class jDaoFactoryBase  {
     /**
     * @internal
     */
-    protected function _createConditionsClause($daocond){
+    protected function _createConditionsClause($daocond, $withOrder=true){
 
         $c = $this->_DaoRecordClassName;
         $rec= new $c();
@@ -368,17 +391,19 @@ abstract class jDaoFactoryBase  {
 
         $sql = $this->_generateCondition ($daocond->condition, $fields, true);
 
-        $order = array ();
-        foreach ($daocond->order as $name => $way){
-            if (isset($fields[$name])){
-                $order[] = $name.' '.$way;
+        if($withOrder){
+            $order = array ();
+            foreach ($daocond->order as $name => $way){
+                if (isset($fields[$name])){
+                    $order[] = $name.' '.$way;
+                }
             }
-        }
-        if(count ($order) > 0){
-            if(trim($sql) =='') {
-                $sql.= ' 1=1 ';
+            if(count ($order) > 0){
+                if(trim($sql) =='') {
+                    $sql.= ' 1=1 ';
+                }
+                $sql.=' ORDER BY '.implode (', ', $order);
             }
-            $sql.=' ORDER BY '.implode (', ', $order);
         }
         return $sql;
     }

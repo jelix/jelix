@@ -133,6 +133,14 @@ class jFormsCompiler implements jISimpleCompiler {
             if('true' == (string)$control['required'])
                 $source[]='$ctrl->required=true;';
         }
+        // defaultvalue support
+        if(isset($control['defaultvalue'])){
+            if($controltype != 'input' && $controltype != 'textarea' && $controltype != 'output'
+                 && $controltype != 'checkbox'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('defaultvalue',$controltype,$this->sourceFile));
+            }
+            $source[]='$ctrl->defaultValue=\''.str_replace('\'','\\\'',(string)$control['defaultvalue']) .'\';';
+        }
 
         // label support
         if(!isset($control->label)){
@@ -154,6 +162,26 @@ class jFormsCompiler implements jISimpleCompiler {
             case 'radiobuttons':
             case 'menulist':
             case 'listbox':
+                if(isset($control['selectedvalue']) && isset($control->selectedvalues)){
+                    throw new jException('jelix~formserr.attribute.not.allowed',array('selectedvalue',$controltype,$this->sourceFile));
+                }
+                $hasSelectedValues = false;
+                if(isset($control->selectedvalues) && isset($control->selectedvalues->value)){
+                    if( ($controltype == 'listbox' && isset($control['multiple']) && 'true' != (string)$control['multiple'])
+                        || $controltype == 'radiobuttons' || $controltype == 'menulist'
+                        ){
+                        throw new jException('jelix~formserr.defaultvalues.not.allowed',$this->sourceFile);
+                    }
+                    $str =' array(';
+                    foreach($control->selectedvalues->value as $value){
+                        $str.="'". str_replace("'","\\'", (string)$value) ."',";
+                    }
+                    $source[]='$ctrl->selectedValues='.$str.');';
+                    $hasSelectedValues = true;
+                }elseif(isset($control['selectedvalue'])){
+                    $source[]='$ctrl->selectedValues=array(\''. str_replace("'","\\'", (string)$control['selectedvalue']) .'\');';
+                    $hasSelectedValues = true;
+                }
                 // recuperer les <items> attr label|labellocale value
                 if(isset($control['dao'])){
                     $daoselector = (string)$control['dao'];
@@ -161,12 +189,11 @@ class jFormsCompiler implements jISimpleCompiler {
                     $daolabel = (string)$control['daolabelproperty'];
                     $daovalue = (string)$control['daovalueproperty'];
                     $source[]='$ctrl->datasource = new jFormDaoDatasource(\''.$daoselector.'\',\''.
-                        $daomethod.'\',\''.$daolabel.'\',\''.$daovalue.'\');';
-
+                                    $daomethod.'\',\''.$daolabel.'\',\''.$daovalue.'\');';
                 }else{
                     $source[]='$ctrl->datasource= new jFormStaticDatasource();';
                     $source[]='$ctrl->datasource->datas = array(';
-
+                    $selectedvalues=array();
                     foreach($control->item as $item){
                         $value ="'".str_replace("'","\\'",(string)$item['value'])."'=>";
                         if(isset($item['label'])){
@@ -176,9 +203,27 @@ class jFormsCompiler implements jISimpleCompiler {
                         }else{
                             $source[] = $value."'".str_replace("'","\\'",(string)$item['value'])."',";
                         }
+
+                        if(isset($item['selected'])){
+                            if($hasSelectedValues){
+                                throw new jException('jelix~formserr.selected.attribute.not.allowed',$this->sourceFile);
+                            }
+                            if((string)$item['selected']== 'true'){
+                                $selectedvalues[]=(string)$item['value'];
+                            }
+                        }
                     }
                     $source[]=");";
+                    if(count($selectedvalues)){
+                        if(count($selectedvalues)>1 && 
+                                (($controltype == 'listbox' && isset($control['multiple']) && 'true' != (string)$control['multiple'])
+                                || $controltype == 'radiobuttons' || $controltype == 'menulist')  ){
+                            throw new jException('jelix~formserr.multiple.selected.not.allowed',$this->sourceFile);
+                        }
+                        $source[]='$ctrl->selectedValues='.var_export($selectedvalues,true).';';
+                    }
                 }
+
                break;
         }
 
@@ -212,7 +257,10 @@ class jFormsCompiler implements jISimpleCompiler {
         }else{
             $source[]='$label = str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->label).'\');';
         }
-        $source[]='$js.="gControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".$label."\', \''.$dt.'\');\n";';
+        if($controltype == 'checkboxes' || $controltype == 'listbox')
+            $source[]='$js.="gControl = new jFormsControl(\''.(string)$control['ref'].'[]\', \'".$label."\', \''.$dt.'\');\n";';
+        else
+            $source[]='$js.="gControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".$label."\', \''.$dt.'\');\n";';
 
         if(isset($control['readonly']) && 'true' == (string)$control['readonly']){
             $source[]='$js.="gControl.readonly = true;\n";';

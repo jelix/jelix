@@ -68,13 +68,11 @@ abstract class jFormsBase {
         $req = $GLOBALS['gJCoord']->request;
         foreach($this->_controls as $name=>$ctrl){
             $value = $req->getParam($name);
-            //if($value !== null) on commente pour le moment,
             //@todo à prevoir un meilleur test, pour les formulaires sur plusieurs pages
             if($value === null) $value='';
             $this->_container->datas[$name]= $value;
         }
     }
-
 
     /**
     * add a control to the form
@@ -97,8 +95,17 @@ abstract class jFormsBase {
             $value=$this->_container->datas[$name];
             if($value === null && $ctrl->required){
                 $this->_container->errors[$name]=JFORM_ERRDATA_REQUIRED;
-            }elseif(!$ctrl->datatype->check($value)){
-                $this->_container->errors[$name]=JFORM_ERRDATA_INVALID;
+            }else{
+                if(is_array($value)){
+                    foreach($value as $v){
+                        if(!$ctrl->datatype->check($v)){
+                            $this->_container->errors[$name]=JFORM_ERRDATA_INVALID;
+                            break;
+                        }
+                    }
+                }elseif(!$ctrl->datatype->check($value)){
+                    $this->_container->errors[$name]=JFORM_ERRDATA_INVALID;
+                }
             }
         }
         return count($this->_container->errors) == 0;
@@ -115,7 +122,8 @@ abstract class jFormsBase {
         if(!$daorec)
             return new Exception('formId is invalid, couldn\'t get the corresponding dao object');
         foreach($this->_controls as $name=>$ctrl){
-            $this->_container->datas[$name] = $daorec->$name;
+            if(isset($daorec->$name))
+                $this->_container->datas[$name] = $daorec->$name;
         }
     }
 
@@ -130,15 +138,144 @@ abstract class jFormsBase {
         $dao = jDao::create($daoSelector);
         $daorec = jDao::createRecord($daoSelector);
         foreach($this->_controls as $name=>$ctrl){
-            $daorec->$name = $this->_container->datas[$name];
+            if(is_array($this->_container->datas[$name])){
+                if( count ($this->_container->datas[$name]) ==1){
+                    $daorec->$name = $this->_container->datas[$name][0];
+                }else{
+                    // do nothing for arrays ?
+                }
+            }else
+                $daorec->$name = $this->_container->datas[$name];
         }
         if($this->_container->formId){
             $daorec->setPk($this->_container->formId);
             $dao->update($daorec);
         }else{
+            // todo : what about updating the formId with the Pk.
             $dao->insert($daorec);
         }
         return $daorec->getPk();
+    }
+
+    /**
+     * set datas from a DAO, in a control
+     * 
+     * The control must be a container like checkboxes or listbox with multiple attribute.
+     * The form should contain a formId
+     *
+     * The Dao should map to an "association table" : its primary key should be
+     * the primary key stored in the formId + the field which will contain one of 
+     * the values of the control. If this order is not the same as defined into the dao,
+     * you should provide the list of property names which corresponds to the primary key
+     * in this order : properties for the formId, followed by the property which contains 
+     * the value.
+     * @param string $controlName  the name of the control
+     * @param string $daoSelector the selector of a dao file
+     * @param mixed  $primaryKeyNames list of field corresponding to primary keys (optional)
+     * @see jDao
+     */
+    public function initControlFromDao($controlName, $daoSelector, $primaryKeyNames=null){
+
+        if(!$this->_controls[$controlName]->isContainer()){
+            throw new Exception("jFormsBase::initControlFromDao: the control $controlName is not a container");
+        }
+
+        if(!$this->_container->formId)
+            throw new Exception("jFormsBase::initControlFromDao: no primary key");
+
+        $primaryKey = $this->_container->formId;
+
+        if(!is_array($primaryKey))
+            $primaryKey =array($primaryKey);
+
+        $dao = jDao::create($daoSelector);
+        $daorec = jDao::createRecord($daoSelector);
+
+        $conditions = jDao::createConditions();
+        if($primaryKeyNames)
+            $pkNamelist = $primaryKeyNames;
+        else
+            $pkNamelist = $daorec->getPrimaryKeyNames();
+
+        foreach($primaryKey as $k=>$pk){
+            $conditions->addCondition ($pkNamelist[$k], '=', $pk);
+        }
+
+        $results = $dao->findBy($conditions);
+        $valuefield = $pkNamelist[$k+1];
+        $val = array();
+        foreach($results as $res){
+            $val[]=$res->$valuefield;
+        }
+        $this->_container->datas[$controlName]=$val;
+    }
+
+
+    /**
+     * save datas of a control using a dao.
+     *
+     * The control must be a container like checkboxes or listbox with multiple attribute.
+     * If the form contain a new record (no formId), you should call saveToDao before
+     * in order to get a new id (the primary key of the new record), or you should get a new id 
+     * by an other way. then you must pass this primary key in the third argument.
+     * If the form have already a formId, then it will be used as a primary key, unless
+     * you give one in the third argument.
+     *
+     * The Dao should map to an "association table" : its primary key should be
+     * the primary key stored in the formId + the field which will contain one of 
+     * the values of the control. If this order is not the same as defined into the dao,
+     * you should provide the list of property names which corresponds to the primary key
+     * in this order : properties for the formId, followed by the property which contains 
+     * the value.
+     * All existing records which have the formid in their keys are deleted
+     * before to insert new values.
+     *
+     * @param string $controlName  the name of the control
+     * @param string $daoSelector the selector of a dao file
+     * @param mixed  $primaryKey the primary key if the form have no id. (optional)
+     * @param mixed  $primaryKeyNames list of field corresponding to primary keys (optional)
+     * @see jDao
+     */
+    public function saveControlToDao($controlName, $daoSelector, $primaryKey = null, $primaryKeyNames=null){
+
+        if(!$this->_controls[$controlName]->isContainer()){
+            throw new Exception("jFormsBase::saveControlToDao: the control $controlName is not a container");
+        }
+
+        $values = $this->_container->datas[$controlName];
+        if(!is_array($values))
+            throw new Exception("jFormsBase::saveControlToDao: value of the control $controlName is not an array !");
+
+        if(!$this->_container->formId && !$primaryKey)
+            throw new Exception("jFormsBase::saveControlToDao: no primary key");
+
+        if(!$primaryKey)
+            $primaryKey = $this->_container->formId;
+
+        if(!is_array($primaryKey))
+            $primaryKey =array($primaryKey);
+
+        $dao = jDao::create($daoSelector);
+        $daorec = jDao::createRecord($daoSelector);
+
+        $conditions = jDao::createConditions();
+        if($primaryKeyNames)
+            $pkNamelist = $primaryKeyNames;
+        else
+            $pkNamelist = $daorec->getPrimaryKeyNames();
+
+        foreach($primaryKey as $k=>$pk){
+            $conditions->addCondition ($pkNamelist[$k], '=', $pk);
+            $daorec->{$pkNamelist[$k]} = $pk;
+        }
+
+        $dao->deleteBy($conditions);
+
+        $valuefield = $pkNamelist[$k+1];
+        foreach($values as $value){
+            $daorec->$valuefield = $value;
+            $dao->insert($daorec);
+        }
     }
 
     /**

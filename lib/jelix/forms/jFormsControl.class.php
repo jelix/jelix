@@ -22,12 +22,14 @@ abstract class jFormsControl {
    public $required=false;
    public $readonly=false;
    public $label='';
-
    public $value='';
-   public $defaultValue='';
 
    function __construct($ref){
       $this->ref = $ref;
+   }
+
+   function isContainer(){
+        return false; 
    }
 }
 
@@ -39,6 +41,7 @@ abstract class jFormsControl {
  */
 class jFormsControlInput extends jFormsControl {
    public $type='input';
+   public $defaultValue='';
 }
 
 
@@ -54,17 +57,8 @@ abstract class jFormsBaseControlSelect1 extends jFormsControl {
      * @var jIFormDatasource
      */
     public $datasource;
+    public $selectedValues=array();
 }
-
-/**
- *
- * @package     jelix
- * @subpackage  forms
- * @experimental
- */
-/*class jFormsControlSelect extends jFormsBaseControlSelect1 {
-   public $type="select";
-}*/
 
 /**
  *
@@ -74,6 +68,10 @@ abstract class jFormsBaseControlSelect1 extends jFormsControl {
  */
 class jFormsControlCheckboxes extends jFormsBaseControlSelect1 {
    public $type="checkboxes";
+
+   function isContainer(){
+        return true;
+   }
 }
 
 /**
@@ -95,6 +93,11 @@ class jFormsControlRadiobuttons extends jFormsBaseControlSelect1 {
 class jFormsControlListbox extends jFormsBaseControlSelect1 {
    public $type="listbox";
    public $multiple = false;
+
+   function isContainer(){
+        return $this->multiple;
+   }
+
 }
 
 /**
@@ -115,6 +118,7 @@ class jFormsControlMenulist extends jFormsBaseControlSelect1 {
  */
 class jFormsControlTextarea extends jFormsControl {
    public $type='textarea';
+   public $defaultValue='';
 }
 
 /**
@@ -135,6 +139,7 @@ class jFormsControlSecret extends jFormsControl {
  */
 class jFormsControlCheckbox extends jFormsControl {
    public $type='checkbox';
+   public $defaultValue='';
 }
 
 /**
@@ -145,6 +150,7 @@ class jFormsControlCheckbox extends jFormsControl {
  */
 class jFormsControlOutput extends jFormsControl {
    public $type='output';
+   public $defaultValue='';
 }
 
 /**

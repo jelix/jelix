@@ -5,8 +5,18 @@
       <label>product name</label>
    </input>
 
-   <input ref="price" datatype="float">
+   <input ref="price" type="decimal">
       <label>The price</label>
    </input>
+
+   <checkboxes ref="tag" >
+      <label>Tags</label>
+      <item value="book"/>
+      <item value="high tech" />
+      <item value="professionnal" />
+      <item value="white and black" />
+      <item value="best seller" />
+      <item value="promotion" />
+    </checkboxes>
 
 </forms>

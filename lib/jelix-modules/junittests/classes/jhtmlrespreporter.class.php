@@ -88,6 +88,8 @@ class jHtmlRespReporter extends SimpleReporter {
    }
 
    function paintDiff($stringA, $stringB){
+$this->_response->body->append('MAIN','<!--A:'.$stringA.'-->');
+$this->_response->body->append('MAIN','<!--B:'.$stringB.'-->');
         $diff = new Diff(explode("\n",$stringA),explode("\n",$stringB));
         if($diff->isEmpty()) {
             $this->_response->body->append('MAIN','<p>Erreur diff : bizarre, aucune différence d\'aprés la difflib...</p>');

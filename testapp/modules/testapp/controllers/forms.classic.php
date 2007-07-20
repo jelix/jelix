@@ -107,7 +107,7 @@ class formsCtrl extends jController {
 
         // récupe le formulaire et le rempli avec les données reçues de la requête
         $form = jForms::fill('sample',$id);
-    
+
         // on pourrait ici enregistrer les données aprés un $form->check()
         // non implementé pour le moment...
 
@@ -140,8 +140,6 @@ class formsCtrl extends jController {
       $rep->action="forms_listform";
       return $rep;
    }
-
-
 
 }
 

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="product_tags_test" primarykey="product_id,tag" />
+   </datasources>
+   <record>
+      <property name="id"  fieldname="product_id" datatype="int" required="true" />
+      <property name="tag" fieldname="tag"    datatype="string"  required="true"/>
+   </record>
+</dao>
+
