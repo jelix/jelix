@@ -554,11 +554,12 @@ $js.="gForm.addControl( gControl);\n";',
         $jfc = new testJFormsCompiler();
 
         foreach($this->_XmlControls as $k=>$control){
-            $xml = simplexml_load_string( $control);
-            if(!$xml){
+            $dom = new DOMDocument;
+            if(!$dom->loadXML($control)){
                 $this->fail("Can't load xml test content ($k)");
             }else{
-                $ct = $jfc->testPhpControl($xml->getName(), $xml);
+                // getName() in simplexml doesn't exists in prior version of php 5.1.3, so we use a DOM
+                $ct = $jfc->testPhpControl($dom->documentElement->localName, simplexml_import_dom($dom));
                 $this->assertEqualOrDiff($this->_PhpControls[$k],$ct, "test $k failed" );
             }
         }
@@ -569,11 +570,12 @@ $js.="gForm.addControl( gControl);\n";',
         $jfc = new testJFormsCompiler();
 
         foreach($this->_XmlControls as $k=>$control){
-            $xml = simplexml_load_string( $control);
-            if(!$xml){
+            $dom = new DOMDocument;
+            if(!$dom->loadXML($control)){
                 $this->fail("Can't load xml test content ($k)");
             }else{
-                $ct = $jfc->testJsControl($xml->getName(), $xml);
+                // getName() in simplexml doesn't exists in prior version of php 5.1.3, so we use a DOM
+                $ct = $jfc->testJsControl($dom->documentElement->localName, simplexml_import_dom($dom));
                 $this->assertEqualOrDiff($this->_JsControls[$k],$ct, "test $k failed" );
             }
         }
@@ -643,12 +645,13 @@ array('','','myfile')
         $jfc = new testJFormsCompiler();
 
         foreach($this->_BadXmlControls as $k=>$control){
-            $xml = simplexml_load_string( $control[0]);
-            if(!$xml){
+            $dom = new DOMDocument;
+            if(!$dom->loadXML($control[0])){
                 $this->fail("Can't load bad xml test content ($k)");
             }else{
                 try {
-                    $ct = $jfc->testPhpControl($xml->getName(), $xml);
+                    // getName() in simplexml doesn't exists in prior version of php 5.1.3, so we use a DOM
+                    $ct = $jfc->testPhpControl($dom->documentElement->localName, simplexml_import_dom($dom));
                     $this->fail("no exception during bad xml test content $k");
                 }catch(jException $e){
                     $this->assertEqualOrDiff($control[1], $e->getLocaleKey());
