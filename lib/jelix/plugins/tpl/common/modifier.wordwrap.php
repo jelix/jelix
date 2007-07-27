@@ -25,7 +25,7 @@
  * @param boolean
  * @return string
  */
-function jtpl_modifier_wordwrap($string,$length=80,$break="\n",$cut=false)
+function jtpl_modifier_common_wordwrap($string,$length=80,$break="\n",$cut=false)
 {
     return wordwrap($string,$length,$break,$cut);
 }

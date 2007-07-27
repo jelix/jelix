@@ -20,7 +20,7 @@
  * @param boolean $include_spaces include whitespace in the character count
  * @return integer
  */
-function jtpl_modifier_count_characters($string, $include_spaces = false)
+function jtpl_modifier_common_count_characters($string, $include_spaces = false)
 {
     if ($include_spaces)
        return(iconv_strlen($string, jTpl::getEncoding()));

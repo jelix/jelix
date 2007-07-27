@@ -17,7 +17,7 @@
  * @param string $method indicates what you want to specify (possible values : js,css,overlay,rootattr,ns)
  * @param mixed $param parameter (a css style sheet for "css" for example)
  */
-function jtpl_meta_xul($tpl, $method, $param)
+function jtpl_meta_xul_xul($tpl, $method, $param)
 {
     global $gJCoord, $gJConfig;
 

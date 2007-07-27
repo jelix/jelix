@@ -20,7 +20,7 @@
  * @param string
  * @return string
  */
-function jtpl_modifier_strip($text, $replace = ' ')
+function jtpl_modifier_common_strip($text, $replace = ' ')
 {
     return preg_replace('!\s+!', $replace, $text);
 }

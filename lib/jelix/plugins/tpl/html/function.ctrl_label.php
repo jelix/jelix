@@ -13,7 +13,7 @@
  *
  * @param jTpl $tpl template engine
  */
-function jtpl_function_ctrl_label($tpl)
+function jtpl_function_html_ctrl_label($tpl)
 {
     if(isset($tpl->_privateVars['__builder']))
         $tpl->_privateVars['__builder']->outputControlLabel($tpl->_privateVars['__ctrl']);

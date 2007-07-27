@@ -249,14 +249,8 @@ class jTplCompiler
 
             $targs=array($res);
 
-            if( ! $path = $this->_getPlugin('modifier',$m[1])){
-                if(isset($this->_modifier[$m[1]])){
-                    $res = $this->_modifier[$m[1]].'('.$res.')';
-                } else {
-                    $this->doError2('errors.tpl.tag.modifier.unknow',$this->_currentTag, $m[1]);
-                    return '';
-                }
-            } else {
+            if( $path = $this->_getPlugin('modifier',$m[1])){
+
                 if(isset($m[2])){
                     $args = explode(':',$m[2]);
 
@@ -264,8 +258,17 @@ class jTplCompiler
                         $targs[] = $this->_parseFinal($arg,$this->_allowedInVar, $this->_excludedInVar);
                     }
                 }
-                $res = 'jtpl_modifier_'.$m[1].'('.implode(',',$targs).')';
-                $this->_pluginPath[$path] = true;
+                $res = $path[1].'('.implode(',',$targs).')';
+                $this->_pluginPath[$path[0]] = true;
+
+            } else {
+
+                if(isset($this->_modifier[$m[1]])){
+                    $res = $this->_modifier[$m[1]].'('.$res.')';
+                } else {
+                    $this->doError2('errors.tpl.tag.modifier.unknow',$this->_currentTag, $m[1]);
+                    return '';
+                }
             }
         }
         return $res;
@@ -345,33 +348,33 @@ class jTplCompiler
                         $this->doError1('errors.tpl.tag.block.end.missing',end($this->_blockStack));
                     }else{
                         array_pop($this->_blockStack);
-                        $fct = 'jtpl_block_'.$m[1];
+                        $fct = 'jtpl_block_'.$this->_outputType.'_'.$m[1];
                         if(!function_exists($fct)){
                             $this->doError1('errors.tpl.tag.block.begin.missing',$m[1]);
                         }else
                             $res = $fct($this,false,null);
                     }
                 }else if(preg_match('/^meta_(\w+)$/',$name,$m)){
-                     if ( ! $path = $this->_getPlugin('meta',$m[1])) {
-                        $this->doError1('errors.tpl.tag.meta.unknow',$m[1]);
+                     if ($path = $this->_getPlugin('meta',$m[1])) {
+                        $this->_parseMeta($args,$path[1]);
+                        $this->_pluginPath[$path[0]] = true;
                     }else{
-                        $this->_parseMeta($args,$m[1]);
-                        $this->_pluginPath[$path] = true;
+                        $this->doError1('errors.tpl.tag.meta.unknow',$m[1]);
                     }
                     $res='';
 
                 }else if ( $path = $this->_getPlugin('block',$name)) {
-                    require_once($path);
+                    require_once($path[0]);
                     $argfct=$this->_parseFinal($args,$this->_allowedAssign, array(';'),true);
-                    $fct = 'jtpl_block_'.$name;
+                    $fct = $path[1];
                     $res = $fct($this,true,$argfct);
                     array_push($this->_blockStack,$name);
 
                 }else if ( $path = $this->_getPlugin('function',$name)) {
 
                     $argfct=$this->_parseFinal($args,$this->_allowedAssign);
-                    $res = 'jtpl_function_'.$name.'( $t'.(trim($argfct)!=''?','.$argfct:'').');';
-                    $this->_pluginPath[$path] = true;
+                    $res = $path[1].'( $t'.(trim($argfct)!=''?','.$argfct:'').');';
+                    $this->_pluginPath[$path[0]] = true;
 
                 } else {
                     $this->doError1('errors.tpl.tag.function.unknow',$name);
@@ -491,7 +494,7 @@ class jTplCompiler
         if(preg_match("/^(\w+)\s+(.*)$/",$args,$m)){
             $argfct=$this->_parseFinal($m[2],$this->_allowedInExpr);
             if($fct!=''){
-                $this->_metaBody.= 'jtpl_meta_'.$fct.'( $t,'."'".$m[1]."',".$argfct.");\n";
+                $this->_metaBody.= $fct.'( $t,'."'".$m[1]."',".$argfct.");\n";
             }else{
                 $this->_metaBody.= "\$t->_meta['".$m[1]."']=".$argfct.";\n";
             }
@@ -504,7 +507,8 @@ class jTplCompiler
      * try to find a plugin
      * @param string $type type of plugin (function, modifier...)
      * @param string $name the plugin name
-     * @return string the path of the plugin, or '' if not found
+     * @return array|boolean an array containing the path of the plugin 
+     *                      and the name of the plugin function, or false if not found
      */
     protected function _getPlugin($type, $name){
         $foundPath='';
@@ -520,7 +524,7 @@ class jTplCompiler
                 $foundPath=$path.$type.'.'.$name.'.php';
 
                 if(file_exists($foundPath)){
-                    return $foundPath;
+                    return array($foundPath, 'jtpl_'.$type.'_'.$this->_outputType.'_'.$name);
                 }
             }
         }
@@ -533,11 +537,11 @@ class jTplCompiler
 #endif
                 $foundPath=$path.$type.'.'.$name.'.php';
                 if(file_exists($foundPath)){
-                    return $foundPath;
+                    return array($foundPath, 'jtpl_'.$type.'_common_'.$name) ;
                 }
             }
         }
-        return '';
+        return false;
     }
 
     public function doError0($err){

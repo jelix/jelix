@@ -17,7 +17,7 @@
  * @param string
  * @return integer
  */
-function jtpl_modifier_count_paragraphs($string)
+function jtpl_modifier_common_count_paragraphs($string)
 {
     // count \r or \n characters
     return count(preg_split('/[\r\n]+/', $string));

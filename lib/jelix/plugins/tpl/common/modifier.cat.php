@@ -21,7 +21,7 @@
  * @param string $cat the string to concat to $string
  * @return string
  */
-function jtpl_modifier_cat($string, $cat)
+function jtpl_modifier_common_cat($string, $cat)
 {
     return $string . $cat;
 }

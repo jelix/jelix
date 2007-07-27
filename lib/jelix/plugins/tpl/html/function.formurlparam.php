@@ -16,7 +16,7 @@
  * @param string $selector selector action
  * @param array $params parameters for the url
  */
-function jtpl_function_formurlparam($tpl, $selector, $params=array())
+function jtpl_function_html_formurlparam($tpl, $selector, $params=array())
 {
     $url = jUrl::get($selector, $params, 2); // retourne un jUrl
     foreach ($url->params as $p_name => $p_value) {

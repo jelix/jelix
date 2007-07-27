@@ -20,7 +20,7 @@
  * @param array $params parameters for the url
  * @param array $jsparam array : key=name of a url parameter, value=piece of javascript code ( variable name for example)
  */
-function jtpl_function_urljsstring($tpl, $selector, $params=array(), $jsparams=array())
+function jtpl_function_html_urljsstring($tpl, $selector, $params=array(), $jsparams=array())
 {
     $search = array();
     $repl =array();

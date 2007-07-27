@@ -20,7 +20,7 @@
  * @param string
  * @return string
  */
-function jtpl_modifier_replace($string, $search, $replace)
+function jtpl_modifier_common_replace($string, $search, $replace)
 {
     return str_replace($search, $replace, $string);
 }

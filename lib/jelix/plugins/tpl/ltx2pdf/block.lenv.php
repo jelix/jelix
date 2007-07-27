@@ -17,7 +17,7 @@
  * @param $param array  1=>latex command
  * @return string the php code corresponding to the begin or end of the block
  */
-function jtpl_block_lenv($compiler, $begin, $param=array())
+function jtpl_block_ltx2pdf_lenv($compiler, $begin, $param=array())
 {
     static $stack=array();
     if ($begin){

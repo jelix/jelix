@@ -21,7 +21,7 @@
  * @param string|array
  * @return string
  */
-function jtpl_modifier_regex_replace($string, $search, $replace)
+function jtpl_modifier_common_regex_replace($string, $search, $replace)
 {
     if (preg_match('!\W(\w+)$!s', $search, $match) &&
             (strpos($match[1], 'e') !== false)) {

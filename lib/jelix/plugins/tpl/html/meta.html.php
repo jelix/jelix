@@ -18,7 +18,7 @@
  * @param string $method indicates what you want to specify (possible values : js,css,bodyattr)
  * @param mixed $param parameter (a css style sheet for "css" for example)
  */
-function jtpl_meta_html($tpl, $method, $param)
+function jtpl_meta_html_html($tpl, $method, $param)
 {
     global $gJCoord,$gJConfig;
 

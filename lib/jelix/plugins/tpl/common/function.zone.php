@@ -17,7 +17,7 @@
  * @param string $string the zone selector
  * @param array $params parameters for the zone
  */
-function jtpl_function_zone($tpl, $name, $params=array())
+function jtpl_function_common_zone($tpl, $name, $params=array())
 {
      echo jZone::get($name, $params);
 }

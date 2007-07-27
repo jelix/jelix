@@ -16,7 +16,7 @@
  * @param jTpl $tpl template engine
  * @param string $locale the locale key
  */
-function jtpl_function_jlocale($tpl, $locale)
+function jtpl_function_html_jlocale($tpl, $locale)
 {
      if(func_num_args() == 3 && is_array(func_get_arg(2))){
          $param = func_get_arg(2);

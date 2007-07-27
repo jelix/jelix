@@ -17,7 +17,7 @@
  * @param string
  * @return integer
  */
-function jtpl_modifier_count_words($string)
+function jtpl_modifier_common_count_words($string)
 {
     // split text by ' ',\r,\n,\f,\t
     $split_array = preg_split('/\s+/',$string);

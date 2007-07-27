@@ -13,7 +13,7 @@
  *
  * @param jTpl $tpl template engine
  */
-function jtpl_function_ctrl_value($tpl)
+function jtpl_function_html_ctrl_value($tpl)
 {
 
     echo htmlspecialchars($tpl->_privateVars['__form']->getData($tpl->_privateVars['__ctrl']->ref));

@@ -12,7 +12,7 @@
  * modifier plugin : simple search/replace for latex chars
  * @param string
  */
-function jtpl_modifier_latex($string)
+function jtpl_modifier_ltx2pdf_latex($string)
 {
     return str_replace(array('#','$','%','^','&','_','{','}','~'), array('\\#','\\$','\\%','\\^','\\&','\\_','\\{','\\}','\\~'), str_replace('\\','\\textbackslash',$string));
 }

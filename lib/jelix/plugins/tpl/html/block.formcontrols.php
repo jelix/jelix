@@ -20,7 +20,7 @@
  * @return string the php code corresponding to the begin or end of the block
  * @see jForms
  */
-function jtpl_block_formcontrols($compiler, $begin, $param=array())
+function jtpl_block_html_formcontrols($compiler, $begin, $param=array())
 {
 
     if(!$begin){

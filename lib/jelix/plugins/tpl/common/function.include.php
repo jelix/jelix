@@ -17,7 +17,7 @@
  * @param jTpl $t template engine
  * @param string $string the template selector
  */
-function jtpl_function_include($t, $string) {
+function jtpl_function_common_include($t, $string) {
     $t->display($string);
 }
 

@@ -21,7 +21,7 @@
  * @param string $default_date default date if $string is empty
  * @return string|void
  */
-function jtpl_modifier_date_format( $string, $format="%b %e, %Y",
+function jtpl_modifier_common_date_format( $string, $format="%b %e, %Y",
                                     $default_date=null) {
 
     if (substr(PHP_OS,0,3) == 'WIN') {

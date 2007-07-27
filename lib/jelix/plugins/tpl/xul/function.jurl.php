@@ -17,7 +17,7 @@
  * @param array $params parameters for the url
  * @param boolean $escape if true, then escape the string for xml
  */
-function jtpl_function_jurl($tpl, $selector, $params=array(),$escape=true)
+function jtpl_function_xul_jurl($tpl, $selector, $params=array(),$escape=true)
 {
      echo jUrl::get($selector, $params, ($escape?1:0));
 }

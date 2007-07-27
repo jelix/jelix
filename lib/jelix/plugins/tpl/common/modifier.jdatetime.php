@@ -37,7 +37,7 @@
  * @return string the converted date
  * @see jDateTime
  */
-function jtpl_modifier_jdatetime($date, $format_in = 'db_datetime',
+function jtpl_modifier_common_jdatetime($date, $format_in = 'db_datetime',
                                  $format_out = 'lang_date') {
     $formats = array(
         'lang_date' => jDateTime::LANG_DFORMAT,

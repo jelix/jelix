@@ -17,7 +17,7 @@
  * @param $param array  1=>latex command
  * @return string the php code corresponding to the begin or end of the block
  */
-function jtpl_block_lcmd($compiler, $begin, $param=array())
+function jtpl_block_ltx2pdf_lcmd($compiler, $begin, $param=array())
 {
     if ($begin){
         $param[0];

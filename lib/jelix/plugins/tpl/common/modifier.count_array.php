@@ -16,7 +16,7 @@
  * @param array
  * @return integer
  */
-function jtpl_modifier_count_array($aArray)
+function jtpl_modifier_common_count_array($aArray)
 {
     return count($aArray);
 }

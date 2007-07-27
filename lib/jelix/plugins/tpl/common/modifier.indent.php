@@ -22,7 +22,7 @@
  * @param string
  * @return string
  */
-function jtpl_modifier_indent($string,$chars=4,$char=" ")
+function jtpl_modifier_common_indent($string,$chars=4,$char=" ")
 {
     return preg_replace('!^!m',str_repeat($char,$chars),$string);
 }

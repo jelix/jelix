@@ -21,7 +21,7 @@ require_once(LIB_PATH.'diff/diffhtml.php');
  * @param string $str2 the second string
  * @param string $nodiffmsg message quand il n'y a pas de différence
  */
-function jtpl_function_diff($tpl, $str1,$str2, $nodiffmsg='Pas de différence')
+function jtpl_function_html_diff($tpl, $str1,$str2, $nodiffmsg='Pas de différence')
 {
     $diff = new Diff(explode("\n",$str1),explode("\n",$str2));
 

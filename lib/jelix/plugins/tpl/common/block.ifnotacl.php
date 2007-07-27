@@ -17,7 +17,7 @@
  * @param $params array  0=>subject 1=>right value 2=>optional resource
  * @return string the php code corresponding to the begin or end of the block
  */
-function jtpl_block_ifnotacl($compiler, $begin, $params=array())
+function jtpl_block_common_ifnotacl($compiler, $begin, $params=array())
 {
     if($begin){
         if(count($params) == 2){

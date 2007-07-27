@@ -17,7 +17,7 @@
  * @param string
  * @return string
  */
-function jtpl_modifier_nl2br($string)
+function jtpl_modifier_html_nl2br($string)
 {
     return nl2br($string);
 }

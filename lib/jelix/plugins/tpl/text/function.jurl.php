@@ -16,7 +16,7 @@
  * @param string $selector selector action
  * @param array $params parameters for the url
  */
-function jtpl_function_jurl($tpl, $selector, $params=array())
+function jtpl_function_text_jurl($tpl, $selector, $params=array())
 {
      echo jUrl::get($selector, $params, 0);
 }

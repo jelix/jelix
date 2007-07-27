@@ -27,7 +27,7 @@
  * @param boolean $break_words
  * @return string
  */
-function jtpl_modifier_truncate($string, $length = 80, $etc = '...',
+function jtpl_modifier_common_truncate($string, $length = 80, $etc = '...',
                                   $break_words = false)
 {
     if ($length == 0)

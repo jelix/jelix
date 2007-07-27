@@ -17,7 +17,7 @@
  * @param array $params no parameters. array should be empty
  * @return string the php code corresponding to the begin or end of the block
  */
-function jtpl_block_ifusernotconnected($compiler, $begin, $params=array())
+function jtpl_block_common_ifusernotconnected($compiler, $begin, $params=array())
 {
     if($begin){
         if(count($params)){

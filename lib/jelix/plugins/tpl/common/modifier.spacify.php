@@ -19,7 +19,7 @@
  * @param string
  * @return string
  */
-function jtpl_modifier_spacify($string, $spacify_char = ' ')
+function jtpl_modifier_common_spacify($string, $spacify_char = ' ')
 {
     return implode($spacify_char,
                    preg_split('//', $string, -1, PREG_SPLIT_NO_EMPTY));

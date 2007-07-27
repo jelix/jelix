@@ -24,7 +24,7 @@ require_once(JELIX_LIB_UTILS_PATH.'jWiki.class.php');
  * @see jWiki
  * @link  http://wikirenderer.berlios.de/
  */
-function jtpl_modifier_wiki($text, $config = 'wr3_to_xhtml')
+function jtpl_modifier_common_wiki($text, $config = 'wr3_to_xhtml')
 {
     $wr = new jWiki($config);
     return $wr->render($text);

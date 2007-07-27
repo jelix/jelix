@@ -13,7 +13,7 @@
  *
  * @param jTpl $tpl template engine
  */
-function jtpl_function_ctrl_control($tpl)
+function jtpl_function_html_ctrl_control($tpl)
 {
     $tpl->_privateVars['__builder']->outputControl($tpl->_privateVars['__ctrl']);
 }
