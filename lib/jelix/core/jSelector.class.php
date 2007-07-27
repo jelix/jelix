@@ -609,7 +609,7 @@ class jSelectorTpl extends jSelectorModule {
     protected function _createCachePath(){
        // on ne partage pas le même cache pour tous les emplacements possibles
        // au cas où un overload était supprimé
-       $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/templates/'.$this->_where.$this->_cacheSuffix;
+       $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/templates/'.$this->_where.'_'.$this->outputType.$this->_cacheSuffix;
     }
 }
 

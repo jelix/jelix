@@ -75,7 +75,6 @@ class jTplCompiler
         $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
         $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
         $this->_allowedInForeach = array_merge($this->_vartype, array(T_AS, T_DOUBLE_ARROW));
-        
 
 #if JTPL_STANDALONE
         require_once(JTPL_LOCALES_PATH.$GLOBALS['jTplConfig']['lang'].'.php');
@@ -94,7 +93,7 @@ class jTplCompiler
      */
     public function compile($tplFile, $outputtype){
         $this->_sourceFile = $tplFile;
-        $cachefile = JTPL_CACHE_PATH . basename($tplFile);
+        $cachefile = JTPL_CACHE_PATH .$this->_outputType.'_'. basename($tplFile);
         $this->_outputType = ($outputtype==''?'html':$outputtype);
 #else
     /**
@@ -115,7 +114,7 @@ class jTplCompiler
             $this->doError0('errors.tpl.not.found');
         }
 
-        $tplcontent = file_get_contents ( $this->_sourceFile);
+        $tplcontent = file_get_contents ($this->_sourceFile);
 
         preg_match_all("!{literal}(.*?){/literal}!s", $tplcontent, $_match);
 
@@ -131,16 +130,16 @@ class jTplCompiler
         }
 
 #if JTPL_STANDALONE
-        $header.='function template_meta_'.md5($tplFile).'($t){';
+        $header.='function template_meta_'.md5($tplFile.'_'.$this->_outputType).'($t){';
 #else
-        $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource).'($t){';
+        $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource.'_'.$this->_outputType).'($t){';
 #endif
         $header .="\n".$this->_metaBody."\nreturn \$t->_meta;\n}\n";
 
 #if JTPL_STANDALONE
-        $header.='function template_'.md5($tplFile).'($t){'."\n?>";
+        $header.='function template_'.md5($tplFile.'_'.$this->_outputType).'($t){'."\n?>";
 #else
-        $header.='function template_'.md5($selector->module.'_'.$selector->resource).'($t){'."\n?>";
+        $header.='function template_'.md5($selector->module.'_'.$selector->resource.'_'.$this->_outputType).'($t){'."\n?>";
 #endif
         $result = $header.$result."<?php \n}\n?>";
 

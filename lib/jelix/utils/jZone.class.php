@@ -58,6 +58,18 @@ class jZone {
     protected $_tplname='';
 
     /**
+     * says the type of the output of the template, in the case of the result
+     * of the zone is not used in a response in the same output type.
+     * For example, the output type of a ajax response is text, but the template
+     * can contains html, so the template should be treated as html content,
+     * so you should put 'html' here.
+     * If empty, the output type will be the output type of the current response.
+     * @var string
+     * @see jTpl::fetch
+     */
+    protected $_tplOuputType='';
+
+    /**
      * the jtpl object created automatically by jZone if you set up _tplname
      * you can use it in _prepareTpl
      * @var jTpl
@@ -190,7 +202,7 @@ class jZone {
                 if($this->_tplname != ''){
                     $this->_tpl = new jTpl();
                     $this->_tpl->assign($this->_params);
-                    $this->_tpl->meta($this->_tplname);
+                    $this->_tpl->meta($this->_tplname, $this->_tplOuputType);
                 }
                 $content = file_get_contents($f);
             }else{
@@ -231,7 +243,7 @@ class jZone {
         $this->_tpl = new jTpl();
         $this->_tpl->assign($this->_params);
         $this->_prepareTpl();
-        return $this->_tpl->metaFetch($this->_tplname);
+        return $this->_tpl->metaFetch($this->_tplname, $this->_tplOuputType);
     }
 
     /**

@@ -150,38 +150,41 @@ class jTpl {
     /**
      * process all meta instruction of a template
      * @param string $tpl template selector
+     * @param string $outputtype the type of output (html, text etc..)
      */
-    public function meta($tpl){
-        $this->getTemplate($tpl,'template_meta_');
+    public function meta($tpl, $outputtype=''){
+        $this->getTemplate($tpl,'template_meta_', $outputtype);
     }
 
     /**
      * display the generated content from the given template
      * @param string $tpl template selector
+     * @param string $outputtype the type of output (html, text etc..)
      */
-    public function display ($tpl){
-        $this->getTemplate($tpl,'template_');
+    public function display ($tpl, $outputtype=''){
+        $this->getTemplate($tpl,'template_', $outputtype);
     }
 
     /**
      * include the compiled template file and call one of the generated function
      * @param string $tpl template selector
      * @param string $fctname the internal function name (meta or content)
+     * @param string $outputtype the type of output (html, text etc..)
      */
     protected function  getTemplate($tpl,$fctname, $outputtype=''){
 #ifnot JTPL_STANDALONE
         $sel = new jSelectorTpl($tpl,$outputtype);
         jIncluder::inc($sel);
-        $fct = $fctname.md5($sel->module.'_'.$sel->resource);
+        $fct = $fctname.md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType);
 #else
         $tpl = JTPL_TEMPLATES_PATH . $tpl;
         $filename = basename($tpl);
-        $cachefile = JTPL_CACHE_PATH . $filename;
+        $cachefile = JTPL_CACHE_PATH.$outputtype.'_'.$filename;
 
         $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
         if (!$mustCompile) {
             if (filemtime($tpl) > filemtime($cachefile)) {
-            $mustCompile = true;
+                $mustCompile = true;
             }
         }
 
@@ -192,7 +195,7 @@ class jTpl {
             $compiler->compile($tpl,$outputtype);
         }
         require_once($cachefile);
-        $fct = $fctname.md5($tpl);
+        $fct = $fctname.md5($tpl.'_'.$outputtype);
 #endif
         $fct($this);
     }
@@ -200,7 +203,7 @@ class jTpl {
     /**
      * return the generated content from the given template
      * @param string $tpl template selector
-     * @param string $outputtype
+     * @param string $outputtype the type of output (html, text etc..)
      * @return string the generated content
      */
     public function fetch ($tpl, $outputtype=''){
@@ -218,35 +221,36 @@ class jTpl {
     /**
      * optimized version of meta() + fetch()
      * @param string $tpl template selector
+     * @param string $outputtype the type of output (html, text etc..)
      * @return string the generated content
      * @since 1.0b1
      */
-    public function metaFetch ($tpl){
+    public function metaFetch ($tpl, $outputtype=''){
         ob_start ();
         try{
 #ifnot JTPL_STANDALONE
-            $sel = new jSelectorTpl($tpl);
+            $sel = new jSelectorTpl($tpl, $outputtype);
             jIncluder::inc($sel);
-            $md = md5($sel->module.'_'.$sel->resource);
+            $md = md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType);
 #else
             $tpl = JTPL_TEMPLATES_PATH . $tpl;
             $filename = basename($tpl);
-            $cachefile = JTPL_CACHE_PATH . $filename;
+            $cachefile = JTPL_CACHE_PATH.$outputtype.'_'.$filename;
 
             $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
             if (!$mustCompile) {
                 if (filemtime($tpl) > filemtime($cachefile)) {
-                $mustCompile = true;
+                    $mustCompile = true;
                 }
             }
 
             if ($mustCompile) {
                 include_once(JTPL_PATH . 'jTplCompiler.class.php');
                 $compiler = new jTplCompiler();
-                $compiler->compile($tpl);
+                $compiler->compile($tpl,$outputtype);
             }
             require_once($cachefile);
-            $md = md5($tpl);
+            $md = md5($tpl.'_'.$outputtype);
 #endif
             $fct = 'template_meta_'.$md;
             $fct($this);
