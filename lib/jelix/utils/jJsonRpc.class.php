@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Julien ISSLER
 * @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2007 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -35,7 +36,7 @@ class jJsonRpc {
 #if ENABLE_PHP_JSON
         $obj = json_decode($content,true);
 #else
-        $json = new JSON(JSON_LOOSE_TYPE);
+        $json = new SERVICES_JSON(SERVICES_JSON_LOOSE_TYPE);
         $obj = $json->decode($content);
         /*
         $obj->method
@@ -56,7 +57,7 @@ class jJsonRpc {
 #if ENABLE_PHP_JSON
         return '{"method":"'.$methodname.'","params":'.json_encode($params).',"id":'.json_encode($id).'}';
 #else
-        $json = new JSON();
+        $json = new SERVICES_JSON();
         return '{"method":"'.$methodname.'","params":'.$json->encode($params).',"id":'.$json->encode($id).'}';
 #endif
 
@@ -72,7 +73,7 @@ class jJsonRpc {
 #if ENABLE_PHP_JSON
         return json_decode($content);
 #else
-        $json = new JSON(JSON_LOOSE_TYPE);
+        $json = new SERVICES_JSON(SERVICES_JSON_LOOSE_TYPE);
         return $json->decode($content);
 #endif
 
@@ -87,7 +88,7 @@ class jJsonRpc {
 #if ENABLE_PHP_JSON
         return '{"result":'.json_encode($params).',"error":null,"id":'.json_encode($id).'}';
 #else
-        $json = new JSON();
+        $json = new SERVICES_JSON();
         return '{"result":'.$json->encode($params).',"error":null,"id":'.$json->encode($id).'}';
 #endif
     }
@@ -102,7 +103,7 @@ class jJsonRpc {
 #if ENABLE_PHP_JSON
         return '{"result":null,"error":{"code": '.json_encode($code).', "string":'.json_encode($message).' },"id":'.json_encode($id).'}';
 #else
-        $json = new JSON();
+        $json = new SERVICES_JSON();
         return '{"result":null,"error":{"code": '.$json->encode($code).', "string":'.$json->encode($message).' },"id":'.$json->encode($id).'}';
 #endif
     }
