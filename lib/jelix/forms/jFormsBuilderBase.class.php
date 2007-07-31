@@ -103,8 +103,7 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
     public function outputControlLabel($ctrl){
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes'){
             echo htmlspecialchars($ctrl->label);
-        }
-        if($ctrl->type != 'submit'){
+        }else if($ctrl->type != 'submit'){
             $id = $this->_name.'_'.$ctrl->ref;
             echo '<label for="'.$id.'">'.htmlspecialchars($ctrl->label).'</label>';
         }
@@ -149,6 +148,7 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
                     if(in_array($v,$value)) 
                         echo 'checked="checked"';
                     echo '/><label for="',$id,$i,'">',htmlspecialchars($label),'</label>';
+                    $i++;
                 }
             }else{
                 foreach($ctrl->datasource->getDatas() as $v=>$label){
@@ -156,6 +156,7 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
                     if($v == $value) 
                         echo 'checked="checked"';
                     echo '/><label for="',$id,$i,'">',htmlspecialchars($label),'</label>';
+                    $i++;
                 }
             }
             break;
