@@ -18,6 +18,9 @@ default =
 ;user= "root"
 ;password=
 ;persistent= on
+; when you have charset issues, enable force_encoding so the connection will be
+; made with the charset indicated in jelix config
+;force_encoding = on
 
 ; pour pdo :
 ;driver=pdo

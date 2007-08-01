@@ -21,6 +21,9 @@ host= "localhost"
 user= "root"
 password=
 persistent= on
+; when you have charset issues, enable force_encoding so the connection will be
+; made with the charset indicated in jelix config
+;force_encoding = on
 
 ; to run all test, you should install pdo on your server
 ; and setup a pdo connection

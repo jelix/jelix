@@ -20,9 +20,9 @@
  * <li>'lang_date' (jDateTime::LANG_DFORMAT)</li>
  * <li>'lang_datetime' => jDateTime::LANG_DTFORMAT)</li>
  * <li>'lang_time' => jDateTime::LANG_TFORMAT)</li>
- * <li>'db_date' => jDateTime::BD_DFORMAT)</li>
- * <li>'db_datetime' => jDateTime::BD_DTFORMAT)</li>
- * <li>'db_time' => jDateTime::BD_TFORMAT)</li>
+ * <li>'db_date' => jDateTime::DB_DFORMAT)</li>
+ * <li>'db_datetime' => jDateTime::DB_DTFORMAT)</li>
+ * <li>'db_time' => jDateTime::DB_TFORMAT)</li>
  * <li>'iso8601' => jDateTime::ISO8601_FORMAT)</li>
  * <li>'timestamp' => jDateTime::TIMESTAMP_FORMAT)</li>
  * <li>'rfc822'=> jDateTime::RFC822_FORMAT)</li></ul>
@@ -43,9 +43,9 @@ function jtpl_modifier_common_jdatetime($date, $format_in = 'db_datetime',
         'lang_date' => jDateTime::LANG_DFORMAT,
         'lang_datetime' => jDateTime::LANG_DTFORMAT,
         'lang_time' => jDateTime::LANG_TFORMAT,
-        'db_date' => jDateTime::BD_DFORMAT,
-        'db_datetime' => jDateTime::BD_DTFORMAT,
-        'db_time' => jDateTime::BD_TFORMAT,
+        'db_date' => jDateTime::DB_DFORMAT,
+        'db_datetime' => jDateTime::DB_DTFORMAT,
+        'db_time' => jDateTime::DB_TFORMAT,
         'iso8601' => jDateTime::ISO8601_FORMAT,
         'timestamp' => jDateTime::TIMESTAMP_FORMAT,
         'rfc822'=> jDateTime::RFC822_FORMAT);

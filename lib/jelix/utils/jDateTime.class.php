@@ -72,13 +72,21 @@ class jDateTime{
     const LANG_DFORMAT=10;
     const LANG_DTFORMAT=11;
     const LANG_TFORMAT=12;
-    const BD_DFORMAT=20;
-    const BD_DTFORMAT=21;
-    const BD_TFORMAT=22;
+    const DB_DFORMAT=20;
+    const DB_DTFORMAT=21;
+    const DB_TFORMAT=22;
     const ISO8601_FORMAT=40;
     const TIMESTAMP_FORMAT=50;
     const RFC822_FORMAT=60;
 
+    /**#@+
+     * use DB_* consts instead
+     * @deprecated
+     */
+    const BD_DFORMAT=20;
+    const BD_DTFORMAT=21;
+    const BD_TFORMAT=22;
+    /**#@-*/
 
     function __construct($year=0, $month=0, $day=0, $hour=0, $minute=0, $second=0){
         $this->year = $year;
@@ -116,12 +124,15 @@ class jDateTime{
                $lf = jLocale::get('jelix~format.time');
                $str = date($lf, $t);
                break;
+           case self::DB_DFORMAT:
            case self::BD_DFORMAT:
                $str = sprintf('%04d-%02d-%02d', $this->year, $this->month, $this->day);
                break;
+           case self::DB_DTFORMAT:
            case self::BD_DTFORMAT:
                $str = sprintf('%04d-%02d-%02d %02d:%02d:%02d', $this->year, $this->month, $this->day, $this->hour, $this->minute, $this->second);
                break;
+           case self::DB_TFORMAT:
            case self::BD_TFORMAT:
                $str = sprintf('%02d:%02d:%02d', $this->hour, $this->minute, $this->second);
                break;
@@ -184,6 +195,7 @@ class jDateTime{
                    $this->second = $res['tm_sec'];
                }
                break;
+           case self::DB_DFORMAT:
            case self::BD_DFORMAT:
                if($ok=preg_match('/^(\d{4})\-(\d{2})\-(\d{2})$/', $str, $match)){
                     $this->year = $match[1];
@@ -191,6 +203,7 @@ class jDateTime{
                     $this->day = $match[3];
                }
                break;
+           case self::DB_DTFORMAT:
            case self::BD_DTFORMAT:
                if($ok=preg_match('/^(\d{4})\-(\d{2})\-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', $str, $match)){
                     $this->year = $match[1];
@@ -201,6 +214,7 @@ class jDateTime{
                     $this->second = $match[6];
                }
                break;
+           case self::DB_TFORMAT:
            case self::BD_TFORMAT:
                if($ok=preg_match('/^(\d{2}):(\d{2}):(\d{2})$/', $str, $match)){
                     $this->hour = $match[1];
