@@ -57,7 +57,7 @@ class jTplCompiler
     private $_metaBody = '';
 
     private $_modifier = array('upper'=>'strtoupper', 'lower'=>'strtolower',
-        'escxml'=>'htmlspecialchars', 'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
+        'escxml'=>'htmlspecialchars', 'eschtml'=>'htmlspecialchars', 'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
         'capitalize'=>'ucwords', 'stripslashes'=>'stripslashes'
     );
 
