@@ -65,7 +65,8 @@ class jTplCompiler
 
     private $_sourceFile;
     private $_currentTag;
-    private $_outputType;
+    protected $_outputType='';
+    protected $_trusted=true;
 
     /**
      * Initialize some properties
@@ -91,10 +92,11 @@ class jTplCompiler
      * @param string $tplfile the file name that contains the template
      * @return boolean true if ok
      */
-    public function compile($tplFile, $outputtype){
+    public function compile($tplFile, $outputtype, $trusted){
         $this->_sourceFile = $tplFile;
-        $cachefile = JTPL_CACHE_PATH .$this->_outputType.'_'. basename($tplFile);
+        $cachefile = JTPL_CACHE_PATH .$this->_outputType.($trusted?'_t':'').'_'. basename($tplFile);
         $this->_outputType = ($outputtype==''?'html':$outputtype);
+        $this->_trusted = $trusted;
 #else
     /**
      * Launch the compilation of a template
@@ -107,6 +109,7 @@ class jTplCompiler
         $this->_sourceFile = $selector->getPath();
         $cachefile = $selector->getCompiledFilePath();
         $this->_outputType = $selector->outputType;
+        $this->_trusted = $selector->trusted;
         jContext::push($selector->module);
 #endif
 
@@ -130,16 +133,16 @@ class jTplCompiler
         }
 
 #if JTPL_STANDALONE
-        $header.='function template_meta_'.md5($tplFile.'_'.$this->_outputType).'($t){';
+        $header.='function template_meta_'.md5($tplFile.'_'.$this->_outputType.($this->_trusted?'_t':'')).'($t){';
 #else
-        $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource.'_'.$this->_outputType).'($t){';
+        $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource.'_'.$this->_outputType.($this->_trusted?'_t':'')).'($t){';
 #endif
         $header .="\n".$this->_metaBody."\nreturn \$t->_meta;\n}\n";
 
 #if JTPL_STANDALONE
-        $header.='function template_'.md5($tplFile.'_'.$this->_outputType).'($t){'."\n?>";
+        $header.='function template_'.md5($tplFile.'_'.$this->_outputType.($this->_trusted?'_t':'')).'($t){'."\n?>";
 #else
-        $header.='function template_'.md5($selector->module.'_'.$selector->resource.'_'.$this->_outputType).'($t){'."\n?>";
+        $header.='function template_'.md5($selector->module.'_'.$selector->resource.'_'.$this->_outputType.($this->_trusted?'_t':'')).'($t){'."\n?>";
 #endif
         $result = $header.$result."<?php \n}\n?>";
 
@@ -423,7 +426,7 @@ class jTplCompiler
                 }elseif($type == T_VARIABLE){
                     $result.='$t->_vars[\''.substr($str,1).'\']';
                 }elseif($type == T_WHITESPACE || in_array($type, $allowed)){
-                    if($type == T_STRING && defined($str) && !in_array(strtoupper($str),$this->_allowedConstants)){
+                    if(!$this->_trusted && $type == T_STRING && defined($str) && !in_array(strtoupper($str),$this->_allowedConstants)){
                         $this->doError2('errors.tpl.tag.constant.notallowed', $this->_currentTag, $str);
                     }
                     $result.=$str;
@@ -568,37 +571,5 @@ class jTplCompiler
     }
 
 }
-
-
-
-#if DEBUGJTPL
-
-function showtokens($arr){
-
-echo '<table border="1" style="font-size:0.7em">';
-foreach($arr as $tok){
-
-   if(is_array($tok)){
-      echo '<tr><td>',token_name($tok[0]), '</td><td>',htmlspecialchars($tok[1]),"</td></tr>\n";
-   }else
-      echo '<tr><td colspan="2">',$tok, "</td></tr>\n";
-
-}
-echo '</table><hr/>';
-
-}
-
-function showtoken($tok){
-
-echo '<table border="1" style="font-size:0.7em">';
-   if(is_array($tok)){
-      echo '<tr><td>',token_name($tok[0]), '</td><td>',htmlspecialchars($tok[1]),"</td></tr>\n";
-   }else
-      echo '<tr><td colspan="2">',$tok, "</td></tr>\n";
-echo '</table><hr/>';
-
-}
-
-#endif
 
 ?>

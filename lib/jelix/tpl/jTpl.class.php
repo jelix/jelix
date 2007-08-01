@@ -151,18 +151,20 @@ class jTpl {
      * process all meta instruction of a template
      * @param string $tpl template selector
      * @param string $outputtype the type of output (html, text etc..)
+     * @param boolean $trusted  says if the template file is trusted or not
      */
-    public function meta($tpl, $outputtype=''){
-        $this->getTemplate($tpl,'template_meta_', $outputtype);
+    public function meta($tpl, $outputtype='', $trusted = true){
+        $this->getTemplate($tpl,'template_meta_', $outputtype, $trusted);
     }
 
     /**
      * display the generated content from the given template
      * @param string $tpl template selector
      * @param string $outputtype the type of output (html, text etc..)
+     * @param boolean $trusted  says if the template file is trusted or not
      */
-    public function display ($tpl, $outputtype=''){
-        $this->getTemplate($tpl,'template_', $outputtype);
+    public function display ($tpl, $outputtype='', $trusted = true){
+        $this->getTemplate($tpl,'template_', $outputtype, $trusted);
     }
 
     /**
@@ -170,16 +172,17 @@ class jTpl {
      * @param string $tpl template selector
      * @param string $fctname the internal function name (meta or content)
      * @param string $outputtype the type of output (html, text etc..)
+     * @param boolean $trusted  says if the template file is trusted or not
      */
-    protected function  getTemplate($tpl,$fctname, $outputtype=''){
+    protected function  getTemplate($tpl,$fctname, $outputtype='', $trusted = true){
 #ifnot JTPL_STANDALONE
-        $sel = new jSelectorTpl($tpl,$outputtype);
+        $sel = new jSelectorTpl($tpl,$outputtype,$trusted);
         jIncluder::inc($sel);
-        $fct = $fctname.md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType);
+        $fct = $fctname.md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType.($trusted?'_t':''));
 #else
         $tpl = JTPL_TEMPLATES_PATH . $tpl;
         $filename = basename($tpl);
-        $cachefile = JTPL_CACHE_PATH.$outputtype.'_'.$filename;
+        $cachefile = JTPL_CACHE_PATH.$outputtype.($trusted?'_t':'').'_'.$filename;
 
         $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
         if (!$mustCompile) {
@@ -192,10 +195,10 @@ class jTpl {
             include_once(JTPL_PATH . 'jTplCompiler.class.php');
 
             $compiler = new jTplCompiler();
-            $compiler->compile($tpl,$outputtype);
+            $compiler->compile($tpl,$outputtype, $trusted);
         }
         require_once($cachefile);
-        $fct = $fctname.md5($tpl.'_'.$outputtype);
+        $fct = $fctname.md5($tpl.'_'.$outputtype.($trusted?'_t':''));
 #endif
         $fct($this);
     }
@@ -204,12 +207,13 @@ class jTpl {
      * return the generated content from the given template
      * @param string $tpl template selector
      * @param string $outputtype the type of output (html, text etc..)
+     * @param boolean $trusted  says if the template file is trusted or not
      * @return string the generated content
      */
-    public function fetch ($tpl, $outputtype=''){
+    public function fetch ($tpl, $outputtype='', $trusted = true){
         ob_start ();
         try{
-           $this->getTemplate($tpl,'template_', $outputtype);
+           $this->getTemplate($tpl,'template_', $outputtype, $trusted);
            $content = ob_get_clean();
         }catch(Exception $e){
            ob_end_clean();
@@ -222,20 +226,21 @@ class jTpl {
      * optimized version of meta() + fetch()
      * @param string $tpl template selector
      * @param string $outputtype the type of output (html, text etc..)
+     * @param boolean $trusted  says if the template file is trusted or not
      * @return string the generated content
      * @since 1.0b1
      */
-    public function metaFetch ($tpl, $outputtype=''){
+    public function metaFetch ($tpl, $outputtype='', $trusted = true){
         ob_start ();
         try{
 #ifnot JTPL_STANDALONE
-            $sel = new jSelectorTpl($tpl, $outputtype);
+            $sel = new jSelectorTpl($tpl, $outputtype, $trusted);
             jIncluder::inc($sel);
-            $md = md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType);
+            $md = md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType.($trusted?'_t':''));
 #else
             $tpl = JTPL_TEMPLATES_PATH . $tpl;
             $filename = basename($tpl);
-            $cachefile = JTPL_CACHE_PATH.$outputtype.'_'.$filename;
+            $cachefile = JTPL_CACHE_PATH.$outputtype.($trusted?'_t':'').'_'.$filename;
 
             $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
             if (!$mustCompile) {
@@ -247,10 +252,10 @@ class jTpl {
             if ($mustCompile) {
                 include_once(JTPL_PATH . 'jTplCompiler.class.php');
                 $compiler = new jTplCompiler();
-                $compiler->compile($tpl,$outputtype);
+                $compiler->compile($tpl,$outputtype,$trusted);
             }
             require_once($cachefile);
-            $md = md5($tpl.'_'.$outputtype);
+            $md = md5($tpl.'_'.$outputtype.($trusted?'_t':''));
 #endif
             $fct = 'template_meta_'.$md;
             $fct($this);

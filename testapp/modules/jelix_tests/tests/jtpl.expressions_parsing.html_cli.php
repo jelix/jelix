@@ -13,6 +13,10 @@ require_once(JELIX_LIB_TPL_PATH.'jTplCompiler.class.php');
 
 class testJtplCompiler extends jTplCompiler {
 
+   public function setTrusted($trusted){
+        $this->_trusted = $trusted;
+   }
+
    public function testParseExpr($string, $allowed=array(), $exceptchar=array(';'), $splitArgIntoArray=false){
         return $this->_parseFinal($string, $allowed, $exceptchar, $splitArgIntoArray);
    }
@@ -85,11 +89,19 @@ class UTjtplexpr extends jUnitTestCase {
         '$aa[$bb[4]]'=>'$t->_vars[\'aa\'][$t->_vars[\'bb\'][4]]',
     );
 
+    protected $varexprTrustedMode = array(
+        '$aaa.PHP_VERSION'=>'$t->_vars[\'aaa\'].PHP_VERSION',
+    );
+
+    protected $varexprUnTrustedMode = array(
+
+    );
+
+
     protected $badvarexpr = array(
         '$'=>array('jelix~errors.tpl.tag.character.invalid',array('','$','')),
         'foreach($a)'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','foreach','')),
         '@aaa.bbb'=>array('jelix~errors.tpl.tag.locale.end.missing',array('','')),
-        '$aaa.PHP_VERSION'=>array('jelix~errors.tpl.tag.constant.notallowed',array('','PHP_VERSION','')),
         '@aaa.b,bb@'=>array('jelix~errors.tpl.tag.character.invalid',array('',',','')),
         '@@'=>array('jelix~errors.tpl.tag.locale.invalid',array('','')),
         '[$aa/234]'=>array('jelix~errors.tpl.tag.character.invalid',array('','[','')),
@@ -125,38 +137,121 @@ class UTjtplexpr extends jUnitTestCase {
         '$aa*=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','*=','')),
     );
 
-    function testVarExpr() {
+    protected $badvarexprTrustedMode = array(
+
+    );
+
+    protected $badvarexprUnTrustedMode = array(
+        '$aaa.PHP_VERSION'=>array('jelix~errors.tpl.tag.constant.notallowed',array('','PHP_VERSION','')),
+    );
+
+
+
+    function testVarExprTrustedMode() {
         $compil = new testJtplCompiler();
+        $compil->setTrusted(true);
         foreach($this->varexpr as $k=>$t){
-            //$this->sendMessage("test good datasource ".$k);
             try{
                 $res = $compil->testParseVarExpr($k);
                 $this->assertEqualOrDiff($t, $res);
             }catch(jException $e){
-                $this->fail("Test '$k', Exception jelix inconnue : ".$e->getMessage().' ('.$e->getLocaleKey().')');
+                $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
-                $this->fail("Test '$k', Exception inconnue : ".$e->getMessage());
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+            }
+        }
+        foreach($this->varexprTrustedMode as $k=>$t){
+            try{
+                $res = $compil->testParseVarExpr($k);
+                $this->assertEqualOrDiff($t, $res);
+            }catch(jException $e){
+                $this->fail("Test '$k', Unknown Jelix Exception : ".$e->getMessage().' ('.$e->getLocaleKey().')');
+            }catch(Exception $e){
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
             }
         }
     }
 
-    function testBadVarExpr() {
+    function testVarExprUnTrustedMode() {
         $compil = new testJtplCompiler();
-        foreach($this->badvarexpr as $k=>$t){
-            //$this->sendMessage("test good datasource ".$k);
+        $compil->setTrusted(false);
+        foreach($this->varexpr as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->fail("Exception non survenu pour le test '$k' ");
+                $this->assertEqualOrDiff($t, $res);
             }catch(jException $e){
-                //$this->sendMessage($e->getMessage());
+                $this->fail("Test '$k', Unknown Jelix Exception : ".$e->getMessage().' ('.$e->getLocaleKey().')');
+            }catch(Exception $e){
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+            }
+        }
+        foreach($this->varexprUnTrustedMode as $k=>$t){
+            try{
+                $res = $compil->testParseVarExpr($k);
+                $this->assertEqualOrDiff($t, $res);
+            }catch(jException $e){
+                $this->fail("Test '$k', Unknown Jelix Exception : ".$e->getMessage().' ('.$e->getLocaleKey().')');
+            }catch(Exception $e){
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+            }
+        }
+    }
+
+
+
+    function testBadVarExprTrustedMode() {
+        $compil = new testJtplCompiler();
+        $compil->setTrusted(true);
+        foreach($this->badvarexpr as $k=>$t){
+            try{
+                $res = $compil->testParseVarExpr($k);
+                $this->fail("No Exception for this test '$k' ");
+            }catch(jException $e){
                 $this->assertEqualOrDiff($t[0], $e->getLocaleKey());
                 $this->assertEqual($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
-                $this->pass("Exception inconnue : ".$e->getMessage());
+                $this->pass("Unknown Exception: ".$e->getMessage());
+            }
+        }
+        foreach($this->badvarexprTrustedMode as $k=>$t){
+            try{
+                $res = $compil->testParseVarExpr($k);
+                $this->fail("No Exception for this test '$k' ");
+            }catch(jException $e){
+                $this->assertEqualOrDiff($t[0], $e->getLocaleKey());
+                $this->assertEqual($t[1], $e->getLocaleParameters());
+            }catch(Exception $e){
+                $this->pass("Unknown Exception: ".$e->getMessage());
             }
         }
     }
 
+    function testBadVarExprUnTrustedMode() {
+        $compil = new testJtplCompiler();
+        $compil->setTrusted(false);
+        foreach($this->badvarexpr as $k=>$t){
+            try{
+                $res = $compil->testParseVarExpr($k);
+                $this->fail("No Exception for this test '$k' ");
+            }catch(jException $e){
+                $this->assertEqualOrDiff($t[0], $e->getLocaleKey());
+                $this->assertEqual($t[1], $e->getLocaleParameters());
+            }catch(Exception $e){
+                $this->pass("Unknown Exception: ".$e->getMessage());
+            }
+        }
+        foreach($this->badvarexprUnTrustedMode as $k=>$t){
+            try{
+                $res = $compil->testParseVarExpr($k);
+                $this->fail("No Exception for this test '$k' ");
+            }catch(jException $e){
+                $this->assertEqualOrDiff($t[0], $e->getLocaleKey());
+                $this->assertEqual($t[1], $e->getLocaleParameters());
+            }catch(Exception $e){
+                $this->pass("Unknown Exception: ".$e->getMessage());
+            }
+        }
+    }
 
 }
 

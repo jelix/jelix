@@ -539,17 +539,19 @@ class jSelectorTpl extends jSelectorModule {
     protected $_suffix = '.tpl';
     protected $_where;
     public $outputType='';
+    public $trusted=true;
 
     /**
      * @param string $sel the template selector
      * @param string $outputtype  the type of output (html, text..) By default, it takes the response type
+     * @param boolean $trusted  says if the template file is trusted or not
      */
-    function __construct($sel, $outputtype=''){
+    function __construct($sel, $outputtype='', $trusted=true){
         if($outputtype == '')
             $this->outputType = $GLOBALS['gJCoord']->response->getFormatType();
         else
             $this->outputType = $outputtype;
-
+        $this->trusted = $trusted;
         $this->_compiler='jTplCompiler';
         $this->_compilerPath=JELIX_LIB_TPL_PATH.'jTplCompiler.class.php';
         parent::__construct($sel);
@@ -609,7 +611,7 @@ class jSelectorTpl extends jSelectorModule {
     protected function _createCachePath(){
        // on ne partage pas le même cache pour tous les emplacements possibles
        // au cas où un overload était supprimé
-       $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/templates/'.$this->_where.'_'.$this->outputType.$this->_cacheSuffix;
+       $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/templates/'.$this->_where.'_'.$this->outputType.($this->trusted?'_t':'').$this->_cacheSuffix;
     }
 }
 
