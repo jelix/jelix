@@ -137,7 +137,7 @@ class UTjformsCompiler extends jUnitTestCase {
     dao="foo" daomethod="bar" daolabelproperty="baz" daovalueproperty="plop">
     <label>Votre nom</label>
 </listbox>',
-32=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+32=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" size="8">
     <label>Votre nom</label>
     <item label="1aa" value="aaa" />
     <item labellocale="locb" value="bbb" />
@@ -355,6 +355,7 @@ $ctrl->datasource->datas = array(
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
 );
+$ctrl->size=8;
 $this->addControl($ctrl);',
 33=>'$ctrl= new jFormsControlmenulist(\'nom\');
 $ctrl->datatype= new jDatatypeString();
@@ -602,12 +603,12 @@ $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~form
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gForm.addControl( gControl);\n";',
 31=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gForm.addControl( gControl);\n";',
 32=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gForm.addControl( gControl);\n";',
@@ -628,7 +629,7 @@ $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~form
 $js.="gControl.multiple = true;\n";
 $js.="gForm.addControl( gControl);\n";',
 36=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gForm.addControl( gControl);\n";',
@@ -638,7 +639,7 @@ $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~form
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gForm.addControl( gControl);\n";',
 38=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gForm.addControl( gControl);\n";',

@@ -93,6 +93,7 @@ class jFormsControlRadiobuttons extends jFormsBaseControlSelect1 {
 class jFormsControlListbox extends jFormsBaseControlSelect1 {
    public $type="listbox";
    public $multiple = false;
+   public $size = 4;
 
    function isContainer(){
         return $this->multiple;

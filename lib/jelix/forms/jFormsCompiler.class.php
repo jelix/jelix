@@ -234,7 +234,14 @@ class jFormsCompiler implements jISimpleCompiler {
             if('true' == (string)$control['multiple'])
                 $source[]='$ctrl->multiple=true;';
         }
-
+        if(isset($control['size'])){
+            if($controltype != 'listbox'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('size',$controltype,$this->sourceFile));
+            }
+            $size = intval((string)$control['size']);
+            if($size < 2) $size = 2;
+            $source[]='$ctrl->size='.$size.';';
+        }
         $source[]='$this->addControl($ctrl);';
         return implode("\n", $source);
     }
@@ -257,7 +264,7 @@ class jFormsCompiler implements jISimpleCompiler {
         }else{
             $source[]='$label = str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->label).'\');';
         }
-        if($controltype == 'checkboxes' || $controltype == 'listbox')
+        if($controltype == 'checkboxes' || ($controltype == 'listbox' && isset($control['multiple']) && 'true' == (string)$control['multiple']))
             $source[]='$js.="gControl = new jFormsControl(\''.(string)$control['ref'].'[]\', \'".$label."\', \''.$dt.'\');\n";';
         else
             $source[]='$js.="gControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".$label."\', \''.$dt.'\');\n";';
