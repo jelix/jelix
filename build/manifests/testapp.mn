@@ -116,6 +116,7 @@ cd testapp/modules/jelix_tests/tests/
   jforms.compiler.html.php
   jforms.htmlbuilder.html.php
   jforms.with_dao.html.php
+  jtpl.compiler.html_cli.php
   jtpl.expressions_parsing.html_cli.php
   utils.jfilter.html_cli.php
 

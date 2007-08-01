@@ -117,21 +117,12 @@ class jTplCompiler
             $this->doError0('errors.tpl.not.found');
         }
 
-        $tplcontent = file_get_contents ($this->_sourceFile);
-
-        preg_match_all("!{literal}(.*?){/literal}!s", $tplcontent, $_match);
-
-        $this->_literals = $_match[1];
-
-        $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', $tplcontent);
-
-        $result = preg_replace_callback("/{((.).*?)}/s", array($this,'_callback'), $tplcontent);
+        $result = $this->compileContent(file_get_contents ($this->_sourceFile));
 
         $header ="<?php \n";
         foreach($this->_pluginPath as $path=>$ok){
             $header.=' require_once(\''.$path."');\n";
         }
-
 #if JTPL_STANDALONE
         $header.='function template_meta_'.md5($tplFile.'_'.$this->_outputType.($this->_trusted?'_t':'')).'($t){';
 #else
@@ -145,9 +136,6 @@ class jTplCompiler
         $header.='function template_'.md5($selector->module.'_'.$selector->resource.'_'.$this->_outputType.($this->_trusted?'_t':'')).'($t){'."\n?>";
 #endif
         $result = $header.$result."<?php \n}\n?>";
-
-        $result = preg_replace('/\?>\n?<\?php/', '', $result);
-        //$result = preg_replace('/<\?php\b+\? >/', '', $result);
 
 #if JTPL_STANDALONE
         $_dirname = dirname($cachefile);
@@ -190,6 +178,24 @@ class jTplCompiler
         jContext::pop();
 #endif
         return true;
+    }
+
+    protected function compileContent($tplcontent){
+        $tplcontent = preg_replace("!<\?php(.*?)\?>!s", '', $tplcontent);
+        $tplcontent = preg_replace("!{\*(.*?)\*}!s", '', $tplcontent);
+
+        preg_match_all("!{literal}(.*?){/literal}!s", $tplcontent, $_match);
+
+        $this->_literals = $_match[1];
+
+        $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', $tplcontent);
+
+        $tplcontent = preg_replace_callback("/{((.).*?)}/s", array($this,'_callback'), $tplcontent);
+
+        $tplcontent = preg_replace('/\?>\n?<\?php/', '', $tplcontent);
+        $tplcontent = preg_replace('/<\?php\\s+\?>/', '', $tplcontent);
+
+        return $tplcontent;
     }
 
     /**
