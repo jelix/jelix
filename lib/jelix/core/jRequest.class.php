@@ -86,6 +86,8 @@ abstract class jRequest {
         $this->url_script_path = substr ($_SERVER['SCRIPT_NAME'], 0,$lastslash ).'/';//following is subdir/
         if($gJConfig->urlengine['basePath'] == ''){ // for beginners or simple site, we "guess" the base path
             $gJConfig->urlengine['basePath'] = $this->url_script_path;
+            if($gJConfig->urlengine['jelixWWWPath']{0} != '/')
+                $gJConfig->urlengine['jelixWWWPath'] = $this->url_script_path.$gJConfig->urlengine['jelixWWWPath'];
         }else if(strpos($this->url_script_path,$gJConfig->urlengine['basePath']) !== 0){
             die('Jelix Error: basePath in config file doesn\'t correspond to current base path. You should setup it to '.$this->url_script_path);
         }

@@ -61,6 +61,10 @@ class jConfigCompiler {
             $config->urlengine['basePath'] = $path;
         }
 
+        if($path!='' && $config->urlengine['jelixWWWPath']{0} != '/')
+            $config->urlengine['jelixWWWPath'] = $path.$config->urlengine['jelixWWWPath'];
+
+
         /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config->defaultLocale,$m)){
             if(!isset($m[2])){
                 $m[2] = $m[1];
@@ -105,6 +109,9 @@ class jConfigCompiler {
             if(substr($path,-1) != '/') $path.='/';
             $config['urlengine']['basePath'] = $path;
         }
+
+        if($path!='' && $config['urlengine']['jelixWWWPath']{0} != '/')
+            $config['urlengine']['jelixWWWPath'] = $path.$config['urlengine']['jelixWWWPath'];
 
         /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config['defaultLocale'],$m)){
             if(!isset($m[2])){

@@ -36,7 +36,13 @@ class jTpl {
      */
     public $_meta = array();
 
-    public function __construct(){ }
+    public function __construct(){
+        global $gJConfig;
+        $this->_vars['j_basePath'] = $gJConfig->urlengine['basePath'];
+        $this->_vars['j_jelixwww'] = $gJConfig->urlengine['jelixWWWPath'];
+        $this->_vars['j_datenow'] = date('Y-m-d');
+        $this->_vars['j_timenow'] = date('H:i:s');
+    }
 
     /**
      * assign a value in a template variable

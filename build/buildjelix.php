@@ -15,8 +15,8 @@ $BUILD_OPTIONS = array(
     '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
     ),
 'PHP_VERSION_TARGET'=> array(
-    "PHP5 version for which jelix will be generated (by default, for all PHP5 version)",
-    '5.0'
+    "PHP5 version for which jelix will be generated (by default, the target is php 5.1)",
+    '5.1'
     ),
 'EDITION_NAME'=> array(
     "The edition name of the version (optional)",

@@ -108,6 +108,12 @@ multiview = off
 ; : basePath="/aaa/" )
 basePath = ""
 
+; this is the url path to the jelix-www content (you can found this content in lib/jelix-www/)
+; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
+; jelix-www, or copy its content in yourapp/www/ (with a name like 'jelix' for example)
+; so you should indicate the relative path of this link/directory to the basePath, or an absolute path.
+jelixWWWPath = "jelix/"
+
 defaultEntrypoint= index
 
 entrypointExtension= .php
