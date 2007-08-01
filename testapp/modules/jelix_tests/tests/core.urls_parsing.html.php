@@ -35,6 +35,7 @@ class UTParseUrls extends UnitTestCase {
       $gJCoord->request->type=$this->oldRequestType;
       $gJConfig->urlengine = $this->oldUrlengineConf;
       $gJConfig->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
+      jUrl::getEngine(true);
     }
 
     function testSignificantEngine() {

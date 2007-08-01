@@ -281,7 +281,7 @@ $this->addControl($ctrl);',
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_0" value="10" /><label for="'.$this->formname.'_choixsimple_0">foo</label>';
-        $result.='<input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_1" value="11" checked="checked" /><label for="'.$this->formname.'_choixsimple_1">bar</label>';
+        $result.='<input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_1" value="11" checked="checked"/><label for="'.$this->formname.'_choixsimple_1">bar</label>';
         $result.='<input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_2" value="23" /><label for="'.$this->formname.'_choixsimple_2">baz</label>';
 
         $this->assertEqualOrDiff($result, $out);

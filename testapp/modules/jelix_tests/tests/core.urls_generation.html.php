@@ -38,6 +38,7 @@ class UTCreateUrls extends UnitTestCase {
       $gJConfig->urlengine = $this->oldUrlengineConf;
       $gJConfig->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
       $gJConfig->_modulesPathList=$this->oldModule ;
+      jUrl::getEngine(true);
     }
 
 

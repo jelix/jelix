@@ -78,6 +78,10 @@ function toto() {
 {$toto} *}</p> {* hello *}',
         '<p>ok </p> ',
         ),
+8=>array(
+        '<p>ok {* {if $a == "a"}aaa{/if} *}</p>',
+        '<p>ok </p>',
+        ),
     );
 
     function testCompileContent() {
