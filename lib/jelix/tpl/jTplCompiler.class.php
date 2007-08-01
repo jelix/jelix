@@ -255,16 +255,13 @@ class jTplCompiler
                 return '';
             }
 
-            $targs=array($res);
-
             if( $path = $this->_getPlugin('modifier',$m[1])){
 
                 if(isset($m[2])){
-                    $args = explode(':',$m[2]);
-
-                    foreach($args as $arg){
-                        $targs[] = $this->_parseFinal($arg,$this->_allowedInVar, $this->_excludedInVar);
-                    }
+                    $targs = $this->_parseFinal($m[2],$this->_allowedInVar, $this->_excludedInVar, true, ',',':');
+                    array_unshift($targs, $res);
+                }else{
+                    $targs = array($res);
                 }
                 $res = $path[1].'('.implode(',',$targs).')';
                 $this->_pluginPath[$path[0]] = true;
@@ -400,7 +397,7 @@ class jTplCompiler
      * @param boolean $splitArgIntoArray true: split the results on coma
      * @return array|string
      */
-    protected function _parseFinal($string, $allowed=array(), $exceptchar=array(';'), $splitArgIntoArray=false){
+    protected function _parseFinal($string, $allowed=array(), $exceptchar=array(';'), $splitArgIntoArray=false, $sep1=',', $sep2=','){
         $tokens = token_get_all('<?php '.$string.'?>');
 
         $results=array();
@@ -471,7 +468,7 @@ class jTplCompiler
                     $sqbracketcount++;$result.=$tok;
                 } elseif ($tok ==']') {
                     $sqbracketcount--;$result.=$tok;
-                } elseif( $splitArgIntoArray && $tok ==',' && $bracketcount==0 && $sqbracketcount==0){
+                } elseif( $splitArgIntoArray && ($tok == $sep1 || $tok == $sep2) && $bracketcount==0 && $sqbracketcount==0){
                    $results[]=$result;
                    $result='';
                 } else {

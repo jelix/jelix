@@ -40,6 +40,11 @@ class testJtplCompiler extends jTplCompiler {
    public function testParseAssignExpr2($string){
         return $this->_parseFinal($string,$this->_allowedAssign, array(';'),true);
    }
+
+   public function testParseVariable($string){
+        return $this->_parseVariable($string);
+   }
+
 }
 
 
@@ -98,53 +103,6 @@ class UTjtplexpr extends jUnitTestCase {
     );
 
 
-    protected $badvarexpr = array(
-        '$'=>array('jelix~errors.tpl.tag.character.invalid',array('','$','')),
-        'foreach($a)'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','foreach','')),
-        '@aaa.bbb'=>array('jelix~errors.tpl.tag.locale.end.missing',array('','')),
-        '@aaa.b,bb@'=>array('jelix~errors.tpl.tag.character.invalid',array('',',','')),
-        '@@'=>array('jelix~errors.tpl.tag.locale.invalid',array('','')),
-        '[$aa/234]'=>array('jelix~errors.tpl.tag.character.invalid',array('','[','')),
-        '($aa/234)'=>array('jelix~errors.tpl.tag.character.invalid',array('','(','')),
-        '$b+($aa/234'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
-        '$b+(($aa/234)'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
-        '$aa/234)'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
-        '$aa/234))'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
-        '$aa[234'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
-        '$aa[[234]'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
-        '$aa234]'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
-        'isset($t[5])'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','isset','')),
-        'empty($aa)'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','empty','')),
-        '$aa == 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
-        '$aa != 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','!=','')),
-        '$aa >= 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','>=','')),
-        '$aa !== 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','!==','')),
-        '$aa <= 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','<=','')),
-        '$aa << 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','<<','')),
-        '$aa >> 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','>>','')),
-        '$aa == false'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
-        '$aa == true'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
-        '$aa == null'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
-        '$aa && $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','&&','')),
-        '$aa || $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','||','')),
-        '$aa and $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','and','')),
-        '$aa or $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','or','')),
-        '$aa xor $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','xor','')),
-        '$aa=$bb'=>array('jelix~errors.tpl.tag.character.invalid',array('','=','')),
-        '$aa+=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','+=','')),
-        '$aa-=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','-=','')),
-        '$aa/=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','/=','')),
-        '$aa*=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','*=','')),
-    );
-
-    protected $badvarexprTrustedMode = array(
-
-    );
-
-    protected $badvarexprUnTrustedMode = array(
-        '$aaa.PHP_VERSION'=>array('jelix~errors.tpl.tag.constant.notallowed',array('','PHP_VERSION','')),
-    );
-
 
 
     function testVarExprTrustedMode() {
@@ -197,7 +155,52 @@ class UTjtplexpr extends jUnitTestCase {
         }
     }
 
+    protected $badvarexpr = array(
+        '$'=>array('jelix~errors.tpl.tag.character.invalid',array('','$','')),
+        'foreach($a)'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','foreach','')),
+        '@aaa.bbb'=>array('jelix~errors.tpl.tag.locale.end.missing',array('','')),
+        '@aaa.b,bb@'=>array('jelix~errors.tpl.tag.character.invalid',array('',',','')),
+        '@@'=>array('jelix~errors.tpl.tag.locale.invalid',array('','')),
+        '[$aa/234]'=>array('jelix~errors.tpl.tag.character.invalid',array('','[','')),
+        '($aa/234)'=>array('jelix~errors.tpl.tag.character.invalid',array('','(','')),
+        '$b+($aa/234'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$b+(($aa/234)'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$aa/234)'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$aa/234))'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$aa[234'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$aa[[234]'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        '$aa234]'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
+        'isset($t[5])'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','isset','')),
+        'empty($aa)'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','empty','')),
+        '$aa == 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
+        '$aa != 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','!=','')),
+        '$aa >= 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','>=','')),
+        '$aa !== 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','!==','')),
+        '$aa <= 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','<=','')),
+        '$aa << 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','<<','')),
+        '$aa >> 123'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','>>','')),
+        '$aa == false'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
+        '$aa == true'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
+        '$aa == null'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','==','')),
+        '$aa && $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','&&','')),
+        '$aa || $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','||','')),
+        '$aa and $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','and','')),
+        '$aa or $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','or','')),
+        '$aa xor $bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','xor','')),
+        '$aa=$bb'=>array('jelix~errors.tpl.tag.character.invalid',array('','=','')),
+        '$aa+=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','+=','')),
+        '$aa-=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','-=','')),
+        '$aa/=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','/=','')),
+        '$aa*=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','*=','')),
+    );
 
+    protected $badvarexprTrustedMode = array(
+
+    );
+
+    protected $badvarexprUnTrustedMode = array(
+        '$aaa.PHP_VERSION'=>array('jelix~errors.tpl.tag.constant.notallowed',array('','PHP_VERSION','')),
+    );
 
     function testBadVarExprTrustedMode() {
         $compil = new testJtplCompiler();
@@ -249,6 +252,30 @@ class UTjtplexpr extends jUnitTestCase {
                 $this->assertEqual($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
                 $this->pass("Unknown Exception: ".$e->getMessage());
+            }
+        }
+    }
+
+    protected $varTag = array(
+        '$aaa|escxml' => 'htmlspecialchars($t->_vars[\'aaa\'])',
+        '$aaa|jdatetime' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'])',
+        '$aaa|jdatetime:\'db_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_date\')',
+        '$aaa|jdatetime:\'db_date\':\'lang_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_date\',\'lang_date\')',
+        '$aaa|jdatetime:\'db_date\',\'lang_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_date\',\'lang_date\')',
+    );
+
+
+    function testVarTag() {
+        $compil = new testJtplCompiler();
+        $compil->setTrusted(true);
+        foreach($this->varTag as $k=>$t){
+            try{
+                $res = $compil->testParseVariable($k);
+                $this->assertEqualOrDiff($t, $res);
+            }catch(jException $e){
+                $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
+            }catch(Exception $e){
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
             }
         }
     }
