@@ -38,7 +38,7 @@ class jTpl {
 
     public function __construct(){
         global $gJConfig;
-        $this->_vars['j_basePath'] = $gJConfig->urlengine['basePath'];
+        $this->_vars['j_basepath'] = $gJConfig->urlengine['basePath'];
         $this->_vars['j_jelixwww'] = $gJConfig->urlengine['jelixWWWPath'];
         $this->_vars['j_datenow'] = date('Y-m-d');
         $this->_vars['j_timenow'] = date('H:i:s');
