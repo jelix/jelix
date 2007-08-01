@@ -9,7 +9,7 @@ sd lib/jelix/tpl/
 
 sd lib/jelix/plugins/tpl/common
 dd plugins/common
-  function.include.php
+  cfunction.include.php
   modifier.cat.php
   modifier.count_array.php
   modifier.count_characters.php

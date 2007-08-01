@@ -13,10 +13,6 @@ require_once(JELIX_LIB_TPL_PATH.'jTplCompiler.class.php');
 
 class testJtplContentCompiler extends jTplCompiler {
 
-   public function setTrusted($trusted){
-        $this->_trusted = $trusted;
-   }
-
    public function compileContent2($content){
         return $this->compileContent($content);
    }
@@ -86,9 +82,36 @@ function toto() {
 
     function testCompileContent() {
         $compil = new testJtplContentCompiler();
-        $compil->setTrusted(true);
+        $compil->trusted = true;
 
         foreach($this->content as $k=>$t){
+            try{
+                $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));
+            }catch(jException $e){
+                $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
+            }catch(Exception $e){
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+            }
+        }
+    }
+
+
+   protected $contentPlugins = array(
+1=>array(
+        '<p>ok {zone \'toto\'}</p>',
+        '<p>ok <?php echo jZone::get(\'toto\');?></p>',
+        ),
+2=>array(
+        '<p>ok {zone $truc,array(\'toto\'=>4,\'bla\'=>\'foo\')}</p>',
+        '<p>ok <?php echo jZone::get($t->_vars[\'truc\'],array(\'toto\'=>4,\'bla\'=>\'foo\'));?></p>',
+        ),
+);
+
+    function testCompilePlugins() {
+        $compil = new testJtplContentCompiler();
+        $compil->trusted = true;
+
+        foreach($this->contentPlugins as $k=>$t){
             try{
                 $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));
             }catch(jException $e){

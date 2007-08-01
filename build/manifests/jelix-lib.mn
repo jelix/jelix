@@ -291,7 +291,7 @@ cd lib/jelix/plugins/tpl/common
   block.ifnotacl.php
   block.ifuserconnected.php
   block.ifusernotconnected.php
-  function.zone.php
+  cfunction.zone.php
   modifier.cat.php
   modifier.count_array.php
   modifier.count_characters.php

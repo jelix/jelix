@@ -65,8 +65,8 @@ class jTplCompiler
 
     private $_sourceFile;
     private $_currentTag;
-    protected $_outputType='';
-    protected $_trusted=true;
+    public $outputType='';
+    public $trusted=true;
 
     /**
      * Initialize some properties
@@ -94,9 +94,9 @@ class jTplCompiler
      */
     public function compile($tplFile, $outputtype, $trusted){
         $this->_sourceFile = $tplFile;
-        $cachefile = JTPL_CACHE_PATH .$this->_outputType.($trusted?'_t':'').'_'. basename($tplFile);
-        $this->_outputType = ($outputtype==''?'html':$outputtype);
-        $this->_trusted = $trusted;
+        $cachefile = JTPL_CACHE_PATH .$this->outputType.($trusted?'_t':'').'_'. basename($tplFile);
+        $this->outputType = ($outputtype==''?'html':$outputtype);
+        $this->trusted = $trusted;
 #else
     /**
      * Launch the compilation of a template
@@ -108,8 +108,8 @@ class jTplCompiler
     public function compile($selector){
         $this->_sourceFile = $selector->getPath();
         $cachefile = $selector->getCompiledFilePath();
-        $this->_outputType = $selector->outputType;
-        $this->_trusted = $selector->trusted;
+        $this->outputType = $selector->outputType;
+        $this->trusted = $selector->trusted;
         jContext::push($selector->module);
 #endif
 
@@ -124,16 +124,16 @@ class jTplCompiler
             $header.=' require_once(\''.$path."');\n";
         }
 #if JTPL_STANDALONE
-        $header.='function template_meta_'.md5($tplFile.'_'.$this->_outputType.($this->_trusted?'_t':'')).'($t){';
+        $header.='function template_meta_'.md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){';
 #else
-        $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource.'_'.$this->_outputType.($this->_trusted?'_t':'')).'($t){';
+        $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){';
 #endif
         $header .="\n".$this->_metaBody."\nreturn \$t->_meta;\n}\n";
 
 #if JTPL_STANDALONE
-        $header.='function template_'.md5($tplFile.'_'.$this->_outputType.($this->_trusted?'_t':'')).'($t){'."\n?>";
+        $header.='function template_'.md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){'."\n?>";
 #else
-        $header.='function template_'.md5($selector->module.'_'.$selector->resource.'_'.$this->_outputType.($this->_trusted?'_t':'')).'($t){'."\n?>";
+        $header.='function template_'.md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){'."\n?>";
 #endif
         $result = $header.$result."<?php \n}\n?>";
 
@@ -255,19 +255,23 @@ class jTplCompiler
                 return '';
             }
 
-            if( $path = $this->_getPlugin('modifier',$m[1])){
+            if(isset($m[2])){
+                $targs = $this->_parseFinal($m[2],$this->_allowedInVar, $this->_excludedInVar, true, ',',':');
+                array_unshift($targs, $res);
+            }else{
+                $targs = array($res);
+            }
 
-                if(isset($m[2])){
-                    $targs = $this->_parseFinal($m[2],$this->_allowedInVar, $this->_excludedInVar, true, ',',':');
-                    array_unshift($targs, $res);
-                }else{
-                    $targs = array($res);
-                }
+            if( $path = $this->_getPlugin('cmodifier',$m[1])){
+                require_once($path[0]);
+                $fct = $path[1];
+                $res = $fct($this,$targs);
+
+            } else if( $path = $this->_getPlugin('modifier',$m[1])){
                 $res = $path[1].'('.implode(',',$targs).')';
                 $this->_pluginPath[$path[0]] = true;
 
             } else {
-
                 if(isset($this->_modifier[$m[1]])){
                     $res = $this->_modifier[$m[1]].'('.$res.')';
                 } else {
@@ -348,18 +352,18 @@ class jTplCompiler
                 $res='';
                 break;
             default:
-                if(preg_match('!^/(\w+)$!',$name,$m)){
+                if (preg_match('!^/(\w+)$!',$name,$m)) {
                     if (end($this->_blockStack) !=$m[1]) {
                         $this->doError1('errors.tpl.tag.block.end.missing',end($this->_blockStack));
                     }else{
                         array_pop($this->_blockStack);
-                        $fct = 'jtpl_block_'.$this->_outputType.'_'.$m[1];
+                        $fct = 'jtpl_block_'.$this->outputType.'_'.$m[1];
                         if(!function_exists($fct)){
                             $this->doError1('errors.tpl.tag.block.begin.missing',$m[1]);
                         }else
                             $res = $fct($this,false,null);
                     }
-                }else if(preg_match('/^meta_(\w+)$/',$name,$m)){
+                } else if(preg_match('/^meta_(\w+)$/',$name,$m)) {
                      if ($path = $this->_getPlugin('meta',$m[1])) {
                         $this->_parseMeta($args,$path[1]);
                         $this->_pluginPath[$path[0]] = true;
@@ -368,15 +372,20 @@ class jTplCompiler
                     }
                     $res='';
 
-                }else if ( $path = $this->_getPlugin('block',$name)) {
+                } else if ( $path = $this->_getPlugin('block',$name)) {
                     require_once($path[0]);
                     $argfct=$this->_parseFinal($args,$this->_allowedAssign, array(';'),true);
                     $fct = $path[1];
                     $res = $fct($this,true,$argfct);
                     array_push($this->_blockStack,$name);
 
-                }else if ( $path = $this->_getPlugin('function',$name)) {
+                } else if ( $path = $this->_getPlugin('cfunction',$name)) {
+                    require_once($path[0]);
+                    $argfct=$this->_parseFinal($args,$this->_allowedAssign, array(';'),true);
+                    $fct = $path[1];
+                    $res = $fct($this,$argfct);
 
+                } else if ( $path = $this->_getPlugin('function',$name)) {
                     $argfct=$this->_parseFinal($args,$this->_allowedAssign);
                     $res = $path[1].'( $t'.(trim($argfct)!=''?','.$argfct:'').');';
                     $this->_pluginPath[$path[0]] = true;
@@ -429,7 +438,7 @@ class jTplCompiler
                 }elseif($type == T_VARIABLE){
                     $result.='$t->_vars[\''.substr($str,1).'\']';
                 }elseif($type == T_WHITESPACE || in_array($type, $allowed)){
-                    if(!$this->_trusted && $type == T_STRING && defined($str) && !in_array(strtoupper($str),$this->_allowedConstants)){
+                    if(!$this->trusted && $type == T_STRING && defined($str) && !in_array(strtoupper($str),$this->_allowedConstants)){
                         $this->doError2('errors.tpl.tag.constant.notallowed', $this->_currentTag, $str);
                     }
                     $result.=$str;
@@ -519,17 +528,17 @@ class jTplCompiler
         $foundPath='';
 
 #if JTPL_STANDALONE
-        if(isset($GLOBALS['jTplConfig']['tplpluginsPathList'][$this->_outputType])){
-            foreach($GLOBALS['jTplConfig']['tplpluginsPathList'][$this->_outputType] as $path){
+        if(isset($GLOBALS['jTplConfig']['tplpluginsPathList'][$this->outputType])){
+            foreach($GLOBALS['jTplConfig']['tplpluginsPathList'][$this->outputType] as $path){
 #else
         global $gJConfig;
-        if(isset($gJConfig->{'_tplpluginsPathList_'.$this->_outputType})){
-            foreach($gJConfig->{'_tplpluginsPathList_'.$this->_outputType} as $path){
+        if(isset($gJConfig->{'_tplpluginsPathList_'.$this->outputType})){
+            foreach($gJConfig->{'_tplpluginsPathList_'.$this->outputType} as $path){
 #endif
                 $foundPath=$path.$type.'.'.$name.'.php';
 
                 if(file_exists($foundPath)){
-                    return array($foundPath, 'jtpl_'.$type.'_'.$this->_outputType.'_'.$name);
+                    return array($foundPath, 'jtpl_'.$type.'_'.$this->outputType.'_'.$name);
                 }
             }
         }

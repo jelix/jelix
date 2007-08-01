@@ -13,10 +13,6 @@ require_once(JELIX_LIB_TPL_PATH.'jTplCompiler.class.php');
 
 class testJtplCompiler extends jTplCompiler {
 
-   public function setTrusted($trusted){
-        $this->_trusted = $trusted;
-   }
-
    public function testParseExpr($string, $allowed=array(), $exceptchar=array(';'), $splitArgIntoArray=false){
         return $this->_parseFinal($string, $allowed, $exceptchar, $splitArgIntoArray);
    }
@@ -107,7 +103,7 @@ class UTjtplexpr extends jUnitTestCase {
 
     function testVarExprTrustedMode() {
         $compil = new testJtplCompiler();
-        $compil->setTrusted(true);
+        $compil->trusted = true;
         foreach($this->varexpr as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
@@ -132,7 +128,7 @@ class UTjtplexpr extends jUnitTestCase {
 
     function testVarExprUnTrustedMode() {
         $compil = new testJtplCompiler();
-        $compil->setTrusted(false);
+        $compil->trusted = false;
         foreach($this->varexpr as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
@@ -204,7 +200,7 @@ class UTjtplexpr extends jUnitTestCase {
 
     function testBadVarExprTrustedMode() {
         $compil = new testJtplCompiler();
-        $compil->setTrusted(true);
+        $compil->trusted = true;
         foreach($this->badvarexpr as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
@@ -231,7 +227,7 @@ class UTjtplexpr extends jUnitTestCase {
 
     function testBadVarExprUnTrustedMode() {
         $compil = new testJtplCompiler();
-        $compil->setTrusted(false);
+        $compil->trusted = false;
         foreach($this->badvarexpr as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
@@ -267,7 +263,7 @@ class UTjtplexpr extends jUnitTestCase {
 
     function testVarTag() {
         $compil = new testJtplCompiler();
-        $compil->setTrusted(true);
+        $compil->trusted = true;
         foreach($this->varTag as $k=>$t){
             try{
                 $res = $compil->testParseVariable($k);
