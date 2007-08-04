@@ -348,5 +348,18 @@ class jAuth {
         return self::createUserObject($login,$password);
     }
 
+    /**
+     * generate a password with random letter or number
+     * @param int $length the length of the generated password
+     * @return string the generated password
+     */
+    public static function getRandomPassword($length = 10){
+        $letter = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $pass = '';
+        for($i=0;$i<$length;$i++){
+            $pass .= $letter{rand(0,61)};
+        }
+        return $pass;
+    }
 }
 ?>
