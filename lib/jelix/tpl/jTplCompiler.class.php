@@ -357,11 +357,12 @@ class jTplCompiler
                         $this->doError1('errors.tpl.tag.block.end.missing',end($this->_blockStack));
                     }else{
                         array_pop($this->_blockStack);
-                        $fct = 'jtpl_block_'.$this->outputType.'_'.$m[1];
-                        if(!function_exists($fct)){
-                            $this->doError1('errors.tpl.tag.block.begin.missing',$m[1]);
-                        }else
+                        if(function_exists($fct = 'jtpl_block_'.$this->outputType.'_'.$m[1])){
                             $res = $fct($this,false,null);
+                        }else if(function_exists($fct = 'jtpl_block_common_'.$m[1])){
+                            $res = $fct($this,false,null);
+                        }else
+                            $this->doError1('errors.tpl.tag.block.begin.missing',$m[1]);
                     }
                 } else if(preg_match('/^meta_(\w+)$/',$name,$m)) {
                      if ($path = $this->_getPlugin('meta',$m[1])) {

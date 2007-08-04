@@ -105,6 +105,12 @@ function toto() {
         '<p>ok {zone $truc,array(\'toto\'=>4,\'bla\'=>\'foo\')}</p>',
         '<p>ok <?php echo jZone::get($t->_vars[\'truc\'],array(\'toto\'=>4,\'bla\'=>\'foo\'));?></p>',
         ),
+
+3=>array(
+        '<p>ok {ifuserconnected} connected {/ifuserconnected}</p>',
+        '<p>ok <?php  if(jAuth::isConnected()){?> connected <?php  } ?></p>',
+        ),
+
 );
 
     function testCompilePlugins() {
