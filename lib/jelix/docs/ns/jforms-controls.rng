@@ -5,14 +5,20 @@
   <define name="UI.Common">
      <attribute name="ref" />
      <ref name="label" />
-     <!--<zeroOrMore>
-        <choice>
-           <ref name="help" />
-           <ref name="hint" />
-           <ref name="alert" />
-           <ref name="actions" />
-        </choice>
-     </zeroOrMore>-->
+     <optional>
+        <ref name="help" />
+     </optional>
+
+     <!--
+     <optional>
+        <ref name="hint" />
+     </optional>
+     <optional>
+        <ref name="alert" />
+     </optional>
+     <optional>
+        <ref name="help" />
+     </optional>-->
   </define>
   <!--
   <define name="UI.Common.Attrs">
@@ -306,15 +312,14 @@
      </element>
   </define>
 
-  <!--
-  <define name="hint">
-     <element name="hint">
+  <define name="help">
+     <element name="help">
         <ref name="message.content" />
      </element>
   </define>
-
-  <define name="help">
-     <element name="help">
+<!--
+  <define name="hint">
+     <element name="hint">
         <ref name="message.content" />
      </element>
   </define>
@@ -325,6 +330,4 @@
      </element>
   </define>
 -->
-
-
 </grammar>

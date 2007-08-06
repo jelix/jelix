@@ -62,7 +62,8 @@ class jFormsCompiler implements jISimpleCompiler {
 
       $srcjs=array();
       $srcjs[]='$js="gForm = new jFormsForm(\'".$this->_name."\');\n";';
-      $srcjs[]='$js.="gForm.setDecorator(new ".$errorDecoratorName."());\n";';
+      $srcjs[]='$js.="gForm.setErrorDecorator(new ".$errorDecoratorName."());\n";';
+      $srcjs[]='$js.="gForm.setHelpDecorator(new ".$helpDecoratorName."());\n";';
       foreach($xml->children() as $controltype=>$control){
             $source[] = $this->generatePHPControl($controltype, $control);
             $srcjs[] =  $this->generateJsControl($controltype, $control);
@@ -76,7 +77,7 @@ class jFormsCompiler implements jISimpleCompiler {
       jFile::write($cachefile, implode("\n", $source));
       $srcjs[]='$js.="jForms.declareForm(gForm);\n";';
 
-      $srcHtmlBuilder[]=' public function getJavascriptCheck($errorDecoratorName){';
+      $srcHtmlBuilder[]=' public function getJavascriptCheck($errorDecoratorName, $helpDecoratorName){';
       $srcHtmlBuilder[]= implode("\n", $srcjs);
       $srcHtmlBuilder[]=' return $js; }';
       $srcHtmlBuilder[]='} ?>';
@@ -108,7 +109,9 @@ class jFormsCompiler implements jISimpleCompiler {
             }
 
             $dt = (string)$control['type'];
-            if(!in_array(strtolower($dt), array('string','boolean','decimal','integer','hexadecimal','datetime','date','time','localedatetime','localedate','localetime', 'url','email','ipv4','ipv6'))){
+            if(!in_array(strtolower($dt), array('string','boolean','decimal','integer','hexadecimal',
+                                                'datetime','date','time','localedatetime','localedate','localetime', 
+                                                'url','email','ipv4','ipv6'))){
                throw new jException('jelix~formserr.datatype.unknow',array($dt,$controltype,$this->sourceFile));
             }
             $source[]='$ctrl->datatype= new jDatatype'.$dt.'();';
@@ -156,6 +159,10 @@ class jFormsCompiler implements jISimpleCompiler {
             $labellocale='';
             $source[]='$ctrl->label=\''.str_replace("'","\\'",$label).'\';';
         }
+        if(isset($control->help)){
+            $source[]='$ctrl->hasHelp=true;';
+        }
+
         // support of static datas or daos
         switch($controltype){
             case 'checkboxes':
@@ -274,6 +281,15 @@ class jFormsCompiler implements jISimpleCompiler {
         }
         if(isset($control['required']) && 'true' == (string)$control['required']){
             $source[]='$js.="gControl.required = true;\n";';
+        }
+
+        if(isset($control->help)){
+            if(isset($control->help['locale'])){
+                $help='str_replace("\'","\\\'",jLocale::get(\''.(string)$control->help['locale'].'\'))';
+            }else{
+                $help='str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->help).'\')';
+            }
+            $source[]='$js.="gControl.help=\'".'.$help.'."\';\n";';
         }
 
         $source[]='$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";';

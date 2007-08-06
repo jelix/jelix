@@ -19,6 +19,7 @@
  *                     1=>selector of submit action  
  *                     2=>array of parameters for submit action 
  *                     3=>name of your javascript object for error listener
+ *                     4=>name of your javascript object for help listener
  * @return string the php code corresponding to the begin or end of the block
  * @see jForms
  */
@@ -39,14 +40,19 @@ unset($t->_privateVars[\'__builder\']);';
         $param[2] = 'array()';
     }
 
-    if(isset($param[3]))
+    if(isset($param[3]) && $param[3] ! '')
         $errdecorator = $param[3];
     else
         $errdecorator = "'jFormsErrorDecoratorAlert'";
 
+    if(isset($param[4]) && $param[4] ! '')
+        $helpdecorator = $param[4];
+    else
+        $helpdecorator = "'jFormsErrorDecoratorAlert'";
+
     $content = ' $t->_privateVars[\'__form\'] = '.$param[0].';
 $t->_privateVars[\'__builder\'] = $t->_privateVars[\'__form\']->getBuilder(\'html\', '.$param[1].','.$param[2].');
-$t->_privateVars[\'__builder\']->outputHeader('.$errdecorator.');
+$t->_privateVars[\'__builder\']->outputHeader(array('.$errdecorator.','.$helpdecorator.'));
 if($GLOBALS[\'gJCoord\']->response!= null){
     $GLOBALS[\'gJCoord\']->response->addJSLink($GLOBALS[\'gJConfig\']->urlengine[\'basePath\'].\'jelix/js/jforms.js\');
 }

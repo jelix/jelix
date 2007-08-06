@@ -19,10 +19,11 @@ abstract class jFormsControl {
    public $type = null;
    public $ref='';
    public $datatype='string';
-   public $required=false;
-   public $readonly=false;
+   public $required = false;
+   public $readonly = false;
    public $label='';
    public $value='';
+   public $hasHelp = false;
 
    function __construct($ref){
       $this->ref = $ref;

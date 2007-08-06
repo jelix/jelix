@@ -25,7 +25,7 @@ class testHMLForm { // simulate a jFormBase object
 }
 
 class testJFormsHtmlBuilder extends jFormsHtmlBuilderBase {
-    public function getJavascriptCheck($params){
+    public function getJavascriptCheck($errDecorator,$helpDecorator){
         return '';
     }
 }
@@ -45,7 +45,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $builder = new testJFormsHtmlBuilder(new testHMLForm(), 'jelix_tests~urlsig_url1',array());
         $formname = $builder->getName();
         ob_start();
-        $builder->outputHeader('');
+        $builder->outputHeader(array('',''));
         $out = ob_get_clean();
         $result ='<form action="/index.php" method="POST" name="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div><input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig_url1"/>
@@ -59,7 +59,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $builder = new testJFormsHtmlBuilder(new testHMLForm(), 'jelix_tests~urlsig_url1',array('foo'=>'b>ar'));
         $formname = $builder->getName();
         ob_start();
-        $builder->outputHeader('');
+        $builder->outputHeader(array('',''));
         $out = ob_get_clean();
         $result ='<form action="/index.php" method="POST" name="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
@@ -99,6 +99,11 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl->defaultValue='toto';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="nominconnu" id="'.$this->formname.'_nominconnu" value="toto"/>', $out);
+
+        $ctrl->hasHelp=true;
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input type="text" name="nominconnu" id="'.$this->formname.'_nominconnu" value="toto"/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'nominconnu\')">?</a></span>', $out);
+
     }
     function testOutputCheckbox(){
         $ctrl= new jFormsControlCheckbox('chk');

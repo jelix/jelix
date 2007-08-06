@@ -91,7 +91,7 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
         }
         echo '<script type="text/javascript"> 
 //<[CDATA[
-', $this->getJavascriptCheck($params),'
+', $this->getJavascriptCheck($params[0],$params[1]),'
 //]]>
 </script>';
     }
@@ -250,10 +250,19 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
             echo '<button type="submit"',$id,'>',htmlspecialchars($ctrl->label),'</button>';
             break;
         }
+
+        if ($ctrl->hasHelp) {
+            if($ctrl->type == 'checkboxes' || ($ctrl->type == 'listbox' && $ctrl->multiple)){
+                $name=$ctrl->ref.'[]';
+            }else{
+                $name=$ctrl->ref;
+            }
+            echo '<span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->_name.'\',\''.$name.'\')">?</a></span>';
+        }
     }
 
 
-    abstract public function getJavascriptCheck($params);
+    abstract public function getJavascriptCheck($errDecorator,$helpDecorator);
 }
 
 

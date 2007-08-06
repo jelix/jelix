@@ -191,6 +191,10 @@ class UTjformsCompiler extends jUnitTestCase {
     <item value="ccc"/>
     <selectedvalues> <value>bbb</value><value>aaa</value></selectedvalues>
 </listbox>',
+42=>'<input ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <help>vous devez indiquer votre nom</help>
+</input>',
     );
 
     protected $_PhpControls = array(
@@ -445,6 +449,11 @@ $ctrl->datasource->datas = array(
 );
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
+42=>'$ctrl= new jFormsControlinput(\'nom\');
+$ctrl->datatype= new jDatatypeString();
+$ctrl->label=\'Votre nom\';
+$ctrl->hasHelp=true;
+$this->addControl($ctrl);',
 );
 
 
@@ -661,6 +670,13 @@ $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~form
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gControl.multiple = true;\n";
 $js.="gForm.addControl( gControl);\n";',
+42=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="gControl.help=\'".str_replace("\'","\\\'",\'vous devez indiquer votre nom\')."\';\n";
+$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="gForm.addControl( gControl);\n";',
+
     );
 
     function testPhpControl(){
