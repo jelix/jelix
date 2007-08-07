@@ -48,13 +48,14 @@ unset($t->_privateVars[\'__builder\']);';
     if(isset($param[4]) && $param[4] ! '')
         $helpdecorator = $param[4];
     else
-        $helpdecorator = "'jFormsErrorDecoratorAlert'";
+        $helpdecorator = "'jFormsHelpDecoratorAlert'";
 
     $content = ' $t->_privateVars[\'__form\'] = '.$param[0].';
 $t->_privateVars[\'__builder\'] = $t->_privateVars[\'__form\']->getBuilder(\'html\', '.$param[1].','.$param[2].');
 $t->_privateVars[\'__builder\']->outputHeader(array('.$errdecorator.','.$helpdecorator.'));
 if($GLOBALS[\'gJCoord\']->response!= null){
     $GLOBALS[\'gJCoord\']->response->addJSLink($GLOBALS[\'gJConfig\']->urlengine[\'basePath\'].\'jelix/js/jforms.js\');
+    $GLOBALS[\'gJCoord\']->response->addCSSLink($GLOBALS[\'gJConfig\']->urlengine[\'basePath\'].\'jelix/design/jforms.css\');
 }
 ';
 

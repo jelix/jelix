@@ -101,12 +101,13 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
     }
 
     public function outputControlLabel($ctrl){
+        $required = ($ctrl->required == ''?'':' jforms-required');
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons'){
             $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
-            echo '<span class="jforms-label"',$hint,'>',htmlspecialchars($ctrl->label),'</span>';
+            echo '<span class="jforms-label',$required,'"',$hint,'>',htmlspecialchars($ctrl->label),'</span>';
         }else if($ctrl->type != 'submit'){
             $id = $this->_name.'_'.$ctrl->ref;
-            echo '<label class="jforms-label" for="'.$id.'">'.htmlspecialchars($ctrl->label).'</label>';
+            echo '<label class="jforms-label',$required,'" for="'.$id.'">'.htmlspecialchars($ctrl->label).'</label>';
         }
     }
 

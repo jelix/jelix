@@ -351,6 +351,7 @@ cd lib/jelix/plugins/urls/simple
 cd lib/jelix-www/design
   jelix.css
   tooltip.css
+  jform.css
 cd lib/jelix-www/js
   tooltip.js
   jforms.js
