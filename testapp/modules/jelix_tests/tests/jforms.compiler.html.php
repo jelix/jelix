@@ -199,6 +199,27 @@ class UTjformsCompiler extends jUnitTestCase {
     <label>Votre nom</label>
     <hint>vous devez indiquer votre nom</hint>
 </input>',
+44=>'<input ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <alert>Le nom est invalide</alert>
+</input>',
+45=>'<input ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <alert type="invalid">Le nom est invalide</alert>
+</input>',
+46=>'<input ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <alert type="required">vous avez oublié le nom</alert>
+</input>',
+47=>'<input ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <alert locale="error.alert.invalid.nom"/>
+</input>',
+48=>'<input ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <alert type="invalid">Le nom est invalide</alert>
+    <alert type="required" locale="error.alert.invalid.nom"/>
+</input>',
     );
 
     protected $_PhpControls = array(
@@ -463,6 +484,32 @@ $ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->hint=\'vous devez indiquer votre nom\';
 $this->addControl($ctrl);',
+44=>'$ctrl= new jFormsControlinput(\'nom\');
+$ctrl->datatype= new jDatatypeString();
+$ctrl->label=\'Votre nom\';
+$ctrl->alertInvalid=\'Le nom est invalide\';
+$this->addControl($ctrl);',
+45=>'$ctrl= new jFormsControlinput(\'nom\');
+$ctrl->datatype= new jDatatypeString();
+$ctrl->label=\'Votre nom\';
+$ctrl->alertInvalid=\'Le nom est invalide\';
+$this->addControl($ctrl);',
+46=>'$ctrl= new jFormsControlinput(\'nom\');
+$ctrl->datatype= new jDatatypeString();
+$ctrl->label=\'Votre nom\';
+$ctrl->alertRequired=\'vous avez oublié le nom\';
+$this->addControl($ctrl);',
+47=>'$ctrl= new jFormsControlinput(\'nom\');
+$ctrl->datatype= new jDatatypeString();
+$ctrl->label=\'Votre nom\';
+$ctrl->alertInvalid=jLocale::get(\'error.alert.invalid.nom\');
+$this->addControl($ctrl);',
+48=>'$ctrl= new jFormsControlinput(\'nom\');
+$ctrl->datatype= new jDatatypeString();
+$ctrl->label=\'Votre nom\';
+$ctrl->alertRequired=jLocale::get(\'error.alert.invalid.nom\');
+$ctrl->alertInvalid=\'Le nom est invalide\';
+$this->addControl($ctrl);',
 );
 
 
@@ -689,6 +736,31 @@ $js.="gForm.addControl( gControl);\n";',
 $js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="gForm.addControl( gControl);\n";',
+44=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",\'Le nom est invalide\')."\';\n";
+$js.="gForm.addControl( gControl);\n";',
+45=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",\'Le nom est invalide\')."\';\n";
+$js.="gForm.addControl( gControl);\n";',
+46=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="gControl.errRequired=\'".str_replace("\'","\\\'",\'vous avez oublié le nom\')."\';\n";
+$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="gForm.addControl( gControl);\n";',
+47=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'error.alert.invalid.nom\'))."\';\n";
+$js.="gForm.addControl( gControl);\n";',
+48=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'error.alert.invalid.nom\'))."\';\n";
+$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",\'Le nom est invalide\')."\';\n";
 $js.="gForm.addControl( gControl);\n";',
     );
 
