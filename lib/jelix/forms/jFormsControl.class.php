@@ -24,6 +24,9 @@ abstract class jFormsControl {
    public $label='';
    public $value='';
    public $hasHelp = false;
+   public $hint='';
+   public $alertInvalid='';
+   public $alertRequired='';
 
    function __construct($ref){
       $this->ref = $ref;

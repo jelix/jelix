@@ -8,11 +8,10 @@
      <optional>
         <ref name="help" />
      </optional>
-
-     <!--
      <optional>
         <ref name="hint" />
      </optional>
+     <!--
      <optional>
         <ref name="alert" />
      </optional>
@@ -317,13 +316,14 @@
         <ref name="message.content" />
      </element>
   </define>
-<!--
+
   <define name="hint">
      <element name="hint">
         <ref name="message.content" />
      </element>
   </define>
-
+  
+<!--
   <define name="alert">
      <element name="alert">
         <ref name="message.content" />

@@ -102,22 +102,25 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
 
     public function outputControlLabel($ctrl){
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons'){
-            echo htmlspecialchars($ctrl->label);
+            $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
+            echo '<span class="jforms-label"',$hint,'>',htmlspecialchars($ctrl->label),'</span>';
         }else if($ctrl->type != 'submit'){
             $id = $this->_name.'_'.$ctrl->ref;
-            echo '<label for="'.$id.'">'.htmlspecialchars($ctrl->label).'</label>';
+            echo '<label class="jforms-label" for="'.$id.'">'.htmlspecialchars($ctrl->label).'</label>';
         }
     }
 
     public function outputControl($ctrl){
         $id = ' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'"';
         $readonly = ($ctrl->readonly?' readonly="readonly"':'');
+        $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
+
         switch($ctrl->type){
         case 'input':
             $value = $this->_form->getData($ctrl->ref);
             if($value === null)
                 $value = $ctrl->defaultValue;
-            echo '<input type="text"',$id,$readonly,' value="',htmlspecialchars($value),'"/>';
+            echo '<input type="text"',$id,$readonly,$hint,' value="',htmlspecialchars($value),'"/>';
             break;
         case 'checkbox':
             $value = $this->_form->getData($ctrl->ref);
@@ -128,7 +131,7 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
             }else{
                 $v="";
             }
-            echo '<input type="checkbox"',$id,$readonly,$v,' value="true"/>';
+            echo '<input type="checkbox"',$id,$readonly,$hint,$v,' value="true"/>';
             break;
         case 'checkboxes':
             $i=0;
@@ -175,7 +178,7 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
             }
             break;
         case 'menulist':
-            echo '<select',$id,$readonly,' size="1">';
+            echo '<select',$id,$readonly,$hint,' size="1">';
             $value = $this->_form->getData($ctrl->ref);
             if($value === null){
                 if(count($ctrl->selectedValues) == 1)
@@ -188,7 +191,7 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
             break;
         case 'listbox':
             if($ctrl->multiple){
-                echo '<select name="',$ctrl->ref,'[]" id="',$this->_name,'_',$ctrl->ref,'"',$readonly,' size="',$ctrl->size,'" multiple="multiple">';
+                echo '<select name="',$ctrl->ref,'[]" id="',$this->_name,'_',$ctrl->ref,'"',$readonly,$hint,' size="',$ctrl->size,'" multiple="multiple">';
                 $value = $this->_form->getData($ctrl->ref);
                 if($value == null){
                     $value = $ctrl->selectedValues;
@@ -220,7 +223,7 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
                         $value ='';
                 }
 
-                echo '<select',$id,$readonly,' size="',$ctrl->size,'">';
+                echo '<select',$id,$readonly,$hint,' size="',$ctrl->size,'">';
                 foreach($ctrl->datasource->getDatas() as $v=>$label){
                     echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
                 }
@@ -231,23 +234,23 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
             $value = $this->_form->getData($ctrl->ref);
             if($value === null)
                 $value = $ctrl->defaultValue;
-            echo '<textarea',$id,$readonly,'>',htmlspecialchars($value),'</textarea>';
+            echo '<textarea',$id,$readonly,$hint,'>',htmlspecialchars($value),'</textarea>';
             break;
         case 'secret':
-            echo '<input type="password"',$id,$readonly,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"/>';
+            echo '<input type="password"',$id,$readonly,$hint,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"/>';
             break;
         case 'output':
             $value = $this->_form->getData($ctrl->ref);
             if($value === null)
                 $value = $ctrl->defaultValue;
             echo '<input type="hidden"',$id,' value="',htmlspecialchars($value),'"/>';
-            echo htmlspecialchars($value);
+            echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($value),'</span>';
             break;
         case 'upload':
-            echo '<input type="file"',$id,$readonly,' value=""/>'; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
+            echo '<input type="file"',$id,$readonly,$hint,' value=""/>'; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
             break;
         case 'submit':
-            echo '<button type="submit"',$id,'>',htmlspecialchars($ctrl->label),'</button>';
+            echo '<button type="submit"',$id,$hint,'>',htmlspecialchars($ctrl->label),'</button>';
             break;
         }
 

@@ -162,6 +162,36 @@ class jFormsCompiler implements jISimpleCompiler {
         if(isset($control->help)){
             $source[]='$ctrl->hasHelp=true;';
         }
+        if(isset($control->hint)){
+            if(isset($control->hint['locale'])){
+                $source[]='$ctrl->hint=jLocale::get(\''.(string)$control->hint['locale'].'\');';
+            }else{
+                $source[]='$ctrl->hint=\''.str_replace("'","\\'",(string)$control->hint).'\';';
+            }
+        }
+        if(isset($control->alert)){
+            $alertInvalid='';
+            $alertRequired='';
+
+            foreach($control->alert as $alert){
+                if(isset($alert['locale'])){
+                    $msg='jLocale::get(\''.(string)$alert['locale'].'\');';
+                }else{
+                    $msg='\''.str_replace("'","\\'",(string)$alert).'\';';
+                }
+
+                if(isset($alert['type'])){
+                    if((string)$alert['type'] == 'required')
+                        $alertRequired = '$ctrl->alertRequired='.$msg;
+                    else
+                        $alertInvalid = '$ctrl->alertInvalid='.$msg;
+                } else {
+                    $alertInvalid = '$ctrl->alertInvalid='.$msg;
+                }
+            }
+            if($alertRequired !='') $source[]=$alertRequired;
+            if($alertInvalid !='') $source[]=$alertInvalid;
+        }
 
         // support of static datas or daos
         switch($controltype){
@@ -292,8 +322,30 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$js.="gControl.help=\'".'.$help.'."\';\n";';
         }
 
-        $source[]='$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";';
-        $source[]='$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";';
+        $alertInvalid='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))';
+        $alertRequired='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))';
+
+        if(isset($control->alert)){
+            foreach($control->alert as $alert){
+                if(isset($alert['locale'])){
+                    $msg='str_replace("\'","\\\'",jLocale::get(\''.(string)$alert['locale'].'\'))';
+                }else{
+                    $msg='str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$alert).'\')';
+                }
+
+                if(isset($alert['type'])){
+                    if((string)$alert['type'] == 'required')
+                        $alertRequired = $msg;
+                    else
+                        $alertInvalid = $msg;
+                } else {
+                    $alertInvalid = $msg;
+                }
+            }
+        }
+
+        $source[]='$js.="gControl.errRequired=\'".'.$alertRequired.'."\';\n";';
+        $source[]='$js.="gControl.errInvalid =\'".'.$alertInvalid.'."\';\n";';
         if(isset($control['multiple']) && 'true' == (string)$control['multiple']){
             $source[]='$js.="gControl.multiple = true;\n";';
         }

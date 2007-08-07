@@ -195,6 +195,10 @@ class UTjformsCompiler extends jUnitTestCase {
     <label>Votre nom</label>
     <help>vous devez indiquer votre nom</help>
 </input>',
+43=>'<input ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <hint>vous devez indiquer votre nom</hint>
+</input>',
     );
 
     protected $_PhpControls = array(
@@ -454,6 +458,11 @@ $ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->hasHelp=true;
 $this->addControl($ctrl);',
+43=>'$ctrl= new jFormsControlinput(\'nom\');
+$ctrl->datatype= new jDatatypeString();
+$ctrl->label=\'Votre nom\';
+$ctrl->hint=\'vous devez indiquer votre nom\';
+$this->addControl($ctrl);',
 );
 
 
@@ -676,7 +685,11 @@ $js.="gControl.help=\'".str_replace("\'","\\\'",\'vous devez indiquer votre nom\
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gForm.addControl( gControl);\n";',
-
+43=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="gForm.addControl( gControl);\n";',
     );
 
     function testPhpControl(){
