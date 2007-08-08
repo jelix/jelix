@@ -16,7 +16,7 @@
  */
 function jtpl_function_html_ctrl_control($tpl, $ctrlname='')
 {
-    if($tpl->_privateVars['__ctrlref'] == '' && $ctrlname =='') {
+    if( (!isset($tpl->_privateVars['__ctrlref']) || $tpl->_privateVars['__ctrlref'] == '') && $ctrlname =='') {
         return;
     }
     if($ctrlname =='') {
