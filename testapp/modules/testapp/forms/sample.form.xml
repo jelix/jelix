@@ -37,7 +37,6 @@
       <item value="bo" label="Bordeaux" />
   </listbox>
 
-
    <checkboxes ref="objets" required="true">
       <label>Vous avez </label>
       <item value="maison" label="Une maison" />
@@ -45,5 +44,10 @@
       <item value="bateau" label="Un bateau" />
       <item value="assiette" label="Une assiette" />
   </checkboxes>
+
+  <input ref="datenaissance" type="localedate">
+      <label>Votre date de naissance</label>
+      <help>Le format de la date est jj/mm/aaaa</help>
+  </input>
 
 </forms>

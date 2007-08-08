@@ -618,16 +618,19 @@ $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~form
 $js.="gForm.addControl( gControl);\n";',
 19=>'$label = str_replace("\'","\\\'",\'Votre nom\');
 $js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'localedatetime\');\n";
+$js.="gControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gForm.addControl( gControl);\n";',
 20=>'$label = str_replace("\'","\\\'",\'Votre nom\');
 $js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'localedate\');\n";
+$js.="gControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gForm.addControl( gControl);\n";',
 21=>'$label = str_replace("\'","\\\'",\'Votre nom\');
 $js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'localetime\');\n";
+$js.="gControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="gForm.addControl( gControl);\n";',

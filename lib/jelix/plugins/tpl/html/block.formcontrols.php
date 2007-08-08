@@ -43,7 +43,8 @@ function jtpl_block_html_formcontrols($compiler, $begin, $param=array())
                 $ctrls_to_display = '.$param[0].';
             }
             else {
-                $t->_privateVars[\'__form\'] = '.$param[0].'; 
+                $t->_privateVars[\'__form\'] = '.$param[0].';
+                $ctrls_to_display=null;
             }';
         }
         else{

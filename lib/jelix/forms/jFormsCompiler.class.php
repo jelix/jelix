@@ -317,6 +317,10 @@ class jFormsCompiler implements jISimpleCompiler {
         else
             $source[]='$js.="gControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".$label."\', \''.$dt.'\');\n";';
 
+        if($dt == 'localedate' || $dt =='localedatetime' || $dt =='localetime'){
+            $source[]='$js.="gControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";';
+        }
+
         if(isset($control['readonly']) && 'true' == (string)$control['readonly']){
             $source[]='$js.="gControl.readonly = true;\n";';
         }
