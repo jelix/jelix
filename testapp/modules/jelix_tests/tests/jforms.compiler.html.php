@@ -220,6 +220,9 @@ class UTjformsCompiler extends jUnitTestCase {
     <alert type="invalid">Le nom est invalide</alert>
     <alert type="required" locale="error.alert.invalid.nom"/>
 </input>',
+49=>'<checkbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" valueoncheck="oui" valueonuncheck="non">
+    <label>Avez-vous un nom ?</label>
+</checkbox>',
     );
 
     protected $_PhpControls = array(
@@ -510,6 +513,12 @@ $ctrl->label=\'Votre nom\';
 $ctrl->alertRequired=jLocale::get(\'error.alert.invalid.nom\');
 $ctrl->alertInvalid=\'Le nom est invalide\';
 $this->addControl($ctrl);',
+49=>'$ctrl= new jFormsControlcheckbox(\'nom\');
+$ctrl->datatype= new jDatatypeBoolean();
+$ctrl->label=\'Avez-vous un nom ?\';
+$ctrl->valueOnCheck=\'oui\';
+$ctrl->valueOnUncheck=\'non\';
+$this->addControl($ctrl);',
 );
 
 
@@ -762,6 +771,12 @@ $js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
 $js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'error.alert.invalid.nom\'))."\';\n";
 $js.="gControl.errInvalid =\'".str_replace("\'","\\\'",\'Le nom est invalide\')."\';\n";
 $js.="gForm.addControl( gControl);\n";',
+49=>'$label = str_replace("\'","\\\'",\'Avez-vous un nom ?\');
+$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'boolean\');\n";
+$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="gForm.addControl( gControl);\n";',
+
     );
 
     function testPhpControl(){

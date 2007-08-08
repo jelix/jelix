@@ -70,7 +70,15 @@ abstract class jFormsBase {
             $value = $req->getParam($name);
             //@todo à prevoir un meilleur test, pour les formulaires sur plusieurs pages
             if($value === null) $value='';
-            $this->_container->datas[$name]= $value;
+            if($ctrl->type=='checkbox'){
+                if($value){
+                    $this->_container->datas[$name]= $ctrl->valueOnCheck;
+                }else{
+                    $this->_container->datas[$name]= $ctrl->valueOnUncheck;
+                }
+            }else{
+                $this->_container->datas[$name]= $value;
+            }
         }
     }
 
@@ -108,10 +116,10 @@ abstract class jFormsBase {
                 if($value == '' && $ctrl->required){
                     $this->_container->errors[$name]=JFORM_ERRDATA_REQUIRED;
                 }else{
-                    if($ctrl->type == 'checkbox' && $value ==''){
-                        $value='false';
-                    }
-                    if(!$ctrl->datatype->check($value)){
+                    if($ctrl->type == 'checkbox'){
+                        if($value != $ctrl->valueOnCheck && $value != $ctrl->valueOnUncheck)
+                            $this->_container->errors[$name]=JFORM_ERRDATA_INVALID;
+                    }elseif(!$ctrl->datatype->check($value)){
                         $this->_container->errors[$name]=JFORM_ERRDATA_INVALID;
                     }
                 }
@@ -315,6 +323,11 @@ abstract class jFormsBase {
      * @param string $value the data value
      */
     public function setData($name,$value){
+        if($this->_controls[$name]->type == 'checkbox') {
+            if($value != $this->_controls[$name]->valueOnCheck){
+                $value = $this->_controls[$name]->valueOnUncheck;
+            }
+        }
         $this->_container->datas[$name]=$value;
     }
     /**

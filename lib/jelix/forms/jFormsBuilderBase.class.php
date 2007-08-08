@@ -149,14 +149,15 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
             break;
         case 'checkbox':
             $value = $this->_form->getData($ctrl->ref);
-            if($value ===null)
-                $value = ($ctrl->defaultValue == 'true');
-            if($value){
+            if($value =='')
+                $value = $ctrl->defaultValue;
+
+            if($ctrl->valueOnCheck == $value){
                 $v=' checked="checked"';
             }else{
-                $v="";
+                $v='';
             }
-            echo '<input type="checkbox"',$id,$readonly,$hint,$class,$v,' value="true"/>';
+            echo '<input type="checkbox"',$id,$readonly,$hint,$class,$v,' value="',$ctrl->valueOnCheck,'"/>';
             break;
         case 'checkboxes':
             $i=0;

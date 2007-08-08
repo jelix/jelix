@@ -279,6 +279,17 @@ class jFormsCompiler implements jISimpleCompiler {
             if($size < 2) $size = 2;
             $source[]='$ctrl->size='.$size.';';
         }
+
+        if(isset($control['valueoncheck']) || isset($control['valueonuncheck'])){
+            if($controltype != 'checkbox'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('valueon*',$controltype,$this->sourceFile));
+            }
+            if(isset($control['valueoncheck']))
+                $source[]='$ctrl->valueOnCheck=\''.str_replace("'","\\'", (string)$control['valueoncheck']) ."';";
+            if(isset($control['valueonuncheck']))
+                $source[]='$ctrl->valueOnUncheck=\''.str_replace("'","\\'", (string)$control['valueonuncheck']) ."';";
+        }
+
         $source[]='$this->addControl($ctrl);';
         return implode("\n", $source);
     }

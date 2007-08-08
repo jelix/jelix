@@ -145,7 +145,9 @@ class jFormsControlSecret extends jFormsControl {
  */
 class jFormsControlCheckbox extends jFormsControl {
    public $type='checkbox';
-   public $defaultValue='';
+   public $defaultValue='0';
+   public $valueOnCheck='1';
+   public $valueOnUncheck='0';
 }
 
 /**
