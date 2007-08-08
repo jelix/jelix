@@ -187,6 +187,8 @@
        <ref name="UI.Common" />
        <ref name="UI.attr.readonly" />
        <ref name="UI.attr.defaultvalue" />
+       <optional><attribute name="valueoncheck" /></optional>
+       <optional><attribute name="valueonuncheck" /></optional>
      </element>
   </define>
 

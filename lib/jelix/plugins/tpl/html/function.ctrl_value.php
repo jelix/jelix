@@ -12,10 +12,21 @@
  * function plugin :  print the value of a form control. You should use this plugin inside a formcontrols block
  *
  * @param jTpl $tpl template engine
+ * @param string $ctrlname  the name of the control to display (required if it is outside a formcontrols)
+ * @param string $sep  separator to display values of a multi-value control
  */
-function jtpl_function_html_ctrl_value($tpl, $sep =', ')
+function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', ')
 {
-    $value = $tpl->_privateVars['__form']->getData($tpl->_privateVars['__ctrl']->ref);
+
+    if($tpl->_privateVars['__ctrlref'] == '' && $ctrlname =='') {
+        return;
+    }
+    if($ctrlname =='') {
+        $ctrlname=$tpl->_privateVars['__ctrl']->ref;
+        $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
+    }
+
+    $value = $tpl->_privateVars['__form']->getData($ctrlname);
     if(is_array($value)){
         $s ='';
         foreach($value as $v){

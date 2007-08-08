@@ -12,10 +12,21 @@
  * function plugin :  print the html content of a form control. You should use this plugin inside a formcontrols block
  *
  * @param jTpl $tpl template engine
+ * @param string $ctrlname  the name of the control to display (required if it is outside a formcontrols)
  */
-function jtpl_function_html_ctrl_control($tpl)
+function jtpl_function_html_ctrl_control($tpl, $ctrlname='')
 {
-    $tpl->_privateVars['__builder']->outputControl($tpl->_privateVars['__ctrl']);
+    if($tpl->_privateVars['__ctrlref'] == '' && $ctrlname =='') {
+        return;
+    }
+    if($ctrlname =='') {
+        $tpl->_privateVars['__displayed_ctrl'][$tpl->_privateVars['__ctrlref']] = true;
+        $tpl->_privateVars['__formbuilder']->outputControl($tpl->_privateVars['__ctrl']);
+    }else{
+        $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
+        $ctrls = $tpl->_privateVars['__form']->getControls();
+        $tpl->_privateVars['__formbuilder']->outputControl($ctrls[$ctrlname]);
+    }
 }
 
 ?>

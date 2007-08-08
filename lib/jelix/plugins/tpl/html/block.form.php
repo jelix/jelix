@@ -27,9 +27,10 @@ function jtpl_block_html_form($compiler, $begin, $param=array())
 {
 
     if(!$begin){
-        return '$t->_privateVars[\'__builder\']->outputFooter(); 
+        return '$t->_privateVars[\'__formbuilder\']->outputFooter(); 
 unset($t->_privateVars[\'__form\']); 
-unset($t->_privateVars[\'__builder\']);';
+unset($t->_privateVars[\'__formbuilder\']);
+unset($t->_privateVars[\'__displayed_ctrl\']);';
     }
 
     if(count($param) < 2 || count($param) > 4){
@@ -51,8 +52,9 @@ unset($t->_privateVars[\'__builder\']);';
         $helpdecorator = "'jFormsHelpDecoratorAlert'";
 
     $content = ' $t->_privateVars[\'__form\'] = '.$param[0].';
-$t->_privateVars[\'__builder\'] = $t->_privateVars[\'__form\']->getBuilder(\'html\', '.$param[1].','.$param[2].');
-$t->_privateVars[\'__builder\']->outputHeader(array('.$errdecorator.','.$helpdecorator.'));
+$t->_privateVars[\'__formbuilder\'] = $t->_privateVars[\'__form\']->getBuilder(\'html\', '.$param[1].','.$param[2].');
+$t->_privateVars[\'__formbuilder\']->outputHeader(array('.$errdecorator.','.$helpdecorator.'));
+$t->_privateVars[\'__displayed_ctrl\'] = array();
 if($GLOBALS[\'gJCoord\']->response!= null){
     $GLOBALS[\'gJCoord\']->response->addJSLink($GLOBALS[\'gJConfig\']->urlengine[\'jelixWWWPath\'].\'js/jforms.js\');
     $GLOBALS[\'gJCoord\']->response->addCSSLink($GLOBALS[\'gJConfig\']->urlengine[\'jelixWWWPath\'].\'design/jform.css\');
