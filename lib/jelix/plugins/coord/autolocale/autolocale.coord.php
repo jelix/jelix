@@ -63,7 +63,7 @@ class AutoLocaleCoordPlugin implements jICoordPlugin {
         if(!$langDetected){
             if(isset($_SESSION['JX_LANG'])){
                 $lang=$_SESSION['JX_LANG'];
-            }else if($this->config['useDefaultLanguageBrowser']){
+            }else if($this->config['useDefaultLanguageBrowser'] && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
                 $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
                 foreach($languages as $bl){
                     // pour les user-agents qui livrent un code internationnal
