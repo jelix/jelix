@@ -20,6 +20,7 @@ require_once (JELIX_LIB_UTILS_PATH    . 'jXmlRpc.class.php');
 * handle XML-rpc call. The response has to be a xml-rpc response.
 * @package  jelix
 * @subpackage core_request
+* @link http://www.xmlrpc.com/
 */
 class jXmlRpcRequest extends jRequest {
 
@@ -41,7 +42,7 @@ class jXmlRpcRequest extends jRequest {
 
             // Décodage de la requete
             list($nom,$vars) = jXmlRpc::decodeRequest($requestXml);
-            list($module, $action) = explode('.',$nom);
+            list($module, $action) = explode(':',$nom);
 
             if(is_array($vars)){
                 $this->params = $vars;

@@ -169,13 +169,11 @@ class jXmlRpc {
                     }
                 }
             }else if(isset($valuetag->{'dateTime.iso8601'})){
-                    $value = new jDateTime();
-                    $value->setFromString((string)$valuetag->{'dateTime.iso8601'}, jDateTime::ISO8601_FORMAT);
-                    break;
+                $value = new jDateTime();
+                $value->setFromString((string)$valuetag->{'dateTime.iso8601'}, jDateTime::ISO8601_FORMAT);
             }else if(isset($valuetag->base64)){
-                    $value = new jBinaryData();
-                    $value->setFromBase64String((string)$valuetag->base64);
-                    break;
+                $value = new jBinaryData();
+                $value->setFromBase64String((string)$valuetag->base64);
             }
 
         }else{
@@ -241,7 +239,7 @@ class jXmlRpc {
  * @subpackage utils
  */
 class jBinaryData  {
-    private $data;
+    public $data;
 
     public function toBase64String(){
         return base64_encode($this->data);
