@@ -18,7 +18,7 @@
 abstract class jFormsControl {
    public $type = null;
    public $ref='';
-   public $datatype='string';
+   public $datatype;
    public $required = false;
    public $readonly = false;
    public $label='';
@@ -30,6 +30,7 @@ abstract class jFormsControl {
 
    function __construct($ref){
       $this->ref = $ref;
+      $this->datatype = new jDatatypeString();
    }
 
    function isContainer(){

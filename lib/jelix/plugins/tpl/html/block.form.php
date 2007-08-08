@@ -40,12 +40,12 @@ unset($t->_privateVars[\'__builder\']);';
         $param[2] = 'array()';
     }
 
-    if(isset($param[3]) && $param[3] ! '')
+    if(isset($param[3]) && $param[3] != '')
         $errdecorator = $param[3];
     else
         $errdecorator = "'jFormsErrorDecoratorAlert'";
 
-    if(isset($param[4]) && $param[4] ! '')
+    if(isset($param[4]) && $param[4] != '')
         $helpdecorator = $param[4];
     else
         $helpdecorator = "'jFormsHelpDecoratorAlert'";
@@ -54,8 +54,8 @@ unset($t->_privateVars[\'__builder\']);';
 $t->_privateVars[\'__builder\'] = $t->_privateVars[\'__form\']->getBuilder(\'html\', '.$param[1].','.$param[2].');
 $t->_privateVars[\'__builder\']->outputHeader(array('.$errdecorator.','.$helpdecorator.'));
 if($GLOBALS[\'gJCoord\']->response!= null){
-    $GLOBALS[\'gJCoord\']->response->addJSLink($GLOBALS[\'gJConfig\']->urlengine[\'basePath\'].\'jelix/js/jforms.js\');
-    $GLOBALS[\'gJCoord\']->response->addCSSLink($GLOBALS[\'gJConfig\']->urlengine[\'basePath\'].\'jelix/design/jforms.css\');
+    $GLOBALS[\'gJCoord\']->response->addJSLink($GLOBALS[\'gJConfig\']->urlengine[\'jelixWWWPath\'].\'js/jforms.js\');
+    $GLOBALS[\'gJCoord\']->response->addCSSLink($GLOBALS[\'gJConfig\']->urlengine[\'jelixWWWPath\'].\'design/jform.css\');
 }
 ';
 

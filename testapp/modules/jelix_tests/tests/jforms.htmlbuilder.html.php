@@ -13,14 +13,28 @@ require_once(JELIX_LIB_FORMS_PATH.'jFormsBuilderBase.class.php');
 require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
 require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 require_once(JELIX_LIB_FORMS_PATH.'jFormsDatasource.class.php');
+require_once(JELIX_LIB_FORMS_PATH.'jFormsDataContainer.class.php');
 
 class testHMLForm { // simulate a jFormBase object
+    public $controls= array();
+    public $container;
+
+    function __construct(){
+        $this->container = new jFormsDataContainer('','');
+    }
+
     function getData($name) {
         $a = array('nom'=>'laurent', 'chk'=>'true', 'choixsimple'=>'11', 'choixmultiple'=>array('10','23'));
         if(isset($a[$name]))
             return $a[$name];
         else
             return null;
+    }
+    function getControls() {
+        return $this->controls;
+    }
+    function getContainer() {
+        return $this->container;
     }
 }
 
@@ -106,7 +120,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nominconnu">Votre nom</label>', $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nominconnu" title="ceci est un tooltip">Votre nom</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="nominconnu" id="'.$this->formname.'_nominconnu" title="ceci est un tooltip" value="toto"/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'nominconnu\')">?</a></span>', $out);
@@ -141,7 +155,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chkinconnu">Une option</label>', $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chkinconnu" title="ceci est un tooltip">Une option</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="checkbox" name="chkinconnu" id="'.$this->formname.'_chkinconnu" readonly="readonly" title="ceci est un tooltip" checked="checked" value="true"/>', $out);
@@ -270,7 +284,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl->readonly = true;
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_choixsimple">Votre choix</label>', $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_choixsimple" title="ceci est un tooltip">Votre choix</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" readonly="readonly" title="ceci est un tooltip" size="1">';
@@ -328,7 +342,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl->hint='ceci est un tooltip';
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_choixmultiple">Votre choix</label>', $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_choixmultiple" title="ceci est un tooltip">Votre choix</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixmultiple[]" id="'.$this->formname.'_choixmultiple" title="ceci est un tooltip" size="4" multiple="multiple">';
@@ -393,7 +407,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nom">Votre nom</label>', $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nom" title="ceci est un tooltip">Votre nom</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="nom" id="'.$this->formname.'_nom" readonly="readonly" title="ceci est un tooltip">laurent</textarea>', $out);
@@ -416,7 +430,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nom">Votre nom</label>', $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nom" title="ceci est un tooltip">Votre nom</label>', $out);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="nom" id="'.$this->formname.'_nom" readonly="readonly" title="ceci est un tooltip" value="laurent"/>', $out);
 
@@ -460,7 +474,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nom">Votre nom</label>', $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nom" title="ceci est un tooltip">Votre nom</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="file" name="nom" id="'.$this->formname.'_nom" readonly="readonly" title="ceci est un tooltip" value=""/>', $out);

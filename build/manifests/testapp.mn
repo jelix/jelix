@@ -113,11 +113,13 @@ cd testapp/modules/jelix_tests/tests/
   jdb.1_queries.html.php
   jdb.2_queries_with_pdo.html.php
   jforms.html.php
+  jforms.check_datas.html.php
   jforms.compiler.html.php
   jforms.htmlbuilder.html.php
   jforms.with_dao.html.php
   jtpl.compiler.html_cli.php
   jtpl.expressions_parsing.html_cli.php
+  utils.jdatatype.html_cli.php
   utils.jfilter.html_cli.php
 
 cd testapp/var

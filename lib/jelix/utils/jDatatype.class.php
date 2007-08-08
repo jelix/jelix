@@ -61,14 +61,12 @@ class jDatatypeString extends jDatatype {
     protected $minLength=null;
     protected $maxLength=null;
     protected $pattern=null;
-    protected $whitespace=null;
-
-    protected $facets = array('length','minLength','maxLength', 'pattern', 'whitespace');
+    protected $facets = array('length','minLength','maxLength', 'pattern');
 
     public function check($value){
         if($this->hasFacets){
             $len = iconv_strlen($value, $GLOBALS['gJConfig']->defaultCharset);
-            if($this->length !== null && $len > $this->length)
+            if($this->length !== null && $len != $this->length)
                 return false;
             if($this->minLength !== null && $len < $this->minLength)
                 return false;
@@ -101,9 +99,7 @@ class jDatatypeDecimal extends jDatatype {
     // xxxx.yyyyy
     protected $maxValue=null;
     protected $minValue=null;
-    protected $totalDigits=null;
-    protected $fractionDigits=null;
-    protected $facets = array('maxValue', 'minValue', 'totalDigits', 'fractionDigits');
+    protected $facets = array('maxValue', 'minValue');
     public function check($value) { return jFilter::isFloat($value, $this->minValue, $this->maxValue); }
     protected function _addFacet($type,$value){
         if($type == 'maxValue' || $type == 'minValue'){
@@ -119,7 +115,6 @@ class jDatatypeDecimal extends jDatatype {
  * @experimental
  */
 class jDatatypeInteger extends jDatatypeDecimal {
-    protected $facets = array('maxValue', 'minValue', 'totalDigits');
     public function check($value) { return jFilter::isInt($value, $this->minValue, $this->maxValue); }
     protected function _addFacet($type,$value){
         if($type == 'maxValue' || $type == 'minValue'){
@@ -136,7 +131,6 @@ class jDatatypeInteger extends jDatatypeDecimal {
  * @experimental
  */
 class jDatatypeHexadecimal extends jDatatypeDecimal {
-    protected $facets = array('maxValue', 'minValue', 'totalDigits');
     public function check($value) {
         if(substr($value,0,2) != '0x') $value='0x'.$value;
         return jFilter::isHexInt($value, $this->minValue, $this->maxValue);
@@ -157,7 +151,8 @@ class jDatatypeHexadecimal extends jDatatypeDecimal {
  */
 class jDatatypeDateTime extends jDatatype {
     protected $facets = array('maxValue', 'minValue');
-
+    protected $maxValue;
+    protected $minValue;
     private $dt;
     protected $format=21;
     public function check($value) {

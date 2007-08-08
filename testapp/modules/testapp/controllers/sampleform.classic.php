@@ -39,10 +39,13 @@ class sampleFormCtrl extends jController {
    function save(){
       // récuper le formulaire
       // et le rempli avec les données reçues de la requête
-      $form = jForms::fill('sample');
-
       $rep= $this->getResponse("redirect");
-      $rep->action="sampleform_ok";
+
+      $form = jForms::fill('sample');
+      if($form->check())
+          $rep->action="sampleform_ok";
+      else
+          $rep->action="sampleform_show";
       return $rep;
    }
 

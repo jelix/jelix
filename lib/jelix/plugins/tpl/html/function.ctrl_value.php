@@ -13,10 +13,17 @@
  *
  * @param jTpl $tpl template engine
  */
-function jtpl_function_html_ctrl_value($tpl)
+function jtpl_function_html_ctrl_value($tpl, $sep =', ')
 {
-
-    echo htmlspecialchars($tpl->_privateVars['__form']->getData($tpl->_privateVars['__ctrl']->ref));
+    $value = $tpl->_privateVars['__form']->getData($tpl->_privateVars['__ctrl']->ref);
+    if(is_array($value)){
+        $s ='';
+        foreach($value as $v){
+            $s.=$sep.htmlspecialchars($v);
+        }
+        echo substr($s, strlen($sep));
+    }else
+        echo htmlspecialchars($value);
 }
 
 ?>

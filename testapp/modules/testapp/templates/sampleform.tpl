@@ -12,14 +12,14 @@ myErrorDecorator.prototype = {
     },
     addError : function(control, messageType){
         if(messageType == 1){
-            this.message  += control.errRequired + "\n";
+            this.message  += "* " +control.errRequired + "\n";
         }else if(messageType == 2){
-            this.message  += control.errInvalid + "\n";
+            this.message  += "* " +control.errInvalid + "\n";
         }
     },
     end : function(){
         if(this.message != ''){
-            alert("Erreur de saisie:\n" + this.message);
+            alert("Message from myErrorDecorator\nErreur de saisie:\n" + this.message);
         }
     }
 }

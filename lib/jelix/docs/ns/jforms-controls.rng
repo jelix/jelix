@@ -11,13 +11,9 @@
      <optional>
         <ref name="hint" />
      </optional>
-     <!--
      <optional>
         <ref name="alert" />
      </optional>
-     <optional>
-        <ref name="help" />
-     </optional>-->
   </define>
   <!--
   <define name="UI.Common.Attrs">
@@ -323,11 +319,17 @@
      </element>
   </define>
   
-<!--
   <define name="alert">
      <element name="alert">
+        <optional>
+           <attribute name="type">
+                <choice>
+                    <value>required</value>
+                    <value>invalid</value>
+                </choice>
+            </attribute>
+        </optional>
         <ref name="message.content" />
      </element>
   </define>
--->
 </grammar>

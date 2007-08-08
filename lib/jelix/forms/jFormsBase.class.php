@@ -93,18 +93,27 @@ abstract class jFormsBase {
         $this->_container->errors = array();
         foreach($this->_controls as $name=>$ctrl){
             $value=$this->_container->datas[$name];
-            if($value === null && $ctrl->required){
-                $this->_container->errors[$name]=JFORM_ERRDATA_REQUIRED;
-            }else{
-                if(is_array($value)){
+            if(is_array($value)){
+                if(count($value) == 0 && $ctrl->required){
+                    $this->_container->errors[$name]=JFORM_ERRDATA_REQUIRED;
+                }else{
                     foreach($value as $v){
                         if(!$ctrl->datatype->check($v)){
                             $this->_container->errors[$name]=JFORM_ERRDATA_INVALID;
                             break;
                         }
                     }
-                }elseif(!$ctrl->datatype->check($value)){
-                    $this->_container->errors[$name]=JFORM_ERRDATA_INVALID;
+                }
+            }else{
+                if($value == '' && $ctrl->required){
+                    $this->_container->errors[$name]=JFORM_ERRDATA_REQUIRED;
+                }else{
+                    if($ctrl->type == 'checkbox' && $value ==''){
+                        $value='false';
+                    }
+                    if(!$ctrl->datatype->check($value)){
+                        $this->_container->errors[$name]=JFORM_ERRDATA_INVALID;
+                    }
                 }
             }
         }

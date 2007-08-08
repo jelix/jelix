@@ -11,13 +11,16 @@
 
    <checkbox ref="geek">
        <label>Êtes vous un geek ?</label>
+       <help>Un geek est un passionné d'informatique</help>
+       <hint>Cochez la case si vous êtes un geek</hint>
    </checkbox>
 
-   <radiobuttons ref="sexe">
+   <radiobuttons ref="sexe" required="true">
       <label>Vous êtes </label>
       <item value="h" label="un homme" />
       <item value="f" label="une femme" />
       <item value="no" label="je ne sais pas" />
+      <alert type="required">Vous devez indiquer le sexe, même si vous ne savez pas :-)</alert>
   </radiobuttons>
 
   <menulist ref="conf" dao="testapp~config" daomethod="findAll" daolabelproperty="cvalue" daovalueproperty="ckey">
@@ -25,7 +28,7 @@
   </menulist>
 
   <listbox ref="home">
-      <label>Vous habitez :</label>
+      <label>Vous habitez </label>
       <item value="pa" label="Paris" />
       <item value="ma" label="Marseille" />
       <item value="ly" label="Lyon" />
@@ -33,5 +36,14 @@
       <item value="li" label="Lille" />
       <item value="bo" label="Bordeaux" />
   </listbox>
+
+
+   <checkboxes ref="objets" required="true">
+      <label>Vous avez </label>
+      <item value="maison" label="Une maison" />
+      <item value="voiture" label="Une voiture" />
+      <item value="bateau" label="Un bateau" />
+      <item value="assiette" label="Une assiette" />
+  </checkboxes>
 
 </forms>
