@@ -142,11 +142,9 @@ class jTplCompiler
         if (!@is_writable($_dirname)) {
             // cache_dir not writable, see if it exists
             if (!@is_dir($_dirname)) {
-                trigger_error (sprintf($this->_locales['file.directory.notexists'], $_dirname), E_USER_ERROR);
-                return false;
+                throw new Exception (sprintf($this->_locales['file.directory.notexists'], $_dirname));
             }
-            trigger_error (sprintf($this->_locales['file.directory.notwritable'], $cachefile, $_dirname), E_USER_ERROR);
-            return false;
+            throw new Exception (sprintf($this->_locales['file.directory.notwritable'], $cachefile, $_dirname));
         }
 
         // write to tmp file, then rename it to avoid
@@ -156,8 +154,7 @@ class jTplCompiler
         if (!($fd = @fopen($_tmp_file, 'wb'))) {
             $_tmp_file = $_dirname . '/' . uniqid('wrt');
             if (!($fd = @fopen($_tmp_file, 'wb'))) {
-                trigger_error(sprintf($this->_locales['file.write.error'], $cachefile, $_tmp_file), E_USER_ERROR);
-                return false;
+                throw new Exception(sprintf($this->_locales['file.write.error'], $cachefile, $_tmp_file));
             }
         }
 
@@ -210,8 +207,7 @@ class jTplCompiler
         // test du premier caractère
         if (!preg_match('/^\$|@|\*|[a-zA-Z\/]$/',$firstcar)) {
 #if JTPL_STANDALONE
-            trigger_error(sprintf($this->_locales['errors.tpl.tag.syntax.invalid'], $tag, $this->_sourceFile),E_USER_ERROR);
-            return '';
+            throw new Exception(sprintf($this->_locales['errors.tpl.tag.syntax.invalid'], $tag, $this->_sourceFile));
 #else
             throw new jException('jelix~errors.tpl.tag.syntax.invalid',array($tag,$this->_sourceFile));
 #endif
@@ -224,8 +220,7 @@ class jTplCompiler
         } else {
             if (!preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/',$tag,$m)) {
 #if JTPL_STANDALONE
-                trigger_error(sprintf($this->_locales['errors.tpl.tag.function.invalid'], $tag, $this->_sourceFile),E_USER_ERROR);
-                return '';
+                throw new Exception(sprintf($this->_locales['errors.tpl.tag.function.invalid'], $tag, $this->_sourceFile));
 #else
                 throw new jException('jelix~errors.tpl.tag.function.invalid',array($tag,$this->_sourceFile));
 #endif
@@ -252,7 +247,6 @@ class jTplCompiler
         foreach($tok as $modifier){
             if(!preg_match('/^(\w+)(?:\:(.*))?$/',$modifier,$m)){
                 $this->doError2('errors.tpl.tag.modifier.invalid',$this->_currentTag, $modifier);
-                return '';
             }
 
             if(isset($m[2])){
@@ -276,7 +270,6 @@ class jTplCompiler
                     $res = $this->_modifier[$m[1]].'('.$res.')';
                 } else {
                     $this->doError2('errors.tpl.tag.modifier.unknow',$this->_currentTag, $m[1]);
-                    return '';
                 }
             }
         }
@@ -425,11 +418,14 @@ class jTplCompiler
             array_shift($tokens);
         }
 
+        $previousTok=null;
+
         foreach($tokens as $tok) {
             if (is_array($tok)) {
                 list($type,$str)= $tok;
                 $first=false;
                 if ($type== T_CLOSE_TAG) {
+                    $previousTok = $tok;
                     continue;
                 }
                 if($inLocale && in_array($type,$this->_inLocaleOk)){
@@ -437,7 +433,10 @@ class jTplCompiler
                 }elseif($type == T_VARIABLE && $inLocale){
                     $locale.='\'.$t->_vars[\''.substr($str,1).'\'].\'';
                 }elseif($type == T_VARIABLE){
-                    $result.='$t->_vars[\''.substr($str,1).'\']';
+                    if(is_array($previousTok) && $previousTok[0] == T_OBJECT_OPERATOR)
+                        $result.='{$t->_vars[\''.substr($str,1).'\']}';
+                    else
+                        $result.='$t->_vars[\''.substr($str,1).'\']';
                 }elseif($type == T_WHITESPACE || in_array($type, $allowed)){
                     if(!$this->trusted && $type == T_STRING && defined($str) && !in_array(strtoupper($str),$this->_allowedConstants)){
                         $this->doError2('errors.tpl.tag.constant.notallowed', $this->_currentTag, $str);
@@ -445,7 +444,6 @@ class jTplCompiler
                     $result.=$str;
                 }else{
                     $this->doError2('errors.tpl.tag.phpsyntax.invalid', $this->_currentTag, $str);
-                    return '';
                 }
             } else {
                 if ($tok == '@') {
@@ -453,7 +451,6 @@ class jTplCompiler
                         $inLocale = false;
                         if ($locale=='') {
                             $this->doError1('errors.tpl.tag.locale.invalid', $this->_currentTag);
-                            return '';
                         } else {
 #if JTPL_STANDALONE
                             $result.='${$GLOBALS[\'jTplConfig\'][\'localesGetter\']}(\''.$locale.'\')';
@@ -469,7 +466,6 @@ class jTplCompiler
                     $locale.=$tok;
                 } elseif ($inLocale || in_array($tok,$exceptchar) || ($first && $tok !='!')) {
                     $this->doError2('errors.tpl.tag.character.invalid', $this->_currentTag, $tok);
-                    return '';
                 } elseif ($tok =='(') {
                     $bracketcount++;$result.=$tok;
                 } elseif ($tok ==')') {
@@ -486,7 +482,7 @@ class jTplCompiler
                 }
                 $first=false;
             }
-
+            $previousTok = $tok;
         }
 
         if ($inLocale) {
@@ -561,7 +557,7 @@ class jTplCompiler
 
     public function doError0($err){
 #if JTPL_STANDALONE
-        trigger_error(sprintf($this->_locales[$err], $this->_sourceFile),E_USER_ERROR);
+        throw new Exception(sprintf($this->_locales[$err], $this->_sourceFile));
 #else
         throw new jException('jelix~'.$err,array($this->_sourceFile));
 #endif
@@ -569,7 +565,7 @@ class jTplCompiler
 
     public function doError1($err, $arg){
 #if JTPL_STANDALONE
-        trigger_error(sprintf($this->_locales[$err], $arg, $this->_sourceFile),E_USER_ERROR);
+        throw new Exception(sprintf($this->_locales[$err], $arg, $this->_sourceFile));
 #else
         throw new jException('jelix~'.$err,array($arg, $this->_sourceFile));
 #endif
@@ -577,7 +573,7 @@ class jTplCompiler
 
     public function doError2($err, $arg1, $arg2){
 #if JTPL_STANDALONE
-        trigger_error(sprintf($this->_locales[$err], $arg1, $arg2, $this->_sourceFile),E_USER_ERROR);
+        throw new Exception(sprintf($this->_locales[$err], $arg1, $arg2, $this->_sourceFile));
 #else
         throw new jException('jelix~'.$err,array($arg1, $arg2, $this->_sourceFile));
 #endif

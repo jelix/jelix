@@ -81,6 +81,8 @@ class UTjtplexpr extends jUnitTestCase {
         '$aa++'=>'$t->_vars[\'aa\']++',
         '$aa--'=>'$t->_vars[\'aa\']--',
         '$bb->bar'=>'$t->_vars[\'bb\']->bar',
+        '$bb->$bar'=>'$t->_vars[\'bb\']->{$t->_vars[\'bar\']}',
+        '$bb->$bar->yo'=>'$t->_vars[\'bb\']->{$t->_vars[\'bar\']}->yo',
         '@abstract.as.break.case.catch.class.clone@'=>'jLocale::get(\'abstract.as.break.case.catch.class.clone\')',
         '@const.continue.declare.default.do.echo.else.elseif.empty@'=>'jLocale::get(\'const.continue.declare.default.do.echo.else.elseif.empty\')',
         '@exit.final.for.foreach.function.global.if.implements.instanceof@'=>'jLocale::get(\'exit.final.for.foreach.function.global.if.implements.instanceof\')',
