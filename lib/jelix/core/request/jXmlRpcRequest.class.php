@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  core_request
 * @author      Laurent Jouanneau
-* @contributor
-* @copyright   2005-2006 Laurent Jouanneau
+* @contributor Frederic Guillot
+* @copyright   2005-2006 Laurent Jouanneau, 2007 Frederic Guillot
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -44,10 +44,7 @@ class jXmlRpcRequest extends jRequest {
             list($nom,$vars) = jXmlRpc::decodeRequest($requestXml);
             list($module, $action) = explode(':',$nom);
 
-            if(is_array($vars)){
-                $this->params = $vars;
-            }else
-                $this->params['params'] = $vars;
+            $this->params['params'] = $vars;
 
             // Définition de l'action a executer et des paramètres
             $this->params['module'] = $module;

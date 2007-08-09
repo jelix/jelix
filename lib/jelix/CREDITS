@@ -42,6 +42,7 @@ Gildas Givaja (aka Giviz)
 
 Frédéric Guillot (aka fg)
  - patch for multiple authentification in a same session (#207)
+ - bug fixes in support of XML-RPC request and response
 
 Julien Issler
  - updated JSON class (#231)

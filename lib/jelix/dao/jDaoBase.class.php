@@ -4,7 +4,7 @@
  * @subpackage  dao
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
- * @copyright   2005-2006 Laurent Jouanneau
+ * @copyright   2005-2007 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -63,6 +63,7 @@ abstract class jDaoRecordBase {
 
     /**
      * @return array list of properties name which contains primary keys
+     * @since 1.0beta3
      */
     public function getPrimaryKeyNames(){ return $this->_pkFields; }
 
@@ -351,6 +352,7 @@ abstract class jDaoFactoryBase  {
      * jDaoConditions object.
      * @param jDaoConditions $searchcond
      * @return
+     * @since 1.0beta3
      */
     public function deleteBy ($searchcond){
         if ($searchcond->isEmpty ()){
