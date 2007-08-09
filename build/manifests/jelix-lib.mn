@@ -222,7 +222,14 @@ cd lib/jelix-modules/jauth/install/var/config
   authsw.coord.ini.php
 cd lib/jelix-modules/jauth/locales/en_US
   auth.ISO-8859-1.properties
+  auth.UTF-8.properties
   autherror.ISO-8859-1.properties
+  autherror.UTF-8.properties
+cd lib/jelix-modules/jauth/locales/en_EN
+  auth.ISO-8859-1.properties
+  auth.UTF-8.properties
+  autherror.ISO-8859-1.properties
+  autherror.UTF-8.properties
 cd lib/jelix-modules/jauth/locales/fr_FR
   auth.ISO-8859-1.properties
   autherror.ISO-8859-1.properties
