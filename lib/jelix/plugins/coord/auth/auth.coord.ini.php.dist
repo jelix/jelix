@@ -75,6 +75,7 @@ persistant_duration=3
 ; paramètres pour le driver db
 [Db]
 dao = ""
+profil = ""
 
 ; nom de la fonction globale qui sert à crypter le mot de passe
 password_crypt_function = md5
