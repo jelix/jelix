@@ -51,6 +51,25 @@ after_login = ""
 enable_after_logout_override = off
 after_logout = ""
 
+;============ Paramètres pour la persistance de la session
+
+; PARAMETRES OBLIGATOIRES
+
+; active la persistance de la session
+persistant_enable=on
+
+; clé utilisée pour le cryptage du password dans le cookie
+persistant_crypt_key=exempledecledecryptage
+
+; nom du cookie pour la persistance de la session
+persistant_cookie_name=jelixAuthentificationCookie
+
+; PARAMETRES OPTIONNELS
+
+; durée de validité du cookie (en nombre de jour) : si non renseigné la persistance est valable pendant 24h.
+persistant_duration=3
+
+
 ;=========== Paramètres pour les drivers
 
 ; paramètres pour le driver db

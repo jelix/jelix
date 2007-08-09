@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage coord_plugin
 * @author     Croes Gérald
-* @contributor  Laurent Jouanneau, Frédéric Guillot
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2007 Frédéric Guillot
+* @contributor  Laurent Jouanneau, Frédéric Guillot, Antoine Detante
+* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
 * Une partie du code est issue d'une version experimentale de la classe
 * PluginAuth issue du framework Copix 2.3dev20050901.
 * et est sous Copyright 2001-2005 CopixTeam (licence LGPL) http://www.copix.org
@@ -42,7 +42,20 @@ class AuthCoordPlugin implements jICoordPlugin {
         $notLogged = false;
         $badip = false;
         $selector = null;
-
+        // Check if auth cookie exist and user isn't logged on
+        if (isset($this->config['persistant_enable']) && $this->config['persistant_enable'] && !jAuth::isConnected()){
+            if(isset($this->config['persistant_cookie_name']) && isset($this->config['persistant_crypt_key'])){
+                $cookieName=$this->config['persistant_cookie_name'];
+                if(isset($_COOKIE[$cookieName]['login']) && isset($_COOKIE[$cookieName]['passwd']) && strlen($_COOKIE[$cookieName]['passwd'])>0){
+                    $login = $_COOKIE[$cookieName]['login'];
+                    $encryptedPassword=$_COOKIE[$cookieName]['passwd'];
+                    jAuth::login($login,jCrypt::decrypt($encryptedPassword,$this->config['persistant_crypt_key']));
+                }
+            }
+            else{
+                throw new jException('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name, persistant_crypt_key');
+            }
+        }
         //Do we check the ip ?
         if ($this->config['secure_with_ip']){
             if (! isset ($_SESSION['JELIX_AUTH_SECURE_WITH_IP'])){

@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage auth
 * @author     Laurent Jouanneau
-* @contributor Frédéric Guillot
-* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007 Frédéric Guillot
+* @contributor Frédéric Guillot, Antoine Detante
+* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
 * Classe orginellement issue d'une branche experimentale du
 * framework Copix 2.3dev. http://www.copix.org (jAuth)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
@@ -281,9 +281,10 @@ class jAuth {
      * authentificate a user, and create a user in the php session
      * @param string $login the login of the user
      * @param string $password the password to test (not encrypted)
+     * @param boolean $persistant (optional) the session must be persistant
      * @return boolean true if authentification is ok
      */
-    public static function login($login, $password){
+    public static function login($login, $password, $persistant=false){
 
         $dr = self::_getDriver();
         $config = self::_getConfig();
@@ -299,9 +300,35 @@ class jAuth {
 
             $_SESSION[$config['session_name']] = $user;
             jEvent::notify ('AuthLogin', array('login'=>$login));
+            
+            // Add a cookie for session persistance, if enabled
+            if($persistant && isset($config['persistant_enable']) && $config['persistant_enable']) {
+                if(!isset($config['persistant_crypt_key']) || !isset($config['persistant_cookie_name'])){
+                    throw new jException('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name, persistant_crypt_key');
+                }
+                $cookieDuration=24*3600;
+                if(isset($config['persistant_duration']))
+                    $cookieDuration=$config['persistant_duration']*86400;
+                $cookieDuration+=time();
+                $encryptedPassword=jCrypt::encrypt($password,$config['persistant_crypt_key']);
+                setcookie($config['persistant_cookie_name'].'[login]',$login,$cookieDuration);
+                setcookie($config['persistant_cookie_name'].'[passwd]',$encryptedPassword,$cookieDuration);
+            }
             return true;
         }else
             return false;
+    }
+    
+    /**
+     * Check if persistant session is enabled in config
+     * @return boolean true if persistant session in enabled
+     */
+    public static function isPersistant(){
+        $config = self::_getConfig();
+        if(!isset($config['persistant_enable']))
+            return false;
+        else
+            return $config['persistant_enable'];
     }
 
     /**
@@ -313,6 +340,12 @@ class jAuth {
         jEvent::notify ('AuthLogout', array('login'=>$_SESSION[$config['session_name']]->login));
         $_SESSION[$config['session_name']] = new jDummyAuthUser();
         jAcl::clearCache();
+        if(isset($config['persistant_enable']) && $config['persistant_enable']){
+            if(!isset($config['persistant_cookie_name']))
+                throw new jException('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name, persistant_crypt_key');
+            setcookie($config['persistant_cookie_name'].'[login]');
+            setcookie($config['persistant_cookie_name'].'[passwd]');
+        }
     }
 
     /**

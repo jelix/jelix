@@ -1,86 +1,92 @@
-Crédits
+Credits
 =======
 
-Développeurs
+Core team developers
+--------------------
+
+Laurent Jouanneau (laurentj):
+ - Conceptor and main developer of Jelix
+
+Loic Mathaud (bballizlife):
+ - testor, many bug fixes and many patches on jelix
+ - jtpl contributor: standalone edition of jTpl, tag for comments, {for}, stripslashes modifier
+ - sqlite driver for jdb
+ - operators in jDao
+ - features to run Jelix application from a command line
+ - implementation of jResponseXML, jResponseRss20
+ - documentation
+ - many improvements (jClasses::inc(), jIniFile, jAppManager, jelix-scripts etc )
+
+Contributors
 ------------
+By alphabetic order on the name
 
-Laurent Jouanneau (laurentj) :
- - Concepteur et développeur principal de Jelix
-
-Loic Mathaud (bballizlife) :
- - testeur, nombreuses corrections de bugs et nombreux patchs dans jelix
- - contributions jTpl : version standalone du moteur de template, commentaires, {for}, modifier stripslashes
- - driver sqlite pour jDb
- - daos : opérateurs supplementaires
- - adaptation du framework pour la réalisation d'applications fonctionnant en ligne de commande
- - implementation de jResponseXML, jResponseRss20
- - corrections orthographiques dans la documentation
- - Diverses améliorations (jClasses::inc(), jIniFile, jAppManager, dans jelix-scripts etc. )
-
-Contributeurs
--------------
-
-Yannick Le Guédart (aka Torgan)
- - driver auth jAuthDriverClass
- - plugin jtpl date_format
- - Divers bug fix et petites améliorations
- - Contributions sur jResponseRss et jResponseAtom
- - Driver Intuition pour jDb
-
-Nicolas Jeudy (aka njeudy)
- - driver auth jAuthDriverLDS (pour les annuaires ldap LDS)
- - jResponseCss
-
-Aubanel MONNIER
- - reponse jResponseLatexToPdf et les plugins de templates associés
- - patch pour les ancres dans jResponseRedirect
-
-M. Thiriot (aka Doubleface)
- - testeur
- - bug fixs sur le support de PDO dans jDb
-
-Yann
- - Petite amélioration sur jResponseHtml (description et keywords)
-
-Laurent Raufaste (aka analogue)
- - patch sur la connexion postgresql (#123)
-
-Frédéric Guillot (aka fg)
- - patch pour authentification multiple dans une même session (#207)
-
+Vincent Bonnard
+ - bug fix in jXmlRpc.class.php (#190)
+ 
 Cedric
- - patch correctif sur jFile::read
+ - bug fix in jFile::read
+
+Antoine Detante
+ - support of persistant authentification in jAuth and auth plugin (#229)
+
+Mickaël Fradin (aka mike)
+ - improvements in the jtpl plugin: formcontrols (#223)
 
 Olivier Gambier (aka d-m-p)
- - review de code, corrections de bugs
+ - code reviewer, bug fixes
 
 Gildas Givaja (aka Giviz)
- - testeur, corrections de bugs
- - correction dans jXmlRpc.class.php (#192)
+ - testor, bug fixes
+ - bug fix in jXmlRpc.class.php (#192)
 
-Nicolas Lassalle
- - correction d'un bug (#188)
- 
-Vincent Bonnard
- - coquille dans jXmlRpc.class.php (#180)
- 
-Mickaël Fradin (aka mike)
- - amélioration sur le plugin de template formcontrols (#223)
+Frédéric Guillot (aka fg)
+ - patch for multiple authentification in a same session (#207)
 
 Julien Issler
- - update JSON class (#231)
+ - updated JSON class (#231)
 
-Contributeurs involontaires ;-)
--------------------------------
+Nicolas Jeudy (aka njeudy)
+ - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
+ - jResponseCss
+
+Nicolas Lassalle
+ - bug fix in jResponseBinary (#188)
+ 
+Yannick Le Guédart (aka Torgan)
+ - auth driver: jAuthDriverClass
+ - jtpl plugin: date_format
+ - some bug fixes and little improvements
+ - Contribution on jResponseRss and jResponseAtom
+ - jdb driver for Intuition
+
+Aubanel MONNIER
+ - jResponseLatexToPdf and jtpl plugins for latex
+ - patch for anchors support in jResponseRedirect
+
+Laurent Raufaste (aka analogue)
+ - patch on postgresql driver (#123)
+
+M. Thiriot (aka Doubleface)
+ - testor
+ - bug fixes on PDO support in jDb
+
+Yann
+ - improvements in jResponseHtml (description and keywords)
+
+
+Thanks for all users, especially those who reported bugs. :-)
+
+Thanks for their works:
+-----------------------
 
 Brent R. Matzelle
-    pour sa classe PHPMailer (jMailer dans Jelix)
+    for his PHPMailer class (jMailer in Jelix)
 Chris Ryan
-    pour sa classe SMTP (jSmtp dans Jelix)
+    for his SMTP classe (jSmtp in Jelix)
 Copix Team
-    en particulier Gerald Croes, co-auteur des parties du code qui sont issues du projet
-    Copix version 2.3dev20050901 et qui sont sous copyright 2001-2005 Copix Team
+    in particulary Gerald Croes, co-author of source parts from Copix project
+    (version 2.3dev20050901), under copyright 2001-2005 Copix Team
     (http://www.copix.org)
 
-
-(mise à jour à svn-405)
+(updated svn-533)

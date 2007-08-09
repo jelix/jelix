@@ -3,8 +3,8 @@
 * @package    jelix-modules
 * @subpackage jauth
 * @author     Croes Gérald,  Bertrand Yan
-* @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @contributor Laurent Jouanneau, Antoine Detante
+* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2007 Antoine Detante
 * Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixZone)
 * Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
 * Auteurs initiaux : Gerald Croes et Bertrand Yan
@@ -31,7 +31,7 @@ class loginCtrl extends jController {
             $url_return =  jUrl::get($conf['after_login']);
         }
 
-        if (!jAuth::login($this->param('login'), $this->param('password'))){
+        if (!jAuth::login($this->param('login'), $this->param('password'), $this->param('rememberMe'))){
             sleep (intval($conf['on_error_sleep']));
             $url_return = jUrl::get($conf['after_logout'],array ('login'=>$this->param('login'), 'failed'=>1));
         }
@@ -64,8 +64,7 @@ class loginCtrl extends jController {
 
         $rep->title =  jLocale::get ('auth.titlePage.login');
         $rep->bodyTpl = 'jauth~index';
-        $rep->body->assignZone ('MAIN', 'jauth~loginform', array ('login'=>$this->param('login'), 'failed'=>$this->param('failed')));
-
+        $rep->body->assignZone ('MAIN', 'jauth~loginform', array ('login'=>$this->param('login'), 'failed'=>$this->param('failed'), 'showRememberMe'=>jAuth::isPersistant()));
         return $rep;
     }
 }
