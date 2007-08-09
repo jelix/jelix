@@ -260,6 +260,7 @@ class UTjtplexpr extends jUnitTestCase {
         '$aaa|jdatetime:\'db_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_date\')',
         '$aaa|jdatetime:\'db_date\':\'lang_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_date\',\'lang_date\')',
         '$aaa|jdatetime:\'db_date\',\'lang_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_date\',\'lang_date\')',
+        '$aaa|jdatetime:\'db_:date\',\'lang_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_:date\',\'lang_date\')',
     );
 
 

@@ -37,21 +37,22 @@ class jHtmlInstallChecker implements jIInstallCheckReporter {
         echo '</ul>';
         echo '<div class="results">';
         if($checker->nbError){
-            echo ' ',$checker->nbError, $checker->messages->get('number.errors');
+            echo ' ',$checker->nbError, $checker->messages->get( ($checker->nbError > 1?'number.errors':'number.error'));
         }
         if($checker->nbWarning){
-            echo ' ',$checker->nbWarning, $checker->messages->get('number.warnings');
+            echo ' ',$checker->nbWarning, $checker->messages->get(($checker->nbWarning > 1?'number.warnings':'number.warning'));
         }
         if($checker->nbNotice){
-            echo ' ',$checker->nbNotice, $checker->messages->get('number.notices');
+            echo ' ',$checker->nbNotice, $checker->messages->get(($checker->nbNotice > 1?'number.notices':'number.notice'));
         }
 
+
         if($checker->nbError){
-           echo '<p>',$checker->messages->get('conclusion.errors'),'</p>';
+           echo '<p>',$checker->messages->get(($checker->nbError > 1?'conclusion.errors':'conclusion.error')),'</p>';
         }else  if($checker->nbWarning){
-            echo '<p>',$checker->messages->get('conclusion.warnings'),'</p>';
+            echo '<p>',$checker->messages->get(($checker->nbWarning > 1?'conclusion.warnings':'conclusion.warning')),'</p>';
         }else  if($checker->nbNotice){
-            echo '<p>',$checker->messages->get('conclusion.notices'),'</p>';
+            echo '<p>',$checker->messages->get(($checker->nbNotice > 1?'conclusion.notices':'conclusion.notice')),'</p>';
         }else{
             echo '<p>',$checker->messages->get('conclusion.ok'),'</p>';
         }
