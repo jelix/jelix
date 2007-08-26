@@ -463,8 +463,28 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nom" title="ceci est un tooltip">Votre nom</label>', $out);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="nom" id="'.$this->formname.'_nom" readonly="readonly" title="ceci est un tooltip" value="laurent"/>', $out);
-
     }
+    function testOutputSecretConfirm(){
+        $ctrl= new jFormsControlSecretConfirm('nom_confirm');
+        $ctrl->label='Votre nom';
+
+        ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nom_confirm">Votre nom</label>', $out);
+
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input type="password" name="nom_confirm" id="'.$this->formname.'_nom_confirm" value=""/>', $out);
+
+        $ctrl->readonly = true;
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input type="password" name="nom_confirm" id="'.$this->formname.'_nom_confirm" readonly="readonly" value=""/>', $out);
+
+        $ctrl->hint='ceci est un tooltip';
+        ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nom_confirm" title="ceci est un tooltip">Votre nom</label>', $out);
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input type="password" name="nom_confirm" id="'.$this->formname.'_nom_confirm" readonly="readonly" title="ceci est un tooltip" value=""/>', $out);
+    }
+
     function testOutputOutput(){
         $ctrl= new jFormsControlOutput('nom');
         $ctrl->datatype= new jDatatypeString();

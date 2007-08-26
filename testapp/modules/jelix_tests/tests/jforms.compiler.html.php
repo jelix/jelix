@@ -223,41 +223,41 @@ class UTjformsCompiler extends jUnitTestCase {
 49=>'<checkbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" valueoncheck="oui" valueonuncheck="non">
     <label>Avez-vous un nom ?</label>
 </checkbox>',
+50=>'<secret ref="pwd" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre mot de passe</label>
+    <confirm label="confirmez" />
+</secret>',
+51=>'<secret ref="pwd" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre mot de passe</label>
+    <confirm labellocale="password.confirm" />
+</secret>',
     );
 
     protected $_PhpControls = array(
 0=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 1=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->readonly=true;
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 2=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->required=true;
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 3=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=jLocale::get(\'foo~bar\');
 $this->addControl($ctrl);',
 4=>'$ctrl= new jFormsControltextarea(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 5=>'$ctrl= new jFormsControlsecret(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 6=>'$ctrl= new jFormsControloutput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 7=>'$ctrl= new jFormsControlupload(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 /*8=>'$ctrl= new jFormsControlselect1(\'nom\');
@@ -276,11 +276,9 @@ $ctrl->datasource->datas = array(
 );
 $this->addControl($ctrl);',*/
 10=>'$ctrl= new jFormsControlsubmit(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 11=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypestring();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 12=>'$ctrl= new jFormsControlinput(\'nom\');
@@ -344,12 +342,10 @@ $ctrl->datatype= new jDatatypeBoolean();
 $ctrl->label=\'Avez-vous un nom ?\';
 $this->addControl($ctrl);',
 27=>'$ctrl= new jFormsControlcheckboxes(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 28=>'$ctrl= new jFormsControlcheckboxes(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
 $ctrl->datasource->datas = array(
@@ -359,12 +355,10 @@ $ctrl->datasource->datas = array(
 );
 $this->addControl($ctrl);',
 29=>'$ctrl= new jFormsControlradiobuttons(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 30=>'$ctrl= new jFormsControlradiobuttons(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
 $ctrl->datasource->datas = array(
@@ -374,12 +368,10 @@ $ctrl->datasource->datas = array(
 );
 $this->addControl($ctrl);',
 31=>'$ctrl= new jFormsControllistbox(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 32=>'$ctrl= new jFormsControllistbox(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
 $ctrl->datasource->datas = array(
@@ -390,12 +382,10 @@ $ctrl->datasource->datas = array(
 $ctrl->size=8;
 $this->addControl($ctrl);',
 33=>'$ctrl= new jFormsControlmenulist(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 34=>'$ctrl= new jFormsControlmenulist(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
 $ctrl->datasource->datas = array(
@@ -405,13 +395,11 @@ $ctrl->datasource->datas = array(
 );
 $this->addControl($ctrl);',
 35=>'$ctrl= new jFormsControllistbox(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
 36=>'$ctrl= new jFormsControllistbox(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
 $ctrl->datasource->datas = array(
@@ -421,12 +409,10 @@ $ctrl->datasource->datas = array(
 );
 $this->addControl($ctrl);',
 37=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->defaultValue=\'toto\';
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 38=>'$ctrl= new jFormsControllistbox(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
 $ctrl->datasource->datas = array(
@@ -439,7 +425,6 @@ $ctrl->selectedValues=array (
 );
 $this->addControl($ctrl);',
 39=>'$ctrl= new jFormsControllistbox(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
 $ctrl->datasource->datas = array(
@@ -454,7 +439,6 @@ $ctrl->selectedValues=array (
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
 40=>'$ctrl= new jFormsControllistbox(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->selectedValues=array(\'aaa\');
 $ctrl->datasource= new jFormStaticDatasource();
@@ -466,7 +450,6 @@ $ctrl->datasource->datas = array(
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
 41=>'$ctrl= new jFormsControllistbox(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->selectedValues= array(\'bbb\',\'aaa\',);
 $ctrl->datasource= new jFormStaticDatasource();
@@ -478,37 +461,30 @@ $ctrl->datasource->datas = array(
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
 42=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->hasHelp=true;
 $this->addControl($ctrl);',
 43=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->hint=\'vous devez indiquer votre nom\';
 $this->addControl($ctrl);',
 44=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->alertInvalid=\'Le nom est invalide\';
 $this->addControl($ctrl);',
 45=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->alertInvalid=\'Le nom est invalide\';
 $this->addControl($ctrl);',
 46=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->alertRequired=\'vous avez oublié le nom\';
 $this->addControl($ctrl);',
 47=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->alertInvalid=jLocale::get(\'error.alert.invalid.nom\');
 $this->addControl($ctrl);',
 48=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datatype= new jDatatypeString();
 $ctrl->label=\'Votre nom\';
 $ctrl->alertRequired=jLocale::get(\'error.alert.invalid.nom\');
 $ctrl->alertInvalid=\'Le nom est invalide\';
@@ -519,267 +495,306 @@ $ctrl->label=\'Avez-vous un nom ?\';
 $ctrl->valueOnCheck=\'oui\';
 $ctrl->valueOnUncheck=\'non\';
 $this->addControl($ctrl);',
+50=>'$ctrl= new jFormsControlsecret(\'pwd\');
+$ctrl->label=\'Votre mot de passe\';
+$ctrl2 = new jFormsControlSecretConfirm(\'pwd_confirm\');
+$ctrl2->primarySecret = \'pwd\';
+$ctrl2->label=\'confirmez\';
+$ctrl2->required = $ctrl->required;
+$ctrl2->readonly = $ctrl->readonly;
+$this->addControl($ctrl);
+$this->addControl($ctrl2);',
+51=>'$ctrl= new jFormsControlsecret(\'pwd\');
+$ctrl->label=\'Votre mot de passe\';
+$ctrl2 = new jFormsControlSecretConfirm(\'pwd_confirm\');
+$ctrl2->primarySecret = \'pwd\';
+$ctrl2->label=jLocale::get(\'password.confirm\');
+$ctrl2->required = $ctrl->required;
+$ctrl2->readonly = $ctrl->readonly;
+$this->addControl($ctrl);
+$this->addControl($ctrl2);',
 );
 
 
     protected $_JsControls = array(
 0=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 1=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.readonly = true;\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.readonly = true;\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 2=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.required = true;\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.required = true;\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 3=>'$label = str_replace("\'","\\\'",jLocale::get(\'foo~bar\'));
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 4=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 5=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 6=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 7=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 /*8=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 9=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',*/
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',*/
 10=>'',
 11=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 12=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'boolean\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'boolean\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 13=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'decimal\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'decimal\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 14=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'integer\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'integer\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 15=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'hexadecimal\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'hexadecimal\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 16=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'datetime\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'datetime\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 17=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'date\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'date\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 18=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'time\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'time\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 19=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'localedatetime\');\n";
-$js.="gControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'localedatetime\');\n";
+$js.="jForms.tControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 20=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'localedate\');\n";
-$js.="gControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'localedate\');\n";
+$js.="jForms.tControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 21=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'localetime\');\n";
-$js.="gControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'localetime\');\n";
+$js.="jForms.tControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 22=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'url\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'url\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 23=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'email\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'email\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 24=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'ipv4\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'ipv4\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 25=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'ipv6\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'ipv6\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 26=>'$label = str_replace("\'","\\\'",\'Avez-vous un nom ?\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'boolean\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'boolean\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 27=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 28=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 29=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 30=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 31=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 32=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 33=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 34=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 35=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gControl.multiple = true;\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tControl.multiple = true;\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 36=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 37=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 38=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 39=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gControl.multiple = true;\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tControl.multiple = true;\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 40=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gControl.multiple = true;\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tControl.multiple = true;\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 41=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gControl.multiple = true;\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom[]\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tControl.multiple = true;\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 42=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.help=\'".str_replace("\'","\\\'",\'vous devez indiquer votre nom\')."\';\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.help=\'".str_replace("\'","\\\'",\'vous devez indiquer votre nom\')."\';\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 43=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 44=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",\'Le nom est invalide\')."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",\'Le nom est invalide\')."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 45=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",\'Le nom est invalide\')."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",\'Le nom est invalide\')."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 46=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",\'vous avez oublié le nom\')."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",\'vous avez oublié le nom\')."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 47=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'error.alert.invalid.nom\'))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'error.alert.invalid.nom\'))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 48=>'$label = str_replace("\'","\\\'",\'Votre nom\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'error.alert.invalid.nom\'))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",\'Le nom est invalide\')."\';\n";
-$js.="gForm.addControl( gControl);\n";',
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'error.alert.invalid.nom\'))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",\'Le nom est invalide\')."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
 49=>'$label = str_replace("\'","\\\'",\'Avez-vous un nom ?\');
-$js.="gControl = new jFormsControl(\'nom\', \'".$label."\', \'boolean\');\n";
-$js.="gControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="gControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="gForm.addControl( gControl);\n";',
-
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'boolean\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+50=>'$label = str_replace("\'","\\\'",\'Votre mot de passe\');
+$js.="jForms.tControl = new jFormsControl(\'pwd\', \'".$label."\', \'string\');\n";
+$label2 = str_replace("\'","\\\'",\'confirmez\');
+$js.="jForms.tControl2 = new jFormsControl(\'pwd_confirm\', \'".$label2."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tControl2.errRequired=jForms.tControl.errRequired;\n";
+$js.="jForms.tControl2.errInvalid =jForms.tControl.errInvalid;\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";
+$js.="jForms.tControl2.isConfirmField=true;\njForms.tControl2.confirmFieldOf=\'pwd\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl2);\n";',
+51=>'$label = str_replace("\'","\\\'",\'Votre mot de passe\');
+$js.="jForms.tControl = new jFormsControl(\'pwd\', \'".$label."\', \'string\');\n";
+$label2 = str_replace("\'","\\\'",jLocale::get(\'password.confirm\'));
+$js.="jForms.tControl2 = new jFormsControl(\'pwd_confirm\', \'".$label2."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tControl2.errRequired=jForms.tControl.errRequired;\n";
+$js.="jForms.tControl2.errInvalid =jForms.tControl.errInvalid;\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";
+$js.="jForms.tControl2.isConfirmField=true;\njForms.tControl2.confirmFieldOf=\'pwd\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl2);\n";',
     );
 
     function testPhpControl(){
@@ -871,7 +886,14 @@ array(
 'jelix~formserr.attribute.not.allowed',
 array('defaultvalue','secret','myfile')
 ),
-
+array(
+'<secret ref="pwd"  xmlns="http://jelix.org/ns/forms/1.0">
+<label>Votre mot de passe</label>
+<confirm />
+</secret>',
+'jelix~formserr.attribute.missing',
+array('label','confirm','myfile')
+),
 array(
 '<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="false">
     <label>Votre nom</label>

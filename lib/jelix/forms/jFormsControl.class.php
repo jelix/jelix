@@ -11,6 +11,12 @@
 
 /**
  *
+*/
+define('JFORM_ERRDATA_INVALID',1);
+define('JFORM_ERRDATA_REQUIRED',2);
+
+/**
+ *
  * @package     jelix
  * @subpackage  forms
  * @experimental
@@ -35,6 +41,16 @@ abstract class jFormsControl {
 
    function isContainer(){
         return false; 
+   }
+   
+   function check($value, $form){
+        if($value == '') {
+            if($this->required)
+                return JFORM_ERRDATA_REQUIRED;
+        }elseif(!$this->datatype->check($value)){
+            return JFORM_ERRDATA_INVALID;
+        }
+        return null;
    }
 }
 
@@ -77,6 +93,28 @@ class jFormsControlCheckboxes extends jFormsBaseControlSelect1 {
    function isContainer(){
         return true;
    }
+   
+   function check($value, $form){
+        if(is_array($value)){
+            if(count($value) == 0 && $this->required){
+                return JFORM_ERRDATA_REQUIRED;
+            }else{
+                foreach($value as $v){
+                    if(!$this->datatype->check($v)){
+                        return JFORM_ERRDATA_INVALID;
+                    }
+                }
+            }
+        }else{
+            if($value == ''){
+                if($this->required)
+                    return JFORM_ERRDATA_REQUIRED;
+            }else{
+                return JFORM_ERRDATA_INVALID;
+            }
+        }
+        return null;
+   }
 }
 
 /**
@@ -102,6 +140,30 @@ class jFormsControlListbox extends jFormsBaseControlSelect1 {
 
    function isContainer(){
         return $this->multiple;
+   }
+
+   function check($value, $form){
+        if(is_array($value)){
+            if(!$this->multiple){
+                return JFORM_ERRDATA_INVALID;
+            }
+            if(count($value) == 0 && $this->required){
+                return JFORM_ERRDATA_REQUIRED;
+            }else{
+                foreach($value as $v){
+                    if(!$this->datatype->check($v)){
+                        return JFORM_ERRDATA_INVALID;
+                    }
+                }
+            }
+        }else{
+            if($value == '' && $this->required){
+                return JFORM_ERRDATA_REQUIRED;
+            }elseif(!$this->datatype->check($value)){
+                return JFORM_ERRDATA_INVALID;
+            }
+        }
+        return null;
    }
 
 }
@@ -143,11 +205,35 @@ class jFormsControlSecret extends jFormsControl {
  * @subpackage  forms
  * @experimental
  */
+class jFormsControlSecretConfirm extends jFormsControl {
+   public $type='secretconfirm';
+   public $primarySecret='';
+   
+   function check($value, $form){
+        if($value != $form->getData($this->primarySecret))
+            return JFORM_ERRDATA_INVALID;
+        return null;
+   }
+}
+
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ * @experimental
+ */
 class jFormsControlCheckbox extends jFormsControl {
    public $type='checkbox';
    public $defaultValue='0';
    public $valueOnCheck='1';
    public $valueOnUncheck='0';
+   
+    function check($value, $form){
+        if($value != $this->valueOnCheck && $value != $this->valueOnUncheck)
+            return JFORM_ERRDATA_INVALID;
+            
+        return null;
+    }
 }
 
 /**
@@ -159,6 +245,10 @@ class jFormsControlCheckbox extends jFormsControl {
 class jFormsControlOutput extends jFormsControl {
    public $type='output';
    public $defaultValue='';
+   
+   public function check($value, $form){
+        return null;
+   }
 }
 
 /**
@@ -179,6 +269,10 @@ class jFormsControlUpload extends jFormsControl {
  */
 class jFormsControlSubmit extends jFormsControl {
    public $type='submit';
+   
+   public function check($value, $form){
+        return null;
+   }
 }
 
 ?>

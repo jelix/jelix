@@ -61,9 +61,9 @@ class jFormsCompiler implements jISimpleCompiler {
       $srcHtmlBuilder[]='  }';
 
       $srcjs=array();
-      $srcjs[]='$js="gForm = new jFormsForm(\'".$this->_name."\');\n";';
-      $srcjs[]='$js.="gForm.setErrorDecorator(new ".$errorDecoratorName."());\n";';
-      $srcjs[]='$js.="gForm.setHelpDecorator(new ".$helpDecoratorName."());\n";';
+      $srcjs[]='$js="jForms.tForm = new jFormsForm(\'".$this->_name."\');\n";';
+      $srcjs[]='$js.="jForms.tForm.setErrorDecorator(new ".$errorDecoratorName."());\n";';
+      $srcjs[]='$js.="jForms.tForm.setHelpDecorator(new ".$helpDecoratorName."());\n";';
       foreach($xml->children() as $controltype=>$control){
             $source[] = $this->generatePHPControl($controltype, $control);
             $srcjs[] =  $this->generateJsControl($controltype, $control);
@@ -75,7 +75,7 @@ class jFormsCompiler implements jISimpleCompiler {
       $source[]='} ?>';
 
       jFile::write($cachefile, implode("\n", $source));
-      $srcjs[]='$js.="jForms.declareForm(gForm);\n";';
+      $srcjs[]='$js.="jForms.declareForm(jForms.tForm);\n";';
 
       $srcHtmlBuilder[]=' public function getJavascriptCheck($errorDecoratorName, $helpDecoratorName){';
       $srcHtmlBuilder[]= implode("\n", $srcjs);
@@ -114,12 +114,12 @@ class jFormsCompiler implements jISimpleCompiler {
                                                 'url','email','ipv4','ipv6'))){
                throw new jException('jelix~formserr.datatype.unknow',array($dt,$controltype,$this->sourceFile));
             }
-            $source[]='$ctrl->datatype= new jDatatype'.$dt.'();';
+            if($dt != 'string')
+                $source[]='$ctrl->datatype= new jDatatype'.$dt.'();';
         }else if($controltype == 'checkbox') {
             $source[]='$ctrl->datatype= new jDatatypeBoolean();';
-        }else{
-            $source[]='$ctrl->datatype= new jDatatypeString();';
         }
+        
         // readonly support
         if(isset($control['readonly'])){
             if($controltype == 'output' || $controltype == 'submit'){
@@ -169,10 +169,9 @@ class jFormsCompiler implements jISimpleCompiler {
                 $source[]='$ctrl->hint=\''.str_replace("'","\\'",(string)$control->hint).'\';';
             }
         }
+        $alertInvalid='';
+        $alertRequired='';
         if(isset($control->alert)){
-            $alertInvalid='';
-            $alertRequired='';
-
             foreach($control->alert as $alert){
                 if(isset($alert['locale'])){
                     $msg='jLocale::get(\''.(string)$alert['locale'].'\');';
@@ -192,13 +191,13 @@ class jFormsCompiler implements jISimpleCompiler {
             if($alertRequired !='') $source[]=$alertRequired;
             if($alertInvalid !='') $source[]=$alertInvalid;
         }
-
-        // support of static datas or daos
+        $hasCtrl2 = false;
         switch($controltype){
             case 'checkboxes':
             case 'radiobuttons':
             case 'menulist':
             case 'listbox':
+                // support of static datas or daos
                 if(isset($control['selectedvalue']) && isset($control->selectedvalues)){
                     throw new jException('jelix~formserr.attribute.not.allowed',array('selectedvalue',$controltype,$this->sourceFile));
                 }
@@ -262,6 +261,35 @@ class jFormsCompiler implements jISimpleCompiler {
                 }
 
                break;
+            case 'secret':
+                if(isset($control->confirm)) {
+                    $label='';
+                    if(isset($control->confirm['label'])){
+                        $label = "'".str_replace("'","\\'",(string)$control->confirm['label'])."';";
+                    }elseif(isset($control->confirm['labellocale'])){
+                        $label = "jLocale::get('".(string)$control->confirm['labellocale']."');";
+                    }else{
+                        throw new jException('jelix~formserr.attribute.missing',array('label','confirm',$this->sourceFile));
+                    }
+                    $source[]='$ctrl2 = new jFormsControlSecretConfirm(\''.(string)$control['ref'].'_confirm\');';
+                    $source[]='$ctrl2->primarySecret = \''.(string)$control['ref'].'\';';
+                    $source[]='$ctrl2->label='.$label;
+                    $source[]='$ctrl2->required = $ctrl->required;';
+                    $source[]='$ctrl2->readonly = $ctrl->readonly;';
+                    if($alertInvalid!='')
+                        $source[]='$ctrl2->alertInvalid = $ctrl->alertInvalid;';
+                    if($alertRequired!='')
+                        $source[]='$ctrl2->alertRequired = $ctrl->alertRequired;';
+                    
+                    if(isset($control->help)){
+                        $source[]='$ctrl2->hasHelp=true;';
+                    }
+                    if(isset($control->hint)){
+                        $source[]='$ctrl2->hint=$ctrl->hint;';
+                    }
+                    $hasCtrl2 = true;
+                }
+                break;
         }
 
         if(isset($control['multiple'])){
@@ -291,6 +319,8 @@ class jFormsCompiler implements jISimpleCompiler {
         }
 
         $source[]='$this->addControl($ctrl);';
+        if($hasCtrl2)
+            $source[]='$this->addControl($ctrl2);';
         return implode("\n", $source);
     }
 
@@ -298,6 +328,12 @@ class jFormsCompiler implements jISimpleCompiler {
         if($controltype == 'submit')
             return '';
 
+        if(isset($control->confirm) && $controltype == 'secret') {
+            $hasConfirm = true;
+        }else{
+            $hasConfirm = false;
+        }
+        
         $source = array();
 
         if(isset($control['type'])){
@@ -313,19 +349,30 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$label = str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->label).'\');';
         }
         if($controltype == 'checkboxes' || ($controltype == 'listbox' && isset($control['multiple']) && 'true' == (string)$control['multiple']))
-            $source[]='$js.="gControl = new jFormsControl(\''.(string)$control['ref'].'[]\', \'".$label."\', \''.$dt.'\');\n";';
-        else
-            $source[]='$js.="gControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".$label."\', \''.$dt.'\');\n";';
+            $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'[]\', \'".$label."\', \''.$dt.'\');\n";';
+        else{
+            $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".$label."\', \''.$dt.'\');\n";';
+            if($hasConfirm){
+                if(isset($control->confirm['label'])){
+                    $source[]='$label2 = str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->confirm['label']).'\');';
+                }else{
+                    $source[]='$label2 = str_replace("\'","\\\'",jLocale::get(\''.(string)$control->confirm['labellocale'].'\'));';
+                }
+                $source[]='$js.="jForms.tControl2 = new jFormsControl(\''.(string)$control['ref'].'_confirm\', \'".$label2."\', \''.$dt.'\');\n";';
+            }
+        }
 
         if($dt == 'localedate' || $dt =='localedatetime' || $dt =='localetime'){
-            $source[]='$js.="gControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";';
+            $source[]='$js.="jForms.tControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";';
         }
 
         if(isset($control['readonly']) && 'true' == (string)$control['readonly']){
-            $source[]='$js.="gControl.readonly = true;\n";';
+            $source[]='$js.="jForms.tControl.readonly = true;\n";';
+            if($hasConfirm) $source[]='$js.="jForms.tControl2.readonly = true;\n";';
         }
         if(isset($control['required']) && 'true' == (string)$control['required']){
-            $source[]='$js.="gControl.required = true;\n";';
+            $source[]='$js.="jForms.tControl.required = true;\n";';
+            if($hasConfirm) $source[]='$js.="jForms.tControl2.required = true;\n";';
         }
 
         if(isset($control->help)){
@@ -334,7 +381,8 @@ class jFormsCompiler implements jISimpleCompiler {
             }else{
                 $help='str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->help).'\')';
             }
-            $source[]='$js.="gControl.help=\'".'.$help.'."\';\n";';
+            $source[]='$js.="jForms.tControl.help=\'".'.$help.'."\';\n";';
+            if($hasConfirm) $source[]='$js.="jForms.tControl2.help=jForms.tControl.help;\n";';
         }
 
         $alertInvalid='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))';
@@ -359,13 +407,23 @@ class jFormsCompiler implements jISimpleCompiler {
             }
         }
 
-        $source[]='$js.="gControl.errRequired=\'".'.$alertRequired.'."\';\n";';
-        $source[]='$js.="gControl.errInvalid =\'".'.$alertInvalid.'."\';\n";';
-        if(isset($control['multiple']) && 'true' == (string)$control['multiple']){
-            $source[]='$js.="gControl.multiple = true;\n";';
+        $source[]='$js.="jForms.tControl.errRequired=\'".'.$alertRequired.'."\';\n";';
+        $source[]='$js.="jForms.tControl.errInvalid =\'".'.$alertInvalid.'."\';\n";';
+        if($hasConfirm){
+            $alertInvalid='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label2))';
+            $alertRequired='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label2))';
+            $source[]='$js.="jForms.tControl2.errRequired=\'".'.$alertRequired.'."\';\n";';
+            $source[]='$js.="jForms.tControl2.errInvalid =\'".'.$alertInvalid.'."\';\n";';
         }
-
-        $source[]='$js.="gForm.addControl( gControl);\n";';
+        
+        if(isset($control['multiple']) && 'true' == (string)$control['multiple']){
+            $source[]='$js.="jForms.tControl.multiple = true;\n";';
+        }
+        $source[]='$js.="jForms.tForm.addControl( jForms.tControl);\n";';
+        if($hasConfirm) {
+            $source[]='$js.="jForms.tControl2.isConfirmField=true;\njForms.tControl2.confirmFieldOf=\''.(string)$control['ref'].'\';\n";';
+            $source[]='$js.="jForms.tForm.addControl( jForms.tControl2);\n";';
+        }
 
         return implode("\n", $source);
     }
@@ -376,16 +434,16 @@ class jFormsCompiler implements jISimpleCompiler {
     
         au final, le javascript généré dans la page html doit ressembler à cela
 
-        gForm = new jFormsForm('name');
-        gForm.setDecorator(new jFormsErrorDecoratorAlert());
+        jForms.tForm = new jFormsForm('name');
+        jForms.tForm.setDecorator(new jFormsErrorDecoratorAlert());
         
-        gControl = new jFormsControl('name', 'a label', 'datatype');
-        gControl.required = true;
-        gControl.errInvalid='';
-        gControl.errRequired='';
-        gForm.addControl( gControl);
+        jForms.tControl = new jFormsControl('name', 'a label', 'datatype');
+        jForms.tControl.required = true;
+        jForms.tControl.errInvalid='';
+        jForms.tControl.errRequired='';
+        jForms.tForm.addControl( jForms.tControl);
         ...
-        jForms.declareForm(gForm);
+        jForms.declareForm(jForms.tForm);
 
 
         onsubmit="return jForms.verifyForm(this)"
@@ -393,20 +451,20 @@ class jFormsCompiler implements jISimpleCompiler {
 
         // le code php généré dans le builder
 
-        $js="gForm = new jFormsForm('".$this->getFormName()."');\n";
-        $js.="gForm.setDecorator(new jFormsErrorDecoratorAlert());\n";
+        $js="jForms.tForm = new jFormsForm('".$this->getFormName()."');\n";
+        $js.="jForms.tForm.setDecorator(new jFormsErrorDecoratorAlert());\n";
         $label = 'a label';
         ou
         $label = jLocale::get('mod~cle_locale_user');
-        $js.="gControl = new jFormsControl('name', '".str_replace("'","\\'", $label)."', 'datatype');\n";
-        $js.="gControl.required = true;\n";
+        $js.="jForms.tControl = new jFormsControl('name', '".str_replace("'","\\'", $label)."', 'datatype');\n";
+        $js.="jForms.tControl.required = true;\n";
 
         $invalid = jLocale::get('jelix~forms.check.invalid',$label));
         ou
         $invalid = jLocale::get('mod~cle_locale_user');
         ou
         $invalid = 'bla bla';
-        $js.="gControl.errInvalid='".str_replace("'","\\'",$invalid)."';\n";
+        $js.="jForms.tControl.errInvalid='".str_replace("'","\\'",$invalid)."';\n";
 
 
         $required = jLocale::get('jelix~forms.check.required',$label));
@@ -415,10 +473,10 @@ class jFormsCompiler implements jISimpleCompiler {
         ou
         $required = 'bla bla';
 
-        $js.="gControl.errRequired='".str_replace("'","\\'",$required)."';\n";
-        $js.="gForm.addControl( gControl);\n";
+        $js.="jForms.tControl.errRequired='".str_replace("'","\\'",$required)."';\n";
+        $js.="jForms.tForm.addControl( jForms.tControl);\n";
         ...
-        $js.="jForms.declareForm(gForm);\n";
+        $js.="jForms.declareForm(jForms.tForm);\n";
 
         */
 }

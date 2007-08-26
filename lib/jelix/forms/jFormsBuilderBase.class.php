@@ -263,6 +263,7 @@ abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
             echo '<textarea',$id,$readonly,$hint,$class,'>',htmlspecialchars($value),'</textarea>';
             break;
         case 'secret':
+        case 'secretconfirm':
             echo '<input type="password"',$id,$readonly,$hint,$class,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"/>';
             break;
         case 'output':

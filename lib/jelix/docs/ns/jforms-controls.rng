@@ -163,6 +163,15 @@
        <ref name="UI.Common" />
        <ref name="UI.attr.readonly" />
        <ref name="UI.attr.required" />
+       <optional>
+          <element name="confirm">
+                <empty/>
+                <choice>
+                    <attribute name="label" />
+                    <attribute name="labellocale" />
+                </choice>
+          </element>
+       </optional>
      </element>
   </define>
 
@@ -192,23 +201,6 @@
      </element>
   </define>
 
-<!--
-  <define name="select1">
-     <element name="select1">
-       <ref name="UI.Common" />
-       <ref name="List.UI.Common" />
-       <optional>
-         <attribute name="appearance">
-             <choice>
-                 <value>radiobuttons</value>
-                 <value>listbox</value>
-                 <value>menulist</value>
-             </choice>
-         </attribute>
-      </optional> 
-     </element>
-  </define>
--->
   <define name="radiobuttons">
      <element name="radiobuttons">
        <ref name="UI.Common" />
@@ -241,38 +233,20 @@
        <ref name="List.UI.Common" />
      </element>
   </define>
-
-  
-<!--  <define name="select">
-     <element name="select">
-       <ref name="UI.Common" />
-       <ref name="List.UI.Common" />
-       <optional>
-         <attribute name="appearance">
-             <choice>
-                 <value>checkbox</value>
-                 <value>listbox</value>
-             </choice>
-         </attribute>
-      </optional> 
-     </element>
-  </define>-->
   
   <define name="output">
      <element name="output">
        <ref name="UI.Common" />
        <ref name="UI.attr.defaultvalue" />
-       <!--<optional><attribute name="value"/></optional>-->
      </element>
   </define>
 
   <define name="submit">
      <element name="submit">
        <ref name="UI.Common" />
-       <!--<optional><attribute name="value"/></optional>-->
      </element>
   </define>
--->
+
   
   <!--
       <define name="range">

@@ -16,7 +16,11 @@ require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 require_once(JELIX_LIB_FORMS_PATH.'jFormsDataContainer.class.php');
 
 class testCDForm extends jFormsBase {
-    function addCtrl($control){
+    function addCtrl($control, $reset=true){
+        if($reset){
+            $this->_controls = array();
+            $this->_container->datas = array();
+        }
         $this->addControl($control);
     }
 }
@@ -29,10 +33,8 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->form = new testCDForm($this->container);
     }
 
-
     function testInput() {
         $ctrl = new jFormsControlInput('nom');
-        $ctrl->datatype=new jDatatypeString();
         $ctrl->required = false;
         //$ctrl->value='';
         $this->form->addCtrl($ctrl);
@@ -47,7 +49,6 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->assertTrue($this->form->check());
 
         $ctrl->datatype->addFacet('length',3);
-        $this->assertFalse($this->form->check());
         $this->form->setData('nom','a');
         $this->assertFalse($this->form->check());
         $this->form->setData('nom','aa');
@@ -64,9 +65,9 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->form->addCtrl($ctrl);
 
         $this->form->setData('nom',null);
-        $this->assertFalse($this->form->check());
+        $this->assertTrue($this->form->check());
         $this->form->setData('nom','');
-        $this->assertFalse($this->form->check());
+        $this->assertTrue($this->form->check());
         $this->form->setData('nom','on');
         $this->assertTrue($this->form->check());
         $this->form->setData('nom','off');
@@ -84,6 +85,10 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->assertTrue($this->form->check());
         $this->form->setData('nom','on');
         $this->assertTrue($this->form->check());
+        $this->form->setData('nom','0');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','1');
+        $this->assertTrue($this->form->check());
     }
 
     function testCheckboxes() {
@@ -96,7 +101,7 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->form->setData('nom','');
         $this->assertTrue($this->form->check());
         $this->form->setData('nom','on');
-        $this->assertTrue($this->form->check());
+        $this->assertFalse($this->form->check());
         $this->form->setData('nom',array('toto','titi'));
         $this->assertTrue($this->form->check());
 
@@ -109,9 +114,47 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->form->setData('nom',array());
         $this->assertFalse($this->form->check());
         $this->form->setData('nom','on');
-        $this->assertTrue($this->form->check());
+        $this->assertFalse($this->form->check());
         $this->form->setData('nom',array('toto','titi'));
         $this->assertTrue($this->form->check());
+    }
+
+    function testSecret(){
+        $ctrl = new jFormsControlSecret('nom');
+        $ctrl->required = false;
+        $this->form->addCtrl($ctrl);
+        
+        $this->form->setData('nom',null);
+        $this->assertTrue($this->form->check());
+        $ctrl->required = true;
+        $this->assertFalse($this->form->check());
+        $this->form->setData('nom','');
+        $this->assertFalse($this->form->check());
+        $ctrl->required = false;
+        $this->assertTrue($this->form->check());
+
+        $ctrl2 = new jFormsControlSecretConfirm('nom_confirm');
+        $ctrl2->primarySecret = 'nom';
+        $this->form->addCtrl($ctrl2, false);
+        
+        $this->form->setData('nom_confirm','');
+        $this->assertTrue($this->form->check());
+        
+        $this->form->setData('nom','aaa');
+        $this->assertFalse($this->form->check());
+        $this->form->setData('nom_confirm','aaa');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom_confirm','aaaaaaa');
+        $this->assertFalse($this->form->check());
+    }
+
+    function testDate(){
+        $ctrl = new jFormsControlinput('datenaissance');
+        $ctrl->datatype= new jDatatypelocaledate();
+        $ctrl->hasHelp=true;
+        $this->form->addCtrl($ctrl);
+        $this->assertTrue($this->form->check());
+    
     }
 
 }

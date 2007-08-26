@@ -50,4 +50,9 @@
       <help>Le format de la date est jj/mm/aaaa</help>
   </input>
 
+  <secret ref="pwd">
+    <label>Un mot de passe</label>
+    <confirm label="Retapez le mot de passe pour confirmer" />
+  </secret>
+
 </forms>
