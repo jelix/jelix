@@ -153,7 +153,6 @@ cd lib/jelix/docs/ns
   project.rng
   urls.rng
   jforms.rng
-  jforms-controls.rng
 
 cd lib/jelix-www/xul/test/
   testxulform.php
