@@ -52,6 +52,37 @@ abstract class jFormsControl {
         }
         return null;
    }
+
+   function getDisplayValue($value){
+        return $value;
+   }
+}
+
+/**
+ * bas class for controls which uses a datasource to fill their contents.
+ * @package     jelix
+ * @subpackage  forms
+ * @experimental
+ */
+abstract class jFormsControlDatasource extends jFormsControl {
+    public $type="datasource";
+    /**
+     * @var jIFormDatasource
+     */
+    public $datasource;
+    public $selectedValues=array();
+
+   function getDisplayValue($value){
+        if(is_array($value)){
+            $labels = array();
+            foreach($value as $val){
+                $labels[$val]=$this->datasource->getLabel($val);
+            }
+            return $labels;
+        }else{
+            return $this->datasource->getLabel($value);
+        }
+    }
 }
 
 /**
@@ -66,20 +97,7 @@ class jFormsControlInput extends jFormsControl {
 }
 
 
-/**
- *
- * @package     jelix
- * @subpackage  forms
- * @experimental
- */
-abstract class jFormsBaseControlSelect1 extends jFormsControl {
-    public $type="select1";
-    /**
-     * @var jIFormDatasource
-     */
-    public $datasource;
-    public $selectedValues=array();
-}
+
 
 /**
  *
@@ -87,7 +105,7 @@ abstract class jFormsBaseControlSelect1 extends jFormsControl {
  * @subpackage  forms
  * @experimental
  */
-class jFormsControlCheckboxes extends jFormsBaseControlSelect1 {
+class jFormsControlCheckboxes extends jFormsControlDatasource {
    public $type="checkboxes";
 
    function isContainer(){
@@ -123,7 +141,7 @@ class jFormsControlCheckboxes extends jFormsBaseControlSelect1 {
  * @subpackage  forms
  * @experimental
  */
-class jFormsControlRadiobuttons extends jFormsBaseControlSelect1 {
+class jFormsControlRadiobuttons extends jFormsControlDatasource {
    public $type="radiobuttons";
 }
 
@@ -133,7 +151,7 @@ class jFormsControlRadiobuttons extends jFormsBaseControlSelect1 {
  * @subpackage  forms
  * @experimental
  */
-class jFormsControlListbox extends jFormsBaseControlSelect1 {
+class jFormsControlListbox extends jFormsControlDatasource {
    public $type="listbox";
    public $multiple = false;
    public $size = 4;
@@ -174,7 +192,7 @@ class jFormsControlListbox extends jFormsBaseControlSelect1 {
  * @subpackage  forms
  * @experimental
  */
-class jFormsControlMenulist extends jFormsBaseControlSelect1 {
+class jFormsControlMenulist extends jFormsControlDatasource {
    public $type="menulist";
 }
 

@@ -39,12 +39,6 @@ class jFormsCompiler implements jISimpleCompiler {
          throw new jException('jelix~formserr.invalid.xml.file',array($this->sourceFile));
       }
 
-      /*if(!isset($xml->model)){
-         trigger_error(jLocale::get('jelix~formserr.missing.tag',array('model',$sourceFile)), E_USER_ERROR);
-         return false;
-      }
-      */
-
       $source=array();
       $source[]='<?php ';
       $source[]='class '.$selector->getClass().' extends jFormsBase {';
@@ -68,11 +62,7 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[] = $this->generatePHPControl($controltype, $control);
             $srcjs[] =  $this->generateJsControl($controltype, $control);
       }
-      $source[]='  }';
-
-      //$source[]=' public function save(){ } ';
-
-      $source[]='} ?>';
+      $source[]="  }\n} ?>";
 
       jFile::write($cachefile, implode("\n", $source));
       $srcjs[]='$js.="jForms.declareForm(jForms.tForm);\n";';
@@ -223,7 +213,10 @@ class jFormsCompiler implements jISimpleCompiler {
                     $daoselector = (string)$control['dao'];
                     $daomethod = (string)$control['daomethod'];
                     $daolabel = (string)$control['daolabelproperty'];
-                    $daovalue = (string)$control['daovalueproperty'];
+                    if(isset($control['daovalueproperty']))
+                        $daovalue = (string)$control['daovalueproperty'];
+                    else
+                        $daovalue = '';
                     $source[]='$ctrl->datasource = new jFormDaoDatasource(\''.$daoselector.'\',\''.
                                     $daomethod.'\',\''.$daolabel.'\',\''.$daovalue.'\');';
                 }else{

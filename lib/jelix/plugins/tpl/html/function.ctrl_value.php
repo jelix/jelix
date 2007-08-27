@@ -27,6 +27,7 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', ')
     }
 
     $value = $tpl->_privateVars['__form']->getData($ctrlname);
+    $value = $tpl->_privateVars['__ctrl']->getDisplayValue($value);
     if(is_array($value)){
         $s ='';
         foreach($value as $v){

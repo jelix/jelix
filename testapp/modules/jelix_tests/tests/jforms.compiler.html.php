@@ -52,16 +52,6 @@ class UTjformsCompiler extends jUnitTestCase {
 7=>'<upload ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
 </upload>',
-/*8=>'<select1 ref="nom" xmlns="http://jelix.org/ns/forms/1.0"
-    dao="foo" daomethod="bar" daolabelproperty="baz" daovalueproperty="plop">
-    <label>Votre nom</label>
-</select1>',
-9=>'<select ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
-    <label>Votre nom</label>
-    <item label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
-    <item value="ccc"/>
-</select>',*/
 10=>'<submit ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
 </submit>',
@@ -260,21 +250,6 @@ $this->addControl($ctrl);',
 7=>'$ctrl= new jFormsControlupload(\'nom\');
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-/*8=>'$ctrl= new jFormsControlselect1(\'nom\');
-$ctrl->datatype= new jDatatypeString();
-$ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
-$this->addControl($ctrl);',
-9=>'$ctrl= new jFormsControlselect(\'nom\');
-$ctrl->datatype= new jDatatypeString();
-$ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormStaticDatasource();
-$ctrl->datasource->datas = array(
-\'aaa\'=>\'1aa\',
-\'bbb\'=>jLocale::get(\'locb\'),
-\'ccc\'=>\'ccc\',
-);
-$this->addControl($ctrl);',*/
 10=>'$ctrl= new jFormsControlsubmit(\'nom\');
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
