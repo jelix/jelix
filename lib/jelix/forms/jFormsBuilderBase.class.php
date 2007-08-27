@@ -299,7 +299,13 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             echo '<input type="file"',$id,$readonly,$hint,$class,' value=""/>'; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
             break;
         case 'submit':
-            echo '<button type="submit"',$id,$hint,'>',htmlspecialchars($ctrl->label),'</button>';
+            if($ctrl->standalone){
+                echo '<button type="submit"',$id,$hint,'>',htmlspecialchars($ctrl->label),'</button>';
+            }else{
+                foreach($ctrl->datasource->getDatas() as $v=>$label){
+                    echo '<button type="submit"',$id,$hint,' value="',htmlspecialchars($v),'">',htmlspecialchars($label),'</button> ';
+                }
+            }
             break;
         }
 

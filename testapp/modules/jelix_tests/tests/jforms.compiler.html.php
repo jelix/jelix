@@ -221,6 +221,16 @@ class UTjformsCompiler extends jUnitTestCase {
     <label>Votre mot de passe</label>
     <confirm labellocale="password.confirm" />
 </secret>',
+52=>'<submit ref="validation" xmlns="http://jelix.org/ns/forms/1.0"
+    dao="foo" daomethod="bar" daolabelproperty="baz" daovalueproperty="plop">
+    <label>Type de validation</label>
+</submit>',
+53=>'<submit ref="validation" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Type de validation</label>
+    <item label="1aa" value="aaa" />
+    <item labellocale="locb" value="bbb" />
+    <item value="ccc"/>
+</submit>',
     );
 
     protected $_PhpControls = array(
@@ -252,6 +262,7 @@ $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 10=>'$ctrl= new jFormsControlsubmit(\'nom\');
 $ctrl->label=\'Votre nom\';
+$ctrl->datasource= new jFormStaticDatasource();
 $this->addControl($ctrl);',
 11=>'$ctrl= new jFormsControlinput(\'nom\');
 $ctrl->label=\'Votre nom\';
@@ -488,6 +499,22 @@ $ctrl2->required = $ctrl->required;
 $ctrl2->readonly = $ctrl->readonly;
 $this->addControl($ctrl);
 $this->addControl($ctrl2);',
+52=>'$ctrl= new jFormsControlsubmit(\'validation\');
+$ctrl->label=\'Type de validation\';
+$ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->standalone=false;
+$this->addControl($ctrl);',
+53=>'$ctrl= new jFormsControlsubmit(\'validation\');
+$ctrl->label=\'Type de validation\';
+$ctrl->standalone=false;
+$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource->datas = array(
+\'aaa\'=>\'1aa\',
+\'bbb\'=>jLocale::get(\'locb\'),
+\'ccc\'=>\'ccc\',
+);
+$this->addControl($ctrl);',
+
 );
 
 
@@ -770,6 +797,9 @@ $js.="jForms.tControl2.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'je
 $js.="jForms.tForm.addControl( jForms.tControl);\n";
 $js.="jForms.tControl2.isConfirmField=true;\njForms.tControl2.confirmFieldOf=\'pwd\';\n";
 $js.="jForms.tForm.addControl( jForms.tControl2);\n";',
+52=>'',
+53=>'',
+
     );
 
     function testPhpControl(){

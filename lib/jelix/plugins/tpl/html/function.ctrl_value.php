@@ -15,25 +15,31 @@
  * @param string $ctrlname  the name of the control to display (required if it is outside a formcontrols)
  * @param string $sep  separator to display values of a multi-value control
  */
-function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', ')
-{
+function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
 
     if( (!isset($tpl->_privateVars['__ctrlref']) || $tpl->_privateVars['__ctrlref'] == '') && $ctrlname =='') {
         return;
     }
-
-    $value = $tpl->_privateVars['__form']->getData($ctrlname);
+    $insideForm = isset($tpl->_privateVars['__formbuilder']);
 
     if($ctrlname =='') {
-        if($tpl->_privateVars['__ctrl']->type == 'submit') return;
+        if($tpl->_privateVars['__ctrl']->type == 'submit' && ($tpl->_privateVars['__ctrl']->standalone || $insideForm)){
+            echo "no value";
+            return;
+        }
         $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
         $ctrl = $tpl->_privateVars['__ctrl'];
+        $ctrlname = $tpl->_privateVars['__ctrlref'];
     }else{
         $ctrls = $tpl->_privateVars['__form']->getControls();
-        if($ctrls[$ctrlname]->type == 'submit') return;
+        if($ctrls[$ctrlname]->type == 'submit' && ($ctrls[$ctrlname]->standalone || $insideForm)){
+            echo "no value";
+            return;
+        }
         $ctrl = $ctrls[$ctrlname];
     }
 
+    $value = $tpl->_privateVars['__form']->getData($ctrlname);
     $value = $ctrl->getDisplayValue($value);
     if(is_array($value)){
         $s ='';

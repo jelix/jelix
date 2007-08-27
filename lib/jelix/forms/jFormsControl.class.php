@@ -267,8 +267,9 @@ class jFormsControlUpload extends jFormsControl {
  * @package     jelix
  * @subpackage  forms
  */
-class jFormsControlSubmit extends jFormsControl {
+class jFormsControlSubmit extends jFormsControlDatasource {
     public $type='submit';
+    public $standalone = true;
     public function check($value, $form){
         return null;
     }

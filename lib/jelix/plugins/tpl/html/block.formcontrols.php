@@ -61,7 +61,7 @@ if (!isset($t->_privateVars[\'__displayed_ctrl\'])) {
 }
 $t->_privateVars[\'__ctrlref\']=\'\';
 foreach($t->_privateVars[\'__form\']->getControls() as $ctrlref=>$ctrl){ 
-    if($ctrl->type == \'submit\') continue;
+    if($ctrl->type == \'submit\' && isset($t->_privateVars[\'__formbuilder\'])) continue;
     if(!isset($t->_privateVars[\'__displayed_ctrl\'][$ctrlref]) && ( $ctrls_to_display===null || in_array($ctrlref, $ctrls_to_display))){
         $t->_privateVars[\'__ctrlref\'] = $ctrlref;
         $t->_privateVars[\'__ctrl\'] = $ctrl;

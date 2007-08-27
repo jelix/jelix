@@ -140,6 +140,12 @@
   <define name="submit">
      <element name="submit">
        <ref name="control.common" />
+       <choice>
+            <oneOrMore>
+                <ref name="item" />
+            </oneOrMore>
+            <ref name="data.dao" />
+        </choice>
      </element>
   </define>
 

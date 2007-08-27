@@ -189,6 +189,7 @@ class jFormsCompiler implements jISimpleCompiler {
             if($alertInvalid !='') $source[]=$alertInvalid;
         }
         $hasCtrl2 = false;
+        $hasSelectedValues = false;
         switch($controltype){
             case 'checkboxes':
             case 'radiobuttons':
@@ -198,7 +199,6 @@ class jFormsCompiler implements jISimpleCompiler {
                 if(isset($control['selectedvalue']) && isset($control->selectedvalues)){
                     throw new jException('jelix~formserr.attribute.not.allowed',array('selectedvalue',$controltype,$this->sourceFile));
                 }
-                $hasSelectedValues = false;
                 if(isset($control->selectedvalues) && isset($control->selectedvalues->value)){
                     if( ($controltype == 'listbox' && isset($control['multiple']) && 'true' != (string)$control['multiple'])
                         || $controltype == 'radiobuttons' || $controltype == 'menulist'
@@ -215,6 +215,7 @@ class jFormsCompiler implements jISimpleCompiler {
                     $source[]='$ctrl->selectedValues=array(\''. str_replace("'","\\'", (string)$control['selectedvalue']) .'\');';
                     $hasSelectedValues = true;
                 }
+            case 'submit':
                 // recuperer les <items> attr label|labellocale value
                 if(isset($control['dao'])){
                     $daoselector = (string)$control['dao'];
@@ -226,7 +227,13 @@ class jFormsCompiler implements jISimpleCompiler {
                         $daovalue = '';
                     $source[]='$ctrl->datasource = new jFormDaoDatasource(\''.$daoselector.'\',\''.
                                     $daomethod.'\',\''.$daolabel.'\',\''.$daovalue.'\');';
-                }else{
+                    if($controltype == 'submit'){
+                        $source[]='$ctrl->standalone=false;';
+                    }
+                }elseif(isset($control->item)){
+                    if($controltype == 'submit'){
+                        $source[]='$ctrl->standalone=false;';
+                    }
                     $source[]='$ctrl->datasource= new jFormStaticDatasource();';
                     $source[]='$ctrl->datasource->datas = array(';
                     $selectedvalues=array();
@@ -241,7 +248,7 @@ class jFormsCompiler implements jISimpleCompiler {
                         }
 
                         if(isset($item['selected'])){
-                            if($hasSelectedValues){
+                            if($hasSelectedValues || $controltype == 'submit'){
                                 throw new jException('jelix~formserr.selected.attribute.not.allowed',$this->sourceFile);
                             }
                             if((string)$item['selected']== 'true'){
@@ -258,6 +265,8 @@ class jFormsCompiler implements jISimpleCompiler {
                         }
                         $source[]='$ctrl->selectedValues='.var_export($selectedvalues,true).';';
                     }
+                }else{
+                    $source[]='$ctrl->datasource= new jFormStaticDatasource();';
                 }
 
                break;
