@@ -779,8 +779,8 @@ $label2 = str_replace("\'","\\\'",\'confirmez\');
 $js.="jForms.tControl2 = new jFormsControl(\'pwd_confirm\', \'".$label2."\', \'string\');\n";
 $js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="jForms.tControl2.errRequired=jForms.tControl.errRequired;\n";
-$js.="jForms.tControl2.errInvalid =jForms.tControl.errInvalid;\n";
+$js.="jForms.tControl2.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label2))."\';\n";
+$js.="jForms.tControl2.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label2))."\';\n";
 $js.="jForms.tForm.addControl( jForms.tControl);\n";
 $js.="jForms.tControl2.isConfirmField=true;\njForms.tControl2.confirmFieldOf=\'pwd\';\n";
 $js.="jForms.tForm.addControl( jForms.tControl2);\n";',
@@ -790,8 +790,8 @@ $label2 = str_replace("\'","\\\'",jLocale::get(\'password.confirm\'));
 $js.="jForms.tControl2 = new jFormsControl(\'pwd_confirm\', \'".$label2."\', \'string\');\n";
 $js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="jForms.tControl2.errRequired=jForms.tControl.errRequired;\n";
-$js.="jForms.tControl2.errInvalid =jForms.tControl.errInvalid;\n";
+$js.="jForms.tControl2.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label2))."\';\n";
+$js.="jForms.tControl2.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label2))."\';\n";
 $js.="jForms.tForm.addControl( jForms.tControl);\n";
 $js.="jForms.tControl2.isConfirmField=true;\njForms.tControl2.confirmFieldOf=\'pwd\';\n";
 $js.="jForms.tForm.addControl( jForms.tControl2);\n";',
