@@ -16,34 +16,33 @@ define('JFORM_ERRDATA_INVALID',1);
 define('JFORM_ERRDATA_REQUIRED',2);
 
 /**
- *
+ * base class for all jforms control
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 abstract class jFormsControl {
-   public $type = null;
-   public $ref='';
-   public $datatype;
-   public $required = false;
-   public $readonly = false;
-   public $label='';
-   public $value='';
-   public $hasHelp = false;
-   public $hint='';
-   public $alertInvalid='';
-   public $alertRequired='';
+    public $type = null;
+    public $ref='';
+    public $datatype;
+    public $required = false;
+    public $readonly = false;
+    public $label='';
+    public $value='';
+    public $hasHelp = false;
+    public $hint='';
+    public $alertInvalid='';
+    public $alertRequired='';
 
-   function __construct($ref){
-      $this->ref = $ref;
-      $this->datatype = new jDatatypeString();
-   }
+    function __construct($ref){
+        $this->ref = $ref;
+        $this->datatype = new jDatatypeString();
+    }
 
-   function isContainer(){
+    function isContainer(){
         return false; 
-   }
-   
-   function check($value, $form){
+    }
+
+    function check($value, $form){
         if($value == '') {
             if($this->required)
                 return JFORM_ERRDATA_REQUIRED;
@@ -51,28 +50,29 @@ abstract class jFormsControl {
             return JFORM_ERRDATA_INVALID;
         }
         return null;
-   }
+    }
 
-   function getDisplayValue($value){
+    function getDisplayValue($value){
         return $value;
-   }
+    }
 }
 
 /**
  * bas class for controls which uses a datasource to fill their contents.
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 abstract class jFormsControlDatasource extends jFormsControl {
+
     public $type="datasource";
+
     /**
      * @var jIFormDatasource
      */
     public $datasource;
     public $selectedValues=array();
 
-   function getDisplayValue($value){
+    function getDisplayValue($value){
         if(is_array($value)){
             $labels = array();
             foreach($value as $val){
@@ -89,30 +89,25 @@ abstract class jFormsControlDatasource extends jFormsControl {
  *
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 class jFormsControlInput extends jFormsControl {
-   public $type='input';
-   public $defaultValue='';
+    public $type='input';
+    public $defaultValue='';
 }
-
-
-
 
 /**
  *
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 class jFormsControlCheckboxes extends jFormsControlDatasource {
-   public $type="checkboxes";
+    public $type="checkboxes";
 
-   function isContainer(){
+    function isContainer(){
         return true;
-   }
-   
-   function check($value, $form){
+    }
+
+    function check($value, $form){
         if(is_array($value)){
             if(count($value) == 0 && $this->required){
                 return JFORM_ERRDATA_REQUIRED;
@@ -132,35 +127,33 @@ class jFormsControlCheckboxes extends jFormsControlDatasource {
             }
         }
         return null;
-   }
+    }
 }
 
 /**
  *
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 class jFormsControlRadiobuttons extends jFormsControlDatasource {
-   public $type="radiobuttons";
+    public $type="radiobuttons";
 }
 
 /**
  *
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 class jFormsControlListbox extends jFormsControlDatasource {
-   public $type="listbox";
-   public $multiple = false;
-   public $size = 4;
+    public $type="listbox";
+    public $multiple = false;
+    public $size = 4;
 
-   function isContainer(){
+    function isContainer(){
         return $this->multiple;
-   }
+    }
 
-   function check($value, $form){
+    function check($value, $form){
         if(is_array($value)){
             if(!$this->multiple){
                 return JFORM_ERRDATA_INVALID;
@@ -182,74 +175,48 @@ class jFormsControlListbox extends jFormsControlDatasource {
             }
         }
         return null;
-   }
-
+    }
 }
 
 /**
  *
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 class jFormsControlMenulist extends jFormsControlDatasource {
-   public $type="menulist";
+    public $type="menulist";
 }
 
 /**
  *
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 class jFormsControlTextarea extends jFormsControl {
-   public $type='textarea';
-   public $defaultValue='';
+    public $type='textarea';
+    public $defaultValue='';
 }
 
 /**
  *
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 class jFormsControlSecret extends jFormsControl {
-   public $type='secret';
+    public $type='secret';
 }
 
 /**
  *
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 class jFormsControlSecretConfirm extends jFormsControl {
-   public $type='secretconfirm';
-   public $primarySecret='';
-   
-   function check($value, $form){
+    public $type='secretconfirm';
+    public $primarySecret='';
+    function check($value, $form){
         if($value != $form->getData($this->primarySecret))
             return JFORM_ERRDATA_INVALID;
-        return null;
-   }
-}
-
-/**
- *
- * @package     jelix
- * @subpackage  forms
- * @experimental
- */
-class jFormsControlCheckbox extends jFormsControl {
-   public $type='checkbox';
-   public $defaultValue='0';
-   public $valueOnCheck='1';
-   public $valueOnUncheck='0';
-   
-    function check($value, $form){
-        if($value != $this->valueOnCheck && $value != $this->valueOnUncheck)
-            return JFORM_ERRDATA_INVALID;
-            
         return null;
     }
 }
@@ -258,39 +225,53 @@ class jFormsControlCheckbox extends jFormsControl {
  *
  * @package     jelix
  * @subpackage  forms
- * @experimental
+ */
+class jFormsControlCheckbox extends jFormsControl {
+    public $type='checkbox';
+    public $defaultValue='0';
+    public $valueOnCheck='1';
+    public $valueOnUncheck='0';
+
+    function check($value, $form){
+        if($value != $this->valueOnCheck && $value != $this->valueOnUncheck)
+            return JFORM_ERRDATA_INVALID;
+        return null;
+    }
+}
+
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
  */
 class jFormsControlOutput extends jFormsControl {
-   public $type='output';
-   public $defaultValue='';
-   
-   public function check($value, $form){
+    public $type='output';
+    public $defaultValue='';
+
+    public function check($value, $form){
         return null;
-   }
+    }
 }
 
 /**
  *
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 class jFormsControlUpload extends jFormsControl {
-   public $type='upload';
+    public $type='upload';
 }
 
 /**
  *
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 class jFormsControlSubmit extends jFormsControl {
-   public $type='submit';
-   
-   public function check($value, $form){
+    public $type='submit';
+    public function check($value, $form){
         return null;
-   }
+    }
 }
 
 ?>

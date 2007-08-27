@@ -16,7 +16,6 @@
  * (html form for example)
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 abstract class jFormsBuilderBase {
     /**
@@ -56,13 +55,32 @@ abstract class jFormsBuilderBase {
 
     public function getName(){ return  $this->_name; }
 
+    /**
+     * output the header content of the form
+     * @param array $params some parameters, depending of the type of builder
+     */
     abstract public function outputHeader($params);
 
+    /**
+     * output the footer content of the form
+     */
     abstract public function outputFooter();
 
+    /**
+     * displays the content corresponding of the given control
+     * @param jFormsControl $ctrl the control to display
+     */
     abstract public function outputControl($ctrl);
+
+    /**
+     * displays the label corresponding of the given control
+     * @param jFormsControl $ctrl the control to display
+     */
     abstract public function outputControlLabel($ctrl);
 
+    /**
+     * generates a name for the form
+     */
     public static function generateFormName(){
         static $number = 0;
         $number++;
@@ -75,10 +93,14 @@ abstract class jFormsBuilderBase {
  * HTML form builder
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
-abstract class jFormsHtmlBuilderBase extends  jFormsBuilderBase {
+abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
 
+    /**
+     * output the header content of the form
+     * @param array $params some parameters 0=>name of the javascript error decorator
+     *    1=> name of the javascript help decorator
+     */
     public function outputHeader($params){
         $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
         echo '<form action="'.$url->scriptName . $url->pathInfo.'" method="POST" name="'. $this->_name.'" onsubmit="return jForms.verifyForm(this)">';

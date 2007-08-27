@@ -13,7 +13,6 @@
  * this object is a container for form datas
  * @package     jelix
  * @subpackage  forms
- * @experimental
  */
 class jFormsDataContainer {
     /**
@@ -46,16 +45,14 @@ class jFormsDataContainer {
         $this->formId = $formId;
         $this->formSelector =$formSelector;
     }
-    
+
     function unsetData($name){
         unset($this->datas[$name]);
     }
-    
+
     function clear(){
         $this->datas = array();
         $this->errors = array();
     }
-
 }
-
 ?>

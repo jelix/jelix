@@ -48,7 +48,10 @@ class jFormStaticDatasource implements jIFormDatasource {
     }
 
     public function getLabel($key){
-        return $this->datas[$key];
+        if(isset($this->datas[$key]))
+            return $this->datas[$key];
+        else
+            return null;
     }
 }
 
@@ -91,7 +94,11 @@ class jFormDaoDatasource implements jIFormDatasource {
 
     public function getLabel($key){
         if($this->dao === null) $this->dao = jDao::get($this->selector);
-        return $this->dao->get($key)->{$this->labelProperty};
+        $rec = $this->dao->get($key);
+        if($rec)
+            return $rec->{$this->labelProperty};
+        else
+            return null;
     }
 
 }
