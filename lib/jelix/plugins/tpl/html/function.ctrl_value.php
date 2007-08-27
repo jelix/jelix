@@ -21,13 +21,20 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', ')
     if( (!isset($tpl->_privateVars['__ctrlref']) || $tpl->_privateVars['__ctrlref'] == '') && $ctrlname =='') {
         return;
     }
-    if($ctrlname =='') {
-        $ctrlname=$tpl->_privateVars['__ctrl']->ref;
-        $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
-    }
 
     $value = $tpl->_privateVars['__form']->getData($ctrlname);
-    $value = $tpl->_privateVars['__ctrl']->getDisplayValue($value);
+
+    if($ctrlname =='') {
+        if($tpl->_privateVars['__ctrl']->type == 'submit') return;
+        $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
+        $ctrl = $tpl->_privateVars['__ctrl'];
+    }else{
+        $ctrls = $tpl->_privateVars['__form']->getControls();
+        if($ctrls[$ctrlname]->type == 'submit') return;
+        $ctrl = $ctrls[$ctrlname];
+    }
+
+    $value = $ctrl->getDisplayValue($value);
     if(is_array($value)){
         $s ='';
         foreach($value as $v){

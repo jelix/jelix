@@ -17,12 +17,20 @@
 abstract class jFormsBase {
 
     /**
-     * List of form controls
+     * List of all form controls
      * array of jFormsControl objects
      * @var array
      * @see jFormsControl
      */
     protected $_controls = array();
+
+    /**
+     * List of submit buttons
+     * array of jFormsControl objects
+     * @var array
+     * @see jFormsControl
+     */
+    protected $_submits = array();
 
     /**
      * the datas container
@@ -80,6 +88,8 @@ abstract class jFormsBase {
     */
     protected function addControl($control){
         $this->_controls [$control->ref] = $control;
+        if($control->type =='submit')
+            $this->_submits [$control->ref] = $control;
         if(!isset($this->_container->datas[$control->ref])){
             $this->_container->datas[$control->ref] = $control->value;
         }
@@ -339,7 +349,7 @@ abstract class jFormsBase {
             return $this->_container->datas[$name];
         else return null;
     }
-    
+
     /**
      * @return array form datas
      */
@@ -348,11 +358,16 @@ abstract class jFormsBase {
      * @return jFormsDataContainer
      */
     public function getContainer(){ return $this->_container; }
-    
+
     /**
      * @return array of jFormsControl objects
      */
     public function getControls(){ return $this->_controls; }
+
+    /**
+     * @return array of jFormsControl objects
+     */
+    public function getSubmits(){ return $this->_submits; }
 
     /**
      * @return string the formId

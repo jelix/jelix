@@ -55,4 +55,8 @@
     <confirm label="Retapez le mot de passe pour confirmer" />
   </secret>
 
+  <submit ref="submit">
+   <label>Valider</label>
+  </submit>
+
 </forms>

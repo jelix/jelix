@@ -19,12 +19,15 @@ function jtpl_function_html_ctrl_control($tpl, $ctrlname='')
     if( (!isset($tpl->_privateVars['__ctrlref']) || $tpl->_privateVars['__ctrlref'] == '') && $ctrlname =='') {
         return;
     }
+
     if($ctrlname =='') {
+        if($tpl->_privateVars['__ctrl']->type == 'submit') return;
         $tpl->_privateVars['__displayed_ctrl'][$tpl->_privateVars['__ctrlref']] = true;
         $tpl->_privateVars['__formbuilder']->outputControl($tpl->_privateVars['__ctrl']);
     }else{
-        $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
         $ctrls = $tpl->_privateVars['__form']->getControls();
+        if($ctrls[$ctrlname]->type == 'submit') return;
+        $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
         $tpl->_privateVars['__formbuilder']->outputControl($ctrls[$ctrlname]);
     }
 }

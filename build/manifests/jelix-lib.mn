@@ -329,9 +329,11 @@ cd lib/jelix/plugins/tpl/html
   function.diff.php
   block.form.php
   block.formcontrols.php
+  block.formsubmits.php
   function.ctrl_control.php
   function.ctrl_label.php
   function.ctrl_value.php
+  function.formsubmit.php
 
 cd lib/jelix/plugins/tpl/ltx2pdf
   function.jlocale.php

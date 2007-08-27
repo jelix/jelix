@@ -25,6 +25,8 @@ function jtpl_function_html_ctrl_label($tpl, $ctrlname='')
         $ctrls = $tpl->_privateVars['__form']->getControls();
         $ctrl=$ctrls[$ctrlname];
     }
+    if($ctrl->type == 'submit') return;
+
     if(isset($tpl->_privateVars['__formbuilder'])){
         $tpl->_privateVars['__formbuilder']->outputControlLabel($ctrl);
     }else
