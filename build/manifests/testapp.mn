@@ -40,6 +40,7 @@ cd testapp/modules/testapp/controllers
   forms.classic.php
   sampleform.classic.php
   syndication.classic.php
+  samplecrud.classic.php
 cd testapp/modules/testapp/templates
   hello.tpl
   hello2.tpl

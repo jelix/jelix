@@ -24,7 +24,8 @@ cd lib/jelix/acl
 
 cd lib/jelix/controllers
   jControllerCmdLine.class.php
-
+  jControllerDaoCrud.class.php
+  
 cd lib/jelix/core
 ! defaultconfig.ini.php
 * jConfigCompiler.class.php
