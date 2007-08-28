@@ -51,8 +51,8 @@ class jFormsCompiler implements jISimpleCompiler {
         $source[]='    protected $_builders = array( ';
         $source[]='    \'html\'=>array(\''.$cacheHtmlBuilderFile.'\',\''.$selector->getClass().'_builder_html\'), ';
         $source[]='    );';
-        $source[]=' public function __construct(&$container, $reset = false){';
-        $source[]='          parent::__construct($container, $reset); ';
+        $source[]=' public function __construct($sel, &$container, $reset = false){';
+        $source[]='          parent::__construct($sel, $container, $reset); ';
 
         $srcHtmlBuilder=array();
         $srcHtmlBuilder[]='<?php class '.$selector->getClass().'_builder_html extends jFormsHtmlBuilderBase {';

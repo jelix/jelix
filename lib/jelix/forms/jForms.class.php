@@ -51,7 +51,7 @@ class jForms {
         if(!isset($_SESSION['JFORMS'][$formSel][$formId])){
             $_SESSION['JFORMS'][$formSel][$formId]= new jFormsDataContainer($formSel, $formId);
         }
-        $form = new $c($_SESSION['JFORMS'][$formSel][$formId],true);
+        $form = new $c($sel->toString(), $_SESSION['JFORMS'][$formSel][$formId],true);
         return $form;
     }
 
@@ -75,7 +75,7 @@ class jForms {
         $sel = new jSelectorForm($formSel);
         jIncluder::inc($sel);
         $c = $sel->getClass();
-        $form = new $c($_SESSION['JFORMS'][$formSel][$formId],false);
+        $form = new $c($sel->toString(), $_SESSION['JFORMS'][$formSel][$formId],false);
 
         return $form;
     }

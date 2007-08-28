@@ -30,7 +30,7 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
     protected $container;
     function testStart() {
         $this->container = new jFormsDataContainer('','');
-        $this->form = new testCDForm($this->container);
+        $this->form = new testCDForm('foo',$this->container);
     }
 
     function testInput() {
