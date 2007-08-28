@@ -191,6 +191,7 @@ cd lib/jelix/utils/
   jDateTime.class.php
   jFile.class.php
   jIniFile.class.php
+* jJson.class.php
 * jJsonRpc.class.php
   jLog.class.php
 * jWiki.class.php

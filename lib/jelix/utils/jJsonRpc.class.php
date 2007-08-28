@@ -71,7 +71,7 @@ class jJsonRpc {
     public static function decodeResponse($content){
         // {result:.. , error:.. , id:.. }
 #if ENABLE_PHP_JSON
-        return json_decode($content);
+        return json_decode($content,true);
 #else
         $json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
         return $json->decode($content);
