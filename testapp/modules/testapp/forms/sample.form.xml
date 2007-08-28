@@ -55,6 +55,11 @@
     <confirm label="Retapez le mot de passe pour confirmer" />
   </secret>
 
+  <upload ref="image" mimetype="image/gif;image/png;" maxsize="50000">
+     <label>Votre photo (gif/png &lt; 50ko)</label>
+     <alert>Le fichier doit être une image gif ou png de moins de 50000 octets</alert>
+  </upload>
+
   <submit ref="valid">
     <label>Valider</label>
     <item value="svg" label="Sauvegarde" />

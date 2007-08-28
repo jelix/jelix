@@ -260,6 +260,37 @@ class jFormsControlOutput extends jFormsControl {
  */
 class jFormsControlUpload extends jFormsControl {
     public $type='upload';
+    public $mimetype=array();
+    public $maxsize=0;
+
+    public $fileInfo = array();
+
+    function check($value, $form){
+        if(isset($_FILES[$this->ref]))
+            $this->fileInfo = $_FILES[$this->ref];
+        else
+            $this->fileInfo = array('name'=>'','type'=>'','size'=>0,'tmp_name'=>'', 'error'=>UPLOAD_ERR_NO_FILE);
+
+        if($this->fileInfo['error'] == UPLOAD_ERR_NO_FILE) {
+            if($this->required)
+                return JFORM_ERRDATA_REQUIRED;
+        }else{
+            if($this->fileInfo['error'] != UPLOAD_ERR_OK || !is_uploaded_file($this->fileInfo['tmp_name']))
+                return JFORM_ERRDATA_INVALID;
+
+            if($this->maxsize && $this->fileInfo['size'] > $this->maxsize)
+                return JFORM_ERRDATA_INVALID;
+
+            if(count($this->mimetype)){
+                if($this->fileInfo['type']==''){
+                    $this->fileInfo['type'] = mime_content_type($this->fileInfo['tmp_name']);
+                }
+                if(!in_array($this->fileInfo['type'], $this->mimetype))
+                    return JFORM_ERRDATA_INVALID;
+            }
+        }
+        return null;
+    }
 }
 
 /**

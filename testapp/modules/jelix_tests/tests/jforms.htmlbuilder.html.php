@@ -36,6 +36,9 @@ class testHMLForm { // simulate a jFormBase object
     function getContainer() {
         return $this->container;
     }
+    function hasUpload(){
+       return false;
+    }
 }
 
 class testJFormsHtmlBuilder extends jFormsHtmlBuilderBase {

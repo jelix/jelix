@@ -107,7 +107,12 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
      */
     public function outputHeader($params){
         $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
-        echo '<form action="'.$url->scriptName . $url->pathInfo.'" method="POST" name="'. $this->_name.'" onsubmit="return jForms.verifyForm(this)">';
+        echo '<form action="',$url->scriptName,$url->pathInfo,'" method="POST" name="', $this->_name,'" onsubmit="return jForms.verifyForm(this)"';
+        if($this->_form->hasUpload())
+            echo ' enctype="multipart/form-data">';
+        else
+            echo '>';
+
         if(count($url->params)){
             echo '<div>';
             foreach ($url->params as $p_name => $p_value) {
@@ -133,7 +138,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
                         echo '<li>', jLocale::get('jelix~formserr.js.err.required', $ctrls[$cname]->label),'</li>';
                     }
                 }else{
-                    if($ctrls[$cname]->alertRequired){
+                    if($ctrls[$cname]->alertInvalid){
                         echo '<li>', $ctrls[$cname]->alertInvalid,'</li>';
                     }else{
                         echo '<li>', jLocale::get('jelix~formserr.js.err.invalid', $ctrls[$cname]->label),'</li>';
@@ -300,6 +305,9 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($value),'</span>';
             break;
         case 'upload':
+            if($ctrl->maxsize){
+                echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$ctrl->maxsize,'"',$this->_endt;
+            }
             echo '<input type="file"',$id,$readonly,$hint,$class,' value=""',$this->_endt; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
             break;
         case 'submit':

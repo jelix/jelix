@@ -231,6 +231,21 @@ class UTjformsCompiler extends jUnitTestCase {
     <item labellocale="locb" value="bbb" />
     <item value="ccc"/>
 </submit>',
+54=>'<upload ref="nom" xmlns="http://jelix.org/ns/forms/1.0" maxsize="22356">
+    <label>Votre nom</label>
+</upload>',
+55=>'<upload ref="nom" xmlns="http://jelix.org/ns/forms/1.0" maxsize="22356" mimetype="image/gif">
+    <label>Votre nom</label>
+</upload>',
+56=>'<upload ref="nom" xmlns="http://jelix.org/ns/forms/1.0" maxsize="22356" mimetype="image/gif;">
+    <label>Votre nom</label>
+</upload>',
+57=>'<upload ref="nom" xmlns="http://jelix.org/ns/forms/1.0" maxsize="22356" mimetype="image/gif;image/png">
+    <label>Votre nom</label>
+</upload>',
+58=>'<upload ref="nom" xmlns="http://jelix.org/ns/forms/1.0" mimetype="image/gif;;image/png;">
+    <label>Votre nom</label>
+</upload>',
     );
 
     protected $_PhpControls = array(
@@ -514,7 +529,39 @@ $ctrl->datasource->datas = array(
 \'ccc\'=>\'ccc\',
 );
 $this->addControl($ctrl);',
-
+54=>'$ctrl= new jFormsControlupload(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->maxsize=22356;
+$this->addControl($ctrl);',
+55=>'$ctrl= new jFormsControlupload(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->maxsize=22356;
+$ctrl->mimetype=array (
+  0 => \'image/gif\',
+);
+$this->addControl($ctrl);',
+56=>'$ctrl= new jFormsControlupload(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->maxsize=22356;
+$ctrl->mimetype=array (
+  0 => \'image/gif\',
+);
+$this->addControl($ctrl);',
+57=>'$ctrl= new jFormsControlupload(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->maxsize=22356;
+$ctrl->mimetype=array (
+  0 => \'image/gif\',
+  1 => \'image/png\',
+);
+$this->addControl($ctrl);',
+58=>'$ctrl= new jFormsControlupload(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->mimetype=array (
+  0 => \'image/gif\',
+  2 => \'image/png\',
+);
+$this->addControl($ctrl);',
 );
 
 
@@ -799,7 +846,31 @@ $js.="jForms.tControl2.isConfirmField=true;\njForms.tControl2.confirmFieldOf=\'p
 $js.="jForms.tForm.addControl( jForms.tControl2);\n";',
 52=>'',
 53=>'',
-
+54=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+55=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+56=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+57=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+58=>'$label = str_replace("\'","\\\'",\'Votre nom\');
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".$label."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
     );
 
     function testPhpControl(){

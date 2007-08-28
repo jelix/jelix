@@ -77,9 +77,9 @@
        <ref name="control.common" />
        <ref name="UI.attr.readonly" />
        <ref name="UI.attr.required" />
-       <!--<attribute name="mediatype" /> 
-       <attribute name="maxsize" />
-       <element name="storage">
+       <optional><attribute name="mimetype" /></optional>
+       <optional><attribute name="maxsize" /></optional>
+       <!--<element name="storage">
            <attribute name="type"><choice><value>file</value><value>blob</value></choice></attribute>
            <attribute name="value" /> 
        </element>

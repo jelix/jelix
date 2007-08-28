@@ -327,6 +327,22 @@ class jFormsCompiler implements jISimpleCompiler {
                 $source[]='$ctrl->valueOnUncheck=\''.str_replace("'","\\'", (string)$control['valueonuncheck']) ."';";
         }
 
+        if(isset($control['maxsize'])){
+            if($controltype != 'upload'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('upload',$controltype,$this->sourceFile));
+            }
+            $source[]='$ctrl->maxsize='.intval((string)$control['maxsize']).';';
+        }
+        if(isset($control['mimetype'])){
+            if($controltype != 'upload'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('upload',$controltype,$this->sourceFile));
+            }
+            $mime = split('[,; ]',(string)$control['mimetype']);
+            $mime = array_diff($mime, array('')); // we remove all ''
+
+            $source[]='$ctrl->mimetype='.var_export($mime,true).';';
+        }
+
         $source[]='$this->addControl($ctrl);';
         if($hasCtrl2)
             $source[]='$this->addControl($ctrl2);';

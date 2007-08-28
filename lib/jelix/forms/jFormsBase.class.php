@@ -42,6 +42,14 @@ abstract class jFormsBase {
     protected $_submits = array();
 
     /**
+     * List of uploads controls
+     * array of jFormsControl objects
+     * @var array
+     * @see jFormsControl
+     */
+    protected $_uploads = array();
+
+    /**
      * the datas container
      * @var jFormsDataContainer
      */
@@ -93,22 +101,15 @@ abstract class jFormsBase {
                 }else{
                     $this->_container->datas[$name]= $ctrl->valueOnUncheck;
                 }
+            }elseif($ctrl->type=='upload'){
+                if(isset($_FILES[$name])){
+                    $this->_container->datas[$name]= $_FILES[$name]['name'];
+                }else{
+                    $this->_container->datas[$name]= '';
+                }
             }else{
                 $this->_container->datas[$name]= $value;
             }
-        }
-    }
-
-    /**
-    * add a control to the form
-    * @param $control jFormsControl
-    */
-    protected function addControl($control){
-        $this->_controls [$control->ref] = $control;
-        if($control->type =='submit')
-            $this->_submits [$control->ref] = $control;
-        if(!isset($this->_container->datas[$control->ref])){
-            $this->_container->datas[$control->ref] = $control->value;
         }
     }
 
@@ -391,6 +392,10 @@ abstract class jFormsBase {
      */
     public function id(){ return $this->_container->formId; }
 
+    /**
+     * @return boolean
+     */
+    public function hasUpload() { return count($this->_uploads)>0; }
 
     /**
      * @param string $buildertype  the type name of a form builder
@@ -408,6 +413,78 @@ abstract class jFormsBase {
             throw new jExceptionForm('invalid.form.builder', array($buildertype, $this->_sel));
         }
     }
+
+    /**
+     * save an uploaded file in the given directory. the given control must be 
+     * an upload control of course.
+     * @param string $controlName the name of the upload control
+     * @param string $path path of the directory where to store the file. If it is not given,
+     *                     it will be stored under the var/uploads/_modulename~formname_/ directory
+     * @param string $alternateName a new name for the file. If it is not given, the file
+     *                              while be stored with the original name
+     * @return boolean true if the file has been saved correctly
+     */
+    public function saveFile($controlName, $path='', $alternateName='') {
+        if($path == '')
+            $path = JELIX_APP_VAR_PATH.'uploads/'.$this->_sel.'/';
+
+        jFile::createDir($path);
+
+        if(!isset($this->_controls[$controlName]) || $this->_controls[$controlName]->type != 'upload')
+            throw new jExceptionForm('invalid.upload.control.name', array($controlName, $this->_sel));
+
+        if(!isset($_FILES[$controlName]) || $_FILES[$controlName]!= UPLOAD_ERR_OK)
+            return false;
+
+        if($this->_controls[$controlName]->maxsize && $_FILES[$controlName]['size'] > $this->_controls[$controlName]->maxsize){
+            return false;
+        }
+        move_uploaded_file($_FILES[$controlName]['tmp_name'], $path);
+        return true;
+    }
+
+    /**
+     * save all uploaded file in the given directory
+     * @param string $path path of the directory where to store the file. If it is not given,
+     *                     it will be stored under the var/uploads/_modulename~formname_/ directory
+     * @param string $alternateName a new name for the file. If it is not given, the file
+     *                              while be stored with the original name
+     */
+    public function saveAllFiles($path='') {
+        if($path == '')
+            $path = JELIX_APP_VAR_PATH.'uploads/'.$this->_sel.'/';
+
+        jFile::createDir($path);
+
+        foreach($this->_uploads as $ref=>$ctrl){
+
+            if(!isset($_FILES[$ref]) || $_FILES[$ref]!= UPLOAD_ERR_OK)
+                continue;
+            if($ctrl->maxsize && $_FILES[$ref]['size'] > $ctrl->maxsize)
+                continue;
+
+            move_uploaded_file($_FILES[$ref]['tmp_name'], $path);
+        }
+    }
+
+
+    /**
+    * add a control to the form
+    * @param $control jFormsControl
+    */
+    protected function addControl($control){
+        $this->_controls [$control->ref] = $control;
+        if($control->type =='submit')
+            $this->_submits [$control->ref] = $control;
+        if($control->type =='upload'){
+            $this->_uploads [$control->ref] = $control;
+        }
+        if(!isset($this->_container->datas[$control->ref])){
+            $this->_container->datas[$control->ref] = $control->value;
+        }
+    }
+
+
 
 }
 
