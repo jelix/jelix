@@ -41,6 +41,7 @@ abstract class jFormsBuilderBase {
      */
     protected $_name;
 
+    protected $_endt = '/>';
     /**
      * @param jFormsBase $form a form object
      * @param string $action action selector where form will be submit
@@ -51,6 +52,9 @@ abstract class jFormsBuilderBase {
         $this->_action = $action;
         $this->_actionParams = $actionParams;
         $this->_name = jFormsBuilderBase::generateFormName();
+        if($GLOBALS['gJCoord']->response!= null && $GLOBALS['gJCoord']->response->getType() == 'html'){
+            $this->_endt = ($GLOBALS['gJCoord']->response->isXhtml()?'/>':'>');
+        }
     }
 
     public function getName(){ return  $this->_name; }
@@ -107,7 +111,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
         if(count($url->params)){
             echo '<div>';
             foreach ($url->params as $p_name => $p_value) {
-                echo '<input type="hidden" name="'. $p_name .'" value="'. htmlspecialchars($p_value) .'"/>', "\n";
+                echo '<input type="hidden" name="', $p_name ,'" value="', htmlspecialchars($p_value), '"',$this->_endt, "\n";
             }
             echo '</div>';
         }
@@ -167,7 +171,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             $value = $this->_form->getData($ctrl->ref);
             if($value === null)
                 $value = $ctrl->defaultValue;
-            echo '<input type="text"',$id,$readonly,$hint,$class,' value="',htmlspecialchars($value),'"/>';
+            echo '<input type="text"',$id,$readonly,$hint,$class,' value="',htmlspecialchars($value),'"',$this->_endt;
             break;
         case 'checkbox':
             $value = $this->_form->getData($ctrl->ref);
@@ -179,7 +183,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             }else{
                 $v='';
             }
-            echo '<input type="checkbox"',$id,$readonly,$hint,$class,$v,' value="',$ctrl->valueOnCheck,'"/>';
+            echo '<input type="checkbox"',$id,$readonly,$hint,$class,$v,' value="',$ctrl->valueOnCheck,'"',$this->_endt;
             break;
         case 'checkboxes':
             $i=0;
@@ -198,7 +202,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
                     echo '<input type="checkbox"',$attrs,$i,'" value="',htmlspecialchars($v),'"';
                     if(in_array($v,$value)) 
                         echo ' checked="checked"';
-                    echo $readonly,$class,'/><label for="',$id,$i,'">',htmlspecialchars($label),'</label>';
+                    echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label>';
                     $i++;
                 }
             }else{
@@ -206,7 +210,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
                     echo '<input type="checkbox"',$attrs,$i,'" value="',htmlspecialchars($v),'"';
                     if($v == $value) 
                         echo ' checked="checked"';
-                    echo $readonly,$class,'/><label for="',$id,$i,'">',htmlspecialchars($label),'</label>';
+                    echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label>';
                     $i++;
                 }
             }
@@ -220,7 +224,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
                     $value = $ctrl->selectedValues[0];
             }
             foreach($ctrl->datasource->getDatas() as $v=>$label){
-                echo '<input type="radio"',$id,$i,'" value="',htmlspecialchars($v),'"',($v==$value?' checked="checked"':''),$readonly,$class,'/>';
+                echo '<input type="radio"',$id,$i,'" value="',htmlspecialchars($v),'"',($v==$value?' checked="checked"':''),$readonly,$class,$this->_endt;
                 echo '<label for="',$this->_name,'_',$ctrl->ref,'_',$i,'">',htmlspecialchars($label),'</label>';
                 $i++;
             }
@@ -286,17 +290,17 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             break;
         case 'secret':
         case 'secretconfirm':
-            echo '<input type="password"',$id,$readonly,$hint,$class,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"/>';
+            echo '<input type="password"',$id,$readonly,$hint,$class,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
             break;
         case 'output':
             $value = $this->_form->getData($ctrl->ref);
             if($value === null)
                 $value = $ctrl->defaultValue;
-            echo '<input type="hidden"',$id,' value="',htmlspecialchars($value),'"/>';
+            echo '<input type="hidden"',$id,' value="',htmlspecialchars($value),'"',$this->_endt;
             echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($value),'</span>';
             break;
         case 'upload':
-            echo '<input type="file"',$id,$readonly,$hint,$class,' value=""/>'; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
+            echo '<input type="file"',$id,$readonly,$hint,$class,' value=""',$this->_endt; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
             break;
         case 'submit':
             if($ctrl->standalone){
