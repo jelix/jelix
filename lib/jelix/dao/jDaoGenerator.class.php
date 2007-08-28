@@ -345,7 +345,7 @@ class jDaoGenerator {
     *  create FROM clause for all SELECT query
     * @return array  FROM string and WHERE string
     */
-    private function _getFromClause(){
+    protected function _getFromClause(){
 
       $aliaslink = ($this->_dbtype == 'oci8'?' ':' AS ');
 
@@ -418,7 +418,7 @@ class jDaoGenerator {
     /**
     * build SELECT clause for all SELECT queries
     */
-   private function _getSelectClause ($distinct=false){
+   protected function _getSelectClause ($distinct=false){
       $result = array();
 
       $tables = $this->_datasParser->getTables();
@@ -466,7 +466,7 @@ class jDaoGenerator {
     * @param array    $using     list of CopixPropertiesForDAO object. if null, get default fields list
     * @see  jDaoProperty
     */
-    private function _writeFieldsInfoWith ($info, $start = '', $end='', $beetween = '', $using = null){
+    protected function _writeFieldsInfoWith ($info, $start = '', $end='', $beetween = '', $using = null){
         $result = array();
         if ($using === null){
             //if no fields are provided, using _datasParser's as default.
@@ -483,7 +483,7 @@ class jDaoGenerator {
     /**
     * format field names with start, end and between strings.
     */
-    private function _writeFieldNamesWith ($start = '', $end='', $beetween = '', $using = null){
+    protected function _writeFieldNamesWith ($start = '', $end='', $beetween = '', $using = null){
         return $this->_writeFieldsInfoWith ('name', $start, $end, $beetween, $using);
     }
 
@@ -491,7 +491,7 @@ class jDaoGenerator {
     /**
     * gets fields that match a condition returned by the $captureMethod
     */
-    private function _getPropertiesBy ($captureMethod){
+    protected function _getPropertiesBy ($captureMethod){
         $captureMethod = '_capture'.$captureMethod;
         $result = array ();
 
@@ -503,23 +503,23 @@ class jDaoGenerator {
         return $result;
     }
 
-    private function _capturePkFields(&$field){
+    protected function _capturePkFields(&$field){
         return ($field->table == $this->_datasParser->getPrimaryTable()) && $field->isPK;
     }
 
-    private function _capturePrimaryFieldsExcludeAutoIncrement(&$field){
+    protected function _capturePrimaryFieldsExcludeAutoIncrement(&$field){
         return ($field->table == $this->_datasParser->getPrimaryTable()) &&
         ($field->datatype != 'autoincrement') && ($field->datatype != 'bigautoincrement');
     }
 
-    private function _capturePrimaryFieldsExcludePk(&$field){
+    protected function _capturePrimaryFieldsExcludePk(&$field){
         return ($field->table == $this->_datasParser->getPrimaryTable()) && !$field->isPK;
     }
 
-    private function _capturePrimaryTable(&$field){
+    protected function _capturePrimaryTable(&$field){
         return ($field->table == $this->_datasParser->getPrimaryTable());
     }
-    private function _captureAll(&$field){
+    protected function _captureAll(&$field){
         return true;
     }
 
@@ -527,7 +527,7 @@ class jDaoGenerator {
     /**
     * get autoincrement PK field
     */
-    private function _getAutoIncrementField ($using = null){
+    protected function _getAutoIncrementField ($using = null){
         if ($using === null){
             $using = $this->_datasParser->getProperties ();
         }
@@ -547,7 +547,7 @@ class jDaoGenerator {
     }
 
 
-    private function _buildSimpleConditions (&$fields, $fieldPrefix='', $forSelect=true){
+    protected function _buildSimpleConditions (&$fields, $fieldPrefix='', $forSelect=true){
         $r = ' ';
 
         $first = true;
@@ -565,16 +565,16 @@ class jDaoGenerator {
             }
 
             $var = '$'.$fieldPrefix.$field->name;
-            $value = $this->_preparePHPExpr($var,$field->datatype,false);
+            $value = $this->_preparePHPExpr($var,$field->datatype, !$field->required,'=' );
 
-            $r .= $condition.'\'.('.$var.'===null ? \' IS NULL \' : \' = \'.'.$value.').\'';
+            $r .= $condition.'\'.'.$value.'.\'';
         }
 
         return $r;
     }
 
 
-    private function _prepareValues ($fieldList, $pattern='', $prefixfield=''){
+    protected function _prepareValues ($fieldList, $pattern='', $prefixfield=''){
         $values = $fields = array();
 
         foreach ((array)$fieldList as $fieldName=>$field) {
@@ -601,7 +601,7 @@ class jDaoGenerator {
      * @param jDaoConditions
      * @param array
      */
-    private function _buildConditions ($cond, $fields, $params=array(), $withPrefix=true){
+    protected function _buildConditions ($cond, $fields, $params=array(), $withPrefix=true){
         $sql = $this->_buildSQLCondition ($cond->condition, $fields, $params,$withPrefix, true);
 
         $order = array ();
@@ -633,7 +633,7 @@ class jDaoGenerator {
     /**
      * @param jDaoCondition
      */
-    private function _buildSQLCondition ($condition, $fields, $params, $withPrefix, $principal=false){
+    protected function _buildSQLCondition ($condition, $fields, $params, $withPrefix, $principal=false){
 
         $r = ' ';
 
@@ -653,7 +653,7 @@ class jDaoGenerator {
                $f = $this->_encloseName($prop->fieldName);
             }
 
-            $r .= $f.' '.$cond['operator'].' ';
+            $r .= $f.' ';
 
             if($cond['operator'] == 'IN' || $cond['operator'] == 'NOT IN'){
                if($cond['isExpr']){
@@ -665,20 +665,30 @@ class jDaoGenerator {
                   }
                   $phpvalue = 'implode(\',\', array_map( create_function(\'$__e\',\'return '.$phpvalue.';\'), '.$cond['value'].'))';
                   $value= '(\'.'.$phpvalue.'.\')';
-
                }else{
                   $value= '('.$cond['value'].')';
                }
-               $r.=$value;
-            }elseif($cond['operator'] != 'IS NULL' && $cond['operator'] != 'IS NOT NULL'){
-
+               $r.=$cond['operator'].' '.$value;
+            }elseif($cond['operator'] == 'IS NULL' || $cond['operator'] == 'IS NOT NULL'){
+               $r.=$cond['operator'].' ';
+            }else{
                if($cond['isExpr']){
                   $value=str_replace("'","\\'",$cond['value']);
-                  foreach($params as $param){
-                     $value = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $prop->datatype, false).'.\'',$value);
+                  // we need to know if the expression is like "$foo" (1) or a thing like "concat($foo,'bla')" (2)
+                  // because of the nullability of the parameter. If the value of the parameter is null and the operator
+                  // is = or <>, then we need to generate a thing like :
+                  // - in case 1: ($foo === null ? 'IS NULL' : '='.$this->_conn->quote($foo))
+                  // - in case 2: '= concat('.($foo === null ? 'NULL' : $this->_conn->quote($foo)).' ,\'bla\')'
+                  if(strpos($value, '$') === 0){
+                     $value = '\'.'.$this->_preparePHPExpr($value, $prop->datatype, !$prop->required,$cond['operator']).'.\'';
+                  }else{
+                        foreach($params as $param){
+                            $value = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $prop->datatype, !$prop->required).'.\'',$value);
+                        }
+                        $value= $cond['operator'].' '.$value;
                   }
                }else{
-                  $value= $this->_preparePHPValue($cond['value'], $prop->datatype,false);
+                  $value= $cond['operator'].' '.$this->_preparePHPValue($cond['value'], $prop->datatype,false);
                }
                $r.=$value;
             }
@@ -708,7 +718,7 @@ class jDaoGenerator {
    * The method generates something like (including quotes) '.some PHP code.'
    *   (we do break "simple quoted strings")
    */
-   function _preparePHPValue($value, $fieldType, $checknull=true){
+   protected function _preparePHPValue($value, $fieldType, $checknull=true){
       if($checknull){
         if($value == 'null' || $value == 'NULL' || $value === null)
             return 'NULL';
@@ -737,40 +747,56 @@ class jDaoGenerator {
       }
    }
 
-   private function _preparePHPExpr($expr, $fieldType, $checknull=true){
+   protected function _preparePHPExpr($expr, $fieldType, $checknull=true, $forCondition=''){
+      $opnull=$opval='';
+      if($checknull && $forCondition != ''){
+        if($forCondition == '=')
+            $opnull = 'IS ';
+        elseif($forCondition == '<>')
+            $opnull = 'IS NOT ';
+        else
+            $checknull=false;
+      }
+      if($forCondition!='')
+        $forCondition = '\''.$forCondition.'\'.';
+
       switch(strtolower($fieldType)){
          case 'int':
          case 'integer':
          case 'autoincrement':
             if($checknull){
-               $expr= '('.$expr.' === null ? \'NULL\' : intval('.$expr.'))';
+               $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'intval('.$expr.'))';
             }else{
-               $expr= 'intval('.$expr.')';
+               $expr= $forCondition.'intval('.$expr.')';
             }
             break;
          case 'double':
          case 'float':
             if($checknull){
-               $expr= '('.$expr.' === null ? \'NULL\' : doubleval('.$expr.'))';
+               $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'doubleval('.$expr.'))';
             }else{
-               $expr= 'doubleval('.$expr.')';
+               $expr= $forCondition.'doubleval('.$expr.')';
             }
             break;
          case 'numeric': //usefull for bigint and stuff
          case 'bigautoincrement':
             if($checknull){
-               $expr='('.$expr.' === null ? \'NULL\' : (is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.')))';
+               $expr='('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.')))';
             }else{
-               $expr='(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
+               $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
             }
             break;
          default:
-            $expr ='$this->_conn->quote('.$expr.')';
+            if($checknull){
+               $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_conn->quote('.$expr.'))';
+            }else{
+               $expr= $forCondition.'$this->_conn->quote('.$expr.')';
+            }
       }
       return $expr;
    }
 
-    private function _encloseName($name){
+    protected function _encloseName($name){
         if($this->_dbtype == 'mysql'){
             return '`'.$name.'`';
         }elseif($this->_dbtype == 'postgresql'){
