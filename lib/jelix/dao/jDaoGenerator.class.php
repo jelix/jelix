@@ -490,6 +490,7 @@ class jDaoGenerator {
 
     /**
     * gets fields that match a condition returned by the $captureMethod
+    * @internal
     */
     protected function _getPropertiesBy ($captureMethod){
         $captureMethod = '_capture'.$captureMethod;
@@ -546,7 +547,19 @@ class jDaoGenerator {
         return null;
     }
 
-
+    /**
+     * build a WHERE clause with conditions on given properties : conditions are 
+     * equality between a variable and the field.
+     * the variable name is the name of the property, made with an optional prefix
+     * given in $fieldPrefix parameter.
+     * This method is called to generate WHERE clause for primary keys.
+     * @param array $fields  list of jDaoPropery objects
+     * @param string $fieldPrefix  an optional prefix to prefix variable names
+     * @param boolean $forSelect  if true, the table name or table alias will prefix
+     *                            the field name in the query
+     * @return string the WHERE clause (without the WHERE keyword)
+     * @internal
+     */
     protected function _buildSimpleConditions (&$fields, $fieldPrefix='', $forSelect=true){
         $r = ' ';
 
@@ -597,9 +610,13 @@ class jDaoGenerator {
 
 
     /**
-     *
-     * @param jDaoConditions
-     * @param array
+     * build 'where' clause from conditions declared with condition tag in a user method
+     * @param jDaoConditions $cond the condition object which contains conditions datas
+     * @param array $fields  array of jDaoProperty
+     * @param array $params  list of parameters name of the method
+     * @param boolean $withPrefix true if the field name should be preceded by the table name/table alias
+     * @return string a WHERE clause (without the WHERE keyword) with eventually an ORDER clause
+     * @internal
      */
     protected function _buildConditions ($cond, $fields, $params=array(), $withPrefix=true){
         $sql = $this->_buildSQLCondition ($cond->condition, $fields, $params,$withPrefix, true);
@@ -631,7 +648,16 @@ class jDaoGenerator {
 
 
     /**
-     * @param jDaoCondition
+     * build SQL WHERE clause 
+     * Used by _buildConditions. And this method call itself recursively
+     * @param jDaoCondition $cond a condition object which contains conditions datas
+     * @param array $fields  array of jDaoProperty
+     * @param array $params  list of parameters name of the method
+     * @param boolean $withPrefix true if the field name should be preceded by the table name/table alias
+     * @param boolean $principal  should be true for the first call, and false for recursive call
+     * @return string a WHERE clause (without the WHERE keyword)
+     * @see jDaoGenerator::_buildConditions
+     * @internal
      */
     protected function _buildSQLCondition ($condition, $fields, $params, $withPrefix, $principal=false){
 
@@ -788,7 +814,7 @@ class jDaoGenerator {
             break;
          default:
             if($checknull){
-               $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_conn->quote('.$expr.'))';
+               $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_conn->quote('.$expr.',false))';
             }else{
                $expr= $forCondition.'$this->_conn->quote('.$expr.')';
             }
