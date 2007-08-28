@@ -42,7 +42,7 @@ final class jResponseJson extends jResponse {
 #if ENABLE_PHP_JSON
         $content = json_encode($this->datas);
 #else
-        $json = new JSON(JSON_LOOSE_TYPE);
+        $json = new Services_JSON(JSON_LOOSE_TYPE);
         $content = $json->encode($this->datas);
 #endif
         if($this->hasErrors()) return false;
@@ -71,7 +71,7 @@ final class jResponseJson extends jResponse {
 #if ENABLE_PHP_JSON
         $content = json_encode($message);
 #else
-        $json = new JSON(JSON_LOOSE_TYPE);
+        $json = new Services_JSON(JSON_LOOSE_TYPE);
         $content = $json->encode($message);
 #endif
         $this->_httpHeaders['Content-length'] = strlen($content);

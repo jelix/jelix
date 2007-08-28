@@ -36,7 +36,7 @@ class jJsonRpc {
 #if ENABLE_PHP_JSON
         $obj = json_decode($content,true);
 #else
-        $json = new SERVICES_JSON(SERVICES_JSON_LOOSE_TYPE);
+        $json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
         $obj = $json->decode($content);
         /*
         $obj->method
@@ -57,7 +57,7 @@ class jJsonRpc {
 #if ENABLE_PHP_JSON
         return '{"method":"'.$methodname.'","params":'.json_encode($params).',"id":'.json_encode($id).'}';
 #else
-        $json = new SERVICES_JSON();
+        $json = new Services_JSON();
         return '{"method":"'.$methodname.'","params":'.$json->encode($params).',"id":'.$json->encode($id).'}';
 #endif
 
@@ -73,7 +73,7 @@ class jJsonRpc {
 #if ENABLE_PHP_JSON
         return json_decode($content);
 #else
-        $json = new SERVICES_JSON(SERVICES_JSON_LOOSE_TYPE);
+        $json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
         return $json->decode($content);
 #endif
 
@@ -88,7 +88,7 @@ class jJsonRpc {
 #if ENABLE_PHP_JSON
         return '{"result":'.json_encode($params).',"error":null,"id":'.json_encode($id).'}';
 #else
-        $json = new SERVICES_JSON();
+        $json = new Services_JSON();
         return '{"result":'.$json->encode($params).',"error":null,"id":'.$json->encode($id).'}';
 #endif
     }
@@ -103,7 +103,7 @@ class jJsonRpc {
 #if ENABLE_PHP_JSON
         return '{"result":null,"error":{"code": '.json_encode($code).', "string":'.json_encode($message).' },"id":'.json_encode($id).'}';
 #else
-        $json = new SERVICES_JSON();
+        $json = new Services_JSON();
         return '{"result":null,"error":{"code": '.$json->encode($code).', "string":'.$json->encode($message).' },"id":'.$json->encode($id).'}';
 #endif
     }
