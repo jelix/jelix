@@ -326,6 +326,7 @@ cd lib/jelix/plugins/tpl/html
   modifier.nl2br.php
   meta.html.php
   function.formfull.php
+  function.formdatasfull.php
   function.formurl.php
   function.formurlparam.php
   function.diff.php

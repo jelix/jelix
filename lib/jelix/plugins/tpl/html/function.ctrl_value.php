@@ -24,7 +24,6 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
 
     if($ctrlname =='') {
         if($tpl->_privateVars['__ctrl']->type == 'submit' && ($tpl->_privateVars['__ctrl']->standalone || $insideForm)){
-            echo "no value";
             return;
         }
         $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
@@ -33,7 +32,6 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
     }else{
         $ctrls = $tpl->_privateVars['__form']->getControls();
         if($ctrls[$ctrlname]->type == 'submit' && ($ctrls[$ctrlname]->standalone || $insideForm)){
-            echo "no value";
             return;
         }
         $ctrl = $ctrls[$ctrlname];
