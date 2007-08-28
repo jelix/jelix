@@ -125,6 +125,7 @@ cd testapp/modules/jelix_tests/tests/
 cd testapp/var
   .htaccess
 cd testapp/var/log
+cd testapp/var/uploads
 cd testapp/var/config
   defaultconfig.ini.php.dist
   dbprofils.ini.php.dist

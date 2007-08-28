@@ -69,6 +69,7 @@ class createappCommand extends JelixScriptCommand {
        $this->createDir(JELIX_APP_VAR_PATH.'overloads/');
        $this->createDir(JELIX_APP_VAR_PATH.'themes/');
        $this->createDir(JELIX_APP_VAR_PATH.'themes/default/');
+       $this->createDir(JELIX_APP_VAR_PATH.'uploads/');
        $this->createDir(JELIX_APP_PATH.'modules');
        $this->createDir(JELIX_APP_PATH.'plugins');
        $this->createDir(JELIX_APP_PATH.'plugins/coord/');

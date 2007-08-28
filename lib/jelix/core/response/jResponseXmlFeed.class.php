@@ -65,7 +65,8 @@ abstract class jResponseXMLFeed extends jResponse {
         global $gJConfig;
 
         $this->charset  = $gJConfig->defaultCharset;
-        $this->lang     = $gJConfig->defaultLocale;
+        list($lang,$country ) = split('_', $gJConfig->defaultLocale);
+        $this->lang       = $lang;
 
         parent::__construct ();
     }

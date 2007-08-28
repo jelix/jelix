@@ -19,6 +19,7 @@ cd myapp/modules/myapp/templates
   hello.tpl
 cd myapp/var
   .htaccess
+cd myapp/var/uploads
 cd myapp/var/config
   defaultconfig.ini.php.dist
   dbprofils.ini.php.dist
