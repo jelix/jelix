@@ -19,8 +19,8 @@ cd lib/jelix/auth
 
 cd lib/jelix/acl
   jAcl.class.php
-  jAclUserGroup.class.php
-  jAclManager.class.php
+  jAclDbUserGroup.class.php
+  jAclDbManager.class.php
   jAclDb.class.php
 
 cd lib/jelix/controllers
