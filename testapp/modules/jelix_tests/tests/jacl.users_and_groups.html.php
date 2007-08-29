@@ -38,8 +38,8 @@ class UTjaclusergroup extends jUnitTestCaseDb {
 
         // creation d'un groupe
 
-        $this->grpId1 = jAclUserGroup::createGroup('group1');
-        $this->assertTrue($this->grpId1 != '', 'jAclUserGroup::createGroup failed : id is empty');
+        $this->grpId1 = jAclDbUserGroup::createGroup('group1');
+        $this->assertTrue($this->grpId1 != '', 'jAclDbUserGroup::createGroup failed : id is empty');
         $this->groups = array(array('id_aclgrp'=>$this->grpId1,
             'name'=>'group1',
             'grouptype'=>0,
@@ -48,8 +48,8 @@ class UTjaclusergroup extends jUnitTestCaseDb {
 
         // creation de deux autres groupes
 
-        $this->grpId2 = jAclUserGroup::createGroup('group2');
-        $this->grpId3 = jAclUserGroup::createGroup('group3');
+        $this->grpId2 = jAclDbUserGroup::createGroup('group2');
+        $this->grpId3 = jAclDbUserGroup::createGroup('group3');
         $this->groups[] = array('id_aclgrp'=>$this->grpId2,
             'name'=>'group2',
             'grouptype'=>0,
@@ -64,9 +64,9 @@ class UTjaclusergroup extends jUnitTestCaseDb {
 
     public function testDefaultGroup(){
         // on met un des groupes par defaut
-        jAclUserGroup::setDefaultGroup($this->grpId2,false);
+        jAclDbUserGroup::setDefaultGroup($this->grpId2,false);
         $this->assertTableContainsRecords('jacl_group', $this->groups);
-        jAclUserGroup::setDefaultGroup($this->grpId2,true);
+        jAclDbUserGroup::setDefaultGroup($this->grpId2,true);
         $this->defaultGroupId = $this->grpId2; // for next test method
         $this->groups[1]['grouptype']=1;
         $this->assertTableContainsRecords('jacl_group', $this->groups);
@@ -74,14 +74,14 @@ class UTjaclusergroup extends jUnitTestCaseDb {
 
     public function testRenameGroup(){
         // changement de nom d'un groupe
-        jAclUserGroup::updateGroup($this->grpId3, 'newgroup3');
+        jAclDbUserGroup::updateGroup($this->grpId3, 'newgroup3');
         $this->groups[2]['name']='newgroup3';
         $this->assertTableContainsRecords('jacl_group', $this->groups);
     }
 
     public function testGroupList(){
         // recuperation de la liste de tous les groupes
-        $list = jAclUserGroup::getGroupList()->fetchAll();
+        $list = jAclDbUserGroup::getGroupList()->fetchAll();
 
         $verif='<array>
     <object>
@@ -109,7 +109,7 @@ class UTjaclusergroup extends jUnitTestCaseDb {
 
     public function testRemoveGroup(){
         // creation d'un autre groupe
-        $this->grpId4 = jAclUserGroup::createGroup('group4');
+        $this->grpId4 = jAclDbUserGroup::createGroup('group4');
         $records2 = $this->groups;
         $records2[] = array('id_aclgrp'=>$this->grpId4,
             'name'=>'group4',
@@ -118,7 +118,7 @@ class UTjaclusergroup extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('jacl_group', $records2);
 
         // destruction d'un groupe (ici qui n'a pas de user)
-        jAclUserGroup::removeGroup($this->grpId4);
+        jAclDbUserGroup::removeGroup($this->grpId4);
         $this->assertTableContainsRecords('jacl_group', $this->groups);
 
     }
@@ -129,7 +129,7 @@ class UTjaclusergroup extends jUnitTestCaseDb {
         $this->assertTableIsEmpty('jacl_user_group');
 
         // creation d'un user dans les acl, sans le mettre dans les groupes par defaut
-        jAclUserGroup::createUser('laurent',false);
+        jAclDbUserGroup::createUser('laurent',false);
         $this->grpId5 = $this->getLastId('id_aclgrp', 'jacl_group');
 
         $this->groups[] = array('id_aclgrp'=>$this->grpId5,
@@ -147,7 +147,7 @@ class UTjaclusergroup extends jUnitTestCaseDb {
     public function testCreateUser2(){
         // creation d'un deuxième user dans les acl, en le mettant 
         // dans les groupes par defaut
-        jAclUserGroup::createUser('max');
+        jAclDbUserGroup::createUser('max');
         $this->grpId6 = $this->getLastId('id_aclgrp', 'jacl_group');
 
         $this->groups[] = array('id_aclgrp'=>$this->grpId6,
@@ -166,9 +166,9 @@ class UTjaclusergroup extends jUnitTestCaseDb {
 
     public function testAddUserIntoGroup(){
         // ajout d'un user dans un groupe
-        jAclUserGroup::createUser('robert');
+        jAclDbUserGroup::createUser('robert');
         $this->grpId7 = $this->getLastId('id_aclgrp', 'jacl_group');
-        jAclUserGroup::addUserToGroup('robert', $this->grpId1);
+        jAclDbUserGroup::addUserToGroup('robert', $this->grpId1);
 
         $this->groups[] = array('id_aclgrp'=>$this->grpId7,
             'name'=>'robert',
@@ -190,7 +190,7 @@ class UTjaclusergroup extends jUnitTestCaseDb {
     public function testUsersList(){
 
         // récuperation de la liste des users
-        $list = jAclUserGroup::getUsersList($this->defaultGroupId)->fetchAll();
+        $list = jAclDbUserGroup::getUsersList($this->defaultGroupId)->fetchAll();
         $verif='<array>
     <object>
         <string property="id_aclgrp" value="'.$this->defaultGroupId.'" />
@@ -207,7 +207,7 @@ class UTjaclusergroup extends jUnitTestCaseDb {
     public function testRemoveUserFromGroup(){
 
         // on enleve un user dans un groupe
-        jAclUserGroup::removeUserFromGroup('robert', $this->grpId1);
+        jAclDbUserGroup::removeUserFromGroup('robert', $this->grpId1);
 
         $this->usergroups=array(
             array('login'=>'laurent', 'id_aclgrp'=>$this->grpId5),
@@ -222,7 +222,7 @@ class UTjaclusergroup extends jUnitTestCaseDb {
 
     public function testRemoveUser(){
         // on enleve un user
-        jAclUserGroup::removeUser('robert');
+        jAclDbUserGroup::removeUser('robert');
         $this->usergroups=array(
             array('login'=>'laurent', 'id_aclgrp'=>$this->grpId5),
             array('login'=>'max', 'id_aclgrp'=>$this->grpId6),
@@ -236,7 +236,7 @@ class UTjaclusergroup extends jUnitTestCaseDb {
     public function testRemoveUsedGroup(){
         // on detruit un groupe qui a des users
         // on ajoute d'abord un user dans un groupe
-        jAclUserGroup::addUserToGroup('max', $this->grpId3);
+        jAclDbUserGroup::addUserToGroup('max', $this->grpId3);
 
         $this->usergroups=array(
             array('login'=>'laurent', 'id_aclgrp'=>$this->grpId5),
@@ -250,7 +250,7 @@ class UTjaclusergroup extends jUnitTestCaseDb {
 
 
         
-        jAclUserGroup::removeGroup($this->grpId3);
+        jAclDbUserGroup::removeGroup($this->grpId3);
         $this->usergroups=array(
             array('login'=>'laurent', 'id_aclgrp'=>$this->grpId5),
             array('login'=>'max', 'id_aclgrp'=>$this->grpId6),

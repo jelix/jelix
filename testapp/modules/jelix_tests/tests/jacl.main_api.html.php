@@ -73,23 +73,23 @@ class UTjacl extends jUnitTestCaseDb {
     }
 
     public function testIsMemberOfGroup(){
-        $this->assertTrue(jAclUserGroup::isMemberOfGroup (1));
-        $this->assertFalse(jAclUserGroup::isMemberOfGroup (2));
+        $this->assertTrue(jAclDbUserGroup::isMemberOfGroup (1));
+        $this->assertFalse(jAclDbUserGroup::isMemberOfGroup (2));
     }
 
     public function testGetRight(){
-        jAclManager::addSubject('super.cms',2 , 'cms~rights.super.cms');
-        jAclManager::addSubject('admin.access',1 , 'admin~rights.access');
-        jAclManager::addRight(1, 'super.cms', 'LIST' );
-        jAclManager::addRight(1, 'super.cms', 'UPDATE' );
-        jAclManager::addRight(1, 'super.cms', 'DELETE' , 154);
+        jAclDbManager::addSubject('super.cms',2 , 'cms~rights.super.cms');
+        jAclDbManager::addSubject('admin.access',1 , 'admin~rights.access');
+        jAclDbManager::addRight(1, 'super.cms', 'LIST' );
+        jAclDbManager::addRight(1, 'super.cms', 'UPDATE' );
+        jAclDbManager::addRight(1, 'super.cms', 'DELETE' , 154);
 
         $this->assertEqual(jAcl::getRight('super.cms'), array('LIST','UPDATE')); // droit généraux sur le sujet super.cms
         $this->assertEqual(jAcl::getRight('admin.access'), array());
         $this->assertEqual(jAcl::getRight('super.cms',154), array('LIST','UPDATE', 'DELETE')); // droit sur une ressource
         $this->assertEqual(jAcl::getRight('super.cms',122), array('LIST','UPDATE')); // ressource non repertoriée
 
-        jAclManager::addRight(1, 'admin.access', 'TRUE' );
+        jAclDbManager::addRight(1, 'admin.access', 'TRUE' );
 
         $this->assertEqual(jAcl::getRight('admin.access'), array('TRUE'));
 

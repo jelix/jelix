@@ -41,7 +41,7 @@ class dbAclDriver implements jIAclDriver {
         if(!jAuth::isConnected()) // not authificated = no rights
             return array();
 
-        $groups = jAclUserGroup::getGroups();
+        $groups = jAclDbUserGroup::getGroups();
 
         // recupère toutes les valeurs correspondant aux groupes auquel appartient le user,
         //   avec le sujet et ressource indiqué

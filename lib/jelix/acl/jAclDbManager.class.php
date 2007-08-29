@@ -11,12 +11,12 @@
 
 
 /**
- * This class is used to manage rights
+ * This class is used to manage rights. Works only with db driver of jAcl.
  * @package     jelix
  * @subpackage  acl
  * @static
  */
-class jAclManager {
+class jAclDbManager {
 
     /**
      * @internal The constructor is private, because all methods are static

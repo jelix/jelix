@@ -10,12 +10,13 @@
 */
 
 /**
- * Use this class to register or unregister users in the acl system, and to manage user groups
+ * Use this class to register or unregister users in the acl system, and to manage user groups.
+ *  Works only with db driver of jAcl.
  * @package     jelix
  * @subpackage  acl
  * @static
  */
-class jAclUserGroup {
+class jAclDbUserGroup {
 
     /**
      * @internal The constructor is private, because all methods are static
