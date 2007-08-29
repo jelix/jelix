@@ -85,7 +85,7 @@ ACTION:
 
     protected function cmd_list(){
         $sql="SELECT id_aclgrp, name, grouptype FROM jacl_group WHERE grouptype <2 ORDER BY name";
-        $cnx = jDb::getConnection(jAcl::getDbProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfil());
         $rs = $cnx->query($sql);
         echo "id\tlabel name\t\tdefault\n--------------------------------------------------------\n";
         foreach($rs as $rec){
@@ -102,7 +102,7 @@ ACTION:
         if(!is_array($params) || count($params) != 1)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAcl::getDbProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfil());
 
         $sql="INSERT into jacl_group (name, grouptype, ownerlogin) VALUES (";
         $sql.=$cnx->quote($params[0]).',';
@@ -121,7 +121,7 @@ ACTION:
         if(!is_array($params) || count($params) != 1)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAcl::getDbProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfil());
 
         $sql="SELECT id_aclgrp,  grouptype FROM jacl_group WHERE id_aclgrp=".intval($params[0]);
         $rs = $cnx->query($sql);
@@ -154,7 +154,7 @@ ACTION:
         if(!is_array($params) || count($params) == 0 || count($params) > 2)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAcl::getDbProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfil());
 
         $sql="SELECT id_aclgrp,  grouptype FROM jacl_group WHERE id_aclgrp=".intval($params[0]);
         $rs = $cnx->query($sql);
@@ -185,7 +185,7 @@ ACTION:
         if(!is_array($params) || count($params) != 2)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAcl::getDbProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfil());
 
         $sql="SELECT id_aclgrp,  grouptype FROM jacl_group WHERE id_aclgrp=".intval($params[0]);
         $rs = $cnx->query($sql);

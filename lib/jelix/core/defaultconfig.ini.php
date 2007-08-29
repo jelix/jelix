@@ -175,3 +175,6 @@ smtpUsername =
 smtpPassword =
 ; SMTP server timeout in seconds
 smtpTimeout = 10
+
+[acl]
+driver = db

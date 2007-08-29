@@ -21,6 +21,7 @@ cd lib/jelix/acl
   jAcl.class.php
   jAclUserGroup.class.php
   jAclManager.class.php
+  jAclDb.class.php
 
 cd lib/jelix/controllers
   jControllerCmdLine.class.php
@@ -249,12 +250,15 @@ cd lib/jelix-plugins
   INSTALL
   CREDITS
 cd lib/jelix-plugins/auth/
+cd lib/jelix-plugins/acl/
 cd lib/jelix-plugins/coord/
 cd lib/jelix-plugins/db/
 cd lib/jelix-plugins/urls/
 cd lib/jelix-plugins/tpl/
 cd lib/jelix-plugins/wr_rules/
 
+cd lib/jelix/plugins/acl/db
+  db.acl.php
 cd lib/jelix/plugins/auth/db
   db.auth.php
 cd lib/jelix/plugins/auth/class

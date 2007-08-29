@@ -104,3 +104,7 @@ jsonrpc = "@jsonrpc"
 
 [logfiles]
 default=messages.log
+
+[acl]
+driver = db
+

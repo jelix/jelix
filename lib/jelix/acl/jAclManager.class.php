@@ -12,7 +12,6 @@
 
 /**
  * This class is used to manage rights
- * It needs the jxacl module.
  * @package     jelix
  * @subpackage  acl
  * @static
@@ -33,7 +32,7 @@ class jAclManager {
      * @return boolean  true if the right is set
      */
     public static function addRight($group, $subject, $value , $resource=''){
-        $profil = jAcl::getDbProfil();
+        $profil = jAclDb::getProfil();
         $daosbj = jDao::get('jelix~jaclsubject', $profil);
         $daorightval = jDao::get('jelix~jaclrightvalues', $profil);
 
@@ -78,7 +77,7 @@ class jAclManager {
      * @param string $resource the id of a resource
      */
     public static function removeRight($group, $subject, $value , $resource=''){
-        $daoright = jDao::get('jelix~jaclrights', jAcl::getDbProfil());
+        $daoright = jDao::get('jelix~jaclrights', jAclDb::getProfil());
         if($resource === null) $resource='';
         $daoright->delete($subject,$group,$resource,$value);
         jAcl::clearCache();
@@ -92,7 +91,7 @@ class jAclManager {
      * @param string $resource the id of a resource
      */
     public static function removeResourceRight($subject, $resource){
-        $daoright = jDao::get('jelix~jaclrights', jAcl::getDbProfil());
+        $daoright = jDao::get('jelix~jaclrights', jAclDb::getProfil());
         $daoright->deleteBySubjRes($subject, $resource);
         jAcl::clearCache();
     }
@@ -105,7 +104,7 @@ class jAclManager {
      */
     public static function addSubject($subject, $id_aclvalgrp, $label_key){
         // ajoute un sujet dans la table jacl_subject
-        $p = jAcl::getDbProfil();
+        $p = jAclDb::getProfil();
         $daosbj = jDao::get('jelix~jaclsubject',$p);
         $subj = jDao::createRecord('jelix~jaclsubject',$p);
         $subj->id_aclsbj=$subject;
@@ -123,7 +122,7 @@ class jAclManager {
     public static function removeSubject($subject){
         // supprime dans jacl_rights
         // supprime dans jacl_subject
-        $p = jAcl::getDbProfil();
+        $p = jAclDb::getProfil();
         $daoright = jDao::get('jelix~jaclrights',$p);
         $daoright->deleteBySubject($subject);
         $daosbj = jDao::get('jelix~jaclsubject',$p);

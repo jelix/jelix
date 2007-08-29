@@ -3,18 +3,39 @@
 * @package     jelix
 * @subpackage  acl
 * @author      Laurent Jouanneau
-* @copyright   2006 Laurent Jouanneau
+* @copyright   2006-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.0a3
 */
 
 /**
+ * interface for jAcl drivers
+ * @package jelix
+ * @subpackage acl
+ */
+interface jIAclDriver {
+
+    /**
+     * return the possible values of the right on the given subject (and on the optional resource)
+     * @param string $subject the key of the subject
+     * @param string $resource the id of a resource
+     * @return array list of values corresponding to the right
+     */
+    public function getRight($subject, $resource=null);
+
+    /**
+     * clear some cached datas, it a cache exists in the driver..
+     */
+    public function clearCache();
+
+}
+
+/**
  * Main class to query the acl system, and to know value of a right
  *
  * you should call this class (all method are static) when you want to know if
- * the current user have a right, or to know if he is a member of a group
- * This class needs the acl module.
+ * the current user have a right
  * @package jelix
  * @subpackage acl
  * @static
@@ -27,14 +48,26 @@ class jAcl {
     private function __construct (){ }
 
     /**
-     * Says if the current user is a member of the given user group
-     * @param int $groupid The id of a group
-     * @return boolean true if it's ok
+     * load the acl driver
+     * @return jIAclDriver
      */
-    public static function isMemberOfGroup ($groupid){
-        $groups = self::getGroups();
-        return in_array($groupid, $groups);
+    protected static function _getDriver(){
+        static $driver = null;
+        if($driver == null){
+            global $gJConfig;
+            $db = strtolower($gJConfig->acl['driver']);
+            if(!isset($gJConfig->_pluginsPathList_acl) 
+                || !isset($gJConfig->_pluginsPathList_acl[$db])
+                || !file_exists($gJConfig->_pluginsPathList_acl[$db]) ){
+                 throw new jException('jelix~errors.acl.driver.notfound',$db);
+            }
+            require_once($gJConfig->_pluginsPathList_acl[$db].$db.'.acl.php');
+            $dname = $gJConfig->acl['driver'].'AclDriver';
+            $driver = new $dname($gJConfig->acl);
+        }
+        return $driver;
     }
+
 
     /**
      * call this method to know if the current user has the right with the given value
@@ -43,14 +76,12 @@ class jAcl {
      * @param string $resource the id of a resource
      * @return boolean true if yes
      */
-    public static function check($subject, $value, $resource=null){
+    public static function check($subject, $value=true, $resource=null){
         $val = self::getRight($subject, $resource);
         return in_array($value,$val);
     }
+        
 
-
-    protected static $aclres = array();
-    protected static $acl = array();
 
     /**
      * return the value of the right on the given subject (and on the optional resource)
@@ -59,37 +90,8 @@ class jAcl {
      * @return array list of values corresponding to the right
      */
     public static function getRight($subject, $resource=null){
-
-        if($resource === null && isset(self::$acl[$subject])){
-            return self::$acl[$subject];
-        }elseif(isset(self::$aclres[$subject][$resource])){
-            return self::$aclres[$subject][$resource];
-        }
-
-        if(!jAuth::isConnected()) // not authificated = no rights
-            return array();
-
-        $groups = self::getGroups();
-
-        // recupère toutes les valeurs correspondant aux groupes auquel appartient le user,
-        //   avec le sujet et ressource indiqué
-        $values= array();
-        $dao = jDao::get('jelix~jaclrights', self::getDbProfil());
-        $list = $dao->getAllGroupRights($subject, $groups);
-        foreach($list as $right){
-            $values [] = $right->value;
-        }
-        self::$acl[$subject] = $values;
-
-        if($resource !== null){
-            $list = $dao->getAllGroupRightsWithRes($subject, $groups, $resource);
-            foreach($list as $right){
-                $values [] = $right->value;
-            }
-            self::$aclres[$subject][$resource] = $values = array_unique($values);
-        }
-
-        return $values;
+        $dr = self::_getDriver();
+        return $dr->getRight($subject, $resource);
     }
 
     /**
@@ -97,49 +99,8 @@ class jAcl {
      * @since 1.0b2
      */
     public static function clearCache(){
-        self::$acl = array();
-        self::$aclres = array();
-    }
-
-
-    /**
-     * retrieve the list of group the current user is member of
-     * @return array list of group id
-     */
-    protected static function getGroups(){
-        static $groups = null;
-
-        if(!jAuth::isConnected())
-            return array();
-
-        // chargement des groupes
-        if($groups === null){
-            $dao = jDao::get('jelix~jaclusergroup', self::getDbProfil());
-            $gp = $dao->getGroupsUser($_SESSION['JELIX_USER']->login);
-            $groups = array();
-            foreach($gp as $g){
-                $groups[]=intval($g->id_aclgrp);
-            }
-        }
-        return $groups;
-    }
-
-    /**
-     * return the profil name used for jacl connection
-     * @return string profil name
-     * @since 1.0b2
-     */
-    public static function getDbProfil(){
-        static $profil='';
-        if($profil== ''){
-            try{
-                $prof = jDb::getProfil ('jacl_profil', true);
-            }catch(Exception $e){
-                $prof = jDb::getProfil ();
-            }
-            $profil = $prof['name'];
-        }
-        return $profil;
+        $dr = self::_getDriver();
+        $dr->clearCache();
     }
 }
 

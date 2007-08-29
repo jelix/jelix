@@ -27,7 +27,7 @@ class userTest {
 class UTjacl extends jUnitTestCaseDb {
 
     public function testStart(){
-        $this->dbProfil = jAcl::getDbProfil();
+        $this->dbProfil = jAclDb::getProfil();
         $this->emptyTable('jacl_rights');
         $this->emptyTable('jacl_subject');
 
@@ -73,8 +73,8 @@ class UTjacl extends jUnitTestCaseDb {
     }
 
     public function testIsMemberOfGroup(){
-        $this->assertTrue(jAcl::isMemberOfGroup (1));
-        $this->assertFalse(jAcl::isMemberOfGroup (2));
+        $this->assertTrue(jAclUserGroup::isMemberOfGroup (1));
+        $this->assertFalse(jAclUserGroup::isMemberOfGroup (2));
     }
 
     public function testGetRight(){
