@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  acl
 * @author      Laurent Jouanneau
-* @copyright   2006 Laurent Jouanneau
+* @copyright   2006-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.0a3
@@ -27,6 +27,7 @@ class jAclDbUserGroup {
      * Says if the current user is a member of the given user group
      * @param int $groupid The id of a group
      * @return boolean true if it's ok
+     * @since 1.0b3
      */
     public static function isMemberOfGroup ($groupid){
         $groups = self::getGroups();
@@ -36,6 +37,7 @@ class jAclDbUserGroup {
     /**
      * retrieve the list of group the current user is member of
      * @return array list of group id
+     * @since 1.0b3
      */
     public static function getGroups(){
         static $groups = null;
