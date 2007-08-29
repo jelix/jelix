@@ -97,7 +97,7 @@ class intuitionDbConnection extends jDbConnection {
         if (is_object ($queryResult) or 
             (is_numeric ($queryResult) and $queryResult > 0)){
 
-            $rs 				= new jDbResultSetIntuition ($queryResult);
+            $rs 				= new intuitionDbResultSet ($queryResult);
             $rs->_connector 	= $this;
         }else{
             $rs = false;
