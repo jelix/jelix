@@ -32,7 +32,7 @@ class jResponseText extends jResponse {
      */
     public function output(){
         global $gJConfig;
-        $this->addHttpHeader('Content-Type','text/plain;charset='.$gJConfig->defaultCharset,false);
+        $this->addHttpHeader('Content-Type','text/plain;charset='.$gJConfig->charset,false);
         $this->_httpHeaders['Content-length']=strlen($this->content);
         $this->sendHttpHeaders();
         echo $this->content;
@@ -45,7 +45,7 @@ class jResponseText extends jResponse {
     public function outputErrors(){
         global $gJConfig;
         header("HTTP/1.0 500 Internal Server Error");
-        header('Content-Type: text/plain;charset='.$gJConfig->defaultCharset);
+        header('Content-Type: text/plain;charset='.$gJConfig->charset);
         if($this->hasErrors()){
             foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
                echo '['.$e[0].' '.$e[1].'] '.$e[2]." \t".$e[3]." \t".$e[4]."\n";

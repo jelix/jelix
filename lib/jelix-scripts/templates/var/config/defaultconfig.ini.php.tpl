@@ -1,13 +1,12 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-defaultModule = "{$appname}"
-defaultAction = "default_index"
-defaultLocale = "fr_FR"
-defaultCharset = "UTF-8"
+
+locale = "fr_FR"
+charset = "UTF-8"
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
-defaultTimeZone = "Europe/Paris"
+timeZone = "Europe/Paris"
 
 checkTrustedModules = off
 
@@ -17,9 +16,7 @@ trustedModules =
 pluginsPath = lib:jelix-plugins/,app:plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 
-dbProfils = dbprofils.ini.php
-
-defaultTheme = default
+theme = default
 
 [plugins]
 ;nom = nom_fichier_ini

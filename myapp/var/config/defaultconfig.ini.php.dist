@@ -1,13 +1,12 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-defaultModule = "myapp"
-defaultAction = "main_"
-defaultLocale = "fr_FR"
-defaultCharset = "ISO-8859-1"
+
+locale = "fr_FR"
+charset = "UTF-8"
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
-defaultTimeZone = "Europe/Paris"
+timeZone = "Europe/Paris"
 
 checkTrustedModules = off
 
@@ -20,7 +19,7 @@ tplpluginsPath = lib:jelix/tpl/plugins/
 
 dbProfils = dbprofils.ini.php
 
-defaultTheme = default
+theme = default
 
 [plugins]
 ;nom = nom_fichier_ini

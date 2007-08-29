@@ -34,14 +34,14 @@ class jCmdLineRequest extends jRequest {
         $scriptName = array_shift($argv); // shift the script name
 
         if ($_SERVER['argc'] == 1) {
-            $argsel = $gJConfig->defaultModule.'~'.$gJConfig->defaultAction;
+            $argsel = $gJConfig->startModule.'~'.$gJConfig->startAction;
         } else {
             $argsel = array_shift($argv); // get the module~action selector
             if ($argsel == 'help') {
                 $argsel = 'jelix~help_index';
             }
             if (!preg_match('/(?:([\w\.]+)~)/', $argsel)) {
-                $argsel = $gJConfig->defaultModule.'~'.$argsel;
+                $argsel = $gJConfig->startModule.'~'.$argsel;
             }
         }
 

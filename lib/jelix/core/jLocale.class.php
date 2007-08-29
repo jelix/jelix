@@ -46,7 +46,7 @@ class jBundle {
     public function get ($key, $charset = null){
 
         if($charset == null){
-            $charset = $GLOBALS['gJConfig']->defaultCharset;
+            $charset = $GLOBALS['gJConfig']->charset;
         }
         if (!in_array ($charset, $this->_loadedCharset)){
             $this->_loadLocales ($this->locale, $charset);
@@ -176,7 +176,7 @@ class jLocale {
      * @return string
      */
     static function getCurrentLang(){
-        $s=$GLOBALS['gJConfig']->defaultLocale;
+        $s=$GLOBALS['gJConfig']->locale;
         return substr($s,0, strpos($s,'_'));
     }
     /**
@@ -184,7 +184,7 @@ class jLocale {
      * @return string
      */
     static function getCurrentCountry (){
-        $s=$GLOBALS['gJConfig']->defaultLocale;
+        $s=$GLOBALS['gJConfig']->locale;
         return substr($s,strpos($s,'_')+1);
     }
 
@@ -205,8 +205,8 @@ class jLocale {
             $file = new jSelectorLoc($key, $locale, $charset);
         }catch(jExceptionSelector $e){
             if($e->getCode() == 12) throw $e;
-            if ($locale === null)  $locale = $gJConfig->defaultLocale;
-            if ($charset === null) $charset = $gJConfig->defaultCharset;
+            if ($locale === null)  $locale = $gJConfig->locale;
+            if ($charset === null) $charset = $gJConfig->charset;
             throw new Exception('(200)The given locale key "'.$key.'" is invalid  (for charset '.$charset.', lang '.$locale.')');
         }
 
@@ -222,10 +222,10 @@ class jLocale {
         if ($string === null){
             //if the message was not found, we're gonna
             //use the default language and country.
-            if ($locale    == $gJConfig->defaultLocale){
+            if ($locale    == $gJConfig->locale){
                 throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang for the '.$file->charset.' charset ');
             }
-            return jLocale::get ($key, $args, $gJConfig->defaultLocale);
+            return jLocale::get ($key, $args, $gJConfig->locale);
         }else{
             //here, we know the message
             if ($args!==null){

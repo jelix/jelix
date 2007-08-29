@@ -1,8 +1,8 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-defaultModule = "testapp"
-defaultAction = "main_index"
+startModule = "testapp"
+startAction = "main_index"
 
 [plugins]
 ;nom = nom_fichier_ini

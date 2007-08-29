@@ -1,11 +1,11 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-defaultModule = "jelix"
-defaultAction = "default_index"
-defaultLocale = "fr_FR"
-defaultCharset = "UTF-8"
-defaultTimeZone = "Europe/Paris"
+startModule = "jelix"
+startAction = "default_index"
+locale = "fr_FR"
+charset = "UTF-8"
+timeZone = "Europe/Paris"
 
 checkTrustedModules = off
 
@@ -17,7 +17,7 @@ modulesPath = lib:jelix-modules/,app:modules/
 
 dbProfils = dbprofils.ini.php
 
-defaultTheme = default
+theme = default
 use_error_handler = on
 shared_session = off
 

@@ -285,7 +285,7 @@ class jTpl {
 #if JTPL_STANDALONE
         return $GLOBALS['jTplConfig']['charset'];
 #else
-        return $GLOBALS['gJConfig']->defaultCharset;
+        return $GLOBALS['gJConfig']->charset;
 #endif
     }
 }

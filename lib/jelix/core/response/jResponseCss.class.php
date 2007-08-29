@@ -36,7 +36,7 @@ class jResponseCss extends jResponse {
      */
     public function output(){
         global $gJConfig;
-        $this->_httpHeaders['Content-Type']='text/css;charset='.$gJConfig->defaultCharset;
+        $this->_httpHeaders['Content-Type']='text/css;charset='.$gJConfig->charset;
         $this->_httpHeaders['Content-length']=strlen($this->content);
         $this->sendHttpHeaders();
         echo $this->content;
@@ -46,7 +46,7 @@ class jResponseCss extends jResponse {
     public function outputErrors(){
         global $gJConfig;
         header("HTTP/1.0 500 Internal Server Error");
-        header('Content-Type: text/css;charset='.$gJConfig->defaultCharset);
+        header('Content-Type: text/css;charset='.$gJConfig->charset);
         echo "/*\n";
         if($this->hasErrors()){
             foreach( $GLOBALS['gJCoord']->errorMessages  as $e){

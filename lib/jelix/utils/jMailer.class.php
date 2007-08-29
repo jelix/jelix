@@ -222,7 +222,7 @@ class jMailer
      */
     function __construct(){
         global $gJConfig;
-        $this->CharSet = $gJConfig->defaultCharset;
+        $this->CharSet = $gJConfig->charset;
         $this->Mailer = $gJConfig->mailer['mailerType'];
         $this->Hostname = $gJConfig->mailer['hostname'];
         $this->Sendmail = $gJConfig->mailer['sendmailPath'];

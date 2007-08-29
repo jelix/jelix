@@ -65,7 +65,7 @@ class jDatatypeString extends jDatatype {
 
     public function check($value){
         if($this->hasFacets){
-            $len = iconv_strlen($value, $GLOBALS['gJConfig']->defaultCharset);
+            $len = iconv_strlen($value, $GLOBALS['gJConfig']->charset);
             if($this->length !== null && $len != $this->length)
                 return false;
             if($this->minLength !== null && $len < $this->minLength)

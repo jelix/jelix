@@ -39,7 +39,7 @@ function jtpl_meta_html_html($tpl, $method, $param)
             $gJCoord->response->addCSSLink($param,array(),true);
             break;
         case 'csstheme':
-            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->defaultTheme.'/'.$param);
+            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param);
             break;
         case 'bodyattr':
             if(is_array($param)){

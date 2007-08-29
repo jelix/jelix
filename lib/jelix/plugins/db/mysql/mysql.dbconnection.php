@@ -75,8 +75,8 @@ class mysqlDbConnection extends jDbConnection {
       $funcconnect= ($this->profil['persistent']? 'mysql_pconnect':'mysql_connect');
       if($cnx = @$funcconnect ($this->profil['host'], $this->profil['user'], $this->profil['password'])){
          if(isset($this->profil['force_encoding']) && $this->profil['force_encoding'] == true
-            && isset($this->_charsets[$GLOBALS['gJConfig']->defaultCharset])){
-             mysql_query("SET CHARACTER SET '".$this->_charsets[$GLOBALS['gJConfig']->defaultCharset]."'", $cnx);
+            && isset($this->_charsets[$GLOBALS['gJConfig']->charset])){
+             mysql_query("SET CHARACTER SET '".$this->_charsets[$GLOBALS['gJConfig']->charset]."'", $cnx);
          }
          return $cnx;
       }else{

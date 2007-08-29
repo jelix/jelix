@@ -390,7 +390,7 @@ class jFormsCompiler implements jISimpleCompiler {
         }
 
         if($dt == 'localedate' || $dt =='localedatetime' || $dt =='localetime'){
-            $source[]='$js.="jForms.tControl.lang=\'".$GLOBALS[\'gJConfig\']->defaultLocale."\';\n";';
+            $source[]='$js.="jForms.tControl.lang=\'".$GLOBALS[\'gJConfig\']->locale."\';\n";';
         }
 
         if(isset($control['readonly']) && 'true' == (string)$control['readonly']){

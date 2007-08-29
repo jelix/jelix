@@ -95,8 +95,8 @@ class postgresqlDbConnection extends jDbConnection {
 
         if($cnx=@$funcconnect ($str)){
             if(isset($this->profil['force_encoding']) && $this->profil['force_encoding'] == true
-               && isset($this->_charsets[$GLOBALS['gJConfig']->defaultCharset])){
-                pg_set_client_encoding($cnx, $this->_charsets[$GLOBALS['gJConfig']->defaultCharset]);
+               && isset($this->_charsets[$GLOBALS['gJConfig']->charset])){
+                pg_set_client_encoding($cnx, $this->_charsets[$GLOBALS['gJConfig']->charset]);
             }
             return $cnx;
         }else{

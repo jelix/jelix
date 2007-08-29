@@ -131,8 +131,8 @@ class jResponseHtml extends jResponse {
     */
     function __construct (){
         global $gJConfig;
-        $this->_charset = $gJConfig->defaultCharset;
-        $this->_lang = $gJConfig->defaultLocale;
+        $this->_charset = $gJConfig->charset;
+        $this->_lang = $gJConfig->locale;
         $this->body = new jTpl();
         parent::__construct();
     }

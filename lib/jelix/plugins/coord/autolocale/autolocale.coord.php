@@ -94,7 +94,7 @@ class AutoLocaleCoordPlugin implements jICoordPlugin {
 
         if($lang!=''){
             $_SESSION['JX_LANG']=$lang;
-            $gJConfig->defaultLocale = $lang;
+            $gJConfig->locale = $lang;
         }
         return null;
     }

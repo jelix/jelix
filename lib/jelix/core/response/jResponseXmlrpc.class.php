@@ -30,11 +30,11 @@ final class jResponseXmlRpc extends jResponse {
 
     public function output(){
 
-        $content = jXmlRpc::encodeResponse($this->response, $GLOBALS['gJConfig']->defaultCharset);
+        $content = jXmlRpc::encodeResponse($this->response, $GLOBALS['gJConfig']->charset);
 
         if($this->hasErrors()) return false;
 
-        $this->_httpHeaders["Content-Type"]="text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset;
+        $this->_httpHeaders["Content-Type"]="text/xml;charset=".$GLOBALS['gJConfig']->charset;
         $this->_httpHeaders["Content-length"]=strlen($content);
         $this->sendHttpHeaders();
         echo $content;
@@ -52,10 +52,10 @@ final class jResponseXmlRpc extends jResponse {
             $errorCode = -1;
         }
         $this->clearHttpHeaders();
-        $content = jXmlRpc::encodeFaultResponse($errorCode,$errorMessage, $GLOBALS['gJConfig']->defaultCharset);
+        $content = jXmlRpc::encodeFaultResponse($errorCode,$errorMessage, $GLOBALS['gJConfig']->charset);
 
         header("HTTP/1.0 500 Internal Server Error");
-        header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset);
+        header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->charset);
         header("Content-length: ".strlen($content));
         echo $content;
     }

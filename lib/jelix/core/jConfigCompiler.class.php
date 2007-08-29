@@ -40,8 +40,8 @@ class jConfigCompiler {
                 die("Syntax error in the Jelix config file $configFile !");
         }
         $config->isWindows = (substr(PHP_OS,0,3) == 'WIN');
-        if(trim( $config->defaultAction) == '')
-             $config->defaultAction = '_';
+        if(trim( $config->startAction) == '')
+             $config->startAction = '_';
 
         $config->_allBasePath = array();
         
@@ -65,15 +65,15 @@ class jConfigCompiler {
             $config->urlengine['jelixWWWPath'] = $path.$config->urlengine['jelixWWWPath'];
 
 
-        /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config->defaultLocale,$m)){
+        /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config->locale,$m)){
             if(!isset($m[2])){
                 $m[2] = $m[1];
             }
             $config->defaultLang = strtolower($m[1]);
             $config->defaultCountry = strtoupper($m[2]);
-            $config->defaultLocale = $config->defaultLang.'_'.$config->defaultCountry;
+            $config->locale = $config->defaultLang.'_'.$config->defaultCountry;
         }else{
-            die("Syntax error in the defaultLocale parameter in Jelix config file $configFile !");
+            die("Syntax error in the locale parameter in Jelix config file $configFile !");
         }*/
 #else
         $config = jIniFile::read(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
@@ -90,8 +90,8 @@ class jConfigCompiler {
             self::_mergeConfig($config, $userConfig);
         }
         $config['isWindows'] = (substr(PHP_OS,0,3) == 'WIN');
-        if(trim( $config['defaultAction']) == '')
-             $config['defaultAction'] = '_';
+        if(trim( $config['startAction']) == '')
+             $config['startAction'] = '_';
 
         $config['_allBasePath'] = array();
         $config['_modulesPathList'] = self::_loadPathList($config['modulesPath'], $config['_allBasePath']);
@@ -113,15 +113,15 @@ class jConfigCompiler {
         if($path!='' && $config['urlengine']['jelixWWWPath']{0} != '/')
             $config['urlengine']['jelixWWWPath'] = $path.$config['urlengine']['jelixWWWPath'];
 
-        /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config['defaultLocale'],$m)){
+        /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config['locale'],$m)){
             if(!isset($m[2])){
                 $m[2] = $m[1];
             }
             $config['defaultLang'] = strtolower($m[1]);
             $config['defaultCountry'] = strtoupper($m[2]);
-            $config['defaultLocale'] = $config['defaultLang'].'_'.$config['defaultCountry'];
+            $config['locale'] = $config['defaultLang'].'_'.$config['defaultCountry'];
         }else{
-            die("Syntax error in the defaultLocale parameter in Jelix config file $configFile !");
+            die("Syntax error in the locale parameter in Jelix config file $configFile !");
         }*/
 #endif
 

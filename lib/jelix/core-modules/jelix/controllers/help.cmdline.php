@@ -37,7 +37,7 @@ Utilisation générale :
 ";
         } else {
             if (!preg_match('/(?:([\w\.]+)~)/', $cmd_name)) {
-                $cmd_name = $gJConfig->defaultModule.'~'.$cmd_name;
+                $cmd_name = $gJConfig->startModule.'~'.$cmd_name;
             }
             $selector = new jSelectorAct($cmd_name);
 

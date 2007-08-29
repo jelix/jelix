@@ -416,10 +416,10 @@ class jSelectorLoc extends jSelectorModule {
     function __construct($sel, $locale=null, $charset=null){
         global $gJConfig;
         if ($locale === null){
-            $locale = $gJConfig->defaultLocale;
+            $locale = $gJConfig->locale;
         }
         if ($charset === null){
-            $charset = $gJConfig->defaultCharset;
+            $charset = $gJConfig->charset;
         }
         if(strpos($locale,'_') === false){
             $locale.='_'.strtoupper($locale);
@@ -563,15 +563,15 @@ class jSelectorTpl extends jSelectorModule {
             throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         }
 
-        if($gJConfig->defaultTheme != 'default'){
+        if($gJConfig->theme != 'default'){
             // on regarde si il y a un template redéfinie pour le theme courant
-            $this->_where = 'themes/'.$gJConfig->defaultTheme.'/'.$this->module.'/'.$gJConfig->defaultLocale.'/'.$this->resource;
+            $this->_where = 'themes/'.$gJConfig->theme.'/'.$this->module.'/'.$gJConfig->locale.'/'.$this->resource;
             $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
             if (is_readable ($this->_path)){
                 return;
             }
             // on regarde si il y a un template redéfinie pour le theme courant
-            $this->_where = 'themes/'.$gJConfig->defaultTheme.'/'.$this->module.'/'.$this->resource;
+            $this->_where = 'themes/'.$gJConfig->theme.'/'.$this->module.'/'.$this->resource;
             $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
             if (is_readable ($this->_path)){
                 return;
@@ -579,7 +579,7 @@ class jSelectorTpl extends jSelectorModule {
         }
 
         // on regarde si il y a un template redéfinie dans le theme par defaut
-        $this->_where = 'themes/default/'.$this->module.'/'.$gJConfig->defaultLocale.'/'.$this->resource;
+        $this->_where = 'themes/default/'.$this->module.'/'.$gJConfig->locale.'/'.$this->resource;
         $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
         if (is_readable ($this->_path)){
             return;
@@ -592,9 +592,9 @@ class jSelectorTpl extends jSelectorModule {
         }
 
         // et sinon, on regarde si le template existe dans le module en question
-        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$gJConfig->defaultLocale.'/'.$this->resource.'.tpl';
+        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$gJConfig->locale.'/'.$this->resource.'.tpl';
         if (is_readable ($this->_path)){
-            $this->_where = 'modules/'.$this->module.'/'.$gJConfig->defaultLocale.'/'.$this->resource;
+            $this->_where = 'modules/'.$this->module.'/'.$gJConfig->locale.'/'.$this->resource;
             return;
         }
 

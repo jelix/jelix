@@ -1,5 +1,5 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-defaultModule = "myapp"
-defaultAction = "main_index"
+startModule = "myapp"
+startAction = "main_index"

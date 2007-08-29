@@ -114,10 +114,10 @@ class jDbPDOConnection extends PDO {
             $this->setAttribute(JPDO_MYSQL_ATTR_USE_BUFFERED_QUERY, true);
     
         if(isset($prof['force_encoding']) && $prof['force_encoding']==true){
-            if($this->dbms == 'mysql' && isset($this->_mysqlCharsets[$GLOBALS['gJConfig']->defaultCharset])){
-                $this->exec("SET CHARACTER SET '".$this->_mysqlCharsets[$GLOBALS['gJConfig']->defaultCharset]."'");
-            }elseif($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[$GLOBALS['gJConfig']->defaultCharset])){
-                $this->exec("SET client_encoding to '".$this->_pgsqlCharsets[$GLOBALS['gJConfig']->defaultCharset]."'");
+            if($this->dbms == 'mysql' && isset($this->_mysqlCharsets[$GLOBALS['gJConfig']->charset])){
+                $this->exec("SET CHARACTER SET '".$this->_mysqlCharsets[$GLOBALS['gJConfig']->charset]."'");
+            }elseif($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[$GLOBALS['gJConfig']->charset])){
+                $this->exec("SET client_encoding to '".$this->_pgsqlCharsets[$GLOBALS['gJConfig']->charset]."'");
             }
         }
     }

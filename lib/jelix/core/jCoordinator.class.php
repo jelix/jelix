@@ -91,10 +91,10 @@ class jCoordinator {
         }
 #if PHP50
         if(function_exists('date_default_timezone_set')){
-            date_default_timezone_set($gJConfig->defaultTimeZone);
+            date_default_timezone_set($gJConfig->timeZone);
         }
 #else
-        date_default_timezone_set($gJConfig->defaultTimeZone);
+        date_default_timezone_set($gJConfig->timeZone);
 #endif
         $this->_loadPlugins();
     }
@@ -158,12 +158,13 @@ class jCoordinator {
         $this->actionName = $this->request->getParam('action');
 
         if(empty($this->moduleName)){
-            $this->moduleName = $gJConfig->defaultModule;
-            if(empty($this->actionName))
-               $this->actionName = $gJConfig->defaultAction;
+            $this->moduleName = $gJConfig->startModule;
         }
         if(empty($this->actionName)){
-            $this->actionName = 'default_index';
+            if($this->moduleName == $gJConfig->startModule)
+                $this->actionName = $gJConfig->startAction;
+            else
+                $this->actionName = 'default_index';
         }
 
         // verification du module

@@ -35,7 +35,7 @@ function jtpl_meta_xul_xul($tpl, $method, $param)
             $gJCoord->response->addCSSLink($param);
             break;
         case 'csstheme':
-            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->defaultTheme.'/'.$param);
+            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param);
             break;
         case 'rootattr':
             if(is_array($param)){

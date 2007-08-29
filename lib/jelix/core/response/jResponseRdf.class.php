@@ -79,10 +79,10 @@ final class jResponseRdf extends jResponse {
 
     public function output(){
         if($this->hasErrors()) return false;
-        $this->_httpHeaders['Content-Type']='text/xml;charset='.$GLOBALS['gJConfig']->defaultCharset;
+        $this->_httpHeaders['Content-Type']='text/xml;charset='.$GLOBALS['gJConfig']->charset;
         $this->sendHttpHeaders();
 
-        echo '<?xml version="1.0" encoding="'.$GLOBALS['gJConfig']->defaultCharset.'"?>';
+        echo '<?xml version="1.0" encoding="'.$GLOBALS['gJConfig']->charset.'"?>';
         $this->prologSent = true;
         if($this->template !=''){
             $tpl= new jTpl();
@@ -139,7 +139,7 @@ final class jResponseRdf extends jResponse {
         $EOL="\n";
         if(!$this->_httpHeadersSent){
             header("HTTP/1.0 500 Internal Server Error");
-            header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->defaultCharset);
+            header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->charset);
         }
         if(!$this->prologSent){
             echo '<?xml version="1.0" encoding="ISO-8859-1"?>'.$EOL;
