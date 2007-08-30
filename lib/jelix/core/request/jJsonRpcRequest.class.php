@@ -4,7 +4,7 @@
 * @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -12,9 +12,7 @@
 /**
  * the jJsonRpcRequest require jJsonRpc class
  */
-require_once (JELIX_LIB_UTILS_PATH    . 'jJsonRpc.class.php');
-
-
+require_once (JELIX_LIB_UTILS_PATH . 'jJsonRpc.class.php');
 
 /**
 * handle a JSON-rpc call. The response has to be a json rpc response.
@@ -52,10 +50,7 @@ class jJsonRpcRequest extends jRequest {
         if(isset( $requestobj['id']))
             $this->jsonRequestId = $requestobj['id'];
 
-        if(is_array($requestobj['params']))
-            $this->params = $requestobj['params'];
-        else
-            $this->params['params'] = $requestobj['params'];
+        $this->params['params'] = $requestobj['params'];
 
         // Définition de l'action a executer et des paramètres
         $this->params['module'] = $module;
