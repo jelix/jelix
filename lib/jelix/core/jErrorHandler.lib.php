@@ -111,7 +111,7 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         @error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);
     }
     if(strpos($action , 'MAIL') !== false){
-        error_log($messageLog,1, $conf['email'], $conf['emailHeaders']);
+        error_log(wordwrap($messageLog,70),1, $conf['email'], $conf['emailHeaders']);
     }
     if(strpos($action , 'SYSLOG') !== false){
         error_log($messageLog,0);
