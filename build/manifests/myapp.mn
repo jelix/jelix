@@ -21,8 +21,8 @@ cd myapp/var
   .htaccess
 cd myapp/var/uploads
 cd myapp/var/config
-  defaultconfig.ini.php.dist
+  defaultconfig.ini.php
   dbprofils.ini.php.dist
 cd myapp/var/config/index
-  config.ini.php.dist
+  config.ini.php
 cd temp/myapp

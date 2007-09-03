@@ -130,15 +130,15 @@ cd testapp/var
 cd testapp/var/log
 cd testapp/var/uploads
 cd testapp/var/config
-  defaultconfig.ini.php.dist
+  defaultconfig.ini.php
   dbprofils.ini.php.dist
   urls.xml
 cd testapp/var/config/index
-  config.ini.php.dist
+  config.ini.php
 cd testapp/var/config/xmlrpc
-  config.ini.php.dist
+  config.ini.php
 cd testapp/var/config/jsonrpc
-  config.ini.php.dist
+  config.ini.php
 cd testapp/var/themes/default/testapp
   hello2.tpl
 cd testapp/var/themes/default/junittests
