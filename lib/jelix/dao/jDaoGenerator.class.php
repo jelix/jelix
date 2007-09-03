@@ -89,24 +89,27 @@ class jDaoGenerator {
           $src[] =' public $'.$id.';';
       }
 
-      $src[] = ' protected $_properties = '.var_export($properties, true).';';
-      $src[] = ' protected $_pkFields = array('.$this->_writeFieldNamesWith ($start = '\'', $end='\'', $beetween = ',', $pkFields).');';
-
+      $src[] = '   public function getProperties() { return '.$this->_DaoClassName.'::$_properties; }';
+      $src[] = '   public function getPrimaryKeyNames() { return '.$this->_DaoClassName.'::$_pkFields; }';
       $src[] = '}';
 
       //--------------------
       // Build the dao class
       //--------------------
 
-
       $src[] = "\nclass ".$this->_DaoClassName.' extends jDaoFactoryBase {';
-      $src[] ='   protected $_tables = '.var_export($tables, true).';';
-      $src[] ='   protected $_primaryTable = \''.$this->_datasParser->getPrimaryTable().'\';';
-      $src[] ='   protected $_selectClause=\''.$sqlSelectClause.'\';';
-      $src[] ='   protected $_fromClause=\''.$sqlFromClause.'\';';
-      $src[] ='   protected $_whereClause=\''.$sqlWhereClause.'\';';
-      $src[] ='   protected $_DaoRecordClassName=\''.$this->_DaoRecordClassName.'\';';
-      $src[] ='   protected $_pkFields = array('.$this->_writeFieldNamesWith ($start = '\'', $end='\'', $beetween = ',', $pkFields).');';
+      $src[] = '   protected $_tables = '.var_export($tables, true).';';
+      $src[] = '   protected $_primaryTable = \''.$this->_datasParser->getPrimaryTable().'\';';
+      $src[] = '   protected $_selectClause=\''.$sqlSelectClause.'\';';
+      $src[] = '   protected $_fromClause=\''.$sqlFromClause.'\';';
+      $src[] = '   protected $_whereClause=\''.$sqlWhereClause.'\';';
+      $src[] = '   protected $_DaoRecordClassName=\''.$this->_DaoRecordClassName.'\';';
+      $src[] = '   public static $_properties = '.var_export($properties, true).';';
+      $src[] = '   public static $_pkFields = array('.$this->_writeFieldNamesWith ($start = '\'', $end='\'', $beetween = ',', $pkFields).');';
+
+      // cannot put this methods directly into jDaoBase because of a php bug on static methods/properties
+      $src[] = '   public function getProperties() { return self::$_properties; }';
+      $src[] = '   public function getPrimaryKeyNames() { return self::$_pkFields;}';
 
       $src[] = ' ';
       $src[] = ' protected function _getPkWhereClauseForSelect($pk){';

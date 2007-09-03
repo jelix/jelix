@@ -24,48 +24,17 @@ abstract class jDaoRecordBase {
     const ERROR_MINLENGTH = 5;
 
     /**
-     * informations on all properties
-     * 
-     * keys are property name, and values are an array like that :
-     * <pre> array (
-     *  'name' => 'name of property',
-     *  'fieldName' => 'name of fieldname',
-     *  'regExp' => NULL, // or the regular expression to test the value
-     *  'required' => true/false, 
-     *  'isPK' => true/false, //says if it is a primary key
-     *  'isFK' => true/false, //says if it is a foreign key
-     *  'datatype' => '', // type of data : string
-     *  'table' => 'grp', // alias of the table the property is attached to
-     *  'updatePattern' => '%s',
-     *  'insertPattern' => '%s',
-     *  'selectPattern' => '%s',
-     *  'sequenceName' => '', // name of the sequence when type is autoincrement
-     *  'maxlength' => NULL, // or a number
-     *  'minlength' => NULL, // or a number
-     *  'ofPrimaryTable' => true/false,
-     *  'needsQuotes' => tree/false, // says if the value need to enclosed between quotes
-     * ) </pre>
-     * @var array 
-     */
-    protected $_properties = array();
-
-    /**
-     * list of id of primary key properties
-     * @var array
-     */
-    protected $_pkFields = array();
-
-    /**
      * @return array informations on all properties
-     * @see jDaoRecordBase::$_properties
+     * @see jDaoFactoryBase::getProperties()
      */
-    public function getProperties(){ return $this->_properties; }
+    abstract public function getProperties();
 
     /**
      * @return array list of properties name which contains primary keys
-     * @since 1.0beta3
+     * @see jDaoFactoryBase::getPrimaryKeyNames()
+     * @since 1.0b3
      */
-    public function getPrimaryKeyNames(){ return $this->_pkFields; }
+    abstract public function getPrimaryKeyNames();
 
     /**
      * check values in the properties of the record, according on the dao definition
@@ -73,7 +42,7 @@ abstract class jDaoRecordBase {
      */
     public function check(){
         $errors=array();
-        foreach($this->_properties as $prop=>$infos){
+        foreach($this->getProperties() as $prop=>$infos){
             $value = $this->$prop;
 
             // test required
@@ -130,10 +99,12 @@ abstract class jDaoRecordBase {
         if(count($args)==1 && is_array($args[0])){
             $args=$args[0];
         }
-        if(count($args) == 0 || count($args) != count($this->_pkFields) ) 
+        $pkf = $this->getPrimaryKeyNames();
+
+        if(count($args) == 0 || count($args) != count($pkf) ) 
             throw new jException('jelix~dao.error.keys.missing');
 
-        foreach($this->_pkFields as $k=>$prop){
+        foreach($pkf as $k=>$prop){
            $this->$prop = $args[$k];
         }
         return true;
@@ -142,14 +113,15 @@ abstract class jDaoRecordBase {
     /**
      * return the value of fields corresponding to the primary key
      * @return mixed  the value or an array of values if there is several  pk
-     * @since 1.0beta3
+     * @since 1.0b3
      */
     public function getPk(){
-        if(count($this->_pkFields) == 1){
-            return $this->{$this->_pkFields[0]};
+        $pkf = $this->getPrimaryKeyNames();
+        if(count($pkf) == 1){
+            return $this->{$pkf[0]};
         }else{
             $list = array();
-            foreach($this->_pkFields as $k=>$prop){
+            foreach($pkf as $k=>$prop){
                 $list[] = $this->$prop;
             }
             return $list;
@@ -210,11 +182,6 @@ abstract class jDaoFactoryBase  {
      * @var string
      */
     protected $_DaoRecordClassName;
-    /**
-     * list of id of primary properties
-     * @var array
-     */
-    protected $_pkFields;
 
     /**
      * @param jDbConnection $conn the database connection
@@ -222,6 +189,40 @@ abstract class jDaoFactoryBase  {
     function  __construct($conn){
         $this->_conn = $conn;
     }
+
+    /**
+     * informations on all properties
+     * 
+     * keys are property name, and values are an array like that :
+     * <pre> array (
+     *  'name' => 'name of property',
+     *  'fieldName' => 'name of fieldname',
+     *  'regExp' => NULL, // or the regular expression to test the value
+     *  'required' => true/false, 
+     *  'isPK' => true/false, //says if it is a primary key
+     *  'isFK' => true/false, //says if it is a foreign key
+     *  'datatype' => '', // type of data : string
+     *  'table' => 'grp', // alias of the table the property is attached to
+     *  'updatePattern' => '%s',
+     *  'insertPattern' => '%s',
+     *  'selectPattern' => '%s',
+     *  'sequenceName' => '', // name of the sequence when type is autoincrement
+     *  'maxlength' => NULL, // or a number
+     *  'minlength' => NULL, // or a number
+     *  'ofPrimaryTable' => true/false,
+     *  'needsQuotes' => tree/false, // says if the value need to enclosed between quotes
+     * ) </pre>
+     * @return array informations on all properties
+     * @since 1.0beta3
+     */
+    abstract public function getProperties();
+
+    /**
+     * list of id of primary properties
+     * @return array list of properties name which contains primary keys
+     * @since 1.0beta3
+     */
+    abstract public function getPrimaryKeyNames();
 
     /**
      * return all records
@@ -253,7 +254,7 @@ abstract class jDaoFactoryBase  {
         if(count($args)==1 && is_array($args[0])){
             $args=$args[0];
         }
-        $keys = array_combine($this->_pkFields,$args );
+        $keys = array_combine($this->getPrimaryKeyNames(),$args );
 
         if($keys === false){
             throw new jException('jelix~dao.error.keys.missing');
@@ -278,7 +279,7 @@ abstract class jDaoFactoryBase  {
         if(count($args)==1 && is_array($args[0])){
             $args=$args[0];
         }
-        $keys = array_combine($this->_pkFields, $args);
+        $keys = array_combine($this->getPrimaryKeyNames(), $args);
         if($keys === false){
             throw new jException('jelix~dao.error.keys.missing');
         }
@@ -386,12 +387,8 @@ abstract class jDaoFactoryBase  {
     * @internal
     */
     protected function _createConditionsClause($daocond, $withOrder=true){
-
-        $c = $this->_DaoRecordClassName;
-        $rec= new $c();
-        $fields = $rec->getProperties();
-
-        $sql = $this->_generateCondition ($daocond->condition, $fields, true);
+        $props = $this->getProperties();
+        $sql = $this->_generateCondition ($daocond->condition, $props, true);
 
         if($withOrder){
             $order = array ();

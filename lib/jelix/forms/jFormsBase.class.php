@@ -138,7 +138,7 @@ abstract class jFormsBase {
         if(!$daorec)
             throw new jExceptionForm('bad.formid.for.dao', array($daoSelector, $this->_container->formId, $this->_sel));
 
-        $prop = $daorec->getProperties();
+        $prop = $dao->getProperties();
         foreach($this->_controls as $name=>$ctrl){
             if(isset($prop[$name])) {
                 if($ctrl->datatype instanceof jDatatypeLocaleDateTime && $prop[$name]['datatype'] == 'datetime') {
@@ -166,7 +166,7 @@ abstract class jFormsBase {
     public function saveToDao($daoSelector){
         $dao = jDao::create($daoSelector);
         $daorec = jDao::createRecord($daoSelector);
-        $prop = $daorec->getProperties();
+        $prop = $dao->getProperties();
         foreach($this->_controls as $name=>$ctrl){
             if(is_array($this->_container->datas[$name])){
                 if( count ($this->_container->datas[$name]) ==1){
@@ -236,7 +236,7 @@ abstract class jFormsBase {
         if($primaryKeyNames)
             $pkNamelist = $primaryKeyNames;
         else
-            $pkNamelist = $daorec->getPrimaryKeyNames();
+            $pkNamelist = $dao->getPrimaryKeyNames();
 
         foreach($primaryKey as $k=>$pk){
             $conditions->addCondition ($pkNamelist[$k], '=', $pk);
@@ -303,7 +303,7 @@ abstract class jFormsBase {
         if($primaryKeyNames)
             $pkNamelist = $primaryKeyNames;
         else
-            $pkNamelist = $daorec->getPrimaryKeyNames();
+            $pkNamelist = $dao->getPrimaryKeyNames();
 
         foreach($primaryKey as $k=>$pk){
             $conditions->addCondition ($pkNamelist[$k], '=', $pk);
