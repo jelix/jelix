@@ -344,6 +344,7 @@ cd lib/jelix/plugins/tpl/html
   function.ctrl_label.php
   function.ctrl_value.php
   function.formsubmit.php
+  function.pagelinks.php
 
 cd lib/jelix/plugins/tpl/ltx2pdf
   function.jlocale.php

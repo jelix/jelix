@@ -12,5 +12,6 @@
 </tr>
 {/foreach}
 </table>
-
+<p>Pages : {pagelinks $listAction, array(),  $recordCount, $page, $listPageSize, $offsetParameterName }</p>
 <p><a href="{jurl $createAction}">Create a new record</a>.</p>
+

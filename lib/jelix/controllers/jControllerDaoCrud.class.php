@@ -71,6 +71,11 @@ class jControllerDaoCrud extends jController {
      */
     protected $templateAssign = 'MAIN';
 
+    /**
+     * name of the parameter which contains the page offset, for the index action
+     * @var string
+     */
+    protected $offsetParameterName = 'offset';
 
     /**
      * id for the "pseudo" form used to show a record. You can change it if the default one corresponds to
@@ -111,7 +116,7 @@ class jControllerDaoCrud extends jController {
      * list all records
      */
     function index(){
-        $offset = $this->intParam('first',0,true);
+        $offset = $this->intParam($this->offsetParameterName,0,true);
 
         $rep = $this->_getResponse();
 
@@ -133,6 +138,11 @@ class jControllerDaoCrud extends jController {
         $tpl->assign('createAction' , $this->_getAction('create'));
         $tpl->assign('deleteAction' , $this->_getAction('delete'));
         $tpl->assign('viewAction' , $this->_getAction('view'));
+        $tpl->assign('listAction' , $this->_getAction('index'));
+        $tpl->assign('listPageSize', $this->listPageSize);
+        $tpl->assign('page',$offset);
+        $tpl->assign('recordCount',$dao->countAll());
+        $tpl->assign('offsetParameterName',$this->offsetParameterName);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->listTemplate));
 
         return $rep;
