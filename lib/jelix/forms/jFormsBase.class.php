@@ -130,13 +130,16 @@ abstract class jFormsBase {
     /**
      * set form datas from a DAO
      * @param string $daoSelector the selector of a dao file
+     * @param string $key the primary key for the dao. if null, takes the form ID as primary key
      * @see jDao
      */
-    public function initFromDao($daoSelector){
+    public function initFromDao($daoSelector, $key = null){
+        if($key === null)
+            $key = $this->_container->formId;
         $dao = jDao::create($daoSelector);
-        $daorec = $dao->get($this->_container->formId);
+        $daorec = $dao->get($key);
         if(!$daorec)
-            throw new jExceptionForm('bad.formid.for.dao', array($daoSelector, $this->_container->formId, $this->_sel));
+            throw new jExceptionForms('jelix~formserr.bad.formid.for.dao', array($daoSelector, $key, $this->_sel));
 
         $prop = $dao->getProperties();
         foreach($this->_controls as $name=>$ctrl){
@@ -218,11 +221,11 @@ abstract class jFormsBase {
     public function initControlFromDao($controlName, $daoSelector, $primaryKeyNames=null){
 
         if(!$this->_controls[$controlName]->isContainer()){
-            throw new jExceptionForm('control.not.container', array($controlName, $this->_sel));
+            throw new jExceptionForms('jelix~formserr.control.not.container', array($controlName, $this->_sel));
         }
 
         if(!$this->_container->formId)
-            throw new jExceptionForm('formid.undefined.for.dao', array($controlName, $this->_sel));
+            throw new jExceptionForms('jelix~formserr.formid.undefined.for.dao', array($controlName, $this->_sel));
 
         $primaryKey = $this->_container->formId;
 
@@ -280,15 +283,15 @@ abstract class jFormsBase {
     public function saveControlToDao($controlName, $daoSelector, $primaryKey = null, $primaryKeyNames=null){
 
         if(!$this->_controls[$controlName]->isContainer()){
-            throw new jExceptionForm('control.not.container', array($controlName, $this->_sel));
+            throw new jExceptionForms('jelix~formserr.control.not.container', array($controlName, $this->_sel));
         }
 
         $values = $this->_container->datas[$controlName];
         if(!is_array($values))
-            throw new jExceptionForm('value.not.array', array($controlName, $this->_sel));
+            throw new jExceptionForms('jelix~formserr.value.not.array', array($controlName, $this->_sel));
 
         if(!$this->_container->formId && !$primaryKey)
-            throw new jExceptionForm('formid.undefined.for.dao', array($controlName, $this->_sel));
+            throw new jExceptionForms('jelix~formserr.formid.undefined.for.dao', array($controlName, $this->_sel));
 
         if(!$primaryKey)
             $primaryKey = $this->_container->formId;
@@ -410,7 +413,7 @@ abstract class jFormsBase {
             $c =  $this->_builders[$buildertype][1];
             return new $c($this, $action, $actionParams);
         }else{
-            throw new jExceptionForm('invalid.form.builder', array($buildertype, $this->_sel));
+            throw new jExceptionForms('jelix~formserr.invalid.form.builder', array($buildertype, $this->_sel));
         }
     }
 
@@ -431,7 +434,7 @@ abstract class jFormsBase {
         jFile::createDir($path);
 
         if(!isset($this->_controls[$controlName]) || $this->_controls[$controlName]->type != 'upload')
-            throw new jExceptionForm('invalid.upload.control.name', array($controlName, $this->_sel));
+            throw new jExceptionForms('jelix~formserr.invalid.upload.control.name', array($controlName, $this->_sel));
 
         if(!isset($_FILES[$controlName]) || $_FILES[$controlName]!= UPLOAD_ERR_OK)
             return false;
