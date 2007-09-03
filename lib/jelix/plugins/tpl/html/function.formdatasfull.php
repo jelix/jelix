@@ -17,7 +17,7 @@
 function jtpl_function_html_formdatasfull($tpl, $form)
 {
 
-    $formBuilder = $form->getBuilder('html', $action, $params);
+    //$formBuilder = $form->getBuilder('html', $action, $params);
 
     echo '<table class="jforms-table" border="0">';
 

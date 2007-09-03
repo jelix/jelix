@@ -16,6 +16,7 @@
 <h3>Formulaires</h3>
 <ul>
    <li><a href="{jurl 'sampleform_status'}">données session</a></li>
+   <li><a href="{jurl 'samplecrud_index'}">Formulaire crud</a></li>
 </ul>
 <p>formulaire simple (singleton)</p>
 <ul>
@@ -30,6 +31,8 @@
    <li><a href="{jurl 'forms_newform'}">Nouveau formulaire</a></li>
    <li><a href="{jurl 'forms_listform'}">liste des instances</a></li>
 </ul>
+
+
 
 <h3>Tests syndication</h3>
 <ul>

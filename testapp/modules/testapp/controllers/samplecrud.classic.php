@@ -13,12 +13,11 @@
  *     NOT FINISHED
  */
 class sampleCrudCtrl extends jControllerDaoCrud {
-    
+
     protected $dao = 'jelix_tests~products';
-    
+
     protected $form = 'testapp~products';
 
-    
 }
 
 ?>
