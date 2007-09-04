@@ -120,7 +120,7 @@ INSERT INTO `myconfig` (`cfg_key`, `cfg_value`) VALUES ('foo', 'foovalue'),
 ('33', '456ghjk'),
 ('test', '33');
 
-
+-- for unit tests
 CREATE TABLE `product_test` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `name` VARCHAR( 150 ) NOT NULL ,
@@ -132,3 +132,10 @@ CREATE TABLE `product_tags_test` (
 `tag` VARCHAR( 50 ) NOT NULL ,
 PRIMARY KEY ( `product_id` , `tag` )
 ) ENGINE = MYISAM ;
+
+-- for the crud example
+CREATE TABLE `products` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`name` VARCHAR( 150 ) NOT NULL ,
+`price` FLOAT NOT NULL
+) TYPE = MYISAM ;

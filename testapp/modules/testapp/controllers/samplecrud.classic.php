@@ -16,7 +16,7 @@ class sampleCrudCtrl extends jControllerDaoCrud {
 
     protected $listPageSize = 5;
 
-    protected $dao = 'jelix_tests~products';
+    protected $dao = 'testapp~products';
 
     protected $form = 'testapp~products';
 

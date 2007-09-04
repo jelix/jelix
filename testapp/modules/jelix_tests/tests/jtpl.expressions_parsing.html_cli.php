@@ -75,6 +75,7 @@ class UTjtplexpr extends jUnitTestCase {
         '$aa.@trc.$abcd.popo@'=>'$t->_vars[\'aa\'].jLocale::get(\'trc.\'.$t->_vars[\'abcd\'].\'.popo\')',
         '@aa~trc.234.popo@'=>'jLocale::get(\'aa~trc.234.popo\')',
         '@aa~trc.23.4.popo@'=>'jLocale::get(\'aa~trc.23.4.popo\')',
+        '@aa~trc.23.4.list@'=>'jLocale::get(\'aa~trc.23.4.list\')',
         '$aa*count($bb)'=>'$t->_vars[\'aa\']*count($t->_vars[\'bb\'])',
         '$aa & $bb'=>'$t->_vars[\'aa\'] & $t->_vars[\'bb\']',
         '$aa | $bb'=>'$t->_vars[\'aa\'] | $t->_vars[\'bb\']',

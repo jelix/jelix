@@ -84,6 +84,9 @@ class jControllerDaoCrud extends jController {
      */
     protected $pseudoFormId = 'jelix_crud_roxor';
 
+
+    protected $uploadsDirectory ='';
+
     /**
      * Returned a simple html response to display CRUD contents. You can override this
      * method to return a personnalized response
@@ -181,6 +184,7 @@ class jControllerDaoCrud extends jController {
 
         if($form->check() && $this->_checkDatas($form)){
             $id = $form->saveToDao($this->dao);
+            $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
             jForms::destroy($this->form);
             $rep->params['id'] = $id;
@@ -256,6 +260,7 @@ class jControllerDaoCrud extends jController {
 
         if($form->check() && $this->_checkDatas($form)){
             $id = $form->saveToDao($this->dao);
+            $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
             jForms::destroy($this->form, $id);
         } else {
