@@ -86,6 +86,8 @@ cd lib/jelix/core-modules/jelix/install/sql
   install_jacl.schema.mysql.sql
   install_jacl.datas.mysql.sql
 cd lib/jelix/core-modules/jelix/locales/en_US
+  acldb.ISO-8859-1.properties
+  acldb.UTF-8.properties
   auth.ISO-8859-1.properties
   auth.UTF-8.properties
   common.ISO-8859-1.properties
@@ -109,6 +111,8 @@ cd lib/jelix/core-modules/jelix/locales/en_US
   ui.ISO-8859-1.properties
   ui.UTF-8.properties
 cd lib/jelix/core-modules/jelix/locales/en_EN
+  acldb.ISO-8859-1.properties
+  acldb.UTF-8.properties
   auth.ISO-8859-1.properties
   auth.UTF-8.properties
   common.ISO-8859-1.properties
@@ -132,6 +136,8 @@ cd lib/jelix/core-modules/jelix/locales/en_EN
   ui.ISO-8859-1.properties
   ui.UTF-8.properties
 cd lib/jelix/core-modules/jelix/locales/fr_FR
+  acldb.ISO-8859-1.properties
+  acldb.UTF-8.properties
   auth.ISO-8859-1.properties
   auth.UTF-8.properties
   common.ISO-8859-1.properties

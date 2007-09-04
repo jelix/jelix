@@ -10,7 +10,7 @@
 */
 
 /**
- *     NOT FINISHED
+ *
  */
 class sampleCrudCtrl extends jControllerDaoCrud {
 
