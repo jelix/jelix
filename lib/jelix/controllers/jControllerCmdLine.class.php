@@ -38,11 +38,14 @@ class jControllerCmdLine extends jController {
 
     }
 
-    protected function param($param, $defaultValue=null){
+    protected function param ($parName, $parDefaultValue=null, $useDefaultIfEmpty=false){
         if (isset($this->_parameters[$param])) {
-            return $this->_parameters[$param];
+            if($this->_parameters[$param] == '' && $useDefaultIfEmpty)
+                return $parDefaultValue;
+            else
+                return $this->_parameters[$param];
         } else {
-            return $defaultValue;
+            return $parDefaultValue;
         }
     }
 

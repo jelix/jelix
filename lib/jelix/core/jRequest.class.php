@@ -119,7 +119,7 @@ abstract class jRequest {
     * Gets the value of a request parameter. If not defined, gets its default value.
     * @param string  $name           the name of the request parameter
     * @param mixed   $defaultValue   the default returned value if the parameter doesn't exists
-    * @param boolean $useDefaultIfEmpty true: says to return the default value the value is ""
+    * @param boolean $useDefaultIfEmpty true: says to return the default value if the parameter value is ""
     * @return mixed the request parameter value
     */
     public function getParam($name, $defaultValue=null, $useDefaultIfEmpty=false){
