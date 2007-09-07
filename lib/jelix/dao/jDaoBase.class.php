@@ -46,7 +46,7 @@ abstract class jDaoRecordBase {
             $value = $this->$prop;
 
             // test required
-            if($infos['required'] && $value === null && $infos['datatype'] != 'autoincrement' && $infos['datatype'] != 'bigautoincrement'){
+            if($infos['required'] && $value === null){
                 $errors[$prop][] = self::ERROR_REQUIRED;
                 continue;
             }

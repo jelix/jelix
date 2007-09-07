@@ -4,7 +4,7 @@
       <primarytable name="myconfig" primarykey="cfg_key" />
    </datasources>
    <record>
-      <property name="ckey"   fieldname="cfg_key" datatype="string" required="true" />
+      <property name="ckey"   fieldname="cfg_key" datatype="string"/>
       <property name="cvalue" fieldname="cfg_value" datatype="string" />
    </record>
    <factory>

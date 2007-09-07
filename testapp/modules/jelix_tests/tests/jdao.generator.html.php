@@ -128,7 +128,7 @@ class UTDao_generator extends jUnitTestCase {
         $result = $generator->GetPreparePHPExpr('$foo', 'integer',true);
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : intval($foo))',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'autoincrement',true);
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : intval($foo))',$result);
+        $this->assertEqualOrDiff('intval($foo)',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'string',true);
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : $this->_conn->quote($foo,false))',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'double',true);
@@ -138,13 +138,13 @@ class UTDao_generator extends jUnitTestCase {
         $result = $generator->GetPreparePHPExpr('$foo', 'numeric',true);
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : (is_numeric ($foo) ? $foo : intval($foo)))',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'bigautoincrement',true);
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : (is_numeric ($foo) ? $foo : intval($foo)))',$result);
+        $this->assertEqualOrDiff('(is_numeric ($foo) ? $foo : intval($foo))',$result);
 
         // with checknull and operator =
         $result = $generator->GetPreparePHPExpr('$foo', 'integer',true,'=');
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.intval($foo))',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'autoincrement',true,'=');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.intval($foo))',$result);
+        $this->assertEqualOrDiff('\'=\'.intval($foo)',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'string',true,'=');
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.$this->_conn->quote($foo,false))',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'double',true,'=');
@@ -154,13 +154,13 @@ class UTDao_generator extends jUnitTestCase {
         $result = $generator->GetPreparePHPExpr('$foo', 'numeric',true,'=');
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.(is_numeric ($foo) ? $foo : intval($foo)))',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'bigautoincrement',true,'=');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.(is_numeric ($foo) ? $foo : intval($foo)))',$result);
+        $this->assertEqualOrDiff('\'=\'.(is_numeric ($foo) ? $foo : intval($foo))',$result);
 
         // with checknull and operator <>
         $result = $generator->GetPreparePHPExpr('$foo', 'integer',true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \'<>\'.intval($foo))',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'autoincrement',true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \'<>\'.intval($foo))',$result);
+        $this->assertEqualOrDiff('\'<>\'.intval($foo)',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'string',true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \'<>\'.$this->_conn->quote($foo,false))',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'double',true,'<>');
@@ -170,7 +170,7 @@ class UTDao_generator extends jUnitTestCase {
         $result = $generator->GetPreparePHPExpr('$foo', 'numeric',true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \'<>\'.(is_numeric ($foo) ? $foo : intval($foo)))',$result);
         $result = $generator->GetPreparePHPExpr('$foo', 'bigautoincrement',true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \'<>\'.(is_numeric ($foo) ? $foo : intval($foo)))',$result);
+        $this->assertEqualOrDiff('\'<>\'.(is_numeric ($foo) ? $foo : intval($foo))',$result);
 
         // with checknull and other operator <=
         $result = $generator->GetPreparePHPExpr('$foo', 'integer',true,'<=');

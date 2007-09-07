@@ -39,7 +39,7 @@ class UTDao_generator_select extends jUnitTestCase {
       <primarytable name="product_test" primarykey="id" />
    </datasources>
    <record>
-      <property name="id"   fieldname="id" datatype="autoincrement" required="true" />
+      <property name="id"   fieldname="id" datatype="autoincrement"/>
       <property name="name" fieldname="name" datatype="string"  required="true"/>
       <property name="price" fieldname="price" datatype="float"/>
    </record>
@@ -56,7 +56,7 @@ class UTDao_generator_select extends jUnitTestCase {
       <primarytable name="p" realname="product_test" primarykey="id" />
    </datasources>
    <record>
-      <property name="id"   fieldname="id" datatype="autoincrement" required="true" />
+      <property name="id"   fieldname="id" datatype="autoincrement"/>
       <property name="name" fieldname="name" datatype="string"  required="true"/>
       <property name="price" fieldname="price" datatype="float"/>
    </record>
@@ -79,7 +79,7 @@ class UTDao_generator_select extends jUnitTestCase {
       <primarytable name="product_test" primarykey="id" />
    </datasources>
    <record>
-      <property name="id"   fieldname="id" datatype="autoincrement" required="true" />
+      <property name="id"   fieldname="id" datatype="autoincrement"/>
       <property name="name" fieldname="name" datatype="string"  required="true" selectpattern="%s"/>
       <property name="price" fieldname="price" datatype="float"/>
    </record>
@@ -97,7 +97,7 @@ class UTDao_generator_select extends jUnitTestCase {
       <primarytable name="product_test" primarykey="id" />
    </datasources>
    <record>
-      <property name="id"   fieldname="id" datatype="autoincrement" required="true" />
+      <property name="id"   fieldname="id" datatype="autoincrement"/>
       <property name="name" fieldname="name" datatype="string"  required="true" selectpattern="TOUPPER(%s)"/>
       <property name="price" fieldname="price" datatype="float"/>
    </record>
@@ -115,7 +115,7 @@ class UTDao_generator_select extends jUnitTestCase {
       <primarytable name="p" realname="product_test" primarykey="id" />
    </datasources>
    <record>
-      <property name="id"   fieldname="id" datatype="autoincrement" required="true" />
+      <property name="id"   fieldname="id" datatype="autoincrement"/>
       <property name="name" fieldname="name" datatype="string"  required="true" selectpattern="TOUPPER(%s)"/>
       <property name="price" fieldname="price" datatype="float"/>
    </record>
@@ -134,7 +134,7 @@ class UTDao_generator_select extends jUnitTestCase {
       <primarytable name="product_test" primarykey="id" />
    </datasources>
    <record>
-      <property name="id"   fieldname="id" datatype="autoincrement" required="true" />
+      <property name="id"   fieldname="id" datatype="autoincrement"/>
       <property name="name" fieldname="name" datatype="string"  required="true" selectpattern="TOUPPER(name)"/>
       <property name="price" fieldname="price" datatype="float"/>
    </record>

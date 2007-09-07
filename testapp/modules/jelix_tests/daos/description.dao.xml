@@ -4,8 +4,8 @@
       <primarytable name="description_test" primarykey="id,lang" />
    </datasources>
    <record>
-      <property name="id"   fieldname="id" datatype="integer" required="true" />
-      <property name="lang"   fieldname="lang" datatype="string" required="true" />
+      <property name="id"   fieldname="id" datatype="integer"/>
+      <property name="lang"   fieldname="lang" datatype="string"/>
       <property name="texte" fieldname="texte" datatype="string"  required="true"/>
    </record>
 </dao>

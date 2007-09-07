@@ -70,7 +70,7 @@ class jDaoGenerator {
       $pkFields          = $this->_getPropertiesBy('PkFields');
       $pTableRealName    = $tables[$this->_datasParser->getPrimaryTable()]['realname'];
       $pTableRealNameEsc = $this->_encloseName($pTableRealName);
-      $pkai              = $this->_getAutoIncrementField();
+      $pkai              = $this->_getAutoIncrementPKField();
       $sqlPkCondition    = $this->_buildSimpleConditions($pkFields);
       if($sqlPkCondition != ''){
          $sqlPkCondition= ($sqlWhereClause !='' ? ' AND ':' WHERE ').$sqlPkCondition;
@@ -129,6 +129,9 @@ class jDaoGenerator {
       $src[] = 'public function insert ($record){';
 
       if($pkai !== null){
+         // if there is an autoincrement field as primary key
+
+         // if a value is given for the autoincrement field, then with do a full insert
          $src[]=' if($record->'.$pkai->name.' > 0 ){';
          $src[] = '    $query = \'INSERT INTO '.$pTableRealNameEsc.' (';
          $fields = $this->_getPropertiesBy('PrimaryTable');
@@ -143,15 +146,16 @@ class jDaoGenerator {
 
          if (($this->_dbtype=='mysql') || ($this->_dbtype=='sqlserver') || ($this->_dbtype=='postgresql')) {
             $fields = $this->_getPropertiesBy('PrimaryFieldsExcludeAutoIncrement');
-         /*}elseif ($pkai->sequenceName != ''){
-            $src[] = '    $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
-            $fields = $this->_getPropertiesBy('PrimaryTable');*/
          }else{
             $fields = $this->_getPropertiesBy('PrimaryTable');
          }
       }else{
          $fields = $this->_getPropertiesBy('PrimaryTable');
       }
+
+      // if there isn't a autoincrement as primary key, then we do a full insert.
+      // if there isn't a value for the autoincrement field and if this is a mysql/sqlserver and pgsql, 
+      // we do an insert without given primary key. In other case, we do a full insert.
 
       $src[] = '    $query = \'INSERT INTO '.$pTableRealNameEsc.' (';
 
@@ -531,7 +535,7 @@ class jDaoGenerator {
     /**
     * get autoincrement PK field
     */
-    protected function _getAutoIncrementField ($using = null){
+    protected function _getAutoIncrementPKField ($using = null){
         if ($using === null){
             $using = $this->_datasParser->getProperties ();
         }
@@ -540,6 +544,8 @@ class jDaoGenerator {
         $tb = $tb[$this->_datasParser->getPrimaryTable()]['realname'];
 
         foreach ($using as $id=>$field) {
+            if(!$field->isPK)
+                continue;
             if ($field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement') {
                if($this->_dbtype=="postgresql" && !strlen($field->sequenceName)){
                   $field->sequenceName = $tb.'_'.$field->name.'_seq';
@@ -581,7 +587,7 @@ class jDaoGenerator {
             }
 
             $var = '$'.$fieldPrefix.$field->name;
-            $value = $this->_preparePHPExpr($var,$field->datatype, !$field->required,'=' );
+            $value = $this->_preparePHPExpr($var,$field->datatype, !$field->requiredInConditions,'=' );
 
             $r .= $condition.'\'.'.$value.'.\'';
         }
@@ -709,10 +715,10 @@ class jDaoGenerator {
                   // - in case 1: ($foo === null ? 'IS NULL' : '='.$this->_conn->quote($foo))
                   // - in case 2: '= concat('.($foo === null ? 'NULL' : $this->_conn->quote($foo)).' ,\'bla\')'
                   if(strpos($value, '$') === 0){
-                     $value = '\'.'.$this->_preparePHPExpr($value, $prop->datatype, !$prop->required,$cond['operator']).'.\'';
+                     $value = '\'.'.$this->_preparePHPExpr($value, $prop->datatype, !$prop->requiredInConditions,$cond['operator']).'.\'';
                   }else{
                         foreach($params as $param){
-                            $value = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $prop->datatype, !$prop->required).'.\'',$value);
+                            $value = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $prop->datatype, !$prop->requiredInConditions).'.\'',$value);
                         }
                         $value= $cond['operator'].' '.$value;
                   }
@@ -792,12 +798,14 @@ class jDaoGenerator {
       switch(strtolower($fieldType)){
          case 'int':
          case 'integer':
-         case 'autoincrement':
             if($checknull){
                $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'intval('.$expr.'))';
             }else{
                $expr= $forCondition.'intval('.$expr.')';
             }
+            break;
+         case 'autoincrement':
+            $expr= $forCondition.'intval('.$expr.')';
             break;
          case 'double':
          case 'float':
@@ -808,12 +816,14 @@ class jDaoGenerator {
             }
             break;
          case 'numeric': //usefull for bigint and stuff
-         case 'bigautoincrement':
             if($checknull){
                $expr='('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.')))';
             }else{
                $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
             }
+            break;
+         case 'bigautoincrement':
+            $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
             break;
          default:
             if($checknull){

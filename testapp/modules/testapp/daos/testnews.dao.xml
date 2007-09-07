@@ -5,7 +5,7 @@
      <foreigntable name="hd_news_rubriques" primarykey="news_rubriques_id" onforeignkey="news_rubrique" />
   </datasources>
   <record>
-     <property name="id"          fieldname="news_id"            datatype="autoincrement" required="yes" />
+     <property name="id"          fieldname="news_id"            datatype="autoincrement"/>
      <property name="titre"       fieldname="news_titre"         datatype="string"        required="yes" />
      <property name="description" fieldname="news_description"   datatype="string"        required="yes" />
      <property name="texte"       fieldname="news_texte"         datatype="string"        required="yes" />

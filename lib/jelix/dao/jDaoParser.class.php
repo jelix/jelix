@@ -227,10 +227,16 @@ class jDaoProperty {
     public $regExp = null;
 
     /**
-    * says if the field is required.
+    * says if the field is required when doing a check
     * @var boolean
     */
     public $required = false;
+
+    /**
+    * says if the value of the field is required when construct SQL conditions
+    * @var boolean
+    */
+    public $requiredInConditions = false;
 
     /**
     * Says if it's a primary key.
@@ -289,32 +295,38 @@ class jDaoProperty {
             throw new jDaoXmlException ('property.unknow.table', $this->name);
         }
 
-        $this->required   = $def->getBool ($params['required']);
+        $this->required   = $this->requiredInConditions = $def->getBool ($params['required']);
         $this->maxlength  = $params['maxlength'] !== null ? intval($params['maxlength']) : null;
         $this->minlength  = $params['minlength'] !== null ? intval($params['minlength']) : null;
         $this->regExp     = $params['regexp'];
 
 
-        $this->isPK = in_array($this->fieldName, $tables[$this->table]['pk']);
-        if(!$this->isPK){
-           $this->isFK = isset($tables[$this->table]['fk'][$this->fieldName]);
-        }
-
         if ($params['datatype']===null){
             throw new jDaoXmlException ('missing.attr', array('datatype', 'property'));
         }
         $params['datatype']=trim(strtolower($params['datatype']));
-        $this->needsQuotes = in_array ($params['datatype'], array ('string', 'varchar', 'text', 'date', 'datetime', 'time'));
 
         if (!in_array ($params['datatype'], array ('autoincrement', 'bigautoincrement', 'int', 'datetime', 'time',
                                     'integer', 'varchar', 'string', 'text', 'varchardate', 'date', 'numeric', 'double', 'float'))){
            throw new jDaoXmlException ('wrong.attr', array($params['datatype'], $this->fieldName,'property'));
         }
         $this->datatype = strtolower($params['datatype']);
+        $this->needsQuotes = in_array ($params['datatype'], array ('string', 'varchar', 'text', 'date', 'datetime', 'time'));
 
-        if(($this->datatype == 'autoincrement' || $this->datatype == 'bigautoincrement')
-           && $params['sequence'] !==null){
-            $this->sequenceName = $params['sequence'];
+        $this->isPK = in_array($this->fieldName, $tables[$this->table]['pk']);
+        if(!$this->isPK){
+           $this->isFK = isset($tables[$this->table]['fk'][$this->fieldName]);
+        } else {
+            $this->required = true;
+            $this->requiredInConditions = true;
+        }
+
+        if($this->datatype == 'autoincrement' || $this->datatype == 'bigautoincrement') {
+            if($params['sequence'] !==null){
+                $this->sequenceName = $params['sequence'];
+            }
+            $this->required = false;
+            $this->requiredInConditions = true;
         }
 
         // on ignore les attributs *pattern sur les champs PK et FK
@@ -334,6 +346,7 @@ class jDaoProperty {
             $this->updatePattern = '';
             $this->insertPattern = '';
             $this->required = false;
+            $this->requiredInConditions = false;
             $this->ofPrimaryTable = false;
         }else{
             $this->ofPrimaryTable=true;

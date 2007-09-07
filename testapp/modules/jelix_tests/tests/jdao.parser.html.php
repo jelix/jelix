@@ -330,6 +330,7 @@ array('','')
             <string p="datatype" value="string"/>
             <null p="regExp"/>
             <boolean p="required" value="false"/>
+            <boolean p="requiredInConditions" value="false"/>
             <boolean p="isPK" value="false" />
             <boolean p="isFK" value="false" />
             <string p="updatePattern" value="%s" />
@@ -352,6 +353,7 @@ array('','')
             <string p="datatype" value="string"/>
             <null p="regExp"/>
             <boolean p="required" value="false"/>
+            <boolean p="requiredInConditions" value="false"/>
             <boolean p="isPK" value="false" />
             <boolean p="isFK" value="false" />
             <string p="updatePattern" value="" />
@@ -375,6 +377,7 @@ array('','')
             <string p="datatype" value="autoincrement"/>
             <null p="regExp"/>
             <boolean p="required" value="false"/>
+            <boolean p="requiredInConditions" value="true"/>
             <boolean p="isPK" value="true" />
             <boolean p="isFK" value="false" />
             <string p="updatePattern" value="%s" />
