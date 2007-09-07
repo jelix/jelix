@@ -113,6 +113,7 @@ cd testapp/modules/jelix_tests/tests/
   jdao.parser.html.php
   jdao.parser2.html.php
   jdao.generator.html.php
+  jdao.generator_select.html.php
   jdb.0_profiles.html.php
   jdb.1_queries.html.php
   jdb.2_queries_with_pdo.html.php

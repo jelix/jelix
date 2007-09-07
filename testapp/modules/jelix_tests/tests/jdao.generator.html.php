@@ -389,10 +389,94 @@ class UTDao_generator extends jUnitTestCase {
         $where = $generator->BuildSQLCondition ($methods['method9']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method9']->getParameters(), false);
         $this->assertEqualOrDiff(' `grouptype` = 2 AND `name` = TOUPPER(\'.$this->_conn->quote($login).\')',$where);
+    }
 
 
+    function testBuildSQLConditionWithPattern(){
+        $doc ='<?xml version="1.0" encoding="UTF-8"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+    <datasources>
+        <primarytable name="grp" realname="jacl_group" primarykey="id_aclgrp" />
+    </datasources>
+    <record>
+      <property name="id_aclgrp" fieldname="id_aclgrp" datatype="autoincrement" required="yes"/>
+      <property name="parent_id" required="false" datatype="int" />
+      <property name="name" fieldname="name" datatype="string" required="yes" selectpattern="TOUPPER(%s)"/>
+      <property name="grouptype" fieldname="grouptype" datatype="int" required="yes"/>
+      <property name="ownerlogin" fieldname="ownerlogin" datatype="string" />
+    </record>
+    <factory>
+        <method name="method1" type="select">
+            <conditions>
+               <eq property="name" value="toto" />
+            </conditions>
+        </method>
+
+        <method name="method2" type="select">
+           <conditions>
+              <neq property="name" value="toto" />
+           </conditions>
+           <order>
+               <orderitem property="name" way="asc" />
+           </order>
+        </method>
+
+        <method name="method3" type="select">
+           <parameter name="login" />
+           <conditions>
+              <eq property="grouptype" value="2" />
+              <eq property="name" expr="$login" />
+           </conditions>
+        </method>
+
+        <method name="method9" type="select">
+           <parameter name="login" />
+           <conditions>
+              <eq property="grouptype" value="2" />
+              <eq property="name" expr="TOUPPER($login)" />
+           </conditions>
+        </method> 
+        
+    </factory>
+</dao>';
+        $parser = new jDaoParser ();
+        $parser->parse(simplexml_load_string($doc));
+        $generator = new testDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+
+        $methods=$parser->getMethods();
+
+        $where = $generator->BuildSQLCondition ($methods['method1']->getConditions()->condition, $parser->getProperties(),
+                                                $methods['method1']->getParameters(), false);
+        $this->assertEqualOrDiff(' `name` = \\\'toto\\\'',$where);
+
+        $where = $generator->BuildSQLCondition ($methods['method2']->getConditions()->condition, $parser->getProperties(),
+                                                $methods['method2']->getParameters(), false);
+        $this->assertEqualOrDiff(' `name` <> \\\'toto\\\'',$where);
+
+        $where = $generator->BuildSQLCondition ($methods['method3']->getConditions()->condition, $parser->getProperties(),
+                                                $methods['method3']->getParameters(), false);
+        $this->assertEqualOrDiff(' `grouptype` = 2 AND `name` \'.\'=\'.$this->_conn->quote($login).\'',$where);
+
+        // with prefix
+        $where = $generator->BuildSQLCondition ($methods['method1']->getConditions()->condition, $parser->getProperties(),
+                                                $methods['method1']->getParameters(), true);
+        $this->assertEqualOrDiff(' `grp`.`name` = \\\'toto\\\'',$where);
+
+        $where = $generator->BuildSQLCondition ($methods['method2']->getConditions()->condition, $parser->getProperties(),
+                                                $methods['method2']->getParameters(), true);
+        $this->assertEqualOrDiff(' `grp`.`name` <> \\\'toto\\\'',$where);
+
+        $where = $generator->BuildSQLCondition ($methods['method3']->getConditions()->condition, $parser->getProperties(),
+                                                $methods['method3']->getParameters(), true);
+        $this->assertEqualOrDiff(' `grp`.`grouptype` = 2 AND `grp`.`name` \'.\'=\'.$this->_conn->quote($login).\'',$where);
+
+        $where = $generator->BuildSQLCondition ($methods['method9']->getConditions()->condition, $parser->getProperties(),
+                                                $methods['method9']->getParameters(), false);
+        $this->assertEqualOrDiff(' `grouptype` = 2 AND `name` = TOUPPER(\'.$this->_conn->quote($login).\')',$where);
 
     }
+
+
 
     function testBuildSimpleCondition(){
         $doc ='<?xml version="1.0" encoding="UTF-8"?>
@@ -411,20 +495,20 @@ class UTDao_generator extends jUnitTestCase {
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
         $generator = new testDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
-        
 
         $pkFields=$generator->GetPropertiesBy('PkFields');
         $this->assertTrue(count($pkFields) ==1);
         $this->assertTrue(isset($pkFields['id_aclgrp']));
-    
+
         $where = $generator->BuildSimpleConditions ($pkFields);
         $this->assertEqualOrDiff(' `grp`.`id_aclgrp`\'.\'=\'.intval($id_aclgrp).\'',$where);
-        
+
         $where = $generator->BuildSimpleConditions ($pkFields, 'record->');
         $this->assertEqualOrDiff(' `grp`.`id_aclgrp`\'.\'=\'.intval($record->id_aclgrp).\'',$where);
 
         $where = $generator->BuildSimpleConditions ($pkFields, 'record->', false);
         $this->assertEqualOrDiff(' `id_aclgrp`\'.\'=\'.intval($record->id_aclgrp).\'',$where);
     }
+
 }
 ?>
