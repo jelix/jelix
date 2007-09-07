@@ -1,10 +1,9 @@
 <?php
 /**
 * @package     jelix-scripts
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -16,7 +15,26 @@
 abstract class JelixScriptCommand {
 
    public $name;
+
+   /**
+    * options available for the command
+    * the array contains items like :
+    *   key =  name of the option '-foo'
+    *   value = boolean: true if the option need a value after it
+    * @var array
+    */
    public $allowed_options=array();
+
+   /**
+    * parameters needed for the command
+    * the array contains items like :
+    *   key =  name of the variable which will contains the parameter value
+    *   value = boolean: false if the parameter is optional
+    * Optional parameters should be declared at the end of the array
+    * The last parameter declaration could have '...' as name, so it will contains
+    * in an array any additional values given in the command line
+    * @var array
+    */
    public $allowed_parameters=array();
 
    protected $_options;

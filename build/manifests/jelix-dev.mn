@@ -99,30 +99,34 @@ cd lib/jelix-scripts
   INSTALL
   CREDITS
 cd lib/jelix-scripts/commands
-  createapp.cmd.php
-  createdao.cmd.php
-  help.cmd.php
-  createmodule.cmd.php
-  createctrl.cmd.php
-  createzone.cmd.php
-  createaction.cmd.php
-  cleartemp.cmd.php
-  aclvalue.cmd.php
   aclgroup.cmd.php
   aclright.cmd.php
+  aclvalue.cmd.php
+  cleartemp.cmd.php
+  createaction.cmd.php
+  createapp.cmd.php
+  createctrl.cmd.php
+  createdao.cmd.php
+  createdaocrud.cmd.php
+  createform.cmd.php
+  createmodule.cmd.php
+  createzone.cmd.php
+  help.cmd.php
 cd lib/jelix-scripts/includes
   command.class.php
   utils.lib.php
 cd lib/jelix-scripts/templates
   module.xml.tpl
   dao.xml.tpl
+  form.xml.tpl
   dao_empty.xml.tpl
   controller.tpl
+  controller.cmdline.tpl
+  controller.daocrud.tpl
   template.tpl
   zone.tpl
   project.xml.tpl
   application.init.php.tpl
-  controller.cmdline.tpl
 cd lib/jelix-scripts/templates/www
   xmlrpc.php.tpl
   index.php.tpl

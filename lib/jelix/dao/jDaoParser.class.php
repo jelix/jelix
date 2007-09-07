@@ -304,10 +304,10 @@ class jDaoProperty {
             throw new jDaoXmlException ('missing.attr', array('datatype', 'property'));
         }
         $params['datatype']=trim(strtolower($params['datatype']));
-        $this->needsQuotes = in_array ($params['datatype'], array ('string', 'date', 'datetime', 'time'));
+        $this->needsQuotes = in_array ($params['datatype'], array ('string', 'varchar', 'text', 'date', 'datetime', 'time'));
 
         if (!in_array ($params['datatype'], array ('autoincrement', 'bigautoincrement', 'int', 'datetime', 'time',
-                                    'integer', 'varchar', 'string', 'varchardate', 'date', 'numeric', 'double', 'float'))){
+                                    'integer', 'varchar', 'string', 'text', 'varchardate', 'date', 'numeric', 'double', 'float'))){
            throw new jDaoXmlException ('wrong.attr', array($params['datatype'], $this->fieldName,'property'));
         }
         $this->datatype = strtolower($params['datatype']);

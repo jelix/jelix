@@ -1,10 +1,9 @@
 <?php
 /**
 * @package     jelix-scripts
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2005-2006 Jouanneau laurent
+* @copyright   2005-2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -138,11 +137,9 @@ function jxs_getRelativePath($path, $targetPath, $intoString=false){
 }
 
 function jxs_init_jelix_env(){
-   global $gJConfig;
-
-   $gJConfig = jConfig::load(JELIXS_APP_CONFIG_FILE);
-
-
+    global $gJConfig;
+    if(!$gJConfig)
+        $gJConfig = jConfig::load(JELIXS_APP_CONFIG_FILE);
 }
 
 

@@ -73,11 +73,13 @@ class createdaoCommand extends JelixScriptCommand {
 
             switch($prop->type){
 
-               case 'varchar':
                case 'text':
                case 'mediumtext':
                case 'longtext':
                case 'tinytext':
+                  $type='text';
+                  break;
+               case 'varchar':
                case 'char':
                case 'enum':
                case 'bpchar':
@@ -111,10 +113,14 @@ class createdaoCommand extends JelixScriptCommand {
                   break;
 
                case 'date':
-               case 'datetime':
-               case 'timestamp':
-               case 'time':
                   $type='date';
+                  break;
+               case 'timestamp':
+               case 'datetime':
+                  $type='datetime';
+                  break;
+               case 'time':
+                  $type='time';
                   break;
                default:
                   $type='';
@@ -130,7 +136,7 @@ class createdaoCommand extends JelixScriptCommand {
                      $primarykeys.=$fieldname;
                }
                if($prop->not_null && $type != 'autoincrement')
-                  $properties.=' required="yes"';
+                  $properties.=' required="true"';
                $properties.='/>';
             }
 
