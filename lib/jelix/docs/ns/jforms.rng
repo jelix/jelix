@@ -219,12 +219,14 @@
   
   <define name="item">
      <element name="item">
-         <optional>
-            <choice>
-                <attribute name="label" />
-                <attribute name="labellocale" />
-             </choice>
-         </optional>
+        <choice>
+            <text />
+            <empty />
+            <group>
+                <attribute name="locale" />
+                <empty/>
+            </group>
+        </choice>
          <optional><attribute name="selected"><choice><value>true</value><value>false</value></choice></attribute></optional>
          <attribute name="value" />
      </element>

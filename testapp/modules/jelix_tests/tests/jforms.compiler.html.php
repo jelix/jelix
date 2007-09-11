@@ -109,8 +109,8 @@ class UTjformsCompiler extends jUnitTestCase {
 </checkboxes>',
 28=>'<checkboxes ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
-    <item label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
 </checkboxes>',
 29=>'<radiobuttons ref="nom" xmlns="http://jelix.org/ns/forms/1.0"
@@ -119,8 +119,8 @@ class UTjformsCompiler extends jUnitTestCase {
 </radiobuttons>',
 30=>'<radiobuttons ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
-    <item label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
 </radiobuttons>',
 31=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0"
@@ -129,8 +129,8 @@ class UTjformsCompiler extends jUnitTestCase {
 </listbox>',
 32=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" size="8">
     <label>Votre nom</label>
-    <item label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
 </listbox>',
 33=>'<menulist ref="nom" xmlns="http://jelix.org/ns/forms/1.0"
@@ -139,8 +139,8 @@ class UTjformsCompiler extends jUnitTestCase {
 </menulist>',
 34=>'<menulist ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
-    <item label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
 </menulist>',
 35=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="true"
@@ -149,8 +149,8 @@ class UTjformsCompiler extends jUnitTestCase {
 </listbox>',
 36=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="false">
     <label>Votre nom</label>
-    <item label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
 </listbox>',
 37=>'<input ref="nom" defaultvalue="toto" xmlns="http://jelix.org/ns/forms/1.0">
@@ -158,26 +158,26 @@ class UTjformsCompiler extends jUnitTestCase {
 </input>',
 38=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="false">
     <label>Votre nom</label>
-    <item selected="true" label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item selected="true" value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
 </listbox>',
 39=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="true">
     <label>Votre nom</label>
-    <item selected="true" label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item selected="true" value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item selected="true" value="ccc"/>
 </listbox>',
 40=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="true" selectedvalue="aaa">
     <label>Votre nom</label>
-    <item label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
 </listbox>',
 41=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="true">
     <label>Votre nom</label>
-    <item label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
     <selectedvalues> <value>bbb</value><value>aaa</value></selectedvalues>
 </listbox>',
@@ -227,8 +227,8 @@ class UTjformsCompiler extends jUnitTestCase {
 </submit>',
 53=>'<submit ref="validation" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Type de validation</label>
-    <item label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
 </submit>',
 54=>'<upload ref="nom" xmlns="http://jelix.org/ns/forms/1.0" maxsize="22356">
@@ -973,8 +973,8 @@ array('label','confirm','myfile')
 array(
 '<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="false">
     <label>Votre nom</label>
-    <item selected="true" label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item selected="true" value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item selected="true" value="ccc"/>
 </listbox>',
 'jelix~formserr.multiple.selected.not.allowed',
@@ -983,8 +983,8 @@ array(
 array(
 '<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="false">
     <label>Votre nom</label>
-    <item label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
      <selectedvalues> <value>bbb</value><value>aaa</value></selectedvalues>
 </listbox>',
@@ -994,10 +994,10 @@ array(
 array(
 '<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="true">
     <label>Votre nom</label>
-    <item selected="true" label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item selected="true" value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
-     <selectedvalues> <value>bbb</value><value>aaa</value></selectedvalues>
+    <selectedvalues> <value>bbb</value><value>aaa</value></selectedvalues>
 </listbox>',
 'jelix~formserr.selected.attribute.not.allowed',
 'myfile'
@@ -1005,8 +1005,8 @@ array(
 array(
 '<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" selectedvalue="aaa" multiple="true">
     <label>Votre nom</label>
-    <item selected="true" label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item selected="true" value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
 </listbox>',
 'jelix~formserr.selected.attribute.not.allowed',
@@ -1015,8 +1015,8 @@ array(
 array(
 '<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" selectedvalue="aaa" multiple="true">
     <label>Votre nom</label>
-    <item label="1aa" value="aaa" />
-    <item labellocale="locb" value="bbb" />
+    <item value="aaa">1aa</item>
+    <item locale="locb" value="bbb" />
     <item value="ccc"/>
      <selectedvalues> <value>bbb</value><value>aaa</value></selectedvalues>
 </listbox>',

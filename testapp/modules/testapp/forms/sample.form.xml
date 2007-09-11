@@ -17,9 +17,9 @@
 
    <radiobuttons ref="sexe" required="true">
       <label>Vous êtes </label>
-      <item value="h" label="un homme" />
-      <item value="f" label="une femme" />
-      <item value="no" label="je ne sais pas" />
+      <item value="h">un homme</item>
+      <item value="f">une femme</item>
+      <item value="no">je ne sais pas</item>
       <alert type="required">Vous devez indiquer le sexe, même si vous ne savez pas :-)</alert>
   </radiobuttons>
 
@@ -29,20 +29,20 @@
 
   <listbox ref="home">
       <label>Vous habitez </label>
-      <item value="pa" label="Paris" />
-      <item value="ma" label="Marseille" />
-      <item value="ly" label="Lyon" />
-      <item value="br" label="Brest" />
-      <item value="li" label="Lille" />
-      <item value="bo" label="Bordeaux" />
+      <item value="pa">Paris</item>
+      <item value="ma">Marseille</item>
+      <item value="ly">Lyon</item>
+      <item value="br">Brest</item>
+      <item value="li">Lille</item>
+      <item value="bo">Bordeaux</item>
   </listbox>
 
    <checkboxes ref="objets" required="true">
       <label>Vous avez </label>
-      <item value="maison" label="Une maison" />
-      <item value="voiture" label="Une voiture" />
-      <item value="bateau" label="Un bateau" />
-      <item value="assiette" label="Une assiette" />
+      <item value="maison">Une maison</item>
+      <item value="voiture">Une voiture</item>
+      <item value="bateau">Un bateau</item>
+      <item value="assiette">Une assiette</item>
   </checkboxes>
 
   <input ref="datenaissance" type="localedate">
@@ -62,8 +62,8 @@
 
   <submit ref="valid">
     <label>Valider</label>
-    <item value="svg" label="Sauvegarde" />
-    <item value="prev" label="Preview" />
+    <item value="svg">Sauvegarde</item>
+    <item value="prev">Preview</item>
   </submit>
 
 </forms>

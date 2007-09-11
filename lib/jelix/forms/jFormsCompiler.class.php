@@ -239,10 +239,10 @@ class jFormsCompiler implements jISimpleCompiler {
                     $selectedvalues=array();
                     foreach($control->item as $item){
                         $value ="'".str_replace("'","\\'",(string)$item['value'])."'=>";
-                        if(isset($item['label'])){
-                            $source[] = $value."'".str_replace("'","\\'",(string)$item['label'])."',";
-                        }elseif(isset($item['labellocale'])){
-                            $source[] = $value."jLocale::get('".(string)$item['labellocale']."'),";
+                        if(isset($item['locale'])){
+                            $source[] = $value."jLocale::get('".(string)$item['locale']."'),";
+                        }elseif( "" != (string)$item){
+                            $source[] = $value."'".str_replace("'","\\'",(string)$item)."',";
                         }else{
                             $source[] = $value."'".str_replace("'","\\'",(string)$item['value'])."',";
                         }
