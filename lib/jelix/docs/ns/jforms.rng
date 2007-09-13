@@ -61,11 +61,13 @@
        <ref name="UI.attr.required" />
        <optional>
           <element name="confirm">
-                <empty/>
-                <choice>
-                    <attribute name="label" />
+            <choice>
+                <text />
+                <group>
+                    <emtpy/>
                     <attribute name="labellocale" />
-                </choice>
+                </group>
+            </choice>
           </element>
        </optional>
      </element>

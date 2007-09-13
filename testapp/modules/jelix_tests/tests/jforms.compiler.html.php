@@ -215,11 +215,11 @@ class UTjformsCompiler extends jUnitTestCase {
 </checkbox>',
 50=>'<secret ref="pwd" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre mot de passe</label>
-    <confirm label="confirmez" />
+    <confirm>confirmez</confirm>
 </secret>',
 51=>'<secret ref="pwd" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre mot de passe</label>
-    <confirm labellocale="password.confirm" />
+    <confirm locale="password.confirm" />
 </secret>',
 52=>'<submit ref="validation" xmlns="http://jelix.org/ns/forms/1.0"
     dao="foo" daomethod="bar" daolabelproperty="baz" daovalueproperty="plop">
@@ -967,8 +967,16 @@ array(
 <label>Votre mot de passe</label>
 <confirm />
 </secret>',
-'jelix~formserr.attribute.missing',
-array('label','confirm','myfile')
+'jelix~formserr.content.missing',
+array('confirm','myfile')
+),
+array(
+'<secret ref="pwd"  xmlns="http://jelix.org/ns/forms/1.0">
+<label>Votre mot de passe</label>
+<confirm></confirm>
+</secret>',
+'jelix~formserr.content.missing',
+array('confirm','myfile')
 ),
 array(
 '<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="false">

@@ -273,12 +273,12 @@ class jFormsCompiler implements jISimpleCompiler {
             case 'secret':
                 if(isset($control->confirm)) {
                     $label='';
-                    if(isset($control->confirm['label'])){
-                        $label = "'".str_replace("'","\\'",(string)$control->confirm['label'])."';";
-                    }elseif(isset($control->confirm['labellocale'])){
-                        $label = "jLocale::get('".(string)$control->confirm['labellocale']."');";
+                    if(isset($control->confirm['locale'])){
+                        $label = "jLocale::get('".(string)$control->confirm['locale']."');";
+                    }elseif( "" != (string)$control->confirm) {
+                        $label = "'".str_replace("'","\\'",(string)$control->confirm)."';";
                     }else{
-                        throw new jException('jelix~formserr.attribute.missing',array('label','confirm',$this->sourceFile));
+                        throw new jException('jelix~formserr.content.missing',array('confirm',$this->sourceFile));
                     }
                     $source[]='$ctrl2 = new jFormsControlSecretConfirm(\''.(string)$control['ref'].'_confirm\');';
                     $source[]='$ctrl2->primarySecret = \''.(string)$control['ref'].'\';';
@@ -380,10 +380,10 @@ class jFormsCompiler implements jISimpleCompiler {
         else{
             $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".$label."\', \''.$dt.'\');\n";';
             if($hasConfirm){
-                if(isset($control->confirm['label'])){
-                    $source[]='$label2 = str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->confirm['label']).'\');';
+                if(isset($control->confirm['locale'])){
+                    $source[]='$label2 = str_replace("\'","\\\'",jLocale::get(\''.(string)$control->confirm['locale'].'\'));';                
                 }else{
-                    $source[]='$label2 = str_replace("\'","\\\'",jLocale::get(\''.(string)$control->confirm['labellocale'].'\'));';
+                    $source[]='$label2 = str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->confirm).'\');';
                 }
                 $source[]='$js.="jForms.tControl2 = new jFormsControl(\''.(string)$control['ref'].'_confirm\', \'".$label2."\', \''.$dt.'\');\n";';
             }
