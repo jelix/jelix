@@ -428,19 +428,27 @@ abstract class jFormsBase {
      * @return boolean true if the file has been saved correctly
      */
     public function saveFile($controlName, $path='', $alternateName='') {
-        if($path == '')
+        if ($path == '') {
             $path = JELIX_APP_VAR_PATH.'uploads/'.$this->_sel.'/';
+        } else if (substr($path, -1, 1) != '/') {
+            $path.='/';
+        }
 
         if(!isset($this->_controls[$controlName]) || $this->_controls[$controlName]->type != 'upload')
             throw new jExceptionForms('jelix~formserr.invalid.upload.control.name', array($controlName, $this->_sel));
 
-        if(!isset($_FILES[$controlName]) || $_FILES[$controlName]!= UPLOAD_ERR_OK)
+        if(!isset($_FILES[$controlName]) || $_FILES[$controlName]['error']!= UPLOAD_ERR_OK)
             return false;
 
         if($this->_controls[$controlName]->maxsize && $_FILES[$controlName]['size'] > $this->_controls[$controlName]->maxsize){
             return false;
         }
         jFile::createDir($path);
+        if ($alternateName == '') {
+            $path.= $_FILES[$controlName]['name'];
+        } else {
+            $path.= $alternateName;
+        }
         move_uploaded_file($_FILES[$controlName]['tmp_name'], $path);
         return true;
     }
@@ -449,24 +457,25 @@ abstract class jFormsBase {
      * save all uploaded file in the given directory
      * @param string $path path of the directory where to store the file. If it is not given,
      *                     it will be stored under the var/uploads/_modulename~formname_/ directory
-     * @param string $alternateName a new name for the file. If it is not given, the file
-     *                              while be stored with the original name
      */
     public function saveAllFiles($path='') {
-        if($path == '')
+        if ($path == '') {
             $path = JELIX_APP_VAR_PATH.'uploads/'.$this->_sel.'/';
+        } else if (substr($path, -1, 1) != '/') {
+            $path.='/';
+        }
 
         if(count($this->_uploads))
             jFile::createDir($path);
 
         foreach($this->_uploads as $ref=>$ctrl){
 
-            if(!isset($_FILES[$ref]) || $_FILES[$ref]!= UPLOAD_ERR_OK)
+            if(!isset($_FILES[$ref]) || $_FILES[$ref]['error']!= UPLOAD_ERR_OK)
                 continue;
             if($ctrl->maxsize && $_FILES[$ref]['size'] > $ctrl->maxsize)
                 continue;
 
-            move_uploaded_file($_FILES[$ref]['tmp_name'], $path);
+            move_uploaded_file($_FILES[$ref]['tmp_name'], $path.$_FILES[$ref]['name']);
         }
     }
 
