@@ -107,7 +107,7 @@
   </define>
 
   <define name="listbox">
-     <element name="radiobuttons">
+     <element name="listbox">
        <ref name="control.common" />
        <ref name="control.list.common" />
        <optional>
@@ -115,11 +115,14 @@
                 <choice><value>true</value><value>false</value></choice>
             </attribute>
        </optional>
+       <optional>
+            <attribute name="size" />
+       </optional>
      </element>
   </define>
 
   <define name="menulist">
-     <element name="radiobuttons">
+     <element name="menulist">
        <ref name="control.common" />
        <ref name="control.list.common" />
      </element>

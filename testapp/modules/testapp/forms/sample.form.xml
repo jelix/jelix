@@ -52,7 +52,7 @@
 
   <secret ref="pwd">
     <label>Un mot de passe</label>
-    <confirm label="Retapez le mot de passe pour confirmer" />
+    <confirm>Retapez le mot de passe pour confirmer</confirm>
   </secret>
 
   <upload ref="image" mimetype="image/gif;image/png;" maxsize="50000">
