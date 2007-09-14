@@ -5,13 +5,10 @@
 * @author     Laurent Jouanneau
 * @contributor
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* This classe was get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
+* Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial author of this Copix classe is Laurent Jouanneau, and this classe was adapted for Jelix by him
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-* Classe orginellement issue d'une branche experimentale du
-* framework Copix 2.3dev. http://www.copix.org (CopixAuthDriverDb)
-* Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteur initial : Laurent Jouanneau
-* Adaptée pour Jelix par Laurent Jouanneau
 */
 
 

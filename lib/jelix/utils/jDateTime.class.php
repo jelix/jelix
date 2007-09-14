@@ -7,17 +7,15 @@
 * @contributor Loic Mathaud
 * @copyright   2001-2005 CopixTeam 2005-2006 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud
+*
+* This class was get originally from the Copix project (CopixDate.lib.php, Copix 2.3dev20050901, http://www.copix.org)
+* Only few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this Copix classes are Gerald Croes and Laurent Jouanneau,
+* and this class was adapted/improved for Jelix by Laurent Jouanneau
+*
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-
-* Une petite partie du code est issue du fichier CopixDate.lib.php
-* du framework Copix 2.3dev20050901. http://www.copix.org
-* et est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
-
-
 
 #if PHP50
 if(!function_exists('strptime')){ // existe depuis php 5.1

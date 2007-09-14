@@ -5,22 +5,30 @@
 * @author      Croes Gérald, Patrice Ferlet
 * @contributor Laurent Jouanneau
 * @copyright 2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
+#if ENABLE_OPTIMIZED_SOURCE
+* This classes were get originally from the Copix project
+* (CopixEvent*, CopixListener*, Copix 2.3dev20050901, http://www.copix.org)
+* Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this Copix classes are Gerald Croes and  Patrice Ferlet,
+* and this classes were adapted/improved for Jelix by Laurent Jouanneau
+*
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-* Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixEvent, CopixEventNotifier, CopixEventResponse)
-* Une partie du code est sous Copyright 2001-2005 CopixTeam
-* Auteurs initiaux : Croes Gérald, Patrice Ferlet
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
-*
 */
-
-#if ENABLE_OPTIMIZED_SOURCE
-
 #includephp jEventListener.class.php
 #includephp jEventListenerFactory.class.php
 
 #else
+* This class was get originally from the Copix project
+* (CopixEvent, CopixEventNotifier, CopixEventResponse, Copix 2.3dev20050901, http://www.copix.org)
+* Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this Copix class are Gerald Croes and  Patrice Ferlet,
+* and this class was adapted/improved for Jelix by Laurent Jouanneau
+*
+* @link        http://www.jelix.org
+* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+*/
+
 /**
  *
  */
@@ -30,7 +38,7 @@ require_once (JELIX_LIB_EVENTS_PATH . 'jEventListenerFactory.class.php');
 
 
 /**
-* classe des évènements passés aux listeners
+* Class which represents an event in the event system
 * @package     jelix
 * @subpackage  events
 */
@@ -79,8 +87,6 @@ class jEvent {
       }
       return $ret;
    }
-
-
 
    /**
    * send a notification to all modules

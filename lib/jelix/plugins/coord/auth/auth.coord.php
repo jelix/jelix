@@ -5,14 +5,14 @@
 * @author     Croes Gérald
 * @contributor  Laurent Jouanneau, Frédéric Guillot, Antoine Detante
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
-* Une partie du code est issue d'une version experimentale de la classe
-* PluginAuth issue du framework Copix 2.3dev20050901.
-* et est sous Copyright 2001-2005 CopixTeam (licence LGPL) http://www.copix.org
-* Auteur initial : Croes Gérald
-* Contributeur de la version experimentale : Laurent Jouanneau
-* Adaptée pour Jelix par Laurent Jouanneau
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
+* This class was get originally from an experimental branch of the Copix project
+* (PluginAuth, Copix 2.3dev20050901, http://www.copix.org)
+* Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this Copix classes are Gerald Croes and Laurent Jouanneau,
+* and this class was adapted for Jelix by Laurent Jouanneau
+*
+* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 require_once(JELIX_LIB_AUTH_PATH.'jAuth.class.php');
 require_once(JELIX_LIB_AUTH_PATH.'jAuthUser.class.php');

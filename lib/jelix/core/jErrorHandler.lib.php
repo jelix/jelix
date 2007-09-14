@@ -5,13 +5,13 @@
 * @author     Laurent Jouanneau
 * @contributor
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* This function was get originally from the Copix project (CopixErrorHandler, Copix 2.3dev20050901, http://www.copix.org)
+* Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this function are Gerald Croes and Laurent Jouanneau,
+* and it was adapted/improved for Jelix by Laurent Jouanneau
+*
 * @link        http://www.jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-* fichier orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixErrorHandler.lib.php)
-* Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteur initial :Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
 

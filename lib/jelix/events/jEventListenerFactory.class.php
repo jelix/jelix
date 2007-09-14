@@ -5,14 +5,13 @@
 * @author      Croes Gérald, Patrice Ferlet
 * @contributor Laurent Jouanneau
 * @copyright 2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
+* This class was get originally from the Copix project (CopixListenerFactory, Copix 2.3dev20050901, http://www.copix.org)
+* Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this Copix classes are Gerald Croes and Patrice Ferlet
+* and this class was adapted for Jelix by Laurent Jouanneau
+*
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-* Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixListenerFactory)
-* Une partie du code est sous Copyright 2001-2005 CopixTeam
-* Auteurs initiaux : Croes Gérald, Patrice Ferlet
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
-*
 */
 
 /**

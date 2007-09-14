@@ -5,11 +5,9 @@
  * @author     Laurent Jouanneau
  * @contributor
  * @copyright  2005-2006 Laurent Jouanneau
+ *   Idea of this class was picked from the Copix project (CopixInclude, Copix 2.3dev20050901, http://www.copix.org)
  * @link       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
- * few line of code of jInclude are copyrighted Copyright 2001-2005 CopixTeam (LGPL licence)
- * and piked from CopixInclude class of Copix 2.3dev20050901 framework.
- * initial author : Laurent Jouanneau
  */
 
 #ifnot ENABLE_PHP_JELIX

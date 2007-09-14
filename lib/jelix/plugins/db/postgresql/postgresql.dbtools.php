@@ -6,13 +6,13 @@
 * @contributor Laurent Jouanneau
 * @contributor Nicolas Jeudy (patch ticket #99)
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* This class was get originally from the Copix project (CopixDBToolsPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
+* Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this Copix class are Gerald Croes, Ferlet Patrice  and Laurent Jouanneau,
+* and this class was adapted for Jelix by Laurent Jouanneau
+*
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-* Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixDBToolsPostgreSQL)
-* Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteurs initiaux : Gerald Croes, Ferlet Patrice et Laurent Jouanneau
-* Adaptée pour Jelix par Laurent Jouanneau
 */
 
 /**
@@ -21,10 +21,6 @@
  * @subpackage db_driver
  */
 class postgresqlDbTools extends jDbTools {
-
-   function __construct($connector){
-      parent::__construct($connector);
-   }
 
    /*
    * retourne la liste des tables

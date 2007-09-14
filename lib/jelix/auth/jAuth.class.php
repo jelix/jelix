@@ -5,13 +5,11 @@
 * @author     Laurent Jouanneau
 * @contributor Frédéric Guillot, Antoine Detante
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
-* Classe orginellement issue d'une branche experimentale du
-* framework Copix 2.3dev. http://www.copix.org (jAuth)
-* Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteur initial : Laurent Jouanneau
-* Adaptée pour Jelix par Laurent Jouanneau
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
+* This classes were get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
+* Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial author of this Copix classes is Laurent Jouanneau, and this classes were adapted for Jelix by him
+* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 #ifnot ENABLE_PHP_JELIX
 /**
@@ -114,7 +112,7 @@ class jAuth {
 
             if (!isset($config['session_name'])
                 || $config['session_name'] == ''){
-                
+
                 $config['session_name'] = 'JELIX_USER';
             }
         }

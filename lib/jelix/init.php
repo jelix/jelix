@@ -3,8 +3,8 @@
 * Initialize all defines and includes necessary files
 *
 #if ENABLE_OPTIMIZED_SOURCE
-* Some line of code come from php framework Copix 2.3dev20050901
-* They are copyrighted 2001-2005 CopixTeam (LGPL Licence)
+* Some lines of code were get from Copix project (Copix 2.3dev20050901)
+* and are copyrighted 2001-2005 CopixTeam (LGPL Licence)
 #endif
 * @package  jelix
 * @subpackage core

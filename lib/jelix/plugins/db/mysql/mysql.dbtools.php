@@ -5,13 +5,13 @@
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
+* This class was get originally from the Copix project (CopixDbToolsMysql, Copix 2.3dev20050901, http://www.copix.org)
+* Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
+* and this class was adapted/improved for Jelix by Laurent Jouanneau
+*
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-* Classe orginellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixDbToolsMysql)
-* Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée pour Jelix par Laurent Jouanneau
 */
 
 /**
@@ -20,9 +20,6 @@
  * @subpackage db_driver
  */
 class mysqlDbTools extends jDbTools {
-   function __construct($connector){
-      parent::__construct($connector);
-   }
 
    /**
    * retourne la liste des tables

@@ -7,18 +7,15 @@
 * @contributor Gildas Givaja
 * @contributor Vincent Bonnard
 * @copyright   2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+*
+* This class was get originally from the Copix project (CopixXmlRpc, Copix 2.3dev20050901, http://www.copix.org)
+* Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial author of this Copix class is Laurent Jouanneau,
+* and this class was adapted/improved for Jelix by Laurent Jouanneau
+*
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-* adaptation pour Jelix par Laurent Jouanneau
-*
-* classe originellement issue du framework Copix 2.3dev20050901. http://www.copix.org (CopixXmlRpc)
-* Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteur initial : Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
-
-
-
 
 /**
  * object to encode decode some XMl-RPC request and XMl-RPC response

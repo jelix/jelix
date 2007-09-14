@@ -1,18 +1,18 @@
 <?php
 /**
-* @package    jelix
-* @subpackage db
+* @package     jelix
+* @subpackage  db
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright  2005-2006 Laurent Jouanneau
-* @link      http://www.jelix.org
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+* @copyright   2005-2006 Laurent Jouanneau
 *
-* Quelques lignes de codes sont issues de la classe CopixDbConnection
-* du framework Copix 2.3dev20050901. http://www.copix.org
-* Elles sont sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
+* This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
+* However only few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this Copix classes are Gerald Croes and Laurent Jouanneau,
+* and this class was adapted/improved for Jelix by Laurent Jouanneau
+*
+* @link        http://www.jelix.org
+* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
 /**
@@ -61,7 +61,7 @@ abstract class jDbConnection {
     function __construct($profil){
        $this->profil = & $profil;
        $this->dbms = $profil['driver'];
-       $this->_connection=$this->_connect();
+       $this->_connection = $this->_connect();
     }
 
     function __destruct(){

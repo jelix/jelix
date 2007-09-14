@@ -5,14 +5,14 @@
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2005-2006 Laurent Jouanneau
+* Some parts of this file are took from an experimental branch of the Copix project (CopixUrl.class.php, Copix 2.3dev20050901, http://www.copix.org),
+* Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this parts are Gerald Croes and Laurent Jouanneau,
+* and this parts were adapted/improved for Jelix by Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*
-* Some parts of this file are took from Copix Framework v2.3dev20050901, CopixUrl.class.php,
-* copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
-* author : Gerald Croes, Laurent Jouanneau.
-* http://www.copix.org
 */
+
 #ifnot ENABLE_PHP_JELIX
 /**
  * interface for url engines
@@ -107,9 +107,6 @@ abstract class jUrlBase {
 
 
 }
-
-
-
 
 /**
  * A container to store url datas for an action

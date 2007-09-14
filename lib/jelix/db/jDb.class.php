@@ -2,20 +2,35 @@
 /**
 * @package    jelix
 * @subpackage db
+#if ENABLE_OPTIMIZED_SOURCE
 * @author     Laurent Jouanneau
 * @contributor
 * @copyright  2005-2007 Laurent Jouanneau
+*
+* Some of this classes were get originally from the Copix project
+* (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
+* Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this Copix classes are Gerald Croes and Laurent Jouanneau,
+* and this classes were adapted/improved for Jelix by Laurent Jouanneau
+*
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-* API inspirée de la classe CopixDbFactory issue du framework Copix 2.3dev20050901. http://www.copix.org
 */
-#if ENABLE_OPTIMIZED_SOURCE
 
 #includephp jDbConnection.class.php
 #includephp jDbResultSet.class.php
 
 #else
+* @author     Laurent Jouanneau
+* @contributor
+* @copyright  2005-2007 Laurent Jouanneau
+*
+* API ideas of this class were get originally from the Copix project (CopixDbFactory, Copix 2.3dev20050901, http://www.copix.org)
+* No lines of code are copyrighted by CopixTeam
+*
+* @link      http://www.jelix.org
+* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+*/
 
 /**
  *

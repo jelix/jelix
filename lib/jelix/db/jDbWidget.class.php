@@ -5,13 +5,14 @@
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
+*
+* This class was get originally from the Copix project (CopixDbWidget, Copix 2.3dev20050901, http://www.copix.org)
+* Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this Copix classes are Gerald Croes and Laurent Jouanneau,
+* and this class was adapted/improved for Jelix by Laurent Jouanneau
+*
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-* Methodes issues originellement de la classe  CopixDbWidget du framework Copix 2.3dev20050901. http://www.copix.org
-* Une partie du code est sous Copyright 2001-2005 CopixTeam (licence LGPL)
-* Auteurs initiaux : Gerald Croes et Laurent Jouanneau
-* Adaptée et améliorée pour Jelix par Laurent Jouanneau
 */
 
 /**
