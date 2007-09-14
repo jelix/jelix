@@ -269,11 +269,11 @@ class jDaoProperty {
     /**
     * constructor.
     */
-    function __construct ($params, $def){
+    function __construct ($aParams, $def){
         $needed = array('name', 'fieldname', 'table', 'datatype', 'required', 'minlength',
-        'maxlength', 'regexp', 'sequence', 'updatemotif', 'insertmotif', 'selectmotif', 'updatepattern', 'insertpattern', 'selectpattern');
+        'maxlength', 'regexp', 'sequence');
 
-        $params = $def->getAttr($params, $needed);
+        $params = $def->getAttr($aParams, $needed);
 
         if ($params['name']===null){
             throw new jDaoXmlException ('missing.attr', array('name', 'property'));
@@ -332,12 +332,24 @@ class jDaoProperty {
         if(!$this->isPK && !$this->isFK){
             // *motif attributes are deprecated since  1.0b3
             // TODO: remove support of *motif attributes in jelix 1.0
-            $this->updatePattern= $params['updatemotif']!==null ? $params['updatemotif'] :'%s';
-            $this->insertPattern= $params['insertmotif']!==null ? $params['insertmotif'] :'%s';
-            $this->selectPattern= $params['selectmotif']!==null ? $params['selectmotif'] :'%s';
-            $this->updatePattern= $params['updatepattern']!==null ? $params['updatepattern'] :$this->updatePattern;
-            $this->insertPattern= $params['insertpattern']!==null ? $params['insertpattern'] :$this->insertPattern;
-            $this->selectPattern= $params['selectpattern']!==null ? $params['selectpattern'] :$this->selectPattern;
+
+            if(isset($aParams['updatepattern'])) {
+                $this->updatePattern=(string)$aParams['updatepattern'];
+            }elseif(isset($aParams['updatemotif'])){
+                $this->updatePattern=(string)$aParams['updatemotif'];
+            }
+
+            if(isset($aParams['insertpattern'])) {
+                $this->insertPattern=(string)$aParams['insertpattern'];
+            }elseif(isset($aParams['insertmotif'])){
+                $this->insertPattern=(string)$aParams['insertmotif'];
+            }
+
+            if(isset($aParams['selectpattern'])) {
+                $this->selectPattern=(string)$aParams['selectpattern'];
+            }elseif(isset($aParams['selectmotif'])){
+                $this->selectPattern=(string)$aParams['selectmotif'];
+            }
         }
 
         // no update and insert patterns for field of external tables
