@@ -44,6 +44,9 @@ class jXmlRpcRequest extends jRequest {
             list($nom,$vars) = jXmlRpc::decodeRequest($requestXml);
             list($module, $action) = explode(':',$nom);
 
+            if(count($vars) == 1 && is_array($vars[0]))
+                $this->params = $vars[0];
+
             $this->params['params'] = $vars;
 
             // Définition de l'action a executer et des paramètres

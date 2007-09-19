@@ -50,6 +50,9 @@ class jJsonRpcRequest extends jRequest {
         if(isset( $requestobj['id']))
             $this->jsonRequestId = $requestobj['id'];
 
+        if(is_array($requestobj['params']))
+            $this->params = $requestobj['params'];
+
         $this->params['params'] = $requestobj['params'];
 
         // Définition de l'action a executer et des paramètres
