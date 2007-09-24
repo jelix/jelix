@@ -94,28 +94,74 @@ class jManifest {
         $tokens = token_get_all($content);
         $result = '';
         $firstcomment= true;
+        $currentWhistpace ='';
+        $firstPHPfound = false;
         foreach ($tokens as $token) {
             if (is_string($token)) {
+                if(in_array($token, array('(',')','{','}')) && strpos($currentWhitespace, "\n") === false) {
+                   $currentWhitespace='';
+                }
+                if($currentWhitespace != '') {
+                    $s = self::strip_ws($currentWhitespace);
+                    $result.=$s;
+                    $currentWhitespace ='';
+                }
                 $result.=$token;
             } else {
                 switch ($token[0]) {
+                    case T_OPEN_TAG:
+                        if($currentWhitespace != '') {
+                            $s = self::strip_ws($currentWhitespace);
+                            $result.=$s;
+                            $currentWhitespace ='';
+                        }
+                        $result.=$token[1];
+                        if(!$firstPHPfound) {
+                            $result.= "/* comments & extra-whitespaces have been removed by jBuildTools*/\n";
+                            $firstPHPfound=true;
+                        }
+                        break;
                     case T_COMMENT:
+                        $currentWhitespace.="\n";
                         break;
                     case T_DOC_COMMENT:
                         // on garde le premier commentaire documentaire
                         if($firstcomment){
+                            if($currentWhitespace != '') {
+                                $s = self::strip_ws($currentWhitespace);
+                                $result.=$s;
+                                $currentWhitespace ='';
+                            }
                             $result.=$token[1];
                             $firstcomment = false;
                         }
                         break;
+                    case T_WHITESPACE:
+                        $currentWhitespace.=$token[1];
+                        break;
                     default:
+                        if($currentWhitespace != '') {
+                            $s = self::strip_ws($currentWhitespace);
+                            $result.=$s;
+                            $currentWhitespace ='';
+                        }
                         $result.=$token[1];
                         break;
                 }
             }
         }
         return $result;
+    }
 
+    static protected function strip_ws($s){
+        $result = $s;
+        $result = str_replace("\n\r","\n",$result); // removed \r
+        $result = str_replace("\r","\n",$result); // removed standalone \r
+        $result = preg_replace("(\n+)", "\n", $result);
+        $result = str_replace("\t","    ",$result);
+        $result = str_replace("    ","\t",$result);
+        $result = preg_replace("/^([\n \t]+)\n([ \t]*)$/", "\n$2", $result);
+        return $result;
     }
 }
 ?>
