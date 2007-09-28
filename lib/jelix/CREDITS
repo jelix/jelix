@@ -47,6 +47,9 @@ Frédéric Guillot (aka fg)
 Julien Issler
  - updated JSON class (#231)
 
+Bastien Jaillot (aka bastnic)
+ - bug fix in jDaoGenerator (#282)
+
 Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
  - jResponseCss

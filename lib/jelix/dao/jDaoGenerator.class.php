@@ -4,6 +4,7 @@
 * @subpackage dao
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
+* @contributor Bastien Jaillot (bug fix)
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDAOGeneratorV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -447,9 +448,9 @@ class jDaoGenerator {
             }else{
                //in oracle we must escape name
                if ($this->_dbtype == 'oci8') {
-                  $field = sprintf ($prop->selectPattern, $table.$this->_encloseName($prop->fieldName)).' "'.$prop->name.'"';
+                  $field = sprintf (str_replace("'","\\'",$prop->selectPattern), $table.$this->_encloseName($prop->fieldName)).' "'.$prop->name.'"';
                }else{
-                  $field = sprintf ($prop->selectPattern, $table.$this->_encloseName($prop->fieldName)).' as '.$this->_encloseName($prop->name);
+                  $field = sprintf (str_replace("'","\\'",$prop->selectPattern), $table.$this->_encloseName($prop->fieldName)).' as '.$this->_encloseName($prop->name);
                }
             }
 
