@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  junittests
 * @author      Jouanneau Laurent
-* @contributor
-* @copyright   2007 Jouanneau laurent
+* @contributor Rahal Aboulfeth
+* @copyright   2007 Jouanneau laurent, 2007 Rahal Aboulfeth
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -46,28 +46,22 @@ class defaultCtrl extends jController {
             return $rep;
         }
 
-
         $rep = $this->_prepareResponse();
-
 
         $reporter = jClasses::create("jhtmlrespreporter");
         jClasses::inc('junittestcase');
         jClasses::inc('junittestcasedb');
         $reporter->setResponse($rep);
 
-        $group = new GroupTest('Tests on all modules');
-
         foreach($this->testsList as $module=>$tests){
-
+            jContext::push($module);
+            $group = new GroupTest('Tests on module '.$module);
             foreach($this->testsList[$module] as $test){
                 $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
             }
+            $group->run($reporter);
+            jContext::pop();
         }
-        jContext::push($module);
-        $group->run($reporter);
-        jContext::pop();
-
-
         return $this->_finishResponse($rep);
     }
 

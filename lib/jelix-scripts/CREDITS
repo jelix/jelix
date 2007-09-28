@@ -12,7 +12,7 @@ Contributors
 By alphabetic order on the name
 
 Bastien Jaillot
-  - bug fix on createdaocrud
+  - bug fix on createdaocrud (#283)
 
 Thiriot Christophe 
   - clearcache command
