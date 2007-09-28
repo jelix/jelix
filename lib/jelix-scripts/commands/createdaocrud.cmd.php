@@ -2,7 +2,7 @@
 /**
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
-* @contributor 
+* @contributor Bastien Jaillot (bug fix)
 * @copyright   2007 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -44,9 +44,7 @@ class createdaocrudCommand extends JelixScriptCommand {
         $path= $this->getModulePath($this->_parameters['module']);
 
         $table = $this->getParam('table');
-        $ctrlname = $this->getParam('ctrlname');
-        if($ctrlname == null)
-            $ctrlname == $table;
+        $ctrlname = $this->getParam('ctrlname', $table);
 
         if(file_exists($path.'controllers/'.$ctrlname.'.classic.php')){
             die("Error: controller '".$ctrlname."' already exists");

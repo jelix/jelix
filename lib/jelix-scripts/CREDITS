@@ -1,8 +1,23 @@
-Crédits
+Credits
 =======
 
-Concepteur et développeur : Laurent Jouanneau
+Core team developers
+--------------------
 
-Contributeurs :
-  Loic Mathaud (bug fix)
-  Thiriot Christophe (clearcache)
+Laurent Jouanneau (laurentj):
+ - Conceptor and main developer of Jelix scripts
+
+Contributors
+------------
+By alphabetic order on the name
+
+Bastien Jaillot
+  - bug fix on createdaocrud
+
+Thiriot Christophe 
+  - clearcache command
+
+Loic Mathaud
+  - bug fix
+
+
