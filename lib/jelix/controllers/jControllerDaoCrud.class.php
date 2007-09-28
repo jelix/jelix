@@ -188,7 +188,7 @@ class jControllerDaoCrud extends jController {
         }
 
         if($form->check() && $this->_checkDatas($form)){
-            $id = $form->saveToDao($this->dao, $this->dbProfil);
+            $id = $form->saveToDao($this->dao, null, $this->dbProfil);
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
             jForms::destroy($this->form);
@@ -264,7 +264,7 @@ class jControllerDaoCrud extends jController {
         }
 
         if($form->check() && $this->_checkDatas($form)){
-            $id = $form->saveToDao($this->dao, $this->dbProfil);
+            $id = $form->saveToDao($this->dao, null, $this->dbProfil);
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
             jForms::destroy($this->form, $id);
