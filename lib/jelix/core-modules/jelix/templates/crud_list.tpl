@@ -1,6 +1,6 @@
 <h1>{@jelix~crud.title.list@}</h1>
 
-<table class="crud-record-list" border="1">
+<table class="crud-record-list">
 <thead>
 <tr>
     {foreach $properties as $propname}

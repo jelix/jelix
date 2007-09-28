@@ -206,7 +206,7 @@ class jControllerDaoCrud extends jController {
         $tpl->assign('form',$form);
         $tpl->assign('submitAction', $this->_getAction('savecreate'));
         $tpl->assign('listAction' , $this->_getAction('index'));
-        $this->_create($rep, $tpl);
+        $this->_create($form, $rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->editTemplate));
         return $rep;
 
@@ -215,10 +215,11 @@ class jControllerDaoCrud extends jController {
     /**
      * overload this method if you wan to do additionnal things on the response and on the edit template
      * during the create action.
+     * @param jFormsBase $form the form
      * @param jHtmlResponse $resp the response
      * @param jtpl $tpl the template to display the edit form 
      */
-    protected function _create($resp, $tpl) {
+    protected function _create($form, $resp, $tpl) {
 
     }
 
@@ -305,7 +306,7 @@ class jControllerDaoCrud extends jController {
         $tpl->assign('submitAction', $this->_getAction('saveupdate'));
         $tpl->assign('listAction' , $this->_getAction('index'));
         $tpl->assign('viewAction' , $this->_getAction('view'));
-        $this->_editUpdate($rep, $tpl);
+        $this->_editUpdate($form, $rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->editTemplate));
         return $rep;
     }
@@ -313,10 +314,11 @@ class jControllerDaoCrud extends jController {
     /**
      * overload this method if you wan to do additionnal things on the response and on the edit template
      * during the editupdate action.
+     * @param jFormsBase $form the form
      * @param jHtmlResponse $resp the response
      * @param jtpl $tpl the template to display the edit form 
      */
-    protected function _editUpdate($resp, $tpl) {
+    protected function _editUpdate($form, $resp, $tpl) {
 
     }
 
@@ -378,7 +380,7 @@ class jControllerDaoCrud extends jController {
         $tpl->assign('editAction' , $this->_getAction('preupdate'));
         $tpl->assign('deleteAction' , $this->_getAction('delete'));
         $tpl->assign('listAction' , $this->_getAction('index'));
-        $this->_view($rep,$tpl);
+        $this->_view($form, $rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->viewTemplate));
         return $rep;
     }
@@ -386,10 +388,11 @@ class jControllerDaoCrud extends jController {
     /**
      * overload this method if you want to do additionnal things on the response and on the view template
      * during the view action.
+     * @param jFormsBase $form the form
      * @param jHtmlResponse $resp the response
      * @param jtpl $tpl the template to display the form content
      */
-    protected function _view($resp, $tpl) {
+    protected function _view($form, $resp, $tpl) {
 
     }
 
