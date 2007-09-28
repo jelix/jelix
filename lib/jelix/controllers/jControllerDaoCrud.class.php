@@ -88,6 +88,11 @@ class jControllerDaoCrud extends jController {
     protected $uploadsDirectory ='';
 
     /**
+     * the jDb profil to use with the dao
+     */
+    protected $dbProfil = '';
+
+    /**
      * Returned a simple html response to display CRUD contents. You can override this
      * method to return a personnalized response
      * @return jResponseHtml the response
@@ -123,7 +128,7 @@ class jControllerDaoCrud extends jController {
 
         $rep = $this->_getResponse();
 
-        $dao = jDao::get($this->dao);
+        $dao = jDao::get($this->dao, $this->dbProfil);
         $results = $dao->findBy(jDao::createConditions(),$offset,$this->listPageSize);
         $pk = $dao->getPrimaryKeyNames();
 
@@ -183,7 +188,7 @@ class jControllerDaoCrud extends jController {
         }
 
         if($form->check() && $this->_checkDatas($form)){
-            $id = $form->saveToDao($this->dao);
+            $id = $form->saveToDao($this->dao, $this->dbProfil);
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
             jForms::destroy($this->form);
@@ -210,7 +215,7 @@ class jControllerDaoCrud extends jController {
         $form = jForms::create($this->form, $id);
 
         try {
-            $form->initFromDao($this->dao);
+            $form->initFromDao($this->dao, null, $this->dbProfil);
         }catch(Exception $e){
             $rep->action = $this->_getAction('index');
             return $rep;
@@ -259,7 +264,7 @@ class jControllerDaoCrud extends jController {
         }
 
         if($form->check() && $this->_checkDatas($form)){
-            $id = $form->saveToDao($this->dao);
+            $id = $form->saveToDao($this->dao, $this->dbProfil);
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
             jForms::destroy($this->form, $id);
@@ -285,7 +290,7 @@ class jControllerDaoCrud extends jController {
         // we're using a form to display a record, to have the portunity to have
         // labels with each values.
         $form = jForms::create($this->form, $this->pseudoFormId);
-        $form->initFromDao($this->dao, $id);
+        $form->initFromDao($this->dao, $id, $this->dbProfil);
 
         $tpl = new jTpl();
         $tpl->assign('id', $id);
@@ -303,7 +308,7 @@ class jControllerDaoCrud extends jController {
     function delete(){
         $id = $this->param('id');
         if( $id !== null ){
-            $dao = jDao::get($this->dao);
+            $dao = jDao::get($this->dao, $this->dbProfil);
             $dao->delete($id);
         }
         $rep = $this->getResponse('redirect');

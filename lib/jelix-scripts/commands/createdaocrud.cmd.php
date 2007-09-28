@@ -52,8 +52,10 @@ class createdaocrudCommand extends JelixScriptCommand {
 
         $agcommand = jxs_load_command('createdao');
         $options = array();
+        $profil = '';
         if ($this->getOption('-profil')) {
-            $options = array('-profil'=>$this->getOption('-profil'));
+            $profil = $this->getOption('-profil');
+            $options = array('-profil'=>$profil);
         }
         $agcommand->init($options,array('module'=>$this->_parameters['module'], 'name'=>$ctrlname,'table'=>$table));
         $agcommand->run();
@@ -64,7 +66,7 @@ class createdaocrudCommand extends JelixScriptCommand {
 
         $this->createDir($path.'controllers/');
         $this->createFile($path.'controllers/'.$ctrlname.'.classic.php','controller.daocrud.tpl',array('name'=>$ctrlname, 
-                'module'=>$this->_parameters['module'], 'table'=>$table));
+                'module'=>$this->_parameters['module'], 'table'=>$table, 'profil'=>$profil));
     }
 }
 

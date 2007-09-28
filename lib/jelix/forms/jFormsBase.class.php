@@ -131,12 +131,13 @@ abstract class jFormsBase {
      * set form datas from a DAO
      * @param string $daoSelector the selector of a dao file
      * @param string $key the primary key for the dao. if null, takes the form ID as primary key
+     * @param string $dbProfil the jDb profil to use with the dao
      * @see jDao
      */
-    public function initFromDao($daoSelector, $key = null){
+    public function initFromDao($daoSelector, $key = null, $dbProfil=''){
         if($key === null)
             $key = $this->_container->formId;
-        $dao = jDao::create($daoSelector);
+        $dao = jDao::create($daoSelector, $dbProfil);
         $daorec = $dao->get($key);
         if(!$daorec)
             throw new jExceptionForms('jelix~formserr.bad.formid.for.dao', array($daoSelector, $key, $this->_sel));
@@ -163,12 +164,13 @@ abstract class jFormsBase {
      * save datas using a dao.
      * it call insert or update depending the value of the formId stored in the container
      * @param string $daoSelector the selector of a dao file
+     * @param string $dbProfil the jDb profil to use with the dao
      * @return mixed  the primary key of the new record in a case of inserting
      * @see jDao
      */
-    public function saveToDao($daoSelector){
-        $dao = jDao::create($daoSelector);
-        $daorec = jDao::createRecord($daoSelector);
+    public function saveToDao($daoSelector, $dbProfil=''){
+        $dao = jDao::create($daoSelector, $dbProfil);
+        $daorec = jDao::createRecord($daoSelector, $dbProfil);
         $prop = $dao->getProperties();
         foreach($this->_controls as $name=>$ctrl){
             if(is_array($this->_container->datas[$name])){
@@ -216,9 +218,10 @@ abstract class jFormsBase {
      * @param string $controlName  the name of the control
      * @param string $daoSelector the selector of a dao file
      * @param mixed  $primaryKeyNames list of field corresponding to primary keys (optional)
+     * @param string $dbProfil the jDb profil to use with the dao
      * @see jDao
      */
-    public function initControlFromDao($controlName, $daoSelector, $primaryKeyNames=null){
+    public function initControlFromDao($controlName, $daoSelector, $primaryKeyNames=null, $dbProfil=''){
 
         if(!$this->_controls[$controlName]->isContainer()){
             throw new jExceptionForms('jelix~formserr.control.not.container', array($controlName, $this->_sel));
@@ -232,8 +235,8 @@ abstract class jFormsBase {
         if(!is_array($primaryKey))
             $primaryKey =array($primaryKey);
 
-        $dao = jDao::create($daoSelector);
-        $daorec = jDao::createRecord($daoSelector);
+        $dao = jDao::create($daoSelector, $dbProfil);
+        $daorec = jDao::createRecord($daoSelector, $dbProfil);
 
         $conditions = jDao::createConditions();
         if($primaryKeyNames)
@@ -278,9 +281,10 @@ abstract class jFormsBase {
      * @param string $daoSelector the selector of a dao file
      * @param mixed  $primaryKey the primary key if the form have no id. (optional)
      * @param mixed  $primaryKeyNames list of field corresponding to primary keys (optional)
+     * @param string $dbProfil the jDb profil to use with the dao
      * @see jDao
      */
-    public function saveControlToDao($controlName, $daoSelector, $primaryKey = null, $primaryKeyNames=null){
+    public function saveControlToDao($controlName, $daoSelector, $primaryKey = null, $primaryKeyNames=null, $dbProfil=''){
 
         if(!$this->_controls[$controlName]->isContainer()){
             throw new jExceptionForms('jelix~formserr.control.not.container', array($controlName, $this->_sel));
