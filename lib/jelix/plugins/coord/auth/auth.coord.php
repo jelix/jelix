@@ -4,7 +4,7 @@
 * @subpackage coord_plugin
 * @author     Croes Gérald
 * @contributor  Laurent Jouanneau, Frédéric Guillot, Antoine Detante
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
+* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
 *
 * This class was get originally from an experimental branch of the Copix project
 * (PluginAuth, Copix 2.3dev20050901, http://www.copix.org)
@@ -69,7 +69,7 @@ class AuthCoordPlugin implements jICoordPlugin {
                 }
             }
         }
-        
+
         //Creating the user's object if needed
         if (! isset ($_SESSION[$this->config['session_name']])){
             $notLogged = true;
@@ -79,15 +79,15 @@ class AuthCoordPlugin implements jICoordPlugin {
         }
         if(!$notLogged && $this->config['timeout']){
             if(isset($_SESSION['JELIX_AUTH_LASTTIME'])){
-                if((mktime() - $_SESSION['JELIX_AUTH_LASTTIME'] )> ($this->config['timeout'] *60)){
+                if((time() - $_SESSION['JELIX_AUTH_LASTTIME'] )> ($this->config['timeout'] *60)){
                     $notLogged = true;
                     jAuth::logout();
                     unset($_SESSION['JELIX_AUTH_LASTTIME']);
                 }else{
-                    $_SESSION['JELIX_AUTH_LASTTIME'] =mktime();
+                    $_SESSION['JELIX_AUTH_LASTTIME'] = time();
                 }
             }else{
-                $_SESSION['JELIX_AUTH_LASTTIME'] =mktime();
+                $_SESSION['JELIX_AUTH_LASTTIME'] = time();
             }
         }
         $needAuth = isset($params['auth.required']) ? ($params['auth.required']==true):$this->config['auth_required'];
