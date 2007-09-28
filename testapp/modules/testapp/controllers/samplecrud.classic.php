@@ -20,6 +20,8 @@ class sampleCrudCtrl extends jControllerDaoCrud {
 
     protected $form = 'testapp~products';
 
+
+    protected $propertiesForRecordsOrder = array('price'=>'desc');
 }
 
 ?>

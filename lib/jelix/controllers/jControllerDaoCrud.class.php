@@ -40,6 +40,15 @@ class jControllerDaoCrud extends jController {
      */
     protected $propertiesForList = array();
 
+
+    /**
+     * list of properties which serve to order the record list
+     * if empty list (default), the list is in a natural order
+     * keys are properties name, and values are "asc" or "desc"
+     * @var array
+     */
+    protected $propertiesForRecordsOrder = array();
+
     /**
      * template to display the list of records
      * @var string
@@ -132,19 +141,30 @@ class jControllerDaoCrud extends jController {
         $rep = $this->_getResponse();
 
         $dao = jDao::get($this->dao, $this->dbProfil);
-        $results = $dao->findBy(jDao::createConditions(),$offset,$this->listPageSize);
+
+        $cond = jDao::createConditions();
+        foreach ($this->propertiesForRecordsOrder as $p=>$order) {
+            $cond->addItemOrder($p, $order);
+        }
+
+        $results = $dao->findBy($cond,$offset,$this->listPageSize);
         $pk = $dao->getPrimaryKeyNames();
 
-        jForms::destroy($this->form, $this->pseudoFormId);
-
+        // we're using a form to have the portunity to have
+        // labels for each columns.
+        $form = jForms::create($this->form, $this->pseudoFormId);
         $tpl = new jTpl();
         $tpl->assign('list',$results);
         $tpl->assign('primarykey', $pk[0]);
-        if(count($this->propertiesForList))
-            $tpl->assign('properties', $this->propertiesForList);
-        else{
-            $tpl->assign('properties', array_keys($dao->getProperties()));
+
+        if(count($this->propertiesForList)) {
+            $prop = $this->propertiesForList;
+        }else{
+            $prop = array_keys($dao->getProperties());
         }
+
+        $tpl->assign('properties', $prop);
+        $tpl->assign('controls',$form->getControls());
         $tpl->assign('editAction' , $this->_getAction('preupdate'));
         $tpl->assign('createAction' , $this->_getAction('create'));
         $tpl->assign('deleteAction' , $this->_getAction('delete'));
@@ -156,9 +176,8 @@ class jControllerDaoCrud extends jController {
         $tpl->assign('offsetParameterName',$this->offsetParameterName);
 
         $this->_index($rep, $tpl);
-
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->listTemplate));
-
+        jForms::destroy($this->form, $this->pseudoFormId);
         return $rep;
     }
 
