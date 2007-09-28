@@ -112,11 +112,14 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * you can do your own datas check of a form. Called only if the $form->check() is ok.
+     * you can do your own datas check of a form by overloading this method.
+     * You can also do some other things. It is called only if the $form->check() is ok.
+     * and before the save of the datas.
      * @param jFormsBase $form the current form
+     * @param boolean $calltype   true for an update, false for a create
      * @return boolean true if it is ok.
      */
-    protected function _checkDatas($form){
+    protected function _checkDatas($form, $calltype){
         return true;
     }
 
@@ -151,9 +154,22 @@ class jControllerDaoCrud extends jController {
         $tpl->assign('page',$offset);
         $tpl->assign('recordCount',$dao->countAll());
         $tpl->assign('offsetParameterName',$this->offsetParameterName);
+
+        $this->_index($rep, $tpl);
+
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->listTemplate));
 
         return $rep;
+    }
+
+    /**
+     * overload this method if you wan to do additionnal things on the response and on the list template
+     * during the index action.
+     * @param jHtmlResponse $resp the response
+     * @param jtpl $tpl the template to display the record list
+     */
+    protected function _index($resp, $tpl) {
+
     }
 
     /**
@@ -171,8 +187,19 @@ class jControllerDaoCrud extends jController {
         $tpl->assign('form',$form);
         $tpl->assign('submitAction', $this->_getAction('savecreate'));
         $tpl->assign('listAction' , $this->_getAction('index'));
+        $this->_create($rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->editTemplate));
         return $rep;
+
+    }
+
+    /**
+     * overload this method if you wan to do additionnal things on the response and on the edit template
+     * during the create action.
+     * @param jHtmlResponse $resp the response
+     * @param jtpl $tpl the template to display the edit form 
+     */
+    protected function _create($resp, $tpl) {
 
     }
 
@@ -187,10 +214,11 @@ class jControllerDaoCrud extends jController {
             return $rep;
         }
 
-        if($form->check() && $this->_checkDatas($form)){
+        if($form->check() && $this->_checkDatas($form, false)){
             $id = $form->saveToDao($this->dao, null, $this->dbProfil);
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
+            $this->_afterCreate($form, $id);
             jForms::destroy($this->form);
             $rep->params['id'] = $id;
             return $rep;
@@ -199,6 +227,17 @@ class jControllerDaoCrud extends jController {
             return $rep;
         }
     }
+
+    /**
+     * overload this method if you wan to do additionnal things after the creation of
+     * a record
+     * @param jFormsBase $form the form object
+     * @param mixed $id the new id of the inserted record
+     */
+    protected function _afterCreate($form, $id) {
+
+    }
+
 
     /**
      * prepare a form in order to edit an existing record, and redirect to the editupdate action
@@ -247,8 +286,19 @@ class jControllerDaoCrud extends jController {
         $tpl->assign('submitAction', $this->_getAction('saveupdate'));
         $tpl->assign('listAction' , $this->_getAction('index'));
         $tpl->assign('viewAction' , $this->_getAction('view'));
+        $this->_editUpdate($rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->editTemplate));
         return $rep;
+    }
+
+    /**
+     * overload this method if you wan to do additionnal things on the response and on the edit template
+     * during the editupdate action.
+     * @param jHtmlResponse $resp the response
+     * @param jtpl $tpl the template to display the edit form 
+     */
+    protected function _editUpdate($resp, $tpl) {
+
     }
 
     /**
@@ -263,9 +313,10 @@ class jControllerDaoCrud extends jController {
             return $rep;
         }
 
-        if($form->check() && $this->_checkDatas($form)){
+        if($form->check() && $this->_checkDatas($form, true)){
             $id = $form->saveToDao($this->dao, null, $this->dbProfil);
             $form->saveAllFiles($this->uploadsDirectory);
+            $this->_afterUpdate($form, $id);
             $rep->action = $this->_getAction('view');
             jForms::destroy($this->form, $id);
         } else {
@@ -273,6 +324,16 @@ class jControllerDaoCrud extends jController {
         }
         $rep->params['id'] = $id;
         return $rep;
+    }
+
+    /**
+     * overload this method if you wan to do additionnal things after the update of
+     * a record
+     * @param jFormsBase $form the form object
+     * @param mixed $id the new id of the updated record
+     */
+    protected function _afterUpdate($form, $id) {
+
     }
 
     /**
@@ -298,8 +359,19 @@ class jControllerDaoCrud extends jController {
         $tpl->assign('editAction' , $this->_getAction('preupdate'));
         $tpl->assign('deleteAction' , $this->_getAction('delete'));
         $tpl->assign('listAction' , $this->_getAction('index'));
+        $this->_view($rep,$tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->viewTemplate));
         return $rep;
+    }
+
+    /**
+     * overload this method if you want to do additionnal things on the response and on the view template
+     * during the view action.
+     * @param jHtmlResponse $resp the response
+     * @param jtpl $tpl the template to display the form content
+     */
+    protected function _view($resp, $tpl) {
+
     }
 
     /**
@@ -307,7 +379,7 @@ class jControllerDaoCrud extends jController {
      */
     function delete(){
         $id = $this->param('id');
-        if( $id !== null ){
+        if( $id !== null && $this->_delete($id) ){
             $dao = jDao::get($this->dao, $this->dbProfil);
             $dao->delete($id);
         }
@@ -315,6 +387,16 @@ class jControllerDaoCrud extends jController {
         $rep->action = $this->_getAction('index');
         return $rep;
     }
+
+    /**
+     * overload this method if you want to do additionnal things before the deletion of a record
+     * @param mixed $id the new id of the record
+     * @return boolean true if the record can be deleted
+     */
+    protected function _delete($id) {
+        return true;
+    }
+
 }
 
 
