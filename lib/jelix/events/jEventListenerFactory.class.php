@@ -85,13 +85,11 @@ class jEventListenerFactory {
         if (! isset (self::$_listenersSingleton[$module][$listenerName])){
             global $gJConfig;
             require_once ($gJConfig->_modulesPathList[$module].'classes/'.strtolower ($listenerName).'.listener.php');
-#if ENABLE_OLD_CLASS_NAMING
             $className = $listenerName.'Listener';
-            if($gJConfig->enableOldClassNaming && !class_exists($className,false)){
+#if ENABLE_OLD_CLASS_NAMING
+            if(!class_exists($className,false)){
                 $className = 'Listener'.$listenerName;
             }
-#else
-            $className = $listenerName.'Listener';
 #endif
             self::$_listenersSingleton[$module][$listenerName] =  new $className ();
         }

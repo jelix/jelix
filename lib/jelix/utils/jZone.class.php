@@ -284,13 +284,11 @@ class jZone {
 
         $fileName = $sel->getPath();
         require_once($fileName);
-#if ENABLE_OLD_CLASS_NAMING
         $className = $sel->resource.'Zone';
-        if($GLOBALS['gJConfig']->enableOldClassNaming && !class_exists($className,false)){
+#if ENABLE_OLD_CLASS_NAMING
+        if(!class_exists($className,false)){
             $className = 'Zone'.$sel->resource;
         }
-#else
-        $className = $sel->resource.'Zone';
 #endif
         $zone = new $className ($params);
         $toReturn = $zone->$method ();

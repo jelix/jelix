@@ -55,16 +55,16 @@ $BUILD_OPTIONS = array(
     "true if you want sources with PHP comments deleted (valid only if ENABLE_OPTIMIZED_SOURCE is true)",
     false,
     ),
-'ENABLE_OLD_CLASS_NAMING'=>array(
-    "old module class naming (jelix <= 1.0a5) can be used",
-    true, //TODO false pour la 1.0 finale
-    ),
 'PACKAGE_TAR_GZ'=>array(
     "create a tar.gz package",
     false,
     ),
 'PACKAGE_ZIP'=>array(
     "create a zip package",
+    false,
+    ),
+'ENABLE_OLD_CLASS_NAMING'=>array(
+    "old module class naming (jelix <= 1.0a5) can be used. deprecated for Jelix 1.0.",
     false,
     ),
 'PHP50'=> array(
