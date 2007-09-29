@@ -496,7 +496,7 @@ class jSelectorDao extends jSelectorModule {
         $overloadedPath = JELIX_APP_VAR_PATH.'overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix;
         if (is_readable ($overloadedPath)){
            $this->_path = $overloadedPath;
-           $this->_where = 1;
+           $this->_where = 'overloaded/';
            return;
         }
         // et sinon, on regarde si le dao existe dans le module en question
@@ -505,14 +505,13 @@ class jSelectorDao extends jSelectorModule {
         if (!is_readable ($this->_path)){
             throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "dao"));
         }
-        $this->_where = 0;
+        $this->_where = 'modules/';
     }
 
     protected function _createCachePath(){
-        $d = array('modules/','overloaded/');
         // on ne partage pas le même cache pour tous les emplacements possibles
         // au cas où un overload était supprimé
-        $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/daos/'.$d[$this->_where].$this->module.'~'.$this->resource.'~'.$this->driver.$this->_cacheSuffix;
+        $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/daos/'.$this->_where.$this->module.'~'.$this->resource.'~'.$this->driver.$this->_cacheSuffix;
     }
 
     public function getDaoClass(){
@@ -561,15 +560,18 @@ class jSelectorTpl extends jSelectorModule {
             throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         }
 
+        $path = $this->module.'/'.$this->resource;
+        $lpath = $this->module.'/'.$gJConfig->locale.'/'.$this->resource;
+
         if($gJConfig->theme != 'default'){
             // on regarde si il y a un template redéfinie pour le theme courant
-            $this->_where = 'themes/'.$gJConfig->theme.'/'.$this->module.'/'.$gJConfig->locale.'/'.$this->resource;
+            $this->_where = 'themes/'.$gJConfig->theme.'/'.$lpath;
             $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
             if (is_readable ($this->_path)){
                 return;
             }
             // on regarde si il y a un template redéfinie pour le theme courant
-            $this->_where = 'themes/'.$gJConfig->theme.'/'.$this->module.'/'.$this->resource;
+            $this->_where = 'themes/'.$gJConfig->theme.'/'.$path;
             $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
             if (is_readable ($this->_path)){
                 return;
@@ -577,13 +579,13 @@ class jSelectorTpl extends jSelectorModule {
         }
 
         // on regarde si il y a un template redéfinie dans le theme par defaut
-        $this->_where = 'themes/default/'.$this->module.'/'.$gJConfig->locale.'/'.$this->resource;
+        $this->_where = 'themes/default/'.$lpath;
         $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
         if (is_readable ($this->_path)){
             return;
         }
 
-        $this->_where = 'themes/default/'.$this->module.'/'.$this->resource;
+        $this->_where = 'themes/default/'.$path;
         $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
         if (is_readable ($this->_path)){
             return;
@@ -592,13 +594,13 @@ class jSelectorTpl extends jSelectorModule {
         // et sinon, on regarde si le template existe dans le module en question
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$gJConfig->locale.'/'.$this->resource.'.tpl';
         if (is_readable ($this->_path)){
-            $this->_where = 'modules/'.$this->module.'/'.$gJConfig->locale.'/'.$this->resource;
+            $this->_where = 'modules/'.$lpath;
             return;
         }
 
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.'.tpl';
         if (is_readable ($this->_path)){
-            $this->_where = 'modules/'.$this->module.'/'.$this->resource;
+            $this->_where = 'modules/'.$path;
             return;
         }
 
@@ -641,12 +643,12 @@ class jSelectorZone extends jSelectorModule {
  */
 class jSelectorForm extends jSelectorModule {
     protected $type = 'form';
-
+    protected $_where;
+    protected $_dirname = 'forms/';
+    protected $_suffix = '.form.xml';
+    
     function __construct($sel){
 
-        $this->_dirname =  'forms/';
-        $this->_suffix = '.form.xml';
-        $this->_cacheSuffix = '.php';
         $this->_compiler='jFormsCompiler';
         $this->_compilerPath=JELIX_LIB_FORMS_PATH.'jFormsCompiler.class.php';
 
@@ -657,9 +659,38 @@ class jSelectorForm extends jSelectorModule {
         return 'cForm_'.$this->module.'_Jx_'.$this->resource;
     }
 
-    public function getCompiledBuilderFilePath ($type){
-        return JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->module.'~'.$this->resource.'_builder_'.$type.$this->_cacheSuffix;
+   
+    protected function _createPath(){
+        global $gJConfig;
+        if(!isset($gJConfig->_modulesPathList[$this->module])){
+            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString(true));
+        }
+        
+        // we see if the forms have been redefined
+        $overloadedPath = JELIX_APP_VAR_PATH.'overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix;
+        if (is_readable ($overloadedPath)){
+           $this->_path = $overloadedPath;
+           $this->_where = 'overloaded/';
+           return;
+        }
+
+        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
+        if (!is_readable ($this->_path)){
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), $this->type));
+        }
+        $this->_where = 'modules/';
     }
+    
+    protected function _createCachePath(){
+        // on ne partage pas le même cache pour tous les emplacements possibles
+        // au cas où un overload était supprimé
+        $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->_where.$this->module.'~'.$this->resource.$this->_cacheSuffix;
+    }
+    
+    public function getCompiledBuilderFilePath ($type){
+        return JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->_where.$this->module.'~'.$this->resource.'_builder_'.$type.$this->_cacheSuffix;
+    }
+    
 }
 
 /**
