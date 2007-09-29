@@ -13,7 +13,7 @@
         required="yes"
         maxlength="" minlength="" regexp=""
         sequence=""
-        updatemotif="" insertmotif="" selectmotif=""
+        updatepattern="" insertpattern="" selectpattern=""
     />-->
     </record>
     <!--<factory>

@@ -330,25 +330,16 @@ class jDaoProperty {
 
         // on ignore les attributs *pattern sur les champs PK et FK
         if(!$this->isPK && !$this->isFK){
-            // *motif attributes are deprecated since  1.0b3
-            // TODO: remove support of *motif attributes in jelix 1.0
-
             if(isset($aParams['updatepattern'])) {
                 $this->updatePattern=(string)$aParams['updatepattern'];
-            }elseif(isset($aParams['updatemotif'])){
-                $this->updatePattern=(string)$aParams['updatemotif'];
             }
 
             if(isset($aParams['insertpattern'])) {
                 $this->insertPattern=(string)$aParams['insertpattern'];
-            }elseif(isset($aParams['insertmotif'])){
-                $this->insertPattern=(string)$aParams['insertmotif'];
             }
 
             if(isset($aParams['selectpattern'])) {
                 $this->selectPattern=(string)$aParams['selectpattern'];
-            }elseif(isset($aParams['selectmotif'])){
-                $this->selectPattern=(string)$aParams['selectmotif'];
             }
         }
 
