@@ -166,7 +166,7 @@ class jControllerDaoCrud extends jController {
         $tpl->assign('properties', $prop);
         $tpl->assign('controls',$form->getControls());
         $tpl->assign('editAction' , $this->_getAction('preupdate'));
-        $tpl->assign('createAction' , $this->_getAction('create'));
+        $tpl->assign('createAction' , $this->_getAction('precreate'));
         $tpl->assign('deleteAction' , $this->_getAction('delete'));
         $tpl->assign('viewAction' , $this->_getAction('view'));
         $tpl->assign('listAction' , $this->_getAction('index'));
@@ -189,6 +189,19 @@ class jControllerDaoCrud extends jController {
      */
     protected function _index($resp, $tpl) {
 
+    }
+
+    /**
+     * prepare a form to create a record.
+     */
+    function precreate() {
+        // we cannot create the form directly in the create action
+        // because if the forms already exists, we wouldn't show
+        // errors or already filled field. see ticket #292
+        $form = jForms::create($this->form);
+        $rep = $this->getResponse('redirect');
+        $rep->action = $this->_getAction('create');
+        return $rep;
     }
 
     /**
