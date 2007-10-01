@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage controllers
 * @author     Loic Mathaud
-* @contributor
-* @copyright  2006 Loic Mathaud
+* @contributor M. Thiriot
+* @copyright  2006 Loic Mathaud, 2007 M. Thiriot
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
@@ -39,11 +39,11 @@ class jControllerCmdLine extends jController {
     }
 
     protected function param ($parName, $parDefaultValue=null, $useDefaultIfEmpty=false){
-        if (isset($this->_parameters[$param])) {
-            if($this->_parameters[$param] == '' && $useDefaultIfEmpty)
+        if (isset($this->_parameters[$parName])) {
+            if($this->_parameters[$parName] == '' && $useDefaultIfEmpty)
                 return $parDefaultValue;
             else
-                return $this->_parameters[$param];
+                return $this->_parameters[$parName];
         } else {
             return $parDefaultValue;
         }
