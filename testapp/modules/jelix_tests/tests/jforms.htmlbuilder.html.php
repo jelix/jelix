@@ -17,18 +17,23 @@ require_once(JELIX_LIB_FORMS_PATH.'jFormsDataContainer.class.php');
 
 class testHMLForm { // simulate a jFormBase object
     public $controls= array();
+    public $submits= array();
+    public $uploads= array();
     public $container;
 
+    protected $datas =  array( 'chk'=>'1', 'chk2'=>'', 'choixsimple'=>'11', 'choixmultiple'=>array('10','23'));
     function __construct(){
         $this->container = new jFormsDataContainer('','');
     }
 
     function getData($name) {
-        $a = array('nom'=>'laurent', 'chk'=>'1', 'chk2'=>'', 'chk3'=>'0', 'choixsimple'=>'11', 'choixmultiple'=>array('10','23'));
-        if(isset($a[$name]))
-            return $a[$name];
+        if(isset($this->datas[$name]))
+            return $this->datas[$name];
         else
             return null;
+    }
+    function setData($name,$value) {
+        $this->datas[$name]=$value;
     }
     function getControls() {
         return $this->controls;
@@ -38,6 +43,15 @@ class testHMLForm { // simulate a jFormBase object
     }
     function hasUpload(){
        return false;
+    }
+    function addControl($control){
+        $this->controls [$control->ref] = $control;
+        if($control->type =='submit')
+            $this->submits [$control->ref] = $control;
+        if($control->type =='upload'){
+            $this->uploads [$control->ref] = $control;
+        }
+        $this->datas[$control->ref] = $control->defaultValue;
     }
 }
 
@@ -50,10 +64,11 @@ class testJFormsHtmlBuilder extends jFormsHtmlBuilderBase {
 
 class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
+    protected $form;
     protected $builder;
     function testStart() {
-        $form = new testHMLForm();
-        $this->builder = new testJFormsHtmlBuilder($form, 'jelix_tests~urlsig_url1',array());
+        $this->form = new testHMLForm();
+        $this->builder = new testJFormsHtmlBuilder($this->form, 'jelix_tests~urlsig_url1',array());
         $this->formname = $this->builder->getName();
     }
 
@@ -104,39 +119,54 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nom">Votre nom</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input type="text" name="nom" id="'.$this->formname.'_nom" value=""/>', $out);
+
+        $this->form->addControl($ctrl);
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input type="text" name="nom" id="'.$this->formname.'_nom" value=""/>', $out);
+
+        $this->form->setData('nom','toto');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input type="text" name="nom" id="'.$this->formname.'_nom" value="toto"/>', $out);
+
+        $ctrl->defaultValue='laurent';
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input type="text" name="nom" id="'.$this->formname.'_nom" value="toto"/>', $out);
+
+        $this->form->addControl($ctrl);
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="nom" id="'.$this->formname.'_nom" value="laurent"/>', $out);
 
         $ctrl->readonly=true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="nom" id="'.$this->formname.'_nom" readonly="readonly" value="laurent"/>', $out);
 
-        $ctrl= new jFormsControlinput('nominconnu');
-        $ctrl->datatype= new jDatatypeString();
-        $ctrl->label='Votre nom';
-        $ctrl->defaultValue='toto';
-        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="nominconnu" id="'.$this->formname.'_nominconnu" value="toto"/>', $out);
-
+        $ctrl->readonly=false;
         $ctrl->hasHelp=true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="nominconnu" id="'.$this->formname.'_nominconnu" value="toto"/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'nominconnu\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('<input type="text" name="nom" id="'.$this->formname.'_nom" value="laurent"/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'nom\')">?</a></span>', $out);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nominconnu" title="ceci est un tooltip">Votre nom</label>', $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_nom" title="ceci est un tooltip">Votre nom</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="nominconnu" id="'.$this->formname.'_nominconnu" title="ceci est un tooltip" value="toto"/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'nominconnu\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('<input type="text" name="nom" id="'.$this->formname.'_nom" title="ceci est un tooltip" value="laurent"/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'nom\')">?</a></span>', $out);
 
     }
     function testOutputCheckbox(){
         $ctrl= new jFormsControlCheckbox('chk');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Une option';
+        $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk">Une option</label>', $out);
 
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input type="checkbox" name="chk" id="'.$this->formname.'_chk" value="1"/>', $out);
+
+        $this->form->setData('chk','1');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="checkbox" name="chk" id="'.$this->formname.'_chk" checked="checked" value="1"/>', $out);
 
@@ -151,50 +181,30 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" value="1"/>', $out);
 
         $ctrl->defaultValue='1';
+        $this->form->addControl($ctrl);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" checked="checked" value="1"/>', $out);
 
-
-        $ctrl= new jFormsControlCheckbox('chk3');
-        $ctrl->datatype= new jDatatypeString();
-        $ctrl->label='Une option';
-
-        ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk3">Une option</label>', $out);
-
+        $this->form->setData('chk2', '0');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chk3" id="'.$this->formname.'_chk3" value="1"/>', $out);
-
-        $ctrl->defaultValue='1';
-        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chk3" id="'.$this->formname.'_chk3" value="1"/>', $out);
-
-
-        $ctrl= new jFormsControlCheckbox('chkinconnu');
-        $ctrl->datatype= new jDatatypeString();
-        $ctrl->label='Une option';
-
-        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chkinconnu" id="'.$this->formname.'_chkinconnu" value="1"/>', $out);
+        $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" value="1"/>', $out);
 
         $ctrl->readonly=true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chkinconnu" id="'.$this->formname.'_chkinconnu" readonly="readonly" value="1"/>', $out);
+        $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" value="1"/>', $out);
 
-        $ctrl->defaultValue='1';
+        $this->form->setData('chk2', '1');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chkinconnu" id="'.$this->formname.'_chkinconnu" readonly="readonly" checked="checked" value="1"/>', $out);
-
+        $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" checked="checked" value="1"/>', $out);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chkinconnu" title="ceci est un tooltip">Une option</label>', $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk2" title="ceci est un tooltip">Une option</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chkinconnu" id="'.$this->formname.'_chkinconnu" readonly="readonly" title="ceci est un tooltip" checked="checked" value="1"/>', $out);
-
-
+        $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" title="ceci est un tooltip" checked="checked" value="1"/>', $out);
     }
+
     function testOutputCheckboxes(){
         $ctrl= new jFormsControlcheckboxes('choixsimple');
         $ctrl->datatype= new jDatatypeString();
@@ -326,7 +336,17 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result.='<option value="23">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
+
+        $this->form->setData('choixsimple',"23");
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" readonly="readonly" title="ceci est un tooltip" size="1">';
+        $result.='<option value="10">foo</option>';
+        $result.='<option value="11">bar</option>';
+        $result.='<option value="23" selected="selected">baz</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
     }
+
     function testOutputListbox(){
         $ctrl= new jFormsControllistbox('choixsimple');
         $ctrl->datatype= new jDatatypeString();
@@ -339,8 +359,8 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="4">';
         $result.='<option value="10">foo</option>';
-        $result.='<option value="11" selected="selected">bar</option>';
-        $result.='<option value="23">baz</option>';
+        $result.='<option value="11">bar</option>';
+        $result.='<option value="23" selected="selected">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
 
@@ -361,8 +381,8 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" readonly="readonly" size="4">';
         $result.='<option value="10">foo</option>';
-        $result.='<option value="11" selected="selected">bar</option>';
-        $result.='<option value="23">baz</option>';
+        $result.='<option value="11">bar</option>';
+        $result.='<option value="23" selected="selected">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
 
@@ -390,11 +410,22 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new jFormDaoDatasource('jelix_tests~products','findAll','name','id');
-        $ctrl->selectedValues=array ('10');
+        $ctrl->defaultValue=array ('10');
+
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_choixsimpleinconnu">Votre choix</label>', $out);
 
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimpleinconnu" id="'.$this->formname.'_choixsimpleinconnu" size="4">';
+        $result.='<option value="10">foo</option>';
+        $result.='<option value="11">bar</option>';
+        $result.='<option value="23">baz</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+
+        $this->form->addControl($ctrl);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixsimpleinconnu" id="'.$this->formname.'_choixsimpleinconnu" size="4">';
         $result.='<option value="10" selected="selected">foo</option>';
@@ -404,17 +435,26 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff($result, $out);
 
 
-
         $ctrl= new jFormsControllistbox('choixmultipleinconnu');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new jFormDaoDatasource('jelix_tests~products','findAll','name','id');
         $ctrl->multiple=true;
         $ctrl->size=8;
-        $ctrl->selectedValues=array ('11','23');
+        $ctrl->defaultValue=array ('11','23');
+
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_choixmultipleinconnu">Votre choix</label>', $out);
 
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixmultipleinconnu[]" id="'.$this->formname.'_choixmultipleinconnu" size="8" multiple="multiple">';
+        $result.='<option value="10">foo</option>';
+        $result.='<option value="11">bar</option>';
+        $result.='<option value="23">baz</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $this->form->addControl($ctrl);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixmultipleinconnu[]" id="'.$this->formname.'_choixmultipleinconnu" size="8" multiple="multiple">';
         $result.='<option value="10">foo</option>';

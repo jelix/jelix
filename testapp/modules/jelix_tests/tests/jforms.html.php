@@ -41,14 +41,14 @@ class UTjforms extends jUnitTestCase {
             <boolean property="required" value="true"/>
             <boolean property="readonly" value="false"/>
             <string property="label" value="product name"/>
-            <string property="value" value=""/>
+            <string property="defaultValue" value=""/>
         </object>
         <object key="price" class="jFormsControlInput">
             <string property="ref" value="price"/>
             <boolean property="required" value="false"/>
             <boolean property="readonly" value="false"/>
             <string property="label" value="The price"/>
-            <string property="value" value=""/>
+            <string property="defaultValue" value=""/>
         </object>
     </array>
 </object>';
@@ -76,14 +76,14 @@ class UTjforms extends jUnitTestCase {
             <boolean property="required" value="true"/>
             <boolean property="readonly" value="false"/>
             <string property="label" value="product name"/>
-            <string property="value" value=""/>
+            <string property="defaultValue" value=""/>
         </object>
         <object key="price" class="jFormsControlInput">
             <string property="ref" value="price"/>
             <boolean property="required" value="false"/>
             <boolean property="readonly" value="false"/>
             <string property="label" value="The price"/>
-            <string property="value" value=""/>
+            <string property="defaultValue" value=""/>
         </object>
     </array>
 </object>';
@@ -185,14 +185,14 @@ class UTjforms extends jUnitTestCase {
             <boolean property="required" value="true"/>
             <boolean property="readonly" value="false"/>
             <string property="label" value="product name"/>
-            <string property="value" value=""/>
+            <string property="defaultValue" value=""/>
         </object>
         <object key="price" class="jFormsControlInput">
             <string property="ref" value="price"/>
             <boolean property="required" value="false"/>
             <boolean property="readonly" value="false"/>
             <string property="label" value="The price"/>
-            <string property="value" value=""/>
+            <string property="defaultValue" value=""/>
         </object>
     </array>
 </object>';
@@ -225,14 +225,14 @@ class UTjforms extends jUnitTestCase {
             <boolean property="required" value="true"/>
             <boolean property="readonly" value="false"/>
             <string property="label" value="product name"/>
-            <string property="value" value=""/>
+            <string property="defaultValue" value=""/>
         </object>
         <object key="price" class="jFormsControlInput">
             <string property="ref" value="price"/>
             <boolean property="required" value="false"/>
             <boolean property="readonly" value="false"/>
             <string property="label" value="The price"/>
-            <string property="value" value=""/>
+            <string property="defaultValue" value=""/>
         </object>
     </array>
 </object>';

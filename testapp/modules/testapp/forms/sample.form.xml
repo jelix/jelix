@@ -5,7 +5,7 @@
       <label>Votre nom</label>
    </input>
 
-   <input ref="prenom" >
+   <input ref="prenom" defaultvalue="robert">
       <label>Votre prénom</label>
    </input>
 

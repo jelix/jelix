@@ -27,7 +27,7 @@ abstract class jFormsControl {
     public $required = false;
     public $readonly = false;
     public $label='';
-    public $value='';
+    public $defaultValue='';
     public $hasHelp = false;
     public $hint='';
     public $alertInvalid='';
@@ -70,7 +70,7 @@ abstract class jFormsControlDatasource extends jFormsControl {
      * @var jIFormDatasource
      */
     public $datasource;
-    public $selectedValues=array();
+    public $defaultValue=array();
 
     function getDisplayValue($value){
         if(is_array($value)){
@@ -92,7 +92,6 @@ abstract class jFormsControlDatasource extends jFormsControl {
  */
 class jFormsControlInput extends jFormsControl {
     public $type='input';
-    public $defaultValue='';
 }
 
 /**
@@ -194,7 +193,6 @@ class jFormsControlMenulist extends jFormsControlDatasource {
  */
 class jFormsControlTextarea extends jFormsControl {
     public $type='textarea';
-    public $defaultValue='';
 }
 
 /**
@@ -246,7 +244,6 @@ class jFormsControlCheckbox extends jFormsControl {
  */
 class jFormsControlOutput extends jFormsControl {
     public $type='output';
-    public $defaultValue='';
 
     public function check($value, $form){
         return null;

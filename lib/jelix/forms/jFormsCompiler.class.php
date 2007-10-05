@@ -209,10 +209,10 @@ class jFormsCompiler implements jISimpleCompiler {
                     foreach($control->selectedvalues->value as $value){
                         $str.="'". str_replace("'","\\'", (string)$value) ."',";
                     }
-                    $source[]='$ctrl->selectedValues='.$str.');';
+                    $source[]='$ctrl->defaultValue='.$str.');';
                     $hasSelectedValues = true;
                 }elseif(isset($control['selectedvalue'])){
-                    $source[]='$ctrl->selectedValues=array(\''. str_replace("'","\\'", (string)$control['selectedvalue']) .'\');';
+                    $source[]='$ctrl->defaultValue=array(\''. str_replace("'","\\'", (string)$control['selectedvalue']) .'\');';
                     $hasSelectedValues = true;
                 }
             case 'submit':
@@ -263,7 +263,7 @@ class jFormsCompiler implements jISimpleCompiler {
                                 || $controltype == 'radiobuttons' || $controltype == 'menulist')  ){
                             throw new jException('jelix~formserr.multiple.selected.not.allowed',$this->sourceFile);
                         }
-                        $source[]='$ctrl->selectedValues='.var_export($selectedvalues,true).';';
+                        $source[]='$ctrl->defaultValue='.var_export($selectedvalues,true).';';
                     }
                 }else{
                     $source[]='$ctrl->datasource= new jFormStaticDatasource();';
@@ -289,7 +289,7 @@ class jFormsCompiler implements jISimpleCompiler {
                         $source[]='$ctrl2->alertInvalid = $ctrl->alertInvalid;';
                     if($alertRequired!='')
                         $source[]='$ctrl2->alertRequired = $ctrl->alertRequired;';
-                    
+
                     if(isset($control->help)){
                         $source[]='$ctrl2->hasHelp=true;';
                     }

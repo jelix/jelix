@@ -125,7 +125,7 @@ $verif='
             <array property="datas">
                 <string key="name" value="" />
                 <string key="price" value="" />
-                <string key="tag" value="" />
+                <array key="tag">array()</array>
             </array>
             <array property="errors">array()</array>
         </object>
@@ -144,7 +144,7 @@ $verif='
             <array property="datas">
                 <string key="name" value="other phone" />
                 <string key="price" value="68" />
-                <string key="tag" value="" />
+                <array key="tag">array()</array>
             </array>
             <array property="errors">array()</array>
         </object>

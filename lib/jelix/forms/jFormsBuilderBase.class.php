@@ -174,14 +174,10 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
         switch($ctrl->type){
         case 'input':
             $value = $this->_form->getData($ctrl->ref);
-            if($value === null)
-                $value = $ctrl->defaultValue;
             echo '<input type="text"',$id,$readonly,$hint,$class,' value="',htmlspecialchars($value),'"',$this->_endt;
             break;
         case 'checkbox':
             $value = $this->_form->getData($ctrl->ref);
-            if($value =='')
-                $value = $ctrl->defaultValue;
 
             if($ctrl->valueOnCheck == $value){
                 $v=' checked="checked"';
@@ -195,9 +191,6 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             $id=$this->_name.'_'.$ctrl->ref.'_';
             $attrs=' name="'.$ctrl->ref.'[]" id="'.$id;
             $value = $this->_form->getData($ctrl->ref);
-            if($value == null){
-                $value = $ctrl->selectedValues;
-            }
 
             if(is_array($value) && count($value) == 1)
                 $value = $value[0];
@@ -224,9 +217,11 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             $i=0;
             $id=' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'_';
             $value = $this->_form->getData($ctrl->ref);
-            if($value === null){
-                if(count($ctrl->selectedValues) == 1)
-                    $value = $ctrl->selectedValues[0];
+            if(is_array($value)){
+                if(isset($value[0]))
+                    $value = $value[0];
+                else
+                    $value='';
             }
             foreach($ctrl->datasource->getDatas() as $v=>$label){
                 echo '<input type="radio"',$id,$i,'" value="',htmlspecialchars($v),'"',($v==$value?' checked="checked"':''),$readonly,$class,$this->_endt;
@@ -237,10 +232,13 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
         case 'menulist':
             echo '<select',$id,$readonly,$hint,$class,' size="1">';
             $value = $this->_form->getData($ctrl->ref);
-            if($value === null){
-                if(count($ctrl->selectedValues) == 1)
-                    $value = $ctrl->selectedValues[0];
+            if(is_array($value)){
+                if(isset($value[0]))
+                    $value = $value[0];
+                else
+                    $value='';
             }
+
             foreach($ctrl->datasource->getDatas() as $v=>$label){
                 echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
             }
@@ -250,9 +248,6 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             if($ctrl->multiple){
                 echo '<select name="',$ctrl->ref,'[]" id="',$this->_name,'_',$ctrl->ref,'"',$readonly,$hint,$class,' size="',$ctrl->size,'" multiple="multiple">';
                 $value = $this->_form->getData($ctrl->ref);
-                if($value == null){
-                    $value = $ctrl->selectedValues;
-                }
 
                 if(is_array($value) && count($value) == 1)
                     $value = $value[0];
@@ -269,9 +264,6 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
                 echo '</select>';
             }else{
                 $value = $this->_form->getData($ctrl->ref);
-                if($value == null){
-                    $value = $ctrl->selectedValues;
-                }
 
                 if(is_array($value)){
                     if(count($value) >= 1)
@@ -289,8 +281,6 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             break;
         case 'textarea':
             $value = $this->_form->getData($ctrl->ref);
-            if($value === null)
-                $value = $ctrl->defaultValue;
             echo '<textarea',$id,$readonly,$hint,$class,'>',htmlspecialchars($value),'</textarea>';
             break;
         case 'secret':
@@ -299,8 +289,6 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             break;
         case 'output':
             $value = $this->_form->getData($ctrl->ref);
-            if($value === null)
-                $value = $ctrl->defaultValue;
             echo '<input type="hidden"',$id,' value="',htmlspecialchars($value),'"',$this->_endt;
             echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($value),'</span>';
             break;

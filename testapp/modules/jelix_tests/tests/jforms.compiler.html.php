@@ -421,7 +421,7 @@ $ctrl->datasource->datas = array(
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
 );
-$ctrl->selectedValues=array (
+$ctrl->defaultValue=array (
   0 => \'aaa\',
 );
 $this->addControl($ctrl);',
@@ -433,7 +433,7 @@ $ctrl->datasource->datas = array(
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
 );
-$ctrl->selectedValues=array (
+$ctrl->defaultValue=array (
   0 => \'aaa\',
   1 => \'ccc\',
 );
@@ -441,7 +441,7 @@ $ctrl->multiple=true;
 $this->addControl($ctrl);',
 40=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->selectedValues=array(\'aaa\');
+$ctrl->defaultValue=array(\'aaa\');
 $ctrl->datasource= new jFormStaticDatasource();
 $ctrl->datasource->datas = array(
 \'aaa\'=>\'1aa\',
@@ -452,7 +452,7 @@ $ctrl->multiple=true;
 $this->addControl($ctrl);',
 41=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->selectedValues= array(\'bbb\',\'aaa\',);
+$ctrl->defaultValue= array(\'bbb\',\'aaa\',);
 $ctrl->datasource= new jFormStaticDatasource();
 $ctrl->datasource->datas = array(
 \'aaa\'=>\'1aa\',

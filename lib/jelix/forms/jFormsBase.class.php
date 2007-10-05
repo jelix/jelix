@@ -501,7 +501,7 @@ abstract class jFormsBase {
             $this->_uploads [$control->ref] = $control;
         }
         if(!isset($this->_container->datas[$control->ref])){
-            $this->_container->datas[$control->ref] = $control->value;
+            $this->_container->datas[$control->ref] = $control->defaultValue;
         }
     }
 }
