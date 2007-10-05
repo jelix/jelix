@@ -104,10 +104,11 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
      * output the header content of the form
      * @param array $params some parameters 0=>name of the javascript error decorator
      *    1=> name of the javascript help decorator
+     *    2=> name of method
      */
     public function outputHeader($params){
         $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
-        echo '<form action="',$url->scriptName,$url->pathInfo,'" method="POST" name="', $this->_name,'" onsubmit="return jForms.verifyForm(this)"';
+        echo '<form action="',$url->scriptName,$url->pathInfo,'" method="'.$params[2].'" name="', $this->_name,'" onsubmit="return jForms.verifyForm(this)"';
         if($this->_form->hasUpload())
             echo ' enctype="multipart/form-data">';
         else

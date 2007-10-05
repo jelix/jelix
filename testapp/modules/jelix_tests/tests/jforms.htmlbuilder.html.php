@@ -77,12 +77,12 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $builder = new testJFormsHtmlBuilder(new testHMLForm(), 'jelix_tests~urlsig_url1',array());
         $formname = $builder->getName();
         ob_start();
-        $builder->outputHeader(array('',''));
+        $builder->outputHeader(array('','','POST'));
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="POST" name="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div><input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig_url1"/>
 </div><script type="text/javascript"> 
-//<[CDATA[
+//<![CDATA[
 
 //]]>
 </script>';
@@ -91,13 +91,13 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $builder = new testJFormsHtmlBuilder(new testHMLForm(), 'jelix_tests~urlsig_url1',array('foo'=>'b>ar'));
         $formname = $builder->getName();
         ob_start();
-        $builder->outputHeader(array('',''));
+        $builder->outputHeader(array('','','GET'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="POST" name="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div><input type="hidden" name="foo" value="b&gt;ar"/>
+        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="GET" name="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig_url1"/>
 </div><script type="text/javascript"> 
-//<[CDATA[
+//<![CDATA[
 
 //]]>
 </script>';

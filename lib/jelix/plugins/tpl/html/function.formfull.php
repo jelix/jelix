@@ -18,11 +18,12 @@
  * @param string $errDecorator name of your javascript object for error listener
  * @param string $helpDecorator name of your javascript object for help listener
  */
-function jtpl_function_html_formfull($tpl, $form, $action, $params=array(), $errDecorator='jFormsErrorDecoratorAlert', $helpDecorator='jFormsHelpDecoratorAlert')
+function jtpl_function_html_formfull($tpl, $form, $action, $params=array(), 
+        $errDecorator='jFormsErrorDecoratorAlert', $helpDecorator='jFormsHelpDecoratorAlert', $method='POST')
 {
 
     $formBuilder = $form->getBuilder('html', $action, $params);
-    $formBuilder->outputHeader(array($errDecorator, $helpDecorator));
+    $formBuilder->outputHeader(array($errDecorator, $helpDecorator, $method));
 
     if($GLOBALS['gJCoord']->response!= null){
         $GLOBALS['gJCoord']->response->addJSLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'js/jforms.js');
