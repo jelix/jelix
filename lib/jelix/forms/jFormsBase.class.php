@@ -214,19 +214,20 @@ abstract class jFormsBase {
      * The control must be a container like checkboxes or listbox with multiple attribute.
      * The form should contain a formId
      *
-     * The Dao should map to an "association table" : its primary key should be
-     * the primary key stored in the formId + the field which will contain one of 
+     * The Dao should map to an "association table" : its primary key should be composed by
+     * the primary key stored in the formId (or the given primarykey) + the field which will contain one of 
      * the values of the control. If this order is not the same as defined into the dao,
      * you should provide the list of property names which corresponds to the primary key
      * in this order : properties for the formId, followed by the property which contains 
      * the value.
      * @param string $controlName  the name of the control
      * @param string $daoSelector the selector of a dao file
+     * @param mixed  $primaryKey the primary key if the form have no id. (optional)
      * @param mixed  $primaryKeyNames list of field corresponding to primary keys (optional)
      * @param string $dbProfil the jDb profil to use with the dao
      * @see jDao
      */
-    public function initControlFromDao($controlName, $daoSelector, $primaryKeyNames=null, $dbProfil=''){
+    public function initControlFromDao($controlName, $daoSelector, $primaryKey = null, $primaryKeyNames=null, $dbProfil=''){
 
         if(!$this->_controls[$controlName]->isContainer()){
             throw new jExceptionForms('jelix~formserr.control.not.container', array($controlName, $this->_sel));
@@ -235,7 +236,8 @@ abstract class jFormsBase {
         if(!$this->_container->formId)
             throw new jExceptionForms('jelix~formserr.formid.undefined.for.dao', array($controlName, $this->_sel));
 
-        $primaryKey = $this->_container->formId;
+        if($primaryKey === null)
+            $primaryKey = $this->_container->formId;
 
         if(!is_array($primaryKey))
             $primaryKey =array($primaryKey);
@@ -302,7 +304,7 @@ abstract class jFormsBase {
         if(!$this->_container->formId && !$primaryKey)
             throw new jExceptionForms('jelix~formserr.formid.undefined.for.dao', array($controlName, $this->_sel));
 
-        if(!$primaryKey)
+        if($primaryKey === null)
             $primaryKey = $this->_container->formId;
 
         if(!is_array($primaryKey))

@@ -121,7 +121,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             echo '</div>';
         }
         echo '<script type="text/javascript"> 
-//<[CDATA[
+//<![CDATA[
 ', $this->getJavascriptCheck($params[0],$params[1]),'
 //]]>
 </script>';
