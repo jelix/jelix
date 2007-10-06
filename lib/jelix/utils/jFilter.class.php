@@ -174,7 +174,7 @@ class jFilter {
 #if ENABLE_PHP_FILTER
         return filter_var($val, FILTER_VALIDATE_EMAIL);
 #else
-        return preg_match('/^[A-Z0-9][A-Z0-9_\-]*(\.[A-Z0-9][A-Z0-9_\-]*)*@[A-Z0-9][A-Z0-9_\-]*(\.[A-Z0-9][A-Z0-9_\-]+)$/i',$val);
+        return preg_match('/^[A-Z0-9][A-Z0-9_\-]*(\.[A-Z0-9][A-Z0-9_\-]*)*@[A-Z0-9][A-Z0-9_\-]*(\.[A-Z0-9][A-Z0-9_\-]+)+$/i',$val);
 #endif
     }
 

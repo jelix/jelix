@@ -9,6 +9,10 @@
       <label>Votre prénom</label>
    </input>
 
+   <input ref="mail" type="email">
+      <label>Votre mail</label>
+   </input>
+
    <checkbox ref="geek">
        <label>Êtes vous un geek ?</label>
        <help>Un geek est un passionné d'informatique</help>
