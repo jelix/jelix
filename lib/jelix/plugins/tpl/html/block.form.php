@@ -52,9 +52,9 @@ unset($t->_privateVars[\'__displayed_ctrl\']);';
     else
         $helpdecorator = "'jFormsHelpDecoratorAlert'";
 
-    $method = strtoupper(isset($param[5])?$param[5]:'POST');
-    if($method!='GET' && $method!='POST')
-        $method='POST';
+    $method = strtolower(isset($param[5])?$param[5]:'post');
+    if($method!='get' && $method!='post')
+        $method='post';
 
     $content = ' $t->_privateVars[\'__form\'] = '.$param[0].';
 $t->_privateVars[\'__formbuilder\'] = $t->_privateVars[\'__form\']->getBuilder(\'html\', '.$param[1].','.$param[2].');

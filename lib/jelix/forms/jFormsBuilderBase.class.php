@@ -108,7 +108,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
      */
     public function outputHeader($params){
         $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
-        echo '<form action="',$url->scriptName,$url->pathInfo,'" method="'.$params[2].'" name="', $this->_name,'" onsubmit="return jForms.verifyForm(this)"';
+        echo '<form action="',$url->scriptName,$url->pathInfo,'" method="'.$params[2].'" id="', $this->_name,'" onsubmit="return jForms.verifyForm(this)"';
         if($this->_form->hasUpload())
             echo ' enctype="multipart/form-data">';
         else

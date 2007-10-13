@@ -19,7 +19,7 @@
  * @param string $helpDecorator name of your javascript object for help listener
  */
 function jtpl_function_html_formfull($tpl, $form, $action, $params=array(), 
-        $errDecorator='jFormsErrorDecoratorAlert', $helpDecorator='jFormsHelpDecoratorAlert', $method='POST')
+        $errDecorator='jFormsErrorDecoratorAlert', $helpDecorator='jFormsHelpDecoratorAlert', $method='post')
 {
 
     $formBuilder = $form->getBuilder('html', $action, $params);
