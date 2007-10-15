@@ -137,6 +137,15 @@ class UTfilter extends UnitTestCase {
         $this->assertFalse(jFilter::isIPv6('023:01:A0:cd0:8be0:ffff:0:0:98'), "isIPv6('023:01:A0:cd0:8be0:ffff:0:0:98')");
     }
 
+    public function testEmail(){
+        $this->assertFalse(jFilter::isEmail('toto@mail'), "isEmail('toto@mail')");
+        $this->assertTrue(jFilter::isEmail('toto@mail.com'), "isEmail('toto@mail.com')");
+        $this->assertTrue(jFilter::isEmail('toto@mail.poer.dsmlqsd'), "isEmail('toto@mail.poer.dsmlqsd')");
+        $this->assertTrue(jFilter::isEmail('"bob john"@mail.com'), "isEmail('\"bob john\"@mail.com')");
+        $this->assertTrue(jFilter::isEmail('bob.john@mail.com'), "isEmail('bob.john@mail.com')");
+        $this->assertTrue(jFilter::isEmail('hello{john}t#r+u&c@mail.com'), "isEmail('hello{john}t#r+u&c@mail.com')");
+        $this->assertTrue(jFilter::isEmail('bob@123.23.56.43'), "isEmail('bob@123.23.56.43')");
+    }
 }
 
 ?>
