@@ -161,6 +161,7 @@ class jTpl {
      */
     public function meta($tpl, $outputtype='', $trusted = true){
         $this->getTemplate($tpl,'template_meta_', $outputtype, $trusted);
+        return $this->_meta;
     }
 
     /**
@@ -214,29 +215,11 @@ class jTpl {
      * @param string $tpl template selector
      * @param string $outputtype the type of output (html, text etc..)
      * @param boolean $trusted  says if the template file is trusted or not
+     * @param boolean $callMeta false if meta should not be called
      * @return string the generated content
      */
-    public function fetch ($tpl, $outputtype='', $trusted = true){
-        ob_start ();
-        try{
-           $this->getTemplate($tpl,'template_', $outputtype, $trusted);
-           $content = ob_get_clean();
-        }catch(Exception $e){
-           ob_end_clean();
-           throw $e;
-        }
-        return $content;
-    }
-
-    /**
-     * optimized version of meta() + fetch()
-     * @param string $tpl template selector
-     * @param string $outputtype the type of output (html, text etc..)
-     * @param boolean $trusted  says if the template file is trusted or not
-     * @return string the generated content
-     * @since 1.0b1
-     */
-    public function metaFetch ($tpl, $outputtype='', $trusted = true){
+    public function fetch ($tpl, $outputtype='', $trusted = true, $callMeta=true){
+        $content = '';
         ob_start ();
         try{
 #ifnot JTPL_STANDALONE
@@ -263,8 +246,10 @@ class jTpl {
             require_once($cachefile);
             $md = md5($tpl.'_'.$outputtype.($trusted?'_t':''));
 #endif
-            $fct = 'template_meta_'.$md;
-            $fct($this);
+            if ($callMeta) {
+                $fct = 'template_meta_'.$md;
+                $fct($this);
+            }
             $fct = 'template_'.$md;
             $fct($this);
             $content = ob_get_clean();
@@ -273,6 +258,19 @@ class jTpl {
             throw $e;
         }
         return $content;
+    }
+
+    /**
+     * deprecated function: optimized version of meta() + fetch().
+     * Instead use fetch with true as $callMeta parameter.
+     * @param string $tpl template selector
+     * @param string $outputtype the type of output (html, text etc..)
+     * @param boolean $trusted  says if the template file is trusted or not
+     * @return string the generated content
+     * @deprecated
+     */
+    public function metaFetch ($tpl, $outputtype='', $trusted = true){
+        return $this->fetch ($tpl, $outputtype, $trusted,true);
     }
 
 

@@ -128,7 +128,7 @@ class jTplCompiler
 #else
         $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){';
 #endif
-        $header .="\n".$this->_metaBody."\nreturn \$t->_meta;\n}\n";
+        $header .="\n".$this->_metaBody."\n}\n";
 
 #if JTPL_STANDALONE
         $header.='function template_'.md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){'."\n?>";
@@ -512,6 +512,10 @@ class jTplCompiler
         }else{
             $this->doError1('errors.tpl.tag.meta.invalid', $this->_currentTag);
         }
+    }
+
+    public function addMetaContent($content){
+        $this->_metaBody.= $content."\n";
     }
 
     /**
