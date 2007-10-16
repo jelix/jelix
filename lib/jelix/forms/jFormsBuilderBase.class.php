@@ -138,6 +138,8 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
                     }else{
                         echo '<li>', jLocale::get('jelix~formserr.js.err.required', $ctrls[$cname]->label),'</li>';
                     }
+                }elseif ($err != '' && $err != JFORM_ERRDATA_INVALID) {
+                    echo '<li>', $err,'</li>';
                 }else{
                     if($ctrls[$cname]->alertInvalid){
                         echo '<li>', $ctrls[$cname]->alertInvalid,'</li>';

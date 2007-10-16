@@ -48,7 +48,7 @@ class jAclDbUserGroup {
         // chargement des groupes
         if($groups === null){
             $dao = jDao::get('jelix~jaclusergroup', jAclDb::getProfil());
-            $gp = $dao->getGroupsUser($_SESSION['JELIX_USER']->login);
+            $gp = $dao->getGroupsUser(jAuth::getUserSession()->login);
             $groups = array();
             foreach($gp as $g){
                 $groups[]=intval($g->id_aclgrp);
