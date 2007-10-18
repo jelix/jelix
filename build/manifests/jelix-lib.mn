@@ -170,7 +170,8 @@ cd lib/jelix/core-modules/jelix/templates
   crud_view.tpl
 
 cd lib/jelix/dao
-  jDaoBase.class.php
+  jDaoRecordBase.class.php
+  jDaoFactoryBase.class.php
   jDao.class.php
 * jDaoCompiler.class.php
   jDaoConditions.class.php
