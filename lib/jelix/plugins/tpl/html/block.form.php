@@ -42,12 +42,12 @@ unset($t->_privateVars[\'__displayed_ctrl\']);';
         $param[2] = 'array()';
     }
 
-    if(isset($param[3]) && $param[3] != '')
+    if(isset($param[3]) && $param[3] != '""'  && $param[3] != "''")
         $errdecorator = $param[3];
     else
         $errdecorator = "'jFormsErrorDecoratorAlert'";
 
-    if(isset($param[4]) && $param[4] != '')
+    if(isset($param[4]) && $param[4] != '""'  && $param[4] != "''")
         $helpdecorator = $param[4];
     else
         $helpdecorator = "'jFormsHelpDecoratorAlert'";
