@@ -17,6 +17,10 @@ class jAuth {
     static function isConnected() {
         return self::$connect;
     }
+
+    static function getUserSession() {
+        return $_SESSION['JELIX_USER'];
+    }
 }
 
 class userTest {
