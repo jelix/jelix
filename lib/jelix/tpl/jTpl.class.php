@@ -97,7 +97,6 @@ class jTpl {
         }
     }
 
-
 #ifnot JTPL_STANDALONE
     /**
      * assign a zone content to a template variable
@@ -109,6 +108,21 @@ class jTpl {
     function assignZone($name, $zoneName, $params=array()){
         $this->_vars[$name] = jZone::get ($zoneName, $params);
     }
+
+    /**
+     * append a zone content to a template variable
+     * @param string $name the variable name
+     * @param string $zoneName  a zone selector
+     * @param array  $params  parameters for the zone
+     * @see jZone
+     */
+    function appendZone($name, $zoneName, $params=array()){
+        if(isset($this->_vars[$name]))
+            $this->_vars[$name] .= jZone::get ($zoneName, $params);
+        else
+            $this->_vars[$name] = jZone::get ($zoneName, $params);
+    }
+
     /**
      * assign a zone content to a template variable only if this variable doesn't exist
      * @param string $name the variable name
