@@ -494,6 +494,7 @@ class jMailer
 
         if(count($bad_rcpt) > 0) // Create error message
         {
+            $error = '';
             for($i = 0; $i < count($bad_rcpt); $i++)
             {
                 if($i != 0) { $error .= ", "; }
