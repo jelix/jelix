@@ -299,21 +299,28 @@ cd lib/jelix/plugins/db/intuition
   intuition.dbconnection.php
   intuition.dbresultset.php
   intuition.dbtools.php
+  intuition.daobuilder.php
 
 cd lib/jelix/plugins/db/mysql
   mysql.dbconnection.php
   mysql.dbresultset.php
   mysql.dbtools.php
+  mysql.daobuilder.php
 
 cd lib/jelix/plugins/db/postgresql
   postgresql.dbconnection.php
   postgresql.dbresultset.php
   postgresql.dbtools.php
+  postgresql.daobuilder.php
 
 cd lib/jelix/plugins/db/sqlite
   sqlite.dbconnection.php
   sqlite.dbresultset.php
   sqlite.dbtools.php
+  sqlite.daobuilder.php
+
+cd lib/jelix/plugins/db/oci8
+  oci8.daobuilder.php
 
 cd lib/jelix/plugins/tpl/common
   block.ifacl.php

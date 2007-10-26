@@ -86,7 +86,16 @@ class jDaoCompiler  implements jISimpleCompiler {
         $parser = new jDaoParser ();
         $parser->parse(simplexml_import_dom($doc));
 
-        $generator = new jDaoGenerator($selector->getDaoClass(), $selector->getDaoRecordClass(), $parser);
+        global $gJConfig;
+#ifnot ENABLE_OPTIMIZED_SOURCE
+        if(!isset($gJConfig->_pluginsPathList_db[$selector->driver])
+            || !file_exists($gJConfig->_pluginsPathList_db[$selector->driver]) ){
+                throw new jException('jelix~db.error.driver.notfound', $profil['driver']);
+        }
+#endif
+        require_once($gJConfig->_pluginsPathList_db[$selector->driver].$selector->driver.'.daobuilder.php');
+        $class = $selector->driver.'DaoBuilder';
+        $generator = new $class ($selector->getDaoClass(), $selector->getDaoRecordClass(), $parser);
 
         // génération des classes PHP correspondant à la définition de la DAO
         $compiled = '<?php '.$generator->buildClasses ()."\n?>";

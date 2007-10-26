@@ -29,19 +29,23 @@ class jDaoGenerator {
    * the dao definition.
    * @var jDaoParser
    */
-   private $_datasParser = null;
+   protected $_datasParser = null;
 
    /**
    * The DaoRecord ClassName
    * @var string
    */
-   private $_DaoRecordClassName = null;
+   protected $_DaoRecordClassName = null;
 
    /**
    * the DAO classname
    * @var string
    */
-   private $_DaoClassName=null;
+   protected $_DaoClassName = null;
+
+
+   protected $propertiesListForInsert = 'PrimaryTable';
+   protected $aliasWord = ' AS ';
 
    /**
    * constructor
@@ -57,7 +61,7 @@ class jDaoGenerator {
    /**
    * build all classes
    */
-   public function buildClasses () {
+   public final function buildClasses () {
 
       $src = array();
       $src[] = ' require_once ( JELIX_LIB_DAO_PATH .\'jDaoRecordBase.class.php\');';
@@ -145,11 +149,7 @@ class jDaoGenerator {
 
          $src[] = '}else{';
 
-         if (($this->_dbtype=='mysql') || ($this->_dbtype=='sqlserver') || ($this->_dbtype=='postgresql')) {
-            $fields = $this->_getPropertiesBy('PrimaryFieldsExcludeAutoIncrement');
-         }else{
-            $fields = $this->_getPropertiesBy('PrimaryTable');
-         }
+         $fields = $this->_getPropertiesBy($this->propertiesListForInsert);
       }else{
          $fields = $this->_getPropertiesBy('PrimaryTable');
       }
@@ -175,15 +175,10 @@ class jDaoGenerator {
 
       if($pkai !== null){
          $src[] = '   if($result){';
-         if ($this->_dbtype=='sqlserver') {
-            $src[] = '      if($record->'.$pkai->name.' < 1 ) $record->'.$pkai->name.'= $this->_conn->lastIdInTable(\''.$pkai->fieldName.'\',\''.$pTableRealName.'\');';
-         }else if ($this->_dbtype=='postgresql') {
-            $src[] = '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
-         }else{
-            $src[] = '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
-         }
-         $src[] = '    return $result;';
-         $src[] = ' }else return false;';
+         $src[] = '      if($record->'.$pkai->name.' < 1 ) ';
+         $src[] = $this->genUpdateAutoIncrementPK($pkai, $pTableRealName);
+         $src[] = '      return $result;';
+         $src[] = '   }else return false;';
       }else{
          $src[] = '    return $result;';
       }
@@ -353,9 +348,7 @@ class jDaoGenerator {
     *  create FROM clause for all SELECT query
     * @return array  FROM string and WHERE string
     */
-    protected function _getFromClause(){
-
-      $aliaslink = ($this->_dbtype == 'oci8'?' ':' AS ');
+    final protected function _getFromClause(){
 
       $sqlWhere = '';
       $tables = $this->_datasParser->getTables();
@@ -365,7 +358,7 @@ class jDaoGenerator {
       $ptname = $this->_encloseName($primarytable['name']);
 
       if($primarytable['name']!=$primarytable['realname'])
-         $sqlFrom =$ptrealname.$aliaslink.$ptname;
+         $sqlFrom =$ptrealname.$this->aliasWord.$ptname;
       else
          $sqlFrom =$ptrealname;
 
@@ -374,7 +367,7 @@ class jDaoGenerator {
          $tablename = $this->_encloseName($table['name']);
 
          if($table['name']!=$table['realname'])
-            $r =$this->_encloseName($table['realname']).$aliaslink.$tablename;
+            $r =$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
          else
             $r =$this->_encloseName($table['realname']);
 
@@ -396,7 +389,7 @@ class jDaoGenerator {
                $fieldjoin.=' AND '.$ptname.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
             }
             $fieldjoin=substr($fieldjoin,4);
-            //$fieldjoin=$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'];
+
             if($tablejoin[1] == 0){
                $sqlFrom.=' LEFT JOIN '.$r.' ON ('.$fieldjoin.')';
             }elseif($tablejoin[1] == 1){
@@ -409,14 +402,13 @@ class jDaoGenerator {
          $table= $tables[$tablejoin];
          $tablename = $this->_encloseName($table['name']);
          if($table['name']!=$table['realname'])
-            $sqlFrom .=', '.$this->_encloseName($table['realname']).$aliaslink.$tablename;
+            $sqlFrom .=', '.$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
         else
             $sqlFrom .=', '.$this->_encloseName($table['realname']);
 
         foreach($table['fk'] as $k => $fk){
            $sqlWhere.=' AND '.$ptname.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
         }
-         //$sqlWhere.=' AND '.$primarytable['name'].'.'.$table['onforeignkey'].'='.$table['name'].'.'.$table['primarykey'];
       }
 
       $sqlWhere=($sqlWhere !='') ? ' WHERE '.substr($sqlWhere,4) :'';
@@ -837,12 +829,13 @@ class jDaoGenerator {
    }
 
     protected function _encloseName($name){
-        if($this->_dbtype == 'mysql'){
-            return '`'.$name.'`';
-        }elseif($this->_dbtype == 'postgresql'){
-            return '"'.$name.'"';
-        }else
-            return $name;
+        return $name;
     }
+
+    protected function genUpdateAutoIncrementPK($pkai, $pTableRealName) {
+        return '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
+    }
+
+
 }
 ?>
