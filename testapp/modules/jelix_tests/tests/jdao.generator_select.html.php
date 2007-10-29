@@ -11,12 +11,14 @@
 
 require_once(JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php');
 
-class testDaoGenerator2 extends jDaoGenerator {
+require_once(JELIX_LIB_PATH.'plugins/db/mysql/mysql.daobuilder.php');
+
+
+class testSelectMysqlDaoGenerator extends mysqlDaoBuilder {
 
     function GetSelectClause ($distinct=false){
         return $this->_getSelectClause ($distinct);
     }
-
 
     function GetFromClause(){
         return $this->_getFromClause();
@@ -46,7 +48,7 @@ class UTDao_generator_select extends jUnitTestCase {
 </dao>';
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
-        $generator= new testDaoGenerator2('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator= new testSelectMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
         $result = $generator->GetSelectClause();
         $this->assertEqualOrDiff('SELECT `product_test`.`id`, `product_test`.`name`, `product_test`.`price`',$result);
 
@@ -64,7 +66,7 @@ class UTDao_generator_select extends jUnitTestCase {
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
 
-        $generator= new testDaoGenerator2('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator= new testSelectMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
         $result = $generator->GetSelectClause();
         $this->assertEqualOrDiff('SELECT `p`.`id`, `p`.`name`, `p`.`price`',$result);
     }
@@ -87,7 +89,7 @@ class UTDao_generator_select extends jUnitTestCase {
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
 
-        $generator= new testDaoGenerator2('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator= new testSelectMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
         $result = $generator->GetSelectClause();
         $this->assertEqualOrDiff('SELECT `product_test`.`id`, `product_test`.`name`, `product_test`.`price`',$result);
 
@@ -105,7 +107,7 @@ class UTDao_generator_select extends jUnitTestCase {
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
 
-        $generator= new testDaoGenerator2('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator= new testSelectMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
         $result = $generator->GetSelectClause();
         $this->assertEqualOrDiff('SELECT `product_test`.`id`, TOUPPER(`product_test`.`name`) as `name`, `product_test`.`price`',$result);
 
@@ -123,7 +125,7 @@ class UTDao_generator_select extends jUnitTestCase {
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
 
-        $generator= new testDaoGenerator2('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator= new testSelectMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
         $result = $generator->GetSelectClause();
         $this->assertEqualOrDiff('SELECT `p`.`id`, TOUPPER(`p`.`name`) as `name`, `p`.`price`',$result);
 
@@ -142,7 +144,7 @@ class UTDao_generator_select extends jUnitTestCase {
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
 
-        $generator= new testDaoGenerator2('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator= new testSelectMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
         $result = $generator->GetSelectClause();
         $this->assertEqualOrDiff('SELECT `product_test`.`id`, TOUPPER(name) as `name`, `product_test`.`price`',$result);
 
@@ -161,7 +163,7 @@ class UTDao_generator_select extends jUnitTestCase {
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
 
-        $generator= new testDaoGenerator2('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator= new testSelectMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
         $result = $generator->GetSelectClause();
         $this->assertEqualOrDiff('SELECT `product_test`.`id`, CONCAT(name,\\\' \\\',price) as `name`, `product_test`.`price`',$result);
 

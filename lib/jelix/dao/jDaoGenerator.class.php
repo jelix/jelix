@@ -55,7 +55,6 @@ class jDaoGenerator {
       $this->_datasParser = $daoDefinition;
       $this->_DaoClassName = $factoryClassName;
       $this->_DaoRecordClassName = $recordClassName;
-      $this->_dbtype = jDaoCompiler::$dbType;
    }
 
    /**
@@ -350,53 +349,17 @@ class jDaoGenerator {
     */
     final protected function _getFromClause(){
 
-      $sqlWhere = '';
       $tables = $this->_datasParser->getTables();
-
       $primarytable = $tables[$this->_datasParser->getPrimaryTable()];
       $ptrealname = $this->_encloseName($primarytable['realname']);
       $ptname = $this->_encloseName($primarytable['name']);
 
+      list($sqlFrom, $sqlWhere) = $this->genOuterJoins(&$tables, $ptname);
+
       if($primarytable['name']!=$primarytable['realname'])
-         $sqlFrom =$ptrealname.$this->aliasWord.$ptname;
+         $sqlFrom =$ptrealname.$this->aliasWord.$ptname.$sqlFrom;
       else
-         $sqlFrom =$ptrealname;
-
-      foreach($this->_datasParser->getOuterJoins() as $tablejoin){
-         $table= $tables[$tablejoin[0]];
-         $tablename = $this->_encloseName($table['name']);
-
-         if($table['name']!=$table['realname'])
-            $r =$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
-         else
-            $r =$this->_encloseName($table['realname']);
-
-         $fieldjoin='';
-         if ($this->_dbtype == 'oci8') {
-            if($tablejoin[1] == 0){
-               $operand='='; $opafter='(+)';
-            }elseif($tablejoin[1] == 1){
-               $operand='(+)='; $opafter='';
-            }
-
-            foreach($table['fk'] as $k => $fk){
-               $fieldjoin.=' AND '.$ptname.'.'.$this->_encloseName($fk).$operand.$tablename.'.'.$this->_encloseName($table['pk'][$k]).$opafter;
-            }
-            $sqlFrom.=', '.$r;
-            $sqlWhere.=$fieldjoin;
-         }else{
-            foreach($table['fk'] as $k => $fk){
-               $fieldjoin.=' AND '.$ptname.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
-            }
-            $fieldjoin=substr($fieldjoin,4);
-
-            if($tablejoin[1] == 0){
-               $sqlFrom.=' LEFT JOIN '.$r.' ON ('.$fieldjoin.')';
-            }elseif($tablejoin[1] == 1){
-               $sqlFrom.=' RIGHT JOIN '.$r.' ON ('.$fieldjoin.')';
-            }
-         }
-      }
+         $sqlFrom =$ptrealname.$sqlFrom;
 
       foreach($this->_datasParser->getInnerJoins() as $tablejoin){
          $table= $tables[$tablejoin];
@@ -415,6 +378,32 @@ class jDaoGenerator {
       return array(' FROM '.$sqlFrom,$sqlWhere);
    }
 
+   protected function genOuterJoins(&$tables, $primaryTableName){
+      $sqlFrom = '';
+      foreach($this->_datasParser->getOuterJoins() as $tablejoin){
+         $table= $tables[$tablejoin[0]];
+         $tablename = $this->_encloseName($table['name']);
+
+         if($table['name']!=$table['realname'])
+            $r =$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
+         else
+            $r =$this->_encloseName($table['realname']);
+
+         $fieldjoin='';
+         foreach($table['fk'] as $k => $fk){
+            $fieldjoin.=' AND '.$primaryTableName.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
+         }
+         $fieldjoin=substr($fieldjoin,4);
+
+         if($tablejoin[1] == 0){
+            $sqlFrom.=' LEFT JOIN '.$r.' ON ('.$fieldjoin.')';
+         }elseif($tablejoin[1] == 1){
+            $sqlFrom.=' RIGHT JOIN '.$r.' ON ('.$fieldjoin.')';
+         }
+      }
+      return array($sqlFrom, '');
+   }
+
     /**
     * build SELECT clause for all SELECT queries
     */
@@ -427,31 +416,24 @@ class jDaoGenerator {
          $table = $this->_encloseName($tables[$prop->table]['name']) .'.';
 
          if ($prop->selectPattern !=''){
-            if ($prop->selectPattern =='%s'){
-               if ($prop->fieldName != $prop->name || $this->_dbtype == 'sqlite'){
-                     //in oracle we must escape name
-                  if ($this->_dbtype == 'oci8') {
-                     $field = $table.$this->_encloseName($prop->fieldName).' "'.$prop->name.'"';
-                  }else{
-                     $field = $table.$this->_encloseName($prop->fieldName).' as '.$this->_encloseName($prop->name);
-                  }
-               }else{
-                     $field = $table.$this->_encloseName($prop->fieldName);
-               }
-            }else{
-               //in oracle we must escape name
-               if ($this->_dbtype == 'oci8') {
-                  $field = sprintf (str_replace("'","\\'",$prop->selectPattern), $table.$this->_encloseName($prop->fieldName)).' "'.$prop->name.'"';
-               }else{
-                  $field = sprintf (str_replace("'","\\'",$prop->selectPattern), $table.$this->_encloseName($prop->fieldName)).' as '.$this->_encloseName($prop->name);
-               }
-            }
-
-            $result[]=$field;
+            $result[]= $this->genSelectPattern($prop->selectPattern, $table, $prop->fieldName, $prop->name);
          }
       }
 
       return 'SELECT '.($distinct?'DISTINCT ':'').(implode (', ',$result));
+    }
+
+    protected function genSelectPattern ($pattern, $table, $fieldname, $propname ){
+        if ($pattern =='%s'){
+            if ($fieldname != $propname){
+                $field = $table.$this->_encloseName($fieldname).' as '.$this->_encloseName($propname);
+            }else{
+                $field = $table.$this->_encloseName($fieldname);
+            }
+        }else{
+            $field = sprintf (str_replace("'","\\'",$pattern), $table.$this->_encloseName($fieldname)).' as '.$this->_encloseName($propname);
+        }
+        return $field;
     }
 
     /**
@@ -540,9 +522,6 @@ class jDaoGenerator {
             if(!$field->isPK)
                 continue;
             if ($field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement') {
-               if($this->_dbtype=="postgresql" && !strlen($field->sequenceName)){
-                  $field->sequenceName = $tb.'_'.$field->name.'_seq';
-               }
                return $field;
             }
         }

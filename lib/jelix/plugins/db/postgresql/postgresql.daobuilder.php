@@ -30,5 +30,27 @@ class postgresqlDaoBuilder extends jDaoGenerator {
     protected function _encloseName($name){
         return '"'.$name.'"';
     }
+
+    protected function _getAutoIncrementPKField ($using = null){
+        if ($using === null){
+            $using = $this->_datasParser->getProperties ();
+        }
+
+        $tb = $this->_datasParser->getTables();
+        $tb = $tb[$this->_datasParser->getPrimaryTable()]['realname'];
+
+        foreach ($using as $id=>$field) {
+            if(!$field->isPK)
+                continue;
+            if ($field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement') {
+               if(!strlen($field->sequenceName)){
+                  $field->sequenceName = $tb.'_'.$field->name.'_seq';
+               }
+               return $field;
+            }
+        }
+        return null;
+    }
+
 }
 ?>

@@ -11,7 +11,13 @@
 
 require_once(JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php');
 
-class testDaoGenerator extends jDaoGenerator {
+require_once(JELIX_LIB_PATH.'plugins/db/mysql/mysql.daobuilder.php');
+require_once(JELIX_LIB_PATH.'plugins/db/postgresql/postgresql.daobuilder.php');
+require_once(JELIX_LIB_PATH.'plugins/db/oci8/oci8.daobuilder.php');
+require_once(JELIX_LIB_PATH.'plugins/db/sqlite/sqlite.daobuilder.php');
+
+
+class testMysqlDaoGenerator extends mysqlDaoBuilder {
 
     function GetPropertiesBy ($captureMethod){
         return $this->_getPropertiesBy ($captureMethod);
@@ -37,6 +43,87 @@ class testDaoGenerator extends jDaoGenerator {
     }
 }
 
+
+class testPgsqlDaoGenerator extends postgresqlDaoBuilder {
+
+    function GetPropertiesBy ($captureMethod){
+        return $this->_getPropertiesBy ($captureMethod);
+    }
+
+    function BuildSimpleConditions (&$fields, $fieldPrefix='', $forSelect=true){
+        return $this->_buildSimpleConditions ($fields, $fieldPrefix, $forSelect);
+    }
+
+    function BuildSQLCondition ($condition, $fields, $params, $withPrefix){
+        return $this->_buildSQLCondition ($condition, $fields, $params, $withPrefix, true);
+    }
+
+    function GetPreparePHPValue($value, $fieldType, $checknull=true){
+        return $this->_preparePHPValue($value, $fieldType, $checknull);
+    }
+
+    function GetPreparePHPExpr($expr, $fieldType, $checknull=true, $forCondition=''){
+        return $this->_preparePHPExpr($expr, $fieldType, $checknull, $forCondition);
+    }
+    function GetEncloseName($name){
+        return $this->_encloseName($name);
+    }
+}
+
+
+class testOci8DaoGenerator extends oci8DaoBuilder {
+
+    function GetPropertiesBy ($captureMethod){
+        return $this->_getPropertiesBy ($captureMethod);
+    }
+
+    function BuildSimpleConditions (&$fields, $fieldPrefix='', $forSelect=true){
+        return $this->_buildSimpleConditions ($fields, $fieldPrefix, $forSelect);
+    }
+
+    function BuildSQLCondition ($condition, $fields, $params, $withPrefix){
+        return $this->_buildSQLCondition ($condition, $fields, $params, $withPrefix, true);
+    }
+
+    function GetPreparePHPValue($value, $fieldType, $checknull=true){
+        return $this->_preparePHPValue($value, $fieldType, $checknull);
+    }
+
+    function GetPreparePHPExpr($expr, $fieldType, $checknull=true, $forCondition=''){
+        return $this->_preparePHPExpr($expr, $fieldType, $checknull, $forCondition);
+    }
+    function GetEncloseName($name){
+        return $this->_encloseName($name);
+    }
+}
+
+class testSqliteDaoGenerator extends sqliteDaoBuilder {
+
+    function GetPropertiesBy ($captureMethod){
+        return $this->_getPropertiesBy ($captureMethod);
+    }
+
+    function BuildSimpleConditions (&$fields, $fieldPrefix='', $forSelect=true){
+        return $this->_buildSimpleConditions ($fields, $fieldPrefix, $forSelect);
+    }
+
+    function BuildSQLCondition ($condition, $fields, $params, $withPrefix){
+        return $this->_buildSQLCondition ($condition, $fields, $params, $withPrefix, true);
+    }
+
+    function GetPreparePHPValue($value, $fieldType, $checknull=true){
+        return $this->_preparePHPValue($value, $fieldType, $checknull);
+    }
+
+    function GetPreparePHPExpr($expr, $fieldType, $checknull=true, $forCondition=''){
+        return $this->_preparePHPExpr($expr, $fieldType, $checknull, $forCondition);
+    }
+    function GetEncloseName($name){
+        return $this->_encloseName($name);
+    }
+}
+
+
 class UTDao_generator extends jUnitTestCase {
     protected function getSimpleGenerator(){
         $doc ='<?xml version="1.0"?>
@@ -52,7 +139,7 @@ class UTDao_generator extends jUnitTestCase {
 </dao>';
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
-        return new testDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        return new testMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
     }
 
 
@@ -77,28 +164,19 @@ class UTDao_generator extends jUnitTestCase {
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
 
-        jDaoCompiler::$dbType='mysql';
-        $generator= new testDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator= new testMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
         $result = $generator->GetEncloseName('foo');
         $this->assertEqualOrDiff('`foo`',$result);
 
-        jDaoCompiler::$dbType='postgresql';
-        $generator= new testDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator= new testPgsqlDaoGenerator('cDao_foo_Jx_bar_Jx_postgresql', 'cDaoRecord_foo_Jx_bar_Jx_postgresql', $parser);
         $result = $generator->GetEncloseName('foo');
         $this->assertEqualOrDiff('"foo"',$result);
 
-        jDaoCompiler::$dbType='oracle';
-        $generator= new testDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator= new testOci8DaoGenerator('cDao_foo_Jx_bar_Jx_oci8', 'cDaoRecord_foo_Jx_bar_Jx_oci8', $parser);
         $result = $generator->GetEncloseName('foo');
         $this->assertEqualOrDiff('foo',$result);
 
-        jDaoCompiler::$dbType='oci8';
-        $generator= new testDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
-        $result = $generator->GetEncloseName('foo');
-        $this->assertEqualOrDiff('foo',$result);
-
-        jDaoCompiler::$dbType='sqlite';
-        $generator= new testDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator= new testSqliteDaoGenerator('cDao_foo_Jx_bar_Jx_sqlite', 'cDaoRecord_foo_Jx_bar_Jx_sqlite', $parser);
         $result = $generator->GetEncloseName('foo');
         $this->assertEqualOrDiff('foo',$result);
     }
@@ -321,7 +399,7 @@ class UTDao_generator extends jUnitTestCase {
 </dao>';
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
-        $generator = new testDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator = new testMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
         
         $methods=$parser->getMethods();
     
@@ -441,7 +519,7 @@ class UTDao_generator extends jUnitTestCase {
 </dao>';
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
-        $generator = new testDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator = new testMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
 
         $methods=$parser->getMethods();
 
@@ -494,7 +572,7 @@ class UTDao_generator extends jUnitTestCase {
 </dao>';
         $parser = new jDaoParser ();
         $parser->parse(simplexml_load_string($doc));
-        $generator = new testDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
+        $generator = new testMysqlDaoGenerator('cDao_foo_Jx_bar_Jx_mysql', 'cDaoRecord_foo_Jx_bar_Jx_mysql', $parser);
 
         $pkFields=$generator->GetPropertiesBy('PkFields');
         $this->assertTrue(count($pkFields) ==1);

@@ -21,5 +21,16 @@ class sqliteDaoBuilder extends jDaoGenerator {
 
     }
 
+    protected function genSelectPattern ($pattern, $table, $fieldname, $propname ){
+        if ($pattern =='%s'){
+            $field = $table.$this->_encloseName($fieldname).' as '.$this->_encloseName($propname);
+        }else{
+            $field = sprintf (str_replace("'","\\'",$pattern), $table.$this->_encloseName($fieldname)).' as '.$this->_encloseName($propname);
+        }
+        return $field;
+    }
+
+
+
 }
 ?>
