@@ -94,8 +94,8 @@ class jTplCompiler
      */
     public function compile($tplFile, $outputtype, $trusted){
         $this->_sourceFile = $tplFile;
-        $cachefile = JTPL_CACHE_PATH .$this->outputType.($trusted?'_t':'').'_'. basename($tplFile);
         $this->outputType = ($outputtype==''?'html':$outputtype);
+        $cachefile = JTPL_CACHE_PATH .$this->outputType.($trusted?'_t':'').'_'. basename($tplFile);
         $this->trusted = $trusted;
 #else
     /**
