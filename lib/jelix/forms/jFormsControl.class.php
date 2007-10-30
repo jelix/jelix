@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Loic Mathaud
 * @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -92,6 +93,7 @@ abstract class jFormsControlDatasource extends jFormsControl {
  */
 class jFormsControlInput extends jFormsControl {
     public $type='input';
+    public $size=0;
 }
 
 /**
@@ -193,6 +195,8 @@ class jFormsControlMenulist extends jFormsControlDatasource {
  */
 class jFormsControlTextarea extends jFormsControl {
     public $type='textarea';
+    public $rows=0;
+    public $cols=0;
 }
 
 /**
@@ -202,6 +206,7 @@ class jFormsControlTextarea extends jFormsControl {
  */
 class jFormsControlSecret extends jFormsControl {
     public $type='secret';
+    public $size=0;
 }
 
 /**
@@ -211,6 +216,7 @@ class jFormsControlSecret extends jFormsControl {
  */
 class jFormsControlSecretConfirm extends jFormsControl {
     public $type='secretconfirm';
+    public $size=0;
     public $primarySecret='';
     function check($value, $form){
         if($value != $form->getData($this->primarySecret))

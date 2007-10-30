@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Loic Mathaud
 * @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -177,7 +178,8 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
         switch($ctrl->type){
         case 'input':
             $value = $this->_form->getData($ctrl->ref);
-            echo '<input type="text"',$id,$readonly,$hint,$class,' value="',htmlspecialchars($value),'"',$this->_endt;
+            $size = ($ctrl->size == 0?'' : ' size="'.$ctrl->size.'"');
+            echo '<input type="text"',$id,$readonly,$hint,$class,$size,' value="',htmlspecialchars($value),'"',$this->_endt;
             break;
         case 'checkbox':
             $value = $this->_form->getData($ctrl->ref);
@@ -284,11 +286,14 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             break;
         case 'textarea':
             $value = $this->_form->getData($ctrl->ref);
-            echo '<textarea',$id,$readonly,$hint,$class,'>',htmlspecialchars($value),'</textarea>';
+            $rows = ($ctrl->rows == 0?'': ' rows="'.$ctrl->rows.'"');
+            $cols = ($ctrl->cols == 0?'': ' cols="'.$ctrl->cols.'"');
+            echo '<textarea',$id,$readonly,$hint,$class,$rows,$cols,'>',htmlspecialchars($value),'</textarea>';
             break;
         case 'secret':
         case 'secretconfirm':
-            echo '<input type="password"',$id,$readonly,$hint,$class,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
+            $size = ($ctrl->size == 0?'': ' size="'.$ctrl->size.'"');
+            echo '<input type="password"',$id,$readonly,$hint,$class,$size,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
             break;
         case 'output':
             $value = $this->_form->getData($ctrl->ref);

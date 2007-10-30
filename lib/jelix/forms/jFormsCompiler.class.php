@@ -3,8 +3,9 @@
 * @package    jelix
 * @subpackage forms
 * @author     Laurent Jouanneau
-* @contributor
+* @contributor Loic Mathaud
 * @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -188,6 +189,14 @@ class jFormsCompiler implements jISimpleCompiler {
             if($alertRequired !='') $source[]=$alertRequired;
             if($alertInvalid !='') $source[]=$alertInvalid;
         }
+        if(isset($control['size'])){
+            if (!in_array($controltype, array('listbox', 'input', 'secret'))) {
+                throw new jException('jelix~formserr.attribute.not.allowed',array('size',$controltype,$this->sourceFile));
+            }
+            $size = intval((string)$control['size']);
+            if($size < 2) $size = 2;
+            $source[]='$ctrl->size='.$size.';';
+        }
         $hasCtrl2 = false;
         $hasSelectedValues = false;
         switch($controltype){
@@ -296,25 +305,38 @@ class jFormsCompiler implements jISimpleCompiler {
                     if(isset($control->hint)){
                         $source[]='$ctrl2->hint=$ctrl->hint;';
                     }
+                    if (isset($control['size'])) {
+                        $source[]='$ctrl2->size=$ctrl->size;';
+                    }
                     $hasCtrl2 = true;
                 }
                 break;
         }
 
+        if (isset($control['rows'])) {
+            if ($controltype != 'textarea') {
+                throw new jException('jelix~formserr.attribute.not.allowed',array('rows',$controltype,$this->sourceFile));
+            }
+            $rows = intval((string)$control['rows']);
+            if($rows < 2) $rows = 2;
+            $source[]='$ctrl->rows='.$rows.';';
+        }
+        
+        if (isset($control['cols'])) {
+            if ($controltype != 'textarea') {
+                throw new jException('jelix~formserr.attribute.not.allowed',array('cols',$controltype,$this->sourceFile));
+            }
+            $cols = intval((string)$control['cols']);
+            if($cols < 2) $cols = 2;
+            $source[]='$ctrl->cols='.$cols.';';
+        }
+        
         if(isset($control['multiple'])){
             if($controltype != 'listbox'){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('multiple',$controltype,$this->sourceFile));
             }
             if('true' == (string)$control['multiple'])
                 $source[]='$ctrl->multiple=true;';
-        }
-        if(isset($control['size'])){
-            if($controltype != 'listbox'){
-                throw new jException('jelix~formserr.attribute.not.allowed',array('size',$controltype,$this->sourceFile));
-            }
-            $size = intval((string)$control['size']);
-            if($size < 2) $size = 2;
-            $source[]='$ctrl->size='.$size.';';
         }
 
         if(isset($control['valueoncheck']) || isset($control['valueonuncheck'])){
