@@ -86,7 +86,6 @@ class sqliteDbConnection extends jDbConnection {
         } else {
             throw new jException('jelix~db.error.query.bad', sqlite_error_string($this->_connection).'('.$query.')');
         }
-        exit;
     }
 
     protected function _doLimitQuery ($queryString, $offset, $number){

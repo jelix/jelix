@@ -48,10 +48,11 @@ class jForms {
         jIncluder::inc($sel);
         $c = $sel->getClass();
         if($formId === null) $formId=JFORMS_DEFAULT_ID;
-        if(!isset($_SESSION['JFORMS'][$formSel][$formId])){
-            $_SESSION['JFORMS'][$formSel][$formId]= new jFormsDataContainer($formSel, $formId);
+        $fid = is_array($formId) ? serialize($formId) : $formId;
+        if(!isset($_SESSION['JFORMS'][$formSel][$fid])){
+            $_SESSION['JFORMS'][$formSel][$fid]= new jFormsDataContainer($formSel, $formId);
         }
-        $form = new $c($sel->toString(), $_SESSION['JFORMS'][$formSel][$formId],true);
+        $form = new $c($sel->toString(), $_SESSION['JFORMS'][$formSel][$fid],true);
         return $form;
     }
 
@@ -67,15 +68,16 @@ class jForms {
     static public function get($formSel,$formId=JFORMS_DEFAULT_ID){
         global $gJCoord;
         if($formId === null) $formId=JFORMS_DEFAULT_ID;
+        $fid = is_array($formId) ? serialize($formId) : $formId;
 
-        if(!isset($_SESSION['JFORMS'][$formSel][$formId])){
+        if(!isset($_SESSION['JFORMS'][$formSel][$fid])){
             return null;
         }
 
         $sel = new jSelectorForm($formSel);
         jIncluder::inc($sel);
         $c = $sel->getClass();
-        $form = new $c($sel->toString(), $_SESSION['JFORMS'][$formSel][$formId],false);
+        $form = new $c($sel->toString(), $_SESSION['JFORMS'][$formSel][$fid],false);
 
         return $form;
     }
@@ -107,6 +109,7 @@ class jForms {
    static public function destroy($formSel,$formId=JFORMS_DEFAULT_ID){
       global $gJCoord;
       if($formId === null) $formId=JFORMS_DEFAULT_ID;
+      if(is_array($formId)) $formId = serialize($formId);
       if(isset($_SESSION['JFORMS'][$formSel][$formId])){
           unset($_SESSION['JFORMS'][$formSel][$formId]);
       }

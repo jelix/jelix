@@ -17,8 +17,11 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         global $gJCoord;
         $_SESSION['JFORMS'] = array();
         $form = jForms::create('product');
+        $form = jForms::create('label', array(1,'fr'));
+        $form = jForms::create('label', array(1,'en'));
         $this->emptyTable('product_test');
         $this->emptyTable('product_tags_test');
+        $this->emptyTable('labels_test');
         $this->savedParams = $gJCoord->request->params;
     }
 
@@ -45,8 +48,6 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         );
         $this->assertTableContainsRecords('product_tags_test', $records);
 
-
-
         //insert a second product
         $gJCoord->request->params['name'] = 'computer';
         $gJCoord->request->params['price'] = '590';
@@ -69,7 +70,31 @@ class UTjformsWithDao extends jUnitTestCaseDb {
             array('product_id'=>$this->id2,'tag'=>'promotion'),
         );
         $this->assertTableContainsRecords('product_tags_test', $records);
+    }
 
+    function testInsertDao2(){
+        global $gJCoord;
+
+        $gJCoord->request->params['label'] = 'bonjour';
+        $form = jForms::fill('label', array(1,'fr'));
+
+        // save main datas
+        $form->saveToDao('labels');
+        $records = array(
+            array('key'=>1, 'lang'=>'fr', 'label'=>'bonjour'),
+        );
+        $this->assertTableContainsRecords('labels_test', $records);
+
+        //insert a second label
+        $gJCoord->request->params['label'] = 'Hello';
+        $form = jForms::fill('label', array(1,'en'));
+
+        $form->saveToDao('labels');
+        $records = array(
+            array('key'=>1, 'lang'=>'fr', 'label'=>'bonjour'),
+            array('key'=>1, 'lang'=>'en', 'label'=>'Hello'),
+        );
+        $this->assertTableContainsRecords('labels_test', $records);
     }
 
     function testUpdateDao(){

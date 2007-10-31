@@ -15,7 +15,7 @@ class UTjforms extends jUnitTestCase {
     protected $form1;
     protected $form2;
 
-    protected $form1Descriptor, $form2Descriptor;
+    protected $form1Descriptor, $form2Descriptor, $formLabelDescriptor;
 
     function testStart(){
         $_SESSION['JFORMS'] = array();
@@ -88,6 +88,30 @@ class UTjforms extends jUnitTestCase {
     </array>
 </object>';
 
+        $this->formLabelDescriptor = '
+<object class="cForm_jelix_tests_Jx_label">
+    <object method="getContainer()" class="jFormsDataContainer">
+        <array property="formId">array(1,\'fr\')</array>
+        <string property="formSelector" value="label" />
+        <array property="datas">
+            <string key="label" value="" />
+        </array>
+        <array property="errors">array()</array>
+    </object>
+    <array method="getDatas()">
+        <string key="label" value="" />
+    </array>
+    <array method="id()">array(1,\'fr\')</array>
+    <array method="getControls()">
+        <object key="label" class="jFormsControlInput">
+            <string property="ref" value="label"/>
+            <boolean property="required" value="true"/>
+            <boolean property="readonly" value="false"/>
+            <string property="label" value="The label"/>
+            <string property="defaultValue" value=""/>
+        </object>
+    </array>
+</object>';
     }
 
     function testCreate(){
@@ -136,6 +160,44 @@ class UTjforms extends jUnitTestCase {
      </array>
 </array>';
         $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+
+
+        $this->formLabel = jForms::create('label', array(1,'fr'));
+        $this->assertComplexIdenticalStr($this->formLabel, $this->formLabelDescriptor);
+        $verif='
+<array>
+     <array key="product">
+        <object key="'.JFORMS_DEFAULT_ID.'" class="jFormsDataContainer">
+            <integer property="formId" value="'.JFORMS_DEFAULT_ID.'" />
+            <string property="formSelector" value="product" />
+            <array property="datas">
+                <string key="name" value="" />
+                <string key="price" value="" />
+            </array>
+            <array property="errors">array()</array>
+        </object>
+        <object key="akey" class="jFormsDataContainer">
+            <string property="formId" value="akey" />
+            <string property="formSelector" value="product" />
+            <array property="datas">
+                <string key="name" value="" />
+                <string key="price" value="" />
+            </array>
+            <array property="errors">array()</array>
+        </object>
+     </array>
+     <array key="label">
+        <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
+            <array property="formId">array(1,\'fr\')</array>
+            <string property="formSelector" value="label" />
+            <array property="datas">
+                <string key="label" value="" />
+            </array>
+            <array property="errors">array()</array>
+        </object>
+     </array>
+</array>';
+        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
     }
 
     function testGet(){
@@ -150,6 +212,10 @@ class UTjforms extends jUnitTestCase {
 
         $f3 = jForms::get('product', 'anUnknowKey');
         $this->assertNull($f3);
+
+        $f4 = jForms::get('label', array(1,'fr'));
+        $this->assertComplexIdenticalStr($f4, $this->formLabelDescriptor);
+        $this->assertIdentical($f4, $this->formLabel);
     }
 
     function testFill(){
@@ -257,6 +323,16 @@ class UTjforms extends jUnitTestCase {
             <array property="errors">array()</array>
         </object>
      </array>
+     <array key="label">
+        <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
+            <array property="formId">array(1,\'fr\')</array>
+            <string property="formSelector" value="label" />
+            <array property="datas">
+                <string key="label" value="" />
+            </array>
+            <array property="errors">array()</array>
+        </object>
+     </array>
 </array>';
         $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
 
@@ -264,6 +340,16 @@ class UTjforms extends jUnitTestCase {
         $verif='
 <array>
      <array key="product">array()</array>
+     <array key="label">
+        <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
+            <array property="formId">array(1,\'fr\')</array>
+            <string property="formSelector" value="label" />
+            <array property="datas">
+                <string key="label" value="" />
+            </array>
+            <array property="errors">array()</array>
+        </object>
+     </array>
 </array>';
         $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
     }

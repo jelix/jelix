@@ -124,7 +124,8 @@ INSERT INTO `myconfig` (`cfg_key`, `cfg_value`) VALUES ('foo', 'foovalue'),
 CREATE TABLE `product_test` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `name` VARCHAR( 150 ) NOT NULL ,
-`price` FLOAT NOT NULL
+`price` FLOAT NOT NULL,
+`create_date` datetime NOT NULL
 ) TYPE = MYISAM ;
 
 CREATE TABLE `product_tags_test` (
@@ -133,9 +134,18 @@ CREATE TABLE `product_tags_test` (
 PRIMARY KEY ( `product_id` , `tag` )
 ) ENGINE = MYISAM ;
 
+CREATE TABLE `labels_test` (
+`key` INT NOT NULL ,
+`lang` VARCHAR( 5 ) NOT NULL ,
+`label` VARCHAR( 50 ) NOT NULL ,
+PRIMARY KEY ( `key` , `lang` )
+);
+
 -- for the crud example
 CREATE TABLE `products` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `name` VARCHAR( 150 ) NOT NULL ,
 `price` FLOAT NOT NULL
 ) TYPE = MYISAM ;
+
+

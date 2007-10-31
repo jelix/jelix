@@ -94,9 +94,10 @@ cd testapp/modules/jelix_tests/daos
   products.dao.xml
   product_tags.dao.xml
   description.dao.xml
+  labels.dao.xml
 cd testapp/modules/jelix_tests/forms
   product.form.xml
-
+  label.form.xml
 cd testapp/modules/jelix_tests/tests/
   core.jlocale.html.php
   core.selectors_action.html.php

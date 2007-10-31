@@ -139,8 +139,10 @@ abstract class jFormsBase {
             $key = $this->_container->formId;
         $dao = jDao::create($daoSelector, $dbProfil);
         $daorec = $dao->get($key);
-        if(!$daorec)
+        if(!$daorec) {
+            if(is_array($key)) $key = var_export($key,true);
             throw new jExceptionForms('jelix~formserr.bad.formid.for.dao', array($daoSelector, $key, $this->_sel));
+        }
 
         $prop = $dao->getProperties();
         foreach($this->_controls as $name=>$ctrl){
@@ -198,7 +200,8 @@ abstract class jFormsBase {
             if($key === null)
                 $key = $this->_container->formId;
             $daorec->setPk($key);
-            $dao->update($daorec);
+            if($dao->update($daorec) == 0)
+                $dao->insert($daorec);
         }else{
             if($key !== null)
                 $daorec->setPk($key);
