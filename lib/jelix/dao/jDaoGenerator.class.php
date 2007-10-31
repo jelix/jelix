@@ -173,17 +173,33 @@ class jDaoGenerator {
 
 
       if($pkai !== null){
-         $src[] = '   if($result){';
-         $src[] = '      if($record->'.$pkai->name.' < 1 ) ';
+         $src[] = '   if(!$result)';
+         $src[] = '       return false;';
+
+         $src[] = '   if($record->'.$pkai->name.' < 1 ) ';
          $src[] = $this->genUpdateAutoIncrementPK($pkai, $pTableRealName);
-         $src[] = '      return $result;';
-         $src[] = '   }else return false;';
-      }else{
-         $src[] = '    return $result;';
       }
+
+      // we generate a SELECT query to update field on the record object, which are autoincrement or calculated
+      $fields = $this->_getPropertiesBy('FieldToUpdate');
+      if (count($fields)) {
+        $result = array();
+        foreach ($fields as $id=>$prop){
+            $result[]= $this->genSelectPattern($prop->selectPattern, '', $prop->fieldName, $prop->name);
+        }
+
+        $sql = 'SELECT '.(implode (', ',$result)). ' FROM '.$pTableRealNameEsc.' WHERE ';
+        $sql.= $this->_buildSimpleConditions($pkFields, 'record->', false);
+
+        $src[] = '  $query =\''.$sql.'\';';
+        $src[] = '  $rs  =  $this->_conn->query ($query);';
+        $src[] = '  $newrecord =  $rs->fetch ();';
+        foreach ($fields as $id=>$prop){
+            $src[] = '  $record->'.$prop->name.' = $newrecord->'.$prop->name.';';
+        }
+      }
+      $src[] = '    return $result;';
       $src[] = '}';
-
-
 
       //-----  update method
 
@@ -502,9 +518,19 @@ class jDaoGenerator {
     protected function _capturePrimaryTable(&$field){
         return ($field->table == $this->_datasParser->getPrimaryTable());
     }
+
     protected function _captureAll(&$field){
         return true;
     }
+
+    protected function _captureFieldToUpdate(&$field){
+        return ($field->table == $this->_datasParser->getPrimaryTable()
+                && !$field->isPK
+                && !$field->isFK
+                && ( $field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement'
+                    || ($field->insertPattern != '%s' && $field->selectPattern != '')));
+    }
+
 
 
     /**
@@ -812,7 +838,7 @@ class jDaoGenerator {
     }
 
     protected function genUpdateAutoIncrementPK($pkai, $pTableRealName) {
-        return '      if($record->'.$pkai->name.' < 1  ) $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
+        return '       $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
     }
 
 

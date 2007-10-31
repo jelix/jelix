@@ -7,6 +7,7 @@
       <property name="id"   fieldname="id" datatype="autoincrement"/>
       <property name="name" fieldname="name" datatype="string"  required="true"/>
       <property name="price" fieldname="price" datatype="float"/>
+      <property name="create_date" fieldname="create_date" datatype="datetime" insertpattern="NOW()"/>
    </record>
 </dao>
 

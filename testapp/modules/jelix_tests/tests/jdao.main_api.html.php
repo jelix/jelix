@@ -81,6 +81,7 @@ class UTDao extends jUnitTestCaseDb {
 
         $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
         $this->assertNotEqual($this->prod1->id, '', 'jDaoBase::insert : id not set');
+        $this->assertNotEqual($this->prod1->create_date, '', 'jDaoBase::insert : create_date not updated');
 
         $this->prod2 = jDao::createRecord ('products');
         $this->prod2->name ='fourchette';
@@ -89,6 +90,7 @@ class UTDao extends jUnitTestCaseDb {
 
         $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
         $this->assertNotEqual($this->prod2->id, '', 'jDaoBase::insert : id not set');
+        $this->assertNotEqual($this->prod2->create_date, '', 'jDaoBase::insert : create_date not updated');
 
         $this->prod3 = jDao::createRecord ('products');
         $this->prod3->name ='verre';
@@ -97,7 +99,7 @@ class UTDao extends jUnitTestCaseDb {
 
         $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
         $this->assertNotEqual($this->prod3->id, '', 'jDaoBase::insert : id not set');
-
+        $this->assertNotEqual($this->prod3->create_date, '', 'jDaoBase::insert : create_date not updated');
 
         $this->records = array(
             array('id'=>$this->prod1->id,

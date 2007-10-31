@@ -124,7 +124,15 @@ class jUnitTestCaseDb extends jUnitTestCase {
         foreach($records as $rec){
             $ok=false;
             foreach($results as $k=>$res){
-                if($res ==  $rec){
+                $sameValues = true;
+                foreach($rec as $name=>$value){
+                    if($res[$name] != $value) {
+                        $sameValues = false;
+                        break;
+                    }
+                }
+
+                if($sameValues){
                     unset($results[$k]);
                     $ok = true;
                     break;
