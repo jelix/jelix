@@ -393,21 +393,21 @@ class jFormsCompiler implements jISimpleCompiler {
             $dt = 'string';
 
         if(isset($control->label['locale'])){
-            $source[]='$label = str_replace("\'","\\\'",jLocale::get(\''.(string)$control->label['locale'].'\'));';
+            $source[]='$label = jLocale::get(\''.(string)$control->label['locale'].'\');';
         }else{
-            $source[]='$label = str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->label).'\');';
+            $source[]='$label = \''.str_replace("'","\\'",(string)$control->label).'\';';
         }
         if($controltype == 'checkboxes' || ($controltype == 'listbox' && isset($control['multiple']) && 'true' == (string)$control['multiple']))
-            $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'[]\', \'".$label."\', \''.$dt.'\');\n";';
+            $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'[]\', \'".str_replace("\'","\\\'",$label)."\', \''.$dt.'\');\n";';
         else{
-            $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".$label."\', \''.$dt.'\');\n";';
+            $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".str_replace("\'","\\\'",$label)."\', \''.$dt.'\');\n";';
             if($hasConfirm){
                 if(isset($control->confirm['locale'])){
-                    $source[]='$label2 = str_replace("\'","\\\'",jLocale::get(\''.(string)$control->confirm['locale'].'\'));';                
+                    $source[]='$label2 = jLocale::get(\''.(string)$control->confirm['locale'].'\');';                
                 }else{
-                    $source[]='$label2 = str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->confirm).'\');';
+                    $source[]='$label2 = \''.str_replace("'","\\'",(string)$control->confirm).'\';';
                 }
-                $source[]='$js.="jForms.tControl2 = new jFormsControl(\''.(string)$control['ref'].'_confirm\', \'".$label2."\', \''.$dt.'\');\n";';
+                $source[]='$js.="jForms.tControl2 = new jFormsControl(\''.(string)$control['ref'].'_confirm\', \'".str_replace("\'","\\\'",$label2)."\', \''.$dt.'\');\n";';
             }
         }
 
