@@ -400,6 +400,13 @@ abstract class jFormsBase {
     public function getControls(){ return $this->_controls; }
 
     /**
+     * @param string $name the control name you want to get
+     * @return jFormsControl 
+     * @since jelix 1.0
+     */
+    public function getControl($name){ return $this->_controls[$name]; }
+
+    /**
      * @return array of jFormsControl objects
      */
     public function getSubmits(){ return $this->_submits; }
