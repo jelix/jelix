@@ -15,7 +15,7 @@ class createmoduleCommand extends JelixScriptCommand {
     public  $allowed_options=array('-nosubdir'=>false, '-nocontroller'=>false, '-cmdline'=>false);
     public  $allowed_parameters=array('module'=>true);
 
-    public  $syntaxhelp = "[-nosubdir] [-nocontroller] [-withcmdline] MODULE";
+    public  $syntaxhelp = "[-nosubdir] [-nocontroller] [-cmdline] MODULE";
     public  $help=array(
         'fr'=>"
     Créer un nouveau module, avec son fichier module.xml, et un controleur
@@ -24,14 +24,14 @@ class createmoduleCommand extends JelixScriptCommand {
 
     -nosubdir (facultatif) : ne créer pas tous les sous-repertoires courant..
     -nocontroller (facultatif) : ne créer pas de fichier controleur par défaut
-    -withcmdline (facultatif) : crée le module avec un controleur pour la ligne de commande
+    -cmdline (facultatif) : crée le module avec un controleur pour la ligne de commande
     MODULE : le nom du module à créer.",
         'en'=>"
     Create a new module, with all necessary files and sub-directories.
 
     -nosubdir (optional): don't create sub-directories.
     -nocontroller (optional): don't create a default controller.
-    -withcmdline (optional): create a controller for command line (jControllerCmdLine)
+    -cmdline (optional): create a controller for command line (jControllerCmdLine)
     MODULE: name of the new module."
     );
 
@@ -61,7 +61,7 @@ class createmoduleCommand extends JelixScriptCommand {
        if(!$this->getOption('-nocontroller')){
          $agcommand = jxs_load_command('createctrl');
          $options = array();
-         if ($this->getOption('-withcmdline')) {
+         if ($this->getOption('-cmdline')) {
             $options = array('-cmdline'=>true);
          }
          $agcommand->init($options,array('module'=>$this->_parameters['module'], 'name'=>'default','method'=>'index'));

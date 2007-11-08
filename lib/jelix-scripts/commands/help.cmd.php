@@ -31,9 +31,9 @@ Utilisation générale :
     COMMANDE : nom de la commande à executer
     OPTIONS  : une ou plusieurs options. Le nom d'une option commence par un
                tiret et peut être suivi par une valeur.
-               exemple :
-                 -override
-                 -project-path /foo/bar
+               exemple d'options pour certaines commandes :
+                 -cmdline
+                 -profile myprofil
     PARAMETRES : une ou plusieurs valeurs qui se suivent
 
     Les options et paramètres à indiquer dépendent de la commande. Les options
@@ -51,9 +51,9 @@ General use :
             JELIX_APP_NAME environment variable.
     COMMAND: name of the command to execute
     OPTIONS: one or more options. An option name begin with a '-' and can be 
-            followed by a value. Example:
-              -override
-              -project-path /foo/bar
+            followed by a value. Example with some specific commands:
+              -cmdline
+              -profil myprofil
     PARAMETERS: one or more values
 
     Options and parameters depends of the command. Options are always 
