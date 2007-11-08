@@ -14,7 +14,7 @@
  * @package    jelix
  * @subpackage db_driver
  */
-class oci8DaoBuilder extends jDaoGenerator {
+class ociDaoBuilder extends jDaoGenerator {
 
     protected $aliasWord = ' ';
     protected $propertiesListForInsert = 'PrimaryFieldsExcludeAutoIncrement';

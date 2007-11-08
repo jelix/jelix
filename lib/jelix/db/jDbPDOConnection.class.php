@@ -82,7 +82,7 @@ class jDbPDOConnection extends PDO {
     public $profil;
 
     /**
-     * The database type name (mysql, postgresql ...)
+     * The database type name (mysql, pgsql ...)
      */
     public $dbms;
 

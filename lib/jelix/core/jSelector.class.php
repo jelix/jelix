@@ -476,8 +476,6 @@ class jSelectorDao extends jSelectorModule {
             }else{
                 $this->driver= $p['driver'];
             }
-            if($this->driver=='pgsql')
-                $this->driver='postgresql';
         }else{
             $this->driver=$driver;
         }

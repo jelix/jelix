@@ -12,8 +12,8 @@
 require_once(JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php');
 
 require_once(JELIX_LIB_PATH.'plugins/db/mysql/mysql.daobuilder.php');
-require_once(JELIX_LIB_PATH.'plugins/db/postgresql/postgresql.daobuilder.php');
-require_once(JELIX_LIB_PATH.'plugins/db/oci8/oci8.daobuilder.php');
+require_once(JELIX_LIB_PATH.'plugins/db/pgsql/pgsql.daobuilder.php');
+require_once(JELIX_LIB_PATH.'plugins/db/oci/oci.daobuilder.php');
 require_once(JELIX_LIB_PATH.'plugins/db/sqlite/sqlite.daobuilder.php');
 
 
@@ -44,7 +44,7 @@ class testMysqlDaoGenerator extends mysqlDaoBuilder {
 }
 
 
-class testPgsqlDaoGenerator extends postgresqlDaoBuilder {
+class testPgsqlDaoGenerator extends pgsqlDaoBuilder {
 
     function GetPropertiesBy ($captureMethod){
         return $this->_getPropertiesBy ($captureMethod);
@@ -71,7 +71,7 @@ class testPgsqlDaoGenerator extends postgresqlDaoBuilder {
 }
 
 
-class testOci8DaoGenerator extends oci8DaoBuilder {
+class testOciDaoGenerator extends ociDaoBuilder {
 
     function GetPropertiesBy ($captureMethod){
         return $this->_getPropertiesBy ($captureMethod);
@@ -168,11 +168,11 @@ class UTDao_generator extends jUnitTestCase {
         $result = $generator->GetEncloseName('foo');
         $this->assertEqualOrDiff('`foo`',$result);
 
-        $generator= new testPgsqlDaoGenerator('cDao_foo_Jx_bar_Jx_postgresql', 'cDaoRecord_foo_Jx_bar_Jx_postgresql', $parser);
+        $generator= new testPgsqlDaoGenerator('cDao_foo_Jx_bar_Jx_pgsql', 'cDaoRecord_foo_Jx_bar_Jx_pgsql', $parser);
         $result = $generator->GetEncloseName('foo');
         $this->assertEqualOrDiff('"foo"',$result);
 
-        $generator= new testOci8DaoGenerator('cDao_foo_Jx_bar_Jx_oci8', 'cDaoRecord_foo_Jx_bar_Jx_oci8', $parser);
+        $generator= new testOciDaoGenerator('cDao_foo_Jx_bar_Jx_oci', 'cDaoRecord_foo_Jx_bar_Jx_oci', $parser);
         $result = $generator->GetEncloseName('foo');
         $this->assertEqualOrDiff('foo',$result);
 

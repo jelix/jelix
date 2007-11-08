@@ -14,7 +14,7 @@
  * @package    jelix
  * @subpackage db_driver
  */
-class postgresqlDaoBuilder extends jDaoGenerator {
+class pgsqlDaoBuilder extends jDaoGenerator {
 
     protected $propertiesListForInsert = 'PrimaryFieldsExcludeAutoIncrement';
 

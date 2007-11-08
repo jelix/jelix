@@ -21,7 +21,7 @@
  * @package    jelix
  * @subpackage db_driver
  */
-class postgresqlDbConnection extends jDbConnection {
+class pgsqlDbConnection extends jDbConnection {
     protected $_charsets =array( 'UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');
 
     function __construct($profil){
@@ -47,7 +47,7 @@ class postgresqlDbConnection extends jDbConnection {
         $id=(string)mktime();
         $res = pg_prepare($this->_connection, $id, $query);
         if($res){
-            $rs= new postgresqlDbResultSet ($res, $id, $this->_connection );
+            $rs= new pgsqlDbResultSet ($res, $id, $this->_connection );
         }else{
             throw new jException('jelix~db.error.query.bad',  pg_last_error($this->_connection).'('.$query.')');
         }
@@ -111,7 +111,7 @@ class postgresqlDbConnection extends jDbConnection {
 
     protected function _doQuery ($queryString){
         if ($qI = pg_query ($this->_connection, $queryString)){
-            $rs= new postgresqlDbResultSet ($qI);
+            $rs= new pgsqlDbResultSet ($qI);
             $rs->_connector = $this;
         }else{
             $rs = false;

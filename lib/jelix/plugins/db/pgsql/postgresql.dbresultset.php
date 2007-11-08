@@ -18,7 +18,7 @@
  * @package    jelix
  * @subpackage db_driver
  */
-class postgresqlDbResultSet extends jDbResultSet {
+class pgsqlDbResultSet extends jDbResultSet {
     protected $_stmtId;
     protected $_cnt;
 

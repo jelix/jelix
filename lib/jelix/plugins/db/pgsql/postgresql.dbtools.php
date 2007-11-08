@@ -20,7 +20,7 @@
  * @package    jelix
  * @subpackage db_driver
  */
-class postgresqlDbTools extends jDbTools {
+class pgsqlDbTools extends jDbTools {
 
    /*
    * retourne la liste des tables

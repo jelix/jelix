@@ -307,11 +307,11 @@ cd lib/jelix/plugins/db/mysql
   mysql.dbtools.php
   mysql.daobuilder.php
 
-cd lib/jelix/plugins/db/postgresql
-  postgresql.dbconnection.php
-  postgresql.dbresultset.php
-  postgresql.dbtools.php
-  postgresql.daobuilder.php
+cd lib/jelix/plugins/db/pgsql
+  pgsql.dbconnection.php
+  pgsql.dbresultset.php
+  pgsql.dbtools.php
+  pgsql.daobuilder.php
 
 cd lib/jelix/plugins/db/sqlite
   sqlite.dbconnection.php
@@ -319,8 +319,8 @@ cd lib/jelix/plugins/db/sqlite
   sqlite.dbtools.php
   sqlite.daobuilder.php
 
-cd lib/jelix/plugins/db/oci8
-  oci8.daobuilder.php
+cd lib/jelix/plugins/db/oci
+  oci.daobuilder.php
 
 cd lib/jelix/plugins/tpl/common
   block.ifacl.php
