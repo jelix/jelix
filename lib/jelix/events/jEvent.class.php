@@ -5,9 +5,8 @@
 * @author      Croes Gérald, Patrice Ferlet
 * @contributor Laurent Jouanneau
 * @copyright 2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
-#if ENABLE_OPTIMIZED_SOURCE
 * This classes were get originally from the Copix project
-* (CopixEvent*, CopixListener*, Copix 2.3dev20050901, http://www.copix.org)
+* (CopixEvent*, CopixListener* from Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix classes are Gerald Croes and  Patrice Ferlet,
 * and this classes were adapted/improved for Jelix by Laurent Jouanneau
@@ -15,25 +14,14 @@
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+
+#if ENABLE_OPTIMIZED_SOURCE
 #includephp jEventListener.class.php
-#includephp jEventListenerFactory.class.php
-
 #else
-* This class was get originally from the Copix project
-* (CopixEvent, CopixEventNotifier, CopixEventResponse, Copix 2.3dev20050901, http://www.copix.org)
-* Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
-* Initial authors of this Copix class are Gerald Croes and  Patrice Ferlet,
-* and this class was adapted/improved for Jelix by Laurent Jouanneau
-*
-* @link        http://www.jelix.org
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
-
 /**
  *
  */
 require_once (JELIX_LIB_EVENTS_PATH . 'jEventListener.class.php');
-require_once (JELIX_LIB_EVENTS_PATH . 'jEventListenerFactory.class.php');
 #endif
 
 
@@ -43,87 +31,62 @@ require_once (JELIX_LIB_EVENTS_PATH . 'jEventListenerFactory.class.php');
 * @subpackage  events
 */
 class jEvent {
-   /**
-   * The name of the event.
-   * @var string name
-   */
-   protected $_name = null;
+    /**
+    * The name of the event.
+    * @var string name
+    */
+    protected $_name = null;
 
-   /**
-   * the event parameters
-   */
-   protected $_params = null;
+    /**
+    * the event parameters
+    */
+    protected $_params = null;
 
-   /**
-   * the listeners list.
-   */
-   protected static $_listeners = array ();
-
-   /**
-   * New event.
-   */
-   function __construct ($name, $params=array()){
-      $this->_name   = $name;
-      $this->_params = & $params;
-   }
-
-   /**
-   * gets the name of the event
-   *    will be used internally for optimisations
-   */
-   public function getName (){
-      return $this->_name;
-   }
-
-   /**
-   * gets the given param
-   * @param string $name the param name
-   */
-   public function getParam ($name){
-      if (isset ($this->_params[$name])){
-         $ret = $this->_params[$name];
-      }else{
-         $ret = null;
-      }
-      return $ret;
-   }
-
-   /**
-   * send a notification to all modules
-   * @param $event string   the event name
-   * @return jEvent
-   */
-   public static function notify ($eventname, $params=array()) {
-
-      $event = new jEvent($eventname, $params);
-
-      if(!isset(jEvent::$_listeners[$eventname])){
-          jEvent::$_listeners[$eventname] = jEventListenerFactory::getListenersOf ($eventname);
-      }
-
-      if (isset (jEvent::$_listeners[$eventname])){
-         foreach (array_keys (jEvent::$_listeners[$eventname]) as $key) {
-            jEvent::$_listeners[$eventname][$key]->performEvent ($event);
-         }
-      }
-      return $event;
-   }
-
-
-   /**
+    /**
     * @var array of array
     */
-   protected $_responses = array ();
+    protected $_responses = array ();
 
-   /**
-    * add a response in the list
-    * @param array response a single response
+    /**
+    * New event.
+    * @param string $name  the event name
+    * @param array $params an associative array which contains parameters for the listeners
     */
-   public function add ($response) {
-      $this->_responses[] = & $response;
-   }
+    function __construct ($name, $params=array()){
+        $this->_name   = $name;
+        $this->_params = & $params;
+    }
 
-   /**
+    /**
+    * gets the name of the event
+    *    will be used internally for optimisations
+    */
+    public function getName (){
+        return $this->_name;
+    }
+
+    /**
+    * gets the given param
+    * @param string $name the param name
+    */
+    public function getParam ($name){
+        if (isset ($this->_params[$name])){
+            $ret = $this->_params[$name];
+        }else{
+            $ret = null;
+        }
+        return $ret;
+    }
+
+    /**
+    * adds datas in the responses list
+    * @param array $response a single response
+    */
+    public function add ($response) {
+        $this->_responses[] = & $response;
+    }
+
+    /**
     * look in all the responses if we have a parameter having value as its answer
     * eg, we want to know if we have failed = true, we do
     * @param string $responseName the param we're looking for
@@ -131,26 +94,103 @@ class jEvent {
     * @param ref $response the response that have this value
     * @return boolean wether or not we have founded the response value
     */
-   public function inResponse ($responseName, $value, & $response){
-      $founded  = false;
-      $response = array ();
+    public function inResponse ($responseName, $value, & $response){
+        $founded  = false;
+        $response = array ();
 
-      foreach ($this->_responses as $key=>$listenerResponse){
-         if (isset ($listenerResponse[$responseName]) && $listenerResponse[$responseName] == $value){
-            $founded = true;
-            $response[] = & $this->_responses[$key];
-         }
-      }
+        foreach ($this->_responses as $key=>$listenerResponse){
+            if (isset ($listenerResponse[$responseName]) && $listenerResponse[$responseName] == $value){
+                $founded = true;
+                $response[] = & $this->_responses[$key];
+            }
+        }
 
-      return $founded;
-   }
+        return $founded;
+    }
 
-   /**
+    /**
     * gets all the responses
     * @return array of associative array
     */
-   public function getResponse () {
-      return $this->_responses;
+    public function getResponse () {
+        return $this->_responses;
+    }
+
+
+   //------------------------------------- static methods
+
+
+    /**
+    * send a notification to all modules
+    * @param $event string   the event name
+    * @return jEvent
+    */
+    public static function notify ($eventname, $params=array()) {
+
+        $event = new jEvent($eventname, $params);
+
+        if(!isset(self::$hashListened[$eventname])){
+            self::loadListenersFor ($eventname);
+        }
+
+        $methodName = 'on'.$event->getName ();
+        $list = & self::$hashListened[$eventname];
+        foreach (array_keys ($list) as $key) {
+            $list[$key]->$methodName ($event);
+        }
+
+        return $event;
    }
+
+    protected static $compilerDatas = array('jEventCompiler',
+                    'events/jEventCompiler.class.php',
+                    'events.xml',
+                    'events.php'
+                    );
+
+    /**
+    * because a listener can listen several events, we should
+    * create only one instancy of a listener for performance, and 
+    * $hashListened will contains only reference to this listener.
+    * @var array of jEventListener
+    */
+    protected static $listenersSingleton = array ();
+
+    /**
+    * hash table for event listened.
+    * $_hash['eventName'] = array of events (by reference)
+    * @var associative array of object
+    */
+    protected static $hashListened = array ();
+
+    /**
+    * return the list of all listener corresponding to an event
+    * @param string $eventName the event name we wants the listeners for.
+    * @return array of objects
+    */
+    protected static function loadListenersFor ($eventName) {
+        if (!isset($GLOBALS['JELIX_EVENTS'])) {
+            jIncluder::incAll(self::$compilerDatas);
+        }
+
+        $inf = & $GLOBALS['JELIX_EVENTS'];
+        self::$hashListened[$eventName] = array();
+        if(isset($inf[$eventName])){
+            foreach ($inf[$eventName] as $listener){
+                list($module,$listenerName) = $listener;
+                if (! isset (self::$listenersSingleton[$module][$listenerName])){
+                    require_once ($GLOBALS['gJConfig']->_modulesPathList[$module].'classes/'.strtolower ($listenerName).'.listener.php');
+                    $className = $listenerName.'Listener';
+        #if ENABLE_OLD_CLASS_NAMING
+                    if(!class_exists($className,false)){
+                        $className = 'Listener'.$listenerName;
+                    }
+        #endif
+                    self::$listenersSingleton[$module][$listenerName] =  new $className ();
+                }
+                self::$hashListened[$eventName][] = self::$listenersSingleton[$module][$listenerName];
+            }
+        }
+    }
 }
 ?>
