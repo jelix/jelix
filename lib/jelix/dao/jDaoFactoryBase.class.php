@@ -62,6 +62,20 @@ abstract class jDaoFactoryBase  {
     protected $_DaoRecordClassName;
 
     /**
+     * the selector of the dao, to be sent with events
+     * @var string
+     */
+    protected $_daoSelector;
+
+    /**
+     * 
+     */
+    protected $_deleteBeforeEvent = false;
+    protected $_deleteAfterEvent = false;
+    protected $_deleteByBeforeEvent = false;
+    protected $_deleteByAfterEvent = false;
+
+    /**
      * @param jDbConnection $conn the database connection
      */
     function  __construct($conn){
@@ -127,7 +141,7 @@ abstract class jDaoFactoryBase  {
      * @param string  one or more primary key
      * @return jDaoRecordBase
      */
-    public function get(){
+    final public function get(){
         $args=func_get_args();
         if(count($args)==1 && is_array($args[0])){
             $args=$args[0];
@@ -152,7 +166,7 @@ abstract class jDaoFactoryBase  {
      * @param string  one or more primary key
      * @return int the number of deleted record
      */
-    public function delete(){
+    final public function delete(){
         $args=func_get_args();
         if(count($args)==1 && is_array($args[0])){
             $args=$args[0];
@@ -163,7 +177,15 @@ abstract class jDaoFactoryBase  {
         }
         $q = 'DELETE FROM '.$this->_tables[$this->_primaryTable]['realname'].' ';
         $q.= $this->_getPkWhereClauseForNonSelect($keys);
-        return $this->_conn->exec ($q);
+
+        if ($this->_deleteBeforeEvent) {
+            jEvent::notify("daoDeleteBefore", array('dao'=>$this->_daoselector, 'keys'=>$keys));
+        }
+        $result = $this->_conn->exec ($q);
+        if ($this->_deleteAfterEvent) {
+            jEvent::notify("daoDeleteAfter", array('dao'=>$this->_daoselector, 'keys'=>$keys, 'result'=>$result));
+        }
+        return $result;
     }
 
     /**
@@ -189,7 +211,7 @@ abstract class jDaoFactoryBase  {
      * @param int $limitCount 
      * @return jDbResultSet
      */
-    public function findBy ($searchcond, $limitOffset=0, $limitCount=0){
+    final public function findBy ($searchcond, $limitOffset=0, $limitCount=0){
         $query = $this->_selectClause.$this->_fromClause.$this->_whereClause;
         if (!$searchcond->isEmpty ()){
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
@@ -214,7 +236,7 @@ abstract class jDaoFactoryBase  {
      * @param jDaoConditions $searchcond
      * @return int the count
      */
-    public function countBy($searchcond) {
+    final public function countBy($searchcond) {
         $query = 'SELECT COUNT(*) as c '.$this->_fromClause.$this->_whereClause;
         if (!$searchcond->isEmpty ()){
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
@@ -224,7 +246,6 @@ abstract class jDaoFactoryBase  {
         $res =  $rs->fetch();
         return intval($res->c);
     }
-    
 
     /**
      * delete all record corresponding to the conditions stored into the
@@ -233,14 +254,22 @@ abstract class jDaoFactoryBase  {
      * @return
      * @since 1.0beta3
      */
-    public function deleteBy ($searchcond){
+    final public function deleteBy ($searchcond){
         if ($searchcond->isEmpty ()){
             return;
         }
+
         $query = 'DELETE FROM '.$this->_tables[$this->_primaryTable]['realname'].' WHERE ';
         $query .= $this->_createConditionsClause($searchcond, false);
 
-        return $this->_conn->exec($query);
+        if ($this->_deleteByBeforeEvent) {
+            jEvent::notify("daoDeleteByBefore", array('dao'=>$this->_daoselector, 'criterias'=>$searchcond));
+        }
+        $result = $this->_conn->exec($query);
+        if ($this->_deleteByAfterEvent) {
+            jEvent::notify("daoDeleteByAfter", array('dao'=>$this->_daoselector, 'criterias'=>$searchcond, 'result'=>$result));
+        }
+        return $result;
     }
 
 
@@ -264,7 +293,7 @@ abstract class jDaoFactoryBase  {
     /**
     * @internal
     */
-    protected function _createConditionsClause($daocond, $withOrder=true){
+    final protected function _createConditionsClause($daocond, $withOrder=true){
         $props = $this->getProperties();
         $sql = $this->_generateCondition ($daocond->condition, $props, true);
 
@@ -289,7 +318,7 @@ abstract class jDaoFactoryBase  {
      * @internal it don't support isExpr property of a condition because of security issue (SQL injection)
      * because the value could be provided by a form, it is escaped in any case
      */
-    protected function _generateCondition($condition, &$fields, $principal=true){
+    final protected function _generateCondition($condition, &$fields, $principal=true){
         $r = ' ';
         $notfirst = false;
         foreach ($condition->conditions as $cond){
@@ -355,7 +384,7 @@ abstract class jDaoFactoryBase  {
     /**
      * prepare the value ready to be used in a dynamic evaluation
      */
-    protected function _prepareValue($value, $fieldType){
+    final protected function _prepareValue($value, $fieldType){
         switch(strtolower($fieldType)){
             case 'int':
             case 'integer':

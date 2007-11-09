@@ -61,6 +61,12 @@ class jDaoParser {
      */
     private $_methods = array();
 
+    /**
+     * list of main events to sent
+     */
+    private $_eventList = array();
+
+
     public $hasOnlyPrimaryKeys = false;
     /**
     * Constructor
@@ -109,13 +115,20 @@ class jDaoParser {
         if($debug == 1) return;
 
         // get additionnal methods definition
-        if(isset ($xml->factory) && isset ($xml->factory[0]->method)){
-            foreach($xml->factory[0]->method as $method){
-                $m = new jDaoMethod ($method, $this);
-                if(isset ($this->_methods[$m->name])){
-                    throw new jDaoXmlException ('method.duplicate',$m->name);
+        if (isset ($xml->factory)) {
+            if (isset($xml->factory[0]['events'])) {
+                $events = (string)$xml->factory[0]['events'];
+                $this->_eventList = preg_split("/[\s,]+/", $events);
+            }
+
+            if (isset($xml->factory[0]->method)){
+                foreach($xml->factory[0]->method as $method){
+                    $m = new jDaoMethod ($method, $this);
+                    if(isset ($this->_methods[$m->name])){
+                        throw new jDaoXmlException ('method.duplicate',$m->name);
+                    }
+                    $this->_methods[$m->name] = $m;
                 }
-                $this->_methods[$m->name] = $m;
             }
         }
     }
@@ -198,6 +211,7 @@ class jDaoParser {
     public function getMethods(){  return $this->_methods;}
     public function getOuterJoins(){  return $this->_ojoins;}
     public function getInnerJoins(){  return $this->_ijoins;}
+    public function hasEvent($event){ return in_array($event,$this->_eventList);}
 }
 
 
@@ -367,6 +381,8 @@ class jDaoMethod {
     public $name;
     public $type;
     public $distinct=false;
+    public $beforeEventEnabled = false;
+    public $afterEventEnabled = false;
     private $_conditions = null;
     private $_parameters   = array();
     private $_parametersDefaultValues = array();
@@ -379,7 +395,7 @@ class jDaoMethod {
     function __construct ($method, $def){
         $this->_def = $def;
 
-        $params = $def->getAttr($method, array('name', 'type', 'call','distinct'));
+        $params = $def->getAttr($method, array('name', 'type', 'call','distinct', 'beforeEvent', 'afterEvent'));
 
         if ($params['name']===null){
             throw new jDaoXmlException ('missing.attr', array('name', 'method'));
@@ -469,6 +485,13 @@ class jDaoMethod {
             }else{
                 throw new jDaoXmlException ('method.limit.forbidden', $this->name);
             }
+        }
+
+        if ($this->type == 'update' || $this->type == 'delete') {
+            if ($params['beforeEvent'] == 'true')
+                $this->beforeEventEnabled = true;
+            if ($params['afterEvent'] == 'true')
+                $this->afterEventEnabled = true;
         }
     }
 

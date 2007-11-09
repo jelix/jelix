@@ -108,6 +108,17 @@ class jDaoGenerator {
       $src[] = '   protected $_fromClause=\''.$sqlFromClause.'\';';
       $src[] = '   protected $_whereClause=\''.$sqlWhereClause.'\';';
       $src[] = '   protected $_DaoRecordClassName=\''.$this->_DaoRecordClassName.'\';';
+      $src[] = '   protected $_daoSelector = \''.jDaoCompiler::$daoId.'\';';
+
+      if($this->_datasParser->hasEvent('deletebefore') || $this->_datasParser->hasEvent('delete'))
+         $src[] = '   protected $_deleteBeforeEvent = true;';
+      if ($this->_datasParser->hasEvent('deleteafter') || $this->_datasParser->hasEvent('delete'))
+         $src[] = '   protected $_deleteAfterEvent = true;';
+      if ($this->_datasParser->hasEvent('deletebybefore') || $this->_datasParser->hasEvent('deleteby'))
+         $src[] = '   protected $_deleteByBeforeEvent = true;';
+      if ($this->_datasParser->hasEvent('deletebyafter') || $this->_datasParser->hasEvent('deleteby'))
+         $src[] = '   protected $_deleteByAfterEvent = true;';
+
       $src[] = '   public static $_properties = '.var_export($properties, true).';';
       $src[] = '   public static $_pkFields = array('.$this->_writeFieldNamesWith ($start = '\'', $end='\'', $beetween = ',', $pkFields).');';
 
@@ -169,8 +180,10 @@ class jDaoGenerator {
       if($pkai !== null)
          $src[] = '}';
 
+      if($this->_datasParser->hasEvent('insertbefore') || $this->_datasParser->hasEvent('insert')){
+         $src[] = '   jEvent::notify("daoInsertBefore", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+      }
       $src[] = '   $result = $this->_conn->exec ($query);';
-
 
       if($pkai !== null){
          $src[] = '   if(!$result)';
@@ -198,6 +211,11 @@ class jDaoGenerator {
             $src[] = '  $record->'.$prop->name.' = $newrecord->'.$prop->name.';';
         }
       }
+
+      if($this->_datasParser->hasEvent('insertafter') || $this->_datasParser->hasEvent('insert')){
+         $src[] = '   jEvent::notify("daoInsertAfter", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+      }
+
       $src[] = '    return $result;';
       $src[] = '}';
 
@@ -218,7 +236,16 @@ class jDaoGenerator {
             $src[] = ' where '.$sqlCondition;
     
          $src[] = "';";
-         $src[] = '   return $this->_conn->exec ($query);';
+         if($this->_datasParser->hasEvent('updatebefore') || $this->_datasParser->hasEvent('update')){
+            $src[] = '   jEvent::notify("daoUpdateBefore", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+         }
+         if($this->_datasParser->hasEvent('updateafter') || $this->_datasParser->hasEvent('update')){
+            $src[] = '   $result = $this->_conn->exec ($query);';
+            $src[] = '   jEvent::notify("daoUpdateAfter", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+            $src[] = '   return $result;';
+         }
+         else 
+            $src[] = '   return $this->_conn->exec ($query);';
          $src[] = " }";//ends the update function
       }else{
          //the dao is mapped on a table which contains only primary key : update is impossible
@@ -226,6 +253,7 @@ class jDaoGenerator {
          $src[] = "     throw new jException('jelix~dao.error.update.impossible',array('".jDaoCompiler::$daoId."','".jDaoCompiler::$daoPath."'));";
          $src[] = " }";
       }
+
       //----- other user methods
 
       $allField = $this->_getPropertiesBy('All');
@@ -328,7 +356,21 @@ class jDaoGenerator {
          switch($method->type){
                case 'delete':
                case 'update' :
-                  $src[] = '    return $this->_conn->exec ($__query);';
+                  if ($method->beforeEventEnabled || $method->afterEventEnabled) {
+                     $methname = ($method->type == 'update'?'Update':'Insert');
+                     if ($method->beforeEventEnabled) {
+                        $src[] = '   jEvent::notify("daoSpecific'.$methname.'Before", array(\'dao\'=>$this->_daoselector,\'method\'=>\''.$method->name.'\', \'params\'=>func_get_args()));';
+                     }
+                     if ($method->afterEventEnabled) {
+                        $src[] = '   $result = $this->_conn->exec ($__query);';
+                        $src[] = '   jEvent::notify("daoSpecific'.$methname.'After", array(\'dao\'=>$this->_daoselector,\'method\'=>\''.$method->name.'\', \'params\'=>func_get_args()));';
+                        $src[] = '   return $result;';
+                     } else {
+                        $src[] = '    return $this->_conn->exec ($__query);';
+                     }
+                  } else {
+                    $src[] = '    return $this->_conn->exec ($__query);';
+                  }
                break;
                case 'count':
                   $src[] = '    $__rs = $this->_conn->query($__query);';
