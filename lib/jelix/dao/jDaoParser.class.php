@@ -381,8 +381,8 @@ class jDaoMethod {
     public $name;
     public $type;
     public $distinct=false;
-    public $beforeEventEnabled = false;
-    public $afterEventEnabled = false;
+    public $eventBeforeEnabled = false;
+    public $eventAfterEnabled = false;
     private $_conditions = null;
     private $_parameters   = array();
     private $_parametersDefaultValues = array();
@@ -395,7 +395,7 @@ class jDaoMethod {
     function __construct ($method, $def){
         $this->_def = $def;
 
-        $params = $def->getAttr($method, array('name', 'type', 'call','distinct', 'beforeEvent', 'afterEvent'));
+        $params = $def->getAttr($method, array('name', 'type', 'call','distinct', 'eventBefore', 'eventAfter'));
 
         if ($params['name']===null){
             throw new jDaoXmlException ('missing.attr', array('name', 'method'));
@@ -437,6 +437,13 @@ class jDaoMethod {
         $this->_conditions = new jDaoConditions();
         if (isset ($method->conditions)){
             $this->_parseConditions($method->conditions[0],false);
+        }
+
+        if ($this->type == 'update' || $this->type == 'delete') {
+            if ($params['eventBefore'] == 'true')
+                $this->eventBeforeEnabled = true;
+            if ($params['eventAfter'] == 'true')
+                $this->eventAfterEnabled = true;
         }
 
         if($this->type == 'update'){
@@ -485,13 +492,6 @@ class jDaoMethod {
             }else{
                 throw new jDaoXmlException ('method.limit.forbidden', $this->name);
             }
-        }
-
-        if ($this->type == 'update' || $this->type == 'delete') {
-            if ($params['beforeEvent'] == 'true')
-                $this->beforeEventEnabled = true;
-            if ($params['afterEvent'] == 'true')
-                $this->afterEventEnabled = true;
         }
     }
 
@@ -663,12 +663,11 @@ class jDaoMethod {
          throw new jDaoXmlException ('method.values.property.bad', array($this->name,$prop ));
          return false;
       }
+
       if($props[$prop]->isPK){
          throw new jDaoXmlException ('method.values.property.pkforbidden', array($this->name,$prop ));
          return false;
       }
-
-
 
       if($value!==null && $attr['expr']!==null){
          throw new jDaoXmlException ('method.values.valueexpr', array($this->name, $prop));

@@ -11,7 +11,7 @@
 
 require_once(JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php');
 
-class UTDao_parser2 extends jUnitTestCase {
+class UTDao_parser_update extends jUnitTestCase {
 
     function setUp() {
         jDaoCompiler::$daoId ='';
@@ -20,70 +20,15 @@ class UTDao_parser2 extends jUnitTestCase {
 
     protected $methDatas=array(
         array('<?xml version="1.0"?>
-          <method name="foo" type="select">
-            <order>
-                <orderitem property="publishdate" way="desc"/>
-            </order>
+          <method name="foo" type="update">
+                <values>
+                    <value property="subject" expr="\'abc\'" />
+                </values>
           </method>',
         '<?xml version="1.0"?>
         <object>
             <string p="name" value="foo"/>
-            <string p="type" value="select"/>
-            <boolean p="distinct" value="false"/>
-            <boolean p="eventBeforeEnabled" value="false"/>
-            <boolean p="eventAfterEnabled" value="false"/>
-            <object m="getConditions()" class="jDaoConditions">
-                <object p="condition" class="jDaoCondition">
-                    <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
-                </object>
-                <array p="order">array("publishdate"=>"desc")</array>
-            </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
-            <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
-            <null m="getProcStock ()"/>
-            <null m="getBody ()"/>
-        </object>'),
-        array('<?xml version="1.0"?>
-          <method name="foo" type="select">
-            <parameter name="aWay" />
-            <order>
-                <orderitem property="publishdate" way="$aWay"/>
-            </order>
-          </method>',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value="foo"/>
-            <string p="type" value="select"/>
-            <boolean p="distinct" value="false"/>
-            <boolean p="eventBeforeEnabled" value="false"/>
-            <boolean p="eventAfterEnabled" value="false"/>
-            <object m="getConditions()" class="jDaoConditions">
-                <object p="condition" class="jDaoCondition">
-                    <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
-                </object>
-                <array p="order">array("publishdate"=>\'$aWay\')</array>
-            </object>
-            <array m="getParameters ()">array("aWay")</array>
-            <array m="getParametersDefaultValues ()">array()</array>
-            <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
-            <null m="getProcStock ()"/>
-            <null m="getBody ()"/>
-        </object>'),
-        array('<?xml version="1.0"?>
-          <method name="foo" type="select">
-            <limit offset="10" count="5" />
-          </method>',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value="foo"/>
-            <string p="type" value="select"/>
+            <string p="type" value="update"/>
             <boolean p="distinct" value="false"/>
             <boolean p="eventBeforeEnabled" value="false"/>
             <boolean p="eventAfterEnabled" value="false"/>
@@ -97,21 +42,22 @@ class UTDao_parser2 extends jUnitTestCase {
             </object>
             <array m="getParameters ()">array()</array>
             <array m="getParametersDefaultValues ()">array()</array>
-            <array m="getLimit ()">array("offset"=>10, "count"=>5, "offsetparam"=>false,"countparam"=>false)</array>
-            <array m="getValues ()">array()</array>
+            <null m="getLimit ()"/>
+            <array m="getValues ()">array(\'subject\'=>array(\'\\\'abc\\\'\',true))</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
         array('<?xml version="1.0"?>
-          <method name="foo" type="select">
-            <parameter name="aOffset" />
-            <parameter name="aCount" />
-            <limit offset="$aOffset" count="$aCount" />
+          <method name="foo" type="update">
+            <parameter name="mytext" />
+                <values>
+                    <value property="subject" expr="$mytext" />
+                </values>
           </method>',
         '<?xml version="1.0"?>
         <object>
             <string p="name" value="foo"/>
-            <string p="type" value="select"/>
+            <string p="type" value="update"/>
             <boolean p="distinct" value="false"/>
             <boolean p="eventBeforeEnabled" value="false"/>
             <boolean p="eventAfterEnabled" value="false"/>
@@ -123,16 +69,47 @@ class UTDao_parser2 extends jUnitTestCase {
                 </object>
                 <array p="order">array()</array>
             </object>
-            <array m="getParameters ()">array("aOffset","aCount")</array>
+            <array m="getParameters ()">array("mytext")</array>
             <array m="getParametersDefaultValues ()">array()</array>
-            <array m="getLimit ()">array("offset"=>\'$aOffset\', "count"=>\'$aCount\', "offsetparam"=>true,"countparam"=>true)</array>
-            <array m="getValues ()">array()</array>
+            <null m="getLimit ()"/>
+            <array m="getValues ()">array(\'subject\'=>array(\'$mytext\',true))</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
-
         array('<?xml version="1.0"?>
-          <method name="foo" type="select">
+          <method name="foo" type="update">
+                <values>
+                    <value property="subject" value="my text" />
+                </values>
+          </method>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="foo"/>
+            <string p="type" value="update"/>
+            <boolean p="distinct" value="false"/>
+            <boolean p="eventBeforeEnabled" value="false"/>
+            <boolean p="eventAfterEnabled" value="false"/>
+            <object m="getConditions()" class="jDaoConditions">
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array()</array>
+                    <array p="group">array()</array>
+                </object>
+                <array p="order">array()</array>
+            </object>
+            <array m="getParameters ()">array()</array>
+            <array m="getParametersDefaultValues ()">array()</array>
+            <null m="getLimit ()"/>
+            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <null m="getProcStock ()"/>
+            <null m="getBody ()"/>
+        </object>'),
+       
+        array('<?xml version="1.0"?>
+          <method name="foo" type="update">
+            <values>
+                <value property="subject" value="my text" />
+            </values>
             <conditions>
                 <eq property="subject" value="bar" />
                 <eq property="texte" value="machine" />
@@ -141,7 +118,7 @@ class UTDao_parser2 extends jUnitTestCase {
         '<?xml version="1.0"?>
         <object>
             <string p="name" value="foo"/>
-            <string p="type" value="select"/>
+            <string p="type" value="update"/>
             <boolean p="distinct" value="false"/>
             <boolean p="eventBeforeEnabled" value="false"/>
             <boolean p="eventAfterEnabled" value="false"/>
@@ -159,143 +136,69 @@ class UTDao_parser2 extends jUnitTestCase {
             <array m="getParameters ()">array()</array>
             <array m="getParametersDefaultValues ()">array()</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
+            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
 
         array('<?xml version="1.0"?>
-          <method name="foo" type="select" distinct="true">
-            <conditions logic="or">
-                <eq property="subject" value="bar" />
-                <eq property="texte" value="machine" />
-            </conditions>
+          <method name="foo" type="update" eventBefore="true">
+            <values>
+                <value property="subject" value="my text" />
+            </values>
           </method>',
         '<?xml version="1.0"?>
         <object>
             <string p="name" value="foo"/>
-            <string p="type" value="select"/>
-            <boolean p="distinct" value="true"/>
-            <boolean p="eventBeforeEnabled" value="false"/>
-            <boolean p="eventAfterEnabled" value="false"/>
-            <object m="getConditions()" class="jDaoConditions">
-                <object p="condition" class="jDaoCondition">
-                    <null p="parent" />
-                    <array p="conditions">array(
-                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "isExpr"=>false),
-                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
-                    <array p="group">array()</array>
-                    <string p="glueOp" value="OR"/>
-                </object>
-                <array p="order">array()</array>
-            </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
-            <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
-            <null m="getProcStock ()"/>
-            <null m="getBody ()"/>
-        </object>'),
-
-
-        array('<?xml version="1.0"?>
-          <method name="foo" type="select">
-            <conditions logic="or">
-                <conditions>
-                    <eq property="subject" value="bar" />
-                    <eq property="texte" value="machine" />
-                </conditions>
-                <conditions>
-                    <eq property="subject" value="bar2" />
-                    <conditions logic="or">
-                        <eq property="texte" value="machine2" />
-                        <eq property="texte" value="truc" />
-                    </conditions>
-                </conditions>
-            </conditions>
-          </method>',
-        '<?xml version="1.0"?>
-        <object>
-            <string p="name" value="foo"/>
-            <string p="type" value="select"/>
+            <string p="type" value="update"/>
             <boolean p="distinct" value="false"/>
-            <boolean p="eventBeforeEnabled" value="false"/>
+            <boolean p="eventBeforeEnabled" value="true"/>
             <boolean p="eventAfterEnabled" value="false"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
                     <array p="conditions">array()</array>
-                    <array p="group">
-                        <object p="condition" class="jDaoCondition">
-                            <notnull p="parent" />
-                            <array p="conditions">array(
-                            array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "isExpr"=>false),
-                            array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
-                            <array p="group">array()</array>
-                            <string p="glueOp" value="AND"/>
-                        </object>
-                        <object p="condition" class="jDaoCondition">
-                            <object p="parent" class="jDaoCondition" />
-                            <array p="conditions">array(
-                            array("field_id"=>"subject","value"=>"bar2", "operator"=>"=", "isExpr"=>false))</array>
-                            <array p="group">
-                                <object p="condition" class="jDaoCondition">
-                                    <notnull p="parent" />
-                                    <array p="conditions">array(
-                                    array("field_id"=>"texte","value"=>"machine2", "operator"=>"=", "isExpr"=>false),
-                                    array("field_id"=>"texte","value"=>"truc", "operator"=>"=", "isExpr"=>false))</array>
-                                    <array p="group">array()</array>
-                                    <string p="glueOp" value="OR"/>
-                                </object>
-                            </array>
-                            <string p="glueOp" value="AND"/>
-                        </object>
-                    </array>
-                    <string p="glueOp" value="OR"/>
+                    <array p="group">array()</array>
                 </object>
                 <array p="order">array()</array>
             </object>
             <array m="getParameters ()">array()</array>
             <array m="getParametersDefaultValues ()">array()</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
+            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
-
+        
         array('<?xml version="1.0"?>
-          <method name="foo" type="select">
-            <conditions>
-                <eq property="subject" value="" />
-                <eq property="texte" expr="\'machine\'" />
-            </conditions>
+          <method name="foo" type="update" eventAfter="true">
+            <values>
+                <value property="subject" value="my text" />
+            </values>
           </method>',
         '<?xml version="1.0"?>
         <object>
             <string p="name" value="foo"/>
-            <string p="type" value="select"/>
+            <string p="type" value="update"/>
             <boolean p="distinct" value="false"/>
             <boolean p="eventBeforeEnabled" value="false"/>
-            <boolean p="eventAfterEnabled" value="false"/>
+            <boolean p="eventAfterEnabled" value="true"/>
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(
-                     array("field_id"=>"subject","value"=>"", "operator"=>"=", "isExpr"=>false),
-                     array("field_id"=>"texte","value"=>"\'machine\'", "operator"=>"=", "isExpr"=>true))</array>
+                    <array p="conditions">array()</array>
                     <array p="group">array()</array>
-                    <string p="glueOp" value="AND"/>
                 </object>
                 <array p="order">array()</array>
             </object>
             <array m="getParameters ()">array()</array>
             <array m="getParametersDefaultValues ()">array()</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array()</array>
+            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
-        </object>'),
-
+        </object>'),        
+        
     );
 
     function testMethods() {
@@ -336,18 +239,54 @@ class UTDao_parser2 extends jUnitTestCase {
 
     protected $badmethDatas=array(
       array('<?xml version="1.0"?>
-          <method name="foo" type="select">
-            <parameter name="aWay" />
-            <order>
-                <orderitem property="publishdate" way="$afoo"/>
-            </order>
+          <method name="foo" type="update">
           </method>',
-          'jelix~daoxml.method.orderitem.parameter.unknow', array('','','foo','$afoo')
+          'jelix~daoxml.method.values.undefine', array('','','foo')
+          ),
+      array('<?xml version="1.0"?>
+          <method name="foo" type="update">
+            <values>
+                <value  value="" />
+            </values>
+          </method>',
+          'jelix~daoxml.method.values.property.unknow', array('','','foo','')
+          ),
+      array('<?xml version="1.0"?>
+          <method name="foo" type="update">
+            <values>
+                <value property="plop" value="" />
+            </values>
+          </method>',
+          'jelix~daoxml.method.values.property.unknow', array('','','foo','plop')
+          ),
+      array('<?xml version="1.0"?>
+          <method name="foo" type="update">
+            <values>
+                <value property="author_firstname" value="" />
+            </values>
+          </method>',
+          'jelix~daoxml.method.values.property.bad', array('','','foo','author_firstname')
+          ),
+      array('<?xml version="1.0"?>
+          <method name="foo" type="update">
+            <values>
+                <value property="id" value="" />
+            </values>
+          </method>',
+          'jelix~daoxml.method.values.property.pkforbidden', array('','','foo','id')
+          ),
+      array('<?xml version="1.0"?>
+          <method name="foo" type="update">
+            <values>
+                <value property="subject" value="abc" expr="\'abs\'"/>
+            </values>
+          </method>',
+          'jelix~daoxml.method.values.valueexpr', array('','','foo','subject')
           ),
 
     );
 
-   function testBadMethods() {
+   function testBadUpdateMethods() {
  $dao ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
   <datasources>
@@ -382,6 +321,40 @@ class UTDao_parser2 extends jUnitTestCase {
         }
     }
 
+   function testBadUpdateMethods2() {
+ $dao ='<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+  <datasources>
+    <primarytable name="news" primarykey="news_id,foo_id" />
+  </datasources>
+  <record>
+    <property name="id" fieldname="news_id" datatype="autoincrement" />
+    <property name="id2" fieldname="foo_id" datatype="integer" />
+  </record>
+</dao>';
+
+        $parser = new jDaoParser();
+        $parser->parse(simplexml_load_string($dao),1);
+
+        //$this->sendMessage("test bad update method ");
+        $xml= simplexml_load_string('<?xml version="1.0"?>
+          <method name="tryupdate" type="update">
+            <parameter name="something" />
+            <values>
+                <value property="foo_id" expr="$something" />
+            </values>
+          </method>');
+
+        try{
+            $p = new jDaoMethod($xml, $parser);
+            $this->fail("Pas d'exception survenue !");
+        }catch(jDaoXmlException $e){
+            $this->assertEqual($e->getLocaleKey(), 'jelix~daoxml.method.update.forbidden');
+            $this->assertEqual($e->getLocaleParameters(), array('','','tryupdate'));
+        }catch(Exception $e){
+            $this->fail("Exception inconnue : ".$e->getMessage());
+        }
+    }
 }
 
 

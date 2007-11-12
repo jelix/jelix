@@ -356,12 +356,12 @@ class jDaoGenerator {
          switch($method->type){
                case 'delete':
                case 'update' :
-                  if ($method->beforeEventEnabled || $method->afterEventEnabled) {
+                  if ($method->eventBeforeEnabled || $method->eventAfterEnabled) {
                      $methname = ($method->type == 'update'?'Update':'Insert');
-                     if ($method->beforeEventEnabled) {
+                     if ($method->eventBeforeEnabled) {
                         $src[] = '   jEvent::notify("daoSpecific'.$methname.'Before", array(\'dao\'=>$this->_daoselector,\'method\'=>\''.$method->name.'\', \'params\'=>func_get_args()));';
                      }
-                     if ($method->afterEventEnabled) {
+                     if ($method->eventAfterEnabled) {
                         $src[] = '   $result = $this->_conn->exec ($__query);';
                         $src[] = '   jEvent::notify("daoSpecific'.$methname.'After", array(\'dao\'=>$this->_daoselector,\'method\'=>\''.$method->name.'\', \'params\'=>func_get_args()));';
                         $src[] = '   return $result;';
