@@ -528,7 +528,14 @@ abstract class jFormsBase {
             $this->_uploads [$control->ref] = $control;
         }
         if(!isset($this->_container->datas[$control->ref])){
-            $this->_container->datas[$control->ref] = $control->defaultValue;
+            if ( $control->datatype instanceof jDatatypeDateTime && $control->defaultValue == 'now') {
+                $dt = new jDateTime();
+                $dt->now();
+                $this->_container->datas[$control->ref] = $dt->toString($control->datatype->getFormat());
+            }
+            else {
+                $this->_container->datas[$control->ref] = $control->defaultValue;
+            }
         }
     }
 }

@@ -175,6 +175,10 @@ class jDatatypeDateTime extends jDatatype {
             parent::_addFacet($type,$value);
         }
     }
+    /**
+     * @since 1.0RC1
+     */
+    public function getFormat() { return $this->format; }
 }
 
 /**
