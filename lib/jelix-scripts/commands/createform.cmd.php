@@ -87,7 +87,10 @@ class createformCommand extends JelixScriptCommand {
             $attr='';
             if($property->required)
                 $attr.=' required="true"';
-
+                
+            if($property->defaultValue !== null)
+                $attr.=' defaultvalue="'.htmlspecialchars($property->defaultValue).'"';
+            
             //if(false)
             //    $attr.=' defaultvalue=""';
             $datatype='';

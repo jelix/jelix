@@ -148,13 +148,21 @@ abstract class jFormsBase {
         foreach($this->_controls as $name=>$ctrl){
             if(isset($prop[$name])) {
                 if($ctrl->datatype instanceof jDatatypeLocaleDateTime && $prop[$name]['datatype'] == 'datetime') {
-                    $dt = new jDateTime();
-                    $dt->setFromString($daorec->$name, jDateTime::DB_DTFORMAT);
-                    $this->_container->datas[$name] = $dt->toString(jDateTime::LANG_DTFORMAT);
+                    if($daorec->$name != '') {
+                        $dt = new jDateTime();
+                        $dt->setFromString($daorec->$name, jDateTime::DB_DTFORMAT);
+                        $this->_container->datas[$name] = $dt->toString(jDateTime::LANG_DTFORMAT);
+                    } else {
+                        $this->_container->datas[$name] ='';
+                    }
                 }elseif($ctrl->datatype instanceof jDatatypeLocaleDate && $prop[$name]['datatype'] == 'date') {
-                    $dt = new jDateTime();
-                    $dt->setFromString($daorec->$name, jDateTime::DB_DFORMAT);
-                    $this->_container->datas[$name] = $dt->toString(jDateTime::LANG_DFORMAT);
+                    if($daorec->$name != '') {
+                        $dt = new jDateTime();
+                        $dt->setFromString($daorec->$name, jDateTime::DB_DFORMAT);
+                        $this->_container->datas[$name] = $dt->toString(jDateTime::LANG_DFORMAT);
+                    } else {
+                        $this->_container->datas[$name] ='';
+                    }
                 }else{
                     $this->_container->datas[$name] = $daorec->$name;
                 }
@@ -176,17 +184,24 @@ abstract class jFormsBase {
         $daorec = jDao::createRecord($daoSelector, $dbProfil);
         $prop = $dao->getProperties();
         foreach($this->_controls as $name=>$ctrl){
+            if(!isset($prop[$name]))
+                continue;
+        
             if(is_array($this->_container->datas[$name])){
                 if( count ($this->_container->datas[$name]) ==1){
                     $daorec->$name = $this->_container->datas[$name][0];
                 }else{
                     // do nothing for arrays ?
+                    continue;
                 }
             }else{
                 $daorec->$name = $this->_container->datas[$name];
             }
 
-            if($ctrl->datatype instanceof jDatatypeLocaleDateTime && $prop[$name]['datatype'] == 'datetime') {
+            if($daorec->$name == '' && !$prop[$name]['required']) {
+                // if no value and if the property is not required, we set null to it
+                $daorec->$name = null;
+            }else if($ctrl->datatype instanceof jDatatypeLocaleDateTime && $prop[$name]['datatype'] == 'datetime') {
                 $dt = new jDateTime();
                 $dt->setFromString($daorec->$name, jDateTime::LANG_DTFORMAT);
                 $daorec->$name = $dt->toString(jDateTime::DB_DTFORMAT);

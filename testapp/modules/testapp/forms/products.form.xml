@@ -5,7 +5,7 @@
       <label>Product name</label>
    </input>
 
-   <input ref="price" type="decimal" require="true">
+   <input ref="price" type="decimal" defaultvalue="0">
       <label>Price</label>
    </input>
 
