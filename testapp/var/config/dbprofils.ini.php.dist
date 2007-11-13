@@ -44,6 +44,11 @@ password=
 ;user=
 ;password=
 
+; to run tests with sqlite
+[testapp_sqlite]
+driver=sqlite
+database="tests.sqlite"
+
 ;--------------- don't remove or change following sections !!!!!!!!
 ;--- used by unit tests
 ;--- don't set one of this profile as default profile

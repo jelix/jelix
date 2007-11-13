@@ -9,26 +9,26 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTjDbPgsql extends jUnitTestCase {
+class UTjDbSqlite extends jUnitTestCase {
 
     function testTools(){
         try {
-            $profil = jDb::getProfil('testapp_pgsql');
+            $profil = jDb::getProfil('testapp_sqlite');
         } catch (Exception $e) {
-            $this->sendMessage("UTjDbPgsql cannot be run : no postgresql connexion");
+            $this->sendMessage("UTjDbSqlite cannot be run : no sqlite profil");
             return;
         }
 
-        $tools = jDb::getTools('testapp_pgsql');
+        $tools = jDb::getTools('testapp_sqlite');
         $fields = $tools->getFieldList('products');
         $structure = '<array>
     <object key="id" class="jDbFieldProperties">
-        <string property="type" value="int" />
+        <string property="type" value="integer" />
         <string property="name" value="id" />
         <boolean property="notNull" value="true" />
         <boolean property="primary" value="true" />
         <boolean property="autoIncrement" value="true" />
-        <boolean property="hasDefault" value="true" />
+        <boolean property="hasDefault" value="false" />
         <string property="default" value="" />
         <integer property="length" value="0" />
     </object>
@@ -39,7 +39,7 @@ class UTjDbPgsql extends jUnitTestCase {
         <boolean property="primary" value="false" />
         <boolean property="autoIncrement" value="false" />
         <boolean property="hasDefault" value="false" />
-        <null property="default" />
+        <string property="default" value="" />
         <integer property="length" value="150" />
     </object>
     <object key="price" class="jDbFieldProperties">

@@ -90,7 +90,10 @@ class jDaoGenerator {
 
       foreach ($this->_datasParser->getProperties() as $id=>$field){
           $properties[$id] = get_object_vars($field);
-          $src[] =' public $'.$id.';';
+          if($field->defaultValue !== null)
+              $src[] =' public $'.$id.'='.var_export($field->defaultValue, true).';';
+          else
+              $src[] =' public $'.$id.';';
       }
 
       $src[] = '   public function getProperties() { return '.$this->_DaoClassName.'::$_properties; }';

@@ -339,6 +339,31 @@ array('','')
             <string p="sequenceName" value="" />
             <null p="maxlength"/>
             <null p="minlength"/>
+            <null p="defaultValue" />
+            <boolean p="ofPrimaryTable" value="true" />
+        </object>'
+        ),
+        array(
+        '<?xml version="1.0"?>
+        <property name="label" datatype="string" default="no label"/>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="label"/>
+            <string p="fieldName" value="label"/>
+            <string p="table" value="news"/>
+            <string p="datatype" value="string"/>
+            <null p="regExp"/>
+            <boolean p="required" value="false"/>
+            <boolean p="requiredInConditions" value="false"/>
+            <boolean p="isPK" value="false" />
+            <boolean p="isFK" value="false" />
+            <string p="updatePattern" value="%s" />
+            <string p="insertPattern" value="%s" />
+            <string p="selectPattern" value="%s" />
+            <string p="sequenceName" value="" />
+            <null p="maxlength"/>
+            <null p="minlength"/>
+            <string p="defaultValue" value="no label" />
             <boolean p="ofPrimaryTable" value="true" />
         </object>'
         ),

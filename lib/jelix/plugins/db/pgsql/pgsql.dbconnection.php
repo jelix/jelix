@@ -63,7 +63,7 @@ class pgsqlDbConnection extends jDbConnection {
     }
 
     protected function _connect (){
-        $funcconnect= ($this->profil['persistent'] ? 'pg_pconnect':'pg_connect');
+        $funcconnect= (isset($this->profil['persistent']) && $this->profil['persistent'] ? 'pg_pconnect':'pg_connect');
 
         $str = '';
 

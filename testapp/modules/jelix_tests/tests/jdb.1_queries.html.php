@@ -126,6 +126,7 @@ class UTjDb extends jUnitTestCase {
         <boolean property="autoIncrement" value="true" />
         <boolean property="hasDefault" value="false" />
         <null property="default" />
+        <integer property="length" value="0" />
     </object>
     <object key="name" class="jDbFieldProperties">
         <string property="type" value="varchar" />
@@ -135,6 +136,7 @@ class UTjDb extends jUnitTestCase {
         <boolean property="autoIncrement" value="false" />
         <boolean property="hasDefault" value="false" />
         <string property="default" value="" />
+        <integer property="length" value="150" />
     </object>
     <object key="price" class="jDbFieldProperties">
         <string property="type" value="float" />
@@ -144,6 +146,7 @@ class UTjDb extends jUnitTestCase {
         <boolean property="autoIncrement" value="false" />
         <boolean property="hasDefault" value="true" />
         <string property="default" value="0" />
+        <integer property="length" value="0" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($fields, $structure, 'bad results');

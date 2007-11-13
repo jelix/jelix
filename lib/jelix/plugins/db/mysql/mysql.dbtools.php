@@ -27,14 +27,14 @@ class mysqlDbTools extends jDbTools {
     */
     function _getTableList (){
         $results = array ();
-    
+
         $rs = $this->_connector->query ('SHOW TABLES FROM '.$this->_connector->profil['database']);
         $col_name = 'Tables_in_'.$this->_connector->profil['database'];
-    
+
         while ($line = $rs->fetch ()){
             $results[] = $line->$col_name;
         }
-    
+
         return $results;
     }
 
@@ -44,13 +44,21 @@ class mysqlDbTools extends jDbTools {
     */
     function _getFieldList ($tableName){
         $results = array ();
-    
+
         $rs = $this->_connector->query ('SHOW FIELDS FROM ' . $tableName);
-    
+
         while ($line = $rs->fetch ()){
             $field = new jDbFieldProperties();
-            preg_match('/^(\w+).*$/',$line->Type,$m);
-            $field->type = $m[1];
+
+            if (preg_match('/^(\w+)\s*(\((\d+)\))?.*$/',$line->Type,$m)) {
+                $field->type = strtolower($m[1]);
+                if ($field->type == 'varchar' && isset($m[3])) {
+                    $field->length = intval($m[3]);
+                }
+            } else {
+                $field->type = $line->Type;
+            }
+
             $field->name = $line->Field;
             $field->notNull = ($line->Null == 'NO');
             $field->primary = ($line->Key == 'PRI');

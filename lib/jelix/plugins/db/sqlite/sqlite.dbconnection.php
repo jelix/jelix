@@ -60,7 +60,7 @@ class sqliteDbConnection extends jDbConnection {
     }
 
     protected function _connect (){
-        $funcconnect= ($this->profil['persistent']? 'sqlite_popen':'sqlite_open');
+        $funcconnect= (isset($this->profil['persistent']) && $this->profil['persistent']? 'sqlite_popen':'sqlite_open');
         if ($cnx = @$funcconnect(JELIX_APP_VAR_PATH. 'db/sqlite/'.$this->profil['database'])) {
             return $cnx;
         } else {

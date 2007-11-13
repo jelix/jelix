@@ -280,12 +280,13 @@ class jDaoProperty {
 
     public $ofPrimaryTable = true;
 
+    public $defaultValue = null;
     /**
     * constructor.
     */
     function __construct ($aParams, $def){
         $needed = array('name', 'fieldname', 'table', 'datatype', 'required', 'minlength',
-        'maxlength', 'regexp', 'sequence');
+        'maxlength', 'regexp', 'sequence', 'default');
 
         $params = $def->getAttr($aParams, $needed);
 
@@ -313,7 +314,6 @@ class jDaoProperty {
         $this->minlength  = $params['minlength'] !== null ? intval($params['minlength']) : null;
         $this->regExp     = $params['regexp'];
 
-
         if ($params['datatype']===null){
             throw new jDaoXmlException ('missing.attr', array('datatype', 'property'));
         }
@@ -340,6 +340,22 @@ class jDaoProperty {
             }
             $this->required = false;
             $this->requiredInConditions = true;
+        }
+
+        if($params['default'] !== null) {
+            switch($this->datatype) {
+              case 'autoincrement':
+              case 'int':
+              case 'integer':
+                $this->defaultValue = intval($params['default']);
+                break;
+              case 'double':
+              case 'float':
+                $this->defaultValue = doubleval($params['default']);
+                break;
+              default:
+                $this->defaultValue = $params['default'];
+            }
         }
 
         // on ignore les attributs *pattern sur les champs PK et FK

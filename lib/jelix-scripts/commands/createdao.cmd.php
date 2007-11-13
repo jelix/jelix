@@ -135,8 +135,15 @@ class createdaoCommand extends JelixScriptCommand {
                   else
                      $primarykeys.=$fieldname;
                }
-               if($prop->notNull && !$prop->auto_increment)
+               if($prop->notNull && !$prop->autoIncrement)
                   $properties.=' required="true"';
+
+               if($prop->hasDefault) {
+                   $properties.=' default="'.htmlspecialchars($prop->default).'"';
+               }
+               if ($prop->length) {
+                    $properties.=' maxlength="'.$prop->length.'"';
+               }
                $properties.='/>';
             }
 
