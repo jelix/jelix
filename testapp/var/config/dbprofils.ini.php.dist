@@ -36,6 +36,14 @@ user=root
 ; you can change password option : use same value as password in testapp profils
 password=
 
+; to run tests with pgsql
+;[testapp_pgsql]
+;driver="pgsql"
+;host=
+;database=testapp
+;user=
+;password=
+
 ;--------------- don't remove or change following sections !!!!!!!!
 ;--- used by unit tests
 ;--- don't set one of this profile as default profile

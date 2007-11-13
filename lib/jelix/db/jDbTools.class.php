@@ -21,11 +21,50 @@
  * @subpackage db
  */
  class jDbFieldProperties {
+    /**
+     * type of the field
+     * @var string
+     */
     public $type;
+    
+    /**
+     * field name
+     * @var string
+     */
     public $name;
-    public $not_null=true;
+    
+    /**
+     * says if the field can be null or not
+     * @var boolean
+     */
+    public $notNull=true;
+    
+    /**
+     * says if the field is the primary key
+     * @var boolean
+     */
     public $primary=false;
-    public $auto_increment=false;
+    
+    /**
+     * says if the field is auto incremented
+     * @var boolean
+     */
+    public $autoIncrement=false;
+    
+    /**
+     * default value
+     * @var string
+     */
+    public $default='';
+    
+    /**
+     * says if there is a default value
+     * @var boolean
+     */
+    public $hasDefault = false;
+
+
+    public $length = 0;
 }
 
 

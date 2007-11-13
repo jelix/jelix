@@ -395,7 +395,7 @@ class jDaoMethod {
     function __construct ($method, $def){
         $this->_def = $def;
 
-        $params = $def->getAttr($method, array('name', 'type', 'call','distinct', 'eventBefore', 'eventAfter'));
+        $params = $def->getAttr($method, array('name', 'type', 'call','distinct', 'eventbefore', 'eventafter'));
 
         if ($params['name']===null){
             throw new jDaoXmlException ('missing.attr', array('name', 'method'));
@@ -440,9 +440,9 @@ class jDaoMethod {
         }
 
         if ($this->type == 'update' || $this->type == 'delete') {
-            if ($params['eventBefore'] == 'true')
+            if ($params['eventbefore'] == 'true')
                 $this->eventBeforeEnabled = true;
-            if ($params['eventAfter'] == 'true')
+            if ($params['eventafter'] == 'true')
                 $this->eventAfterEnabled = true;
         }
 

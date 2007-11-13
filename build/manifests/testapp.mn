@@ -25,6 +25,7 @@ cd testapp/modules
 
 cd testapp/install
   install.mysql.sql
+  install.pgsql.sql
 
 cd testapp/modules/testapp
   module.xml
@@ -119,6 +120,7 @@ cd testapp/modules/jelix_tests/tests/
   jdb.0_profiles.html.php
   jdb.1_queries.html.php
   jdb.2_queries_with_pdo.html.php
+  jdb.pgsql.html.php
   jforms.html.php
   jforms.check_datas.html.php
   jforms.compiler.html.php

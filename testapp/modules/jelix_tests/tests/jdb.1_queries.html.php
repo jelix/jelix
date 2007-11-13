@@ -113,6 +113,43 @@ class UTjDb extends jUnitTestCase {
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
     }
 
+    function testTools(){
+
+        $tools = jDb::getTools($this->dbProfil);
+        $fields = $tools->getFieldList('products');
+        $structure = '<array>
+    <object key="id" class="jDbFieldProperties">
+        <string property="type" value="int" />
+        <string property="name" value="id" />
+        <boolean property="notNull" value="true" />
+        <boolean property="primary" value="true" />
+        <boolean property="autoIncrement" value="true" />
+        <boolean property="hasDefault" value="false" />
+        <null property="default" />
+    </object>
+    <object key="name" class="jDbFieldProperties">
+        <string property="type" value="varchar" />
+        <string property="name" value="name" />
+        <boolean property="notNull" value="true" />
+        <boolean property="primary" value="false" />
+        <boolean property="autoIncrement" value="false" />
+        <boolean property="hasDefault" value="false" />
+        <string property="default" value="" />
+    </object>
+    <object key="price" class="jDbFieldProperties">
+        <string property="type" value="float" />
+        <string property="name" value="price" />
+        <boolean property="notNull" value="false" />
+        <boolean property="primary" value="false" />
+        <boolean property="autoIncrement" value="false" />
+        <boolean property="hasDefault" value="true" />
+        <string property="default" value="0" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($fields, $structure, 'bad results');
+    }
+
+
 }
 
 

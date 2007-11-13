@@ -83,23 +83,23 @@ class sqliteDbTools extends jDbTools {
             $field->type      = strtolower($m[1]);
             $field->name = $result_line->name;
             //$p_result_line->length    = $length;
-            $field->not_null   = ($result_line->notnull != 1);
+            $field->notNull   = ($result_line->notnull != 1);
             $field->primary  = ($result_line->pk == 1);
 
             if (preg_match('/^int/i', $field->type)) {
                 if ($field->primary) {
-                    $field->auto_increment = true;
+                    $field->autoIncrement = true;
                 } else {
                     $str = stristr($create_table, $field->name);
                     $array = explode(',', $str);
                     if (preg_match('/autoincrement/i', $array[0])) {
-                        $field->auto_increment = true;
+                        $field->autoIncrement = true;
                     } else {
-                        $field->auto_increment = false;
+                        $field->autoIncrement = false;
                     }
                 }
             } else {
-                $field->auto_increment = false;
+                $field->autoIncrement = false;
             }
             $results[$result_line->name] = $field;
         }

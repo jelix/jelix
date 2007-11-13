@@ -2,15 +2,10 @@
 /**
 * @package    jelix
 * @subpackage db_driver
-* @author     Croes Gérald, Ferlet Patrice, Laurent Jouanneau
+* @author     Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Nicolas Jeudy (patch ticket #99)
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
-* This class was get originally from the Copix project (CopixDBToolsPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
-* Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
-* Initial authors of this Copix class are Gerald Croes, Ferlet Patrice  and Laurent Jouanneau,
-* and this class was adapted for Jelix by Laurent Jouanneau
-*
+* @copyright  2005-2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -28,7 +23,7 @@ class pgsqlDbTools extends jDbTools {
    */
    protected function _getTableList (){
       $results = array ();
-      $sql = "SELECT tablename FROM pg_tables WHERE tablename NOT LIKE 'pg_%' ORDER BY tablename";
+      $sql = "SELECT tablename FROM pg_tables WHERE schemaname NOT IN ('pg_catalog', 'information_schema') ORDER BY tablename";
       $rs = $this->_connector->query ($sql);
       while ($line = $rs->fetch()){
          $results[] = $line->tablename;
@@ -41,38 +36,49 @@ class pgsqlDbTools extends jDbTools {
     */
     protected function _getFieldList ($tableName){
         $results = array ();
-        $sql_get_fields = "SELECT
-        a.attname as Field, t.typname as type, a.attlen as length, a.atttypmod,
-        case when a.attnotnull  then 1 else 0 end as notnull,
-        a.atthasdef,
-        (SELECT adsrc FROM pg_attrdef adef WHERE a.attrelid=adef.adrelid AND a.attnum=adef.adnum) AS adsrc
-        FROM
-            pg_attribute a,
-            pg_class c,
-            pg_type t
+        
+        // get table informations
+        $sql ='SELECT oid, relhaspkey, relhasindex FROM pg_class WHERE relname = \''.$tableName.'\'';
+        $rs = $this->_connector->query ($sql);
+        if (! ($table = $rs->fetch())) {
+            throw new Exception('dbtools, pgsql: unknow table');
+        }
+
+        $pkeys = array();
+        // get primary keys informations
+        if ($table->relhaspkey == 't') {
+            $sql = 'SELECT indkey FROM pg_index WHERE indrelid = '.$table->oid.' and indisprimary = true';
+            $rs = $this->_connector->query ($sql);
+            $pkeys = preg_split("/[\s]+/", $rs->fetch()->indkey);
+        }
+
+        // get field informations
+        $sql_get_fields = "SELECT t.typname, a.attname, a.attnotnull, a.attnum,
+        a.atthasdef, d.adsrc
+        FROM pg_type t, pg_attribute a LEFT JOIN pg_attrdef d ON (d.adrelid=a.attrelid AND d.adnum=a.attnum)
         WHERE
-          c.relname = '{$tableName}' AND a.attnum > 0 AND a.attrelid = c.oid AND a.atttypid = t.oid
+          a.attnum > 0 AND a.attrelid = ".$table->oid." AND a.atttypid = t.oid
         ORDER BY a.attnum";
-
-        $rs = $this->_connector->query ($sql_get_fields);
+        
         $toReturn=array();
-        while ($result_line = $rs->fetch ()){
+        $rs = $this->_connector->query ($sql_get_fields);
+        while ($line = $rs->fetch ()){
             $field = new jDbFieldProperties();
-            if(preg_match('/nextval\(\'(.*?)\.'.$tableName.'_'.$result_line->field.'_seq\'::text\)/',
-            $result_line->adsrc)){
-                $field->auto_increment=true;
+            $field->name = $line->attname;
+            $field->type = preg_replace('/(\D*)\d*/','\\1',$line->typname);
+            $field->notNull = ($line->attnotnull=='t');
+            $field->hasDefault = ($line->atthasdef == 't');
+            $field->default = $line->adsrc;
+
+            if(preg_match('/^nextval\(.*\)$/', $line->adsrc)){
+                $field->autoIncrement=true;
+                $field->default = '';
             }
-
-            $field->notnull = ($result_line->notnull==1)  ? true:false;
-            $field->type = preg_replace('/(\D*)\d*/','\\1',$result_line->type);
-            if($result_line->length<0)
-                $field->length=null;
-            else
-                $field->length=$result_line->length;
-            $field->name = $result_line->field;
-             $field->primary = ($result_line->atthasdef == 't');
-
-            $toReturn[$result_line->field]=$field;
+            
+            if(in_array($line->attnum, $pkeys))
+                $field->primary = true;
+            
+            $toReturn[$line->attname]=$field;
         }
 
         return $toReturn;

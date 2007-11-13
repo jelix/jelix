@@ -91,7 +91,7 @@ class createdaoCommand extends JelixScriptCommand {
                case 'integer':
                case 'smallint':
                case 'year':
-                  if($prop->auto_increment ){
+                  if($prop->autoIncrement ){
                      $type='autoincrement';
                   }else{
                      $type='int';
@@ -100,7 +100,7 @@ class createdaoCommand extends JelixScriptCommand {
 
                case 'mediumint':
                case 'bigint':
-                  if($prop->auto_increment ){
+                  if($prop->autoIncrement ){
                      $type='bigautoincrement';
                   }else{
                      $type='numeric';
@@ -135,7 +135,7 @@ class createdaoCommand extends JelixScriptCommand {
                   else
                      $primarykeys.=$fieldname;
                }
-               if($prop->not_null && !$prop->auto_increment)
+               if($prop->notNull && !$prop->auto_increment)
                   $properties.=' required="true"';
                $properties.='/>';
             }

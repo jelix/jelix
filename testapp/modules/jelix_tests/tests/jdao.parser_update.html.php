@@ -142,7 +142,7 @@ class UTDao_parser_update extends jUnitTestCase {
         </object>'),
 
         array('<?xml version="1.0"?>
-          <method name="foo" type="update" eventBefore="true">
+          <method name="foo" type="update" eventbefore="true">
             <values>
                 <value property="subject" value="my text" />
             </values>
@@ -171,7 +171,7 @@ class UTDao_parser_update extends jUnitTestCase {
         </object>'),
         
         array('<?xml version="1.0"?>
-          <method name="foo" type="update" eventAfter="true">
+          <method name="foo" type="update" eventafter="true">
             <values>
                 <value property="subject" value="my text" />
             </values>

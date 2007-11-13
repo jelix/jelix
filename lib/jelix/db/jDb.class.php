@@ -89,13 +89,13 @@ class jDb {
 
         global $gJConfig;
 #ifnot ENABLE_OPTIMIZED_SOURCE
-        if(!isset($gJConfig->_pluginsPathList_db[$profil['driver']])
-            || !file_exists($gJConfig->_pluginsPathList_db[$profil['driver']]) ){
-                throw new jException('jelix~db.error.driver.notfound', $profil['driver']);
+        if(!isset($gJConfig->_pluginsPathList_db[$driver])
+            || !file_exists($gJConfig->_pluginsPathList_db[$driver]) ){
+                throw new jException('jelix~db.error.driver.notfound', $driver);
         }
 #endif
-        require_once($gJConfig->_pluginsPathList_db[$profil['driver']].$profil['driver'].'.dbtools.php');
-        $class = $profil['driver'].'DbTools';
+        require_once($gJConfig->_pluginsPathList_db[$driver].$driver.'.dbtools.php');
+        $class = $driver.'DbTools';
 
         //Création de l'objet
         $cnx = self::getConnection ($name);
