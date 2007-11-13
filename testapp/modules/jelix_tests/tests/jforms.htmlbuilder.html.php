@@ -308,6 +308,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value=""></option>';
         $result.='<option value="10">foo</option>';
         $result.='<option value="11" selected="selected">bar</option>';
         $result.='<option value="23">baz</option>';
@@ -331,12 +332,14 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" readonly="readonly" title="ceci est un tooltip" size="1">';
+        $result.='<option value=""></option>';
         $result.='<option value="10">foo</option>';
         $result.='<option value="11" selected="selected">bar</option>';
         $result.='<option value="23">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
 
+        $ctrl->required = true;
         $this->form->setData('choixsimple',"23");
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" readonly="readonly" title="ceci est un tooltip" size="1">';
@@ -345,6 +348,18 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result.='<option value="23" selected="selected">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
+    
+        $ctrl->required = false;
+        $this->form->setData('choixsimple',"");
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" readonly="readonly" title="ceci est un tooltip" size="1">';
+        $result.='<option value="" selected="selected"></option>';
+        $result.='<option value="10">foo</option>';
+        $result.='<option value="11">bar</option>';
+        $result.='<option value="23">baz</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+        $this->form->setData('choixsimple',"23");
     }
 
     function testOutputListbox(){

@@ -243,7 +243,9 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
                 else
                     $value='';
             }
-
+            if (!$ctrl->required) {
+                echo '<option value=""',($value==''?' selected="selected"':''),'></option>';
+            }
             foreach($ctrl->datasource->getDatas() as $v=>$label){
                 echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
             }
