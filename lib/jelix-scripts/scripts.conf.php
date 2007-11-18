@@ -9,8 +9,8 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-
-define('JELIXS_APPS_BASEPATH', realpath(dirname(__FILE__).'/../../'));
+// related path given to GetAppsRepository should be related to the jelix.php script.
+define('JELIXS_APPS_BASEPATH', GetAppsRepository('../../'));
 
 define ('JELIXS_APPTPL_PATH'        , JELIXS_APPS_BASEPATH."/$APPNAME/");
 define ('JELIXS_APPTPL_TEMP_PATH'   , JELIXS_APPS_BASEPATH."/temp/$APPNAME/");

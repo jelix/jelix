@@ -42,6 +42,14 @@ if(preg_match('/^\-\-([\w\-\.]+)$/',$commandName,$m)){
 
 }
 
+function GetAppsRepository($relatedPath) {
+    $path = realpath(dirname(__FILE__).'/'.$relatedPath);
+    $last = substr($path, -1,1);
+    if($last == '\\' || $last == '/')
+        $path = substr($path, 0,-1);
+    return $path;
+}
+
 /**
  * recupération de la config
  */
