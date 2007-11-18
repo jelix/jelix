@@ -181,7 +181,18 @@ abstract class jFormsBase {
      */
     public function saveToDao($daoSelector, $key = null, $dbProfil=''){
         $dao = jDao::create($daoSelector, $dbProfil);
-        $daorec = jDao::createRecord($daoSelector, $dbProfil);
+        
+        if($key === null)
+            $key = $this->_container->formId;
+        
+        if($key != null && ($daorec = $dao->get($key))) {
+            $toInsert= false;
+        }else{
+            $daorec = jDao::createRecord($daoSelector, $dbProfil);
+            $daorec->setPk($key);
+            $toInsert= true;
+        }
+        
         $prop = $dao->getProperties();
         foreach($this->_controls as $name=>$ctrl){
             if(!isset($prop[$name]))
@@ -211,17 +222,11 @@ abstract class jFormsBase {
                 $daorec->$name = $dt->toString(jDateTime::DB_DFORMAT);
             }
         }
-        if($this->_container->formId){
-            if($key === null)
-                $key = $this->_container->formId;
-            $daorec->setPk($key);
-            if($dao->update($daorec) == 0)
-                $dao->insert($daorec);
-        }else{
-            if($key !== null)
-                $daorec->setPk($key);
-            // todo : what about updating the formId with the Pk.
+        if($toInsert){
+            // todo : what about updating the formId with the Pk ?
             $dao->insert($daorec);
+        }else{
+            $dao->update($daorec);
         }
         return $daorec->getPk();
     }

@@ -112,6 +112,8 @@ class UTjformsWithDao extends jUnitTestCaseDb {
 
         $this->assertEqual($id, $this->id);
 
+        $form->saveToDao('products'); // try to update an unchanged record 
+
         $records = array(
             array('id'=>$this->id, 'name'=>'other phone', 'price'=>68),
             array('id'=>$this->id2,'name'=>'computer',    'price'=>590),
