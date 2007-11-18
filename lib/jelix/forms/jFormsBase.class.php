@@ -97,19 +97,28 @@ abstract class jFormsBase {
             if($value === null) $value='';
             if($ctrl->type=='checkbox'){
                 if($value){
-                    $this->_container->datas[$name]= $ctrl->valueOnCheck;
+                    $value = $ctrl->valueOnCheck;
                 }else{
-                    $this->_container->datas[$name]= $ctrl->valueOnUncheck;
+                    $value = $ctrl->valueOnUncheck;
                 }
             }elseif($ctrl->type=='upload'){
                 if(isset($_FILES[$name])){
-                    $this->_container->datas[$name]= $_FILES[$name]['name'];
+                    $value = $_FILES[$name]['name'];
                 }else{
-                    $this->_container->datas[$name]= '';
+                    $value= '';
                 }
-            }else{
-                $this->_container->datas[$name]= $value;
+            }elseif($ctrl->type=='submit' && $value) {
+                // because IE send the <button> content as value instead of the content of the 
+                // "value" attribute, we should verify it and get the real value
+                $datas = $ctrl->datasource->getDatas();
+                if(!isset($datas[$value])) {
+                    $datas=array_flip($datas);
+                    if(isset($datas[$value])) {
+                        $value = $datas[$value];
+                    }
+                }
             }
+            $this->_container->datas[$name]= $value;
         }
     }
 
