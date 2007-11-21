@@ -331,6 +331,12 @@ class jSelectorClass extends jSelectorModule {
     public $className = '';
 
     function __construct($sel){
+#if ENABLE_PHP_JELIX
+        if(jelix_scan_class_sel($sel, $this)){
+            if($this->module ==''){
+                $this->module = jContext::get ();
+            }
+#else
         if(preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_\.\\/]+)$/", $sel, $m)){
             if($m[1]!='' && $m[2]!=''){
                 $this->module = $m[2];
@@ -345,7 +351,7 @@ class jSelectorClass extends jSelectorModule {
                 $this->className = $m[3];
                 $this->subpath ='';
             }
-            
+#endif
             $this->_createPath();
             $this->_createCachePath();
         }else{
@@ -410,6 +416,7 @@ class jSelectorLoc extends jSelectorModule {
     public $messageKey = '';
     public $locale ='';
     public $charset='';
+    public $_compiler = 'jLocalesCompiler';
 
     function __construct($sel, $locale=null, $charset=null){
         global $gJConfig;
@@ -427,9 +434,14 @@ class jSelectorLoc extends jSelectorModule {
         $this->_dirname =  'locales/' .$locale.'/';
         $this->_suffix = '.'.$charset.'.properties';
         $this->_cacheSuffix = '.'.$charset.'.php';
-        $this->_compiler='jLocalesCompiler';
         $this->_compilerPath=JELIX_LIB_CORE_PATH.'jLocalesCompiler.class.php';
 
+#if ENABLE_PHP_JELIX
+        if(jelix_scan_locale_sel($sel, $this)){
+            if($this->module ==''){
+                $this->module = jContext::get ();
+            }
+#else
         if(preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\.]+)$/", $sel, $m)){
             if($m[1]!='' && $m[2]!=''){
                 $this->module = $m[2];
@@ -439,6 +451,7 @@ class jSelectorLoc extends jSelectorModule {
             $this->resource = $m[3];
             $this->fileKey = $m[3];
             $this->messageKey = $m[4];
+#endif
             $this->_createPath();
             $this->_createCachePath();
         }else{

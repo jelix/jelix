@@ -32,6 +32,8 @@ zend_function_entry jelix_functions[] = {
 	PHP_FE(jelix_read_ini,  NULL)
 	PHP_FE(jelix_scan_module_sel,  NULL)
 	PHP_FE(jelix_scan_action_sel,  NULL)
+	PHP_FE(jelix_scan_class_sel,  NULL)
+	PHP_FE(jelix_scan_locale_sel,  NULL)
 	{NULL, NULL, NULL}	/* Must be the last line in jelix_functions[] */
 };
 /* }}} */
@@ -419,7 +421,7 @@ PHP_FUNCTION(jelix_scan_module_sel)
 
 /* {{{ proto boolean jelix_scan_action_sel(string arg, object tofill *)
    scan a string as a jelix selector, and fill object properties with founded values 
-/^(?:([\w\.]+|\#)~)?([\w\.]+|\#)?(?:@([\w\.]+))?$/
+/^(?:([a-zA-Z0-9_\.]+|\#)~)?([a-zA-Z0-9_]+|\#)?(?:@([a-zA-Z0-9_]+))?$/
 */
 PHP_FUNCTION(jelix_scan_action_sel)
 {
@@ -660,13 +662,235 @@ PHP_FUNCTION(jelix_scan_action_sel)
 }
 /* }}} */
 
+/* {{{ proto boolean jelix_scan_class_sel(string arg, object tofill *)
+   scan a string as a jelix selector, and fill object properties with founded values 
+/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_\.\\/]+)$/
+*/
+PHP_FUNCTION(jelix_scan_class_sel)
+{
+    zval **selectorStr, **objectArg;
+    switch (ZEND_NUM_ARGS()) {
+        case 2:
+            if (zend_get_parameters_ex(2, &selectorStr, &objectArg) == FAILURE) {
+                RETURN_FALSE;
+            }
+			break;
+		default:
+			ZEND_WRONG_PARAM_COUNT();
+			break;
+	}
+
+    if(Z_TYPE_P(*objectArg) != IS_OBJECT){
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid second argument, not an object");
+        RETURN_FALSE
+	}
+
+    int length;
+    char *sel, *cursor, *module, *resource, *classname, *subpath;
+
+    int module_length=0;
+    int resource_length=0;
+    int class_length=0;
+    int subpath_length=0;
+    int cursor_count=0;
+
+    convert_to_string_ex(selectorStr);
+    length = Z_STRLEN_PP(selectorStr);
+    sel = Z_STRVAL_PP(selectorStr);
+
+    cursor_count=0;
+    cursor = module = resource = classname = subpath = sel;
+
+    int error = 0;
+    int hasSlash = 0;
+
+    // parse the module part
+    while(cursor_count < length){
+        if(*cursor == '~'){
+            break;
+        }
+        if (*cursor == '/') {
+            subpath_length = module_length + 1;
+            classname = cursor+1;
+        } else  if(!( ( *cursor >= 'a' && *cursor <= 'z')
+            || ( *cursor >= 'A' && *cursor <= 'Z')
+            || ( *cursor >= '0' && *cursor <= '9')
+            || *cursor == '_' || *cursor == '.')) {
+            RETURN_FALSE
+        }
+        module_length ++;
+        cursor_count ++;
+        cursor++;
+    }
 
 
+    if(cursor_count >= length){
+        // we don't find any '~' characters, so we have parsed the resource
+        resource_length = module_length;
+        module_length = 0;
+    }else{
+        // the string starts by a ~ : it's not really a problem, but we generate an error
+        // to keep compatibility with php version of selectors.
+        if(module_length == 0 || subpath_length != 0){
+            RETURN_FALSE
+        }
 
+        cursor_count++;
+        cursor++;
+        classname = subpath = resource = cursor;
+        resource_length = 0;
+        while(cursor_count < length){
+            if (*cursor == '/') {
+                subpath_length = resource_length + 1;
+                classname = cursor+1;
+            } else if(!( ( *cursor >= 'a' && *cursor <= 'z')
+                || ( *cursor >= 'A' && *cursor <= 'Z')
+                || ( *cursor >= '0' && *cursor <= '9')
+                || *cursor == '_' || *cursor == '.')){
+                RETURN_FALSE
+            }
+            resource_length ++;
+            cursor_count ++;
+            cursor++;
+        }
 
-  /*
-    JELIX_SELECTOR_MODULE           /^(([\w\.]+)~)?([\w\.]+)$/
-    JELIX_SELECTOR_ACTION           /^(?:([\w\.]+|\#)~)?([\w\.]+|\#)?(?:@([\w\.]+))?$/
-    JELIX_SELECTOR_LOCALE           /^(([\w\.]+)~)?(\w+)\.([\w\.]+)$/
-    JELIX_SELECTOR_SIMPLEFILE       /^([\w\.\/]+)$/
-    */
+    }
+
+    if( resource_length == 0 ){
+        RETURN_FALSE
+    }
+
+    if (subpath_length == 0) {
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "className", sizeof("className") - 1,	resource, resource_length TSRMLS_CC);
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "subpath", sizeof("subpath") - 1,	subpath, 0 TSRMLS_CC);
+    }
+    else if (subpath_length == 1) {
+        if (resource_length == 1) {
+            RETURN_FALSE
+        }
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "className", sizeof("className") - 1,	classname, resource_length-1 TSRMLS_CC);
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "subpath", sizeof("subpath") - 1,	subpath, 0 TSRMLS_CC);
+    }
+    else {
+        if (resource_length == subpath_length) {
+            RETURN_FALSE
+        }
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "className", sizeof("className") - 1,	classname, resource_length - subpath_length TSRMLS_CC);
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "subpath", sizeof("subpath") - 1,	subpath, subpath_length TSRMLS_CC);
+    }
+
+    zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "module", sizeof("module") - 1,	module, module_length TSRMLS_CC);
+    zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	resource, resource_length TSRMLS_CC);
+
+	RETURN_TRUE
+}
+
+/* {{{ proto boolean jelix_scan_locale_sel(string arg, object tofill *)
+   scan a string as a jelix selector, and fill object properties with founded values 
+/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\.]+)$/
+*/
+PHP_FUNCTION(jelix_scan_locale_sel)
+{
+    zval **selectorStr, **objectArg;
+    switch (ZEND_NUM_ARGS()) {
+        case 2:
+            if (zend_get_parameters_ex(2, &selectorStr, &objectArg) == FAILURE) {
+                RETURN_FALSE;
+            }
+			break;
+		default:
+			ZEND_WRONG_PARAM_COUNT();
+			break;
+	}
+
+    if(Z_TYPE_P(*objectArg) != IS_OBJECT){
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid second argument, not an object");
+        RETURN_FALSE
+	}
+
+    int length;
+    char *sel, *cursor, *module, *resource, *filekey, *localekey;
+
+    int module_length=0;
+    int resource_length=0;
+    int filekey_length=0;
+    int localkey_length=0;
+    int cursor_count=0;
+
+    convert_to_string_ex(selectorStr);
+    length = Z_STRLEN_PP(selectorStr);
+    sel = Z_STRVAL_PP(selectorStr);
+
+    cursor_count=0;
+    cursor = module = resource = filekey = localekey = sel;
+
+    int error = 0;
+    int hasPoint = 0;
+
+    // parse the module part
+    while(cursor_count < length){
+        if(*cursor == '~'){
+            break;
+        }
+        if (*cursor == '.' && !hasPoint) {
+            filekey_length = module_length;
+            localekey = cursor+1;
+            hasPoint = 1;
+        } else  if(!( ( *cursor >= 'a' && *cursor <= 'z')
+            || ( *cursor >= 'A' && *cursor <= 'Z')
+            || ( *cursor >= '0' && *cursor <= '9')
+            || *cursor == '_' || *cursor == '.')) {
+            RETURN_FALSE
+        }
+        module_length ++;
+        cursor_count ++;
+        cursor++;
+    }
+
+    if(cursor_count >= length){
+        // we don't find any '~' characters, so we have parsed the resource
+        resource_length = module_length;
+        module_length = 0;
+    }else{
+        // the string starts by a ~ : it's not really a problem, but we generate an error
+        // to keep compatibility with php version of selectors.
+        if(module_length == 0){
+            RETURN_FALSE
+        }
+        hasPoint = 0;
+        cursor_count++;
+        cursor++;
+        filekey = localekey = resource = cursor;
+        resource_length = 0;
+        filekey_length = 0;
+        while(cursor_count < length){
+            if (*cursor == '.' && !hasPoint) {
+                filekey_length = resource_length;
+                localekey = cursor+1;
+                hasPoint = 1;
+            } else if(!( ( *cursor >= 'a' && *cursor <= 'z')
+                || ( *cursor >= 'A' && *cursor <= 'Z')
+                || ( *cursor >= '0' && *cursor <= '9')
+                || *cursor == '_' || *cursor == '.')){
+                RETURN_FALSE
+            }
+            resource_length ++;
+            cursor_count ++;
+            cursor++;
+        }
+    }
+
+    if (resource_length == 0 || filekey_length == 0 || filekey_length == 1 
+        || filekey_length == resource_length || filekey_length == resource_length -1) {
+        RETURN_FALSE
+    }
+
+    zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "fileKey", sizeof("fileKey") - 1,	filekey, filekey_length TSRMLS_CC);
+    zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "messageKey", sizeof("messageKey") - 1,	localekey, resource_length - filekey_length -1 TSRMLS_CC);
+    zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "module", sizeof("module") - 1,	module, module_length TSRMLS_CC);
+    /*zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	resource, resource_length TSRMLS_CC);*/
+    zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	filekey, filekey_length TSRMLS_CC);
+
+	RETURN_TRUE
+}
+/* }}} */
