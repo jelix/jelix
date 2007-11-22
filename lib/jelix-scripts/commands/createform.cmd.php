@@ -87,10 +87,16 @@ class createformCommand extends JelixScriptCommand {
             $attr='';
             if($property->required)
                 $attr.=' required="true"';
-                
+
             if($property->defaultValue !== null)
                 $attr.=' defaultvalue="'.htmlspecialchars($property->defaultValue).'"';
-            
+
+            if($property->maxlength !== null)
+                $attr.=' maxlength="'.$property->maxlength.'"';
+
+            if($property->minlength !== null)
+                $attr.=' minlength="'.$property->minlength.'"';
+
             //if(false)
             //    $attr.=' defaultvalue=""';
             $datatype='';

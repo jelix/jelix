@@ -265,7 +265,10 @@ class UTjformsCompiler extends jUnitTestCase {
 </textarea>',
 64=>'<textarea ref="nom" rows="15" cols="20" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
-</textarea>'
+</textarea>',
+65=>'<input ref="nom" maxlength="3" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+</input>',
     );
 
     protected $_PhpControls = array(
@@ -613,7 +616,11 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Votre nom\';
 $ctrl->rows=15;
 $ctrl->cols=20;
-$this->addControl($ctrl);'
+$this->addControl($ctrl);',
+65=>'$ctrl= new jFormsControlinput(\'nom\');
+$ctrl->datasource->addFacet(\'maxLength\',3);
+$ctrl->label=\'Votre nom\';
+$this->addControl($ctrl);',
 );
 
 
@@ -958,7 +965,13 @@ $js.="jForms.tForm.addControl( jForms.tControl);\n";',
 $js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
 $js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="jForms.tForm.addControl( jForms.tControl);\n";'
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+65=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.maxLength = 3;\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
     );
 
     function testPhpControl(){

@@ -142,6 +142,22 @@ class jFormsCompiler implements jISimpleCompiler {
             }
             $source[]='$ctrl->defaultValue=\''.str_replace('\'','\\\'',(string)$control['defaultvalue']) .'\';';
         }
+        // minlength support
+        if(isset($control['minlength'])){
+            if($controltype != 'textarea' && 
+                ($controltype != 'input'|| ($controltype == 'input' && isset($control['type']) && $control['type'] != 'string'))){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('minlength',$controltype,$this->sourceFile));
+            }
+            $source[]='$ctrl->datasource->addFacet(\'minLength\','.intval((string)$control['minlength']).');';
+        }
+        // maxlength support
+        if(isset($control['maxlength'])){
+            if($controltype != 'textarea' && 
+                ($controltype != 'input'|| ($controltype == 'input' && isset($control['type']) && $control['type'] != 'string'))){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('maxlength',$controltype,$this->sourceFile));
+            }
+            $source[]='$ctrl->datasource->addFacet(\'maxLength\','.intval((string)$control['maxlength']).');';
+        }
 
         // label support
         if(!isset($control->label)){
