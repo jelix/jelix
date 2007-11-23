@@ -4,8 +4,10 @@
 * @subpackage forms
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud
+* @contributor Uriel Corfa Emotic SARL
 * @copyright   2006-2007 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud
+* @copyright   2007 Emotic SARL
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -255,6 +257,13 @@ class jFormsCompiler implements jISimpleCompiler {
                     if($controltype == 'submit'){
                         $source[]='$ctrl->standalone=false;';
                     }
+                }elseif(isset($control['dsclass'])){
+                    $dsclass = (string)$control['dsclass'];
+                    $class = new jSelectorClass($dsclass);
+                    $source[]='jClasses::inc(\''.$dsclass.'\');';
+                    $source[]='$datasource = new '.$class->className.'($this->id());';
+                    $source[]='if ($datasource instanceof jIFormDatasource){$ctrl->datasource=$datasource;}';
+                    $source[]='else{$ctrl->datasource=new jFormStaticDatasource();}';
                 }elseif(isset($control->item)){
                     if($controltype == 'submit'){
                         $source[]='$ctrl->standalone=false;';

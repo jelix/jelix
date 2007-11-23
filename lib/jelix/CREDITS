@@ -27,6 +27,9 @@ Vincent Bonnard
 Cedric
  - bug fix in jFile::read
 
+Uriel Corfa
+ - Support of class datasources in jForms (#323)
+
 Antoine Detante
  - support of persistant authentification in jAuth and auth plugin (#229)
 
