@@ -439,7 +439,12 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$js.="jForms.tControl.required = true;\n";';
             if($hasConfirm) $source[]='$js.="jForms.tControl2.required = true;\n";';
         }
-
+        if(isset($control['maxlength'])){
+            $source[]='$js.="jForms.tControl.maxLength = '.intval($control['maxlength']).';\n";';
+        }
+        if(isset($control['minlength'])){
+            $source[]='$js.="jForms.tControl.minLength = '.intval($control['minlength']).';\n";';
+        }
         if(isset($control->help)){
             if(isset($control->help['locale'])){
                 $help='str_replace("\'","\\\'",jLocale::get(\''.(string)$control->help['locale'].'\'))';
