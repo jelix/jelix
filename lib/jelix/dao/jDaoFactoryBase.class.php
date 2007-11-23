@@ -4,8 +4,10 @@
  * @subpackage  dao
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
+ * @contributor Julien Issler
  * @copyright   2005-2007 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
+ * @copyright   2007 Julien Issler
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -80,6 +82,12 @@ abstract class jDaoFactoryBase  {
      */
     function  __construct($conn){
         $this->_conn = $conn;
+        
+        if($this->_conn->hasTablePrefix()){
+            foreach($this->_tables as $table_name=>$table){
+                $this->_tables[$table_name]['realname'] = $this->_conn->prefixTable($table['realname']);
+            }
+        }
     }
 
     /**
@@ -125,6 +133,7 @@ abstract class jDaoFactoryBase  {
         $rs->setFetchMode(8,$this->_DaoRecordClassName);
         return $rs;
     }
+
     /**
      * return the number of all records
      * @return int the count
@@ -201,7 +210,6 @@ abstract class jDaoFactoryBase  {
      */
     abstract public function update ($record);
 
-
     /**
      * return all record corresponding to the conditions stored into the
      * jDaoConditions object.
@@ -271,7 +279,6 @@ abstract class jDaoFactoryBase  {
         }
         return $result;
     }
-
 
     /**
      * create a WHERE clause with conditions on primary keys with given value. This method

@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  db
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Julien Issler
 * @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2007 Julien Issler
 *
 * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
 * However only few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -81,7 +82,6 @@ abstract class jDbConnection {
         return $result;
     }
 
-
     /**
     * Launch a SQL Query with limit parameter (so only a subset of a result)
     * @param   string   $queryString   the SQL query
@@ -117,6 +117,30 @@ abstract class jDbConnection {
            return (is_null ($text) ? 'NULL' : "'".$this->_quote($text)."'");
         else
            return "'".$this->_quote ($text)."'";
+    }
+
+    /**
+      * Prefix the given table with the prefix specified in the connection's profile
+      * If there's no prefix for the connection's profile, return the table's name unchanged.
+      *
+      * @param string $table the table's name
+      * @return string the prefixed table's name
+      * @author Julien Issler
+      **/
+    public function prefixTable($table_name){
+        if(!isset($this->profil['table_prefix']))
+            return $table_name;
+        return $this->profil['table_prefix'].$table_name;
+    }
+
+    /**
+      * Check if the current connection has a table prefix set
+      *
+      * @return boolean
+      * @author Julien Issler
+      **/
+    public function hasTablePrefix(){
+        return isset($this->profil['table_prefix']);
     }
 
     /**
@@ -184,7 +208,6 @@ abstract class jDbConnection {
      * @notimplemented
      */
     public function setAttribute($id, $value){ }
-
 
     /**
      *

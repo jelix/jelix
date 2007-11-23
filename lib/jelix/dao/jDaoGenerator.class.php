@@ -5,7 +5,9 @@
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Bastien Jaillot (bug fix)
+* @contributor Julien Issler
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright  2007 Julien Issler
 * This class was get originally from the Copix project (CopixDAOGeneratorV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -43,8 +45,8 @@ class jDaoGenerator {
    */
    protected $_DaoClassName = null;
 
-
    protected $propertiesListForInsert = 'PrimaryTable';
+
    protected $aliasWord = ' AS ';
 
    /**
@@ -73,7 +75,7 @@ class jDaoGenerator {
       $sqlSelectClause   = $this->_getSelectClause();
       $pkFields          = $this->_getPropertiesBy('PkFields');
       $pTableRealName    = $tables[$this->_datasParser->getPrimaryTable()]['realname'];
-      $pTableRealNameEsc = $this->_encloseName($pTableRealName);
+      $pTableRealNameEsc = $this->_encloseName('\'.$this->_conn->prefixTable(\''.$pTableRealName.'\').\'');
       $pkai              = $this->_getAutoIncrementPKField();
       $sqlPkCondition    = $this->_buildSimpleConditions($pkFields);
       if($sqlPkCondition != ''){
@@ -108,7 +110,7 @@ class jDaoGenerator {
       $src[] = '   protected $_tables = '.var_export($tables, true).';';
       $src[] = '   protected $_primaryTable = \''.$this->_datasParser->getPrimaryTable().'\';';
       $src[] = '   protected $_selectClause=\''.$sqlSelectClause.'\';';
-      $src[] = '   protected $_fromClause=\''.$sqlFromClause.'\';';
+      $src[] = '   protected $_fromClause;';
       $src[] = '   protected $_whereClause=\''.$sqlWhereClause.'\';';
       $src[] = '   protected $_DaoRecordClassName=\''.$this->_DaoRecordClassName.'\';';
       $src[] = '   protected $_daoSelector = \''.jDaoCompiler::$daoId.'\';';
@@ -125,6 +127,12 @@ class jDaoGenerator {
       $src[] = '   public static $_properties = '.var_export($properties, true).';';
       $src[] = '   public static $_pkFields = array('.$this->_writeFieldNamesWith ($start = '\'', $end='\'', $beetween = ',', $pkFields).');';
 
+      $src[] = ' ';
+      $src[] = 'public function __construct($conn){';
+      $src[] = '   parent::__construct($conn);';
+      $src[] = '   $this->_fromClause = \''.$sqlFromClause.'\';';
+      $src[] = '}';
+
       // cannot put this methods directly into jDaoBase because of a php bug on static methods/properties
       $src[] = '   public function getProperties() { return self::$_properties; }';
       $src[] = '   public function getPrimaryKeyNames() { return self::$_pkFields;}';
@@ -135,13 +143,11 @@ class jDaoGenerator {
       $src[] = ' return \''.$sqlPkCondition.'\';';
       $src[] = '}';
 
-
       $src[] = ' ';
       $src[] = 'protected function _getPkWhereClauseForNonSelect($pk){';
       $src[] = '   extract($pk);';
       $src[] = '   return \' where '.$this->_buildSimpleConditions($pkFields,'',false).'\';';
       $src[] = '}';
-
 
       //----- Insert method
       $src[] = 'public function insert ($record){';
@@ -403,7 +409,6 @@ class jDaoGenerator {
       return implode("\n",$src);
    }
 
-
     /**
     *  create FROM clause for all SELECT query
     * @return array  FROM string and WHERE string
@@ -411,6 +416,11 @@ class jDaoGenerator {
     final protected function _getFromClause(){
 
       $tables = $this->_datasParser->getTables();
+
+      foreach($tables as $table_name => $table){
+         $tables[$table_name]['realname'] = '\'.$this->_conn->prefixTable(\''.$table['realname'].'\').\'';
+      }
+
       $primarytable = $tables[$this->_datasParser->getPrimaryTable()];
       $ptrealname = $this->_encloseName($primarytable['realname']);
       $ptname = $this->_encloseName($primarytable['name']);
@@ -885,7 +895,6 @@ class jDaoGenerator {
     protected function genUpdateAutoIncrementPK($pkai, $pTableRealName) {
         return '       $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
     }
-
 
 }
 ?>
