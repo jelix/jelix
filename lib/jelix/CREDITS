@@ -68,9 +68,12 @@ Yannick Le Guédart (aka Torgan)
  - Contribution on jResponseRss and jResponseAtom
  - jdb driver for Intuition
 
-Aubanel MONNIER
+Aubanel Monnier
  - jResponseLatexToPdf and jtpl plugins for latex
  - patch for anchors support in jResponseRedirect
+
+Dominique Papin
+ - added j_themepath variable in jtpl (#346)
 
 Laurent Raufaste (aka analogue)
  - patch on postgresql driver (#123)
