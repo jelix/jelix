@@ -1,5 +1,4 @@
 <?php
-
 /**
 * check a jelix installation
 *
@@ -15,7 +14,6 @@
 /**
  * interface for objects which output result of the install check
  * @since 1.0b2
- * @experimental
  */
 interface jIInstallCheckReporter {
     function start();
@@ -29,7 +27,6 @@ interface jIInstallCheckReporter {
 /**
  * message provider for jInstallCheck
  * @since 1.0b2
- * @experimental
  */
 class jInstallMessageProvider {
     protected $currentLang;
@@ -43,6 +40,7 @@ class jInstallMessageProvider {
             'number.warning'=>' avertissement.',
             'number.notices'=>' remarques.',
             'number.notice'=>' remarque.',
+            'build.not.found'=>'Le fichier BUILD de jelix est introuvable',
             'conclusion.error'=>'Vous devez corriger l\'erreur pour faire fonctionner correctement votre application.',
             'conclusion.errors'=>'Vous devez corriger les erreurs pour faire fonctionner correctement votre application.',
             'conclusion.warning'=>'Votre application peut à priori fonctionner, mais il est préférable de corriger l\'avertissement pour être sûr.',
@@ -59,12 +57,21 @@ class jInstallMessageProvider {
             'extension.tokenizer'=>'L\'extension tokenizer n\'est pas installée',
             'extension.iconv'=>'L\'extension iconv n\'est pas installée',
             'extensions.required.ok'=>'Toutes les extensions obligatoires sont installées',
+            'extensions.filter'=>'Cette édition de Jelix a besoin de l\'extension filter',
+            'extensions.json'=>'Cette édition de Jelix a besoin de l\'extension json',
+            'extensions.xmlrpc'=>'Cette édition de Jelix a besoin de l\'extension xmlrpc',
+            'extensions.jelix'=>'Cette édition de Jelix a besoin de l\'extension jelix',
+            'extensions.apc'=>'Cette édition de Jelix a besoin de l\'extension apc',
+            'extensions.eaccelerator'=>'Cette édition de Jelix a besoin de l\'extension eaccelerator',
             'path.core'=>'Le fichier init.php  de jelix ou le fichier application.ini.php de votre application n\'est pas chargé',
             'path.temp'=>'Le repertoire temporaire n\'est pas accessible en écriture ou alors JELIX_APP_TEMP_PATH n\'est pas configurée comme il faut',
             'path.log'=>'Le repertoire log n\'est pas accessible en écriture ou alors JELIX_APP_LOG_PATH n\'est pas configurée comme il faut',
             'path.var'=>'JELIX_APP_VAR_PATH n\'est pas configuré correctement : ce répertoire n\'existe pas',
             'path.config'=>'JELIX_APP_CONFIG_PATH n\'est pas configuré correctement : ce répertoire n\'existe pas',
             'path.www'=>'JELIX_APP_WWW_PATH n\'est pas configuré correctement : ce répertoire n\'existe pas',
+            'php.bad.version'=>'Mauvaise version de PHP',
+            'php.version.current'=>'Version courante :',
+            'php.version.required'=>'Cette édition de Jelix nécessite au moins PHP ',
             'too.critical.error'=>'Trop d\'erreurs critiques sont apparues. Corrigez les.',
             'config.file'=>'La variable $config_file n\'existe pas ou le fichier qu\'elle indique n\'existe pas',
             'paths.ok'=>'Les répertoires temp, log, var, config et www sont ok',
@@ -86,6 +93,7 @@ class jInstallMessageProvider {
             'number.warning'=>' warning.',
             'number.notices'=>' notices.',
             'number.notice'=>' notice.',
+            'build.not.found'=>'BUILD jelix file is not found',
             'conclusion.error'=>'You must fix the error in order to run your application correctly.',
             'conclusion.errors'=>'You must fix errors in order to run your application correctly.',
             'conclusion.warning'=>'Your application may run without problems, but it is recommanded to fix the warning.',
@@ -102,12 +110,21 @@ class jInstallMessageProvider {
             'extension.tokenizer'=>'tokenizer extension is not installed',
             'extension.iconv'=>'iconv extension is not installed',
             'extensions.required.ok'=>'All needed PHP extensions are installed',
+            'extensions.filter'=>'This Jelix edition require the xmlrpc extension',
+            'extensions.json'=>'This Jelix edition require the json extension',
+            'extensions.xmlrpc'=>'This Jelix edition require the xmlrpc extension',
+            'extensions.jelix'=>'This Jelix edition require the jelix extension',
+            'extensions.apc'=>'This Jelix edition require the apc extension',
+            'extensions.eaccelerator'=>'This Jelix edition require the eaccelerator extension',
             'path.core'=>'jelix init.php file or application.ini.php file is not loaded',
             'path.temp'=>'Temp directory is not writable or JELIX_APP_TEMP_PATH is not correctly set !',
             'path.log'=>'log directory is not writable or JELIX_APP_LOG_PATH is not correctly set!',
             'path.var'=>'JELIX_APP_VAR_PATH is not correctly set: var directory  doesn\'t exist!',
             'path.config'=>'JELIX_APP_CONFIG_PATH is not correctly set: config directory  doesn\'t exist!',
             'path.www'=>'JELIX_APP_WWW_PATH is not correctly set: www directory  doesn\'t exist!',
+            'php.bad.version'=>'Bad PHP version',
+            'php.version.current'=>'Current version:',
+            'php.version.required'=>'This edition of Jelix require at least PHP ',
             'too.critical.error'=>'Too much critical errors. Fix them.',
             'config.file'=>'$config_file variable does not exist or doesn\'t contain a correct application config file name',
             'paths.ok'=>'temp, log, var, config and www directory are ok',
@@ -158,7 +175,6 @@ class jInstallMessageProvider {
 /**
  * check an installation of a jelix application
  * @since 1.0b2
- * @experimental
  */
 class jInstallCheck {
 
@@ -178,6 +194,8 @@ class jInstallCheck {
     public $nbWarning = 0;
     public $nbNotice = 0;
 
+    protected $buildProperties;
+
     function __construct ($reporter){
         $this->reporter = $reporter;
         $this->messages = new jInstallMessageProvider();
@@ -190,11 +208,13 @@ class jInstallCheck {
         $this->nbNotice = 0;
         $this->reporter->start();
         try {
-            $this->checkPhpExtensions();
             $this->checkAppPaths();
+            $this->loadBuildFile();
+            $this->checkPhpExtensions();
             $this->checkPhpSettings();
         }catch(Exception $e){
-            $this->error($this->messages.get('cannot.continue').$e->getMessage());
+            $this->reporter->showError($this->messages->get('cannot.continue').$e->getMessage());
+            $this->nbError ++;
         }
         $this->reporter->end($this);
     }
@@ -209,6 +229,10 @@ class jInstallCheck {
             $this->reporter->showOk($this->messages->get($msg));
         $this->nbOk ++;
     }
+    /**
+     * generate a warning
+     * @param string $msg  the key of the message to display
+     */
     protected function warning($msg){
         if($this->reporter)
             $this->reporter->showWarning($this->messages->get($msg));
@@ -220,11 +244,15 @@ class jInstallCheck {
         $this->nbNotice ++;
     }
 
-
-
     function checkPhpExtensions(){
         $ok=true;
-
+        if(!version_compare($this->buildProperties['PHP_VERSION_TARGET'], phpversion(), '<=')){
+            $this->error('php.bad.version');
+            $notice = $this->messages->get('php.version.required').$this->buildProperties['PHP_VERSION_TARGET'];
+            $notice.= '. '.$this->messages->get('php.version.current').phpversion();
+            $this->reporter->showNotice($notice);
+            $ok=false;
+        }
         if(!class_exists('DOMDocument',false)){
             $this->error('extension.dom');
             $ok=false;
@@ -246,6 +274,30 @@ class jInstallCheck {
                 $this->error('extension.'.$name);
                 $ok=false;
             }
+        }
+        if($this->buildProperties['ENABLE_PHP_FILTER'] == '1' && !extension_loaded ('filter')) {
+            $this->error('extension.filter');
+            $ok=false;
+        }
+        if($this->buildProperties['ENABLE_PHP_JSON'] == '1' && !extension_loaded ('json')) {
+            $this->error('extension.json');
+            $ok=false;
+        }
+        if($this->buildProperties['ENABLE_PHP_XMLRPC'] == '1' && !extension_loaded ('xmlrpc')) {
+            $this->error('extension.xmlrpc');
+            $ok=false;
+        }
+        if($this->buildProperties['ENABLE_PHP_JELIX'] == '1' && !extension_loaded ('jelix')) {
+            $this->error('extension.jelix');
+            $ok=false;
+        }
+        if($this->buildProperties['WITH_BYTECODE_CACHE'] == 'apc' && !extension_loaded ('apc')) {
+            $this->error('extension.apc');
+            $ok=false;
+        }
+        if($this->buildProperties['WITH_BYTECODE_CACHE'] == 'eaccelerator' && !extension_loaded ('eaccelerator')) {
+            $this->error('extension.eaccelerator');
+            $ok=false;
         }
 
         if($ok)
@@ -294,7 +346,14 @@ class jInstallCheck {
         return $ok;
     }
 
-
+    function loadBuildFile() {
+        if (!file_exists(JELIX_LIB_PATH.'BUILD')){
+            throw new Exception($this->messages->get('build.not.found'));
+        } else {
+            $this->buildProperties = parse_ini_file(JELIX_LIB_PATH.'BUILD');
+        }
+        
+    }
 
     function checkPhpSettings(){
         $ok = true;
@@ -332,38 +391,5 @@ class jInstallCheck {
         }
         return $ok;
     }
-
-
-/*
-
-Verifier que l'install est en adéquation avec les paramètres du fichier build :
-PHP_VERSION_TARGET
-ENABLE_PHP_FILTER
-ENABLE_PHP_JSON
-ENABLE_PHP_XMLRPC
-ENABLE_PHP_JELIX
-
-->existence des modules optionnels
-    filter
-    json
-    xmlrpc
-    jelix
-
-existence des fichiers de configuration dans JELIX_APP_CONFIG_PATH
-    dbprofils.php
-
-test connection à une base pour tout les profils
-
-Dans la conf :
-    verification de tous les chemins de modules
-    verification de tous les chemins de plugins et plugins tpl
-    verifier que le plugin magicquotes est activé ou pas selon la valeur de magic_quotes
-
-Verification de l'existence de l'url /jelix/ (alias de jelix-www)
-
-*/
-
 }
-
-
 ?>
