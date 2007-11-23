@@ -34,7 +34,7 @@ Antoine Detante
  - support of persistant authentification in jAuth and auth plugin (#229)
 
 F. Fernandez
- - little improvement in jLog.
+ - little improvement in jLog.(#344)
 
 Mickaël Fradin (aka mike)
  - improvements in the jtpl plugin: formcontrols (#223)
