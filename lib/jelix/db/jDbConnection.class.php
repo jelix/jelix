@@ -140,7 +140,7 @@ abstract class jDbConnection {
       * @author Julien Issler
       **/
     public function hasTablePrefix(){
-        return isset($this->profil['table_prefix']);
+        return (isset($this->profil['table_prefix']) && $this->profil['table_prefix'] != '');
     }
 
     /**

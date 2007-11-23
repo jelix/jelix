@@ -176,5 +176,28 @@ class jDbPDOConnection extends PDO {
       return 0;
     }
 
+    /**
+      * Prefix the given table with the prefix specified in the connection's profile
+      * If there's no prefix for the connection's profile, return the table's name unchanged.
+      *
+      * @param string $table the table's name
+      * @return string the prefixed table's name
+      * @author Julien Issler
+      **/
+    public function prefixTable($table_name){
+        if(!isset($this->profil['table_prefix']))
+            return $table_name;
+        return $this->profil['table_prefix'].$table_name;
+    }
+
+    /**
+      * Check if the current connection has a table prefix set
+      *
+      * @return boolean
+      * @author Julien Issler
+      **/
+    public function hasTablePrefix(){
+        return (isset($this->profil['table_prefix']) && $this->profil['table_prefix']!='');
+    }
 }
 ?>

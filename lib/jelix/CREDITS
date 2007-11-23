@@ -49,6 +49,7 @@ Frédéric Guillot (aka fg)
 
 Julien Issler
  - updated JSON class (#231)
+ - table prefix support in jDb and jDao (#293)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
