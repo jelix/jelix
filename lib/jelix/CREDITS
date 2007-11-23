@@ -74,6 +74,7 @@ Aubanel Monnier
 
 Dominique Papin
  - added j_themepath variable in jtpl (#346)
+ - improved addCssLink usability for IE (#348)
 
 Laurent Raufaste (aka analogue)
  - patch on postgresql driver (#123)

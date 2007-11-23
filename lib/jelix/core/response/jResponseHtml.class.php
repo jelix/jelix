@@ -3,9 +3,9 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Laurent Jouanneau
-* @contributor Yann (description and keywords)
-* @copyright   2005-2007 Laurent Jouanneau, 2006 Yann
-*   few lines of code are copyrighted CopixTeam http://www.copix.org
+* @contributor Yann (description and keywords), Dominique Papin
+* @copyright   2005-2007 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
+*              few lines of code are copyrighted CopixTeam http://www.copix.org
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -271,11 +271,13 @@ class jResponseHtml extends jResponse {
      *
      * @param string $src the link
      * @param array $params additionnals attributes for the link tag
-     * @param boolean $forIE if true, the style sheet will be only for IE browser
+     * @param mixed $forIE if true, the style sheet will be only for IE browser. string values possible (ex:'lt IE 7')
      */
     final public function addCSSLink ($src, $params=array (), $forIE=false){
         if($forIE){
             if (!isset ($this->_CSSIELink[$src])){
+                if (!is_bool($forIE) && !empty($forIE))
+                    $params['_ieCondition'] = $forIE;
                 $this->_CSSIELink[$src] = $params;
             }
         }else{
@@ -373,18 +375,23 @@ class jResponseHtml extends jResponse {
         }
 
         if(count($this->_CSSIELink)){
-            echo '<!--[if IE]>';
             foreach ($this->_CSSIELink as $src=>$params){
+                // special params for conditions on IE versions
+                if (!isset($params['_ieCondition']))
+                  $params['_ieCondition'] = 'IE' ;
+                echo '<!--[if '.$params['_ieCondition'].' ]>';
                 //the extra params we may found in there.
                 $more = '';
                 foreach ($params as $param_name=>$param_value){
+                    if ($param_name=='_ieCondition')
+                      continue ;
                     $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
                 }
                 if(!isset($params['rel']))
                     $more .='rel="stylesheet" ';
                 echo  '<link type="text/css" href="',$src,'" ',$more,$this->_endTag;
+                echo '<![endif]-->';
             }
-            echo '<![endif]-->';
         }
 
         if($this->favicon != ''){

@@ -1,13 +1,12 @@
 <?php
 /**
-* @package    jelix
-* @subpackage jtpl_plugin
-* @version    $Id$
-* @author     Jouanneau Laurent
-* @contributor Yann (description and keywords)
-* @copyright  2005-2006 Jouanneau laurent
-* @link        http://www.jelix.org
-* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @package      jelix
+* @subpackage   jtpl_plugin
+* @author       Jouanneau Laurent
+* @contributor  Yann (description and keywords), Dominique Papin (ie7 support)
+* @copyright    2005-2006 Jouanneau laurent, 2007 Dominique Papin
+* @link         http://www.jelix.org
+* @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
@@ -15,7 +14,10 @@
  *
  * @see jResponseHtml
  * @param jTpl $tpl template engine
- * @param string $method indicates what you want to specify (possible values : js,css,bodyattr)
+ * @param string $method indicates what you want to specify
+ *       (possible values : js, css, jsie, cssie, cssie7, cssltie7, csstheme,
+ *       cssthemeie, cssthemeie7, cssthemeltie7, bodyattr, keywords,
+ *       description, others)
  * @param mixed $param parameter (a css style sheet for "css" for example)
  */
 function jtpl_meta_html_html($tpl, $method, $param)
@@ -38,8 +40,23 @@ function jtpl_meta_html_html($tpl, $method, $param)
         case 'cssie':
             $gJCoord->response->addCSSLink($param,array(),true);
             break;
+        case 'cssie7':
+            $gJCoord->response->addCSSLink($param,array(),'IE 7');
+            break;
+        case 'cssltie7':
+            $gJCoord->response->addCSSLink($param,array(),'lt IE 7');
+            break;
         case 'csstheme':
             $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param);
+            break;
+        case 'cssthemeie':
+            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,array(),true);
+            break;
+        case 'cssthemeie7':
+            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,array(),'IE 7');
+            break;
+        case 'cssthemeltie7':
+            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,array(),'lt IE 7');
             break;
         case 'bodyattr':
             if(is_array($param)){
