@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage utils
 * @author     Laurent Jouanneau
-* @contributor
-* @copyright  2006 Laurent Jouanneau
+* @contributor F. Fernandez
+* @copyright  2006 Laurent Jouanneau, 2007 F. Fernandez
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -46,6 +46,10 @@ class jLog {
           $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
       }
       $f = str_replace('%ip%', $_SERVER['REMOTE_ADDR'], $f);
+      $f = str_replace('%m%', date("m"), $f);
+      $f = str_replace('%Y%', date("Y"), $f);
+      $f = str_replace('%d%', date("d"), $f);
+      $f = str_replace('%H%', date("H"), $f);
       $sel = new jSelectorLog($f);
 
       $str = date ("Y-m-d H:i:s")."\t".$_SERVER['REMOTE_ADDR']."\t$type\t$message\n";
