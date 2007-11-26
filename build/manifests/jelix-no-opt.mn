@@ -22,3 +22,5 @@ cd lib/jelix/events
 cd lib/jelix/dao
   jDaoGenerator.class.php
   jDaoParser.class.php
+  jDaoProperty.class.php
+  jDaoMethod.class.php

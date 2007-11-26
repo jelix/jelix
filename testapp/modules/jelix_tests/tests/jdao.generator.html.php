@@ -124,6 +124,12 @@ class testSqliteDaoGenerator extends sqliteDaoBuilder {
 }
 
 
+class testDaoProperty {
+    public $datatype;
+    public $defaultValue=null;
+}
+
+
 class UTDao_generator extends jUnitTestCase {
     protected function getSimpleGenerator(){
         $doc ='<?xml version="1.0"?>
@@ -183,87 +189,151 @@ class UTDao_generator extends jUnitTestCase {
 
     function testPreparePHPExpr(){
         $generator=$this->getSimpleGenerator();
+        $prop = new testDaoProperty();
 
         // with no checknull
-        $result = $generator->GetPreparePHPExpr('$foo', 'int',false);
+        $prop->datatype='int';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, false);
         $this->assertEqualOrDiff('intval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'integer',false);
+        $prop->datatype='integer';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, false);
         $this->assertEqualOrDiff('intval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'autoincrement',false);
+        $prop->datatype='autoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, false);
         $this->assertEqualOrDiff('intval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'string',false);
+        $prop->datatype='string';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, false);
         $this->assertEqualOrDiff('$this->_conn->quote($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'double',false);
+        $prop->datatype='double';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, false);
         $this->assertEqualOrDiff('doubleval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'float',false);
+        $prop->datatype='float';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, false);
         $this->assertEqualOrDiff('doubleval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'numeric',false);
+        $prop->datatype='numeric';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, false);
         $this->assertEqualOrDiff('(is_numeric ($foo) ? $foo : intval($foo))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'bigautoincrement',false);
+        $prop->datatype='bigautoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, false);
         $this->assertEqualOrDiff('(is_numeric ($foo) ? $foo : intval($foo))',$result);
 
         // with checknull 
-        $result = $generator->GetPreparePHPExpr('$foo', 'integer',true);
+        $prop->datatype='integer';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true);
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : intval($foo))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'autoincrement',true);
+        $prop->datatype='autoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true);
         $this->assertEqualOrDiff('intval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'string',true);
+        $prop->datatype='string';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true);
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : $this->_conn->quote($foo,false))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'double',true);
+        $prop->datatype='double';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true);
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : doubleval($foo))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'float',true);
+        $prop->datatype='float';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true);
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : doubleval($foo))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'numeric',true);
+        $prop->datatype='numeric';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true);
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : (is_numeric ($foo) ? $foo : intval($foo)))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'bigautoincrement',true);
+        $prop->datatype='bigautoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true);
         $this->assertEqualOrDiff('(is_numeric ($foo) ? $foo : intval($foo))',$result);
 
         // with checknull and operator =
-        $result = $generator->GetPreparePHPExpr('$foo', 'integer',true,'=');
+        $prop->datatype='integer';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.intval($foo))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'autoincrement',true,'=');
+        $prop->datatype='autoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
         $this->assertEqualOrDiff('\'=\'.intval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'string',true,'=');
+        $prop->datatype='string';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.$this->_conn->quote($foo,false))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'double',true,'=');
+        $prop->datatype='double';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.doubleval($foo))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'float',true,'=');
+        $prop->datatype='float';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.doubleval($foo))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'numeric',true,'=');
+        $prop->datatype='numeric';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.(is_numeric ($foo) ? $foo : intval($foo)))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'bigautoincrement',true,'=');
+        $prop->datatype='bigautoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
         $this->assertEqualOrDiff('\'=\'.(is_numeric ($foo) ? $foo : intval($foo))',$result);
 
+        // with checknull with default value and operator =
+        /*$prop->defaultValue=34;
+        $prop->datatype='integer';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : ($foo === \'\'?\'=\'.34:\'=\'.intval($foo)))',$result);
+        $prop->datatype='autoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
+        $this->assertEqualOrDiff('\'=\'.intval($foo)',$result);
+        $prop->datatype='string';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.$this->_conn->quote($foo,false))',$result);
+        $prop->defaultValue=34.6;
+        $prop->datatype='double';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : ($foo === \'\'?\'=\'.34.6:\'=\'.doubleval($foo)))',$result);
+        $prop->defaultValue=34.6;
+        $prop->datatype='float';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : ($foo === \'\'?\'=\'.34.6:\'=\'.doubleval($foo)))',$result);
+        $prop->datatype='numeric';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.(is_numeric ($foo) ? $foo : intval($foo)))',$result);
+        $prop->datatype='bigautoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
+        $this->assertEqualOrDiff('\'=\'.(is_numeric ($foo) ? $foo : intval($foo))',$result);
+        $prop->defaultValue = null;*/
+
         // with checknull and operator <>
-        $result = $generator->GetPreparePHPExpr('$foo', 'integer',true,'<>');
+        $prop->datatype='integer';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \'<>\'.intval($foo))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'autoincrement',true,'<>');
+        $prop->datatype='autoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<>');
         $this->assertEqualOrDiff('\'<>\'.intval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'string',true,'<>');
+        $prop->datatype='string';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \'<>\'.$this->_conn->quote($foo,false))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'double',true,'<>');
+        $prop->datatype='double';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \'<>\'.doubleval($foo))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'float',true,'<>');
+        $prop->datatype='float';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \'<>\'.doubleval($foo))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'numeric',true,'<>');
+        $prop->datatype='numeric';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \'<>\'.(is_numeric ($foo) ? $foo : intval($foo)))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'bigautoincrement',true,'<>');
+        $prop->datatype='bigautoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<>');
         $this->assertEqualOrDiff('\'<>\'.(is_numeric ($foo) ? $foo : intval($foo))',$result);
 
         // with checknull and other operator <=
-        $result = $generator->GetPreparePHPExpr('$foo', 'integer',true,'<=');
+        $prop->datatype='integer';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<=');
         $this->assertEqualOrDiff('\'<=\'.intval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'autoincrement',true,'<=');
+        $prop->datatype='autoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<=');
         $this->assertEqualOrDiff('\'<=\'.intval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'string',true,'<=');
+        $prop->datatype='string';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<=');
         $this->assertEqualOrDiff('\'<=\'.$this->_conn->quote($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'double',true,'<=');
+        $prop->datatype='double';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<=');
         $this->assertEqualOrDiff('\'<=\'.doubleval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'float',true,'<=');
+        $prop->datatype='float';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<=');
         $this->assertEqualOrDiff('\'<=\'.doubleval($foo)',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'numeric',true,'<=');
+        $prop->datatype='numeric';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<=');
         $this->assertEqualOrDiff('\'<=\'.(is_numeric ($foo) ? $foo : intval($foo))',$result);
-        $result = $generator->GetPreparePHPExpr('$foo', 'bigautoincrement',true,'<=');
+        $prop->datatype='bigautoincrement';
+        $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'<=');
         $this->assertEqualOrDiff('\'<=\'.(is_numeric ($foo) ? $foo : intval($foo))',$result);
     }
 

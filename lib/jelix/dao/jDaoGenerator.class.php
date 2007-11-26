@@ -302,7 +302,7 @@ class jDaoGenerator {
                   foreach($method->getValues() as $propname=>$value){
                      if($value[1]){
                         foreach($method->getParameters() as $param){
-                           $value[0] = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $updatefields[$propname]->datatype,false).'.\'',$value[0]);
+                           $value[0] = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $updatefields[$propname],false).'.\'',$value[0]);
                         }
                         $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '. $value[0];
                      }else{
@@ -640,7 +640,7 @@ class jDaoGenerator {
             }
 
             $var = '$'.$fieldPrefix.$field->name;
-            $value = $this->_preparePHPExpr($var,$field->datatype, !$field->requiredInConditions,'=' );
+            $value = $this->_preparePHPExpr($var,$field, !$field->requiredInConditions,'=' );
 
             $r .= $condition.'\'.'.$value.'.\'';
         }
@@ -657,7 +657,7 @@ class jDaoGenerator {
                 continue;
             }
 
-            $value = $this->_preparePHPExpr('$'.$prefixfield.$fieldName, $field->datatype, true);
+            $value = $this->_preparePHPExpr('$'.$prefixfield.$fieldName, $field, true);
 
             if($pattern != ''){
                 $values[$field->name] = sprintf($field->$pattern,'\'.'.$value.'.\'');
@@ -745,7 +745,7 @@ class jDaoGenerator {
 
             if($cond['operator'] == 'IN' || $cond['operator'] == 'NOT IN'){
                if($cond['isExpr']){
-                  $phpvalue= $this->_preparePHPExpr('$__e', $prop->datatype, false);
+                  $phpvalue= $this->_preparePHPExpr('$__e', $prop, false);
                   if(strpos($phpvalue,'$this->_conn->quote')===0){
                      $phpvalue = str_replace('$this->_conn->quote(',"'\''.str_replace('\\'','\\\\\\'',",$phpvalue).".'\''";
                      $phpvalue = str_replace('\\','\\\\', $phpvalue);
@@ -768,10 +768,10 @@ class jDaoGenerator {
                   // - in case 1: ($foo === null ? 'IS NULL' : '='.$this->_conn->quote($foo))
                   // - in case 2: '= concat('.($foo === null ? 'NULL' : $this->_conn->quote($foo)).' ,\'bla\')'
                   if(strpos($value, '$') === 0){
-                     $value = '\'.'.$this->_preparePHPExpr($value, $prop->datatype, !$prop->requiredInConditions,$cond['operator']).'.\'';
+                     $value = '\'.'.$this->_preparePHPExpr($value, $prop, !$prop->requiredInConditions,$cond['operator']).'.\'';
                   }else{
                         foreach($params as $param){
-                            $value = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $prop->datatype, !$prop->requiredInConditions).'.\'',$value);
+                            $value = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $prop, !$prop->requiredInConditions).'.\'',$value);
                         }
                         $value= $cond['operator'].' '.$value;
                   }
@@ -835,7 +835,7 @@ class jDaoGenerator {
       }
    }
 
-   protected function _preparePHPExpr($expr, $fieldType, $checknull=true, $forCondition=''){
+   protected function _preparePHPExpr($expr, $field, $checknull=true, $forCondition=''){
       $opnull=$opval='';
       if($checknull && $forCondition != ''){
         if($forCondition == '=')
@@ -848,7 +848,7 @@ class jDaoGenerator {
       if($forCondition!='')
         $forCondition = '\''.$forCondition.'\'.';
 
-      switch(strtolower($fieldType)){
+      switch(strtolower($field->datatype)){
          case 'int':
          case 'integer':
             if($checknull){
@@ -863,7 +863,7 @@ class jDaoGenerator {
          case 'double':
          case 'float':
             if($checknull){
-               $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'doubleval('.$expr.'))';
+                $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'doubleval('.$expr.'))';
             }else{
                $expr= $forCondition.'doubleval('.$expr.')';
             }

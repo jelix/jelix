@@ -118,7 +118,7 @@ abstract class jFormsBase {
                     }
                 }
             }
-            $this->_container->datas[$name]= $value;
+            $this->_container->datas[$name] = $value;
         }
     }
 
@@ -221,6 +221,9 @@ abstract class jFormsBase {
             if($daorec->$name == '' && !$prop[$name]['required']) {
                 // if no value and if the property is not required, we set null to it
                 $daorec->$name = null;
+            }else if($daorec->$name == '' && $prop[$name]['defaultValue'] !== null 
+                    && in_array($prop[$name]['datatype'], array('int','integer','double','float'))) {
+                $daorec->$name = $prop[$name]['defaultValue'];
             }else if($ctrl->datatype instanceof jDatatypeLocaleDateTime && $prop[$name]['datatype'] == 'datetime') {
                 $dt = new jDateTime();
                 $dt->setFromString($daorec->$name, jDateTime::LANG_DTFORMAT);
