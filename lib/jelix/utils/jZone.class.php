@@ -92,17 +92,6 @@ class jZone {
     }
 
     /**
-    * old method. Alias of "get" method. Use "get" method instead.
-    * @param string $name zone selector
-    * @param array $params parameters for the zone
-    * @return string the generated content of the zone
-    * @deprecated
-    */
-    public static function processZone ($name, $params=array ()){
-        return self::_callZone($name, 'getContent', $params);
-    }
-
-    /**
     * get the content of a zone
     * @param string $name zone selector
     * @param array $params parameters for the zone
@@ -114,16 +103,6 @@ class jZone {
     }
 
     /**
-    * old method name. Use "clear" method instead.
-    * @param string $name zone selector
-    * @param array $params parameters for the zone
-    * @deprecated
-    */
-    public static function clearZone ($name, $params=array ()){
-        return self::_callZone($name, 'clearCache', $params);
-    }
-
-    /**
     * clear a specific cache of a zone
     * @param string $name zone selector
     * @param array $params parameters for the zone
@@ -131,15 +110,6 @@ class jZone {
     */
     public static function clear ($name, $params=array ()){
         return self::_callZone($name, 'clearCache', $params);
-    }
-
-    /**
-    * old method name. use clearAll instead.
-    * @param string $name zone selector
-    * @deprecated
-    */
-    public static function clearAllZone($name=''){
-        self::clearAll($name);
     }
 
     /**

@@ -369,17 +369,6 @@ class jAuth {
     }
 
     /**
-     * deprecated method. see CreateUserObject
-     * @param string $login the user login
-     * @param string $password the user password
-     * @return object the returned object depends on the driver
-     * @deprecated
-     */
-    public static function createUser($login,$password){
-        return self::createUserObject($login,$password);
-    }
-
-    /**
      * generate a password with random letter or number
      * @param int $length the length of the generated password
      * @return string the generated password

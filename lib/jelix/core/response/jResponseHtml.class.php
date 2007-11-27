@@ -299,14 +299,6 @@ class jResponseHtml extends jResponse {
     }
 
     /**
-     * @deprecated
-     * @see $addHeadContent
-     */
-    final public function addOthers ($content){
-        $this->_Others[] = $content;
-    }
-
-    /**
      * add additional content into the document head
      * @param string $content
      * @since 1.0b1

@@ -211,16 +211,6 @@ class jUrl extends jUrlBase {
         return $url;
     }
 
-    /**
-    * construct query part of the url
-    * @param boolean $forxml if the output must be HTML/XML compliant
-    * @return string
-    * @deprecated
-    */
-    public function collapseParams ($forxml = false) {
-        return http_build_query($this->params, '', ($forxml?'&amp;':'&'));
-    }
-
     //============================== static helper methods
 
     /**
@@ -290,18 +280,6 @@ class jUrl extends jUrlBase {
     static function parse($scriptNamePath, $pathinfo, $params ){
          return jUrl::getEngine()->parse($scriptNamePath,$pathinfo, $params);
     }
-
-    /**
-    * gets the module/action parameters from the destination string.
-    * @param string $dest the destination to parse
-    * @return assocative array where keys are module and action
-    * @deprecated
-    */
-    static function getAction ($actionSelector){
-        $sel = new jSelectorAct($actionSelector,true);
-        return array('module'=>$sel->module, 'action'=>$sel->resource, 'request'=>$sel->request);
-    }
-
 
     /**
      * escape and simplier a string to be a part of an url path
