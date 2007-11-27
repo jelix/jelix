@@ -8,6 +8,10 @@
    <input ref="price" type="decimal" defaultvalue="0">
       <label>Price</label>
    </input>
+   <checkbox ref="promo">
+      <label>Promotion</label>
+   </checkbox>
+
 
   <submit ref="valid">
     <label>Save</label>

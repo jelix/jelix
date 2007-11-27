@@ -125,6 +125,9 @@ class createformCommand extends JelixScriptCommand {
                 case 'text':
                     $tag='textarea';
                     break;
+                case 'boolean':
+                    $tag='checkbox';
+                    break;
             }
             if($datatype != '')
                 $attr.=' type="'.$datatype.'"';

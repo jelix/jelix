@@ -77,6 +77,8 @@ abstract class jDaoFactoryBase  {
     protected $_deleteByBeforeEvent = false;
     protected $_deleteByAfterEvent = false;
 
+    protected $trueValue = 1;
+    protected $falseValue = 0;
     /**
      * @param jDbConnection $conn the database connection
      */
@@ -412,6 +414,14 @@ abstract class jDaoFactoryBase  {
                     //not a numeric, nevermind, casting it
                     return $value === null ? 'NULL' : intval ($value);
                 }
+                break;
+            case 'boolean':
+                if($value === null)
+                   $value = 'NULL';
+                elseif ($value === true|| strtolower($value)=='true'|| $value =='1')
+                    $value =  $this->trueValue;
+                else
+                    $value =  $this->falseValue;
                 break;
             default:
                 $value = $this->_conn->quote ($value);

@@ -122,6 +122,10 @@ class createdaoCommand extends JelixScriptCommand {
                case 'time':
                   $type='time';
                   break;
+               case 'bool':
+               case 'boolean':
+                  $type='boolean';
+                  break;
                default:
                   $type='';
             }

@@ -5,7 +5,8 @@
 CREATE TABLE products (
     id integer NOT NULL,
     name character varying(150) NOT NULL,
-    price real DEFAULT 0
+    price real DEFAULT 0,
+    promo boolean NOT NULL
 );
 
 

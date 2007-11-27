@@ -149,14 +149,17 @@ abstract class jFormsBase {
         $dao = jDao::create($daoSelector, $dbProfil);
         $daorec = $dao->get($key);
         if(!$daorec) {
-            if(is_array($key)) $key = var_export($key,true);
-            throw new jExceptionForms('jelix~formserr.bad.formid.for.dao', array($daoSelector, $key, $this->_sel));
+            if(is_array($key))
+                $key = var_export($key,true);
+            throw new jExceptionForms('jelix~formserr.bad.formid.for.dao',
+                                      array($daoSelector, $key, $this->_sel));
         }
 
         $prop = $dao->getProperties();
         foreach($this->_controls as $name=>$ctrl){
             if(isset($prop[$name])) {
-                if($ctrl->datatype instanceof jDatatypeLocaleDateTime && $prop[$name]['datatype'] == 'datetime') {
+                if($ctrl->datatype instanceof jDatatypeLocaleDateTime
+                   && $prop[$name]['datatype'] == 'datetime') {
                     if($daorec->$name != '') {
                         $dt = new jDateTime();
                         $dt->setFromString($daorec->$name, jDateTime::DB_DTFORMAT);
@@ -164,7 +167,8 @@ abstract class jFormsBase {
                     } else {
                         $this->_container->datas[$name] ='';
                     }
-                }elseif($ctrl->datatype instanceof jDatatypeLocaleDate && $prop[$name]['datatype'] == 'date') {
+                }elseif($ctrl->datatype instanceof jDatatypeLocaleDate
+                        && $prop[$name]['datatype'] == 'date') {
                     if($daorec->$name != '') {
                         $dt = new jDateTime();
                         $dt->setFromString($daorec->$name, jDateTime::DB_DFORMAT);
@@ -172,6 +176,12 @@ abstract class jFormsBase {
                     } else {
                         $this->_container->datas[$name] ='';
                     }
+                }elseif($ctrl->type=='checkbox' && $prop[$name]['datatype'] == 'boolean') {
+                    if($daorec->$name == 'TRUE'||  $daorec->$name == 't'|| $daorec->$name == '1'||$daorec->$name == true){
+                        $this->_container->datas[$name] = $ctrl->valueOnCheck;
+                    }else {
+                        $this->_container->datas[$name] = $ctrl->valueOnUncheck;
+                    } 
                 }else{
                     $this->_container->datas[$name] = $daorec->$name;
                 }
@@ -222,13 +232,22 @@ abstract class jFormsBase {
                 // if no value and if the property is not required, we set null to it
                 $daorec->$name = null;
             }else if($daorec->$name == '' && $prop[$name]['defaultValue'] !== null 
-                    && in_array($prop[$name]['datatype'], array('int','integer','double','float'))) {
+                    && in_array($prop[$name]['datatype'],
+                                array('int','integer','double','float'))) {
                 $daorec->$name = $prop[$name]['defaultValue'];
-            }else if($ctrl->datatype instanceof jDatatypeLocaleDateTime && $prop[$name]['datatype'] == 'datetime') {
+                
+            }else if( $prop[$name]['datatype'] == 'boolean'){
+                $daorec->$name = ($daorec->$name == '1'|| $daorec->$name == 'true'
+                                  || $daorec->$name == 't');
+
+            }else if($ctrl->datatype instanceof jDatatypeLocaleDateTime
+                     && $prop[$name]['datatype'] == 'datetime') {
                 $dt = new jDateTime();
                 $dt->setFromString($daorec->$name, jDateTime::LANG_DTFORMAT);
                 $daorec->$name = $dt->toString(jDateTime::DB_DTFORMAT);
-            }elseif($ctrl->datatype instanceof jDatatypeLocaleDate && $prop[$name]['datatype'] == 'date') {
+                
+            }elseif($ctrl->datatype instanceof jDatatypeLocaleDate
+                    && $prop[$name]['datatype'] == 'date') {
                 $dt = new jDateTime();
                 $dt->setFromString($daorec->$name, jDateTime::LANG_DFORMAT);
                 $daorec->$name = $dt->toString(jDateTime::DB_DFORMAT);

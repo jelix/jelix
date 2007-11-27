@@ -83,8 +83,8 @@ class jDaoProperty {
     * constructor.
     */
     function __construct ($aParams, $def){
-        $needed = array('name', 'fieldname', 'table', 'datatype', 'required', 'minlength',
-        'maxlength', 'regexp', 'sequence', 'default');
+        $needed = array('name', 'fieldname', 'table', 'datatype', 'required',
+                        'minlength', 'maxlength', 'regexp', 'sequence', 'default');
 
         $params = $def->getAttr($aParams, $needed);
 
@@ -117,12 +117,18 @@ class jDaoProperty {
         }
         $params['datatype']=trim(strtolower($params['datatype']));
 
-        if (!in_array ($params['datatype'], array ('autoincrement', 'bigautoincrement', 'int', 'datetime', 'time',
-                                    'integer', 'varchar', 'string', 'text', 'varchardate', 'date', 'numeric', 'double', 'float'))){
-           throw new jDaoXmlException ('wrong.attr', array($params['datatype'], $this->fieldName,'property'));
+        if (!in_array ($params['datatype'],
+                       array ('autoincrement', 'bigautoincrement', 'int',
+                              'datetime', 'time', 'integer', 'varchar', 'string',
+                              'text', 'varchardate', 'date', 'numeric', 'double',
+                              'float', 'boolean'))){
+           throw new jDaoXmlException ('wrong.attr', array($params['datatype'],
+                                                           $this->fieldName,
+                                                           'property'));
         }
         $this->datatype = strtolower($params['datatype']);
-        $this->needsQuotes = in_array ($params['datatype'], array ('string', 'varchar', 'text', 'date', 'datetime', 'time'));
+        $this->needsQuotes = in_array ($params['datatype'],
+                array ('string', 'varchar', 'text', 'date', 'datetime', 'time'));
 
         $this->isPK = in_array($this->fieldName, $tables[$this->table]['pk']);
         if(!$this->isPK){
@@ -150,6 +156,10 @@ class jDaoProperty {
               case 'double':
               case 'float':
                 $this->defaultValue = doubleval($params['default']);
+                break;
+              case 'boolean':
+                $v = $params['default'];
+                $this->defaultValue = ($v =='1'|| $v=='t'|| strtolower($v) =='true');
                 break;
               default:
                 $this->defaultValue = $params['default'];

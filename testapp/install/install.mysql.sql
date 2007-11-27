@@ -145,7 +145,8 @@ PRIMARY KEY ( `key` , `lang` )
 CREATE TABLE `products` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `name` VARCHAR( 150 ) NOT NULL ,
-`price` FLOAT   default '0'
+`price` FLOAT   default '0',
+`promo` BOOL NOT NULL 
 ) TYPE = MYISAM ;
 
 

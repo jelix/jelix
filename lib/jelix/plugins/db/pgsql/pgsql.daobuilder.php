@@ -17,7 +17,11 @@
 class pgsqlDaoBuilder extends jDaoGenerator {
 
     protected $propertiesListForInsert = 'PrimaryFieldsExcludeAutoIncrement';
-
+    
+    protected $trueValue = 'TRUE';
+    
+    protected $falseValue = 'FALSE';
+    
     function __construct($factoryClassName, $recordClassName, $daoDefinition){
         parent::__construct($factoryClassName, $recordClassName, $daoDefinition);
 

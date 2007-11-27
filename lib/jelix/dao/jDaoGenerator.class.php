@@ -49,6 +49,9 @@ class jDaoGenerator {
 
    protected $aliasWord = ' AS ';
 
+   protected $trueValue = 1;
+   protected $falseValue = 0;
+
    /**
    * constructor
    * @param jDaoParser $daoDefinition
@@ -114,6 +117,11 @@ class jDaoGenerator {
       $src[] = '   protected $_whereClause=\''.$sqlWhereClause.'\';';
       $src[] = '   protected $_DaoRecordClassName=\''.$this->_DaoRecordClassName.'\';';
       $src[] = '   protected $_daoSelector = \''.jDaoCompiler::$daoId.'\';';
+
+      if($this->trueValue != 1){
+         $src[]='   protected $trueValue ='.var_export($this->trueValue,true).';';
+         $src[]='   protected $falseValue ='.var_export($this->falseValue,true).';';
+      } 
 
       if($this->_datasParser->hasEvent('deletebefore') || $this->_datasParser->hasEvent('delete'))
          $src[] = '   protected $_deleteBeforeEvent = true;';
@@ -826,6 +834,9 @@ class jDaoGenerator {
             else
                 return intval($value);
             break;
+         case 'boolean':
+            return $this->getBooleanValue($value);
+            break;
          default:
             if(strpos($value,"'") !== false){
                 return '\'.$this->_conn->quote(\''.str_replace('\'','\\\'',$value).'\').\'';
@@ -878,6 +889,13 @@ class jDaoGenerator {
          case 'bigautoincrement':
             $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
             break;
+         case 'boolean':
+            if($checknull){
+               $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'('.$expr.'?\''.$this->trueValue.'\':\''.$this->falseValue.'\'))';
+            }else{
+               $expr= $forCondition.'('.$expr.'?\''.$this->trueValue.'\':\''.$this->falseValue.'\')';
+            }
+            break;
          default:
             if($checknull){
                $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_conn->quote('.$expr.',false))';
@@ -895,6 +913,11 @@ class jDaoGenerator {
     protected function genUpdateAutoIncrementPK($pkai, $pTableRealName) {
         return '       $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
     }
+    
+    protected function getBooleanValue($value){
+        return (strtolower($value)=='true'|| $value =='1'|| $value=='t'?$this->trueValue:$this->falseValue);
+    } 
+      
 
 }
 ?>
