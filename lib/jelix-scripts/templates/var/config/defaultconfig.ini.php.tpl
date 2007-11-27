@@ -106,7 +106,10 @@ default=messages.log
 
 
 [mailer]
-; type d'envoi de mail : "mail" (mail()), "sendmail" (call sendmail), or "smtp" (send directly to a smtp)
+webmasterEmail = root@localhost
+webmasterName =
+
+; how to send mail : "mail" (mail()), "sendmail" (call sendmail), or "smtp" (send directly to a smtp)
 mailerType = mail
 ; Sets the hostname to use in Message-Id and Received headers
 ; and as default HELO string. If empty, the value returned

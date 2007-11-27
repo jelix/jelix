@@ -63,7 +63,7 @@ class jMailer
      * Sets the From name of the message.
      * @var string
      */
-    public $FromName           = "Root User";
+    public $FromName           = "";
 
     /**
      * Sets the Sender email (Return-Path) of the message.  If not empty,
@@ -233,6 +233,10 @@ class jMailer
         $this->Username = $gJConfig->mailer['smtpUsername'];
         $this->Password = $gJConfig->mailer['smtpPassword'];
         $this->Timeout = $gJConfig->mailer['smtpTimeout'];
+        if($gJConfig->mailer['webmasterEmail'] != '') {
+            $this->From = $gJConfig->mailer['webmasterEmail'];
+        }
+        $this->FromName = $gJConfig->mailer['webmasterName'];
     }
 
 
