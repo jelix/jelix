@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage controllers
 * @author     Laurent Jouanneau
-* @contributor
+* @contributor Bastien Jaillot
 * @copyright  2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -251,7 +251,7 @@ class jControllerDaoCrud extends jController {
             $id = $form->saveToDao($this->dao, null, $this->dbProfil);
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
-            $this->_afterCreate($form, $id);
+            $this->_afterCreate($form, $id, $rep);
             jForms::destroy($this->form);
             $rep->params['id'] = $id;
             return $rep;
@@ -266,8 +266,9 @@ class jControllerDaoCrud extends jController {
      * a record
      * @param jFormsBase $form the form object
      * @param mixed $id the new id of the inserted record
+     * @param jHtmlResponse $resp the response
      */
-    protected function _afterCreate($form, $id) {
+    protected function _afterCreate($form, $id, $resp) {
 
     }
 
@@ -350,8 +351,8 @@ class jControllerDaoCrud extends jController {
         if($form->check() && $this->_checkDatas($form, true)){
             $id = $form->saveToDao($this->dao, null, $this->dbProfil);
             $form->saveAllFiles($this->uploadsDirectory);
-            $this->_afterUpdate($form, $id);
             $rep->action = $this->_getAction('view');
+            $this->_afterUpdate($form, $id, $rep);
             jForms::destroy($this->form, $id);
         } else {
             $rep->action = $this->_getAction('editupdate');
@@ -365,8 +366,9 @@ class jControllerDaoCrud extends jController {
      * a record
      * @param jFormsBase $form the form object
      * @param mixed $id the new id of the updated record
+     * @param jHtmlResponse $resp the response
      */
-    protected function _afterUpdate($form, $id) {
+    protected function _afterUpdate($form, $id, $resp) {
 
     }
 
@@ -414,12 +416,12 @@ class jControllerDaoCrud extends jController {
      */
     function delete(){
         $id = $this->param('id');
-        if( $id !== null && $this->_delete($id) ){
+        $rep = $this->getResponse('redirect');
+        $rep->action = $this->_getAction('index');
+        if( $id !== null && $this->_delete($id, $rep) ){
             $dao = jDao::get($this->dao, $this->dbProfil);
             $dao->delete($id);
         }
-        $rep = $this->getResponse('redirect');
-        $rep->action = $this->_getAction('index');
         return $rep;
     }
 
@@ -427,8 +429,9 @@ class jControllerDaoCrud extends jController {
      * overload this method if you want to do additionnal things before the deletion of a record
      * @param mixed $id the new id of the record
      * @return boolean true if the record can be deleted
+     * @param jHtmlResponse $resp the response
      */
-    protected function _delete($id) {
+    protected function _delete($id, $resp) {
         return true;
     }
 

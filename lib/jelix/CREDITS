@@ -56,6 +56,7 @@ Julien Issler
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
+ - little improvement in the jControllerDaoCrud API (#330)
 
 Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
