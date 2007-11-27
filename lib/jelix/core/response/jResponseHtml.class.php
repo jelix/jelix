@@ -175,9 +175,31 @@ class jResponseHtml extends jResponse {
            $this->body->display($this->bodyTpl);
 
         if($this->hasErrors()){
-            echo '<div id="jelixerror" style="position:absolute;left:0px;top:0px;border:3px solid red; background-color:#f39999;color:black;">';
-            echo $this->getFormatedErrorMsg();
-            echo '<p><a href="#" onclick="document.getElementById(\'jelixerror\').style.display=\'none\';return false;">fermer</a></p></div>';
+            if($GLOBALS['gJConfig']->error_handling['showInFirebug']){
+                echo '<script type="text/javascript">if(console){';
+                foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+                    switch ($e[0]) {
+                      case 'warning':
+                        echo 'console.warn("[warning ';
+                        break;
+                      case 'notice':
+                        echo 'console.info("[notice ';
+                        break;
+                      case 'strict':
+                        echo 'console.info("[strict ';
+                        break;
+                      case 'error':
+                        echo 'console.error("[error ';
+                        break;
+                    }
+                    echo $e[1].'] '.str_replace('"','\"',$e[2]),' (',$e[3],' ',$e[4],')");';
+                }
+                echo '}else{alert("there are some errors, you should activate Firebug to see them");}</script>';
+            }else{
+                echo '<div id="jelixerror" style="position:absolute;left:0px;top:0px;border:3px solid red; background-color:#f39999;color:black;">';
+                echo $this->getFormatedErrorMsg();
+                echo '<p><a href="#" onclick="document.getElementById(\'jelixerror\').style.display=\'none\';return false;">fermer</a></p></div>';
+            }
         }
         echo implode("\n",$this->_bodyBottom);
         echo '</body></html>';
@@ -223,8 +245,7 @@ class jResponseHtml extends jResponse {
     protected function getFormatedErrorMsg(){
         $errors='';
         foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
-            // FIXME : Pourquoi utiliser htmlentities() ?
-           $errors .=  '<p style="margin:0;"><b>['.$e[0].' '.$e[1].']</b> <span style="color:#FF0000">'.htmlentities($e[2], ENT_NOQUOTES, $this->_charset)."</span> \t".$e[3]." \t".$e[4]."</p>\n";
+           $errors .=  '<p style="margin:0;"><b>['.$e[0].' '.$e[1].']</b> <span style="color:#FF0000">'.htmlspecialchars($e[2], ENT_NOQUOTES, $this->_charset)."</span> \t".$e[3]." \t".$e[4]."</p>\n";
         }
         return $errors;
     }
