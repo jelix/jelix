@@ -3,9 +3,9 @@
 * @package     jelix
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
-* @contributor Mathaud Loic (version standalone)
+* @contributor Mathaud Loic (version standalone), Dominique Papin
 * @copyright   2005-2007 Laurent Jouanneau
-* @copyright   2006 Mathaud Loic
+* @copyright   2006 Mathaud Loic, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -50,7 +50,7 @@ class jTplCompiler
     protected $_allowedInForeach;
     protected $_excludedInVar = array(';','=');
 
-    protected $_allowedConstants = array('TRUE','FALSE','NULL', 'M_1_PI', 'M_2_PI', 'M_2_SQRTPI', 'M_E', 
+    protected $_allowedConstants = array('TRUE','FALSE','NULL', 'M_1_PI', 'M_2_PI', 'M_2_SQRTPI', 'M_E',
         'M_LN10', 'M_LN2', 'M_LOG10E', 'M_LOG2E', 'M_PI','M_PI_2','M_PI_4','M_SQRT1_2','M_SQRT2');
 
     private $_pluginPath=array();
@@ -192,6 +192,9 @@ class jTplCompiler
         $tplcontent = preg_replace('/\?>\n?<\?php/', '', $tplcontent);
         $tplcontent = preg_replace('/<\?php\\s+\?>/', '', $tplcontent);
 
+        if(count($this->_blockStack))
+            $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
+
         return $tplcontent;
     }
 
@@ -290,7 +293,7 @@ class jTplCompiler
                 array_push($this->_blockStack,'if');
                 break;
             case 'else':
-                if (end($this->_blockStack) !='if') {
+                if (substr(end($this->_blockStack),0,2) !='if') {
                     $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
                 }else
                     $res = 'else:';
@@ -522,7 +525,7 @@ class jTplCompiler
      * try to find a plugin
      * @param string $type type of plugin (function, modifier...)
      * @param string $name the plugin name
-     * @return array|boolean an array containing the path of the plugin 
+     * @return array|boolean an array containing the path of the plugin
      *                      and the name of the plugin function, or false if not found
      */
     protected function _getPlugin($type, $name){

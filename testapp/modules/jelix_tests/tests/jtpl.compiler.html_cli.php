@@ -108,7 +108,11 @@ function toto() {
 
 3=>array(
         '<p>ok {ifuserconnected} connected {/ifuserconnected}</p>',
-        '<p>ok <?php  if(jAuth::isConnected()){?> connected <?php  } ?></p>',
+        '<p>ok <?php  if(jAuth::isConnected()):?> connected <?php  endif; ?></p>',
+        ),
+4=>array(
+        '<p>ok {ifuserconnected} connected {else} not connected {/ifuserconnected}</p>',
+        '<p>ok <?php  if(jAuth::isConnected()):?> connected <?php else:?> not connected <?php  endif; ?></p>',
         ),
 
 );
@@ -122,6 +126,30 @@ function toto() {
                 $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
+            }catch(Exception $e){
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+            }
+        }
+    }
+    
+    protected $tplerrors = array(
+         0=>array('{if}',
+                  'jelix~errors.tpl.tag.block.end.missing',array('if',null) ),
+         1=>array('{ifuserconnected} {if}  {/if} ',
+                  'jelix~errors.tpl.tag.block.end.missing',array('ifuserconnected',null) ),
+         );
+    
+    function testCompileErrors() {
+        $compil = new testJtplContentCompiler();
+        $compil->trusted = true;
+
+        foreach($this->tplerrors as $k=>$t){
+            try{
+                $compil->compileContent2($t[0]);
+                $this->fail("Test '$k', exception didn't happen");
+            }catch(jException $e){
+                $this->assertEqual($e->getLocaleKey(), $t[1]);
+                $this->assertEqualOrDiff($e->getLocaleParameters(), $t[2]);
             }catch(Exception $e){
                 $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
             }
