@@ -112,12 +112,54 @@ class jResponseXul extends jResponse {
         echo implode('',$this->_bodyTop);
         if($this->bodyTpl != '')
             $this->body->display($this->bodyTpl);
+
         if($this->hasErrors()){
-            echo '<vbox id="jelixerror" style="border:3px solid red; background-color:#f39999;color:black;">';
-            echo $this->getFormatedErrorMsg();
-            echo '</vbox>';
+            if($GLOBALS['gJConfig']->error_handling['showInFirebug']){
+                echo '<script type="text/javascript">if(console){';
+                foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+                    switch ($e[0]) {
+                      case 'warning':
+                        echo 'console.warn("[warning ';
+                        break;
+                      case 'notice':
+                        echo 'console.info("[notice ';
+                        break;
+                      case 'strict':
+                        echo 'console.info("[strict ';
+                        break;
+                      case 'error':
+                        echo 'console.error("[error ';
+                        break;
+                    }
+                    echo $e[1].'] '.str_replace('"','\"',$e[2]),' (',$e[3],' ',$e[4],')");';
+                }
+                echo '}else{alert("there are some errors, you should activate Firebug to see them");}</script>';
+            }else{
+                echo '<vbox id="jelixerror" style="border:3px solid red; background-color:#f39999;color:black;">';
+                echo $this->getFormatedErrorMsg();
+                echo '</vbox>';
+            }
         }
+
         echo implode('',$this->_bodyBottom);
+
+        if(count($GLOBALS['gJCoord']->logMessages)) {
+            if(count($GLOBALS['gJCoord']->logMessages['response'])) {
+                echo '<vbox id="jelixlog">';
+                foreach($GLOBALS['gJCoord']->logMessages['response'] as $m) {
+                    echo '<description>',htmlspecialchars($m),'</description>';
+                }
+                echo '</vbox>';
+            }
+            if(count($GLOBALS['gJCoord']->logMessages['firebug'])) {
+                echo '<script type="text/javascript">if(console){';
+                foreach($GLOBALS['gJCoord']->logMessages['firebug'] as $m) {
+                    echo 'console.debug("',str_replace('"','\"',$m),'");';
+                }
+                echo '}else{alert("there are log messages, you should activate Firebug to see them");}</script>';
+            }
+        }
+
         echo '</',$this->_root,'>';
         return true;
     }

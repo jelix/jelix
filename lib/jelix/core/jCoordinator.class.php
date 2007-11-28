@@ -63,6 +63,12 @@ class jCoordinator {
     public $errorMessages=array();
 
     /**
+     * List of all log messages
+     * @var array
+     */
+    public $logMessages=array();
+
+    /**
      * @param  string $configFile name of the ini file to configure the framework
      */
     function __construct ($configFile) {
@@ -139,6 +145,15 @@ class jCoordinator {
             return $this->initDefaultResponseOfRequest();
         }
         return !$this->response->acceptSeveralErrors();
+    }
+
+    /**
+     * Store a log message. Responses object should take care
+     * of the logMessages properties to display them.
+     * @param  string $message error message
+     */
+    public function addLogMsg($message, $type='default'){
+        $this->logMessages[$type][] = $message;
     }
 
     /**

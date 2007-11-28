@@ -202,6 +202,22 @@ class jResponseHtml extends jResponse {
             }
         }
         echo implode("\n",$this->_bodyBottom);
+        if(count($GLOBALS['gJCoord']->logMessages)) {
+            if(count($GLOBALS['gJCoord']->logMessages['response'])) {
+                echo '<ul id="jelixlog">';
+                foreach($GLOBALS['gJCoord']->logMessages['response'] as $m) {
+                    echo '<li>',htmlspecialchars($m),'</li>';
+                }
+                echo '</ul>';
+            }
+            if(count($GLOBALS['gJCoord']->logMessages['firebug'])) {
+                echo '<script type="text/javascript">if(console){';
+                foreach($GLOBALS['gJCoord']->logMessages['firebug'] as $m) {
+                    echo 'console.debug("',str_replace('"','\"',$m),'");';
+                }
+                echo '}else{alert("there are log messages, you should activate Firebug to see them");}</script>';
+            }
+        }
         echo '</body></html>';
         return true;
     }

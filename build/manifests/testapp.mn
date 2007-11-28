@@ -131,6 +131,7 @@ cd testapp/modules/jelix_tests/tests/
   jtpl.expressions_parsing.html_cli.php
   utils.jdatatype.html_cli.php
   utils.jfilter.html_cli.php
+  utils.jlog.html_cli.php
 
 cd testapp/var
   .htaccess
