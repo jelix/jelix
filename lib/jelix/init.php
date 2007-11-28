@@ -11,10 +11,11 @@
 * @author   Jouanneau Laurent
 #if ENABLE_OPTIMIZED_SOURCE
 * @author Croes Gerald
-* @contributor Loic Mathaud
+* @contributor Loic Mathaud, Julien Issler
 * @copyright 2005-2007 Jouanneau laurent
 * @copyright 2001-2005 CopixTeam
 * @copyright 2006 Mathaud Loic
+* @copyright 2007 Julien Issler
 * @link http://www.copix.org
 #else
 * @contributor Loic Mathaud
@@ -135,13 +136,13 @@ $gJConfig = null;
  */
 $gLibPath=array('Db'=>JELIX_LIB_DB_PATH, 'Dao'=>JELIX_LIB_DAO_PATH,
  'Forms'=>JELIX_LIB_FORMS_PATH, 'Event'=>JELIX_LIB_EVENTS_PATH,
- 'Tpl'=>JELIX_LIB_TPL_PATH, 'Acl'=>JELIX_LIB_ACL_PATH, 'Controller'=>JELIX_LIB_CTRL_PATH);
+ 'Tpl'=>JELIX_LIB_TPL_PATH, 'Acl'=>JELIX_LIB_ACL_PATH, 'Controller'=>JELIX_LIB_CTRL_PATH, 'Auth'=>JELIX_LIB_AUTH_PATH);
 
 /**
  * __autoload function used by php to try to load an unknown class
  */
 function __autoload($class){
-   if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms).*$/', $class, $m)){
+   if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms|Auth).*$/', $class, $m)){
        $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
    }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
        // pour les dao stockés en sessions notament

@@ -3,8 +3,9 @@
 * @package    jelix
 * @subpackage auth
 * @author     Laurent Jouanneau
-* @contributor Frédéric Guillot, Antoine Detante
+* @contributor Frédéric Guillot, Antoine Detante, Julien Issler
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
+* @copyright  2007 Julien Issler
 *
 * This classes were get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -336,7 +337,7 @@ class jAuth {
 
         $config = self::_getConfig();
         jEvent::notify ('AuthLogout', array('login'=>$_SESSION[$config['session_name']]->login));
-        $_SESSION[$config['session_name']] = new jDummyAuthUser();
+        $_SESSION[$config['session_name']] = new jAuthDummyUser();
         jAcl::clearCache();
         if(isset($config['persistant_enable']) && $config['persistant_enable']){
             if(!isset($config['persistant_cookie_name']))
@@ -363,7 +364,7 @@ class jAuth {
     public static function getUserSession (){
         $config = self::_getConfig();
         if (! isset ($_SESSION[$config['session_name']])){
-            $_SESSION[$config['session_name']] = new jDummyAuthUser();
+            $_SESSION[$config['session_name']] = new jAuthDummyUser();
         }
         return $_SESSION[$config['session_name']];
     }

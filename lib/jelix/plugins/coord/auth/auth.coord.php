@@ -3,8 +3,9 @@
 * @package    jelix
 * @subpackage coord_plugin
 * @author     Croes Gérald
-* @contributor  Laurent Jouanneau, Frédéric Guillot, Antoine Detante
+* @contributor  Laurent Jouanneau, Frédéric Guillot, Antoine Detante, Julien Issler
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
+* @copyright  2007 Julien Issler
 *
 * This class was get originally from an experimental branch of the Copix project
 * (PluginAuth, Copix 2.3dev20050901, http://www.copix.org)
@@ -15,7 +16,7 @@
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 require_once(JELIX_LIB_AUTH_PATH.'jAuth.class.php');
-require_once(JELIX_LIB_AUTH_PATH.'jAuthUser.class.php');
+require_once(JELIX_LIB_AUTH_PATH.'jAuthDummyUser.class.php');
 
 /**
 * @package    jelix
@@ -73,7 +74,7 @@ class AuthCoordPlugin implements jICoordPlugin {
         //Creating the user's object if needed
         if (! isset ($_SESSION[$this->config['session_name']])){
             $notLogged = true;
-            $_SESSION[$this->config['session_name']] = new jDummyAuthUser();
+            $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
         }else{
             $notLogged = ! jAuth::isConnected();
         }

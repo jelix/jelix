@@ -9,17 +9,14 @@
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+require_once(JELIX_LIB_AUTH_PATH.'jAuthUser.class.php');
+
 /**
- * default object to represent a user
- *
- * this is only a data container. In fact, auth drivers can provide
- * other object to embed user data.
+ * internal use
  * @package    jelix
  * @subpackage auth
  */
-abstract class jAuthUser {
-    public $login = '';
-    public $email ='';
+class jAuthDummyUser extends  jAuthUser {
 }
 
 
