@@ -72,7 +72,7 @@ function jtpl_meta_html_html($tpl, $method, $param)
             $gJCoord->response->addMetaDescription($param);
             break;
         case 'others':
-            $gJCoord->response->addContent($param);
+            $gJCoord->response->addHeadContent($param);
             break;
     }
 }
