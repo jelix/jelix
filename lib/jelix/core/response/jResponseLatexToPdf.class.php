@@ -9,8 +9,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-define ('PDF_LATEX_RESPONSE_CACHE', JELIX_APP_TEMP_PATH.'responseLatexToPdf/');
-
 /**
 * pdf response, generated from a latex content
 * @package  jelix
@@ -56,11 +54,14 @@ class jResponseLatexToPdf extends jResponse {
      */
     public $pdflatexPath='pdflatex';
 
+    public $cachePath= '';
+
     /**
      * constructor;
      * setup the template engine
      */
     function __construct (){
+        $this->cachePath = JELIX_APP_TEMP_PATH.'responseLatexToPdf/';
         $this->body = new jTpl();
         parent::__construct();
     }
@@ -117,8 +118,8 @@ class jResponseLatexToPdf extends jResponse {
 
         $fbase='cache-'.md5($data);
         
-        $texFile=PDF_LATEX_RESPONSE_CACHE.$fbase.'.tex';
-        $pdfFile=PDF_LATEX_RESPONSE_CACHE.$fbase.'.pdf';
+        $texFile=$this->cachePath.$fbase.'.tex';
+        $pdfFile=$this->cachePath.$fbase.'.pdf';
 
         if (! file_exists($pdfFile)){
             // Naïve cache: we have an md5 on the content of the tex file. If the pdf 
@@ -128,7 +129,7 @@ class jResponseLatexToPdf extends jResponse {
             $output=array();
             $retVal=1;	
                 exec('
-            TEXMFOUTPUT='.PDF_LATEX_RESPONSE_CACHE.' && export TEXMFOUTPUT && TEXINPUTS=:'.PDF_LATEX_RESPONSE_CACHE.' && export TEXINPUTS &&
+            TEXMFOUTPUT='.$this->cachePath.' && export TEXMFOUTPUT && TEXINPUTS=:'.$this->cachePath.' && export TEXINPUTS &&
             '.$this->pdflatexPath.' --interaction=batchmode '.$texFile, $output, $retVal);
             if ($retVal==0){
                 $outputStr=implode('<br />',$output);
@@ -158,7 +159,7 @@ class jResponseLatexToPdf extends jResponse {
      * Clears the cache directory
      */
     public function clearCache(){
-        jFile::removeDir(PDF_LATEX_RESPONSE_CACHE, false);
+        jFile::removeDir($this->cachePath, false);
     }
 
     /**

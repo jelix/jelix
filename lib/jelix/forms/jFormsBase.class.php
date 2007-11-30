@@ -9,6 +9,9 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+require(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
+require(JELIX_LIB_FORMS_PATH.'jFormsDatasource.class.php');
+require(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 
 /**
  * exception for jforms

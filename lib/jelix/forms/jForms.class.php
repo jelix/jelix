@@ -9,16 +9,7 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-/**
- *
- */
-define('JFORMS_ID_PARAM','__forms_id__');
-define('JFORMS_DEFAULT_ID',0);
-
 require_once(JELIX_LIB_FORMS_PATH.'jFormsBase.class.php');
-require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
-require_once(JELIX_LIB_FORMS_PATH.'jFormsDatasource.class.php');
-require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 
 /**
  * static class to manage and call a form
@@ -29,6 +20,13 @@ require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
  * @subpackage  forms
  */
 class jForms {
+
+    const ID_PARAM = '__forms_id__';
+
+    const DEFAULT_ID = 0;
+
+    const ERRDATA_INVALID = 1;
+    const ERRDATA_REQUIRED = 2;
 
     private function __construct(){ }
 
@@ -43,11 +41,12 @@ class jForms {
      * @param string $formId  the id of the new instance (an id of a record for example)
      * @return jFormBase the object representing the form
      */
-    public static function create($formSel , $formId=JFORMS_DEFAULT_ID){
+    public static function create($formSel , $formId=null){
         $sel = new jSelectorForm($formSel);
         jIncluder::inc($sel);
         $c = $sel->getClass();
-        if($formId === null) $formId=JFORMS_DEFAULT_ID;
+        if($formId === null)
+            $formId = self::DEFAULT_ID;
         $fid = is_array($formId) ? serialize($formId) : $formId;
         if(!isset($_SESSION['JFORMS'][$formSel][$fid])){
             $_SESSION['JFORMS'][$formSel][$fid]= new jFormsDataContainer($formSel, $formId);
@@ -65,9 +64,10 @@ class jForms {
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      * @return jFormBase the object representing the form. Return null if there isn't an existing form
      */
-    static public function get($formSel,$formId=JFORMS_DEFAULT_ID){
+    static public function get($formSel,$formId=null){
         global $gJCoord;
-        if($formId === null) $formId=JFORMS_DEFAULT_ID;
+        if($formId === null)
+            $formId= self::DEFAULT_ID;
         $fid = is_array($formId) ? serialize($formId) : $formId;
 
         if(!isset($_SESSION['JFORMS'][$formSel][$fid])){
@@ -91,7 +91,7 @@ class jForms {
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      * @return jFormBase the object representing the form. Return null if there isn't an existing form
      */
-    static public function fill($formSel,$formId=JFORMS_DEFAULT_ID){
+    static public function fill($formSel,$formId=null){
         $form = self::get($formSel,$formId);
         if($form)
             $form->initFromRequest();
@@ -106,13 +106,13 @@ class jForms {
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      */
-   static public function destroy($formSel,$formId=JFORMS_DEFAULT_ID){
-      global $gJCoord;
-      if($formId === null) $formId=JFORMS_DEFAULT_ID;
-      if(is_array($formId)) $formId = serialize($formId);
-      if(isset($_SESSION['JFORMS'][$formSel][$formId])){
-          unset($_SESSION['JFORMS'][$formSel][$formId]);
-      }
+   static public function destroy($formSel,$formId=null){
+        global $gJCoord;
+        if($formId === null)  $formId = self::DEFAULT_ID;
+        if(is_array($formId)) $formId = serialize($formId);
+        if(isset($_SESSION['JFORMS'][$formSel][$formId])){
+            unset($_SESSION['JFORMS'][$formSel][$formId]);
+        }
    }
 }
 

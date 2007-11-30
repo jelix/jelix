@@ -21,7 +21,7 @@
 /**
  *
  */
-require_once (JELIX_LIB_EVENTS_PATH . 'jEventListener.class.php');
+require(JELIX_LIB_EVENTS_PATH . 'jEventListener.class.php');
 #endif
 
 

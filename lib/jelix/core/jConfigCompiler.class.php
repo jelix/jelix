@@ -39,7 +39,7 @@ class jConfigCompiler {
             if( false === @jelix_read_ini(JELIX_APP_CONFIG_PATH.$configFile,$config))
                 die("Syntax error in the Jelix config file $configFile !");
         }
-        $config->isWindows = (substr(PHP_OS,0,3) == 'WIN');
+        $config->isWindows = (DIRECTORY_SEPARATOR == '\\');
         if(trim( $config->startAction) == '')
              $config->startAction = '_';
 
@@ -89,7 +89,7 @@ class jConfigCompiler {
                 die("Syntax error in the Jelix config file $configFile !");
             self::_mergeConfig($config, $userConfig);
         }
-        $config['isWindows'] = (substr(PHP_OS,0,3) == 'WIN');
+        $config['isWindows'] =  (DIRECTORY_SEPARATOR == '\\');
         if(trim( $config['startAction']) == '')
              $config['startAction'] = '_';
 

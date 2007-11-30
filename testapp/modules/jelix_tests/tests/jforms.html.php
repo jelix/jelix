@@ -22,7 +22,7 @@ class UTjforms extends jUnitTestCase {
         $this->form1Descriptor = '
 <object class="cForm_jelix_tests_Jx_product">
     <object method="getContainer()" class="jFormsDataContainer">
-        <integer property="formId" value="'.JFORMS_DEFAULT_ID.'" />
+        <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
         <string property="formSelector" value="product" />
         <array property="datas">
             <string key="name" value="" />
@@ -34,7 +34,7 @@ class UTjforms extends jUnitTestCase {
         <string key="name" value="" />
         <string key="price" value="" />
     </array>
-    <integer method="id()" value="'.JFORMS_DEFAULT_ID.'" />
+    <integer method="id()" value="'.jForms::DEFAULT_ID.'" />
     <array method="getControls()">
         <object key="name" class="jFormsControlInput">
             <string property="ref" value="name"/>
@@ -121,8 +121,8 @@ class UTjforms extends jUnitTestCase {
         $verif='
 <array>
      <array key="product">
-        <object key="'.JFORMS_DEFAULT_ID.'" class="jFormsDataContainer">
-            <integer property="formId" value="'.JFORMS_DEFAULT_ID.'" />
+        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
+            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="product" />
             <array property="datas">
                 <string key="name" value="" />
@@ -139,8 +139,8 @@ class UTjforms extends jUnitTestCase {
         $verif='
 <array>
      <array key="product">
-        <object key="'.JFORMS_DEFAULT_ID.'" class="jFormsDataContainer">
-            <integer property="formId" value="'.JFORMS_DEFAULT_ID.'" />
+        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
+            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="product" />
             <array property="datas">
                 <string key="name" value="" />
@@ -167,8 +167,8 @@ class UTjforms extends jUnitTestCase {
         $verif='
 <array>
      <array key="product">
-        <object key="'.JFORMS_DEFAULT_ID.'" class="jFormsDataContainer">
-            <integer property="formId" value="'.JFORMS_DEFAULT_ID.'" />
+        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
+            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="product" />
             <array property="datas">
                 <string key="name" value="" />
@@ -232,7 +232,7 @@ class UTjforms extends jUnitTestCase {
         $verif = '
 <object class="cForm_jelix_tests_Jx_product">
     <object method="getContainer()" class="jFormsDataContainer">
-        <integer property="formId" value="'.JFORMS_DEFAULT_ID.'" />
+        <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
         <string property="formSelector" value="product" />
         <array property="datas">
             <string key="name" value="phone" />
@@ -244,7 +244,7 @@ class UTjforms extends jUnitTestCase {
         <string key="name" value="phone" />
         <string key="price" value="45" />
     </array>
-    <integer method="id()" value="'.JFORMS_DEFAULT_ID.'" />
+    <integer method="id()" value="'.jForms::DEFAULT_ID.'" />
     <array method="getControls()">
         <object key="name" class="jFormsControlInput">
             <string property="ref" value="name"/>

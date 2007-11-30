@@ -13,7 +13,7 @@
 /**
 *
 */
-require_once (JELIX_LIB_UTILS_PATH    . 'jXmlRpc.class.php');
+require(JELIX_LIB_UTILS_PATH. 'jXmlRpc.class.php');
 
 
 /**

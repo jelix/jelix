@@ -255,7 +255,7 @@ class jCoordinator {
         if(!file_exists($ctrlpath)){
             throw new jException('jelix~errors.ad.controller.file.unknow',array($this->actionName,$ctrlpath));
         }
-        require_once($ctrlpath);
+        require($ctrlpath);
         $class = $selector->getClass();
         if(!class_exists($class,false)){
             throw new jException('jelix~errors.ad.controller.class.unknow',array($this->actionName,$class, $ctrlpath));

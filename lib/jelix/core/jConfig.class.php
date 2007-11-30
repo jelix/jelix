@@ -93,7 +93,7 @@ class jConfig {
             }
         }
         if($compil){
-            require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
+            require(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
             return jConfigCompiler::read($configFile);
         }else
             return $config;

@@ -13,11 +13,6 @@
 */
 
 /**
- *
- */
-require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
-
-/**
  * generates form class from an xml file describing the form
  * @package     jelix
  * @subpackage  forms

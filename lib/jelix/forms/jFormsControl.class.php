@@ -11,12 +11,6 @@
 */
 
 /**
- *
-*/
-define('JFORM_ERRDATA_INVALID',1);
-define('JFORM_ERRDATA_REQUIRED',2);
-
-/**
  * base class for all jforms control
  * @package     jelix
  * @subpackage  forms
@@ -46,9 +40,9 @@ abstract class jFormsControl {
     function check($value, $form){
         if($value == '') {
             if($this->required)
-                return JFORM_ERRDATA_REQUIRED;
+                return jForms::ERRDATA_REQUIRED;
         }elseif(!$this->datatype->check($value)){
-            return JFORM_ERRDATA_INVALID;
+            return jForms::ERRDATA_INVALID;
         }
         return null;
     }
@@ -111,20 +105,20 @@ class jFormsControlCheckboxes extends jFormsControlDatasource {
     function check($value, $form){
         if(is_array($value)){
             if(count($value) == 0 && $this->required){
-                return JFORM_ERRDATA_REQUIRED;
+                return jForms::ERRDATA_REQUIRED;
             }else{
                 foreach($value as $v){
                     if(!$this->datatype->check($v)){
-                        return JFORM_ERRDATA_INVALID;
+                        return jForms::ERRDATA_INVALID;
                     }
                 }
             }
         }else{
             if($value == ''){
                 if($this->required)
-                    return JFORM_ERRDATA_REQUIRED;
+                    return jForms::ERRDATA_REQUIRED;
             }else{
-                return JFORM_ERRDATA_INVALID;
+                return jForms::ERRDATA_INVALID;
             }
         }
         return null;
@@ -157,22 +151,22 @@ class jFormsControlListbox extends jFormsControlDatasource {
     function check($value, $form){
         if(is_array($value)){
             if(!$this->multiple){
-                return JFORM_ERRDATA_INVALID;
+                return jForms::ERRDATA_INVALID;
             }
             if(count($value) == 0 && $this->required){
-                return JFORM_ERRDATA_REQUIRED;
+                return jForms::ERRDATA_REQUIRED;
             }else{
                 foreach($value as $v){
                     if(!$this->datatype->check($v)){
-                        return JFORM_ERRDATA_INVALID;
+                        return jForms::ERRDATA_INVALID;
                     }
                 }
             }
         }else{
             if($value == '' && $this->required){
-                return JFORM_ERRDATA_REQUIRED;
+                return jForms::ERRDATA_REQUIRED;
             }elseif(!$this->datatype->check($value)){
-                return JFORM_ERRDATA_INVALID;
+                return jForms::ERRDATA_INVALID;
             }
         }
         return null;
@@ -220,7 +214,7 @@ class jFormsControlSecretConfirm extends jFormsControl {
     public $primarySecret='';
     function check($value, $form){
         if($value != $form->getData($this->primarySecret))
-            return JFORM_ERRDATA_INVALID;
+            return jForms::ERRDATA_INVALID;
         return null;
     }
 }
@@ -238,7 +232,7 @@ class jFormsControlCheckbox extends jFormsControl {
 
     function check($value, $form){
         if($value != $this->valueOnCheck && $value != $this->valueOnUncheck)
-            return JFORM_ERRDATA_INVALID;
+            return jForms::ERRDATA_INVALID;
         return null;
     }
 }
@@ -276,20 +270,20 @@ class jFormsControlUpload extends jFormsControl {
 
         if($this->fileInfo['error'] == UPLOAD_ERR_NO_FILE) {
             if($this->required)
-                return JFORM_ERRDATA_REQUIRED;
+                return jForms::ERRDATA_REQUIRED;
         }else{
             if($this->fileInfo['error'] != UPLOAD_ERR_OK || !is_uploaded_file($this->fileInfo['tmp_name']))
-                return JFORM_ERRDATA_INVALID;
+                return jForms::ERRDATA_INVALID;
 
             if($this->maxsize && $this->fileInfo['size'] > $this->maxsize)
-                return JFORM_ERRDATA_INVALID;
+                return jForms::ERRDATA_INVALID;
 
             if(count($this->mimetype)){
                 if($this->fileInfo['type']==''){
                     $this->fileInfo['type'] = mime_content_type($this->fileInfo['tmp_name']);
                 }
                 if(!in_array($this->fileInfo['type'], $this->mimetype))
-                    return JFORM_ERRDATA_INVALID;
+                    return jForms::ERRDATA_INVALID;
             }
         }
         return null;

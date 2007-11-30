@@ -133,13 +133,13 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             echo '<ul class="jforms-error-list">';
             $errRequired='';
             foreach($errors as $cname => $err){
-                if($err == JFORM_ERRDATA_REQUIRED) {
+                if($err == jForms::ERRDATA_REQUIRED) {
                     if($ctrls[$cname]->alertRequired){
                         echo '<li>', $ctrls[$cname]->alertRequired,'</li>';
                     }else{
                         echo '<li>', jLocale::get('jelix~formserr.js.err.required', $ctrls[$cname]->label),'</li>';
                     }
-                }elseif ($err != '' && $err != JFORM_ERRDATA_INVALID) {
+                }elseif ($err != '' && $err != jForms::ERRDATA_INVALID) {
                     echo '<li>', $err,'</li>';
                 }else{
                     if($ctrls[$cname]->alertInvalid){
