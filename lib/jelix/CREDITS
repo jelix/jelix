@@ -35,6 +35,7 @@ Antoine Detante
 
 F. Fernandez
  - little improvement in jLog.(#344)
+ - little improvement in formcontrols plugin (#353)
 
 Mickaël Fradin (aka mike)
  - improvements in the jtpl plugin: formcontrols (#223)
