@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage core
 * @author     Laurent Jouanneau
-* @contributor
-* @copyright  2005-2006 laurent Jouanneau
+* @contributor Sylvain de Vathaire
+* @copyright  2005-2007 laurent Jouanneau, 2007 Sylvain de Vathaire
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -51,9 +51,8 @@ function jExceptionHandler($exception){
     ));
 
     if(strpos($action , 'TRACE') !== false){
-        $arr = debug_backtrace();
+        $arr = $exception->getTrace();
         $messageLog.="\ttrace:";
-        array_shift($arr);
         foreach($arr as $k=>$t){
             $messageLog.="\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
             $messageLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');

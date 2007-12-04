@@ -1,7 +1,6 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-
 locale = "fr_FR"
 charset = "UTF-8"
 

@@ -185,3 +185,15 @@ driver = db
 
 [sessions]
 shared_session = off
+; Use alternative storage engines for sessions
+;
+; usage :
+;
+; storage = "files"
+; files_path = "app:var/sessions/"
+;
+; or
+;
+; storage = "dao"
+; dao_selector = "jelix~jsession"
+; dao_db_profile = ""
