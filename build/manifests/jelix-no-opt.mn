@@ -11,6 +11,7 @@ cd lib/jelix/core
   jResponse.class.php
 * jSelector.class.php
 * jUrl.class.php
+  jSession.class.php
 
 cd lib/jelix/db
   jDbConnection.class.php

@@ -19,7 +19,7 @@ dbProfils = dbprofils.ini.php
 
 theme = default
 use_error_handler = on
-shared_session = off
+
 
 [plugins]
 
@@ -181,3 +181,7 @@ smtpTimeout = 10
 
 [acl]
 driver = db
+
+
+[sessions]
+shared_session = off

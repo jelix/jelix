@@ -33,11 +33,12 @@ class jDaoMethod {
     private $_def = null;
     private $_procstock=null;
     private $_body=null;
+    private $_groupBy=null;
 
     function __construct ($method, $def){
         $this->_def = $def;
 
-        $params = $def->getAttr($method, array('name', 'type', 'call','distinct', 'eventbefore', 'eventafter'));
+        $params = $def->getAttr($method, array('name', 'type', 'call','distinct', 'eventbefore', 'eventafter', 'groupby'));
 
         if ($params['name']===null){
             throw new jDaoXmlException ('missing.attr', array('name', 'method'));
@@ -125,6 +126,20 @@ class jDaoMethod {
             }
         }
 
+        if(strlen($params['groupby'])){
+            if($this->type == 'select'){
+                $this->_groupBy = preg_split("/[\s,]+/", $params['groupby']);
+                $props = $this->_def->getProperties();
+                foreach($this->_groupBy as $p){
+                    if (!isset ($props[$p])) {
+                        throw new jDaoXmlException ('method.property.unknown', array($this->name, $p));
+                    }
+                }
+            }else{
+                throw new jDaoXmlException ('forbidden.attr.context', array('groupby', '<method name="'.$this->name.'"'));
+            }
+        }
+
         if (isset($method->limit)){
             if(isset($method->limit[1])){
                 throw new jDaoXmlException ('tag.duplicate', array('limit', $this->name));
@@ -144,6 +159,7 @@ class jDaoMethod {
     public function getValues (){ return $this->_values;}
     public function getProcStock (){ return $this->_procstock;}
     public function getBody (){ return $this->_body;}
+    public function getGroupBy() { return $this->_groupBy;}
 
     private function _parseConditions($conditions, $subcond=true){
         if (isset ($conditions['logic'])){

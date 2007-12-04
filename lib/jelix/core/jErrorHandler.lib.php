@@ -120,6 +120,7 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     if(strpos($action , 'EXIT') !== false){
         if($doecho && $gJCoord->response)
             $gJCoord->response->outputErrors();
+        jSession::end();
         exit;
     }
 }

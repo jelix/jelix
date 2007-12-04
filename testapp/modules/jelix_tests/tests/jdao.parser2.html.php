@@ -294,6 +294,71 @@ class UTDao_parser2 extends jUnitTestCase {
             <array m="getValues ()">array()</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
+            <null m="getGroupBy ()"/>
+        </object>'),
+
+        array('<?xml version="1.0"?>
+          <method name="foo" type="select" groupby="id">
+            <conditions>
+                <eq property="subject" value="" />
+            </conditions>
+          </method>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="foo"/>
+            <string p="type" value="select"/>
+            <boolean p="distinct" value="false"/>
+            <boolean p="eventBeforeEnabled" value="false"/>
+            <boolean p="eventAfterEnabled" value="false"/>
+            <object m="getConditions()" class="jDaoConditions">
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array(
+                     array("field_id"=>"subject","value"=>"", "operator"=>"=", "isExpr"=>false))</array>
+                    <array p="group">array()</array>
+                    <string p="glueOp" value="AND"/>
+                </object>
+                <array p="order">array()</array>
+            </object>
+            <array m="getParameters ()">array()</array>
+            <array m="getParametersDefaultValues ()">array()</array>
+            <null m="getLimit ()"/>
+            <array m="getValues ()">array()</array>
+            <null m="getProcStock ()"/>
+            <null m="getBody ()"/>
+            <array m="getGroupBy ()">array("id")</array>
+        </object>'),
+
+        array('<?xml version="1.0"?>
+          <method name="foo" type="select" groupby="id, subject">
+            <conditions>
+                <eq property="subject" value="" />
+            </conditions>
+          </method>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="foo"/>
+            <string p="type" value="select"/>
+            <boolean p="distinct" value="false"/>
+            <boolean p="eventBeforeEnabled" value="false"/>
+            <boolean p="eventAfterEnabled" value="false"/>
+            <object m="getConditions()" class="jDaoConditions">
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array(
+                     array("field_id"=>"subject","value"=>"", "operator"=>"=", "isExpr"=>false))</array>
+                    <array p="group">array()</array>
+                    <string p="glueOp" value="AND"/>
+                </object>
+                <array p="order">array()</array>
+            </object>
+            <array m="getParameters ()">array()</array>
+            <array m="getParametersDefaultValues ()">array()</array>
+            <null m="getLimit ()"/>
+            <array m="getValues ()">array()</array>
+            <null m="getProcStock ()"/>
+            <null m="getBody ()"/>
+            <array m="getGroupBy ()">array("id","subject")</array>
         </object>'),
 
     );

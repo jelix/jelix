@@ -297,6 +297,7 @@ class jDaoGenerator {
          $src[] = ' function '.$method->name.' ('. $mparam.'){';
 
          $limit='';
+         $groupby='';
 
          switch($method->type){
                case 'delete':
@@ -351,6 +352,10 @@ class jDaoGenerator {
                   if( $method->type == 'select' && ($lim = $method->getLimit ()) !==null){
                      $limit=', '.$lim['offset'].', '.$lim['count'];
                   }
+                  $gb = $method->getGroupBy();
+                  if ($gb) {
+                      $groupby = '    $__query .= \' GROUPBY '.implode(",", $gb).'\';';
+                  }
 
                break;
          }
@@ -395,12 +400,16 @@ class jDaoGenerator {
                   $src[] = '    return intval($__res->c);';
                   break;
                case 'selectfirst':
+                  if ($groupby)
+                    $src[]= $groupby;
                   $src[] = '    $__rs = $this->_conn->limitQuery($__query,0,1);';
                   $src[] = '    $__rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
                   $src[] = '    return $__rs->fetch();';
                   break;
                case 'select':
                default:
+                  if ($groupby)
+                    $src[]= $groupby;
                   if($limit)
                       $src[] = '    $__rs = $this->_conn->limitQuery($__query'.$limit.');';
                   else
@@ -410,7 +419,6 @@ class jDaoGenerator {
          }
          $src[] = '}';
       }
-
 
       $src[] = '}';//end of class
 

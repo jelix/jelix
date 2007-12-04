@@ -90,6 +90,7 @@ function jExceptionHandler($exception){
 
     if($doecho)
         $gJCoord->response->outputErrors();
+    jSession::end();
     exit;
 }
 

@@ -86,7 +86,7 @@ class jCoordinator {
         $gJConfig = jConfig::load($configFile);
 
         //make sure that the session cookie is only for the current application
-        if(!$gJConfig->shared_session)
+        if(!$gJConfig->sessions['shared_session'])
             session_set_cookie_params ( 0 , $gJConfig->urlengine['basePath']);
 
         // set Error and exception handler
@@ -167,7 +167,7 @@ class jCoordinator {
 
         $this->request = $request;
         $this->request->init();
-        session_start();
+        jSession::start();
 
         $this->moduleName = $this->request->getParam('module');
         $this->actionName = $this->request->getParam('action');
@@ -242,6 +242,7 @@ class jCoordinator {
         }
 
         jContext::pop();
+        jSession::end();
     }
 
     /**

@@ -82,10 +82,12 @@ cd lib/jelix/core-modules/jelix/daos
    jaclsubject.dao.xml
    jaclusergroup.dao.xml
    jaclgroupsofuser.dao.xml
+   jsession.dao.xml
 cd lib/jelix/core-modules/jelix/install/sql
   delete.mysql.sql
   install_jacl.schema.mysql.sql
   install_jacl.datas.mysql.sql
+  install_jsession.schema.mysql.sql
 cd lib/jelix/core-modules/jelix/locales/en_US
   acldb.ISO-8859-1.properties
   acldb.UTF-8.properties

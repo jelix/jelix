@@ -18,8 +18,9 @@
 * @copyright 2007 Julien Issler
 * @link http://www.copix.org
 #else
-* @contributor Loic Mathaud
+* @contributor Loic Mathaud, Julien Issler
 * @copyright 2005-2007 Jouanneau laurent
+* @copyright 2007 Julien Issler
 #endif
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -90,6 +91,7 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/jResponse.class.php
 #includephp core/jLocale.class.php
 #includephp core/jIncluder.class.php
+#includephp core/jSession.class.php
 #ifnot ENABLE_PHP_JELIX
 #includephp core/jICoordPlugin.iface.php
 #endif
@@ -108,6 +110,7 @@ require (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
 require (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
 require (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
+require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
 #ifnot ENABLE_PHP_JELIX
 require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
 #endif
