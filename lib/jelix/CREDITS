@@ -96,6 +96,7 @@ Yann
 
 Sylvain de Vathaire (aka sylvain261)
  - little bug fix in exception handler (#356)
+ - little improvement in exception handler and error handler (#357)
 
 Thanks for all users, especially those who reported bugs. :-)
 

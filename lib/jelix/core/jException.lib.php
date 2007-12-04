@@ -35,12 +35,12 @@ function jExceptionHandler($exception){
         if(is_string($ret)){
             $msg = 'Double error ! 1)'. $ret.'; 2)'.$msg;
         }
-
     }
 
     // formatage du message de log
     $messageLog = strtr($conf['messageLogFormat'], array(
         '%date%' => date("Y-m-d H:i:s"),
+        '%ip%'   => $_SERVER['REMOTE_ADDR'],
         '%code%' => $exception->getCode(),
         '%msg%'  => $msg,
         '%file%' => $exception->getFile(),

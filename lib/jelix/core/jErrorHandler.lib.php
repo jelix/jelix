@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage core
 * @author     Laurent Jouanneau
-* @contributor
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @contributor Sylvain de Vathaire
+* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2007 Sylvain de Vathaire
 * This function was get originally from the Copix project (CopixErrorHandler, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this function are Gerald Croes and Laurent Jouanneau,
@@ -71,6 +71,7 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     // formatage du message
     $messageLog = strtr($conf['messageLogFormat'], array(
         '%date%' => date("Y-m-d H:i:s"),
+        '%ip%'   => $_SERVER['REMOTE_ADDR'],
         '%typeerror%'=>$codeString[$errno],
         '%code%' => $code,
         '%msg%'  => $errmsg,
