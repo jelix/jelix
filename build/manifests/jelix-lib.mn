@@ -426,3 +426,22 @@ cd lib/wikirenderer/rules
 ! classicwr_to_xhtml.php
 ! classicwr_to_wr3.php
 ! wr3_to_text.php
+
+cd lib/tcpdf
+  LICENSE.TXT
+  README.TXT
+  tcpdf.php
+cd lib/tcpdf/barcode
+! barcode.php
+! c128aobject.php
+! c128bobject.php
+! c128cobject.php
+! c39object.php
+! i25object.php
+! image.php
+! lesser.txt
+cd lib/tcpdf/config
+! tcpdf_config.php
+cd lib/tcpdf/config/lang
+! eng.php
+

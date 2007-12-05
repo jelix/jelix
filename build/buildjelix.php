@@ -67,6 +67,10 @@ $BUILD_OPTIONS = array(
     "old module class naming (jelix <= 1.0a5) can be used. deprecated for Jelix 1.0.",
     false,
     ),
+'INCLUDE_ALL_FONTS'=>array(
+    "True if you want to include lib/fonts content for tcpdf or other",
+    false,
+    ),
 'PHP50'=> array(
     false,   // hidden option
     false,
@@ -104,7 +108,6 @@ $BUILD_OPTIONS = array(
     '',
     ),*/
 );
-
 
 
 include(dirname(__FILE__).'/lib/jBuild.inc.php');
@@ -204,6 +207,10 @@ if(!$ENABLE_PHP_JSON){
     jManifest::process('build/manifests/lib-json.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
 jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , ENV::getAll());
+
+if($INCLUDE_ALL_FONTS){
+    jManifest::process('build/manifests/fonts.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
+}
 
 if($ENABLE_PHP_JELIX && ($PACKAGE_TAR_GZ || $PACKAGE_ZIP)){
    jManifest::process('build/manifests/jelix-ext-php.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
