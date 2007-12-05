@@ -87,7 +87,10 @@ div.exception p { font-size:0.9em; }
 .diff del { background: #f99; }
 .diff ins { background: #9f9; }
 
-
+.pagelinks li { display:inline; border:1px solid gray; padding:4px; color:black; }
+.pagelinks li.pagelinks-disabled { color: gray;}
+.pagelinks li.pagelinks-current { font-weight:bold;}
+.pagelinks li a:hover, .pagelinks li:hover { background-color:#eee; }
 
 #sidemenu {
    position:absolute;
