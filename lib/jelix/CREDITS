@@ -87,6 +87,9 @@ Dominique Papin (aka bibo)
 Laurent Raufaste (aka analogue)
  - patch on postgresql driver (#123)
 
+Rahal
+ - improvement on locale selectors : possibility to overload locales (#358)
+
 M. Thiriot (aka Doubleface)
  - testor
  - bug fixes on PDO support in jDb

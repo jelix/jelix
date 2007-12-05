@@ -11,7 +11,8 @@
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2007 Laurent Jouanneau, 2007 Loic Mathaud
+* @contributor Rahal
+* @copyright   2005-2007 Laurent Jouanneau, 2007 Loic Mathaud, 2007 Rahal
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -417,6 +418,7 @@ class jSelectorLoc extends jSelectorModule {
     public $locale ='';
     public $charset='';
     public $_compiler = 'jLocalesCompiler';
+    protected $_where;
 
     function __construct($sel, $locale=null, $charset=null){
         global $gJConfig;
@@ -457,6 +459,34 @@ class jSelectorLoc extends jSelectorModule {
         }else{
             throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
+    }
+
+    protected function _createPath(){
+        global $gJConfig;
+        if(!isset($gJConfig->_modulesPathList[$this->module])){
+            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
+        }
+
+        // on regarde si la locale a été redéfini
+        $overloadedPath = JELIX_APP_VAR_PATH.'overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix;
+        if (is_readable ($overloadedPath)){
+           $this->_path = $overloadedPath;
+           $this->_where = 'overloaded/';
+           return;
+        }
+        // et sinon, on regarde si la locale existe dans le module en question
+        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
+
+        if (!is_readable ($this->_path)){
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "locale"));
+        }
+        $this->_where = 'modules/';
+    }
+
+    protected function _createCachePath(){
+        // on ne partage pas le même cache pour tous les emplacements possibles
+        // au cas où un overload était supprimé
+        $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/locales/'.$this->_where.$this->module.'~'.$this->resource.$this->_cacheSuffix;
     }
 
     public function toString($full=false){
