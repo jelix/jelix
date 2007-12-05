@@ -13,6 +13,11 @@
  *
  * usage : {form $theformobject,'submit_action', $submit_action_params} here form content {/form}
  *
+ * You can add this others parameters :
+ *   string $errDecorator name of your javascript object for error listener<br/>
+ *   string $helpDecorator name of your javascript object for help listener<br/>
+ *   string $method : the method of submit : post or get
+ *
  * @param jTplCompiler $compiler the template compiler
  * @param boolean $begin true if it is the begin of block, else false
  * @param array $param 0=>form object 
@@ -20,7 +25,7 @@
  *                     2=>array of parameters for submit action 
  *                     3=>name of your javascript object for error listener
  *                     4=>name of your javascript object for help listener
- *                     5=>name of the method : POST or GET
+ *                     5=>name of the method : 'post' or 'get'
  * @return string the php code corresponding to the begin or end of the block
  * @see jForms
  */

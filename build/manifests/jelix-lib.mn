@@ -355,7 +355,7 @@ cd lib/jelix/plugins/tpl/html
   function.urljsstring.php
   modifier.nl2br.php
   meta.html.php
-  function.formfull.php
+  cfunction.formfull.php
   function.formdatasfull.php
   function.formurl.php
   function.formurlparam.php
