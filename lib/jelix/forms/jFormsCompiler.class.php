@@ -145,7 +145,7 @@ class jFormsCompiler implements jISimpleCompiler {
                 ($controltype != 'input'|| ($controltype == 'input' && isset($control['type']) && $control['type'] != 'string'))){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('minlength',$controltype,$this->sourceFile));
             }
-            $source[]='$ctrl->datasource->addFacet(\'minLength\','.intval((string)$control['minlength']).');';
+            $source[]='$ctrl->datatype->addFacet(\'minLength\','.intval((string)$control['minlength']).');';
         }
         // maxlength support
         if(isset($control['maxlength'])){
@@ -153,7 +153,7 @@ class jFormsCompiler implements jISimpleCompiler {
                 ($controltype != 'input'|| ($controltype == 'input' && isset($control['type']) && $control['type'] != 'string'))){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('maxlength',$controltype,$this->sourceFile));
             }
-            $source[]='$ctrl->datasource->addFacet(\'maxLength\','.intval((string)$control['maxlength']).');';
+            $source[]='$ctrl->datatype->addFacet(\'maxLength\','.intval((string)$control['maxlength']).');';
         }
 
         // label support

@@ -14,12 +14,12 @@ class UTjDbPgsql extends jUnitTestCase {
     function testTools(){
         try {
             $profil = jDb::getProfil('testapp_pgsql');
+            $tools = jDb::getTools('testapp_pgsql');
         } catch (Exception $e) {
             $this->sendMessage("UTjDbPgsql cannot be run : no postgresql connexion");
             return;
         }
 
-        $tools = jDb::getTools('testapp_pgsql');
         $fields = $tools->getFieldList('products');
         $structure = '<array>
     <object key="id" class="jDbFieldProperties">

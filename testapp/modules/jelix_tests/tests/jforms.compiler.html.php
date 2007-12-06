@@ -11,6 +11,9 @@
 */
 
 require_once(JELIX_LIB_FORMS_PATH.'jFormsCompiler.class.php');
+require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
+require_once(JELIX_LIB_FORMS_PATH.'jFormsDatasource.class.php');
+require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 
 class testJFormsCompiler extends jFormsCompiler {
 
@@ -621,11 +624,11 @@ $ctrl->rows=15;
 $ctrl->cols=20;
 $this->addControl($ctrl);',
 65=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datasource->addFacet(\'maxLength\',3);
+$ctrl->datatype->addFacet(\'maxLength\',3);
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 66=>'$ctrl= new jFormsControlinput(\'nom\');
-$ctrl->datasource->addFacet(\'minLength\',3);
+$ctrl->datatype->addFacet(\'minLength\',3);
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 );
