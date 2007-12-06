@@ -236,6 +236,10 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('jelix_tests~urlsig_url20', array('mois'=>'08',  'annee'=>'2007','lang'=>'en_EN'));
       $urlList[]= array('jelix_tests~urlsig_url20', array('mois'=>'08',  'annee'=>'2007','lang'=>'fr_FR'));
       $urlList[]= array('jelix_tests~urlsig_url20', array('mois'=>'08',  'annee'=>'2007'));
+      $urlList[]= array('jelix_tests~urlsig_url30', array());
+      $urlList[]= array('jelix_tests~default_hello2', array());
+      $urlList[]= array('jelix_tests~default_hello3', array());
+      $urlList[]= array('jelix_tests~hello3', array());
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -255,6 +259,10 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php/articles/en/2007/08",
           "/index.php/articles/fr/2007/08",
           "/index.php/articles/fr/2007/08",
+          "/index.php/hello",
+          "/index.php/hello2",
+          "/index.php/hello3",
+          "/index.php/hello3",
        );
 
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
@@ -280,6 +288,10 @@ class UTCreateUrls extends UnitTestCase {
           "/index/articles/en/2007/08",
           "/index/articles/fr/2007/08",
           "/index/articles/fr/2007/08",
+          "/index/hello",
+          "/index/hello2",
+          "/index/hello3",
+          "/index/hello3",
        );
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);

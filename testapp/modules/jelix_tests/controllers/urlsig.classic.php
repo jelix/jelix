@@ -70,6 +70,13 @@ class urlsigCtrl extends jController {
    function url10() {
       return $this->url1('url10');
    }
+
+   function url30() {
+      $rep = $this->getResponse('html',true);
+      $content='<h1>test url 30</h1>';
+      $rep->body->assign('MAIN',$content);
+      return $rep;
+   }
 }
 
 ?>

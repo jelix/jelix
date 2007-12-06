@@ -45,6 +45,9 @@
               <param name="mois" escape="false" />
               <static name="lang" value="en_EN" />
         </url>
+        <url pathinfo="/hello" module="jelix_tests" action="urlsig_url30" />
+        <url pathinfo="/hello2" module="jelix_tests" action="hello2" />
+        <url pathinfo="/hello3" module="jelix_tests" action="default_hello3" />
     </classicentrypoint>
     <classicentrypoint name="testnews">
        <url pathinfo="/:annee/:mois" module="jelix_tests" action="urlsig_url2">
