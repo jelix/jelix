@@ -330,6 +330,7 @@ cd lib/jelix/plugins/tpl/common
   block.ifnotacl.php
   block.ifuserconnected.php
   block.ifusernotconnected.php
+  block.stripws.php
   cfunction.zone.php
   modifier.cat.php
   modifier.count_array.php

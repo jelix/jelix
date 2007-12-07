@@ -75,6 +75,9 @@ Yannick Le Guédart (aka Torgan)
  - Contribution on jResponseRss and jResponseAtom
  - jdb driver for Intuition
 
+Hugues Magnier
+ - tpl plugin stripws (#140)
+
 Aubanel Monnier
  - jResponseLatexToPdf and jtpl plugins for latex
  - patch for anchors support in jResponseRedirect
