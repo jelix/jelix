@@ -99,7 +99,7 @@ M. Thiriot (aka Doubleface)
  - bug fixes on PDO support in jDb
 
 Christian Tritten
- - improvements on paglinks plugin (#340)
+ - improvements on pagelinks plugin (#340)
 
 Yann
  - improvements in jResponseHtml (description and keywords)

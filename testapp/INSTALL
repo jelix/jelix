@@ -1,0 +1,8 @@
+Installation of testapp
+
+- create a database and import one of the testapp/install/*.sql script into it.
+- rename testapp/var/config/dbprofils.ini.php.dist to testapp/var/config/dbprofils.ini.php
+- configure parameters in dbprofils.ini.php, in section testapp for mysql,
+    testapppdo if you have pdo extension and testapp_pgsql if you have postgresql sql
+    don't touch other sections.
+- put write access for apache on temp/testapp/
