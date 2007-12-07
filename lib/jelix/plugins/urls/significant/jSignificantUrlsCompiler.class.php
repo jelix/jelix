@@ -3,11 +3,11 @@
 * @package     jelix
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Thibault PIRONT < nuKs >
 * @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2007 Thibault PIRONT
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*
 */
 
 /**
@@ -133,8 +133,17 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                }
 
                $action = (string)$url['action'];
+               if (strpos($action, '_') === false) {
+                  $action = 'default_'.$action;
+               }
+
                if(isset($url['actionoverride'])){
                   $actionOverride = preg_split("/[\s,]+/", (string)$url['actionoverride']);
+                  foreach ($actionOverride as &$each) {
+                     if (strpos($each, '_') === false) {
+                        $each = 'default_'.$each;
+                     }
+                  }
                }else{
                   $actionOverride = false;
                }

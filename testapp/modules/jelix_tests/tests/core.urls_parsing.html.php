@@ -4,7 +4,9 @@
 * @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006-2007 Jouanneau laurent
+* @contributor Thibault PIRONT < nuKs >
+* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2007 Thibault PIRONT
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -74,7 +76,7 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'en_EN');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'fr_FR');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url30');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'hello2');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'default_hello2');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'default_hello3');
 
       $request=array(
