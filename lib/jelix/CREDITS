@@ -83,8 +83,9 @@ Dominique Papin (aka bibo)
  - added j_themepath variable in jtpl (#346)
  - improved addCssLink usability for IE (#348)
  - added support of 'else' keyword for block plugin in jtpl (#349)
+ - fixed bug in firebug support (#362)
 
-Thibault PIRONT (aka nuks)
+Thibault Piront (aka nuks)
  - fixed bug in significant url engine (#364)
 
 Laurent Raufaste (aka analogue)
