@@ -190,15 +190,18 @@ class jCoordinator {
         jContext::push ($this->moduleName);
         try{
             $this->action = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
-        }catch(jExceptionSelector $e){
-            if($e->getCode() == 12){
-                throw new jException('jelix~errors.module.unknow',$this->moduleName);
-            }elseif($e->getCode() == 10){
-                throw new jException('jelix~errors.action.unknow',$this->actionName);
+            $ctrl = $this->getController($this->action);
+        }catch(jException $e){
+            if ($gJConfig->urlengine['notfoundAct'] =='') {
+                throw $e;
+            }
+            try {
+                $this->action = new jSelectorAct($gJConfig->urlengine['notfoundAct']);
+                $ctrl = $this->getController($this->action);
+            }catch(jException $e2){
+                throw $e;
             }
         }
-
-        $ctrl = $this->getController($this->action);
 
         $pluginparams = array();
         if(isset($ctrl->pluginParams['*'])){
