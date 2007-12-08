@@ -2,7 +2,7 @@ cd testapp
   project.xml
   .htaccess
   application.init.php
-  INSTALL
+  INSTALL.txt
 cd testapp/plugins
   .htaccess
 cd testapp/responses
