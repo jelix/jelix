@@ -1,5 +1,5 @@
 --TEST--
-Test jelix_scan_action_sel with some bad action selectors
+Test jelix_scan_old_action_sel with some bad action selectors
 --SKIPIF--
 <?php if (!extension_loaded("jelix")) print "skip"; ?>
 --FILE--
@@ -12,14 +12,14 @@ class obj {
     public $method;
 }
 
-$tests = array("a-b~toto", "ab~ro-ro", "~toPO::etto", 
+$tests = array("a-b~toto", "ab~ro-ro", "~toPO__etto", 
    "#aaa", "##" , "aa#aa", "aaa#",
    "foo~#aaa", "foo~aa#aa", "foo~aaa#", "~@classic", "@", "#@", "aa.bb", "aa~bb.cc");
 
 foreach($tests as $k=>$t){
 
     $obj = new obj();
-    $ret = jelix_scan_action_sel($t, $obj,"machin_bidule");
+    $ret = jelix_scan_old_action_sel($t, $obj,"machin_bidule");
     echo $k,":";
     if($ret === false){
         echo "ok\n";

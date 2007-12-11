@@ -4,7 +4,13 @@
 {/if}
 
 {if ! $isLogged}
+
+{* if you overload this template, just choose the right form tag *}
+{if $j_enableOldActionSelector}
 <form action="{jurl 'jauth~login_in'}" method="post" id="loginForm">
+{else}
+<form action="{jurl 'jauth~login:in'}" method="post" id="loginForm">
+{/if}
       <fieldset>
       <table>
        <tr>

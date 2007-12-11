@@ -20,7 +20,7 @@
 <p>key={$oneconf->ckey} value={$oneconf->cvalue}</p>
 
 <h3>Test insertion</h3>
-<form action="{jurl 'testapp~main_testdao'}" method="POST">
+<form action="{jurl 'testapp~main:testdao'}" method="POST">
 <fieldset><legend>Ajouter une nouvelle clé</legend>
 <p><label for="newid">id :</label><input type="text" name="newid"  id="newid"/></p>
 <p><label for="newvalue">Valeur :</label><input type="text" name="newvalue" id="newvalue" /></p>

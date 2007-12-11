@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  core_url
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Thibault PIRONT < nuKs >
 * @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2007 Thibault PIRONT
 * Some parts of this file are took from an experimental branch of the Copix project (CopixUrl.class.php, Copix 2.3dev20050901, http://www.copix.org),
 * Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this parts are Gerald Croes and Laurent Jouanneau,
@@ -206,7 +207,10 @@ class jUrl extends jUrlBase {
     public function toString ($forxml = false){
         $url = $this->scriptName.$this->pathInfo;
         if (count ($this->params)>0){
-            $url .='?'.http_build_query($this->params, '', ($forxml?'&amp;':'&'));
+            $q = http_build_query($this->params, '', ($forxml?'&amp;':'&'));
+            if(strpos($q, '%3A')!==false)
+                $q = str_replace( '%3A', ':', $q);
+            $url .='?'.$q;
         }
         return $url;
     }
@@ -224,8 +228,11 @@ class jUrl extends jUrlBase {
         }
         static $url = false;
         if ($url === false){
-           $url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].$GLOBALS['gJCoord']->request->url_path_info.'?';
-           $url.= http_build_query($_GET, '', ($forxml?'&amp;':'&'));
+            $url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].$GLOBALS['gJCoord']->request->url_path_info.'?';
+            $q = http_build_query($_GET, '', ($forxml?'&amp;':'&'));
+            if(strpos($q, '%3A')!==false)
+                $q = str_replace( '%3A', ':', $q);
+            $url .=$q;
         }
         return $url;
     }
@@ -238,10 +245,13 @@ class jUrl extends jUrlBase {
     * @return string the url
     */
     static function appendToUrlString ($url, $params = array (), $forxml = false){
+        $q = http_build_query($params, '', ($forxml?'&amp;':'&'));
+        if(strpos($q, '%3A')!==false)
+            $q = str_replace( '%3A', ':', $q);
         if ((($pos = strpos ( $url, '?')) !== false) && ($pos !== (strlen ($url)-1))){
-            return $url . ($forxml ? '&amp;' : '&').http_build_query($params, '', ($forxml?'&amp;':'&'));
+            return $url . ($forxml ? '&amp;' : '&').$q;
         }else{
-            return $url . '?'.http_build_query($params, '', ($forxml?'&amp;':'&'));
+            return $url . '?'.$q;
         }
     }
 
@@ -298,7 +308,7 @@ class jUrl extends jUrlBase {
                 $url_escape_to = explode(' ',jLocale::get('jelix~format.url_escape_to'));
             }
             // we don't use strtr because it is not utf8 compliant
-            $str=str_replace($url_escape_from,$url_escape_to, $str); // supprime les caractères accentués, et les quotes, doubles quotes
+            $str=str_replace($url_escape_from, $url_escape_to, $str); // supprime les caractères accentués, et les quotes, doubles quotes
             $str=preg_replace("/([^\w])/"," ",$str); // remplace tout ce qui n'est pas lettre par un espace
             //$str=preg_replace("/(?<=\s)\w{1,2}(?=\s)/"," ",$str); // enleve les mots de moins de 2 lettres
             $str=preg_replace("/( +)/","-",trim($str)); // on remplace les espaces et groupes d'espaces par -
@@ -326,7 +336,7 @@ class jUrl extends jUrlBase {
     static function getEngine($reset=false){
         static $engine = null;
 
-        if($reset) $engine=null; // pour pouvoir faire les tests unitaires
+        if($reset) $engine=null; // for unit tests
 
         if($engine === null){
             global $gJConfig;

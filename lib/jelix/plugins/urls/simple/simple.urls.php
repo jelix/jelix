@@ -18,6 +18,9 @@
  */
 class simpleUrlEngine implements jIUrlEngine {
 
+    protected $urlspe = null;
+    protected $urlhttps = null;
+
     /**
     * Parse some url components
     * @param string $scriptNamePath    /path/index.php
@@ -59,45 +62,44 @@ class simpleUrlEngine implements jIUrlEngine {
      * @param string  $action
      */
     protected function getScript($requestType, $module=null, $action=null){
-        static $urlspe = null;
-        static $urlhttps = null;
         global $gJConfig;
-
+        
         $script = $gJConfig->urlengine['defaultEntrypoint'];
 
-        if($urlhttps == null){
-            $urlhttps=array();
+        if($this->urlhttps == null){
+            $this->urlhttps=array();
             $selectors = preg_split("/[\s,]+/", $gJConfig->urlengine['simple_urlengine_https']);
             foreach($selectors as $sel2){
-                $urlhttps[$sel2]= true;
+                $this->urlhttps[$sel2]= true;
             }
         }
 
         $usehttps= false;
-        if($action && isset($urlhttps[$module.'~'.$action.'@'.$requestType])){
+        if($action && isset($this->urlhttps[$module.'~'.$action.'@'.$requestType])){
             $usehttps = true;
-        }elseif($module &&  isset($urlhttps[$module.'~*@'.$requestType])){
+        }elseif($module &&  isset($this->urlhttps[$module.'~*@'.$requestType])){
             $usehttps = true;
-        }elseif(isset($urlhttps['@'.$requestType])){
+        }elseif(isset($this->urlhttps['@'.$requestType])){
             $usehttps = true;
         }
 
         if(count($gJConfig->simple_urlengine_entrypoints)){
-           if($urlspe == null){
-               $urlspe = array();
+           if($this->urlspe == null){
+               $this->urlspe = array();
                foreach($gJConfig->simple_urlengine_entrypoints as $entrypoint=>$sel){
                  $selectors = preg_split("/[\s,]+/", $sel);
                  foreach($selectors as $sel2){
-                     $urlspe[$sel2]= $entrypoint;
+                     $this->urlspe[$sel2]= $entrypoint;
                  }
                }
            }
-           if($action && isset($urlspe[$s1 = $module.'~'.$action.'@'.$requestType])){
-                $script = $urlspe[$s1];
-           }elseif($module &&  isset($urlspe[$s2 = $module.'~*@'.$requestType])){
-                $script = $urlspe[$s2];
-           }elseif( isset($urlspe[$s3 = '@'.$requestType])){
-               $script = $urlspe[$s3];
+
+           if($action && isset($this->urlspe[$s1 = $module.'~'.$action.'@'.$requestType])){
+                $script = $this->urlspe[$s1];
+           }elseif($module &&  isset($this->urlspe[$s2 = $module.'~*@'.$requestType])){
+                $script = $this->urlspe[$s2];
+           }elseif( isset($this->urlspe[$s3 = '@'.$requestType])){
+               $script = $this->urlspe[$s3];
            }
         }
         if(!$gJConfig->urlengine['multiview']){

@@ -28,12 +28,12 @@ class helpCtrl extends jControllerCmdLine {
 
         if (empty($cmd_name)) {
             $rep->content = "
-Utilisation générale :
-    php cmdline.php help [COMMANDE]
+General purpose:
+    php cmdline.php help [COMMAND]
 
-    COMMANDE : nom de la commande à lancer
-               'module~controller_action' ou plus simplement
-               'action' en fonction de la configuration de l'application
+    COMMAND : name of the command to launch
+               'module~controller:action' or more simply
+               'controller:action' or 'action', depending of the app configuration
 ";
         } else {
             if (!preg_match('/(?:([\w\.]+)~)/', $cmd_name)) {
@@ -47,12 +47,12 @@ Utilisation générale :
             $help = $ctrl->help;
 
             $rep->content = "
-Utilisation de la commande ". $selector->method ." :
+Use of the command ". $selector->method ." :
 ";
             if (isset($help[$selector->method])) {
                 $rep->content .= $help[$selector->method]."\n\n";
             } else {
-                $rep->content .= "\tPas d'aide disponible pour cette commande\n\n";
+                $rep->content .= "\tNo available help for this command\n\n";
             }
         }
         return $rep;

@@ -13,12 +13,18 @@ Jelix version: {$versionjelix}<br/>
 <h2>Tests menu</h2>
 {if count($modules)}
     <ul>
+        {if $j_enableOldActionSelector}
         <li><a href="{jurl 'junittests~default_index'}">Home</a></li>
         <li><a href="{jurl 'junittests~default_all'}">Run all tests</a></li>
+        {else}
+        <li><a href="{jurl 'junittests~default:index'}">Home</a></li>
+        <li><a href="{jurl 'junittests~default:all'}">Run all tests</a></li>
+        {/if}
     </ul>
 
     <h3>Modules</h3>
     <ul>
+{if $j_enableOldActionSelector}
     {foreach $modules as $module=>$tests}
         <li>{$module}
             <ul>
@@ -29,6 +35,18 @@ Jelix version: {$versionjelix}<br/>
             </ul>
         </li>
     {/foreach}
+{else}
+    {foreach $modules as $module=>$tests}
+        <li>{$module}
+            <ul>
+                <li><a href="{jurl 'junittests~default:module', array('mod'=>$module)}">All tests</a></li>
+        {foreach $tests as $test}
+                <li><a href="{jurl 'junittests~default:single', array('mod'=>$module, 'test'=>$test[1])}">{$test[2]}</a>
+        {/foreach}
+            </ul>
+        </li>
+    {/foreach}
+{/if}
     </ul>
 {else}
     <p>No availabled tests.</p>

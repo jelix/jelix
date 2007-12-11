@@ -1,7 +1,7 @@
 <h1>Test de formulaire (instances multiples)</h1>
 <p>Remplissez le formulaire</p>
 
-<form action="{jurl 'forms_save'}" method="POST">
+<form action="{jurl 'forms:save'}" method="POST">
 <fieldset>
    <legend>Votre identité</legend>
     <p><label for="nom">Nom :</label> <input type="text" name="nom" id="nom" value="{$form->datas['nom']}"/></p>
@@ -14,4 +14,4 @@
 <input type="submit" value="ok" /></p>
 </form>
 
-<p><a href="{jurl 'forms_listform'}">Annuler</a></p>
+<p><a href="{jurl 'forms:listform'}">Annuler</a></p>

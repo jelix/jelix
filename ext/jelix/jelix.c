@@ -32,6 +32,7 @@ zend_function_entry jelix_functions[] = {
 	PHP_FE(jelix_read_ini,  NULL)
 	PHP_FE(jelix_scan_module_sel,  NULL)
 	PHP_FE(jelix_scan_action_sel,  NULL)
+	PHP_FE(jelix_scan_old_action_sel,  NULL)
 	PHP_FE(jelix_scan_class_sel,  NULL)
 	PHP_FE(jelix_scan_locale_sel,  NULL)
 	{NULL, NULL, NULL}	/* Must be the last line in jelix_functions[] */
@@ -411,7 +412,7 @@ PHP_FUNCTION(jelix_scan_module_sel)
    scan a string as a jelix selector, and fill object properties with founded values 
 /^(?:([a-zA-Z0-9_\.]+|\#)~)?([a-zA-Z0-9_]+|\#)?(?:@([a-zA-Z0-9_]+))?$/
 */
-PHP_FUNCTION(jelix_scan_action_sel)
+PHP_FUNCTION(jelix_scan_old_action_sel)
 {
     zval **selectorStr, **objectArg, **defaultActionArg;
     int length;
@@ -649,6 +650,251 @@ PHP_FUNCTION(jelix_scan_action_sel)
 	RETURN_TRUE
 }
 /* }}} */
+
+
+/* {{{ proto boolean jelix_scan_action_sel(string arg, object tofill *)
+   scan a string as a jelix selector, and fill object properties with founded values 
+/^(?:([a-zA-Z0-9_\.]+|\#)~)?([a-zA-Z0-9_:]+|\#)?(?:@([a-zA-Z0-9_]+))?$/
+*/
+PHP_FUNCTION(jelix_scan_action_sel)
+{
+    zval **selectorStr, **objectArg, **defaultActionArg;
+    int length;
+    char * sel, *cursor, *module, *resource, *request;
+
+
+    if(ZEND_NUM_ARGS() != 3) {
+        ZEND_WRONG_PARAM_COUNT();
+    }
+    if (zend_get_parameters_ex(3, &selectorStr, &objectArg, &defaultActionArg) == FAILURE) {
+        php_error_docref(NULL TSRMLS_CC, E_WARNING, "cannot read arguments");
+        RETURN_FALSE;
+    }
+
+    if(Z_TYPE_P(*objectArg) != IS_OBJECT){
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid second argument, not an object");
+        RETURN_FALSE
+	}
+    if(Z_TYPE_P(*defaultActionArg) != IS_STRING){
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid third argument, not a string");
+        RETURN_FALSE
+	}
+
+    int module_length=0;
+    int resource_length=0;
+    int request_length=0;
+    int cursor_count=0;
+
+    convert_to_string_ex(selectorStr);
+    length = Z_STRLEN_PP(selectorStr);
+    sel = Z_STRVAL_PP(selectorStr);
+
+    cursor_count=0;
+    cursor = module = resource = sel;
+
+    int error = 0;
+    int sharpOk = 0;
+    int hasRequest=0;
+    int firstDashPos = -1;
+    int hasDot = 0;
+
+    // parse the module part
+    while(cursor_count < length){
+        if(*cursor == '~' || *cursor == '@'){
+            break;
+        }
+        if(*cursor == '#'){
+            if(sharpOk || module_length > 1){
+                RETURN_FALSE
+            }
+            sharpOk=1;
+        }else if(*cursor == '.'){
+            hasDot = 1;
+        }else if(!( ( *cursor >= 'a' && *cursor <= 'z')
+                || ( *cursor >= 'A' && *cursor <= 'Z')
+                || ( *cursor >= '0' && *cursor <= '9')
+                || *cursor == '_' || *cursor == ':' ) || sharpOk){
+                RETURN_FALSE
+        }
+        if(*cursor == ':' && firstDashPos == -1){
+            firstDashPos = module_length;
+        }
+
+        module_length ++;
+        cursor_count ++;
+        cursor++;
+    }
+
+    if(cursor_count >= length){
+        // we don't find any '~' characters, so we have parsed the resource
+        if(hasDot) RETURN_FALSE
+
+        resource_length = module_length;
+        module_length = 0;
+    }else if( *cursor == '@'){
+        // we don't find any '~' characters, so we have parsed the resource
+        if(hasDot) RETURN_FALSE
+
+        resource_length = module_length;
+        module_length = 0;
+        hasRequest = 1;
+        // now we parse the @ section
+        cursor_count ++;
+        cursor++;
+
+        request = cursor;
+        request_length = 0;
+        while(cursor_count < length){
+            if(!( ( *cursor >= 'a' && *cursor <= 'z')
+                || ( *cursor >= 'A' && *cursor <= 'Z')
+                || ( *cursor >= '0' && *cursor <= '9')
+                || *cursor == '_' || *cursor == ':' || *cursor == '.')){
+                RETURN_FALSE
+            }
+            request_length ++;
+            cursor_count ++;
+            cursor++;
+        }
+    }else{
+        // the string starts by a ~ : it's not really a problem, but we generate an error
+        // to keep compatibily with php version of selectors.
+        if(module_length == 0){
+            RETURN_FALSE
+        }
+        firstDashPos=-1;
+        cursor_count++;
+        cursor++;
+        resource = cursor;
+        resource_length = 0;
+        sharpOk = 0;
+        while(cursor_count < length){
+            if(*cursor == '@'){
+                break;
+            }
+
+            if(*cursor == '#'){
+                if(sharpOk || resource_length > 1){
+                    RETURN_FALSE
+                }
+                sharpOk=1;
+            }else if(!( ( *cursor >= 'a' && *cursor <= 'z')
+                    || ( *cursor >= 'A' && *cursor <= 'Z')
+                    || ( *cursor >= '0' && *cursor <= '9')
+                    || *cursor == '_' || *cursor == ':') || sharpOk){
+                    RETURN_FALSE
+            }
+            if(*cursor == ':' && firstDashPos == -1){
+                firstDashPos = resource_length;
+            }
+
+            resource_length ++;
+            cursor_count ++;
+            cursor++;
+        }
+
+        if(*cursor == '@'){
+            hasRequest = 1;
+            cursor_count++;
+            cursor++;
+            request = cursor;
+            request_length = 0;
+            while(cursor_count < length){
+                if(!( ( *cursor >= 'a' && *cursor <= 'z')
+                    || ( *cursor >= 'A' && *cursor <= 'Z')
+                    || ( *cursor >= '0' && *cursor <= '9')
+                    || *cursor == '_' || *cursor == '.')){
+                    RETURN_FALSE
+                }
+                request_length ++;
+                cursor_count ++;
+                cursor++;
+            }
+        }
+    }
+
+    // request shouldn't empty if there is a @
+    if(hasRequest && request_length == 0){
+        RETURN_FALSE
+    }
+
+    if(resource_length == 0){
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	"default_index", sizeof("default_index")-1 TSRMLS_CC);
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	"default", sizeof("default")-1 TSRMLS_CC);
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	"index", sizeof("index")-1 TSRMLS_CC);
+    }else{
+        if(resource_length == 1 && *resource == '#'){
+           resource_length = Z_STRLEN_PP(defaultActionArg);
+           resource = Z_STRVAL_PP(defaultActionArg);
+           firstDashPos=-1;
+           int i;
+           for(i=0; i < resource_length;i++){
+                if(resource[i] == '_'){
+                    firstDashPos=i;
+                    break;
+                }
+           }
+        }
+
+        if(firstDashPos == -1){
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	"default", sizeof("default")-1 TSRMLS_CC);
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	resource, resource_length TSRMLS_CC);
+
+            char *r;
+            int ld = sizeof("default:") -1;
+            int lr = ld + resource_length;
+            r= emalloc(lr+1);
+            if (r) {
+                memcpy(r, "default:", ld);
+                memcpy(r+ld, resource, resource_length);
+                r[lr] = 0;
+                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr TSRMLS_CC);
+                efree(r);
+            }
+
+        }else if(firstDashPos == 0){
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	"default", sizeof("default")-1 TSRMLS_CC);
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	resource+1, resource_length-1 TSRMLS_CC);
+
+            char *r;
+            int ld = sizeof("default") -1;
+            int lr = ld + resource_length;
+            r= emalloc(lr+1);
+            if (r) {
+                memcpy(r, "default", ld);
+                memcpy(r+ld, resource, resource_length);
+                r[lr] = 0;
+                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr TSRMLS_CC);
+                efree(r);
+            }
+
+        }else if(firstDashPos == resource_length-1){
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	resource, resource_length-1 TSRMLS_CC);
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	"index", sizeof("index")-1 TSRMLS_CC);
+            char *r;
+            int ld = sizeof("index") -1;
+            int lr = resource_length + ld;
+            r= emalloc(lr+1);
+            if (r) {
+                memcpy(r, resource, resource_length);
+                memcpy(r+resource_length, "index", ld);
+                r[lr] = 0;
+                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr TSRMLS_CC);
+                efree(r);
+            }
+
+        }else{
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	resource, firstDashPos TSRMLS_CC);
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	resource+firstDashPos+1, resource_length-firstDashPos-1 TSRMLS_CC);
+            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	resource, resource_length TSRMLS_CC);
+        }
+    }
+
+    zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "module", sizeof("module") - 1,	module, module_length TSRMLS_CC);
+    zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "request", sizeof("request") - 1,	request, request_length TSRMLS_CC);
+	RETURN_TRUE
+}
+/* }}} */
+
 
 /* {{{ proto boolean jelix_scan_class_sel(string arg, object tofill *)
    scan a string as a jelix selector, and fill object properties with founded values 

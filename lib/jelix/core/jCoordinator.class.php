@@ -1,12 +1,13 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
-* @author     Laurent Jouanneau
-* @contributor
-* @copyright  2005-2006 laurent Jouanneau
-* @link       http://www.jelix.org
-* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @package      jelix
+* @subpackage   core
+* @author       Laurent Jouanneau
+* @contributor  Thibault PIRONT < nuKs >
+* @copyright    2005-2006 laurent Jouanneau
+* @copyright    2007 Thibault PIRONT
+* @link         http://www.jelix.org
+* @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
@@ -178,8 +179,16 @@ class jCoordinator {
         if(empty($this->actionName)){
             if($this->moduleName == $gJConfig->startModule)
                 $this->actionName = $gJConfig->startAction;
-            else
-                $this->actionName = 'default_index';
+            else {
+#ifdef ENABLE_OLD_ACTION_SELECTOR
+                if($GLOBALS['gJConfig']->enableOldActionSelector == false)
+                    $this->actionName = 'default:index';
+                else
+                    $this->actionName = 'default_index';
+#else
+                $this->actionName = 'default:index';
+#endif
+            }
         }
 
         // verification du module

@@ -35,7 +35,7 @@ class formsCtrl extends jController {
         // création d'un formulaire vierge
         $form = jForms::create('sample');
         $rep= $this->getResponse("redirect");
-        $rep->action="forms_showform";
+        $rep->action="forms:showform";
         $rep->params['id']= $form->id();
         return $rep;
     }
@@ -62,7 +62,7 @@ class formsCtrl extends jController {
     
         // redirection vers le formulaire
         $rep= $this->getResponse("redirect");
-        $rep->action="forms_showform";
+        $rep->action="forms:showform";
         $rep->params['id']= $form->id(); // ou $id, c'est pareil
         return $rep;
     }
@@ -112,7 +112,7 @@ class formsCtrl extends jController {
         // non implementé pour le moment...
 
         $rep= $this->getResponse("redirect");
-        $rep->action="forms_listform";
+        $rep->action="forms:listform";
         return $rep;
     }
 
@@ -137,7 +137,7 @@ class formsCtrl extends jController {
    function destroy(){
       jForms::destroy('sample',$this->param('id'));
       $rep= $this->getResponse("redirect");
-      $rep->action="forms_listform";
+      $rep->action="forms:listform";
       return $rep;
    }
 

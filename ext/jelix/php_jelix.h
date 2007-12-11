@@ -35,6 +35,7 @@ PHP_FUNCTION(jelix_version);
 PHP_FUNCTION(jelix_read_ini);
 PHP_FUNCTION(jelix_scan_module_sel);
 PHP_FUNCTION(jelix_scan_action_sel);
+PHP_FUNCTION(jelix_scan_old_action_sel);
 PHP_FUNCTION(jelix_scan_class_sel);
 PHP_FUNCTION(jelix_scan_locale_sel);
 

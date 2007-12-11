@@ -1,12 +1,13 @@
 <?php
 /**
-* @package  jelix
-* @subpackage core
-* @author   Jouanneau Laurent
-* @contributor
-* @copyright   2006-2007 Jouanneau laurent
-* @link        http://www.jelix.org
-* @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @package      jelix
+* @subpackage   core
+* @author       Jouanneau Laurent
+* @contributor  Thibault PIRONT < nuKs >
+* @copyright    2006-2007 Jouanneau laurent
+* @copyright    2007 Thibault PIRONT
+* @link         http://www.jelix.org
+* @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
@@ -40,8 +41,16 @@ class jConfigCompiler {
                 die("Syntax error in the Jelix config file $configFile !");
         }
         $config->isWindows = (DIRECTORY_SEPARATOR == '\\');
-        if(trim( $config->startAction) == '')
-             $config->startAction = '_';
+        if(trim( $config->startAction) == '') {
+#ifdef ENABLE_OLD_ACTION_SELECTOR
+            if($GLOBALS['gJConfig']->enableOldActionSelector == false)
+                $config->startAction = ':';
+            else
+                $config->startAction = '_';
+#else
+            $config->startAction = ':';
+#endif
+       }
 
         $config->_allBasePath = array();
         
@@ -90,9 +99,17 @@ class jConfigCompiler {
             self::_mergeConfig($config, $userConfig);
         }
         $config['isWindows'] =  (DIRECTORY_SEPARATOR == '\\');
-        if(trim( $config['startAction']) == '')
-             $config['startAction'] = '_';
-
+        if(trim( $config['startAction']) == '') {
+#ifdef ENABLE_OLD_ACTION_SELECTOR
+            if($GLOBALS['gJConfig']->enableOldActionSelector == false)
+                $config['startAction'] = ':';
+            else
+                $config['startAction'] = '_';
+#else
+            $config['startAction'] = ':';
+#endif
+        }
+        
         $config['_allBasePath'] = array();
         $config['_modulesPathList'] = self::_loadPathList($config['modulesPath'], $config['_allBasePath']);
 

@@ -17,6 +17,8 @@ modulesPath = lib:jelix-modules/,app:modules/
 
 theme = default
 
+enableOldActionSelector = 
+
 [plugins]
 ;nom = nom_fichier_ini
 
@@ -73,7 +75,7 @@ entrypointExtension= .php
 
 ; leave empty to have jelix error messages
 notfoundAct =
-;notfoundAct = "jelix~error_notfound"
+;notfoundAct = "jelix~error:notfound"
 
 ;indique si vous utilisez IIS comme serveur
 useIIS = off

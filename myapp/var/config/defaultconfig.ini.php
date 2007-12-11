@@ -21,6 +21,8 @@ dbProfils = dbprofils.ini.php
 
 theme = default
 
+enableOldActionSelector =
+
 [plugins]
 ;nom = nom_fichier_ini
 
@@ -75,7 +77,7 @@ defaultEntrypoint= index
 
 entrypointExtension= .php
 
-notfoundAct = "jelix~error_notfound"
+;notfoundAct = "jelix~error:notfound"
 
 ;indique si vous utilisez IIS comme serveur
 useIIS = off

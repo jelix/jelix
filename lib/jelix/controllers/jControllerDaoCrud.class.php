@@ -1,12 +1,14 @@
 <?php
 /**
-* @package    jelix
-* @subpackage controllers
-* @author     Laurent Jouanneau
-* @contributor Bastien Jaillot
-* @copyright  2007 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+* @package      jelix
+* @subpackage   controllers
+* @author       Laurent Jouanneau
+* @contributor  Bastien Jaillot
+* @contributor  Thibault PIRONT < nuKs >
+* @copyright    2007 Laurent Jouanneau
+* @copyright    2007 Thibault PIRONT
+* @link         http://www.jelix.org
+* @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
 */
 
@@ -117,7 +119,14 @@ class jControllerDaoCrud extends jController {
      */
     protected function _getAction($method){
         global $gJCoord;
-        return $gJCoord->action->module.'~'.$gJCoord->action->controller.'_'.$method;
+#ifdef ENABLE_OLD_ACTION_SELECTOR
+        if($GLOBALS['gJConfig']->enableOldActionSelector == false)
+            return $gJCoord->action->module.'~'.$gJCoord->action->controller.':'.$method;
+        else
+            return $gJCoord->action->module.'~'.$gJCoord->action->controller.'_'.$method;
+#else
+        return $gJCoord->action->module.'~'.$gJCoord->action->controller.':'.$method;
+#endif
     }
 
     /**

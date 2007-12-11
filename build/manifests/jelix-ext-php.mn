@@ -7,39 +7,43 @@ cd ext/jelix
   VERSION
   clean.sh
   EXPERIMENTAL
-  jelix.c
-  php_jelix.h
   CREDITS
   LICENCE
-  TODO
-  jelix_interfaces.c
   INSTALL
+  TODO
+  php_jelix.h
+  jelix_interfaces.c
   jelix_interfaces.h
+  jelix.c
 cd ext/jelix/tests
-  jirestcontroller_001.phpt
-  scan_action_sel_002.phpt
-  version_001.phpt
+  001.phpt
+  jelix2.ini
+  jelix_const_001.phpt
   jelix.ini
   jiauthdriver_001.phpt
   jiauthdriver_002.phpt
-  jiselector_001.phpt
-  jiselector_002.phpt
-  jelix2.ini
-  001.phpt
-  jirestcontroller_002.phpt
-  jisimplecompiler_001.phpt
-  jimultifilecompiler_001.phpt
-  jisimplecompiler_002.phpt
-  jimultifilecompiler_002.phpt
-  read_ini_001.phpt
-  jiurlengine_001.phpt
-  read_ini_002.phpt
-  jiurlengine_002.phpt
-  read_ini_003.phpt
-  scan_module_sel_001.phpt
   jicoordplugin_001.phpt
-  jelix_const_001.phpt
   jicoordplugin_002.phpt
   jicoordplugin_003.phpt
-  scan_module_sel_002.phpt
+  jimultifilecompiler_001.phpt
+  jimultifilecompiler_002.phpt
+  jirestcontroller_001.phpt
+  jirestcontroller_002.phpt
+  jiselector_001.phpt
+  jiselector_002.phpt
+  jisimplecompiler_001.phpt
+  jisimplecompiler_002.phpt
+  jiurlengine_001.phpt
+  jiurlengine_002.phpt
+  read_ini_001.phpt
+  read_ini_002.phpt
+  read_ini_003.phpt
   scan_action_sel_001.phpt
+  scan_action_sel_002.phpt
+  scan_class_sel_001.phpt
+  scan_locale_sel_001.phpt
+  scan_module_sel_001.phpt
+  scan_module_sel_002.phpt
+  scan_old_action_sel_001.phpt
+  scan_old_action_sel_002.phpt
+  version_001.phpt

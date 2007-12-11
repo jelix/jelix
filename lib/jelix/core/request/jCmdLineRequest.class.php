@@ -4,7 +4,9 @@
 * @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
+* @contributor Thibault PIRONT < nuKs >
 * @copyright   2005-2006 Laurent Jouanneau, 2006-2007 Loic Mathaud
+* @copyright   2007 Thibault PIRONT
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -38,7 +40,14 @@ class jCmdLineRequest extends jRequest {
         } else {
             $argsel = array_shift($argv); // get the module~action selector
             if ($argsel == 'help') {
-                $argsel = 'jelix~help_index';
+#ifdef ENABLE_OLD_ACTION_SELECTOR
+                if($GLOBALS['gJConfig']->enableOldActionSelector == false)
+                    $argsel = 'jelix~help:index';
+                else
+                    $argsel = 'jelix~help_index';
+#else
+                $argsel = 'jelix~help:index';
+#endif
             }
             if (!preg_match('/(?:([\w\.]+)~)/', $argsel)) {
                 $argsel = $gJConfig->startModule.'~'.$argsel;

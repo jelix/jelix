@@ -23,7 +23,7 @@ class jSelectorUrlCfgSig extends jSelectorCfg {
         $o = new jSignificantUrlsCompiler();
         return $o;
     }
-    public function getCompiledFilePath (){ return JELIX_APP_TEMP_PATH.'compiled/urlsig/creationinfos.php';}
+    public function getCompiledFilePath (){ return JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$this->file.'.creationinfos.php';}
 }
 
 /**
@@ -97,9 +97,9 @@ class significantUrlEngine implements jIUrlEngine {
 
         if ($gJConfig->urlengine['enableParser']){
 
-            $sel = new jSelectorUrlCfgSig('urls.xml');
+            $sel = new jSelectorUrlCfgSig($gJConfig->urlengine['significantFile']);
             jIncluder::inc($sel);
-            $basepath = $GLOBALS['gJConfig']->urlengine['basePath'];
+            $basepath = $gJConfig->urlengine['basePath'];
             if(strpos($scriptNamePath, $basepath) === 0){
                 $snp = substr($scriptNamePath,strlen($basepath));
             }else{
@@ -109,9 +109,9 @@ class significantUrlEngine implements jIUrlEngine {
             if($pos !== false){
                 $snp = substr($snp,0,$pos);
             }
-            $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($snp).'.entrypoint.php';
+            $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$sel->file.'.'.rawurlencode($snp).'.entrypoint.php';
             if(file_exists($file)){
-                require_once($file);
+                require($file);
                 $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 101
                 $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][rawurlencode($snp)];
                 $urlact = $this->_parse($scriptNamePath, $pathinfo, $params);
@@ -230,7 +230,14 @@ class significantUrlEngine implements jIUrlEngine {
             try{
                 $urlact = jUrl::get($gJConfig->urlengine['notfoundAct'],array(),jUrl::JURLACTION);
             }catch(Exception $e){
-                $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error_notfound'));
+#ifdef ENABLE_OLD_ACTION_SELECTOR
+                if($gJConfig->enableOldActionSelector)
+                    $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error_notfound'));
+                else
+                    $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));
+#else
+                $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));
+#endif
             }
         }else if(!$urlact && $isDefault){
             // si on n'a pas trouvé de correspondance, mais que c'est l'entry point
@@ -256,7 +263,7 @@ class significantUrlEngine implements jIUrlEngine {
     public function create( $urlact){
 
         if($this->dataCreateUrl == null){
-            $sel = new jSelectorUrlCfgSig('urls.xml');
+            $sel = new jSelectorUrlCfgSig($GLOBALS['gJConfig']->urlengine['significantFile']);
             jIncluder::inc($sel);
             $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
         }

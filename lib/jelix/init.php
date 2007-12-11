@@ -139,7 +139,8 @@ $gJConfig = null;
  */
 $gLibPath=array('Db'=>JELIX_LIB_DB_PATH, 'Dao'=>JELIX_LIB_DAO_PATH,
  'Forms'=>JELIX_LIB_FORMS_PATH, 'Event'=>JELIX_LIB_EVENTS_PATH,
- 'Tpl'=>JELIX_LIB_TPL_PATH, 'Acl'=>JELIX_LIB_ACL_PATH, 'Controller'=>JELIX_LIB_CTRL_PATH, 'Auth'=>JELIX_LIB_AUTH_PATH);
+ 'Tpl'=>JELIX_LIB_TPL_PATH, 'Acl'=>JELIX_LIB_ACL_PATH, 'Controller'=>JELIX_LIB_CTRL_PATH,
+ 'Auth'=>JELIX_LIB_AUTH_PATH);
 
 /**
  * __autoload function used by php to try to load an unknown class

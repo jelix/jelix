@@ -16,7 +16,7 @@ session_name = "JELIX_USER"
 secure_with_ip = 0
 
 ; action en cas de piratage de la session et si onError = 2
-bad_ip_action = "jxauth~login_out"
+bad_ip_action = "jxauth~login:out"
 
 ;Timeout. Permet de forcer une authentification aprés un certain temps écoulé
 ;sans action . temps en minutes. 0 = pas de timeout.

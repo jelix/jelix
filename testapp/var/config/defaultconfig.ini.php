@@ -20,7 +20,6 @@ theme = default
 ; for junittests module
 enableTests = on
 
-
 [plugins]
 ;nom = nom_fichier_ini
 
@@ -75,7 +74,7 @@ defaultEntrypoint= index
 entrypointExtension= .php
 
 notfoundAct = 
-;notfoundAct = "jelix~error_notfound"
+;notfoundAct = "jelix~error:notfound"
 
 ;indique si vous utilisez IIS comme serveur
 useIIS = off
@@ -87,7 +86,7 @@ IISPathKey = __JELIX_URL__
 IISStripslashesPathKey = on
 
 ; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur d'url simple
-simple_urlengine_https = "unittest~urlsig_url8@classic @xmlrpc"
+simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
 
 [simple_urlengine_entrypoints]
 ; paramètres pour le moteur d'url simple : liste des points d'entrées avec les actions
@@ -102,8 +101,8 @@ simple_urlengine_https = "unittest~urlsig_url8@classic @xmlrpc"
 index = "@classic"
 xmlrpc = "@xmlrpc"
 jsonrpc = "@jsonrpc"
-testnews = "jelix_tests~urlsig_url2@classic jelix_tests~urlsig_url3@classic"
-foo/bar = "jelix_tests~urlsig_url4@classic"
+testnews = "jelix_tests~urlsig:url2@classic jelix_tests~urlsig:url3@classic"
+foo/bar = "jelix_tests~urlsig:url4@classic"
 news = "new~*@classic"
 
 __https=

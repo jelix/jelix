@@ -6,4 +6,4 @@
    <dt>Prenom :</dt>
    <dd>{$prenom}</dd>
 </dl>
-<p><a href="{jurl 'forms_listform'}">Retour à la liste</a></p>
+<p><a href="{jurl 'forms:listform'}">Retour à la liste</a></p>

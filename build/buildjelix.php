@@ -64,8 +64,12 @@ $BUILD_OPTIONS = array(
     false,
     ),
 'ENABLE_OLD_CLASS_NAMING'=>array(
-    "old module class naming (jelix <= 1.0a5) can be used. deprecated for Jelix 1.0.",
+    "old module class naming (jelix <= 1.0a5) can be used. deprecated for Jelix 1.0 and higher.",
     false,
+    ),
+'ENABLE_OLD_ACTION_SELECTOR'=>array(
+    "old action selector can be used. deprecated for Jelix 1.1 and higher.",
+    true,
     ),
 'INCLUDE_ALL_FONTS'=>array(
     "True if you want to include lib/fonts content for tcpdf or other",
@@ -221,7 +225,7 @@ file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 // creation du fichier d'infos sur le build
 $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SVN_REVISION', 'ENABLE_PHP_FILTER',
     'ENABLE_PHP_JSON', 'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
-    'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT', 'ENABLE_OLD_CLASS_NAMING' );
+    'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT', 'ENABLE_OLD_CLASS_NAMING', 'ENABLE_OLD_ACTION_SELECTOR' );
 
 $infos = '; --- build date:  '.date('Y-m-d H:i')."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);
 

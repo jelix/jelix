@@ -9,33 +9,44 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTSelectorAct extends UnitTestCase {
-    protected $oldConfValue;
-
+/**
+ * @deprecated
+ */
+class UTOldSelectorAct extends UnitTestCase {
+    protected $savedAct;
+    protected $savedFile;
+    protected $savedan;
+    
     function setUp() {
-        $this->oldConfValue = $GLOBALS['gJConfig']->enableOldActionSelector;
-        $GLOBALS['gJConfig']->enableOldActionSelector = false;
+        global $gJCoord;
+        $this->savedAct = $GLOBALS['gJConfig']->enableOldActionSelector;
+        $this->savedFile = $GLOBALS['gJConfig']->urlengine['significantFile'];
+        $this->savedan = $gJCoord->actionName;
+        $gJCoord->actionName = $gJCoord->action->controller.'_'.$gJCoord->action->method;
+
+        
+        $GLOBALS['gJConfig']->enableOldActionSelector = true;
+        $GLOBALS['gJConfig']->urlengine['significantFile'] = 'urls_old.xml';
     }
 
     function tearDown() {
-        $GLOBALS['gJConfig']->enableOldActionSelector = $this->oldConfValue;
+        $GLOBALS['gJConfig']->enableOldActionSelector = $this->savedAct;
+        $GLOBALS['gJConfig']->urlengine['significantFile'] = $this->savedFile;
+        $GLOBALS['gJCoord']->actionName = $this->savedan;
     }
-
-
+    
     function testWithModule() {
         $sels=array(
-"testapp~ctrl:meth@truc"=>array('testapp','ctrl','meth','truc'),
-"testapp~ct_rl:me_th@truc"=>array('testapp','ct_rl','me_th','truc'),
-"testapp~:meth@truc"=>array('testapp','default','meth','truc'),
-"testapp~:me_th@truc"=>array('testapp','default','me_th','truc'),
+"testapp~ctrl_meth@truc"=>array('testapp','ctrl','meth','truc'),
+"testapp~_meth@truc"=>array('testapp','default','meth','truc'),
 "testapp~meth@truc"=>array('testapp','default','meth','truc'),
-"testapp~ctrl:@truc"=>array('testapp','ctrl','index','truc'),
+"testapp~ctrl_@truc"=>array('testapp','ctrl','index','truc'),
 "testapp~@truc"=>array('testapp','default','index','truc'),
 "testapp~#@truc"=>array('testapp',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'truc'),
-"testapp~ctrl:meth"=>array('testapp','ctrl','meth','classic'),
-"testapp~:meth"=>array('testapp','default','meth','classic'),
+"testapp~ctrl_meth"=>array('testapp','ctrl','meth','classic'),
+"testapp~_meth"=>array('testapp','default','meth','classic'),
 "testapp~meth"=>array('testapp','default','meth','classic'),
-"testapp~ctrl:"=>array('testapp','ctrl','index','classic'),
+"testapp~ctrl_"=>array('testapp','ctrl','index','classic'),
 "testapp~"=>array('testapp','default','index','classic'),
 "testapp~#"=>array('testapp',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'classic'),
         );
@@ -45,15 +56,15 @@ class UTSelectorAct extends UnitTestCase {
 
     function testWithoutModule() {
         $sels=array(
-"~ctrl:meth@truc"=>false,
+"~ctrl_meth@truc"=>false,
 "~_meth@truc"=>false,
-"~ctrl:@truc"=>false,
+"~ctrl_@truc"=>false,
 "~@truc"=>false,
 "~#@truc"=>false,
-"~ctrl:meth"=>false,
-"~:meth"=>false,
+"~ctrl_meth"=>false,
+"~_meth"=>false,
 "me.th"=>false,
-"~ctrl:"=>false,
+"~ctrl_"=>false,
 "~"=>false,
 "~#"=>false,
 "a-b~toto"=>false,
@@ -79,16 +90,16 @@ class UTSelectorAct extends UnitTestCase {
     function testWithModuleWildcard() {
         $mod = $GLOBALS['gJCoord']->action->module;
         $sels=array(
-"#~ctrl:meth@truc"=>array($mod,'ctrl','meth','truc'),
-"#~:meth@truc"=>array($mod,'default','meth','truc'),
+"#~ctrl_meth@truc"=>array($mod,'ctrl','meth','truc'),
+"#~_meth@truc"=>array($mod,'default','meth','truc'),
 "#~meth@truc"=>array($mod,'default','meth','truc'),
-"#~ctrl:@truc"=>array($mod,'ctrl','index','truc'),
+"#~ctrl_@truc"=>array($mod,'ctrl','index','truc'),
 "#~@truc"=>array($mod,'default','index','truc'),
 "#~#@truc"=>array($mod,$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'truc'),
-"#~ctrl:meth"=>array($mod,'ctrl','meth','classic'),
-"#~:meth"=>array($mod,'default','meth','classic'),
+"#~ctrl_meth"=>array($mod,'ctrl','meth','classic'),
+"#~_meth"=>array($mod,'default','meth','classic'),
 "#~meth"=>array($mod,'default','meth','classic'),
-"#~ctrl:"=>array($mod,'ctrl','index','classic'),
+"#~ctrl_"=>array($mod,'ctrl','index','classic'),
 "#~"=>array($mod,'default','index','classic'),
 "#~#"=>array($mod,$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'classic'),
         );
@@ -97,15 +108,15 @@ class UTSelectorAct extends UnitTestCase {
 
    function testMisc() {
         $sels=array(
-"ctrl:meth@truc"=>array('jelix_tests','ctrl','meth','truc'),
-":meth@truc"=>array('jelix_tests','default','meth','truc'),
-"ctrl:@truc"=>array('jelix_tests','ctrl','index','truc'),
+"ctrl_meth@truc"=>array('jelix_tests','ctrl','meth','truc'),
+"_meth@truc"=>array('jelix_tests','default','meth','truc'),
+"ctrl_@truc"=>array('jelix_tests','ctrl','index','truc'),
 "@truc"=>array('jelix_tests','default','index','truc'),
 "#@truc"=>array('jelix_tests',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'truc'),
-"ctrl:meth"=>array('jelix_tests','ctrl','meth','classic'),
-":meth"=>array('jelix_tests','default','meth','classic'),
+"ctrl_meth"=>array('jelix_tests','ctrl','meth','classic'),
+"_meth"=>array('jelix_tests','default','meth','classic'),
 "meth"=>array('jelix_tests','default','meth','classic'),
-"ctrl:"=>array('jelix_tests','ctrl','index','classic'),
+"ctrl_"=>array('jelix_tests','ctrl','index','classic'),
 ""=>array('jelix_tests','default','index','classic'),
 "#"=>array('jelix_tests',$GLOBALS['gJCoord']->action->controller, $GLOBALS['gJCoord']->action->method,'classic'),
         );
@@ -131,10 +142,10 @@ class UTSelectorAct extends UnitTestCase {
                 && $s->method == $res[2]
                 && $s->request == $res[3];
                 if(!$ok)
-                    $msg=' contains unexpected datas ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
+                    $msg=' contient ces données inattendues ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
             }
 
-            $this->assertTrue($ok , ' test of '.$sel. ' (should be '.($res === false ? 'invalid':'valid').')');
+            $this->assertTrue($ok , ' test de '.$sel. ' (devrait être '.($res === false ? 'invalide':'valide').')');
             if($msg)
                 $this->sendMessage($msg);
         }
@@ -146,11 +157,11 @@ class UTSelectorAct extends UnitTestCase {
         $list=array(
 
                 array(
-                        array('truc', 'testapp', 'ctrl:meth'),
+                        array('truc', 'testapp', 'ctrl_meth'),
                         array('testapp','ctrl','meth','truc'),
                 ),
                 array(
-                        array('truc', 'testapp', ':meth'),
+                        array('truc', 'testapp', '_meth'),
                         array('testapp','default','meth','truc'),
                 ),
                 array(
@@ -158,11 +169,11 @@ class UTSelectorAct extends UnitTestCase {
                         array('testapp','default','meth','truc'),
                 ),
                 array(
-                        array('truc', 'testapp', 'ctrl:'),
+                        array('truc', 'testapp', 'ctrl_'),
                         array('testapp','ctrl','index','truc'),
                 ),
                 array(
-                        array('truc', 'testapp', 'ctrl:'),
+                        array('truc', 'testapp', 'ctrl_'),
                         array('testapp','ctrl','index','truc'),
                 ),
         );
@@ -182,10 +193,10 @@ class UTSelectorAct extends UnitTestCase {
                 && $s->method == $res[2]
                 && $s->request == $res[3];
                 if(!$valid)
-                    $msg=' contains unexpected datas ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
+                    $msg=' contient ces données inattendues ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
             }
 
-            $this->assertTrue($valid , ' test of '.$sel. ' (should be '.($res === false ? 'invalid':'valid').')');
+            $this->assertTrue($valid , ' test de '.$sel. ' (devrait être '.($res === false ? 'invalide':'valide').')');
             if($msg)
                 $this->sendMessage($msg);
         }

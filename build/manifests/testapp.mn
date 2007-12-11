@@ -103,9 +103,12 @@ cd testapp/modules/jelix_tests/forms
 cd testapp/modules/jelix_tests/tests/
   core.jlocale.html.php
   core.selectors_action.html.php
+  core.old_selectors_action.html.php
   core.selectors_module.html.php
   core.urls_generation.html.php
+  core.old_urls_generation.html.php
   core.urls_parsing.html.php
+  core.old_urls_parsing.html.php
   events.simple_test.html.php
   jacl.main_api.html.php
   jacl.manager.html.php
@@ -142,6 +145,7 @@ cd testapp/var/config
   defaultconfig.ini.php
   dbprofils.ini.php.dist
   urls.xml
+  urls_old.xml
 cd testapp/var/config/index
   config.ini.php
 cd testapp/var/config/xmlrpc

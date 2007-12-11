@@ -68,19 +68,19 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
     protected $builder;
     function testStart() {
         $this->form = new testHMLForm();
-        $this->builder = new testJFormsHtmlBuilder($this->form, 'jelix_tests~urlsig_url1',array());
+        $this->builder = new testJFormsHtmlBuilder($this->form, 'jelix_tests~urlsig:url1',array());
         $this->formname = $this->builder->getName();
     }
 
 
     function testOutputHeader(){
-        $builder = new testJFormsHtmlBuilder(new testHMLForm(), 'jelix_tests~urlsig_url1',array());
+        $builder = new testJFormsHtmlBuilder(new testHMLForm(), 'jelix_tests~urlsig:url1',array());
         $formname = $builder->getName();
         ob_start();
         $builder->outputHeader(array('','','post'));
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div><input type="hidden" name="module" value="jelix_tests"/>
-<input type="hidden" name="action" value="urlsig_url1"/>
+<input type="hidden" name="action" value="urlsig:url1"/>
 </div><script type="text/javascript"> 
 //<![CDATA[
 
@@ -88,14 +88,14 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 </script>';
         $this->assertEqualOrDiff($result, $out);
 
-        $builder = new testJFormsHtmlBuilder(new testHMLForm(), 'jelix_tests~urlsig_url1',array('foo'=>'b>ar'));
+        $builder = new testJFormsHtmlBuilder(new testHMLForm(), 'jelix_tests~urlsig:url1',array('foo'=>'b>ar'));
         $formname = $builder->getName();
         ob_start();
         $builder->outputHeader(array('','','get'));
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
-<input type="hidden" name="action" value="urlsig_url1"/>
+<input type="hidden" name="action" value="urlsig:url1"/>
 </div><script type="text/javascript"> 
 //<![CDATA[
 

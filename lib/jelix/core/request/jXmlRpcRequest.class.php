@@ -4,7 +4,9 @@
 * @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor Frederic Guillot
+* @contributor Thibault PIRONT < nuKs >
 * @copyright   2005-2006 Laurent Jouanneau, 2007 Frederic Guillot
+* @copyright   2007 Thibault PIRONT
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -42,7 +44,7 @@ class jXmlRpcRequest extends jRequest {
 
             // Décodage de la requete
             list($nom,$vars) = jXmlRpc::decodeRequest($requestXml);
-            list($module, $action) = explode(':',$nom);
+            list($module, $action) = explode(':',$nom,2);
 
             if(count($vars) == 1 && is_array($vars[0]))
                 $this->params = $vars[0];

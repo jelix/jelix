@@ -133,15 +133,32 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                }
 
                $action = (string)$url['action'];
-               if (strpos($action, '_') === false) {
-                  $action = 'default_'.$action;
+#ifdef ENABLE_OLD_ACTION_SELECTOR
+               if($GLOBALS['gJConfig']->enableOldActionSelector == false)
+                   $separator = ':';
+               else
+                   $separator = '_';
+               
+               if (strpos($action, $separator) === false) {
+                  $action = 'default'.$separator.$action;
                }
 
                if(isset($url['actionoverride'])){
                   $actionOverride = preg_split("/[\s,]+/", (string)$url['actionoverride']);
                   foreach ($actionOverride as &$each) {
-                     if (strpos($each, '_') === false) {
-                        $each = 'default_'.$each;
+                     if (strpos($each, $separator) === false) {
+                        $each = 'default'.$separator.$each;
+#else
+               if (strpos($action, ':') === false) {
+                  $action = 'default:'.$action;
+               }
+
+               if(isset($url['actionoverride'])){
+                  $actionOverride = preg_split("/[\s,]+/", (string)$url['actionoverride']);
+                  foreach ($actionOverride as &$each) {
+                     if (strpos($each, ':') === false) {
+                        $each = 'default:'.$each;
+#endif
                      }
                   }
                }else{
@@ -266,10 +283,10 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
            $parseContent.='$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($entryPoint).'\'] = '.var_export($parseInfos, true).";\n?>";
 
-           jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.rawurlencode($entryPoint).'.entrypoint.php',$parseContent);
+           jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($entryPoint).'.entrypoint.php',$parseContent);
         }
         $createUrlContent .='$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($createUrlInfos, true).";\n?>";
-        jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/creationinfos.php',$createUrlContent);
+        jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$aSelector->file.'.creationinfos.php',$createUrlContent);
         return true;
     }
 

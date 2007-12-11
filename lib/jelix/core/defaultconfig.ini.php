@@ -2,7 +2,7 @@
 ;for security reasons , don't remove or modify the first line
 
 startModule = "jelix"
-startAction = "default_index"
+startAction = "default:index"
 locale = "fr_FR"
 charset = "UTF-8"
 timeZone = "Europe/Paris"
@@ -20,6 +20,7 @@ dbProfils = dbprofils.ini.php
 theme = default
 use_error_handler = on
 
+enableOldActionSelector =
 
 [plugins]
 
@@ -120,7 +121,7 @@ entrypointExtension= .php
 
 ; leave empty to have jelix error messages
 notfoundAct =
-;notfoundAct = "jelix~error_notfound"
+;notfoundAct = "jelix~error:notfound"
 
 ;if you use IIS as a serveur set it to on
 useIIS = off
@@ -133,6 +134,8 @@ IISStripslashes_path_key = on
 
 ; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur d'url simple
 simple_urlengine_https =
+
+significantFile = "urls.xml"
 
 [simple_urlengine_entrypoints]
 ; paramètres pour le moteur d'url simple : liste des points d'entrées avec les actions

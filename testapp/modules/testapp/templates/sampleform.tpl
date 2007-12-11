@@ -26,7 +26,7 @@ myErrorDecorator.prototype = {
 {/literal}
 </script>
 
-{form $form,'sampleform_save', array(), 'myErrorDecorator'}
+{form $form,'sampleform:save', array(), 'myErrorDecorator'}
 <fieldset>
    <legend>Votre identité</legend>
     {formcontrols}

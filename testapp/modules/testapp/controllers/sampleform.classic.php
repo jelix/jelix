@@ -15,7 +15,7 @@ class sampleFormCtrl extends jController {
       // création d'un formulaire vierge
       $form = jForms::create('sample');
       $rep= $this->getResponse("redirect");
-      $rep->action="sampleform_show";
+      $rep->action="sampleform:show";
       return $rep;
   }
 
@@ -43,9 +43,9 @@ class sampleFormCtrl extends jController {
 
       $form = jForms::fill('sample');
       if($form->check())
-          $rep->action="sampleform_ok";
+          $rep->action="sampleform:ok";
       else
-          $rep->action="sampleform_show";
+          $rep->action="sampleform:show";
       return $rep;
    }
 
@@ -68,7 +68,7 @@ class sampleFormCtrl extends jController {
    function destroy(){
       jForms::destroy('sample');
       $rep= $this->getResponse("redirect");
-      $rep->action="sampleform_status";
+      $rep->action="sampleform:status";
       return $rep;
    }
 

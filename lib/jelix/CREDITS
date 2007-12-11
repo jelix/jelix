@@ -90,6 +90,7 @@ Dominique Papin (aka bibo)
 
 Thibault Piront (aka nuks)
  - fixed bug in significant url engine (#364)
+ - big part of the patch about new action selectors (#317)
 
 Laurent Raufaste (aka analogue)
  - patch on postgresql driver (#123)

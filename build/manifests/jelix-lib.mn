@@ -26,7 +26,7 @@ cd lib/jelix/acl
 
 cd lib/jelix/controllers
   jControllerCmdLine.class.php
-  jControllerDaoCrud.class.php
+*  jControllerDaoCrud.class.php
   
 cd lib/jelix/core
 ! defaultconfig.ini.php
@@ -35,7 +35,7 @@ cd lib/jelix/core
 
 cd lib/jelix/core/request
   jClassicRequest.class.php
-  jCmdLineRequest.class.php
+* jCmdLineRequest.class.php
   jJsonRpcRequest.class.php
   jXmlRpcRequest.class.php
   jXulRequest.class.php
@@ -388,7 +388,7 @@ cd lib/jelix/plugins/tpl/xul
   meta.xul.php
 
 cd lib/jelix/plugins/urls/significant
-  jSignificantUrlsCompiler.class.php
+* jSignificantUrlsCompiler.class.php
 * significant.urls.php
 cd lib/jelix/plugins/urls/simple
   simple.urls.php
