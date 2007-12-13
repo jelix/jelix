@@ -169,11 +169,24 @@ class significantUrlEngine implements jIUrlEngine {
                 // si une action est présente dans l'url actuelle
                 // et qu'elle fait partie des actions secondaires, alors on la laisse
                 // sinon on prend celle indiquée dans la conf
-                if( $infoparsing[3]
-                    && isset($params['action'])
-                    && in_array($params['action'], $infoparsing[3])){
-
-                    $url->params['action']=$params['action']; // action peut avoir été écrasé par une itération précédente
+                if ($infoparsing[3] && isset($params['action'])) {
+#ifdef ENABLE_OLD_ACTION_SELECTOR
+                    if(strpos($params['action'], ':') === false) {
+                        if(!$gJConfig->enableOldActionSelector || strpos($params['action'], '_') === false) {
+                            $params['action'] = 'default:'.$params['action'];
+                        } else if($gJConfig->enableOldActionSelector && strpos($params['action'], '_') !== false) {
+                            $params['action'] = str_replace("_",":",$params['action']);
+                        }
+                    }
+#else
+                    if(strpos($params['action'], ':') === false) {
+                        $params['action'] = 'default:'.$params['action'];
+                    }
+#endif
+                    if(in_array($params['action'], $infoparsing[3]))
+                        $url->params['action']=$params['action']; // action peut avoir été écrasé par une itération précédente
+                    else
+                        $url->params['action']=$infoparsing[1];
                 }else{
                     $url->params['action']=$infoparsing[1];
                 }
@@ -196,10 +209,26 @@ class significantUrlEngine implements jIUrlEngine {
                     // si une action est présente dans l'url actuelle
                     // et qu'elle fait partie des actions secondaires, alors on la laisse
                     // sinon on prend celle indiquée dans la conf
-                    if( !($infoparsing[6]
-                        && isset($params['action'])
-                        && in_array($params['action'], $infoparsing[6]))){
 
+                    if($infoparsing[6] && isset($params['action']) ) {
+#ifdef ENABLE_OLD_ACTION_SELECTOR
+                        if(strpos($params['action'], ':') === false) {
+                            if(!$gJConfig->enableOldActionSelector || strpos($params['action'], '_') === false) {
+                                $params['action'] = 'default:'.$params['action'];
+                            } else if($gJConfig->enableOldActionSelector && strpos($params['action'], '_') !== false) {
+                                $params['action'] = str_replace("_",":",$params['action']);
+                            }
+                        }
+#else
+                        if(strpos($params['action'], ':') === false) {
+                            $params['action'] = 'default:'.$params['action'];
+                        }
+#endif
+                        if(!in_array($params['action'], $infoparsing[6]) && $infoparsing[1] !='') {
+                            $params['action']=$infoparsing[1];
+                        }
+
+                    } else {
                         if($infoparsing[1] !='')
                             $params['action']=$infoparsing[1];
                     }
@@ -230,14 +259,7 @@ class significantUrlEngine implements jIUrlEngine {
             try{
                 $urlact = jUrl::get($gJConfig->urlengine['notfoundAct'],array(),jUrl::JURLACTION);
             }catch(Exception $e){
-#ifdef ENABLE_OLD_ACTION_SELECTOR
-                if($gJConfig->enableOldActionSelector)
-                    $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error_notfound'));
-                else
-                    $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));
-#else
                 $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));
-#endif
             }
         }else if(!$urlact && $isDefault){
             // si on n'a pas trouvé de correspondance, mais que c'est l'entry point

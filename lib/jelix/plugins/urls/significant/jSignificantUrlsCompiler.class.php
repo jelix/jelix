@@ -133,22 +133,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                }
 
                $action = (string)$url['action'];
-#ifdef ENABLE_OLD_ACTION_SELECTOR
-               if($GLOBALS['gJConfig']->enableOldActionSelector == false)
-                   $separator = ':';
-               else
-                   $separator = '_';
-               
-               if (strpos($action, $separator) === false) {
-                  $action = 'default'.$separator.$action;
-               }
 
-               if(isset($url['actionoverride'])){
-                  $actionOverride = preg_split("/[\s,]+/", (string)$url['actionoverride']);
-                  foreach ($actionOverride as &$each) {
-                     if (strpos($each, $separator) === false) {
-                        $each = 'default'.$separator.$each;
-#else
                if (strpos($action, ':') === false) {
                   $action = 'default:'.$action;
                }
@@ -158,7 +143,6 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                   foreach ($actionOverride as &$each) {
                      if (strpos($each, ':') === false) {
                         $each = 'default:'.$each;
-#endif
                      }
                   }
                }else{

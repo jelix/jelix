@@ -42,15 +42,8 @@ class jConfigCompiler {
         }
         $config->isWindows = (DIRECTORY_SEPARATOR == '\\');
         if(trim( $config->startAction) == '') {
-#ifdef ENABLE_OLD_ACTION_SELECTOR
-            if($GLOBALS['gJConfig']->enableOldActionSelector == false)
-                $config->startAction = ':';
-            else
-                $config->startAction = '_';
-#else
             $config->startAction = ':';
-#endif
-       }
+        }
 
         $config->_allBasePath = array();
         
@@ -100,14 +93,7 @@ class jConfigCompiler {
         }
         $config['isWindows'] =  (DIRECTORY_SEPARATOR == '\\');
         if(trim( $config['startAction']) == '') {
-#ifdef ENABLE_OLD_ACTION_SELECTOR
-            if($GLOBALS['gJConfig']->enableOldActionSelector == false)
-                $config['startAction'] = ':';
-            else
-                $config['startAction'] = '_';
-#else
             $config['startAction'] = ':';
-#endif
         }
         
         $config['_allBasePath'] = array();

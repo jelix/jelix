@@ -29,8 +29,8 @@ class UTOldCreateUrls extends UnitTestCase {
       $this->oldModule = $gJConfig->_modulesPathList;
       $this->oldActionSelector = $gJConfig->enableOldActionSelector;
       $gJConfig->enableOldActionSelector = true;
-      $gJConfig->simple_urlengine_entrypoints['testnews'] = "jelix_tests~urlsig_url2@classic jelix_tests~urlsig_url3@classic";
-      $gJConfig->simple_urlengine_entrypoints['foo/bar'] = "jelix_tests~urlsig_url4@classic";
+      $gJConfig->simple_urlengine_entrypoints['testnews'] = "jelix_tests~urlsig:url2@classic jelix_tests~urlsig:url3@classic";
+      $gJConfig->simple_urlengine_entrypoints['foo/bar'] = "jelix_tests~urlsig:url4@classic";
     }
 
     function tearDown() {
@@ -106,7 +106,7 @@ class UTOldCreateUrls extends UnitTestCase {
          'defaultEntrypoint'=>'index',
          'entrypointExtension'=>'.php',
          'notfoundAct'=>'jelix~notfound',
-         'simple_urlengine_https'=>'jelix_tests~urlsig_url8@classic @xmlrpc',
+         'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
          'significantFile'=>'urls_old.xml',
        );
       /* $gJConfig->simple_urlengine_entrypoints = array(
@@ -129,13 +129,13 @@ class UTOldCreateUrls extends UnitTestCase {
       $urlList[]= array('jelix_tests~urlsig_url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
 
       $trueResult=array(
-          "/index.php?mois=10&annee=2005&id=35&module=jelix_tests&action=urlsig_url1",
-          "/testnews.php?mois=05&annee=2004&module=jelix_tests&action=urlsig_url2",
-          "/testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=jelix_tests&action=urlsig_url3",
-          "/foo/bar.php?first=premier&second=deuxieme&module=jelix_tests&action=urlsig_url4",
-          "/index.php?foo=oof&bar=rab&module=jelix_tests&action=urlsig_url5",
+          "/index.php?mois=10&annee=2005&id=35&module=jelix_tests&action=urlsig:url1",
+          "/testnews.php?mois=05&annee=2004&module=jelix_tests&action=urlsig:url2",
+          "/testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=jelix_tests&action=urlsig:url3",
+          "/foo/bar.php?first=premier&second=deuxieme&module=jelix_tests&action=urlsig:url4",
+          "/index.php?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
           "/xmlrpc.php",
-          "/index.php?rubrique=vetements&id_article=98&module=jelix_tests&action=urlsig_url8",
+          "/index.php?rubrique=vetements&id_article=98&module=jelix_tests&action=urlsig:url8",
        );
 
 
@@ -146,13 +146,13 @@ class UTOldCreateUrls extends UnitTestCase {
       $gJConfig->urlengine['multiview']=true;
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
       $trueResult=array(
-          "/index?mois=10&annee=2005&id=35&module=jelix_tests&action=urlsig_url1",
-          "/testnews?mois=05&annee=2004&module=jelix_tests&action=urlsig_url2",
-          "/testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=jelix_tests&action=urlsig_url3",
-          "/foo/bar?first=premier&second=deuxieme&module=jelix_tests&action=urlsig_url4",
-          "/index?foo=oof&bar=rab&module=jelix_tests&action=urlsig_url5",
+          "/index?mois=10&annee=2005&id=35&module=jelix_tests&action=urlsig:url1",
+          "/testnews?mois=05&annee=2004&module=jelix_tests&action=urlsig:url2",
+          "/testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=jelix_tests&action=urlsig:url3",
+          "/foo/bar?first=premier&second=deuxieme&module=jelix_tests&action=urlsig:url4",
+          "/index?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
           "/xmlrpc",
-          "/index?rubrique=vetements&id_article=98&module=jelix_tests&action=urlsig_url8",
+          "/index?rubrique=vetements&id_article=98&module=jelix_tests&action=urlsig:url8",
        );
       $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
       $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
@@ -175,8 +175,8 @@ class UTOldCreateUrls extends UnitTestCase {
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
          'entrypointExtension'=>'.php',
-         'notfoundAct'=>'jelix~notfound',
-         'simple_urlengine_https'=>'jelix_tests~urlsig_url8@classic @xmlrpc',
+         'notfoundAct'=>'jelix~error:notfound',
+         'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
          'significantFile'=>'urls_old.xml',
        );
 
@@ -217,7 +217,7 @@ class UTOldCreateUrls extends UnitTestCase {
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
          'entrypointExtension'=>'.php',
-         'notfoundAct'=>'jelix~notfound',
+         'notfoundAct'=>'jelix~error:notfound',
          'significantFile'=>'urls_old.xml',
        );
 
@@ -228,7 +228,9 @@ class UTOldCreateUrls extends UnitTestCase {
 
       $urlList=array();
       $urlList[]= array('urlsig_url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'01'));
+      $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'01'));
       $urlList[]= array('urlsig_url9', array('mois'=>'10',  'annee'=>'2005', 'id'=>'09'));
+      $urlList[]= array('urlsig:url9', array('mois'=>'10',  'annee'=>'2005', 'id'=>'09'));
       $urlList[]= array('urlsig_url10', array('mois'=>'10',  'annee'=>'2005', 'id'=>'10'));
       $urlList[]= array('urlsig_url2', array('mois'=>'05',  'annee'=>'2004'));
       $urlList[]= array('jelix_tests~urlsig_url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
@@ -252,16 +254,18 @@ class UTOldCreateUrls extends UnitTestCase {
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
-          "/index.php/test/news/2005/10/09?action=urlsig_url9",
-          "/index.php/test/news/2005/10/10?action=urlsig_url10",
+          "/index.php/test/news/2005/10/01",
+          "/index.php/test/news/2005/10/09?action=urlsig:url9",
+          "/index.php/test/news/2005/10/09?action=urlsig:url9",
+          "/index.php/test/news/2005/10/10?action=urlsig:url10",
           "/testnews.php/2004/05",
           "/index.php/test/cms/actualite/65-c-est-la-fete-au-village",
           "/test/cms2/actualite/65",
           "/foo/bar.php/withhandler/premier/deuxieme",
-          "/index.php?foo=oof&bar=rab&module=jelix_tests&action=urlsig_url5",
+          "/index.php?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
           "/xmlrpc.php",
-          "/news.php?aaa=bbb&action=default_bar",
-          "/index.php/test/news/2007/23/74?action=urlsig_url8",
+          "/news.php?aaa=bbb&action=default:bar",
+          "/index.php/test/news/2007/23/74?action=urlsig:url8",
           "/index.php/shop/vetements/98",
           "/index.php/shop/bricolage/53/",
           "/index.php/supershop/alimentation?id_article=26",
@@ -274,23 +278,25 @@ class UTOldCreateUrls extends UnitTestCase {
           "/index.php/hello3",
        );
 
-      $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
+      $trueResult[13]='https://'.$_SERVER['HTTP_HOST'].$trueResult[13];
       $this->_doCompareUrl("significant, multiview = false", $urlList,$trueResult);
 
 
       $gJConfig->urlengine['multiview']=true;
       $trueResult=array(
           "/index/test/news/2005/10/01",
-          "/index/test/news/2005/10/09?action=urlsig_url9",
-          "/index/test/news/2005/10/10?action=urlsig_url10",
+          "/index/test/news/2005/10/01",
+          "/index/test/news/2005/10/09?action=urlsig:url9",
+          "/index/test/news/2005/10/09?action=urlsig:url9",
+          "/index/test/news/2005/10/10?action=urlsig:url10",
           "/testnews/2004/05",
           "/index/test/cms/actualite/65-c-est-la-fete-au-village",
           "/test/cms2/actualite/65",
           "/foo/bar/withhandler/premier/deuxieme",
-          "/index?foo=oof&bar=rab&module=jelix_tests&action=urlsig_url5",
+          "/index?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
           "/xmlrpc",
-          "/news?aaa=bbb&action=default_bar",
-          "/index/test/news/2007/23/74?action=urlsig_url8",
+          "/news?aaa=bbb&action=default:bar",
+          "/index/test/news/2007/23/74?action=urlsig:url8",
           "/index/shop/vetements/98",
           "/index/shop/bricolage/53/",
           "/index/supershop/alimentation?id_article=26",
@@ -302,7 +308,7 @@ class UTOldCreateUrls extends UnitTestCase {
           "/index/hello3",
           "/index/hello3",
        );
-      $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
+      $trueResult[13]='https://'.$_SERVER['HTTP_HOST'].$trueResult[13];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
 
     }
@@ -347,12 +353,6 @@ class UTOldCreateUrls extends UnitTestCase {
           array(2,11,'jelix~errors.selector.invalid.target'),
        );
       $this->_doCompareError("significant, errors multiview = true", $urlList,$trueResult);
-
-
     }
-
-
-
-
 }
 ?>

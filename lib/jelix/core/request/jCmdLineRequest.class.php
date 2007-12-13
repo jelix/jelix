@@ -40,14 +40,7 @@ class jCmdLineRequest extends jRequest {
         } else {
             $argsel = array_shift($argv); // get the module~action selector
             if ($argsel == 'help') {
-#ifdef ENABLE_OLD_ACTION_SELECTOR
-                if($GLOBALS['gJConfig']->enableOldActionSelector == false)
-                    $argsel = 'jelix~help:index';
-                else
-                    $argsel = 'jelix~help_index';
-#else
                 $argsel = 'jelix~help:index';
-#endif
             }
             if (!preg_match('/(?:([\w\.]+)~)/', $argsel)) {
                 $argsel = $gJConfig->startModule.'~'.$argsel;

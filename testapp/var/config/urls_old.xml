@@ -7,57 +7,57 @@
               <static name="bla" value="cequejeveux" />
         </url>
 
-        <url pathinfo="/test/news/:annee/:mois/:id" module="jelix_tests" action="urlsig_url1" actionoverride="urlsig_url8,urlsig_url9,urlsig_url10">
+        <url pathinfo="/test/news/:annee/:mois/:id" module="jelix_tests" action="urlsig:url1" actionoverride="urlsig:url8,urlsig:url9,urlsig:url10">
            <param name="annee" regexp="\d{4}"/>
            <param name="mois"  regexp="\d{2}" />
            <param name="id"   regexp="\d{2}" />
         </url>
 
-        <url pathinfo="/test/cms/:rubrique/:id_art-:article" module="jelix_tests" action="urlsig_url3">
+        <url pathinfo="/test/cms/:rubrique/:id_art-:article" module="jelix_tests" action="urlsig:url3">
            <param name="rubrique" />
            <param name="id_art" regexp="\d+"/>
            <param name="article" escape="true" type="string"/>
         </url>
 
-        <url pathinfo="/test/cms2/:rubrique/:id_art" module="jelix_tests" action="urlsig_url6" noentrypoint="true">
+        <url pathinfo="/test/cms2/:rubrique/:id_art" module="jelix_tests" action="urlsig:url6" noentrypoint="true">
            <param name="rubrique" />
            <param name="id_art" regexp="\d+"/>
         </url>
 
-        <url pathinfo="/shop/:rubrique/:id_article" module="jelix_tests" https="true" action="urlsig_url11">
+        <url pathinfo="/shop/:rubrique/:id_article" module="jelix_tests" https="true" action="urlsig:url11">
            <param name="rubrique" />
            <param name="id_article" type="int"/>
         </url>
-        <url pathinfo="/shop/:rubrique/:id_article/" module="jelix_tests" action="urlsig_url12">
+        <url pathinfo="/shop/:rubrique/:id_article/" module="jelix_tests" action="urlsig:url12">
            <param name="rubrique" />
            <param name="id_article" type="int"/>
         </url>
-        <url pathinfo="/supershop/:rubrique" module="jelix_tests" action="urlsig_url13" optionalTrailingSlash="true">
+        <url pathinfo="/supershop/:rubrique" module="jelix_tests" action="urlsig:url13" optionalTrailingSlash="true">
            <param name="rubrique" />
         </url>
-        <url pathinfo="/articles/fr/:annee/:mois" module="jelix_tests" action="urlsig_url20">
+        <url pathinfo="/articles/fr/:annee/:mois" module="jelix_tests" action="urlsig:url20">
               <param name="annee" escape="true" type="year"/>
               <param name="mois" escape="false" />
               <static name="lang" value="fr_FR" />
         </url>
-        <url pathinfo="/articles/en/:annee/:mois" module="jelix_tests" action="urlsig_url20">
+        <url pathinfo="/articles/en/:annee/:mois" module="jelix_tests" action="urlsig:url20">
               <param name="annee" escape="true" type="year"/>
               <param name="mois" escape="false" />
               <static name="lang" value="en_EN" />
         </url>
-        <url pathinfo="/hello" module="jelix_tests" action="urlsig_url30" />
+        <url pathinfo="/hello" module="jelix_tests" action="urlsig:url30" />
         <url pathinfo="/hello2" module="jelix_tests" action="hello2" />
-        <url pathinfo="/hello3" module="jelix_tests" action="default_hello3" />
+        <url pathinfo="/hello3" module="jelix_tests" action="default:hello3" />
     </classicentrypoint>
     <classicentrypoint name="testnews">
-       <url pathinfo="/:annee/:mois" module="jelix_tests" action="urlsig_url2">
+       <url pathinfo="/:annee/:mois" module="jelix_tests" action="urlsig:url2">
           <param name="annee" type="year"/>
           <param name="mois"  type="mounth" />
           <static name="mystatic" value="valeur statique" />
         </url>
     </classicentrypoint>
     <classicentrypoint name="foo/bar">
-       <url handler="urlsig" module="jelix_tests" action="urlsig_url4" />
+       <url handler="urlsig" module="jelix_tests" action="urlsig:url4" />
     </classicentrypoint>
 
     <classicentrypoint name="news">

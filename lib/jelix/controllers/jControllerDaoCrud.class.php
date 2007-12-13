@@ -119,14 +119,7 @@ class jControllerDaoCrud extends jController {
      */
     protected function _getAction($method){
         global $gJCoord;
-#ifdef ENABLE_OLD_ACTION_SELECTOR
-        if($GLOBALS['gJConfig']->enableOldActionSelector == false)
-            return $gJCoord->action->module.'~'.$gJCoord->action->controller.':'.$method;
-        else
-            return $gJCoord->action->module.'~'.$gJCoord->action->controller.'_'.$method;
-#else
         return $gJCoord->action->module.'~'.$gJCoord->action->controller.':'.$method;
-#endif
     }
 
     /**

@@ -180,14 +180,7 @@ class jCoordinator {
             if($this->moduleName == $gJConfig->startModule)
                 $this->actionName = $gJConfig->startAction;
             else {
-#ifdef ENABLE_OLD_ACTION_SELECTOR
-                if($GLOBALS['gJConfig']->enableOldActionSelector == false)
-                    $this->actionName = 'default:index';
-                else
-                    $this->actionName = 'default_index';
-#else
                 $this->actionName = 'default:index';
-#endif
             }
         }
 

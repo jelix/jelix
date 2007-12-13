@@ -63,34 +63,40 @@ class UTOldParseUrls extends UnitTestCase {
 
 
       $resultList=array();
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url1', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url8', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url2', 'mois'=>'05',  'annee'=>'2004', "mystatic"=>"valeur statique");
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fete au village');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url4', 'first'=>'premier',  'second'=>'deuxieme');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url1', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url8', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url8', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url2', 'mois'=>'05',  'annee'=>'2004', "mystatic"=>"valeur statique");
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fete au village');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url4', 'first'=>'premier',  'second'=>'deuxieme');
       // celle ci n'a pas de définition dans urls.xml *exprés*
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url5', 'foo'=>'oof',  'bar'=>'rab');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url5', 'foo'=>'oof',  'bar'=>'rab');
       $resultList[]= array();
       $resultList[]= array('module'=>'news', 'action'=>'main_bar', 'aaa'=>'bbb');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url11', 'rubrique'=>'vetements',  'id_article'=>'65');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url12', 'rubrique'=>'bricolage',  'id_article'=>'34');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url13', 'rubrique'=>'alimentation');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url13', 'rubrique'=>'chaussures');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'en_EN');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'fr_FR');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig_url30');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'default_hello2');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'default_hello3');
+      $resultList[]= array('module'=>'news', 'action'=>'main:bar', 'aaa'=>'bbb');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url11', 'rubrique'=>'vetements',  'id_article'=>'65');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url12', 'rubrique'=>'bricolage',  'id_article'=>'34');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url13', 'rubrique'=>'alimentation');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url13', 'rubrique'=>'chaussures');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'en_EN');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'fr_FR');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url30');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:hello2');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:hello3');
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
           array("index.php","/test/news/2005/10/35",array("action"=>"urlsig_url8")),
+          array("index.php","/test/news/2005/10/35",array("action"=>"urlsig:url8")),
           array("testnews.php","/2004/05",array()),
           array("index.php","/test/cms/actualite/65-c-est-la-fete-au-village",array()),
           array("foo/bar.php","/withhandler/premier/deuxieme",array()),
           array("index.php",'',array('module'=>'jelix_tests', 'action'=>'urlsig_url5', 'foo'=>'oof',  'bar'=>'rab')),
+          array("index.php",'',array('module'=>'jelix_tests', 'action'=>'urlsig:url5', 'foo'=>'oof',  'bar'=>'rab')),
           array("xmlrpc.php","",array()),
           array("news.php","",array('aaa'=>'bbb','action'=>'main_bar')),
+          array("news.php","",array('aaa'=>'bbb','action'=>'main:bar')),
           array("index.php","/shop/vetements/65",array()),
           array("index.php","/shop/bricolage/34/",array()),
           array("index.php","/supershop/alimentation",array()),
@@ -118,12 +124,15 @@ class UTOldParseUrls extends UnitTestCase {
       $request=array(
           array("index","/test/news/2005/10/35",array()),
           array("index","/test/news/2005/10/35",array("action"=>"urlsig_url8")),
+          array("index","/test/news/2005/10/35",array("action"=>"urlsig:url8")),
           array("testnews","/2004/05",array()),
           array("index","/test/cms/actualite/65-c-est-la-fete-au-village",array()),
           array("foo/bar","/withhandler/premier/deuxieme",array()),
           array("index",'',array('module'=>'jelix_tests', 'action'=>'urlsig_url5', 'foo'=>'oof',  'bar'=>'rab')),
+          array("index",'',array('module'=>'jelix_tests', 'action'=>'urlsig:url5', 'foo'=>'oof',  'bar'=>'rab')),
           array("xmlrpc","",array()),
           array("news","",array('aaa'=>'bbb','action'=>'main_bar')),
+          array("news","",array('aaa'=>'bbb','action'=>'main:bar')),
           array("index","/shop/vetements/65",array()),
           array("index","/shop/bricolage/34/",array()),
           array("index","/supershop/alimentation",array()),

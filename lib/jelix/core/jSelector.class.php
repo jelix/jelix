@@ -194,7 +194,7 @@ class jSelectorActFast extends jSelectorModule {
     function __construct($request, $module, $action){
         $this->module = $module;
 #ifdef ENABLE_OLD_ACTION_SELECTOR
-        if($GLOBALS['gJConfig']->enableOldActionSelector == false)
+        if($GLOBALS['gJConfig']->enableOldActionSelector == false || strpos($action,':') !== false)
             $separator = ':';
         else
             $separator = '_';
@@ -209,11 +209,7 @@ class jSelectorActFast extends jSelectorModule {
             $this->controller = $r[0]=='' ? 'default':$r[0];
             $this->method = $r[1]==''?'index':$r[1];
         }
-#ifdef ENABLE_OLD_ACTION_SELECTOR
-        $this->resource = $this->controller.$separator.$this->method;
-#else
         $this->resource = $this->controller.':'.$this->method;
-#endif
         $this->request = $request;
         $this->_createPath();
     }
@@ -272,7 +268,7 @@ class jSelectorAct extends jSelectorActFast {
 
 #if ENABLE_PHP_JELIX
 #ifdef ENABLE_OLD_ACTION_SELECTOR
-        if($GLOBALS['gJConfig']->enableOldActionSelector == false) {
+        if($GLOBALS['gJConfig']->enableOldActionSelector == false || strpos($sel,':') !== false) {
             $res = jelix_scan_action_sel($sel, $this, $gJCoord->actionName)
         }
         else{
@@ -307,12 +303,10 @@ class jSelectorAct extends jSelectorActFast {
             else
                 $this->resource = $m[2];
 #ifdef ENABLE_OLD_ACTION_SELECTOR
-            if($GLOBALS['gJConfig']->enableOldActionSelector == false)
-                $separator = ':';
+            if($GLOBALS['gJConfig']->enableOldActionSelector == false || strpos($this->resource,':') !== false)
+                $r = explode(':',$this->resource);
             else
-                $separator = '_';
-
-            $r = explode($separator,$this->resource);
+                $r = explode('_',$this->resource);
 #else
             $r = explode(':',$this->resource);
 #endif
@@ -323,11 +317,8 @@ class jSelectorAct extends jSelectorActFast {
                 $this->controller = $r[0]=='' ? 'default':$r[0];
                 $this->method = $r[1]==''?'index':$r[1];
             }
-#ifdef ENABLE_OLD_ACTION_SELECTOR
-            $this->resource = $this->controller.$separator.$this->method;
-#else
             $this->resource = $this->controller.':'.$this->method;
-#endif
+            
             if($m[3] != '' && $enableRequestPart)
                 $this->request = $m[3];
             else
