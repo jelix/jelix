@@ -102,8 +102,8 @@ class jResponseTcpdf  extends jResponse {
     * @return mixed Value returned bu FPDF's method
     */
     public function __call($method, $attr){
-        if ($this->fpdf !== null){
-            return call_user_func_array(array($this->fpdf, $method), $attr );
+        if ($this->tcpdf !== null){
+            return call_user_func_array(array($this->tcpdf, $method), $attr );
         }else{
             throw new jException('jelix~errors.reptcpdf.not_a_jtcpdf');
             return false;
