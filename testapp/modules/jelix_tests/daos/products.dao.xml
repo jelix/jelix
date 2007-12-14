@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
    <datasources>
-      <primarytable name="product_test" primarykey="id" />
+      <primarytable name="p" realname="product_test" primarykey="id" />
    </datasources>
    <record>
       <property name="id"   fieldname="id" datatype="autoincrement"/>

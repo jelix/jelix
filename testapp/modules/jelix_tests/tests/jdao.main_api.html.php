@@ -213,7 +213,39 @@ class UTDao extends jUnitTestCaseDb {
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
+    }
 
+    function testDeleteBy(){
+        $dao = jDao::create ('products');
+
+        $conditions = jDao::createConditions();
+        $conditions->addCondition ('id', '=', $this->prod2->id);
+
+        $dao->deleteBy($conditions);
+        $this->assertTrue($dao->countAll() == 1, 'countAll doesn\'t return 1');
+
+        $this->records = array(
+            array('id'=>$this->prod3->id,
+            'name'=>'verre',
+            'price'=>2.43),
+        );
+        $this->assertTableContainsRecords('product_test', $this->records);
+
+        $res = $dao->findAll();
+        $list = array();
+        foreach($res as $r){
+            $list[] = $r;
+        }
+        $this->assertEqual(count($list), 1, 'findAll doesn\'t return all products. %s ');
+
+    $verif='<array>
+    <object>
+        <string property="id" value="'.$this->prod3->id.'" />
+        <string property="name" value="verre" />
+        <string property="price" value="2.43" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($list, $verif);
     }
 }
 ?>

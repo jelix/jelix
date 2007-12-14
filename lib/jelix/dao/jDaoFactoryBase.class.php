@@ -302,11 +302,11 @@ abstract class jDaoFactoryBase  {
     /**
     * @internal
     */
-    final protected function _createConditionsClause($daocond, $withOrder=true){
+    final protected function _createConditionsClause($daocond, $forSelect=true){
         $props = $this->getProperties();
-        $sql = $this->_generateCondition ($daocond->condition, $props, true);
+        $sql = $this->_generateCondition ($daocond->condition, $props, $forSelect, true);
 
-        if($withOrder){
+        if($forSelect){
             $order = array ();
             foreach ($daocond->order as $name => $way){
                 if (isset($props[$name])){
@@ -327,7 +327,7 @@ abstract class jDaoFactoryBase  {
      * @internal it don't support isExpr property of a condition because of security issue (SQL injection)
      * because the value could be provided by a form, it is escaped in any case
      */
-    final protected function _generateCondition($condition, &$fields, $principal=true){
+    final protected function _generateCondition($condition, &$fields, $forSelect, $principal=true){
         $r = ' ';
         $notfirst = false;
         foreach ($condition->conditions as $cond){
@@ -338,8 +338,12 @@ abstract class jDaoFactoryBase  {
 
             $prop=$fields[$cond['field_id']];
 
-            $prefixNoCondition = $this->_tables[$prop['table']]['name'].'.'.$prop['fieldName'];
-            $prefix=$prefixNoCondition.' '.$cond['operator'].' '; // ' ' pour les like..
+            if($forSelect)
+                $prefixNoCondition = $this->_tables[$prop['table']]['name'].'.'.$prop['fieldName'];
+            else
+                $prefixNoCondition = $prop['fieldName'];
+
+            $prefix = $prefixNoCondition.' '.$cond['operator'].' '; // ' ' for LIKE..
 
             if (!is_array ($cond['value'])){
                 $value = $this->_prepareValue($cond['value'],$prop['datatype']);
@@ -381,7 +385,7 @@ abstract class jDaoFactoryBase  {
             }else{
                 $notfirst=true;
             }
-            $r .= $this->_generateCondition($conditionDetail, $fields, false);
+            $r .= $this->_generateCondition($conditionDetail, $fields, $forSelect, false);
         }
 
         //adds parenthesis around the sql if needed (non empty)
