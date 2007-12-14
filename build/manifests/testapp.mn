@@ -90,6 +90,7 @@ cd testapp/modules/jelix_tests/locales/en_US
   testunit.ISO-8859-1.properties
 cd testapp/modules/jelix_tests/templates
   menu.tpl
+  test_plugin_jurl.tpl
 cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php
 cd testapp/modules/jelix_tests/daos
@@ -133,6 +134,7 @@ cd testapp/modules/jelix_tests/tests/
   jforms.with_dao.html.php
   jtpl.compiler.html_cli.php
   jtpl.expressions_parsing.html_cli.php
+  jtpl.plugins.html.php
   utils.jdatatype.html_cli.php
   utils.jfilter.html_cli.php
   utils.jlog.html_cli.php
