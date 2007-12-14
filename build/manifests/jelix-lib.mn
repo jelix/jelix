@@ -63,6 +63,7 @@ cd lib/jelix/core/response
   jResponseAtom10.class.php
   jResponseCss.class.php
   jResponseLatexToPdf.class.php
+  jResponseTcpdf.class.php
 
 cd lib/jelix/core-modules/jelix
   module.xml
@@ -222,6 +223,7 @@ cd lib/jelix/utils/
   jMailer.class.php
   jSmtp.class.php
 * jFilter.class.php
+  jTcpdf.class.php
 
 cd lib/jelix-modules
   LICENCE

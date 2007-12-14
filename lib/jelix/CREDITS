@@ -29,6 +29,7 @@ Cedric
 
 Uriel Corfa
  - Support of class datasources in jForms (#323)
+ - contribution à jResponseTcpdf (#131)
 
 Antoine Detante (aka antoinefr)
  - support of persistant authentification in jAuth and auth plugin (#229)
@@ -56,6 +57,7 @@ Julien Issler
  - table prefix support in jDb and jDao (#293)
  - fixed a bug with jAuthDummyUser (#352)
  - jSession implementation (#354)
+ - jResponsePdf and jTcpdf classes (#131)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
