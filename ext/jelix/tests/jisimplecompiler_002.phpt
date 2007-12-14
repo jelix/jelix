@@ -22,7 +22,7 @@ Interface [ <internal:jelix> interface jISimpleCompiler ] {
   }
 
   - Methods [1] {
-    Method [ <internal> abstract public method compile ] {
+    Method [ <internal:jelix> abstract public method compile ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $aSelector ]

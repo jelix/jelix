@@ -22,7 +22,7 @@ Interface [ <internal:jelix> interface jIUrlEngine ] {
   }
 
   - Methods [2] {
-    Method [ <internal> abstract public method parse ] {
+    Method [ <internal:jelix> abstract public method parse ] {
 
       - Parameters [3] {
         Parameter #0 [ <required> $scriptNamePath ]
@@ -31,7 +31,7 @@ Interface [ <internal:jelix> interface jIUrlEngine ] {
       }
     }
 
-    Method [ <internal> abstract public method create ] {
+    Method [ <internal:jelix> abstract public method create ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $urlact ]

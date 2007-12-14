@@ -16,7 +16,14 @@ class UTOldSelectorAct extends UnitTestCase {
     protected $savedAct;
     protected $savedFile;
     protected $savedan;
-    
+    protected $enableTest = true;
+
+    function testStart(){
+        $ar = parse_ini_file(JELIX_LIB_PATH.'BUILD');
+        $this->enableTest = (isset($ar['ENABLE_OLD_ACTION_SELECTOR']) && $ar['ENABLE_OLD_ACTION_SELECTOR']);
+        if (!$this->enableTest) $this->sendMessage("UTOldSelectorAct disabled");
+    }
+
     function setUp() {
         global $gJCoord;
         $this->savedAct = $GLOBALS['gJConfig']->enableOldActionSelector;
@@ -24,7 +31,6 @@ class UTOldSelectorAct extends UnitTestCase {
         $this->savedan = $gJCoord->actionName;
         $gJCoord->actionName = $gJCoord->action->controller.'_'.$gJCoord->action->method;
 
-        
         $GLOBALS['gJConfig']->enableOldActionSelector = true;
         $GLOBALS['gJConfig']->urlengine['significantFile'] = 'urls_old.xml';
     }
@@ -36,6 +42,8 @@ class UTOldSelectorAct extends UnitTestCase {
     }
     
     function testWithModule() {
+        if(!$this->enableTest) return;
+
         $sels=array(
 "testapp~ctrl_meth@truc"=>array('testapp','ctrl','meth','truc'),
 "testapp~_meth@truc"=>array('testapp','default','meth','truc'),
@@ -55,6 +63,8 @@ class UTOldSelectorAct extends UnitTestCase {
 
 
     function testWithoutModule() {
+        if(!$this->enableTest) return;
+
         $sels=array(
 "~ctrl_meth@truc"=>false,
 "~_meth@truc"=>false,
@@ -88,6 +98,8 @@ class UTOldSelectorAct extends UnitTestCase {
 
 
     function testWithModuleWildcard() {
+        if(!$this->enableTest) return;
+
         $mod = $GLOBALS['gJCoord']->action->module;
         $sels=array(
 "#~ctrl_meth@truc"=>array($mod,'ctrl','meth','truc'),
@@ -107,6 +119,8 @@ class UTOldSelectorAct extends UnitTestCase {
     }
 
    function testMisc() {
+        if(!$this->enableTest) return;
+
         $sels=array(
 "ctrl_meth@truc"=>array('jelix_tests','ctrl','meth','truc'),
 "_meth@truc"=>array('jelix_tests','default','meth','truc'),
@@ -154,6 +168,8 @@ class UTOldSelectorAct extends UnitTestCase {
 
 
     function testFastSel() {
+        if(!$this->enableTest) return;
+
         $list=array(
 
                 array(

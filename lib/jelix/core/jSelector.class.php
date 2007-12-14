@@ -193,7 +193,7 @@ class jSelectorActFast extends jSelectorModule {
      */
     function __construct($request, $module, $action){
         $this->module = $module;
-#ifdef ENABLE_OLD_ACTION_SELECTOR
+#if ENABLE_OLD_ACTION_SELECTOR
         if($GLOBALS['gJConfig']->enableOldActionSelector == false || strpos($action,':') !== false)
             $separator = ':';
         else
@@ -267,12 +267,12 @@ class jSelectorAct extends jSelectorActFast {
         global $gJCoord;
 
 #if ENABLE_PHP_JELIX
-#ifdef ENABLE_OLD_ACTION_SELECTOR
+#if ENABLE_OLD_ACTION_SELECTOR
         if($GLOBALS['gJConfig']->enableOldActionSelector == false || strpos($sel,':') !== false) {
-            $res = jelix_scan_action_sel($sel, $this, $gJCoord->actionName)
+            $res = jelix_scan_action_sel($sel, $this, $gJCoord->actionName);
         }
         else{
-            $res = jelix_scan_old_action_sel($sel, $this, $gJCoord->actionName)
+            $res = jelix_scan_old_action_sel($sel, $this, $gJCoord->actionName);
         }
         if($res){
 #else
@@ -302,7 +302,7 @@ class jSelectorAct extends jSelectorActFast {
                 $this->resource = $gJCoord->actionName;
             else
                 $this->resource = $m[2];
-#ifdef ENABLE_OLD_ACTION_SELECTOR
+#if ENABLE_OLD_ACTION_SELECTOR
             if($GLOBALS['gJConfig']->enableOldActionSelector == false || strpos($this->resource,':') !== false)
                 $r = explode(':',$this->resource);
             else
@@ -318,7 +318,7 @@ class jSelectorAct extends jSelectorActFast {
                 $this->method = $r[1]==''?'index':$r[1];
             }
             $this->resource = $this->controller.':'.$this->method;
-            
+
             if($m[3] != '' && $enableRequestPart)
                 $this->request = $m[3];
             else

@@ -35,7 +35,7 @@ $tests = array( 0=>"toto", 1=>"aaa~toto", 2=>"aa_AZ123aR~toPO:etto", 3=>"foo.bar
 foreach($tests as $k=>$t){
 
     $obj = new obj();
-    $ret = jelix_scan_action_sel($t, $obj, "machin_bidule");
+    $ret = jelix_scan_action_sel($t, $obj, "machin:bidule");
     echo $k,":";
     if($ret === true){
         echo "ok\n";

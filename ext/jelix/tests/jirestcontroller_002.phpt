@@ -22,16 +22,16 @@ Interface [ <internal:jelix> interface jIRestController ] {
   }
 
   - Methods [4] {
-    Method [ <internal> abstract public method get ] {
+    Method [ <internal:jelix> abstract public method get ] {
     }
 
-    Method [ <internal> abstract public method post ] {
+    Method [ <internal:jelix> abstract public method post ] {
     }
 
-    Method [ <internal> abstract public method put ] {
+    Method [ <internal:jelix> abstract public method put ] {
     }
 
-    Method [ <internal> abstract public method delete ] {
+    Method [ <internal:jelix> abstract public method delete ] {
     }
   }
 }

@@ -574,7 +574,7 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
     }
 
     if(resource_length == 0){
-        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	"default_index", sizeof("default_index")-1 TSRMLS_CC);
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	"default:index", sizeof("default:index")-1 TSRMLS_CC);
         zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	"default", sizeof("default")-1 TSRMLS_CC);
         zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	"index", sizeof("index")-1 TSRMLS_CC);
     }else{
@@ -584,10 +584,18 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
            firstDashPos=-1;
            int i;
            for(i=0; i < resource_length;i++){
-                if(resource[i] == '_'){
+                if(resource[i] == ':'){
                     firstDashPos=i;
                     break;
                 }
+           }
+           if (firstDashPos == -1) {
+              for(i=0; i < resource_length;i++){
+                  if(resource[i] == '_'){
+                     firstDashPos=i;
+                     break;
+                  }
+              }
            }
         }
 
@@ -596,11 +604,11 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
             zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	resource, resource_length TSRMLS_CC);
 
             char *r;
-            int ld = sizeof("default_") -1;
+            int ld = sizeof("default:") -1;
             int lr = ld + resource_length;
             r= emalloc(lr+1);
             if (r) {
-                memcpy(r, "default_", ld);
+                memcpy(r, "default:", ld);
                 memcpy(r+ld, resource, resource_length);
                 r[lr] = 0;
                 zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr TSRMLS_CC);
@@ -612,12 +620,12 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
             zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	resource+1, resource_length-1 TSRMLS_CC);
 
             char *r;
-            int ld = sizeof("default") -1;
-            int lr = ld + resource_length;
+            int ld = sizeof("default:") -1;
+            int lr = ld + resource_length-1;
             r= emalloc(lr+1);
             if (r) {
-                memcpy(r, "default", ld);
-                memcpy(r+ld, resource, resource_length);
+                memcpy(r, "default:", ld);
+                memcpy(r+ld, resource+1, resource_length-1);
                 r[lr] = 0;
                 zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr TSRMLS_CC);
                 efree(r);
@@ -631,8 +639,8 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
             int lr = resource_length + ld;
             r= emalloc(lr+1);
             if (r) {
-                memcpy(r, resource, resource_length);
-                memcpy(r+resource_length, "index", ld);
+                memcpy(r, resource, resource_length-1);
+                memcpy(r+resource_length-1, ":index", ld+1);
                 r[lr] = 0;
                 zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, lr TSRMLS_CC);
                 efree(r);
@@ -641,7 +649,16 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
         }else{
             zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	resource, firstDashPos TSRMLS_CC);
             zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	resource+firstDashPos+1, resource_length-firstDashPos-1 TSRMLS_CC);
-            zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	resource, resource_length TSRMLS_CC);
+            char *r;
+            r= emalloc(resource_length+1);
+            if (r) {
+                memcpy(r, resource, firstDashPos);
+                memcpy(r+firstDashPos, ":", 1);
+                memcpy(r+firstDashPos+1, resource+firstDashPos+1, resource_length-firstDashPos-1);
+                r[resource_length] = 0;
+                zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	r, resource_length TSRMLS_CC);
+                efree(r);
+            }
         }
     }
 
@@ -818,7 +835,7 @@ PHP_FUNCTION(jelix_scan_action_sel)
     }
 
     if(resource_length == 0){
-        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	"default_index", sizeof("default_index")-1 TSRMLS_CC);
+        zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	"default:index", sizeof("default:index")-1 TSRMLS_CC);
         zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "controller", sizeof("controller") - 1,	"default", sizeof("default")-1 TSRMLS_CC);
         zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "method", sizeof("method") - 1,	"index", sizeof("index")-1 TSRMLS_CC);
     }else{
@@ -828,7 +845,7 @@ PHP_FUNCTION(jelix_scan_action_sel)
            firstDashPos=-1;
            int i;
            for(i=0; i < resource_length;i++){
-                if(resource[i] == '_'){
+                if(resource[i] == ':'){
                     firstDashPos=i;
                     break;
                 }

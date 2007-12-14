@@ -22,14 +22,14 @@ Interface [ <internal:jelix> interface jIAuthDriver ] {
   }
 
   - Methods [9] {
-    Method [ <internal, ctor> abstract public method __construct ] {
+    Method [ <internal:jelix, ctor> abstract public method __construct ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $params ]
       }
     }
 
-    Method [ <internal> abstract public method createUser ] {
+    Method [ <internal:jelix> abstract public method createUser ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $login ]
@@ -37,42 +37,42 @@ Interface [ <internal:jelix> interface jIAuthDriver ] {
       }
     }
 
-    Method [ <internal> abstract public method saveNewUser ] {
+    Method [ <internal:jelix> abstract public method saveNewUser ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $user ]
       }
     }
 
-    Method [ <internal> abstract public method removeUser ] {
+    Method [ <internal:jelix> abstract public method removeUser ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $login ]
       }
     }
 
-    Method [ <internal> abstract public method updateUser ] {
+    Method [ <internal:jelix> abstract public method updateUser ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $user ]
       }
     }
 
-    Method [ <internal> abstract public method getUser ] {
+    Method [ <internal:jelix> abstract public method getUser ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $login ]
       }
     }
 
-    Method [ <internal> abstract public method getUserList ] {
+    Method [ <internal:jelix> abstract public method getUserList ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $pattern ]
       }
     }
 
-    Method [ <internal> abstract public method changePassword ] {
+    Method [ <internal:jelix> abstract public method changePassword ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $login ]
@@ -80,7 +80,7 @@ Interface [ <internal:jelix> interface jIAuthDriver ] {
       }
     }
 
-    Method [ <internal> abstract public method verifyPassword ] {
+    Method [ <internal:jelix> abstract public method verifyPassword ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $login ]

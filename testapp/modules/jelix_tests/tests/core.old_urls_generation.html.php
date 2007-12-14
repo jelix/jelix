@@ -17,6 +17,13 @@ class UTOldCreateUrls extends UnitTestCase {
     protected $oldModule;
     protected $simple_urlengine_entrypoints;
     protected $oldActionSelector;
+    protected $enableTest = true;
+
+    function testStart(){
+        $ar = parse_ini_file(JELIX_LIB_PATH.'BUILD');
+        $this->enableTest = (isset($ar['ENABLE_OLD_ACTION_SELECTOR']) && $ar['ENABLE_OLD_ACTION_SELECTOR']);
+        if (!$this->enableTest) $this->sendMessage("UTOldCreateUrls disabled");
+    }
 
     function setUp() {
       global $gJCoord, $gJConfig;
@@ -94,6 +101,7 @@ class UTOldCreateUrls extends UnitTestCase {
 
     function testSimpleEngine() {
        global $gJConfig, $gJCoord;
+       if(!$this->enableTest) return;
 
        $gJCoord->request->url_script_path='/';
        $gJCoord->request->params=array();
@@ -163,6 +171,8 @@ class UTOldCreateUrls extends UnitTestCase {
 
 
     function testSimpleEngineError(){
+        if(!$this->enableTest) return;
+
        global $gJConfig, $gJCoord;
 
        $gJCoord->request->url_script_path='/';
@@ -205,6 +215,8 @@ class UTOldCreateUrls extends UnitTestCase {
 
 
     function testSignificantEngine() {
+        if(!$this->enableTest) return;
+
        global $gJConfig, $gJCoord;
 
        $gJCoord->request->url_script_path='/';
@@ -315,6 +327,8 @@ class UTOldCreateUrls extends UnitTestCase {
 
 
     function testSignificantEngineError(){
+        if(!$this->enableTest) return;
+
        global $gJConfig, $gJCoord;
 
        $gJCoord->request->url_script_path='/';

@@ -15,7 +15,7 @@ class UTjtplplugins extends jUnitTestCase {
     protected $templates = array(
 0=>array(
         'test_plugin_jurl', // selecteur du template
-        '<p><a href="qsd%BASEPATH%index.php?module=jelix_tests&amp;action=urlsig:url1">aaa</a></p>', // contenu généré
+        '<p><a href="%BASEPATH%index.php?module=jelix_tests&amp;action=urlsig:url1">aaa</a></p>', // contenu généré
         ),
     );
 

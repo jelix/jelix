@@ -17,6 +17,13 @@ class UTOldParseUrls extends UnitTestCase {
     protected $oldUrlengineConf;
     protected $simple_urlengine_entrypoints;
     protected $oldActionSelector;
+    protected $enableTest = true;
+
+    function testStart(){
+        $ar = parse_ini_file(JELIX_LIB_PATH.'BUILD');
+        $this->enableTest = (isset($ar['ENABLE_OLD_ACTION_SELECTOR']) && $ar['ENABLE_OLD_ACTION_SELECTOR']);
+        if (!$this->enableTest) $this->sendMessage("UTOldParseUrls disabled");
+    }
 
     function setUp() {
       global $gJCoord, $gJConfig;
@@ -43,6 +50,8 @@ class UTOldParseUrls extends UnitTestCase {
     }
 
     function testSignificantEngine() {
+        if(!$this->enableTest) return;
+
        global $gJConfig, $gJCoord;
 
        $gJCoord->request->url_script_path='/';

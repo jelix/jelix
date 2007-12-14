@@ -22,19 +22,19 @@ Interface [ <internal:jelix> interface jISelector ] {
   }
 
   - Methods [5] {
-    Method [ <internal> abstract public method getPath ] {
+    Method [ <internal:jelix> abstract public method getPath ] {
     }
 
-    Method [ <internal> abstract public method getCompiledFilePath ] {
+    Method [ <internal:jelix> abstract public method getCompiledFilePath ] {
     }
 
-    Method [ <internal> abstract public method getCompiler ] {
+    Method [ <internal:jelix> abstract public method getCompiler ] {
     }
 
-    Method [ <internal> abstract public method useMultiSourceCompiler ] {
+    Method [ <internal:jelix> abstract public method useMultiSourceCompiler ] {
     }
 
-    Method [ <internal> abstract public method toString ] {
+    Method [ <internal:jelix> abstract public method toString ] {
 
       - Parameters [1] {
         Parameter #0 [ <optional> $full ]

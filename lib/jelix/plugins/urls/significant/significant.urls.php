@@ -170,7 +170,7 @@ class significantUrlEngine implements jIUrlEngine {
                 // et qu'elle fait partie des actions secondaires, alors on la laisse
                 // sinon on prend celle indiquée dans la conf
                 if ($infoparsing[3] && isset($params['action'])) {
-#ifdef ENABLE_OLD_ACTION_SELECTOR
+#if ENABLE_OLD_ACTION_SELECTOR
                     if(strpos($params['action'], ':') === false) {
                         if(!$gJConfig->enableOldActionSelector || strpos($params['action'], '_') === false) {
                             $params['action'] = 'default:'.$params['action'];
@@ -211,7 +211,7 @@ class significantUrlEngine implements jIUrlEngine {
                     // sinon on prend celle indiquée dans la conf
 
                     if($infoparsing[6] && isset($params['action']) ) {
-#ifdef ENABLE_OLD_ACTION_SELECTOR
+#if ENABLE_OLD_ACTION_SELECTOR
                         if(strpos($params['action'], ':') === false) {
                             if(!$gJConfig->enableOldActionSelector || strpos($params['action'], '_') === false) {
                                 $params['action'] = 'default:'.$params['action'];

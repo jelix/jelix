@@ -22,7 +22,7 @@ Interface [ <internal:jelix> interface jIMultiFileCompiler ] {
   }
 
   - Methods [2] {
-    Method [ <internal> abstract public method compileItem ] {
+    Method [ <internal:jelix> abstract public method compileItem ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $sourceFile ]
@@ -30,7 +30,7 @@ Interface [ <internal:jelix> interface jIMultiFileCompiler ] {
       }
     }
 
-    Method [ <internal> abstract public method endCompile ] {
+    Method [ <internal:jelix> abstract public method endCompile ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $cachefile ]

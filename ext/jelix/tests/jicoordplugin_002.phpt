@@ -22,17 +22,17 @@ Interface [ <internal:jelix> interface jICoordPlugin ] {
   }
 
   - Methods [3] {
-    Method [ <internal> abstract public method beforeAction ] {
+    Method [ <internal:jelix> abstract public method beforeAction ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $params ]
       }
     }
 
-    Method [ <internal> abstract public method beforeOutput ] {
+    Method [ <internal:jelix> abstract public method beforeOutput ] {
     }
 
-    Method [ <internal> abstract public method afterProcess ] {
+    Method [ <internal:jelix> abstract public method afterProcess ] {
     }
   }
 }
