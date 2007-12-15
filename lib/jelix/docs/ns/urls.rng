@@ -22,13 +22,13 @@
             <name>rdfentrypoint</name>
             <name>xmlentrypoint</name>
             <name>xulentrypoint</name>
+            <name>cssentrypoint</name>
          </choice>
 
-         <optional><attribute name="default"><data type="boolean"/></attribute></optional>
-         <optional> <attribute name="noentrypoint"><data type="boolean"/></attribute> </optional>
-         <optional> <attribute name="https"><data type="boolean"/></attribute> </optional>
-
          <attribute name="name"/>
+         <optional><attribute name="default"><data type="boolean"/></attribute></optional>
+         <optional><attribute name="https"><data type="boolean"/></attribute> </optional>
+         <optional><attribute name="noentrypoint"><data type="boolean"/></attribute> </optional>
          <zeroOrMore>
             <choice>
                <ref name="url" />
@@ -51,13 +51,14 @@
          </optional>
          <optional>
             <attribute name="pathinfo" />
-            <oneOrMore>
+            <zeroOrMore>
                <ref name="param" />
-            </oneOrMore>
+            </zeroOrMore>
             <zeroOrMore>
                <ref name="static" />
             </zeroOrMore>
          </optional>
+         <optional> <attribute name="optionalTrailingSlash"><data type="boolean"/></attribute> </optional>
       </element>
    </define>
 

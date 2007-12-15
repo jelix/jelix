@@ -63,9 +63,10 @@
                <optional><attribute name="maxlength"><data type="int" /></attribute></optional>
                <optional><attribute name="regexp" /></optional>
                <optional><attribute name="sequence" /></optional>
-               <optional><attribute name="updatemotif" /></optional>
-               <optional><attribute name="insertmotif" /></optional>
-               <optional><attribute name="selectmotif" /></optional>
+               <optional><attribute name="updatepattern" /></optional>
+               <optional><attribute name="insertpattern" /></optional>
+               <optional><attribute name="selectpattern" /></optional>
+               <optional><attribute name="default" /></optional>
             </element>
          </oneOrMore>
       </element>
@@ -75,6 +76,7 @@
 
    <define name="factory">
       <element name="factory">
+         <optional><attribute name="events" /></optional>
          <oneOrMore>
             <ref name="method" />
          </oneOrMore>
@@ -98,6 +100,7 @@
          <element name="method">
             <attribute name="type"><value>delete</value></attribute>
             <ref name="method.common" />
+            <ref name="method.events" />
             <ref name="method.conditions"/>
          </element>
 
@@ -114,6 +117,7 @@
             <attribute name="type"><value>update</value></attribute>
             <ref name="method.common" />
             <ref name="method.values" />
+            <ref name="method.events" />
             <ref name="method.conditions" />
          </element>
 
@@ -128,6 +132,9 @@
             </optional>
             <optional>
                 <attribute name="distinct" />
+            </optional>
+            <optional>
+                <attribute name="groupby" />
             </optional>
             <ref name="method.common" />
             <ref name="method.conditions" />
@@ -146,6 +153,25 @@
             <empty/>
          </element>
       </zeroOrMore>
+   </define>
+
+   <define name="method.events">
+       <optional>
+           <attribute name="eventbefore">
+               <choice>
+                  <value>true</value>
+                  <value>false</value>
+              </choice>
+           </attribute>
+       </optional>
+       <optional>
+           <attribute name="eventafter">
+               <choice>
+                   <value>true</value>
+                   <value>false</value>
+               </choice>
+           </attribute>
+       </optional>
    </define>
 
    <define name="method.conditions">
@@ -298,6 +324,8 @@
          <value>time</value>
          <value>date</value>
          <value>string</value>
+         <value>text</value>
+         <value>boolean</value>
       </choice>
    </define>
 </grammar>
