@@ -64,6 +64,10 @@
      <alert>Le fichier doit être une image gif ou png de moins de 50000 octets</alert>
   </upload>
 
+  <reset ref="cancel">
+    <label>Annuler</label>
+  </reset>
+
   <submit ref="valid">
     <label>Valider</label>
     <item value="svg">Sauvegarde</item>

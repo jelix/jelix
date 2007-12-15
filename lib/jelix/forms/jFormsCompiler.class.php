@@ -3,10 +3,10 @@
 * @package    jelix
 * @subpackage forms
 * @author     Laurent Jouanneau
-* @contributor Loic Mathaud
+* @contributor Loic Mathaud, Dominique Papin
 * @contributor Uriel Corfa Emotic SARL
 * @copyright   2006-2007 Laurent Jouanneau
-* @copyright   2007 Loic Mathaud
+* @copyright   2007 Loic Mathaud, 2007 Dominique Papin
 * @copyright   2007 Emotic SARL
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -37,12 +37,6 @@ class jFormsCompiler implements jISimpleCompiler {
             throw new jException('jelix~formserr.invalid.xml.file',array($this->sourceFile));
         }
 
-        if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'forms/1.0'){
-            throw new jException('jelix~formserr.namespace.wrong',array($this->sourceFile));
-        }
-
-        $xml = simplexml_import_dom($doc);
-
         $source=array();
         $source[]='<?php ';
         $source[]='class '.$selector->getClass().' extends jFormsBase {';
@@ -63,10 +57,8 @@ class jFormsCompiler implements jISimpleCompiler {
         $srcjs[]='$js.="jForms.tForm.setErrorDecorator(new ".$errorDecoratorName."());\n";';
         $srcjs[]='$js.="jForms.tForm.setHelpDecorator(new ".$helpDecoratorName."());\n";';
 
-        foreach($xml->children() as $controltype=>$control){
-            $source[] = $this->generatePHPControl($controltype, $control);
-            $srcjs[] =  $this->generateJsControl($controltype, $control);
-        }
+        $this->generatePHPContent($doc, $source, $srcjs);
+
         $source[]="  }\n} ?>";
 
         jFile::write($cachefile, implode("\n", $source));
@@ -81,6 +73,23 @@ class jFormsCompiler implements jISimpleCompiler {
         return true;
     }
 
+    protected function generatePHPContent($doc, &$source, &$srcjs){
+
+        if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'forms/1.0'){
+           throw new jException('jelix~formserr.namespace.wrong',array($this->sourceFile));
+        }
+
+        $xml = simplexml_import_dom($doc);
+
+        if (count($xml->reset) > 1 )
+            throw new jException('jelix~formserr.notunique.tag',array('reset',$this->sourceFile));
+
+
+        foreach($xml->children() as $controltype=>$control){
+            $source[] = $this->generatePHPControl($controltype, $control);
+            $srcjs[] =  $this->generateJsControl($controltype, $control);
+        }
+    }
 
     protected function generatePHPControl($controltype, $control){
 
@@ -105,7 +114,7 @@ class jFormsCompiler implements jISimpleCompiler {
 
             $dt = (string)$control['type'];
             if(!in_array(strtolower($dt), array('string','boolean','decimal','integer','hexadecimal',
-                                                'datetime','date','time','localedatetime','localedate','localetime', 
+                                                'datetime','date','time','localedatetime','localedate','localetime',
                                                 'url','email','ipv4','ipv6'))){
                throw new jException('jelix~formserr.datatype.unknow',array($dt,$controltype,$this->sourceFile));
             }
@@ -117,7 +126,7 @@ class jFormsCompiler implements jISimpleCompiler {
 
         // readonly support
         if(isset($control['readonly'])){
-            if($controltype == 'output' || $controltype == 'submit'){
+            if($controltype == 'output' || $controltype == 'submit' || $controltype == 'reset'){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('readonly',$controltype,$this->sourceFile));
             }
             if('true' == (string)$control['readonly'])
@@ -125,7 +134,7 @@ class jFormsCompiler implements jISimpleCompiler {
         }
         // required support
         if(isset($control['required'])){
-            if($controltype == 'checkbox' || $controltype == 'output' || $controltype == 'submit'){
+            if($controltype == 'checkbox' || $controltype == 'output' || $controltype == 'submit' || $controltype == 'reset'){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('required',$controltype,$this->sourceFile));
             }
             if('true' == (string)$control['required'])
@@ -141,7 +150,7 @@ class jFormsCompiler implements jISimpleCompiler {
         }
         // minlength support
         if(isset($control['minlength'])){
-            if($controltype != 'textarea' && 
+            if($controltype != 'textarea' &&
                 ($controltype != 'input'|| ($controltype == 'input' && isset($control['type']) && $control['type'] != 'string'))){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('minlength',$controltype,$this->sourceFile));
             }
@@ -149,7 +158,7 @@ class jFormsCompiler implements jISimpleCompiler {
         }
         // maxlength support
         if(isset($control['maxlength'])){
-            if($controltype != 'textarea' && 
+            if($controltype != 'textarea' &&
                 ($controltype != 'input'|| ($controltype == 'input' && isset($control['type']) && $control['type'] != 'string'))){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('maxlength',$controltype,$this->sourceFile));
             }
@@ -287,7 +296,7 @@ class jFormsCompiler implements jISimpleCompiler {
                     }
                     $source[]=");";
                     if(count($selectedvalues)){
-                        if(count($selectedvalues)>1 && 
+                        if(count($selectedvalues)>1 &&
                                 (($controltype == 'listbox' && isset($control['multiple']) && 'true' != (string)$control['multiple'])
                                 || $controltype == 'radiobuttons' || $controltype == 'menulist')  ){
                             throw new jException('jelix~formserr.multiple.selected.not.allowed',$this->sourceFile);
@@ -394,7 +403,7 @@ class jFormsCompiler implements jISimpleCompiler {
     protected function generateJsControl($controltype, $control){
         // in this method, we generate a PHP script which will generate a javascript script ;-)
 
-        if($controltype == 'submit')
+        if($controltype == 'submit' || $controltype == 'reset')
             return '';
 
         if(isset($control->confirm) && $controltype == 'secret') {
@@ -423,7 +432,7 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".str_replace("\'","\\\'",$label)."\', \''.$dt.'\');\n";';
             if($hasConfirm){
                 if(isset($control->confirm['locale'])){
-                    $source[]='$label2 = jLocale::get(\''.(string)$control->confirm['locale'].'\');';                
+                    $source[]='$label2 = jLocale::get(\''.(string)$control->confirm['locale'].'\');';
                 }else{
                     $source[]='$label2 = \''.str_replace("'","\\'",(string)$control->confirm).'\';';
                 }

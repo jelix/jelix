@@ -1,11 +1,12 @@
 <?php
 /**
-* @package    jelix
-* @subpackage jtpl_plugin
-* @author     Laurent Jouanneau
-* @copyright  2007 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @package      jelix
+* @subpackage   jtpl_plugin
+* @author       Laurent Jouanneau
+* @contributor  Dominique Papin
+* @copyright    2007 Laurent Jouanneau, 2007 Dominique Papin
+* @link         http://www.jelix.org
+* @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
@@ -23,7 +24,7 @@ function jtpl_function_html_formdatasfull($tpl, $form)
 
 
     foreach( $form->getControls() as $ctrlref=>$ctrl){
-        if($ctrl->type == 'submit') continue;
+        if($ctrl->type == 'submit' || $ctrl->type == 'reset') continue;
 
         echo '<tr><th scope="row">';
         echo htmlspecialchars($ctrl->label);

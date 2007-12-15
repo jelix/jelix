@@ -33,5 +33,5 @@ myErrorDecorator.prototype = {
     <p>{ctrl_label}: {ctrl_control}</p>
     {/formcontrols}
 </fieldset>
-<p>{formsubmit}</p>
+<p>{formreset}{formsubmit}</p>
 {/form}

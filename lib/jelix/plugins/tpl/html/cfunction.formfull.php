@@ -1,11 +1,12 @@
 <?php
 /**
-* @package    jelix
-* @subpackage jtpl_plugin
-* @author     Laurent Jouanneau
-* @copyright  2007 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @package      jelix
+* @subpackage   jtpl_plugin
+* @author       Laurent Jouanneau
+* @contributor  Dominique Papin
+* @copyright    2007 Laurent Jouanneau, 2007 Dominique Papin
+* @link         http://www.jelix.org
+* @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
@@ -17,9 +18,9 @@
  *   string $method : the method of submit : 'post' or 'get'
  *
  * @param jTplCompiler $compiler the template compiler
- * @param array $params 0=>form object 
- *                     1=>selector of submit action  
- *                     2=>array of parameters for submit action 
+ * @param array $params 0=>form object
+ *                     1=>selector of submit action
+ *                     2=>array of parameters for submit action
  *                     3=>name of your javascript object for error listener
  *                     4=>name of your javascript object for help listener
  *                     5=>name of the method : POST or GET
@@ -60,7 +61,7 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
     echo \'<table class="jforms-table" border="0">\';
 
     foreach( $formfull->getControls() as $ctrlref=>$ctrl){
-        if($ctrl->type == \'submit\') continue;
+        if($ctrl->type == \'submit\' || $ctrl->type == \'reset\') continue;
         echo \'<tr><th scope="row">\';
         $formfullBuilder->outputControlLabel($ctrl);
         echo \'</th><td>\';
@@ -68,6 +69,8 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
         echo \'</td></tr>\';
     }
     echo \'</table> <div class="jforms-submit-buttons">\';
+    if ( $ctrl = $formfull->getReset() )
+        $formfullBuilder->outputControl($ctrl);
     foreach( $formfull->getSubmits() as $ctrlref=>$ctrl){
         $formfullBuilder->outputControl($ctrl);
         echo \' \';

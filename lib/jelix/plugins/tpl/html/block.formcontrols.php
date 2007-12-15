@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  jtpl_plugin
 * @author      Jouanneau Laurent
-* @contributor Mickaël Fradin, F.Fernandez
-* @copyright   2007 Jouanneau laurent, 2007 Mickaël Fradin, 2007 F.Fernandez
+* @contributor Mickaël Fradin, F.Fernandez, Dominique Papin
+* @copyright   2007 Jouanneau laurent, 2007 Mickaël Fradin, 2007 F.Fernandez, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -20,7 +20,7 @@
  * @param jTplCompiler $compiler the template compiler
  * @param boolean $begin true if it is the begin of block, else false
  * @param array $param empty array
- *                     or 0=>jFormsBase object 
+ *                     or 0=>jFormsBase object
  *                     or 0=>jFormsBase object, 1=>array of control names
  *                     or 0=>array of control names
  * @return string the php code corresponding to the begin or end of the block
@@ -33,7 +33,7 @@ function jtpl_block_html_formcontrols($compiler, $begin, $param=array())
         return '}} $t->_privateVars[\'__ctrlref\']=\'\';'; // if, foreach
     }
 
-    if(count($param) > 3){ 
+    if(count($param) > 3){
         $compiler->doError2('errors.tplplugin.block.bad.argument.number','formcontrols',3);
         return '';
     }
@@ -41,23 +41,23 @@ function jtpl_block_html_formcontrols($compiler, $begin, $param=array())
         if(count($param) == 1){
             $content = 'if(is_array('.$param[0].')){
                 $ctrls_to_display = '.$param[0].';
-                $ctrls_notto_display = null; 
+                $ctrls_notto_display = null;
             }
             else {
                 $t->_privateVars[\'__form\'] = '.$param[0].';
                 $ctrls_to_display=null;
-                $ctrls_notto_display = null; 
+                $ctrls_notto_display = null;
             }';
         }
-        elseif(count($param) == 2){ 
+        elseif(count($param) == 2){
             $content = 'if(is_array('.$param[0].')){
                 $ctrls_to_display = '.$param[0].';
-                $ctrls_notto_display = '.$param[1].'; 
+                $ctrls_notto_display = '.$param[1].';
             }
             else {
                 $t->_privateVars[\'__form\'] = '.$param[0].';
                 $ctrls_to_display='.$param[1].';
-                $ctrls_notto_display = null; 
+                $ctrls_notto_display = null;
             }';
         }
         else{
@@ -75,8 +75,8 @@ if (!isset($t->_privateVars[\'__displayed_ctrl\'])) {
     $t->_privateVars[\'__displayed_ctrl\'] = array();
 }
 $t->_privateVars[\'__ctrlref\']=\'\';
-foreach($t->_privateVars[\'__form\']->getControls() as $ctrlref=>$ctrl){ 
-    if($ctrl->type == \'submit\' && isset($t->_privateVars[\'__formbuilder\'])) continue;
+foreach($t->_privateVars[\'__form\']->getControls() as $ctrlref=>$ctrl){
+    if(($ctrl->type == \'submit\' || $ctrl->type == \'reset\') && isset($t->_privateVars[\'__formbuilder\'])) continue;
     if(!isset($t->_privateVars[\'__displayed_ctrl\'][$ctrlref])
        && (  ($ctrls_to_display===null && $ctrls_notto_display === null)
           || ($ctrls_to_display===null && !in_array($ctrlref, $ctrls_notto_display))

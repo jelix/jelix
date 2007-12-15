@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor Loic Mathaud
-* @copyright   2006-2007 Laurent Jouanneau
+* @contributor Loic Mathaud, Dominique Papin
+* @copyright   2006-2007 Laurent Jouanneau, 2007 Dominique Papin
 * @copyright   2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -122,7 +122,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             }
             echo '</div>';
         }
-        echo '<script type="text/javascript"> 
+        echo '<script type="text/javascript">
 //<![CDATA[
 ', $this->getJavascriptCheck($params[0],$params[1]),'
 //]]>
@@ -164,7 +164,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons'){
             echo '<span class="jforms-label',$required,$inError,'"',$hint,'>',htmlspecialchars($ctrl->label),'</span>';
-        }else if($ctrl->type != 'submit'){
+        }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
             $id = $this->_name.'_'.$ctrl->ref;
             echo '<label class="jforms-label',$required,$inError,'" for="'.$id.'"',$hint,'>'.htmlspecialchars($ctrl->label).'</label>';
         }
@@ -203,7 +203,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             if(is_array($value)){
                 foreach($ctrl->datasource->getDatas() as $v=>$label){
                     echo '<input type="checkbox"',$attrs,$i,'" value="',htmlspecialchars($v),'"';
-                    if(in_array($v,$value)) 
+                    if(in_array($v,$value))
                         echo ' checked="checked"';
                     echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label>';
                     $i++;
@@ -211,7 +211,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             }else{
                 foreach($ctrl->datasource->getDatas() as $v=>$label){
                     echo '<input type="checkbox"',$attrs,$i,'" value="',htmlspecialchars($v),'"';
-                    if($v == $value) 
+                    if($v == $value)
                         echo ' checked="checked"';
                     echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label>';
                     $i++;
@@ -316,6 +316,9 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
                     echo '<button type="submit"',$id,$hint,' value="',htmlspecialchars($v),'">',htmlspecialchars($label),'</button> ';
                 }
             }
+            break;
+        case 'reset':
+            echo '<button type="reset"',$id,$hint,'>',htmlspecialchars($ctrl->label),'</button>';
             break;
         }
 

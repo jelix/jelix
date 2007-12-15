@@ -19,6 +19,10 @@ class testJFormsCompiler extends jFormsCompiler {
 
    protected $sourceFile = 'myfile';
 
+   public function testPhpForm($doc){
+        return $this->generatePHPContent($doc, $dummysrc, $dummysrcjs);
+   }
+
    public function testPhpControl($controltype, $control){
         return $this->generatePHPControl($controltype, $control);
    }
@@ -275,6 +279,9 @@ class UTjformsCompiler extends jUnitTestCase {
 66=>'<input ref="nom" minlength="3" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
 </input>',
+67=>'<reset ref="annulation" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>type annulation</label>
+</reset>',
     );
 
     protected $_PhpControls = array(
@@ -630,6 +637,9 @@ $this->addControl($ctrl);',
 66=>'$ctrl= new jFormsControlinput(\'nom\');
 $ctrl->datatype->addFacet(\'minLength\',3);
 $ctrl->label=\'Votre nom\';
+$this->addControl($ctrl);',
+67=>'$ctrl= new jFormsControlreset(\'annulation\');
+$ctrl->label=\'type annulation\';
 $this->addControl($ctrl);',
 );
 
@@ -988,6 +998,7 @@ $js.="jForms.tControl.minLength = 3;\n";
 $js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="jForms.tForm.addControl( jForms.tControl);\n";',
+67=>'',
     );
 
     function testPhpControl(){
@@ -1148,8 +1159,6 @@ array(
 'jelix~formserr.attribute.not.allowed',
 array('selectedvalue','listbox','myfile')
 ),
-
-
 /*array(
 '<input ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
@@ -1158,6 +1167,7 @@ array('selectedvalue','listbox','myfile')
 array('','','myfile')
 ),*/
     );
+
 
     function testBadControl(){
         $jfc = new testJFormsCompiler();
@@ -1174,6 +1184,54 @@ array('','','myfile')
                 }catch(jException $e){
                     $this->assertEqualOrDiff($control[1], $e->getLocaleKey());
                     $this->assertEqual($control[2], $e->getLocaleParameters());
+                }catch(Exception $e){
+                    $this->fail("Unexpected exception for bad xml test content $k :". $e->getMessage());
+                }
+            }
+        }
+    }
+
+
+    protected $_BadXmlForms = array(
+array(
+'<forms>
+  <input ref="nom">
+    <label>Votre nom</label>
+  </input>
+</forms>',
+'jelix~formserr.namespace.wrong',
+array('myfile')
+),
+array(
+'<forms xmlns="http://jelix.org/ns/forms/1.0">
+  <reset ref="reset1">
+    <label>annulation 1</label>
+  </reset>
+  <reset ref="reset2">
+    <label>annulation 2</label>
+  </reset>
+</forms>',
+'jelix~formserr.notunique.tag',
+array( 'reset','myfile')
+),
+    );
+
+
+    function testBadForm() {
+        $jfc = new testJFormsCompiler();
+
+        foreach($this->_BadXmlForms as $k=>$form){
+            $dom = new DOMDocument;
+            if(!$dom->loadXML($form[0])){
+                $this->fail("Can't load bad xml test content ($k)");
+            }else{
+                try {
+                    // getName() in simplexml doesn't exists in prior version of php 5.1.3, so we use a DOM
+                    $ct = $jfc->testPhpForm($dom);
+                    $this->fail("no exception during bad xml test content $k");
+                }catch(jException $e){
+                    $this->assertEqualOrDiff($form[1], $e->getLocaleKey());
+                    $this->assertEqual($form[2], $e->getLocaleParameters());
                 }catch(Exception $e){
                     $this->fail("Unexpected exception for bad xml test content $k :". $e->getMessage());
                 }

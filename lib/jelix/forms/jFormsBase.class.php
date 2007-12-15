@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor
-* @copyright   2006-2007 Laurent Jouanneau
+* @contributor Dominique Papin
+* @copyright   2006-2007 Laurent Jouanneau, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -47,6 +47,14 @@ abstract class jFormsBase {
      * @see jFormsControl
      */
     protected $_submits = array();
+
+    /**
+     * Reset button
+     * @var jFormsControl
+     * @see jFormsControl
+     * @since 1.0
+     */
+    protected $_reset = null;
 
     /**
      * List of uploads controls
@@ -115,7 +123,7 @@ abstract class jFormsBase {
                     $value= '';
                 }
             }elseif($ctrl->type=='submit' && $value) {
-                // because IE send the <button> content as value instead of the content of the 
+                // because IE send the <button> content as value instead of the content of the
                 // "value" attribute, we should verify it and get the real value
                 $datas = $ctrl->datasource->getDatas();
                 if(!isset($datas[$value])) {
@@ -188,7 +196,7 @@ abstract class jFormsBase {
                         $this->_container->datas[$name] = $ctrl->valueOnCheck;
                     }else {
                         $this->_container->datas[$name] = $ctrl->valueOnUncheck;
-                    } 
+                    }
                 }else{
                     $this->_container->datas[$name] = $daorec->$name;
                 }
@@ -238,7 +246,7 @@ abstract class jFormsBase {
             if($daorec->$name == '' && !$prop[$name]['required']) {
                 // if no value and if the property is not required, we set null to it
                 $daorec->$name = null;
-            }else if($daorec->$name == '' && $prop[$name]['defaultValue'] !== null 
+            }else if($daorec->$name == '' && $prop[$name]['defaultValue'] !== null
                     && in_array($prop[$name]['datatype'],
                                 array('int','integer','double','float'))) {
                 $daorec->$name = $prop[$name]['defaultValue'];
@@ -271,15 +279,15 @@ abstract class jFormsBase {
 
     /**
      * set datas from a DAO, in a control
-     * 
+     *
      * The control must be a container like checkboxes or listbox with multiple attribute.
      * The form should contain a formId
      *
      * The Dao should map to an "association table" : its primary key should be composed by
-     * the primary key stored in the formId (or the given primarykey) + the field which will contain one of 
+     * the primary key stored in the formId (or the given primarykey) + the field which will contain one of
      * the values of the control. If this order is not the same as defined into the dao,
      * you should provide the list of property names which corresponds to the primary key
-     * in this order : properties for the formId, followed by the property which contains 
+     * in this order : properties for the formId, followed by the property which contains
      * the value.
      * @param string $controlName  the name of the control
      * @param string $daoSelector the selector of a dao file
@@ -331,16 +339,16 @@ abstract class jFormsBase {
      *
      * The control must be a container like checkboxes or listbox with multiple attribute.
      * If the form contain a new record (no formId), you should call saveToDao before
-     * in order to get a new id (the primary key of the new record), or you should get a new id 
+     * in order to get a new id (the primary key of the new record), or you should get a new id
      * by an other way. then you must pass this primary key in the third argument.
      * If the form have already a formId, then it will be used as a primary key, unless
      * you give one in the third argument.
      *
      * The Dao should map to an "association table" : its primary key should be
-     * the primary key stored in the formId + the field which will contain one of 
+     * the primary key stored in the formId + the field which will contain one of
      * the values of the control. If this order is not the same as defined into the dao,
      * you should provide the list of property names which corresponds to the primary key
-     * in this order : properties for the formId, followed by the property which contains 
+     * in this order : properties for the formId, followed by the property which contains
      * the value.
      * All existing records which have the formid in their keys are deleted
      * before to insert new values.
@@ -410,7 +418,7 @@ abstract class jFormsBase {
     /**
      * set an error message on a specific field
      * @param string $field the field name
-     * @param string $mesg  the error message string 
+     * @param string $mesg  the error message string
      */
     public function setErrorOn($field, $mesg){
         $this->_container->errors[$field]=$mesg;
@@ -459,7 +467,7 @@ abstract class jFormsBase {
 
     /**
      * @param string $name the control name you want to get
-     * @return jFormsControl 
+     * @return jFormsControl
      * @since jelix 1.0
      */
     public function getControl($name){ return $this->_controls[$name]; }
@@ -468,6 +476,11 @@ abstract class jFormsBase {
      * @return array of jFormsControl objects
      */
     public function getSubmits(){ return $this->_submits; }
+ 
+    /**
+     * @return array of jFormsControl objects
+     */
+    public function getReset(){ return $this->_reset; }
 
     /**
      * @return string the formId
@@ -497,7 +510,7 @@ abstract class jFormsBase {
     }
 
     /**
-     * save an uploaded file in the given directory. the given control must be 
+     * save an uploaded file in the given directory. the given control must be
      * an upload control of course.
      * @param string $controlName the name of the upload control
      * @param string $path path of the directory where to store the file. If it is not given,
@@ -567,9 +580,11 @@ abstract class jFormsBase {
         $this->_controls [$control->ref] = $control;
         if($control->type =='submit')
             $this->_submits [$control->ref] = $control;
-        if($control->type =='upload'){
+        else if($control->type =='reset')
+            $this->_reset = $control;
+        else if($control->type =='upload')
             $this->_uploads [$control->ref] = $control;
-        }
+
         if(!isset($this->_container->datas[$control->ref])){
             if ( $control->datatype instanceof jDatatypeDateTime && $control->defaultValue == 'now') {
                 $dt = new jDateTime();

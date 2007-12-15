@@ -33,6 +33,9 @@
             -->
         </choice>
       </oneOrMore>
+      <optional>
+        <ref name="reset" />
+      </optional>
   </define>
 
 
@@ -319,6 +322,11 @@
    </define>
 -->
 
+  <define name="reset">
+     <element name="reset">
+       <ref name="control.common" />
+     </element>
+  </define>
   
   <!--
       <define name="range">

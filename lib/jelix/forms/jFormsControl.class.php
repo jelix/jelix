@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor Loic Mathaud
-* @copyright   2006-2007 Laurent Jouanneau
+* @contributor Loic Mathaud, Dominique Papin
+* @copyright   2006-2007 Laurent Jouanneau, 2007 Dominique Papin
 * @copyright   2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -34,7 +34,7 @@ abstract class jFormsControl {
     }
 
     function isContainer(){
-        return false; 
+        return false;
     }
 
     function check($value, $form){
@@ -302,5 +302,13 @@ class jFormsControlSubmit extends jFormsControlDatasource {
         return null;
     }
 }
+
+class jFormsControlReset extends jFormsControl {
+    public $type='reset';
+    public function check($value, $form){
+        return null;
+    }
+}
+
 
 ?>

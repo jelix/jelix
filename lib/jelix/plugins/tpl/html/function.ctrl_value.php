@@ -1,11 +1,12 @@
 <?php
 /**
-* @package    jelix
-* @subpackage jtpl_plugin
-* @author     Laurent Jouanneau
-* @copyright  2007 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @package      jelix
+* @subpackage   jtpl_plugin
+* @author       Laurent Jouanneau
+* @contributor  Dominique Papin
+* @copyright    2007 Laurent Jouanneau, 2007 Dominique Papin
+* @link         http://www.jelix.org
+* @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
@@ -23,7 +24,11 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
     $insideForm = isset($tpl->_privateVars['__formbuilder']);
 
     if($ctrlname =='') {
-        if($tpl->_privateVars['__ctrl']->type == 'submit' && ($tpl->_privateVars['__ctrl']->standalone || $insideForm)){
+        if(($tpl->_privateVars['__ctrl']->type == 'submit')
+                && ($tpl->_privateVars['__ctrl']->standalone || $insideForm)){
+            return;
+        }
+        if(($tpl->_privateVars['__ctrl']->type == 'reset') && $insideForm){
             return;
         }
         $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
@@ -31,7 +36,8 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
         $ctrlname = $tpl->_privateVars['__ctrlref'];
     }else{
         $ctrls = $tpl->_privateVars['__form']->getControls();
-        if($ctrls[$ctrlname]->type == 'submit' && ($ctrls[$ctrlname]->standalone || $insideForm)){
+        if(($ctrls[$ctrlname]->type == 'submit' || $ctrls[$ctrlname]->type == 'reset')
+                && ($ctrls[$ctrlname]->standalone || $insideForm)){
             return;
         }
         $ctrl = $ctrls[$ctrlname];

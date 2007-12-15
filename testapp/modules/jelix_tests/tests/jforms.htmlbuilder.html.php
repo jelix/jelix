@@ -19,6 +19,7 @@ class testHMLForm { // simulate a jFormBase object
     public $controls= array();
     public $submits= array();
     public $uploads= array();
+    public $reset= null;
     public $container;
 
     protected $datas =  array( 'chk'=>'1', 'chk2'=>'', 'choixsimple'=>'11', 'choixmultiple'=>array('10','23'));
@@ -48,9 +49,10 @@ class testHMLForm { // simulate a jFormBase object
         $this->controls [$control->ref] = $control;
         if($control->type =='submit')
             $this->submits [$control->ref] = $control;
-        if($control->type =='upload'){
+        else if($control->type =='upload')
             $this->uploads [$control->ref] = $control;
-        }
+        else if($control->type =='reset')
+            $this->reset = $control;
         $this->datas[$control->ref] = $control->defaultValue;
     }
 }
@@ -81,7 +83,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div><input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig:url1"/>
-</div><script type="text/javascript"> 
+</div><script type="text/javascript">
 //<![CDATA[
 
 //]]>
@@ -96,7 +98,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig:url1"/>
-</div><script type="text/javascript"> 
+</div><script type="text/javascript">
 //<![CDATA[
 
 //]]>
@@ -348,7 +350,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result.='<option value="23" selected="selected">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-    
+
         $ctrl->required = false;
         $this->form->setData('choixsimple',"");
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
@@ -607,6 +609,26 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<button type="submit" name="nom" id="'.$this->formname.'_nom" title="ceci est un tooltip">Votre nom</button>', $out);
     }
+    function testOutputReset(){
+        $ctrl= new jFormsControlReset('nom');
+        $ctrl->datatype= new jDatatypeString();
+        $ctrl->label='Votre nom';
+
+        ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('', $out);
+
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<button type="reset" name="nom" id="'.$this->formname.'_nom">Votre nom</button>', $out);
+
+        $ctrl->readonly = true;
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<button type="reset" name="nom" id="'.$this->formname.'_nom">Votre nom</button>', $out);
+
+        $ctrl->hint='ceci est un tooltip';
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<button type="reset" name="nom" id="'.$this->formname.'_nom" title="ceci est un tooltip">Votre nom</button>', $out);
+    }
+
 }
 
 ?>
