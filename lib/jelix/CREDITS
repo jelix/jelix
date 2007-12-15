@@ -55,6 +55,9 @@ Frédéric Guillot (aka fg)
  - patch for multiple authentification in a same session (#207)
  - bug fixes in support of XML-RPC request and response
 
+Florian Hatat
+ - improvements on jDateTime + RFC2822 support (#379)
+
 Julien Issler
  - updated JSON class (#231)
  - table prefix support in jDb and jDao (#293)

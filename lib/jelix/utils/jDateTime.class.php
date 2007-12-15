@@ -5,8 +5,11 @@
 * @author      Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2001-2005 CopixTeam 2005-2006 Laurent Jouanneau
+* @contributor Florian Hatat
+* @copyright   2005-2006 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud
+* @copyright   2007 Florian Hatat
+* @copyright   2001-2005 CopixTeam, GeraldCroes, Laurent Jouanneau
 *
 * This class was get originally from the Copix project (CopixDate.lib.php, Copix 2.3dev20050901, http://www.copix.org)
 * Only few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -24,30 +27,37 @@ if(!function_exists('strptime')){ // existe depuis php 5.1
      */
     function strptime ( $strdate, $format ){
         // c'est pas une compatibilité 100% avec strptime de PHP 5.1 mais c'est suffisant pour nos besoins
-        $plop = array( 's'=>'tm_sec', 'i'=>'tm_min', 'H'=>'tm_hour',
-        'd'=>'tm_mday', 'm'=>'tm_mon', 'Y'=>'tm_year');
-
+        $plop = array( 'S'=>'tm_sec', 'M'=>'tm_min', 'H'=>'tm_hour',
+            'd'=>'tm_mday', 'm'=>'tm_mon', 'Y'=>'tm_year');
 
         $regexp = preg_quote($format, '/');
         $regexp = str_replace(
-                array('%d','%m','%Y','%H','%i','%s'),
-                array('(\d{2})','(\d{2})','(\d{4})','(\d{2})','(\d{2})','(\d{2})'),
+                array('%d','%m','%Y','%H','%M','%S'),
+                array('(?P<tm_mday>\d{2})','(?P<tm_mon>\d{2})',
+                      '(?P<tm_year>\d{4})','(?P<tm_hour>\d{2})',
+                      '(?P<tm_min>\d{2})','(?P<tm_sec>\d{2})'),
                 $regexp);
-        if(preg_match('/^'.$regexp.'$/', $strdate,$m)){
+        if(preg_match('/^'.$regexp.'$/', $strdate, $m)){
             $result=array('tm_sec'=>0,'tm_min'=>0,'tm_hour'=>0,'tm_mday'=>0,'tm_mon'=>0,'tm_year'=>0,'tm_wday'=>0,'tm_yday'=>0,'unparsed'=>'');
-            preg_match_all('/%(\w)/',$format,$patt);
-            foreach($patt[1] as $k=>$v){
-                if(!isset($plop[$v])) continue;
-                $result[$plop[$v]] = intval($m[$k+1]);
-                if($plop[$v] == 'tm_mon'){
-                    $result[$plop[$v]] -= 1;
+            foreach($m as $key => $value){
+                if(!isset($result[$key])){
+                    continue;
+                }
+                $result[$key] = intval($value);
+                switch($key){
+                case 'tm_mon':
+                    $result[$key]--;
+                    break;
+                case 'tm_year':
+                    $result[$key] -= 1900;
+                    break;
+                default:
+                    break;
                 }
             }
-            $result['tm_year'] -= 1900;
             return $result;
-        }else{
-            return false;
         }
+        return false;
     }
 }
 #endif
@@ -76,6 +86,7 @@ class jDateTime{
     const ISO8601_FORMAT=40;
     const TIMESTAMP_FORMAT=50;
     const RFC822_FORMAT=60;
+    const RFC2822_FORMAT=61;
 
     /**#@+
      * use DB_* consts instead
@@ -94,6 +105,33 @@ class jDateTime{
         $this->minute = $minute;
         $this->second = $second;
 
+        if(!$this->_check())
+        {
+          throw new jException('jelix~errors.datetime.invalid',
+              array($this->year, $this->month, $this->day,
+                $this->hour, $this->minute, $this->second));
+        }
+    }
+
+    /**
+     * checks if the current jDateTime object is a valid gregorian date/time
+     * @return bool true if the date/time are valid.
+     */
+    private function _check() {
+        // Only check the date if it is defined (eg. day, month and year are 
+        // strictly positive).
+        if($this->day > 0 && $this->month > 0 && $this->year > 0
+            && !checkdate($this->month, $this->day, $this->year))
+        {
+            return false;
+        }
+        if(!(($this->second >= 0) && ($this->second < 60)
+            && ($this->minute >= 0) && ($this->minute < 60)
+            && ($this->hour >= 0) && ($this->hour < 24)))
+        {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -141,6 +179,7 @@ class jDateTime{
                $str =(string) mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
                break;
            case self::RFC822_FORMAT:
+           case self::RFC2822_FORMAT:
                $str = date('r', mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year ));
                break;
         }
@@ -153,8 +192,9 @@ class jDateTime{
      * @param int $format one of the class constant, or -1 if it is a default format
      */
     function setFromString($str,$format=-1){
-        if($format==-1)
+        if($format==-1){
             $format = $this->defaultFormat;
+        }
         $this->year = 0;
         $this->month = 0;
         $this->day = 0;
@@ -162,6 +202,7 @@ class jDateTime{
         $this->minute = 0;
         $this->second = 0;
         $ok=false;
+
         switch($format){
            case self::LANG_DFORMAT:
                $lf = jLocale::get('jelix~format.date_st');
@@ -176,8 +217,8 @@ class jDateTime{
                $lf = jLocale::get('jelix~format.datetime_st');
                if($res = strptime ( $str, $lf )){
                    $ok=true;
-                   $this->year = $res['tm_year']+1900;
-                   $this->month = $res['tm_mon'] +1;
+                   $this->year = $res['tm_year'] + 1900;
+                   $this->month = $res['tm_mon'] + 1;
                    $this->day = $res['tm_mday'];
                    $this->hour = $res['tm_hour'];
                    $this->minute = $res['tm_min'];
@@ -195,29 +236,32 @@ class jDateTime{
                break;
            case self::DB_DFORMAT:
            case self::BD_DFORMAT:
-               if($ok=preg_match('/^(\d{4})\-(\d{2})\-(\d{2})$/', $str, $match)){
-                    $this->year = $match[1];
-                    $this->month = $match[2];
-                    $this->day = $match[3];
+               if($res = strptime( $str, "%Y-%m-%d" )){
+                   $ok=true;
+                   $this->year = $res['tm_year'] + 1900;
+                   $this->month = $res['tm_mon'] + 1;
+                   $this->day = $res['tm_mday'];
                }
                break;
            case self::DB_DTFORMAT:
            case self::BD_DTFORMAT:
-               if($ok=preg_match('/^(\d{4})\-(\d{2})\-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', $str, $match)){
-                    $this->year = $match[1];
-                    $this->month = $match[2];
-                    $this->day = $match[3];
-                    $this->hour = $match[4];
-                    $this->minute = $match[5];
-                    $this->second = $match[6];
+               if($res = strptime( $str, "%Y-%m-%d %H:%M:%S" )){
+                   $ok=true;
+                   $this->year = $res['tm_year'] + 1900;
+                   $this->month = $res['tm_mon'] + 1;
+                   $this->day = $res['tm_mday'];
+                   $this->hour = $res['tm_hour'];
+                   $this->minute = $res['tm_min'];
+                   $this->second = $res['tm_sec'];
                }
                break;
            case self::DB_TFORMAT:
            case self::BD_TFORMAT:
-               if($ok=preg_match('/^(\d{2}):(\d{2}):(\d{2})$/', $str, $match)){
-                    $this->hour = $match[1];
-                    $this->minute = $match[2];
-                    $this->second = $match[3];
+               if($res = strptime( $str, "%H:%M:%S" )){
+                   $ok=true;
+                   $this->hour = $res['tm_hour'];
+                   $this->minute = $res['tm_min'];
+                   $this->second = $res['tm_sec'];
                }
                break;
            case self::ISO8601_FORMAT:
@@ -252,9 +296,48 @@ class jDateTime{
                $this->second = $t['seconds'];
                break;
            case self::RFC822_FORMAT:
-               throw new Exception ('jDatetime::setFromString : RFC822_FORMAT not implemented');
+           case self::RFC2822_FORMAT:
+               // Note the "x" modifier, otherwise the pattern would look like 
+               // obfuscated code.
+               $regexp = "/^
+                     (?: (?P<nday> Mon | Tue | Wed | Thu | Fri | Sat | Sun) , )? \s+
+                     (?P<day>\d{1,2}) \s+
+                     (?P<nmonth> Jan | Feb | Mar | Apr | May | Jun |
+                               Jul | Aug | Sep | Oct | Nov | Dec) \s+
+                     (?P<year>\d{4}) \s+
+                     (?P<hour>\d{2}) : (?P<minute>\d{2}) (?: : (?P<second>\d{2}))? \s+
+                     (?P<tzsign>[+-]) (?P<tzhour>\d{2}) (?P<tzminute>\d{2})$/x";
+
+               $english_months = array("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+
+               $match = array("year" => 0, "month" => 0, "day" => 0,
+                   "hour" => 0, "minute" => 0, "second" => 0, "tzsign" => "+",
+                   "tzhour" => 0, "tzminute" => 0);
+
+               if($ok = preg_match($regexp, $str, $match)){
+                   $this->year = intval($match['year']);
+                   $this->month = array_search($match['nmonth'], $english_months) + 1;
+                   $this->day = intval($match['day']);
+                   $this->hour = intval($match['hour']);
+                   $this->minute = intval($match['minute']);
+                   $this->second = intval($match['second']);
+
+                   # Adjust according to the timezone, so that the stored time 
+                   # corresponds to UTC.
+                   $tz = new jDateTime(0, 0, 0, intval($match['tzhour']),
+                       intval($match['tzminute']), 0);
+                   if($match['tzsign'] == '+'){
+                       $this->sub($tz);
+                   }
+                   else{
+                       $this->add($tz);
+                   }
+               }
+               break;
         }
-        return $ok;
+
+        return $ok && $this->_check();
     }
 
     /**
