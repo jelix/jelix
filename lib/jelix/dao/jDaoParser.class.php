@@ -85,7 +85,7 @@ class jDaoParser {
             $t = $this->_parseTable (0, $xml->datasources[0]->primarytable[0]);
             $this->_primaryTable = $t['name'];
             if(isset($xml->datasources[0]->primarytable[1])){
-               throw new jDaoXmlException ('table.two.many');
+                throw new jDaoXmlException ('table.two.many');
             }
             foreach($xml->datasources[0]->foreigntable as $table){
                 $this->_parseTable (1, $table);

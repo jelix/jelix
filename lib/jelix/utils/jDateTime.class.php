@@ -315,10 +315,10 @@ class jDateTime{
      * to know the duration between two dates
      */
     public function durationTo($dt){
-       $t = mktime ( $dt->hour, $dt->minute,$dt->second , $dt->month, $dt->day, $dt->year )
-         - mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
-       $t = getdate ($t);
-       return new jDateTime( $t['year']-1970,$t['mon']-1, $t['mday']-1, $t['hours']-1, $t['minutes'], $t['seconds']);
+        $t = mktime ( $dt->hour, $dt->minute,$dt->second , $dt->month, $dt->day, $dt->year )
+            - mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
+        $t = getdate ($t);
+        return new jDateTime( $t['year']-1970,$t['mon']-1, $t['mday']-1, $t['hours']-1, $t['minutes'], $t['seconds']);
     }
 
     /**
@@ -327,14 +327,14 @@ class jDateTime{
      * @return integer -1 si $dt >, 0 si =, 1 si $dt <
      */
     public function compareTo($dt){
-      $fields=array('year','month','day','hour','minute','second');
-      foreach($fields as $field){
-         if($dt->$field > $this->$field)
-            return -1;
-         else if($dt->$field < $this->$field)
-            return 1;
-      }
-      return 0;
+        $fields=array('year','month','day','hour','minute','second');
+        foreach($fields as $field){
+            if($dt->$field > $this->$field)
+                return -1;
+            else if($dt->$field < $this->$field)
+                return 1;
+        }
+        return 0;
     }
 
     /**

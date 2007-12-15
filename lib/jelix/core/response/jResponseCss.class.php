@@ -50,7 +50,7 @@ class jResponseCss extends jResponse {
         echo "/*\n";
         if($this->hasErrors()){
             foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
-               echo '['.$e[0].' '.$e[1].'] '.$e[2]." \t".$e[3]." \t".$e[4]."\n";
+                echo '['.$e[0].' '.$e[1].'] '.$e[2]." \t".$e[3]." \t".$e[4]."\n";
             }
         }else{
             echo "[unknow error]\n";

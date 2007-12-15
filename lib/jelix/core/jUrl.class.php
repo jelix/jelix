@@ -23,21 +23,21 @@
  * @copyright   2005 CopixTeam, 2005-2006 Laurent Jouanneau
  */
 interface jIUrlEngine {
-  /**
-    * Parse some url components
-    * @param string $scriptNamePath    /path/index.php
-    * @param string $pathinfo          the path info part of the url (part between script name and query)
-    * @param array  $params            url parameters (query part e.g. $_REQUEST)
-    * @return jUrlAction
-    */
-  public function parse($scriptNamePath, $pathinfo, $params );
+    /**
+        * Parse some url components
+        * @param string $scriptNamePath    /path/index.php
+        * @param string $pathinfo          the path info part of the url (part between script name and query)
+        * @param array  $params            url parameters (query part e.g. $_REQUEST)
+        * @return jUrlAction
+        */
+    public function parse($scriptNamePath, $pathinfo, $params );
 
-  /**
-   * Create a jurl object with the given action datas
-   * @param jUrlAction $url  information about the action
-   * @return jUrl the url correspondant to the action
-   */
-  public function create($urlact);
+    /**
+    * Create a jurl object with the given action datas
+    * @param jUrlAction $url  information about the action
+    * @return jUrl the url correspondant to the action
+    */
+    public function create($urlact);
 
 }
 #endif

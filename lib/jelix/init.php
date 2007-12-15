@@ -116,7 +116,6 @@ require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
 #endif
 #endif
 
-
 /**
  * The main object of Jelix which process all things
  * @global jCoordinator $gJCoord
@@ -146,27 +145,27 @@ $gLibPath=array('Db'=>JELIX_LIB_DB_PATH, 'Dao'=>JELIX_LIB_DAO_PATH,
  * __autoload function used by php to try to load an unknown class
  */
 function __autoload($class){
-   if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms|Auth).*$/', $class, $m)){
-       $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
-   }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
-       // pour les dao stockés en sessions notament
-       $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
-       if($GLOBALS['gJConfig']->compilation['checkCacheFiletime']){
-           // si il faut verifier le filetime, alors on inclus via le jIncluder
-           // au cas où il faudrait recompiler le dao avant l'inclusion de la classe
-           jIncluder::inc($s);
-           return;
-       }else{
-          $f = $s->getCompiledFilePath ();
-          // on verifie que le fichier est là (dans le cas d'un temp purgé, cf bug #6062)
-          if(!file_exists($f)){ // si absent, on recompile
+    if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms|Auth).*$/', $class, $m)){
+        $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
+    }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
+        // pour les dao stockés en sessions notament
+        $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
+        if($GLOBALS['gJConfig']->compilation['checkCacheFiletime']){
+            // si il faut verifier le filetime, alors on inclus via le jIncluder
+            // au cas où il faudrait recompiler le dao avant l'inclusion de la classe
             jIncluder::inc($s);
             return;
-          }
-       }
-   }else{
-      $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
-   }
+        }else{
+            $f = $s->getCompiledFilePath ();
+            // on verifie que le fichier est là (dans le cas d'un temp purgé, cf bug #6062)
+            if(!file_exists($f)){ // si absent, on recompile
+                jIncluder::inc($s);
+                return;
+            }
+        }
+    }else{
+        $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
+    }
 
 #if ENABLE_OPTIMIZED_SOURCE
     require_once($f);
@@ -177,7 +176,6 @@ function __autoload($class){
         throw new Exception("Jelix fatal error : Unknow class $class");
     }
 #endif
-
 }
 
 ?>

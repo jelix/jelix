@@ -25,7 +25,5 @@ class jXulRequest extends jRequest {
         $url  = jUrl::parse($_SERVER['SCRIPT_NAME'], $this->url_path_info, $_GET);
         $this->params = array_merge($url->params, $_POST);
     }
-
-
 }
 ?>

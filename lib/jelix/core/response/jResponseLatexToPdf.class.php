@@ -113,11 +113,11 @@ class jResponseLatexToPdf extends jResponse {
 ';
         $data.=$this->body->fetch($this->bodyTpl);
         $data.= '
-    
+
 \end{document}';
 
         $fbase='cache-'.md5($data);
-        
+
         $texFile=$this->cachePath.$fbase.'.tex';
         $pdfFile=$this->cachePath.$fbase.'.pdf';
 
@@ -171,7 +171,7 @@ class jResponseLatexToPdf extends jResponse {
         header('Content-Type: text/plain;charset='.$gJConfig->charset);
         if($this->hasErrors()){
             foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
-               echo '['.$e[0].' '.$e[1].'] '.$e[2]." \t".$e[3]." \t".$e[4]."\n";
+                echo '['.$e[0].' '.$e[1].'] '.$e[2]." \t".$e[3]." \t".$e[4]."\n";
             }
         }else{
             echo "[unknow error]\n";

@@ -84,7 +84,7 @@ abstract class jDaoFactoryBase  {
      */
     function  __construct($conn){
         $this->_conn = $conn;
-        
+
         if($this->_conn->hasTablePrefix()){
             foreach($this->_tables as $table_name=>$table){
                 $this->_tables[$table_name]['realname'] = $this->_conn->prefixTable($table['realname']);
@@ -131,7 +131,7 @@ abstract class jDaoFactoryBase  {
      * @return jDbResultSet
      */
     public function findAll(){
-        $rs =  $this->_conn->query ($this->_selectClause.$this->_fromClause.$this->_whereClause);
+        $rs = $this->_conn->query ($this->_selectClause.$this->_fromClause.$this->_whereClause);
         $rs->setFetchMode(8,$this->_DaoRecordClassName);
         return $rs;
     }
@@ -142,8 +142,8 @@ abstract class jDaoFactoryBase  {
      */
     public function countAll(){
         $query = 'SELECT COUNT(*) as c '.$this->_fromClause.$this->_whereClause;
-        $rs  =  $this->_conn->query ($query);
-        $res =  $rs->fetch ();
+        $rs  = $this->_conn->query ($query);
+        $res = $rs->fetch ();
         return intval($res->c);
     }
 
@@ -166,7 +166,7 @@ abstract class jDaoFactoryBase  {
         $q = $this->_selectClause.$this->_fromClause.$this->_whereClause;
         $q .= $this->_getPkWhereClauseForSelect($keys);
 
-        $rs  =  $this->_conn->query ($q);
+        $rs = $this->_conn->query ($q);
         $rs->setFetchMode(8,$this->_DaoRecordClassName);
         $record =  $rs->fetch ();
         return $record;
@@ -229,9 +229,9 @@ abstract class jDaoFactoryBase  {
         }
 
         if($limitCount != 0){
-            $rs  =  $this->_conn->limitQuery ($query, $limitOffset, $limitCount);
+            $rs = $this->_conn->limitQuery ($query, $limitOffset, $limitCount);
         }else{
-            $rs  =  $this->_conn->query ($query);
+            $rs = $this->_conn->query ($query);
         }
         $rs->setFetchMode(8,$this->_DaoRecordClassName);
         return $rs;
@@ -252,8 +252,8 @@ abstract class jDaoFactoryBase  {
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
             $query .= $this->_createConditionsClause($searchcond);
         }
-        $rs  =  $this->_conn->query ($query);
-        $res =  $rs->fetch();
+        $rs  = $this->_conn->query ($query);
+        $res = $rs->fetch();
         return intval($res->c);
     }
 
@@ -261,7 +261,7 @@ abstract class jDaoFactoryBase  {
      * delete all record corresponding to the conditions stored into the
      * jDaoConditions object.
      * @param jDaoConditions $searchcond
-     * @return
+     * @return number of deleted rows
      * @since 1.0beta3
      */
     final public function deleteBy ($searchcond){
@@ -394,6 +394,7 @@ abstract class jDaoFactoryBase  {
         }
         return $r;
     }
+
     /**
      * prepare the value ready to be used in a dynamic evaluation
      */
@@ -432,6 +433,5 @@ abstract class jDaoFactoryBase  {
         }
         return $value;
     }
-
 }
 ?>

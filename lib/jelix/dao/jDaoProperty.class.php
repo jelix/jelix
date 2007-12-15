@@ -132,7 +132,7 @@ class jDaoProperty {
 
         $this->isPK = in_array($this->fieldName, $tables[$this->table]['pk']);
         if(!$this->isPK){
-           $this->isFK = isset($tables[$this->table]['fk'][$this->fieldName]);
+            $this->isFK = isset($tables[$this->table]['fk'][$this->fieldName]);
         } else {
             $this->required = true;
             $this->requiredInConditions = true;

@@ -27,8 +27,7 @@
  * @author Chris Ryan
  * @since 1.0b1
  */
-class jSmtp
-{
+class jSmtp {
     /**
      *  SMTP server port
      *  @var int

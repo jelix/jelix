@@ -83,7 +83,7 @@ class jDatatypeString extends jDatatype {
  * @subpackage  utils
  */
 class jDatatypeBoolean extends jDatatype {
-  public function check($value) { return jFilter::isBool($value); }
+    public function check($value) { return jFilter::isBool($value); }
 }
 
 /**
@@ -180,7 +180,7 @@ class jDatatypeDateTime extends jDatatype {
  * @subpackage  utils
  */
 class jDatatypeTime extends jDatatypeDateTime {
-   protected $format=22;
+    protected $format=22;
 }
 /**
  * Datatype date
@@ -188,7 +188,7 @@ class jDatatypeTime extends jDatatypeDateTime {
  * @subpackage  utils
  */
 class jDatatypeDate extends jDatatypeDateTime {
-   protected $format=20;
+    protected $format=20;
 }
 
 /**
@@ -197,7 +197,7 @@ class jDatatypeDate extends jDatatypeDateTime {
  * @subpackage  utils
  */
 class jDatatypeLocaleDateTime extends jDatatypeDateTime {
-   protected $format=11;
+    protected $format=11;
 }
 
 /**
@@ -206,7 +206,7 @@ class jDatatypeLocaleDateTime extends jDatatypeDateTime {
  * @subpackage  utils
  */
 class jDatatypeLocaleDate extends jDatatypeDateTime {
-   protected $format=10;
+    protected $format=10;
 }
 
 /**
@@ -215,7 +215,7 @@ class jDatatypeLocaleDate extends jDatatypeDateTime {
  * @subpackage  utils
  */
 class jDatatypeLocaleTime extends jDatatypeDateTime {
-   protected $format=12;
+    protected $format=12;
 }
 
 

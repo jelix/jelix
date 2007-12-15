@@ -57,7 +57,7 @@ class jDb {
         $profil = self::getProfil ($name);
 
         if (!isset ($cnxPool[$name])){
-           $cnxPool[$name] = self::_createConnector ($profil);
+            $cnxPool[$name] = self::_createConnector ($profil);
         }
         return $cnxPool[$name];
     }
@@ -83,15 +83,15 @@ class jDb {
         $driver = $profil['driver'];
 
         if($driver == 'pdo'){
-           preg_match('/^(\w+)\:.*$/',$profil['dsn'], $m);
-           $driver = $m[1];
+            preg_match('/^(\w+)\:.*$/',$profil['dsn'], $m);
+            $driver = $m[1];
         }
 
         global $gJConfig;
 #ifnot ENABLE_OPTIMIZED_SOURCE
         if(!isset($gJConfig->_pluginsPathList_db[$driver])
             || !file_exists($gJConfig->_pluginsPathList_db[$driver]) ){
-                throw new jException('jelix~db.error.driver.notfound', $driver);
+            throw new jException('jelix~db.error.driver.notfound', $driver);
         }
 #endif
         require_once($gJConfig->_pluginsPathList_db[$driver].$driver.'.dbtools.php');
@@ -124,7 +124,7 @@ class jDb {
         static $profils = null;
         global $gJConfig;
         if($profils === null){
-           $profils = parse_ini_file(JELIX_APP_CONFIG_PATH.$gJConfig->dbProfils , true);
+            $profils = parse_ini_file(JELIX_APP_CONFIG_PATH.$gJConfig->dbProfils , true);
         }
 
         if($name == ''){
@@ -141,13 +141,12 @@ class jDb {
         }
 
         if(isset($profils[$name]) && is_array($profils[$name])){
-           $profils[$name]['name'] = $name;
-           return $profils[$name];
+            $profils[$name]['name'] = $name;
+            return $profils[$name];
         }else{
-           throw new jException('jelix~db.error.profil.unknow',$name);
+            throw new jException('jelix~db.error.profil.unknow',$name);
         }
     }
-
 
     /**
      * call it to test a profil (during an install for example)
@@ -159,7 +158,7 @@ class jDb {
             self::_createConnector ($profil);
             $ok = true;
         }catch(Exception $e){
-           $ok = false;
+            $ok = false;
         }
         return $ok;
     }
@@ -178,7 +177,7 @@ class jDb {
 #ifnot ENABLE_OPTIMIZED_SOURCE
             if(!isset($gJConfig->_pluginsPathList_db[$profil['driver']])
                 || !file_exists($gJConfig->_pluginsPathList_db[$profil['driver']]) ){
-                    throw new jException('jelix~db.error.driver.notfound', $profil['driver']);
+                throw new jException('jelix~db.error.driver.notfound', $profil['driver']);
             }
 #endif
             $p = $gJConfig->_pluginsPathList_db[$profil['driver']].$profil['driver'];
@@ -191,7 +190,5 @@ class jDb {
             return $dbh;
         }
     }
-
 }
-
 ?>

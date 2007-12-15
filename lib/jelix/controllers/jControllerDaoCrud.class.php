@@ -26,7 +26,7 @@ class jControllerDaoCrud extends jController {
      * @var string
      */
     protected $dao = '';
-    
+
     /**
      * selector of the form to use to edit and display a record
      * It should be filled by child controller.
@@ -41,7 +41,6 @@ class jControllerDaoCrud extends jController {
      * @var array
      */
     protected $propertiesForList = array();
-
 
     /**
      * list of properties which serve to order the record list
@@ -224,7 +223,6 @@ class jControllerDaoCrud extends jController {
         $this->_create($form, $rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->editTemplate));
         return $rep;
-
     }
 
     /**
@@ -438,6 +436,5 @@ class jControllerDaoCrud extends jController {
     }
 
 }
-
 
 ?>

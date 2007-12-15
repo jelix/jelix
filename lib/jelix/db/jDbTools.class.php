@@ -26,47 +26,45 @@
      * @var string
      */
     public $type;
-    
+
     /**
      * field name
      * @var string
      */
     public $name;
-    
+
     /**
      * says if the field can be null or not
      * @var boolean
      */
     public $notNull=true;
-    
+
     /**
      * says if the field is the primary key
      * @var boolean
      */
     public $primary=false;
-    
+
     /**
      * says if the field is auto incremented
      * @var boolean
      */
     public $autoIncrement=false;
-    
+
     /**
      * default value
      * @var string
      */
     public $default='';
-    
+
     /**
      * says if there is a default value
      * @var boolean
      */
     public $hasDefault = false;
 
-
     public $length = 0;
 }
-
 
 
 /**
@@ -75,34 +73,42 @@
  * @subpackage db
  */
 abstract class jDbTools {
-   protected $_connector;
+
+    /**
+    * the database connector
+    * @var jDbConnection
+    */
+    protected $_connector;
+
     /**
     *
     */
-   function __construct( $connector){
-      $this->_connector = $connector;
-   }
+    function __construct( $connector){
+        $this->_connector = $connector;
+    }
 
-   /**
-   * returns the table list
-   */
-   public function getTableList (){
-      return $this->_getTableList ();
-   }
+    /**
+    * returns the table list
+    */
+    public function getTableList (){
+        return $this->_getTableList ();
+    }
 
-   /**
-   * return the field list of a given table
-   */
-   public function getFieldList ($tableName){
-      return $this->_getFieldList ($tableName);
-   }
+    /**
+    * return the field list of a given table
+    */
+    public function getFieldList ($tableName){
+        return $this->_getFieldList ($tableName);
+    }
 
-   abstract protected function _getTableList ();
-   abstract protected function _getFieldList ($tableName);
+    abstract protected function _getTableList ();
+    abstract protected function _getFieldList ($tableName);
 
     protected $dbmsStyle = array();
 
-                                        // comment     end of query
+    /**
+     * regular expression to detect comments and end of query
+     */
     protected $dbmsDefaultStyle = array('/^\s*#/', '/;\s*$/');
 
     public function execSQLScript ($file) {
@@ -136,7 +142,5 @@ abstract class jDbTools {
         }
         return $nbCmd;
     }
-
-
 }
 ?>

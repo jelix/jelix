@@ -44,9 +44,9 @@ final class jResponseXmlRpc extends jResponse {
     public function outputErrors(){
         global $gJCoord;
         if(count($gJCoord->errorMessages)){
-           $e = $gJCoord->errorMessages[0];
-           $errorCode = $e[1];
-           $errorMessage = '['.$e[0].'] '.$e[2].' (file: '.$e[3].', line: '.$e[4].')';
+            $e = $gJCoord->errorMessages[0];
+            $errorCode = $e[1];
+            $errorMessage = '['.$e[0].'] '.$e[2].' (file: '.$e[3].', line: '.$e[4].')';
         }else{
             $errorMessage = 'Unknow error';
             $errorCode = -1;

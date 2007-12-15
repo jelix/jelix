@@ -86,10 +86,10 @@ abstract class jController{
     * @return integer the request parameter value
     */
     protected function intParam ($parName, $parDefaultValue=null, $useDefaultIfEmpty=false){
-       $value = $this->request->getParam($parName, $parDefaultValue, $useDefaultIfEmpty);
-       if(is_numeric($value))
+        $value = $this->request->getParam($parName, $parDefaultValue, $useDefaultIfEmpty);
+        if(is_numeric($value))
             return intval($value);
-       else
+        else
             return null;
     }
 
@@ -102,10 +102,10 @@ abstract class jController{
     * @return float the request parameter value
     */
     protected function floatParam ($parName, $parDefaultValue=null, $useDefaultIfEmpty=false){
-       $value = $this->request->getParam($parName, $parDefaultValue, $useDefaultIfEmpty);
-       if(is_numeric($value))
+        $value = $this->request->getParam($parName, $parDefaultValue, $useDefaultIfEmpty);
+        if(is_numeric($value))
             return floatval($value);
-       else
+        else
             return null;
     }
 
@@ -118,12 +118,12 @@ abstract class jController{
     * @return boolean the request parameter value
     */
     protected function boolParam ($parName, $parDefaultValue=null, $useDefaultIfEmpty=false){
-       $value = $this->request->getParam($parName, $parDefaultValue, $useDefaultIfEmpty);
-       if($value=="true" || $value == "1" || $value=="on" || $value=="yes")
+        $value = $this->request->getParam($parName, $parDefaultValue, $useDefaultIfEmpty);
+        if($value=="true" || $value == "1" || $value=="on" || $value=="yes")
             return true;
-       elseif($value=="false" || $value == "0" || $value=="off" || $value=="no")
+        elseif($value=="false" || $value == "0" || $value=="off" || $value=="no")
             return false;
-       else
+        else
             return null;
     }
 

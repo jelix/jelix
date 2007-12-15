@@ -12,9 +12,11 @@
 
 /** 
 * Static methods help to encrypt and decrypt string. mCrypt is used if it is installed, else a basic algorithm is used.
+* @package     jelix
+* @subpackage  utils
 */
-class jCrypt{
-    
+class jCrypt {
+
     /**
      * Decrypt a string with a specific key
      * @param string $string the string to decrypt
@@ -31,7 +33,7 @@ class jCrypt{
             $decrypted=jCrypt::simpleCrypt($decodedString,$key);
         return $decrypted;
     }
-    
+
     /**
      * Encrypt a string with a specific key
      * @param string $string the string to encrypt
@@ -47,7 +49,7 @@ class jCrypt{
             $encrypted=jCrypt::simpleCrypt($string,$key);
         return base64_encode($encrypted);
     }
-    
+
     /**
      * Encrypt a string with mCrypt.
      * @param string $string the string to encrypt
@@ -56,7 +58,7 @@ class jCrypt{
      */
     protected static function mcryptEncrypt($string,$key){
         if($key=='')
-    	    throw new jException('jelix~auth.error.key.empty');
+            throw new jException('jelix~auth.error.key.empty');
         $td = mcrypt_module_open(MCRYPT_WAKE, '', MCRYPT_MODE_STREAM, '');
         $ks = mcrypt_enc_get_key_size($td);
         $key = substr($key, 0, $ks);
@@ -75,7 +77,7 @@ class jCrypt{
      */
     protected static function mcryptDecrypt($string,$key){
         if($key=='')
-    	    throw new jException('jelix~auth.error.key.empty');
+            throw new jException('jelix~auth.error.key.empty');
         $td = mcrypt_module_open(MCRYPT_WAKE, '', MCRYPT_MODE_STREAM, '');
         $ks = mcrypt_enc_get_key_size($td);
         $key = substr($key, 0, $ks);

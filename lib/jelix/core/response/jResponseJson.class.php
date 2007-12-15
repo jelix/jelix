@@ -57,9 +57,9 @@ final class jResponseJson extends jResponse {
         global $gJCoord;
         $message = array();
         if(count($gJCoord->errorMessages)){
-           $e = $gJCoord->errorMessages[0];
-           $message['errorCode'] = $e[1];
-           $message['errorMessage'] = '['.$e[0].'] '.$e[2].' (file: '.$e[3].', line: '.$e[4].')';
+            $e = $gJCoord->errorMessages[0];
+            $message['errorCode'] = $e[1];
+            $message['errorMessage'] = '['.$e[0].'] '.$e[2].' (file: '.$e[3].', line: '.$e[4].')';
         }else{
             $message['errorMessage'] = 'Unknow error';
             $message['errorCode'] = -1;

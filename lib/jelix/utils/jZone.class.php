@@ -145,7 +145,7 @@ class jZone {
     * @return mixed the param value
     */
     public function getParam ($paramName, $defaultValue=null){
-       return array_key_exists ($paramName, $this->_params) ? $this->_params[$paramName] : $defaultValue;
+        return array_key_exists ($paramName, $this->_params) ? $this->_params[$paramName] : $defaultValue;
     }
 
     /**
@@ -238,8 +238,6 @@ class jZone {
         return JELIX_APP_TEMP_PATH.'zonecache/~'.$module.'~'.strtolower(get_class($this)).'~'.$id.'.php';
     }
 
-
-
    /**
     * instancy a zone object, and call one of its methods
     * @param string $name zone selector
@@ -266,7 +264,5 @@ class jZone {
         jContext::pop ();
         return $toReturn;
     }
-
-
 }
 ?>

@@ -13,6 +13,8 @@
 
 /**
  * interface for objects which output result of the install check
+ * @package  jelix
+ * @subpackage core
  * @since 1.0b2
  */
 interface jIInstallCheckReporter {
@@ -26,6 +28,8 @@ interface jIInstallCheckReporter {
 
 /**
  * message provider for jInstallCheck
+ * @package  jelix
+ * @subpackage core
  * @since 1.0b2
  */
 class jInstallMessageProvider {
@@ -142,7 +146,6 @@ class jInstallMessageProvider {
 
     function __construct($lang=''){
         if($lang == ''){
-
             $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
             foreach($languages as $bl){
                 // pour les user-agents qui livrent un code internationnal
@@ -174,6 +177,8 @@ class jInstallMessageProvider {
 
 /**
  * check an installation of a jelix application
+ * @package  jelix
+ * @subpackage core
  * @since 1.0b2
  */
 class jInstallCheck {
@@ -224,6 +229,7 @@ class jInstallCheck {
             $this->reporter->showError($this->messages->get($msg));
         $this->nbError ++;
     }
+
     protected function ok($msg){
         if($this->reporter)
             $this->reporter->showOk($this->messages->get($msg));
@@ -238,6 +244,7 @@ class jInstallCheck {
             $this->reporter->showWarning($this->messages->get($msg));
         $this->nbWarning ++;
     }
+
     protected function notice($msg){
         if($this->reporter)
             $this->reporter->showNotice($this->messages->get($msg));
@@ -306,7 +313,6 @@ class jInstallCheck {
         return $ok;
     }
 
-
     function checkAppPaths(){
         $ok = true;
         if(!defined('JELIX_LIB_PATH') || !defined('JELIX_APP_PATH')){
@@ -352,7 +358,6 @@ class jInstallCheck {
         } else {
             $this->buildProperties = parse_ini_file(JELIX_LIB_PATH.'BUILD');
         }
-        
     }
 
     function checkPhpSettings(){

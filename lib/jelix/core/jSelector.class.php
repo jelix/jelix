@@ -344,7 +344,7 @@ class jSelectorClass extends jSelectorModule {
     protected $type = 'class';
     protected $_dirname = 'classes/';
     protected $_suffix = '.class.php';
-    
+
     /**
     * subpath part in the resource content
     * @since 1.0b2
@@ -495,9 +495,9 @@ class jSelectorLoc extends jSelectorModule {
         // on regarde si la locale a été redéfini
         $overloadedPath = JELIX_APP_VAR_PATH.'overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix;
         if (is_readable ($overloadedPath)){
-           $this->_path = $overloadedPath;
-           $this->_where = 'overloaded/';
-           return;
+            $this->_path = $overloadedPath;
+            $this->_where = 'overloaded/';
+            return;
         }
         // et sinon, on regarde si la locale existe dans le module en question
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
@@ -712,7 +712,7 @@ class jSelectorForm extends jSelectorModule {
     protected $_where;
     protected $_dirname = 'forms/';
     protected $_suffix = '.form.xml';
-    
+
     function __construct($sel){
 
         $this->_compiler='jFormsCompiler';
@@ -725,13 +725,13 @@ class jSelectorForm extends jSelectorModule {
         return 'cForm_'.$this->module.'_Jx_'.$this->resource;
     }
 
-   
+
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
             throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString(true));
         }
-        
+
         // we see if the forms have been redefined
         $overloadedPath = JELIX_APP_VAR_PATH.'overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix;
         if (is_readable ($overloadedPath)){
@@ -746,17 +746,17 @@ class jSelectorForm extends jSelectorModule {
         }
         $this->_where = 'modules/';
     }
-    
+
     protected function _createCachePath(){
         // on ne partage pas le même cache pour tous les emplacements possibles
         // au cas où un overload était supprimé
         $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->_where.$this->module.'~'.$this->resource.$this->_cacheSuffix;
     }
-    
+
     public function getCompiledBuilderFilePath ($type){
         return JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->_where.$this->module.'~'.$this->resource.'_builder_'.$type.$this->_cacheSuffix;
     }
-    
+
 }
 
 /**

@@ -20,6 +20,7 @@
  * @subpackage dao
  */
 class jDaoCondition {
+
     /**
     * the parent group if any
     */
@@ -126,8 +127,5 @@ class jDaoConditions {
            'value'=>$value,
            'operator'=>$operator, 'isExpr'=>$foo);
     }
-
 }
-
-
 ?>

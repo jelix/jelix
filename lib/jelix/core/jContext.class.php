@@ -37,7 +37,7 @@ class jContext {
     * @return string the obsolet module name
     */
     static function pop (){
-       return array_pop (self::$context);
+        return array_pop (self::$context);
     }
 
     /**

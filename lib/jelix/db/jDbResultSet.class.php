@@ -69,33 +69,33 @@ abstract class jDbResultSet implements Iterator {
     }
 
     /**
-     * @notimplemented
+     * not implemented
      */
     public function getAttribute($attr){return null;}
     /**
-     * @notimplemented
+     * not implemented
      */
     public function setAttribute($attr, $value){}
 
     /**
-     * @notimplemented
+     * not implemented
      */
     abstract public function bindColumn($column, &$param , $type=null );
     /**
-     * @notimplemented
+     * not implemented
      */
     abstract public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null);
     /**
-     * @notimplemented
+     * not implemented
      */
     abstract public function bindValue($parameter, $value, $data_type);
     /**
-     * @notimplemented
+     * not implemented
      */
     abstract public function columnCount();
 
     /**
-     * @notimplemented
+     * not implemented
      */
     abstract public function execute($parameters=null);
 
@@ -113,25 +113,25 @@ abstract class jDbResultSet implements Iterator {
         return $this->_currentRecord;
     }
 
- 	public function key () {
- 	  return $this->_recordIndex;
- 	}
+    public function key () {
+        return $this->_recordIndex;
+    }
 
- 	public function next () {
- 	  $this->_currentRecord =  $this->fetch ();
- 	  if($this->_currentRecord)
- 	      $this->_recordIndex++;
- 	}
+    public function next () {
+        $this->_currentRecord =  $this->fetch ();
+        if($this->_currentRecord)
+            $this->_recordIndex++;
+    }
 
- 	public function rewind () {
- 	  $this->_rewind();
- 	  $this->_recordIndex = 0;
- 	  $this->_currentRecord =  $this->fetch ();
- 	}
+    public function rewind () {
+        $this->_rewind();
+        $this->_recordIndex = 0;
+        $this->_currentRecord =  $this->fetch ();
+    }
 
- 	public function valid () {
- 	  return ($this->_currentRecord != false);
- 	}
+    public function valid () {
+        return ($this->_currentRecord != false);
+    }
 
 
 }

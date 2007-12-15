@@ -149,13 +149,13 @@ final class jResponseRdf extends jResponse {
 
         echo '<Bag RDF:about="urn:jelix:error">'.$EOL;
         if(count($gJCoord->errorMessages)){
-           foreach($gJCoord->errorMessages as $e){
+            foreach($gJCoord->errorMessages as $e){
                 echo "<li>\n";
                 echo '<Description err:code="'.$e[1].'" err:type="'.$e[0].'" err:file="'.$e[3].'" err:line="'.$e[4].'">';
                 echo '<err:message>'.htmlspecialchars($e[2]).'</err:message>';
                 echo "</Description>\n";
                 echo "</li>\n";
-           }
+            }
         }else{
             echo "<li>\n";
             echo '<Description err:code="-1" err:type="error" err:file="" err:line="">';

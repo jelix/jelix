@@ -15,6 +15,10 @@
 *
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+
+/**
+ *
+ */
 require(JELIX_LIB_AUTH_PATH.'jAuth.class.php');
 require(JELIX_LIB_AUTH_PATH.'jAuthDummyUser.class.php');
 

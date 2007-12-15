@@ -166,25 +166,25 @@ abstract class jRequest {
 
         if($useOriginal){
             if(!isset($gJConfig->_coreResponses[$type])){
-               throw new jException('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
+                throw new jException('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
             }
             $respclass = $gJConfig->_coreResponses[$type];
         }else{
             if(!isset($gJConfig->responses[$type])){
-               throw new jException('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
+                throw new jException('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
             }
             $respclass = $gJConfig->responses[$type];
         }
         if(file_exists($path=JELIX_LIB_RESPONSE_PATH.$respclass.'.class.php')){
-           require_once ($path);
+            require_once ($path);
         }elseif(file_exists($path=JELIX_APP_PATH.'responses/'.$respclass.'.class.php')){
-           require_once ($path);
+            require_once ($path);
         }else{
-           throw new jException('jelix~errors.ad.response.not.loaded',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
+            throw new jException('jelix~errors.ad.response.not.loaded',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
         }
 
         if(!$this->isAllowedResponse($respclass)){
-           throw new jException('jelix~errors.ad.response.type.notallowed',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
+            throw new jException('jelix~errors.ad.response.type.notallowed',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
         }
 
         $response = new $respclass();
@@ -193,6 +193,5 @@ abstract class jRequest {
         return $response;
     }
 }
-
 
 ?>

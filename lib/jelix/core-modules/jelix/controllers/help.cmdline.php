@@ -1,14 +1,15 @@
 <?php
 /**
-* @package jelix-modules
+* @package    jelix-modules
 * @subpackage jelix
-* @version  $Id:$
-* @author Loic Mathaud
-* @copyright 2006 Loic Mathaud
-* @link
-* @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+* @author     Loic Mathaud
+* @copyright  2006 Loic Mathaud
+* @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
+/**
+ *
+ */
 class helpCtrl extends jControllerCmdLine {
     protected $allowed_options = array(
             'index' => array());

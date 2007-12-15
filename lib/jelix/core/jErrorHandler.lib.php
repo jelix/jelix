@@ -71,7 +71,7 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
 
     // When we are in cmdline we need to fix the remoteAddr
     $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
-    
+
     // formatage du message
     $messageLog = strtr($conf['messageLogFormat'], array(
         '%date%' => date("Y-m-d H:i:s"),

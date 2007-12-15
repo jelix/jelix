@@ -68,7 +68,6 @@ class jXmlRpc {
         }
         $request.='</params></methodCall>';
         return $request;
-
     }
 
     /**

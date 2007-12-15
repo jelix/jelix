@@ -38,7 +38,6 @@ class jResponseRss20 extends jResponseXMLFeed {
 
         $this->infos = new jRSS20Info ();
 
-
         parent::__construct ();
         $this->infos->language = $this->lang;
     }
@@ -218,8 +217,7 @@ class jRSS20Info extends jXMLFeedInfo{
      */
     public $skipDays;
 
-    function __construct ()
-    {
+    function __construct () {
             $this->_mandatory = array ( 'title', 'webSiteUrl', 'description');
     }
 }

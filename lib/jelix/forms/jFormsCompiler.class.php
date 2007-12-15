@@ -38,7 +38,7 @@ class jFormsCompiler implements jISimpleCompiler {
         }
 
         if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'forms/1.0'){
-           throw new jException('jelix~formserr.namespace.wrong',array($this->sourceFile));
+            throw new jException('jelix~formserr.namespace.wrong',array($this->sourceFile));
         }
 
         $xml = simplexml_import_dom($doc);
@@ -114,7 +114,7 @@ class jFormsCompiler implements jISimpleCompiler {
         }else if($controltype == 'checkbox') {
             $source[]='$ctrl->datatype= new jDatatypeBoolean();';
         }
-        
+
         // readonly support
         if(isset($control['readonly'])){
             if($controltype == 'output' || $controltype == 'submit'){
@@ -341,7 +341,7 @@ class jFormsCompiler implements jISimpleCompiler {
             if($rows < 2) $rows = 2;
             $source[]='$ctrl->rows='.$rows.';';
         }
-        
+
         if (isset($control['cols'])) {
             if ($controltype != 'textarea') {
                 throw new jException('jelix~formserr.attribute.not.allowed',array('cols',$controltype,$this->sourceFile));
@@ -350,7 +350,7 @@ class jFormsCompiler implements jISimpleCompiler {
             if($cols < 2) $cols = 2;
             $source[]='$ctrl->cols='.$cols.';';
         }
-        
+
         if(isset($control['multiple'])){
             if($controltype != 'listbox'){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('multiple',$controltype,$this->sourceFile));

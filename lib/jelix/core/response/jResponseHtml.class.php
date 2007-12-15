@@ -162,17 +162,17 @@ class jResponseHtml extends jResponse {
         $this->_headSent = 1;
         $this->_commonProcess();
         if($this->bodyTpl != '')
-           $this->body->meta($this->bodyTpl);
+            $this->body->meta($this->bodyTpl);
         $this->outputHtmlHeader();
         echo '<body ';
         foreach($this->bodyTagAttributes as $attr=>$value){
-           echo $attr,'="', htmlspecialchars($value),'" ';
+            echo $attr,'="', htmlspecialchars($value),'" ';
         }
         echo ">\n";
         $this->_headSent = 2;
         echo implode("\n",$this->_bodyTop);
         if($this->bodyTpl != '')
-           $this->body->display($this->bodyTpl);
+            $this->body->display($this->bodyTpl);
 
         if($this->hasErrors()){
             if($GLOBALS['gJConfig']->error_handling['showInFirebug']){
@@ -499,11 +499,11 @@ class jResponseHtml extends jResponse {
      * @param boolean $xhtml true if you want xhtml, false if you want html
      */
     final public function setXhtmlOutput($xhtml = true){
-       $this->_isXhtml = $xhtml;
-       if($xhtml)
-          $this->_endTag = "/>\n";
-       else
-          $this->_endTag = ">\n";
+        $this->_isXhtml = $xhtml;
+        if($xhtml)
+            $this->_endTag = "/>\n";
+        else
+            $this->_endTag = ">\n";
     }
 
     /**
@@ -511,6 +511,7 @@ class jResponseHtml extends jResponse {
      * @return boolean true if it is xhtml
      */
     final public function isXhtml(){ return $this->_isXhtml; }
+
     /**
      * return the end of a html tag : "/>" or ">", depending if it will generate xhtml or html
      * @return string

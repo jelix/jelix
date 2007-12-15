@@ -112,7 +112,6 @@ class jAclDbManager {
         $subj->label_key =$label_key;
         $daosbj->insert($subj);
         jAcl::clearCache();
-
     }
 
     /**

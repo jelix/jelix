@@ -46,7 +46,7 @@ class jConfigCompiler {
         }
 
         $config->_allBasePath = array();
-        
+
         $config->_modulesPathList = self::_loadPathList($config->modulesPath, $config->_allBasePath);
 
         self::_loadPluginsPathList($config);
@@ -95,7 +95,7 @@ class jConfigCompiler {
         if(trim( $config['startAction']) == '') {
             $config['startAction'] = ':';
         }
-        
+
         $config['_allBasePath'] = array();
         $config['_modulesPathList'] = self::_loadPathList($config['modulesPath'], $config['_allBasePath']);
 

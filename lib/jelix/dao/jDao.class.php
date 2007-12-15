@@ -57,7 +57,7 @@ class jDao {
        static $_daoSingleton=array();
 
        $sel = new jSelectorDao($DaoId, $profil);
-       $DaoId    = $sel->toString ();
+       $DaoId = $sel->toString ();
 
         if (! isset ($_daoSingleton[$DaoId])){
             $_daoSingleton[$DaoId] = self::create ($sel,$profil);
@@ -94,6 +94,5 @@ class jDao {
         $obj = new jDaoConditions ($glueOp);
         return $obj;
     }
-
 }
 ?>

@@ -64,8 +64,8 @@ class jAclDbUserGroup {
      * @return array a list of users object (dao records)
      */
     public static function getUsersList($groupid){
-      $dao = jDao::get('jelix~jaclusergroup', jAclDb::getProfil());
-      return $dao->getUsersGroup($groupid);
+        $dao = jDao::get('jelix~jaclusergroup', jAclDb::getProfil());
+        return $dao->getUsersGroup($groupid);
     }
 
     /**
@@ -83,7 +83,7 @@ class jAclDbUserGroup {
         $daogroup = jDao::get('jelix~jaclgroup',$p);
         $usergrp = jDao::createRecord('jelix~jaclusergroup',$p);
         $usergrp->login =$login;
-    
+
         // si $defaultGroup -> assign le user aux groupes par defaut
         if($defaultGroup){
             $defgrp = $daogroup->getDefaultGroups();
@@ -98,7 +98,7 @@ class jAclDbUserGroup {
         $persgrp->name = $login;
         $persgrp->grouptype = 2;
         $persgrp->ownerlogin = $login;
-    
+
         $daogroup->insert($persgrp);
         $usergrp->id_aclgrp = $persgrp->id_aclgrp;
         $daousergroup->insert($usergrp);
@@ -126,8 +126,8 @@ class jAclDbUserGroup {
      * @param int $groupid the group id
      */
     public static function removeUserFromGroup($login,$groupid){
-      $daousergroup = jDao::get('jelix~jaclusergroup',jAclDb::getProfil());
-      $daousergroup->delete($login,$groupid);
+        $daousergroup = jDao::get('jelix~jaclusergroup',jAclDb::getProfil());
+        $daousergroup->delete($login,$groupid);
     }
 
     /**
@@ -139,17 +139,17 @@ class jAclDbUserGroup {
         $daogroup = jDao::get('jelix~jaclgroup',$p);
         $daoright = jDao::get('jelix~jaclrights',$p);
         $daousergroup = jDao::get('jelix~jaclusergroup',$p);
-    
+
         // recupere le groupe privé
         $privategrp = $daogroup->getPrivateGroup($login);
         if(!$privategrp) return;
-    
+
         // supprime les droits sur le groupe privé (jacl_rights)
         $daoright->deleteByGroup($privategrp->id_aclgrp);
-    
+
         // supprime le groupe personnel du user (jacl_group)
         $daogroup->delete($privategrp->id_aclgrp);
-    
+
         // l'enleve de tous les groupes (jacl_users_group)
         $daousergroup->deleteByUser($login);
     }

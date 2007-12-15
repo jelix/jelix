@@ -80,11 +80,11 @@ class jDaoCompiler  implements jISimpleCompiler {
         $doc = new DOMDocument();
 
         if(!$doc->load(jDaoCompiler::$daoPath)){
-           throw new jException('jelix~daoxml.file.unknow', jDaoCompiler::$daoPath);
+            throw new jException('jelix~daoxml.file.unknow', jDaoCompiler::$daoPath);
         }
 
         if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0'){
-           throw new jException('jelix~daoxml.namespace.wrong',array(jDaoCompiler::$daoPath, $doc->namespaceURI));
+            throw new jException('jelix~daoxml.namespace.wrong',array(jDaoCompiler::$daoPath, $doc->namespaceURI));
         }
 
         $parser = new jDaoParser ();
@@ -94,7 +94,7 @@ class jDaoCompiler  implements jISimpleCompiler {
 #ifnot ENABLE_OPTIMIZED_SOURCE
         if(!isset($gJConfig->_pluginsPathList_db[$selector->driver])
             || !file_exists($gJConfig->_pluginsPathList_db[$selector->driver]) ){
-                throw new jException('jelix~db.error.driver.notfound', $profil['driver']);
+            throw new jException('jelix~db.error.driver.notfound', $profil['driver']);
         }
 #endif
         require_once($gJConfig->_pluginsPathList_db[$selector->driver].$selector->driver.'.daobuilder.php');
@@ -106,7 +106,6 @@ class jDaoCompiler  implements jISimpleCompiler {
         jFile::write ($selector->getCompiledFilePath(), $compiled);
         return true;
     }
-
 }
 
 /**
@@ -132,6 +131,4 @@ class jDaoXmlException extends jException {
         parent::__construct($localekey, $arg);
     }
 }
-
-
 ?>

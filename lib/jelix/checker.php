@@ -3,17 +3,24 @@
 /**
 * check a jelix installation
 *
-* @package  jelix
-* @subpackage core
-* @author   Jouanneau Laurent
-* @copyright 2007 Jouanneau laurent
-* @link     http://www.jelix.org
-* @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-* @since 1.0b2
+* @package     jelix
+* @subpackage  core
+* @author      Jouanneau Laurent
+* @copyright   2007 Jouanneau laurent
+* @link        http://www.jelix.org
+* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @since       1.0b2
 */
 
+/**
+ *
+ */
 include dirname(__FILE__).'/core/jInstallChecker.class.php';
 
+/**
+ * an HTML reporter for jInstallChecker
+ * @package jelix
+ */
 class jHtmlInstallChecker implements jIInstallCheckReporter {
     function start(){
         echo '<ul class="checkresults">';
@@ -46,7 +53,6 @@ class jHtmlInstallChecker implements jIInstallCheckReporter {
             echo ' ',$checker->nbNotice, $checker->messages->get(($checker->nbNotice > 1?'number.notices':'number.notice'));
         }
 
-
         if($checker->nbError){
            echo '<p>',$checker->messages->get(($checker->nbError > 1?'conclusion.errors':'conclusion.error')),'</p>';
         }else  if($checker->nbWarning){
@@ -78,15 +84,11 @@ header("Content-type:text/html;charset=UTF-8");
         margin: 2em;
         padding:1em;
         list-style-type:none;
-        
     }
     ul.checkresults li { margin:0; padding:5px; border-top:1px solid black; }
-
     li.checkerror   { background-color:#ff6666;}
     li.checkok      { background-color:#a4ffa9;}
     li.checkwarning { background-color:#ffbc8f;}
-
-
     </style>
 
 </head><body >
@@ -95,9 +97,3 @@ header("Content-type:text/html;charset=UTF-8");
 <?php $check->run(); ?>
 </body>
 </html>
-
-
-
-
-
-

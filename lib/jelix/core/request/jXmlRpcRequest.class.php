@@ -34,26 +34,26 @@ class jXmlRpcRequest extends jRequest {
      * analyse the http request and set the params property
      */
     protected function _initParams(){
-            global $HTTP_RAW_POST_DATA;
-            if(isset($HTTP_RAW_POST_DATA)){
-                $requestXml = $HTTP_RAW_POST_DATA;
-            }else{
-                $requestXml = file('php://input');
-                $requestXml = implode("\n",$requestXml);
-            }
+        global $HTTP_RAW_POST_DATA;
+        if(isset($HTTP_RAW_POST_DATA)){
+            $requestXml = $HTTP_RAW_POST_DATA;
+        }else{
+            $requestXml = file('php://input');
+            $requestXml = implode("\n",$requestXml);
+        }
 
-            // Décodage de la requete
-            list($nom,$vars) = jXmlRpc::decodeRequest($requestXml);
-            list($module, $action) = explode(':',$nom,2);
+        // Décodage de la requete
+        list($nom,$vars) = jXmlRpc::decodeRequest($requestXml);
+        list($module, $action) = explode(':',$nom,2);
 
-            if(count($vars) == 1 && is_array($vars[0]))
-                $this->params = $vars[0];
+        if(count($vars) == 1 && is_array($vars[0]))
+            $this->params = $vars[0];
 
-            $this->params['params'] = $vars;
+        $this->params['params'] = $vars;
 
-            // Définition de l'action a executer et des paramètres
-            $this->params['module'] = $module;
-            $this->params['action'] = $action;
+        // Définition de l'action a executer et des paramètres
+        $this->params['module'] = $module;
+        $this->params['action'] = $action;
     }
 
     public function allowedResponses(){ return array('jResponseXmlrpc');}

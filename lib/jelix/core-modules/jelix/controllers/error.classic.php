@@ -1,13 +1,15 @@
 <?php
 /**
-* @package jelix-modules
+* @package    jelix-modules
 * @subpackage jelix
-* @author Laurent Jouanneau
-* @copyright 2006 Laurent Jouanneau
-* @link
-* @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+* @author     Laurent Jouanneau
+* @copyright  2006 Laurent Jouanneau
+* @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
+/**
+ *
+ */
 class errorCtrl extends jController {
 
     /**

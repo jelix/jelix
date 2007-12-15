@@ -26,8 +26,7 @@
  * @copyright 2001 - 2003 Brent R. Matzelle,  2006 Laurent Jouanneau
  * @since 1.0b1
  */
-class jMailer
-{
+class jMailer {
     /**
      * Email priority (1 = High, 3 = Normal, 5 = low).
      * @var int

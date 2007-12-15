@@ -217,13 +217,13 @@ class jCoordinator {
         foreach ($this->plugins as $name => $obj){
             $result = $this->plugins[$name]->beforeAction ($pluginparams);
             if($result){
-               $this->action = $result;
-               jContext::pop();
-               jContext::push($result->module);
-               $this->moduleName = $result->module;
-               $this->actionName = $result->resource;
-               $ctrl = $this->getController($this->action);
-               break;
+                $this->action = $result;
+                jContext::pop();
+                jContext::push($result->module);
+                $this->moduleName = $result->module;
+                $this->actionName = $result->resource;
+                $ctrl = $this->getController($this->action);
+                break;
             }
         }
 
@@ -234,12 +234,12 @@ class jCoordinator {
         }
 
         foreach ($this->plugins as $name => $obj){
-           $this->plugins[$name]->beforeOutput ();
+            $this->plugins[$name]->beforeOutput ();
         }
 
         // envoi de la réponse
         if(!$this->response->output()){
-           $this->response->outputErrors();
+            $this->response->outputErrors();
         }
 
         foreach ($this->plugins as $name => $obj){
@@ -293,11 +293,11 @@ class jCoordinator {
 
         $respclass = $gJConfig->responses[$type];
         if(file_exists($path=JELIX_LIB_RESPONSE_PATH.$respclass.'.class.php')){
-           require_once ($path);
+            require_once ($path);
         }elseif(file_exists($path=JELIX_APP_PATH.'responses/'.$respclass.'.class.php')){
-           require_once ($path);
+            require_once ($path);
         }else{
-           return jLocale::get('jelix~errors.default.response.not.loaded',array($this->moduleName.'~'.$this->actionName,$type));
+            return jLocale::get('jelix~errors.default.response.not.loaded',array($this->moduleName.'~'.$this->actionName,$type));
         }
 
         $this->response = new $respclass();

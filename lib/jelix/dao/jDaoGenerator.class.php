@@ -27,403 +27,404 @@
 */
 class jDaoGenerator {
 
-   /**
-   * the dao definition.
-   * @var jDaoParser
-   */
-   protected $_datasParser = null;
+    /**
+    * the dao definition.
+    * @var jDaoParser
+    */
+    protected $_datasParser = null;
 
-   /**
-   * The DaoRecord ClassName
-   * @var string
-   */
-   protected $_DaoRecordClassName = null;
+    /**
+    * The DaoRecord ClassName
+    * @var string
+    */
+    protected $_DaoRecordClassName = null;
 
-   /**
-   * the DAO classname
-   * @var string
-   */
-   protected $_DaoClassName = null;
+    /**
+    * the DAO classname
+    * @var string
+    */
+    protected $_DaoClassName = null;
 
-   protected $propertiesListForInsert = 'PrimaryTable';
+    protected $propertiesListForInsert = 'PrimaryTable';
 
-   protected $aliasWord = ' AS ';
+    protected $aliasWord = ' AS ';
 
-   protected $trueValue = 1;
-   protected $falseValue = 0;
+    protected $trueValue = 1;
+    protected $falseValue = 0;
 
-   /**
-   * constructor
-   * @param jDaoParser $daoDefinition
-   */
-   function __construct($factoryClassName, $recordClassName, $daoDefinition){
-      $this->_datasParser = $daoDefinition;
-      $this->_DaoClassName = $factoryClassName;
-      $this->_DaoRecordClassName = $recordClassName;
-   }
+    /**
+    * constructor
+    * @param jDaoParser $daoDefinition
+    */
+    function __construct($factoryClassName, $recordClassName, $daoDefinition){
+        $this->_datasParser = $daoDefinition;
+        $this->_DaoClassName = $factoryClassName;
+        $this->_DaoRecordClassName = $recordClassName;
+    }
 
-   /**
-   * build all classes
-   */
-   public final function buildClasses () {
+    /**
+    * build all classes
+    */
+    public final function buildClasses () {
 
-      $src = array();
-      $src[] = ' require_once ( JELIX_LIB_DAO_PATH .\'jDaoRecordBase.class.php\');';
-      $src[] = ' require_once ( JELIX_LIB_DAO_PATH .\'jDaoFactoryBase.class.php\');';
+        $src = array();
+        $src[] = ' require_once ( JELIX_LIB_DAO_PATH .\'jDaoRecordBase.class.php\');';
+        $src[] = ' require_once ( JELIX_LIB_DAO_PATH .\'jDaoFactoryBase.class.php\');';
 
-      // prepare some values to generate properties and methods
+        // prepare some values to generate properties and methods
 
-      list($sqlFromClause, $sqlWhereClause)= $this->_getFromClause();
-      $tables            = $this->_datasParser->getTables();
-      $sqlSelectClause   = $this->_getSelectClause();
-      $pkFields          = $this->_getPropertiesBy('PkFields');
-      $pTableRealName    = $tables[$this->_datasParser->getPrimaryTable()]['realname'];
-      $pTableRealNameEsc = $this->_encloseName('\'.$this->_conn->prefixTable(\''.$pTableRealName.'\').\'');
-      $pkai              = $this->_getAutoIncrementPKField();
-      $sqlPkCondition    = $this->_buildSimpleConditions($pkFields);
-      if($sqlPkCondition != ''){
-         $sqlPkCondition= ($sqlWhereClause !='' ? ' AND ':' WHERE ').$sqlPkCondition;
-      }
-
-      //-----------------------
-      // Build the record class
-      //-----------------------
-
-      $src[] = "\nclass ".$this->_DaoRecordClassName.' extends jDaoRecordBase {';
-
-      $properties=array();
-
-      foreach ($this->_datasParser->getProperties() as $id=>$field){
-          $properties[$id] = get_object_vars($field);
-          if($field->defaultValue !== null)
-              $src[] =' public $'.$id.'='.var_export($field->defaultValue, true).';';
-          else
-              $src[] =' public $'.$id.';';
-      }
-
-      $src[] = '   public function getProperties() { return '.$this->_DaoClassName.'::$_properties; }';
-      $src[] = '   public function getPrimaryKeyNames() { return '.$this->_DaoClassName.'::$_pkFields; }';
-      $src[] = '}';
-
-      //--------------------
-      // Build the dao class
-      //--------------------
-
-      $src[] = "\nclass ".$this->_DaoClassName.' extends jDaoFactoryBase {';
-      $src[] = '   protected $_tables = '.var_export($tables, true).';';
-      $src[] = '   protected $_primaryTable = \''.$this->_datasParser->getPrimaryTable().'\';';
-      $src[] = '   protected $_selectClause=\''.$sqlSelectClause.'\';';
-      $src[] = '   protected $_fromClause;';
-      $src[] = '   protected $_whereClause=\''.$sqlWhereClause.'\';';
-      $src[] = '   protected $_DaoRecordClassName=\''.$this->_DaoRecordClassName.'\';';
-      $src[] = '   protected $_daoSelector = \''.jDaoCompiler::$daoId.'\';';
-
-      if($this->trueValue != 1){
-         $src[]='   protected $trueValue ='.var_export($this->trueValue,true).';';
-         $src[]='   protected $falseValue ='.var_export($this->falseValue,true).';';
-      } 
-
-      if($this->_datasParser->hasEvent('deletebefore') || $this->_datasParser->hasEvent('delete'))
-         $src[] = '   protected $_deleteBeforeEvent = true;';
-      if ($this->_datasParser->hasEvent('deleteafter') || $this->_datasParser->hasEvent('delete'))
-         $src[] = '   protected $_deleteAfterEvent = true;';
-      if ($this->_datasParser->hasEvent('deletebybefore') || $this->_datasParser->hasEvent('deleteby'))
-         $src[] = '   protected $_deleteByBeforeEvent = true;';
-      if ($this->_datasParser->hasEvent('deletebyafter') || $this->_datasParser->hasEvent('deleteby'))
-         $src[] = '   protected $_deleteByAfterEvent = true;';
-
-      $src[] = '   public static $_properties = '.var_export($properties, true).';';
-      $src[] = '   public static $_pkFields = array('.$this->_writeFieldNamesWith ($start = '\'', $end='\'', $beetween = ',', $pkFields).');';
-
-      $src[] = ' ';
-      $src[] = 'public function __construct($conn){';
-      $src[] = '   parent::__construct($conn);';
-      $src[] = '   $this->_fromClause = \''.$sqlFromClause.'\';';
-      $src[] = '}';
-
-      // cannot put this methods directly into jDaoBase because of a php bug on static methods/properties
-      $src[] = '   public function getProperties() { return self::$_properties; }';
-      $src[] = '   public function getPrimaryKeyNames() { return self::$_pkFields;}';
-
-      $src[] = ' ';
-      $src[] = ' protected function _getPkWhereClauseForSelect($pk){';
-      $src[] = '   extract($pk);';
-      $src[] = ' return \''.$sqlPkCondition.'\';';
-      $src[] = '}';
-
-      $src[] = ' ';
-      $src[] = 'protected function _getPkWhereClauseForNonSelect($pk){';
-      $src[] = '   extract($pk);';
-      $src[] = '   return \' where '.$this->_buildSimpleConditions($pkFields,'',false).'\';';
-      $src[] = '}';
-
-      //----- Insert method
-      $src[] = 'public function insert ($record){';
-
-      if($pkai !== null){
-         // if there is an autoincrement field as primary key
-
-         // if a value is given for the autoincrement field, then with do a full insert
-         $src[]=' if($record->'.$pkai->name.' > 0 ){';
-         $src[] = '    $query = \'INSERT INTO '.$pTableRealNameEsc.' (';
-         $fields = $this->_getPropertiesBy('PrimaryTable');
-         list($fields, $values) = $this->_prepareValues($fields,'insertPattern', 'record->');
-
-         $src[] = implode(',',$fields);
-         $src[] = ') VALUES (';
-         $src[] = implode(', ',$values);
-         $src[] = ")';";
-
-         $src[] = '}else{';
-
-         $fields = $this->_getPropertiesBy($this->propertiesListForInsert);
-      }else{
-         $fields = $this->_getPropertiesBy('PrimaryTable');
-      }
-
-      // if there isn't a autoincrement as primary key, then we do a full insert.
-      // if there isn't a value for the autoincrement field and if this is a mysql/sqlserver and pgsql, 
-      // we do an insert without given primary key. In other case, we do a full insert.
-
-      $src[] = '    $query = \'INSERT INTO '.$pTableRealNameEsc.' (';
-
-      list($fields, $values) = $this->_prepareValues($fields,'insertPattern', 'record->');
-
-      $src[] = implode(',',$fields);
-      $src[] = ') VALUES (';
-      $src[] = implode(', ',$values);
-      $src[] = ")';";
-
-      if($pkai !== null)
-         $src[] = '}';
-
-      if($this->_datasParser->hasEvent('insertbefore') || $this->_datasParser->hasEvent('insert')){
-         $src[] = '   jEvent::notify("daoInsertBefore", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
-      }
-      $src[] = '   $result = $this->_conn->exec ($query);';
-
-      if($pkai !== null){
-         $src[] = '   if(!$result)';
-         $src[] = '       return false;';
-
-         $src[] = '   if($record->'.$pkai->name.' < 1 ) ';
-         $src[] = $this->genUpdateAutoIncrementPK($pkai, $pTableRealName);
-      }
-
-      // we generate a SELECT query to update field on the record object, which are autoincrement or calculated
-      $fields = $this->_getPropertiesBy('FieldToUpdate');
-      if (count($fields)) {
-        $result = array();
-        foreach ($fields as $id=>$prop){
-            $result[]= $this->genSelectPattern($prop->selectPattern, '', $prop->fieldName, $prop->name);
+        list($sqlFromClause, $sqlWhereClause)= $this->_getFromClause();
+        $tables            = $this->_datasParser->getTables();
+        $sqlSelectClause   = $this->_getSelectClause();
+        $pkFields          = $this->_getPropertiesBy('PkFields');
+        $pTableRealName    = $tables[$this->_datasParser->getPrimaryTable()]['realname'];
+        $pTableRealNameEsc = $this->_encloseName('\'.$this->_conn->prefixTable(\''.$pTableRealName.'\').\'');
+        $pkai              = $this->_getAutoIncrementPKField();
+        $sqlPkCondition    = $this->_buildSimpleConditions($pkFields);
+        if($sqlPkCondition != ''){
+            $sqlPkCondition= ($sqlWhereClause !='' ? ' AND ':' WHERE ').$sqlPkCondition;
         }
 
-        $sql = 'SELECT '.(implode (', ',$result)). ' FROM '.$pTableRealNameEsc.' WHERE ';
-        $sql.= $this->_buildSimpleConditions($pkFields, 'record->', false);
+        //-----------------------
+        // Build the record class
+        //-----------------------
 
-        $src[] = '  $query =\''.$sql.'\';';
-        $src[] = '  $rs  =  $this->_conn->query ($query);';
-        $src[] = '  $newrecord =  $rs->fetch ();';
-        foreach ($fields as $id=>$prop){
-            $src[] = '  $record->'.$prop->name.' = $newrecord->'.$prop->name.';';
-        }
-      }
+        $src[] = "\nclass ".$this->_DaoRecordClassName.' extends jDaoRecordBase {';
 
-      if($this->_datasParser->hasEvent('insertafter') || $this->_datasParser->hasEvent('insert')){
-         $src[] = '   jEvent::notify("daoInsertAfter", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
-      }
+        $properties=array();
 
-      $src[] = '    return $result;';
-      $src[] = '}';
-
-      //-----  update method
-
-      $src[] = 'public function update ($record){';
-      list($fields, $values) = $this->_prepareValues($this->_getPropertiesBy('PrimaryFieldsExcludePk'),'updatePattern', 'record->');
-      if(count($fields)){
-         $src[] = '   $query = \'UPDATE '.$pTableRealNameEsc.' SET ';
-         $sqlSet='';
-         foreach($fields as $k=> $fname){
-            $sqlSet.= ', '.$fname. '= '. $values[$k];
-         }
-         $src[] = substr($sqlSet,1);
-    
-         $sqlCondition = $this->_buildSimpleConditions($pkFields, 'record->', false);
-         if($sqlCondition!='')
-            $src[] = ' where '.$sqlCondition;
-    
-         $src[] = "';";
-         if($this->_datasParser->hasEvent('updatebefore') || $this->_datasParser->hasEvent('update')){
-            $src[] = '   jEvent::notify("daoUpdateBefore", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
-         }
-         if($this->_datasParser->hasEvent('updateafter') || $this->_datasParser->hasEvent('update')){
-            $src[] = '   $result = $this->_conn->exec ($query);';
-            $src[] = '   jEvent::notify("daoUpdateAfter", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
-            $src[] = '   return $result;';
-         }
-         else 
-            $src[] = '   return $this->_conn->exec ($query);';
-         $src[] = " }";//ends the update function
-      }else{
-         //the dao is mapped on a table which contains only primary key : update is impossible
-         // so we will generate an error on update
-         $src[] = "     throw new jException('jelix~dao.error.update.impossible',array('".jDaoCompiler::$daoId."','".jDaoCompiler::$daoPath."'));";
-         $src[] = " }";
-      }
-
-      //----- other user methods
-
-      $allField = $this->_getPropertiesBy('All');
-      $primaryFields = $this->_getPropertiesBy('PrimaryTable');
-      $ct=null;
-
-
-      foreach($this->_datasParser->getMethods() as $name=>$method){
-
-         $defval = $method->getParametersDefaultValues();
-         if(count($defval)){
-            $mparam='';
-            foreach($method->getParameters() as $param){
-               $mparam.=', $'.$param;
-               if(isset($defval[$param]))
-                  $mparam.='=\''.str_replace("'","\'",$defval[$param]).'\'';
-            }
-            $mparam = substr($mparam,1);
-         }else{
-            $mparam=implode(', $',$method->getParameters());
-            if($mparam != '') $mparam ='$'.$mparam;
-         }
-
-         $src[] = ' function '.$method->name.' ('. $mparam.'){';
-
-         $limit='';
-         $groupby='';
-
-         switch($method->type){
-               case 'delete':
-                  $src[] = '    $__query = \'DELETE FROM '.$pTableRealNameEsc.' \';';
-                  $glueCondition =' WHERE ';
-                  break;
-               case 'update':
-                  $src[] = '    $__query = \'UPDATE '.$pTableRealNameEsc.' SET ';
-                  $updatefields = $this->_getPropertiesBy('PrimaryFieldsExcludePk');
-                  $sqlSet='';
-                  foreach($method->getValues() as $propname=>$value){
-                     if($value[1]){
-                        foreach($method->getParameters() as $param){
-                           $value[0] = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $updatefields[$propname],false).'.\'',$value[0]);
-                        }
-                        $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '. $value[0];
-                     }else{
-                        $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '. $this->_preparePHPValue($value[0],$updatefields[$propname]->datatype,false);
-                     }
-                  }
-                  $src[] =substr($sqlSet,1).'\';';
-
-                  $glueCondition =' WHERE ';
-                  break;
-
-               case 'php':
-                  $src[] = $method->getBody();
-                  $src[] = '}';
-                  break;
-
-               case 'count':
-                  if($method->distinct !=''){
-                    $prop = $this->_datasParser->getProperties ();
-                    $prop = $prop[$method->distinct];
-                    $count=' DISTINCT '.$this->_encloseName($tables[$prop->table]['name']) .'.'.$this->_encloseName($prop->fieldName);
-                  }else{
-                    $count='*';
-                  }
-                  $src[] = '    $__query = \'SELECT COUNT('.$count.') as c \'.$this->_fromClause.$this->_whereClause;';
-                  $glueCondition = ($sqlWhereClause !='' ? ' AND ':' WHERE ');
-                  break;
-               case 'selectfirst':
-               case 'select':
-               default:
-                  if($method->distinct !=''){
-                    $select = '\''.$this->_getSelectClause($method->distinct).'\'';
-                  }else{
-                     $select=' $this->_selectClause';
-                  }
-                  $src[] = '    $__query = '.$select.'.$this->_fromClause.$this->_whereClause;';
-                  $glueCondition = ($sqlWhereClause !='' ? ' AND ':' WHERE ');
-                  if( $method->type == 'select' && ($lim = $method->getLimit ()) !==null){
-                     $limit=', '.$lim['offset'].', '.$lim['count'];
-                  }
-                  $gb = $method->getGroupBy();
-                  if ($gb) {
-                      $groupby = '    $__query .= \' GROUPBY '.implode(",", $gb).'\';';
-                  }
-
-               break;
-         }
-
-         if($method->type == 'php')
-            continue;
-
-         $cond = $method->getConditions();
-
-         if($cond !== null){
-            if($method->type == 'delete' || $method->type == 'update')
-               $sqlCond = $this->_buildConditions($cond, $primaryFields, $method->getParameters(), false);
+        foreach ($this->_datasParser->getProperties() as $id=>$field){
+            $properties[$id] = get_object_vars($field);
+            if($field->defaultValue !== null)
+                $src[] =' public $'.$id.'='.var_export($field->defaultValue, true).';';
             else
-               $sqlCond = $this->_buildConditions($cond, $allField,$method->getParameters(),true);
+                $src[] =' public $'.$id.';';
+        }
 
-            if(trim($sqlCond) != '')
-               $src[] = '$__query .=\''.$glueCondition.$sqlCond."';";
-         }
+        $src[] = '   public function getProperties() { return '.$this->_DaoClassName.'::$_properties; }';
+        $src[] = '   public function getPrimaryKeyNames() { return '.$this->_DaoClassName.'::$_pkFields; }';
+        $src[] = '}';
 
-         switch($method->type){
-               case 'delete':
-               case 'update' :
-                  if ($method->eventBeforeEnabled || $method->eventAfterEnabled) {
-                     $methname = ($method->type == 'update'?'Update':'Insert');
-                     if ($method->eventBeforeEnabled) {
-                        $src[] = '   jEvent::notify("daoSpecific'.$methname.'Before", array(\'dao\'=>$this->_daoselector,\'method\'=>\''.$method->name.'\', \'params\'=>func_get_args()));';
-                     }
-                     if ($method->eventAfterEnabled) {
-                        $src[] = '   $result = $this->_conn->exec ($__query);';
-                        $src[] = '   jEvent::notify("daoSpecific'.$methname.'After", array(\'dao\'=>$this->_daoselector,\'method\'=>\''.$method->name.'\', \'params\'=>func_get_args()));';
-                        $src[] = '   return $result;';
-                     } else {
+        //--------------------
+        // Build the dao class
+        //--------------------
+
+        $src[] = "\nclass ".$this->_DaoClassName.' extends jDaoFactoryBase {';
+        $src[] = '   protected $_tables = '.var_export($tables, true).';';
+        $src[] = '   protected $_primaryTable = \''.$this->_datasParser->getPrimaryTable().'\';';
+        $src[] = '   protected $_selectClause=\''.$sqlSelectClause.'\';';
+        $src[] = '   protected $_fromClause;';
+        $src[] = '   protected $_whereClause=\''.$sqlWhereClause.'\';';
+        $src[] = '   protected $_DaoRecordClassName=\''.$this->_DaoRecordClassName.'\';';
+        $src[] = '   protected $_daoSelector = \''.jDaoCompiler::$daoId.'\';';
+
+        if($this->trueValue != 1){
+            $src[]='   protected $trueValue ='.var_export($this->trueValue,true).';';
+            $src[]='   protected $falseValue ='.var_export($this->falseValue,true).';';
+        }
+
+        if($this->_datasParser->hasEvent('deletebefore') || $this->_datasParser->hasEvent('delete'))
+            $src[] = '   protected $_deleteBeforeEvent = true;';
+        if ($this->_datasParser->hasEvent('deleteafter') || $this->_datasParser->hasEvent('delete'))
+            $src[] = '   protected $_deleteAfterEvent = true;';
+        if ($this->_datasParser->hasEvent('deletebybefore') || $this->_datasParser->hasEvent('deleteby'))
+            $src[] = '   protected $_deleteByBeforeEvent = true;';
+        if ($this->_datasParser->hasEvent('deletebyafter') || $this->_datasParser->hasEvent('deleteby'))
+            $src[] = '   protected $_deleteByAfterEvent = true;';
+
+        $src[] = '   public static $_properties = '.var_export($properties, true).';';
+        $src[] = '   public static $_pkFields = array('.$this->_writeFieldNamesWith ($start = '\'', $end='\'', $beetween = ',', $pkFields).');';
+
+        $src[] = ' ';
+        $src[] = 'public function __construct($conn){';
+        $src[] = '   parent::__construct($conn);';
+        $src[] = '   $this->_fromClause = \''.$sqlFromClause.'\';';
+        $src[] = '}';
+
+        // cannot put this methods directly into jDaoBase because of a php bug on static methods/properties
+        $src[] = '   public function getProperties() { return self::$_properties; }';
+        $src[] = '   public function getPrimaryKeyNames() { return self::$_pkFields;}';
+
+        $src[] = ' ';
+        $src[] = ' protected function _getPkWhereClauseForSelect($pk){';
+        $src[] = '   extract($pk);';
+        $src[] = ' return \''.$sqlPkCondition.'\';';
+        $src[] = '}';
+
+        $src[] = ' ';
+        $src[] = 'protected function _getPkWhereClauseForNonSelect($pk){';
+        $src[] = '   extract($pk);';
+        $src[] = '   return \' where '.$this->_buildSimpleConditions($pkFields,'',false).'\';';
+        $src[] = '}';
+
+        //----- Insert method
+        $src[] = 'public function insert ($record){';
+
+        if($pkai !== null){
+            // if there is an autoincrement field as primary key
+
+            // if a value is given for the autoincrement field, then with do a full insert
+            $src[]=' if($record->'.$pkai->name.' > 0 ){';
+            $src[] = '    $query = \'INSERT INTO '.$pTableRealNameEsc.' (';
+            $fields = $this->_getPropertiesBy('PrimaryTable');
+            list($fields, $values) = $this->_prepareValues($fields,'insertPattern', 'record->');
+
+            $src[] = implode(',',$fields);
+            $src[] = ') VALUES (';
+            $src[] = implode(', ',$values);
+            $src[] = ")';";
+
+            $src[] = '}else{';
+
+            $fields = $this->_getPropertiesBy($this->propertiesListForInsert);
+        }else{
+            $fields = $this->_getPropertiesBy('PrimaryTable');
+        }
+
+        // if there isn't a autoincrement as primary key, then we do a full insert.
+        // if there isn't a value for the autoincrement field and if this is a mysql/sqlserver and pgsql, 
+        // we do an insert without given primary key. In other case, we do a full insert.
+
+        $src[] = '    $query = \'INSERT INTO '.$pTableRealNameEsc.' (';
+
+        list($fields, $values) = $this->_prepareValues($fields,'insertPattern', 'record->');
+
+        $src[] = implode(',',$fields);
+        $src[] = ') VALUES (';
+        $src[] = implode(', ',$values);
+        $src[] = ")';";
+
+        if($pkai !== null)
+            $src[] = '}';
+
+        if($this->_datasParser->hasEvent('insertbefore') || $this->_datasParser->hasEvent('insert')){
+            $src[] = '   jEvent::notify("daoInsertBefore", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+        }
+        $src[] = '   $result = $this->_conn->exec ($query);';
+
+        if($pkai !== null){
+            $src[] = '   if(!$result)';
+            $src[] = '       return false;';
+
+            $src[] = '   if($record->'.$pkai->name.' < 1 ) ';
+            $src[] = $this->genUpdateAutoIncrementPK($pkai, $pTableRealName);
+        }
+
+        // we generate a SELECT query to update field on the record object, which are autoincrement or calculated
+        $fields = $this->_getPropertiesBy('FieldToUpdate');
+        if (count($fields)) {
+            $result = array();
+            foreach ($fields as $id=>$prop){
+                $result[]= $this->genSelectPattern($prop->selectPattern, '', $prop->fieldName, $prop->name);
+            }
+
+            $sql = 'SELECT '.(implode (', ',$result)). ' FROM '.$pTableRealNameEsc.' WHERE ';
+            $sql.= $this->_buildSimpleConditions($pkFields, 'record->', false);
+
+            $src[] = '  $query =\''.$sql.'\';';
+            $src[] = '  $rs  =  $this->_conn->query ($query);';
+            $src[] = '  $newrecord =  $rs->fetch ();';
+            foreach ($fields as $id=>$prop){
+                $src[] = '  $record->'.$prop->name.' = $newrecord->'.$prop->name.';';
+            }
+        }
+
+        if($this->_datasParser->hasEvent('insertafter') || $this->_datasParser->hasEvent('insert')){
+            $src[] = '   jEvent::notify("daoInsertAfter", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+        }
+
+        $src[] = '    return $result;';
+        $src[] = '}';
+
+        //-----  update method
+
+        $src[] = 'public function update ($record){';
+        list($fields, $values) = $this->_prepareValues($this->_getPropertiesBy('PrimaryFieldsExcludePk'),'updatePattern', 'record->');
+        if(count($fields)){
+            $src[] = '   $query = \'UPDATE '.$pTableRealNameEsc.' SET ';
+            $sqlSet='';
+            foreach($fields as $k=> $fname){
+                $sqlSet.= ', '.$fname. '= '. $values[$k];
+            }
+            $src[] = substr($sqlSet,1);
+
+            $sqlCondition = $this->_buildSimpleConditions($pkFields, 'record->', false);
+            if($sqlCondition!='')
+                $src[] = ' where '.$sqlCondition;
+
+            $src[] = "';";
+            if($this->_datasParser->hasEvent('updatebefore') || $this->_datasParser->hasEvent('update')){
+                $src[] = '   jEvent::notify("daoUpdateBefore", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+            }
+            if($this->_datasParser->hasEvent('updateafter') || $this->_datasParser->hasEvent('update')){
+                $src[] = '   $result = $this->_conn->exec ($query);';
+                $src[] = '   jEvent::notify("daoUpdateAfter", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+                $src[] = '   return $result;';
+            }
+            else
+                $src[] = '   return $this->_conn->exec ($query);';
+            $src[] = " }";//ends the update function
+        }else{
+            //the dao is mapped on a table which contains only primary key : update is impossible
+            // so we will generate an error on update
+            $src[] = "     throw new jException('jelix~dao.error.update.impossible',array('".jDaoCompiler::$daoId."','".jDaoCompiler::$daoPath."'));";
+            $src[] = " }";
+        }
+
+        //----- other user methods
+
+        $allField = $this->_getPropertiesBy('All');
+        $primaryFields = $this->_getPropertiesBy('PrimaryTable');
+        $ct=null;
+
+
+        foreach($this->_datasParser->getMethods() as $name=>$method){
+
+            $defval = $method->getParametersDefaultValues();
+            if(count($defval)){
+                $mparam='';
+                foreach($method->getParameters() as $param){
+                    $mparam.=', $'.$param;
+                    if(isset($defval[$param]))
+                        $mparam.='=\''.str_replace("'","\'",$defval[$param]).'\'';
+                }
+                $mparam = substr($mparam,1);
+            }else{
+                $mparam=implode(', $',$method->getParameters());
+                if($mparam != '') $mparam ='$'.$mparam;
+            }
+
+            $src[] = ' function '.$method->name.' ('. $mparam.'){';
+
+            $limit='';
+            $groupby='';
+
+            switch($method->type){
+                case 'delete':
+                    $src[] = '    $__query = \'DELETE FROM '.$pTableRealNameEsc.' \';';
+                    $glueCondition =' WHERE ';
+                    break;
+                case 'update':
+                    $src[] = '    $__query = \'UPDATE '.$pTableRealNameEsc.' SET ';
+                    $updatefields = $this->_getPropertiesBy('PrimaryFieldsExcludePk');
+                    $sqlSet='';
+                    foreach($method->getValues() as $propname=>$value){
+                        if($value[1]){
+                            foreach($method->getParameters() as $param){
+                                $value[0] = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $updatefields[$propname],false).'.\'',$value[0]);
+                            }
+                            $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '. $value[0];
+                        }else{
+                            $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '.
+                                $this->_preparePHPValue($value[0],$updatefields[$propname]->datatype,false);
+                        }
+                    }
+                    $src[] =substr($sqlSet,1).'\';';
+
+                    $glueCondition =' WHERE ';
+                    break;
+
+                case 'php':
+                    $src[] = $method->getBody();
+                    $src[] = '}';
+                    break;
+
+                case 'count':
+                    if($method->distinct !=''){
+                        $prop = $this->_datasParser->getProperties ();
+                        $prop = $prop[$method->distinct];
+                        $count=' DISTINCT '.$this->_encloseName($tables[$prop->table]['name']) .'.'.$this->_encloseName($prop->fieldName);
+                    }else{
+                        $count='*';
+                    }
+                    $src[] = '    $__query = \'SELECT COUNT('.$count.') as c \'.$this->_fromClause.$this->_whereClause;';
+                    $glueCondition = ($sqlWhereClause !='' ? ' AND ':' WHERE ');
+                    break;
+                case 'selectfirst':
+                case 'select':
+                default:
+                    if($method->distinct !=''){
+                        $select = '\''.$this->_getSelectClause($method->distinct).'\'';
+                    }else{
+                        $select=' $this->_selectClause';
+                    }
+                    $src[] = '    $__query = '.$select.'.$this->_fromClause.$this->_whereClause;';
+                    $glueCondition = ($sqlWhereClause !='' ? ' AND ':' WHERE ');
+                    if( $method->type == 'select' && ($lim = $method->getLimit ()) !==null){
+                        $limit=', '.$lim['offset'].', '.$lim['count'];
+                    }
+                    $gb = $method->getGroupBy();
+                    if ($gb) {
+                        $groupby = '    $__query .= \' GROUPBY '.implode(",", $gb).'\';';
+                    }
+            }
+
+            if($method->type == 'php')
+                continue;
+
+            $cond = $method->getConditions();
+
+            if($cond !== null){
+                if($method->type == 'delete' || $method->type == 'update')
+                    $sqlCond = $this->_buildConditions($cond, $primaryFields, $method->getParameters(), false);
+                else
+                    $sqlCond = $this->_buildConditions($cond, $allField,$method->getParameters(),true);
+
+                if(trim($sqlCond) != '')
+                    $src[] = '$__query .=\''.$glueCondition.$sqlCond."';";
+            }
+
+            switch($method->type){
+                case 'delete':
+                case 'update' :
+                    if ($method->eventBeforeEnabled || $method->eventAfterEnabled) {
+                        $methname = ($method->type == 'update'?'Update':'Insert');
+                        if ($method->eventBeforeEnabled) {
+                        $src[] = '   jEvent::notify("daoSpecific'.$methname.'Before", array(\'dao\'=>$this->_daoselector,\'method\'=>\''.
+                            $method->name.'\', \'params\'=>func_get_args()));';
+                        }
+                        if ($method->eventAfterEnabled) {
+                            $src[] = '   $result = $this->_conn->exec ($__query);';
+                            $src[] = '   jEvent::notify("daoSpecific'.$methname.'After", array(\'dao\'=>$this->_daoselector,\'method\'=>\''.
+                                $method->name.'\', \'params\'=>func_get_args()));';
+                            $src[] = '   return $result;';
+                        } else {
+                            $src[] = '    return $this->_conn->exec ($__query);';
+                        }
+                    } else {
                         $src[] = '    return $this->_conn->exec ($__query);';
-                     }
-                  } else {
-                    $src[] = '    return $this->_conn->exec ($__query);';
-                  }
-               break;
-               case 'count':
-                  $src[] = '    $__rs = $this->_conn->query($__query);';
-                  $src[] = '    $__res = $__rs->fetch();';
-                  $src[] = '    return intval($__res->c);';
-                  break;
-               case 'selectfirst':
-                  if ($groupby)
-                    $src[]= $groupby;
-                  $src[] = '    $__rs = $this->_conn->limitQuery($__query,0,1);';
-                  $src[] = '    $__rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
-                  $src[] = '    return $__rs->fetch();';
-                  break;
-               case 'select':
-               default:
-                  if ($groupby)
-                    $src[]= $groupby;
-                  if($limit)
-                      $src[] = '    $__rs = $this->_conn->limitQuery($__query'.$limit.');';
-                  else
-                      $src[] = '    $__rs = $this->_conn->query($__query);';
-                  $src[] = '    $__rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
-                  $src[] = '    return $__rs;';
-         }
-         $src[] = '}';
-      }
+                    }
+                    break;
+                case 'count':
+                    $src[] = '    $__rs = $this->_conn->query($__query);';
+                    $src[] = '    $__res = $__rs->fetch();';
+                    $src[] = '    return intval($__res->c);';
+                    break;
+                case 'selectfirst':
+                    if ($groupby)
+                        $src[]= $groupby;
+                    $src[] = '    $__rs = $this->_conn->limitQuery($__query,0,1);';
+                    $src[] = '    $__rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
+                    $src[] = '    return $__rs->fetch();';
+                    break;
+                case 'select':
+                default:
+                    if ($groupby)
+                        $src[]= $groupby;
+                    if($limit)
+                        $src[] = '    $__rs = $this->_conn->limitQuery($__query'.$limit.');';
+                    else
+                        $src[] = '    $__rs = $this->_conn->query($__query);';
+                    $src[] = '    $__rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
+                    $src[] = '    return $__rs;';
+            }
+            $src[] = '}';
+        }
 
-      $src[] = '}';//end of class
+        $src[] = '}';//end of class
 
-      return implode("\n",$src);
-   }
+        return implode("\n",$src);
+    }
 
     /**
     *  create FROM clause for all SELECT query
@@ -431,83 +432,83 @@ class jDaoGenerator {
     */
     final protected function _getFromClause(){
 
-      $tables = $this->_datasParser->getTables();
+        $tables = $this->_datasParser->getTables();
 
-      foreach($tables as $table_name => $table){
-         $tables[$table_name]['realname'] = '\'.$this->_conn->prefixTable(\''.$table['realname'].'\').\'';
-      }
-
-      $primarytable = $tables[$this->_datasParser->getPrimaryTable()];
-      $ptrealname = $this->_encloseName($primarytable['realname']);
-      $ptname = $this->_encloseName($primarytable['name']);
-
-      list($sqlFrom, $sqlWhere) = $this->genOuterJoins(&$tables, $ptname);
-
-      if($primarytable['name']!=$primarytable['realname'])
-         $sqlFrom =$ptrealname.$this->aliasWord.$ptname.$sqlFrom;
-      else
-         $sqlFrom =$ptrealname.$sqlFrom;
-
-      foreach($this->_datasParser->getInnerJoins() as $tablejoin){
-         $table= $tables[$tablejoin];
-         $tablename = $this->_encloseName($table['name']);
-         if($table['name']!=$table['realname'])
-            $sqlFrom .=', '.$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
-        else
-            $sqlFrom .=', '.$this->_encloseName($table['realname']);
-
-        foreach($table['fk'] as $k => $fk){
-           $sqlWhere.=' AND '.$ptname.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
+        foreach($tables as $table_name => $table){
+            $tables[$table_name]['realname'] = '\'.$this->_conn->prefixTable(\''.$table['realname'].'\').\'';
         }
-      }
 
-      $sqlWhere=($sqlWhere !='') ? ' WHERE '.substr($sqlWhere,4) :'';
-      return array(' FROM '.$sqlFrom,$sqlWhere);
-   }
+        $primarytable = $tables[$this->_datasParser->getPrimaryTable()];
+        $ptrealname = $this->_encloseName($primarytable['realname']);
+        $ptname = $this->_encloseName($primarytable['name']);
 
-   protected function genOuterJoins(&$tables, $primaryTableName){
-      $sqlFrom = '';
-      foreach($this->_datasParser->getOuterJoins() as $tablejoin){
-         $table= $tables[$tablejoin[0]];
-         $tablename = $this->_encloseName($table['name']);
+        list($sqlFrom, $sqlWhere) = $this->genOuterJoins(&$tables, $ptname);
 
-         if($table['name']!=$table['realname'])
-            $r =$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
-         else
-            $r =$this->_encloseName($table['realname']);
+        if($primarytable['name']!=$primarytable['realname'])
+            $sqlFrom =$ptrealname.$this->aliasWord.$ptname.$sqlFrom;
+        else
+            $sqlFrom =$ptrealname.$sqlFrom;
 
-         $fieldjoin='';
-         foreach($table['fk'] as $k => $fk){
-            $fieldjoin.=' AND '.$primaryTableName.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
-         }
-         $fieldjoin=substr($fieldjoin,4);
+        foreach($this->_datasParser->getInnerJoins() as $tablejoin){
+            $table= $tables[$tablejoin];
+            $tablename = $this->_encloseName($table['name']);
+            if($table['name']!=$table['realname'])
+                $sqlFrom .=', '.$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
+            else
+                $sqlFrom .=', '.$this->_encloseName($table['realname']);
 
-         if($tablejoin[1] == 0){
-            $sqlFrom.=' LEFT JOIN '.$r.' ON ('.$fieldjoin.')';
-         }elseif($tablejoin[1] == 1){
-            $sqlFrom.=' RIGHT JOIN '.$r.' ON ('.$fieldjoin.')';
-         }
-      }
-      return array($sqlFrom, '');
-   }
+            foreach($table['fk'] as $k => $fk){
+                $sqlWhere.=' AND '.$ptname.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
+            }
+        }
+
+        $sqlWhere=($sqlWhere !='') ? ' WHERE '.substr($sqlWhere,4) :'';
+        return array(' FROM '.$sqlFrom,$sqlWhere);
+    }
+
+    protected function genOuterJoins(&$tables, $primaryTableName){
+        $sqlFrom = '';
+        foreach($this->_datasParser->getOuterJoins() as $tablejoin){
+            $table= $tables[$tablejoin[0]];
+            $tablename = $this->_encloseName($table['name']);
+
+            if($table['name']!=$table['realname'])
+                $r =$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
+            else
+                $r =$this->_encloseName($table['realname']);
+
+            $fieldjoin='';
+            foreach($table['fk'] as $k => $fk){
+                $fieldjoin.=' AND '.$primaryTableName.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
+            }
+            $fieldjoin=substr($fieldjoin,4);
+
+            if($tablejoin[1] == 0){
+                $sqlFrom.=' LEFT JOIN '.$r.' ON ('.$fieldjoin.')';
+            }elseif($tablejoin[1] == 1){
+                $sqlFrom.=' RIGHT JOIN '.$r.' ON ('.$fieldjoin.')';
+            }
+        }
+        return array($sqlFrom, '');
+    }
 
     /**
     * build SELECT clause for all SELECT queries
     */
-   protected function _getSelectClause ($distinct=false){
-      $result = array();
+    protected function _getSelectClause ($distinct=false){
+        $result = array();
 
-      $tables = $this->_datasParser->getTables();
-      foreach ($this->_datasParser->getProperties () as $id=>$prop){
+        $tables = $this->_datasParser->getTables();
+        foreach ($this->_datasParser->getProperties () as $id=>$prop){
 
-         $table = $this->_encloseName($tables[$prop->table]['name']) .'.';
+            $table = $this->_encloseName($tables[$prop->table]['name']) .'.';
 
-         if ($prop->selectPattern !=''){
-            $result[]= $this->genSelectPattern($prop->selectPattern, $table, $prop->fieldName, $prop->name);
-         }
-      }
+            if ($prop->selectPattern !=''){
+                $result[]= $this->genSelectPattern($prop->selectPattern, $table, $prop->fieldName, $prop->name);
+            }
+        }
 
-      return 'SELECT '.($distinct?'DISTINCT ':'').(implode (', ',$result));
+        return 'SELECT '.($distinct?'DISTINCT ':'').(implode (', ',$result));
     }
 
     protected function genSelectPattern ($pattern, $table, $fieldname, $propname ){
@@ -619,7 +620,7 @@ class jDaoGenerator {
             if(!$field->isPK)
                 continue;
             if ($field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement') {
-               return $field;
+                return $field;
             }
         }
         return null;
@@ -703,16 +704,16 @@ class jDaoGenerator {
         foreach ($cond->order as $name => $way){
             $ord='';
             if (isset($fields[$name])){
-               $ord = $this->_encloseName($fields[$name]->table).'.'.$this->_encloseName($fields[$name]->fieldName);
+                $ord = $this->_encloseName($fields[$name]->table).'.'.$this->_encloseName($fields[$name]->fieldName);
             }elseif($name{0} == '$'){
-               $ord = '\'.'.$name.'.\'';
+                $ord = '\'.'.$name.'.\'';
             }else{
-               continue;
+                continue;
             }
             if($way{0} == '$'){
-               $order[]=$ord.' \'.( strtolower('.$way.') ==\'asc\'?\'asc\':\'desc\').\'';
+                $order[]=$ord.' \'.( strtolower('.$way.') ==\'asc\'?\'asc\':\'desc\').\'';
             }else{
-               $order[]=$ord.' '.$way;
+                $order[]=$ord.' '.$way;
             }
         }
         if(count ($order) > 0){
@@ -723,7 +724,6 @@ class jDaoGenerator {
         }
         return $sql;
     }
-
 
     /**
      * build SQL WHERE clause 
@@ -752,49 +752,49 @@ class jDaoGenerator {
             $prop = $fields[$cond['field_id']];
 
             if($withPrefix){
-               $f = $this->_encloseName($prop->table).'.'.$this->_encloseName($prop->fieldName);
+                $f = $this->_encloseName($prop->table).'.'.$this->_encloseName($prop->fieldName);
             }else{
-               $f = $this->_encloseName($prop->fieldName);
+                $f = $this->_encloseName($prop->fieldName);
             }
 
             $r .= $f.' ';
 
             if($cond['operator'] == 'IN' || $cond['operator'] == 'NOT IN'){
-               if($cond['isExpr']){
-                  $phpvalue= $this->_preparePHPExpr('$__e', $prop, false);
-                  if(strpos($phpvalue,'$this->_conn->quote')===0){
-                     $phpvalue = str_replace('$this->_conn->quote(',"'\''.str_replace('\\'','\\\\\\'',",$phpvalue).".'\''";
-                     $phpvalue = str_replace('\\','\\\\', $phpvalue);
-                     $phpvalue = str_replace('\'','\\\'', $phpvalue);
-                  }
-                  $phpvalue = 'implode(\',\', array_map( create_function(\'$__e\',\'return '.$phpvalue.';\'), '.$cond['value'].'))';
-                  $value= '(\'.'.$phpvalue.'.\')';
-               }else{
-                  $value= '('.$cond['value'].')';
-               }
-               $r.=$cond['operator'].' '.$value;
+                if($cond['isExpr']){
+                    $phpvalue= $this->_preparePHPExpr('$__e', $prop, false);
+                    if(strpos($phpvalue,'$this->_conn->quote')===0){
+                        $phpvalue = str_replace('$this->_conn->quote(',"'\''.str_replace('\\'','\\\\\\'',",$phpvalue).".'\''";
+                        $phpvalue = str_replace('\\','\\\\', $phpvalue);
+                        $phpvalue = str_replace('\'','\\\'', $phpvalue);
+                    }
+                    $phpvalue = 'implode(\',\', array_map( create_function(\'$__e\',\'return '.$phpvalue.';\'), '.$cond['value'].'))';
+                    $value= '(\'.'.$phpvalue.'.\')';
+                }else{
+                    $value= '('.$cond['value'].')';
+                }
+                $r.=$cond['operator'].' '.$value;
             }elseif($cond['operator'] == 'IS NULL' || $cond['operator'] == 'IS NOT NULL'){
-               $r.=$cond['operator'].' ';
+                $r.=$cond['operator'].' ';
             }else{
-               if($cond['isExpr']){
-                  $value=str_replace("'","\\'",$cond['value']);
-                  // we need to know if the expression is like "$foo" (1) or a thing like "concat($foo,'bla')" (2)
-                  // because of the nullability of the parameter. If the value of the parameter is null and the operator
-                  // is = or <>, then we need to generate a thing like :
-                  // - in case 1: ($foo === null ? 'IS NULL' : '='.$this->_conn->quote($foo))
-                  // - in case 2: '= concat('.($foo === null ? 'NULL' : $this->_conn->quote($foo)).' ,\'bla\')'
-                  if(strpos($value, '$') === 0){
-                     $value = '\'.'.$this->_preparePHPExpr($value, $prop, !$prop->requiredInConditions,$cond['operator']).'.\'';
-                  }else{
+                if($cond['isExpr']){
+                    $value=str_replace("'","\\'",$cond['value']);
+                    // we need to know if the expression is like "$foo" (1) or a thing like "concat($foo,'bla')" (2)
+                    // because of the nullability of the parameter. If the value of the parameter is null and the operator
+                    // is = or <>, then we need to generate a thing like :
+                    // - in case 1: ($foo === null ? 'IS NULL' : '='.$this->_conn->quote($foo))
+                    // - in case 2: '= concat('.($foo === null ? 'NULL' : $this->_conn->quote($foo)).' ,\'bla\')'
+                    if(strpos($value, '$') === 0){
+                        $value = '\'.'.$this->_preparePHPExpr($value, $prop, !$prop->requiredInConditions,$cond['operator']).'.\'';
+                    }else{
                         foreach($params as $param){
                             $value = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $prop, !$prop->requiredInConditions).'.\'',$value);
                         }
                         $value= $cond['operator'].' '.$value;
-                  }
-               }else{
-                  $value= $cond['operator'].' '.$this->_preparePHPValue($cond['value'], $prop->datatype,false);
-               }
-               $r.=$value;
+                    }
+                }else{
+                    $value= $cond['operator'].' '.$this->_preparePHPValue($cond['value'], $prop->datatype,false);
+                }
+                $r.=$value;
             }
         }
         //sub conditions
@@ -815,104 +815,102 @@ class jDaoGenerator {
 
 
 
-   /**
-   * prepare a string ready to be included in a PHP script
-   * we assume that if the value is "NULL", all things has been take care of
-   *   before the call of this method
-   * The method generates something like (including quotes) '.some PHP code.'
-   *   (we do break "simple quoted strings")
-   */
-   protected function _preparePHPValue($value, $fieldType, $checknull=true){
-      if($checknull){
-        if($value == 'null' || $value == 'NULL' || $value === null)
-            return 'NULL';
-      }
-      switch(strtolower($fieldType)){
-         case 'int':
-         case 'integer':
-         case 'autoincrement':
-            return intval($value);
-         case 'double':
-         case 'float':
-            return doubleval($value);
-         case 'numeric': //usefull for bigint and stuff
-         case 'bigautoincrement':
-            if(is_numeric($value))
-                return $value;
-            else
+    /**
+    * prepare a string ready to be included in a PHP script
+    * we assume that if the value is "NULL", all things has been take care of
+    *   before the call of this method
+    * The method generates something like (including quotes) '.some PHP code.'
+    *   (we do break "simple quoted strings")
+    */
+    protected function _preparePHPValue($value, $fieldType, $checknull=true){
+        if($checknull){
+            if($value == 'null' || $value == 'NULL' || $value === null)
+                return 'NULL';
+        }
+        switch(strtolower($fieldType)){
+            case 'int':
+            case 'integer':
+            case 'autoincrement':
                 return intval($value);
-            break;
-         case 'boolean':
-            return $this->getBooleanValue($value);
-            break;
-         default:
-            if(strpos($value,"'") !== false){
-                return '\'.$this->_conn->quote(\''.str_replace('\'','\\\'',$value).'\').\'';
-            }else{
-                return "\\'".$value."\\'";
-            }
-      }
-   }
+            case 'double':
+            case 'float':
+                return doubleval($value);
+            case 'numeric': //usefull for bigint and stuff
+            case 'bigautoincrement':
+                if(is_numeric($value))
+                    return $value;
+                else
+                    return intval($value);
+            case 'boolean':
+                return $this->getBooleanValue($value);
+            default:
+                if(strpos($value,"'") !== false){
+                    return '\'.$this->_conn->quote(\''.str_replace('\'','\\\'',$value).'\').\'';
+                }else{
+                    return "\\'".$value."\\'";
+                }
+        }
+    }
 
-   protected function _preparePHPExpr($expr, $field, $checknull=true, $forCondition=''){
-      $opnull=$opval='';
-      if($checknull && $forCondition != ''){
-        if($forCondition == '=')
-            $opnull = 'IS ';
-        elseif($forCondition == '<>')
-            $opnull = 'IS NOT ';
-        else
-            $checknull=false;
-      }
-      if($forCondition!='')
-        $forCondition = '\''.$forCondition.'\'.';
+    protected function _preparePHPExpr($expr, $field, $checknull=true, $forCondition=''){
+        $opnull=$opval='';
+        if($checknull && $forCondition != ''){
+            if($forCondition == '=')
+                $opnull = 'IS ';
+            elseif($forCondition == '<>')
+                $opnull = 'IS NOT ';
+            else
+                $checknull=false;
+        }
+        if($forCondition!='')
+            $forCondition = '\''.$forCondition.'\'.';
 
-      switch(strtolower($field->datatype)){
-         case 'int':
-         case 'integer':
-            if($checknull){
-               $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'intval('.$expr.'))';
-            }else{
-               $expr= $forCondition.'intval('.$expr.')';
-            }
-            break;
-         case 'autoincrement':
-            $expr= $forCondition.'intval('.$expr.')';
-            break;
-         case 'double':
-         case 'float':
-            if($checknull){
-                $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'doubleval('.$expr.'))';
-            }else{
-               $expr= $forCondition.'doubleval('.$expr.')';
-            }
-            break;
-         case 'numeric': //usefull for bigint and stuff
-            if($checknull){
-               $expr='('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.')))';
-            }else{
-               $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
-            }
-            break;
-         case 'bigautoincrement':
-            $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
-            break;
-         case 'boolean':
-            if($checknull){
-               $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'('.$expr.'?\''.$this->trueValue.'\':\''.$this->falseValue.'\'))';
-            }else{
-               $expr= $forCondition.'('.$expr.'?\''.$this->trueValue.'\':\''.$this->falseValue.'\')';
-            }
-            break;
-         default:
-            if($checknull){
-               $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_conn->quote('.$expr.',false))';
-            }else{
-               $expr= $forCondition.'$this->_conn->quote('.$expr.')';
-            }
-      }
-      return $expr;
-   }
+        switch(strtolower($field->datatype)){
+            case 'int':
+            case 'integer':
+                if($checknull){
+                    $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'intval('.$expr.'))';
+                }else{
+                    $expr= $forCondition.'intval('.$expr.')';
+                }
+                break;
+            case 'autoincrement':
+                $expr= $forCondition.'intval('.$expr.')';
+                break;
+            case 'double':
+            case 'float':
+                if($checknull){
+                    $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'doubleval('.$expr.'))';
+                }else{
+                    $expr= $forCondition.'doubleval('.$expr.')';
+                }
+                break;
+            case 'numeric': //usefull for bigint and stuff
+                if($checknull){
+                    $expr='('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.')))';
+                }else{
+                    $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
+                }
+                break;
+            case 'bigautoincrement':
+                $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
+                break;
+            case 'boolean':
+                if($checknull){
+                    $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'('.$expr.'?\''.$this->trueValue.'\':\''.$this->falseValue.'\'))';
+                }else{
+                    $expr= $forCondition.'('.$expr.'?\''.$this->trueValue.'\':\''.$this->falseValue.'\')';
+                }
+                break;
+            default:
+                if($checknull){
+                    $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_conn->quote('.$expr.',false))';
+                }else{
+                    $expr= $forCondition.'$this->_conn->quote('.$expr.')';
+                }
+        }
+        return $expr;
+    }
 
     protected function _encloseName($name){
         return $name;
@@ -921,11 +919,9 @@ class jDaoGenerator {
     protected function genUpdateAutoIncrementPK($pkai, $pTableRealName) {
         return '       $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
     }
-    
+
     protected function getBooleanValue($value){
         return (strtolower($value)=='true'|| $value =='1'|| $value=='t'?$this->trueValue:$this->falseValue);
-    } 
-      
-
+    }
 }
 ?>

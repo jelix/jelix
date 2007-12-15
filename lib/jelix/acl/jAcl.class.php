@@ -59,7 +59,7 @@ class jAcl {
             if(!isset($gJConfig->_pluginsPathList_acl) 
                 || !isset($gJConfig->_pluginsPathList_acl[$db])
                 || !file_exists($gJConfig->_pluginsPathList_acl[$db]) ){
-                 throw new jException('jelix~errors.acl.driver.notfound',$db);
+                throw new jException('jelix~errors.acl.driver.notfound',$db);
             }
             require_once($gJConfig->_pluginsPathList_acl[$db].$db.'.acl.php');
             $dname = $gJConfig->acl['driver'].'AclDriver';
@@ -67,7 +67,6 @@ class jAcl {
         }
         return $driver;
     }
-
 
     /**
      * call this method to know if the current user has the right with the given value
@@ -80,8 +79,6 @@ class jAcl {
         $val = self::getRight($subject, $resource);
         return in_array($value,$val);
     }
-        
-
 
     /**
      * return the value of the right on the given subject (and on the optional resource)

@@ -9,7 +9,11 @@
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+/**
+ *
+ */
 require_once(JELIX_LIB_UTILS_PATH.'jWiki.class.php');
+
 /**
  * modifier plugin :  transform a wiki text to another format
  * you can use other transformations by given the name of

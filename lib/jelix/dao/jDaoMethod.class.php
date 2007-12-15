@@ -187,86 +187,86 @@ class jDaoMethod {
 
     }
 
-   private $_op = array('eq'=>'=', 'neq'=>'<>', 'lt'=>'<', 'gt'=>'>', 'lteq'=>'<=', 'gteq'=>'>=',
+    private $_op = array('eq'=>'=', 'neq'=>'<>', 'lt'=>'<', 'gt'=>'>', 'lteq'=>'<=', 'gteq'=>'>=',
         'like'=>'LIKE', 'notlike'=>'NOT LIKE', 'isnull'=>'IS NULL', 'isnotnull'=>'IS NOT NULL','in'=>'IN', 'notin'=>'NOT IN',
         'binary_op'=>'dummy');
       // 'between'=>'BETWEEN',  'notbetween'=>'NOT BETWEEN',
 
-   private $_attrcond = array('property', 'expr', 'operator', 'driver'); //, 'min', 'max', 'exprmin', 'exprmax'
+    private $_attrcond = array('property', 'expr', 'operator', 'driver'); //, 'min', 'max', 'exprmin', 'exprmax'
 
-   private function _addCondition($op, $cond){
+    private function _addCondition($op, $cond){
 
-      $attr = $this->_def->getAttr($cond, $this->_attrcond);
+        $attr = $this->_def->getAttr($cond, $this->_attrcond);
 
-      $field_id = ($attr['property']!==null? $attr['property']:'');
+        $field_id = ($attr['property']!==null? $attr['property']:'');
 
-      if(!isset($this->_op[$op])){
-         throw new jDaoXmlException ('method.condition.unknown', array($this->name, $op));
-      }
+        if(!isset($this->_op[$op])){
+            throw new jDaoXmlException ('method.condition.unknown', array($this->name, $op));
+        }
 
-      $operator = $this->_op[$op];
+        $operator = $this->_op[$op];
 
-      $props = $this->_def->getProperties();
+        $props = $this->_def->getProperties();
 
-      if (!isset ($props[$field_id])){
-         throw new jDaoXmlException ('method.property.unknown', array($this->name, $field_id));
-      }
+        if (!isset ($props[$field_id])){
+            throw new jDaoXmlException ('method.property.unknown', array($this->name, $field_id));
+        }
 
-      if($this->type=='update'){
-         if($props[$field_id]->table != $this->_def->getPrimaryTable()){
-            throw new jDaoXmlException ('method.property.forbidden', array($this->name, $field_id));
-         }
-      }
-
-      if(isset($cond['value']))
-          $value=(string)$cond['value'];
-      else
-          $value = null;
-
-      if($value!==null && $attr['expr']!==null){
-         throw new jDaoXmlException ('method.condition.valueexpr.together', array($this->name, $op));
-      }else if($value!==null){
-         if($op == 'isnull' || $op =='isnotnull'){
-            throw new jDaoXmlException ('method.condition.valueexpr.notallowed', array($this->name, $op,$field_id));
-         }
-         if($op == 'binary_op') {
-            if (!isset($attr['operator']) || empty($attr['operator'])) {
-                throw new jDaoXmlException ('method.condition.operator.missing', array($this->name, $op,$field_id));
+        if($this->type=='update'){
+            if($props[$field_id]->table != $this->_def->getPrimaryTable()){
+                throw new jDaoXmlException ('method.property.forbidden', array($this->name, $field_id));
             }
-            if (isset($attr['driver']) && !empty($attr['driver'])) {
-                if (jDaoCompiler::$dbType != $attr['driver']) {
-                    throw new jDaoXmlException ('method.condition.driver.notallowed', array($this->name, $op,$field_id));
+        }
+
+        if(isset($cond['value']))
+            $value=(string)$cond['value'];
+        else
+            $value = null;
+
+        if($value!==null && $attr['expr']!==null){
+            throw new jDaoXmlException ('method.condition.valueexpr.together', array($this->name, $op));
+        }else if($value!==null){
+            if($op == 'isnull' || $op =='isnotnull'){
+                throw new jDaoXmlException ('method.condition.valueexpr.notallowed', array($this->name, $op,$field_id));
+            }
+            if($op == 'binary_op') {
+                if (!isset($attr['operator']) || empty($attr['operator'])) {
+                    throw new jDaoXmlException ('method.condition.operator.missing', array($this->name, $op,$field_id));
                 }
-            }
-            $operator = $attr['operator'];
-         }
-         $this->_conditions->addCondition ($field_id, $operator, $value);
-      }else if($attr['expr']!==null){
-         if($op == 'isnull' || $op =='isnotnull'){
-            throw new jDaoXmlException ('method.condition.valueexpr.notallowed', array($this->name, $op, $field_id));
-         }
-         if(($op == 'in' || $op =='notin')&& !preg_match('/^\$[a-zA-Z0-9_]+$/', $attr['expr'])){
-            throw new jDaoXmlException ('method.condition.innotin.bad.expr', array($this->name, $op, $field_id));
-         }
-         if($op == 'binary_op') {
-            if (!isset($attr['operator']) || empty($attr['operator'])) {
-                throw new jDaoXmlException ('method.condition.operator.missing', array($this->name, $op,$field_id));
-            }
-            if (isset($attr['driver']) && !empty($attr['driver'])) {
-                if (jDaoCompiler::$dbType != $attr['driver']) {
-                    throw new jDaoXmlException ('method.condition.driver.notallowed', array($this->name, $op,$field_id));
+                if (isset($attr['driver']) && !empty($attr['driver'])) {
+                    if (jDaoCompiler::$dbType != $attr['driver']) {
+                        throw new jDaoXmlException ('method.condition.driver.notallowed', array($this->name, $op,$field_id));
+                    }
                 }
+                $operator = $attr['operator'];
             }
-            $operator = $attr['operator'];
-         }
-         $this->_conditions->addCondition ($field_id, $operator, $attr['expr'], true);
-      }else{
-          if($op != 'isnull' && $op !='isnotnull'){
-              throw new jDaoXmlException ('method.condition.valueexpr.missing', array($this->name, $op, $field_id));
-          }
-          $this->_conditions->addCondition ($field_id, $operator, '', false);
-      }
-   }
+            $this->_conditions->addCondition ($field_id, $operator, $value);
+        }else if($attr['expr']!==null){
+            if($op == 'isnull' || $op =='isnotnull'){
+                throw new jDaoXmlException ('method.condition.valueexpr.notallowed', array($this->name, $op, $field_id));
+            }
+            if(($op == 'in' || $op =='notin')&& !preg_match('/^\$[a-zA-Z0-9_]+$/', $attr['expr'])){
+                throw new jDaoXmlException ('method.condition.innotin.bad.expr', array($this->name, $op, $field_id));
+            }
+            if($op == 'binary_op') {
+                if (!isset($attr['operator']) || empty($attr['operator'])) {
+                    throw new jDaoXmlException ('method.condition.operator.missing', array($this->name, $op,$field_id));
+                }
+                if (isset($attr['driver']) && !empty($attr['driver'])) {
+                    if (jDaoCompiler::$dbType != $attr['driver']) {
+                        throw new jDaoXmlException ('method.condition.driver.notallowed', array($this->name, $op,$field_id));
+                    }
+                }
+                $operator = $attr['operator'];
+            }
+            $this->_conditions->addCondition ($field_id, $operator, $attr['expr'], true);
+        }else{
+            if($op != 'isnull' && $op !='isnotnull'){
+                throw new jDaoXmlException ('method.condition.valueexpr.missing', array($this->name, $op, $field_id));
+            }
+            $this->_conditions->addCondition ($field_id, $operator, '', false);
+        }
+    }
 
     private function _addOrder($order){
         $attr = $this->_def->getAttr($order, array('property','way'));
@@ -294,93 +294,88 @@ class jDaoMethod {
         }else{
             throw new jDaoXmlException ('method.orderitem.property.missing', array($this->name));
         }
-   }
+    }
 
-   private function _addValue($attr){
-      if(isset($attr['value']))
-          $value=(string)$attr['value'];
-      else
-          $value = null;
+    private function _addValue($attr){
+        if(isset($attr['value']))
+            $value=(string)$attr['value'];
+        else
+            $value = null;
 
-      $attr = $this->_def->getAttr($attr, array('property','expr'));
+        $attr = $this->_def->getAttr($attr, array('property','expr'));
 
-      $prop = $attr['property'];
-      $props =$this->_def->getProperties();
+        $prop = $attr['property'];
+        $props =$this->_def->getProperties();
 
-      if ($prop === null){
-         throw new jDaoXmlException ('method.values.property.unknow', array($this->name, $prop));
-         return false;
-      }
+        if ($prop === null){
+            throw new jDaoXmlException ('method.values.property.unknow', array($this->name, $prop));
+        }
 
-      if(!isset($props[$prop])){
-         throw new jDaoXmlException ('method.values.property.unknow', array($this->name, $prop));
-         return false;
-      }
+        if(!isset($props[$prop])){
+            throw new jDaoXmlException ('method.values.property.unknow', array($this->name, $prop));
+        }
 
-      if($props[$prop]->table != $this->_def->getPrimaryTable()){
-         throw new jDaoXmlException ('method.values.property.bad', array($this->name,$prop ));
-         return false;
-      }
+        if($props[$prop]->table != $this->_def->getPrimaryTable()){
+            throw new jDaoXmlException ('method.values.property.bad', array($this->name,$prop ));
+        }
 
-      if($props[$prop]->isPK){
-         throw new jDaoXmlException ('method.values.property.pkforbidden', array($this->name,$prop ));
-         return false;
-      }
+        if($props[$prop]->isPK){
+            throw new jDaoXmlException ('method.values.property.pkforbidden', array($this->name,$prop ));
+        }
 
-      if($value!==null && $attr['expr']!==null){
-         throw new jDaoXmlException ('method.values.valueexpr', array($this->name, $prop));
-      }else if($value!==null){
-         $this->_values [$prop]= array( $value, false);
-      }else if($attr['expr']!==null){
-         $this->_values [$prop]= array( $attr['expr'], true);
-      }else{
-         $this->_values [$prop]= array( '', false);
-      }
+        if($value!==null && $attr['expr']!==null){
+            throw new jDaoXmlException ('method.values.valueexpr', array($this->name, $prop));
+        }else if($value!==null){
+            $this->_values [$prop]= array( $value, false);
+        }else if($attr['expr']!==null){
+            $this->_values [$prop]= array( $attr['expr'], true);
+        }else{
+            $this->_values [$prop]= array( '', false);
+        }
+    }
 
-   }
+    private function _addLimit($limit){
+        $attr = $this->_def->getAttr($limit, array('offset','count'));
 
-   private function _addLimit($limit){
-      $attr = $this->_def->getAttr($limit, array('offset','count'));
+        extract($attr);
 
-      extract($attr);
+        if( $offset === null){
+            throw new jDaoXmlException ('missing.attr',array('offset','limit'));
+        }
+        if($count === null){
+            throw new jDaoXmlException ('missing.attr',array('count','limit'));
+        }
 
-      if( $offset === null){
-         throw new jDaoXmlException ('missing.attr',array('offset','limit'));
-      }
-      if($count === null){
-         throw new jDaoXmlException ('missing.attr',array('count','limit'));
-      }
+        if(substr ($offset,0,1) == '$'){
+            if(in_array (substr ($offset,1),$this->_parameters)){
+                $offsetparam=true;
+            }else{
+                throw new jDaoXmlException ('method.limit.parameter.unknow', array($this->name, $offset));
+            }
+        }else{
+            if(is_numeric ($offset)){
+                $offsetparam=false;
+                $offset = intval ($offset);
+            }else{
+                throw new jDaoXmlException ('method.limit.badvalue', array($this->name, $offset));
+            }
+        }
 
-      if(substr ($offset,0,1) == '$'){
-         if(in_array (substr ($offset,1),$this->_parameters)){
-            $offsetparam=true;
-         }else{
-            throw new jDaoXmlException ('method.limit.parameter.unknow', array($this->name, $offset));
-         }
-      }else{
-         if(is_numeric ($offset)){
-            $offsetparam=false;
-            $offset = intval ($offset);
-         }else{
-            throw new jDaoXmlException ('method.limit.badvalue', array($this->name, $offset));
-         }
-      }
-
-      if(substr ($count,0,1) == '$'){
-         if(in_array (substr ($count,1),$this->_parameters)){
-            $countparam=true;
-         }else{
-            throw new jDaoXmlException ('method.limit.parameter.unknow', array($this->name, $count));
-         }
-      }else{
-         if(is_numeric($count)){
-            $countparam=false;
-            $count=intval($count);
-         }else{
-            throw new jDaoXmlException ('method.limit.badvalue', array($this->name, $count));
-         }
-      }
-      $this->_limit= compact('offset', 'count', 'offsetparam','countparam');
-   }
+        if(substr ($count,0,1) == '$'){
+            if(in_array (substr ($count,1),$this->_parameters)){
+                $countparam=true;
+            }else{
+                throw new jDaoXmlException ('method.limit.parameter.unknow', array($this->name, $count));
+            }
+        }else{
+            if(is_numeric($count)){
+                $countparam=false;
+                $count=intval($count);
+            }else{
+                throw new jDaoXmlException ('method.limit.badvalue', array($this->name, $count));
+            }
+        }
+        $this->_limit= compact('offset', 'count', 'offsetparam','countparam');
+    }
 }
 ?>

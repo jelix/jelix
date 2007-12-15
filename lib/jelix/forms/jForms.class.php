@@ -9,6 +9,9 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+/**
+ *
+ */
 require_once(JELIX_LIB_FORMS_PATH.'jFormsBase.class.php');
 
 /**
@@ -106,14 +109,14 @@ class jForms {
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      */
-   static public function destroy($formSel,$formId=null){
+    static public function destroy($formSel,$formId=null){
         global $gJCoord;
         if($formId === null)  $formId = self::DEFAULT_ID;
         if(is_array($formId)) $formId = serialize($formId);
         if(isset($_SESSION['JFORMS'][$formSel][$formId])){
             unset($_SESSION['JFORMS'][$formSel][$formId]);
         }
-   }
+    }
 }
 
 ?>

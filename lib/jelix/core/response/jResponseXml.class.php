@@ -81,7 +81,6 @@ class jResponseXml extends jResponse {
             $xml_string = $this->content->fetch($this->contentTpl);
         }else{
             throw new jException('jelix~errors.repxml.no.content');
-            return false;
         }
 
         if (simplexml_load_string($xml_string)) {
@@ -89,7 +88,6 @@ class jResponseXml extends jResponse {
         } else {
             // xml mal formé
             throw new jException('jelix~errors.repxml.invalid.content');
-            return false;
         }
         return true;
     }
@@ -99,11 +97,11 @@ class jResponseXml extends jResponse {
      */
     final public function outputErrors() {
         if (!$this->_headSent) {
-             if (!$this->_httpHeadersSent) {
+            if (!$this->_httpHeadersSent) {
                 header("HTTP/1.0 500 Internal Server Error");
                 header('Content-Type: text/xml;charset='.$this->_charset);
-             }
-             echo '<?xml version="1.0" encoding="'. $this->_charset .'"?>';
+            }
+            echo '<?xml version="1.0" encoding="'. $this->_charset .'"?>';
         }
 
         echo '<errors xmlns="http://jelix.org/ns/xmlerror/1.0">';

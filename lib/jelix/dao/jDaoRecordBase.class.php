@@ -72,7 +72,6 @@ abstract class jDaoRecordBase {
                     $errors[$prop][] = self::ERROR_MINLENGTH;
                 }
 
-
             }elseif( in_array($infos['datatype'], array('int','integer','numeric', 'double', 'float'))) {
                 // test datatype
                 if($value !== null && !is_numeric($value)){
@@ -105,11 +104,11 @@ abstract class jDaoRecordBase {
             throw new jException('jelix~dao.error.keys.missing');
 
         foreach($pkf as $k=>$prop){
-           $this->$prop = $args[$k];
+            $this->$prop = $args[$k];
         }
         return true;
     }
-    
+
     /**
      * return the value of fields corresponding to the primary key
      * @return mixed  the value or an array of values if there is several  pk

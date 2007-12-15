@@ -9,14 +9,18 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+/**
+ *
+ */
 require(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
 require(JELIX_LIB_FORMS_PATH.'jFormsDatasource.class.php');
 require(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 
 /**
  * exception for jforms
+ * @package     jelix
+ * @subpackage  forms
  */
-
 class jExceptionForms extends jException {
 
 }
@@ -203,10 +207,10 @@ abstract class jFormsBase {
      */
     public function saveToDao($daoSelector, $key = null, $dbProfil=''){
         $dao = jDao::create($daoSelector, $dbProfil);
-        
+
         if($key === null)
             $key = $this->_container->formId;
-        
+
         if($key != null && ($daorec = $dao->get($key))) {
             $toInsert= false;
         }else{
@@ -214,12 +218,12 @@ abstract class jFormsBase {
             $daorec->setPk($key);
             $toInsert= true;
         }
-        
+
         $prop = $dao->getProperties();
         foreach($this->_controls as $name=>$ctrl){
             if(!isset($prop[$name]))
                 continue;
-        
+
             if(is_array($this->_container->datas[$name])){
                 if( count ($this->_container->datas[$name]) ==1){
                     $daorec->$name = $this->_container->datas[$name][0];
@@ -238,7 +242,7 @@ abstract class jFormsBase {
                     && in_array($prop[$name]['datatype'],
                                 array('int','integer','double','float'))) {
                 $daorec->$name = $prop[$name]['defaultValue'];
-                
+
             }else if( $prop[$name]['datatype'] == 'boolean'){
                 $daorec->$name = ($daorec->$name == '1'|| $daorec->$name == 'true'
                                   || $daorec->$name == 't');
@@ -248,7 +252,7 @@ abstract class jFormsBase {
                 $dt = new jDateTime();
                 $dt->setFromString($daorec->$name, jDateTime::LANG_DTFORMAT);
                 $daorec->$name = $dt->toString(jDateTime::DB_DTFORMAT);
-                
+
             }elseif($ctrl->datatype instanceof jDatatypeLocaleDate
                     && $prop[$name]['datatype'] == 'date') {
                 $dt = new jDateTime();

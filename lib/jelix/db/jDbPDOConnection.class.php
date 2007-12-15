@@ -75,10 +75,11 @@ class jDbPDOConnection extends PDO {
 
     private $_mysqlCharsets =array( 'UTF-8'=>'utf8', 'ISO-8859-1'=>'latin1');
     private $_pgsqlCharsets =array( 'UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');
+
     /**
-    * the profil the connection is using
-    * @var array
-    */
+     * the profil the connection is using
+     * @var array
+     */
     public $profil;
 
     /**
@@ -87,8 +88,8 @@ class jDbPDOConnection extends PDO {
     public $dbms;
 
     /**
-    * Use a profil to do the connection
-    */
+     * Use a profil to do the connection
+     */
     function __construct($profil){
         $this->profil = $profil;
         $this->dbms=substr($profil['dsn'],0,strpos($profil['dsn'],':'));
@@ -146,7 +147,6 @@ class jDbPDOConnection extends PDO {
 
     }
 
-
     public function limitQuery ($queryString, $limitOffset = null, $limitCount = null){
         if ($limitOffset !== null && $limitCount !== null){
            if($this->dbms == 'mysql'){
@@ -160,13 +160,12 @@ class jDbPDOConnection extends PDO {
     }
 
     /**
-    * sets the autocommit state
-    * @param boolean state the status of autocommit
-    */
+     * sets the autocommit state
+     * @param boolean state the status of autocommit
+     */
     public function setAutoCommit($state=true){
         $this->setAttribute(self::JPDO_ATTR_AUTOCOMMIT,$state);
     }
-
 
     public function lastIdInTable($fieldName, $tableName){
       $rs = $this->query ('SELECT MAX('.$fieldName.') as ID FROM '.$tableName);
@@ -177,13 +176,13 @@ class jDbPDOConnection extends PDO {
     }
 
     /**
-      * Prefix the given table with the prefix specified in the connection's profile
-      * If there's no prefix for the connection's profile, return the table's name unchanged.
-      *
-      * @param string $table the table's name
-      * @return string the prefixed table's name
-      * @author Julien Issler
-      **/
+     * Prefix the given table with the prefix specified in the connection's profile
+     * If there's no prefix for the connection's profile, return the table's name unchanged.
+     *
+     * @param string $table the table's name
+     * @return string the prefixed table's name
+     * @author Julien Issler
+     */
     public function prefixTable($table_name){
         if(!isset($this->profil['table_prefix']))
             return $table_name;
@@ -191,11 +190,11 @@ class jDbPDOConnection extends PDO {
     }
 
     /**
-      * Check if the current connection has a table prefix set
-      *
-      * @return boolean
-      * @author Julien Issler
-      **/
+     * Check if the current connection has a table prefix set
+     *
+     * @return boolean
+     * @author Julien Issler
+     */
     public function hasTablePrefix(){
         return (isset($this->profil['table_prefix']) && $this->profil['table_prefix']!='');
     }

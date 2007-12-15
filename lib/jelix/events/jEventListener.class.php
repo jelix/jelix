@@ -21,14 +21,14 @@
 * @subpackage  events
 */
 class jEventListener {
-   /**
-   * perform a given event
-   * @param jEvent $event the event itself
-   * @return void
-   */
-   function performEvent (& $event) {
-      $methodName = 'on'.$event->getName ();
-      $this->$methodName ($event);
-   }
+    /**
+    * perform a given event
+    * @param jEvent $event the event itself
+    * @return void
+    */
+    function performEvent (& $event) {
+        $methodName = 'on'.$event->getName ();
+        $this->$methodName ($event);
+    }
 }
 ?>

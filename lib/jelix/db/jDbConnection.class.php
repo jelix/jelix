@@ -60,14 +60,14 @@ abstract class jDbConnection {
     * @param array $profil  profil properties
     */
     function __construct($profil){
-       $this->profil = & $profil;
-       $this->dbms = $profil['driver'];
-       $this->_connection = $this->_connect();
+        $this->profil = & $profil;
+        $this->dbms = $profil['driver'];
+        $this->_connection = $this->_connect();
     }
 
     function __destruct(){
         if($this->_connection !== null){
-           $this->_disconnect ();
+            $this->_disconnect ();
         }
     }
 
@@ -114,9 +114,9 @@ abstract class jDbConnection {
     */
     public function quote($text, $checknull=true){
         if($checknull)
-           return (is_null ($text) ? 'NULL' : "'".$this->_quote($text)."'");
+            return (is_null ($text) ? 'NULL' : "'".$this->_quote($text)."'");
         else
-           return "'".$this->_quote ($text)."'";
+            return "'".$this->_quote ($text)."'";
     }
 
     /**
@@ -197,7 +197,6 @@ abstract class jDbConnection {
      * Not implemented
      * @param integer $id the attribut id
      * @return string the attribute value
-     * @notimplemented
      */
     public function getAttribute($id){ return '';}
 
@@ -205,7 +204,6 @@ abstract class jDbConnection {
      * Not implemented
      * @param integer $id the attribut id
      * @param string $value the attribute value
-     * @notimplemented
      */
     public function setAttribute($id, $value){ }
 
@@ -213,11 +211,11 @@ abstract class jDbConnection {
      *
      */
     public function lastIdInTable($fieldName, $tableName){
-      $rs = $this->query ('SELECT MAX('.$fieldName.') as ID FROM '.$tableName);
-      if (($rs !== null) && $r = $rs->fetch ()){
-         return $r->ID;
-      }
-      return 0;
+        $rs = $this->query ('SELECT MAX('.$fieldName.') as ID FROM '.$tableName);
+        if (($rs !== null) && $r = $rs->fetch ()){
+            return $r->ID;
+        }
+        return 0;
     }
 
     /**

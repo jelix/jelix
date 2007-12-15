@@ -94,7 +94,7 @@ final class jResponseBinary  extends jResponse {
             return true;
         }
     }
-    
+
     /**
      * set all headers to force download
      */

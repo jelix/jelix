@@ -106,7 +106,7 @@ class jResponseXul extends jResponse {
         $this->sendHttpHeaders();
         $this->_commonProcess();
         if($this->bodyTpl != '')
-           $this->body->meta($this->bodyTpl);
+            $this->body->meta($this->bodyTpl);
         $this->outputHeader();
         $this->_headSent = true;
         echo implode('',$this->_bodyTop);
@@ -173,9 +173,9 @@ class jResponseXul extends jResponse {
         }
         echo '<vbox>';
         if($this->hasErrors()){
-           echo $this->getFormatedErrorMsg();
+            echo $this->getFormatedErrorMsg();
         }else{
-           echo "<description style=\"color:#FF0000;\">Unknow error</description>";
+            echo "<description style=\"color:#FF0000;\">Unknow error</description>";
         }
         echo '</vbox></',$this->_root,'>';
     }
@@ -187,7 +187,7 @@ class jResponseXul extends jResponse {
     protected function getFormatedErrorMsg(){
         $errors='';
         foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
-           $errors .=  '<description style="color:#FF0000;">['.$e[0].' '.$e[1].'] '.htmlspecialchars($e[2], ENT_NOQUOTES, $GLOBALS['gJConfig']->charset)." \t".$e[3]." \t".$e[4]."</description>\n";
+            $errors .=  '<description style="color:#FF0000;">['.$e[0].' '.$e[1].'] '.htmlspecialchars($e[2], ENT_NOQUOTES, $GLOBALS['gJConfig']->charset)." \t".$e[3]." \t".$e[4]."</description>\n";
         }
         return $errors;
     }
@@ -198,11 +198,11 @@ class jResponseXul extends jResponse {
      * @param boolean $beforeTpl true if you want to add before, false for after
      */
     function addContent($content, $beforeTpl = false){
-      if($beforeTpl){
-        $this->_bodyTop[]=$content;
-      }else{
-         $this->_bodyBottom[]=$content;
-      }
+        if($beforeTpl){
+            $this->_bodyTop[]=$content;
+        }else{
+            $this->_bodyBottom[]=$content;
+        }
     }
 
     /**
@@ -264,7 +264,6 @@ class jResponseXul extends jResponse {
         foreach ($this->_JSLink as $src=>$params){
             echo '<script type="application/x-javascript" src="',$src,'" />',"\n";
         }
-
 
         // js code
         if(count($this->_JSCode)){

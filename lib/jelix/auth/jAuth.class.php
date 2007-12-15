@@ -133,7 +133,7 @@ class jAuth {
             if(!isset($gJConfig->_pluginsPathList_auth) 
                 || !isset($gJConfig->_pluginsPathList_auth[$db])
                 || !file_exists($gJConfig->_pluginsPathList_auth[$db]) ){
-                 throw new jException('jelix~auth.error.driver.notfound',$db);
+                throw new jException('jelix~auth.error.driver.notfound',$db);
             }
             require_once($gJConfig->_pluginsPathList_auth[$db].$db.'.auth.php');
             $dname = $config['driver'].'AuthDriver';
@@ -299,7 +299,7 @@ class jAuth {
 
             $_SESSION[$config['session_name']] = $user;
             jEvent::notify ('AuthLogin', array('login'=>$login));
-            
+
             // Add a cookie for session persistance, if enabled
             if($persistant && isset($config['persistant_enable']) && $config['persistant_enable']) {
                 if(!isset($config['persistant_crypt_key']) || !isset($config['persistant_cookie_name'])){
@@ -352,7 +352,6 @@ class jAuth {
      * @return boolean
      */
     public static function isConnected(){
-
         $config = self::_getConfig();
         return (isset($_SESSION[$config['session_name']]) && $_SESSION[$config['session_name']]->login != '');
     }
