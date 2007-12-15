@@ -54,6 +54,11 @@ class jResponseLatexToPdf extends jResponse {
      */
     public $pdflatexPath='pdflatex';
 
+    /**
+     * path to the cache directory.
+     * default is directory responseLatexToPdf in temp directory
+     * @since 1.0
+     */
     public $cachePath= '';
 
     /**

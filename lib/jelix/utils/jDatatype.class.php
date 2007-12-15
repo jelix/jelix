@@ -169,7 +169,7 @@ class jDatatypeDateTime extends jDatatype {
         }
     }
     /**
-     * @since 1.0RC1
+     * @since 1.0
      */
     public function getFormat() { return $this->format; }
 }

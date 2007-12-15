@@ -8,7 +8,8 @@
 */
 
 /**
- *
+ * @package    jelix-modules
+ * @subpackage jelix
  */
 class errorCtrl extends jController {
 

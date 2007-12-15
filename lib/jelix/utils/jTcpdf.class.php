@@ -7,14 +7,19 @@
 * @copyright   2007 Julien Issler, 2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @since 1.0
 */
 
+/**
+ *
+ */
 require_once (LIB_PATH.'tcpdf/tcpdf.php');
 
 /**
  * sub-class of TCPDF, for better Jelix integration (error handling) and easy save to disk feature.
  * @package    jelix
  * @subpackage utils
+ * @since 1.0
  */
 class jTcpdf extends TCPDF {
 

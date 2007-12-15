@@ -7,6 +7,7 @@
 * @copyright  2007 Julien Issler
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @since 1.0
 */
 
 /**
@@ -14,11 +15,15 @@
  *
  * @package  jelix
  * @subpackage core
+ * @since 1.0
  */
 class jSession {
 
     protected static $_params;
 
+    /**
+     * start a session
+     */
     public static function start(){
         $params = $GLOBALS['gJConfig']->sessions;
 
@@ -54,7 +59,9 @@ class jSession {
         return true;
     }
 
-
+    /**
+     * end a session
+     */
     public static function end(){
         session_write_close();
         return true;
@@ -71,17 +78,23 @@ class jSession {
         return $dao;
     }
 
-
+    /**
+     * dao handler for session stored in database
+     */
     public static function daoOpen ($save_path, $session_name) {
         return true;
     }
 
-
+    /**
+     * dao handler for session stored in database
+     */
     public static function daoClose() {
         return true;
     }
 
-
+    /**
+     * dao handler for session stored in database
+     */
     public static function daoRead ($id) {
         $session = self::_getDao()->get($id);
 
@@ -92,7 +105,9 @@ class jSession {
         return $session->data;
     }
 
-
+    /**
+     * dao handler for session stored in database
+     */
     public static function daoWrite ($id, $data) {
         $dao = self::_getDao();
 
@@ -111,7 +126,9 @@ class jSession {
         return true;
     }
 
-
+    /**
+     * dao handler for session stored in database
+     */
     public static function daoDestroy ($id) {
         if (isset($_COOKIE[session_name()])) {
            setcookie(session_name(), '', time()-42000, '/');
@@ -121,7 +138,9 @@ class jSession {
         return true;
     }
 
-
+    /**
+     * dao handler for session stored in database
+     */
     public static function daoGarbageCollector ($maxlifetime) {
         $date = new jDateTime();
         $date->now();

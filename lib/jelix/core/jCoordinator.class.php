@@ -66,6 +66,7 @@ class jCoordinator {
     /**
      * List of all log messages
      * @var array
+     * @since 1.0
      */
     public $logMessages=array();
 
@@ -152,6 +153,7 @@ class jCoordinator {
      * Store a log message. Responses object should take care
      * of the logMessages properties to display them.
      * @param  string $message error message
+     * @since 1.0
      */
     public function addLogMsg($message, $type='default'){
         $this->logMessages[$type][] = $message;

@@ -8,7 +8,8 @@
 */
 
 /**
- *
+ * @package    jelix-modules
+ * @subpackage jelix
  */
 class helpCtrl extends jControllerCmdLine {
     protected $allowed_options = array(

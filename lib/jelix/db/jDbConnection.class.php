@@ -126,7 +126,8 @@ abstract class jDbConnection {
       * @param string $table the table's name
       * @return string the prefixed table's name
       * @author Julien Issler
-      **/
+      * @since 1.0
+      */
     public function prefixTable($table_name){
         if(!isset($this->profil['table_prefix']))
             return $table_name;
@@ -138,7 +139,8 @@ abstract class jDbConnection {
       *
       * @return boolean
       * @author Julien Issler
-      **/
+      * @since 1.0
+      */
     public function hasTablePrefix(){
         return (isset($this->profil['table_prefix']) && $this->profil['table_prefix'] != '');
     }

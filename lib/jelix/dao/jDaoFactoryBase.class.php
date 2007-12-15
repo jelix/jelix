@@ -70,14 +70,29 @@ abstract class jDaoFactoryBase  {
     protected $_daoSelector;
 
     /**
-     * 
+     * @since 1.0
      */
     protected $_deleteBeforeEvent = false;
+    /**
+     * @since 1.0
+     */
     protected $_deleteAfterEvent = false;
+    /**
+     * @since 1.0
+     */
     protected $_deleteByBeforeEvent = false;
+    /**
+     * @since 1.0
+     */
     protected $_deleteByAfterEvent = false;
 
+    /**
+     * @since 1.0
+     */
     protected $trueValue = 1;
+    /**
+     * @since 1.0
+     */
     protected $falseValue = 0;
     /**
      * @param jDbConnection $conn the database connection

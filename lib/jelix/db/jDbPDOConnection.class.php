@@ -59,6 +59,7 @@ class jDbPDOConnection extends PDO {
     /**
     * PDO constant name have been change between php 5.0 and 5.1. So we use our own constant.
     * @link http://lxr.php.net/source/php-src/ext/pdo/php_pdo_driver.h
+    * @since 1.0
     */
     const JPDO_FETCH_OBJ = 5; // PDO::FETCH_OBJ
     const JPDO_FETCH_ORI_NEXT = 0; // PDO::FETCH_ORI_NEXT
@@ -182,6 +183,7 @@ class jDbPDOConnection extends PDO {
      * @param string $table the table's name
      * @return string the prefixed table's name
      * @author Julien Issler
+     * @since 1.0
      */
     public function prefixTable($table_name){
         if(!isset($this->profil['table_prefix']))
@@ -194,6 +196,7 @@ class jDbPDOConnection extends PDO {
      *
      * @return boolean
      * @author Julien Issler
+     * @since 1.0
      */
     public function hasTablePrefix(){
         return (isset($this->profil['table_prefix']) && $this->profil['table_prefix']!='');

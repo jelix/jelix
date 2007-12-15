@@ -28,6 +28,7 @@ final class jResponseRedirectUrl extends jResponse {
     /**
      * set the url with the referer URL
      * @return boolean true if there is a referer URL
+     * @since 1.0
      */
     public function toReferer($defaultUrl='') {
         if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != '') {

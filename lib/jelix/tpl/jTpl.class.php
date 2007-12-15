@@ -119,6 +119,7 @@ class jTpl {
      * @param string $zoneName  a zone selector
      * @param array  $params  parameters for the zone
      * @see jZone
+     * @since 1.0
      */
     function appendZone($name, $zoneName, $params=array()){
         if(isset($this->_vars[$name]))
