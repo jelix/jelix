@@ -338,6 +338,7 @@ cd lib/jelix/plugins/tpl/common
   modifier.count_array.php
   modifier.count_characters.php
   modifier.count_paragraphs.php
+  modifier.count_records.php
   modifier.count_sentences.php
   modifier.count_words.php
   modifier.date_format.php

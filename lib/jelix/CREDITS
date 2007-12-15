@@ -31,6 +31,9 @@ Uriel Corfa
  - Support of class datasources in jForms (#323)
  - contribution à jResponseTcpdf (#131)
 
+Dandelionmood
+ - added counter_records tpl plugin (#370)
+
 Antoine Detante (aka antoinefr)
  - support of persistant authentification in jAuth and auth plugin (#229)
 

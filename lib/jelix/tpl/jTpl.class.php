@@ -17,21 +17,26 @@
 class jTpl {
 
     /**
-     * all assigned template variables. Public because Internal use. Don't touch it :-)
+     * all assigned template variables. 
+     * It have a public access only for plugins. So you musn't use directly this property
+     * except from tpl plugins.
      * See methods of jTpl to manage template variables
      * @var array
      */
     public $_vars = array ();
 
     /**
-     * temporary template variables for plugins. Public because Internal use. Don't touch it :-)
+     * temporary template variables for plugins.
+     * It have a public access only for plugins. So you musn't use directly this property
+     * except from tpl plugins.
      * @var array
      */
     public $_privateVars = array ();
 
-
     /**
      * internal use
+     * It have a public access only for plugins. So you musn't use directly this property
+     * except from tpl plugins.
      * @var array
      */
     public $_meta = array();
