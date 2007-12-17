@@ -46,7 +46,7 @@ docs:
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) build/config/jelix-test.ini
 	cp -R -f build/phpdoc/Converters/HTML/frames $(PHPDOC)phpDocumentor/Converters/HTML/
 	$(PHPDOC)phpdoc \
-	-d $(TESTPATH)/lib/jelix/,$(TESTPATH)/lib/jelix-modules/,$(TESTPATH)/lib/diff/,$(TESTPATH)/lib/json/,$(TESTPATH)/lib/tcpdf/,$(TESTPATH)/lib/wikirenderer/ \
+	-d $(TESTPATH)/lib/jelix/ \
 	-t $(DOCSPATH) \
 	-o "HTML:frames:DOM/jelix" -s on -ct "contributor,licence" -i *.ini.php \
 	-ti "Jelix API Reference" -ric "README,INSTALL,CHANGELOG,CREDITS,LICENCE,VERSION,BUILD"
