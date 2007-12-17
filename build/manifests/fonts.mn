@@ -1,4 +1,4 @@
-cd lib/fonts
+cd lib/pdf-fonts
   dejavusans-bold.ctg.z
   dejavusans-bold.z
   dejavusans-boldoblique.ctg.z
@@ -129,7 +129,7 @@ cd lib/fonts
   veraseb.ctg.z
   veraseb.php
   veraseb.z
-cd lib/fonts/dejavu-ttf-2.15
+cd lib/pdf-fonts/dejavu-ttf-2.15
   AUTHORS
   BUGS
   langcover.txt
@@ -138,13 +138,13 @@ cd lib/fonts/dejavu-ttf-2.15
   README
   status.txt
   unicover.txt
-cd lib/fonts/freefont
+cd lib/pdf-fonts/freefont
   AUTHORS
   ChangeLog
   CREDITS
   INSTALL
   README
-cd lib/fonts/old
+cd lib/pdf-fonts/old
   .noencode
   courier.php
   helvetica.php
@@ -157,7 +157,7 @@ cd lib/fonts/old
   timesbi.php
   timesi.php
   zapfdingbats.php
-cd lib/fonts/old/makefont
+cd lib/pdf-fonts/old/makefont
   cp1250.map
   cp1251.map
   cp1252.map
@@ -179,7 +179,7 @@ cd lib/fonts/old/makefont
   koi8-r.map
   koi8-u.map
   makefont.php
-cd lib/fonts/ttf-bitstream-vera-1.10
+cd lib/pdf-fonts/ttf-bitstream-vera-1.10
   COPYRIGHT.TXT
   local.conf
   README.TXT

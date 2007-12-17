@@ -27,7 +27,7 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 //----------------- Preparation des variables d'environnement
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-    $PACKAGE_NAME='jelix-fonts';
+    $PACKAGE_NAME='jelix-pdf-fonts';
 
     $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME.'/';
 }else{
