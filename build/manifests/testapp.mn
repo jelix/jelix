@@ -86,8 +86,16 @@ cd testapp/modules/jelix_tests/locales/
   test_I.properties
 cd testapp/modules/jelix_tests/locales/fr_FR
   testunit.ISO-8859-1.properties
+  tests1.UTF-8.properties
+  tests2.UTF-8.properties
+cd testapp/modules/jelix_tests/locales/fr_CA
+  tests1.UTF-8.properties
 cd testapp/modules/jelix_tests/locales/en_US
   testunit.ISO-8859-1.properties
+  tests1.UTF-8.properties
+cd testapp/modules/jelix_tests/locales/en_EN
+  tests1.UTF-8.properties
+  tests3.UTF-8.properties
 cd testapp/modules/jelix_tests/templates
   menu.tpl
   test_plugin_counter_init_allarg_noexeption.tpl
