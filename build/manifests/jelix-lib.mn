@@ -334,6 +334,10 @@ cd lib/jelix/plugins/tpl/common
   block.ifusernotconnected.php
   block.stripws.php
   cfunction.zone.php
+  function.counter.php
+  function.counter_init.php
+  function.counter_reset.php
+  function.counter_reset_all.php
   modifier.cat.php
   modifier.count_array.php
   modifier.count_characters.php

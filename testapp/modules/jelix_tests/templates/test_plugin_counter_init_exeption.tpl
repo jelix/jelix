@@ -1,0 +1,1 @@
+{counter_init '', 'aa', 'y'}{for $i=0;$i<5;$i++}{counter}{if $i!=4}-{/if}{/for}

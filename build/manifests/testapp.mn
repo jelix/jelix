@@ -90,6 +90,12 @@ cd testapp/modules/jelix_tests/locales/en_US
   testunit.ISO-8859-1.properties
 cd testapp/modules/jelix_tests/templates
   menu.tpl
+  test_plugin_counter_init_allarg_noexeption.tpl
+  test_plugin_counter_init_exeption.tpl
+  test_plugin_counter_init_noexeption.tpl
+  test_plugin_counter_reset_all.tpl
+  test_plugin_counter_reset.tpl
+  test_plugin_counter.tpl
   test_plugin_jurl.tpl
 cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php

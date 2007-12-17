@@ -1,0 +1,1 @@
+{for $i=0;$i<5;$i++}{counter}{if $i!=4}-{/if}{/for},{for $i=0;$i<5;$i++}{counter 'nuks'}{if $i!=4}-{/if}{/for}{counter_reset_all},{for $i=0;$i<5;$i++}{counter}{if $i!=4}-{/if}{/for},{for $i=0;$i<5;$i++}{counter 'nuks'}{if $i!=4}-{/if}{/for}
