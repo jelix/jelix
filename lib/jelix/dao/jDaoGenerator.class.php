@@ -297,7 +297,6 @@ class jDaoGenerator {
             $src[] = ' function '.$method->name.' ('. $mparam.'){';
 
             $limit='';
-            $groupby='';
 
             switch($method->type){
                 case 'delete':
@@ -353,26 +352,27 @@ class jDaoGenerator {
                     if( $method->type == 'select' && ($lim = $method->getLimit ()) !==null){
                         $limit=', '.$lim['offset'].', '.$lim['count'];
                     }
-                    $gb = $method->getGroupBy();
-                    if ($gb) {
-                        $groupby = '    $__query .= \' GROUPBY '.implode(",", $gb).'\';';
-                    }
             }
 
             if($method->type == 'php')
                 continue;
 
             $cond = $method->getConditions();
-
+            $sqlCond = '';
             if($cond !== null){
                 if($method->type == 'delete' || $method->type == 'update')
                     $sqlCond = $this->_buildConditions($cond, $primaryFields, $method->getParameters(), false);
+                else if($method->type == 'count')
+                    $sqlCond = $this->_buildConditions($cond, $allField, $method->getParameters(), true);
                 else
-                    $sqlCond = $this->_buildConditions($cond, $allField,$method->getParameters(),true);
+                    $sqlCond = $this->_buildConditions($cond, $allField, $method->getParameters(), true, $method->getGroupBy());
 
-                if(trim($sqlCond) != '')
-                    $src[] = '$__query .=\''.$glueCondition.$sqlCond."';";
+            } else if(($method->type == 'select' || $method->type == 'selectfirst')) {
+                $sqlCond = $this->_buildConditions(null, $allField, $method->getParameters(), true, $method->getGroupBy());
             }
+
+            if(trim($sqlCond) != '')
+                $src[] = '$__query .=\''.$glueCondition.$sqlCond."';";
 
             switch($method->type){
                 case 'delete':
@@ -401,16 +401,12 @@ class jDaoGenerator {
                     $src[] = '    return intval($__res->c);';
                     break;
                 case 'selectfirst':
-                    if ($groupby)
-                        $src[]= $groupby;
                     $src[] = '    $__rs = $this->_conn->limitQuery($__query,0,1);';
                     $src[] = '    $__rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
                     $src[] = '    return $__rs->fetch();';
                     break;
                 case 'select':
                 default:
-                    if ($groupby)
-                        $src[]= $groupby;
                     if($limit)
                         $src[] = '    $__rs = $this->_conn->limitQuery($__query'.$limit.');';
                     else
@@ -694,17 +690,37 @@ class jDaoGenerator {
      * @param array $fields  array of jDaoProperty
      * @param array $params  list of parameters name of the method
      * @param boolean $withPrefix true if the field name should be preceded by the table name/table alias
+     * @param array $groupby  list of properties to use in a groupby
      * @return string a WHERE clause (without the WHERE keyword) with eventually an ORDER clause
      * @internal
      */
-    protected function _buildConditions ($cond, $fields, $params=array(), $withPrefix=true){
-        $sql = $this->_buildSQLCondition ($cond->condition, $fields, $params,$withPrefix, true);
+    protected function _buildConditions ($cond, $fields, $params=array(), $withPrefix=true, $groupby=null){
+        if($cond)
+            $sql = $this->_buildSQLCondition ($cond->condition, $fields, $params, $withPrefix, true);
+        else
+            $sql = '';
+
+        if($groupby && count($groupby)) {
+            if(trim($sql) =='') {
+                $sql = ' 1=1 ';
+            }
+            foreach($groupby as $k=>$f) {
+                if ($withPrefix)
+                    $groupby[$k]= $this->_encloseName($fields[$f]->table).'.'.$this->_encloseName($fields[$f]->fieldName);
+                else
+                    $groupby[$k]= $this->_encloseName($fields[$f]->fieldName);
+            }
+            $sql .= ' GROUP BY '.implode (', ', $groupby);
+        }
 
         $order = array ();
         foreach ($cond->order as $name => $way){
             $ord='';
             if (isset($fields[$name])){
-                $ord = $this->_encloseName($fields[$name]->table).'.'.$this->_encloseName($fields[$name]->fieldName);
+                if ($withPrefix)
+                    $ord = $this->_encloseName($fields[$name]->table).'.'.$this->_encloseName($fields[$name]->fieldName);
+                else
+                    $ord = $this->_encloseName($fields[$name]->fieldName);
             }elseif($name{0} == '$'){
                 $ord = '\'.'.$name.'.\'';
             }else{
@@ -718,7 +734,7 @@ class jDaoGenerator {
         }
         if(count ($order) > 0){
             if(trim($sql) =='') {
-                $sql.= ' 1=1 ';
+                $sql = ' 1=1 ';
             }
             $sql.=' ORDER BY '.implode (', ', $order);
         }
