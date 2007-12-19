@@ -21,9 +21,10 @@
  * jMailer based on PHPMailer - PHP email transport class
  * @package jelix
  * @subpackage  utils
- * @author Brent R. Matzelle
+ * @author Brent R. Matzelle, Andy Prevost
  * @contributor Laurent Jouanneau
  * @copyright 2001 - 2003 Brent R. Matzelle,  2006 Laurent Jouanneau
+ * @copyright 2004 - 2007 Andy Prevost
  * @since 1.0b1
  */
 class jMailer {
@@ -628,16 +629,73 @@ class jMailer {
      * Wraps message for use with mailers that do not
      * automatically perform wrapping and for quoted-printable.
      * Original written by philippe.
+     * @internal the code of this method has been picked from version 2.0.0 og PHPMailer
      * @return string
      */
     protected function WrapText($message, $length, $qp_mode = false) {
         $soft_break = ($qp_mode) ? sprintf(" =%s", $this->LE) : $this->LE;
 
         $message = $this->FixEOL($message);
-        if (substr($message, -1) == $this->LE)
+        if (substr($message, -1) == $this->LE) {
             $message = substr($message, 0, -1);
+        }
 
-        return wordwrap ( $message, $length, $this->LE, 1 );
+        $line = explode($this->LE, $message);
+        $message = '';
+        for ($i=0 ;$i < count($line); $i++) {
+            $line_part = explode(' ', $line[$i]);
+            $buf = '';
+            for ($e = 0; $e<count($line_part); $e++) {
+                $word = $line_part[$e];
+                if ($qp_mode and (strlen($word) > $length)) {
+                    $space_left = $length - strlen($buf) - 1;
+                    if ($e != 0) {
+                        if ($space_left > 20) {
+                            $len = $space_left;
+                            if (substr($word, $len - 1, 1) == '=') {
+                                $len--;
+                            } elseif (substr($word, $len - 2, 1) == '=') {
+                                $len -= 2;
+                            }
+                            $part = substr($word, 0, $len);
+                            $word = substr($word, $len);
+                            $buf .= ' ' . $part;
+                            $message .= $buf . sprintf("=%s", $this->LE);
+                        } else {
+                            $message .= $buf . $soft_break;
+                        }
+                        $buf = '';
+                    }
+                    while (strlen($word) > 0) {
+                        $len = $length;
+                        if (substr($word, $len - 1, 1) == '=') {
+                            $len--;
+                        } elseif (substr($word, $len - 2, 1) == '=') {
+                            $len -= 2;
+                        }
+                        $part = substr($word, 0, $len);
+                        $word = substr($word, $len);
+
+                        if (strlen($word) > 0) {
+                            $message .= $part . sprintf("=%s", $this->LE);
+                        } else {
+                            $buf = $part;
+                        }
+                    }
+                } else {
+                    $buf_o = $buf;
+                    $buf .= ($e == 0) ? $word : (' ' . $word);
+
+                    if (strlen($buf) > $length and $buf_o != '') {
+                        $message .= $buf_o . $soft_break;
+                        $buf = $word;
+                    }
+                }
+            }
+            $message .= $buf . $this->LE;
+        }
+
+        return $message;
     }
 
     /**
