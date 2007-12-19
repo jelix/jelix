@@ -341,7 +341,7 @@ abstract class jFormsBase {
      * If the form contain a new record (no formId), you should call saveToDao before
      * in order to get a new id (the primary key of the new record), or you should get a new id
      * by an other way. then you must pass this primary key in the third argument.
-     * If the form have already a formId, then it will be used as a primary key, unless
+     * If the form has already a formId, then it will be used as a primary key, unless
      * you give one in the third argument.
      *
      * The Dao should map to an "association table" : its primary key should be
@@ -367,7 +367,7 @@ abstract class jFormsBase {
         }
 
         $values = $this->_container->datas[$controlName];
-        if(!is_array($values))
+        if(!is_array($values) && $values != '')
             throw new jExceptionForms('jelix~formserr.value.not.array', array($controlName, $this->_sel));
 
         if(!$this->_container->formId && !$primaryKey)
@@ -394,11 +394,12 @@ abstract class jFormsBase {
         }
 
         $dao->deleteBy($conditions);
-
-        $valuefield = $pkNamelist[$k+1];
-        foreach($values as $value){
-            $daorec->$valuefield = $value;
-            $dao->insert($daorec);
+        if (is_array($values)) {
+            $valuefield = $pkNamelist[$k+1];
+            foreach($values as $value){
+                $daorec->$valuefield = $value;
+                $dao->insert($daorec);
+            }
         }
     }
 
