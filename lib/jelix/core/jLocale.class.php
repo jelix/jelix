@@ -207,7 +207,7 @@ class jLocale {
             if($e->getCode() == 12) throw $e;
             if ($locale === null)  $locale = $gJConfig->locale;
             if ($charset === null) $charset = $gJConfig->charset;
-            throw new Exception('(200)The given locale key "'.$key.'" is invalid  (for charset '.$charset.', lang '.$locale.')');
+            throw new Exception('(200)The given locale key "'.$key.'" is invalid (for charset '.$charset.', lang '.$locale.')');
         }
 
         $locale = $file->locale;
@@ -222,7 +222,7 @@ class jLocale {
         if ($string === null){
             //if the message was not found, we're gonna
             //use the default language and country.
-            if ($locale    == $gJConfig->locale){
+            if ($locale == $gJConfig->locale){
                 throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang for the '.$file->charset.' charset ');
             }
             return jLocale::get ($key, $args, $gJConfig->locale);

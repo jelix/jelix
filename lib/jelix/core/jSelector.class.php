@@ -460,7 +460,7 @@ class jSelectorLoc extends jSelectorModule {
         $this->charset = $charset;
         $this->_dirname =  'locales/' .$locale.'/';
         $this->_suffix = '.'.$charset.'.properties';
-        $this->_cacheSuffix = '.'.$charset.'.php';
+        $this->_cacheSuffix = '.'.$locale.'.'.$charset.'.php';
         $this->_compilerPath=JELIX_LIB_CORE_PATH.'jLocalesCompiler.class.php';
 
 #if ENABLE_PHP_JELIX
@@ -489,6 +489,8 @@ class jSelectorLoc extends jSelectorModule {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
+            if ($this->module == 'jelix')
+                throw new Exception('jelix module is not enabled !!');
             throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         }
 
@@ -503,7 +505,15 @@ class jSelectorLoc extends jSelectorModule {
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
 
         if (!is_readable ($this->_path)){
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "locale"));
+            // to avoid infinite loop in a specific lang, we should check if we don't
+            // try to retrieve the same message as the one we use for the exception below,
+            // and if it is this message, it means that the error message doesn't exist 
+            // in the specific lang, so we retrieve it in en_EN language
+            if($this->toString() == 'jelix~errors.selector.invalid.target')
+                $l = 'en_EN';
+            else
+                $l=null;
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "locale"),1,$l);
         }
         $this->_where = 'modules/';
     }

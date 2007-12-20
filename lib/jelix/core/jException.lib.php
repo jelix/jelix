@@ -119,14 +119,15 @@ class jException extends Exception {
      * @param string $localekey a locale key
      * @param array $localeParams parameters for the message (for sprintf)
      * @param integer $code error code (can be provided by the localized message)
+     * @param string $lang
      */
-    public function __construct($localekey, $localeParams=array(), $code = 1) {
+    public function __construct($localekey, $localeParams=array(), $code = 1, $lang=null) {
 
         $this->localeKey = $localekey;
         $this->localeParams = $localeParams;
 
         try{
-            $message = jLocale::get($localekey, $localeParams);
+            $message = jLocale::get($localekey, $localeParams, $lang);
         }catch(Exception $e){
             $message = $e->getMessage();
         }

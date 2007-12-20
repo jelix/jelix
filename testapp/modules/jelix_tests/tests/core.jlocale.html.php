@@ -63,6 +63,71 @@ class UTjlocale extends jUnitTestCase {
             }
         }
     }
+    
+    
+    function testSimpleLocale(){
+        $GLOBALS['gJConfig']->locale = 'fr_FR';
+        $this->assertEqual('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale'));
+        $this->assertEqual('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale', null, 'fr_FR'));
+        $this->assertEqual('ceci est une phrase fr_CA',jLocale::get('tests1.first.locale', null, 'fr_CA'));
+        $this->assertEqual('this is an en_US sentence',jLocale::get('tests1.first.locale', null, 'en_US'));
+        $this->assertEqual('this is an en_EN sentence',jLocale::get('tests1.first.locale', null, 'en_EN'));
+    }
+        
+    function testException() {
+        $GLOBALS['gJConfig']->locale = 'fr_FR';
+        try {
+            $loc = jLocale::get('tests1.first.locale', null, 'de_DE');
+            $this->fail('no exception');
+        }catch(jException $e) {
+            $this->fail('wrong exception type');
+        }catch(Exception $e) {
+            $this->pass();
+            $this->assertEqual($e->getMessage(), '(200)The given locale key "tests1.first.locale" is invalid (for charset UTF-8, lang de_DE)');
+        }
+
+        $GLOBALS['gJConfig']->locale = 'de_DE';
+        try {
+            $loc = jLocale::get('tests1.first.locale', null, 'de_DE');
+            $this->fail('no exception');
+        }catch(jException $e) {
+            $this->fail('wrong exception type');
+        }catch(Exception $e) {
+            $this->pass();
+            $this->assertEqual($e->getMessage(), '(200)The given locale key "tests1.first.locale" is invalid (for charset UTF-8, lang de_DE)');
+        }
+        $GLOBALS['gJConfig']->locale = 'fr_FR';
+    }
+
+    function testWithNoAskedLocale(){
+        // all this tests are made on an existing locale file
+/*
+        $this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('test1.second.locale'));
+        // no test1.second.locale in fr_CA, so we should have the fr_FR one
+        $this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('test1.second.locale', null, 'fr_CA'));
+        // no test1.third.locale in fr_CA, fr_FR, so we should have the en_EN one
+        $this->assertEqual('this is an en_EN sentence',jLocale::get('test1.third.locale', null, 'fr_CA'));
+        $this->assertEqual('this is an en_EN sentence',jLocale::get('test1.third.locale', null, 'fr_FR'));
+
+        try{
+            jLocale::get('test1.fourth.locale', null, 'fr_FR')
+            $this->fail('no exception when trying to get test1.fourth.locale locale');
+        }catch(jException $e){
+            $this->pass();
+        }
+    }
+
+    function testWithNoAskedLocaleFile(){
+        // all this tests are made on an non existing locale file
+
+        $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('test2.first.locale'));
+        // no test2.properties file for fr_CA, so we should have the fr_FR one
+        $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('test2.first.locale', null, 'fr_CA'));
+        // no test3.properties file for fr_CA and fr_FR, so we should have the en_EN one
+        $this->assertEqual('this is an en_EN sentence test3',jLocale::get('test3.first.locale', null, 'fr_CA'));
+        $this->assertEqual('this is an en_EN sentence test3',jLocale::get('test3.first.locale', null, 'fr_FR'));
+  */  }
+    
 }
 
 ?>
