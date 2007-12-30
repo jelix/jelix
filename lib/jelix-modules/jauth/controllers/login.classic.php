@@ -22,6 +22,13 @@ class loginCtrl extends jController {
     function in (){
         $conf = $GLOBALS['gJCoord']->getPlugin('auth')->config;
         $url_return = '/';
+
+        if ($conf['after_login'] == '')
+            throw new jException ('jauth~autherror.no.auth_login');
+
+        if ($conf['after_logout'] == '')
+            throw new jException ('jauth~autherror.no.auth_logout');
+
         if (!($conf['enable_after_login_override'] && $url_return= $this->param('auth_url_return'))){
             $url_return =  jUrl::get($conf['after_login']);
         }
@@ -42,6 +49,9 @@ class loginCtrl extends jController {
     function out (){
         jAuth::logout();
         $conf = $GLOBALS['gJCoord']->getPlugin ('auth')->config;
+
+        if ($conf['after_logout'] == '')
+            throw new jException ('jauth~autherror.no.auth_logout');
 
         if (!($conf['enable_after_logout_override'] && $url_return= $this->param('auth_url_return'))){
             $url_return =  jUrl::get($conf['after_logout']);
