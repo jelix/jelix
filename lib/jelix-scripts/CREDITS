@@ -20,4 +20,6 @@ Thiriot Christophe
 Loic Mathaud
   - bug fix
 
+Yannick Le Guédart
+  - script to convert old action selectors to new action selectors (modules/beta_migrating)
 
