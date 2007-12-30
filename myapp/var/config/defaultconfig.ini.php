@@ -72,21 +72,11 @@ multiview = off
 ; : basePath="/aaa/" )
 basePath = ""
 
-
 defaultEntrypoint= index
 
 entrypointExtension= .php
 
 ;notfoundAct = "jelix~error:notfound"
-
-;indique si vous utilisez IIS comme serveur
-useIIS = off
-
-;indique le paramètre dans $_GET où est indiqué le path_info
-IISPathKey = __JELIX_URL__
-
-;indique si il faut stripslashé le path_info récupéré par le biais de IISPathKey
-IISStripslashesPathKey = on
 
 
 [simple_urlengine_entrypoints]

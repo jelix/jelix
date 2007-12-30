@@ -1,5 +1,7 @@
 Installation of testapp
 
+- download and install a "developer" edition of Jelix
+- move the testapp directory at the same level of the lib/ directory of jelix.
 - create a database and import one of the testapp/install/*.sql script into it.
 - rename testapp/var/config/dbprofils.ini.php.dist to testapp/var/config/dbprofils.ini.php
 - configure parameters in dbprofils.ini.php, in section testapp for mysql,

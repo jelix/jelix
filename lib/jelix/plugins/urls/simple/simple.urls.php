@@ -63,7 +63,7 @@ class simpleUrlEngine implements jIUrlEngine {
      */
     protected function getScript($requestType, $module=null, $action=null){
         global $gJConfig;
-        
+
         $script = $gJConfig->urlengine['defaultEntrypoint'];
 
         if($this->urlhttps == null){

@@ -101,6 +101,14 @@ enableParser = on
 
 multiview = off
 
+; the name of the variable in $_SERVER which contains the name of the script
+; example : if the you call http://mysite.com/foo/index.php, this is the variable
+; which contains "/foo/index.php"
+; This name can be SCRIPT_NAME, ORIG_SCRIPT_NAME, PHP_SELF or REDIRECT_SCRIPT_URL
+; it is detected automatically by jelix but it can fail sometime, so you could have to setup it
+scriptNameServerVariable = 
+
+
 ; basePath corresponds to the path to the base directory of your application.
 ; so if the url to access to your application is http://foo.com/aaa/bbb/www/index.php, you should
 ; set basePath = "/aaa/bbb/www/". 
@@ -124,15 +132,6 @@ entrypointExtension= .php
 ; leave empty to have jelix error messages
 notfoundAct =
 ;notfoundAct = "jelix~error:notfound"
-
-;if you use IIS as a serveur set it to on
-useIIS = off
-
-;if you use IIS, indicate the parameter which contains the path_info
-IISPathKey = __JELIX_URL__
-
-;indique si il faut stripslashé le path_info récupéré par le biais de IISPathKey
-IISStripslashes_path_key = on
 
 ; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur d'url simple
 simple_urlengine_https =

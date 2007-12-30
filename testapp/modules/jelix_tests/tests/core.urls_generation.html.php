@@ -21,7 +21,7 @@ class UTCreateUrls extends UnitTestCase {
     function setUp() {
       global $gJCoord, $gJConfig;
 
-      $this->oldUrlScriptPath = $gJCoord->request->url_script_path;
+      $this->oldUrlScriptPath = $gJCoord->request->urlScriptPath;
       $this->oldParams = $gJCoord->request->params;
       $this->oldRequestType = $gJCoord->request->type;
       $this->oldUrlengineConf = $gJConfig->urlengine;
@@ -35,7 +35,7 @@ class UTCreateUrls extends UnitTestCase {
     function tearDown() {
       global $gJCoord, $gJConfig;
 
-      $gJCoord->request->url_script_path=$this->oldUrlScriptPath;
+      $gJCoord->request->urlScriptPath=$this->oldUrlScriptPath;
       $gJCoord->request->params=$this->oldParams;
       $gJCoord->request->type=$this->oldRequestType;
       $gJConfig->urlengine = $this->oldUrlengineConf;
@@ -93,7 +93,7 @@ class UTCreateUrls extends UnitTestCase {
     function testSimpleEngine() {
        global $gJConfig, $gJCoord;
 
-       $gJCoord->request->url_script_path='/';
+       $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
        $gJConfig->urlengine = array(
@@ -156,7 +156,7 @@ class UTCreateUrls extends UnitTestCase {
     function testSimpleEngineError(){
        global $gJConfig, $gJCoord;
 
-       $gJCoord->request->url_script_path='/';
+       $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
        $gJConfig->urlengine = array(
@@ -193,7 +193,7 @@ class UTCreateUrls extends UnitTestCase {
     function testSignificantEngine() {
        global $gJConfig, $gJCoord;
 
-       $gJCoord->request->url_script_path='/';
+       $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
        $gJConfig->urlengine = array(
@@ -296,7 +296,7 @@ class UTCreateUrls extends UnitTestCase {
     function testSignificantEngineError(){
        global $gJConfig, $gJCoord;
 
-       $gJCoord->request->url_script_path='/';
+       $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
        $gJConfig->urlengine = array(

@@ -24,9 +24,9 @@ class jCmdLineRequest extends jRequest {
 
     protected function _initUrlDatas(){ 
         global $gJConfig; 
-        $this->url_script_path = '/'; 
-        $this->url_script_name = $_SERVER['SCRIPT_NAME']; 
-        $this->url_path_info = ''; 
+        $this->url_script_path = $this->urlScriptPath = '/'; 
+        $this->url_script_name = $this->urlScriptName = $this->urlScript = $_SERVER['SCRIPT_NAME']; 
+        $this->url_path_info = $this->urlPathInfo = ''; 
     }
 
     protected function _initParams(){

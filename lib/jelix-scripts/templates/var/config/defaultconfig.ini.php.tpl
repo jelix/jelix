@@ -77,14 +77,8 @@ entrypointExtension= .php
 notfoundAct =
 ;notfoundAct = "jelix~error:notfound"
 
-;indique si vous utilisez IIS comme serveur
-useIIS = off
-
-;indique le paramètre dans $_GET où est indiqué le path_info
-IISPathKey = __JELIX_URL__
-
-;indique si il faut stripslashé le path_info récupéré par le biais de IISPathKey
-IISStripslashes_path_key = on
+; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur d'url simple
+simple_urlengine_https =
 
 
 [simple_urlengine_entrypoints]

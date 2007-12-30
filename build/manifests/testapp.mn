@@ -117,6 +117,7 @@ cd testapp/modules/jelix_tests/forms
   label.form.xml
 cd testapp/modules/jelix_tests/tests/
   core.jlocale.html.php
+  core.jrequest.html_cli.php
   core.selectors_action.html.php
   core.old_selectors_action.html.php
   core.selectors_module.html.php

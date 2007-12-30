@@ -22,7 +22,7 @@ class jXulRequest extends jRequest {
     public $defaultResponseType = 'xul';
 
     protected function _initParams(){
-        $url  = jUrl::parse($_SERVER['SCRIPT_NAME'], $this->url_path_info, $_GET);
+        $url  = jUrl::parse($this->urlScript, $this->urlPathInfo, $_GET);
         $this->params = array_merge($url->params, $_POST);
     }
 }

@@ -39,22 +39,53 @@ abstract class jRequest {
     public $defaultResponseType = '';
 
     /**
-     * the path to the entry point in the url
+     * the path of the entry point in the url
+     * if the url is /foo/index.php/bar, its value is /foo/
      * @var string
+     */
+    public $urlScriptPath;
+
+    /**
+     * the name of the entry point
+     * if the url is /foo/index.php/bar, its value is index.php
+     * @var string
+     */
+    public $urlScriptName;
+
+    /**
+     * the path to the entry point in the url
+     * if the url is /foo/index.php/bar, its value is /foo/index.php
+     * @var string
+     */
+    public $urlScript;
+
+    /**
+     * the pathinfo part of the url
+     * if the url is /foo/index.php/bar, its value is /bar
+     * @var string
+     */
+    public $urlPathInfo;
+
+
+    /**
+     * @var string
+     * @deprecated see $urlScriptPath
      */
     public $url_script_path;
 
     /**
-     * the name of the entry point
      * @var string
+     * @deprecated see $urlScriptName
      */
     public $url_script_name;
 
     /**
-     * the pathinfo part of the url
      * @var string
+     * @deprecated see $urlPathInfo
      */
     public $url_path_info;
+
+
 
     function __construct(){  }
 
@@ -72,47 +103,47 @@ abstract class jRequest {
     abstract protected function _initParams();
 
     /**
-     * inits the url_* properties
-     * @copyright 2003-2005 CopixTeam
-     *  method took from Copix Framework v2.3dev20050901, CopixCoordinator.class.php,
-     *  released under GNU Lesser General Public Licence.
-     * @author Gerald Croes
-     * @contributor Laurent Jouanneau
+     * init the url* properties
      */
     protected function _initUrlDatas(){
         global $gJConfig;
 
-        $lastslash = strrpos ($_SERVER['SCRIPT_NAME'], '/');
-        $this->url_script_path = substr ($_SERVER['SCRIPT_NAME'], 0,$lastslash ).'/';//following is subdir/
+        if (isset($_SERVER[$gJConfig->urlengine['scriptNameServerVariable']]))
+            $this->urlScript = $_SERVER[$gJConfig->urlengine['scriptNameServerVariable']];
+        else
+            $this->urlScript = $_SERVER['SCRIPT_NAME'];
+
+        $lastslash = strrpos ($this->urlScript, '/');
+        $this->url_script_path = $this->urlScriptPath = substr ($this->urlScript, 0, $lastslash ).'/';
+
         if($gJConfig->urlengine['basePath'] == ''){ // for beginners or simple site, we "guess" the base path
-            $gJConfig->urlengine['basePath'] = $this->url_script_path;
+            $gJConfig->urlengine['basePath'] = $this->urlScriptPath;
             if($gJConfig->urlengine['jelixWWWPath']{0} != '/')
-                $gJConfig->urlengine['jelixWWWPath'] = $this->url_script_path.$gJConfig->urlengine['jelixWWWPath'];
-        }else if(strpos($this->url_script_path,$gJConfig->urlengine['basePath']) !== 0){
-            die('Jelix Error: basePath in config file doesn\'t correspond to current base path. You should setup it to '.$this->url_script_path);
+                $gJConfig->urlengine['jelixWWWPath'] = $this->urlScriptPath.$gJConfig->urlengine['jelixWWWPath'];
+        }else if(strpos($this->urlScriptPath,$gJConfig->urlengine['basePath']) !== 0){
+            throw new Exception('Jelix Error: basePath in config file doesn\'t correspond to current base path. You should setup it to '.$this->urlScriptPath);
         }
 
-        $this->url_script_name = substr ($_SERVER['SCRIPT_NAME'], $lastslash+1);//following is index.php
+        $this->url_script_name = $this->urlScriptName = substr ($this->urlScript, $lastslash+1);
 
         if(isset($_SERVER['PATH_INFO'])){
             $pathinfo = $_SERVER['PATH_INFO'];
-            if ($gJConfig->isWindows && strpos ($_SERVER['PATH_INFO'], $_SERVER['SCRIPT_NAME']) !== false){
-                //under IIS, we may get as PATH_INFO /subdir/index.php/mypath/myaction (which is incorrect)
-                $pathinfo = substr ($_SERVER['PATH_INFO'], strlen ($_SERVER['SCRIPT_NAME']));
-            }
-        }else{
-            if($gJConfig->isWindows && $gJConfig->urlengine['useIIS'] && isset ($_GET[$gJConfig->urlengine['IISPathKey']])){
-                $pathinfo = $_GET[$gJConfig->urlengine['IISPathKey']];
-                $pathinfo = $gJConfig->urlengine['IISStripslashesPathKey'] === true ? stripslashes($pathinfo) : $pathinfo;
-            }else{
-                //if($_SERVER['PHP_SELF']!= $_SERVER['SCRIPT_NAME']){
-                //   $pathinfo = substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME'])-1);
-                //}else
-                   $pathinfo='';
+        } else if(isset($_SERVER['ORIG_PATH_INFO'])){
+            $pathinfo = $_SERVER['ORIG_PATH_INFO'];
+        } else
+            $pathinfo = '';
 
-            }
+        if($pathinfo == $this->urlScript) {
+            //when php is used as cgi and if there isn't pathinfo in the url
+            $pathinfo = '';
         }
-        $this->url_path_info = $pathinfo;
+
+        if ($gJConfig->isWindows && $pathinfo && strpos ($pathinfo, $this->urlScript) !== false){
+            //under IIS, we may get  /subdir/index.php/mypath/myaction as PATH_INFO, so we fix it
+            $pathinfo = substr ($pathinfo, strlen ($this->urlScript));
+        }
+
+        $this->url_path_info = $this->urlPathInfo = $pathinfo;
     }
 
     /**
