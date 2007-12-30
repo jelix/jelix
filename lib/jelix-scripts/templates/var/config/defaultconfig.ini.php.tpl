@@ -17,7 +17,9 @@ modulesPath = lib:jelix-modules/,app:modules/
 
 theme = default
 
+#if ENABLE_OLD_ACTION_SELECTOR
 enableOldActionSelector = 
+#endif
 
 [plugins]
 ;nom = nom_fichier_ini
