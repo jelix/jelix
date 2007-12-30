@@ -23,6 +23,14 @@ require(JELIX_LIB_AUTH_PATH.'jAuth.class.php');
 require(JELIX_LIB_AUTH_PATH.'jAuthDummyUser.class.php');
 
 /**
+ * deprecated class. It is here only for a soft migrating from jelix 1.0b3 to 1.0
+ * when a jDummyAuthUser object is stored in a session
+ * @deprecated
+ */
+class jDummyAuthUser extends jAuthUser {
+}
+
+/**
 * @package    jelix
 * @subpackage coord_plugin
 */
@@ -34,7 +42,6 @@ class AuthCoordPlugin implements jICoordPlugin {
 
         if (!isset($this->config['session_name'])
             || $this->config['session_name'] == ''){
-                
             $this->config['session_name'] = 'JELIX_USER';
         }
     }
@@ -80,6 +87,12 @@ class AuthCoordPlugin implements jICoordPlugin {
             $notLogged = true;
             $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
         }else{
+            // This test is here only for a soft migrating from jelix 1.0b3 to 1.0
+            // it should be removed in futur version
+            if($_SESSION[$this->config['session_name']] instanceof jDummyAuthUser) {
+                $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
+            }
+
             $notLogged = ! jAuth::isConnected();
         }
         if(!$notLogged && $this->config['timeout']){
