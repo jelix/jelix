@@ -438,7 +438,7 @@ class jDaoGenerator {
         $ptrealname = $this->_encloseName($primarytable['realname']);
         $ptname = $this->_encloseName($primarytable['name']);
 
-        list($sqlFrom, $sqlWhere) = $this->genOuterJoins(&$tables, $ptname);
+        list($sqlFrom, $sqlWhere) = $this->genOuterJoins($tables, $ptname);
 
         if($primarytable['name']!=$primarytable['realname'])
             $sqlFrom =$ptrealname.$this->aliasWord.$ptname.$sqlFrom;

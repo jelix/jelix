@@ -20,6 +20,7 @@ class UTfilter extends UnitTestCase {
     }
 
     public function testIsInt(){
+        $this->assertTrue(jFilter::isInt('0'), "isInt('0')");
         $this->assertTrue(jFilter::isInt('1'), "isInt('1')");
         $this->assertTrue(jFilter::isInt('13213313'), "isInt('13213313')");
         $this->assertTrue(jFilter::isInt('-13213313'), "isInt('-13213313')");
@@ -39,10 +40,11 @@ class UTfilter extends UnitTestCase {
         $this->assertFalse(jFilter::isHexInt(''), "isHexInt('')");
         $this->assertFalse(jFilter::isHexInt('a'), "isHexInt('a')");
         $this->assertFalse(jFilter::isHexInt('465abd598'), "isHexInt('465abd598')");
+        $this->assertTrue(jFilter::isHexInt('0x0'), "isHexInt('0x0')");
         $this->assertTrue(jFilter::isHexInt('0x1'), "isHexInt('0x1')");
         $this->assertTrue(jFilter::isHexInt('0x13213313'), "isHexInt('0x13213313')");
         $this->assertTrue(jFilter::isHexInt('0x132abD13'), "isHexInt('0x132abD13')");
-        $this->assertFalse(jFilter::isHexInt('-13213313'), "isHexInt('-13213313')");
+        $this->assertTrue(jFilter::isHexInt('-13213313'), "isHexInt('-13213313')");
         $this->assertTrue(jFilter::isHexInt('0x9813',0x12,0x15246), "isHexInt('0x9813',0x12,0x15246)");
         $this->assertFalse(jFilter::isHexInt('0x11',0x12,0x15246), "isHexInt('0x11',0x12,0x15246)");
         $this->assertFalse(jFilter::isHexInt('0x11',0x5,0x9), "isHexInt('0x11',0x5,0x9)");
@@ -65,6 +67,7 @@ class UTfilter extends UnitTestCase {
     }
 
     public function testIsFloat(){
+        $this->assertTrue(jFilter::isFloat('0'), "isFloat('0')");
         $this->assertTrue(jFilter::isFloat('1'), "isFloat('1')");
         $this->assertTrue(jFilter::isFloat('13213313'), "isFloat('13213313')");
         $this->assertTrue(jFilter::isFloat('132.13313'), "isFloat('132.13313')");

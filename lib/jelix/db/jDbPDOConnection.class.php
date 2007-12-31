@@ -25,10 +25,11 @@ class jDbPDOResultSet extends PDOStatement {
      * Arguments are ignored. JDb don't care about it (fetch always as classes or objects)
      * But there are here because of the compatibility of internal methods of PDOStatement
      * @param integer $fetch_style ignored
-     * @param integer $column_index ignored
+     * @param integer $column_index
+     * @param array $ctor_arg  (ignored)
      * @return array list of object which contain all rows
      */
-    public function fetchAll ( $fetch_style = jDbPDOConnection::JPDO_FETCH_OBJ, $column_index=0 ){
+    public function fetchAll ( $fetch_style = jDbPDOConnection::JPDO_FETCH_OBJ, $column_index=0, $ctor_arg=null ){
         if($this->_fetchMode){
             if( $this->_fetchMode != jDbPDOConnection::JPDO_FETCH_COLUMN)
                 return parent::fetchAll($this->_fetchMode);

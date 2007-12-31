@@ -37,7 +37,7 @@ class jFilter {
     static public function isInt ($val, $min=null, $max=null){
 #if ENABLE_PHP_FILTER
         // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
-        if(!filter_var($val, FILTER_VALIDATE_INT)) return false;
+        if(filter_var($val, FILTER_VALIDATE_INT) === false) return false;
 #else
         // @FIXME : trouver une solution plus performante ?
         if(!preg_match("/^\\-?\d+$/", $val)) return false;
@@ -57,10 +57,10 @@ class jFilter {
     static public function isHexInt ($val, $min=null, $max=null){
 #if ENABLE_PHP_FILTER
         // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
-        if(!filter_var($val, FILTER_VALIDATE_INT, FILTER_FLAG_ALLOW_HEX)) return false;
+        if(filter_var($val, FILTER_VALIDATE_INT, FILTER_FLAG_ALLOW_HEX) === false) return false;
 #else
         // @FIXME : trouver une solution plus performante ?
-        if(!preg_match("/^0x[a-f0-9A-F]+$/", $val)) return false;
+        if(!preg_match("/^(0x[a-f0-9A-F]+|\\-?\d+)$/", $val)) return false;
 #endif
         if($min !== null && intval($val,16) < $min) return false;
         if($max !== null && intval($val,16) > $max) return false;
@@ -74,11 +74,9 @@ class jFilter {
      * @return boolean true if it is valid
      */
     static public function isBool ($val){
-#if ENABLE_PHP_FILTER
-        return filter_var($val, FILTER_VALIDATE_BOOLEAN);
-#else
+        // we don't use filter_var because it return false when a boolean is "false" or "FALSE" etc..
+        //return filter_var($val, FILTER_VALIDATE_BOOLEAN);
         return in_array($val, array('true','false','1','0','TRUE', 'FALSE','on','off'));
-#endif
     }
 
 
@@ -92,7 +90,7 @@ class jFilter {
     static public function isFloat ($val, $min=null, $max=null){
 #if ENABLE_PHP_FILTER
         // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
-        if(!filter_var($val, FILTER_VALIDATE_FLOAT)) return false;
+        if(filter_var($val, FILTER_VALIDATE_FLOAT) === false) return false;
 #else
         if(!is_numeric($val)) return false;
 #endif
@@ -110,18 +108,15 @@ class jFilter {
     static public function isUrl ($url, $schemeRequired=false,
                             $hostRequired=false, $pathRequired=false,
                             $queryRequired=false ){
-#if ENABLE_PHP_FILTER
+        /* because of a bug in filter_var (error when no scheme even if there isn't
+         FILTER_FLAG_SCHEME_REQUIRED flag), we don't use filter_var here
         $flag=0;
         if($schemeRequired) $flag |= FILTER_FLAG_SCHEME_REQUIRED;
         if($hostRequired) $flag |= FILTER_FLAG_HOST_REQUIRED;
         if($pathRequired) $flag |= FILTER_FLAG_PATH_REQUIRED;
         if($queryRequired) $flag |= FILTER_FLAG_QUERY_REQUIRED;
         return filter_var($url, FILTER_VALIDATE_URL, $flag);
-#else
-        //$re = '/^(([a-z]):\/\/)?((([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?)?';
-        //$re .= '((\/'
-        //if (!preg_match('/^(([a-z]):\/\/)?((([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?)?\//i', $url, $m)) {
-
+        */
         // php filter use in fact parse_url, so we use the same function to have same result.
         // however, note that it doesn't validate all bad url...
         $res=@parse_url($url);
@@ -131,7 +126,6 @@ class jFilter {
         if($pathRequired && $res['path'] == '') return false;
         if($queryRequired && $res['query'] == '') return false;
         return true;
-#endif
     }
 
     /**
@@ -141,7 +135,7 @@ class jFilter {
      */
     static public function isIPv4 ($val){
 #if ENABLE_PHP_FILTER
-        return filter_var($val, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+        return filter_var($val, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
 #else
         if(!preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/',$val,$m)) return false;
         if(intval($m[1]) > 255) return false;
@@ -159,7 +153,7 @@ class jFilter {
      */
     static public function isIPv6 ($val){
 #if ENABLE_PHP_FILTER
-        return filter_var($val, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+        return filter_var($val, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
 #else
         return preg_match('/^(?:[a-f0-9]{1,4})(?::(?:[a-f0-9]{1,4})){7}$/i',$val);
 #endif
@@ -172,7 +166,7 @@ class jFilter {
      */
     static public function isEmail ($val){
 #if ENABLE_PHP_FILTER
-        return filter_var($val, FILTER_VALIDATE_EMAIL);
+        return filter_var($val, FILTER_VALIDATE_EMAIL) !== false;
 #else
         return preg_match("/^(?:(?:\\\"[^\\\"\\f\\n\\r\\t\\b]+\\\")|(?:[\\w\\!\\#\\$\\%\\&\\'\\*\\+\\-\\~\\/\\^\\`\\|\\{\\}]+(?:\\.[\\w\\!\\#\\$\\%\\&\\'\\*\\+\\-\\~\\/\\^\\`\\|\\{\\}]+)*))@(?:(?:\\[(?:(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9])))\\])|(?:(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9])))|(?:(?:(?:[A-Za-z0-9\\-])+\\.)+[A-Za-z\\-]+))$/",$val);
 #endif
