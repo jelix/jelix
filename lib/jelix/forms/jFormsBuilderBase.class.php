@@ -199,21 +199,22 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
 
             if(is_array($value) && count($value) == 1)
                 $value = $value[0];
+            $span ='<span class="jforms-chkbox jforms-ctl-'.$ctrl->ref.'"><input type="checkbox"';
 
             if(is_array($value)){
                 foreach($ctrl->datasource->getDatas() as $v=>$label){
-                    echo '<input type="checkbox"',$attrs,$i,'" value="',htmlspecialchars($v),'"';
+                    echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
                     if(in_array($v,$value))
                         echo ' checked="checked"';
-                    echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label>';
+                    echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label></span>';
                     $i++;
                 }
             }else{
                 foreach($ctrl->datasource->getDatas() as $v=>$label){
-                    echo '<input type="checkbox"',$attrs,$i,'" value="',htmlspecialchars($v),'"';
+                    echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
                     if($v == $value)
                         echo ' checked="checked"';
-                    echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label>';
+                    echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label></span>';
                     $i++;
                 }
             }
@@ -228,9 +229,10 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
                 else
                     $value='';
             }
+            $span ='<span class="jforms-radio jforms-ctl-'.$ctrl->ref.'"><input type="radio"';
             foreach($ctrl->datasource->getDatas() as $v=>$label){
-                echo '<input type="radio"',$id,$i,'" value="',htmlspecialchars($v),'"',($v==$value?' checked="checked"':''),$readonly,$class,$this->_endt;
-                echo '<label for="',$this->_name,'_',$ctrl->ref,'_',$i,'">',htmlspecialchars($label),'</label>';
+                echo $span,$id,$i,'" value="',htmlspecialchars($v),'"',($v==$value?' checked="checked"':''),$readonly,$class,$this->_endt;
+                echo '<label for="',$this->_name,'_',$ctrl->ref,'_',$i,'">',htmlspecialchars($label),'</label></span>';
                 $i++;
             }
             break;
