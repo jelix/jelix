@@ -46,6 +46,7 @@ abstract class jDatatype {
         if(in_array($type, $this->facets)){
             return $this->$type;
         }
+        return null;
     }
 
     protected function _addFacet($type,$value){
