@@ -20,15 +20,20 @@ class requestTest extends jRequest {
 
 class UTjrequest extends jUnitTestCase {
     protected $currentServer;
+    protected $currentBasePath;
+    protected $currentConfigScriptName;
 
     function setUp() {
         $this->currentServer = $_SERVER;
         $this->currentConfigScriptName = $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'];
+        $this->currentBasePath = $GLOBALS['gJConfig']->urlengine['basePath'];
+        $GLOBALS['gJConfig']->urlengine['basePath'] = '/';
     }
 
     function tearDown() {
         $_SERVER = $this->currentServer;
         $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = $this->currentConfigScriptName;
+        $GLOBALS['gJConfig']->urlengine['basePath'] = $this->currentBasePath;
     }
 
     // /foo/index.php, CGI,  cgi.fix_pathinfo=0

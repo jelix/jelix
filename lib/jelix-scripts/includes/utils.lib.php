@@ -103,7 +103,7 @@ function jxs_commandlist(){
 
 
 
-function jxs_getRelativePath($path, $targetPath, $intoString=false){
+function jxs_getRelativePath($path, $targetPath, $intoString=false, $useDSConst = false){
     $cut = (DIRECTORY_SEPARATOR == '/'? '!/!': "![/\\\\]!");
     $sep = DIRECTORY_SEPARATOR;
     $path = preg_split($cut,$path);
@@ -120,19 +120,23 @@ function jxs_getRelativePath($path, $targetPath, $intoString=false){
             break;
     }
     if(count($path)){
-      $relativePath=str_repeat('..'.$sep,count($path));
+        $relativePath=str_repeat('..'.$sep,count($path));
     }else{
-      $relativePath='.'.$sep;
+        $relativePath='.'.$sep;
     }
     if(count($targetPath) && $dir != $targetdir){
-       $relativePath.= $targetdir.$sep.implode($sep,$targetPath);
+        $relativePath.= $targetdir.$sep.implode($sep,$targetPath);
     }elseif(count($targetPath) ){
         $relativePath.= implode($sep,$targetPath);
     }
     if(substr($relativePath,-1) != $sep)
-       $relativePath.=$sep;
-    if($intoString && $sep =='\\')
-      $relativePath = str_replace('\\','\\\\', $relativePath);
+        $relativePath.=$sep;
+    if($intoString && $sep =='\\') {
+        if ($useDSConst)
+            $relativePath = str_replace('\\','\'.DIRECTORY_SEPARATOR.\'', $relativePath);
+        else
+            $relativePath = str_replace('\\','\\\\', $relativePath);
+    }
     return $relativePath;
 }
 

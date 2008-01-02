@@ -7,4 +7,5 @@ Installation of testapp
 - configure parameters in dbprofils.ini.php, in section testapp for mysql,
     testapppdo if you have pdo extension and testapp_pgsql if you have postgresql sql
     don't touch other sections.
+- create the "testapp/" directory in the temp directory of Jelix
 - put write access for apache on temp/testapp/

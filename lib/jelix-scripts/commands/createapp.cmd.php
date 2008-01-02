@@ -13,19 +13,19 @@
 class createappCommand extends JelixScriptCommand {
 
     public  $name = 'createapp';
-    public  $allowed_options=array('-withdefaultmodule'=>false, '-withcmdline'=>false);
+    public  $allowed_options=array('-nodefaultmodule'=>false, '-withcmdline'=>false);
     public  $allowed_parameters=array();
 
-    public  $syntaxhelp = "[-withdefaultmodule] [-withcmdline] [-withrpc]";
+    public  $syntaxhelp = "[-nodefaultmodule] [-withcmdline] [-withrpc]";
     public  $help='';
 
     function __construct(){
         $this->help= array(
             'fr'=>"
-    Créer une nouvelle application avec tous les répertoires nécessaires.
+    Créer une nouvelle application avec tous les répertoires nécessaires et un module
+    du même nom que l'application.
 
-    Si l'option -withdefaultmodule est présente, créer également un module du
-    même nom que l'application.
+    Si l'option -nodefaultmodule est présente, le module n'est pas crée.
 
     Si l'option -withcmdline est présente, créer un point d'entrée afin de 
     développer desscripts en ligne de commande.
@@ -36,10 +36,10 @@ class createappCommand extends JelixScriptCommand {
     2) soit dans une variable d'environnement JELIX_APP_NAME.
     ",
             'en'=>"
-    Create a new application with all directories
-
-    If you give -withdefaultmodule option, it create also a module which have 
+    Create a new application with all directories and a module which have 
     the same name of the application.
+
+    If you give -nodefaultmodule option, it won't create the module. 
 
     If you give the -withcmdline option, it will create an entry point for
     command line script.
@@ -54,7 +54,7 @@ class createappCommand extends JelixScriptCommand {
 
     public function run(){
        if(file_exists(JELIX_APP_PATH)){
-           die("Erreur : application déjà existante\n");
+           die("Error : this application already created\n");
        }
 
        $this->createDir(JELIX_APP_PATH);
@@ -89,22 +89,22 @@ class createappCommand extends JelixScriptCommand {
        $this->createFile(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php','var/config/dbprofils.ini.php.tpl',$param);
        $this->createFile(JELIX_APP_CONFIG_PATH.'index/config.ini.php','var/config/index/config.ini.php.tpl',$param);
 
-       $param['rp_temp']=jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_TEMP_PATH,true);
-       $param['rp_var'] =jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_VAR_PATH,true);
-       $param['rp_log'] =jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_LOG_PATH,true);
-       $param['rp_conf']=jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CONFIG_PATH,true);
-       $param['rp_www'] =jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_WWW_PATH,true);
-       $param['rp_cmd'] =jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,true);
+       $param['rp_temp']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_TEMP_PATH, true, true);
+       $param['rp_var'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_VAR_PATH,  true, true);
+       $param['rp_log'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_LOG_PATH,  true, true);
+       $param['rp_conf']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CONFIG_PATH, true, true);
+       $param['rp_www'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_WWW_PATH,  true, true);
+       $param['rp_cmd'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,  true, true);
 
        $this->createFile(JELIX_APP_PATH.'application.init.php','application.init.php.tpl',$param);
 
        $param = array('appname'=>$GLOBALS['APPNAME']);
-       $param['rp_jelix']=jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_LIB_PATH ,true);
-       $param['rp_app']=jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH,true );
+       $param['rp_jelix'] = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_LIB_PATH, true, true);
+       $param['rp_app']   = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH, true, true);
 
        $this->createFile(JELIX_APP_WWW_PATH.'index.php','www/index.php.tpl',$param);
-       
-       if($this->getOption('-withdefaultmodule')){
+
+       if(!$this->getOption('-nodefaultmodule')){
             $cmd = jxs_load_command('createmodule');
             $cmd->init(array(),array('module'=>$GLOBALS['APPNAME']));
             $cmd->run();
