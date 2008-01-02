@@ -23,7 +23,7 @@ abstract class jDatatype {
     }
 
     /**
-    * call it ot add restriction on possible values
+    * call it to add restriction on possible values
     * @param string $type
     * @param string $value
     */
@@ -32,6 +32,19 @@ abstract class jDatatype {
         if(in_array($type, $this->facets)){
             $this->hasFacets = true;
             $this->_addFacet($type,$value);
+        }
+    }
+
+
+    /**
+    * get a restriction value
+    * @param string $type
+    * @return mixed  the value
+    * @since 1.0
+    */
+    public function getFacet($type){
+        if(in_array($type, $this->facets)){
+            return $this->$type;
         }
     }
 
@@ -50,7 +63,9 @@ abstract class jDatatype {
 }
 
 /**
- * Datatype String
+ * Datatype String.
+ *
+ * Possible facets are: 'length','minLength','maxLength', 'pattern'
  * @package     jelix
  * @subpackage  utils
  */
@@ -88,6 +103,8 @@ class jDatatypeBoolean extends jDatatype {
 
 /**
  * Datatype Decimal
+ *
+ * Possible facets are: 'maxValue', 'minValue'
  * @package     jelix
  * @subpackage  utils
  */
@@ -139,6 +156,8 @@ class jDatatypeHexadecimal extends jDatatypeDecimal {
 
 /**
  * Datatype datetime
+ *
+ * Possible facets are: 'maxValue', 'minValue'
  * @package     jelix
  * @subpackage  utils
  */
@@ -221,6 +240,9 @@ class jDatatypeLocaleTime extends jDatatypeDateTime {
 
 /**
  * Datatype url
+ *
+ * Possible facets are: 'schemeRequired','hostRequired','pathRequired', 'queryRequired'.
+ * all are booleans.
  * @package     jelix
  * @subpackage  utils
  */
