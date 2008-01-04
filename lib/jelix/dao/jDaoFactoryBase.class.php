@@ -238,10 +238,11 @@ abstract class jDaoFactoryBase  {
      */
     final public function findBy ($searchcond, $limitOffset=0, $limitCount=0){
         $query = $this->_selectClause.$this->_fromClause.$this->_whereClause;
-        if (!$searchcond->isEmpty ()){
+        if ($searchcond->hasConditions ()){
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
             $query .= $this->_createConditionsClause($searchcond);
         }
+        $query.= $this->_createOrderClause($searchcond);
 
         if($limitCount != 0){
             $rs = $this->_conn->limitQuery ($query, $limitOffset, $limitCount);
@@ -263,7 +264,7 @@ abstract class jDaoFactoryBase  {
      */
     final public function countBy($searchcond) {
         $query = 'SELECT COUNT(*) as c '.$this->_fromClause.$this->_whereClause;
-        if (!$searchcond->isEmpty ()){
+        if ($searchcond->hasConditions ()){
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
             $query .= $this->_createConditionsClause($searchcond);
         }
@@ -319,23 +320,25 @@ abstract class jDaoFactoryBase  {
     */
     final protected function _createConditionsClause($daocond, $forSelect=true){
         $props = $this->getProperties();
-        $sql = $this->_generateCondition ($daocond->condition, $props, $forSelect, true);
+        return $this->_generateCondition ($daocond->condition, $props, $forSelect, true);
+    }
 
-        if($forSelect){
-            $order = array ();
-            foreach ($daocond->order as $name => $way){
-                if (isset($props[$name])){
-                    $order[] = $name.' '.$way;
-                }
-            }
-            if(count ($order) > 0){
-                if(trim($sql) =='') {
-                    $sql.= ' 1=1 ';
-                }
-                $sql.=' ORDER BY '.implode (', ', $order);
+    /**
+     * @internal
+     */
+    final protected function _createOrderClause($daocond) {
+        $order = array ();
+        $props =$this->getProperties();
+        foreach ($daocond->order as $name => $way){
+            if (isset($props[$name])){
+                $order[] = $name.' '.$way;
             }
         }
-        return $sql;
+
+        if(count ($order)){
+            return ' ORDER BY '.implode (', ', $order);
+        }
+        return '';
     }
 
     /**

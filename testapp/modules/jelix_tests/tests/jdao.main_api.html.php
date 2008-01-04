@@ -177,6 +177,76 @@ class UTDao extends jUnitTestCaseDb {
 
     }
 
+
+    function testFindByCountByOrder(){
+        $dao = jDao::create ('products');
+
+        $conditions = jDao::createConditions();
+        $conditions->addItemOrder('id','DESC');
+
+        $count = $dao->countBy($conditions);
+        $this->assertEqual($count, 3, 'countBy: %s');
+
+        $res = $dao->findBy($conditions);
+        $list = array();
+        foreach($res as $r){
+            $list[] = $r;
+        }
+        $this->assertEqual(count($list), 3, 'findBy doesn\'t return all products. %s ');
+
+        $verif='<array>
+    <object>
+        <string property="id" value="'.$this->prod3->id.'" />
+        <string property="name" value="verre" />
+        <string property="price" value="2.43" />
+    </object>
+    <object>
+        <string property="id" value="'.$this->prod2->id.'" />
+        <string property="name" value="fourchette" />
+        <string property="price" value="1.54" />
+    </object>
+    <object>
+        <string property="id" value="'.$this->prod1->id.'" />
+        <string property="name" value="assiette nouvelle" />
+        <string property="price" value="5.90" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($list, $verif);
+    }
+
+    function testFindByCountByConditionsOrder(){
+        $dao = jDao::create ('products');
+
+        $conditions = jDao::createConditions();
+        $conditions->addItemOrder('id','DESC');
+        $conditions->addCondition ('id', '>=', $this->prod2->id);
+
+        $count = $dao->countBy($conditions);
+        $this->assertEqual($count, 2, 'countBy: %s');
+
+        $res = $dao->findBy($conditions);
+        $list = array();
+        foreach($res as $r){
+            $list[] = $r;
+        }
+        $this->assertEqual(count($list), 2, 'findBy doesn\'t return all products. %s ');
+
+        $verif='<array>
+    <object>
+        <string property="id" value="'.$this->prod3->id.'" />
+        <string property="name" value="verre" />
+        <string property="price" value="2.43" />
+    </object>
+    <object>
+        <string property="id" value="'.$this->prod2->id.'" />
+        <string property="name" value="fourchette" />
+        <string property="price" value="1.54" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($list, $verif);
+    }
+
+
     function testDelete(){
         $dao = jDao::create ('products');
         $dao->delete($this->prod1->id);

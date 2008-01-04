@@ -86,13 +86,22 @@ class jDaoConditions {
     }
 
     /**
-    * says if the condition is empty
+    * says if there are no conditions nor order
     * @return boolean  false if there isn't condition
     */
     function isEmpty (){
         return (count ($this->condition->group) == 0) &&
         (count ($this->condition->conditions) == 0) &&
         (count ($this->order) == 0) ;
+    }
+
+    /**
+    * says if there are no conditions
+    * @return boolean  false if there isn't condition
+    * @since 1.0
+    */
+    function hasConditions (){
+        return (count ($this->condition->group) || count ($this->condition->conditions));
     }
 
     /**
