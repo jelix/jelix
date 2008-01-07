@@ -37,10 +37,12 @@ function jExceptionHandler($exception){
         }
     }
 
+    $ip = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR']:'');
+
     // formatage du message de log
     $messageLog = strtr($conf['messageLogFormat'], array(
         '%date%' => date("Y-m-d H:i:s"),
-        '%ip%'   => $_SERVER['REMOTE_ADDR'],
+        '%ip%'   => $ip,
         '%code%' => $exception->getCode(),
         '%msg%'  => $msg,
         '%file%' => $exception->getFile(),
