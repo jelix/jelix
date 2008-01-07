@@ -255,18 +255,19 @@ class significantUrlEngine implements jIUrlEngine {
                 }
             }
         }
-        if(!$urlact && !$isDefault){
-            try{
-                $urlact = jUrl::get($gJConfig->urlengine['notfoundAct'],array(),jUrl::JURLACTION);
-            }catch(Exception $e){
-                $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));
+        if(!$urlact) {
+            if($isDefault && $pathinfo == ''){
+               // si on n'a pas trouvé de correspondance, mais que c'est l'entry point
+               // par defaut pour le type de request courant, alors on laisse passer..
+               $urlact = new jUrlAction($params);
+            } else {
+               try{
+                   $urlact = jUrl::get($gJConfig->urlengine['notfoundAct'],array(),jUrl::JURLACTION);
+               }catch(Exception $e){
+                   $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));
+               }
             }
-        }else if(!$urlact && $isDefault){
-            // si on n'a pas trouvé de correspondance, mais que c'est l'entry point
-            // par defaut pour le type de request courant, alors on laisse passer..
-            $urlact = new jUrlAction($params);
         }
-
         return $urlact;
     }
 
