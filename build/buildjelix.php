@@ -147,23 +147,23 @@ if($PHP_VERSION_TARGET){
     $PHP50=1;
 }
 
-$BUILD_FLAGS = '';
-if($ENABLE_PHP_JELIX)  $BUILD_FLAGS.='j';
-if($ENABLE_PHP_JSON)  $BUILD_FLAGS.='s';
-if($ENABLE_PHP_XMLRPC)  $BUILD_FLAGS.='x';
-if($ENABLE_PHP_FILTER)  $BUILD_FLAGS.='f';
-if($ENABLE_OLD_CLASS_NAMING)  $BUILD_FLAGS.='c';
+$BUILD_FLAGS = 0;
+if($ENABLE_PHP_JELIX)  $BUILD_FLAGS |=1;
+if($ENABLE_PHP_JSON)  $BUILD_FLAGS |=2;
+if($ENABLE_PHP_XMLRPC)  $BUILD_FLAGS |=4;
+if($ENABLE_PHP_FILTER)  $BUILD_FLAGS |=8;
 switch($WITH_BYTECODE_CACHE){
-    case 'auto': $BUILD_FLAGS.='o'; break;
-    case 'apc': $BUILD_FLAGS.='a'; break;
-    case 'eaccelerator': $BUILD_FLAGS.='e'; break;
+    case 'auto': $BUILD_FLAGS |=48; break;
+    case 'apc': $BUILD_FLAGS |=16; break;
+    case 'eaccelerator': $BUILD_FLAGS |=32; break;
 }
+if($ENABLE_OLD_CLASS_NAMING)  $BUILD_FLAGS |=256;
+if($ENABLE_OLD_ACTION_SELECTOR) $BUILD_FLAGS |= 512;
+
 
 if($EDITION_NAME ==''){
     $EDITION_NAME_x='userbuild';
-    if($BUILD_FLAGS !=''){
-        $EDITION_NAME_x.='-'.$BUILD_FLAGS;
-    }
+    $EDITION_NAME_x.='-f'.$BUILD_FLAGS;
     if($PHP_VERSION_TARGET){
         $EDITION_NAME_x.='-p'.$PHP_VERSION_TARGET;
     }
