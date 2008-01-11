@@ -4,7 +4,7 @@
 * @subpackage   core
 * @author       Laurent Jouanneau
 * @contributor  Thibault PIRONT < nuKs >
-* @copyright    2005-2006 laurent Jouanneau
+* @copyright    2005-2008 laurent Jouanneau
 * @copyright    2007 Thibault PIRONT
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -263,7 +263,7 @@ class jCoordinator {
         if(!file_exists($ctrlpath)){
             throw new jException('jelix~errors.ad.controller.file.unknow',array($this->actionName,$ctrlpath));
         }
-        require($ctrlpath);
+        require_once($ctrlpath);
         $class = $selector->getClass();
         if(!class_exists($class,false)){
             throw new jException('jelix~errors.ad.controller.class.unknow',array($this->actionName,$class, $ctrlpath));

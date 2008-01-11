@@ -4,7 +4,7 @@
 * @subpackage core
 * @author     Laurent Jouanneau
 * @contributor
-* @copyright  2005-2007 Laurent Jouanneau
+* @copyright  2005-2008 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -121,7 +121,7 @@ abstract class jRequest {
             if($gJConfig->urlengine['jelixWWWPath']{0} != '/')
                 $gJConfig->urlengine['jelixWWWPath'] = $this->urlScriptPath.$gJConfig->urlengine['jelixWWWPath'];
         }else if(strpos($this->urlScriptPath,$gJConfig->urlengine['basePath']) !== 0){
-            throw new Exception('Jelix Error: basePath in config file doesn\'t correspond to current base path. You should setup it to '.$this->urlScriptPath);
+            throw new Exception('Jelix Error: basePath ('.$gJConfig->urlengine['basePath'].') in config file doesn\'t correspond to current base path. You should setup it to '.$this->urlScriptPath);
         }
 
         $this->url_script_name = $this->urlScriptName = substr ($this->urlScript, $lastslash+1);
