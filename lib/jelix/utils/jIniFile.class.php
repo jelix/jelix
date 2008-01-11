@@ -36,8 +36,9 @@ class jIniFile {
      * the read method (or parse_ini_file)
      * @param array $array the content of an ini file
      * @param string $filename the path and the name of the file use to store the content
+     * @param string $header   some content to insert at the begining of the file
      */
-    public static function write($array, $filename) {
+    public static function write($array, $filename, $header='') {
         $result='';
         foreach ($array as $k => $v) {
             if (is_array($v)) {
@@ -52,7 +53,7 @@ class jIniFile {
         }
 
         if ($f = @fopen($filename, 'wb')) {
-            fwrite($f, $result);
+            fwrite($f, $header.$result);
             fclose($f);
         } else {
             // jIniFile est utilisé par le compilateur des configs

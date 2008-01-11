@@ -127,6 +127,8 @@ cd lib/jelix-scripts/templates
   zone.tpl
   project.xml.tpl
   application.init.php.tpl
+  htaccess_deny
+  htaccess_allow
 cd lib/jelix-scripts/templates/www
   xmlrpc.php.tpl
   index.php.tpl

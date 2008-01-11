@@ -84,6 +84,7 @@ class createappCommand extends JelixScriptCommand {
 
        $param = array('appname'=>$GLOBALS['APPNAME']);
 
+       $this->createFile(JELIX_APP_PATH.'.htaccess','htaccess_deny',$param);
        $this->createFile(JELIX_APP_PATH.'project.xml','project.xml.tpl',$param);
        $this->createFile(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php','var/config/defaultconfig.ini.php.tpl',$param);
        $this->createFile(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php','var/config/dbprofils.ini.php.tpl',$param);
@@ -103,6 +104,7 @@ class createappCommand extends JelixScriptCommand {
        $param['rp_app']   = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH, true, true);
 
        $this->createFile(JELIX_APP_WWW_PATH.'index.php','www/index.php.tpl',$param);
+       $this->createFile(JELIX_APP_WWW_PATH.'.htaccess','htaccess_allow',$param);
 
        if(!$this->getOption('-nodefaultmodule')){
             $cmd = jxs_load_command('createmodule');
