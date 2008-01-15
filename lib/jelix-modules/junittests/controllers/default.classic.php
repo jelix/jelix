@@ -32,7 +32,7 @@ class defaultCtrl extends jController {
         }
 
         $rep = $this->_prepareResponse();
-        
+
         return $this->_finishResponse($rep);
     }
 
@@ -48,9 +48,9 @@ class defaultCtrl extends jController {
 
         $rep = $this->_prepareResponse();
 
-        $reporter = jClasses::create("jhtmlrespreporter");
-        jClasses::inc('junittestcase');
-        jClasses::inc('junittestcasedb');
+        $reporter = jClasses::create("junittests~jhtmlrespreporter");
+        jClasses::inc('junittests~junittestcase');
+        jClasses::inc('junittests~junittestcasedb');
         $reporter->setResponse($rep);
 
         foreach($this->testsList as $module=>$tests){
@@ -79,9 +79,9 @@ class defaultCtrl extends jController {
 
         $module = $this->param('mod');
         if(isset($this->testsList[$module])){
-            $reporter = jClasses::create("jhtmlrespreporter");
-            jClasses::inc('junittestcase');
-            jClasses::inc('junittestcasedb');
+            $reporter = jClasses::create("junittests~jhtmlrespreporter");
+            jClasses::inc('junittests~junittestcase');
+            jClasses::inc('junittests~junittestcasedb');
             $reporter->setResponse($rep);
 
             $group = new GroupTest('All tests in "'.$module. '" module');
@@ -111,9 +111,9 @@ class defaultCtrl extends jController {
         $testname = $this->param('test');
 
         if(isset($this->testsList[$module])){
-            $reporter = jClasses::create("jhtmlrespreporter");
-            jClasses::inc('junittestcase');
-            jClasses::inc('junittestcasedb');
+            $reporter = jClasses::create("junittests~jhtmlrespreporter");
+            jClasses::inc('junittests~junittestcase');
+            jClasses::inc('junittests~junittestcasedb');
             $reporter->setResponse($rep);
 
             foreach($this->testsList[$module] as $test){
@@ -131,14 +131,11 @@ class defaultCtrl extends jController {
         return $this->_finishResponse($rep);
     }
 
-
-
     protected $testsList = array();
-
 
     protected function _prepareResponse(){
         $rep = $this->getResponse('html', true);
-        $rep->bodyTpl = 'main';
+        $rep->bodyTpl = 'junittests~main';
 
         $rep->body->assign('page_title', 'Unit Tests');
         $rep->body->assign('versionphp',phpversion());
