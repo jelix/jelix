@@ -23,5 +23,16 @@ class errorCtrl extends jController {
 
         return $rep;
     }
+
+    /**
+    * 403 error page
+    */
+    public function badright() {
+        $rep = $this->getResponse('html', true);
+        $rep->bodyTpl = 'jelix~403.html';
+        $rep->setHttpStatus('403', 'Forbidden');
+
+        return $rep;
+    }
 }
 ?>

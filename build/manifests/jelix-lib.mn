@@ -166,6 +166,7 @@ cd lib/jelix/core-modules/jelix/locales/fr_FR
   ui.UTF-8.properties
 cd lib/jelix/core-modules/jelix/templates
   404.xul.tpl
+  403.html.tpl
   404.html.tpl
   rss20.tpl
   atom10.tpl
@@ -304,6 +305,11 @@ cd lib/jelix/plugins/coord/auth
 ! auth.coord.php
   plugin.xml
   auth.coord.ini.php.dist
+
+cd lib/jelix/plugins/coord/jacl
+! jacl.coord.php
+  plugin.xml
+  jacl.coord.ini.php.dist
 
 cd lib/jelix/plugins/db/intuition
   intuition.dbconnection.php
