@@ -187,7 +187,7 @@ smtpTimeout = 10
 
 [acl]
 driver = db
-
+enableAclDbEventListener = off
 
 [sessions]
 shared_session = off

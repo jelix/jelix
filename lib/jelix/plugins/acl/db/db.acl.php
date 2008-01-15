@@ -43,6 +43,12 @@ class dbAclDriver implements jIAclDriver {
 
         $groups = jAclDbUserGroup::getGroups();
 
+        if (count($groups) == 0) {
+            self::$acl[$subject] = array();
+            self::$aclres[$subject][$resource] = array();
+            return array();
+        }
+
         // recupère toutes les valeurs correspondant aux groupes auquel appartient le user,
         //   avec le sujet et ressource indiqué
         $values= array();

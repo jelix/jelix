@@ -230,6 +230,11 @@ cd lib/jelix-modules
   INSTALL
   CREDITS
 
+cd lib/jelix-modules/jacldb
+  module.xml
+  events.xml
+cd lib/jelix-modules/jacldb/classes
+!  jacldb.listener.php
 cd lib/jelix-modules/jauth
   module.xml
   events.xml
