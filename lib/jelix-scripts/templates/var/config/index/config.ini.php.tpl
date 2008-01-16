@@ -5,6 +5,6 @@ startModule = "{$appname}"
 startAction = "default:index"
 
 [plugins]
-;nom = nom_fichier_ini
+;nom = file_ini_name or 1
 
 [responses]

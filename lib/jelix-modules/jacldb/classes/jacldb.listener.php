@@ -6,8 +6,14 @@
 * @contributor 
 * @copyright   2008 Jouanneau laurent
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+* @since 1.0.1
 */
 
+/**
+ * @package     jelix-modules
+ * @subpackage  jacldb
+ * @since 1.0.1
+ */
 class jacldbListener extends jEventListener{
 
    /**

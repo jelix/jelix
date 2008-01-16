@@ -26,6 +26,7 @@ class errorCtrl extends jController {
 
     /**
     * 403 error page
+    * @since 1.0.1
     */
     public function badright() {
         $rep = $this->getResponse('html', true);

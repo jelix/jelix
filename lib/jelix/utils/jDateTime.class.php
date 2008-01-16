@@ -67,7 +67,7 @@ if(!function_exists('strptime')){ // existe depuis php 5.1
  * @package     jelix
  * @subpackage  utils
  */
-class jDateTime{
+class jDateTime {
     public $day;
     public $month;
     public $year;
@@ -97,6 +97,9 @@ class jDateTime{
     const BD_TFORMAT=22;
     /**#@-*/
 
+    /**
+     *
+     */
     function __construct($year=0, $month=0, $day=0, $hour=0, $minute=0, $second=0){
         $this->year = $year;
         $this->month = $month;
@@ -136,8 +139,9 @@ class jDateTime{
 
     /**
      * convert the date to a string format
-     * @param int $format one of the class constant, or -1 if it is a default format
+     * @param int $format one of the class constant xxx_FORMAT, or -1 if it should use the default format
      * @return string the string date
+     * @see jDateTime:$defaultFormat
      */
     function toString($format=-1){
         if($format==-1)
@@ -189,7 +193,8 @@ class jDateTime{
     /**
      * read a string to extract date values
      * @param string $str the string date
-     * @param int $format one of the class constant, or -1 if it is a default format
+     * @param int $format one of the class constant xxx_FORMAT, or -1 if it should use the default format
+     * @see jDateTime:$defaultFormat
      */
     function setFromString($str,$format=-1){
         if($format==-1){
@@ -341,7 +346,9 @@ class jDateTime{
     }
 
     /**
-     * add a duration to the date
+     * Add a duration to the date.
+     * You can specify the duration in a jDateTime object (which then is not a date/time)
+     * or give each value of the duration
      * @param jDateTime/int $year the duration value or a year with 4 digits
      * @param int $month month with 2 digits
      * @param int $day day with 2 digits
@@ -368,7 +375,9 @@ class jDateTime{
     }
 
     /**
-     * substract a duration to the date
+     * substract a <b>duration</b> to the date
+     * You can specify the duration in a jDateTime object (which then is not a date/time)
+     * or give each value of the duration
      * @param jDateTime/int $year the duration value or a year with 4 digits
      * @param int $month month with 2 digits
      * @param int $day day with 2 digits
@@ -395,7 +404,9 @@ class jDateTime{
     }
 
     /**
-     * to know the duration between two dates
+     * to know the duration between two dates.
+     * @param jDateTime $dt  the date on which a sub will be made with the date on the current object
+     * @return jDateTime a jDateTime object which will contains <b>a duration</b> (not a date)
      */
     public function durationTo($dt){
         $t = mktime ( $dt->hour, $dt->minute,$dt->second , $dt->month, $dt->day, $dt->year )
@@ -407,7 +418,7 @@ class jDateTime{
     /**
      * compare two date
      * @param jDateTime $dt the date to compare
-     * @return integer -1 si $dt >, 0 si =, 1 si $dt <
+     * @return integer -1 if $dt > $this, 0 if $dt = $this, 1 if $dt < $this
      */
     public function compareTo($dt){
         $fields=array('year','month','day','hour','minute','second');
