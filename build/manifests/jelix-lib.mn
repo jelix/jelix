@@ -381,6 +381,7 @@ cd lib/jelix/plugins/tpl/html
   function.diff.php
   block.form.php
   block.formcontrols.php
+  block.formdatas.php
   block.formsubmits.php
   function.ctrl_control.php
   function.ctrl_label.php
