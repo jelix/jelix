@@ -315,7 +315,8 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
                 echo '<button type="submit"',$id,$hint,'>',htmlspecialchars($ctrl->label),'</button>';
             }else{
                 foreach($ctrl->datasource->getDatas() as $v=>$label){
-                    echo '<button type="submit"',$id,$hint,' value="',htmlspecialchars($v),'">',htmlspecialchars($label),'</button> ';
+                    $v = htmlspecialchars($v);
+                    echo '<button type="submit" name="',$ctrl->ref,'" id="',$this->_name,'_',$ctrl->ref,'_',$v,'"',$hint,' value="',$v,'">',htmlspecialchars($label),'</button> ';
                 }
             }
             break;
@@ -337,6 +338,5 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
 
     abstract public function getJavascriptCheck($errDecorator,$helpDecorator);
 }
-
 
 ?>

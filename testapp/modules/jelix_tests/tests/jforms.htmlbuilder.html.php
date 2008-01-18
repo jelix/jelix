@@ -608,6 +608,15 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<button type="submit" name="nom" id="'.$this->formname.'_nom" title="ceci est un tooltip">Votre nom</button>', $out);
+
+        $ctrl->standalone=false;
+        $ctrl->datasource= new jFormStaticDatasource();
+        $ctrl->datasource->datas = array('svg'=>'Sauvegarde','prev'=>'Preview');
+
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $output = '<button type="submit" name="nom" id="'.$this->formname.'_nom_svg" title="ceci est un tooltip" value="svg">Sauvegarde</button> ';
+        $output .= '<button type="submit" name="nom" id="'.$this->formname.'_nom_prev" title="ceci est un tooltip" value="prev">Preview</button> ';
+        $this->assertEqualOrDiff($output, $out);
     }
     function testOutputReset(){
         $ctrl= new jFormsControlReset('nom');
