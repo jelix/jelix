@@ -385,8 +385,9 @@ class jControllerDaoCrud extends jController {
         $rep = $this->_getResponse();
 
         // we're using a form to display a record, to have the portunity to have
-        // labels with each values.
-        $form = jForms::create($this->form, $this->pseudoFormId);
+        // labels with each values. We need also him to load easily values of some
+        // of controls with initControlFromDao (to use in _view method).
+        $form = jForms::create($this->form, $id);
         $form->initFromDao($this->dao, $id, $this->dbProfil);
 
         $tpl = new jTpl();
