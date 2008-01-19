@@ -90,18 +90,18 @@ class createappCommand extends JelixScriptCommand {
        $this->createFile(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php','var/config/dbprofils.ini.php.tpl',$param);
        $this->createFile(JELIX_APP_CONFIG_PATH.'index/config.ini.php','var/config/index/config.ini.php.tpl',$param);
 
-       $param['rp_temp']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_TEMP_PATH, true, true);
-       $param['rp_var'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_VAR_PATH,  true, true);
-       $param['rp_log'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_LOG_PATH,  true, true);
-       $param['rp_conf']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CONFIG_PATH, true, true);
-       $param['rp_www'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_WWW_PATH,  true, true);
-       $param['rp_cmd'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,  true, true);
+       $param['rp_temp']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_TEMP_PATH, true);
+       $param['rp_var'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_VAR_PATH,  true);
+       $param['rp_log'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_LOG_PATH,  true);
+       $param['rp_conf']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CONFIG_PATH, true);
+       $param['rp_www'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_WWW_PATH,  true);
+       $param['rp_cmd'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,  true);
 
        $this->createFile(JELIX_APP_PATH.'application.init.php','application.init.php.tpl',$param);
 
        $param = array('appname'=>$GLOBALS['APPNAME']);
-       $param['rp_jelix'] = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_LIB_PATH, true, true);
-       $param['rp_app']   = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH, true, true);
+       $param['rp_jelix'] = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_LIB_PATH, true);
+       $param['rp_app']   = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH, true);
 
        $this->createFile(JELIX_APP_WWW_PATH.'index.php','www/index.php.tpl',$param);
        $this->createFile(JELIX_APP_WWW_PATH.'.htaccess','htaccess_allow',$param);
