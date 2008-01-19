@@ -122,9 +122,10 @@ abstract class jFormsBase {
                 }else{
                     $value= '';
                 }
-            }elseif($ctrl->type=='submit' && $value) {
+            }elseif($ctrl->type=='submit' && $value && !$ctrl->standalone) {
                 // because IE send the <button> content as value instead of the content of the
                 // "value" attribute, we should verify it and get the real value
+                // or when using <input type="submit">, we have only the label as value (in all browsers...
                 $datas = $ctrl->datasource->getDatas();
                 if(!isset($datas[$value])) {
                     $datas=array_flip($datas);
