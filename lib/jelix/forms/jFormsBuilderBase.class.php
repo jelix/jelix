@@ -312,7 +312,7 @@ abstract class jFormsHtmlBuilderBase extends jFormsBuilderBase {
             break;
         case 'submit':
             if($ctrl->standalone){
-                echo '<button type="submit"',$id,$hint,'>',htmlspecialchars($ctrl->label),'</button>';
+                echo '<input type="submit"',$id,$hint,' value="',htmlspecialchars($ctrl->label),'"/>';
             }else{
                 foreach($ctrl->datasource->getDatas() as $v=>$label){
                     // because IE6 sucks with <button type=submit> (see ticket #431), we must use input :-(
