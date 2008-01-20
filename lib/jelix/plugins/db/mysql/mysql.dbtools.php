@@ -62,9 +62,13 @@ class mysqlDbTools extends jDbTools {
             $field->name = $line->Field;
             $field->notNull = ($line->Null == 'NO');
             $field->primary = ($line->Key == 'PRI');
-            $field->hasDefault = ($line->Default != '' || !($line->Default == null && $field->notNull));
-            $field->default = $line->Default;
             $field->autoIncrement  = ($line->Extra == 'auto_increment');
+            $field->hasDefault = ($line->Default != '' || !($line->Default == null && $field->notNull));
+            // to fix a bug in php 5.2.5 or mysql 5.0.51
+            if($field->notNull && $line->Default === null && !$field->autoIncrement)
+                $field->default ='';
+            else
+                $field->default = $line->Default;
             $results[$line->Field] = $field;
         }
         return $results;
