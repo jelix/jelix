@@ -70,6 +70,9 @@ persistant_cookie_name=jelixAuthentificationCookie
 ; duration of the validity of the cookie (in days). default is 1 day.
 persistant_duration = 1
 
+; base path for the cookie. If empty, it uses the basePath value from the main configuration.
+persistant_cookie_path =
+
 ;=========== Parameters for drivers
 
 ;------- parameters for the "Db" driver

@@ -599,23 +599,23 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff('', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="submit" name="nom" id="'.$this->formname.'_nom" value="Votre nom"/>', $out);
+        $this->assertEqualOrDiff('<input type="submit" name="nom" id="'.$this->formname.'_nom" class="jforms-submit" value="Votre nom"/>', $out);
 
         $ctrl->readonly = true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="submit" name="nom" id="'.$this->formname.'_nom" value="Votre nom"/>', $out);
+        $this->assertEqualOrDiff('<input type="submit" name="nom" id="'.$this->formname.'_nom" class="jforms-submit" value="Votre nom"/>', $out);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="submit" name="nom" id="'.$this->formname.'_nom" title="ceci est un tooltip" value="Votre nom"/>', $out);
+        $this->assertEqualOrDiff('<input type="submit" name="nom" id="'.$this->formname.'_nom" title="ceci est un tooltip" class="jforms-submit" value="Votre nom"/>', $out);
 
         $ctrl->standalone=false;
         $ctrl->datasource= new jFormStaticDatasource();
         $ctrl->datasource->datas = array('svg'=>'Sauvegarde','prev'=>'Preview');
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $output = '<input type="submit" name="nom" id="'.$this->formname.'_nom_svg" title="ceci est un tooltip" value="Sauvegarde"/> ';
-        $output .= '<input type="submit" name="nom" id="'.$this->formname.'_nom_prev" title="ceci est un tooltip" value="Preview"/> ';
+        $output = '<input type="submit" name="nom" id="'.$this->formname.'_nom_svg" title="ceci est un tooltip" class="jforms-submit" value="Sauvegarde"/> ';
+        $output .= '<input type="submit" name="nom" id="'.$this->formname.'_nom_prev" title="ceci est un tooltip" class="jforms-submit" value="Preview"/> ';
         $this->assertEqualOrDiff($output, $out);
     }
     function testOutputReset(){
@@ -627,15 +627,15 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff('', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<button type="reset" name="nom" id="'.$this->formname.'_nom">Votre nom</button>', $out);
+        $this->assertEqualOrDiff('<button type="reset" name="nom" id="'.$this->formname.'_nom" class="jforms-reset">Votre nom</button>', $out);
 
         $ctrl->readonly = true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<button type="reset" name="nom" id="'.$this->formname.'_nom">Votre nom</button>', $out);
+        $this->assertEqualOrDiff('<button type="reset" name="nom" id="'.$this->formname.'_nom" class="jforms-reset">Votre nom</button>', $out);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<button type="reset" name="nom" id="'.$this->formname.'_nom" title="ceci est un tooltip">Votre nom</button>', $out);
+        $this->assertEqualOrDiff('<button type="reset" name="nom" id="'.$this->formname.'_nom" title="ceci est un tooltip" class="jforms-reset">Votre nom</button>', $out);
     }
 
 }
