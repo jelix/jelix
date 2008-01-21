@@ -1,0 +1,24 @@
+What should have been done to release a new version of jelix
+
+- check if this files are updated :
+   README
+   lib/jelix/CREDITS
+   lib/jelix/INSTALL
+   lib/jelix-modules/CREDITS
+- create some package and
+    - test them with testapp
+    - check if all needed files are here
+- update changelogs in the web site
+- svn: Copy the branch/trunk into the tags 
+- modify this files into the tag directory to reflect the new version 
+    lib/jelix/VERSION
+    testapp/VERSION
+    myapp/VERSION
+- create packages
+- download packages on berlios.de
+- download packages on download.jelix.org
+- update home page of the web site
+- update the download page on the web site
+- update the API documentation on the web site
+- create package for the API documentation on the web site
+- news
