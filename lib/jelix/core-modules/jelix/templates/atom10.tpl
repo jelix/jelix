@@ -3,7 +3,7 @@
     xmlns:err="http://jelix.org/ns/xmlerror/1.0"
 	xml:lang="{$lang}">
 
-  <title>{$atom->title|escxml}></title>
+  <title>{$atom->title|escxml}</title>
   <id>{$atom->id|escxml}</id>
   <updated>{$atom->updated|jdatetime:'db_datetime':'iso8601'}</updated>
 
