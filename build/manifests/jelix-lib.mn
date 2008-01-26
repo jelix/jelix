@@ -200,6 +200,7 @@ cd lib/jelix/forms
   jFormsControl.class.php
   jFormsDataContainer.class.php
   jFormsDatasource.class.php
+  jIFormsBuilderCompiler.iface.php
 
 cd lib/jelix/tpl/
 *  jTpl.class.php
@@ -310,6 +311,11 @@ cd lib/jelix/plugins/coord/jacl
 ! jacl.coord.php
   plugin.xml
   jacl.coord.ini.php.dist
+
+cd lib/jelix/plugins/jforms/html
+  html.jformscompiler.php
+  html.jformsbuilder.php
+
 
 cd lib/jelix/plugins/db/intuition
   intuition.dbconnection.php

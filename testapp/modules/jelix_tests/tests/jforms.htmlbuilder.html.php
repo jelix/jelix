@@ -14,6 +14,7 @@ require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
 require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 require_once(JELIX_LIB_FORMS_PATH.'jFormsDatasource.class.php');
 require_once(JELIX_LIB_FORMS_PATH.'jFormsDataContainer.class.php');
+require_once(JELIX_LIB_PATH.'plugins/jforms/html/html.jformsbuilder.php');
 
 class testHMLForm { // simulate a jFormBase object
     public $controls= array();
@@ -57,7 +58,7 @@ class testHMLForm { // simulate a jFormBase object
     }
 }
 
-class testJFormsHtmlBuilder extends jFormsHtmlBuilderBase {
+class testJFormsHtmlBuilder extends htmlJformsBuilder {
     public function getJavascriptCheck($errDecorator,$helpDecorator){
         return '';
     }

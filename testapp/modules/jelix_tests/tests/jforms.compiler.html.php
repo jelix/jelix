@@ -14,21 +14,25 @@ require_once(JELIX_LIB_FORMS_PATH.'jFormsCompiler.class.php');
 require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
 require_once(JELIX_LIB_FORMS_PATH.'jFormsDatasource.class.php');
 require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
+require_once(JELIX_LIB_PATH.'plugins/jforms/html/html.jformscompiler.php');
 
 class testJFormsCompiler extends jFormsCompiler {
 
    protected $sourceFile = 'myfile';
 
    public function testPhpForm($doc){
-        return $this->generatePHPContent($doc, $dummysrc, $dummysrcjs);
+        $dummysrc = $dummyBuilders = $dummyCompilers = array();
+        return $this->generatePHPContent($doc, $dummysrc, $dummyBuilders, $dummyCompilers);
    }
 
    public function testPhpControl($controltype, $control){
         return $this->generatePHPControl($controltype, $control);
    }
+}
 
-   public function testJsControl($controltype, $control){
-        return $this->generateJsControl($controltype, $control);
+class testHtmlJformsCompiler extends htmlJformsCompiler {
+   public function testControl($controltype, $control){
+        return $this->generateControl($controltype, $control);
    }
 }
 
@@ -1018,7 +1022,7 @@ $js.="jForms.tForm.addControl( jForms.tControl);\n";',
 
 
     function testJsControl(){
-        $jfc = new testJFormsCompiler();
+        $jfc = new testHtmlJformsCompiler();
 
         foreach($this->_XmlControls as $k=>$control){
             $dom = new DOMDocument;
@@ -1026,7 +1030,7 @@ $js.="jForms.tForm.addControl( jForms.tControl);\n";',
                 $this->fail("Can't load xml test content ($k)");
             }else{
                 // getName() in simplexml doesn't exists in prior version of php 5.1.3, so we use a DOM
-                $ct = $jfc->testJsControl($dom->documentElement->localName, simplexml_import_dom($dom));
+                $ct = $jfc->testControl($dom->documentElement->localName, simplexml_import_dom($dom));
                 $this->assertEqualOrDiff($this->_JsControls[$k],$ct, "test $k failed" );
             }
         }

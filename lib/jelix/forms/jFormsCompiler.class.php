@@ -12,6 +12,8 @@
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+require(JELIX_LIB_FORMS_PATH.'jIFormsBuilderCompiler.iface.php');
+
 /**
  * generates form class from an xml file describing the form
  * @package     jelix
@@ -24,11 +26,34 @@ class jFormsCompiler implements jISimpleCompiler {
 
     public function compile($selector){
         global $gJCoord;
+        global $gJConfig;
         $sel = clone $selector;
 
         $this->sourceFile = $selector->getPath();
-        $cachefile = $selector->getCompiledFilePath();
-        $cacheHtmlBuilderFile = $selector->getCompiledBuilderFilePath ('html');
+
+        $source=array();
+        $source[]='<?php ';
+        $source[]='class '.$selector->getClass().' extends jFormsBase {';
+        $source[]='    protected $_builders = array( ';
+
+        $srcBuilders=array();
+        $buildersCompilers = array();
+        foreach($gJConfig->_pluginsPathList_jforms as $buildername => $pluginPath) {
+            require_once($pluginPath.$buildername.'.jformscompiler.php');
+            $classname = $buildername.'JformsCompiler';
+            $buildersCompilers[$buildername] = new $classname();
+
+            $srcBuilders[$buildername]=array();
+            $srcBuilders[$buildername][] = '<?php ';
+            $srcBuilders[$buildername][] = ' require_once(\''.$pluginPath.$buildername.'.jformsbuilder.php\'); ';
+            $srcBuilders[$buildername][] = ' class '.$selector->getClass().'_builder_'.$buildername.' extends '.$buildername.'JformsBuilder'.' {';
+            $srcBuilders[$buildername][] = ' public function __construct($form, $action, $actionParams){';
+            $srcBuilders[$buildername][] = '          parent::__construct($form, $action, $actionParams); ';
+            $srcBuilders[$buildername][] = '  }';
+            $srcBuilders[$buildername][] = $buildersCompilers[$buildername]->startCompile();
+
+            $source[]='    \''.$buildername.'\'=>array(\''.$selector->getCompiledBuilderFilePath($buildername).'\',\''.$selector->getClass().'_builder_'.$buildername.'\'), ';
+        }
 
         // chargement du fichier XML
         $doc = new DOMDocument();
@@ -37,44 +62,25 @@ class jFormsCompiler implements jISimpleCompiler {
             throw new jException('jelix~formserr.invalid.xml.file',array($this->sourceFile));
         }
 
-        $source=array();
-        $source[]='<?php ';
-        $source[]='class '.$selector->getClass().' extends jFormsBase {';
-        $source[]='    protected $_builders = array( ';
-        $source[]='    \'html\'=>array(\''.$cacheHtmlBuilderFile.'\',\''.$selector->getClass().'_builder_html\'), ';
         $source[]='    );';
         $source[]=' public function __construct($sel, &$container, $reset = false){';
         $source[]='          parent::__construct($sel, $container, $reset); ';
 
-        $srcHtmlBuilder=array();
-        $srcHtmlBuilder[]='<?php class '.$selector->getClass().'_builder_html extends jFormsHtmlBuilderBase {';
-        $srcHtmlBuilder[]=' public function __construct($form, $action, $actionParams){';
-        $srcHtmlBuilder[]='          parent::__construct($form, $action, $actionParams); ';
-        $srcHtmlBuilder[]='  }';
-
-        $srcjs=array();
-        $srcjs[]='$js="jForms.tForm = new jFormsForm(\'".$this->_name."\');\n";';
-        $srcjs[]='$js.="jForms.tForm.setErrorDecorator(new ".$errorDecoratorName."());\n";';
-        $srcjs[]='$js.="jForms.tForm.setHelpDecorator(new ".$helpDecoratorName."());\n";';
-
-        $this->generatePHPContent($doc, $source, $srcjs);
+        $this->generatePHPContent($doc, $source, $srcBuilders, $buildersCompilers);
 
         $source[]="  }\n} ?>";
+        jFile::write($selector->getCompiledFilePath(), implode("\n", $source));
 
-        jFile::write($cachefile, implode("\n", $source));
-        $srcjs[]='$js.="jForms.declareForm(jForms.tForm);\n";';
-
-        $srcHtmlBuilder[]=' public function getJavascriptCheck($errorDecoratorName, $helpDecoratorName){';
-        $srcHtmlBuilder[]= implode("\n", $srcjs);
-        $srcHtmlBuilder[]=' return $js; }';
-        $srcHtmlBuilder[]='} ?>';
-
-        jFile::write($cacheHtmlBuilderFile, implode("\n", $srcHtmlBuilder));
+        foreach($gJConfig->_pluginsPathList_jforms as $buildername => $pluginPath) {
+            $srcBuilders[$buildername][]= $buildersCompilers[$buildername]->endCompile();
+            $srcBuilders[$buildername][]= '} ?>';
+            jFile::write($selector->getCompiledBuilderFilePath($buildername), implode("\n", $srcBuilders[$buildername]));
+        }
         return true;
     }
 
-    protected function generatePHPContent($doc, &$source, &$srcjs){
-
+    protected function generatePHPContent($doc, &$source, &$srcBuilders, &$buildersCompilers){
+        global $gJConfig;
         if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'forms/1.0'){
            throw new jException('jelix~formserr.namespace.wrong',array($this->sourceFile));
         }
@@ -84,10 +90,11 @@ class jFormsCompiler implements jISimpleCompiler {
         if (count($xml->reset) > 1 )
             throw new jException('jelix~formserr.notunique.tag',array('reset',$this->sourceFile));
 
-
         foreach($xml->children() as $controltype=>$control){
             $source[] = $this->generatePHPControl($controltype, $control);
-            $srcjs[] =  $this->generateJsControl($controltype, $control);
+            foreach($gJConfig->_pluginsPathList_jforms as $buildername => $pluginPath) {
+                $srcBuilders[$buildername][]= $buildersCompilers[$buildername]->generateControl($controltype, $control);
+            }
         }
     }
 
@@ -386,7 +393,7 @@ class jFormsCompiler implements jISimpleCompiler {
         }
         if(isset($control['mimetype'])){
             if($controltype != 'upload'){
-                throw new jException('jelix~formserr.attribute.not.allowed',array('upload',$controltype,$this->sourceFile));
+                throw new jException('jelix~formserr.attribute.not.allowed',array('upload', $controltype, $this->sourceFile));
             }
             $mime = split('[,; ]',(string)$control['mimetype']);
             $mime = array_diff($mime, array('')); // we remove all ''
@@ -397,117 +404,6 @@ class jFormsCompiler implements jISimpleCompiler {
         $source[]='$this->addControl($ctrl);';
         if($hasCtrl2)
             $source[]='$this->addControl($ctrl2);';
-        return implode("\n", $source);
-    }
-
-    protected function generateJsControl($controltype, $control){
-        // in this method, we generate a PHP script which will generate a javascript script ;-)
-
-        if($controltype == 'submit' || $controltype == 'reset')
-            return '';
-
-        if(isset($control->confirm) && $controltype == 'secret') {
-            $hasConfirm = true;
-        }else{
-            $hasConfirm = false;
-        }
-
-        $source = array();
-
-        if(isset($control['type'])){
-            $dt = (string)$control['type'];
-        }else if($controltype == 'checkbox')
-            $dt = 'boolean';
-        else
-            $dt = 'string';
-
-        if(isset($control->label['locale'])){
-            $source[]='$label = jLocale::get(\''.(string)$control->label['locale'].'\');';
-        }else{
-            $source[]='$label = \''.str_replace("'","\\'",(string)$control->label).'\';';
-        }
-        if($controltype == 'checkboxes' || ($controltype == 'listbox' && isset($control['multiple']) && 'true' == (string)$control['multiple']))
-            $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'[]\', \'".str_replace("\'","\\\'",$label)."\', \''.$dt.'\');\n";';
-        else{
-            $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".str_replace("\'","\\\'",$label)."\', \''.$dt.'\');\n";';
-            if($hasConfirm){
-                if(isset($control->confirm['locale'])){
-                    $source[]='$label2 = jLocale::get(\''.(string)$control->confirm['locale'].'\');';
-                }else{
-                    $source[]='$label2 = \''.str_replace("'","\\'",(string)$control->confirm).'\';';
-                }
-                $source[]='$js.="jForms.tControl2 = new jFormsControl(\''.(string)$control['ref'].'_confirm\', \'".str_replace("\'","\\\'",$label2)."\', \''.$dt.'\');\n";';
-            }
-        }
-
-        if($dt == 'localedate' || $dt =='localedatetime' || $dt =='localetime'){
-            $source[]='$js.="jForms.tControl.lang=\'".$GLOBALS[\'gJConfig\']->locale."\';\n";';
-        }
-
-        if(isset($control['readonly']) && 'true' == (string)$control['readonly']){
-            $source[]='$js.="jForms.tControl.readonly = true;\n";';
-            if($hasConfirm) $source[]='$js.="jForms.tControl2.readonly = true;\n";';
-        }
-        if(isset($control['required']) && 'true' == (string)$control['required']){
-            $source[]='$js.="jForms.tControl.required = true;\n";';
-            if($hasConfirm) $source[]='$js.="jForms.tControl2.required = true;\n";';
-        }
-        if(isset($control['maxlength'])){
-            $source[]='$js.="jForms.tControl.maxLength = '.intval($control['maxlength']).';\n";';
-        }
-        if(isset($control['minlength'])){
-            $source[]='$js.="jForms.tControl.minLength = '.intval($control['minlength']).';\n";';
-        }
-        if(isset($control->help)){
-            if(isset($control->help['locale'])){
-                $help='str_replace("\'","\\\'",jLocale::get(\''.(string)$control->help['locale'].'\'))';
-            }else{
-                $help='str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->help).'\')';
-            }
-            $source[]='$js.="jForms.tControl.help=\'".'.$help.'."\';\n";';
-            if($hasConfirm) $source[]='$js.="jForms.tControl2.help=jForms.tControl.help;\n";';
-        }
-
-        $alertInvalid='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))';
-        $alertRequired='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))';
-
-        if(isset($control->alert)){
-            foreach($control->alert as $alert){
-                if(isset($alert['locale'])){
-                    $msg='str_replace("\'","\\\'",jLocale::get(\''.(string)$alert['locale'].'\'))';
-                }else{
-                    $msg='str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$alert).'\')';
-                }
-
-                if(isset($alert['type'])){
-                    if((string)$alert['type'] == 'required')
-                        $alertRequired = $msg;
-                    else
-                        $alertInvalid = $msg;
-                } else {
-                    $alertInvalid = $msg;
-                }
-            }
-        }
-
-        $source[]='$js.="jForms.tControl.errRequired=\'".'.$alertRequired.'."\';\n";';
-        $source[]='$js.="jForms.tControl.errInvalid =\'".'.$alertInvalid.'."\';\n";';
-        if($hasConfirm){
-            $alertInvalid='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label2))';
-            $alertRequired='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label2))';
-            $source[]='$js.="jForms.tControl2.errRequired=\'".'.$alertRequired.'."\';\n";';
-            $source[]='$js.="jForms.tControl2.errInvalid =\'".'.$alertInvalid.'."\';\n";';
-        }
-
-        if(isset($control['multiple']) && 'true' == (string)$control['multiple']){
-            $source[]='$js.="jForms.tControl.multiple = true;\n";';
-        }
-        $source[]='$js.="jForms.tForm.addControl( jForms.tControl);\n";';
-        if($hasConfirm) {
-            $source[]='$js.="jForms.tControl2.isConfirmField=true;\njForms.tControl2.confirmFieldOf=\''.(string)$control['ref'].'\';\n";';
-            $source[]='$js.="jForms.tForm.addControl( jForms.tControl2);\n";';
-        }
-
         return implode("\n", $source);
     }
 }
