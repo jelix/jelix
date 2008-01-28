@@ -18,7 +18,7 @@ class myHtmlResponse extends jResponseHtml {
    public $bodyTpl = 'testapp~main';
 
    // modifications communes aux actions utilisant cette reponses
-   protected function _commonProcess(){
+   protected function doAfterActions(){
        $this->title .= ($this->title !=''?' - ':'').' Test App';
 
        $this->body->assignZone('menu','testapp~sommaire');

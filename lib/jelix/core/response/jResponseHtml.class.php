@@ -151,16 +151,9 @@ class jResponseHtml extends jResponse {
         }
 
         $this->sendHttpHeaders();
-        if($this->_isXhtml){
-            echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$this->_lang,'" lang="',$this->_lang,'">
-';
-        }else{
-            echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n";
-            echo '<html lang="',$this->_lang,'">';
-        }
+        $this->outputDoctype();
         $this->_headSent = 1;
-        $this->_commonProcess();
+        $this->doAfterActions();
         if($this->bodyTpl != '')
             $this->body->meta($this->bodyTpl);
         $this->outputHtmlHeader();
@@ -225,10 +218,19 @@ class jResponseHtml extends jResponse {
     /**
      * The method you can overload in your inherited html response
      * overload it if you want to add processes (stylesheet, head settings, additionnal content etc..)
-     * for all actions
+     * after all actions
+     * @since 1.1
+     */
+    protected function doAfterActions(){
+        $this->_commonProcess(); // for compatibility with jelix 1.0
+    }
+
+    /**
+     * same use as doAfterActions, but deprecated method. It is just here for compatibility with Jelix 1.0.
+     * Use doAfterActions instead
+     * @deprecated
      */
     protected function _commonProcess(){
-
     }
 
     /**
@@ -369,6 +371,20 @@ class jResponseHtml extends jResponse {
      */
     final public function addMetaDescription ($content){
         $this->_MetaDescription[] = $content;
+    }
+
+    /**
+     * generate the doctype. You can override it if you want to have your own doctype, like XHTML+MATHML.
+     */
+    protected function outputDoctype (){
+        if($this->_isXhtml){
+            echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$this->_lang,'" lang="',$this->_lang,'">
+';
+        }else{
+            echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n";
+            echo '<html lang="',$this->_lang,'">';
+        }
     }
 
     /**

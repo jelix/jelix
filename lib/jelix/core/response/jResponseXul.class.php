@@ -104,7 +104,7 @@ class jResponseXul extends jResponse {
 
         $this->_httpHeaders['Content-Type']='application/vnd.mozilla.xul+xml;charset='.$GLOBALS['gJConfig']->charset;
         $this->sendHttpHeaders();
-        $this->_commonProcess();
+        $this->doAfterActions();
         if($this->bodyTpl != '')
             $this->body->meta($this->bodyTpl);
         $this->outputHeader();
@@ -276,11 +276,21 @@ class jResponseXul extends jResponse {
     }
 
     /**
-     * override it into your own xul response object, to do
-     * all things commons to all xul actions
+     * The method you can overload in your inherited XUL response
+     * overload it if you want to add processes (stylesheet, head settings, additionnal content etc..)
+     * after all actions
+     * @since 1.1
+     */
+    protected function doAfterActions(){
+        $this->_commonProcess(); // for compatibility with jelix 1.0
+    }
+
+    /**
+     * same use as doAfterActions, but deprecated method. It is just here for compatibility with Jelix 1.0.
+     * Use doAfterActions instead
+     * @deprecated
      */
     protected function _commonProcess(){
-
     }
 
     /**
