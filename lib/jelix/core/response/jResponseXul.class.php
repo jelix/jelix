@@ -131,7 +131,7 @@ class jResponseXul extends jResponse {
                         echo 'console.error("[error ';
                         break;
                     }
-                    echo $e[1].'] '.str_replace('"','\"',$e[2]),' (',str_replace('\\','\\\\',$e[3]),' ',$e[4],')");';
+                    echo $e[1],'] ',str_replace(array('"',"\n","\r"),array('\"',' ',' '),$e[2]),' (',str_replace('\\','\\\\',$e[3]),' ',$e[4],')");';
                 }
                 echo '}else{alert("there are some errors, you should activate Firebug to see them");}</script>';
             }else{
@@ -154,7 +154,7 @@ class jResponseXul extends jResponse {
             if(count($GLOBALS['gJCoord']->logMessages['firebug'])) {
                 echo '<script type="text/javascript">if(console){';
                 foreach($GLOBALS['gJCoord']->logMessages['firebug'] as $m) {
-                    echo 'console.debug("',str_replace(array('\\','"'),array('\\\\','\"'),$m),'");';
+                    echo 'console.debug("',str_replace(array('\\','"',"\n","\r"),array('\\\\','\"',' ',' '),$m),'");';
                 }
                 echo '}else{alert("there are log messages, you should activate Firebug to see them");}</script>';
             }
