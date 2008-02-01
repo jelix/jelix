@@ -193,6 +193,7 @@ class jConfigCompiler {
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $result=array();
         foreach($list as $k=>$path){
+            if(trim($path) == '') continue;
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
             if(!file_exists($p)){
                 trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
@@ -227,6 +228,7 @@ class jConfigCompiler {
 #endif
         array_unshift($list, JELIX_LIB_PATH.'plugins/'); 
         foreach($list as $k=>$path){
+            if(trim($path) == '') continue;
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
             if(!file_exists($p)){
                 trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
