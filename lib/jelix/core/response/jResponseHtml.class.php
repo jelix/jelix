@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Yann (description and keywords), Dominique Papin
-* @copyright   2005-2007 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
+* @copyright   2005-2008 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
 *              few lines of code are copyrighted CopixTeam http://www.copix.org
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -375,6 +375,7 @@ class jResponseHtml extends jResponse {
 
     /**
      * generate the doctype. You can override it if you want to have your own doctype, like XHTML+MATHML.
+     * @since 1.1
      */
     protected function outputDoctype (){
         if($this->_isXhtml){

@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
-* @copyright   2005-2007 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2005-2008 Laurent Jouanneau, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -310,7 +310,7 @@ class jResponseXul extends jResponse {
         }
 
         foreach ($this->_overlays as $src=>$ok){
-            echo  '<?xul-overlay href="',$src,'" ?>',"\n";
+            echo  '<?xul-overlay href="',htmlspecialchars($src),'" ?>',"\n";
         }
 
         $this->rootAttributes['title']=$this->title;
