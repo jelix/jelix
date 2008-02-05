@@ -99,6 +99,8 @@ engine        = simple
 ; you use the significant engine. If you use the simple url engine, you can set to off.
 enableParser = on
 
+; if multiview is activated in apache, eg, you don't have to indicate the ".php" suffix
+; then set this parameter to on
 multiview = off
 
 ; the name of the variable in $_SERVER which contains the name of the script
@@ -108,6 +110,14 @@ multiview = off
 ; it is detected automatically by jelix but it can fail sometime, so you could have to setup it
 scriptNameServerVariable = 
 
+
+; If you have a rewrite rules which move the pathinfo into a queryparameter
+; like RewriteRule ^(.*)$ index.php/?jpathinfo=$1 [L,QSA]
+; (it is necessary in some CGI configuration)
+; then you should set pathInfoInQueryParameter to the name of the parameter
+; which contains the pathinfo value ("jpathinfo" for example)
+; leave empty if you don't have to create such rewrite rules.
+pathInfoInQueryParameter =
 
 ; basePath corresponds to the path to the base directory of your application.
 ; so if the url to access to your application is http://foo.com/aaa/bbb/www/index.php, you should

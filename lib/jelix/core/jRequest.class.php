@@ -126,7 +126,14 @@ abstract class jRequest {
 
         $this->url_script_name = $this->urlScriptName = substr ($this->urlScript, $lastslash+1);
 
-        if(isset($_SERVER['PATH_INFO'])){
+        $piiqp = $gJConfig->urlengine['pathInfoInQueryParameter'];
+        if ($piiqp) {
+            if (isset($_GET[$piiqp])) {
+                $pathinfo = $_GET[$piiqp];
+                unset($_GET[$piiqp]);
+            } else
+                $pathinfo = '';
+        } else if(isset($_SERVER['PATH_INFO'])){
             $pathinfo = $_SERVER['PATH_INFO'];
         } else if(isset($_SERVER['ORIG_PATH_INFO'])){
             $pathinfo = $_SERVER['ORIG_PATH_INFO'];
