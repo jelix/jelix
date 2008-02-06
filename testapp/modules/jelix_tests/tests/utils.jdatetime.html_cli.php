@@ -3,13 +3,22 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Florian Hatat
-* @contributor
-* @copyright   2007 Florian Hatat
+* @contributor Rahal
+* @copyright   2007 Florian Hatat, 2008 Rahal
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 class testjDateTime extends UnitTestCase {
+
+    function setUp(){
+        date_default_time_zone("Europe/Paris");
+    }
+
+    function tearDown(){
+        global $gJConfig;
+        date_default_time_zone($gJConfig->timeZone);
+    }
 
     function testValidConstruct(){
         // Retraite des Suisses à Marignan
