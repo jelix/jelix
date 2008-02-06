@@ -12,12 +12,12 @@
 class testjDateTime extends UnitTestCase {
 
     function setUp(){
-        date_default_time_zone("Europe/Paris");
+        date_default_timezone_set("Europe/Paris");
     }
 
     function tearDown(){
         global $gJConfig;
-        date_default_time_zone($gJConfig->timeZone);
+        date_default_timezone_set($gJConfig->timeZone);
     }
 
     function testValidConstruct(){
