@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Laurent Jouanneau
-* @contributor Dominique Papin
+* @contributor Dominique Papin, Julien Issler
 * @copyright   2005-2008 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -299,7 +300,8 @@ class jResponseXul extends jResponse {
     protected function _otherthings(){
         // overlays
         if($this->fetchOverlays){
-            $eventresp = jEvent::notify ('FetchXulOverlay', array('tpl'=>$this->bodyTpl));
+            $sel = new jSelectorTpl($this->bodyTpl);
+            $eventresp = jEvent::notify ('FetchXulOverlay', array('tpl'=>$sel->toString()));
             foreach($eventresp->getResponse() as $rep){
                 if(is_array($rep)){
                     $this->_overlays[jUrl::get($rep[0],$rep[1])]=true;

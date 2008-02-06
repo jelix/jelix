@@ -30,13 +30,6 @@ class jZone {
     protected $_useCache = false;
 
     /**
-    * parameters name which identify a cache (an article id for exemple)
-    * you should override it in your class if you want a cache for each parameter values
-    * @var array
-    */
-    protected $_cacheParams = array ();
-
-    /**
      * cache timeout (seconds).
      * set to 0 if you want to delete cache manually.
      * @var integer

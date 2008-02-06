@@ -64,6 +64,7 @@ Julien Issler
  - fixed a bug with jAuthDummyUser (#352)
  - jSession implementation (#354)
  - jResponsePdf and jTcpdf classes (#131)
+ - fixed various bugs (ex: #451)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
