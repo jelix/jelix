@@ -299,6 +299,15 @@ class jResponseXul extends jResponse {
      */
     protected function _otherthings(){
         // overlays
+
+        // browser sniffing, because "&" should be escaped in a xul-overlay PI in gecko 1.9+
+        $escape = false;
+        if(preg_match('!^Mozilla/5.0 \(.* rv:(\d)\.(\d).*\) Gecko/\d+.*$!',$_SERVER["HTTP_USER_AGENT"],$m)){
+            if(version_compare($m[1].'.'.$m[2], '1.9') >= 0) {
+                $escape = true;
+            }
+        }
+
         if($this->fetchOverlays){
             $sel = new jSelectorTpl($this->bodyTpl);
             $eventresp = jEvent::notify ('FetchXulOverlay', array('tpl'=>$sel->toString()));
@@ -312,7 +321,7 @@ class jResponseXul extends jResponse {
         }
 
         foreach ($this->_overlays as $src=>$ok){
-            echo  '<?xul-overlay href="',htmlspecialchars($src),'" ?>',"\n";
+            echo  '<?xul-overlay href="',($escape?htmlspecialchars($src):$src),'" ?>',"\n";
         }
 
         $this->rootAttributes['title']=$this->title;
