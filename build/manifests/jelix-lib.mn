@@ -407,6 +407,11 @@ cd lib/jelix/plugins/tpl/text
   function.jlocale.php
   function.jurl.php
 
+cd lib/jelix/plugins/tpl/xml
+  function.jlocale.php
+  function.jurl.php
+  meta.xml.php
+
 cd lib/jelix/plugins/tpl/xul
   function.jlocale.php
   function.jurl.php

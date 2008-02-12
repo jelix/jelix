@@ -120,7 +120,6 @@ class jAuth {
                 ||  $config['persistant_cookie_path'] == '') {
                 $config['persistant_cookie_path'] = $GLOBALS['gJConfig']->urlengine['basePath'];
             }
-
         }
         return $config;
     }
