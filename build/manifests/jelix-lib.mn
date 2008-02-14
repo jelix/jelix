@@ -440,7 +440,65 @@ cd lib/jelix-www/xul
   jsonrpc.js
   jxbl.xml
   jxbl.css
-
+cd lib/jelix-www/wymeditor
+c jquery.wymeditor.js
+c wym_css_parser.js
+c xhtml_parser.js
+  GPL-license.txt
+  MIT-license.txt
+  README
+cd lib/jelix-www/wymeditor/lang
+c es.js
+c fr.js
+c de.js
+c sv.js
+c nl.js
+c pl.js
+c hu.js
+c it.js
+c en.js
+c ca.js
+cd lib/jelix-www/wymeditor/plugins/hovertools
+c jquery.wymeditor.hovertools.js
+cd lib/jelix-www/wymeditor/plugins/tidy
+  tidy.php
+c jquery.wymeditor.tidy.js
+  wand.png
+  README
+cd lib/jelix-www/wymeditor/iframe/default
+  lbl-pre.png
+  lbl-blockquote.png
+  lbl-h1.png
+  lbl-h2.png
+  wymiframe.html
+  lbl-h3.png
+  lbl-h4.png
+  lbl-h5.png
+  lbl-h6.png
+  wymiframe.css
+  lbl-p.png
+cd lib/jelix-www/wymeditor/skins
+  wymeditor_icon.png
+cd lib/jelix-www/wymeditor/skins/default
+  screen.css
+  icons.png
+cd lib/jelix-www/jquery
+  GPL-LICENSE.txt
+  MIT-LICENSE.txt
+  README
+! jquery.js
+cd lib/jelix-www/jquery/date_input
+  README
+  date_input.css
+c jquery.date_input.js
+  LICENCE
+! jquery.date_input.nl_NL.js
+! jquery.date_input.de_DE.js
+! jquery.date_input.pt_PT.js
+! jquery.date_input.ru_RU.js
+! jquery.date_input.es_ES.js
+cd lib/jelix-www/jquery/dimensions
+c jquery.dimensions.js
 
 cd lib/clearbricks
   LICENCE

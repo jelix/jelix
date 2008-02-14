@@ -33,7 +33,7 @@ class jManifest {
 
         foreach($script as $nbline=>$line){
             $nbline++;
-            if(preg_match(';^(cd|sd|dd|\*|!|\*!)?\s+([a-zA-Z0-9\/.\-_]+)\s*(?:\(([a-zA-Z0-9\/.\-_]*)\))?\s*$;m', $line, $m)){
+            if(preg_match(';^(cd|sd|dd|\*|!|\*!|c|\*c)?\s+([a-zA-Z0-9\/.\-_]+)\s*(?:\(([a-zA-Z0-9\/.\-_]*)\))?\s*$;m', $line, $m)){
                 if($m[1] == 'dd'){
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);
                     jBuildUtils::createDir($distdir.$currentdestdir);
@@ -44,6 +44,9 @@ class jManifest {
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);
                     jBuildUtils::createDir($distdir.$currentdestdir);
                 }else{
+                    $doPreprocessing = (strpos($m[1],'*') !== false);
+                    $doCompression = (strpos($m[1],'c') !== false) || ($stripcomment && (strpos($m[1],'!') === false));
+
                     if($m[2] == ''){
                         throw new Exception ( "$ficlist : file required on line $nbline \n");
                     }
@@ -53,7 +56,7 @@ class jManifest {
                     $destfile = $distdir.$currentdestdir.$m[3];
                     $sourcefile = $sourcedir.$currentsrcdir.$m[2];
 
-                    if($m[1]=='*' || $m[1]=='*!'){
+                    if($doPreprocessing){
                         if($verbose){
                             echo "process  $sourcefile \tto\t$destfile \n";
                         }
@@ -63,18 +66,24 @@ class jManifest {
                         }catch(Exception $e){
                             throw new Exception ( "$ficlist : line $nbline, cannot process file ".$m[2]." (". $e->getMessage() .")\n");
                         }
-                        if($m[1]=='*' && $stripcomment && preg_match("/\.php$/",$destfile)){
-                            $contents = self::stripPhpComments($contents);
+                        if($doCompression) {
+                            if( preg_match("/\.php$/",$destfile)) {
+                                $contents = self::stripPhpComments($contents);
+                            }
+                            else if(preg_match("/\.js$/",$destfile)) {
+                                $packer = new JavaScriptPacker($contents, 0, true, false);
+                                $contents = $packer->pack();
+                            }
                         }
                         file_put_contents($destfile,$contents);
 
-                    }elseif($m[1]!='!'&& $stripcomment && preg_match("/\.php$/",$destfile)){
+                    }elseif($doCompression && preg_match("/\.php$/",$destfile)){
                         if($verbose)
                             echo "strip comment in  $sourcefile\tto\t".$destfile."\n";
                         $src = file_get_contents($sourcefile);
                         file_put_contents($destfile,self::stripPhpComments($src));
 
-                    }elseif($m[1]!='!'&& $stripcomment && preg_match("/\.js$/",$destfile)){
+                    }elseif($doCompression && preg_match("/\.js$/",$destfile)) {
                         if($verbose)
                             echo "compress javascript file ".$destfile."\n";
 
