@@ -14,3 +14,4 @@ cd lib
    preprocessor.lib.php
    jManifest.class.php
    jCmdUtils.class.php
+   class.JavaScriptPacker.php

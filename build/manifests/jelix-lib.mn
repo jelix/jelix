@@ -207,25 +207,26 @@ cd lib/jelix/tpl/
 *  jTplCompiler.class.php
 
 cd lib/jelix/utils/
+  jAppManager.class.php
   jClasses.class.php
   jCmdUtils.class.php
   jCrypt.class.php
   jDatatype.class.php
   jDateTime.class.php
   jFile.class.php
+* jFilter.class.php
+  jHttp.class.php
   jIniFile.class.php
 * jJson.class.php
 * jJsonRpc.class.php
   jLog.class.php
+  jMailer.class.php
+  jSmtp.class.php
+  jTcpdf.class.php
 * jWiki.class.php
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php
-  jAppManager.class.php
-  jMailer.class.php
-  jSmtp.class.php
-* jFilter.class.php
-  jTcpdf.class.php
 
 cd lib/jelix-modules
   LICENCE
@@ -440,6 +441,16 @@ cd lib/jelix-www/xul
   jxbl.xml
   jxbl.css
 
+
+cd lib/clearbricks
+  LICENCE
+  README.jelix
+  VERSION
+
+cd lib/clearbricks/net
+  class.net.socket.php
+cd lib/clearbricks/net.http
+  class.net.http.php
 
 cd lib/diff
 ! difflib.php

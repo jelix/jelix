@@ -4,3 +4,10 @@ Credits for jBuildTools
 Main developer : Laurent Jouanneau
 
 See http://jelix.org
+
+
+Credits for external tools including in the package
+===================================================
+
+- Nicolas Martin for his class class.JavaScriptPacker.php 
+  http://joliclic.free.fr/php/javascript-packer/en/

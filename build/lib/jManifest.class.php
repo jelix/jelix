@@ -10,6 +10,8 @@
 
 require_once(dirname(__FILE__).'/preprocessor.lib.php');
 require_once(dirname(__FILE__).'/jBuildUtils.lib.php');
+require_once(dirname(__FILE__).'/class.JavaScriptPacker.php');
+
 
 class jManifest {
 
@@ -72,6 +74,13 @@ class jManifest {
                         $src = file_get_contents($sourcefile);
                         file_put_contents($destfile,self::stripPhpComments($src));
 
+                    }elseif($m[1]!='!'&& $stripcomment && preg_match("/\.js$/",$destfile)){
+                        if($verbose)
+                            echo "compress javascript file ".$destfile."\n";
+
+                        $script = file_get_contents($sourcefile);
+                        $packer = new JavaScriptPacker($script, 0, true, false);
+                        file_put_contents($destfile, $packer->pack());
                     }else{
                         if($verbose)
                             echo "copy  ".$sourcedir.$currentsrcdir.$m[2]."\tto\t".$destfile."\n";
