@@ -22,17 +22,18 @@ function jExceptionHandler($exception){
     $conf = $gJConfig->error_handling;
     $action = $conf['exception'];
 
-    $doecho=true;
+    $doEchoByResponse=true;
 
     if($gJCoord->request == null){
 
         $msg = 'JELIX PANIC ! Error during initialization !! '.$msg;
-        $doecho = false;
+        $doEchoByResponse = false;
 
     }elseif($gJCoord->response == null){
 
         $ret = $gJCoord->initDefaultResponseOfRequest();
         if(is_string($ret)){
+            $doEchoByResponse = false;
             $msg = 'Double error ! 1)'. $ret.'; 2)'.$msg;
         }
     }
@@ -62,16 +63,19 @@ function jExceptionHandler($exception){
         $messageLog.="\n";
     }
 
+    $echoAsked = false;
     // traitement du message
     if(strpos($action , 'ECHOQUIET') !== false){
-        if(!$doecho){
+        $echoAsked = true;
+        if(!$doEchoByResponse){
             header("HTTP/1.1 500 Internal jelix error");
             header('Content-type: text/plain');
             echo 'JELIX PANIC ! Error during initialization !! ';
         }else
             $gJCoord->addErrorMsg('error', $exception->getCode(), $conf['quietMessage'], '', '');
     }elseif(strpos($action , 'ECHO') !== false){
-        if($doecho)
+        $echoAsked = true;
+        if($doEchoByResponse)
             $gJCoord->addErrorMsg('error', $exception->getCode(), $msg, $exception->getFile(), $exception->getLine());
         else{
             header("HTTP/1.1 500 Internal jelix error");
@@ -89,8 +93,17 @@ function jExceptionHandler($exception){
         error_log($messageLog,0);
     }
 
-    if($doecho)
-        $gJCoord->response->outputErrors();
+    if($doEchoByResponse) {
+        if ($gJCoord->response)
+            $gJCoord->response->outputErrors();
+        else if($echoAsked) {
+            header("HTTP/1.1 500 Internal jelix error");
+            header('Content-type: text/plain');
+            foreach($gJCoord->errorMessages as $msg)
+                echo $msg."\n";
+        }
+    }
+
     jSession::end();
     exit;
 }

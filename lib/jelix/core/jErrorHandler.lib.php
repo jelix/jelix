@@ -57,15 +57,16 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         $action = $conf['default'];
     }
 
-    $doecho=true;
+    $doEchoByResponse = true;
     if($gJCoord->request == null){
         $errmsg = 'JELIX PANIC ! Error during initialization !! '.$errmsg;
-        $doecho = false;
+        $doEchoByResponse = false;
         $action.= ' EXIT';
     }elseif($gJCoord->response == null){
         $ret = $gJCoord->initDefaultResponseOfRequest();
         if(is_string($ret)){
             $errmsg = 'Double error ! 1)'. $ret.'; 2)'.$errmsg;
+            $doEchoByResponse = false;
         }
     }
 
@@ -95,16 +96,20 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         }
         $messageLog.="\n";
     }
+    $echoAsked = false;
     // traitement du message
     if(strpos($action , 'ECHOQUIET') !== false){
-        if(!$doecho){
+        $echoAsked = true;
+        if(!$doEchoByResponse){
             header("HTTP/1.1 500 Internal jelix error");
             header('Content-type: text/plain');
             echo 'JELIX PANIC ! Error during initialization !! ';
-        }elseif($gJCoord->addErrorMsg($codeString[$errno], $code, $conf['quietMessage'], '', ''))
+        }elseif($gJCoord->addErrorMsg($codeString[$errno], $code, $conf['quietMessage'], '', '')){
             $action.=' EXIT';
+        }
     }elseif(strpos($action , 'ECHO') !== false){
-        if(!$doecho){
+        $echoAsked = true;
+        if(!$doEchoByResponse){
             header("HTTP/1.1 500 Internal jelix error");
             header('Content-type: text/plain');
             echo $messageLog;
@@ -123,8 +128,16 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     }
 
     if(strpos($action , 'EXIT') !== false){
-        if($doecho && $gJCoord->response)
-            $gJCoord->response->outputErrors();
+        if($doEchoByResponse) {
+            if ($gJCoord->response)
+                $gJCoord->response->outputErrors();
+            else if($echoAsked) {
+                header("HTTP/1.1 500 Internal jelix error");
+                header('Content-type: text/plain');
+                foreach($gJCoord->errorMessages as $msg)
+                    echo $msg."\n";
+            }
+        }
         jSession::end();
         exit;
     }
