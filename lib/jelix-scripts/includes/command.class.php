@@ -54,7 +54,7 @@ abstract class JelixScriptCommand {
 
 
    protected function getModulePath($module, $shouldexist=true){
-      $path=JELIX_APP_PATH.'modules/'.strtolower($module).'/';
+      $path=JELIX_APP_PATH.'modules/'.$module.'/';
       if(!file_exists($path) && $shouldexist){
          die("Error: module '".$module."' don't exist ($path)\n");
       }
