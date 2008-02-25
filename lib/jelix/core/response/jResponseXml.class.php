@@ -4,8 +4,10 @@
 * @subpackage  core_response
 * @author      Loic Mathaud
 * @contributor Laurent Jouanneau
+* @contributor Sylvain de Vathaire
 * @copyright   2005-2006 loic Mathaud
 * @copyright   2007 Laurent Jouanneau
+* @copyright   2008 Sylvain de Vathaire
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -49,6 +51,20 @@ class jResponseXml extends jResponse {
     private $_css = array();
     private $_xsl = array();
 
+    /**
+     * says what part of the html head has been send
+     * @var integer
+     */
+    protected $_headSent = 0;
+
+    /** 
+     * say if the XML header have to be generated
+     * Usefull if the XML string to output already contain the XML header
+     * @var boolean
+     * @since 1.0.3
+     */
+    public $sendXMLHeader = TRUE;
+
 
     /**
     * constructor..
@@ -68,8 +84,10 @@ class jResponseXml extends jResponse {
         $this->_httpHeaders['Content-Type']='text/xml;charset='.$this->_charset;
         $this->sendHttpHeaders();
 
-        echo '<?xml version="1.0" encoding="'. $this->_charset .'"?>', "\n";
-        $this->outputXmlHeader();
+        if($this->sendXMLHeader){
+            echo '<?xml version="1.0" encoding="'. $this->_charset .'"?>', "\n";
+            $this->outputXmlHeader();
+        }
         $this->_headSent = true;
 
 
