@@ -620,9 +620,12 @@ class jSelectorTpl extends jSelectorModule {
      * @param boolean $trusted  says if the template file is trusted or not
      */
     function __construct($sel, $outputtype='', $trusted=true){
-        if($outputtype == '')
-            $this->outputType = $GLOBALS['gJCoord']->response->getFormatType();
-        else
+        if($outputtype == '') {
+            if($GLOBALS['gJCoord']->response)
+                $this->outputType = $GLOBALS['gJCoord']->response->getFormatType();
+            else
+                $this->outputType = $GLOBALS['gJCoord']->request->defaultResponseType;
+        } else
             $this->outputType = $outputtype;
         $this->trusted = $trusted;
         $this->_compiler='jTplCompiler';
