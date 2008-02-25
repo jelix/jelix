@@ -172,9 +172,6 @@ class UTDao extends jUnitTestCaseDb {
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
-
-
-
     }
 
 
@@ -316,6 +313,42 @@ class UTDao extends jUnitTestCaseDb {
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
+    }
+
+    function testCheck() {
+
+        $record = jDao::createRecord('products');
+        $check = $record->check();
+        $results = array('name'=>array(jDaoRecordBase::ERROR_REQUIRED));
+        $this->assertEqual($results,$check);
+
+        $record->name = 'Foo';
+        $check = $record->check();
+        $this->assertFalse($check);
+
+        $record->create_date = 'foo';
+        $check = $record->check();
+        $results = array('create_date'=>array(jDaoRecordBase::ERROR_BAD_FORMAT));
+        $this->assertEqual($results,$check);
+
+        $record->create_date = '2008-02-15';
+        $check = $record->check();
+        $results = array('create_date'=>array(jDaoRecordBase::ERROR_BAD_FORMAT));
+        $this->assertEqual($results,$check);
+
+        $record->create_date = '2008-02-15 12:03:34';
+        $check = $record->check();
+        $this->assertFalse($check);
+
+        $record->price='foo';
+        $check = $record->check();
+        $results = array('price'=>array(jDaoRecordBase::ERROR_BAD_TYPE));
+        $this->assertEqual($results,$check);
+
+        $record->price=56;
+        $check = $record->check();
+        $this->assertFalse($check);
+
     }
 }
 ?>

@@ -38,7 +38,7 @@ abstract class jDaoRecordBase {
 
     /**
      * check values in the properties of the record, according on the dao definition
-     * @return array list of errors
+     * @return array|false list of errors or false if ok
      */
     public function check(){
         $errors=array();
@@ -51,15 +51,17 @@ abstract class jDaoRecordBase {
                 continue;
             }
 
-            if($infos['datatype']=='varchar' || $infos['datatype']=='string'){
+            switch($infos['datatype']) {
+              case 'varchar':
+              case 'string' :
                 if(!is_string($value) && $value !== null){
                     $errors[$prop][] = self::ERROR_BAD_TYPE;
-                    continue;
+                    break;
                 }
                 // test regexp
                 if ($infos['regExp'] !== null && preg_match ($infos['regExp'], $value) === 0){
                     $errors[$prop][] = self::ERROR_BAD_FORMAT;
-                    continue;
+                    break;
                 }
 
                 //  test maxlength et minlength
@@ -71,21 +73,32 @@ abstract class jDaoRecordBase {
                 if($infos['minlength'] !== null && $len < intval($infos['minlength'])){
                     $errors[$prop][] = self::ERROR_MINLENGTH;
                 }
-
-            }elseif( in_array($infos['datatype'], array('int','integer','numeric', 'double', 'float'))) {
-                // test datatype
+                break;
+            case 'int';
+            case 'integer':
+            case 'numeric':
+            case 'double':
+            case 'float':
                 if($value !== null && !is_numeric($value)){
                     $errors[$prop][] = self::ERROR_BAD_TYPE;
-                    continue;
                 }
-            }elseif( in_array($infos['datatype'], array('datetime', 'time','varchardate', 'date'))) {
-                if (jLocale::timestampToDate ($value) === false){
+                break;
+            case 'datetime':
+                if(!preg_match('/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})?$/', $value))
                     $errors[$prop][] = self::ERROR_BAD_FORMAT;
-                    continue;
-                }
+                break;
+            case 'time':
+                if(!preg_match('/^(\d{2}:\d{2}:\d{2})?$/', $value))
+                    $errors[$prop][] = self::ERROR_BAD_FORMAT;
+                break;
+            case 'varchardate':
+            case 'date':
+                if(!preg_match('/^(\d{4}-\d{2}-\d{2})?$/', $value))
+                    $errors[$prop][] = self::ERROR_BAD_FORMAT;
+                break;
             }
         }
-        return $errors;
+        return (count($errors)?$errors:false);
     }
 
     /**
