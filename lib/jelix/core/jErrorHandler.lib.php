@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @contributor Sylvain de Vathaire
 * @contributor Loic Mathaud <loic@mathaud.net>
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2007 Sylvain de Vathaire, 2007 Loic Mathaud
+* @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau, 2007 Sylvain de Vathaire, 2007 Loic Mathaud
 * This function was get originally from the Copix project (CopixErrorHandler, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this function are Gerald Croes and Laurent Jouanneau,
@@ -52,94 +52,13 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     $conf = $gJConfig->error_handling;
 
     if (isset ($codeString[$errno])){
-        $action = $conf[$codeString[$errno]];
+        $toDo = $conf[$codeString[$errno]];
     }else{
-        $action = $conf['default'];
+        $toDo = $conf['default'];
     }
+    $trace = debug_backtrace();
+    array_shift($trace);
+    $gJCoord->handleError($toDo, $codeString[$errno], $errno, $errmsg, $filename, $linenum, $trace);
 
-    $doEchoByResponse = true;
-    if($gJCoord->request == null){
-        $errmsg = 'JELIX PANIC ! Error during initialization !! '.$errmsg;
-        $doEchoByResponse = false;
-        $action.= ' EXIT';
-    }elseif($gJCoord->response == null){
-        $ret = $gJCoord->initDefaultResponseOfRequest();
-        if(is_string($ret)){
-            $errmsg = 'Double error ! 1)'. $ret.'; 2)'.$errmsg;
-            $doEchoByResponse = false;
-        }
-    }
-
-    // When we are in cmdline we need to fix the remoteAddr
-    $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
-
-    // formatage du message
-    $messageLog = strtr($conf['messageLogFormat'], array(
-        '%date%' => date("Y-m-d H:i:s"),
-        '%ip%'   => $remoteAddr,
-        '%typeerror%'=>$codeString[$errno],
-        '%code%' => $code,
-        '%msg%'  => $errmsg,
-        '%file%' => $filename,
-        '%line%' => $linenum,
-        '\t' =>"\t",
-        '\n' => "\n"
-    ));
-
-    if(strpos($action , 'TRACE') !== false){
-        $arr = debug_backtrace();
-        $messageLog.="\ttrace:";
-        array_shift($arr);
-        foreach($arr as $k=>$t){
-            $messageLog.="\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
-            $messageLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
-        }
-        $messageLog.="\n";
-    }
-    $echoAsked = false;
-    // traitement du message
-    if(strpos($action , 'ECHOQUIET') !== false){
-        $echoAsked = true;
-        if(!$doEchoByResponse){
-            header("HTTP/1.1 500 Internal jelix error");
-            header('Content-type: text/plain');
-            echo 'JELIX PANIC ! Error during initialization !! ';
-        }elseif($gJCoord->addErrorMsg($codeString[$errno], $code, $conf['quietMessage'], '', '')){
-            $action.=' EXIT';
-        }
-    }elseif(strpos($action , 'ECHO') !== false){
-        $echoAsked = true;
-        if(!$doEchoByResponse){
-            header("HTTP/1.1 500 Internal jelix error");
-            header('Content-type: text/plain');
-            echo $messageLog;
-        }elseif($gJCoord->addErrorMsg($codeString[$errno], $code, $errmsg, $filename, $linenum)){
-            $action.=' EXIT';
-        }
-    }
-    if(strpos($action , 'LOGFILE') !== false){
-        @error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);
-    }
-    if(strpos($action , 'MAIL') !== false){
-        error_log(wordwrap($messageLog,70),1, $conf['email'], $conf['emailHeaders']);
-    }
-    if(strpos($action , 'SYSLOG') !== false){
-        error_log($messageLog,0);
-    }
-
-    if(strpos($action , 'EXIT') !== false){
-        if($doEchoByResponse) {
-            if ($gJCoord->response)
-                $gJCoord->response->outputErrors();
-            else if($echoAsked) {
-                header("HTTP/1.1 500 Internal jelix error");
-                header('Content-type: text/plain');
-                foreach($gJCoord->errorMessages as $msg)
-                    echo $msg."\n";
-            }
-        }
-        jSession::end();
-        exit;
-    }
 }
 ?>

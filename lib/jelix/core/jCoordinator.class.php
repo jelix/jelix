@@ -132,34 +132,6 @@ class jCoordinator {
     }
 
     /**
-     * Store an error/warning/notice message. Responses object should take care
-     * of the errorMessages properties to display them.
-     * @param  string $type  error type : 'error', 'warning', 'notice'
-     * @param  integer $code  error code
-     * @param  string $message error message
-     * @param  string $file    the file name where the error appear
-     * @param  integer $line  the line number where the error appear
-     * @return boolean    true= the process should stop now, false = the error manager do its job
-     */
-    public function addErrorMsg($type, $code, $message, $file, $line){
-        $this->errorMessages[] = array($type, $code, $message, $file, $line);
-        if(!$this->response){
-            return $this->initDefaultResponseOfRequest();
-        }
-        return !$this->response->acceptSeveralErrors();
-    }
-
-    /**
-     * Store a log message. Responses object should take care
-     * of the logMessages properties to display them.
-     * @param  string $message error message
-     * @since 1.0
-     */
-    public function addLogMsg($message, $type='default'){
-        $this->logMessages[$type][] = $message;
-    }
-
-    /**
     * main method : launch the execution of the action.
     *
     * This method should be called in a entry point.
@@ -305,6 +277,136 @@ class jCoordinator {
         $this->response = new $respclass();
 
         return false;
+    }
+
+    /**
+     * Handle an error event. Called by error handler and exception handler.
+     * Responses object should take care of the errorMessages property to display errors.
+     * @param string  $toDo    a string which contains keyword indicating what to do with the error
+     * @param string  $type    error type : 'error', 'warning', 'notice'
+     * @param integer $code    error code
+     * @param string  $message error message
+     * @param string  $file    the file name where the error appear
+     * @param integer $line    the line number where the error appear
+     * @param array   $trace   the stack trace
+     * @since 1.1
+     */
+    public function handleError($toDo, $type, $code, $message, $file, $line, $trace){
+        global $gJConfig;
+        $conf = $gJConfig->error_handling;
+
+        $doEchoByResponse = true;
+
+        if($this->request == null){
+            $message = 'JELIX PANIC ! Error during initialization !! '.$message;
+            $doEchoByResponse = false;
+            $toDo.= ' EXIT';
+
+        }elseif($this->response == null){
+            $ret = $this->initDefaultResponseOfRequest();
+            if(is_string($ret)){
+                $message = 'Double error ! 1)'. $ret.'; 2)'.$message;
+                $doEchoByResponse = false;
+            }
+        }
+
+        // When we are in cmdline we need to fix the remoteAddr
+        $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
+
+        // formatage du message
+        $messageLog = strtr($conf['messageLogFormat'], array(
+            '%date%' => date("Y-m-d H:i:s"),
+            '%ip%'   => $remoteAddr,
+            '%typeerror%'=>$type,
+            '%code%' => $code,
+            '%msg%'  => $message,
+            '%file%' => $file,
+            '%line%' => $line,
+            '\t' =>"\t",
+            '\n' => "\n"
+        ));
+
+        if(strpos($toDo , 'TRACE') !== false){
+            $arr = debug_backtrace();
+            $messageLog.="\ttrace:";
+            foreach($arr as $k=>$t){
+                $messageLog.="\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
+                $messageLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
+            }
+            $messageLog.="\n";
+        }
+
+
+        $echoAsked = false;
+        // traitement du message
+        if(strpos($toDo , 'ECHOQUIET') !== false){
+            $echoAsked = true;
+            if(!$doEchoByResponse){
+                header("HTTP/1.1 500 Internal jelix error");
+                header('Content-type: text/plain');
+                echo 'JELIX PANIC ! Error during initialization !! ';
+            }elseif($this->addErrorMsg($type, $code, $conf['quietMessage'], '', '')){
+                $toDo.=' EXIT';
+            }
+        }elseif(strpos($toDo , 'ECHO') !== false){
+            $echoAsked = true;
+            if(!$doEchoByResponse){
+                header("HTTP/1.1 500 Internal jelix error");
+                header('Content-type: text/plain');
+                echo $messageLog;
+            }elseif($this->addErrorMsg($type, $code, $message, $file, $line)){
+                $toDo.=' EXIT';
+            }
+        }
+
+        if(strpos($toDo , 'LOGFILE') !== false){
+            @error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);
+        }
+        if(strpos($toDo , 'MAIL') !== false){
+            error_log(wordwrap($messageLog,70),1, $conf['email'], $conf['emailHeaders']);
+        }
+        if(strpos($toDo , 'SYSLOG') !== false){
+            error_log($messageLog,0);
+        }
+
+        if(strpos($toDo , 'EXIT') !== false){
+            if($doEchoByResponse) {
+                if ($this->response)
+                    $this->response->outputErrors();
+                else if($echoAsked) {
+                    header("HTTP/1.1 500 Internal jelix error");
+                    header('Content-type: text/plain');
+                    foreach($this->errorMessages as $msg)
+                        echo $msg."\n";
+                }
+            }
+            jSession::end();
+            exit;
+        }
+    }
+
+    /**
+     * Store an error/warning/notice message.
+     * @param  string $type  error type : 'error', 'warning', 'notice'
+     * @param  integer $code  error code
+     * @param  string $message error message
+     * @param  string $file    the file name where the error appear
+     * @param  integer $line  the line number where the error appear
+     * @return boolean    true= the process should stop now, false = the error manager do its job
+     */
+    protected function addErrorMsg($type, $code, $message, $file, $line){
+        $this->errorMessages[] = array($type, $code, $message, $file, $line);
+        return !$this->response->acceptSeveralErrors();
+    }
+
+    /**
+     * Store a log message. Responses object should take care
+     * of the logMessages properties to display them.
+     * @param  string $message error message
+     * @since 1.0
+     */
+    public function addLogMsg($message, $type='default'){
+        $this->logMessages[$type][] = $message;
     }
 
     /**
