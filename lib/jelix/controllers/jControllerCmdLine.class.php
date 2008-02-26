@@ -1,12 +1,12 @@
 <?php
 /**
-* @package    jelix
-* @subpackage controllers
-* @author     Loic Mathaud
-* @contributor M. Thiriot
-* @copyright  2006 Loic Mathaud, 2007 M. Thiriot
+* @package     jelix
+* @subpackage  controllers
+* @author      Loic Mathaud
+* @contributor M. Thiriot, Laurent Jouanneau
+* @copyright   2006 Loic Mathaud, 2007 M. Thiriot, 2008 Laurent Jouanneau
 * @link        http://www.jelix.org
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
 */
 
@@ -33,8 +33,16 @@ class jControllerCmdLine extends jController {
         $params = $this->request->params;
         unset($params['module']);
         unset($params['action']);
+
         $action = new jSelectorAct($this->request->params['action']);
-        list($this->_options,$this->_parameters) = jCmdUtils::getOptionsAndParams($params,$this->allowed_options[$action->method] , $this->allowed_parameters[$action->method]);
+
+        if( !in_array($action->method, get_class_methods(get_class($this)))) {
+            throw new jException('jelix~errors.cli.unknow.command', $action->method);
+        }
+        $opt = isset($this->allowed_options[$action->method]) ? $this->allowed_options[$action->method]: array();
+        $par = isset($this->allowed_parameters[$action->method]) ? $this->allowed_parameters[$action->method]: array();
+
+        list($this->_options,$this->_parameters) = jCmdUtils::getOptionsAndParams($params, $opt, $par);
 
     }
 
@@ -56,7 +64,6 @@ class jControllerCmdLine extends jController {
             return false;
         }
     }
-
 }
 
 ?>

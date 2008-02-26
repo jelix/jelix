@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage utils
 * @author     Loic Mathaud
-* @contributor
-* @copyright  2006 Loic Mathaud
+* @contributor Laurent Jouanneau
+* @copyright  2006 Loic Mathaud, 2008 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -31,14 +31,14 @@ class jCmdUtils {
                         $sw = array_shift($argv);
                         $switches[$sw] = array_shift($argv);
                     } else {
-                        die("Error: parameter missing for the '".$argv[0]."' option\n");
+                        throw new jException('jelix~errors.cli.option.value.missing', $argv[0]);
                     }
                 } else {
                     $sw = array_shift($argv);
                     $switches[$sw] = true;
                 }
             } else {
-                die("Error: unknow option '".$argv[0]."' \n");
+                throw new jException('jelix~errors.cli.unknow.option', $argv[0]);
             }
         }
 
@@ -46,7 +46,7 @@ class jCmdUtils {
         foreach ($params as $pname => $needed) {
             if (count($argv) == 0) {
                 if ($needed) {
-                    die("Error: '".$pname."' parameter missing\n");
+                    throw new jException('jelix~errors.cli.param.missing', $argv[0]);
                 } else {
                     break;
                 }
@@ -55,7 +55,7 @@ class jCmdUtils {
         }
 
         if (count($argv)) {
-            die("Error: two many parameters\n");
+            throw new jException('jelix~errors.cli.two.many.parameters');
         }
 
         return array($switches , $parameters);

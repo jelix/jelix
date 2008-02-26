@@ -28,6 +28,12 @@ cd testapp/install
   install.mysql.sql
   install.pgsql.sql
 
+cd testapp/var/config/cmdline
+    config.ini.php
+
+cd testapp/scripts
+    cmdline.php
+
 cd testapp/modules/testapp
   module.xml
 cd testapp/modules/testapp/locales/en_US
@@ -44,6 +50,7 @@ cd testapp/modules/testapp/controllers
   sampleform.classic.php
   syndication.classic.php
   samplecrud.classic.php
+  default.cmdline.php
 cd testapp/modules/testapp/templates
   hello.tpl
   hello2.tpl
