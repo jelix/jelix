@@ -48,6 +48,26 @@ class UTjDb_profile extends jUnitTestCase {
         $this->assertEqual($p['name'], 'testapppdo');
     }
 
+    function testVirtualProfil() {
+        $profile = array(
+            'driver'=>"mysql",
+            'database'=>"virtual_mysql",
+            'host'=> "localhostv_mysql",
+            'user'=> "v_mysql",
+            'password'=> "vir_mysql",
+            'persistent'=> '1',
+            'force_encoding'=>1
+        );
+
+        jDb::createVirtualProfile('foobar', $profile);
+
+        $p = jDb::getProfil('foobar');
+        $profile['name'] = 'foobar';
+
+        $this->assertEqual($profile, $p);
+    }
+
+
     function testBadProfil(){
         try {
             $p = jDb::getProfil('abcdef'); // unknow profil

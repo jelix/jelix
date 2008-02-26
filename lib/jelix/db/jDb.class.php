@@ -45,6 +45,9 @@ require(JELIX_LIB_DB_PATH.'jDbResultSet.class.php');
  * @subpackage db
  */
 class jDb {
+
+    static private $_profils =  null;
+
     /**
     * return a database connector
     * Use a local pool.
@@ -121,28 +124,27 @@ class jDb {
     * @return array  properties
     */
     public static function getProfil ($name='', $nameIsProfilType=false){
-        static $profils = null;
         global $gJConfig;
-        if($profils === null){
-            $profils = parse_ini_file(JELIX_APP_CONFIG_PATH.$gJConfig->dbProfils , true);
+        if(self::$_profils === null){
+            self::$_profils = parse_ini_file(JELIX_APP_CONFIG_PATH.$gJConfig->dbProfils , true);
         }
 
         if($name == ''){
-            if(isset($profils['default']))
-                $name=$profils['default'];
+            if(isset(self::$_profils['default']))
+                $name=self::$_profils['default'];
             else
                 throw new jException('jelix~db.error.default.profil.unknow');
         }elseif($nameIsProfilType){
-            if(isset($profils[$name]) && is_string($profils[$name])){
-                $name = $profils[$name];
+            if(isset(self::$_profils[$name]) && is_string(self::$_profils[$name])){
+                $name = self::$_profils[$name];
             }else{
                 throw new jException('jelix~db.error.profil.type.unknow',$name);
             }
         }
 
-        if(isset($profils[$name]) && is_array($profils[$name])){
-            $profils[$name]['name'] = $name;
-            return $profils[$name];
+        if(isset(self::$_profils[$name]) && is_array(self::$_profils[$name])){
+            self::$_profils[$name]['name'] = $name;
+            return self::$_profils[$name];
         }else{
             throw new jException('jelix~db.error.profil.unknow',$name);
         }
@@ -189,6 +191,21 @@ class jDb {
             $dbh = new $class ($profil);
             return $dbh;
         }
+    }
+
+    public static function createVirtualProfile ($name, $params) {
+        if ($name == '') {
+           throw new jException('jelix~db.error.virtual.profile.no.name');
+        }
+
+        if (! is_array ($params)) {
+           throw new jException('jelix~db.error.virtual.profile.invalid.params', $name);
+        }
+
+        if (self::$_profils === null) {
+            self::$_profils = parse_ini_file (JELIX_APP_CONFIG_PATH . $gJConfig->dbProfils, true);
+        }
+        self::$_profils[$name] = $params;
     }
 }
 ?>
