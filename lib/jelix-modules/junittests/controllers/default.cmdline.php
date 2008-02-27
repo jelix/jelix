@@ -37,10 +37,9 @@ class defaultCtrl extends jControllerCmdLine {
     protected function _prepareResponse(){
         $rep = $this->getResponse();
 
-        $rep->content = 
-'Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION.'
+        $rep->content = '
+Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION.'
 ===========================================================================
-
 ';
 
         foreach($GLOBALS['gJConfig']->_modulesPathList as $module=>$path){

@@ -20,11 +20,14 @@ endif
 ifndef DOCSPATH
 DOCSPATH=_docs
 endif
+ifndef TESTS_DBPROFILES
+TESTS_DBPROFILES=testapp/var/config/dbprofils.ini.php.dist
+endif
 
 default:
 	@echo "target:"
 	@echo " nightlies : "
-	@echo "     généerations des packages des nightly build"
+	@echo "     générations des packages des nightly build"
 	@echo " docs : "
 	@echo "     Génération de la doc"
 	@echo "paramètres facultatifs (valeurs actuelles) :"
@@ -41,6 +44,12 @@ nightlies:
 	$(PHP) build/buildapp.php -D $(DISTPATHSWITCH) build/config/myapp-dist.ini
 	$(PHP) build/buildmodules.php -D $(DISTPATHSWITCH) build/config/modules-dist.ini
 	$(PHP) build/buildfonts.php -D $(DISTPATHSWITCH) build/config/jelix-fonts-dist.ini
+
+tests:
+	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) build/config/jelix-test.ini
+	$(PHP) build/buildapp.php -D $(TESTPATHSWITCH) build/config/testapp-test.ini
+	cd $(TESTPATH) && cp $(TESTS_DBPROFILES) testapp/var/config/dbprofils.ini.php
+	cd $(TESTPATH)/testapp/scripts/ && $(PHP) tests.php default:index
 
 docs: 
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) build/config/jelix-test.ini
