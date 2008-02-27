@@ -218,8 +218,6 @@ class UTOldSelectorAct extends UnitTestCase {
         }
 
     }
-
-
 }
 
 ?>

@@ -2,6 +2,7 @@ cd testapp
   project.xml
   .htaccess
   application.init.php
+  application-cli.init.php
   INSTALL.txt
 cd testapp/plugins
   .htaccess
@@ -28,11 +29,9 @@ cd testapp/install
   install.mysql.sql
   install.pgsql.sql
 
-cd testapp/var/config/cmdline
-    config.ini.php
-
 cd testapp/scripts
     cmdline.php
+    tests.php
 
 cd testapp/modules/testapp
   module.xml
@@ -123,37 +122,37 @@ cd testapp/modules/jelix_tests/forms
   product.form.xml
   label.form.xml
 cd testapp/modules/jelix_tests/tests/
-  core.jlocale.html.php
+  core.jlocale.html_cli.php
   core.jrequest.html_cli.php
-  core.selectors_action.html.php
   core.old_selectors_action.html.php
-  core.selectors_module.html.php
-  core.urls_generation.html.php
   core.old_urls_generation.html.php
-  core.urls_parsing.html.php
   core.old_urls_parsing.html.php
-  events.simple_test.html.php
-  jacl.main_api.html.php
-  jacl.manager.html.php
-  jacl.users_and_groups.html.php
-  jdao.conditions.html.php
-  jdao.main_api.html.php
-  jdao.main_api_with_pdo.html.php
-  jdao.parser.html.php
-  jdao.parser2.html.php
-  jdao.parser_update.html.php
-  jdao.generator.html.php
-  jdao.generator_select.html.php
-  jdb.0_profiles.html.php
-  jdb.1_queries.html.php
-  jdb.2_queries_with_pdo.html.php
-  jdb.pgsql.html.php
-  jdb.sqlite.html.php
-  jforms.html.php
-  jforms.check_datas.html.php
-  jforms.compiler.html.php
-  jforms.htmlbuilder.html.php
-  jforms.with_dao.html.php
+  core.selectors_action.html.php
+  core.selectors_module.html_cli.php
+  core.urls_generation.html.php
+  core.urls_parsing.html_cli.php
+  events.simple_test.html_cli.php
+  jacl.main_api.html_cli.php
+  jacl.manager.html_cli.php
+  jacl.users_and_groups.html_cli.php
+  jdao.conditions.html_cli.php
+  jdao.main_api.html_cli.php
+  jdao.main_api_with_pdo.html_cli.php
+  jdao.parser.html_cli.php
+  jdao.parser2.html_cli.php
+  jdao.parser_update.html_cli.php
+  jdao.generator.html_cli.php
+  jdao.generator_select.html_cli.php
+  jdb.0_profiles.html_cli.php
+  jdb.1_queries.html_cli.php
+  jdb.2_queries_with_pdo.html_cli.php
+  jdb.pgsql.html_cli.php
+  jdb.sqlite.html_cli.php
+  jforms.html_cli.php
+  jforms.check_datas.html_cli.php
+  jforms.compiler.html_cli.php
+  jforms.htmlbuilder.html_cli.php
+  jforms.with_dao.html_cli.php
   jtpl.compiler.html_cli.php
   jtpl.expressions_parsing.html_cli.php
   jtpl.plugins.html.php
@@ -165,6 +164,7 @@ cd testapp/modules/jelix_tests/tests/
 cd testapp/var
   .htaccess
 cd testapp/var/log
+cd testapp/var/log-cli
 cd testapp/var/uploads
 cd testapp/var/config
   defaultconfig.ini.php
@@ -177,6 +177,9 @@ cd testapp/var/config/xmlrpc
   config.ini.php
 cd testapp/var/config/jsonrpc
   config.ini.php
+cd testapp/var/config/cmdline
+  config.ini.php
+  configtests.ini.php
 cd testapp/var/themes/default/testapp
   hello2.tpl
 cd testapp/var/themes/default/junittests
@@ -187,3 +190,4 @@ cd testapp/var/db/sqlite/
   tests.sqlite
 
 cd temp/testapp
+cd temp/testapp-cli

@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(dirname(__FILE__).'/jdao.main_api.html.php');
+require_once(dirname(__FILE__).'/jdao.main_api.html_cli.php');
 /**
  * same tests as UTDAO, but with a pdo connection
  */

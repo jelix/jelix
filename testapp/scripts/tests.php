@@ -13,7 +13,7 @@ require_once ('../application-cli.init.php');
 
 require_once (JELIX_LIB_CORE_PATH.'request/jCmdLineRequest.class.php');
 
-$config_file = 'cmdline/config.ini.php';
+$config_file = 'cmdline/configtests.ini.php';
 
 $jelix = new jCoordinator($config_file);
 $jelix->process(new jCmdLineRequest());
