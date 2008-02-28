@@ -189,7 +189,7 @@ class jTplCompiler
 
         $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', $tplcontent);
 
-        $tplcontent = preg_replace_callback("/{((.).*?)}/s", array($this,'_callback'), $tplcontent);
+        $tplcontent = preg_replace_callback("/{((.).*?)}/sm", array($this,'_callback'), $tplcontent);
 
         $tplcontent = preg_replace('/\?>\n?<\?php/', '', $tplcontent);
         $tplcontent = preg_replace('/<\?php\\s+\?>/', '', $tplcontent);
@@ -223,7 +223,7 @@ class jTplCompiler
         } elseif ($firstcar == '*') {
             return '';
         } else {
-            if (!preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/',$tag,$m)) {
+            if (!preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/ms',$tag,$m)) {
 #if JTPL_STANDALONE
                 throw new Exception(sprintf($this->_locales['errors.tpl.tag.function.invalid'], $tag, $this->_sourceFile));
 #else
@@ -446,6 +446,8 @@ class jTplCompiler
                     if(!$this->trusted && $type == T_STRING && defined($str) && !in_array(strtoupper($str),$this->_allowedConstants)){
                         $this->doError2('errors.tpl.tag.constant.notallowed', $this->_currentTag, $str);
                     }
+                    if($type == T_WHITESPACE)
+                        $str = preg_replace("/(\s+)/ms"," ",$str);
                     $result.=$str;
                 }else{
                     $this->doError2('errors.tpl.tag.phpsyntax.invalid', $this->_currentTag, $str);

@@ -123,6 +123,20 @@ function toto() {
         '<p>ok {ifuserconnected} connected {else} not connected {/ifuserconnected}</p>',
         '<p>ok <?php  if(jAuth::isConnected()):?> connected <?php else:?> not connected <?php  endif; ?></p>',
         ),
+5=>array(
+        '<p>ok {zone $truc,
+                     array(\'toto\'=>4,
+                      \'bla\'=>\'foo\')
+                }</p>',
+        '<p>ok <?php echo jZone::get($t->_vars[\'truc\'], array(\'toto\'=>4, \'bla\'=>\'foo\') );?></p>',
+        ),
+6=>array(
+        '<p>ok {zone $truc,
+                     array(\'toto\'=>4,
+                      \'bla\'=>\'foo\')
+                }</p><div>{counter_init \'name\', \'0\', 1, 1}</div>',
+        '<p>ok <?php echo jZone::get($t->_vars[\'truc\'], array(\'toto\'=>4, \'bla\'=>\'foo\') );?></p><div><?php jtpl_function_common_counter_init( $t,\'name\', \'0\', 1, 1);?></div>',
+        ),
 
 );
 
@@ -140,14 +154,14 @@ function toto() {
             }
         }
     }
-    
+
     protected $tplerrors = array(
          0=>array('{if}',
                   'jelix~errors.tpl.tag.block.end.missing',array('if',null) ),
          1=>array('{ifuserconnected} {if}  {/if} ',
                   'jelix~errors.tpl.tag.block.end.missing',array('ifuserconnected',null) ),
          );
-    
+
     function testCompileErrors() {
         $compil = new testJtplContentCompiler();
         $compil->trusted = true;
