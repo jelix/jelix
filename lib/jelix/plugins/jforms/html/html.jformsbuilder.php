@@ -196,9 +196,8 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             break;
         case 'textarea':
             $value = $this->_form->getData($ctrl->ref);
-            $rows = ($ctrl->rows == 0?'': ' rows="'.$ctrl->rows.'"');
-            $cols = ($ctrl->cols == 0?'': ' cols="'.$ctrl->cols.'"');
-            echo '<textarea',$id,$readonly,$hint,$class,$rows,$cols,'>',htmlspecialchars($value),'</textarea>';
+            $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
+            echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
             break;
         case 'secret':
         case 'secretconfirm':

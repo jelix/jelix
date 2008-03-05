@@ -189,8 +189,8 @@ class jFormsControlMenulist extends jFormsControlDatasource {
  */
 class jFormsControlTextarea extends jFormsControl {
     public $type='textarea';
-    public $rows=0;
-    public $cols=0;
+    public $rows=5;
+    public $cols=40;
 }
 
 /**

@@ -41,7 +41,11 @@
       <item value="bo">Bordeaux</item>
   </listbox>
 
-   <checkboxes ref="objets" required="true">
+  <textarea ref="address">
+      <label>Your address</label>
+  </textarea>
+
+  <checkboxes ref="objets" required="true">
       <label>Vous avez </label>
       <item value="maison">Une maison</item>
       <item value="voiture">Une voiture</item>
