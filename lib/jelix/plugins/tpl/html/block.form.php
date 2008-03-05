@@ -39,8 +39,8 @@ unset($t->_privateVars[\'__formbuilder\']);
 unset($t->_privateVars[\'__displayed_ctrl\']);';
     }
 
-    if(count($param) < 2 || count($param) > 5){
-        $compiler->doError2('errors.tplplugin.block.bad.argument.number','form',2);
+    if(count($param) < 2 || count($param) > 6){
+        $compiler->doError2('errors.tplplugin.block.bad.argument.number','form','2-6');
         return '';
     }
     if(count($param) == 2){
