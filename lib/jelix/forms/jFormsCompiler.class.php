@@ -275,6 +275,9 @@ class jFormsCompiler implements jISimpleCompiler {
                     $source[]='$datasource = new '.$class->className.'($this->id());';
                     $source[]='if ($datasource instanceof jIFormDatasource){$ctrl->datasource=$datasource;}';
                     $source[]='else{$ctrl->datasource=new jFormStaticDatasource();}';
+                    if($controltype == 'submit'){
+                        $source[]='$ctrl->standalone=false;';
+                    }
                 }elseif(isset($control->item)){
                     if($controltype == 'submit'){
                         $source[]='$ctrl->standalone=false;';
