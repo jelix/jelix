@@ -4,7 +4,7 @@
 * @subpackage core
 * @author     Julien Issler
 * @contributor
-* @copyright  2007 Julien Issler
+* @copyright  2007-2008 Julien Issler
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0
@@ -27,34 +27,41 @@ class jSession {
     public static function start(){
         $params = $GLOBALS['gJConfig']->sessions;
 
-        if(!isset($params['storage'])){
-            session_start();
-            return true;
+        if(isset($params['storage'])){
+
+            switch($params['storage']){
+
+                case 'dao':
+                    session_set_save_handler(
+                        array(__CLASS__,'daoOpen'),
+                        array(__CLASS__,'daoClose'),
+                        array(__CLASS__,'daoRead'),
+                        array(__CLASS__,'daoWrite'),
+                        array(__CLASS__,'daoDestroy'),
+                        array(__CLASS__,'daoGarbageCollector')
+                    );
+                    self::$_params = $params;
+                    break;
+
+                case 'files':
+                    $path = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $params['files_path']);
+                    session_save_path($path);
+                    break;
+
+                default:
+                    break;
+            }
+
         }
 
-        switch($params['storage']){
-
-            case 'dao':
-                session_set_save_handler(
-                    array(__CLASS__,'daoOpen'),
-                    array(__CLASS__,'daoClose'),
-                    array(__CLASS__,'daoRead'),
-                    array(__CLASS__,'daoWrite'),
-                    array(__CLASS__,'daoDestroy'),
-                    array(__CLASS__,'daoGarbageCollector')
-                );
-                self::$_params = $params;
-                break;
-
-            case 'files':
-                $path = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $params['files_path']);
-                session_save_path($path);
-                break;
-
-            default:
-                break;
+        if(isset($params['name'])){
+            if(!preg_match('#^[a-zA-Z0-9]+$#',$params['name'])){
+                // regexp check because session name can only be alpha numeric according to the php documentation
+                throw new jException('jelix~errors.jsession.name.invalid');
+            }
+            session_name($params['name']);
         }
-
+        
         session_start();
         return true;
     }

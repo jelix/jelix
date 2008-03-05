@@ -137,6 +137,8 @@ driver = db
 
 
 [sessions]
+; You can change the session name by setting the following parameter (only accepts alpha-numeric chars) :
+; name = "mySessionName"
 ; Use alternative storage engines for sessions
 ;
 ; usage :

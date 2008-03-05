@@ -65,6 +65,7 @@ Julien Issler
  - jSession implementation (#354)
  - jResponsePdf and jTcpdf classes (#131)
  - fixed various bugs (ex: #451)
+ - added Session Name support in jSession (#417)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
