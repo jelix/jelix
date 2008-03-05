@@ -129,7 +129,7 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
         // Next link
         if (!empty($displayProperties['next-label'])) {
             echo '<li class="pagelinks-next';
-            if ($nextBound <= $itemsTotal) {
+            if ($nextBound < $itemsTotal) {
                 echo '"><a href="', $urlNextPage->toString(true), '">', $displayProperties['next-label'], '</a>';
             } else {
                 echo ' pagelinks-disabled">',$displayProperties['next-label'] ;
@@ -140,7 +140,7 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
         // End link
         if (!empty($displayProperties['end-label'])) {
             echo '<li class="pagelinks-end';
-            if ($nextBound <= $itemsTotal) {
+            if ($nextBound < $itemsTotal) {
                 echo '"><a href="', $urlEndPage->toString(true), '">', $displayProperties['end-label'], '</a>';
             } else {
                 echo ' pagelinks-disabled">',$displayProperties['end-label'] ;

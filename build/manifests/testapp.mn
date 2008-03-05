@@ -111,6 +111,7 @@ cd testapp/modules/jelix_tests/templates
   test_plugin_counter_reset.tpl
   test_plugin_counter.tpl
   test_plugin_jurl.tpl
+  test_plugin_pagelinks.tpl
 cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php
 cd testapp/modules/jelix_tests/daos
