@@ -91,78 +91,114 @@ cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
 cd lib/jelix/core-modules/jelix/locales/en_US
   acldb.ISO-8859-1.properties
+  acldb.ISO-8859-15.properties
   acldb.UTF-8.properties
   auth.ISO-8859-1.properties
+  auth.ISO-8859-15.properties
   auth.UTF-8.properties
   common.ISO-8859-1.properties
+  common.ISO-8859-15.properties
   common.UTF-8.properties
   crud.ISO-8859-1.properties
+  crud.ISO-8859-15.properties
   crud.UTF-8.properties
   dao.ISO-8859-1.properties
+  dao.ISO-8859-15.properties
   dao.UTF-8.properties
   daoxml.ISO-8859-1.properties
+  daoxml.ISO-8859-15.properties
   daoxml.UTF-8.properties
   db.ISO-8859-1.properties
+  db.ISO-8859-15.properties
   db.UTF-8.properties
   errors.ISO-8859-1.properties
+  errors.ISO-8859-15.properties
   errors.UTF-8.properties
   format.ISO-8859-1.properties
+  format.ISO-8859-15.properties
   format.UTF-8.properties
   formserr.ISO-8859-1.properties
+  formserr.ISO-8859-15.properties
   formserr.UTF-8.properties
   jelix.ISO-8859-1.properties
+  jelix.ISO-8859-15.properties
   jelix.UTF-8.properties
   ui.ISO-8859-1.properties
+  ui.ISO-8859-15.properties
   ui.UTF-8.properties
 cd lib/jelix/core-modules/jelix/locales/en_EN
   acldb.ISO-8859-1.properties
+  acldb.ISO-8859-15.properties
   acldb.UTF-8.properties
   auth.ISO-8859-1.properties
+  auth.ISO-8859-15.properties
   auth.UTF-8.properties
   common.ISO-8859-1.properties
+  common.ISO-8859-15.properties
   common.UTF-8.properties
   crud.ISO-8859-1.properties
+  crud.ISO-8859-15.properties
   crud.UTF-8.properties
   dao.ISO-8859-1.properties
+  dao.ISO-8859-15.properties
   dao.UTF-8.properties
   daoxml.ISO-8859-1.properties
+  daoxml.ISO-8859-15.properties
   daoxml.UTF-8.properties
   db.ISO-8859-1.properties
+  db.ISO-8859-15.properties
   db.UTF-8.properties
   errors.ISO-8859-1.properties
+  errors.ISO-8859-15.properties
   errors.UTF-8.properties
   format.ISO-8859-1.properties
+  format.ISO-8859-15.properties
   format.UTF-8.properties
   formserr.ISO-8859-1.properties
+  formserr.ISO-8859-15.properties
   formserr.UTF-8.properties
   jelix.ISO-8859-1.properties
+  jelix.ISO-8859-15.properties
   jelix.UTF-8.properties
   ui.ISO-8859-1.properties
+  ui.ISO-8859-15.properties
   ui.UTF-8.properties
 cd lib/jelix/core-modules/jelix/locales/fr_FR
   acldb.ISO-8859-1.properties
+  acldb.ISO-8859-15.properties
   acldb.UTF-8.properties
   auth.ISO-8859-1.properties
+  auth.ISO-8859-15.properties
   auth.UTF-8.properties
   common.ISO-8859-1.properties
+  common.ISO-8859-15.properties
   common.UTF-8.properties
   crud.ISO-8859-1.properties
+  crud.ISO-8859-15.properties
   crud.UTF-8.properties
   dao.ISO-8859-1.properties
+  dao.ISO-8859-15.properties
   dao.UTF-8.properties
   daoxml.ISO-8859-1.properties
+  daoxml.ISO-8859-15.properties
   daoxml.UTF-8.properties
   db.ISO-8859-1.properties
+  db.ISO-8859-15.properties
   db.UTF-8.properties
   errors.ISO-8859-1.properties
+  errors.ISO-8859-15.properties
   errors.UTF-8.properties
   format.ISO-8859-1.properties
+  format.ISO-8859-15.properties
   format.UTF-8.properties
   formserr.ISO-8859-1.properties
+  formserr.ISO-8859-15.properties
   formserr.UTF-8.properties
   jelix.ISO-8859-1.properties
+  jelix.ISO-8859-15.properties
   jelix.UTF-8.properties
   ui.ISO-8859-1.properties
+  ui.ISO-8859-15.properties
   ui.UTF-8.properties
 cd lib/jelix/core-modules/jelix/templates
   404.xul.tpl
@@ -253,18 +289,24 @@ cd lib/jelix-modules/jauth/install/var/config
   authsw.coord.ini.php
 cd lib/jelix-modules/jauth/locales/en_US
   auth.ISO-8859-1.properties
+  auth.ISO-8859-15.properties
   auth.UTF-8.properties
   autherror.ISO-8859-1.properties
+  autherror.ISO-8859-15.properties
   autherror.UTF-8.properties
 cd lib/jelix-modules/jauth/locales/en_EN
   auth.ISO-8859-1.properties
+  auth.ISO-8859-15.properties
   auth.UTF-8.properties
   autherror.ISO-8859-1.properties
+  autherror.ISO-8859-15.properties
   autherror.UTF-8.properties
 cd lib/jelix-modules/jauth/locales/fr_FR
   auth.ISO-8859-1.properties
-  autherror.ISO-8859-1.properties
+  auth.ISO-8859-15.properties
   auth.UTF-8.properties
+  autherror.ISO-8859-1.properties
+  autherror.ISO-8859-15.properties
   autherror.UTF-8.properties
 cd lib/jelix-modules/jauth/templates
   login.form.tpl
