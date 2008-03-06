@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2008 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -56,11 +56,11 @@ class jResponseZip extends jResponse {
         $this->_httpHeaders['Content-Type']='application/zip';
         $this->_httpHeaders['Content-Disposition']='attachment; filename="'.$this->zipfilename.'"';
 
-        $this->addHttpHeaders('Content-Description','File Transfert',false);
-        $this->addHttpHeaders('Content-Transfer-Encoding','binary',false);
-        $this->addHttpHeaders('Pragma','no-cache',false);
-        $this->addHttpHeaders('Cache-Control','no-store, no-cache, must-revalidate, post-check=0, pre-check=0',false);
-        $this->addHttpHeaders('Expires','0',false);
+        $this->addHttpHeader('Content-Description','File Transfert',false);
+        $this->addHttpHeader('Content-Transfer-Encoding','binary',false);
+        $this->addHttpHeader('Pragma','no-cache',false);
+        $this->addHttpHeader('Cache-Control','no-store, no-cache, must-revalidate, post-check=0, pre-check=0',false);
+        $this->addHttpHeader('Expires','0',false);
 
         $this->_httpHeaders['Content-length']=strlen($zipContent);
         $this->sendHttpHeaders();
