@@ -16,9 +16,9 @@
  * @param jTpl $tpl template engine
  * @param string $action selector of the action 
  * @param array $actionParams parameters for the action
- * @param integer $pageSize  items number in a page
  * @param integer $itemsTotal number of items
  * @param integer $offset  index of the first item to display
+ * @param integer $pageSize  items number in a page
  * @param string $paramName name of the parameter in the actionParams which will content a page offset
  * @param array $displayProperties properties for the links display
  *  */

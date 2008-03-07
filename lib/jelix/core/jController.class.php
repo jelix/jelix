@@ -61,6 +61,7 @@ abstract class jController{
     * jZone::get alias
     * @param string $name zone selector
     * @param array $params associative array, parameters
+    * @deprecated
     */
     protected function processZone($name, $params=array ()){
         return jZone::get ($name, $params);
