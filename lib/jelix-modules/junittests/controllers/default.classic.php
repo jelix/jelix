@@ -47,13 +47,14 @@ class defaultCtrl extends jController {
         }
 
         $rep = $this->_prepareResponse();
-
-        $reporter = jClasses::create("junittests~jhtmlrespreporter");
+        jClasses::inc("junittests~jhtmlrespreporter");
         jClasses::inc('junittests~junittestcase');
         jClasses::inc('junittests~junittestcasedb');
-        $reporter->setResponse($rep);
 
         foreach($this->testsList as $module=>$tests){
+            $reporter = new jhtmlrespreporter();
+            $reporter->setResponse($rep);
+
             jContext::push($module);
             $group = new GroupTest('Tests on module '.$module);
             foreach($this->testsList[$module] as $test){
