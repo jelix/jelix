@@ -89,6 +89,11 @@ cd lib/jelix/core-modules/jelix/install/sql
   install_jacl.schema.mysql.sql
   install_jacl.datas.mysql.sql
   install_jsession.schema.mysql.sql
+  delete.pgsql.sql
+  install_jacl.schema.pgsql.sql
+  install_jacl.datas.pgsql.sql
+  install_jsession.schema.pgsql.sql
+
 cd lib/jelix/core-modules/jelix/locales/en_US
   acldb.ISO-8859-1.properties
   acldb.ISO-8859-15.properties

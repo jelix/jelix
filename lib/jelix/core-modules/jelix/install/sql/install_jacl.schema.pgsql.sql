@@ -48,48 +48,6 @@ CREATE TABLE jacl_user_group (
     id_aclgrp integer NOT NULL
 );
 
-CREATE TABLE jlx_user (
-    usr_login character varying(50) NOT NULL,
-    usr_password character varying(50) NOT NULL,
-    usr_email character varying(255) NOT NULL
-);
-
-CREATE TABLE labels_tests (
-    "key" integer NOT NULL,
-    lang character varying(5) NOT NULL,
-    label character varying(50) NOT NULL
-);
-
-CREATE TABLE myconfig (
-    cfg_key character varying(150) NOT NULL,
-    cfg_value character varying(255) NOT NULL
-);
-
-CREATE TABLE product_tags_test (
-    product_id integer NOT NULL,
-    tag character varying(50) NOT NULL
-);
-
-CREATE TABLE product_test (
-    id serial NOT NULL,
-    name character varying(150) NOT NULL,
-    price real NOT NULL,
-    create_date timestamp with time zone NOT NULL
-);
-
-SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('product_test', 'id'), 1, false);
-
-
-CREATE TABLE products (
-    id serial NOT NULL,
-    name character varying(150) NOT NULL,
-    price real DEFAULT 0,
-    promo boolean NOT NULL
-);
-
-SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('products', 'id'), 1, false);
-
-
 
 ALTER TABLE ONLY jacl_group
     ADD CONSTRAINT jacl_group_pkey PRIMARY KEY (id_aclgrp);
@@ -109,24 +67,6 @@ ALTER TABLE ONLY jacl_subject
 ALTER TABLE ONLY jacl_user_group
     ADD CONSTRAINT jacl_user_group_pkey PRIMARY KEY ("login", id_aclgrp);
 
-ALTER TABLE ONLY jlx_user
-    ADD CONSTRAINT jlx_user_pkey PRIMARY KEY (usr_login);
-
-ALTER TABLE ONLY labels_tests
-    ADD CONSTRAINT labels_tests_pkey PRIMARY KEY ("key", lang);
-
-ALTER TABLE ONLY myconfig
-    ADD CONSTRAINT myconfig_pkey PRIMARY KEY (cfg_key);
-
-ALTER TABLE ONLY product_tags_test
-    ADD CONSTRAINT product_tags_test_pkey PRIMARY KEY (product_id, tag);
-
-ALTER TABLE ONLY product_test
-    ADD CONSTRAINT product_test_pkey PRIMARY KEY (id);
-
-ALTER TABLE ONLY products
-    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
-
 ALTER TABLE ONLY jacl_right_values
     ADD CONSTRAINT jacl_right_values_id_aclvalgrp_fkey FOREIGN KEY (id_aclvalgrp) REFERENCES jacl_right_values_group(id_aclvalgrp);
 
@@ -143,14 +83,6 @@ ALTER TABLE ONLY jacl_user_group
     ADD CONSTRAINT jacl_user_group_id_aclgrp_fkey FOREIGN KEY (id_aclgrp) REFERENCES jacl_group(id_aclgrp);
 
 
-
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('foo', 'foovalue');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('bar', 'barvalue');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('name', 'laurent');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('engine', 'jelix');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('browser', 'firefox');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('33', '456ghjk');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('test', '33');
 
 
 
