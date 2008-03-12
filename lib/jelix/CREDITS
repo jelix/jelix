@@ -69,7 +69,7 @@ Julien Issler
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
- - little improvement in the jControllerDaoCrud API (#330)
+ - little improvement in the jControllerDaoCrud API (#330, #487)
  - fixed minor bugs
 
 Nicolas Jeudy (aka njeudy)

@@ -7,6 +7,7 @@
 * @contributor  Thibault PIRONT < nuKs >
 * @copyright    2007 Laurent Jouanneau
 * @copyright    2007 Thibault PIRONT
+* @copyright    2007,2008 Bastien Jaillot
 * @link         http://www.jelix.org
 * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
@@ -144,9 +145,7 @@ class jControllerDaoCrud extends jController {
         $dao = jDao::get($this->dao, $this->dbProfil);
 
         $cond = jDao::createConditions();
-        foreach ($this->propertiesForRecordsOrder as $p=>$order) {
-            $cond->addItemOrder($p, $order);
-        }
+        $this->_indexSetConditions($cond);
 
         $results = $dao->findBy($cond,$offset,$this->listPageSize);
         $pk = $dao->getPrimaryKeyNames();
@@ -173,7 +172,7 @@ class jControllerDaoCrud extends jController {
         $tpl->assign('listAction' , $this->_getAction('index'));
         $tpl->assign('listPageSize', $this->listPageSize);
         $tpl->assign('page',$offset);
-        $tpl->assign('recordCount',$dao->countAll());
+        $tpl->assign('recordCount',$dao->countBy($cond));
         $tpl->assign('offsetParameterName',$this->offsetParameterName);
 
         $this->_index($rep, $tpl);
@@ -190,6 +189,17 @@ class jControllerDaoCrud extends jController {
      */
     protected function _index($resp, $tpl) {
 
+    }
+
+    /**
+     * overload this method if you wan to do additionnal conditions to the index's select
+     * during the index action.
+     * @param jDaoConditions $cond the conditions
+     */
+    protected function _indexSetConditions($cond) {
+        foreach ($this->propertiesForRecordsOrder as $p=>$order) {
+            $cond->addItemOrder($p, $order);
+        }
     }
 
     /**
