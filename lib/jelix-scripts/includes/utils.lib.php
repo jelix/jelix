@@ -17,7 +17,7 @@ function jxs_load_command($cmdName){
 
    }
 
-   require($commandfile);
+   require_once($commandfile);
 
    $cmdName.='Command';
 

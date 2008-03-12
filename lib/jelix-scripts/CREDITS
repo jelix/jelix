@@ -1,25 +1,20 @@
 Credits
 =======
 
-Core team developers
---------------------
-
-Laurent Jouanneau (laurentj):
- - Conceptor and main developer of Jelix scripts
-
-Contributors
-------------
 By alphabetic order on the name
 
 Bastien Jaillot
   - bug fix on createdaocrud (#283)
 
-Thiriot Christophe 
-  - clearcache command
-
-Loic Mathaud
-  - bug fix
+Laurent Jouanneau (laurentj):
+ - Conceptor and main developer of Jelix scripts
 
 Yannick Le Guédart
   - script to convert old action selectors to new action selectors (modules/beta_migrating)
 
+Loic Mathaud
+  - bug fix
+
+Christophe Thiriot
+  - clearcache command
+  - little enhancement in createapp (#418)

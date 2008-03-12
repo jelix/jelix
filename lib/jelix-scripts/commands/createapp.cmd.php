@@ -5,7 +5,8 @@
 * @author      Jouanneau Laurent
 * @contributor Loic Mathaud
 * @contributor Gildas Givaja (bug #83)
-* @copyright   2005-2007 Jouanneau laurent, 2006 Loic Mathaud, 2007 Gildas Givaja
+* @contributor Christophe Thiriot
+* @copyright   2005-2007 Jouanneau laurent, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -113,6 +114,11 @@ class createappCommand extends JelixScriptCommand {
        }
 
        if ($this->getOption('-withcmdline')) {
+            $agcommand = jxs_load_command('createctrl');
+            $options = array('-cmdline'=>true);
+            $agcommand->init($options,array('module'=>$GLOBALS['APPNAME'], 'name'=>'default','method'=>'index'));
+            $agcommand->run();
+
             $this->createDir(JELIX_APP_CMD_PATH);
             $this->createDir(JELIX_APP_CONFIG_PATH.'cmdline');
             $this->createFile(JELIX_APP_CONFIG_PATH.'cmdline/config.ini.php','var/config/cmdline/config.ini.php.tpl',$param);

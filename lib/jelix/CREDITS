@@ -70,6 +70,7 @@ Julien Issler
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
  - little improvement in the jControllerDaoCrud API (#330)
+ - fixed minor bugs
 
 Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
@@ -113,6 +114,7 @@ Rahal
 M. Thiriot (aka Doubleface)
  - testor
  - bug fixes on PDO support in jDb
+ - fixed minor bugs
 
 Christian Tritten
  - improvements on pagelinks plugin (#340)
