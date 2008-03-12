@@ -54,7 +54,7 @@ class jResponseZip extends jResponse {
             return false;
         }
         $this->_httpHeaders['Content-Type']='application/zip';
-        $this->_httpHeaders['Content-Disposition']='attachment; filename="'.$this->zipfilename.'"';
+        $this->_httpHeaders['Content-Disposition']='attachment; filename="'.$this->zipFilename.'"';
 
         $this->addHttpHeader('Content-Description','File Transfert',false);
         $this->addHttpHeader('Content-Transfer-Encoding','binary',false);
