@@ -1,5 +1,5 @@
 
---- Liste des groupes
+-- Liste des groupes
 DROP TABLE IF EXISTS `jacl_group`;
 CREATE TABLE `jacl_group` (
   `id_aclgrp` int(11) NOT NULL auto_increment,
@@ -9,7 +9,7 @@ CREATE TABLE `jacl_group` (
   PRIMARY KEY  (`id_aclgrp`)
 ) TYPE=MyISAM AUTO_INCREMENT=1 ;
 
---- liste des groupes associés à chaque utilisateur
+-- liste des groupes associés à chaque utilisateur
 DROP TABLE IF EXISTS `jacl_user_group`;
 CREATE TABLE `jacl_user_group` (
   `login` varchar(50) NOT NULL default '',
@@ -18,8 +18,8 @@ CREATE TABLE `jacl_user_group` (
 ) TYPE=MyISAM;
 
 
---- groupes de valeurs de droits
---- type_aclvalgrp : 0 = valeurs pouvant être combinées, 1= valeurs exclusives
+-- groupes de valeurs de droits
+-- type_aclvalgrp : 0 = valeurs pouvant être combinées, 1= valeurs exclusives
 DROP TABLE IF EXISTS `jacl_right_values_group`;
 CREATE TABLE `jacl_right_values_group` (
   `id_aclvalgrp` int(11) NOT NULL default '0',
@@ -28,7 +28,7 @@ CREATE TABLE `jacl_right_values_group` (
   PRIMARY KEY  (`id_aclvalgrp`)
 ) TYPE=MyISAM;
 
---- liste des valeurs possibles dans chaque groupe de valeurs de droits
+-- liste des valeurs possibles dans chaque groupe de valeurs de droits
 DROP TABLE IF EXISTS `jacl_right_values`;
 CREATE TABLE `jacl_right_values` (
   `value` varchar(20) NOT NULL default '',
@@ -38,7 +38,7 @@ CREATE TABLE `jacl_right_values` (
 ) TYPE=MyISAM;
 
 
---- liste des sujets, avec leur appartenance à un groupe de valeurs de droits
+-- liste des sujets, avec leur appartenance à un groupe de valeurs de droits
 DROP TABLE IF EXISTS `jacl_subject`;
 CREATE TABLE `jacl_subject` (
   `id_aclsbj` varchar(100) NOT NULL default '',
@@ -48,8 +48,8 @@ CREATE TABLE `jacl_subject` (
   KEY `id_aclvalgrp` (`id_aclvalgrp`)
 ) TYPE=MyISAM;
 
---- table centrale
---- valeurs du droit pour chaque couple sujet/groupe ou triplet sujet/groupe/ressource
+-- table centrale
+-- valeurs du droit pour chaque couple sujet/groupe ou triplet sujet/groupe/ressource
 DROP TABLE IF EXISTS `jacl_rights`;
 CREATE TABLE `jacl_rights` (
   `id_aclsbj` varchar(100) NOT NULL default '',
