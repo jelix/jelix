@@ -168,6 +168,7 @@ class UTjlocale extends jUnitTestCase {
            $this->pass();
            $this->assertEqual('(200)The given locale key "tests1.second.locale" is invalid (for charset ISO-8859-11, lang fr_FR)', $e->getMessage());
         }
+        $GLOBALS['gJConfig']->charset = 'UTF-8';
         */
     }
 
