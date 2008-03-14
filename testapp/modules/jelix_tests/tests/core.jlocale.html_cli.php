@@ -52,7 +52,7 @@ class UTjlocale extends jUnitTestCase {
         );
 
     public function testBundle(){
-        
+
         foreach($this->firstlist as $file=>$content){
             $b = new bundleTest('','');
             try{
@@ -63,8 +63,8 @@ class UTjlocale extends jUnitTestCase {
             }
         }
     }
-    
-    
+
+
     function testSimpleLocale(){
         $GLOBALS['gJConfig']->locale = 'fr_FR';
         $this->assertEqual('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale'));
@@ -73,7 +73,7 @@ class UTjlocale extends jUnitTestCase {
         $this->assertEqual('this is an en_US sentence',jLocale::get('tests1.first.locale', null, 'en_US'));
         $this->assertEqual('this is an en_EN sentence',jLocale::get('tests1.first.locale', null, 'en_EN'));
     }
-        
+
     function testException() {
         $GLOBALS['gJConfig']->locale = 'fr_FR';
         try {
@@ -101,33 +101,76 @@ class UTjlocale extends jUnitTestCase {
 
     function testWithNoAskedLocale(){
         // all this tests are made on an existing locale file
-/*
-        $this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('test1.second.locale'));
+
+        $this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('tests1.second.locale'));
         // no test1.second.locale in fr_CA, so we should have the fr_FR one
-        $this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('test1.second.locale', null, 'fr_CA'));
+        //$this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('tests1.second.locale', null, 'fr_CA'));
         // no test1.third.locale in fr_CA, fr_FR, so we should have the en_EN one
-        $this->assertEqual('this is an en_EN sentence',jLocale::get('test1.third.locale', null, 'fr_CA'));
-        $this->assertEqual('this is an en_EN sentence',jLocale::get('test1.third.locale', null, 'fr_FR'));
+        //$this->assertEqual('this is an en_EN sentence',jLocale::get('tests1.third.locale', null, 'fr_CA'));
+        //$this->assertEqual('this is an en_EN sentence',jLocale::get('tests1.third.locale', null, 'fr_FR'));
 
         try{
-            jLocale::get('test1.fourth.locale', null, 'fr_FR')
-            $this->fail('no exception when trying to get test1.fourth.locale locale');
+            jLocale::get('tests1.fourth.locale', null, 'fr_FR');
+            $this->fail('no exception when trying to get tests1.fourth.locale locale');
         }catch(jException $e){
+            $this->fail('Bad exception when trying to get tests1.fourth.locale locale');
+        }catch(Exception $e){
             $this->pass();
+            $this->assertEqual('(210)The given locale key "jelix_tests~tests1.fourth.locale" does not exists in the default lang for the UTF-8 charset', $e->getMessage());
         }
     }
 
     function testWithNoAskedLocaleFile(){
         // all this tests are made on an non existing locale file
 
-        $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('test2.first.locale'));
+        $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale'));
         // no test2.properties file for fr_CA, so we should have the fr_FR one
-        $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('test2.first.locale', null, 'fr_CA'));
+       // $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale', null, 'fr_CA'));
         // no test3.properties file for fr_CA and fr_FR, so we should have the en_EN one
-        $this->assertEqual('this is an en_EN sentence test3',jLocale::get('test3.first.locale', null, 'fr_CA'));
-        $this->assertEqual('this is an en_EN sentence test3',jLocale::get('test3.first.locale', null, 'fr_FR'));
-  */  }
-    
+        //$this->assertEqual('this is an en_EN sentence test3',jLocale::get('tests3.first.locale', null, 'fr_CA'));
+        //$this->assertEqual('this is an en_EN sentence test3',jLocale::get('tests3.first.locale', null, 'fr_FR'));
+    }
+
+    function testWithBadCharset() {
+
+        try {
+            // this locale exists, but only in UTF-8, not in
+            jLocale::get('tests1.second.locale', null,'fr_FR','ISO-8859-1');
+            $this->fail();
+        }catch(jException $e){
+            $this->fail('Bad exception when trying to get tests1.second.locale locale ('.$e->getMessage().')');
+        } catch(Exception $e) {
+           $this->pass();
+           $this->assertEqual('(200)The given locale key "tests1.second.locale" is invalid (for charset ISO-8859-1, lang fr_FR)', $e->getMessage());
+        }
+
+        try {
+            // this locale don't exists, not in UTF-8 nor in ISO-8859-1
+            jLocale::get('tests1.second.locale', null,'de_DE','ISO-8859-1');
+            $this->fail();
+        }catch(jException $e){
+            $this->fail('Bad exception when trying to get tests1.second.locale locale ('.$e->getMessage().')');
+        } catch(Exception $e) {
+           $this->pass();
+           $this->assertEqual('(200)The given locale key "tests1.second.locale" is invalid (for charset ISO-8859-1, lang de_DE)', $e->getMessage());
+        }
+
+        // ok now, we change to ISO-8859-11 : error message of jelix don't exists in this charset
+        // it causes infinite loop in Jelix 1.0.2 and lower.
+        /*$GLOBALS['gJConfig']->charset = 'ISO-8859-11';
+        try {
+            // this locale exists, but only in UTF-8, not in
+            jLocale::get('tests1.second.locale', null,'fr_FR','ISO-8859-11');
+            $this->fail();
+        }catch(jException $e){
+            $this->fail('Bad exception when trying to get tests1.second.locale locale ('.$e->getMessage().')');
+        } catch(Exception $e) {
+           $this->pass();
+           $this->assertEqual('(200)The given locale key "tests1.second.locale" is invalid (for charset ISO-8859-11, lang fr_FR)', $e->getMessage());
+        }
+        */
+    }
+
 }
 
 ?>

@@ -223,7 +223,7 @@ class jLocale {
             //if the message was not found, we're gonna
             //use the default language and country.
             if ($locale == $gJConfig->locale){
-                throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang for the '.$file->charset.' charset ');
+                throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang for the '.$file->charset.' charset');
             }
             return jLocale::get ($key, $args, $gJConfig->locale);
         }else{
