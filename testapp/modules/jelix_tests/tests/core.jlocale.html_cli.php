@@ -106,9 +106,10 @@ class UTjlocale extends jUnitTestCase {
         // no test1.second.locale in fr_CA, so we should have the fr_FR one
         //$this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('tests1.second.locale', null, 'fr_CA'));
         // no test1.third.locale in fr_CA, fr_FR, so we should have the en_EN one
-        //$this->assertEqual('this is an en_EN sentence',jLocale::get('tests1.third.locale', null, 'fr_CA'));
-        //$this->assertEqual('this is an en_EN sentence',jLocale::get('tests1.third.locale', null, 'fr_FR'));
-
+        //$GLOBALS['gJConfig']->locale = 'en_EN';
+        //$this->assertEqual('this is the 3th en_EN sentence',jLocale::get('tests1.third.locale', null, 'fr_CA'));
+        //$this->assertEqual('this is the 3th en_EN sentence',jLocale::get('tests1.third.locale', null, 'fr_FR'));
+        //$GLOBALS['gJConfig']->locale = 'fr_FR';
         try{
             jLocale::get('tests1.fourth.locale', null, 'fr_FR');
             $this->fail('no exception when trying to get tests1.fourth.locale locale');
@@ -125,10 +126,12 @@ class UTjlocale extends jUnitTestCase {
 
         $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale'));
         // no test2.properties file for fr_CA, so we should have the fr_FR one
-       // $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale', null, 'fr_CA'));
+        //$this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale', null, 'fr_CA'));
         // no test3.properties file for fr_CA and fr_FR, so we should have the en_EN one
+        //$GLOBALS['gJConfig']->locale = 'en_EN';
         //$this->assertEqual('this is an en_EN sentence test3',jLocale::get('tests3.first.locale', null, 'fr_CA'));
         //$this->assertEqual('this is an en_EN sentence test3',jLocale::get('tests3.first.locale', null, 'fr_FR'));
+        //$GLOBALS['gJConfig']->locale = 'fr_FR';
     }
 
     function testWithBadCharset() {
