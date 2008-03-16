@@ -28,6 +28,7 @@ cd testapp/modules
 cd testapp/install
   install.mysql.sql
   install.pgsql.sql
+  installer.php
 
 cd testapp/scripts
     cmdline.php

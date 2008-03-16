@@ -243,6 +243,13 @@ cd lib/jelix/forms
   jFormsDatasource.class.php
   jIFormsBuilderCompiler.iface.php
 
+cd lib/jelix/installer
+  jIInstallReporter.iface.php
+  jInstallerApp.class.php
+  jInstallerBase.class.php
+  jInstallerModule.class.php
+  jInstallerPlugin.class.php
+
 cd lib/jelix/tpl/
 *  jTpl.class.php
 *  jTplCompiler.class.php

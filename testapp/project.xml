@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <project xmlns="http://jelix.org/ns/project/1.0">
-
+    <jelix minversion="" maxversion="" />
+    <php  minversion="" maxversion="" />
+    <name></name>
+    <version stability=""></version>
+    <licence uri=""></licence>
+    <authors>
+        <author role="lead/tester/developer/core-developer/packager/.."
+                name="" email="" active="true/false"/>
+    </authors>
+    <infos lang="">
+        <summary>
+        </summary>
+        <description>
+        </description>
+        <notes>
+        </notes>
+    </infos>
 </project>

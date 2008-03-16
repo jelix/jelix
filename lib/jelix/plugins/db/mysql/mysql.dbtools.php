@@ -21,6 +21,8 @@
  */
 class mysqlDbTools extends jDbTools {
 
+    protected $dbmsStyle = array('/^\s*(#|\-\- )/', '/;\s*$/');
+
     /**
     * retourne la liste des tables
     * @return   array    $tab[] = $nomDeTable

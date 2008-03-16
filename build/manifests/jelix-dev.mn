@@ -112,6 +112,7 @@ cd lib/jelix-scripts/commands
   createmodule.cmd.php
   createzone.cmd.php
   help.cmd.php
+  installapp.cmd.php
 cd lib/jelix-scripts/includes
   command.class.php
   utils.lib.php

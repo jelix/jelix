@@ -86,5 +86,10 @@ class pgsqlDbTools extends jDbTools {
 
         return $toReturn;
     }
+
+    public function execSQLScript ($file) {
+        $sqlQueries=file_get_contents($file);
+        $this->_connector->query ($sqlQueries);
+    }
 }
 ?>

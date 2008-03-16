@@ -19,7 +19,8 @@ define ('JELIXS_APPTPL_VAR_PATH'    , JELIXS_APPS_BASEPATH."/$APPNAME/var/");
 define ('JELIXS_APPTPL_LOG_PATH'    , JELIXS_APPS_BASEPATH."/$APPNAME/var/log/");
 define ('JELIXS_APPTPL_CONFIG_PATH' , JELIXS_APPS_BASEPATH."/$APPNAME/var/config/");
 define ('JELIXS_APPTPL_CMD_PATH'    , JELIXS_APPS_BASEPATH."/$APPNAME/scripts/");
-define ('JELIXS_INIT_PATH'          , JELIXS_APPS_BASEPATH.'/lib/jelix/init.php');
+define ('JELIXS_LIB_PATH'          , JELIXS_APPS_BASEPATH.'/lib/');
+define ('JELIXS_INIT_PATH'          , JELIXS_LIB_PATH.'jelix/init.php');
 
 /* example for a linux package :
 
