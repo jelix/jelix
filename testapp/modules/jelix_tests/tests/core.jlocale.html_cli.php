@@ -3,8 +3,9 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Julien Issler
 * @copyright   2006-2007 Jouanneau laurent
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -137,7 +138,7 @@ class UTjlocale extends jUnitTestCase {
     function testWithBadCharset() {
 
         try {
-            // this locale exists, but only in UTF-8, not in
+            // this locale exists, but only in UTF-8, not in ISO-8859-1
             jLocale::get('tests1.second.locale', null,'fr_FR','ISO-8859-1');
             $this->fail();
         }catch(jException $e){
@@ -162,7 +163,7 @@ class UTjlocale extends jUnitTestCase {
         // it causes infinite loop in Jelix 1.0.2 and lower.
         $GLOBALS['gJConfig']->charset = 'ISO-8859-11';
         try {
-            // this locale exists, but only in UTF-8, not in
+            // this locale exists, but only in UTF-8, not in ISO-8859-11
             jLocale::get('tests1.second.locale', null,'fr_FR','ISO-8859-11');
             $this->fail();
         }catch(jException $e){
