@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
     <datasources>
-        <primarytable name="{$table}" realname="{$table}" primarykey="{$primarykeys}" />
+        <primarytable name="%%table%%" realname="%%table%%" primarykey="%%primarykeys%%" />
     </datasources>
     <record>
 
 
-        {$properties}
+        %%properties%%
 
 
     <!--<property name="" fieldname="" datatype="string/int/float/autoincrement/date"

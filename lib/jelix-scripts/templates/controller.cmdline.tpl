@@ -1,14 +1,14 @@
 <?php
 /**
 * @package
-* @subpackage {$module}
+* @subpackage %%module%%
 * @author
 * @copyright
 * @link
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-class {$name}Ctrl extends jControllerCmdLine {
+class %%name%%Ctrl extends jControllerCmdLine {
 
     /**
     * Options to the command line
@@ -16,7 +16,7 @@ class {$name}Ctrl extends jControllerCmdLine {
     * true means that a value should be provided for the option on the command line
     */
     protected $allowed_options = array(
-            '{$method}' => array());
+            '%%method%%' => array());
 
     /**
      * Parameters for the command line
@@ -25,11 +25,11 @@ class {$name}Ctrl extends jControllerCmdLine {
      * is optional
      */
     protected $allowed_parameters = array(
-            '{$method}' => array());
+            '%%method%%' => array());
     /**
     *
     */
-    function {$method}() {
+    function %%method%%() {
         $rep = $this->getResponse(); // text response by default
 
         return $rep;
