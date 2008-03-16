@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  core
 * @author      Laurent Jouanneau
-* @contributor Sylvain de Vathaire
+* @contributor Sylvain de Vathaire, Julien Issler
 * @copyright   2005-2008 laurent Jouanneau, 2007 Sylvain de Vathaire
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -48,14 +49,15 @@ class jException extends Exception {
      * @param array $localeParams parameters for the message (for sprintf)
      * @param integer $code error code (can be provided by the localized message)
      * @param string $lang
+     * @param string $charset
      */
-    public function __construct($localekey, $localeParams=array(), $code = 1, $lang=null) {
+    public function __construct($localekey, $localeParams = array(), $code = 1, $lang = null, $charset = null) {
 
         $this->localeKey = $localekey;
         $this->localeParams = $localeParams;
 
         try{
-            $message = jLocale::get($localekey, $localeParams, $lang);
+            $message = jLocale::get($localekey, $localeParams, $lang, $charset);
         }catch(Exception $e){
             $message = $e->getMessage();
         }

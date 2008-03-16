@@ -160,7 +160,7 @@ class UTjlocale extends jUnitTestCase {
 
         // ok now, we change to ISO-8859-11 : error message of jelix don't exists in this charset
         // it causes infinite loop in Jelix 1.0.2 and lower.
-        /*$GLOBALS['gJConfig']->charset = 'ISO-8859-11';
+        $GLOBALS['gJConfig']->charset = 'ISO-8859-11';
         try {
             // this locale exists, but only in UTF-8, not in
             jLocale::get('tests1.second.locale', null,'fr_FR','ISO-8859-11');
@@ -172,7 +172,6 @@ class UTjlocale extends jUnitTestCase {
            $this->assertEqual('(200)The given locale key "tests1.second.locale" is invalid (for charset ISO-8859-11, lang fr_FR)', $e->getMessage());
         }
         $GLOBALS['gJConfig']->charset = 'UTF-8';
-        */
     }
 
 }
