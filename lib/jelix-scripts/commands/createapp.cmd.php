@@ -91,6 +91,8 @@ class createappCommand extends JelixScriptCommand {
        $this->createFile(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php','var/config/dbprofils.ini.php.tpl',$param);
        $this->createFile(JELIX_APP_CONFIG_PATH.'index/config.ini.php','var/config/index/config.ini.php.tpl',$param);
 
+       $this->createFile(JELIX_APP_PATH.'responses/myHtmlResponse.class.php','myHtmlResponse.class.php.tpl',$param);
+
        $param['rp_temp']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_TEMP_PATH, true);
        $param['rp_var'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_VAR_PATH,  true);
        $param['rp_log'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_LOG_PATH,  true);
@@ -111,6 +113,7 @@ class createappCommand extends JelixScriptCommand {
             $cmd = jxs_load_command('createmodule');
             $cmd->init(array(),array('module'=>$GLOBALS['APPNAME']));
             $cmd->run();
+            $this->createFile(JELIX_APP_PATH.'modules/'.$GLOBALS['APPNAME'].'/templates/main.tpl', 'main.tpl.tpl',$param);
        }
 
        if ($this->getOption('-withcmdline')) {

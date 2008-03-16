@@ -116,6 +116,8 @@ cd lib/jelix-scripts/includes
   command.class.php
   utils.lib.php
 cd lib/jelix-scripts/templates
+  main.tpl.tpl
+  myHtmlResponse.class.php.tpl
   module.xml.tpl
   dao.xml.tpl
   form.xml.tpl

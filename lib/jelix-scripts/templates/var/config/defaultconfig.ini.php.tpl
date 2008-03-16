@@ -1,5 +1,6 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
+;this file doesn't list all possible properties. See lib/jelix/core/defaultconfig.ini.php for that
 
 locale = "fr_FR"
 charset = "UTF-8"
@@ -25,7 +26,7 @@ enableOldActionSelector =
 ;nom = nom_fichier_ini
 
 [responses]
-
+html=myHtmlResponse
 
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
