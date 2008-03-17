@@ -1,0 +1,66 @@
+diff -u wshelper_o/IPReflectionClass.class.php wshelper/IPReflectionClass.class.php
+--- wshelper_o/IPReflectionClass.class.php	2006-04-07 11:24:40.000000000 +0200
++++ wshelper/IPReflectionClass.class.php	2008-03-17 22:30:41.000000000 +0100
+@@ -10,6 +10,8 @@
+  * @version 0.1
+  * @author David Kingma
+  * @extends reflectionClass
++ * Modified by sylvain261 in order to add the alsoHerited param to getMethods and getProperties methods
++ * Modified by sylvain261 in order to remove __constuct method in getMethods 
+  */
+ class IPReflectionClass extends reflectionClass {
+ 	/** @var string class name */
+@@ -56,11 +58,13 @@
+ 	 * @param boolean If the method should also return private functions
+ 	 * @return IPReflectionMethod[]
+ 	 */
+-	public function getMethods($alsoProtected = true, $alsoPrivate = true){
++	public function getMethods($alsoProtected = true, $alsoPrivate = true, $alsoHerited = false){
+ 		$ar = parent::getMethods();
+ 		foreach($ar as $method){
++			if($method->name == '__construct')
++				continue;
+ 			$m = new IPReflectionMethod($this->classname, $method->name);
+-			if((!$m->isPrivate() || $alsoPrivate) && (!$m->isProtected() || $alsoProtected) && ($m->getDeclaringClass()->name == $this->classname))
++			if((!$m->isPrivate() || $alsoPrivate) && (!$m->isProtected() || $alsoProtected) && (($m->getDeclaringClass()->name == $this->classname) || $alsoHerited))
+ 				$this->methods[$method->name] = $m;
+ 		}
+ 		ksort($this->methods);
+@@ -74,11 +78,11 @@
+ 	 * @param boolean If the method should also return private properties
+ 	 * @return IPReflectionProperty[]
+ 	 */
+-	public function getProperties($alsoProtected=true,$alsoPrivate=true) {
++	public function getProperties($alsoProtected=true,$alsoPrivate=true, $alsoHerited = false) {
+ 		$ar = parent::getProperties();
+ 		$this->properties = Array();
+ 		foreach($ar as $property){
+-			if((!$property->isPrivate() || $alsoPrivate) && (!$property->isProtected() || $alsoProtected)){
++			if((!$property->isPrivate() || $alsoPrivate) && (!$property->isProtected() || $alsoProtected) && (($property->getDeclaringClass()->name == $this->classname) || $alsoHerited)){
+ 				try{
+ 					$p = new IPReflectionProperty($this->classname, $property->getName());
+ 					$this->properties[$property->name]=$p;
+diff -u wshelper_o/IPXMLSchema.class.php wshelper/IPXMLSchema.class.php
+--- wshelper_o/IPXMLSchema.class.php	2006-02-15 19:14:28.000000000 +0100
++++ wshelper/IPXMLSchema.class.php	2008-03-17 22:32:14.000000000 +0100
+@@ -2,6 +2,7 @@
+ 
+ /**
+  * This class helps you creating a valid XMLSchema file
++ * Sylvain261 : Ajout du paramètre false à class_exists pour empécher l'autoload
+  */
+ class IPXMLSchema {
+ 	/** @var domelement reference to the parent domelement */
+@@ -60,10 +61,10 @@
+ 				}
+ 			}else{ //should be a known class
+ 
+-				if(!class_exists($name)) throw new WSDLException("Error creating WSDL: no class found with the name '$name' / $type : $parent, so how should we know the structure for this datatype?");
++				if(!class_exists($name), false) throw new WSDLException("Error creating WSDL: no class found with the name '$name' / $type : $parent, so how should we know the structure for this datatype?");
+ 				$v = new IPReflectionClass($name);
+ 				//TODO: check if the class extends another class?
+-				$properties = $v->getProperties(false, false);//not protected and private properties
++				$properties = $v->getProperties(false, false, false);//not protected and private properties
+ 
+ 				foreach((array) $properties as $property){
+ 					if(!$property->isPrivate){

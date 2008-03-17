@@ -603,3 +603,16 @@ cd lib/tcpdf/config
 cd lib/tcpdf/config/lang
 ! eng.php
 
+cd lib/wshelper
+! CREDITS
+! LICENCE
+! README
+! IPPhpDoc.class.php
+! IPReflectionClass.class.php
+! IPReflectionCommentParser.class.php
+! IPReflectionMethod.class.php
+! IPReflectionProperty.class.php
+! IPXMLSchema.class.php
+! WSDLException.class.php
+! WSDLStruct.class.php
+! WSException.class.php
