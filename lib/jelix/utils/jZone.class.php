@@ -203,11 +203,11 @@ class jZone {
     * @return string generated content
     */
     protected function _createContent (){
-        if($this->_tplname == '') return '';
         $this->_tpl = new jTpl();
         $this->_tpl->assign($this->_params);
         $this->_prepareTpl();
-        return $this->_tpl->metaFetch($this->_tplname, $this->_tplOuputType);
+        if($this->_tplname == '') return '';
+        return $this->_tpl->fetch($this->_tplname, $this->_tplOuputType);
     }
 
     /**
