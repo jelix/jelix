@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_FORMS_PATH.'jForms.class.php');
+require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
 class UTjforms extends jUnitTestCase {
     protected $form1;

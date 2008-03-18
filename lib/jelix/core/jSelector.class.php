@@ -564,7 +564,7 @@ class jSelectorDao extends jSelectorModule {
             $this->driver=$driver;
         }
         $this->_compiler='jDaoCompiler';
-        $this->_compilerPath=JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php';
+        $this->_compilerPath=JELIX_LIB_PATH.'dao/jDaoCompiler.class.php';
         parent::__construct($sel);
     }
 
@@ -635,7 +635,7 @@ class jSelectorTpl extends jSelectorModule {
             $this->outputType = $outputtype;
         $this->trusted = $trusted;
         $this->_compiler='jTplCompiler';
-        $this->_compilerPath=JELIX_LIB_TPL_PATH.'jTplCompiler.class.php';
+        $this->_compilerPath=JELIX_LIB_PATH.'tpl/jTplCompiler.class.php';
         parent::__construct($sel);
     }
 
@@ -735,7 +735,7 @@ class jSelectorForm extends jSelectorModule {
     function __construct($sel){
 
         $this->_compiler='jFormsCompiler';
-        $this->_compilerPath=JELIX_LIB_FORMS_PATH.'jFormsCompiler.class.php';
+        $this->_compilerPath=JELIX_LIB_PATH.'forms/jFormsCompiler.class.php';
 
         parent::__construct($sel);
     }

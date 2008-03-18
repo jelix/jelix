@@ -9,11 +9,11 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_FORMS_PATH.'jFormsBase.class.php');
-require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
-require_once(JELIX_LIB_FORMS_PATH.'jFormsDatasource.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsBase.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsControl.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsDatasource.class.php');
 require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
-require_once(JELIX_LIB_FORMS_PATH.'jFormsDataContainer.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
 
 class testCDForm extends jFormsBase {
     function addCtrl($control, $reset=true){

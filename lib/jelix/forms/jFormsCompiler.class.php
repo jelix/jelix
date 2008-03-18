@@ -12,7 +12,7 @@
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require(JELIX_LIB_FORMS_PATH.'jIFormsBuilderCompiler.iface.php');
+require(JELIX_LIB_PATH.'forms/jIFormsBuilderCompiler.iface.php');
 
 /**
  * generates form class from an xml file describing the form

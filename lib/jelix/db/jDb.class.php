@@ -35,8 +35,8 @@
 /**
  *
  */
-require(JELIX_LIB_DB_PATH.'jDbConnection.class.php');
-require(JELIX_LIB_DB_PATH.'jDbResultSet.class.php');
+require(JELIX_LIB_PATH.'db/jDbConnection.class.php');
+require(JELIX_LIB_PATH.'db/jDbResultSet.class.php');
 #endif
 
 /**

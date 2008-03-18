@@ -12,9 +12,9 @@
 /**
  *
  */
-require_once(JELIX_LIB_DB_PATH.'jDb.class.php');
-require_once(JELIX_LIB_DAO_PATH.'jDaoRecordBase.class.php');
-require_once(JELIX_LIB_DAO_PATH.'jDaoFactoryBase.class.php');
+require_once(JELIX_LIB_PATH.'db/jDb.class.php');
+require_once(JELIX_LIB_PATH.'dao/jDaoRecordBase.class.php');
+require_once(JELIX_LIB_PATH.'dao/jDaoFactoryBase.class.php');
 
 /**
  * Factory to create DAO objects

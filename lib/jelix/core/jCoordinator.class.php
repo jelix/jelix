@@ -266,7 +266,7 @@ class jCoordinator {
         }
 
         $respclass = $gJConfig->responses[$type];
-        if(file_exists($path=JELIX_LIB_RESPONSE_PATH.$respclass.'.class.php')){
+        if(file_exists($path=JELIX_LIB_CORE_PATH.'response/'.$respclass.'.class.php')){
             require_once ($path);
         }elseif(file_exists($path=JELIX_APP_PATH.'responses/'.$respclass.'.class.php')){
             require_once ($path);

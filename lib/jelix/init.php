@@ -49,21 +49,7 @@ define ('JELIX_NAMESPACE_BASE' , 'http://jelix.org/ns/');
 define ('JELIX_LIB_PATH',         dirname (__FILE__).'/');
 define ('JELIX_LIB_CORE_PATH',    JELIX_LIB_PATH.'core/');
 define ('JELIX_LIB_UTILS_PATH',   JELIX_LIB_PATH.'utils/');
-define ('JELIX_LIB_AUTH_PATH',    JELIX_LIB_PATH.'auth/');
-define ('JELIX_LIB_DB_PATH',      JELIX_LIB_PATH.'db/');
-define ('JELIX_LIB_ACL_PATH',     JELIX_LIB_PATH.'acl/');
-define ('JELIX_LIB_DAO_PATH',     JELIX_LIB_PATH.'dao/');
-define ('JELIX_LIB_EVENTS_PATH',  JELIX_LIB_PATH.'events/');
-define ('JELIX_LIB_FORMS_PATH',   JELIX_LIB_PATH.'forms/');
-define ('JELIX_LIB_REQUEST_PATH', JELIX_LIB_PATH.'core/request/');
-define ('JELIX_LIB_RESPONSE_PATH',JELIX_LIB_PATH.'core/response/');
-define ('JELIX_LIB_TPL_PATH',     JELIX_LIB_PATH.'tpl/');
-define ('JELIX_LIB_CTRL_PATH',    JELIX_LIB_PATH.'controllers/');
-
-// all path of libs
-define ('LIB_PATH',           realpath(dirname (__FILE__).'/../').'/');
-define ('JELIX_PLUGINS_PATH', LIB_PATH.'jelix-plugins/');
-define ('JELIX_MODULE_PATH',  LIB_PATH.'jelix-modules/');
+define ('LIB_PATH',               realpath(JELIX_LIB_PATH.'../').'/');
 
 #if WITH_BYTECODE_CACHE == 'auto'
 define ('BYTECODE_CACHE_EXISTS', function_exists('apc_cache_info')|| function_exists('eaccelerator_info'));
@@ -136,16 +122,16 @@ $gJConfig = null;
  * @name $gLibPath
  * @see __autoload()
  */
-$gLibPath=array('Db'=>JELIX_LIB_DB_PATH, 'Dao'=>JELIX_LIB_DAO_PATH,
- 'Forms'=>JELIX_LIB_FORMS_PATH, 'Event'=>JELIX_LIB_EVENTS_PATH,
- 'Tpl'=>JELIX_LIB_TPL_PATH, 'Acl'=>JELIX_LIB_ACL_PATH, 'Controller'=>JELIX_LIB_CTRL_PATH,
- 'Auth'=>JELIX_LIB_AUTH_PATH);
+$gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
+ 'Forms'=>JELIX_LIB_PATH.'forms/', 'Event'=>JELIX_LIB_PATH.'events/',
+ 'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Acl'=>JELIX_LIB_PATH.'acl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
+ 'Auth'=>JELIX_LIB_PATH.'auth/');
 
 /**
  * __autoload function used by php to try to load an unknown class
  */
 function __autoload($class){
-    if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms|Auth).*$/', $class, $m)){
+    if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms|Auth).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
     }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
         // pour les dao stockés en sessions notament

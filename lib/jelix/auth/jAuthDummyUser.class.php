@@ -12,7 +12,7 @@
 /**
  *
  */
-require_once(JELIX_LIB_AUTH_PATH.'jAuthUser.class.php');
+require_once(JELIX_LIB_PATH.'auth/jAuthUser.class.php');
 
 /**
  * internal use

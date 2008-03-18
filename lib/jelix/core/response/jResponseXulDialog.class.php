@@ -12,7 +12,7 @@
 /**
 *
 */
-require_once(JELIX_LIB_RESPONSE_PATH.'jResponseXul.class.php');
+require_once(JELIX_LIB_CORE_PATH.'response/jResponseXul.class.php');
 
 /**
 * Generate a XUL dialog

@@ -9,11 +9,11 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_FORMS_PATH.'jFormsBuilderBase.class.php');
-require_once(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsControl.class.php');
 require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
-require_once(JELIX_LIB_FORMS_PATH.'jFormsDatasource.class.php');
-require_once(JELIX_LIB_FORMS_PATH.'jFormsDataContainer.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsDatasource.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
 require_once(JELIX_LIB_PATH.'plugins/jforms/html/html.jformsbuilder.php');
 
 class testHMLForm { // simulate a jFormBase object

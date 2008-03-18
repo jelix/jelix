@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_DAO_PATH.'jDaoCompiler.class.php');
+require_once(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php');
 
 require_once(JELIX_LIB_PATH.'plugins/db/mysql/mysql.daobuilder.php');
 

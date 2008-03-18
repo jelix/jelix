@@ -1,5 +1,5 @@
 <?php 
-require_once (JELIX_LIB_RESPONSE_PATH.'jResponseHtml.class.php');
+require_once (JELIX_LIB_CORE_PATH.'response/jResponseHtml.class.php');
 
 class myHtmlResponse extends jResponseHtml {
 

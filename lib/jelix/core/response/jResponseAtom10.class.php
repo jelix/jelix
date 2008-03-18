@@ -13,8 +13,8 @@
 /**
 *
 */
-require_once(JELIX_LIB_TPL_PATH.'jTpl.class.php');
-require_once(JELIX_LIB_RESPONSE_PATH.'jResponseXmlFeed.class.php');
+require_once(JELIX_LIB_PATH.'tpl/jTpl.class.php');
+require_once(JELIX_LIB_CORE_PATH.'response/jResponseXmlFeed.class.php');
 
 /**
 * Atom 1.0 response

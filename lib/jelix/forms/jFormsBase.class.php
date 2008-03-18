@@ -12,8 +12,8 @@
 /**
  *
  */
-require(JELIX_LIB_FORMS_PATH.'jFormsControl.class.php');
-require(JELIX_LIB_FORMS_PATH.'jFormsDatasource.class.php');
+require(JELIX_LIB_PATH.'forms/jFormsControl.class.php');
+require(JELIX_LIB_PATH.'forms/jFormsDatasource.class.php');
 require(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 
 /**
@@ -502,7 +502,7 @@ abstract class jFormsBase {
      */
     public function getBuilder($buildertype, $action, $actionParams){
         if(isset($this->_builders[$buildertype])){
-            include_once(JELIX_LIB_FORMS_PATH.'jFormsBuilderBase.class.php');
+            include_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
             include_once ($this->_builders[$buildertype][0]);
             $c =  $this->_builders[$buildertype][1];
             return new $c($this, $action, $actionParams);

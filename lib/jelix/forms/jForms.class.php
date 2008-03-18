@@ -12,7 +12,7 @@
 /**
  *
  */
-require_once(JELIX_LIB_FORMS_PATH.'jFormsBase.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsBase.class.php');
 
 /**
  * static class to manage and call a form

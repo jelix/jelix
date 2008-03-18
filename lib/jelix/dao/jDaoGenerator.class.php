@@ -68,8 +68,8 @@ class jDaoGenerator {
     public final function buildClasses () {
 
         $src = array();
-        $src[] = ' require_once ( JELIX_LIB_DAO_PATH .\'jDaoRecordBase.class.php\');';
-        $src[] = ' require_once ( JELIX_LIB_DAO_PATH .\'jDaoFactoryBase.class.php\');';
+        $src[] = ' require_once ( JELIX_LIB_PATH .\'dao/jDaoRecordBase.class.php\');';
+        $src[] = ' require_once ( JELIX_LIB_PATH .\'dao/jDaoFactoryBase.class.php\');';
 
         // prepare some values to generate properties and methods
 

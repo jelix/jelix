@@ -36,10 +36,10 @@
 /**
  *
  */
-require(JELIX_LIB_DAO_PATH.'jDaoParser.class.php');
-require(JELIX_LIB_DAO_PATH.'jDaoProperty.class.php');
-require(JELIX_LIB_DAO_PATH.'jDaoMethod.class.php');
-require(JELIX_LIB_DAO_PATH.'jDaoGenerator.class.php');
+require(JELIX_LIB_PATH.'dao/jDaoParser.class.php');
+require(JELIX_LIB_PATH.'dao/jDaoProperty.class.php');
+require(JELIX_LIB_PATH.'dao/jDaoMethod.class.php');
+require(JELIX_LIB_PATH.'dao/jDaoGenerator.class.php');
 #endif
 
 /**
