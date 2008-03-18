@@ -7,11 +7,9 @@
 * @copyright
 */
 
-require_once ('%%rp_jelix%%init.php');
-
-require_once ('%%rp_app%%application.init.php');
-
-require_once (JELIX_LIB_CORE_PATH.'request/jRdfRequest.class.php');
+require ('%%rp_jelix%%init.php');
+require ('%%rp_app%%application.init.php');
+require (JELIX_LIB_CORE_PATH.'request/jRdfRequest.class.php');
 
 $config_file = 'rdf/config.ini.php';
 

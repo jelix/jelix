@@ -14,9 +14,9 @@ $BUILD_OPTIONS = array(
     '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
     ), 
 'APPNAME'=> array(
-    "The name of the app you want to generate (demoxul, myapp, testapp)",
+    "The name of the app you want to generate (testapp)",
     '',
-    '/demoxul|myapp|testapp/',
+    '/testapp/',
     ),
 'PACKAGE_TAR_GZ'=>array(
     "create a tar.gz package",
