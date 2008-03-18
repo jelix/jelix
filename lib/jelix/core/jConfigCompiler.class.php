@@ -85,14 +85,14 @@ class jConfigCompiler {
 #else
         $config = jIniFile::read(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
 
-        if( $commonConfig = @parse_ini_file(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',true)){
+        if( $commonConfig = parse_ini_file(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',true)){
             self::_mergeConfig($config, $commonConfig);
         }
 
         if($configFile !='defaultconfig.ini.php'){
             if(!file_exists(JELIX_APP_CONFIG_PATH.$configFile))
                 die("Jelix config file $configFile is missing !");
-            if( false === ($userConfig = @parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true)))
+            if( false === ($userConfig = parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true)))
                 die("Syntax error in the Jelix config file $configFile !");
             self::_mergeConfig($config, $userConfig);
         }

@@ -121,7 +121,7 @@ class jCoordinator {
                    $conff = $conf;
                    if(!file_exists(JELIX_APP_CONFIG_PATH.$conff))
                         die("Jelix Error: Error in the main configuration. Configuration file '$conff' for plugin $name doesn't exist!");
-                   if( false === ($conf = @parse_ini_file(JELIX_APP_CONFIG_PATH.$conff,true)))
+                   if( false === ($conf = parse_ini_file(JELIX_APP_CONFIG_PATH.$conff,true)))
                         die("Jelix Error: Error in the configuration file of plugin $name ($conff)!");
                 }
                 include( $gJConfig->_pluginsPathList_coord[$name].$name.'.coord.php');
