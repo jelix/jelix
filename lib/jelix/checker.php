@@ -62,6 +62,7 @@ class jHtmlInstallChecker implements jIInstallCheckReporter {
         }else{
             echo '<p>',$checker->messages->get('conclusion.ok'),'</p>';
         }
+        echo "</div>";
     }
 }
 $check = new jInstallCheck(new jHtmlInstallChecker);

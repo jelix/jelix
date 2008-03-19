@@ -1,4 +1,54 @@
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.7em;
+/*
+ * Design and CSS file by Laurent Jouanneau for jelix.org
+ * Copyright (c) 2006-2007 by Laurent Jouanneau - adapted by Bastien Jaillot
+ *
+ * You cannot use this stylesheet on your own site without the permission of the author
+ * All right reserved
+ */
+
+body {  
+    font-family: Verdana, Arial, Sans; 
+    font-size:0.8em;
+    margin:0;
+    background-color:#eff4f6;
+    padding-left:1em;
+    padding-right:1em;
+}
+
+.logo {
+    background: transparent url('images/logo_jelix_moyen.png') top left;
+    height: 60px;
+    width: 180px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+a { color:#3f6f7a; text-decoration:underline; }
+a:visited {  color : #002830;}
+a:hover { color: #0f82af; background-color: #d7e7eb; }
+
+
+h1.apptitle {
+    margin: 32px 0 60px 200px;
+    font-size: 1.7em;
+    color: #002830;
+}
+
+/*
+ * checker
+ *********/
+ul.checkresults {
+    border:3px solid black;
+    margin: 2em;
+    padding:1em;
+    list-style-type:none;
+}
+ul.checkresults li { margin:0; padding:5px; border-top:1px solid black; }
+li.checkerror   { background-color:#ff6666;}
+li.checkok      { background-color:#a4ffa9;}
+li.checkwarning { background-color:#ffbc8f;}
+
+.nocss {
+    display: none;
 }

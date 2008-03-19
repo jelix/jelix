@@ -54,6 +54,13 @@ force  = off
 ; name of url engine :  "simple" or "significant"
 engine        = simple
 
+; this is the url path to the jelix-www content (you can found this content in lib/jelix-www/)
+; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
+; jelix-www, or copy its content in yourapp/www/ (with a name like 'jelix' for example)
+; so you should indicate the relative path of this link/directory to the basePath, or an absolute path.
+jelixWWWPath = "jelix/"
+
+
 ; enable the parsing of the url. Set it to off if the url is already parsed by another program
 ; (like mod_rewrite in apache), if the rewrite of the url corresponds to a simple url, and if
 ; you use the significant engine. If you use the simple url engine, you can set to off.

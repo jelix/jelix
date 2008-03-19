@@ -214,6 +214,14 @@ cd lib/jelix/core-modules/jelix/templates
   crud_list.tpl
   crud_edit.tpl
   crud_view.tpl
+cd lib/jelix/core-modules/jelix/templates/en_EN
+  check_install.tpl
+cd lib/jelix/core-modules/jelix/templates/en_US
+  check_install.tpl
+cd lib/jelix/core-modules/jelix/templates/fr_FR
+  check_install.tpl
+cd lib/jelix/core-modules/jelix/zones
+  check_install.zone.php
 
 cd lib/jelix/dao
   jDaoRecordBase.class.php
