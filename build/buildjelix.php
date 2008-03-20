@@ -121,15 +121,17 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
 $SVN_REVISION = Subversion::revision();
 
-if($LIB_VERSION == 'SVN'){
-    $LIB_VERSION = 'SVN-'.$SVN_REVISION;
-    $IS_NIGHTLY = true;
-}else{
-    $IS_NIGHTLY = false;
+$IS_NIGHTLY = (strpos($LIB_VERSION,'SVN') !== false);
+
+if($IS_NIGHTLY){
+    $PACKAGE_NAME='jelix-'.str_replace('SVN', '', $LIB_VERSION);
+    if(substr($PACKAGE_NAME,-1,1) == '.')
+      $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
+    $LIB_VERSION = str_replace('SVN', $SVN_REVISION, $LIB_VERSION);
 }
-
-
-
+else {
+    $PACKAGE_NAME='jelix-'.$LIB_VERSION;
+}
 
 if($PHP_VERSION_TARGET){
     if(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
@@ -177,10 +179,6 @@ if( ! $ENABLE_OPTIMIZED_SOURCE)
     $STRIP_COMMENT='';
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-    if($IS_NIGHTLY)
-        $PACKAGE_NAME='jelix-nightly';
-    else
-        $PACKAGE_NAME='jelix-'.$LIB_VERSION;
 
     if($EDITION_NAME_x != '')
         $PACKAGE_NAME.='-'.$EDITION_NAME_x;

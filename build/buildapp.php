@@ -52,19 +52,20 @@ $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
 Env::setFromFile('VERSION',$APPDIR.'/VERSION',true);
 $SVN_REVISION = Subversion::revision($APPDIR);
 
-if($VERSION == 'SVN'){
-    $VERSION = 'SVN-'.$SVN_REVISION;
-    $IS_NIGHTLY = true;
-}else{
-    $IS_NIGHTLY = false;
+$IS_NIGHTLY = (strpos($VERSION,'SVN') !== false);
+
+if($IS_NIGHTLY){
+    $PACKAGE_NAME=$APPNAME.'-'.str_replace('SVN', '', $VERSION);
+    if(substr($PACKAGE_NAME,-1,1) == '.')
+      $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
+    $VERSION = str_replace('SVN', $SVN_REVISION, $VERSION);
+}
+else {
+    $PACKAGE_NAME=$APPNAME.'-'.$VERSION;
 }
 
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-    if($IS_NIGHTLY)
-        $PACKAGE_NAME=$APPNAME.'-nightly';
-    else
-        $PACKAGE_NAME=$APPNAME.'-'.$VERSION;
     //$MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME;
 }
 
