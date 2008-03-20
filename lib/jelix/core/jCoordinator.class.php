@@ -3,9 +3,10 @@
 * @package      jelix
 * @subpackage   core
 * @author       Laurent Jouanneau
-* @contributor  Thibault PIRONT < nuKs >
+* @contributor  Thibault PIRONT < nuKs >, Julien Issler
 * @copyright    2005-2008 laurent Jouanneau
 * @copyright    2007 Thibault PIRONT
+* @copyright    2008 Julien Issler
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -86,10 +87,6 @@ class jCoordinator {
         }
         // load configuration data
         $gJConfig = jConfig::load($configFile);
-
-        //make sure that the session cookie is only for the current application
-        if(!$gJConfig->sessions['shared_session'])
-            session_set_cookie_params ( 0 , $gJConfig->urlengine['basePath']);
 
         // set Error and exception handler
         // ne devrait être désactivé que lors de certains tests de jelix

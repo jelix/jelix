@@ -33,6 +33,10 @@ class jSession {
 
         $params = $GLOBALS['gJConfig']->sessions;
 
+        //make sure that the session cookie is only for the current application
+        if(!$params['shared_session'])
+            session_set_cookie_params ( 0 , $GLOBALS['gJConfig']->urlengine['basePath']);
+
         if(isset($params['storage'])){
 
             switch($params['storage']){
