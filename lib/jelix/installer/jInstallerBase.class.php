@@ -59,18 +59,30 @@ abstract class jInstallerBase {
 
     /**
      * @param string $filename relative path to the var/config directory
-     *
+     * @return jIniFileModifier
      */
     function getConfig($filename) {
-        throw new Exception("copyDirectoryContent not implemented");
+        return new jIniFileModifier(JELIX_APP_CONFIG_PATH.$filename);
     }
 
     /**
      * @param string $path relative path to the install directory
-     * @param string $target  'www' for the www path
+     * @param string $target 
      */
     function copyDirectoryContent($path, $target) {
         throw new Exception("copyDirectoryContent not implemented");
+        /*$currentTarget = $target;
+        $dir = new DirectoryIterator($this->basePath.$path);
+        foreach ($dir as $dirContent) {
+            if ($dirContent->isFile()) {
+                copy($dirContent->getPathName(),$currentTarget.'/'.);
+        	} else {
+        		// recursive directory deletion
+                if (!$dirContent->isDot() && $dirContent->isDir()) {
+                    $this->copyDirectoryContent($dirContent->getPathName());
+        		}
+        	}
+        }
     }
 }
 
