@@ -16,6 +16,7 @@
 * @package     jelix
 * @subpackage  installer
 * @experimental
+* @since 1.1
 */
 abstract class jInstallerBase {
 
@@ -54,6 +55,14 @@ abstract class jInstallerBase {
             $driver = $m[1];
         }
         $tools->execSQLScript($this->basePath.$name.'.'.$driver.'.sql');
+    }
+
+    /**
+     * @param string $filename relative path to the var/config directory
+     *
+     */
+    function getConfig($filename) {
+        throw new Exception("copyDirectoryContent not implemented");
     }
 
     /**

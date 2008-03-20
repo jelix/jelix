@@ -273,6 +273,7 @@ cd lib/jelix/utils/
 * jFilter.class.php
   jHttp.class.php
   jIniFile.class.php
+  jIniFileModifier.class.php
 * jJson.class.php
 * jJsonRpc.class.php
   jLog.class.php

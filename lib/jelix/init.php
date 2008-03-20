@@ -125,13 +125,13 @@ $gJConfig = null;
 $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  'Forms'=>JELIX_LIB_PATH.'forms/', 'Event'=>JELIX_LIB_PATH.'events/',
  'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Acl'=>JELIX_LIB_PATH.'acl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
- 'Auth'=>JELIX_LIB_PATH.'auth/');
+ 'Auth'=>JELIX_LIB_PATH.'auth/', 'Installer'=>JELIX_LIB_PATH.'installer/');
 
 /**
  * __autoload function used by php to try to load an unknown class
  */
 function __autoload($class){
-    if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms|Auth).*/i', $class, $m)){
+    if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms|Auth|Installer).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
     }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
         // pour les dao stockés en sessions notament

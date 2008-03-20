@@ -16,6 +16,7 @@
 * @package     jelix
 * @subpackage  installer
 * @experimental
+* @since 1.1
 */
 abstract class jInstallerPlugin extends jInstallerBase {
 

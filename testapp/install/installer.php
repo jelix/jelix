@@ -12,7 +12,8 @@
 class appInstaller extends jInstallerApp {
 
     function install(){
-        $this->execSQLScript('install');
+         $this->reporter->message("Test ok");
+        //$this->execSQLScript('install');
     }
 
     function uninstall(){

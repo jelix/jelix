@@ -277,7 +277,7 @@ class jConfigCompiler {
         $varname = '';
         $extlen = strlen($ext);
 
-        if(strrpos($_SERVER['SCRIPT_NAME'], $ext) === (strlen($_SERVER['SCRIPT_NAME']) - $extlen)) {
+        if(strrpos($_SERVER['SCRIPT_NAME'], $ext) === (strlen($_SERVER['SCRIPT_NAME']) - $extlen) || php_sapi_name() == 'cli') {
             return 'SCRIPT_NAME';
         }else if (isset($_SERVER['REDIRECT_URL']) && strrpos( $_SERVER['REDIRECT_URL'], $ext) === (strlen( $_SERVER['REDIRECT_URL']) -$extlen)) {
             return 'REDIRECT_URL';

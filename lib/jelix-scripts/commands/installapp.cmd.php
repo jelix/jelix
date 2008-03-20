@@ -56,12 +56,13 @@ class installappCommand extends JelixScriptCommand {
     }
 
     public function run(){
-        $installFile = JELIX_APP_PATH.'install/install.php';
+        $installFile = JELIX_APP_PATH.'install/installer.php';
         echo "EXPERIMENTAL ! Still in development !\n";
         if (!file_exists($installFile)) {
             echo "No install script.\nDone.\n";
             return;
         }
+
         jxs_init_jelix_env();
         include($installFile);
 
@@ -76,7 +77,7 @@ class installappCommand extends JelixScriptCommand {
 
         $reporter = new installappReporter;
         $installer = new appInstaller($reporter, JELIX_APP_PATH.'install/');
-        appInstaller->install();
+        $installer->install();
 
         if($reporter->hasError)
             echo "\nEnded with errors.\n";
