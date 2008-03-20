@@ -25,6 +25,12 @@ class jSession {
      * start a session
      */
     public static function start(){
+
+        // do not start the session if the request is made from the command line
+        if($GLOBALS['gJCoord']->request instanceof jCmdLineRequest){
+            return false;
+        }
+
         $params = $GLOBALS['gJConfig']->sessions;
 
         if(isset($params['storage'])){
@@ -61,7 +67,7 @@ class jSession {
             }
             session_name($params['name']);
         }
-        
+
         session_start();
         return true;
     }
