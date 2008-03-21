@@ -6,7 +6,8 @@
 * @contributor Loic Mathaud
 * @contributor Gildas Givaja (bug #83)
 * @contributor Christophe Thiriot
-* @copyright   2005-2007 Jouanneau laurent, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot
+* @contributor Bastien Jaillot
+* @copyright   2005-2007 Jouanneau laurent, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -111,7 +112,7 @@ class createappCommand extends JelixScriptCommand {
 
        if(!$this->getOption('-nodefaultmodule')){
             $cmd = jxs_load_command('createmodule');
-            $cmd->init(array(),array('module'=>$GLOBALS['APPNAME']));
+            $cmd->init(array('-addinstallzone'=>true),array('module'=>$GLOBALS['APPNAME']));
             $cmd->run();
             $this->createFile(JELIX_APP_PATH.'modules/'.$GLOBALS['APPNAME'].'/templates/main.tpl', 'main.tpl.tpl',$param);
        }

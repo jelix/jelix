@@ -124,6 +124,7 @@ cd lib/jelix-scripts/templates
   form.xml.tpl
   dao_empty.xml.tpl
   controller.tpl
+  controller.newapp.tpl
   controller.cmdline.tpl
   controller.daocrud.tpl
   template.tpl

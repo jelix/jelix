@@ -4,7 +4,8 @@
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
 * @contributor Loic Mathaud
-* @copyright   2005-2007 Jouanneau laurent
+* @contributor Bastien Jaillot
+* @copyright   2005-2007 Jouanneau laurent, 2008 Bastien Jaillot
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -12,13 +13,14 @@
 class createctrlCommand extends JelixScriptCommand {
 
     public  $name = 'createctrl';
-    public  $allowed_options=array('-cmdline'=>false);
+    public  $allowed_options=array('-cmdline'=>false, '-addinstallzone'=>false);
     public  $allowed_parameters=array('module'=>true,'name'=>true, 'method'=>false);
 
-    public  $syntaxhelp = "[-cmdline] MODULE CONTROLLER [METHOD]";
+    public  $syntaxhelp = "[-addinstallzone] [-cmdline] MODULE CONTROLLER [METHOD]";
     public  $help=array(
         'fr'=>"
     Créer un nouveau controleur de type jController ou jControllerCmdLine.
+    -addinstallzone (facultatif) : ajoute la zone check_install pour une nouvelle application
 
     Si l'option -cmdline est présente, le controleur est de type 
     jControllerCmdLine (pour développer des scripts en ligne de commande).
@@ -29,6 +31,7 @@ class createctrlCommand extends JelixScriptCommand {
                               le nom index.",
         'en'=>"
     Create a new controller, either a jController or jControllerCmdLine.
+    -addinstallzone (optional) : add the check_install zone for new application
     
     To create a jControllerCmdLine (for command line script), you should 
     provide -cmdline option
@@ -59,7 +62,12 @@ class createctrlCommand extends JelixScriptCommand {
        if ($this->getOption('-cmdline')) {
             $tplname = 'controller.cmdline.tpl';
        } else {
-            $tplname = 'controller.tpl';
+            if ($this->getOption('-addinstallzone')) {
+                $tplname = 'controller.newapp.tpl';
+            }
+            else {
+                $tplname = 'controller.tpl';
+            }
        }
        $this->createFile($agfilename,$tplname,$param);
 

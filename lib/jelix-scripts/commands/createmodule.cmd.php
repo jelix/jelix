@@ -3,7 +3,8 @@
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
 * @contributor Loic Mathaud
-* @copyright   2005-2007 Jouanneau laurent, 2007 Loic Mathaud
+* @contributor Bastien Jaillot
+* @copyright   2005-2007 Jouanneau laurent, 2007 Loic Mathaud, 2008 Bastien Jaillot
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -12,7 +13,7 @@
 class createmoduleCommand extends JelixScriptCommand {
 
     public  $name = 'createmodule';
-    public  $allowed_options=array('-nosubdir'=>false, '-nocontroller'=>false, '-cmdline'=>false);
+    public  $allowed_options=array('-nosubdir'=>false, '-nocontroller'=>false, '-cmdline'=>false, '-addinstallzone'=>false);
     public  $allowed_parameters=array('module'=>true);
 
     public  $syntaxhelp = "[-nosubdir] [-nocontroller] [-cmdline] MODULE";
@@ -25,6 +26,7 @@ class createmoduleCommand extends JelixScriptCommand {
     -nosubdir (facultatif) : ne créer pas tous les sous-repertoires courant..
     -nocontroller (facultatif) : ne créer pas de fichier controleur par défaut
     -cmdline (facultatif) : crée le module avec un controleur pour la ligne de commande
+    -addinstallzone (facultatif) : ajoute la zone check_install pour une nouvelle application
     MODULE : le nom du module à créer.",
         'en'=>"
     Create a new module, with all necessary files and sub-directories.
@@ -32,6 +34,7 @@ class createmoduleCommand extends JelixScriptCommand {
     -nosubdir (optional): don't create sub-directories.
     -nocontroller (optional): don't create a default controller.
     -cmdline (optional): create a controller for command line (jControllerCmdLine)
+    -addinstallzone (optional) : add the check_install zone for new application
     MODULE: name of the new module."
     );
 
@@ -63,6 +66,9 @@ class createmoduleCommand extends JelixScriptCommand {
          $options = array();
          if ($this->getOption('-cmdline')) {
             $options = array('-cmdline'=>true);
+         }
+         if ($this->getOption('-addinstallzone')) {
+            $options = array('-addinstallzone'=>true);
          }
          $agcommand->init($options,array('module'=>$this->_parameters['module'], 'name'=>'default','method'=>'index'));
          $agcommand->run();
