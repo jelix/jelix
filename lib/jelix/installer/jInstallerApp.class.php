@@ -29,11 +29,11 @@ abstract class jInstallerApp extends jInstallerBase {
     function installModules() {
         throw new Exception("installModules not implemented");
     }
-    
+
     function uninstallModules() {
         throw new Exception("uninstallModules not implemented");
     }
-    
+
 }
 
 ?>

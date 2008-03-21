@@ -12,7 +12,8 @@
 class appInstaller extends jInstallerApp {
 
     function install(){
-         $this->reporter->message("Test ok");
+        //$this->copyDirectoryContent($this->basePath.'/www', JELIX_APP_WWW_PATH.'test');
+        $this->reporter->message("Test ok");
         //$this->execSQLScript('install');
     }
 

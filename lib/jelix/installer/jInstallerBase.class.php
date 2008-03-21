@@ -31,7 +31,6 @@ abstract class jInstallerBase {
         $this->basePath = $basePath;
     }
 
-
     /**
      * main method for the installation
      */
@@ -43,8 +42,9 @@ abstract class jInstallerBase {
     abstract function uninstall();
 
     /**
-     * import a sql script into 
+     * import a sql script into the given profile.
      * @param string $name the part of the file name : $name.databasetype.sql
+     *               for example, if you provide example.mysql.sql and example.pgsql.sql, give 'example'
      */
     function execSQLScript($name, $profil='') {
         $tools = jDb::getTools($profil);
@@ -66,22 +66,21 @@ abstract class jInstallerBase {
     }
 
     /**
-     * @param string $path relative path to the install directory
-     * @param string $target 
+     * @param string $sourcePath
+     * @param string $targetPath
      */
-    function copyDirectoryContent($path, $target) {
-        throw new Exception("copyDirectoryContent not implemented");
-        /*$currentTarget = $target;
-        $dir = new DirectoryIterator($this->basePath.$path);
+    function copyDirectoryContent($sourcePath, $targetPath) {
+        jFile::createDir($targetPath);
+        $dir = new DirectoryIterator($sourcePath);
         foreach ($dir as $dirContent) {
             if ($dirContent->isFile()) {
-                copy($dirContent->getPathName(),$currentTarget.'/'.);
-        	} else {
-        		// recursive directory deletion
+                copy($dirContent->getPathName(), $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath())));
+            } else {
                 if (!$dirContent->isDot() && $dirContent->isDir()) {
-                    $this->copyDirectoryContent($dirContent->getPathName());
-        		}
-        	}
+                    $newTarget = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
+                    $this->copyDirectoryContent($dirContent->getPathName(),$newTarget );
+                }
+            }
         }
     }
 }
