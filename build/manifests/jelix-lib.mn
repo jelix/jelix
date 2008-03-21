@@ -495,6 +495,9 @@ cd lib/jelix-www/design
   jform.css
 cd lib/jelix-www/design/images
   logo_jelix_moyen.png
+  fond-bandeau.png
+  fond-cellule.png
+  jelix_powered.png
 cd lib/jelix-www/js
   tooltip.js
   jforms.js
