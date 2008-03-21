@@ -4,9 +4,10 @@
 * @subpackage utils
 * @author Laurent Jouanneau
 * @contributor Thiriot Christophe
+* @contributor Bastien Jaillot
 * @contributor Loic Mathaud
 * @contributor Cedric (fix bug ticket 56)
-* @copyright   2005-2006 Laurent Jouanneau, 2006 Thiriot Christophe, 2006 Loic Mathaud
+* @copyright   2005-2006 Laurent Jouanneau, 2006 Thiriot Christophe, 2006 Loic Mathaud, 2008 Bastien Jaillot
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -102,7 +103,7 @@ class jFile {
         $dir = new DirectoryIterator($path);
         foreach ($dir as $dirContent) {
         	// file deletion
-            if ($dirContent->isFile()) {
+            if ($dirContent->isFile() || $dirContent->isLink()) {
         		unlink($dirContent->getPathName());
         	} else {
         		// recursive directory deletion
