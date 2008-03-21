@@ -1,4 +1,13 @@
 <?php
+/**
+* @package     jelix
+* @subpackage  forms
+* @author      Laurent Jouanneau
+* @contributor
+* @copyright   2006-2008 Laurent Jouanneau
+* @link        http://www.jelix.org
+* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+*/
 
 /**
  * HTML form compiler
@@ -22,7 +31,7 @@ class htmlJformsCompiler implements jIFormsBuilderCompiler {
     public function generateControl($controltype, $control) {
        // in this method, we generate a PHP script which will generate a javascript script ;-)
 
-        if($controltype == 'submit' || $controltype == 'reset')
+        if($controltype == 'submit' || $controltype == 'reset' || $controltype == 'hidden')
             return '';
 
         if(isset($control->confirm) && $controltype == 'secret') {

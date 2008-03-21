@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin
 * @contributor Uriel Corfa Emotic SARL
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2008 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2007 Dominique Papin
 * @copyright   2007 Emotic SARL
 * @link        http://www.jelix.org
@@ -150,7 +150,7 @@ class jFormsCompiler implements jISimpleCompiler {
         // defaultvalue support
         if(isset($control['defaultvalue'])){
             if($controltype != 'input' && $controltype != 'textarea' && $controltype != 'output'
-                 && $controltype != 'checkbox'){
+                 && $controltype != 'checkbox' && $controltype != 'hidden'){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('defaultvalue',$controltype,$this->sourceFile));
             }
             $source[]='$ctrl->defaultValue=\''.str_replace('\'','\\\'',(string)$control['defaultvalue']) .'\';';
@@ -172,11 +172,15 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$ctrl->datatype->addFacet(\'maxLength\','.intval((string)$control['maxlength']).');';
         }
 
+        if($controltype == 'hidden') {
+            $source[]='$this->addControl($ctrl);';
+            return implode("\n", $source);
+        }
+
         // label support
         if(!isset($control->label)){
             throw new jException('jelix~formserr.tag.missing',array('label',$controltype,$this->sourceFile));
         }
-
         if(isset($control->label['locale'])){
             $label='';
             $labellocale=(string)$control->label['locale'];

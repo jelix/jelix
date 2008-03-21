@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin
-* @copyright   2006-2007 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2006-2008 Laurent Jouanneau, 2007 Dominique Papin
 * @copyright   2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -303,6 +303,11 @@ class jFormsControlSubmit extends jFormsControlDatasource {
     }
 }
 
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ */
 class jFormsControlReset extends jFormsControl {
     public $type='reset';
     public function check($value, $form){
@@ -310,5 +315,13 @@ class jFormsControlReset extends jFormsControl {
     }
 }
 
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
+ */
+class jFormsControlHidden extends jFormsControlReset {
+    public $type='hidden';
+}
 
 ?>

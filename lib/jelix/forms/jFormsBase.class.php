@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
-* @copyright   2006-2007 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2006-2008 Laurent Jouanneau, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -63,6 +63,14 @@ abstract class jFormsBase {
      * @see jFormsControl
      */
     protected $_uploads = array();
+
+    /**
+     * List of hidden controls
+     * array of jFormsControl objects
+     * @var array
+     * @see jFormsControl
+     */
+    protected $_hiddens = array();
 
     /**
      * the datas container
@@ -478,7 +486,12 @@ abstract class jFormsBase {
      * @return array of jFormsControl objects
      */
     public function getSubmits(){ return $this->_submits; }
- 
+
+     /**
+     * @return array of jFormsControl objects
+     */
+    public function getHiddens(){ return $this->_hiddens; }
+
     /**
      * @return array of jFormsControl objects
      */
@@ -586,6 +599,8 @@ abstract class jFormsBase {
             $this->_reset = $control;
         else if($control->type =='upload')
             $this->_uploads [$control->ref] = $control;
+        else if($control->type =='hidden')
+            $this->_hiddens [$control->ref] = $control;
 
         if(!isset($this->_container->datas[$control->ref])){
             if ( $control->datatype instanceof jDatatypeDateTime && $control->defaultValue == 'now') {

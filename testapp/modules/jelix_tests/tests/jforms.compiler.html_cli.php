@@ -4,7 +4,7 @@
 * @subpackage  unittest module
 * @author      Jouanneau Laurent
 * @contributor Loic Mathaud
-* @copyright   2007 Jouanneau laurent
+* @copyright   2007-2008 Jouanneau laurent
 * @copyright   2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -286,6 +286,8 @@ class UTjformsCompiler extends jUnitTestCase {
 67=>'<reset ref="annulation" xmlns="http://jelix.org/ns/forms/1.0">
     <label>type annulation</label>
 </reset>',
+68=>'<hidden ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+</hidden>',
     );
 
     protected $_PhpControls = array(
@@ -645,6 +647,8 @@ $this->addControl($ctrl);',
 67=>'$ctrl= new jFormsControlreset(\'annulation\');
 $ctrl->label=\'type annulation\';
 $this->addControl($ctrl);',
+68=>'$ctrl= new jFormsControlhidden(\'nom\');
+$this->addControl($ctrl);',
 );
 
 
@@ -1003,6 +1007,7 @@ $js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jel
 $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="jForms.tForm.addControl( jForms.tControl);\n";',
 67=>'',
+68=>'',
     );
 
     function testPhpControl(){

@@ -4,7 +4,7 @@
 * @subpackage  unittest module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2007 Jouanneau laurent
+* @copyright   2007-2008 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -20,6 +20,7 @@ class testHMLForm { // simulate a jFormBase object
     public $controls= array();
     public $submits= array();
     public $uploads= array();
+    public $_hiddens= array();
     public $reset= null;
     public $container;
 
@@ -46,6 +47,9 @@ class testHMLForm { // simulate a jFormBase object
     function hasUpload(){
        return false;
     }
+    function getHiddens() {
+        return $this->_hiddens;
+    }
     function addControl($control){
         $this->controls [$control->ref] = $control;
         if($control->type =='submit')
@@ -54,6 +58,8 @@ class testHMLForm { // simulate a jFormBase object
             $this->uploads [$control->ref] = $control;
         else if($control->type =='reset')
             $this->reset = $control;
+        else if($control->type =='hidden')
+            $this->_hiddens [$control->ref] = $control;
         $this->datas[$control->ref] = $control->defaultValue;
     }
 }
@@ -82,7 +88,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();
         $builder->outputHeader(array('','','post'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div><input type="hidden" name="module" value="jelix_tests"/>
+        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig:url1"/>
 </div><script type="text/javascript">
 //<![CDATA[
@@ -96,7 +102,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();
         $builder->outputHeader(array('','','get'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div><input type="hidden" name="foo" value="b&gt;ar"/>
+        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig:url1"/>
 </div><script type="text/javascript">
@@ -646,7 +652,51 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<button type="reset" name="nom" id="'.$this->formname.'_nom" title="ceci est un tooltip" class="jforms-reset">Votre nom</button>', $out);
     }
+    function testOutputHidden(){
+        $ctrl= new jFormsControlHidden('nom');
 
+        ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('', $out);
+
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('', $out);
+
+        $form = new testHMLForm();
+        $form->addControl($ctrl);
+
+        $builder = new testJFormsHtmlBuilder($form, 'jelix_tests~urlsig:url1',array());
+        $formname = $builder->getName();
+        ob_start();
+        $builder->outputHeader(array('','','post'));
+        $out = ob_get_clean();
+        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
+<input type="hidden" name="action" value="urlsig:url1"/>
+<input type="hidden" name="nom" id="'.$formname.'_nom" value=""/>
+</div><script type="text/javascript">
+//<![CDATA[
+
+//]]>
+</script>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $ctrl->defaultValue='toto';
+        $form = new testHMLForm();
+        $form->addControl($ctrl);
+        $builder = new testJFormsHtmlBuilder($form, 'jelix_tests~urlsig:url1',array());
+        $formname = $builder->getName();
+        ob_start();
+        $builder->outputHeader(array('','','post'));
+        $out = ob_get_clean();
+        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
+<input type="hidden" name="action" value="urlsig:url1"/>
+<input type="hidden" name="nom" id="'.$formname.'_nom" value="toto"/>
+</div><script type="text/javascript">
+//<![CDATA[
+
+//]]>
+</script>';
+        $this->assertEqualOrDiff($result, $out);
+    }
 }
 
 ?>

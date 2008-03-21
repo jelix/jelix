@@ -4,7 +4,7 @@
 * @subpackage   jtpl_plugin
 * @author       Laurent Jouanneau
 * @contributor  Dominique Papin
-* @copyright    2007 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright    2007-2008 Laurent Jouanneau, 2007 Dominique Papin
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -26,9 +26,11 @@ function jtpl_function_html_ctrl_label($tpl, $ctrlname='')
         $ctrls = $tpl->_privateVars['__form']->getControls();
         $ctrl=$ctrls[$ctrlname];
     }
-
+    if ($ctrl->type == 'hidden')
+        return;
     if(isset($tpl->_privateVars['__formbuilder'])){
-        if($ctrl->type == 'submit' || $ctrl->type == 'reset') return;
+        if($ctrl->type == 'submit' || $ctrl->type == 'reset')
+            return;
         $tpl->_privateVars['__formbuilder']->outputControlLabel($ctrl);
     }else
         echo htmlspecialchars($ctrl->label);

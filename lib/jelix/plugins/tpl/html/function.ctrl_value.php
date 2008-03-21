@@ -4,7 +4,7 @@
 * @subpackage   jtpl_plugin
 * @author       Laurent Jouanneau
 * @contributor  Dominique Papin
-* @copyright    2007 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright    2007-2008 Laurent Jouanneau, 2007 Dominique Papin
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -24,6 +24,8 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
     $insideForm = isset($tpl->_privateVars['__formbuilder']);
 
     if($ctrlname =='') {
+        if($tpl->_privateVars['__ctrl']->type == 'hidden')
+            return;
         if(($tpl->_privateVars['__ctrl']->type == 'submit')
                 && ($tpl->_privateVars['__ctrl']->standalone || $insideForm)){
             return;
@@ -36,6 +38,8 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
         $ctrlname = $tpl->_privateVars['__ctrlref'];
     }else{
         $ctrls = $tpl->_privateVars['__form']->getControls();
+        if($ctrls[$ctrlname]->type == 'hidden')
+            return;
         if(($ctrls[$ctrlname]->type == 'submit' || $ctrls[$ctrlname]->type == 'reset')
                 && ($ctrls[$ctrlname]->standalone || $insideForm)){
             return;

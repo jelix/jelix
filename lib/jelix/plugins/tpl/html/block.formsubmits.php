@@ -4,7 +4,7 @@
 * @subpackage  jtpl_plugin
 * @author      Jouanneau Laurent
 * @contributor Mickaël Fradin
-* @copyright   2007 Jouanneau laurent, 2007 Mickaël Fradin
+* @copyright   2007-2008 Jouanneau laurent, 2007 Mickaël Fradin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

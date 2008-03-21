@@ -4,7 +4,7 @@
 * @subpackage  jtpl_plugin
 * @author      Jouanneau Laurent
 * @contributor Mickaël Fradin, F.Fernandez, Dominique Papin
-* @copyright   2007 Jouanneau laurent, 2007 Mickaël Fradin, 2007 F.Fernandez, 2007 Dominique Papin
+* @copyright   2007-2008 Jouanneau laurent, 2007 Mickaël Fradin, 2007 F.Fernandez, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -76,7 +76,7 @@ if (!isset($t->_privateVars[\'__displayed_ctrl\'])) {
 }
 $t->_privateVars[\'__ctrlref\']=\'\';
 foreach($t->_privateVars[\'__form\']->getControls() as $ctrlref=>$ctrl){
-    if($ctrl->type == \'reset\') continue;
+    if($ctrl->type == \'reset\' || $ctrl->type == \'hidden\') continue;
     if($ctrl->type == \'submit\' && (isset($t->_privateVars[\'__formbuilder\']) || $ctrl->standalone)) continue;
     if(!isset($t->_privateVars[\'__displayed_ctrl\'][$ctrlref])
        && (  ($ctrls_to_display===null && $ctrls_notto_display === null)

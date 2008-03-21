@@ -1,4 +1,13 @@
 <?php
+/**
+* @package     jelix
+* @subpackage  forms
+* @author      Laurent Jouanneau
+* @contributor
+* @copyright   2006-2008 Laurent Jouanneau
+* @link        http://www.jelix.org
+* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+*/
 
 /**
  * HTML form builder
@@ -21,10 +30,13 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
         else
             echo '>';
 
-        if(count($url->params)){
-            echo '<div>';
+        if(count($url->params) || count($this->_form->getHiddens())){
+            echo '<div class="jforms-hiddens">';
             foreach ($url->params as $p_name => $p_value) {
                 echo '<input type="hidden" name="', $p_name ,'" value="', htmlspecialchars($p_value), '"',$this->_endt, "\n";
+            }
+            foreach ($this->_form->getHiddens() as $ctrl) {
+                echo '<input type="hidden" name="', $ctrl->ref,'" id="',$this->_name,'_',$ctrl->ref,'" value="', htmlspecialchars($this->_form->getData($ctrl->ref)), '"',$this->_endt, "\n";
             }
             echo '</div>';
         }
@@ -65,6 +77,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
     }
 
     public function outputControlLabel($ctrl){
+        if($ctrl->type == 'hidden') return;
         $required = ($ctrl->required == ''?'':' jforms-required');
         $inError = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');

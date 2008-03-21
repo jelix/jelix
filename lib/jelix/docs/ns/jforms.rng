@@ -27,6 +27,7 @@
             <ref name="listbox" />
             <ref name="radiobuttons"/>
             <ref name="menulist" />
+            <ref name="hidden" />
             <!--
             <ref name="range" />
             <ref name="trigger" />
@@ -177,6 +178,13 @@
      <element name="submit">
        <ref name="control.common" />
        <ref name="datasources" />
+     </element>
+  </define>
+
+  <define name="hidden">
+     <element name="hidden">
+       <attribute name="ref" />
+       <ref name="UI.attr.defaultvalue" />
      </element>
   </define>
 
