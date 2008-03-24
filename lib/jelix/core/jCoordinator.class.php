@@ -110,14 +110,14 @@ class jCoordinator {
     private function _loadPlugins(){
         global $gJConfig;
 
-        foreach($gJConfig->plugins as $name=>$conf){
+        foreach($gJConfig->coordplugins as $name=>$conf){
             if($conf && isset($gJConfig->_pluginsPathList_coord[$name])){
                 if($conf=='1'){
                     $conf = array();
                 }else{
                    $conff = $conf;
                    if(!file_exists(JELIX_APP_CONFIG_PATH.$conff))
-                        die("Jelix Error: Error in the main configuration. Configuration file '$conff' for plugin $name doesn't exist!");
+                        die("Jelix Error: Error in the main configuration. Configuration file '$conff' for coord plugin $name doesn't exist!");
                    if( false === ($conf = parse_ini_file(JELIX_APP_CONFIG_PATH.$conff,true)))
                         die("Jelix Error: Error in the configuration file of plugin $name ($conff)!");
                 }

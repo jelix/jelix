@@ -4,7 +4,7 @@
 startModule = "%%appname%%"
 startAction = "default:index"
 
-[plugins]
+[coordplugins]
 ;nom = file_ini_name or 1
 
 [responses]

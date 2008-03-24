@@ -22,7 +22,7 @@ use_error_handler = on
 
 enableOldActionSelector =
 
-[plugins]
+[coordplugins]
 
 [responses]
 html = jResponseHtml

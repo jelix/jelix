@@ -33,7 +33,7 @@ interface jIRestController{
 abstract class jController{
 
     /**
-     * parameters for plugins
+     * parameters for plugins of the coordinator
      *
      * this array should contains all parameters needed by installed plugins for
      * each action, see the documentation of each plugins to know this parameters.

@@ -22,7 +22,7 @@ theme = default
 enableOldActionSelector = 
 #endif
 
-[plugins]
+[coordplugins]
 ;nom = nom_fichier_ini
 
 [responses]

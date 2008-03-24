@@ -4,7 +4,7 @@
 startModule="testapp"
 startAction="main:index"
 
-[plugins]
+[coordplugins]
 ;nom = nom_fichier_ini
 
 [responses]

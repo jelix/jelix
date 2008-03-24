@@ -20,7 +20,7 @@ theme = default
 ; for junittests module
 enableTests = on
 
-[plugins]
+[coordplugins]
 ;nom = nom_fichier_ini
 
 [responses]
