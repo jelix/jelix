@@ -412,20 +412,29 @@ class jSelectorClass extends jSelectorModule {
 }
 
 /**
- * selector for business class
+ * selector for interface 
  *
- * business class is a class stored in classname.class.php file in the classes/ module directory
+ * interface is stored in interfacename.iface.php file in the classes/ module directory
  * or one of its subdirectory.
- * syntax : "module~classname" or "module~classname.
+ * syntax : "iface:module~ifacename" or "module~ifacename.
  * @package    jelix
  * @subpackage core_selector
- * @since 1.0b2
+ * @since 1.0.3
  */
-class jSelectorInterface extends jSelectorClass {
+class jSelectorIface extends jSelectorClass {
     protected $type = 'iface';
     protected $_dirname = 'classes/';
     protected $_suffix = '.iface.php';
 }
+
+/**
+ * selector for interface 
+ * @package    jelix
+ * @subpackage core_selector
+ * @since 1.0b2
+ * @deprecated 
+ */
+class jSelectorInterface extends jSelectorIface {}
 
 /**
  * selector for localisation string
