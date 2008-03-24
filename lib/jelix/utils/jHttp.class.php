@@ -18,7 +18,7 @@ require(LIB_PATH.'clearbricks/net.http/class.net.http.php');
  * @subpackage utils
  * @see netHttp
  */
-class jhttp extends netHttp {
+class jHttp extends netHttp {
     protected $user_agent = 'Clearbricks/Jelix HTTP Client';
 
     protected function debug($msg,$object=false){
@@ -33,4 +33,3 @@ class jhttp extends netHttp {
     }
 }
 
-?>
