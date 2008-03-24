@@ -172,7 +172,97 @@ class jFilter {
 #endif
     }
 
+    /**
+     * remove all javascript things in a html content
+     * The html content should be a subtree of a body tag, not a whole document
+     * @param string $html html content
+     * @return string  the cleaned html content
+     * @since 1.1
+     */
+    static public function cleanHtml($html) { //, $isXhtml = true
+        global $gJConfig;
+        $doc = new DOMDocument('1.0',$gJConfig->charset);
+        $foot = '</body></html>';
 
+        /*if($isXhtml) {
+            $head = '<?xml version="1.0" encoding=""?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset='.$gJConfig->charset.'"/><title></title></head><body>';
+            if(!$doc->loadXML($head.$html.$foot)) {
+                return 1;
+            }
+        }else{*/
+            $head = '<html><head><meta http-equiv="Content-Type" content="text/html; charset='.$gJConfig->charset.'"/><title></title></head><body>';
+            if(!$doc->loadHTML($head.$html.$foot)) {
+                return 1;
+            }
+        //}
+
+        $items = $doc->getElementsByTagName('script');
+        foreach ($items as $item) {
+            $item->parentNode->removeChild($item);
+        }
+        $items = $doc->getElementsByTagName('applet');
+        foreach ($items as $item) {
+            $item->parentNode->removeChild($item);
+        }
+        $items = $doc->getElementsByTagName('base');
+        foreach ($items as $item) {
+            $item->parentNode->removeChild($item);
+        }
+        $items = $doc->getElementsByTagName('basefont');
+        foreach ($items as $item) {
+            $item->parentNode->removeChild($item);
+        }
+        $items = $doc->getElementsByTagName('frame');
+        foreach ($items as $item) {
+            $item->parentNode->removeChild($item);
+        }
+        $items = $doc->getElementsByTagName('frameset');
+        foreach ($items as $item) {
+            $item->parentNode->removeChild($item);
+        }
+        $items = $doc->getElementsByTagName('noframes');
+        foreach ($items as $item) {
+            $item->parentNode->removeChild($item);
+        }
+        $items = $doc->getElementsByTagName('isindex');
+        foreach ($items as $item) {
+            $item->parentNode->removeChild($item);
+        }
+        $items = $doc->getElementsByTagName('iframe');
+        foreach ($items as $item) {
+            $item->parentNode->removeChild($item);
+        }
+        $items = $doc->getElementsByTagName('noscript');
+        foreach ($items as $item) {
+            $item->parentNode->removeChild($item);
+        }
+
+        self::cleanAttr($doc->getElementsByTagName('body')->item(0));
+        $doc->formatOutput = true;
+        if(!preg_match('!<body>(.*)</body>!smU', $doc->saveHTML(), $m))
+            return 2;
+        return $m[1];
+    }
+
+    static protected function cleanAttr($node) {
+        $child=$node->firstChild;
+        while($child) {
+            if($child->nodeType == XML_ELEMENT_NODE) {
+                $attrs = $child->attributes;
+                foreach($attrs as $attr) {
+                    if(strtolower(substr($attr->localName,0,2)) == 'on')
+                        $child->removeAttributeNode($attr);
+                    else if(strtolower($attr->localName) == 'href') {
+                        if(strpos(strtolower(trim($attr->nodeValue)),"javascript:") !==false)
+                            $child->removeAttributeNode($attr);
+                    }
+                }
+                self::cleanAttr($child);
+            }
+            $child = $child->nextSibling;
+        }
+    }
 }
 
-?>

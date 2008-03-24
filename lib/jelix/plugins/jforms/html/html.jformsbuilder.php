@@ -257,4 +257,3 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
 
     abstract public function getJavascriptCheck($errDecorator,$helpDecorator);
 }
-?>

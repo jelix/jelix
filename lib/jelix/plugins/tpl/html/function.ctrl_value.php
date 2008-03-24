@@ -55,6 +55,8 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
             $s.=$sep.htmlspecialchars($v);
         }
         echo substr($s, strlen($sep));
+    }elseif($ctrl->datatype instanceof jDatatypeHtml) {
+        echo $value;
     }else
         echo htmlspecialchars($value);
 }

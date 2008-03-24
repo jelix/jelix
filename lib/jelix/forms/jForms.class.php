@@ -31,6 +31,9 @@ class jForms {
     const ERRDATA_INVALID = 1;
     const ERRDATA_REQUIRED = 2;
 
+    /**
+     * pure static class, so no constructor
+     */
     private function __construct(){ }
 
     /**
@@ -118,5 +121,3 @@ class jForms {
         }
     }
 }
-
-?>

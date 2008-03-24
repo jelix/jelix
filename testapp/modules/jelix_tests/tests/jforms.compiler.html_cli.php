@@ -288,6 +288,12 @@ class UTjformsCompiler extends jUnitTestCase {
 </reset>',
 68=>'<hidden ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
 </hidden>',
+69=>'<input ref="nom" type="html" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+</input>',
+70=>'<textarea ref="nom" type="html" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+</textarea>',
     );
 
     protected $_PhpControls = array(
@@ -649,6 +655,14 @@ $ctrl->label=\'type annulation\';
 $this->addControl($ctrl);',
 68=>'$ctrl= new jFormsControlhidden(\'nom\');
 $this->addControl($ctrl);',
+69=>'$ctrl= new jFormsControlinput(\'nom\');
+$ctrl->datatype= new jDatatypehtml();
+$ctrl->label=\'Votre nom\';
+$this->addControl($ctrl);',
+70=>'$ctrl= new jFormsControltextarea(\'nom\');
+$ctrl->datatype= new jDatatypeHtml();
+$ctrl->label=\'Votre nom\';
+$this->addControl($ctrl);',
 );
 
 
@@ -1008,6 +1022,17 @@ $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jel
 $js.="jForms.tForm.addControl( jForms.tControl);\n";',
 67=>'',
 68=>'',
+69=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+70=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+
     );
 
     function testPhpControl(){
@@ -1062,8 +1087,8 @@ array(
 '<textarea ref="nom" type="boolean" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
 </textarea>',
-'jelix~formserr.attribute.not.allowed',
-array('type','textarea','myfile')
+'jelix~formserr.datatype.unknow',
+array('boolean','textarea','myfile')
 ),
 array(
 '<input ref="nom" type="foo" xmlns="http://jelix.org/ns/forms/1.0">
@@ -1168,6 +1193,7 @@ array(
 'jelix~formserr.attribute.not.allowed',
 array('selectedvalue','listbox','myfile')
 ),
+
 /*array(
 '<input ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
@@ -1191,8 +1217,8 @@ array('','','myfile')
                     $ct = $jfc->testPhpControl($dom->documentElement->localName, simplexml_import_dom($dom));
                     $this->fail("no exception during bad xml test content $k");
                 }catch(jException $e){
-                    $this->assertEqualOrDiff($control[1], $e->getLocaleKey());
-                    $this->assertEqual($control[2], $e->getLocaleParameters());
+                    $this->assertEqualOrDiff($control[1], $e->getLocaleKey(),"%s ($k)");
+                    $this->assertEqual($control[2], $e->getLocaleParameters(),"%s ($k)");
                 }catch(Exception $e){
                     $this->fail("Unexpected exception for bad xml test content $k :". $e->getMessage());
                 }

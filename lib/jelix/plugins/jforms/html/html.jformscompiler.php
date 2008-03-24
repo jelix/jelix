@@ -44,6 +44,7 @@ class htmlJformsCompiler implements jIFormsBuilderCompiler {
 
         if(isset($control['type'])){
             $dt = (string)$control['type'];
+            if($dt == 'html') $dt = 'string';
         }else if($controltype == 'checkbox')
             $dt = 'boolean';
         else
@@ -145,4 +146,3 @@ class htmlJformsCompiler implements jIFormsBuilderCompiler {
     }
 
 }
-?>

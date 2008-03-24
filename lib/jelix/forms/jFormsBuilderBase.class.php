@@ -92,5 +92,3 @@ abstract class jFormsBuilderBase {
         return 'jform'.$number;
     }
 }
-
-?>

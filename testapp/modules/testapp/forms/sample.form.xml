@@ -46,7 +46,9 @@
   <textarea ref="address">
       <label>Your address</label>
   </textarea>
-
+  <textarea ref="description" type="html">
+      <label>Description in html</label>
+  </textarea>
   <checkboxes ref="objets" required="true">
       <label>Vous avez </label>
       <item value="maison">Une maison</item>

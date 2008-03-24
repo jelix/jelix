@@ -19,4 +19,3 @@ interface jIFormsBuilderCompiler {
     public function endCompile();
 }
 
-?>

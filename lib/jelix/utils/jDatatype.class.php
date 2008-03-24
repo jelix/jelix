@@ -4,10 +4,24 @@
 * @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006 Laurent Jouanneau
+* @copyright   2006-2008 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+
+/**
+ * interface for datatypes which can filter value
+ * @package     jelix
+ * @subpackage  utils
+ * @since 1.1
+ */
+interface jIFilteredDatatype {
+    /**
+     * return the value on which filters are applied
+     * should be call after a call of check() method
+     */
+    public function getFilteredValue();
+}
 
 /**
  *
@@ -19,22 +33,17 @@ abstract class jDatatype {
     protected $hasFacets= false;
     protected $facets = array();
 
-    function __construct(){
-    }
-
     /**
     * call it to add restriction on possible values
     * @param string $type
     * @param string $value
     */
     public function addFacet($type,$value=null){
-
         if(in_array($type, $this->facets)){
             $this->hasFacets = true;
             $this->_addFacet($type,$value);
         }
     }
-
 
     /**
     * get a restriction value
@@ -90,6 +99,41 @@ class jDatatypeString extends jDatatype {
                 return false;
         }
         return true;
+    }
+}
+
+/**
+ * Datatype HTML String.
+ *
+ * Possible facets are: 'length','minLength','maxLength'
+ * @package     jelix
+ * @subpackage  utils
+ * @since 1.1
+ */
+class jDatatypeHtml extends jDatatype implements jIFilteredDatatype {
+    protected $length=null;
+    protected $minLength=null;
+    protected $maxLength=null;
+    protected $facets = array('length','minLength','maxLength');
+
+    protected $newValue;
+
+    public function check($value){
+        if($this->hasFacets){
+            $len = iconv_strlen($value, $GLOBALS['gJConfig']->charset);
+            if($this->length !== null && $len != $this->length)
+                return false;
+            if($this->minLength !== null && $len < $this->minLength)
+                return false;
+            if($this->maxLength !== null && $len > $this->maxLength)
+                return false;
+        }
+        $this->newValue = jFilter::cleanHtml($value);
+        return is_string($this->newValue);
+    }
+
+    public function getFilteredValue() {
+        return $this->newValue;
     }
 }
 
@@ -294,4 +338,4 @@ class jDatatypeEmail extends jDatatype {
 }
 
 
-?>
+

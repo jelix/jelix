@@ -55,4 +55,3 @@ class jFormsDataContainer {
         $this->errors = array();
     }
 }
-?>

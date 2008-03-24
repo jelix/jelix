@@ -4,12 +4,12 @@
 * @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006-2007 Jouanneau laurent
+* @copyright   2006-2008 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTfilter extends UnitTestCase {
+class UTfilter extends jUnitTestCase {
 
     public function testHeader(){
         if(jFilter::usePhpFilter()){
@@ -149,6 +149,44 @@ class UTfilter extends UnitTestCase {
         $this->assertTrue(jFilter::isEmail('hello{john}t#r+u&c@mail.com'), "isEmail('hello{john}t#r+u&c@mail.com')");
         $this->assertTrue(jFilter::isEmail('bob@123.23.56.43'), "isEmail('bob@123.23.56.43')");
     }
+
+
+    public function testCleanHtml(){
+
+        $html='<div>lorem</div>';
+        $result='<div>lorem</div>';
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+
+        $html='<div>lorem<em>aaa</em></div>';
+        $result="<div>lorem<em>aaa</em>\n</div>";
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+
+        $html='<div>lorem <script> foo </script></div>';
+        $result='<div>lorem </div>';
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+
+        $html='<div>lorem <SCRIPT> foo </SCRIPT></div>';
+        $result='<div>lorem </div>';
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+
+        //$html='<div>lorem <![CDATA[<SCRIPT> foo </SCRIPT>]]></div>';
+        //$result='<div>lorem <![CDATA[<SCRIPT> foo </SCRIPT>]]></div>';
+        //$this->assertEqualOrDiff($result, jFilter::satanizeHtml($html));
+
+        $html='<div onclick="xss()">lorem</div>';
+        $result='<div>lorem</div>';
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+
+        $html='<div onclick="xss()">lorem <strong onMouseOver="toto()">ah ah </strong></div>';
+        $result="<div>lorem <strong>ah ah </strong>\n</div>";
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+
+        $html='<div onclick="xss()">lorem <a href="javascript:pirate()">ah ah </a></div>';
+        $result="<div>lorem <a>ah ah </a>\n</div>";
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+
+    }
+
 }
 
 ?>

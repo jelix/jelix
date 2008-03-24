@@ -153,7 +153,7 @@ abstract class jFormsBase {
     public function check(){
         $this->_container->errors = array();
         foreach($this->_controls as $name=>$ctrl){
-            $err = $ctrl->check($this->_container->datas[$name], $this);
+            $err = $ctrl->check($this);
             if($err !== null)
                 $this->_container->errors[$name]= $err;
         }
@@ -614,5 +614,3 @@ abstract class jFormsBase {
         }
     }
 }
-
-?>
