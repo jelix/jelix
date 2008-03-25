@@ -44,11 +44,11 @@ class jIniFile {
             if (is_array($v)) {
                 $result.='['.$k."]\n";
                 foreach($v as $k2 => $v2){
-                    $result .= $k2.'='.self::_iniValue($v2)."\n";
+                    $result .= self::_iniValue($k2,$v2);
                 }
             } else {
-                // on met les valeurs simples en debut de fichier
-                $result = $k.'='.self::_iniValue($v)."\n".$result;
+                // we put simple values at the beginning of the file.
+                $result = self::_iniValue($k,$v).$result;
             }
         }
 
@@ -72,11 +72,16 @@ class jIniFile {
      * @param string $value the value
      * @return string the formated value
      */
-    static private function _iniValue($value){
-        if ($value == '' || is_numeric($value) || preg_match("/^[\w]*$/", $value)) {
-            return $value;
+    static private function _iniValue($key, $value){
+        if(is_array($value)) {
+            $res = '';
+            foreach($value as $v)
+                $res.=self::_iniValue($key.'[]', $v);
+            return $res;
+        }else if ($value == '' || is_numeric($value) || preg_match("/^[\w]*$/", $value)) {
+            return $key.'='.$value."\n";
         } else {
-            return '"'.$value.'"';
+            return $key.'="'.$value."\"\n";
         }
     }
 }

@@ -238,7 +238,6 @@ class jFilter {
         foreach ($items as $item) {
             $item->parentNode->removeChild($item);
         }
-
         self::cleanAttr($doc->getElementsByTagName('body')->item(0));
         $doc->formatOutput = true;
         if(!preg_match('!<body>(.*)</body>!smU', $doc->saveHTML(), $m))
@@ -255,7 +254,7 @@ class jFilter {
                     if(strtolower(substr($attr->localName,0,2)) == 'on')
                         $child->removeAttributeNode($attr);
                     else if(strtolower($attr->localName) == 'href') {
-                        if(strpos(strtolower(trim($attr->nodeValue)),"javascript:") !==false)
+                        if(preg_match("/^(javascript|vbscript)\:.*/",trim($attr->nodeValue)))
                             $child->removeAttributeNode($attr);
                     }
                 }

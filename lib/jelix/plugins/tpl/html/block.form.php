@@ -74,10 +74,15 @@ if($gJCoord->response!= null){
     $gJCoord->response->addCSSLink($www.\'design/jform.css\');
     foreach($t->_vars as $k=>$v){
         if($v instanceof jFormsBase && count($edlist = $v->getHtmlEditors())) {
-            $gJCoord->response->addJSLink($www.\'jquery/jquery.js\');
             foreach($edlist as $ed) {
-                if(isset($gJConfig->htmleditors[$ed->engine]))
-                    $gJCoord->response->addJSLink($bp.$gJConfig->htmleditors[$ed->engine]);
+                if(isset($gJConfig->htmleditors[$ed->engine])){
+                    if(is_array($gJConfig->htmleditors[$ed->engine])){
+                        foreach($gJConfig->htmleditors[$ed->engine] as $url) {
+                            $gJCoord->response->addJSLink($bp.$url);
+                        }
+                    }else
+                        $gJCoord->response->addJSLink($bp.$gJConfig->htmleditors[$ed->engine]);
+                }
                 if(isset($gJConfig->htmleditors[$ed->engine.\'.config.\'.$ed->config]))
                     $gJCoord->response->addJSLink($bp.$gJConfig->htmleditors[$ed->engine.\'.config.\'.$ed->config]);
                 if(isset($gJConfig->htmleditors[$ed->engine.\'.skin.\'.$ed->skin]))
