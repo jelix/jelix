@@ -212,6 +212,17 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
             echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
             break;
+        case 'htmleditor':
+            echo '<script type="text/javascript">
+            //<![CDATA[
+            jelix_',$ctrl->engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'");
+            //]]>
+            </script>';
+
+            $value = $this->_form->getData($ctrl->ref);
+            $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
+            echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
+            break;
         case 'secret':
         case 'secretconfirm':
             $size = ($ctrl->size == 0?'': ' size="'.$ctrl->size.'"');

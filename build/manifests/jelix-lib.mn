@@ -560,6 +560,8 @@ cd lib/jelix-www/wymeditor/skins
 cd lib/jelix-www/wymeditor/skins/default
   screen.css
   icons.png
+cd lib/jelix-www/wymeditor/config
+c simple.js
 cd lib/jelix-www/jquery
   GPL-LICENSE.txt
   MIT-LICENSE.txt

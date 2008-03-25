@@ -46,9 +46,11 @@
   <textarea ref="address">
       <label>Your address</label>
   </textarea>
-  <textarea ref="description" type="html">
+
+  <htmleditor ref="description">
       <label>Description in html</label>
-  </textarea>
+  </htmleditor>
+
   <checkboxes ref="objets" required="true">
       <label>Vous avez </label>
       <item value="maison">Une maison</item>
@@ -75,7 +77,7 @@
   <captcha ref="cap">
     <label>Filtre antispam</label>
   </captcha>
-  
+
   <reset ref="cancel">
     <label>Annuler</label>
   </reset>

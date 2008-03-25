@@ -297,6 +297,9 @@ class UTjformsCompiler extends jUnitTestCase {
 71=>'<captcha ref="cap" xmlns="http://jelix.org/ns/forms/1.0">
     <label>captcha</label>
 </captcha>',
+72=>'<htmleditor ref="contenu" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Texte</label>
+</htmleditor>',
     );
 
     protected $_PhpControls = array(
@@ -669,6 +672,9 @@ $this->addControl($ctrl);',
 71=>'$ctrl= new jFormsControlcaptcha(\'cap\');
 $ctrl->label=\'captcha\';
 $this->addControl($ctrl);',
+72=>'$ctrl= new jFormsControlhtmleditor(\'contenu\');
+$ctrl->label=\'Texte\';
+$this->addControl($ctrl);',
 );
 
 
@@ -1040,6 +1046,11 @@ $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jel
 $js.="jForms.tForm.addControl( jForms.tControl);\n";',
 71=>'$label = \'captcha\';
 $js.="jForms.tControl = new jFormsControl(\'cap\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+72=>'$label = \'Texte\';
+$js.="jForms.tControl = new jFormsControl(\'contenu\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
 $js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="jForms.tForm.addControl( jForms.tControl);\n";',

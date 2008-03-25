@@ -729,6 +729,39 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" title="ceci est un tooltip" value=""/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'cap\')">?</a></span>', $out);
     }
+
+    function testOutputHtmleditor(){
+        $ctrl= new jFormsControlhtmleditor('contenu');
+        $ctrl->label='Texte';
+
+        ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_contenu">Texte</label>', $out);
+
+        $this->form->setData('contenu','<p>Ceci est un contenu</p>');
+
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
+
+        $ctrl->readonly=true;
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
+
+        $ctrl->hint='ceci est un tooltip';
+        ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_contenu" title="ceci est un tooltip">Texte</label>', $out);
+
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
+
+        $ctrl->rows=20;
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="20" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
+
+        $ctrl->cols=60;
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="20" cols="60">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
+
+    }
 }
 
 ?>

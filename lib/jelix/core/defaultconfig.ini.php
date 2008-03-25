@@ -133,6 +133,7 @@ basePath = ""
 ; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
 ; jelix-www, or copy its content in yourapp/www/ (with a name like 'jelix' for example)
 ; so you should indicate the relative path of this link/directory to the basePath, or an absolute path.
+; if you change it, change also all pathes in [htmleditors]
 jelixWWWPath = "jelix/"
 
 defaultEntrypoint= index
@@ -216,3 +217,10 @@ shared_session = off
 ; storage = "dao"
 ; dao_selector = "jelix~jsession"
 ; dao_db_profile = ""
+
+
+[htmleditors]
+wymeditor        = jelix/wymeditor/jquery.wymeditor.js
+wymeditor.config.simple = jelix/wymeditor/config/simple.js
+wymeditor.skin.default  = jelix/wymeditor/skins/default/screen.css
+

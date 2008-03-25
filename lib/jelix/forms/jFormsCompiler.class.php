@@ -179,6 +179,10 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$ctrl->datatype= new jDatatypeHtml();';
             unset($attributes['type']);
         }
+        $this->_generateTextareaHtmlEditor($source, $control, $attributes);
+    }
+
+    protected function _generateTextareaHtmlEditor(&$source, $control, &$attributes) {
         $this->attrReadonly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->attrDefaultvalue($source, $attributes);
@@ -205,6 +209,24 @@ class jFormsCompiler implements jISimpleCompiler {
             if($cols < 2) $cols = 2;
             $source[]='$ctrl->cols='.$cols.';';
             unset($attributes['cols']);
+        }
+    }
+
+    protected function generateHtmleditor(&$source, $control, &$attributes) {
+        $this->_generateTextareaHtmlEditor($source, $control, $attributes);
+
+        if (isset($attributes['engine'])) {
+            $source[]='$ctrl->engine=\''.str_replace("'","\\'",$attributes['engine']).'\';';
+            unset($attributes['engine']);
+        }
+
+        if (isset($attributes['config'])) {
+            $source[]='$ctrl->config=\''.str_replace("'","\\'",$attributes['config']).'\';';
+            unset($attributes['config']);
+        }
+        if (isset($attributes['skin'])) {
+            $source[]='$ctrl->skin=\''.str_replace("'","\\'",$attributes['skin']).'\';';
+            unset($attributes['skin']);
         }
     }
 

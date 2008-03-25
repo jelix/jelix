@@ -81,6 +81,25 @@ class jFormsControlTextarea extends jFormsControl {
  *
  * @package     jelix
  * @subpackage  forms
+ * @since 1.1
+ */
+class jFormsControlHtmlEditor extends jFormsControl {
+    public $type='htmleditor';
+    public $rows=5;
+    public $cols=40;
+    public $engine='wymeditor';
+    public $config='simple';
+    public $skin='default';
+    function __construct($ref){
+        $this->ref = $ref;
+        $this->datatype = new jDatatypeHtml();
+    }
+}
+
+/**
+ *
+ * @package     jelix
+ * @subpackage  forms
  */
 class jFormsControlSecret extends jFormsControl {
     public $type='secret';
@@ -221,6 +240,7 @@ class jFormsControlHidden extends jFormsControlReset {
  * captcha control
  * @package     jelix
  * @subpackage  forms
+ * @since 1.1
  */
 class jFormsControlCaptcha extends jFormsControl {
     public $type = 'captcha';

@@ -66,9 +66,25 @@ $t->_privateVars[\'__formbuilder\'] = $t->_privateVars[\'__form\']->getBuilder(\
 $t->_privateVars[\'__formbuilder\']->outputHeader(array('.$errdecorator.','.$helpdecorator.',\''.$method.'\'));
 $t->_privateVars[\'__displayed_ctrl\'] = array();
 ';
-    $compiler->addMetaContent('if($GLOBALS[\'gJCoord\']->response!= null){
-    $GLOBALS[\'gJCoord\']->response->addJSLink($GLOBALS[\'gJConfig\']->urlengine[\'jelixWWWPath\'].\'js/jforms.js\');
-    $GLOBALS[\'gJCoord\']->response->addCSSLink($GLOBALS[\'gJConfig\']->urlengine[\'jelixWWWPath\'].\'design/jform.css\');
+    $compiler->addMetaContent('global $gJCoord, $gJConfig;
+if($gJCoord->response!= null){
+    $www =$gJConfig->urlengine[\'jelixWWWPath\'];
+    $bp =$gJConfig->urlengine[\'basePath\'];
+    $gJCoord->response->addJSLink($www.\'js/jforms.js\');
+    $gJCoord->response->addCSSLink($www.\'design/jform.css\');
+    foreach($t->_vars as $k=>$v){
+        if($v instanceof jFormsBase && count($edlist = $v->getHtmlEditors())) {
+            $gJCoord->response->addJSLink($www.\'jquery/jquery.js\');
+            foreach($edlist as $ed) {
+                if(isset($gJConfig->htmleditors[$ed->engine]))
+                    $gJCoord->response->addJSLink($bp.$gJConfig->htmleditors[$ed->engine]);
+                if(isset($gJConfig->htmleditors[$ed->engine.\'.config.\'.$ed->config]))
+                    $gJCoord->response->addJSLink($bp.$gJConfig->htmleditors[$ed->engine.\'.config.\'.$ed->config]);
+                if(isset($gJConfig->htmleditors[$ed->engine.\'.skin.\'.$ed->skin]))
+                    $gJCoord->response->addCSSLink($bp.$gJConfig->htmleditors[$ed->engine.\'.skin.\'.$ed->skin]);
+            }
+        }
+    }
 }
 ');
 

@@ -73,6 +73,14 @@ abstract class jFormsBase {
     protected $_hiddens = array();
 
     /**
+     * List of htmleditorcontrols
+     * array of jFormsControl objects
+     * @var array
+     * @see jFormsControl
+     */
+    protected $_htmleditors = array();
+
+    /**
      * the data container
      * @var jFormsDataContainer
      */
@@ -498,6 +506,11 @@ abstract class jFormsBase {
      */
     public function getHiddens(){ return $this->_hiddens; }
 
+     /**
+     * @return array of jFormsControl objects
+     */
+    public function getHtmlEditors(){ return $this->_htmleditors; }
+
     /**
      * @return array of jFormsControl objects
      */
@@ -607,6 +620,8 @@ abstract class jFormsBase {
             $this->_uploads [$control->ref] = $control;
         else if($control->type =='hidden')
             $this->_hiddens [$control->ref] = $control;
+        else if($control->type == 'htmleditor')
+            $this->_htmleditors [$control->ref] = $control;
 
         if(!isset($this->_container->data[$control->ref])){
             if ( $control->datatype instanceof jDatatypeDateTime && $control->defaultValue == 'now') {
