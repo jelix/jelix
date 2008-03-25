@@ -11,6 +11,7 @@ $GLOBALS['jTplConfig']['locales'] =array(
     'errors.tpl.tag.modifier.unknow'=>'Dans le tag %s du template %3$s Le modificateur %2$s est inconnu',
     'errors.tpl.tag.block.end.missing'=>'Dans le template %2$s, la fin d\'un bloc %1$s est manquant',
     'errors.tpl.tag.block.begin.missing'=>'Dans le template %2$s, le début d\'un bloc %1$s est manquant',
+    'errors.tpl.tag.argument.unknow'=>'Dans le template %2$s L\'argument %1$s est inconnu',
     'errors.tpl.tag.function.unknow'=>'Dans le template %2$s La fonction %1$s est inconnue',
     'errors.tpl.tag.meta.unknow'=>'Dans le template %2$s La balise meta %1$s est inconnue',
     'errors.tpl.tag.meta.invalid'=>'Dans le template %2$s La syntaxe de la meta %1$s est invalide',
@@ -20,7 +21,6 @@ $GLOBALS['jTplConfig']['locales'] =array(
     'errors.tpl.tag.bracket.error'=>'Dans le tag %s du template %s, il y a des erreurs au niveau des parenthèses',
     'errors.tplplugin.block.too.few.arguments'=>'Dans le tag %s du template %s, arguments manquants',
     'errors.tplplugin.block.too.many.arguments'=>'Dans le tag %s du template %s, arguments en trop',
-    'errors.tplplugin.block.bad.argument.number'=>'Dans le tag %s du template %3$s, nombre d\'arguments incorrect (%2$s attendus)',
     'errors.tpl.tag.constant.notallowed'=>'Dans le tag %s du template %3$s, les constantes (%2$s) sont interdites',
 );
 

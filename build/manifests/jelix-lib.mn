@@ -428,6 +428,9 @@ cd lib/jelix/plugins/tpl/common
   function.counter_init.php
   function.counter_reset.php
   function.counter_reset_all.php
+  function.cycle_init.php
+  function.cycle.php
+  function.cycle_reset.php
   modifier.cat.php
   modifier.count_array.php
   modifier.count_characters.php
