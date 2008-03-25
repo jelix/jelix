@@ -697,6 +697,38 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 </script>';
         $this->assertEqualOrDiff($result, $out);
     }
+
+    function testOutputCaptcha(){
+        $ctrl= new jFormsControlcaptcha('cap');
+        $ctrl->label='captcha for security';
+
+        ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap">captcha for security</label>', $out);
+
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" value=""/>', $out);
+
+        $this->form->addControl($ctrl);
+        $this->form->setData('cap','toto');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" value=""/>', $out);
+
+        $ctrl->readonly=true;
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" value=""/>', $out);
+
+        $ctrl->readonly=false;
+        $ctrl->hasHelp=true;
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" value=""/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'cap\')">?</a></span>', $out);
+
+        $ctrl->hint='ceci est un tooltip';
+        ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap" title="ceci est un tooltip">captcha for security</label>', $out);
+
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" title="ceci est un tooltip" value=""/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'cap\')">?</a></span>', $out);
+    }
 }
 
 ?>

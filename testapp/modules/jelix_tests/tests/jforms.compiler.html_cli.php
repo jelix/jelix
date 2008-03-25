@@ -294,6 +294,9 @@ class UTjformsCompiler extends jUnitTestCase {
 70=>'<textarea ref="nom" type="html" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
 </textarea>',
+71=>'<captcha ref="cap" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>captcha</label>
+</captcha>',
     );
 
     protected $_PhpControls = array(
@@ -663,6 +666,9 @@ $this->addControl($ctrl);',
 $ctrl->datatype= new jDatatypeHtml();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
+71=>'$ctrl= new jFormsControlcaptcha(\'cap\');
+$ctrl->label=\'captcha\';
+$this->addControl($ctrl);',
 );
 
 
@@ -1029,6 +1035,11 @@ $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jel
 $js.="jForms.tForm.addControl( jForms.tControl);\n";',
 70=>'$label = \'Votre nom\';
 $js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+71=>'$label = \'captcha\';
+$js.="jForms.tControl = new jFormsControl(\'cap\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
 $js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="jForms.tForm.addControl( jForms.tControl);\n";',

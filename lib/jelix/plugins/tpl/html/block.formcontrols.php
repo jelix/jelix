@@ -78,6 +78,7 @@ $t->_privateVars[\'__ctrlref\']=\'\';
 foreach($t->_privateVars[\'__form\']->getControls() as $ctrlref=>$ctrl){
     if($ctrl->type == \'reset\' || $ctrl->type == \'hidden\') continue;
     if($ctrl->type == \'submit\' && (isset($t->_privateVars[\'__formbuilder\']) || $ctrl->standalone)) continue;
+    if($ctrl->type == \'captcha\' && !isset($t->_privateVars[\'__formbuilder\'])) continue;
     if(!isset($t->_privateVars[\'__displayed_ctrl\'][$ctrlref])
        && (  ($ctrls_to_display===null && $ctrls_notto_display === null)
           || ($ctrls_to_display===null && !in_array($ctrlref, $ctrls_notto_display))

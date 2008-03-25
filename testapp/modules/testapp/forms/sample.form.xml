@@ -72,6 +72,10 @@
      <alert>Le fichier doit être une image gif ou png de moins de 50000 octets</alert>
   </upload>
 
+  <captcha ref="cap">
+    <label>Filtre antispam</label>
+  </captcha>
+  
   <reset ref="cancel">
     <label>Annuler</label>
   </reset>

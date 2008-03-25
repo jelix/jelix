@@ -212,7 +212,6 @@ class jFormsCompiler implements jISimpleCompiler {
         $this->attrDefaultvalue($source, $attributes);
         $this->readLabel($source, $control, 'output');
         $this->readHelpHintAlert($source, $control);
-
     }
 
     protected function generateSubmit(&$source, $control, &$attributes) {
@@ -346,6 +345,14 @@ class jFormsCompiler implements jISimpleCompiler {
             unset($attributes['mimetype']);
         }
     }
+
+    protected function generateCaptcha(&$source, $control, &$attributes) {
+        $this->readLabel($source, $control, 'captcha');
+        $this->readHelpHintAlert($source, $control);
+    }
+
+
+
 
     protected function attrReadonly(&$source, &$attributes) {
         if(isset($attributes['readonly'])){

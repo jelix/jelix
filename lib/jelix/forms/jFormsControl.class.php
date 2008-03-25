@@ -217,7 +217,32 @@ class jFormsControlHidden extends jFormsControlReset {
     public $type='hidden';
 }
 
+/**
+ * captcha control
+ * @package     jelix
+ * @subpackage  forms
+ */
+class jFormsControlCaptcha extends jFormsControl {
+    public $type = 'captcha';
+    public $question='';
+    public $required = true;
+    function check($form){
+        $value = $form->getContainer()->data[$this->ref];
+        if($value == '') {
+            return jForms::ERRDATA_REQUIRED;
+        }elseif($value != $form->getContainer()->privateData[$this->ref]){
+            return jForms::ERRDATA_INVALID;
+        }
+        return null;
+    }
 
+    function initExpectedValue($form){
+        $numbers = jLocale::get('jelix~captcha.number');
+        $id = rand(1,intval($numbers));
+        $this->question = jLocale::get('jelix~captcha.question.'.$id);
+        $form->getContainer()->privateData[$this->ref] = jLocale::get('jelix~captcha.response.'.$id);
+    }
+}
 
 /**
  * base class for controls which uses a datasource to fill their contents.

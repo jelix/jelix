@@ -101,6 +101,9 @@ cd lib/jelix/core-modules/jelix/locales/en_US
   auth.ISO-8859-1.properties
   auth.ISO-8859-15.properties
   auth.UTF-8.properties
+  captcha.ISO-8859-1.properties
+  captcha.ISO-8859-15.properties
+  captcha.UTF-8.properties
   common.ISO-8859-1.properties
   common.ISO-8859-15.properties
   common.UTF-8.properties
@@ -138,6 +141,9 @@ cd lib/jelix/core-modules/jelix/locales/en_EN
   auth.ISO-8859-1.properties
   auth.ISO-8859-15.properties
   auth.UTF-8.properties
+  captcha.ISO-8859-1.properties
+  captcha.ISO-8859-15.properties
+  captcha.UTF-8.properties
   common.ISO-8859-1.properties
   common.ISO-8859-15.properties
   common.UTF-8.properties
@@ -175,6 +181,9 @@ cd lib/jelix/core-modules/jelix/locales/fr_FR
   auth.ISO-8859-1.properties
   auth.ISO-8859-15.properties
   auth.UTF-8.properties
+  captcha.ISO-8859-1.properties
+  captcha.ISO-8859-15.properties
+  captcha.UTF-8.properties
   common.ISO-8859-1.properties
   common.ISO-8859-15.properties
   common.UTF-8.properties

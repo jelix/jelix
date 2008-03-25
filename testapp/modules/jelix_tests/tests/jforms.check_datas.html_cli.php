@@ -154,9 +154,32 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $ctrl->hasHelp=true;
         $this->form->addCtrl($ctrl);
         $this->assertTrue($this->form->check());
-    
+
     }
 
+    function testCaptcha() {
+
+        $ctrl = new jFormsControlCaptcha('captcha');
+        $this->form->addCtrl($ctrl);
+
+        $ctrl->initExpectedValue($this->form);
+
+        $this->assertTrue(isset($this->form->getContainer()->privateData['captcha']));
+
+        $expectedResponse = $this->form->getContainer()->privateData['captcha'];
+        $this->assertFalse($this->form->check());
+
+        if( $expectedResponse == '1234')
+            $badresponse = '12345';
+        else
+            $badresponse = '1234';
+
+        $this->form->setData('captcha',$badresponse);
+        $this->assertFalse($this->form->check());
+
+        $this->form->setData('captcha',$expectedResponse);
+        $this->assertTrue($this->form->check());
+    }
 }
 
 ?>

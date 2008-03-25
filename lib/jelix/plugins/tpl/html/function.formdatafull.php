@@ -24,7 +24,7 @@ function jtpl_function_html_formdatafull($tpl, $form)
 
 
     foreach( $form->getControls() as $ctrlref=>$ctrl){
-        if($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden') continue;
+        if($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden' || $ctrl->type == 'captcha') continue;
 
         echo '<tr><th scope="row">';
         echo htmlspecialchars($ctrl->label);

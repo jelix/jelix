@@ -24,27 +24,22 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
     $insideForm = isset($tpl->_privateVars['__formbuilder']);
 
     if($ctrlname =='') {
-        if($tpl->_privateVars['__ctrl']->type == 'hidden')
-            return;
-        if(($tpl->_privateVars['__ctrl']->type == 'submit')
-                && ($tpl->_privateVars['__ctrl']->standalone || $insideForm)){
-            return;
-        }
-        if(($tpl->_privateVars['__ctrl']->type == 'reset') && $insideForm){
-            return;
-        }
-        $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
         $ctrl = $tpl->_privateVars['__ctrl'];
+        $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
         $ctrlname = $tpl->_privateVars['__ctrlref'];
     }else{
         $ctrls = $tpl->_privateVars['__form']->getControls();
-        if($ctrls[$ctrlname]->type == 'hidden')
-            return;
-        if(($ctrls[$ctrlname]->type == 'submit' || $ctrls[$ctrlname]->type == 'reset')
-                && ($ctrls[$ctrlname]->standalone || $insideForm)){
-            return;
-        }
         $ctrl = $ctrls[$ctrlname];
+    }
+
+    if($ctrl->type == 'hidden' || $ctrl->type == 'captcha')
+        return;
+
+    if($ctrl->type == 'submit'  && ($ctrl->standalone || $insideForm))
+        return;
+
+    if($ctrl->type == 'reset' && $insideForm){
+        return;
     }
 
     $value = $tpl->_privateVars['__form']->getData($ctrlname);

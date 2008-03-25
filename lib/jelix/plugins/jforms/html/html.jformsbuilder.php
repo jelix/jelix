@@ -242,6 +242,11 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
         case 'reset':
             echo '<button type="reset"',$id,$hint,' class="jforms-reset">',htmlspecialchars($ctrl->label),'</button>';
             break;
+        case 'captcha':
+            $ctrl->initExpectedValue($this->_form);
+            echo '<span class="jforms-captcha-question">',htmlspecialchars($ctrl->question),'</span> ';
+            echo '<input type="text"',$id,$hint,$class,' value=""',$this->_endt;
+            break;
         }
 
         if ($ctrl->hasHelp) {
