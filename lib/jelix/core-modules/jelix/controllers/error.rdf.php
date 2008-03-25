@@ -18,7 +18,7 @@ class errorCtrl extends jController {
     */
     public function notfound() {
         $rep = $this->getResponse('rdf', true);
-        $rep->datas = array(  array('name'=>'error', 'error'=>'404 not found (wrong action)'));
+        $rep->data = array(  array('name'=>'error', 'error'=>'404 not found (wrong action)'));
         $rep->setHttpStatus('404', 'Not Found');
 
         return $rep;

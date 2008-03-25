@@ -431,7 +431,7 @@ class jFormsCompiler implements jISimpleCompiler {
     }
 
     protected function readSelectedValue(&$source, $control, $controltype, &$attributes) {
-        // support of static datas or daos
+        // support of static data or daos
         if(isset($attributes['selectedvalue']) && isset($control->selectedvalues)){
             throw new jException('jelix~formserr.attribute.not.allowed',array('selectedvalue',$controltype,$this->sourceFile));
         }
@@ -488,7 +488,7 @@ class jFormsCompiler implements jISimpleCompiler {
                 $source[]='$ctrl->standalone=false;';
             }
             $source[]='$ctrl->datasource= new jFormStaticDatasource();';
-            $source[]='$ctrl->datasource->datas = array(';
+            $source[]='$ctrl->datasource->data = array(';
             $selectedvalues=array();
             foreach($control->item as $item){
                 $value ="'".str_replace("'","\\'",(string)$item['value'])."'=>";

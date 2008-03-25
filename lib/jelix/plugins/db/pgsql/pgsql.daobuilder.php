@@ -37,11 +37,11 @@ class pgsqlDaoBuilder extends jDaoGenerator {
 
     protected function _getAutoIncrementPKField ($using = null){
         if ($using === null){
-            $using = $this->_datasParser->getProperties ();
+            $using = $this->_dataParser->getProperties ();
         }
 
-        $tb = $this->_datasParser->getTables();
-        $tb = $tb[$this->_datasParser->getPrimaryTable()]['realname'];
+        $tb = $this->_dataParser->getTables();
+        $tb = $tb[$this->_dataParser->getPrimaryTable()]['realname'];
 
         foreach ($using as $id=>$field) {
             if(!$field->isPK)

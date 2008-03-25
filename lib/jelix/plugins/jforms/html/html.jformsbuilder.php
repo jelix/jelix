@@ -121,7 +121,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             $span ='<span class="jforms-chkbox jforms-ctl-'.$ctrl->ref.'"><input type="checkbox"';
 
             if(is_array($value)){
-                foreach($ctrl->datasource->getDatas() as $v=>$label){
+                foreach($ctrl->datasource->getData() as $v=>$label){
                     echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
                     if(in_array($v,$value))
                         echo ' checked="checked"';
@@ -129,7 +129,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
                     $i++;
                 }
             }else{
-                foreach($ctrl->datasource->getDatas() as $v=>$label){
+                foreach($ctrl->datasource->getData() as $v=>$label){
                     echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
                     if($v == $value)
                         echo ' checked="checked"';
@@ -149,7 +149,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
                     $value='';
             }
             $span ='<span class="jforms-radio jforms-ctl-'.$ctrl->ref.'"><input type="radio"';
-            foreach($ctrl->datasource->getDatas() as $v=>$label){
+            foreach($ctrl->datasource->getData() as $v=>$label){
                 echo $span,$id,$i,'" value="',htmlspecialchars($v),'"',($v==$value?' checked="checked"':''),$readonly,$class,$this->_endt;
                 echo '<label for="',$this->_name,'_',$ctrl->ref,'_',$i,'">',htmlspecialchars($label),'</label></span>';
                 $i++;
@@ -167,7 +167,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             if (!$ctrl->required) {
                 echo '<option value=""',($value==''?' selected="selected"':''),'></option>';
             }
-            foreach($ctrl->datasource->getDatas() as $v=>$label){
+            foreach($ctrl->datasource->getData() as $v=>$label){
                 echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
             }
             echo '</select>';
@@ -181,11 +181,11 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
                     $value = $value[0];
 
                 if(is_array($value)){
-                    foreach($ctrl->datasource->getDatas() as $v=>$label){
+                    foreach($ctrl->datasource->getData() as $v=>$label){
                         echo '<option value="',htmlspecialchars($v),'"',(in_array($v,$value)?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
                     }
                 }else{
-                    foreach($ctrl->datasource->getDatas() as $v=>$label){
+                    foreach($ctrl->datasource->getData() as $v=>$label){
                         echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
                     }
                 }
@@ -201,7 +201,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
                 }
 
                 echo '<select',$id,$readonly,$hint,$class,' size="',$ctrl->size,'">';
-                foreach($ctrl->datasource->getDatas() as $v=>$label){
+                foreach($ctrl->datasource->getData() as $v=>$label){
                     echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
                 }
                 echo '</select>';
@@ -232,7 +232,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             if($ctrl->standalone){
                 echo '<input type="submit"',$id,$hint,' class="jforms-submit" value="',htmlspecialchars($ctrl->label),'"/>';
             }else{
-                foreach($ctrl->datasource->getDatas() as $v=>$label){
+                foreach($ctrl->datasource->getData() as $v=>$label){
                     // because IE6 sucks with <button type=submit> (see ticket #431), we must use input :-(
                     echo '<input type="submit" name="',$ctrl->ref,'" id="',$this->_name,'_',$ctrl->ref,'_',htmlspecialchars($v),'"',
                         $hint,' class="jforms-submit" value="',htmlspecialchars($label),'"/> ';

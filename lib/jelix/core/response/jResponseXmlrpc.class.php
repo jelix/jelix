@@ -24,7 +24,7 @@ final class jResponseXmlRpc extends jResponse {
     protected $_acceptSeveralErrors=false;
 
     /**
-     * PHP Datas to send into the response
+     * PHP Data to send into the response
      */
     public $response = null;
 

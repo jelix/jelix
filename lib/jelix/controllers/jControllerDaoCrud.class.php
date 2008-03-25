@@ -123,12 +123,20 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * you can do your own datas check of a form by overloading this method.
+     * you can do your own data check of a form by overloading this method.
      * You can also do some other things. It is called only if the $form->check() is ok.
-     * and before the save of the datas.
+     * and before the save of the data.
      * @param jFormsBase $form the current form
      * @param boolean $calltype   true for an update, false for a create
      * @return boolean true if it is ok.
+     */
+    protected function _checkData($form, $calltype){
+        return $this->_checkDatas($form, $calltype); // for compatibility
+    }
+
+    /**
+     * DEPRECATED, use _checkData instead
+     * @deprecated since 1.1
      */
     protected function _checkDatas($form, $calltype){
         return true;
@@ -247,7 +255,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * save datas of a form in a new record
+     * save data of a form in a new record
      */
     function savecreate(){
         $form = jForms::fill($this->form);
@@ -257,7 +265,7 @@ class jControllerDaoCrud extends jController {
             return $rep;
         }
 
-        if($form->check() && $this->_checkDatas($form, false)){
+        if($form->check() && $this->_checkData($form, false)){
             $id = $form->saveToDao($this->dao, null, $this->dbProfil);
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
@@ -347,7 +355,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * save datas of a form in a new record
+     * save data of a form in a new record
      */
     function saveupdate(){
         $rep = $this->getResponse('redirect');
@@ -358,7 +366,7 @@ class jControllerDaoCrud extends jController {
             return $rep;
         }
 
-        if($form->check() && $this->_checkDatas($form, true)){
+        if($form->check() && $this->_checkData($form, true)){
             $id = $form->saveToDao($this->dao, null, $this->dbProfil);
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');

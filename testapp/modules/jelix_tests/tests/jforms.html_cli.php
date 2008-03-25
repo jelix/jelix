@@ -24,13 +24,13 @@ class UTjforms extends jUnitTestCase {
     <object method="getContainer()" class="jFormsDataContainer">
         <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
         <string property="formSelector" value="product" />
-        <array property="datas">
+        <array property="data">
             <string key="name" value="" />
             <string key="price" value="" />
         </array>
         <array property="errors">array()</array>
     </object>
-    <array method="getDatas()">
+    <array method="getAllData()">
         <string key="name" value="" />
         <string key="price" value="" />
     </array>
@@ -59,13 +59,13 @@ class UTjforms extends jUnitTestCase {
     <object method="getContainer()" class="jFormsDataContainer">
         <string property="formId" value="akey" />
         <string property="formSelector" value="product" />
-        <array property="datas">
+        <array property="data">
             <string key="name" value="" />
             <string key="price" value="" />
         </array>
         <array property="errors">array()</array>
     </object>
-    <array method="getDatas()">
+    <array method="getAllData()">
         <string key="name" value="" />
         <string key="price" value="" />
     </array>
@@ -93,12 +93,12 @@ class UTjforms extends jUnitTestCase {
     <object method="getContainer()" class="jFormsDataContainer">
         <array property="formId">array(1,\'fr\')</array>
         <string property="formSelector" value="label" />
-        <array property="datas">
+        <array property="data">
             <string key="label" value="" />
         </array>
         <array property="errors">array()</array>
     </object>
-    <array method="getDatas()">
+    <array method="getAllData()">
         <string key="label" value="" />
     </array>
     <array method="id()">array(1,\'fr\')</array>
@@ -124,7 +124,7 @@ class UTjforms extends jUnitTestCase {
         <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="product" />
-            <array property="datas">
+            <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
@@ -142,7 +142,7 @@ class UTjforms extends jUnitTestCase {
         <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="product" />
-            <array property="datas">
+            <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
@@ -151,7 +151,7 @@ class UTjforms extends jUnitTestCase {
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
             <string property="formSelector" value="product" />
-            <array property="datas">
+            <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
@@ -170,7 +170,7 @@ class UTjforms extends jUnitTestCase {
         <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="product" />
-            <array property="datas">
+            <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
@@ -179,7 +179,7 @@ class UTjforms extends jUnitTestCase {
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
             <string property="formSelector" value="product" />
-            <array property="datas">
+            <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
@@ -190,7 +190,7 @@ class UTjforms extends jUnitTestCase {
         <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
             <array property="formId">array(1,\'fr\')</array>
             <string property="formSelector" value="label" />
-            <array property="datas">
+            <array property="data">
                 <string key="label" value="" />
             </array>
             <array property="errors">array()</array>
@@ -234,13 +234,13 @@ class UTjforms extends jUnitTestCase {
     <object method="getContainer()" class="jFormsDataContainer">
         <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
         <string property="formSelector" value="product" />
-        <array property="datas">
+        <array property="data">
             <string key="name" value="phone" />
             <string key="price" value="45" />
         </array>
         <array property="errors">array()</array>
     </object>
-    <array method="getDatas()">
+    <array method="getAllData()">
         <string key="name" value="phone" />
         <string key="price" value="45" />
     </array>
@@ -274,13 +274,13 @@ class UTjforms extends jUnitTestCase {
     <object method="getContainer()" class="jFormsDataContainer">
         <integer property="formId" value="akey" />
         <string property="formSelector" value="product" />
-        <array property="datas">
+        <array property="data">
             <string key="name" value="phone" />
             <string key="price" value="45" />
         </array>
         <array property="errors">array()</array>
     </object>
-    <array method="getDatas()">
+    <array method="getAllData()">
         <string key="name" value="phone" />
         <string key="price" value="45" />
     </array>
@@ -316,7 +316,7 @@ class UTjforms extends jUnitTestCase {
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
             <string property="formSelector" value="product" />
-            <array property="datas">
+            <array property="data">
                 <string key="name" value="phone" />
                 <string key="price" value="45" />
             </array>
@@ -327,7 +327,7 @@ class UTjforms extends jUnitTestCase {
         <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
             <array property="formId">array(1,\'fr\')</array>
             <string property="formSelector" value="label" />
-            <array property="datas">
+            <array property="data">
                 <string key="label" value="" />
             </array>
             <array property="errors">array()</array>
@@ -344,7 +344,7 @@ class UTjforms extends jUnitTestCase {
         <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
             <array property="formId">array(1,\'fr\')</array>
             <string property="formSelector" value="label" />
-            <array property="datas">
+            <array property="data">
                 <string key="label" value="" />
             </array>
             <array property="errors">array()</array>

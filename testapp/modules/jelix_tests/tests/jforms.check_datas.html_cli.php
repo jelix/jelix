@@ -19,7 +19,7 @@ class testCDForm extends jFormsBase {
     function addCtrl($control, $reset=true){
         if($reset){
             $this->_controls = array();
-            $this->_container->datas = array();
+            $this->_container->data = array();
         }
         $this->addControl($control);
     }

@@ -397,7 +397,7 @@ $this->addControl($ctrl);',
 28=>'$ctrl= new jFormsControlcheckboxes(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
-$ctrl->datasource->datas = array(
+$ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
@@ -410,7 +410,7 @@ $this->addControl($ctrl);',
 30=>'$ctrl= new jFormsControlradiobuttons(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
-$ctrl->datasource->datas = array(
+$ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
@@ -424,7 +424,7 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Votre nom\';
 $ctrl->size=8;
 $ctrl->datasource= new jFormStaticDatasource();
-$ctrl->datasource->datas = array(
+$ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
@@ -437,7 +437,7 @@ $this->addControl($ctrl);',
 34=>'$ctrl= new jFormsControlmenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
-$ctrl->datasource->datas = array(
+$ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
@@ -451,7 +451,7 @@ $this->addControl($ctrl);',
 36=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
-$ctrl->datasource->datas = array(
+$ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
@@ -464,7 +464,7 @@ $this->addControl($ctrl);',
 38=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
-$ctrl->datasource->datas = array(
+$ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
@@ -476,7 +476,7 @@ $this->addControl($ctrl);',
 39=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormStaticDatasource();
-$ctrl->datasource->datas = array(
+$ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
@@ -491,7 +491,7 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue=array(\'aaa\');
 $ctrl->datasource= new jFormStaticDatasource();
-$ctrl->datasource->datas = array(
+$ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
@@ -502,7 +502,7 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue= array(\'bbb\',\'aaa\',);
 $ctrl->datasource= new jFormStaticDatasource();
-$ctrl->datasource->datas = array(
+$ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',
@@ -571,7 +571,7 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Type de validation\';
 $ctrl->standalone=false;
 $ctrl->datasource= new jFormStaticDatasource();
-$ctrl->datasource->datas = array(
+$ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
 \'ccc\'=>\'ccc\',

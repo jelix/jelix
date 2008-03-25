@@ -72,13 +72,13 @@ interface jIUrlSignificantHandler {
 class significantUrlEngine implements jIUrlEngine {
 
     /**
-    * datas to create significant url
+    * data to create significant url
     * @var array
     */
     protected $dataCreateUrl = null;
 
     /**
-    * datas to parse and anaylise significant url, and to determine action, module etc..
+    * data to parse and anaylise significant url, and to determine action, module etc..
     * @var array
     */
     protected $dataParseUrl =  null;
@@ -273,7 +273,7 @@ class significantUrlEngine implements jIUrlEngine {
 
 
     /**
-    * Create a jurl object with the given action datas
+    * Create a jurl object with the given action data
     * @param jUrlAction $url  information about the action
     * @return jUrl the url correspondant to the action
     * @author      Laurent Jouanneau

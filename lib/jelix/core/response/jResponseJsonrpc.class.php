@@ -26,7 +26,7 @@ final class jResponseJsonRpc extends jResponse {
     protected $_acceptSeveralErrors=false;
 
     /**
-     * PHP datas you want to return
+     * PHP data you want to return
      * @var mixed
      */
     public $response = null;

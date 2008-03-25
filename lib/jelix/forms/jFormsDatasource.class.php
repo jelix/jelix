@@ -19,9 +19,9 @@ interface jIFormDatasource {
     /**
      * load and returns data to fill a control. The returned array should be 
      * an associative array  key => label
-     * @return array the datas
+     * @return array the data
      */
-    public function getDatas();
+    public function getData();
 
     /**
      * Return the label corresponding to the given key
@@ -41,15 +41,15 @@ class jFormStaticDatasource implements jIFormDatasource {
      * associative array which contains keys and labels
      * @var array
      */
-    public $datas = array();
+    public $data = array();
 
-    public function getDatas(){
-        return $this->datas;
+    public function getData(){
+        return $this->data;
     }
 
     public function getLabel($key){
-        if(isset($this->datas[$key]))
-            return $this->datas[$key];
+        if(isset($this->data[$key]))
+            return $this->data[$key];
         else
             return null;
     }
@@ -82,7 +82,7 @@ class jFormDaoDatasource implements jIFormDatasource {
         $this->keyProperty = $key;
     }
 
-    public function getDatas(){
+    public function getData(){
         if($this->dao === null) $this->dao = jDao::get($this->selector);
         $found = $this->dao->{$this->method}();
         $result=array();

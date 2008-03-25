@@ -15,7 +15,7 @@
 */
 
 /**
- * extract datas from a dao xml content
+ * extract data from a dao xml content
  * @package  jelix
  * @subpackage dao
  * @see jDaoCompiler

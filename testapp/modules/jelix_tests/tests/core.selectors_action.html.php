@@ -131,7 +131,7 @@ class UTSelectorAct extends UnitTestCase {
                 && $s->method == $res[2]
                 && $s->request == $res[3];
                 if(!$ok)
-                    $msg=' contains unexpected datas ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
+                    $msg=' contains unexpected data ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
             }
 
             $this->assertTrue($ok , ' test of '.$sel. ' (should be '.($res === false ? 'invalid':'valid').')');
@@ -182,7 +182,7 @@ class UTSelectorAct extends UnitTestCase {
                 && $s->method == $res[2]
                 && $s->request == $res[3];
                 if(!$valid)
-                    $msg=' contains unexpected datas ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
+                    $msg=' contains unexpected data ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
             }
 
             $this->assertTrue($valid , ' test of '.$sel. ' (should be '.($res === false ? 'invalid':'valid').')');

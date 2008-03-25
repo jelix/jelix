@@ -73,7 +73,7 @@ abstract class jFormsBase {
     protected $_hiddens = array();
 
     /**
-     * the datas container
+     * the data container
      * @var jFormsDataContainer
      */
     protected $_container=null;
@@ -98,8 +98,8 @@ abstract class jFormsBase {
 
     /**
      * @param string $sel the form selector
-     * @param jFormsDataContainer $container the datas container
-     * @param boolean $reset says if the datas should be reset
+     * @param jFormsDataContainer $container the data container
+     * @param boolean $reset says if the data should be reset
      */
     public function __construct($sel, &$container, $reset = false){
         $this->_container = & $container;
@@ -110,7 +110,7 @@ abstract class jFormsBase {
     }
 
     /**
-     * set form datas from request parameters
+     * set form data from request parameters
      */
     public function initFromRequest(){
         $req = $GLOBALS['gJCoord']->request;
@@ -134,20 +134,20 @@ abstract class jFormsBase {
                 // because IE send the <button> content as value instead of the content of the
                 // "value" attribute, we should verify it and get the real value
                 // or when using <input type="submit">, we have only the label as value (in all browsers...
-                $datas = $ctrl->datasource->getDatas();
-                if(!isset($datas[$value])) {
-                    $datas=array_flip($datas);
-                    if(isset($datas[$value])) {
-                        $value = $datas[$value];
+                $data = $ctrl->datasource->getData();
+                if(!isset($data[$value])) {
+                    $data=array_flip($data);
+                    if(isset($data[$value])) {
+                        $value = $data[$value];
                     }
                 }
             }
-            $this->_container->datas[$name] = $value;
+            $this->_container->data[$name] = $value;
         }
     }
 
     /**
-     * check validity of all datas form
+     * check validity of all data form
      * @return boolean true if all is ok
      */
     public function check(){
@@ -161,7 +161,7 @@ abstract class jFormsBase {
     }
 
     /**
-     * set form datas from a DAO
+     * set form data from a DAO
      * @param string $daoSelector the selector of a dao file
      * @param string $key the primary key for the dao. if null, takes the form ID as primary key
      * @param string $dbProfil the jDb profil to use with the dao
@@ -187,34 +187,34 @@ abstract class jFormsBase {
                     if($daorec->$name != '') {
                         $dt = new jDateTime();
                         $dt->setFromString($daorec->$name, jDateTime::DB_DTFORMAT);
-                        $this->_container->datas[$name] = $dt->toString(jDateTime::LANG_DTFORMAT);
+                        $this->_container->data[$name] = $dt->toString(jDateTime::LANG_DTFORMAT);
                     } else {
-                        $this->_container->datas[$name] ='';
+                        $this->_container->data[$name] ='';
                     }
                 }elseif($ctrl->datatype instanceof jDatatypeLocaleDate
                         && $prop[$name]['datatype'] == 'date') {
                     if($daorec->$name != '') {
                         $dt = new jDateTime();
                         $dt->setFromString($daorec->$name, jDateTime::DB_DFORMAT);
-                        $this->_container->datas[$name] = $dt->toString(jDateTime::LANG_DFORMAT);
+                        $this->_container->data[$name] = $dt->toString(jDateTime::LANG_DFORMAT);
                     } else {
-                        $this->_container->datas[$name] ='';
+                        $this->_container->data[$name] ='';
                     }
                 }elseif($ctrl->type=='checkbox' && $prop[$name]['datatype'] == 'boolean') {
                     if($daorec->$name == 'TRUE'||  $daorec->$name == 't'|| $daorec->$name == '1'||$daorec->$name == true){
-                        $this->_container->datas[$name] = $ctrl->valueOnCheck;
+                        $this->_container->data[$name] = $ctrl->valueOnCheck;
                     }else {
-                        $this->_container->datas[$name] = $ctrl->valueOnUncheck;
+                        $this->_container->data[$name] = $ctrl->valueOnUncheck;
                     }
                 }else{
-                    $this->_container->datas[$name] = $daorec->$name;
+                    $this->_container->data[$name] = $daorec->$name;
                 }
             }
         }
     }
 
     /**
-     * save datas using a dao.
+     * save data using a dao.
      * it call insert or update depending the value of the formId stored in the container
      * @param string $daoSelector the selector of a dao file
      * @param string $key the primary key for the dao. if null, takes the form ID as primary key
@@ -241,15 +241,15 @@ abstract class jFormsBase {
             if(!isset($prop[$name]))
                 continue;
 
-            if(is_array($this->_container->datas[$name])){
-                if( count ($this->_container->datas[$name]) ==1){
-                    $daorec->$name = $this->_container->datas[$name][0];
+            if(is_array($this->_container->data[$name])){
+                if( count ($this->_container->data[$name]) ==1){
+                    $daorec->$name = $this->_container->data[$name][0];
                 }else{
                     // do nothing for arrays ?
                     continue;
                 }
             }else{
-                $daorec->$name = $this->_container->datas[$name];
+                $daorec->$name = $this->_container->data[$name];
             }
 
             if($daorec->$name == '' && !$prop[$name]['required']) {
@@ -287,7 +287,7 @@ abstract class jFormsBase {
     }
 
     /**
-     * set datas from a DAO, in a control
+     * set data from a DAO, in a control
      *
      * The control must be a container like checkboxes or listbox with multiple attribute.
      * The form should contain a formId
@@ -339,12 +339,12 @@ abstract class jFormsBase {
         foreach($results as $res){
             $val[]=$res->$valuefield;
         }
-        $this->_container->datas[$controlName]=$val;
+        $this->_container->data[$controlName]=$val;
     }
 
 
     /**
-     * save datas of a control using a dao.
+     * save data of a control using a dao.
      *
      * The control must be a container like checkboxes or listbox with multiple attribute.
      * If the form contain a new record (no formId), you should call saveToDao before
@@ -375,7 +375,7 @@ abstract class jFormsBase {
             throw new jExceptionForms('jelix~formserr.control.not.container', array($controlName, $this->_sel));
         }
 
-        $values = $this->_container->datas[$controlName];
+        $values = $this->_container->data[$controlName];
         if(!is_array($values) && $values != '')
             throw new jExceptionForms('jelix~formserr.value.not.array', array($controlName, $this->_sel));
 
@@ -448,7 +448,7 @@ abstract class jFormsBase {
                     $value = $this->_controls[$name]->valueOnUncheck;
             }
         }
-        $this->_container->datas[$name]=$value;
+        $this->_container->data[$name]=$value;
     }
     /**
      *
@@ -456,15 +456,21 @@ abstract class jFormsBase {
      * @return string the data value
      */
     public function getData($name){
-        if(isset($this->_container->datas[$name]))
-            return $this->_container->datas[$name];
+        if(isset($this->_container->data[$name]))
+            return $this->_container->data[$name];
         else return null;
     }
 
     /**
-     * @return array form datas
+     * @return array form data
      */
-    public function getDatas(){ return $this->_container->datas; }
+    public function getAllData(){ return $this->_container->data; }
+    /**
+     * DEPRECATED, use getAllData() instead.
+     * @return array form data
+     * @deprecated since 1.1
+     */
+    public function getDatas(){ return $this->_container->data; }
     /**
      * @return jFormsDataContainer
      */
@@ -602,14 +608,14 @@ abstract class jFormsBase {
         else if($control->type =='hidden')
             $this->_hiddens [$control->ref] = $control;
 
-        if(!isset($this->_container->datas[$control->ref])){
+        if(!isset($this->_container->data[$control->ref])){
             if ( $control->datatype instanceof jDatatypeDateTime && $control->defaultValue == 'now') {
                 $dt = new jDateTime();
                 $dt->now();
-                $this->_container->datas[$control->ref] = $dt->toString($control->datatype->getFormat());
+                $this->_container->data[$control->ref] = $dt->toString($control->datatype->getFormat());
             }
             else {
-                $this->_container->datas[$control->ref] = $control->defaultValue;
+                $this->_container->data[$control->ref] = $control->defaultValue;
             }
         }
     }

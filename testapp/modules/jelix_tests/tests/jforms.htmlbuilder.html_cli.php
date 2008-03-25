@@ -24,19 +24,19 @@ class testHMLForm { // simulate a jFormBase object
     public $reset= null;
     public $container;
 
-    protected $datas =  array( 'chk'=>'1', 'chk2'=>'', 'choixsimple'=>'11', 'choixmultiple'=>array('10','23'));
+    protected $data =  array( 'chk'=>'1', 'chk2'=>'', 'choixsimple'=>'11', 'choixmultiple'=>array('10','23'));
     function __construct(){
         $this->container = new jFormsDataContainer('','');
     }
 
     function getData($name) {
-        if(isset($this->datas[$name]))
-            return $this->datas[$name];
+        if(isset($this->data[$name]))
+            return $this->data[$name];
         else
             return null;
     }
     function setData($name,$value) {
-        $this->datas[$name]=$value;
+        $this->data[$name]=$value;
     }
     function getControls() {
         return $this->controls;
@@ -60,7 +60,7 @@ class testHMLForm { // simulate a jFormBase object
             $this->reset = $control;
         else if($control->type =='hidden')
             $this->_hiddens [$control->ref] = $control;
-        $this->datas[$control->ref] = $control->defaultValue;
+        $this->data[$control->ref] = $control->defaultValue;
     }
 }
 
@@ -240,7 +240,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Vos choix';
         $ctrl->datasource= new jFormStaticDatasource();
-        $ctrl->datasource->datas = array(
+        $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
             '23'=>'baz',
@@ -283,7 +283,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff($result, $out);
 
         $ctrl->datasource= new jFormStaticDatasource();
-        $ctrl->datasource->datas = array(
+        $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
             '23'=>'baz',
@@ -325,7 +325,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff($result, $out);
 
         $ctrl->datasource= new jFormStaticDatasource();
-        $ctrl->datasource->datas = array(
+        $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
             '23'=>'baz',
@@ -389,7 +389,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff($result, $out);
 
         $ctrl->datasource= new jFormStaticDatasource();
-        $ctrl->datasource->datas = array(
+        $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
             '23'=>'baz',
@@ -626,7 +626,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         $ctrl->standalone=false;
         $ctrl->datasource= new jFormStaticDatasource();
-        $ctrl->datasource->datas = array('svg'=>'Sauvegarde','prev'=>'Preview');
+        $ctrl->datasource->data = array('svg'=>'Sauvegarde','prev'=>'Preview');
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $output = '<input type="submit" name="nom" id="'.$this->formname.'_nom_svg" title="ceci est un tooltip" class="jforms-submit" value="Sauvegarde"/> ';

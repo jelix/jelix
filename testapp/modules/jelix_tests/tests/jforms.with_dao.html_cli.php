@@ -33,14 +33,14 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         $gJCoord->request->params['tag'] = array('professionnal','book');
         $form = jForms::fill('product');
 
-        // save main datas
+        // save main data
         $this->id = $form->saveToDao('products');
         $records = array(
             array('id'=>$this->id, 'name'=>'phone', 'price'=>45),
         );
         $this->assertTableContainsRecords('product_test', $records);
 
-        // save datas of the tags control which is a container
+        // save data of the tags control which is a container
         $form->saveControlToDao('tag','product_tags',$this->id);
         $records = array(
             array('product_id'=>$this->id, 'tag'=>'professionnal'),
@@ -61,7 +61,7 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         );
         $this->assertTableContainsRecords('product_test', $records);
 
-        // save datas of the tags control which is a container
+        // save data of the tags control which is a container
         $form->saveControlToDao('tag','product_tags',$this->id2);
         $records = array(
             array('product_id'=>$this->id, 'tag'=>'professionnal'),
@@ -78,7 +78,7 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         $gJCoord->request->params['label'] = 'bonjour';
         $form = jForms::fill('label', array(1,'fr'));
 
-        // save main datas
+        // save main data
         $form->saveToDao('labels');
         $records = array(
             array('key'=>1, 'lang'=>'fr', 'label'=>'bonjour'),
@@ -120,7 +120,7 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         );
         $this->assertTableContainsRecords('product_test', $records);
 
-        // save datas of the tags control which is a container
+        // save data of the tags control which is a container
         $form->saveControlToDao('tag','product_tags',$this->id);
         $records = array(
             array('product_id'=>$this->id2, 'tag'=>'professionnal'),
@@ -149,7 +149,7 @@ $verif='
         <object key="'.$this->id.'" class="jFormsDataContainer">
             <integer property="formId" value="'.$this->id.'" />
             <string property="formSelector" value="product" />
-            <array property="datas">
+            <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
                 <array key="tag">array()</array>
@@ -168,7 +168,7 @@ $verif='
         <object key="'.$this->id.'" class="jFormsDataContainer">
             <integer property="formId" value="'.$this->id.'" />
             <string property="formSelector" value="product" />
-            <array property="datas">
+            <array property="data">
                 <string key="name" value="other phone" />
                 <string key="price" value="68" />
                 <array key="tag">array()</array>
@@ -189,7 +189,7 @@ $verif='
         <object key="'.$this->id.'" class="jFormsDataContainer">
             <integer property="formId" value="'.$this->id.'" />
             <string property="formSelector" value="product" />
-            <array property="datas">
+            <array property="data">
                 <string key="name" value="other phone" />
                 <string key="price" value="68" />
                 <array key="tag">array(\'best seller\', \'high tech\')</array>

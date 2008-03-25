@@ -29,10 +29,10 @@ final class jResponseJson extends jResponse {
     protected $_acceptSeveralErrors=false;
 
     /**
-     * datas in PHP you want to send
+     * data in PHP you want to send
      * @var mixed
      */
-    public $datas = null;
+    public $data = null;
 
 
     public function output(){
@@ -40,10 +40,10 @@ final class jResponseJson extends jResponse {
         if($this->hasErrors()) return false;
         $this->_httpHeaders['Content-Type'] = "text/plain";
 #if ENABLE_PHP_JSON
-        $content = json_encode($this->datas);
+        $content = json_encode($this->data);
 #else
         $json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
-        $content = $json->encode($this->datas);
+        $content = $json->encode($this->data);
 #endif
         if($this->hasErrors()) return false;
 
@@ -80,4 +80,3 @@ final class jResponseJson extends jResponse {
     }
 }
 
-?>

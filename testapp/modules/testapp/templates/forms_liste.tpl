@@ -6,8 +6,8 @@
 {foreach $liste as $id=>$form}
     <tr>
     <td>{$id}</td>
-    <td>{$form->datas['nom']}</td>
-    <td>{$form->datas['prenom']}</td>
+    <td>{$form->data['nom']}</td>
+    <td>{$form->data['prenom']}</td>
     <td>
         <a href="{jurl 'forms:view',array('id'=>$id)}">voir</a>
         <a href="{jurl 'forms:showform',array('id'=>$id)}">éditer</a>

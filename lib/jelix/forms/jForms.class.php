@@ -37,11 +37,11 @@ class jForms {
     private function __construct(){ }
 
     /**
-     * Create a new form with empty datas
+     * Create a new form with empty data
      *
      * Call it to create a new form, before to display it.
-     * Datas of the form are stored in the php session in a jFormsDataContainer object.
-     * If a form with same id exists, datas are erased.
+     * Data of the form are stored in the php session in a jFormsDataContainer object.
+     * If a form with same id exists, data are erased.
      *
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the new instance (an id of a record for example)
@@ -64,7 +64,7 @@ class jForms {
     /**
      * get an existing instance of a form
      *
-     * In your controller, call it before to re-display a form with existing datas.
+     * In your controller, call it before to re-display a form with existing data.
      *
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the form (if you use multiple instance of a form)
@@ -89,7 +89,7 @@ class jForms {
     }
 
     /**
-     * get an existing instance of a form, and fill it with datas provided by the request
+     * get an existing instance of a form, and fill it with data provided by the request
      *
      * use it in the action called to submit a webform.
      *
@@ -107,7 +107,7 @@ class jForms {
     /**
      * destroy a form in the session
      *
-     * use it after saving datas of a form, and if you don't want to re-display the form.
+     * use it after saving data of a form, and if you don't want to re-display the form.
      *
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the form (if you use multiple instance of a form)

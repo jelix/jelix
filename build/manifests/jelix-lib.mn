@@ -87,11 +87,11 @@ cd lib/jelix/core-modules/jelix/daos
 cd lib/jelix/core-modules/jelix/install/sql
   delete.mysql.sql
   install_jacl.schema.mysql.sql
-  install_jacl.datas.mysql.sql
+  install_jacl.data.mysql.sql
   install_jsession.schema.mysql.sql
   delete.pgsql.sql
   install_jacl.schema.pgsql.sql
-  install_jacl.datas.pgsql.sql
+  install_jacl.data.pgsql.sql
   install_jsession.schema.pgsql.sql
 
 cd lib/jelix/core-modules/jelix/locales/en_US
@@ -445,13 +445,13 @@ cd lib/jelix/plugins/tpl/html
   modifier.nl2br.php
   meta.html.php
   cfunction.formfull.php
-  function.formdatasfull.php
+  function.formdatafull.php
   function.formurl.php
   function.formurlparam.php
   function.diff.php
   block.form.php
   block.formcontrols.php
-  block.formdatas.php
+  block.formdata.php
   block.formsubmits.php
   function.ctrl_control.php
   function.ctrl_label.php

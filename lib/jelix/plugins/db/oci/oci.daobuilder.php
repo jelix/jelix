@@ -26,7 +26,7 @@ class ociDaoBuilder extends jDaoGenerator {
     protected function genOuterJoins(&$tables, $primaryTableName){
         $sqlFrom = '';
         $sqlWhere ='';
-        foreach($this->_datasParser->getOuterJoins() as $tablejoin){
+        foreach($this->_dataParser->getOuterJoins() as $tablejoin){
             $table= $tables[$tablejoin[0]];
             $tablename = $this->_encloseName($table['name']);
 

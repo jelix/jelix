@@ -31,8 +31,8 @@ class jIniFile {
     }
 
     /**
-     * write some datas in an ini file
-     * the datas array should follow the same structure returned by
+     * write some data in an ini file
+     * the data array should follow the same structure returned by
      * the read method (or parse_ini_file)
      * @param array $array the content of an ini file
      * @param string $filename the path and the name of the file use to store the content

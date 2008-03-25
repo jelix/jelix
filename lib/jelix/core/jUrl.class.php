@@ -33,7 +33,7 @@ interface jIUrlEngine {
     public function parse($scriptNamePath, $pathinfo, $params );
 
     /**
-    * Create a jurl object with the given action datas
+    * Create a jurl object with the given action data
     * @param jUrlAction $url  information about the action
     * @return jUrl the url correspondant to the action
     */
@@ -110,7 +110,7 @@ abstract class jUrlBase {
 }
 
 /**
- * A container to store url datas for an action
+ * A container to store url data for an action
  * @package  jelix
  * @subpackage core_url
  * @author      Laurent Jouanneau
@@ -155,7 +155,7 @@ class jUrlAction extends jUrlBase {
 
 
 /**
- * Object that contains url datas, and which provides static method helpers
+ * Object that contains url data, and which provides static method helpers
  * @package  jelix
  * @subpackage core_url
  * @author      Laurent Jouanneau (for the original code from Copix and enhancement for jelix)

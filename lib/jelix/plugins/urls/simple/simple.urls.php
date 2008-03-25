@@ -37,7 +37,7 @@ class simpleUrlEngine implements jIUrlEngine {
 
 
     /**
-    * Create a jurl object with the given action datas
+    * Create a jurl object with the given action data
     * @param jUrlAction $url  information about the action
     * @return jUrl the url correspondant to the action
     */

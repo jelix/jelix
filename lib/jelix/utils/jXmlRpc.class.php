@@ -73,7 +73,7 @@ class jXmlRpc {
     /**
      * decode an xmlrpc response
      * @param string $xmlcontent the content of the response, in xmlrpc format
-     * @return mixed datas stored into the response
+     * @return mixed data stored into the response
      */
     public static function decodeResponse($xmlcontent){
         $xml = simplexml_load_string($xmlcontent);
@@ -188,21 +188,21 @@ class jXmlRpc {
         if(is_array($value)){
 
             $isArray = true;
-            $datas = array();
+            $data = array();
             $structkeys = array();
             foreach($value as $key => $val){
                 if(!is_numeric($key))
                     $isArray=false;
 
                 $structkeys[]='<name>'.$key.'</name>';
-                $datas[]=self::_encodeValue($val);
+                $data[]=self::_encodeValue($val);
             }
 
             if($isArray){
-                $response .= '<array><data>'.implode(' ',$datas).'</data></array>';
+                $response .= '<array><data>'.implode(' ',$data).'</data></array>';
             }else{
                 $response .= '<struct>';
-                foreach($datas as $k=>$v){
+                foreach($data as $k=>$v){
                     $response.='<member>'.$structkeys[$k].$v.'</member>';
                 }
                 $response .= '</struct>';

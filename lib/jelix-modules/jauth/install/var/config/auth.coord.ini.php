@@ -64,7 +64,7 @@ persistant_enable=off
 ; key to use to crypt the password in the cookie. replace it by your own words !
 persistant_crypt_key= exampleOfCryptKey
 
-; the name of the cookie which is used to store datas for the authentification
+; the name of the cookie which is used to store data for the authentification
 persistant_cookie_name=jelixAuthentificationCookie
 
 ; duration of the validity of the cookie (in days). default is 1 day.
@@ -74,7 +74,7 @@ persistant_duration = 1
 
 ;------- parameters for the "Db" driver
 [Db]
-; name of the dao to get user datas
+; name of the dao to get user data
 dao = ""
 
 ; profil to use for jDb 

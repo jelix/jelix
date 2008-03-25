@@ -9,9 +9,9 @@
 */
 
 /**
- * a block to display only datas of a form
+ * a block to display only data of a form
  *
- * usage : {formdatas $theformobject} here the form content {/formdatas}
+ * usage : {formdata $theformobject} here the form content {/formdata}
  *
  * @param jTplCompiler $compiler the template compiler
  * @param boolean $begin true if it is the begin of block, else false
@@ -20,7 +20,7 @@
  * @see jForms
  * @since 1.0.1
  */
-function jtpl_block_html_formdatas($compiler, $begin, $param=array())
+function jtpl_block_html_formdata($compiler, $begin, $param=array())
 {
 
     if(!$begin){
@@ -30,7 +30,7 @@ unset($t->_privateVars[\'__displayed_ctrl\']);';
     }
 
     if(count($param) != 1) {
-        $compiler->doError2('errors.tplplugin.block.bad.argument.number','formdatas',1);
+        $compiler->doError2('errors.tplplugin.block.bad.argument.number','formdata',1);
         return '';
     }
 

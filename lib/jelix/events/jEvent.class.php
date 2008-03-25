@@ -79,7 +79,7 @@ class jEvent {
     }
 
     /**
-    * adds datas in the responses list
+    * adds data in the responses list
     * @param array $response a single response
     */
     public function add ($response) {
@@ -142,7 +142,7 @@ class jEvent {
         return $event;
    }
 
-    protected static $compilerDatas = array('jEventCompiler',
+    protected static $compilerData = array('jEventCompiler',
                     'events/jEventCompiler.class.php',
                     'events.xml',
                     'events.php'
@@ -170,7 +170,7 @@ class jEvent {
     */
     protected static function loadListenersFor ($eventName) {
         if (!isset($GLOBALS['JELIX_EVENTS'])) {
-            jIncluder::incAll(self::$compilerDatas);
+            jIncluder::incAll(self::$compilerData);
         }
 
         $inf = & $GLOBALS['JELIX_EVENTS'];

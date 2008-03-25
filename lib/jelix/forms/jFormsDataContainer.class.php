@@ -10,7 +10,7 @@
 */
 
 /**
- * this object is a container for form datas
+ * this object is a container for form data
  * @package     jelix
  * @subpackage  forms
  */
@@ -18,7 +18,7 @@ class jFormsDataContainer {
     /**
      * @var array
      */
-    public $datas = array();
+    public $data = array();
     /**
      * the instance id of the form
      * @var string 
@@ -31,7 +31,7 @@ class jFormsDataContainer {
     public $formSelector;
 
     /**
-     * list of errors detected in datas
+     * list of errors detected in data
      * @var array
      */
     public $errors = array();
@@ -47,11 +47,11 @@ class jFormsDataContainer {
     }
 
     function unsetData($name){
-        unset($this->datas[$name]);
+        unset($this->data[$name]);
     }
 
     function clear(){
-        $this->datas = array();
+        $this->data = array();
         $this->errors = array();
     }
 }

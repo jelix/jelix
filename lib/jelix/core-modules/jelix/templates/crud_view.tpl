@@ -1,5 +1,5 @@
 <h1>{@jelix~crud.title.view@}</h1>
-{formdatasfull $form}
+{formdatafull $form}
 
 
 <ul>

@@ -38,14 +38,14 @@ abstract class jFormsControl {
     }
 
     function check($form){
-        $value = $form->getContainer()->datas[$this->ref];
+        $value = $form->getContainer()->data[$this->ref];
         if($value == '') {
             if($this->required)
                 return jForms::ERRDATA_REQUIRED;
         }elseif(!$this->datatype->check($value)){
             return jForms::ERRDATA_INVALID;
         }elseif($this->datatype instanceof jIFilteredDatatype) {
-            $form->getContainer()->datas[$this->ref] = $this->datatype->getFilteredValue();
+            $form->getContainer()->data[$this->ref] = $this->datatype->getFilteredValue();
         }
         return null;
     }
@@ -87,7 +87,7 @@ class jFormsControlSecret extends jFormsControl {
     public $size=0;
 
     function check($form){
-        if ($form->getContainer()->datas[$this->ref] == '' && $this->required) {
+        if ($form->getContainer()->data[$this->ref] == '' && $this->required) {
             return jForms::ERRDATA_REQUIRED;
         }
         return null;
@@ -105,7 +105,7 @@ class jFormsControlSecretConfirm extends jFormsControl {
     public $primarySecret='';
 
     function check($form){
-        if($form->getContainer()->datas[$this->ref] != $form->getData($this->primarySecret))
+        if($form->getContainer()->data[$this->ref] != $form->getData($this->primarySecret))
             return jForms::ERRDATA_INVALID;
         return null;
     }
@@ -123,7 +123,7 @@ class jFormsControlCheckbox extends jFormsControl {
     public $valueOnUncheck='0';
 
     function check($form){
-        $value = $form->getContainer()->datas[$this->ref];
+        $value = $form->getContainer()->data[$this->ref];
         if($value != $this->valueOnCheck && $value != $this->valueOnUncheck)
             return jForms::ERRDATA_INVALID;
         return null;
@@ -260,7 +260,7 @@ class jFormsControlCheckboxes extends jFormsControlDatasource {
     }
 
     function check($form){
-        $value = $form->getContainer()->datas[$this->ref];
+        $value = $form->getContainer()->data[$this->ref];
         if(is_array($value)){
             if(count($value) == 0 && $this->required){
                 return jForms::ERRDATA_REQUIRED;
@@ -292,7 +292,7 @@ class jFormsControlListbox extends jFormsControlDatasource {
     }
 
     function check($form){
-        $value = $form->getContainer()->datas[$this->ref];
+        $value = $form->getContainer()->data[$this->ref];
         if(is_array($value)){
             if(!$this->multiple){
                 return jForms::ERRDATA_INVALID;
@@ -318,7 +318,7 @@ class jFormsControlRadiobuttons extends jFormsControlDatasource {
     public $type="radiobuttons";
 
     function check($form){
-        if($form->getContainer()->datas[$this->ref] == '' && $this->required) {
+        if($form->getContainer()->data[$this->ref] == '' && $this->required) {
             return jForms::ERRDATA_REQUIRED;
         }
         return null;

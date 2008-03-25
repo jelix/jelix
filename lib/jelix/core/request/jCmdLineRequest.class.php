@@ -22,7 +22,7 @@ class jCmdLineRequest extends jRequest {
 
     public $defaultResponseType = 'text';
 
-    protected function _initUrlDatas(){ 
+    protected function _initUrlData(){ 
         global $gJConfig; 
         $this->url_script_path = $this->urlScriptPath = '/'; 
         $this->url_script_name = $this->urlScriptName = $this->urlScript = $_SERVER['SCRIPT_NAME']; 

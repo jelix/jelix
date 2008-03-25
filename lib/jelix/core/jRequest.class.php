@@ -93,7 +93,7 @@ abstract class jRequest {
      * initialize the request : analyse of http request etc..
      */
     public function init(){
-        $this->_initUrlDatas();
+        $this->_initUrlData();
         $this->_initParams();
     }
 
@@ -105,7 +105,7 @@ abstract class jRequest {
     /**
      * init the url* properties
      */
-    protected function _initUrlDatas(){
+    protected function _initUrlData(){
         global $gJConfig;
 
         if (isset($_SERVER[$gJConfig->urlengine['scriptNameServerVariable']]))

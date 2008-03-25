@@ -9,7 +9,7 @@
 */
 
 /**
- * a block to display an html form, with datas from a jforms
+ * a block to display an html form, with data from a jforms
  *
  * usage : {form $theformobject,'submit_action', $submit_action_params} here form content {/form}
  *

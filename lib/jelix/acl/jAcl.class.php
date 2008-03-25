@@ -25,7 +25,7 @@ interface jIAclDriver {
     public function getRight($subject, $resource=null);
 
     /**
-     * clear some cached datas, it a cache exists in the driver..
+     * clear some cached data, it a cache exists in the driver..
      */
     public function clearCache();
 
