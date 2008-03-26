@@ -120,4 +120,22 @@ class jForms {
             unset($_SESSION['JFORMS'][$formSel][$formId]);
         }
     }
+
+    /**
+     * destroy all form which are too old and unused
+     * @param integer $life the number of second of a life of a form
+     */
+    static public function clean($formSel='', $life=86400) {
+        if($formSel=='') {
+            foreach($_SESSION['JFORMS'] as $sel=>$f) {
+                self::clean($sel, $life);
+            }
+        } else if(isset($_SESSION['JFORMS'][$formSel])) {
+            $t = time();
+            foreach($_SESSION['JFORMS'][$formSel] as $id=>$cont) {
+                if($t-$cont->updatetime > $life)
+                    unset($_SESSION['JFORMS'][$formSel][$id]);
+            }
+        }
+    }
 }

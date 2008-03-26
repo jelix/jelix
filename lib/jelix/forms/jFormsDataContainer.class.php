@@ -45,6 +45,12 @@ class jFormsDataContainer {
     public $errors = array();
 
     /**
+     * the last date when the form has been used
+     * @var integer
+     */
+    public $updatetime = 0;
+
+    /**
      *
      * @param jSelectorForm $formSelector
      * @param string $formId

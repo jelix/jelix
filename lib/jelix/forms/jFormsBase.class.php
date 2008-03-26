@@ -114,6 +114,7 @@ abstract class jFormsBase {
         if($reset){
             $this->_container->clear();
         }
+        $this->_container->updatetime = time();
         $this->_sel = $sel;
     }
 

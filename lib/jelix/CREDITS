@@ -94,7 +94,7 @@ Frédéric Guillot (aka fg)
  - patch for multiple authentification in a same session (#207)
  - bug fixes in support of XML-RPC request and response
 
-Florian Hatat
+Florian Hatat (aka flh)
  - improvements on jDateTime + RFC2822 support (#379)
 
 Nicolas Jeudy (aka njeudy)
