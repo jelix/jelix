@@ -263,13 +263,7 @@ class jCoordinator {
         }
 
         $respclass = $gJConfig->responses[$type];
-        if(file_exists($path=JELIX_LIB_CORE_PATH.'response/'.$respclass.'.class.php')){
-            require_once ($path);
-        }elseif(file_exists($path=JELIX_APP_PATH.'responses/'.$respclass.'.class.php')){
-            require_once ($path);
-        }else{
-            return jLocale::get('jelix~errors.default.response.not.loaded',array($this->moduleName.'~'.$this->actionName,$type));
-        }
+        require_once ($gJConfig->responses[$type.'.path']);
 
         $this->response = new $respclass();
 

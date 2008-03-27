@@ -207,23 +207,20 @@ abstract class jRequest {
                 throw new jException('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
             }
             $respclass = $gJConfig->_coreResponses[$type];
+            $path = $gJConfig->_coreResponses[$type.'.path'];
         }else{
             if(!isset($gJConfig->responses[$type])){
                 throw new jException('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
             }
             $respclass = $gJConfig->responses[$type];
-        }
-        if(file_exists($path=JELIX_LIB_CORE_PATH.'response/'.$respclass.'.class.php')){
-            require_once ($path);
-        }elseif(file_exists($path=JELIX_APP_PATH.'responses/'.$respclass.'.class.php')){
-            require_once ($path);
-        }else{
-            throw new jException('jelix~errors.ad.response.not.loaded',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
+            $path = $gJConfig->responses[$type.'.path'];
         }
 
         if(!$this->isAllowedResponse($respclass)){
             throw new jException('jelix~errors.ad.response.type.notallowed',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
         }
+
+        require_once ($path);
 
         $response = new $respclass();
         $gJCoord->response= $response;

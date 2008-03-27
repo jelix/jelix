@@ -71,6 +71,9 @@ class jConfigCompiler {
         if($path!='' && $config->urlengine['jelixWWWPath']{0} != '/')
             $config->urlengine['jelixWWWPath'] = $path.$config->urlengine['jelixWWWPath'];
 
+        self::_initResponsesPath($config->responses);
+        self::_initResponsesPath($config->_coreResponses);
+
 
         /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config->locale,$m)){
             if(!isset($m[2])){
@@ -125,6 +128,9 @@ class jConfigCompiler {
 
         if($path!='' && $config['urlengine']['jelixWWWPath']{0} != '/')
             $config['urlengine']['jelixWWWPath'] = $path.$config['urlengine']['jelixWWWPath'];
+
+        self::_initResponsesPath($config['responses']);
+        self::_initResponsesPath($config['_coreResponses']);
 
         /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config['locale'],$m)){
             if(!isset($m[2])){
@@ -288,6 +294,21 @@ class jConfigCompiler {
             the variable in $_SERVER which contains the script name. You must see phpinfo and setup this parameter in your config file.');
     }
 
+    /**
+     * get all physical pathes of responses file
+     */
+    static private function _initResponsesPath(&$list){
+        $copylist = $list; // because we modify $list and then it will search for "foo.path" responses...
+        foreach($copylist as $type=>$class){
+            if(file_exists($path=JELIX_LIB_CORE_PATH.'response/'.$class.'.class.php')){
+                $list[$type.'.path']=$path;
+            }elseif(file_exists($path=JELIX_APP_PATH.'responses/'.$class.'.class.php')){
+                $list[$type.'.path']=$path;
+            }else{
+                throw new Exception('Jelix Config Error: the class file of the response type "'.$type.'" is not found ('.$path.')');
+            }
+        }
+    }
 
 #ifnot ENABLE_PHP_JELIX
     /**

@@ -6,5 +6,4 @@ startAction="main:index"
 
 [responses]
 html = myHtmlResponse
-unittest = testUnitResponse
 
