@@ -99,6 +99,11 @@ abstract class jFormsBase {
     protected $_builders = array();
 
     /**
+     * list of modified controls
+     * @var array
+     */
+    protected $_modifiedControls = array();
+    /**
      * the form selector
      * @var string
      */
@@ -123,6 +128,7 @@ abstract class jFormsBase {
      */
     public function initFromRequest(){
         $req = $GLOBALS['gJCoord']->request;
+        $this->_modifiedControls=array();
         foreach($this->_controls as $name=>$ctrl){
             $value = $req->getParam($name);
             //@todo à prevoir un meilleur test, pour les formulaires sur plusieurs pages
@@ -151,6 +157,8 @@ abstract class jFormsBase {
                     }
                 }
             }
+            if($this->_container->data[$name] != $value)
+                $this->_modifiedControls[$name] = $this->_container->data[$name];
             $this->_container->data[$name] = $value;
         }
     }
@@ -459,6 +467,7 @@ abstract class jFormsBase {
         }
         $this->_container->data[$name]=$value;
     }
+
     /**
      *
      * @param string $name the name of the control/data
@@ -504,13 +513,21 @@ abstract class jFormsBase {
 
      /**
      * @return array of jFormsControl objects
+     * @since 1.1
      */
     public function getHiddens(){ return $this->_hiddens; }
 
      /**
      * @return array of jFormsControl objects
+     * @since 1.1
      */
     public function getHtmlEditors(){ return $this->_htmleditors; }
+
+     /**
+     * @return array key=control id,  value=old value
+     * @since 1.1
+     */
+    public function getModifiedControls(){ return $this->_modifiedControls; }
 
     /**
      * @return array of jFormsControl objects

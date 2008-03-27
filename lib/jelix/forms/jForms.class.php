@@ -126,6 +126,7 @@ class jForms {
      * @param integer $life the number of second of a life of a form
      */
     static public function clean($formSel='', $life=86400) {
+        if(!isset($_SESSION['JFORMS'])) return;
         if($formSel=='') {
             foreach($_SESSION['JFORMS'] as $sel=>$f) {
                 self::clean($sel, $life);
