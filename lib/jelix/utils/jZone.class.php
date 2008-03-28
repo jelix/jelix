@@ -116,7 +116,7 @@ class jZone {
 
         if($name !=''){
             $sel = new jSelectorZone($name);
-            $fic = '~'.$sel->module.'~zone'.strtolower($sel->resource).'~';
+            $fic = '~'.$sel->module.'~'.strtolower($sel->resource).'zone~';
         }else{
             $fic = '~';
         }
