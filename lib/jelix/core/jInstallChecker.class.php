@@ -5,7 +5,8 @@
 * @package  jelix
 * @subpackage core
 * @author   Jouanneau Laurent
-* @copyright 2007 Jouanneau laurent
+* @contributor Bastien Jaillot
+* @copyright 2007-2008 Jouanneau laurent, 2008 Bastien Jaillot
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0b2
@@ -61,15 +62,15 @@ class jInstallMessageProvider {
             'extension.tokenizer'=>'L\'extension tokenizer n\'est pas installée',
             'extension.iconv'=>'L\'extension iconv n\'est pas installée',
             'extensions.required.ok'=>'Toutes les extensions obligatoires sont installées',
-            'extensions.filter'=>'Cette édition de Jelix a besoin de l\'extension filter',
-            'extensions.json'=>'Cette édition de Jelix a besoin de l\'extension json',
-            'extensions.xmlrpc'=>'Cette édition de Jelix a besoin de l\'extension xmlrpc',
-            'extensions.jelix'=>'Cette édition de Jelix a besoin de l\'extension jelix',
-            'extensions.apc'=>'Cette édition de Jelix a besoin de l\'extension apc',
-            'extensions.eaccelerator'=>'Cette édition de Jelix a besoin de l\'extension eaccelerator',
+            'extension.filter'=>'Cette édition de Jelix a besoin de l\'extension filter',
+            'extension.json'=>'Cette édition de Jelix a besoin de l\'extension json',
+            'extension.xmlrpc'=>'Cette édition de Jelix a besoin de l\'extension xmlrpc',
+            'extension.jelix'=>'Cette édition de Jelix a besoin de l\'extension jelix',
+            'extension.apc'=>'Cette édition de Jelix a besoin de l\'extension apc',
+            'extension.eaccelerator'=>'Cette édition de Jelix a besoin de l\'extension eaccelerator',
             'path.core'=>'Le fichier init.php  de jelix ou le fichier application.ini.php de votre application n\'est pas chargé',
             'path.temp'=>'Le repertoire temporaire n\'est pas accessible en écriture ou alors JELIX_APP_TEMP_PATH n\'est pas configurée comme il faut',
-            'path.log'=>'Le repertoire log n\'est pas accessible en écriture ou alors JELIX_APP_LOG_PATH n\'est pas configurée comme il faut',
+            'path.log'=>'Le repertoire var/log dans votre application n\'est pas accessible en écriture ou alors JELIX_APP_LOG_PATH n\'est pas configurée comme il faut',
             'path.var'=>'JELIX_APP_VAR_PATH n\'est pas configuré correctement : ce répertoire n\'existe pas',
             'path.config'=>'JELIX_APP_CONFIG_PATH n\'est pas configuré correctement : ce répertoire n\'existe pas',
             'path.www'=>'JELIX_APP_WWW_PATH n\'est pas configuré correctement : ce répertoire n\'existe pas',
@@ -79,13 +80,15 @@ class jInstallMessageProvider {
             'too.critical.error'=>'Trop d\'erreurs critiques sont apparues. Corrigez les.',
             'config.file'=>'La variable $config_file n\'existe pas ou le fichier qu\'elle indique n\'existe pas',
             'paths.ok'=>'Les répertoires temp, log, var, config et www sont ok',
+            'ini.magic_quotes_gpc_with_plugin'=>'php.ini : le plugin magicquotes est activé mais vous devriez mettre magic_quotes_gpc à off',
+            'ini.magicquotes_plugin_without_php'=>'php.ini : le plugin magicquotes est activé alors que magic_quotes_gpc est déjà à off, désactivez le plugin',
             'ini.magic_quotes_gpc'=>'php.ini : l\'activation des magicquotes n\'est pas recommandée pour jelix. Vous devez les désactiver ou activer le plugin magicquotes si ce n\'est pas fait',
             'ini.magic_quotes_runtime'=>'php.ini : magic_quotes_runtime doit être à off',
             'ini.session.auto_start'=>'php.ini : session.auto_start doit être à off',
             'ini.safe_mode'=>'php.ini : le safe_mode n\'est pas recommandé pour jelix.',
-            'ini.register_globals'=>'php.ini : il faut désactiver register_globals, pour des raisons de sécurité et parce que l\'application n\'en a pas besoin.',
-            'ini.asp_tags'=>'php.ini :  il est conseillé de désactiver asp_tags. L\'application n\'en a pas besoin.',
-            'ini.short_open_tag'=>'php.ini :  il est conseillé de désactiver short_open_tag. L\'application n\'en a pas besoin.',
+            'ini.register_globals'=>'php.ini : il faut désactiver register_globals, pour des raisons de sécurité et parce que Jelix n\'en a pas besoin.',
+            'ini.asp_tags'=>'php.ini :  il est conseillé de désactiver asp_tags. Jelix n\'en a pas besoin.',
+            'ini.short_open_tag'=>'php.ini :  il est conseillé de désactiver short_open_tag. Jelix n\'en a pas besoin.',
             'ini.ok'=>'Les paramètres de php sont ok',
         ),
 
@@ -102,9 +105,9 @@ class jInstallMessageProvider {
             'conclusion.errors'=>'You must fix errors in order to run your application correctly.',
             'conclusion.warning'=>'Your application may run without problems, but it is recommanded to fix the warning.',
             'conclusion.warnings'=>'Your application may run without problems, but it is recommanded to fix warnings.',
-            'conclusion.notice'=>'The install is ok, although there is a notice.',
-            'conclusion.notices'=>'The install is ok, although there are notices.',
-            'conclusion.ok'=>'The install is ok',
+            'conclusion.notice'=>'The installation is ok, although there is a notice.',
+            'conclusion.notices'=>'The installation is ok, although there are notices.',
+            'conclusion.ok'=>'The installation is ok',
             'cannot.continue'=>'Cannot continue the checking: ',
             'extension.dom'=>'DOM extension is not installed',
             'extension.spl'=>'SPL extension is not installed',
@@ -114,15 +117,15 @@ class jInstallMessageProvider {
             'extension.tokenizer'=>'tokenizer extension is not installed',
             'extension.iconv'=>'iconv extension is not installed',
             'extensions.required.ok'=>'All needed PHP extensions are installed',
-            'extensions.filter'=>'This Jelix edition require the xmlrpc extension',
-            'extensions.json'=>'This Jelix edition require the json extension',
-            'extensions.xmlrpc'=>'This Jelix edition require the xmlrpc extension',
-            'extensions.jelix'=>'This Jelix edition require the jelix extension',
-            'extensions.apc'=>'This Jelix edition require the apc extension',
-            'extensions.eaccelerator'=>'This Jelix edition require the eaccelerator extension',
+            'extension.filter'=>'This Jelix edition require the xmlrpc extension',
+            'extension.json'=>'This Jelix edition require the json extension',
+            'extension.xmlrpc'=>'This Jelix edition require the xmlrpc extension',
+            'extension.jelix'=>'This Jelix edition require the jelix extension',
+            'extension.apc'=>'This Jelix edition require the apc extension',
+            'extension.eaccelerator'=>'This Jelix edition require the eaccelerator extension',
             'path.core'=>'jelix init.php file or application.ini.php file is not loaded',
-            'path.temp'=>'Temp directory is not writable or JELIX_APP_TEMP_PATH is not correctly set !',
-            'path.log'=>'log directory is not writable or JELIX_APP_LOG_PATH is not correctly set!',
+            'path.temp'=>'temp/yourApp directory is not writable or JELIX_APP_TEMP_PATH is not correctly set !',
+            'path.log'=>'var/log directory (in the directory of your application) is not writable or JELIX_APP_LOG_PATH is not correctly set!',
             'path.var'=>'JELIX_APP_VAR_PATH is not correctly set: var directory  doesn\'t exist!',
             'path.config'=>'JELIX_APP_CONFIG_PATH is not correctly set: config directory  doesn\'t exist!',
             'path.www'=>'JELIX_APP_WWW_PATH is not correctly set: www directory  doesn\'t exist!',
@@ -132,13 +135,15 @@ class jInstallMessageProvider {
             'too.critical.error'=>'Too much critical errors. Fix them.',
             'config.file'=>'$config_file variable does not exist or doesn\'t contain a correct application config file name',
             'paths.ok'=>'temp, log, var, config and www directory are ok',
+            'ini.magic_quotes_gpc_with_plugin'=>'php.ini : the magicquotes plugin is actived but you should set magic_quotes_gpc to off',
+            'ini.magicquotes_plugin_without_php'=>'php.ini : the magicquotes plugin is actived whereas magic_quotes_gpc is already off, you should disable the plugin',
             'ini.magic_quotes_gpc'=>'php.ini : magicquotes are not recommended for Jelix. You should deactivate it or activate the magicquote jelix plugin',
             'ini.magic_quotes_runtime'=>'php.ini : magic_quotes_runtime must be off',
             'ini.session.auto_start'=>'php.ini : session.auto_start must be off',
             'ini.safe_mode'=>'php.ini : safe_mode is not recommended.',
-            'ini.register_globals'=>'php.ini : you must deactivate register_globals, for security reasons, and because the application doesn\'t need it.',
-            'ini.asp_tags'=>'php.ini :  you should deactivate  asp_tags. The application doesn\'t need it.',
-            'ini.short_open_tag'=>'php.ini :  you should deactivate short_open_tag. The application doesn\'t need it.',
+            'ini.register_globals'=>'php.ini : you must deactivate register_globals, for security reasons, and because Jelix doesn\'t need it.',
+            'ini.asp_tags'=>'php.ini :  you should deactivate  asp_tags. Jelix doesn\'t need it.',
+            'ini.short_open_tag'=>'php.ini :  you should deactivate short_open_tag. Jelix doesn\'t need it.',
             'ini.ok'=>'php settings are ok',
            /* ''=>'',*/
         ),
@@ -154,6 +159,8 @@ class jInstallMessageProvider {
                     break;
                 }
             }
+        }elseif(preg_match("/^([a-zA-Z]{2})(?:[-_]([a-zA-Z]{2}))?$/",$lang,$match)){
+            $lang = strtolower($match[1]);
         }
         if(!isset($this->messages[$lang])){
             $lang = 'en';
@@ -201,9 +208,9 @@ class jInstallCheck {
 
     protected $buildProperties;
 
-    function __construct ($reporter){
+    function __construct ($reporter, $lang=''){
         $this->reporter = $reporter;
-        $this->messages = new jInstallMessageProvider();
+        $this->messages = new jInstallMessageProvider($lang);
     }
 
     function run(){
@@ -290,10 +297,10 @@ class jInstallCheck {
             $this->error('extension.json');
             $ok=false;
         }
-        if($this->buildProperties['ENABLE_PHP_XMLRPC'] == '1' && !extension_loaded ('xmlrpc')) {
+        /*if($this->buildProperties['ENABLE_PHP_XMLRPC'] == '1' && !extension_loaded ('xmlrpc')) {
             $this->error('extension.xmlrpc');
             $ok=false;
-        }
+        }*/
         if($this->buildProperties['ENABLE_PHP_JELIX'] == '1' && !extension_loaded ('jelix')) {
             $this->error('extension.jelix');
             $ok=false;
@@ -362,14 +369,30 @@ class jInstallCheck {
 
     function checkPhpSettings(){
         $ok = true;
-        if(ini_get('magic_quotes_gpc') == 1){
-            $this->warning('ini.magic_quotes_gpc');
-            $ok=false;
+        $defaultconfig = parse_ini_file(JELIX_APP_CONFIG_PATH."defaultconfig.ini.php", true);
+        $indexconfig = parse_ini_file(JELIX_APP_CONFIG_PATH."index/config.ini.php", true);
+
+        if ((isset ($defaultconfig['coordplugins']['magicquotes']) && $defaultconfig['coordplugins']['magicquotes'] == 1) ||
+            (isset ($indexconfig['coordplugins']['magicquotes']) && $indexconfig['coordplugins']['magicquotes'] == 1)) {
+            if(ini_get('magic_quotes_gpc') == 1){
+                $this->notice('ini.magic_quotes_gpc_with_plugin');
+            }
+            else {
+                $this->error('ini.magicquotes_plugin_without_php');
+                $ok=false;
+            }
+        }
+        else {
+            if(ini_get('magic_quotes_gpc') == 1){
+                $this->warning('ini.magic_quotes_gpc');
+                $ok=false;
+            }
         }
         if(ini_get('magic_quotes_runtime') == 1){
             $this->error('ini.magic_quotes_runtime');
             $ok=false;
         }
+        
 
         if(ini_get('session.auto_start') == 1){
             $this->error('ini.session.auto_start');

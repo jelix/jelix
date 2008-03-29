@@ -1,4 +1,12 @@
 <?php
+/**
+* @package    jelix-modules
+* @subpackage jelix
+* @author     Bastien Jaillot
+* @contributor Laurent Jouanneau
+* @copyright  2008 Bastien Jaillot
+* @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+*/
 
 include (JELIX_LIB_CORE_PATH.'jInstallChecker.class.php');
 
@@ -8,7 +16,7 @@ include (JELIX_LIB_CORE_PATH.'jInstallChecker.class.php');
  */
 class checkZoneInstallReporter implements jIInstallCheckReporter {
     public $trace = '';
-    
+
     function start(){
         $this->trace .= '<ul class="checkresults">';
     }
@@ -53,15 +61,37 @@ class checkZoneInstallReporter implements jIInstallCheckReporter {
     }
 }
 
-
+/**
+ * a zone to display a default start page with results of the installation check
+ * @package jelix
+ */
 class check_installZone extends jZone {
- 
-	protected $_tplname='check_install';
- 
-	protected function _prepareTpl() {
-	    $reporter = new checkZoneInstallReporter();
-        $check = new jInstallCheck($reporter);
+
+    protected $_tplname='check_install';
+
+    protected function _prepareTpl() {
+        $lang = $GLOBALS['gJConfig']->locale;
+        if(!$this->getParam('no_lang_check')) {
+            $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            foreach($languages as $bl){
+                if(preg_match("/^([a-zA-Z]{2})(?:[-_]([a-zA-Z]{2}))?(;q=[0-9]\\.[0-9])?$/",$bl,$match)){
+                    if(isset($match[2]))
+                        $lang = strtolower($match[1]).'_'.strtoupper($match[2]);
+                    else
+                        $lang = strtolower($match[1]).'_'.strtoupper($match[1]);
+                    break;
+                }
+            }
+            if($lang!='fr_FR' && $lang != 'en_EN' && $lang != 'en_US')
+                $lang = 'en_EN';
+            $GLOBALS['gJConfig']->locale = $lang;
+        }
+
+        $reporter = new checkZoneInstallReporter();
+        $check = new jInstallCheck($reporter, $lang);
         $check->run();
+        $this->_tpl->assign('wwwpath', JELIX_APP_WWW_PATH);
+        $this->_tpl->assign('configpath', JELIX_APP_CONFIG_PATH);
         $this->_tpl->assign('check',$reporter->trace);
    }
 }
