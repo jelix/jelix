@@ -46,7 +46,7 @@ class jCmdUtils {
         foreach ($params as $pname => $needed) {
             if (count($argv) == 0) {
                 if ($needed) {
-                    throw new jException('jelix~errors.cli.param.missing', $argv[0]);
+                    throw new jException('jelix~errors.cli.param.missing', $pname);
                 } else {
                     break;
                 }
