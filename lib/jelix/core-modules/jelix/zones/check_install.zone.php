@@ -16,27 +16,28 @@ include (JELIX_LIB_CORE_PATH.'jInstallChecker.class.php');
  */
 class checkZoneInstallReporter implements jIInstallCheckReporter {
     public $trace = '';
-
+    protected $list='';
     function start(){
-        $this->trace .= '<ul class="checkresults">';
     }
     function showError($message){
-        $this->trace .= '<li class="checkerror">'.htmlspecialchars($message).'</li>';
+        $this->list .= '<li class="checkerror">'.htmlspecialchars($message).'</li>';
     }
     function showWarning($message){
-        $this->trace .= '<li class="checkwarning">'.htmlspecialchars($message).'</li>';
+        $this->list .= '<li class="checkwarning">'.htmlspecialchars($message).'</li>';
 
     }
     function showOk($message){
-        // $this->trace .= '<li class="checkok">'.htmlspecialchars($message).'</li>';
+        // $this->list .= '<li class="checkok">'.htmlspecialchars($message).'</li>';
 
     }
     function showNotice($message){
-        $this->trace .= '<li class="checknotice">'.htmlspecialchars($message).'</li>';
+        $this->list .= '<li class="checknotice">'.htmlspecialchars($message).'</li>';
 
     }
     function end($checker){
-        $this->trace .= '</ul>';
+        if($this->list !='')
+            $this->trace = '<ul class="checkresults">'.$this->list.'</ul>';
+
         $this->trace .= '<div class="results">';
         if($checker->nbError){
             $this->trace .= ' '.$checker->nbError. $checker->messages->get( ($checker->nbError > 1?'number.errors':'number.error'));
