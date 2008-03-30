@@ -114,7 +114,7 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
 
         $module = $this->param('mod');
         if(isset($this->testsList[$module])){
-            $reporter = jClasses::create("junittests~jtextrespreporter");
+            $reporter = jClasses::create("junittests~jhtmlrespreporter");
             jClasses::inc('junittests~junittestcase');
             jClasses::inc('junittests~junittestcasedb');
             $reporter->setResponse($rep);
@@ -138,7 +138,7 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
         $testname = $this->param('test');
 
         if(isset($this->testsList[$module])){
-            $reporter = jClasses::create("junittests~jtextrespreporter");
+            $reporter = jClasses::create("junittests~jhtmlrespreporter");
             jClasses::inc('junittests~junittestcase');
             jClasses::inc('junittests~junittestcasedb');
             $reporter->setResponse($rep);
@@ -154,7 +154,7 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
                 }
             }
         }else
-            $rep->content.= "\n" . 'no tests for "'.$module.'" module.' . "\n";
+            $rep->body->assign ('MAIN','<p>no tests for "'.$module.'" module.</p>');
         return $this->_finishResponse($rep);
     }
 }
