@@ -4,9 +4,11 @@
 <script language="Javascript">
 if (document.getElementById) {ldelim}
 {section name=p loop=$info}
+    var tree = new WebFXTree('<span class="package">{$info.0.package|escape:"quotes"}</span>');
+    tree.setBehavior('classic');
+
 	{if $info[p].subpackage == ""}
-		var tree = new WebFXTree('<span class="package">{$info.0.package|escape:"quotes"}</span>');
-		tree.setBehavior('classic');
+
 	
 		{if $hastodos}
 			var todos = new WebFXTreeItem('To-do List', '{$todolink}');
