@@ -742,7 +742,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
             //<![CDATA[
-            jelix_wymeditor_default("'.$this->formname.'_contenu");
+            jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
             //]]>
             </script><textarea name="contenu" id="'.$this->formname.'_contenu" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
@@ -750,7 +750,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
             //<![CDATA[
-            jelix_wymeditor_default("'.$this->formname.'_contenu");
+            jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
             //]]>
             </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
@@ -761,7 +761,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
             //<![CDATA[
-            jelix_wymeditor_default("'.$this->formname.'_contenu");
+            jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
             //]]>
             </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
@@ -769,7 +769,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
             //<![CDATA[
-            jelix_wymeditor_default("'.$this->formname.'_contenu");
+            jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
             //]]>
             </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="20" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
@@ -777,7 +777,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
             //<![CDATA[
-            jelix_wymeditor_default("'.$this->formname.'_contenu");
+            jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
             //]]>
             </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="20" cols="60">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 

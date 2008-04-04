@@ -216,7 +216,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             $engine = $GLOBALS['gJConfig']->htmleditors[$ctrl->config.'.engine.name'];
             echo '<script type="text/javascript">
             //<![CDATA[
-            jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'");
+            jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->_name,'");
             //]]>
             </script>';
 
