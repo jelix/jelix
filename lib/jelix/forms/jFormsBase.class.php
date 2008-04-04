@@ -4,6 +4,8 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
+* @contributor Bastien Jaillot
+* @copyright   2006-2007 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
 * @copyright   2006-2008 Laurent Jouanneau, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -231,15 +233,14 @@ abstract class jFormsBase {
     }
 
     /**
-     * save data using a dao.
-     * it call insert or update depending the value of the formId stored in the container
+     * prepare a dao whith filled by all controls
      * @param string $daoSelector the selector of a dao file
      * @param string $key the primary key for the dao. if null, takes the form ID as primary key
      * @param string $dbProfil the jDb profil to use with the dao
-     * @return mixed  the primary key of the new record in a case of inserting
+     * @return mixed return three vars : $daorec, $dao, $toInsert which have to be extracted
      * @see jDao
      */
-    public function saveToDao($daoSelector, $key = null, $dbProfil=''){
+    public function prepareDaoFromControls($daoSelector, $key = null, $dbProfil=''){
         $dao = jDao::create($daoSelector, $dbProfil);
 
         if($key === null)
@@ -294,6 +295,21 @@ abstract class jFormsBase {
                 $daorec->$name = $dt->toString(jDateTime::DB_DFORMAT);
             }
         }
+        return compact("daorec", "dao", "toInsert");
+    }
+        
+        
+    /**
+     * save data using a dao.
+     * it call insert or update depending the value of the formId store    d in the container
+     * @param string $daoSelector the selector of a dao file
+     * @param string $key the primary key for the dao. if null, takes t    he form ID as primary key
+     * @param string $dbProfil the jDb profil to use with the dao
+     * @return mixed  the primary key of the new record in a case of in    serting
+     * @see jDao
+     */
+    public function saveToDao($daoSelector, $key = null, $dbProfil=''){
+        extract($this->prepareDaoFromControls($daoSelector,$key,$dbProfil));
         if($toInsert){
             // todo : what about updating the formId with the Pk ?
             $dao->insert($daorec);
