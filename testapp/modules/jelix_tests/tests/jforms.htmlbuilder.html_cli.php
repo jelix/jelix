@@ -88,7 +88,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();
         $builder->outputHeader(array('','','post'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
+        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'"><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig:url1"/>
 </div><script type="text/javascript">
 //<![CDATA[
@@ -102,7 +102,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();
         $builder->outputHeader(array('','','get'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
+        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$formname.'"><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig:url1"/>
 </div><script type="text/javascript">
@@ -669,7 +669,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();
         $builder->outputHeader(array('','','post'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
+        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'"><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig:url1"/>
 <input type="hidden" name="nom" id="'.$formname.'_nom" value=""/>
 </div><script type="text/javascript">
@@ -687,7 +687,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();
         $builder->outputHeader(array('','','post'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'" onsubmit="return jForms.verifyForm(this)"><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
+        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$formname.'"><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig:url1"/>
 <input type="hidden" name="nom" id="'.$formname.'_nom" value="toto"/>
 </div><script type="text/javascript">
@@ -742,7 +742,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
             //<![CDATA[
-            jelix_wymeditor_simple("'.$this->formname.'_contenu");
+            jelix_wymeditor_default("'.$this->formname.'_contenu");
             //]]>
             </script><textarea name="contenu" id="'.$this->formname.'_contenu" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
@@ -750,7 +750,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
             //<![CDATA[
-            jelix_wymeditor_simple("'.$this->formname.'_contenu");
+            jelix_wymeditor_default("'.$this->formname.'_contenu");
             //]]>
             </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
@@ -761,7 +761,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
             //<![CDATA[
-            jelix_wymeditor_simple("'.$this->formname.'_contenu");
+            jelix_wymeditor_default("'.$this->formname.'_contenu");
             //]]>
             </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
@@ -769,7 +769,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
             //<![CDATA[
-            jelix_wymeditor_simple("'.$this->formname.'_contenu");
+            jelix_wymeditor_default("'.$this->formname.'_contenu");
             //]]>
             </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="20" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
@@ -777,7 +777,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
             //<![CDATA[
-            jelix_wymeditor_simple("'.$this->formname.'_contenu");
+            jelix_wymeditor_default("'.$this->formname.'_contenu");
             //]]>
             </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="20" cols="60">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 

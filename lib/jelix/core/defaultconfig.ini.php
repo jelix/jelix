@@ -220,8 +220,9 @@ shared_session = off
 
 
 [htmleditors]
-wymeditor[]        = jelix/jquery/jquery.js
-wymeditor[]        = jelix/wymeditor/jquery.wymeditor.js
-wymeditor.config.simple = jelix/wymeditor/config/simple.js
-wymeditor.skin.default  = jelix/wymeditor/skins/default/screen.css
+default.engine.name = wymeditor
+default.engine.file[] = jelix/jquery/jquery.js
+default.engine.file[] = jelix/wymeditor/jquery.wymeditor.js
+default.config = jelix/wymeditor/config/default.js
+default.skin.default  = jelix/wymeditor/skins/default/screen.css
 

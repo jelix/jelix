@@ -36,6 +36,8 @@ function jtpl_function_html_formdatafull($tpl, $form)
                 $s.=','.htmlspecialchars($v);
             }
             echo substr($s, 1);
+        }elseif($ctrl->datatype instanceof jDatatypeHtml) {
+            echo $value;
         }else
             echo htmlspecialchars($value);
 

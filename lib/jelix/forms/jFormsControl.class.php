@@ -87,8 +87,7 @@ class jFormsControlHtmlEditor extends jFormsControl {
     public $type='htmleditor';
     public $rows=5;
     public $cols=40;
-    public $engine='wymeditor';
-    public $config='simple';
+    public $config='default';
     public $skin='default';
     function __construct($ref){
         $this->ref = $ref;

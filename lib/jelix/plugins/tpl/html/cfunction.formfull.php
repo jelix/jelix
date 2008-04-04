@@ -32,9 +32,31 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
         $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','formfull','2-6');
     }
 
-    $compiler->addMetaContent('if($GLOBALS[\'gJCoord\']->response!= null){
-        $GLOBALS[\'gJCoord\']->response->addJSLink($GLOBALS[\'gJConfig\']->urlengine[\'jelixWWWPath\'].\'js/jforms.js\');
-        $GLOBALS[\'gJCoord\']->response->addCSSLink($GLOBALS[\'gJConfig\']->urlengine[\'jelixWWWPath\'].\'design/jform.css\');
+    $compiler->addMetaContent('global $gJCoord, $gJConfig;
+        if($gJCoord->response!= null){
+            $www =$gJConfig->urlengine[\'jelixWWWPath\'];
+            $bp =$gJConfig->urlengine[\'basePath\'];
+            $gJCoord->response->addJSLink($www.\'js/jforms.js\');
+            $gJCoord->response->addCSSLink($www.\'design/jform.css\');
+            foreach($t->_vars as $k=>$v){
+                if($v instanceof jFormsBase && count($edlist = $v->getHtmlEditors())) {
+                    foreach($edlist as $ed) {
+                        if(isset($gJConfig->htmleditors[$ed->config.\'.engine.file\'])){
+                            if(is_array($gJConfig->htmleditors[$ed->config.\'.engine.file\'])){
+                                foreach($gJConfig->htmleditors[$ed->config.\'.engine.file\'] as $url) {
+                                    $gJCoord->response->addJSLink($bp.$url);
+                                }
+                            }else
+                                $gJCoord->response->addJSLink($bp.$gJConfig->htmleditors[$ed->config.\'.engine.file\']);
+                        }
+                        if(isset($gJConfig->htmleditors[$ed->config.\'.config\']))
+                            $gJCoord->response->addJSLink($bp.$gJConfig->htmleditors[$ed->config.\'.config\']);
+                        if(isset($gJConfig->htmleditors[$ed->config.\'.skin.\'.$ed->skin]))
+                            $gJCoord->response->addCSSLink($bp.$gJConfig->htmleditors[$ed->config.\'.skin.\'.$ed->skin]);
+                    }
+                }
+            }
+        }
     }
     ');
 

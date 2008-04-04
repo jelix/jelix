@@ -75,18 +75,18 @@ if($gJCoord->response!= null){
     foreach($t->_vars as $k=>$v){
         if($v instanceof jFormsBase && count($edlist = $v->getHtmlEditors())) {
             foreach($edlist as $ed) {
-                if(isset($gJConfig->htmleditors[$ed->engine])){
-                    if(is_array($gJConfig->htmleditors[$ed->engine])){
-                        foreach($gJConfig->htmleditors[$ed->engine] as $url) {
+                if(isset($gJConfig->htmleditors[$ed->config.\'.engine.file\'])){
+                    if(is_array($gJConfig->htmleditors[$ed->config.\'.engine.file\'])){
+                        foreach($gJConfig->htmleditors[$ed->config.\'.engine.file\'] as $url) {
                             $gJCoord->response->addJSLink($bp.$url);
                         }
                     }else
-                        $gJCoord->response->addJSLink($bp.$gJConfig->htmleditors[$ed->engine]);
+                        $gJCoord->response->addJSLink($bp.$gJConfig->htmleditors[$ed->config.\'.engine.file\']);
                 }
-                if(isset($gJConfig->htmleditors[$ed->engine.\'.config.\'.$ed->config]))
-                    $gJCoord->response->addJSLink($bp.$gJConfig->htmleditors[$ed->engine.\'.config.\'.$ed->config]);
-                if(isset($gJConfig->htmleditors[$ed->engine.\'.skin.\'.$ed->skin]))
-                    $gJCoord->response->addCSSLink($bp.$gJConfig->htmleditors[$ed->engine.\'.skin.\'.$ed->skin]);
+                if(isset($gJConfig->htmleditors[$ed->config.\'.config\']))
+                    $gJCoord->response->addJSLink($bp.$gJConfig->htmleditors[$ed->config.\'.config\']);
+                if(isset($gJConfig->htmleditors[$ed->config.\'.skin.\'.$ed->skin]))
+                    $gJCoord->response->addCSSLink($bp.$gJConfig->htmleditors[$ed->config.\'.skin.\'.$ed->skin]);
             }
         }
     }
