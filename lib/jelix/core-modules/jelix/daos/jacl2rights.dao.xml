@@ -18,6 +18,13 @@
                <in property="id_aclgrp" expr="$groups" />
             </conditions>
         </method>
+        <method name="getAllRights" type="select">
+            <parameter name="groups" />
+            <conditions >
+                <eq property="id_aclres" expr="''"/>
+                <in property="id_aclgrp" expr="$groups" />
+            </conditions>
+        </method>
         <method name="getRightWithRes" type="selectfirst">
            <parameter name="subject" />
            <parameter name="groups" />
@@ -27,6 +34,29 @@
               <eq property="id_aclres" expr="$res" />
               <in property="id_aclgrp" expr="$groups" />
            </conditions>
+        </method>
+        <method name="getAnonymousRight" type="selectfirst">
+            <parameter name="subject" />
+            <conditions >
+                <eq property="id_aclsbj" expr="$subject" />
+                <eq property="id_aclres" expr="''"/>
+                <eq property="id_aclgrp" value="0" />
+            </conditions>
+        </method>
+        <method name="getAnonymousRightWithRes" type="selectfirst">
+            <parameter name="subject" />
+            <parameter name="res" />
+            <conditions >
+                <eq property="id_aclsbj" expr="$subject" />
+                <eq property="id_aclres" expr="$res" />
+                <eq property="id_aclgrp" value="0" />
+            </conditions>
+        </method>
+        <method name="getAllAnonymousRights" type="select">
+            <conditions >
+                <eq property="id_aclres" expr="''"/>
+                <eq property="id_aclgrp" value="0" />
+            </conditions>
         </method>
         <method name="deleteByGroup" type="delete">
            <parameter name="group" />

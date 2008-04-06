@@ -22,7 +22,9 @@ class dbAcl2Driver implements jIAcl2Driver {
 
 
     protected static $aclres = array();
-    protected static $acl = array();
+    protected static $acl = null;
+    protected static $anonaclres = array();
+    protected static $anonacl = null;
 
     /**
      * return the value of the right on the given subject (and on the optional resource)
@@ -32,50 +34,93 @@ class dbAcl2Driver implements jIAcl2Driver {
      */
     public function getRight($subject, $resource=null){
 
-        if($resource === null && isset(self::$acl[$subject])){
+        if(!jAuth::isConnected()) {
+            return self::getAnonymousRight($subject, $resource);
+        }
+
+        $groups = null;
+
+        if (self::$acl === null) {
+            $groups = jAcl2DbUserGroup::getGroups();
+            self::$acl=array();
+            if (count($groups)) {
+                $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfil());
+                foreach($dao->getAllRights($groups) as $rec){
+                    self::$acl[$rec->id_aclsbj] = true;
+                }
+            }
+        }
+
+        if(!isset(self::$acl[$subject])){
+            self::$acl[$subject] = false;
+        }
+
+        if($resource === null){
             return self::$acl[$subject];
-        }elseif(isset(self::$aclres[$subject][$resource])){
+        }
+
+        if(isset(self::$aclres[$subject][$resource])){
             return self::$aclres[$subject][$resource];
         }
 
-        if(!jAuth::isConnected()) // not authicated == no rights
-            return false;
-
-        $groups = jAcl2DbUserGroup::getGroups();
-
-        if (count($groups) == 0) {
-            self::$acl[$subject] = false;
-            self::$aclres[$subject][$resource] = false;
-            return false;
-        }
-
-        $hasRight = false;
-        $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfil());
-        $right = $dao->getRight($subject, $groups);
-        self::$acl[$subject] = $hasRight = ($right != false);
-
-        if($resource !== null){
-            if($hasRight) {
-                self::$aclres[$subject][$resource] = true;
-            }
-            else {
+        self::$aclres[$subject][$resource] = self::$acl[$subject];
+        if(!self::$acl[$subject]){
+            if($groups===null)
+                $groups = jAcl2DbUserGroup::getGroups();
+            if (count($groups)) {
+                $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfil());
                 $right = $dao->getRightWithRes($subject, $groups, $resource);
-                self::$aclres[$subject][$resource] = $hasRight = ($right != false);
+                self::$aclres[$subject][$resource] = ($right != false);
+            }
+            return self::$aclres[$subject][$resource];
+        }
+        else
+            return true;
+    }
+
+    protected function getAnonymousRight($subject, $resource=null) {
+
+        if (self::$anonacl === null) {
+            $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfil());
+            self::$anonacl=array();
+            foreach($dao->getAllAnonymousRights() as $rec){
+                self::$anonacl[$rec->id_aclsbj] = true;
             }
         }
 
-        return $hasRight;
+        if(!isset(self::$anonacl[$subject])){
+            self::$anonacl[$subject] = false;
+        }
+
+        if($resource === null){
+            return self::$anonacl[$subject];
+        }
+
+        if(isset(self::$anonaclres[$subject][$resource])){
+            return self::$anonaclres[$subject][$resource];
+        }
+
+        self::$anonaclres[$subject][$resource] = self::$anonacl[$subject];
+        if(!self::$anonacl[$subject]){
+            $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfil());
+            $right = $dao->getAnonymousRightWithRes($subject, $resource);
+            self::$anonaclres[$subject][$resource] = $r = ($right != false);
+            return $r;
+        }
+        else
+            return true;
     }
+
 
     /**
      * clear right cache
-     * @since 1.0b2
      */
     public function clearCache(){
-        self::$acl = array();
+        self::$acl = null;
         self::$aclres = array();
+        self::$anonacl = null;
+        self::$anonaclres = array();
     }
-    
+
 }
 
-?>

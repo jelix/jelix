@@ -15,14 +15,16 @@
     </record>
     <factory>
         <method name="getDefaultGroups" type="select">
-            <conditions>
+           <conditions>
                <eq property="grouptype" value="1" />
-            </conditions>
+               <neq property="id_aclgrp" value="0" />
+           </conditions>
         </method>
 
         <method name="findAllPublicGroup" type="select">
            <conditions>
               <neq property="grouptype" value="2" />
+              <neq property="id_aclgrp" value="0" />
            </conditions>
            <order>
                <orderitem property="name" way="asc" />
@@ -44,6 +46,7 @@
            </values>
            <conditions>
               <eq property="id_aclgrp" expr="$group" />
+              <neq property="id_aclgrp" value="0" />
            </conditions>
         </method>
 
@@ -54,6 +57,7 @@
            </values>
            <conditions>
               <eq property="id_aclgrp" expr="$group" />
+              <neq property="id_aclgrp" value="0" />
            </conditions>
         </method>
 
@@ -65,6 +69,7 @@
            </values>
            <conditions>
               <eq property="id_aclgrp" expr="$group" />
+              <neq property="id_aclgrp" value="0" />
            </conditions>
         </method>
 

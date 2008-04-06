@@ -109,6 +109,8 @@ class jAcl2DbUserGroup {
      * @param int $groupid the group id
      */
     public static function addUserToGroup($login, $groupid){
+        if( $groupid == 0)
+            throw new Exception ('jAcl2DbUserGroup::addUserToGroup : invalid group id');
         $p = jAcl2Db::getProfil();
         $usergrp = jDao::createRecord('jelix~jacl2usergroup',$p);
         $usergrp->login =$login;
@@ -170,6 +172,9 @@ class jAcl2DbUserGroup {
      * @param boolean $default true if the group is to be default, else false
      */
     public static function setDefaultGroup($groupid, $default=true){
+        if( $groupid == 0)
+            throw new Exception ('jAcl2DbUserGroup::setDefaultGroup : invalid group id');
+
         $daogroup = jDao::get('jelix~jacl2group',jAcl2Db::getProfil());
         if($default)
             $daogroup->setToDefault($groupid);
@@ -183,6 +188,8 @@ class jAcl2DbUserGroup {
      * @param string $name the new name
      */
     public static function updateGroup($groupid, $name){
+        if( $groupid == 0)
+            throw new Exception ('jAcl2DbUserGroup::updateGroup : invalid group id');
         jDao::get('jelix~jacl2group',jAcl2Db::getProfil())->changeName($groupid,$name);
     }
 
@@ -191,6 +198,8 @@ class jAcl2DbUserGroup {
      * @param int $groupid the group id
      */
     public static function removeGroup($groupid){
+        if( $groupid == 0)
+            throw new Exception ('jAcl2DbUserGroup::removeGroup : invalid group id');
         $p = jAcl2Db::getProfil();
         // enlever tout les droits attaché au groupe
         jDao::get('jelix~jacl2rights',$p)->deleteByGroup($groupid);
