@@ -13,7 +13,7 @@
 /**
  * a special if block to test easily a right value
  *
- * <pre>{ifacl 'subject',54} ..here generated content if the user has the right  {/ifacl}</pre>
+ * <pre>{ifacl 'subject','value', 54} ..here generated content if the user has the right  {/ifacl}</pre>
  * @param jTplCompiler $compiler the template compiler
  * @param boolean true if it is the begin of block, else false
  * @param $param array  0=>subject 1=>right value 2=>optional resource

@@ -23,6 +23,10 @@ cd lib/jelix/acl
   jAclDbUserGroup.class.php
   jAclDbManager.class.php
   jAclDb.class.php
+  jAcl2.class.php
+  jAcl2DbUserGroup.class.php
+  jAcl2DbManager.class.php
+  jAcl2Db.class.php
 
 cd lib/jelix/controllers
   jControllerCmdLine.class.php
@@ -84,14 +88,23 @@ cd lib/jelix/core-modules/jelix/daos
    jaclusergroup.dao.xml
    jaclgroupsofuser.dao.xml
    jsession.dao.xml
+   jacl2group.dao.xml
+   jacl2rights.dao.xml
+   jacl2subject.dao.xml
+   jacl2usergroup.dao.xml
+   jacl2groupsofuser.dao.xml
 cd lib/jelix/core-modules/jelix/install/sql
   delete.mysql.sql
   install_jacl.schema.mysql.sql
   install_jacl.data.mysql.sql
+  install_jacl2.schema.mysql.sql
+  install_jacl2.data.mysql.sql
   install_jsession.schema.mysql.sql
   delete.pgsql.sql
   install_jacl.schema.pgsql.sql
   install_jacl.data.pgsql.sql
+  install_jacl2.schema.pgsql.sql
+  install_jacl2.data.pgsql.sql
   install_jsession.schema.pgsql.sql
 
 cd lib/jelix/core-modules/jelix/locales/en_US
@@ -304,6 +317,11 @@ cd lib/jelix-modules/jacldb
   events.xml
 cd lib/jelix-modules/jacldb/classes
 !  jacldb.listener.php
+cd lib/jelix-modules/jacl2db
+  module.xml
+  events.xml
+cd lib/jelix-modules/jacl2db/classes
+!  jacl2db.listener.php
 cd lib/jelix-modules/jauth
   module.xml
   events.xml
@@ -351,6 +369,7 @@ cd lib/jelix-plugins
   CREDITS
 cd lib/jelix-plugins/auth/
 cd lib/jelix-plugins/acl/
+cd lib/jelix-plugins/acl2/
 cd lib/jelix-plugins/coord/
 cd lib/jelix-plugins/db/
 cd lib/jelix-plugins/urls/
@@ -359,6 +378,8 @@ cd lib/jelix-plugins/wr_rules/
 
 cd lib/jelix/plugins/acl/db
   db.acl.php
+cd lib/jelix/plugins/acl2/db
+  db.acl2.php
 cd lib/jelix/plugins/auth/db
   db.auth.php
 cd lib/jelix/plugins/auth/class
@@ -384,6 +405,11 @@ cd lib/jelix/plugins/coord/jacl
 ! jacl.coord.php
   plugin.xml
   jacl.coord.ini.php.dist
+
+cd lib/jelix/plugins/coord/jacl2
+! jacl2.coord.php
+  plugin.xml
+  jacl2.coord.ini.php.dist
 
 cd lib/jelix/plugins/jforms/html
   html.jformscompiler.php
@@ -420,6 +446,8 @@ cd lib/jelix/plugins/db/oci
 cd lib/jelix/plugins/tpl/common
   block.ifacl.php
   block.ifnotacl.php
+  block.ifacl2.php
+  block.ifnotacl2.php
   block.ifuserconnected.php
   block.ifusernotconnected.php
   block.stripws.php

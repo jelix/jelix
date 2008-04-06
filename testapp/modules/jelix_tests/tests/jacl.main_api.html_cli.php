@@ -9,19 +9,21 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+if(!class_exists('jAuth',false)) {
+    class jAuth {
 
-class jAuth {
+        static public $connect = true;
 
-    static public $connect = true;
+        static function isConnected() {
+            return self::$connect;
+        }
 
-    static function isConnected() {
-        return self::$connect;
-    }
-
-    static function getUserSession() {
-        return $_SESSION['JELIX_USER'];
+        static function getUserSession() {
+            return $_SESSION['JELIX_USER'];
+        }
     }
 }
+
 
 class userTest {
     public $login;

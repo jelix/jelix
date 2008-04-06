@@ -200,6 +200,11 @@ smtpTimeout = 10
 driver = db
 enableAclDbEventListener = off
 
+[acl2]
+driver = db
+enableAclDbEventListener = off
+
+
 [sessions]
 shared_session = off
 ; You can change the session name by setting the following parameter (only accepts alpha-numeric chars) :
