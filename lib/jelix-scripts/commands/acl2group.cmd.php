@@ -187,7 +187,8 @@ ACTION:
 
         $cnx = jDb::getConnection(jAclDb::getProfil());
 
-        $id = $this->_getGrpId($params[0]);
+        if($params[0] != 0)
+            $id = $this->_getGrpId($params[0]);
 
         $sql="DELETE FROM jacl2_rights WHERE id_aclgrp=";
         $sql.=intval($id);
@@ -324,6 +325,8 @@ ACTION:
     private function _getGrpId($param){
         $cnx = jDb::getConnection(jAclDb::getProfil());
         if(is_numeric($param)){
+            if(intval($param) >= 0)
+                die('Error: invalid group id');
             $sql="SELECT id_aclgrp FROM jacl2_group WHERE grouptype <2 AND id_aclgrp = ".$param;
         }else{
             $sql="SELECT id_aclgrp FROM jacl2_group WHERE grouptype <2 AND name = ".$cnx->quote($param);

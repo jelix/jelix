@@ -74,13 +74,29 @@ ACTION:
 
 
     protected function cmd_list(){
+        echo "group\tsubject\t\tresource\n---------------------------------------------------------------\n";
+        echo "- anonymous group\n";
+        $sql="SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, s.label_key as subject
+                FROM jacl2_rights r, jacl2_subject s
+                WHERE r.id_aclgrp = 0 AND r.id_aclsbj=s.id_aclsbj
+                ORDER BY subject, id_aclres ";
+        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $rs = $cnx->query($sql);
+        $sbj =-1;
+        foreach($rs as $rec){
+            if($sbj !=$rec->id_aclsbj){
+                $sbj = $rec->id_aclsbj;
+                echo "\t",$rec->id_aclsbj,"\n";
+            }
+            echo "\t\t",$rec->id_aclres,"\n";
+        }
+
         $sql="SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, name as grp, s.label_key as subject
                 FROM jacl2_rights r, jacl2_group g, jacl2_subject s
                 WHERE r.id_aclgrp = g.id_aclgrp AND r.id_aclsbj=s.id_aclsbj
                 ORDER BY grp, subject, id_aclres ";
         $cnx = jDb::getConnection(jAclDb::getProfil());
         $rs = $cnx->query($sql);
-        echo "group\tsubject\t\tresource\n---------------------------------------------------------------\n";
         $grp=-1;
         $sbj =-1;
         foreach($rs as $rec){
@@ -236,8 +252,12 @@ ACTION:
 
         $cnx = jDb::getConnection(jAclDb::getProfil());
         if(is_numeric($param)){
+            if($param == '0')
+                return 0;
             $sql="SELECT id_aclgrp FROM jacl2_group WHERE $c id_aclgrp = ".$param;
         }else{
+            if($param =='anonymous')
+                return 0;
             $sql="SELECT id_aclgrp FROM jacl2_group WHERE $c name = ".$cnx->quote($param);
         }
         $rs = $cnx->query($sql);

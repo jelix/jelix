@@ -35,12 +35,12 @@ class jAcl2CoordPlugin implements jICoordPlugin {
         $aclok = true;
 
         if(isset($params['jacl2.right'])) {
-            $aclok = jAcl::check($params['jacl2.right']);
+            $aclok = jAcl2::check($params['jacl2.right']);
 
         }elseif(isset($params['jacl2.rights.and'])) {
             $aclok = true;
             foreach($params['jacl2.rights.and'] as $right) {
-                if(!jAcl::check($right)) {
+                if(!jAcl2::check($right)) {
                     $aclok = false;
                     break;
                 }
@@ -48,7 +48,7 @@ class jAcl2CoordPlugin implements jICoordPlugin {
         }elseif(isset($params['jacl2.rights.or'])) {
             $aclok = false;
             foreach($params['jacl2.rights.or'] as $right) {
-                if(jAcl::check($right)) {
+                if(jAcl2::check($right)) {
                     $aclok = true;
                     break;
                 }

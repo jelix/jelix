@@ -94,6 +94,10 @@ class UTjacl2 extends jUnitTestCaseDb {
         jAcl2::clearCache();
         $this->assertFalse(jAcl2::check('super.cms.list'));
         $this->assertFalse(jAcl2::check('admin.access'));
+        jAcl2::clearCache();
+        jAcl2DbManager::addRight(0, 'super.cms.list' );
+        $this->assertTrue(jAcl2::check('super.cms.list'));
+        $this->assertFalse(jAcl2::check('admin.access'));
         jAuth::$connect = true;
         jAcl2::clearCache();
     }
