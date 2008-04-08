@@ -131,6 +131,9 @@ Rahal
 Philippe Schelte (aka dubphil)
  - plugin tpl cycle (#149)
 
+Warren Seine (aka SooW)
+ - <script /> tags don't end with a newline (#536)
+
 Christian Tritten
  - improvements on pagelinks plugin (#340)
 

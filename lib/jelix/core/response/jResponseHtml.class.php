@@ -4,7 +4,9 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Yann (description and keywords), Dominique Papin
+* @contributor Warren Seine
 * @copyright   2005-2008 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
+* @copyright   2008 Warren Seine
 *              few lines of code are copyrighted CopixTeam http://www.copix.org
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -453,7 +455,7 @@ class jResponseHtml extends jResponse {
             foreach ($params as $param_name=>$param_value){
                 $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
             }
-            echo '<script type="text/javascript" src="',$src,'" ',$more,'></script>';
+            echo '<script type="text/javascript" src="',$src,'" ',$more,'></script>',"\n";
         }
         if(count($this->_JSIELink)){
             echo '<!--[if IE]>';
@@ -463,7 +465,7 @@ class jResponseHtml extends jResponse {
                 foreach ($params as $param_name=>$param_value){
                     $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
                 }
-                echo '<script type="text/javascript" src="',$src,'" ',$more,'></script>';
+                echo '<script type="text/javascript" src="',$src,'" ',$more,'></script>',"\n";
             }
             echo '<![endif]-->';
         }
