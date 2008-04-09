@@ -59,7 +59,7 @@ class jAcl2DbManager {
      */
     public static function removeRight($group, $subject, $resource=''){
         if($resource === null) $resource='';
-        jDao::get('jelix~jacl2rights', jAclDb::getProfil())
+        jDao::get('jelix~jacl2rights', jAcl2Db::getProfil())
             ->delete($subject,$group,$resource);
         jAcl2::clearCache();
     }
@@ -72,7 +72,7 @@ class jAcl2DbManager {
      * @param string $resource the id of a resource
      */
     public static function removeResourceRight($subject, $resource){
-        jDao::get('jelix~jacl2rights', jAclDb::getProfil())->deleteBySubjRes($subject, $resource);
+        jDao::get('jelix~jacl2rights', jAcl2Db::getProfil())->deleteBySubjRes($subject, $resource);
         jAcl2::clearCache();
     }
 
@@ -83,7 +83,7 @@ class jAcl2DbManager {
      */
     public static function addSubject($subject, $label_key){
         // ajoute un sujet dans la table jacl_subject
-        $p = jAclDb::getProfil();
+        $p = jAcl2Db::getProfil();
         $subj = jDao::createRecord('jelix~jacl2subject',$p);
         $subj->id_aclsbj=$subject;
         $subj->label_key =$label_key;
@@ -96,7 +96,7 @@ class jAcl2DbManager {
      * @param string  $subject the key of the subject
      */
     public static function removeSubject($subject){
-        $p = jAclDb::getProfil();
+        $p = jAcl2Db::getProfil();
         jDao::get('jelix~jacl2rights',$p)->deleteBySubject($subject);
         jDao::get('jelix~jacl2subject',$p)->delete($subject);
         jAcl2::clearCache();

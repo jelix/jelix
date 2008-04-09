@@ -7,4 +7,11 @@
       <property name="id_aclsbj" fieldname="id_aclsbj" datatype="string" required="yes"/>
       <property name="label_key" fieldname="label_key" datatype="string"/>
     </record>
+    <factory>
+        <method name="findAllSubject" type="select">
+           <order>
+              <orderitem property="id_aclsbj" way="asc" />
+           </order>
+        </method>
+    </factory>
 </dao>

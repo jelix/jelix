@@ -19,5 +19,13 @@
                 <eq property="login" expr="$login" />
             </conditions>
         </method>
+        <method name="getPrivateGroup" type="selectfirst">
+            <parameter name="login" />
+            <conditions>
+                <eq property="login" expr="$login" />
+                <eq property="ownerlogin" expr="$login" />
+                <eq property="grouptype" value="2" />
+            </conditions>
+        </method>
     </factory>
 </dao>
