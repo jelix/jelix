@@ -1,0 +1,24 @@
+
+
+cd lib/jelix-admin-modules/jacl2_admin
+  module.xml
+cd lib/jelix-admin-modules/jacl2_admin/locales/en_EN
+  acl2.UTF-8.properties
+cd lib/jelix-admin-modules/jacl2_admin/locales/fr_FR
+  acl2.UTF-8.properties
+cd lib/jelix-admin-modules/jacl2_admin/controllers
+  groups.classic.php
+  users.classic.php
+cd lib/jelix-admin-modules/jacl2_admin/install
+  urls_example.xml
+cd lib/jelix-admin-modules/jacl2_admin/templates
+  groups_right.tpl
+  users_list.tpl
+  user_rights.tpl
+  groups_right_view.tpl
+  user_rights_view.tpl
+
+cd lib/jelix-www/design/
+
+  jacl2.css
+

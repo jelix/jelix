@@ -1,0 +1,51 @@
+
+
+table.rights {
+ border-bottom: 1px solid #d7d7d7;
+ border-collapse: collapse;
+ border-spacing: 0;
+ margin:1em;
+}
+
+table.rights th { text-align: left; padding: 0 1em .1em 0; font-size: 12px }
+table.rights thead { background: #f7f7f0 }
+table.rights thead th {
+ border: 1px solid #d7d7d7;
+ border-bottom-color: #999;
+ font-size: 11px;
+ font-weight: bold;
+ padding: 2px .5em;
+ vertical-align: middle;
+ text-align:center;
+}
+table.rights thead th :link:hover, table.rights thead th :visited:hover {
+ background-color: transparent;
+}
+table.rights thead th a { border: none; padding-right: 12px }
+table.rights tbody td, table.rights tbody th {
+ border: 1px dotted #ddd;
+ padding: .33em .5em;
+ vertical-align: top;
+}
+table.rights tbody td a:hover, table.rights tbody th a:hover {
+ background-color: transparent;
+}
+table.rights tbody tr { border-top: 1px solid #ddd }
+table.rights tbody tr.even { background-color: #fcfcfc }
+table.rights tbody tr.odd { background-color: #f7f7f7 }
+table.rights tbody tr:hover { background: #eed !important }
+
+table.rights thead th.notingroup, table.rights tbody td.notingroup {color:#BBB}
+table.rights tbody td { font-weight:bold; text-align:center;}
+table.rights tbody td.notingroup { font-weight:normal; }
+table.rights thead th a.removegroup { text-decoration:none !important; border:1px solid #bbb; background-color:#F6DCDC; padding:0 2px; }
+table.rights thead th a.addgroup { text-decoration:none !important; border:1px solid #bbb; background-color:#DEF6D5; padding:0 2px; }
+table.rights tbody td.colblank { background-color:#fff; border:0 none #fff!important;}
+table.rights thead th.colblank { background-color:#fff; border-top:0 none #fff!important;border-bottom:0 none #fff!important;}
+
+fieldset { margin-top:1em; }
+
+.pagelinks li { display:inline; border:1px solid gray; padding:4px; color:black; }
+.pagelinks li.pagelinks-disabled { color: gray;}
+.pagelinks li.pagelinks-current { font-weight:bold;}
+.pagelinks li a:hover, .pagelinks li:hover { background-color:#eee; }

@@ -18,7 +18,7 @@
                <in property="id_aclgrp" expr="$groups" />
             </conditions>
         </method>
-        <method name="getAllRights" type="select">
+        <method name="getRightsByGroups" type="select">
             <parameter name="groups" />
             <conditions >
                 <eq property="id_aclres" expr="''"/>

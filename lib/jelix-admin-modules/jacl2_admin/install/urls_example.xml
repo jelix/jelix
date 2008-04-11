@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urls xmlns="http://jelix.org/ns/urls/1.0">
+    <classicentrypoint name="index" default="true">
+      <!--
+          Add this url elements in your urls.xml. Of course you can modify it.
+      -->
+      <url pathinfo="/admin/acl/groups/rights" module="jacl2_admin" action="groups:index"/>
+      <url pathinfo="/admin/acl/groups/saverights" module="jacl2_admin" action="groups:saverights"/>
+      <url pathinfo="/admin/acl/groups/new" module="jacl2_admin" action="groups:newgroup"/>
+      <url pathinfo="/admin/acl/groups/rename" module="jacl2_admin" action="groups:changename"/>
+      <url pathinfo="/admin/acl/groups/delete" module="jacl2_admin" action="groups:delgroup"/>
+      <url pathinfo="/admin/acl/users" module="jacl2_admin" action="users:index"/>
+      <url pathinfo="/admin/acl/users/:user" module="jacl2_admin" action="users:rights" actionoverride="users:removegroup,users:addgroup,users:saverights"/>
+
+    </classicentrypoint>
+</urls>

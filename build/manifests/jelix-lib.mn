@@ -108,6 +108,9 @@ cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.pgsql.sql
 
 cd lib/jelix/core-modules/jelix/locales/en_US
+  acl2db.ISO-8859-1.properties
+  acl2db.ISO-8859-15.properties
+  acl2db.UTF-8.properties
   acldb.ISO-8859-1.properties
   acldb.ISO-8859-15.properties
   acldb.UTF-8.properties
@@ -148,6 +151,9 @@ cd lib/jelix/core-modules/jelix/locales/en_US
   ui.ISO-8859-15.properties
   ui.UTF-8.properties
 cd lib/jelix/core-modules/jelix/locales/en_EN
+  acl2db.ISO-8859-1.properties
+  acl2db.ISO-8859-15.properties
+  acl2db.UTF-8.properties
   acldb.ISO-8859-1.properties
   acldb.ISO-8859-15.properties
   acldb.UTF-8.properties
@@ -188,6 +194,9 @@ cd lib/jelix/core-modules/jelix/locales/en_EN
   ui.ISO-8859-15.properties
   ui.UTF-8.properties
 cd lib/jelix/core-modules/jelix/locales/fr_FR
+  acl2db.ISO-8859-1.properties
+  acl2db.ISO-8859-15.properties
+  acl2db.UTF-8.properties
   acldb.ISO-8859-1.properties
   acldb.ISO-8859-15.properties
   acldb.UTF-8.properties

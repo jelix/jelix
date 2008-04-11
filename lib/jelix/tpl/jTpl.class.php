@@ -60,9 +60,7 @@ class jTpl {
      */
     public function assign ($name, $value = null){
         if(is_array($name)){
-           foreach ($name as $key => $val) {
-               $this->_vars[$key] = $val;
-           }
+            $this->_vars = array_merge($this->_vars, $name);
         }else{
             $this->_vars[$name] = $value;
         }

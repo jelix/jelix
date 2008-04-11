@@ -45,7 +45,7 @@ class dbAcl2Driver implements jIAcl2Driver {
             self::$acl=array();
             if (count($groups)) {
                 $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfil());
-                foreach($dao->getAllRights($groups) as $rec){
+                foreach($dao->getRightsByGroups($groups) as $rec){
                     self::$acl[$rec->id_aclsbj] = true;
                 }
             }

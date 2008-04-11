@@ -64,7 +64,20 @@ class jAcl2DbManager {
         jAcl2::clearCache();
     }
 
-
+    /**
+     * set rights on the given group. old rights are removed
+     * @param int    $group the group id.
+     * @param array  $rights, list of rights key=subject, value=true
+     */
+    public static function setRightsOnGroup($group, $rights){
+        $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfil());
+        $dao->deleteByGroup($group);
+        foreach($rights as $sbj=>$val){
+            if($val != '')
+              self::addRight($group,$sbj);
+        }
+        jAcl2::clearCache();
+    }
 
     /**
      * remove the right on the given subject/resource, for all groups
