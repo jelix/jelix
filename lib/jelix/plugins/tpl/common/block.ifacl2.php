@@ -4,8 +4,9 @@
 * @subpackage  jtpl_plugin
 * @author      Jouanneau Laurent
 * @contributor Dominique Papin
+* @contributor Bastien Jaillot
 * @copyright   2006-2008 Jouanneau laurent
-* @copyright   2007 Dominique Papin
+* @copyright   2007 Dominique Papin, 2008 Bastien Jaillot
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -24,7 +25,7 @@ function jtpl_block_common_ifacl2($compiler, $begin, $param=array())
     if($begin){
         if(count($param) == 1){
             $content = ' if(jAcl2::check('.$param[0].')):';
-        }elseif(count($param) == 3){
+        }elseif(count($param) == 2){
             $content = ' if(jAcl2::check('.$param[0].','.$param[1].')):';
         }else{
             $content='';
