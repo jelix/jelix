@@ -57,7 +57,6 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
                 }
             }
         }
-    }
     ');
 
     if(count($params) == 2){
