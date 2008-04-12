@@ -6,9 +6,9 @@
 * @contributor Laurent Jouanneau
 * @contributor Loic Mathaud
 * @contributor Florian Hatat
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2008 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud
-* @copyright   2007 Florian Hatat
+* @copyright   2007-2008 Florian Hatat
 * @copyright   2001-2005 CopixTeam, GeraldCroes, Laurent Jouanneau
 *
 * This class was get originally from the Copix project (CopixDate.lib.php, Copix 2.3dev20050901, http://www.copix.org)
@@ -282,7 +282,7 @@ class jDateTime {
                     $this->minute = $match[5];
                     if($match[6] != '') $this->second = $match[6];
                     if($match[8] != 'Z'){
-                        $d = new jDateTime(0,0,0,$match[10],$match[11]);
+                        $d = new jDuration(array('hour'=>$match[10],'minute'=>$match[11]));
                         if($match[9] == '+')
                             $this->add($d);
                         else
@@ -330,8 +330,8 @@ class jDateTime {
 
                    # Adjust according to the timezone, so that the stored time 
                    # corresponds to UTC.
-                   $tz = new jDateTime(0, 0, 0, intval($match['tzhour']),
-                       intval($match['tzminute']), 0);
+                   $tz = new jDuration(array('hour'=>intval($match['tzhour']),
+                       'minute'=>intval($match['tzminute'])));
                    if($match['tzsign'] == '+'){
                        $this->sub($tz);
                    }
@@ -347,9 +347,9 @@ class jDateTime {
 
     /**
      * Add a duration to the date.
-     * You can specify the duration in a jDateTime object (which then is not a date/time)
-     * or give each value of the duration
-     * @param jDateTime/int $year the duration value or a year with 4 digits
+     * You can specify the duration in a jDuration object or give each value of
+     * the duration.
+     * @param jDuration/int $year the duration value or a year with 4 digits
      * @param int $month month with 2 digits
      * @param int $day day with 2 digits
      * @param int $hour hour with 2 digits
@@ -357,13 +357,15 @@ class jDateTime {
      * @param int $second second with 2 digits
      */
     public function add($year, $month=0, $day=0, $hour=0, $minute=0, $second=0) {
-        if ($year instanceof jDateTime) {
+        if ($year instanceof jDuration) {
             $dt = $year;
         } else {
-            $dt = new jDateTime($year, $month, $day, $hour, $minute, $second);
+            $dt = new jDuration(array("year" => $year, "month" => $month,
+                "day" => $day, "hour" => $hour, "minute" => $minute,
+                "second" => $second));
         }
-        $t = mktime ( $this->hour +  $dt->hour, $this->minute + $dt->minute, $this->second + $dt->second ,
-             $this->month + $dt->month, $this->day + $dt->day, $this->year + $dt->year);
+        $t = mktime($this->hour, $this->minute, $this->second + $dt->seconds,
+             $this->month + $dt->months, $this->day + $dt->days, $this->year);
 
         $t = getdate ($t);
         $this->year = $t['year'];
@@ -376,9 +378,9 @@ class jDateTime {
 
     /**
      * substract a <b>duration</b> to the date
-     * You can specify the duration in a jDateTime object (which then is not a date/time)
-     * or give each value of the duration
-     * @param jDateTime/int $year the duration value or a year with 4 digits
+     * You can specify the duration in a jDuration object or give each value of
+     * the duration.
+     * @param jDuration/int $year the duration value or a year with 4 digits
      * @param int $month month with 2 digits
      * @param int $day day with 2 digits
      * @param int $hour hour with 2 digits
@@ -386,33 +388,41 @@ class jDateTime {
      * @param int $second second with 2 digits
      */
     public function sub($year, $month=0, $day=0, $hour=0, $minute=0, $second=0) {
-        if ($year instanceof jDateTime) {
+        if ($year instanceof jDuration) {
             $dt = $year;
         } else {
-            $dt = new jDateTime($year, $month, $day, $hour, $minute, $second);
+            $dt = new jDuration(array("year" => $year, "month" => $month,
+                "day" => $day, "hour" => $hour, "minute" => $minute,
+                "second" => $second));
         }
-        $t = mktime ( $this->hour -  $dt->hour, $this->minute - $dt->minute, $this->second - $dt->second ,
-             $this->month - $dt->month, $this->day - $dt->day, $this->year - $dt->year);
-
-        $t = getdate ($t);
-        $this->year = $t['year'];
-        $this->month = $t['mon'];
-        $this->day = $t['mday'];
-        $this->hour = $t['hours'];
-        $this->minute = $t['minutes'];
-        $this->second = $t['seconds'];
+        $dt->mult(-1);
+        $this->add($dt);
     }
 
     /**
      * to know the duration between two dates.
      * @param jDateTime $dt  the date on which a sub will be made with the date on the current object
-     * @return jDateTime a jDateTime object which will contains <b>a duration</b> (not a date)
+     * @param bool $absolute 
+     * @return jDuration a jDuration object
      */
-    public function durationTo($dt){
-        $t = mktime ( $dt->hour, $dt->minute,$dt->second , $dt->month, $dt->day, $dt->year )
-            - mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
-        $t = getdate ($t);
-        return new jDateTime( $t['year']-1970,$t['mon']-1, $t['mday']-1, $t['hours']-1, $t['minutes'], $t['seconds']);
+    public function durationTo($dt, $absolute=true){
+        if($absolute){
+            $t = mktime($dt->hour, $dt->minute, $dt->second,
+                $dt->month, $dt->day, $dt->year)
+                - mktime($this->hour, $this->minute, $this->second,
+                    $this->month, $this->day, $this->year);
+            return new jDuration($t);
+        }
+        else{
+            return new jDuration(array(
+                "year" => $dt->year - $this->year,
+                "month" => $dt->month - $this->month,
+                "day" => $dt->day - $this-> day,
+                "hour" => $dt->hour - $this->hour,
+                "minute" => $dt->minute - $this->minute,
+                "second" => $dt->second - $this->second
+            ));
+        }
     }
 
     /**
@@ -443,5 +453,3 @@ class jDateTime {
         $this->second = date('s');
     }
 }
-
-?>

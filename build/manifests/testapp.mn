@@ -162,6 +162,7 @@ cd testapp/modules/jelix_tests/tests/
   jtpl.expressions_parsing.html_cli.php
   jtpl.plugins.html.php
   utils.jdatatype.html_cli.php
+  utils.jduration.html_cli.php
   utils.jfilter.html_cli.php
   utils.jlog.html_cli.php
   utils.jdatetime.html_cli.php

@@ -300,6 +300,7 @@ cd lib/jelix/utils/
   jCrypt.class.php
   jDatatype.class.php
   jDateTime.class.php
+  jDuration.class.php
   jFile.class.php
 * jFilter.class.php
   jHttp.class.php
