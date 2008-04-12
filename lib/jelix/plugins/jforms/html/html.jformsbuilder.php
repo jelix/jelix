@@ -16,6 +16,62 @@
  */
 abstract class htmlJformsBuilder extends jFormsBuilderBase {
 
+    public function outputAllControls() {
+
+        echo '<table class="jforms-table" border="0">';
+        foreach( $this->_form->getControls() as $ctrlref=>$ctrl){
+            if($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden') continue;
+            if(!$this->_form->isActivated($ctrlref)) continue;
+            echo '<tr><th scope="row">';
+            $this->outputControlLabel($ctrl);
+            echo '</th><td>';
+            $this->outputControl($ctrl);
+            echo '</td></tr>';
+        }
+        echo '</table> <div class="jforms-submit-buttons">';
+        if ( $ctrl = $this->_form->getReset() ) {
+            if(!$this->_form->isActivated($ctrl->ref)) continue;
+            $this->outputControl($ctrl);
+            echo ' ';
+        }
+        foreach( $this->_form->getSubmits() as $ctrlref=>$ctrl){
+            if(!$this->_form->isActivated($ctrlref)) continue;
+            $this->outputControl($ctrl);
+            echo ' ';
+        }
+        echo '</div>';
+    }
+
+    public function outputMetaContent($t) {
+        global $gJCoord, $gJConfig;
+        $resp= $gJCoord->response;
+        if($resp === null){
+            return;
+        }
+        $www =$gJConfig->urlengine['jelixWWWPath'];
+        $bp =$gJConfig->urlengine['basePath'];
+        $resp->addJSLink($www.'js/jforms.js');
+        $resp->addCSSLink($www.'design/jform.css');
+        foreach($t->_vars as $k=>$v){
+            if($v instanceof jFormsBase && count($edlist = $v->getHtmlEditors())) {
+                foreach($edlist as $ed) {
+                    if(isset($gJConfig->htmleditors[$ed->config.'.engine.file'])){
+                        if(is_array($gJConfig->htmleditors[$ed->config.'.engine.file'])){
+                            foreach($gJConfig->htmleditors[$ed->config.'.engine.file'] as $url) {
+                                $resp->addJSLink($bp.$url);
+                            }
+                        }else
+                            $resp->addJSLink($bp.$gJConfig->htmleditors[$ed->config.'.engine.file']);
+                    }
+                    if(isset($gJConfig->htmleditors[$ed->config.'.config']))
+                        $resp->addJSLink($bp.$gJConfig->htmleditors[$ed->config.'.config']);
+                    if(isset($gJConfig->htmleditors[$ed->config.'.skin.'.$ed->skin]))
+                        $resp->addCSSLink($bp.$gJConfig->htmleditors[$ed->config.'.skin.'.$ed->skin]);
+                }
+            }
+        }
+    }
+
     /**
      * output the header content of the form
      * @param array $params some parameters 0=>name of the javascript error decorator
@@ -36,6 +92,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
                 echo '<input type="hidden" name="', $p_name ,'" value="', htmlspecialchars($p_value), '"',$this->_endt, "\n";
             }
             foreach ($this->_form->getHiddens() as $ctrl) {
+                if(!$this->_form->isActivated($ctrl->ref)) continue;
                 echo '<input type="hidden" name="', $ctrl->ref,'" id="',$this->_name,'_',$ctrl->ref,'" value="', htmlspecialchars($this->_form->getData($ctrl->ref)), '"',$this->_endt, "\n";
             }
             echo '</div>';
@@ -270,7 +327,6 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             echo '<span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->_name.'\',\''.$name.'\')">?</a></span>';
         }
     }
-
 
     abstract public function getJavascriptCheck($errDecorator,$helpDecorator);
 }

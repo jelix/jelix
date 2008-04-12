@@ -14,6 +14,7 @@ class sampleFormCtrl extends jController {
   function newform(){
       // création d'un formulaire vierge
       $form = jForms::create('sample');
+      $form->deactivate('unwanted');
       $rep= $this->getResponse("redirect");
       $rep->action="sampleform:show";
       return $rep;
@@ -24,6 +25,7 @@ class sampleFormCtrl extends jController {
       $form = jForms::get('sample');
       if($form == null){
           $form = jForms::create('sample');
+          $form->deactivate('unwanted');
       }
       $rep = $this->getResponse('html');
       $rep->title = 'Edition d\'un formulaire';

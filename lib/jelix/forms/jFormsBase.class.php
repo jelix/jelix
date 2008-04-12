@@ -132,6 +132,8 @@ abstract class jFormsBase {
         $req = $GLOBALS['gJCoord']->request;
         $this->_modifiedControls=array();
         foreach($this->_controls as $name=>$ctrl){
+            if(!$this->_container->isActivated($name))
+                continue;
             $value = $req->getParam($name);
             //@todo à prevoir un meilleur test, pour les formulaires sur plusieurs pages
             if($value === null) $value='';
@@ -172,6 +174,8 @@ abstract class jFormsBase {
     public function check(){
         $this->_container->errors = array();
         foreach($this->_controls as $name=>$ctrl){
+            if(!$this->_container->isActivated($name))
+                continue;
             $err = $ctrl->check($this);
             if($err !== null)
                 $this->_container->errors[$name]= $err;
@@ -297,8 +301,7 @@ abstract class jFormsBase {
         }
         return compact("daorec", "dao", "toInsert");
     }
-        
-        
+
     /**
      * save data using a dao.
      * it call insert or update depending the value of the formId store    d in the container
@@ -504,7 +507,35 @@ abstract class jFormsBase {
      * @return array form data
      * @deprecated since 1.1
      */
-    public function getDatas(){ return $this->_container->data; }
+    public function getDatas(){
+        trigger_error('jFormsBase::getDatas is deprecated, use getAllData instead',E_USER_NOTICE);
+        return $this->_container->data;
+    }
+
+    /**
+     * deactivate (or reactivate) a control
+     * When a control is deactivated, it is not displayes anymore in the output form
+     * @param string $name  the name of the control
+     * @param boolean $deactivation   TRUE to deactivate, or FALSE to reactivate
+     */
+    public function deactivate($name, $deactivation=true) {
+        if($deactivation) {
+            $this->_container->deactivate($name);
+        }
+        else {
+            $this->_container->deactivate($name, false);
+        }
+    }
+
+    /**
+    * check if a control is activated
+    * @param $name the control name
+    * @return boolean true if it is activated
+    */
+    public function isActivated($name) {
+        return $this->_container->isActivated($name);
+    }
+
     /**
      * @return jFormsDataContainer
      */
@@ -562,16 +593,17 @@ abstract class jFormsBase {
 
     /**
      * @param string $buildertype  the type name of a form builder
-     * @param string $action action selector where form will be submit
-     * @param array $actionParams  parameters for the action
      * @return jFormsBuilderBase
      */
-    public function getBuilder($buildertype, $action, $actionParams){
+    public function getBuilder($buildertype){
         if(isset($this->_builders[$buildertype])){
+            if(isset($this->_builders[$buildertype]['inst']))
+                return $this->_builders[$buildertype]['inst'];
             include_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
             include_once ($this->_builders[$buildertype][0]);
             $c =  $this->_builders[$buildertype][1];
-            return new $c($this, $action, $actionParams);
+            $o = $this->_builders[$buildertype]['inst'] = new $c($this);
+            return $o;
         }else{
             throw new jExceptionForms('jelix~formserr.invalid.form.builder', array($buildertype, $this->_sel));
         }

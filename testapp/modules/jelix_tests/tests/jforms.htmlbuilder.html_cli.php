@@ -50,6 +50,11 @@ class testHMLForm { // simulate a jFormBase object
     function getHiddens() {
         return $this->_hiddens;
     }
+
+    public function isActivated($name) {
+        return true;
+    }
+
     function addControl($control){
         $this->controls [$control->ref] = $control;
         if($control->type =='submit')
@@ -77,13 +82,15 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
     protected $builder;
     function testStart() {
         $this->form = new testHMLForm();
-        $this->builder = new testJFormsHtmlBuilder($this->form, 'jelix_tests~urlsig:url1',array());
+        $this->builder = new testJFormsHtmlBuilder($this->form);
+        $this->builder->setAction('jelix_tests~urlsig:url1',array());
         $this->formname = $this->builder->getName();
     }
 
 
     function testOutputHeader(){
-        $builder = new testJFormsHtmlBuilder(new testHMLForm(), 'jelix_tests~urlsig:url1',array());
+        $builder = new testJFormsHtmlBuilder(new testHMLForm());
+        $builder->setAction('jelix_tests~urlsig:url1',array());
         $formname = $builder->getName();
         ob_start();
         $builder->outputHeader(array('','','post'));
@@ -97,7 +104,8 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 </script>';
         $this->assertEqualOrDiff($result, $out);
 
-        $builder = new testJFormsHtmlBuilder(new testHMLForm(), 'jelix_tests~urlsig:url1',array('foo'=>'b>ar'));
+        $builder = new testJFormsHtmlBuilder(new testHMLForm());
+        $builder->setAction('jelix_tests~urlsig:url1',array('foo'=>'b>ar'));
         $formname = $builder->getName();
         ob_start();
         $builder->outputHeader(array('','','get'));
@@ -664,7 +672,8 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $form = new testHMLForm();
         $form->addControl($ctrl);
 
-        $builder = new testJFormsHtmlBuilder($form, 'jelix_tests~urlsig:url1',array());
+        $builder = new testJFormsHtmlBuilder($form);
+        $builder->setAction('jelix_tests~urlsig:url1',array());
         $formname = $builder->getName();
         ob_start();
         $builder->outputHeader(array('','','post'));
@@ -682,7 +691,8 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl->defaultValue='toto';
         $form = new testHMLForm();
         $form->addControl($ctrl);
-        $builder = new testJFormsHtmlBuilder($form, 'jelix_tests~urlsig:url1',array());
+        $builder = new testJFormsHtmlBuilder($form);
+        $builder->setAction('jelix_tests~urlsig:url1',array());
         $formname = $builder->getName();
         ob_start();
         $builder->outputHeader(array('','','post'));

@@ -40,4 +40,3 @@ $t->_privateVars[\'__displayed_ctrl\'] = array();
     return $content;
 }
 
-?>

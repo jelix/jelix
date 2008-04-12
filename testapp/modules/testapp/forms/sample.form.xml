@@ -74,6 +74,10 @@
      <alert>Le fichier doit être une image gif ou png de moins de 50000 octets</alert>
   </upload>
 
+  <input ref="unwanted" required="true" type="datetime">
+      <label>This field shouldn't appear, it is deactivated</label>
+   </input>
+  
   <captcha ref="cap">
     <label>Filtre antispam</label>
   </captcha>

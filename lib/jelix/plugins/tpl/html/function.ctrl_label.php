@@ -29,6 +29,8 @@ function jtpl_function_html_ctrl_label($tpl, $ctrlname='')
     if ($ctrl->type == 'hidden')
         return;
 
+    if(!$tpl->_privateVars['__form']->isActivated($ctrl->ref)) return;
+
     // if _formbuilder exists, we are inside a {form} (so it displays a form)
     // else we are inside a {formdata}
     if(isset($tpl->_privateVars['__formbuilder'])){
@@ -42,4 +44,3 @@ function jtpl_function_html_ctrl_label($tpl, $ctrlname='')
     }
 }
 
-?>

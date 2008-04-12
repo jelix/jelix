@@ -42,6 +42,9 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
         return;
     }
 
+    if(!$tpl->_privateVars['__form']->isActivated($ctrlname))
+        return;
+
     $value = $tpl->_privateVars['__form']->getData($ctrlname);
     $value = $ctrl->getDisplayValue($value);
     if(is_array($value)){
@@ -55,5 +58,3 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
     }else
         echo htmlspecialchars($value);
 }
-
-?>

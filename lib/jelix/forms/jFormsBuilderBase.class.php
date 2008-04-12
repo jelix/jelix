@@ -45,11 +45,16 @@ abstract class jFormsBuilderBase {
     protected $_endt = '/>';
     /**
      * @param jFormsBase $form a form object
+     */
+    public function __construct($form){
+        $this->_form = $form;
+    }
+
+    /**
      * @param string $action action selector where form will be submit
      * @param array $actionParams  parameters for the action
      */
-    public function __construct($form, $action, $actionParams){
-        $this->_form = $form;
+    public function setAction( $action, $actionParams){
         $this->_action = $action;
         $this->_actionParams = $actionParams;
         $this->_name = jFormsBuilderBase::generateFormName();
@@ -61,6 +66,14 @@ abstract class jFormsBuilderBase {
     public function getName(){ return  $this->_name; }
 
     /**
+     * called during the meta content processing in templates
+     * This method should set things on the response, like adding
+     * css styles, javascript links etc.
+     * @param jTpl $tpl the template object
+     */
+    abstract public function outputMetaContent($tpl);
+
+    /**
      * output the header content of the form
      * @param array $params some parameters, depending of the type of builder
      */
@@ -70,6 +83,12 @@ abstract class jFormsBuilderBase {
      * output the footer content of the form
      */
     abstract public function outputFooter();
+
+    /**
+     * displays all the form. outputMetaContent, outputHeader and outputFooters are also called 
+     * @since 1.1
+     */
+    abstract public function outputAllControls();
 
     /**
      * displays the content corresponding of the given control

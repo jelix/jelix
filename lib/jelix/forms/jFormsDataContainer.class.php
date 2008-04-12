@@ -50,6 +50,11 @@ class jFormsDataContainer {
      */
     public $updatetime = 0;
 
+
+    /**
+     *
+     */
+    protected $deactivated = array();
     /**
      *
      * @param jSelectorForm $formSelector
@@ -68,4 +73,24 @@ class jFormsDataContainer {
         $this->data = array();
         $this->errors = array();
     }
+
+    public function deactivate($name, $deactivation=true) {
+        if($deactivation) {
+            $this->deactivated[$name]=true;
+        }
+        else {
+            if(isset($this->deactivated[$name]))
+                unset($this->deactivated[$name]);
+        }
+    }
+
+    /**
+    * check if a control is activated
+    * @param $name the control name
+    * @return boolean true if it is activated
+    */
+    public function isActivated($name) {
+        return !isset($this->deactivated[$name]);
+    }
+
 }

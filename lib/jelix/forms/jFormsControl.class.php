@@ -110,6 +110,9 @@ class jFormsControlSecret extends jFormsControl {
         }
         return null;
     }
+    function getDisplayValue($value){
+        return str_repeat("*", strlen($value));
+    }
 }
 
 /**

@@ -61,11 +61,11 @@ if (!isset($t->_privateVars[\'__displayed_submits\'])) {
 }
 $t->_privateVars[\'__submitref\']=\'\';
 foreach($t->_privateVars[\'__form\']->getSubmits() as $ctrlref=>$ctrl){ 
-    if(!isset($t->_privateVars[\'__displayed_submits\'][$ctrlref]) && ( $submits_to_display===null || in_array($ctrlref, $submits_to_display))){
+    if(!$t->_privateVars[\'__form\']->isActivated($ctrlref)) continue;
+    if(!isset($t->_privateVars[\'__displayed_submits\'][$ctrlref]) 
+        && ( $submits_to_display===null || in_array($ctrlref, $submits_to_display))){
         $t->_privateVars[\'__submitref\'] = $ctrlref;
         $t->_privateVars[\'__submit\'] = $ctrl;
 ';
     return $content;
 }
-
-?>

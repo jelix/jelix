@@ -17,7 +17,6 @@
 class htmlJformsCompiler implements jIFormsBuilderCompiler {
 
     public function __construct() {
-
     }
 
     public function startCompile() {

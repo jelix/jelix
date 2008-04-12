@@ -17,15 +17,13 @@
  */
 function jtpl_function_html_formdatafull($tpl, $form)
 {
-
-    //$formBuilder = $form->getBuilder('html', $action, $params);
-
     echo '<table class="jforms-table" border="0">';
 
-
     foreach( $form->getControls() as $ctrlref=>$ctrl){
-        if($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden' || $ctrl->type == 'captcha') continue;
+        if($crl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden' || $ctrl->type == 'captcha') continue;
+        if(!$tpl->_privateVars['__form']->isActivated($ctrlref)) continue;
 
+        if($t->_privateVars['__form']->isActivated($ctrlname)) {
         echo '<tr><th scope="row">';
         echo htmlspecialchars($ctrl->label);
         echo '</th><td>';
@@ -47,5 +45,3 @@ function jtpl_function_html_formdatafull($tpl, $form)
 
     echo '</table>';
 }
-
-?>

@@ -48,8 +48,8 @@ class jFormsCompiler implements jISimpleCompiler {
             $srcBuilders[$buildername][] = '<?php ';
             $srcBuilders[$buildername][] = ' require_once(\''.$pluginPath.$buildername.'.jformsbuilder.php\'); ';
             $srcBuilders[$buildername][] = ' class '.$selector->getClass().'_builder_'.$buildername.' extends '.$buildername.'JformsBuilder'.' {';
-            $srcBuilders[$buildername][] = ' public function __construct($form, $action, $actionParams){';
-            $srcBuilders[$buildername][] = '          parent::__construct($form, $action, $actionParams); ';
+            $srcBuilders[$buildername][] = ' public function __construct($form){';
+            $srcBuilders[$buildername][] = '          parent::__construct($form); ';
             $srcBuilders[$buildername][] = '  }';
             $srcBuilders[$buildername][] = $buildersCompilers[$buildername]->startCompile();
 
