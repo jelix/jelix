@@ -67,7 +67,7 @@ $t->_privateVars[\'__formbuilder\']->setAction('.$param[1].','.$param[2].');
 $t->_privateVars[\'__formbuilder\']->outputHeader(array('.$errdecorator.','.$helpdecorator.',\''.$method.'\'));
 $t->_privateVars[\'__displayed_ctrl\'] = array();
 ';
-    $compiler->addMetaContent($param[0].'->getBuilder(\'html\')->outputMetaContent($t);');
+	$compiler->addMetaContent('if(isset('.$param[0].')) { '.$param[0].'->getBuilder(\'html\')->outputMetaContent($t);}');
 
     return $content;
 }
