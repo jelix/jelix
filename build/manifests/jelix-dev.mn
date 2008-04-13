@@ -140,6 +140,7 @@ cd lib/jelix-scripts/templates/www
   index.php.tpl
   jsonrpc.php.tpl
   rdf.php.tpl
+  soap.php.tpl
 cd lib/jelix-scripts/templates/scripts
   cmdline.php.tpl
 cd lib/jelix-scripts/templates/var/config/
@@ -152,6 +153,8 @@ cd lib/jelix-scripts/templates/var/config/jsonrpc/
 cd lib/jelix-scripts/templates/var/config/xmlrpc/
   config.ini.php.tpl
 cd lib/jelix-scripts/templates/var/config/cmdline/
+  config.ini.php.tpl
+cd lib/jelix-scripts/templates/var/config/soap/
   config.ini.php.tpl
 
 cd lib/jelix-scripts/modules/beta_migrating/

@@ -14,6 +14,7 @@ cd testapp/www
   .htaccess
   xmlrpc.php
   index.php
+  soap.php
   testnews.php
   check.php
 cd testapp/www/foo
@@ -51,6 +52,8 @@ cd testapp/modules/testapp/controllers
   syndication.classic.php
   samplecrud.classic.php
   default.cmdline.php
+  clientSoap.classic.php
+  soap.soap.php
 cd testapp/modules/testapp/templates
   hello.tpl
   hello2.tpl
@@ -63,6 +66,7 @@ cd testapp/modules/testapp/templates
   forms_edit.tpl
   forms_liste.tpl
   forms_view.tpl
+  soap.tpl
 cd testapp/modules/testapp/zones
   test.zone.php
   sommaire.zone.php
@@ -131,6 +135,7 @@ cd testapp/modules/jelix_tests/tests/
   core.old_urls_parsing.html.php
   core.selectors_action.html.php
   core.selectors_module.html_cli.php
+  core.soap.html.php
   core.urls_generation.html.php
   core.urls_parsing.html_cli.php
   events.simple_test.html_cli.php
@@ -187,6 +192,8 @@ cd testapp/var/config/jsonrpc
 cd testapp/var/config/cmdline
   config.ini.php
   configtests.ini.php
+cd testapp/var/config/soap
+  config.ini.php
 cd testapp/var/themes/default/testapp
   hello2.tpl
 cd testapp/var/themes/default/junittests

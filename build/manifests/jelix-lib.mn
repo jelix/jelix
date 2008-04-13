@@ -36,6 +36,7 @@ cd lib/jelix/core
 ! defaultconfig.ini.php
 * jConfigCompiler.class.php
   jInstallChecker.class.php
+  jSoapCoordinator.class.php
 
 cd lib/jelix/core/request
   jClassicRequest.class.php
@@ -45,6 +46,7 @@ cd lib/jelix/core/request
   jXulRequest.class.php
   jRdfRequest.class.php
   jCssRequest.class.php
+  jSoapRequest.class.php
 
 cd lib/jelix/core/response
   jResponseBinary.class.php
@@ -68,6 +70,7 @@ cd lib/jelix/core/response
   jResponseCss.class.php
   jResponseLatexToPdf.class.php
   jResponseTcpdf.class.php
+  jResponseSoap.class.php
 
 cd lib/jelix/core-modules/jelix
   module.xml
@@ -316,6 +319,7 @@ cd lib/jelix/utils/
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php
+  jWSDL.class.php
 
 cd lib/jelix-modules
   LICENCE
@@ -372,6 +376,21 @@ cd lib/jelix-modules/jauth/templates
 cd lib/jelix-modules/jauth/zones
 ! loginform.zone.php
 
+cd lib/jelix-modules/jWSDL
+  module.xml
+cd lib/jelix-modules/jWSDL/controllers
+  WSDL.classic.php
+cd lib/jelix-modules/jWSDL/templates
+  soap_doc.tpl
+cd lib/jelix-modules/jWSDL/locales/en_EN
+  errors.ISO-8859-1.properties
+  errors.UTF-8.properties
+cd lib/jelix-modules/jWSDL/locales/en_US
+  errors.ISO-8859-1.properties
+  errors.UTF-8.properties
+cd lib/jelix-modules/jWSDL/locales/fr_FR
+  errors.ISO-8859-1.properties
+  errors.UTF-8.properties
 
 cd lib/jelix-plugins
   LICENCE

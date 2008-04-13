@@ -129,9 +129,8 @@ class IPReflectionCommentParser{
 			case 'param':
 				$o = new stdClass();
 				$o->type = trim($tagArr[1]);
-				$o->name= str_replace('$', '', trim($tagArr[2]));
 				$o->comment = implode(" ",$tagArr);
-				$this->obj->parameters[$o->name] = $o;
+				$this->obj->params[] = $o;
 				break;
 			case 'return':
 				$this->obj->return = trim($tagArr[1]); break;

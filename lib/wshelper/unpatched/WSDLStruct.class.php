@@ -67,8 +67,7 @@ class WSDLStruct {
 	const NS_SOAP = "http://schemas.xmlsoap.org/wsdl/soap/";
 	const NS_ENC  = "http://schemas.xmlsoap.org/soap/encoding/"; 
 	const NS_XSD  = "http://www.w3.org/2001/XMLSchema";
-	const NS_APACHE  = "http://xml.apache.org/xml-soap";
-
+	
 	const CREATE_EMPTY_INPUTS = true;
 	
 	/*
@@ -117,7 +116,6 @@ class WSDLStruct {
 		$definitions->setAttribute("xmlns:SOAP-ENC", 	self::NS_ENC);
 		$definitions->setAttribute("xmlns:wsdl", 		self::NS_WSDL);
 		$definitions->setAttribute("xmlns:xsd", 		self::NS_XSD);
-		$definitions->setAttribute("xmlns:apache", 		self::NS_APACHE);
 		$definitions->setAttribute("xmlns:tns", 		$this->tns);
 		$definitions->setAttribute("targetNamespace", 	$this->tns);
 
@@ -286,19 +284,11 @@ class WSDLStruct {
 			if($t = IPXMLSchema::checkSchemaType(strtolower($partType)))
 				$part->setAttribute("type", "xsd:".$t);
 			else{
-				//If it is an associative array, change the type name
-				if(substr($partType,-4) == "[=>]"){
-					$partType = substr($partType,0, strlen($partType)-4);
-					if(!IPXMLSchema::checkSchemaType(strtolower($partType))){
-						$partName = $partType;
-						$this->xmlSchema->addComplexType($partType, $partName);
-					}
-					$part->setAttribute("type", "apache:Map");
-				}else{
-					$partName = (substr($partType,-2) == "[]")?substr($partType,0,strpos($partType,"["))."Array":$partType;
-					$part->setAttribute("type", "tns:".$partName);
-					$this->xmlSchema->addComplexType($partType, $partName);
-				}
+				//If it is an array, change the type name
+				$partName = (substr($partType,-2) == "[]")?substr($partType,0,strpos($partType,"["))."Array":$partType;
+
+				$part->setAttribute("type", "tns:".$partName);
+				$this->xmlSchema->addComplexType($partType, $partName);
 			}
 		}
 	}

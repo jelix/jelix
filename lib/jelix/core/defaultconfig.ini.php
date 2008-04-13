@@ -45,6 +45,7 @@ atom1.0 = jResponseAtom10
 css= jResponseCss
 ltx2pdf= jResponseLatexToPdf
 tcpdf = jResponseTcpdf
+soap=jResponseSoap
 
 [_coreResponses]
 html = jResponseHtml
@@ -67,6 +68,7 @@ atom1.0 = jResponseAtom10
 css= jResponseCss
 ltx2pdf= jResponseLatexToPdf
 tcpdf = jResponseTcpdf
+soap=jResponseSoap
 
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"

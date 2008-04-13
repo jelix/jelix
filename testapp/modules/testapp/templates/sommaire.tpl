@@ -39,3 +39,10 @@
    <li><a href="{jurl 'syndication:rss'}">Rss 2.0</a></li>
    <li><a href="{jurl 'syndication:atom'}">Atom 1.0</a></li>
 </ul>
+
+<h3>Tests soap</h3>
+<ul>
+   <li><a href="{jurl 'clientSoap:soapExtension'}">client (soap extension)</a></li>
+   <li><a href="{jurl 'jWSDL~WSDL:index'}">Web services documentation</a></li>
+   <li><a href="{jurl 'jWSDL~WSDL:wsdl', array('service'=>'testapp~soap')}">WSDL</a></li>
+</ul>

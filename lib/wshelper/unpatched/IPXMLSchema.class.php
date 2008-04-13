@@ -2,7 +2,6 @@
 
 /**
  * This class helps you creating a valid XMLSchema file
- * Sylvain261 : Ajout du paramètre false à class_exists pour empécher l'autoload
  */
 class IPXMLSchema {
 	/** @var domelement reference to the parent domelement */
@@ -28,11 +27,6 @@ class IPXMLSchema {
 	
 	public function addComplexType($type, $name = false, $parent = false) {
 		if(!$parent){//outline element
-
-			if(substr($name,-4) == '[=>]'){
-				$name = substr($name, 0,strlen($name) -4);
-			}
-			
 			//check if the complexType doesn't already exists
 			if(isset($this->types[$name])) return $this->types[$name];
 
@@ -50,17 +44,26 @@ class IPXMLSchema {
 		if(strtolower(substr($type,0,6)) == 'array(' || substr($type,-2) == '[]'){
 			$this->addArray($type,$complexTypeTag);
 		}else{//it should be an object
-			if(substr($type,-4) == '[=>]'){
-				$type = substr($type, 0,strlen($type) -4);
-				echo("\nAdd type element :$type \n");
-				$this->addTypeElement($type, $name, $complexTypeTag);
+			$tag=$this->addElement("xsd:all", $complexTypeTag);
+			//check if it has the name 'object()' (kind of a stdClass)
+			if(strtolower(substr($type,0,6)) == 'object'){//stdClass
+				$content = substr($type, 7, (strlen($type)-1));
+				$properties = split(",", $content);//split the content into properties
+				foreach((array)$properties as $property){
+					if($pos = strpos($property, "=>")){//array with keys (order is important, so use 'sequence' tag)
+						$keyType = substr($property,6,($pos-6));
+						$valueType = substr($property,($pos+2), (strlen($property)-7));
+						$el->$this->addTypeElement($valueType, $keyType, $tag);
+					}else{
+						throw new WSDLException("Error creating WSDL: expected \"=>\". When using the object() as type, use it as object(paramname=>paramtype,paramname2=>paramtype2)");
+					}
+				}
 			}else{ //should be a known class
 
-				$tag=$this->addElement("xsd:all", $complexTypeTag);
-				if(!class_exists($name, FALSE)) throw new WSDLException("Error creating WSDL: no class found with the name '$name' / $type : $parent, so how should we know the structure for this datatype?");
+				if(!class_exists($name)) throw new WSDLException("Error creating WSDL: no class found with the name '$name' / $type : $parent, so how should we know the structure for this datatype?");
 				$v = new IPReflectionClass($name);
 				//TODO: check if the class extends another class?
-				$properties = $v->getProperties(false, false, false);//not protected and private properties
+				$properties = $v->getProperties(false, false);//not protected and private properties
 
 				foreach((array) $properties as $property){
 					if(!$property->isPrivate){
@@ -103,18 +106,9 @@ class IPXMLSchema {
 					$el->setAttribute("type", "tns:".$name);
 					$this->addComplexType($type, $name, false);
 				}
-			}else{
-				if(substr($type,-4) == '[=>]'){
-					$name = substr($type, 0, -4);
-					$el->setAttribute("type", "apache:Map");
-					if(!$this->checkSchemaType(strtolower($name))){
-						$this->addComplexType($name, $name, false);
-					}
-				}else{
-					//else, new complextype, outline (element with 'ref' attrib)
-					$el->setAttribute("type", "tns:".$type);
-					$this->addComplexType($type, $type);
-				}
+			}else{//else, new complextype, outline (element with 'ref' attrib)
+				$el->setAttribute("type", "tns:".$type);
+				$this->addComplexType($type, $type);
 			}
 		}
 		return $el;
