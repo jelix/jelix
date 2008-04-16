@@ -32,7 +32,7 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
         $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','formfull','2-6');
     }
 
-    $compiler->addMetaContent($params[0].'->getBuilder(\'html\')->outputMetaContent($t);');
+    $compiler->addMetaContent('if(isset('.$param[0].')) { '.$param[0].'->getBuilder(\'html\')->outputMetaContent($t);}');
 
     if(count($params) == 2){
         $params[2] = 'array()';
