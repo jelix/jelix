@@ -15,7 +15,7 @@ Julien Issler
  - fixed various bugs (ex: #451)
  - added Session Name support in jSession (#417)
  - fixed bug about infinite loop with non-existent charset (#442)
- - some enhancement in jSession (#445, #504)
+ - some enhancement in jSession (#445, #504, #506)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)

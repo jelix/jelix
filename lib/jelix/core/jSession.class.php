@@ -26,8 +26,8 @@ class jSession {
      */
     public static function start(){
 
-        // do not start the session if the request is made from the command line
-        if($GLOBALS['gJCoord']->request instanceof jCmdLineRequest){
+        // do not start the session if the request is made from the command line or if sessions are disabled in configuration
+        if($GLOBALS['gJCoord']->request instanceof jCmdLineRequest || !$GLOBALS['gJConfig']->sessions['start']){
             return false;
         }
 

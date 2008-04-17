@@ -208,6 +208,8 @@ enableAclDbEventListener = off
 
 
 [sessions]
+; to disable sessions, set the following parameter to 0
+start = 1
 shared_session = off
 ; You can change the session name by setting the following parameter (only accepts alpha-numeric chars) :
 ; name = "mySessionName"
