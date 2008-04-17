@@ -352,7 +352,7 @@ class jSelectorClass extends jSelectorModule {
     * @since 1.0b2
     */
     public $subpath ='';
-    /** 
+    /**
     * the class name specified in the selector
     * @since 1.0b2
     */
@@ -391,7 +391,7 @@ class jSelectorClass extends jSelectorModule {
         global $gJConfig;
         if (!isset($gJConfig->_modulesPathList[$this->module])) {
             throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
-        } 
+        }
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->subpath.$this->className.$this->_suffix;
 
         if (!file_exists($this->_path) || strpos($this->subpath,'..') !== false ) { // second test for security issues
@@ -412,7 +412,7 @@ class jSelectorClass extends jSelectorModule {
 }
 
 /**
- * selector for interface 
+ * selector for interface
  *
  * interface is stored in interfacename.iface.php file in the classes/ module directory
  * or one of its subdirectory.
@@ -428,11 +428,11 @@ class jSelectorIface extends jSelectorClass {
 }
 
 /**
- * selector for interface 
+ * selector for interface
  * @package    jelix
  * @subpackage core_selector
  * @since 1.0b2
- * @deprecated 
+ * @deprecated
  */
 class jSelectorInterface extends jSelectorIface {}
 
@@ -469,9 +469,7 @@ class jSelectorLoc extends jSelectorModule {
         }
         $this->locale = $locale;
         $this->charset = $charset;
-        $this->_dirname =  'locales/' .$locale.'/';
         $this->_suffix = '.'.$charset.'.properties';
-        $this->_cacheSuffix = '.'.$locale.'.'.$charset.'.php';
         $this->_compilerPath=JELIX_LIB_CORE_PATH.'jLocalesCompiler.class.php';
 
 #if ENABLE_PHP_JELIX
@@ -505,32 +503,44 @@ class jSelectorLoc extends jSelectorModule {
             throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
         }
 
-        // on regarde si la locale a été redéfini
-        $overloadedPath = JELIX_APP_VAR_PATH.'overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix;
-        if (is_readable ($overloadedPath)){
-            $this->_path = $overloadedPath;
-            $this->_where = 'overloaded/';
-            return;
-        }
-        // et sinon, on regarde si la locale existe dans le module en question
-        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
+        $locales = array($this->locale);
+        $lang = substr($this->locale,0,2);
+        $generic_locale = $lang.'_'.strtoupper($lang);
+        if($this->locale !== $generic_locale)
+            $locales[] = $generic_locale;
 
-        if (!is_readable ($this->_path)){
-            // to avoid infinite loop in a specific lang or charset, we should check if we don't
-            // try to retrieve the same message as the one we use for the exception below,
-            // and if it is this message, it means that the error message doesn't exist 
-            // in the specific lang or charset, so we retrieve it in en_EN language and UTF-8 charset
-            if($this->toString() == 'jelix~errors.selector.invalid.target'){
-                $l = 'en_EN';
-                $c = 'UTF-8';
+        foreach($locales as $locale){
+            // check if the locale has been overloaded
+            $overloadedPath = JELIX_APP_VAR_PATH.'overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix;
+            if (is_readable ($overloadedPath)){
+                $this->_path = $overloadedPath;
+                $this->_where = 'overloaded/';
+                $this->_cacheSuffix = '.'.$locale.'.'.$this->charset.'.php';
+                return;
             }
-            else{
-                $l = null;
-                $c = null;
+            // else check for the original locale file
+            $path = $gJConfig->_modulesPathList[$this->module].'/locales/'.$locale.'/'.$this->resource.$this->_suffix;
+            if (is_readable ($path)){
+                $this->_where = 'modules/';
+                $this->_path = $path;
+                $this->_cacheSuffix = '.'.$locale.'.'.$this->charset.'.php';
+                return;
             }
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "locale"), 1, $l, $c);
         }
-        $this->_where = 'modules/';
+
+        // to avoid infinite loop in a specific lang or charset, we should check if we don't
+        // try to retrieve the same message as the one we use for the exception below,
+        // and if it is this message, it means that the error message doesn't exist
+        // in the specific lang or charset, so we retrieve it in en_EN language and UTF-8 charset
+        if($this->toString() == 'jelix~errors.selector.invalid.target'){
+            $l = 'en_EN';
+            $c = 'UTF-8';
+        }
+        else{
+            $l = null;
+            $c = null;
+        }
+        throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "locale"), 1, $l, $c);
     }
 
     protected function _createCachePath(){

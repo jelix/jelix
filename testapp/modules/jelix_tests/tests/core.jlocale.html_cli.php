@@ -127,7 +127,7 @@ class UTjlocale extends jUnitTestCase {
 
         $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale'));
         // no test2.properties file for fr_CA, so we should have the fr_FR one
-        //$this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale', null, 'fr_CA'));
+        $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale', null, 'fr_CA'));
         // no test3.properties file for fr_CA and fr_FR, so we should have the en_EN one
         //$GLOBALS['gJConfig']->locale = 'en_EN';
         //$this->assertEqual('this is an en_EN sentence test3',jLocale::get('tests3.first.locale', null, 'fr_CA'));
