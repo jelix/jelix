@@ -26,6 +26,8 @@
 {/foreach}
 </tbody>
 </table>
+{if $recordCount > $listPageSize}
 <p class="crud-pages">Pages : {pagelinks $listAction, array($spkName=>$spk),  $recordCount, $page, $listPageSize, $offsetParameterName }</p>
+{/if}
 <p><a href="{jurl $createAction, array($spkName=>$spk)}" class="crud-link">{@jelix~crud.link.create.record@}</a>.</p>
 
