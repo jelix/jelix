@@ -135,7 +135,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
 
     public function outputControlLabel($ctrl){
         if($ctrl->type == 'hidden') return;
-        $required = ($ctrl->required == ''?'':' jforms-required');
+        $required = ($ctrl->required == ''|| $ctrl->readonly?'':' jforms-required');
         $inError = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons'){
@@ -148,14 +148,21 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
 
     public function outputControl($ctrl){
         $id = ' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'"';
+        $class = ($ctrl->required == ''|| $ctrl->readonly?'':' jforms-required');
+        $class.= (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
+        if($class !='') $class = ' class="'.$class.'"';
         $readonly = ($ctrl->readonly?' readonly="readonly"':'');
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
-        $class = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' class="jforms-error"':'');
         switch($ctrl->type){
         case 'input':
             $value = $this->_form->getData($ctrl->ref);
             $size = ($ctrl->size == 0?'' : ' size="'.$ctrl->size.'"');
-            echo '<input type="text"',$id,$readonly,$hint,$class,$size,' value="',htmlspecialchars($value),'"',$this->_endt;
+            $maxl= $ctrl->datatype->getFacet('maxLength');
+            if($maxl !== null)
+                $maxl=' maxlength="'.$maxl.'"';
+            else
+                $maxl='';
+            echo '<input type="text"',$id,$readonly,$hint,$class,$size,$maxl,' value="',htmlspecialchars($value),'"',$this->_endt;
             break;
         case 'checkbox':
             $value = $this->_form->getData($ctrl->ref);
