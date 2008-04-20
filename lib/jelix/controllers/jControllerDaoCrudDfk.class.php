@@ -139,11 +139,12 @@ class jControllerDaoCrudDfk extends jController {
      * you can do your own data check of a form by overloading this method.
      * You can also do some other things. It is called only if the $form->check() is ok.
      * and before the save of the data.
+     * @param string $spk the static value of the primary key of the record
      * @param jFormsBase $form the current form
      * @param boolean $calltype   true for an update, false for a create
      * @return boolean true if it is ok.
      */
-    protected function _checkData($form, $calltype){
+    protected function _checkData($spk, $form, $calltype){
         return true;
     }
 
@@ -305,18 +306,18 @@ class jControllerDaoCrudDfk extends jController {
             return $rep;
         }
 
-        if($form->check() && $this->_checkData($form, false)){
+        if($form->check() && $this->_checkData($spk, $form, false)){
 
             //$id = $this->_getPk($this->param($this->spkName)
 
-            list($rec, $dao, $toInsert)=$this->prepareDaoFromControls($this->dao, null, $this->dbProfil);
-            $rec->{$this->spkName} = $spk;
+            extract($form->prepareDaoFromControls($this->dao, null, $this->dbProfil));
+            $daorec->{$this->spkName} = $spk;
             if(!$this->_isPkAutoIncrement($dao)) {
-                $rec->{$this->dpkName} = $this->param($this->dpkName);
+                $daorec->{$this->dpkName} = $this->param($this->dpkName);
             }
 
-            $dao->insert($rec);
-            $id = $rec->getPk();
+            $dao->insert($daorec);
+            $id = $daorec->getPk();
 
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
@@ -443,7 +444,7 @@ class jControllerDaoCrudDfk extends jController {
 
         $rep->params[$this->dpkName] = $dpk;
 
-        if($form->check() && $this->_checkData($form, true)){
+        if($form->check() && $this->_checkData($spk, $form, true)){
             $form->saveToDao($this->dao, $id, $this->dbProfil);
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
@@ -528,7 +529,7 @@ class jControllerDaoCrudDfk extends jController {
 
         $dao = jDao::get($this->dao, $this->dbProfil);
         $id = $this->_getPk($spk, $dpk, $dao);
-        if( $dpk !== null && $this->_delete($id, $rep) ){
+        if( $dpk !== null && $this->_delete($spk, $dpk, $rep) ){
             $dao->delete($id);
         }
         return $rep;
@@ -536,11 +537,12 @@ class jControllerDaoCrudDfk extends jController {
 
     /**
      * overload this method if you want to do additionnal things before the deletion of a record
-     * @param mixed $id the new id of the record
+     * @param mixed $spk the static value of the primary key of the record to delete
+     * @param mixed $dpk the dynamic value of the primary key of the record to delete
      * @return boolean true if the record can be deleted
      * @param jHtmlResponse $resp the response
      */
-    protected function _delete($id, $resp) {
+    protected function _delete($spk, $dpk, $resp) {
         return true;
     }
 

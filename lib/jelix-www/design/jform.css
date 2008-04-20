@@ -7,8 +7,8 @@
 .jforms-label {}
 .jforms-value {}
 
-.jforms-required { font-weight:bold; }
-.jforms-required:after { content:"*"; font-weight:bold; color:red; }
+label.jforms-required { font-weight:bold; }
+label.jforms-required:after { content:"*"; font-weight:bold; color:red; }
 
 .jforms-error-list { color:red; border:1px solid red;}
 
