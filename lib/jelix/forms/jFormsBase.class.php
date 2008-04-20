@@ -245,7 +245,7 @@ abstract class jFormsBase {
      * @see jDao
      */
     public function prepareDaoFromControls($daoSelector, $key = null, $dbProfil=''){
-        $dao = jDao::create($daoSelector, $dbProfil);
+        $dao = jDao::get($daoSelector, $dbProfil);
 
         if($key === null)
             $key = $this->_container->formId;
@@ -254,7 +254,8 @@ abstract class jFormsBase {
             $toInsert= false;
         }else{
             $daorec = jDao::createRecord($daoSelector, $dbProfil);
-            $daorec->setPk($key);
+            if($key != null)
+                $daorec->setPk($key);
             $toInsert= true;
         }
 
