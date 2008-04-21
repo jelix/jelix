@@ -209,8 +209,8 @@ class jTplCompiler
     public function _callback($matches){
         list(,$tag, $firstcar) = $matches;
 
-        // test du premier caractère
-        if (!preg_match('/^\$|@|\*|[a-zA-Z\/]$/',$firstcar)) {
+        // check the first character
+        if (!preg_match('/^\$|@|[a-zA-Z\/]$/',$firstcar)) {
 #if JTPL_STANDALONE
             throw new Exception(sprintf($this->_locales['errors.tpl.tag.syntax.invalid'], $tag, $this->_sourceFile));
 #else
@@ -220,8 +220,6 @@ class jTplCompiler
         $this->_currentTag = $tag;
         if ($firstcar == '$' || $firstcar == '@') {
             return  '<?php echo '.$this->_parseVariable($tag).'; ?>';
-        } elseif ($firstcar == '*') {
-            return '';
         } else {
             if (!preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/ms',$tag,$m)) {
 #if JTPL_STANDALONE
@@ -591,5 +589,3 @@ class jTplCompiler
     }
 
 }
-
-?>
