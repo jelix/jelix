@@ -82,6 +82,7 @@ cd testapp/modules/jelix_tests/classes
   testevents.listener.php
   test.iface.php
   myclass.class.php
+  mydatasource.class.php
 cd testapp/modules/jelix_tests/classes/tests
   foo.class.php
   foo.iface.php

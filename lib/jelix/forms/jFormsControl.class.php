@@ -276,7 +276,7 @@ abstract class jFormsControlDatasource extends jFormsControl {
     public $type="datasource";
 
     /**
-     * @var jIFormDatasource
+     * @var jIFormsDatasource
      */
     public $datasource;
     public $defaultValue=array();

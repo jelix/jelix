@@ -303,6 +303,39 @@ class UTjformsCompiler extends jUnitTestCase {
 73=>'<htmleditor ref="contenu" config="simple" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Texte</label>
 </htmleditor>',
+74=>'<checkboxes ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop"/>
+</checkboxes>',
+75=>'<radiobuttons ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop"/>
+</radiobuttons>',
+76=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop"/>
+</listbox>',
+77=>'<menulist ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop"/>
+</menulist>',
+78=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="true">
+    <label>Votre nom</label>
+    <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop"/>
+</listbox>',
+79=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop" criteria="toto"/>
+</listbox>',
+80=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="true">
+    <label>Votre nom</label>
+    <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop" criteriafrom="prenom"/>
+</listbox>',
+81=>'<menulist ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+    <datasource class="jelix_tests~mydatasource"/>
+</menulist>',
+
     );
 
     protected $_PhpControls = array(
@@ -334,7 +367,7 @@ $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 10=>'$ctrl= new jFormsControlsubmit(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource= new jFormsStaticDatasource();
 $this->addControl($ctrl);',
 11=>'$ctrl= new jFormsControlinput(\'nom\');
 $ctrl->label=\'Votre nom\';
@@ -401,11 +434,11 @@ $ctrl->label=\'Avez-vous un nom ?\';
 $this->addControl($ctrl);',
 27=>'$ctrl= new jFormsControlcheckboxes(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 28=>'$ctrl= new jFormsControlcheckboxes(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource= new jFormsStaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
@@ -414,11 +447,11 @@ $ctrl->datasource->data = array(
 $this->addControl($ctrl);',
 29=>'$ctrl= new jFormsControlradiobuttons(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 30=>'$ctrl= new jFormsControlradiobuttons(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource= new jFormsStaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
@@ -427,12 +460,12 @@ $ctrl->datasource->data = array(
 $this->addControl($ctrl);',
 31=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 32=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->size=8;
-$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource= new jFormsStaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
@@ -441,11 +474,11 @@ $ctrl->datasource->data = array(
 $this->addControl($ctrl);',
 33=>'$ctrl= new jFormsControlmenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 34=>'$ctrl= new jFormsControlmenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource= new jFormsStaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
@@ -454,12 +487,12 @@ $ctrl->datasource->data = array(
 $this->addControl($ctrl);',
 35=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
 36=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource= new jFormsStaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
@@ -472,7 +505,7 @@ $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 38=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource= new jFormsStaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
@@ -484,7 +517,7 @@ $ctrl->defaultValue=array (
 $this->addControl($ctrl);',
 39=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource= new jFormsStaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
@@ -499,7 +532,7 @@ $this->addControl($ctrl);',
 40=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue=array(\'aaa\');
-$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource= new jFormsStaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
@@ -510,7 +543,7 @@ $this->addControl($ctrl);',
 41=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue= array(\'bbb\',\'aaa\',);
-$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource= new jFormsStaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
@@ -573,13 +606,13 @@ $this->addControl($ctrl);
 $this->addControl($ctrl2);',
 52=>'$ctrl= new jFormsControlsubmit(\'validation\');
 $ctrl->label=\'Type de validation\';
-$ctrl->datasource = new jFormDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $ctrl->standalone=false;
 $this->addControl($ctrl);',
 53=>'$ctrl= new jFormsControlsubmit(\'validation\');
 $ctrl->label=\'Type de validation\';
 $ctrl->standalone=false;
-$ctrl->datasource= new jFormStaticDatasource();
+$ctrl->datasource= new jFormsStaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>jLocale::get(\'locb\'),
@@ -682,6 +715,44 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Texte\';
 $ctrl->config=\'simple\';
 $this->addControl($ctrl);',
+74=>'$ctrl= new jFormsControlcheckboxes(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$this->addControl($ctrl);',
+75=>'$ctrl= new jFormsControlradiobuttons(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$this->addControl($ctrl);',
+76=>'$ctrl= new jFormsControllistbox(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$this->addControl($ctrl);',
+77=>'$ctrl= new jFormsControlmenulist(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$this->addControl($ctrl);',
+78=>'$ctrl= new jFormsControllistbox(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->multiple=true;
+$this->addControl($ctrl);',
+79=>'$ctrl= new jFormsControllistbox(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'toto\');
+$this->addControl($ctrl);',
+80=>'$ctrl= new jFormsControllistbox(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',null,\'prenom\');
+$ctrl->multiple=true;
+$this->addControl($ctrl);',
+81=>'$ctrl= new jFormsControlmenulist(\'nom\');
+$ctrl->label=\'Votre nom\';
+jClasses::inc(\'jelix_tests~mydatasource\');
+$datasource = new mydatasource($this->id());
+if ($datasource instanceof jIFormsDatasource){$ctrl->datasource=$datasource;}
+else{$ctrl->datasource=new jFormsStaticDatasource();}
+$this->addControl($ctrl);',
+
 );
 
 
@@ -1066,7 +1137,48 @@ $js.="jForms.tControl = new jFormsControl(\'contenu\', \'".str_replace("\'","\\\
 $js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="jForms.tForm.addControl( jForms.tControl);\n";',
-
+74=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom[]\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+75=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+76=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+77=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+78=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom[]\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tControl.multiple = true;\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+79=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+80=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom[]\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tControl.multiple = true;\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+81=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
     );
 
     function testPhpControl(){

@@ -35,4 +35,3 @@ class sqliteDaoBuilder extends jDaoGenerator {
 
 
 }
-?>

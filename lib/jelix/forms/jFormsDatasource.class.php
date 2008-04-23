@@ -15,13 +15,14 @@
  * @package     jelix
  * @subpackage  forms
  */
-interface jIFormDatasource {
+interface jIFormsDatasource {
     /**
      * load and returns data to fill a control. The returned array should be 
      * an associative array  key => label
+     * @param jFormsBase $form  the form
      * @return array the data
      */
-    public function getData();
+    public function getData($form);
 
     /**
      * Return the label corresponding to the given key
@@ -31,19 +32,30 @@ interface jIFormDatasource {
     public function getLabel($key);
 }
 
+
+/**
+ * old interface which have been renamed to jIFormsDatasource.
+ * use jIFormsDatasource instead
+ * @package     jelix
+ * @subpackage  forms
+ * @deprecated since 1.1
+ */
+interface jIFormDatasource extends jIFormsDatasource {
+}
+
 /**
  * A datasource which is based on static values.
  * @package     jelix
  * @subpackage  forms
  */
-class jFormStaticDatasource implements jIFormDatasource {
+class jFormsStaticDatasource implements jIFormsDatasource {
     /**
      * associative array which contains keys and labels
      * @var array
      */
     public $data = array();
 
-    public function getData(){
+    public function getData($form){
         return $this->data;
     }
 
@@ -61,19 +73,24 @@ class jFormStaticDatasource implements jIFormDatasource {
  * @package     jelix
  * @subpackage  forms
  */
-class jFormDaoDatasource implements jIFormDatasource {
+class jFormsDaoDatasource implements jIFormsDatasource {
 
     protected $selector;
     protected $method;
     protected $labelProperty;
     protected $keyProperty;
 
+    protected $criteria;
+    protected $criteriaForm;
+
     protected $dao = null;
 
-    function __construct ($selector ,$method , $label, $key){
+    function __construct ($selector ,$method , $label, $key, $criteria=null, $criteriaFrom=null){
         $this->selector  = $selector;
         $this->method = $method ;
         $this->labelProperty = $label;
+        $this->criteria = $criteria;
+        $this->criteriaFrom = $criteriaFrom;
         if($key == ''){
             $rec = jDao::createRecord($this->selector);
             $pfields = $rec->getPrimaryKeyNames();
@@ -82,9 +99,16 @@ class jFormDaoDatasource implements jIFormDatasource {
         $this->keyProperty = $key;
     }
 
-    public function getData(){
-        if($this->dao === null) $this->dao = jDao::get($this->selector);
-        $found = $this->dao->{$this->method}();
+    public function getData($form){
+        if($this->dao === null)
+            $this->dao = jDao::get($this->selector);
+        if($this->criteria !== null) {
+            $found = $this->dao->{$this->method}($this->criteria);
+        } else if ($this->criteriaFrom !== null) {
+            $found = $this->dao->{$this->method}($form->getData($this->criteriaFrom));
+        } else {
+            $found = $this->dao->{$this->method}();
+        }
         $result=array();
         foreach($found as $obj){
             $result[$obj->{$this->keyProperty}] = $obj->{$this->labelProperty};

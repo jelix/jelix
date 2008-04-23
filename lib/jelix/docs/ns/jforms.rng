@@ -18,19 +18,21 @@
         <choice>
             <ref name="input" />
             <ref name="textarea" />
+            <ref name="htmleditor" />
             <ref name="secret" />
             <ref name="output" />
             <ref name="upload" />
             <ref name="submit" />
+            <ref name="reset" />
             <ref name="checkbox" />
             <ref name="checkboxes" />
             <ref name="listbox" />
             <ref name="radiobuttons"/>
             <ref name="menulist" />
             <ref name="hidden" />
+            <ref name="captcha" />
             <!--
             <ref name="range" />
-            <ref name="trigger" />
             -->
         </choice>
       </oneOrMore>
@@ -42,12 +44,16 @@
 
   <define name="input">
      <element name="input">
-       <ref name="control.common" />
+         <ref name="control.common" />
          <choice>
             <group>
                 <attribute name="type"><value>string</value></attribute>
                 <ref name="attr.length" />
                 <ref name="attr.size" />
+            </group>
+            <group>
+                <attribute name="type"><value>html</value></attribute>
+                <ref name="attr.length" />
             </group>
             <attribute name="type">
                 <choice>
@@ -67,7 +73,6 @@
                     <value>ipv6</value>
                 </choice>
             </attribute>
-            <ref name="attr.length" />
         </choice>
        <ref name="UI.attr.readonly" />
        <ref name="UI.attr.required" />
@@ -82,6 +87,21 @@
        <ref name="UI.attr.required" />
        <ref name="UI.attr.defaultvalue" />
        <ref name="attr.length" />
+       <optional><attribute name="type"><value>html</value></attribute></optional>
+       <optional><attribute name="rows"><data type="integer" /></attribute></optional>
+       <optional><attribute name="cols"><data type="integer" /></attribute></optional>
+     </element>
+  </define>
+
+  <define name="htmleditor">
+     <element name="htmleditor">
+       <ref name="control.common" />
+       <ref name="UI.attr.readonly" />
+       <ref name="UI.attr.required" />
+       <ref name="UI.attr.defaultvalue" />
+       <ref name="attr.length" />
+       <optional><attribute name="config" /></optional>
+       <optional><attribute name="skin" /></optional>
        <optional><attribute name="rows"><data type="integer" /></attribute></optional>
        <optional><attribute name="cols"><data type="integer" /></attribute></optional>
      </element>
@@ -99,7 +119,7 @@
                 <text />
                 <group>
                     <emtpy/>
-                    <attribute name="labellocale" />
+                    <attribute name="locale" />
                 </group>
             </choice>
           </element>
@@ -133,13 +153,6 @@
      </element>
   </define>
 
-  <define name="radiobuttons">
-     <element name="radiobuttons">
-       <ref name="control.common" />
-       <ref name="control.list.common" />
-     </element>
-  </define>
-
   <define name="listbox">
      <element name="listbox">
        <ref name="control.common" />
@@ -166,7 +179,13 @@
        <ref name="control.list.common" />
      </element>
   </define>
-  
+
+  <define name="radiobuttons">
+     <element name="radiobuttons">
+       <ref name="control.common" />
+       <ref name="control.list.common" />
+     </element>
+  </define>
   <define name="output">
      <element name="output">
        <ref name="control.common" />
@@ -181,10 +200,22 @@
      </element>
   </define>
 
+  <define name="reset">
+     <element name="reset">
+       <ref name="control.common" />
+     </element>
+  </define>
+
   <define name="hidden">
      <element name="hidden">
        <attribute name="ref" />
        <ref name="UI.attr.defaultvalue" />
+     </element>
+  </define>
+
+  <define name="captcha">
+     <element name="captcha">
+       <ref name="control.common" />
      </element>
   </define>
 
@@ -240,6 +271,7 @@
 
   <define name="datasources">
      <optional><choice>
+        <ref name="datasource" />
         <ref name="datasources.items" />
         <ref name="datasources.dao" />
         <ref name="datasources.class" />
@@ -272,6 +304,26 @@
 
   <define name="datasources.class">
       <attribute name="dsclass" />
+  </define>
+
+  <define name="datasource">
+    <element name="datasource">
+        <choice>
+            <group>
+                <attribute name="dao" />
+                <attribute name="daomethod" />
+                <attribute name="labelproperty" />
+                <optional><attribute name="valueproperty" /></optional>
+                <optional>
+                    <choice>
+                        <attribute name="criteria" />
+                        <attribute name="criteriafrom" />
+                    </choice>
+                </optional>
+            </group>
+            <attribute name="class" />
+        </choice>
+    </element>
   </define>
 
   <define name="message.content">
@@ -329,13 +381,6 @@
       </element>
    </define>
 -->
-
-  <define name="reset">
-     <element name="reset">
-       <ref name="control.common" />
-     </element>
-  </define>
-  
   <!--
       <define name="range">
           <element name="range">
@@ -347,13 +392,7 @@
               <optional><attribute name="incremental"><data type="boolean" /></attribute></optional>
           </element>
       </define>
-      
-      <define name="trigger">
-          <element name="trigger">
-              <ref name="control.common" />
-              <ref name="UI.Common.Attrs" />
-          </element>
-      </define>
+
   -->
   
 

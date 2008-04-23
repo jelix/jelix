@@ -24,7 +24,7 @@ class testHMLForm { // simulate a jFormBase object
     public $reset= null;
     public $container;
 
-    protected $data =  array( 'chk'=>'1', 'chk2'=>'', 'choixsimple'=>'11', 'choixmultiple'=>array('10','23'));
+    protected $data =  array( 'chk'=>'1', 'chk2'=>'', 'choixsimple'=>'11', 'choixmultiple'=>array('10','23'), 'autrechoix'=>'10');
     function __construct(){
         $this->container = new jFormsDataContainer('','');
     }
@@ -236,7 +236,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl= new jFormsControlcheckboxes('choixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Vos choix';
-        $ctrl->datasource = new jFormDaoDatasource('jelix_tests~products','findAll','name','id');
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
 
         $records = array(
             array('id'=>'10', 'name'=>'foo', 'price'=>'12'),
@@ -257,7 +257,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl= new jFormsControlcheckboxes('choixmultiple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Vos choix';
-        $ctrl->datasource= new jFormStaticDatasource();
+        $ctrl->datasource= new jFormsStaticDatasource();
         $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
@@ -289,7 +289,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl= new jFormsControlradiobuttons('choixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormDaoDatasource('jelix_tests~products','findAll','name','id');
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<span class="jforms-label">Votre choix</span>', $out);
@@ -300,7 +300,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result.='<span class="jforms-radio jforms-ctl-choixsimple"><input type="radio" name="choixsimple" id="'.$this->formname.'_choixsimple_2" value="23"/><label for="'.$this->formname.'_choixsimple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
 
-        $ctrl->datasource= new jFormStaticDatasource();
+        $ctrl->datasource= new jFormsStaticDatasource();
         $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
@@ -328,7 +328,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl= new jFormsControlmenulist('choixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormDaoDatasource('jelix_tests~products','findAll','name','id');
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_choixsimple">Votre choix</label>', $out);
@@ -342,7 +342,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
 
-        $ctrl->datasource= new jFormStaticDatasource();
+        $ctrl->datasource= new jFormsStaticDatasource();
         $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
@@ -386,6 +386,64 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result.='<option value="23">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
+
+        $ctrl->readonly = false;
+        $ctrl->hint='';
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findByMaxId','name','id','15');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value="" selected="selected"></option>';
+        $result.='<option value="10">foo</option>';
+        $result.='<option value="11">bar</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findByMaxId','name','id','11');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value="" selected="selected"></option>';
+        $result.='<option value="10">foo</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $this->form->setData('choixsimple',"10");
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value=""></option>';
+        $result.='<option value="10" selected="selected">foo</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $this->form->setData('choixsimple',"");
+        $this->form->setData('autrechoix',"25");
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findByMaxId','name','id',null, 'autrechoix');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value="" selected="selected"></option>';
+        $result.='<option value="10">foo</option>';
+        $result.='<option value="11">bar</option>';
+        $result.='<option value="23">baz</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $this->form->setData('autrechoix',"15");
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value="" selected="selected"></option>';
+        $result.='<option value="10">foo</option>';
+        $result.='<option value="11">bar</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $this->form->setData('choixsimple',"10");
+        $this->form->setData('autrechoix',"11");
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value=""></option>';
+        $result.='<option value="10" selected="selected">foo</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
         $this->form->setData('choixsimple',"23");
     }
 
@@ -393,7 +451,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl= new jFormsControllistbox('choixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormDaoDatasource('jelix_tests~products','findAll','name','id');
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_choixsimple">Votre choix</label>', $out);
@@ -406,7 +464,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
 
-        $ctrl->datasource= new jFormStaticDatasource();
+        $ctrl->datasource= new jFormsStaticDatasource();
         $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
@@ -432,7 +490,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl= new jFormsControllistbox('choixmultiple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormDaoDatasource('jelix_tests~products','findAll','name','id');
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
         $ctrl->multiple=true;
         $ctrl->hint='ceci est un tooltip';
 
@@ -451,7 +509,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl= new jFormsControllistbox('choixsimpleinconnu');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormDaoDatasource('jelix_tests~products','findAll','name','id');
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
         $ctrl->defaultValue=array ('10');
 
 
@@ -480,7 +538,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl= new jFormsControllistbox('choixmultipleinconnu');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormDaoDatasource('jelix_tests~products','findAll','name','id');
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
         $ctrl->multiple=true;
         $ctrl->size=8;
         $ctrl->defaultValue=array ('11','23');
@@ -505,6 +563,26 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
     }
+
+    function testOutputListboxClassDatasource(){
+        $ctrl= new jFormsControllistbox('choixsimple');
+        $ctrl->datatype= new jDatatypeString();
+        $ctrl->label='Votre choix';
+        jClasses::inc('mydatasource');
+        $ctrl->datasource = new mydatasource(0);
+
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="4">';
+        $result.='<option value="aaa">label for aaa</option>';
+        $result.='<option value="bbb">label for bbb</option>';
+        $result.='<option value="ccc">label for ccc</option>';
+        $result.='<option value="ddd">label for ddd</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+    }
+
+
     function testOutputTextarea(){
         $ctrl= new jFormsControltextarea('nom');
         $ctrl->datatype= new jDatatypeString();
@@ -643,7 +721,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff('<input type="submit" name="nom" id="'.$this->formname.'_nom" title="ceci est un tooltip" class="jforms-submit" value="Votre nom"/>', $out);
 
         $ctrl->standalone=false;
-        $ctrl->datasource= new jFormStaticDatasource();
+        $ctrl->datasource= new jFormsStaticDatasource();
         $ctrl->datasource->data = array('svg'=>'Sauvegarde','prev'=>'Preview');
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();

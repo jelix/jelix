@@ -358,7 +358,6 @@ abstract class jFormsBase {
             $primaryKey =array($primaryKey);
 
         $dao = jDao::create($daoSelector, $dbProfil);
-        $daorec = jDao::createRecord($daoSelector, $dbProfil);
 
         $conditions = jDao::createConditions();
         if($primaryKeyNames)

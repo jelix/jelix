@@ -9,5 +9,13 @@
       <property name="price" fieldname="price" datatype="float" default="0"/>
       <property name="create_date" fieldname="create_date" datatype="datetime" insertpattern="NOW()"/>
    </record>
+   <factory>
+       <method name="findByMaxId" type="select">
+           <parameter name="maxId" />
+           <conditions>
+                <lt property="id" expr="$maxId" />
+            </conditions>
+       </method>
+   </factory>
 </dao>
 

@@ -215,11 +215,6 @@ class jFormsCompiler implements jISimpleCompiler {
     protected function generateHtmleditor(&$source, $control, &$attributes) {
         $this->_generateTextareaHtmlEditor($source, $control, $attributes);
 
-        if (isset($attributes['engine'])) {
-            $source[]='$ctrl->engine=\''.str_replace("'","\\'",$attributes['engine']).'\';';
-            unset($attributes['engine']);
-        }
-
         if (isset($attributes['config'])) {
             $source[]='$ctrl->config=\''.str_replace("'","\\'",$attributes['config']).'\';';
             unset($attributes['config']);
@@ -243,15 +238,16 @@ class jFormsCompiler implements jISimpleCompiler {
     }
 
     protected function generateReset(&$source, $control, &$attributes) {
+        // XXX: readonly attr really needed ?
         $this->attrReadonly($source, $attributes);
         $this->readLabel($source, $control, 'reset');
         $this->readHelpHintAlert($source, $control);
-
     }
 
     protected function generateCheckbox(&$source, $control, &$attributes) {
         $source[]='$ctrl->datatype= new jDatatypeBoolean();';
         $this->attrDefaultvalue($source, $attributes);
+        $this->attrReadonly($source, $attributes);
         $this->readLabel($source, $control, 'checkbox');
         $this->readHelpHintAlert($source, $control);
         if(isset($attributes['valueoncheck'])){
@@ -424,7 +420,7 @@ class jFormsCompiler implements jISimpleCompiler {
     }
 
     protected function readHelpHintAlert(&$source, $control) {
-        if(isset($control->help)){
+        if(isset($control->help)){ // help value is readed in the html compiler
             $source[]='$ctrl->hasHelp=true;';
         }
         if(isset($control->hint)){
@@ -486,14 +482,55 @@ class jFormsCompiler implements jISimpleCompiler {
     }
 
     protected function readDatasource(&$source, $control, $controltype, &$attributes, $hasSelectedValues=false) {
-        // recuperer les <items> attr label|labellocale value
-        if(isset($attributes['dao'])){
+
+        if(isset($control->datasource)) {
+            $attrs = array();
+            foreach ($control->datasource->attributes() as $name=>$value){
+                $attrs[$name]=(string)$value;
+            }
+
+            if(isset($attrs['dao'])) {
+                if(isset($attrs['valueproperty'])) {
+                    $daovalue = $attrs['valueproperty'];
+                } else
+                    $daovalue = '';
+                if(!isset($attrs['method']))
+                    throw new jException('jelix~formserr.attribute.missing',array('method', 'datasource',$this->sourceFile));
+                if(!isset($attrs['labelproperty']))
+                    throw new jException('jelix~formserr.attribute.missing',array('method', 'datasource',$this->sourceFile));
+
+                if(isset($attrs['criteria']))
+                    $criteria=',\''.$attrs['criteria'].'\'';
+                elseif(isset($attrs['criteriafrom']))
+                    $criteria=',null,\''.$attrs['criteriafrom'].'\'';
+                else
+                    $criteria='';
+
+                $source[]='$ctrl->datasource = new jFormsDaoDatasource(\''.$attrs['dao'].'\',\''.
+                                $attrs['method'].'\',\''.$attrs['labelproperty'].'\',\''.$daovalue.'\''.$criteria.');';
+                if($controltype == 'submit'){
+                    $source[]='$ctrl->standalone=false;';
+                }
+            }else if(isset($attrs['class'])) {
+                $class = new jSelectorClass($attrs['class']);
+                $source[]='jClasses::inc(\''.$attrs['class'].'\');';
+                $source[]='$datasource = new '.$class->className.'($this->id());';
+                $source[]='if ($datasource instanceof jIFormsDatasource){$ctrl->datasource=$datasource;}';
+                $source[]='else{$ctrl->datasource=new jFormsStaticDatasource();}';
+                if($controltype == 'submit'){
+                    $source[]='$ctrl->standalone=false;';
+                }
+            } else {
+                throw new jException('jelix~formserr.attribute.missing',array('class/dao', 'datasource',$this->sourceFile));
+            }
+
+        }else if(isset($attributes['dao'])){ // read deprecated dao attributes
             if(isset($attributes['daovalueproperty'])) {
                 $daovalue = $attributes['daovalueproperty'];
                 unset($attributes['daovalueproperty']);
             } else
                 $daovalue = '';
-            $source[]='$ctrl->datasource = new jFormDaoDatasource(\''.$attributes['dao'].'\',\''.
+            $source[]='$ctrl->datasource = new jFormsDaoDatasource(\''.$attributes['dao'].'\',\''.
                             $attributes['daomethod'].'\',\''.$attributes['daolabelproperty'].'\',\''.$daovalue.'\');';
             unset($attributes['dao']);
             unset($attributes['daomethod']);
@@ -501,22 +538,23 @@ class jFormsCompiler implements jISimpleCompiler {
             if($controltype == 'submit'){
                 $source[]='$ctrl->standalone=false;';
             }
-        }elseif(isset($attributes['dsclass'])){
+        }elseif(isset($attributes['dsclass'])){ // read deprecated dsclass attribute
             $dsclass = $attributes['dsclass'];
             unset($attributes['dsclass']);
             $class = new jSelectorClass($dsclass);
             $source[]='jClasses::inc(\''.$dsclass.'\');';
             $source[]='$datasource = new '.$class->className.'($this->id());';
-            $source[]='if ($datasource instanceof jIFormDatasource){$ctrl->datasource=$datasource;}';
-            $source[]='else{$ctrl->datasource=new jFormStaticDatasource();}';
+            $source[]='if ($datasource instanceof jIFormsDatasource){$ctrl->datasource=$datasource;}';
+            $source[]='else{$ctrl->datasource=new jFormsStaticDatasource();}';
             if($controltype == 'submit'){
                 $source[]='$ctrl->standalone=false;';
             }
         }elseif(isset($control->item)){
+            // get all <items> and their label|labellocale attributes + their values
             if($controltype == 'submit'){
                 $source[]='$ctrl->standalone=false;';
             }
-            $source[]='$ctrl->datasource= new jFormStaticDatasource();';
+            $source[]='$ctrl->datasource= new jFormsStaticDatasource();';
             $source[]='$ctrl->datasource->data = array(';
             $selectedvalues=array();
             foreach($control->item as $item){
@@ -548,7 +586,7 @@ class jFormsCompiler implements jISimpleCompiler {
                 $source[]='$ctrl->defaultValue='.var_export($selectedvalues,true).';';
             }
         }else{
-            $source[]='$ctrl->datasource= new jFormStaticDatasource();';
+            $source[]='$ctrl->datasource= new jFormsStaticDatasource();';
         }
     }
 }
