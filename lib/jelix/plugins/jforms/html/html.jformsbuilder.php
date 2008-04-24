@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Julien Issler
 * @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -220,7 +221,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             }
             break;
         case 'menulist':
-            echo '<select',$id,$readonly,$hint,$class,' size="1">';
+            echo '<select',$id,$hint,$class,' size="1">';
             $value = $this->_form->getData($ctrl->ref);
             if(is_array($value)){
                 if(isset($value[0]))
@@ -238,7 +239,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             break;
         case 'listbox':
             if($ctrl->multiple){
-                echo '<select name="',$ctrl->ref,'[]" id="',$this->_name,'_',$ctrl->ref,'"',$readonly,$hint,$class,' size="',$ctrl->size,'" multiple="multiple">';
+                echo '<select name="',$ctrl->ref,'[]" id="',$this->_name,'_',$ctrl->ref,'"',$hint,$class,' size="',$ctrl->size,'" multiple="multiple">';
                 $value = $this->_form->getData($ctrl->ref);
 
                 if(is_array($value) && count($value) == 1)
@@ -264,7 +265,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
                         $value ='';
                 }
 
-                echo '<select',$id,$readonly,$hint,$class,' size="',$ctrl->size,'">';
+                echo '<select',$id,$hint,$class,' size="',$ctrl->size,'">';
                 foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
                     echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
                 }

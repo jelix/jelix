@@ -17,6 +17,7 @@ Julien Issler
  - fixed bug about infinite loop with non-existent charset (#442)
  - some enhancement in jSession (#445, #504, #506)
  - localization system should work with language code without country (#95)
+ - jForms html shouldn't generate readonly attribute on select (#550)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
