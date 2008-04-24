@@ -109,7 +109,7 @@ Nicolas Lassalle
  - bug fix in jResponseBinary (#188)
 
 Kévin Lepeltier (aka Lipki)
- - plugin image for jtpl (#474, #502)
+ - plugin image for jtpl (#474, #502, #559, #560)
  - bug fixed in firebug support (#500)
 
 Hugues Magnier (aka BaGroN)

@@ -9,6 +9,8 @@
  */
 
 /**
+ * image plugin :  write the url corresponding to the image
+ * 
  * Add a link to the image,
  * The image is resized, and cached
  *
@@ -17,6 +19,8 @@
  * alt :string
  * width :uint
  * height :uint
+ * maxwidth :uint only with maxheight
+ * maxheight :uint only with maxwidth
  * zoom 1-100
  * omo :boolean
  * alignh [left|center|right|:int]
@@ -29,6 +33,7 @@
  * sblur :uint
  * sopacity :uint
  * scolor #000000 :string
+ * background #000000 :string
  *
  * gif   -> image/gif
  * jpeg  -> image/jpeg
@@ -39,10 +44,6 @@
  * wbmp  -> image/vnd.wap.wbmp
  * png   -> image/png
  * other -> image/png
- */
-
-/**
- * image plugin :  write the url corresponding to the image
  *
  * @param jTpl $tpl template engine
  * @param string $src the url of image (data/fichiers/):string.[gif|jpeg|jpg|jpe|xpm|xbm|wbmp|png]
@@ -60,7 +61,7 @@ function jtpl_function_html_image($tpl, $src, $params=array()) {
     if (   empty($params['background'])
         && strpos($_SERVER["HTTP_USER_AGENT"], 'MSIE') !== false
         && strpos($_SERVER["HTTP_USER_AGENT"], 'MSIE 7') === false) {
-        $params['background'] = array(255, 255, 255);
+        $params['background'] = '#ffffff';
     }
     
     // Name of the file cache
@@ -81,7 +82,7 @@ function jtpl_function_html_image($tpl, $src, $params=array()) {
     
     // Cache and make changes if necessary.
     if( is_file($origine_path) && !is_file($cache_path) ) {
-        $att = array('width'=>'', 'height'=>'', 'zoom'=>'', 'alignh'=>'', 'alignv'=>'', 'ext'=>'', 'quality'=>'', 'shadow'=>'');
+        $att = array('width'=>'', 'height'=>'', 'maxwidth'=>'', 'maxheight'=>'', 'zoom'=>'', 'alignh'=>'', 'alignv'=>'', 'ext'=>'', 'quality'=>'', 'shadow'=>'');
         if( count(array_intersect_key($params, $att)) )
             jtpl_function_html_image_inCache($src, $cachename, $params);
     }
@@ -94,8 +95,10 @@ function jtpl_function_html_image($tpl, $src, $params=array()) {
     if( !is_file($cache_path) ) {
         $att['src'] = $origine_www;
         $att['style'] = empty($att['style'])?'':$att['style'];
-        if( !empty($params['width']) )     $att['style'] .= 'width: '.$params['width'].'px;';
-        if( !empty($params['height']) ) $att['style'] .= 'height: '.$params['height'].'px;';
+        if( !empty($params['width']) )             $att['style'] .= 'width: '.$params['width'].'px;';
+        else if( !empty($params['maxwidth']) )     $att['style'] .= 'width: '.$params['maxwidth'].'px;';
+        if( !empty($params['height']) )            $att['style'] .= 'height: '.$params['height'].'px;';
+        else if( !empty($params['maxheight']) )    $att['style'] .= 'height: '.$params['maxheight'].'px;';
     } else
         $att['src'] = $cache_www;
     
@@ -130,6 +133,20 @@ function jtpl_function_html_image_inCache($src, $cachename, $array) {
         case 'image/image/x-xbitmap' : $image = imagecreatefromxbm($origine_www); break;
         case 'image/x-xpixmap'       : $image = imagecreatefromxpm($origine_www); break;
         default                      : return ;
+    }
+    
+    if(!empty($array['maxwidth']) && !empty($array['maxheight'])) {
+        
+        $rapy = imagesy($image)/$array['maxwidth'];
+        $rapx = imagesx($image)/$array['maxheight'];
+        
+        if( $rapy > $rapx ) {
+            $array['height'] = $array['maxheight'];
+            $array['width'] = imagesx($image)/$rapy;
+        } else {
+            $array['width'] = $array['maxwidth'];
+            $array['height'] = imagesy($image)/$rapx;
+        }
     }
     
     if (!empty($array['width']) || !empty($array['height'])) {
@@ -192,8 +209,11 @@ function jtpl_function_html_image_inCache($src, $cachename, $array) {
     
     // Background
     if( !empty($array['background']) ) {
+        $array['background'] = str_replace('#', '', $array['background']);
+        $rgb = array(0,0,0);
+        for ($x=0;$x<3;$x++) $rgb[$x] = hexdec(substr($array['background'],(2*$x),2));
         $fond = imagecreatetruecolor(imagesx($image), imagesy($image));
-        imagefill( $fond, 0, 0, imagecolorallocate( $fond, 255, 255, 255) );
+        imagefill( $fond, 0, 0, imagecolorallocate( $fond, $rgb[0], $rgb[1], $rgb[2]) );
         imagecopy( $fond, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
         $image = $fond;
     }
