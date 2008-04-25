@@ -27,7 +27,6 @@ Bastien Jaillot (aka bastnic)
  - fixed bug in jFile::removeDir which crash if they are link inside (#519)
  - add a jFormBase prepareDaoFromControls which return a DAO filled by form (#497)
 
-
 Laurent Jouanneau (laurentj):
  - Conceptor and main developer of Jelix
 
@@ -37,6 +36,10 @@ Yannick Le Guédart (aka Torgan)
  - some bug fixes and little improvements
  - Contribution on jResponseRss and jResponseAtom
  - jdb driver for Intuition
+
+Kévin Lepeltier (aka Lipki)
+ - plugin image for jtpl (#474, #502, #559, #560)
+ - bug fixed in firebug support (#500)
 
 Loic Mathaud (bballizlife):
  - testor, many bug fixes and many patches on jelix
@@ -108,10 +111,6 @@ Nicolas Jeudy (aka njeudy)
 
 Nicolas Lassalle
  - bug fix in jResponseBinary (#188)
-
-Kévin Lepeltier (aka Lipki)
- - plugin image for jtpl (#474, #502, #559, #560)
- - bug fixed in firebug support (#500)
 
 Hugues Magnier (aka BaGroN)
  - tpl plugin stripws (#140)
