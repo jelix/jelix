@@ -46,7 +46,7 @@
  * other -> image/png
  *
  * @param jTpl $tpl template engine
- * @param string $src the url of image (data/fichiers/):string.[gif|jpeg|jpg|jpe|xpm|xbm|wbmp|png]
+ * @param string $src the url of image (myapp/www/):string.[gif|jpeg|jpg|jpe|xpm|xbm|wbmp|png]
  * @param array $params parameters for the url
  */
 function jtpl_function_html_image($tpl, $src, $params=array()) {
@@ -73,14 +73,14 @@ function jtpl_function_html_image($tpl, $src, $params=array()) {
     
     // Path
     $cache_path = JELIX_APP_WWW_PATH.'cache/images/'.$cachename;
-    $origine_path = JELIX_APP_WWW_PATH.'data/fichiers/'.$src;
+    $origine_path = JELIX_APP_WWW_PATH.$src;
     
     global $gJConfig;
     $www = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'];
     $cache_www = $www.'cache/images/'.$cachename;
-    $origine_www = $www.'data/fichiers/'.$src;
+    $origine_www = $www.$src;
     
-    // Cache and make changes if necessary.
+    // Cache and make changes if necessary
     if( is_file($origine_path) && !is_file($cache_path) ) {
         $att = array('width'=>'', 'height'=>'', 'maxwidth'=>'', 'maxheight'=>'', 'zoom'=>'', 'alignh'=>'', 'alignv'=>'', 'ext'=>'', 'quality'=>'', 'shadow'=>'');
         if( count(array_intersect_key($params, $att)) )
@@ -118,7 +118,7 @@ function jtpl_function_html_image_inCache($src, $cachename, $array) {
                    'xpm'=>'image/x-xpixmap', 'xbm'=>'image/x-xbitmap', 'wbmp'=>'image/vnd.wap.wbmp');
     
     global $gJConfig;
-    $origine_www = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'].'data/fichiers/'.$src;
+    $origine_www = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'].$src;
     
     $path_parts = pathinfo($origine_www);
     $ext = $mimes[$path_parts['extension']];
