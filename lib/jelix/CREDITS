@@ -38,8 +38,10 @@ Yannick Le Guédart (aka Torgan)
  - jdb driver for Intuition
 
 Kévin Lepeltier (aka Lipki)
- - plugin image for jtpl (#474, #502, #559, #560)
+ - plugin image for jtpl (#474, #502, #558, #559, #560)
  - bug fixed in firebug support (#500)
+ - trois plugin swf (#498)
+ - plugin coord history (#507)
 
 Loic Mathaud (bballizlife):
  - testor, many bug fixes and many patches on jelix
