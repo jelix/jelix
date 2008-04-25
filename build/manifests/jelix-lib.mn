@@ -444,6 +444,11 @@ cd lib/jelix/plugins/coord/jacl2
   plugin.xml
   jacl2.coord.ini.php.dist
 
+cd lib/jelix/plugins/coord/history
+! history.coord.php
+  plugin.xml
+  history.coord.ini.php.dist
+
 cd lib/jelix/plugins/jforms/html
   html.jformscompiler.php
   html.jformsbuilder.php
@@ -533,6 +538,9 @@ cd lib/jelix/plugins/tpl/html
   function.formreset.php
   function.image.php
   function.pagelinks.php
+  block.swf.php
+  cfunction.swfbiscuit.php
+  block.swfjs.php
 
 cd lib/jelix/plugins/tpl/ltx2pdf
   function.jlocale.php
@@ -643,6 +651,8 @@ c jquery.date_input.js
 ! jquery.date_input.es_ES.js
 cd lib/jelix-www/jquery/dimensions
 c jquery.dimensions.js
+cd lib/jelix-www/jquery/flash
+c jquery.flash.js
 
 cd lib/clearbricks
   LICENCE
