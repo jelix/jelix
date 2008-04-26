@@ -23,8 +23,6 @@ class jFormsCompiler implements jISimpleCompiler {
 
     protected $sourceFile;
 
-    protected $doubleControl;
-
     public function compile($selector){
         global $gJCoord;
         global $gJConfig;
@@ -100,7 +98,6 @@ class jFormsCompiler implements jISimpleCompiler {
     }
 
     protected function generatePHPControl($controltype, $control){
-        $this->doubleControl = false;
         $source = array();
         $class = 'jFormsControl'.$controltype;
 
@@ -121,8 +118,7 @@ class jFormsCompiler implements jISimpleCompiler {
         $source[]='$ctrl= new '.$class.'(\''.$attributes['ref'].'\');';
         unset($attributes['ref']);
 
-        $name='generate'.$controltype;
-        $this->$name($source, $control, $attributes);
+        $doublecontrol = $this->{'generate'.$controltype}($source, $control, $attributes);
 
         if(count($attributes)) {
             reset($attributes);
@@ -130,7 +126,7 @@ class jFormsCompiler implements jISimpleCompiler {
         }
 
         $source[]='$this->addControl($ctrl);';
-        if ($this->doubleControl)
+        if ($doublecontrol)
             $source[]='$this->addControl($ctrl2);';
         return implode("\n", $source);
     }
@@ -169,6 +165,7 @@ class jFormsCompiler implements jISimpleCompiler {
         $this->readLabel($source, $control, 'input');
         $this->readHelpHintAlert($source, $control);
         $this->attrSize($source, $attributes);
+        return false;
     }
 
     protected function generateTextarea(&$source, $control, &$attributes) {
@@ -179,7 +176,7 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$ctrl->datatype= new jDatatypeHtml();';
             unset($attributes['type']);
         }
-        $this->_generateTextareaHtmlEditor($source, $control, $attributes);
+        return $this->_generateTextareaHtmlEditor($source, $control, $attributes);
     }
 
     protected function _generateTextareaHtmlEditor(&$source, $control, &$attributes) {
@@ -210,6 +207,7 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$ctrl->cols='.$cols.';';
             unset($attributes['cols']);
         }
+        return false;
     }
 
     protected function generateHtmleditor(&$source, $control, &$attributes) {
@@ -223,18 +221,21 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$ctrl->skin=\''.str_replace("'","\\'",$attributes['skin']).'\';';
             unset($attributes['skin']);
         }
+        return false;
     }
 
     protected function generateOutput(&$source, $control, &$attributes) {
         $this->attrDefaultvalue($source, $attributes);
         $this->readLabel($source, $control, 'output');
         $this->readHelpHintAlert($source, $control);
+        return false;
     }
 
     protected function generateSubmit(&$source, $control, &$attributes) {
         $this->readLabel($source, $control, 'submit');
         $this->readHelpHintAlert($source, $control);
         $this->readDatasource($source, $control, 'submit', $attributes);
+        return false;
     }
 
     protected function generateReset(&$source, $control, &$attributes) {
@@ -242,6 +243,7 @@ class jFormsCompiler implements jISimpleCompiler {
         $this->attrReadonly($source, $attributes);
         $this->readLabel($source, $control, 'reset');
         $this->readHelpHintAlert($source, $control);
+        return false;
     }
 
     protected function generateCheckbox(&$source, $control, &$attributes) {
@@ -258,10 +260,12 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$ctrl->valueOnUncheck=\''.str_replace("'","\\'", $attributes['valueonuncheck']) ."';";
             unset($attributes['valueonuncheck']);
         }
+        return false;
     }
 
     protected function generateHidden(&$source, $control, &$attributes) {
         $this->attrDefaultvalue($source, $attributes);
+        return false;
     }
 
     protected function generateCheckboxes(&$source, $control, &$attributes) {
@@ -271,6 +275,7 @@ class jFormsCompiler implements jISimpleCompiler {
         $this->readHelpHintAlert($source, $control);
         $hasSelectedValues = $this->readSelectedValue($source, $control, 'checkboxes', $attributes);
         $this->readDatasource($source, $control, 'checkboxes', $attributes, $hasSelectedValues);
+        return false;
     }
 
     protected function generateRadiobuttons(&$source, $control, &$attributes) {
@@ -280,6 +285,7 @@ class jFormsCompiler implements jISimpleCompiler {
         $this->readHelpHintAlert($source, $control);
         $hasSelectedValues = $this->readSelectedValue($source, $control, 'radiobuttons', $attributes);
         $this->readDatasource($source, $control, 'radiobuttons', $attributes, $hasSelectedValues);
+        return false;
     }
 
     protected function generateMenulist(&$source, $control, &$attributes) {
@@ -289,6 +295,7 @@ class jFormsCompiler implements jISimpleCompiler {
         $this->readHelpHintAlert($source, $control);
         $hasSelectedValues = $this->readSelectedValue($source, $control, 'menulist', $attributes);
         $this->readDatasource($source, $control, 'menulist', $attributes, $hasSelectedValues);
+        return false;
     }
 
     protected function generateListbox(&$source, $control, &$attributes) {
@@ -304,6 +311,7 @@ class jFormsCompiler implements jISimpleCompiler {
                 $source[]='$ctrl->multiple=true;';
             unset($attributes['multiple']);
         }
+        return false;
     }
 
     protected function generateSecret(&$source, $control, &$attributes) {
@@ -341,8 +349,9 @@ class jFormsCompiler implements jISimpleCompiler {
             if (isset($control['size'])) {
                 $source[]='$ctrl2->size=$ctrl->size;';
             }
-            $this->doubleControl = true;
+            return true;
         }
+        return false;
     }
 
     protected function generateUpload(&$source, $control, &$attributes) {
@@ -362,11 +371,13 @@ class jFormsCompiler implements jISimpleCompiler {
             $source[]='$ctrl->mimetype='.var_export($mime,true).';';
             unset($attributes['mimetype']);
         }
+        return false;
     }
 
     protected function generateCaptcha(&$source, $control, &$attributes) {
         $this->readLabel($source, $control, 'captcha');
         $this->readHelpHintAlert($source, $control);
+        return false;
     }
 
 

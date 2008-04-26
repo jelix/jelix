@@ -5,8 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
 * @contributor Bastien Jaillot
-* @copyright   2006-2007 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
-* @copyright   2006-2008 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2006-2008 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -135,32 +134,12 @@ abstract class jFormsBase {
             if(!$this->_container->isActivated($name))
                 continue;
             $value = $req->getParam($name);
+
             //@todo à prevoir un meilleur test, pour les formulaires sur plusieurs pages
             if($value === null) $value='';
-            if($ctrl->type=='checkbox'){
-                if($value){
-                    $value = $ctrl->valueOnCheck;
-                }else{
-                    $value = $ctrl->valueOnUncheck;
-                }
-            }elseif($ctrl->type=='upload'){
-                if(isset($_FILES[$name])){
-                    $value = $_FILES[$name]['name'];
-                }else{
-                    $value= '';
-                }
-            }elseif($ctrl->type=='submit' && $value && !$ctrl->standalone) {
-                // because IE send the <button> content as value instead of the content of the
-                // "value" attribute, we should verify it and get the real value
-                // or when using <input type="submit">, we have only the label as value (in all browsers...
-                $data = $ctrl->datasource->getData();
-                if(!isset($data[$value])) {
-                    $data=array_flip($data);
-                    if(isset($data[$value])) {
-                        $value = $data[$value];
-                    }
-                }
-            }
+
+            $value = $ctrl->getValueFromRequest($this, $value);
+
             if($this->_container->data[$name] != $value)
                 $this->_modifiedControls[$name] = $this->_container->data[$name];
             $this->_container->data[$name] = $value;
@@ -205,39 +184,13 @@ abstract class jFormsBase {
         $prop = $dao->getProperties();
         foreach($this->_controls as $name=>$ctrl){
             if(isset($prop[$name])) {
-                if($ctrl->datatype instanceof jDatatypeLocaleDateTime
-                   && $prop[$name]['datatype'] == 'datetime') {
-                    if($daorec->$name != '') {
-                        $dt = new jDateTime();
-                        $dt->setFromString($daorec->$name, jDateTime::DB_DTFORMAT);
-                        $this->_container->data[$name] = $dt->toString(jDateTime::LANG_DTFORMAT);
-                    } else {
-                        $this->_container->data[$name] ='';
-                    }
-                }elseif($ctrl->datatype instanceof jDatatypeLocaleDate
-                        && $prop[$name]['datatype'] == 'date') {
-                    if($daorec->$name != '') {
-                        $dt = new jDateTime();
-                        $dt->setFromString($daorec->$name, jDateTime::DB_DFORMAT);
-                        $this->_container->data[$name] = $dt->toString(jDateTime::LANG_DFORMAT);
-                    } else {
-                        $this->_container->data[$name] ='';
-                    }
-                }elseif($ctrl->type=='checkbox' && $prop[$name]['datatype'] == 'boolean') {
-                    if($daorec->$name == 'TRUE'||  $daorec->$name == 't'|| $daorec->$name == '1'||$daorec->$name == true){
-                        $this->_container->data[$name] = $ctrl->valueOnCheck;
-                    }else {
-                        $this->_container->data[$name] = $ctrl->valueOnUncheck;
-                    }
-                }else{
-                    $this->_container->data[$name] = $daorec->$name;
-                }
+                $this->_container->data[$name] = $ctrl->prepareValueFromDao($daorec->$name, $prop[$name]['datatype']);
             }
         }
     }
 
     /**
-     * prepare a dao whith filled by all controls
+     * prepare a dao with values of all controls
      * @param string $daoSelector the selector of a dao file
      * @param string $key the primary key for the dao. if null, takes the form ID as primary key
      * @param string $dbProfil the jDb profil to use with the dao

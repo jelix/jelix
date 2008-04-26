@@ -53,6 +53,15 @@ abstract class jFormsControl {
     function getDisplayValue($value){
         return $value;
     }
+
+    function getValueFromRequest($form, $requestValue) {
+        return $requestValue;
+    }
+
+    function prepareValueFromDao($value, $daoDatatype) {
+        return $value;
+    }
+
 }
 
 
@@ -64,6 +73,27 @@ abstract class jFormsControl {
 class jFormsControlInput extends jFormsControl {
     public $type='input';
     public $size=0;
+
+    function prepareValueFromDao($value, $daoDatatype) {
+        if($this->datatype instanceof jDatatypeLocaleDateTime
+            && $daoDatatype == 'datetime') {
+            if($value != '') {
+                $dt = new jDateTime();
+                $dt->setFromString($value, jDateTime::DB_DTFORMAT);
+                $value = $dt->toString(jDateTime::LANG_DTFORMAT);
+            }
+        }elseif($this->datatype instanceof jDatatypeLocaleDate
+                && $daoDatatype == 'date') {
+            if($value != '') {
+                $dt = new jDateTime();
+                $dt->setFromString($value, jDateTime::DB_DFORMAT);
+                $value = $dt->toString(jDateTime::LANG_DFORMAT);
+            }
+        }
+        return $value;
+    }
+
+
 }
 
 /**
@@ -149,6 +179,26 @@ class jFormsControlCheckbox extends jFormsControl {
             return jForms::ERRDATA_INVALID;
         return null;
     }
+
+    function getValueFromRequest($form, $requestValue) {
+        if($requestValue){
+            return  $this->valueOnCheck;
+        }else{
+            return $this->valueOnUncheck;
+        }
+    }
+
+    function prepareValueFromDao($value, $daoDatatype) {
+        if( $daoDatatype == 'boolean') {
+            if($value == 'TRUE'||  $value == 't'|| $value == '1'|| $value == true){
+                $value = $this->valueOnCheck;
+            }else {
+                $value = $this->valueOnUncheck;
+            }
+        }
+        return $value;
+    }
+
 }
 
 /**
@@ -202,6 +252,14 @@ class jFormsControlUpload extends jFormsControl {
         }
         return null;
     }
+
+    function getValueFromRequest($form, $requestValue) {
+        if(isset($_FILES[$this->ref])){
+            return $_FILES[$this->ref]['name'];
+        }else{
+            return '';
+        }
+    }
 }
 
 /**
@@ -215,6 +273,24 @@ class jFormsControlSubmit extends jFormsControlDatasource {
     public function check($form){
         return null;
     }
+
+    function getValueFromRequest($form, $requestValue) {
+
+        if($requestValue && !$this->standalone) {
+            // because IE send the <button> content as value instead of the content of the
+            // "value" attribute, we should verify it and get the real value
+            // or when using <input type="submit">, we have only the label as value (in all browsers...
+            $data = $this->datasource->getData($form);
+            if(!isset($data[$requestValue])) {
+                $data=array_flip($data);
+                if(isset($data[$requestValue])) {
+                    $requestValue = $data[$requestValue];
+                }
+            }
+        }
+        return $requestValue;
+    }
+
 }
 
 /**
