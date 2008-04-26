@@ -148,164 +148,186 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
     }
 
     public function outputControl($ctrl){
+        if($ctrl->type == 'hidden') return;
         $id = ' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'"';
         $class = ($ctrl->required == ''|| $ctrl->readonly?'':' jforms-required');
         $class.= (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
         if($class !='') $class = ' class="'.$class.'"';
         $readonly = ($ctrl->readonly?' readonly="readonly"':'');
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
-        switch($ctrl->type){
-        case 'input':
-            $value = $this->_form->getData($ctrl->ref);
-            $size = ($ctrl->size == 0?'' : ' size="'.$ctrl->size.'"');
-            $maxl= $ctrl->datatype->getFacet('maxLength');
-            if($maxl !== null)
-                $maxl=' maxlength="'.$maxl.'"';
-            else
-                $maxl='';
-            echo '<input type="text"',$id,$readonly,$hint,$class,$size,$maxl,' value="',htmlspecialchars($value),'"',$this->_endt;
-            break;
-        case 'checkbox':
-            $value = $this->_form->getData($ctrl->ref);
 
-            if($ctrl->valueOnCheck == $value){
-                $v=' checked="checked"';
-            }else{
-                $v='';
+        $this->{'output'.$ctrl->type}($ctrl, $id, $class, $readonly, $hint);
+
+        $this->outputHelp($ctrl);
+    }
+
+    protected function outputInput($ctrl, $id, $class, $readonly, $hint) {
+        $value = $this->_form->getData($ctrl->ref);
+        $size = ($ctrl->size == 0?'' : ' size="'.$ctrl->size.'"');
+        $maxl= $ctrl->datatype->getFacet('maxLength');
+        if($maxl !== null)
+            $maxl=' maxlength="'.$maxl.'"';
+        else
+            $maxl='';
+        echo '<input type="text"',$id,$readonly,$hint,$class,$size,$maxl,' value="',htmlspecialchars($value),'"',$this->_endt;
+    }
+
+    protected function outputCheckbox($ctrl, $id, $class, $readonly, $hint) {
+        $value = $this->_form->getData($ctrl->ref);
+
+        if($ctrl->valueOnCheck == $value){
+            $v=' checked="checked"';
+        }else{
+            $v='';
+        }
+        echo '<input type="checkbox"',$id,$readonly,$hint,$class,$v,' value="',$ctrl->valueOnCheck,'"',$this->_endt;
+    }
+
+    protected function outputCheckboxes($ctrl, $id, $class, $readonly, $hint) {
+        $i=0;
+        $id=$this->_name.'_'.$ctrl->ref.'_';
+        $attrs=' name="'.$ctrl->ref.'[]" id="'.$id;
+        $value = $this->_form->getData($ctrl->ref);
+
+        if(is_array($value) && count($value) == 1)
+            $value = $value[0];
+        $span ='<span class="jforms-chkbox jforms-ctl-'.$ctrl->ref.'"><input type="checkbox"';
+
+        if(is_array($value)){
+            foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
+                echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
+                if(in_array($v,$value))
+                    echo ' checked="checked"';
+                echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label></span>';
+                $i++;
             }
-            echo '<input type="checkbox"',$id,$readonly,$hint,$class,$v,' value="',$ctrl->valueOnCheck,'"',$this->_endt;
-            break;
-        case 'checkboxes':
-            $i=0;
-            $id=$this->_name.'_'.$ctrl->ref.'_';
-            $attrs=' name="'.$ctrl->ref.'[]" id="'.$id;
+        }else{
+            foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
+                echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
+                if($v == $value)
+                    echo ' checked="checked"';
+                echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label></span>';
+                $i++;
+            }
+        }
+    }
+
+    protected function outputRadiobuttons($ctrl, $id, $class, $readonly, $hint) {
+        $i=0;
+        $id=' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'_';
+        $value = $this->_form->getData($ctrl->ref);
+        if(is_array($value)){
+            if(isset($value[0]))
+                $value = $value[0];
+            else
+                $value='';
+        }
+        $span ='<span class="jforms-radio jforms-ctl-'.$ctrl->ref.'"><input type="radio"';
+        foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
+            echo $span,$id,$i,'" value="',htmlspecialchars($v),'"',($v==$value?' checked="checked"':''),$readonly,$class,$this->_endt;
+            echo '<label for="',$this->_name,'_',$ctrl->ref,'_',$i,'">',htmlspecialchars($label),'</label></span>';
+            $i++;
+        }
+    }
+
+    protected function outputMenulist($ctrl, $id, $class, $readonly, $hint) {
+        echo '<select',$id,$hint,$class,' size="1">';
+        $value = $this->_form->getData($ctrl->ref);
+        if(is_array($value)){
+            if(isset($value[0]))
+                $value = $value[0];
+            else
+                $value='';
+        }
+        if (!$ctrl->required) {
+            echo '<option value=""',($value==''?' selected="selected"':''),'></option>';
+        }
+        foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
+            echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
+        }
+        echo '</select>';
+    }
+
+    protected function outputListbox($ctrl, $id, $class, $readonly, $hint) {
+        if($ctrl->multiple){
+            echo '<select name="',$ctrl->ref,'[]" id="',$this->_name,'_',$ctrl->ref,'"',$hint,$class,' size="',$ctrl->size,'" multiple="multiple">';
             $value = $this->_form->getData($ctrl->ref);
 
             if(is_array($value) && count($value) == 1)
                 $value = $value[0];
-            $span ='<span class="jforms-chkbox jforms-ctl-'.$ctrl->ref.'"><input type="checkbox"';
 
             if(is_array($value)){
                 foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                    echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
-                    if(in_array($v,$value))
-                        echo ' checked="checked"';
-                    echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label></span>';
-                    $i++;
+                    echo '<option value="',htmlspecialchars($v),'"',(in_array($v,$value)?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
                 }
             }else{
                 foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                    echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
-                    if($v == $value)
-                        echo ' checked="checked"';
-                    echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label></span>';
-                    $i++;
+                    echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
                 }
             }
-            break;
-        case 'radiobuttons':
-            $i=0;
-            $id=' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'_';
+            echo '</select>';
+        }else{
             $value = $this->_form->getData($ctrl->ref);
+
             if(is_array($value)){
-                if(isset($value[0]))
+                if(count($value) >= 1)
                     $value = $value[0];
                 else
-                    $value='';
+                    $value ='';
             }
-            $span ='<span class="jforms-radio jforms-ctl-'.$ctrl->ref.'"><input type="radio"';
-            foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                echo $span,$id,$i,'" value="',htmlspecialchars($v),'"',($v==$value?' checked="checked"':''),$readonly,$class,$this->_endt;
-                echo '<label for="',$this->_name,'_',$ctrl->ref,'_',$i,'">',htmlspecialchars($label),'</label></span>';
-                $i++;
-            }
-            break;
-        case 'menulist':
-            echo '<select',$id,$hint,$class,' size="1">';
-            $value = $this->_form->getData($ctrl->ref);
-            if(is_array($value)){
-                if(isset($value[0]))
-                    $value = $value[0];
-                else
-                    $value='';
-            }
-            if (!$ctrl->required) {
-                echo '<option value=""',($value==''?' selected="selected"':''),'></option>';
-            }
+
+            echo '<select',$id,$hint,$class,' size="',$ctrl->size,'">';
             foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
                 echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
             }
             echo '</select>';
-            break;
-        case 'listbox':
-            if($ctrl->multiple){
-                echo '<select name="',$ctrl->ref,'[]" id="',$this->_name,'_',$ctrl->ref,'"',$hint,$class,' size="',$ctrl->size,'" multiple="multiple">';
-                $value = $this->_form->getData($ctrl->ref);
+        }
+    }
 
-                if(is_array($value) && count($value) == 1)
-                    $value = $value[0];
+    protected function outputTextarea($ctrl, $id, $class, $readonly, $hint) {
+        $value = $this->_form->getData($ctrl->ref);
+        $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
+        echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
+    }
 
-                if(is_array($value)){
-                    foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                        echo '<option value="',htmlspecialchars($v),'"',(in_array($v,$value)?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
-                    }
-                }else{
-                    foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                        echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
-                    }
-                }
-                echo '</select>';
-            }else{
-                $value = $this->_form->getData($ctrl->ref);
+    protected function outputHtmleditor($ctrl, $id, $class, $readonly, $hint) {
+        $engine = $GLOBALS['gJConfig']->htmleditors[$ctrl->config.'.engine.name'];
+        echo '<script type="text/javascript">
+//<![CDATA[
+jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->_name,'");
+//]]>
+</script>';
 
-                if(is_array($value)){
-                    if(count($value) >= 1)
-                        $value = $value[0];
-                    else
-                        $value ='';
-                }
+        $value = $this->_form->getData($ctrl->ref);
+        $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
+        echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
+    }
 
-                echo '<select',$id,$hint,$class,' size="',$ctrl->size,'">';
-                foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                    echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
-                }
-                echo '</select>';
-            }
-            break;
-        case 'textarea':
-            $value = $this->_form->getData($ctrl->ref);
-            $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
-            echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
-            break;
-        case 'htmleditor':
-            $engine = $GLOBALS['gJConfig']->htmleditors[$ctrl->config.'.engine.name'];
-            echo '<script type="text/javascript">
-            //<![CDATA[
-            jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->_name,'");
-            //]]>
-            </script>';
+    protected function outputSecret($ctrl, $id, $class, $readonly, $hint) {
+        $size = ($ctrl->size == 0?'': ' size="'.$ctrl->size.'"');
+        echo '<input type="password"',$id,$readonly,$hint,$class,$size,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
+    }
 
-            $value = $this->_form->getData($ctrl->ref);
-            $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
-            echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
-            break;
-        case 'secret':
-        case 'secretconfirm':
-            $size = ($ctrl->size == 0?'': ' size="'.$ctrl->size.'"');
-            echo '<input type="password"',$id,$readonly,$hint,$class,$size,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
-            break;
-        case 'output':
+    protected function outputSecretconfirm($ctrl, $id, $class, $readonly, $hint) {
+        $size = ($ctrl->size == 0?'': ' size="'.$ctrl->size.'"');
+        echo '<input type="password"',$id,$readonly,$hint,$class,$size,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
+    }
+
+    protected function outputOutput($ctrl, $id, $class, $readonly, $hint) {
             $value = $this->_form->getData($ctrl->ref);
             echo '<input type="hidden"',$id,' value="',htmlspecialchars($value),'"',$this->_endt;
             echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($value),'</span>';
-            break;
-        case 'upload':
+    }
+
+    protected function outputUpload($ctrl, $id, $class, $readonly, $hint) {
             if($ctrl->maxsize){
                 echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$ctrl->maxsize,'"',$this->_endt;
             }
             echo '<input type="file"',$id,$readonly,$hint,$class,' value=""',$this->_endt; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
-            break;
-        case 'submit':
+
+    }
+
+    protected function outputSubmit($ctrl, $id, $class, $readonly, $hint) {
             if($ctrl->standalone){
                 echo '<input type="submit"',$id,$hint,' class="jforms-submit" value="',htmlspecialchars($ctrl->label),'"/>';
             }else{
@@ -315,17 +337,19 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
                         $hint,' class="jforms-submit" value="',htmlspecialchars($label),'"/> ';
                 }
             }
-            break;
-        case 'reset':
-            echo '<button type="reset"',$id,$hint,' class="jforms-reset">',htmlspecialchars($ctrl->label),'</button>';
-            break;
-        case 'captcha':
-            $ctrl->initExpectedValue($this->_form);
-            echo '<span class="jforms-captcha-question">',htmlspecialchars($ctrl->question),'</span> ';
-            echo '<input type="text"',$id,$hint,$class,' value=""',$this->_endt;
-            break;
-        }
+    }
 
+    protected function outputReset($ctrl, $id, $class, $readonly, $hint) {
+        echo '<button type="reset"',$id,$hint,' class="jforms-reset">',htmlspecialchars($ctrl->label),'</button>';
+    }
+
+    protected function outputCaptcha($ctrl, $id, $class, $readonly, $hint) {
+        $ctrl->initExpectedValue($this->_form);
+        echo '<span class="jforms-captcha-question">',htmlspecialchars($ctrl->question),'</span> ';
+        echo '<input type="text"',$id,$hint,$class,' value=""',$this->_endt;
+    }
+
+    protected function outputHelp($ctrl) {
         if ($ctrl->hasHelp) {
             if($ctrl->type == 'checkboxes' || ($ctrl->type == 'listbox' && $ctrl->multiple)){
                 $name=$ctrl->ref.'[]';

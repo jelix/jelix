@@ -358,7 +358,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_choixsimple" title="ceci est un tooltip">Votre choix</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" readonly="readonly" title="ceci est un tooltip" size="1">';
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" title="ceci est un tooltip" size="1">';
         $result.='<option value=""></option>';
         $result.='<option value="10">foo</option>';
         $result.='<option value="11" selected="selected">bar</option>';
@@ -369,7 +369,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl->required = true;
         $this->form->setData('choixsimple',"23");
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" readonly="readonly" title="ceci est un tooltip" size="1">';
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" title="ceci est un tooltip" size="1">';
         $result.='<option value="10">foo</option>';
         $result.='<option value="11">bar</option>';
         $result.='<option value="23" selected="selected">baz</option>';
@@ -379,7 +379,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $ctrl->required = false;
         $this->form->setData('choixsimple',"");
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" readonly="readonly" title="ceci est un tooltip" size="1">';
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" title="ceci est un tooltip" size="1">';
         $result.='<option value="" selected="selected"></option>';
         $result.='<option value="10">foo</option>';
         $result.='<option value="11">bar</option>';
@@ -479,7 +479,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_choixsimple">Votre choix</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" readonly="readonly" size="4">';
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="4">';
         $result.='<option value="10">foo</option>';
         $result.='<option value="11">bar</option>';
         $result.='<option value="23" selected="selected">baz</option>';
@@ -839,18 +839,18 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
-            //<![CDATA[
-            jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
-            //]]>
-            </script><textarea name="contenu" id="'.$this->formname.'_contenu" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
+//<![CDATA[
+jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
+//]]>
+</script><textarea name="contenu" id="'.$this->formname.'_contenu" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
         $ctrl->readonly=true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
-            //<![CDATA[
-            jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
-            //]]>
-            </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
+//<![CDATA[
+jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
+//]]>
+</script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
@@ -858,26 +858,26 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
-            //<![CDATA[
-            jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
-            //]]>
-            </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
+//<![CDATA[
+jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
+//]]>
+</script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
         $ctrl->rows=20;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
-            //<![CDATA[
-            jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
-            //]]>
-            </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="20" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
+//<![CDATA[
+jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
+//]]>
+</script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="20" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
         $ctrl->cols=60;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<script type="text/javascript">
-            //<![CDATA[
-            jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
-            //]]>
-            </script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="20" cols="60">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
+//<![CDATA[
+jelix_wymeditor_default("'.$this->formname.'_contenu","jform1");
+//]]>
+</script><textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" rows="20" cols="60">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
 
     }
 }
