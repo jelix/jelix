@@ -175,7 +175,8 @@ cd lib/jelix/docs/ns
   plugin.rng
   project.rng
   urls.rng
-  jforms.rng
+  jforms_1.0.rng
+  jforms_1.1.rng
 
 cd lib/jelix-www/xul/test/
   testxulform.php

@@ -16,7 +16,9 @@
  */
 class htmlJformsCompiler implements jIFormsBuilderCompiler {
 
-    public function __construct() {
+    public function __construct($mainCompiler) {
+        // nothing to do here. The two available main format of jforms are compatible here for javascript generation.
+
     }
 
     public function startCompile() {

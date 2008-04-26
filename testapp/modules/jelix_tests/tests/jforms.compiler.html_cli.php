@@ -11,24 +11,47 @@
 */
 
 require_once(JELIX_LIB_PATH.'forms/jFormsCompiler.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsCompiler_jf_1_0.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsCompiler_jf_1_1.class.php');
 require_once(JELIX_LIB_PATH.'forms/jFormsControl.class.php');
 require_once(JELIX_LIB_PATH.'forms/jFormsDatasource.class.php');
 require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 require_once(JELIX_LIB_PATH.'plugins/jforms/html/html.jformscompiler.php');
 
-class testJFormsCompiler extends jFormsCompiler {
 
-   protected $sourceFile = 'myfile';
 
-   public function testPhpForm($doc){
+class testJFormsCompiler10 extends jFormsCompiler_jf_1_0 {
+
+    public function __construct() {
+        parent::__construct('myfile');
+    }
+
+    public function testPhpForm($doc){
         $dummysrc = $dummyBuilders = $dummyCompilers = array();
-        return $this->generatePHPContent($doc, $dummysrc, $dummyBuilders, $dummyCompilers);
-   }
+        return $this->compile($doc, $dummysrc, $dummyBuilders, $dummyCompilers);
+    }
 
-   public function testPhpControl($controltype, $control){
+    public function testPhpControl($controltype, $control){
         return $this->generatePHPControl($controltype, $control);
-   }
+    }
 }
+
+class testJFormsCompiler11 extends jFormsCompiler_jf_1_1 {
+
+    public function __construct() {
+        parent::__construct('myfile');
+    }
+
+    public function testPhpForm($doc){
+        $dummysrc = $dummyBuilders = $dummyCompilers = array();
+        return $this->compile($doc, $dummysrc, $dummyBuilders, $dummyCompilers);
+    }
+
+    public function testPhpControl($controltype, $control){
+        return $this->generatePHPControl($controltype, $control);
+    }
+}
+
 
 class testHtmlJformsCompiler extends htmlJformsCompiler {
    public function testControl($controltype, $control){
@@ -286,52 +309,52 @@ class UTjformsCompiler extends jUnitTestCase {
 67=>'<reset ref="annulation" xmlns="http://jelix.org/ns/forms/1.0">
     <label>type annulation</label>
 </reset>',
-68=>'<hidden ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+68=>'<hidden ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
 </hidden>',
-69=>'<input ref="nom" type="html" xmlns="http://jelix.org/ns/forms/1.0">
+69=>'<input ref="nom" type="html" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
 </input>',
-70=>'<textarea ref="nom" type="html" xmlns="http://jelix.org/ns/forms/1.0">
+70=>'<textarea ref="nom" type="html" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
 </textarea>',
-71=>'<captcha ref="cap" xmlns="http://jelix.org/ns/forms/1.0">
+71=>'<captcha ref="cap" xmlns="http://jelix.org/ns/forms/1.1">
     <label>captcha</label>
 </captcha>',
-72=>'<htmleditor ref="contenu" xmlns="http://jelix.org/ns/forms/1.0">
+72=>'<htmleditor ref="contenu" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Texte</label>
 </htmleditor>',
-73=>'<htmleditor ref="contenu" config="simple" xmlns="http://jelix.org/ns/forms/1.0">
+73=>'<htmleditor ref="contenu" config="simple" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Texte</label>
 </htmleditor>',
-74=>'<checkboxes ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+74=>'<checkboxes ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
     <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop"/>
 </checkboxes>',
-75=>'<radiobuttons ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+75=>'<radiobuttons ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
     <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop"/>
 </radiobuttons>',
-76=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+76=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
     <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop"/>
 </listbox>',
-77=>'<menulist ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+77=>'<menulist ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
     <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop"/>
 </menulist>',
-78=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="true">
+78=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1" multiple="true">
     <label>Votre nom</label>
     <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop"/>
 </listbox>',
-79=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+79=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
     <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop" criteria="toto"/>
 </listbox>',
-80=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" multiple="true">
+80=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1" multiple="true">
     <label>Votre nom</label>
     <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop" criteriafrom="prenom"/>
 </listbox>',
-81=>'<menulist ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
+81=>'<menulist ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
     <datasource class="jelix_tests~mydatasource"/>
 </menulist>',
@@ -1181,8 +1204,9 @@ $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jel
 $js.="jForms.tForm.addControl( jForms.tControl);\n";',
     );
 
-    function testPhpControl(){
-        $jfc = new testJFormsCompiler();
+    function testPhpControl10(){
+        $jfc10 = new testJFormsCompiler10();
+        $jfc11 = new testJFormsCompiler11();
 
         foreach($this->_XmlControls as $k=>$control){
             $dom = new DOMDocument;
@@ -1190,15 +1214,19 @@ $js.="jForms.tForm.addControl( jForms.tControl);\n";',
                 $this->fail("Can't load xml test content ($k)");
             }else{
                 // getName() in simplexml doesn't exists in prior version of php 5.1.3, so we use a DOM
-                $ct = $jfc->testPhpControl($dom->documentElement->localName, simplexml_import_dom($dom));
+
+                if($dom->documentElement->namespaceURI == JELIX_NAMESPACE_BASE.'forms/1.0')
+                    $ct = $jfc10->testPhpControl($dom->documentElement->localName, simplexml_import_dom($dom));
+                else
+                    $ct = $jfc11->testPhpControl($dom->documentElement->localName, simplexml_import_dom($dom));
+
                 $this->assertEqualOrDiff($this->_PhpControls[$k],$ct, "test $k failed" );
             }
         }
     }
 
-
     function testJsControl(){
-        $jfc = new testHtmlJformsCompiler();
+        $jfc = new testHtmlJformsCompiler(new testJFormsCompiler10());
 
         foreach($this->_XmlControls as $k=>$control){
             $dom = new DOMDocument;
@@ -1231,6 +1259,13 @@ array('ref','input','myfile')
 ),
 array(
 '<textarea ref="nom" type="boolean" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+</textarea>',
+'jelix~formserr.attribute.not.allowed',
+array('type','textarea','myfile')
+),
+array(
+'<textarea ref="nom" type="boolean" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
 </textarea>',
 'jelix~formserr.datatype.unknow',
@@ -1351,7 +1386,8 @@ array('','','myfile')
 
 
     function testBadControl(){
-        $jfc = new testJFormsCompiler();
+        $jfc10 = new testJFormsCompiler10();
+        $jfc11 = new testJFormsCompiler11();
 
         foreach($this->_BadXmlControls as $k=>$control){
             $dom = new DOMDocument;
@@ -1360,7 +1396,11 @@ array('','','myfile')
             }else{
                 try {
                     // getName() in simplexml doesn't exists in prior version of php 5.1.3, so we use a DOM
-                    $ct = $jfc->testPhpControl($dom->documentElement->localName, simplexml_import_dom($dom));
+                    if($dom->documentElement->namespaceURI == JELIX_NAMESPACE_BASE.'forms/1.0')
+                        $ct = $jfc10->testPhpControl($dom->documentElement->localName, simplexml_import_dom($dom));
+                    else
+                        $ct = $jfc11->testPhpControl($dom->documentElement->localName, simplexml_import_dom($dom));
+
                     $this->fail("no exception during bad xml test content $k");
                 }catch(jException $e){
                     $this->assertEqualOrDiff($control[1], $e->getLocaleKey(),"%s ($k)");
@@ -1374,15 +1414,6 @@ array('','','myfile')
 
 
     protected $_BadXmlForms = array(
-array(
-'<forms>
-  <input ref="nom">
-    <label>Votre nom</label>
-  </input>
-</forms>',
-'jelix~formserr.namespace.wrong',
-array('myfile')
-),
 array(
 '<forms xmlns="http://jelix.org/ns/forms/1.0">
   <reset ref="reset1">
@@ -1399,7 +1430,7 @@ array( 'reset','myfile')
 
 
     function testBadForm() {
-        $jfc = new testJFormsCompiler();
+        $jfc = new testJFormsCompiler10();
 
         foreach($this->_BadXmlForms as $k=>$form){
             $dom = new DOMDocument;

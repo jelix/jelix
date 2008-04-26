@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<forms xmlns="http://jelix.org/ns/forms/1.0">
+<forms xmlns="http://jelix.org/ns/forms/1.1">
 
    <hidden ref="hiddenvalue" defaultvalue="my hidden value"/>
 
@@ -29,7 +29,8 @@
       <alert type="required">Vous devez indiquer le sexe, même si vous ne savez pas :-)</alert>
   </radiobuttons>
 
-  <menulist ref="conf" dao="testapp~config" daomethod="findAll" daolabelproperty="cvalue" daovalueproperty="ckey">
+  <menulist ref="conf" >
+      <datasource dao="testapp~config" method="findAll" labelproperty="cvalue" valueproperty="ckey" />
       <label>Selectionnez une des valeurs</label>
   </menulist>
 

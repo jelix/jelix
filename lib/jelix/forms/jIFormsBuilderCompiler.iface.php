@@ -10,7 +10,7 @@
 */
 interface jIFormsBuilderCompiler {
 
-    public function __construct();
+    public function __construct($mainCompiler);
 
     public function startCompile();
 
