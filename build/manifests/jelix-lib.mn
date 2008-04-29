@@ -72,6 +72,7 @@ cd lib/jelix/core/response
   jResponseLatexToPdf.class.php
   jResponseTcpdf.class.php
   jResponseSoap.class.php
+  jResponseHtmlFragment.class.php
 
 cd lib/jelix/core-modules/jelix
   module.xml
