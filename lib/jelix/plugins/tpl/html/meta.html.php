@@ -3,8 +3,8 @@
 * @package      jelix
 * @subpackage   jtpl_plugin
 * @author       Jouanneau Laurent
-* @contributor  Yann (description and keywords), Dominique Papin (ie7 support)
-* @copyright    2005-2006 Jouanneau laurent, 2007 Dominique Papin
+* @contributor  Yann (description and keywords), Dominique Papin (ie7 support), Mickaël Fradin (style)
+* @copyright    2005-2006 Jouanneau laurent, 2007 Dominique Papin, 2008 Mickaël Fradin
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -57,6 +57,13 @@ function jtpl_meta_html_html($tpl, $method, $param)
             break;
         case 'cssthemeltie7':
             $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,array(),'lt IE 7');
+            break;
+        case 'style':
+            if(is_array($param)){
+                foreach($param as $p1=>$p2){
+                    $gJCoord->response->addStyle($p1,$p2);
+                }
+            }
             break;
         case 'bodyattr':
             if(is_array($param)){

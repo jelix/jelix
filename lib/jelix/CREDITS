@@ -91,6 +91,7 @@ F. Fernandez (aka e-media)
 
 Mickaël Fradin (aka mike)
  - improvements in the jtpl plugin: formcontrols (#223)
+ - added style feature in the meta_html plugin (#553)
 
 Olivier Gambier (aka d-m-p)
  - code reviewer, bug fixes
