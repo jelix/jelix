@@ -47,7 +47,11 @@ class UTjlocale extends jUnitTestCase {
         'test_D.properties' => '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>',
         'test_E.properties' => '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>',
         'test_F.properties' => '<array><string key="module.description" value="Tests unitaires jelix" /></array>',
-        'test_G.properties' => '<array><string key="module.description" value="Tests unitaires jelix" /><string key="ooo" value="bbbb" /></array>',
+        'test_G.properties' => '<array><string key="module.description" value="Tests unitaires jelix" />
+                                    <string key="ooo" value="bbbb" />
+                                    <string key="bbb" value=" " />
+                                    <string key="ddd" value="lorem ipsum &amp;#65; &lt;html&gt; &amp;quote; test &amp;gt;" />
+                                </array>',
         'test_H.properties' => '<array><string key="module.description" value="Tests unitaires # jelix" /><string key="ooo" value="bbbb" /></array>',
         'test_I.properties' => '<array><string key="module.description" value="Tests unitaires # jelix" /><string key="ooo" value="bbbb" /></array>',
         );
