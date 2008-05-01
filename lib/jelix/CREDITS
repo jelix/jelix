@@ -64,6 +64,7 @@ Christophe Thiriot (aka Doubleface)
  - testor
  - bug fixes on PDO support in jDb
  - fixed minor bugs
+ - implementation of "live" exit in command line (#406)
 
 
 Contributors

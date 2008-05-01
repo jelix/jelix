@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  junittests
 * @author      Jouanneau Laurent
-* @contributor 
+* @contributor Thiriot Christophe
 * @copyright   2008 Jouanneau laurent
+* @copyright   2008 Thiriot Christophe
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -37,10 +38,10 @@ class defaultCtrl extends jControllerCmdLine {
     protected function _prepareResponse(){
         $rep = $this->getResponse();
 
-        $rep->content = '
+        $rep->addContent('
 Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION.'
 ===========================================================================
-';
+');
 
         foreach($GLOBALS['gJConfig']->_modulesPathList as $module=>$path){
             if(file_exists($path.'tests/')){
@@ -63,7 +64,6 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
     }
 
     protected function _finishResponse($rep){
-
         return $rep;
     }
 
@@ -74,14 +74,14 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
         $rep = $this->_prepareResponse();
         if(count($this->testsList)){
             foreach($this->testsList as $module=>$tests) {
-                $rep->content.= 'module "'.$module."\":\n";
+                $rep->addContent('module "'.$module."\":\n", true);
                 foreach($tests as $test){
-                    $rep->content.= "\t".$test[2]."\t(".$test[1].")\n";
+                    $rep->addContent("\t".$test[2]."\t(".$test[1].")\n", true);
                 }
             }
         }
         else {
-            $rep->content.='No availabled tests';
+            $rep->addContent('No availabled tests');
         }
         return $this->_finishResponse($rep);
     }
@@ -101,7 +101,8 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
             foreach($this->testsList[$module] as $test){
                 $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
             }
-            $group->run($reporter);
+            $result = $group->run($reporter);
+            if (!$result) $rep->setExitCode(jResponseCmdline::EXIT_CODE_ERROR);
             jContext::pop();
         }
         return $this->_finishResponse($rep);
@@ -124,7 +125,8 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
                 $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
             }
             jContext::push($module);
-            $group->run($reporter);
+            $result = $group->run($reporter);
+            if (!$result) $rep->setExitStatus(jResponseCmdline::EXIT_CODE_ERROR);
             jContext::pop();
         }
         return $this->_finishResponse($rep);
@@ -148,13 +150,14 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
                     $group = new GroupTest('"'.$module. '" module , '.$test[2]);
                     $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
                     jContext::push($module);
-                    $group->run($reporter);
+                    $result = $group->run($reporter);
+                    if (!$result) $rep->setExitStatus(jResponseCmdline::EXIT_CODE_ERROR);
                     jContext::pop();
                     break;
                 }
             }
         }else
-            $rep->content.= "\n" . 'no tests for "'.$module.'" module.' . "\n";
+            $rep->addContent("\n" . 'no tests for "'.$module.'" module.' . "\n");
         return $this->_finishResponse($rep);
     }
 }

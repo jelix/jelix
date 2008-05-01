@@ -57,6 +57,7 @@ cd lib/jelix/core/response
   jResponseRedirect.class.php
   jResponseRedirectUrl.class.php
   jResponseText.class.php
+  jResponseCmdline.class.php
   jResponseXmlrpc.class.php
   jResponseXul.class.php
   jResponseXulOverlay.class.php

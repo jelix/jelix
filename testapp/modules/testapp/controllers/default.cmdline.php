@@ -20,7 +20,7 @@ class defaultCtrl extends jControllerCmdLine {
     */
     function index() {
         $rep = $this->getResponse();
-        $rep->content = "Hello, it works !";
+        $rep->addContent("Hello, it works !");
         return $rep;
     }
 }

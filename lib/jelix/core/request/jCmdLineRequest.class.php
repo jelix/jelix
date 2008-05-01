@@ -5,8 +5,10 @@
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
 * @contributor Thibault PIRONT < nuKs >
+* @contributor Thiriot Christophe
 * @copyright   2005-2006 Laurent Jouanneau, 2006-2007 Loic Mathaud
 * @copyright   2007 Thibault PIRONT
+* @copyright   2008 Thiriot Christophe
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -20,7 +22,11 @@ class jCmdLineRequest extends jRequest {
 
     public $type = 'cmdline';
 
-    public $defaultResponseType = 'text';
+    public $defaultResponseType = 'cmdline';
+
+    public function allowedResponses(){
+        return array('jResponseCmdline');
+    }
 
     protected function _initUrlData(){ 
         global $gJConfig; 
