@@ -131,7 +131,7 @@ abstract class jFormsBase {
         $req = $GLOBALS['gJCoord']->request;
         $this->_modifiedControls=array();
         foreach($this->_controls as $name=>$ctrl){
-            if(!$this->_container->isActivated($name))
+            if(!$this->_container->isActivated($name) || $ctrl->readonly)
                 continue;
             $value = $req->getParam($name);
 
