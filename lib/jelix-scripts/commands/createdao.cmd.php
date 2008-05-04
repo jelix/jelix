@@ -152,6 +152,11 @@ class createdaoCommand extends JelixScriptCommand {
             }
 
          }
+
+         if($primarykeys == '') {
+            throw new Exception("The table has no primary keys. A dao needs a primary key on the table to be defined.");
+         }
+
          $param['properties']=$properties;
          $param['primarykeys']=$primarykeys;
          $this->createFile($filename,'dao.xml.tpl',$param);
@@ -159,5 +164,3 @@ class createdaoCommand extends JelixScriptCommand {
     }
 }
 
-
-?>

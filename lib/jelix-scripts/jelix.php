@@ -105,6 +105,12 @@ list($options,$parameters) = jxs_getOptionsAndParams($argv,$command->allowed_opt
 //--------- launch the command now
 $command->init($options,$parameters);
 
-$command->run();
+try {
+    $command->run();
+}catch(Exception $e) {
+    echo "Error: ".$e->getMessage(),"\n";
+    exit(1);
+}
 
-?>
+exit(0);
+
