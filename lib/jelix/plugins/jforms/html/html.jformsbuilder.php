@@ -46,7 +46,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
     public function outputMetaContent($t) {
         global $gJCoord, $gJConfig;
         $resp= $gJCoord->response;
-        if($resp === null){
+        if($resp === null || $resp->getType() !='html'){
             return;
         }
         $www =$gJConfig->urlengine['jelixWWWPath'];

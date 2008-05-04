@@ -45,48 +45,47 @@
  * @param array $params parameters for the url
  */
 function jtpl_block_html_swfjs($compiler, $begin, $params) {
-    
+
     if($begin) {
-        
+
         $meta  = '
-		global $gJCoord, $gJConfig;
-		if( isset($gJCoord->response) ) {
-	        $src = '.$params[0].';
-	        $options = '.$params[1].';
-	        $params = '.$params[2].';
-	        $flashvar = '.$params[3].';
-	
-	        $script = \'$(function(){\'."\n";
-	        $script .= "        ".\'$("#\'.$options[\'id\'].\'").flash({\'."\n";
-	        if( !empty($options[\'width\']) )
-	            $script .= "            ".\'width:"\'.$options[\'width\'].\'",\'."\n";
-	        if( !empty($options[\'height\']) )
-	            $script .= "            ".\'height:"\'.$options[\'height\'].\'",\'."\n";
-	        if( count($params) ) foreach($params as $key => $val)
-	            $script .= "            ".$key.\':"\'.$val.\'", \'."\r";
-	        $script .= "            ".\'src:"\'.$t->_vars[\'j_basepath\'].$src.\'"\'."\n";
-	        $script .= "        ".\'}, {\'."\n";
-	        if( !empty($options[\'version\']) )
-	            $script .= "            ".\'version:\'.$options[\'version\'].\',\'."\n";
-	        if( !empty($options[\'detect\']) )
-	            $script .= "            ".\'expressInstall:\'.$options[\'detect\'].\'\'."\n";
-	        $script .= "        ".\'}, function(htmlOptions) {\'."\n";
-	        if( count($flashvar) ) foreach($flashvar as $key => $val)
-	            $script .= "            ".\'htmlOptions.flashvars.\'.$key.\' = "\'.$val.\'";\'."\n";
-	        $script .= "            ".\'$(this).children().remove();\'."\n";
-	        $script .= "            ".\'$(this).prepend($.fn.flash.transform(htmlOptions));\'."\n";
-	        $script .= "        ".\'});\'."\n";
-	        $script .= "    ".\'});\'."\n";
-	
-	        
-	        $gJCoord->response->addJSLink($gJConfig->urlengine[\'jelixWWWPath\'].\'jquery/jquery.js\');
-	        $gJCoord->response->addJSLink($gJConfig->urlengine[\'jelixWWWPath\'].\'jquery/flash/jquery.flash.js\');
-	        $gJCoord->response->addJSCode($script);
-		}
+        global $gJCoord, $gJConfig;
+        if( isset($gJCoord->response) && $gJCoord->response->getType() ==\'html\') {
+            $src = '.$params[0].';
+            $options = '.$params[1].';
+            $params = '.$params[2].';
+            $flashvar = '.$params[3].';
+
+            $script = \'$(function(){\'."\n";
+            $script .= "        ".\'$("#\'.$options[\'id\'].\'").flash({\'."\n";
+            if( !empty($options[\'width\']) )
+                $script .= "            ".\'width:"\'.$options[\'width\'].\'",\'."\n";
+            if( !empty($options[\'height\']) )
+                $script .= "            ".\'height:"\'.$options[\'height\'].\'",\'."\n";
+            if( count($params) ) foreach($params as $key => $val)
+                $script .= "            ".$key.\':"\'.$val.\'", \'."\r";
+            $script .= "            ".\'src:"\'.$t->_vars[\'j_basepath\'].$src.\'"\'."\n";
+            $script .= "        ".\'}, {\'."\n";
+            if( !empty($options[\'version\']) )
+                $script .= "            ".\'version:\'.$options[\'version\'].\',\'."\n";
+            if( !empty($options[\'detect\']) )
+                $script .= "            ".\'expressInstall:\'.$options[\'detect\'].\'\'."\n";
+            $script .= "        ".\'}, function(htmlOptions) {\'."\n";
+            if( count($flashvar) ) foreach($flashvar as $key => $val)
+                $script .= "            ".\'htmlOptions.flashvars.\'.$key.\' = "\'.$val.\'";\'."\n";
+            $script .= "            ".\'$(this).children().remove();\'."\n";
+            $script .= "            ".\'$(this).prepend($.fn.flash.transform(htmlOptions));\'."\n";
+            $script .= "        ".\'});\'."\n";
+            $script .= "    ".\'});\'."\n";
+
+            $gJCoord->response->addJSLink($gJConfig->urlengine[\'jelixWWWPath\'].\'jquery/jquery.js\');
+            $gJCoord->response->addJSLink($gJConfig->urlengine[\'jelixWWWPath\'].\'jquery/flash/jquery.flash.js\');
+            $gJCoord->response->addJSCode($script);
+        }
         ';
-		
+
         $compiler->addMetaContent($meta);
-        
+
         $sortie  = '
         $options = '.$params[1].';
 
@@ -96,14 +95,14 @@ function jtpl_block_html_swfjs($compiler, $begin, $params) {
         foreach( $atts as $key => $val ) if( !empty($val) )
             $att .= \' \'.$key.\'="\'.$val.\'"\';
         echo \'<div \'.$att.\'>\';
-		';
-		
+        ';
+
         return $sortie;
-        
+
     } else {
-        
+
         return 'echo \'</div>\'';
-        
+
     }
 
 }

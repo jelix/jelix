@@ -16,9 +16,9 @@
  *       array('id'=>'promo', 'width'=>150, 'height'=>90),
  *       array('quality'=>'hight', 'wmode'=>'transparent'),
  *       array('longeur'=>150)}
- * 
+ *
  * Render :
- * 
+ *
  * <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
  *         codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0"
  *         width="150" height="90">
@@ -29,7 +29,7 @@
  *            quality="high" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer"
  *            type="application/x-shockwave-flash" width="150" height="90"/>
  * </object>
- * 
+ *
  * $params[0] url of the swf
  * $params[1]['id'] id of <object .../>
  * $params[1]['class'] class of <object .../>
@@ -42,7 +42,7 @@
  * @param array $params parameters for the url
  */
 function jtpl_cfunction_html_swfbiscuit($tpl, $params) {
-    
+
     $sortie  = '
         $src = '.$params[0].';
         $options = '.$params[1].';
@@ -72,8 +72,7 @@ function jtpl_cfunction_html_swfbiscuit($tpl, $params) {
             echo \'&\'.$key.\'=\'.$val."\n";
         echo \'" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="\'.$options[\'width\'].\'" height="\'.$options[\'height\'].\'"></embed>\';
         echo \'</object>\';
-		';
+        ';
     return $sortie;
-
 }
 ?>

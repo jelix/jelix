@@ -44,9 +44,8 @@
  * @param array $params parameters for the url
  */
 function jtpl_block_html_swf($compiler, $begin, $params) {
-    
+
     if($begin) {
-        
         $sortie  = '
         $src = '.$params[0].';
         $options = '.$params[1].';
@@ -67,14 +66,10 @@ function jtpl_block_html_swf($compiler, $begin, $params) {
         echo "    ";
         if( count($params) ) foreach($params as $key => $val)
             echo \'<param name="\'.$key.\'" value="\'.$val.\'" />\'."\n";
-	    ';
+        ';
         return $sortie;
-        
     } else {
-        
         return 'echo \'</object>\';';
-        
     }
-
 }
 ?>
