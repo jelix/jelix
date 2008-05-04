@@ -3,7 +3,9 @@
  * @package    jelix
  * @subpackage utils
  * @author     Laurent Jouanneau
+ * @contributor Julien Issler
  * @copyright  2006 Laurent Jouanneau
+ * @copyright 2008 Julien Issler
  * @link       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -88,7 +90,7 @@ class jZipCreator {
 
         // converts unix timestamp to dos binary format
         if($filetime == 0)
-            $filetime = mktime();
+            $filetime = time();
         elseif($filetime < 315529200) // 01/01/1980
             $filetime = 315529200;
 
@@ -155,7 +157,8 @@ class jZipCreator {
            - file comment (variable size)
         */
         $cdrecord = "\x50\x4b\x01\x02\x00\x00\x14\x00\x00\x00\x08\x00".$fileinfo;
-        $cdrecord .= "\x00\x00\x00\x00\x00\x00\x32\x00\x00\x00";
+        $cdrecord .= "\x00\x00\x00\x00\x00\x00";
+        $cdrecord .= pack('V', 32);
         $cdrecord .= pack('V', $this ->centralDirOffset );
         $cdrecord .= $zipFileName;
 

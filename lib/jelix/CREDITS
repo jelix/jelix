@@ -18,6 +18,7 @@ Julien Issler
  - some enhancement in jSession (#445, #504, #506)
  - localization system should work with language code without country (#95)
  - jForms html shouldn't generate readonly attribute on select (#550)
+ - jResponseZip : on windows files are view like folders (#538)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
