@@ -155,7 +155,7 @@ class jResponseXul extends jResponse {
             if(count($GLOBALS['gJCoord']->logMessages['firebug'])) {
                 echo '<script type="text/javascript">if(console){';
                 foreach($GLOBALS['gJCoord']->logMessages['firebug'] as $m) {
-                    echo 'console.debug("',str_replace(array('\\','"',"\n","\r","\t"),array('\\\\','\"','\\n','\\r','\\t'),$m),'");';
+                    echo 'console.debug("',str_replace(array('"',"\n","\r","\t"),array('\"','\\n','\\r','\\t'),$m),'");';
                 }
                 echo '}else{alert("there are log messages, you should activate Firebug to see them");}</script>';
             }
