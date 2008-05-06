@@ -161,7 +161,6 @@ class UTjtplexpr extends jUnitTestCase {
         '@aaa.b,bb@'=>array('jelix~errors.tpl.tag.character.invalid',array('',',','')),
         '@@'=>array('jelix~errors.tpl.tag.locale.invalid',array('','')),
         '[$aa/234]'=>array('jelix~errors.tpl.tag.character.invalid',array('','[','')),
-        '($aa/234)'=>array('jelix~errors.tpl.tag.character.invalid',array('','(','')),
         '$b+($aa/234'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
         '$b+(($aa/234)'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
         '$aa/234)'=>array('jelix~errors.tpl.tag.bracket.error',array('','')),
