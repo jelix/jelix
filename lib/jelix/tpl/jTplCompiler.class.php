@@ -189,7 +189,13 @@ class jTplCompiler
 
         $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', $tplcontent);
 
+#if PHP50 || PHP51
+        // there is a @ because an exception in the callback function generates a warning in PHP 5.1.2
+        // (not in PHP 5.2)
+        $tplcontent = @preg_replace_callback("/{((.).*?)}/sm", array($this,'_callback'), $tplcontent);
+#else
         $tplcontent = preg_replace_callback("/{((.).*?)}/sm", array($this,'_callback'), $tplcontent);
+#endif
 
         $tplcontent = preg_replace('/\?>\n?<\?php/', '', $tplcontent);
         $tplcontent = preg_replace('/<\?php\\s+\?>/', '', $tplcontent);
