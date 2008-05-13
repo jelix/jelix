@@ -38,6 +38,7 @@ cd lib/jelix/core
 * jConfigCompiler.class.php
   jInstallChecker.class.php
   jSoapCoordinator.class.php
+  jCmdlineCoordinator.class.php
 
 cd lib/jelix/core/request
   jClassicRequest.class.php

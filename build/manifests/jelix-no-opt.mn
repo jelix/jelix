@@ -3,7 +3,6 @@ cd lib/jelix/core
   jContext.class.php
 * jController.class.php
 * jCoordinator.class.php
-  jCmdlineCoordinator.class.php
   jErrorHandler.lib.php
   jException.lib.php
 * jIncluder.class.php

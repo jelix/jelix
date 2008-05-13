@@ -30,9 +30,8 @@ class %%name%%Ctrl extends jControllerCmdLine {
     *
     */
     function %%method%%() {
-        $rep = $this->getResponse(); // text response by default
+        $rep = $this->getResponse(); // cmdline response by default
 
         return $rep;
     }
 }
-?>

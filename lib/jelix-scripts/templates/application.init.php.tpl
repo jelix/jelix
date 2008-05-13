@@ -18,4 +18,3 @@ define ('JELIX_APP_CONFIG_PATH',  realpath(JELIX_APP_PATH.'%%rp_conf%%').DIRECTO
 define ('JELIX_APP_WWW_PATH',     realpath(JELIX_APP_PATH.'%%rp_www%%').DIRECTORY_SEPARATOR);
 define ('JELIX_APP_CMD_PATH',     realpath(JELIX_APP_PATH.'%%rp_cmd%%').DIRECTORY_SEPARATOR);
 
-?>
