@@ -43,7 +43,7 @@ class classicwr_to_xhtml  extends WikiRendererConfig  {
 
 }
 
-// ===================================== dÃ©clarations des tags inlines
+// ===================================== déclarations des tags inlines
 
 class cwrxhtml_strong extends WikiTagXhtml {
     protected $name='strong';
@@ -159,7 +159,7 @@ class cwrxhtml_image extends WikiTagXhtml {
 
 
 
-// ===================================== dÃ©claration des diffÃ©rents bloc wiki
+// ===================================== déclaration des différents bloc wiki
 
 /**
  * traite les signes de types liste
@@ -203,7 +203,7 @@ class cwrxhtml_list extends WikiRendererBloc {
             $str.=($t{$i-1}== '#'?"</li></ol>\n":"</li></ul>\n");
          }
          $str.="</li>\n<li>";
-         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour Ãªtre sur...
+         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour être sur...
 
       }elseif( $d < 0 ){ // un niveau de plus
          $c=substr($this->_detectMatch[1],-1,1);
@@ -379,7 +379,7 @@ class cwrxhtml_blockquote extends WikiRendererBloc {
 }
 
 /**
- * traite les signes de type dÃ©finitions
+ * traite les signes de type définitions
  */
 class cwrxhtml_definition extends WikiRendererBloc {
 

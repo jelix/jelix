@@ -229,4 +229,3 @@ abstract class jRequest {
     }
 }
 
-?>

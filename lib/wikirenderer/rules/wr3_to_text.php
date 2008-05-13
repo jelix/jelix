@@ -45,7 +45,7 @@ class wr3_to_text   extends WikiRendererConfig {
 
 }
 
-// ===================================== dÃ©clarations des tags inlines
+// ===================================== déclarations des tags inlines
 
 class wr3text_strong extends WikiTag {
     public $beginTag='__';
@@ -147,7 +147,7 @@ class wr3text_footnote extends WikiTag {
    }
 }
 
-// ===================================== dÃ©claration des diffÃ©rents bloc wiki
+// ===================================== déclaration des différents bloc wiki
 
 /**
  * traite les signes de types liste
@@ -300,7 +300,7 @@ class wr3text_blockquote extends WikiRendererBloc {
 }
 
 /**
- * traite les signes de type dÃ©finitions
+ * traite les signes de type définitions
  */
 class wr3text_definition extends WikiRendererBloc {
 

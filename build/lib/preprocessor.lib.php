@@ -266,7 +266,10 @@ class jPreProcessor{
                         throw new jExceptionPreProc($filename,$nb,self::ERR_INVALID_FILENAME,$m[2] );
                     }
                     if($m[1] == 'php'){
-                        if(preg_match('/^\s*\<\?(?:php)?(.*)\?\>\s*$/sm',$source[$nb],$ms)){
+                        if(preg_match('/^\s*\<\?(?:php)?(.*)/sm',$source[$nb],$ms)){
+                            $source[$nb] = $ms[1];
+                        }
+                        if(preg_match('/(.*)\?\>\s*$/sm',$source[$nb],$ms)){
                             $source[$nb] = $ms[1];
                         }
                     }
