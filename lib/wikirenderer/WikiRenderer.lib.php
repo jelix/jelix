@@ -58,15 +58,24 @@ abstract class WikiTag {
     public $beginTag='';
     public $endTag='';
     public $isTextLineTag=false;
+    /**
+     * list of possible separators
+     */
     public $separators=array();
 
     protected $attribute=array();
     protected $checkWikiWordIn=array();
     protected $contents=array('');
+    /**
+     * wiki content of each part of the tag
+     */
     protected $wikiContentArr = array('');
+    /**
+     * wiki content of the full tag
+     */
     protected $wikiContent='';
     protected $separatorCount=0;
-    protected $separator=false;
+    protected $currentSeparator=false;
     protected $checkWikiWordFunction=false;
     protected $config = null;
 
@@ -77,7 +86,7 @@ abstract class WikiTag {
         $this->config = $config;
         $this->checkWikiWordFunction=$config->checkWikiWordFunction;
         if($config->checkWikiWordFunction === null) $this->checkWikiWordIn=array();
-        if(count($this->separators)) $this->separator= $this->separators[0];
+        if(count($this->separators)) $this->currentSeparator = $this->separators[0];
     }
 
     /**
@@ -85,7 +94,7 @@ abstract class WikiTag {
     * @param string $wikiContent   the original content in wiki syntax if $parsedContent is given, or a simple string if not
     * @param string $parsedContent the content already parsed (by an other wikitag object), when this wikitag contents other wikitags
     */
-    public final function addContent($wikiContent, $parsedContent=false){
+    public function addContent($wikiContent, $parsedContent=false){
         if($parsedContent === false){
             $parsedContent =$this->_doEscape($wikiContent);
             if(count( $this->checkWikiWordIn)
@@ -101,26 +110,26 @@ abstract class WikiTag {
     /**
     * called by the inline parser, when it found a separator
     */
-    public final function addseparator(){
+    public function addSeparator($token){
         $this->wikiContent.= $this->wikiContentArr[$this->separatorCount];
         $this->separatorCount++;
         if($this->separatorCount> count($this->separators))
-            $this->separator = end($this->separators);
+            $this->currentSeparator = end($this->separators);
         else
-            $this->separator = $this->separators[$this->separatorCount-1];
-        $this->wikiContent.= $this->separator;
+            $this->currentSeparator = $this->separators[$this->separatorCount-1];
+        $this->wikiContent.= $this->currentSeparator;
         $this->contents[$this->separatorCount]='';
         $this->wikiContentArr[$this->separatorCount]='';
     }
 
     /**
-    * return the separator used by this tag.
+    * says if the given token is the current separator of the tag.
     *
     * The tag can support many separator
     * @return string the separator
     */
-    public final function getCurrentSeparator(){
-            return $this->separator;
+    public function isCurrentSeparator($token){
+        return ($this->currentSeparator == $token);
     }
 
     /**
@@ -136,6 +145,10 @@ abstract class WikiTag {
     * @return string the content
     */
     public function getContent(){ return $this->contents[0];}
+
+    public function isOtherTagAllowed() {
+        return ($this->attribute[$this->separatorCount] == '$$');
+    }
 
     /**
     * return the generated content of the tag
@@ -214,35 +227,47 @@ class WikiInlineParser {
     protected $resultline='';
     protected $str=array();
     protected $splitPattern='';
-    protected $_separator;
+
     protected $config;
+
+    protected $textLineContainers=array();
+
     /**
     * constructor
     * @param WikiRendererConfig $config  a config object
     */
     function __construct($config ){
         $separators = array();
-        $this->escapeChar = '\\';
+        $this->escapeChar = $config->escapeChar;
         $this->config = $config;
 
         foreach($config->inlinetags as $class){
             $t = new $class($config);
             $this->listTag[$t->beginTag]=$t;
 
-            $this->splitPattern.=preg_quote($t->beginTag).')|(';
+            $this->splitPattern .= '|('.preg_quote($t->beginTag, '/').')';
             if($t->beginTag!= $t->endTag)
-                $this->splitPattern.=preg_quote($t->endTag).')|(';
+                $this->splitPattern .= '|('.preg_quote($t->endTag, '/').')';
             $separators = array_merge($separators, $t->separators);
         }
         foreach($config->simpletags as $tag=>$html){
-            $this->splitPattern.=preg_quote($tag).')|(';
-        }
-        $separators= array_unique($separators);
-        foreach($separators as $sep){
-            $this->splitPattern.=preg_quote($sep).')|(';
+            $this->splitPattern.='|('.preg_quote($tag, '/').')';
         }
 
-        $this->splitPattern = '/('.$this->splitPattern.preg_quote($this->escapeChar ).')/';
+        foreach($config->availabledTextLineContainers as $class){
+            $t = new $class($config);
+            $this->textLineContainers[$class] = $t;
+            $separators = array_merge($separators, $t->separators);
+        }
+
+        $separators= array_unique($separators);
+        foreach($separators as $sep){
+            $this->splitPattern.='|('.preg_quote($sep, '/').')';
+        }
+        if($this->escapeChar != '')
+            $this->splitPattern .='|('.preg_quote($this->escapeChar, '/').')';
+        $this->splitPattern = '/'.substr($this->splitPattern,1).'/';
+
         $this->simpletags= $config->simpletags;
     }
 
@@ -253,11 +278,10 @@ class WikiInlineParser {
     */
     public function parse($line){
         $this->error=false;
+        $firsttag = clone ($this->textLineContainers[$this->config->defaultTextLineContainer]);
 
         $this->str = preg_split($this->splitPattern,$line, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $this->end = count($this->str);
-        $l = $this->config->textLineContainer;
-        $firsttag = new $l($this->config);
 
         if($this->end > 1){
             $pos=-1;
@@ -282,25 +306,29 @@ class WikiInlineParser {
       for($i=$posstart+1; $i < $this->end; $i++){
             $t=&$this->str[$i];
             $brutContent.=$t;
-            // a t-on un antislash ?
-            if($t === $this->escapeChar){
+            // is it the escape char ?
+            if($this->escapeChar !='' && $t === $this->escapeChar){
                if($checkNextTag){
                   $t=''; // yes -> let's ignore the tag
                   $checkNextTag=false;
                }else{
-                  // if we are here, this is because the previous part was an backslash
+                  // if we are here, this is because the previous part was the escape char
                   $tag->addContent($this->escapeChar);
                   $checkNextTag=true;
                }
 
             // is this a separator ?
-            }elseif($t === $tag->getCurrentSeparator()){
-                $tag->addSeparator();
+            }elseif($tag->isCurrentSeparator($t)){
+                $tag->addSeparator($t);
 
             }elseif($checkNextTag){
                 // is there a ended tag
                 if($tag->endTag == $t && !$tag->isTextLineTag){
                     return $i;
+
+                }elseif(!$tag->isOtherTagAllowed()) {
+                    $tag->addContent($t);
+
                 // is there a tag which begin something ?
                 }elseif( isset($this->listTag[$t]) ){
                     $newtag = clone $this->listTag[$t];
@@ -489,7 +517,10 @@ abstract class WikiRendererConfig {
    */
    public $inlinetags= array();
 
-   public $textLineContainer = 'WikiTextLine';
+   public $defaultTextLineContainer = 'WikiTextLine';
+
+   public $availabledTextLineContainers = array('WikiTextLine');
+
 
    /**
    * liste des balises de type bloc reconnus par WikiRenderer.
@@ -500,6 +531,8 @@ abstract class WikiRendererConfig {
    public $simpletags = array();
 
    public $checkWikiWordFunction = null;
+
+   public $escapeChar = '\\';
 
    /**
     * Called before the wiki text parsing

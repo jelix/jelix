@@ -30,7 +30,9 @@ class classicwr_to_xhtml  extends WikiRendererConfig  {
    public $inlinetags= array( 'cwrxhtml_strong','cwrxhtml_em','cwrxhtml_code','cwrxhtml_q',
     'cwrxhtml_cite','cwrxhtml_acronym','cwrxhtml_link', 'cwrxhtml_image', 'cwrxhtml_anchor');
 
-   public $textLineContainer = 'WikiHtmlTextLine';
+   public $defaultTextLineContainer = 'WikiHtmlTextLine';
+
+   public $availabledTextLineContainers = array('WikiHtmlTextLine');
 
    /**
    * liste des balises de type bloc reconnus par WikiRenderer.
@@ -43,7 +45,7 @@ class classicwr_to_xhtml  extends WikiRendererConfig  {
 
 }
 
-// ===================================== déclarations des tags inlines
+// ===================================== dï¿½clarations des tags inlines
 
 class cwrxhtml_strong extends WikiTagXhtml {
     protected $name='strong';
@@ -159,7 +161,7 @@ class cwrxhtml_image extends WikiTagXhtml {
 
 
 
-// ===================================== déclaration des différents bloc wiki
+// ===================================== dï¿½claration des diffï¿½rents bloc wiki
 
 /**
  * traite les signes de types liste
@@ -203,7 +205,7 @@ class cwrxhtml_list extends WikiRendererBloc {
             $str.=($t{$i-1}== '#'?"</li></ol>\n":"</li></ul>\n");
          }
          $str.="</li>\n<li>";
-         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour être sur...
+         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour ï¿½tre sur...
 
       }elseif( $d < 0 ){ // un niveau de plus
          $c=substr($this->_detectMatch[1],-1,1);
@@ -379,7 +381,7 @@ class cwrxhtml_blockquote extends WikiRendererBloc {
 }
 
 /**
- * traite les signes de type définitions
+ * traite les signes de type dï¿½finitions
  */
 class cwrxhtml_definition extends WikiRendererBloc {
 

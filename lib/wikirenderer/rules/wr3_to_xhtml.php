@@ -31,7 +31,9 @@ class wr3_to_xhtml  extends WikiRendererConfig  {
     'wr3xhtml_cite','wr3xhtml_acronym','wr3xhtml_link', 'wr3xhtml_image',
     'wr3xhtml_anchor', 'wr3xhtml_footnote');
 
-   public $textLineContainer = 'WikiHtmlTextLine';
+   public $defaultTextLineContainer = 'WikiHtmlTextLine';
+
+   public $availabledTextLineContainers = array('WikiHtmlTextLine');
 
    /**
    * liste des balises de type bloc reconnus par WikiRenderer.
@@ -43,23 +45,23 @@ class wr3_to_xhtml  extends WikiRendererConfig  {
    public $simpletags = array('%%%'=>'<br />');
 
 
-   // la syntaxe wr3 contient la possibilité de mettre des notes de bas de page
-   // celles-ci seront stockées ici, avant leur incorporation à la fin du texte.
+   // la syntaxe wr3 contient la possibilitï¿½ de mettre des notes de bas de page
+   // celles-ci seront stockï¿½es ici, avant leur incorporation ï¿½ la fin du texte.
    public $footnotes = array();
    public $footnotesId='';
    public $footnotesTemplate = '<div class="footnotes"><h4>Notes</h4>%s</div>';
 
     /**
-    * methode invoquée avant le parsing
+    * methode invoquï¿½e avant le parsing
     */
    public function onStart($texte){
         $this->footnotesId = rand(0,30000);
-        $this->footnotes = array(); // on remet à zero les footnotes
+        $this->footnotes = array(); // on remet ï¿½ zero les footnotes
         return $texte;
     }
 
    /**
-    * methode invoquée aprés le parsing
+    * methode invoquï¿½e aprï¿½s le parsing
     */
     public function onParse($finalTexte){
         // on rajoute les notes de bas de pages.
@@ -71,7 +73,7 @@ class wr3_to_xhtml  extends WikiRendererConfig  {
     }
 }
 
-// ===================================== déclarations des tags inlines
+// ===================================== dï¿½clarations des tags inlines
 
 class wr3xhtml_strong extends WikiTagXhtml {
     protected $name='strong';
@@ -200,7 +202,7 @@ class wr3xhtml_footnote extends WikiTagXhtml {
    }
 }
 
-// ===================================== déclaration des différents bloc wiki
+// ===================================== dï¿½claration des diffï¿½rents bloc wiki
 
 /**
  * traite les signes de types liste
@@ -244,7 +246,7 @@ class wr3xhtml_list extends WikiRendererBloc {
             $str.=($t{$i-1}== '#'?"</li></ol>\n":"</li></ul>\n");
          }
          $str.="</li>\n<li>";
-         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour être sur...
+         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour ï¿½tre sur...
 
       }elseif( $d < 0 ){ // un niveau de plus
          $c=substr($this->_detectMatch[1],-1,1);
@@ -444,7 +446,7 @@ class wr3xhtml_blockquote extends WikiRendererBloc {
 }
 
 /**
- * traite les signes de type définitions
+ * traite les signes de type dï¿½finitions
  */
 class wr3xhtml_definition extends WikiRendererBloc {
 

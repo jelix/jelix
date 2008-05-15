@@ -30,7 +30,9 @@ class classicwr_to_wr3  extends WikiRendererConfig {
    public $inlinetags= array( 'cwrwr3_strong','cwrwr3_em','cwrwr3_code','cwrwr3_q',
     'cwrwr3_cite','cwrwr3_acronym','cwrwr3_link', 'cwrwr3_image', 'cwrwr3_anchor');
 
-   public $textLineContainer = 'WikiTextLine';
+   public $defaultTextLineContainer = 'WikiTextLine';
+
+   public $availabledTextLineContainers = array('WikiHtmlTextLine');
 
    /**
    * liste des balises de type bloc reconnus par WikiRenderer.
@@ -43,7 +45,7 @@ class classicwr_to_wr3  extends WikiRendererConfig {
 
 }
 
-// ===================================== déclarations des tags inlines
+// ===================================== dï¿½clarations des tags inlines
 
 class cwrwr3_strong extends WikiTag {
     public $beginTag='__';
@@ -155,7 +157,7 @@ class cwrwr3_image extends WikiTag {
 
 
 
-// ===================================== déclaration des différents bloc wiki
+// ===================================== dï¿½claration des diffï¿½rents bloc wiki
 
 class WrWr3Bloc extends WikiRendererBloc {
    public function getRenderedLine(){
@@ -239,7 +241,7 @@ class cwrwr3_blockquote extends WrWr3Bloc {
 }
 
 /**
- * traite les signes de type définitions
+ * traite les signes de type dï¿½finitions
  */
 class cwrwr3_definition extends WrWr3Bloc {
 

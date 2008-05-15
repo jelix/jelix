@@ -31,7 +31,9 @@ class wr3_to_text   extends WikiRendererConfig {
     'wr3text_cite','wr3text_acronym','wr3text_link', 'wr3text_image', 'wr3text_anchor',
     'wr3text_footnote');
 
-   public $textLineContainer = 'WikiTextLine';
+   public $defaultTextLineContainer = 'WikiTextLine';
+
+   public $availabledTextLineContainers = array('WikiTextLine');
 
    /**
    * liste des balises de type bloc reconnus par WikiRenderer.
@@ -45,7 +47,7 @@ class wr3_to_text   extends WikiRendererConfig {
 
 }
 
-// ===================================== déclarations des tags inlines
+// ===================================== dï¿½clarations des tags inlines
 
 class wr3text_strong extends WikiTag {
     public $beginTag='__';
@@ -147,7 +149,7 @@ class wr3text_footnote extends WikiTag {
    }
 }
 
-// ===================================== déclaration des différents bloc wiki
+// ===================================== dï¿½claration des diffï¿½rents bloc wiki
 
 /**
  * traite les signes de types liste
@@ -300,7 +302,7 @@ class wr3text_blockquote extends WikiRendererBloc {
 }
 
 /**
- * traite les signes de type définitions
+ * traite les signes de type dï¿½finitions
  */
 class wr3text_definition extends WikiRendererBloc {
 

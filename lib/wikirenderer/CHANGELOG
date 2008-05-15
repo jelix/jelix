@@ -1,13 +1,24 @@
-Changelog de WikiRenderer version 3.x
+Changelog of WikiRenderer
 
 Version 3.1
 
+- fixed bug: / was not allowed in patterns for inline tags
+- new property WikiTagXhtml::additionnalAttributes, so we can specify static attributes to add on an xhtml element
+- new property WikiTagXhtml::ignoreAttribute
+- escape char is now configurable
+- inline parser now takes care about attribute which don't allow wiki tags in them
+- renamed WikiRendererConfig::$textLineContainer to WikiRendererConfig::$defaultTextLineContainer
+- new property WikiRendererConfig::$availabledTextLineContainers
+- renamed WikiTag::$separator to WikiTag::$currentSeparator
+- WikiTag::addContent and WikiTag::addSeparator are no more final methods
+- WikiTag::addSeparator receive now the separator as  argument
+- renamed WikiTag::getCurrentSeparator() to WikiTag::isCurrentSeparator($token)
 
 Version 3.0
 
-- fix php5 syntax and deprecated properties
-- fix bug : error when default rule is used (wrong class name)
-- fix bug : callback function for CamelCase word was never called
+- fixed php5 syntax and deprecated properties
+- fixed bug : error when default rule is used (wrong class name)
+- fixed bug : callback function for CamelCase word was never called
 
 Version 3.0 RC1
 

@@ -678,6 +678,7 @@ cd lib/wikirenderer
   CHANGELOG
   CREDITS
   LICENCE
+  VERSION
 ! WikiRenderer.lib.php
 
 cd lib/wikirenderer/rules
@@ -686,6 +687,7 @@ cd lib/wikirenderer/rules
 ! classicwr_to_xhtml.php
 ! classicwr_to_wr3.php
 ! wr3_to_text.php
+! wr3_to_docbook.php
 
 cd lib/tcpdf
   LICENSE.TXT

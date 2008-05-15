@@ -31,7 +31,9 @@ class wr3_to_docbook  extends WikiRendererConfig  {
     'wr3dbk_cite','wr3dbk_acronym','wr3dbk_link', 'wr3dbk_image',
     'wr3dbk_anchor', 'wr3dbk_footnote');
 
-   public $textLineContainer = 'WikiHtmlTextLine';
+   public $defaultTextLineContainer = 'WikiHtmlTextLine';
+
+   public $availabledTextLineContainers = array('WikiHtmlTextLine');
 
    /**
    * liste des balises de type bloc reconnus par WikiRenderer.
