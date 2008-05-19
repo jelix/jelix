@@ -302,25 +302,25 @@ class jAuth {
             }
 
             $_SESSION[$config['session_name']] = $user;
-            $persistenceEnabled = ($persistant && isset($config['persistant_enable']) && $config['persistant_enable']);
+            $persistence = 0;
 
             // Add a cookie for session persistance, if enabled
-            if($persistenceEnabled) {
+            if($persistant && isset($config['persistant_enable']) && $config['persistant_enable']) {
                 if(!isset($config['persistant_crypt_key']) || !isset($config['persistant_cookie_name'])){
                     throw new jException('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name, persistant_crypt_key');
                 }
 
                 if(isset($config['persistant_duration']))
-                    $cookieDuration=$config['persistant_duration']*86400;
+                    $persistence=$config['persistant_duration']*86400;
                 else
-                    $cookieDuration=86400; // 24h
-                $cookieDuration+=time();
+                    $persistence=86400; // 24h
+                $persistence += time();
                 $encryptedPassword=jCrypt::encrypt($password,$config['persistant_crypt_key']);
-                setcookie($config['persistant_cookie_name'].'[login]', $login, $cookieDuration, $config['persistant_cookie_path']);
-                setcookie($config['persistant_cookie_name'].'[passwd]', $encryptedPassword, $cookieDuration, $config['persistant_cookie_path']);
+                setcookie($config['persistant_cookie_name'].'[login]', $login, $persistence, $config['persistant_cookie_path']);
+                setcookie($config['persistant_cookie_name'].'[passwd]', $encryptedPassword, $persistence, $config['persistant_cookie_path']);
             }
 
-            jEvent::notify ('AuthLogin', array('login'=>$login, 'persistenceEnabled'=>$persistenceEnabled));
+            jEvent::notify ('AuthLogin', array('login'=>$login, 'persistence'=>$persistence));
             return true;
         }else
             return false;
