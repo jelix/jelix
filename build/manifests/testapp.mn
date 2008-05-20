@@ -1,4 +1,5 @@
 cd testapp
+
   project.xml
   .htaccess
   application.init.php
@@ -86,6 +87,7 @@ cd testapp/modules/jelix_tests/classes
 cd testapp/modules/jelix_tests/classes/tests
   foo.class.php
   foo.iface.php
+  bind.class.php
 cd testapp/modules/jelix_tests/locales/
   test_A.properties
   test_B.properties
@@ -173,6 +175,7 @@ cd testapp/modules/jelix_tests/tests/
   utils.jlog.html_cli.php
   utils.jdatetime.html_cli.php
   utils.jinifilemodifier.html_cli.php
+  utils.jclasses.html_cli.php
 
 cd testapp/var
   .htaccess

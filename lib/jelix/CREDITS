@@ -65,6 +65,7 @@ Christophe Thiriot (aka Doubleface)
  - testor
  - bug fixes on PDO support in jDb
  - fixed minor bugs
+ - Added enhanced service handling (dependency injection) in jClasses (#523)
  - implementation of "live" exit in command line (#406)
 
 

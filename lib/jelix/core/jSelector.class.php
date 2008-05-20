@@ -14,9 +14,10 @@
 * @contributor Rahal
 * @contributor Thibault PIRONT < nuKs >
 * @contributor Julien Issler
+* @contributor Christophe Thiriot
 * @copyright   2005-2007 Laurent Jouanneau, 2007 Loic Mathaud, 2007 Rahal
 * @copyright   2007 Thibault PIRONT
-* @copyright   2008 Julien Issler
+* @copyright   2008 Julien Issler, 2008 Christophe Thiriot
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -34,10 +35,14 @@ class jSelectorFactory {
      * @param string $selstr  the selector. It should be a full selector : "type:module~resource" (not "module~resource")
      * @return jISelector the corresponding selector
      */
-    static public function create ($selstr){
-        if(preg_match("/^([a-z]{3,5})\:([\w~\/\.]+)$/", $selstr, $m)){
+    static public function create ($selstr, $defaulttype=false) {
+        if (is_string($defaulttype) && strpos($selstr, ':') === false) {
+            $selstr = "$defaulttype:$selstr";
+        }
+
+        if(preg_match("/^([a-z]{3,5})\:([\w~\/\.]+)$/", $selstr, $m)) {
             $cname='jSelector'.$m[1];
-            if(class_exists($cname)){
+            if(class_exists($cname)) {
                 $sel = new $cname($m[2]);
                 return $sel;
             }

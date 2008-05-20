@@ -308,6 +308,7 @@ cd lib/jelix/tpl/
 cd lib/jelix/utils/
   jAppManager.class.php
   jClasses.class.php
+  jBinding.class.php
   jCmdUtils.class.php
   jCrypt.class.php
   jDatatype.class.php

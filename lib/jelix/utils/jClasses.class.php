@@ -4,7 +4,9 @@
 * @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
+* @contributor Christophe Thiriot
 * @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2008 Christophe Thiriot
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -19,6 +21,8 @@ class jClasses {
 
     static protected $_instances = array();
 
+    static protected $_bindings = array();
+
     private function __construct(){}
 
     /**
@@ -26,7 +30,7 @@ class jClasses {
      * @param string $selector the jelix selector correponding to the class
      * @return object an instance of the classe
      */
-    static public function create($selector){
+    static public function create($selector) {
         $sel = new jSelectorClass($selector);
         require_once($sel->getPath());
         $class = $sel->className;
@@ -34,10 +38,22 @@ class jClasses {
     }
 
     /**
+     * Shortcut to corresponding jBinding::getInstance() but without singleton
+     * The binding is recreated each time (be careful about performance)
+     * 
+     * @param string $selector  Selector to a bindable class|interface
+     * @return object           Corresponding instance
+     * @since 1.1
+     */
+    static public function createBinded($selector) {
+        return self::getBinding($selector, false);
+    }
+
+    /**
      * alias of create method
      * @see jClasses::create()
      */
-    static public function createInstance($selector){
+    static public function createInstance($selector) {
         return self::create($selector);
     }
 
@@ -47,7 +63,7 @@ class jClasses {
      * @param string $selector the jelix selector correponding to the class
      * @return object an instance of the classe
      */
-    static public function getService($selector){
+    static public function getService($selector) {
         $sel = new jSelectorClass($selector);
         $s = $sel->toString();
         if (isset(self::$_instances[$s])) {
@@ -57,6 +73,65 @@ class jClasses {
             self::$_instances[$s]=$o;
             return $o;
         }
+    }
+
+    /**
+     * Shortcut to corresponding jBinding::getInstance() 
+     * 
+     * @param string $selector  Selector to a bindable class|interface
+     * @return object           Corresponding instance
+     * @since 1.1
+     */
+    static public function getBindedService($selector) {
+        return self::getBinding($selector)->getInstance();
+    }
+
+    /**
+     * Alias of self::getBinding method. Better for use like this : jClasses::bind('selector').to('classselector')
+     * 
+     * @param  string $selector 
+     * @return jBinding
+     * @see jClasses::bind
+     * @since 1.1
+     */
+    static public function bind($selector) {
+        return self::getBinding($selector);
+    }
+
+    /**
+     * Get the binding corresponding to the specified selector.
+     * Better for use like this : jClasses::getBinding($selector)->getClassName()
+     * 
+     * @param string $selector
+     * @param bool   $singleton if this binding should be a singleton or not
+     * @return jBinding
+     * @see jClasses::bind
+     * @since 1.1
+     */
+    static public function getBinding($selector, $singleton=true) {
+        $osel = jSelectorFactory::create($selector, 'iface');
+        $s    = $osel->toString(true);
+
+        $binding = null;
+        if ($singleton === false || !isset(self::$_bindings[$s])) {
+            $binding = new jBinding($osel);
+            if ($singleton === true) self::$_bindings[$s] = $binding;
+        } else {
+            $binding = self::$_bindings[$s];
+        }
+
+
+        return $binding;
+    }
+
+    /**
+     * Reset the defined bindings (should only use it for unit tests)
+     * 
+     * @return void
+     * @since 1.1
+     */
+    static public function resetBindings() {
+        self::$_bindings = array();
     }
 
     /**
