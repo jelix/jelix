@@ -4,6 +4,7 @@
 * @subpackage db_driver
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
+* @contributor Sylvain de Vathaire
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDbConnectionMysql, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -76,7 +77,7 @@ class mysqlDbConnection extends jDbConnection {
       if($cnx = @$funcconnect ($this->profil['host'], $this->profil['user'], $this->profil['password'])){
          if(isset($this->profil['force_encoding']) && $this->profil['force_encoding'] == true
             && isset($this->_charsets[$GLOBALS['gJConfig']->charset])){
-             mysql_query("SET CHARACTER SET '".$this->_charsets[$GLOBALS['gJConfig']->charset]."'", $cnx);
+             mysql_query("SET NAMES '".$this->_charsets[$GLOBALS['gJConfig']->charset]."'", $cnx);
          }
          return $cnx;
       }else{
