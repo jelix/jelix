@@ -59,6 +59,9 @@
     <classicentrypoint name="foo/bar">
        <url handler="urlsig" module="jelix_tests" action="urlsig:url4" />
     </classicentrypoint>
+    <classicentrypoint name="invisible"  noentrypoint="true">
+        <url handler="urlsig" module="jelix_tests" action="urlsig:bug599"/>
+    </classicentrypoint>
 
     <classicentrypoint name="news">
         <url module="news" />

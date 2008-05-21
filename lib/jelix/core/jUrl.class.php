@@ -205,7 +205,12 @@ class jUrl extends jUrlBase {
     * @return string
     */
     public function toString ($forxml = false){
-        $url = $this->scriptName.$this->pathInfo;
+        $url = $this->scriptName;
+        if(substr($this->scriptName,-1) == '/')
+            $url.=ltrim($this->pathInfo,'/');
+        else
+            $url.= $this->pathInfo;
+
         if (count ($this->params)>0){
             $q = http_build_query($this->params, '', ($forxml?'&amp;':'&'));
             if(strpos($q, '%3A')!==false)

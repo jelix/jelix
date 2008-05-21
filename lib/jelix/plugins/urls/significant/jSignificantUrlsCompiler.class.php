@@ -62,9 +62,9 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
             $CREATE_URL = array(
                'news~show@classic' =>
-                  array(0,'entrypoint', https true/false, entrypoint true/false, 'selecteur handler')
+                  array(0,'entrypoint', https true/false, 'selecteur handler')
                   ou
-                  array(1,'entrypoint', https true/false, entrypoint true/false,
+                  array(1,'entrypoint', https true/false,
                         array('annee','mois','jour','id','titre'), // liste des paramètres de l'url à prendre en compte
                         array(true, false..), // valeur des escapes
                         "/news/%1/%2/%3/%4-%5", // forme de l'url
@@ -76,8 +76,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                     array( 4, array(1,...), array(1,...)...)
 
                   ou
-                  array(2,'entrypoint', https true/false, entrypoint true/false ); pour les clés du type "@request"
-                  array(3,'entrypoint', https true/false, entrypoint true/false );  pour les clés du type  "module~@request"
+                  array(2,'entrypoint', https true/false); pour les clés du type "@request"
+                  array(3,'entrypoint', https true/false);  pour les clés du type  "module~@request"
 
         */
         $typeparam = array('string'=>'([^\/]+)','char'=>'([^\/])', 'letter'=>'(\w)',
