@@ -388,19 +388,16 @@ class significantUrlEngine implements jIUrlEngine {
             $handler =new $c();
             $handler->create($urlact, $url);
         }elseif($urlinfo[0]==1){
-            $result = $urlinfo[5];
+            $pi = $urlinfo[5];
             foreach ($urlinfo[3] as $k=>$param){
                 if($urlinfo[4][$k]){
-                    $result=str_replace(':'.$param, jUrl::escape($url->getParam($param,''),true), $result);
+                    $pi=str_replace(':'.$param, jUrl::escape($url->getParam($param,''),true), $pi);
                 }else{
-                    $result=str_replace(':'.$param, $url->getParam($param,''), $result);
+                    $pi=str_replace(':'.$param, $url->getParam($param,''), $pi);
                 }
                 $url->delParam($param);
             }
-            //if($urlinfo[1])
-                $url->pathInfo = $result;
-            //else
-                //$url->pathInfo = substr($result,1);
+            $url->pathInfo = $pi;
             if($urlinfo[6])
                 $url->setParam('action',$action);
             // removed parameters corresponding to static values
