@@ -4,7 +4,7 @@
 * @subpackage  core_url
 * @author      Laurent Jouanneau
 * @contributor Thibault PIRONT < nuKs >
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2008 Laurent Jouanneau
 * @copyright   2007 Thibault PIRONT
 * Some parts of this file are took from an experimental branch of the Copix project (CopixUrl.class.php, Copix 2.3dev20050901, http://www.copix.org),
 * Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -205,12 +205,31 @@ class jUrl extends jUrlBase {
     * @return string
     */
     public function toString ($forxml = false){
+        return $this->getPath().$this->getQuery($forxml);
+    }
+
+    /**
+     * get the path part of the url (scriptName + pathinfo)
+     * @return string
+     * @since 1.0.4
+     */
+    public function getPath() {
         $url = $this->scriptName;
         if(substr($this->scriptName,-1) == '/')
             $url.=ltrim($this->pathInfo,'/');
         else
             $url.= $this->pathInfo;
+        return $url;
+    }
 
+    /**
+     * get the query part of the url
+     * @param boolean $forxml  true: some characters will be escaped
+     * @return string
+     * @since 1.0.4
+     */
+    public function getQuery($forxml = false) {
+        $url = '';
         if (count ($this->params)>0){
             $q = http_build_query($this->params, '', ($forxml?'&amp;':'&'));
             if(strpos($q, '%3A')!==false)
