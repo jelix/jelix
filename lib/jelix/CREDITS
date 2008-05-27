@@ -149,6 +149,7 @@ Yann
  - improvements in jResponseHtml (description and keywords)
 
 Sylvain de Vathaire (aka sylvain261)
+ - Soap support : jSoapRequest, jResponseSoap etc... (#377)
  - little bug fix in exception handler (#356)
  - little improvement in exception handler and error handler (#357)
  - little improvement in jResponseXml (#465)
@@ -170,4 +171,4 @@ Copix Team
     (version 2.3dev20050901), under copyright 2001-2005 Copix Team
     (http://www.copix.org)
 
-(updated svn-841)
+(updated svn-879)
