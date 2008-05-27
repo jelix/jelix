@@ -3,7 +3,9 @@
 * @package     jelix
 * @subpackage  jtpl_plugin
 * @author      Jouanneau Laurent
+* @contributor Julien Issler
 * @copyright   2006-2008 Jouanneau laurent
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -57,14 +59,12 @@ unset($t->_privateVars[\'__displayed_ctrl\']);';
     else
         $helpdecorator = "'jFormsHelpDecoratorAlert'";
 
-    $method = strtolower(isset($param[5])?$param[5]:'post');
-    if($method!='get' && $method!='post')
-        $method='post';
+    $method = isset($param[5])?$param[5]:'\'post\'';
 
     $content = ' $t->_privateVars[\'__form\'] = '.$param[0].';
 $t->_privateVars[\'__formbuilder\'] = $t->_privateVars[\'__form\']->getBuilder(\'html\');
 $t->_privateVars[\'__formbuilder\']->setAction('.$param[1].','.$param[2].');
-$t->_privateVars[\'__formbuilder\']->outputHeader(array('.$errdecorator.','.$helpdecorator.',\''.$method.'\'));
+$t->_privateVars[\'__formbuilder\']->outputHeader(array('.$errdecorator.','.$helpdecorator.','.$method.'));
 $t->_privateVars[\'__displayed_ctrl\'] = array();
 ';
 	$compiler->addMetaContent('if(isset('.$param[0].')) { '.$param[0].'->getBuilder(\'html\')->outputMetaContent($t);}');

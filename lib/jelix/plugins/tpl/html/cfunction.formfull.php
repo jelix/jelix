@@ -3,8 +3,9 @@
 * @package      jelix
 * @subpackage   jtpl_plugin
 * @author       Laurent Jouanneau
-* @contributor  Dominique Papin
+* @contributor  Dominique Papin, Julien Issler
 * @copyright    2007-2008 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright    2008 Julien Issler
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -47,14 +48,12 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
     else
         $helpdecorator = "'jFormsHelpDecoratorAlert'";
 
-    $method = strtolower(isset($params[5])?$params[5]:'post');
-    if($method!='get' && $method!='post')
-        $method='post';
+    $method = isset($params[5])?$params[5]:'\'post\'';
 
     $content = ' $formfull = '.$params[0].';
     $formfullBuilder = $formfull->getBuilder(\'html\');
     $formfullBuilder->setAction('.$params[1].','.$params[2].');
-    $formfullBuilder->outputHeader(array('.$errdecorator.','.$helpdecorator.',\''.$method.'\'));
+    $formfullBuilder->outputHeader(array('.$errdecorator.','.$helpdecorator.','.$method.'));
     $formfullBuilder->outputAllControls();
     $formfullBuilder->outputFooter();';
 

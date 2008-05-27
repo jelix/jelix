@@ -81,7 +81,8 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
      */
     public function outputHeader($params){
         $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
-        echo '<form action="',$url->getPath(),'" method="'.$params[2].'" id="', $this->_name,'"';
+        $method = (strtolower($params[2])=='get')?'get':'post';
+        echo '<form action="',$url->getPath(),'" method="'.$method.'" id="', $this->_name,'"';
         if($this->_form->hasUpload())
             echo ' enctype="multipart/form-data">';
         else
