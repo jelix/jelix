@@ -178,7 +178,15 @@ class UTjlocale extends jUnitTestCase {
         }
         $GLOBALS['gJConfig']->charset = 'UTF-8';
     }
-
+    
+    function testLineBreak(){
+        $this->assertEqual("This sentence has a line break\n after the word \"break\"",jLocale::get('tests4.string.with.line.break',null,'en_EN','UTF-8'));
+    }
+    
+    function testLineBreakWithMultiLineString(){
+        $this->assertEqual("This multiline sentence\n has two line breaks\n after the words \"sentence\" and \"breaks\"",jLocale::get('tests4.multiline.string.with.line.break',null,'en_EN','UTF-8'));
+    }
+    
 }
 
 ?>

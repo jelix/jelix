@@ -4,12 +4,13 @@
 * @subpackage core
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
-* @contributor
+* @contributor Julien Issler
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
 * initial authors : Gerald Croes, Laurent Jouanneau.
 * enhancement by Laurent Jouanneau for Jelix.
+* @copyright 2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -120,7 +121,7 @@ class jBundle {
                         if(preg_match("/^\s*(.*)\s*(\\\\?)$/U", $line, $match)){
                             $sp = preg_split('/(?<!\\\\)\#/', $match[1], -1 ,PREG_SPLIT_NO_EMPTY);
                             $multiline= ($match[2] =="\\");
-                            $this->_strings[$charset][$key].=' '.trim(str_replace('\#','#',$sp[0]));
+                            $this->_strings[$charset][$key].=' '.trim(str_replace(array('\#','\n'),array('#',"\n"),$sp[0]));
                         }else{
                             throw new Exception('Syntaxe error in file properties '.$fichier.' line '.$linenumber,210);
                         }
@@ -138,7 +139,7 @@ class jBundle {
                             $value='';
                         }
 
-                        $this->_strings[$charset][$key] =$value;
+                        $this->_strings[$charset][$key] = str_replace(array('\#','\n'),array('#',"\n"),$value);
 
                     }elseif(preg_match("/^\s*(\#.*)?$/",$line, $match)){
                         // ok, juste un commentaire

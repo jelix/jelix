@@ -110,6 +110,7 @@ cd testapp/modules/jelix_tests/locales/en_US
 cd testapp/modules/jelix_tests/locales/en_EN
   tests1.UTF-8.properties
   tests3.UTF-8.properties
+  tests4.UTF-8.properties
 cd testapp/modules/jelix_tests/templates
   menu.tpl
   test_plugin_counter_init_allarg_noexeption.tpl
