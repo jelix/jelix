@@ -20,6 +20,7 @@ Julien Issler
  - jForms html shouldn't generate readonly attribute on select (#550)
  - jResponseZip : on windows files are view like folders (#538)
  - form plugin create always a form with method post (#592)
+ - jDao : attribute groupby for method selectfirst (#447)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
