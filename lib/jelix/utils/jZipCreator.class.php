@@ -64,13 +64,14 @@ class jZipCreator {
                 $path.='/';
 
             if ($handle = opendir($path)) {
+                $this->addEmptyDir($zipDirPath,filemtime($path));
                 while (($file = readdir($handle)) !== false) {
-                    if($file == "." || $file == "..") continue;
-                    if (!is_dir($path.$file)) {
+                    if($file == '.' || $file == '..')
+                        continue;
+                    if (!is_dir($path.$file))
                         $this->addFile($path.$file, $zipDirPath.$file);
-                    }elseif ($recursive){
+                    else if ($recursive)
                         $this->addDir($path.$file,$zipDirPath.$file, true);
-                    }
                 }
                 closedir($handle);
             }
@@ -88,17 +89,8 @@ class jZipCreator {
      */
     public function addContentFile($zipFileName, $content, $filetime = 0){
 
-        // converts unix timestamp to dos binary format
-        if($filetime == 0)
-            $filetime = time();
-        elseif($filetime < 315529200) // 01/01/1980
-            $filetime = 315529200;
-
-        $dt = getdate($filetime);
-
-        $filetime =  pack('V',($dt['seconds'] >> 1) | ($dt['minutes'] << 5) | ($dt['hours'] << 11) |
-                ($dt['mday'] << 16) | ($dt['mon'] << 21) | (($dt['year'] - 1980) << 25));
-
+        $filetime = $this->_getDOSTimeFormat($filetime);
+        
         /*
         generation of the file record
 
@@ -126,46 +118,42 @@ class jZipCreator {
         $fileinfo .= pack('V', strlen($zippedcontent)). pack('V', strlen($content));
         $fileinfo .= pack('v', strlen($zipFileName))."\x00\x00";
 
-        $filerecord   = "\x50\x4b\x03\x04\x14\x00\x00\x00\x08\x00";
-        $filerecord .= $fileinfo.$zipFileName.$zippedcontent;
+        $filerecord = "\x50\x4b\x03\x04\x14\x00\x00\x00\x08\x00".$fileinfo.
+            $zipFileName.$zippedcontent;
 
         $this->fileRecords[] = $filerecord;
 
+        $this->_addCentralDirEntry($zipFileName, $fileinfo);
 
-        /*
-         register the file into the central directory record
-         it contains an header for each file
-           - central file header signature   4 bytes  (0x02014b50)
-           - version made by                 2 bytes  0=DOS
-           - version needed to extract       2 bytes  0x14
-           - general purpose bit flag        2 bytes  0
-           - compression method              2 bytes  0x8
-           - last mod file time              2 bytes (fileinfo)
-           - last mod file date              2 bytes (fileinfo)
-           - crc-32                          4 bytes (fileinfo)
-           - compressed size                 4 bytes (fileinfo)
-           - uncompressed size               4 bytes (fileinfo)
-           - file name length                2 bytes (fileinfo)
-           - extra field length              2 bytes   0 (fileinfo)
-           - file comment length             2 bytes   0
-           - disk number start               2 bytes   0
-           - internal file attributes        2 bytes   0
-           - external file attributes        4 bytes   32 : 'archive' bit set
-           - relative offset of local header 4 bytes
-           - file name (variable size)
-           - extra field (variable size)
-           - file comment (variable size)
-        */
-        $cdrecord = "\x50\x4b\x01\x02\x00\x00\x14\x00\x00\x00\x08\x00".$fileinfo;
-        $cdrecord .= "\x00\x00\x00\x00\x00\x00";
-        $cdrecord .= pack('V', 32);
-        $cdrecord .= pack('V', $this ->centralDirOffset );
-        $cdrecord .= $zipFileName;
+        $this->centralDirOffset += strlen($filerecord);
 
-        $this->centralDirectory[] = $cdrecord;
+    }
+    
+    /**
+     * adds an empty dir to the zip file
+     */
+    public function addEmptyDir($name, $time=0){
+        
+        $time = $this->_getDOSTimeFormat($time);
 
-        $this ->centralDirOffset += strlen($filerecord);
+        $name = str_replace('\\', '/', $name);
+        
+        if(substr($name,-1,1)!=='/')
+            $name .= '/';
 
+        if($name == '/')
+            return;
+
+        $fileinfo = $time."\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00".
+            pack('v', strlen($name))."\x00\x00";
+
+        $filerecord = "\x50\x4b\x03\x04\x14\x00\x00\x00\x08\x00".$fileinfo.$name;
+
+        $this->fileRecords[] = $filerecord;
+
+        $this->_addCentralDirEntry($name, $fileinfo, true);
+
+        $this->centralDirOffset += strlen($filerecord);
     }
 
 
@@ -198,6 +186,60 @@ class jZipCreator {
         */
         return implode('', $this->fileRecords).$centraldir."\x50\x4b\x05\x06\x00\x00\x00\x00".$c.$c.
             pack('V', strlen($centraldir)).pack('V', $this ->centralDirOffset)."\x00\x00";
+    }
+    
+    
+    
+    protected function _getDOSTimeFormat($timestamp){
+        // converts unix timestamp to dos binary format
+        if($timestamp == 0)
+            $timestamp = time();
+        elseif($timestamp < 315529200) // 01/01/1980
+            $timestamp = 315529200;
+
+        $dt = getdate($timestamp);
+
+        return pack('V',($dt['seconds'] >> 1) | ($dt['minutes'] << 5) | ($dt['hours'] << 11) |
+                ($dt['mday'] << 16) | ($dt['mon'] << 21) | (($dt['year'] - 1980) << 25));
+        
+    }
+    
+    protected function _addCentralDirEntry($name, $info, $isDir = false){        
+        /*
+         register the file into the central directory record
+         it contains an header for each file
+           - central file header signature   4 bytes  (0x02014b50)
+           - version made by                 2 bytes  0=DOS
+           - version needed to extract       2 bytes  0x14
+           - general purpose bit flag        2 bytes  0
+           - compression method              2 bytes  0x8
+           - last mod file time              2 bytes (fileinfo)
+           - last mod file date              2 bytes (fileinfo)
+           - crc-32                          4 bytes (fileinfo)
+           - compressed size                 4 bytes (fileinfo)
+           - uncompressed size               4 bytes (fileinfo)
+           - file name length                2 bytes (fileinfo)
+           - extra field length              2 bytes   0 (fileinfo)
+           - file comment length             2 bytes   0
+           - disk number start               2 bytes   0
+           - internal file attributes        2 bytes   0
+           - external file attributes        4 bytes   32 : 'archive' bit set ; 16 : for empty folder support
+           - relative offset of local header 4 bytes
+           - file name (variable size)
+           - extra field (variable size)
+           - file comment (variable size)
+        */
+        
+        $cdrecord = "\x50\x4b\x01\x02\x00\x00\x14\x00\x00\x00\x08\x00".$info;
+        $cdrecord .= "\x00\x00\x00\x00\x00\x00";
+        if($isDir)
+            $cdrecord .= pack('V', 16);
+        else
+            $cdrecord .= pack('V', 32);
+        $cdrecord .= pack('V', $this ->centralDirOffset );
+        $cdrecord .= $name;
+
+        $this->centralDirectory[] = $cdrecord;
     }
 }
 
