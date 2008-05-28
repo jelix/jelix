@@ -22,6 +22,7 @@ Julien Issler
  - form plugin create always a form with method post (#592)
  - jDao : attribute groupby for method selectfirst (#447)
  - jZipCreator : empty dirs are not included in the archive (#570)
+ - jForms : fixed bugs in jforms.js based on Martus' report (#554)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
