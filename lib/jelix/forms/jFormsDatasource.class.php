@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Dominique Papin
 * @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -17,7 +18,7 @@
  */
 interface jIFormsDatasource {
     /**
-     * load and returns data to fill a control. The returned array should be 
+     * load and returns data to fill a control. The returned array should be
      * an associative array  key => label
      * @param jFormsBase $form  the form
      * @return array the data
@@ -26,7 +27,7 @@ interface jIFormsDatasource {
 
     /**
      * Return the label corresponding to the given key
-     * @param string $key the key 
+     * @param string $key the key
      * @return string the label
      */
     public function getLabel($key);
@@ -79,20 +80,22 @@ class jFormsDaoDatasource implements jIFormsDatasource {
     protected $method;
     protected $labelProperty;
     protected $keyProperty;
+    protected $profile;
 
     protected $criteria;
     protected $criteriaForm;
 
     protected $dao = null;
 
-    function __construct ($selector ,$method , $label, $key, $criteria=null, $criteriaFrom=null){
+    function __construct ($selector ,$method , $label, $key, $profile='', $criteria=null, $criteriaFrom=null){
         $this->selector  = $selector;
+        $this->profile = $profile;
         $this->method = $method ;
         $this->labelProperty = $label;
         $this->criteria = $criteria;
         $this->criteriaFrom = $criteriaFrom;
         if($key == ''){
-            $rec = jDao::createRecord($this->selector);
+            $rec = jDao::createRecord($this->selector, $this->profile);
             $pfields = $rec->getPrimaryKeyNames();
             $key = $pfields[0];
         }
@@ -101,7 +104,7 @@ class jFormsDaoDatasource implements jIFormsDatasource {
 
     public function getData($form){
         if($this->dao === null)
-            $this->dao = jDao::get($this->selector);
+            $this->dao = jDao::get($this->selector, $this->profile);
         if($this->criteria !== null) {
             $found = $this->dao->{$this->method}($this->criteria);
         } else if ($this->criteriaFrom !== null) {
@@ -117,7 +120,7 @@ class jFormsDaoDatasource implements jIFormsDatasource {
     }
 
     public function getLabel($key){
-        if($this->dao === null) $this->dao = jDao::get($this->selector);
+        if($this->dao === null) $this->dao = jDao::get($this->selector, $this->profile);
         $rec = $this->dao->get($key);
         if($rec)
             return $rec->{$this->labelProperty};
@@ -126,4 +129,3 @@ class jFormsDaoDatasource implements jIFormsDatasource {
     }
 
 }
-

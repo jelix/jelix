@@ -6,7 +6,7 @@
 * @contributor Loic Mathaud, Dominique Papin
 * @contributor Uriel Corfa Emotic SARL
 * @copyright   2006-2008 Laurent Jouanneau
-* @copyright   2007 Loic Mathaud, 2007 Dominique Papin
+* @copyright   2007 Loic Mathaud, 2007-2008 Dominique Papin
 * @copyright   2007 Emotic SARL
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -101,6 +101,10 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
             }
 
             if(isset($attrs['dao'])) {
+                if ( isset($attrs['profile']))
+                    $profile = '\''.$attrs['profile'].'\'';
+                else
+                    $profile = '\'\'';
                 if(isset($attrs['valueproperty'])) {
                     $daovalue = $attrs['valueproperty'];
                 } else
@@ -118,7 +122,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
                     $criteria='';
 
                 $source[]='$ctrl->datasource = new jFormsDaoDatasource(\''.$attrs['dao'].'\',\''.
-                                $attrs['method'].'\',\''.$attrs['labelproperty'].'\',\''.$daovalue.'\''.$criteria.');';
+                                 $attrs['method'].'\',\''.$attrs['labelproperty'].'\',\''.$daovalue.'\','.$profile.$criteria.');';
                 if($controltype == 'submit'){
                     $source[]='$ctrl->standalone=false;';
                 }

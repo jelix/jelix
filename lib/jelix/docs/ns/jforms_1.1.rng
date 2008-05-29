@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar 
+<grammar
   xmlns="http://relaxng.org/ns/structure/1.0"
   xmlns:ev="http://www.w3.org/2001/xml-events"
   datatype="http://www.w3.org/2001/XMLSchema-datatypes"
@@ -136,12 +136,12 @@
        <optional><attribute name="maxsize"><data type="integer" /></attribute></optional>
        <!--<element name="storage">
            <attribute name="type"><choice><value>file</value><value>blob</value></choice></attribute>
-           <attribute name="value" /> 
+           <attribute name="value" />
        </element>
        -->
      </element>
   </define>
-  
+
   <define name="checkbox">
      <element name="checkbox">
        <ref name="control.common" />
@@ -231,7 +231,7 @@
         <ref name="alert" />
      </optional>
   </define>
-  
+
   <define name="UI.attr.readonly">
       <optional><attribute name="readonly"><choice><value>true</value><value>false</value></choice></attribute></optional>
   </define>
@@ -241,7 +241,7 @@
   <define name="UI.attr.defaultvalue">
       <optional><attribute name="defaultvalue" /></optional>
   </define>
-  
+
   <define name="attr.length">
       <optional><attribute name="minlength"><data type="integer" /></attribute></optional>
       <optional><attribute name="maxlength"><data type="integer" /></attribute></optional>
@@ -319,6 +319,7 @@
                         <attribute name="criteriafrom" />
                     </choice>
                 </optional>
+                <optional><attribute name="profile" /></optional>
             </group>
             <attribute name="class" />
         </choice>
@@ -393,6 +394,6 @@
       </define>
 
   -->
-  
+
 
 </grammar>

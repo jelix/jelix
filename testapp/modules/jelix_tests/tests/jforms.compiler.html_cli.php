@@ -350,11 +350,15 @@ class UTjformsCompiler extends jUnitTestCase {
     <label>Votre nom</label>
     <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop" criteria="toto"/>
 </listbox>',
-80=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1" multiple="true">
+80=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
+    <label>Votre nom</label>
+    <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop" profile="youp" criteria="toto"/>
+</listbox>',
+81=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1" multiple="true">
     <label>Votre nom</label>
     <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop" criteriafrom="prenom"/>
 </listbox>',
-81=>'<menulist ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
+82=>'<menulist ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
     <datasource class="jelix_tests~mydatasource"/>
 </menulist>',
@@ -740,35 +744,39 @@ $ctrl->config=\'simple\';
 $this->addControl($ctrl);',
 74=>'$ctrl= new jFormsControlcheckboxes(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\');
 $this->addControl($ctrl);',
 75=>'$ctrl= new jFormsControlradiobuttons(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\');
 $this->addControl($ctrl);',
 76=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\');
 $this->addControl($ctrl);',
 77=>'$ctrl= new jFormsControlmenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\');
 $this->addControl($ctrl);',
 78=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\');
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
 79=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'toto\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',\'toto\');
 $this->addControl($ctrl);',
 80=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',null,\'prenom\');
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'youp\',\'toto\');
+$this->addControl($ctrl);',
+81=>'$ctrl= new jFormsControllistbox(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,\'prenom\');
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
-81=>'$ctrl= new jFormsControlmenulist(\'nom\');
+82=>'$ctrl= new jFormsControlmenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
 jClasses::inc(\'jelix_tests~mydatasource\');
 $datasource = new mydatasource($this->id());
