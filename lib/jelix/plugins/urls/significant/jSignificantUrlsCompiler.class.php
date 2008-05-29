@@ -4,7 +4,7 @@
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor Thibault PIRONT < nuKs >
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2008 Laurent Jouanneau
 * @copyright   2007 Thibault PIRONT
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -163,6 +163,9 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                   else
                     $selclass = $class;
                   $s= new jSelectorUrlHandler($selclass);
+                  if(!isset($url['action'])) {
+                    $action = '*';
+                  }
                   $createUrlContent.="include_once('".$s->getPath()."');\n";
                   $parseInfos[]=array($module, $action, $selclass, $actionOverride );
                   $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$urlep, $urlhttps, $selclass);

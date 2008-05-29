@@ -178,6 +178,11 @@ cd testapp/modules/jelix_tests/tests/
   utils.jinifilemodifier.html_cli.php
   utils.jclasses.html_cli.php
 
+cd testapp/modules/testurls/classes/
+  urlhandlermodule.urlhandler.php
+cd testapp/modules/testurls/controllers/
+  urlsig.classic.php
+
 cd testapp/var
   .htaccess
 cd testapp/var/log

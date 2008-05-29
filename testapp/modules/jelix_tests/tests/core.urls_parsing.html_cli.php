@@ -81,6 +81,10 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url30');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:hello2');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:hello3');
+      $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urla');
+      $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urla', 'first'=>'premier');
+      $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urlb');
+      $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urlc');
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -100,6 +104,11 @@ class UTParseUrls extends UnitTestCase {
           array("index.php","/hello",array()),
           array("index.php","/hello2",array()),
           array("index.php","/hello3",array()),
+          array("handlermodule.php","/myhand/urlsig/urla",array()),
+          array("handlermodule.php","/myhand/urlsig/urla",array('first'=>'premier')),
+          array("handlermodule.php","/myhand/urlsig/urlb",array()),
+          array("handlermodule.php","/myhand/urlsig/urlc",array()),
+
        );
 
       //$this->sendMessage("significant, multiview = false");
@@ -133,6 +142,10 @@ class UTParseUrls extends UnitTestCase {
           array("index","/hello",array()),
           array("index","/hello2",array()),
           array("index","/hello3",array()),
+          array("handlermodule","/myhand/urlsig/urla",array()),
+          array("handlermodule","/myhand/urlsig/urla",array('first'=>'premier')),
+          array("handlermodule","/myhand/urlsig/urlb",array()),
+          array("handlermodule","/myhand/urlsig/urlc",array()),
        );
       foreach($request as $k=>$urldata){
          $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);

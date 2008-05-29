@@ -235,6 +235,9 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('jelix_tests~default:hello3', array());
       $urlList[]= array('jelix_tests~hello3', array());
       $urlList[]= array('jelix_tests~urlsig:bug599', array('first'=>'premier',  'second'=>'deuxieme'));
+      $urlList[]= array('testurls~urlsig:urla', array());
+      $urlList[]= array('testurls~urlsig:urla', array('first'=>'premier'));
+      $urlList[]= array('testurls~urlsig:urlb', array());
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -259,6 +262,9 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php/hello3",
           "/index.php/hello3",
           "/withhandler/premier/deuxieme",
+          "/myhand/urlsig/urla",
+          "/myhand/urlsig/urla?first=premier",
+          "/myhand/urlsig/urlb",
        );
 
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
@@ -289,6 +295,9 @@ class UTCreateUrls extends UnitTestCase {
           "/index/hello3",
           "/index/hello3",
           "/withhandler/premier/deuxieme",
+          "/myhand/urlsig/urla",
+          "/myhand/urlsig/urla?first=premier",
+          "/myhand/urlsig/urlb",
        );
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
