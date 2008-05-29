@@ -3,7 +3,7 @@ Credits
 
 By alphabetic order on the name
 
-Developers of the Jelix team 
+Developers of the Jelix team
 ----------------------------
 
 Julien Issler
@@ -66,6 +66,8 @@ Dominique Papin (aka bibo)
  - added support of 'else' keyword for block plugin in jtpl (#349)
  - fixed bug in firebug support (#362)
  - added support of <reset> in jforms (#258)
+ - fixed bug in swf* plugin (#585)
+ - jforms dao datasource : enhancements (#581,#582)
 
 Christophe Thiriot (aka Doubleface)
  - testor
@@ -80,7 +82,7 @@ Contributors
 
 Vincent Bonnard
  - bug fix in jXmlRpc.class.php (#190)
- 
+
 Cedric
  - bug fix in jFile::read
 
