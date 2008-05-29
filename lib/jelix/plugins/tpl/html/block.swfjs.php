@@ -1,18 +1,20 @@
 <?php
 /**
- * @package    jelix
- * @subpackage jtpl_plugin
- * @author     Lepeltier kévin
- * @copyright  2008 Lepeltier kévin
- * @link       http://www.jelix.org
- * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
- * 
+ * @package     jelix
+ * @subpackage  jtpl_plugin
+ * @author      Lepeltier kévin
+ * @contributor Dominique Papin
+ * @copyright   2008 Lepeltier kévin
+ * @copyright   2008 Dominique Papin
+ * @link        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
  * This script uses the jQuery script written by Luke Lutman "jquery.flash.js"
  */
 
 /**
  * swfjs plugin :  Adds html and JS code to display a swf
- * 
+ *
  * Example :
  * {swfjs 'promobidon.swf',
  *         array('id'=>'promo', 'width'=>150, 'height'=>90, 'detect'=>true),
@@ -20,15 +22,15 @@
  *         array('longeur'=>150)}
  *     {image 'toupie.png'}
  * {/swfjs}
- * 
+ *
  * Render after the execution of javascript file :
- * 
+ *
  * <div id="promo">
  *     <embed width="150" height="90" wmode="transparent" quality="hight"
  *            type="application/x-shockwave-flash" src="/data/fichiers/promobidon.swf"
  *            pluginspage="http://www.adobe.com/go/getflashplayer" flashvars="longeur=150"/>
  * </div>
- * 
+ *
  * $params[0] url of the swf
  * $params[1]['id'] id of <object .../>
  * $params[1]['class'] class of <object .../>
@@ -64,7 +66,7 @@ function jtpl_block_html_swfjs($compiler, $begin, $params) {
                 $script .= "            ".\'height:"\'.$options[\'height\'].\'",\'."\n";
             if( count($params) ) foreach($params as $key => $val)
                 $script .= "            ".$key.\':"\'.$val.\'", \'."\r";
-            $script .= "            ".\'src:"\'.$t->_vars[\'j_basepath\'].$src.\'"\'."\n";
+            $script .= "            ".\'src:"\'.$src.\'"\'."\n";
             $script .= "        ".\'}, {\'."\n";
             if( !empty($options[\'version\']) )
                 $script .= "            ".\'version:\'.$options[\'version\'].\',\'."\n";
