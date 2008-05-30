@@ -1200,16 +1200,21 @@ $js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jel
 $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="jForms.tForm.addControl( jForms.tControl);\n";',
 80=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+81=>'$label = \'Votre nom\';
 $js.="jForms.tControl = new jFormsControl(\'nom[]\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
 $js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
 $js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
 $js.="jForms.tControl.multiple = true;\n";
 $js.="jForms.tForm.addControl( jForms.tControl);\n";',
-81=>'$label = \'Votre nom\';
-$js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\n";
-$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\n";
-$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\n";
-$js.="jForms.tForm.addControl( jForms.tControl);\n";',
+82=>'$label = \'Votre nom\';
+$js.="jForms.tControl = new jFormsControl(\'nom\', \'".str_replace("\'","\\\'",$label)."\', \'string\');\\n";
+$js.="jForms.tControl.errRequired=\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label))."\';\\n";
+$js.="jForms.tControl.errInvalid =\'".str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))."\';\\n";
+$js.="jForms.tForm.addControl( jForms.tControl);\\n";',
     );
 
     function testPhpControl10(){

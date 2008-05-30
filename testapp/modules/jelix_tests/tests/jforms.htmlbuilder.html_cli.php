@@ -389,7 +389,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         $ctrl->readonly = false;
         $ctrl->hint='';
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findByMaxId','name','id','15');
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findByMaxId','name','id','', '15');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
         $result.='<option value="" selected="selected"></option>';
@@ -398,7 +398,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
 
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findByMaxId','name','id','11');
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findByMaxId','name','id','', '11');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
         $result.='<option value="" selected="selected"></option>';
@@ -416,7 +416,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         $this->form->setData('choixsimple',"");
         $this->form->setData('autrechoix',"25");
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findByMaxId','name','id',null, 'autrechoix');
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findByMaxId','name','id','', null, 'autrechoix');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
         $result.='<option value="" selected="selected"></option>';
