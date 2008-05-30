@@ -221,6 +221,8 @@ function jtpl_function_html_image_inCache($src, $cachename, $array) {
     
     $ext = empty($array['ext'])?$ext:$mimes[$array['ext']];
     $cache_path = JELIX_APP_WWW_PATH.'cache/images/';
+    jFile::createDir($cache_path);
+    
     
     // Register
     switch ( $ext ) {
