@@ -54,8 +54,8 @@ function jtpl_function_html_image($tpl, $src, $params=array()) {
     // Extension
     if( empty($params['ext']) ) {
         $path_parts = pathinfo($src);
-        $ext = $path_parts['extension'];
-    } else $ext = $params['ext'];
+        $ext = strtolower($path_parts['extension']);
+    } else $ext = strtolower($params['ext']);
     
     // White background for IE
     if (   empty($params['background'])
@@ -121,7 +121,7 @@ function jtpl_function_html_image_inCache($src, $cachename, $array) {
     $origine_www = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'].$src;
     
     $path_parts = pathinfo($origine_www);
-    $ext = $mimes[$path_parts['extension']];
+    $ext = $mimes[strtolower($path_parts['extension'])];
     $quality = (!empty($array['quality']))?  $array['quality'] : 100;
     
     // Creating an image
