@@ -67,7 +67,7 @@ function jtpl_function_html_image($tpl, $src, $params=array()) {
     // Name of the file cache
     $chaine = $src;
     foreach($params as $key => $value)
-        if( !in_array($key, array('alt', 'class', 'id', 'style')))
+        if( !in_array($key, array('alt', 'class', 'id', 'style', 'longdesc', 'name', 'ismap', 'usemap', 'title', 'dir', 'lang', 'onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress', 'onkeydown', 'onkeyup')))
             $chaine .= $key.$value;
     $cachename = md5($chaine).'.'.$ext;
     
@@ -88,7 +88,7 @@ function jtpl_function_html_image($tpl, $src, $params=array()) {
     }
     
     // Attributes
-    $att = array('alt'=>'', 'id'=>'', 'class'=>'');
+    $att = array('alt'=>'', 'id'=>'', 'class'=>'', 'style'=>'', 'longdesc'=>'', 'name'=>'', 'ismap'=>'', 'usemap'=>'', 'title'=>'', 'dir'=>'', 'lang'=>'', 'onclick'=>'', 'ondblclick'=>'', 'onmousedown'=>'', 'onmouseup'=>'', 'onmouseover'=>'', 'onmousemove'=>'', 'onmouseout'=>'', 'onkeypress'=>'', 'onkeydown'=>'', 'onkeyup'=>'');
     $att = array_intersect_key($params, $att);
     
     // If the image does not undergo transformation
