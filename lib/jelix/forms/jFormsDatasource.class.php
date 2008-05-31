@@ -78,22 +78,26 @@ class jFormsDaoDatasource implements jIFormsDatasource {
 
     protected $selector;
     protected $method;
-    protected $labelProperty;
+    protected $labelProperty = array();
+    protected $labelSeparator;
     protected $keyProperty;
     protected $profile;
 
-    protected $criteria;
-    protected $criteriaForm;
+    protected $criteria = null;
+    protected $criteriaFrom = null ;
 
     protected $dao = null;
 
-    function __construct ($selector ,$method , $label, $key, $profile='', $criteria=null, $criteriaFrom=null){
+    function __construct ($selector ,$method , $label, $key, $profile='', $criteria=null, $criteriaFrom=null, $labelSeparator=''){
         $this->selector  = $selector;
         $this->profile = $profile;
         $this->method = $method ;
-        $this->labelProperty = $label;
-        $this->criteria = $criteria;
-        $this->criteriaFrom = $criteriaFrom;
+        $this->labelProperty = preg_split('/[\s,]+/',$label);
+        $this->labelSeparator = $labelSeparator;
+        if ( $criteria !== null )
+            $this->criteria = preg_split('/[\s,]+/',$criteria) ;
+        if ( $criteriaFrom !== null )
+            $this->criteriaFrom = preg_split('/[\s,]+/',$criteriaFrom) ;
         if($key == ''){
             $rec = jDao::createRecord($this->selector, $this->profile);
             $pfields = $rec->getPrimaryKeyNames();
@@ -106,15 +110,26 @@ class jFormsDaoDatasource implements jIFormsDatasource {
         if($this->dao === null)
             $this->dao = jDao::get($this->selector, $this->profile);
         if($this->criteria !== null) {
-            $found = $this->dao->{$this->method}($this->criteria);
+            $found = call_user_func_array( array($this->dao, $this->method), $this->criteria);
         } else if ($this->criteriaFrom !== null) {
-            $found = $this->dao->{$this->method}($form->getData($this->criteriaFrom));
+            $args = array() ;
+            foreach( (array)$this->criteriaFrom as $criteria ) {
+              array_push( $args, $form->getData($criteria) ) ;
+            }
+            $found = call_user_func_array( array($this->dao, $this->method), $args);
         } else {
             $found = $this->dao->{$this->method}();
         }
         $result=array();
         foreach($found as $obj){
-            $result[$obj->{$this->keyProperty}] = $obj->{$this->labelProperty};
+            $label = '' ;
+            foreach( (array)$this->labelProperty as $property ) {
+                if (!empty( $obj->{$property}))
+                    $label .= $obj->{$property}.$this->labelSeparator;
+            }
+            if ($this->labelSeparator != '')
+                $label = substr($label, 0, -strlen($this->labelSeparator));
+            $result[$obj->{$this->keyProperty}] = $label ;
         }
         return $result;
     }
@@ -122,8 +137,16 @@ class jFormsDaoDatasource implements jIFormsDatasource {
     public function getLabel($key){
         if($this->dao === null) $this->dao = jDao::get($this->selector, $this->profile);
         $rec = $this->dao->get($key);
-        if($rec)
-            return $rec->{$this->labelProperty};
+        if($rec) {
+            $label = '' ;
+            foreach( (array)$this->labelProperty as $property ) {
+                if (!empty( $rec->{$property}))
+                    $label .= $rec->{$property}.$this->labelSeparator;
+            }
+            if ($this->labelSeparator != '')
+                $label = substr($label, 0, -strlen($this->labelSeparator));
+            return $label ;
+        }
         else
             return null;
     }

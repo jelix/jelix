@@ -102,9 +102,9 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
 
             if(isset($attrs['dao'])) {
                 if ( isset($attrs['profile']))
-                    $profile = '\''.$attrs['profile'].'\'';
+                    $profile = ',\''.$attrs['profile'].'\'';
                 else
-                    $profile = '\'\'';
+                    $profile = ',\'\'';
                 if(isset($attrs['valueproperty'])) {
                     $daovalue = $attrs['valueproperty'];
                 } else
@@ -115,14 +115,18 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
                     throw new jException('jelix~formserr.attribute.missing',array('method', 'datasource',$this->sourceFile));
 
                 if(isset($attrs['criteria']))
-                    $criteria=',\''.$attrs['criteria'].'\'';
+                    $criteria=',\''.$attrs['criteria'].'\',null';
                 elseif(isset($attrs['criteriafrom']))
                     $criteria=',null,\''.$attrs['criteriafrom'].'\'';
                 else
-                    $criteria='';
+                    $criteria=',null,null';
+                if ( isset($attrs['labelseparator']))
+                    $labelSeparator = ',\''.$attrs['labelseparator'].'\'';
+                else
+                    $labelSeparator = '';
 
                 $source[]='$ctrl->datasource = new jFormsDaoDatasource(\''.$attrs['dao'].'\',\''.
-                                 $attrs['method'].'\',\''.$attrs['labelproperty'].'\',\''.$daovalue.'\','.$profile.$criteria.');';
+                                 $attrs['method'].'\',\''.$attrs['labelproperty'].'\',\''.$daovalue.'\''.$profile.$criteria.$labelSeparator.');';
                 if($controltype == 'submit'){
                     $source[]='$ctrl->standalone=false;';
                 }

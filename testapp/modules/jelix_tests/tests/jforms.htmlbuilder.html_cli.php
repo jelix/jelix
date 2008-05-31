@@ -3,8 +3,9 @@
 * @package     testapp
 * @subpackage  unittest module
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Dominique Papin
 * @copyright   2007-2008 Jouanneau laurent
+* @copyright   2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -24,7 +25,7 @@ class testHMLForm { // simulate a jFormBase object
     public $reset= null;
     public $container;
 
-    protected $data =  array( 'chk'=>'1', 'chk2'=>'', 'choixsimple'=>'11', 'choixmultiple'=>array('10','23'), 'autrechoix'=>'10');
+    protected $data =  array( 'chk'=>'1', 'chk2'=>'', 'choixsimple'=>'11', 'choixmultiple'=>array('10','23'), 'autrechoix'=>'10', 'autrechoix2'=>'25');
     function __construct(){
         $this->container = new jFormsDataContainer('','');
     }
@@ -441,6 +442,70 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
         $result.='<option value=""></option>';
         $result.='<option value="10" selected="selected">foo</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+
+        $this->form->setData('choixsimple',"");
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findByMaxId','name,price','id','','25',null);
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value="" selected="selected"></option>';
+        $result.='<option value="10">foo12</option>';
+        $result.='<option value="11">bar54</option>';
+        $result.='<option value="23">baz97</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findByMaxId','name,price','id','','25',null,' - ');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value="" selected="selected"></option>';
+        $result.='<option value="10">foo - 12</option>';
+        $result.='<option value="11">bar - 54</option>';
+        $result.='<option value="23">baz - 97</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findBetweenId','name,price','id','','9,25',null,' - ');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value="" selected="selected"></option>';
+        $result.='<option value="10">foo - 12</option>';
+        $result.='<option value="11">bar - 54</option>';
+        $result.='<option value="23">baz - 97</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findBetweenId','name,price','id','','10,25',null,' - ');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value="" selected="selected"></option>';
+        $result.='<option value="11">bar - 54</option>';
+        $result.='<option value="23">baz - 97</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $this->form->setData('autrechoix',"9");
+        $this->form->setData('autrechoix2',"25");
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findBetweenId','name,price','id','',null,'autrechoix,autrechoix2',' - ');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value="" selected="selected"></option>';
+        $result.='<option value="10">foo - 12</option>';
+        $result.='<option value="11">bar - 54</option>';
+        $result.='<option value="23">baz - 97</option>';
+        $result.='</select>';
+        $this->assertEqualOrDiff($result, $out);
+
+        $this->form->setData('autrechoix',"10");
+        $this->form->setData('autrechoix2',"25");
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findBetweenId','name,price','id','',null,'autrechoix,autrechoix2',' - ');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="choixsimple" id="'.$this->formname.'_choixsimple" size="1">';
+        $result.='<option value="" selected="selected"></option>';
+        $result.='<option value="11">bar - 54</option>';
+        $result.='<option value="23">baz - 97</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
 

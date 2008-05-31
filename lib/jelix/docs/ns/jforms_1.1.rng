@@ -312,6 +312,7 @@
                 <attribute name="dao" />
                 <attribute name="daomethod" />
                 <attribute name="labelproperty" />
+                <optional><attribute name="labelseparator" /></optional>
                 <optional><attribute name="valueproperty" /></optional>
                 <optional>
                     <choice>
