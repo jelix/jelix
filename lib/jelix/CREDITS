@@ -68,6 +68,7 @@ Dominique Papin (aka bibo)
  - added support of <reset> in jforms (#258)
  - fixed bug in swf* plugin (#585)
  - jforms dao datasource : enhancements (#581,#582)
+ - added ifctrl block plugin (#601)
 
 Christophe Thiriot (aka Doubleface)
  - testor

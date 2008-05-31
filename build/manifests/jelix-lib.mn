@@ -537,6 +537,7 @@ cd lib/jelix/plugins/tpl/html
   block.formcontrols.php
   block.formdata.php
   block.formsubmits.php
+  block.ifctrl.php
   function.ctrl_control.php
   function.ctrl_label.php
   function.ctrl_value.php
