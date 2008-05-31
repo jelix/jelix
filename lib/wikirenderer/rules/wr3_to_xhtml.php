@@ -4,7 +4,7 @@
  *
  * @package WikiRenderer
  * @subpackage rules
- * @author Laurent Jouanneau <jouanneau@netcourrier.com>
+ * @author Laurent Jouanneau
  * @copyright 2003-2006 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *
@@ -45,23 +45,23 @@ class wr3_to_xhtml  extends WikiRendererConfig  {
    public $simpletags = array('%%%'=>'<br />');
 
 
-   // la syntaxe wr3 contient la possibilit� de mettre des notes de bas de page
-   // celles-ci seront stock�es ici, avant leur incorporation � la fin du texte.
+   // la syntaxe wr3 contient la possibilité de mettre des notes de bas de page
+   // celles-ci seront stockées ici, avant leur incorporation é la fin du texte.
    public $footnotes = array();
    public $footnotesId='';
    public $footnotesTemplate = '<div class="footnotes"><h4>Notes</h4>%s</div>';
 
     /**
-    * methode invoqu�e avant le parsing
+    * methode invoquée avant le parsing
     */
    public function onStart($texte){
         $this->footnotesId = rand(0,30000);
-        $this->footnotes = array(); // on remet � zero les footnotes
+        $this->footnotes = array(); // on remet é zero les footnotes
         return $texte;
     }
 
    /**
-    * methode invoqu�e apr�s le parsing
+    * methode invoquée aprés le parsing
     */
     public function onParse($finalTexte){
         // on rajoute les notes de bas de pages.
@@ -73,7 +73,7 @@ class wr3_to_xhtml  extends WikiRendererConfig  {
     }
 }
 
-// ===================================== d�clarations des tags inlines
+// ===================================== déclarations des tags inlines
 
 class wr3xhtml_strong extends WikiTagXhtml {
     protected $name='strong';
@@ -202,7 +202,7 @@ class wr3xhtml_footnote extends WikiTagXhtml {
    }
 }
 
-// ===================================== d�claration des diff�rents bloc wiki
+// ===================================== déclaration des différents bloc wiki
 
 /**
  * traite les signes de types liste
@@ -246,7 +246,7 @@ class wr3xhtml_list extends WikiRendererBloc {
             $str.=($t{$i-1}== '#'?"</li></ol>\n":"</li></ul>\n");
          }
          $str.="</li>\n<li>";
-         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour �tre sur...
+         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour étre sur...
 
       }elseif( $d < 0 ){ // un niveau de plus
          $c=substr($this->_detectMatch[1],-1,1);
@@ -446,7 +446,7 @@ class wr3xhtml_blockquote extends WikiRendererBloc {
 }
 
 /**
- * traite les signes de type d�finitions
+ * traite les signes de type définitions
  */
 class wr3xhtml_definition extends WikiRendererBloc {
 

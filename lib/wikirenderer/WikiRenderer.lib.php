@@ -2,7 +2,7 @@
 /**
  * Wikirenderer is a wiki text parser. It can transform a wiki text into xhtml or other formats
  * @package WikiRenderer
- * @author Laurent Jouanneau <jouanneau@netcourrier.com>
+ * @author Laurent Jouanneau
  * @copyright 2003-2008 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *
@@ -21,13 +21,13 @@
  *
  */
 define('WIKIRENDERER_PATH', dirname(__FILE__).'/');
-define('WIKIRENDERER_VERSION', '3.1pre-php5.50');
+define('WIKIRENDERER_VERSION', '3.1pre-php5.58');
 
 
 /**
  * Wikirenderer is a wiki text parser. It can transform a wiki text into xhtml or other formats
  * @package WikiRenderer
- * @author Laurent Jouanneau <jouanneau@netcourrier.com>
+ * @author Laurent Jouanneau
  * @copyright 2003-2008 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *
@@ -96,11 +96,11 @@ abstract class WikiTag {
     */
     public function addContent($wikiContent, $parsedContent=false){
         if($parsedContent === false){
-            $parsedContent =$this->_doEscape($wikiContent);
+            $parsedContent = $this->_doEscape($wikiContent);
             if(count( $this->checkWikiWordIn)
                 && isset($this->attribute[$this->separatorCount])
                 && in_array($this->attribute[$this->separatorCount], $this->checkWikiWordIn)){
-                $parsedContent=$this->_findWikiWord($parsedContent);
+                $parsedContent = $this->_findWikiWord($parsedContent);
             }
         }
         $this->contents[$this->separatorCount] .= $parsedContent;
@@ -129,7 +129,7 @@ abstract class WikiTag {
     * @return string the separator
     */
     public function isCurrentSeparator($token){
-        return ($this->currentSeparator == $token);
+        return ($this->currentSeparator === $token);
     }
 
     /**
@@ -193,7 +193,7 @@ abstract class WikiTag {
 /**
  * Wikirenderer is a wiki text parser. It can transform a wiki text into xhtml or other formats
  * @package WikiRenderer
- * @author Laurent Jouanneau <jouanneau@netcourrier.com>
+ * @author Laurent Jouanneau
  * @copyright 2003-2008 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *
@@ -369,7 +369,7 @@ class WikiInlineParser {
 /**
  * Wikirenderer is a wiki text parser. It can transform a wiki text into xhtml or other formats
  * @package WikiRenderer
- * @author Laurent Jouanneau <jouanneau@netcourrier.com>
+ * @author Laurent Jouanneau
  * @copyright 2003-2008 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *
@@ -488,7 +488,7 @@ abstract class WikiRendererBloc {
 /**
  * Wikirenderer is a wiki text parser. It can transform a wiki text into xhtml or other formats
  * @package WikiRenderer
- * @author Laurent Jouanneau <jouanneau@netcourrier.com>
+ * @author Laurent Jouanneau
  * @copyright 2003-2008 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *
@@ -558,7 +558,7 @@ abstract class WikiRendererConfig {
 /**
  * Wikirenderer is a wiki text parser. It can transform a wiki text into xhtml or other formats
  * @package WikiRenderer
- * @author Laurent Jouanneau <jouanneau@netcourrier.com>
+ * @author Laurent Jouanneau
  * @copyright 2003-2008 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *

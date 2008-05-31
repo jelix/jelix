@@ -4,7 +4,7 @@
  *
  * @package WikiRenderer
  * @subpackage rules
- * @author Laurent Jouanneau <jouanneau@netcourrier.com>
+ * @author Laurent Jouanneau
  * @copyright 2003-2006 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *
@@ -45,7 +45,7 @@ class classicwr_to_xhtml  extends WikiRendererConfig  {
 
 }
 
-// ===================================== d�clarations des tags inlines
+// ===================================== déclarations des tags inlines
 
 class cwrxhtml_strong extends WikiTagXhtml {
     protected $name='strong';
@@ -161,7 +161,7 @@ class cwrxhtml_image extends WikiTagXhtml {
 
 
 
-// ===================================== d�claration des diff�rents bloc wiki
+// ===================================== déclaration des différents bloc wiki
 
 /**
  * traite les signes de types liste
@@ -205,7 +205,7 @@ class cwrxhtml_list extends WikiRendererBloc {
             $str.=($t{$i-1}== '#'?"</li></ol>\n":"</li></ul>\n");
          }
          $str.="</li>\n<li>";
-         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour �tre sur...
+         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour étre sur...
 
       }elseif( $d < 0 ){ // un niveau de plus
          $c=substr($this->_detectMatch[1],-1,1);
@@ -381,7 +381,7 @@ class cwrxhtml_blockquote extends WikiRendererBloc {
 }
 
 /**
- * traite les signes de type d�finitions
+ * traite les signes de type définitions
  */
 class cwrxhtml_definition extends WikiRendererBloc {
 

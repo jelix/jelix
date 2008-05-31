@@ -4,7 +4,7 @@
  *
  * @package WikiRenderer
  * @subpackage wr3_to_text
- * @author Laurent Jouanneau <jouanneau@netcourrier.com>
+ * @author Laurent Jouanneau
  * @copyright 2003-2006 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *
@@ -47,7 +47,7 @@ class wr3_to_text   extends WikiRendererConfig {
 
 }
 
-// ===================================== d�clarations des tags inlines
+// ===================================== déclarations des tags inlines
 
 class wr3text_strong extends WikiTag {
     public $beginTag='__';
@@ -149,7 +149,7 @@ class wr3text_footnote extends WikiTag {
    }
 }
 
-// ===================================== d�claration des diff�rents bloc wiki
+// ===================================== déclaration des différents bloc wiki
 
 /**
  * traite les signes de types liste
@@ -302,7 +302,7 @@ class wr3text_blockquote extends WikiRendererBloc {
 }
 
 /**
- * traite les signes de type d�finitions
+ * traite les signes de type définitions
  */
 class wr3text_definition extends WikiRendererBloc {
 
