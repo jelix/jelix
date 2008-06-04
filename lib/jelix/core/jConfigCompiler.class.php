@@ -29,18 +29,29 @@ class jConfigCompiler {
      */
     static public function read($configFile){
 
+        if(JELIX_APP_TEMP_PATH=='/'){
+            // if it equals to '/', this is because realpath has returned false in the application.init.php
+            // so this is because the path doesn't exist.
+            die('Jelix Error: Application temp directory doesn\'t exist !');
+        }
+
+        if(!is_writable(JELIX_APP_TEMP_PATH)){
+            die('Jelix Error: Application temp directory is not writable');
+        }
+
 #if ENABLE_PHP_JELIX
         $config = jelix_read_ini(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
 
-        @jelix_read_ini(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',$config);
+        @jelix_read_ini(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php', $config);
 
         if($configFile !='defaultconfig.ini.php'){
             if(!file_exists(JELIX_APP_CONFIG_PATH.$configFile))
                 die("Jelix config file $configFile is missing !");
-            if( false === @jelix_read_ini(JELIX_APP_CONFIG_PATH.$configFile,$config))
+            if( false === @jelix_read_ini(JELIX_APP_CONFIG_PATH.$configFile, $config))
                 die("Syntax error in the Jelix config file $configFile !");
         }
-        $config->isWindows = (DIRECTORY_SEPARATOR == '\\');
+
+        $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
         if(trim( $config->startAction) == '') {
             $config->startAction = ':';
         }

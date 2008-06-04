@@ -79,12 +79,6 @@ class jCoordinator {
 
         $gJCoord =  $this;
 
-        if(JELIX_APP_TEMP_PATH=='/'){ // le realpath dans application.ini.php a renvoyé false...
-            die('Jelix Error: Application temp directory doesn\'t exist !');
-        }
-        if(!is_writable(JELIX_APP_TEMP_PATH)){
-            die('Jelix Error: Application temp directory is not writable');
-        }
         // load configuration data
         $gJConfig = jConfig::load($configFile);
 
