@@ -51,7 +51,7 @@ function jtpl_modifier_common_jdatetime($date, $format_in = 'db_datetime',
         'rfc822'=> jDateTime::RFC822_FORMAT);
 
     if(!isset($formats[$format_in]) | !isset($formats[$format_out])){
-        throw new jException("tpl.tag.modifier.invalid", array('','jdatetime',''));
+        throw new jException("jelix~errors.tpl.tag.modifier.invalid", array('','jdatetime',''));
     }
 
     $dt = new jDateTime();
