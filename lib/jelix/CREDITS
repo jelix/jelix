@@ -64,11 +64,11 @@ Dominique Papin (aka bibo)
  - added j_themepath variable in jtpl (#346)
  - improved addCssLink usability for IE (#348)
  - added support of 'else' keyword for block plugin in jtpl (#349)
- - fixed bug in firebug support (#362)
  - added support of <reset> in jforms (#258)
- - fixed bug in swf* plugin (#585)
+ - fixed some bugs (#362,#585)
  - jforms dao datasource : enhancements (#581,#582)
  - added ifctrl block plugin (#601)
+ - added addContent method to jResponseHtmlFragment (#610)
 
 Christophe Thiriot (aka Doubleface)
  - testor
