@@ -120,6 +120,9 @@ Florian Hatat (aka flh)
  - improvements on jDateTime + RFC2822 support (#379)
  - Fix bugs on duration calculation + new jDuration class (#425, #453)
 
+Julien Jacottet
+ - tpl plugin link_to_remote (#30)
+
 Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
  - jResponseCss

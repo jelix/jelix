@@ -548,6 +548,7 @@ cd lib/jelix/plugins/tpl/html
   block.swf.php
   cfunction.swfbiscuit.php
   block.swfjs.php
+  function.link_to_remote.php
 
 cd lib/jelix/plugins/tpl/ltx2pdf
   function.jlocale.php
