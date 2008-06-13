@@ -208,7 +208,7 @@ enableAclDbEventListener = off
 
 [acl2]
 driver = db
-enableAclDbEventListener = off
+enableAcl2DbEventListener = off
 
 
 [sessions]

@@ -3,8 +3,8 @@
 * @package     jelix-modules
 * @subpackage  jacl2db
 * @author      Jouanneau Laurent
-* @contributor 
-* @copyright   2008 Jouanneau laurent
+* @contributor Bastien Jaillot
+* @copyright   2008 Jouanneau laurent, 2008 Bastien Jaillot
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.1
 */
@@ -22,7 +22,7 @@ class jacl2dbListener extends jEventListener{
     * @param jEvent $event   the event
     */
    function onAuthNewUser($event){
-        if($GLOBALS['gJConfig']->acl['enableAclDbEventListener']) {
+        if($GLOBALS['gJConfig']->acl2['enableAcl2DbEventListener']) {
             $user = $event->getParam('user');
             jAcl2DbUserGroup::createUser($user->login);
         }
@@ -34,7 +34,7 @@ class jacl2dbListener extends jEventListener{
     * @param jEvent $event   the event
     */
    function onAuthRemoveUser($event){
-        if($GLOBALS['gJConfig']->acl['enableAclDbEventListener']) {
+        if($GLOBALS['gJConfig']->acl2['enableAcl2DbEventListener']) {
             $login = $event->getParam('login');
             jAcl2DbUserGroup::removeUser($login);
         }

@@ -33,6 +33,7 @@ Bastien Jaillot (aka bastnic)
  - fixed bug in jFile::removeDir which crash if they are link inside (#519)
  - add a jFormBase prepareDaoFromControls which return a DAO filled by form (#497)
  - jforms tpl plugins : choice of builder (#583)
+ - fixed bug in jacl2 events : conflict with jacl (#621)
 
 Laurent Jouanneau (laurentj):
  - Conceptor and main developer of Jelix
