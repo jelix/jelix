@@ -72,14 +72,29 @@ class jBinding {
      *
      * @return mixed
      */
-    public function getInstance() {
-        if ($this->instance === null) {
-            if ($this->toSelector === null) {
-                $this->toSelector = $this->_getClassSelector();
-            }
-            $this->instance = jClasses::create($this->toSelector->toString());
+    public function getInstance($singleton=true) {
+        $instance = null;
+        if (true === $singleton && $this->instance !== null) {
+            $instance = $this->instance;
+        } elseif (true === $singleton && $this->instance === null) {
+            $instance = $this->instance = $this->_createInstance();
+        } else { // all cases with $singleton === false
+            $instance = $this->_createInstance();
         }
-        return $this->instance;
+        return $instance;
+    }
+
+    /**
+     * Create the binded selector if not initialzed yet
+     * 
+     * @return mixed 
+     */
+    protected function _createInstance() {
+        if ($this->toSelector === null) {
+            $this->instance   = null;
+            $this->toSelector = $this->_getClassSelector();    
+        }
+        return jClasses::create($this->toSelector->toString());
     }
 
     /**

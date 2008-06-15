@@ -46,7 +46,7 @@ class jClasses {
      * @since 1.1
      */
     static public function createBinded($selector) {
-        return self::getBinding($selector, false);
+        return self::getBinding($selector)->getInstance(false);
     }
 
     /**
@@ -108,20 +108,15 @@ class jClasses {
      * @see jClasses::bind
      * @since 1.1
      */
-    static public function getBinding($selector, $singleton=true) {
+    static public function getBinding($selector) {
         $osel = jSelectorFactory::create($selector, 'iface');
         $s    = $osel->toString(true);
 
-        $binding = null;
-        if ($singleton === false || !isset(self::$_bindings[$s])) {
-            $binding = new jBinding($osel);
-            if ($singleton === true) self::$_bindings[$s] = $binding;
-        } else {
-            $binding = self::$_bindings[$s];
+        if (!isset(self::$_bindings[$s])) {
+            self::$_bindings[$s] = new jBinding($osel);
         }
 
-
-        return $binding;
+        return self::$_bindings[$s];
     }
 
     /**

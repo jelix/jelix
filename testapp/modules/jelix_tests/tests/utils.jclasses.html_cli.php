@@ -110,6 +110,8 @@ class UTjclasses extends UnitTestCase {
     public function testcreateBindedCalledTwice(){
         $obj1 = jClasses::createBinded('class:jelix_tests~myclass');
         $obj2 = jClasses::createBinded('class:jelix_tests~myclass');
+        $this->assertTrue($obj1 instanceof myclass);
+        $this->assertTrue($obj2 instanceof myclass);
         $this->assertTrue($obj1 !== $obj2);
 
         jClasses::bind('jelix_tests~test')->to('jelix_tests~myclass');
@@ -122,9 +124,11 @@ class UTjclasses extends UnitTestCase {
     // then toInstance has no effect... 
     public function testCreateBindedWithToInstanceCalledTwice(){
         $instance = new StdClass();
-        jClasses::bind('jelix_tests~test')->toInstance($instance);
-        $obj1 = jClasses::createBinded('jelix_tests~test');
-        $obj2 = jClasses::createBinded('jelix_tests~test');
+        jClasses::bind('class:jelix_tests~myclass')->toInstance($instance);
+        $obj1 = jClasses::createBinded('class:jelix_tests~myclass');
+        $obj2 = jClasses::createBinded('class:jelix_tests~myclass');
+        $this->assertTrue($obj1 instanceof myclass);
+        $this->assertTrue($obj2 instanceof myclass);
         $this->assertTrue($obj1 !== $obj2);
     }
 }
