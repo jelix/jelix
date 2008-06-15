@@ -129,6 +129,9 @@ Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
  - jResponseCss
 
+Gwendal Jouannic (aka obewan)
+ - oracle support with PDO-OCI (#615)
+
 Nicolas Lassalle
  - bug fix in jResponseBinary (#188)
 

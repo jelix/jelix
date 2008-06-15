@@ -486,6 +486,7 @@ cd lib/jelix/plugins/db/sqlite
 
 cd lib/jelix/plugins/db/oci
   oci.daobuilder.php
+  oci.dbtools.php
 
 cd lib/jelix/plugins/tpl/common
   block.ifacl.php

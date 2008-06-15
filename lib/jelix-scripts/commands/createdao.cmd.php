@@ -3,7 +3,9 @@
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
 * @contributor Nicolas Jeudy (patch ticket #99)
+* @contributor Gwendal Jouannic (patch ticket #615)
 * @copyright   2005-2007 Jouanneau laurent
+* @copyright   2007 Nicolas Jeudy, 2008 Gwendal Jouannic
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -73,12 +75,14 @@ class createdaoCommand extends JelixScriptCommand {
 
             switch($prop->type){
 
+               case 'clob': 
                case 'text':
                case 'mediumtext':
                case 'longtext':
                case 'tinytext':
                   $type='text';
                   break;
+               case 'varchar2':
                case 'varchar':
                case 'char':
                case 'enum':
@@ -86,6 +90,7 @@ class createdaoCommand extends JelixScriptCommand {
                case 'set':
                   $type='string';
                   break;
+               case 'number':
                case 'tinyint':
                case 'int':
                case 'integer':
@@ -147,6 +152,9 @@ class createdaoCommand extends JelixScriptCommand {
                }
                if ($prop->length) {
                     $properties.=' maxlength="'.$prop->length.'"';
+               }
+               if ($prop->sequence) {
+                    $properties.=' sequence="'.$prop->sequence.'"';
                }
                $properties.='/>';
             }

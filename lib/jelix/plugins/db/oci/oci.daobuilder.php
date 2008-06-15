@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage db_driver
 * @author     Laurent Jouanneau
-* @contributor
+* @contributor Gwendal Jouannic
 * @copyright  2007 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -62,6 +62,14 @@ class ociDaoBuilder extends jDaoGenerator {
         }
         return $field;
     }
+    
+    /*
+     * Remplace le lastInsertId qui ne marche pas avec oci 
+     */
+    protected function genUpdateAutoIncrementPK($pkai, $pTableRealName) {
+        return '          $record->'.$pkai->name.'= $this->_conn->query(\'SELECT '.$pkai->sequenceName.'.currval as '.$pkai->name.' from dual\')->fetch()->'.$pkai->name.';';
+    }
+    
 
 }
 ?>

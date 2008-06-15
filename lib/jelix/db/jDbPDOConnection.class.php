@@ -3,8 +3,9 @@
 * @package    jelix
 * @subpackage db
 * @author     Laurent Jouanneau
-* @contributor
+* @contributor Gwendal Jouannic
 * @copyright  2005-2006 Laurent Jouanneau
+* @copyright  2008 Gwendal Jouannic
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -74,6 +75,8 @@ class jDbPDOConnection extends PDO {
     const JPDO_ATTR_ERRMODE = 3; // PDO::ATTR_ERRMODE
     const JPDO_ERRMODE_EXCEPTION = 2; // PDO::ERRMODE_EXCEPTION
     const JPDO_MYSQL_ATTR_USE_BUFFERED_QUERY = 1000; // PDO::MYSQL_ATTR_USE_BUFFERED_QUERY
+    const JPDO_ATTR_CASE = 8; // PDO::ATTR_CASE
+    const JPDO_CASE_LOWER = 2; // PDO::CASE_LOWER
 
     private $_mysqlCharsets =array( 'UTF-8'=>'utf8', 'ISO-8859-1'=>'latin1');
     private $_pgsqlCharsets =array( 'UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');
@@ -116,6 +119,10 @@ class jDbPDOConnection extends PDO {
         if($this->dbms == 'mysql')
             $this->setAttribute(self::JPDO_MYSQL_ATTR_USE_BUFFERED_QUERY, true);
     
+        // Oracle renvoie les noms de colonnes en majuscules, il faut donc forcer la casse en minuscules
+        if ($this->dbms == 'oci')
+            $this->setAttribute(self::JPDO_ATTR_CASE, self::JPDO_CASE_LOWER);            
+            
         if(isset($prof['force_encoding']) && $prof['force_encoding']==true){
             if($this->dbms == 'mysql' && isset($this->_mysqlCharsets[$GLOBALS['gJConfig']->charset])){
                 $this->exec("SET CHARACTER SET '".$this->_mysqlCharsets[$GLOBALS['gJConfig']->charset]."'");
