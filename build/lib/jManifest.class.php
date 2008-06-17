@@ -1,9 +1,10 @@
 <?php
 /**
 * @package     jBuildTools
-* @author      Jouanneau Laurent
-* @contributor
-* @copyright   2006 Jouanneau laurent
+* @author      Laurent Jouanneau
+* @contributor Kévin Lepeltier
+* @copyright   2006-2008 Jouanneau laurent
+* @copyright   2008 Kévin Lepeltier
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -33,7 +34,7 @@ class jManifest {
 
         foreach($script as $nbline=>$line){
             $nbline++;
-            if(preg_match(';^(cd|sd|dd|\*|!|\*!|c|\*c)?\s+([a-zA-Z0-9\/.\-_]+)\s*(?:\(([a-zA-Z0-9\/.\-_]*)\))?\s*$;m', $line, $m)){
+            if(preg_match(';^(cd|sd|dd|\*|!|\*!|c|\*c|cch)?\s+([a-zA-Z0-9\/.\-_]+)\s*(?:\(([a-zA-Z0-9\%\/.\-_]*)\))?\s*$;m', $line, $m)){
                 if($m[1] == 'dd'){
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);
                     jBuildUtils::createDir($distdir.$currentdestdir);
@@ -45,7 +46,7 @@ class jManifest {
                     jBuildUtils::createDir($distdir.$currentdestdir);
                 }else{
                     $doPreprocessing = (strpos($m[1],'*') !== false);
-                    $doCompression = (strpos($m[1],'c') !== false) || ($stripcomment && (strpos($m[1],'!') === false));
+                    $doCompression = (strpos($m[1],'c') !== false && $m[1] != 'cch') || ($stripcomment && (strpos($m[1],'!') === false));
 
                     if($m[2] == ''){
                         throw new Exception ( "$ficlist : file required on line $nbline \n");
@@ -90,6 +91,32 @@ class jManifest {
                         $script = file_get_contents($sourcefile);
                         $packer = new JavaScriptPacker($script, 0, true, false);
                         file_put_contents($destfile, $packer->pack());
+
+                    }elseif($m[1] == 'cch') {
+                        if(strpos($m[3], '%charset%') === false) {
+                            throw new Exception ( "$ficlist : line $nbline, dest file ".$m[3]." doesn't contains %charset% pattern.\n");
+                        }
+
+                        if($verbose)
+                            echo "convert charset\tsources\t".$sourcedir.$currentsrcdir.$m[2]."   ".$m[3]."\n";
+
+                        $encoding = preg_split('/[\s,]+/', $preprocvars['PROPERTIES_CHARSET_TARGET']);
+
+                        $content = file_get_contents( $sourcefile );
+                        if (isset($preprocvars['DEFAULT_CHARSET']) && $preprocvars['DEFAULT_CHARSET'] != '')
+                            $encode = $preprocvars['DEFAULT_CHARSET'];
+                        else
+                            $encode = mb_detect_encoding( $content );
+
+                        foreach ( $encoding as $val ) {
+                            $encodefile = str_replace('%charset%', $val, $destfile);
+                            if($verbose)
+                                echo "\tencode into ".$encodefile."\n";
+                            $file = fopen($encodefile, "w");
+                            fwrite($file, mb_convert_encoding($content, $val, $encode));
+                            fclose($file);
+                        }
+
                     }else{
                         if($verbose)
                             echo "copy  ".$sourcedir.$currentsrcdir.$m[2]."\tto\t".$destfile."\n";

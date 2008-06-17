@@ -3,7 +3,10 @@ Credits for jBuildTools
 
 Main developer : Laurent Jouanneau
 
-See http://jelix.org
+Contributors: 
+
+Kévin Lepeltier (aka Lipki)
+  - convertion of file to other encoding (cch command in manifests)
 
 
 Credits for external tools including in the package

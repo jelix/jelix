@@ -2,8 +2,9 @@
 /**
 * @package     jelix
 * @author      Jouanneau Laurent
-* @contributor
-* @copyright   2006-2007 Jouanneau laurent
+* @contributor Kévin Lepeltier
+* @copyright   2006-2008 Jouanneau laurent
+* @copyright   2008 Kévin Lepeltier
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -74,6 +75,16 @@ $BUILD_OPTIONS = array(
 'INCLUDE_ALL_FONTS'=>array(
     "True if you want to include lib/fonts content for tcpdf or other",
     false,
+    ),
+'PROPERTIES_CHARSET_TARGET'=> array(
+    "List of charset used for command cch (convert charset)",
+    'UTF-8,ISO-8859-1,ISO-8859-15',
+    '',
+    ),
+'DEFAULT_CHARSET'=> array(
+    "The default charset of file. useful when convertir some files (cch command)",
+    'UTF-8',
+    '',
     ),
 'PHP50'=> array(
     false,   // hidden option
