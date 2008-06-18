@@ -2,8 +2,9 @@
 /**
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
-* @contributor 
+* @contributor Julien Issler
 * @copyright   2007-2008 Jouanneau laurent
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -27,8 +28,8 @@ ACTION:
  * alluserslist
     liste tout les utilisateurs inscrits
  * [-defaultgroup] create  nom
-     créer un groupe. Si il y a l'option -defaultgroup, ce nouveau
-     groupe sera un groupe par defaut pour les nouveaux utilisateurs
+    créer un groupe. Si il y a l'option -defaultgroup, ce nouveau
+    groupe sera un groupe par defaut pour les nouveaux utilisateurs
  * setdefault groupid [true|false]
     fait du groupe indiqué un groupe par defaut (ou n'est plus
     un groupe par defaut si false est indiqué)
@@ -36,10 +37,12 @@ ACTION:
     change le nom d'un groupe
  * delete   groupid
     efface un groupe
- * adduser login groupid
-   ajoute un utilisateur dans un groupe
+ * createuser login
+    créé un utilisateur et son groupe privé
+ * adduser groupid login
+    ajoute un utilisateur dans un groupe
  * removeuser login groupid
-   enlève un utilisateur d'un groupe
+    enlève un utilisateur d'un groupe
 ",
         'en'=>"
 jAcl2: user group management
@@ -52,8 +55,8 @@ ACTION:
  * alluserslist
     list all users
  * [-defaultgroup] create name
-     create a group. If there is -defaultgroup option, this new group
-     become a defautl group for new users
+    create a group. If there is -defaultgroup option, this new group
+    become a defautl group for new users
  * setdefault groupid [true|false]
     the given group become a default group or not
     become a default group if false is given
@@ -61,6 +64,8 @@ ACTION:
     change a group name
  * delete   groupid
     delete a group
+ * createuser login
+    add a user and and it's private group
  * adduser groupid login
     add a user in a group
  * removeuser groupid login
@@ -79,7 +84,7 @@ ACTION:
             'alluserslist'=>"Liste de tous les utilisateurs",
             'adduser'=>"Ajoute un utilisateur",
             'removeuser'=>"Enlève un utilisateur",
-            'createuser'=>"Créer un user dans jAcl2",
+            'createuser'=>"Créé un user dans jAcl2",
             'destroyuser'=>"Enlève un user de jAcl2",
             ),
         'en'=>array(
@@ -325,7 +330,7 @@ ACTION:
     private function _getGrpId($param){
         $cnx = jDb::getConnection(jAclDb::getProfil());
         if(is_numeric($param)){
-            if(intval($param) >= 0)
+            if(intval($param) <= 0)
                 die('Error: invalid group id');
             $sql="SELECT id_aclgrp FROM jacl2_group WHERE grouptype <2 AND id_aclgrp = ".$param;
         }else{

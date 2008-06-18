@@ -24,6 +24,7 @@ Julien Issler
  - jZipCreator : empty dirs are not included in the archive (#570)
  - jForms : fixed bugs in jforms.js based on Martus' report (#554)
  - jLocale : support multiline rendering in strings (#569)
+ - some errors and missing help for jAcl2 command line scripts (#622)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
