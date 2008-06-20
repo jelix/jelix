@@ -88,7 +88,7 @@ class UTjtplexpr extends jUnitTestCase {
         '@const.continue.declare.default.do.echo.else.elseif.empty@'=>'jLocale::get(\'const.continue.declare.default.do.echo.else.elseif.empty\')',
         '@exit.final.for.foreach.function.global.if.implements.instanceof@'=>'jLocale::get(\'exit.final.for.foreach.function.global.if.implements.instanceof\')',
         '@interface.and.or.xor.new.private.public@'=>'jLocale::get(\'interface.and.or.xor.new.private.public\')',
-        '@protected.return.static.switch.throw.try.use.var.while@'=>'jLocale::get(\'protected.return.static.switch.throw.try.use.var.while\')',
+        '@protected.return.static.switch.throw.try.use.var.eval.while@'=>'jLocale::get(\'protected.return.static.switch.throw.try.use.var.eval.while\')',
         '$aa*(234+$b)'=>'$t->_vars[\'aa\']*(234+$t->_vars[\'b\'])',
         '$aa[$bb[4]]'=>'$t->_vars[\'aa\'][$t->_vars[\'bb\'][4]]',
     );
