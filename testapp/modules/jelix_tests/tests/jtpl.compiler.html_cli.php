@@ -13,12 +13,19 @@ require_once(JELIX_LIB_PATH.'tpl/jTplCompiler.class.php');
 
 class testJtplContentCompiler extends jTplCompiler {
 
-   public function compileContent2($content){
+    public function setUserPlugins($userModifiers, $userFunctions) {
+        $this->_modifier = array_merge($this->_modifier, $userModifiers);
+        $this->_userFunctions = $userFunctions;
+    }
+
+    public function compileContent2($content){
         return $this->compileContent($content);
-   }
+    }
 }
 
+function testjtplcontentUserFunction($t,$a,$b) {
 
+}
 
 
 class UTjtplcontent extends jUnitTestCase {
@@ -118,13 +125,17 @@ function toto() {
         '<p>ok{if ($foo || $bar) && $baz} {/if}</p>',
         '<p>ok<?php if(($t->_vars[\'foo\'] || $t->_vars[\'bar\']) && $t->_vars[\'baz\']):?> <?php endif;?></p>',
         ),
+19=>array(
+        '<p>ok{bla $foo, $params}</p>',
+        '<p>ok<?php testjtplcontentUserFunction( $t,$t->_vars[\'foo\'], $t->_vars[\'params\']);?></p>',
+        ),
     );
 
     function testCompileContent() {
         $compil = new testJtplContentCompiler();
         $compil->outputType = 'html';
         $compil->trusted = true;
-
+        $compil->setUserPlugins(array(), array('bla'=>'testjtplcontentUserFunction'));
         foreach($this->content as $k=>$t){
             try{
                 $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));

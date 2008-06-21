@@ -56,7 +56,7 @@ class jTplCompiler
     private $_pluginPath=array();
     private $_metaBody = '';
 
-    private $_modifier = array('upper'=>'strtoupper', 'lower'=>'strtolower',
+    protected $_modifier = array('upper'=>'strtoupper', 'lower'=>'strtolower',
         'escxml'=>'htmlspecialchars', 'eschtml'=>'htmlspecialchars', 'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
         'capitalize'=>'ucwords', 'stripslashes'=>'stripslashes'
     );
@@ -67,6 +67,8 @@ class jTplCompiler
     private $_currentTag;
     public $outputType='';
     public $trusted=true;
+
+    protected $_userFunctions = array();
 
     /**
      * Initialize some properties
@@ -92,11 +94,14 @@ class jTplCompiler
      * @param string $tplfile the file name that contains the template
      * @return boolean true if ok
      */
-    public function compile($tplFile, $outputtype, $trusted){
+    public function compile($tplFile, $outputtype, $trusted, $userModifiers = array(), $userFunctions = array()){
         $this->_sourceFile = $tplFile;
         $this->outputType = ($outputtype==''?'html':$outputtype);
         $cachefile = JTPL_CACHE_PATH .$this->outputType.($trusted?'_t':'').'_'. basename($tplFile);
         $this->trusted = $trusted;
+        $this->_modifier = array_merge($this->_modifier, $userModifiers);
+        $this->_userFunctions = $userFunctions;
+
 #else
     /**
      * Launch the compilation of a template
@@ -110,6 +115,9 @@ class jTplCompiler
         $cachefile = $selector->getCompiledFilePath();
         $this->outputType = $selector->outputType;
         $this->trusted = $selector->trusted;
+        $this->_modifier = array_merge($this->_modifier, $selector->userModifiers);
+        $this->_userFunctions = $selector->userFunctions;
+
         jContext::push($selector->module);
 #endif
 
@@ -392,6 +400,10 @@ class jTplCompiler
                     $argfct=$this->_parseFinal($args,$this->_allowedAssign);
                     $res = $path[1].'( $t'.(trim($argfct)!=''?','.$argfct:'').');';
                     $this->_pluginPath[$path[0]] = true;
+
+                } else if ( isset($this->_userFunctions[$name])) {
+                    $argfct=$this->_parseFinal($args,$this->_allowedAssign);
+                    $res = $this->_userFunctions[$name].'( $t'.(trim($argfct)!=''?','.$argfct:'').');';
 
                 } else {
                     $this->doError1('errors.tpl.tag.function.unknow',$name);

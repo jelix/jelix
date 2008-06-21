@@ -13,6 +13,12 @@ require_once(JELIX_LIB_PATH.'tpl/jTplCompiler.class.php');
 
 class testJtplCompiler extends jTplCompiler {
 
+    public function setUserPlugins($userModifiers, $userFunctions) {
+        $this->_modifier = array_merge($this->_modifier, $userModifiers);
+        $this->_userFunctions = $userFunctions;
+    }
+
+
    public function testParseExpr($string, $allowed=array(), $exceptchar=array(';'), $splitArgIntoArray=false){
         return $this->_parseFinal($string, $allowed, $exceptchar, $splitArgIntoArray);
    }
@@ -43,7 +49,7 @@ class testJtplCompiler extends jTplCompiler {
 
 }
 
-
+function testjtplcontentUserModifier($s){}
 
 
 class UTjtplexpr extends jUnitTestCase {
@@ -261,12 +267,15 @@ class UTjtplexpr extends jUnitTestCase {
         '$aaa|jdatetime:\'db_date\':\'lang_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_date\',\'lang_date\')',
         '$aaa|jdatetime:\'db_date\',\'lang_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_date\',\'lang_date\')',
         '$aaa|jdatetime:\'db_:date\',\'lang_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_:date\',\'lang_date\')',
+        '$aaa|bla'=>'testjtplcontentUserModifier($t->_vars[\'aaa\'])',
     );
 
 
     function testVarTag() {
         $compil = new testJtplCompiler();
         $compil->trusted = true;
+        $compil->setUserPlugins(array('bla'=>'testjtplcontentUserModifier'),array());
+
         foreach($this->varTag as $k=>$t){
             try{
                 $res = $compil->testParseVariable($k);

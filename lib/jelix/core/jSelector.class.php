@@ -643,6 +643,9 @@ class jSelectorTpl extends jSelectorModule {
     protected $_where;
     public $outputType='';
     public $trusted=true;
+    public $userModifiers = array();
+    public $userFunctions = array();
+
 
     /**
      * @param string $sel the template selector

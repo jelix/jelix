@@ -4,7 +4,7 @@
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
-* @copyright   2005-2006 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2005-2008 Laurent Jouanneau, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -206,6 +206,8 @@ class jTpl {
     protected function  getTemplate($tpl,$fctname, $outputtype='', $trusted = true){
 #ifnot JTPL_STANDALONE
         $sel = new jSelectorTpl($tpl,$outputtype,$trusted);
+        $sel->userModifiers = $this->userModifiers;
+        $sel->userFunctions = $this->userFunctions;
         jIncluder::inc($sel);
         $fct = $fctname.md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType.($trusted?'_t':''));
 #else
@@ -224,6 +226,7 @@ class jTpl {
             include_once(JTPL_PATH . 'jTplCompiler.class.php');
 
             $compiler = new jTplCompiler();
+            $compiler->setUserPlugins( $this->userModifiers, $this->userFunctions);
             $compiler->compile($tpl,$outputtype, $trusted);
         }
         require_once($cachefile);
@@ -295,6 +298,33 @@ class jTpl {
         return $this->fetch ($tpl, $outputtype, $trusted,true);
     }
 
+
+    protected $userModifiers = array();
+
+    /**
+     * register a user modifier. The function should accept at least a
+     * string as first parameter, and should return this string
+     * which can be modified.
+     * @param string $name  the name of the modifier in a template
+     * @param string $functionName the corresponding PHP function
+     * @since jelix 1.1
+     */
+    public function registerModifier($name, $functionName) {
+        $this->userModifiers[$name] = $functionName;
+    }
+
+    protected $userFunctions = array();
+
+    /**
+     * register a user function. The function should accept a jTpl object
+     * as first parameter.
+     * @param string $name  the name of the modifier in a template
+     * @param string $functionName the corresponding PHP function
+     * @since jelix 1.1
+     */
+    public function registerFunction($name, $functionName) {
+        $this->userFunctions[$name] = $functionName;
+    }
 
     /**
      * return the current encoding
