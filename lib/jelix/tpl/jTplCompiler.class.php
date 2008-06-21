@@ -345,6 +345,7 @@ class jTplCompiler
                 break;
 
             case 'assign':
+            case 'eval':
                 $res = $this->_parseFinal($args,$this->_allowedAssign).';';
                 break;
             case 'literal':

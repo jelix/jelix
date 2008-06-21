@@ -10,6 +10,7 @@
 */
 
 require_once(JELIX_LIB_PATH.'tpl/jTplCompiler.class.php');
+define('TEST_JTPL_COMPILER_ASSIGN',1);
 
 class testJtplCompiler extends jTplCompiler {
 
@@ -106,8 +107,6 @@ class UTjtplexpr extends jUnitTestCase {
     protected $varexprUnTrustedMode = array(
 
     );
-
-
 
 
     function testVarExprTrustedMode() {
@@ -287,6 +286,53 @@ class UTjtplexpr extends jUnitTestCase {
             }
         }
     }
+
+
+    protected $varAssign = array(
+        '$aa=$bb'=>'$t->_vars[\'aa\']=$t->_vars[\'bb\']',
+        '$aa+=$bb'=>'$t->_vars[\'aa\']+=$t->_vars[\'bb\']',
+        '$aa-=$bb'=>'$t->_vars[\'aa\']-=$t->_vars[\'bb\']',
+        '$aa/=$bb'=>'$t->_vars[\'aa\']/=$t->_vars[\'bb\']',
+        '$aa*=$bb'=>'$t->_vars[\'aa\']*=$t->_vars[\'bb\']',
+        'TEST_JTPL_COMPILER_ASSIGN'=>'TEST_JTPL_COMPILER_ASSIGN'
+    );
+
+    protected $varAssignUnTrustedMode = array(
+        'TEST_JTPL_COMPILER_ASSIGN'=>array('jelix~errors.tpl.tag.constant.notallowed',array('','TEST_JTPL_COMPILER_ASSIGN','')),
+    );
+
+
+    function testAssign() {
+        $compil = new testJtplCompiler();
+        $compil->trusted = true;
+
+        foreach($this->varAssign as $k=>$t){
+            try{
+                $res = $compil->testParseAssignExpr($k);
+                $this->assertEqualOrDiff($t, $res);
+            }catch(jException $e){
+                $this->fail("Test '$k', Unknown Jelix Exception : ".$e->getMessage().' ('.$e->getLocaleKey().')');
+            }catch(Exception $e){
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+            }
+        }
+
+        $compil->trusted = false;
+
+        foreach($this->varAssignUnTrustedMode as $k=>$t){
+            try{
+                $res = $compil->testParseAssignExpr($k);
+                $this->fail("No Exception for this test '$k' ");
+            }catch(jException $e){
+                $this->assertEqualOrDiff($t[0], $e->getLocaleKey());
+                $this->assertEqual($t[1], $e->getLocaleParameters());
+            }catch(Exception $e){
+                $this->pass("Unknown Exception: ".$e->getMessage());
+            }
+
+        }
+    }
+
 
 }
 
