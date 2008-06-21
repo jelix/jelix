@@ -183,4 +183,3 @@ class jResponseLatexToPdf extends jResponse {
         }
     }
 }
-?>

@@ -257,5 +257,3 @@ class jRSSItem extends jXMLFeedItem {
      */
     public $sourceTitle;
 }
-
-?>

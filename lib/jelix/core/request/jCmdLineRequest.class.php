@@ -60,4 +60,4 @@ class jCmdLineRequest extends jRequest {
         $this->params['action'] = $selector->resource;
     }
 }
-?>
+

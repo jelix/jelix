@@ -646,7 +646,6 @@ class jSelectorTpl extends jSelectorModule {
     public $userModifiers = array();
     public $userFunctions = array();
 
-
     /**
      * @param string $sel the template selector
      * @param string $outputtype  the type of output (html, text..) By default, it takes the response type
@@ -910,4 +909,3 @@ class jSelectorLib extends jSelectorSimpleFile {
     }
 }
 
-?>

@@ -58,4 +58,3 @@ class jResponseCss extends jResponse {
         echo "\n*/";
     }
 }
-?>

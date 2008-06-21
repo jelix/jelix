@@ -61,4 +61,3 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     $gJCoord->handleError($toDo, $codeString[$errno], $errno, $errmsg, $filename, $linenum, $trace);
 
 }
-?>

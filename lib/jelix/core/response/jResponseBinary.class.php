@@ -126,4 +126,3 @@ final class jResponseBinary  extends jResponse {
         }
     }
 }
-?>

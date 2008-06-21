@@ -173,7 +173,7 @@ class jUrl extends jUrlBase {
     const JURL=2;
     const JURLACTION=3;
     /**#@-*/
-    
+
     /**
     * script name including its path
     * @var string
@@ -380,5 +380,3 @@ class jUrl extends jUrlBase {
     }
 
 }
-
-?>

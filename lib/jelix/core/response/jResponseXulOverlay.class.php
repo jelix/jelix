@@ -25,4 +25,3 @@ class jResponseXulOverlay extends jResponseXul {
     protected $_root = 'overlay';
     function _otherthings(){ } // pas d'overlay dans un overlay
 }
-?>

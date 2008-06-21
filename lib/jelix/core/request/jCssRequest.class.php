@@ -28,4 +28,3 @@ class jCssRequest extends jRequest {
 
     public function allowedResponses(){ return array('jResponseCss');}
 }
-?>

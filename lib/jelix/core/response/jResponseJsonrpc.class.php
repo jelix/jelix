@@ -71,4 +71,3 @@ final class jResponseJsonRpc extends jResponse {
     }
 }
 
-?>

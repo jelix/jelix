@@ -26,4 +26,3 @@ class jXulRequest extends jRequest {
         $this->params = array_merge($url->params, $_POST);
     }
 }
-?>

@@ -59,4 +59,3 @@ class jXmlRpcRequest extends jRequest {
     public function allowedResponses(){ return array('jResponseXmlrpc');}
 
 }
-?>

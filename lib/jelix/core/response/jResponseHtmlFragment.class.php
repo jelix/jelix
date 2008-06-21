@@ -147,4 +147,3 @@ class jResponseHtmlFragment extends jResponse {
         return $errors;
     }
 }
-?>

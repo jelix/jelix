@@ -19,7 +19,7 @@ class jResponseCmdline extends jResponse {
      * Code used by exit function in the end of the process if no error occured 
      */
     const EXIT_CODE_OK = 0;
-    
+
     /**
      * Code used by exit function in the end of the process if an error occured 
      */
@@ -120,4 +120,3 @@ class jResponseCmdline extends jResponse {
      */
     protected function sendHttpHeaders(){}
 }
-?>

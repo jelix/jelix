@@ -28,4 +28,4 @@ class jRdfRequest extends jRequest {
     public function allowedResponses(){ return array('jResponseRdf');}
 
 }
-?>
+

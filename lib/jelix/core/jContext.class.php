@@ -55,4 +55,3 @@ class jContext {
         self::$context = array ();
     }
 }
-?>

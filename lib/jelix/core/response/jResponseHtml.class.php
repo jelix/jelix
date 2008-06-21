@@ -538,4 +538,3 @@ class jResponseHtml extends jResponse {
     final public function endTag(){ return $this->_endTag;}
 
 }
-?>

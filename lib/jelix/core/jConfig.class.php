@@ -100,5 +100,3 @@ class jConfig {
     }
 }
 
-
-?>

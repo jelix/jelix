@@ -24,4 +24,3 @@ class jResponseXulPage extends jResponseXul {
     protected $_type =  'xulpage';
     protected $_root = 'page';
 }
-?>

@@ -248,4 +248,3 @@ class jAtom10Item extends jXMLFeedItem {
 
 }
 
-?>

@@ -244,4 +244,3 @@ abstract class jXMLFeedItem {
     protected $_mandatory = array ();
 }
 
-?>

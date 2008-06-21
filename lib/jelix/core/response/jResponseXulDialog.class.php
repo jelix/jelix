@@ -24,4 +24,3 @@ class jResponseXulDialog extends jResponseXul {
     protected $_type =  'xuldialog';
     protected $_root = 'dialog';
 }
-?>

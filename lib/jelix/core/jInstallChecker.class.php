@@ -388,16 +388,17 @@ class jInstallCheck {
                 $ok=false;
             }
         }
+
         if(ini_get('magic_quotes_runtime') == 1){
             $this->error('ini.magic_quotes_runtime');
             $ok=false;
         }
-        
 
         if(ini_get('session.auto_start') == 1){
             $this->error('ini.session.auto_start');
             $ok=false;
         }
+
         if(ini_get('safe_mode') == 1){
             $this->warning('safe_mode');
             $ok=false;
@@ -420,4 +421,3 @@ class jInstallCheck {
         return $ok;
     }
 }
-?>

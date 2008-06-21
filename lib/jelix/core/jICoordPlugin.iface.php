@@ -39,4 +39,3 @@ interface jICoordPlugin {
      */
     public function afterProcess ();
 }
-?>

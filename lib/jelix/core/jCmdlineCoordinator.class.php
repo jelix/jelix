@@ -27,4 +27,3 @@ class jCmdlineCoordinator extends jCoordinator{
         exit($this->response->getExitCode());
     }
 }
-?>

@@ -41,7 +41,6 @@ final class jResponseRedirectUrl extends jResponse {
         }
     }
 
-
     public function output(){
         if ($this->url =='')
             throw new jException('repredirect.empty.url');
@@ -58,5 +57,3 @@ final class jResponseRedirectUrl extends jResponse {
          $resp->outputErrors();
     }
 }
-
-?>

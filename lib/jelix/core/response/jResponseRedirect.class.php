@@ -55,5 +55,3 @@ final class jResponseRedirect extends jResponse {
     }
 
 }
-
-?>

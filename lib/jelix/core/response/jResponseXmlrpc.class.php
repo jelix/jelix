@@ -60,5 +60,3 @@ final class jResponseXmlRpc extends jResponse {
         echo $content;
     }
 }
-
-?>

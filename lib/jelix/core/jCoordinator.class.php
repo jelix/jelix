@@ -445,4 +445,3 @@ class jCoordinator {
         return $gJConfig->_modulesPathList[$module];
     }
 }
-?>

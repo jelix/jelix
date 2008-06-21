@@ -167,4 +167,3 @@ final class jResponseRdf extends jResponse {
         echo "</RDF>\n";
     }
 }
-?>
