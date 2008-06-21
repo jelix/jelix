@@ -67,6 +67,16 @@ class jTpl {
     }
 
     /**
+     * assign a value by reference in a template variable
+     * @param string $name the variable name
+     * @param mixed  $value the value
+     * @since jelix 1.1
+     */
+    public function assignByRef ($name, & $value){
+        $this->_vars[$name] = &$value;
+    }
+
+    /**
      * concat a value in with a value of an existing template variable
      * @param string|array $name the variable name, or an associative array 'name'=>'value'
      * @param mixed  $value the value (or null if $name is an array)
