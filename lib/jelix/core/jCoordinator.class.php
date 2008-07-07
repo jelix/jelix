@@ -3,10 +3,11 @@
 * @package      jelix
 * @subpackage   core
 * @author       Laurent Jouanneau
-* @contributor  Thibault PIRONT < nuKs >, Julien Issler
+* @contributor  Thibault PIRONT < nuKs >, Julien Issler, Dominique Papin
 * @copyright    2005-2008 laurent Jouanneau
 * @copyright    2007 Thibault PIRONT
 * @copyright    2008 Julien Issler
+* @copyright    2008 Dominique Papin
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -298,13 +299,17 @@ class jCoordinator {
         // When we are in cmdline we need to fix the remoteAddr
         $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
 
-        // formatage du message
+        // url params including module and action
+        $url = str_replace('array', 'url', var_export($this->request->params, true));
+
+        // formatting message
         $messageLog = strtr($conf['messageLogFormat'], array(
             '%date%' => date("Y-m-d H:i:s"),
             '%ip%'   => $remoteAddr,
             '%typeerror%'=>$type,
             '%code%' => $code,
             '%msg%'  => $message,
+            '%url%'  => $url,
             '%file%' => $file,
             '%line%' => $line,
             '\t' =>"\t",
