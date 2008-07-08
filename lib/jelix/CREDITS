@@ -160,6 +160,9 @@ Philippe Schelte (aka dubphil)
 Warren Seine (aka SooW)
  - <script /> tags don't end with a newline (#536)
 
+Thomas
+ - fixed bugs in jDao (#576)
+
 Christian Tritten
  - improvements on pagelinks plugin (#340)
 

@@ -49,7 +49,7 @@ define ('JELIX_NAMESPACE_BASE' , 'http://jelix.org/ns/');
 define ('JELIX_LIB_PATH',         dirname (__FILE__).'/');
 define ('JELIX_LIB_CORE_PATH',    JELIX_LIB_PATH.'core/');
 define ('JELIX_LIB_UTILS_PATH',   JELIX_LIB_PATH.'utils/');
-define ('LIB_PATH',               realpath(JELIX_LIB_PATH.'../').'/');
+define ('LIB_PATH',               dirname(JELIX_LIB_PATH).'/');
 
 #if WITH_BYTECODE_CACHE == 'auto'
 define ('BYTECODE_CACHE_EXISTS', function_exists('apc_cache_info')|| function_exists('eaccelerator_info'));

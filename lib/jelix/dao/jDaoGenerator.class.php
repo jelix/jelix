@@ -310,7 +310,7 @@ class jDaoGenerator {
                     foreach($method->getValues() as $propname=>$value){
                         if($value[1]){
                             foreach($method->getParameters() as $param){
-                                $value[0] = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $updatefields[$propname],false).'.\'',$value[0]);
+                                $value[0] = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $updatefields[$propname],true).'.\'',$value[0]);
                             }
                             $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '. $value[0];
                         }else{
