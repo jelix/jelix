@@ -262,8 +262,15 @@ abstract class jDaoFactoryBase  {
      * @param jDaoConditions $searchcond
      * @return int the count
      */
-    final public function countBy($searchcond) {
-        $query = 'SELECT COUNT(*) as c '.$this->_fromClause.$this->_whereClause;
+    final public function countBy($searchcond, $distinct=null) {
+        $count = '*';
+        if ($distinct !== null) {
+            $props = $this->getProperties();
+            if (isset($props[$distinct]))
+                $count = 'DISTINCT '.$this->_tables[$props[$distinct]['table']]['realname'].'.'.$props[$distinct]['fieldName'];
+        }
+        
+        $query = 'SELECT COUNT('.$count.') as c '.$this->_fromClause.$this->_whereClause;
         if ($searchcond->hasConditions ()){
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
             $query .= $this->_createConditionsClause($searchcond);

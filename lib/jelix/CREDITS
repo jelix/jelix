@@ -162,6 +162,7 @@ Warren Seine (aka SooW)
 
 Thomas
  - fixed bugs in jDao (#576, #643)
+ - jDaoFactoryBase::countBy : allowing to do count on distinct fields (#580)
 
 Christian Tritten
  - improvements on pagelinks plugin (#340)
