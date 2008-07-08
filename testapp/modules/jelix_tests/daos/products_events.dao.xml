@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="p" realname="product_test" primarykey="id" />
+   </datasources>
+   <record>
+      <property name="id"   fieldname="id" datatype="autoincrement"/>
+      <property name="name" fieldname="name" datatype="string"  required="true"/>
+      <property name="price" fieldname="price" datatype="float" default="0"/>
+      <property name="create_date" fieldname="create_date" datatype="datetime" insertpattern="NOW()"/>
+   </record>
+   <factory events="deletebefore, deleteafter, updatebefore, updateafter, insertbefore, insertafter, deletebybefore, deletebyafter">
+       <method name="findByMaxId" type="select">
+           <parameter name="maxId" />
+           <conditions>
+                <lt property="id" expr="$maxId" />
+            </conditions>
+       </method>
+       <method name="findBetweenId" type="select">
+           <parameter name="minId" />
+           <parameter name="maxId" />
+           <conditions>
+                <gt property="id" expr="$minId" />
+                <lt property="id" expr="$maxId" />
+            </conditions>
+       </method>
+   </factory>
+</dao>

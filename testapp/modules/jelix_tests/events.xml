@@ -4,4 +4,14 @@
       <event name="TestEventWithParams" />
       <event name="TestEvent" />
    </listener>
+   <listener name="testdaoevents">
+      <event name="daoDeleteBefore" />
+      <event name="daoDeleteAfter" />
+      <event name="daoUpdateBefore" />
+      <event name="daoUpdateAfter" />
+      <event name="daoInsertBefore" />
+      <event name="daoInsertAfter" />
+      <event name="daoDeleteByBefore" />
+      <event name="daoDeleteByAfter" />
+   </listener>
 </events>

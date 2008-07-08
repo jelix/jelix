@@ -161,7 +161,7 @@ Warren Seine (aka SooW)
  - <script /> tags don't end with a newline (#536)
 
 Thomas
- - fixed bugs in jDao (#576)
+ - fixed bugs in jDao (#576, #643)
 
 Christian Tritten
  - improvements on pagelinks plugin (#340)

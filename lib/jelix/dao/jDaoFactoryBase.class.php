@@ -205,11 +205,11 @@ abstract class jDaoFactoryBase  {
         $q.= $this->_getPkWhereClauseForNonSelect($keys);
 
         if ($this->_deleteBeforeEvent) {
-            jEvent::notify("daoDeleteBefore", array('dao'=>$this->_daoselector, 'keys'=>$keys));
+            jEvent::notify("daoDeleteBefore", array('dao'=>$this->_daoSelector, 'keys'=>$keys));
         }
         $result = $this->_conn->exec ($q);
         if ($this->_deleteAfterEvent) {
-            jEvent::notify("daoDeleteAfter", array('dao'=>$this->_daoselector, 'keys'=>$keys, 'result'=>$result));
+            jEvent::notify("daoDeleteAfter", array('dao'=>$this->_daoSelector, 'keys'=>$keys, 'result'=>$result));
         }
         return $result;
     }
@@ -289,11 +289,11 @@ abstract class jDaoFactoryBase  {
         $query .= $this->_createConditionsClause($searchcond, false);
 
         if ($this->_deleteByBeforeEvent) {
-            jEvent::notify("daoDeleteByBefore", array('dao'=>$this->_daoselector, 'criterias'=>$searchcond));
+            jEvent::notify("daoDeleteByBefore", array('dao'=>$this->_daoSelector, 'criterias'=>$searchcond));
         }
         $result = $this->_conn->exec($query);
         if ($this->_deleteByAfterEvent) {
-            jEvent::notify("daoDeleteByAfter", array('dao'=>$this->_daoselector, 'criterias'=>$searchcond, 'result'=>$result));
+            jEvent::notify("daoDeleteByAfter", array('dao'=>$this->_daoSelector, 'criterias'=>$searchcond, 'result'=>$result));
         }
         return $result;
     }

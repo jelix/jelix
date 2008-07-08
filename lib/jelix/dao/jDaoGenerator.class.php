@@ -198,7 +198,7 @@ class jDaoGenerator {
             $src[] = '}';
 
         if($this->_dataParser->hasEvent('insertbefore') || $this->_dataParser->hasEvent('insert')){
-            $src[] = '   jEvent::notify("daoInsertBefore", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+            $src[] = '   jEvent::notify("daoInsertBefore", array(\'dao\'=>$this->_daoSelector, \'record\'=>$record));';
         }
         $src[] = '   $result = $this->_conn->exec ($query);';
 
@@ -230,7 +230,7 @@ class jDaoGenerator {
         }
 
         if($this->_dataParser->hasEvent('insertafter') || $this->_dataParser->hasEvent('insert')){
-            $src[] = '   jEvent::notify("daoInsertAfter", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+            $src[] = '   jEvent::notify("daoInsertAfter", array(\'dao\'=>$this->_daoSelector, \'record\'=>$record));';
         }
 
         $src[] = '    return $result;';
@@ -254,11 +254,11 @@ class jDaoGenerator {
 
             $src[] = "';";
             if($this->_dataParser->hasEvent('updatebefore') || $this->_dataParser->hasEvent('update')){
-                $src[] = '   jEvent::notify("daoUpdateBefore", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+                $src[] = '   jEvent::notify("daoUpdateBefore", array(\'dao\'=>$this->_daoSelector, \'record\'=>$record));';
             }
             if($this->_dataParser->hasEvent('updateafter') || $this->_dataParser->hasEvent('update')){
                 $src[] = '   $result = $this->_conn->exec ($query);';
-                $src[] = '   jEvent::notify("daoUpdateAfter", array(\'dao\'=>$this->_daoselector, \'record\'=>$record));';
+                $src[] = '   jEvent::notify("daoUpdateAfter", array(\'dao\'=>$this->_daoSelector, \'record\'=>$record));';
                 $src[] = '   return $result;';
             }
             else
@@ -378,15 +378,16 @@ class jDaoGenerator {
                 case 'delete':
                 case 'update' :
                     if ($method->eventBeforeEnabled || $method->eventAfterEnabled) {
-                        $methname = ($method->type == 'update'?'Update':'Insert');
+                        $src[] = '   $args = func_get_args();';
+                        $methname = ($method->type == 'update'?'Update':'Delete');
                         if ($method->eventBeforeEnabled) {
-                        $src[] = '   jEvent::notify("daoSpecific'.$methname.'Before", array(\'dao\'=>$this->_daoselector,\'method\'=>\''.
-                            $method->name.'\', \'params\'=>func_get_args()));';
+                        $src[] = '   jEvent::notify("daoSpecific'.$methname.'Before", array(\'dao\'=>$this->_daoSelector,\'method\'=>\''.
+                            $method->name.'\', \'params\'=>$args));';
                         }
                         if ($method->eventAfterEnabled) {
                             $src[] = '   $result = $this->_conn->exec ($__query);';
-                            $src[] = '   jEvent::notify("daoSpecific'.$methname.'After", array(\'dao\'=>$this->_daoselector,\'method\'=>\''.
-                                $method->name.'\', \'params\'=>func_get_args()));';
+                            $src[] = '   jEvent::notify("daoSpecific'.$methname.'After", array(\'dao\'=>$this->_daoSelector,\'method\'=>\''.
+                                $method->name.'\', \'params\'=>$args));';
                             $src[] = '   return $result;';
                         } else {
                             $src[] = '    return $this->_conn->exec ($__query);';
