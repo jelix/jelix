@@ -39,6 +39,12 @@ class jSession {
 
         if(isset($params['storage'])){
 
+            /* on debian/ubuntu (maybe others), garbage collector launch probability is set to 0
+               and replaced by a simple cron job which is not enough for jSession (different path, db storage, ...),
+               so we set it to 1 as PHP's default value */
+            if(!ini_get('session.gc_probability'))
+                ini_set('session.gc_probability','1');
+
             switch($params['storage']){
 
                 case 'dao':
