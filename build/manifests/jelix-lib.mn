@@ -239,6 +239,7 @@ cd lib/jelix/utils/
 * jJsonRpc.class.php
   jLog.class.php
   jMailer.class.php
+  jMessage.class.php
   jSmtp.class.php
   jTcpdf.class.php
 * jWiki.class.php
@@ -452,6 +453,7 @@ cd lib/jelix/plugins/tpl/html
   block.swfjs.php
   function.link_to_remote.php
   function.breadcrumb.php
+  function.jmessage.php
 
 cd lib/jelix/plugins/tpl/ltx2pdf
   function.jlocale.php
