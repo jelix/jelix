@@ -27,9 +27,9 @@ function jtpl_function_html_jmessage($tpl, $type = '') {
     // Display messages
     if ($type == '') {
         echo '<ul class="jelix-msg">';
-        foreach ($messages as $types) {
-            foreach ($types as $type => $msg) {
-                echo '<li class="jelix-msg-item-'.$type.'">'.htmlspecialchars($msg).'</li>';
+        foreach ($messages as $type_msg => $all_msg) {
+            foreach ($all_msg as $msg) {
+                echo '<li class="jelix-msg-item-'.$type_msg.'">'.htmlspecialchars($msg).'</li>';
             }
         }
     } else {
@@ -41,7 +41,7 @@ function jtpl_function_html_jmessage($tpl, $type = '') {
     echo '</ul>';
 
     if ($type == '') {
-        jMessage::clearAll();;
+        jMessage::clearAll();
     } else {
         jMessage::clear($type);
     }
