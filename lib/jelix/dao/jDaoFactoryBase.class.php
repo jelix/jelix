@@ -8,6 +8,7 @@
  * @copyright   2005-2007 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007 Julien Issler
+ * @copyright   2008 Thomas
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -242,6 +243,7 @@ abstract class jDaoFactoryBase  {
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
             $query .= $this->_createConditionsClause($searchcond);
         }
+        $query.= $this->_createGroupClause($searchcond);
         $query.= $this->_createOrderClause($searchcond);
 
         if($limitCount != 0){
@@ -348,6 +350,24 @@ abstract class jDaoFactoryBase  {
         return '';
     }
 
+    /**
+     * @internal
+     */
+    final protected function _createGroupClause($daocond) {
+        $group = array ();
+        $props = $this->getProperties();
+        foreach ($daocond->group as $name) {
+            if (isset($props[$name])) {
+                $group[] = $name;
+            }
+        }
+        
+        if (count ($group)) {
+            return ' GROUP BY '.implode(', ', $group);
+        }
+        return '';
+    }
+    
     /**
      * @internal it don't support isExpr property of a condition because of security issue (SQL injection)
      * because the value could be provided by a form, it is escaped in any case

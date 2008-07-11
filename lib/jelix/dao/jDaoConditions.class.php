@@ -5,6 +5,7 @@
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright  2008 Thomas
 * This classes was get originally from the Copix project (CopixDAOSearchConditions, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix classes are Gerald Croes and Laurent Jouanneau,
@@ -64,6 +65,11 @@ class jDaoConditions {
     public $order = array ();
 
     /**
+    * the groups we wants the list to be
+    */
+    public $group = array ();
+    
+    /**
     * the condition we actually are browsing
     */
     private $_currentCondition;
@@ -85,6 +91,15 @@ class jDaoConditions {
         $this->order[$field_id]=$way;
     }
 
+    /**
+     * add a group clause
+     *
+     * @param string $field_id	the property name used to group results
+     */
+    function addItemGroup($field_id) {
+        $this->group[] = $field_id;
+    }
+    
     /**
     * says if there are no conditions nor order
     * @return boolean  false if there isn't condition
