@@ -26,6 +26,7 @@ Julien Issler
  - jLocale: support multiline rendering in strings (#569)
  - some errors and missing help for jAcl2 command line scripts (#622)
  - jSession: old sessions are not purged with some PHP configurations (#645)
+ - linebreaks in textareas in jtpl plugin (#646)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)

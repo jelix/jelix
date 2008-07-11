@@ -3,8 +3,9 @@
 * @package      jelix
 * @subpackage   jtpl_plugin
 * @author       Laurent Jouanneau
-* @contributor  Dominique Papin
+* @contributor  Dominique Papin, Julien Issler
 * @copyright    2007-2008 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright    2008 Julien Issler
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -33,9 +34,11 @@ function jtpl_function_html_formdatafull($tpl, $form)
                 $s.=','.htmlspecialchars($v);
             }
             echo substr($s, 1);
-        }elseif($ctrl->datatype instanceof jDatatypeHtml) {
+        }elseif($ctrl->datatype instanceof jDatatypeHtml)
             echo $value;
-        }else
+        else if($ctrl->type == 'textarea')
+            echo nl2br(htmlspecialchars($value));
+        else
             echo htmlspecialchars($value);
 
         echo '</td></tr>';
