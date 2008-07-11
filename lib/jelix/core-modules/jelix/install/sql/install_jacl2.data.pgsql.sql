@@ -1,7 +1,7 @@
 
 INSERT INTO jacl2_group (id_aclgrp, name, grouptype, ownerlogin) VALUES (1, 'admins', 0, NULL);
 INSERT INTO jacl2_group (id_aclgrp, name, grouptype, ownerlogin) VALUES (2, 'users', 0, NULL);
-
+SELECT setval('jacl2_group_id_aclgrp_seq', 2, true);
 
 INSERT INTO jacl2_subject (id_aclsbj, label_key) VALUES ('acl.user.view', 'jelix~acl2db.acl.user.view');
 INSERT INTO jacl2_subject (id_aclsbj, label_key) VALUES ('acl.user.modify', 'jelix~acl2db.acl.user.modify');
