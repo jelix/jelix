@@ -3,8 +3,10 @@
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
 * @contributor Julien Issler
+* @contributor Loic Mathaud
 * @copyright   2007-2008 Jouanneau laurent
 * @copyright   2008 Julien Issler
+* @copyright   2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -23,13 +25,13 @@ jAcl2 : gestion des groupes d'utilisateurs
 ACTION:
  * list
     liste les groupes d'utilisateurs
- * userslist  groupid
+ * userslist groupid
     liste les utilisateurs d'un groupe
  * alluserslist
-    liste tout les utilisateurs inscrits
+    liste tous les utilisateurs inscrits
  * [-defaultgroup] create  nom
-    créer un groupe. Si il y a l'option -defaultgroup, ce nouveau
-    groupe sera un groupe par defaut pour les nouveaux utilisateurs
+    crée un groupe. Si il y a l'option -defaultgroup, ce nouveau
+    groupe sera un groupe par défaut pour les nouveaux utilisateurs
  * setdefault groupid [true|false]
     fait du groupe indiqué un groupe par defaut (ou n'est plus
     un groupe par defaut si false est indiqué)
@@ -38,7 +40,7 @@ ACTION:
  * delete   groupid
     efface un groupe
  * createuser login
-    créé un utilisateur et son groupe privé
+    crée un utilisateur et son groupe privé
  * adduser groupid login
     ajoute un utilisateur dans un groupe
  * removeuser login groupid
@@ -51,21 +53,21 @@ ACTION:
  * list    
     list users groups
  * userslist groupid
-    list of users of a group
+    list users of a group
  * alluserslist
     list all users
  * [-defaultgroup] create name
     create a group. If there is -defaultgroup option, this new group
-    become a defautl group for new users
+    becomes a default group for new users
  * setdefault groupid [true|false]
-    the given group become a default group or not
+    the given group becomes a default group or does not
     become a default group if false is given
  * changename groupid newname
     change a group name
- * delete   groupid
+ * delete groupid
     delete a group
  * createuser login
-    add a user and and it's private group
+    add a user and its private group
  * adduser groupid login
     add a user in a group
  * removeuser groupid login
@@ -84,8 +86,8 @@ ACTION:
             'alluserslist'=>"Liste de tous les utilisateurs",
             'adduser'=>"Ajoute un utilisateur",
             'removeuser'=>"Enlève un utilisateur",
-            'createuser'=>"Créé un user dans jAcl2",
-            'destroyuser'=>"Enlève un user de jAcl2",
+            'createuser'=>"Crée un uitlisateur dans jAcl2",
+            'destroyuser'=>"Enlève un utilisateur de jAcl2",
             ),
         'en'=>array(
             'list'=>"List of users groups",
@@ -108,7 +110,7 @@ ACTION:
         $action = $this->getParam('action');
         if(!in_array($action,array('list','create','setdefault','changename',
             'delete','userslist','alluserslist','adduser','removeuser','createuser','destroyuser'))){
-            die("unknow subcommand\n");
+            die("unknown subcommand\n");
         }
 
         $meth= 'cmd_'.$action;
@@ -227,7 +229,7 @@ ACTION:
             elseif($params[1]=='true')
                 $def=1;
             else
-                die("error: bad value for last parameter\n");
+                die("Error: bad value for last parameter\n");
         }
 
         $sql="UPDATE jacl2_group SET grouptype=$def  WHERE id_aclgrp=".$id;

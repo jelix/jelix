@@ -2,8 +2,8 @@
 /**
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
-* @contributor 
-* @copyright   2007 Jouanneau laurent
+* @contributor Loic Mathaud
+* @copyright   2007 Jouanneau laurent, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -21,8 +21,8 @@ jAcl : gestion des droits
 
 ACTION:
  * list
- * add  groupid sujet value [resource]
- * [-allres] remove  groupid sujet value [resource]
+ * add groupid sujet value [resource]
+ * [-allres] remove groupid sujet value [resource]
  * subject_create subject labelkey valuegroup
  * subject_delete subject 
  * subject_list
@@ -32,8 +32,8 @@ jAcl: rights management
 
 ACTION:
  * list
- * add  groupid sujet value [resource]
- * [-allres] remove  groupid sujet value [resource]
+ * add  groupid subject value [resource]
+ * [-allres] remove groupid subject value [resource]
  * subject_create subject labelkey valuegroup
  * subject_delete subject 
  * subject_list
@@ -43,16 +43,16 @@ ACTION:
     protected $titles = array(
         'fr'=>array(
             'list'=>"Liste des droits",
-            'add'=>"ajout d'un droit",
-            'remove'=>"retire un droit",
+            'add'=>"Ajout d'un droit",
+            'remove'=>"Retire un droit",
             'subject_create'=>"Création d'un sujet",
             'subject_delete'=>"Effacement d'un sujet",
             'subject_list'=>"Liste des sujets",
             ),
         'en'=>array(
-            'list'=>"rights list",
-            'add'=>"add a right",
-            'remove'=>"remove a right",
+            'list'=>"Rights list",
+            'add'=>"Add a right",
+            'remove'=>"Remove a right",
             'subject_create'=>"Create a subject",
             'subject_delete'=>"Delete a subject",
             'subject_list'=>"List of subjects",
@@ -64,7 +64,7 @@ ACTION:
         jxs_init_jelix_env();
         $action = $this->getParam('action');
         if(!in_array($action,array('list','add','remove','subject_create','subject_delete','subject_list'))){
-            die("unknow subcommand\n");
+            die("unknown subcommand\n");
         }
 
         $meth= 'cmd_'.$action;
@@ -122,7 +122,7 @@ ACTION:
                 AND value=".$value;
         $rs = $cnx->query($sql);
         if($rs->fetch()){
-            die("Error: right already set\n");
+            die("Error: right already sets\n");
         }
 
         $sql="SELECT * FROM jacl_group WHERE id_aclgrp=".$group;
@@ -248,7 +248,7 @@ ACTION:
         $sql="SELECT id_aclsbj FROM jacl_subject WHERE id_aclsbj=".$cnx->quote($params[0]);
         $rs = $cnx->query($sql);
         if(!$rs->fetch()){
-            die("Error: this subject does not exists\n");
+            die("Error: this subject does not exist\n");
         }
 
         $sql="DELETE FROM jacl_rights WHERE id_aclsbj=";
@@ -264,4 +264,3 @@ ACTION:
 
 }
 
-?>

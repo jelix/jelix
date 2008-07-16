@@ -2,8 +2,8 @@
 /**
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
-* @contributor 
-* @copyright   2007 Jouanneau laurent
+* @contributor Loic Mathaud
+* @copyright   2007 Jouanneau laurent, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -17,11 +17,11 @@ class createformCommand extends JelixScriptCommand {
     public  $syntaxhelp = "MODULE FORM [DAO]";
     public  $help=array(
         'fr'=>"
-    Créer un nouveau fichier jforms, soit vide, soit un formulaire à partir d'un fichier dao
+    Crée un nouveau fichier jforms, soit vide, soit un formulaire à partir d'un fichier dao
 
     MODULE: nom du module concerné.
     FORM : nom du formulaire.
-    DAO   : selecteur du dao concerné. Si non indiqué, le fichier jforms sera vide.",
+    DAO   : sélecteur du dao concerné. Si non indiqué, le fichier jforms sera vide.",
 
         'en'=>"
     Create a new jforms file, from a jdao file.
@@ -139,5 +139,3 @@ class createformCommand extends JelixScriptCommand {
     }
 }
 
-
-?>

@@ -32,7 +32,7 @@ if(preg_match('/^\-\-([\w\-\.]+)$/',$commandName,$m)){
 
     if(!isset($_SERVER['JELIX_APP_NAME'])||$_SERVER['JELIX_APP_NAME'] == ''){
         if($commandName != 'help'){
-            die("Error: JELIX_APP_NAME environnement variable doesn't exists \n");
+            die("Error: JELIX_APP_NAME environnement variable doesn't exist \n");
         }else{
             $APPNAME='';
         }
@@ -60,7 +60,7 @@ if(!isset($_SERVER['JELIX_CONFIG'])){
 
 }elseif(!file_exists($_SERVER['JELIX_CONFIG'])){
 
-   die("Error: path given by the JELIX_CONFIG environnement variable doesn't exists (".$_SERVER['JELIX_CONFIG']." )\n");
+   die("Error: path given by the JELIX_CONFIG environnement variable doesn't exist (".$_SERVER['JELIX_CONFIG']." )\n");
 
 }else{
   $jelix_config = $_SERVER['JELIX_CONFIG'];
@@ -79,7 +79,7 @@ if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
    include (JELIXS_APPTPL_PATH.'application.init.php');
 }else{
    if($commandName !='createapp' && $commandName !='help'){
-     die("Error: the given application doesn't exists (".JELIXS_APPTPL_PATH." )\n");
+     die("Error: the given application doesn't exist (".JELIXS_APPTPL_PATH." )\n");
    }
    define ('JELIX_APP_PATH',         JELIXS_APPTPL_PATH );
    define ('JELIX_APP_TEMP_PATH',    JELIXS_APPTPL_TEMP_PATH);

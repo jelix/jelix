@@ -40,5 +40,3 @@ class cleartempCommand extends JelixScriptCommand {
     }
 }
 
-
-?>

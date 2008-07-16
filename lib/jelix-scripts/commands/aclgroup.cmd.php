@@ -2,8 +2,8 @@
 /**
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
-* @contributor 
-* @copyright   2007 Jouanneau laurent
+* @contributor Loic Mathaud
+* @copyright   2007 Jouanneau laurent, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -22,15 +22,15 @@ jAcl : gestion des groupes d'utilisateurs
 ACTION:
  * list
     liste les groupes d'utilisateurs
- * [-defaultgroup] create  nom
-     créer un groupe. Si il y a l'option -defaultgroup, ce nouveau
-     groupe sera un groupe par defaut pour les nouveaux utilisateurs
+ * [-defaultgroup] create nom
+     crée un groupe. Si il y a l'option -defaultgroup, ce nouveau
+     groupe sera un groupe par défaut pour les nouveaux utilisateurs
  * setdefault groupid [true|false]
-    fait du groupe indiqué un groupe par defaut (ou n'est plus
-    un groupe par defaut si false est indiqué)
+    fait du groupe indiqué un groupe par défaut (ou n'est plus
+    un groupe par défaut si false est indiqué)
  * changename groupid nouveaunom
     change le nom d'un groupe
- * delete   groupid
+ * delete groupid
     efface un groupe
 ",
         'en'=>"
@@ -41,13 +41,13 @@ ACTION:
     list users groups
  * [-defaultgroup] create name
      create a group. If there is -defaultgroup option, this new group
-     become a defautl group for new users
+     becomes a default group for new users
  * setdefault groupid [true|false]
-    the given group become a default group or not
+    the given group becomes a default group or does not
     become a default group if false is given
  * changename groupid newname
     change a group name
- * delete   groupid
+ * delete groupid
     delete a group
 ",
     );
@@ -74,7 +74,7 @@ ACTION:
         jxs_init_jelix_env();
         $action = $this->getParam('action');
         if(!in_array($action,array('list','create','setdefault','changename','delete'))){
-            die("unknow subcommand\n");
+            die("unknown subcommand\n");
         }
 
         $meth= 'cmd_'.$action;
@@ -172,7 +172,7 @@ ACTION:
             elseif($params[1]=='true')
                 $def=1;
             else
-                die("error: bad value for last parameter\n");
+                die("Error: bad value for last parameter\n");
         }
 
         $sql="UPDATE jacl_group SET grouptype=$def  WHERE id_aclgrp=".intval($params[0]);
@@ -202,4 +202,3 @@ ACTION:
     }
 }
 
-?>

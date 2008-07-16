@@ -2,8 +2,8 @@
 /**
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
-* @contributor
-* @copyright   2005-2007 Jouanneau laurent
+* @contributor Mathaud Loic
+* @copyright   2005-2007 Jouanneau laurent, 2008 Mathaud Loic
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -13,7 +13,7 @@ function jxs_load_command($cmdName){
    $commandfile = JELIX_SCRIPT_PATH.'commands/'.$cmdName.'.cmd.php';
 
    if(!file_exists($commandfile)){
-      die("Error: unknow command\n");
+      die("Error: unknown command\n");
 
    }
 
@@ -22,7 +22,7 @@ function jxs_load_command($cmdName){
    $cmdName.='Command';
 
    if(!class_exists( $cmdName)){
-      die("Error: don't find the command runtime\n");
+      die("Error: can't find the command runtime\n");
    }
 
    $command = new $cmdName;
@@ -52,7 +52,7 @@ function jxs_getOptionsAndParams($argv, $sws,$params){
             $switches[$sw]=true;
          }
       }else{
-         die("Error: unknow option '".$argv[0]."' \n");
+         die("Error: unknown option '".$argv[0]."' \n");
       }
    }
 
@@ -79,7 +79,7 @@ function jxs_getOptionsAndParams($argv, $sws,$params){
    }
 
    if(count($argv)){
-      die("Error: two many parameters\n");
+      die("Error: too many parameters\n");
    }
 
    return array($switches , $parameters);
@@ -143,5 +143,3 @@ function jxs_init_jelix_env(){
         $gJConfig = jConfig::load(JELIXS_APP_CONFIG_FILE);
 }
 
-
-?>

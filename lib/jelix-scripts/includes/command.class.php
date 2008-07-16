@@ -2,8 +2,8 @@
 /**
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
-* @contributor
-* @copyright   2005-2007 Jouanneau laurent
+* @contributor Mathaud Loic
+* @copyright   2005-2007 Jouanneau laurent, 2008 Mathaud Loic
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -56,7 +56,7 @@ abstract class JelixScriptCommand {
    protected function getModulePath($module, $shouldexist=true){
       $path=JELIX_APP_PATH.'modules/'.$module.'/';
       if(!file_exists($path) && $shouldexist){
-         die("Error: module '".$module."' don't exist ($path)\n");
+         die("Error: module '".$module."' doesn't exist ($path)\n");
       }
       return $path;
    }
@@ -69,7 +69,7 @@ abstract class JelixScriptCommand {
       $tplpath = JELIX_SCRIPT_PATH.'templates/'.$template;
 
       if(!file_exists($tplpath)){
-          echo "Error: template file '".$tplpath."' doesn't exists\n";
+          echo "Error: template file '".$tplpath."' doesn't exist\n";
          return false;
       }
       $tpl = file($tplpath);
@@ -133,4 +133,4 @@ abstract class JelixScriptCommand {
        }
    }
 }
-?>
+

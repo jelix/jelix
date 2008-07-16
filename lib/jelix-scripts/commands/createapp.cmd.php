@@ -24,13 +24,13 @@ class createappCommand extends JelixScriptCommand {
     function __construct(){
         $this->help= array(
             'fr'=>"
-    Créer une nouvelle application avec tous les répertoires nécessaires et un module
+    Crée une nouvelle application avec tous les répertoires nécessaires et un module
     du même nom que l'application.
 
-    Si l'option -nodefaultmodule est présente, le module n'est pas crée.
+    Si l'option -nodefaultmodule est présente, le module n'est pas créé.
 
-    Si l'option -withcmdline est présente, créer un point d'entrée afin de 
-    développer desscripts en ligne de commande.
+    Si l'option -withcmdline est présente, crée un point d'entrée afin de 
+    développer des scripts en ligne de commande.
 
     Le nom de l'application doit être indiqué
     1) soit en premier paramètre du script jelix
@@ -39,7 +39,7 @@ class createappCommand extends JelixScriptCommand {
     ",
             'en'=>"
     Create a new application with all directories and a module which have 
-    the same name of the application.
+    the same name asthe one of the application.
 
     If you give -nodefaultmodule option, it won't create the module. 
 
@@ -56,7 +56,7 @@ class createappCommand extends JelixScriptCommand {
 
     public function run(){
        if(file_exists(JELIX_APP_PATH)){
-           die("Error : this application already created\n");
+           die("Error : this application is already created\n");
        }
 
        $this->createDir(JELIX_APP_PATH);
@@ -139,4 +139,3 @@ class createappCommand extends JelixScriptCommand {
     }
 }
 
-?>

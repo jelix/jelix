@@ -2,8 +2,8 @@
 /**
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
-* @contributor 
-* @copyright   2007 Jouanneau laurent
+* @contributor Loic Mathaud
+* @copyright   2007 Jouanneau laurent, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -22,19 +22,19 @@ jAcl : gestion des valeurs de droits
 ACTION:
  * group_list
      liste les groupes de valeurs
- * group_add     id labelkey type
-     ajoute un groupe de valeur avec l'id, le libelle et le type indiqué
+ * group_add id labelkey type
+     ajoute un groupe de valeur avec l'id, le libellé et le type indiqué
      type :
         0 : les valeurs peuvent être cumulées pour un même sujet.
         1 : les valeurs sont mutuellement exclusives pour un même sujet.
- * group_delete  id
+ * group_delete id
     détruit un groupe de valeurs
  * list [rvgid]
     liste des valeurs de droits, pour tous les groupes ou
-    pour celui indiqué en parametre
- * add      value labelkey rvgid
+    pour celui indiqué en paramètre
+ * add value labelkey rvgid
     ajoute une valeur dans le groupe de valeurs rvgid
- * delete   value rvgid 
+ * delete value rvgid 
     enlève une valeur du groupe de valeurs rvgid
 ",
         'en'=>"
@@ -43,7 +43,7 @@ jAcl: right values management
 ACTION:
  * group_list
      list all values groups
- * group_add     id labelkey type
+ * group_add id labelkey type
      add a values group with the given id, label and type
      type :
         0 : values can be used together for a same subject
@@ -53,9 +53,9 @@ ACTION:
  * list [rvgid]
     list of all right values, in all values groups or in the
     given group
- * add      value labelkey rvgid
+ * add value labelkey rvgid
     add a value in a group (rvgid= group id)
- * delete   value rvgid 
+ * delete value rvgid 
     remove a value from a group (rvgid= group id)
 ",
     );
@@ -73,7 +73,7 @@ ACTION:
             'group_list'=>"List of group of values of rights",
             'group_add'=>"Add a group of values of rights",
             'group_delete'=>"Remove a group of values of rights",
-            'list'=>"list of right values",
+            'list'=>"List of right values",
             'add'=>"Add a value of right",
             'delete'=>"Remove a value of right",
             ),
@@ -84,7 +84,7 @@ ACTION:
         jxs_init_jelix_env();
         $action = $this->getParam('action');
         if(!in_array($action,array('group_list','group_add','group_delete','list','add','delete'))){
-            die("unknow subcommand\n");
+            die("unknown subcommand\n");
         }
 
         $meth= 'cmd_'.$action;
@@ -132,7 +132,7 @@ ACTION:
 
         $rs = $cnx->query('SELECT count(id_aclsbj) as n FROM jacl_subject WHERE id_aclvalgrp='.intval($params[0]));
         if(!$rs)
-            die("error: not possible count\n");
+            die("Error: not possible count\n");
 
         $rec = $rs->fetch();
         if(!$rec)
@@ -200,13 +200,13 @@ ACTION:
 
         $rs = $cnx->query('SELECT count(id_aclvalgrp) as n FROM jacl_right_values_group WHERE id_aclvalgrp='.intval($params[2]));
         if(!$rs)
-            die("error: not possible count\n");
+            die("Error: not possible count\n");
 
         $rec = $rs->fetch();
         if(!$rec)
-            die("error: no count\n");
+            die("Error: no count\n");
         if($rec->n == 0){
-            die("error: Unknow values group id.\n");
+            die("Error: Unknown values group id.\n");
         }
 
 
@@ -229,13 +229,13 @@ ACTION:
 
         $rs = $cnx->query('SELECT count(*) as n FROM jacl_right_values WHERE id_aclvalgrp='.intval($params[1]).' AND value='.$cnx->quote($params[0]));
         if(!$rs)
-            die("error: not possible count\n");
+            die("Error: not possible count\n");
 
         $rec = $rs->fetch();
         if(!$rec)
-            die("error: no count\n");
+            die("Error: no count\n");
         if($rec->n == 0){
-            die("error: Unknow value or group id.\n");
+            die("Error: Unknown value or group id.\n");
         }
 
         $sql ='SELECT count(*) as n 
@@ -247,13 +247,13 @@ ACTION:
 
         $rs = $cnx->query($sql);
         if(!$rs)
-            die("error: not possible count\n");
+            die("Error: not possible count\n");
 
         $rec = $rs->fetch();
         if(!$rec)
-            die("error: no count\n");
+            die("Error: no count\n");
         if($rec->n > 0){
-            die("error: This value is used in rights setting. Please remove rights which used this value before deleting the value\n");
+            die("Error: This value is used in rights setting. Please remove rights which used this value before deleting the value\n");
         }
 
 
@@ -263,4 +263,3 @@ ACTION:
     }
 }
 
-?>

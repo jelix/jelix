@@ -3,7 +3,8 @@
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
 * @contributor Bastien Jaillot (bug fix)
-* @copyright   2007 Jouanneau laurent
+* @contributor Loic Mathaud (typos fix)
+* @copyright   2007 Jouanneau laurent, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -18,13 +19,13 @@ class createdaocrudCommand extends JelixScriptCommand {
     public  $syntaxhelp = "[-profil name] MODULE TABLE [CTRLNAME]";
     public  $help=array(
         'fr'=>"
-    Créer un nouveau controleur de type jControllerDaoCrud, reposant sur un jdao et un jform.
+    Crée un nouveau contrôleur de type jControllerDaoCrud, reposant sur un jdao et un jform.
 
     -profil (facultatif) : indique le profil à utiliser pour se connecter à
                            la base et récupérer les informations de la table
     MODULE : le nom du module où stocker le contrôleur
     TABLE : le nom de la table SQL
-    CTRLNAME (facultatif) : nom du controlleur (par défaut, celui de la table)",
+    CTRLNAME (facultatif) : nom du contrôleur (par défaut, celui de la table)",
 
         'en'=>"
     Create a new controller jControllerDaoCrud
@@ -32,7 +33,7 @@ class createdaocrudCommand extends JelixScriptCommand {
     -profil (optional) : indicate the name of the profil to use for the
                         database connection.
 
-    MODULE: name of the module wher to create the crud
+    MODULE: name of the module where to create the crud
     TABLE : name of the SQL table
     CTRLNAME (optional) : name of the controller."
     );
@@ -70,5 +71,3 @@ class createdaocrudCommand extends JelixScriptCommand {
     }
 }
 
-
-?>

@@ -114,5 +114,3 @@ List of available commands:\n\t",
     }
 }
 
-
-?>

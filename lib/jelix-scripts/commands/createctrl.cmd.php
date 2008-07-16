@@ -19,25 +19,25 @@ class createctrlCommand extends JelixScriptCommand {
     public  $syntaxhelp = "[-addinstallzone] [-cmdline] MODULE CONTROLLER [METHOD]";
     public  $help=array(
         'fr'=>"
-    Créer un nouveau controleur de type jController ou jControllerCmdLine.
+    Crée un nouveau contrôleur de type jController ou jControllerCmdLine.
     -addinstallzone (facultatif) : ajoute la zone check_install pour une nouvelle application
 
-    Si l'option -cmdline est présente, le controleur est de type 
+    Si l'option -cmdline est présente, le contrôleur est de type 
     jControllerCmdLine (pour développer des scripts en ligne de commande).
     
     MODULE : le nom du module concerné.
-    CONTROLLER :  nom du controleur que vous voulez créer.
+    CONTROLLER : nom du contrôleur que vous voulez créer.
     METHOD (facultatif) : nom de la première méthode. Par défaut, elle a
                               le nom index.",
         'en'=>"
     Create a new controller, either a jController or jControllerCmdLine.
     -addinstallzone (optional) : add the check_install zone for new application
     
-    To create a jControllerCmdLine (for command line script), you should 
+    To create a jControllerCmdLine (for command line scripts), you should 
     provide -cmdline option
     
     MODULE : module name where to create the controller.
-    CONTROLLER :  name of your new controller.
+    CONTROLLER : name of your new controller.
     METHOD (optional) : name of the first method ('index' by default)."
     );
 
@@ -74,5 +74,3 @@ class createctrlCommand extends JelixScriptCommand {
     }
 }
 
-
-?>
