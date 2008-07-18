@@ -21,4 +21,4 @@ function jtpl_function_text_jurl($tpl, $selector, $params=array())
      echo jUrl::get($selector, $params, 0);
 }
 
-?>
+

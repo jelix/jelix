@@ -28,4 +28,3 @@ class mysqlDaoBuilder extends jDaoGenerator {
     }
 
 }
-?>

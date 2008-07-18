@@ -214,4 +214,3 @@ class jDaoParser {
     public function hasEvent($event){ return in_array($event,$this->_eventList);}
 }
 
-?>

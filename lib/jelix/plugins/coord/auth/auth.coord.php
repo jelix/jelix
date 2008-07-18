@@ -162,4 +162,4 @@ class AuthCoordPlugin implements jICoordPlugin {
         return $toReturn;
     }
 }
-?>
+

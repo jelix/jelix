@@ -23,4 +23,3 @@ class jAuthDummyUser extends  jAuthUser {
 }
 
 
-?>

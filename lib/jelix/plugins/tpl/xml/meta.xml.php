@@ -36,4 +36,3 @@ function jtpl_meta_xml_xml($tpl, $method, $param)
     }
 }
 
-?>

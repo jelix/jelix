@@ -35,5 +35,3 @@ function jtpl_block_common_ifacl($compiler, $begin, $param=array())
     }
     return $content;
 }
-
-?>

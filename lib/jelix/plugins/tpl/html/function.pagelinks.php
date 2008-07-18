@@ -151,5 +151,3 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
         echo '</ul>';
     }
 }
-
-?>

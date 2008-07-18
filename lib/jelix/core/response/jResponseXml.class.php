@@ -178,5 +178,3 @@ class jResponseXml extends jResponse {
         }
     }
 }
-
-?>

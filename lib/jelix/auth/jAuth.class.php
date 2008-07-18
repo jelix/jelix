@@ -390,4 +390,3 @@ class jAuth {
         return $pass;
     }
 }
-?>

@@ -378,4 +378,3 @@ class jDaoMethod {
         $this->_limit= compact('offset', 'count', 'offsetparam','countparam');
     }
 }
-?>

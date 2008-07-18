@@ -24,4 +24,3 @@ class errorCtrl extends jController {
         return $rep;
     }
 }
-?>

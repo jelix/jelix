@@ -40,5 +40,3 @@ function jtpl_function_common_counter_init($tpl, $name = '', $type = '0', $start
             $in_use['start'] = 'A';
     }
 }
-
-?>

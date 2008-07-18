@@ -15,4 +15,4 @@ $config_file = 'jsonrpc/config.ini.php';
 $jelix = new jCoordinator($config_file);
 $jelix->process(new jJsonRpcRequest());
 
-?>
+

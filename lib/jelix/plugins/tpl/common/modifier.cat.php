@@ -25,5 +25,3 @@ function jtpl_modifier_common_cat($string, $cat)
 {
     return $string . $cat;
 }
-
-?>

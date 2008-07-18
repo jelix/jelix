@@ -108,4 +108,3 @@ function jtpl_block_html_swfjs($compiler, $begin, $params) {
     }
 
 }
-?>

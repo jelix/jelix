@@ -59,4 +59,3 @@ function jtpl_function_common_counter($tpl, $name = '', $print = true) {
     $in_use['start'] += $in_use['incr'];
 }
 
-?>

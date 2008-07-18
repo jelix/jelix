@@ -35,4 +35,4 @@ function jtpl_function_xul_urljsstring($tpl, $selector, $params=array(), $jspara
     echo '"'.str_replace($search, $repl, $url).'"';
 }
 
-?>
+

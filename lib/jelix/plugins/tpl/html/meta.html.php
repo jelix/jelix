@@ -83,4 +83,4 @@ function jtpl_meta_html_html($tpl, $method, $param)
             break;
     }
 }
-?>
+

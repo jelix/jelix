@@ -32,4 +32,3 @@ function jtpl_modifier_common_regex_replace($string, $search, $replace)
     return preg_replace($search, $replace, $string);
 }
 
-?>

@@ -24,4 +24,4 @@ function jtpl_function_html_formurlparam($tpl, $selector, $params=array())
     }
 }
 
-?>
+

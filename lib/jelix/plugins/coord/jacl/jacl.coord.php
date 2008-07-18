@@ -72,4 +72,4 @@ class jAclCoordPlugin implements jICoordPlugin {
     public function afterProcess (){}
 
 }
-?>
+

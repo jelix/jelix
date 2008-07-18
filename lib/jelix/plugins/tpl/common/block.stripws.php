@@ -24,4 +24,3 @@ function jtpl_block_common_stripws($compiler, $begin, $param=array()) {
     }
     return $content;
 }
-?>

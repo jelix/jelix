@@ -24,4 +24,3 @@ $GLOBALS['jTplConfig']['locales'] =array(
     'errors.tpl.tag.constant.notallowed'=>'Dans le tag %s du template %3$s, les constantes (%2$s) sont interdites',
 );
 
-?>

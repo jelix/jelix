@@ -245,4 +245,3 @@ class jBinaryData  {
         $this->data = base64_decode($string);
     }
 }
-?>

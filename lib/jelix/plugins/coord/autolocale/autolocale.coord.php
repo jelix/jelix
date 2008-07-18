@@ -107,4 +107,3 @@ class AutoLocaleCoordPlugin implements jICoordPlugin {
     public function afterProcess() {}
 
 }
-?>

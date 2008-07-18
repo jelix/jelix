@@ -22,4 +22,4 @@ function jtpl_function_xul_jurl($tpl, $selector, $params=array(),$escape=true)
      echo jUrl::get($selector, $params, ($escape?1:0));
 }
 
-?>
+

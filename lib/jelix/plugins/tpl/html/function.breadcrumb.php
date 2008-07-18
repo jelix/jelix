@@ -75,4 +75,3 @@ function jtpl_function_html_breadcrumb($tpl, $nb=null, $separator = '') {
 
     echo '</ol>';
 }
-?>

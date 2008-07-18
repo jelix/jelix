@@ -97,4 +97,3 @@ class jDbWidget {
         return $result;
     }
 }
-?>

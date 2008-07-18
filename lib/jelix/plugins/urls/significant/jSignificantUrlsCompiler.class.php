@@ -279,4 +279,3 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
 }
 
-?>

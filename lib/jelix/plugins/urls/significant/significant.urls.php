@@ -411,4 +411,3 @@ class significantUrlEngine implements jIUrlEngine {
         return $url;
     }
 }
-?>

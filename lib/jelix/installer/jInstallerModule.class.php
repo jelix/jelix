@@ -22,4 +22,3 @@ abstract class jInstallerModule extends jInstallerBase {
 
 }
 
-?>

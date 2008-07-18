@@ -26,6 +26,3 @@ function jtpl_block_ltx2pdf_lenv($compiler, $begin, $param=array())
     }else 
         return 'echo \'\\end{'.array_pop($stack).'}\';';
 }
-
-
-?>

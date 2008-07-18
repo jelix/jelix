@@ -27,4 +27,3 @@ function jtpl_modifier_common_replace($string, $search, $replace)
 
 /* vim: set expandtab: */
 
-?>

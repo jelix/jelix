@@ -47,4 +47,3 @@ function jtpl_function_common_cycle_init($tpl, $name, $values='') {
     $tpl->_privateVars['cycle'][$name]['values'] = explode(',',$values);
     $tpl->_privateVars['cycle'][$name]['index'] = 0;
 }
-?>

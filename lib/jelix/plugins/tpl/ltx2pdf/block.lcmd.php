@@ -26,5 +26,3 @@ function jtpl_block_ltx2pdf_lcmd($compiler, $begin, $param=array())
         return 'echo \'}\';';
 }
 
-
-?>

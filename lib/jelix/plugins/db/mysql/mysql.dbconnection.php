@@ -146,4 +146,4 @@ class mysqlDbConnection extends jDbConnection {
    }
 
 }
-?>
+

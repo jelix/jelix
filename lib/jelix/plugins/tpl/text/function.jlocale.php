@@ -30,4 +30,4 @@ function jtpl_function_text_jlocale($tpl, $locale)
      }
 }
 
-?>
+

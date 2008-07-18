@@ -76,4 +76,3 @@ class mysqlDbTools extends jDbTools {
         return $results;
     }
 }
-?>

@@ -92,4 +92,4 @@ class pgsqlDbTools extends jDbTools {
         $this->_connector->query ($sqlQueries);
     }
 }
-?>
+

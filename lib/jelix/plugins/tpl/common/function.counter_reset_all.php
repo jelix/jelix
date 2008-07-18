@@ -19,5 +19,3 @@ function jtpl_function_common_counter_reset_all($tpl) {
         return;
     $tpl->_privateVars['counterArray'] = array( 'default' => array('type' => '0', 'start' => 1, 'incr' => 1) );
 }
-
-?>

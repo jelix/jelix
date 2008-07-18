@@ -34,4 +34,3 @@ function jtpl_block_common_ifuserconnected($compiler, $begin, $params=array())
     return $content;
 }
 
-?>

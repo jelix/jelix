@@ -24,4 +24,3 @@ function jtpl_modifier_common_sprintf($string, $format)
     return sprintf($format, $string);
 }
 
-?>

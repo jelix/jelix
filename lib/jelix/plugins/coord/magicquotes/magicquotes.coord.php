@@ -77,4 +77,4 @@ class MagicQuotesCoordPlugin implements jICoordPlugin {
     */
     public function afterProcess (){}
 }
-?>
+

@@ -22,4 +22,3 @@ abstract class jAuthUser {
     public $email ='';
 }
 
-?>

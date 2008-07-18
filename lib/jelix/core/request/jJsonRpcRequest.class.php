@@ -63,4 +63,3 @@ class jJsonRpcRequest extends jRequest {
     public function allowedResponses(){ return array('jResponseJsonrpc');}
 
 }
-?>

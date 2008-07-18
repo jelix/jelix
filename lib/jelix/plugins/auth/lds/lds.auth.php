@@ -213,4 +213,4 @@ class ldsAuthDriver implements jIAuthDriver {
         return $xmlResponse;
     }
 }
-?>
+

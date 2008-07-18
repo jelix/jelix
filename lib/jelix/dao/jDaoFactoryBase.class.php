@@ -492,4 +492,3 @@ abstract class jDaoFactoryBase  {
         return $value;
     }
 }
-?>

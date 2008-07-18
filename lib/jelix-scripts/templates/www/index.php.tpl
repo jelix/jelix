@@ -16,4 +16,4 @@ $config_file = 'index/config.ini.php';
 $jelix = new jCoordinator($config_file);
 $jelix->process(new jClassicRequest());
 
-?>
+

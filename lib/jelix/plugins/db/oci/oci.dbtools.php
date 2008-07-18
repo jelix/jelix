@@ -34,7 +34,7 @@ class ociDbTools extends jDbTools {
     */
     function _getFieldList ($tableName){
         $results = array ();
-        
+
         $query = 'SELECT COLUMN_NAME, DATA_TYPE, DATA_LENGTH, NULLABLE, DATA_DEFAULT,  
                         (SELECT CONSTRAINT_TYPE 
                          FROM USER_CONSTRAINTS UC, USER_CONS_COLUMNS UCC 
@@ -51,19 +51,19 @@ class ociDbTools extends jDbTools {
         $rs = $this->_connector->query ($query);
 
         while ($line = $rs->fetch ()){
-        	
+
             $field = new jDbFieldProperties();
 
             $field->name = strtolower($line->column_name);
             $field->type = strtolower($line->data_type);
-            
+
             if ($line->data_type == 'VARCHAR2'){
                 $field->length = intval($line->data_length);
-            }    
-            	      
+            }
+
             $field->notNull = ($line->nullable == 'N');
             $field->primary = ($line->constraint_type == 'P');
-            
+
             /**
              * A chaque champ auto increment correspond une sequence
              */
@@ -71,12 +71,12 @@ class ociDbTools extends jDbTools {
                 $field->autoIncrement  = true;
                 $field->sequence = $this->_getAISequenceName($tableName, $field->name);
             }
-            
+
             if ($line->data_default !== null || !($line->data_default === null && $field->notNull)){
                 $field->hasDefault = true;
                 $field->default =  $line->data_default;   
-        	}
-        	
+            }
+
             $results[$field->name] = $field;
         }
         return $results;
@@ -90,4 +90,3 @@ class ociDbTools extends jDbTools {
         return preg_replace(array('/\*tbName\*/', '/\*clName\*/'), array(strtoupper($tbName), strtoupper($clName)), $this->_connector->profil['sequence_AI_pattern']);
     }
 }
-?>

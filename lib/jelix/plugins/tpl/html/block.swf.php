@@ -75,4 +75,3 @@ function jtpl_block_html_swf($compiler, $begin, $params) {
         return 'echo \'</object>\';';
     }
 }
-?>

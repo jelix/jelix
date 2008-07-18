@@ -87,4 +87,3 @@ class dbAuthDriver implements jIAuthDriver {
         return $password;
     }
 }
-?>

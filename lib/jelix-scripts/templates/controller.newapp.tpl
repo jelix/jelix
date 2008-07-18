@@ -22,4 +22,3 @@ class %%name%%Ctrl extends jController {
         return $rep;
     }
 }
-?>

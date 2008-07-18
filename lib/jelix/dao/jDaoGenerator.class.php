@@ -941,4 +941,3 @@ class jDaoGenerator {
         return (strtolower($value)=='true'|| $value =='1'|| $value=='t'?$this->trueValue:$this->falseValue);
     }
 }
-?>

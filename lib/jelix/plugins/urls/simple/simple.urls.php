@@ -114,4 +114,3 @@ class simpleUrlEngine implements jIUrlEngine {
     }
 }
 
-?>

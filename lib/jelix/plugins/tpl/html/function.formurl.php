@@ -22,4 +22,3 @@ function jtpl_function_html_formurl($tpl, $selector, $params=array())
     echo $url->getPath();
 }
 
-?>

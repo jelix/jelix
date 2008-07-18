@@ -37,4 +37,4 @@ function jtpl_block_html_ifctrl($compiler, $begin, $params=array())
     return $content;
 }
 
-?>
+

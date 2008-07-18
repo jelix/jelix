@@ -78,4 +78,3 @@ class intuitionDbResultSet extends jDbResultSet {
             array ('pgsql','bindValue')); 
     }
 }
-?>

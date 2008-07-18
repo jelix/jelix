@@ -16,4 +16,4 @@ $config_file = 'rdf/config.ini.php';
 $jelix = new jCoordinator($config_file);
 $jelix->process(new jRdfRequest());
 
-?>
+

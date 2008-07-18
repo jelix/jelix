@@ -210,4 +210,3 @@ class jDbPDOConnection extends PDO {
         return (isset($this->profil['table_prefix']) && $this->profil['table_prefix']!='');
     }
 }
-?>

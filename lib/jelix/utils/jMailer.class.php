@@ -1380,4 +1380,4 @@ class jMailer {
     }
 }
 
-?>
+

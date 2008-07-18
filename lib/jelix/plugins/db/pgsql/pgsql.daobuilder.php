@@ -57,4 +57,3 @@ class pgsqlDaoBuilder extends jDaoGenerator {
     }
 
 }
-?>

@@ -30,4 +30,4 @@ function jtpl_modifier_common_wordwrap($string,$length=80,$break="\n",$cut=false
     return wordwrap($string,$length,$break,$cut);
 }
 
-?>
+

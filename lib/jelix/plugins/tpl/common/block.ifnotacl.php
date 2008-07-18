@@ -36,4 +36,3 @@ function jtpl_block_common_ifnotacl($compiler, $begin, $params=array())
     return $content;
 }
 
-?>

@@ -157,4 +157,3 @@ class classAuthDriver implements jIAuthDriver {
         return $password;
     }
 }
-?>

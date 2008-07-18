@@ -33,4 +33,3 @@ function jtpl_function_common_cycle_reset($tpl, $name='') {
         throw new jException("jelix~errors.tplplugin.function.argument.unknow", array($cycle_name,'cycle',''));
     }
 }
-?>

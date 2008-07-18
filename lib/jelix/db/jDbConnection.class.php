@@ -264,4 +264,3 @@ abstract class jDbConnection {
         return addslashes($text);
     }
 }
-?>

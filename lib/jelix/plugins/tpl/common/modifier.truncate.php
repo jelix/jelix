@@ -58,5 +58,3 @@ function jtpl_modifier_common_truncate($string, $length = 80, $etc = '...',
     } else
         return $string;
 }
-
-?>

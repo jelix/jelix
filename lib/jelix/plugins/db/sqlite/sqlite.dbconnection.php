@@ -116,4 +116,4 @@ class sqliteDbConnection extends jDbConnection {
     }
 
 }
-?>
+

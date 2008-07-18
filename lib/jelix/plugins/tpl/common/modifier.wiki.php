@@ -34,4 +34,3 @@ function jtpl_modifier_common_wiki($text, $config = 'wr3_to_xhtml')
     return $wr->render($text);
 }
 
-?>

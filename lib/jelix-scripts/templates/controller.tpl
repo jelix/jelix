@@ -14,8 +14,8 @@ class %%name%%Ctrl extends jController {
     */
     function %%method%%() {
         $rep = $this->getResponse('html');
-		
+
         return $rep;
     }
 }
-?>
+

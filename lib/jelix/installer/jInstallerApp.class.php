@@ -36,4 +36,3 @@ abstract class jInstallerApp extends jInstallerBase {
 
 }
 
-?>

@@ -18,4 +18,3 @@ class intuitionDbTools extends jDbTools{
         parent::__construct ($connector);
    }
 }
-?>

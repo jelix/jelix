@@ -31,4 +31,4 @@ function jtpl_cfunction_common_include($compiler, $param=array()) {
     }
 }
 
-?>
+

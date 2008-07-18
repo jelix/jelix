@@ -56,4 +56,3 @@ function jtpl_function_common_cycle($tpl, $param=''){
     }
     echo $retval;
 }
-?>

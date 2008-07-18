@@ -16,5 +16,3 @@ function jtpl_modifier_ltx2pdf_latex($string)
 {
     return str_replace(array('#','$','%','^','&','_','{','}','~'), array('\\#','\\$','\\%','\\^','\\&','\\_','\\{','\\}','\\~'), str_replace('\\','\\textbackslash',$string));
 }
-
-?>

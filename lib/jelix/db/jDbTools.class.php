@@ -150,4 +150,3 @@ abstract class jDbTools {
         return $nbCmd;
     }
 }
-?>

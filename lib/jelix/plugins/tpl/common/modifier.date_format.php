@@ -43,5 +43,3 @@ function jtpl_modifier_common_date_format( $string, $format="%b %e, %Y",
         return '';
     }
 }
-
-?>

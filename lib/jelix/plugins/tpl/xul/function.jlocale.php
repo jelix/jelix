@@ -29,4 +29,3 @@ function jtpl_function_xul_jlocale($tpl, $locale)
      }
 }
 
-?>

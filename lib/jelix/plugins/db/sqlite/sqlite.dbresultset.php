@@ -44,4 +44,4 @@ class sqliteDbResultSet extends jDbResultSet {
     public function execute($parameters=null)
       {throw new jException('jelix~db.error.feature.unsupported', array('sqlite','bindColumn')); }
 }
-?>
+

@@ -152,4 +152,4 @@ class jDaoConditions {
            'operator'=>$operator, 'isExpr'=>$foo);
     }
 }
-?>
+

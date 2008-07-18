@@ -59,4 +59,3 @@ function jtpl_modifier_common_jdatetime($date, $format_in = 'db_datetime',
     return $dt->toString($formats[$format_out]);
 }
 
-?>

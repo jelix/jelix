@@ -115,4 +115,3 @@ class jResponseTcpdf  extends jResponse {
     }
 
 }
-?>

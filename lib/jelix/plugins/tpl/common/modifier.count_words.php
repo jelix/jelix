@@ -27,4 +27,3 @@ function jtpl_modifier_common_count_words($string)
     return count($word_count);
 }
 
-?>

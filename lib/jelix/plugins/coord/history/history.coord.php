@@ -110,4 +110,4 @@ class historyCoordPlugin implements jICoordPlugin {
 
 }
 
-?>
+

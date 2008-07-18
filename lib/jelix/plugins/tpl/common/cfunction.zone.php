@@ -31,4 +31,3 @@ function jtpl_cfunction_common_zone($compiler, $params=array())
     return $content;
 }
 
-?>

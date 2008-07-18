@@ -90,7 +90,7 @@ class jZipCreator {
     public function addContentFile($zipFileName, $content, $filetime = 0){
 
         $filetime = $this->_getDOSTimeFormat($filetime);
-        
+
         /*
         generation of the file record
 
@@ -128,16 +128,16 @@ class jZipCreator {
         $this->centralDirOffset += strlen($filerecord);
 
     }
-    
+
     /**
      * adds an empty dir to the zip file
      */
     public function addEmptyDir($name, $time=0){
-        
+
         $time = $this->_getDOSTimeFormat($time);
 
         $name = str_replace('\\', '/', $name);
-        
+
         if(substr($name,-1,1)!=='/')
             $name .= '/';
 
@@ -187,9 +187,7 @@ class jZipCreator {
         return implode('', $this->fileRecords).$centraldir."\x50\x4b\x05\x06\x00\x00\x00\x00".$c.$c.
             pack('V', strlen($centraldir)).pack('V', $this ->centralDirOffset)."\x00\x00";
     }
-    
-    
-    
+
     protected function _getDOSTimeFormat($timestamp){
         // converts unix timestamp to dos binary format
         if($timestamp == 0)
@@ -201,9 +199,9 @@ class jZipCreator {
 
         return pack('V',($dt['seconds'] >> 1) | ($dt['minutes'] << 5) | ($dt['hours'] << 11) |
                 ($dt['mday'] << 16) | ($dt['mon'] << 21) | (($dt['year'] - 1980) << 25));
-        
+
     }
-    
+
     protected function _addCentralDirEntry($name, $info, $isDir = false){        
         /*
          register the file into the central directory record
@@ -229,7 +227,7 @@ class jZipCreator {
            - extra field (variable size)
            - file comment (variable size)
         */
-        
+
         $cdrecord = "\x50\x4b\x01\x02\x00\x00\x14\x00\x00\x00\x08\x00".$info;
         $cdrecord .= "\x00\x00\x00\x00\x00\x00";
         if($isDir)
@@ -242,5 +240,3 @@ class jZipCreator {
         $this->centralDirectory[] = $cdrecord;
     }
 }
-
-?>

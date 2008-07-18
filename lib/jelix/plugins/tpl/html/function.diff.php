@@ -33,4 +33,3 @@ function jtpl_function_html_diff($tpl, $str1,$str2, $nodiffmsg='Pas de différen
     }
 }
 
-?>

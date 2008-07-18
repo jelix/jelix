@@ -23,4 +23,3 @@ class intuitionDaoBuilder extends jDaoGenerator {
     }
 
 }
-?>

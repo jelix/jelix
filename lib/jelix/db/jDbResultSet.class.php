@@ -135,4 +135,4 @@ abstract class jDbResultSet implements Iterator {
 
 
 }
-?>
+

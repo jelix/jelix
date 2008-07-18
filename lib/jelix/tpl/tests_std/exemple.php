@@ -11,4 +11,3 @@ $tpl->assign('titre', 'Ceci est un test !');
 $tpl->display('test.tpl');
 
 
-?>

@@ -55,4 +55,3 @@ class jResponseText extends jResponse {
         }
     }
 }
-?>

@@ -166,4 +166,4 @@ class pgsqlDbConnection extends jDbConnection {
         return pg_escape_string($text);
     }
 }
-?>
+

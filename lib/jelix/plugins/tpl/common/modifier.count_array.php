@@ -20,5 +20,3 @@ function jtpl_modifier_common_count_array($aArray)
 {
     return count($aArray);
 }
-
-?>

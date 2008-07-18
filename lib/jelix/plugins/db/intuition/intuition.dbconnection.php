@@ -144,4 +144,3 @@ class intuitionDbConnection extends jDbConnection {
         return quote ($text);
     }
 }
-?>

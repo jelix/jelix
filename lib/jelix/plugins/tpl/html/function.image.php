@@ -339,4 +339,4 @@ function jtpl_function_html_image_ombre ( $image, $array) {
     return $temp2;
 
 }
-?>
+

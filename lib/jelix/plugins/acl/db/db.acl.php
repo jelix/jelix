@@ -31,7 +31,7 @@ class dbAclDriver implements jIAclDriver {
      * @return array list of values corresponding to the right
      */
     public function getRight($subject, $resource=null){
-    
+
         if($resource === null && isset(self::$acl[$subject])){
             return self::$acl[$subject];
         }elseif(isset(self::$aclres[$subject][$resource])){
@@ -69,7 +69,7 @@ class dbAclDriver implements jIAclDriver {
 
         return $values;
     }
-    
+
     /**
      * clear right cache
      * @since 1.0b2
@@ -78,7 +78,6 @@ class dbAclDriver implements jIAclDriver {
         self::$acl = array();
         self::$aclres = array();
     }
-    
+
 }
 
-?>

@@ -77,4 +77,3 @@ function jtpl_cfunction_html_swfbiscuit($tpl, $params) {
         ';
     return $sortie;
 }
-?>

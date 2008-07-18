@@ -21,5 +21,3 @@ function jtpl_modifier_html_nl2br($string)
 {
     return nl2br($string);
 }
-
-?>

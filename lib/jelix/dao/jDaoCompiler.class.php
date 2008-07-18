@@ -131,4 +131,3 @@ class jDaoXmlException extends jException {
         parent::__construct($localekey, $arg);
     }
 }
-?>

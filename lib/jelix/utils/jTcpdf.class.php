@@ -68,4 +68,3 @@ class jTcpdf extends TCPDF {
     }
 
 }
-?>

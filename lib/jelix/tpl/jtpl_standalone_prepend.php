@@ -37,4 +37,4 @@ function getLocales($locale) {
     return $locale;
 }
 
-?>
+

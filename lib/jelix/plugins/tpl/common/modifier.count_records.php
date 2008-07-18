@@ -21,4 +21,4 @@ function jtpl_modifier_common_count_records($DbResultSet)
     return $DbResultSet->rowCount();
 }
 
-?>
+

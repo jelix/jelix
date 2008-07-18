@@ -33,5 +33,3 @@ function jtpl_block_common_ifusernotconnected($compiler, $begin, $params=array()
     }
     return $content;
 }
-
-?>

@@ -31,4 +31,3 @@ function jtpl_function_ltx2pdf_jlocale($tpl, $locale)
      echo str_replace(array('#','$','%','^','&','_','{','}','~'), array('\\#','\\$','\\%','\\^','\\&','\\_','\\{','\\}','\\~'), str_replace('\\','\\textbackslash',$loc));
 }
 
-?>

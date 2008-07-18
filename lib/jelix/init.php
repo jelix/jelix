@@ -164,4 +164,3 @@ function __autoload($class){
 #endif
 }
 
-?>

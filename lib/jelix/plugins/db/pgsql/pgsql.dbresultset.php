@@ -66,4 +66,3 @@ class pgsqlDbResultSet extends jDbResultSet {
         return true;
     }
 }
-?>

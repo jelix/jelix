@@ -31,4 +31,3 @@ class jEventListener {
         $this->$methodName ($event);
     }
 }
-?>

@@ -19,13 +19,12 @@ function jtpl_function_common_counter_reset($tpl, $name = '') {
     if( empty($name) && $name !== '0' ){
         $name = 'default';
     }
-    
+
     if(!isset($tpl->_privateVars['counterArray']))
         return;
     if( !isset($tpl->_privateVars['counterArray'][$name]))
         return;
-    
+
     $tpl->_privateVars['counterArray'][$name] = array( 'type' => '0', 'start' => 1, 'incr' => 1 );
 }
 
-?>

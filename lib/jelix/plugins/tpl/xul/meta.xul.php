@@ -56,4 +56,3 @@ function jtpl_meta_xul_xul($tpl, $method, $param)
     }
 }
 
-?>

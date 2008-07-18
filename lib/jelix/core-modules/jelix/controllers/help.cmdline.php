@@ -62,4 +62,3 @@ Use of the command ". $selector->method ." :
         return $rep;
     }
 }
-?>

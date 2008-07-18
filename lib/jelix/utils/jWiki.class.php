@@ -57,4 +57,3 @@ class jWiki extends  WikiRenderer {
         }
    }
 }
-?>

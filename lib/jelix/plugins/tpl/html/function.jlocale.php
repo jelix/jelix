@@ -32,4 +32,3 @@ function jtpl_function_html_jlocale($tpl, $locale)
      }
 }
 
-?>

@@ -208,4 +208,3 @@ class jDb {
         self::$_profils[$name] = $params;
     }
 }
-?>

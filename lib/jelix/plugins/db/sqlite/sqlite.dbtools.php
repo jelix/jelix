@@ -71,4 +71,4 @@ class sqliteDbTools extends jDbTools {
         return $results;
     }
 }
-?>
+

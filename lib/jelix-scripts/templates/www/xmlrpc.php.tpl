@@ -15,4 +15,3 @@ $config_file = 'xmlrpc/config.ini.php';
 $jelix = new JCoordinator($config_file);
 $jelix->process(new jXmlRpcRequest());
 
-?>
