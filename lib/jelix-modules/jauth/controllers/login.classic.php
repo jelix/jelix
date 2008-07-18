@@ -4,7 +4,8 @@
 * @subpackage  jauth
 * @author      Laurent Jouanneau
 * @contributor Antoine Detante
-* @copyright   2005-2007 Laurent Jouanneau, 2007 Antoine Detante
+* @contributor Bastien Jaillot
+* @copyright   2005-2007 Laurent Jouanneau, 2007 Antoine Detante, 2008 Bastien Jaillot
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -65,6 +66,19 @@ class loginCtrl extends jController {
     * Shows the login form
     */
     function form() {
+        if (jAuth::isConnected()) {
+            $conf = $GLOBALS['gJCoord']->getPlugin('auth')->config; 
+
+            if ($conf['after_login'] != '') {
+                if (!($conf['enable_after_login_override'] && $url_return= $this->param('auth_url_return'))){ 
+                    $url_return =  jUrl::get($conf['after_login']);
+                }
+                $rep = $this->getResponse('redirectUrl');
+                $rep->url = $url_return;
+                return $rep;
+            }
+        }
+
         $rep = $this->getResponse('html');
 
         $rep->title =  jLocale::get ('auth.titlePage.login');
@@ -73,4 +87,3 @@ class loginCtrl extends jController {
         return $rep;
     }
 }
-?>

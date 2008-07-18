@@ -27,6 +27,6 @@
        </fieldset>
    </form>
 {else}
-    <p>{$user->surname} {$user->name}</p>
+    <p>{$user->login}</p>
 {/if}
 </div>
