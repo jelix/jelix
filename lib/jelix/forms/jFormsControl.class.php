@@ -439,6 +439,7 @@ class jFormsControlListbox extends jFormsControlDatasource {
  */
 class jFormsControlRadiobuttons extends jFormsControlDatasource {
     public $type="radiobuttons";
+    public $defaultValue='';
 
     function check($form){
         if($form->getContainer()->data[$this->ref] == '' && $this->required) {
@@ -455,6 +456,7 @@ class jFormsControlRadiobuttons extends jFormsControlDatasource {
  */
 class jFormsControlMenulist extends jFormsControlRadiobuttons {
     public $type="menulist";
+    public $defaultValue='';
 }
 
 

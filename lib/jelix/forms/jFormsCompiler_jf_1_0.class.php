@@ -397,7 +397,11 @@ class jFormsCompiler_jf_1_0  {
             $source[]='$ctrl->defaultValue='.$str.');';
             $hasSelectedValues = true;
         }elseif(isset($attributes['selectedvalue'])){
-            $source[]='$ctrl->defaultValue=array(\''. str_replace("'","\\'", (string)$control['selectedvalue']) .'\');';
+            if ($controltype == 'menulist' ||  $controltype == 'radiobuttons') {
+                $source[]='$ctrl->defaultValue=\''. str_replace("'","\\'", (string)$control['selectedvalue']) .'\';';
+            } else {
+                $source[]='$ctrl->defaultValue=array(\''. str_replace("'","\\'", (string)$control['selectedvalue']) .'\');';
+            }
             $hasSelectedValues = true;
             unset($attributes['selectedvalue']);
         }
