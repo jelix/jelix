@@ -21,6 +21,7 @@ Julien Issler
  - jResponseZip: on windows files are view like folders (#538)
  - form plugin create always a form with method post (#592)
  - jDao: attribute groupby for method selectfirst (#447)
+ - jDao: fixed bug with jDaoConditions and IN operator (#572)
  - jZipCreator: empty dirs are not included in the archive (#570)
  - jForms: fixed bugs in jforms.js based on Martus' report (#554)
  - jLocale: support multiline rendering in strings (#569)

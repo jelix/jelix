@@ -7,7 +7,7 @@
  * @contributor Julien Issler
  * @copyright   2005-2007 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
- * @copyright   2007 Julien Issler
+ * @copyright   2007-2008 Julien Issler
  * @copyright   2008 Thomas
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -271,7 +271,7 @@ abstract class jDaoFactoryBase  {
             if (isset($props[$distinct]))
                 $count = 'DISTINCT '.$this->_tables[$props[$distinct]['table']]['realname'].'.'.$props[$distinct]['fieldName'];
         }
-        
+
         $query = 'SELECT COUNT('.$count.') as c '.$this->_fromClause.$this->_whereClause;
         if ($searchcond->hasConditions ()){
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
@@ -361,13 +361,13 @@ abstract class jDaoFactoryBase  {
                 $group[] = $name;
             }
         }
-        
+
         if (count ($group)) {
             return ' GROUP BY '.implode(', ', $group);
         }
         return '';
     }
-    
+
     /**
      * @internal it don't support isExpr property of a condition because of security issue (SQL injection)
      * because the value could be provided by a form, it is escaped in any case
@@ -388,12 +388,25 @@ abstract class jDaoFactoryBase  {
             else
                 $prefixNoCondition = $prop['fieldName'];
 
-            $prefix = $prefixNoCondition.' '.$cond['operator'].' '; // ' ' for LIKE..
+            $op = strtoupper($cond['operator']);
+            $prefix = $prefixNoCondition.' '.$op.' '; // ' ' for LIKE..
 
-            if (!is_array ($cond['value'])){
+            if ($op == 'IN' || $op == 'NOT IN'){
+                if(is_array($cond['value'])){
+                    $values = array();
+                    foreach($cond['value'] as $value)
+                        $values[] = $this->_prepareValue($value,$prop['datatype']);
+                    $values = join(',', $values);
+                }
+                else
+                    $values = $cond['value'];
+
+                $r .= $prefix.'('.$values.')';
+            }
+            else if (!is_array ($cond['value'])){
                 $value = $this->_prepareValue($cond['value'],$prop['datatype']);
                 if ($value === 'NULL'){
-                    if($cond['operator'] == '='){
+                    if($op == '='){
                         $r .= $prefixNoCondition.' IS NULL';
                     }else{
                         $r .= $prefixNoCondition.' IS NOT NULL';
@@ -410,7 +423,7 @@ abstract class jDaoFactoryBase  {
                     }
                     $value = $this->_prepareValue($conditionValue,$prop['datatype']);
                     if ($value === 'NULL'){
-                        if($cond['operator'] == '='){
+                        if($op == '='){
                             $r .= $prefixNoCondition.' IS NULL';
                         }else{
                             $r .= $prefixNoCondition.' IS NOT NULL';
