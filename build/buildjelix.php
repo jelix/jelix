@@ -70,7 +70,7 @@ $BUILD_OPTIONS = array(
     ),
 'ENABLE_OLD_ACTION_SELECTOR'=>array(
     "old action selector can be used. deprecated for Jelix 1.1 and higher.",
-    true,
+    false,
     ),
 'INCLUDE_ALL_FONTS'=>array(
     "True if you want to include lib/fonts content for tcpdf or other",
