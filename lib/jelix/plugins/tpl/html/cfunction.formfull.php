@@ -56,7 +56,7 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
     $content = ' $formfull = '.$params[0].';
     $formfullBuilder = $formfull->getBuilder('.$builder.');
     $formfullBuilder->setAction('.$params[1].','.$params[2].');
-    $formfullBuilder->outputHeader('.$options.'));
+    $formfullBuilder->outputHeader('.$options.');
     $formfullBuilder->outputAllControls();
     $formfullBuilder->outputFooter();';
 

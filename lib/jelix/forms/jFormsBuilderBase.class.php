@@ -57,7 +57,7 @@ abstract class jFormsBuilderBase {
     public function setAction( $action, $actionParams){
         $this->_action = $action;
         $this->_actionParams = $actionParams;
-        $this->_name = jFormsBuilderBase::generateFormName();
+        $this->_name = jFormsBuilderBase::generateFormName($this->_form->getSelector());
         if($GLOBALS['gJCoord']->response!= null && $GLOBALS['gJCoord']->response->getType() == 'html'){
             $this->_endt = ($GLOBALS['gJCoord']->response->isXhtml()?'/>':'>');
         }
@@ -105,9 +105,13 @@ abstract class jFormsBuilderBase {
     /**
      * generates a name for the form
      */
-    public static function generateFormName(){
-        static $number = 0;
-        $number++;
-        return 'jform'.$number;
+    protected static function generateFormName($sel){
+        static $forms = array();
+        $name = 'jforms_'.str_replace('~','_',$sel);
+        if (isset($forms[$sel])) {
+            return $name.(++$forms[$sel]);
+        } else 
+            $forms[$sel] = 0;
+        return $name;
     }
 }

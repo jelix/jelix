@@ -127,6 +127,10 @@ abstract class jFormsBase {
         $this->sel = $sel;
     }
 
+    public function getSelector() {
+        return $this->sel;
+    }
+
     /**
      * set form data from request parameters
      */
