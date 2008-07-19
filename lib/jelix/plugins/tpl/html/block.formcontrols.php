@@ -69,19 +69,29 @@ function jtpl_block_html_formcontrols($compiler, $begin, $param=array())
         $content = '$ctrls_to_display=null;';
         $content .= '$ctrls_notto_display=null;';
     }
-
+    $_frmctrlInsideForm = $compiler->isInsideBlock('form');
     $content .= '
 if (!isset($t->_privateVars[\'__displayed_ctrl\'])) {
     $t->_privateVars[\'__displayed_ctrl\'] = array();
 }
 $t->_privateVars[\'__ctrlref\']=\'\';
-$_frmctrlInsideForm = isset($t->_privateVars[\'__formbuilder\']);
-foreach($t->_privateVars[\'__form\']->getControls() as $ctrlref=>$ctrl){
+';
+if($_frmctrlInsideForm){
+    $list = 'getRootControls()';
+}else{
+    $list = 'getControls()';
+}
+$content.='
+foreach($t->_privateVars[\'__form\']->'.$list.' as $ctrlref=>$ctrl){
     if(!$t->_privateVars[\'__form\']->isActivated($ctrlref)) continue;
-    if($ctrl->type == \'reset\' || $ctrl->type == \'hidden\') continue;
-    if($ctrl->type == \'submit\' && ($_frmctrlInsideForm || $ctrl->standalone)) continue;
-    if(!$_frmctrlInsideForm && ($ctrl->type == \'captcha\' || $ctrl->type == \'secretconfirm\') ) continue;
-    if(!isset($t->_privateVars[\'__displayed_ctrl\'][$ctrlref])
+    if($ctrl->type == \'reset\' || $ctrl->type == \'hidden\') continue;'."\n";
+    if(!$_frmctrlInsideForm)
+        $content.='if($ctrl->type == \'submit\' && $ctrl->standalone) continue;
+            if($ctrl->type == \'captcha\' || $ctrl->type == \'secretconfirm\') continue;'."\n";
+    else 
+        $content.='if($ctrl->type == \'submit\') continue;';
+
+    $content.='if(!isset($t->_privateVars[\'__displayed_ctrl\'][$ctrlref])
        && (  ($ctrls_to_display===null && $ctrls_notto_display === null)
           || ($ctrls_to_display===null && !in_array($ctrlref, $ctrls_notto_display))
           || in_array($ctrlref, $ctrls_to_display))) {

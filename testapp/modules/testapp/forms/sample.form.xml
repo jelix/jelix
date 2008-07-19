@@ -2,32 +2,34 @@
 <forms xmlns="http://jelix.org/ns/forms/1.1">
 
    <hidden ref="hiddenvalue" defaultvalue="my hidden value"/>
+    <group ref="identity">
+        <label>Your identity</label>
 
-   <input ref="nom" required="true">
-      <label>Votre nom</label>
-   </input>
+        <input ref="nom" required="true">
+            <label>Your name</label>
+        </input>
 
-   <input ref="prenom" defaultvalue="robert">
-      <label>Votre prénom</label>
-   </input>
+        <input ref="prenom" defaultvalue="robert">
+            <label>Your firstname</label>
+        </input>
 
-   <input ref="mail" type="email">
-      <label>Votre mail</label>
-   </input>
+        <radiobuttons ref="sexe" required="true">
+            <label>Vous êtes </label>
+            <item value="h">un homme</item>
+            <item value="f">une femme</item>
+            <item value="no">je ne sais pas</item>
+            <alert type="required">Vous devez indiquer le sexe, même si vous ne savez pas :-)</alert>
+        </radiobuttons>
+        <input ref="mail" type="email">
+            <label>Votre mail</label>
+        </input>
 
-   <checkbox ref="geek">
-       <label>Êtes vous un geek ?</label>
-       <help>Un geek est un passionné d'informatique</help>
-       <hint>Cochez la case si vous êtes un geek</hint>
-   </checkbox>
-
-   <radiobuttons ref="sexe" required="true">
-      <label>Vous êtes </label>
-      <item value="h">un homme</item>
-      <item value="f">une femme</item>
-      <item value="no">je ne sais pas</item>
-      <alert type="required">Vous devez indiquer le sexe, même si vous ne savez pas :-)</alert>
-  </radiobuttons>
+        <checkbox ref="geek">
+            <label>Êtes vous un geek ?</label>
+            <help>Un geek est un passionné d'informatique</help>
+            <hint>Cochez la case si vous êtes un geek</hint>
+        </checkbox>
+    </group>
 
   <menulist ref="conf" >
       <datasource dao="testapp~config" method="findAll" labelproperty="cvalue" valueproperty="ckey" />
@@ -78,7 +80,28 @@
   <input ref="unwanted" required="true" type="datetime">
       <label>This field shouldn't appear, it is deactivated</label>
    </input>
-  
+
+   <choice ref="task">
+      <label>Task status</label>
+      <item value="new">
+          <label>New</label>
+      </item>
+      <item value="assigned">
+          <label>Assigned</label>
+          <input ref="assignee" required="true">
+              <label>assignee name</label>
+          </input>
+      </item>
+      <item value="closed">
+          <label>Closed</label>
+          <menulist ref="task-done">
+              <label>Status</label>
+              <item value="done">Done</item>
+              <item value="cancelled">Cancelled</item>
+              <item value="later">Later</item>
+          </menulist>
+      </item>
+   </choice>
   <captcha ref="cap">
     <label>Filtre antispam</label>
   </captcha>

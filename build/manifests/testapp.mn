@@ -63,6 +63,7 @@ cd testapp/modules/testapp/templates
   testzone.tpl
   sommaire.tpl
   sampleform.tpl
+  sampleformfull.tpl
   sampleformresult.tpl
   forms_edit.tpl
   forms_liste.tpl
@@ -168,7 +169,9 @@ cd testapp/modules/jelix_tests/tests/
   jforms.html_cli.php
   jforms.check_datas.html_cli.php
   jforms.compiler.html_cli.php
+  jforms.compiler_1_1.html_cli.php
   jforms.htmlbuilder.html_cli.php
+  jforms.htmlbuilder2.html_cli.php
   jforms.with_dao.html_cli.php
   jtpl.compiler.html_cli.php
   jtpl.expressions_parsing.html_cli.php

@@ -23,6 +23,9 @@ class jFormsCompiler_jf_1_0  {
 
     protected $sourceFile;
 
+    protected $srcBuilders;
+    protected $buildersCompilers;
+
     public function __construct($sourceFile) {
         $this->sourceFile = $sourceFile;
     }
@@ -31,21 +34,35 @@ class jFormsCompiler_jf_1_0  {
 
         global $gJConfig;
 
+        $this->srcBuilders = &$srcBuilders;
+        $this->buildersCompilers = &$buildersCompilers;
+
         $xml = simplexml_import_dom($doc);
 
         if (count($xml->reset) > 1 )
             throw new jException('jelix~formserr.notunique.tag',array('reset',$this->sourceFile));
 
-        foreach($xml->children() as $controltype=>$control){
+        foreach ($xml->children() as $controltype=>$control) {
             $source[] = $this->generatePHPControl($controltype, $control);
-            foreach($gJConfig->_pluginsPathList_jforms as $buildername => $pluginPath) {
-                $srcBuilders[$buildername][]= $buildersCompilers[$buildername]->generateControl($controltype, $control);
+            //foreach($gJConfig->_pluginsPathList_jforms as $buildername => $pluginPath) {
+            //    $srcBuilders[$buildername][]= $buildersCompilers[$buildername]->generateControl($controltype, $control);
+            foreach($buildersCompilers as $buildername => $builder) {
+                $srcBuilders[$buildername][]= $builder->generateControl($controltype, $control);
             }
         }
     }
 
     protected function generatePHPControl($controltype, $control){
         $source = array();
+        $twocontrols = $this->_generatePHPControl($source, $controltype, $control);
+
+        $source[]='$this->addControl($ctrl);';
+        if ($twocontrols)
+            $source[]='$this->addControl($ctrl2);';
+        return implode("\n", $source);
+    }
+
+    protected function _generatePHPControl(&$source, $controltype, $control){
         $class = 'jFormsControl'.$controltype;
 
         $attributes = array();
@@ -58,7 +75,7 @@ class jFormsCompiler_jf_1_0  {
             throw new jException('jelix~formserr.unknow.tag',array($controltype,$this->sourceFile));
         }
 
-        if(!isset($attributes['ref'])){
+        if(!isset($attributes['ref']) || $attributes['ref'] == ''){
             throw new jException('jelix~formserr.attribute.missing',array('ref',$controltype,$this->sourceFile));
         }
 
@@ -66,17 +83,13 @@ class jFormsCompiler_jf_1_0  {
         $source[]='$ctrl= new '.$class.'(\''.$attributes['ref'].'\');';
         unset($attributes['ref']);
 
-        $doublecontrol = $this->$method($source, $control, $attributes);
+        $twocontrols = $this->$method($source, $control, $attributes);
 
         if(count($attributes)) {
             reset($attributes);
             throw new jException('jelix~formserr.attribute.not.allowed',array(key($attributes),$controltype,$this->sourceFile));
         }
-
-        $source[]='$this->addControl($ctrl);';
-        if ($doublecontrol)
-            $source[]='$this->addControl($ctrl2);';
-        return implode("\n", $source);
+        return $twocontrols;
     }
 
     protected $allowedInputType = array('string','boolean','decimal','integer','hexadecimal',
@@ -95,7 +108,6 @@ class jFormsCompiler_jf_1_0  {
                 $source[]='$ctrl->datatype= new jDatatype'.$type.'();';
             unset($attributes['type']);
         }
-        $this->attrReadonly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->attrDefaultvalue($source, $attributes);
         if(isset($attributes['minlength'])){
@@ -115,14 +127,15 @@ class jFormsCompiler_jf_1_0  {
         $this->readLabel($source, $control, 'input');
         $this->readHelpHintAlert($source, $control);
         $this->attrSize($source, $attributes);
+        $this->attrReadOnly($source, $attributes);
         return false;
     }
 
     protected function generateTextarea(&$source, $control, &$attributes) {
 
-        $this->attrReadonly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->attrDefaultvalue($source, $attributes);
+        $this->attrReadOnly($source, $attributes);
 
         if(isset($attributes['minlength'])){
             $source[]='$ctrl->datatype->addFacet(\'minLength\','.intval($attributes['minlength']).');';
@@ -165,8 +178,6 @@ class jFormsCompiler_jf_1_0  {
     }
 
     protected function generateReset(&$source, $control, &$attributes) {
-        // XXX: readonly attr really needed ?
-        $this->attrReadonly($source, $attributes);
         $this->readLabel($source, $control, 'reset');
         $this->readHelpHintAlert($source, $control);
         return false;
@@ -175,9 +186,9 @@ class jFormsCompiler_jf_1_0  {
     protected function generateCheckbox(&$source, $control, &$attributes) {
         $source[]='$ctrl->datatype= new jDatatypeBoolean();';
         $this->attrDefaultvalue($source, $attributes);
-        $this->attrReadonly($source, $attributes);
         $this->readLabel($source, $control, 'checkbox');
         $this->readHelpHintAlert($source, $control);
+        $this->attrReadOnly($source, $attributes);
         if(isset($attributes['valueoncheck'])){
             $source[]='$ctrl->valueOnCheck=\''.str_replace("'","\\'", $attributes['valueoncheck']) ."';";
             unset($attributes['valueoncheck']);
@@ -190,40 +201,40 @@ class jFormsCompiler_jf_1_0  {
     }
 
     protected function generateCheckboxes(&$source, $control, &$attributes) {
-        $this->attrReadonly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->readLabel($source, $control, 'checkboxes');
         $this->readHelpHintAlert($source, $control);
+        $this->attrReadOnly($source, $attributes);
         $hasSelectedValues = $this->readSelectedValue($source, $control, 'checkboxes', $attributes);
         $this->readDatasource($source, $control, 'checkboxes', $attributes, $hasSelectedValues);
         return false;
     }
 
     protected function generateRadiobuttons(&$source, $control, &$attributes) {
-        $this->attrReadonly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->readLabel($source, $control, 'radiobuttons');
         $this->readHelpHintAlert($source, $control);
+        $this->attrReadOnly($source, $attributes);
         $hasSelectedValues = $this->readSelectedValue($source, $control, 'radiobuttons', $attributes);
         $this->readDatasource($source, $control, 'radiobuttons', $attributes, $hasSelectedValues);
         return false;
     }
 
     protected function generateMenulist(&$source, $control, &$attributes) {
-        $this->attrReadonly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->readLabel($source, $control, 'menulist');
         $this->readHelpHintAlert($source, $control);
+        $this->attrReadOnly($source, $attributes);
         $hasSelectedValues = $this->readSelectedValue($source, $control, 'menulist', $attributes);
         $this->readDatasource($source, $control, 'menulist', $attributes, $hasSelectedValues);
         return false;
     }
 
     protected function generateListbox(&$source, $control, &$attributes) {
-        $this->attrReadonly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->readLabel($source, $control, 'listbox');
         $this->readHelpHintAlert($source, $control);
+        $this->attrReadOnly($source, $attributes);
         $this->attrSize($source, $attributes);
         $hasSelectedValues = $this->readSelectedValue($source, $control, 'listbox', $attributes);
         $this->readDatasource($source, $control, 'listbox', $attributes, $hasSelectedValues);
@@ -236,11 +247,12 @@ class jFormsCompiler_jf_1_0  {
     }
 
     protected function generateSecret(&$source, $control, &$attributes) {
-        $this->attrReadonly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->readLabel($source, $control, 'secret');
         list($alertInvalid, $alertRequired)=$this->readHelpHintAlert($source, $control);
         $this->attrSize($source, $attributes);
+        $hasRo = (isset($attributes['readonly']) && 'true' == $attributes['readonly']);
+        $this->attrReadOnly($source, $attributes);
 
         if(isset($control->confirm)) {
             $label='';
@@ -255,7 +267,6 @@ class jFormsCompiler_jf_1_0  {
             $source[]='$ctrl2->primarySecret = \''.(string)$control['ref'].'\';';
             $source[]='$ctrl2->label='.$label;
             $source[]='$ctrl2->required = $ctrl->required;';
-            $source[]='$ctrl2->readonly = $ctrl->readonly;';
             if($alertInvalid!='')
                 $source[]='$ctrl2->alertInvalid = $ctrl->alertInvalid;';
             if($alertRequired!='')
@@ -270,16 +281,19 @@ class jFormsCompiler_jf_1_0  {
             if (isset($control['size'])) {
                 $source[]='$ctrl2->size=$ctrl->size;';
             }
+
+            if($hasRo)
+                $source[]='$ctrl2->initialReadOnly = true;';
             return true;
         }
         return false;
     }
 
     protected function generateUpload(&$source, $control, &$attributes) {
-        $this->attrReadonly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->readLabel($source, $control, 'input');
         $this->readHelpHintAlert($source, $control);
+        $this->attrReadOnly($source, $attributes);
 
         if(isset($attributes['maxsize'])){
             $source[]='$ctrl->maxsize='.intval($attributes['maxsize']).';';
@@ -295,10 +309,10 @@ class jFormsCompiler_jf_1_0  {
         return false;
     }
 
-    protected function attrReadonly(&$source, &$attributes) {
+    protected function attrReadOnly(&$source, &$attributes) {
         if(isset($attributes['readonly'])){
             if('true' == $attributes['readonly'])
-                $source[]='$ctrl->readonly=true;';
+                $source[]='$ctrl->initialReadOnly=true;';
             unset($attributes['readonly']);
         }
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar
+<grammar 
   xmlns="http://relaxng.org/ns/structure/1.0"
   xmlns:ev="http://www.w3.org/2001/xml-events"
   datatype="http://www.w3.org/2001/XMLSchema-datatypes"
@@ -16,19 +16,10 @@
    <define name="form.controls">
       <oneOrMore>
         <choice>
-            <ref name="input" />
-            <ref name="textarea" />
-            <ref name="htmleditor" />
-            <ref name="secret" />
-            <ref name="output" />
-            <ref name="upload" />
+            <ref name="primary_controls" />
+            <ref name="group" />
             <ref name="submit" />
-            <ref name="checkbox" />
-            <ref name="checkboxes" />
-            <ref name="listbox" />
-            <ref name="radiobuttons"/>
-            <ref name="menulist" />
-            <ref name="hidden" />
+            <ref name="choice" />
             <ref name="captcha" />
             <!--
             <ref name="range" />
@@ -38,6 +29,21 @@
       <optional>
         <ref name="reset" />
       </optional>
+  </define>
+
+  <define name="primary_controls">
+    <ref name="input" />
+    <ref name="textarea" />
+    <ref name="htmleditor" />
+    <ref name="secret" />
+    <ref name="output" />
+    <ref name="upload" />
+    <ref name="checkbox" />
+    <ref name="checkboxes" />
+    <ref name="listbox" />
+    <ref name="radiobuttons"/>
+    <ref name="menulist" />
+    <ref name="hidden" />
   </define>
 
 
@@ -136,7 +142,7 @@
        <optional><attribute name="maxsize"><data type="integer" /></attribute></optional>
        <!--<element name="storage">
            <attribute name="type"><choice><value>file</value><value>blob</value></choice></attribute>
-           <attribute name="value" />
+           <attribute name="value" /> 
        </element>
        -->
      </element>
@@ -215,6 +221,42 @@
   <define name="captcha">
      <element name="captcha">
        <ref name="control.common" />
+     </element>
+  </define>
+
+  <define name="group">
+     <element name="group">
+        <attribute name="ref" />
+        <ref name="label" />
+        <ref name="UI.attr.readonly" />
+        <oneOrMore>
+            <choice>
+                <ref name="primary_controls" />
+            </choice>
+        </oneOrMore>
+     </element>
+  </define>
+
+  <define name="choice">
+     <element name="choice">
+        <ref name="control.common" />
+        <ref name="UI.attr.readonly" />
+        <oneOrMore>
+            <element name="item">
+                <attribute name="value" />
+                <optional>
+                    <attribute name="selected">
+                        <choice><value>true</value><value>false</value></choice>
+                    </attribute>
+                </optional>
+                <ref name="label" />
+                <zeroOrMore>
+                    <choice>
+                        <ref name="primary_controls" />
+                    </choice>
+                </zeroOrMore>
+            </element>
+        </oneOrMore>
      </element>
   </define>
 
@@ -320,7 +362,6 @@
                         <attribute name="criteriafrom" />
                     </choice>
                 </optional>
-                <optional><attribute name="profile" /></optional>
             </group>
             <attribute name="class" />
         </choice>
@@ -395,6 +436,6 @@
       </define>
 
   -->
-
+  
 
 </grammar>

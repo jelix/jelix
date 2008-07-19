@@ -37,9 +37,9 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
     }
 
     protected function _generateTextareaHtmlEditor(&$source, $control, &$attributes) {
-        $this->attrReadonly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->attrDefaultvalue($source, $attributes);
+        $this->attrReadOnly($source, $attributes);
 
         if(isset($attributes['minlength'])){
             $source[]='$ctrl->datatype->addFacet(\'minLength\','.intval($attributes['minlength']).');';
@@ -92,6 +92,96 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
         return false;
     }
 
+    protected function generateGroup(&$source, $control, &$attributes) {
+        $this->readLabel($source, $control, 'group');
+        $this->attrReadOnly(&$source, &$attributes);
+        $source[]='$topctrl = $ctrl;';
+        $ctrlcount = $this->readChildControls($source, 'group', $control, array('label'));
+        if ($ctrlcount == 0) {
+             throw new jException('jelix~formserr.no.child.control',array('group',$this->sourceFile));
+        }
+        $source[]='$ctrl = $topctrl;';
+        return false;
+    }
+
+    protected function generateChoice(&$source, $control, &$attributes) {
+        $this->readLabel($source, $control, 'choice');
+        $this->attrReadOnly(&$source, &$attributes);
+        $this->readHelpHintAlert($source, $control);
+        $source[]='$topctrl = $ctrl;';
+        $hasSelected = false;
+        $selectedvalue = null;
+        $itemCount = 0;
+        foreach($control->item as $item){
+            if(!isset($item['value'])){
+                throw new jException('jelix~formserr.attribute.missing',array('value','item of choice',$this->sourceFile));
+            }
+            $value = (string)$item['value'];
+
+            if(isset($item['selected'])){
+                if($hasSelected){
+                    throw new jException('jelix~formserr.selected.attribute.not.allowed',$this->sourceFile);
+                }
+                if((string)$item['selected']== 'true'){
+                    $hasSelected = true;
+                    $selectedvalue=$value;
+                }
+            }
+            if(!isset($item->label)){
+                throw new jException('jelix~formserr.tag.missing',array('label','item of choice',$this->sourceFile));
+            }
+
+            if(isset($item->label['locale'])){
+                $label='';
+                $labellocale=(string)$item->label['locale'];
+                $source[]='$topctrl->createItem(\''.str_replace("'","\\'",$value).'\', jLocale::get(\''.$labellocale.'\'));';
+            }else{
+                $label=(string)$item->label;
+                $labellocale='';
+                $source[]='$topctrl->createItem(\''.str_replace("'","\\'",$value).'\', \''.str_replace("'","\\'",$label).'\');';
+            }
+
+            $ctrlcount = $this->readChildControls($source, 'choice', $item, array('label'), str_replace("'","\\'",$value));
+            $itemCount ++;
+        }
+
+        if ($itemCount == 0) {
+            throw new jException('jelix~formserr.no.child.control',array('choice',$this->sourceFile));
+        }
+
+        $source[]='$topctrl->defaultValue=\''.str_replace('\'','\\\'',$selectedvalue).'\';';
+        $source[]='$ctrl = $topctrl;';
+        return false;
+    }
+
+
+    protected function readChildControls(&$source, $controltype, $xml, $ignore, $itemname='') {
+        if($itemname != '')
+            $itemname = ",'$itemname'";
+        $ctrlcount = 0;
+        global $gJConfig;
+        foreach($xml->children() as $ctrltype=>$control){
+            if(in_array($ctrltype, $ignore))
+                continue;
+            if(!in_array($ctrltype, array('input','textarea', 'output','checkbox','checkboxes','radiobuttons',
+                        'menulist','listbox','secret', 'upload', 'hidden','htmleditor'))) {
+                throw new jException('jelix~formserr.control.not.allowed',array($ctrltype, $controltype,$this->sourceFile));
+            }
+            $ctrlcount++;
+            $src = array();
+            $twocontrols = $this->_generatePHPControl($src, $ctrltype, $control);
+
+            $src[]='$topctrl->addChildControl($ctrl'.$itemname.');';
+            if ($twocontrols)
+                $src[]='$topctrl->addChildControl($ctrl2'.$itemname.');';
+            $source[]= implode("\n", $src);
+            /*foreach($gJConfig->_pluginsPathList_jforms as $buildername => $pluginPath) {
+                $this->srcBuilders[$buildername][]= $this->buildersCompilers[$buildername]->generateControl($ctrltype, $control);
+            }*/
+        }
+        return $ctrlcount;
+    }
+
     protected function readDatasource(&$source, $control, $controltype, &$attributes, $hasSelectedValues=false) {
 
         if(isset($control->datasource)) {
@@ -101,11 +191,11 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
             }
 
             if(isset($attrs['dao'])) {
-                if ( isset($attrs['profile']))
+                if (isset($attrs['profile']))
                     $profile = ',\''.$attrs['profile'].'\'';
                 else
                     $profile = ',\'\'';
-                if(isset($attrs['valueproperty'])) {
+                if (isset($attrs['valueproperty'])) {
                     $daovalue = $attrs['valueproperty'];
                 } else
                     $daovalue = '';
@@ -120,13 +210,13 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
                     $criteria=',null,\''.$attrs['criteriafrom'].'\'';
                 else
                     $criteria=',null,null';
-                if ( isset($attrs['labelseparator']))
+                if (isset($attrs['labelseparator']))
                     $labelSeparator = ',\''.$attrs['labelseparator'].'\'';
                 else
                     $labelSeparator = '';
 
                 $source[]='$ctrl->datasource = new jFormsDaoDatasource(\''.$attrs['dao'].'\',\''.
-                                 $attrs['method'].'\',\''.$attrs['labelproperty'].'\',\''.$daovalue.'\''.$profile.$criteria.$labelSeparator.');';
+                                $attrs['method'].'\',\''.$attrs['labelproperty'].'\',\''.$daovalue.'\''.$profile.$criteria.$labelSeparator.');';
                 if($controltype == 'submit'){
                     $source[]='$ctrl->standalone=false;';
                 }

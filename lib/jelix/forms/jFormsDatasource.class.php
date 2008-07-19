@@ -84,7 +84,7 @@ class jFormsDaoDatasource implements jIFormsDatasource {
     protected $profile;
 
     protected $criteria = null;
-    protected $criteriaFrom = null ;
+    protected $criteriaFrom = null;
 
     protected $dao = null;
 
@@ -98,6 +98,7 @@ class jFormsDaoDatasource implements jIFormsDatasource {
             $this->criteria = preg_split('/[\s,]+/',$criteria) ;
         if ( $criteriaFrom !== null )
             $this->criteriaFrom = preg_split('/[\s,]+/',$criteriaFrom) ;
+
         if($key == ''){
             $rec = jDao::createRecord($this->selector, $this->profile);
             $pfields = $rec->getPrimaryKeyNames();
@@ -137,7 +138,7 @@ class jFormsDaoDatasource implements jIFormsDatasource {
     public function getLabel($key){
         if($this->dao === null) $this->dao = jDao::get($this->selector, $this->profile);
         $rec = $this->dao->get($key);
-        if($rec) {
+        if ($rec) {
             $label = '' ;
             foreach( (array)$this->labelProperty as $property ) {
                 if (!empty( $rec->{$property}))
@@ -150,5 +151,5 @@ class jFormsDaoDatasource implements jIFormsDatasource {
         else
             return null;
     }
-
 }
+

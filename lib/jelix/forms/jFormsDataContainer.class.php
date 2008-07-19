@@ -50,6 +50,10 @@ class jFormsDataContainer {
      */
     public $updatetime = 0;
 
+    /**
+     *
+     */ 
+    protected $readOnly = array();
 
     /**
      *
@@ -84,6 +88,16 @@ class jFormsDataContainer {
         }
     }
 
+    public function setReadOnly($name, $readonly=true) {
+        if($readonly) {
+            $this->readOnly[$name]=true;
+        }
+        else {
+            if(isset($this->readOnly[$name]))
+                unset($this->readOnly[$name]);
+        }
+    }
+
     /**
     * check if a control is activated
     * @param $name the control name
@@ -92,5 +106,15 @@ class jFormsDataContainer {
     public function isActivated($name) {
         return !isset($this->deactivated[$name]);
     }
+
+    /**
+    * check if a control is activated
+    * @param $name the control name
+    * @return boolean true if it is activated
+    */
+    public function isReadOnly($name) {
+        return isset($this->readOnly[$name]);
+    }
+
 
 }

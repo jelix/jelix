@@ -413,6 +413,21 @@ class jTplCompiler
         return $res;
     }
 
+    /**
+     * for plugins, it says if the plugin is inside the given block
+     * @param string $blockName the block to search
+     * @param boolean $onlyUpper check only the upper block
+     * @return boolean  true if it is inside the block
+     */
+    public function isInsideBlock($blockName, $onlyUpper=false) {
+        if($onlyUpper)
+            return (end($this->_blockStack) == $blockName);
+        for($i=count($this->_blockStack) -1; $i>=0; $i--) {
+            if($this->_blockStack[$i] == $blockName)
+                return true;
+        }
+        return false;
+    }
 
     /**
      * sub-function which analyse an expression

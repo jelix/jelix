@@ -18,8 +18,8 @@ require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
 class testCDForm extends jFormsBase {
     function addCtrl($control, $reset=true){
         if($reset){
-            $this->_controls = array();
-            $this->_container->data = array();
+            $this->controls = array();
+            $this->container->data = array();
         }
         $this->addControl($control);
     }
@@ -28,7 +28,7 @@ class testCDForm extends jFormsBase {
 class UTjformsCheckDatas extends jUnitTestCaseDb {
     protected $form;
     protected $container;
-    function testStart() {
+    function setUp() {
         $this->container = new jFormsDataContainer('','');
         $this->form = new testCDForm('foo',$this->container);
     }
@@ -123,7 +123,7 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $ctrl = new jFormsControlSecret('nom');
         $ctrl->required = false;
         $this->form->addCtrl($ctrl);
-        
+
         $this->form->setData('nom',null);
         $this->assertTrue($this->form->check());
         $ctrl->required = true;
@@ -136,10 +136,10 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $ctrl2 = new jFormsControlSecretConfirm('nom_confirm');
         $ctrl2->primarySecret = 'nom';
         $this->form->addCtrl($ctrl2, false);
-        
+
         $this->form->setData('nom_confirm','');
         $this->assertTrue($this->form->check());
-        
+
         $this->form->setData('nom','aaa');
         $this->assertFalse($this->form->check());
         $this->form->setData('nom_confirm','aaa');
@@ -162,7 +162,7 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $ctrl = new jFormsControlCaptcha('captcha');
         $this->form->addCtrl($ctrl);
 
-        $ctrl->initExpectedValue($this->form);
+        $ctrl->initExpectedValue();
 
         $this->assertTrue(isset($this->form->getContainer()->privateData['captcha']));
 
@@ -179,6 +179,79 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
 
         $this->form->setData('captcha',$expectedResponse);
         $this->assertTrue($this->form->check());
+    }
+
+    function testGroup() {
+        $group = new jFormsControlGroup('group');
+
+        $ctrl = new jFormsControlInput('nom');
+        $ctrl->required = false;
+        $group->addChildControl($ctrl);
+
+        $ctrl = new jFormsControlCheckboxes('categories');
+        $ctrl->required = true;
+        $group->addChildControl($ctrl);
+        $this->form->addCtrl($group);
+
+        $this->assertFalse($this->form->check());
+
+        $this->form->setData('categories',array('toto','titi'));
+        $this->assertTrue($this->form->check());
+
+        $this->form->setData('nom', 'foo');
+        $this->assertTrue($this->form->check());
+
+    }
+
+
+    function testChoice() {
+        $choice = new jFormsControlChoice('choice');
+        $choice->required = false;
+
+        $choice->createItem('item1','labelitem1');
+        $choice->createItem('item2','labelitem2');
+        $choice->createItem('item3','labelitem3');
+
+        $ctrl = new jFormsControlInput('nom');
+        $ctrl->required = false;
+        $choice->addChildControl($ctrl, 'item1');
+
+        $ctrl = new jFormsControlCheckboxes('categories');
+        $ctrl->required = true;
+        $choice->addChildControl($ctrl, 'item1');
+
+        $ctrl = new jFormsControlinput('datenaissance');
+        $ctrl->datatype= new jDatatypelocaledate();
+        $choice->addChildControl($ctrl, 'item2');
+
+        $this->form->addCtrl($choice);
+
+        $this->assertFalse($this->form->check());
+
+        $this->form->setData('choice', 'foo');
+        $this->assertFalse($this->form->check());
+
+        $this->form->setData('choice', 'item3');
+        $this->assertTrue($this->form->check());
+
+        $this->form->setData('choice', 'item1');
+        $this->assertFalse($this->form->check());
+
+        $this->form->setData('categories','toto');
+        $this->assertFalse($this->form->check());
+
+        $this->form->setData('categories',array('toto'));
+        $this->assertTrue($this->form->check());
+
+        $this->form->setData('categories',array('toto','titi'));
+        $this->assertTrue($this->form->check());
+
+        $this->form->setData('choice', 'item2');
+        $this->assertTrue($this->form->check());
+
+        $this->form->setData('categories','');
+        $this->assertTrue($this->form->check());
+
     }
 }
 

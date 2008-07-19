@@ -21,7 +21,7 @@
 <p>formulaire simple (singleton)</p>
 <ul>
    <li><a href="{jurl 'sampleform:newform'}">Nouveau formulaire</a></li>
-   <li><a href="{jurl 'sampleform:show'}">voir le formulaire</a></li>
+   <li><a href="{jurl 'sampleform:show'}">voir le formulaire</a> (<a href="{jurl 'sampleform:show', array('full'=>1)}">full</a>)</li>
    <li><a href="{jurl 'sampleform:ok'}">Resultats</a></li>
    <li><a href="{jurl 'sampleform:destroy'}">détruire le formulaire</a></li>
 </ul>

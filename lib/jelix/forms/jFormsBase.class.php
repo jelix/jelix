@@ -39,7 +39,15 @@ abstract class jFormsBase {
      * @var array
      * @see jFormsControl
      */
-    protected $_controls = array();
+    protected $controls = array();
+
+    /**
+     * List of top controls
+     * array of jFormsControl objects
+     * @var array
+     * @see jFormsControl
+     */
+    protected $rootControls = array();
 
     /**
      * List of submit buttons
@@ -47,7 +55,7 @@ abstract class jFormsBase {
      * @var array
      * @see jFormsControl
      */
-    protected $_submits = array();
+    protected $submits = array();
 
     /**
      * Reset button
@@ -55,7 +63,7 @@ abstract class jFormsBase {
      * @see jFormsControl
      * @since 1.0
      */
-    protected $_reset = null;
+    protected $reset = null;
 
     /**
      * List of uploads controls
@@ -63,7 +71,7 @@ abstract class jFormsBase {
      * @var array
      * @see jFormsControl
      */
-    protected $_uploads = array();
+    protected $uploads = array();
 
     /**
      * List of hidden controls
@@ -71,7 +79,7 @@ abstract class jFormsBase {
      * @var array
      * @see jFormsControl
      */
-    protected $_hiddens = array();
+    protected $hiddens = array();
 
     /**
      * List of htmleditorcontrols
@@ -79,49 +87,44 @@ abstract class jFormsBase {
      * @var array
      * @see jFormsControl
      */
-    protected $_htmleditors = array();
+    protected $htmleditors = array();
 
     /**
      * the data container
      * @var jFormsDataContainer
      */
-    protected $_container=null;
-
-    /**
-     * says if the form is readonly
-     * @var boolean
-     */
-    protected $_readOnly = false;
+    protected $container = null;
 
     /**
      * content list of available form builder
      * @var boolean
      */
-    protected $_builders = array();
+    protected $builders = array();
 
     /**
      * list of modified controls
-     * @var array
+     * keys are name of control, value is the old value of the control
+     * @var array 
      */
-    protected $_modifiedControls = array();
+    protected $modifiedControls = array();
     /**
      * the form selector
      * @var string
      */
-    protected $_sel;
+    protected $sel;
 
     /**
      * @param string $sel the form selector
      * @param jFormsDataContainer $container the data container
      * @param boolean $reset says if the data should be reset
      */
-    public function __construct($sel, &$container, $reset = false){
-        $this->_container = & $container;
+    public function __construct($sel, $container, $reset = false){
+        $this->container = $container;
         if($reset){
-            $this->_container->clear();
+            $this->container->clear();
         }
-        $this->_container->updatetime = time();
-        $this->_sel = $sel;
+        $this->container->updatetime = time();
+        $this->sel = $sel;
     }
 
     /**
@@ -129,20 +132,11 @@ abstract class jFormsBase {
      */
     public function initFromRequest(){
         $req = $GLOBALS['gJCoord']->request;
-        $this->_modifiedControls=array();
-        foreach($this->_controls as $name=>$ctrl){
-            if(!$this->_container->isActivated($name) || $ctrl->readonly)
+        $this->modifiedControls=array();
+        foreach($this->rootControls as $name=>$ctrl){
+            if(!$this->container->isActivated($name) || $this->container->isReadOnly($name))
                 continue;
-            $value = $req->getParam($name);
-
-            //@todo à prevoir un meilleur test, pour les formulaires sur plusieurs pages
-            if($value === null) $value='';
-
-            $value = $ctrl->getValueFromRequest($this, $value);
-
-            if($this->_container->data[$name] != $value)
-                $this->_modifiedControls[$name] = $this->_container->data[$name];
-            $this->_container->data[$name] = $value;
+            $ctrl->setValueFromRequest($req);
         }
     }
 
@@ -151,15 +145,12 @@ abstract class jFormsBase {
      * @return boolean true if all is ok
      */
     public function check(){
-        $this->_container->errors = array();
-        foreach($this->_controls as $name=>$ctrl){
-            if(!$this->_container->isActivated($name))
-                continue;
-            $err = $ctrl->check($this);
-            if($err !== null)
-                $this->_container->errors[$name]= $err;
+        $this->container->errors = array();
+        foreach($this->rootControls as $name=>$ctrl){
+            if($this->container->isActivated($name))
+                $ctrl->check();
         }
-        return count($this->_container->errors) == 0;
+        return count($this->container->errors) == 0;
     }
 
     /**
@@ -171,20 +162,20 @@ abstract class jFormsBase {
      */
     public function initFromDao($daoSelector, $key = null, $dbProfil=''){
         if($key === null)
-            $key = $this->_container->formId;
+            $key = $this->container->formId;
         $dao = jDao::create($daoSelector, $dbProfil);
         $daorec = $dao->get($key);
         if(!$daorec) {
             if(is_array($key))
                 $key = var_export($key,true);
             throw new jExceptionForms('jelix~formserr.bad.formid.for.dao',
-                                      array($daoSelector, $key, $this->_sel));
+                                      array($daoSelector, $key, $this->sel));
         }
 
         $prop = $dao->getProperties();
-        foreach($this->_controls as $name=>$ctrl){
+        foreach($this->controls as $name=>$ctrl){
             if(isset($prop[$name])) {
-                $this->_container->data[$name] = $ctrl->prepareValueFromDao($daorec->$name, $prop[$name]['datatype']);
+                $ctrl->setDataFromDao($daorec->$name, $prop[$name]['datatype']);
             }
         }
     }
@@ -201,7 +192,7 @@ abstract class jFormsBase {
         $dao = jDao::get($daoSelector, $dbProfil);
 
         if($key === null)
-            $key = $this->_container->formId;
+            $key = $this->container->formId;
 
         if($key != null && ($daorec = $dao->get($key))) {
             $toInsert= false;
@@ -213,19 +204,19 @@ abstract class jFormsBase {
         }
 
         $prop = $dao->getProperties();
-        foreach($this->_controls as $name=>$ctrl){
+        foreach($this->controls as $name=>$ctrl){
             if(!isset($prop[$name]))
                 continue;
 
-            if(is_array($this->_container->data[$name])){
-                if( count ($this->_container->data[$name]) ==1){
-                    $daorec->$name = $this->_container->data[$name][0];
+            if(is_array($this->container->data[$name])){
+                if( count ($this->container->data[$name]) ==1){
+                    $daorec->$name = $this->container->data[$name][0];
                 }else{
                     // do nothing for arrays ?
                     continue;
                 }
             }else{
-                $daorec->$name = $this->_container->data[$name];
+                $daorec->$name = $this->container->data[$name];
             }
 
             if($daorec->$name == '' && !$prop[$name]['required']) {
@@ -288,24 +279,24 @@ abstract class jFormsBase {
      * you should provide the list of property names which corresponds to the primary key
      * in this order : properties for the formId, followed by the property which contains
      * the value.
-     * @param string $controlName  the name of the control
+     * @param string $name  the name of the control
      * @param string $daoSelector the selector of a dao file
      * @param mixed  $primaryKey the primary key if the form have no id. (optional)
      * @param mixed  $primaryKeyNames list of field corresponding to primary keys (optional)
      * @param string $dbProfil the jDb profil to use with the dao
      * @see jDao
      */
-    public function initControlFromDao($controlName, $daoSelector, $primaryKey = null, $primaryKeyNames=null, $dbProfil=''){
+    public function initControlFromDao($name, $daoSelector, $primaryKey = null, $primaryKeyNames=null, $dbProfil=''){
 
-        if(!$this->_controls[$controlName]->isContainer()){
-            throw new jExceptionForms('jelix~formserr.control.not.container', array($controlName, $this->_sel));
+        if(!$this->controls[$name]->isContainer()){
+            throw new jExceptionForms('jelix~formserr.control.not.container', array($name, $this->sel));
         }
 
-        if(!$this->_container->formId)
-            throw new jExceptionForms('jelix~formserr.formid.undefined.for.dao', array($controlName, $this->_sel));
+        if(!$this->container->formId)
+            throw new jExceptionForms('jelix~formserr.formid.undefined.for.dao', array($name, $this->sel));
 
         if($primaryKey === null)
-            $primaryKey = $this->_container->formId;
+            $primaryKey = $this->container->formId;
 
         if(!is_array($primaryKey))
             $primaryKey =array($primaryKey);
@@ -328,7 +319,7 @@ abstract class jFormsBase {
         foreach($results as $res){
             $val[]=$res->$valuefield;
         }
-        $this->_container->data[$controlName]=$val;
+        $this->controls[$name]->setData($val);
     }
 
 
@@ -360,19 +351,19 @@ abstract class jFormsBase {
      */
     public function saveControlToDao($controlName, $daoSelector, $primaryKey = null, $primaryKeyNames=null, $dbProfil=''){
 
-        if(!$this->_controls[$controlName]->isContainer()){
-            throw new jExceptionForms('jelix~formserr.control.not.container', array($controlName, $this->_sel));
+        if(!$this->controls[$controlName]->isContainer()){
+            throw new jExceptionForms('jelix~formserr.control.not.container', array($controlName, $this->sel));
         }
 
-        $values = $this->_container->data[$controlName];
+        $values = $this->container->data[$controlName];
         if(!is_array($values) && $values != '')
-            throw new jExceptionForms('jelix~formserr.value.not.array', array($controlName, $this->_sel));
+            throw new jExceptionForms('jelix~formserr.value.not.array', array($controlName, $this->sel));
 
-        if(!$this->_container->formId && !$primaryKey)
-            throw new jExceptionForms('jelix~formserr.formid.undefined.for.dao', array($controlName, $this->_sel));
+        if(!$this->container->formId && !$primaryKey)
+            throw new jExceptionForms('jelix~formserr.formid.undefined.for.dao', array($controlName, $this->sel));
 
         if($primaryKey === null)
-            $primaryKey = $this->_container->formId;
+            $primaryKey = $this->container->formId;
 
         if(!is_array($primaryKey))
             $primaryKey =array($primaryKey);
@@ -402,17 +393,11 @@ abstract class jFormsBase {
     }
 
     /**
-     * set the form  read only or read/write
-     * @param boolean $r true if you want read only
-     */
-    public function setReadOnly($r = true){  $this->_readOnly = $r;  }
-
-    /**
      * return list of errors found during the check
      * @return array
      * @see jFormsBase::check
      */
-    public function getErrors(){  return $this->_container->errors;  }
+    public function getErrors(){  return $this->container->errors;  }
 
     /**
      * set an error message on a specific field
@@ -420,7 +405,7 @@ abstract class jFormsBase {
      * @param string $mesg  the error message string
      */
     public function setErrorOn($field, $mesg){
-        $this->_container->errors[$field]=$mesg;
+        $this->container->errors[$field]=$mesg;
     }
 
     /**
@@ -428,33 +413,26 @@ abstract class jFormsBase {
      * @param string $name the name of the control/data
      * @param string $value the data value
      */
-    public function setData($name,$value){
-        if($this->_controls[$name]->type == 'checkbox') {
-            if($value != $this->_controls[$name]->valueOnCheck){
-                if($value =='on')
-                    $value = $this->_controls[$name]->valueOnCheck;
-                else
-                    $value = $this->_controls[$name]->valueOnUncheck;
-            }
-        }
-        $this->_container->data[$name]=$value;
+    public function setData($name, $value) {
+        $this->controls[$name]->setData($value);
     }
 
     /**
      *
-     * @param string $name the name of the control/data
+     * @param string $name the name of the  control/data
      * @return string the data value
      */
-    public function getData($name){
-        if(isset($this->_container->data[$name]))
-            return $this->_container->data[$name];
+    public function getData($name) {
+        if(isset($this->container->data[$name]))
+            return $this->container->data[$name];
         else return null;
     }
 
     /**
      * @return array form data
      */
-    public function getAllData(){ return $this->_container->data; }
+    public function getAllData(){ return $this->container->data; }
+
     /**
      * DEPRECATED, use getAllData() instead.
      * @return array form data
@@ -462,8 +440,14 @@ abstract class jFormsBase {
      */
     public function getDatas(){
         trigger_error('jFormsBase::getDatas is deprecated, use getAllData instead',E_USER_NOTICE);
-        return $this->_container->data;
+        return $this->container->data;
     }
+
+
+    function setModifiedFlag($name){
+        $this->modifiedControls[$name] = $this->container->data[$name];
+    }
+
 
     /**
      * deactivate (or reactivate) a control
@@ -472,12 +456,7 @@ abstract class jFormsBase {
      * @param boolean $deactivation   TRUE to deactivate, or FALSE to reactivate
      */
     public function deactivate($name, $deactivation=true) {
-        if($deactivation) {
-            $this->_container->deactivate($name);
-        }
-        else {
-            $this->_container->deactivate($name, false);
-        }
+        $this->controls[$name]->deactivate($deactivation);
     }
 
     /**
@@ -486,79 +465,103 @@ abstract class jFormsBase {
     * @return boolean true if it is activated
     */
     public function isActivated($name) {
-        return $this->_container->isActivated($name);
+        return $this->container->isActivated($name);
     }
+
+
+    /**
+     * set a control readonly or not
+     * @param boolean $r true if you want read only
+     */
+    public function setReadOnly($name, $r = true) {
+        $this->controls[$name]->setReadOnly($r);
+    }
+
+    /**
+     * check if a control is readonly
+     * @return boolean true if it is readonly
+     */
+    public function isReadOnly($name) {
+        return $this->container->isReadOnly($name);
+    }
+
 
     /**
      * @return jFormsDataContainer
      */
-    public function getContainer(){ return $this->_container; }
+    public function getContainer(){ return $this->container; }
+
 
     /**
      * @return array of jFormsControl objects
      */
-    public function getControls(){ return $this->_controls; }
+    public function getRootControls(){ return $this->rootControls; }
+
+    /**
+     * @return array of jFormsControl objects
+     */
+    public function getControls(){ return $this->controls; }
 
     /**
      * @param string $name the control name you want to get
      * @return jFormsControl
      * @since jelix 1.0
      */
-    public function getControl($name){ return $this->_controls[$name]; }
+    public function getControl($name){ return $this->controls[$name]; }
 
     /**
      * @return array of jFormsControl objects
      */
-    public function getSubmits(){ return $this->_submits; }
+    public function getSubmits(){ return $this->submits; }
 
      /**
      * @return array of jFormsControl objects
      * @since 1.1
      */
-    public function getHiddens(){ return $this->_hiddens; }
+    public function getHiddens(){ return $this->hiddens; }
 
      /**
      * @return array of jFormsControl objects
      * @since 1.1
      */
-    public function getHtmlEditors(){ return $this->_htmleditors; }
+    public function getHtmlEditors(){ return $this->htmleditors; }
 
      /**
      * @return array key=control id,  value=old value
      * @since 1.1
      */
-    public function getModifiedControls(){ return $this->_modifiedControls; }
+    public function getModifiedControls(){ return $this->modifiedControls; }
 
     /**
      * @return array of jFormsControl objects
      */
-    public function getReset(){ return $this->_reset; }
+    public function getReset(){ return $this->reset; }
 
     /**
      * @return string the formId
      */
-    public function id(){ return $this->_container->formId; }
+    public function id(){ return $this->container->formId; }
 
     /**
      * @return boolean
      */
-    public function hasUpload() { return count($this->_uploads)>0; }
+    public function hasUpload() { return count($this->uploads)>0; }
 
     /**
      * @param string $buildertype  the type name of a form builder
      * @return jFormsBuilderBase
      */
     public function getBuilder($buildertype){
-        if(isset($this->_builders[$buildertype])){
-            if(isset($this->_builders[$buildertype]['inst']))
-                return $this->_builders[$buildertype]['inst'];
+        if(isset($this->builders[$buildertype])){
+            if(isset($this->builders[$buildertype]['inst']))
+                return $this->builders[$buildertype]['inst'];
             include_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
-            include_once ($this->_builders[$buildertype][0]);
-            $c =  $this->_builders[$buildertype][1];
-            $o = $this->_builders[$buildertype]['inst'] = new $c($this);
+            include_once ($this->builders[$buildertype][0]);
+            $c = $this->builders[$buildertype][1];
+            $o = $this->builders[$buildertype]['inst'] = new $c($this);
             return $o;
         }else{
-            throw new jExceptionForms('jelix~formserr.invalid.form.builder', array($buildertype, $this->_sel));
+            throw new jExceptionForms('jelix~formserr.invalid.form.builder', array($buildertype, $this->sel));
         }
     }
 
@@ -574,18 +577,18 @@ abstract class jFormsBase {
      */
     public function saveFile($controlName, $path='', $alternateName='') {
         if ($path == '') {
-            $path = JELIX_APP_VAR_PATH.'uploads/'.$this->_sel.'/';
+            $path = JELIX_APP_VAR_PATH.'uploads/'.$this->sel.'/';
         } else if (substr($path, -1, 1) != '/') {
             $path.='/';
         }
 
-        if(!isset($this->_controls[$controlName]) || $this->_controls[$controlName]->type != 'upload')
-            throw new jExceptionForms('jelix~formserr.invalid.upload.control.name', array($controlName, $this->_sel));
+        if(!isset($this->controls[$controlName]) || $this->controls[$controlName]->type != 'upload')
+            throw new jExceptionForms('jelix~formserr.invalid.upload.control.name', array($controlName, $this->sel));
 
         if(!isset($_FILES[$controlName]) || $_FILES[$controlName]['error']!= UPLOAD_ERR_OK)
             return false;
 
-        if($this->_controls[$controlName]->maxsize && $_FILES[$controlName]['size'] > $this->_controls[$controlName]->maxsize){
+        if($this->controls[$controlName]->maxsize && $_FILES[$controlName]['size'] > $this->controls[$controlName]->maxsize){
             return false;
         }
         jFile::createDir($path);
@@ -605,15 +608,15 @@ abstract class jFormsBase {
      */
     public function saveAllFiles($path='') {
         if ($path == '') {
-            $path = JELIX_APP_VAR_PATH.'uploads/'.$this->_sel.'/';
+            $path = JELIX_APP_VAR_PATH.'uploads/'.$this->sel.'/';
         } else if (substr($path, -1, 1) != '/') {
             $path.='/';
         }
 
-        if(count($this->_uploads))
+        if(count($this->uploads))
             jFile::createDir($path);
 
-        foreach($this->_uploads as $ref=>$ctrl){
+        foreach($this->uploads as $ref=>$ctrl){
 
             if(!isset($_FILES[$ref]) || $_FILES[$ref]['error']!= UPLOAD_ERR_OK)
                 continue;
@@ -624,32 +627,63 @@ abstract class jFormsBase {
         }
     }
 
+    /**
+    * add a control to the form
+    * @param $control jFormsControl
+    */
+    public function addControl($control){
+        $this->rootControls [$control->ref] = $control;
+        $this->addChildControl($control);
+
+        if($control instanceof jFormsControlGroups) {
+            foreach($control->getChildControls() as $ctrl)
+                $this->addChildControl($ctrl);
+        }
+    }
+
+
+    function removeControl($name) {
+        if(!isset($this->rootControls [$name]))
+            return;
+        unset($this->rootControls [$name]);
+        unset($this->controls [$name]);
+        unset($this->submits [$name]);
+        if($this->reset && $this->reset->ref == $name)
+            $this->reset = null;
+        unset($this->uploads [$name]);
+        unset($this->hiddens [$name]);
+        unset($this->htmleditors [$name]);
+        unset($this->container->data[$name]);
+    }
+
 
     /**
     * add a control to the form
     * @param $control jFormsControl
     */
-    protected function addControl($control){
-        $this->_controls [$control->ref] = $control;
+    protected function addChildControl($control){
+        $this->controls [$control->ref] = $control;
         if($control->type =='submit')
-            $this->_submits [$control->ref] = $control;
+            $this->submits [$control->ref] = $control;
         else if($control->type =='reset')
-            $this->_reset = $control;
+            $this->reset = $control;
         else if($control->type =='upload')
-            $this->_uploads [$control->ref] = $control;
+            $this->uploads [$control->ref] = $control;
         else if($control->type =='hidden')
-            $this->_hiddens [$control->ref] = $control;
+            $this->hiddens [$control->ref] = $control;
         else if($control->type == 'htmleditor')
-            $this->_htmleditors [$control->ref] = $control;
+            $this->htmleditors [$control->ref] = $control;
 
-        if(!isset($this->_container->data[$control->ref])){
+        $control->setForm($this);
+
+        if(!isset($this->container->data[$control->ref])){
             if ( $control->datatype instanceof jDatatypeDateTime && $control->defaultValue == 'now') {
                 $dt = new jDateTime();
                 $dt->now();
-                $this->_container->data[$control->ref] = $dt->toString($control->datatype->getFormat());
+                $this->container->data[$control->ref] = $dt->toString($control->datatype->getFormat());
             }
             else {
-                $this->_container->data[$control->ref] = $control->defaultValue;
+                $this->container->data[$control->ref] = $control->defaultValue;
             }
         }
     }

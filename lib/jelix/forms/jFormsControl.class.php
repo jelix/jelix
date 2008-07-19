@@ -20,7 +20,6 @@ abstract class jFormsControl {
     public $ref='';
     public $datatype;
     public $required = false;
-    public $readonly = false;
     public $label='';
     public $defaultValue='';
     public $hasHelp = false;
@@ -28,40 +27,88 @@ abstract class jFormsControl {
     public $alertInvalid='';
     public $alertRequired='';
 
+    public $initialReadOnly = false;
+    public $initialActivation = true;
+
+    protected $form;
+    protected $container;
+
+
     function __construct($ref){
         $this->ref = $ref;
         $this->datatype = new jDatatypeString();
     }
 
+    function setForm($form) {
+        $this->form = $form;
+        $this->container = $form->getContainer();
+        if($this->initialReadOnly)
+            $this->container->setReadOnly($this->ref, true);
+        if(!$this->initialActivation)
+            $this->container->deactivate($this->ref, true);
+    }
+
+    /**
+     * says if the control can have multiple values
+     */
     function isContainer(){
         return false;
     }
 
-    function check($form){
-        $value = $form->getContainer()->data[$this->ref];
+    function check(){
+        $value = $this->container->data[$this->ref];
         if($value == '') {
             if($this->required)
-                return jForms::ERRDATA_REQUIRED;
+                return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
         }elseif(!$this->datatype->check($value)){
-            return jForms::ERRDATA_INVALID;
+            return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
         }elseif($this->datatype instanceof jIFilteredDatatype) {
-            $form->getContainer()->data[$this->ref] = $this->datatype->getFilteredValue();
+            $this->container->data[$this->ref] = $this->datatype->getFilteredValue();
         }
         return null;
+    }
+
+    function setData($value) {
+        if($this->container->data[$this->ref] != $value)
+            $this->form->setModifiedFlag($this->ref);
+        $this->container->data[$this->ref] = $value;
+    }
+
+    function setReadOnly($r){
+        $this->container->setReadOnly($this->ref, $r);
+    }
+
+    function setValueFromRequest($request) {
+        $this->setData($request->getParam($this->ref,''));
+    }
+
+    function setDataFromDao($value, $daoDatatype) {
+        $this->setData($value);
     }
 
     function getDisplayValue($value){
         return $value;
     }
 
-    function getValueFromRequest($form, $requestValue) {
-        return $requestValue;
+    public function deactivate($deactivation=true) {
+        $this->container->deactivate($this->ref, $deactivation);
     }
 
-    function prepareValueFromDao($value, $daoDatatype) {
-        return $value;
+    /**
+    * check if the control is activated
+    * @return boolean true if it is activated
+    */
+    public function isActivated() {
+        return $this->container->isActivated($this->ref);
     }
 
+    /**
+     * check if the control is readonly
+     * @return boolean true if it is readonly
+     */
+    public function isReadOnly() {
+        return $this->container->isReadOnly($this->ref);
+    }
 }
 
 
@@ -74,7 +121,7 @@ class jFormsControlInput extends jFormsControl {
     public $type='input';
     public $size=0;
 
-    function prepareValueFromDao($value, $daoDatatype) {
+    function setDataFromDao($value, $daoDatatype) {
         if($this->datatype instanceof jDatatypeLocaleDateTime
             && $daoDatatype == 'datetime') {
             if($value != '') {
@@ -90,10 +137,8 @@ class jFormsControlInput extends jFormsControl {
                 $value = $dt->toString(jDateTime::LANG_DFORMAT);
             }
         }
-        return $value;
+        $this->setData($value);
     }
-
-
 }
 
 /**
@@ -134,9 +179,9 @@ class jFormsControlSecret extends jFormsControl {
     public $type='secret';
     public $size=0;
 
-    function check($form){
-        if ($form->getContainer()->data[$this->ref] == '' && $this->required) {
-            return jForms::ERRDATA_REQUIRED;
+    function check(){
+        if ($this->container->data[$this->ref] == '' && $this->required) {
+            return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
         }
         return null;
     }
@@ -155,9 +200,9 @@ class jFormsControlSecretConfirm extends jFormsControl {
     public $size=0;
     public $primarySecret='';
 
-    function check($form){
-        if($form->getContainer()->data[$this->ref] != $form->getData($this->primarySecret))
-            return jForms::ERRDATA_INVALID;
+    function check(){
+        if($this->container->data[$this->ref] != $this->form->getData($this->primarySecret))
+            return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
         return null;
     }
 }
@@ -173,22 +218,33 @@ class jFormsControlCheckbox extends jFormsControl {
     public $valueOnCheck='1';
     public $valueOnUncheck='0';
 
-    function check($form){
-        $value = $form->getContainer()->data[$this->ref];
+    function check(){
+        $value = $this->container->data[$this->ref];
         if($value != $this->valueOnCheck && $value != $this->valueOnUncheck)
-            return jForms::ERRDATA_INVALID;
+            return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
         return null;
     }
 
-    function getValueFromRequest($form, $requestValue) {
-        if($requestValue){
-            return  $this->valueOnCheck;
+    function setValueFromRequest($request) {
+        $value = $request->getParam($this->ref);
+        if($value){
+            $this->setData($this->valueOnCheck);
         }else{
-            return $this->valueOnUncheck;
+            $this->setData($this->valueOnUncheck);
         }
     }
 
-    function prepareValueFromDao($value, $daoDatatype) {
+    function setData($value) {
+        if($value != $this->valueOnCheck){
+            if($value =='on')
+                $value = $this->valueOnCheck;
+            else
+                $value = $this->valueOnUncheck;
+        }
+        parent::setData($value);
+    }
+
+    function setDataFromDao($value, $daoDatatype) {
         if( $daoDatatype == 'boolean') {
             if($value == 'TRUE'||  $value == 't'|| $value == '1'|| $value == true){
                 $value = $this->valueOnCheck;
@@ -196,7 +252,7 @@ class jFormsControlCheckbox extends jFormsControl {
                 $value = $this->valueOnUncheck;
             }
         }
-        return $value;
+        $this->setData($value);
     }
 
 }
@@ -209,7 +265,7 @@ class jFormsControlCheckbox extends jFormsControl {
 class jFormsControlOutput extends jFormsControl {
     public $type='output';
 
-    public function check($form){
+    public function check(){
         return null;
     }
 }
@@ -226,7 +282,7 @@ class jFormsControlUpload extends jFormsControl {
 
     public $fileInfo = array();
 
-    function check($form){
+    function check(){
         if(isset($_FILES[$this->ref]))
             $this->fileInfo = $_FILES[$this->ref];
         else
@@ -234,30 +290,30 @@ class jFormsControlUpload extends jFormsControl {
 
         if($this->fileInfo['error'] == UPLOAD_ERR_NO_FILE) {
             if($this->required)
-                return jForms::ERRDATA_REQUIRED;
+                return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
         }else{
             if($this->fileInfo['error'] != UPLOAD_ERR_OK || !is_uploaded_file($this->fileInfo['tmp_name']))
-                return jForms::ERRDATA_INVALID;
+                return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
 
             if($this->maxsize && $this->fileInfo['size'] > $this->maxsize)
-                return jForms::ERRDATA_INVALID;
+                return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
 
             if(count($this->mimetype)){
                 if($this->fileInfo['type']==''){
                     $this->fileInfo['type'] = mime_content_type($this->fileInfo['tmp_name']);
                 }
                 if(!in_array($this->fileInfo['type'], $this->mimetype))
-                    return jForms::ERRDATA_INVALID;
+                    return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
             }
         }
         return null;
     }
 
-    function getValueFromRequest($form, $requestValue) {
+    function setValueFromRequest($request) {
         if(isset($_FILES[$this->ref])){
-            return $_FILES[$this->ref]['name'];
+            $this->setData($_FILES[$this->ref]['name']);
         }else{
-            return '';
+            $this->setData('');
         }
     }
 }
@@ -270,25 +326,28 @@ class jFormsControlUpload extends jFormsControl {
 class jFormsControlSubmit extends jFormsControlDatasource {
     public $type='submit';
     public $standalone = true;
-    public function check($form){
+
+    public function check(){
         return null;
     }
 
-    function getValueFromRequest($form, $requestValue) {
+    function setValueFromRequest($request) {
 
-        if($requestValue && !$this->standalone) {
+        $value = $request->getParam($this->ref,'');
+
+        if($value && !$this->standalone) {
             // because IE send the <button> content as value instead of the content of the
             // "value" attribute, we should verify it and get the real value
-            // or when using <input type="submit">, we have only the label as value (in all browsers...
-            $data = $this->datasource->getData($form);
-            if(!isset($data[$requestValue])) {
+            // or when using <input type="submit">, we have only the label as value (in all browsers...)
+            $data = $this->datasource->getData($this->form);
+            if(!isset($data[$value])) {
                 $data=array_flip($data);
-                if(isset($data[$requestValue])) {
-                    $requestValue = $data[$requestValue];
+                if(isset($data[$value])) {
+                    $value = $data[$value];
                 }
             }
         }
-        return $requestValue;
+        $this->setData($value);
     }
 
 }
@@ -300,7 +359,8 @@ class jFormsControlSubmit extends jFormsControlDatasource {
  */
 class jFormsControlReset extends jFormsControl {
     public $type='reset';
-    public function check($form){
+
+    public function check(){
         return null;
     }
 }
@@ -324,21 +384,21 @@ class jFormsControlCaptcha extends jFormsControl {
     public $type = 'captcha';
     public $question='';
     public $required = true;
-    function check($form){
-        $value = $form->getContainer()->data[$this->ref];
+    function check(){
+        $value = $this->container->data[$this->ref];
         if($value == '') {
-            return jForms::ERRDATA_REQUIRED;
-        }elseif($value != $form->getContainer()->privateData[$this->ref]){
-            return jForms::ERRDATA_INVALID;
+            return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
+        }elseif($value !=  $this->container->privateData[$this->ref]){
+            return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
         }
         return null;
     }
 
-    function initExpectedValue($form){
+    function initExpectedValue(){
         $numbers = jLocale::get('jelix~captcha.number');
         $id = rand(1,intval($numbers));
         $this->question = jLocale::get('jelix~captcha.question.'.$id);
-        $form->getContainer()->privateData[$this->ref] = jLocale::get('jelix~captcha.response.'.$id);
+        $this->container->privateData[$this->ref] = jLocale::get('jelix~captcha.response.'.$id);
     }
 }
 
@@ -382,18 +442,18 @@ class jFormsControlCheckboxes extends jFormsControlDatasource {
         return true;
     }
 
-    function check($form){
-        $value = $form->getContainer()->data[$this->ref];
+    function check(){
+        $value = $this->container->data[$this->ref];
         if(is_array($value)){
             if(count($value) == 0 && $this->required){
-                return jForms::ERRDATA_REQUIRED;
+                return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
             }
         }else{
             if($value == ''){
                 if($this->required)
-                    return jForms::ERRDATA_REQUIRED;
+                    return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
             }else{
-                return jForms::ERRDATA_INVALID;
+                return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
             }
         }
         return null;
@@ -414,18 +474,18 @@ class jFormsControlListbox extends jFormsControlDatasource {
         return $this->multiple;
     }
 
-    function check($form){
-        $value = $form->getContainer()->data[$this->ref];
+    function check(){
+        $value = $this->container->data[$this->ref];
         if(is_array($value)){
             if(!$this->multiple){
-                return jForms::ERRDATA_INVALID;
+                return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
             }
             if(count($value) == 0 && $this->required){
-                return jForms::ERRDATA_REQUIRED;
+                return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
             }
         }else{
             if($value == '' && $this->required){
-                return jForms::ERRDATA_REQUIRED;
+                return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
             }
         }
         return null;
@@ -440,10 +500,9 @@ class jFormsControlListbox extends jFormsControlDatasource {
 class jFormsControlRadiobuttons extends jFormsControlDatasource {
     public $type="radiobuttons";
     public $defaultValue='';
-
-    function check($form){
-        if($form->getContainer()->data[$this->ref] == '' && $this->required) {
-            return jForms::ERRDATA_REQUIRED;
+    function check(){
+        if($this->container->data[$this->ref] == '' && $this->required) {
+            return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
         }
         return null;
     }
@@ -459,4 +518,163 @@ class jFormsControlMenulist extends jFormsControlRadiobuttons {
     public $defaultValue='';
 }
 
+
+/**
+ * abstract classes for controls which contain other controls
+ * @package     jelix
+ * @subpackage  forms
+ */
+abstract class jFormsControlGroups extends jFormsControl {
+    public $type = 'groups';
+
+    /**
+     * all child controls of the group
+     */
+    protected $childControls = array();
+
+    function check(){
+        $rv = null;
+        foreach($this->childControls as $ctrl) {
+            if(($rv2 = $ctrl->check())!==null) {
+                $rv = $rv2;
+            }
+        }
+        return $rv;
+    }
+
+    function getDisplayValue($value){
+        return $value;
+    }
+
+    function setValueFromRequest($request) {
+        foreach($this->childControls as $name => $ctrl) {
+            if(!$this->form->isActivated($name) || $this->form->isReadOnly($name))
+                continue;
+            $ctrl->setValueFromRequest($request);
+        }
+        $this->setData($request->getParam($this->ref,''));
+    }
+
+    function addChildControl($control, $itemName = '') {
+        $this->childControls[$control->ref]=$control;
+    }
+
+    function getChildControls() { return $this->childControls;}
+
+    function setReadOnly($r){
+        $this->container->setReadOnly($this->ref, $r);
+        foreach($this->childControls as $ctrl) {
+           $ctrl->setReadOnly($r);
+        }
+    }
+
+    public function deactivate($deactivation=true) {
+        $this->container->deactivate($this->ref, $deactivation);
+        foreach($this->childControls as $ctrl) {
+            $ctrl->deactivate($deactivation);
+        }
+    }
+}
+
+/**
+ * group
+ * @package     jelix
+ * @subpackage  forms
+ */
+class jFormsControlGroup extends jFormsControlGroups {
+    public $type="group";
+}
+
+
+/**
+ * choice
+ * @package     jelix
+ * @subpackage  forms
+ */
+class jFormsControlChoice extends jFormsControlGroups {
+
+    public $type="choice";
+
+    /**
+     * list of item. Each value is an array which contains corresponding controls of the item
+     * an item could not have controls, in this case its value is an empty array
+     */
+    public $items = array();
+
+    public $itemsNames = array();
+
+    function check(){
+        if(isset($this->items[$this->container->data[$this->ref]])) {
+            $rv = null;
+            foreach($this->items[$this->container->data[$this->ref]] as $ctrl) {
+                if (($rv2 = $ctrl->check()) !== null) {
+                    $rv = $rv2;
+                }
+            }
+            return $rv;
+        } else {
+            return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
+        }
+    }
+
+    function createItem($value, $label) {
+        $this->items[$value] = array();
+        $this->itemsNames[$value]= $label;
+    }
+
+    function addChildControl($control, $itemValue = '') {
+        $this->childControls[$control->ref]=$control;
+        $this->items[$itemValue][$control->ref] = $control;
+    }
+
+    function setData($value) {
+        parent::setData($value);
+        // we deactivate controls which are not selected
+        foreach($this->items as $item => $list) {
+            $ro = ($item != $value);
+            foreach($list as $ref=>$ctrl) {
+                $this->form->setReadOnly($ref, $ro);
+            }
+        }
+    }
+
+    function setValueFromRequest($request) {
+        $this->setData($request->getParam($this->ref,''));
+        if(isset($this->items[$this->container->data[$this->ref]])){
+            foreach($this->items[$this->container->data[$this->ref]] as $name=>$ctrl) {
+                $ctrl->setValueFromRequest($request);
+            }
+        }
+    }
+}
+
+/**
+ * switch
+ * @package     jelix
+ * @subpackage  forms
+ * @experimental
+ */
+class jFormsControlSwitch extends jFormsControlChoice {
+    public $type="switch";
+
+
+    function setValueFromRequest($request) {
+        //$this->setData($request->getParam($this->ref,''));
+        if(isset($this->items[$this->container->data[$this->ref]])){
+            foreach($this->items[$this->container->data[$this->ref]] as $name=>$ctrl) {
+                $ctrl->setValueFromRequest($request);
+            }
+        }
+    }
+}
+
+/*
+ * repeat
+ * @package     jelix
+ * @subpackage  forms
+ */
+/*
+class jFormsControlRepeat extends jFormsControlGroups {
+    public $type="repeat";
+}*/
 

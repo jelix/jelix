@@ -17,12 +17,13 @@
             </conditions>
        </method>
        <method name="findBetweenId" type="select">
-           <parameter name="minId" />
-           <parameter name="maxId" />
-           <conditions>
+            <parameter name="minId" />
+            <parameter name="maxId" />
+            <conditions>
                 <gt property="id" expr="$minId" />
                 <lt property="id" expr="$maxId" />
             </conditions>
        </method>
    </factory>
 </dao>
+

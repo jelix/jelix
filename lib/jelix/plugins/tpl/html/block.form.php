@@ -61,7 +61,7 @@ unset($t->_privateVars[\'__displayed_ctrl\']);';
         $helpdecorator = "'jFormsHelpDecoratorAlert'";
 
     $method = isset($param[5])?$param[5]:'\'post\'';
-        
+
     if(isset($param[6]) && $param[6] != '""'  && $param[6] != "''")
         $builder = $param[6];
     else
@@ -73,7 +73,7 @@ $t->_privateVars[\'__formbuilder\']->setAction('.$param[1].','.$param[2].');
 $t->_privateVars[\'__formbuilder\']->outputHeader(array('.$errdecorator.','.$helpdecorator.','.$method.'));
 $t->_privateVars[\'__displayed_ctrl\'] = array();
 ';
-	$compiler->addMetaContent('if(isset('.$param[0].')) { '.$param[0].'->getBuilder('.$builder.')->outputMetaContent($t);}');
+    $compiler->addMetaContent('if(isset('.$param[0].')) { '.$param[0].'->getBuilder('.$builder.')->outputMetaContent($t);}');
 
     return $content;
 }

@@ -1,5 +1,5 @@
-<h1>Test de formulaire</h1>
-<p>Voici un formulaire de test</p>
+<h1>A sample form</h1>
+<p>Here is a form generated and managed by jforms, with a personnalized display.</p>
 <script type="text/javascript">
 {literal}
 function myErrorDecorator(){
@@ -19,7 +19,7 @@ myErrorDecorator.prototype = {
     },
     end : function(){
         if(this.message != ''){
-            alert("Message from myErrorDecorator\nErreur de saisie:\n" + this.message);
+            alert("Message from myErrorDecorator\nError:\n" + this.message);
         }
     }
 }
@@ -27,11 +27,8 @@ myErrorDecorator.prototype = {
 </script>
 
 {form $form,'sampleform:save', array(), 'myErrorDecorator'}
-<fieldset>
-   <legend>Votre identité</legend>
     {formcontrols}
-    <p>{ctrl_label}: {ctrl_control}</p>
+    <div>{ctrl_label}: {ctrl_control}</div>
     {/formcontrols}
-</fieldset>
 <p>{formreset} {formsubmit}</p>
 {/form}

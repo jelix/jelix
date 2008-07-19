@@ -50,7 +50,7 @@ class jFormsCompiler implements jISimpleCompiler {
         $source=array();
         $source[]='<?php ';
         $source[]='class '.$selector->getClass().' extends jFormsBase {';
-        $source[]='    protected $_builders = array( ';
+        $source[]='    protected $builders = array( ';
 
         $srcBuilders=array();
         $buildersCompilers = array();

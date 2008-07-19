@@ -32,24 +32,75 @@ class htmlJformsCompiler implements jIFormsBuilderCompiler {
     public function generateControl($controltype, $control) {
        // in this method, we generate a PHP script which will generate a javascript script ;-)
 
-        if($controltype == 'submit' || $controltype == 'reset' || $controltype == 'hidden')
+        if($controltype == 'submit' || $controltype == 'reset' || $controltype == 'hidden' )
             return '';
-
-        if(isset($control->confirm) && $controltype == 'secret') {
-            $hasConfirm = true;
-        }else{
-            $hasConfirm = false;
-        }
 
         $source = array();
 
-        if(isset($control['type'])){
-            $dt = (string)$control['type'];
-            if($dt == 'html') $dt = 'string';
-        }else if($controltype == 'checkbox')
-            $dt = 'boolean';
-        else
-            $dt = 'string';
+        if ($controltype == 'group') {
+            foreach($control->children() as $ctrltype=>$ctrl){
+                if($ctrltype == 'label')
+                    continue;
+                $source[] = $this->_generateControl($ctrltype, $ctrl);
+                $source[]='$js.="jForms.tForm.addControl(jForms.tControl);\n";';
+            }
+            return implode("\n", $source);
+
+        } else if ($controltype == 'choice') {
+
+            $source[]=$this->_generateControl($controltype, $control);
+            $source[]='$js.="jForms.tControl2 = jForms.tControl;\n";';
+
+            foreach($control->item as $item){
+                $value = (string)$item['value'];
+                $hasChild = false;
+                foreach($item->children() as $ctrltype=>$ctrl){
+                    if($ctrltype == 'label')
+                        continue;
+                    $hasChild = true;
+                    $source[] = $this->_generateControl($ctrltype, $ctrl);
+                    $source[]='$js.="jForms.tControl2.addControl(jForms.tControl, \''.str_replace("'","\\'",$value).'\');\n";';
+                }
+                if (!$hasChild) {
+                    $source[]='$js.="jForms.tControl2.items[\''.str_replace("'","\\'",$value).'\']=[];\n";';
+                }
+            }
+
+            $source[]='$js.="jForms.tForm.addControl(jForms.tControl2);\n";';
+        } else {
+
+            $source[]= $this->_generateControl($controltype, $control);
+            $source[]='$js.="jForms.tForm.addControl(jForms.tControl);\n";';
+        }
+
+        return implode("\n", $source);
+    }
+
+    protected function _generateControl($controltype, $control) {
+       // in this method, we generate a PHP script which will generate a javascript script ;-)
+
+        if($controltype == 'submit' || $controltype == 'reset' || $controltype == 'hidden' )
+            return '';
+
+        $source = array();
+
+        $hasConfirm = false;
+        $isLocale = false;
+
+        if($controltype == 'secret') {
+            $hasConfirm = isset($control->confirm);
+            $dt = 'Secret';
+        } else if ($controltype == 'checkbox') {
+            $dt = 'Boolean';
+        } else if ($controltype == 'choice') {
+            $dt = 'Choice';
+        } else if (isset($control['type'])) {
+            $dt = $dt2 = ucfirst((string)$control['type']);
+            if($dt == 'Html') $dt = 'String';
+            else if ($dt == 'Localetime') { $dt = 'Time'; $isLocale = true; }
+            else if ($dt == 'Localedate' || $dt =='Localedatetime' ) $isLocale = true;
+        } else
+            $dt = 'String';
 
         if(isset($control->label['locale'])){
             $source[]='$label = jLocale::get(\''.(string)$control->label['locale'].'\');';
@@ -57,30 +108,25 @@ class htmlJformsCompiler implements jIFormsBuilderCompiler {
             $source[]='$label = \''.str_replace("'","\\'",(string)$control->label).'\';';
         }
         if($controltype == 'checkboxes' || ($controltype == 'listbox' && isset($control['multiple']) && 'true' == (string)$control['multiple']))
-            $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'[]\', \'".str_replace("\'","\\\'",$label)."\', \''.$dt.'\');\n";';
+            $source[]='$js.="jForms.tControl = new jFormsControl'.$dt.'(\''.(string)$control['ref'].'[]\', \'".str_replace("\'","\\\'",$label)."\');\n";';
         else{
-            $source[]='$js.="jForms.tControl = new jFormsControl(\''.(string)$control['ref'].'\', \'".str_replace("\'","\\\'",$label)."\', \''.$dt.'\');\n";';
+            $source[]='$js.="jForms.tControl = new jFormsControl'.$dt.'(\''.(string)$control['ref'].'\', \'".str_replace("\'","\\\'",$label)."\');\n";';
             if($hasConfirm){
                 if(isset($control->confirm['locale'])){
                     $source[]='$label2 = jLocale::get(\''.(string)$control->confirm['locale'].'\');';
                 }else{
                     $source[]='$label2 = \''.str_replace("'","\\'",(string)$control->confirm).'\';';
                 }
-                $source[]='$js.="jForms.tControl2 = new jFormsControl(\''.(string)$control['ref'].'_confirm\', \'".str_replace("\'","\\\'",$label2)."\', \''.$dt.'\');\n";';
+                $source[]='$js.="jForms.tControl.confirmField = new jFormsControlSecretConfirm(\''.(string)$control['ref'].'_confirm\', \'".str_replace("\'","\\\'",$label2)."\');\n";';
             }
         }
 
-        if($dt == 'localedate' || $dt =='localedatetime' || $dt =='localetime'){
+        if($isLocale){
             $source[]='$js.="jForms.tControl.lang=\'".$GLOBALS[\'gJConfig\']->locale."\';\n";';
         }
 
-        if(isset($control['readonly']) && 'true' == (string)$control['readonly']){
-            $source[]='$js.="jForms.tControl.readonly = true;\n";';
-            if($hasConfirm) $source[]='$js.="jForms.tControl2.readonly = true;\n";';
-        }
         if(isset($control['required']) && 'true' == (string)$control['required']){
             $source[]='$js.="jForms.tControl.required = true;\n";';
-            if($hasConfirm) $source[]='$js.="jForms.tControl2.required = true;\n";';
         }
         if(isset($control['maxlength'])){
             $source[]='$js.="jForms.tControl.maxLength = '.intval($control['maxlength']).';\n";';
@@ -95,7 +141,7 @@ class htmlJformsCompiler implements jIFormsBuilderCompiler {
                 $help='str_replace("\'","\\\'",\''.str_replace("'","\\'",(string)$control->help).'\')';
             }
             $source[]='$js.="jForms.tControl.help=\'".'.$help.'."\';\n";';
-            if($hasConfirm) $source[]='$js.="jForms.tControl2.help=jForms.tControl.help;\n";';
+            if($hasConfirm) $source[]='$js.="jForms.tControl.confirmField.help=jForms.tControl.help;\n";';
         }
 
         $alertInvalid='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label))';
@@ -125,21 +171,16 @@ class htmlJformsCompiler implements jIFormsBuilderCompiler {
         if($hasConfirm){
             $alertInvalid='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.invalid\', $label2))';
             $alertRequired='str_replace("\'","\\\'",jLocale::get(\'jelix~formserr.js.err.required\',$label2))';
-            $source[]='$js.="jForms.tControl2.errRequired=\'".'.$alertRequired.'."\';\n";';
-            $source[]='$js.="jForms.tControl2.errInvalid =\'".'.$alertInvalid.'."\';\n";';
+            $source[]='$js.="jForms.tControl.confirmField.errRequired=\'".'.$alertRequired.'."\';\n";';
+            $source[]='$js.="jForms.tControl.confirmField.errInvalid =\'".'.$alertInvalid.'."\';\n";';
         }
 
         if(isset($control['multiple']) && 'true' == (string)$control['multiple']){
             $source[]='$js.="jForms.tControl.multiple = true;\n";';
         }
-        $source[]='$js.="jForms.tForm.addControl( jForms.tControl);\n";';
-        if($hasConfirm) {
-            $source[]='$js.="jForms.tControl2.isConfirmField=true;\njForms.tControl2.confirmFieldOf=\''.(string)$control['ref'].'\';\n";';
-            $source[]='$js.="jForms.tForm.addControl( jForms.tControl2);\n";';
-        }
-
         return implode("\n", $source);
     }
+
 
     public function endCompile() {
         $srcjs='$js.="jForms.declareForm(jForms.tForm);\n";'."\n";

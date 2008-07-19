@@ -20,14 +20,20 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
     public function outputAllControls() {
 
         echo '<table class="jforms-table" border="0">';
-        foreach( $this->_form->getControls() as $ctrlref=>$ctrl){
+        foreach( $this->_form->getRootControls() as $ctrlref=>$ctrl){
             if($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden') continue;
             if(!$this->_form->isActivated($ctrlref)) continue;
-            echo '<tr><th scope="row">';
-            $this->outputControlLabel($ctrl);
-            echo '</th><td>';
-            $this->outputControl($ctrl);
-            echo '</td></tr>';
+            if($ctrl->type == 'group') {
+                echo '<tr><td colspan="2">';
+                $this->outputControl($ctrl);
+                echo '</td></tr>';
+            }else{
+                echo '<tr><th scope="row">';
+                $this->outputControlLabel($ctrl);
+                echo '</th><td>';
+                $this->outputControl($ctrl);
+                echo '</td></tr>';
+            }
         }
         echo '</table> <div class="jforms-submit-buttons">';
         if ( $ctrl = $this->_form->getReset() ) {
@@ -46,7 +52,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
     public function outputMetaContent($t) {
         global $gJCoord, $gJConfig;
         $resp= $gJCoord->response;
-        if($resp === null || $resp->getType() !='html'){
+        if($resp === null){
             return;
         }
         $www =$gJConfig->urlengine['jelixWWWPath'];
@@ -81,8 +87,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
      */
     public function outputHeader($params){
         $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
-        $method = (strtolower($params[2])=='get')?'get':'post';
-        echo '<form action="',$url->getPath(),'" method="'.$method.'" id="', $this->_name,'"';
+        echo '<form action="',$url->scriptName,$url->pathInfo,'" method="'.$params[2].'" id="', $this->_name,'"';
         if($this->_form->hasUpload())
             echo ' enctype="multipart/form-data">';
         else
@@ -110,6 +115,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             echo '<ul class="jforms-error-list">';
             $errRequired='';
             foreach($errors as $cname => $err){
+                if(!$this->_form->isActivated($ctrls[$cname]->ref)) continue;
                 if($err == jForms::ERRDATA_REQUIRED) {
                     if($ctrls[$cname]->alertRequired){
                         echo '<li>', $ctrls[$cname]->alertRequired,'</li>';
@@ -136,29 +142,29 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
     }
 
     public function outputControlLabel($ctrl){
-        if($ctrl->type == 'hidden') return;
-        $required = ($ctrl->required == ''|| $ctrl->readonly?'':' jforms-required');
+        if($ctrl->type == 'hidden' || $ctrl->type == 'group') return;
+        $required = ($ctrl->required == false || $ctrl->isReadOnly()?'':' jforms-required');
         $inError = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons'){
             echo '<span class="jforms-label',$required,$inError,'"',$hint,'>',htmlspecialchars($ctrl->label),'</span>';
         }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
             $id = $this->_name.'_'.$ctrl->ref;
-            echo '<label class="jforms-label',$required,$inError,'" for="'.$id.'"',$hint,'>'.htmlspecialchars($ctrl->label).'</label>';
+            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$hint,'>',htmlspecialchars($ctrl->label),'</label>';
         }
     }
 
     public function outputControl($ctrl){
         if($ctrl->type == 'hidden') return;
+        $ro = $ctrl->isReadOnly();
         $id = ' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'"';
-        $class = ($ctrl->required == ''|| $ctrl->readonly?'':' jforms-required');
+        $class = ($ctrl->required == false || $ro?'':' jforms-required');
         $class.= (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
+        $class.= ($ro && $ctrl->type != 'captcha'?' jforms-readonly':'');
+        $readonly = ($ro?' readonly="readonly"':'');
         if($class !='') $class = ' class="'.$class.'"';
-        $readonly = ($ctrl->readonly?' readonly="readonly"':'');
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
-
         $this->{'output'.$ctrl->type}($ctrl, $id, $class, $readonly, $hint);
-
         $this->outputHelp($ctrl);
     }
 
@@ -315,29 +321,29 @@ jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->
     }
 
     protected function outputOutput($ctrl, $id, $class, $readonly, $hint) {
-            $value = $this->_form->getData($ctrl->ref);
-            echo '<input type="hidden"',$id,' value="',htmlspecialchars($value),'"',$this->_endt;
-            echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($value),'</span>';
+        $value = $this->_form->getData($ctrl->ref);
+        echo '<input type="hidden"',$id,' value="',htmlspecialchars($value),'"',$this->_endt;
+        echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($value),'</span>';
     }
 
     protected function outputUpload($ctrl, $id, $class, $readonly, $hint) {
-            if($ctrl->maxsize){
-                echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$ctrl->maxsize,'"',$this->_endt;
-            }
-            echo '<input type="file"',$id,$readonly,$hint,$class,' value=""',$this->_endt; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
+        if($ctrl->maxsize){
+            echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$ctrl->maxsize,'"',$this->_endt;
+        }
+        echo '<input type="file"',$id,$readonly,$hint,$class,' value=""',$this->_endt; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
 
     }
 
     protected function outputSubmit($ctrl, $id, $class, $readonly, $hint) {
-            if($ctrl->standalone){
-                echo '<input type="submit"',$id,$hint,' class="jforms-submit" value="',htmlspecialchars($ctrl->label),'"/>';
-            }else{
-                foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                    // because IE6 sucks with <button type=submit> (see ticket #431), we must use input :-(
-                    echo '<input type="submit" name="',$ctrl->ref,'" id="',$this->_name,'_',$ctrl->ref,'_',htmlspecialchars($v),'"',
-                        $hint,' class="jforms-submit" value="',htmlspecialchars($label),'"/> ';
-                }
+        if($ctrl->standalone){
+            echo '<input type="submit"',$id,$hint,' class="jforms-submit" value="',htmlspecialchars($ctrl->label),'"/>';
+        }else{
+            foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
+                // because IE6 sucks with <button type=submit> (see ticket #431), we must use input :-(
+                echo '<input type="submit" name="',$ctrl->ref,'" id="',$this->_name,'_',$ctrl->ref,'_',htmlspecialchars($v),'"',
+                    $hint,' class="jforms-submit" value="',htmlspecialchars($label),'"/> ';
             }
+        }
     }
 
     protected function outputReset($ctrl, $id, $class, $readonly, $hint) {
@@ -345,10 +351,70 @@ jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->
     }
 
     protected function outputCaptcha($ctrl, $id, $class, $readonly, $hint) {
-        $ctrl->initExpectedValue($this->_form);
+        $ctrl->initExpectedValue();
         echo '<span class="jforms-captcha-question">',htmlspecialchars($ctrl->question),'</span> ';
         echo '<input type="text"',$id,$hint,$class,' value=""',$this->_endt;
     }
+
+    protected function outputGroup($ctrl, $id, $class, $readonly, $hint) {
+        echo '<fieldset><legend>',htmlspecialchars($ctrl->label),"</legend>\n";
+        echo '<table class="jforms-table-group" border="0">',"\n";
+        foreach( $ctrl->getChildControls() as $ctrlref=>$c){
+            if($c->type == 'submit' || $c->type == 'reset' || $c->type == 'hidden') continue;
+            if(!$this->_form->isActivated($ctrlref)) continue;
+            echo '<tr><th scope="row">';
+            $this->outputControlLabel($c);
+            echo "</th>\n<td>";
+            $this->outputControl($c);
+            echo "</td></tr>\n";
+        }
+        echo "</table></fieldset>";
+    }
+
+    protected function outputChoice($ctrl, $id, $class, $readonly, $hint) {
+        echo '<ul class="jforms-choice jforms-ctl-'.$ctrl->ref.'" >',"\n";
+
+        $value = $this->_form->getData($ctrl->ref);
+        if(is_array($value)){
+            if(isset($value[0]))
+                $value = $value[0];
+            else
+                $value='';
+        }
+
+        $i=0;
+        $id=' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'_';
+        foreach( $ctrl->items as $itemName=>$listctrl){
+            echo '<li><label><input type="radio"',$id,$i,'" value="',htmlspecialchars($itemName),'"';
+            echo ($itemName==$value?' checked="checked"':''),$readonly;
+            echo ' onclick="jForms.getForm(\'',$this->_name,'\').getControl(\'',$ctrl->ref,'\').activate(\'',$itemName,'\')"', $this->_endt;
+            echo htmlspecialchars($ctrl->itemsNames[$itemName]),'</label> ';
+
+            foreach($listctrl as $ref=>$c) {
+                if(!$this->_form->isActivated($ref)) continue;
+                echo ' <span class="jforms-item-controls">';
+                // we remove readonly status so when a user change the choice and 
+                // javascript is deactivated, it can still change the value of the control
+                $ro = $c->isReadOnly() && $readonly != '';
+                if($ro) $c->setReadOnly(false);
+                $this->outputControlLabel($c);
+                echo ' ';
+                $this->outputControl($c);
+                if($ro) $c->setReadOnly($ro);
+                echo "</span>\n";
+            }
+            echo "</li>\n";
+            $i++;
+        }
+        echo "</ul>\n";
+
+        echo '<script type="text/javascript">
+//<![CDATA[
+jForms.getForm("',$this->_name,'").getControl("',$ctrl->ref,'").activate("',$value,'");
+//]]>
+</script>';
+    }
+
 
     protected function outputHelp($ctrl) {
         if ($ctrl->hasHelp) {
