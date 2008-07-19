@@ -516,6 +516,7 @@ class jFormsControlRadiobuttons extends jFormsControlDatasource {
 class jFormsControlMenulist extends jFormsControlRadiobuttons {
     public $type="menulist";
     public $defaultValue='';
+    public $emptyItemLabel='';
 }
 
 

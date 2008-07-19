@@ -25,6 +25,21 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
                                       'datetime','date','time','localedatetime','localedate','localetime',
                                       'url','email','ipv4','ipv6','html');
 
+
+    protected function generateMenulist(&$source, $control, &$attributes) {
+        parent::generateMenulist($source, $control, $attributes);
+        if(isset($control->emptyitem)) {
+            if(isset($control->emptyitem['locale'])){
+                $labellocale=(string)$control->emptyitem['locale'];
+                $source[]='$ctrl->emptyItemLabel=jLocale::get(\''.$labellocale.'\');';
+            }else{
+                $label= (string)$control->emptyitem;
+                $source[]='$ctrl->emptyItemLabel=\''.str_replace("'","\\'",$label).'\';';
+            }
+        }
+        return false;
+    }
+
     protected function generateTextarea(&$source, $control, &$attributes) {
         if(isset($attributes['type'])){
             if ( $attributes['type'] != 'html') {

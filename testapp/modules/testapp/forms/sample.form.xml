@@ -33,11 +33,12 @@
 
   <menulist ref="conf" >
       <datasource dao="testapp~config" method="findAll" labelproperty="cvalue" valueproperty="ckey" />
-      <label>Selectionnez une des valeurs</label>
+      <label>Select one value</label>
+      <emptyitem>-- choices --</emptyitem>
   </menulist>
 
   <listbox ref="home">
-      <label>Vous habitez </label>
+      <label>You leave at</label>
       <item value="pa">Paris</item>
       <item value="ma">Marseille</item>
       <item value="ly">Lyon</item>

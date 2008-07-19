@@ -173,8 +173,11 @@
 
   <define name="menulist">
      <element name="menulist">
-       <ref name="control.common" />
-       <ref name="control.list.common" />
+       <interleave>
+            <ref name="control.common" />
+            <ref name="control.list.common" />
+            <optional><element name="emptyitem"><ref name="message.content" /></element></optional>
+        </interleave>
      </element>
   </define>
 
@@ -262,16 +265,18 @@
 
   <define name="control.common">
      <attribute name="ref" />
-     <ref name="label" />
-     <optional>
-        <ref name="help" />
-     </optional>
-     <optional>
-        <ref name="hint" />
-     </optional>
-     <optional>
-        <ref name="alert" />
-     </optional>
+     <interleave>
+        <ref name="label" />
+        <optional>
+            <ref name="help" />
+        </optional>
+        <optional>
+            <ref name="hint" />
+        </optional>
+        <optional>
+            <ref name="alert" />
+        </optional>
+     </interleave>
   </define>
 
   <define name="UI.attr.readonly">

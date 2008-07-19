@@ -252,7 +252,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
                 $value='';
         }
         if (!$ctrl->required) {
-            echo '<option value=""',($value==''?' selected="selected"':''),'></option>';
+            echo '<option value=""',($value==''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),'</option>';
         }
         foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
             echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
