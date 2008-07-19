@@ -15,20 +15,23 @@
  *
  * usage : {form $theformobject,'submit_action', $submit_action_params} here form content {/form}
  *
- * You can add this others parameters :
- *   string $errDecorator name of your javascript object for error listener<br/>
- *   string $helpDecorator name of your javascript object for help listener<br/>
- *   string $method : the method of submit : post or get
+ * You can add this others parameters :<ul>
+ *   <li>string $builderName  (default is 'html')</li>
+ *   <li>array  $options for the builder. Example, for the 'html' builder : <ul>
+ *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
+ *      <li>"helpDecorator"=>"name of your javascript object for help listener"</li>
+ *      <li>"method" => "post" or "get". default is "post"</li>
+ *      </ul>
+ *    </li>
+ *  </ul>
  *
  * @param jTplCompiler $compiler the template compiler
  * @param boolean $begin true if it is the begin of block, else false
  * @param array $param 0=>form object 
  *                     1=>selector of submit action  
  *                     2=>array of parameters for submit action 
- *                     3=>name of your javascript object for error listener
- *                     4=>name of your javascript object for help listener
- *                     5=>name of the method : 'post' or 'get'
- *                     6=>name of the builder : default is html
+ *                     3=>name of the builder : default is html
+ *                     4=>array of options for the builder
  * @return string the php code corresponding to the begin or end of the block
  * @see jForms
  */
@@ -42,8 +45,8 @@ unset($t->_privateVars[\'__formbuilder\']);
 unset($t->_privateVars[\'__displayed_ctrl\']);';
     }
 
-    if(count($param) < 2 || count($param) > 7){
-        $compiler->doError2('errors.tplplugin.block.bad.argument.number','form','2-7');
+    if(count($param) < 2 || count($param) > 5){
+        $compiler->doError2('errors.tplplugin.block.bad.argument.number','form','2-5');
         return '';
     }
     if(count($param) == 2){
@@ -51,26 +54,19 @@ unset($t->_privateVars[\'__displayed_ctrl\']);';
     }
 
     if(isset($param[3]) && $param[3] != '""'  && $param[3] != "''")
-        $errdecorator = $param[3];
-    else
-        $errdecorator = "'jFormsErrorDecoratorAlert'";
-
-    if(isset($param[4]) && $param[4] != '""'  && $param[4] != "''")
-        $helpdecorator = $param[4];
-    else
-        $helpdecorator = "'jFormsHelpDecoratorAlert'";
-
-    $method = isset($param[5])?$param[5]:'\'post\'';
-
-    if(isset($param[6]) && $param[6] != '""'  && $param[6] != "''")
-        $builder = $param[6];
+        $builder = $param[3];
     else
         $builder = "'html'";
+
+    if(isset($param[4]))
+        $options = $param[4];
+    else
+        $options = "array()";
 
     $content = ' $t->_privateVars[\'__form\'] = '.$param[0].';
 $t->_privateVars[\'__formbuilder\'] = $t->_privateVars[\'__form\']->getBuilder('.$builder.');
 $t->_privateVars[\'__formbuilder\']->setAction('.$param[1].','.$param[2].');
-$t->_privateVars[\'__formbuilder\']->outputHeader(array('.$errdecorator.','.$helpdecorator.','.$method.'));
+$t->_privateVars[\'__formbuilder\']->outputHeader('.$options.');
 $t->_privateVars[\'__displayed_ctrl\'] = array();
 ';
     $compiler->addMetaContent('if(isset('.$param[0].')) { '.$param[0].'->getBuilder('.$builder.')->outputMetaContent($t);}');

@@ -81,13 +81,18 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
 
     /**
      * output the header content of the form
-     * @param array $params some parameters 0=>name of the javascript error decorator
-     *    1=> name of the javascript help decorator
-     *    2=> name of method
+     * @param array $params some parameters <ul>
+     *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
+     *      <li>"helpDecorator"=>"name of your javascript object for help listener"</li>
+     *      <li>"method" => "post" or "get". default is "post"</li>
+     *      </ul>
      */
     public function outputHeader($params){
+        $params = array_merge(array('errorDecorator'=>'jFormsErrorDecoratorAlert',
+                 'helpDecorator'=>'jFormsHelpDecoratorAlert', 'method'=>'post'), $params);
+
         $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
-        echo '<form action="',$url->scriptName,$url->pathInfo,'" method="'.$params[2].'" id="', $this->_name,'"';
+        echo '<form action="',$url->scriptName,$url->pathInfo,'" method="'.$params['method'].'" id="', $this->_name,'"';
         if($this->_form->hasUpload())
             echo ' enctype="multipart/form-data">';
         else
@@ -106,7 +111,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
         }
         echo '<script type="text/javascript">
 //<![CDATA[
-', $this->getJavascriptCheck($params[0],$params[1]),'
+', $this->getJavascriptCheck($params['errorDecorator'],$params['helpDecorator']),'
 //]]>
 </script>';
         $errors = $this->_form->getContainer()->errors;

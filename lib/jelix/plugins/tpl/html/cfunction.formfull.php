@@ -13,30 +13,33 @@
 /**
  * Display a full form without the use of other plugins.
  * usage : {formfull $theformobject,'submit_action', $submit_action_params}
- * You can add this others parameters :
- *   string $errDecorator name of your javascript object for error listener<br/>
- *   string $helpDecorator name of your javascript object for help listener<br/>
- *   string $method : the method of submit : 'post' or 'get'
- *
+ * 
+ * You can add this others parameters :<ul>
+ *   <li>string $builderName  (default is 'html')</li>
+ *   <li>array  $options for the builder. Example, for the 'html' builder : <ul>
+ *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
+ *      <li>"helpDecorator"=>"name of your javascript object for help listener"</li>
+ *      <li>"method" => "post" or "get". default is "post"</li>
+ *      </ul>
+ *    </li>
+ *  </ul>
  * @param jTplCompiler $compiler the template compiler
- * @param array $params 0=>form object
- *                     1=>selector of submit action
- *                     2=>array of parameters for submit action
- *                     3=>name of your javascript object for error listener
- *                     4=>name of your javascript object for help listener
- *                     5=>name of the method : POST or GET
- *                     6=>name of the builder : default is html
+ * @param array $param 0=>form object 
+ *                     1=>selector of submit action  
+ *                     2=>array of parameters for submit action 
+ *                     3=>name of the builder : default is html
+ *                     4=>array of options for the builder
  * @return string the php code corresponding to the begin or end of the block
  */
 function jtpl_cfunction_html_formfull($compiler, $params=array())
 {
-    if (count($params) < 2 || count($params) > 7) {
-        $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','formfull','2-7');
+    if (count($params) < 2 || count($params) > 5) {
+        $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','formfull','2-5');
     }
 
-    if(isset($params[6]) && $params[6] != '""'  && $params[6] != "''") 
-        $builder = $params[6];
-    else 
+    if(isset($param[3]) && $param[3] != '""'  && $param[3] != "''")
+        $builder = $param[3];
+    else
         $builder = "'html'";
 
     $compiler->addMetaContent('if(isset('.$params[0].')) { '.$params[0].'->getBuilder('.$builder.')->outputMetaContent($t);}');
@@ -44,22 +47,16 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
     if(count($params) == 2){
         $params[2] = 'array()';
     }
-    if(isset($params[3]) && $params[3] != '""'  && $params[3] != "''")
-        $errdecorator = $params[3];
-    else
-        $errdecorator = "'jFormsErrorDecoratorAlert'";
 
-    if(isset($params[4]) && $params[4] != '""'  && $params[4] != "''")
-        $helpdecorator = $params[4];
+    if(isset($param[4]))
+        $options = $param[4];
     else
-        $helpdecorator = "'jFormsHelpDecoratorAlert'";
-
-    $method = isset($params[5])?$params[5]:'\'post\'';
+        $options = "array()";
 
     $content = ' $formfull = '.$params[0].';
     $formfullBuilder = $formfull->getBuilder('.$builder.');
     $formfullBuilder->setAction('.$params[1].','.$params[2].');
-    $formfullBuilder->outputHeader(array('.$errdecorator.','.$helpdecorator.','.$method.'));
+    $formfullBuilder->outputHeader('.$options.'));
     $formfullBuilder->outputAllControls();
     $formfullBuilder->outputFooter();';
 

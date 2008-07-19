@@ -12,7 +12,7 @@
  * a special if block to test easily the current control name
  * TO BE USED inside a {formcontrols} block
  *
- * {ifctrl 'name1','name2',...}some tpl{else}some other tpl{/ifctrl}
+ * {ifctrl 'name1','name2',...} some tpl {else} some other tpl {/ifctrl}
  * @param jTplCompiler $compiler the template compiler
  * @param boolean $begin true if it is the begin of block, else false
  * @param array $params 0=>'name',etc. to match against current control name

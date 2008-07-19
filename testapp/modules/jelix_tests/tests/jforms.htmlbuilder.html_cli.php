@@ -41,7 +41,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
     function testOutputHeader(){
         $this->builder->setAction('jelix_tests~urlsig:url1',array());
         ob_start();
-        $this->builder->outputHeader(array('','','post'));
+        $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->builder->getName().'"><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig:url1"/>
@@ -54,7 +54,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
         $this->builder->setAction('jelix_tests~urlsig:url1',array('foo'=>'b>ar'));
         ob_start();
-        $this->builder->outputHeader(array('','','get'));
+        $this->builder->outputHeader(array('method'=>'get'));
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$this->builder->getName().'"><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
@@ -790,7 +790,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 
 
         ob_start();
-        $this->builder->outputHeader(array('','','post'));
+        $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'" enctype="multipart/form-data"><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
@@ -866,7 +866,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->assertEqualOrDiff('', $out);
 
         ob_start();
-        $this->builder->outputHeader(array('','','post'));
+        $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
@@ -884,7 +884,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $this->form->removeControl($ctrl->ref);
         $this->form->addControl($ctrl);
         ob_start();
-        $this->builder->outputHeader(array('','','post'));
+        $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>

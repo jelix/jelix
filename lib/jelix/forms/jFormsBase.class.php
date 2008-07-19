@@ -552,6 +552,7 @@ abstract class jFormsBase {
      * @return jFormsBuilderBase
      */
     public function getBuilder($buildertype){
+        if($buildertype == '') $buildertype = 'html';
         if(isset($this->builders[$buildertype])){
             if(isset($this->builders[$buildertype]['inst']))
                 return $this->builders[$buildertype]['inst'];

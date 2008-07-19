@@ -209,7 +209,7 @@ function toto() {
          3=>array('{for ($i=0;$i<$p;$i++)} A {/for}',
                   'jelix~errors.tpl.tag.character.invalid',array('for ($i=0;$i<$p;$i++)','(',null) ),
          4=>array('{form ($foo,$params)} aa {/form}',
-                  'jelix~errors.tplplugin.block.bad.argument.number',array('form','2-7',null) ),
+                  'jelix~errors.tplplugin.block.bad.argument.number',array('form','2-5',null) ),
          5=>array('{($aaa)}',
                   'jelix~errors.tpl.tag.syntax.invalid',array('($aaa)',null) ),
          );

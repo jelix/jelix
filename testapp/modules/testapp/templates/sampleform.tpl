@@ -26,7 +26,7 @@ myErrorDecorator.prototype = {
 {/literal}
 </script>
 
-{form $form,'sampleform:save', array(), 'myErrorDecorator'}
+{form $form,'sampleform:save', array(), 'html', array('errorDecorator'=>'myErrorDecorator')}
     {formcontrols}
     <div>{ctrl_label}: {ctrl_control}</div>
     {/formcontrols}
