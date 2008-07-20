@@ -1,3 +1,29 @@
+Version 1.1.6
+-------------
+
+ * Remove the requirement for the dimensions plugin, which is included in
+   jQuery 1.2.6
+
+Version 1.1.5
+-------------
+
+ * Bugfix - In IE 6, the iframe layer had a great z-index than the actual calendar,
+   so would obstruct it from view (#2683)
+
+Version 1.1.4
+-------------
+
+ * Moved the z-index and other CSS declarations from the Javascript into the CSS
+   file for easier customisation (#1521)
+ * Bugfix - The current month should always be stored using the first day so we
+   can be sure that day exists when the month is changed (#1717)
+
+Version 1.1.3
+-------------
+
+ * Bugfix - Customisations (translations etc.) now work in IE 6/7 [Heads up:
+   Christian Jarhult]
+
 Version 1.1.2
 -------------
 
