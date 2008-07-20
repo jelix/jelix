@@ -556,6 +556,7 @@ cd lib/jelix-www/jquery/date_input
   README
   date_input.css
 c jquery.date_input.min.js
+c jquery.date_input.fr_FR.js
   LICENCE
 ! jquery.date_input.nl_NL.js
 ! jquery.date_input.de_DE.js
