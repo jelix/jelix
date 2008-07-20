@@ -555,15 +555,13 @@ cd lib/jelix-www/jquery
 cd lib/jelix-www/jquery/date_input
   README
   date_input.css
-c jquery.date_input.js
+c jquery.date_input.min.js
   LICENCE
 ! jquery.date_input.nl_NL.js
 ! jquery.date_input.de_DE.js
 ! jquery.date_input.pt_PT.js
 ! jquery.date_input.ru_RU.js
 ! jquery.date_input.es_ES.js
-cd lib/jelix-www/jquery/dimensions
-c jquery.dimensions.js
 cd lib/jelix-www/jquery/flash
 c jquery.flash.js
 
