@@ -1,6 +1,6 @@
 <?php
 /**
-* @package     Jelix
+* @package     jelix
 * @subpackage  jtpl_plugin
 * @author      Loic Mathaud
 * @copyright   2008 Loic Mathaud
