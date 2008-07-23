@@ -49,6 +49,7 @@ Yannick Le Guédart (aka Torgan)
  - Contribution on jResponseRss and jResponseAtom
  - jdb driver for Intuition
  - resolved memory exhausted errors in truncate modifier (#511)
+ - fixed bug on jBundle (#639)
 
 Kévin Lepeltier (aka Lipki)
  - plugin image for jtpl (#474, #502, #558, #559, #560)

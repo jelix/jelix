@@ -54,6 +54,10 @@ class UTjlocale extends jUnitTestCase {
                                 </array>',
         'test_H.properties' => '<array><string key="module.description" value="Tests unitaires # jelix" /><string key="ooo" value="bbbb" /></array>',
         'test_I.properties' => '<array><string key="module.description" value="Tests unitaires # jelix" /><string key="ooo" value="bbbb" /></array>',
+        'test_J.properties' => '<array>
+                <string key="text.key" value="bug 639 there shouldn\'t have a notice during the parsing of this property " />
+                <string key="text.key2" value="same problem but with spaces at the end of the last line " />
+                <string key="text.key3" value="youpa" /></array>',
         );
 
     public function testBundle(){
@@ -178,15 +182,15 @@ class UTjlocale extends jUnitTestCase {
         }
         $GLOBALS['gJConfig']->charset = 'UTF-8';
     }
-    
+
     function testLineBreak(){
         $this->assertEqual("This sentence has a line break\n after the word \"break\"",jLocale::get('tests4.string.with.line.break',null,'en_EN','UTF-8'));
     }
-    
+
     function testLineBreakWithMultiLineString(){
         $this->assertEqual("This multiline sentence\n has two line breaks\n after the words \"sentence\" and \"breaks\"",jLocale::get('tests4.multiline.string.with.line.break',null,'en_EN','UTF-8'));
     }
-    
+
 }
 
 ?>

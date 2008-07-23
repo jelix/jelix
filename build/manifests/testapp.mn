@@ -100,6 +100,7 @@ cd testapp/modules/jelix_tests/locales/
   test_G.properties
   test_H.properties
   test_I.properties
+  test_J.properties
 cd testapp/modules/jelix_tests/locales/fr_FR
   testunit.ISO-8859-1.properties
   tests1.UTF-8.properties
