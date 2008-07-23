@@ -92,7 +92,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
                  'helpDecorator'=>'jFormsHelpDecoratorAlert', 'method'=>'post'), $params);
 
         $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
-        echo '<form action="',$url->scriptName,$url->pathInfo,'" method="'.$params['method'].'" id="', $this->_name,'"';
+        echo '<form action="',$url->getPath(),'" method="'.$params['method'].'" id="', $this->_name,'"';
         if($this->_form->hasUpload())
             echo ' enctype="multipart/form-data">';
         else
