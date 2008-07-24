@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  jtpl_plugin
 * @author      Jouanneau Laurent
-* @contributor Mickaël Fradin, F.Fernandez, Dominique Papin
-* @copyright   2007-2008 Jouanneau laurent, 2007 Mickaël Fradin, 2007 F.Fernandez, 2007 Dominique Papin
+* @contributor Mickaël Fradin, F.Fernandez, Dominique Papin, Alexis Métaireau
+* @copyright   2007-2008 Jouanneau laurent, 2007 Mickaël Fradin, 2007 F.Fernandez, 2007 Dominique Papin, 2008 Alexis Métaireau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -50,7 +50,7 @@ function jtpl_block_html_formcontrols($compiler, $begin, $param=array())
             }';
         }
         elseif(count($param) == 2){
-            $content = 'if(is_array('.$param[0].')){
+            $content = 'if(is_array('.$param[0].') || '.$param[0].' === null){
                 $ctrls_to_display = '.$param[0].';
                 $ctrls_notto_display = '.$param[1].';
             }
@@ -94,7 +94,7 @@ foreach($t->_privateVars[\'__form\']->'.$list.' as $ctrlref=>$ctrl){
     $content.='if(!isset($t->_privateVars[\'__displayed_ctrl\'][$ctrlref])
        && (  ($ctrls_to_display===null && $ctrls_notto_display === null)
           || ($ctrls_to_display===null && !in_array($ctrlref, $ctrls_notto_display))
-          || in_array($ctrlref, $ctrls_to_display))) {
+          || (is_array($ctrls_to_display) && in_array($ctrlref, $ctrls_to_display) ))) {
         $t->_privateVars[\'__ctrlref\'] = $ctrlref;
         $t->_privateVars[\'__ctrl\'] = $ctrl;
 ';
