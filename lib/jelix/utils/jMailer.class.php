@@ -11,8 +11,9 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Brent R. Matzelle
-* @contributor Laurent Jouanneau
+* @contributor Laurent Jouanneau, Kévin Lepeltier
 * @copyright   2001 - 2003  Brent R. Matzelle, 2006 Laurent Jouanneau
+* @copyright   2008 Kévin Lepeltier
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -84,6 +85,13 @@ class jMailer {
      * @var string
      */
     public $Body               = "";
+
+    /**
+     * Use tpl for sets the Body of the message.  This can be either an HTML or text body.
+     * If HTML then run IsHTML(true).
+     * @var string
+     */
+    public $bodyTpl;
 
     /**
      * Sets the text-only body of the message.  This automatically sets the
@@ -345,7 +353,31 @@ class jMailer {
         $this->ReplyTo[$cur][0] = trim($address);
         $this->ReplyTo[$cur][1] = $name;
     }
+    
 
+    /**
+     * Find the name and address in the form "name<address@hop.tld>"
+     * @param string $address
+     * @return array( $name, $address )
+     */
+    function getAddrName($address) {
+        
+        preg_match ('`^([^<]*)<([^>]*)>$`', $address, $tab );
+        array_shift($tab);
+        return $tab;
+        
+    }
+
+    /**
+     * Adds a Tpl référence.
+     * @param string $selector
+     * @return void
+     */
+    function Tpl( $selector ) {
+        
+        $this->bodyTpl = $selector;
+        
+    }
 
     /////////////////////////////////////////////////
     // MAIL SENDING METHODS
@@ -361,6 +393,54 @@ class jMailer {
         $header = "";
         $body = "";
         $result = true;
+        
+        if( isset($this->bodyTpl) && $this->bodyTpl != "") {
+            
+            $mailtpl = new jTpl();
+            $metas = $mailtpl->meta( $this->bodyTpl );
+            
+            if( isset($metas['Subject']) )
+                $this->Subject = $metas['Subject'];
+                
+            if( isset($metas['Priority']) )
+                $this->Priority = $metas['Priority'];
+            $mailtpl->assign('Priority', $this->Priority );
+                
+            if( isset($metas['From']) ) {
+                $adr = $this->getAddrName( $metas['From'] );
+                $this->From = $adr[1];
+                $this->FromName = $adr[0];
+            }
+            $mailtpl->assign('From', $this->From );
+            $mailtpl->assign('FromName', $this->FromName );
+            
+            if( isset($metas['Sender']) )
+                $this->Sender = $metas['Sender'];
+            $mailtpl->assign('Sender', $this->Sender );
+            
+            if( isset($metas['to']) )
+                foreach( $metas['to'] as $val )
+                    $this->to[] = $this->getAddrName( $val );
+            $mailtpl->assign('to', $this->to );
+                    
+            if( isset($metas['cc']) )
+                foreach( $metas['cc'] as $val )
+                    $this->cc[] = $this->getAddrName( $val );
+            $mailtpl->assign('cc', $this->cc );
+                    
+            if( isset($metas['bcc']) )
+                foreach( $metas['bcc'] as $val )
+                    $this->bcc[] = $this->getAddrName( $val );
+            $mailtpl->assign('bcc', $this->bcc );
+                    
+            if( isset($metas['ReplyTo']) )
+                foreach( $metas['ReplyTo'] as $val )
+                    $this->ReplyTo[] = $this->getAddrName( $val );
+            $mailtpl->assign('ReplyTo', $this->ReplyTo );
+            
+            $this->Body = $mailtpl->fetch( $this->bodyTpl );
+            
+        }
 
         if((count($this->to) + count($this->cc) + count($this->bcc)) < 1)
         {

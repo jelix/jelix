@@ -56,6 +56,7 @@ Kévin Lepeltier (aka Lipki)
  - bug fixed in firebug support (#500)
  - trois plugin swf (#498)
  - plugin coord history (#507)
+ - improvement in jMailer (#530)
 
 Loic Mathaud (bballizlife):
  - testor, many bug fixes and many patches on jelix
