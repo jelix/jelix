@@ -470,6 +470,7 @@ cd lib/jelix/plugins/tpl/ltx2pdf
 cd lib/jelix/plugins/tpl/text
   function.jlocale.php
   function.jurl.php
+  function.formdatafull.php
 
 cd lib/jelix/plugins/tpl/xml
   function.jlocale.php
