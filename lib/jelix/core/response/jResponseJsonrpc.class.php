@@ -35,7 +35,7 @@ final class jResponseJsonRpc extends jResponse {
     public function output(){
         global $gJCoord;
 
-        $this->_httpHeaders['Content-Type'] = "text/plain";
+        $this->_httpHeaders['Content-Type'] = "application/json";
         if($gJCoord->request->jsonRequestId !== null){
             $content = jJsonRpc::encodeResponse($this->response, $gJCoord->request->jsonRequestId);
             if($this->hasErrors()) return false;
@@ -63,7 +63,7 @@ final class jResponseJsonRpc extends jResponse {
         $this->clearHttpHeaders();
         $this->_httpStatusCode ='500';
         $this->_httpStatusMsg ='Internal Server Error';
-        $this->_httpHeaders['Content-Type'] = "text/plain";
+        $this->_httpHeaders['Content-Type'] = "application/json";
         $content = jJsonRpc::encodeFaultResponse($errorCode,$errorMessage, $gJCoord->request->jsonRequestId);
         $this->_httpHeaders['Content-length'] = strlen($content);
         $this->sendHttpHeaders();
