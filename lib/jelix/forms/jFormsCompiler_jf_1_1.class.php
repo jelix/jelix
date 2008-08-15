@@ -190,9 +190,6 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
             if ($twocontrols)
                 $src[]='$topctrl->addChildControl($ctrl2'.$itemname.');';
             $source[]= implode("\n", $src);
-            /*foreach($gJConfig->_pluginsPathList_jforms as $buildername => $pluginPath) {
-                $this->srcBuilders[$buildername][]= $this->buildersCompilers[$buildername]->generateControl($ctrltype, $control);
-            }*/
         }
         return $ctrlcount;
     }

@@ -362,11 +362,6 @@ cd lib/jelix/plugins/coord/history
   plugin.xml
   history.coord.ini.php.dist
 
-cd lib/jelix/plugins/jforms/html
-  html.jformscompiler.php
-  html.jformsbuilder.php
-
-
 cd lib/jelix/plugins/db/intuition
   intuition.dbconnection.php
   intuition.dbresultset.php
@@ -394,6 +389,9 @@ cd lib/jelix/plugins/db/sqlite
 cd lib/jelix/plugins/db/oci
   oci.daobuilder.php
   oci.dbtools.php
+
+cd lib/jelix/plugins/jforms/html
+  html.jformsbuilder.php
 
 cd lib/jelix/plugins/tpl/common
   block.ifacl.php

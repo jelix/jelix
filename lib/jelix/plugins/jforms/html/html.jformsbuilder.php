@@ -17,6 +17,10 @@
  */
 abstract class htmlJformsBuilder extends jFormsBuilderBase {
 
+    protected $options;
+
+    protected $isRootControl = true;
+
     public function outputAllControls() {
 
         echo '<table class="jforms-table" border="0">';
@@ -88,15 +92,25 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
      *      </ul>
      */
     public function outputHeader($params){
-        $params = array_merge(array('errorDecorator'=>'jFormsErrorDecoratorAlert',
+        $this->options = array_merge(array('errorDecorator'=>'jFormsErrorDecoratorAlert',
                  'helpDecorator'=>'jFormsHelpDecoratorAlert', 'method'=>'post'), $params);
 
         $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
-        echo '<form action="',$url->getPath(),'" method="'.$params['method'].'" id="', $this->_name,'"';
+        echo '<form action="',$url->getPath(),'" method="'.$this->options['method'].'" id="', $this->_name,'"';
         if($this->_form->hasUpload())
             echo ' enctype="multipart/form-data">';
         else
             echo '>';
+
+        echo '<script type="text/javascript">
+//<![CDATA[
+jForms.tForm = new jFormsForm(\''.$this->_name.'\');
+jForms.tForm.setErrorDecorator(new '.$this->options['errorDecorator'].'());
+jForms.tForm.setHelpDecorator(new '.$this->options['helpDecorator'].'());
+jForms.declareForm(jForms.tForm);
+//]]>
+</script>';
+
 
         if(count($url->params) || count($this->_form->getHiddens())){
             echo '<div class="jforms-hiddens">';
@@ -109,11 +123,7 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             }
             echo '</div>';
         }
-        echo '<script type="text/javascript">
-//<![CDATA[
-', $this->getJavascriptCheck($params['errorDecorator'],$params['helpDecorator']),'
-//]]>
-</script>';
+
         $errors = $this->_form->getContainer()->errors;
         if(count($errors)){
             $ctrls = $this->_form->getControls();
@@ -142,7 +152,14 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
         }
     }
 
+    protected $jsContent = '';
+
     public function outputFooter(){
+        echo '<script type="text/javascript">
+//<![CDATA[
+'.$this->jsContent.'
+//]]>
+</script>';
         echo '</form>';
     }
 
@@ -170,7 +187,33 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
         if($class !='') $class = ' class="'.$class.'"';
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
         $this->{'output'.$ctrl->type}($ctrl, $id, $class, $readonly, $hint);
+        $this->{'js'.$ctrl->type}($ctrl);
         $this->outputHelp($ctrl);
+    }
+
+    protected function commonJs($ctrl) {
+        if($ctrl->help){
+            $this->jsContent .="jForms.tControl.help='".str_replace("'","\\'",$ctrl->help)."';\n";
+        }
+
+        if($ctrl->required){
+            $this->jsContent .="jForms.tControl.required = true;\n";
+            if($ctrl->alertRequired){
+                $this->jsContent .="jForms.tControl.errRequired='".str_replace("'","\\'",$ctrl->alertRequired)."';\n";
+            }
+            else {
+                $this->jsContent .="jForms.tControl.errRequired='".str_replace("'","\\'",jLocale::get('jelix~formserr.js.err.required', $ctrl->label))."';\n";
+            }
+        }
+
+        if($ctrl->alertInvalid){
+            $this->jsContent .="jForms.tControl.errInvalid='".str_replace("'","\\'",$ctrl->alertInvalid)."';\n";
+        }
+        else {
+            $this->jsContent .="jForms.tControl.errInvalid='".str_replace("'","\\'",jLocale::get('jelix~formserr.js.err.invalid', $ctrl->label))."';\n";
+        }
+
+        if ($this->isRootControl) $this->jsContent .="jForms.tForm.addControl(jForms.tControl);\n";
     }
 
     protected function outputInput($ctrl, $id, $class, $readonly, $hint) {
@@ -184,6 +227,38 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
         echo '<input type="text"',$id,$readonly,$hint,$class,$size,$maxl,' value="',htmlspecialchars($value),'"',$this->_endt;
     }
 
+    protected function jsInput($ctrl) {
+
+        $datatype = array('jDatatypeBoolean'=>'Boolean','jDatatypeDecimal'=>'Decimal','jDatatypeInteger'=>'Integer','jDatatypeHexadecimal'=>'Hexadecimal',
+                        'jDatatypeDatetime'=>'Datetime','jDatatypeDate'=>'Date','jDatatypeTime'=>'Time',
+                        'jDatatypeUrl'=>'Url','jDatatypeEmail'=>'Email','jDatatypeIPv4'=>'Ipv4','jDatatypeIPv6'=>'Ipv6');
+        $isLocale = false;
+        if(isset($datatype[get_class($ctrl)]))
+            $dt = $datatype[get_class($ctrl)];
+        else if ($ctrl->datatype instanceof jDatatypeLocaleTime)
+            { $dt = 'Time'; $isLocale = true; }
+        else if ($ctrl->datatype instanceof jDatatypeLocaleDate)
+            { $dt = 'LocaleDate'; $isLocale = true; }
+        else if ($ctrl->datatype instanceof jDatatypeLocaleDateTime)
+            { $dt = 'LocaleDatetime'; $isLocale = true; }
+        else
+            $dt = 'String';
+
+        $this->jsContent .="jForms.tControl = new jFormsControl".$dt."('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+        if ($isLocale)
+            $this->jsContent .="jForms.tControl.lang='".$GLOBALS['gJConfig']->locale."';\n";
+
+        $maxl= $ctrl->datatype->getFacet('maxLength');
+        if($maxl !== null)
+            $this->jsContent .="jForms.tControl.maxLength = '$maxl';\n";
+
+        $minl= $ctrl->datatype->getFacet('minLength');
+        if($minl !== null)
+            $this->jsContent .="jForms.tControl.minLength = '$minl';\n";
+
+        $this->commonJs($ctrl);
+    }
+
     protected function outputCheckbox($ctrl, $id, $class, $readonly, $hint) {
         $value = $this->_form->getData($ctrl->ref);
 
@@ -193,6 +268,13 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             $v='';
         }
         echo '<input type="checkbox"',$id,$readonly,$hint,$class,$v,' value="',$ctrl->valueOnCheck,'"',$this->_endt;
+    }
+
+    protected function jsCheckbox($ctrl) {
+
+        $this->jsContent .="jForms.tControl = new jFormsControlBoolean('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+
+        $this->commonJs($ctrl);
     }
 
     protected function outputCheckboxes($ctrl, $id, $class, $readonly, $hint) {
@@ -224,6 +306,13 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
         }
     }
 
+    protected function jsCheckboxes($ctrl) {
+
+        $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."[]', '".str_replace("'","\'",$ctrl->label)."');\n";
+
+        $this->commonJs($ctrl);
+    }
+
     protected function outputRadiobuttons($ctrl, $id, $class, $readonly, $hint) {
         $i=0;
         $id=' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'_';
@@ -242,6 +331,13 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
         }
     }
 
+    protected function jsRadiobuttons($ctrl) {
+
+        $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+
+        $this->commonJs($ctrl);
+    }
+
     protected function outputMenulist($ctrl, $id, $class, $readonly, $hint) {
         echo '<select',$id,$hint,$class,' size="1">';
         $value = $this->_form->getData($ctrl->ref);
@@ -258,6 +354,13 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
             echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
         }
         echo '</select>';
+    }
+
+    protected function jsMenulist($ctrl) {
+
+        $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+
+        $this->commonJs($ctrl);
     }
 
     protected function outputListbox($ctrl, $id, $class, $readonly, $hint) {
@@ -296,23 +399,47 @@ abstract class htmlJformsBuilder extends jFormsBuilderBase {
         }
     }
 
+    protected function jsListbox($ctrl) {
+        if($ctrl->multiple){
+            $this->jsContent .= "jForms.tControl = new jFormsControlString('".$ctrl->ref."[]', '".str_replace("'","\'",$ctrl->label)."');\n";
+            $this->jsContent .= "jForms.tControl.multiple = true;\n";
+        } else {
+            $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+        }
+
+        $this->commonJs($ctrl);
+    }
+
     protected function outputTextarea($ctrl, $id, $class, $readonly, $hint) {
         $value = $this->_form->getData($ctrl->ref);
         $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
         echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
     }
 
-    protected function outputHtmleditor($ctrl, $id, $class, $readonly, $hint) {
-        $engine = $GLOBALS['gJConfig']->htmleditors[$ctrl->config.'.engine.name'];
-        echo '<script type="text/javascript">
-//<![CDATA[
-jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->_name,'");
-//]]>
-</script>';
+    protected function jsTextarea($ctrl) {
+        $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
 
+        $maxl= $ctrl->datatype->getFacet('maxLength');
+        if($maxl !== null)
+            $this->jsContent .="jForms.tControl.maxLength = '$maxl';\n";
+
+        $minl= $ctrl->datatype->getFacet('minLength');
+        if($minl !== null)
+            $this->jsContent .="jForms.tControl.minLength = '$minl';\n";
+
+        $this->commonJs($ctrl);
+    }
+
+    protected function outputHtmleditor($ctrl, $id, $class, $readonly, $hint) {
         $value = $this->_form->getData($ctrl->ref);
         $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
         echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
+    }
+
+    protected function jsHtmleditor($ctrl) {
+        $this->jsTextarea($ctrl);
+        $engine = $GLOBALS['gJConfig']->htmleditors[$ctrl->config.'.engine.name'];
+        $this->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$this->_name.'_'.$ctrl->ref.'","'.$this->_name."\");\n";
     }
 
     protected function outputSecret($ctrl, $id, $class, $readonly, $hint) {
@@ -320,9 +447,18 @@ jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->
         echo '<input type="password"',$id,$readonly,$hint,$class,$size,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
     }
 
+    protected function jsSecret($ctrl) {
+        $this->jsTextarea($ctrl);
+    }
+
     protected function outputSecretconfirm($ctrl, $id, $class, $readonly, $hint) {
         $size = ($ctrl->size == 0?'': ' size="'.$ctrl->size.'"');
         echo '<input type="password"',$id,$readonly,$hint,$class,$size,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
+    }
+
+    protected function jsSecretconfirm($ctrl) {
+        // we assume that a secret confirm control is just after a secret control in the list of controls
+        $this->jsContent .= "jForms.tControl.confirmField = new jFormsControlSecretConfirm('".$ctrl->ref."_confirm', '".str_replace("'","\\'",$ctrl->label)."');\n";
     }
 
     protected function outputOutput($ctrl, $id, $class, $readonly, $hint) {
@@ -331,12 +467,21 @@ jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->
         echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($value),'</span>';
     }
 
+    protected function jsOutput($ctrl) {
+    }
+
     protected function outputUpload($ctrl, $id, $class, $readonly, $hint) {
         if($ctrl->maxsize){
             echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$ctrl->maxsize,'"',$this->_endt;
         }
         echo '<input type="file"',$id,$readonly,$hint,$class,' value=""',$this->_endt; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
 
+    }
+
+    protected function jsUpload($ctrl) {
+        $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+
+        $this->commonJs($ctrl);
     }
 
     protected function outputSubmit($ctrl, $id, $class, $readonly, $hint) {
@@ -351,14 +496,26 @@ jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->
         }
     }
 
+    protected function jsSubmit($ctrl) {
+        // no javascript
+    }
+
     protected function outputReset($ctrl, $id, $class, $readonly, $hint) {
         echo '<button type="reset"',$id,$hint,' class="jforms-reset">',htmlspecialchars($ctrl->label),'</button>';
+    }
+
+    protected function jsReset($ctrl) {
+        // no javascript
     }
 
     protected function outputCaptcha($ctrl, $id, $class, $readonly, $hint) {
         $ctrl->initExpectedValue();
         echo '<span class="jforms-captcha-question">',htmlspecialchars($ctrl->question),'</span> ';
         echo '<input type="text"',$id,$hint,$class,' value=""',$this->_endt;
+    }
+
+    protected function jsCaptcha($ctrl) {
+        $this->jsTextarea($ctrl);
     }
 
     protected function outputGroup($ctrl, $id, $class, $readonly, $hint) {
@@ -376,6 +533,10 @@ jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->
         echo "</table></fieldset>";
     }
 
+    protected function jsGroup($ctrl) {
+        //no javacript
+    }
+
     protected function outputChoice($ctrl, $id, $class, $readonly, $hint) {
         echo '<ul class="jforms-choice jforms-ctl-'.$ctrl->ref.'" >',"\n";
 
@@ -389,6 +550,9 @@ jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->
 
         $i=0;
         $id=' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'_';
+        $this->jsChoiceInternal($ctrl);
+        $this->jsContent .="jForms.tControl2 = jForms.tControl;\n";
+        $this->isRootControl = false;
         foreach( $ctrl->items as $itemName=>$listctrl){
             echo '<li><label><input type="radio"',$id,$i,'" value="',htmlspecialchars($itemName),'"';
             echo ($itemName==$value?' checked="checked"':''),$readonly;
@@ -400,29 +564,46 @@ jelix_',$engine,'_',$ctrl->config.'("',$this->_name,'_',$ctrl->ref,'","',$this->
                 echo ' <span class="jforms-item-controls">';
                 // we remove readonly status so when a user change the choice and 
                 // javascript is deactivated, it can still change the value of the control
-                $ro = $c->isReadOnly() && $readonly != '';
-                if($ro) $c->setReadOnly(false);
+                $ro = $c->isReadOnly();
+                if($ro && $readonly != '') $c->setReadOnly(false);
                 $this->outputControlLabel($c);
                 echo ' ';
                 $this->outputControl($c);
-                if($ro) $c->setReadOnly($ro);
+                if($ro) $c->setReadOnly(true);
                 echo "</span>\n";
+                $this->jsContent .="jForms.tControl2.addControl(jForms.tControl, '".str_replace("'","\\'",$itemName)."');\n";
             }
+            if(!count($listctrl)) {
+                $this->jsContent .="jForms.tControl2.items['".str_replace("'","\\'",$itemName)."']=[];\n";
+            }
+
             echo "</li>\n";
             $i++;
         }
         echo "</ul>\n";
-
-        echo '<script type="text/javascript">
-//<![CDATA[
-jForms.getForm("',$this->_name,'").getControl("',$ctrl->ref,'").activate("',$value,'");
-//]]>
-</script>';
+        $this->isRootControl = true;
     }
 
+    protected function jsChoice($ctrl) {
+        $value = $this->_form->getData($ctrl->ref);
+        if(is_array($value)){
+            if(isset($value[0]))
+                $value = $value[0];
+            else
+                $value='';
+        }
+        $this->jsContent .= "jForms.tControl2.activate('".$value."');\n";
+    }
+
+    protected function jsChoiceInternal($ctrl) {
+
+        $this->jsContent .="jForms.tControl = new jFormsControlChoice('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+
+        $this->commonJs($ctrl);
+    }
 
     protected function outputHelp($ctrl) {
-        if ($ctrl->hasHelp) {
+        if ($ctrl->help) {
             if($ctrl->type == 'checkboxes' || ($ctrl->type == 'listbox' && $ctrl->multiple)){
                 $name=$ctrl->ref.'[]';
             }else{
@@ -431,6 +612,4 @@ jForms.getForm("',$this->_name,'").getControl("',$ctrl->ref,'").activate("',$val
             echo '<span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->_name.'\',\''.$name.'\')">?</a></span>';
         }
     }
-
-    abstract public function getJavascriptCheck($errDecorator,$helpDecorator);
 }

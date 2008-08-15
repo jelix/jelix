@@ -22,7 +22,7 @@ abstract class jFormsControl {
     public $required = false;
     public $label='';
     public $defaultValue='';
-    public $hasHelp = false;
+    public $help = '';
     public $hint='';
     public $alertInvalid='';
     public $alertRequired='';
@@ -198,6 +198,9 @@ class jFormsControlSecret extends jFormsControl {
 class jFormsControlSecretConfirm extends jFormsControl {
     public $type='secretconfirm';
     public $size=0;
+    /**
+     * ref value of the associated secret control
+     */
     public $primarySecret='';
 
     function check(){
@@ -264,6 +267,9 @@ class jFormsControlCheckbox extends jFormsControl {
  */
 class jFormsControlOutput extends jFormsControl {
     public $type='output';
+
+    function setValueFromRequest($request) {
+    }
 
     public function check(){
         return null;

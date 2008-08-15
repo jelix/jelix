@@ -24,18 +24,16 @@ class jFormsCompiler_jf_1_0  {
     protected $sourceFile;
 
     protected $srcBuilders;
-    protected $buildersCompilers;
 
     public function __construct($sourceFile) {
         $this->sourceFile = $sourceFile;
     }
 
-    public function compile ($doc, &$source, &$srcBuilders, &$buildersCompilers) {
+    public function compile ($doc, &$source, &$srcBuilders) {
 
         global $gJConfig;
 
         $this->srcBuilders = &$srcBuilders;
-        $this->buildersCompilers = &$buildersCompilers;
 
         $xml = simplexml_import_dom($doc);
 
@@ -44,11 +42,6 @@ class jFormsCompiler_jf_1_0  {
 
         foreach ($xml->children() as $controltype=>$control) {
             $source[] = $this->generatePHPControl($controltype, $control);
-            //foreach($gJConfig->_pluginsPathList_jforms as $buildername => $pluginPath) {
-            //    $srcBuilders[$buildername][]= $buildersCompilers[$buildername]->generateControl($controltype, $control);
-            foreach($buildersCompilers as $buildername => $builder) {
-                $srcBuilders[$buildername][]= $builder->generateControl($controltype, $control);
-            }
         }
     }
 
@@ -166,7 +159,7 @@ class jFormsCompiler_jf_1_0  {
     protected function generateOutput(&$source, $control, &$attributes) {
         $this->attrDefaultvalue($source, $attributes);
         $this->readLabel($source, $control, 'output');
-        $this->readHelpHintAlert($source, $control);
+        //$this->readHelpHintAlert($source, $control);
         return false;
     }
 
@@ -273,7 +266,7 @@ class jFormsCompiler_jf_1_0  {
                 $source[]='$ctrl2->alertRequired = $ctrl->alertRequired;';
 
             if(isset($control->help)){
-                $source[]='$ctrl2->hasHelp=true;';
+                $source[]='$ctrl2->help=$ctrl->help;';
             }
             if(isset($control->hint)){
                 $source[]='$ctrl2->hint=$ctrl->hint;';
@@ -358,7 +351,11 @@ class jFormsCompiler_jf_1_0  {
 
     protected function readHelpHintAlert(&$source, $control) {
         if(isset($control->help)){ // help value is readed in the html compiler
-            $source[]='$ctrl->hasHelp=true;';
+            if(isset($control->help['locale'])){
+                $source[]='$ctrl->help=jLocale::get(\''.(string)$control->help['locale'].'\');';
+            }else{
+                $source[]='$ctrl->help=\''.str_replace("'","\\'",(string)$control->help).'\';';
+            }
         }
         if(isset($control->hint)){
             if(isset($control->hint['locale'])){

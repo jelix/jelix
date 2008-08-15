@@ -18,9 +18,8 @@ class testHMLForm2 extends jFormsBase {
 }
 
 class testJFormsHtmlBuilder2 extends htmlJformsBuilder {
-    public function getJavascriptCheck($errDecorator,$helpDecorator){
-        return '';
-    }
+    function getJsContent() { $js= $this->jsContent; $this->jsContent = '';return $js;}
+    function clearJs() { $this->jsContent = ''; }
 }
 
 
@@ -93,6 +92,23 @@ class UTjformsHTMLBuilder2 extends jUnitTestCaseDb {
 
         ob_start();$this->builder->outputControl($group);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
+        $this->assertEqualOrDiff('jForms.tControl = new jFormsControlString(\'nom\', \'Your name\');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'La saisie de "Your name" est obligatoire\';
+jForms.tControl.errInvalid=\'La saisie de "Your name" est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+jForms.tControl = new jFormsControlString(\'prenom\', \'Your firstname\');
+jForms.tControl.errInvalid=\'La saisie de "Your firstname" est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+jForms.tControl = new jFormsControlString(\'sexe\', \'Vous êtes \');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'Vous devez indiquer le sexe, même si vous ne savez pas :-)\';
+jForms.tControl.errInvalid=\'La saisie de "Vous êtes " est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+jForms.tControl = new jFormsControlString(\'mail\', \'Votre mail\');
+jForms.tControl.errInvalid=\'La saisie de "Votre mail" est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+', $this->builder->getJsContent());
 
         $group->setReadOnly(true);
         $expected = '<fieldset><legend>Your identity</legend>'."\n";
@@ -109,6 +125,23 @@ class UTjformsHTMLBuilder2 extends jUnitTestCaseDb {
         $expected .= '<td><input type="text" name="mail" id="'.$this->formname.'_mail" readonly="readonly" class=" jforms-readonly" value=""/></td></tr>'."\n</table></fieldset>";
         ob_start();$this->builder->outputControl($group);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
+        $this->assertEqualOrDiff('jForms.tControl = new jFormsControlString(\'nom\', \'Your name\');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'La saisie de "Your name" est obligatoire\';
+jForms.tControl.errInvalid=\'La saisie de "Your name" est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+jForms.tControl = new jFormsControlString(\'prenom\', \'Your firstname\');
+jForms.tControl.errInvalid=\'La saisie de "Your firstname" est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+jForms.tControl = new jFormsControlString(\'sexe\', \'Vous êtes \');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'Vous devez indiquer le sexe, même si vous ne savez pas :-)\';
+jForms.tControl.errInvalid=\'La saisie de "Vous êtes " est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+jForms.tControl = new jFormsControlString(\'mail\', \'Votre mail\');
+jForms.tControl.errInvalid=\'La saisie de "Votre mail" est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+', $this->builder->getJsContent());
 
     }
 
@@ -159,13 +192,28 @@ class UTjformsHTMLBuilder2 extends jUnitTestCaseDb {
         $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n";
-        $expected .= '<script type="text/javascript">'."\n";
-        $expected .= '//<![CDATA['."\n";
-        $expected .= 'jForms.getForm("").getControl("status").activate("");'."\n";
-        $expected .= '//]]>'."\n";
-        $expected .= '</script>';
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
+        $this->assertEqualOrDiff('jForms.tControl = new jFormsControlChoice(\'status\', \'Task Status\');
+jForms.tControl.errInvalid=\'La saisie de "Task Status" est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+jForms.tControl2 = jForms.tControl;
+jForms.tControl2.items[\'new\']=[];
+jForms.tControl = new jFormsControlString(\'nom\', \'Name\');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'La saisie de "Name" est obligatoire\';
+jForms.tControl.errInvalid=\'La saisie de "Name" est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'assigned\');
+jForms.tControl = new jFormsControlString(\'prenom\', \'Firstname\');
+jForms.tControl.errInvalid=\'La saisie de "Firstname" est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'assigned\');
+jForms.tControl = new jFormsControlString(\'reason\', \'Reason \');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'Hey, specify a reason !\';
+jForms.tControl.errInvalid=\'La saisie de "Reason " est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'closed\');
+jForms.tControl2.activate(\'\');
+', $this->builder->getJsContent());
 
         $this->form->getContainer()->data['status']='assigned';
 
@@ -177,13 +225,28 @@ class UTjformsHTMLBuilder2 extends jUnitTestCaseDb {
         $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n";
-        $expected .= '<script type="text/javascript">'."\n";
-        $expected .= '//<![CDATA['."\n";
-        $expected .= 'jForms.getForm("").getControl("status").activate("assigned");'."\n";
-        $expected .= '//]]>'."\n";
-        $expected .= '</script>';
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
+        $this->assertEqualOrDiff('jForms.tControl = new jFormsControlChoice(\'status\', \'Task Status\');
+jForms.tControl.errInvalid=\'La saisie de "Task Status" est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+jForms.tControl2 = jForms.tControl;
+jForms.tControl2.items[\'new\']=[];
+jForms.tControl = new jFormsControlString(\'nom\', \'Name\');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'La saisie de "Name" est obligatoire\';
+jForms.tControl.errInvalid=\'La saisie de "Name" est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'assigned\');
+jForms.tControl = new jFormsControlString(\'prenom\', \'Firstname\');
+jForms.tControl.errInvalid=\'La saisie de "Firstname" est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'assigned\');
+jForms.tControl = new jFormsControlString(\'reason\', \'Reason \');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'Hey, specify a reason !\';
+jForms.tControl.errInvalid=\'La saisie de "Reason " est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'closed\');
+jForms.tControl2.activate(\'assigned\');
+', $this->builder->getJsContent());
 
         $this->form->getContainer()->data['status']='new';
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
@@ -194,13 +257,28 @@ class UTjformsHTMLBuilder2 extends jUnitTestCaseDb {
         $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n";
-        $expected .= '<script type="text/javascript">'."\n";
-        $expected .= '//<![CDATA['."\n";
-        $expected .= 'jForms.getForm("").getControl("status").activate("new");'."\n";
-        $expected .= '//]]>'."\n";
-        $expected .= '</script>';
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
+        $this->assertEqualOrDiff('jForms.tControl = new jFormsControlChoice(\'status\', \'Task Status\');
+jForms.tControl.errInvalid=\'La saisie de "Task Status" est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+jForms.tControl2 = jForms.tControl;
+jForms.tControl2.items[\'new\']=[];
+jForms.tControl = new jFormsControlString(\'nom\', \'Name\');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'La saisie de "Name" est obligatoire\';
+jForms.tControl.errInvalid=\'La saisie de "Name" est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'assigned\');
+jForms.tControl = new jFormsControlString(\'prenom\', \'Firstname\');
+jForms.tControl.errInvalid=\'La saisie de "Firstname" est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'assigned\');
+jForms.tControl = new jFormsControlString(\'reason\', \'Reason \');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'Hey, specify a reason !\';
+jForms.tControl.errInvalid=\'La saisie de "Reason " est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'closed\');
+jForms.tControl2.activate(\'new\');
+', $this->builder->getJsContent());
 
         $this->form->getContainer()->data['status']='closed';
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
@@ -211,16 +289,28 @@ class UTjformsHTMLBuilder2 extends jUnitTestCaseDb {
         $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" checked="checked" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n";
-        $expected .= '<script type="text/javascript">'."\n";
-        $expected .= '//<![CDATA['."\n";
-        $expected .= 'jForms.getForm("").getControl("status").activate("closed");'."\n";
-        $expected .= '//]]>'."\n";
-        $expected .= '</script>';
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
+        $this->assertEqualOrDiff('jForms.tControl = new jFormsControlChoice(\'status\', \'Task Status\');
+jForms.tControl.errInvalid=\'La saisie de "Task Status" est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+jForms.tControl2 = jForms.tControl;
+jForms.tControl2.items[\'new\']=[];
+jForms.tControl = new jFormsControlString(\'nom\', \'Name\');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'La saisie de "Name" est obligatoire\';
+jForms.tControl.errInvalid=\'La saisie de "Name" est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'assigned\');
+jForms.tControl = new jFormsControlString(\'prenom\', \'Firstname\');
+jForms.tControl.errInvalid=\'La saisie de "Firstname" est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'assigned\');
+jForms.tControl = new jFormsControlString(\'reason\', \'Reason \');
+jForms.tControl.required = true;
+jForms.tControl.errRequired=\'Hey, specify a reason !\';
+jForms.tControl.errInvalid=\'La saisie de "Reason " est invalide\';
+jForms.tControl2.addControl(jForms.tControl, \'closed\');
+jForms.tControl2.activate(\'closed\');
+', $this->builder->getJsContent());
     }
-
-
-
 }
 
