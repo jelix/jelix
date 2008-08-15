@@ -109,7 +109,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
 
     protected function generateGroup(&$source, $control, &$attributes) {
         $this->readLabel($source, $control, 'group');
-        $this->attrReadOnly(&$source, &$attributes);
+        $this->attrReadOnly($source, $attributes);
         $source[]='$topctrl = $ctrl;';
         $ctrlcount = $this->readChildControls($source, 'group', $control, array('label'));
         if ($ctrlcount == 0) {
@@ -121,7 +121,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
 
     protected function generateChoice(&$source, $control, &$attributes) {
         $this->readLabel($source, $control, 'choice');
-        $this->attrReadOnly(&$source, &$attributes);
+        $this->attrReadOnly($source, $attributes);
         $this->readHelpHintAlert($source, $control);
         $source[]='$topctrl = $ctrl;';
         $hasSelected = false;
