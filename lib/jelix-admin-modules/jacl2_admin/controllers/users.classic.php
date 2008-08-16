@@ -54,6 +54,7 @@ class usersCtrl extends jController {
             $usersCount = $dao->countBy($cond);
 
         } elseif($grpid == -1) {
+            $cnx = jDb::getConnection($p);
             //only those who have no groups
             if($cnx->dbms != 'pgsql') { 
                 // with MYSQL 4.0.12, you must use an alias with the count to use it with HAVING 
@@ -65,7 +66,6 @@ class usersCtrl extends jController {
                         GROUP BY login HAVING count(id_aclgrp) < 2 ORDER BY login';
             }
 
-            $cnx = jDb::getConnection($p);
             $rs = $cnx->query($sql);
             $usersCount = $rs->rowCount();
         } else {

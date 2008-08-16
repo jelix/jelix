@@ -571,9 +571,9 @@ cd lib/clearbricks
   VERSION
 
 cd lib/clearbricks/net
-  class.net.socket.php
+! class.net.socket.php
 cd lib/clearbricks/net.http
-  class.net.http.php
+! class.net.http.php
 
 cd lib/diff
 ! difflib.php
