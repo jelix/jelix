@@ -208,7 +208,6 @@ cd lib/jelix/forms
   jFormsControl.class.php
   jFormsDataContainer.class.php
   jFormsDatasource.class.php
-  jIFormsBuilderCompiler.iface.php
 
 cd lib/jelix/installer
   jIInstallReporter.iface.php

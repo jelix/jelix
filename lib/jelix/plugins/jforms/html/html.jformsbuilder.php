@@ -15,7 +15,7 @@
  * @package     jelix
  * @subpackage  jelix-plugins
  */
-abstract class htmlJformsBuilder extends jFormsBuilderBase {
+class htmlJformsBuilder extends jFormsBuilderBase {
 
     protected $options;
 

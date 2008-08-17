@@ -23,17 +23,13 @@ class jFormsCompiler_jf_1_0  {
 
     protected $sourceFile;
 
-    protected $srcBuilders;
-
     public function __construct($sourceFile) {
         $this->sourceFile = $sourceFile;
     }
 
-    public function compile ($doc, &$source, &$srcBuilders) {
+    public function compile ($doc, &$source) {
 
         global $gJConfig;
-
-        $this->srcBuilders = &$srcBuilders;
 
         $xml = simplexml_import_dom($doc);
 

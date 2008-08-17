@@ -556,14 +556,16 @@ abstract class jFormsBase {
      * @return jFormsBuilderBase
      */
     public function getBuilder($buildertype){
+        global $gJConfig;
         if($buildertype == '') $buildertype = 'html';
-        if(isset($this->builders[$buildertype])){
-            if(isset($this->builders[$buildertype]['inst']))
-                return $this->builders[$buildertype]['inst'];
+        if(isset($gJConfig->_pluginsPathList_jforms[$buildertype])){
+            if(isset($this->builders[$buildertype]))
+                return $this->builders[$buildertype];
             include_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
-            include_once ($this->builders[$buildertype][0]);
-            $c = $this->builders[$buildertype][1];
-            $o = $this->builders[$buildertype]['inst'] = new $c($this);
+            include_once ($gJConfig->_pluginsPathList_jforms[$buildertype].$buildertype.'.jformsbuilder.php');
+            //echo "builder=".$gJConfig->_pluginsPathList_jforms[$buildertype];
+            $c = $buildertype.'JformsBuilder';
+            $o = $this->builders[$buildertype] = new $c($this);
             return $o;
         }else{
             throw new jExceptionForms('jelix~formserr.invalid.form.builder', array($buildertype, $this->sel));

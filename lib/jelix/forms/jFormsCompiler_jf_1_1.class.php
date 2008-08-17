@@ -126,6 +126,13 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
         $source[]='$topctrl = $ctrl;';
         $hasSelected = false;
         $selectedvalue = null;
+
+        if(isset($attributes['selectedvalue'])){
+            $selectedvalue= (string)$control['selectedvalue'];
+            $hasSelected = true;
+            unset($attributes['selectedvalue']);
+        }
+
         $itemCount = 0;
         foreach($control->item as $item){
             if(!isset($item['value'])){

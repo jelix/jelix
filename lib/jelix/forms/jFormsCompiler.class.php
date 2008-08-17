@@ -50,34 +50,15 @@ class jFormsCompiler implements jISimpleCompiler {
         $source=array();
         $source[]='<?php ';
         $source[]='class '.$selector->getClass().' extends jFormsBase {';
-        $source[]='    protected $builders = array( ';
-
-        $srcBuilders=array();
-        foreach($gJConfig->_pluginsPathList_jforms as $buildername => $pluginPath) {
-            $srcBuilders[$buildername]=array();
-            $srcBuilders[$buildername][] = '<?php ';
-            $srcBuilders[$buildername][] = ' require_once(\''.$pluginPath.$buildername.'.jformsbuilder.php\'); ';
-            $srcBuilders[$buildername][] = ' class '.$selector->getClass().'_builder_'.$buildername.' extends '.$buildername.'JformsBuilder {';
-            $srcBuilders[$buildername][] = ' public function __construct($form){';
-            $srcBuilders[$buildername][] = '          parent::__construct($form);';
-            $srcBuilders[$buildername][] = '  }';
-            
-            $source[]='    \''.$buildername.'\'=>array(\''.$selector->getCompiledBuilderFilePath($buildername).'\',\''.$selector->getClass().'_builder_'.$buildername.'\'), ';
-        }
-
-        $source[]='    );';
+        
         $source[]=' public function __construct($sel, &$container, $reset = false){';
         $source[]='          parent::__construct($sel, $container, $reset);';
 
-        $compiler->compile($doc, $source, $srcBuilders);
+        $compiler->compile($doc, $source);
 
         $source[]="  }\n} ?>";
         jFile::write($selector->getCompiledFilePath(), implode("\n", $source));
 
-        foreach($gJConfig->_pluginsPathList_jforms as $buildername => $pluginPath) {
-            $srcBuilders[$buildername][]= '} ?>';
-            jFile::write($selector->getCompiledBuilderFilePath($buildername), implode("\n", $srcBuilders[$buildername]));
-        }
         return true;
     }
 }

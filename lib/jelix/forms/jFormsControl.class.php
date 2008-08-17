@@ -630,7 +630,7 @@ class jFormsControlChoice extends jFormsControlGroups {
     }
 
     function addChildControl($control, $itemValue = '') {
-        $this->childControls[$control->ref]=$control;
+        $this->childControls[$control->ref] = $control;
         $this->items[$itemValue][$control->ref] = $control;
     }
 
