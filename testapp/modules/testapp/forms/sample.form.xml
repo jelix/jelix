@@ -14,20 +14,21 @@
         </input>
 
         <radiobuttons ref="sexe" required="true">
-            <label>Vous êtes </label>
-            <item value="h">un homme</item>
-            <item value="f">une femme</item>
-            <item value="no">je ne sais pas</item>
-            <alert type="required">Vous devez indiquer le sexe, même si vous ne savez pas :-)</alert>
+            <label>Vous are </label>
+            <item value="h">a man</item>
+            <item value="f">a woman</item>
+            <item value="no">you don't know</item>
+            <alert type="required">You should indicate your sex, even if
+              you don't know :-)</alert>
         </radiobuttons>
         <input ref="mail" type="email">
-            <label>Votre mail</label>
+            <label>Your email</label>
         </input>
 
         <checkbox ref="geek">
-            <label>Êtes vous un geek ?</label>
-            <help>Un geek est un passionné d'informatique</help>
-            <hint>Cochez la case si vous êtes un geek</hint>
+            <label>Are you a geek ?</label>
+            <help>A geek is a person which is extremely keen on computer science</help>
+            <hint>Check the box if you are a geek</hint>
         </checkbox>
     </group>
 
@@ -56,26 +57,26 @@
   </htmleditor>
 
   <checkboxes ref="objets" required="true">
-      <label>Vous avez </label>
-      <item value="maison">Une maison</item>
-      <item value="voiture">Une voiture</item>
-      <item value="bateau">Un bateau</item>
-      <item value="assiette">Une assiette</item>
+      <label>You have </label>
+      <item value="maison">a house</item>
+      <item value="voiture">a car</item>
+      <item value="bateau">a boat</item>
+      <item value="assiette">a plate</item>
   </checkboxes>
 
   <input ref="datenaissance" type="localedate">
-      <label>Votre date de naissance</label>
-      <help>Le format de la date est jj/mm/aaaa</help>
+      <label>Your birthday</label>
+      <help>date format is dd/mm/yyyy</help>
   </input>
 
   <secret ref="pwd">
-    <label>Un mot de passe</label>
-    <confirm>Retapez le mot de passe pour confirmer</confirm>
+    <label>A password</label>
+    <confirm>Type again the password to confirm</confirm>
   </secret>
 
   <upload ref="image" mimetype="image/gif;image/png;" maxsize="50000">
-     <label>Votre photo (gif/png &lt; 50ko)</label>
-     <alert>Le fichier doit être une image gif ou png de moins de 50000 octets</alert>
+     <label>Your photo (gif/png &lt; 50ko)</label>
+     <alert>The file should be a gif or png image, under 50000 octets</alert>
   </upload>
 
   <input ref="unwanted" required="true" type="datetime">
@@ -104,16 +105,16 @@
       </item>
    </choice>
   <captcha ref="cap">
-    <label>Filtre antispam</label>
+    <label>Antispam filter</label>
   </captcha>
 
   <reset ref="cancel">
-    <label>Annuler</label>
+    <label>Cancel</label>
   </reset>
 
   <submit ref="valid">
-    <label>Valider</label>
-    <item value="svg">Sauvegarde</item>
+    <label>Validate</label>
+    <item value="svg">Save</item>
     <item value="prev">Preview</item>
   </submit>
 

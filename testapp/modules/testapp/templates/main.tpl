@@ -11,5 +11,5 @@
 </div>
 
 <div id="footer">
-page HTML générée le {$j_datenow} à {$j_timenow} par {@jelix~jelix.framework.name@}
+HTML page generated at {$j_datenow} - {$j_timenow} by {@jelix~jelix.framework.name@}
 </div>

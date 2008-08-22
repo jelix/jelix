@@ -28,7 +28,7 @@ class sampleFormCtrl extends jController {
           $form->deactivate('unwanted');
       }
       $rep = $this->getResponse('html');
-      $rep->title = 'Edition d\'un formulaire';
+      $rep->title = 'Form editing';
 
       $tpl = new jTpl();
       $tpl->assign('form', $form);
@@ -37,7 +37,7 @@ class sampleFormCtrl extends jController {
           $rep->body->assign('MAIN',$tpl->fetch('sampleformfull'));
       else
           $rep->body->assign('MAIN',$tpl->fetch('sampleform'));
-      $rep->body->assign('page_title','formulaires');
+      $rep->body->assign('page_title','forms');
 
       return $rep;
    }
@@ -58,14 +58,14 @@ class sampleFormCtrl extends jController {
    function ok(){
       $form = jForms::get('sample');
       $rep = $this->getResponse('html');
-      $rep->title = 'Edition d\'un formulaire';
+      $rep->title = 'Form editing';
 
       if($form){
         $tpl = new jTpl();
         $tpl->assign('form', $form);
         $rep->body->assign('MAIN',$tpl->fetch('sampleformresult'));
       }else{
-        $rep->body->assign('MAIN','<p>le formulaire n\'existe pas</p>');
+        $rep->body->assign('MAIN','<p>The form doesn\'t exist.</p>');
       }
       $rep->body->assign('page_title','formulaires');
       return $rep;
@@ -84,11 +84,11 @@ class sampleFormCtrl extends jController {
 
       $rep->body->assign('page_title','formulaires');
 
-      $content='<h1>Données en session des formulaires</h1>';
+      $content='<h1>Session data of forms</h1>';
       if(isset($_SESSION['JFORMS'])){
           $content.='<pre>'.htmlspecialchars(var_export($_SESSION['JFORMS'],true)).'</pre>';
       }else{
-          $content.='<p>Il n\'y a pas de formulaires...</p>';
+          $content.='<p>There isn\'t any forms...</p>';
       }
       $rep->body->assign('MAIN',$content);
       return $rep;

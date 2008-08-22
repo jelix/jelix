@@ -14,13 +14,13 @@ class formsCtrl extends jController {
 
     function listform(){
         $rep = $this->getResponse('html');
-        $rep->title = 'Liste d\'instance de formulaire';
-        $rep->body->assign('page_title','formulaires instances multiples');
+        $rep->title = 'Instances list of forms';
+        $rep->body->assign('page_title','Instances list of forms');
 
         $tpl = new jTpl();
         // on triche ici, il n'y a pas d'api car inutile en temps normal
         if(isset($_SESSION['JFORMS']['sample']))
-            $tpl->assign('liste', $_SESSION['JFORMS']['sample']); 
+            $tpl->assign('liste', $_SESSION['JFORMS']['sample']);
         else
             $tpl->assign('liste', array()); 
         $rep->body->assign('MAIN',$tpl->fetch('forms_liste'));
@@ -74,9 +74,8 @@ class formsCtrl extends jController {
      */
     function showform(){
         $rep = $this->getResponse('html');
-        $rep->title = 'Edition d\'un formulaire';
-        $rep->body->assign('page_title','formulaires');
-
+        $rep->title = 'Form editing';
+        $rep->body->assign('page_title','forms');
 
         // recupère les données du formulaire dont l'id est dans le paramètre id
         $form = jForms::get('sample',$this->param('id'));
@@ -86,9 +85,9 @@ class formsCtrl extends jController {
             $tpl->assign('id', $form->id());
             $rep->body->assign('MAIN',$tpl->fetch('forms_edit'));
         }else{
-            $rep->body->assign('MAIN','<p>mauvais id</p>' );
+            $rep->body->assign('MAIN','<p>bad id</p>' );
         }
-    
+
         return $rep;
     }
 
@@ -119,8 +118,8 @@ class formsCtrl extends jController {
     function view(){
         $form = jForms::get('sample',$this->param('id'));
         $rep = $this->getResponse('html');
-        $rep->title = 'Contenu d\'un formulaire';
-        $rep->body->assign('page_title','formulaires');
+        $rep->title = 'Content of a form';
+        $rep->body->assign('page_title','forms');
 
         if($form){
             $tpl = new jTpl();
@@ -129,7 +128,7 @@ class formsCtrl extends jController {
             $tpl->assign('id', $this->param('id'));
             $rep->body->assign('MAIN',$tpl->fetch('forms_view'));
         }else{
-            $rep->body->assign('MAIN','<p>le formulaire n\'existe pas</p>');
+            $rep->body->assign('MAIN','<p>The form doesn\'t exist.</p>');
         }
         return $rep;
     }

@@ -1,9 +1,9 @@
-<h1>Test de formulaire (instances multiples)</h1>
-<p>Contenu du formulaire de l'enregistrement {$id} :</p>
+<h1>jForms test (multiple instances)</h1>
+<p>Content of the form for the record "{$id}":</p>
 <dl>
-   <dt>Nom :</dt>
+   <dt>Lastname:</dt>
    <dd>{$nom}</dd>
-   <dt>Prenom :</dt>
+   <dt>Firstname:</dt>
    <dd>{$prenom}</dd>
 </dl>
-<p><a href="{jurl 'forms:listform'}">Retour à la liste</a></p>
+<p><a href="{jurl 'forms:listform'}">Back to the list</a></p>

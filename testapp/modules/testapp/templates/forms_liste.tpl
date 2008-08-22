@@ -1,5 +1,5 @@
-<h1>Test de formulaire (instances multiples)</h1>
-<p>Voici la liste des instances du formulaire sample</p>
+<h1>jForms test (multiple instances)</h1>
+<p>Here is the list of instances of the "sample" form</p>
 
 {if count($liste)}
 <table border="1">
@@ -9,20 +9,20 @@
     <td>{$form->data['nom']}</td>
     <td>{$form->data['prenom']}</td>
     <td>
-        <a href="{jurl 'forms:view',array('id'=>$id)}">voir</a>
-        <a href="{jurl 'forms:showform',array('id'=>$id)}">éditer</a>
-        <a href="{jurl 'forms:destroy',array('id'=>$id)}">détruire</a>
+        <a href="{jurl 'forms:view',array('id'=>$id)}">see</a>
+        <a href="{jurl 'forms:showform',array('id'=>$id)}">edit</a>
+        <a href="{jurl 'forms:destroy',array('id'=>$id)}">destroy</a>
     </tr>
 {/foreach}
 </table>
 {else}
-<p> pas de formulaire</o>
+<p>no form</o>
 {/if}
 
 
 <ul>
-    <li><a href="{jurl 'forms:edit',array('id'=>1)}">créer une instance pour l'enregistrement 1</a></li>
-    <li><a href="{jurl 'forms:edit',array('id'=>2)}">créer une instance pour l'enregistrement 2</a></li>
-    <li><a href="{jurl 'forms:newform'}">créer une instance pour un nouvel enregistrement</a></li>
+    <li><a href="{jurl 'forms:edit',array('id'=>1)}">create a instance for the record 1</a></li>
+    <li><a href="{jurl 'forms:edit',array('id'=>2)}">create a instance for the record 2</a></li>
+    <li><a href="{jurl 'forms:newform'}">create an instance for a new record</a></li>
 </ul>
 

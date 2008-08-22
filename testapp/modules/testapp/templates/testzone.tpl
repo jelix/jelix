@@ -1,29 +1,29 @@
-<h3>Résultat d'un findAll</h3>
+<h3>Results of findAll</h3>
 <table>
    <tr><th>key</th><th>value</th></tr>
   {foreach $config as $conf}
   <tr><td>{$conf->ckey}</td><td>{$conf->cvalue}</td></tr>
   {/foreach}
 </table>
-<p>CountAll donne : {$nombre}</p>
-<p>getCountValue donne : {$nombrevalue} (nombre de valeur contenant le mot "value")</p>
+<p>CountAll gives : {$nombre}</p>
+<p>getCountValue gives : {$nombrevalue} (number of values which contain the word "value")</p>
 
-<h3>Utilisation d'un findBy</h3>
-<p>cherchant les clés foo ou bar</p>
+<h3>Using findBy</h3>
+<p>It searches keys "foo" or "bar"</p>
 <table>
    <tr><th>key</th><th>value</th></tr>
   {foreach $petitconfig as $conf}
   <tr><td>{$conf->ckey}</td><td>{$conf->cvalue}</td></tr>
   {/foreach}
 </table>
-<h3>Résultat d'un get('foo')</h3>
+<h3>Results of get('foo')</h3>
 <p>key={$oneconf->ckey} value={$oneconf->cvalue}</p>
 
-<h3>Test insertion</h3>
+<h3>Insert Test</h3>
 <form action="{jurl 'testapp~main:testdao'}" method="POST">
-<fieldset><legend>Ajouter une nouvelle clé</legend>
+<fieldset><legend>Add a new key</legend>
 <p><label for="newid">id :</label><input type="text" name="newid"  id="newid"/></p>
-<p><label for="newvalue">Valeur :</label><input type="text" name="newvalue" id="newvalue" /></p>
-<p><input type="submit" value="enregistrer" /></p>
+<p><label for="newvalue">Value :</label><input type="text" name="newvalue" id="newvalue" /></p>
+<p><input type="submit" value="Save" /></p>
 </form>
-
+Note: it is not using jforms here.
