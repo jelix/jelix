@@ -300,7 +300,9 @@ class jCoordinator {
         $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
 
         // url params including module and action
-        $url = str_replace('array', 'url', var_export($this->request->params, true));
+        if ($this->request)
+            $url = str_replace('array', 'url', var_export($this->request->params, true));
+        else $url = 'Unknow url';
 
         // formatting message
         $messageLog = strtr($conf['messageLogFormat'], array(
