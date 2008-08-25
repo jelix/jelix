@@ -5,10 +5,11 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  * @contributor Julien Issler
+ * @contributor Thomas, Greut
  * @copyright   2005-2007 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007-2008 Julien Issler
- * @copyright   2008 Thomas
+ * @copyright   2008 Thomas, 2008 Greut
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -237,7 +238,7 @@ abstract class jDaoFactoryBase  {
      * @param int $limitCount 
      * @return jDbResultSet
      */
-    final public function findBy ($searchcond, $limitOffset=0, $limitCount=0){
+    final public function findBy ($searchcond, $limitOffset=0, $limitCount=null){
         $query = $this->_selectClause.$this->_fromClause.$this->_whereClause;
         if ($searchcond->hasConditions ()){
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
@@ -246,7 +247,7 @@ abstract class jDaoFactoryBase  {
         $query.= $this->_createGroupClause($searchcond);
         $query.= $this->_createOrderClause($searchcond);
 
-        if($limitCount != 0){
+        if($limitCount !== null){
             $rs = $this->_conn->limitQuery ($query, $limitOffset, $limitCount);
         }else{
             $rs = $this->_conn->query ($query);
