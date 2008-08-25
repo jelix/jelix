@@ -444,7 +444,12 @@ jForms.declareForm(jForms.tForm);
 
     protected function outputSecret($ctrl, $id, $class, $readonly, $hint) {
         $size = ($ctrl->size == 0?'': ' size="'.$ctrl->size.'"');
-        echo '<input type="password"',$id,$readonly,$hint,$class,$size,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
+        $maxl = $ctrl->datatype->getFacet('maxLength');
+        if($maxl !== null)
+            $maxl = ' maxlength="'.$maxl.'"';
+        else
+            $maxl = '';
+        echo '<input type="password"',$id,$readonly,$hint,$class,$size,$maxl,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
     }
 
     protected function jsSecret($ctrl) {

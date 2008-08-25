@@ -179,12 +179,6 @@ class jFormsControlSecret extends jFormsControl {
     public $type='secret';
     public $size=0;
 
-    function check(){
-        if ($this->container->data[$this->ref] == '' && $this->required) {
-            return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
-        }
-        return null;
-    }
     function getDisplayValue($value){
         return str_repeat("*", strlen($value));
     }

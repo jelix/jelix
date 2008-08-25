@@ -82,6 +82,18 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
         return false;
     }
 
+    protected function generateSecret(&$source, $control, &$attributes) {
+        if(isset($attributes['minlength'])){
+            $source[]='$ctrl->datatype->addFacet(\'minLength\','.intval($attributes['minlength']).');';
+            unset($attributes['minlength']);
+        }
+        if(isset($attributes['maxlength'])){
+            $source[]='$ctrl->datatype->addFacet(\'maxLength\','.intval($attributes['maxlength']).');';
+            unset($attributes['maxlength']);
+        }
+        return parent::generateSecret($source, $control, $attributes);
+    }
+
     protected function generateHtmleditor(&$source, $control, &$attributes) {
         $this->_generateTextareaHtmlEditor($source, $control, $attributes);
 

@@ -374,7 +374,10 @@ class UTjformsCompiler_1_1 extends jUnitTestCase {
     <label>Votre nom</label>
     <datasource dao="foo" method="bar" labelproperty="baz,biz" labelseparator=" - " valueproperty="plop" criteriafrom="prenom,nom"/>
 </menulist>',
-
+83=>'<secret ref="pwd" minlength="5" maxlength="10" xmlns="http://jelix.org/ns/forms/1.1">
+    <label>Votre mot de passe</label>
+    <confirm>confirmez</confirm>
+</secret>',
     );
 
     protected $_PhpControls = array(
@@ -827,6 +830,16 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz,biz\',\'plop\',\'\',null,\'prenom,nom\',\' - \');
 $this->addControl($ctrl);',
+83=>'$ctrl= new jFormsControlsecret(\'pwd\');
+$ctrl->datatype->addFacet(\'minLength\',5);
+$ctrl->datatype->addFacet(\'maxLength\',10);
+$ctrl->label=\'Votre mot de passe\';
+$ctrl2 = new jFormsControlSecretConfirm(\'pwd_confirm\');
+$ctrl2->primarySecret = \'pwd\';
+$ctrl2->label=\'confirmez\';
+$ctrl2->required = $ctrl->required;
+$this->addControl($ctrl);
+$this->addControl($ctrl2);',
 );
 
     function testPhpControl11(){

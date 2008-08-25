@@ -1003,6 +1003,18 @@ jForms.tControl.errInvalid=\'La saisie de "mot de passe" est invalide\';
 jForms.tForm.addControl(jForms.tControl);
 ', $this->builder->getJsContent());
 
+        $ctrl->datatype->addFacet('minLength',5);
+        $ctrl->datatype->addFacet('maxLength',10);
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" maxlength="10" value="laurent"/>', $out);
+        $this->assertEqualOrDiff('jForms.tControl = new jFormsControlString(\'passwd\', \'mot de passe\');
+jForms.tControl.maxLength = \'10\';
+jForms.tControl.minLength = \'5\';
+jForms.tControl.errInvalid=\'La saisie de "mot de passe" est invalide\';
+jForms.tForm.addControl(jForms.tControl);
+', $this->builder->getJsContent());
+
+
     }
     function testOutputSecretConfirm(){
         $ctrl= new jFormsControlSecretConfirm('passwd_confirm');

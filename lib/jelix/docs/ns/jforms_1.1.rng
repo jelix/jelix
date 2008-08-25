@@ -117,6 +117,7 @@
        <ref name="control.common" />
        <ref name="UI.attr.readonly" />
        <ref name="UI.attr.required" />
+       <ref name="attr.length" />
        <ref name="attr.size" />
        <optional>
           <element name="confirm">
