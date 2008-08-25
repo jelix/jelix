@@ -85,7 +85,7 @@ Christophe Thiriot (aka Doubleface)
  - fixed minor bugs
  - Added enhanced service handling (dependency injection) in jClasses (#523, #602)
  - implementation of "live" exit in command line (#406)
-
+ - automatic timezone setting (#600)
 
 Contributors
 ------------

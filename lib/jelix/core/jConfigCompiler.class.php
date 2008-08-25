@@ -3,9 +3,9 @@
 * @package      jelix
 * @subpackage   core
 * @author       Jouanneau Laurent
-* @contributor  Thibault PIRONT < nuKs >
+* @contributor  Thibault PIRONT < nuKs >, Christophe Thiriot
 * @copyright    2006-2008 Jouanneau laurent
-* @copyright    2007 Thibault PIRONT
+* @copyright    2007 Thibault PIRONT, 2008 Christophe Thiriot
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -87,6 +87,13 @@ class jConfigCompiler {
         self::_initResponsesPath($config->responses);
         self::_initResponsesPath($config->_coreResponses);
 
+        if (trim($config->timeZone) === '') {
+#if PHP50
+            $config->timeZone = "Europe/Paris";
+#else
+            $config->timeZone = date_default_timezone_get();
+#endif
+        }
 
         /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config->locale,$m)){
             if(!isset($m[2])){
@@ -146,6 +153,13 @@ class jConfigCompiler {
 
         self::_initResponsesPath($config['responses']);
         self::_initResponsesPath($config['_coreResponses']);
+        if (trim($config['timeZone']) === '') {
+#if PHP50
+            $config['timeZone'] = "Europe/Paris";
+#else
+            $config['timeZone'] = date_default_timezone_get();
+#endif
+        }
 
         /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config['locale'],$m)){
             if(!isset($m[2])){

@@ -3,9 +3,12 @@
 
 startModule = "jelix"
 startAction = "default:index"
-locale = "fr_FR"
+locale = "en_US"
 charset = "UTF-8"
-timeZone = "Europe/Paris"
+
+; see http://www.php.net/manual/en/timezones.php for supported values
+; if empty, jelix will try to get the default timezone
+timeZone = 
 
 checkTrustedModules = off
 

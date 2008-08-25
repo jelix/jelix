@@ -1,11 +1,12 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-locale = "fr_FR"
+locale = "en_US"
 charset = "UTF-8"
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
-timeZone = "Europe/Paris"
+; if empty, jelix will try to get the default timezone
+timeZone = 
 
 checkTrustedModules = off
 
