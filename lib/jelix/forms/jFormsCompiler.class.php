@@ -4,15 +4,14 @@
 * @subpackage forms
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin
-* @contributor Uriel Corfa Emotic SARL
+* @contributor Uriel Corfa Emotic SARL, Julien Issler
 * @copyright   2006-2008 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2007 Dominique Papin
 * @copyright   2007 Emotic SARL
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
-require(JELIX_LIB_PATH.'forms/jIFormsBuilderCompiler.iface.php');
 
 /**
  * generates form class from an xml file describing the form
