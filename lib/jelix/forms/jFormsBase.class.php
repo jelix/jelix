@@ -604,8 +604,7 @@ abstract class jFormsBase {
         } else {
             $path.= $alternateName;
         }
-        move_uploaded_file($_FILES[$controlName]['tmp_name'], $path);
-        return true;
+        return move_uploaded_file($_FILES[$controlName]['tmp_name'], $path);
     }
 
     /**
