@@ -91,7 +91,11 @@ class jConfigCompiler {
 #if PHP50
             $config->timeZone = "Europe/Paris";
 #else
-            $config->timeZone = date_default_timezone_get();
+            $tz = ini_get('date.timezone');
+            if ($tz != '')
+                $config->timeZone = $tz;
+            else
+                $config->timeZone = "Europe/Paris";
 #endif
         }
 
@@ -157,7 +161,11 @@ class jConfigCompiler {
 #if PHP50
             $config['timeZone'] = "Europe/Paris";
 #else
-            $config['timeZone'] = date_default_timezone_get();
+            $tz = ini_get('date.timezone');
+            if ($tz != '')
+                $config['timeZone'] = $tz;
+            else
+                $config['timeZone'] = "Europe/Paris";
 #endif
         }
 

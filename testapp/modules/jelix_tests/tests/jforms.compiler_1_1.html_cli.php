@@ -1057,14 +1057,14 @@ array('','','myfile')
 
     protected $_BadXmlForms = array(
 array(
-'<forms xmlns="http://jelix.org/ns/forms/1.1">
+'<form xmlns="http://jelix.org/ns/forms/1.1">
   <reset ref="reset1">
     <label>annulation 1</label>
   </reset>
   <reset ref="reset2">
     <label>annulation 2</label>
   </reset>
-</forms>',
+</form>',
 'jelix~formserr.notunique.tag',
 array( 'reset','myfile')
 ),
