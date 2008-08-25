@@ -4,9 +4,9 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Yann (description and keywords), Dominique Papin
-* @contributor Warren Seine
+* @contributor Warren Seine, Alexis Métaireau
 * @copyright   2005-2008 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
-* @copyright   2008 Warren Seine
+* @copyright   2008 Warren Seine, Alexis Métaireau
 *              few lines of code are copyrighted CopixTeam http://www.copix.org
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -103,6 +103,7 @@ class jResponseHtml extends jResponse {
     protected $_Others  = array ();
     protected $_MetaKeywords = array();
     protected $_MetaDescription = array();
+    protected $_Link = array();
     /**#@-*/
 
     /**#@+
@@ -283,6 +284,18 @@ class jResponseHtml extends jResponse {
          $this->_bodyBottom[]=$content;
       }
     }
+    
+    /**
+     * add a generic link to the head
+     * 
+     * @param string $href  url of the link
+     * @param string $rel   relation name
+     * @param string $type  mime type of the ressource
+     * @param string $title
+     */ 
+    final public function addLink($href, $rel, $type, $title='') {
+        $this->_Link[$href] = array($rel, $type, $title);
+    }
 
     /**
      * add a link to a javascript script in the document head
@@ -422,30 +435,36 @@ class jResponseHtml extends jResponse {
             echo  '<link type="text/css" href="',$src,'" ',$more,$this->_endTag;
         }
 
-        if(count($this->_CSSIELink)){
-            foreach ($this->_CSSIELink as $src=>$params){
-                // special params for conditions on IE versions
-                if (!isset($params['_ieCondition']))
-                  $params['_ieCondition'] = 'IE' ;
-                echo '<!--[if '.$params['_ieCondition'].' ]>';
-                //the extra params we may found in there.
-                $more = '';
-                foreach ($params as $param_name=>$param_value){
-                    if ($param_name=='_ieCondition')
-                      continue ;
-                    $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
-                }
-                if(!isset($params['rel']))
-                    $more .='rel="stylesheet" ';
-                echo  '<link type="text/css" href="',$src,'" ',$more,$this->_endTag;
-                echo '<![endif]-->';
+        foreach ($this->_CSSIELink as $src=>$params){
+            // special params for conditions on IE versions
+            if (!isset($params['_ieCondition']))
+              $params['_ieCondition'] = 'IE' ;
+            echo '<!--[if '.$params['_ieCondition'].' ]>';
+            //the extra params we may found in there.
+            $more = '';
+            foreach ($params as $param_name=>$param_value){
+                if ($param_name=='_ieCondition')
+                  continue ;
+                $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
             }
+            if(!isset($params['rel']))
+                $more .='rel="stylesheet" ';
+            echo  '<link type="text/css" href="',$src,'" ',$more,$this->_endTag;
+            echo '<![endif]-->';
         }
 
         if($this->favicon != ''){
             $fav = htmlspecialchars($this->favicon);
             echo '<link rel="icon" type="image/x-icon" href="',$fav,'" ',$this->_endTag;
             echo '<link rel="shortcut icon" type="image/x-icon" href="',$fav,'" ',$this->_endTag;
+        }
+        
+        // others links
+        foreach($this->_Link as $href=>$params){
+            $more = '';
+            if (!empty($params[2]))
+                $more = 'title = "'.htmlspecialchars($params[2]).'"';
+            echo '<link rel="',$params[0],'" type="',$params[1],'" href="',$href,'" ',$more,$this->_endTag;
         }
 
         // js link

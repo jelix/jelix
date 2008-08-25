@@ -150,7 +150,8 @@ Hugues Magnier (aka BaGroN)
 
 Alexis Métaireau
  - improvements on jtpl plugin formcontrol (#652)
-
+ - added jResponseHtml::addLink(#657)
+ 
 Aubanel Monnier
  - jResponseLatexToPdf and jtpl plugins for latex
  - patch for anchors support in jResponseRedirect
