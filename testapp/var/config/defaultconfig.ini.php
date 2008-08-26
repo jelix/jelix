@@ -98,6 +98,17 @@ news = "new~*@classic"
 
 __https=
 
+[basic_significant_urlengine_entrypoints]
+; for each entry point, it indicates if the entry point name
+; should be include in the url or not
+index = on
+xmlrpc = on
+jsonrpc = on
+testnews = off
+foo/bar = on
+news = on
+
+
 [logfiles]
 default=messages.log
 

@@ -348,5 +348,114 @@ class UTCreateUrls extends UnitTestCase {
 
     }
 
+    function testBasicSignificantEngine() {
+       global $gJConfig, $gJCoord;
+
+       $gJCoord->request->urlScriptPath='/';
+       $gJCoord->request->params=array();
+       //$gJCoord->request->type=;
+       $gJConfig->urlengine = array(
+         'engine'=>'basic_significant',
+         'enableParser'=>true,
+         'multiview'=>false,
+         'basePath'=>'/',
+         'defaultEntrypoint'=>'index',
+         'entrypointExtension'=>'.php',
+         'notfoundAct'=>'jelix~error:notfound',
+         'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
+         'significantFile'=>'urls.xml',
+       );
+
+      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+
+      $urlList=array();
+      $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
+      $urlList[]= array('urlsig:url2', array('mois'=>'05',  'annee'=>'2004'));
+      $urlList[]= array('jelix_tests~urlsig:url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
+      $urlList[]= array('jelix_tests~urlsig:url4', array('first'=>'premier',  'second'=>'deuxieme'));
+      // celle ci n'a pas de définition dans urls.xml *exprés*
+      $urlList[]= array('urlsig:url5', array('foo'=>'oof',  'bar'=>'rab'));
+      $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
+      $urlList[]= array('jelix_tests~urlsig:url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
+      $urlList[]= array('jelix_tests~default:index', array('rubrique'=>'vetements',  'id_article'=>'98'));
+      $urlList[]= array('jelix_tests~urlsig:index', array('rubrique'=>'vetements',  'id_article'=>'98'));
+
+      $trueResult=array(
+          "/index.php/jelix_tests/urlsig/url1?mois=10&annee=2005&id=35",
+          "/jelix_tests/urlsig/url2?mois=05&annee=2004",
+          "/jelix_tests/urlsig/url3?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village",
+          "/foo/bar.php/jelix_tests/urlsig/url4?first=premier&second=deuxieme",
+          "/index.php/jelix_tests/urlsig/url5?foo=oof&bar=rab",
+          "/xmlrpc.php",
+          "/index.php/jelix_tests/urlsig/url8?rubrique=vetements&id_article=98",
+          "/index.php/jelix_tests/?rubrique=vetements&id_article=98",
+          "/index.php/jelix_tests/urlsig/?rubrique=vetements&id_article=98",
+       );
+
+
+      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
+      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
+      $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
+
+      $gJConfig->urlengine['multiview']=true;
+      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+      $trueResult=array(
+          "/index/jelix_tests/urlsig/url1?mois=10&annee=2005&id=35",
+          "/jelix_tests/urlsig/url2?mois=05&annee=2004",
+          "/jelix_tests/urlsig/url3?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village",
+          "/foo/bar/jelix_tests/urlsig/url4?first=premier&second=deuxieme",
+          "/index/jelix_tests/urlsig/url5?foo=oof&bar=rab",
+          "/xmlrpc",
+          "/index/jelix_tests/urlsig/url8?rubrique=vetements&id_article=98",
+          "/index/jelix_tests/?rubrique=vetements&id_article=98",
+          "/index/jelix_tests/urlsig/?rubrique=vetements&id_article=98",
+       );
+      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
+      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
+      $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
+    }
+
+
+
+    function testBasciSignificantEngineError(){
+       global $gJConfig, $gJCoord;
+
+       $gJCoord->request->urlScriptPath='/';
+       $gJCoord->request->params=array();
+       //$gJCoord->request->type=;
+       $gJConfig->urlengine = array(
+         'engine'=>'basic_significant',
+         'enableParser'=>true,
+         'multiview'=>false,
+         'basePath'=>'/',
+         'defaultEntrypoint'=>'index',
+         'entrypointExtension'=>'.php',
+         'notfoundAct'=>'jelix~notfound',
+         'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
+         'significantFile'=>'urls.xml',
+       );
+
+      $urlList=array();
+      $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
+
+      $trueResult=array(
+          // type exception : 0 Exception, 1 jException, 2 jExceptionSelector
+          // code
+          // local key
+          array(2,11,'jelix~errors.selector.invalid.target'),
+       );
+
+      $this->_doCompareError("simple, errors, multiview = false", $urlList,$trueResult);
+
+      $gJConfig->urlengine['multiview']=true;
+      $trueResult=array(
+          array(2,11,'jelix~errors.selector.invalid.target'),
+       );
+      $this->_doCompareError("simple, errors multiview = true", $urlList,$trueResult);
+    }
+
+
+
+
 }
 ?>

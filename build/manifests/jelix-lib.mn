@@ -483,8 +483,13 @@ cd lib/jelix/plugins/tpl/xul
 cd lib/jelix/plugins/urls/significant
 * jSignificantUrlsCompiler.class.php
 * significant.urls.php
+
 cd lib/jelix/plugins/urls/simple
   simple.urls.php
+
+cd lib/jelix/plugins/urls/basic_significant
+  basic_significant.urls.php
+
 
 cd lib/jelix-www/design
   jelix.css

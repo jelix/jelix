@@ -42,18 +42,62 @@ class simpleUrlEngine implements jIUrlEngine {
     * @return jUrl the url correspondant to the action
     */
     public function create($urlact){
+        global $gJConfig;
+        $m = $urlact->getParam('module');
+        $a = $urlact->getParam('action');
 
-         $scriptName = $this->getScript($urlact->requestType, $urlact->getParam('module'),$urlact->getParam('action'));
-         $url = new jUrl($scriptName, $urlact->params, '');
-         // pour certains types de requete, les paramètres ne sont pas dans l'url
-         // donc on les supprime
-         // c'est un peu crade de faire ça en dur ici, mais ce serait lourdingue
-         // de charger la classe request pour savoir si on peut supprimer ou pas
-         if(in_array($urlact->requestType ,array('xmlrpc','jsonrpc','soap')))
-            $url->clearParam();
+        $scriptName = $this->getBasePath($urlact->requestType, $m, $a);
+        $scriptName .= $this->getScript($urlact->requestType, $m, $a);
 
-         return $url;
+        if(!$gJConfig->urlengine['multiview']){
+            $scriptName.=$gJConfig->urlengine['entrypointExtension'];
+        }
+
+        $url = new jUrl($scriptName, $urlact->params, '');
+        // pour certains types de requete, les paramètres ne sont pas dans l'url
+        // donc on les supprime
+        // c'est un peu crade de faire ça en dur ici, mais ce serait lourdingue
+        // de charger la classe request pour savoir si on peut supprimer ou pas
+        if(in_array($urlact->requestType ,array('xmlrpc','jsonrpc','soap')))
+          $url->clearParam();
+
+        return $url;
     }
+
+    /**
+     * read the configuration and return an url part according of the
+     * of the https configuration
+     * @param string $requestType
+     * @param string $module
+     * @param string  $action
+     */
+    protected function getBasePath($requestType, $module=null, $action=null) {
+        global $gJConfig;
+        if($this->urlhttps == null){
+            $this->urlhttps=array();
+            $selectors = preg_split("/[\s,]+/", $gJConfig->urlengine['simple_urlengine_https']);
+            foreach($selectors as $sel2){
+                $this->urlhttps[$sel2]= true;
+            }
+        }
+
+        $usehttps= false;
+        if (count($this->urlhttps)) {
+          if($action && isset($this->urlhttps[$module.'~'.$action.'@'.$requestType])){
+              $usehttps = true;
+          }elseif($module &&  isset($this->urlhttps[$module.'~*@'.$requestType])){
+              $usehttps = true;
+          }elseif(isset($this->urlhttps['@'.$requestType])){
+              $usehttps = true;
+          }
+        }
+
+        if ($usehttps)
+          return 'https://'.$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'];
+        else
+          return $gJConfig->urlengine['basePath'];
+    }
+
 
     /**
      * read the configuration and gets the script path corresponding to the given parameters
@@ -65,23 +109,6 @@ class simpleUrlEngine implements jIUrlEngine {
         global $gJConfig;
 
         $script = $gJConfig->urlengine['defaultEntrypoint'];
-
-        if($this->urlhttps == null){
-            $this->urlhttps=array();
-            $selectors = preg_split("/[\s,]+/", $gJConfig->urlengine['simple_urlengine_https']);
-            foreach($selectors as $sel2){
-                $this->urlhttps[$sel2]= true;
-            }
-        }
-
-        $usehttps= false;
-        if($action && isset($this->urlhttps[$module.'~'.$action.'@'.$requestType])){
-            $usehttps = true;
-        }elseif($module &&  isset($this->urlhttps[$module.'~*@'.$requestType])){
-            $usehttps = true;
-        }elseif(isset($this->urlhttps['@'.$requestType])){
-            $usehttps = true;
-        }
 
         if(count($gJConfig->simple_urlengine_entrypoints)){
            if($this->urlspe == null){
@@ -102,15 +129,8 @@ class simpleUrlEngine implements jIUrlEngine {
                $script = $this->urlspe[$s3];
            }
         }
-        if(!$gJConfig->urlengine['multiview']){
-            $script.=$gJConfig->urlengine['entrypointExtension'];
-        }
 
-        if($usehttps){
-            return 'https://'.$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'].$script;
-        }else{
-            return $gJConfig->urlengine['basePath'].$script;
-        }
+        return $script;
     }
 }
 

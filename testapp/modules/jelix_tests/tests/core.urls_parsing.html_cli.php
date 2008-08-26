@@ -157,6 +157,87 @@ class UTParseUrls extends UnitTestCase {
       }
 
     }
+
+
+    function testBasicSignificantEngine() {
+       global $gJConfig, $gJCoord;
+
+       $gJCoord->request->urlScriptPath='/';
+       $gJCoord->request->params=array();
+       //$gJCoord->request->type=;
+       $gJConfig->urlengine = array(
+         'engine'=>'basic_significant',
+         'enableParser'=>true,
+         'multiview'=>false,
+         'basePath'=>'/',
+         'defaultEntrypoint'=>'index',
+         'entrypointExtension'=>'.php',
+         'notfoundAct'=>'jelix~notfound',
+         'significantFile'=>'urls.xml',
+       );
+
+      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+
+      $resultList=array();
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url1', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url2', 'mois'=>'05',  'annee'=>'2004');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fete au village');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url4', 'first'=>'premier',  'second'=>'deuxieme');
+      $resultList[]= array();
+      $resultList[]= array('module'=>'news',        'action'=>'main:bar',     'aaa'=>'bbb');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url5', 'foo'=>'oof',  'bar'=>'rab');
+
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url8', 'rubrique'=>'vetements',  'id_article'=>'98');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:index', 'rubrique'=>'vetements',  'id_article'=>'98');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:index', 'rubrique'=>'vetements',  'id_article'=>'98');
+
+      $request=array(
+          array("index.php","/jelix_tests/urlsig/url1",array('mois'=>'10',  'annee'=>'2005', 'id'=>'35')),
+          array("testnews.php","/jelix_tests/urlsig/url2",array('mois'=>'05',  'annee'=>'2004')),
+          array("testnews.php","/jelix_tests/urlsig/url3",array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fete au village')),
+          array("foo/bar.php","/jelix_tests/urlsig/url4",array('first'=>'premier',  'second'=>'deuxieme')),
+          array("xmlrpc.php","",array()),
+          array("news.php","/news/main/bar",array('aaa'=>'bbb')),
+          array("index.php","/jelix_tests/urlsig/url5",array('foo'=>'oof',  'bar'=>'rab')),
+          array("index.php","/jelix_tests/urlsig/url8",array('rubrique'=>'vetements',  'id_article'=>'98')),
+          array("index.php","/jelix_tests/",array('rubrique'=>'vetements',  'id_article'=>'98')),
+          array("index.php","/jelix_tests/urlsig/",array('rubrique'=>'vetements',  'id_article'=>'98')),
+       );
+
+      //$this->sendMessage("significant, multiview = false");
+      foreach($request as $k=>$urldata){
+         $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);
+         $p = $url->params;
+         ksort($p);
+         ksort($resultList[$k]);
+
+         $this->assertTrue( ($p == $resultList[$k]), 'created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
+      }
+
+      $gJConfig->urlengine['multiview']=true;
+      $request=array(
+          array("index","/jelix_tests/urlsig/url1",array('mois'=>'10',  'annee'=>'2005', 'id'=>'35')),
+          array("testnews","/jelix_tests/urlsig/url2",array('mois'=>'05',  'annee'=>'2004')),
+          array("testnews","/jelix_tests/urlsig/url3",array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fete au village')),
+          array("foo/bar","/jelix_tests/urlsig/url4",array('first'=>'premier',  'second'=>'deuxieme')),
+          array("xmlrpc","",array()),
+          array("news","/news/main/bar",array('aaa'=>'bbb')),
+          array("index","/jelix_tests/urlsig/url5",array('foo'=>'oof',  'bar'=>'rab')),
+          array("index","/jelix_tests/urlsig/url8",array('rubrique'=>'vetements',  'id_article'=>'98')),
+          array("index","/jelix_tests/",array('rubrique'=>'vetements',  'id_article'=>'98')),
+          array("index","/jelix_tests/urlsig/",array('rubrique'=>'vetements',  'id_article'=>'98')),
+       );
+      foreach($request as $k=>$urldata){
+         $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);
+         $p = $url->params;
+         ksort($p);
+         ksort($resultList[$k]);
+
+         $this->assertTrue( ($p == $resultList[$k]), 'created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
+      }
+
+    }
+
 }
 
 ?>
