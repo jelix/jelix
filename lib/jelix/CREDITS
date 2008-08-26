@@ -163,7 +163,7 @@ Thibault Piront (aka nuks)
  - fixed bug in jAcl2 pgsql install file (#631)
 
 Laurent Raufaste (aka analogue)
- - patch on postgresql driver (#123)
+ - patches on postgresql driver (#123, #671, #672)
 
 Rahal
  - improvement on locale selectors : possibility to overload locales (#358)

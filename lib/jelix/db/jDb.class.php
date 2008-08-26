@@ -59,6 +59,12 @@ class jDb {
 
         $profil = self::getProfil ($name);
 
+        if (!$name) {
+            // we set the name to avoid two connection for a same profil, when it is the default profil
+            // and when we call getConnection two times, one with no name and on with the name
+            $name = $profil['name'];
+        }
+
         if (!isset ($cnxPool[$name])){
             $cnxPool[$name] = self::_createConnector ($profil);
         }

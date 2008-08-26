@@ -6,7 +6,7 @@
 * @contributor Laurent Jouanneau
 * @contributor Yannick Le Guédart
 * @contributor Laurent Raufaste
-* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007 Laurent Raufaste
+* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007-2008 Laurent Raufaste
 * This class was get originally from the Copix project (CopixDBConnectionPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -67,31 +67,30 @@ class pgsqlDbConnection extends jDbConnection {
 
         $str = '';
 
-        // on fait une distinction car si host indiqué -> connection TCP/IP, sinon socket unix
+        // we do a distinction because if the host is given == TCP/IP connection else unix socket
         if($this->profil['host'] != '')
             $str = 'host=\''.$this->profil['host'].'\''.$str;
 
-        // Si le port est défini on le rajoute à la chaine de connexion
         if (isset($this->profil['port'])) {
             $str .= ' port=\''.$this->profil['port'].'\'';
         }
 
-        // Si le nom de la base de données est spécifié, on le rajoute à la chaine de connexion
         if ($this->profil['database'] != '') {
             $str .= ' dbname=\''.$this->profil['database'].'\'';
         }
 
-        // Si le nom d'utilisateur est spécifié, on le rajoute à la chaine de connexion
-        // on fait un isset et non une équivalence à chaine vide pour permettre de specifier
-        // tout en permettant aussi d'utiliser les variables d'environnements (dans ce cas, ne pas mettre de parametre user dans la conf)
+        // we do isset instead of equality test against an empty string, to allow to specify
+        // that we want to use configuration set in environment variables
         if (isset($this->profil['user'])) {
             $str .= ' user=\''.$this->profil['user'].'\'';
         }
 
-        // Si le mot de passe est spécifié, on le rajoute à la chaine de connexion
-        // même remarque que pour login.
         if (isset($this->profil['password'])) {
             $str .= ' password=\''.$this->profil['password'].'\'';
+        }
+
+        if (isset($this->profil['timeout']) && $this->profil['timeout'] != '') {
+            $str .= ' connect_timeout=\''.$this->profil['timeout'].'\'';
         }
 
         if($cnx=@$funcconnect ($str)){
