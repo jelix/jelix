@@ -215,6 +215,11 @@ class jFormsControlCheckbox extends jFormsControl {
     public $valueOnCheck='1';
     public $valueOnUncheck='0';
 
+    function __construct($ref){
+        $this->ref = $ref;
+        $this->datatype = new jDatatypeBoolean();
+    }
+
     function check(){
         $value = $this->container->data[$this->ref];
         if($value != $this->valueOnCheck && $value != $this->valueOnUncheck)

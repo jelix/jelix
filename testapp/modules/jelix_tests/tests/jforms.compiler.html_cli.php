@@ -376,7 +376,6 @@ $ctrl->datatype= new jDatatypeipv6();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 26=>'$ctrl= new jFormsControlcheckbox(\'nom\');
-$ctrl->datatype= new jDatatypeBoolean();
 $ctrl->label=\'Avez-vous un nom ?\';
 $this->addControl($ctrl);',
 27=>'$ctrl= new jFormsControlcheckboxes(\'nom\');
@@ -528,7 +527,6 @@ $ctrl->alertRequired=jLocale::get(\'error.alert.invalid.nom\');
 $ctrl->alertInvalid=\'Le nom est invalide\';
 $this->addControl($ctrl);',
 49=>'$ctrl= new jFormsControlcheckbox(\'nom\');
-$ctrl->datatype= new jDatatypeBoolean();
 $ctrl->label=\'Avez-vous un nom ?\';
 $ctrl->valueOnCheck=\'oui\';
 $ctrl->valueOnUncheck=\'non\';

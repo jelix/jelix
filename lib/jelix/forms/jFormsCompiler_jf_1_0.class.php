@@ -173,7 +173,6 @@ class jFormsCompiler_jf_1_0  {
     }
 
     protected function generateCheckbox(&$source, $control, &$attributes) {
-        $source[]='$ctrl->datatype= new jDatatypeBoolean();';
         $this->attrDefaultvalue($source, $attributes);
         $this->readLabel($source, $control, 'checkbox');
         $this->readHelpHintAlert($source, $control);

@@ -664,10 +664,10 @@ abstract class jFormsBase {
 
 
     /**
-    * add a control to the form
+    * declare a child control to the form. The given control should be a child of an other control
     * @param $control jFormsControl
     */
-    protected function addChildControl($control){
+    public function addChildControl($control){
         $this->controls [$control->ref] = $control;
         if($control->type =='submit')
             $this->submits [$control->ref] = $control;

@@ -564,8 +564,10 @@ jForms.declareForm(jForms.tForm);
             echo ' onclick="jForms.getForm(\'',$this->_name,'\').getControl(\'',$ctrl->ref,'\').activate(\'',$itemName,'\')"', $this->_endt;
             echo htmlspecialchars($ctrl->itemsNames[$itemName]),'</label> ';
 
+            $displayedControls = false;
             foreach($listctrl as $ref=>$c) {
-                if(!$this->_form->isActivated($ref)) continue;
+                if(!$this->_form->isActivated($ref) || $c->type == 'hidden') continue;
+                $displayedControls = true;
                 echo ' <span class="jforms-item-controls">';
                 // we remove readonly status so when a user change the choice and 
                 // javascript is deactivated, it can still change the value of the control
@@ -578,7 +580,7 @@ jForms.declareForm(jForms.tForm);
                 echo "</span>\n";
                 $this->jsContent .="jForms.tControl2.addControl(jForms.tControl, '".str_replace("'","\\'",$itemName)."');\n";
             }
-            if(!count($listctrl)) {
+            if(!$displayedControls) {
                 $this->jsContent .="jForms.tControl2.items['".str_replace("'","\\'",$itemName)."']=[];\n";
             }
 
