@@ -157,7 +157,9 @@ jForms.declareForm(jForms.tForm);
     public function outputFooter(){
         echo '<script type="text/javascript">
 //<![CDATA[
+(function(){var c, c2;
 '.$this->jsContent.'
+})();
 //]]>
 </script>';
         echo '</form>';
@@ -191,29 +193,33 @@ jForms.declareForm(jForms.tForm);
         $this->outputHelp($ctrl);
     }
 
+    protected function escJsStr($str) {
+        return '\''.str_replace(array("'","\n"),array("\\'", "\\n"), $str).'\'';
+    }
+
     protected function commonJs($ctrl) {
         if($ctrl->help){
-            $this->jsContent .="jForms.tControl.help='".str_replace("'","\\'",$ctrl->help)."';\n";
+            $this->jsContent .="c.help=".$this->escJsStr($ctrl->help).";\n";
         }
 
         if($ctrl->required){
-            $this->jsContent .="jForms.tControl.required = true;\n";
+            $this->jsContent .="c.required = true;\n";
             if($ctrl->alertRequired){
-                $this->jsContent .="jForms.tControl.errRequired='".str_replace("'","\\'",$ctrl->alertRequired)."';\n";
+                $this->jsContent .="c.errRequired=".$this->escJsStr($ctrl->alertRequired).";\n";
             }
             else {
-                $this->jsContent .="jForms.tControl.errRequired='".str_replace("'","\\'",jLocale::get('jelix~formserr.js.err.required', $ctrl->label))."';\n";
+                $this->jsContent .="c.errRequired=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.required', $ctrl->label)).";\n";
             }
         }
 
         if($ctrl->alertInvalid){
-            $this->jsContent .="jForms.tControl.errInvalid='".str_replace("'","\\'",$ctrl->alertInvalid)."';\n";
+            $this->jsContent .="c.errInvalid=".$this->escJsStr($ctrl->alertInvalid).";\n";
         }
         else {
-            $this->jsContent .="jForms.tControl.errInvalid='".str_replace("'","\\'",jLocale::get('jelix~formserr.js.err.invalid', $ctrl->label))."';\n";
+            $this->jsContent .="c.errInvalid=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.invalid', $ctrl->label)).";\n";
         }
 
-        if ($this->isRootControl) $this->jsContent .="jForms.tForm.addControl(jForms.tControl);\n";
+        if ($this->isRootControl) $this->jsContent .="jForms.tForm.addControl(c);\n";
     }
 
     protected function outputInput($ctrl, $id, $class, $readonly, $hint) {
@@ -244,17 +250,17 @@ jForms.declareForm(jForms.tForm);
         else
             $dt = 'String';
 
-        $this->jsContent .="jForms.tControl = new jFormsControl".$dt."('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+        $this->jsContent .="c = new jFormsControl".$dt."('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         if ($isLocale)
-            $this->jsContent .="jForms.tControl.lang='".$GLOBALS['gJConfig']->locale."';\n";
+            $this->jsContent .="c.lang='".$GLOBALS['gJConfig']->locale."';\n";
 
         $maxl= $ctrl->datatype->getFacet('maxLength');
         if($maxl !== null)
-            $this->jsContent .="jForms.tControl.maxLength = '$maxl';\n";
+            $this->jsContent .="c.maxLength = '$maxl';\n";
 
         $minl= $ctrl->datatype->getFacet('minLength');
         if($minl !== null)
-            $this->jsContent .="jForms.tControl.minLength = '$minl';\n";
+            $this->jsContent .="c.minLength = '$minl';\n";
 
         $this->commonJs($ctrl);
     }
@@ -272,7 +278,7 @@ jForms.declareForm(jForms.tForm);
 
     protected function jsCheckbox($ctrl) {
 
-        $this->jsContent .="jForms.tControl = new jFormsControlBoolean('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+        $this->jsContent .="c = new jFormsControlBoolean('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
@@ -308,7 +314,7 @@ jForms.declareForm(jForms.tForm);
 
     protected function jsCheckboxes($ctrl) {
 
-        $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."[]', '".str_replace("'","\'",$ctrl->label)."');\n";
+        $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
@@ -333,7 +339,7 @@ jForms.declareForm(jForms.tForm);
 
     protected function jsRadiobuttons($ctrl) {
 
-        $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+        $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
@@ -358,7 +364,7 @@ jForms.declareForm(jForms.tForm);
 
     protected function jsMenulist($ctrl) {
 
-        $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+        $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
@@ -401,10 +407,10 @@ jForms.declareForm(jForms.tForm);
 
     protected function jsListbox($ctrl) {
         if($ctrl->multiple){
-            $this->jsContent .= "jForms.tControl = new jFormsControlString('".$ctrl->ref."[]', '".str_replace("'","\'",$ctrl->label)."');\n";
-            $this->jsContent .= "jForms.tControl.multiple = true;\n";
+            $this->jsContent .= "c = new jFormsControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n";
+            $this->jsContent .= "c.multiple = true;\n";
         } else {
-            $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+            $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         }
 
         $this->commonJs($ctrl);
@@ -417,15 +423,15 @@ jForms.declareForm(jForms.tForm);
     }
 
     protected function jsTextarea($ctrl) {
-        $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+        $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $maxl= $ctrl->datatype->getFacet('maxLength');
         if($maxl !== null)
-            $this->jsContent .="jForms.tControl.maxLength = '$maxl';\n";
+            $this->jsContent .="c.maxLength = '$maxl';\n";
 
         $minl= $ctrl->datatype->getFacet('minLength');
         if($minl !== null)
-            $this->jsContent .="jForms.tControl.minLength = '$minl';\n";
+            $this->jsContent .="c.minLength = '$minl';\n";
 
         $this->commonJs($ctrl);
     }
@@ -463,7 +469,7 @@ jForms.declareForm(jForms.tForm);
 
     protected function jsSecretconfirm($ctrl) {
         // we assume that a secret confirm control is just after a secret control in the list of controls
-        $this->jsContent .= "jForms.tControl.confirmField = new jFormsControlSecretConfirm('".$ctrl->ref."_confirm', '".str_replace("'","\\'",$ctrl->label)."');\n";
+        $this->jsContent .= "c.confirmField = new jFormsControlSecretConfirm('".$ctrl->ref."_confirm', ".$this->escJsStr($ctrl->label).");\n";
     }
 
     protected function outputOutput($ctrl, $id, $class, $readonly, $hint) {
@@ -484,7 +490,7 @@ jForms.declareForm(jForms.tForm);
     }
 
     protected function jsUpload($ctrl) {
-        $this->jsContent .="jForms.tControl = new jFormsControlString('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+        $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
@@ -556,7 +562,7 @@ jForms.declareForm(jForms.tForm);
         $i=0;
         $id=' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'_';
         $this->jsChoiceInternal($ctrl);
-        $this->jsContent .="jForms.tControl2 = jForms.tControl;\n";
+        $this->jsContent .="c2 = c;\n";
         $this->isRootControl = false;
         foreach( $ctrl->items as $itemName=>$listctrl){
             echo '<li><label><input type="radio"',$id,$i,'" value="',htmlspecialchars($itemName),'"';
@@ -578,10 +584,10 @@ jForms.declareForm(jForms.tForm);
                 $this->outputControl($c);
                 if($ro) $c->setReadOnly(true);
                 echo "</span>\n";
-                $this->jsContent .="jForms.tControl2.addControl(jForms.tControl, '".str_replace("'","\\'",$itemName)."');\n";
+                $this->jsContent .="c2.addControl(c, ".$this->escJsStr($itemName).");\n";
             }
             if(!$displayedControls) {
-                $this->jsContent .="jForms.tControl2.items['".str_replace("'","\\'",$itemName)."']=[];\n";
+                $this->jsContent .="c2.items[".$this->escJsStr($itemName)."]=[];\n";
             }
 
             echo "</li>\n";
@@ -599,12 +605,12 @@ jForms.declareForm(jForms.tForm);
             else
                 $value='';
         }
-        $this->jsContent .= "jForms.tControl2.activate('".$value."');\n";
+        $this->jsContent .= "c2.activate('".$value."');\n";
     }
 
     protected function jsChoiceInternal($ctrl) {
 
-        $this->jsContent .="jForms.tControl = new jFormsControlChoice('".$ctrl->ref."', '".str_replace("'","\'",$ctrl->label)."');\n";
+        $this->jsContent .="c = new jFormsControlChoice('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
