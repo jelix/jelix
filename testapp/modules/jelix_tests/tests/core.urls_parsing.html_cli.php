@@ -158,7 +158,6 @@ class UTParseUrls extends UnitTestCase {
 
     }
 
-
     function testBasicSignificantEngine() {
        global $gJConfig, $gJCoord;
 
@@ -190,6 +189,7 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url8', 'rubrique'=>'vetements',  'id_article'=>'98');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:index', 'rubrique'=>'vetements',  'id_article'=>'98');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:index', 'rubrique'=>'vetements',  'id_article'=>'98');
+      $resultList[]= array('rubrique'=>'vetements',  'id_article'=>'98');
 
       $request=array(
           array("index.php","/jelix_tests/urlsig/url1",array('mois'=>'10',  'annee'=>'2005', 'id'=>'35')),
@@ -202,6 +202,7 @@ class UTParseUrls extends UnitTestCase {
           array("index.php","/jelix_tests/urlsig/url8",array('rubrique'=>'vetements',  'id_article'=>'98')),
           array("index.php","/jelix_tests/",array('rubrique'=>'vetements',  'id_article'=>'98')),
           array("index.php","/jelix_tests/urlsig/",array('rubrique'=>'vetements',  'id_article'=>'98')),
+          array("index.php","",array('rubrique'=>'vetements',  'id_article'=>'98')),
        );
 
       //$this->sendMessage("significant, multiview = false");
@@ -226,6 +227,7 @@ class UTParseUrls extends UnitTestCase {
           array("index","/jelix_tests/urlsig/url8",array('rubrique'=>'vetements',  'id_article'=>'98')),
           array("index","/jelix_tests/",array('rubrique'=>'vetements',  'id_article'=>'98')),
           array("index","/jelix_tests/urlsig/",array('rubrique'=>'vetements',  'id_article'=>'98')),
+          array("index","",array('rubrique'=>'vetements',  'id_article'=>'98')),
        );
       foreach($request as $k=>$urldata){
          $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);

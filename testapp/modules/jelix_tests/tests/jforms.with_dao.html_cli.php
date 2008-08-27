@@ -35,6 +35,7 @@ class UTjformsWithDao extends jUnitTestCaseDb {
 
         // save main data
         $this->id = $form->saveToDao('products');
+        $this->assertTrue(preg_match("/^[0-9]+$/",$this->id));
         $records = array(
             array('id'=>$this->id, 'name'=>'phone', 'price'=>45),
         );
@@ -55,6 +56,8 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         $form = jForms::fill('product');
 
         $this->id2 = $form->saveToDao('products');
+        $this->assertTrue(preg_match("/^[0-9]+$/",$this->id2));
+        $this->assertNotEqual($this->id, $this->id2);
         $records = array(
             array('id'=>$this->id, 'name'=>'phone', 'price'=>45),
             array('id'=>$this->id2, 'name'=>'computer', 'price'=>590),
@@ -79,7 +82,8 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         $form = jForms::fill('label', array(1,'fr'));
 
         // save main data
-        $form->saveToDao('labels');
+        $id = $form->saveToDao('labels');
+        $this->assertEqual($id, array(1,'fr'));
         $records = array(
             array('key'=>1, 'lang'=>'fr', 'label'=>'bonjour'),
         );
@@ -89,7 +93,8 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         $gJCoord->request->params['label'] = 'Hello';
         $form = jForms::fill('label', array(1,'en'));
 
-        $form->saveToDao('labels');
+        $id2 = $form->saveToDao('labels');
+        $this->assertEqual($id2, array(1,'en'));
         $records = array(
             array('key'=>1, 'lang'=>'fr', 'label'=>'bonjour'),
             array('key'=>1, 'lang'=>'en', 'label'=>'Hello'),
