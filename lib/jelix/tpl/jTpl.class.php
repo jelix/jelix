@@ -207,6 +207,15 @@ class jTpl {
     }
 
     /**
+     * contains the name of the template file
+     * It have a public access only for plugins. So you musn't use directly this property
+     * except from tpl plugins.
+     * @var string
+     * @since 1.1
+     */
+    public $_templateName;
+
+    /**
      * include the compiled template file and call one of the generated function
      * @param string $tpl template selector
      * @param string $fctname the internal function name (meta or content)
@@ -219,11 +228,12 @@ class jTpl {
         $sel->userModifiers = $this->userModifiers;
         $sel->userFunctions = $this->userFunctions;
         jIncluder::inc($sel);
+        $this->_templateName = $sel->toString();
         $fct = $fctname.md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType.($trusted?'_t':''));
 #else
         $tpl = JTPL_TEMPLATES_PATH . $tpl;
-        $filename = basename($tpl);
-        $cachefile = JTPL_CACHE_PATH.$outputtype.($trusted?'_t':'').'_'.$filename;
+        $this->_templateName = basename($tpl);
+        $cachefile = JTPL_CACHE_PATH.$outputtype.($trusted?'_t':'').'_'.$this->_templateName;
 
         $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
         if (!$mustCompile) {
@@ -259,12 +269,15 @@ class jTpl {
         try{
 #ifnot JTPL_STANDALONE
             $sel = new jSelectorTpl($tpl, $outputtype, $trusted);
+            $sel->userModifiers = $this->userModifiers;
+            $sel->userFunctions = $this->userFunctions;
             jIncluder::inc($sel);
             $md = md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType.($trusted?'_t':''));
+            $this->_templateName = $sel->toString();
 #else
             $tpl = JTPL_TEMPLATES_PATH . $tpl;
-            $filename = basename($tpl);
-            $cachefile = JTPL_CACHE_PATH.$outputtype.($trusted?'_t':'').'_'.$filename;
+            $this->_templateName = basename($tpl);
+            $cachefile = JTPL_CACHE_PATH.$outputtype.($trusted?'_t':'').'_'.$this->_templateName;
 
             $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
             if (!$mustCompile) {
@@ -276,6 +289,7 @@ class jTpl {
             if ($mustCompile) {
                 include_once(JTPL_PATH . 'jTplCompiler.class.php');
                 $compiler = new jTplCompiler();
+                $compiler->setUserPlugins( $this->userModifiers, $this->userFunctions);
                 $compiler->compile($tpl,$outputtype,$trusted);
             }
             require_once($cachefile);
