@@ -37,8 +37,8 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
         $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','formfull','2-5');
     }
 
-    if(isset($param[3]) && $param[3] != '""'  && $param[3] != "''")
-        $builder = $param[3];
+    if(isset($params[3]) && $params[3] != '""'  && $params[3] != "''")
+        $builder = $params[3];
     else
         $builder = "'html'";
 
@@ -48,8 +48,8 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
         $params[2] = 'array()';
     }
 
-    if(isset($param[4]))
-        $options = $param[4];
+    if(isset($params[4]))
+        $options = $params[4];
     else
         $options = "array()";
 
