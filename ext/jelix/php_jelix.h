@@ -1,7 +1,7 @@
 /**
 *  Jelix
 *  a php extension for Jelix Framework
-* @copyright Copyright (c) 2006-2007 Laurent Jouanneau
+* @copyright Copyright (c) 2006-2008 Laurent Jouanneau
 * @author : Laurent Jouanneau
 * @link http://jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -41,6 +41,7 @@ PHP_FUNCTION(jelix_scan_locale_sel);
 
 ZEND_BEGIN_MODULE_GLOBALS(jelix)
     zval * active_ini_file_section;
+    int activated;
 ZEND_END_MODULE_GLOBALS(jelix)
 
 /* In every utility function you add that needs to use variables 

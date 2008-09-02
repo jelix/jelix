@@ -1,7 +1,7 @@
 /**
 *  Jelix
 *  a php extension for Jelix Framework
-* @copyright Copyright (c) 2006-2007 Laurent Jouanneau
+* @copyright Copyright (c) 2006-2008 Laurent Jouanneau
 * @author : Laurent Jouanneau
 * @link http://jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -61,38 +61,36 @@ ZEND_GET_MODULE(jelix)
 
 /* {{{ PHP_INI
  */
-/* Remove comments and fill if you need to have entries in php.ini
 PHP_INI_BEGIN()
-    STD_PHP_INI_ENTRY("jelix.global_value",      "42", PHP_INI_ALL, OnUpdateLong, global_value, zend_jelix_globals, jelix_globals)
-    STD_PHP_INI_ENTRY("jelix.global_string", "foobar", PHP_INI_ALL, OnUpdateString, global_string, zend_jelix_globals, jelix_globals)
+    /* this flag allow to disable some features of the jelix extension, so we can use
+     * dev or opt edition of jelix
+     */
+    STD_PHP_INI_BOOLEAN("jelix.activated", "1", PHP_INI_SYSTEM, OnUpdateBool, activated, zend_jelix_globals, jelix_globals)
 PHP_INI_END()
-*/
+
 /* }}} */
 
 /* {{{ php_jelix_init_globals
  */
-/* Uncomment this function if you have INI entries
+
 static void php_jelix_init_globals(zend_jelix_globals *jelix_globals)
 {
-	jelix_globals->global_value = 0;
-	jelix_globals->global_string = NULL;
+    jelix_globals->activated = 1;
 }
-*/
+
 /* }}} */
 
 /* {{{ PHP_MINIT_FUNCTION
  */
 PHP_MINIT_FUNCTION(jelix)
 {
-	/* If you have INI entries, uncomment these lines
-	REGISTER_INI_ENTRIES();
-	*/
+    REGISTER_INI_ENTRIES();
+    if (JELIX_G(activated)) {
+        PHP_MINIT(jelix_interfaces)(INIT_FUNC_ARGS_PASSTHRU);
 
-	PHP_MINIT(jelix_interfaces)(INIT_FUNC_ARGS_PASSTHRU);
-
-    REGISTER_STRING_CONSTANT("JELIX_NAMESPACE_BASE", "http://jelix.org/ns/", CONST_CS | CONST_PERSISTENT);
-
-	return SUCCESS;
+        REGISTER_STRING_CONSTANT("JELIX_NAMESPACE_BASE", "http://jelix.org/ns/", CONST_CS | CONST_PERSISTENT);
+    }
+    return SUCCESS;
 }
 /* }}} */
 
@@ -100,10 +98,8 @@ PHP_MINIT_FUNCTION(jelix)
  */
 PHP_MSHUTDOWN_FUNCTION(jelix)
 {
-	/* uncomment this line if you have INI entries
-	UNREGISTER_INI_ENTRIES();
-	*/
-	return SUCCESS;
+    UNREGISTER_INI_ENTRIES();
+    return SUCCESS;
 }
 /* }}} */
 
@@ -112,7 +108,7 @@ PHP_MSHUTDOWN_FUNCTION(jelix)
  */
 PHP_RINIT_FUNCTION(jelix)
 {
-	return SUCCESS;
+    return SUCCESS;
 }
 /* }}} */
 
@@ -133,9 +129,7 @@ PHP_MINFO_FUNCTION(jelix)
 	php_info_print_table_header(2, "jelix framework support", "enabled");
 	php_info_print_table_end();
 
-	/* Remove comments if you have entries in php.ini
 	DISPLAY_INI_ENTRIES();
-	*/
 }
 /* }}} */
 
@@ -145,7 +139,7 @@ PHP_MINFO_FUNCTION(jelix)
 PHP_FUNCTION(jelix_version)
 {
 	if(ZEND_NUM_ARGS() != 0)  ZEND_WRONG_PARAM_COUNT()
-
+    
 	RETURN_STRINGL(JELIX_VERSION, sizeof(JELIX_VERSION)-1, 1);
 }
 /* }}} */
@@ -326,7 +320,7 @@ PHP_FUNCTION(jelix_scan_module_sel)
             type = Z_LVAL_PP(typeArg);
             if(type < 1 || type > 4){
                 php_error_docref(NULL TSRMLS_CC, E_WARNING, "Third argument doesn't correspond to one of JELIX_SEL_* constant");
-                RETURN_FALSE
+                RETURN_FALSE;
             }
             break;*/
 		default:
@@ -336,7 +330,7 @@ PHP_FUNCTION(jelix_scan_module_sel)
 
     if(Z_TYPE_P(*objectArg) != IS_OBJECT){
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid second argument, not an object");
-        RETURN_FALSE
+        RETURN_FALSE;
 	}
 
     int module_length=0;
@@ -361,7 +355,7 @@ PHP_FUNCTION(jelix_scan_module_sel)
             || ( *cursor >= 'A' && *cursor <= 'Z')
             || ( *cursor >= '0' && *cursor <= '9')
             || *cursor == '_' || *cursor == '.')){
-            RETURN_FALSE
+            RETURN_FALSE;
         }
         module_length ++;
         cursor_count ++;
@@ -377,7 +371,7 @@ PHP_FUNCTION(jelix_scan_module_sel)
         // the string starts by a ~ : it's not really a problem, but we generate an error
         // to keep compatibily with php version of selectors.
         if(module_length == 0){
-            RETURN_FALSE
+            RETURN_FALSE;
         }
 
         cursor_count++;
@@ -389,7 +383,7 @@ PHP_FUNCTION(jelix_scan_module_sel)
                 || ( *cursor >= 'A' && *cursor <= 'Z')
                 || ( *cursor >= '0' && *cursor <= '9')
                 || *cursor == '_' || *cursor == '.')){
-                RETURN_FALSE
+                RETURN_FALSE;
             }
             resource_length ++;
             cursor_count ++;
@@ -398,12 +392,12 @@ PHP_FUNCTION(jelix_scan_module_sel)
     }
 
     if( resource_length == 0 ){
-        RETURN_FALSE
+        RETURN_FALSE;
     }
 
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "module", sizeof("module") - 1,	module, module_length TSRMLS_CC);
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	resource, resource_length TSRMLS_CC);
-	RETURN_TRUE
+	RETURN_TRUE;
 }
 /* }}} */
 
@@ -429,11 +423,11 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
 
     if(Z_TYPE_P(*objectArg) != IS_OBJECT){
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid second argument, not an object");
-        RETURN_FALSE
+        RETURN_FALSE;
 	}
     if(Z_TYPE_P(*defaultActionArg) != IS_STRING){
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid third argument, not a string");
-        RETURN_FALSE
+        RETURN_FALSE;
 	}
 
     int module_length=0;
@@ -461,7 +455,7 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
         }
         if(*cursor == '#'){
             if(sharpOk || module_length > 1){
-                RETURN_FALSE
+                RETURN_FALSE;
             }
             sharpOk=1;
         }else if(*cursor == '.'){
@@ -470,7 +464,7 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
                 || ( *cursor >= 'A' && *cursor <= 'Z')
                 || ( *cursor >= '0' && *cursor <= '9')
                 || *cursor == '_' ) || sharpOk){
-                RETURN_FALSE
+                RETURN_FALSE;
         }
         if(*cursor == '_' && firstDashPos == -1){
             firstDashPos = module_length;
@@ -483,13 +477,13 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
 
     if(cursor_count >= length){
         // we don't find any '~' characters, so we have parsed the resource
-        if(hasDot) RETURN_FALSE
+        if(hasDot) RETURN_FALSE;
 
         resource_length = module_length;
         module_length = 0;
     }else if( *cursor == '@'){
         // we don't find any '~' characters, so we have parsed the resource
-        if(hasDot) RETURN_FALSE
+        if(hasDot) RETURN_FALSE;
 
         resource_length = module_length;
         module_length = 0;
@@ -505,7 +499,7 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
                 || ( *cursor >= 'A' && *cursor <= 'Z')
                 || ( *cursor >= '0' && *cursor <= '9')
                 || *cursor == '_' || *cursor == '.')){
-                RETURN_FALSE
+                RETURN_FALSE;
             }
             request_length ++;
             cursor_count ++;
@@ -515,7 +509,7 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
         // the string starts by a ~ : it's not really a problem, but we generate an error
         // to keep compatibily with php version of selectors.
         if(module_length == 0){
-            RETURN_FALSE
+            RETURN_FALSE;
         }
         firstDashPos=-1;
         cursor_count++;
@@ -530,14 +524,14 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
 
             if(*cursor == '#'){
                 if(sharpOk || resource_length > 1){
-                    RETURN_FALSE
+                    RETURN_FALSE;
                 }
                 sharpOk=1;
             }else if(!( ( *cursor >= 'a' && *cursor <= 'z')
                     || ( *cursor >= 'A' && *cursor <= 'Z')
                     || ( *cursor >= '0' && *cursor <= '9')
                     || *cursor == '_') || sharpOk){
-                    RETURN_FALSE
+                    RETURN_FALSE;
             }
             if(*cursor == '_' && firstDashPos == -1){
                 firstDashPos = resource_length;
@@ -559,7 +553,7 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
                     || ( *cursor >= 'A' && *cursor <= 'Z')
                     || ( *cursor >= '0' && *cursor <= '9')
                     || *cursor == '_' || *cursor == '.')){
-                    RETURN_FALSE
+                    RETURN_FALSE;
                 }
                 request_length ++;
                 cursor_count ++;
@@ -570,7 +564,7 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
 
     // request shouldn't empty if there is a @
     if(hasRequest && request_length == 0){
-        RETURN_FALSE
+        RETURN_FALSE;
     }
 
     if(resource_length == 0){
@@ -664,7 +658,7 @@ PHP_FUNCTION(jelix_scan_old_action_sel)
 
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "module", sizeof("module") - 1,	module, module_length TSRMLS_CC);
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "request", sizeof("request") - 1,	request, request_length TSRMLS_CC);
-	RETURN_TRUE
+	RETURN_TRUE;
 }
 /* }}} */
 
@@ -690,11 +684,11 @@ PHP_FUNCTION(jelix_scan_action_sel)
 
     if(Z_TYPE_P(*objectArg) != IS_OBJECT){
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid second argument, not an object");
-        RETURN_FALSE
+        RETURN_FALSE;
 	}
     if(Z_TYPE_P(*defaultActionArg) != IS_STRING){
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid third argument, not a string");
-        RETURN_FALSE
+        RETURN_FALSE;
 	}
 
     int module_length=0;
@@ -722,7 +716,7 @@ PHP_FUNCTION(jelix_scan_action_sel)
         }
         if(*cursor == '#'){
             if(sharpOk || module_length > 1){
-                RETURN_FALSE
+                RETURN_FALSE;
             }
             sharpOk=1;
         }else if(*cursor == '.'){
@@ -731,7 +725,7 @@ PHP_FUNCTION(jelix_scan_action_sel)
                 || ( *cursor >= 'A' && *cursor <= 'Z')
                 || ( *cursor >= '0' && *cursor <= '9')
                 || *cursor == '_' || *cursor == ':' ) || sharpOk){
-                RETURN_FALSE
+                RETURN_FALSE;
         }
         if(*cursor == ':' && firstDashPos == -1){
             firstDashPos = module_length;
@@ -744,13 +738,13 @@ PHP_FUNCTION(jelix_scan_action_sel)
 
     if(cursor_count >= length){
         // we don't find any '~' characters, so we have parsed the resource
-        if(hasDot) RETURN_FALSE
+        if(hasDot) RETURN_FALSE;
 
         resource_length = module_length;
         module_length = 0;
     }else if( *cursor == '@'){
         // we don't find any '~' characters, so we have parsed the resource
-        if(hasDot) RETURN_FALSE
+        if(hasDot) RETURN_FALSE;
 
         resource_length = module_length;
         module_length = 0;
@@ -766,7 +760,7 @@ PHP_FUNCTION(jelix_scan_action_sel)
                 || ( *cursor >= 'A' && *cursor <= 'Z')
                 || ( *cursor >= '0' && *cursor <= '9')
                 || *cursor == '_' || *cursor == ':' || *cursor == '.')){
-                RETURN_FALSE
+                RETURN_FALSE;
             }
             request_length ++;
             cursor_count ++;
@@ -776,7 +770,7 @@ PHP_FUNCTION(jelix_scan_action_sel)
         // the string starts by a ~ : it's not really a problem, but we generate an error
         // to keep compatibily with php version of selectors.
         if(module_length == 0){
-            RETURN_FALSE
+            RETURN_FALSE;
         }
         firstDashPos=-1;
         cursor_count++;
@@ -791,14 +785,14 @@ PHP_FUNCTION(jelix_scan_action_sel)
 
             if(*cursor == '#'){
                 if(sharpOk || resource_length > 1){
-                    RETURN_FALSE
+                    RETURN_FALSE;
                 }
                 sharpOk=1;
             }else if(!( ( *cursor >= 'a' && *cursor <= 'z')
                     || ( *cursor >= 'A' && *cursor <= 'Z')
                     || ( *cursor >= '0' && *cursor <= '9')
                     || *cursor == '_' || *cursor == ':') || sharpOk){
-                    RETURN_FALSE
+                    RETURN_FALSE;
             }
             if(*cursor == ':' && firstDashPos == -1){
                 firstDashPos = resource_length;
@@ -820,7 +814,7 @@ PHP_FUNCTION(jelix_scan_action_sel)
                     || ( *cursor >= 'A' && *cursor <= 'Z')
                     || ( *cursor >= '0' && *cursor <= '9')
                     || *cursor == '_' || *cursor == '.')){
-                    RETURN_FALSE
+                    RETURN_FALSE;
                 }
                 request_length ++;
                 cursor_count ++;
@@ -831,7 +825,7 @@ PHP_FUNCTION(jelix_scan_action_sel)
 
     // request shouldn't empty if there is a @
     if(hasRequest && request_length == 0){
-        RETURN_FALSE
+        RETURN_FALSE;
     }
 
     if(resource_length == 0){
@@ -908,7 +902,7 @@ PHP_FUNCTION(jelix_scan_action_sel)
 
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "module", sizeof("module") - 1,	module, module_length TSRMLS_CC);
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "request", sizeof("request") - 1,	request, request_length TSRMLS_CC);
-	RETURN_TRUE
+	RETURN_TRUE;
 }
 /* }}} */
 
@@ -933,7 +927,7 @@ PHP_FUNCTION(jelix_scan_class_sel)
 
     if(Z_TYPE_P(*objectArg) != IS_OBJECT){
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid second argument, not an object");
-        RETURN_FALSE
+        RETURN_FALSE;
 	}
 
     int length;
@@ -967,7 +961,7 @@ PHP_FUNCTION(jelix_scan_class_sel)
             || ( *cursor >= 'A' && *cursor <= 'Z')
             || ( *cursor >= '0' && *cursor <= '9')
             || *cursor == '_' || *cursor == '.')) {
-            RETURN_FALSE
+            RETURN_FALSE;
         }
         module_length ++;
         cursor_count ++;
@@ -983,7 +977,7 @@ PHP_FUNCTION(jelix_scan_class_sel)
         // the string starts by a ~ : it's not really a problem, but we generate an error
         // to keep compatibility with php version of selectors.
         if(module_length == 0 || subpath_length != 0){
-            RETURN_FALSE
+            RETURN_FALSE;
         }
 
         cursor_count++;
@@ -998,7 +992,7 @@ PHP_FUNCTION(jelix_scan_class_sel)
                 || ( *cursor >= 'A' && *cursor <= 'Z')
                 || ( *cursor >= '0' && *cursor <= '9')
                 || *cursor == '_' || *cursor == '.')){
-                RETURN_FALSE
+                RETURN_FALSE;
             }
             resource_length ++;
             cursor_count ++;
@@ -1008,7 +1002,7 @@ PHP_FUNCTION(jelix_scan_class_sel)
     }
 
     if( resource_length == 0 ){
-        RETURN_FALSE
+        RETURN_FALSE;
     }
 
     if (subpath_length == 0) {
@@ -1017,14 +1011,14 @@ PHP_FUNCTION(jelix_scan_class_sel)
     }
     else if (subpath_length == 1) {
         if (resource_length == 1) {
-            RETURN_FALSE
+            RETURN_FALSE;
         }
         zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "className", sizeof("className") - 1,	classname, resource_length-1 TSRMLS_CC);
         zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "subpath", sizeof("subpath") - 1,	subpath, 0 TSRMLS_CC);
     }
     else {
         if (resource_length == subpath_length) {
-            RETURN_FALSE
+            RETURN_FALSE;
         }
         zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "className", sizeof("className") - 1,	classname, resource_length - subpath_length TSRMLS_CC);
         zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "subpath", sizeof("subpath") - 1,	subpath, subpath_length TSRMLS_CC);
@@ -1033,7 +1027,7 @@ PHP_FUNCTION(jelix_scan_class_sel)
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "module", sizeof("module") - 1,	module, module_length TSRMLS_CC);
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	resource, resource_length TSRMLS_CC);
 
-	RETURN_TRUE
+	RETURN_TRUE;
 }
 
 /* {{{ proto boolean jelix_scan_locale_sel(string arg, object tofill *)
@@ -1056,7 +1050,7 @@ PHP_FUNCTION(jelix_scan_locale_sel)
 
     if(Z_TYPE_P(*objectArg) != IS_OBJECT){
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid second argument, not an object");
-        RETURN_FALSE
+        RETURN_FALSE;
 	}
 
     int length;
@@ -1091,7 +1085,7 @@ PHP_FUNCTION(jelix_scan_locale_sel)
             || ( *cursor >= 'A' && *cursor <= 'Z')
             || ( *cursor >= '0' && *cursor <= '9')
             || *cursor == '_' || *cursor == '.')) {
-            RETURN_FALSE
+            RETURN_FALSE;
         }
         module_length ++;
         cursor_count ++;
@@ -1106,7 +1100,7 @@ PHP_FUNCTION(jelix_scan_locale_sel)
         // the string starts by a ~ : it's not really a problem, but we generate an error
         // to keep compatibility with php version of selectors.
         if(module_length == 0){
-            RETURN_FALSE
+            RETURN_FALSE;
         }
         hasPoint = 0;
         cursor_count++;
@@ -1123,7 +1117,7 @@ PHP_FUNCTION(jelix_scan_locale_sel)
                 || ( *cursor >= 'A' && *cursor <= 'Z')
                 || ( *cursor >= '0' && *cursor <= '9')
                 || *cursor == '_' || *cursor == '.')){
-                RETURN_FALSE
+                RETURN_FALSE;
             }
             resource_length ++;
             cursor_count ++;
@@ -1133,7 +1127,7 @@ PHP_FUNCTION(jelix_scan_locale_sel)
 
     if (resource_length == 0 || filekey_length == 0 || filekey_length == 1 
         || filekey_length == resource_length || filekey_length == resource_length -1) {
-        RETURN_FALSE
+        RETURN_FALSE;
     }
 
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "fileKey", sizeof("fileKey") - 1,	filekey, filekey_length TSRMLS_CC);
@@ -1142,6 +1136,6 @@ PHP_FUNCTION(jelix_scan_locale_sel)
     /*zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	resource, resource_length TSRMLS_CC);*/
     zend_update_property_stringl(Z_OBJCE_P(*objectArg), *objectArg, "resource", sizeof("resource") - 1,	filekey, filekey_length TSRMLS_CC);
 
-	RETURN_TRUE
+	RETURN_TRUE;
 }
 /* }}} */
