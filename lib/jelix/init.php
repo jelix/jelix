@@ -65,41 +65,69 @@ error_reporting (E_ALL | E_STRICT);
 
 #if ENABLE_OPTIMIZED_SOURCE
 
+#ifnot ENABLE_PHP_JELIX
+#includephp core/jICoordPlugin.iface.php
+#includephp core/jISelector.iface.php
+#endif
 #includephp core/jErrorHandler.lib.php
 #includephp core/jException.lib.php
 #includephp core/jContext.class.php
 #includephp core/jConfig.class.php
 #includephp core/jSelector.class.php
+#includephp core/selector/jSelectorModule.class.php
+#includephp core/selector/jSelectorActFast.class.php
+#includephp core/selector/jSelectorAct.class.php
+#includephp core/selector/jSelectorClass.class.php
+#includephp core/selector/jSelectorDao.class.php
+#includephp core/selector/jSelectorForm.class.php
+#includephp core/selector/jSelectorIface.class.php
+#includephp core/selector/jSelectorLoc.class.php
+#includephp core/selector/jSelectorTpl.class.php
+#includephp core/selector/jSelectorZone.class.php
+#includephp core/selector/jSelectorSimpleFile.class.php
+#includephp core/selector/jSelectorFile.lib.php
 #includephp core/jUrl.class.php
 #includephp core/jCoordinator.class.php
 #includephp core/jController.class.php
 #includephp core/jRequest.class.php
 #includephp core/jResponse.class.php
+#includephp core/jBundle.class.php
 #includephp core/jLocale.class.php
 #includephp core/jIncluder.class.php
 #includephp core/jSession.class.php
-#ifnot ENABLE_PHP_JELIX
-#includephp core/jICoordPlugin.iface.php
-#endif
+
 #else
 
-// chargement du coeur
+#ifnot ENABLE_PHP_JELIX
+require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
+require (JELIX_LIB_CORE_PATH . 'jISelector.iface.php');
+#endif
 require (JELIX_LIB_CORE_PATH . 'jErrorHandler.lib.php');
 require (JELIX_LIB_CORE_PATH . 'jException.lib.php');
 require (JELIX_LIB_CORE_PATH . 'jContext.class.php');
 require (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSelector.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorModule.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorActFast.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorAct.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorClass.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDao.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorForm.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorIface.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorLoc.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorTpl.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorZone.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorSimpleFile.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorFile.lib.php');
 require (JELIX_LIB_CORE_PATH . 'jUrl.class.php');
 require (JELIX_LIB_CORE_PATH . 'jCoordinator.class.php');
 require (JELIX_LIB_CORE_PATH . 'jController.class.php');
 require (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
 require (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
+require (JELIX_LIB_CORE_PATH . 'jBundle.class.php');
 require (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
-#ifnot ENABLE_PHP_JELIX
-require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
-#endif
 #endif
 
 /**

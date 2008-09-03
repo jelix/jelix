@@ -144,7 +144,7 @@ class jClasses {
      * @since 1.0b2
      */
     static public function incIface($selector) {
-        $sel = new jSelectorInterface($selector);
+        $sel = new jSelectorIface($selector);
         require_once($sel->getPath());
     }
 }

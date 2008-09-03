@@ -17,7 +17,7 @@
  */
 class jBinding {
     /**
-     * @var jSelectorInterface|jSelectorClass Called selector
+     * @var jSelectorIface|jSelectorClass Called selector
      */
     protected $fromSelector = null;
 
@@ -33,7 +33,7 @@ class jBinding {
 
     /**
      * __constructor
-     * @param jSelectorInterface|jSelectorClass
+     * @param jSelectorIface|jSelectorClass
      * @return void
      */
     public function __construct($selector) {

@@ -1,4 +1,12 @@
+cd lib/jelix/acl
+  jIAcl2Driver.iface.php
+
+cd lib/jelix/auth
+  jIAuthDriver.iface.php
+
+
 cd lib/jelix/core
+  jBundle.class.php
 * jConfig.class.php
   jContext.class.php
 * jController.class.php
@@ -6,12 +14,27 @@ cd lib/jelix/core
   jErrorHandler.lib.php
   jException.lib.php
 * jIncluder.class.php
+  jISelector.iface.php
   jLocale.class.php
   jRequest.class.php
   jResponse.class.php
 * jSelector.class.php
 * jUrl.class.php
   jSession.class.php
+
+cd lib/jelix/core/selector
+* jSelectorAct.class.php
+* jSelectorActFast.class.php
+* jSelectorClass.class.php
+  jSelectorDao.class.php
+  jSelectorFile.lib.php
+  jSelectorForm.class.php
+  jSelectorIface.class.php
+* jSelectorLoc.class.php
+* jSelectorModule.class.php
+  jSelectorSimpleFile.class.php
+  jSelectorTpl.class.php
+  jSelectorZone.class.php
 
 cd lib/jelix/db
   jDbConnection.class.php

@@ -23,7 +23,7 @@ cd lib/jelix/acl
   jAclDbUserGroup.class.php
   jAclDbManager.class.php
   jAclDb.class.php
-  jAcl2.class.php
+* jAcl2.class.php
   jAcl2DbUserGroup.class.php
   jAcl2DbManager.class.php
   jAcl2Db.class.php

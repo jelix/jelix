@@ -9,27 +9,11 @@
 * @since 1.1
 */
 
-/**
- * interface for jAcl2 drivers
- * @package jelix
- * @subpackage acl
- */
-interface jIAcl2Driver {
-
-    /**
-     * return the possible values of the right on the given subject (and on the optional resource)
-     * @param string $subject the key of the subject
-     * @param string $resource the id of a resource
-     * @return array list of values corresponding to the right
-     */
-    public function getRight($subject, $resource=null);
-
-    /**
-     * clear some cached data, it a cache exists in the driver..
-     */
-    public function clearCache();
-
-}
+#if ENABLE_OPTIMIZED_SOURCE
+#includephp jIAcl2Driver.iface.php
+#else
+require(JELIX_LIB_PATH.'acl/jIAcl2Driver.iface.php');
+#endif
 
 /**
  * Main class to query the acl system, and to know value of a right
