@@ -52,7 +52,11 @@ define ('JELIX_LIB_UTILS_PATH',   JELIX_LIB_PATH.'utils/');
 define ('LIB_PATH',               dirname(JELIX_LIB_PATH).'/');
 
 #if WITH_BYTECODE_CACHE == 'auto'
-define ('BYTECODE_CACHE_EXISTS', function_exists('apc_cache_info')|| function_exists('eaccelerator_info'));
+define ('BYTECODE_CACHE_EXISTS', function_exists('apc_cache_info') || function_exists('eaccelerator_info') || function_exists('xcache_info'));
+#elseif WITH_BYTECODE_CACHE
+define ('BYTECODE_CACHE_EXISTS', true);
+#else
+define ('BYTECODE_CACHE_EXISTS', false);
 #endif
 
 #if PHP50 || PHP51

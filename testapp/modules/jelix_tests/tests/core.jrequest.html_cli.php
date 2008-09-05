@@ -9,7 +9,15 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
 
+
+class configCompileTest extends jConfigCompiler {
+    
+    static public function prepareConfig2($config){
+        self::prepareConfig($config);
+    }
+}
 
 class requestTest extends jRequest {
 
@@ -20,20 +28,19 @@ class requestTest extends jRequest {
 
 class UTjrequest extends jUnitTestCase {
     protected $currentServer;
-    protected $currentBasePath;
-    protected $currentConfigScriptName;
-
+    protected $currentConfig;
+    
     function setUp() {
         $this->currentServer = $_SERVER;
-        $this->currentConfigScriptName = $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'];
-        $this->currentBasePath = $GLOBALS['gJConfig']->urlengine['basePath'];
+        $this->currentConfig = clone $GLOBALS['gJConfig'];
         $GLOBALS['gJConfig']->urlengine['basePath'] = '/';
+        $GLOBALS['gJConfig']->responses=array();
+        $GLOBALS['gJConfig']->_coreResponses=array();
     }
 
     function tearDown() {
         $_SERVER = $this->currentServer;
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = $this->currentConfigScriptName;
-        $GLOBALS['gJConfig']->urlengine['basePath'] = $this->currentBasePath;
+        $GLOBALS['gJConfig'] = clone $this->currentConfig;
     }
 
     // /foo/index.php, CGI,  cgi.fix_pathinfo=0
@@ -52,6 +59,7 @@ class UTjrequest extends jUnitTestCase {
         'SCRIPT_NAME' => '/cgi-bin/php5',
         );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
 
         $this->assertEqual('/foo/', $req->urlScriptPath);
@@ -77,6 +85,7 @@ class UTjrequest extends jUnitTestCase {
         'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
 
         $this->assertEqual('/foo/', $req->urlScriptPath);
@@ -98,6 +107,7 @@ class UTjrequest extends jUnitTestCase {
         'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
 
         $this->assertEqual('/foo/', $req->urlScriptPath);
@@ -120,6 +130,7 @@ class UTjrequest extends jUnitTestCase {
         'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
 
         $this->assertEqual('/foo/', $req->urlScriptPath);
@@ -140,6 +151,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
 
         $this->assertEqual('/foo/', $req->urlScriptPath);
@@ -167,6 +179,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -188,6 +201,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -209,6 +223,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -229,6 +244,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -255,6 +271,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -278,6 +295,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
        );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -303,6 +321,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/bar',
        );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -325,6 +344,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
+        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -333,4 +353,3 @@ class UTjrequest extends jUnitTestCase {
     }
 }
 
-?>

@@ -66,27 +66,6 @@ abstract class jRequest {
      */
     public $urlPathInfo;
 
-
-    /**
-     * @var string
-     * @deprecated see $urlScriptPath
-     */
-    public $url_script_path;
-
-    /**
-     * @var string
-     * @deprecated see $urlScriptName
-     */
-    public $url_script_name;
-
-    /**
-     * @var string
-     * @deprecated see $urlPathInfo
-     */
-    public $url_path_info;
-
-
-
     function __construct(){  }
 
     /**
@@ -108,23 +87,9 @@ abstract class jRequest {
     protected function _initUrlData(){
         global $gJConfig;
 
-        if (isset($_SERVER[$gJConfig->urlengine['scriptNameServerVariable']]))
-            $this->urlScript = $_SERVER[$gJConfig->urlengine['scriptNameServerVariable']];
-        else
-            $this->urlScript = $_SERVER['SCRIPT_NAME'];
-
-        $lastslash = strrpos ($this->urlScript, '/');
-        $this->url_script_path = $this->urlScriptPath = substr ($this->urlScript, 0, $lastslash ).'/';
-
-        if($gJConfig->urlengine['basePath'] == ''){ // for beginners or simple site, we "guess" the base path
-            $gJConfig->urlengine['basePath'] = $this->urlScriptPath;
-            if($gJConfig->urlengine['jelixWWWPath']{0} != '/')
-                $gJConfig->urlengine['jelixWWWPath'] = $this->urlScriptPath.$gJConfig->urlengine['jelixWWWPath'];
-        }else if(strpos($this->urlScriptPath,$gJConfig->urlengine['basePath']) !== 0){
-            throw new Exception('Jelix Error: basePath ('.$gJConfig->urlengine['basePath'].') in config file doesn\'t correspond to current base path. You should setup it to '.$this->urlScriptPath);
-        }
-
-        $this->url_script_name = $this->urlScriptName = substr ($this->urlScript, $lastslash+1);
+        $this->urlScript = $gJConfig->urlengine['urlScript'];
+        $this->urlScriptPath = $gJConfig->urlengine['urlScriptPath'];
+        $this->urlScriptName = $gJConfig->urlengine['urlScriptName'];
 
         $piiqp = $gJConfig->urlengine['pathInfoInQueryParameter'];
         if ($piiqp) {
@@ -150,7 +115,7 @@ abstract class jRequest {
             $pathinfo = substr ($pathinfo, strlen ($this->urlScript));
         }
 
-        $this->url_path_info = $this->urlPathInfo = $pathinfo;
+        $this->urlPathInfo = $pathinfo;
     }
 
     /**
@@ -174,20 +139,10 @@ abstract class jRequest {
     }
 
     /**
-     * return a list of class name of allowed response corresponding to the request
-     * @return array the list, or false which means everything
-     * @see jRequest::getResponse()
-     */
-    public function allowedResponses(){ return false;}
-
-    /**
      * @param string $respclass the name of a response class
      */
     public function isAllowedResponse($respclass){
-        if($ar=$this->allowedResponses()){
-            return in_array($respclass, $ar);
-        }else
-            return true;
+        return true;
     }
 
     /**

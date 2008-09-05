@@ -56,6 +56,8 @@ class jXmlRpcRequest extends jRequest {
         $this->params['action'] = $action;
     }
 
-    public function allowedResponses(){ return array('jResponseXmlrpc');}
+    public function isAllowedResponse($respclass){
+        return ('jResponseXmlrpc' == $respclass);
+    }
 
 }

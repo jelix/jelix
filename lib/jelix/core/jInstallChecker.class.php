@@ -66,8 +66,7 @@ class jInstallMessageProvider {
             'extension.json'=>'Cette édition de Jelix a besoin de l\'extension json',
             'extension.xmlrpc'=>'Cette édition de Jelix a besoin de l\'extension xmlrpc',
             'extension.jelix'=>'Cette édition de Jelix a besoin de l\'extension jelix',
-            'extension.apc'=>'Cette édition de Jelix a besoin de l\'extension apc',
-            'extension.eaccelerator'=>'Cette édition de Jelix a besoin de l\'extension eaccelerator',
+            'extension.opcode.cache'=>'Cette édition de Jelix a besoin d\'une extension de cache d\'opcode (apc, eaccelerator...)',
             'path.core'=>'Le fichier init.php  de jelix ou le fichier application.ini.php de votre application n\'est pas chargé',
             'path.temp'=>'Le repertoire temporaire n\'est pas accessible en écriture ou alors JELIX_APP_TEMP_PATH n\'est pas configurée comme il faut',
             'path.log'=>'Le repertoire var/log dans votre application n\'est pas accessible en écriture ou alors JELIX_APP_LOG_PATH n\'est pas configurée comme il faut',
@@ -121,8 +120,7 @@ class jInstallMessageProvider {
             'extension.json'=>'This Jelix edition require the json extension',
             'extension.xmlrpc'=>'This Jelix edition require the xmlrpc extension',
             'extension.jelix'=>'This Jelix edition require the jelix extension',
-            'extension.apc'=>'This Jelix edition require the apc extension',
-            'extension.eaccelerator'=>'This Jelix edition require the eaccelerator extension',
+            'extension.opcode.cache'=>'This Jelix edition require an extension for opcode cache (apc, eaccelerator...)',
             'path.core'=>'jelix init.php file or application.ini.php file is not loaded',
             'path.temp'=>'temp/yourApp directory is not writable or JELIX_APP_TEMP_PATH is not correctly set !',
             'path.log'=>'var/log directory (in the directory of your application) is not writable or JELIX_APP_LOG_PATH is not correctly set!',
@@ -305,15 +303,12 @@ class jInstallCheck {
             $this->error('extension.jelix');
             $ok=false;
         }
-        if($this->buildProperties['WITH_BYTECODE_CACHE'] == 'apc' && !extension_loaded ('apc')) {
-            $this->error('extension.apc');
-            $ok=false;
+        if($this->buildProperties['WITH_BYTECODE_CACHE'] != 'auto' && $this->buildProperties['WITH_BYTECODE_CACHE'] != '') {
+            if(!extension_loaded ('apc') && !extension_loaded ('eaccelerator') && !extension_loaded ('xcache')) {
+                $this->error('extension.opcode.cache');
+                $ok=false;
+            }
         }
-        if($this->buildProperties['WITH_BYTECODE_CACHE'] == 'eaccelerator' && !extension_loaded ('eaccelerator')) {
-            $this->error('extension.eaccelerator');
-            $ok=false;
-        }
-
         if($ok)
             $this->ok('extensions.required.ok');
 

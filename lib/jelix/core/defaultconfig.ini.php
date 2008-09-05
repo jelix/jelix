@@ -25,6 +25,9 @@ use_error_handler = on
 
 enableOldActionSelector =
 
+; reserved variable
+requestScript=
+
 [coordplugins]
 
 [responses]
@@ -158,6 +161,11 @@ notfoundAct =
 simple_urlengine_https =
 
 significantFile = "urls.xml"
+
+; filled automatically by jelix
+urlScript=
+urlScriptPath=
+urlScriptName=
 
 [simple_urlengine_entrypoints]
 ; parameters for the simple url engine. This is the list of entry points

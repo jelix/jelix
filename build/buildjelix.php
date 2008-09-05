@@ -40,9 +40,9 @@ $BUILD_OPTIONS = array(
     false,
     ),
 'WITH_BYTECODE_CACHE'=> array(
-    "says which bytecode cache engine will be recognized by jelix. Possible values :  'auto' (automatic detection), 'apc', 'eaccelerator' or '' for  none",
+    "says which bytecode cache engine will be recognized by jelix. Possible values :  'auto' (automatic detection), 'apc', 'eaccelerator', 'xcache' or '' for  none",
     'auto',
-    '/^(auto|apc|eaccelerator)?$/',
+    '/^(auto|apc|eaccelerator|xcache)?$/',
     ),
 'ENABLE_DEVELOPER'=>array(
     "include all developers tools in the distribution (simpletest &cie)",
@@ -166,9 +166,10 @@ if($ENABLE_PHP_JSON)  $BUILD_FLAGS |=2;
 if($ENABLE_PHP_XMLRPC)  $BUILD_FLAGS |=4;
 if($ENABLE_PHP_FILTER)  $BUILD_FLAGS |=8;
 switch($WITH_BYTECODE_CACHE){
-    case 'auto': $BUILD_FLAGS |=48; break;
+    case 'auto': $BUILD_FLAGS |=112; break;
     case 'apc': $BUILD_FLAGS |=16; break;
     case 'eaccelerator': $BUILD_FLAGS |=32; break;
+    case 'xcache': $BUILD_FLAGS |=64; break;
 }
 if($ENABLE_OLD_CLASS_NAMING)  $BUILD_FLAGS |=256;
 if($ENABLE_OLD_ACTION_SELECTOR) $BUILD_FLAGS |= 512;

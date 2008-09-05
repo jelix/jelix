@@ -44,13 +44,62 @@ class jConfigCompiler {
 
         @jelix_read_ini(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php', $config);
 
-        if($configFile !='defaultconfig.ini.php'){
+        if($configFile != 'defaultconfig.ini.php'){
             if(!file_exists(JELIX_APP_CONFIG_PATH.$configFile))
                 die("Jelix config file $configFile is missing !");
             if( false === @jelix_read_ini(JELIX_APP_CONFIG_PATH.$configFile, $config))
                 die("Syntax error in the Jelix config file $configFile !");
         }
+#else
+        $config = jIniFile::read(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
 
+        if( $commonConfig = parse_ini_file(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',true)){
+            self::_mergeConfig($config, $commonConfig);
+        }
+
+        if($configFile !='defaultconfig.ini.php'){
+            if(!file_exists(JELIX_APP_CONFIG_PATH.$configFile))
+                die("Jelix config file $configFile is missing !");
+            if( false === ($userConfig = parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true)))
+                die("Syntax error in the Jelix config file $configFile !");
+            self::_mergeConfig($config, $userConfig);
+        }
+        $config = (object) $config;
+#endif
+
+        self::prepareConfig($config);
+
+#if WITH_BYTECODE_CACHE == 'auto'
+        if(BYTECODE_CACHE_EXISTS){
+            $filename=JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.conf.php';
+            if ($f = @fopen($filename, 'wb')) {
+                fwrite($f, '<?php $config = '.var_export(get_object_vars($config),true).";\n?>");
+                fclose($f);
+            } else {
+                throw new Exception('(24)Error while writing config cache file '.$filename);
+            }
+        }else{
+            jIniFile::write(get_object_vars($config), JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php', ";<?php die('');?>\n");
+        }
+#elseif WITH_BYTECODE_CACHE 
+        $filename=JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.conf.php';
+        if ($f = @fopen($filename, 'wb')) {
+            fwrite($f, '<?php $config = '.var_export(get_object_vars($config),true).";\n?>");
+            fclose($f);
+        } else {
+            throw new Exception('(24)Error while writing config cache file '.$filename);
+        }
+#else
+        jIniFile::write(get_object_vars($config), JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php', ";<?php die('');?>\n");
+#endif
+        return $config;
+    }
+
+    /**
+     * fill some config properties with calculated values
+     */
+    static protected function prepareConfig($config){
+        
         $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
         if(trim( $config->startAction) == '') {
             $config->startAction = ':';
@@ -73,15 +122,27 @@ class jConfigCompiler {
         if($config->urlengine['scriptNameServerVariable'] == '') {
             $config->urlengine['scriptNameServerVariable'] = self::_findServerName($config->urlengine['entrypointExtension']);
         }
+        $config->urlengine['urlScript'] = $_SERVER[$config->urlengine['scriptNameServerVariable']];
+        $lastslash = strrpos ($config->urlengine['urlScript'], '/');
+        $config->urlengine['urlScriptPath'] = substr ($config->urlengine['urlScript'], 0, $lastslash ).'/';
+        $config->urlengine['urlScriptName'] = substr ($config->urlengine['urlScript'], $lastslash+1);
 
-        $path=$config->urlengine['basePath'];
-        if($path!='/' && $path!=''){
+        $path = $config->urlengine['basePath'];
+        if ($path != '/' && $path != '') {
             if($path{0} != '/') $path='/'.$path;
             if(substr($path,-1) != '/') $path.='/';
-            $config->urlengine['basePath'] = $path;
-        }
 
-        if($path!='' && $config->urlengine['jelixWWWPath']{0} != '/')
+            if(strpos($config->urlengine['urlScriptPath'], $path) !== 0){
+                throw new Exception('Jelix Error: basePath ('.$path.') in config file doesn\'t correspond to current base path. You should setup it to '.$config->urlengine['urlScriptPath']);
+            }
+
+        } else if ($path == '') {
+            // for beginners or simple site, we "guess" the base path
+            $path = $config->urlengine['urlScriptPath'];
+        }
+        $config->urlengine['basePath'] = $path;
+
+        if($config->urlengine['jelixWWWPath']{0} != '/')
             $config->urlengine['jelixWWWPath'] = $path.$config->urlengine['jelixWWWPath'];
 
         self::_initResponsesPath($config->responses);
@@ -109,121 +170,6 @@ class jConfigCompiler {
         }else{
             die("Syntax error in the locale parameter in Jelix config file $configFile !");
         }*/
-#else
-        $config = jIniFile::read(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
-
-        if( $commonConfig = parse_ini_file(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',true)){
-            self::_mergeConfig($config, $commonConfig);
-        }
-
-        if($configFile !='defaultconfig.ini.php'){
-            if(!file_exists(JELIX_APP_CONFIG_PATH.$configFile))
-                die("Jelix config file $configFile is missing !");
-            if( false === ($userConfig = parse_ini_file(JELIX_APP_CONFIG_PATH.$configFile,true)))
-                die("Syntax error in the Jelix config file $configFile !");
-            self::_mergeConfig($config, $userConfig);
-        }
-        $config['isWindows'] =  (DIRECTORY_SEPARATOR == '\\');
-        if(trim( $config['startAction']) == '') {
-            $config['startAction'] = ':';
-        }
-
-        $config['_allBasePath'] = array();
-        $config['_modulesPathList'] = self::_loadPathList($config['modulesPath'], $config['_allBasePath']);
-
-        self::_loadPluginsPathList($config);
-
-        if($config['checkTrustedModules']){
-            $config['_trustedModules'] = explode(',',$config['trustedModules']);
-            if(!in_array('jelix',$config['_trustedModules']))
-                $config['_trustedModules'][]='jelix';
-        }else{
-            $config['_trustedModules'] = array_keys($config['_modulesPathList']);
-        }
-
-        if($config['urlengine']['scriptNameServerVariable'] == '') {
-            $config['urlengine']['scriptNameServerVariable'] = self::_findServerName($config['urlengine']['entrypointExtension']);
-        }
-
-        $path=$config['urlengine']['basePath'];
-        if($path!='/' && $path!=''){
-            if($path{0} != '/') $path='/'.$path;
-            if(substr($path,-1) != '/') $path.='/';
-            $config['urlengine']['basePath'] = $path;
-        }
-
-        if($path!='' && $config['urlengine']['jelixWWWPath']{0} != '/')
-            $config['urlengine']['jelixWWWPath'] = $path.$config['urlengine']['jelixWWWPath'];
-
-        self::_initResponsesPath($config['responses']);
-        self::_initResponsesPath($config['_coreResponses']);
-        if (trim($config['timeZone']) === '') {
-#if PHP50
-            $config['timeZone'] = "Europe/Paris";
-#else
-            $tz = ini_get('date.timezone');
-            if ($tz != '')
-                $config['timeZone'] = $tz;
-            else
-                $config['timeZone'] = "Europe/Paris";
-#endif
-        }
-
-        /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config['locale'],$m)){
-            if(!isset($m[2])){
-                $m[2] = $m[1];
-            }
-            $config['defaultLang'] = strtolower($m[1]);
-            $config['defaultCountry'] = strtoupper($m[2]);
-            $config['locale'] = $config['defaultLang'].'_'.$config['defaultCountry'];
-        }else{
-            die("Syntax error in the locale parameter in Jelix config file $configFile !");
-        }*/
-#endif
-
-#if WITH_BYTECODE_CACHE == 'auto'
-        if(BYTECODE_CACHE_EXISTS){
-            $filename=JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.conf.php';
-            if ($f = @fopen($filename, 'wb')) {
-#if ENABLE_PHP_JELIX
-                fwrite($f, '<?php $config = '.var_export(get_object_vars($config),true).";\n?>");
-#else
-                fwrite($f, '<?php $config = '.var_export($config,true).";\n?>");
-#endif
-                fclose($f);
-            } else {
-                throw new Exception('(24)Error while writing config cache file '.$filename);
-            }
-        }else{
-#if ENABLE_PHP_JELIX
-            jIniFile::write(get_object_vars($config), JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php', ";<?php die('');?>\n");
-#else
-            jIniFile::write($config, JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php', ";<?php die('');?>\n");
-#endif
-        }
-#elseif WITH_BYTECODE_CACHE 
-        $filename=JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.conf.php';
-        if ($f = @fopen($filename, 'wb')) {
-#if ENABLE_PHP_JELIX
-            fwrite($f, '<?php $config = '.var_export(get_object_vars($config),true).";\n?>");
-#else
-            fwrite($f, '<?php $config = '.var_export($config,true).";\n?>");
-#endif
-            fclose($f);
-        } else {
-            throw new Exception('(24)Error while writing config cache file '.$filename);
-        }
-#else
-#if ENABLE_PHP_JELIX
-        jIniFile::write(get_object_vars($config), JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php', ";<?php die('');?>\n");
-#else
-        jIniFile::write($config, JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php', ";<?php die('');?>\n");
-#endif
-#endif
-#ifnot ENABLE_PHP_JELIX
-        $config = (object) $config;
-#endif
-        return $config;
     }
 
     /**
@@ -231,7 +177,7 @@ class jConfigCompiler {
      * @param array $list list of "lib:*" and "app:*" path
      * @return array list of full path
      */
-    static private function _loadPathList($list, &$allBasePath){
+    static protected function _loadPathList($list, &$allBasePath){
         $list = split(' *, *',$list);
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $result=array();
@@ -258,17 +204,12 @@ class jConfigCompiler {
         return $result;
     }
 
-
     /**
      * Analyse plugin paths
      * @param array|object $config the config container
      */
-    static private function _loadPluginsPathList(&$config){
-#if ENABLE_PHP_JELIX
+    static protected function _loadPluginsPathList(&$config){
         $list = split(' *, *',$config->pluginsPath);
-#else
-        $list = split(' *, *',$config['pluginsPath']);
-#endif
         array_unshift($list, JELIX_LIB_PATH.'plugins/'); 
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
@@ -285,25 +226,15 @@ class jConfigCompiler {
                     if ($f{0} != '.' && is_dir($p.$f)) {
                         if($subdir = opendir($p.$f)){
                             if($k!=0) 
-#if ENABLE_PHP_JELIX
                                $config->_allBasePath[]=$p.$f.'/';
-#else
-                               $config['_allBasePath'][]=$p.$f.'/';
-#endif
                             while (false !== ($subf = readdir($subdir))) {
                                 if ($subf{0} != '.' && is_dir($p.$f.'/'.$subf)) {
                                     if($f == 'tpl'){
-#if ENABLE_PHP_JELIX
                                         $prop = '_tplpluginsPathList_'.$subf;
                                         $config->{$prop}[] = $p.$f.'/'.$subf.'/';
                                     }else{
                                         $prop = '_pluginsPathList_'.$f;
                                         $config->{$prop}[$subf] = $p.$f.'/'.$subf.'/';
-#else
-                                        $config['_tplpluginsPathList_'.$subf][] = $p.$f.'/'.$subf.'/';
-                                    }else{
-                                        $config['_pluginsPathList_'.$f][$subf] =$p.$f.'/'.$subf.'/';
-#endif
                                     }
                                 }
                             }

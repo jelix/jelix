@@ -25,7 +25,9 @@ class jRdfRequest extends jRequest {
         $url  = jUrl::parse($this->urlScript, $this->urlPathInfo, $_GET);
         $this->params = array_merge($url->params, $_POST);
     }
-    public function allowedResponses(){ return array('jResponseRdf');}
 
+    public function isAllowedResponse($respclass){
+        return ('jResponseRdf' == $respclass);
+    }
 }
 

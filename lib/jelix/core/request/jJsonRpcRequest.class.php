@@ -60,6 +60,8 @@ class jJsonRpcRequest extends jRequest {
         $this->params['action'] = $action;
     }
 
-    public function allowedResponses(){ return array('jResponseJsonrpc');}
+    public function isAllowedResponse($respclass){
+        return ('jResponseJsonrpc' == $respclass);
+    }
 
 }

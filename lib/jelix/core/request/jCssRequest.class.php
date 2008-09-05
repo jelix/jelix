@@ -26,5 +26,7 @@ class jCssRequest extends jRequest {
         $this->params = array_merge($url->params, $_POST);
     }
 
-    public function allowedResponses(){ return array('jResponseCss');}
+    public function isAllowedResponse($respclass){
+        return ('jResponseCss' == $respclass);
+    }
 }
