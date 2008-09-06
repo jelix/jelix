@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage core
 * @author     Julien Issler
-* @contributor
-* @copyright  2007-2008 Julien Issler
+* @contributor Laurent Jouanneau
+* @copyright  2007-2008 Julien Issler, 2008 Laurent Jouanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0
@@ -26,18 +26,18 @@ class jSession {
      */
     public static function start(){
 
+        $params = & $GLOBALS['gJConfig']->sessions;
+
         // do not start the session if the request is made from the command line or if sessions are disabled in configuration
-        if($GLOBALS['gJCoord']->request instanceof jCmdLineRequest || !$GLOBALS['gJConfig']->sessions['start']){
+        if($GLOBALS['gJCoord']->request instanceof jCmdLineRequest || !$params['start']){
             return false;
         }
-
-        $params = $GLOBALS['gJConfig']->sessions;
 
         //make sure that the session cookie is only for the current application
         if(!$params['shared_session'])
             session_set_cookie_params ( 0 , $GLOBALS['gJConfig']->urlengine['basePath']);
 
-        if(isset($params['storage'])){
+        if($params['storage'] != ''){
 
             /* on debian/ubuntu (maybe others), garbage collector launch probability is set to 0
                and replaced by a simple cron job which is not enough for jSession (different path, db storage, ...),
@@ -70,11 +70,13 @@ class jSession {
 
         }
 
-        if(isset($params['name'])){
+        if($params['name'] !=''){
+#ifnot ENABLE_OPTIMIZED_SOURCE
             if(!preg_match('#^[a-zA-Z0-9]+$#',$params['name'])){
                 // regexp check because session name can only be alpha numeric according to the php documentation
                 throw new jException('jelix~errors.jsession.name.invalid');
             }
+#endif
             session_name($params['name']);
         }
 

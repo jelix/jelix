@@ -136,8 +136,8 @@ class jCoordinator {
         $this->request->init();
         jSession::start();
 
-        $this->moduleName = $this->request->getParam('module');
-        $this->actionName = $this->request->getParam('action');
+        $this->moduleName = $request->getParam('module');
+        $this->actionName = $request->getParam('action');
 
         if(empty($this->moduleName)){
             $this->moduleName = $gJConfig->startModule;
@@ -150,7 +150,7 @@ class jCoordinator {
             }
         }
 
-        // verification du module
+        // module check
         if($gJConfig->checkTrustedModules && !in_array($this->moduleName,$gJConfig->_trustedModules)){
             throw new jException('jelix~errors.module.untrusted',$this->moduleName);
         }

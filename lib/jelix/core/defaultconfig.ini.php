@@ -233,10 +233,15 @@ start = 1
 shared_session = off
 ; You can change the session name by setting the following parameter (only accepts alpha-numeric chars) :
 ; name = "mySessionName"
+
+name=
+
 ;
 ; Use alternative storage engines for sessions
-;
-; usage :
+; empty value means the default storage engine of PHP
+storage=
+
+; some additionnal options can be set, depending of the type of storage engine
 ;
 ; storage = "files"
 ; files_path = "app:var/sessions/"
