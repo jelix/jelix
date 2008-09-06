@@ -25,9 +25,6 @@ use_error_handler = on
 
 enableOldActionSelector =
 
-; reserved variable
-requestScript=
-
 [coordplugins]
 
 [responses]
@@ -166,6 +163,7 @@ significantFile = "urls.xml"
 urlScript=
 urlScriptPath=
 urlScriptName=
+urlScriptId=
 
 [simple_urlengine_entrypoints]
 ; parameters for the simple url engine. This is the list of entry points

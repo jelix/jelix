@@ -21,6 +21,17 @@ require_once (dirname(__FILE__).'/../simple/simple.urls.php');
 class basic_significantUrlEngine extends simpleUrlEngine {
 
     /**
+     * Parse a url from the request
+     * @param jRequest $request           
+     * @param array  $params            url parameters
+     * @return jUrlAction
+     * @since 1.1
+     */
+    public function parseFromRequest($request, $params){
+        return $this->parse($request->urlScript, $request->urlPathInfo, $params);
+    }
+
+    /**
     * Parse some url components
     * @param string $scriptNamePath    /path/index.php
     * @param string $pathinfo          the path info part of the url (part between script name and query)
@@ -29,9 +40,6 @@ class basic_significantUrlEngine extends simpleUrlEngine {
     */
     public function parse($scriptNamePath, $pathinfo, $params ){
         global $gJConfig;
-        // in fact, parse is called only inside jRequest object,
-        // so we don't have to "guess" the request type
-        // but this is not very good indeed, i know
 
         if ($gJConfig->urlengine['enableParser']){
             $pathinfo = trim($pathinfo,'/');

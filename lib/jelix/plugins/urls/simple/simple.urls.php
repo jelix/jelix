@@ -4,7 +4,7 @@
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2008 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -22,6 +22,17 @@ class simpleUrlEngine implements jIUrlEngine {
     protected $urlhttps = null;
 
     /**
+     * Parse a url from the request
+     * @param jRequest $request           
+     * @param array  $params            url parameters
+     * @return jUrlAction
+     * @since 1.1
+     */
+    public function parseFromRequest($request, $params){
+        return new jUrlAction($params, $request->type);
+    }
+
+    /**
     * Parse some url components
     * @param string $scriptNamePath    /path/index.php
     * @param string $pathinfo          the path info part of the url (part between script name and query)
@@ -29,9 +40,6 @@ class simpleUrlEngine implements jIUrlEngine {
     * @return jUrlAction
     */
     public function parse($scriptNamePath, $pathinfo, $params ){
-        // in fact, parse is called only inside jRequest object,
-        // so we don't have to "guess" the request type
-        // but this is not very good indeed, i know
         return new jUrlAction($params);
     }
 

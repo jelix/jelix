@@ -127,23 +127,30 @@ class jConfigCompiler {
         $config->urlengine['urlScriptPath'] = substr ($config->urlengine['urlScript'], 0, $lastslash ).'/';
         $config->urlengine['urlScriptName'] = substr ($config->urlengine['urlScript'], $lastslash+1);
 
-        $path = $config->urlengine['basePath'];
-        if ($path != '/' && $path != '') {
-            if($path{0} != '/') $path='/'.$path;
-            if(substr($path,-1) != '/') $path.='/';
+        $basepath = $config->urlengine['basePath'];
+        if ($basepath != '/' && $basepath != '') {
+            if($basepath{0} != '/') $basepath='/'.$basepath;
+            if(substr($basepath,-1) != '/') $basepath.='/';
 
-            if(strpos($config->urlengine['urlScriptPath'], $path) !== 0){
-                throw new Exception('Jelix Error: basePath ('.$path.') in config file doesn\'t correspond to current base path. You should setup it to '.$config->urlengine['urlScriptPath']);
+            if(strpos($config->urlengine['urlScriptPath'], $basepath) !== 0){
+                throw new Exception('Jelix Error: basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$config->urlengine['urlScriptPath']);
             }
 
-        } else if ($path == '') {
+        } else if ($basepath == '') {
             // for beginners or simple site, we "guess" the base path
-            $path = $config->urlengine['urlScriptPath'];
+            $basepath = $config->urlengine['urlScriptPath'];
         }
-        $config->urlengine['basePath'] = $path;
+        $config->urlengine['basePath'] = $basepath;
 
         if($config->urlengine['jelixWWWPath']{0} != '/')
-            $config->urlengine['jelixWWWPath'] = $path.$config->urlengine['jelixWWWPath'];
+            $config->urlengine['jelixWWWPath'] = $basepath.$config->urlengine['jelixWWWPath'];
+
+        $snp = substr($config->urlengine['urlScript'],strlen($basepath));
+        $pos = strrpos($snp, $config->urlengine['entrypointExtension']);
+        if($pos !== false){
+            $snp = substr($snp,0,$pos);
+        }
+        $config->urlengine['urlScriptId'] = $snp;
 
         self::_initResponsesPath($config->responses);
         self::_initResponsesPath($config->_coreResponses);

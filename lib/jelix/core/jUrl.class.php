@@ -33,6 +33,15 @@ interface jIUrlEngine {
     public function parse($scriptNamePath, $pathinfo, $params );
 
     /**
+     * Parse a url from the request
+     * @param jRequest $request           
+     * @param array  $params            url parameters
+     * @return jUrlAction
+     * @since 1.1
+     */
+    public function parseFromRequest($request, $params );
+
+    /**
     * Create a jurl object with the given action data
     * @param jUrlAction $url  information about the action
     * @return jUrl the url correspondant to the action
@@ -129,10 +138,11 @@ class jUrlAction extends jUrlBase {
      */
     function __construct ($params=array(),$request=''){
         $this->params=$params;
-        $this->requestType=$request;
-        if($this->requestType == ''){
+        if($request == ''){
             $this->requestType = $GLOBALS['gJCoord']->request->type;
         }
+        else
+            $this->requestType = $request;
     }
 
     /**
@@ -313,6 +323,17 @@ class jUrl extends jUrlBase {
      */
     static function parse($scriptNamePath, $pathinfo, $params ){
          return jUrl::getEngine()->parse($scriptNamePath,$pathinfo, $params);
+    }
+
+    /**
+     * Parse a url from the request
+     * @param jRequest $request           
+     * @param array  $params            url parameters ($_REQUEST, or $_GET)
+     * @return jUrlAction
+     * @since 1.1
+     */
+    static function parseFromRequest($request, $params ){
+         return jUrl::getEngine()->parseFromRequest($request, $params);
     }
 
     /**

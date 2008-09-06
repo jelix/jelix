@@ -67,7 +67,7 @@ interface jIUrlSignificantHandler {
  * @package  jelix
  * @subpackage urls_engine
  * @author      Laurent Jouanneau
- * @copyright   2005-2006 Laurent Jouanneau
+ * @copyright   2005-2008 Laurent Jouanneau
  */
 class significantUrlEngine implements jIUrlEngine {
 
@@ -83,6 +83,41 @@ class significantUrlEngine implements jIUrlEngine {
     */
     protected $dataParseUrl =  null;
 
+    /**
+     * Parse a url from the request
+     * @param jRequest $request           
+     * @param array  $params            url parameters
+     * @return jUrlAction
+     * @since 1.1
+     */
+    public function parseFromRequest($request, $params){
+        global $gJConfig;
+
+        $urlact = null;
+
+        if ($gJConfig->urlengine['enableParser']){
+
+            $sel = new jSelectorUrlCfgSig($gJConfig->urlengine['significantFile']);
+            jIncluder::inc($sel);
+            $snp = rawurlencode($gJConfig->urlengine['urlScriptId']);
+            $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php';
+            if(file_exists($file)){
+                require($file);
+                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 101
+                $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
+                $urlact = $this->_parse($request->urlScript, $request->urlPathInfo, $params);
+                if(!$urlact ){
+                    $urlact = new jUrlAction($params);
+                }
+            }else{
+                $urlact = new jUrlAction($params);
+            }
+        }else{
+            $urlact = new jUrlAction($params);
+        }
+        return $urlact;
+    }
+    
     /**
     * Parse some url components
     * @param string $scriptNamePath    /path/index.php
@@ -109,11 +144,12 @@ class significantUrlEngine implements jIUrlEngine {
             if($pos !== false){
                 $snp = substr($snp,0,$pos);
             }
-            $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$sel->file.'.'.rawurlencode($snp).'.entrypoint.php';
+            $snp = rawurlencode($snp);
+            $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php';
             if(file_exists($file)){
                 require($file);
                 $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 101
-                $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][rawurlencode($snp)];
+                $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
                 $urlact = $this->_parse($scriptNamePath, $pathinfo, $params);
                 if(!$urlact ){
                     $urlact = new jUrlAction($params);

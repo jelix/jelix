@@ -151,7 +151,7 @@ class jCoordinator {
         }
 
         // verification du module
-        if(!in_array($this->moduleName,$gJConfig->_trustedModules)){
+        if($gJConfig->checkTrustedModules && !in_array($this->moduleName,$gJConfig->_trustedModules)){
             throw new jException('jelix~errors.module.untrusted',$this->moduleName);
         }
 
@@ -171,28 +171,29 @@ class jCoordinator {
             }
         }
 
-        $pluginparams = array();
-        if(isset($ctrl->pluginParams['*'])){
-            $pluginparams = $ctrl->pluginParams['*'];
-        }
+        if (count($this->plugins)) {
+            $pluginparams = array();
+            if(isset($ctrl->pluginParams['*'])){
+                $pluginparams = $ctrl->pluginParams['*'];
+            }
 
-        if(isset($ctrl->pluginParams[$this->action->method])){
-            $pluginparams = array_merge($pluginparams, $ctrl->pluginParams[$this->action->method]);
-        }
+            if(isset($ctrl->pluginParams[$this->action->method])){
+                $pluginparams = array_merge($pluginparams, $ctrl->pluginParams[$this->action->method]);
+            }
 
-        foreach ($this->plugins as $name => $obj){
-            $result = $this->plugins[$name]->beforeAction ($pluginparams);
-            if($result){
-                $this->action = $result;
-                jContext::pop();
-                jContext::push($result->module);
-                $this->moduleName = $result->module;
-                $this->actionName = $result->resource;
-                $ctrl = $this->getController($this->action);
-                break;
+            foreach ($this->plugins as $name => $obj){
+                $result = $this->plugins[$name]->beforeAction ($pluginparams);
+                if($result){
+                    $this->action = $result;
+                    jContext::pop();
+                    jContext::push($result->module);
+                    $this->moduleName = $result->module;
+                    $this->actionName = $result->resource;
+                    $ctrl = $this->getController($this->action);
+                    break;
+                }
             }
         }
-
         $this->response = $ctrl->{$this->action->method}();
 
         if($this->response == null){
