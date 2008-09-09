@@ -8,7 +8,7 @@
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
-
+#ifnot ENABLE_PHP_JELIX
 /**
  * interface for datatypes which can filter value
  * @package     jelix
@@ -22,7 +22,7 @@ interface jIFilteredDatatype {
      */
     public function getFilteredValue();
 }
-
+#endif
 /**
  *
  * @package     jelix

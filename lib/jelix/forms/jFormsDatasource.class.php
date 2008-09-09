@@ -9,7 +9,7 @@
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
-
+#ifnot ENABLE_PHP_JELIX
 /**
  * Interface for objects which provides a source of data to fill some controls in a form,
  * like menulist, listbox etc...
@@ -32,7 +32,7 @@ interface jIFormsDatasource {
      */
     public function getLabel($key);
 }
-
+#endif
 
 /**
  * old interface which have been renamed to jIFormsDatasource.

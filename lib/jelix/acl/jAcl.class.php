@@ -9,6 +9,7 @@
 * @since 1.0a3
 */
 
+#ifnot ENABLE_PHP_JELIX
 /**
  * interface for jAcl drivers
  * @package jelix
@@ -30,6 +31,7 @@ interface jIAclDriver {
     public function clearCache();
 
 }
+#endif
 
 /**
  * Main class to query the acl system, and to know value of a right

@@ -8,7 +8,7 @@
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-
+#ifnot ENABLE_PHP_JELIX
 /**
  * interface for classes used with the jAuthDriverClass
 * @package    jelix
@@ -76,8 +76,7 @@ interface jIAuthDriverClass {
     */
     public function getByLoginPassword($login, $cryptedpassword);
 }
-
-
+#endif
 
 
 /**

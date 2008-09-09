@@ -72,6 +72,7 @@ error_reporting (E_ALL | E_STRICT);
 #ifnot ENABLE_PHP_JELIX
 #includephp core/jICoordPlugin.iface.php
 #includephp core/jISelector.iface.php
+#includephp core/jIUrlEngine.iface.php
 #endif
 #includephp core/jErrorHandler.lib.php
 #includephp core/jException.lib.php
@@ -90,6 +91,8 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/selector/jSelectorZone.class.php
 #includephp core/selector/jSelectorSimpleFile.class.php
 #includephp core/selector/jSelectorFile.lib.php
+#includephp core/jUrlBase.class.php
+#includephp core/jUrlAction.class.php
 #includephp core/jUrl.class.php
 #includephp core/jCoordinator.class.php
 #includephp core/jController.class.php
@@ -105,6 +108,7 @@ error_reporting (E_ALL | E_STRICT);
 #ifnot ENABLE_PHP_JELIX
 require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jISelector.iface.php');
+require (JELIX_LIB_CORE_PATH . 'jIUrlEngine.iface.php');
 #endif
 require (JELIX_LIB_CORE_PATH . 'jErrorHandler.lib.php');
 require (JELIX_LIB_CORE_PATH . 'jException.lib.php');
@@ -123,6 +127,8 @@ require (JELIX_LIB_CORE_PATH . 'selector/jSelectorTpl.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorZone.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorSimpleFile.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorFile.lib.php');
+require (JELIX_LIB_CORE_PATH . 'jUrlBase.class.php');
+require (JELIX_LIB_CORE_PATH . 'jUrlAction.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrl.class.php');
 require (JELIX_LIB_CORE_PATH . 'jCoordinator.class.php');
 require (JELIX_LIB_CORE_PATH . 'jController.class.php');

@@ -1,9 +1,3 @@
-cd lib/jelix/acl
-  jIAcl2Driver.iface.php
-
-cd lib/jelix/auth
-  jIAuthDriver.iface.php
-
 
 cd lib/jelix/core
   jBundle.class.php
@@ -14,11 +8,12 @@ cd lib/jelix/core
   jErrorHandler.lib.php
   jException.lib.php
 * jIncluder.class.php
-  jISelector.iface.php
   jLocale.class.php
   jRequest.class.php
   jResponse.class.php
 * jSelector.class.php
+  jUrlBase.class.php
+  jUrlAction.class.php
 * jUrl.class.php
 * jSession.class.php
 

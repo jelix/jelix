@@ -21,13 +21,21 @@ Interface [ <internal:jelix> interface jIUrlEngine ] {
   - Properties [0] {
   }
 
-  - Methods [2] {
+  - Methods [3] {
     Method [ <internal:jelix> abstract public method parse ] {
 
       - Parameters [3] {
         Parameter #0 [ <required> $scriptNamePath ]
         Parameter #1 [ <required> $pathinfo ]
         Parameter #2 [ <required> $params ]
+      }
+    }
+
+    Method [ <internal:jelix> abstract public method parseFromRequest ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $request ]
+        Parameter #1 [ <required> $params ]
       }
     }
 

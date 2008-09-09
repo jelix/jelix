@@ -9,10 +9,12 @@
 * @since 1.1
 */
 
+#ifnot ENABLE_PHP_JELIX
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp jIAcl2Driver.iface.php
 #else
 require(JELIX_LIB_PATH.'acl/jIAcl2Driver.iface.php');
+#endif
 #endif
 
 /**

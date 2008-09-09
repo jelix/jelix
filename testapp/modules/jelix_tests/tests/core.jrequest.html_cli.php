@@ -13,7 +13,7 @@ require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
 
 
 class configCompileTest extends jConfigCompiler {
-    
+
     static public function prepareConfig2($config){
         self::prepareConfig($config);
     }
@@ -29,7 +29,7 @@ class requestTest extends jRequest {
 class UTjrequest extends jUnitTestCase {
     protected $currentServer;
     protected $currentConfig;
-    
+
     function setUp() {
         $this->currentServer = $_SERVER;
         $this->currentConfig = clone $GLOBALS['gJConfig'];

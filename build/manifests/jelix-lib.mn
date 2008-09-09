@@ -19,7 +19,7 @@ cd lib/jelix/auth
   jAuthDummyUser.class.php
 
 cd lib/jelix/acl
-  jAcl.class.php
+* jAcl.class.php
   jAclDbUserGroup.class.php
   jAclDbManager.class.php
   jAclDb.class.php
@@ -207,7 +207,7 @@ cd lib/jelix/forms
   jFormsCompiler_jf_1_1.class.php
   jFormsControl.class.php
   jFormsDataContainer.class.php
-  jFormsDatasource.class.php
+* jFormsDatasource.class.php
 
 cd lib/jelix/installer
   jIInstallReporter.iface.php
@@ -226,7 +226,7 @@ cd lib/jelix/utils/
   jBinding.class.php
   jCmdUtils.class.php
   jCrypt.class.php
-  jDatatype.class.php
+* jDatatype.class.php
   jDateTime.class.php
   jDuration.class.php
   jFile.class.php
@@ -323,7 +323,7 @@ cd lib/jelix/plugins/acl2/db
 cd lib/jelix/plugins/auth/db
   db.auth.php
 cd lib/jelix/plugins/auth/class
-  class.auth.php
+* class.auth.php
 cd lib/jelix/plugins/auth/lds
   lds.auth.php
 

@@ -12,6 +12,7 @@
 * Initial author of this Copix classes is Laurent Jouanneau, and this classes were adapted for Jelix by him
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+
 #ifnot ENABLE_PHP_JELIX
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp jIAuthDriver.iface.php

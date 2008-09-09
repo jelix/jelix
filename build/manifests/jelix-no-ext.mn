@@ -1,2 +1,4 @@
 cd lib/jelix/core
   jICoordPlugin.iface.php
+  jISelector.iface.php
+  jIUrlEngine.iface.php
