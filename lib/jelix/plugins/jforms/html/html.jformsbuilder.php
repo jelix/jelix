@@ -239,8 +239,9 @@ jForms.declareForm(jForms.tForm);
                         'jDatatypeDatetime'=>'Datetime','jDatatypeDate'=>'Date','jDatatypeTime'=>'Time',
                         'jDatatypeUrl'=>'Url','jDatatypeEmail'=>'Email','jDatatypeIPv4'=>'Ipv4','jDatatypeIPv6'=>'Ipv6');
         $isLocale = false;
-        if(isset($datatype[get_class($ctrl)]))
-            $dt = $datatype[get_class($ctrl)];
+        $data_type_class = get_class($ctrl->datatype);
+        if(isset($datatype[$data_type_class]))
+            $dt = $datatype[$data_type_class];
         else if ($ctrl->datatype instanceof jDatatypeLocaleTime)
             { $dt = 'Time'; $isLocale = true; }
         else if ($ctrl->datatype instanceof jDatatypeLocaleDate)

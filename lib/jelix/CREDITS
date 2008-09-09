@@ -28,6 +28,7 @@ Julien Issler
  - some errors and missing help for jAcl2 command line scripts (#622)
  - jSession: old sessions are not purged with some PHP configurations (#645)
  - linebreaks in textareas in jtpl plugin (#646)
+ - jForms: HTML builder does not generate right datatype in javascript (#686)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
