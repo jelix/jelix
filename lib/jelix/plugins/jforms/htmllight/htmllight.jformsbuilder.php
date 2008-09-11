@@ -15,7 +15,7 @@
  * @package     jelix
  * @subpackage  jelix-plugins
  */
-class htmlJformsBuilder extends jFormsBuilderBase {
+class htmllightJformsBuilder extends jFormsBuilderBase {
 
     protected $options;
 
@@ -61,8 +61,7 @@ class htmlJformsBuilder extends jFormsBuilderBase {
         }
         $www =$gJConfig->urlengine['jelixWWWPath'];
         $bp =$gJConfig->urlengine['basePath'];
-        $resp->addJSLink($www.'jquery/jquery.js');
-        $resp->addJSLink($www.'js/jforms_jquery.js');
+        $resp->addJSLink($www.'js/jforms_light.js');
         $resp->addCSSLink($www.'design/jform.css');
         foreach($t->_vars as $k=>$v){
             if($v instanceof jFormsBase && count($edlist = $v->getHtmlEditors())) {
@@ -93,8 +92,8 @@ class htmlJformsBuilder extends jFormsBuilderBase {
      *      </ul>
      */
     public function outputHeader($params){
-        $this->options = array_merge(array('errorDecorator'=>'jFormsJQErrorDecoratorAlert',
-                 'helpDecorator'=>'jFormsJQHelpDecoratorAlert', 'method'=>'post'), $params);
+        $this->options = array_merge(array('errorDecorator'=>'jFormsErrorDecoratorAlert',
+                 'helpDecorator'=>'jFormsHelpDecoratorAlert', 'method'=>'post'), $params);
 
         $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
         echo '<form action="',$url->getPath(),'" method="'.$this->options['method'].'" id="', $this->_name,'"';
@@ -105,10 +104,10 @@ class htmlJformsBuilder extends jFormsBuilderBase {
 
         echo '<script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\''.$this->_name.'\');
-jFormsJQ.tForm.setErrorDecorator(new '.$this->options['errorDecorator'].'());
-jFormsJQ.tForm.setHelpDecorator(new '.$this->options['helpDecorator'].'());
-jFormsJQ.declareForm(jFormsJQ.tForm);
+jForms.tForm = new jFormsForm(\''.$this->_name.'\');
+jForms.tForm.setErrorDecorator(new '.$this->options['errorDecorator'].'());
+jForms.tForm.setHelpDecorator(new '.$this->options['helpDecorator'].'());
+jForms.declareForm(jForms.tForm);
 //]]>
 </script>';
 
@@ -220,7 +219,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
             $this->jsContent .="c.errInvalid=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.invalid', $ctrl->label)).";\n";
         }
 
-        if ($this->isRootControl) $this->jsContent .="jFormsJQ.tForm.addControl(c);\n";
+        if ($this->isRootControl) $this->jsContent .="jForms.tForm.addControl(c);\n";
     }
 
     protected function outputInput($ctrl, $id, $class, $readonly, $hint) {
@@ -252,7 +251,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         else
             $dt = 'String';
 
-        $this->jsContent .="c = new jFormsJQControl".$dt."('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .="c = new jFormsControl".$dt."('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         if ($isLocale)
             $this->jsContent .="c.lang='".$GLOBALS['gJConfig']->locale."';\n";
 
@@ -280,7 +279,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
     protected function jsCheckbox($ctrl) {
 
-        $this->jsContent .="c = new jFormsJQControlBoolean('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .="c = new jFormsControlBoolean('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
@@ -316,7 +315,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
     protected function jsCheckboxes($ctrl) {
 
-        $this->jsContent .="c = new jFormsJQControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
@@ -341,7 +340,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
     protected function jsRadiobuttons($ctrl) {
 
-        $this->jsContent .="c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
@@ -366,7 +365,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
     protected function jsMenulist($ctrl) {
 
-        $this->jsContent .="c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
@@ -409,10 +408,10 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
     protected function jsListbox($ctrl) {
         if($ctrl->multiple){
-            $this->jsContent .= "c = new jFormsJQControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n";
+            $this->jsContent .= "c = new jFormsControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n";
             $this->jsContent .= "c.multiple = true;\n";
         } else {
-            $this->jsContent .="c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+            $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         }
 
         $this->commonJs($ctrl);
@@ -425,7 +424,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
     }
 
     protected function jsTextarea($ctrl) {
-        $this->jsContent .="c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $maxl= $ctrl->datatype->getFacet('maxLength');
         if($maxl !== null)
@@ -471,7 +470,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
     protected function jsSecretconfirm($ctrl) {
         // we assume that a secret confirm control is just after a secret control in the list of controls
-        $this->jsContent .= "c.confirmField = new jFormsJQControlSecretConfirm('".$ctrl->ref."_confirm', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .= "c.confirmField = new jFormsControlSecretConfirm('".$ctrl->ref."_confirm', ".$this->escJsStr($ctrl->label).");\n";
     }
 
     protected function outputOutput($ctrl, $id, $class, $readonly, $hint) {
@@ -492,7 +491,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
     }
 
     protected function jsUpload($ctrl) {
-        $this->jsContent .="c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .="c = new jFormsControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
@@ -569,7 +568,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         foreach( $ctrl->items as $itemName=>$listctrl){
             echo '<li><label><input type="radio"',$id,$i,'" value="',htmlspecialchars($itemName),'"';
             echo ($itemName==$value?' checked="checked"':''),$readonly;
-            echo ' onclick="jFormsJQ.getForm(\'',$this->_name,'\').getControl(\'',$ctrl->ref,'\').activate(\'',$itemName,'\')"', $this->_endt;
+            echo ' onclick="jForms.getForm(\'',$this->_name,'\').getControl(\'',$ctrl->ref,'\').activate(\'',$itemName,'\')"', $this->_endt;
             echo htmlspecialchars($ctrl->itemsNames[$itemName]),'</label> ';
 
             $displayedControls = false;
@@ -612,7 +611,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
     protected function jsChoiceInternal($ctrl) {
 
-        $this->jsContent .="c = new jFormsJQControlChoice('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .="c = new jFormsControlChoice('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
     }
@@ -624,7 +623,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
             }else{
                 $name=$ctrl->ref;
             }
-            echo '<span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->_name.'\',\''.$name.'\')">?</a></span>';
+            echo '<span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->_name.'\',\''.$name.'\')">?</a></span>';
         }
     }
 }

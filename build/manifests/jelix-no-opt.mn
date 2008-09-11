@@ -1,3 +1,8 @@
+cd lib/jelix/acl
+  jIAcl2Driver.iface.php
+
+cd lib/jelix/auth
+  jIAuthDriver.iface.php
 
 cd lib/jelix/core
   jBundle.class.php

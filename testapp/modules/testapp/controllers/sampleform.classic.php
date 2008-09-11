@@ -33,6 +33,8 @@ class sampleFormCtrl extends jController {
       $tpl = new jTpl();
       $tpl->assign('form', $form);
 
+      $tpl->assign('builder', $this->param('builder','html'));
+
       if($this->param('full')) 
           $rep->body->assign('MAIN',$tpl->fetch('sampleformfull'));
       else

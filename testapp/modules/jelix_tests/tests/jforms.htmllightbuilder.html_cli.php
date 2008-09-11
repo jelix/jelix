@@ -13,26 +13,26 @@
 require_once(JELIX_LIB_PATH.'forms/jFormsBase.class.php');
 require_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
 require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
-require_once(JELIX_LIB_PATH.'plugins/jforms/html/html.jformsbuilder.php');
+require_once(JELIX_LIB_PATH.'plugins/jforms/htmllight/htmllight.jformsbuilder.php');
 
-class testHMLForm extends jFormsBase { 
+class testHtmlLightForm extends jFormsBase { 
 }
 
-class testJFormsHtmlBuilder extends htmlJformsBuilder {
+class testJFormsHtmlLightBuilder extends htmllightJformsBuilder {
     function getJsContent() { $js= $this->jsContent; $this->jsContent = '';return $js;}
     function clearJs() { $this->jsContent = ''; }
 }
 
 
-class UTjformsHTMLBuilder extends jUnitTestCaseDb {
+class UTjformsHtmlLightBuilder extends jUnitTestCaseDb {
 
     protected $form;
     protected $container;
     protected $builder;
     function testStart() {
-        $this->container = new jFormsDataContainer('formtest','');
-        $this->form = new testHMLForm('formtest', $this->container, true );
-        $this->builder = new testJFormsHtmlBuilder($this->form);
+        $this->container = new jFormsDataContainer('formtestlight','');
+        $this->form = new testHtmlLightForm('formtestlight', $this->container, true );
+        $this->builder = new testJFormsHtmlLightBuilder($this->form);
 
     }
 
@@ -43,10 +43,10 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\');
-jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
-jFormsJQ.declareForm(jFormsJQ.tForm);
+jForms.tForm = new jFormsForm(\'jforms_formtestlight\');
+jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
+jForms.tForm.setHelpDecorator(new jFormsHelpDecoratorAlert());
+jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig:url1"/>
@@ -60,10 +60,10 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
-jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
-jFormsJQ.declareForm(jFormsJQ.tForm);
+jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
+jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
+jForms.tForm.setHelpDecorator(new jFormsHelpDecoratorAlert());
+jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
@@ -97,44 +97,44 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" value=""/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $this->form->setData('input1','toto');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" value="toto"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->defaultValue='laurent';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" value="toto"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $this->form->removeControl($ctrl->ref);
         $this->form->addControl($ctrl);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->required=true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class=" jforms-required" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.required = true;
 c.errRequired=\'La saisie de "Votre nom" est obligatoire\';
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -142,20 +142,20 @@ jFormsJQ.tForm.addControl(c);
         $ctrl->required=false;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" readonly="readonly" class=" jforms-readonly" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
         $ctrl->setReadOnly(false);
         $ctrl->help='some help';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" value="laurent"/><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->formname.'\',\'input1\')">?</a></span>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
+        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" value="laurent"/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'input1\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.help=\'some help\';
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -163,11 +163,11 @@ jFormsJQ.tForm.addControl(c);
 help with \' and
 line break.';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" value="laurent"/><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->formname.'\',\'input1\')">?</a></span>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
+        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" value="laurent"/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'input1\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.help=\'some \nhelp with \\\' and\nline break.\';
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->hint='ceci est un tooltip';
@@ -176,11 +176,11 @@ jFormsJQ.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_input1" title="ceci est un tooltip">Votre nom</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" title="ceci est un tooltip" value="laurent"/><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->formname.'\',\'input1\')">?</a></span>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
+        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" title="ceci est un tooltip" value="laurent"/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'input1\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.help=\'some help\';
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -189,10 +189,10 @@ jFormsJQ.tForm.addControl(c);
         $ctrl->datatype->addFacet('maxLength',5);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" maxlength="5" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.maxLength = \'5\';
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
     }
@@ -207,18 +207,18 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="checkbox" name="chk1" id="'.$this->formname.'_chk1" value="1"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlBoolean(\'chk1\', \'Une option\');
+        $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk1\', \'Une option\');
 c.errInvalid=\'La saisie de "Une option" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
         $this->form->setData('chk1','1');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="checkbox" name="chk1" id="'.$this->formname.'_chk1" checked="checked" value="1"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlBoolean(\'chk1\', \'Une option\');
+        $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk1\', \'Une option\');
 c.errInvalid=\'La saisie de "Une option" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl= new jFormsControlCheckbox('chk2');
@@ -231,9 +231,9 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" value="1"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlBoolean(\'chk2\', \'Une option\');
+        $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'La saisie de "Une option" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -242,35 +242,35 @@ jFormsJQ.tForm.addControl(c);
         $this->form->addControl($ctrl);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" checked="checked" value="1"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlBoolean(\'chk2\', \'Une option\');
+        $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'La saisie de "Une option" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $this->form->setData('chk2', '0');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" value="1"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlBoolean(\'chk2\', \'Une option\');
+        $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'La saisie de "Une option" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" class=" jforms-readonly" value="1"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlBoolean(\'chk2\', \'Une option\');
+        $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'La saisie de "Une option" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
         $this->form->setData('chk2', '1');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" class=" jforms-readonly" checked="checked" value="1"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlBoolean(\'chk2\', \'Une option\');
+        $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'La saisie de "Une option" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->hint='ceci est un tooltip';
@@ -279,9 +279,9 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" checked="checked" value="1"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlBoolean(\'chk2\', \'Une option\');
+        $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'La saisie de "Une option" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
     }
@@ -308,9 +308,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_1" value="11"/><label for="'.$this->formname.'_choixsimple_1">bar</label></span>';
         $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_2" value="23"/><label for="'.$this->formname.'_choixsimple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'choixsimple[]\', \'Vos choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'choixsimple[]\', \'Vos choix\');
 c.errInvalid=\'La saisie de "Vos choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -320,9 +320,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_1" value="11" checked="checked"/><label for="'.$this->formname.'_choixsimple_1">bar</label></span>';
         $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_2" value="23"/><label for="'.$this->formname.'_choixsimple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'choixsimple[]\', \'Vos choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'choixsimple[]\', \'Vos choix\');
 c.errInvalid=\'La saisie de "Vos choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -345,9 +345,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" value="11"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>';
         $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" value="23"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'choixmultiple[]\', \'Vos choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'choixmultiple[]\', \'Vos choix\');
 c.errInvalid=\'La saisie de "Vos choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -357,9 +357,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" value="11" checked="checked"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>';
         $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" value="23"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'choixmultiple[]\', \'Vos choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'choixmultiple[]\', \'Vos choix\');
 c.errInvalid=\'La saisie de "Vos choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -369,9 +369,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" value="11"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>';
         $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" value="23" checked="checked"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'choixmultiple[]\', \'Vos choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'choixmultiple[]\', \'Vos choix\');
 c.errInvalid=\'La saisie de "Vos choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -385,9 +385,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" value="11" readonly="readonly" class=" jforms-readonly"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>';
         $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" value="23" checked="checked" readonly="readonly" class=" jforms-readonly"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'choixmultiple[]\', \'Vos choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'choixmultiple[]\', \'Vos choix\');
 c.errInvalid=\'La saisie de "Vos choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
     }
 
@@ -406,9 +406,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="11"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>';
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" value="23"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'rbchoixsimple\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -419,9 +419,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="11" checked="checked"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>';
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" value="23"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'rbchoixsimple\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -437,9 +437,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="11" checked="checked"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>';
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" value="23"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'rbchoixsimple\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -449,9 +449,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="11"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>';
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" value="23" checked="checked"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'rbchoixsimple\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->setReadOnly(true);
@@ -464,9 +464,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="11" readonly="readonly" class=" jforms-readonly"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>';
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" value="23" checked="checked" readonly="readonly" class=" jforms-readonly"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'rbchoixsimple\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
     }
@@ -489,9 +489,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'menulist1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -504,9 +504,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'menulist1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -519,9 +519,9 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'menulist1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->setReadOnly(true);
@@ -537,9 +537,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'menulist1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -552,11 +552,11 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23" selected="selected">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'menulist1\', \'Votre choix\');
 c.required = true;
 c.errRequired=\'La saisie de "Votre choix" est obligatoire\';
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -570,9 +570,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'menulist1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -586,9 +586,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="11">bar</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'menulist1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -599,9 +599,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="10">foo</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'menulist1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -612,9 +612,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="10" selected="selected">foo</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'menulist1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -631,9 +631,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'menulist1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -743,9 +743,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'listbox1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'listbox1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $this->form->setData('listbox1',"23");
@@ -756,9 +756,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23" selected="selected">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'listbox1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'listbox1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -771,9 +771,9 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'listbox1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'listbox1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -788,9 +788,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23" selected="selected">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'listbox1\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'listbox1\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -813,10 +813,10 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'lbchoixmultiple[]\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'lbchoixmultiple[]\', \'Votre choix\');
 c.multiple = true;
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -828,10 +828,10 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23" selected="selected">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'lbchoixmultiple[]\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'lbchoixmultiple[]\', \'Votre choix\');
 c.multiple = true;
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -852,9 +852,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'listbox2\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'listbox2\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -877,10 +877,10 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="23" selected="selected">baz</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'lbchoixmultiple2[]\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'lbchoixmultiple2[]\', \'Votre choix\');
 c.multiple = true;
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
     }
@@ -901,9 +901,9 @@ jFormsJQ.tForm.addControl(c);
         $result.='<option value="ddd">label for ddd</option>';
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'listboxclass\', \'Votre choix\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'listboxclass\', \'Votre choix\');
 c.errInvalid=\'La saisie de "Votre choix" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
     }
@@ -920,27 +920,27 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="textarea1" id="'.$this->formname.'_textarea1" rows="5" cols="40"></textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'textarea1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'textarea1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
         $this->form->setData('textarea1','laurent');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="textarea1" id="'.$this->formname.'_textarea1" rows="5" cols="40">laurent</textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'textarea1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'textarea1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="textarea1" id="'.$this->formname.'_textarea1" readonly="readonly" class=" jforms-readonly" rows="5" cols="40">laurent</textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'textarea1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'textarea1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -950,27 +950,27 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="textarea1" id="'.$this->formname.'_textarea1" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" rows="5" cols="40">laurent</textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'textarea1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'textarea1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
         $ctrl->rows=20;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="textarea1" id="'.$this->formname.'_textarea1" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" rows="20" cols="40">laurent</textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'textarea1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'textarea1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
         $ctrl->cols=60;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="textarea1" id="'.$this->formname.'_textarea1" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" rows="20" cols="60">laurent</textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'textarea1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'textarea1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -986,25 +986,25 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" value=""/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'passwd\', \'mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'passwd\', \'mot de passe\');
 c.errInvalid=\'La saisie de "mot de passe" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $this->form->setData('passwd','laurent');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'passwd\', \'mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'passwd\', \'mot de passe\');
 c.errInvalid=\'La saisie de "mot de passe" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" class=" jforms-readonly" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'passwd\', \'mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'passwd\', \'mot de passe\');
 c.errInvalid=\'La saisie de "mot de passe" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->hint='ceci est un tooltip';
@@ -1012,20 +1012,20 @@ jFormsJQ.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd" title="ceci est un tooltip">mot de passe</label>', $out);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'passwd\', \'mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'passwd\', \'mot de passe\');
 c.errInvalid=\'La saisie de "mot de passe" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->datatype->addFacet('minLength',5);
         $ctrl->datatype->addFacet('maxLength',10);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" maxlength="10" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'passwd\', \'mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'passwd\', \'mot de passe\');
 c.maxLength = \'10\';
 c.minLength = \'5\';
 c.errInvalid=\'La saisie de "mot de passe" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -1040,14 +1040,14 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" value=""/>', $out);
-        $this->assertEqualOrDiff('c.confirmField = new jFormsJQControlSecretConfirm(\'passwd_confirm_confirm\', \'confirmation mot de passe\');
+        $this->assertEqualOrDiff('c.confirmField = new jFormsControlSecretConfirm(\'passwd_confirm_confirm\', \'confirmation mot de passe\');
 ', $this->builder->getJsContent());
 
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" readonly="readonly" class=" jforms-readonly" value=""/>', $out);
-        $this->assertEqualOrDiff('c.confirmField = new jFormsJQControlSecretConfirm(\'passwd_confirm_confirm\', \'confirmation mot de passe\');
+        $this->assertEqualOrDiff('c.confirmField = new jFormsControlSecretConfirm(\'passwd_confirm_confirm\', \'confirmation mot de passe\');
 ', $this->builder->getJsContent());
 
 
@@ -1056,7 +1056,7 @@ jFormsJQ.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd_confirm" title="ceci est un tooltip">confirmation mot de passe</label>', $out);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" value=""/>', $out);
-        $this->assertEqualOrDiff('c.confirmField = new jFormsJQControlSecretConfirm(\'passwd_confirm_confirm\', \'confirmation mot de passe\');
+        $this->assertEqualOrDiff('c.confirmField = new jFormsControlSecretConfirm(\'passwd_confirm_confirm\', \'confirmation mot de passe\');
 ', $this->builder->getJsContent());
 
     }
@@ -1108,17 +1108,17 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="file" name="upload1" id="'.$this->formname.'_upload1" value=""/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'upload1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'upload1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="file" name="upload1" id="'.$this->formname.'_upload1" readonly="readonly" class=" jforms-readonly" value=""/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'upload1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'upload1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->hint='ceci est un tooltip';
@@ -1127,9 +1127,9 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="file" name="upload1" id="'.$this->formname.'_upload1" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" value=""/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'upload1\', \'Votre nom\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'upload1\', \'Votre nom\');
 c.errInvalid=\'La saisie de "Votre nom" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         ob_start();
@@ -1137,10 +1137,10 @@ jFormsJQ.tForm.addControl(c);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'" enctype="multipart/form-data"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
-jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
-jFormsJQ.declareForm(jFormsJQ.tForm);
+jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
+jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
+jForms.tForm.setHelpDecorator(new jFormsHelpDecoratorAlert());
+jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
@@ -1230,10 +1230,10 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
-jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
-jFormsJQ.declareForm(jFormsJQ.tForm);
+jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
+jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
+jForms.tForm.setHelpDecorator(new jFormsHelpDecoratorAlert());
+jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
@@ -1251,10 +1251,10 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
-jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
-jFormsJQ.declareForm(jFormsJQ.tForm);
+jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
+jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
+jForms.tForm.setHelpDecorator(new jFormsHelpDecoratorAlert());
+jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
@@ -1275,43 +1275,43 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" class=" jforms-required" value=""/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'cap\', \'captcha for security\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'cap\', \'captcha for security\');
 c.required = true;
 c.errRequired=\'La saisie de "captcha for security" est obligatoire\';
 c.errInvalid=\'La saisie de "captcha for security" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $this->form->setData('cap','toto');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" class=" jforms-required" value=""/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'cap\', \'captcha for security\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'cap\', \'captcha for security\');
 c.required = true;
 c.errRequired=\'La saisie de "captcha for security" est obligatoire\';
 c.errInvalid=\'La saisie de "captcha for security" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" value=""/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'cap\', \'captcha for security\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'cap\', \'captcha for security\');
 c.required = true;
 c.errRequired=\'La saisie de "captcha for security" est obligatoire\';
 c.errInvalid=\'La saisie de "captcha for security" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->setReadOnly(false);
         $ctrl->help='some help';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" class=" jforms-required" value=""/><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->formname.'\',\'cap\')">?</a></span>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'cap\', \'captcha for security\');
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" class=" jforms-required" value=""/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'cap\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'cap\', \'captcha for security\');
 c.help=\'some help\';
 c.required = true;
 c.errRequired=\'La saisie de "captcha for security" est obligatoire\';
 c.errInvalid=\'La saisie de "captcha for security" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $ctrl->hint='ceci est un tooltip';
@@ -1319,13 +1319,13 @@ jFormsJQ.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap" title="ceci est un tooltip">captcha for security</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" title="ceci est un tooltip" class=" jforms-required" value=""/><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->formname.'\',\'cap\')">?</a></span>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'cap\', \'captcha for security\');
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" title="ceci est un tooltip" class=" jforms-required" value=""/><span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->formname.'\',\'cap\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'cap\', \'captcha for security\');
 c.help=\'some help\';
 c.required = true;
 c.errRequired=\'La saisie de "captcha for security" est obligatoire\';
 c.errInvalid=\'La saisie de "captcha for security" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
     }
@@ -1342,19 +1342,19 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
 c.errInvalid=\'La saisie de "Texte" est invalide\';
-jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1");
+jForms.tForm.addControl(c);
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
 ', $this->builder->getJsContent());
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" class=" jforms-readonly" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
 c.errInvalid=\'La saisie de "Texte" est invalide\';
-jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1");
+jForms.tForm.addControl(c);
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
 ', $this->builder->getJsContent());
 
         $ctrl->hint='ceci est un tooltip';
@@ -1363,41 +1363,41 @@ jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1");
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
 c.errInvalid=\'La saisie de "Texte" est invalide\';
-jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1");
+jForms.tForm.addControl(c);
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
 ', $this->builder->getJsContent());
 
 
         $ctrl->rows=20;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" rows="20" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
 c.errInvalid=\'La saisie de "Texte" est invalide\';
-jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1");
+jForms.tForm.addControl(c);
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
 ', $this->builder->getJsContent());
 
 
         $ctrl->cols=60;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" rows="20" cols="60">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
 c.errInvalid=\'La saisie de "Texte" est invalide\';
-jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1");
+jForms.tForm.addControl(c);
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
 ', $this->builder->getJsContent());
 
         $ctrl->required=true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" rows="20" cols="60">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
 c.required = true;
 c.errRequired=\'La saisie de "Texte" est obligatoire\';
 c.errInvalid=\'La saisie de "Texte" est invalide\';
-jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1");
+jForms.tForm.addControl(c);
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
 ', $this->builder->getJsContent());
     }
 }

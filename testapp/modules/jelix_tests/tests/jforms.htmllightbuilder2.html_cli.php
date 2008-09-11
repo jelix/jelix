@@ -12,18 +12,18 @@
 require_once(JELIX_LIB_PATH.'forms/jFormsBase.class.php');
 require_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
 require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
-require_once(JELIX_LIB_PATH.'plugins/jforms/html/html.jformsbuilder.php');
+require_once(JELIX_LIB_PATH.'plugins/jforms/htmllight/htmllight.jformsbuilder.php');
 
-class testHMLForm2 extends jFormsBase { 
+class testHTMLLightForm2 extends jFormsBase { 
 }
 
-class testJFormsHtmlBuilder2 extends htmlJformsBuilder {
+class testJFormsHtmlLightBuilder2 extends htmllightJformsBuilder {
     function getJsContent() { $js= $this->jsContent; $this->jsContent = '';return $js;}
     function clearJs() { $this->jsContent = ''; }
 }
 
 
-class UTjformsHTMLBuilder2 extends jUnitTestCaseDb {
+class UTjformsHTMLLightBuilder2 extends jUnitTestCaseDb {
 
     protected $form;
     protected $container;
@@ -31,9 +31,9 @@ class UTjformsHTMLBuilder2 extends jUnitTestCaseDb {
     protected $formname;
 
     function testStart() {
-        $this->container = new jFormsDataContainer('formtest','');
-        $this->form = new testHMLForm2('formtest', $this->container, true );
-        $this->builder = new testJFormsHtmlBuilder2($this->form);
+        $this->container = new jFormsDataContainer('formtestlightB','');
+        $this->form = new testHTMLLightForm2('formtestlightB', $this->container, true );
+        $this->builder = new testJFormsHtmlLightBuilder2($this->form);
         $this->formname = $this->builder->getName();
     }
 
@@ -92,22 +92,22 @@ class UTjformsHTMLBuilder2 extends jUnitTestCaseDb {
 
         ob_start();$this->builder->outputControl($group);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'nom\', \'Your name\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'nom\', \'Your name\');
 c.required = true;
 c.errRequired=\'La saisie de "Your name" est obligatoire\';
 c.errInvalid=\'La saisie de "Your name" est invalide\';
-jFormsJQ.tForm.addControl(c);
-c = new jFormsJQControlString(\'prenom\', \'Your firstname\');
+jForms.tForm.addControl(c);
+c = new jFormsControlString(\'prenom\', \'Your firstname\');
 c.errInvalid=\'La saisie de "Your firstname" est invalide\';
-jFormsJQ.tForm.addControl(c);
-c = new jFormsJQControlString(\'sexe\', \'Vous êtes \');
+jForms.tForm.addControl(c);
+c = new jFormsControlString(\'sexe\', \'Vous êtes \');
 c.required = true;
 c.errRequired=\'Vous devez indiquer le sexe, même si vous ne savez pas :-)\';
 c.errInvalid=\'La saisie de "Vous êtes " est invalide\';
-jFormsJQ.tForm.addControl(c);
-c = new jFormsJQControlEmail(\'mail\', \'Votre mail\');
+jForms.tForm.addControl(c);
+c = new jFormsControlEmail(\'mail\', \'Votre mail\');
 c.errInvalid=\'La saisie de "Votre mail" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $group->setReadOnly(true);
@@ -125,22 +125,22 @@ jFormsJQ.tForm.addControl(c);
         $expected .= '<td><input type="text" name="mail" id="'.$this->formname.'_mail" readonly="readonly" class=" jforms-readonly" value=""/></td></tr>'."\n</table></fieldset>";
         ob_start();$this->builder->outputControl($group);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'nom\', \'Your name\');
+        $this->assertEqualOrDiff('c = new jFormsControlString(\'nom\', \'Your name\');
 c.required = true;
 c.errRequired=\'La saisie de "Your name" est obligatoire\';
 c.errInvalid=\'La saisie de "Your name" est invalide\';
-jFormsJQ.tForm.addControl(c);
-c = new jFormsJQControlString(\'prenom\', \'Your firstname\');
+jForms.tForm.addControl(c);
+c = new jFormsControlString(\'prenom\', \'Your firstname\');
 c.errInvalid=\'La saisie de "Your firstname" est invalide\';
-jFormsJQ.tForm.addControl(c);
-c = new jFormsJQControlString(\'sexe\', \'Vous êtes \');
+jForms.tForm.addControl(c);
+c = new jFormsControlString(\'sexe\', \'Vous êtes \');
 c.required = true;
 c.errRequired=\'Vous devez indiquer le sexe, même si vous ne savez pas :-)\';
 c.errInvalid=\'La saisie de "Vous êtes " est invalide\';
-jFormsJQ.tForm.addControl(c);
-c = new jFormsJQControlEmail(\'mail\', \'Votre mail\');
+jForms.tForm.addControl(c);
+c = new jFormsControlEmail(\'mail\', \'Votre mail\');
 c.errInvalid=\'La saisie de "Votre mail" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
     }
@@ -185,29 +185,29 @@ jFormsJQ.tForm.addControl(c);
 
 
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_0" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label> </li>'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_1" value="assigned" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>  <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_nom">Name</label> <input type="text" name="nom" id="'.$this->formname.'_nom" readonly="readonly" class=" jforms-readonly" value=""/></span>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_0" value="new" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label> </li>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_1" value="assigned" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>  <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_nom">Name</label> <input type="text" name="nom" id="'.$this->formname.'_nom" readonly="readonly" class=" jforms-readonly" value=""/></span>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_prenom">Firstname</label> <input type="text" name="prenom" id="'.$this->formname.'_prenom" readonly="readonly" class=" jforms-readonly" value="robert"/></span>'."\n";
         $expected .= '</li>'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n";
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlChoice(\'status\', \'Task Status\');
+        $this->assertEqualOrDiff('c = new jFormsControlChoice(\'status\', \'Task Status\');
 c.errInvalid=\'La saisie de "Task Status" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 c2 = c;
 c2.items[\'new\']=[];
-c = new jFormsJQControlString(\'nom\', \'Name\');
+c = new jFormsControlString(\'nom\', \'Name\');
 c.required = true;
 c.errRequired=\'La saisie de "Name" est obligatoire\';
 c.errInvalid=\'La saisie de "Name" est invalide\';
 c2.addControl(c, \'assigned\');
-c = new jFormsJQControlString(\'prenom\', \'Firstname\');
+c = new jFormsControlString(\'prenom\', \'Firstname\');
 c.errInvalid=\'La saisie de "Firstname" est invalide\';
 c2.addControl(c, \'assigned\');
-c = new jFormsJQControlString(\'reason\', \'Reason \');
+c = new jFormsControlString(\'reason\', \'Reason \');
 c.required = true;
 c.errRequired=\'Hey, specify a reason !\';
 c.errInvalid=\'La saisie de "Reason " est invalide\';
@@ -218,29 +218,29 @@ c2.activate(\'\');
         $this->form->getContainer()->data['status']='assigned';
 
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_0" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label> </li>'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_1" value="assigned" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>  <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_nom">Name</label> <input type="text" name="nom" id="'.$this->formname.'_nom" readonly="readonly" class=" jforms-readonly" value=""/></span>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_0" value="new" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label> </li>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_1" value="assigned" checked="checked" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>  <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_nom">Name</label> <input type="text" name="nom" id="'.$this->formname.'_nom" readonly="readonly" class=" jforms-readonly" value=""/></span>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_prenom">Firstname</label> <input type="text" name="prenom" id="'.$this->formname.'_prenom" readonly="readonly" class=" jforms-readonly" value="robert"/></span>'."\n";
         $expected .= '</li>'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n";
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlChoice(\'status\', \'Task Status\');
+        $this->assertEqualOrDiff('c = new jFormsControlChoice(\'status\', \'Task Status\');
 c.errInvalid=\'La saisie de "Task Status" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 c2 = c;
 c2.items[\'new\']=[];
-c = new jFormsJQControlString(\'nom\', \'Name\');
+c = new jFormsControlString(\'nom\', \'Name\');
 c.required = true;
 c.errRequired=\'La saisie de "Name" est obligatoire\';
 c.errInvalid=\'La saisie de "Name" est invalide\';
 c2.addControl(c, \'assigned\');
-c = new jFormsJQControlString(\'prenom\', \'Firstname\');
+c = new jFormsControlString(\'prenom\', \'Firstname\');
 c.errInvalid=\'La saisie de "Firstname" est invalide\';
 c2.addControl(c, \'assigned\');
-c = new jFormsJQControlString(\'reason\', \'Reason \');
+c = new jFormsControlString(\'reason\', \'Reason \');
 c.required = true;
 c.errRequired=\'Hey, specify a reason !\';
 c.errInvalid=\'La saisie de "Reason " est invalide\';
@@ -250,29 +250,29 @@ c2.activate(\'assigned\');
 
         $this->form->getContainer()->data['status']='new';
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_0" value="new" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label> </li>'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_1" value="assigned" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>  <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_nom">Name</label> <input type="text" name="nom" id="'.$this->formname.'_nom" readonly="readonly" class=" jforms-readonly" value=""/></span>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_0" value="new" checked="checked" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label> </li>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_1" value="assigned" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>  <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_nom">Name</label> <input type="text" name="nom" id="'.$this->formname.'_nom" readonly="readonly" class=" jforms-readonly" value=""/></span>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_prenom">Firstname</label> <input type="text" name="prenom" id="'.$this->formname.'_prenom" readonly="readonly" class=" jforms-readonly" value="robert"/></span>'."\n";
         $expected .= '</li>'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n";
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlChoice(\'status\', \'Task Status\');
+        $this->assertEqualOrDiff('c = new jFormsControlChoice(\'status\', \'Task Status\');
 c.errInvalid=\'La saisie de "Task Status" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 c2 = c;
 c2.items[\'new\']=[];
-c = new jFormsJQControlString(\'nom\', \'Name\');
+c = new jFormsControlString(\'nom\', \'Name\');
 c.required = true;
 c.errRequired=\'La saisie de "Name" est obligatoire\';
 c.errInvalid=\'La saisie de "Name" est invalide\';
 c2.addControl(c, \'assigned\');
-c = new jFormsJQControlString(\'prenom\', \'Firstname\');
+c = new jFormsControlString(\'prenom\', \'Firstname\');
 c.errInvalid=\'La saisie de "Firstname" est invalide\';
 c2.addControl(c, \'assigned\');
-c = new jFormsJQControlString(\'reason\', \'Reason \');
+c = new jFormsControlString(\'reason\', \'Reason \');
 c.required = true;
 c.errRequired=\'Hey, specify a reason !\';
 c.errInvalid=\'La saisie de "Reason " est invalide\';
@@ -282,29 +282,29 @@ c2.activate(\'new\');
 
         $this->form->getContainer()->data['status']='closed';
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_0" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label> </li>'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_1" value="assigned" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>  <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_nom">Name</label> <input type="text" name="nom" id="'.$this->formname.'_nom" readonly="readonly" class=" jforms-readonly" value=""/></span>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_0" value="new" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label> </li>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_1" value="assigned" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>  <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_nom">Name</label> <input type="text" name="nom" id="'.$this->formname.'_nom" readonly="readonly" class=" jforms-readonly" value=""/></span>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_prenom">Firstname</label> <input type="text" name="prenom" id="'.$this->formname.'_prenom" readonly="readonly" class=" jforms-readonly" value="robert"/></span>'."\n";
         $expected .= '</li>'."\n";
-        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
+        $expected .= '<li><label><input type="radio" name="status" id="'.$this->formname.'_status_2" value="closed" checked="checked" onclick="jForms.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>  <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason">Reason </label> <select name="reason" id="'.$this->formname.'_reason" class=" jforms-required" size="1"><option value="aa">fixed</option><option value="bb">won t fixed</option><option value="cc">later</option></select></span>'."\n";
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n";
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
         $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlChoice(\'status\', \'Task Status\');
+        $this->assertEqualOrDiff('c = new jFormsControlChoice(\'status\', \'Task Status\');
 c.errInvalid=\'La saisie de "Task Status" est invalide\';
-jFormsJQ.tForm.addControl(c);
+jForms.tForm.addControl(c);
 c2 = c;
 c2.items[\'new\']=[];
-c = new jFormsJQControlString(\'nom\', \'Name\');
+c = new jFormsControlString(\'nom\', \'Name\');
 c.required = true;
 c.errRequired=\'La saisie de "Name" est obligatoire\';
 c.errInvalid=\'La saisie de "Name" est invalide\';
 c2.addControl(c, \'assigned\');
-c = new jFormsJQControlString(\'prenom\', \'Firstname\');
+c = new jFormsControlString(\'prenom\', \'Firstname\');
 c.errInvalid=\'La saisie de "Firstname" est invalide\';
 c2.addControl(c, \'assigned\');
-c = new jFormsJQControlString(\'reason\', \'Reason \');
+c = new jFormsControlString(\'reason\', \'Reason \');
 c.required = true;
 c.errRequired=\'Hey, specify a reason !\';
 c.errInvalid=\'La saisie de "Reason " est invalide\';

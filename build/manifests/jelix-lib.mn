@@ -392,6 +392,9 @@ cd lib/jelix/plugins/db/oci
 cd lib/jelix/plugins/jforms/html
   html.jformsbuilder.php
 
+cd lib/jelix/plugins/jforms/htmllight
+  htmllight.jformsbuilder.php
+
 cd lib/jelix/plugins/tpl/common
   block.ifacl.php
   block.ifnotacl.php
@@ -502,7 +505,8 @@ cd lib/jelix-www/design/images
   jelix_powered.png
 cd lib/jelix-www/js
   tooltip.js
-  jforms.js
+  jforms_light.js
+  jforms_jquery.js
   json.js
 cd lib/jelix-www/xul
   jxulform.css

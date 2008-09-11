@@ -173,6 +173,8 @@ cd testapp/modules/jelix_tests/tests/
   jforms.compiler_1_1.html_cli.php
   jforms.htmlbuilder.html_cli.php
   jforms.htmlbuilder2.html_cli.php
+  jforms.htmllightbuilder.html_cli.php
+  jforms.htmllightbuilder2.html_cli.php
   jforms.with_dao.html_cli.php
   jtpl.compiler.html_cli.php
   jtpl.expressions_parsing.html_cli.php
