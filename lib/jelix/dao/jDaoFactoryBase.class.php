@@ -5,11 +5,11 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  * @contributor Julien Issler
- * @contributor Thomas, Greut
+ * @contributor Thomas, Yoan Blanc
  * @copyright   2005-2007 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007-2008 Julien Issler
- * @copyright   2008 Thomas, 2008 Greut
+ * @copyright   2008 Thomas, 2008 Yoan Blanc
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
