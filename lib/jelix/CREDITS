@@ -29,6 +29,7 @@ Julien Issler
  - jSession: old sessions are not purged with some PHP configurations (#645)
  - linebreaks in textareas in jtpl plugin (#646)
  - jForms: HTML builder does not generate right datatype in javascript (#686)
+ - jForms: wymeditor fields don't get updated before javascript form check (#687)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
