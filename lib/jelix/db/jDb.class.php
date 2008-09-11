@@ -1,11 +1,11 @@
 <?php
 /**
-* @package    jelix
-* @subpackage db
+* @package     jelix
+* @subpackage  db
 #if ENABLE_OPTIMIZED_SOURCE
-* @author     Laurent Jouanneau
-* @contributor
-* @copyright  2005-2007 Laurent Jouanneau
+* @author      Laurent Jouanneau
+* @contributor Yannick Le Guédart, Laurent Raufaste
+* @copyright   2005-2007 Laurent Jouanneau, 2008 Laurent Raufaste
 *
 * Some of this classes were get originally from the Copix project
 * (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -13,7 +13,7 @@
 * Initial authors of this Copix classes are Gerald Croes and Laurent Jouanneau,
 * and this classes were adapted/improved for Jelix by Laurent Jouanneau
 *
-* @link      http://www.jelix.org
+* @link     http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
@@ -22,7 +22,7 @@
 
 #else
 * @author     Laurent Jouanneau
-* @contributor
+* @contributor Yannick Le Guédart, Laurent Raufaste
 * @copyright  2005-2007 Laurent Jouanneau
 *
 * API ideas of this class were get originally from the Copix project (CopixDbFactory, Copix 2.3dev20050901, http://www.copix.org)
@@ -47,6 +47,7 @@ require(JELIX_LIB_PATH.'db/jDbResultSet.class.php');
 class jDb {
 
     static private $_profils =  null;
+    static private $_cnxPool = array();
 
     /**
     * return a database connector
@@ -55,8 +56,6 @@ class jDb {
     * @return jDbConnection  connector
     */
     public static function getConnection ($name = null){
-        static $cnxPool = array();
-
         $profil = self::getProfil ($name);
 
         if (!$name) {
@@ -65,10 +64,10 @@ class jDb {
             $name = $profil['name'];
         }
 
-        if (!isset ($cnxPool[$name])){
-            $cnxPool[$name] = self::_createConnector ($profil);
+        if (!isset(self::$_cnxPool[$name])) {
+            self::$_cnxPool[$name] = self::_createConnector($profil);
         }
-        return $cnxPool[$name];
+        return self::$_cnxPool[$name];
     }
 
     /**
@@ -212,5 +211,6 @@ class jDb {
             self::$_profils = parse_ini_file (JELIX_APP_CONFIG_PATH . $gJConfig->dbProfils, true);
         }
         self::$_profils[$name] = $params;
+        unset (self::$_cnxPool[$name]);
     }
 }
