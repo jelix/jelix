@@ -149,7 +149,7 @@ class jZone {
      * @deprecated 1.1
      */
     public function getParam ($paramName, $defaultValue=null){
-    	return $this->param($paramName, $defaultValue);
+        return $this->param($paramName, $defaultValue);
     }
 
     /**
