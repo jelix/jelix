@@ -29,6 +29,16 @@ class pgsqlDbConnection extends jDbConnection {
             throw new jException('jelix~db.error.nofunction','posgresql');
         }
         parent::__construct($profil);
+        if(isset($this->profil['single_transaction']) && ($this->profil['single_transaction'])){
+            $this->beginTransaction();
+        }
+    }
+
+    function __destruct(){
+        if(isset($this->profil['single_transaction']) && ($this->profil['single_transaction'])){
+            $this->commit();
+        }
+        parent::__destruct();
     }
 
     public function beginTransaction (){

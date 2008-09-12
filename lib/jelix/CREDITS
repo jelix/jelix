@@ -82,7 +82,7 @@ Dominique Papin (aka bibo)
  - added addContent method to jResponseHtmlFragment (#610)
 
 Laurent Raufaste (aka analogue)
- - patches on postgresql driver (#123, #671, #672)
+ - patches on postgresql driver (#123, #671, #672, #674)
  - replaced getParam (deprecated) with param in jZone (#680)
 
 Christophe Thiriot (aka Doubleface)
