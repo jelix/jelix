@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage utils
 * @author     Croes Gérald, Laurent Jouanneau
-* @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @contributor Laurent Jouanneau, Laurent Raufaste
+* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2008 Laurent Raufaste
 *
 * This class was get originally from the Copix project (CopixZone, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -137,8 +137,19 @@ class jZone {
     * @param mixed $defaultValue the parameter default value
     * @return mixed the param value
     */
-    public function getParam ($paramName, $defaultValue=null){
+    public function param ($paramName, $defaultValue=null){
         return array_key_exists ($paramName, $this->_params) ? $this->_params[$paramName] : $defaultValue;
+    }
+    
+    /**
+     * Same as param(), included for compatibility with older versions
+     * @param string $paramName the parameter name
+     * @param mixed $defaultValue the parameter default value
+     * @return mixed the param value
+     * @deprecated 1.1
+     */
+    public function getParam ($paramName, $defaultValue=null){
+    	return $this->param($paramName, $defaultValue);
     }
 
     /**

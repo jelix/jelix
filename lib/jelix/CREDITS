@@ -83,6 +83,7 @@ Dominique Papin (aka bibo)
 
 Laurent Raufaste (aka analogue)
  - patches on postgresql driver (#123, #671, #672)
+ - replaced getParam (deprecated) with param in jZone (#680)
 
 Christophe Thiriot (aka Doubleface)
  - testor
