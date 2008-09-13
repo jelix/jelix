@@ -12,7 +12,7 @@
         </ul>
         <p>Si vous voulez utiliser un autre nom que jelix pour ce dossier, modifier le paramêtre <code>jelixWWWPath</code>
          dans <em>{$configpath}defaultconfig.ini</em>.</p>
-        <p>Pour plus d'informations, consultez <a href="http://jelix.org/articles/manuel/installation/application#configuration-du-serveur"
+        <p>Pour plus d'informations, consultez <a href="http://jelix.org/articles/fr/manuel-1.1/installation/application#configuration-du-serveur"
              title="documentation officielle">la documentation sur l'installation de Jelix</a>.</p>
         <hr />
     </div>
