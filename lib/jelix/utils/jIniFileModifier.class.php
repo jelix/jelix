@@ -35,7 +35,7 @@ class jIniFileModifier {
         if(!file_exists($filename))
             throw new jException ('jelix~errors.file.notexists', $filename);
         $this->filename = $filename;
-        $this->parse(file ($filename));
+        $this->parse(preg_split("/(\r\n|\n|\r)/", file_get_contents($filename)));
     }
 
     /**

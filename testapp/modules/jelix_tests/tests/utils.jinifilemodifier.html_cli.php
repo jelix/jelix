@@ -12,7 +12,7 @@
 class testIniFileModifier extends jIniFileModifier {
 
     function __construct($filename) {
-
+      if($filename !='') parent::__construct($filename);
     }
 
     function testParse($content) {
@@ -434,6 +434,21 @@ truc=machin2
 ';
         $parser->testParse($content);
         $this->assertEqualOrDiff($parser->generate(), $result );
+
+        file_put_contents(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php', $content);
+        $parser = new testIniFileModifier(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php');
+        $this->assertEqualOrDiff($parser->generate(), $result );
+        
+        $content = str_replace("\n", "\r", $content);
+        file_put_contents(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php', $content);
+        $parser = new testIniFileModifier(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php');
+        $this->assertEqualOrDiff($parser->generate(), $result );
+        
+        $content = str_replace("\r", "\r\n", $content);
+        file_put_contents(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php', $content);
+        $parser = new testIniFileModifier(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php');
+        $this->assertEqualOrDiff($parser->generate(), $result );
+
     }
 }
 
