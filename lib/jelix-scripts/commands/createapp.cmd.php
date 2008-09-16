@@ -15,7 +15,7 @@
 class createappCommand extends JelixScriptCommand {
 
     public  $name = 'createapp';
-    public  $allowed_options=array('-nodefaultmodule'=>false, '-withcmdline'=>false);
+    public  $allowed_options=array('-nodefaultmodule'=>false, '-withcmdline'=>false, '-withrpc'=>false);
     public  $allowed_parameters=array();
 
     public  $syntaxhelp = "[-nodefaultmodule] [-withcmdline] [-withrpc]";
@@ -66,8 +66,6 @@ class createappCommand extends JelixScriptCommand {
        $this->createDir(JELIX_APP_LOG_PATH);
        $this->createDir(JELIX_APP_CONFIG_PATH);
        $this->createDir(JELIX_APP_CONFIG_PATH.'index/');
-       $this->createDir(JELIX_APP_CONFIG_PATH.'jsonrpc/');
-       $this->createDir(JELIX_APP_CONFIG_PATH.'xmlrpc/');
        $this->createDir(JELIX_APP_VAR_PATH.'overloads/');
        $this->createDir(JELIX_APP_VAR_PATH.'themes/');
        $this->createDir(JELIX_APP_VAR_PATH.'themes/default/');
@@ -103,7 +101,7 @@ class createappCommand extends JelixScriptCommand {
 
        $this->createFile(JELIX_APP_PATH.'application.init.php','application.init.php.tpl',$param);
 
-       $param = array('appname'=>$GLOBALS['APPNAME']);
+       $param = array('appname'=>$GLOBALS['APPNAME'], 'modulename'=>'');
        $param['rp_jelix'] = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_LIB_PATH, true);
        $param['rp_app']   = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH, true);
 
@@ -114,7 +112,8 @@ class createappCommand extends JelixScriptCommand {
             $cmd = jxs_load_command('createmodule');
             $cmd->init(array('-addinstallzone'=>true),array('module'=>$GLOBALS['APPNAME']));
             $cmd->run();
-            $this->createFile(JELIX_APP_PATH.'modules/'.$GLOBALS['APPNAME'].'/templates/main.tpl', 'main.tpl.tpl',$param);
+            $param['modulename'] = $GLOBALS['APPNAME'];
+            $this->createFile(JELIX_APP_PATH.'modules/'.$GLOBALS['APPNAME'].'/templates/main.tpl', 'main.tpl.tpl', $param);
        }
 
        if ($this->getOption('-withcmdline')) {
@@ -125,12 +124,14 @@ class createappCommand extends JelixScriptCommand {
 
             $this->createDir(JELIX_APP_CMD_PATH);
             $this->createDir(JELIX_APP_CONFIG_PATH.'cmdline');
-            $this->createFile(JELIX_APP_CONFIG_PATH.'cmdline/config.ini.php','var/config/cmdline/config.ini.php.tpl',$param);
+            $this->createFile(JELIX_APP_CONFIG_PATH.'cmdline/config.ini.php','var/config/cmdline/config.ini.php.tpl', $param);
             $param['rp_cmd'] =jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,true);
             $this->createFile(JELIX_APP_CMD_PATH.'cmdline.php','scripts/cmdline.php.tpl',$param);
        }
 
        if($this->getOption('-withrpc')){
+          $this->createDir(JELIX_APP_CONFIG_PATH.'jsonrpc/');
+          $this->createDir(JELIX_APP_CONFIG_PATH.'xmlrpc/');
           $this->createFile(JELIX_APP_WWW_PATH.'jsonrpc.php','www/jsonrpc.php.tpl',$param);
           $this->createFile(JELIX_APP_WWW_PATH.'xmlrpc.php','www/xmlrpc.php.tpl',$param);
           $this->createFile(JELIX_APP_CONFIG_PATH.'jsonrpc/config.ini.php','var/config/jsonrpc/config.ini.php.tpl',$param);

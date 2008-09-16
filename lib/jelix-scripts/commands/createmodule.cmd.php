@@ -40,39 +40,53 @@ class createmoduleCommand extends JelixScriptCommand {
 
 
     public function run(){
-       $path= $this->getModulePath($this->_parameters['module'], false);
+        jxs_init_jelix_env();
+        $path= $this->getModulePath($this->_parameters['module'], false);
 
-       if(file_exists($path)){
-          die("Error: module '".$this->_parameters['module']."' already exists");
-       }
-       $this->createDir($path);
-       $this->createFile($path.'module.xml','module.xml.tpl',array('name'=>$this->_parameters['module']));
+        if(file_exists($path)){
+            die("Error: module '".$this->_parameters['module']."' already exists");
+        }
+        $this->createDir($path);
+        $this->createFile($path.'module.xml','module.xml.tpl',array('name'=>$this->_parameters['module']));
 
-       if(!$this->getOption('-nosubdir')){
-          $this->createDir($path.'classes/');
-          $this->createDir($path.'zones/');
-          $this->createDir($path.'controllers/');
-          $this->createDir($path.'templates/');
-          $this->createDir($path.'classes/');
-          $this->createDir($path.'daos/');
-          $this->createDir($path.'forms/');
-          $this->createDir($path.'locales/');
-          $this->createDir($path.'locales/en_EN/');
-          $this->createDir($path.'locales/fr_FR/');
-       }
+        if(!$this->getOption('-nosubdir')){
+            $this->createDir($path.'classes/');
+            $this->createDir($path.'zones/');
+            $this->createDir($path.'controllers/');
+            $this->createDir($path.'templates/');
+            $this->createDir($path.'classes/');
+            $this->createDir($path.'daos/');
+            $this->createDir($path.'forms/');
+            $this->createDir($path.'locales/');
+            $this->createDir($path.'locales/en_EN/');
+            $this->createDir($path.'locales/fr_FR/');
+        }
 
-       if(!$this->getOption('-nocontroller')){
-         $agcommand = jxs_load_command('createctrl');
-         $options = array();
-         if ($this->getOption('-cmdline')) {
-            $options = array('-cmdline'=>true);
-         }
-         if ($this->getOption('-addinstallzone')) {
-            $options = array('-addinstallzone'=>true);
-         }
-         $agcommand->init($options,array('module'=>$this->_parameters['module'], 'name'=>'default','method'=>'index'));
-         $agcommand->run();
-       }
+        if(!$this->getOption('-nocontroller')){
+            $agcommand = jxs_load_command('createctrl');
+            $options = array();
+            if ($this->getOption('-cmdline')) {
+               $options = array('-cmdline'=>true);
+            }
+            if ($this->getOption('-addinstallzone')) {
+                $options = array('-addinstallzone'=>true);
+            }
+            $agcommand->init($options,array('module'=>$this->_parameters['module'], 'name'=>'default','method'=>'index'));
+            $agcommand->run();
+        }
+        $inifiles = array(JELIX_APP_CONFIG_PATH.'index/config.ini.php',
+                        JELIX_APP_CONFIG_PATH.'cmdline/config.ini.php',
+                        JELIX_APP_CONFIG_PATH.'jsonrpc/config.ini.php',
+                        JELIX_APP_CONFIG_PATH.'xmlrpc/config.ini.php',
+                        );
+        foreach($inifiles as $filename) {
+            try {
+                $ini = new jIniFileModifier($filename);
+                if ($ini->getValue('startModule') == '')
+                    $ini->setValue('startModule', $this->_parameters['module']);
+                $ini->save();
+            }catch(Exception $e){}
+        }
     }
 }
 
