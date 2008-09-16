@@ -13,10 +13,10 @@
 class createmoduleCommand extends JelixScriptCommand {
 
     public  $name = 'createmodule';
-    public  $allowed_options=array('-nosubdir'=>false, '-nocontroller'=>false, '-cmdline'=>false, '-addinstallzone'=>false);
+    public  $allowed_options=array('-nosubdir'=>false, '-nocontroller'=>false, '-cmdline'=>false, '-addinstallzone'=>false, '-defaultmodule'=>false);
     public  $allowed_parameters=array('module'=>true);
 
-    public  $syntaxhelp = "[-nosubdir] [-nocontroller] [-cmdline] MODULE";
+    public  $syntaxhelp = "[-nosubdir] [-nocontroller] [-cmdline] [-addinstallzone] [-defaultmodule] MODULE";
     public  $help=array(
         'fr'=>"
     Crée un nouveau module, avec son fichier module.xml, et un contrôleur
@@ -27,6 +27,8 @@ class createmoduleCommand extends JelixScriptCommand {
     -nocontroller (facultatif) : ne crée pas de fichier contrôleur par défaut
     -cmdline (facultatif) : crée le module avec un contrôleur pour la ligne de commande
     -addinstallzone (facultatif) : ajoute la zone check_install pour une nouvelle application
+    -defaultmodule (facultatif) : le module devient le module par defaut de l'application
+
     MODULE : le nom du module à créer.",
         'en'=>"
     Create a new module, with all necessary files and sub-directories.
@@ -35,6 +37,7 @@ class createmoduleCommand extends JelixScriptCommand {
     -nocontroller (optional): don't create a default controller.
     -cmdline (optional): create a controller for command line (jControllerCmdLine)
     -addinstallzone (optional) : add the check_install zone for new application
+    -defaultmodule (optional) : the new module become the default module
     MODULE: name of the new module."
     );
 
@@ -79,10 +82,15 @@ class createmoduleCommand extends JelixScriptCommand {
                         JELIX_APP_CONFIG_PATH.'jsonrpc/config.ini.php',
                         JELIX_APP_CONFIG_PATH.'xmlrpc/config.ini.php',
                         );
-        foreach($inifiles as $filename) {
+        $isdefault = $this->getOption('-defaultmodule');
+        foreach($inifiles as $k=> $filename) {
             try {
                 $ini = new jIniFileModifier($filename);
-                if ($ini->getValue('startModule') == '')
+                if ($isdefault && $k == 0) {
+                    $ini->setValue('startModule', $this->_parameters['module']);
+                    $ini->setValue('startAction', 'default:index');
+                }
+                else if ($ini->getValue('startModule') == '')
                     $ini->setValue('startModule', $this->_parameters['module']);
                 $ini->save();
             }catch(Exception $e){}
