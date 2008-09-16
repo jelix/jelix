@@ -41,7 +41,7 @@ abstract class jDbResultSet implements Iterator {
     }
     /**
      * fetch a result. The result is returned as an object.
-     * @return object|boolean result object or false if ther is no more result
+     * @return object|boolean result object or false if there is no more result
      */
     public function fetch(){
         $result = $this->_fetch ();

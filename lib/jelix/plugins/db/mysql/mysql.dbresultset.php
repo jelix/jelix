@@ -22,7 +22,11 @@
 class mysqlDbResultSet extends jDbResultSet {
 
     protected function  _fetch (){
-        $ret =  mysql_fetch_object ($this->_idResult);
+        if($this->_fetchMode == self::FETCH_CLASS){
+            $ret =  mysql_fetch_object ($this->_idResult, $this->_fetchModeParam);
+        }else{
+            $ret =  mysql_fetch_object ($this->_idResult);
+        }
         return $ret;
     }
     protected function _free (){
