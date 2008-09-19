@@ -197,8 +197,7 @@ function __autoload($class){
     if(file_exists($f)){
         require_once($f);
     }else{
-        throw new Exception("Jelix fatal error : Unknow class $class");
+        throw new Exception("Jelix fatal error : Unknown class $class");
     }
 #endif
 }
-
