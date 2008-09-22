@@ -32,13 +32,12 @@ class jDao {
     * @return jDaoFactoryBase  the dao object
     */
     public static function create ($DaoId, $profil=''){
-        if(!is_object($DaoId))
-            $sel = new jSelectorDao($DaoId, $profil);
-        else $sel = $DaoId;
+        if(is_string($DaoId))
+            $DaoId = new jSelectorDao($DaoId, $profil);
 
-        $c = $sel->getDaoClass();
+        $c = $DaoId->getDaoClass();
         if(!class_exists($c,false)){
-            jIncluder::inc($sel);
+            jIncluder::inc($DaoId);
         }
         $conn = jDb::getConnection ($profil);
         $obj = new $c ($conn);

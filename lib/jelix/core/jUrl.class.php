@@ -230,14 +230,12 @@ class jUrl extends jUrlBase {
     /**
      * return the current url engine
      * @return jIUrlEngine
-     * @internal call with true parameter, to force to re-instancy the engine. usefull for test suite
+     * @internal call with true parameter, to force to re-instancy the engine. useful for test suite
      */
     static function getEngine($reset=false){
         static $engine = null;
 
-        if($reset) $engine=null; // for unit tests
-
-        if($engine === null){
+        if($engine === null || $reset){
             global $gJConfig;
             $name = $gJConfig->urlengine['engine'];
 #ifnot ENABLE_OPTIMIZED_SOURCE
@@ -248,10 +246,9 @@ class jUrl extends jUrlBase {
 #endif
             require_once($gJConfig->_pluginsPathList_urls[$name].$name.'.urls.php');
 
-            $cl=$name.'UrlEngine';
+            $cl = $name.'UrlEngine';
             $engine = new $cl();
         }
         return $engine;
     }
-
 }

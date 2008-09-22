@@ -175,10 +175,11 @@ abstract class jRequest {
             throw new jException('jelix~errors.ad.response.type.notallowed',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
         }
 
-        require_once ($path);
+        if(!class_exists($respclass,false))
+            require($path);
 
         $response = new $respclass();
-        $gJCoord->response= $response;
+        $gJCoord->response = $response;
 
         return $response;
     }

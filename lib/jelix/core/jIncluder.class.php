@@ -82,12 +82,8 @@ class jIncluder {
      * check the cache, compile if needed, and include the cache
      * @param    jISelector   $aSelectorId    the selector corresponding to the file
     */
-    public static function inc($aSelector=''){
+    public static function inc($aSelector){
        global $gJConfig,$gJCoord;
-
-        if(is_string($aSelector)){
-            $aSelector = jSelectorFactory::create($aSelector);
-        }
 
         $cachefile = $aSelector->getCompiledFilePath();
 
@@ -96,31 +92,31 @@ class jIncluder {
         }
 
         $mustCompile = $gJConfig->compilation['force'] || !file_exists($cachefile);
-        $sourcefile = $aSelector->getPath();
 
-        if($sourcefile == '' || !file_exists($sourcefile)){
-            throw new jException('jelix~errors.includer.source.missing',array( $aSelector->toString(true)));
-        }
-
-        if($gJConfig->compilation['checkCacheFiletime'] && !$mustCompile){
+        if(!$mustCompile && $gJConfig->compilation['checkCacheFiletime']){
+#ifnot ENABLE_OPTIMIZED_SOURCE
+            $sourcefile = $aSelector->getPath();
+            if($sourcefile == '' || !file_exists($sourcefile)){
+                throw new jException('jelix~errors.includer.source.missing',array( $aSelector->toString(true)));
+            }
             if( filemtime($sourcefile) > filemtime($cachefile)){
+#else
+            if( filemtime($aSelector->getPath()) > filemtime($cachefile)){
+#endif
                 $mustCompile = true;
             }
         }
 
-        $compileok=true;
         if($mustCompile){
             $compiler = $aSelector->getCompiler();
-
-            if($compiler && $compileok=$compiler->compile($aSelector)){
-                require_once($cachefile);
+            if($compiler && $compiler->compile($aSelector)){
+                require($cachefile);
                 jIncluder::$_includedFiles[$cachefile]=true;
             }
         }else{
-            require_once($cachefile);
+            require($cachefile);
             jIncluder::$_includedFiles[$cachefile]=true;
         }
-
     }
 
     /**
@@ -142,9 +138,8 @@ class jIncluder {
         }
 
         $mustCompile = $gJConfig->compilation['force'] || !file_exists($cachefile);
-        $checkCompile = $gJConfig->compilation['checkCacheFiletime'];
 
-        if(!$mustCompile && $checkCompile){
+        if(!$mustCompile && $gJConfig->compilation['checkCacheFiletime']){
             $compiledate = filemtime($cachefile);
             foreach($gJConfig->_modulesPathList as $module=>$path){
                 $sourcefile = $path.$aType[2];
@@ -157,23 +152,22 @@ class jIncluder {
             }
         }
 
-        $compileok=true;
         if($mustCompile){
             require_once(JELIX_LIB_PATH.$aType[1]);
             $compiler = new $aType[0];
-
+            $compileok = true;
             foreach($gJConfig->_modulesPathList as $module=>$path){
-                $compileok=$compiler->compileItem($path.$aType[2], $module);
+                $compileok = $compiler->compileItem($path.$aType[2], $module);
                 if(!$compileok) break;
             }
 
             if($compileok){
                 $compiler->endCompile($cachefile);
-                require_once($cachefile);
+                require($cachefile);
                 jIncluder::$_includedFiles[$cachefile]=true;
             }
         }else{
-            require_once($cachefile);
+            require($cachefile);
             jIncluder::$_includedFiles[$cachefile]=true;
         }
     }

@@ -164,6 +164,7 @@ urlScript=
 urlScriptPath=
 urlScriptName=
 urlScriptId=
+urlScriptIdenc=
 
 [simple_urlengine_entrypoints]
 ; parameters for the simple url engine. This is the list of entry points

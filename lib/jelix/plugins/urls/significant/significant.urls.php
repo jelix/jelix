@@ -85,7 +85,7 @@ class significantUrlEngine implements jIUrlEngine {
 
     /**
      * Parse a url from the request
-     * @param jRequest $request           
+     * @param jRequest $request
      * @param array  $params            url parameters
      * @return jUrlAction
      * @since 1.1
@@ -93,31 +93,24 @@ class significantUrlEngine implements jIUrlEngine {
     public function parseFromRequest($request, $params){
         global $gJConfig;
 
-        $urlact = null;
-
         if ($gJConfig->urlengine['enableParser']){
 
             $sel = new jSelectorUrlCfgSig($gJConfig->urlengine['significantFile']);
             jIncluder::inc($sel);
-            $snp = rawurlencode($gJConfig->urlengine['urlScriptId']);
+            $snp = $gJConfig->urlengine['urlScriptIdenc'];
             $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php';
             if(file_exists($file)){
                 require($file);
-                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 101
+                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 99
                 $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
-                $urlact = $this->_parse($request->urlScript, $request->urlPathInfo, $params);
-                if(!$urlact ){
-                    $urlact = new jUrlAction($params);
-                }
-            }else{
-                $urlact = new jUrlAction($params);
+                return $this->_parse($request->urlScript, $request->urlPathInfo, $params);
             }
-        }else{
-            $urlact = new jUrlAction($params);
         }
+
+        $urlact = new jUrlAction($params);
         return $urlact;
     }
-    
+
     /**
     * Parse some url components
     * @param string $scriptNamePath    /path/index.php
@@ -127,8 +120,6 @@ class significantUrlEngine implements jIUrlEngine {
     */
     public function parse($scriptNamePath, $pathinfo, $params){
         global $gJConfig;
-
-        $urlact = null;
 
         if ($gJConfig->urlengine['enableParser']){
 
@@ -148,18 +139,12 @@ class significantUrlEngine implements jIUrlEngine {
             $file=JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php';
             if(file_exists($file)){
                 require($file);
-                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 101
+                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 127
                 $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
-                $urlact = $this->_parse($scriptNamePath, $pathinfo, $params);
-                if(!$urlact ){
-                    $urlact = new jUrlAction($params);
-                }
-            }else{
-                $urlact = new jUrlAction($params);
+                return $this->_parse($scriptNamePath, $pathinfo, $params);
             }
-        }else{
-            $urlact = new jUrlAction($params);
         }
+        $urlact = new jUrlAction($params);
         return $urlact;
     }
 

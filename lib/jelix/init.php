@@ -172,30 +172,32 @@ function __autoload($class){
     if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms|Auth|Installer).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
     }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
-        // pour les dao stockés en sessions notament
+        // for DAO which are stored in sessions for example
         $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
         if($GLOBALS['gJConfig']->compilation['checkCacheFiletime']){
-            // si il faut verifier le filetime, alors on inclus via le jIncluder
-            // au cas où il faudrait recompiler le dao avant l'inclusion de la classe
+            // if it is needed to check the filetime, then we use jIncluder
+            // because perhaps we will have to recompile the dao before the include
             jIncluder::inc($s);
-            return;
         }else{
-            $f = $s->getCompiledFilePath ();
-            // on verifie que le fichier est là (dans le cas d'un temp purgé, cf bug #6062)
-            if(!file_exists($f)){ // si absent, on recompile
+            $f = $s->getCompiledFilePath();
+            // we should verify that the file is here and if not, we recompile
+            // (case where the temp has been cleaned, see bug #6062 on berlios.de)
+            if (!file_exists($f)) {
                 jIncluder::inc($s);
-                return;
             }
+            else
+                require($f);
         }
+        return;
     }else{
         $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
     }
 
 #if ENABLE_OPTIMIZED_SOURCE
-    require_once($f);
+    require($f);
 #else
     if(file_exists($f)){
-        require_once($f);
+        require($f);
     }else{
         throw new Exception("Jelix fatal error : Unknown class $class");
     }

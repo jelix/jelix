@@ -151,6 +151,7 @@ class jConfigCompiler {
             $snp = substr($snp,0,$pos);
         }
         $config->urlengine['urlScriptId'] = $snp;
+        $config->urlengine['urlScriptIdenc'] = rawurlencode($snp);
 
         self::_initResponsesPath($config->responses);
         self::_initResponsesPath($config->_coreResponses);
