@@ -126,6 +126,7 @@
      <element name="checkbox">
        <ref name="control.common" />
        <ref name="UI.attr.readonly" />
+       <ref name="UI.attr.required" />
        <ref name="UI.attr.defaultvalue" />
        <optional><attribute name="valueoncheck" /></optional>
        <optional><attribute name="valueonuncheck" /></optional>

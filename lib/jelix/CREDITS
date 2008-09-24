@@ -32,6 +32,7 @@ Julien Issler
  - jForms: wymeditor fields don't get updated before javascript form check (#687)
  - jTpl plugins: number_format modifier (#679)
  - jForms: Javascript error handling does not work for element <checkboxes> (#636)
+ - jForms: Add support of the required attribute on <checkbox> (#635)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)

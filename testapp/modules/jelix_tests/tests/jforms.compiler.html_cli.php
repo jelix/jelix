@@ -3,9 +3,10 @@
 * @package     testapp
 * @subpackage  unittest module
 * @author      Jouanneau Laurent
-* @contributor Loic Mathaud
+* @contributor Loic Mathaud, Julien Issler
 * @copyright   2007-2008 Jouanneau laurent
 * @copyright   2007 Loic Mathaud
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -698,13 +699,6 @@ array(
 </checkbox>',
 'jelix~formserr.attribute.not.allowed',
 array('type','checkbox','myfile')
-),
-array(
-'<checkbox ref="nom" xmlns="http://jelix.org/ns/forms/1.0" required="true">
-    <label>Votre nom</label>
-</checkbox>',
-'jelix~formserr.attribute.not.allowed',
-array('required','checkbox','myfile')
 ),
 array(
 '<secret ref="pwd" defaultvalue="toto"  xmlns="http://jelix.org/ns/forms/1.0">

@@ -3,8 +3,9 @@
 * @package     testapp
 * @subpackage  unittest module
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Julien Issler
 * @copyright   2007-2008 Jouanneau laurent
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -89,6 +90,18 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->assertTrue($this->form->check());
         $this->form->setData('nom','1');
         $this->assertTrue($this->form->check());
+        
+        $ctrl->required = true;
+        $this->form->setData('nom',null);
+        $this->assertFalse($this->form->check());
+        $this->form->setData('nom','');
+        $this->assertFalse($this->form->check());
+        $this->form->setData('nom','on');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','0');
+        $this->assertFalse($this->form->check());
+        $this->form->setData('nom','1');
+        $this->assertTrue($this->form->check());        
     }
 
     function testCheckboxes() {

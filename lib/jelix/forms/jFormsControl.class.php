@@ -3,9 +3,10 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor Loic Mathaud, Dominique Papin
+* @contributor Loic Mathaud, Dominique Papin, Julien Issler
 * @copyright   2006-2008 Laurent Jouanneau, 2007 Dominique Papin
 * @copyright   2007 Loic Mathaud
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -222,6 +223,8 @@ class jFormsControlCheckbox extends jFormsControl {
 
     function check(){
         $value = $this->container->data[$this->ref];
+        if($this->required && $value == $this->valueOnUncheck)
+            return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
         if($value != $this->valueOnCheck && $value != $this->valueOnUncheck)
             return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
         return null;

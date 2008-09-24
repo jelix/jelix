@@ -3,11 +3,12 @@
 * @package    jelix
 * @subpackage forms
 * @author     Laurent Jouanneau
-* @contributor Loic Mathaud, Dominique Papin
+* @contributor Loic Mathaud, Dominique Papin, Julien Issler
 * @contributor Uriel Corfa Emotic SARL
 * @copyright   2006-2008 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2007 Dominique Papin
 * @copyright   2007 Emotic SARL
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -185,6 +186,7 @@ class jFormsCompiler_jf_1_0  {
             $source[]='$ctrl->valueOnUncheck=\''.str_replace("'","\\'", $attributes['valueonuncheck']) ."';";
             unset($attributes['valueonuncheck']);
         }
+        $this->attrRequired($source, $attributes);
         return false;
     }
 
