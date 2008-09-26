@@ -1,7 +1,7 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-locale = "en_US"
+locale = "en_EN"
 charset = "UTF-8"
 
 ; see http://www.php.net/manual/en/timezones.php for supported values

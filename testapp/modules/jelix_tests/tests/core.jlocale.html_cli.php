@@ -81,6 +81,7 @@ class UTjlocale extends jUnitTestCase {
         $this->assertEqual('ceci est une phrase fr_CA',jLocale::get('tests1.first.locale', null, 'fr_CA'));
         $this->assertEqual('this is an en_US sentence',jLocale::get('tests1.first.locale', null, 'en_US'));
         $this->assertEqual('this is an en_EN sentence',jLocale::get('tests1.first.locale', null, 'en_EN'));
+        $GLOBALS['gJConfig']->locale = 'en_EN';
     }
 
     function testException() {
@@ -105,12 +106,12 @@ class UTjlocale extends jUnitTestCase {
             $this->pass();
             $this->assertEqual($e->getMessage(), '(200)The given locale key "tests1.first.locale" is invalid (for charset UTF-8, lang de_DE)');
         }
-        $GLOBALS['gJConfig']->locale = 'fr_FR';
+        $GLOBALS['gJConfig']->locale = 'en_EN';
     }
 
     function testWithNoAskedLocale(){
         // all this tests are made on an existing locale file
-
+        $GLOBALS['gJConfig']->locale = 'fr_FR';
         $this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('tests1.second.locale'));
         // no test1.second.locale in fr_CA, so we should have the fr_FR one
         //$this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('tests1.second.locale', null, 'fr_CA'));
@@ -128,11 +129,12 @@ class UTjlocale extends jUnitTestCase {
             $this->pass();
             $this->assertEqual('(210)The given locale key "jelix_tests~tests1.fourth.locale" does not exists in the default lang for the UTF-8 charset', $e->getMessage());
         }
+        $GLOBALS['gJConfig']->locale = 'en_EN';
     }
 
     function testWithNoAskedLocaleFile(){
         // all this tests are made on an non existing locale file
-
+        $GLOBALS['gJConfig']->locale = 'fr_FR';
         $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale'));
         // no test2.properties file for fr_CA, so we should have the fr_FR one
         $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale', null, 'fr_CA'));
@@ -141,6 +143,7 @@ class UTjlocale extends jUnitTestCase {
         //$this->assertEqual('this is an en_EN sentence test3',jLocale::get('tests3.first.locale', null, 'fr_CA'));
         //$this->assertEqual('this is an en_EN sentence test3',jLocale::get('tests3.first.locale', null, 'fr_FR'));
         //$GLOBALS['gJConfig']->locale = 'fr_FR';
+        $GLOBALS['gJConfig']->locale = 'en_EN';
     }
 
     function testWithBadCharset() {
