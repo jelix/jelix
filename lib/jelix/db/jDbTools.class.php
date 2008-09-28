@@ -111,12 +111,10 @@ abstract class jDbTools {
     abstract protected function _getTableList ();
     abstract protected function _getFieldList ($tableName);
 
-    protected $dbmsStyle = array();
-
     /**
      * regular expression to detect comments and end of query
      */
-    protected $dbmsDefaultStyle = array('/^\s*#/', '/;\s*$/');
+    protected $dbmsStyle = array('/^\s*#/', '/;\s*$/');
 
     public function execSQLScript ($file) {
 
@@ -124,11 +122,7 @@ abstract class jDbTools {
         $cmdSQL = '';
         $nbCmd = 0;
 
-        if(isset($this->dbmsStyle[$this->_connector->dbms])){
-            $style=$this->dbmsStyle[$this->_connector->dbms];
-        }else{
-            $style=$this->dbmsDefaultStyle;
-        }
+         $style=$this->dbmsStyle;
 
         foreach ((array)$lines as $key=>$line) {
             if ((!preg_match($style[0],$line))&&(strlen(trim($line))>0)) { // la ligne n'est ni vide ni commentaire

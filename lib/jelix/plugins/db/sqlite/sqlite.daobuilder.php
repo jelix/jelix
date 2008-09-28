@@ -32,6 +32,4 @@ class sqliteDaoBuilder extends jDaoGenerator {
         return $field;
     }
 
-
-
 }
