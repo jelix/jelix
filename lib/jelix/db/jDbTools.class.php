@@ -3,9 +3,10 @@
 * @package    jelix
 * @subpackage db
 * @author     Croes Gérald, Laurent Jouanneau
-* @contributor Laurent Jouanneau, Gwendal Jouannic
+* @contributor Laurent Jouanneau, Gwendal Jouannic, Julien Issler
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @copyright  2008 Gwendal Jouannic
+* @copyright  2008 Julien Issler
 *
 * This class was get originally from the Copix project (CopixDbTools, CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -105,7 +106,7 @@ abstract class jDbTools {
     * return the field list of a given table
     */
     public function getFieldList ($tableName){
-        return $this->_getFieldList ($tableName);
+        return $this->_getFieldList ($this->_connector->prefixTable($tableName));
     }
 
     abstract protected function _getTableList ();

@@ -33,6 +33,7 @@ Julien Issler
  - jTpl plugins: number_format modifier (#679)
  - jForms: Javascript error handling does not work for element <checkboxes> (#636)
  - jForms: Add support of the required attribute on <checkbox> (#635)
+ - fixes about table_prefix in jDb (#702, #703)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
