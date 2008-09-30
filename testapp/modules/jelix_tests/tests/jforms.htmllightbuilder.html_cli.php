@@ -469,7 +469,25 @@ jForms.tForm.addControl(c);
 c.errInvalid=\'"Votre choix" field is invalid\';
 jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
-
+        
+        $this->builder->clearJs();
+        
+        $ctrl->datasource = new jFormsStaticDatasource();
+        $ctrl->datasource->data = array('1'=>'Yes','0'=>'No');
+        $this->form->setReadOnly('rbchoixsimple',false);
+        $this->form->setData('rbchoixsimple',null);
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" value="1"/><label for="'.$this->formname.'_rbchoixsimple_0">Yes</label></span>';
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="0"/><label for="'.$this->formname.'_rbchoixsimple_1">No</label></span>';
+        $this->assertEqualOrDiff($result, $out);
+        
+        $this->form->setData('rbchoixsimple',0);
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" value="1"/><label for="'.$this->formname.'_rbchoixsimple_0">Yes</label></span>';
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="0" checked="checked"/><label for="'.$this->formname.'_rbchoixsimple_1">No</label></span>';
+        $this->assertEqualOrDiff($result, $out);
+        
+        $this->builder->clearJs();
     }
 
     function testOutputMenulist(){

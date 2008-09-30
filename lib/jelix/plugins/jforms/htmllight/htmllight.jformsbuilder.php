@@ -330,9 +330,10 @@ jForms.declareForm(jForms.tForm);
             else
                 $value='';
         }
+        $value = (string) $value;
         $span ='<span class="jforms-radio jforms-ctl-'.$ctrl->ref.'"><input type="radio"';
         foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-            echo $span,$id,$i,'" value="',htmlspecialchars($v),'"',($v==$value?' checked="checked"':''),$readonly,$class,$this->_endt;
+            echo $span,$id,$i,'" value="',htmlspecialchars($v),'"',((string) $v===$value?' checked="checked"':''),$readonly,$class,$this->_endt;
             echo '<label for="',$this->_name,'_',$ctrl->ref,'_',$i,'">',htmlspecialchars($label),'</label></span>';
             $i++;
         }
