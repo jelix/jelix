@@ -4,7 +4,7 @@
 * @subpackage  utils
 * @author      Julien Issler
 * @contributor Laurent Jouanneau
-* @copyright   2007 Julien Issler, 2007 Laurent Jouanneau
+* @copyright   2007-2008 Julien Issler, 2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0
@@ -29,6 +29,9 @@ class jTcpdf extends TCPDF {
             $encoding = $GLOBALS['gJConfig']->charset;
 
         parent::__construct($orientation, $unit, $format, ($encoding == 'UTF-8' || $encoding == 'UTF-16'), $encoding);
+        
+        $this->setHeaderFont(array('vera','',10));
+        $this->setFooterFont(array('vera','',10));
     }
 
 
