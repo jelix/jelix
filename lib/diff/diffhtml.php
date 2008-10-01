@@ -47,7 +47,7 @@ class _HWLDF_WordAccumulator {
 
         foreach ($words as $word) {
             // new-line should only come as first char of word.
-            if (!$word)
+            if ($word === null)
                 continue;
             if ($word[0] == "\n") {
                 $this->_group .= " ";
