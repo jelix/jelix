@@ -86,6 +86,7 @@ Dominique Papin (aka bibo)
  - jforms dao datasource : enhancements (#581,#582)
  - added ifctrl block plugin (#601)
  - added addContent method to jResponseHtmlFragment (#610)
+ - added config option to define default form builder (#696)
 
 Laurent Raufaste (aka analogue)
  - patches on postgresql driver (#123, #671, #672, #674)
@@ -163,7 +164,7 @@ Hugues Magnier (aka BaGroN)
 Alexis Métaireau
  - improvements on jtpl plugin formcontrol (#652)
  - added jResponseHtml::addLink(#657)
- 
+
 Aubanel Monnier
  - jResponseLatexToPdf and jtpl plugins for latex
  - patch for anchors support in jResponseRedirect

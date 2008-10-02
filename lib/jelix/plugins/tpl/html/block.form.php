@@ -3,9 +3,9 @@
 * @package     jelix
 * @subpackage  jtpl_plugin
 * @author      Jouanneau Laurent
-* @contributor Julien Issler, Bastien Jaillot
+* @contributor Julien Issler, Bastien Jaillot, Dominique Papin
 * @copyright   2006-2008 Jouanneau laurent
-* @copyright   2008 Julien Issler, 2008 Bastien Jaillot
+* @copyright   2008 Julien Issler, 2008 Bastien Jaillot, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
