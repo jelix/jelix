@@ -13,34 +13,37 @@
 /**
  * Display a full form without the use of other plugins.
  * usage : {formfull $theformobject,'submit_action', $submit_action_params}
- * 
+ *
  * You can add this others parameters :<ul>
  *   <li>string $builderName  (default is 'html')</li>
  *   <li>array  $options for the builder. Example, for the 'html' builder : <ul>
- *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
+ *      <li>"errorDecorator"=>"name of your javascript object for error listener"</li>
  *      <li>"helpDecorator"=>"name of your javascript object for help listener"</li>
  *      <li>"method" => "post" or "get". default is "post"</li>
  *      </ul>
  *    </li>
  *  </ul>
  * @param jTplCompiler $compiler the template compiler
- * @param array $param 0=>form object 
- *                     1=>selector of submit action  
- *                     2=>array of parameters for submit action 
+ * @param array $param 0=>form object
+ *                     1=>selector of submit action
+ *                     2=>array of parameters for submit action
  *                     3=>name of the builder : default is html
  *                     4=>array of options for the builder
  * @return string the php code corresponding to the begin or end of the block
  */
 function jtpl_cfunction_html_formfull($compiler, $params=array())
 {
+
+    global $gJConfig;
+
     if (count($params) < 2 || count($params) > 5) {
         $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','formfull','2-5');
     }
 
-    if(isset($params[3]) && $params[3] != '""'  && $params[3] != "''")
-        $builder = $params[3];
+    if(isset($params[3]) && trim($params[3]) != '""'  && trim($params[3]) != "''")
+        $builder = trim($params[3]);
     else
-        $builder = "'html'";
+        $builder = "'".$gJConfig->tplplugins['defaultJformsBuilder']."'";
 
     $compiler->addMetaContent('if(isset('.$params[0].')) { '.$params[0].'->getBuilder('.$builder.')->outputMetaContent($t);}');
 
@@ -49,7 +52,7 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
     }
 
     if(isset($params[4]))
-        $options = $params[4];
+        $options = trim($params[4]);
     else
         $options = "array()";
 
@@ -62,4 +65,3 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
 
     return $content;
 }
-

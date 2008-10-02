@@ -18,7 +18,7 @@
  * You can add this others parameters :<ul>
  *   <li>string $builderName  (default is 'html')</li>
  *   <li>array  $options for the builder. Example, for the 'html' builder : <ul>
- *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
+ *      <li>"errorDecorator"=>"name of your javascript object for error listener"</li>
  *      <li>"helpDecorator"=>"name of your javascript object for help listener"</li>
  *      <li>"method" => "post" or "get". default is "post"</li>
  *      </ul>
@@ -27,9 +27,9 @@
  *
  * @param jTplCompiler $compiler the template compiler
  * @param boolean $begin true if it is the begin of block, else false
- * @param array $param 0=>form object 
- *                     1=>selector of submit action  
- *                     2=>array of parameters for submit action 
+ * @param array $param 0=>form object
+ *                     1=>selector of submit action
+ *                     2=>array of parameters for submit action
  *                     3=>name of the builder : default is html
  *                     4=>array of options for the builder
  * @return string the php code corresponding to the begin or end of the block
@@ -38,9 +38,11 @@
 function jtpl_block_html_form($compiler, $begin, $param=array())
 {
 
+    global $gJConfig;
+
     if(!$begin){
-        return '$t->_privateVars[\'__formbuilder\']->outputFooter(); 
-unset($t->_privateVars[\'__form\']); 
+        return '$t->_privateVars[\'__formbuilder\']->outputFooter();
+unset($t->_privateVars[\'__form\']);
 unset($t->_privateVars[\'__formbuilder\']);
 unset($t->_privateVars[\'__displayed_ctrl\']);';
     }
@@ -53,13 +55,13 @@ unset($t->_privateVars[\'__displayed_ctrl\']);';
         $param[2] = 'array()';
     }
 
-    if(isset($param[3]) && $param[3] != '""'  && $param[3] != "''")
-        $builder = $param[3];
+    if(isset($param[3]) && trim($param[3]) != '""'  && trim($param[3]) != "''")
+        $builder = trim($param[3]);
     else
-        $builder = "'html'";
+        $builder = "'".$gJConfig->tplplugins['defaultJformsBuilder']."'";
 
     if(isset($param[4]))
-        $options = $param[4];
+        $options = trim($param[4]);
     else
         $options = "array()";
 
@@ -73,4 +75,3 @@ $t->_privateVars[\'__displayed_ctrl\'] = array();
 
     return $content;
 }
-

@@ -8,7 +8,7 @@ charset = "UTF-8"
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
 ; if empty, jelix will try to get the default timezone
-timeZone = 
+timeZone =
 
 checkTrustedModules = off
 
@@ -26,6 +26,9 @@ use_error_handler = on
 enableOldActionSelector =
 
 [coordplugins]
+
+[tplplugins]
+defaultJformsBuilder = html
 
 [responses]
 html = jResponseHtml
@@ -117,7 +120,7 @@ multiview = off
 ; which contains "/foo/index.php"
 ; This name can be SCRIPT_NAME, ORIG_SCRIPT_NAME, PHP_SELF or REDIRECT_SCRIPT_URL
 ; it is detected automatically by jelix but it can fail sometime, so you could have to setup it
-scriptNameServerVariable = 
+scriptNameServerVariable =
 
 
 ; If you have a rewrite rules which move the pathinfo into a queryparameter
@@ -130,10 +133,10 @@ pathInfoInQueryParameter =
 
 ; basePath corresponds to the path to the base directory of your application.
 ; so if the url to access to your application is http://foo.com/aaa/bbb/www/index.php, you should
-; set basePath = "/aaa/bbb/www/". 
+; set basePath = "/aaa/bbb/www/".
 ; if it is http://foo.com/index.php, set basePath="/"
 ; Jelix can guess the basePath, so you can keep basePath empty. But in the case where there are some
-; entry points which are not in the same directory (ex: you have two entry point : http://foo.com/aaa/index.php 
+; entry points which are not in the same directory (ex: you have two entry point : http://foo.com/aaa/index.php
 ; and http://foo.com/aaa/bbb/other.php ), you MUST set the basePath (ex here, the higher entry point is index.php so
 ; : basePath="/aaa/" )
 basePath = ""
@@ -260,4 +263,3 @@ default.engine.file[] = jelix/jquery/jquery.js
 default.engine.file[] = jelix/wymeditor/jquery.wymeditor.js
 default.config = jelix/wymeditor/config/default.js
 default.skin.default  = jelix/wymeditor/skins/default/screen.css
-
