@@ -41,7 +41,7 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
     }
 
     if(isset($params[3]) && trim($params[3]) != '""'  && trim($params[3]) != "''")
-        $builder = trim($params[3]);
+        $builder = $params[3];
     else
         $builder = "'".$gJConfig->tplplugins['defaultJformsBuilder']."'";
 
@@ -52,7 +52,7 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
     }
 
     if(isset($params[4]))
-        $options = trim($params[4]);
+        $options = $params[4];
     else
         $options = "array()";
 

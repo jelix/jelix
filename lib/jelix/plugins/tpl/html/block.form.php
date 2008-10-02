@@ -56,12 +56,12 @@ unset($t->_privateVars[\'__displayed_ctrl\']);';
     }
 
     if(isset($param[3]) && trim($param[3]) != '""'  && trim($param[3]) != "''")
-        $builder = trim($param[3]);
+        $builder = $param[3];
     else
         $builder = "'".$gJConfig->tplplugins['defaultJformsBuilder']."'";
 
     if(isset($param[4]))
-        $options = trim($param[4]);
+        $options = $param[4];
     else
         $options = "array()";
 
