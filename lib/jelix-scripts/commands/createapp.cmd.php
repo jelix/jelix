@@ -84,6 +84,11 @@ class createappCommand extends JelixScriptCommand {
 
        $param = array('appname'=>$GLOBALS['APPNAME']);
 
+        if($this->getOption('-nodefaultmodule'))
+            $param['tplname'] = 'jelix~defaultmain';
+        else
+            $param['tplname'] = $GLOBALS['APPNAME'].'~main';
+
        $this->createFile(JELIX_APP_PATH.'.htaccess','htaccess_deny',$param);
        $this->createFile(JELIX_APP_PATH.'project.xml','project.xml.tpl',$param);
        $this->createFile(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php','var/config/defaultconfig.ini.php.tpl',$param);
