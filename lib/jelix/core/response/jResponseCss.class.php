@@ -5,7 +5,7 @@
 * @author      Nicolas Jeudy
 * @contributor Laurent Jouanneau
 * @copyright   2006 Nicolas Jeudy
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2008 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -36,6 +36,8 @@ class jResponseCss extends jResponse {
      */
     public function output(){
         global $gJConfig;
+        if($this->hasErrors()) return false;
+        
         $this->_httpHeaders['Content-Type']='text/css;charset='.$gJConfig->charset;
         $this->_httpHeaders['Content-length']=strlen($this->content);
         $this->sendHttpHeaders();

@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Christophe Thiriot
-* @contributor 
-* @copyright   2008 Christophe Thiriot
+* @contributor Laurent Jouanneau
+* @copyright   2008 Christophe Thiriot, 2008 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -42,10 +42,13 @@ class jResponseCmdline extends jResponse {
 
     /**
      * output the content with the text/plain mime type
-     * @return boolean   true no reason to be false 
+     * @return boolean   
      */
     public function output(){
-        $this->flushContent();
+        if ($this->hasErrors())
+            outputErrors();
+        else
+            $this->flushContent();
         return true;
     }
 
