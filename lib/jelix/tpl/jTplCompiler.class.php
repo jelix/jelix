@@ -327,7 +327,13 @@ class jTplCompiler
                 array_push($this->_blockStack,'while');
                 break;
             case 'for':
-                $res = 'for('. $this->_parseFinal($args, $this->_allowedInExpr, array('(')) .'):';
+                if($this->trusted)
+                    $notallowed = array();
+                else
+                    $notallowed = array('(');
+                if(preg_match("/^\s*\((.*)\)\s*$/",$args, $m))
+                   $args = $m[1];
+                $res = 'for('. $this->_parseFinal($args, $this->_allowedInExpr, $notallowed) .'):';
                 array_push($this->_blockStack,'for');
                 break;
 
@@ -445,7 +451,7 @@ class jTplCompiler
         $first = true;
         $inLocale = false;
         $locale='';
-        $bracketcount=$sqbracketcount=0;
+        $bracketcount = $sqbracketcount = 0;
         $firstok = array_shift($tokens);
 
         // il y a un bug, parfois le premier token n'est pas T_OPEN_TAG...

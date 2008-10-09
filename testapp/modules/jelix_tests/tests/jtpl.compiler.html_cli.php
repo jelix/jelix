@@ -129,6 +129,16 @@ function toto() {
         '<p>ok{bla $foo, $params}</p>',
         '<p>ok<?php testjtplcontentUserFunction( $t,$t->_vars[\'foo\'], $t->_vars[\'params\']);?></p>',
         ),
+20=>array('{for ($i=0;$i<$p;$i++)} A {/for}',
+          '<?php for($t->_vars[\'i\']=0;$t->_vars[\'i\']<$t->_vars[\'p\'];$t->_vars[\'i\']++):?> A <?php endfor;?>'
+         ),
+21=>array('{for $i=0;$i<$p;$i++} A {/for}',
+          '<?php for($t->_vars[\'i\']=0;$t->_vars[\'i\']<$t->_vars[\'p\'];$t->_vars[\'i\']++):?> A <?php endfor;?>'
+         ),
+22=>array('{for $i=count($o);$i<$p;$i++} A {/for}',
+          '<?php for($t->_vars[\'i\']=count($t->_vars[\'o\']);$t->_vars[\'i\']<$t->_vars[\'p\'];$t->_vars[\'i\']++):?> A <?php endfor;?>'
+         ),
+
     );
 
     function testCompileContent() {
@@ -137,6 +147,31 @@ function toto() {
         $compil->trusted = true;
         $compil->setUserPlugins(array(), array('bla'=>'testjtplcontentUserFunction'));
         foreach($this->content as $k=>$t){
+            try{
+                $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));
+            }catch(jException $e){
+                $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
+            }catch(Exception $e){
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+            }
+        }
+    }
+
+    protected $contentUntrusted = array(
+0=>array('{for ($i=0;$i<$p;$i++)} A {/for}',
+          '<?php for($t->_vars[\'i\']=0;$t->_vars[\'i\']<$t->_vars[\'p\'];$t->_vars[\'i\']++):?> A <?php endfor;?>'
+         ),
+1=>array('{for $i=0;$i<$p;$i++} A {/for}',
+          '<?php for($t->_vars[\'i\']=0;$t->_vars[\'i\']<$t->_vars[\'p\'];$t->_vars[\'i\']++):?> A <?php endfor;?>'
+         ),
+    );
+    
+    function testCompileContentUntrusted() {
+        $compil = new testJtplContentCompiler();
+        $compil->outputType = 'html';
+        $compil->trusted = false;
+        $compil->setUserPlugins(array(), array('bla'=>'testjtplcontentUserFunction'));
+        foreach($this->contentUntrusted as $k=>$t){
             try{
                 $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));
             }catch(jException $e){
@@ -206,8 +241,8 @@ function toto() {
                   'jelix~errors.tpl.tag.block.end.missing',array('ifuserconnected',null) ),
          2=>array('{foreach ($t=>$a)} A {/foreach}',
                   'jelix~errors.tpl.tag.character.invalid',array('foreach ($t=>$a)', '(', NULL) ),
-         3=>array('{for ($i=0;$i<$p;$i++)} A {/for}',
-                  'jelix~errors.tpl.tag.character.invalid',array('for ($i=0;$i<$p;$i++)','(',null) ),
+         3=>array('{for ($i=0;$i<$p;$i++} A {/for}',
+                  'jelix~errors.tpl.tag.bracket.error',array('for ($i=0;$i<$p;$i++',null) ),
          4=>array('{form ($foo,$params)} aa {/form}',
                   'jelix~errors.tplplugin.block.bad.argument.number',array('form','2-5',null) ),
          5=>array('{($aaa)}',
@@ -231,6 +266,29 @@ function toto() {
             }
         }
     }
+
+    protected $tplerrors2 = array(
+         0=>array('{for $i=count($a);$i<$p;$i++} A {/for}',
+                  'jelix~errors.tpl.tag.character.invalid',array('for $i=count($a);$i<$p;$i++','(',null) ),
+    );
+    function testCompileErrorsUntrusted() {
+
+        foreach($this->tplerrors2 as $k=>$t){
+            $compil = new testJtplContentCompiler();
+            $compil->outputType = 'html';
+            $compil->trusted = false;
+            try{
+                $compil->compileContent2($t[0]);
+                $this->fail("Test '$k', exception didn't happen");
+            }catch(jException $e){
+                $this->assertEqual($e->getLocaleKey(), $t[1], "Test '$k': %s  (local parameters: ".var_export($e->getLocaleParameters(), true).")");
+                $this->assertEqualOrDiff($e->getLocaleParameters(), $t[2], "Test '$k': %s");
+            }catch(Exception $e){
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+            }
+        }
+    }
+
 }
 
 ?>
