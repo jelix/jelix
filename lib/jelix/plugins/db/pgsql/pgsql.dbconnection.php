@@ -119,7 +119,7 @@ class pgsqlDbConnection extends jDbConnection {
     }
 
     protected function _doQuery ($queryString){
-        if ($qI = pg_query ($this->_connection, $queryString)){
+        if ($qI = @pg_query ($this->_connection, $queryString)){
             $rs= new pgsqlDbResultSet ($qI);
             $rs->_connector = $this;
         }else{
