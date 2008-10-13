@@ -606,22 +606,16 @@ cd lib/wikirenderer/rules
 ! wr3_to_docbook.php
 
 cd lib/tcpdf
-  LICENSE.TXT
-  README.TXT
+  unicode_data.php
   tcpdf.php
-cd lib/tcpdf/barcode
-! barcode.php
-! c128aobject.php
-! c128bobject.php
-! c128cobject.php
-! c39object.php
-! i25object.php
-! image.php
-! lesser.txt
+  README.TXT
+  LICENSE.TXT
+  htmlcolors.php
+  barcodes.php
 cd lib/tcpdf/config
-! tcpdf_config.php
+  tcpdf_config.php
 cd lib/tcpdf/config/lang
-! eng.php
+  eng.php
 
 cd lib/wshelper
 ! CREDITS

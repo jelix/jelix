@@ -16,7 +16,7 @@
 require_once (JELIX_LIB_UTILS_PATH.'jTcpdf.class.php');
 
 /**
-* PDF Response based on TCPDF (http://tcpdf.sourceforge.net) 
+* PDF Response based on TCPDF (http://tcpdf.sourceforge.net)
 * @package  jelix
 * @subpackage core_response
 * @since 1.0
@@ -51,17 +51,31 @@ class jResponseTcpdf  extends jResponse {
      */
     public function output(){
 
-        if($this->hasErrors()) return false;
-
-        if(!($this->tcpdf instanceof jTcpdf)){
-            throw new jException('jelix~errors.reptcpdf.not_a_jtcpdf');
+        if($this->hasErrors())
             return false;
-        }
 
-        if($this->doDownload)
-            $this->tcpdf->Output($this->outputFileName,'D');
-        else
-            $this->tcpdf->Output($this->outputFileName,'I');
+        if(!($this->tcpdf instanceof jTcpdf))
+            throw new jException('jelix~errors.reptcpdf.not_a_jtcpdf');
+
+        $pdf_data = $this->tcpdf->Output('','S');
+
+        header("Cache-Control: public, must-revalidate, max-age=0"); // HTTP/1.1
+        header("Pragma: public");
+        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+        header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+        header('Content-Length: '.strlen($pdf_data));
+        if($this->doDownload){
+            header("Content-Type: application/force-download");
+            header("Content-Type: application/octet-stream", false);
+            header("Content-Transfer-Encoding: binary");
+            header('Content-Disposition: attachment; filename="'.$this->outputFileName.'";');
+            echo $pdf_data;
+        }
+        else{
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: inline; filename="'.$this->outputFileName.'";');
+            echo $pdf_data;
+        }
 
         flush();
         return true;
@@ -78,12 +92,11 @@ class jResponseTcpdf  extends jResponse {
         $this->addHttpHeader('Content-Type','text/plain;charset='.$gJConfig->charset,false);
         $this->sendHttpHeaders();
         if($this->hasErrors()){
-            foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+            foreach( $GLOBALS['gJCoord']->errorMessages  as $e)
                echo '['.$e[0].' '.$e[1].'] '.$e[2]." \t".$e[3]." \t".$e[4]."\n";
-            }
-        }else{
-            echo "[unknow error]\n";
         }
+        else
+            echo "[unknow error]\n";
     }
 
 
@@ -106,12 +119,10 @@ class jResponseTcpdf  extends jResponse {
     * @return mixed Value returned bu FPDF's method
     */
     public function __call($method, $attr){
-        if ($this->tcpdf !== null){
+        if ($this->tcpdf !== null)
             return call_user_func_array(array($this->tcpdf, $method), $attr );
-        }else{
+        else
             throw new jException('jelix~errors.reptcpdf.not_a_jtcpdf');
-            return false;
-        }
     }
 
 }

@@ -2,16 +2,17 @@
 //============================================================+
 // File name   : tcpdf_config.php
 // Begin       : 2004-06-11
-// Last Update : 2007-07-30
+// Last Update : 2008-10-10
 //
 // Description : Congiguration file for TCPDF.
 //
 // Author: Nicola Asuni
 //
 // (c) Copyright:
-//               Tecnick.com S.r.l.
-//               Via Ugo Foscolo n.19
-//               09045 Quartu Sant'Elena (CA)
+//               Nicola Asuni
+//               Tecnick.com s.r.l.
+//               Via Della Pace, 11
+//               09044 Quartucciu (CA)
 //               ITALY
 //               www.tecnick.com
 //               info@tecnick.com
@@ -20,9 +21,9 @@
 /**
  * Configuration file for TCPDF.
  * @author Nicola Asuni
- * @copyright Copyright &copy; 2004, Tecnick.com S.r.l. - Via Ugo Foscolo n.19 - 09045 Quartu Sant'Elena (CA) - ITALY - www.tecnick.com - info@tecnick.com
+ * @copyright 2004-2008 Nicola Asuni - Tecnick.com S.r.l (www.tecnick.com) Via Della Pace, 11 - 09044 - Quartucciu (CA) - ITALY - www.tecnick.com - info@tecnick.com
  * @package com.tecnick.tcpdf
- * @version 1.53.0.TC033
+ * @version 4.0.014
  * @link http://tcpdf.sourceforge.net
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * @since 2004-10-27
@@ -32,37 +33,67 @@
 
 if (!defined("K_TCPDF_EXTERNAL_CONFIG")) {
 	
-	// PLEASE SET THE FOLLOWING CONSTANTS:
+	// DOCUMENT_ROOT fix for IIS Webserver
+	if ((!isset($_SERVER['DOCUMENT_ROOT'])) OR (empty($_SERVER['DOCUMENT_ROOT']))) {
+		if(isset($_SERVER['SCRIPT_FILENAME'])) {
+			$_SERVER['DOCUMENT_ROOT'] = str_replace( '\\', '/', substr($_SERVER['SCRIPT_FILENAME'], 0, 0-strlen($_SERVER['PHP_SELF'])));
+		} elseif(isset($_SERVER['PATH_TRANSLATED'])) {
+			$_SERVER['DOCUMENT_ROOT'] = str_replace( '\\', '/', substr(str_replace('\\\\', '\\', $_SERVER['PATH_TRANSLATED']), 0, 0-strlen($_SERVER['PHP_SELF'])));
+		}	else {
+			// define here your DOCUMENT_ROOT path if the previous fails
+			$_SERVER['DOCUMENT_ROOT'] = "/var/www";
+		}
+	}
+	
+	// Automatic calculation for the following K_PATH_MAIN constant
+	$k_path_main = str_replace( '\\', '/', realpath(substr(dirname(__FILE__), 0, 0-strlen("config"))));
+	if (substr($k_path_main, -1) != '/') {
+		$k_path_main .= '/';
+	}
 	
 	/**
-	 * installation path
+	 * Installation path (/var/www/tcpdf/).
+	 * By default it is automatically calculated but you can also set it as a fixed string to improve performances.
 	 */
-	define ("K_PATH_MAIN", LIB_PATH."tcpdf/");
+	define ("K_PATH_MAIN", $k_path_main);
+	
+	// Automatic calculation for the following K_PATH_URL constant
+	if (isset($_SERVER["HTTP_HOST"]) AND (!empty($_SERVER["HTTP_HOST"]))) {
+		if(isset($_SERVER["HTTPS"]) AND (!empty($_SERVER["HTTPS"])) AND strtolower($_SERVER['HTTPS'])!='off') {
+			$k_path_url = "https://";
+		} else {
+			$k_path_url = "http://";
+		}
+		$k_path_url .= $_SERVER["HTTP_HOST"];
+		$k_path_url .= str_replace( '\\', '/', substr($_SERVER["PHP_SELF"], 0, -24));
+	}
 	
 	/**
-	 * url path
+	 * URL path to tcpdf installation folder (http://localhost/tcpdf/).
+	 * By default it is automatically calculated but you can also set it as a fixed string to improve performances..
 	 */
-	define ("K_PATH_URL", $GLOBALS['gJConfig']->urlengine['basePath']);
+	define ("K_PATH_URL", $k_path_url);
 	
 	/**
 	 * path for PDF fonts
+	 * use K_PATH_MAIN."fonts/old/" for old non-UTF8 fonts
 	 */
-	define ("FPDF_FONTPATH", LIB_PATH."pdf-fonts/");
+	define ("K_PATH_FONTS", K_PATH_MAIN."fonts/");
 	
 	/**
 	 * cache directory for temporary files (full path)
 	 */
-	define ("K_PATH_CACHE", JELIX_APP_TEMP_PATH."tcpdfcache/");
+	define ("K_PATH_CACHE", K_PATH_MAIN."cache/");
 	
 	/**
 	 * cache directory for temporary files (url path)
 	 */
-	define ("K_PATH_URL_CACHE", K_PATH_URL."tcpdf/");
+	define ("K_PATH_URL_CACHE", K_PATH_URL."cache/");
 	
 	/**
 	 *images directory
 	 */
-	define ("K_PATH_IMAGES", JELIX_APP_VAR_PATH."tcpdf/");
+	define ("K_PATH_IMAGES", K_PATH_MAIN."images/");
 	
 	/**
 	 * blank image
@@ -82,7 +113,7 @@ if (!defined("K_TCPDF_EXTERNAL_CONFIG")) {
 	/**
 	 * document creator
 	 */
-	define ("PDF_CREATOR", "Jelix Framework with jResponsePDF and TCPDF");
+	define ("PDF_CREATOR", "TCPDF");
 	
 	/**
 	 * document author
@@ -92,22 +123,22 @@ if (!defined("K_TCPDF_EXTERNAL_CONFIG")) {
 	/**
 	 * header title
 	 */
-	define ("PDF_HEADER_TITLE", "header title");
+	define ("PDF_HEADER_TITLE", "TCPDF Example");
 	
 	/**
 	 * header description string
 	 */
-	define ("PDF_HEADER_STRING", "first row\nsecond row\nthird row");
+	define ("PDF_HEADER_STRING", "by Nicola Asuni - Tecnick.com\nwww.tcpdf.org");
 	
 	/**
 	 * image logo
 	 */
-	define ("PDF_HEADER_LOGO", "");
+	define ("PDF_HEADER_LOGO", "tcpdf_logo.jpg");
 	
 	/**
 	 * header logo image width [mm]
 	 */
-	define ("PDF_HEADER_LOGO_WIDTH", 20);
+	define ("PDF_HEADER_LOGO_WIDTH", 30);
 	
 	/**
 	 *  document unit of measure [pt=point, mm=millimeter, cm=centimeter, in=inch]
@@ -147,7 +178,7 @@ if (!defined("K_TCPDF_EXTERNAL_CONFIG")) {
 	/**
 	 * main font name
 	 */
-	define ("PDF_FONT_NAME_MAIN", "vera"); //vera
+	define ("PDF_FONT_NAME_MAIN", "helvetica");
 	
 	/**
 	 * main font size
@@ -157,7 +188,7 @@ if (!defined("K_TCPDF_EXTERNAL_CONFIG")) {
 	/**
 	 * data font name
 	 */
-	define ("PDF_FONT_NAME_DATA", "vera"); //verase
+	define ("PDF_FONT_NAME_DATA", "helvetica");
 	
 	/**
 	 * data font size
@@ -165,7 +196,7 @@ if (!defined("K_TCPDF_EXTERNAL_CONFIG")) {
 	define ("PDF_FONT_SIZE_DATA", 8);
 	
 	/**
-	 *  scale factor for images (number of points in user unit)
+	 * Ratio used to scale the images
 	 */
 	define ("PDF_IMAGE_SCALE_RATIO", 4);
 	
