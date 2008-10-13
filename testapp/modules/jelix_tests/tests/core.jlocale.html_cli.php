@@ -78,6 +78,8 @@ class UTjlocale extends jUnitTestCase {
         $GLOBALS['gJConfig']->locale = 'fr_FR';
         $this->assertEqual('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale'));
         $this->assertEqual('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale', null, 'fr_FR'));
+        $this->assertEqualOrDiff('Chaîne à tester',jLocale::get('tests1.multiline.locale.with.accent'));
+        $this->assertEqualOrDiff(utf8_decode('Chaîne à tester'),jLocale::get('testunit.multiline.locale.with.accent',null,null,'ISO-8859-1'));
         $this->assertEqual('ceci est une phrase fr_CA',jLocale::get('tests1.first.locale', null, 'fr_CA'));
         $this->assertEqual('this is an en_US sentence',jLocale::get('tests1.first.locale', null, 'en_US'));
         $this->assertEqual('this is an en_EN sentence',jLocale::get('tests1.first.locale', null, 'en_EN'));
