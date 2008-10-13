@@ -34,8 +34,9 @@ class jTcpdf extends TCPDF {
 
         parent::__construct($orientation, $unit, $format, ($encoding == 'UTF-8' || $encoding == 'UTF-16'), $encoding);
 
-        $this->setHeaderFont(array('helvetica','',10));
-        $this->setFooterFont(array('helvetica','',10));
+        $this->setHeaderFont(array('dejavusans','',10));
+        $this->setFooterFont(array('dejavusans','',10));
+        $this->setFont('dejavusans','',10);
     }
 
 

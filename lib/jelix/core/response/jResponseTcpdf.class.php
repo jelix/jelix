@@ -68,12 +68,12 @@ class jResponseTcpdf  extends jResponse {
             header("Content-Type: application/force-download");
             header("Content-Type: application/octet-stream", false);
             header("Content-Transfer-Encoding: binary");
-            header('Content-Disposition: attachment; filename="'.$this->outputFileName.'";');
+            header('Content-Disposition: attachment; filename="'.str_replace('"','\"',$this->outputFileName).'";');
             echo $pdf_data;
         }
         else{
             header('Content-Type: application/pdf');
-            header('Content-Disposition: inline; filename="'.$this->outputFileName.'";');
+            header('Content-Disposition: inline; filename="'.str_replace('"','\"',$this->outputFileName).'";');
             echo $pdf_data;
         }
 
