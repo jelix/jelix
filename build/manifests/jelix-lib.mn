@@ -606,7 +606,7 @@ cd lib/wikirenderer/rules
 ! wr3_to_docbook.php
 
 cd lib/tcpdf
-  unicode_data.php
+! unicode_data.php
   tcpdf.php
   README.TXT
   LICENSE.TXT
