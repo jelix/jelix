@@ -3,9 +3,9 @@
 * @package      jelix
 * @subpackage   core
 * @author       Jouanneau Laurent
-* @contributor  Thibault PIRONT < nuKs >, Christophe Thiriot
+* @contributor  Thibault PIRONT < nuKs >, Christophe Thiriot, Philippe Schelté
 * @copyright    2006-2008 Jouanneau laurent
-* @copyright    2007 Thibault PIRONT, 2008 Christophe Thiriot
+* @copyright    2007 Thibault PIRONT, 2008 Christophe Thiriot, 2008 Philippe Schelté
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -81,7 +81,7 @@ class jConfigCompiler {
         }else{
             jIniFile::write(get_object_vars($config), JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php', ";<?php die('');?>\n");
         }
-#elseif WITH_BYTECODE_CACHE 
+#elseif WITH_BYTECODE_CACHE
         $filename=JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.conf.php';
         if ($f = @fopen($filename, 'wb')) {
             fwrite($f, '<?php $config = '.var_export(get_object_vars($config),true).";\n?>");
@@ -99,7 +99,7 @@ class jConfigCompiler {
      * fill some config properties with calculated values
      */
     static protected function prepareConfig($config){
-        
+
         $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
         if(trim( $config->startAction) == '') {
             $config->startAction = ':';
@@ -113,8 +113,8 @@ class jConfigCompiler {
 
         if($config->checkTrustedModules){
             $config->_trustedModules = explode(',',$config->trustedModules);
-            if(!in_array('jelix',$config->trustedModules))
-                $config->trustedModules[]='jelix';
+            if(!in_array('jelix',$config->_trustedModules))
+                $config->_trustedModules[]='jelix';
         }else{
             $config->_trustedModules = array_keys($config->_modulesPathList);
         }
@@ -198,7 +198,7 @@ class jConfigCompiler {
             }
             if(substr($p,-1) !='/')
                 $p.='/';
-            if($k!=0) 
+            if($k!=0)
                 $allBasePath[]=$p;
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
@@ -218,7 +218,7 @@ class jConfigCompiler {
      */
     static protected function _loadPluginsPathList(&$config){
         $list = split(' *, *',$config->pluginsPath);
-        array_unshift($list, JELIX_LIB_PATH.'plugins/'); 
+        array_unshift($list, JELIX_LIB_PATH.'plugins/');
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
@@ -233,7 +233,7 @@ class jConfigCompiler {
                 while (false !== ($f = readdir($handle))) {
                     if ($f{0} != '.' && is_dir($p.$f)) {
                         if($subdir = opendir($p.$f)){
-                            if($k!=0) 
+                            if($k!=0)
                                $config->_allBasePath[]=$p.$f.'/';
                             while (false !== ($subf = readdir($subdir))) {
                                 if ($subf{0} != '.' && is_dir($p.$f.'/'.$subf)) {

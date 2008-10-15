@@ -180,6 +180,7 @@ Rahal
 
 Philippe Schelte (aka dubphil)
  - plugin tpl cycle (#149)
+ - error in checkTrustedModules function (#715)
 
 Warren Seine (aka SooW)
  - <script /> tags don't end with a newline (#536)
