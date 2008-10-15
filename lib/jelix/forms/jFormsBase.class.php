@@ -104,7 +104,7 @@ abstract class jFormsBase {
     /**
      * list of modified controls
      * keys are name of control, value is the old value of the control
-     * @var array 
+     * @var array
      */
     protected $modifiedControls = array();
     /**
@@ -563,7 +563,6 @@ abstract class jFormsBase {
                 return $this->builders[$buildertype];
             include_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
             include_once ($gJConfig->_pluginsPathList_jforms[$buildertype].$buildertype.'.jformsbuilder.php');
-            //echo "builder=".$gJConfig->_pluginsPathList_jforms[$buildertype];
             $c = $buildertype.'JformsBuilder';
             $o = $this->builders[$buildertype] = new $c($this);
             return $o;
