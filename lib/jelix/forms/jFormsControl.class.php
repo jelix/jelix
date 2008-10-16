@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin, Julien Issler
-* @copyright   2006-2008 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2006-2008 Laurent Jouanneau, 2007-2008 Dominique Papin
 * @copyright   2007 Loic Mathaud
 * @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
@@ -58,7 +58,7 @@ abstract class jFormsControl {
 
     function check(){
         $value = $this->container->data[$this->ref];
-        if($value == '') {
+        if(trim($value) == '') {
             if($this->required)
                 return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
         }elseif(!$this->datatype->check($value)){
@@ -394,7 +394,7 @@ class jFormsControlCaptcha extends jFormsControl {
     public $required = true;
     function check(){
         $value = $this->container->data[$this->ref];
-        if($value == '') {
+        if(trim($value) == '') {
             return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
         }elseif($value !=  $this->container->privateData[$this->ref]){
             return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
@@ -686,4 +686,3 @@ class jFormsControlSwitch extends jFormsControlChoice {
 class jFormsControlRepeat extends jFormsControlGroups {
     public $type="repeat";
 }*/
-

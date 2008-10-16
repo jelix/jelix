@@ -82,11 +82,12 @@ Dominique Papin (aka bibo)
  - improved addCssLink usability for IE (#348)
  - added support of 'else' keyword for block plugin in jtpl (#349)
  - added support of <reset> in jforms (#258)
- - fixed some bugs (#362,#585)
+ - fixed some bugs (#362,#585,#718)
  - jforms dao datasource : enhancements (#581,#582)
  - added ifctrl block plugin (#601)
  - added addContent method to jResponseHtmlFragment (#610)
  - added config option to define default form builder (#696)
+
 
 Laurent Raufaste (aka analogue)
  - patches on postgresql driver (#123, #671, #672, #674)
