@@ -457,7 +457,7 @@ class jFormsControlCheckboxes extends jFormsControlDatasource {
                 return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
             }
         }else{
-            if($value == ''){
+            if(trim($value) == ''){
                 if($this->required)
                     return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
             }else{
@@ -492,7 +492,7 @@ class jFormsControlListbox extends jFormsControlDatasource {
                 return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
             }
         }else{
-            if($value == '' && $this->required){
+            if(trim($value) == '' && $this->required){
                 return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
             }
         }
