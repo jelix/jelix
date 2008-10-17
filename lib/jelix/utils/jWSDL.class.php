@@ -92,6 +92,15 @@ class jWSDL {
             throw new jException('jelix~errors.ad.controller.class.unknow', array('jWSDL', $this->controllerClassName, $this->_ctrlpath));
         }
 
+        //Check eAccelerator configuration in order to Reflexion API work
+        if (extension_loaded('eAccelerator')) {
+            $reflect = new ReflectionClass('jWSDL');
+            if($reflect->getDocComment() == NULL) {
+                throw new jException('jWSDL~errors.eaccelerator.configuration');
+            }
+            unset($reflect);
+        }
+
     }
 
     /**
