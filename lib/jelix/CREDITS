@@ -176,6 +176,9 @@ Thibault Piront (aka nuks)
  - counter* plugins for jtpl (#375)
  - fixed bug in jAcl2 pgsql install file (#631)
 
+Pulsation
+  - possibility to disable zone caching (#717)
+
 Rahal
  - improvement on locale selectors : possibility to overload locales (#358)
 

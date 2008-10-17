@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage utils
 * @author     Croes Gérald, Laurent Jouanneau
-* @contributor Laurent Jouanneau, Laurent Raufaste
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2008 Laurent Raufaste
+* @contributor Laurent Jouanneau, Laurent Raufaste, Pulsation
+* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau, 2008 Laurent Raufaste, 2008 Pulsation
 *
 * This class was get originally from the Copix project (CopixZone, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -158,7 +158,9 @@ class jZone {
     * @return string  zone content
     */
     public function getContent (){
-        if ($this->_useCache){
+    	global $gJConfig;
+    	
+        if ($this->_useCache && !$gJConfig->zones['disableCache']){
             $f = $this->_getCacheFile();
             if(file_exists($f)){
                 if($this->_cacheTimeout > 0){
