@@ -4,13 +4,13 @@
 * @subpackage core
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
-* @contributor Julien Issler, Yannick Le Guédart
+* @contributor Julien Issler, Yannick Le Guédart, Dominique Papin
 * @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
 * initial authors : Gerald Croes, Laurent Jouanneau.
 * enhancement by Laurent Jouanneau for Jelix.
-* @copyright 2008 Julien Issler, 2008 Yannick Le Guédart
+* @copyright 2008 Julien Issler, 2008 Yannick Le Guédart, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -109,6 +109,7 @@ class jBundle {
     protected function _loadResources ($fichier, $charset){
 
         if (($f = @fopen ($fichier, 'r')) !== false) {
+            $utf8Mod = ($charset=='UTF-8')?'u':'';
             $multiline=false;
             $linenumber=0;
             $key='';
@@ -117,7 +118,7 @@ class jBundle {
                     $linenumber++;
                     $line=rtrim($line);
                     if($multiline){
-                        if(preg_match("/^\s*(.*)\s*(\\\\?)$/U", $line, $match)){
+                        if(preg_match("/^\s*(.*)\s*(\\\\?)$/U".$utf8Mod, $line, $match)){
                             $multiline= ($match[2] =="\\");
                             if (strlen ($match[1])) {
                                 $sp = preg_split('/(?<!\\\\)\#/', $match[1], -1 ,PREG_SPLIT_NO_EMPTY);
@@ -128,7 +129,7 @@ class jBundle {
                         }else{
                             throw new Exception('Syntaxe error in file properties '.$fichier.' line '.$linenumber,210);
                         }
-                    }elseif(preg_match("/^\s*(.+)\s*=\s*(.*)\s*(\\\\?)$/U",$line, $match)){
+                    }elseif(preg_match("/^\s*(.+)\s*=\s*(.*)\s*(\\\\?)$/U".$utf8Mod,$line, $match)){
                         // on a bien un cle=valeur
                         $key=$match[1];
                         $multiline= ($match[3] =="\\");
