@@ -3,9 +3,9 @@
 * @package     testapp
 * @subpackage  unittest module
 * @author      Jouanneau Laurent
-* @contributor Julien Issler
+* @contributor Julien Issler, Dominique Papin
 * @copyright   2007-2008 Jouanneau laurent
-* @copyright   2008 Julien Issler
+* @copyright   2008 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -45,6 +45,8 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $ctrl->required = true;
         $this->assertFalse($this->form->check());
         $this->form->setData('nom','');
+        $this->assertFalse($this->form->check());
+        $this->form->setData('nom','    ');
         $this->assertFalse($this->form->check());
         $ctrl->required = false;
         $this->assertTrue($this->form->check());
@@ -90,7 +92,7 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->assertTrue($this->form->check());
         $this->form->setData('nom','1');
         $this->assertTrue($this->form->check());
-        
+
         $ctrl->required = true;
         $this->form->setData('nom',null);
         $this->assertFalse($this->form->check());
@@ -101,7 +103,7 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->form->setData('nom','0');
         $this->assertFalse($this->form->check());
         $this->form->setData('nom','1');
-        $this->assertTrue($this->form->check());        
+        $this->assertTrue($this->form->check());
     }
 
     function testCheckboxes() {
@@ -174,6 +176,13 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
 
         $ctrl = new jFormsControlCaptcha('captcha');
         $this->form->addCtrl($ctrl);
+
+        // captcha required by default $ctrl->required = true;
+        $this->assertFalse($this->form->check());
+        $this->form->setData('captcha','');
+        $this->assertFalse($this->form->check());
+        $this->form->setData('captcha','    ');
+        $this->assertFalse($this->form->check());
 
         $ctrl->initExpectedValue();
 
