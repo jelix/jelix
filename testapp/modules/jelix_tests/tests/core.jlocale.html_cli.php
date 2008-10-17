@@ -3,9 +3,9 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
-* @contributor Julien Issler, Dominique Papin
+* @contributor Julien Issler
 * @copyright   2006-2007 Jouanneau laurent
-* @copyright   2008 Julien Issler, 2008 Dominique Papin
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -79,9 +79,7 @@ class UTjlocale extends jUnitTestCase {
         $this->assertEqual('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale'));
         $this->assertEqual('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale', null, 'fr_FR'));
         $this->assertEqualOrDiff('Chaîne à tester',jLocale::get('tests1.multiline.locale.with.accent'));
-        $this->assertEqualOrDiff('Chaîne à tester à foison',jLocale::get('tests1.multiline.locale.with.accent2'));
         $this->assertEqualOrDiff(utf8_decode('Chaîne à tester'),jLocale::get('testunit.multiline.locale.with.accent',null,null,'ISO-8859-1'));
-        $this->assertEqualOrDiff(utf8_decode('Chaîne à tester à foison'),jLocale::get('testunit.multiline.locale.with.accent2',null,null,'ISO-8859-1'));
         $this->assertEqual('ceci est une phrase fr_CA',jLocale::get('tests1.first.locale', null, 'fr_CA'));
         $this->assertEqual('this is an en_US sentence',jLocale::get('tests1.first.locale', null, 'en_US'));
         $this->assertEqual('this is an en_EN sentence',jLocale::get('tests1.first.locale', null, 'en_EN'));
