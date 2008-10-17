@@ -6,7 +6,7 @@
   ns="http://jelix.org/ns/forms/1.0">
 
    <start>
-      <element name="forms">
+      <element name="form">
          <ref name="form.controls" />
       </element>
    </start>
