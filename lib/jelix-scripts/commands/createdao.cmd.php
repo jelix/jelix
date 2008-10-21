@@ -74,7 +74,7 @@ class createdaoCommand extends JelixScriptCommand {
          $primarykeys='';
          foreach($fields as $fieldname=>$prop){
 
-            switch($prop->type){
+            switch(strtolower($prop->type)){
 
                case 'clob': 
                case 'text':
@@ -93,6 +93,7 @@ class createdaoCommand extends JelixScriptCommand {
                   break;
                case 'number':
                case 'tinyint':
+               case 'numeric':
                case 'int':
                case 'integer':
                case 'smallint':
