@@ -5,6 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
 * @contributor Bastien Jaillot
+* @contributor Christophe Thiriot
 * @copyright   2006-2008 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -372,8 +373,8 @@ abstract class jFormsBase {
         if(!is_array($primaryKey))
             $primaryKey =array($primaryKey);
 
-        $dao = jDao::create($daoSelector);
-        $daorec = jDao::createRecord($daoSelector);
+        $dao = jDao::create($daoSelector, $dbProfil);
+        $daorec = jDao::createRecord($daoSelector, $dbProfil);
 
         $conditions = jDao::createConditions();
         if($primaryKeyNames)
