@@ -4,7 +4,7 @@
 * @subpackage  db
 #if ENABLE_OPTIMIZED_SOURCE
 * @author      Laurent Jouanneau
-* @contributor Yannick Le Guédart, Laurent Raufaste
+* @contributor Yannick Le Guédart, Laurent Raufaste, Christophe Thiriot
 * @copyright   2005-2007 Laurent Jouanneau, 2008 Laurent Raufaste
 *
 * Some of this classes were get originally from the Copix project
@@ -199,6 +199,7 @@ class jDb {
     }
 
     public static function createVirtualProfile ($name, $params) {
+        global $gJConfig;
         if ($name == '') {
            throw new jException('jelix~db.error.virtual.profile.no.name');
         }
