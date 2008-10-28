@@ -46,7 +46,7 @@ class jResponseCmdline extends jResponse {
      */
     public function output(){
         if ($this->hasErrors())
-            outputErrors();
+            $this->outputErrors();
         else
             $this->flushContent();
         return true;
