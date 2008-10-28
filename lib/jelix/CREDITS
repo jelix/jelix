@@ -36,6 +36,7 @@ Julien Issler
  - fixes about table_prefix in jDb (#702, #703)
  - jForms: radiobutton with value 0 should not get selected by default (#691)
  - jTcpdf: added default font for header and footer (#693)
+ - jDao: autoremove of empty groups in jDaoConditions (#724)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)

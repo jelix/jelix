@@ -3,9 +3,10 @@
 * @package    jelix
 * @subpackage dao
 * @author     Croes Gérald, Laurent Jouanneau
-* @contributor Laurent Jouanneau
+* @contributor Laurent Jouanneau, Julien Issler
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * @copyright  2008 Thomas
+* @copyright  2008 Julien Issler
 * This classes was get originally from the Copix project (CopixDAOSearchConditions, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix classes are Gerald Croes and Laurent Jouanneau,
@@ -46,6 +47,10 @@ class jDaoCondition {
         $this->parent = $parent;
         $this->glueOp = $glueOp;
     }
+
+    public function isEmpty(){
+        return empty($this->conditions) && empty($this->group);
+    }
 }
 
 /**
@@ -68,7 +73,7 @@ class jDaoConditions {
     * the groups we wants the list to be
     */
     public $group = array ();
-    
+
     /**
     * the condition we actually are browsing
     */
@@ -99,7 +104,7 @@ class jDaoConditions {
     function addItemGroup($field_id) {
         $this->group[] = $field_id;
     }
-    
+
     /**
     * says if there are no conditions nor order
     * @return boolean  false if there isn't condition
@@ -125,7 +130,6 @@ class jDaoConditions {
     */
     function startGroup ($glueOp = 'AND'){
         $cond= new jDaoCondition ($glueOp, $this->_currentCondition);
-        $this->_currentCondition->group[] = $cond;
         $this->_currentCondition = $cond;
     }
 
@@ -134,6 +138,8 @@ class jDaoConditions {
     */
     function endGroup (){
         if ($this->_currentCondition->parent !== null){
+            if(!$this->_currentCondition->isEmpty())
+                $this->_currentCondition->parent->group[] = $this->_currentCondition;
             $this->_currentCondition = $this->_currentCondition->parent;
         }
     }
@@ -152,4 +158,3 @@ class jDaoConditions {
            'operator'=>$operator, 'isExpr'=>$foo);
     }
 }
-

@@ -3,8 +3,9 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Julien Issler
 * @copyright   2006-2007 Jouanneau laurent
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -105,9 +106,24 @@ class UTDao_Conditions extends jUnitTestCase {
         }
     }
 
+    function testEmptyRecursive(){
+        $cond = new jDaoConditions();
+        $cond->startGroup();
+        $cond->startGroup('OR');
+        $cond->endGroup();
+        $cond->endGroup();
+        $this->assertFalse($cond->hasConditions());
+        $this->assertTrue($cond->isEmpty());
+    }
 
-
+    function testNonEmptyRecursive(){
+        $cond = new jDaoConditions();
+        $cond->startGroup();
+        $cond->startGroup('OR');
+        $cond->addCondition('test','=',1);
+        $cond->endGroup();
+        $cond->endGroup();
+        $this->assertTrue($cond->hasConditions());
+        $this->assertFalse($cond->isEmpty());
+    }
 }
-
-
-?>
