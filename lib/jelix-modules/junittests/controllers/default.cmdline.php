@@ -126,7 +126,7 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
             }
             jContext::push($module);
             $result = $group->run($reporter);
-            if (!$result) $rep->setExitStatus(jResponseCmdline::EXIT_CODE_ERROR);
+            if (!$result) $rep->setExitCode(jResponseCmdline::EXIT_CODE_ERROR);
             jContext::pop();
         }
         return $this->_finishResponse($rep);
@@ -151,7 +151,7 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
                     $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
                     jContext::push($module);
                     $result = $group->run($reporter);
-                    if (!$result) $rep->setExitStatus(jResponseCmdline::EXIT_CODE_ERROR);
+                    if (!$result) $rep->setExitCode(jResponseCmdline::EXIT_CODE_ERROR);
                     jContext::pop();
                     break;
                 }
