@@ -5,8 +5,9 @@
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
 * @contributor Bastien Jaillot
-* @contributor Christophe Thiriot
+* @contributor Christophe Thiriot, Julien Issler
 * @copyright   2006-2008 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -635,7 +636,7 @@ abstract class jFormsBase {
 
     /**
     * add a control to the form
-    * @param $control jFormsControl
+    * @param jFormsControl $control the control to add
     */
     public function addControl($control){
         $this->rootControls [$control->ref] = $control;
@@ -645,6 +646,25 @@ abstract class jFormsBase {
             foreach($control->getChildControls() as $ctrl)
                 $this->addChildControl($ctrl);
         }
+    }
+
+    /**
+     * add a control to the form, before the specified control
+     * @param jFormsControl $control the control to add
+     * @param string $ref The ref of the control the new control should be inserted before
+     * @since 1.1
+     */
+    public function addControlBefore($control, $ref){
+        if(isset($this->rootControls[$ref])){
+            $controls = array();
+            foreach($this->rootControls as $k=>$c){
+                if($k == $ref)
+                    $controls[$control->ref] = null;
+                $controls[$k] = $c;
+            }
+            $this->rootControls = $controls;
+        }
+        $this->addControl($control);
     }
 
 
@@ -665,7 +685,7 @@ abstract class jFormsBase {
 
     /**
     * declare a child control to the form. The given control should be a child of an other control
-    * @param $control jFormsControl
+    * @param jFormsControl $control
     */
     public function addChildControl($control){
         $this->controls [$control->ref] = $control;

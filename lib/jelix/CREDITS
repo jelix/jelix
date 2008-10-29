@@ -37,6 +37,7 @@ Julien Issler
  - jForms: radiobutton with value 0 should not get selected by default (#691)
  - jTcpdf: added default font for header and footer (#693)
  - jDao: autoremove of empty groups in jDaoConditions (#724)
+ - jForms: new addControlBefore() method (#728)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
