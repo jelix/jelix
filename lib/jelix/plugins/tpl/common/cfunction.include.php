@@ -1,4 +1,4 @@
- <?php
+<?php
 /**
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
@@ -26,9 +26,7 @@ function jtpl_cfunction_common_include($compiler, $param=array()) {
     if(count($param) == 1){
         return '$t->display('.$param[0].');';
     }else{
-        $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','zone','1');
+        $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','include','1');
         return '';
     }
 }
-
-

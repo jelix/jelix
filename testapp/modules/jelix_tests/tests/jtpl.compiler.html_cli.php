@@ -138,7 +138,10 @@ function toto() {
 22=>array('{for $i=count($o);$i<$p;$i++} A {/for}',
           '<?php for($t->_vars[\'i\']=count($t->_vars[\'o\']);$t->_vars[\'i\']<$t->_vars[\'p\'];$t->_vars[\'i\']++):?> A <?php endfor;?>'
          ),
-
+23=>array(
+        '<p>ok {const $foo}</p>',
+        '<p>ok <?php echo htmlspecialchars(constant($t->_vars[\'foo\']));?></p>',
+        ),
     );
 
     function testCompileContent() {
@@ -270,6 +273,8 @@ function toto() {
     protected $tplerrors2 = array(
          0=>array('{for $i=count($a);$i<$p;$i++} A {/for}',
                   'jelix~errors.tpl.tag.character.invalid',array('for $i=count($a);$i<$p;$i++','(',null) ),
+         1=>array('{const \'fff\'}',
+                  'jelix~errors.tplplugin.untrusted.not.available',array('const',null) ),
     );
     function testCompileErrorsUntrusted() {
 

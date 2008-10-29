@@ -448,6 +448,7 @@ cd lib/jelix/plugins/tpl/html
   block.formdata.php
   block.formsubmits.php
   block.ifctrl.php
+  cfunction.const.php
   function.ctrl_control.php
   function.ctrl_label.php
   function.ctrl_value.php
@@ -470,16 +471,19 @@ cd lib/jelix/plugins/tpl/ltx2pdf
   block.lcmd.php
 
 cd lib/jelix/plugins/tpl/text
+  cfunction.const.php
   function.jlocale.php
   function.jurl.php
   function.formdatafull.php
 
 cd lib/jelix/plugins/tpl/xml
+  cfunction.const.php
   function.jlocale.php
   function.jurl.php
   meta.xml.php
 
 cd lib/jelix/plugins/tpl/xul
+  cfunction.const.php
   function.jlocale.php
   function.jurl.php
   function.urljsstring.php
