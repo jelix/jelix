@@ -3,8 +3,8 @@
 * @package      jelix
 * @subpackage   coord_plugin
 * @author       Lepeltier Kévin
-* @contributor  Dominique Papin
-* @copyright  2008 Lepeltier Kévin, 2008 Dominique Papin
+* @contributor  Dominique Papin, Laurent Jouanneau
+* @copyright  2008 Lepeltier Kévin, 2008 Dominique Papin, 2008 Laurent Jouanneau
 *
 * The plugin History is a plugin coord,
 * it records the action / settings made during a session and allows for reuse.
@@ -15,19 +15,26 @@ class historyCoordPlugin implements jICoordPlugin {
 
     public $config;
 
-    function __construct( $conf ){
+    function __construct ($conf){
         $this->config = $conf;
-
-        if( $this->config['time'] && !isset($_SESSION[$this->config['session_time_name']]) )
-            $_SESSION[$this->config['session_time_name']] = microtime(true);
-
+        $stn = $this->config['session_time_name'];
+        
+        if ($this->config['time']) {
+            if (!isset($_SESSION[$stn]))
+                $_SESSION[$stn] = microtime(true);
+        } else if (isset($_SESSION[$stn])) {
+            unset($_SESSION[$stn]);
+        }
     }
 
     public function beforeAction ($params) {
 
         if( !empty($params['history.add']) && $params['history.add'] ) {
+
             if( !isset($_SESSION[$this->config['session_name']]) )
                 $_SESSION[$this->config['session_name']] = array();
+
+            $history = & $_SESSION[$this->config['session_name']];
 
             global $gJCoord;
             $page['params'] = $gJCoord->request->params;
@@ -38,21 +45,20 @@ class historyCoordPlugin implements jICoordPlugin {
             $page['label'] = ( !empty($params['history.label']) )? $params['history.label']:'';
             $page['title'] = ( !empty($params['history.title']) )? $params['history.title']:'';
 
-            if( !count($_SESSION[$this->config['session_name']]) ) {
-                $_SESSION[$this->config['session_name']][] = $page;
-            } else if ( $this->config['double'] || !$this->isLast( $page['action'], $page['params'] ) ) {
-                if( $this->config['single'] ) {
-                    foreach( $_SESSION[$this->config['session_name']] as $key=>$valu ) if( $valu == $page )
-                        array_splice( $_SESSION[$this->config['session_name']], $key, 1 );
+            if (!count($history)) {
+                $history[] = $page;
+            } else if ($this->config['double'] || !$this->isLast( $page['action'], $page['params'])) {
+                if ($this->config['single']) {
+                    foreach ($history as $key=>$valu) if ($valu == $page)
+                        array_splice ($history, $key, 1);
                 }
-                $_SESSION[$this->config['session_name']][] = $page;
+                $history[] = $page;
             }
 
-            if( count($_SESSION[$this->config['session_name']]) > $this->config['maxsize'] ) {
-                array_shift( $_SESSION[$this->config['session_name']] );
+            if (count($history) > $this->config['maxsize']) {
+                array_shift($history);
             }
         }
-
     }
 
     public function isLast($action, $params = NULL) {
@@ -70,17 +76,16 @@ class historyCoordPlugin implements jICoordPlugin {
 
 
     public function change( $key, $val ) {
-
-        $page = array_pop($_SESSION[$this->config['session_name']]);
+        $sn = $this->config['session_name'];
+        $page = array_pop($_SESSION[$sn]);
         $page[$key] = $val;
 
-        if( $this->config['double'] || end($_SESSION[$this->config['session_name']]) != $page ) {
-            if( $this->config['single'] )
-                foreach( $_SESSION[$this->config['session_name']] as $key=>$value ) if( $value == $page )
-                    array_splice( $_SESSION[$this->config['session_name']], $key, 1 );
-            $_SESSION[$this->config['session_name']][] = $page;
+        if ($this->config['double'] || end($_SESSION[$sn]) != $page) {
+            if ($this->config['single'])
+                foreach ($_SESSION[$sn] as $key=>$value) if ($value == $page)
+                    array_splice ($_SESSION[$sn], $key, 1);
+            $_SESSION[$sn][] = $page;
         }
-
     }
 
     public function beforeOutput(){}
@@ -103,7 +108,7 @@ class historyCoordPlugin implements jICoordPlugin {
     }
 
     public function time() {
-        if( $this->config['time'] && isset($_SESSION[$this->config['session_time_name']]) )
+        if ($this->config['time'])
             return microtime(true) - $_SESSION[$this->config['session_time_name']];
         return 0;
     }
