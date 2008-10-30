@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['jTplConfig']['locales'] =array(
+jTplConfig::$localizedMessages =array(
     'errors.tpl.not.found'=>'Le fichier template %s est introuvable',
     'file.directory.notexists'=>'Le répertoire demandé (%s) n\'existe pas',
     'file.directory.notwritable'=>'Impossible d\'écrire le fichier %s, assurez vous que le répertoire %s autorise l\'écriture',

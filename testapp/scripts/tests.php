@@ -20,4 +20,3 @@ $config_file = 'cmdline/configtests.ini.php';
 $jelix = new jCmdlineCoordinator($config_file);
 $jelix->process(new jCmdLineRequest());
 
-?>

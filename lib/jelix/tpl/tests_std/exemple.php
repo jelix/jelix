@@ -1,13 +1,14 @@
 <?php 
 
+include '../jtpl_standalone_prepend.php';
 
-include 'jtpl_standalone_prepend.php';
+jTplConfig::$templatePath = dirname(__FILE__) . '/';
 
 $tpl = new jTpl();
 
 $countries = array('France', 'Italie', 'Espagne', 'Belgique');
 $tpl->assign('countries', $countries);
-$tpl->assign('titre', 'Ceci est un test !');
+$tpl->assign('titre', 'This is a test !');
 $tpl->display('test.tpl');
 
 

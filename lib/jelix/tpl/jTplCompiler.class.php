@@ -80,8 +80,8 @@ class jTplCompiler
         $this->_allowedInForeach = array_merge($this->_vartype, array(T_AS, T_DOUBLE_ARROW));
 
 #if JTPL_STANDALONE
-        require_once(JTPL_LOCALES_PATH.$GLOBALS['jTplConfig']['lang'].'.php');
-        $this->_locales = $GLOBALS['jTplConfig']['locales'];
+        require_once(jTplConfig::$localizedMessagesPath.jTplConfig::$lang.'.php');
+        $this->_locales = jTplConfig::$localizedMessages;
 #endif
     }
 
@@ -97,7 +97,7 @@ class jTplCompiler
     public function compile($tplFile, $outputtype, $trusted, $userModifiers = array(), $userFunctions = array()){
         $this->_sourceFile = $tplFile;
         $this->outputType = ($outputtype==''?'html':$outputtype);
-        $cachefile = JTPL_CACHE_PATH .$this->outputType.($trusted?'_t':'').'_'. basename($tplFile);
+        $cachefile = jTplConfig::$cachePath .$this->outputType.($trusted?'_t':'').'_'. basename($tplFile);
         $this->trusted = $trusted;
         $this->_modifier = array_merge($this->_modifier, $userModifiers);
         $this->_userFunctions = $userFunctions;
@@ -498,7 +498,7 @@ class jTplCompiler
                             $this->doError1('errors.tpl.tag.locale.invalid', $this->_currentTag);
                         } else {
 #if JTPL_STANDALONE
-                            $result.='${$GLOBALS[\'jTplConfig\'][\'localesGetter\']}(\''.$locale.'\')';
+                            $result.='${jTplConfig::$localesGetter}(\''.$locale.'\')';
 #else
                             $result.='jLocale::get(\''.$locale.'\')';
 #endif
@@ -574,8 +574,8 @@ class jTplCompiler
         $foundPath='';
 
 #if JTPL_STANDALONE
-        if(isset($GLOBALS['jTplConfig']['tplpluginsPathList'][$this->outputType])){
-            foreach($GLOBALS['jTplConfig']['tplpluginsPathList'][$this->outputType] as $path){
+        if(isset(jTplConfig::$pluginPathList[$this->outputType])){
+            foreach(jTplConfig::$pluginPathList[$this->outputType] as $path){
 #else
         global $gJConfig;
         if(isset($gJConfig->{'_tplpluginsPathList_'.$this->outputType})){

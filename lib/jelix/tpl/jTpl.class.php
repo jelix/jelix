@@ -231,11 +231,11 @@ class jTpl {
         $this->_templateName = $sel->toString();
         $fct = $fctname.md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType.($trusted?'_t':''));
 #else
-        $tpl = JTPL_TEMPLATES_PATH . $tpl;
+        $tpl = jTplConfig::$templatePath . $tpl;
         $this->_templateName = basename($tpl);
-        $cachefile = JTPL_CACHE_PATH.$outputtype.($trusted?'_t':'').'_'.$this->_templateName;
+        $cachefile = jTplConfig::$cachePath.$outputtype.($trusted?'_t':'').'_'.$this->_templateName;
 
-        $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
+        $mustCompile = jTplConfig::$compilationForce || !file_exists($cachefile);
         if (!$mustCompile) {
             if (filemtime($tpl) > filemtime($cachefile)) {
                 $mustCompile = true;
@@ -275,11 +275,11 @@ class jTpl {
             $md = md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType.($trusted?'_t':''));
             $this->_templateName = $sel->toString();
 #else
-            $tpl = JTPL_TEMPLATES_PATH . $tpl;
+            $tpl = jTplConfig::$templatePath . $tpl;
             $this->_templateName = basename($tpl);
-            $cachefile = JTPL_CACHE_PATH.$outputtype.($trusted?'_t':'').'_'.$this->_templateName;
+            $cachefile = jTplConfig::$cachePath.$outputtype.($trusted?'_t':'').'_'.$this->_templateName;
 
-            $mustCompile = $GLOBALS['jTplConfig']['compilation_force']['force'] || !file_exists($cachefile);
+            $mustCompile = jTplConfig::$compilationForce || !file_exists($cachefile);
             if (!$mustCompile) {
                 if (filemtime($tpl) > filemtime($cachefile)) {
                     $mustCompile = true;
@@ -290,7 +290,7 @@ class jTpl {
                 include_once(JTPL_PATH . 'jTplCompiler.class.php');
                 $compiler = new jTplCompiler();
                 $compiler->setUserPlugins( $this->userModifiers, $this->userFunctions);
-                $compiler->compile($tpl,$outputtype,$trusted);
+                $compiler->compile($tpl, $outputtype, $trusted);
             }
             require_once($cachefile);
             $md = md5($tpl.'_'.$outputtype.($trusted?'_t':''));
@@ -357,7 +357,7 @@ class jTpl {
      */
     public static function getEncoding (){
 #if JTPL_STANDALONE
-        return $GLOBALS['jTplConfig']['charset'];
+        return jTplConfig::$charset;
 #else
         return $GLOBALS['gJConfig']->charset;
 #endif

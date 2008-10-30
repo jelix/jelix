@@ -22,6 +22,10 @@ $BUILD_OPTIONS = array(
     "create a zip package",
     false,
     ),
+'WITH_TESTS'=>array(
+    "includes tests",
+    false,
+    ),
 'VERSION'=> array(
     false,
     'SVN',
@@ -47,19 +51,19 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 Env::setFromFile('VERSION','lib/jelix/tpl/VERSION', true);
 $SVN_REVISION = Subversion::revision();
 
-if($VERSION == 'SVN'){
-    $VERSION = 'SVN-'.$SVN_REVISION;
-    $IS_NIGHTLY = true;
-}else{
-    $IS_NIGHTLY = false;
+$IS_NIGHTLY = (strpos($VERSION,'SVN') !== false);
+
+if($IS_NIGHTLY){
+    $PACKAGE_NAME='jtpl-'.str_replace('SVN', '', $VERSION);
+    if(substr($PACKAGE_NAME,-1,1) == '.')
+      $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
+    $VERSION = str_replace('SVN', $SVN_REVISION, $VERSION);
+}
+else {
+    $PACKAGE_NAME='jtpl-'.$VERSION;
 }
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-    if($IS_NIGHTLY)
-        $PACKAGE_NAME = 'jtpl-nightly';
-    else
-        $PACKAGE_NAME = 'jtpl-'.$VERSION;
-
     $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME.'/';
 }else{
     $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
@@ -73,6 +77,11 @@ jBuildUtils::createDir($BUILD_TARGET_PATH);
 
 //... execution des manifests
 jManifest::process('build/manifests/jtpl-standalone.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
+
+if($WITH_TESTS) {
+    jManifest::process('build/manifests/jtpl-standalone-tests.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
+}
+
 
 
 file_put_contents($BUILD_TARGET_PATH.'/VERSION', $VERSION);
