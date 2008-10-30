@@ -91,6 +91,7 @@ jTplConfig::$templatePath = realpath(JTPL_PATH.'templates/') . '/';
 
 jTplConfig::addPluginsRepository(realpath(JTPL_PATH.'plugins/'));
 
+
 include(JTPL_PATH . 'jTpl.class.php');
 
 

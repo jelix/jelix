@@ -26,23 +26,27 @@ class jTplCompiler
     private $_literals;
 
     private  $_vartype = array(T_CHARACTER, T_CONSTANT_ENCAPSED_STRING, T_DNUMBER,
-    T_ENCAPSED_AND_WHITESPACE, T_LNUMBER, T_OBJECT_OPERATOR, T_STRING, T_WHITESPACE,T_ARRAY);
+            T_ENCAPSED_AND_WHITESPACE, T_LNUMBER, T_OBJECT_OPERATOR, T_STRING,
+            T_WHITESPACE, T_ARRAY);
 
-    private  $_assignOp = array(T_AND_EQUAL, T_DIV_EQUAL, T_MINUS_EQUAL, T_MOD_EQUAL,
-    T_MUL_EQUAL, T_OR_EQUAL, T_PLUS_EQUAL, T_PLUS_EQUAL, T_SL_EQUAL,
-    T_SR_EQUAL, T_XOR_EQUAL);
+    private  $_assignOp = array(T_AND_EQUAL, T_DIV_EQUAL, T_MINUS_EQUAL,
+            T_MOD_EQUAL, T_MUL_EQUAL, T_OR_EQUAL, T_PLUS_EQUAL, T_PLUS_EQUAL,
+            T_SL_EQUAL, T_SR_EQUAL, T_XOR_EQUAL);
 
-    private  $_op = array(T_BOOLEAN_AND, T_BOOLEAN_OR, T_EMPTY, T_INC, T_DEC, T_ISSET,
-    T_IS_EQUAL, T_IS_GREATER_OR_EQUAL, T_IS_IDENTICAL, T_IS_NOT_EQUAL,
-    T_IS_NOT_IDENTICAL, T_IS_SMALLER_OR_EQUAL, T_LOGICAL_AND,
-    T_LOGICAL_OR, T_LOGICAL_XOR, T_SR, T_SL, T_DOUBLE_ARROW);
+    private  $_op = array(T_BOOLEAN_AND, T_BOOLEAN_OR, T_EMPTY, T_INC, T_DEC,
+            T_ISSET, T_IS_EQUAL, T_IS_GREATER_OR_EQUAL, T_IS_IDENTICAL,
+            T_IS_NOT_EQUAL, T_IS_NOT_IDENTICAL, T_IS_SMALLER_OR_EQUAL,
+            T_LOGICAL_AND, T_LOGICAL_OR, T_LOGICAL_XOR, T_SR, T_SL,
+            T_DOUBLE_ARROW);
 
-    private $_inLocaleOk = array(T_STRING, T_ABSTRACT, T_AS, T_BREAK, T_CASE, T_CATCH, T_CLASS, T_CLONE,
-       T_CONST, T_CONTINUE, T_DECLARE, T_DEFAULT, T_DO, T_ECHO, T_ELSE, T_ELSEIF, T_EMPTY,
-       T_EXIT, T_FINAL, T_FOR, T_FOREACH, T_FUNCTION, T_GLOBAL, T_IF, T_IMPLEMENTS, T_INSTANCEOF,
-       T_INTERFACE, T_LIST, T_LOGICAL_AND, T_LOGICAL_OR, T_LOGICAL_XOR, T_NEW, T_PRIVATE, T_PUBLIC,
-       T_PROTECTED, T_RETURN, T_STATIC, T_SWITCH, T_THROW, T_TRY, T_USE, T_VAR, T_WHILE,
-       T_DNUMBER, T_LNUMBER, T_EVAL);
+    private $_inLocaleOk = array(T_STRING, T_ABSTRACT, T_AS, T_BREAK, T_CASE,
+            T_CATCH, T_CLASS, T_CLONE, T_CONST, T_CONTINUE, T_DECLARE, T_DEFAULT,
+            T_DO, T_ECHO, T_ELSE, T_ELSEIF, T_EMPTY, T_EXIT, T_FINAL, T_FOR,
+            T_FOREACH, T_FUNCTION, T_GLOBAL, T_IF, T_IMPLEMENTS, T_INSTANCEOF,
+            T_INTERFACE, T_LIST, T_LOGICAL_AND, T_LOGICAL_OR, T_LOGICAL_XOR,
+            T_NEW, T_PRIVATE, T_PUBLIC, T_PROTECTED, T_RETURN, T_STATIC,
+            T_SWITCH, T_THROW, T_TRY, T_USE, T_VAR, T_WHILE, T_DNUMBER,
+            T_LNUMBER, T_EVAL);
 
     protected $_allowedInVar;
     protected $_allowedInExpr;
@@ -50,16 +54,17 @@ class jTplCompiler
     protected $_allowedInForeach;
     protected $_excludedInVar = array(';','=');
 
-    protected $_allowedConstants = array('TRUE','FALSE','NULL', 'M_1_PI', 'M_2_PI', 'M_2_SQRTPI', 'M_E',
-        'M_LN10', 'M_LN2', 'M_LOG10E', 'M_LOG2E', 'M_PI','M_PI_2','M_PI_4','M_SQRT1_2','M_SQRT2');
+    protected $_allowedConstants = array('TRUE','FALSE','NULL', 'M_1_PI',
+            'M_2_PI', 'M_2_SQRTPI', 'M_E', 'M_LN10', 'M_LN2', 'M_LOG10E',
+            'M_LOG2E', 'M_PI','M_PI_2','M_PI_4','M_SQRT1_2','M_SQRT2');
 
     private $_pluginPath=array();
     private $_metaBody = '';
 
     protected $_modifier = array('upper'=>'strtoupper', 'lower'=>'strtolower',
-        'escxml'=>'htmlspecialchars', 'eschtml'=>'htmlspecialchars', 'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
-        'capitalize'=>'ucwords', 'stripslashes'=>'stripslashes'
-    );
+            'escxml'=>'htmlspecialchars', 'eschtml'=>'htmlspecialchars',
+            'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
+            'capitalize'=>'ucwords', 'stripslashes'=>'stripslashes');
 
     private $_blockStack=array();
 
@@ -96,7 +101,7 @@ class jTplCompiler
      */
     public function compile($tplFile, $outputtype, $trusted, $userModifiers = array(), $userFunctions = array()){
         $this->_sourceFile = $tplFile;
-        $this->outputType = ($outputtype==''?'html':$outputtype);
+        $this->outputType = $outputtype;
         $cachefile = jTplConfig::$cachePath .$this->outputType.($trusted?'_t':'').'_'. basename($tplFile);
         $this->trusted = $trusted;
         $this->_modifier = array_merge($this->_modifier, $userModifiers);
@@ -589,8 +594,8 @@ class jTplCompiler
             }
         }
 #if JTPL_STANDALONE
-        if(isset($GLOBALS['jTplConfig']['tplpluginsPathList']['common'])){
-            foreach($GLOBALS['jTplConfig']['tplpluginsPathList']['common'] as $path){
+        if(isset(jTplConfig::$pluginPathList['common'])){
+            foreach(jTplConfig::$pluginPathList['common'] as $path){
 #else
         if(isset($gJConfig->_tplpluginsPathList_common)){
             foreach($gJConfig->_tplpluginsPathList_common as $path){

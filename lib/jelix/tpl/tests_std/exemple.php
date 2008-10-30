@@ -1,5 +1,5 @@
 <?php 
-
+error_reporting(E_ALL);
 include '../jtpl_standalone_prepend.php';
 
 jTplConfig::$templatePath = dirname(__FILE__) . '/';

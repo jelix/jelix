@@ -222,7 +222,7 @@ class jTpl {
      * @param string $outputtype the type of output (html, text etc..)
      * @param boolean $trusted  says if the template file is trusted or not
      */
-    protected function  getTemplate($tpl,$fctname, $outputtype='', $trusted = true){
+    protected function getTemplate($tpl,$fctname, $outputtype='', $trusted = true){
 #ifnot JTPL_STANDALONE
         $sel = new jSelectorTpl($tpl,$outputtype,$trusted);
         $sel->userModifiers = $this->userModifiers;
@@ -233,6 +233,9 @@ class jTpl {
 #else
         $tpl = jTplConfig::$templatePath . $tpl;
         $this->_templateName = basename($tpl);
+        if ($outputtype=='')
+            $outputtype = 'html';
+
         $cachefile = jTplConfig::$cachePath.$outputtype.($trusted?'_t':'').'_'.$this->_templateName;
 
         $mustCompile = jTplConfig::$compilationForce || !file_exists($cachefile);
@@ -246,8 +249,7 @@ class jTpl {
             include_once(JTPL_PATH . 'jTplCompiler.class.php');
 
             $compiler = new jTplCompiler();
-            $compiler->setUserPlugins( $this->userModifiers, $this->userFunctions);
-            $compiler->compile($tpl,$outputtype, $trusted);
+            $compiler->compile($tpl,$outputtype, $trusted, $this->userModifiers, $this->userFunctions);
         }
         require_once($cachefile);
         $fct = $fctname.md5($tpl.'_'.$outputtype.($trusted?'_t':''));
@@ -289,8 +291,7 @@ class jTpl {
             if ($mustCompile) {
                 include_once(JTPL_PATH . 'jTplCompiler.class.php');
                 $compiler = new jTplCompiler();
-                $compiler->setUserPlugins( $this->userModifiers, $this->userFunctions);
-                $compiler->compile($tpl, $outputtype, $trusted);
+                $compiler->compile($tpl, $outputtype, $trusted, $this->userModifiers, $this->userFunctions);
             }
             require_once($cachefile);
             $md = md5($tpl.'_'.$outputtype.($trusted?'_t':''));
