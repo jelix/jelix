@@ -32,7 +32,7 @@ class jTplConfig {
     /**
      * the lang activated in the templates
      */
-    static $lang = 'fr';
+    static $lang = 'en';
 
     /**
      * the charset used in the templates

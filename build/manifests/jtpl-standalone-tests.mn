@@ -96,8 +96,25 @@ sd lib/simpletest/test/support/collector
   collectable.1
   collectable.2
 
-sd lib/jelix/tpl/tests_std/
+sd lib/jelix/tpl/tests/
 dd tests/
    exemple.php
    test.tpl
+   index.php
+   compiler.php
+   expressions_parsing.php
 
+sd lib/diff
+dd tests/diff
+   diffhtml.php
+   difflib.php
+
+sd lib/jelix-modules/junittests/classes
+dd tests/simpletest/
+   junittestcase.class.php
+
+sd lib/jelix/tpl/tests/
+dd tests/simpletest/
+   myhtmlreporter.class.php
+
+   

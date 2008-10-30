@@ -9,11 +9,15 @@ sd lib/jelix/tpl/
 
 sd lib/jelix/plugins/tpl/common
 dd plugins/common
+  block.stripws.php
   cfunction.include.php
   function.counter.php
   function.counter_init.php
   function.counter_reset.php
   function.counter_reset_all.php
+  function.cycle.php
+  function.cycle_init.php
+  function.cycle_reset.php
   modifier.cat.php
   modifier.count_array.php
   modifier.count_characters.php
@@ -22,6 +26,7 @@ dd plugins/common
   modifier.count_words.php
   modifier.date_format.php
   modifier.indent.php
+  modifier.number_format.php
   modifier.regex_replace.php
   modifier.replace.php
   modifier.spacify.php
@@ -32,17 +37,28 @@ dd plugins/common
 
 sd lib/jelix/plugins/tpl/html
 dd plugins/html
+  block.swf.php
+  cfunction.const.php
+  cfunction.swfbiscuit.php
   modifier.nl2br.php
+  function.image.php
 
 sd lib/jelix/plugins/tpl/text
 dd plugins/text
+  cfunction.const.php
 
 sd lib/jelix/plugins/tpl/xul
 dd plugins/xul
+  cfunction.const.php
+
+sd lib/jelix/plugins/tpl/xml
+dd plugins/xml
+  cfunction.const.php
 
 sd lib/jelix/tpl/locales/
 dd locales/
   fr.php
+  en.php
 
 sd lib/jelix/tpl/temp/
 dd temp/
