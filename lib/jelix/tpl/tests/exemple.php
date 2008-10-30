@@ -11,4 +11,9 @@ $tpl->assign('countries', $countries);
 $tpl->assign('titre', 'This is a test !');
 $tpl->display('test.tpl');
 
+$tpl = new jTpl();
+$tpl->assign('titre', 'This is an other test !');
+$tpl->display('foo/test.tpl');
+
+
 

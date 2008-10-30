@@ -99,10 +99,10 @@ class jTplCompiler
      * @param string $tplfile the file name that contains the template
      * @return boolean true if ok
      */
-    public function compile($tplFile, $outputtype, $trusted, $userModifiers = array(), $userFunctions = array()){
+    public function compile($tplName, $tplFile, $outputtype, $trusted, $userModifiers = array(), $userFunctions = array()){
         $this->_sourceFile = $tplFile;
         $this->outputType = $outputtype;
-        $cachefile = jTplConfig::$cachePath .$this->outputType.($trusted?'_t':'').'_'. basename($tplFile);
+        $cachefile = jTplConfig::$cachePath .dirname($tplName).'/'.$this->outputType.($trusted?'_t':'').'_'. basename($tplName);
         $this->trusted = $trusted;
         $this->_modifier = array_merge($this->_modifier, $userModifiers);
         $this->_userFunctions = $userFunctions;
@@ -151,12 +151,13 @@ class jTplCompiler
         $result = $header.$result."<?php \n}\n?>";
 
 #if JTPL_STANDALONE
-        $_dirname = dirname($cachefile);
-        if (!@is_writable($_dirname)) {
-            // cache_dir not writable, see if it exists
-            if (!@is_dir($_dirname)) {
-                throw new Exception (sprintf($this->_locales['file.directory.notexists'], $_dirname));
-            }
+
+        $_dirname = jTplConfig::$cachePath.dirname($tplName).'/';
+    echo $tplFile.'<br>'.$_dirname.'<br>'.$cachefile;
+        if (!is_dir($_dirname)) { 
+ 	        umask(0000); 
+ 	        mkdir($_dirname, 0777, true); 
+ 	    } else if (!@is_writable($_dirname)) {
             throw new Exception (sprintf($this->_locales['file.directory.notwritable'], $cachefile, $_dirname));
         }
 

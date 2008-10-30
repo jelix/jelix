@@ -104,6 +104,10 @@ dd tests/
    compiler.php
    expressions_parsing.php
 
+sd lib/jelix/tpl/tests/foo/
+dd tests/foo/
+   test.tpl
+
 sd lib/diff
 dd tests/diff
    diffhtml.php
