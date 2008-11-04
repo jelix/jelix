@@ -1,0 +1,83 @@
+--- class.phpmailer.php.orig	2008-07-19 23:22:14.000000000 +0200
++++ class.phpmailer.php	2008-11-04 12:22:40.000000000 +0100
+@@ -522,9 +522,9 @@
+ 
+     $smtp_from = ($this->Sender == '') ? $this->From : $this->Sender;
+     if(!$this->smtp->Mail($smtp_from)) {
++      $this->smtp->Reset();
+       $error = $this->Lang('from_failed') . $smtp_from;
+       $this->SetError($error);
+-      $this->smtp->Reset();
+       return false;
+     }
+ 
+@@ -552,15 +552,15 @@
+         }
+         $error .= $bad_rcpt[$i];
+       }
++      $this->smtp->Reset();
+       $error = $this->Lang('recipients_failed') . $error;
+       $this->SetError($error);
+-      $this->smtp->Reset();
+       return false;
+     }
+ 
+     if(!$this->smtp->Data($header . $body)) {
+-      $this->SetError($this->Lang('data_not_accepted'));
+       $this->smtp->Reset();
++      $this->SetError($this->Lang('data_not_accepted'));
+       return false;
+     }
+     if($this->SMTPKeepAlive == true) {
+@@ -609,8 +609,8 @@
+ 
+         if($tls) {
+           if(!$this->smtp->StartTLS()) {
+-            $this->SetError($this->Lang("tls"));
+             $this->smtp->Reset();
++            $this->SetError($this->Lang("tls"));
+             $connection = false;
+           }
+ 
+@@ -621,8 +621,8 @@
+         $connection = true;
+         if($this->SMTPAuth) {
+           if(!$this->smtp->Authenticate($this->Username, $this->Password)) {
+-            $this->SetError($this->Lang('authenticate'));
+             $this->smtp->Reset();
++            $this->SetError($this->Lang('authenticate'));
+             $connection = false;
+           }
+         }
+@@ -1217,11 +1217,11 @@
+       $this->SetError($this->Lang('file_open') . $path);
+       return '';
+     }
+-    if (function_exists('get_magic_quotes')) {
++    if (!function_exists('get_magic_quotes')) {
+         function get_magic_quotes() {
+             return false;
+         }
+-}
++    }
+     if (PHP_VERSION < 6) {
+       $magic_quotes = get_magic_quotes_runtime();
+       set_magic_quotes_runtime(0);
+@@ -1608,7 +1608,7 @@
+    * @access private
+    * @return void
+    */
+-  private function SetError($msg) {
++  protected function SetError($msg) {
+     $this->error_count++;
+     $this->ErrorInfo = $msg;
+   }
+@@ -1650,7 +1650,7 @@
+    * @access private
+    * @return string
+    */
+-  private function Lang($key) {
++  protected function Lang($key) {
+     if(count($this->language) < 1) {
+       $this->SetLanguage('en'); // set the default language
+     }
