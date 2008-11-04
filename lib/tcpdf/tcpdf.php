@@ -2,35 +2,35 @@
 //============================================================+
 // File name   : tcpdf.php
 // Begin       : 2002-08-03
-// Last Update : 2008-10-13
+// Last Update : 2008-11-04
 // Author      : Nicola Asuni - info@tecnick.com - http://www.tcpdf.org
-// Version     : 4.0.033
+// Version     : 4.2.004
 // License     : GNU LGPL (http://www.gnu.org/copyleft/lesser.html)
 // 	----------------------------------------------------------------------------
 //  Copyright (C) 2002-2008  Nicola Asuni - Tecnick.com S.r.l.
-// 	
+//
 // 	This program is free software: you can redistribute it and/or modify
 // 	it under the terms of the GNU Lesser General Public License as published by
 // 	the Free Software Foundation, either version 2.1 of the License, or
 // 	(at your option) any later version.
-// 	
+//
 // 	This program is distributed in the hope that it will be useful,
 // 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 	GNU Lesser General Public License for more details.
-// 	
+//
 // 	You should have received a copy of the GNU Lesser General Public License
 // 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 	
+//
 // 	See LICENSE.TXT file for more information.
 //  ----------------------------------------------------------------------------
 //
-// Description : This is a PHP class for generating PDF documents without 
+// Description : This is a PHP class for generating PDF documents without
 //               requiring external extensions.
 //
 // NOTE:
-// This class was originally derived in 2002 from the Public 
-// Domain FPDF class by Olivier Plathey (http://www.fpdf.org), 
+// This class was originally derived in 2002 from the Public
+// Domain FPDF class by Olivier Plathey (http://www.fpdf.org),
 // but now is almost entirely rewritten.
 //
 // Main features:
@@ -59,7 +59,7 @@
 //
 // -----------------------------------------------------------
 // THANKS TO:
-// 
+//
 // Olivier Plathey (http://www.fpdf.org) for original FPDF.
 // Efthimios Mavrogeorgiadis (emavro@yahoo.com) for suggestions on RTL language support.
 // Klemen Vodopivec (http://www.fpdf.de/downloads/addons/37/) for Encryption algorithm.
@@ -82,6 +82,7 @@
 // Teus Hagen for several suggestions and fixes.
 // Yukihiro Nakadaira for CID-0 CJK fonts fixes.
 // Kosmas Papachristos for some CSS improvements.
+// Marcel Partap for some fixes.
 // Anyone that has reported a bug or sent a suggestion.
 //============================================================+
 
@@ -120,7 +121,7 @@
  * @copyright 2004-2008 Nicola Asuni - Tecnick.com S.r.l (www.tecnick.com) Via Della Pace, 11 - 09044 - Quartucciu (CA) - ITALY - www.tecnick.com - info@tecnick.com
  * @link http://www.tcpdf.org
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
- * @version 4.0.033
+ * @version 4.2.004
  */
 
 /**
@@ -146,24 +147,24 @@ require_once(dirname(__FILE__).'/htmlcolors.php');
 require_once(dirname(__FILE__)."/barcodes.php");
 
 
-//if (!class_exists('TCPDF')) {
+if (!class_exists('TCPDF', false)) {
 	/**
 	 * define default PDF document producer
-	 */ 
-	define('PDF_PRODUCER','TCPDF 4.0.033 (http://www.tcpdf.org)');
-	
+	 */
+	define('PDF_PRODUCER','TCPDF 4.2.004 (http://www.tcpdf.org)');
+
 	/**
 	* This is a PHP class for generating PDF documents without requiring external extensions.<br>
 	* TCPDF project (http://www.tcpdf.org) has been originally derived in 2002 from the Public Domain FPDF class by Olivier Plathey (http://www.fpdf.org), but now is almost entirely rewritten.<br>
 	* @name TCPDF
 	* @package com.tecnick.tcpdf
-	* @version 4.0.033
+	* @version 4.2.004
 	* @author Nicola Asuni - info@tecnick.com
 	* @link http://www.tcpdf.org
 	* @license http://www.gnu.org/copyleft/lesser.html LGPL
 	*/
 	class TCPDF {
-		
+
 		// protected or Protected properties
 
 		/**
@@ -171,7 +172,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @access protected
 		*/
 		protected $page;
-		
+
 		/**
 		* @var current object number
 		* @access protected
@@ -207,7 +208,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @access protected
 		*/
 		protected $compress;
-		
+
 		/**
 		* @var current page orientation (P = Portrait, L = Landscape)
 		* @access protected
@@ -215,7 +216,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		protected $CurOrientation;
 
 		/**
-		* @var array that stores page dimensions.<ul><li>$this->pagedim[$this->page]['w'] => page_width_in_points</li><li>$this->pagedim[$this->page]['h'] => height</li><li>$this->pagedim[$this->page]['tm'] => top_margin</li><li>$this->pagedim[$this->page]['bm'] => bottom_margin</li><li>$this->pagedim[$this->page]['lm'] => left_margin</li><li>$this->pagedim[$this->page]['rm'] => right_margin</li><li>$this->pagedim[$this->page]['pb'] => auto_page_break</li><li>$this->pagedim[$this->page]['or'] => page_orientation</li></ul>
+		* @var array that stores page dimensions.<ul><li>$this->pagedim[$this->page]['w'] => page_width_in_points</li><li>$this->pagedim[$this->page]['h'] => height in points</li><li>$this->pagedim[$this->page]['wk'] => page_width_in_points</li><li>$this->pagedim[$this->page]['hk'] => height</li><li>$this->pagedim[$this->page]['tm'] => top_margin</li><li>$this->pagedim[$this->page]['bm'] => bottom_margin</li><li>$this->pagedim[$this->page]['lm'] => left_margin</li><li>$this->pagedim[$this->page]['rm'] => right_margin</li><li>$this->pagedim[$this->page]['pb'] => auto_page_break</li><li>$this->pagedim[$this->page]['or'] => page_orientation</li><li>$this->pagedim[$this->page]['olm'] => original_left_margin</li><li>$this->pagedim[$this->page]['orm'] => original_right_margin</li></ul>
 		* @access protected
 		*/
 		protected $pagedim = array();
@@ -291,7 +292,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @access protected
 		*/
 		protected $cMargin;
-		
+
 		/**
 		* @var cell internal padding (previous value)
 		* @access protected
@@ -375,14 +376,14 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @access protected
 		*/
 		protected $FontStyle;
-		
+
 		/**
 		* @var current font ascent (distance between font top and baseline)
 		* @access protected
 		* @since 2.8.000 (2007-03-29)
 		*/
 		protected $FontAscent;
-		
+
 		/**
 		* @var current font descent (distance between font bottom and baseline)
 		* @access protected
@@ -548,282 +549,282 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @access protected
 		*/
 		protected $PDFVersion = "1.7";
-		
-		
+
+
 		// ----------------------
-		
+
 		/**
 		 * @var Minimum distance between header and top page margin.
 		 * @access protected
 		 */
 		protected $header_margin;
-		
+
 		/**
 		 * @var Minimum distance between footer and bottom page margin.
 		 * @access protected
 		 */
 		protected $footer_margin;
-		
+
 		/**
 		 * @var original left margin value
 		 * @access protected
 		 * @since 1.53.0.TC013
 		 */
 		protected $original_lMargin;
-		
+
 		/**
 		 * @var original right margin value
 		 * @access protected
 		 * @since 1.53.0.TC013
 		 */
 		protected $original_rMargin;
-			
+
 		/**
 		 * @var Header font.
 		 * @access protected
 		 */
 		protected $header_font;
-		
+
 		/**
 		 * @var Footer font.
 		 * @access protected
 		 */
 		protected $footer_font;
-		
+
 		/**
 		 * @var Language templates.
 		 * @access protected
 		 */
 		protected $l;
-		
+
 		/**
 		 * @var Barcode to print on page footer (only if set).
 		 * @access protected
 		 */
 		protected $barcode = false;
-		
+
 		/**
 		 * @var If true prints header
 		 * @access protected
 		 */
 		protected $print_header = true;
-		
+
 		/**
 		 * @var If true prints footer.
 		 * @access protected
 		 */
 		protected $print_footer = true;
-			
+
 		/**
 		 * @var Header image logo.
 		 * @access protected
 		 */
 		protected $header_logo = "";
-		
+
 		/**
 		 * @var Header image logo width in mm.
 		 * @access protected
 		 */
 		protected $header_logo_width = 30;
-		
+
 		/**
 		 * @var String to print as title on document header.
 		 * @access protected
 		 */
 		protected $header_title = "";
-		
+
 		/**
 		 * @var String to print on document header.
 		 * @access protected
 		 */
 		protected $header_string = "";
-		
+
 		/**
 		 * @var Default number of columns for html table.
 		 * @access protected
 		 */
 		protected $default_table_columns = 4;
-		
-		
+
+
 		// variables for html parser
-		
+
 		/**
 		 * @var HTML PARSER: store current link.
 		 * @access protected
 		 */
 		protected $HREF;
-		
+
 		/**
 		 * @var store available fonts list.
 		 * @access protected
 		 */
 		protected $fontlist = array();
-		
+
 		/**
 		 * @var current foreground color
 		 * @access protected
 		 */
 		protected $fgcolor;
-						
+
 		/**
 		 * @var HTML PARSER: array of boolean values, true in case of ordered list (OL), false otherwise.
 		 * @access protected
 		 */
 		protected $listordered = array();
-		
+
 		/**
 		 * @var HTML PARSER: array count list items on nested lists.
 		 * @access protected
 		 */
 		protected $listcount = array();
-		
+
 		/**
 		 * @var HTML PARSER: current list nesting level.
 		 * @access protected
 		 */
 		protected $listnum = 0;
-		
+
 		/**
 		 * @var HTML PARSER: indent amount for lists.
 		 * @access protected
 		 */
 		protected $listindent;
-		
+
 		/**
 		 * @var current background color
 		 * @access protected
 		 */
 		protected $bgcolor;
-		
+
 		/**
 		 * @var Store temporary font size in points.
 		 * @access protected
 		 */
 		protected $tempfontsize = 10;
-		
+
 		/**
 		 * @var spacer for LI tags.
 		 * @access protected
 		 */
 		protected $lispacer = "";
-		
+
 		/**
 		 * @var default encoding
 		 * @access protected
 		 * @since 1.53.0.TC010
 		 */
 		protected $encoding = "UTF-8";
-		
+
 		/**
 		 * @var PHP internal encoding
 		 * @access protected
 		 * @since 1.53.0.TC016
 		 */
 		protected $internal_encoding;
-		
+
 		/**
 		 * @var indicates if the document language is Right-To-Left
 		 * @access protected
 		 * @since 2.0.000
 		 */
 		protected $rtl = false;
-		
+
 		/**
 		 * @var used to force RTL or LTR string inversion
 		 * @access protected
 		 * @since 2.0.000
 		 */
 		protected $tmprtl = false;
-		
+
 		// --- Variables used for document encryption:
-		
+
 		/**
 		 * Indicates whether document is protected
 		 * @access protected
 		 * @since 2.0.000 (2008-01-02)
 		 */
 		protected $encrypted;
-		
+
 		/**
 		 * U entry in pdf document
 		 * @access protected
 		 * @since 2.0.000 (2008-01-02)
 		 */
 		protected $Uvalue;
-		
+
 		/**
 		 * O entry in pdf document
 		 * @access protected
 		 * @since 2.0.000 (2008-01-02)
 		 */
 		protected $Ovalue;
-		
+
 		/**
 		 * P entry in pdf document
 		 * @access protected
 		 * @since 2.0.000 (2008-01-02)
 		 */
 		protected $Pvalue;
-		
+
 		/**
 		 * encryption object id
 		 * @access protected
 		 * @since 2.0.000 (2008-01-02)
 		 */
 		protected $enc_obj_id;
-		
+
 		/**
 		 * last RC4 key encrypted (cached for optimisation)
 		 * @access protected
 		 * @since 2.0.000 (2008-01-02)
 		 */
 		protected $last_rc4_key;
-		
+
 		/**
 		 * last RC4 computed key
 		 * @access protected
 		 * @since 2.0.000 (2008-01-02)
 		 */
 		protected $last_rc4_key_c;
-		
+
 		/**
 		 * RC4 padding
 		 * @access protected
 		 */
 		protected $padding = "\x28\xBF\x4E\x5E\x4E\x75\x8A\x41\x64\x00\x4E\x56\xFF\xFA\x01\x08\x2E\x2E\x00\xB6\xD0\x68\x3E\x80\x2F\x0C\xA9\xFE\x64\x53\x69\x7A";
-		
+
 		/**
 		 * RC4 encryption key
 		 * @access protected
 		 */
 		protected $encryption_key;
-		
+
 		// --- bookmark ---
-		
+
 		/**
 		 * Outlines for bookmark
 		 * @access protected
 		 * @since 2.1.002 (2008-02-12)
 		 */
 		protected $outlines = array();
-		
+
 		/**
 		 * Outline root for bookmark
 		 * @access protected
 		 * @since 2.1.002 (2008-02-12)
 		 */
 		protected $OutlineRoot;
-		
-		
+
+
 		// --- javascript and form ---
-		
+
 		/**
 		 * javascript code
 		 * @access protected
 		 * @since 2.1.002 (2008-02-12)
 		 */
 		protected $javascript = "";
-		
+
 		/**
 		 * javascript counter
 		 * @access protected
@@ -882,91 +883,91 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		 * @since 3.0.000 (2008-03-27)
 		 */
 		protected $dpi = 72;
-		
+
 		/**
 		 * Indicates whether a new page group was requested
 		 * @access protected
 		 * @since 3.0.000 (2008-03-27)
 		 */
 		protected $newpagegroup;
-		
+
 		/**
 		 * Contains the number of pages of the groups
 		 * @access protected
 		 * @since 3.0.000 (2008-03-27)
 		 */
 		protected $pagegroups;
-		
+
 		/**
 		 * Contains the alias of the current page group
 		 * @access protected
 		 * @since 3.0.000 (2008-03-27)
 		 */
-		protected $currpagegroup; 
-		
+		protected $currpagegroup;
+
 		/**
 		 * Restrict the rendering of some elements to screen or printout.
 		 * @access protected
 		 * @since 3.0.000 (2008-03-27)
 		 */
 		protected $visibility="all";
-		
+
 		/**
 		 * Print visibility.
 		 * @access protected
 		 * @since 3.0.000 (2008-03-27)
 		 */
 		protected $n_ocg_print;
-		
+
 		/**
 		 * View visibility.
 		 * @access protected
 		 * @since 3.0.000 (2008-03-27)
 		 */
 		protected $n_ocg_view;
-		
+
 		/**
 		 * Array of transparency objects and parameters.
 		 * @access protected
 		 * @since 3.0.000 (2008-03-27)
 		 */
 		protected $extgstates;
-		
+
 		/**
 		 * Set the default JPEG compression quality (1-100)
 		 * @access protected
 		 * @since 3.0.000 (2008-03-27)
 		 */
 		protected $jpeg_quality;
-				
+
 		/**
 		 * Default cell height ratio.
 		 * @access protected
 		 * @since 3.0.014 (2008-05-23)
 		 */
 		protected $cell_height_ratio = K_CELL_HEIGHT_RATIO;
-		
+
 		/**
 		 * PDF viewer preferences.
 		 * @access protected
 		 * @since 3.1.000 (2008-06-09)
 		 */
 		protected $viewer_preferences;
-		
+
 		/**
 		 * A name object specifying how the document should be displayed when opened.
 		 * @access protected
 		 * @since 3.1.000 (2008-06-09)
 		 */
 		protected $PageMode;
-		
+
 		/**
 		 * Array for storing gradient information.
 		 * @access protected
 		 * @since 3.1.000 (2008-06-09)
 		 */
 		protected $gradients = array();
-		
+
 		/**
 		 * Array used to store positions inside the pages buffer.
 		 * keys are the page numbers
@@ -974,85 +975,85 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		 * @since 3.2.000 (2008-06-26)
 		 */
 		protected $intmrk = array();
-		
+
 		/**
 		 * Array used to store footer positions of each page.
 		 * @access protected
 		 * @since 3.2.000 (2008-07-01)
 		 */
 		protected $footerpos = array();
-		
-		
+
+
 		/**
 		 * Array used to store footer lenght of each page.
 		 * @access protected
 		 * @since 4.0.014 (2008-07-29)
 		 */
 		protected $footerlen = array();
-		
+
 		/**
 		 * True if a newline is created.
 		 * @access protected
 		 * @since 3.2.000 (2008-07-01)
 		 */
 		protected $newline = true;
-		
+
 		/**
 		 * End position of the latest inserted line
 		 * @access protected
 		 * @since 3.2.000 (2008-07-01)
 		 */
 		protected $endlinex = 0;
-		
+
 		/**
 		 * PDF string for last line width
 		 * @access protected
 		 * @since 4.0.006 (2008-07-16)
 		 */
 		protected $linestyleWidth = "";
-		
+
 		/**
 		 * PDF string for last line width
 		 * @access protected
 		 * @since 4.0.006 (2008-07-16)
 		 */
 		protected $linestyleCap = "0 J";
-		
+
 		/**
 		 * PDF string for last line width
 		 * @access protected
 		 * @since 4.0.006 (2008-07-16)
 		 */
 		protected $linestyleJoin = "0 j";
-		
+
 		/**
 		 * PDF string for last line width
 		 * @access protected
 		 * @since 4.0.006 (2008-07-16)
 		 */
 		protected $linestyleDash = "[] 0 d";
-		
+
 		/**
 		 * True if marked-content sequence is open
 		 * @access protected
 		 * @since 4.0.013 (2008-07-28)
 		 */
 		protected $openMarkedContent = false;
-		
+
 		/**
-		 * Count the latest inserted vertical spaces on HTML.
+		 * Count the latest inserted vertical spaces on HTML
 		 * @access protected
 		 * @since 4.0.021 (2008-08-24)
 		 */
 		protected $htmlvspace = 0;
-		
+
 		/**
 		 * Array of Spot colors
 		 * @access protected
 		 * @since 4.0.024 (2008-09-12)
 		 */
 		protected $spot_colors = array();
-		
+
 		/**
 		 * Symbol used for HTML unordered list items
 		 * @access protected
@@ -1060,13 +1061,48 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		 */
 		protected $lisymbol = "-";
 
+		/**
+		 * String used to mark the beginning and end of EPS image blocks
+		 * @access protected
+		 * @since 4.1.000 (2008-10-18)
+		 */
+		protected $epsmarker = "x#!#EPS#!#x";
+
+		/**
+		 * Array of transformation matrix
+		 * @access protected
+		 * @since 4.2.000 (2008-10-29)
+		 */
+		protected $transfmatrix = array();
+
+		/**
+		 * Booklet mode for double-sided pages
+		 * @access protected
+		 * @since 4.2.000 (2008-10-29)
+		 */
+		protected $booklet = false;
+
+		/**
+		 * Epsilon value used for float calculations
+		 * @access protected
+		 * @since 4.2.000 (2008-10-29)
+		 */
+		protected $feps = 0.001;
+
+		/**
+		 * Array used for custom vertical spaces for HTML tags
+		 * @access protected
+		 * @since 4.2.001 (2008-10-30)
+		 */
+		protected $tagvpaces = array();
+
 		//------------------------------------------------------------
 		// METHODS
 		//------------------------------------------------------------
 
 		/**
-		 * This is the class constructor. 
-		 * It allows to set up the page format, the orientation and 
+		 * This is the class constructor.
+		 * It allows to set up the page format, the orientation and
 		 * the measure unit used in all the methods (except for the font sizes).
 		 * @since 1.0
 		 * @param string $orientation page orientation. Possible values are (case insensitive):<ul><li>P or Portrait (default)</li><li>L or Landscape</li></ul>
@@ -1173,7 +1209,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			// initialize some settings
 			$this->utf8Bidi(array(""));
 		}
-		
+
 		/**
 		 * Default destructor.
 		 * @since 1.53.0.TC016
@@ -1184,12 +1220,12 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				mb_internal_encoding($this->internal_encoding);
 			}
 		}
-		
+
 		/**
-		* Set the units of measure for the document.
-		* @param string $unit User measure unit. Possible values are:<ul><li>pt: point</li><li>mm: millimeter (default)</li><li>cm: centimeter</li><li>in: inch</li></ul><br />A point equals 1/72 of inch, that is to say about 0.35 mm (an inch being 2.54 cm). This is a very common unit in typography; font sizes are expressed in that unit.
-		* @since 3.0.015 (2008-06-06)
-		*/
+		 * Set the units of measure for the document.
+		 * @param string $unit User measure unit. Possible values are:<ul><li>pt: point</li><li>mm: millimeter (default)</li><li>cm: centimeter</li><li>in: inch</li></ul><br />A point equals 1/72 of inch, that is to say about 0.35 mm (an inch being 2.54 cm). This is a very common unit in typography; font sizes are expressed in that unit.
+		 * @since 3.0.015 (2008-06-06)
+		 */
 		public function setPageUnit($unit) {
 		//Set scale factor
 			switch (strtolower($unit)) {
@@ -1223,7 +1259,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$this->setPageOrientation($this->CurOrientation);
 			}
 		}
-		
+
 		/**
 		* Set the page format
 		* @param mixed $format The format used for pages. It can be either one of the following values (case insensitive) or a custom format in the form of a two-element array containing the width and the height (expressed in the unit given by unit).<ul><li>4A0</li><li>2A0</li><li>A0</li><li>A1</li><li>A2</li><li>A3</li><li>A4 (default)</li><li>A5</li><li>A6</li><li>A7</li><li>A8</li><li>A9</li><li>A10</li><li>B0</li><li>B1</li><li>B2</li><li>B3</li><li>B4</li><li>B5</li><li>B6</li><li>B7</li><li>B8</li><li>B9</li><li>B10</li><li>C0</li><li>C1</li><li>C2</li><li>C3</li><li>C4</li><li>C5</li><li>C6</li><li>C7</li><li>C8</li><li>C9</li><li>C10</li><li>RA0</li><li>RA1</li><li>RA2</li><li>RA3</li><li>RA4</li><li>SRA0</li><li>SRA1</li><li>SRA2</li><li>SRA3</li><li>SRA4</li><li>LETTER</li><li>LEGAL</li><li>EXECUTIVE</li><li>FOLIO</li></ul>
@@ -1294,7 +1330,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->setPageOrientation($orientation);
 		}
-		
+
 		/**
 		* Set page orientation.
 		* @param string $orientation page orientation. Possible values are (case insensitive):<ul><li>P or PORTRAIT (default)</li><li>L or LANDSCAPE</li></ul>
@@ -1334,9 +1370,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->SetAutoPageBreak($autopagebreak, $bottommargin);
 			// store page dimensions
-			$this->pagedim[$this->page] = array('w' => $this->wPt, 'h' => $this->hPt, 'tm' => $this->tMargin, 'bm' => $bottommargin, 'lm' => $this->lMargin, 'rm' => $this->rMargin, 'pb' => $autopagebreak, 'or' => $this->CurOrientation);
+			$this->pagedim[$this->page] = array('w' => $this->wPt, 'h' => $this->hPt, 'wk' => $this->w, 'hk' => $this->h, 'tm' => $this->tMargin, 'bm' => $bottommargin, 'lm' => $this->lMargin, 'rm' => $this->rMargin, 'pb' => $autopagebreak, 'or' => $this->CurOrientation, 'olm' => $this->original_lMargin, 'orm' => $this->original_rMargin);
 		}
-				
+
 		/**
 		 * Enable or disable Right-To-Left language mode
 		 * @param Boolean $enable if true enable Right-To-Left language mode.
@@ -1346,7 +1382,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->rtl = $enable ? true : false;
 			$this->tmprtl = false;
 		}
-		
+
 		/**
 		 * Return the RTL status
 		 * @return boolean
@@ -1355,7 +1391,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function getRTL() {
 			return $this->rtl;
 		}
-		
+
 		/**
 		* Force temporary RTL language direction
 		* @param mixed $mode can be false, 'L' for LTR or 'R' for RTL
@@ -1370,7 +1406,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 			}
 		}
-		
+
 		/**
 		* Set the last cell height.
 		* @param float $h cell height.
@@ -1380,7 +1416,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function setLastH($h) {
 			$this->lasth = $h;
 		}
-		
+
 		/**
 		* Get the last cell height.
 		* @return last cell height
@@ -1389,7 +1425,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function getLastH() {
 			return $this->lasth;
 		}
-		
+
 		/**
 		* Set the image scale.
 		* @param float $scale image scale.
@@ -1680,7 +1716,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			//Creator of document
 			$this->creator = $creator;
 		}
-		
+
 		/**
 		* Defines an alias for the total number of pages. It will be substituted as the document is closed.<br />
 		* @param string $alias The alias. Default value: {nb}.
@@ -1691,7 +1727,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			//Define an alias for total number of pages
 			$this->AliasNbPages = $alias;
 		}
-		
+
 		/**
 		 * Returns the string alias used for the total number of pages.
          * If the current font is unicode type, the returned string is surrounded by additional curly braces.
@@ -1705,7 +1741,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
             }
 			return $this->AliasNbPages;
 		}
-		
+
 		/**
 		* This method is automatically called in case of fatal error; it simply outputs the message and halts the execution. An inherited class may override it to customize the error handling but should always halt the script, or the resulting document would probably be invalid.
 		* 2004-06-11 :: Nicola Asuni : changed bold tag with strong
@@ -1748,7 +1784,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			//Close document
 			$this->_enddoc();
 		}
-		
+
 		/**
 		* Move pointer at the specified document page and update page dimensions.
 		* @param int $pnum page number
@@ -1758,6 +1794,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		*/
 		public function setPage($pnum, $resetmargins=false) {
 			if (($pnum > 0) AND ($pnum <= count($this->pages))) {
+				$oldpage = $this->page;
 				$this->page = $pnum;
 				$this->wPt = $this->pagedim[$this->page]['w'];
 				$this->hPt = $this->pagedim[$this->page]['h'];
@@ -1765,6 +1802,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->h = $this->hPt / $this->k;
 				$this->tMargin = $this->pagedim[$this->page]['tm'];
 				$this->bMargin = $this->pagedim[$this->page]['bm'];
+				$this->original_lMargin = $this->pagedim[$this->page]['olm'];
+				$this->original_rMargin = $this->pagedim[$this->page]['orm'];
 				$this->AutoPageBreak = $this->pagedim[$this->page]['pb'];
 				$this->CurOrientation = $this->pagedim[$this->page]['or'];
 				$this->SetAutoPageBreak($this->AutoPageBreak, $this->bMargin);
@@ -1772,21 +1811,29 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$this->lMargin = $this->pagedim[$this->page]['lm'];
 					$this->rMargin = $this->pagedim[$this->page]['rm'];
 					$this->SetY($this->tMargin);
+				} else {
+					// account for booklet mode
+					if ($this->pagedim[$this->page]['olm'] != $this->pagedim[$oldpage]['olm']) {
+						$deltam = $this->pagedim[$this->page]['olm'] - $this->pagedim[$this->page]['orm'];
+						$this->lMargin += $deltam;
+						$this->rMargin -= $deltam;
+					}
 				}
 			} else {
 				$this->Error('Wrong page number on setPage() function.');
 			}
 		}
-		
+
 		/**
 		* Reset pointer to the last document page.
+		* @param boolean $resetmargins if true reset left, right, top margins and Y position.
 		* @since 2.0.000 (2008-01-04)
 		* @see setPage(), getPage(), getNumPages()
 		*/
-		public function lastPage() {
-			$this->setPage($this->getNumPages());
+		public function lastPage($resetmargins=false) {
+			$this->setPage($this->getNumPages(), $resetmargins);
 		}
-		
+
 		/**
 		* Get current document page number.
 		* @return int page number
@@ -1796,8 +1843,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function getPage() {
 			return $this->page;
 		}
-		
-		
+
+
 		/**
 		* Get the total number of insered pages.
 		* @return int number of pages
@@ -1834,6 +1881,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			if ($this->state == 0) {
 				$this->Open();
 			}
+			$this->swapMargins($this->booklet);
 			// save current settings
 			$font_family = $this->FontFamily;
 			$font_style = $this->FontStyle;
@@ -1850,10 +1898,12 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$prev_TextColor = $this->TextColor;
 			$prev_ColorFlag = $this->ColorFlag;
 			if ($this->page > 0) {
+				$this->swapMargins($this->booklet);
 				//Page footer
 				$this->setFooter();
 				//Close page
 				$this->_endpage();
+				$this->swapMargins($this->booklet);
 			}
 			//Start new page
 			$this->_beginpage($orientation, $format);
@@ -1889,7 +1939,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			// mark this point
 			$this->intmrk[$this->page] = strlen($this->pages[$this->page]);
 		}
-		
+
 		/**
 	 	 * Set start-writing mark on current page for multicell borders and fills.
 	 	 * This function must be called after calling Image() function for a background image.
@@ -1900,7 +1950,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function setPageMark() {
 			$this->intmrk[$this->page] = strlen($this->pages[$this->page]);
 		}
-		
+
 		/**
 	 	 * Set header data.
 		 * @param string $ln header image logo
@@ -1914,7 +1964,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->header_title = $ht;
 			$this->header_string = $hs;
 		}
-		
+
 		/**
 	 	 * Returns header data:
 	 	 * <ul><li>$ret['logo'] = logo image</li><li>$ret['logo_width'] = width of the image logo in user units</li><li>$ret['title'] = header title</li><li>$ret['string'] = header description string</li></ul>
@@ -1929,7 +1979,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$ret['string'] = $this->header_string;
 			return $ret;
 		}
-		
+
 		/**
 	 	 * Set header margin.
 		 * (minimum distance between header and top page margin)
@@ -1938,7 +1988,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function setHeaderMargin($hm=10) {
 			$this->header_margin = $hm;
 		}
-		
+
 		/**
 	 	 * Returns header margin in user units.
 		 * @return float
@@ -1947,7 +1997,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function getHeaderMargin() {
 			return $this->header_margin;
 		}
-		
+
 		/**
 	 	 * Set footer margin.
 		 * (minimum distance between footer and bottom page margin)
@@ -1956,7 +2006,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function setFooterMargin($fm=10) {
 			$this->footer_margin = $fm;
 		}
-		
+
 		/**
 	 	 * Returns footer margin in user units.
 		 * @return float
@@ -1967,36 +2017,36 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		}
 		/**
 	 	 * Set a flag to print page header.
-		 * @param boolean $val set to true to print the page header (default), false otherwise. 
+		 * @param boolean $val set to true to print the page header (default), false otherwise.
 		 */
 		public function setPrintHeader($val=true) {
 			$this->print_header = $val;
 		}
-		
+
 		/**
 	 	 * Set a flag to print page footer.
-		 * @param boolean $value set to true to print the page footer (default), false otherwise. 
+		 * @param boolean $value set to true to print the page footer (default), false otherwise.
 		 */
 		public function setPrintFooter($val=true) {
 			$this->print_footer = $val;
 		}
-		
+
 		/**
 	 	 * Return the right-bottom (or left-bottom for RTL) corner X coordinate of last inserted image
-		 * @return float 
+		 * @return float
 		 */
 		public function getImageRBX() {
 			return $this->img_rb_x;
 		}
-		
+
 		/**
 	 	 * Return the right-bottom (or left-bottom for RTL) corner Y coordinate of last inserted image
-		 * @return float 
+		 * @return float
 		 */
 		public function getImageRBY() {
 			return $this->img_rb_y;
 		}
-		
+
 		/**
 	 	 * This method is used to render the page header.
 	 	 * It is automatically called by AddPage() and could be overwritten in your own inherited class.
@@ -2037,15 +2087,15 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->Cell(0, 0, '', 'T', 0, 'C');
 		}
-		
+
 		/**
-	 	 * This method is used to render the page footer. 
+	 	 * This method is used to render the page footer.
 	 	 * It is automatically called by AddPage() and could be overwritten in your own inherited class.
 		 */
-		public function Footer() {				
+		public function Footer() {
 			$cur_y = $this->GetY();
 			$ormargins = $this->getOriginalMargins();
-			$this->SetTextColor(0, 0, 0);			
+			$this->SetTextColor(0, 0, 0);
 			//set style for cell border
 			$line_width = 0.85 / $this->getScaleFactor();
 			$this->SetLineStyle(array("width" => $line_width, "cap" => "butt", "join" => "miter", "dash" => 0, "color" => array(0, 0, 0)));
@@ -2054,7 +2104,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			if (!empty($barcode)) {
 				$this->Ln();
 				$barcode_width = round(($this->getPageWidth() - $ormargins['left'] - $ormargins['right'])/3);
-				$this->write1DBarcode($barcode, "C128B", $this->GetX(), $cur_y + $line_width, $barcode_width, (($this->getFooterMargin() / 3) - $line_width), 0.3, '', '');	
+				$this->write1DBarcode($barcode, "C128B", $this->GetX(), $cur_y + $line_width, $barcode_width, (($this->getFooterMargin() / 3) - $line_width), 0.3, '', '');
 			}
 			$pagenumtxt = $this->l['w_page']." ".$this->PageNo().' / '.$this->getAliasNbPages();
 			$this->SetY($cur_y);
@@ -2067,9 +2117,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->Cell(0, 0, $pagenumtxt, 'T', 0, 'R');
 			}
 		}
-		
+
 		/**
-	 	 * This method is used to render the page header. 
+	 	 * This method is used to render the page header.
 	 	 * @access protected
 	 	 * @since 4.0.012 (2008-07-24)
 		 */
@@ -2097,9 +2147,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->lasth = $lasth;
 			}
 		}
-		
+
 		/**
-	 	 * This method is used to render the page footer. 
+	 	 * This method is used to render the page footer.
 	 	 * @access protected
 	 	 * @since 4.0.012 (2008-07-24)
 		 */
@@ -2134,7 +2184,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->footerlen[$this->page] = strlen($this->pages[$this->page]) - $this->footerpos[$this->page];
 			$this->InFooter = false;
 		}
-		
+
 		/**
 		* Returns the current page number.
 		* @return int page number
@@ -2144,10 +2194,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function PageNo() {
 			return $this->page;
 		}
-		
+
 		/**
-		* Defines a new spot color. 
-		* It can be expressed in RGB components or gray scale. 
+		* Defines a new spot color.
+		* It can be expressed in RGB components or gray scale.
 		* The method can be called before the first page is created and the value is retained from page to page.
 		* @param int $c Cyan color for CMYK. Value between 0 and 255
 		* @param int $m Magenta color for CMYK. Value between 0 and 255
@@ -2164,8 +2214,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		}
 
 		/**
-		* Defines the color used for all drawing operations (lines, rectangles and cell borders). 
-		* It can be expressed in RGB components or gray scale. 
+		* Defines the color used for all drawing operations (lines, rectangles and cell borders).
+		* It can be expressed in RGB components or gray scale.
 		* The method can be called before the first page is created and the value is retained from page to page.
 		* @param array $color array of colors
 		* @since 3.1.000 (2008-06-11)
@@ -2222,7 +2272,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out($this->DrawColor);
 			}
 		}
-		
+
 		/**
 		* Defines the spot color used for all drawing operations (lines, rectangles and cell borders).
 		* @param string $name name of the spot color
@@ -2239,10 +2289,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out($this->DrawColor);
 			}
 		}
-		
+
 		/**
-		* Defines the color used for all filling operations (filled rectangles and cell backgrounds). 
-		* It can be expressed in RGB components or gray scale. 
+		* Defines the color used for all filling operations (filled rectangles and cell backgrounds).
+		* It can be expressed in RGB components or gray scale.
 		* The method can be called before the first page is created and the value is retained from page to page.
 		* @param array $color array of colors
 		* @since 3.1.000 (2008-6-11)
@@ -2260,7 +2310,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 			}
 		}
-		
+
 		/**
 		* Defines the color used for all filling operations (filled rectangles and cell backgrounds). It can be expressed in RGB components or gray scale. The method can be called before the first page is created and the value is retained from page to page.
 		* @param int $col1 Gray level for single color, or Red color for RGB, or Cyan color for CMYK. Value between 0 and 255
@@ -2303,7 +2353,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out($this->FillColor);
 			}
 		}
-		
+
 		/**
 		* Defines the spot color used for all filling operations (filled rectangles and cell backgrounds).
 		* @param string $name name of the spot color
@@ -2321,9 +2371,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out($this->FillColor);
 			}
 		}
-		
+
 		/**
-		* Defines the color used for text. It can be expressed in RGB components or gray scale. 
+		* Defines the color used for text. It can be expressed in RGB components or gray scale.
 		* The method can be called before the first page is created and the value is retained from page to page.
 		* @param array $color array of colors
 		* @since 3.1.000 (2008-6-11)
@@ -2381,7 +2431,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->ColorFlag = ($this->FillColor != $this->TextColor);
 		}
-		
+
 		/**
 		* Defines the spot color used for text.
 		* @param string $name name of the spot color
@@ -2413,7 +2463,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function GetStringWidth($s, $fontname='', $fontstyle='', $fontsize=0) {
 			return $this->GetArrStringWidth($this->utf8Bidi($this->UTF8StringToArray($s), $this->tmprtl), $fontname, $fontstyle, $fontsize);
 		}
-		
+
 		/**
 		* Returns the string length of an array of chars in user unit. A font must be selected.<br>
 		* @param string $arr The array of chars whose total length is to be computed
@@ -2433,7 +2483,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->SetFont($fontname, $fontstyle, $fontsize);
 			}
 			$w = 0;
-			foreach($sa as $char) {
+			foreach ($sa as $char) {
 				$w += $this->GetCharWidth($char);
 			}
 			// restore previous values
@@ -2442,7 +2492,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return $w;
 		}
-		
+
 		/**
 		* Returns the length of the char in user unit for the current font.<br>
 		* @param int $char The char code whose length is to be returned
@@ -2454,12 +2504,6 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$cw = &$this->CurrentFont['cw'];
 			if (isset($cw[$char])) {
 				$w = $cw[$char];
-				/*
-			} elseif (isset($cw[ord($char)])) {
-				$w = $cw[ord($char)];
-			} elseif (isset($cw[chr($char)])) {
-				$w = $cw[chr($char)];
-				*/
 			} elseif (isset($this->CurrentFont['dw'])) {
 				$w = $this->CurrentFont['dw'];
 			} elseif (isset($this->CurrentFont['desc']['MissingWidth'])) {
@@ -2469,7 +2513,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return ($w * $this->FontSize / 1000);
 		}
-		
+
 		/**
 		* Returns the numbero of characters in a string.
 		* @param string $s The input string.
@@ -2479,10 +2523,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function GetNumChars($s) {
 			if (($this->CurrentFont['type'] == "TrueTypeUnicode") OR ($this->CurrentFont['type'] == "cidfont0")) {
 				return count($this->UTF8StringToArray($s));
-			} 
+			}
 			return strlen($s);
 		}
-			
+
 		/**
 		* Fill the list of available fonts ($this->fontlist).
 		* @access protected
@@ -2497,10 +2541,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			closedir($fontsdir);
 		}
-		
+
 		/**
 		* Imports a TrueType, Type1, core, or CID0 font and makes it available.
-		* It is necessary to generate a font definition file first (read /fonts/utils/README.TXT). 
+		* It is necessary to generate a font definition file first (read /fonts/utils/README.TXT).
 		* The definition file (and the font file itself when embedding) must be present either in the current directory or in the one indicated by K_PATH_FONTS if the constant is defined. If it could not be found, the error "Could not include font definition file" is generated.
 		* Changed to support UTF-8 Unicode [Nicola Asuni, 2005-01-02].
 		* @param string $family Font family. The name can be chosen arbitrarily. If it is a standard family name, it will override the corresponding font.
@@ -2525,29 +2569,33 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			if (($family == "symbol") OR ($family == "zapfdingbats")) {
 				$style = '';
 			}
-			$style = strtoupper($style);
+			$tempstyle = strtoupper($style);
+			$style = "";
 			// underline
-			if (strpos($style,'U') !== false) {
+			if (strpos($tempstyle, 'U') !== false) {
 				$this->underline = true;
-				$style = str_replace('U', '', $style);
 			} else {
 				$this->underline = false;
 			}
-			//line through (deleted)
-			if (strpos($style,'D') !== false) {
+			// line through (deleted)
+			if (strpos($tempstyle, 'D') !== false) {
 				$this->linethrough = true;
-				$style = str_replace('D', '', $style);
 			} else {
 				$this->linethrough = false;
 			}
-			if ($style == 'IB') {
-				$style = 'BI';
+			// bold
+			if (strpos($tempstyle, 'B') !== false) {
+				$style .= "B";
+			}
+			// oblique
+			if (strpos($tempstyle, 'I') !== false) {
+				$style .= "I";
 			}
 			$fontkey = $family.$style;
 			$font_style = $style.($this->underline ? 'U' : '').($this->linethrough ? 'D' : '');
 			$fontdata = array("fontkey" => $fontkey, "family" => $family, "style" => $font_style);
 			// check if the font has been already added
-			if (isset($this->fonts[$fontkey])) {	
+			if (isset($this->fonts[$fontkey])) {
 				return $fontdata;
 			}
 			if ($file == '') {
@@ -2558,10 +2606,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$file = str_replace(' ', '', $family).'.php';
 			}
 			if (isset($type)) {
-				unset($type); 
+				unset($type);
 			}
 			if (isset($cw)) {
-				unset($cw); 
+				unset($cw);
 			}
 			include($this->_getfontpath().$file);
 			if ((!isset($type)) OR (!isset($cw))) {
@@ -2579,7 +2627,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$file = '';
 			} elseif ($type == 'core') {
-				$def_width = $cw[ord('?')];
+				$def_width = $cw[ord('"')];
 				$this->fonts[$fontkey] = array('i' => $i, 'type' => 'core', 'name' => $this->CoreFonts[$fontkey], 'up' => -100, 'ut' => 50, 'cw' => $cw, 'dw' => $def_width);
 			} elseif (($type == 'TrueType') OR ($type == 'Type1')) {
 				if (!isset($file)) {
@@ -2621,9 +2669,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		}
 
 		/**
-		* Sets the font used to print character strings. 
+		* Sets the font used to print character strings.
 		* The font can be either a standard one or a font added via the AddFont() method. Standard fonts use Windows encoding cp1252 (Western Europe).
-		* The method can be called before the first page is created and the font is retained from page to page. 
+		* The method can be called before the first page is created and the font is retained from page to page.
 		* If you just wish to change the current font size, it is simpler to call SetFontSize().
 		* Note: for the standard fonts, the font metric files must be accessible. There are three possibilities for this:<ul><li>They are in the current directory (the one where the running script lies)</li><li>They are in one of the directories defined by the include_path parameter</li><li>They are in the directory defined by the K_PATH_FONTS constant</li></ul><br />
 		* @param string $family Family font. It can be either a name defined by AddFont() or one of the standard Type1 families (case insensitive):<ul><li>times (Times-Roman)</li><li>timesb (Times-Bold)</li><li>timesi (Times-Italic)</li><li>timesbi (Times-BoldItalic)</li><li>helvetica (Helvetica)</li><li>helveticab (Helvetica-Bold)</li><li>helveticai (Helvetica-Oblique)</li><li>helveticabi (Helvetica-BoldOblique)</li><li>courier (Courier)</li><li>courierb (Courier-Bold)</li><li>courieri (Courier-Oblique)</li><li>courierbi (Courier-BoldOblique)</li><li>symbol (Symbol)</li><li>zapfdingbats (ZapfDingbats)</li></ul> It is also possible to pass an empty string. In that case, the current family is retained.
@@ -2709,13 +2757,14 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @param float $w Width of the rectangle
 		* @param float $h Height of the rectangle
 		* @param mixed $link URL or identifier returned by AddLink()
+		* @param int $spaces number of spaces on the text to link
 		* @since 1.5
 		* @see AddLink(), Annotation(), Cell(), Write(), Image()
 		*/
-		public function Link($x, $y, $w, $h, $link) {
-			$this->Annotation($x, $y, $w, $h, $link, array('Subtype'=>'Link'));
+		public function Link($x, $y, $w, $h, $link, $spaces=0) {
+			$this->Annotation($x, $y, $w, $h, $link, array('Subtype'=>'Link'), $spaces);
 		}
-		
+
 		/**
 		* Puts a text annotation on a rectangular area of the page.
 		* !!!! THIS FUNCTION IS NOT YET FULLY IMPLEMENTED !!!!
@@ -2725,12 +2774,53 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @param float $h Height of the rectangle
 		* @param string $text annotation text
 		* @param array $opt array of options (see section 8.4 of PDF reference 1.7).
+		* @param int $spaces number of spaces on the text to link
 		* @since 4.0.018 (2008-08-06)
 		*/
-		public function Annotation($x, $y, $w, $h, $text, $opt=array('Subtype'=>'Text')) {
-			$this->PageAnnots[$this->page][] = array('x' => $x, 'y' => $y, 'w' => $w, 'h' => $h, 'txt' => $text, 'opt' => $opt);
+		public function Annotation($x, $y, $w, $h, $text, $opt=array('Subtype'=>'Text'), $spaces=0) {
+			// recalculate coordinates to account for graphic transformations
+			if (isset($this->transfmatrix)) {
+				$maxid = count($this->transfmatrix) - 1;
+				for ($i=$maxid; $i >= 0; $i--) {
+					$ctm = $this->transfmatrix[$i];
+					if (isset($ctm['a'])) {
+						$x = $x * $this->k;
+						$y = ($this->h - $y) * $this->k;
+						$w = $w * $this->k;
+						$h = $h * $this->k;
+						// top left
+						$xt = $x;
+						$yt = $y;
+						$x1 = ($ctm['a'] * $xt) + ($ctm['c'] * $yt) + $ctm['e'];
+						$y1 = ($ctm['b'] * $xt) + ($ctm['d'] * $yt) + $ctm['f'];
+						// top right
+						$xt = $x + $w;
+						$yt = $y;
+						$x2 = ($ctm['a'] * $xt) + ($ctm['c'] * $yt) + $ctm['e'];
+						$y2 = ($ctm['b'] * $xt) + ($ctm['d'] * $yt) + $ctm['f'];
+						// bottom left
+						$xt = $x;
+						$yt = $y - $h;
+						$x3 = ($ctm['a'] * $xt) + ($ctm['c'] * $yt) + $ctm['e'];
+						$y3 = ($ctm['b'] * $xt) + ($ctm['d'] * $yt) + $ctm['f'];
+						// bottom right
+						$xt = $x + $w;
+						$yt = $y - $h;
+						$x4 = ($ctm['a'] * $xt) + ($ctm['c'] * $yt) + $ctm['e'];
+						$y4 = ($ctm['b'] * $xt) + ($ctm['d'] * $yt) + $ctm['f'];
+						// new coordinates (rectangle area)
+						$x = min($x1, $x2, $x3, $x4);
+						$y = max($y1, $y2, $y3, $y4);
+						$w = (max($x1, $x2, $x3, $x4) - $x) / $this->k;
+						$h = ($y - min($y1, $y2, $y3, $y4)) / $this->k;
+						$x = $x / $this->k;
+						$y = $this->h - ($y / $this->k);
+					}
+				}
+			}
+			$this->PageAnnots[$this->page][] = array('x' => $x, 'y' => $y, 'w' => $w, 'h' => $h, 'txt' => $text, 'opt' => $opt, 'numspaces' => $spaces);
 		}
-		
+
 		/**
 		* Prints a character string. The origin is on the left of the first charcter, on the baseline. This method allows to place a string precisely on the page, but it is usually easier to use Cell(), MultiCell() or Write() which are the standard methods to print text.
 		* @param float $x Abscissa of the origin
@@ -2763,8 +2853,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			if ($this->underline AND ($txt!='')) {
 				$s .= ' '.$this->_dounderline($xr, $y, $txt);
 			}
-			if ($this->linethrough AND ($txt!='')) { 
-				$s .= ' '.$this->_dolinethrough($xr, $y, $txt); 
+			if ($this->linethrough AND ($txt!='')) {
+				$s .= ' '.$this->_dolinethrough($xr, $y, $txt);
 			}
 			if ($this->ColorFlag AND (!$clip)) {
 				$s='q '.$this->TextColor.' '.$s.' Q';
@@ -2773,7 +2863,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		}
 
 		/**
-		* Whenever a page break condition is met, the method is called, and the break is issued or not depending on the returned value. 
+		* Whenever a page break condition is met, the method is called, and the break is issued or not depending on the returned value.
 		* The default implementation returns a value according to the mode selected by SetAutoPageBreak().<br />
 		* This method is called automatically and should not be called directly by the application.
 		* @return boolean
@@ -2783,10 +2873,11 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function AcceptPageBreak() {
 			return $this->AutoPageBreak;
 		}
-		
+
 		/**
 		* Add page if needed.
 		* @param float $h Cell height. Default value: 0.
+		* @return boolean true in case of page break, false otherwise.
 		* @since 3.2.000 (2008-07-01)
 		* @access protected
 		*/
@@ -2807,8 +2898,23 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$this->_out($rs);
 				$this->y = $this->tMargin;
-				$this->x = $x;
+				$oldpage = $this->page - 1;
+				if ($this->rtl) {
+					if ($this->pagedim[$this->page]['rm'] != $this->pagedim[$oldpage]['rm']) {
+						$this->x = $x - ($this->pagedim[$this->page]['rm'] - $this->pagedim[$oldpage]['rm']);
+					} else {
+						$this->x = $x;
+					}
+				} else {
+					if ($this->pagedim[$this->page]['lm'] != $this->pagedim[$oldpage]['lm']) {
+						$this->x = $x + ($this->pagedim[$this->page]['lm'] - $this->pagedim[$oldpage]['lm']);
+					} else {
+						$this->x = $x;
+					}
+				}
+				return true;
 			}
+			return false;
 		}
 
 		/**
@@ -2836,7 +2942,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->checkPageBreak($h);
 			$this->_out($this->getCellCode($w, $h, $txt, $border, $ln, $align, $fill, $link, $stretch));
 		}
-		
+
 		/**
 		* Returns the PDF string code to print a cell (rectangular area) with optional borders, background color and character string. The upper-left corner of the cell corresponds to the current position. The text can be aligned or centered. After the call, the current position moves to the right or to the next line. It is possible to put a link on the text.<br />
 		* If automatic page breaking is enabled and the cell goes beyond the limit, a page break is done before outputting.
@@ -2866,7 +2972,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$w = $this->w - $this->rMargin - $this->x;
 				}
 			}
-			$s = '';			
+			$s = '';
 			if (($fill == 1) OR ($border == 1)) {
 				if ($fill == 1) {
 					$op = ($border == 1) ? 'B' : 'f';
@@ -2880,7 +2986,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$s .= sprintf('%.2f %.2f %.2f %.2f re %s ', $xk, (($this->h - $this->y) * $k), ($w * $k), (-$h * $k), $op);
 			}
-			
+
 			if (is_string($border)) {
 				$x = $this->x;
 				$y = $this->y;
@@ -2926,7 +3032,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$width = $this->GetStringWidth($txt);
 				// ratio between cell lenght and text lenght
 				$ratio = ($w - (2 * $this->cMargin)) / $width;
-				
+
 				// stretch text if required
 				if (($stretch > 0) AND (($ratio < 1) OR (($ratio > 1) AND (($stretch % 2) == 0)))) {
 					if ($stretch > 2) {
@@ -3010,14 +3116,14 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				if ($this->underline)  {
 					$s .= ' '.$this->_dounderline($xdx, $basefonty, $txt);
 				}
-				if ($this->linethrough) { 
+				if ($this->linethrough) {
 					$s .= ' '.$this->_dolinethrough($xdx, $basefonty, $txt);
 				}
 				if ($this->ColorFlag) {
 					$s .= ' Q';
 				}
 				if ($link) {
-					$this->Link($xdx, $this->y + (($h - $this->FontSize)/2), $width, $this->FontSize, $link);
+					$this->Link($xdx, $this->y + (($h - $this->FontSize)/2), $width, $this->FontSize, $link, substr_count($txt, chr(32)));
 				}
 			}
 			// output cell
@@ -3062,7 +3168,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		}
 
 		/**
-		* This method allows printing text with line breaks. 
+		* This method allows printing text with line breaks.
 		* They can be automatic (as soon as the text reaches the right border of the cell) or explicit (via the \n character). As many cells as necessary are output, one below the other.<br />
 		* Text can be aligned, centered or justified. The cell block can be framed and the background painted.
 		* @param float $w Width of cells. If 0, they extend up to the right margin of the page.
@@ -3081,7 +3187,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @since 1.3
 		* @see SetFont(), SetDrawColor(), SetFillColor(), SetTextColor(), SetLineWidth(), Cell(), Write(), SetAutoPageBreak()
 		*/
-		public function MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false) {	
+		public function MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false) {
 			if ((empty($this->lasth))OR ($reseth)) {
 				//set row height
 				$this->lasth = $this->FontSize * $this->cell_height_ratio;
@@ -3131,11 +3237,11 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			// add top padding
 			$this->y += $this->cMargin;
 			if ($ishtml) {
-				// Write HTML text
+				// ******* Write HTML text
 				$this->writeHTML($txt, true, 0, $reseth, true, $align);
 				$nl = 1;
 			} else {
-				// Write text
+				// ******* Write text
 				$nl = $this->Write($this->lasth, $txt, '', 0, $align, true, $stretch, false);
 			}
 			// add bottom padding
@@ -3163,7 +3269,16 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						$this->SetY($this->tMargin); // put cursor at the beginning of text
 						$h = $this->getPageHeight() - $this->tMargin - $this->getBreakMargin();
 					}
-					$this->SetX($x);
+					$nx = $x;
+					// account for margin changes
+					if ($page > $startpage) {
+						if (($this->rtl) AND ($this->pagedim[$page]['rm'] != $this->pagedim[$startpage]['rm'])) {
+							$nx = $x + ($this->pagedim[$page]['rm'] - $this->pagedim[$startpage]['rm']);
+						} elseif ((!$this->rtl) AND ($this->pagedim[$page]['lm'] != $this->pagedim[$startpage]['lm'])) {
+							$nx = $x + ($this->pagedim[$page]['lm'] - $this->pagedim[$startpage]['lm']);
+						}
+					}
+					$this->SetX($nx);
 					$ccode = $this->getCellCode($w, $h, "", $border, 1, '', $fill);
 					if ($border OR $fill) {
 						$pstart = substr($this->pages[$this->page], 0, $this->intmrk[$this->page]);
@@ -3175,7 +3290,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			} else {
 				$h = max($h, ($currentY - $y));
 				// put cursor at the beginning of text
-				$this->SetY($y); 
+				$this->SetY($y);
 				$this->SetX($x);
 				$ccode = $this->getCellCode($w, $h, "", $border, 1, '', $fill);
 				if ($border OR $fill) {
@@ -3205,7 +3320,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return $nl;
 		}
-		
+
 		/**
 		* This method prints text from the current position.<br />
 		* @param float $h Line height
@@ -3216,10 +3331,11 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @param boolean $ln if true set cursor at the bottom of the line, otherwise set cursor at the top of the line.
 		* @param int $stretch stretch carachter mode: <ul><li>0 = disabled</li><li>1 = horizontal scaling only if necessary</li><li>2 = forced horizontal scaling</li><li>3 = character spacing only if necessary</li><li>4 = forced character spacing</li></ul>
 		* @param boolean $firstline if true prints only the first line and return the remaining string.
+		* @param boolean $firstblock if true the string is the starting of a line.
 		* @return mixed Return the number of cells or the remaining string if $firstline = true.
 		* @since 1.5
 		*/
-		public function Write($h, $txt, $link='', $fill=0, $align='', $ln=false, $stretch=0, $firstline=false) {
+		public function Write($h, $txt, $link='', $fill=0, $align='', $ln=false, $stretch=0, $firstline=false, $firstblock=false) {
 			// remove carriage returns
 			$s = str_replace("\r", '', $txt);
 			// check if string contains arabic text
@@ -3235,7 +3351,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			// get the number of characters
 			$nb = count($chars);
 			// handle single space character
-			if (($nb == 1) AND preg_match("/[\s]/u", $s)) {
+			if (($nb == 1) AND preg_match("/[\s]/", $s)) {
 				if ($this->rtl) {
 					$this->x -= $this->GetStringWidth($s);
 				} else {
@@ -3296,10 +3412,15 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$j = $i + 1;
 					$l = 0;
 					$sep = -1;
+					// account for margin changes
+					if ((($this->y + $this->lasth) > $this->PageBreakTrigger) AND (empty($this->InFooter))) {
+						// AcceptPageBreak() may be overriden on extended classed to include margin changes
+						$this->AcceptPageBreak();
+					}
 					$w = $this->getRemainingWidth();
 					$wmax = $w - (2 * $this->cMargin);
 				} else {
-					if (preg_match("/[\s]/u", $this->unichr($c))) {
+					if (preg_match("/[\s]/", $this->unichr($c))) {
 						// update last blank space position
 						$sep = $i;
 					}
@@ -3344,12 +3465,17 @@ require_once(dirname(__FILE__)."/barcodes.php");
 								}
 								$j = $i;
 								$i--;
-							}	
+							}
 						} else {
 							// word wrapping
+							if ($this->rtl AND (!$firstblock)) {
+								$endspace = 1;
+							} else {
+								$endspace = 0;
+							}
 							if ($firstline) {
 								$startx = $this->x;
-								$linew = $this->GetArrStringWidth($this->utf8Bidi(array_slice($chars, $j, $sep), $this->tmprtl));
+								$linew = $this->GetArrStringWidth($this->utf8Bidi(array_slice($chars, $j, ($sep + $endspace)), $this->tmprtl));
 								if ($this->rtl) {
 									$this->endlinex = $startx - $linew;
 								} else {
@@ -3359,14 +3485,19 @@ require_once(dirname(__FILE__)."/barcodes.php");
 								$tmpcmargin = $this->cMargin;
 								$this->cMargin = 0;
 							}
-							$this->Cell($w, $h, $this->UTF8ArrSubString($chars, $j, $sep), 0, 1, $align, $fill, $link, $stretch);
+							$this->Cell($w, $h, $this->UTF8ArrSubString($chars, $j, ($sep + $endspace)), 0, 1, $align, $fill, $link, $stretch);
 							if ($firstline) {
 								$this->cMargin = $tmpcmargin;
-								return ($this->UTF8ArrSubString($chars, $sep));
+								return ($this->UTF8ArrSubString($chars, ($sep + $endspace)));
 							}
 							$i = $sep;
 							$sep = -1;
 							$j = ($i+1);
+						}
+						// account for margin changes
+						if ((($this->y + $this->lasth) > $this->PageBreakTrigger) AND (empty($this->InFooter))) {
+							// AcceptPageBreak() may be overriden on extended classed to include margin changes
+							$this->AcceptPageBreak();
 						}
 						$w = $this->getRemainingWidth();
 						$wmax = $w - (2 * $this->cMargin);
@@ -3433,7 +3564,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return $nl;
 		}
-				
+
 		/**
 		* Returns the remaining width between the current position and margins.
 		* @return int Return the remaining width
@@ -3467,7 +3598,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return $string;
 		}
-		
+
 		/**
 		* Returns the unicode caracter specified by UTF-8 code
 		* @param int $c UTF-8 code
@@ -3476,7 +3607,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @since 2.3.000 (2008-03-05)
 		*/
 		public function unichr($c) {
-			if ((!$this->isunicode) OR  ($this->CurrentFont['type'] == 'core') OR ($this->CurrentFont['type'] == 'TrueType') OR ($this->CurrentFont['type'] == 'Type1')) {
+			if (!$this->isunicode) {
 				return chr($c);
 			} elseif ($c <= 0x7F) {
 				// one byte
@@ -3494,10 +3625,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				return "";
 			}
 		}
-		
+
 		/**
-		* Puts an image in the page. 
-		* The upper-left corner must be given. 
+		* Puts an image in the page.
+		* The upper-left corner must be given.
 		* The dimensions can be specified in different ways:<ul>
 		* <li>explicit width and height (expressed in user unit)</li>
 		* <li>one explicit dimension, the other being calculated automatically in order to keep the original proportions</li>
@@ -3564,13 +3695,13 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$info = false;
 				if ((method_exists($this,$mtd)) AND (!($resize AND function_exists($gdfunction)))) {
 					$info = $this->$mtd($file);
-				} 
+				}
 				if (!$info) {
 					if (function_exists($gdfunction)) {
 						$img = $gdfunction($file);
 						if ($resize) {
 							$imgr = imagecreatetruecolor($neww, $newh);
-							imagecopyresampled($imgr, $img, 0, 0, 0, 0, $neww, $newh, $pixw, $pixh); 
+							imagecopyresampled($imgr, $img, 0, 0, 0, 0, $neww, $newh, $pixw, $pixh);
 							$info = $this->_toJPEG($imgr);
 						} else {
 							$info = $this->_toJPEG($img);
@@ -3634,7 +3765,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$xkimg = $ximg * $this->k;
 			$this->_out(sprintf('q %.2f 0 0 %.2f %.2f %.2f cm /I%d Do Q', ($w * $this->k), ($h * $this->k), $xkimg, (($this->h - ($y + $h)) * $this->k), $info['i']));
 			if ($link) {
-				$this->Link($ximg, $y, $w, $h, $link);
+				$this->Link($ximg, $y, $w, $h, $link, 0);
 			}
 			// set pointer to align the successive text/objects
 			switch($align) {
@@ -3663,7 +3794,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->endlinex = $this->img_rb_x;
 		}
-				
+
 		/**
 		* Convert the loaded php image to a JPEG and then return a structure for the PDF creator.
 		* This function requires GD library and write access to the directory defined on K_PATH_CACHE constant.
@@ -3681,7 +3812,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			unlink($tempname);
 			return $retvars;
 		}
-		
+
 		/**
 		* Extract info from a JPEG file without using the GD library.
 		* @param string $file image file to parse
@@ -3803,9 +3934,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			fclose($f);
 			return array('w' => $w, 'h' => $h, 'cs' => $colspace, 'bpc' => $bpc, 'f' => 'FlateDecode', 'parms' => $parms, 'pal' => $pal, 'trns' => $trns, 'data' => $data);
 		}
-		
+
 		/**
-		* Performs a line break. 
+		* Performs a line break.
 		* The current abscissa goes back to the left margin and the ordinate increases by the amount passed in parameter.
 		* @param float $h The height of the break. By default, the value equals the height of the last printed cell.
 		* @param boolean $cell if true add a cMargin to the x coordinate
@@ -3847,7 +3978,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				return $this->x;
 			}
 		}
-		
+
 		/**
 		* Returns the absolute X value of current position.
 		* @return float
@@ -3857,7 +3988,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function GetAbsX() {
 			return $this->x;
 		}
-		
+
 		/**
 		* Returns the ordinate of the current position.
 		* @return float
@@ -3868,9 +3999,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			//Get y position
 			return $this->y;
 		}
-		
+
 		/**
-		* Defines the abscissa of the current position. 
+		* Defines the abscissa of the current position.
 		* If the passed value is negative, it is relative to the right of the page (or left if language is RTL).
 		* @param float $x The value of the abscissa.
 		* @since 1.2
@@ -3898,7 +4029,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->x = $this->w;
 			}
 		}
-		
+
 		/**
 		* Moves the current abscissa back to the left margin and sets the ordinate.
 		* If the passed value is negative, it is relative to the bottom of the page.
@@ -3928,9 +4059,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->y = $this->h;
 			}
 		}
-		
+
 		/**
-		* Defines the abscissa and ordinate of the current position. 
+		* Defines the abscissa and ordinate of the current position.
 		* If the passed values are negative, they are relative respectively to the right and bottom of the page.
 		* @param float $x The value of the abscissa
 		* @param float $y The value of the ordinate
@@ -3944,10 +4075,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		}
 
 		/**
-		* Send the document to a given destination: string, local file or browser. 
+		* Send the document to a given destination: string, local file or browser.
 		* In the last case, the plug-in may be used (if present) or a download ("Save as" dialog box) may be forced.<br />
 		* The method first calls Close() if necessary to terminate the document.
-		* @param string $name The name of the file when saved.
+		* @param string $name The name of the file when saved. Note that special characters are removed and blanks characters are replaced with the underscore character.
 		* @param string $dest Destination where to send the document. It can take one of the following values:<ul><li>I: send the file inline to the browser (default). The plug-in is used if available. The name given by name is used when one selects the "Save as" option on the link generating the PDF.</li><li>D: send to the browser and force a file download with the name given by name.</li><li>F: save to a local file with the name given by name.</li><li>S: return the document as a string. name is ignored.</li></ul>
 		* @since 1.0
 		* @see Close()
@@ -3964,8 +4095,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$dest = strtoupper($dest);
 			if ($dest != 'F') {
-				$name = str_replace("+", "%20", urlencode($name));
-				$name = preg_replace('/[\r\n]+\s*/', '' , $name);
+				$name = preg_replace('/[\s]+/', '_', $name);
+				$name = preg_replace('/[^a-zA-Z0-9_\.-]/', '', $name);
 			}
 			switch($dest) {
 				case 'I': {
@@ -3982,7 +4113,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						header("Cache-Control: public, must-revalidate, max-age=0"); // HTTP/1.1
 						header("Pragma: public");
 						header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-						header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");	
+						header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
 						header('Content-Length: '.strlen($this->buffer));
 						header('Content-Disposition: inline; filename="'.basename($name).'";');
 					}
@@ -4033,7 +4164,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return '';
 		}
-		
+
 		/**
 		* Check for locale-related bug
 		* @access protected
@@ -4060,13 +4191,13 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return defined('K_PATH_FONTS') ? K_PATH_FONTS : '';
 		}
-		
+
 		/**
 		* Output pages.
 		* @access protected
 		*/
 		protected function _putpages() {
-			$nb = count($this->pages);	
+			$nb = count($this->pages);
 			if (!empty($this->pagegroups)) {
 				// do page number replacement
 				foreach ($this->pagegroups as $k => $v) {
@@ -4115,6 +4246,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$filter = ($this->compress) ? '/Filter /FlateDecode ' : '';
 			for($n=1; $n <= $nb; $n++) {
+				$this->pages[$n] = str_replace($this->epsmarker, "", $this->pages[$n]);
 				//Page
 				$this->_newobj();
 				$this->_out('<</Type /Page');
@@ -4164,7 +4296,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$c = $pl['w'] * $this->k;
 					$d = $pl['h'] * $this->k;
 					$rect = sprintf('%.2f %.2f %.2f %.2f', $a, $b, $a+$c, $b-$d);
-					$annots .= '<</Type /Annot';
+					$annots .= "\n<</Type /Annot";
 					$annots .= ' /Subtype /'.$pl['opt']['subtype'];
 					$annots .= ' /Rect ['.$rect.']';
 					$annots .= ' /Contents '.$this->_textstring($pl['txt']);
@@ -4248,7 +4380,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 							$annots .= ' /W '.sprintf("%.4f", floatval($pl['opt']['bs']['w']));
 						}
 						$bstyles = array('S', 'D', 'B', 'I', 'U');
-						if (isset($pl['opt']['bs']['s']) AND in_array($pl['opt']['bs']['s'], $markups)) {
+						if (isset($pl['opt']['bs']['s']) AND in_array($pl['opt']['bs']['s'], $bstyles)) {
 							$annots .= ' /S /'.$pl['opt']['bs']['s'];
 						}
 						if (isset($pl['opt']['bs']['d']) AND (is_array($pl['opt']['bs']['d']))) {
@@ -4259,7 +4391,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 							}
 							$annots .= ']';
 						}
-						$annots .= '>>';
+						$annots .= '>> ';
 					}
 					if (isset($pl['opt']['be']) AND (is_array($pl['opt']['be']))) {
 						$annots .= ' /BE <<';
@@ -4463,10 +4595,11 @@ require_once(dirname(__FILE__)."/barcodes.php");
 							break;
 						}
 					}
-					
+
 				$annots .= '>>';
 				}
-				$this->_out($annots.']');
+				$annots .= "\n]";
+				$this->_out($annots);
 			}
 		}
 
@@ -4477,7 +4610,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		*/
 		protected function _putfonts() {
 			$nf = $this->n;
-			foreach($this->diffs as $diff) {
+			foreach ($this->diffs as $diff) {
 				//Encodings
 				$this->_newobj();
 				$this->_out('<</Type /Encoding /BaseEncoding /WinAnsiEncoding /Differences ['.$diff.']>>');
@@ -4485,7 +4618,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$mqr = get_magic_quotes_runtime();
 			set_magic_quotes_runtime(0);
-			foreach($this->FontFiles as $file => $info) {
+			foreach ($this->FontFiles as $file => $info) {
 				//Font file embedding
 				$this->_newobj();
 				$this->FontFiles[$file]['n'] = $this->n;
@@ -4515,7 +4648,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out('endobj');
 			}
 			set_magic_quotes_runtime($mqr);
-			foreach($this->fonts as $k => $font) {
+			foreach ($this->fonts as $k => $font) {
 				//Font objects
 				$this->fonts[$k]['n'] = $this->n + 1;
 				$type = $font['type'];
@@ -4562,7 +4695,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					//Descriptor
 					$this->_newobj();
 					$s = '<</Type /FontDescriptor /FontName /'.$name;
-					foreach($font['desc'] as $k => $v) {
+					foreach ($font['desc'] as $k => $v) {
 						$s .= ' /'.$k.' '.$v;
 					}
 					$file = $font['file'];
@@ -4581,7 +4714,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 			}
 		}
-		
+
 		/**
 		 * Output CID-0 fonts.
 		 * @param array $font font data
@@ -4645,7 +4778,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$ranges[$currange][] = $font['cw'][$i];
 				}
 			}
-			foreach($ranges as $k => $ws) {
+			foreach ($ranges as $k => $ws) {
 				$w .= ' '.$k.' [ '.implode(' ', $ws).' ]';
 			}
 			$w .= ' ]';
@@ -4654,7 +4787,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_out('endobj');
 			$this->_newobj();
 			$s = '<</Type /FontDescriptor /FontName /'.$name;
-			foreach($font['desc'] as $k => $v) {
+			foreach ($font['desc'] as $k => $v) {
 				$s .= ' /'.$k.' '.$v;
 			}
 			$this->_out($s.'>>');
@@ -4714,7 +4847,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 			}
 		}
-		
+
 		/**
 		* Output Spot Colors Resources.
 		* @access protected
@@ -4738,7 +4871,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @access protected
 		*/
 		protected function _putxobjectdict() {
-			foreach($this->images as $image) {
+			foreach ($this->images as $image) {
 				$this->_out('/I'.$image['i'].' '.$image['n'].' 0 R');
 			}
 		}
@@ -4750,7 +4883,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		protected function _putresourcedict() {
 			$this->_out('/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]');
 			$this->_out('/Font <<');
-			foreach($this->fonts as $font) {
+			foreach ($this->fonts as $font) {
 				$this->_out('/F'.$font['i'].' '.$font['n'].' 0 R');
 			}
 			$this->_out('>>');
@@ -4761,14 +4894,14 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_out('/Properties <</OC1 '.$this->n_ocg_print.' 0 R /OC2 '.$this->n_ocg_view.' 0 R>>');
 			// transparency
 			$this->_out('/ExtGState <<');
-			foreach($this->extgstates as $k => $extgstate) {
+			foreach ($this->extgstates as $k => $extgstate) {
 				$this->_out('/GS'.$k.' '.$extgstate['n'].' 0 R');
 			}
 			$this->_out('>>');
 			// gradients
 			if (isset($this->gradients) AND (count($this->gradients) > 0)) {
 				$this->_out('/Shading <<');
-				foreach($this->gradients as $id => $grad) {
+				foreach ($this->gradients as $id => $grad) {
 					$this->_out('/Sh'.$id.' '.$grad['id'].' 0 R');
 				}
 				$this->_out('>>');
@@ -4782,7 +4915,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out('>>');
 			}
 		}
-		
+
 		/**
 		* Output Resources.
 		* @access protected
@@ -4813,7 +4946,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out('endobj');
 			}
 		}
-		
+
 		/**
 		* Adds some Metadata information
 		* (see Chapter 10.2 of PDF Reference)
@@ -4839,9 +4972,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out('/Producer '.$this->_textstring(PDF_PRODUCER));
 			}
 			$this->_out('/CreationDate '.$this->_datestring('D:'.date('YmdHis')));
-			$this->_out('/ModDate '.$this->_datestring('D:'.date('YmdHis')));	
+			$this->_out('/ModDate '.$this->_datestring('D:'.date('YmdHis')));
 		}
-		
+
 		/**
 		* Format a date string for meta information
 		* @param string $s date string to escape.
@@ -4854,7 +4987,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return '('. $this->_escape($s).')';
 		}
-		
+
 		/**
 		* Output Catalog.
 		* @access protected
@@ -4862,7 +4995,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		protected function _putcatalog() {
 			$this->_out('/Type /Catalog');
 			$this->_out('/Pages 1 0 R');
-			
+
 			if ($this->ZoomMode == 'fullpage') {
 				$this->_out('/OpenAction [3 0 R /Fit]');
 			} elseif ($this->ZoomMode == 'fullwidth') {
@@ -4895,7 +5028,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_out("/OCProperties <</OCGs [".$p." ".$v."] /D <</ON [".$p."] /OFF [".$v."] /AS [".$as."]>>>>");
 			$this->_putuserrights();
 		}
-		
+
 		/**
 		* Output viewer preferences.
 		* @author Nicola asuni
@@ -5101,7 +5234,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$w = $this->GetStringWidth($txt);
 			return sprintf('%.2f %.2f %.2f %.2f re f', $x * $this->k, ($this->h - ($y - $up / 1000 * $this->FontSize)) * $this->k, $w * $this->k, -$ut / 1000 * $this->FontSizePt);
 		}
-		
+
 		/**
 		* Line through text.
 		* @param int $x X coordinate
@@ -5115,7 +5248,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$w = $this->GetStringWidth($txt);
 			return sprintf('%.2f %.2f %.2f %.2f re f', $x * $this->k, ($this->h - ($y - ($this->FontSize/2) - $up / 1000 * $this->FontSize)) * $this->k, $w * $this->k, -$ut / 1000 * $this->FontSizePt);
 		}
-		
+
 		/**
 		* Read a 4-byte integer from file.
 		* @param string $f file name.
@@ -5147,7 +5280,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return '('. $this->_escape($s).')';
 		}
-		
+
 		/**
 		* Format an URI string
 		* @param string $s string to escape.
@@ -5160,7 +5293,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return '('.$this->_escape($s).')';
 		}
-		
+
 		/**
 		* Format a text string
 		* @param string $s string to escape.
@@ -5203,7 +5336,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_out($s);
 			$this->_out('endstream');
 		}
-		
+
 		/**
 		* Output a string to the document.
 		* @param string $s string to output.
@@ -5249,7 +5382,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_out('<</Type /Font');
 			$this->_out('/Subtype /CIDFontType2');
 			$this->_out('/BaseFont /'.$font['name'].'');
-			$this->_out('/CIDSystemInfo '.($this->n + 2).' 0 R'); 
+			$this->_out('/CIDSystemInfo '.($this->n + 2).' 0 R');
 			$this->_out('/FontDescriptor '.($this->n + 3).' 0 R');
 			if (isset($font['desc']['MissingWidth'])) {
 				$this->_out('/DW '.$font['desc']['MissingWidth'].''); // The default width for glyphs in the CIDFont MissingWidth
@@ -5322,8 +5455,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$size = filesize($ctgfile);
 			$this->_out('<</Length '.$size.'');
 			if (substr($ctgfile, -2) == '.z') { // check file extension
-				/* Decompresses data encoded using the public-domain 
-				zlib/deflate compression method, reproducing the 
+				/* Decompresses data encoded using the public-domain
+				zlib/deflate compression method, reproducing the
 				original text or binary data */
 				$this->_out('/Filter /FlateDecode');
 			}
@@ -5331,7 +5464,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_putstream(file_get_contents($ctgfile));
 			$this->_out('endobj');
 		}
-		
+
 		 /**
 		 * Converts UTF-8 strings to codepoints array.<br>
 		 * Invalid byte sequences will be replaced with 0xFFFD (replacement character)<br>
@@ -5367,7 +5500,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		 * @since 1.53.0.TC005 (2005-01-05)
 		 */
 		protected function UTF8StringToArray($str) {
-			if ((!$this->isunicode) OR  ($this->CurrentFont['type'] == 'core') OR ($this->CurrentFont['type'] == 'TrueType') OR ($this->CurrentFont['type'] == 'Type1')) {
+			if (!$this->isunicode) {
 				// split string into array of equivalent codes
 				$strarr = array();
 				$strlen = strlen($str);
@@ -5388,13 +5521,13 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						$unicode[] = $char; // use the character "as is" because is ASCII
 						$numbytes = 1;
 					} elseif (($char >> 0x05) == 0x06) { // 2 bytes character (0x06 = 110 BIN)
-						$bytes[] = ($char - 0xC0) << 0x06; 
+						$bytes[] = ($char - 0xC0) << 0x06;
 						$numbytes = 2;
 					} elseif (($char >> 0x04) == 0x0E) { // 3 bytes character (0x0E = 1110 BIN)
-						$bytes[] = ($char - 0xE0) << 0x0C; 
+						$bytes[] = ($char - 0xE0) << 0x0C;
 						$numbytes = 3;
 					} elseif (($char >> 0x03) == 0x1E) { // 4 bytes character (0x1E = 11110 BIN)
-						$bytes[] = ($char - 0xF0) << 0x12; 
+						$bytes[] = ($char - 0xF0) << 0x12;
 						$numbytes = 4;
 					} else {
 						// use replacement character for other invalid sequences
@@ -5420,7 +5553,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 							$unicode[] = $char; // add char to array
 						}
 						// reset data for next char
-						$bytes = array(); 
+						$bytes = array();
 						$numbytes = 1;
 					}
 				} else {
@@ -5432,7 +5565,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return $unicode;
 		}
-		
+
 		/**
 		 * Converts UTF-8 strings to UTF16-BE.<br>
 		 * @param string $str string to process.
@@ -5450,7 +5583,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$unicode = $this->UTF8StringToArray($str); // array containing UTF-8 unicode values
 			return $this->arrUTF8ToUTF16BE($unicode, $setbom);
 		}
-		
+
 		/**
 		 * Converts UTF-8 strings to Latin1 when using the standard 14 core fonts.<br>
 		 * @param string $str string to process.
@@ -5460,21 +5593,22 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		 * @since 3.2.000 (2008-06-23)
 		 */
 		protected function UTF8ToLatin1($str) {
+			global $utf8tolatin;
 			if (!$this->isunicode) {
 				return $str; // string is not in unicode
 			}
 			$outstr = ""; // string to be returned
 			$unicode = $this->UTF8StringToArray($str); // array containing UTF-8 unicode values
 			foreach ($unicode as $char) {
-				if ($char == 0xFFFD) {
-					// skip
-				} elseif ($char == 0x2022) {
-					// fix for middot
-					$outstr .= chr(183);
-				} elseif ($char < 256) {
+				if ($char < 256) {
 					$outstr .= chr($char);
+				} elseif (array_key_exists($char, $utf8tolatin)) {
+					// map from UTF-8
+					$outstr .= chr($utf8tolatin[$char]);
+				} elseif ($char == 0xFFFD) {
+					// skip
 				} else {
-					$outstr .= '?';
+					$outstr .= "?";
 				}
 			}
 			return $outstr;
@@ -5485,26 +5619,26 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		 * Based on: http://www.faqs.org/rfcs/rfc2781.html
 	 	 * <pre>
 		 *   Encoding UTF-16:
-		 * 
+		 *
  		 *   Encoding of a single character from an ISO 10646 character value to
 		 *    UTF-16 proceeds as follows. Let U be the character number, no greater
 		 *    than 0x10FFFF.
-		 * 
+		 *
 		 *    1) If U < 0x10000, encode U as a 16-bit unsigned integer and
 		 *       terminate.
-		 * 
+		 *
 		 *    2) Let U' = U - 0x10000. Because U is less than or equal to 0x10FFFF,
 		 *       U' must be less than or equal to 0xFFFFF. That is, U' can be
 		 *       represented in 20 bits.
-		 * 
+		 *
 		 *    3) Initialize two 16-bit unsigned integers, W1 and W2, to 0xD800 and
 		 *       0xDC00, respectively. These integers each have 10 bits free to
 		 *       encode the character value, for a total of 20 bits.
-		 * 
+		 *
 		 *    4) Assign the 10 high-order bits of the 20-bit U' to the 10 low-order
 		 *       bits of W1 and the 10 low-order bits of U' to the 10 low-order
 		 *       bits of W2. Terminate.
-		 * 
+		 *
 		 *    Graphically, steps 2 through 4 look like:
 		 *    U' = yyyyyyyyyyxxxxxxxxxx
 		 *    W1 = 110110yyyyyyyyyy
@@ -5523,7 +5657,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			if ($setbom) {
 				$outstr .= "\xFE\xFF"; // Byte Order Mark (BOM)
 			}
-			foreach($unicode as $char) {
+			foreach ($unicode as $char) {
 				if ($char == 0xFFFD) {
 					$outstr .= "\xFF\xFD"; // replacement character
 				} elseif ($char < 0x10000) {
@@ -5532,7 +5666,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				} else {
 					$char -= 0x10000;
 					$w1 = 0xD800 | ($char >> 0x10);
-					$w2 = 0xDC00 | ($char & 0x3FF);	
+					$w2 = 0xDC00 | ($char & 0x3FF);
 					$outstr .= chr($w1 >> 0x08);
 					$outstr .= chr($w1 & 0xFF);
 					$outstr .= chr($w2 >> 0x08);
@@ -5542,7 +5676,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			return $outstr;
 		}
 		// ====================================================
-		
+
 		/**
 	 	 * Set header font.
 		 * @param array $font font
@@ -5551,7 +5685,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function setHeaderFont($font) {
 			$this->header_font = $font;
 		}
-		
+
 		/**
 	 	 * Get header font.
 	 	 * @return array()
@@ -5560,7 +5694,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function getHeaderFont() {
 			return $this->header_font;
 		}
-		
+
 		/**
 	 	 * Set footer font.
 		 * @param array $font font
@@ -5569,7 +5703,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function setFooterFont($font) {
 			$this->footer_font = $font;
 		}
-		
+
 		/**
 	 	 * Get Footer font.
 	 	 * @return array()
@@ -5578,7 +5712,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function getFooterFont() {
 			return $this->footer_font;
 		}
-		
+
 		/**
 	 	 * Set language array.
 		 * @param array $language
@@ -5588,7 +5722,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->l = $language;
 			$this->rtl = $this->l['a_meta_dir']=='rtl' ? true : false;
 		}
-		
+
 		/**
 		 * Returns the PDF data.
 		 */
@@ -5598,10 +5732,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return $this->buffer;
 		}
-				
+
 		/**
 		 * Output anchor link.
-		 * @param string $url link URL
+		 * @param string $url link URL or internal link (i.e.: &lt;a href="#23"&gt;link to page 23&lt;/a&gt;)
 		 * @param string $name link name
 		 * @param int $fill Indicates if the cell background must be painted (1) or transparent (0). Default value: 0.
 		 * @param boolean $firstline if true prints only the first line and return the remaining string.
@@ -5609,6 +5743,12 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		 * @access public
 		 */
 		public function addHtmlLink($url, $name, $fill=0, $firstline=false) {
+			if ($url{0} == '#') {
+				// convert url to internal link
+				$page = intval(substr($url, 1));
+				$url = $this->AddLink();
+				$this->SetLink($url, 0, $page);
+			}
 			$prevcolor = $this->fgcolor;
 			$this->SetTextColor(0, 0, 255);
 			$prevstyle = $this->FontStyle;
@@ -5618,13 +5758,13 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->SetTextColorArray($prevcolor);
 			return $ret;
 		}
-		
+
 		/**
 		 * Returns an associative array (keys: R,G,B) from an html color name or a six-digit or three-digit hexadecimal color representation (i.e. #3FE5AA or #7FF).
-		 * @param string $color html color 
+		 * @param string $color html color
 		 * @return array
 		 * @access protected
-		 */		
+		 */
 		protected function convertHTMLColorToDec($color="#000000") {
 			global $webcolor;
 			$color = preg_replace('/[\s]*/', '', $color); // remove extra spaces
@@ -5637,7 +5777,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$codes = substr($color, 4);
 				$codes = str_replace(')', '', $codes);
 				$returncolor = explode(',', $codes, 3);
-				return $returncolor;	
+				return $returncolor;
 			}
 			if (substr($color, 0, 1) != "#") {
 				// decode color name
@@ -5670,7 +5810,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return $returncolor;
 		}
-		
+
 		/**
 		 * Converts pixels to Units.
 		 * @param int $px pixels
@@ -5680,9 +5820,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function pixelsToUnits($px) {
 			return $px / $this->k;
 		}
-			
+
 		/**
-		 * Reverse function for htmlentities. 
+		 * Reverse function for htmlentities.
 		 * Convert entities in UTF-8.
 		 * @param $text_to_convert Text to convert.
 		 * @return string converted
@@ -5690,7 +5830,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function unhtmlentities($text_to_convert) {
 			return html_entity_decode($text_to_convert, ENT_QUOTES, $this->encoding);
 		}
-		
+
 		// ENCRYPTION METHODS ----------------------------------
 		// SINCE 2.0.000 (2008-01-02)
 		/**
@@ -5701,7 +5841,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		protected function _objectkey($n) {
 			return substr($this->_md5_16($this->encryption_key.pack('VXxx',$n)),0,10);
 		}
-		
+
 		/**
 		 * Put encryption on PDF document.
 		 * @since 2.0.000 (2008-01-02)
@@ -5714,7 +5854,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_out('/U ('.$this->_escape($this->Uvalue).')');
 			$this->_out('/P '.$this->Pvalue);
 		}
-		
+
 		/**
 		* Returns the input text exrypted using RC4 algorithm and the specified key.
 		* RC4 is the standard encryption algorithm used in PDF format
@@ -5755,7 +5895,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return $out;
 		}
-		
+
 		/**
 		* Encrypts a string using MD5 and returns it's value as a binary string.
 		* @param string $str input string
@@ -5766,7 +5906,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		protected function _md5_16($str) {
 			return pack('H*',md5($str));
 		}
-		
+
 		/**
 		* Compute O value (used for RC4 encryption)
 		* @param String $user_pass user password
@@ -5780,7 +5920,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$owner_RC4_key = substr($tmp,0,5);
 			return $this->_RC4($owner_RC4_key, $user_pass);
 		}
-		
+
 		/**
 		* Compute U value (used for RC4 encryption)
 		* @return String U value
@@ -5790,7 +5930,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		protected function _Uvalue() {
 			return $this->_RC4($this->encryption_key, $this->padding);
 		}
-		
+
 		/**
 		* Compute encryption key
 		* @param String $user_pass user password
@@ -5813,14 +5953,14 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			// Compute P value
 			$this->Pvalue = -(($protection^255)+1);
 		}
-		
+
 		/**
 		* Set document protection
 		* The permission array is composed of values taken from the following ones:
 		* - copy: copy text and images to the clipboard
 		* - print: print the document
 		* - modify: modify it (except for annotations and forms)
-		* - annot-forms: add annotations and forms 
+		* - annot-forms: add annotations and forms
 		* Remark: the protection against modification is for people who have the full Acrobat product.
 		* If you don't set any password, the document will open as usual. If you set a user password, the PDF viewer will ask for it before displaying the document. The master password, if different from the user one, can be used to get full access.
 		* Note: protecting a document requires to encrypt it, which increases the processing time a lot. This can cause a PHP time-out in some cases, especially if the document contains images or fonts.
@@ -5833,7 +5973,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function SetProtection($permissions=array(), $user_pass='', $owner_pass=null) {
 			$options = array('print' => 4, 'modify' => 8, 'copy' => 16, 'annot-forms' => 32);
 			$protection = 192;
-			foreach($permissions as $permission) {
+			foreach ($permissions as $permission) {
 				if (!isset($options[$permission])) {
 					$this->Error('Incorrect permission: '.$permission);
 				}
@@ -5845,12 +5985,12 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->encrypted = true;
 			$this->_generateencryptionkey($user_pass, $owner_pass, $protection);
 		}
-		
+
 		// END OF ENCRYPTION FUNCTIONS -------------------------
-		
+
 		// START TRANSFORMATIONS SECTION -----------------------
 		// authors: Moritz Wagner, Andreas Wurmser, Nicola Asuni
-		
+
 		/**
 		* Starts a 2D tranformation saving current graphic state.
 		* This function must be called before scaling, mirroring, translation, rotation and skewing.
@@ -5861,7 +6001,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function StartTransform() {
 			$this->_out('q');
 		}
-		
+
 		/**
 		* Stops a 2D tranformation restoring previous graphic state.
 		* This function must be called after scaling, mirroring, translation, rotation and skewing.
@@ -5871,6 +6011,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		*/
 		public function StopTransform() {
 			$this->_out('Q');
+			if (isset($this->transfmatrix)) {
+				array_pop($this->transfmatrix);
+			}
 		}
 		/**
 		* Horizontal Scaling.
@@ -5883,7 +6026,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function ScaleX($s_x, $x='', $y='') {
 			$this->Scale($s_x, 100, $x, $y);
 		}
-		
+
 		/**
 		* Vertical Scaling.
 		* @param float $s_y scaling factor for height as percent. 0 is not allowed.
@@ -5895,7 +6038,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function ScaleY($s_y, $x='', $y='') {
 			$this->Scale(100, $s_y, $x, $y);
 		}
-		
+
 		/**
 		* Vertical and horizontal proportional Scaling.
 		* @param float $s scaling factor for width and height as percent. 0 is not allowed.
@@ -5907,7 +6050,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function ScaleXY($s, $x='', $y='') {
 			$this->Scale($s, $s, $x, $y);
 		}
-		
+
 		/**
 		* Vertical and horizontal non-proportional Scaling.
 		* @param float $s_x scaling factor for width as percent. 0 is not allowed.
@@ -5944,7 +6087,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			//scale the coordinate system
 			$this->Transform($tm);
 		}
-		
+
 		/**
 		* Horizontal Mirroring.
 		* @param int $x abscissa of the point. Default is current x position
@@ -5954,7 +6097,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function MirrorH($x='') {
 			$this->Scale(-100, 100, $x);
 		}
-		
+
 		/**
 		* Verical Mirroring.
 		* @param int $y ordinate of the point. Default is current y position
@@ -5964,7 +6107,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function MirrorV($y='') {
 			$this->Scale(100, -100, '', $y);
 		}
-		
+
 		/**
 		* Point reflection mirroring.
 		* @param int $x abscissa of the point. Default is current x position
@@ -5975,7 +6118,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function MirrorP($x='',$y='') {
 			$this->Scale(-100, -100, $x, $y);
 		}
-		
+
 		/**
 		* Reflection against a straight line through point (x, y) with the gradient angle (angle).
 		* @param float $angle gradient angle of the straight line. Default is 0 (horizontal line).
@@ -5988,7 +6131,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->Scale(-100, 100, $x, $y);
 			$this->Rotate(-2*($angle-90), $x, $y);
 		}
-		
+
 		/**
 		* Translate graphic object horizontally.
 		* @param int $t_x movement to the right (or left for RTL)
@@ -5998,7 +6141,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function TranslateX($t_x) {
 			$this->Translate($t_x, 0);
 		}
-		
+
 		/**
 		* Translate graphic object vertically.
 		* @param int $t_y movement to the bottom
@@ -6008,7 +6151,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function TranslateY($t_y) {
 			$this->Translate(0, $t_y);
 		}
-		
+
 		/**
 		* Translate graphic object horizontally and vertically.
 		* @param int $t_x movement to the right
@@ -6030,7 +6173,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			//translate the coordinate system
 			$this->Transform($tm);
 		}
-		
+
 		/**
 		* Rotate object.
 		* @param float $angle angle in degrees for counter-clockwise rotation
@@ -6041,10 +6184,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		*/
 		public function Rotate($angle, $x='', $y='') {
 			if ($x === '') {
-				$x=$this->x;
+				$x = $this->x;
 			}
 			if ($y === '') {
-				$y=$this->y;
+				$y = $this->y;
 			}
 			if ($this->rtl) {
 				$x = $this->w - $x;
@@ -6057,12 +6200,12 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$tm[1] = sin(deg2rad($angle));
 			$tm[2] = -$tm[1];
 			$tm[3] = $tm[0];
-			$tm[4] = $x + $tm[1] * $y - $tm[0] * $x;
-			$tm[5] = $y - $tm[0] * $y - $tm[1] * $x;
+			$tm[4] = $x + ($tm[1] * $y) - ($tm[0] * $x);
+			$tm[5] = $y - ($tm[0] * $y) - ($tm[1] * $x);
 			//rotate the coordinate system around ($x,$y)
 			$this->Transform($tm);
 		}
-		
+
 		/**
 		* Skew horizontally.
 		* @param float $angle_x angle in degrees between -90 (skew to the left) and 90 (skew to the right)
@@ -6074,7 +6217,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function SkewX($angle_x, $x='', $y='') {
 			$this->Skew($angle_x, 0, $x, $y);
 		}
-		
+
 		/**
 		* Skew vertically.
 		* @param float $angle_y angle in degrees between -90 (skew to the bottom) and 90 (skew to the top)
@@ -6086,7 +6229,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function SkewY($angle_y, $x='', $y='') {
 			$this->Skew(0, $angle_y, $x, $y);
 		}
-		
+
 		/**
 		* Skew.
 		* @param float $angle_x angle in degrees between -90 (skew to the left) and 90 (skew to the right)
@@ -6122,7 +6265,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			//skew the coordinate system
 			$this->Transform($tm);
 		}
-		
+
 		/**
 		* Apply graphic transformations.
 		* @since 2.1.000 (2008-01-07)
@@ -6130,14 +6273,16 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		*/
 		protected function Transform($tm) {
 			$this->_out(sprintf('%.3f %.3f %.3f %.3f %.3f %.3f cm', $tm[0], $tm[1], $tm[2], $tm[3], $tm[4], $tm[5]));
+			// store transformation matrix
+			$this->transfmatrix[] = array('a' => $tm[0], 'b' => $tm[1], 'c' => $tm[2], 'd' => $tm[3], 'e' => $tm[4], 'f' => $tm[5]);
 		}
-		
+
 		// END TRANSFORMATIONS SECTION -------------------------
-		
-		
+
+
 		// START GRAPHIC FUNCTIONS SECTION ---------------------
 		// The following section is based on the code provided by David Hernandez Sanz
-		
+
 		/**
 		* Defines the line width. By default, the value equals 0.2 mm. The method can be called before the first page is created and the value is retained from page to page.
 		* @param float $width The width.
@@ -6150,17 +6295,17 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->linestyleWidth = sprintf('%.2f w', ($width * $this->k));
 			$this->_out($this->linestyleWidth);
 		}
-		
+
 		/**
 		* Returns the current the line width.
-		* @return int Line width 
+		* @return int Line width
 		* @since 2.1.000 (2008-01-07)
 		* @see Line(), SetLineWidth()
 		*/
 		public function GetLineWidth() {
 			return $this->LineWidth;
 		}
-		
+
 		/**
 		* Set line style.
 		* @param array $style Line style. Array with keys among the following:
@@ -6229,7 +6374,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->SetDrawColorArray($color);
 			}
 		}
-		
+
 		/*
 		* Set a draw point.
 		* @param float $x Abscissa of point.
@@ -6243,7 +6388,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->_out(sprintf("%.2f %.2f m", $x * $this->k, ($this->h - $y) * $this->k));
 		}
-		
+
 		/*
 		* Draws a line from last draw point.
 		* @param float $x Abscissa of end point.
@@ -6257,7 +6402,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->_out(sprintf("%.2f %.2f l", $x * $this->k, ($this->h - $y) * $this->k));
 		}
-		
+
 		/**
 		* Draws a rectangle.
 		* @param float $x Abscissa of upper-left corner (or upper-right corner for RTL language).
@@ -6274,7 +6419,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->_out(sprintf('%.2f %.2f %.2f %.2f re %s', $x*$this->k, ($this->h-$y)*$this->k, $w*$this->k, -$h*$this->k, $op));
 		}
-		
+
 		/*
 		* Draws a Bezier curve from last draw point.
 		* The Bezier curve is a tangent to the line between the control points at either end of the curve.
@@ -6295,7 +6440,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->_out(sprintf("%.2f %.2f %.2f %.2f %.2f %.2f c", $x1 * $this->k, ($this->h - $y1) * $this->k, $x2 * $this->k, ($this->h - $y2) * $this->k, $x3 * $this->k, ($this->h - $y3) * $this->k));
 		}
-		
+
 		/**
 		* Draws a line between two points.
 		* @param float $x1 Abscissa of first point.
@@ -6315,7 +6460,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_outLine($x2, $y2);
 			$this->_out(" S");
 		}
-		
+
 		/**
 		* Draws a rectangle.
 		* @param float $x Abscissa of upper-left corner (or upper-right corner for RTL language).
@@ -6410,8 +6555,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 			}
 		}
-		
-		
+
+
 		/**
 		* Draws a Bezier curve.
 		* The Bezier curve is a tangent to the line between the control points at
@@ -6448,7 +6593,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$line_style = array();
 					break;
 				}
-				case "FD": 
+				case "FD":
 				case "DF": {
 					$op = "B";
 					break;
@@ -6473,7 +6618,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_outCurve($x1, $y1, $x2, $y2, $x3, $y3);
 			$this->_out($op);
 		}
-		
+
 		/**
 		* Draws a poly-Bezier curve.
 		* Each Bezier curve segment is a tangent to the line between the control points at
@@ -6530,10 +6675,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			foreach ($segments as $segment) {
 				list($x1, $y1, $x2, $y2, $x3, $y3) = $segment;
 				$this->_outCurve($x1, $y1, $x2, $y2, $x3, $y3);
-			}	
+			}
 			$this->_out($op);
 		}
-		
+
 		/**
 		* Draws an ellipse.
 		* An ellipse is formed from n Bezier curves.
@@ -6577,7 +6722,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						$line_style = array();
 						break;
 					}
-					case "FD": 
+					case "FD":
 					case "DF": {
 						$op = "B";
 						break;
@@ -6639,7 +6784,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out($op);
 			}
 		}
-		
+
 		/**
 		* Draws a circle.
 		* A circle is formed from n Bezier curves.
@@ -6666,7 +6811,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function Circle($x0, $y0, $r, $astart=0, $afinish=360, $style="", $line_style=array(), $fill_color=array(), $nc=8) {
 			$this->Ellipse($x0, $y0, $r, 0, 0, $astart, $afinish, $style, $line_style, $fill_color, $nc);
 		}
-		
+
 		/**
 		* Draws a polygon.
 		* @param array $p Points 0 to ($np - 1). Array with values (x0, y0, x1, y1,..., x(np-1), y(np - 1))
@@ -6699,7 +6844,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$op = "f";
 					break;
 				}
-				case "FD": 
+				case "FD":
 				case "DF": {
 					$op = "B";
 					break;
@@ -6711,7 +6856,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				case "CEO": {
 					$op = "W* n";
 					break;
-				}				
+				}
 				default: {
 					$op = "S";
 					break;
@@ -6750,7 +6895,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out($op);
 			}
 		}
-		
+
 		/**
 		* Draws a regular polygon.
 		* @param float $x0 Abscissa of center point.
@@ -6803,7 +6948,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->Polygon($p, $style, $line_style, $fill_color);
 		}
-		
+
 		/**
 		* Draws a star polygon
 		* @param float $x0 Abscissa of center point.
@@ -6869,7 +7014,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			} while (!$visited[$i]);
 			$this->Polygon($p, $style, $line_style, $fill_color);
 		}
-		
+
 		/**
 		* Draws a rounded rectangle.
 		* @param float $x Abscissa of upper-left corner.
@@ -6904,7 +7049,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						$op = "f";
 						break;
 					}
-					case "FD": 
+					case "FD":
 					case "DF": {
 						$op = "B";
 						break;
@@ -6963,9 +7108,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out($op);
 			}
 		}
-		
+
 		// END GRAPHIC FUNCTIONS SECTION -----------------------
-		
+
 		// BIDIRECTIONAL TEXT SECTION --------------------------
 		/**
 		 * Reverse the RLT substrings using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
@@ -6978,7 +7123,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		protected function utf8StrRev($str, $setbom=false, $forcertl=false) {
 			return $this->arrUTF8ToUTF16BE($this->utf8Bidi($this->UTF8StringToArray($str), $forcertl), $setbom);
 		}
-		
+
 		/**
 		 * Reverse the RLT substrings using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
 		 * @param array $ta array of characters composing the string.
@@ -7005,10 +7150,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			if (!($forcertl OR $arabic OR preg_match(K_RE_PATTERN_RTL, $str))) {
 				return $ta;
 			}
-			
+
 			// get number of chars
 			$numchars = count($ta);
-			
+
 			if ($forcertl == 'R') {
 					$pel = 1;
 			} elseif ($forcertl == 'L') {
@@ -7027,7 +7172,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					}
 				}
 			}
-			
+
 			// Current Embedding Level
 			$cel = $pel;
 			// directional override status
@@ -7036,13 +7181,13 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			// start-of-level-run
 			$sor = $pel % 2 ? 'R' : 'L';
 			$eor = $sor;
-			
+
 			//$levels = array(array('level' => $cel, 'sor' => $sor, 'eor' => '', 'chars' => array()));
 			//$current_level = &$levels[count( $levels )-1];
-			
+
 			// Array of characters data
 			$chardata = Array();
-			
+
 			// X1. Begin by setting the current embedding level to the paragraph embedding level. Set the directional override status to neutral. Process each character iteratively, applying rules X2 through X9. Only embedding levels from 0 to 61 are valid in this phase.
 			// 	In the resolution of levels in rules I1 and I2, the maximum embedding level of 62 can be reached.
 			for ($i=0; $i < $numchars; $i++) {
@@ -7098,9 +7243,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					// X7. With each PDF, determine the matching embedding or override code. If there was a valid matching code, restore (pop) the last remembered (pushed) embedding level and directional override.
 					if (count($remember)) {
 						$last = count($remember ) - 1;
-						if (($remember[$last]['num'] == K_RLE) OR 
-							  ($remember[$last]['num'] == K_LRE) OR 
-							  ($remember[$last]['num'] == K_RLO) OR 
+						if (($remember[$last]['num'] == K_RLE) OR
+							  ($remember[$last]['num'] == K_LRE) OR
+							  ($remember[$last]['num'] == K_RLO) OR
 							  ($remember[$last]['num'] == K_LRO)) {
 							$match = array_pop($remember);
 							$cel = $match['cel'];
@@ -7126,16 +7271,16 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$chardata[] = array('char' => $ta[$i], 'level' => $cel, 'type' => $chardir, 'sor' => $sor, 'eor' => $eor);
 				}
 			} // end for each char
-			
+
 			// X8. All explicit directional embeddings and overrides are completely terminated at the end of each paragraph. Paragraph separators are not included in the embedding.
 			// X9. Remove all RLE, LRE, RLO, LRO, PDF, and BN codes.
 			// X10. The remaining rules are applied to each run of characters at the same level. For each run, determine the start-of-level-run (sor) and end-of-level-run (eor) type, either L or R. This depends on the higher of the two levels on either side of the boundary (at the start or end of the paragraph, the level of the 'other' run is the base embedding level). If the higher level is odd, the type is R; otherwise, it is L.
-			
+
 			// 3.3.3 Resolving Weak Types
 			// Weak types are now resolved one level run at a time. At level run boundaries where the type of the character on the other side of the boundary is required, the type assigned to sor or eor is used.
 			// Nonspacing marks are now resolved based on the previous characters.
 			$numchars = count($chardata);
-			
+
 			// W1. Examine each nonspacing mark (NSM) in the level run, and change the type of the NSM to the type of the previous character. If the NSM is at the start of the level run, it will get the type of sor.
 			$prevlevel = -1; // track level changes
 			$levcount = 0; // counts consecutive chars at the same level
@@ -7154,7 +7299,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$prevlevel = $chardata[$i]['level'];
 			}
-			
+
 			// W2. Search backward from each instance of a European number until the first strong type (R, L, AL, or sor) is found. If an AL is found, change the type of the European number to Arabic number.
 			$prevlevel = -1;
 			$levcount = 0;
@@ -7175,14 +7320,14 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$prevlevel = $chardata[$i]['level'];
 			}
-			
+
 			// W3. Change all ALs to R.
 			for ($i=0; $i < $numchars; $i++) {
 				if ($chardata[$i]['type'] == 'AL') {
 					$chardata[$i]['type'] = 'R';
-				} 
+				}
 			}
-			
+
 			// W4. A single European separator between two European numbers changes to a European number. A single common separator between two numbers of the same type changes to that type.
 			$prevlevel = -1;
 			$levcount = 0;
@@ -7203,7 +7348,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$prevlevel = $chardata[$i]['level'];
 			}
-			
+
 			// W5. A sequence of European terminators adjacent to European numbers changes to all European numbers.
 			$prevlevel = -1;
 			$levcount = 0;
@@ -7231,7 +7376,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$prevlevel = $chardata[$i]['level'];
 			}
-			
+
 			// W6. Otherwise, separators and terminators change to Other Neutral.
 			$prevlevel = -1;
 			$levcount = 0;
@@ -7246,7 +7391,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$prevlevel = $chardata[$i]['level'];
 			}
-			
+
 			//W7. Search backward from each instance of a European number until the first strong type (R, L, or sor) is found. If an L is found, then change the type of the European number to L.
 			$prevlevel = -1;
 			$levcount = 0;
@@ -7267,7 +7412,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$prevlevel = $chardata[$i]['level'];
 			}
-			
+
 			// N1. A sequence of neutrals takes the direction of the surrounding strong text if the text on both sides has the same direction. European and Arabic numbers act as if they were R in terms of their influence on neutrals. Start-of-level-run (sor) and end-of-level-run (eor) are used at level run boundaries.
 			$prevlevel = -1;
 			$levcount = 0;
@@ -7318,7 +7463,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$prevlevel = $chardata[$i]['level'];
 			}
-			
+
 			// I1. For all characters with an even (left-to-right) embedding direction, those of type R go up one level and those of type AN or EN go up two levels.
 			// I2. For all characters with an odd (right-to-left) embedding direction, those of type L, EN or AN go up one level.
 			for ($i=0; $i < $numchars; $i++) {
@@ -7336,7 +7481,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$maxlevel = max($chardata[$i]['level'],$maxlevel);
 			}
-			
+
 			// L1. On each line, reset the embedding level of the following characters to the paragraph embedding level:
 			//	1. Segment separators,
 			//	2. Paragraph separators,
@@ -7359,9 +7504,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					}
 				}
 			}
-			
+
 			// Arabic Shaping
-			// Cursively connected scripts, such as Arabic or Syriac, require the selection of positional character shapes that depend on adjacent characters. Shaping is logically applied after the Bidirectional Algorithm is used and is limited to characters within the same directional run. 
+			// Cursively connected scripts, such as Arabic or Syriac, require the selection of positional character shapes that depend on adjacent characters. Shaping is logically applied after the Bidirectional Algorithm is used and is limited to characters within the same directional run.
 			if ($arabic) {
 				$endedletter = array(1569,1570,1571,1572,1573,1575,1577,1583,1584,1585,1586,1608,1688);
 				$alfletter = array(1570,1571,1573,1575);
@@ -7451,7 +7596,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 								//Allah Word
 								// mark characters to delete with false
 								$chardata2[$i-2]['char'] = false;
-								$chardata2[$i-1]['char'] = false; 
+								$chardata2[$i-1]['char'] = false;
 								$chardata2[$i]['char'] = 65010;
 							} else {
 								if (($prevchar !== false) AND in_array($prevchar['char'], $endedletter)) {
@@ -7477,8 +7622,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						}
 					} // end if AL (Arabic Letter)
 				} // end for each char
-				/* 
-				 * Combining characters that can occur with Shadda (0651 HEX, 1617 DEC) are placed in UE586-UE594. 
+				/*
+				 * Combining characters that can occur with Shadda (0651 HEX, 1617 DEC) are placed in UE586-UE594.
 				 * Putting the combining mark and shadda in the same glyph allows us to avoid the two marks overlapping each other in an illegible manner.
 				 */
 				$cw = &$this->CurrentFont['cw'];
@@ -7492,7 +7637,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					}
 				}
 				// remove marked characters
-				foreach($chardata2 as $key => $value) {
+				foreach ($chardata2 as $key => $value) {
 					if ($value['char'] === false) {
 						unset($chardata2[$key]);
 					}
@@ -7504,7 +7649,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				unset($laaletter);
 				unset($charAL);
 			}
-			
+
 			// L2. From the highest level found in the text to the lowest odd level on each line, including intermediate levels not actually present in the text, reverse any contiguous sequence of characters that are at that level or higher.
 			for ($j=$maxlevel; $j > 0; $j--) {
 				$ordarray = Array();
@@ -7534,17 +7679,17 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$chardata = $ordarray;
 			}
-			
+
 			$ordarray = array();
 			for ($i=0; $i < $numchars; $i++) {
 				$ordarray[] = $chardata[$i]['char'];
 			}
-			
+
 			return $ordarray;
 		}
-		
+
 		// END OF BIDIRECTIONAL TEXT SECTION -------------------
-		
+
 		/*
 		* Adds a bookmark.
 		* @param string $txt bookmark description.
@@ -7572,7 +7717,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->outlines[] = array('t' => $txt, 'l' => $level, 'y' => $y, 'p' => $this->PageNo());
 		}
-		
+
 		/*
 		* Create a bookmark PDF string.
 		* @access protected
@@ -7586,7 +7731,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$lru = array();
 			$level = 0;
-			foreach($this->outlines as $i => $o) {
+			foreach ($this->outlines as $i => $o) {
 				if ($o['l'] > 0) {
 					$parent = $lru[($o['l'] - 1)];
 					//Set parent and last pointers
@@ -7610,7 +7755,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			//Outline items
 			$n = $this->n + 1;
-			foreach($this->outlines as $i => $o) {
+			foreach ($this->outlines as $i => $o) {
 				$this->_newobj();
 				$this->_out('<</Title '.$this->_textstring($o['t']));
 				$this->_out('/Parent '.($n + $o['parent']).' 0 R');
@@ -7633,10 +7778,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_out('/Last '.($n + $lru[0]).' 0 R>>');
 			$this->_out('endobj');
 		}
-		
-		
+
+
 		// --- JAVASCRIPT - FORMS ------------------------------
-		
+
 		/*
 		* Adds a javascript
 		* @access public
@@ -7646,7 +7791,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function IncludeJS($script) {
 			$this->javascript .= $script;
 		}
-		
+
 		/*
 		* Create a javascript PDF string.
 		* @access protected
@@ -7673,7 +7818,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_out('>>');
 			$this->_out('endobj');
 		}
-		
+
 		/*
 		* Convert color to javascript color.
 		* @param string $color color name or #RRGGBB
@@ -7691,7 +7836,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			return 'color.'.$color;
 		}
-		
+
 		/*
 		* Adds a javascript form field.
 		* @param string $type field type
@@ -7706,6 +7851,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @since 2.1.002 (2008-02-12)
 		*/
 		protected function _addfield($type, $name, $x, $y, $w, $h, $prop) {
+			if ($this->rtl) {
+				$x = $x - $w;
+			}
 			// the followind avoid fields duplication after saving the document
 			$this->javascript .= "if(getField('tcpdfdocsaved').value != 'saved') {";
 			$k = $this->k;
@@ -7719,10 +7867,14 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				$this->javascript .= "f".$name.".".$key."=".$val.";\n";
 			}
-			$this->x += $w;
+			if ($this->rtl) {
+				$this->x -= $w;
+			} else {
+				$this->x += $w;
+			}
 			$this->javascript .= "}";
 		}
-		
+
 		/*
 		* Creates a text field
 		* @param string $name field name
@@ -7736,7 +7888,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function TextField($name, $w, $h, $prop=array()) {
 			$this->_addfield('text', $name, $this->x, $this->y, $w, $h, $prop);
 		}
-		
+
 		/*
 		* Creates a RadioButton field
 		* @param string $name field name
@@ -7752,7 +7904,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->_addfield('radiobutton', $name, $this->x, $this->y, $w, $w, $prop);
 		}
-		
+
 		/*
 		* Creates a List-box field
 		* @param string $name field name
@@ -7770,12 +7922,12 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->_addfield('listbox', $name, $this->x, $this->y, $w, $h, $prop);
 			$s = '';
-			foreach($values as $value) {
+			foreach ($values as $value) {
 				$s .= "'".addslashes($value)."',";
 			}
 			$this->javascript .= "f".$name.".setItems([".substr($s,0,-1)."]);\n";
 		}
-		
+
 		/*
 		* Creates a Combo-box field
 		* @param string $name field name
@@ -7790,12 +7942,12 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function ComboBox($name, $w, $h, $values, $prop=array()) {
 			$this->_addfield('combobox', $name, $this->x, $this->y, $w, $h, $prop);
 			$s = '';
-			foreach($values as $value) {
+			foreach ($values as $value) {
 				$s .= "'".addslashes($value)."',";
 			}
 			$this->javascript .= "f".$name.".setItems([".substr($s,0,-1)."]);\n";
 		}
-		
+
 		/*
 		* Creates a CheckBox field
 		* @param string $name field name
@@ -7813,7 +7965,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->_addfield('checkbox', $name, $this->x, $this->y, $w, $w, $prop);
 		}
-		
+
 		/*
 		* Creates a button field
 		* @param string $name field name
@@ -7839,9 +7991,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->javascript .= "f".$name.".highlight='push';\n";
 			$this->javascript .= "f".$name.".print=false;\n";
 		}
-		
+
 		// END JAVASCRIPT - FORMS ------------------------------
-		
+
 		/*
 		* Enable Write permissions for PDF Reader.
 		* @access protected
@@ -7878,7 +8030,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			if (!empty($this->ur_signature)) {
 				$this->_out('/Signature['.$this->ur_signature.']');
-			}			
+			}
 			$this->_out('>>');
 			$this->_out('/TransformMethod/UR3');
 			$this->_out('/Type/SigRef');
@@ -7888,22 +8040,22 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_out('>>');
 			$this->_out('>>');
 		}
-		
+
 		/*
 		* Set User's Rights for PDF Reader
-		* Check the PDF Reference 8.7.1 Transform Methods, 
+		* Check the PDF Reference 8.7.1 Transform Methods,
 		* Table 8.105 Entries in the UR transform parameters dictionary
 		* @param boolean $enable if true enable user's rights on PDF reader
 		* @param string $document Names specifying additional document-wide usage rights for the document. The only defined value is "/FullSave", which permits a user to save the document along with modified form and/or annotation data.
 		* @param string $annots Names specifying additional annotation-related usage rights for the document. Valid names in PDF 1.5 and later are /Create/Delete/Modify/Copy/Import/Export, which permit the user to perform the named operation on annotations.
-		* @param string $form Names specifying additional form-field-related usage rights for the document. Valid names are: /Add/Delete/FillIn/Import/Export/SubmitStandalone/SpawnTemplate 
+		* @param string $form Names specifying additional form-field-related usage rights for the document. Valid names are: /Add/Delete/FillIn/Import/Export/SubmitStandalone/SpawnTemplate
 		* @param string $signature Names specifying additional signature-related usage rights for the document. The only defined value is /Modify, which permits a user to apply a digital signature to an existing signature form field or clear a signed signature form field.
 		* @access public
 		* @author Nicola Asuni
 		* @since 2.9.000 (2008-03-26)
 		*/
 		public function setUserRights(
-				$enable=true, 
+				$enable=true,
 				$document="/FullSave",
 				$annots="/Create/Delete/Modify/Copy/Import/Export",
 				$form="/Add/Delete/FillIn/Import/Export/SubmitStandalone/SpawnTemplate",
@@ -7914,7 +8066,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->ur_form = $form;
 			$this->ur_signature = $signature;
 		}
-		
+
 		/*
 		* Create a new page group.
 		* NOTE: call this function before calling AddPage()
@@ -7924,7 +8076,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function startPageGroup() {
 			$this->newpagegroup = true;
 		}
-		
+
 		/*
 		* Return the current page in the group.
 		* @return current page in the group
@@ -7934,7 +8086,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function getGroupPageNo() {
 			return $this->pagegroups[$this->currpagegroup];
 		}
-		
+
 		/*
 		 * Return the alias of the current page group
          * If the current font is unicode type, the returned string is surrounded by additional curly braces.
@@ -7949,7 +8101,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
             }
 			return $this->currpagegroup;
 		}
-		
+
 		/*
 		* Put visibility settings.
 		* @access protected
@@ -7967,10 +8119,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->_out('/Usage <</Print <</PrintState /OFF>> /View <</ViewState /ON>>>>>>');
 			$this->_out('endobj');
 		}
-		
+
 		/*
 		* Set the visibility of the successive elements.
-		* This can be useful, for instance, to put a background 
+		* This can be useful, for instance, to put a background
 		* image or color that will show on screen but won't print.
 		* @param string $v visibility mode. Legal values are: all, print, screen.
 		* @access public
@@ -8004,7 +8156,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->visibility = $v;
 		}
-		
+
 		/*
 		* Add transparency parameters to the current extgstate
 		* @param array $params parameters
@@ -8017,7 +8169,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->extgstates[$n]['parms'] = $parms;
 			return $n;
 		}
-		
+
 		/*
 		* Add an extgstate
 		* @param array $gs extgstate
@@ -8027,7 +8179,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		protected function setExtGState($gs) {
 			$this->_out(sprintf('/GS%d gs', $gs));
 		}
-		
+
 		/*
 		* Put extgstates for object transparency
 		* @param array $gs extgstate
@@ -8047,7 +8199,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out('endobj');
 			}
 		}
-		
+
 		/*
 		* Set alpha for stroking (CA) and non-stroking (ca) operations.
 		* @param float $alpha real value from 0 (transparent) to 1 (opaque)
@@ -8072,46 +8224,46 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->jpeg_quality = intval($quality);
 		}
-		
+
 		/*
 		* Set the default number of columns in a row for HTML tables.
 		* @param int $cols number of columns
 		* @access public
 		* @since 3.0.014 (2008-06-04)
 		*/
-		public function setDefaultTableColumns($cols=4) { 
-			$this->default_table_columns = intval($cols); 
+		public function setDefaultTableColumns($cols=4) {
+			$this->default_table_columns = intval($cols);
 		}
-		
+
 		/*
 		* Set the height of cell repect font height.
 		* @param int $h cell proportion respect font height (typical value = 1.25).
 		* @access public
 		* @since 3.0.014 (2008-06-04)
 		*/
-		public function setCellHeightRatio($h) { 
-			$this->cell_height_ratio = $h; 
+		public function setCellHeightRatio($h) {
+			$this->cell_height_ratio = $h;
 		}
-		
+
 		/*
 		* return the height of cell repect font height.
 		* @access public
 		* @since 4.0.012 (2008-07-24)
 		*/
-		public function getCellHeightRatio() { 
-			return $this->cell_height_ratio; 
+		public function getCellHeightRatio() {
+			return $this->cell_height_ratio;
 		}
-		
+
 		/*
 		* Set the PDF version (check PDF reference for valid values).
 		* Default value is 1.t
 		* @access public
 		* @since 3.1.000 (2008-06-09)
 		*/
-		public function setPDFVersion($version="1.7") { 
+		public function setPDFVersion($version="1.7") {
 			$this->PDFVersion = $version;
 		}
-		
+
 		/*
 		* Set the viewer preferences dictionary controlling the way the document is to be presented on the screen or in print.
 		* (see Section 8.1 of PDF reference, "Viewer Preferences").
@@ -8138,10 +8290,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @access public
 		* @since 3.1.000 (2008-06-09)
 		*/
-		public function setViewerPreferences($preferences) { 
+		public function setViewerPreferences($preferences) {
 			$this->viewer_preferences = $preferences;
 		}
-		
+
 		/**
 		* Paints a linear colour gradient.
 		* @param float $x abscissa of the top left corner of the rectangle.
@@ -8159,7 +8311,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->Clip($x, $y, $w, $h);
 			$this->Gradient(2, $col1, $col2, $coords);
 		}
-		
+
 		/**
 		* Paints a radial colour gradient.
 		* @param float $x abscissa of the top left corner of the rectangle.
@@ -8177,7 +8329,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->Clip($x, $y, $w, $h);
 			$this->Gradient(3, $col1, $col2, $coords);
 		}
-		
+
 		/**
 		* Paints a coons patch mesh.
 		* @param float $x abscissa of the top left corner of the rectangle.
@@ -8196,7 +8348,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @access public
 		*/
 		public function CoonsPatchMesh($x, $y, $w, $h, $col1=array(), $col2=array(), $col3=array(), $col4=array(), $coords=array(0.00,0.0,0.33,0.00,0.67,0.00,1.00,0.00,1.00,0.33,1.00,0.67,1.00,1.00,0.67,1.00,0.33,1.00,0.00,1.00,0.00,0.67,0.00,0.33), $coords_min=0, $coords_max=1) {
-			$this->Clip($x, $y, $w, $h);        
+			$this->Clip($x, $y, $w, $h);
 			$n = count($this->gradients) + 1;
 			$this->gradients[$n]['type'] = 6; //coons patch mesh
 			//check the coords array if it is the simple array or the multi patch array
@@ -8261,7 +8413,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			//restore previous Graphic State
 			$this->_out('Q');
 		}
-		
+
 		/**
 		* Set a rectangular clipping area.
 		* @param float $x abscissa of the top left corner of the rectangle (or top right corner for RTL mode).
@@ -8284,7 +8436,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$s .= sprintf(' %.3f 0 0 %.3f %.3f %.3f cm', $w*$this->k, $h*$this->k, $x*$this->k, ($this->h-($y+$h))*$this->k);
 			$this->_out($s);
 		}
-				
+
 		/**
 		* Output gradient.
 		* @param int $type type of gradient.
@@ -8312,7 +8464,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			//restore previous Graphic State
 			$this->_out('Q');
 		}
-		
+
 		/**
 		* Output shaders.
 		* @author Andreas Würmser, Nicola Asuni
@@ -8320,7 +8472,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		* @access protected
 		*/
 		function _putshaders() {
-			foreach($this->gradients as $id => $grad) {  
+			foreach ($this->gradients as $id => $grad) {
 				if (($grad['type'] == 2) OR ($grad['type'] == 3)) {
 					$this->_newobj();
 					$this->_out('<<');
@@ -8373,7 +8525,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$h = $this->h;
 			$this->_out(sprintf('%.2f %.2f %.2f %.2f %.2f %.2f c', $x1*$this->k, ($h-$y1)*$this->k, $x2*$this->k, ($h-$y2)*$this->k, $x3*$this->k, ($h-$y3)*$this->k));
 		}
-		
+
 		/**
 		* Draw the sector of a circle.
 		* It can be used for instance to render pie charts.
@@ -8391,7 +8543,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		*/
 		public function PieSector($xc, $yc, $r, $a, $b, $style='FD', $cw=true, $o=90) {
 			if ($this->rtl) {
-				$xc = $this->w - $xc - $w;
+				$xc = $this->w - $xc;
 			}
 			if ($cw) {
 				$d = $b;
@@ -8448,10 +8600,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			//terminate drawing
 			$this->_out($op);
 		}
-		
+
 		/**
 		* Embed vector-based Adobe Illustrator (AI) or AI-compatible EPS files.
-		* Only vector drawing is supported, not text or bitmap. 
+		* Only vector drawing is supported, not text or bitmap.
 		* Although the script was successfully tested with various AI format versions, best results are probably achieved with files that were exported in the AI3 format (tested with Illustrator CS2, Freehand MX and Photoshop CS2).
 		* @param string $file Name of the file containing the image.
 		* @param float $x Abscissa of the upper-left corner.
@@ -8473,7 +8625,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$regs = array();
 			// EPS/AI compatibility check (only checks files created by Adobe Illustrator!)
-			preg_match ('/%%Creator:([^\r\n]+)/', $data, $regs); # find Creator
+			preg_match('/%%Creator:([^\r\n]+)/', $data, $regs); # find Creator
 			if (count($regs) > 1) {
 				$version_str = trim($regs[1]); # e.g. "Adobe Illustrator(R) 8.0"
 				if (strpos($version_str, 'Adobe Illustrator') !== false) {
@@ -8490,7 +8642,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$data = substr($data, $start);
 			}
 			// find BoundingBox params
-			preg_match ("/%%BoundingBox:([^\r\n]+)/", $data, $regs);
+			preg_match("/%%BoundingBox:([^\r\n]+)/", $data, $regs);
 			if (count($regs) > 1) {
 				list($x1, $y1, $x2, $y2) = explode(' ', trim($regs[1]));
 			} else {
@@ -8510,7 +8662,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			if ($end) {
 				$data = substr($data, 0, $end);
-			}			
+			}
 			$k = $this->k;
 			if ($w > 0) {
 				$scale_x = $w/(($x2-$x1)/$k);
@@ -8578,7 +8730,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$dy = $y * $k;
 			}
 			// save the current graphic state
-			$this->_out('q');
+			$this->_out("q".$this->epsmarker);
 			// translate
 			$this->_out(sprintf('%.3F %.3F %.3F %.3F %.3F %.3F cm', 1, 0, 0, 1, $dx, $dy+($this->hPt - 2*$y*$k - ($y2-$y1))));
 			// scale
@@ -8586,7 +8738,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$this->_out(sprintf('%.3F %.3F %.3F %.3F %.3F %.3F cm', $scale_x, 0, 0, $scale_y, $x1*(1-$scale_x), $y2*(1-$scale_y)));
 			}
 			// handle pc/unix/mac line endings
-			$lines = split("\r\n|[\r\n]", $data);
+			preg_match('/[\r\n]+/s', $data, $regs);
+			$lines = explode($regs[0], $data);
 			$u=0;
 			$cnt = count($lines);
 			for ($i=0; $i < $cnt; $i++) {
@@ -8599,8 +8752,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				$cmd = array_pop($chunks);
 				// RGB
 				if (($cmd == 'Xa') OR ($cmd == 'XA')) {
-					$b = array_pop($chunks); 
-					$g = array_pop($chunks); 
+					$b = array_pop($chunks);
+					$g = array_pop($chunks);
 					$r = array_pop($chunks);
 					$this->_out("$r $g $b ". ($cmd=='Xa'?'rg':'RG') ); //substr($line, 0, -2).'rg' -> in EPS (AI8): c m y k r g b rg!
 					continue;
@@ -8677,9 +8830,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 			}
 			// restore previous graphic state
-			$this->_out('Q');
+			$this->_out($this->epsmarker."Q");
 			if ($link) {
-				$this->Link($ximg, $y, $w, $h, $link);
+				$this->Link($ximg, $y, $w, $h, $link, 0);
 			}
 			// set pointer to align the successive text/objects
 			switch($align) {
@@ -8708,7 +8861,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->endlinex = $this->img_rb_x;
 		}
-		
+
 		/**
 	 	 * Set document barcode.
 		 * @param string $bc barcode
@@ -8716,7 +8869,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function setBarcode($bc="") {
 			$this->barcode = $bc;
 		}
-		
+
 		/**
 	 	 * Get current barcode.
 		 * @return string
@@ -8725,7 +8878,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function getBarcode() {
 			return $this->barcode;
 		}
-		
+
 		/**
 	 	 * Print Barcode.
 	 	 * @param string $code code to print
@@ -8900,7 +9053,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			if ($style["text"]) {
 				// print text
 				$this->x = $xpos_text;
-				$this->y = $y + $style["padding"] + $barh; 
+				$this->y = $y + $style["padding"] + $barh;
 				$this->Cell(($arrcode["maxw"] * $xres), ($this->cell_height_ratio * $fontsize / $this->k), $code, 0, 0, 'C', 0, '', $style["stretchtext"]);
 			}
 			// restore original direction
@@ -8947,7 +9100,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 			}
 		}
-		
+
 		/**
 	 	 * This function is DEPRECATED, please use the new write1DBarcode() function.
 		 * @param int $x x position in user units
@@ -8997,7 +9150,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->write1DBarcode($code, $type, $x, $y, $w, $h, $xres, $newstyle, '');
 		}
-		
+
 		/**
 		 * Returns an array containing current margins:
 		 * <ul>
@@ -9009,7 +9162,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				<li>$ret['footer'] = footer margin</li>
 				<li>$ret['cell'] = cell margin</li>
 		 * </ul>
-		 * @return array containing all margins measures 
+		 * @return array containing all margins measures
 		 * @since 3.2.000 (2008-06-23)
 		 */
 		public function getMargins() {
@@ -9024,14 +9177,14 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			);
 			return $ret;
 		}
-		
+
 		/**
 		 * Returns an array containing original margins:
 		 * <ul>
 				<li>$ret['left'] = left  margin</li>
 				<li>$ret['right'] = right margin</li>
 		 * </ul>
-		 * @return array containing all margins measures 
+		 * @return array containing all margins measures
 		 * @since 4.0.012 (2008-07-24)
 		 */
 		public function getOriginalMargins() {
@@ -9041,27 +9194,27 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			);
 			return $ret;
 		}
-		
+
 		/**
 		 * Returns the current font size.
-		 * @return current font size 
+		 * @return current font size
 		 * @since 3.2.000 (2008-06-23)
 		 */
 		public function getFontSize() {
 			return $this->FontSize;
 		}
-		
+
 		/**
 		 * Returns the current font size in points unit.
-		 * @return current font size in points unit 
+		 * @return current font size in points unit
 		 * @since 3.2.000 (2008-06-23)
 		 */
 		public function getFontSizePt() {
 			return $this->FontSizePt;
 		}
-		
+
 		/**
-		 * Prints a cell (rectangular area) with optional borders, background color and html text string. 
+		 * Prints a cell (rectangular area) with optional borders, background color and html text string.
 		 * The upper-left corner of the cell corresponds to the current position. After the call, the current position moves to the right or to the next line.<br />
 		 * If automatic page breaking is enabled and the cell goes beyond the limit, a page break is done before outputting.
 		 * @param float $w Cell width. If 0, the cell extends up to the right margin.
@@ -9081,7 +9234,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		public function writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='') {
 			return $this->MultiCell($w, $h, $html, $border, $align, $fill, $ln, $x, $y, $reseth, 0, true);
 		}
-		
+
 		/**
 	 	 * Returns the HTML DOM array.
 	 	 * <ul><li>$dom[$key]['tag'] = true if tag, false otherwise;</li><li>$dom[$key]['value'] = tag name or text;</li><li>$dom[$key]['opening'] = true if opening tag, false otherwise;</li><li>$dom[$key]['attribute'] = array of attributes (attribute name is the key);</li><li>$dom[$key]['style'] = array of style attributes (attribute name is the key);</li><li>$dom[$key]['parent'] = id of parent element;</li><li>$dom[$key]['fontname'] = font family name;</li><li>$dom[$key]['fontstyle'] = font style;</li><li>$dom[$key]['fontsize'] = font size in points;</li><li>$dom[$key]['bgcolor'] = RGB array of background color;</li><li>$dom[$key]['fgcolor'] = RGB array of foreground color;</li><li>$dom[$key]['width'] = width in pixels;</li><li>$dom[$key]['height'] = height in pixels;</li><li>$dom[$key]['align'] = text alignment;</li><li>$dom[$key]['cols'] = number of colums in table;</li><li>$dom[$key]['rows'] = number of rows in table;</li></ul>
@@ -9091,7 +9244,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		 */
 		protected function getHtmlDomArray($html) {
 			// remove all unsupported tags (the line below lists all supported tags)
-			$html = strip_tags($html, "<a><b><blockquote><br><br/><dd><del><div><dl><dt><em><font><h1><h2><h3><h4><h5><h6><hr><i><img><li><ol><p><small><span><strong><sub><sup><table><td><th><tr><u><ul>"); 
+			$html = strip_tags($html, "<marker/><a><b><blockquote><br><br/><dd><del><div><dl><dt><em><font><h1><h2><h3><h4><h5><h6><hr><i><img><li><ol><p><small><span><strong><sub><sup><table><td><th><tr><u><ul>");
 			//replace carriage returns, newlines and tabs
 			$repTable = array("\t" => " ", "\n" => " ", "\r" => " ", "\0" => " ", "\x0B" => " ", "\\" => "\\\\");
 			$html = strtr($html, $repTable);
@@ -9103,8 +9256,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$html = preg_replace('/[\s]*<th/', '<th', $html);
 			$html = preg_replace('/[\s]*<\/td>[\s]*/', '</td>', $html);
 			$html = preg_replace('/[\s]*<td/', '<td', $html);
-			$html = preg_replace('/<\/th>/', '<span></span></th>', $html);
-			$html = preg_replace('/<\/td>/', '<span></span></td>', $html);
+			$html = preg_replace('/<\/th>/', '<marker/></th>', $html);
+			$html = preg_replace('/<\/td>/', '<marker/></td>', $html);
+			$html = preg_replace('/<\/table><marker\/>/', '</table>', $html);
+			$html = preg_replace('/<li([^\>]*)><img/xi', '<li\\1> <img', $html);
 			// pattern for generic tag
 			$tagpattern = '/(<[^>]+>)/Uu';
 			// explodes the string
@@ -9201,7 +9356,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 								// font family
 								if (isset($dom[$key]['style']['font-family'])) {
 									$fontslist = split(",", strtolower($dom[$key]['style']['font-family']));
-									foreach($fontslist as $font) {
+									foreach ($fontslist as $font) {
 										$font = trim(strtolower($font));
 										if (in_array($font, $this->fontlist)) {
 											$dom[$key]['fontname'] = $font;
@@ -9248,7 +9403,6 @@ require_once(dirname(__FILE__)."/barcodes.php");
 								}
 							}
 							// font style
-							$dom[$key]['fontstyle'] = "";
 							if (isset($dom[$key]['style']['font-weight']) AND (strtolower($dom[$key]['style']['font-weight']{0}) == "b")) {
 								$dom[$key]['fontstyle'] .= "B";
 							}
@@ -9293,7 +9447,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 							// font family
 							if (isset($dom[$key]['attribute']['face'])) {
 								$fontslist = split(",", strtolower($dom[$key]['attribute']['face']));
-								foreach($fontslist as $font) {
+								foreach ($fontslist as $font) {
 									$font = trim(strtolower($font));
 									if (in_array($font, $this->fontlist)) {
 										$dom[$key]['fontname'] = $font;
@@ -9390,18 +9544,16 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$dom[$key]['tag'] = false;
 					$dom[$key]['value'] = stripslashes($this->unhtmlentities($element));
 					$dom[$key]['parent'] = end($level);
-					// calculate text width
-					//$dom[$key]['width'] = $this->GetStringWidth($dom[$key]['value'], $dom[($dom[$key]['parent'])]['fontname'], $dom[($dom[$key]['parent'])]['fontstyle'], $dom[($dom[$key]['parent'])]['fontsize']);	
 				}
 				$key++;
 			}
 			return $dom;
 		}
-		
+
 		/**
 		 * Allows to preserve some HTML formatting (limited support).<br />
 		 * IMPORTANT: The HTML must be well formatted - try to clean-up it using an application like HTML-Tidy before submitting.
-		 * Supported tags are: a, b, blockquote, br, dd, del, div, dl, dt, em, font, h1, h2, h3, h4, h5, h6, hr, i, img, li, ol, p, small, span, strong, sub, sup, table, td, th, tr, u, ul, 
+		 * Supported tags are: a, b, blockquote, br, dd, del, div, dl, dt, em, font, h1, h2, h3, h4, h5, h6, hr, i, img, li, ol, p, small, span, strong, sub, sup, table, td, th, tr, u, ul,
 		 * @param string $html text to display
 		 * @param boolean $ln if true add a new line after text (default = true)
 		 * @param int $fill Indicates if the background must be painted (true) or transparent (false).
@@ -9410,7 +9562,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		 * @param string $align Allows to center or align the text. Possible values are:<ul><li>L : left align</li><li>C : center</li><li>R : right align</li><li>'' : empty string : left for LTR or right for RTL</li></ul>
 		 */
 		public function writeHTML($html, $ln=true, $fill=false, $reseth=false, $cell=false, $align='') {
+			$prevhtmlvspace = $this->htmlvspace;
 			// store current values
+			$prevPage = $this->page;
 			$prevlMargin = $this->lMargin;
 			$prevrMargin = $this->rMargin;
 			$prevcMargin = $this->cMargin;
@@ -9428,6 +9582,13 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$startlinepage = $this->page;
 			$newline = true;
 			$loop = 0;
+			$curpos = 0;
+			$blocktags = array("blockquote","br","dd","div","dt","h1","h2","h3","h4","h5","h6","hr","li","ol","p","ul");
+			if (isset($this->PageAnnots[$this->page])) {
+				$pask = count($this->PageAnnots[$this->page]);
+			} else {
+				$pask = 0;
+			}
 			if (isset($this->footerlen[$this->page])) {
 				$this->footerpos[$this->page] = strlen($this->pages[$this->page]) - $this->footerlen[$this->page];
 			} else {
@@ -9453,7 +9614,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->listnum = 0;
 			if ((empty($this->lasth))OR ($reseth)) {
 				//set row height
-				$this->lasth = $this->FontSize * $this->cell_height_ratio; 
+				$this->lasth = $this->FontSize * $this->cell_height_ratio;
 			}
 			$dom = $this->getHtmlDomArray($html);
 			$maxel = count($dom);
@@ -9461,13 +9622,46 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			while ($key < $maxel) {
 				if ($dom[$key]['tag'] OR ($key == 0)) {
 					if ((($dom[$key]['value'] == 'table') OR ($dom[$key]['value'] == 'tr')) AND (isset($dom[$key]['align']))) {
-						$dom[$key]['align'] = ($this->rtl)?'R':'L';
+						$dom[$key]['align'] = ($this->rtl) ? 'R' : 'L';
 					}
 					// vertically align image in line
-					if ((!$this->newline) AND ($dom[$key]['value'] == 'img') 
+					if ((!$this->newline)
+						AND ($dom[$key]['value'] == 'img')
 						AND (isset($dom[$key]['attribute']['height']))
 						AND ($dom[$key]['attribute']['height'] > 0)
+						AND (!((($this->y + $this->pixelsToUnits($dom[$key]['attribute']['height'])) > $this->PageBreakTrigger)
+							AND empty($this->InFooter)
+							AND $this->AcceptPageBreak()))
 						) {
+						if ((!$this->newline) AND ($this->page > $startlinepage)) {
+							// fix lines splitted over two pages
+							if (isset($this->footerlen[$startlinepage])) {
+								$curpos = strlen($this->pages[$startlinepage]) - $this->footerlen[$startlinepage];
+							}
+							// line to be moved one page forward
+							$linebeg = substr($this->pages[$startlinepage], $startlinepos, ($curpos - $startlinepos));
+							$tstart = substr($this->pages[$startlinepage], 0, $startlinepos);
+							$tend = substr($this->pages[$startlinepage], $curpos);
+							// remove line start from previous page
+							$this->pages[$startlinepage] = $tstart."".$tend;
+							$tstart = substr($this->pages[$this->page], 0, $this->intmrk[$this->page]);
+							$tend = substr($this->pages[$this->page], $this->intmrk[$this->page]);
+							// add line start to current page
+							$yshift = $minstartliney - $this->y;
+							$try = sprintf('1 0 0 1 0 %.3f cm', ($yshift * $this->k));
+							$this->pages[$this->page] = $tstart."\nq\n".$try."\n".$linebeg."\nQ\n".$tend;
+							// shift the annotations and links
+							if (isset($this->PageAnnots[$startlinepage])) {
+								foreach ($this->PageAnnots[$startlinepage] as $pak => $pac) {
+									if ($pak >= $pask) {
+										$this->PageAnnots[$this->page][] = $pac;
+										unset($this->PageAnnots[$startlinepage][$pak]);
+										$npak = count($this->PageAnnots[$this->page]) - 1;
+										$this->PageAnnots[$this->page][$npak]['y'] -= $yshift;
+									}
+								}
+							}
+						}
 						$this->y += (($curfontsize / $this->k) - $this->pixelsToUnits($dom[$key]['attribute']['height']));
 						$minstartliney = min($this->y, $minstartliney);
 					} elseif (isset($dom[$key]['fontname']) OR isset($dom[$key]['fontstyle']) OR isset($dom[$key]['fontsize'])) {
@@ -9481,7 +9675,40 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						if (($fontname != $curfontname) OR ($fontstyle != $curfontstyle) OR ($fontsize != $curfontsize)) {
 							$this->SetFont($fontname, $fontstyle, $fontsize);
 							$this->lasth = $this->FontSize * $this->cell_height_ratio;
-							if (is_numeric($fontsize) AND ($fontsize > 0) AND is_numeric($curfontsize) AND ($curfontsize > 0) AND ($fontsize != $curfontsize) AND (!$this->newline) AND ($key < ($maxel - 1))) {
+							if (is_numeric($fontsize) AND ($fontsize > 0)
+								AND is_numeric($curfontsize) AND ($curfontsize > 0)
+								AND ($fontsize != $curfontsize) AND (!$this->newline)
+								AND ($key < ($maxel - 1))
+								) {
+								if ((!$this->newline) AND ($this->page > $startlinepage)) {
+									// fix lines splitted over two pages
+									if (isset($this->footerlen[$startlinepage])) {
+										$curpos = strlen($this->pages[$startlinepage]) - $this->footerlen[$startlinepage];
+									}
+									// line to be moved one page forward
+									$linebeg = substr($this->pages[$startlinepage], $startlinepos, ($curpos - $startlinepos));
+									$tstart = substr($this->pages[$startlinepage], 0, $startlinepos);
+									$tend = substr($this->pages[$startlinepage], $curpos);
+									// remove line start from previous page
+									$this->pages[$startlinepage] = $tstart."".$tend;
+									$tstart = substr($this->pages[$this->page], 0, $this->intmrk[$this->page]);
+									$tend = substr($this->pages[$this->page], $this->intmrk[$this->page]);
+									// add line start to current page
+									$yshift = $minstartliney - $this->y;
+									$try = sprintf('1 0 0 1 0 %.3f cm', ($yshift * $this->k));
+									$this->pages[$this->page] = $tstart."\nq\n".$try."\n".$linebeg."\nQ\n".$tend;
+									// shift the annotations and links
+									if (isset($this->PageAnnots[$startlinepage])) {
+										foreach ($this->PageAnnots[$startlinepage] as $pak => $pac) {
+											if ($pak >= $pask) {
+												$this->PageAnnots[$this->page][] = $pac;
+												unset($this->PageAnnots[$startlinepage][$pak]);
+												$npak = count($this->PageAnnots[$this->page]) - 1;
+												$this->PageAnnots[$this->page][$npak]['y'] -= $yshift;
+											}
+										}
+									}
+								}
 								$this->y += (($curfontsize - $fontsize) / $this->k);
 								$minstartliney = min($this->y, $minstartliney);
 							}
@@ -9490,6 +9717,11 @@ require_once(dirname(__FILE__)."/barcodes.php");
 							$curfontsize = $fontsize;
 						}
 					}
+					if (($plalign == 'J') AND (in_array($dom[$key]['value'], $blocktags))) {
+						$plalign = '';
+					}
+					// get current position on page buffer
+					$curpos = strlen($this->pages[$startlinepage]);
 					if (isset($dom[$key]['bgcolor']) AND ($dom[$key]['bgcolor'] !== false)) {
 						$this->SetFillColorArray($dom[$key]['bgcolor']);
 						$wfill = true;
@@ -9512,10 +9744,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					// we are at the beginning of a new line
 					if (isset($startlinex)) {
 						$yshift = $minstartliney - $startliney;
-						if ($yshift > 0) {
+						if (($yshift > 0) OR ($this->page > $startlinepage)) {
 							$yshift = 0;
 						}
-						if ((isset($plalign) AND ((($plalign == "C") OR (($plalign == "R") AND (!$this->rtl)) OR (($plalign == "L") AND ($this->rtl))))) OR ($yshift < 0)) {
+						if ((isset($plalign) AND ((($plalign == "C") OR ($plalign == "J") OR (($plalign == "R") AND (!$this->rtl)) OR (($plalign == "L") AND ($this->rtl))))) OR ($yshift < 0)) {
 							// the last line must be shifted to be aligned as requested
 							$linew = abs($this->endlinex - $startlinex);
 							$pstart = substr($this->pages[$startlinepage], 0, $startlinepos);
@@ -9538,7 +9770,15 @@ require_once(dirname(__FILE__)."/barcodes.php");
 								$pend = "";
 							}
 							// calculate shifting amount
-							$mdiff = abs($w - $linew);
+							$tw = $w;
+							if ($this->lMargin != $prevlMargin) {
+								$tw += ($prevlMargin - $this->lMargin);
+							}
+							if ($this->rMargin != $prevrMargin) {
+								$tw += ($prevrMargin - $this->rMargin);
+							}
+							$mdiff = abs($tw - $linew);
+							$t_x = 0;
 							if ($plalign == "C") {
 								if ($this->rtl) {
 									$t_x = -($mdiff / 2);
@@ -9551,9 +9791,153 @@ require_once(dirname(__FILE__)."/barcodes.php");
 							} elseif (($plalign == "L") AND ($this->rtl)) {
 								// left alignment on RTL document
 								$t_x = -$mdiff;
-							} else {
-								$t_x = 0;
-							}
+							} elseif (($plalign == "J") AND ($plalign == $lalign)){
+								// Justification
+								if ($this->rtl OR $this->tmprtl) {
+									$t_x = $this->lMargin - $this->endlinex;
+								}
+								$no = 0;
+								$ns = 0;
+								// search spaces
+								if (preg_match_all('/\[\(([^\)]*)\)\]/x', $pmid, $lnstring, PREG_PATTERN_ORDER)) {
+									$maxkk = count($lnstring[1]) - 1;
+									foreach ($lnstring[1] as $kk => $value) {
+										if ($kk == $maxkk) {
+											if ($this->rtl OR $this->tmprtl) {
+												$tvalue = ltrim($value);
+											} else {
+												$tvalue = rtrim($value);
+											}
+										} else {
+											$tvalue = $value;
+										}
+										// count spaces on line
+										$no += substr_count($value, chr(32));
+										$ns += substr_count($tvalue, chr(32));
+									}
+									if ($this->rtl OR $this->tmprtl) {
+										$t_x = $this->lMargin - $this->endlinex - (($no - $ns - 1) * $this->GetStringWidth(chr(32)));
+									}
+									// calculate additional space to add to each space
+									$spacewidth = (($tw - $linew + (($no - $ns) * $this->GetStringWidth(chr(32)))) / ($ns?$ns:1)) * $this->k;
+									$spacewidthu = ($tw - $linew + ($no * $this->GetStringWidth(chr(32)))) / ($ns?$ns:1) / $this->FontSize / $this->k;
+									$nsmax = $ns;
+									$ns = 0;
+									reset($lnstring);
+									$offset = 0;
+									$strcount = 0;
+									$prev_epsposbeg = 0;
+									global $spacew;
+									while (preg_match('/([0-9\.\+\-]*)[\s](Td|cm|m|l|c|re)[\s]/x', $pmid, $strpiece, PREG_OFFSET_CAPTURE, $offset) == 1) {
+										if ($this->rtl OR $this->tmprtl) {
+											$spacew = ($spacewidth * ($nsmax - $ns));
+										} else {
+											$spacew = ($spacewidth * $ns);
+										}
+										$offset = $strpiece[2][1] + strlen($strpiece[2][0]);
+										$epsposbeg = strpos($pmid, "q".$this->epsmarker, $offset);
+										$epsposend = strpos($pmid, $this->epsmarker."Q", $offset) + strlen($this->epsmarker."Q");
+										if ((($epsposbeg > 0) AND ($epsposend > 0) AND ($offset > $epsposbeg) AND ($offset < $epsposend))
+											OR (($epsposbeg === false) AND ($epsposend > 0) AND ($offset < $epsposend))) {
+											// shift EPS images
+											$trx = sprintf('1 0 0 1 %.3f 0 cm', $spacew);
+											$epsposbeg = strpos($pmid, "q".$this->epsmarker, ($prev_epsposbeg - 6));
+											$pmid_b = substr($pmid, 0, $epsposbeg);
+											$pmid_m = substr($pmid, $epsposbeg, ($epsposend - $epsposbeg));
+											$pmid_e = substr($pmid, $epsposend);
+											$pmid = $pmid_b."\nq\n".$trx."\n".$pmid_m."\nQ\n".$pmid_e;
+											$offset = $epsposend;
+											continue;
+										}
+										$prev_epsposbeg = $epsposbeg;
+										$currentxpos = 0;
+										// shift blocks of code
+										switch ($strpiece[2][0]) {
+											case 'Td':
+											case 'cm':
+											case 'm':
+											case 'l': {
+												// get current X position
+												preg_match('/([0-9\.\+\-]*)[\s]('.$strpiece[1][0].')[\s]('.$strpiece[2][0].')([\s]*)/x', $pmid, $xmatches);
+												$currentxpos = $xmatches[1];
+												if (($strcount <= $maxkk) AND ($strpiece[2][0] == "Td")) {
+													if ($strcount == $maxkk) {
+														if ($this->rtl OR $this->tmprtl) {
+															$tvalue = $lnstring[1][$strcount];
+														} else {
+															$tvalue = rtrim($lnstring[1][$strcount]);
+														}
+													} else {
+														$tvalue = $lnstring[1][$strcount];
+													}
+													$ns += substr_count($tvalue, chr(32));
+													$strcount++;
+												}
+												if ($this->rtl OR $this->tmprtl) {
+													$spacew = ($spacewidth * ($nsmax - $ns));
+												}
+												// justify block
+												$pmid = preg_replace_callback('/([0-9\.\+\-]*)[\s]('.$strpiece[1][0].')[\s]('.$strpiece[2][0].')([\s]*)/x',
+													create_function('$matches', 'global $spacew;
+													$newx = sprintf("%.2f",(floatval($matches[1]) + $spacew));
+													return "".$newx." ".$matches[2]." x*#!#*x".$matches[3].$matches[4];'), $pmid, 1);
+												break;
+											}
+											case 're': {
+												// get current X position
+												preg_match('/([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]('.$strpiece[1][0].')[\s]('.$strpiece[2][0].')([\s]*)/x', $pmid, $xmatches);
+												$currentxpos = $xmatches[1];
+												// justify block
+												$pmid = preg_replace_callback('/([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]('.$strpiece[1][0].')[\s]('.$strpiece[2][0].')([\s]*)/x',
+													create_function('$matches', 'global $spacew;
+													$newx = sprintf("%.2f",(floatval($matches[1]) + $spacew));
+													return "".$newx." ".$matches[2]." ".$matches[3]." ".$matches[4]." x*#!#*x".$matches[5].$matches[6];'), $pmid, 1);
+												break;
+											}
+											case 'c': {
+												// get current X position
+												preg_match('/([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]('.$strpiece[1][0].')[\s]('.$strpiece[2][0].')([\s]*)/x', $pmid, $xmatches);
+												$currentxpos = $xmatches[1];
+												// justify block
+												$pmid = preg_replace_callback('/([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]('.$strpiece[1][0].')[\s]('.$strpiece[2][0].')([\s]*)/x',
+													create_function('$matches', 'global $spacew;
+													$newx1 = sprintf("%.3f",(floatval($matches[1]) + $spacew));
+													$newx2 = sprintf("%.3f",(floatval($matches[3]) + $spacew));
+													$newx3 = sprintf("%.3f",(floatval($matches[5]) + $spacew));
+													return "".$newx1." ".$matches[2]." ".$newx2." ".$matches[4]." ".$newx3." ".$matches[6]." x*#!#*x".$matches[7].$matches[8];'), $pmid, 1);
+												break;
+											}
+										}
+										// shift the annotations and links
+										if (isset($this->PageAnnots[$this->page])) {
+											foreach ($this->PageAnnots[$this->page] as $pak => $pac) {
+												if (($pac['y'] >= $minstartliney) AND (($pac['x'] * $this->k) >= ($currentxpos - $this->feps)) AND (($pac['x'] * $this->k) <= ($currentxpos + $this->feps))) {
+													$this->PageAnnots[$this->page][$pak]['x'] += ($spacew / $this->k);
+													$this->PageAnnots[$this->page][$pak]['w'] += (($spacewidth * $pac['numspaces']) / $this->k);
+													break;
+												}
+											}
+										}
+									} // end of while
+									// remove markers
+									$pmid = str_replace("x*#!#*x", "", $pmid);
+									if (($this->CurrentFont['type'] == "TrueTypeUnicode") OR ($this->CurrentFont['type'] == "cidfont0")) {
+										// multibyte characters
+										$spacew = $spacewidthu;
+										$pmid = preg_replace_callback("/\[\(([^\)]*)\)\]/x",
+													create_function('$matches', 'global $spacew;
+													return "[(".str_replace(chr(0).chr(32), ") ".(-2830 * $spacew)." (", $matches[1]).")]";'), $pmid);
+										$this->pages[$startlinepage] = $pstart."\n".$pmid."\n".$pend;
+										$endlinepos = strlen($pstart."\n".$pmid."\n");
+									} else {
+										// non-unicode (single-byte characters)
+										$rs = sprintf("%.3f Tw", $spacewidth);
+										$pmid = preg_replace("/\[\(([^\)]*)\)\]/x", $rs." [(\\1)]", $pmid);
+										$this->pages[$startlinepage] = $pstart."\n".$pmid."\nBT 0 Tw ET\n".$pend;
+										$endlinepos = strlen($pstart."\n".$pmid."\nBT 0 Tw ET\n");
+									}
+								}
+							} // end of J
 							if (($t_x != 0) OR ($yshift < 0)) {
 								// shift the line
 								$trx = sprintf('1 0 0 1 %.3f %.3f cm', ($t_x * $this->k), ($yshift * $this->k));
@@ -9562,7 +9946,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 								// shift the annotations and links
 								if (isset($this->PageAnnots[$this->page])) {
 									foreach ($this->PageAnnots[$this->page] as $pak => $pac) {
-										if ($pac['y'] >= $minstartliney) {
+										if ($pak >= $pask) {
 											$this->PageAnnots[$this->page][$pak]['x'] += $t_x;
 											$this->PageAnnots[$this->page][$pak]['y'] -= $yshift;
 										}
@@ -9572,7 +9956,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 							}
 						}
 					}
-					$this->checkPageBreak($this->lasth);
+					$this->newline = false;
+					$pbrk = $this->checkPageBreak($this->lasth);
 					$this->SetFont($fontname, $fontstyle, $fontsize);
 					if ($wfill) {
 						$this->SetFillColorArray($this->bgcolor);
@@ -9581,7 +9966,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$startliney = $this->y;
 					$minstartliney = $this->y;
 					$startlinepage = $this->page;
-					if (isset($endlinepos)) {
+					if (isset($endlinepos) AND (!$pbrk)) {
 						$startlinepos = $endlinepos;
 						unset($endlinepos);
 					} else {
@@ -9593,13 +9978,17 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						$startlinepos = $this->footerpos[$this->page];
 					}
 					$plalign = $lalign;
-					$this->newline = false;
+					if (isset($this->PageAnnots[$this->page])) {
+						$pask = count($this->PageAnnots[$this->page]);
+					} else {
+						$pask = 0;
+					}
 				}
 				if (isset($opentagpos)) {
 					unset($opentagpos);
 				}
 				if ($dom[$key]['tag']) {
-					if ($dom[$key]['opening']) {	
+					if ($dom[$key]['opening']) {
 						// table content is handled in a special way
 						if (($dom[$key]['value'] == "td") OR ($dom[$key]['value'] == "th")) {
 							$trid = $dom[$key]['parent'];
@@ -9608,15 +9997,15 @@ require_once(dirname(__FILE__)."/barcodes.php");
 								$dom[$table_el]['cols'] = $trid['cols'];
 							}
 							// calculate cell width
-							if (isset($dom[($dom[$key]['parent'])]['width'])) {
-								$table_width = $this->pixelsToUnits($dom[($dom[$key]['parent'])]['width']);
+							if (isset($dom[$trid]['width'])) {
+								$table_width = $this->pixelsToUnits($dom[$trid]['width']);
 							} else {
 								$table_width = $w;
 							}
 							if (isset($dom[($dom[$trid]['parent'])]['attribute']['cellpadding'])) {
 								$currentcmargin = $this->pixelsToUnits($dom[($dom[$trid]['parent'])]['attribute']['cellpadding']);
 							} else {
-								$currentcmargin = 0;		
+								$currentcmargin = 0;
 							}
 							$this->cMargin = $currentcmargin;
 							if (isset($dom[($dom[$trid]['parent'])]['attribute']['cellspacing'])) {
@@ -9668,9 +10057,39 @@ require_once(dirname(__FILE__)."/barcodes.php");
 							}
 							// skip row-spanned cells started on the previous rows
 							if (isset($dom[$table_el]['rowspans'])) {
-								foreach ($dom[$table_el]['rowspans'] as $k => $trwsp) {
-									if  (($trwsp['startx'] == $this->x) AND (($trwsp['starty'] < $this->y) OR ($trwsp['startpage'] < $this->page)) AND ($trwsp['rowspan'] > 0)) {
-										$this->x = $trwsp['endx'] + $cellspacingx;
+								$rsk = 0;
+								$rskmax = count($dom[$table_el]['rowspans']);
+								while ($rsk < $rskmax) {
+									$trwsp = $dom[$table_el]['rowspans'][$rsk];
+									$rsstartx = $trwsp['startx'];
+									$rsendx = $trwsp['endx'];
+									// account for margin changes
+									if ($trwsp['startpage'] < $this->page) {
+										if (($this->rtl) AND ($this->pagedim[$this->page]['rm'] != $this->pagedim[$trwsp['startpage']]['rm'])) {
+											$dl = ($this->pagedim[$this->page]['rm'] - $this->pagedim[$trwsp['startpage']]['rm']);
+											$rsstartx -= $dl;
+											$rsendx -= $dl;
+										} elseif ((!$this->rtl) AND ($this->pagedim[$this->page]['lm'] != $this->pagedim[$trwsp['startpage']]['lm'])) {
+											$dl = ($this->pagedim[$this->page]['lm'] - $this->pagedim[$trwsp['startpage']]['lm']);
+											$rsstartx += $dl;
+											$rsendx += $dl;
+										}
+									}
+									if  (($trwsp['rowspan'] > 0)
+										AND ($rsstartx > ($this->x - $cellspacing - $currentcmargin - $this->feps))
+										AND ($rsstartx < ($this->x + $cellspacing + $currentcmargin + $this->feps))
+										AND (($trwsp['starty'] < ($this->y - $this->feps)) OR ($trwsp['startpage'] < $this->page))) {
+										$this->x = $rsendx + $cellspacingx;
+										if (($trwsp['rowspan'] == 1)
+											AND (isset($dom[$trid]['endy']))
+											AND (isset($dom[$trid]['endpage']))
+											AND ($trwsp['endpage'] == $dom[$trid]['endpage'])) {
+											$dom[$table_el]['rowspans'][$rsk]['endy'] = max($dom[$trid]['endy'], $trwsp['endy']);
+											$dom[$trid]['endy'] = $dom[$table_el]['rowspans'][$rsk]['endy'];
+										}
+										$rsk = 0;
+									} else {
+										$rsk++;
 									}
 								}
 							}
@@ -9682,7 +10101,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 									$this->footerpos[$this->page] = strlen($this->pages[$this->page]);
 								}
 								$trintmrkpos = $this->footerpos[$this->page];
-								$trsid = array_push($dom[$table_el]['rowspans'], array('rowspan' => $rowspan, 'colspan' => $colspan, 'startpage' => $this->page, 'startx' => $this->x, 'starty' => $this->y, 'intmrkpos' => $trintmrkpos));
+								$trsid = array_push($dom[$table_el]['rowspans'], array('trid' => $trid, 'rowspan' => $rowspan, 'mrowspan' => $rowspan, 'colspan' => $colspan, 'startpage' => $this->page, 'startx' => $this->x, 'starty' => $this->y, 'intmrkpos' => $trintmrkpos));
 							}
 							$cellid = array_push($dom[$trid]['cellpos'], array('startx' => $this->x));
 							if ($rowspan > 1) {
@@ -9692,13 +10111,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 							if (isset($dom[$parentid]['bgcolor']) AND ($dom[$parentid]['bgcolor'] !== false)) {
 								$dom[$trid]['cellpos'][($cellid - 1)]['bgcolor'] = $dom[$parentid]['bgcolor'];
 							}
-							
-							// write the cell content
+							// ****** write the cell content ******
 							$this->MultiCell($cellw, 0, $cell_content, false, $lalign, false, 2, '', '', true, 0, true);
-							
 							$this->cMargin = $currentcmargin;
 							$dom[$trid]['cellpos'][($cellid - 1)]['endx'] = $this->x;
-							
 							// update the end of row position
 							if ($rowspan <= 1) {
 								if (isset($dom[$trid]['endy'])) {
@@ -9727,11 +10143,11 @@ require_once(dirname(__FILE__)."/barcodes.php");
 										if (isset($dom[$trid]['endpage'])) {
 											if ($trwsp['endpage'] == $dom[$trid]['endpage']) {
 												$dom[$table_el]['rowspans'][$k]['endy'] = max($dom[$trid]['endy'], $trwsp['endy']);
-											} elseif ($dom[$table_el]['rowspans'][$k]['endpage'] > $dom[$trid]['endpage']) {
-												$dom[$table_el]['rowspans'][$k]['endy'] = $trwsp['endy'];
-											} else {
+											} elseif ($trwsp['endpage'] < $dom[$trid]['endpage']) {
 												$dom[$table_el]['rowspans'][$k]['endy'] = $dom[$trid]['endy'];
 												$dom[$table_el]['rowspans'][$k]['endpage'] = $dom[$trid]['endpage'];
+											} else {
+												$dom[$trid]['endy'] = $this->pagedim[$dom[$trid]['endpage']]['hk'] - $this->pagedim[$dom[$trid]['endpage']]['bm'];
 											}
 										}
 									}
@@ -9748,6 +10164,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 								}
 								$opentagpos = $this->footerpos[$this->page];
 							}
+
 							$this->openHTMLTagHandler($dom, $key, $cell);
 						}
 					} else {
@@ -9779,13 +10196,31 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					}
 					// text
 					$this->htmlvspace = 0;
+					if ($this->rtl OR $this->tmprtl) {
+						// reverse spaces order
+						$len1 = strlen($dom[$key]['value']);
+						$lsp = $len1 - strlen(ltrim($dom[$key]['value']));
+						$rsp = $len1 - strlen(rtrim($dom[$key]['value']));
+						$tmpstr = "";
+						if ($rsp > 0) {
+							$tmpstr .= substr($dom[$key]['value'], -$rsp);
+						}
+						$tmpstr .= trim($dom[$key]['value']);
+						if ($lsp > 0) {
+							$tmpstr .= substr($dom[$key]['value'], 0, $lsp);
+						}
+						$dom[$key]['value'] = $tmpstr;
+					}
 					if ($newline) {
-						if ($this->rtl OR $this->tmprtl) {
+						if (($this->rtl OR $this->tmprtl)) {
 							$dom[$key]['value'] = rtrim($dom[$key]['value']);
 						} else {
 							$dom[$key]['value'] = ltrim($dom[$key]['value']);
 						}
 						$newline = false;
+						$firstblock = true;
+					} else {
+						$firstblock = false;
 					}
 					if ($this->HREF) {
 						// HTML <a> Link
@@ -9793,8 +10228,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					} else {
 						$ctmpmargin = $this->cMargin;
 						$this->cMargin = 0;
-						// write only until the end of the line and get the rest
-						$strrest = $this->Write($this->lasth, $dom[$key]['value'], '', $wfill, "", false, 0, true);
+						// ****** write only until the end of the line and get the rest ******
+						$strrest = $this->Write($this->lasth, $dom[$key]['value'], '', $wfill, '', false, 0, true, $firstblock);
 						$this->cMargin = $ctmpmargin;
 					}
 					if (strlen($strrest) > 0) {
@@ -9824,10 +10259,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			// align the last line
 			if (isset($startlinex)) {
 				$yshift = $minstartliney - $startliney;
-				if ($yshift > 0) {
+				if (($yshift > 0) OR ($this->page > $startlinepage)) {
 					$yshift = 0;
 				}
-				if ((isset($plalign) AND ((($plalign == "C") OR (($plalign == "R") AND (!$this->rtl)) OR (($plalign == "L") AND ($this->rtl))))) OR ($yshift < 0)) {
+				if ((isset($plalign) AND ((($plalign == "C") OR ($plalign == "J") OR (($plalign == "R") AND (!$this->rtl)) OR (($plalign == "L") AND ($this->rtl))))) OR ($yshift < 0)) {
 					// the last line must be shifted to be aligned as requested
 					$linew = abs($this->endlinex - $startlinex);
 					$pstart = substr($this->pages[$startlinepage], 0, $startlinepos);
@@ -9850,7 +10285,14 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						$pend = "";
 					}
 					// calculate shifting amount
-					$mdiff = abs($w - $linew);
+					$tw = $w;
+					if ($this->lMargin != $prevlMargin) {
+						$tw += ($prevlMargin - $this->lMargin);
+					}
+					if ($this->rMargin != $prevrMargin) {
+						$tw += ($prevrMargin - $this->rMargin);
+					}
+					$mdiff = abs($tw - $linew);
 					if ($plalign == "C") {
 						if ($this->rtl) {
 							$t_x = -($mdiff / 2);
@@ -9865,7 +10307,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						$t_x = -$mdiff;
 					} else {
 						$t_x = 0;
-					}				
+					}
 					if (($t_x != 0) OR ($yshift < 0)) {
 						// shift the line
 						$trx = sprintf('1 0 0 1 %.3f %.3f cm', ($t_x * $this->k), ($yshift * $this->k));
@@ -9874,7 +10316,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						// shift the annotations and links
 						if (isset($this->PageAnnots[$this->page])) {
 							foreach ($this->PageAnnots[$this->page] as $pak => $pac) {
-								if ($pac['y'] >= $minstartliney) {
+								if ($pak >= $pask) {
 									$this->PageAnnots[$this->page][$pak]['x'] += $t_x;
 									$this->PageAnnots[$this->page][$pak]['y'] -= $yshift;
 								}
@@ -9891,15 +10333,21 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			$this->SetFont($prevFontFamily, $prevFontStyle, $prevFontSizePt);
 			$this->SetFillColorArray($prevbgcolor);
 			$this->SetTextColorArray($prevfgcolor);
-			$this->lMargin = $prevlMargin;
-			$this->rMargin = $prevrMargin;
 			$this->cMargin = $prevcMargin;
+			$this->htmlvspace = $prevhtmlvspace;
+			if ($prevPage == $this->page) {
+				$this->lMargin = $prevlMargin;
+				$this->rMargin = $prevrMargin;
+			} else {
+				$this->lMargin = $this->pagedim[$this->page]['lm'];
+				$this->rMargin = $this->pagedim[$this->page]['rm'];
+			}
 			unset($dom);
 		}
-		
+
 		/**
 		 * Process opening tags.
-		 * @param array $dom html dom array 
+		 * @param array $dom html dom array
 		 * @param int $key current element id
 		 * @param boolean $cell if true add the default cMargin space to each new line (default false).
 		 * @access protected
@@ -9907,6 +10355,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		protected function openHTMLTagHandler(&$dom, $key, $cell=false) {
 			$tag = $dom[$key];
 			$parent = $dom[($dom[$key]['parent'])];
+			$firstorlast = ($key == 1);
 			// check for text direction attribute
 			if (isset($tag['attribute']['dir'])) {
 				$this->tmprtl = $tag['attribute']['dir'] == 'rtl' ? 'R' : 'L';
@@ -9916,11 +10365,18 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			//Opening tag
 			switch($tag['value']) {
 				case 'table': {
+					$cp = 0;
+					$cs = 0;
 					$dom[$key]['rowspans'] = array();
 					if (isset($tag['attribute']['cellpadding'])) {
+						$cp = $this->pixelsToUnits($tag['attribute']['cellpadding']);
 						$this->oldcMargin = $this->cMargin;
-						$this->cMargin = $this->pixelsToUnits($tag['attribute']['cellpadding']);
+						$this->cMargin = $cp;
 					}
+					if (isset($tag['attribute']['cellspacing'])) {
+						$cs = $this->pixelsToUnits($tag['attribute']['cellspacing']);
+					}
+					$this->checkPageBreak((2 * $cp) + (2 * $cs) + $this->lasth);
 					break;
 				}
 				case 'tr': {
@@ -9928,12 +10384,8 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$dom[$key]['cellpos'] = array();
 					break;
 				}
-				case 'td':
-				case 'th': {
-					break;
-				}
 				case 'hr': {
-					$this->addHTMLVertSpace(1, $cell);
+					$this->addHTMLVertSpace(1, $cell, '', $firstorlast, $tag['value'], false);
 					$this->htmlvspace = 0;
 					if ((isset($tag['attribute']['width'])) AND ($tag['attribute']['width'] != '')) {
 						$hrWidth = $this->pixelsToUnits($tag['attribute']['width']);
@@ -9945,7 +10397,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$prevlinewidth = $this->GetLineWidth();
 					$this->Line($x, $y, $x + $hrWidth, $y);
 					$this->SetLineWidth($prevlinewidth);
-					$this->addHTMLVertSpace(1, $cell);
+					$this->addHTMLVertSpace(1, $cell, '', !isset($dom[($key + 1)]), $tag['value'], false);
 					break;
 				}
 				case 'a': {
@@ -9971,7 +10423,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 							// the only alignment supported is "bottom"
 							// further development is required for other modes.
 							$tag['attribute']['align'] = 'bottom';
-						//} 
+						//}
 						switch($tag['attribute']['align']) {
 							case 'top': {
 								$align = 'T';
@@ -10019,10 +10471,11 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 				case 'dl': {
 					$this->listnum++;
+					$this->addHTMLVertSpace(0, $cell, '', $firstorlast, $tag['value'], false);
 					break;
 				}
 				case 'dt': {
-					$this->addHTMLVertSpace(1, $cell);
+					$this->addHTMLVertSpace(1, $cell, '', $firstorlast, $tag['value'], false);
 					break;
 				}
 				case 'dd': {
@@ -10031,18 +10484,23 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					} else {
 						$this->lMargin += $this->listindent;
 					}
-					$this->addHTMLVertSpace(1, $cell);
+					$this->addHTMLVertSpace(1, $cell, '', $firstorlast, $tag['value'], false);
 					break;
 				}
 				case 'ul':
 				case 'ol': {
+					$this->addHTMLVertSpace(0, $cell, '', $firstorlast, $tag['value'], false);
 					$this->listnum++;
 					if ($tag['value'] == "ol") {
 						$this->listordered[$this->listnum] = true;
 					} else {
 						$this->listordered[$this->listnum] = false;
 					}
-					$this->listcount[$this->listnum] = 0;
+					if (isset($tag['attribute']['start'])) {
+						$this->listcount[$this->listnum] = intval($tag['attribute']['start']) - 1;
+					} else {
+						$this->listcount[$this->listnum] = 0;
+					}
 					if ($this->rtl) {
 						$this->rMargin += $this->listindent;
 					} else {
@@ -10051,7 +10509,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					break;
 				}
 				case 'li': {
-					$this->Ln('', $cell);
+					$this->addHTMLVertSpace(1, $cell, '', $firstorlast, $tag['value'], false);
 					if ($tag['value'] == 'li') {
 						if ($this->listordered[$this->listnum]) {
 							if (isset($tag['attribute']['value'])) {
@@ -10078,7 +10536,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					} else {
 						$this->lMargin += $this->listindent;
 					}
-					$this->addHTMLVertSpace(2, $cell);
+					$this->addHTMLVertSpace(2, $cell, '', $firstorlast, $tag['value'], false);
 					break;
 				}
 				case 'br': {
@@ -10086,11 +10544,11 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					break;
 				}
 				case 'div': {
-					$this->addHTMLVertSpace(2, $cell);
+					$this->addHTMLVertSpace(1, $cell, '', $firstorlast, $tag['value'], false);
 					break;
 				}
 				case 'p': {
-					$this->addHTMLVertSpace(2, $cell);
+					$this->addHTMLVertSpace(2, $cell, '', $firstorlast, $tag['value'], false);
 					break;
 				}
 				case 'sup': {
@@ -10101,13 +10559,13 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					$this->SetXY($this->GetX(), $this->GetY() + ((0.3 * $this->FontSizePt) / $this->k));
 					break;
 				}
-				case 'h1': 
-				case 'h2': 
-				case 'h3': 
-				case 'h4': 
-				case 'h5': 
+				case 'h1':
+				case 'h2':
+				case 'h3':
+				case 'h4':
+				case 'h5':
 				case 'h6': {
-					$this->addHTMLVertSpace(1, $cell, ($tag['fontsize'] * 1.5) / $this->k);
+					$this->addHTMLVertSpace(1, $cell, ($tag['fontsize'] * 1.5) / $this->k, $firstorlast, $tag['value'], false);
 					break;
 				}
 				default: {
@@ -10115,10 +10573,10 @@ require_once(dirname(__FILE__)."/barcodes.php");
 				}
 			}
 		}
-		
+
 		/**
 		 * Process closing tags.
-		 * @param array $dom html dom array 
+		 * @param array $dom html dom array
 		 * @param int $key current element id
 		 * @param boolean $cell if true add the default cMargin space to each new line (default false).
 		 * @access protected
@@ -10126,12 +10584,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		protected function closeHTMLTagHandler(&$dom, $key, $cell=false) {
 			$tag = $dom[$key];
 			$parent = $dom[($dom[$key]['parent'])];
+			$firstorlast = ((!isset($dom[($key + 1)])) OR ((!isset($dom[($key + 2)])) AND ($dom[($key + 1)]['value'] == "marker")));
 			//Closing tag
 			switch($tag['value']) {
-				case 'td':
-				case 'th': {
-					break;
-				}
 				case 'tr': {
 					$table_el = $dom[($dom[$key]['parent'])]['parent'];
 					// update row-spanned cells
@@ -10139,33 +10594,71 @@ require_once(dirname(__FILE__)."/barcodes.php");
 						foreach ($dom[$table_el]['rowspans'] as $k => $trwsp) {
 							$dom[$table_el]['rowspans'][$k]['rowspan'] -= 1;
 							if ($dom[$table_el]['rowspans'][$k]['rowspan'] == 0) {
-								if ($dom[$table_el]['rowspans'][$k]['endpage'] == $dom[($dom[$key]['parent'])]['endpage']) {
-									$dom[($dom[$key]['parent'])]['endy'] = max($dom[$table_el]['rowspans'][$k]['endy'], $dom[($dom[$key]['parent'])]['endy']);
-								} elseif ($dom[$table_el]['rowspans'][$k]['endpage'] > $dom[($dom[$key]['parent'])]['endpage']) {
+								if ($dom[$table_el]['rowspans'][$k]['endpage'] == $parent['endpage']) {
+									$dom[($dom[$key]['parent'])]['endy'] = max($dom[$table_el]['rowspans'][$k]['endy'], $parent['endy']);
+								} elseif ($dom[$table_el]['rowspans'][$k]['endpage'] > $parent['endpage']) {
 									$dom[($dom[$key]['parent'])]['endy'] = $dom[$table_el]['rowspans'][$k]['endy'];
 									$dom[($dom[$key]['parent'])]['endpage'] = $dom[$table_el]['rowspans'][$k]['endpage'];
 								}
 							}
 						}
 					}
-					$this->setPage($dom[($dom[$key]['parent'])]['endpage']);
-					$this->y = $dom[($dom[$key]['parent'])]['endy'];
+					$this->setPage($parent['endpage']);
+					$this->y = $parent['endy'];
 					if (isset($dom[$table_el]['attribute']['cellspacing'])) {
 						$cellspacing = $this->pixelsToUnits($dom[$table_el]['attribute']['cellspacing']);
 						$this->y += $cellspacing;
-					}				
+					}
 					$this->Ln(0, $cell);
-					$this->x = $dom[($dom[$key]['parent'])]['startx'];
+					$this->x = $parent['startx'];
+					// account for booklet mode
+					if ($this->page > $parent['startpage']) {
+						if (($this->rtl) AND ($this->pagedim[$this->page]['rm'] != $this->pagedim[$parent['startpage']]['rm'])) {
+							$this->x += ($this->pagedim[$this->page]['rm'] - $this->pagedim[$parent['startpage']]['rm']);
+						} elseif ((!$this->rtl) AND ($this->pagedim[$this->page]['lm'] != $this->pagedim[$parent['startpage']]['lm'])) {
+							$this->x += ($this->pagedim[$this->page]['lm'] - $this->pagedim[$parent['startpage']]['lm']);
+						}
+					}
 					break;
 				}
 				case 'table': {
 					// draw borders
 					$table_el = $parent;
-					if ((isset($table_el['attribute']['border']) AND ($table_el['attribute']['border'] > 0)) 
+					if ((isset($table_el['attribute']['border']) AND ($table_el['attribute']['border'] > 0))
 						OR (isset($table_el['style']['border']) AND ($table_el['style']['border'] > 0))) {
 							$border = 1;
 					} else {
 						$border = 0;
+					}
+					// fix bottom line alignment of last line before page break
+					foreach ($dom[($dom[$key]['parent'])]['trids'] as $j => $trkey) {
+						$dom[$trkey];
+						// update row-spanned cells
+						if (isset($dom[($dom[$key]['parent'])]['rowspans'])) {
+							foreach ($dom[($dom[$key]['parent'])]['rowspans'] as $k => $trwsp) {
+								if ($trwsp['trid'] == $trkey) {
+									$dom[($dom[$key]['parent'])]['rowspans'][$k]['mrowspan'] -= 1;
+								}
+								if (isset($prevtrkey) AND ($trwsp['trid'] == $prevtrkey) AND ($trwsp['mrowspan'] >= 0)) {
+									$dom[($dom[$key]['parent'])]['rowspans'][$k]['trid'] = $trkey;
+								}
+							}
+						}
+						if (isset($prevtrkey) AND ($dom[$trkey]['endpage'] > $dom[$prevtrkey]['endpage'])) {
+							$pgendy = $this->pagedim[$dom[$prevtrkey]['endpage']]['hk'] - $this->pagedim[$dom[$prevtrkey]['endpage']]['bm'];
+							$dom[$prevtrkey]['endy'] = $pgendy;
+							// update row-spanned cells
+							if (isset($dom[($dom[$key]['parent'])]['rowspans'])) {
+								foreach ($dom[($dom[$key]['parent'])]['rowspans'] as $k => $trwsp) {
+									if (($trwsp['trid'] == $trkey) AND ($trwsp['mrowspan'] == 1) AND ($trwsp['endpage'] == $dom[$prevtrkey]['endpage'])) {
+										$dom[($dom[$key]['parent'])]['rowspans'][$k]['endy'] = $pgendy;
+										$dom[($dom[$key]['parent'])]['rowspans'][$k]['mrowspan'] = -1;
+									}
+								}
+							}
+						}
+						$prevtrkey = $trkey;
+						$table_el = $dom[($dom[$key]['parent'])];
 					}
 					// for each row
 					foreach ($table_el['trids'] as $j => $trkey) {
@@ -10200,7 +10693,6 @@ require_once(dirname(__FILE__)."/barcodes.php");
 										$this->y = $this->tMargin; // put cursor at the beginning of text
 										$ch = $this->getPageHeight() - $this->tMargin - $this->getBreakMargin();
 									}
-	
 									if (isset($cellpos['bgcolor']) AND ($cellpos['bgcolor']) !== false) {
 										$this->SetFillColorArray($cellpos['bgcolor']);
 										$fill = true;
@@ -10209,6 +10701,14 @@ require_once(dirname(__FILE__)."/barcodes.php");
 									}
 									$cw = abs($cellpos['endx'] - $cellpos['startx']);
 									$this->x = $cellpos['startx'];
+									// account for margin changes
+									if ($page > $startpage) {
+										if (($this->rtl) AND ($this->pagedim[$page]['rm'] != $this->pagedim[$startpage]['rm'])) {
+											$this->x -= ($this->pagedim[$page]['rm'] - $this->pagedim[$startpage]['rm']);
+										} elseif ((!$this->rtl) AND ($this->pagedim[$page]['lm'] != $this->pagedim[$startpage]['lm'])) {
+											$this->x += ($this->pagedim[$page]['lm'] - $this->pagedim[$startpage]['lm']);
+										}
+									}
 									// design a cell around the text
 									$ccode = $this->FillColor."\n".$this->getCellCode($cw, $ch, "", $border, 1, '', $fill);
 									$pstart = substr($this->pages[$this->page], 0, $this->intmrk[$this->page]);
@@ -10232,21 +10732,27 @@ require_once(dirname(__FILE__)."/barcodes.php");
 								$pstart = substr($this->pages[$this->page], 0, $this->intmrk[$this->page]);
 								$pend = substr($this->pages[$this->page], $this->intmrk[$this->page]);
 								$this->pages[$this->page] = $pstart.$ccode."\n".$pend;
-								$this->intmrk[$this->page] += strlen($ccode."\n");						
+								$this->intmrk[$this->page] += strlen($ccode."\n");
 							}
-						}					
+						}
 						if (isset($table_el['attribute']['cellspacing'])) {
 							$cellspacing = $this->pixelsToUnits($table_el['attribute']['cellspacing']);
 							$this->y += $cellspacing;
-						}				
+						}
 						$this->Ln(0, $cell);
 						$this->x = $parent['startx'];
+						if ($endpage > $startpage) {
+							if (($this->rtl) AND ($this->pagedim[$endpage]['rm'] != $this->pagedim[$startpage]['rm'])) {
+								$this->x += ($this->pagedim[$endpage]['rm'] - $this->pagedim[$startpage]['rm']);
+							} elseif ((!$this->rtl) AND ($this->pagedim[$endpage]['lm'] != $this->pagedim[$startpage]['lm'])) {
+								$this->x += ($this->pagedim[$endpage]['lm'] - $this->pagedim[$startpage]['lm']);
+							}
+						}
 					}
 					if (isset($parent['cellpadding'])) {
 						$this->cMargin = $this->oldcMargin;
 					}
-					//set row height
-					$this->lasth = $this->FontSize * $this->cell_height_ratio; 
+					$this->lasth = $this->FontSize * $this->cell_height_ratio;
 					break;
 				}
 				case 'a': {
@@ -10262,7 +10768,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					break;
 				}
 				case 'div': {
-					$this->addHTMLVertSpace(1, $cell);
+					$this->addHTMLVertSpace(1, $cell, '', $firstorlast, $tag['value'], true);
 					break;
 				}
 				case 'blockquote': {
@@ -10271,23 +10777,24 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					} else {
 						$this->lMargin -= $this->listindent;
 					}
-					$this->addHTMLVertSpace(2, $cell);
+					$this->addHTMLVertSpace(2, $cell, '', $firstorlast, $tag['value'], true);
 					break;
 				}
 				case 'p': {
-					$this->addHTMLVertSpace(2, $cell);
+					$this->addHTMLVertSpace(2, $cell, '', $firstorlast, $tag['value'], true);
 					break;
 				}
 				case 'dl': {
 					$this->listnum--;
 					if ($this->listnum <= 0) {
 						$this->listnum = 0;
-						$this->addHTMLVertSpace(2, $cell);
+						$this->addHTMLVertSpace(2, $cell, '', $firstorlast, $tag['value'], true);
 					}
 					break;
 				}
 				case 'dt': {
 					$this->lispacer = "";
+					$this->addHTMLVertSpace(0, $cell, '', $firstorlast, $tag['value'], true);
 					break;
 				}
 				case 'dd': {
@@ -10297,6 +10804,7 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					} else {
 						$this->lMargin -= $this->listindent;
 					}
+					$this->addHTMLVertSpace(0, $cell, '', $firstorlast, $tag['value'], true);
 					break;
 				}
 				case 'ul':
@@ -10310,22 +10818,23 @@ require_once(dirname(__FILE__)."/barcodes.php");
 					}
 					if ($this->listnum <= 0) {
 						$this->listnum = 0;
-						$this->addHTMLVertSpace(2, $cell);
+						$this->addHTMLVertSpace(2, $cell, '', $firstorlast, $tag['value'], true);
 					}
 					$this->lasth = $this->FontSize * $this->cell_height_ratio;
 					break;
 				}
 				case 'li': {
 					$this->lispacer = "";
+					$this->addHTMLVertSpace(0, $cell, '', $firstorlast, $tag['value'], true);
 					break;
 				}
-				case 'h1': 
-				case 'h2': 
-				case 'h3': 
-				case 'h4': 
-				case 'h5': 
+				case 'h1':
+				case 'h2':
+				case 'h3':
+				case 'h4':
+				case 'h5':
 				case 'h6': {
-					$this->addHTMLVertSpace(1, $cell, ($parent['fontsize'] * 1.5) / $this->k);
+					$this->addHTMLVertSpace(1, $cell, ($parent['fontsize'] * 1.5) / $this->k, $firstorlast, $tag['value'], true);
 					break;
 				}
 				default : {
@@ -10334,15 +10843,29 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			}
 			$this->tmprtl = false;
 		}
-		
+
 		/**
 		 * Add vertical spaces if needed.
 		 * @param int $n number of spaces to add
 		 * @param boolean $cell if true add the default cMargin space to each new line (default false).
 		 * @param string $h The height of the break. By default, the value equals the height of the last printed cell.
+		 * @param boolean $firstorlast if true do not print additional empty lines.
+		 * @param string $tag HTML tag to which this space will be applied
+		 * @param boolean $closing true if this space will be applied to a closing tag, false otherwise
 		 * @access protected
 		 */
-		protected function addHTMLVertSpace($n, $cell=false, $h='') {
+		protected function addHTMLVertSpace($n, $cell=false, $h='', $firstorlast=false, $tag='', $closing=false) {
+			if ($firstorlast) {
+				$this->Ln(0, $cell);
+				$this->htmlvspace = 0;
+				return;
+			}
+			if (isset($this->tagvpaces[$tag][intval($closing)]['n'])) {
+				$n = $this->tagvpaces[$tag][intval($closing)]['n'];
+			}
+			if (isset($this->tagvpaces[$tag][intval($closing)]['h'])) {
+				$h = $this->tagvpaces[$tag][intval($closing)]['h'];
+			}
 			if (is_string($h)) {
 				$vsize = $n * $this->lasth;
 			} else {
@@ -10351,9 +10874,9 @@ require_once(dirname(__FILE__)."/barcodes.php");
 			if ($vsize > $this->htmlvspace) {
 				$this->Ln(($vsize - $this->htmlvspace), $cell);
 				$this->htmlvspace = $vsize;
-            }
-        }
-		
+			}
+		}
+
 		/**
 		 * Set the character or string to be used as LI item symbol on UL lists.
 		 * @param string $symbol character or string to be used
@@ -10362,10 +10885,62 @@ require_once(dirname(__FILE__)."/barcodes.php");
 		 */
 		public function setLIsymbol($symbol='-') {
 			$this->lisymbol = $symbol;
-        }
-        
+		}
+
+		/**
+		* Set the booklet mode for double-sided pages.
+		* @param boolean $booklet true set the booklet mode on, fals eotherwise.
+		* @param float $inner Inner page margin.
+		* @param float $outer Outer page margin.
+		* @access public
+		* @since 4.2.000 (2008-10-29)
+		*/
+		public function SetBooklet($booklet=true, $inner=-1, $outer=-1) {
+			$this->booklet = $booklet;
+			if ($inner >= 0) {
+				$this->lMargin = $inner;
+			}
+			if ($outer >= 0) {
+				$this->rMargin = $outer;
+			}
+		}
+
+		/**
+		* Swap the left and right margins.
+		* @param boolean $reverse if true swap left and right margins.
+		* @access protected
+		* @since 4.2.000 (2008-10-29)
+		*/
+		protected function swapMargins($reverse=true) {
+			if ($reverse) {
+				// swap left and right margins
+				$mtemp = $this->original_lMargin;
+				$this->original_lMargin = $this->original_rMargin;
+				$this->original_rMargin = $mtemp;
+				$deltam = $this->original_lMargin - $this->original_rMargin;
+				$this->lMargin += $deltam;
+				$this->rMargin -= $deltam;
+			}
+		}
+
+		/**
+		* Set the vertical spaces for HTML tags.
+		* The array must have the following structure (example):
+		* $tagvs = array('h1' => array(0 => array('h' => '', 'n' => 2), 1 => array('h' => 1.3, 'n' => 1)));
+		* The first array level contains the tag names,
+		* the second level contains 0 for opening tags or 1 for closing tags,
+		* the third level contains the vertical space unit (h) and the number spaces to add (n).
+		* If the h parameter is not specified, default values are used.
+		* @param array $tagvs array of tags and relative vertical spaces.
+		* @access protected
+		* @since 4.2.001 (2008-10-30)
+		*/
+		public function setHtmlVSpace($tagvs) {
+			$this->tagvpaces = $tagvs;
+		}
+
 	} // END OF TCPDF CLASS
-//}
+}
 //============================================================+
 // END OF FILE
 //============================================================+

@@ -7,24 +7,24 @@
 // License     : GNU LGPL (http://www.gnu.org/copyleft/lesser.html)
 // 	----------------------------------------------------------------------------
 //  Copyright (C) 2008  Nicola Asuni - Tecnick.com S.r.l.
-// 	
+//
 // 	This program is free software: you can redistribute it and/or modify
 // 	it under the terms of the GNU Lesser General Public License as published by
 // 	the Free Software Foundation, either version 2.1 of the License, or
 // 	(at your option) any later version.
-// 	
+//
 // 	This program is distributed in the hope that it will be useful,
 // 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 // 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // 	GNU Lesser General Public License for more details.
-// 	
+//
 // 	You should have received a copy of the GNU Lesser General Public License
 // 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 	
+//
 // 	See LICENSE.TXT file for more information.
 //  ----------------------------------------------------------------------------
 //
-// Description : PHP class to creates array representations for 
+// Description : PHP class to creates array representations for
 //               common 1D barcodes to be used with TCPDF.
 //
 // Author: Nicola Asuni
@@ -60,15 +60,15 @@
 	* @license http://www.gnu.org/copyleft/lesser.html LGPL
 	*/
 class TCPDFBarcode {
-	
+
 	/**
 	 * @var array representation of barcode.
 	 * @access protected
 	 */
 	protected $barcode_array;
-		
+
 	/**
-	 * This is the class constructor. 
+	 * This is the class constructor.
 	 * Return an array representations for common 1D barcodes:<ul>
 	 * <li>$arrcode["code"] code to be printed on text label</li>
 	 * <li>$arrcode["maxh"] max bar height</li>
@@ -84,16 +84,16 @@ class TCPDFBarcode {
 	public function __construct($code, $type) {
 		$this->setBarcode($code, $type);
 	}
-	
-	/** 
+
+	/**
 	 * Return an array representations of barcode.
  	 * @return array
 	 */
 	public function getBarcodeArray() {
 		return $this->barcode_array;
 	}
-	
-	/** 
+
+	/**
 	 * Set the barcode.
 	 * @param string $code code to print
  	 * @param string $type type of barcode: <ul><li>C39 : CODE 39</li><li>C39+ : CODE 39 with checksum</li><li>C39E : CODE 39 EXTENDED</li><li>C39E+ : CODE 39 EXTENDED with checksum</li><li>I25 : Interleaved 2 of 5</li><li>C128A : CODE 128 A</li><li>C128B : CODE 128 B</li><li>C128C : CODE 128 C</li><li>EAN13 : EAN 13</li><li>UPCA : UPC-A</li><li>POSTNET : POSTNET</li><li>CODABAR : CODABAR</li></ul>
@@ -155,7 +155,7 @@ class TCPDFBarcode {
 		}
 		$this->barcode_array = $arrcode;
 	}
-	
+
 	/**
 	 * CODE 39
 	 * @param string $code code to represent.
@@ -208,7 +208,7 @@ class TCPDFBarcode {
 		$chr['/'] = '121211121';
 		$chr['+'] = '121112121';
 		$chr['%'] = '111212121';
-		
+
 		$code = strtoupper($code);
 		if ($extended) {
 			// extended mode
@@ -223,7 +223,7 @@ class TCPDFBarcode {
 		}
 		// add start and stop codes
 		$code = "*".$code."*";
-		
+
 		$bararray = array("code" => $code, "maxw" => 0, "maxh" => 1, "bcode" => array());
 		$k = 0;
 		for($i=0; $i < strlen($code); $i++) {
@@ -249,7 +249,7 @@ class TCPDFBarcode {
 		}
 		return $bararray;
 	}
-	
+
 	/**
 	 * Encode a string to be used for CODE 39 Extended mode.
 	 * @param string $code code to represent.
@@ -299,7 +299,7 @@ class TCPDFBarcode {
 		}
 		return $code_ext;
 	}
-	
+
 	/**
 	 * Calculate CODE 39 checksum (modulo 43).
 	 * @param string $code code to represent.
@@ -320,9 +320,9 @@ class TCPDFBarcode {
 		$j = ($sum % 43);
 		return $chars[$j];
 	}
-	
+
 	/**
-	 * Interleaved 2 of 5 barcodes. 
+	 * Interleaved 2 of 5 barcodes.
 	 * Contains digits (0 to 9) and encodes the data in the width of both bars and spaces.
 	 * @param string $code code to represent.
 	 * @param boolean $checksum if true add a checksum to the code
@@ -342,14 +342,14 @@ class TCPDFBarcode {
 		$chr['9'] = '12121';
 		$chr['A'] = '11';
 		$chr['Z'] = '21';
-		
+
 		if((strlen($code) % 2) != 0) {
 			// add leading zero if code-length is odd
 			$code = '0'.$code;
 		}
 		// add start and stop codes
 		$code = 'AA'.strtolower($code).'ZA';
-			
+
 		$bararray = array("code" => $code, "maxw" => 0, "maxh" => 1, "bcode" => array());
 		$k = 0;
 		for($i=0; $i < strlen($code); $i=$i+2) {
@@ -378,10 +378,10 @@ class TCPDFBarcode {
 		}
 		return $bararray;
 	}
-	
+
 	/**
-	 * C128 barcodes. 
-	 * 
+	 * C128 barcodes.
+	 *
 	 * @param string $code code to represent.
 	 * @param string $type barcode type: A, B or C
 	 * @return array barcode representation.
@@ -540,7 +540,7 @@ class TCPDFBarcode {
 			$sum +=  (strpos($keys, $code{$i}) * ($i+1));
 		}
 		$check = ($sum % 103);
-		
+
 		// add start, check and stop codes
 		$code = chr($startid).$code.chr($check).chr(106).chr(107);
 		$bararray = array("code" => $code, "maxw" => 0, "maxh" => 1, "bcode" => array());
@@ -568,9 +568,9 @@ class TCPDFBarcode {
 				$k++;
 			}
 		}
-		return $bararray;		
+		return $bararray;
 	}
-	
+
 	/**
 	 * EAN13 and UPC-A barcodes.
 	 * @param string $code code to represent.
@@ -658,7 +658,7 @@ class TCPDFBarcode {
 			'8'=>array('A','B','A','B','B','A'),
 			'9'=>array('A','B','B','A','B','A')
 		);
-		
+
 		$bararray = array("code" => $code, "maxw" => 0, "maxh" => 1, "bcode" => array());
 		$k = 0;
 		$seq = '101';
@@ -689,7 +689,7 @@ class TCPDFBarcode {
 		}
 		return $bararray;
 	}
-	
+
 	/**
 	 * POSTNET barcodes.
 	 * @param string $code zip code to represent. Must be a string containing a zip code of the form DDDDD or DDDDD-DDDD.
@@ -743,7 +743,7 @@ class TCPDFBarcode {
 		$bararray["maxw"] += 1;
 		return $bararray;
 	}
-	
+
 	/**
 	 * CODABAR barcodes.
 	 * @param string $code code to represent.
@@ -773,7 +773,7 @@ class TCPDFBarcode {
 			'C' => '11121221',
 			'D' => '11122211'
 		);
-		
+
 		$bararray = array("code" => $code, "maxw" => 0, "maxh" => 1, "bcode" => array());
 		$k = 0;
 		$w = 0;
@@ -799,10 +799,10 @@ class TCPDFBarcode {
 		}
 		return $bararray;
 	}
-	
+
 } // end of class
 
 //============================================================+
-// END OF FILE                                                 
+// END OF FILE
 //============================================================+
 ?>

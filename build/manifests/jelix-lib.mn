@@ -351,7 +351,7 @@ cd lib/jelix/plugins/coord/jacl2
 ! jacl2.coord.php
   plugin.xml
   jacl2.coord.ini.php.dist
-  
+
 cd lib/jelix/plugins/coord/zendframework
   zendframework.coord.php
   plugin.xml
@@ -613,6 +613,7 @@ cd lib/tcpdf
 ! unicode_data.php
   tcpdf.php
   README.TXT
+  CHANGELOG.TXT
   LICENSE.TXT
   htmlcolors.php
   barcodes.php
