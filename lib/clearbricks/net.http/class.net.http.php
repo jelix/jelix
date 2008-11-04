@@ -67,6 +67,7 @@ class netHttp extends netSocket
 	protected $accept_encoding = 'gzip';	///<	<b>string</b>		HTTP accept encoding
 	protected $accept_language = 'en-us';	///<	<b>string</b>		HTTP accept language
 	protected $user_agent = 'Clearbricks HTTP Client';	///< <b>string</b>	HTTP User Agent
+	protected $more_headers = array();		///< <b>array</b>		More headers to be sent
 	protected $timeout = 10;				///<	<b>integer</b>		Connection timeout
 	protected $use_ssl = false;			///<	<b>boolean</b>		Use SSL connection
 	protected $use_gzip = false;			///<	<b>boolean</b>		Use gzip transfert
@@ -381,10 +382,19 @@ class netHttp extends netSocket
 			$headers[] = $cookie;
 		}
 		
+		# X-Forwarded-For
+		$xforward= array($_SERVER['REMOTE_ADDR']);
+		if ($this->proxy_host) {
+			$xforward[] = $_SERVER['SERVER_ADDR'];
+		}
+		$headers[] = 'X-Forwarded-For: '.implode(', ',$xforward);
+		
 		# Basic authentication
 		if ($this->username && $this->password) {
-			$headers[] = 'Authorization: BASIC '.base64_encode($this->username.':'.$this->password);
+			$headers[] = 'Authorization: Basic '.base64_encode($this->username.':'.$this->password);
 		}
+		
+		$headers = array_merge($headers,$this->more_headers);
 		
 		# If this is a POST, set the content type and length
 		if ($this->postdata) {
@@ -567,6 +577,25 @@ class netHttp extends netSocket
 		$this->username = $username;
 		$this->password = $password;
 	}
+	
+	/**
+	Sets additionnal header to be sent with the request.
+	
+	@param	header	<b>string</b>		Full header definition
+	*/
+	public function setMoreHeader($header)
+	{
+		$this->more_headers[] = $header;
+	}
+	
+	/**
+	Empty additionnal headers.
+	*/
+	public function voidMoreHeaders()
+	{
+		$this->more_headers = array();
+	}
+	
 	
 	/**
 	Sets the cookies to be sent in the request. Takes an array of name value
