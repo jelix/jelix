@@ -48,3 +48,27 @@ cd lib/jelix/dao
   jDaoParser.class.php
   jDaoProperty.class.php
   jDaoMethod.class.php
+  
+cd lib/jelix/forms/controls
+  jFormsControlDatasource.class.php
+  jFormsControlGroups.class.php
+  jFormsControlCaptcha.class.php
+  jFormsControlCheckbox.class.php
+  jFormsControlCheckboxes.class.php
+  jFormsControlChoice.class.php
+  jFormsControlGroup.class.php
+  jFormsControlHidden.class.php
+  jFormsControlHtmlEditor.class.php
+  jFormsControlInput.class.php
+  jFormsControlListbox.class.php
+  jFormsControlMenulist.class.php
+  jFormsControlOutput.class.php
+  jFormsControlRadiobuttons.class.php
+  jFormsControlRepeat.class.php
+  jFormsControlReset.class.php
+  jFormsControlSecret.class.php
+  jFormsControlSecretConfirm.class.php
+  jFormsControlSubmit.class.php
+  jFormsControlSwitch.class.php
+  jFormsControlTextarea.class.php
+  jFormsControlUpload.class.php
