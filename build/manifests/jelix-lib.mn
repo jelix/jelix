@@ -233,6 +233,7 @@ cd lib/jelix/utils/
   jFile.class.php
 * jFilter.class.php
   jHttp.class.php
+  jImageModifier.class.php
   jIniFile.class.php
   jIniFileModifier.class.php
 * jJson.class.php
