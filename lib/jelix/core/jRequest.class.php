@@ -110,7 +110,7 @@ abstract class jRequest {
             $pathinfo = '';
         }
 
-        if ($gJConfig->isWindows && $pathinfo && strpos ($pathinfo, $this->urlScript) !== false){
+        if ($gJConfig->isWindows && $pathinfo && strpos($pathinfo, $this->urlScript) !== false){
             //under IIS, we may get  /subdir/index.php/mypath/myaction as PATH_INFO, so we fix it
             $pathinfo = substr ($pathinfo, strlen ($this->urlScript));
         }

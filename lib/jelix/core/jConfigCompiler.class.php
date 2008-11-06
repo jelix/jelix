@@ -168,6 +168,10 @@ class jConfigCompiler {
 #endif
         }
 
+        if($config->sessions['storage'] == 'files'){
+            $config->sessions['files_path'] = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $config->sessions['files_path']);
+        }
+
         /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config->locale,$m)){
             if(!isset($m[2])){
                 $m[2] = $m[1];

@@ -71,14 +71,16 @@ class jSelectorActFast extends jSelectorModule {
     }
 
     public function getClass(){
-        $className = $this->controller.'Ctrl';
 #if ENABLE_OLD_CLASS_NAMING
+        $className = $this->controller.'Ctrl';
         if(!class_exists($className,false)){
             if(class_exists('CT'.$this->controller,false))
                 $className = 'CT'.$this->controller;
         }
-#endif
         return $className;
+#else
+        return $this->controller.'Ctrl';
+#endif
     }
 
 }

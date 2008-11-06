@@ -29,15 +29,15 @@ class jSession {
         $params = & $GLOBALS['gJConfig']->sessions;
 
         // do not start the session if the request is made from the command line or if sessions are disabled in configuration
-        if($GLOBALS['gJCoord']->request instanceof jCmdLineRequest || !$params['start']){
+        if ($GLOBALS['gJCoord']->request instanceof jCmdLineRequest || !$params['start']) {
             return false;
         }
 
         //make sure that the session cookie is only for the current application
-        if(!$params['shared_session'])
+        if (!$params['shared_session'])
             session_set_cookie_params ( 0 , $GLOBALS['gJConfig']->urlengine['basePath']);
 
-        if($params['storage'] != ''){
+        if ($params['storage'] != '') {
 
             /* on debian/ubuntu (maybe others), garbage collector launch probability is set to 0
                and replaced by a simple cron job which is not enough for jSession (different path, db storage, ...),
@@ -46,7 +46,6 @@ class jSession {
                 ini_set('session.gc_probability','1');
 
             switch($params['storage']){
-
                 case 'dao':
                     session_set_save_handler(
                         array(__CLASS__,'daoOpen'),
@@ -60,14 +59,9 @@ class jSession {
                     break;
 
                 case 'files':
-                    $path = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $params['files_path']);
-                    session_save_path($path);
-                    break;
-
-                default:
+                    session_save_path($params['files_path']);
                     break;
             }
-
         }
 
         if($params['name'] !=''){
