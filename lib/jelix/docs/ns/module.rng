@@ -4,9 +4,13 @@
     datatype="http://www.w3.org/2001/XMLSchema-datatypes"
     >
 
+   <include href="item_infos.rng" />
+
    <start>
       <element name="module">
-         <empty /> <!-- not defined for the moment -->
+         <ref name="info" />
+         <ref name="notes" />
+         <ref name="dependencies" />
       </element>
    </start>
 
