@@ -81,8 +81,6 @@ abstract class jFormsControl {
     }
 
     function setData($value) {
-        if($this->container->data[$this->ref] != $value)
-            $this->form->setModifiedFlag($this->ref);
         $this->container->data[$this->ref] = $value;
     }
 

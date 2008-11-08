@@ -20,7 +20,15 @@ class jFormsDataContainer {
      * @var array
      */
     public $data = array();
-
+    
+    /**
+     * contains data provided by the user in each controls
+     * @var array
+     * @see jFormsBase::getModifiedControls()
+     * @see jFormsBase::resetModifiedControlsList()
+     */
+    public $originalData = array();
+    
     /**
      * internal use. Used by controls object to store some private data. (captcha for example)
      * @var array

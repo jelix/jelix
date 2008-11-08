@@ -104,12 +104,6 @@ abstract class jFormsBase {
     protected $builders = array();
 
     /**
-     * list of modified controls
-     * keys are name of control, value is the old value of the control
-     * @var array
-     */
-    protected $modifiedControls = array();
-    /**
      * the form selector
      * @var string
      */
@@ -138,7 +132,6 @@ abstract class jFormsBase {
      */
     public function initFromRequest(){
         $req = $GLOBALS['gJCoord']->request;
-        $this->modifiedControls=array();
         foreach($this->rootControls as $name=>$ctrl){
             if(!$this->container->isActivated($name) || $this->container->isReadOnly($name))
                 continue;
@@ -449,12 +442,6 @@ abstract class jFormsBase {
         return $this->container->data;
     }
 
-
-    function setModifiedFlag($name){
-        $this->modifiedControls[$name] = $this->container->data[$name];
-    }
-
-
     /**
      * deactivate (or reactivate) a control
      * When a control is deactivated, it is not displayes anymore in the output form
@@ -490,7 +477,6 @@ abstract class jFormsBase {
     public function isReadOnly($name) {
         return $this->container->isReadOnly($name);
     }
-
 
     /**
      * @return jFormsDataContainer
@@ -532,11 +518,25 @@ abstract class jFormsBase {
      */
     public function getHtmlEditors(){ return $this->htmleditors; }
 
-     /**
+    /**
+     * call this method after initilization of the form, in order to track
+     * modified controls
+     * @since 1.1
+     */
+    public function resetModifiedControlsList(){
+        $this->container->originalData = $this->container->data;
+    }
+
+    /**
      * @return array key=control id,  value=old value
      * @since 1.1
      */
-    public function getModifiedControls(){ return $this->modifiedControls; }
+    public function getModifiedControls(){
+        if(count($this->container->originalData))
+            return array_diff($this->container->originalData, $this->container->data);
+        else
+            return $this->container->data;
+    }
 
     /**
      * @return array of jFormsControl objects
