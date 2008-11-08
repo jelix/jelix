@@ -153,7 +153,7 @@ class jTplCompiler
 #if JTPL_STANDALONE
 
         $_dirname = jTplConfig::$cachePath.dirname($tplName).'/';
-    echo $tplFile.'<br>'.$_dirname.'<br>'.$cachefile;
+
         if (!is_dir($_dirname)) { 
  	        umask(0000); 
  	        mkdir($_dirname, 0777, true); 
@@ -230,7 +230,7 @@ class jTplCompiler
         list(,$tag, $firstcar) = $matches;
 
         // check the first character
-        if (!preg_match('/^\$|@|[a-zA-Z\/]$/',$firstcar)) {
+        if (!preg_match('/^\$|@|=|[a-zA-Z\/]$/',$firstcar)) {
 #if JTPL_STANDALONE
             throw new Exception(sprintf($this->_locales['errors.tpl.tag.syntax.invalid'], $tag, $this->_sourceFile));
 #else
@@ -238,7 +238,9 @@ class jTplCompiler
 #endif
         }
         $this->_currentTag = $tag;
-        if ($firstcar == '$' || $firstcar == '@') {
+        if ($firstcar == '=') {
+            return  '<?php echo '.$this->_parseVariable(substr($tag,1)).'; ?>';
+        } else if ($firstcar == '$' || $firstcar == '@') {
             return  '<?php echo '.$this->_parseVariable($tag).'; ?>';
         } else {
             if (!preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/ms',$tag,$m)) {

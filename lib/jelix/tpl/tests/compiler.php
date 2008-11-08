@@ -134,6 +134,22 @@ function toto() {
         '<p>ok {const $foo}</p>',
         '<p>ok <?php echo htmlspecialchars(constant($t->_vars[\'foo\']));?></p>',
         ),
+24=>array(
+        '<p>ok{=$foo.($truc.$bbb)}</p>',
+        '<p>ok<?php echo $t->_vars[\'foo\'].($t->_vars[\'truc\'].$t->_vars[\'bbb\']); ?></p>',
+        ),
+25=>array(
+        '<p>ok{=intval($foo.($truc.$bbb))}</p>',
+        '<p>ok<?php echo intval($t->_vars[\'foo\'].($t->_vars[\'truc\'].$t->_vars[\'bbb\'])); ?></p>',
+        ),
+/*26=>array(
+        '',
+        '',
+        ),
+27=>array(
+        '',
+        '',
+        ),*/
     );
 
     function testCompileContent() {
