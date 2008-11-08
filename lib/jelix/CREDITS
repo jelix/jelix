@@ -90,7 +90,6 @@ Dominique Papin (aka bibo)
  - added addContent method to jResponseHtmlFragment (#610)
  - added config option to define default form builder (#696)
 
-
 Laurent Raufaste (aka analogue)
  - patches on postgresql driver (#123, #671, #672, #674)
  - replaced getParam (deprecated) with param in jZone (#680)
@@ -128,6 +127,9 @@ Antoine Detante (aka antoinefr)
 F. Fernandez (aka e-media)
  - little improvement in jLog.(#344)
  - little improvement in formcontrols plugin (#353)
+
+Foxmask
+  - bug fix in jFile::removeDir (#733)
 
 Mickaël Fradin (aka mike)
  - improvements in the jtpl plugin: formcontrols (#223)

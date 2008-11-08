@@ -6,8 +6,9 @@
 * @contributor Thiriot Christophe
 * @contributor Bastien Jaillot
 * @contributor Loic Mathaud
+* @contributor Foxmask (#733)
 * @contributor Cedric (fix bug ticket 56)
-* @copyright   2005-2006 Laurent Jouanneau, 2006 Thiriot Christophe, 2006 Loic Mathaud, 2008 Bastien Jaillot
+* @copyright   2005-2006 Laurent Jouanneau, 2006 Thiriot Christophe, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Foxmask
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -112,6 +113,9 @@ class jFile {
         		}
         	}
         }
+        unset($dir); // see bug #733
+        unset($dirContent);
+
         // removes the parent directory
         if ($deleteParent) {
             rmdir($path);
