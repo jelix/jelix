@@ -5,32 +5,34 @@
 
    <define name="info">
       <element name="info">
+         <!-- the id should be unique in the world, you can set an UUID or
+            a string like   name@mywebsite.com -->
          <attribute name="id" />
          <attribute name="name" />
-         <attribute name="version" />
-         <attribute name="date">
-            <data type="date" />
-         </attribute>
-         <attribute name="datecreate">
-            <data type="date" />
-         </attribute>
-         <attribute name="stability">
-            <choice>
-               <value>pre-alpha</value>
-               <value>alpha</value>
-               <value>beta</value>
-               <value>stable</value>
-               <value>mature</value>
-            </choice>
-         </attribute>
-         <attribute name="homepageURL">
-            <data type="anyURI"/>
-         </attribute>
-         <attribute name="updateURL">
-            <data type="anyURI"/>
-         </attribute>
-         <zeroOrMore>
-            <element name="summary">
+         <optional>
+            <attribute name="date">
+               <data type="date" />
+            </attribute>
+         </optional>
+         <optional>
+            <attribute name="datecreate">
+               <data type="date" />
+            </attribute>
+         </optional>
+         <element name="version">
+            <attribute name="stability">
+               <choice>
+                  <value>pre-alpha</value>
+                  <value>alpha</value>
+                  <value>beta</value>
+                  <value>stable</value>
+                  <value>mature</value>
+               </choice>
+            </attribute>
+            <text />
+         </element>
+         <oneOrMore>
+            <element name="label">
                <choice>
                   <group>
                      <attribute name="locale" />
@@ -44,7 +46,7 @@
                   </group>
                </choice>
             </element>
-         </zeroOrMore>
+         </oneOrMore>
          <zeroOrMore>
             <element name="description">
                <choice>
@@ -97,6 +99,16 @@
                </optional>
             </element>
          </zeroOrMore>
+         <optional>
+            <element name="homepageURL">
+               <data type="anyURI"/>
+            </element>
+         </optional>
+         <optional>
+            <element name="updateURL">
+               <data type="anyURI"/>
+            </element>
+         </optional>
       </element>      
    </define>
 
