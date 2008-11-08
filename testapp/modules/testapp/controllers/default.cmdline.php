@@ -13,7 +13,13 @@ class defaultCtrl extends jControllerCmdLine {
             'index' => array());
 
     protected $allowed_parameters = array(
-            'index' => array());
+            'index' => array(),
+            'other'=>array('aaa'=>true,'bbb'=>false)
+            );
+
+
+    public $help = array('index'=>'',
+                         'other'=>'Just display a message, it accepts a first parameter and an optional second one');
 
     /**
     *
@@ -23,5 +29,14 @@ class defaultCtrl extends jControllerCmdLine {
         $rep->addContent("Hello, it works !");
         return $rep;
     }
+
+    /**
+    *
+    */
+    function other() {
+        $rep = $this->getResponse();
+        $rep->addContent("given parameters:\naaa=".$this->param('aaa')."\nbbb=".$this->param('bbb')."\n");
+        return $rep;
+    }
 }
-?>
+

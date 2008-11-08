@@ -17,18 +17,49 @@
  * @since 1.0a3
  */
 class jControllerCmdLine extends jController {
+    /**
+     * help for each action
+     * it should be an array('method'=>'help',...);
+     * @var array
+     */
+    public $help = array();
 
-    protected $_options;
-    protected $_parameters;
-
+    /**
+     *   allowed options
+     * @var array
+     * @see jCmdUtils::getOptionsAndParams
+     */
     protected $allowed_options;
+
+    /**
+     *   allowed parameters
+     * @var array
+     * @see jCmdUtils::getOptionsAndParams
+     */
     protected $allowed_parameters;
+
+    /**
+     *   founded options
+     * @var array
+     * @see jCmdUtils::getOptionsAndParams
+     */
+    protected $_options;
+
+    /**
+     *   founded parameters
+     * @var array
+     * @see jCmdUtils::getOptionsAndParams
+     */
+    protected $_parameters;
 
     /**
     *
     * @param jRequest $request
     */
     function __construct ($request){
+        // we receive null when the controller is created only for help
+        if($request == null)
+            return;
         $this->request = $request;
         $params = $this->request->params;
         unset($params['module']);

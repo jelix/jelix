@@ -47,16 +47,16 @@ General purpose:
 
             include($selector->getPath());
             $ctrl = $selector->getClass();
-            $ctrl = new $ctrl();
+            $ctrl = new $ctrl(null);
             $help = $ctrl->help;
 
             $rep->addContent("
 Use of the command ". $selector->method ." :
 ");
-            if (isset($help[$selector->method])) {
+            if (isset($help[$selector->method]) && $help[$selector->method] !='') {
                 $rep->addContent($help[$selector->method]."\n\n");
             } else {
-                $rep->addContent("\tNo available help for this command\n\n");
+                $rep->addContent("\tNo availabled help for this command\n\n");
             }
         }
         return $rep;

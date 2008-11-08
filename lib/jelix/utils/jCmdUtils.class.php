@@ -19,6 +19,33 @@ class jCmdUtils {
 
     private function __construct() {}
 
+    /**
+     * analyze command line parameters and return an array
+     * of all options and parameters which correspond to
+     * allowed options and parameters
+     *
+     * allowed options should be an array like this :
+     * array('-option1'=>bool, '-option2'=>bool, ..)
+     * the boolean indicates that the option has a parameter on the CLI
+     *
+     * allowed parameters is an array like this:
+     * array('param1'=>bool, 'param2'=>bool, ..)
+     * it means that the first parameter value will be in the param1,
+     * the second in param2 etc.. The boolean says that the parameter
+     * is optional. If a parameter is optional, following parameters
+     * should be optional.
+     *
+     * the returned array contains two array :
+     * array('-option1'=>value, '-option2'=>value, ...)
+     * array('param1'=>value, 'param2'=>value...)
+     *
+     *
+     * @param array $argv the array of parameters given by php-cli
+     * @param array $sws allowed options
+     * @param array $params allowed parameters
+     * @return array an array with the array of founded option and
+     *                        an array with founded parameters
+     */
     public static function getOptionsAndParams($argv, $sws, $params) {
         $switches = array();
         $parameters = array();

@@ -41,23 +41,30 @@ class jCmdLineRequest extends jRequest {
         $argv = $_SERVER['argv'];
         $scriptName = array_shift($argv); // shift the script name
 
+        // note: we cannot use jSelectorAct to parse the action
+        // because in the opt edition, jSelectorAct needs an initialized jCoordinator
+        // and this is not the case here. see bug #725.
+
         if ($_SERVER['argc'] == 1) {
-            $argsel = $gJConfig->startModule.'~'.$gJConfig->startAction;
+            $mod = $gJConfig->startModule;
+            $act = $gJConfig->startAction;
         } else {
             $argsel = array_shift($argv); // get the module~action selector
             if ($argsel == 'help') {
-                $argsel = 'jelix~help:index';
-            }
-            if (!preg_match('/(?:([\w\.]+)~)/', $argsel)) {
-                $argsel = $gJConfig->startModule.'~'.$argsel;
+                $mod = 'jelix';
+                $act = 'help:index';
+            }else if (($pos = strpos($argsel,'~')) !== false) {
+                $mod = substr($argsel,0,$pos);
+                $act = substr($argsel,$pos+1);
+            }else {
+                $mod= $gJConfig->startModule;
+                $act= $argsel;
             }
         }
-
-        $selector = new jSelectorAct($argsel);
-
+        
         $this->params = $argv;
-        $this->params['module'] = $selector->module;
-        $this->params['action'] = $selector->resource;
+        $this->params['module'] = $mod;
+        $this->params['action'] = $act;
     }
 }
 
