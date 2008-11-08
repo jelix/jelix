@@ -207,6 +207,8 @@ jBuildUtils::createDir($BUILD_TARGET_PATH);
 
 //... execution des manifests
 jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), $STRIP_COMMENT);
+jManifest::process('build/manifests/jelix-www.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), $STRIP_COMMENT);
+
 if( ! $ENABLE_OPTIMIZED_SOURCE){
     jManifest::process('build/manifests/jelix-no-opt.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), $STRIP_COMMENT);
 }
