@@ -44,7 +44,8 @@ class createzoneCommand extends JelixScriptCommand {
 
        $filename.=strtolower($this->_parameters['name']).'.zone.php';
 
-       $param= array('name'=>$this->_parameters['name'] , 'module'=>$this->_parameters['module']);
+       $param= array('name'=>$this->_parameters['name'] ,
+                     'module'=>$this->_parameters['module']);
 
        if(!$this->getOption('-notpl')){
           if($tpl = $this->getParam('template')){

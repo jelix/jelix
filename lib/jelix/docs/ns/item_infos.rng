@@ -10,12 +10,7 @@
          <attribute name="id" />
          <attribute name="name" />
          <optional>
-            <attribute name="date">
-               <data type="date" />
-            </attribute>
-         </optional>
-         <optional>
-            <attribute name="datecreate">
+            <attribute name="createdate">
                <data type="date" />
             </attribute>
          </optional>
@@ -29,6 +24,11 @@
                   <value>mature</value>
                </choice>
             </attribute>
+            <optional>
+               <attribute name="date">
+                  <data type="date" />
+               </attribute>
+            </optional>
             <text />
          </element>
          <oneOrMore>
@@ -77,10 +77,13 @@
          </zeroOrMore>
          <element name="licence">
             <optional>
-               <attribute name="url">
+               <attribute name="URL">
                   <data type="anyURI" />
                </attribute>
             </optional>
+            <text />
+         </element>
+         <element name="copyright">
             <text />
          </element>
          <oneOrMore>

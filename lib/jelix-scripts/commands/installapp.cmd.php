@@ -2,7 +2,7 @@
 
 /**
 * @package     jelix-scripts
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
 * @copyright   2008 Laurent Jouanneau
 * @link        http://www.jelix.org

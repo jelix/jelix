@@ -110,6 +110,7 @@ cd lib/jelix-scripts/commands
   createctrl.cmd.php
   createdao.cmd.php
   createdaocrud.cmd.php
+  createentrypoint.cmd.php
   createform.cmd.php
   createmodule.cmd.php
   createzone.cmd.php

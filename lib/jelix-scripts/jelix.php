@@ -67,12 +67,7 @@ if(!isset($_SERVER['JELIX_CONFIG'])){
 
 require($jelix_config);
 
-// include all jelix libraries and constants : needed by some commands.
-include (JELIXS_INIT_PATH);
-
 define ('JELIX_SCRIPT_PATH', dirname(__FILE__).'/');
-
-
 
 if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
    include (JELIXS_APPTPL_PATH.'application.init.php');
@@ -80,6 +75,7 @@ if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
    if($commandName !='createapp' && $commandName !='help'){
      die("Error: the given application doesn't exist (".JELIXS_APPTPL_PATH." )\n");
    }
+   include (JELIXS_INIT_PATH);
    define ('JELIX_APP_PATH',         JELIXS_APPTPL_PATH );
    define ('JELIX_APP_TEMP_PATH',    JELIXS_APPTPL_TEMP_PATH);
    define ('JELIX_APP_VAR_PATH',     JELIXS_APPTPL_VAR_PATH);
@@ -91,6 +87,10 @@ if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
 
 include('includes/command.class.php');
 include('includes/utils.lib.php');
+
+if(function_exists('date_default_timezone_set')){
+   date_default_timezone_set(JELIXS_INFO_DEFAULT_TIMEZONE);
+}
 
 /**
  * chargement de la commande

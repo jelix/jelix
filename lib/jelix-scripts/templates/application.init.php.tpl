@@ -1,13 +1,14 @@
 <?php
 /**
-* @package  %%appname%%
-* @subpackage
-* @author
-* @contributor
-* @copyright
-* @link
-* @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+* @package   %%appname%%
+* @subpackage 
+* @author    %%default_creator_name%%
+* @copyright %%default_copyright%%
+* @link      %%default_website%%
+* @licence   %%default_licence_url%% %%default_licence%%
 */
+
+require (dirname(__FILE__).'/%%rp_jelix%%init.php');
 
 define ('JELIX_APP_PATH', dirname (__FILE__).DIRECTORY_SEPARATOR); // don't change
 

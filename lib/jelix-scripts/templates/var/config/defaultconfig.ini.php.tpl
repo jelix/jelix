@@ -2,11 +2,11 @@
 ;for security reasons , don't remove or modify the first line
 ;this file doesn't list all possible properties. See lib/jelix/core/defaultconfig.ini.php for that
 
-locale = "en_EN"
+locale = "%%default_locale%%"
 charset = "UTF-8"
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
-timeZone = "Europe/Paris"
+timeZone = "%%default_timezone%%"
 
 checkTrustedModules = off
 

@@ -62,6 +62,23 @@ abstract class JelixScriptCommand {
    }
 
    protected function createFile($filename, $template, $tplparam=array()){
+      
+      $defaultparams = array(
+         'default_website' => JELIXS_INFO_DEFAULT_WEBSITE,
+         'default_licence' => JELIXS_INFO_DEFAULT_LICENCE,
+         'default_licence_url' => JELIXS_INFO_DEFAULT_LICENCE_URL,
+         'default_creator_name' => JELIXS_INFO_DEFAULT_CREATOR_NAME,
+         'default_creator_email' => JELIXS_INFO_DEFAULT_CREATOR_EMAIL,
+         'default_copyright' => JELIXS_INFO_DEFAULT_COPYRIGHT,
+         'createdate' => date('Y-m-d'),
+         'jelix_version' => file_get_contents(JELIXS_LIB_PATH.'jelix/VERSION'),
+         'appname'=>$GLOBALS['APPNAME'],
+         'default_timezone'=>JELIXS_INFO_DEFAULT_TIMEZONE,
+         'default_locale'=>JELIXS_INFO_DEFAULT_LOCALE,
+      );
+      
+      $tplparam = array_merge($defaultparams, $tplparam);
+      
       if(file_exists($filename)){
          echo "Warning: the file '".$filename."' already exists\n";
          return false;
@@ -69,7 +86,7 @@ abstract class JelixScriptCommand {
       $tplpath = JELIX_SCRIPT_PATH.'templates/'.$template;
 
       if(!file_exists($tplpath)){
-          echo "Error: template file '".$tplpath."' doesn't exist\n";
+         echo "Error: template file '".$tplpath."' doesn't exist\n";
          return false;
       }
       $tpl = file($tplpath);

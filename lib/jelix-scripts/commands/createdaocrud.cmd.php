@@ -66,8 +66,12 @@ class createdaocrudCommand extends JelixScriptCommand {
         $agcommand->run();
 
         $this->createDir($path.'controllers/');
-        $this->createFile($path.'controllers/'.$ctrlname.'.classic.php','controller.daocrud.tpl',array('name'=>$ctrlname, 
-                'module'=>$this->_parameters['module'], 'table'=>$table, 'profil'=>$profil));
+        $params = array('name'=>$ctrlname, 
+                'module'=>$this->_parameters['module'],
+                'table'=>$table,
+                'profil'=>$profil);
+        
+        $this->createFile($path.'controllers/'.$ctrlname.'.classic.php','controller.daocrud.tpl',$params);
     }
 }
 

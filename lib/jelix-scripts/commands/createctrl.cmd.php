@@ -57,7 +57,9 @@ class createctrlCommand extends JelixScriptCommand {
 
        $method = $this->getParam('method','index');
 
-       $param= array('name'=>$this->_parameters['name'] , 'method'=>$method);
+       $param= array('name'=>$this->_parameters['name'] ,
+                     'method'=>$method,
+                     'module'=>$this->_parameters['module']);
 
        if ($this->getOption('-cmdline')) {
             $tplname = 'controller.cmdline.tpl';

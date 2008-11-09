@@ -1,4 +1,14 @@
-<?php 
+<?php
+/**
+* @package   %%appname%%
+* @subpackage 
+* @author    %%default_creator_name%%
+* @copyright %%default_copyright%%
+* @link      %%default_website%%
+* @licence   %%default_licence_url%% %%default_licence%%
+*/
+
+
 require_once (JELIX_LIB_CORE_PATH.'response/jResponseHtml.class.php');
 
 class myHtmlResponse extends jResponseHtml {

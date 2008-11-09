@@ -1,13 +1,12 @@
 <?php
 /**
-* @package  %%appname%%
-* @subpackage scripts
-* @author
-* @contributor
-* @copyright
+* @package   %%appname%%
+* @subpackage 
+* @author    %%default_creator_name%%
+* @copyright %%default_copyright%%
+* @link      %%default_website%%
+* @licence   %%default_licence_url%% %%default_licence%%
 */
-
-require_once ('%%rp_jelix%%init.php');
 
 require_once ('%%rp_app%%application.init.php');
 

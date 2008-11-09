@@ -50,7 +50,12 @@ class createmoduleCommand extends JelixScriptCommand {
             die("Error: module '".$this->_parameters['module']."' already exists");
         }
         $this->createDir($path);
-        $this->createFile($path.'module.xml','module.xml.tpl',array('name'=>$this->_parameters['module']));
+        
+        $param = array();
+        $param['name']=$this->_parameters['module'];
+        $param['default_id'] = $this->_parameters['module'].JELIXS_INFO_DEFAULT_IDSUFFIX;
+
+        $this->createFile($path.'module.xml','module.xml.tpl',$param);
 
         if(!$this->getOption('-nosubdir')){
             $this->createDir($path.'classes/');

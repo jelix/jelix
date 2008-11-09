@@ -100,15 +100,11 @@ function jxs_commandlist(){
    return $list;
 }
 
-
-
-
 function jxs_getRelativePath($path, $targetPath, $intoString=false){
     $cut = (DIRECTORY_SEPARATOR == '/'? '!/!': "![/\\\\]!");
     $sep = DIRECTORY_SEPARATOR;
     $path = preg_split($cut,$path);
     $targetPath = preg_split($cut,$targetPath);
-
 
     $dir='';
     $targetdir='';

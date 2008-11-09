@@ -18,7 +18,9 @@
    <start>
       <element name="project">
          <ref name="info" />
-         <ref name="notes" />
+         <optional>
+            <ref name="notes" />
+         </optional>
          <ref name="dependencies" />
          <ref name="directories"/>
          <ref name="entrypoints"/>

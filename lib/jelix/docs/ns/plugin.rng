@@ -10,7 +10,9 @@
    <start>
       <element name="plugin">
          <ref name="info" />
-         <ref name="notes" />
+         <optional>
+            <ref name="notes" />
+         </optional>
          <ref name="dependencies" />
       </element>
    </start>
