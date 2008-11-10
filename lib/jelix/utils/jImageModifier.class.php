@@ -100,7 +100,7 @@ class jImageModifier {
         // parse params
         $chaine = $src;
         foreach($params as $key => $value) {
-            if( in_array($key, jImage::$transformParams)) {
+            if( in_array($key, jImageModifier::$transformParams)) {
                 $chaine .= $key.$value;
             } else {
                 // attribute params are just transmitted back
