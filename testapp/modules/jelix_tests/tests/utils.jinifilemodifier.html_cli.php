@@ -92,7 +92,7 @@ foo=bar
 [aSection]
 truc=machin
 
-[othersection]
+[ot:her@section]
 truc=machin2
 
 ';
@@ -109,8 +109,8 @@ truc=machin2
                 array(jIniFileModifier::TK_VALUE, 'truc','machin'),
                 array(jIniFileModifier::TK_WS, ""),
             ),
-            'othersection'=>array(
-                array(jIniFileModifier::TK_SECTION, "[othersection]"),
+            'ot:her@section'=>array(
+                array(jIniFileModifier::TK_SECTION, "[ot:her@section]"),
                 array(jIniFileModifier::TK_VALUE, 'truc','machin2'),
                 array(jIniFileModifier::TK_WS, ""),
                 array(jIniFileModifier::TK_WS, ""),
