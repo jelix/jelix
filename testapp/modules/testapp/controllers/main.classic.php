@@ -2,7 +2,6 @@
 /**
 * @package     testapp
 * @subpackage  testapp module
-* @version     $Id$
 * @author      Jouanneau Laurent
 * @contributor
 * @copyright   2005-2006 Jouanneau laurent

@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
-
+    <info id="jwsdl@modules.jelix.org" name="jwsdl" createdate="">
+#expand        <version stability="stable">__LIB_VERSION__</version>
+        <label lang="en-EN">jWSDL</label>
+        <description lang="en-EN">WSDL generator for SOAP web services</description>
+        <licence URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</licence>
+        <copyright>2008 Sylvain de Vathaire</copyright>
+        <creator name="Sylvain de Vathaire" />
+        <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
+        <homepageURL>http://jelix.org</homepageURL>
+    </info>
+    <dependencies>
+#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION__" />
+    </dependencies>
 </module>

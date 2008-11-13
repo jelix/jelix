@@ -1,6 +1,5 @@
 cd testapp
-
-  project.xml
+* project.xml
   .htaccess
   application.init.php
   application-cli.init.php

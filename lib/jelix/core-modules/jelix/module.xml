@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
-
+    <info id="jelix@modules.jelix.org" name="jelix" createdate="">
+#expand        <version stability="stable">__LIB_VERSION__</version>
+        <label lang="en-EN">Jelix Main Module</label>
+        <description lang="en-EN">Main module of jelix which contains some ressources needed by jelix classes</description>
+        <licence URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</licence>
+        <copyright>2005-2008 Laurent Jouanneau and other contributors</copyright>
+        <creator name="Laurent Jouanneau" active="true"/>
+        <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
+        <homepageURL>http://jelix.org</homepageURL>
+    </info>
+    <dependencies>
+#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION__" />
+    </dependencies>
 </module>

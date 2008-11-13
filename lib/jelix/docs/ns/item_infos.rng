@@ -126,6 +126,13 @@
          <element name="jelix">
             <attribute name="maxversion" />
             <attribute name="minversion" />
+            <optional>
+               <attribute name="edition">
+                  <value>dev</value>
+                  <value>opt</value>
+                  <value>gold</value>
+               </attribute>
+            </optional>
          </element>
          <zeroOrMore>
             <choice>

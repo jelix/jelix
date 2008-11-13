@@ -1,7 +1,7 @@
 
 
 cd lib/jelix-admin-modules/jacl2_admin
-  module.xml
+*  module.xml
 cd lib/jelix-admin-modules/jacl2_admin/locales/en_EN
   acl2.UTF-8.properties
 cd lib/jelix-admin-modules/jacl2_admin/locales/fr_FR
