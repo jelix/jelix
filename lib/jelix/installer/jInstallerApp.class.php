@@ -20,9 +20,6 @@
 */
 abstract class jInstallerApp extends jInstallerBase {
 
-
-
-
     /**
     * Install modules by respecting dependencies
     */

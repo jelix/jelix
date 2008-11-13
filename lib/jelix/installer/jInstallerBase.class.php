@@ -11,8 +11,7 @@
 
 /**
 * EXPERIMENTAL
-* a class to install a module. You should override it into a install/install.php file. The 
-* class should be named appInstaller
+* a class to install a component (module or plugin) 
 * @package     jelix
 * @subpackage  installer
 * @experimental
@@ -20,26 +19,47 @@
 */
 abstract class jInstallerBase {
 
-    /**
-     * @var jIInstallReporter
-     */
-    public $reporter;
-
-
-    function __construct($reporter, $basePath) {
-        $this->reporter = $reporter;
-        $this->basePath = $basePath;
+    function __construct($name) {
+        
     }
 
+    abstract function isInstalled();
+    abstract function isActivated();
+
     /**
-     * main method for the installation
+     * install the component. It just call the _install.php of the component
+     *
+     * It should expose a variable $installer to the _install.php,
+     * $installer should be the current instance of this class.
      */
     abstract function install();
 
     /**
-     * main method for the uninstallation
+     * uninstall the component. It just call the _uninstall.php
+     * of the component
+     *
+     * It should expose a variable $installer to the _uninstall.php,
+     * $installer should be the current instance of this class.
      */
     abstract function uninstall();
+
+    /**
+     * activate the component.
+     * It just call the _activate.php of the component ?
+     *
+     * It should expose a variable $installer to the _activate.php,
+     * $installer should be the current instance of this class.
+     */
+    abstract function activate();
+
+    /**
+     * deactivate the component. It just call the _deactivate.php
+     * of the component
+     *
+     * It should expose a variable $installer to the _deactivate.php,
+     * $installer should be the current instance of this class.
+     */
+    abstract function deactivate();
 
     /**
      * import a sql script into the given profile.
@@ -84,4 +104,3 @@ abstract class jInstallerBase {
         }
     }
 }
-

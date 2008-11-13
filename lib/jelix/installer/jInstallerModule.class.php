@@ -11,14 +11,70 @@
 
 /**
 * EXPERIMENTAL
-* a class to install a module. You should override it into a install/install.php file. The 
-* class should be named appInstaller
+* a class to install a module. 
 * @package     jelix
 * @subpackage  installer
 * @experimental
 * @since 1.1
 */
-abstract class jInstallerModule extends jInstallerBase {
+class jInstallerModule extends jInstallerBase {
+
+
+    /**
+     * The module should be present in the application.
+     * @param string $name the name of the module
+     */
+    function __construct($name) {
+        // read the module.xml
+    }
+
+    /**
+     * @return boolean true if the module is installed
+     */
+    function isInstalled() {
+        
+    }
+
+    /**
+     * install the module, by checking dependencies.
+     * @throw jException  if an error occurs during the install.
+     */
+    function install() {
+
+        // * check that all dependencies are ok : the needed modules and plugins
+        // should be present in the application, even if this modules or plugins
+        // are not install
+        // * start the install of all needed modules and plugins before installing
+        // the module. Check before isInstalled() of the module/plugin
+        // If an exception occured during the install of this dependencies
+        // we should call uninstall of previous modules/plugins well installed and which
+        // install() has returned true. throw the exception
+        // * if ok, install the module, by calling the _install.php script
+        // * if error, uninstall dependencies which have just been installed,
+        //   undo things which have made during the install of the module, and
+        //   throw an exception
+    }
+    
+    /**
+     * uninstall the module, by checking dependencies.
+     * @throw jException  if an error occurs during the install.
+     */
+    function uninstall() {
+        // * check that all dependencies are ok : the needed modules and plugins
+        // should be present in the application
+        // * start the uninstall of all needed modules and plugins before installing
+        // the module. 
+        // * if ok, uninstall the module, by calling the _uninstall.php script      
+    }
+    
+    function activate() {
+    }
+    
+    function deactivate() {
+        
+    }
+    
+
 
 }
 
