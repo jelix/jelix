@@ -15,9 +15,10 @@ class LoginFormZone extends jZone {
 
     protected function _prepareTpl(){
 
-        $this->_tpl->assign ('login', $this->getParam('login'));
-        $this->_tpl->assign ('failed',  $this->getParam('failed'));
-
+        $this->_tpl->assign ('login', $this->param('login'));
+        $this->_tpl->assign ('failed',  $this->param('failed'));
+        $this->_tpl->assign ('auth_url_return',  $this->param('auth_url_return', ''));
+         
         $this->_tpl->assign ('user', jAuth::getUserSession());
         $this->_tpl->assign ('isLogged', jAuth::isConnected());
         $this->_tpl->assign ('showRememberMe', $this->getParam('showRememberMe'));

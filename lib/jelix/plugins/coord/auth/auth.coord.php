@@ -118,6 +118,9 @@ class AuthCoordPlugin implements jICoordPlugin {
                     throw new jException($this->config['error_message']);
                 }else{
                     if(!$badip){
+                        $auth_url_return = $GLOBALS['gJCoord']->request->getParam('auth_url_return');
+                        if($auth_url_return === null)
+                            $GLOBALS['gJCoord']->request->params['auth_url_return'] = jUrl::getCurrentUrl();
                         $selector= new jSelectorAct($this->config['on_error_action']);
                     }
                 }
