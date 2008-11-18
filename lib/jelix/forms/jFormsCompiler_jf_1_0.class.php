@@ -40,6 +40,12 @@ class jFormsCompiler_jf_1_0  {
         foreach ($xml->children() as $controltype=>$control) {
             $source[] = $this->generatePHPControl($controltype, $control);
         }
+        
+        $this->_compile($xml, $source);
+    }
+    
+    protected function _compile ($xml, &$source) {
+        // nothing for the moment, can be overrided
     }
 
     protected function generatePHPControl($controltype, $control){

@@ -25,6 +25,11 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
                                       'datetime','date','time','localedatetime','localedate','localetime',
                                       'url','email','ipv4','ipv6','html');
 
+    protected function _compile ($xml, &$source) {
+        if(isset($xml['allowAnyOrigin']) && $xml['allowAnyOrigin'] == 'true') {
+            $source[]='$this->securityLevel=0;';
+        }
+    }
 
     protected function generateMenulist(&$source, $control, &$attributes) {
         parent::generateMenulist($source, $control, $attributes);

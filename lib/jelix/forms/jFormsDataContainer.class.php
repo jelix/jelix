@@ -59,6 +59,11 @@ class jFormsDataContainer {
     public $updatetime = 0;
 
     /**
+     * token for security against CSRF
+     */
+    public $token = '';
+
+    /**
      *
      */ 
     protected $readOnly = array();

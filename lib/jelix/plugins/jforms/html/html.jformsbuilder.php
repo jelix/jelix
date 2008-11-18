@@ -112,17 +112,24 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
 </script>';
 
+        $hiddens = '';
+        foreach ($url->params as $p_name => $p_value) {
+            $hiddens .= '<input type="hidden" name="'. $p_name .'" value="'. htmlspecialchars($p_value). '"'.$this->_endt. "\n";
+        }
 
-        if(count($url->params) || count($this->_form->getHiddens())){
-            echo '<div class="jforms-hiddens">';
-            foreach ($url->params as $p_name => $p_value) {
-                echo '<input type="hidden" name="', $p_name ,'" value="', htmlspecialchars($p_value), '"',$this->_endt, "\n";
-            }
-            foreach ($this->_form->getHiddens() as $ctrl) {
-                if(!$this->_form->isActivated($ctrl->ref)) continue;
-                echo '<input type="hidden" name="', $ctrl->ref,'" id="',$this->_name,'_',$ctrl->ref,'" value="', htmlspecialchars($this->_form->getData($ctrl->ref)), '"',$this->_endt, "\n";
-            }
-            echo '</div>';
+        foreach ($this->_form->getHiddens() as $ctrl) {
+            if(!$this->_form->isActivated($ctrl->ref)) continue;
+            $hiddens .= '<input type="hidden" name="'. $ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'" value="'. htmlspecialchars($this->_form->getData($ctrl->ref)). '"'.$this->_endt. "\n";
+        }
+
+        if($this->_form->securityLevel){
+            $c = $this->_form->getContainer();
+            $tok = $c->token = md5($c->formId.time().session_id());
+            $hiddens .= '<input type="hidden" name="__JFORMS_TOKEN__" value="'.$tok.'"'.$this->_endt. "\n";
+        }
+
+        if($hiddens){
+            echo '<div class="jforms-hiddens">',$hiddens,'</div>';
         }
 
         $errors = $this->_form->getContainer()->errors;

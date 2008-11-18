@@ -7,6 +7,9 @@
 
    <start>
       <element name="form">
+         <optional><attribute name="allowAnyOrigin">
+            <choice><value>true</value><value>false</value></choice>
+            </attribute></optional>
          <ref name="form.controls" />
       </element>
    </start>

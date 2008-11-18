@@ -33,6 +33,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
     function testStart() {
         $this->container = new jFormsDataContainer('formtest','');
         $this->form = new testHMLForm('formtest', $this->container, true );
+        $this->form->securityLevel = 0;
         $this->builder = new testJFormsHtmlBuilder($this->form);
 
     }
@@ -55,6 +56,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
+        $this->form->securityLevel = 1;
         $this->builder->setAction('jelix_tests~urlsig:url1',array('foo'=>'b>ar'));
         ob_start();
         $this->builder->outputHeader(array('method'=>'get'));
@@ -69,10 +71,12 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="module" value="jelix_tests"/>
 <input type="hidden" name="action" value="urlsig:url1"/>
+<input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
 </div>';
         $this->assertEqualOrDiff($result, $out);
         $this->formname = $this->builder->getName();
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
+        $this->form->securityLevel = 0;
 
     }
     function testOutputFooter(){

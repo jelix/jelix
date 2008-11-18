@@ -34,6 +34,11 @@ class jExceptionForms extends jException {
  * @subpackage  forms
  */
 abstract class jFormsBase {
+    
+    const SECURITY_LOW = 0;
+    const SECURITY_CSRF = 1;
+
+    public $securityLevel = 1;
 
     /**
      * List of all form controls
@@ -132,6 +137,11 @@ abstract class jFormsBase {
      */
     public function initFromRequest(){
         $req = $GLOBALS['gJCoord']->request;
+        if ($this->securityLevel == jFormsBase::SECURITY_CSRF) {
+            if ($this->container->token !== $req->getParam('__JFORMS_TOKEN__'))
+                throw new jException("jelix~formserr.invalid.token");
+        }
+
         foreach($this->rootControls as $name=>$ctrl){
             if(!$this->container->isActivated($name) || $this->container->isReadOnly($name))
                 continue;
