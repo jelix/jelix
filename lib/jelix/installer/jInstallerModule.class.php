@@ -19,13 +19,16 @@
 */
 class jInstallerModule extends jInstallerBase {
 
+    protected $application;
 
     /**
      * The module should be present in the application.
      * @param string $name the name of the module
+     * @param jInstallerApp $application
      */
-    function __construct($name) {
+    function __construct($name, $application) {
         // read the module.xml
+        // and set the $path property
     }
 
     /**
@@ -73,8 +76,5 @@ class jInstallerModule extends jInstallerBase {
     function deactivate() {
         
     }
-    
-
-
 }
 

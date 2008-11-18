@@ -18,12 +18,19 @@
 * @since 1.1
 */
 abstract class jInstallerBase {
-
+    
+    /**
+     * the path of the directory of the component
+     * it should be set by the constructor
+     */
+    protected $path = '';
+    
     function __construct($name) {
         
     }
 
     abstract function isInstalled();
+
     abstract function isActivated();
 
     /**
@@ -63,33 +70,28 @@ abstract class jInstallerBase {
 
     /**
      * import a sql script into the given profile.
-     * @param string $name the part of the file name : $name.databasetype.sql
-     *               for example, if you provide example.mysql.sql and example.pgsql.sql, give 'example'
+     *
+     * The name of the script should be store in install/sql/$name.databasetype.sql
+     * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
+     * 
+     * @param string $name the name of the script, without suffixes
      */
-    function execSQLScript($name, $profil='') {
-        $tools = jDb::getTools($profil);
-        $p = jDb::getProfil ($profil);
+    public function execSQLScript($name, $profile='') {
+        $tools = jDb::getTools($profile);
+        $p = jDb::getProfil ($profile);
         $driver = $p['driver'];
         if($driver == 'pdo'){
             preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
             $driver = $m[1];
         }
-        $tools->execSQLScript($this->basePath.$name.'.'.$driver.'.sql');
-    }
-
-    /**
-     * @param string $filename relative path to the var/config directory
-     * @return jIniFileModifier
-     */
-    function getConfig($filename) {
-        return new jIniFileModifier(JELIX_APP_CONFIG_PATH.$filename);
+        $tools->execSQLScript($this->path.'install/sql/'.$name.'.'.$driver.'.sql');
     }
 
     /**
      * @param string $sourcePath
      * @param string $targetPath
      */
-    function copyDirectoryContent($sourcePath, $targetPath) {
+    static function copyDirectoryContent($sourcePath, $targetPath) {
         jFile::createDir($targetPath);
         $dir = new DirectoryIterator($sourcePath);
         foreach ($dir as $dirContent) {
@@ -104,3 +106,4 @@ abstract class jInstallerBase {
         }
     }
 }
+

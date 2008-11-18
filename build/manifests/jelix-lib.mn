@@ -236,6 +236,7 @@ cd lib/jelix/utils/
   jImageModifier.class.php
   jIniFile.class.php
   jIniFileModifier.class.php
+  jIniMultiFilesModifier.class.php
 * jJson.class.php
 * jJsonRpc.class.php
   jLog.class.php

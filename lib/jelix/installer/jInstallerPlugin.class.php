@@ -11,15 +11,26 @@
 
 /**
 * EXPERIMENTAL
-* a class to install a module. You should override it into a install/install.php file. The 
-* class should be named appInstaller
+* a class to install a module.
 * @package     jelix
 * @subpackage  installer
 * @experimental
 * @since 1.1
 */
-abstract class jInstallerPlugin extends jInstallerBase {
+class jInstallerPlugin extends jInstallerBase {
 
+    protected $application;
+
+    /**
+     * The plugin should be present in the application.
+     * @param string $type the type of the plugin ('acl', 'auth', 'tpl', 'urls'...)
+     * @param string $name the name of the plugin
+     * @param jInstallerApp $application
+     */
+    function __construct($type, $name, $application) {
+        // read the module.xml
+        // and set the $path property
+    }
 
 }
 

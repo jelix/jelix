@@ -12,6 +12,14 @@
 class jInstaller {
 
     /**
+     * @return jInstallerApp
+     */
+    static function getApplication() {
+        
+        
+    }
+
+    /**
      * install a package.
      * a package is a zip or gz archive. Top directories of this archive
      * should be a plugin or a module not an application. So in this directories
@@ -65,6 +73,7 @@ class jInstaller {
      * @return array array of jInstallerModule
      */
     static function getModulesList($status = 0) {
+
     }
 
     /**
@@ -106,4 +115,5 @@ class jInstaller {
     static function getPlugin($name) {
     
     }
+
 }
