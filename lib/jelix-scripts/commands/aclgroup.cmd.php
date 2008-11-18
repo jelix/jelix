@@ -112,7 +112,7 @@ ACTION:
             $sql.='0, NULL)';
 
         $cnx->exec($sql);
-        $id = $cnx->lastInsertId();
+        $id = $cnx->lastInsertId('jacl_group_id_aclgrp_seq'); // name of the sequence for pgsql
         echo "OK. Group id is: ".$id."\n";
     }
 

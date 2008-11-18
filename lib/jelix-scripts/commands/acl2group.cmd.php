@@ -183,7 +183,7 @@ ACTION:
             $sql.='0, NULL)';
 
         $cnx->exec($sql);
-        $id = $cnx->lastInsertId();
+        $id = $cnx->lastInsertId('jacl2_group_id_aclgrp_seq'); // name of the sequence for pgsql
         echo "OK. Group id is: ".$id."\n";
     }
 
@@ -307,7 +307,7 @@ ACTION:
         $sql="INSERT into jacl2_group (name, grouptype, ownerlogin) VALUES (";
         $sql.=$login.',2, '.$login.')';
         $cnx->exec($sql);
-        $id = $cnx->lastInsertId();
+        $id = $cnx->lastInsertId('jacl2_group_id_aclgrp_seq'); // name of the sequence for pgsql
 
         $sql="INSERT INTO jacl2_user_group (login, id_aclgrp) VALUES(".$login.", ".$id.")";
         $cnx->exec($sql);
