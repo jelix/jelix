@@ -38,13 +38,18 @@ class jInstallMessageProvider {
 
     protected $messages = array(
         'fr'=>array(
+#ifnot STANDALONE_CHECKER
             'checker.title'=>'Vérification de l\'installation de Jelix',
+#else
+#expand      'checker.title'=>'Vérification de votre serveur pour Jelix __LIB_VERSION__',
+#endif
             'number.errors'=>' erreurs.',
             'number.error'=>' erreur.',
             'number.warnings'=>' avertissements.',
             'number.warning'=>' avertissement.',
             'number.notices'=>' remarques.',
             'number.notice'=>' remarque.',
+#ifnot STANDALONE_CHECKER
             'build.not.found'=>'Le fichier BUILD de jelix est introuvable',
             'conclusion.error'=>'Vous devez corriger l\'erreur pour faire fonctionner correctement votre application.',
             'conclusion.errors'=>'Vous devez corriger les erreurs pour faire fonctionner correctement votre application.',
@@ -53,6 +58,15 @@ class jInstallMessageProvider {
             'conclusion.notice'=>'L\'installation est correcte malgré la remarque.',
             'conclusion.notices'=>'L\'installation est correcte malgré les remarques.',
             'conclusion.ok'=>'L\'installation est correcte',
+#else
+#expand            'conclusion.error'=>'Vous devez corriger l\'erreur pour faire fonctionner correctement une application Jelix __LIB_VERSION__.',
+#expand            'conclusion.errors'=>'Vous devez corriger les erreurs pour faire fonctionner correctement une application Jelix __LIB_VERSION__.',
+#expand            'conclusion.warning'=>'Une application Jelix __LIB_VERSION__ peut à priori fonctionner, mais il est préférable de corriger l\'avertissement pour être sûr.',
+#expand            'conclusion.warnings'=>'Une application Jelix __LIB_VERSION__ peut à priori fonctionner, mais il est préférable de corriger les avertissements pour être sûr.',
+#expand     'conclusion.notice'=>'Aucun problème pour installer une application pour Jelix  __LIB_VERSION__ malgré la remarque.',
+#expand     'conclusion.notices'=>'Aucun problème pour installer une application pour Jelix  __LIB_VERSION__ malgré les remarques.',
+#expand     'conclusion.ok'=>'Vous pouvez installer une application avec Jelix __LIB_VERSION__',
+#endif
             'cannot.continue'=>'Les vérifications ne peuvent continuer : ',
             'extension.dom'=>'L\'extension DOM n\'est pas installée',
             'extension.spl'=>'L\'extension spl  n\'est pas installée',
@@ -92,13 +106,18 @@ class jInstallMessageProvider {
         ),
 
         'en'=>array(
+#ifnot STANDALONE_CHECKER
             'checker.title'=>'Jelix Installation checking',
+#else
+#expand      'checker.title'=>'Check your configuration server for Jelix __LIB_VERSION__',
+#endif
             'number.errors'=>' errors.',
             'number.error'=>' error.',
             'number.warnings'=>' warnings.',
             'number.warning'=>' warning.',
             'number.notices'=>' notices.',
             'number.notice'=>' notice.',
+#ifnot STANDALONE_CHECKER
             'build.not.found'=>'BUILD jelix file is not found',
             'conclusion.error'=>'You must fix the error in order to run your application correctly.',
             'conclusion.errors'=>'You must fix errors in order to run your application correctly.',
@@ -107,6 +126,15 @@ class jInstallMessageProvider {
             'conclusion.notice'=>'The installation is ok, although there is a notice.',
             'conclusion.notices'=>'The installation is ok, although there are notices.',
             'conclusion.ok'=>'The installation is ok',
+#else
+#expand            'conclusion.error'=>'You must fix the error in order to run an application correctly with Jelix __LIB_VERSION__.',
+#expand            'conclusion.errors'=>'You must fix errors in order to run an application correctly with Jelix __LIB_VERSION__.',
+#expand            'conclusion.warning'=>'Your application for Jelix __LIB_VERSION__ may run without problems, but it is recommanded to fix the warning.',
+#expand            'conclusion.warnings'=>'Your application for Jelix __LIB_VERSION__ may run without problems, but it is recommanded to fix warnings.',
+#expand            'conclusion.notice'=>'You can install an application for Jelix __LIB_VERSION__, although there is a notice.',
+#expand            'conclusion.notices'=>'You can install an application for Jelix __LIB_VERSION__, although there are notices.',
+#expand            'conclusion.ok'=>'You can install an application for Jelix __LIB_VERSION__.',
+#endif
             'cannot.continue'=>'Cannot continue the checking: ',
             'extension.dom'=>'DOM extension is not installed',
             'extension.spl'=>'SPL extension is not installed',
@@ -209,6 +237,15 @@ class jInstallCheck {
     function __construct ($reporter, $lang=''){
         $this->reporter = $reporter;
         $this->messages = new jInstallMessageProvider($lang);
+#if STANDALONE_CHECKER
+        $this->buildProperties = array(
+#expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__', 
+#expand    'ENABLE_PHP_FILTER' =>'__ENABLE_PHP_FILTER__', 
+#expand    'ENABLE_PHP_JSON'   =>'__ENABLE_PHP_JSON__', 
+#expand    'ENABLE_PHP_JELIX'  =>'__ENABLE_PHP_JELIX__', 
+#expand    'WITH_BYTECODE_CACHE'=>'__WITH_BYTECODE_CACHE__',
+        );
+#endif
     }
 
     function run(){
@@ -218,8 +255,10 @@ class jInstallCheck {
         $this->nbNotice = 0;
         $this->reporter->start();
         try {
+#ifnot STANDALONE_CHECKER
             $this->checkAppPaths();
             $this->loadBuildFile();
+#endif
             $this->checkPhpExtensions();
             $this->checkPhpSettings();
         }catch(Exception $e){
@@ -260,7 +299,8 @@ class jInstallCheck {
         $ok=true;
         if(!version_compare($this->buildProperties['PHP_VERSION_TARGET'], phpversion(), '<=')){
             $this->error('php.bad.version');
-            $notice = $this->messages->get('php.version.required').$this->buildProperties['PHP_VERSION_TARGET'];
+            $notice = $this->messages->get('php.version.required')
+                     .$this->buildProperties['PHP_VERSION_TARGET'];
             $notice.= '. '.$this->messages->get('php.version.current').phpversion();
             $this->reporter->showNotice($notice);
             $ok=false;
@@ -303,7 +343,8 @@ class jInstallCheck {
             $this->error('extension.jelix');
             $ok=false;
         }
-        if($this->buildProperties['WITH_BYTECODE_CACHE'] != 'auto' && $this->buildProperties['WITH_BYTECODE_CACHE'] != '') {
+        if($this->buildProperties['WITH_BYTECODE_CACHE'] != 'auto' &&
+           $this->buildProperties['WITH_BYTECODE_CACHE'] != '') {
             if(!extension_loaded ('apc') && !extension_loaded ('eaccelerator') && !extension_loaded ('xcache')) {
                 $this->error('extension.opcode.cache');
                 $ok=false;
@@ -314,7 +355,7 @@ class jInstallCheck {
 
         return $ok;
     }
-
+#ifnot STANDALONE_CHECKER
     function checkAppPaths(){
         $ok = true;
         if(!defined('JELIX_LIB_PATH') || !defined('JELIX_APP_PATH')){
@@ -347,7 +388,9 @@ class jInstallCheck {
         else
             throw new Exception($this->messages->get('too.critical.error'));
 
-        if(!isset($GLOBALS['config_file']) || empty($GLOBALS['config_file']) || !file_exists(JELIX_APP_CONFIG_PATH.$GLOBALS['config_file'])){
+        if(!isset($GLOBALS['config_file']) ||
+           empty($GLOBALS['config_file']) ||
+           !file_exists(JELIX_APP_CONFIG_PATH.$GLOBALS['config_file'])){
             throw new Exception($this->messages->get('config.file'));
         }
 
@@ -361,9 +404,11 @@ class jInstallCheck {
             $this->buildProperties = parse_ini_file(JELIX_LIB_PATH.'BUILD');
         }
     }
+#endif
 
     function checkPhpSettings(){
         $ok = true;
+#ifnot STANDALONE_CHECKER
         $defaultconfig = parse_ini_file(JELIX_APP_CONFIG_PATH."defaultconfig.ini.php", true);
         $indexconfig = parse_ini_file(JELIX_APP_CONFIG_PATH."index/config.ini.php", true);
 
@@ -378,12 +423,14 @@ class jInstallCheck {
             }
         }
         else {
+#endif
             if(ini_get('magic_quotes_gpc') == 1){
                 $this->warning('ini.magic_quotes_gpc');
                 $ok=false;
             }
+#ifnot STANDALONE_CHECKER
         }
-
+#endif
         if(ini_get('magic_quotes_runtime') == 1){
             $this->error('ini.magic_quotes_runtime');
             $ok=false;

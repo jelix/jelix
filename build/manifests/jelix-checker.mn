@@ -1,0 +1,4 @@
+
+sd lib/jelix/
+dd .
+* checker.php (jelix_check_server.php)

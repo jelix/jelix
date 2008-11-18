@@ -15,8 +15,11 @@
 /**
  *
  */
+#if STANDALONE_CHECKER
+#includephp core/jInstallChecker.class.php
+#else
 include dirname(__FILE__).'/core/jInstallChecker.class.php';
-
+#endif
 /**
  * an HTML reporter for jInstallChecker
  * @package jelix

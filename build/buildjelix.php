@@ -234,6 +234,10 @@ if($ENABLE_PHP_JELIX && ($PACKAGE_TAR_GZ || $PACKAGE_ZIP)){
    jManifest::process('build/manifests/jelix-ext-php.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
 
+$var = ENV::getAll();
+$var['STANDALONE_CHECKER'] = true;
+jManifest::process('build/manifests/jelix-checker.mn','.', $BUILD_TARGET_PATH , $var);
+
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // creation du fichier d'infos sur le build
