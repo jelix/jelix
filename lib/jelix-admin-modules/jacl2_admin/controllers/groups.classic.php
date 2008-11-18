@@ -38,7 +38,7 @@ class groupsCtrl extends jController {
             $grouprights[$grp->id_aclgrp]=false;
         }
         $rights=array();
-        $p = jAcl2Db::getProfil();
+        $p = jAcl2Db::getProfile();
 
         $rs = jDao::get('jelix~jacl2subject',$p)->findAllSubject();
         foreach($rs as $rec){

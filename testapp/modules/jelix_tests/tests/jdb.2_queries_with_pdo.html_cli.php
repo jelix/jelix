@@ -14,7 +14,7 @@ require_once(dirname(__FILE__).'/jdb.1_queries.html_cli.php');
  */
 class UTjDb_pdo extends UTjDb {
 
-    protected $dbProfil ='testapppdo';
+    protected $dbProfile ='testapppdo';
     protected $needPDO = true;
 }
 

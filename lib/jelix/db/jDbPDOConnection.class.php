@@ -82,10 +82,10 @@ class jDbPDOConnection extends PDO {
     private $_pgsqlCharsets =array( 'UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');
 
     /**
-     * the profil the connection is using
+     * the profile the connection is using
      * @var array
      */
-    public $profil;
+    public $profile;
 
     /**
      * The database type name (mysql, pgsql ...)
@@ -93,12 +93,12 @@ class jDbPDOConnection extends PDO {
     public $dbms;
 
     /**
-     * Use a profil to do the connection
+     * Use a profile to do the connection
      */
-    function __construct($profil){
-        $this->profil = $profil;
-        $this->dbms=substr($profil['dsn'],0,strpos($profil['dsn'],':'));
-        $prof=$profil;
+    function __construct($profile){
+        $this->profile = $profile;
+        $this->dbms=substr($profile['dsn'],0,strpos($profile['dsn'],':'));
+        $prof=$profile;
         $user= '';
         $password='';
         unset($prof['dsn']);
@@ -107,11 +107,11 @@ class jDbPDOConnection extends PDO {
             unset($prof['user']);
         }
         if(isset($prof['password'])){
-            $password = $profil['password'];
+            $password = $profile['password'];
             unset($prof['password']);
         }
         unset($prof['driver']);
-        parent::__construct($profil['dsn'], $user, $password, $prof);
+        parent::__construct($profile['dsn'], $user, $password, $prof);
         $this->setAttribute(self::JPDO_ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
         $this->setAttribute(self::JPDO_ATTR_ERRMODE, self::JPDO_ERRMODE_EXCEPTION);
         // on ne peut pas lancer deux query en même temps avec PDO ! sauf si on utilise mysql
@@ -194,9 +194,9 @@ class jDbPDOConnection extends PDO {
      * @since 1.0
      */
     public function prefixTable($table_name){
-        if(!isset($this->profil['table_prefix']))
+        if(!isset($this->profile['table_prefix']))
             return $table_name;
-        return $this->profil['table_prefix'].$table_name;
+        return $this->profile['table_prefix'].$table_name;
     }
 
     /**
@@ -207,6 +207,6 @@ class jDbPDOConnection extends PDO {
      * @since 1.0
      */
     public function hasTablePrefix(){
-        return (isset($this->profil['table_prefix']) && $this->profil['table_prefix']!='');
+        return (isset($this->profile['table_prefix']) && $this->profile['table_prefix']!='');
     }
 }

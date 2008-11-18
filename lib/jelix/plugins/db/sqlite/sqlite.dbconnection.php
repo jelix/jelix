@@ -16,11 +16,11 @@
  */
 class sqliteDbConnection extends jDbConnection {
 
-    function __construct($profil){
+    function __construct($profile){
         if(!function_exists('sqlite_open')){
             throw new jException('jelix~db.error.nofunction','sqlite');
         }
-        parent::__construct($profil);
+        parent::__construct($profile);
     }
 
     /**
@@ -60,11 +60,11 @@ class sqliteDbConnection extends jDbConnection {
     }
 
     protected function _connect (){
-        $funcconnect= (isset($this->profil['persistent']) && $this->profil['persistent']? 'sqlite_popen':'sqlite_open');
-        if ($cnx = @$funcconnect(JELIX_APP_VAR_PATH. 'db/sqlite/'.$this->profil['database'])) {
+        $funcconnect= (isset($this->profile['persistent']) && $this->profile['persistent']? 'sqlite_popen':'sqlite_open');
+        if ($cnx = @$funcconnect(JELIX_APP_VAR_PATH. 'db/sqlite/'.$this->profile['database'])) {
             return $cnx;
         } else {
-            throw new jException('jelix~db.error.connection',$this->profil['database']);
+            throw new jException('jelix~db.error.connection',$this->profile['database']);
         }
     }
 

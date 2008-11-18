@@ -14,7 +14,7 @@ require_once(dirname(__FILE__).'/jdao.main_api.html_cli.php');
  * same tests as UTDAO, but with a pdo connection
  */
 class UTDaoPdo extends UTDao {
-    protected $dbProfil ='testapppdo';
+    protected $dbProfile ='testapppdo';
     protected $needPDO = true;
 
 }

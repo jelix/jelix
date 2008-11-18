@@ -23,42 +23,47 @@ class dbAuthDriver implements jIAuthDriver {
 
     function __construct($params){
         $this->_params = $params;
-        if(!isset($this->_params['profil']))
-            $this->_params['profil'] = '';
+        if(!isset($this->_params['profile'])) {
+            if(isset($this->_params['profil']))
+                //compatibility with 1.0
+                $this->_params['profile'] = $this->_params['profil'];
+            else
+                $this->_params['profile'] = '';
+        }
     }
 
     public function saveNewUser($user){
-        $dao = jDao::get($this->_params['dao'], $this->_params['profil']);
+        $dao = jDao::get($this->_params['dao'], $this->_params['profile']);
         $dao->insert($user);
         return true;
     }
 
     public function removeUser($login){
-        $dao = jDao::get($this->_params['dao'], $this->_params['profil']);
+        $dao = jDao::get($this->_params['dao'], $this->_params['profile']);
         $dao->deleteByLogin($login);
         return true;
     }
 
     public function updateUser($user){
-        $dao = jDao::get($this->_params['dao'], $this->_params['profil']);
+        $dao = jDao::get($this->_params['dao'], $this->_params['profile']);
         $dao->update($user);
         return true;
     }
 
     public function getUser($login){
-        $dao = jDao::get($this->_params['dao'], $this->_params['profil']);
+        $dao = jDao::get($this->_params['dao'], $this->_params['profile']);
         return $dao->getByLogin($login);
     }
 
     public function createUserObject($login,$password){
-        $user = jDao::createRecord($this->_params['dao'], $this->_params['profil']);
+        $user = jDao::createRecord($this->_params['dao'], $this->_params['profile']);
         $user->login = $login;
         $user->password = $this->cryptPassword($password);
         return $user;
     }
 
     public function getUserList($pattern){
-        $dao = jDao::get($this->_params['dao'], $this->_params['profil']);
+        $dao = jDao::get($this->_params['dao'], $this->_params['profile']);
         if($pattern == '%' || $pattern == ''){
             return $dao->findAll();
         }else{
@@ -67,12 +72,12 @@ class dbAuthDriver implements jIAuthDriver {
     }
 
     public function changePassword($login, $newpassword){
-        $dao = jDao::get($this->_params['dao'], $this->_params['profil']);
+        $dao = jDao::get($this->_params['dao'], $this->_params['profile']);
         return $dao->updatePassword($login, $this->cryptPassword($newpassword));
     }
 
     public function verifyPassword($login, $password){
-        $daouser = jDao::get($this->_params['dao'], $this->_params['profil']);
+        $daouser = jDao::get($this->_params['dao'], $this->_params['profile']);
         $user = $daouser->getByLoginPassword($login, $this->cryptPassword($password));
         return ($user?$user:false);
     }

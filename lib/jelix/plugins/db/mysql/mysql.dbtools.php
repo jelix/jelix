@@ -30,8 +30,8 @@ class mysqlDbTools extends jDbTools {
     function _getTableList (){
         $results = array ();
 
-        $rs = $this->_connector->query ('SHOW TABLES FROM '.$this->_connector->profil['database']);
-        $col_name = 'Tables_in_'.$this->_connector->profil['database'];
+        $rs = $this->_connector->query ('SHOW TABLES FROM '.$this->_connector->profile['database']);
+        $col_name = 'Tables_in_'.$this->_connector->profile['database'];
 
         while ($line = $rs->fetch ()){
             $results[] = $line->$col_name;

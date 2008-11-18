@@ -29,11 +29,11 @@ persistent= on
 ; and setup a pdo connection
 [testapppdo]
 driver=pdo
-; you can change dsn option : use same parameters as testapp profils
+; you can change dsn option : use same parameters as testapp profiles
 dsn= "mysql:host=localhost;dbname=testapp"
-; you can change user option : use same value as user in testapp profils
+; you can change user option : use same value as user in testapp profiles
 user=root
-; you can change password option : use same value as password in testapp profils
+; you can change password option : use same value as password in testapp profiles
 password=
 
 ; to run tests with pgsql

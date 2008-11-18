@@ -1,7 +1,7 @@
 ;<?php die(''); ?>
 ;for security reasons, don't remove or modify the first line
 
-; name of the default profil to use for any connection
+; name of the default profile to use for any connection
 ;default = myapp
 default =
 

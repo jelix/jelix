@@ -77,8 +77,8 @@ persistant_duration = 1
 ; name of the dao to get user data
 dao = ""
 
-; profil to use for jDb 
-profil = ""
+; profile to use for jDb 
+profile = ""
 
 ; name of the php function to crypt the password in the database
 password_crypt_function = md5

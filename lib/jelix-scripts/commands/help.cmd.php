@@ -33,7 +33,7 @@ Utilisation générale :
                tiret et peut être suivi par une valeur.
                exemple d'options pour certaines commandes :
                  -cmdline
-                 -profile myprofil
+                 -profile myprofile
     PARAMETRES : une ou plusieurs valeurs qui se suivent
 
     Les options et paramètres à indiquer dépendent de la commande. Les options
@@ -53,7 +53,7 @@ General use :
     OPTIONS: one or more options. An option name begin with a '-' and can be 
             followed by a value. Example with some specific commands:
               -cmdline
-              -profil myprofil
+              -profile myprofile
     PARAMETERS: one or more values
 
     Options and parameters depends of the command. Options are always 

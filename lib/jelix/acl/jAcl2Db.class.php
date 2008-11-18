@@ -24,19 +24,19 @@ class jAcl2Db {
     private function __construct (){ }
 
     /**
-     * return the profil name used for jacl connection
-     * @return string profil name
+     * return the profile name used for jacl connection
+     * @return string profile name
      */
-    public static function getProfil(){
-        static $profil='';
-        if($profil== ''){
+    public static function getProfile(){
+        static $profile='';
+        if($profile== ''){
             try{
-                $prof = jDb::getProfil ('jacl_profil', true);
+                $prof = jDb::getProfile ('jacl_profile', true);
             }catch(Exception $e){
-                $prof = jDb::getProfil ();
+                $prof = jDb::getProfile ();
             }
-            $profil = $prof['name'];
+            $profile = $prof['name'];
         }
-        return $profil;
+        return $profile;
     }
 }

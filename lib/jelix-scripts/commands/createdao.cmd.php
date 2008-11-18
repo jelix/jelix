@@ -14,15 +14,15 @@
 class createdaoCommand extends JelixScriptCommand {
 
     public  $name = 'createdao';
-    public  $allowed_options=array('-profil'=>true, '-empty'=>false);
+    public  $allowed_options=array('-profile'=>true, '-empty'=>false);
     public  $allowed_parameters=array('module'=>true,'name'=>true, 'table'=>false);
 
-    public  $syntaxhelp = "[-profil name] [-empty] MODULE DAO TABLE";
+    public  $syntaxhelp = "[-profile name] [-empty] MODULE DAO TABLE";
     public  $help=array(
         'fr'=>"
     Crée un nouveau fichier de dao
 
-    -profil (facultatif) : indique le profil à utiliser pour se connecter à
+    -profile (facultatif) : indique le profil à utiliser pour se connecter à
                            la base et récupérer les informations de la table
     -empty (facultatif) : ne se connecte pas à la base et génère un fichier
                           dao vide
@@ -35,7 +35,7 @@ class createdaoCommand extends JelixScriptCommand {
         'en'=>"
     Create a new dao file.
 
-    -profil (optional) : indicate the name of the profil to use for the
+    -profile (optional) : indicate the name of the profile to use for the
                         database connection.
     -empty (optional) : just create an empty dao file (it doesn't connect to
                         the database)
@@ -58,7 +58,7 @@ class createdaoCommand extends JelixScriptCommand {
 
        $filename.=strtolower($this->_parameters['name']).'.dao.xml';
 
-       $profil= $this->getOption('-profil');
+       $profile = $this->getOption('-profile');
 
        $param = array('name'=>($this->_parameters['name']),
               'table'=>($this->_parameters['table']));
@@ -67,7 +67,7 @@ class createdaoCommand extends JelixScriptCommand {
           $this->createFile($filename,'dao_empty.xml.tpl',$param);
        }else{
 
-         $tools = jDb::getTools($profil);
+         $tools = jDb::getTools($profile);
          $fields = $tools->getFieldList($this->_parameters['table']);
 
          $properties='';

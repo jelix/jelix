@@ -121,7 +121,7 @@ ACTION:
 
     protected function cmd_list(){
         $sql="SELECT id_aclgrp, name, grouptype FROM jacl2_group WHERE grouptype <2 ORDER BY name";
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
         $rs = $cnx->query($sql);
         echo "id\tlabel name\t\tdefault\n--------------------------------------------------------\n";
         foreach($rs as $rec){
@@ -140,7 +140,7 @@ ACTION:
 
         $id = $this->_getGrpId($params[0]);
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
         $sql = "SELECT login FROM jacl2_user_group WHERE id_aclgrp =".$id;
         $rs = $cnx->query($sql);
         echo "Login\n-------------------------\n";
@@ -153,7 +153,7 @@ ACTION:
         $sql="SELECT login, u.id_aclgrp, name FROM jacl2_user_group u, jacl2_group g 
             WHERE g.grouptype <2 AND u.id_aclgrp = g.id_aclgrp ORDER BY login";
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
         $rs = $cnx->query($sql);
         echo "Login\t\tgroups\n--------------------------------------------------------\n";
         $login = '';
@@ -173,7 +173,7 @@ ACTION:
         if(!is_array($params) || count($params) != 1)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
 
         $sql="INSERT into jacl2_group (name, grouptype, ownerlogin) VALUES (";
         $sql.=$cnx->quote($params[0]).',';
@@ -192,7 +192,7 @@ ACTION:
         if(!is_array($params) || count($params) != 1)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
 
         if($params[0] != 0)
             $id = $this->_getGrpId($params[0]);
@@ -218,7 +218,7 @@ ACTION:
         if(!is_array($params) || count($params) == 0 || count($params) > 2)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
 
         $id = $this->_getGrpId($params[0]);
 
@@ -244,7 +244,7 @@ ACTION:
 
         $id = $this->_getGrpId($params[0]);
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
         $sql="UPDATE jacl2_group SET name=".$cnx->quote($params[1])."  WHERE id_aclgrp=".$id;
         $cnx->exec($sql);
         echo "OK\n";
@@ -257,7 +257,7 @@ ACTION:
 
         $id = $this->_getGrpId($params[0]);
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
         $sql = "SELECT * FROM jacl2_user_group WHERE login= ".$cnx->quote($params[1])." AND id_aclgrp = $id";
         $rs = $cnx->query($sql);
         if($rec = $rs->fetch()){
@@ -283,7 +283,7 @@ ACTION:
 
         $id = $this->_getGrpId($params[0]);
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
 
         $sql="DELETE FROM jacl2_user_group WHERE login=".$cnx->quote($params[1])." AND id_aclgrp=$id";
         $cnx->exec($sql);
@@ -295,7 +295,7 @@ ACTION:
         if(!is_array($params) || count($params) != 1)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
         $login = $cnx->quote($params[0]);
 
         $sql = "SELECT * FROM jacl2_user_group WHERE login = $login";
@@ -319,7 +319,7 @@ ACTION:
         if(!is_array($params) || count($params) != 1)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
 
         $sql="DELETE FROM jacl2_group WHERE grouptype=2 and ownerlogin=".$cnx->quote($params[0]);
         $cnx->exec($sql);
@@ -330,7 +330,7 @@ ACTION:
     }
 
     private function _getGrpId($param){
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
         if(is_numeric($param)){
             if(intval($param) <= 0)
                 die('Error: invalid group id');

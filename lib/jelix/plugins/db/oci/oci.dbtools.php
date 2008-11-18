@@ -87,6 +87,6 @@ class ociDbTools extends jDbTools {
     * @return   string 
     */
     function _getAISequenceName($tbName, $clName){
-        return preg_replace(array('/\*tbName\*/', '/\*clName\*/'), array(strtoupper($tbName), strtoupper($clName)), $this->_connector->profil['sequence_AI_pattern']);
+        return preg_replace(array('/\*tbName\*/', '/\*clName\*/'), array(strtoupper($tbName), strtoupper($clName)), $this->_connector->profile['sequence_AI_pattern']);
     }
 }

@@ -112,9 +112,9 @@ class jControllerDaoCrudDfk extends jController {
     protected $uploadsDirectory ='';
 
     /**
-     * the jDb profil to use with the dao
+     * the jDb profile to use with the dao
      */
-    protected $dbProfil = '';
+    protected $dbProfile = '';
 
     /**
      * Returned a simple html response to display CRUD contents. You can override this
@@ -151,7 +151,7 @@ class jControllerDaoCrudDfk extends jController {
 
     protected function _isPkAutoIncrement($dao=null) {
         if($dao == null)
-            $dao = jDao::get($this->dao, $this->dbProfil);
+            $dao = jDao::get($this->dao, $this->dbProfile);
 
         $props = $dao->getProperties();
         $dt = $props[$this->dpkName]['datatype'];
@@ -160,7 +160,7 @@ class jControllerDaoCrudDfk extends jController {
 
     protected function _getPk($spk, $dpk, $dao=null) {
         if($dao == null)
-            $dao = jDao::get($this->dao, $this->dbProfil);
+            $dao = jDao::get($this->dao, $this->dbProfile);
 
         $props = $dao->getProperties();
         $pks = $dao->getPrimaryKeyNames();
@@ -180,7 +180,7 @@ class jControllerDaoCrudDfk extends jController {
 
         $rep = $this->_getResponse();
 
-        $dao = jDao::get($this->dao, $this->dbProfil);
+        $dao = jDao::get($this->dao, $this->dbProfile);
 
         $cond = jDao::createConditions();
         $cond->addCondition($this->spkName, '=', $this->param($this->spkName));
@@ -314,7 +314,7 @@ class jControllerDaoCrudDfk extends jController {
         }
 
         if($form->check() && $this->_checkData($spk, $form, false)){
-            extract($form->prepareDaoFromControls($this->dao, null, $this->dbProfil), 
+            extract($form->prepareDaoFromControls($this->dao, null, $this->dbProfile), 
                 EXTR_PREFIX_ALL, "form");
             $form_daorec->{$this->spkName} = $spk;
             if(!$this->_isPkAutoIncrement($form_dao)) {
@@ -385,7 +385,7 @@ class jControllerDaoCrudDfk extends jController {
         $form = jForms::create($this->form, $id);
 
         try {
-            $form->initFromDao($this->dao, $id, $this->dbProfil);
+            $form->initFromDao($this->dao, $id, $this->dbProfile);
         }catch(Exception $e){
             $rep->action = $this->_getAction('index');
             return $rep;
@@ -470,7 +470,7 @@ class jControllerDaoCrudDfk extends jController {
         $rep->params[$this->dpkName] = $dpk;
 
         if($form->check() && $this->_checkData($spk, $form, true)){
-            extract($form->prepareDaoFromControls($this->dao, $id, $this->dbProfil), 
+            extract($form->prepareDaoFromControls($this->dao, $id, $this->dbProfile), 
                 EXTR_PREFIX_ALL, "form");
             $this->_beforeSaveUpdate($form, $form_daorec, $id);
             $form_dao->update($form_daorec);
@@ -528,7 +528,7 @@ class jControllerDaoCrudDfk extends jController {
         // labels with each values. We need also him to load easily values of some
         // of controls with initControlFromDao (to use in _view method).
         $form = jForms::create($this->form, $id);
-        $form->initFromDao($this->dao, $id, $this->dbProfil);
+        $form->initFromDao($this->dao, $id, $this->dbProfile);
 
         $tpl = new jTpl();
         $tpl->assign('dpk', $dpk);
@@ -566,7 +566,7 @@ class jControllerDaoCrudDfk extends jController {
         $rep->action = $this->_getAction('index');
         $rep->params[$this->spkName] = $spk;
 
-        $dao = jDao::get($this->dao, $this->dbProfil);
+        $dao = jDao::get($this->dao, $this->dbProfile);
         $id = $this->_getPk($spk, $dpk, $dao);
         if( $dpk !== null && $this->_delete($spk, $dpk, $rep) ){
             $dao->delete($id);

@@ -16,14 +16,14 @@ class jUnitTestCaseDb extends jUnitTestCase {
     *   erase all record in a table
     */
     function emptyTable($table){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         $db->exec('DELETE FROM '.$table);
     }
 
     function insertRecordsIntoTable($table, $fields, $records, $emptyBefore=false){
         if($emptyBefore)
             $this->emptytable($table);
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
 
         $sql = 'INSERT INTO '.$table.'  ('.implode(',',$fields).') VALUES (';
 
@@ -41,7 +41,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      * check if the table is empty
      */
     function assertTableIsEmpty($table, $message="%s"){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         $rs = $db->query('SELECT count(*) as N FROM '.$table);
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table should be empty");
@@ -62,7 +62,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      * check if the table is not empty
      */
     function assertTableIsNotEmpty($table, $message="%s"){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         $rs = $db->query('SELECT count(*) as N FROM '.$table);
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table shouldn't be empty");
@@ -83,7 +83,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      * check if a table has a specific number of records
      */
     function assertTableHasNRecords($table, $n, $message="%s"){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         $rs = $db->query('SELECT count(*) as N FROM '.$table);
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table should contains ".$n." records");
@@ -104,7 +104,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      * check if all given record are in the table
      */
     function assertTableContainsRecords($table, $records, $onlyThem = true, $message ="%s"){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
 
         $message = sprintf( $message, $table. " table should contains given records.");
 
@@ -162,7 +162,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
     }
 
     function getLastId($fieldName, $tableName){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         return $db->lastIdInTable($fieldName, $tableName);
     }
 

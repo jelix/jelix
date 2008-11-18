@@ -43,7 +43,7 @@ class usersCtrl extends jController {
         $offset = $this->intParam('idx',0,true);
         $grpid = $this->intParam('grpid',-2,true);
 
-        $p = jAcl2Db::getProfil();
+        $p = jAcl2Db::getProfile();
 
         if($grpid == -2) {
             //all users
@@ -121,7 +121,7 @@ class usersCtrl extends jController {
         }
 
         $rights=array();
-        $p = jAcl2Db::getProfil();
+        $p = jAcl2Db::getProfile();
         $rs = jDao::get('jelix~jacl2subject',$p)->findAllSubject();
         foreach($rs as $rec){
             $rights[$rec->id_aclsbj] = $grouprights;
@@ -158,7 +158,7 @@ class usersCtrl extends jController {
         $rep->action = 'jacl2_admin~users:rights';
         $rep->params=array('user'=>$login);
 
-        $dao = jDao::get('jelix~jacl2groupsofuser',jAcl2Db::getProfil());
+        $dao = jDao::get('jelix~jacl2groupsofuser',jAcl2Db::getProfile());
         $grp = $dao->getPrivateGroup($login);
 
         jAcl2DbManager::setRightsOnGroup($grp->id_aclgrp, $rights);

@@ -24,9 +24,9 @@ class jSelectorDao extends jSelectorModule {
     protected $_suffix = '.dao.xml';
     protected $_where;
 
-    function __construct($sel, $driver, $isprofil=true){
-        if($isprofil){
-            $p = jDb::getProfil($driver);
+    function __construct($sel, $driver, $isprofile=true){
+        if($isprofile){
+            $p = jDb::getProfile($driver);
             if($p['driver'] == 'pdo'){
                 $this->driver=substr($p['dsn'],0,strpos($p['dsn'],':'));
             }else{

@@ -15,7 +15,7 @@
 class UTjDb extends jUnitTestCase {
 
     function testConnection(){
-        $cnx = jDb::getConnection($this->dbProfil);
+        $cnx = jDb::getConnection($this->dbProfile);
         $this->assertTrue($cnx != null, 'connection null !');
         if($this->needPDO)
             $this->assertTrue($cnx instanceof jDbPDOConnection, 'connection null !');
@@ -24,7 +24,7 @@ class UTjDb extends jUnitTestCase {
     }
 
     function testEmptyATable(){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         $db->exec('DELETE FROM product_test');
 
         $rs = $db->query('SELECT count(*) as N FROM product_test');
@@ -36,7 +36,7 @@ class UTjDb extends jUnitTestCase {
     }
 
     function testInsert(){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         $nb = $db->exec("INSERT INTO product_test( name, price) VALUES('camembert',2.31) ");
         $this->assertEqual($nb,1,'exec insert 1 should return 1');
         $nb = $db->exec("INSERT INTO product_test( name, price) VALUES('yaourt',0.76) ");
@@ -46,7 +46,7 @@ class UTjDb extends jUnitTestCase {
     }
 
     function testSelect(){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
         if($this->needPDO)
@@ -79,7 +79,7 @@ class UTjDb extends jUnitTestCase {
     }
 
     function testSelectClass(){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
         if($this->needPDO)
@@ -115,7 +115,7 @@ class UTjDb extends jUnitTestCase {
 
     function testTools(){
 
-        $tools = jDb::getTools($this->dbProfil);
+        $tools = jDb::getTools($this->dbProfile);
         $fields = $tools->getFieldList('products');
         $structure = '<array>
     <object key="id" class="jDbFieldProperties">

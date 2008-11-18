@@ -99,9 +99,9 @@ class jControllerDaoCrud extends jController {
     protected $uploadsDirectory ='';
 
     /**
-     * the jDb profil to use with the dao
+     * the jDb profile to use with the dao
      */
-    protected $dbProfil = '';
+    protected $dbProfile = '';
 
     /**
      * Returned a simple html response to display CRUD contents. You can override this
@@ -150,7 +150,7 @@ class jControllerDaoCrud extends jController {
 
         $rep = $this->_getResponse();
 
-        $dao = jDao::get($this->dao, $this->dbProfil);
+        $dao = jDao::get($this->dao, $this->dbProfile);
 
         $cond = jDao::createConditions();
         $this->_indexSetConditions($cond);
@@ -287,7 +287,7 @@ class jControllerDaoCrud extends jController {
         }
 
         if($form->check() && $this->_checkData($form, false)){
-            extract($form->prepareDaoFromControls($this->dao,null,$this->dbProfil), 
+            extract($form->prepareDaoFromControls($this->dao,null,$this->dbProfile), 
                 EXTR_PREFIX_ALL, "form");
             $this->_beforeSaveCreate($form, $form_daorec);
             $form_dao->insert($form_daorec);
@@ -330,7 +330,7 @@ class jControllerDaoCrud extends jController {
         $form = jForms::create($this->form, $id);
 
         try {
-            $form->initFromDao($this->dao, null, $this->dbProfil);
+            $form->initFromDao($this->dao, null, $this->dbProfile);
         }catch(Exception $e){
             $rep->action = $this->_getAction('index');
             return $rep;
@@ -413,7 +413,7 @@ class jControllerDaoCrud extends jController {
         }
 
         if($form->check() && $this->_checkData($form, true)){
-            extract($form->prepareDaoFromControls($this->dao,$id,$this->dbProfil), 
+            extract($form->prepareDaoFromControls($this->dao,$id,$this->dbProfile), 
                 EXTR_PREFIX_ALL, "form");
             $this->_beforeSaveUpdate($form, $form_daorec, $id);
             $form_dao->update($form_daorec);
@@ -455,7 +455,7 @@ class jControllerDaoCrud extends jController {
         // labels with each values. We need also him to load easily values of some
         // of controls with initControlFromDao (to use in _view method).
         $form = jForms::create($this->form, $id);
-        $form->initFromDao($this->dao, $id, $this->dbProfil);
+        $form->initFromDao($this->dao, $id, $this->dbProfile);
 
         $tpl = new jTpl();
         $tpl->assign('id', $id);
@@ -487,7 +487,7 @@ class jControllerDaoCrud extends jController {
         $rep = $this->getResponse('redirect');
         $rep->action = $this->_getAction('index');
         if( $id !== null && $this->_delete($id, $rep) ){
-            $dao = jDao::get($this->dao, $this->dbProfil);
+            $dao = jDao::get($this->dao, $this->dbProfile);
             $dao->delete($id);
         }
         return $rep;

@@ -78,7 +78,7 @@ abstract class jInstallerBase {
      */
     public function execSQLScript($name, $profile='') {
         $tools = jDb::getTools($profile);
-        $p = jDb::getProfil ($profile);
+        $p = jDb::getProfile ($profile);
         $driver = $p['driver'];
         if($driver == 'pdo'){
             preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);

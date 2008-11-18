@@ -13,7 +13,7 @@ class UTjaclmanager extends jUnitTestCaseDb {
 
 
     public function testStart(){
-        $this->dbProfil = jAclDb::getProfil();
+        $this->dbProfile = jAclDb::getProfile();
         $this->emptyTable('jacl_user_group');
         $this->emptyTable('jacl_rights');
         $this->emptyTable('jacl_right_values');

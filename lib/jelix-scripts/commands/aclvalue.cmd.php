@@ -95,7 +95,7 @@ ACTION:
 
     protected function cmd_group_list(){
         $sql="SELECT id_aclvalgrp, label_key, type_aclvalgrp FROM jacl_right_values_group ORDER BY id_aclvalgrp";
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
         $rs = $cnx->query($sql);
         echo "id\tlabel key\t\t\ttype\n--------------------------------------------------------\n";
         foreach($rs as $rec){
@@ -112,7 +112,7 @@ ACTION:
         if(!is_array($params) || count($params) != 3)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
 
         $sql="INSERT into jacl_right_values_group (id_aclvalgrp, label_key, type_aclvalgrp) VALUES (";
         $sql.=intval($params[0]).',';
@@ -128,7 +128,7 @@ ACTION:
         if(!is_array($params) || count($params) != 1)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
 
         $rs = $cnx->query('SELECT count(id_aclsbj) as n FROM jacl_subject WHERE id_aclvalgrp='.intval($params[0]));
         if(!$rs)
@@ -167,7 +167,7 @@ ACTION:
 
         }
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
         $rs = $cnx->query($sql);
 
         if($bygroup){
@@ -196,7 +196,7 @@ ACTION:
         if(!is_array($params) || count($params) != 3)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
 
         $rs = $cnx->query('SELECT count(id_aclvalgrp) as n FROM jacl_right_values_group WHERE id_aclvalgrp='.intval($params[2]));
         if(!$rs)
@@ -225,7 +225,7 @@ ACTION:
         if(!is_array($params) || count($params) != 2)
             die("wrong parameter count\n");
 
-        $cnx = jDb::getConnection(jAclDb::getProfil());
+        $cnx = jDb::getConnection(jAclDb::getProfile());
 
         $rs = $cnx->query('SELECT count(*) as n FROM jacl_right_values WHERE id_aclvalgrp='.intval($params[1]).' AND value='.$cnx->quote($params[0]));
         if(!$rs)

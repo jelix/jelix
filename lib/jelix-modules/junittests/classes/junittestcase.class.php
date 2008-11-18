@@ -13,7 +13,7 @@ class jUnitTestCase extends UnitTestCase {
 
     // for database management
 
-    protected $dbProfil ='';
+    protected $dbProfile ='';
     protected $needPDO = false;
 
     function run(&$reporter) {

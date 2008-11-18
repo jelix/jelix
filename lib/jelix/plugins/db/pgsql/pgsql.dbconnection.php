@@ -24,18 +24,18 @@
 class pgsqlDbConnection extends jDbConnection {
     protected $_charsets =array( 'UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');
 
-    function __construct($profil){
+    function __construct($profile){
         if(!function_exists('pg_connect')){
             throw new jException('jelix~db.error.nofunction','posgresql');
         }
-        parent::__construct($profil);
-        if(isset($this->profil['single_transaction']) && ($this->profil['single_transaction'])){
+        parent::__construct($profile);
+        if(isset($this->profile['single_transaction']) && ($this->profile['single_transaction'])){
             $this->beginTransaction();
         }
     }
 
     function __destruct(){
-        if(isset($this->profil['single_transaction']) && ($this->profil['single_transaction'])){
+        if(isset($this->profile['single_transaction']) && ($this->profile['single_transaction'])){
             $this->commit();
         }
         parent::__destruct();
@@ -73,44 +73,44 @@ class pgsqlDbConnection extends jDbConnection {
     }
 
     protected function _connect (){
-        $funcconnect= (isset($this->profil['persistent']) && $this->profil['persistent'] ? 'pg_pconnect':'pg_connect');
+        $funcconnect= (isset($this->profile['persistent']) && $this->profile['persistent'] ? 'pg_pconnect':'pg_connect');
 
         $str = '';
 
         // we do a distinction because if the host is given == TCP/IP connection else unix socket
-        if($this->profil['host'] != '')
-            $str = 'host=\''.$this->profil['host'].'\''.$str;
+        if($this->profile['host'] != '')
+            $str = 'host=\''.$this->profile['host'].'\''.$str;
 
-        if (isset($this->profil['port'])) {
-            $str .= ' port=\''.$this->profil['port'].'\'';
+        if (isset($this->profile['port'])) {
+            $str .= ' port=\''.$this->profile['port'].'\'';
         }
 
-        if ($this->profil['database'] != '') {
-            $str .= ' dbname=\''.$this->profil['database'].'\'';
+        if ($this->profile['database'] != '') {
+            $str .= ' dbname=\''.$this->profile['database'].'\'';
         }
 
         // we do isset instead of equality test against an empty string, to allow to specify
         // that we want to use configuration set in environment variables
-        if (isset($this->profil['user'])) {
-            $str .= ' user=\''.$this->profil['user'].'\'';
+        if (isset($this->profile['user'])) {
+            $str .= ' user=\''.$this->profile['user'].'\'';
         }
 
-        if (isset($this->profil['password'])) {
-            $str .= ' password=\''.$this->profil['password'].'\'';
+        if (isset($this->profile['password'])) {
+            $str .= ' password=\''.$this->profile['password'].'\'';
         }
 
-        if (isset($this->profil['timeout']) && $this->profil['timeout'] != '') {
-            $str .= ' connect_timeout=\''.$this->profil['timeout'].'\'';
+        if (isset($this->profile['timeout']) && $this->profile['timeout'] != '') {
+            $str .= ' connect_timeout=\''.$this->profile['timeout'].'\'';
         }
 
         if($cnx=@$funcconnect ($str)){
-            if(isset($this->profil['force_encoding']) && $this->profil['force_encoding'] == true
+            if(isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true
                && isset($this->_charsets[$GLOBALS['gJConfig']->charset])){
                 pg_set_client_encoding($cnx, $this->_charsets[$GLOBALS['gJConfig']->charset]);
             }
             return $cnx;
         }else{
-            throw new jException('jelix~db.error.connection',$this->profil['host']);
+            throw new jException('jelix~db.error.connection',$this->profile['host']);
         }
     }
 

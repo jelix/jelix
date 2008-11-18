@@ -45,7 +45,7 @@ class jAcl2DbUserGroup {
 
         // chargement des groupes
         if($groups === null){
-            $gp = jDao::get('jelix~jacl2usergroup', jAcl2Db::getProfil())
+            $gp = jDao::get('jelix~jacl2usergroup', jAcl2Db::getProfile())
                     ->getGroupsUser(jAuth::getUserSession()->login);
             $groups = array();
             foreach($gp as $g){
@@ -62,7 +62,7 @@ class jAcl2DbUserGroup {
      * @return array a list of users object (dao records)
      */
     public static function getUsersList($groupid){
-        return jDao::get('jelix~jacl2usergroup', jAcl2Db::getProfil())->getUsersGroup($groupid);
+        return jDao::get('jelix~jacl2usergroup', jAcl2Db::getProfile())->getUsersGroup($groupid);
     }
 
     /**
@@ -75,7 +75,7 @@ class jAcl2DbUserGroup {
      * @param boolean $defaultGroup if true, the user become the member of default groups
      */
     public static function createUser($login, $defaultGroup=true){
-        $p = jAcl2Db::getProfil();
+        $p = jAcl2Db::getProfile();
         $daousergroup = jDao::get('jelix~jacl2usergroup',$p);
         $daogroup = jDao::get('jelix~jacl2group',$p);
         $usergrp = jDao::createRecord('jelix~jacl2usergroup',$p);
@@ -111,7 +111,7 @@ class jAcl2DbUserGroup {
     public static function addUserToGroup($login, $groupid){
         if( $groupid == 0)
             throw new Exception ('jAcl2DbUserGroup::addUserToGroup : invalid group id');
-        $p = jAcl2Db::getProfil();
+        $p = jAcl2Db::getProfile();
         $usergrp = jDao::createRecord('jelix~jacl2usergroup',$p);
         $usergrp->login =$login;
         $usergrp->id_aclgrp = $groupid;
@@ -124,7 +124,7 @@ class jAcl2DbUserGroup {
      * @param int $groupid the group id
      */
     public static function removeUserFromGroup($login,$groupid){
-        jDao::get('jelix~jacl2usergroup',jAcl2Db::getProfil())->delete($login,$groupid);
+        jDao::get('jelix~jacl2usergroup',jAcl2Db::getProfile())->delete($login,$groupid);
     }
 
     /**
@@ -132,7 +132,7 @@ class jAcl2DbUserGroup {
      * @param string $login the user login
      */
     public static function removeUser($login){
-        $p = jAcl2Db::getProfil();
+        $p = jAcl2Db::getProfile();
         $daogroup = jDao::get('jelix~jacl2group',$p);
 
         // recupere le groupe privé
@@ -155,7 +155,7 @@ class jAcl2DbUserGroup {
      * @return int the id of the new group
      */
     public static function createGroup($name){
-        $p = jAcl2Db::getProfil();
+        $p = jAcl2Db::getProfile();
         $group = jDao::createRecord('jelix~jacl2group',$p);
         $group->name=$name;
         $group->grouptype=0;
@@ -175,7 +175,7 @@ class jAcl2DbUserGroup {
         if( $groupid == 0)
             throw new Exception ('jAcl2DbUserGroup::setDefaultGroup : invalid group id');
 
-        $daogroup = jDao::get('jelix~jacl2group',jAcl2Db::getProfil());
+        $daogroup = jDao::get('jelix~jacl2group',jAcl2Db::getProfile());
         if($default)
             $daogroup->setToDefault($groupid);
         else
@@ -190,7 +190,7 @@ class jAcl2DbUserGroup {
     public static function updateGroup($groupid, $name){
         if( $groupid == 0)
             throw new Exception ('jAcl2DbUserGroup::updateGroup : invalid group id');
-        jDao::get('jelix~jacl2group',jAcl2Db::getProfil())->changeName($groupid,$name);
+        jDao::get('jelix~jacl2group',jAcl2Db::getProfile())->changeName($groupid,$name);
     }
 
     /**
@@ -200,7 +200,7 @@ class jAcl2DbUserGroup {
     public static function removeGroup($groupid){
         if( $groupid == 0)
             throw new Exception ('jAcl2DbUserGroup::removeGroup : invalid group id');
-        $p = jAcl2Db::getProfil();
+        $p = jAcl2Db::getProfile();
         // enlever tout les droits attaché au groupe
         jDao::get('jelix~jacl2rights',$p)->deleteByGroup($groupid);
         // enlever les utilisateurs du groupe
@@ -219,9 +219,9 @@ class jAcl2DbUserGroup {
      */
     public static function getGroupList($login=''){
         if ($login === '') {
-            return jDao::get('jelix~jacl2group',jAcl2Db::getProfil())->findAllPublicGroup();
+            return jDao::get('jelix~jacl2group',jAcl2Db::getProfile())->findAllPublicGroup();
         }else{
-            return jDao::get('jelix~jacl2groupsofuser',jAcl2Db::getProfil())->getGroupsUser($login);
+            return jDao::get('jelix~jacl2groupsofuser',jAcl2Db::getProfile())->getGroupsUser($login);
         }
     }
 }

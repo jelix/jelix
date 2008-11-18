@@ -33,7 +33,7 @@ class userTest {
 class UTjacl extends jUnitTestCaseDb {
 
     public function testStart(){
-        $this->dbProfil = jAclDb::getProfil();
+        $this->dbProfile = jAclDb::getProfile();
         $this->emptyTable('jacl_rights');
         $this->emptyTable('jacl_subject');
 

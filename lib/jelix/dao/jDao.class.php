@@ -27,19 +27,19 @@ class jDao {
     * creates a new instance of a DAO.
     * If no dao is founded, try to compile a DAO from the dao xml file
     * @param string|jSelectorDao $Daoid the dao selector
-    * @param string $profil the db profil name to use for the connection. 
-    *   If empty, use the default profil
+    * @param string $profile the db profile name to use for the connection. 
+    *   If empty, use the default profile
     * @return jDaoFactoryBase  the dao object
     */
-    public static function create ($DaoId, $profil=''){
+    public static function create ($DaoId, $profile=''){
         if(is_string($DaoId))
-            $DaoId = new jSelectorDao($DaoId, $profil);
+            $DaoId = new jSelectorDao($DaoId, $profile);
 
         $c = $DaoId->getDaoClass();
         if(!class_exists($c,false)){
             jIncluder::inc($DaoId);
         }
-        $conn = jDb::getConnection ($profil);
+        $conn = jDb::getConnection ($profile);
         $obj = new $c ($conn);
         return $obj;
     }
@@ -48,18 +48,18 @@ class jDao {
     * return a DAO instance. It Handles a singleton of the DAO.
     * If no dao is founded, try to compile a DAO from the dao xml file
     * @param string|jSelectorDao $Daoid the dao selector
-    * @param string $profil the db profil name to use for the connection. 
-    *   If empty, use the default profil
+    * @param string $profile the db profile name to use for the connection. 
+    *   If empty, use the default profile
     * @return jDaoFactoryBase  the dao object
     */
-    public static function get ($DaoId, $profil='') {
+    public static function get ($DaoId, $profile='') {
        static $_daoSingleton=array();
 
-       $sel = new jSelectorDao($DaoId, $profil);
+       $sel = new jSelectorDao($DaoId, $profile);
        $DaoId = $sel->toString ();
 
         if (! isset ($_daoSingleton[$DaoId])){
-            $_daoSingleton[$DaoId] = self::create ($sel,$profil);
+            $_daoSingleton[$DaoId] = self::create ($sel,$profile);
         }
         return $_daoSingleton[$DaoId];
     }
@@ -67,12 +67,12 @@ class jDao {
     /**
     * creates a record object for the given dao
     * @param string $Daoid the dao selector
-    * @param string $profil the db profil name to use for the connection. 
-    *   If empty, use the default profil
+    * @param string $profile the db profile name to use for the connection. 
+    *   If empty, use the default profile
     * @return jDaoRecordBase  a dao record object
     */
-    public static function createRecord ($DaoId, $profil=''){
-        $sel = new jSelectorDao($DaoId, $profil);
+    public static function createRecord ($DaoId, $profile=''){
+        $sel = new jSelectorDao($DaoId, $profile);
         $c = $sel->getDaoClass();
         if(!class_exists($c,false)){
             jIncluder::inc($sel);

@@ -23,10 +23,10 @@
 abstract class jDbConnection {
 
     /**
-    * profil properties used by the connector
+    * profile properties used by the connector
     * @var array
     */
-    public $profil;
+    public $profile;
 
     /**
      * The database type name (mysql, pgsql ...)
@@ -56,12 +56,12 @@ abstract class jDbConnection {
     protected $_connection = null;
 
     /**
-    * do a connection to the database, using properties of the given profil
-    * @param array $profil  profil properties
+    * do a connection to the database, using properties of the given profile
+    * @param array $profile  profile properties
     */
-    function __construct($profil){
-        $this->profil = & $profil;
-        $this->dbms = $profil['driver'];
+    function __construct($profile){
+        $this->profile = & $profile;
+        $this->dbms = $profile['driver'];
         $this->_connection = $this->_connect();
     }
 
@@ -129,9 +129,9 @@ abstract class jDbConnection {
       * @since 1.0
       */
     public function prefixTable($table_name){
-        if(!isset($this->profil['table_prefix']))
+        if(!isset($this->profile['table_prefix']))
             return $table_name;
-        return $this->profil['table_prefix'].$table_name;
+        return $this->profile['table_prefix'].$table_name;
     }
 
     /**
@@ -142,7 +142,7 @@ abstract class jDbConnection {
       * @since 1.0
       */
     public function hasTablePrefix(){
-        return (isset($this->profil['table_prefix']) && $this->profil['table_prefix'] != '');
+        return (isset($this->profile['table_prefix']) && $this->profile['table_prefix'] != '');
     }
 
     /**

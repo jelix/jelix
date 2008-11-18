@@ -58,18 +58,18 @@ class intuitionDbConnection extends jDbConnection {
     protected function _connect (){
         $this->_iSession = new iSession (); 
         
-        if (!isset ($this->profil['port'])){
-            $this->profil['port'] = 8088;
+        if (!isset ($this->profile['port'])){
+            $this->profile['port'] = 8088;
         }
         
         $connectionArray = array (
-            'host'              => $this->profil['host'],
-            'port'              => $this->profil['port'],
+            'host'              => $this->profile['host'],
+            'port'              => $this->profile['port'],
             'read_only'         => 1,
             'charset'           => in_UTF8,
-            'database'          => $this->profil['database'],
-            'user'              => $this->profil['user'],
-            'password'          => $this->profil['password'],
+            'database'          => $this->profile['database'],
+            'user'              => $this->profile['user'],
+            'password'          => $this->profile['password'],
             'page_size'         => 20,
             'max_answers_count' => 1000,
             'default-language'  => 'en'

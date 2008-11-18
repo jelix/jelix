@@ -11,8 +11,8 @@
 
 class UTjDb_profile extends jUnitTestCase {
 
-    function testProfil() {
-        $p = jDb::getProfil('jelix_tests_mysql');
+    function testProfile() {
+        $p = jDb::getProfile('jelix_tests_mysql');
         $result= array(
             'driver'=>"mysql",
             'database'=>"testapp_mysql",
@@ -26,7 +26,7 @@ class UTjDb_profile extends jUnitTestCase {
 
         $this->assertEqual($p, $result);
 
-        $p = jDb::getProfil('forward',true);
+        $p = jDb::getProfile('forward',true);
         $result= array(
             'driver'=>"mysql",
             'database'=>"jelix_tests_forward",
@@ -40,15 +40,15 @@ class UTjDb_profile extends jUnitTestCase {
 
         $this->assertEqual($p, $result);
 
-        $p = jDb::getProfil('testapp');
+        $p = jDb::getProfile('testapp');
         $this->assertEqual($p['name'], 'testapp');
-        $p = jDb::getProfil();
+        $p = jDb::getProfile();
         $this->assertEqual($p['name'], 'testapp');
-        $p = jDb::getProfil('testapppdo');
+        $p = jDb::getProfile('testapppdo');
         $this->assertEqual($p['name'], 'testapppdo');
     }
 
-    function testVirtualProfil() {
+    function testVirtualProfile() {
         $profile = array(
             'driver'=>"mysql",
             'database'=>"virtual_mysql",
@@ -61,33 +61,33 @@ class UTjDb_profile extends jUnitTestCase {
 
         jDb::createVirtualProfile('foobar', $profile);
 
-        $p = jDb::getProfil('foobar');
+        $p = jDb::getProfile('foobar');
         $profile['name'] = 'foobar';
 
         $this->assertEqual($profile, $p);
     }
 
 
-    function testBadProfil(){
+    function testBadProfile(){
         try {
-            $p = jDb::getProfil('abcdef'); // unknow profil
-            $this->fail('getting a wrong profil doesn\'t generate an exception');
+            $p = jDb::getProfile('abcdef'); // unknow profile
+            $this->fail('getting a wrong profile doesn\'t generate an exception');
         }catch(jException $e){
-            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profil.unknow', 'wrong exception on getting a wrong profil ('.$e->getLocaleKey().')');
+            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profile.unknow', 'wrong exception on getting a wrong profile ('.$e->getLocaleKey().')');
         }
 
         try {
-            $p = jDb::getProfil('abcdef', true); // unknow profil option
-            $this->fail('getting a wrong profil option doesn\'t generate an exception');
+            $p = jDb::getProfile('abcdef', true); // unknow profile option
+            $this->fail('getting a wrong profile option doesn\'t generate an exception');
         }catch(jException $e){
-            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profil.type.unknow', 'wrong exception on getting a wrong profil option ('.$e->getLocaleKey().')');
+            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profile.type.unknow', 'wrong exception on getting a wrong profile option ('.$e->getLocaleKey().')');
         }
 
         try {
-            $p = jDb::getProfil('wrong_profilname', true); // unknow profil name
-            $this->fail('getting a profil option with a wrong name doesn\'t generate an exception');
+            $p = jDb::getProfile('wrong_profilname', true); // unknow profile name
+            $this->fail('getting a profile option with a wrong name doesn\'t generate an exception');
         }catch(jException $e){
-            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profil.unknow', 'wrong exception on getting a profil option with a wrong name ('.$e->getLocaleKey().')');
+            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profile.unknow', 'wrong exception on getting a profile option with a wrong name ('.$e->getLocaleKey().')');
         }
     }
 }

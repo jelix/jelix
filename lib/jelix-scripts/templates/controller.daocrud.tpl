@@ -14,6 +14,6 @@ class %%name%%Ctrl extends jControllerDaoCrud {
 
     protected $form = '%%module%%~%%name%%';
 
-    protected $dbProfil = '%%profil%%';
+    protected $dbProfile = '%%profile%%';
 
 }
