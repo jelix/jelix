@@ -3,9 +3,9 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor Julien Issler
+* @contributor Julien Issler, Dominique Papin
 * @copyright   2006-2008 Laurent Jouanneau
-* @copyright   2008 Julien Issler
+* @copyright   2008 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -96,8 +96,15 @@ class htmlJformsBuilder extends jFormsBuilderBase {
         $this->options = array_merge(array('errorDecorator'=>'jFormsJQErrorDecoratorAlert',
                  'helpDecorator'=>'jFormsJQHelpDecoratorAlert', 'method'=>'post'), $params);
 
-        $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
-        echo '<form action="',$url->getPath(),'" method="'.$this->options['method'].'" id="', $this->_name,'"';
+
+        if (preg_match('/^http:\/\//',$this->_action)) {
+            $urlParams = $this->_actionParams;
+            echo '<form action="',$this->_action,'" method="'.$this->options['method'].'" id="', $this->_name,'"';
+        } else {
+            $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
+            $urlParams = $url->params;
+            echo '<form action="',$url->getPath(),'" method="'.$this->options['method'].'" id="', $this->_name,'"';
+        }
         if($this->_form->hasUpload())
             echo ' enctype="multipart/form-data">';
         else
@@ -113,7 +120,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 </script>';
 
         $hiddens = '';
-        foreach ($url->params as $p_name => $p_value) {
+        foreach ($urlParams as $p_name => $p_value) {
             $hiddens .= '<input type="hidden" name="'. $p_name .'" value="'. htmlspecialchars($p_value). '"'.$this->_endt. "\n";
         }
 
@@ -585,7 +592,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
                 if(!$this->_form->isActivated($ref) || $c->type == 'hidden') continue;
                 $displayedControls = true;
                 echo ' <span class="jforms-item-controls">';
-                // we remove readonly status so when a user change the choice and 
+                // we remove readonly status so when a user change the choice and
                 // javascript is deactivated, it can still change the value of the control
                 $ro = $c->isReadOnly();
                 if($ro && $readonly != '') $c->setReadOnly(false);
