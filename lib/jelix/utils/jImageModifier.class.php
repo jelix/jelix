@@ -85,6 +85,7 @@ class jImageModifier {
         // extension
         if(empty($params['ext'])) {
             $path_parts = pathinfo($src);
+            if ( isset($path_parts['extension']))
             $ext = strtolower($path_parts['extension']);
         } else {
             $ext = strtolower($params['ext']);
@@ -104,7 +105,7 @@ class jImageModifier {
                 $chaine .= $key.$value;
             } else {
                 // attribute params are just transmitted back
-                $att[$key] = $val;
+                $att[$key] = $value;
             }
         }
         // generate cache key based on image src and transform params
@@ -119,7 +120,7 @@ class jImageModifier {
         $www = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'];
         $www .= $gJConfig->urlengine['basePath'];
         $cacheUri = $www.'cache/images/'.$cacheName;
-        $srcUri = (strpos($src,'http')?'':$www).$src;
+        $srcUri = ((strpos($src,'http://')!==FALSE)?'':$www).$src;
 
         // apply transforms if necessary (serve directly or from cache otherwise)
         $pendingTransforms = ($chaine !== $src);

@@ -53,10 +53,15 @@
 function jtpl_function_html_image($tpl, $src, $params=array()) {
     $att = jImageModifier::get($src, $params, false);
 
-    // Tag image
+    // alt attribute is required (xhtml/html4 spec)
+    if (!array_key_exists('alt',$att))
+        $att['alt']='';
+
+    // generating hmtl tag img
     echo '<img';
-    foreach( $att as $key => $val )
+    foreach( $att as $key => $val ) {
         if( !empty($val) )
             echo ' '.$key.'="'.htmlspecialchars($val).'"';
+    }
     echo '/>';
 }
