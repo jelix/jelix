@@ -462,6 +462,10 @@ cd lib/wikirenderer/rules
 ! classicwr_to_wr3.php
 ! wr3_to_text.php
 ! wr3_to_docbook.php
+! dokuwiki_to_xhtml.php
+! dokuwiki_to_docbook.php
+! trac_to_xhtml.php
+
 
 cd lib/tcpdf
 ! unicode_data.php

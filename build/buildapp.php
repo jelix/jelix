@@ -75,7 +75,7 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
 jBuildUtils::createDir($MAIN_TARGET_PATH);
 
 //... execution des manifests
-jManifest::process('build/manifests/'.$APPNAME.'.mn', '.', $MAIN_TARGET_PATH, ENV::getAll());
+jManifest::process('build/manifests/'.$APPNAME.'.mn', '.', $MAIN_TARGET_PATH, ENV::getAll(), true);
 
 
 file_put_contents($MAIN_TARGET_PATH.$APPDIR.'/VERSION', $VERSION);

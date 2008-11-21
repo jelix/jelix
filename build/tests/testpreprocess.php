@@ -197,7 +197,7 @@ class PreProcTestCase extends UnitTestCase {
             }
 
             if($e->sourceLine != $datas[2]){
-                $this->fail($source . ' : mauvais numero de ligne du source ('.$e->sourceLine.')');
+                $this->fail($source . ' : mauvais numero de ligne du source ('.$e->sourceLine.'!='.$datas[2].')');
                 $err=true;
             }
 

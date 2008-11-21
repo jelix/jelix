@@ -69,9 +69,12 @@ class jManifest {
                         }
                         if($doCompression) {
                             if( preg_match("/\.php$/",$destfile)) {
+                                if($verbose) echo "     strip php comment ";
                                 $contents = self::stripPhpComments($contents);
+                                if($verbose) echo "OK\n";
                             }
                             else if(preg_match("/\.js$/",$destfile)) {
+                                if($verbose) echo "compress javascript file \n";
                                 $packer = new JavaScriptPacker($contents, 0, true, false);
                                 $contents = $packer->pack();
                             }
@@ -141,7 +144,7 @@ class jManifest {
         $firstcomment= true;
         $currentWhistpace ='';
         $firstPHPfound = false;
-        foreach ($tokens as $token) {
+        foreach($tokens as $token) {
             if (is_string($token)) {
                 if(in_array($token, array('(',')','{','}')) && strpos($currentWhitespace, "\n") === false) {
                    $currentWhitespace='';

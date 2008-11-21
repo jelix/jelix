@@ -100,11 +100,15 @@ class jPreProcessor{
         $source =explode("\n",file_get_contents($filename));
 
         $result='';
+        $nb = -1;
         // on parcours chaque ligne du source
-        foreach($source as $nb=>$line){
+        while(count($source)){
+            $nb++;
+            $sline = array_shift($source);
+            $tline = $sline;
             $isOpen = !(end($this->_blockstack) & self::BLOCK_NO);
 
-            if(preg_match('/^\#(ifdef|define|ifndef|elifdef|undef)\s+(\w+)\s*$/m',$line,$m)){
+            if(preg_match('/^\#(ifdef|define|ifndef|elifdef|undef)\s+(\w+)\s*$/m',$sline,$m)){
                 switch($m[1]){
                     case 'ifdef':
                         if( !$isOpen ){
@@ -116,19 +120,19 @@ class jPreProcessor{
                                 array_push($this->_blockstack, self::BLOCK_IF_NO);
                             }
                         }
-                        $source[$nb]=false;
+                        $tline=false;
                         break;
                     case 'define': // define avec un seul argument.
                         if($isOpen ){
                             $this->_variables[$m[2]] = true;
                         }
-                        $source[$nb]=false;
+                        $tline=false;
                         break;
                     case 'undef':
                         if($isOpen ){
                             unset($this->_variables[$m[2]]);
                         }
-                        $source[$nb]=false;
+                        $tline=false;
                         break;
                     case 'ifndef':
                         if(!$isOpen){
@@ -140,7 +144,7 @@ class jPreProcessor{
                                 array_push($this->_blockstack, self::BLOCK_IF_YES);
                             }
                         }
-                        $source[$nb]=false;
+                        $tline=false;
                         break;
                     case 'elifdef':
                         $end = array_pop($this->_blockstack);
@@ -158,27 +162,27 @@ class jPreProcessor{
                                 array_push($this->_blockstack, self::BLOCK_IF_NO);
                             }
                         }
-                        $source[$nb]=false;
+                        $tline=false;
                         break;
                 }
                 /*echo $m[1],':';
                 var_dump($this->_blockstack);
                 echo "\n";*/
 
-            }elseif(preg_match('/^\#(define)\s+(\w+)\s+(.+)$/m',$line,$m)){
+            }elseif(preg_match('/^\#(define)\s+(\w+)\s+(.+)$/m',$sline,$m)){
                 // define avec deux arguments
                 if($isOpen){
                     $this->_variables[$m[2]] = trim($m[3]);
                 }
-                $source[$nb]=false;
+                $tline=false;
 
-            }elseif(preg_match('/^\#(expand)\s(.*)$/m',$line,$m)){
+            }elseif(preg_match('/^\#(expand)\s(.*)$/m',$sline,$m)){
                 if($isOpen){
-                    $source[$nb]=preg_replace('/\_\_(\w*)\_\_/e', '(isset($this->_variables["\\1"])&&$this->_variables["\\1"]!==\'\'?$this->_variables["\\1"]:"__\\1__")',$m[2]);
+                    $tline=preg_replace('/\_\_(\w*)\_\_/e', '(isset($this->_variables["\\1"])&&$this->_variables["\\1"]!==\'\'?$this->_variables["\\1"]:"__\\1__")',$m[2]);
                 }else{
-                    $source[$nb]=false;
+                    $tline=false;
                 }
-            }elseif(preg_match('/^\#if\s(.*)$/m',$line,$m)){
+            }elseif(preg_match('/^\#if\s(.*)$/m',$sline,$m)){
                 if( !$isOpen ){
                     array_push($this->_blockstack, self::BLOCK_IF_NO);
                 }else{
@@ -189,9 +193,9 @@ class jPreProcessor{
                         array_push($this->_blockstack, self::BLOCK_IF_NO);
                     }
                 }
-                $source[$nb]=false;
+                $tline=false;
 
-            }elseif(preg_match('/^\#ifnot\s(.*)$/m',$line,$m)){
+            }elseif(preg_match('/^\#ifnot\s(.*)$/m',$sline,$m)){
                 if( !$isOpen ){
                     array_push($this->_blockstack, self::BLOCK_IF_NO);
                 }else{
@@ -202,8 +206,8 @@ class jPreProcessor{
                         array_push($this->_blockstack, self::BLOCK_IF_YES);
                     }
                 }
-                $source[$nb]=false;
-            }elseif(preg_match('/^\#elseif\s(.*)$/m',$line,$m)){
+                $tline=false;
+            }elseif(preg_match('/^\#elseif\s(.*)$/m',$sline,$m)){
                 $end = array_pop($this->_blockstack);
                 if(!($end & self::BLOCK_IF)){
                     throw new jExceptionPreProc($filename,$nb,self::ERR_IF_MISSING);
@@ -220,14 +224,14 @@ class jPreProcessor{
                         array_push($this->_blockstack, self::BLOCK_IF_NO);
                     }
                 }
-                $source[$nb]=false;
-            }elseif(preg_match('/^\#(endif|else)\s*$/m',$line,$m)){
+                $tline=false;
+            }elseif(preg_match('/^\#(endif|else)\s*$/m',$sline,$m)){
                 if($m[1] == 'endif'){
                     $end = array_pop($this->_blockstack);
                     if(!( $end & self::BLOCK_IF || $end & self::BLOCK_ELSE)){
                         throw new jExceptionPreProc($filename,$nb,self::ERR_IF_MISSING);
                     }
-                    $source[$nb]=false;
+                    $tline=false;
                 }elseif($m[1]=='else'){
                     $end = array_pop($this->_blockstack);
                     if($end === self::BLOCK_IF_YES){
@@ -245,9 +249,9 @@ class jPreProcessor{
                     }else{
                         throw new jExceptionPreProc($filename,$nb,self::ERR_IF_MISSING);
                     }
-                    $source[$nb]=false;
+                    $tline=false;
                 }
-            }elseif(preg_match('/^\#include(php)?\s+([\w\/\.\:]+)\s*$/m',$line,$m)){
+            }elseif(preg_match('/^\#include(php)?\s+([\w\/\.\:]+)\s*$/m',$sline,$m)){
                 if($isOpen){
                     $path = $m[2];
                     if(!($path{0} == '/' || preg_match('/^\w\:\\.+$/',$path))){
@@ -260,42 +264,43 @@ class jPreProcessor{
                         $preproc = new jPreProcessor();
                         $preproc->_doSaveVariables = false;
                         $preproc->setVars($this->_variables);
-                        $source[$nb] = $preproc->parseFile($path);
+                        $tline = $preproc->parseFile($path);
                         $this->_variables = $preproc->_variables;
+                        $preproc = null;
                     }else{
                         throw new jExceptionPreProc($filename,$nb,self::ERR_INVALID_FILENAME,$m[2] );
                     }
                     if($m[1] == 'php'){
-                        if(preg_match('/^\s*\<\?(?:php)?(.*)/sm',$source[$nb],$ms)){
-                            $source[$nb] = $ms[1];
+                        if(preg_match('/^\s*\<\?(?:php)?(.*)/sm',$tline,$ms)){
+                            $tline = $ms[1];
                         }
-                        if(preg_match('/(.*)\?\>\s*$/sm',$source[$nb],$ms)){
-                            $source[$nb] = $ms[1];
+                        if(preg_match('/(.*)\?\>\s*$/sm',$tline,$ms)){
+                            $tline = $ms[1];
                         }
                     }
                }else{
-                    $source[$nb]=false;
+                    $tline=false;
                 }
-            }elseif(strlen($line) && $line{0} == '#'){
-                if(strlen($line)>1 && $line{1} == '#'){
+            }elseif(strlen($sline) && $sline{0} == '#'){
+                if(strlen($sline)>1 && $sline{1} == '#'){
                     if(!$isOpen){
-                        $source[$nb]=false;
+                        $tline=false;
                     }else{
-                        $source[$nb] = substr($line,1);
+                        $tline = substr($sline,1);
                     }
                 }else{
                     throw new jExceptionPreProc($filename,$nb,self::ERR_SYNTAX);
                 }
             }else{
                 if(!$isOpen){
-                    $source[$nb]=false;
+                    $tline=false;
                 }
             }
-            if($source[$nb]!==false){
+            if($tline!==false){
                 if($result == '')
-                    $result.=$source[$nb];
+                    $result.=$tline;
                 else
-                    $result.="\n".$source[$nb];
+                    $result.="\n".$tline;
             }
         }
 
