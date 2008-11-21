@@ -2,6 +2,7 @@ Changelog of WikiRenderer
 
 Version 3.1
 
+- no more PHP4 version, only PHP5
 - fixed bug: / was not allowed in patterns for inline tags
 - new property WikiTagXhtml::additionnalAttributes, so we can specify static attributes to add on an xhtml element
 - new property WikiTagXhtml::ignoreAttribute
@@ -13,6 +14,8 @@ Version 3.1
 - WikiTag::addContent and WikiTag::addSeparator are no more final methods
 - WikiTag::addSeparator receive now the separator as  argument
 - renamed WikiTag::getCurrentSeparator() to WikiTag::isCurrentSeparator($token)
+- CamelCaseWord can be ignored with a ! before the word
+- checkWikiWordFunction can be an array to indicate a method of an object
 
 Version 3.0
 

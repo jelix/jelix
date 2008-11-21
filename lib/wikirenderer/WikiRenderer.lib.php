@@ -21,7 +21,7 @@
  *
  */
 define('WIKIRENDERER_PATH', dirname(__FILE__).'/');
-define('WIKIRENDERER_VERSION', '3.1pre-php5.58');
+define('WIKIRENDERER_VERSION', '3.1pre.65');
 
 
 /**
@@ -84,8 +84,8 @@ abstract class WikiTag {
     */
     function __construct($config){
         $this->config = $config;
-        $this->checkWikiWordFunction=$config->checkWikiWordFunction;
-        if($config->checkWikiWordFunction === null) $this->checkWikiWordIn=array();
+        $this->checkWikiWordFunction = $config->checkWikiWordFunction;
+        if($config->checkWikiWordFunction === null) $this->checkWikiWordIn = array();
         if(count($this->separators)) $this->currentSeparator = $this->separators[0];
     }
 
@@ -179,10 +179,17 @@ abstract class WikiTag {
     }
 
     protected function _findWikiWord($string){
-        if($this->checkWikiWordFunction !== null && preg_match_all("/(?<=\b)[A-Z][a-z]+[A-Z0-9]\w*/", $string, $matches)){
-            $fct=$this->checkWikiWordFunction;
+        if($this->checkWikiWordFunction !== null && preg_match_all("/(?:(?<=\b)|!)[A-Z][a-z]+[A-Z0-9]\w*/", $string, $matches)){
             $match = array_unique($matches[0]); // we must have a list without duplicated values, because of str_replace.
-            $string= str_replace($match, $fct($match), $string);
+            if(is_array($this->checkWikiWordFunction)) {
+                $o = $this->checkWikiWordFunction[0];
+                $m = $this->checkWikiWordFunction[1];
+                $result = $o->$m($match);
+            } else {
+                $fct=$this->checkWikiWordFunction;
+                $result = $fct($match);
+            }
+            $string= str_replace($match, $result, $string);
         }
         return $string;
     }
