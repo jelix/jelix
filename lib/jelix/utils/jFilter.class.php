@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Julien Issler
 * @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -121,10 +122,10 @@ class jFilter {
         // however, note that it doesn't validate all bad url...
         $res=@parse_url($url);
         if($res === false) return false;
-        if($schemeRequired && $res['scheme'] == '') return false;
-        if($hostRequired && $res['host'] == '') return false;
-        if($pathRequired && $res['path'] == '') return false;
-        if($queryRequired && $res['query'] == '') return false;
+        if($schemeRequired && !isset($res['scheme'])) return false;
+        if($hostRequired && !isset($res['host'])) return false;
+        if($pathRequired && !isset($res['path'])) return false;
+        if($queryRequired && !isset($res['query'])) return false;
         return true;
     }
 

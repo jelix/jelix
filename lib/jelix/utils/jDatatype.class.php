@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Julien Issler
 * @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -292,8 +293,8 @@ class jDatatypeLocaleTime extends jDatatypeDateTime {
  * @subpackage  utils
  */
 class jDatatypeUrl extends jDatatype {
-    protected $schemeRequired=null;
-    protected $hostRequired=null;
+    protected $schemeRequired=true;
+    protected $hostRequired=true;
     protected $pathRequired=null;
     protected $queryRequired=null;
 

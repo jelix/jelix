@@ -38,6 +38,7 @@ Julien Issler
  - jTcpdf: added default font for header and footer (#693)
  - jDao: autoremove of empty groups in jDaoConditions (#724)
  - jForms: new addControlBefore() method (#728)
+ - jForms: server side check for <input type="url"> doesn't work (#743)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
