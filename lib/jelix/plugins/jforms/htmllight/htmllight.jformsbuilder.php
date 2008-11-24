@@ -95,7 +95,7 @@ class htmllightJformsBuilder extends jFormsBuilderBase {
         $this->options = array_merge(array('errorDecorator'=>'jFormsErrorDecoratorAlert',
                  'helpDecorator'=>'jFormsHelpDecoratorAlert', 'method'=>'post'), $params);
 
-        if (preg_match('/^http:\/\//',$this->_action)) {
+        if (preg_match('#^https?://#',$this->_action)) {
             $urlParams = $this->_actionParams;
             echo '<form action="',$this->_action,'" method="'.$this->options['method'].'" id="', $this->_name,'"';
         } else {

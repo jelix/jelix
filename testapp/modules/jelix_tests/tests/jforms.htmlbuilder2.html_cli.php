@@ -15,7 +15,7 @@ require_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
 require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
 require_once(JELIX_LIB_PATH.'plugins/jforms/html/html.jformsbuilder.php');
 
-class testHMLForm2 extends jFormsBase { 
+class testHMLForm2 extends jFormsBase {
 }
 
 class testJFormsHtmlBuilder2 extends htmlJformsBuilder {
@@ -313,5 +313,63 @@ c2.addControl(c, \'closed\');
 c2.activate(\'closed\');
 ', $this->builder->getJsContent());
     }
-}
 
+    public function testFormWithExternalUrlAsAction(){
+        $this->builder->setAction('http://www.jelix.org/dummy.php',array());
+        ob_start();
+        $this->builder->outputHeader(array('method'=>'post'));
+        $out = ob_get_clean();
+
+        $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
+//<![CDATA[
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest2\');
+jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
+jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
+jFormsJQ.declareForm(jFormsJQ.tForm);
+//]]>
+</script><div class="jforms-hiddens"><input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
+</div>';
+
+        $this->assertEqualOrDiff($result, $out);
+        $this->assertEqualOrDiff('', $this->builder->getJsContent());
+
+        $this->builder->setAction('http://www.jelix.org/dummy.php',array('foo'=>'bar'));
+        ob_start();
+        $this->builder->outputHeader(array('method'=>'post'));
+        $out = ob_get_clean();
+
+        $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
+//<![CDATA[
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest3\');
+jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
+jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
+jFormsJQ.declareForm(jFormsJQ.tForm);
+//]]>
+</script><div class="jforms-hiddens"><input type="hidden" name="foo" value="bar"/>
+<input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
+</div>';
+
+        $this->assertEqualOrDiff($result, $out);
+        $this->assertEqualOrDiff('', $this->builder->getJsContent());
+
+        $this->builder->setAction('https://www.jelix.org/dummy.php',array());
+        ob_start();
+        $this->builder->outputHeader(array('method'=>'get'));
+        $out = ob_get_clean();
+
+        $result ='<form action="https://www.jelix.org/dummy.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
+//<![CDATA[
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest4\');
+jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
+jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
+jFormsJQ.declareForm(jFormsJQ.tForm);
+//]]>
+</script><div class="jforms-hiddens"><input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
+</div>';
+
+        $this->assertEqualOrDiff($result, $out);
+        $this->assertEqualOrDiff('', $this->builder->getJsContent());
+
+    }
+
+}

@@ -16,7 +16,7 @@ require_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
 require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
 require_once(JELIX_LIB_PATH.'plugins/jforms/html/html.jformsbuilder.php');
 
-class testHMLForm extends jFormsBase { 
+class testHMLForm extends jFormsBase {
 }
 
 class testJFormsHtmlBuilder extends htmlJformsBuilder {
@@ -164,9 +164,7 @@ jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
-        $ctrl->help='some 
-help with \' and
-line break.';
+        $ctrl->help="some \nhelp with ' and\nline break.";
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" value="laurent"/><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->formname.'\',\'input1\')">?</a></span>', $out);
         $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
@@ -473,9 +471,9 @@ jFormsJQ.tForm.addControl(c);
 c.errInvalid=\'"Votre choix" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
-        
+
         $this->builder->clearJs();
-        
+
         $ctrl->datasource = new jFormsStaticDatasource();
         $ctrl->datasource->data = array('1'=>'Yes','0'=>'No');
         $this->form->setReadOnly('rbchoixsimple',false);
@@ -484,13 +482,13 @@ jFormsJQ.tForm.addControl(c);
         $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" value="1"/><label for="'.$this->formname.'_rbchoixsimple_0">Yes</label></span>';
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="0"/><label for="'.$this->formname.'_rbchoixsimple_1">No</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        
+
         $this->form->setData('rbchoixsimple',0);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" value="1"/><label for="'.$this->formname.'_rbchoixsimple_0">Yes</label></span>';
         $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="0" checked="checked"/><label for="'.$this->formname.'_rbchoixsimple_1">No</label></span>';
         $this->assertEqualOrDiff($result, $out);
-        
+
         $this->builder->clearJs();
     }
 
