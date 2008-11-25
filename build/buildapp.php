@@ -2,8 +2,9 @@
 /**
 * @package     jelix
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Julien Issler
 * @copyright   2006-2007 Jouanneau laurent
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -12,7 +13,7 @@ $BUILD_OPTIONS = array(
     "main directory where sources will be copied",  // signification (false = option cachée)
     '_dist',                                        // valeur par défaut (boolean = option booleene)
     '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
-    ), 
+    ),
 'APPNAME'=> array(
     "The name of the app you want to generate (testapp)",
     '',
@@ -75,7 +76,7 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
 jBuildUtils::createDir($MAIN_TARGET_PATH);
 
 //... execution des manifests
-jManifest::process('build/manifests/'.$APPNAME.'.mn', '.', $MAIN_TARGET_PATH, ENV::getAll(), true);
+jManifest::process('build/manifests/'.$APPNAME.'.mn', '.', $MAIN_TARGET_PATH, ENV::getAll());
 
 
 file_put_contents($MAIN_TARGET_PATH.$APPDIR.'/VERSION', $VERSION);
