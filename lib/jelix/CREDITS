@@ -129,8 +129,9 @@ F. Fernandez (aka e-media)
  - little improvement in jLog.(#344)
  - little improvement in formcontrols plugin (#353)
 
-Foxmask
+FoxMaSk
   - bug fix in jFile::removeDir (#733)
+  - little improvement in jtpl_function_html_diff(#720)
 
 Mickaël Fradin (aka mike)
  - improvements in the jtpl plugin: formcontrols (#223)

@@ -446,6 +446,7 @@ cd lib/clearbricks/net.http
 cd lib/diff
 ! difflib.php
 ! diffhtml.php
+! difftableformatter.php
   README
 
 cd lib/wikirenderer
