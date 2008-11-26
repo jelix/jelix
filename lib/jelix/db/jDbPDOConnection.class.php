@@ -158,7 +158,7 @@ class jDbPDOConnection extends PDO {
 
     public function limitQuery ($queryString, $limitOffset = null, $limitCount = null){
         if ($limitOffset !== null && $limitCount !== null){
-           if($this->dbms == 'mysql'){
+           if($this->dbms == 'mysql' || $this->dbms == 'sqlite'){
                $queryString.= ' LIMIT '.intval($limitOffset).','. intval($limitCount);
            }elseif($this->dbms == 'pgsql'){
                $queryString.= ' LIMIT '.intval($limitCount).' OFFSET '.intval($limitOffset);
