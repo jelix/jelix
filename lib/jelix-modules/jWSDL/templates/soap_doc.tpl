@@ -4,7 +4,7 @@
         <a href="{jurl 'jWSDL~WSDL:wsdl', array("service"=>$doc['service'])}">[WSDL]</a></span></h1>
 
 <div id="page">
-    <!--<div class="logo"><img src="{$j_jelixwww}jelix/design/images/logo_jelix_moyen.png" alt=""/></div>-->
+    <!--<div class="logo"><img src="{$j_jelixwww}design/images/logo_jelix_moyen.png" alt=""/></div>-->
 
     <div class="menu">
         <h3>Services</h3>
@@ -82,5 +82,5 @@
     </div>
     {/if}
 
-    <div id="jelixpowered"><img src="{$j_basepath}jelix/design/images/jelix_powered.png" alt="jelix powered" /></div>
+    <div id="jelixpowered"><img src="{$j_jelixwww}design/images/jelix_powered.png" alt="jelix powered" /></div>
 </div>

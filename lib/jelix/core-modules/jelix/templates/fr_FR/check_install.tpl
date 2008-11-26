@@ -1,7 +1,7 @@
 {meta_html css $j_jelixwww.'design/jelix.css'}
 
 <div id="page">
-    <div class="logo"><img src="{$j_basepath}jelix/design/images/logo_jelix_moyen.png" alt=""/></div>
+    <div class="logo"><img src="{$j_jelixwww}design/images/logo_jelix_moyen.png" alt=""/></div>
 
     <div class="nocss">
         <hr />
@@ -11,7 +11,7 @@
             <li>sinon copiez/collez le dossier <em>lib/jelix-www/</em> dans le dossier <em>{$wwwpath}</em> et renommez le en 'jelix'</li>
         </ul>
         <p>Si vous voulez utiliser un autre nom que jelix pour ce dossier, modifier le paramêtre <code>jelixWWWPath</code>
-         dans <em>{$configpath}defaultconfig.ini</em>.</p>
+         dans <em>{$configpath}defaultconfig.ini.php</em>.</p>
         <p>Pour plus d'informations, consultez <a href="http://jelix.org/articles/fr/manuel-1.1/installation/application#configuration-du-serveur"
              title="documentation officielle">la documentation sur l'installation de Jelix</a>.</p>
         <hr />
@@ -45,5 +45,5 @@
         </div>
     </div>
 
-    <div id="jelixpowered"><img src="{$j_basepath}jelix/design/images/jelix_powered.png" alt="jelix powered" /></div>
+    <div id="jelixpowered"><img src="{$j_jelixwww}design/images/jelix_powered.png" alt="jelix powered" /></div>
 </div>
