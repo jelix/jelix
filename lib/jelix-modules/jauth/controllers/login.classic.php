@@ -3,9 +3,9 @@
 * @package     jelix-modules
 * @subpackage  jauth
 * @author      Laurent Jouanneau
-* @contributor Antoine Detante
-* @contributor Bastien Jaillot
+* @contributor Antoine Detante, Bastien Jaillot, Loic Mathaud
 * @copyright   2005-2007 Laurent Jouanneau, 2007 Antoine Detante, 2008 Bastien Jaillot
+* @copyright   2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -88,9 +88,9 @@ class loginCtrl extends jController {
             }
         }
 
-        $rep = $this->getResponse('html');
+        $rep = $this->getResponse('htmlauth');
         $rep->title =  jLocale::get ('auth.titlePage.login');
-        //$rep->bodyTpl = 'jauth~index';
+        $rep->bodyTpl = 'jauth~index';
 
         $zp = array ('login'=>$this->param('login'),
                      'failed'=>$this->param('failed'),

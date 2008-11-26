@@ -54,6 +54,7 @@ ltx2pdf= jResponseLatexToPdf
 tcpdf = jResponseTcpdf
 soap = jResponseSoap
 htmlfragment = jResponseHtmlFragment
+htmlauth = jResponseHtml
 
 [_coreResponses]
 html = jResponseHtml
@@ -79,6 +80,7 @@ ltx2pdf= jResponseLatexToPdf
 tcpdf = jResponseTcpdf
 soap = jResponseSoap
 htmlfragment = jResponseHtmlFragment
+htmlauth = jResponseHtml
 
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
