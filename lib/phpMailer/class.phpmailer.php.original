@@ -527,9 +527,9 @@ class PHPMailer {
 
     $smtp_from = ($this->Sender == '') ? $this->From : $this->Sender;
     if(!$this->smtp->Mail($smtp_from)) {
-      $this->smtp->Reset();
       $error = $this->Lang('from_failed') . $smtp_from;
       $this->SetError($error);
+      $this->smtp->Reset();
       return false;
     }
 
@@ -557,15 +557,15 @@ class PHPMailer {
         }
         $error .= $bad_rcpt[$i];
       }
-      $this->smtp->Reset();
       $error = $this->Lang('recipients_failed') . $error;
       $this->SetError($error);
+      $this->smtp->Reset();
       return false;
     }
 
     if(!$this->smtp->Data($header . $body)) {
-      $this->smtp->Reset();
       $this->SetError($this->Lang('data_not_accepted'));
+      $this->smtp->Reset();
       return false;
     }
     if($this->SMTPKeepAlive == true) {
@@ -614,8 +614,8 @@ class PHPMailer {
 
         if($tls) {
           if(!$this->smtp->StartTLS()) {
-            $this->smtp->Reset();
             $this->SetError($this->Lang("tls"));
+            $this->smtp->Reset();
             $connection = false;
           }
 
@@ -626,8 +626,8 @@ class PHPMailer {
         $connection = true;
         if($this->SMTPAuth) {
           if(!$this->smtp->Authenticate($this->Username, $this->Password)) {
-            $this->smtp->Reset();
             $this->SetError($this->Lang('authenticate'));
+            $this->smtp->Reset();
             $connection = false;
           }
         }
@@ -1231,11 +1231,11 @@ class PHPMailer {
       $this->SetError($this->Lang('file_open') . $path);
       return '';
     }
-    if (!function_exists('get_magic_quotes')) {
+    if (function_exists('get_magic_quotes')) {
         function get_magic_quotes() {
             return false;
         }
-    }
+}
     if (PHP_VERSION < 6) {
       $magic_quotes = get_magic_quotes_runtime();
       set_magic_quotes_runtime(0);
@@ -1622,7 +1622,7 @@ class PHPMailer {
    * @access private
    * @return void
    */
-  protected function SetError($msg) {
+  private function SetError($msg) {
     $this->error_count++;
     $this->ErrorInfo = $msg;
   }
@@ -1664,7 +1664,7 @@ class PHPMailer {
    * @access private
    * @return string
    */
-  protected function Lang($key) {
+  private function Lang($key) {
     if(count($this->language) < 1) {
       $this->SetLanguage('en'); // set the default language
     }

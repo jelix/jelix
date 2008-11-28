@@ -1,6 +1,6 @@
---- class.phpmailer.php.orig	2008-07-19 23:22:14.000000000 +0200
-+++ class.phpmailer.php	2008-11-04 12:22:40.000000000 +0100
-@@ -522,9 +522,9 @@
+--- class.phpmailer.php.original	2008-11-08 12:23:04.000000000 +0100
++++ class.phpmailer.php	2008-11-28 12:00:31.000000000 +0100
+@@ -527,9 +527,9 @@
  
      $smtp_from = ($this->Sender == '') ? $this->From : $this->Sender;
      if(!$this->smtp->Mail($smtp_from)) {
@@ -11,7 +11,7 @@
        return false;
      }
  
-@@ -552,15 +552,15 @@
+@@ -557,15 +557,15 @@
          }
          $error .= $bad_rcpt[$i];
        }
@@ -29,7 +29,7 @@
        return false;
      }
      if($this->SMTPKeepAlive == true) {
-@@ -609,8 +609,8 @@
+@@ -614,8 +614,8 @@
  
          if($tls) {
            if(!$this->smtp->StartTLS()) {
@@ -39,7 +39,7 @@
              $connection = false;
            }
  
-@@ -621,8 +621,8 @@
+@@ -626,8 +626,8 @@
          $connection = true;
          if($this->SMTPAuth) {
            if(!$this->smtp->Authenticate($this->Username, $this->Password)) {
@@ -49,7 +49,7 @@
              $connection = false;
            }
          }
-@@ -1217,11 +1217,11 @@
+@@ -1231,11 +1231,11 @@
        $this->SetError($this->Lang('file_open') . $path);
        return '';
      }
@@ -63,7 +63,7 @@
      if (PHP_VERSION < 6) {
        $magic_quotes = get_magic_quotes_runtime();
        set_magic_quotes_runtime(0);
-@@ -1608,7 +1608,7 @@
+@@ -1622,7 +1622,7 @@
     * @access private
     * @return void
     */
@@ -72,7 +72,7 @@
      $this->error_count++;
      $this->ErrorInfo = $msg;
    }
-@@ -1650,7 +1650,7 @@
+@@ -1664,7 +1664,7 @@
     * @access private
     * @return string
     */
