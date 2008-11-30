@@ -39,6 +39,7 @@ Julien Issler
  - jDao: autoremove of empty groups in jDaoConditions (#724)
  - jForms: new addControlBefore() method (#728)
  - jForms: server side check for <input type="url"> doesn't work (#743)
+ - jForms: date and datetime controls + jQuery UI datepicker (#196)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)

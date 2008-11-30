@@ -258,6 +258,16 @@ storage=
 ; dao_selector = "jelix~jsession"
 ; dao_db_profile = ""
 
+[forms]
+; define input type for datetime widgets : "textboxes" or "menulists"
+controls.datetime.input = "menulists"
+; define the way month labels are displayed widgets: "numbers", "names" or "shortnames"
+controls.datetime.months.labels = "names"
+; define the default config for datepickers in jforms
+datepicker = default
+
+[datepickers]
+default = jelix/js/jforms/datepickers/default/init.js
 
 [htmleditors]
 default.engine.name = wymeditor

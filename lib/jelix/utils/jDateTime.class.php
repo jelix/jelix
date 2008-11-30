@@ -3,13 +3,14 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Gérald Croes, Laurent Jouanneau
-* @contributor Laurent Jouanneau
+* @contributor Laurent Jouanneau, Julien Issler
 * @contributor Loic Mathaud
 * @contributor Florian Hatat
 * @copyright   2005-2008 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud
 * @copyright   2007-2008 Florian Hatat
 * @copyright   2001-2005 CopixTeam, GeraldCroes, Laurent Jouanneau
+* @copyright   2008 Julien Issler
 *
 * This class was get originally from the Copix project (CopixDate.lib.php, Copix 2.3dev20050901, http://www.copix.org)
 * Only few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -435,7 +436,7 @@ class jDateTime {
         foreach($fields as $field){
             if($dt->$field > $this->$field)
                 return -1;
-            else if($dt->$field < $this->$field)
+            if($dt->$field < $this->$field)
                 return 1;
         }
         return 0;

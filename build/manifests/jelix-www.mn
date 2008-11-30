@@ -3,6 +3,8 @@ cd lib/jelix-www/design
   jelix.css
   tooltip.css
   jform.css
+cd lib/jelix-www/design/jforms/
+  calendar.gif
 cd lib/jelix-www/design/images
   logo_jelix_moyen.png
   fond-bandeau.png
@@ -13,6 +15,8 @@ cd lib/jelix-www/js
   jforms_light.js
   jforms_jquery.js
   json.js
+cd lib/jelix-www/js/jforms/datepickers/default
+  init.js
 cd lib/jelix-www/xul
   jxulform.css
   jxulform.xml
@@ -78,6 +82,8 @@ c jquery.date_input.fr_FR.js
   LICENCE
 cd lib/jelix-www/jquery/flash
 c jquery.flash.js
+cd lib/jelix-www/jquery/include
+! jquery.include.pack-1.0.js (jquery.include.js)
 cd lib/jelix-www/jquery/ui
 ! ui.accordion.min.js
 ! effects.highlight.min.js

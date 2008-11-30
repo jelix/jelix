@@ -3,11 +3,12 @@
 * @package    jelix
 * @subpackage forms
 * @author     Laurent Jouanneau
-* @contributor Loic Mathaud, Dominique Papin
+* @contributor Loic Mathaud, Dominique Papin, Julien Issler
 * @contributor Uriel Corfa Emotic SARL
 * @copyright   2006-2008 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2007-2008 Dominique Papin
 * @copyright   2007 Emotic SARL
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -41,6 +42,53 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
                 $label= (string)$control->emptyitem;
                 $source[]='$ctrl->emptyItemLabel=\''.str_replace("'","\\'",$label).'\';';
             }
+        }
+        return false;
+    }
+
+    protected function generateDate(&$source, $control, &$attributes) {
+        $this->attrDefaultvalue($source, $attributes);
+        $this->attrReadOnly($source, $attributes);
+        $this->attrRequired($source, $attributes);
+        $this->readLabel($source, $control, 'date');
+        $this->readHelpHintAlert($source, $control);
+        if(isset($attributes['mindate'])){
+            $source[]='$ctrl->datatype->addFacet(\'minValue\',\''.$attributes['mindate'].'\');';
+            unset($attributes['mindate']);
+        }
+        if(isset($attributes['maxdate'])){
+            $source[]='$ctrl->datatype->addFacet(\'maxValue\',\''.$attributes['maxdate'].'\');';
+            unset($attributes['maxdate']);
+        }
+        if(isset($attributes['datepicker'])){
+            $source[]='$ctrl->datepickerConfig = \''.$attributes['datepicker'].'\';';
+            unset($attributes['datepicker']);
+        }
+        return false;
+    }
+
+    protected function generateDatetime(&$source, $control, &$attributes) {
+        $this->attrDefaultvalue($source, $attributes);
+        $this->attrReadOnly($source, $attributes);
+        $this->attrRequired($source, $attributes);
+        $this->readLabel($source, $control, 'datetime');
+        $this->readHelpHintAlert($source, $control);
+        if(isset($attributes['mindate'])){
+            $source[]='$ctrl->datatype->addFacet(\'minValue\',\''.$attributes['mindate'].'\');';
+            unset($attributes['mindate']);
+        }
+        if(isset($attributes['maxdate'])){
+            $source[]='$ctrl->datatype->addFacet(\'maxValue\',\''.$attributes['maxdate'].'\');';
+            unset($attributes['maxdate']);
+        }
+        if(isset($attributes['seconds'])){
+            if($attributes['seconds'] == "true")
+                $source[]='$ctrl->enableSeconds = true;';
+            unset($attributes['seconds']);
+        }
+        if(isset($attributes['datepicker'])){
+            $source[]='$ctrl->datepickerConfig = \''.$attributes['datepicker'].'\';';
+            unset($attributes['datepicker']);
         }
         return false;
     }

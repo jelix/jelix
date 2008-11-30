@@ -183,7 +183,7 @@ jForms.declareForm(jForms.tForm);
         $required = ($ctrl->required == false || $ctrl->isReadOnly()?'':' jforms-required');
         $inError = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
-        if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons'){
+        if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime'){
             echo '<span class="jforms-label',$required,$inError,'"',$hint,'>',htmlspecialchars($ctrl->label),'</span>';
         }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
             $id = $this->_name.'_'.$ctrl->ref;
@@ -249,7 +249,7 @@ jForms.declareForm(jForms.tForm);
     protected function jsInput($ctrl) {
 
         $datatype = array('jDatatypeBoolean'=>'Boolean','jDatatypeDecimal'=>'Decimal','jDatatypeInteger'=>'Integer','jDatatypeHexadecimal'=>'Hexadecimal',
-                        'jDatatypeDatetime'=>'Datetime','jDatatypeDate'=>'Date','jDatatypeTime'=>'Time',
+                        'jDatatypeDateTime'=>'Datetime','jDatatypeDate'=>'Date','jDatatypeTime'=>'Time',
                         'jDatatypeUrl'=>'Url','jDatatypeEmail'=>'Email','jDatatypeIPv4'=>'Ipv4','jDatatypeIPv6'=>'Ipv6');
         $isLocale = false;
         $data_type_class = get_class($ctrl->datatype);
@@ -276,6 +276,181 @@ jForms.declareForm(jForms.tForm);
         if($minl !== null)
             $this->jsContent .="c.minLength = '$minl';\n";
 
+        $this->commonJs($ctrl);
+    }
+
+    protected function _outputDateControlDay($ctrl, $id, $value, $class, $readonly, $hint){
+        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
+            echo '<input type="text" size="2" maxlength="2" id="'.$id.'day" name="'.$ctrl->ref.'[day]"'.$readonly.$hint.$class.' value="'.$value.'"'.$this->_endt;
+        else{
+            echo '<select id="'.$id.'day" name="'.$ctrl->ref.'[day]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.date.day.label')).'</option>';
+            for($i=1;$i<32;$i++){
+                $k = ($i<10)?'0'.$i:$i;
+                echo '<option value="'.$k.'"'.($k == $value?' selected="selected"':'').'>'.$k.'</option>';
+            }
+            echo '</select>';
+        }
+    }
+
+    protected function _outputDateControlMonth($ctrl, $id, $value, $class, $readonly, $hint){
+        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
+            echo '<input type="text" size="2" maxlength="2" id="'.$id.'month" name="'.$ctrl->ref.'[month]"'.$readonly.$hint.$class.' value="'.$value.'"'.$this->_endt;
+        else{
+            $monthLabels = $GLOBALS['gJConfig']->forms['controls.datetime.months.labels'];
+            echo '<select id="'.$id.'month" name="'.$ctrl->ref.'[month]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.date.month.label')).'</option>';
+            for($i=1;$i<13;$i++){
+                $k = ($i<10)?'0'.$i:$i;
+                if($monthLabels == 'names')
+                    $l = htmlspecialchars(jLocale::get('jelix~date_time.month.'.$k.'.label'));
+                else if($monthLabels == 'shortnames')
+                    $l = htmlspecialchars(jLocale::get('jelix~date_time.month.'.$k.'.shortlabel'));
+                else
+                    $l = $k;
+                echo '<option value="'.$k.'"'.($k == $value?' selected="selected"':'').'>'.$l.'</option>';
+            }
+            echo '</select>';
+        }
+    }
+
+    protected function _outputDateControlYear($ctrl, $id, $value, $class, $readonly, $hint){
+        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
+            echo '<input type="text" size="4" maxlength="4" id="'.$id.'year" name="'.$ctrl->ref.'[year]"'.$readonly.$hint.$class.' value="'.$value.'"'.$this->_endt;
+        else{
+            $minDate = $ctrl->datatype->getFacet('minValue');
+            $maxDate = $ctrl->datatype->getFacet('maxValue');
+            if($minDate && $maxDate){
+                echo '<select id="'.$id.'year" name="'.$ctrl->ref.'[year]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.date.year.label')).'</option>';
+                for($i=$minDate->year;$i<=$maxDate->year;$i++)
+                    echo '<option value="'.$i.'"'.($i == $value?' selected="selected"':'').'>'.$i.'</option>';
+                echo '</select>';
+            }
+            else
+                echo '<input type="text" size="4" maxlength="4" id="'.$id.'year" name="'.$ctrl->ref.'[year]"'.$readonly.$hint.$class.' value="'.$value.'"'.$this->_endt;
+        }
+    }
+
+    protected function _outputDateControlHour($ctrl, $id, $value, $class, $readonly, $hint){
+        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
+            echo '<input type="text" id="'.$id.'hour" name="'.$ctrl->ref.'[hour]" value="'.$value.'"'.$this->_endt;
+        else{
+            echo '<select id="'.$id.'hour" name="'.$ctrl->ref.'[hour]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.time.hour.label')).'</option>';
+            for($i=0;$i<60;$i++){
+                $k = ($i<10)?'0'.$i:$i;
+                echo '<option value="'.$k.'"'.( (string) $k === $value?' selected="selected"':'').'>'.$k.'</option>';
+            }
+            echo '</select>';
+        }
+    }
+
+    protected function _outputDateControlMinutes($ctrl, $id, $value, $class, $readonly, $hint){
+        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
+            echo '<input type="text" id="'.$id.'minutes" name="'.$ctrl->ref.'[minutes]" value="'.$value.'"'.$this->_endt;
+        else{
+            echo '<select id="'.$id.'minutes" name="'.$ctrl->ref.'[minutes]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.time.minutes.label')).'</option>';
+            for($i=0;$i<60;$i++){
+                $k = ($i<10)?'0'.$i:$i;
+                echo '<option value="'.$k.'"'.( (string) $k === $value?' selected="selected"':'').'>'.$k.'</option>';
+            }
+            echo '</select>';
+        }
+    }
+
+    protected function _outputDateControlSeconds($ctrl, $id, $value, $class, $readonly, $hint){
+        if(!$ctrl->enableSeconds)
+            echo '<input type="hidden" id="'.$id.'seconds" name="'.$ctrl->ref.'[seconds]" value="'.$value.'"'.$this->_endt;
+        else if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
+            echo '<input type="text" id="'.$id.'seconds" name="'.$ctrl->ref.'[seconds]" value="'.$value.'"'.$this->_endt;
+        else{
+            echo '<select id="'.$id.'seconds" name="'.$ctrl->ref.'[seconds]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.time.seconds.label')).'</option>';
+            for($i=0;$i<60;$i++){
+                $k = ($i<10)?'0'.$i:$i;
+                echo '<option value="'.$k.'"'.( (string) $k === $value?' selected="selected"':'').'>'.$k.'</option>';
+            }
+            echo '</select>';
+        }
+    }
+
+    protected function outputDate($ctrl, $id, $class, $readonly, $hint){
+        $id = $this->_name.'_'.$ctrl->ref.'_';
+        $v = array('year'=>'','month'=>'','day'=>'');
+        if(preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?$#',$this->_form->getData($ctrl->ref),$matches)){
+            if(isset($matches[1]))
+                $v['year'] = $matches[1];
+            if(isset($matches[2]))
+                $v['month'] = $matches[2];
+            if(isset($matches[3]))
+                $v['day'] = $matches[3];
+        }
+        $f = jLocale::get('jelix~format.date');
+        for($i=0;$i<strlen($f);$i++){
+            if($f[$i] == 'Y')
+                $this->_outputDateControlYear($ctrl, $id, $v['year'], $class, $readonly, $hint);
+            else if($f[$i] == 'm')
+                $this->_outputDateControlMonth($ctrl, $id, $v['month'], $class, $readonly, $hint);
+            else if($f[$i] == 'd')
+                $this->_outputDateControlDay($ctrl, $id, $v['day'], $class, $readonly, $hint);
+            else
+                echo ' ';
+        }
+    }
+
+    protected function jsDate($ctrl){
+        $this->jsContent .= "c = new jFormsControlDate('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .= "c.multiFields = true;\n";
+        $minDate = $ctrl->datatype->getFacet('minValue');
+        $maxDate = $ctrl->datatype->getFacet('maxValue');
+        if($minDate)
+            $this->jsContent .= "c.minDate = '".$minDate->toString(jDateTime::BD_DFORMAT)."';\n";
+        if($maxDate)
+            $this->jsContent .= "c.maxDate = '".$maxDate->toString(jDateTime::BD_DFORMAT)."';\n";
+        $this->commonJs($ctrl);
+    }
+
+    protected function outputDatetime($ctrl, $id, $class, $readonly, $hint){
+        $id = $this->_name.'_'.$ctrl->ref.'_';
+        $v = array('year'=>'','month'=>'','day'=>'','hour'=>'','minutes'=>'','seconds'=>'');
+        if(preg_match('#^(\d{4})?-(\d{2})?-(\d{2})? (\d{2})?:(\d{2})?(:(\d{2})?)?$#',$this->_form->getData($ctrl->ref),$matches)){
+            if(isset($matches[1]))
+                $v['year'] = $matches[1];
+            if(isset($matches[2]))
+                $v['month'] = $matches[2];
+            if(isset($matches[3]))
+                $v['day'] = $matches[3];
+            if(isset($matches[4]))
+                $v['hour'] = $matches[4];
+            if(isset($matches[5]))
+                $v['minutes'] = $matches[5];
+            if(isset($matches[7]))
+                $v['seconds'] = $matches[7];
+        }
+        $f = jLocale::get('jelix~format.datetime');
+        for($i=0;$i<strlen($f);$i++){
+            if($f[$i] == 'Y')
+                $this->_outputDateControlYear($ctrl, $id, $v['year'], $class, $readonly, $hint);
+            else if($f[$i] == 'm')
+                $this->_outputDateControlMonth($ctrl, $id, $v['month'], $class, $readonly, $hint);
+            else if($f[$i] == 'd')
+                $this->_outputDateControlDay($ctrl, $id, $v['day'], $class, $readonly, $hint);
+            else if($f[$i] == 'H')
+                $this->_outputDateControlHour($ctrl, $id, $v['hour'], $class, $readonly, $hint);
+            else if($f[$i] == 'i')
+                $this->_outputDateControlMinutes($ctrl, $id, $v['minutes'], $class, $readonly, $hint);
+            else if($f[$i] == 's')
+                $this->_outputDateControlSeconds($ctrl, $id, $v['seconds'], $class, $readonly, $hint);
+            else
+                echo ' ';
+        }
+    }
+
+    protected function jsDatetime($ctrl){
+        $this->jsContent .= "c = new jFormsControlDatetime('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .= "c.multiFields = true;\n";
+        $minDate = $ctrl->datatype->getFacet('minValue');
+        $maxDate = $ctrl->datatype->getFacet('maxValue');
+        if($minDate)
+            $this->jsContent .= "c.minDate = '".$minDate->toString(jDateTime::BD_DTFORMAT)."';\n";
+        if($maxDate)
+            $this->jsContent .= "c.maxDate = '".$maxDate->toString(jDateTime::BD_DTFORMAT)."';\n";
         $this->commonJs($ctrl);
     }
 

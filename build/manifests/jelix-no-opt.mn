@@ -72,3 +72,5 @@ cd lib/jelix/forms/controls
   jFormsControlSwitch.class.php
   jFormsControlTextarea.class.php
   jFormsControlUpload.class.php
+  jFormsControlDate.class.php
+  jFormsControlDatetime.class.php

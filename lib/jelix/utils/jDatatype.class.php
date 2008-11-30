@@ -213,25 +213,28 @@ class jDatatypeDateTime extends jDatatype {
     protected $minValue;
     private $dt;
     protected $format=21;
+    protected $_date_format = 'Y-m-d H:i:s';
     public function check($value) {
         $this->dt = new jDateTime();
         if(!$this->dt->setFromString($value,$this->format)) return false;
         if($this->maxValue !== null){
-            if($this->dt->compareTo($this->maxValue) != -1) return false;
+            if($this->dt->compareTo($this->maxValue) == 1) return false;
         }
         if($this->minValue !== null){
-            if($this->dt->compareTo($this->minValue) != 1) return false;
+            if($this->dt->compareTo($this->minValue) == -1) return false;
         }
         return true;
     }
 
     protected function _addFacet($type,$value){
         if($type == 'maxValue' || $type == 'minValue'){
+            if(!preg_match('#^\d{4}-\d{2}-\d{2} (\d{2}:\d{2}(:\d{2})?)?$#',$value))
+                $value = date($this->_date_format,strtotime($value));
             $this->$type = new jDateTime();
             $this->$type->setFromString($value,$this->format);
-        }else{
-            parent::_addFacet($type,$value);
         }
+        else
+            parent::_addFacet($type,$value);
     }
     /**
      * @since 1.0
@@ -254,6 +257,7 @@ class jDatatypeTime extends jDatatypeDateTime {
  */
 class jDatatypeDate extends jDatatypeDateTime {
     protected $format=20;
+    protected $_date_format = 'Y-m-d';
 }
 
 /**
