@@ -665,7 +665,17 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
     }
 
     protected function jsSecret($ctrl) {
-        $this->jsTextarea($ctrl);
+        $this->jsContent .="c = new jFormsJQControlSecret('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+
+        $maxl= $ctrl->datatype->getFacet('maxLength');
+        if($maxl !== null)
+            $this->jsContent .="c.maxLength = '$maxl';\n";
+
+        $minl= $ctrl->datatype->getFacet('minLength');
+        if($minl !== null)
+            $this->jsContent .="c.minLength = '$minl';\n";
+
+        $this->commonJs($ctrl);
     }
 
     protected function outputSecretconfirm($ctrl, $id, $class, $readonly, $hint) {
@@ -674,8 +684,8 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
     }
 
     protected function jsSecretconfirm($ctrl) {
-        // we assume that a secret confirm control is just after a secret control in the list of controls
-        $this->jsContent .= "c.confirmField = new jFormsJQControlSecretConfirm('".$ctrl->ref."_confirm', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .="c = new jFormsJQControlConfirm('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->commonJs($ctrl);
     }
 
     protected function outputOutput($ctrl, $id, $class, $readonly, $hint) {

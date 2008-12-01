@@ -1007,7 +1007,7 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" value=""/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'passwd\', \'mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsJQControlSecret(\'passwd\', \'mot de passe\');
 c.errInvalid=\'"mot de passe" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
@@ -1015,7 +1015,7 @@ jFormsJQ.tForm.addControl(c);
         $this->form->setData('passwd','laurent');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'passwd\', \'mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsJQControlSecret(\'passwd\', \'mot de passe\');
 c.errInvalid=\'"mot de passe" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
@@ -1023,7 +1023,7 @@ jFormsJQ.tForm.addControl(c);
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" class=" jforms-readonly" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'passwd\', \'mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsJQControlSecret(\'passwd\', \'mot de passe\');
 c.errInvalid=\'"mot de passe" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
@@ -1033,7 +1033,7 @@ jFormsJQ.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd" title="ceci est un tooltip">mot de passe</label>', $out);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'passwd\', \'mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsJQControlSecret(\'passwd\', \'mot de passe\');
 c.errInvalid=\'"mot de passe" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
@@ -1042,7 +1042,7 @@ jFormsJQ.tForm.addControl(c);
         $ctrl->datatype->addFacet('maxLength',10);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" maxlength="10" value="laurent"/>', $out);
-        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'passwd\', \'mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsJQControlSecret(\'passwd\', \'mot de passe\');
 c.maxLength = \'10\';
 c.minLength = \'5\';
 c.errInvalid=\'"mot de passe" field is invalid\';
@@ -1061,14 +1061,29 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" value=""/>', $out);
-        $this->assertEqualOrDiff('c.confirmField = new jFormsJQControlSecretConfirm(\'passwd_confirm_confirm\', \'confirmation mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsJQControlConfirm(\'passwd_confirm\', \'confirmation mot de passe\');
+c.errInvalid=\'"confirmation mot de passe" field is invalid\';
+jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
+
+        $ctrl->required = true;
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input type="password" name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" class=" jforms-required" value=""/>', $out);
+        $this->assertEqualOrDiff('c = new jFormsJQControlConfirm(\'passwd_confirm\', \'confirmation mot de passe\');
+c.required = true;
+c.errRequired=\'"confirmation mot de passe" field is required\';
+c.errInvalid=\'"confirmation mot de passe" field is invalid\';
+jFormsJQ.tForm.addControl(c);
+', $this->builder->getJsContent());
+        $ctrl->required = false;
 
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" readonly="readonly" class=" jforms-readonly" value=""/>', $out);
-        $this->assertEqualOrDiff('c.confirmField = new jFormsJQControlSecretConfirm(\'passwd_confirm_confirm\', \'confirmation mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsJQControlConfirm(\'passwd_confirm\', \'confirmation mot de passe\');
+c.errInvalid=\'"confirmation mot de passe" field is invalid\';
+jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
@@ -1077,7 +1092,9 @@ jFormsJQ.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd_confirm" title="ceci est un tooltip">confirmation mot de passe</label>', $out);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input type="password" name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" readonly="readonly" title="ceci est un tooltip" class=" jforms-readonly" value=""/>', $out);
-        $this->assertEqualOrDiff('c.confirmField = new jFormsJQControlSecretConfirm(\'passwd_confirm_confirm\', \'confirmation mot de passe\');
+        $this->assertEqualOrDiff('c = new jFormsJQControlConfirm(\'passwd_confirm\', \'confirmation mot de passe\');
+c.errInvalid=\'"confirmation mot de passe" field is invalid\';
+jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
     }
