@@ -85,7 +85,7 @@ class jResponseCmdline extends jResponse {
      * 
      * @return int 
      */
-    public function getExitCode($code){
+    public function getExitCode(){
         return $this->_exit_code;
     }
 
