@@ -484,8 +484,6 @@ cd lib/tcpdf
   barcodes.php
 cd lib/tcpdf/config
   tcpdf_config.php
-cd lib/tcpdf/config/lang
-  eng.php
 
 cd lib/wshelper
 ! CREDITS

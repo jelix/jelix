@@ -11,10 +11,10 @@ Name:
 	TCPDF
 
 Version:
-	4.2.004
+	4.3.006
 	
 Release date:
-	2008-11-04
+	2008-12-01
 
 Author:
 	Nicola Asuni 
