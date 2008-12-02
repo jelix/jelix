@@ -483,17 +483,19 @@ jForms.declareForm(jForms.tForm);
         $span ='<span class="jforms-chkbox jforms-ctl-'.$ctrl->ref.'"><input type="checkbox"';
 
         if(is_array($value)){
+            $value = array_map(create_function('$v', 'return (string) $v;'),$value);
             foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
                 echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
-                if(in_array($v,$value))
+                if(in_array((string) $v,$value,true))
                     echo ' checked="checked"';
                 echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label></span>';
                 $i++;
             }
         }else{
+            $value = (string) $value;
             foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
                 echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
-                if($v == $value)
+                if((string) $v === $value)
                     echo ' checked="checked"';
                 echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label></span>';
                 $i++;
@@ -569,12 +571,14 @@ jForms.declareForm(jForms.tForm);
                 $value = $value[0];
 
             if(is_array($value)){
+                $value = array_map(create_function('$v', 'return (string) $v;'),$value);
                 foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                    echo '<option value="',htmlspecialchars($v),'"',(in_array($v,$value)?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
+                    echo '<option value="',htmlspecialchars($v),'"',(in_array((string) $v,$value,true)?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
                 }
             }else{
+                $value = (string) $value;
                 foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                    echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
+                    echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
                 }
             }
             echo '</select>';
@@ -588,9 +592,10 @@ jForms.declareForm(jForms.tForm);
                     $value ='';
             }
 
+            $value = (string) $value;
             echo '<select',$id,$hint,$class,' size="',$ctrl->size,'">';
             foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                echo '<option value="',htmlspecialchars($v),'"',($v==$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
+                echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
             }
             echo '</select>';
         }

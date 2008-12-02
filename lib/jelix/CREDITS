@@ -40,6 +40,8 @@ Julien Issler
  - jForms: new addControlBefore() method (#728)
  - jForms: server side check for <input type="url"> doesn't work (#743)
  - jForms: date and datetime controls + jQuery UI datepicker (#196)
+ - jForms: javascript check of secret control's confirmation does not work (#751)
+ - jForms: some controls are selected by default if their values are "0" (#757)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
