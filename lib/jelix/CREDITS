@@ -196,9 +196,6 @@ Philippe Schelte (aka dubphil)
  - plugin tpl cycle (#149)
  - error in checkTrustedModules function (#715)
 
-Surfoo
- - double / in path for locale selector
-
 Warren Seine (aka SooW)
  - <script /> tags don't end with a newline (#536)
 
@@ -207,6 +204,9 @@ Thomas
  - jDaoFactoryBase::countBy : allowing to do count on distinct fields (#580)
  - JDaoConditions::addItemGroup : add clause group by (#579)
 
+Baptiste Toinot (aka Surfoo)
+ - double / in path for locale selector
+ 
 Christian Tritten
  - improvements on pagelinks plugin (#340)
 

@@ -6,11 +6,11 @@
 * @author      Laurent Jouanneau
 * @contributor Rahal
 * @contributor Julien Issler
-* @contributor Surfoo
+* @contributor Baptiste Toinot
 * @copyright   2005-2007 Laurent Jouanneau
 * @copyright   2007 Rahal
 * @copyright   2008 Julien Issler
-* @copyright   2008 Surfoo
+* @copyright   2008 Baptiste Toinot
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
