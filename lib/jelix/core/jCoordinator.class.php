@@ -23,10 +23,10 @@
  */
 class jCoordinator {
 
-   /**
-    * plugin list
-    * @var  array
-    */
+    /**
+     * plugin list
+     * @var  array
+     */
     public $plugins = array();
 
     /**
@@ -249,23 +249,29 @@ class jCoordinator {
     /**
      * instancy a response object corresponding to the default response type
      * of the current resquest
+     * @param boolean $originalResponse TRUE to get the original, non overloaded response
      * @return mixed  error string or false
      */
-    public function initDefaultResponseOfRequest(){
-        global $gJConfig;
+    public function initDefaultResponseOfRequest($originalResponse = false){
+        if($originalResponse)
+            $responses = &$GLOBALS['gJConfig']->_coreResponses;
+        else
+            $responses = &$GLOBALS['gJConfig']->responses;
 
-        $type= $this->request->defaultResponseType;
+        $type = $this->request->defaultResponseType;
 
-        if(!isset($gJConfig->responses[$type])){
+        if(!isset($responses[$type]))
             return jLocale::get('jelix~errors.default.response.type.unknow',array($this->moduleName.'~'.$this->actionName,$type));
+
+        try{
+            $respclass = $responses[$type];
+            require_once ($responses[$type.'.path']);
+            $this->response = new $respclass();
+            return false;
         }
-
-        $respclass = $gJConfig->responses[$type];
-        require_once ($gJConfig->responses[$type.'.path']);
-
-        $this->response = new $respclass();
-
-        return false;
+        catch(Exception $e){
+            return $this->initDefaultResponseOfRequest(true);
+        }
     }
 
     /**
