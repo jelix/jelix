@@ -104,13 +104,38 @@ class jControllerDaoCrud extends jController {
     protected $dbProfile = '';
 
     /**
-     * Returned a simple html response to display CRUD contents. You can override this
+     * Returned a simple html response to display CRUD contents. You can redefine this
      * method to return a personnalized response
      * @return jResponseHtml the response
      */
     protected function _getResponse(){
         return $this->getResponse('html');
     }
+
+    /**
+     * create the form. You can redefine this method to modify dynamically the form
+     * Typically, you call jForms::create and then you can call addControl or whatever.
+     * Don't do a jForms::get or jForms::fill in this method !
+     * called in methods: index, precreate, create, preupdate, view
+     * @return jFormsBase the form
+     * @since 1.1
+     */
+    protected function _createForm($formId = null) {
+        return jForms::create($this->form, $formId);
+    }
+
+    /**
+     * get an existing form. You can redefine this method to modify dynamically the form
+     * Typically, you call jForms::get and then you can call addControl or whatever.
+     * Don't do a jForms::create or jForms::fill in this method !
+     * called in methods: create, savecreate, editupdate, saveupdate
+     * @return jFormsBase the form
+     * @since 1.1
+     */
+    protected function _getForm($formId = null) {
+        return jForms::get($this->form, $formId);
+    }
+
 
     /**
      * returned the selector of the action corresponding of the given method of the current controller.
@@ -123,7 +148,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * you can do your own data check of a form by overloading this method.
+     * you can do your own data check of a form by redefining this method.
      * You can also do some other things. It is called only if the $form->check() is ok.
      * and before the save of the data.
      * @param jFormsBase $form the current form
@@ -160,7 +185,7 @@ class jControllerDaoCrud extends jController {
 
         // we're using a form to have the portunity to have
         // labels for each columns.
-        $form = jForms::create($this->form, $this->pseudoFormId);
+        $form = $this->_createForm($this->pseudoFormId);
         $tpl = new jTpl();
         $tpl->assign('list',$results);
         $tpl->assign('primarykey', $pk[0]);
@@ -190,7 +215,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you wan to do additionnal things on the response and on the list template
+     * redefine this method if you wan to do additionnal things on the response and on the list template
      * during the index action.
      * @param jHtmlResponse $resp the response
      * @param jtpl $tpl the template to display the record list
@@ -200,7 +225,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you wan to do additionnal conditions to the index's select
+     * redefine this method if you wan to do additionnal conditions to the index's select
      * during the index action.
      * @param jDaoConditions $cond the conditions
      */
@@ -217,7 +242,7 @@ class jControllerDaoCrud extends jController {
         // we cannot create the form directly in the create action
         // because if the forms already exists, we wouldn't show
         // errors or already filled field. see ticket #292
-        $form = jForms::create($this->form);
+        $form = $this->_createForm();
         $this->_preCreate($form);
         $rep = $this->getResponse('redirect');
         $rep->action = $this->_getAction('create');
@@ -225,7 +250,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you want to do additionnal during the precreate action
+     * redefine this method if you want to do additionnal during the precreate action
      * @param jFormsBase $form the form
      * @since 1.1
      */
@@ -237,9 +262,9 @@ class jControllerDaoCrud extends jController {
      * display a form to create a record
      */
     function create(){
-        $form = jForms::get($this->form);
+        $form = $this->_getForm();
         if($form == null){
-            $form = jForms::create($this->form);
+            $form = $this->_createForm();
         }
         $rep = $this->_getResponse();
 
@@ -254,7 +279,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you want to do additionnal things on the response and on the edit template
+     * redefine this method if you want to do additionnal things on the response and on the edit template
      * during the create action.
      * @param jFormsBase $form the form
      * @param jHtmlResponse $resp the response
@@ -265,7 +290,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you wan to do additionnal things on the dao generated by the 
+     * redefine this method if you wan to do additionnal things on the dao generated by the 
      * jFormsBase::prepareDaoFromControls method
      * @param jFormsBase $form the form
      * @param jDaoRecordBase $form_daorec
@@ -279,7 +304,8 @@ class jControllerDaoCrud extends jController {
      * save data of a form in a new record
      */
     function savecreate(){
-        $form = jForms::fill($this->form);
+        $form = $this->_getForm();
+        $form->initFromRequest();
         $rep = $this->getResponse('redirect');
         if($form == null){
             $rep->action = $this->_getAction('index');
@@ -305,7 +331,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you wan to do additionnal things after the creation of
+     * redefine this method if you wan to do additionnal things after the creation of
      * a record
      * @param jFormsBase $form the form object
      * @param mixed $id the new id of the inserted record
@@ -327,7 +353,7 @@ class jControllerDaoCrud extends jController {
             return $rep;
         }
 
-        $form = jForms::create($this->form, $id);
+        $form = $this->_createForm($id);
 
         try {
             $form->initFromDao($this->dao, null, $this->dbProfile);
@@ -343,7 +369,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you want to do additionnal things during preupdate action
+     * redefine this method if you want to do additionnal things during preupdate action
      * @param jFormsBase $form the form object
      * @since 1.1
      */
@@ -358,7 +384,7 @@ class jControllerDaoCrud extends jController {
      */
     function editupdate(){
         $id = $this->param('id');
-        $form = jForms::get($this->form, $id);
+        $form = $this->_getForm($id);
         if( $form === null || $id === null){
             $rep = $this->getResponse('redirect');
             $rep->action = $this->_getAction('index');
@@ -378,7 +404,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you wan to do additionnal things on the response and on the edit template
+     * redefine this method if you wan to do additionnal things on the response and on the edit template
      * during the editupdate action.
      * @param jFormsBase $form the form
      * @param jHtmlResponse $resp the response
@@ -389,7 +415,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you wan to do additionnal things on the dao generated by the 
+     * redefine this method if you wan to do additionnal things on the dao generated by the 
      * jFormsBase::prepareDaoFromControls method
      * @param jFormsBase $form the form
      * @param jDaoRecordBase $form_daorec
@@ -406,7 +432,9 @@ class jControllerDaoCrud extends jController {
     function saveupdate(){
         $rep = $this->getResponse('redirect');
         $id = $this->param('id');
-        $form = jForms::fill($this->form, $id);
+        $form = $this->_getForm($id);
+        $form->initFromRequest();
+
         if( $form === null || $id === null){
             $rep->action = $this->_getAction('index');
             return $rep;
@@ -429,7 +457,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you wan to do additionnal things after the update of
+     * redefine this method if you wan to do additionnal things after the update of
      * a record
      * @param jFormsBase $form the form object
      * @param mixed $id the new id of the updated record
@@ -454,7 +482,7 @@ class jControllerDaoCrud extends jController {
         // we're using a form to display a record, to have the portunity to have
         // labels with each values. We need also him to load easily values of some
         // of controls with initControlFromDao (to use in _view method).
-        $form = jForms::create($this->form, $id);
+        $form = $this->_createForm($id);
         $form->initFromDao($this->dao, $id, $this->dbProfile);
 
         $tpl = new jTpl();
@@ -469,7 +497,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you want to do additionnal things on the response and on the view template
+     * redefine this method if you want to do additionnal things on the response and on the view template
      * during the view action.
      * @param jFormsBase $form the form
      * @param jHtmlResponse $resp the response
@@ -494,7 +522,7 @@ class jControllerDaoCrud extends jController {
     }
 
     /**
-     * overload this method if you want to do additionnal things before the deletion of a record
+     * redefine this method if you want to do additionnal things before the deletion of a record
      * @param mixed $id the id of the record to delete
      * @return boolean true if the record can be deleted
      * @param jHtmlResponse $resp the response
