@@ -56,7 +56,7 @@ class jAuth {
     }
 
     /**
-     * load the auth driver
+     * return the auth driver
      * @return jIAuthDriver
      */
     protected static function _getDriver(){
@@ -75,6 +75,20 @@ class jAuth {
             $driver = new $dname($config[$config['driver']]);
         }
         return $driver;
+    }
+
+    /**
+     * return the value of a parameter of the configuration of the current driver
+     * @param string $paramName
+     * @return string the value. null if it doesn't exist
+     */
+    public static function getDriverParam($paramName) {
+        $config = self::_getConfig();
+        $config = $config[$config['driver']];
+        if(isset($config[$paramName]))
+            return $config[$paramName];
+        else
+            return null;
     }
 
     /**
