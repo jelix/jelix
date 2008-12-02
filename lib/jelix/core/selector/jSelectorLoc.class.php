@@ -1,14 +1,16 @@
 <?php
 /**
-* see jISelector.iface.php for documentation about selectors. 
+* see jISelector.iface.php for documentation about selectors.
 * @package     jelix
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
 * @contributor Rahal
 * @contributor Julien Issler
+* @contributor Surfoo
 * @copyright   2005-2007 Laurent Jouanneau
 * @copyright   2007 Rahal
 * @copyright   2008 Julien Issler
+* @copyright   2008 Surfoo
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -96,7 +98,7 @@ class jSelectorLoc extends jSelectorModule {
                 return;
             }
             // else check for the original locale file
-            $path = $gJConfig->_modulesPathList[$this->module].'/locales/'.$locale.'/'.$this->resource.$this->_suffix;
+            $path = $gJConfig->_modulesPathList[$this->module].'locales/'.$locale.'/'.$this->resource.$this->_suffix;
             if (is_readable ($path)){
                 $this->_where = 'modules/';
                 $this->_path = $path;
