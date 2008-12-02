@@ -533,8 +533,17 @@ abstract class jFormsBase {
      * modified controls
      * @since 1.1
      */
-    public function resetModifiedControlsList(){
+    public function initModifiedControlsList(){
         $this->container->originalData = $this->container->data;
+    }
+
+    /**
+     * DEPRECATED. use initModifiedControlsList() instead.
+     * @since 1.1b1
+     * @deprecated 1.1rc1
+     */
+    public function resetModifiedControlsList(){
+        $this->initModifiedControlsList();
     }
 
     /**

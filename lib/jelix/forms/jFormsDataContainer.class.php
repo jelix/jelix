@@ -25,7 +25,7 @@ class jFormsDataContainer {
      * contains data provided by the user in each controls
      * @var array
      * @see jFormsBase::getModifiedControls()
-     * @see jFormsBase::resetModifiedControlsList()
+     * @see jFormsBase::initModifiedControlsList()
      */
     public $originalData = array();
     
