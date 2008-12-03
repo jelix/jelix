@@ -7,7 +7,6 @@
 * @copyright
 */
 
-require_once ('../../lib/jelix/init.php');
 
 require_once ('../application-cli.init.php');
 

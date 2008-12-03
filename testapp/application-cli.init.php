@@ -10,7 +10,7 @@
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-
+require (dirname(__FILE__).'/../lib/jelix/init.php');
 define ('JELIX_APP_PATH', dirname (__FILE__).'/'); // don't change
 
 define ('JELIX_APP_TEMP_PATH',    realpath(JELIX_APP_PATH.'../temp/testapp-cli/').'/');

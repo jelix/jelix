@@ -9,8 +9,7 @@
 * @link          http://www.jelix.org
 * @licence       http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
-require_once ('../../lib/jelix/init.php');
-require_once ('../../testapp/application.init.php');
+require ('../application.init.php');
 
 require_once (JELIX_LIB_CORE_PATH.'jSoapCoordinator.class.php');
 

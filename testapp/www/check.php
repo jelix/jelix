@@ -9,8 +9,7 @@
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-require ('../../lib/jelix/init.php');
-require ('../../testapp/application.init.php');
+require ('../application.init.php');
 $config_file = 'index/config.ini.php';
 
 require (JELIX_LIB_PATH.'checker.php');

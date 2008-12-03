@@ -9,8 +9,7 @@
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-require ('../../lib/jelix/init.php');
-require ('../../testapp/application.init.php');
+require ('../application.init.php');
 require (JELIX_LIB_CORE_PATH.'request/jXmlRpcRequest.class.php');
 
 $config_file = 'xmlrpc/config.ini.php';
