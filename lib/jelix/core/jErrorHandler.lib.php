@@ -36,6 +36,7 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         E_RECOVERABLE_ERROR => 'error',
         E_WARNING       => 'warning',
         E_NOTICE        => 'notice',
+        E_DEPRECATED    => 'notice',
         E_USER_ERROR    => 'error',
         E_USER_WARNING  => 'warning',
         E_USER_NOTICE   => 'notice',
@@ -52,12 +53,14 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     $conf = $gJConfig->error_handling;
 
     if (isset ($codeString[$errno])){
-        $toDo = $conf[$codeString[$errno]];
+        $codestr = $codeString[$errno];
+        $toDo = $conf[$codestr];
     }else{
+        $codestr = 'error';
         $toDo = $conf['default'];
     }
     $trace = debug_backtrace();
     array_shift($trace);
-    $gJCoord->handleError($toDo, $codeString[$errno], $errno, $errmsg, $filename, $linenum, $trace);
+    $gJCoord->handleError($toDo, $codestr, $errno, $errmsg, $filename, $linenum, $trace);
 
 }
