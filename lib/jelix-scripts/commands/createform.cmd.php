@@ -81,9 +81,14 @@ class createformCommand extends JelixScriptCommand {
         $content = '';
 
         foreach($properties as $name=>$property){
-            if( !$property->ofPrimaryTable || $property->isPK){
+            if( !$property->ofPrimaryTable) {
                 continue;
             }
+            if($property->isPK && ($property->datatype =='autoincrement' ||
+                                   $property->datatype =='bigautoincrement')) {
+                continue;
+            }
+
             $attr='';
             if($property->required)
                 $attr.=' required="true"';

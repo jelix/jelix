@@ -356,7 +356,13 @@ class jControllerDaoCrud extends jController {
         $form = $this->_createForm($id);
 
         try {
-            $form->initFromDao($this->dao, null, $this->dbProfile);
+            $rec = $form->initFromDao($this->dao, null, $this->dbProfile);
+            foreach($rec->getPrimaryKeyNames() as $pkn) {
+                $c = $form->getControl($pkn);
+                if($c !==null) {
+                    $c->setReadOnly(true);
+                }
+            }
         }catch(Exception $e){
             $rep->action = $this->_getAction('index');
             return $rep;

@@ -168,6 +168,7 @@ abstract class jFormsBase {
      * @param string $key the primary key for the dao. if null, takes the form ID as primary key
      * @param string $dbProfile the jDb profile to use with the dao
      * @see jDao
+     * @return jDaoRecordBase
      */
     public function initFromDao($daoSelector, $key = null, $dbProfile=''){
         if($key === null)
@@ -187,6 +188,7 @@ abstract class jFormsBase {
                 $ctrl->setDataFromDao($daorec->$name, $prop[$name]['datatype']);
             }
         }
+        return $daorec;
     }
 
     /**
@@ -509,7 +511,11 @@ abstract class jFormsBase {
      * @return jFormsControl
      * @since jelix 1.0
      */
-    public function getControl($name){ return $this->controls[$name]; }
+    public function getControl($name) {
+        if(isset($this->controls[$name]))
+            return $this->controls[$name];
+        else return null;
+    }
 
     /**
      * @return array of jFormsControl objects

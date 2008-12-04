@@ -84,7 +84,7 @@ abstract class jFormsControl {
         $this->container->data[$this->ref] = $value;
     }
 
-    function setReadOnly($r){
+    function setReadOnly($r = true){
         $this->container->setReadOnly($this->ref, $r);
     }
 
