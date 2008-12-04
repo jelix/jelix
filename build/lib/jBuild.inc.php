@@ -2,8 +2,9 @@
 /**
 * @package     jBuildTools
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Dominique Papin
 * @copyright   2006-2007 Jouanneau laurent
+* @copyright   2008 Dominique Päpin
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -171,18 +172,19 @@ class Env {
 
 class Subversion {
     static public function revision($path='.'){
-        $path=jBuildUtils::normalizeDir($path).'.svn/entries';
+        $path=jBuildUtils::normalizeDir($path);
         $rev=-1;
-        if(file_exists($path)){
+        if(file_exists($path.'.svn/entries')){
             /* FIXME : namespace invalide dans les fichiers entries, on ne peut
               donc pas les lire à partir de simplxml ou dom
 
+            $path = $path.'.svn/entries';
             $svninfo = simplexml_load_file ( $path);
             if(isset($svninfo->entry[0]))
                 $rev=$svninfo->entry[0]['revision'];
             */
-            $rev=`svn info | grep -E "vision" -m 1`;
-            if(preg_match("/vision\s*:\s*(\d+)/",$rev, $m))
+            $rev=`svnversion $path --no-newline`;
+            if(preg_match("/(\d+)[MS]+/",$rev, $m))
                 $rev=$m[1];
         }
         return $rev;
