@@ -71,6 +71,8 @@ define ('JELIX_SCRIPT_PATH', dirname(__FILE__).'/');
 
 if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
    include (JELIXS_APPTPL_PATH.'application.init.php');
+   if(!class_exists('jCoordinator', false)) // for old application.init.php which doesn't include init.php
+      include (JELIXS_INIT_PATH);
 }else{
    if($commandName !='createapp' && $commandName !='help'){
      die("Error: the given application doesn't exist (".JELIXS_APPTPL_PATH." )\n");
