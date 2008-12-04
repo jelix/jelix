@@ -43,6 +43,7 @@ Julien Issler
  - jForms: javascript check of secret control's confirmation does not work (#751)
  - jForms: some controls are selected by default if their values are "0" (#757)
  - jCoordinator: exception loop when response's constructor fails (#749)
+ - jAuth: update usersession when needed (#461)
 
 Bastien Jaillot (aka bastnic)
  - bug fix in jDaoGenerator (#282)
