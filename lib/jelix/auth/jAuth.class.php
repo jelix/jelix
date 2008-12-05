@@ -3,9 +3,9 @@
 * @package    jelix
 * @subpackage auth
 * @author     Laurent Jouanneau
-* @contributor Frédéric Guillot, Antoine Detante, Julien Issler
+* @contributor Frédéric Guillot, Antoine Detante, Julien Issler, Dominique Papin
 * @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
-* @copyright  2007-2008 Julien Issler
+* @copyright  2007-2008 Julien Issler, 2008 Dominique Papin
 *
 * This classes were get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -169,7 +169,7 @@ class jAuth {
 
         if(self::isConnected() && self::getUserSession()->login === $user->login){
             $config = self::_getConfig();
-            $_SESSION[$config['session_name']] = self::getUser($login);
+            $_SESSION[$config['session_name']] = $user;
         }
         jEvent::notify ('AuthUpdateUser', array('user'=>$user));
         return true;
