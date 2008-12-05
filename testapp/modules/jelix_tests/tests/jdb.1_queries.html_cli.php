@@ -78,7 +78,7 @@ class UTjDb extends jUnitTestCase {
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
     }
 
-    function testSelectClass(){
+    function testFetchClass(){
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
@@ -111,6 +111,45 @@ class UTjDb extends jUnitTestCase {
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
+    }
+
+    function testFetchInto(){
+        $db = jDb::getConnection($this->dbProfile);
+        $resultSet = $db->query('SELECT id,name,price FROM product_test');
+        $this->assertNotNull($resultSet, 'a query return null !');
+        if($this->needPDO)
+            $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
+        else
+            $this->assertTrue($resultSet instanceof jDbResultSet, 'resultset is not a jDbResultSet');
+
+        $obj = new MyProductContainer();
+        $t = $obj->token = time();
+        $resultSet->setFetchMode(9, $obj);
+
+        $res = $resultSet->fetch();
+        $structure = '<object class="MyProductContainer">
+        <string property="name" value="camembert" />
+        <string property="price" value="2.31" />
+        <integer property="token" value="'.$t.'" />
+    </object>';
+        $this->assertComplexIdenticalStr($res, $structure, 'bad result');
+
+        $res = $resultSet->fetch();
+        $structure = '<object class="MyProductContainer">
+        <string property="name" value="yaourt" />
+        <string property="price" value="0.76" />
+        <integer property="token" value="'.$t.'" />
+    </object>';
+        $this->assertComplexIdenticalStr($res, $structure, 'bad result');
+
+        $res = $resultSet->fetch();
+        $structure = '<object class="MyProductContainer">
+        <string property="name" value="gloubi-boulga" />
+        <string property="price" value="4.9" />
+        <integer property="token" value="'.$t.'" />
+    </object>';
+        $this->assertComplexIdenticalStr($res, $structure, 'bad result');
+        $this->assertEqual($resultSet->fetch(), false);
     }
 
     function testTools(){
@@ -161,6 +200,7 @@ class MyProductContainer {
     public $name;
     public $price;
 
+    public $token;
 }
 
 ?>

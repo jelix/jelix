@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage db_driver
 * @author     Loic Mathaud
-* @contributor
-* @copyright  2006 Loic Mathaud
+* @contributor Laurent Jouanneau
+* @copyright  2006 Loic Mathaud, 2008 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -20,6 +20,15 @@ class sqliteDbResultSet extends jDbResultSet {
     protected function  _fetch (){
         $ret =  sqlite_fetch_object($this->_idResult);
         return $ret;
+        /*if($this->_fetchMode == jDbConnection::FETCH_CLASS){
+            if ($this->_fetchModeCtoArgs)
+                $ret =  sqlite_fetch_object ($this->_idResult, $this->_fetchModeParam, $this->_fetchModeCtoArgs);
+            else
+                $ret =  sqlite_fetch_object ($this->_idResult, $this->_fetchModeParam);
+        }else{
+            $ret =  sqlite_fetch_object ($this->_idResult);
+        }
+        return $ret;*/
     }
     protected function _free (){
         return;

@@ -22,6 +22,15 @@
  */
 abstract class jDbConnection {
 
+    const FETCH_OBJ = 5;
+    const FETCH_CLASS = 8;
+    const FETCH_INTO = 9;
+    const ATTR_AUTOCOMMIT = 0;
+    const ATTR_ERRMODE = 3;
+    const ATTR_CURSOR = 10;
+    const CURSOR_FWDONLY = 0;
+    const CURSOR_SCROLL = 1;
+
     /**
     * profile properties used by the connector
     * @var array
@@ -73,12 +82,18 @@ abstract class jDbConnection {
 
     /**
     * Launch a SQL Query which returns rows (typically, a SELECT statement)
-    * @param   string   $queryString   the SQL query
+    * @param string   $queryString   the SQL query
+    * @param integer  $fetchmode   FETCH_OBJ, FETCH_CLASS or FETCH_INTO
+    * @param string|object   $param   class name if FETCH_CLASS, an object if FETCH_INTO. else null.
+    * @param array  $ctoargs  arguments for the constructor if FETCH_CLASS
     * @return  jDbResultSet|boolean  False if the query has failed.
     */
-    public function query ($queryString){
+    public function query ($queryString, $fetchmode = self::FETCH_OBJ, $arg1 = null, $ctoargs = null){
         $this->lastQuery = $queryString;
         $result = $this->_doQuery ($queryString);
+        if ($fetchmode != self::FETCH_OBJ) {
+            $result->setFetchMode($fetchmode, $arg1, $ctoargs);
+        }
         return $result;
     }
 
@@ -155,7 +170,7 @@ abstract class jDbConnection {
     }
 
     /**
-     * begin a transaction. Call it after doQuery, doLimitQuery, doExec,
+     * begin a transaction. Call it before query, limitQuery, exec
      * And then commit() or rollback()
      */
     abstract public function beginTransaction ();

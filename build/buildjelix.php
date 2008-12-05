@@ -16,8 +16,8 @@ $BUILD_OPTIONS = array(
     '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
     ),
 'PHP_VERSION_TARGET'=> array(
-    "PHP5 version for which jelix will be generated (by default, the target is php 5.1)",
-    '5.1'
+    "PHP5 version for which jelix will be generated (by default, the target is php 5.2)",
+    '5.2'
     ),
 'EDITION_NAME'=> array(
     "The edition name of the version (optional)",
@@ -98,6 +98,22 @@ $BUILD_OPTIONS = array(
     false,
     false,
     ),
+'PHP53'=> array(
+    false,
+    false,
+    ),
+'PHP51ORMORE'=> array(
+    false,
+    false,
+    ),
+'PHP52ORMORE'=> array(
+    false,
+    false,
+    ),
+'PHP53ORMORE'=> array(
+    false,
+    false,
+    ),
 'SVN_REVISION'=> array(
     false,
     ),
@@ -149,19 +165,30 @@ else {
 }
 
 if($PHP_VERSION_TARGET){
-    if(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
-        // filter et json sont en standard dans >=5.2 : on le force
+    if(version_compare($PHP_VERSION_TARGET, '5.3') > -1){
+        // filter and json are in php >=5.2
+        $ENABLE_PHP_FILTER = 1;
+        $ENABLE_PHP_JSON = 1;
+        $PHP53 = 1;
+        $PHP53ORMORE = 1;
+    }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
+        // filter and json are in php >=5.2
         $ENABLE_PHP_FILTER = 1;
         $ENABLE_PHP_JSON = 1;
         $PHP52 = 1;
+        $PHP52ORMORE = 1;
     }elseif(version_compare($PHP_VERSION_TARGET, '5.1') > -1){
         $PHP51=1;
+        $PHP51ORMORE = 1;
     }else{
-        $PHP50=1;
+        die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }
 }else{
-    // pas de target définie : donc php 5.0
-    $PHP50=1;
+    // no defined target, so php 5.2
+    $ENABLE_PHP_FILTER = 1;
+    $ENABLE_PHP_JSON = 1;
+    $PHP52=1;
+    $PHP2ORMORE=1;
 }
 
 $BUILD_FLAGS = 0;

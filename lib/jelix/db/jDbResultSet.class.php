@@ -16,11 +16,10 @@
  */
 abstract class jDbResultSet implements Iterator {
 
-    const FETCH_CLASS = 8;
-
     protected $_idResult=null;
     protected $_fetchMode = 0;
-    protected $_fetchModeParam = '';
+    protected $_fetchModeParam = null;
+    protected $_fetchModeCtoArgs = null;
 
     function __construct (  $idResult){
         $this->_idResult = $idResult;
@@ -35,9 +34,16 @@ abstract class jDbResultSet implements Iterator {
 
     public function id() { return $this->_idResult; }
 
-    public function setFetchMode($fetchmode, $param=null){
+    /**
+    * set the fetch mode.
+    * @param integer  $fetchmode   FETCH_OBJ, FETCH_CLASS or FETCH_INTO
+    * @param string|object   $param   class name if FETCH_CLASS, an object if FETCH_INTO. else null.
+    * @param array  $ctoargs  arguments for the constructor if FETCH_CLASS
+    */
+    public function setFetchMode($fetchmode, $param=null, $ctoargs=null){
         $this->_fetchMode = $fetchmode;
-        $this->_fetchModeParam =$param;
+        $this->_fetchModeParam = $param;
+        $this->_fetchModeCtoArgs = $ctoargs;
     }
     /**
      * fetch a result. The result is returned as an object.
@@ -45,10 +51,22 @@ abstract class jDbResultSet implements Iterator {
      */
     public function fetch(){
         $result = $this->_fetch ();
-        if($result && $this->_fetchMode == self::FETCH_CLASS && !($result instanceof $this->_fetchModeParam) ){
+        if (!$result || $this->_fetchMode == jDbConnection::FETCH_OBJ)
+            return $result;
+        
+        if ($this->_fetchMode == jDbConnection::FETCH_CLASS) {
+            if ($result instanceof $this->_fetchModeParam)
+                return $result;
             $values = get_object_vars ($result);
             $o = $this->_fetchModeParam;
             $result = new $o();
+            foreach ( $values as $k=>$value){
+                $result->$k = $value;
+            }
+        }
+        else if ($this->_fetchMode == jDbConnection::FETCH_INTO) {
+            $values = get_object_vars ($result);
+            $result = $this->_fetchModeParam;
             foreach ( $values as $k=>$value){
                 $result->$k = $value;
             }
@@ -132,7 +150,6 @@ abstract class jDbResultSet implements Iterator {
     public function valid () {
         return ($this->_currentRecord != false);
     }
-
 
 }
 

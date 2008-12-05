@@ -30,14 +30,14 @@ class jDbPDOResultSet extends PDOStatement {
      * @param array $ctor_arg  (ignored)
      * @return array list of object which contain all rows
      */
-    public function fetchAll ( $fetch_style = jDbPDOConnection::JPDO_FETCH_OBJ, $column_index=0, $ctor_arg=null ){
+    public function fetchAll ( $fetch_style = PDO::FETCH_OBJ, $column_index=0, $ctor_arg=null ){
         if($this->_fetchMode){
-            if( $this->_fetchMode != jDbPDOConnection::JPDO_FETCH_COLUMN)
+            if( $this->_fetchMode != PDO::FETCH_COLUMN)
                 return parent::fetchAll($this->_fetchMode);
             else
                 return parent::fetchAll($this->_fetchMode, $column_index);
         }else{
-            return parent::fetchAll( jDbPDOConnection::JPDO_FETCH_OBJ);
+            return parent::fetchAll(PDO::FETCH_OBJ);
         }
     }
 
@@ -58,26 +58,6 @@ class jDbPDOResultSet extends PDOStatement {
  */
 class jDbPDOConnection extends PDO {
 
-    /**
-    * PDO constant name have been change between php 5.0 and 5.1. So we use our own constant.
-    * @link http://lxr.php.net/source/php-src/ext/pdo/php_pdo_driver.h
-    * @since 1.0
-    */
-    const JPDO_FETCH_OBJ = 5; // PDO::FETCH_OBJ
-    const JPDO_FETCH_ORI_NEXT = 0; // PDO::FETCH_ORI_NEXT
-    const JPDO_FETCH_ORI_FIRST = 2;
-    const JPDO_FETCH_COLUMN = 7; // PDO::FETCH_COLUMN
-    const JPDO_FETCH_CLASS = 8; // PDO::FETCH_CLASS
-    const JPDO_ATTR_STATEMENT_CLASS = 13; //PDO::ATTR_STATEMENT_CLASS
-    const JPDO_ATTR_AUTOCOMMIT = 0; //PDO::ATTR_AUTOCOMMIT
-    const JPDO_ATTR_CURSOR = 10; // PDO::ATTR_CURSOR
-    const JPDO_CURSOR_SCROLL = 1; //PDO::CURSOR_SCROLL
-    const JPDO_ATTR_ERRMODE = 3; // PDO::ATTR_ERRMODE
-    const JPDO_ERRMODE_EXCEPTION = 2; // PDO::ERRMODE_EXCEPTION
-    const JPDO_MYSQL_ATTR_USE_BUFFERED_QUERY = 1000; // PDO::MYSQL_ATTR_USE_BUFFERED_QUERY
-    const JPDO_ATTR_CASE = 8; // PDO::ATTR_CASE
-    const JPDO_CASE_LOWER = 2; // PDO::CASE_LOWER
-
     private $_mysqlCharsets =array( 'UTF-8'=>'utf8', 'ISO-8859-1'=>'latin1');
     private $_pgsqlCharsets =array( 'UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');
 
@@ -97,7 +77,7 @@ class jDbPDOConnection extends PDO {
      */
     function __construct($profile){
         $this->profile = $profile;
-        $this->dbms=substr($profile['dsn'],0,strpos($profile['dsn'],':'));
+        $this->dbms = substr($profile['dsn'],0,strpos($profile['dsn'],':'));
         $prof=$profile;
         $user= '';
         $password='';
@@ -112,16 +92,16 @@ class jDbPDOConnection extends PDO {
         }
         unset($prof['driver']);
         parent::__construct($profile['dsn'], $user, $password, $prof);
-        $this->setAttribute(self::JPDO_ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
-        $this->setAttribute(self::JPDO_ATTR_ERRMODE, self::JPDO_ERRMODE_EXCEPTION);
+        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
+        $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         // on ne peut pas lancer deux query en même temps avec PDO ! sauf si on utilise mysql
         // et que l'on utilise cet attribut...
         if($this->dbms == 'mysql')
-            $this->setAttribute(self::JPDO_MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+            $this->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
     
         // Oracle renvoie les noms de colonnes en majuscules, il faut donc forcer la casse en minuscules
         if ($this->dbms == 'oci')
-            $this->setAttribute(self::JPDO_ATTR_CASE, self::JPDO_CASE_LOWER);            
+            $this->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);            
             
         if(isset($prof['force_encoding']) && $prof['force_encoding']==true){
             if($this->dbms == 'mysql' && isset($this->_mysqlCharsets[$GLOBALS['gJConfig']->charset])){
@@ -141,7 +121,7 @@ class jDbPDOConnection extends PDO {
         switch(count($args)){
         case 1:
             $rs = parent::query($args[0]);
-            $rs->setFetchMode(self::JPDO_FETCH_OBJ);
+            $rs->setFetchMode(PDO::FETCH_OBJ);
             return $rs;
             break;
         case 2:
@@ -173,7 +153,7 @@ class jDbPDOConnection extends PDO {
      * @param boolean state the status of autocommit
      */
     public function setAutoCommit($state=true){
-        $this->setAttribute(self::JPDO_ATTR_AUTOCOMMIT,$state);
+        $this->setAttribute(PDO::ATTR_AUTOCOMMIT,$state);
     }
 
     public function lastIdInTable($fieldName, $tableName){

@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDBResultSetPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -29,8 +29,11 @@ class pgsqlDbResultSet extends jDbResultSet {
         }
 
     public function fetch(){
-        if($this->_fetchMode == self::FETCH_CLASS){
-            $res = pg_fetch_object ($this->_idResult, -1 , $this->_fetchModeParam);
+        if($this->_fetchMode == jDbConnection::FETCH_CLASS){
+            if ($this->_fetchModeCtoArgs)
+                $res = pg_fetch_object ($this->_idResult, -1 , $this->_fetchModeParam, $this->_fetchModeCtoArgs);
+            else
+                $res = pg_fetch_object ($this->_idResult, -1 , $this->_fetchModeParam);
         }else{
             $res = pg_fetch_object ($this->_idResult);
         }
