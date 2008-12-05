@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor 
+* @contributor Julien Issler
 * @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -52,7 +53,7 @@ abstract class jFormsControlGroups extends jFormsControl {
 
     function getChildControls() { return $this->childControls;}
 
-    function setReadOnly($r){
+    function setReadOnly($r = true){
         $this->container->setReadOnly($this->ref, $r);
         foreach($this->childControls as $ctrl) {
            $ctrl->setReadOnly($r);
