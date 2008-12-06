@@ -6,8 +6,8 @@
 * @contributor Laurent Jouanneau
 * @contributor Bastien Jaillot (bug fix)
 * @contributor Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
-* @copyright  2007 Julien Issler
+* @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau
+* @copyright  2007-2008 Julien Issler
 * This class was get originally from the Copix project (CopixDAOGeneratorV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -182,7 +182,7 @@ class jDaoGenerator {
         }
 
         // if there isn't a autoincrement as primary key, then we do a full insert.
-        // if there isn't a value for the autoincrement field and if this is a mysql/sqlserver and pgsql, 
+        // if there isn't a value for the autoincrement field and if this is a mysql/sqlserver and pgsql,
         // we do an insert without given primary key. In other case, we do a full insert.
 
         $src[] = '    $query = \'INSERT INTO '.$pTableRealNameEsc.' (';
@@ -256,14 +256,30 @@ class jDaoGenerator {
             if($this->_dataParser->hasEvent('updatebefore') || $this->_dataParser->hasEvent('update')){
                 $src[] = '   jEvent::notify("daoUpdateBefore", array(\'dao\'=>$this->_daoSelector, \'record\'=>$record));';
             }
-            if($this->_dataParser->hasEvent('updateafter') || $this->_dataParser->hasEvent('update')){
-                $src[] = '   $result = $this->_conn->exec ($query);';
-                $src[] = '   jEvent::notify("daoUpdateAfter", array(\'dao\'=>$this->_daoSelector, \'record\'=>$record));';
-                $src[] = '   return $result;';
+
+            $src[] = '   $result = $this->_conn->exec ($query);';
+
+            // we generate a SELECT query to update field on the record object, which are autoincrement or calculated
+            $fields = $this->_getPropertiesBy('FieldToUpdateOnUpdate');
+            if (count($fields)) {
+                $result = array();
+                foreach ($fields as $id=>$prop){
+                    $result[]= $this->genSelectPattern($prop->selectPattern, '', $prop->fieldName, $prop->name);
+                }
+
+                $sql = 'SELECT '.(implode (', ',$result)). ' FROM '.$pTableRealNameEsc.' WHERE ';
+                $sql.= $this->_buildSimpleConditions($pkFields, 'record->', false);
+
+                $src[] = '  $query =\''.$sql.'\';';
+                $src[] = '  $rs  =  $this->_conn->query ($query, jDbConnection::FETCH_INTO, $record);';
+                $src[] = '  $record =  $rs->fetch ();';
             }
-            else
-                $src[] = '   return $this->_conn->exec ($query);';
-            $src[] = " }";//ends the update function
+
+            if($this->_dataParser->hasEvent('updateafter') || $this->_dataParser->hasEvent('update'))
+                $src[] = '   jEvent::notify("daoUpdateAfter", array(\'dao\'=>$this->_daoSelector, \'record\'=>$record));';
+
+            $src[] = '   return $result;';
+            $src[] = ' }';//ends the update function
         }else{
             //the dao is mapped on a table which contains only primary key : update is impossible
             // so we will generate an error on update
@@ -600,7 +616,13 @@ class jDaoGenerator {
                     || ($field->insertPattern != '%s' && $field->selectPattern != '')));
     }
 
-
+    protected function _captureFieldToUpdateOnUpdate(&$field){
+        return ($field->table == $this->_dataParser->getPrimaryTable()
+                && !$field->isPK
+                && !$field->isFK
+                && ( $field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement'
+                    || ($field->updatePattern != '%s' && $field->selectPattern != '')));
+    }
 
     /**
     * get autoincrement PK field
@@ -624,7 +646,7 @@ class jDaoGenerator {
     }
 
     /**
-     * build a WHERE clause with conditions on given properties : conditions are 
+     * build a WHERE clause with conditions on given properties : conditions are
      * equality between a variable and the field.
      * the variable name is the name of the property, made with an optional prefix
      * given in $fieldPrefix parameter.
@@ -743,7 +765,7 @@ class jDaoGenerator {
     }
 
     /**
-     * build SQL WHERE clause 
+     * build SQL WHERE clause
      * Used by _buildConditions. And this method call itself recursively
      * @param jDaoCondition $cond a condition object which contains conditions data
      * @param array $fields  array of jDaoProperty

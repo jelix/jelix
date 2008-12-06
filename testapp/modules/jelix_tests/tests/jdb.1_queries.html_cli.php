@@ -124,7 +124,7 @@ class UTjDb extends jUnitTestCase {
 
         $obj = new MyProductContainer();
         $t = $obj->token = time();
-        $resultSet->setFetchMode(9, $obj);
+        $resultSet->setFetchMode(jDbConnection::FETCH_INTO, $obj);
 
         $res = $resultSet->fetch();
         $structure = '<object class="MyProductContainer">
