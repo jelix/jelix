@@ -35,7 +35,7 @@ abstract class JelixScriptCommand {
     * in an array any additional values given in the command line
     * @var array
     */
-   public $allowed_parameters=array();
+   public $allowed_parameters = array();
 
    protected $_options;
    protected $_parameters;
@@ -45,7 +45,7 @@ abstract class JelixScriptCommand {
 
    function __construct(){}
 
-   public function init($opt, $parameters){
+   public function init($opt, $parameters) {
      $this->_options = $opt;
      $this->_parameters = $parameters;
    }
@@ -53,7 +53,7 @@ abstract class JelixScriptCommand {
    abstract public function run();
 
 
-   protected function getModulePath($module, $shouldexist=true){
+   protected function getModulePath($module, $shouldexist=true) {
       $path=JELIX_APP_PATH.'modules/'.$module.'/';
       if(!file_exists($path) && $shouldexist){
          die("Error: module '".$module."' doesn't exist ($path)\n");
@@ -61,9 +61,9 @@ abstract class JelixScriptCommand {
       return $path;
    }
 
-   protected function createFile($filename, $template, $tplparam=array()){
+   protected function createFile($filename, $template, $tplparam=array()) {
       
-      $defaultparams = array(
+      $defaultparams = array (
          'default_website' => JELIXS_INFO_DEFAULT_WEBSITE,
          'default_licence' => JELIXS_INFO_DEFAULT_LICENCE,
          'default_licence_url' => JELIXS_INFO_DEFAULT_LICENCE_URL,
@@ -79,13 +79,13 @@ abstract class JelixScriptCommand {
       
       $tplparam = array_merge($defaultparams, $tplparam);
       
-      if(file_exists($filename)){
+      if (file_exists($filename)) {
          echo "Warning: the file '".$filename."' already exists\n";
          return false;
       }
       $tplpath = JELIX_SCRIPT_PATH.'templates/'.$template;
 
-      if(!file_exists($tplpath)){
+      if (!file_exists($tplpath)) {
          echo "Error: template file '".$tplpath."' doesn't exist\n";
          return false;
       }
@@ -126,28 +126,29 @@ abstract class JelixScriptCommand {
       }
    }
 
-
    protected function replaceCallback($matches){
-      if(isset($this->tplparam[$matches[1]])){
+      if (isset($this->tplparam[$matches[1]])) {
          return $this->tplparam[$matches[1]];
-      }else
+      } else
          return '';
    }
 
    protected function getParam($param, $defaultvalue=null){
-      if(isset($this->_parameters[$param])){
-          return $this->_parameters[$param];
-       }else{
-          return $defaultvalue;
-       }
+      if (isset($this->_parameters[$param])) {
+         return $this->_parameters[$param];
+      }
+      else{
+         return $defaultvalue;
+      }
    }
 
    protected function getOption($name){
-      if(isset($this->_options[$name])){
-          return $this->_options[$name];
-       }else{
-          return false;
-       }
+      if (isset($this->_options[$name])) {
+         return $this->_options[$name];
+      }
+      else {
+         return false;
+      }
    }
 }
 

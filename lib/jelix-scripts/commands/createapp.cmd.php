@@ -101,38 +101,39 @@ class createappCommand extends JelixScriptCommand {
             $param['tplname'] = $GLOBALS['APPNAME'].'~main';
 
         $param['config_file'] = 'index/config.ini.php';
+        $param['modulename'] = $GLOBALS['APPNAME'];
+        $param['rp_temp']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_TEMP_PATH, true);
+        $param['rp_var'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_VAR_PATH,  true);
+        $param['rp_log'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_LOG_PATH,  true);
+        $param['rp_conf']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CONFIG_PATH, true);
+        $param['rp_www'] = jxs_getRelativePath(JELIX_APP_PATH, $wwwpath,  true);
+        $param['rp_cmd'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,  true);
+        $param['rp_jelix'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_LIB_PATH, true);
+        $param['rp_app']   = jxs_getRelativePath($wwwpath, JELIX_APP_PATH, true);
 
-       $this->createFile(JELIX_APP_PATH.'.htaccess','htaccess_deny',$param);
-       $this->createFile(JELIX_APP_PATH.'project.xml','project.xml.tpl',$param);
-       $this->createFile(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php','var/config/defaultconfig.ini.php.tpl',$param);
-       $this->createFile(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php','var/config/dbprofils.ini.php.tpl',$param);
-       $this->createFile(JELIX_APP_CONFIG_PATH.'index/config.ini.php','var/config/index/config.ini.php.tpl',$param);
+        $this->createFile(JELIX_APP_PATH.'.htaccess','htaccess_deny',$param);
+        $this->createFile(JELIX_APP_PATH.'project.xml','project.xml.tpl',$param);
+        $this->createFile(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php','var/config/defaultconfig.ini.php.tpl',$param);
+        $this->createFile(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php','var/config/dbprofils.ini.php.tpl',$param);
+        $this->createFile(JELIX_APP_CONFIG_PATH.'index/config.ini.php','var/config/index/config.ini.php.tpl',$param);
 
-       $this->createFile(JELIX_APP_PATH.'responses/myHtmlResponse.class.php','myHtmlResponse.class.php.tpl',$param);
+        $this->createFile(JELIX_APP_PATH.'responses/myHtmlResponse.class.php','myHtmlResponse.class.php.tpl',$param);
+ 
 
-       $param['rp_temp']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_TEMP_PATH, true);
-       $param['rp_var'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_VAR_PATH,  true);
-       $param['rp_log'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_LOG_PATH,  true);
-       $param['rp_conf']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CONFIG_PATH, true);
-       $param['rp_www'] = jxs_getRelativePath(JELIX_APP_PATH, $wwwpath,  true);
-       $param['rp_cmd'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,  true);
-       $param['rp_jelix'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_LIB_PATH, true);
-       $param['rp_app']   = jxs_getRelativePath($wwwpath, JELIX_APP_PATH, true);
        
-       $this->createFile(JELIX_APP_PATH.'application.init.php','application.init.php.tpl',$param);
+        $this->createFile(JELIX_APP_PATH.'application.init.php','application.init.php.tpl',$param);
+    
+        $this->createFile($wwwpath.'index.php','www/index.php.tpl',$param);
+        $this->createFile($wwwpath.'.htaccess','htaccess_allow',$param);
 
-       $this->createFile($wwwpath.'index.php','www/index.php.tpl',$param);
-       $this->createFile($wwwpath.'.htaccess','htaccess_allow',$param);
-
-       if(!$this->getOption('-nodefaultmodule')){
+        if(!$this->getOption('-nodefaultmodule')){
             $cmd = jxs_load_command('createmodule');
             $cmd->init(array('-addinstallzone'=>true),array('module'=>$GLOBALS['APPNAME']));
             $cmd->run();
-            $param['modulename'] = $GLOBALS['APPNAME'];
             $this->createFile(JELIX_APP_PATH.'modules/'.$GLOBALS['APPNAME'].'/templates/main.tpl', 'main.tpl.tpl', $param);
-       }
+        }
 
-       if ($this->getOption('-withcmdline')) {
+        if ($this->getOption('-withcmdline')) {
             $agcommand = jxs_load_command('createctrl');
             $options = array('-cmdline'=>true);
             $agcommand->init($options,array('module'=>$GLOBALS['APPNAME'], 'name'=>'default','method'=>'index'));
@@ -143,7 +144,7 @@ class createappCommand extends JelixScriptCommand {
             $this->createFile(JELIX_APP_CONFIG_PATH.'cmdline/config.ini.php','var/config/cmdline/config.ini.php.tpl', $param);
             $param['rp_cmd'] =jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,true);
             $this->createFile(JELIX_APP_CMD_PATH.'cmdline.php','scripts/cmdline.php.tpl',$param);
-       }
+        }
     }
 }
 

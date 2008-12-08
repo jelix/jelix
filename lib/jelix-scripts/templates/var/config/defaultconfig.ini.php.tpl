@@ -54,8 +54,8 @@ checkCacheFiletime  = on
 force  = off
 
 [urlengine]
-; name of url engine :  "simple" or "significant"
-engine        = simple
+; name of url engine :  "simple", "basic_significant" or "significant"
+engine        = basic_significant
 
 ; this is the url path to the jelix-www content (you can found this content in lib/jelix-www/)
 ; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
@@ -80,7 +80,6 @@ multiview = off
 ; and http://foo.com/aaa/bbb/other.php ), you MUST set the basePath (ex here, the higher entry point is index.php so
 ; : basePath="/aaa/" )
 basePath = ""
-
 
 defaultEntrypoint= index
 

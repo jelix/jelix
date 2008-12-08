@@ -42,22 +42,42 @@ class createentrypointCommand extends JelixScriptCommand {
     }
 
     public function run(){
+        jxs_init_jelix_env();
         $type = $this->getOption('-type');
         if(!$type)
             $type='classic';
 
-        if(!in_array($type, array('classic','jsonrpc','xmlrpc','rdf','soap')))
+        if(!in_array($type, array('classic','jsonrpc','xmlrpc','rdf','soap','cmdline' )))
             die("Error: invalid type\n");
 
         if($type=='classic')
             $type='index';
 
         $name = $this->getParam('name');
-        if (file_exists(JELIX_APP_WWW_PATH.$name)) {
+
+        $inifile = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',
+                                              JELIX_APP_CONFIG_PATH.'index/config.ini.php');
+
+        $param = array();
+        $param['modulename'] = $inifile->getValue('startModule');
+        
+        if ($type == 'cmdline') {
+            if (file_exists(JELIX_APP_CMD_PATH.$name.'.php')) {
+                die("Error: the entry point already exists\n");
+            }
+
+            $this->createDir(JELIX_APP_CONFIG_PATH.'cmdline');
+            $this->createDir(JELIX_APP_CMD_PATH);
+            $this->createFile(JELIX_APP_CONFIG_PATH.'cmdline/'.$name.'.ini.php','var/config/cmdline/config.ini.php.tpl', $param);
+            $param['rp_cmd'] =jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,true);
+            $this->createFile(JELIX_APP_CMD_PATH.$name.'.php','scripts/cmdline.php.tpl',$param);
+            return;
+        }
+        
+        if (file_exists(JELIX_APP_WWW_PATH.$name.'.php')) {
            die("Error: the entry point already exists\n");
         }
 
-        $param = array();
         $param['rp_app']   = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH, true);
         $param['config_file'] = $name.'/config.ini.php';
 
