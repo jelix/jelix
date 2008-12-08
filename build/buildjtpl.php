@@ -28,7 +28,6 @@ $BUILD_OPTIONS = array(
     ),
 'VERSION'=> array(
     false,
-    'SVN',
     '',
     ),
 'IS_NIGHTLY'=> array(
