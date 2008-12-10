@@ -17,7 +17,7 @@ class UTjclasses extends UnitTestCase {
     }
 
     public function testClassNoBinding() {
-        $this->assertTrue(class_exists('jBinding'));
+        $this->assertTrue(class_exists('jClassBinding'));
         $class = jClasses::getBindedService('class:jelix_tests~myclass');
         $this->assertTrue($class instanceof myclass);
 
@@ -36,7 +36,7 @@ class UTjclasses extends UnitTestCase {
         $this->assertTrue($class instanceof myclass);
 
         jClasses::bind('jelix_tests~test')->to('jelix_tests~myclass');
-        $classname = jClasses::getBinding('jelix_tests~test')->getClassName();
+        $classname = jClasses::bind('jelix_tests~test')->getClassName();
         $this->assertTrue($classname === 'myclass');
 
         try {
@@ -54,7 +54,7 @@ class UTjclasses extends UnitTestCase {
         $this->assertTrue($class instanceof myclass);
 
         jClasses::bind('jelix_tests~test')->toInstance($instance);
-        $classname = jClasses::getBinding('jelix_tests~test')->getClassName();
+        $classname = jClasses::bind('jelix_tests~test')->getClassName();
         $this->assertTrue($classname === 'myclass');
     }
 
@@ -63,12 +63,12 @@ class UTjclasses extends UnitTestCase {
         global $gJConfig;
         $oldgjconfig = clone $gJConfig;
 
-        $gJConfig->Bindings['jelix_tests-test'] = 'jelix_tests~myclass';
+        $gJConfig->classbindings['jelix_tests-test'] = 'jelix_tests~myclass';
         $class = jClasses::getBindedService('jelix_tests~test');
         $this->assertTrue($class instanceof myclass);
 
         // test with long selector and test with parse_ini_file
-        $gJConfig->Bindings['class:jelix_tests-myclass'] = 'jelix_tests~myclass';
+        $gJConfig->classbindings['class:jelix_tests-myclass'] = 'jelix_tests~myclass';
         $class = jClasses::getBindedService('class:jelix_tests~myclass');
         $this->assertTrue($class instanceof myclass);
 
@@ -77,7 +77,7 @@ class UTjclasses extends UnitTestCase {
 
     // test with binding in DEFAULT IMPLEMENTATION constant + get class name + non existing binded class
     public function testBindingInDefaultImplementation() {
-        $classname = jClasses::getBinding('iface:jelix_tests~tests/foo')->getClassName();
+        $classname = jClasses::bind('iface:jelix_tests~tests/foo')->getClassName();
         $this->assertEqual($classname, 'bind');
         jClasses::resetBindings();
 

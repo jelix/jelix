@@ -3,7 +3,8 @@
  * @package     jelix
  * @subpackage  utils
  * @author      Christophe THIRIOT
- * @copyright   2008 Christophe THIRIOT
+ * @contributor Laurent Jouanneau
+ * @copyright   2008 Christophe THIRIOT, 2008 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  * @since 1.1
@@ -15,7 +16,7 @@
  * @package     jelix
  * @subpackage  utils
  */
-class jBinding {
+class jClassBinding {
     /**
      * @var jSelectorIface|jSelectorClass Called selector
      */
@@ -46,7 +47,7 @@ class jBinding {
      * Even if this instance is already defined (BE CAREFUL !!! singleton is bypassed)
      *
      * @param string $toselector
-     * @return jBinding $this
+     * @return jClassBinding $this
      */
     public function to($toselector) {
         $this->toSelector = new jSelectorClass($toselector);
@@ -59,7 +60,7 @@ class jBinding {
      * Even if this instance is already defined (BE CAREFUL !!! singleton is bypassed)
      *
      * @param  mixed    $instance
-     * @return jBinding $this
+     * @return jClassBinding $this
      */
     public function toInstance($instance) {
         $this->instance   = $instance;
@@ -73,15 +74,11 @@ class jBinding {
      * @return mixed
      */
     public function getInstance($singleton=true) {
-        $instance = null;
         if (true === $singleton && $this->instance !== null) {
-            $instance = $this->instance;
-        } elseif (true === $singleton && $this->instance === null) {
-            $instance = $this->instance = $this->_createInstance();
-        } else { // all cases with $singleton === false
-            $instance = $this->_createInstance();
+            return $this->instance;
         }
-        return $instance;
+        $this->instance = $this->_createInstance();
+        return $this->instance;
     }
 
     /**
@@ -103,15 +100,13 @@ class jBinding {
      * @return string
      */
     public function getClassName() {
-        $class_name = null;
         if ($this->instance !== null) {
-            $class_name = get_class($this->instance);
+            return get_class($this->instance);
         } elseif ($this->toSelector !== null) {
-            $class_name = $this->toSelector->className;
+            return $this->toSelector->className;
         } else {
-            $class_name = $this->_getClassSelector()->className;
+            return $this->_getClassSelector()->className;
         }
-        return $class_name;
     }
 
     /**
@@ -130,8 +125,8 @@ class jBinding {
 
             // 1) verify that a default implementation is specified in the jelix config file
             global $gJConfig;
-            if (isset($gJConfig->Bindings)) {
-                $conf = $gJConfig->Bindings;
+            if (isset($gJConfig->classbindings) && count($gJConfig->classbindings)) {
+                $conf = $gJConfig->classbindings;
 
                 // No '~' allowed as key of a ini file, we use '-' instead
                 $conf_selector      = str_replace('~', '-', $str_selector);

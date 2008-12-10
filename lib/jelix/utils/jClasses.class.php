@@ -38,7 +38,7 @@ class jClasses {
     }
 
     /**
-     * Shortcut to corresponding jBinding::getInstance() but without singleton
+     * Shortcut to corresponding jClassBinding::getInstance() but without singleton
      * The binding is recreated each time (be careful about performance)
      * 
      * @param string $selector  Selector to a bindable class|interface
@@ -46,7 +46,7 @@ class jClasses {
      * @since 1.1
      */
     static public function createBinded($selector) {
-        return self::getBinding($selector)->getInstance(false);
+        return self::bind($selector)->getInstance(false);
     }
 
     /**
@@ -76,44 +76,32 @@ class jClasses {
     }
 
     /**
-     * Shortcut to corresponding jBinding::getInstance() 
+     * Shortcut to corresponding jClassBinding::getInstance() 
      * 
      * @param string $selector  Selector to a bindable class|interface
      * @return object           Corresponding instance
      * @since 1.1
      */
     static public function getBindedService($selector) {
-        return self::getBinding($selector)->getInstance();
-    }
-
-    /**
-     * Alias of self::getBinding method. Better for use like this : jClasses::bind('selector').to('classselector')
-     * 
-     * @param  string $selector 
-     * @return jBinding
-     * @see jClasses::bind
-     * @since 1.1
-     */
-    static public function bind($selector) {
-        return self::getBinding($selector);
+        return self::bind($selector)->getInstance();
     }
 
     /**
      * Get the binding corresponding to the specified selector.
-     * Better for use like this : jClasses::getBinding($selector)->getClassName()
+     * Better for use like this : jClasses::bind($selector)->getClassName()
      * 
      * @param string $selector
      * @param bool   $singleton if this binding should be a singleton or not
-     * @return jBinding
+     * @return jClassBinding
      * @see jClasses::bind
      * @since 1.1
      */
-    static public function getBinding($selector) {
+    static public function bind($selector) {
         $osel = jSelectorFactory::create($selector, 'iface');
         $s    = $osel->toString(true);
 
         if (!isset(self::$_bindings[$s])) {
-            self::$_bindings[$s] = new jBinding($osel);
+            self::$_bindings[$s] = new jClassBinding($osel);
         }
 
         return self::$_bindings[$s];

@@ -279,3 +279,7 @@ default.skin.default  = jelix/wymeditor/skins/default/screen.css
 [zones]
 ; disable zone caching
 disableCache = off
+
+[classbindings]
+; bindings for class and interfaces : selector_of_class/iface = selector_of_implementation
+
