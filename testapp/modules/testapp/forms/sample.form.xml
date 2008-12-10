@@ -64,10 +64,13 @@
       <item value="assiette">a plate</item>
   </checkboxes>
 
-  <input ref="datenaissance" type="localedate">
+  <!--<input ref="datenaissance" type="localedate">
       <label>Your birthday</label>
       <help>date format is dd/mm/yyyy</help>
-  </input>
+  </input>-->
+  <date ref="datenaissance">
+      <label>Your birthday</label>
+  </date>
 
   <secret ref="pwd">
     <label>A password</label>
