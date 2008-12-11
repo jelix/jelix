@@ -44,6 +44,7 @@ class jClasses {
      * @param string $selector  Selector to a bindable class|interface
      * @return object           Corresponding instance
      * @since 1.1
+     * @experimental  This method is EXPERIMENTAL. It could be changed in future version
      */
     static public function createBinded($selector) {
         return self::bind($selector)->getInstance(false);
@@ -81,6 +82,7 @@ class jClasses {
      * @param string $selector  Selector to a bindable class|interface
      * @return object           Corresponding instance
      * @since 1.1
+     * @experimental  This method is EXPERIMENTAL. It could be changed in future version
      */
     static public function getBindedService($selector) {
         return self::bind($selector)->getInstance();
@@ -95,6 +97,7 @@ class jClasses {
      * @return jClassBinding
      * @see jClasses::bind
      * @since 1.1
+     * @experimental  This method is EXPERIMENTAL. It could be changed in future version
      */
     static public function bind($selector) {
         $osel = jSelectorFactory::create($selector, 'iface');
@@ -112,6 +115,7 @@ class jClasses {
      * 
      * @return void
      * @since 1.1
+     * @experimental  This method is EXPERIMENTAL. It could be changed in future version
      */
     static public function resetBindings() {
         self::$_bindings = array();

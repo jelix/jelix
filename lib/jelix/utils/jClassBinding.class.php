@@ -15,6 +15,8 @@
  *
  * @package     jelix
  * @subpackage  utils
+ * @experimental  This class is EXPERIMENTAL. Its API and its behaviors could
+ * change in future version
  */
 class jClassBinding {
     /**
