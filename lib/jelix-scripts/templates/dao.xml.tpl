@@ -3,18 +3,10 @@
     <datasources>
         <primarytable name="%%table%%" realname="%%table%%" primarykey="%%primarykeys%%" />
     </datasources>
-    <record>
-
-
-        %%properties%%
-
-
-    <!--<property name="" fieldname="" datatype="string/int/float/autoincrement/date"
-        required="yes"
-        maxlength="" minlength="" regexp=""
-        sequence=""
-        updatepattern="" insertpattern="" selectpattern=""
-    />-->
+    <record>%%properties%%
+        <!--<property name="" fieldname="" datatype="string/int/float/date"
+        required="yes" maxlength="" minlength="" regexp="" sequence=""
+        updatepattern="" insertpattern="" selectpattern=""/>-->
     </record>
     <!--<factory>
         <method name="findByStage" type="select/selectfirst/delete/update/php">

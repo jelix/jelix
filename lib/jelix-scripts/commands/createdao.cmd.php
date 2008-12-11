@@ -17,7 +17,7 @@ class createdaoCommand extends JelixScriptCommand {
     public  $allowed_options=array('-profile'=>true, '-empty'=>false);
     public  $allowed_parameters=array('module'=>true,'name'=>true, 'table'=>false);
 
-    public  $syntaxhelp = "[-profile name] [-empty] MODULE DAO TABLE";
+    public  $syntaxhelp = "[-profile name] [-empty] MODULE DAO [TABLE]";
     public  $help=array(
         'fr'=>"
     Crée un nouveau fichier de dao
@@ -31,7 +31,8 @@ class createdaoCommand extends JelixScriptCommand {
     DAO   : nom du dao à créer.
     TABLE : nom de la table principale sur laquelle s'appuie le dao
             (cette commande ne permet pas de générer un dao s'appuyant sur
-             de multiples tables)",
+             de multiples tables)
+    Si la table n'est pas indiquée, le nom de la DAO devra être le nom de la table.",
         'en'=>"
     Create a new dao file.
 
@@ -43,7 +44,8 @@ class createdaoCommand extends JelixScriptCommand {
     MODULE : module name where to create the dao
     DAO    : dao name
     TABLE  : name of the main table on which the dao is mapped. You cannot indicate
-             multiple tables",
+             multiple tables
+    If the TABLE is not provided, the DAO name will be used as table name.",
     );
 
 
@@ -61,14 +63,16 @@ class createdaoCommand extends JelixScriptCommand {
        $profile = $this->getOption('-profile');
 
        $param = array('name'=>($this->_parameters['name']),
-              'table'=>($this->_parameters['table']));
+              'table'=>$this->getParam('table'));
+        if($param['table'] == null)
+            $param['table'] = $param['name'];
 
        if($this->getOption('-empty')){
           $this->createFile($filename,'dao_empty.xml.tpl',$param);
        }else{
 
          $tools = jDb::getTools($profile);
-         $fields = $tools->getFieldList($this->_parameters['table']);
+         $fields = $tools->getFieldList($param['table']);
 
          $properties='';
          $primarykeys='';
@@ -138,7 +142,7 @@ class createdaoCommand extends JelixScriptCommand {
             }
 
             if($type!=''){
-               $properties.="\n    <property name=\"$fieldname\" fieldname=\"$fieldname\"";
+               $properties.="\n        <property name=\"$fieldname\" fieldname=\"$fieldname\"";
                $properties.=' datatype="'.$type.'"';
                if($prop->primary){
                   if($primarykeys != '')
