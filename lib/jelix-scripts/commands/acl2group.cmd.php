@@ -110,7 +110,7 @@ ACTION:
         $action = $this->getParam('action');
         if(!in_array($action,array('list','create','setdefault','changename',
             'delete','userslist','alluserslist','adduser','removeuser','createuser','destroyuser'))){
-            die("unknown subcommand\n");
+            throw new Exception("unknown subcommand");
         }
 
         $meth= 'cmd_'.$action;
@@ -136,7 +136,7 @@ ACTION:
     protected function cmd_userslist(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) != 1)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $id = $this->_getGrpId($params[0]);
 
@@ -171,7 +171,7 @@ ACTION:
     protected function cmd_create(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) != 1)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection(jAclDb::getProfile());
 
@@ -190,7 +190,7 @@ ACTION:
     protected function cmd_delete(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) != 1)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection(jAclDb::getProfile());
 
@@ -216,7 +216,7 @@ ACTION:
     protected function cmd_setdefault(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) == 0 || count($params) > 2)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection(jAclDb::getProfile());
 
@@ -229,7 +229,7 @@ ACTION:
             elseif($params[1]=='true')
                 $def=1;
             else
-                die("Error: bad value for last parameter\n");
+                throw new Exception("bad value for last parameter");
         }
 
         $sql="UPDATE jacl2_group SET grouptype=$def  WHERE id_aclgrp=".$id;
@@ -240,7 +240,7 @@ ACTION:
     protected function cmd_changename(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) != 2)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $id = $this->_getGrpId($params[0]);
 
@@ -253,7 +253,7 @@ ACTION:
     protected function cmd_adduser(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) != 2)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $id = $this->_getGrpId($params[0]);
 
@@ -261,14 +261,14 @@ ACTION:
         $sql = "SELECT * FROM jacl2_user_group WHERE login= ".$cnx->quote($params[1])." AND id_aclgrp = $id";
         $rs = $cnx->query($sql);
         if($rec = $rs->fetch()){
-             die("Error: the user is already in this group\n");
+             throw new Exception("The user is already in this group");
         }
 
         $sql = "SELECT * FROM  jacl2_user_group u, jacl2_group g 
                 WHERE u.id_aclgrp = g.id_aclgrp AND login= ".$cnx->quote($params[1])." AND grouptype = 2";
         $rs = $cnx->query($sql);
         if(! ($rec = $rs->fetch())){
-             die("Error: the user doesn't exist\n");
+             throw new Exception("The user doesn't exist");
         }
 
         $sql="INSERT INTO jacl2_user_group (login, id_aclgrp) VALUES(".$cnx->quote($params[1]).", ".$id.")";
@@ -279,7 +279,7 @@ ACTION:
     protected function cmd_removeuser(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) != 2)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $id = $this->_getGrpId($params[0]);
 
@@ -293,7 +293,7 @@ ACTION:
     protected function cmd_createuser(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) != 1)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection(jAclDb::getProfile());
         $login = $cnx->quote($params[0]);
@@ -301,7 +301,7 @@ ACTION:
         $sql = "SELECT * FROM jacl2_user_group WHERE login = $login";
         $rs = $cnx->query($sql);
         if($rec = $rs->fetch()){
-             die("Error: the user is already registered\n");
+            throw new Exception("the user is already registered");
         }
 
         $sql="INSERT into jacl2_group (name, grouptype, ownerlogin) VALUES (";
@@ -317,7 +317,7 @@ ACTION:
     protected function cmd_destroyuser(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) != 1)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection(jAclDb::getProfile());
 
@@ -333,7 +333,7 @@ ACTION:
         $cnx = jDb::getConnection(jAclDb::getProfile());
         if(is_numeric($param)){
             if(intval($param) <= 0)
-                die('Error: invalid group id');
+                throw new Exception('invalid group id');
             $sql="SELECT id_aclgrp FROM jacl2_group WHERE grouptype <2 AND id_aclgrp = ".$param;
         }else{
             $sql="SELECT id_aclgrp FROM jacl2_group WHERE grouptype <2 AND name = ".$cnx->quote($param);
@@ -342,7 +342,7 @@ ACTION:
         if($rec = $rs->fetch()){
             return $rec->id_aclgrp;
         }else{
-            die("Error: this group doesn't exist or is private\n");
+            throw new Exception("this group doesn't exist or is private");
         }
     }
 

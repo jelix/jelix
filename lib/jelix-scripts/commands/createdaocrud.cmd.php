@@ -48,7 +48,7 @@ class createdaocrudCommand extends JelixScriptCommand {
         $ctrlname = $this->getParam('ctrlname', $table);
 
         if(file_exists($path.'controllers/'.$ctrlname.'.classic.php')){
-            die("Error: controller '".$ctrlname."' already exists");
+            throw new Exception("controller '".$ctrlname."' already exists");
         }
 
         $agcommand = jxs_load_command('createdao');

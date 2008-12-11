@@ -58,7 +58,7 @@ class createappCommand extends JelixScriptCommand {
 
     public function run(){
        if(file_exists(JELIX_APP_PATH)){
-           die("Error : this application is already created\n");
+           throw new Exception("this application is already created");
        }
 
         $this->createDir(JELIX_APP_PATH);
@@ -95,13 +95,23 @@ class createappCommand extends JelixScriptCommand {
         $param = array();
         $param['default_id'] = $GLOBALS['APPNAME'].JELIXS_INFO_DEFAULT_IDSUFFIX;
 
-        if($this->getOption('-nodefaultmodule'))
-            $param['tplname'] = 'jelix~defaultmain';
+        if(preg_match('/([^\w\_0-9])/', $GLOBALS['APPNAME'])) {
+            $moduleok = false;
+        }
         else
+            $moduleok = true;
+
+        if($this->getOption('-nodefaultmodule') || !$moduleok) {
+            $param['tplname'] = 'jelix~defaultmain';
+            $param['modulename'] = 'jelix';
+        }
+        else {
             $param['tplname'] = $GLOBALS['APPNAME'].'~main';
+            $param['modulename'] = $GLOBALS['APPNAME'];
+        }
 
         $param['config_file'] = 'index/config.ini.php';
-        $param['modulename'] = $GLOBALS['APPNAME'];
+        
         $param['rp_temp']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_TEMP_PATH, true);
         $param['rp_var'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_VAR_PATH,  true);
         $param['rp_log'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_LOG_PATH,  true);
@@ -116,28 +126,31 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php','var/config/defaultconfig.ini.php.tpl',$param);
         $this->createFile(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php','var/config/dbprofils.ini.php.tpl',$param);
         $this->createFile(JELIX_APP_CONFIG_PATH.'index/config.ini.php','var/config/index/config.ini.php.tpl',$param);
-
         $this->createFile(JELIX_APP_PATH.'responses/myHtmlResponse.class.php','myHtmlResponse.class.php.tpl',$param);
- 
-
-       
         $this->createFile(JELIX_APP_PATH.'application.init.php','application.init.php.tpl',$param);
     
         $this->createFile($wwwpath.'index.php','www/index.php.tpl',$param);
         $this->createFile($wwwpath.'.htaccess','htaccess_allow',$param);
 
         if(!$this->getOption('-nodefaultmodule')){
-            $cmd = jxs_load_command('createmodule');
-            $cmd->init(array('-addinstallzone'=>true),array('module'=>$GLOBALS['APPNAME']));
-            $cmd->run();
-            $this->createFile(JELIX_APP_PATH.'modules/'.$GLOBALS['APPNAME'].'/templates/main.tpl', 'main.tpl.tpl', $param);
+            try {
+                $cmd = jxs_load_command('createmodule');
+                $cmd->init(array('-addinstallzone'=>true),array('module'=>$GLOBALS['APPNAME']));
+                $cmd->run();
+                $this->createFile(JELIX_APP_PATH.'modules/'.$GLOBALS['APPNAME'].'/templates/main.tpl', 'main.tpl.tpl', $param);
+                $moduleok = true;
+            } catch (Exception $e) {
+                echo "The module has not been created because of this error: ".$e->getMessage()."\nHowever the application has been created";
+            }
         }
 
         if ($this->getOption('-withcmdline')) {
-            $agcommand = jxs_load_command('createctrl');
-            $options = array('-cmdline'=>true);
-            $agcommand->init($options,array('module'=>$GLOBALS['APPNAME'], 'name'=>'default','method'=>'index'));
-            $agcommand->run();
+            if(!$this->getOption('-nodefaultmodule') && $moduleok){
+                $agcommand = jxs_load_command('createctrl');
+                $options = array('-cmdline'=>true);
+                $agcommand->init($options,array('module'=>$GLOBALS['APPNAME'], 'name'=>'default','method'=>'index'));
+                $agcommand->run();
+            }
 
             $this->createDir(JELIX_APP_CMD_PATH);
             $this->createDir(JELIX_APP_CONFIG_PATH.'cmdline');

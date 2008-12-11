@@ -44,10 +44,15 @@ class createmoduleCommand extends JelixScriptCommand {
 
     public function run(){
         jxs_init_jelix_env();
+        
+        if(preg_match('/([^\w\_0-9])/', $this->_parameters['module'])) {
+            throw new Exception("the name '".$this->_parameters['module']."' is not valid for a module");
+        }
+        
         $path= $this->getModulePath($this->_parameters['module'], false);
 
         if(file_exists($path)){
-            die("Error: module '".$this->_parameters['module']."' already exists");
+            throw new Exception("module '".$this->_parameters['module']."' already exists");
         }
         $this->createDir($path);
         

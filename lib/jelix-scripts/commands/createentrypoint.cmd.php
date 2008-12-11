@@ -24,7 +24,7 @@ class createentrypointCommand extends JelixScriptCommand {
     Crée un nouveau point d'entree dans le répertoire www de l'application.
 
     L'option -type indique le type de point d'entrée : classic, jsonrpc,
-    xmlrpc, rdf, soap.
+    xmlrpc, rdf, soap, cmdline.
 
     Le nom du point d'entrée peut contenir un sous-repertoire. Il ne doit pas
     contenir le suffixe .php
@@ -48,7 +48,7 @@ class createentrypointCommand extends JelixScriptCommand {
             $type='classic';
 
         if(!in_array($type, array('classic','jsonrpc','xmlrpc','rdf','soap','cmdline' )))
-            die("Error: invalid type\n");
+            throw new Exception("invalid type");
 
         if($type=='classic')
             $type='index';
@@ -63,7 +63,7 @@ class createentrypointCommand extends JelixScriptCommand {
         
         if ($type == 'cmdline') {
             if (file_exists(JELIX_APP_CMD_PATH.$name.'.php')) {
-                die("Error: the entry point already exists\n");
+                throw new Exception("the entry point already exists");
             }
 
             $this->createDir(JELIX_APP_CONFIG_PATH.'cmdline');
@@ -75,7 +75,7 @@ class createentrypointCommand extends JelixScriptCommand {
         }
         
         if (file_exists(JELIX_APP_WWW_PATH.$name.'.php')) {
-           die("Error: the entry point already exists\n");
+           throw new Exception("the entry point already exists");
         }
 
         $param['rp_app']   = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH, true);
@@ -89,11 +89,11 @@ class createentrypointCommand extends JelixScriptCommand {
         $doc = new DOMDocument();
 
         if (!$doc->load(JELIX_APP_PATH.'project.xml')){
-           die("Error: cannot load project.xml");
+           throw new Exception("cannot load project.xml");
         }
 
         if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'project/1.0'){
-           die("Error: bad namespace in project.xml");
+           throw new Exception("bad namespace in project.xml");
         }
 
         $elem = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');

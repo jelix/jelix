@@ -47,7 +47,7 @@ class createactionCommand extends JelixScriptCommand {
        $param['module'] = $this->_parameters['module'];
 
        // TODO
-        die("not implemented.");
+        throw new Exception("not implemented");
 
     }
 }

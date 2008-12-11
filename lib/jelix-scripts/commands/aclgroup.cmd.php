@@ -74,7 +74,7 @@ ACTION:
         jxs_init_jelix_env();
         $action = $this->getParam('action');
         if(!in_array($action,array('list','create','setdefault','changename','delete'))){
-            die("unknown subcommand\n");
+            throw new Exception("unknown subcommand");
         }
 
         $meth= 'cmd_'.$action;
@@ -100,7 +100,7 @@ ACTION:
     protected function cmd_create(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) != 1)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection(jAclDb::getProfile());
 
@@ -119,7 +119,7 @@ ACTION:
     protected function cmd_delete(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) != 1)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection(jAclDb::getProfile());
 
@@ -127,9 +127,9 @@ ACTION:
         $rs = $cnx->query($sql);
         if($rec = $rs->fetch()){
             if($rec->grouptype == 2)
-                die("Error: can't delete this private group\n");
+                throw new Exception("can't delete this private group");
         }else{
-            die("Error: this group doesn't exist\n");
+            throw new Exception("this group doesn't exist");
         }
 
 
@@ -152,7 +152,7 @@ ACTION:
     protected function cmd_setdefault(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) == 0 || count($params) > 2)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection(jAclDb::getProfile());
 
@@ -160,9 +160,9 @@ ACTION:
         $rs = $cnx->query($sql);
         if($rec = $rs->fetch()){
             if($rec->grouptype == 2)
-                die("Error: can't change this private group\n");
+                throw new Exception("Can't change this private group");
         }else{
-            die("Error: this group doesn't exist\n");
+            throw new Exception("This group doesn't exist");
         }
 
         $def=1;
@@ -172,7 +172,7 @@ ACTION:
             elseif($params[1]=='true')
                 $def=1;
             else
-                die("Error: bad value for last parameter\n");
+                throw new Exception("bad value for last parameter");
         }
 
         $sql="UPDATE jacl_group SET grouptype=$def  WHERE id_aclgrp=".intval($params[0]);
@@ -183,7 +183,7 @@ ACTION:
     protected function cmd_changename(){
         $params = $this->getParam('...');
         if(!is_array($params) || count($params) != 2)
-            die("wrong parameter count\n");
+            throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection(jAclDb::getProfile());
 
@@ -191,9 +191,9 @@ ACTION:
         $rs = $cnx->query($sql);
         if($rec = $rs->fetch()){
             if($rec->grouptype == 2)
-                die("Error: can't change this private group\n");
+                throw new Exception("can't change this private group");
         }else{
-            die("Error: this group doesn't exist\n");
+            throw new Exception("this group doesn't exist");
         }
 
         $sql="UPDATE jacl_group SET name=".$cnx->quote($params[1])."  WHERE id_aclgrp=".intval($params[0]);
