@@ -5,9 +5,6 @@
 * sendmail, PHP mail(), or SMTP.  Methods are
 * based upon the standard AspEmail(tm) classes.
 *
-* Original author : Brent R. Matzelle
-* Adaptation for PHP5 And Jelix : Laurent Jouanneau
-*
 * @package     jelix
 * @subpackage  utils
 * @author      Laurent Jouanneau
@@ -78,18 +75,18 @@ class jMailer extends PHPMailer {
         return $tab;
     }
 
+    protected $tpl = null;
+
     /**
      * Adds a Tpl référence.
      * @param string $selector
-     * @return void
+     * @return jTpl the template object.
      */
     function Tpl( $selector ) {
         $this->bodyTpl = $selector;
+        $this->tpl = new jTpl();
+        return $this->tpl;
     }
-
-    /////////////////////////////////////////////////
-    // MAIL SENDING METHODS
-    /////////////////////////////////////////////////
 
     /**
      * Creates message and assigns Mailer. If the message is
@@ -104,7 +101,7 @@ class jMailer extends PHPMailer {
 
         if( isset($this->bodyTpl) && $this->bodyTpl != "") {
 
-            $mailtpl = new jTpl();
+            $mailtpl = $this->tpl;
             $metas = $mailtpl->meta( $this->bodyTpl );
 
             if( isset($metas['Subject']) )
