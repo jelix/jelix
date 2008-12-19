@@ -14,9 +14,9 @@ class mainCtrl extends jController {
   function index(){
 
       $rep = $this->getResponse('html');
-      $rep->title = 'Accueil de TestApp';
+      $rep->title = 'Homepage of TestApp';
       $rep->body->assign('page_title','Test App');
-      $rep->body->assign('MAIN','<p>Bienvenue sur cette application de test</p>');
+      $rep->body->assign('MAIN','<p>Welcome on this application to test Jelix</p>');
       return $rep;
    }
 
@@ -65,8 +65,4 @@ class mainCtrl extends jController {
 
       return $rep;
    }
-
-
 }
-
-?>
