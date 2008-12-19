@@ -24,12 +24,11 @@ class jstestsCtrl extends jController {
                            
                            <script>
 
-  window.onload = (function(){try{
+  jQuery(document).ready(function(){try{
     
 test("a basic test example", function() {
   ok( true, "this test is fine" );
   var value = "hello";
-  alert("b")
   equals( "hello", value, "We expect value to be hello" );
 });
 

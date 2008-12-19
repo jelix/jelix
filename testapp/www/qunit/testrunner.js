@@ -206,7 +206,7 @@ var config = {
 	// block until document ready
 	blocking: true,
 	//restrict modules/tests by get parameters
-	filters: location.search.length > 1 && $.map( location.search.slice(1).split('&'), decodeURIComponent ),
+	filters: location.search.match(/QUnit=([^&]+)/),
 	isLocal: !!(window.location.protocol == 'file:')
 };
 
@@ -248,7 +248,7 @@ $.extend(window, {
 $(window).load(function() {
 	$('#userAgent').html(navigator.userAgent);
 	var head = $('<div class="testrunner-toolbar"><label for="filter">Hide passed tests</label></div>').insertAfter("#userAgent");
-	$('<input type="checkbox" id="filter" />').attr("disabled", true).prependTo(head).click(function() {
+	$('<input type="checkbox" id="filter" />').prependTo(head).click(function() {
 		$('li.pass')[this.checked ? 'hide' : 'show']();
 	});
 	runTest();	
@@ -289,7 +289,8 @@ function validTest( name ) {
 	var filters = config.filters;
 	if( !filters )
 		return true;
-
+   
+    filters = new Array(decodeURIComponent(filters[1]));
 	var i = filters.length,
 		run = false;
 	while( i-- ){
@@ -386,7 +387,7 @@ function test(name, callback) {
 			var target = $(event.target).filter("strong").clone();
 			if ( target.length ) {
 				target.children().remove();
-				location.href = location.href.match(/^(.+?)(\?.*)?$/)[1] + "?" + encodeURIComponent($.trim(target.text()));
+				location.href = location.href.replace(/&QUnit=[^&]+/,'') + "&QUnit=" + encodeURIComponent($.trim(target.text()));
 			}
 		});
 		
