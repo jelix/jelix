@@ -251,7 +251,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
             if(in_array($ctrltype, $ignore))
                 continue;
             if(!in_array($ctrltype, array('input','textarea', 'output','checkbox','checkboxes','radiobuttons',
-                        'menulist','listbox','secret', 'upload', 'hidden','htmleditor'))) {
+                        'menulist','listbox','secret', 'upload', 'hidden','htmleditor','date','datetime'))) {
                 throw new jException('jelix~formserr.control.not.allowed',array($ctrltype, $controltype,$this->sourceFile));
             }
             $ctrlcount++;
