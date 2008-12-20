@@ -334,7 +334,7 @@ jForms.declareForm(jForms.tForm);
             echo '<input type="text" id="'.$id.'hour" name="'.$ctrl->ref.'[hour]" value="'.$value.'"'.$this->_endt;
         else{
             echo '<select id="'.$id.'hour" name="'.$ctrl->ref.'[hour]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.time.hour.label')).'</option>';
-            for($i=0;$i<60;$i++){
+            for($i=0;$i<24;$i++){
                 $k = ($i<10)?'0'.$i:$i;
                 echo '<option value="'.$k.'"'.( (string) $k === $value?' selected="selected"':'').'>'.$k.'</option>';
             }
