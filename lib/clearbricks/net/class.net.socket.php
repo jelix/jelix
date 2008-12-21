@@ -1,52 +1,46 @@
 <?php
-# ***** BEGIN LICENSE BLOCK *****
+# -- BEGIN LICENSE BLOCK ----------------------------------
+#
 # This file is part of Clearbricks.
-# Copyright (c) 2006 Olivier Meunier and contributors. All rights
-# reserved.
 #
-# Clearbricks is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-# 
-# Clearbricks is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with Clearbricks; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Copyright (c) 2003-2008 Olivier Meunier and contributors
+# Licensed under the GPL version 2.0 license.
+# See LICENSE file or
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 #
-# ***** END LICENSE BLOCK *****
+# -- END LICENSE BLOCK ------------------------------------
 
 /**
-@defgroup CB_NET Clearbricks network classes
-@ingroup CLEARBRICKS
-*/
-
-/**
-@ingroup CB_NET
-@brief Sockets handler
-
-Base sockets client class connections. Once socket is open, you can read
-results with a non recursive iterator in foreach() loop.
+* Network base
+*
+* This class handles network socket through an iterator.
+*
+* @package Clearbricks
+* @subpackage Network
 */
 class netSocket
 {
-	protected $_host;			///< <b>string</b>		Server host
-	protected $_port;			///< <b>integer</b>		Server port
-	protected $_transport = '';	///< <b>string</b>		Server transport
-	protected $_timeout;		///< <b>integer</b>		Connection timeout
+	/** @var string	Server host */
+	protected $_host;
 	
-	protected $_handle;			///< <b>resource</b>	Resource handler
+	/** @var integer	Server port */
+	protected $_port;
+	
+	/** @var string	Server transport */
+	protected $_transport = '';
+	
+	/** @var integer	Connection timeout */
+	protected $_timeout;
+	
+	/** @var resource	Resource handler */
+	protected $_handle;
 	
 	/**
-	Class constructor
-	
-	@param	host		<b>string</b>		Server host
-	@param	port		<b>integer</b>		Server port
-	@param	timeout	<b>integer</b>		Connection timeout
+	* Class constructor
+	*
+	* @param string		$host		Server host
+	* @param string 		$port		Server port
+	* @param string		$timeout		Connection timeout
 	*/
 	public function __construct($host,$port,$timeout=10)
 	{
@@ -56,9 +50,9 @@ class netSocket
 	}
 	
 	/**
-	Object destructor
-	
-	Calls close() method
+	* Object destructor
+	*
+	* Calls {@link close()} method
 	*/
 	public function __destruct()
 	{
@@ -66,9 +60,13 @@ class netSocket
 	}
 	
 	/**
-	Returns host if <var>$host</var> is not set, sets it otherwise.
-	
-	@param	host		<b>string</b>		Server host
+	* Get / Set host
+	*
+	* If <var>$host</var> is set, set {@link $_host} and returns true.
+	* Otherwise, returns {@link $_host} value.
+	*
+	* @param string	$host			Server host
+	* @return string|true
 	*/
 	public function host($host=null)
 	{
@@ -80,9 +78,13 @@ class netSocket
 	}
 	
 	/**
-	Returns port if <var>$port</var> is not set, sets it otherwise.
-	
-	@param	port		<b>integer</b>		Server port
+	* Get / Set port
+	*
+	* If <var>$port</var> is set, set {@link $_port} and returns true.
+	* Otherwise, returns {@link $_port} value.
+	*
+	* @param integer	$port			Server port
+	* @return integer|true
 	*/
 	public function port($port=null)
 	{
@@ -94,11 +96,15 @@ class netSocket
 	}
 	
 	/**
-	Returns timeout if <var>$timeout</var> is not set, sets it otherwise.
-	
-	@param	timeout	<b>integer</b>		Connection timeout
+	* Get / Set timeout
+	*
+	* If <var>$timeout</var> is set, set {@link $_timeout} and returns true.
+	* Otherwise, returns {@link $_timeout} value.
+	*
+	* @param integer	$timeout			Connection timeout
+	* @return string|true
 	*/
-	public function timeout($timeout)
+	public function timeout($timeout=null)
 	{
 		if ($timeout) {
 			$this->_timeout = abs((integer) $timeout);
@@ -108,10 +114,12 @@ class netSocket
 	}
 	
 	/**
-	Opens socket connection. Returns an object of type netSocketIterator which
-	can be iterate with a simple foreach loop.
-	
-	@return	<b>netSocketIterator</b>
+	* Open connection.
+	*
+	* Opens socket connection and Returns an object of type {@link netSocketIterator}
+	* which can be iterate with a simple foreach loop.
+	*
+	* @return	netSocketIterator
 	*/
 	public function open()
 	{
@@ -124,7 +132,7 @@ class netSocket
 	}
 	
 	/**
-	Closes socket connection
+	* Closes socket connection
 	*/
 	public function close()
 	{
@@ -135,29 +143,31 @@ class netSocket
 	}
 	
 	/**
-	Sends data to current socket and returns an object of type
-	netSocketIterator which can be iterate with a simple foreach loop.
-	
-	<var>$data</var> can be a string or an array of simple lines.
-	
-	Example:
-	
-	@verbatim
-	<?php
-	$s = new netSocket('www.google.com',80,2);
-	$s->open();
-	$data = array(
-		'GET / HTTP/1.0'
-	);
-	foreach($s->write($data) as $v) {
-		echo $v."\n";
-	}
-	$s->close();
-	?>
-	@endverbatim
-	
-	@param	data		<b>mixed</b>		Data to send
-	@return	<b>netSocketIterator</b>
+	* Send data
+	*
+	* Sends data to current socket and returns an object of type
+	* {@link netSocketIterator} which can be iterate with a simple foreach loop.
+	*
+	* <var>$data</var> can be a string or an array of lines.
+	*
+	* Example:
+	*
+	* <code>
+	* <?php
+	* $s = new netSocket('www.google.com',80,2);
+	* $s->open();
+	* $data = array(
+	* 	'GET / HTTP/1.0'
+	* );
+	* foreach($s->write($data) as $v) {
+	* 	echo $v."\n";
+	* }
+	* $s->close();
+	* ?>
+	* </code>
+	*
+	* @param string|array	$data		Data to send
+	* @return	netSocketIterator
 	*/
 	public function write($data)
 	{
@@ -174,7 +184,9 @@ class netSocket
 	}
 	
 	/**
-	Flushes socket write buffer.
+	* Flush buffer
+	*
+	* Flushes socket write buffer.
 	*/
 	public function flush()
 	{
@@ -186,7 +198,9 @@ class netSocket
 	}
 	
 	/**
-	Returns an object of type netSocketIterator
+	* Iterator
+	*
+	* Returns an object of type netSocketIterator
 	*/
 	protected function iterator()
 	{
@@ -197,9 +211,11 @@ class netSocket
 	}
 	
 	/**
-	Returns true if socket connection is open.
-	
-	@return	<b>boolean</b>
+	* Is open
+	*
+	* Returns true if socket connection is open.
+	*
+	* @return	boolean
 	*/
 	public function isOpen()
 	{
@@ -207,11 +223,27 @@ class netSocket
 	}
 }
 
+/**
+* Network socket iterator
+*
+* This class offers an iterator for network operations made with
+* {@link netSocket}.
+*
+* @see netSocket::write()
+*/
 class netSocketIterator implements Iterator
 {
+	/** @var resource	Socket resource handler */
 	protected $_handle;
+	
+	/** @var integer	Current index position */
 	protected $_index;
 	
+	/**
+	* Constructor
+	*
+	* @param resource	&$handle		Socket resource handler
+	*/
 	public function __construct(&$handle)
 	{
 		if (!is_resource($handle)) {
@@ -223,22 +255,43 @@ class netSocketIterator implements Iterator
 	
 	/* Iterator methods
 	--------------------------------------------------- */
+	/**
+	* Rewind
+	*/
 	public function rewind() {
 		# Nothing
 	}
 	
+	/**
+	* Valid
+	*
+	* @return boolean	True if EOF of handler
+	*/
 	public function valid() {
 		return !feof($this->_handle);
 	}
 	
+	/**
+	* Move index forward
+	*/
 	public function next() {
 		$this->_index++;
 	}
 	
+	/**
+	* Current index
+	*
+	* @return integer	Current index
+	*/
 	public function key() {
 		return $this->_index;
 	}
 	
+	/**
+	* Current value
+	*
+	* @return string	Current socket response line
+	*/
 	public function current() {
 		return fgets($this->_handle,4096);
 	}

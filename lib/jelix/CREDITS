@@ -207,6 +207,7 @@ Thomas
 
 Baptiste Toinot (aka Surfoo)
  - double / in path for locale selector
+ - fixed little bugs in jForms (#789, #790)
  
 Christian Tritten
  - improvements on pagelinks plugin (#340)

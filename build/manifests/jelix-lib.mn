@@ -443,7 +443,9 @@ cd lib/clearbricks
   LICENCE
   README.jelix
   VERSION
-
+  jelix.inc.php
+cd lib/clearbricks/common
+! lib.files.php
 cd lib/clearbricks/net
 ! class.net.socket.php
 cd lib/clearbricks/net.http

@@ -169,9 +169,13 @@ $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  'Auth'=>JELIX_LIB_PATH.'auth/', 'Installer'=>JELIX_LIB_PATH.'installer/');
 
 /**
- * __autoload function used by php to try to load an unknown class
+ * function used by php to try to load an unknown class
  */
-function __autoload($class){
+#if PHP52ORMORE
+function jelix_autoload($class) {
+#else
+function __autoload($class) {
+#endif
     if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms|Auth|Installer).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
     }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
@@ -206,3 +210,7 @@ function __autoload($class){
     }
 #endif
 }
+
+#if PHP52ORMORE
+spl_autoload_register("jelix_autoload");
+#endif

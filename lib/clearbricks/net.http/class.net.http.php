@@ -1,109 +1,101 @@
 <?php
-# ***** BEGIN LICENSE BLOCK *****
+# -- BEGIN LICENSE BLOCK ----------------------------------
+#
 # This file is part of Clearbricks.
-# Copyright (c) 2006 Olivier Meunier and contributors. All rights
-# reserved.
 #
-# Clearbricks is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-# 
-# Clearbricks is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with Clearbricks; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Copyright (c) 2003-2008 Olivier Meunier and contributors
+# Licensed under the GPL version 2.0 license.
+# See LICENSE file or
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 #
-# ***** END LICENSE BLOCK *****
-#
-# Fully based on Simon Willison's HTTP Client
-#
-# Version 0.9, 6th April 2003 - Simon Willison ( http://simon.incutio.com/ )
-# Manual: http://scripts.incutio.com/httpclient/
-#
-# Changes:
-# - Charset support in POST requests
-# - Proxy support through HTTP_PROXY_HOST and HTTP_PROXY_PORT or setProxy()
-# - SSL support
-# - Handles redirects on other hosts
-# - Configurable output
+# -- END LICENSE BLOCK ------------------------------------
 
 /**
-@ingroup CB_NET
-@brief Client class for HTTP protocol.
-
-Features:
-
-- Implements a useful subset of the HTTP 1.0 and 1.1 protocols.
-- Includes cookie support.
-- Ability to set the user agent and referal fields.
-- Can automatically handle redirected pages.
-- Can be used for multiple requests, with any cookies sent by the server resent
-  for each additional request.
-- Support for gzip encoded content, which can dramatically reduce the amount of
-  bandwidth used in a transaction.
-- Object oriented, with static methods providing a useful shortcut for simple
-  requests.
-- The ability to only read the page headers - useful for implementing tools such
-  as link checkers.
-- Support for file uploads.
-
+* HTTP Client
+*
+* Features:
+*
+* - Implements a useful subset of the HTTP 1.0 and 1.1 protocols.
+* - Includes cookie support.
+* - Ability to set the user agent and referal fields.
+* - Can automatically handle redirected pages.
+* - Can be used for multiple requests, with any cookies sent by the server resent
+*   for each additional request.
+* - Support for gzip encoded content, which can dramatically reduce the amount of
+*   bandwidth used in a transaction.
+* - Object oriented, with static methods providing a useful shortcut for simple
+*   requests.
+* - The ability to only read the page headers - useful for implementing tools such
+*   as link checkers.
+* - Support for file uploads.
+*
+* This class is fully based on Simon Willison's HTTP Client in version 0.9 of
+* 6th April 2003 - {@link http://scripts.incutio.com/httpclient/}
+*
+* Changes since fork:
+*
+* - PHP5 only with Exception support
+* - Charset support in POST requests
+* - Proxy support through HTTP_PROXY_HOST and HTTP_PROXY_PORT or setProxy()
+* - SSL support (if possible)
+* - Handles redirects on other hosts
+* - Configurable output
+*
+* @package Clearbricks
+* @subpackage Network
 */
 class netHttp extends netSocket
 {
-	protected $host;					///<	<b>string</b>		Server host
-	protected $port;					///<	<b>integer</b>		Server port
-	protected $path;					///<	<b>string</b>		Query path
-	protected $method;					///<	<b>string</b>		HTTP method
-	protected $postdata = '';			///<	<b>string</b>		POST query string
-	protected $post_charset;				///<	<b>string</b>		POST charset
-	protected $cookies = array();			///<	<b>array</b>		Cookies sent
-	protected $referer;					///<	<b>string</b>		HTTP referer
-	protected $accept = 'text/xml,application/xml,application/xhtml+xml,text/html,text/plain,image/png,image/jpeg,image/gif,*/*';	///< <b>string</b>	HTTP accept header
-	protected $accept_encoding = 'gzip';	///<	<b>string</b>		HTTP accept encoding
-	protected $accept_language = 'en-us';	///<	<b>string</b>		HTTP accept language
-	protected $user_agent = 'Clearbricks HTTP Client';	///< <b>string</b>	HTTP User Agent
-	protected $more_headers = array();		///< <b>array</b>		More headers to be sent
-	protected $timeout = 10;				///<	<b>integer</b>		Connection timeout
-	protected $use_ssl = false;			///<	<b>boolean</b>		Use SSL connection
-	protected $use_gzip = false;			///<	<b>boolean</b>		Use gzip transfert
-	protected $persist_cookies = true;	///<	<b>boolean</b>		Allow persistant cookies
-	protected $persist_referers = true;	///<	<b>boolean</b>		Allow persistant referers
-	protected $debug = false;			///<	<b>boolean</b>		Use debug mode
-	protected $handle_redirects = true;	///<	<b>boolean</b>		Follow redirects
-	protected $max_redirects = 5;			///<	<b>integer</b>		Maximum redirects to follow
-	protected $headers_only = false;		///<	<b>boolean</b>		Retrieve only headers
-	
-	protected $username;				///<	<b>string</b>		Authentication user name
-	protected $password;				///<	<b>string</b>		Authentication password
-	
-	protected $proxy_host;				///<	<b>string</b>		Proxy server host
-	protected $proxy_port;				///<	<b>integer</b>		Proxy server port
-	
+	/** @var string Server host */				protected $host;
+	/** @var integer Server port */				protected $port;
+	/** @var string Query path */					protected $path;
+	/** @var string HTTP method */				protected $method;
+	/** @var string POST query string */			protected $postdata = '';
+	/** @var string POST charset */				protected $post_charset;
+	/** @var array Cookies sent */				protected $cookies = array();
+	/** @var string HTTP referer */				protected $referer;
+	/** @var string HTTP accept header */			protected $accept = 'text/xml,application/xml,application/xhtml+xml,text/html,text/plain,image/png,image/jpeg,image/gif,*/*';
+	/** @var string HTTP accept encoding */			protected $accept_encoding = 'gzip';
+	/** @var string HTTP accept language */			protected $accept_language = 'en-us';
+	/** @var string HTTP User Agent */				protected $user_agent = 'Clearbricks HTTP Client';
+	/** @var array More headers to be sent */		protected $more_headers = array();
+	/** @var integer Connection timeout */			protected $timeout = 10;
+	/** @var boolean Use SSL connection */			protected $use_ssl = false;
+	/** @var boolean Use gzip transfert */			protected $use_gzip = false;
+	/** @var boolean Allow persistant cookies */		protected $persist_cookies = true;
+	/** @var boolean Allow persistant referers */	protected $persist_referers = true;
+	/** @var boolean Use debug mode */				protected $debug = false;
+	/** @var boolean Follow redirects */			protected $handle_redirects = true;
+	/** @var integer Maximum redirects to follow */	protected $max_redirects = 5;
+	/** @var boolean Retrieve only headers */		protected $headers_only = false;
+	/** @var string Authentication user name */		protected $username;
+	/** @var string Authentication password */		protected $password;
+	/** @var string Proxy server host */			protected $proxy_host;
+	/** @var integer Proxy server port */			protected $proxy_port;
+
 	# Response vars
-	protected $status;					///<	<b>integer</b>		HTTP Status code
-	protected $status_string;			///< <b>string</b>		HTTP Status string
-	protected $headers = array();			///<	<b>array</b>		Response headers
-	protected $content = '';				///<	<b>string</b>		Response body
-	
+	/** @var integer HTTP Status code */			protected $status;
+	/** @var string HTTP Status string */			protected $status_string;
+	/** @var array Response headers */				protected $headers = array();
+	/** @var string Response body */				protected $content = '';
+
 	# Tracker variables
-	protected $redirect_count = 0;		///<	<b>integer</b>		Internal redirects count
-	protected $cookie_host = '';			///<	<b>string</b>		Internal cookie host
-	
+	/** @var integer Internal redirects count */		protected $redirect_count = 0;
+	/** @var string Internal cookie host */			protected $cookie_host = '';
+
 	# Output module (null is this->content)
-	protected $output = null;			///<	<b>string</b>		Output stream name
-	protected $output_h = null;			///<	<b>resource</b>	Output resource
+	/** @var string Output stream name */			protected $output = null;
+	/** @var resource Output resource */			protected $output_h = null;
+	
 	
 	/**
-	Constructor. Takes the web server host, an optional port and timeout.
-	
-	@param	host		<b>string</b>		Server host
-	@param	port		<b>integer</b>		Server port
-	@param	timeout	<b>integer</b>		Connection timeout
+	* Constructor.
+	*
+	* Takes the web server host, an optional port and timeout.
+	*
+	* @param string	$host			Server host
+	* @param integer	$port			Server port
+	* @param integer	$timeout			Connection timeout
 	*/
 	public function __construct($host,$port=80,$timeout=null)
 	{
@@ -120,14 +112,16 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Executes a GET request for the specified path. If <var>$data</var> is
-	specified, appends it to a query string as part of the get request.
-	<var>$data</var> can be an array of key value pairs, in which case a
-	matching query string will be constructed. Returns true on success.
-	
-	@param	path		<b>string</b>		Request path
-	@param	data		<b>array</b>		Request parameters
-	@return	<b>boolean</b>
+	* GET Request
+	*
+	* Executes a GET request for the specified path. If <var>$data</var> is
+	* specified, appends it to a query string as part of the get request.
+	* <var>$data</var> can be an array of key value pairs, in which case a
+	* matching query string will be constructed. Returns true on success.
+	* 
+	* @param string	$path			Request path
+	* @param array		$data			Request parameters
+	* @return boolean
 	*/
 	public function get($path,$data=false)
 	{
@@ -142,15 +136,17 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Executes a POST request for the specified path. If <var>$data</var> is
-	specified, appends it to a query string as part of the get request.
-	<var>$data</var> can be an array of key value pairs, in which case a
-	matching query string will be constructed. Returns true on success.
-	
-	@param	path		<b>string</b>		Request path
-	@param	data		<b>array</b>		Request parameters
-	@param	charset	<b>string</b>		Request charset
-	@return	<b>boolean</b>
+	* POST Request
+	*
+	* Executes a POST request for the specified path. If <var>$data</var> is
+	* specified, appends it to a query string as part of the get request.
+	* <var>$data</var> can be an array of key value pairs, in which case a
+	* matching query string will be constructed. Returns true on success.
+	*
+	* @param string	$path			Request path
+	* @param array		$data			Request parameters
+	* @param array		$charset			Request charset
+	* @return boolean
 	*/
 	public function post($path,$data,$charset=null)
 	{
@@ -164,11 +160,13 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Prepares Query String for HTTP request. <var>$data</var> is an associative
-	array of arguments.
-	
-	@param	data		<b>array</b>		Query data
-	@return	<b>string</b>
+	* Query String Builder
+	*
+	* Prepares Query String for HTTP request. <var>$data</var> is an associative
+	* array of arguments.
+	*
+	* @param array		$data			Query data
+	* @return string
 	*/
 	protected function buildQueryString($data)
 	{
@@ -195,9 +193,11 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Sends HTTP request and stores status, headers, content object properties.
-	
-	@return	<b>boolean</b>
+	* Do Request
+	*
+	* Sends HTTP request and stores status, headers, content object properties.
+	*
+	* @return boolean
 	*/
 	protected function doRequest()
 	{
@@ -343,9 +343,11 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Prepares HTTP request and returns an array of HTTP headers.
-	
-	@return	<b>array</b>
+	* Prepare Request
+	*
+	* Prepares HTTP request and returns an array of HTTP headers.
+	*
+	* @return array
 	*/
 	protected function buildRequest()
 	{
@@ -412,8 +414,10 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Initializes output handler if <var>$output</var> property is not null and
-	is a valid stream.
+	* Open Output
+	*
+	* Initializes output handler if {@link $output} property is not null and
+	* is a valid resource stream.
 	*/
 	protected function outputOpen()
 	{
@@ -427,7 +431,9 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Closes output module if exists.
+	* Close Output
+	*
+	* Closes output module if exists.
 	*/
 	protected function outputClose()
 	{
@@ -437,7 +443,11 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Writes data to output module.
+	* Write Output
+	*
+	* Writes data <var>$c</var> to output module.
+	*
+	* @param string	$c				Data content
 	*/
 	protected function outputWrite($c)
 	{
@@ -449,10 +459,12 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Returns the status code of the response - 200 means OK, 404 means file not
-	found, etc.
-	
-	@return	<b>string</b>
+	* Get Status
+	*
+	* Returns the status code of the response - 200 means OK, 404 means file not
+	* found, etc.
+	*
+	* @return string
 	*/
 	public function getStatus()
 	{
@@ -460,9 +472,11 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Returns the content of the HTTP response. This is usually an HTML document.
-	
-	@return	<b>string</b>
+	* Get Contet
+	*
+	* Returns the content of the HTTP response. This is usually an HTML document.
+	*
+	* @return string
 	*/
 	public function getContent()
 	{
@@ -470,9 +484,11 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Returns the HTTP headers returned by the server as an associative array.
-	
-	@return	<b>array</b>
+	* Response Headers
+	*
+	* Returns the HTTP headers returned by the server as an associative array.
+	*
+	* @return array
 	*/
 	public function getHeaders()
 	{
@@ -480,10 +496,12 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Returns the specified response header, or false if it does not exist.
-	
-	@param	header	<b>string</b>		Header name
-	@return	<b>string</b>
+	* Response Header
+	*
+	* Returns the specified response header, or false if it does not exist.
+	*
+	* @param string	$header			Header name
+	* @return string
 	*/
 	public function getHeader($header)
 	{
@@ -496,9 +514,11 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Returns an array of cookies set by the server.
-	
-	@return	<b>array</b>
+	* Cookies
+	*
+	* Returns an array of cookies set by the server.
+	*
+	* @return array
 	*/
 	public function getCookies()
 	{
@@ -506,9 +526,11 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Returns the full URL that has been requested.
-	
-	@return	<b>string</b>
+	* Request URL
+	*
+	* Returns the full URL that has been requested.
+	*
+	* @return string
 	*/
 	public function getRequestURL()
 	{
@@ -521,10 +543,10 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Sets server host and port.
-	
-	@param	host		<b>string</b>		Server host
-	@param	port		<b>integer</b>		Server port
+	* Sets server host and port.
+	*
+	* @param string	$host			Server host
+	* @param integer	$port			Server port
 	*/
 	public function setHost($host,$port=80)
 	{
@@ -533,10 +555,10 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Sets proxy host and port.
-	
-	@param	host		<b>string</b>		Proxy host
-	@param	port		<b>integer</b>		Proxy port
+	* Sets proxy host and port.
+	*
+	* @param string	host				Proxy host
+	* @param integer	port				Proxy port
 	*/
 	public function setProxy($host,$port='8080')
 	{
@@ -545,9 +567,9 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Sets connection timeout.
-	
-	@param	t		<b>integer</b>		Connection timeout
+	* Sets connection timeout.
+	*
+	* @param integer	$t				Connection timeout
 	*/
 	public function setTimeout($t)
 	{
@@ -555,10 +577,12 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Sets the user agent string to be used in the request. Default is
-	"Clearbricks HTTP Client".
-	
-	@param	string	<b>string</b>		User agent string
+	* User Agent String
+	*
+	* Sets the user agent string to be used in the request. Default is
+	* "Clearbricks HTTP Client".
+	*
+	* @param string	$string			User agent string
 	*/
 	public function setUserAgent($string)
 	{
@@ -566,11 +590,13 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Sets the HTTP authorization username and password to be used in requests.
-	Don't forget to unset this in subsequent requests to different servers.
-	
-	@param	username	<b>string</b>		User name
-	@param	password	<b>integer</b>		Password
+	* HTTP Authentication
+	*
+	* Sets the HTTP authorization username and password to be used in requests.
+	* Don't forget to unset this in subsequent requests to different servers.
+	*
+	* @param string	$username			User name
+	* @param string	$password			Password
 	*/
 	public function setAuthorization($username,$password)
 	{
@@ -579,9 +605,11 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Sets additionnal header to be sent with the request.
-	
-	@param	header	<b>string</b>		Full header definition
+	* Add Header
+	*
+	* Sets additionnal header to be sent with the request.
+	*
+	* @param string	$header			Full header definition
 	*/
 	public function setMoreHeader($header)
 	{
@@ -589,7 +617,7 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Empty additionnal headers.
+	* Empty additionnal headers
 	*/
 	public function voidMoreHeaders()
 	{
@@ -598,10 +626,12 @@ class netHttp extends netSocket
 	
 	
 	/**
-	Sets the cookies to be sent in the request. Takes an array of name value
-	pairs.
-	
-	@param	array	<b>array</b>		Cookies array
+	* Set Cookies
+	*
+	* Sets the cookies to be sent in the request. Takes an array of name value
+	* pairs.
+	*
+	* @param array		$array			Cookies array
 	*/
 	public function setCookies($array)
 	{
@@ -609,7 +639,11 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Sets SSL connection usage.
+	* Enable / Disable SSL
+	*
+	* Sets SSL connection usage.
+	*
+	* @param boolean	$boolean			Enable/Disable SSL
 	*/
 	public function useSSL($boolean)
 	{
@@ -624,9 +658,13 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Specify if the client should request gzip encoded content from the server
-	(saves bandwidth but can increase processor time). Default behaviour is
-	FALSE.
+	* Use Gzip
+	*
+	* Specifies if the client should request gzip encoded content from the server
+	* (saves bandwidth but can increase processor time). Default behaviour is
+	* false.
+	*
+	* @param boolean	$boolean			Enable/Disable Gzip
 	*/
 	public function useGzip($boolean)
 	{
@@ -634,8 +672,12 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Specify if the client should persist cookies between requests. Default
-	behaviour is TRUE.
+	* Persistant Cookies
+	*
+	* Specify if the client should persist cookies between requests. Default
+	* behaviour is true.
+	*
+	* @param boolean	$boolean			Enable/Disable Persist Cookies
 	*/
 	public function setPersistCookies($boolean)
 	{
@@ -643,8 +685,12 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Specify if the client should use the URL of the previous request as the
-	referral of a subsequent request. Default behaviour is TRUE.
+	* Persistant Referrers
+	*
+	* Specify if the client should use the URL of the previous request as the
+	* referral of a subsequent request. Default behaviour is true.
+	*
+	* @param boolean	$boolean			Enable/Disable Persistant Referrers
 	*/
 	public function setPersistReferers($boolean)
 	{
@@ -652,8 +698,12 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Specify if the client should automatically follow redirected requests.
-	Default behaviour is TRUE.
+	* Enable / Disable Redirects
+	*
+	* Specify if the client should automatically follow redirected requests.
+	* Default behaviour is true.
+	*
+	* @param boolean	$boolean			Enable/Disable Redirects
 	*/
 	public function setHandleRedirects($boolean)
 	{
@@ -661,8 +711,12 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Set the maximum number of redirects allowed before the client quits
-	(mainly to prevent infinite loops) Default is 5.
+	* Maximum Redirects
+	*
+	* Set the maximum number of redirects allowed before the client quits
+	* (mainly to prevent infinite loops) Default is 5.
+	*
+	* @param integer	$num				Maximum redirects value
 	*/
 	public function setMaxRedirects($num)
 	{
@@ -670,8 +724,12 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	If TRUE, the client only retrieves the headers from a page. This could be
-	useful for implementing things like link checkers. Defaults to FALSE.
+	* Headers Only
+	*
+	* If true, the client only retrieves the headers from a page. This could be
+	* useful for implementing things like link checkers. Defaults to false.
+	*
+	* @param boolean	$boolean			Enable/Disable Headers Only
 	*/
 	public function setHeadersOnly($boolean)
 	{
@@ -679,7 +737,11 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Should the client run in debug mode? Default behaviour is FALSE.
+	* Debug mode
+	*
+	* Should the client run in debug mode? Default behaviour is false.
+	*
+	* @param boolean	$boolean			Enable/Disable Debug Mode
 	*/
 	public function setDebug($boolean)
 	{
@@ -687,9 +749,12 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Output module init.
-	
-	@param	out		<b>string</b>		Output stream
+	* Set Output
+	*
+	* Output module init. If <var>$out</var> is null, then output will be
+	* directed to STDOUT.
+	*
+	* @param string|null	$out			Output stream
 	*/
 	public function setOutput($out)
 	{
@@ -697,12 +762,14 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Static method designed for running simple GET requests. Returns content or
-	false on failure.
-	
-	@param	url		<b>string</b>		Request URL
-	@param	output	<b>string</b>		Optionnal output stream
-	@return	<b>string</b>
+	* Quick Get
+	*
+	* Static method designed for running simple GET requests. Returns content or
+	* false on failure.
+	*
+	* @param string	$url				Request URL
+	* @param string	$output			Optionnal output stream
+	* @return string|false
 	*/
 	public static function quickGet($url,$output=null)
 	{
@@ -715,13 +782,15 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Static method designed for running simple POST requests. Returns content or
-	false on failure.
-	
-	@param	url		<b>string</b>		Request URL
-	@param	data		<b>array</b>		Array of parameters
-	@param	output	<b>string</b>		Optionnal output stream
-	@return	<b>string</b>
+	* Quick Post
+	*
+	* Static method designed for running simple POST requests. Returns content or
+	* false on failure.
+	*
+	* @param string	$url				Request URL
+	* @param string	$data			Array of parameters
+	* @param string	$output			Optionnal output stream
+	* @return string
 	*/
 	public static function quickPost($url,$data,$output=null)
 	{
@@ -734,11 +803,13 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Returns a new instance of the class. <var>$path</var> is an output variable.
-	
-	@param		url		<b>string</b>		Request URL
-	@param[out]	path		<b>string</b>		Resulting path
-	@return	<b>netHttp</b>
+	* Quick Init
+	*
+	* Returns a new instance of the class. <var>$path</var> is an output variable.
+	*
+	* @param string	$url				Request URL
+	* @param string	&$path			Resulting path
+	* @return netHttp
 	*/
 	public static function initClient($url,&$path)
 	{
@@ -754,9 +825,20 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	Parses an URL and fills <var>$ssl</var>, <var>$host</var>, <var>$port</var>,
-	<var>$path</var>, <var>$user</var> and <var>$pass</var> variables. Returns
-	true on succes.
+	* Read URL
+	*
+	* Parses an URL and fills <var>$ssl</var>, <var>$host</var>, <var>$port</var>,
+	* <var>$path</var>, <var>$user</var> and <var>$pass</var> variables. Returns
+	* true on succes.
+	*
+	* @param string	$url				Request URL
+	* @param boolean	&$ssl			true if HTTPS URL
+	* @param string	&$host			Host name
+	* @param string	&$port			Server Port
+	* @param string	&$path			Path
+	* @param string	&$user			Username
+	* @param string	&$pass			Password
+	* @return boolean
 	*/
 	public static function readURL($url,&$ssl,&$host,&$port,&$path,&$user,&$pass)
 	{
@@ -791,16 +873,18 @@ class netHttp extends netSocket
 	}
 	
 	/**
-	This method is the method the class calls whenever there is debugging
-	information available. $msg is a debugging message and $object is an
-	optional object to be displayed (usually an array). Default behaviour is to
-	display the message and the object in a red bordered div. If you wish
-	debugging information to be handled in a different way you can do so by
-	creating a new class that extends HttpClient and over-riding the debug()
-	method in that class.
-	
-	@param	msg		<b>string</b>		Debug message
-	@param	object	<b>mixed</b>		Variable to print_r
+	* Debug
+	*
+	* This method is the method the class calls whenever there is debugging
+	* information available. $msg is a debugging message and $object is an
+	* optional object to be displayed (usually an array). Default behaviour is to
+	* display the message and the object in a red bordered div. If you wish
+	* debugging information to be handled in a different way you can do so by
+	* creating a new class that extends HttpClient and over-riding the debug()
+	* method in that class.
+	* 
+	* @param string	$msg				Debug message
+	* @param mixed		$object			Variable to print_r
 	*/
 	protected function debug($msg,$object=false)
 	{
@@ -816,8 +900,10 @@ class netHttp extends netSocket
 	}
 }
 
-/* Compatibility to Incutio HttpClient class
-   This will be removed soon!             */
+
+# Compatibility to Incutio HttpClient class
+# This will be removed soon!
+/** @ignore */
 class HttpClient extends netHttp
 {
 	public function getError()
