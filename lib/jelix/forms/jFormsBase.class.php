@@ -558,7 +558,7 @@ abstract class jFormsBase {
      */
     public function getModifiedControls(){
         if(count($this->container->originalData))
-            return array_diff($this->container->originalData, $this->container->data);
+            return array_diff_assoc($this->container->originalData, $this->container->data);
         else
             return $this->container->data;
     }
