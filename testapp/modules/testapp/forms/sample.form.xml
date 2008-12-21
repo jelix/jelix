@@ -14,10 +14,10 @@
         </input>
 
         <radiobuttons ref="sexe" required="true">
-            <label>Vous are </label>
+            <label>You are </label>
             <item value="h">a man</item>
             <item value="f">a woman</item>
-            <item value="no">you don't know</item>
+            <item value="no">I don't know</item>
             <alert type="required">You should indicate your sex, even if
               you don't know :-)</alert>
         </radiobuttons>

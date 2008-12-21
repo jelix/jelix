@@ -17,46 +17,14 @@ class jstestsCtrl extends jController {
       $rep->title = 'Unit tests on jforms';
       $rep->bodyTpl = 'jstest_jforms';
       $rep->addCssLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testsuite.css');
-      //$rep->addJsLink('http://code.jquery.com/jquery-latest.js');
       $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'jquery/jquery.js');
-      //$rep->addJsLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testrunner.js');
-      $rep->addHeadContent('
-                           
-                           <script>
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'jquery/include/jquery.include.js');
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'js/jforms_jquery.js');
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'wymeditor/jquery.wymeditor.js');
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'wymeditor/config/default.js');
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'js/jforms/datepickers/default/init.js');
 
-  jQuery(document).ready(function(){try{
-    
-test("a basic test example", function() {
-  ok( true, "this test is fine" );
-  var value = "hello";
-  equals( "hello", value, "We expect value to be hello" );
-});
-
-module("Module A");
-
-test("first test within module", function() {
-  ok( true, "all pass" );
-});
-
-test("second test within module", function() {
-  ok( true, "all pass" );
-});
-
-module("Module B");
-
-test("some other test", function() {
-  expect(1);
-  ok( true, "well" );
-});
-
-  }catch(e){ alert(e);}});
-
-</script>
-
-                           
-                           ');
-      
-      
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testrunner.js');
       
       return $rep;
   }
