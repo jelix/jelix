@@ -23,13 +23,6 @@ class tesMForm extends jFormsBase {
         }
         $this->addControl($control);
     }
-    
-    public function getModifiedControlsWithAssoc(){
-		if(count($this->container->originalData))
-			return array_diff_assoc($this->container->originalData, $this->container->data);
-		else
-			return $this->container->data;
-	}
 }
 
 class UTjformsGetModifiedControls extends jUnitTestCaseDb {
@@ -38,14 +31,12 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
     function setUp() {
         $this->container = new jFormsDataContainer('','');
         $this->form = new tesMForm('foo',$this->container);
-        
-        
+
         $ctrl = new jFormsControlInput('inputctrl');
         $ctrl->setData('toto');
         $this->form->addCtrl($ctrl);
         $this->form->setData('inputctrl', 'toto');
-        
-        
+
         $ctrl = new jFormsControlCheckbox('chckbxctrl');
         $ctrl->datatype=new jDatatypeBoolean();
         $this->form->addCtrl($ctrl, false);
@@ -60,16 +51,13 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
         $ctrl->valueOnCheck='1';
         $ctrl->valueOnUncheck='0';
         $this->form->addControl($ctrl);
-    
-        
     }
     
     function testinitModifiedControlsList() {
         $this->form->initModifiedControlsList();
-        
+
         $this->assertIdentical($this->form->getContainer()->data, $this->form->getContainer()->originalData);
-        
-        
+
         $initForm = array (
           'inputctrl' => 'toto',
           'chckbxctrl' => '1',

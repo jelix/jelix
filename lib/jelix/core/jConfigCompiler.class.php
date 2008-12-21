@@ -132,7 +132,7 @@ class jConfigCompiler {
             if($basepath{0} != '/') $basepath='/'.$basepath;
             if(substr($basepath,-1) != '/') $basepath.='/';
 
-            if(strpos($config->urlengine['urlScriptPath'], $basepath) !== 0){
+            if(PHP_SAPI != 'cli' && strpos($config->urlengine['urlScriptPath'], $basepath) !== 0){
                 throw new Exception('Jelix Error: basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$config->urlengine['urlScriptPath']);
             }
 
