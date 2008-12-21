@@ -205,8 +205,6 @@ function __autoload($class) {
 #else
     if(file_exists($f)){
         require($f);
-    }else{
-        throw new Exception("Jelix fatal error : Unknown class $class");
     }
 #endif
 }

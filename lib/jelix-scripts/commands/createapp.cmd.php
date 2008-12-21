@@ -7,10 +7,12 @@
 * @contributor Gildas Givaja (bug #83)
 * @contributor Christophe Thiriot
 * @contributor Bastien Jaillot
-* @copyright   2005-2008 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot
+* @contributor Dominique Papin
+* @copyright   2005-2008 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
+require_once (LIB_PATH.'clearbricks/jelix.inc.php');
 
 class createappCommand extends JelixScriptCommand {
 
@@ -31,8 +33,11 @@ class createappCommand extends JelixScriptCommand {
 
     Si l'option -nodefaultmodule est présente, le module n'est pas créé.
 
-    Si l'option -withcmdline est présente, crée un point d'entrée afin de 
+    Si l'option -withcmdline est présente, crée un point d'entrée afin de
     développer des scripts en ligne de commande.
+
+    Si l'option -wwwpath est présente, sa valeur définit le document root de votre application. 
+    wwwpath doit être relatif au répertoire de l'application (valeur par défaut www/). 
 
     Le nom de l'application doit être indiqué
     1) soit en premier paramètre du script jelix
@@ -40,13 +45,15 @@ class createappCommand extends JelixScriptCommand {
     2) soit dans une variable d'environnement JELIX_APP_NAME.
     ",
             'en'=>"
-    Create a new application with all directories and a module which have 
-    the same name asthe one of the application.
+    Create a new application with all directories and one module named as your application.
 
     If you give -nodefaultmodule option, it won't create the module. 
 
-    If you give the -withcmdline option, it will create an entry point for
-    command line script.
+    If you give the -withcmdline option, it will create an entry point dedicated to 
+    command line scripts. 
+
+    If you give the -wwwpath option, it will replace your application default document root. 
+    wwwpath must be relative to your application directory (default value is 'www/').
 
     The application name should be provided by either of this two ways:
     1) by given the name as parameter. Example for a helloApp application
@@ -64,7 +71,7 @@ class createappCommand extends JelixScriptCommand {
         $this->createDir(JELIX_APP_PATH);
 
         if ($p = $this->getOption('-wwwpath')) {
-            $wwwpath = realpath(JELIX_APP_PATH.$p).'/';
+            $wwwpath = path::real(JELIX_APP_PATH.$p, false).'/';
         }
         else {
             $wwwpath = JELIX_APP_WWW_PATH;
@@ -111,7 +118,7 @@ class createappCommand extends JelixScriptCommand {
         }
 
         $param['config_file'] = 'index/config.ini.php';
-        
+
         $param['rp_temp']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_TEMP_PATH, true);
         $param['rp_var'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_VAR_PATH,  true);
         $param['rp_log'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_LOG_PATH,  true);

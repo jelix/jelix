@@ -20,3 +20,6 @@ Loic Mathaud
 Christophe Thiriot
   - clearcache command
   - little enhancement in createapp (#418)
+
+Dominique Papin
+  - fixed bug on createapp command (#776)
