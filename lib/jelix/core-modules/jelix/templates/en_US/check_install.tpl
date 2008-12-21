@@ -12,7 +12,7 @@
         </ul>
         <p>If you want to use another name for the Jelix's web file directory, modify the <code>jelixWWWPath</code>
             parameter in <em>{$configpath}defaultconfig.ini.php</em>.</p>
-        <p>For more informations, see <a href="http://jelix.org/articles/en/manual/installation"
+        <p>For more informations, see <a href="http://jelix.org/articles/en/manual-1.1/installation/applications"
             title="installation documentation">the installation documentation</a> of Jelix.</p>
         <hr />
     </div>
@@ -39,7 +39,7 @@
             <ul>
                 <li><a href="http://www.jelix.org">Visit the Official Jelix's site</a></li>
                 <li><a href="http://jelix.org/articles/en/tutorials">Learn with tutorials</a></li>
-                <li><a href="http://jelix.org/articles/en/manual">Read the documentation of Jelix</a></li>
+                <li><a href="http://jelix.org/articles/en/manual-1.1">Read the documentation of Jelix</a></li>
                 <li><a href="http://jelix.org/forums/index.php?13">Ask your questions in forums</a></li>
             </ul>
         </div>

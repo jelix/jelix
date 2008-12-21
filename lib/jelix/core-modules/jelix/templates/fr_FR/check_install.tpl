@@ -38,8 +38,8 @@
         <div class="blockcontent">
             <ul>
                 <li><a href="http://jelix.org" title="Site officiel de Jelix">Visitez le site de Jelix</a></li>
-                <li><a href="http://jelix.org/articles/tutoriels">Suivez les tutoriels</a></li>
-                <li><a href="http://jelix.org/articles/manuel">Lisez la documentation de Jelix</a></li>
+                <li><a href="http://jelix.org/articles/fr/tutoriels">Suivez les tutoriels</a></li>
+                <li><a href="http://jelix.org/articles/fr/manuel-1.1">Lisez la documentation de Jelix</a></li>
                 <li><a href="http://jelix.org/forums/index.php?14">Posez vos questions dans les forums</a></li>
             </ul>
         </div>
