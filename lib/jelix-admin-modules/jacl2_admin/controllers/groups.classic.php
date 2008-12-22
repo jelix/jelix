@@ -1,12 +1,13 @@
 <?php
 /**
-* @package
-* @subpackage 
-* @author
-* @copyright
-* @link
+* @package   jelix_admin_modules
+* @subpackage jacl2_admin
+* @author    Laurent Jouanneau
+* @copyright 2008 Laurent Jouanneau
+* @link      http://jelix.org
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
+
 
 class groupsCtrl extends jController {
 
