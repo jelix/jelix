@@ -5,7 +5,7 @@
 * @author    Laurent Jouanneau
 * @copyright 2008 Laurent Jouanneau
 * @link      http://jelix.org
-* @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+* @licence  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
 */
 
 
@@ -56,6 +56,7 @@ class groupsCtrl extends jController {
             $rep->body->assign('MAIN', $tpl->fetch('groups_right'));
         else
             $rep->body->assign('MAIN', $tpl->fetch('groups_right_view'));
+        $rep->body->assign('selectedMenuItem','usersgroups');
         return $rep;
     }
 
@@ -109,5 +110,4 @@ class groupsCtrl extends jController {
 
         return $rep;
     }
-
 }

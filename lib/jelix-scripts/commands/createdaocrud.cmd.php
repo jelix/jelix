@@ -58,11 +58,11 @@ class createdaocrudCommand extends JelixScriptCommand {
             $profile = $this->getOption('-profile');
             $options = array('-profile'=>$profile);
         }
-        $agcommand->init($options,array('module'=>$this->_parameters['module'], 'name'=>$ctrlname,'table'=>$table));
+        $agcommand->init($options,array('module'=>$this->_parameters['module'], 'name'=>$table,'table'=>$table));
         $agcommand->run();
 
         $agcommand = jxs_load_command('createform');
-        $agcommand->init(array(),array('module'=>$this->_parameters['module'], 'form'=>$ctrlname,'dao'=>$ctrlname));
+        $agcommand->init(array(),array('module'=>$this->_parameters['module'], 'form'=>$table,'dao'=>$table));
         $agcommand->run();
 
         $this->createDir($path.'controllers/');

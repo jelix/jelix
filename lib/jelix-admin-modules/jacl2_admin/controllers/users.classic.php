@@ -5,7 +5,7 @@
 * @author    Laurent Jouanneau
 * @copyright 2008 Laurent Jouanneau
 * @link      http://jelix.org
-* @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+* @licence   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
 */
 
 class usersCtrl extends jController {
@@ -89,6 +89,8 @@ class usersCtrl extends jController {
         $tpl = new jTpl();
         $tpl->assign(compact('offset','grpid','listPageSize','groups','users','usersCount'));
         $rep->body->assign('MAIN', $tpl->fetch('users_list'));
+        $rep->body->assign('selectedMenuItem','usersrights');
+
         return $rep;
     }
 
@@ -142,6 +144,7 @@ class usersCtrl extends jController {
         }else{
             $rep->body->assign('MAIN', $tpl->fetch('user_rights_view'));
         }
+        $rep->body->assign('selectedMenuItem','usersrights');
         return $rep;
     }
 

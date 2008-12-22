@@ -1,7 +1,26 @@
 
+cd lib/jelix-admin-modules/master_admin/
+*  module.xml
+cd lib/jelix-admin-modules/master_admin/controllers
+   default.classic.php
+cd lib/jelix-admin-modules/master_admin/locales/en_EN
+   gui.UTF-8.properties
+cd lib/jelix-admin-modules/master_admin/locales/fr_FR
+   gui.UTF-8.properties
+cd lib/jelix-admin-modules/master_admin/templates/
+  index_login.tpl
+  main.tpl
+  zone_admin_menu.tpl
+  zone_dashboard.tpl
+cd lib/jelix-admin-modules/master_admin/zones/
+  admin_menu.zone.php
+  dashboard.zone.php
 
 cd lib/jelix-admin-modules/jacl2_admin
 *  module.xml
+   events.xml
+cd lib/jelix-admin-modules/jacl2_admin/classes/
+  jacl2_admin.listener.php
 cd lib/jelix-admin-modules/jacl2_admin/locales/en_EN
   acl2.UTF-8.properties
 cd lib/jelix-admin-modules/jacl2_admin/locales/fr_FR
@@ -19,6 +38,6 @@ cd lib/jelix-admin-modules/jacl2_admin/templates
   user_rights_view.tpl
 
 cd lib/jelix-www/design/
-
+  master_admin.css
   jacl2.css
 

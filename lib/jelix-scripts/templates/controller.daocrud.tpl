@@ -10,9 +10,9 @@
 
 class %%name%%Ctrl extends jControllerDaoCrud {
 
-    protected $dao = '%%module%%~%%name%%';
+    protected $dao = '%%module%%~%%table%%';
 
-    protected $form = '%%module%%~%%name%%';
+    protected $form = '%%module%%~%%table%%';
 
     /**
      * the jDb profile to use with the dao

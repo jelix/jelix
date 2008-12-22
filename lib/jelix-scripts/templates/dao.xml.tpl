@@ -8,8 +8,8 @@
         required="yes" maxlength="" minlength="" regexp="" sequence=""
         updatepattern="" insertpattern="" selectpattern=""/>-->
     </record>
-    <!--<factory>
-        <method name="findByStage" type="select/selectfirst/delete/update/php">
+    <factory>
+        <!--<method name="findByStage" type="select/selectfirst/delete/update/php">
             <parameter name="" />
             <values>
                 <value property="" value="" />
@@ -23,6 +23,6 @@
             <limit offset="" count=""/>
             <body><![CDATA[
             ]]></body>
-        </method>
-    </factory>-->
+        </method>-->
+    </factory>
 </dao>

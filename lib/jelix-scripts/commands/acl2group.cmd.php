@@ -86,7 +86,7 @@ ACTION:
             'alluserslist'=>"Liste de tous les utilisateurs",
             'adduser'=>"Ajoute un utilisateur",
             'removeuser'=>"Enlève un utilisateur",
-            'createuser'=>"Crée un uitlisateur dans jAcl2",
+            'createuser'=>"Crée un utilisateur dans jAcl2",
             'destroyuser'=>"Enlève un utilisateur de jAcl2",
             ),
         'en'=>array(

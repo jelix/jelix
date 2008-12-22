@@ -1,8 +1,13 @@
 --
 INSERT INTO `jacl2_group` (`id_aclgrp`, `name`, `grouptype`, `ownerlogin`) VALUES 
 (1, 'admins', 0, NULL),
-(2, 'users', 0, NULL);
+(2, 'users', 0, NULL),
+(3, 'admin', 2, 'admin');
 
+
+INSERT INTO `jacl2_user_group` (`login`, `id_aclgrp`) VALUES
+('admin', 1),
+('admin', 3);
 
 INSERT INTO `jacl2_subject` (`id_aclsbj`, `label_key`) VALUES 
 ('acl.user.view', 'jelix~acl2db.acl.user.view'),

@@ -106,6 +106,8 @@ cd lib/jelix/core-modules/jelix/install/sql
   install_jacl.data.mysql.sql
   install_jacl2.schema.mysql.sql
   install_jacl2.data.mysql.sql
+  install_jauth.schema.mysql.sql
+  install_jauth.data.mysql.sql
   install_jsession.schema.mysql.sql
   delete.pgsql.sql
   install_jacl.schema.pgsql.sql
