@@ -3,6 +3,9 @@ cd lib/jelix-www/design
   jelix.css
   tooltip.css
   jform.css
+  master_admin.css
+  records_list.css
+  jacl2.css
 cd lib/jelix-www/design/jforms/
   calendar.gif
 cd lib/jelix-www/design/images

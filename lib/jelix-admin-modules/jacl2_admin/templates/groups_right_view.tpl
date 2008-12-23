@@ -2,7 +2,7 @@
 
 <h1>{@jacl2_admin~acl2.groups.title@}</h1>
 
-<table class="rights">
+<table class="records-list jacl2-list">
 <thead>
     <tr>
         <th></th>

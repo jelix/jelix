@@ -7,7 +7,7 @@
 <fieldset><legend>{@jacl2_admin~acl2.rights.title@}</legend>
 
 <div>{formurlparam 'jacl2_admin~users:saverights',array('user'=>$user)}</div>
-<table class="rights">
+<table class="records-list jacl2-list">
 <thead>
     <tr>
         <th rowspan="2"></th>

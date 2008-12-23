@@ -19,7 +19,7 @@
 {if $usersCount == 0}
 <p>{@jacl2_admin~acl2.no.user.message@}</p>
 {else}
-<table class="rights">
+<table class="records-list">
 <thead>
     <tr>
         <th>{@jacl2_admin~acl2.col.users@}</th>
@@ -28,19 +28,21 @@
     </tr>
 </thead>
 <tbody>
+{assign $line = true}
 {foreach $users as $user}
-    <tr>
+    <tr class="{if $line}odd{else}even{/if}">
         <td>{$user->login}</td>
         <td>{foreach $user->groups as $group} {$group->name} {/foreach}</td>
         <td><a href="{jurl 'jacl2_admin~users:rights', array('user'=>$user->login)}">{@jacl2_admin~acl2.rights.link@}</a></td>
     </tr>
+{assign $line = !$line}
 {/foreach}
 </tbody>
 </table>
 {/if}
 
 {if $usersCount > 0}
-<div class="pages">{@jacl2_admin~acl2.pages.links.label@} {pagelinks 'jacl2_admin~users:index', array('grpid'=>$grpid),  $usersCount, $offset, $listPageSize, 'idx' }</div>
+<div class="record-pages-list">{@jacl2_admin~acl2.pages.links.label@} {pagelinks 'jacl2_admin~users:index', array('grpid'=>$grpid),  $usersCount, $offset, $listPageSize, 'idx' }</div>
 {/if}
 
 

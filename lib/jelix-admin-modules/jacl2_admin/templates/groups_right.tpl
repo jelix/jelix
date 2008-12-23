@@ -5,7 +5,7 @@
 <form action="{formurl 'jacl2_admin~groups:saverights'}" method="post">
 <fieldset><legend>{@jacl2_admin~acl2.rights.title@}</legend>
 <div>{formurlparam 'jacl2_admin~groups:saverights'}</div>
-<table class="rights">
+<table class="records-list jacl2-list">
 <thead>
     <tr>
         <th></th>

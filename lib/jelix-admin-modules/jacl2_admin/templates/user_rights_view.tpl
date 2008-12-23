@@ -4,7 +4,7 @@
 
 
 <div>{formurlparam 'jacl2_admin~users:saverights',array('user'=>$user)}</div>
-<table class="rights">
+<table class="records-list jacl2-list">
 
 <thead>
     <tr>

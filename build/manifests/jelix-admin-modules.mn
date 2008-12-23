@@ -37,7 +37,4 @@ cd lib/jelix-admin-modules/jacl2_admin/templates
   groups_right_view.tpl
   user_rights_view.tpl
 
-cd lib/jelix-www/design/
-  master_admin.css
-  jacl2.css
 

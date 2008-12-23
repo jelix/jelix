@@ -1,3 +1,4 @@
+@import url(records_list.css);
 
 body {  
     font-family: Verdana, Arial, Sans; 
@@ -7,6 +8,8 @@ body {
 }
 
 a img { border: 0}
+
+fieldset { margin-top:1em; }
 
 #login-content {
    margin: 4em auto;
@@ -144,3 +147,4 @@ a img { border: 0}
     min-height:2em;
     padding:5px;
 }
+
