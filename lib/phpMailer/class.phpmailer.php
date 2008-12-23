@@ -249,23 +249,23 @@ class PHPMailer {
   public $LE              = "\r\n";
 
   /////////////////////////////////////////////////
-  // PROPERTIES, PRIVATE
+  // PROPERTIES, PROTECTED
   /////////////////////////////////////////////////
 
-  private $smtp            = NULL;
-  private $to              = array();
-  private $cc              = array();
-  private $bcc             = array();
-  private $ReplyTo         = array();
-  private $attachment      = array();
-  private $CustomHeader    = array();
-  private $message_type    = '';
-  private $boundary        = array();
-  private $language        = array();
-  private $error_count     = 0;
-  private $sign_cert_file  = "";
-  private $sign_key_file   = "";
-  private $sign_key_pass   = "";
+  protected $smtp            = NULL;
+  protected $to              = array();
+  protected $cc              = array();
+  protected $bcc             = array();
+  protected $ReplyTo         = array();
+  protected $attachment      = array();
+  protected $CustomHeader    = array();
+  protected $message_type    = '';
+  protected $boundary        = array();
+  protected $language        = array();
+  protected $error_count     = 0;
+  protected $sign_cert_file  = "";
+  protected $sign_key_file   = "";
+  protected $sign_key_pass   = "";
 
   /////////////////////////////////////////////////
   // METHODS, VARIABLES

@@ -1,5 +1,44 @@
---- class.phpmailer.php.original	2008-11-08 12:23:04.000000000 +0100
-+++ class.phpmailer.php	2008-11-28 12:00:31.000000000 +0100
+--- class.phpmailer.php.original	2008-11-29 21:39:21.000000000 +0100
++++ class.phpmailer.php	2008-12-23 22:11:41.000000000 +0100
+@@ -249,23 +249,23 @@
+   public $LE              = "\r\n";
+ 
+   /////////////////////////////////////////////////
+-  // PROPERTIES, PRIVATE
++  // PROPERTIES, PROTECTED
+   /////////////////////////////////////////////////
+ 
+-  private $smtp            = NULL;
+-  private $to              = array();
+-  private $cc              = array();
+-  private $bcc             = array();
+-  private $ReplyTo         = array();
+-  private $attachment      = array();
+-  private $CustomHeader    = array();
+-  private $message_type    = '';
+-  private $boundary        = array();
+-  private $language        = array();
+-  private $error_count     = 0;
+-  private $sign_cert_file  = "";
+-  private $sign_key_file   = "";
+-  private $sign_key_pass   = "";
++  protected $smtp            = NULL;
++  protected $to              = array();
++  protected $cc              = array();
++  protected $bcc             = array();
++  protected $ReplyTo         = array();
++  protected $attachment      = array();
++  protected $CustomHeader    = array();
++  protected $message_type    = '';
++  protected $boundary        = array();
++  protected $language        = array();
++  protected $error_count     = 0;
++  protected $sign_cert_file  = "";
++  protected $sign_key_file   = "";
++  protected $sign_key_pass   = "";
+ 
+   /////////////////////////////////////////////////
+   // METHODS, VARIABLES
 @@ -527,9 +527,9 @@
  
      $smtp_from = ($this->Sender == '') ? $this->From : $this->Sender;
