@@ -148,3 +148,26 @@ fieldset { margin-top:1em; }
     padding:5px;
 }
 
+table.jforms-table {
+ border-bottom: 1px solid #d7d7d7;
+ border-collapse: collapse;
+ border-spacing: 0;
+ margin:1em;
+}
+table.jforms-table tr { border-top: 1px solid #ddd }
+
+table.jforms-table th, table.jforms-table td  {
+ border: 1px dotted #ddd;
+ padding: .33em .5em;
+ vertical-align:top;
+}
+
+table.jforms-table th {
+    text-align:right;
+    background-color: #f7f7f7
+}
+table.jforms-table td {
+    background-color: #fcfcfc
+}
+
+

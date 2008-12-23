@@ -9,6 +9,10 @@
 <thead>
     <tr>
         <th></th>
+        <th colspan="0">{@jacl2_admin~acl2.table.th.groups@}</th>
+    </tr>
+    <tr>
+        <th>{@jacl2_admin~acl2.table.th.rights@}</th>
     {foreach $groups as $group}
         <th>{$group->name}</th>
     {/foreach}

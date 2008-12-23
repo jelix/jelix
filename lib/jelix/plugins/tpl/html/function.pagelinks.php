@@ -150,4 +150,5 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
 
         echo '</ul>';
     }
+    else echo '<ul class="pagelinks"><li class="pagelinks-current">1</li></ul>';
 }

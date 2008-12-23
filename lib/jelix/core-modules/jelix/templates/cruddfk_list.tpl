@@ -1,6 +1,6 @@
 <h1>{@jelix~crud.title.list@}</h1>
 
-<table class="crud-record-list">
+<table class="records-list">
 <thead>
 <tr>
     {foreach $properties as $propname}
@@ -14,8 +14,9 @@
 </tr>
 </thead>
 <tbody>
+{assign $lineparity = true}
 {foreach $list as $record}
-<tr>
+<tr class="{if $lineparity}odd{else}even{/if}">
     {foreach $properties as $propname}
     <td>{$record->$propname|eschtml}</td>
     {/foreach}
@@ -23,6 +24,7 @@
         <a href="{jurl $viewAction,array($spkName=>$spk, $dpkName=>$record->$dpkName)}">{@jelix~crud.link.view.record@}</a>
     </td>
 </tr>
+{assign $lineparity = !$lineparity}
 {/foreach}
 </tbody>
 </table>
