@@ -405,6 +405,8 @@ truc=machin2
   ; a comment
   
 foo=bar
+job= foo.b-a_r
+messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
 anumber=98
 afloatnumber=   5.098  
 [aSection]
@@ -420,6 +422,8 @@ truc=machin2
   ; a comment
   
 foo=bar
+job=foo.b-a_r
+messageLogFormat="%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
 anumber=98
 afloatnumber=5.098  
 [aSection]

@@ -214,7 +214,7 @@ class jIniFileModifier {
     }
 
     protected function getIniValue($value) {
-        if ($value === '' || is_numeric($value) || preg_match("/^[\w]*$/", $value) || strpos("\n",$value) === false ) {
+        if ($value === '' || is_numeric(trim($value)) || (preg_match("/^[\w-.]*$/", $value) && strpos("\n",$value) === false) ) {
             return $value;
         }else if($value === false) {
             $value="0";
