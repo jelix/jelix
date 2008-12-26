@@ -47,7 +47,7 @@ class mysqlDbTools extends jDbTools {
     function _getFieldList ($tableName){
         $results = array ();
 
-        $rs = $this->_connector->query ('SHOW FIELDS FROM ' . $tableName);
+        $rs = $this->_connector->query ('SHOW FIELDS FROM `'.$tableName.'`');
 
         while ($line = $rs->fetch ()){
             $field = new jDbFieldProperties();
