@@ -115,6 +115,7 @@ cd lib/jelix-scripts/commands
   createmodule.cmd.php
   createzone.cmd.php
   help.cmd.php
+  initadmin.cmd.php
   installapp.cmd.php
 cd lib/jelix-scripts/includes
   command.class.php
@@ -136,6 +137,9 @@ cd lib/jelix-scripts/templates
   application.init.php.tpl
   htaccess_deny
   htaccess_allow
+cd lib/jelix-scripts/templates/responses/
+  adminHtmlResponse.class.php.tpl
+  adminLoginHtmlResponse.class.php.tpl
 cd lib/jelix-scripts/templates/www
   xmlrpc.php.tpl
   index.php.tpl
@@ -145,8 +149,10 @@ cd lib/jelix-scripts/templates/www
 cd lib/jelix-scripts/templates/scripts
   cmdline.php.tpl
 cd lib/jelix-scripts/templates/var/config/
+  auth.coord.ini.php.tpl
   dbprofils.ini.php.tpl
 *  defaultconfig.ini.php.tpl
+  jacl2.coord.ini.php.tpl
 cd lib/jelix-scripts/templates/var/config/index/
   config.ini.php.tpl
 cd lib/jelix-scripts/templates/var/config/jsonrpc/
@@ -172,12 +178,14 @@ cd lib/jelix/docs
 cd lib/jelix/docs/ns
   dao.rng
   events.rng
+  item_infos.rng
+  jforms_1.0.rng
+  jforms_1.1.rng
   module.rng
   plugin.rng
   project.rng
+  update.rng
   urls.rng
-  jforms_1.0.rng
-  jforms_1.1.rng
 
 cd lib/jelix-www/xul/test/
   testxulform.php

@@ -148,8 +148,10 @@ smtpPassword =
 smtpTimeout = 10
 
 
-[acl]
+
+[acl2]
 driver = db
+enableAcl2DbEventListener = off
 
 
 [sessions]
