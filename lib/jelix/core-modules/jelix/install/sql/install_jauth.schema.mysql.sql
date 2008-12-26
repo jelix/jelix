@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `jlx_user`;
 CREATE TABLE `jlx_user` (
   `usr_login` varchar(50) NOT NULL DEFAULT '',
   `usr_password` varchar(50) NOT NULL DEFAULT '',
