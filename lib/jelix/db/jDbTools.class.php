@@ -18,9 +18,10 @@
 */
 
 /**
- *
+ * Description of a field of a table
  * @package  jelix
  * @subpackage db
+ * @see jDbTools::getFieldList
  */
  class jDbFieldProperties {
     /**
@@ -74,9 +75,8 @@
     public $sequence = false;
 }
 
-
 /**
- * classe d'outils pour gérer une base de données
+ * Provides utilities methods for a database
  * @package  jelix
  * @subpackage db
  */
@@ -104,6 +104,7 @@ abstract class jDbTools {
 
     /**
     * return the field list of a given table
+    * @return array  array of jDbFieldProperties
     */
     public function getFieldList ($tableName){
         return $this->_getFieldList ($this->_connector->prefixTable($tableName));
@@ -143,5 +144,5 @@ abstract class jDbTools {
             }
         }
         return $nbCmd;
-    }
+   }
 }
