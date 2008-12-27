@@ -8,7 +8,7 @@
 * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
 */
 
-class jacl2_adminListener extends jEventListener{
+class jacl2db_adminListener extends jEventListener{
 
    /**
    *
