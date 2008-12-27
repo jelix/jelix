@@ -113,7 +113,7 @@ class initadminCommand extends JelixScriptCommand {
             }    
         }
         else {
-            //$inifile->setValue('unusedModules', $inifile->getValue('unusedModules').', jacl2_admin');
+            //$inifile->setValue('unusedModules', $inifile->getValue('unusedModules').', jauthdb_admin');
         }
 
         if (!$this->getOption('-noacl2db')) {
@@ -133,7 +133,7 @@ class initadminCommand extends JelixScriptCommand {
             }    
         }
         else {
-            $inifile->setValue('unusedModules', $inifile->getValue('unusedModules').', jacl2_admin');
+            $inifile->setValue('unusedModules', $inifile->getValue('unusedModules').', jacl2db_admin');
         }
 
         $authini->save();

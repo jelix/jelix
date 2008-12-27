@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix_admin_modules
-* @subpackage  jacl2_admin
+* @subpackage  jacl2db_admin
 * @author    Laurent Jouanneau
 * @copyright 2008 Laurent Jouanneau
 * @link        http://jelix.org
@@ -14,7 +14,7 @@ class jacl2_adminListener extends jEventListener{
    *
    */
    function onjadminGetMenuContent ($event) {
-        $event->add(new masterAdminMenuItem('usersrights', jLocale::get('jacl2_admin~acl2.menu.item.rights'), jUrl::get('jacl2_admin~users:index'), 30, 'system'));
-        $event->add(new masterAdminMenuItem('usersgroups', jLocale::get('jacl2_admin~acl2.menu.item.groups'), jUrl::get('jacl2_admin~groups:index'), 20, 'system'));
+        $event->add(new masterAdminMenuItem('usersrights', jLocale::get('jacl2db_admin~acl2.menu.item.rights'), jUrl::get('jacl2db_admin~users:index'), 30, 'system'));
+        $event->add(new masterAdminMenuItem('usersgroups', jLocale::get('jacl2db_admin~acl2.menu.item.groups'), jUrl::get('jacl2db_admin~groups:index'), 20, 'system'));
    }
 }

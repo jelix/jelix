@@ -16,21 +16,21 @@ cd lib/jelix-admin-modules/master_admin/zones/
   admin_menu.zone.php
   dashboard.zone.php
 
-cd lib/jelix-admin-modules/jacl2_admin
+cd lib/jelix-admin-modules/jacl2db_admin
 *  module.xml
    events.xml
-cd lib/jelix-admin-modules/jacl2_admin/classes/
+cd lib/jelix-admin-modules/jacl2db_admin/classes/
   jacl2_admin.listener.php
-cd lib/jelix-admin-modules/jacl2_admin/locales/en_EN
+cd lib/jelix-admin-modules/jacl2db_admin/locales/en_EN
   acl2.UTF-8.properties
-cd lib/jelix-admin-modules/jacl2_admin/locales/fr_FR
+cd lib/jelix-admin-modules/jacl2db_admin/locales/fr_FR
   acl2.UTF-8.properties
-cd lib/jelix-admin-modules/jacl2_admin/controllers
+cd lib/jelix-admin-modules/jacl2db_admin/controllers
   groups.classic.php
   users.classic.php
-cd lib/jelix-admin-modules/jacl2_admin/install
+cd lib/jelix-admin-modules/jacl2db_admin/install
   urls_example.xml
-cd lib/jelix-admin-modules/jacl2_admin/templates
+cd lib/jelix-admin-modules/jacl2db_admin/templates
   groups_right.tpl
   users_list.tpl
   user_rights.tpl

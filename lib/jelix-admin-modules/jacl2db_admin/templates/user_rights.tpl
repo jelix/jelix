@@ -1,29 +1,29 @@
 {meta_html css  $j_jelixwww.'design/jacl2.css'}
 
-<h1>{@jacl2_admin~acl2.user.rights.title@} {$user}</h1>
+<h1>{@jacl2db_admin~acl2.user.rights.title@} {$user}</h1>
 
 
-<form action="{formurl 'jacl2_admin~users:saverights',array('user'=>$user)}" method="post">
-<fieldset><legend>{@jacl2_admin~acl2.rights.title@}</legend>
+<form action="{formurl 'jacl2db_admin~users:saverights',array('user'=>$user)}" method="post">
+<fieldset><legend>{@jacl2db_admin~acl2.rights.title@}</legend>
 
-<div>{formurlparam 'jacl2_admin~users:saverights',array('user'=>$user)}</div>
+<div>{formurlparam 'jacl2db_admin~users:saverights',array('user'=>$user)}</div>
 <table class="records-list jacl2-list">
 <thead>
     <tr>
         <th rowspan="2"></th>
-        <th rowspan="2">{@jacl2_admin~acl2.col.personnal.rights.1@}<br />{@jacl2_admin~acl2.col.personnal.rights.2@}</th>
+        <th rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights.1@}<br />{@jacl2db_admin~acl2.col.personnal.rights.2@}</th>
         {if $nbgrp}
-        <th colspan="{$nbgrp}">{@jacl2_admin~acl2.col.groups@}</th>
+        <th colspan="{$nbgrp}">{@jacl2db_admin~acl2.col.groups@}</th>
         {/if}
         <th class="colblank" rowspan="2"></th>
-        <th rowspan="2">{@jacl2_admin~acl2.col.resulting.1@}<br />{@jacl2_admin~acl2.col.resulting.2@}</th>
+        <th rowspan="2">{@jacl2db_admin~acl2.col.resulting.1@}<br />{@jacl2db_admin~acl2.col.resulting.2@}</th>
     </tr>
     <tr>
     {foreach $groups as $group}
         {if isset($groupsuser[$group->id_aclgrp])}
-        <th>{$group->name} <a class="removegroup" href="{jurl 'jacl2_admin~users:removegroup',array('user'=>$user,'grpid'=>$group->id_aclgrp)}" title="{@jacl2_admin~acl2.remove.group.tooltip@}">-</a></th>
+        <th>{$group->name} <a class="removegroup" href="{jurl 'jacl2db_admin~users:removegroup',array('user'=>$user,'grpid'=>$group->id_aclgrp)}" title="{@jacl2db_admin~acl2.remove.group.tooltip@}">-</a></th>
         {else}
-        <th class="notingroup">{$group->name} <a class="addgroup" href="{jurl 'jacl2_admin~users:addgroup',array('user'=>$user,'grpid'=>$group->id_aclgrp)}" title="{@jacl2_admin~acl2.add.group.tooltip@}">+</a></th>
+        <th class="notingroup">{$group->name} <a class="addgroup" href="{jurl 'jacl2db_admin~users:addgroup',array('user'=>$user,'grpid'=>$group->id_aclgrp)}" title="{@jacl2db_admin~acl2.add.group.tooltip@}">+</a></th>
         {/if}
     {/foreach}
     </tr>
@@ -31,7 +31,7 @@
 <tfoot>
     <tr>
         <td></td>
-        <td><input type="submit" value="{@jacl2_admin~acl2.save.button@}" /></td>
+        <td><input type="submit" value="{@jacl2db_admin~acl2.save.button@}" /></td>
         {if $nbgrp}
         <td colspan="{$nbgrp}"></td>
         {/if}

@@ -1,7 +1,7 @@
 <?php
 /**
 * @package   jelix_admin_modules
-* @subpackage jacl2_admin
+* @subpackage jacl2db_admin
 * @author    Laurent Jouanneau
 * @copyright 2008 Laurent Jouanneau
 * @link      http://jelix.org
@@ -27,12 +27,12 @@ class usersCtrl extends jController {
         $groups=array();
         $o = new StdClass;
         $o->id_aclgrp ='-2';
-        $o->name=jLocale::get('jacl2_admin~acl2.all.users.option');
+        $o->name=jLocale::get('jacl2db_admin~acl2.all.users.option');
         $o->grouptype=0;
         $groups[]=$o;
         $o = new StdClass;
         $o->id_aclgrp ='-1';
-        $o->name=jLocale::get('jacl2_admin~acl2.without.groups.option');
+        $o->name=jLocale::get('jacl2db_admin~acl2.without.groups.option');
         $o->grouptype=0;
         $groups[]=$o;
         foreach(jAcl2DbUserGroup::getGroupList() as $grp) {
@@ -154,11 +154,11 @@ class usersCtrl extends jController {
         $rights = $this->param('rights',array());
 
         if($login == '') {
-            $rep->action = 'jacl2_admin~users:index';
+            $rep->action = 'jacl2db_admin~users:index';
             return $rep;
         }
 
-        $rep->action = 'jacl2_admin~users:rights';
+        $rep->action = 'jacl2db_admin~users:rights';
         $rep->params=array('user'=>$login);
 
         $dao = jDao::get('jelix~jacl2groupsofuser',jAcl2Db::getProfile());
@@ -174,11 +174,11 @@ class usersCtrl extends jController {
 
         $login = $this->param('user');
         if($login != '') {
-            $rep->action = 'jacl2_admin~users:rights';
+            $rep->action = 'jacl2db_admin~users:rights';
             $rep->params=array('user'=>$login);
             jAcl2DbUserGroup::removeUserFromGroup($login, $this->param('grpid') );
         }else{
-            $rep->action = 'jacl2_admin~users:index';
+            $rep->action = 'jacl2db_admin~users:index';
         }
 
         return $rep;
@@ -189,11 +189,11 @@ class usersCtrl extends jController {
 
         $login = $this->param('user');
         if($login != '') {
-            $rep->action = 'jacl2_admin~users:rights';
+            $rep->action = 'jacl2db_admin~users:rights';
             $rep->params=array('user'=>$login);
             jAcl2DbUserGroup::addUserToGroup($login, $this->param('grpid') );
         }else{
-            $rep->action = 'jacl2_admin~users:index';
+            $rep->action = 'jacl2db_admin~users:index';
         }
 
         return $rep;

@@ -1,20 +1,20 @@
 {meta_html css  $j_jelixwww.'design/jacl2.css'}
 
-<h1>{@jacl2_admin~acl2.user.rights.title@} {$user}</h1>
+<h1>{@jacl2db_admin~acl2.user.rights.title@} {$user}</h1>
 
 
-<div>{formurlparam 'jacl2_admin~users:saverights',array('user'=>$user)}</div>
+<div>{formurlparam 'jacl2db_admin~users:saverights',array('user'=>$user)}</div>
 <table class="records-list jacl2-list">
 
 <thead>
     <tr>
         <th rowspan="2"></th>
-        <th rowspan="2">{@jacl2_admin~acl2.col.personnal.rights.1@}<br />{@jacl2_admin~acl2.col.personnal.rights.2@}</th>
+        <th rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights.1@}<br />{@jacl2db_admin~acl2.col.personnal.rights.2@}</th>
         {if $nbgrp}
-        <th colspan="{$nbgrp}">{@jacl2_admin~acl2.col.groups@}</th>
+        <th colspan="{$nbgrp}">{@jacl2db_admin~acl2.col.groups@}</th>
         {/if}
         <th class="colblank" rowspan="2"></th>
-        <th rowspan="2">{@jacl2_admin~acl2.col.resulting.1@}<br />{@jacl2_admin~acl2.col.resulting.2@}</th>
+        <th rowspan="2">{@jacl2db_admin~acl2.col.resulting.1@}<br />{@jacl2db_admin~acl2.col.resulting.2@}</th>
     </tr>
     <tr>
     {foreach $groups as $group}

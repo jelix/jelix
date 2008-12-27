@@ -1,7 +1,7 @@
 <?php
 /**
 * @package   jelix_admin_modules
-* @subpackage jacl2_admin
+* @subpackage jacl2db_admin
 * @author    Laurent Jouanneau
 * @copyright 2008 Laurent Jouanneau
 * @link      http://jelix.org
@@ -29,7 +29,7 @@ class groupsCtrl extends jController {
         $gid=array(0);
         $o = new StdClass;
         $o->id_aclgrp ='0';
-        $o->name = jLocale::get('jacl2_admin~acl2.anonymous.group.name');
+        $o->name = jLocale::get('jacl2db_admin~acl2.anonymous.group.name');
         $o->grouptype=0;
         $groups=array($o);
         $grouprights=array(0=>false);
@@ -72,7 +72,7 @@ class groupsCtrl extends jController {
 
         jAcl2DbManager::setRightsOnGroup(0, (isset($rights[0])?$rights[0]:array()));
 
-        $rep->action = 'jacl2_admin~groups:index';
+        $rep->action = 'jacl2db_admin~groups:index';
         return $rep;
     }
 
@@ -80,7 +80,7 @@ class groupsCtrl extends jController {
 
     function newgroup() {
         $rep = $this->getResponse('redirect');
-        $rep->action = 'jacl2_admin~groups:index';
+        $rep->action = 'jacl2db_admin~groups:index';
 
         $name = $this->param('newgroup');
         if($name != '') {
@@ -92,7 +92,7 @@ class groupsCtrl extends jController {
 
     function changename() {
         $rep = $this->getResponse('redirect');
-        $rep->action = 'jacl2_admin~groups:index';
+        $rep->action = 'jacl2db_admin~groups:index';
 
         $id = $this->param('group_id');
         $name = $this->param('newname');
@@ -104,7 +104,7 @@ class groupsCtrl extends jController {
 
     function delgroup() {
         $rep = $this->getResponse('redirect');
-        $rep->action = 'jacl2_admin~groups:index';
+        $rep->action = 'jacl2db_admin~groups:index';
 
         jAcl2DbUserGroup::removeGroup($this->param('group_id'));
 
