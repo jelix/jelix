@@ -5,22 +5,28 @@ startModule = "jelix"
 startAction = "default:index"
 locale = "en_US"
 charset = "UTF-8"
+theme = default
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
 ; if empty, jelix will try to get the default timezone
 timeZone =
 
-checkTrustedModules = off
-
-; list of modules : module,module,module
-trustedModules =
-
 pluginsPath = lib:jelix-plugins/,app:plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 
+; says if jelix should check trustedModules
+checkTrustedModules = off
+
+; list of modules which can be accessed from the web
+;    module,module,module
+trustedModules =
+
+; list of modules which are not used by the application
+; or not installed.
+unusedModules = 
+
 dbProfils = dbprofils.ini.php
 
-theme = default
 use_error_handler = on
 
 enableOldActionSelector =

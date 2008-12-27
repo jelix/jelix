@@ -8,15 +8,22 @@ charset = "UTF-8"
 ; see http://www.php.net/manual/en/timezones.php for supported values
 timeZone = "%%default_timezone%%"
 
-checkTrustedModules = off
-
-; list of modules : module,module,module
-trustedModules =
+theme = default
 
 pluginsPath = lib:jelix-plugins/,app:plugins/
+
 modulesPath = lib:jelix-modules/,app:modules/
 
-theme = default
+; says if jelix should check trustedModules
+checkTrustedModules = off
+
+; list of modules which can be accessed from the web
+;    module,module,module
+trustedModules =
+
+; list of modules which are not used by the application
+; or not installed.
+unusedModules = jacldb
 
 #if ENABLE_OLD_ACTION_SELECTOR
 enableOldActionSelector =

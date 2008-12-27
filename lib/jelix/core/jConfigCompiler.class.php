@@ -106,8 +106,8 @@ class jConfigCompiler {
         }
 
         $config->_allBasePath = array();
-
-        $config->_modulesPathList = self::_loadPathList($config->modulesPath, $config->_allBasePath);
+        $unusedModules = split(' *, *',$config->unusedModules);
+        $config->_modulesPathList = self::_loadPathList($config->modulesPath, $unusedModules, $config->_allBasePath);
 
         self::_loadPluginsPathList($config);
 
@@ -189,7 +189,7 @@ class jConfigCompiler {
      * @param array $list list of "lib:*" and "app:*" path
      * @return array list of full path
      */
-    static protected function _loadPathList($list, &$allBasePath){
+    static protected function _loadPathList($list, $forbiddenList, &$allBasePath){
         $list = split(' *, *',$list);
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $result=array();
@@ -206,7 +206,7 @@ class jConfigCompiler {
                 $allBasePath[]=$p;
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
-                    if ($f{0} != '.' && is_dir($p.$f)) {
+                    if ($f{0} != '.' && is_dir($p.$f) && !in_array($f, $forbiddenList)) {
                         $result[$f]=$p.$f.'/';
                     }
                 }

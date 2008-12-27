@@ -79,8 +79,6 @@ class initadminCommand extends JelixScriptCommand {
         
         $inifile->setValue('enableAcl2DbEventListener','on','acl2');
 
-        $inifile->save();
-
         $params = array();
 
         $this->createFile(JELIX_APP_PATH.'responses/adminHtmlResponse.class.php','responses/adminHtmlResponse.class.php.tpl',$params);
@@ -114,7 +112,9 @@ class initadminCommand extends JelixScriptCommand {
                 echo "Tables and datas for jAuth.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.";
             }    
         }
-        $authini->save();
+        else {
+            //$inifile->setValue('unusedModules', $inifile->getValue('unusedModules').', jacl2_admin');
+        }
 
         if (!$this->getOption('-noacl2db')) {
             $tools = jDb::getTools($profile);
@@ -132,6 +132,12 @@ class initadminCommand extends JelixScriptCommand {
                 echo "Tables and datas for jAcl2.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.";
             }    
         }
+        else {
+            $inifile->setValue('unusedModules', $inifile->getValue('unusedModules').', jacl2_admin');
+        }
+
+        $authini->save();
+        $inifile->save();
     }
 }
 
