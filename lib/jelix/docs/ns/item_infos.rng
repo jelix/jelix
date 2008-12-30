@@ -75,7 +75,7 @@
                </choice>
             </element>
          </zeroOrMore>
-         <element name="licence">
+         <element name="license">
             <optional>
                <attribute name="URL">
                   <data type="anyURI" />

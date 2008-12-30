@@ -4,7 +4,7 @@
 #expand        <version stability="stable">__LIB_VERSION__</version>
         <label lang="en-EN">jAcl2.db administration</label>
         <description lang="en-EN">Web interface to manage rights with jAcl2 adn its driver 'db'</description>
-        <licence URL="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GPL 2.0</licence>
+        <license URL="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GPL 2.0</license>
         <copyright>2008 Laurent Jouanneau and other contributors</copyright>
         <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
         <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->

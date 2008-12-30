@@ -4,7 +4,7 @@
         <version stability="pre-alpha" date="">0.1pre</version>
         <label lang="%%default_locale%%">%%appname%%</label>
         <description lang="%%default_locale%%"></description>
-        <licence URL="%%default_licence_url%%">%%default_licence%%</licence>
+        <license URL="%%default_license_url%%">%%default_license%%</license>
         <copyright>%%default_copyright%%</copyright>
         <creator name="%%default_creator_name%%" email="%%default_creator_email%%" active="true" />
         <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->

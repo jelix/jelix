@@ -65,8 +65,8 @@ abstract class JelixScriptCommand {
       
       $defaultparams = array (
          'default_website' => JELIXS_INFO_DEFAULT_WEBSITE,
-         'default_licence' => JELIXS_INFO_DEFAULT_LICENCE,
-         'default_licence_url' => JELIXS_INFO_DEFAULT_LICENCE_URL,
+         'default_license' => JELIXS_INFO_DEFAULT_LICENSE,
+         'default_license_url' => JELIXS_INFO_DEFAULT_LICENSE_URL,
          'default_creator_name' => JELIXS_INFO_DEFAULT_CREATOR_NAME,
          'default_creator_email' => JELIXS_INFO_DEFAULT_CREATOR_EMAIL,
          'default_copyright' => JELIXS_INFO_DEFAULT_COPYRIGHT,

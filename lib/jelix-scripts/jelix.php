@@ -1,16 +1,16 @@
 <?php
 /**
 * @package     jelix-scripts
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2006 Jouanneau laurent
-* @link        http://www.jelix.org
+* @copyright   2005-2008 Jouanneau laurent
+* @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 error_reporting(E_ALL);
 
 /**
- * récupération du nom de la commande et éventuellement du nom de l'application
+ * retrieve the name of the jelix command and the name of the application
  */
 
 if($_SERVER['argc'] < 2){
@@ -49,25 +49,30 @@ function GetAppsRepository($relatedPath) {
     return $path;
 }
 
+define ('JELIX_SCRIPT_PATH', dirname(__FILE__).'/');
+
 /**
- * recupération de la config
+ * retrieve the configuration
  */
 
-if(!isset($_SERVER['JELIX_CONFIG'])){
+if (!isset($_SERVER['JELIX_CONFIG'])) {
 
-   $jelix_config=dirname(__FILE__).'/scripts.conf.php';
+   $jelix_config = JELIX_SCRIPT_PATH.'scripts.conf.php';
 
-}elseif(!file_exists($_SERVER['JELIX_CONFIG'])){
+   if (file_exists($jelix_config)) {
+      require($jelix_config);
+   }
+
+} elseif(!file_exists($_SERVER['JELIX_CONFIG'])) {
 
    die("Error: path given by the JELIX_CONFIG environnement variable doesn't exist (".$_SERVER['JELIX_CONFIG']." )\n");
 
-}else{
-  $jelix_config = $_SERVER['JELIX_CONFIG'];
+} else {
+  require($_SERVER['JELIX_CONFIG']);
 }
 
-require($jelix_config);
+require(JELIX_SCRIPT_PATH.'default.conf.php');
 
-define ('JELIX_SCRIPT_PATH', dirname(__FILE__).'/');
 
 if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
    include (JELIXS_APPTPL_PATH.'application.init.php');
