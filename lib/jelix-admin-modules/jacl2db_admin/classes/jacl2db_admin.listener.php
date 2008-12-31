@@ -13,7 +13,7 @@ class jacl2db_adminListener extends jEventListener{
    /**
    *
    */
-   function onjadminGetMenuContent ($event) {
+   function onmasteradminGetMenuContent ($event) {
         $event->add(new masterAdminMenuItem('usersrights', jLocale::get('jacl2db_admin~acl2.menu.item.rights'), jUrl::get('jacl2db_admin~users:index'), 30, 'system'));
         $event->add(new masterAdminMenuItem('usersgroups', jLocale::get('jacl2db_admin~acl2.menu.item.groups'), jUrl::get('jacl2db_admin~groups:index'), 20, 'system'));
    }

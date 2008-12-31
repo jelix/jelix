@@ -50,7 +50,7 @@ class admin_menuZone extends jZone {
         $menu['toplinks']->childItems[] = new masterAdminMenuItem('dashboard', jLocale::get('gui.menu.item.dashboard'), jUrl::get('default:index'));
         $menu['system'] = new masterAdminMenuItem('system', jLocale::get('gui.menu.item.system'), '', 100);
 
-        $items = jEvent::notify('jadminGetMenuContent')->getResponse();
+        $items = jEvent::notify('masteradminGetMenuContent')->getResponse();
 
         foreach ($items as $item) {
             if($item->parentId) {
