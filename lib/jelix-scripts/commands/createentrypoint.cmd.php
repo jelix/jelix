@@ -65,12 +65,24 @@ class createentrypointCommand extends JelixScriptCommand {
             if (file_exists(JELIX_APP_CMD_PATH.$name.'.php')) {
                 throw new Exception("the entry point already exists");
             }
-
+            if (!file_exists(JELIX_APP_PATH.'application-cli.init.php')) {
+                $this->createDir(substr(JELIX_APP_TEMP_PATH,-1).'-cli');
+                $param2['rp_temp']= jxs_getRelativePath(JELIX_APP_PATH, substr(JELIX_APP_TEMP_PATH,0,-1).'-cli', true);
+                $param2['rp_var'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_VAR_PATH,  true);
+                $param2['rp_log'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_LOG_PATH,  true);
+                $param2['rp_conf']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CONFIG_PATH, true);
+                $param2['rp_www'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_WWW_PATH,  true);
+                $param2['rp_cmd'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,  true);
+                $param2['rp_jelix'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_LIB_PATH, true);
+                $param2['rp_app']   = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH, true);
+                $this->createFile(JELIX_APP_PATH.'application-cli.init.php','application.init.php.tpl',$param2);
+            }
             $this->createDir(JELIX_APP_CONFIG_PATH.'cmdline');
             $this->createDir(JELIX_APP_CMD_PATH);
             $this->createFile(JELIX_APP_CONFIG_PATH.'cmdline/'.$name.'.ini.php','var/config/cmdline/config.ini.php.tpl', $param);
             $param['rp_cmd'] =jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,true);
             $this->createFile(JELIX_APP_CMD_PATH.$name.'.php','scripts/cmdline.php.tpl',$param);
+            
             return;
         }
         

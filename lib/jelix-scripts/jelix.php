@@ -73,8 +73,10 @@ if (!isset($_SERVER['JELIX_CONFIG'])) {
 
 require(JELIX_SCRIPT_PATH.'default.conf.php');
 
+if(file_exists(JELIXS_APPTPL_PATH.'jelix-scripts.init.php')){
+   include (JELIXS_APPTPL_PATH.'jelix-scripts.init.php');
 
-if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
+}else if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
    include (JELIXS_APPTPL_PATH.'application.init.php');
    if(!class_exists('jCoordinator', false)) // for old application.init.php which doesn't include init.php
       include (JELIXS_INIT_PATH);
@@ -84,7 +86,9 @@ if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
    }
    include (JELIXS_INIT_PATH);
    define ('JELIX_APP_PATH',         JELIXS_APPTPL_PATH );
-   define ('JELIX_APP_TEMP_PATH',    JELIXS_APPTPL_TEMP_PATH);
+   define ('JELIX_APP_REAL_TEMP_PATH',    JELIXS_APPTPL_TEMP_PATH);
+   define ('JELIX_APP_CLI_TEMP_PATH',    substr(JELIXS_APPTPL_TEMP_PATH,0,-1).'-cli/');
+   define ('JELIX_APP_TEMP_PATH',    substr(JELIXS_APPTPL_TEMP_PATH,0,-1).'-jelix-scripts/');
    define ('JELIX_APP_VAR_PATH',     JELIXS_APPTPL_VAR_PATH);
    define ('JELIX_APP_LOG_PATH',     JELIXS_APPTPL_LOG_PATH);
    define ('JELIX_APP_CONFIG_PATH',  JELIXS_APPTPL_CONFIG_PATH);

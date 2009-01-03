@@ -94,6 +94,8 @@ class createmoduleCommand extends JelixScriptCommand {
                         );
         $isdefault = $this->getOption('-defaultmodule');
         foreach($inifiles as $k=> $filename) {
+            if(!file_exists($filename))
+                continue;
             try {
                 $ini = new jIniFileModifier($filename);
                 if ($isdefault && $k == 0) {
@@ -103,7 +105,9 @@ class createmoduleCommand extends JelixScriptCommand {
                 else if ($ini->getValue('startModule') == '')
                     $ini->setValue('startModule', $this->_parameters['module']);
                 $ini->save();
-            }catch(Exception $e){}
+            }catch(Exception $e){
+                echo "Error during the modification of an ini file: ".$e->getMessage()."\n";
+            }
         }
     }
 }
