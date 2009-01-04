@@ -13,7 +13,7 @@
     </div>
 
     <div id="content">
-    {if $MAIN}{$MAIN}{else}<p>{@master_admin~gui.nocontent@}</p>{/if}
+    {if $MAIN}{$MAIN}{else}<p>{@master_admin~gui.main.nocontent@}</p>{/if}
     </div>
 
 </div>
