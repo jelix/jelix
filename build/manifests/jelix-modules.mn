@@ -55,15 +55,5 @@ cd lib/jelix-modules/jWSDL/locales/fr_FR
 cch errors.UTF-8.properties(errors.%charset%.properties)
 
 cd lib/jelix-plugins
-  LICENCE
-  INSTALL
-  CREDITS
-cd lib/jelix-plugins/auth/
-cd lib/jelix-plugins/acl/
-cd lib/jelix-plugins/acl2/
-cd lib/jelix-plugins/coord/
-cd lib/jelix-plugins/db/
-cd lib/jelix-plugins/urls/
-cd lib/jelix-plugins/tpl/
-cd lib/jelix-plugins/wr_rules/
+
 

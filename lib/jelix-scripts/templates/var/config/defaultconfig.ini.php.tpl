@@ -10,7 +10,7 @@ timeZone = "%%default_timezone%%"
 
 theme = default
 
-pluginsPath = lib:jelix-plugins/,app:plugins/
+pluginsPath = app:plugins/
 
 modulesPath = lib:jelix-modules/,app:modules/
 

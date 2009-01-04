@@ -11,7 +11,7 @@ theme = default
 ; if empty, jelix will try to get the default timezone
 timeZone =
 
-pluginsPath = lib:jelix-plugins/,app:plugins/
+pluginsPath = app:plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 
 ; says if jelix should check trustedModules

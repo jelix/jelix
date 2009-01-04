@@ -104,19 +104,13 @@ class createappCommand extends JelixScriptCommand {
         $param = array();
         $param['default_id'] = $GLOBALS['APPNAME'].JELIXS_INFO_DEFAULT_IDSUFFIX;
 
-        if(preg_match('/([^\w\_0-9])/', $GLOBALS['APPNAME'])) {
-            $moduleok = false;
-        }
-        else
-            $moduleok = true;
-
-        if($this->getOption('-nodefaultmodule') || !$moduleok) {
+        if($this->getOption('-nodefaultmodule')) {
             $param['tplname'] = 'jelix~defaultmain';
             $param['modulename'] = 'jelix';
         }
         else {
-            $param['tplname'] = $GLOBALS['APPNAME'].'~main';
-            $param['modulename'] = $GLOBALS['APPNAME'];
+            $param['modulename'] = preg_replace('/([^a-zA-Z_0-9\.])/','_',$GLOBALS['APPNAME']);
+            $param['tplname'] = $param['modulename'].'~main';
         }
 
         $param['config_file'] = 'index/config.ini.php';
@@ -147,14 +141,16 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile($wwwpath.'index.php','www/index.php.tpl',$param);
         $this->createFile($wwwpath.'.htaccess','htaccess_allow',$param);
 
+        $moduleok = true;
+
         if(!$this->getOption('-nodefaultmodule')){
             try {
                 $cmd = jxs_load_command('createmodule');
-                $cmd->init(array('-addinstallzone'=>true),array('module'=>$GLOBALS['APPNAME']));
+                $cmd->init(array('-addinstallzone'=>true),array('module'=>$param['modulename']));
                 $cmd->run();
-                $this->createFile(JELIX_APP_PATH.'modules/'.$GLOBALS['APPNAME'].'/templates/main.tpl', 'main.tpl.tpl', $param);
-                $moduleok = true;
+                $this->createFile(JELIX_APP_PATH.'modules/'.$param['modulename'].'/templates/main.tpl', 'main.tpl.tpl', $param);
             } catch (Exception $e) {
+                $moduleok = false;
                 echo "The module has not been created because of this error: ".$e->getMessage()."\nHowever the application has been created";
             }
         }
@@ -174,4 +170,3 @@ class createappCommand extends JelixScriptCommand {
         }
     }
 }
-
