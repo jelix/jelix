@@ -80,6 +80,9 @@ persistant_cookie_path =
 ; name of the dao to get user data
 dao = ""
 
+; name of the form for the jauthdb_admin module
+form = ""
+
 ; profile to use for jDb 
 profile = ""
 

@@ -95,6 +95,7 @@ class initadminCommand extends JelixScriptCommand {
 
         if (!$this->getOption('-noauthdb')) {
             $authini->setValue('dao','jauth~jelixuser', 'Db');
+            $authini->setValue('form','jauthdb_admin~jelixuser', 'Db');
             if ($profile != '')
                 $authini->setValue('profile',$profile, 'Db');
             $tools = jDb::getTools($profile);
@@ -113,7 +114,7 @@ class initadminCommand extends JelixScriptCommand {
             }    
         }
         else {
-            //$inifile->setValue('unusedModules', $inifile->getValue('unusedModules').', jauthdb_admin');
+            $inifile->setValue('unusedModules', $inifile->getValue('unusedModules').', jauthdb_admin');
         }
 
         if (!$this->getOption('-noacl2db')) {
