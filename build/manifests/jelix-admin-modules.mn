@@ -4,9 +4,9 @@ cd lib/jelix-admin-modules/master_admin/
 cd lib/jelix-admin-modules/master_admin/controllers
    default.classic.php
 cd lib/jelix-admin-modules/master_admin/locales/en_EN
-   gui.UTF-8.properties
+cch    gui.UTF-8.properties(gui.%charset%.properties)
 cd lib/jelix-admin-modules/master_admin/locales/fr_FR
-   gui.UTF-8.properties
+cch    gui.UTF-8.properties(gui.%charset%.properties)
 cd lib/jelix-admin-modules/master_admin/templates/
   index_login.tpl
   main.tpl
@@ -22,9 +22,9 @@ cd lib/jelix-admin-modules/jacl2db_admin
 cd lib/jelix-admin-modules/jacl2db_admin/classes/
   jacl2db_admin.listener.php
 cd lib/jelix-admin-modules/jacl2db_admin/locales/en_EN
-  acl2.UTF-8.properties
+cch   acl2.UTF-8.properties(acl2.%charset%.properties)
 cd lib/jelix-admin-modules/jacl2db_admin/locales/fr_FR
-  acl2.UTF-8.properties
+cch   acl2.UTF-8.properties(acl2.%charset%.properties)
 cd lib/jelix-admin-modules/jacl2db_admin/controllers
   groups.classic.php
   users.classic.php
@@ -37,4 +37,27 @@ cd lib/jelix-admin-modules/jacl2db_admin/templates
   groups_right_view.tpl
   user_rights_view.tpl
 
+
+cd lib/jelix-admin-modules/jauthdb_admin
+*  module.xml
+   events.xml
+cd lib/jelix-admin-modules/jauthdb_admin/classes/
+  jauthdb_admin.listener.php
+cd lib/jelix-admin-modules/jauthdb_admin/controllers
+  default.classic.php
+cd lib/jelix-admin-modules/jauthdb_admin/forms
+  jelixuser.form.xml
+cd lib/jelix-admin-modules/jauthdb_admin/install
+  urls_example.xml
+cd lib/jelix-admin-modules/jauthdb_admin/locales/en_EN
+cch   auth.UTF-8.properties(auth.%charset%.properties)
+cch   crud.UTF-8.properties(crud.%charset%.properties)
+cd lib/jelix-admin-modules/jauthdb_admin/locales/fr_FR
+cch   auth.UTF-8.properties(auth.%charset%.properties)
+cch   crud.UTF-8.properties(crud.%charset%.properties)
+cd lib/jelix-admin-modules/jauthdb_admin/templates
+  crud_edit.tpl
+  crud_list.tpl
+  crud_view.tpl
+  crud_delete.tpl
 

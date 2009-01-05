@@ -21,3 +21,22 @@ INSERT INTO jacl2_rights (id_aclsbj, id_aclgrp, id_aclres) VALUES ('acl.group.vi
 INSERT INTO jacl2_rights (id_aclsbj, id_aclgrp, id_aclres) VALUES ('acl.user.modify', 1, '');
 INSERT INTO jacl2_rights (id_aclsbj, id_aclgrp, id_aclres) VALUES ('acl.user.view', 1, '');
 
+
+INSERT INTO jacl2_subject (id_aclsbj, label_key) VALUES ('auth.user.list', 'jelix~auth.acl.user.list');
+INSERT INTO jacl2_subject (id_aclsbj, label_key) VALUES ('auth.user.view', 'jelix~auth.acl.user.view');
+INSERT INTO jacl2_subject (id_aclsbj, label_key) VALUES ('auth.user.modify', 'jelix~auth.acl.user.modify');
+INSERT INTO jacl2_subject (id_aclsbj, label_key) VALUES ('auth.user.create', 'jelix~auth.acl.user.create');
+INSERT INTO jacl2_subject (id_aclsbj, label_key) VALUES ('auth.user.delete', 'jelix~auth.acl.user.delete');
+INSERT INTO jacl2_subject (id_aclsbj, label_key) VALUES ('auth.user.change.password', 'jelix~auth.acl.user.change.password');
+
+INSERT INTO jacl2_rights (id_aclsbj, id_aclgrp, id_aclres) VALUES ('auth.user.list', 1, '');
+INSERT INTO jacl2_rights (id_aclsbj, id_aclgrp, id_aclres) VALUES ('auth.user.view', 1, '');
+INSERT INTO jacl2_rights (id_aclsbj, id_aclgrp, id_aclres) VALUES ('auth.user.modify', 1, '');
+INSERT INTO jacl2_rights (id_aclsbj, id_aclgrp, id_aclres) VALUES ('auth.user.create', 1, '');
+INSERT INTO jacl2_rights (id_aclsbj, id_aclgrp, id_aclres) VALUES ('auth.user.delete', 1, '');
+INSERT INTO jacl2_rights (id_aclsbj, id_aclgrp, id_aclres) VALUES ('auth.user.change.password', 1, '');
+
+
+
+
+

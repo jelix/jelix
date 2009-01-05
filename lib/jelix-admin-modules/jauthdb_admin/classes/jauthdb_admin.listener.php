@@ -15,7 +15,7 @@ class jauthdb_adminListener extends jEventListener{
    */
    function onmasteradminGetMenuContent ($event) {
       $plugin = $GLOBALS['gJCoord']->getPlugin('auth', false);
-      if ($plugin && $plugin->config['driver'] == 'Db')
+      if ($plugin && $plugin->config['driver'] == 'Db' && jAcl2::check('auth.user.list'))
          $event->add(new masterAdminMenuItem('users', jLocale::get('jauthdb_admin~auth.adminmenu.item.list'), jUrl::get('jauthdb_admin~default:index'), 10, 'system'));
    }
 }

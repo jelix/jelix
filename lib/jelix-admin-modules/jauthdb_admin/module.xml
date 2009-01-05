@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jauthdb_admin@jelix.org" name="jauthdb_admin" createdate="2009-01-04">
-        <version stability="pre-alpha" date="">0.1pre</version>
+#expand        <version stability="stable">__LIB_VERSION__</version>
         <label lang="en_EN">jauthdb_admin</label>
         <description lang="en_EN"></description>
         <license URL="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GNU Public Licence</license>
@@ -12,6 +12,6 @@
         <!--<updateURL>http://jelix.org/update.xml</updateURL>-->
     </info>
     <dependencies>
-        <jelix minversion="1.2b1pre.1264" maxversion="1.2b1pre.1264" />
+#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION__" />
     </dependencies>
 </module>

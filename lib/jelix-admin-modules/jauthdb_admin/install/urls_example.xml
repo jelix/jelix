@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urls xmlns="http://jelix.org/ns/urls/1.0">
+    <classicentrypoint name="index" default="true">
+      <!--
+          Add this url elements in your urls.xml. Of course you can modify it.
+      -->
+      <url pathinfo="/admin/auth/users/" module="jauthdb_admin" action="default:index"/>
+      <url pathinfo="/admin/auth/user/:id" module="jauthdb_admin" action="default:view">
+        <param name="id"/>
+      </url>
+      <url pathinfo="/admin/auth/create-user" module="jauthdb_admin" action="default:create" actionoverride="default:precreate,default:savecreate"/>
+      <url pathinfo="/admin/auth/user/:id/edit" module="jauthdb_admin" action="default:editupdate" actionoverride="default:preupdate,default:saveupdate">
+        <param name="id"/>
+      </url>
+      <url pathinfo="/admin/auth/user/:id/delete" module="jauthdb_admin" action="default:delete">
+        <param name="id"/>
+      </url>
+<!--      <url pathinfo="/admin/auth/user/:id" module="jauthdb_admin" action="default:">
+        <param name="id"/>
+      </url>
+      <url pathinfo="/admin/auth/user/:id" module="jauthdb_admin" action="default:">
+        <param name="id"/>
+      </url>
+-->
+    </classicentrypoint>
+</urls>
+actionoverride="

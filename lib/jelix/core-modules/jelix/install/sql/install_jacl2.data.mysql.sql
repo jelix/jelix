@@ -25,3 +25,19 @@ INSERT INTO `jacl2_rights` (`id_aclsbj`, `id_aclgrp`, `id_aclres`) VALUES
 ('acl.user.modify', 1, ''),
 ('acl.user.view', 1, '');
 
+
+INSERT INTO `jacl2_subject` (`id_aclsbj`, `label_key`) VALUES 
+('auth.user.list', 'jelix~auth.acl.user.list'),
+('auth.user.view', 'jelix~auth.acl.user.view'),
+('auth.user.modify', 'jelix~auth.acl.user.modify'),
+('auth.user.create', 'jelix~auth.acl.user.create'),
+('auth.user.delete', 'jelix~auth.acl.user.delete'),
+('auth.user.change.password', 'jelix~auth.acl.user.change.password');
+
+INSERT INTO `jacl2_rights` (`id_aclsbj`, `id_aclgrp`, `id_aclres`) VALUES 
+('auth.user.list', 1, ''),
+('auth.user.view', 1, ''),
+('auth.user.modify', 1, ''),
+('auth.user.create', 1, ''),
+('auth.user.delete', 1, ''),
+('auth.user.change.password', 1, '');

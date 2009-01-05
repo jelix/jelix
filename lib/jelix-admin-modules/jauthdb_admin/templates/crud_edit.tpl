@@ -1,15 +1,14 @@
 {if $id === null}
 
-<h1>{@jelix~crud.title.create@}</h1>
-{formfull $form, $submitAction}
-
+<h1>{@jauthdb_admin~crud.title.create@}</h1>
+{formfull $form, 'default:savecreate'}
+<p><a href="{jurl 'default:index'}" class="crud-link">{@jauthdb_admin~crud.link.return.to.list@}</a>.</p>
 {else}
 
-<h1>{@jelix~crud.title.update@}</h1>
-{formfull $form, $submitAction, array('id'=>$id)}
-
+<h1>{@jauthdb_admin~crud.title.update@}</h1>
+{formfull $form, 'default:saveupdate', array('id'=>$id)}
+<p><a href="{jurl 'default:view', array('id'=>$id)}" class="crud-link">{@jauthdb_admin~crud.link.return.to.view@}</a>.</p>
 {/if}
 
 
 
-<p><a href="{jurl $listAction}" class="crud-link">{@jelix~crud.link.return.to.list@}</a>.</p>

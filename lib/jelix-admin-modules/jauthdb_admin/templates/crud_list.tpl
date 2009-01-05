@@ -13,7 +13,9 @@
 <tr class="{if $lineparity}odd{else}even{/if}">
     <td>{$record->login|eschtml}</td>
     <td>
+        {if $canview}
         <a href="{jurl 'jauthdb_admin~default:view',array('id'=>$record->login)}">{@jauthdb_admin~crud.link.view.record@}</a>
+        {/if}
     </td>
 </tr>
 {assign $lineparity = !$lineparity}
@@ -23,5 +25,7 @@
 {if $recordCount > $listPageSize}
 <div class="record-pages-list">Pages : {pagelinks 'jauthdb_admin~default:index', array(),  $recordCount, $page, $listPageSize, 'offset' }</div>
 {/if}
+{if $cancreate}
 <p><a href="{jurl 'jauthdb_admin~default:precreate'}" class="crud-link">{@jauthdb_admin~crud.link.create.record@}</a>.</p>
+{/if}
 
