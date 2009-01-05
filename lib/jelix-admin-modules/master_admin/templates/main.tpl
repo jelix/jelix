@@ -13,7 +13,8 @@
     </div>
 
     <div id="content">
-    {if $MAIN}{$MAIN}{else}<p>{@master_admin~gui.main.nocontent@}</p>{/if}
+        <div id="admin-message">{jmessage}</div>
+        {if $MAIN}{$MAIN}{else}<p>{@master_admin~gui.main.nocontent@}</p>{/if}
     </div>
 
 </div>

@@ -22,6 +22,11 @@ class defaultCtrl extends jController {
         $resp = $this->getResponse('html');
         $resp->title = jLocale::get('gui.dashboard.title');
         $resp->body->assignZone('MAIN','dashboard');
+        
+        if (jAuth::getUserSession()->login == 'admin' && jAuth::getUserSession()->password == md5('admin')) {
+            jMessage::add(jLocale::get('gui.message.admin.password'), 'error');
+        }
+        $resp->body->assign('selectedMenuItem','dashboard');
         return $resp;
     }
 }

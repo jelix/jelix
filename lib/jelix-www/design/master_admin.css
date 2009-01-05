@@ -37,7 +37,7 @@ fieldset { margin-top:1em; }
     height:3em;
 }
 
-#header a { color:black; text-decoration:none; }
+#header a { color:#eff4f6; text-decoration:none; }
 #header a:visited {  color : white;}
 #header a:hover { text-decoration:underline; }
 
@@ -124,6 +124,36 @@ fieldset { margin-top:1em; }
 #menu .menu-bloc li a:hover { text-decoration:underline; background-color: #D5E6EC; }
 #menu .menu-bloc li:hover { background-color: #D5E6EC; }
 
+
+#admin-message {}
+
+#admin-message .jelix-msg {
+    background-color:#eff4f6;
+    border: 1px solid #B0C4CB;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    -o-border-radius:4px;
+    border-radius:4px;
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
+
+#admin-message .jelix-msg li {
+    padding:3px;
+    margin:0;
+}
+
+#admin-message  .jelix-msg li.jelix-msg-item-error {
+    background-color: #F6B1B1;
+}
+#admin-message .jelix-msg li.jelix-msg-item-warning {
+    background-color: #F6CAB1;
+}
+
+#admin-message .jelix-msg li.jelix-msg-item-ok {
+    background-color: #E5F6D4;
+}
 
 
 #dashboard-left-column {
