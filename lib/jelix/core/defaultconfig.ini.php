@@ -264,6 +264,9 @@ storage=
 ; dao_selector = "jelix~jsession"
 ; dao_db_profile = ""
 
+; list of selectors of classes to load before the session_start
+loadClasses=
+
 [forms]
 ; define input type for datetime widgets : "textboxes" or "menulists"
 controls.datetime.input = "menulists"

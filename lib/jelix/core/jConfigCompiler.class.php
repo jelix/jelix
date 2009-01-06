@@ -172,6 +172,35 @@ class jConfigCompiler {
             $config->sessions['files_path'] = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $config->sessions['files_path']);
         }
 
+        $config->sessions['_class_to_load'] = array();
+        if ($config->sessions['loadClasses'] != '') {
+            $list = split(' *, *',$config->sessions['loadClasses']);
+            foreach($list as $sel) {
+                if(preg_match("/^([a-zA-Z0-9_\.]+)~([a-zA-Z0-9_\.\\/]+)$/", $sel, $m)){
+                    if (!isset($config->_modulesPathList[$m[1]])) {
+                        throw new Exception('Error in config files, loadClasses: '.$m[1].' is not a valid or activated module');
+                    }
+
+                    if( ($p=strrpos($m[2], '/')) !== false){
+                        $className = substr($m[2],$p+1);
+                        $subpath = substr($m[2],0,$p+1);
+                    }else{
+                        $className = $m[2];
+                        $subpath ='';
+                    }
+                    
+                    $path = $config->_modulesPathList[$m[1]].'classes/'.$subpath.$className.'.class.php';
+
+                    if (!file_exists($path) || strpos($subpath,'..') !== false ) {
+                        throw new Exception('Error in config files, loadClasses, bad class selector: '.$sel);
+                    }
+                    $config->sessions['_class_to_load'][] = $path;
+                }
+                else
+                    throw new Exception('Error in config files, loadClasses, bad class selector: '.$sel);
+            }
+        }
+
         /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config->locale,$m)){
             if(!isset($m[2])){
                 $m[2] = $m[1];

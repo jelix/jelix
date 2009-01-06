@@ -74,6 +74,12 @@ class jSession {
             session_name($params['name']);
         }
 
+        if(isset($params['_class_to_load'])) {
+            foreach($params['_class_to_load'] as $file) {
+                require_once($file);
+            }
+        }
+
         session_start();
         return true;
     }

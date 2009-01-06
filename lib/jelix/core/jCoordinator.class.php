@@ -83,12 +83,17 @@ class jCoordinator {
         // load configuration data
         $gJConfig = jConfig::load($configFile);
 
+#if ENABLE_OPTIMIZED_SOURCE
+        set_error_handler('jErrorHandler');
+        set_exception_handler('jExceptionHandler');
+#else
         // set Error and exception handler
         // ne devrait être désactivé que lors de certains tests de jelix
         if($gJConfig->use_error_handler){
             set_error_handler('jErrorHandler');
             set_exception_handler('JExceptionHandler');
         }
+#endif
 #if PHP50
         if(function_exists('date_default_timezone_set')){
             date_default_timezone_set($gJConfig->timeZone);
