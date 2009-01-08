@@ -178,7 +178,7 @@ ACTION:
             throw new Exception("Error: this right is not set");
         }
 
-        $sql="DELETE FROM jacl_rights
+        $sql="DELETE FROM jacl2_rights
              WHERE id_aclgrp=".$group."
                 AND id_aclsbj=".$subject;
         if($resource)
