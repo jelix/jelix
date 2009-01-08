@@ -98,6 +98,14 @@ class createentrypointCommand extends JelixScriptCommand {
         $this->createFile(JELIX_APP_WWW_PATH.$name.'.php','www/'.$type.'.php.tpl',$param);
 
 
+        $inifile = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        if(null === $inifile->getValue($name, 'simple_urlengine_entrypoints')) {
+            $inifile->setValue($name, '', 'simple_urlengine_entrypoints');
+        }
+        if(null === $inifile->getValue($name, 'basic_significant_urlengine_entrypoints')) {
+            $inifile->setValue($name, '1', 'basic_significant_urlengine_entrypoints');
+        }
+
         $doc = new DOMDocument();
 
         if (!$doc->load(JELIX_APP_PATH.'project.xml')){

@@ -76,8 +76,43 @@ class initadminCommand extends JelixScriptCommand {
         if(strpos($modulePath, 'lib:jelix-admin-modules')===false){
             $inifile->setValue('modulesPath', 'lib:jelix-admin-modules/,'.$modulePath);
         }
-        
         $inifile->setValue('enableAcl2DbEventListener','on','acl2');
+        
+        $urlconf = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints', null, true);
+        if($urlconf === null || $urlconf == '') {
+            // in defaultconfig
+            $inifile->setValue($entrypoint, 'jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic', 'simple_urlengine_entrypoints', null, true);
+            // in the config of the entry point
+            $inifile->setValue($entrypoint, 'jacl2db~*@classic, jauth~*@classic, jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic', 'simple_urlengine_entrypoints');
+        }
+        else {
+            $urlconf2 = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints');
+            
+            if(strpos($urlconf, 'jacl2db_admin~*@classic') === false)
+                $urlconf .= ',jacl2db_admin~*@classic';
+            if(strpos($urlconf, 'jauthdb_admin~*@classic') === false)
+                $urlconf .= ',jauthdb_admin~*@classic';
+            if(strpos($urlconf, 'master_admin~*@classic') === false)
+                $urlconf .= ',master_admin~*@classic';
+                
+            if(strpos($urlconf2, 'jacl2db_admin~*@classic') === false)
+                $urlconf2 .= ',jacl2db_admin~*@classic';
+            if(strpos($urlconf2, 'jauthdb_admin~*@classic') === false)
+                $urlconf2 .= ',jauthdb_admin~*@classic';
+            if(strpos($urlconf2, 'master_admin~*@classic') === false)
+                $urlconf2 .= ',master_admin~*@classic';
+            if(strpos($urlconf2, 'jacl2db~*@classic') === false)
+                $urlconf2 .= ',jacl2db~*@classic';
+            if(strpos($urlconf2, 'jauth~*@classic') === false)
+                $urlconf2 .= ',jauth~*@classic';
+
+            $inifile->setValue($entrypoint, $urlconf, 'simple_urlengine_entrypoints', null, true);
+            $inifile->setValue($entrypoint, $urlconf2, 'simple_urlengine_entrypoints');
+        }
+
+        if(null == $inifile->getValue($entrypoint, 'basic_significant_urlengine_entrypoints', null, true)) {
+            $inifile->setValue($entrypoint, '1', 'basic_significant_urlengine_entrypoints',null,true);
+        }
 
         $params = array();
 
