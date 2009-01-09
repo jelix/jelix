@@ -18,6 +18,22 @@
       <url pathinfo="/admin/auth/user/:id/delete" module="jauthdb_admin" action="default:delete">
         <param name="id"/>
       </url>
+      
+      <url pathinfo="/admin/auth/profile/:id" module="jauthdb_admin" action="user:index">
+        <param name="id"/>
+      </url>
+      <url pathinfo="/admin/auth/profile/:id/edit" module="jauthdb_admin" action="user:editupdate" actionoverride="user:preupdate,user:saveupdate">
+        <param name="id"/>
+      </url>
+
+      <url pathinfo="/admin/auth/user/:id/password" module="jauthdb_admin" action="password:index">
+        <param name="id"/>
+      </url>
+      <url pathinfo="/admin/auth/user/:id/password-save" module="jauthdb_admin" action="password:update">
+        <param name="id"/>
+      </url>
+      
+      
 <!--      <url pathinfo="/admin/auth/user/:id" module="jauthdb_admin" action="default:">
         <param name="id"/>
       </url>
@@ -27,4 +43,3 @@
 -->
     </classicentrypoint>
 </urls>
-actionoverride="

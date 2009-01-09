@@ -9,20 +9,17 @@
 */
 
 class passwordCtrl extends jController {
-   
-    protected function _checkRights() {
-        $id = $this->param('id');
-        
-        if ($id !== null && ($id == jAuth::getUserSession()->login || jAcl2::check('auth.user.change.password')))
-            return null;
-        
-        $rep = $this->getResponse('html');
-        $tpl = new jTpl();
-        $rep->body->assign('MAIN', $tpl->fetch('jelix~403.html'));
-        $rep->setHttpStatus('403', 'Forbidden');
-        return $rep;
-    }
 
+    public $pluginParams=array(
+        '*'   =>array('jacl2.rights.or'=>array('auth.users.change.password','auth.user.change.password')),
+    );
+
+    protected $personalView = false;
+
+    function __construct ($request){
+        parent::__construct($request);
+        $this->personalView = !jAcl2::check('auth.users.change.password');
+    }
 
     function index(){
         $id = $this->param('id');
@@ -31,14 +28,16 @@ class passwordCtrl extends jController {
             $rep->action = 'master_admin~default:index';
             return $rep;
         }
-        if($rep = $this->_checkRights()){
-            return $rep;
-        }
         $rep = $this->getResponse('html');
 
         $tpl = new jTpl();
         $tpl->assign('id', $id);
         $tpl->assign('randomPwd', jAuth::getRandomPassword());
+        $tpl->assign('personalview', $this->personalView);
+        if ($this->personalView)
+            $tpl->assign('viewaction', 'user:index');
+        else
+            $tpl->assign('viewaction', 'default:view');
         $rep->body->assign('MAIN', $tpl->fetch('password_change'));
         return $rep;
     }
@@ -47,22 +46,11 @@ class passwordCtrl extends jController {
      * 
      */
     function update(){
-        if($rep = $this->_checkRights()){
-            return $rep;
-        }
-
         $id = $this->param('id');
         $pwd = $this->param('pwd');
         $pwdconf = $this->param('pwd_confirm');
         $rep = $this->getResponse('redirect');
 
-        /*if (jAuth::verifyPassword(jAuth::getUserSession()->login, $pwd) == false) {
-            jMessage::add(jLocale::get('crud.message.delete.invalid.pwd'), 'error');
-            $rep->action = 'default:confirmdelete';
-            $rep->params['id'] = $id;
-            return $rep;
-        }*/
-        
         if (trim($pwd) == '' || $pwd != $pwdconf) {
             jMessage::add(jLocale::get('crud.message.bad.password'), 'error');
             $rep->action = 'password:index';
@@ -72,7 +60,10 @@ class passwordCtrl extends jController {
         
         if(jAuth::changePassword($id, $pwd)) {
             jMessage::add(jLocale::get('crud.message.change.password.ok', $id), 'notice');
-            $rep->action = 'default:view';
+            if ($this->personalView)
+                $rep->action = 'user:index';
+            else
+                $rep->action = 'default:view';
             $rep->params['id'] = $id;
             return $rep;
         }
@@ -83,6 +74,5 @@ class passwordCtrl extends jController {
         }
         return $rep;
     }
-
 }
 

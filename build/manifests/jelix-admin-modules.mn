@@ -46,6 +46,7 @@ cd lib/jelix-admin-modules/jauthdb_admin/classes/
 cd lib/jelix-admin-modules/jauthdb_admin/controllers
   default.classic.php
   password.classic.php
+  user.classic.php
 cd lib/jelix-admin-modules/jauthdb_admin/forms
   jelixuser.form.xml
 cd lib/jelix-admin-modules/jauthdb_admin/install
@@ -53,13 +54,17 @@ cd lib/jelix-admin-modules/jauthdb_admin/install
 cd lib/jelix-admin-modules/jauthdb_admin/locales/en_EN
 cch   auth.UTF-8.properties(auth.%charset%.properties)
 cch   crud.UTF-8.properties(crud.%charset%.properties)
+cch   user.UTF-8.properties(user.%charset%.properties)
 cd lib/jelix-admin-modules/jauthdb_admin/locales/fr_FR
 cch   auth.UTF-8.properties(auth.%charset%.properties)
 cch   crud.UTF-8.properties(crud.%charset%.properties)
+cch   user.UTF-8.properties(user.%charset%.properties)
 cd lib/jelix-admin-modules/jauthdb_admin/templates
   crud_edit.tpl
   crud_list.tpl
   crud_view.tpl
   crud_delete.tpl
   password_change.tpl
+  user_edit.tpl
+  user_view.tpl
 

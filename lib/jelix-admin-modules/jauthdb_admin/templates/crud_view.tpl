@@ -23,3 +23,4 @@
 <hr />
 <p><a href="{jurl 'jauthdb_admin~default:index'}" class="crud-link">{@jauthdb_admin~crud.link.return.to.list@}</a></p>
 
+

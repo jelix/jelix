@@ -11,18 +11,16 @@
 class defaultCtrl extends jController {
    
     public $pluginParams=array(
-        'index'        =>array('jacl2.right'=>'auth.user.list'),
-        'view'         =>array('jacl2.right'=>'auth.user.view'),
-        'precreate'    =>array('jacl2.rights.and'=>array('auth.user.view','auth.user.create')),
-        'create'       =>array('jacl2.rights.and'=>array('auth.user.view','auth.user.create')),
-        'savecreate'   =>array('jacl2.rights.and'=>array('auth.user.view','auth.user.create')),
-        'preupdate'    =>array('jacl2.rights.and'=>array('auth.user.view','auth.user.modify')),
-        'editupdate'   =>array('jacl2.rights.and'=>array('auth.user.view','auth.user.modify')),
-        'saveupdate'   =>array('jacl2.rights.and'=>array('auth.user.view','auth.user.modify')),
-        'deleteconfirm'=>array('jacl2.rights.and'=>array('auth.user.view','auth.user.delete')),
-        'delete'       =>array('jacl2.rights.and'=>array('auth.user.view','auth.user.delete')),
-        
-        //'auth.user.change.password'
+        'index'        =>array('jacl2.right'=>'auth.users.list'),
+        'view'         =>array('jacl2.right'=>'auth.users.view'),
+        'precreate'    =>array('jacl2.rights.and'=>array('auth.users.view','auth.users.create')),
+        'create'       =>array('jacl2.rights.and'=>array('auth.users.view','auth.users.create')),
+        'savecreate'   =>array('jacl2.rights.and'=>array('auth.users.view','auth.users.create')),
+        'preupdate'    =>array('jacl2.rights.and'=>array('auth.users.view','auth.users.modify')),
+        'editupdate'   =>array('jacl2.rights.and'=>array('auth.users.view','auth.users.modify')),
+        'saveupdate'   =>array('jacl2.rights.and'=>array('auth.users.view','auth.users.modify')),
+        'deleteconfirm'=>array('jacl2.rights.and'=>array('auth.users.view','auth.users.delete')),
+        'delete'       =>array('jacl2.rights.and'=>array('auth.users.view','auth.users.delete')),
     );
     /**
      * selector of the dao to use for the crud.
@@ -62,19 +60,7 @@ class defaultCtrl extends jController {
     }
 
     /**
-     * you can do your own data check of a form by redefining this method.
-     * You can also do some other things. It is called only if the $form->check() is ok.
-     * and before the save of the data.
-     * @param jFormsBase $form the current form
-     * @param boolean $calltype   true for an update, false for a create
-     * @return boolean true if it is ok.
-     */
-    protected function _checkData($form, $calltype){
-        return true;
-    }
-
-    /**
-     * list all records
+     * list all users
      */
     function index(){
         $offset = $this->intParam('offset',0,true);
@@ -101,15 +87,15 @@ class defaultCtrl extends jController {
         $tpl->assign('listPageSize', $this->listPageSize);
         $tpl->assign('page',$offset);
         $tpl->assign('recordCount',$dao->countAll());
-        $tpl->assign('cancreate', jAcl2::check('auth.user.create'));
-        $tpl->assign('canview', jAcl2::check('auth.user.view'));
+        $tpl->assign('cancreate', jAcl2::check('auth.users.create'));
+        $tpl->assign('canview', jAcl2::check('auth.users.view'));
         $rep->body->assign('MAIN', $tpl->fetch('crud_list'));
         jForms::destroy($this->form,  '___$$$___');
         return $rep;
     }
 
     /**
-     * displays a record
+     * displays a user
      */
     function view(){
         $id = $this->param('id');
@@ -121,8 +107,7 @@ class defaultCtrl extends jController {
         $rep = $this->getResponse('html');
 
         // we're using a form to display a record, to have the portunity to have
-        // labels with each values. We need also him to load easily values of some
-        // of controls with initControlFromDao (to use in _view method).
+        // labels with each values.
         $form = jForms::create($this->form, $id);
         $form->initFromDao($this->dao, $id, $this->dbProfile);
         
@@ -132,9 +117,9 @@ class defaultCtrl extends jController {
         $tpl->assign('otherInfo', jEvent::notify('jauthdbAdminGetViewInfo', array('form'=>$form, 'tpl'=>$tpl))->getResponse());
         $form->deactivate('password');
         $form->deactivate('password_confirm');
-        $tpl->assign('canDelete', (jAuth::getUserSession()->login != $id) &&  jAcl2::check('auth.user.delete'));
-        $tpl->assign('canUpdate', jAcl2::check('auth.user.modify'));
-        $tpl->assign('canChangePass', jAcl2::check('auth.user.change.password'));
+        $tpl->assign('canDelete', (jAuth::getUserSession()->login != $id) &&  jAcl2::check('auth.users.delete'));
+        $tpl->assign('canUpdate', jAcl2::check('auth.users.modify'));
+        $tpl->assign('canChangePass', jAcl2::check('auth.users.change.password'));
         $rep->body->assign('MAIN', $tpl->fetch('crud_view'));
         return $rep;
     }

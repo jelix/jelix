@@ -1,4 +1,8 @@
+{if $personalview}
+<h1>{@jauthdb_admin~user.title.password@}</h1>
+{else}
 <h1>{@jauthdb_admin~crud.title.password@} {$id}</h1>
+{/if}
 <script>
 //<![CDATA[
 {literal}
@@ -33,8 +37,4 @@ onsubmit="return verifpass()">
 	</fieldset>
 </form>
 
-<p><a href="{jurl 'default:view', array('id'=>$id)}" class="crud-link">{@jauthdb_admin~crud.link.return.to.view@}</a>.</p>
-
-
-
-
+<p><a href="{jurl $viewaction, array('id'=>$id)}" class="crud-link">{if $personalview}{@jauthdb_admin~crud.link.return.to.view@}{else}{@jauthdb_admin~user.link.return.to.view@}{/if}</a>.</p>
