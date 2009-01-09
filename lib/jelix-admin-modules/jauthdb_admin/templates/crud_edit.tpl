@@ -2,7 +2,9 @@
 
 <h1>{@jauthdb_admin~crud.title.create@}</h1>
 {formfull $form, 'default:savecreate'}
+<p>{@jauthdb_admin~crud.form.random.password@} {$randomPwd}</p>
 <p><a href="{jurl 'default:index'}" class="crud-link">{@jauthdb_admin~crud.link.return.to.list@}</a>.</p>
+
 {else}
 
 <h1>{@jauthdb_admin~crud.title.update@}</h1>

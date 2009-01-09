@@ -45,6 +45,7 @@ cd lib/jelix-admin-modules/jauthdb_admin/classes/
   jauthdb_admin.listener.php
 cd lib/jelix-admin-modules/jauthdb_admin/controllers
   default.classic.php
+  password.classic.php
 cd lib/jelix-admin-modules/jauthdb_admin/forms
   jelixuser.form.xml
 cd lib/jelix-admin-modules/jauthdb_admin/install
@@ -60,4 +61,5 @@ cd lib/jelix-admin-modules/jauthdb_admin/templates
   crud_list.tpl
   crud_view.tpl
   crud_delete.tpl
+  password_change.tpl
 

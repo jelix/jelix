@@ -7,8 +7,8 @@
 
 <ul class="crud-links-list">
     {if $canUpdate}<li><a href="{jurl 'jauthdb_admin~default:preupdate', array('id'=>$id)}" class="crud-link">{@jauthdb_admin~crud.link.edit.record@}</a></li>{/if}
-    {if $canChangePass}<li><a href="{jurl 'jauthdb_admin~default:passwordform', array('id'=>$id)}" class="crud-link">{@jauthdb_admin~crud.link.change.password@}</a></li>{/if}
-    {if $canDelete}<li><a href="{jurl 'jauthdb_admin~default:delete', array('id'=>$id)}" class="crud-link" onclick="return confirm('{@jauthdb_admin~crud.confirm.deletion@}')">{@jauthdb_admin~crud.link.delete.record@}</a></li>{/if}
+    {if $canChangePass}<li><a href="{jurl 'jauthdb_admin~password:index', array('id'=>$id)}" class="crud-link">{@jauthdb_admin~crud.link.change.password@}</a></li>{/if}
+    {if $canDelete}<li><a href="{jurl 'jauthdb_admin~default:confirmdelete', array('id'=>$id)}" class="crud-link">{@jauthdb_admin~crud.link.delete.record@}</a></li>{/if}
 </ul>
 
 {if count($otherInfo)}

@@ -12,6 +12,9 @@
       <url pathinfo="/admin/auth/user/:id/edit" module="jauthdb_admin" action="default:editupdate" actionoverride="default:preupdate,default:saveupdate">
         <param name="id"/>
       </url>
+      <url pathinfo="/admin/auth/user/:id/confirmdelete" module="jauthdb_admin" action="default:confirmdelete">
+        <param name="id"/>
+      </url>
       <url pathinfo="/admin/auth/user/:id/delete" module="jauthdb_admin" action="default:delete">
         <param name="id"/>
       </url>

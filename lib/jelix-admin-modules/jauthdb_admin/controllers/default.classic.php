@@ -130,6 +130,8 @@ class defaultCtrl extends jController {
         $tpl->assign('id', $id);
         $tpl->assign('form',$form);
         $tpl->assign('otherInfo', jEvent::notify('jauthdbAdminGetViewInfo', array('form'=>$form, 'tpl'=>$tpl))->getResponse());
+        $form->deactivate('password');
+        $form->deactivate('password_confirm');
         $tpl->assign('canDelete', (jAuth::getUserSession()->login != $id) &&  jAcl2::check('auth.user.delete'));
         $tpl->assign('canUpdate', jAcl2::check('auth.user.modify'));
         $tpl->assign('canChangePass', jAcl2::check('auth.user.change.password'));
@@ -142,7 +144,10 @@ class defaultCtrl extends jController {
      */
     function precreate() {
         $form = jForms::create($this->form);
+        $form->deactivate('password', false);
+        $form->deactivate('password_confirm', false);
         jEvent::notify('jauthdbAdminPrepareCreate', array('form'=>$form));
+        
         $rep = $this->getResponse('redirect');
         $rep->action = 'default:create';
         return $rep;
@@ -161,6 +166,7 @@ class defaultCtrl extends jController {
         $tpl = new jTpl();
         $tpl->assign('id', null);
         $tpl->assign('form',$form);
+        $tpl->assign('randomPwd', jAuth::getRandomPassword());
         jEvent::notify('jauthdbAdminEditCreate', array('form'=>$form, 'tpl'=>$tpl));
         
         $rep->body->assign('MAIN', $tpl->fetch('crud_edit'));
@@ -180,16 +186,20 @@ class defaultCtrl extends jController {
         }
         $evresp = array();
         if($form->check()  && !jEvent::notify('jauthdbAdminCheckCreateForm', array('form'=>$form))->inResponse('check', false, $evresp)){
-            extract($form->prepareDaoFromControls($this->dao,null,$this->dbProfile), 
-                EXTR_PREFIX_ALL, "form");
-
-            jAuth::saveNewUser($form_daorec);
-
-            $form->saveAllFiles($this->uploadsDirectory);
-            jForms::destroy($this->form);
+            $props = jDao::createRecord($this->dao, $this->dbProfile)->getProperties();
             
+            $user = jAuth::createUserObject($form->getData('login'),$form->getData('password'));
+
+            $form->setData('password', $user->password);
+            $form->prepareObjectFromControls($user, $props);
+            $form->saveAllFiles($this->uploadsDirectory);
+
+            jAuth::saveNewUser($user);
+            
+            jForms::destroy($this->form);
+            jMessage::add(jLocale::get('crud.message.create.ok', $user->login), 'notice');
             $rep->action = 'default:view';
-            $rep->params['id'] = $form_daorec->login;
+            $rep->params['id'] = $user->login;
             return $rep;
         } else {
             $rep->action = 'default:create';
@@ -228,7 +238,8 @@ class defaultCtrl extends jController {
 
         jEvent::notify('jauthdbAdminPrepareUpdate', array('form'=>$form));
         $form->setReadOnly('login');
-
+        $form->deactivate('password');
+        $form->deactivate('password_confirm');
         $rep->action = 'default:editupdate';        
         return $rep;
     }
@@ -253,7 +264,8 @@ class defaultCtrl extends jController {
         $tpl->assign('id', $id);
         $tpl->assign('form',$form);
         jEvent::notify('jauthdbAdminEditUpdate', array('form'=>$form, 'tpl'=>$tpl));
-
+        $form->deactivate('password'); //for security
+        $form->deactivate('password_confirm');
         $form->setReadOnly('login');
         $rep->body->assign('MAIN', $tpl->fetch('crud_edit'));
         return $rep;
@@ -278,14 +290,13 @@ class defaultCtrl extends jController {
         if($form->check() && !jEvent::notify('jauthdbAdminCheckUpdateForm', array('form'=>$form))->inResponse('check', false, $evresp)){
             extract($form->prepareDaoFromControls($this->dao,$id,$this->dbProfile), 
                 EXTR_PREFIX_ALL, "form");
-
             // we call jAuth instead of using jDao, to allow jAuth to do
             // all process, events...
             jAuth::updateUser($form_daorec);
 
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = 'default:view';
-
+            jMessage::add(jLocale::get('crud.message.update.ok', $id), 'notice');
             jForms::destroy($this->form, $id);
         } else {
             $rep->action = 'default:editupdate';
@@ -319,7 +330,7 @@ class defaultCtrl extends jController {
         $rep = $this->getResponse('redirect');
 
         if (jAuth::verifyPassword(jAuth::getUserSession()->login, $pwd) == false) {
-            jMessage::add(jLocale::get('crud.message.delete.invalid.pwd', 'error'));
+            jMessage::add(jLocale::get('crud.message.delete.invalid.pwd'), 'error');
             $rep->action = 'default:confirmdelete';
             $rep->params['id'] = $id;
             return $rep;
@@ -327,22 +338,21 @@ class defaultCtrl extends jController {
         
         if( $id !== null && jAuth::getUserSession()->login != $id){
             if(jAuth::removeUser($id)) {
-                jMessage::add(jLocale::get('crud.message.delete.ok'));
+                jMessage::add(jLocale::get('crud.message.delete.ok', $id), 'notice');
                 $rep->action = 'default:index';
             }
             else{
-                jMessage::add(jLocale::get('crud.message.delete.notok', 'error'));
+                jMessage::add(jLocale::get('crud.message.delete.notok'), 'error');
                 $rep->action = 'default:view';
                 $rep->params['id'] = $id;
             }
         }
         else {
-            jMessage::add(jLocale::get('crud.message.delete.notok', 'error'));
+            jMessage::add(jLocale::get('crud.message.delete.notok'), 'error');
             $rep->action = 'default:index';
         }
         return $rep;
     }
-
 
 }
 

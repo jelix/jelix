@@ -151,7 +151,8 @@ fieldset { margin-top:1em; }
     background-color: #F6CAB1;
 }
 
-#admin-message .jelix-msg li.jelix-msg-item-ok {
+#admin-message .jelix-msg li.jelix-msg-item-ok,
+#admin-message .jelix-msg li.jelix-msg-item-notice {
     background-color: #E5F6D4;
 }
 
