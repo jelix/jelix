@@ -140,6 +140,8 @@ class classAuthDriver implements jIAuthDriver {
     }
 
     public function verifyPassword($login, $password){
+        if (trim($password) == '')
+            return false;
         $classuser = jClasses::create($this->_params['class']);
 
         $user = $classuser->getByLoginPassword($login, $this->cryptPassword($password));

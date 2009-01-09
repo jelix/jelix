@@ -77,6 +77,8 @@ class dbAuthDriver implements jIAuthDriver {
     }
 
     public function verifyPassword($login, $password){
+        if (trim($password) == '')
+            return false;
         $daouser = jDao::get($this->_params['dao'], $this->_params['profile']);
         $user = $daouser->getByLoginPassword($login, $this->cryptPassword($password));
         return ($user?$user:false);

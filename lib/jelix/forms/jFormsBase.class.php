@@ -163,6 +163,68 @@ abstract class jFormsBase {
     }
 
     /**
+     * prepare an object with values of all controls
+     * @param object $object the object to fill
+     * @param array $properties array of 'propertyname'=>array('required'=>true/false,
+     *                          'defaultValue'=>$value, 'datatype'=>$datatype)
+     *   values of datatype = same as dao datatypes = ex: 'string', 'int','integer','double','float','boolean','datetime','date'
+     */
+    public function prepareObjectFromControls($object, $properties = null){
+        if ($properties == null) {
+            $properties = get_object_vars($object);
+            foreach($properties as $n=>$v) {
+                if (!is_null($v)) {
+                    $r = true;
+                    $t = gettype($v);
+                }
+                else { $t = 'string'; $r = false; }
+                $properties[$n]=array('required'=>$r, 'defaultValue'=>$v, 'datatype'=>$t);
+            }
+        }
+        
+        foreach($this->controls as $name=>$ctrl){
+            if(!isset($properties[$name]))
+                continue;
+
+            if(is_array($this->container->data[$name])){
+                if( count ($this->container->data[$name]) ==1){
+                    $object->$name = $this->container->data[$name][0];
+                }else{
+                    // do nothing for arrays ?
+                    continue;
+                }
+            }else{
+                $object->$name = $this->container->data[$name];
+            }
+
+            if($object->$name == '' && !$properties[$name]['required']) {
+                // if no value and if the property is not required, we set null to it
+                $object->$name = null;
+            }else if($object->$name == '' && $properties[$name]['defaultValue'] !== null
+                    && in_array($properties[$name]['datatype'],
+                                array('int','integer','double','float'))) {
+                $object->$name = $properties[$name]['defaultValue'];
+
+            }else if( $properties[$name]['datatype'] == 'boolean'){
+                $object->$name = ($properties->$name == '1'|| $properties->$name == 'true'
+                                  || $properties->$name == 't');
+
+            }else if($ctrl->datatype instanceof jDatatypeLocaleDateTime
+                     && $properties[$name]['datatype'] == 'datetime') {
+                $dt = new jDateTime();
+                $dt->setFromString($daorec->$name, jDateTime::LANG_DTFORMAT);
+                $object->$name = $dt->toString(jDateTime::DB_DTFORMAT);
+
+            }elseif($ctrl->datatype instanceof jDatatypeLocaleDate
+                    && $properties[$name]['datatype'] == 'date') {
+                $dt = new jDateTime();
+                $dt->setFromString($object->$name, jDateTime::LANG_DFORMAT);
+                $object->$name = $dt->toString(jDateTime::DB_DFORMAT);
+            }
+        }
+    }
+
+    /**
      * set form data from a DAO
      * @param string $daoSelector the selector of a dao file
      * @param string $key the primary key for the dao. if null, takes the form ID as primary key
@@ -213,48 +275,7 @@ abstract class jFormsBase {
                 $daorec->setPk($key);
             $toInsert= true;
         }
-
-        $prop = $dao->getProperties();
-        foreach($this->controls as $name=>$ctrl){
-            if(!isset($prop[$name]))
-                continue;
-
-            if(is_array($this->container->data[$name])){
-                if( count ($this->container->data[$name]) ==1){
-                    $daorec->$name = $this->container->data[$name][0];
-                }else{
-                    // do nothing for arrays ?
-                    continue;
-                }
-            }else{
-                $daorec->$name = $this->container->data[$name];
-            }
-
-            if($daorec->$name == '' && !$prop[$name]['required']) {
-                // if no value and if the property is not required, we set null to it
-                $daorec->$name = null;
-            }else if($daorec->$name == '' && $prop[$name]['defaultValue'] !== null
-                    && in_array($prop[$name]['datatype'],
-                                array('int','integer','double','float'))) {
-                $daorec->$name = $prop[$name]['defaultValue'];
-
-            }else if( $prop[$name]['datatype'] == 'boolean'){
-                $daorec->$name = ($daorec->$name == '1'|| $daorec->$name == 'true'
-                                  || $daorec->$name == 't');
-
-            }else if($ctrl->datatype instanceof jDatatypeLocaleDateTime
-                     && $prop[$name]['datatype'] == 'datetime') {
-                $dt = new jDateTime();
-                $dt->setFromString($daorec->$name, jDateTime::LANG_DTFORMAT);
-                $daorec->$name = $dt->toString(jDateTime::DB_DTFORMAT);
-
-            }elseif($ctrl->datatype instanceof jDatatypeLocaleDate
-                    && $prop[$name]['datatype'] == 'date') {
-                $dt = new jDateTime();
-                $dt->setFromString($daorec->$name, jDateTime::LANG_DFORMAT);
-                $daorec->$name = $dt->toString(jDateTime::DB_DFORMAT);
-            }
-        }
+        $this->prepareObjectFromControls($daorec, $dao->getProperties());
         return compact("daorec", "dao", "toInsert");
     }
 

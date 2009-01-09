@@ -100,6 +100,8 @@ class ldsAuthDriver implements jIAuthDriver {
     }
 
     public function verifyPassword($login, $password){
+        if (trim($password) == '')
+            return false;
         $param[]=$login;
         $param[]=$password;
         $ret= $this->xmlCall("base.ldapAuth",$param);
