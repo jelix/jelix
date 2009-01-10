@@ -109,7 +109,9 @@ class createappCommand extends JelixScriptCommand {
             $param['modulename'] = 'jelix';
         }
         else {
-            $param['modulename'] = preg_replace('/([^a-zA-Z_0-9\.])/','_',$GLOBALS['APPNAME']);
+            // note: since module name are used for name of generated name,
+            // only this characters are allowed
+            $param['modulename'] = preg_replace('/([^a-zA-Z_0-9])/','_',$GLOBALS['APPNAME']);
             $param['tplname'] = $param['modulename'].'~main';
         }
 

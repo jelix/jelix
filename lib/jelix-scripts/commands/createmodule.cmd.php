@@ -44,8 +44,10 @@ class createmoduleCommand extends JelixScriptCommand {
 
     public function run(){
         jxs_init_jelix_env();
-        
-        if(preg_match('/([^a-zA-Z_0-9\.])/', $this->_parameters['module'])) {
+
+        // note: since module name are used for name of generated name,
+        // only this characters are allowed
+        if(preg_match('/([^a-zA-Z_0-9])/', $this->_parameters['module'])) {
             throw new Exception("the name '".$this->_parameters['module']."' is not valid for a module");
         }
         
