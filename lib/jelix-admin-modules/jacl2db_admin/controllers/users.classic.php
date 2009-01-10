@@ -165,6 +165,7 @@ class usersCtrl extends jController {
         $grp = $dao->getPrivateGroup($login);
 
         jAcl2DbManager::setRightsOnGroup($grp->id_aclgrp, $rights);
+        jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
         return $rep;
     }
 

@@ -36,6 +36,7 @@ cd lib/jelix-admin-modules/jacl2db_admin/templates
   user_rights.tpl
   groups_right_view.tpl
   user_rights_view.tpl
+  groups_edit.tpl
 
 
 cd lib/jelix-admin-modules/jauthdb_admin
