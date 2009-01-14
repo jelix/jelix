@@ -134,7 +134,9 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile(JELIX_APP_PATH.'responses/myHtmlResponse.class.php','myHtmlResponse.class.php.tpl',$param);
         $this->createFile(JELIX_APP_PATH.'application.init.php','application.init.php.tpl',$param);
     
+        $param['rp_temp_app'] = $param['rp_temp'];
         $param['rp_temp']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_TEMP_PATH, true);
+        $param['rp_temp_cli']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CLI_TEMP_PATH, true);
         $this->createFile(JELIX_APP_PATH.'jelix-scripts.init.php','application.init.php.tpl',$param);
     
         $param['rp_temp']= jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CLI_TEMP_PATH, true);

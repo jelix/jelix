@@ -27,7 +27,10 @@ class cleartempCommand extends JelixScriptCommand {
 
     public function run(){
         try {
-            jAppManager::clearTemp();
+            jFile::removeDir(JELIX_APP_TEMP_PATH, false);
+	    jFile::removeDir(JELIX_APP_REAL_TEMP_PATH, false);
+	    if (defined('JELIX_APP_TEMP_CLI_PATH'))
+		jFile::removeDir(JELIX_APP_TEMP_CLI_PATH, false);
         }
         catch (Exception $e) {
             if(MESSAGE_LANG == 'fr')

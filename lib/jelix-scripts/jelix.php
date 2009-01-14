@@ -73,16 +73,29 @@ if (!isset($_SERVER['JELIX_CONFIG'])) {
 
 require(JELIX_SCRIPT_PATH.'default.conf.php');
 
-if(file_exists(JELIXS_APPTPL_PATH.'jelix-scripts.init.php')){
-   include (JELIXS_APPTPL_PATH.'jelix-scripts.init.php');
+if (file_exists(JELIXS_APPTPL_PATH) && file_exists(JELIXS_APPTPL_PATH.'application.init.php')) {
 
-}else if(file_exists(JELIXS_APPTPL_PATH.'application.init.php')){
-   include (JELIXS_APPTPL_PATH.'application.init.php');
+   if(!file_exists(JELIXS_APPTPL_PATH.'jelix-scripts.init.php')){
+      echo "Error: jelix-scripts.init.php doesn't exist in your application\n";
+      echo "       You must create this file which should be similar to application.init.php\n";
+      echo "       but with a different temp directory.\n";
+      echo "       it should also declare a constant JELIX_APP_REAL_TEMP_PATH which should contain\n";
+      echo "       the path to the temp directory indicated in application.init.php.\n";
+      exit(1);
+   }
+
+   include (JELIXS_APPTPL_PATH.'jelix-scripts.init.php');
+   
    if(!class_exists('jCoordinator', false)) // for old application.init.php which doesn't include init.php
       include (JELIXS_INIT_PATH);
+
+   // we always clean the temp directory.
+   jFile::removeDir(JELIX_APP_TEMP_PATH, false);
+
 }else{
    if($commandName !='createapp' && $commandName !='help'){
-     die("Error: the given application doesn't exist (".JELIXS_APPTPL_PATH." )\n");
+     echo("Error: the given application doesn't exist (".JELIXS_APPTPL_PATH." )\n");
+     exit(1);
    }
    include (JELIXS_INIT_PATH);
    define ('JELIX_APP_PATH',         JELIXS_APPTPL_PATH );
