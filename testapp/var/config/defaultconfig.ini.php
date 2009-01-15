@@ -22,7 +22,6 @@ theme = default
 enableTests = on
 
 [coordplugins]
-;nom = nom_fichier_ini
 
 [responses]
 

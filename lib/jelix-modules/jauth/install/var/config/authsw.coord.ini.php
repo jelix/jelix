@@ -1,63 +1,119 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
+;============= Main parameters
 
-;============= Paramètres généraux
-
-; Db, Class ou LDS  ( respecter la casse des caractères)
+; driver name : "ldap", "Db", "Class" or "LDS" (respect the case of characters)
 driver = Db
 
-;============ Paramètres pour le plugin
-; indique si on effectue un contrôle sur l'adresse ip
-; qui a démarré la session.
+;============ Parameters for the plugin
+; session variable name
+session_name = "JELIX_USER"
+
+; Says if there is a check on the ip address : verify if the ip
+; is the same when the user has been connected
 secure_with_ip = 0
 
-; action en cas de piratage de la session et si onError = 2
-bad_ip_action = "jauth~loginsw_out"
-
-;Timeout. Permet de forcer une authentification aprés un certain temps écoulé
-;sans action . temps en minutes. 0 = pas de timeout.
+;Timeout. After the given time (in minutes) without activity, the user is disconnected.
+; If the value is 0 : no timeout
 timeout = 0
 
-; indique si il faut absolument ou non une authentification pour chaque action
-; on = authentification necessaire pour toute action
-;   sauf celles qui l'indiquent spécifiquement   (parametre action auth.required=false)
-; off = authentification non requise pour toute action
-;   sauf celles qui l'indiquent spécifiquement   (parametre action auth.required=true)
+; If the value is "on", the user must be authentificated for all actions, except those
+; for which a plugin parameter  auth.required is false
+; If the value is "off", the authentification is not required for all actions, except those
+; for which a plugin parameter  auth.required is true
 auth_required = on
 
-; indique quoi faire en cas de défaut d'authentification
-; 1 = erreur. Valeur à mettre impérativement pour les web services (xmlrpc, jsonrpc...)
-; 2 = redirection vers une action
+; What to do if an authentification is required but the user is not authentificated
+; 1 = generate an error. This value should be set for web services (xmlrpc, jsonrpc...)
+; 2 = redirect to an action
 on_error = 1
 
-; action à executer en cas de défaut d'authentification quand on_error = 2
-on_error_action = "jauth~loginsw_out"
-
-;selecteur de la clé de locale du message d'erreur
+; locale key for the error message when on_error=1
 error_message = "jauth~autherror.notlogged"
 
+; action to execute on a missing authentification when on_error=2
+on_error_action = "jauth~loginsw:out"
 
-;=========== Paramètres pour le module jauth
+; action to execute when a bad ip is checked with secure_with_ip=1 and on_error=2
+bad_ip_action = "jauth~loginsw:out"
 
-; nombre de secondes d'attentes aprés un défaut d'authentification
+;=========== Parameters for jauth module
+
+; number of second to wait after a bad authentification
 on_error_sleep = 3
 
+; action to redirect after the login
+after_login = ""
+
+; action to redirect after a logout
+after_logout = ""
+
+; says if after_login can be overloaded by a "auth_url_return" parameter in the url/form for the login
+enable_after_login_override = off
+
+; says if after_logout can be overloaded by a "auth_url_return" parameter in the url/form for the login
+enable_after_logout_override = off
 
 
-;=========== Paramètres pour les drivers
+;============ Parameters for the persistance of the authentification
 
-; paramètres pour le driver db
+; enable the persistance of the authentification between two sessions
+persistant_enable=off
+
+; key to use to crypt the password in the cookie. replace it by your own words !
+persistant_crypt_key= exampleOfCryptKey
+
+; the name of the cookie which is used to store data for the authentification
+persistant_cookie_name=jelixAuthentificationCookie
+
+; duration of the validity of the cookie (in days). default is 1 day.
+persistant_duration = 1
+
+
+;=========== Parameters for drivers
+
+;------- parameters for the "Db" driver
 [Db]
+; name of the dao to get user data
 dao = ""
 
-; nom de la fonction globale qui sert à crypter le mot de passe
+; profile to use for jDb 
+profile = ""
+
+; name of the php function to crypt the password in the database
 password_crypt_function = md5
 
-; paramètres pour le driver class
+;------- parameters for the "Class" driver
 [Class]
+; selector of the class
 class = ""
+
+; name of the php function to crypt the password in the database
 password_crypt_function = md5
 
+;------- parameters for the "LDS" driver
 [LDS]
 
+;------- parameters for the "ldap" driver
+[ldap]
+; default "localhost"
+hostname=
+; default 389
+port=
+
+; DOMAIN\user or user@DOMAIN to connect with LDAP (user who has at least search right)
+ldapUser=
+; password used to connect with LDAP
+ldapPassword=
+
+; LDAP search params 
+; search base, example for Active Directory: "ou=ADAM users,o=Microsoft,c=US"
+searchBaseDN=
+; search filter, example for Active Directory: "(objectClass=user)"
+searchFilter=
+; attributes to retrieve for the search, example for Active Directory: "cn,distinguishedName,name"
+searchAttributes=
+
+; name of the php function to crypt the password in the database
+password_crypt_function = md5

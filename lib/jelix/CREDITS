@@ -193,6 +193,9 @@ Pulsation
 Rahal
  - improvement on locale selectors : possibility to overload locales (#358)
 
+Tahina Ramaroson
+ - ldap driver for jAuth (#787)
+
 Philippe Schelte (aka dubphil)
  - plugin tpl cycle (#149)
  - error in checkTrustedModules function (#715)
