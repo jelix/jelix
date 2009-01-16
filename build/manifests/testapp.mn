@@ -3,6 +3,7 @@ cd testapp
   .htaccess
   application.init.php
   application-cli.init.php
+  jelix-scripts.init.php
   INSTALL.txt
 cd testapp/plugins
   .htaccess
@@ -232,3 +233,4 @@ cd testapp/var/db/sqlite/
 
 cd temp/testapp
 cd temp/testapp-cli
+cd temp/testapp-scripts

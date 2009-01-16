@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Sylvain de Vathaire
-* @contributor 
-* @copyright   2008 Sylvain de Vathaire
+* @contributor Laurent Jouanneau
+* @copyright   2008 Sylvain de Vathaire, 2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -168,8 +168,12 @@ class jWSDL {
     private function _compile(){
 
         global $gJConfig;
+        
+        $url = jUrl::get($this->module.'~'.$this->controller.':index@soap',array(),jUrl::JURL);
+        $url->clearParam ();
+        $url->setParam('service',$this->module.'~'.$this->controller );
 
-        $serviceURL = "http://".$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'].'soap.php?service='.$this->module.'~'.$this->controller;
+        $serviceURL = "http://".$_SERVER['HTTP_HOST'].$url->toString();
         $serviceNameSpace = "http://".$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'];
 
         $wsdl = new WSDLStruct($serviceNameSpace, $serviceURL, SOAP_RPC, SOAP_ENCODED);

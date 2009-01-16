@@ -94,6 +94,7 @@ jsonrpc = "@jsonrpc"
 testnews = "jelix_tests~urlsig:url2@classic jelix_tests~urlsig:url3@classic"
 foo/bar = "jelix_tests~urlsig:url4@classic"
 news = "new~*@classic"
+soap = "@soap"
 
 __https=
 
@@ -106,7 +107,7 @@ jsonrpc = on
 testnews = off
 foo/bar = on
 news = on
-
+soap = on
 
 [logfiles]
 default=messages.log
