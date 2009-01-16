@@ -54,6 +54,7 @@ class jMailer extends PHPMailer {
         $this->Port = $gJConfig->mailer['smtpPort'];
         $this->Helo = $gJConfig->mailer['smtpHelo'];
         $this->SMTPAuth = $gJConfig->mailer['smtpAuth'];
+        $this->SMTPSecure = $gJConfig->mailer['smtpSecure'];
         $this->Username = $gJConfig->mailer['smtpUsername'];
         $this->Password = $gJConfig->mailer['smtpPassword'];
         $this->Timeout = $gJConfig->mailer['smtpTimeout'];

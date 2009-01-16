@@ -221,6 +221,8 @@ sendmailPath = "/usr/sbin/sendmail"
 smtpHost = "localhost"
 ; default SMTP server port
 smtpPort = 25
+; secured connection or not. possible values: "", "ssl", "tls"
+smtpSecure = 
 ; SMTP HELO of the message (Default is hostname)
 smtpHelo =
 ; SMTP authentication
