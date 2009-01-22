@@ -76,7 +76,7 @@ class initadminCommand extends JelixScriptCommand {
         if(strpos($modulePath, 'lib:jelix-admin-modules')===false){
             $inifile->setValue('modulesPath', 'lib:jelix-admin-modules/,'.$modulePath);
         }
-        $inifile->setValue('enableAcl2DbEventListener','on','acl2');
+        $inifile->setValue('driver','db','acl2');
         
         $urlconf = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints', null, true);
         if($urlconf === null || $urlconf == '') {

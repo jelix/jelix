@@ -22,7 +22,7 @@ class jacldbListener extends jEventListener{
     * @param jEvent $event   the event
     */
    function onAuthNewUser($event){
-        if($GLOBALS['gJConfig']->acl['enableAclDbEventListener']) {
+        if($GLOBALS['gJConfig']->acl['driver'] == 'db') {
             $user = $event->getParam('user');
             jAclDbUserGroup::createUser($user->login);
         }
@@ -34,7 +34,7 @@ class jacldbListener extends jEventListener{
     * @param jEvent $event   the event
     */
    function onAuthRemoveUser($event){
-        if($GLOBALS['gJConfig']->acl['enableAclDbEventListener']) {
+        if($GLOBALS['gJConfig']->acl['driver'] == 'db') {
             $login = $event->getParam('login');
             jAclDbUserGroup::removeUser($login);
         }

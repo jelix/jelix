@@ -233,12 +233,13 @@ smtpPassword =
 smtpTimeout = 10
 
 [acl]
-driver = db
-enableAclDbEventListener = off
+; exemple of driver: "db".
+driver =
 
 [acl2]
-driver = db
-enableAcl2DbEventListener = off
+; exemple of driver: "db"
+driver =
+
 
 
 [sessions]

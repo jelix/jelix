@@ -301,7 +301,9 @@ class jAuth {
         $config = self::_getConfig();
         jEvent::notify ('AuthLogout', array('login'=>$_SESSION[$config['session_name']]->login));
         $_SESSION[$config['session_name']] = new jAuthDummyUser();
-        jAcl::clearCache();
+        try { jAcl::clearCache(); } catch(Exception $e) {}
+        try { jAcl2::clearCache(); } catch(Exception $e) {}
+
         if(isset($config['persistant_enable']) && $config['persistant_enable']){
             if(!isset($config['persistant_cookie_name']))
                 throw new jException('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name, persistant_crypt_key');

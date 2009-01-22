@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  acl
 * @author      Laurent Jouanneau
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.0a3
@@ -58,7 +58,7 @@ class jAcl {
         if($driver == null){
             global $gJConfig;
             $db = strtolower($gJConfig->acl['driver']);
-            if(!isset($gJConfig->_pluginsPathList_acl) 
+            if($db == '' || !isset($gJConfig->_pluginsPathList_acl) 
                 || !isset($gJConfig->_pluginsPathList_acl[$db])
                 || !file_exists($gJConfig->_pluginsPathList_acl[$db]) ){
                 throw new jException('jelix~errors.acl.driver.notfound',$db);

@@ -156,9 +156,8 @@ smtpTimeout = 10
 
 
 [acl2]
-driver = db
-enableAcl2DbEventListener = off
-
+; example of driver: "db"
+driver =
 
 [sessions]
 ; to disable sessions, set the following parameter to 0
