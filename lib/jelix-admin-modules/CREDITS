@@ -1,0 +1,10 @@
+Credits
+=======
+
+By alphabetic order on the name
+
+Laurent Jouanneau
+  - creator of modules: jacl2db_admin, jauthdb_admin, master_admin
+  
+Kévin Lepeltier
+  - improvement on the master_admin menu (#811)

@@ -1,6 +1,10 @@
+cd lib/jelix-admin-modules/
+   CREDITS
 
 cd lib/jelix-admin-modules/master_admin/
 *  module.xml
+cd lib/jelix-admin-modules/master_admin/classes
+   masterAdminMenuItem.class.php
 cd lib/jelix-admin-modules/master_admin/controllers
    default.classic.php
 cd lib/jelix-admin-modules/master_admin/locales/en_EN
@@ -37,7 +41,6 @@ cd lib/jelix-admin-modules/jacl2db_admin/templates
   groups_right_view.tpl
   user_rights_view.tpl
   groups_edit.tpl
-
 
 cd lib/jelix-admin-modules/jauthdb_admin
 *  module.xml
