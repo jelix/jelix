@@ -493,6 +493,8 @@ cd lib/tcpdf
   barcodes.php
 cd lib/tcpdf/config
   tcpdf_config.php
+cd lib/tcpdf/images
+! _blank.png
 
 cd lib/wshelper
 ! CREDITS

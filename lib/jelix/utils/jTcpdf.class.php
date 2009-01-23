@@ -11,12 +11,14 @@
 */
 
 define('K_TCPDF_EXTERNAL_CONFIG',true);
-define("K_PATH_MAIN", LIB_PATH.'tcpdf/');
-define("K_PATH_URL", $GLOBALS['gJConfig']->urlengine['basePath']);
-define("K_PATH_FONTS", LIB_PATH.'pdf-fonts/');
-define("K_PATH_CACHE", K_PATH_MAIN."cache/");
-define("K_CELL_HEIGHT_RATIO", 1.25);
-define("K_SMALL_RATIO", 2/3);
+define('K_PATH_MAIN', LIB_PATH.'tcpdf/');
+define('K_PATH_URL', $GLOBALS['gJConfig']->urlengine['basePath']);
+define('K_PATH_FONTS', LIB_PATH.'pdf-fonts/');
+define('K_PATH_CACHE', JELIX_APP_TEMP_PATH);
+define('K_PATH_IMAGES', JELIX_APP_PATH);
+define('K_BLANK_IMAGE', K_PATH_MAIN.'images/_blank.png');
+define('K_CELL_HEIGHT_RATIO', 1.25);
+define('K_SMALL_RATIO', 2/3);
 require_once (LIB_PATH.'tcpdf/tcpdf.php');
 
 /**
