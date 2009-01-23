@@ -4,7 +4,7 @@
 * @subpackage  utils
 * @author      Julien Issler
 * @contributor Laurent Jouanneau
-* @copyright   2007-2008 Julien Issler, 2007 Laurent Jouanneau
+* @copyright   2007-2009 Julien Issler, 2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0
@@ -34,9 +34,9 @@ class jTcpdf extends TCPDF {
 
         parent::__construct($orientation, $unit, $format, ($encoding == 'UTF-8' || $encoding == 'UTF-16'), $encoding);
 
-        $this->setHeaderFont(array('dejavusans','',10));
-        $this->setFooterFont(array('dejavusans','',10));
-        $this->setFont('dejavusans','',10);
+        $this->setHeaderFont(array('helvetica','',10));
+        $this->setFooterFont(array('helvetica','',10));
+        $this->setFont('helvetica','',10);
     }
 
 
