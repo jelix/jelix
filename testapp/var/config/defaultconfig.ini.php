@@ -115,3 +115,6 @@ default=messages.log
 
 [acl]
 driver = db
+
+[acl2]
+driver = db
