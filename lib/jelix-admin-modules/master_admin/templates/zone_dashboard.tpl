@@ -4,7 +4,7 @@
 <p>{@gui.dashboard.nowidget@}.</p>
 {else}
 
-{assign $nbPerCol = count($widgets)/2}
+{assign $nbPerCol = ceil(count($widgets)/2)}
 <div id="dashboard-content">
     <div id="dashboard-left-column">
         {for $i=0; $i<$nbPerCol;$i++}

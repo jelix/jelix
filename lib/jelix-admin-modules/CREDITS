@@ -8,3 +8,6 @@ Laurent Jouanneau
   
 Kévin Lepeltier
   - improvement on the master_admin menu (#811)
+
+Geekbay
+  - fixed a bug in the master_admin template (#816)
