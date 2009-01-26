@@ -532,7 +532,7 @@ class jDaoGenerator {
                 $field = $table.$this->_encloseName($fieldname);
             }
         }else{
-            $field = sprintf (str_replace("'","\\'",$pattern), $table.$this->_encloseName($fieldname)).' as '.$this->_encloseName($propname);
+            $field = str_replace(array("'", "%s"), array("\\'",$table.$this->_encloseName($fieldname)),$pattern).' as '.$this->_encloseName($propname);
         }
         return $field;
     }

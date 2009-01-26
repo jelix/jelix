@@ -27,7 +27,7 @@ class sqliteDaoBuilder extends jDaoGenerator {
         if ($pattern =='%s'){
             $field = $table.$this->_encloseName($fieldname).' as '.$this->_encloseName($propname);
         }else{
-            $field = sprintf (str_replace("'","\\'",$pattern), $table.$this->_encloseName($fieldname)).' as '.$this->_encloseName($propname);
+            $field = str_replace(array("'", "%s"), array("\\'",$table.$this->_encloseName($fieldname)),$pattern).' as '.$this->_encloseName($propname);
         }
         return $field;
     }

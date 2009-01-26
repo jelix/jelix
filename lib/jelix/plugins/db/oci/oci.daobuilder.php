@@ -58,7 +58,7 @@ class ociDaoBuilder extends jDaoGenerator {
                 $field = $table.$this->_encloseName($fieldname);
             }
         }else{
-            $field = sprintf (str_replace("'","\\'",$pattern), $table.$this->_encloseName($fieldname)).' "'.$propname.'"';
+            $field = str_replace(array("'", "%s"), array("\\'",$table.$this->_encloseName($fieldname)),$pattern).' "'.$propname.'"';
         }
         return $field;
     }
