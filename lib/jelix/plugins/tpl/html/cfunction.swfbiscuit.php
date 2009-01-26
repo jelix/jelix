@@ -58,21 +58,20 @@ function jtpl_cfunction_html_swfbiscuit($tpl, $params) {
             if( !empty($val) )
                 $att .= \' \'.$key.\'="\'.$val.\'"\';
 
-        echo \'<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="\'.$options[\'width\'].\'" height="\'.$options[\'height\'].\'"\'.$att.\'>\';
+        echo "\n".\'<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="\'.$options[\'width\'].\'" height="\'.$options[\'height\'].\'"\'.$att.\'>\'."\n";
         echo "    ".\'<param name="movie" value="\'.$src.\'?\';
         if( count($flashvar) ) foreach($flashvar as $key => $val)
-            echo \'&\'.$key.\'=\'.$val."\n";
-        echo \'" />\';
-        echo "    ";
+            echo \'&\'.$key.\'=\'.$val;
+        echo \'" />\'."\n";
         if( count($params) ) foreach($params as $key => $val)
-            echo \'<param name="\'.$key.\'" value="\'.$val.\'" />\'."\n";
-        echo \'<embed \';
+            echo "    ".\'<param name="\'.$key.\'" value="\'.$val.\'" />\'."\n";
+        echo "    ".\'<embed \';
         if( count($params) ) foreach($params as $key => $val)
-            echo $key.\'="\'.$val.\'" \'."\n";
-        echo \' src="\'.$t->_vars[\'j_basepath\'].$src.\'?\';
+            echo $key.\'="\'.$val.\'" \';
+        echo \' src="\'.$src.\'?\';
         if( count($flashvar) ) foreach($flashvar as $key => $val)
-            echo \'&\'.$key.\'=\'.$val."\n";
-        echo \'" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="\'.$options[\'width\'].\'" height="\'.$options[\'height\'].\'"></embed>\';
+            echo \'&\'.$key.\'=\'.$val;
+        echo \'" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="\'.$options[\'width\'].\'" height="\'.$options[\'height\'].\'"></embed>\'."\n";
         echo \'</object>\';
         ';
     return $sortie;

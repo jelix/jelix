@@ -69,7 +69,9 @@ function jtpl_block_html_swfjs($compiler, $begin, $params) {
             $script .= "            ".\'src:"\'.$src.\'"\'."\n";
             $script .= "        ".\'}, {\'."\n";
             if( !empty($options[\'version\']) )
-                $script .= "            ".\'version:\'.$options[\'version\'].\',\'."\n";
+                $script .= "            ".\'version:\'.$options[\'version\'];
+            if( !empty($options[\'version\']) && !empty($options[\'detect\']) )
+            	$script .= \',\'."\n";
             if( !empty($options[\'detect\']) )
                 $script .= "            ".\'expressInstall:\'.$options[\'detect\'].\'\'."\n";
             $script .= "        ".\'}, function(htmlOptions) {\'."\n";

@@ -63,7 +63,7 @@ function jtpl_block_html_swf($compiler, $begin, $params) {
 
         echo \'<object type="application/x-shockwave-flash" data="\'.$src.\'?\';
         if( count($flashvar) ) foreach($flashvar as $key => $val)
-            echo \'&\'.$key.\'=\'.$val."\n";
+            echo \'&\'.$key.\'=\'.$val;
         echo \'" width="\'.$options[\'width\'].\'" height="\'.$options[\'height\'].\'"\'.$att.\'>\';
         echo "    ";
         echo \'<param name="movie" value="\'.$src.\'" />\'."\n";
