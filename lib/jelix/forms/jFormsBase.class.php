@@ -206,8 +206,8 @@ abstract class jFormsBase {
                 $object->$name = $properties[$name]['defaultValue'];
 
             }else if( $properties[$name]['datatype'] == 'boolean'){
-                $object->$name = ($properties->$name == '1'|| $properties->$name == 'true'
-                                  || $properties->$name == 't');
+                $object->$name = ($properties[$name] == '1'|| $properties[$name] == 'true'
+                                  || $properties[$name] == 't');
 
             }else if($ctrl->datatype instanceof jDatatypeLocaleDateTime
                      && $properties[$name]['datatype'] == 'datetime') {
