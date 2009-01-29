@@ -177,7 +177,10 @@ abstract class jFormsBase {
                     $r = true;
                     $t = gettype($v);
                 }
-                else { $t = 'string'; $r = false; }
+                else {
+                    $t = 'string';
+                    $r = false;
+                }
                 $properties[$n]=array('required'=>$r, 'defaultValue'=>$v, 'datatype'=>$t);
             }
         }
@@ -187,35 +190,37 @@ abstract class jFormsBase {
                 continue;
 
             if(is_array($this->container->data[$name])){
-                if( count ($this->container->data[$name]) ==1){
+                if (count($this->container->data[$name]) ==1) {
                     $object->$name = $this->container->data[$name][0];
-                }else{
+                }
+                else
                     // do nothing for arrays ?
                     continue;
-                }
-            }else{
+            }
+            else{
                 $object->$name = $this->container->data[$name];
             }
 
             if($object->$name == '' && !$properties[$name]['required']) {
                 // if no value and if the property is not required, we set null to it
                 $object->$name = null;
-            }else if($object->$name == '' && $properties[$name]['defaultValue'] !== null
+            }
+            else if($object->$name == '' && $properties[$name]['defaultValue'] !== null
                     && in_array($properties[$name]['datatype'],
                                 array('int','integer','double','float'))) {
                 $object->$name = $properties[$name]['defaultValue'];
-
-            }else if( $properties[$name]['datatype'] == 'boolean'){
-                $object->$name = ($properties[$name] == '1'|| $properties[$name] == 'true'
-                                  || $properties[$name] == 't');
-
-            }else if($ctrl->datatype instanceof jDatatypeLocaleDateTime
+            }
+            else if( $properties[$name]['datatype'] == 'boolean' && !is_bool($object->$name)) {
+                $object->$name = ($object->$name == '1'|| $object->$name == 'true'
+                                  || $object->$name == 't');
+            }
+            else if($ctrl->datatype instanceof jDatatypeLocaleDateTime
                      && $properties[$name]['datatype'] == 'datetime') {
                 $dt = new jDateTime();
                 $dt->setFromString($daorec->$name, jDateTime::LANG_DTFORMAT);
                 $object->$name = $dt->toString(jDateTime::DB_DTFORMAT);
-
-            }elseif($ctrl->datatype instanceof jDatatypeLocaleDate
+            }
+            elseif($ctrl->datatype instanceof jDatatypeLocaleDate
                     && $properties[$name]['datatype'] == 'date') {
                 $dt = new jDateTime();
                 $dt->setFromString($object->$name, jDateTime::LANG_DFORMAT);

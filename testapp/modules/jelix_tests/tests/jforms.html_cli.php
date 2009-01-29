@@ -9,6 +9,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+
+class UTjformsDummyObject {
+    public $name='';
+    public $price=0;
+    public $instock = true;
+}
+
 require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
 class UTjforms extends jUnitTestCase {
@@ -117,7 +124,7 @@ class UTjforms extends jUnitTestCase {
     function testCreate(){
         $this->form1 = jForms::create('product');
         $this->assertComplexIdenticalStr($this->form1, $this->form1Descriptor);
-        return;
+
         $verif='
 <array>
      <array key="product">
@@ -201,25 +208,20 @@ class UTjforms extends jUnitTestCase {
     }
 
     function testGet(){
-        return;
         $f1 = jForms::get('product');
         $this->assertComplexIdenticalStr($f1, $this->form1Descriptor);
-        $this->assertIdentical($f1, $this->form1);
 
         $f2 = jForms::get('product', 'akey');
         $this->assertComplexIdenticalStr($f2, $this->form2Descriptor);
-        $this->assertIdentical($f2, $this->form2);
 
         $f3 = jForms::get('product', 'anUnknowKey');
         $this->assertNull($f3);
 
         $f4 = jForms::get('label', array(1,'fr'));
         $this->assertComplexIdenticalStr($f4, $this->formLabelDescriptor);
-        $this->assertIdentical($f4, $this->formLabel);
     }
 
     function testFill(){
-        return;
         global $gJCoord;
         $savedParams = $gJCoord->request->params;
 
@@ -309,7 +311,7 @@ class UTjforms extends jUnitTestCase {
 
 
     function testDestroy(){
-        return;
+
         jForms::destroy('product');
 
         $verif='
@@ -356,5 +358,62 @@ class UTjforms extends jUnitTestCase {
         $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
     }
 
+
+
+    function testPrepareObjectFromControls() {
+        $f = jForms::create('product');
+        $ctrl= new jFormsControlcheckbox('instock');
+        $ctrl->label='En stock?';
+        $f->addControl($ctrl);
+        
+        $verif='
+<array>
+     <array key="product">
+        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
+            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
+            <string property="formSelector" value="product" />
+            <array property="data">
+                <string key="name" value="" />
+                <string key="price" value="" />
+                <string key="instock" value="0" />
+            </array>
+            <array property="errors">array()</array>
+        </object>
+     </array>
+</array>';
+        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+
+        $f->setData('name', 'car');
+        $f->setData('price', 56598);
+        $f->setData('instock', true);
+
+        $verif='
+<array>
+     <array key="product">
+        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
+            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
+            <string property="formSelector" value="product" />
+            <array property="data">
+                <string key="name" value="car" />
+                <integer key="price" value="56598" />
+                <boolean key="instock" value="true" />
+            </array>
+            <array property="errors">array()</array>
+        </object>
+     </array>
+</array>';
+        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+
+        $o = new UTjformsDummyObject();
+        $f->prepareObjectFromControls($o);
+
+        $verif='<object class="UTjformsDummyObject">
+            <string property="name" value="car" />
+            <integer property="price" value="56598" />
+            <boolean property="instock" value="true" />
+        </object>';
+        $this->assertComplexIdenticalStr($o, $verif);
+
+        jForms::destroy('product');
+    }
 }
-?>
