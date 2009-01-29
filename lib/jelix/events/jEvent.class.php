@@ -179,7 +179,7 @@ class jEvent {
             foreach ($inf[$eventName] as $listener){
                 list($module,$listenerName) = $listener;
                 if (! isset (self::$listenersSingleton[$module][$listenerName])){
-                    require_once ($GLOBALS['gJConfig']->_modulesPathList[$module].'classes/'.strtolower ($listenerName).'.listener.php');
+                    require_once ($GLOBALS['gJConfig']->_modulesPathList[$module].'classes/'.$listenerName.'.listener.php');
                     $className = $listenerName.'Listener';
         #if ENABLE_OLD_CLASS_NAMING
                     if(!class_exists($className,false)){
