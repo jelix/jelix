@@ -98,7 +98,7 @@ class mysqlDbTools extends jDbTools {
         }
 
         $tokens = preg_split('!(\'|"|\\\\|`|DELIMITER |#|/\\*|\\*/|\\-\\- |'."\n".$preg.')!i', $script, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-//echo '<pre>';var_export($tokens);echo '</pre>';
+
         $currentDelimiter = ';';
         $context = 0;
         $queries = array();

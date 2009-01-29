@@ -139,7 +139,10 @@ class initadminCommand extends JelixScriptCommand {
             if(file_exists($path.'install_jauth.schema.'.$db->dbms.'.sql')) {
                 try {
                     $tools->execSQLScript($path.'install_jauth.schema.'.$db->dbms.'.sql');
-                    $tools->execSQLScript($path.'install_jauth.data.'.$db->dbms.'.sql');
+                    $rs = $db->query("SELECT usr_login FROM jlx_user WHERE usr_login='admin'");
+                    if(!$rs || !$rs->fetch())
+                        $db->execute("INSERT INTO jlx_user (usr_login , usr_password , usr_email) VALUES ('admin', ".md5('admin').", 'admin@localhost.localdomain')");
+                    $rs = null;
                 } catch(Exception $e) {
                     echo "An error has occured during the execution of SQL script to install jAuth: ".$e->getMessage();
                 }
@@ -156,17 +159,77 @@ class initadminCommand extends JelixScriptCommand {
             $tools = jDb::getTools($profile);
             $db = jDb::getConnection($profile);
             $path = JELIX_LIB_PATH.'core-modules/jelix/install/sql/';
-            if(file_exists($path.'install_jauth.schema.'.$db->dbms.'.sql')) {
+                
+            $tables = $tools->getTableList();
+            if (in_array('jacl2_rights', $tables)) {
+                ob_start();
                 try {
-                    $tools->execSQLScript($path.'install_jacl2.schema.'.$db->dbms.'.sql');
-                    $tools->execSQLScript($path.'install_jacl2.data.'.$db->dbms.'.sql');
-                } catch(Exception $e) {
-                    echo "An error has occured during the execution of SQL script to install jAcl2.db: ".$e->getMessage();
+                    $cmd = jxs_load_command('acl2group');
+                    $cmd->init(array(),array('action'=>'createuser', '...'=>array('admin')));
+                    $cmd->run();
+                } catch(Exception $e) { }
+                try {
+                    $cmd = jxs_load_command('acl2group');
+                    $cmd->init(array(),array('action'=>'adduser', '...'=>array('admins','admin')));
+                    $cmd->run();
+                } catch(Exception $e) { }
+
+                $subjects = array(
+                    'auth.users.list'=>  'jelix~auth.acl.users.list',
+                    'auth.users.view'=>   'jelix~auth.acl.users.view',
+                    'auth.users.modify'=> 'jelix~auth.acl.users.modify',
+                    'auth.users.create'=> 'jelix~auth.acl.users.create',
+                    'auth.users.delete'=> 'jelix~auth.acl.users.delete',
+                    'auth.users.change.password'=> 'jelix~auth.acl.users.change.password',
+                    'auth.user.view'=> 'jelix~auth.acl.user.view',
+                    'auth.user.modify'=> 'jelix~auth.acl.user.modify',
+                    'auth.user.change.password'=> 'jelix~auth.acl.user.change.password'
+                );
+                
+                foreach ($subjects as $subject=>$label) {
+                    try {
+                        $cmd = jxs_load_command('acl2right');
+                        $cmd->init(array(),array('action'=>'subject_create', '...'=>array($subject,$label)));
+                        $cmd->run();
+                    } catch(Exception $e) { }
                 }
+
+                $rights = array(
+                    array('auth.users.list', 'admins'),
+                    array('auth.users.view', 'admins'),
+                    array('auth.users.modify', 'admins'),
+                    array('auth.users.create', 'admins'),
+                    array('auth.users.delete', 'admins'),
+                    array('auth.users.change.password', 'admins'),
+                    array('auth.user.view', 'admins'),
+                    array('auth.user.modify', 'admins'),
+                    array('auth.user.change.password', 'admins'),
+                    array('auth.user.view', 'users'),
+                    array('auth.user.modify', 'users'),
+                    array('auth.user.change.password', 'users')
+                ); 
+                foreach ($rights as $right) {
+                    try {
+                        $cmd = jxs_load_command('acl2right');
+                        $cmd->init(array(),array('action'=>'add', '...'=>array($right[1],$right[0])));
+                        $cmd->run();
+                    } catch(Exception $e) { }
+                }
+                ob_end_clean();
             }
             else {
-                echo "Tables and datas for jAcl2.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.";
-            }    
+                if(file_exists($path.'install_jauth.schema.'.$db->dbms.'.sql')) {
+                    try {
+                        $tools->execSQLScript($path.'install_jacl2.schema.'.$db->dbms.'.sql');
+                        $tools->execSQLScript($path.'install_jacl2.data.'.$db->dbms.'.sql');
+                    } catch(Exception $e) {
+                        echo "An error has occured during the execution of SQL script to install jAcl2.db: ".$e->getMessage();
+                    }
+                }
+                else {
+                    echo "Tables and datas for jAcl2.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.";
+                }
+            }
         }
         else {
             $inifile->setValue('unusedModules', $inifile->getValue('unusedModules').', jacl2db_admin');

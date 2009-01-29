@@ -304,8 +304,8 @@ ACTION:
             throw new Exception("the user is already registered");
         }
 
-        $sql="INSERT into jacl2_group (name, grouptype, ownerlogin) VALUES (";
-        $sql.=$login.',2, '.$login.')';
+        $sql = "INSERT into jacl2_group (name, grouptype, ownerlogin) VALUES (";
+        $sql.= $login.',2, '.$login.')';
         $cnx->exec($sql);
         $id = $cnx->lastInsertId('jacl2_group_id_aclgrp_seq'); // name of the sequence for pgsql
 
