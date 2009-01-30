@@ -14,7 +14,7 @@
     <td>{$record->login|eschtml}</td>
     <td>
         {if $canview}
-        <a href="{jurl 'jauthdb_admin~default:view',array('id'=>$record->login)}">{@jauthdb_admin~crud.link.view.record@}</a>
+        <a href="{jurl 'jauthdb_admin~default:view',array('id'=>$record->$primarykey)}">{@jauthdb_admin~crud.link.view.record@}</a>
         {/if}
     </td>
 </tr>
