@@ -141,7 +141,7 @@ class initadminCommand extends JelixScriptCommand {
                     $tools->execSQLScript($path.'install_jauth.schema.'.$db->dbms.'.sql');
                     $rs = $db->query("SELECT usr_login FROM jlx_user WHERE usr_login='admin'");
                     if(!$rs || !$rs->fetch())
-                        $db->execute("INSERT INTO jlx_user (usr_login , usr_password , usr_email) VALUES ('admin', ".md5('admin').", 'admin@localhost.localdomain')");
+                        $db->execute("INSERT INTO jlx_user (usr_login , usr_password , usr_email) VALUES ('admin', '".md5('admin')."', 'admin@localhost.localdomain')");
                     $rs = null;
                 } catch(Exception $e) {
                     echo "An error has occured during the execution of SQL script to install jAuth: ".$e->getMessage();

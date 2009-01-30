@@ -14,9 +14,11 @@ cch    gui.UTF-8.properties(gui.%charset%.properties)
 cd lib/jelix-admin-modules/master_admin/templates/
   index_login.tpl
   main.tpl
+  zone_admin_infobox.tpl
   zone_admin_menu.tpl
   zone_dashboard.tpl
 cd lib/jelix-admin-modules/master_admin/zones/
+  admin_infobox.zone.php
   admin_menu.zone.php
   dashboard.zone.php
 

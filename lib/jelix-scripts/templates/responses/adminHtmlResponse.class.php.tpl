@@ -27,6 +27,7 @@ class adminHtmlResponse extends jResponseHtml {
         $this->title .= ($this->title !=''?' - ':'').' Administration';
         $this->body->assignIfNone('selectedMenuItem','');
         $this->body->assignZone('MENU','master_admin~admin_menu', array('selectedMenuItem'=>$this->body->get('selectedMenuItem')));
+        $this->body->assignZone('INFOBOX','master_admin~admin_infobox');
         $this->body->assignIfNone('MAIN','');
         $this->body->assignIfNone('adminTitle','');
         $this->body->assign('user', jAuth::getUserSession());

@@ -48,6 +48,12 @@ fieldset { margin-top:1em; }
 
 #info-box {
     text-align:right;
+    margin: 0;
+}
+#info-box li  {
+    list-style-type:none;
+    display: inline;
+    margin-left: 10px;
 }
 
 #main {
