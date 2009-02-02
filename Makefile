@@ -1,7 +1,6 @@
 
 SHELL=/bin/sh
 PHP=/usr/bin/php
-PHPDOC=../../phpdoc/
 
 CURRENT_PATH = $(shell pwd)
 
@@ -22,6 +21,9 @@ DOCSPATH=_docs
 endif
 ifndef TESTS_DBPROFILES
 TESTS_DBPROFILES=testapp/var/config/dbprofils.ini.php.dist
+endif
+ifndef PHPDOC
+PHPDOC=../../phpdoc/
 endif
 
 default:
@@ -51,7 +53,7 @@ tests:
 
 docs: 
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) build/config/jelix-test.ini
-	cp -R -f build/phpdoc/Converters/HTML/frames $(PHPDOC)phpDocumentor/Converters/HTML/
+#	cp -R -f build/phpdoc/Converters/HTML/frames $(PHPDOC)phpDocumentor/Converters/HTML/
 	$(PHPDOC)phpdoc \
 	-d $(TESTPATH)/lib/jelix/ \
 	-t $(DOCSPATH) \
