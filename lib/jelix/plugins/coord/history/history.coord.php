@@ -29,7 +29,8 @@ class historyCoordPlugin implements jICoordPlugin {
 
     public function beforeAction ($params) {
 
-        if( !empty($params['history.add']) && $params['history.add'] ) {
+        if( !empty($params['history.add']) && $params['history.add']
+            && $_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if( !isset($_SESSION[$this->config['session_name']]) )
                 $_SESSION[$this->config['session_name']] = array();
