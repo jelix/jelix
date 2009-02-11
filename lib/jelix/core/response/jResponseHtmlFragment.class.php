@@ -146,4 +146,6 @@ class jResponseHtmlFragment extends jResponse {
         }
         return $errors;
     }
+    
+    public function getFormatType(){ return 'html';}
 }
