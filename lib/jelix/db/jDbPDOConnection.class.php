@@ -3,9 +3,9 @@
 * @package    jelix
 * @subpackage db
 * @author     Laurent Jouanneau
-* @contributor Gwendal Jouannic
+* @contributor Gwendal Jouannic, Thomas
 * @copyright  2005-2006 Laurent Jouanneau
-* @copyright  2008 Gwendal Jouannic
+* @copyright  2008 Gwendal Jouannic, 2009 Thomas
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -128,7 +128,7 @@ class jDbPDOConnection extends PDO {
             return parent::query($args[0], $args[1]);
             break;
         case 3:
-            return parent::query($args[0], $args[1]);
+            return parent::query($args[0], $args[1], $args[2]);
             break;
         default:
             trigger_error('bad argument number in query',E_USER_ERROR);
