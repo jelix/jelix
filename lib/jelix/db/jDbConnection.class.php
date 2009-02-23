@@ -5,7 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
 * @copyright   2005-2006 Laurent Jouanneau
-* @copyright   2007 Julien Issler
+* @copyright   2007-2009 Julien Issler
 *
 * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
 * However only few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -132,6 +132,16 @@ abstract class jDbConnection {
             return (is_null ($text) ? 'NULL' : "'".$this->_quote($text)."'");
         else
             return "'".$this->_quote ($text)."'";
+    }
+
+    /**
+     * enclose the field name
+     * @param string $fieldName the field name
+     * @return string the enclosed field name
+     * @since 1.1.1
+     */
+    public function encloseFieldName($fieldName){
+        return $fieldName;
     }
 
     /**

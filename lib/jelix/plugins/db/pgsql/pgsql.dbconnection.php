@@ -6,7 +6,9 @@
 * @contributor Laurent Jouanneau
 * @contributor Yannick Le Guédart
 * @contributor Laurent Raufaste
+* @contributor Julien Issler
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007-2008 Laurent Raufaste
+* @copyright  2009 Julien Issler
 * This class was get originally from the Copix project (CopixDBConnectionPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -32,6 +34,16 @@ class pgsqlDbConnection extends jDbConnection {
         if(isset($this->profile['single_transaction']) && ($this->profile['single_transaction'])){
             $this->beginTransaction();
         }
+    }
+
+    /**
+     * enclose the field name
+     * @param string $fieldName the field name
+     * @return string the enclosed field name
+     * @since 1.1.1
+     */
+    public function encloseFieldName($fieldName){
+        return '"'.$fieldName.'"';
     }
 
     function __destruct(){
