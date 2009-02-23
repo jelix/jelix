@@ -2,11 +2,11 @@
 //============================================================+
 // File name   : barcodes.php
 // Begin       : 2008-06-09
-// Last Update : 2008-11-17
-// Version     : 1.0.003
+// Last Update : 2009-02-13
+// Version     : 1.0.005
 // License     : GNU LGPL (http://www.gnu.org/copyleft/lesser.html)
 // 	----------------------------------------------------------------------------
-//  Copyright (C) 2008  Nicola Asuni - Tecnick.com S.r.l.
+//  Copyright (C) 2008-2009 Nicola Asuni - Tecnick.com S.r.l.
 // 	
 // 	This program is free software: you can redistribute it and/or modify
 // 	it under the terms of the GNU Lesser General Public License as published by
@@ -44,17 +44,17 @@
  * @package com.tecnick.tcpdf
  * @abstract Functions for generating string representation of common 1D barcodes.
  * @author Nicola Asuni
- * @copyright 2008 Nicola Asuni - Tecnick.com S.r.l (www.tecnick.com) Via Della Pace, 11 - 09044 - Quartucciu (CA) - ITALY - www.tecnick.com - info@tecnick.com
+ * @copyright 2008-2009 Nicola Asuni - Tecnick.com S.r.l (www.tecnick.com) Via Della Pace, 11 - 09044 - Quartucciu (CA) - ITALY - www.tecnick.com - info@tecnick.com
  * @link http://www.tcpdf.org
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
- * @version 1.0.001
+ * @version 1.0.005
  */
 
 	/**
 	* PHP class to creates array representations for common 1D barcodes to be used with TCPDF (http://www.tcpdf.org).<br>
 	* @name TCPDFBarcode
 	* @package com.tecnick.tcpdf
-	* @version 1.0.001
+	* @version 1.0.005
 	* @author Nicola Asuni
 	* @link http://www.tcpdf.org
 	* @license http://www.gnu.org/copyleft/lesser.html LGPL
@@ -241,11 +241,11 @@ class TCPDFBarcode {
 				$w = $chr[$char]{$j};
 				$bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
 				$bararray['maxw'] += $w;
-				$k++;
+				++$k;
 			}
 			$bararray['bcode'][$k] = array('t' => false, 'w' => 1, 'h' => 1, 'p' => 0);
 			$bararray['maxw'] += 1;
-			$k++;
+			++$k;
 		}
 		return $bararray;
 	}
@@ -373,7 +373,7 @@ class TCPDFBarcode {
 				$w = $seq{$j};
 				$bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
 				$bararray['maxw'] += $w;
-				$k++;
+				++$k;
 			}
 		}
 		return $bararray;
@@ -549,7 +549,8 @@ class TCPDFBarcode {
 		for($i=0; $i < $len; $i++) {
 			$ck = strpos($keys, $code{$i});
 			if (($i == 0) OR ($i > ($len-4))) {
-				$seq = $chr[ord($code{$i})];
+				$char_num = ord($code{$i});
+				$seq = $chr[$char_num];
 			} elseif(($ck >= 0) AND isset($chr[$ck])) {
 					$seq = $chr[$ck];
 			} else {
@@ -565,7 +566,7 @@ class TCPDFBarcode {
 				$w = $seq{$j};
 				$bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
 				$bararray['maxw'] += $w;
-				$k++;
+				++$k;
 			}
 		}
 		return $bararray;		
@@ -683,7 +684,7 @@ class TCPDFBarcode {
 				}
 				$bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
 				$bararray['maxw'] += $w;
-				$k++;
+				++$k;
 				$w = 0;
 			}
 		}
@@ -720,10 +721,11 @@ class TCPDFBarcode {
 		for($i=0; $i < $len; $i++) {
 			$sum += intval($code{$i});
 		}
-		if(($sum % 10) == 0) {
-			return false;
+		$chkd = ($sum % 10);
+		if($chkd > 0) {
+			$chkd = (10 - $chkd);
 		}
-		$code .= ''.(10 - ($sum % 10)).'';
+		$code .= $chkd;
 		$len = strlen($code);
 		// start bar
 		$bararray['bcode'][$k++] = array('t' => 1, 'w' => 1, 'h' => 2, 'p' => 0);
@@ -794,7 +796,7 @@ class TCPDFBarcode {
 				$w = $seq{$j};
 				$bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
 				$bararray['maxw'] += $w;
-				$k++;
+				++$k;
 			}
 		}
 		return $bararray;
