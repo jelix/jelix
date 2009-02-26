@@ -8,7 +8,8 @@
 * @contributor Loic Mathaud
 * @contributor Foxmask (#733)
 * @contributor Cedric (fix bug ticket 56)
-* @copyright   2005-2006 Laurent Jouanneau, 2006 Thiriot Christophe, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Foxmask
+* @contributor Julien Issler
+* @copyright   2005-2006 Laurent Jouanneau, 2006 Thiriot Christophe, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Foxmask, 2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -101,6 +102,10 @@ class jFile {
      * @author Loic Mathaud
      */
     public static function removeDir($path, $deleteParent=true) {
+
+        if($path == '' || $path == '/' || $path == DIRECTORY_SEPARATOR)
+            throw new jException('jelix~errors.file.directory.cannot.remove.fs.root'); //see ticket #840
+
         $dir = new DirectoryIterator($path);
         foreach ($dir as $dirContent) {
         	// file deletion
