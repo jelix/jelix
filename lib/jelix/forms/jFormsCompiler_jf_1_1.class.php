@@ -286,7 +286,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
                 if(!isset($attrs['method']))
                     throw new jException('jelix~formserr.attribute.missing',array('method', 'datasource',$this->sourceFile));
                 if(!isset($attrs['labelproperty']))
-                    throw new jException('jelix~formserr.attribute.missing',array('method', 'datasource',$this->sourceFile));
+                    throw new jException('jelix~formserr.attribute.missing',array('labelproperty', 'datasource',$this->sourceFile));
 
                 if(isset($attrs['criteria']))
                     $criteria=',\''.$attrs['criteria'].'\',null';
