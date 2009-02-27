@@ -12,7 +12,7 @@
 /**
  * cfunction to fetch the content of a zone into a tpl var
  *
- * <pre> {fetchzonecontent 'myVar', 'myModule~myzone', array('foo'=>'bar)}
+ * <pre> {fetchzone 'myVar', 'myModule~myzone', array('foo'=>'bar)}
  * {if $myVar !== ''}
  * <div id="container">
  * {$myVar}
@@ -24,11 +24,11 @@
  *                     2=>$params parameters for the zone (array)
  * @return string the php code corresponding to the function content
  */
-function jtpl_cfunction_common_fetchzonecontent($compiler, $params=array()){
+function jtpl_cfunction_common_fetchzone($compiler, $params=array()){
     if(count($params) == 3)
         return '$t->_vars['.$params[0].'] = jZone::get('.$params[1].','.$params[2].');';
     else if(count($params) == 2)
         return '$t->_vars['.$params[0].'] = jZone::get('.$params[1].');';
-    $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','fetchzonecontent','2-3');
+    $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','fetchzone','2-3');
     return '';
 }

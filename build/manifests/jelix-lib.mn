@@ -350,7 +350,7 @@ cd lib/jelix/plugins/tpl/common
   block.ifuserconnected.php
   block.ifusernotconnected.php
   block.stripws.php
-  cfunction.fetchzonecontent.php
+  cfunction.fetchzone.php
   cfunction.zone.php
   function.counter.php
   function.counter_init.php
