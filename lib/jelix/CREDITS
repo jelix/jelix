@@ -107,6 +107,7 @@ Christophe Thiriot (aka Doubleface)
  - Added enhanced service handling (dependency injection) in jClasses (#523, #602)
  - implementation of "live" exit in command line (#406)
  - automatic timezone setting (#600)
+ - bug in jFilter tests (#842)
 
 Contributors
 ------------
