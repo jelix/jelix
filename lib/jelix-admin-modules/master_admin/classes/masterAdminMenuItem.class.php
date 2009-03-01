@@ -33,7 +33,7 @@ class masterAdminMenuItem {
     public function copyFrom($item) {
         $this->label = $item->label;
         $this->content = $item->content;
-        $this->type = $type;
+        $this->type = $item->type;
         $this->order = $item->order;
         $this->icon = $item->icon;
         $this->childItems = array_merge($item->childItems, $this->childItems);
