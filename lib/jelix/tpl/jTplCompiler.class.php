@@ -3,9 +3,9 @@
 * @package     jelix
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
-* @contributor Mathaud Loic (standalone version), Dominique Papin
+* @contributor Mathaud Loic (standalone version), Dominique Papin, dsdenes
 * @copyright   2005-2008 Laurent Jouanneau
-* @copyright   2006 Mathaud Loic, 2007 Dominique Papin
+* @copyright   2006 Mathaud Loic, 2007 Dominique Papin, 2009 dsdenes
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -64,7 +64,8 @@ class jTplCompiler
     protected $_modifier = array('upper'=>'strtoupper', 'lower'=>'strtolower',
             'escxml'=>'htmlspecialchars', 'eschtml'=>'htmlspecialchars',
             'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
-            'capitalize'=>'ucwords', 'stripslashes'=>'stripslashes');
+            'capitalize'=>'ucwords', 'stripslashes'=>'stripslashes',
+            'upperfirst'=>'ucfirst');
 
     private $_blockStack=array();
 
