@@ -12,3 +12,4 @@ Kévin Lepeltier
 
 Geekbay
   - fixed a bug in the master_admin template (#816)
+  - little improvement in the main.tpl in the master_admin module (#850)

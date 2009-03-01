@@ -72,6 +72,8 @@ fieldset { margin-top:1em; }
 #main a:visited {  color : #002830;}
 #main a:hover { color: #0f82af; background-color: #d7e7eb; }
 
+#main .clear { clear:both;}
+
 #content {
     margin-left: 230px;
     padding: 5px;
