@@ -131,6 +131,9 @@ Dandelionmood
 Antoine Detante (aka antoinefr)
  - support of persistant authentification in jAuth and auth plugin (#229)
 
+dsdenes
+ - fix little thing in crud template (#844)
+
 F. Fernandez (aka e-media)
  - little improvement in jLog.(#344)
  - little improvement in formcontrols plugin (#353)
