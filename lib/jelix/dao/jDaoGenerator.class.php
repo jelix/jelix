@@ -6,7 +6,7 @@
 * @contributor Laurent Jouanneau
 * @contributor Bastien Jaillot (bug fix)
 * @contributor Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
 * @copyright  2007-2008 Julien Issler
 * This class was get originally from the Copix project (CopixDAOGeneratorV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -936,9 +936,9 @@ class jDaoGenerator {
                 break;
             case 'boolean':
                 if($checknull){
-                    $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'('.$expr.'?\''.$this->trueValue.'\':\''.$this->falseValue.'\'))';
+                    $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_prepareValue('.$expr.', "boolean", true))';
                 }else{
-                    $expr= $forCondition.'('.$expr.'?\''.$this->trueValue.'\':\''.$this->falseValue.'\')';
+                    $expr= $forCondition.'$this->_prepareValue('.$expr.', "boolean", true)';
                 }
                 break;
             default:

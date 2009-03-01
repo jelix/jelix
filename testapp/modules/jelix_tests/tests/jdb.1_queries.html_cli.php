@@ -187,6 +187,16 @@ class UTjDb extends jUnitTestCase {
         <string property="default" value="0" />
         <integer property="length" value="0" />
     </object>
+    <object key="promo" class="jDbFieldProperties">
+        <string property="type" value="tinyint" />
+        <string property="name" value="promo" />
+        <boolean property="notNull" value="true" />
+        <boolean property="primary" value="false" />
+        <boolean property="autoIncrement" value="false" />
+        <boolean property="hasDefault" value="false" />
+        <string property="default" value="" />
+        <integer property="length" value="0" />
+    </object>
 </array>';
         $this->assertComplexIdenticalStr($fields, $structure, 'bad results');
     }

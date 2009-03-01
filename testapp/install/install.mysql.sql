@@ -163,7 +163,8 @@ CREATE TABLE `product_test` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `name` VARCHAR( 150 ) NOT NULL ,
 `price` FLOAT NOT NULL,
-`create_date` datetime NOT NULL
+`create_date` datetime default NULL,
+`promo` BOOL NOT NULL 
 ) TYPE = MYISAM ;
 
 CREATE TABLE `product_tags_test` (
@@ -178,6 +179,7 @@ CREATE TABLE `labels_test` (
 `label` VARCHAR( 50 ) NOT NULL ,
 PRIMARY KEY ( `key` , `lang` )
 );
+
 
 -- for the crud example
 CREATE TABLE `products` (

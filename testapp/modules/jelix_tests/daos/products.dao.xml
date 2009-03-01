@@ -6,8 +6,9 @@
    <record>
       <property name="id"   fieldname="id" datatype="autoincrement"/>
       <property name="name" fieldname="name" datatype="string"  required="true"/>
-      <property name="price" fieldname="price" datatype="float" default="0"/>
-      <property name="create_date" fieldname="create_date" datatype="datetime" insertpattern="NOW()"/>
+      <property name="price" fieldname="price" datatype="float" default="0" required="true"/>
+      <property name="create_date" fieldname="create_date" datatype="datetime" insertpattern="NOW()" />
+      <property name="promo" fieldname="promo" datatype="boolean" required="true" default="false"/>
    </record>
    <factory>
        <method name="findByMaxId" type="select">

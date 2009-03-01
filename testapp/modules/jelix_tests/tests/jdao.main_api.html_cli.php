@@ -77,6 +77,7 @@ class UTDao extends jUnitTestCaseDb {
         $this->prod1 = jDao::createRecord ('products');
         $this->prod1->name ='assiette';
         $this->prod1->price = 3.87;
+        $this->prod1->promo = false;
         $res = $dao->insert($this->prod1);
 
         $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
@@ -86,6 +87,7 @@ class UTDao extends jUnitTestCaseDb {
         $this->prod2 = jDao::createRecord ('products');
         $this->prod2->name ='fourchette';
         $this->prod2->price = 1.54;
+        $this->prod2->promo = true;
         $res = $dao->insert($this->prod2);
 
         $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
@@ -95,6 +97,7 @@ class UTDao extends jUnitTestCaseDb {
         $this->prod3 = jDao::createRecord ('products');
         $this->prod3->name ='verre';
         $this->prod3->price = 2.43;
+        $this->prod3->promo = false;
         $res = $dao->insert($this->prod3);
 
         $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
@@ -104,13 +107,16 @@ class UTDao extends jUnitTestCaseDb {
         $this->records = array(
             array('id'=>$this->prod1->id,
             'name'=>'assiette',
-            'price'=>3.87),
+            'price'=>3.87,
+            'promo'=>0),
             array('id'=>$this->prod2->id,
             'name'=>'fourchette',
-            'price'=>1.54),
+            'price'=>1.54,
+            'promo'=>1),
             array('id'=>$this->prod3->id,
             'name'=>'verre',
-            'price'=>2.43),
+            'price'=>2.43,
+            'promo'=>0),
         );
         $this->assertTableContainsRecords('product_test', $this->records);
 
@@ -124,6 +130,7 @@ class UTDao extends jUnitTestCaseDb {
         $this->assertEqual($prod->id, $this->prod1->id, 'jDao::get : bad id on record');
         $this->assertEqual($prod->name,'assiette', 'jDao::get : bad name property on record');
         $this->assertEqual($prod->price,3.87, 'jDao::get : bad price property on record');
+        $this->assertEqual($prod->promo,0, 'jDao::get : bad promo property on record');
     }
 
     function testUpdate(){
@@ -131,15 +138,42 @@ class UTDao extends jUnitTestCaseDb {
         $prod = jDao::createRecord ('products');
         $prod->name ='assiette nouvelle';
         $prod->price = 5.90;
+        $prod->promo = true;
         $prod->id = $this->prod1->id;
 
-        $prod = $dao->update($prod);
+        $dao->update($prod);
         
         $prod2 = $dao->get($this->prod1->id);
         $this->assertTrue($prod2 instanceof jDaoRecordBase,'jDao::get doesn\'t return a jDaoRecordBase object');
         $this->assertEqual($prod2->id, $this->prod1->id, 'jDao::get : bad id on record');
         $this->assertEqual($prod2->name,'assiette nouvelle', 'jDao::get : bad name property on record');
         $this->assertEqual($prod2->price,5.90, 'jDao::get : bad price property on record');
+        $this->assertEqual($prod2->promo,1, 'jDao::get : bad promo property on record');
+        
+        $prod->promo = 't';
+        $dao->update($prod);
+        $prod2 = $dao->get($this->prod1->id);
+        $this->assertEqual($prod2->promo,1, 'jDao::get : bad promo property on record : %');
+        
+        $prod->promo = 'f';
+        $dao->update($prod);
+        $prod2 = $dao->get($this->prod1->id);
+        $this->assertEqual($prod2->promo,0, 'jDao::get : bad promo property on record : %');
+
+        $prod->promo = false;
+        $dao->update($prod);
+        $prod2 = $dao->get($this->prod1->id);
+        $this->assertEqual($prod2->promo,0, 'jDao::get : bad promo property on record : ');
+
+        $prod->promo = 0;
+        $dao->update($prod);
+        $prod2 = $dao->get($this->prod1->id);
+        $this->assertEqual($prod2->promo,0, 'jDao::get : bad promo property on record : '.var_export($prod2->promo,true).' ');
+
+        $prod->promo = 1;
+        $dao->update($prod);
+        $prod2 = $dao->get($this->prod1->id);
+        $this->assertEqual($prod2->promo,1, 'jDao::get : bad promo property on record : %');
 
     }
 
@@ -159,16 +193,19 @@ class UTDao extends jUnitTestCaseDb {
         <string property="id" value="'.$this->prod1->id.'" />
         <string property="name" value="assiette nouvelle" />
         <string property="price" value="5.90" />
+        <string property="promo" value="1" />
     </object>
     <object>
         <string property="id" value="'.$this->prod2->id.'" />
         <string property="name" value="fourchette" />
         <string property="price" value="1.54" />
+        <string property="promo" value="1" />
     </object>
     <object>
         <string property="id" value="'.$this->prod3->id.'" />
         <string property="name" value="verre" />
         <string property="price" value="2.43" />
+        <string property="promo" value="0" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);

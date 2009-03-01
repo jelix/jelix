@@ -74,7 +74,8 @@ CREATE TABLE product_test (
     id serial NOT NULL,
     name character varying(150) NOT NULL,
     price real NOT NULL,
-    create_date timestamp with time zone NOT NULL
+    create_date timestamp with time zone,
+    promo boolean NOT NULL
 );
 
 SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('product_test', 'id'), 1, false);
@@ -88,8 +89,6 @@ CREATE TABLE products (
 );
 
 SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('products', 'id'), 1, false);
-
-
 
 ALTER TABLE ONLY jacl_group
     ADD CONSTRAINT jacl_group_pkey PRIMARY KEY (id_aclgrp);
@@ -202,10 +201,6 @@ ALTER TABLE ONLY jacl2_rights
 
 ALTER TABLE ONLY jacl2_user_group
     ADD CONSTRAINT jacl2_user_group_id_aclgrp_fkey FOREIGN KEY (id_aclgrp) REFERENCES jacl2_group(id_aclgrp);
-
-
-
-
 
 
 

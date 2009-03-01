@@ -6,7 +6,7 @@
  * @contributor Loic Mathaud
  * @contributor Julien Issler
  * @contributor Thomas, Yoan Blanc
- * @copyright   2005-2007 Laurent Jouanneau
+ * @copyright   2005-2009 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007-2009 Julien Issler
  * @copyright   2008 Thomas, 2008 Yoan Blanc
@@ -455,32 +455,33 @@ abstract class jDaoFactoryBase  {
     /**
      * prepare the value ready to be used in a dynamic evaluation
      */
-    final protected function _prepareValue($value, $fieldType){
+    final protected function _prepareValue($value, $fieldType, $notNull = false){
+        if (!$notNull && $value === null)
+            return 'NULL';
+        
         switch(strtolower($fieldType)){
             case 'int':
             case 'integer':
             case 'autoincrement':
-                $value = $value === null ? 'NULL' : intval($value);
+                $value = intval($value);
                 break;
             case 'double':
             case 'float':
-                $value = $value === null ? 'NULL' : doubleval($value);
+                $value = doubleval($value);
                 break;
             case 'numeric'://usefull for bigint and stuff
             case 'bigautoincrement':
                 if (is_numeric ($value)){
                     //was numeric, we can sends it as is
                     // no cast with intval else overflow
-                    return $value === null ? 'NULL' : $value;
+                    return $value;
                 }else{
                     //not a numeric, nevermind, casting it
-                    return $value === null ? 'NULL' : intval ($value);
+                    return intval ($value);
                 }
                 break;
             case 'boolean':
-                if($value === null)
-                   $value = 'NULL';
-                elseif ($value === true|| strtolower($value)=='true'|| $value =='1')
+                if ($value === true|| strtolower($value)=='true'|| $value =='1' || $value ==='t')
                     $value =  $this->trueValue;
                 else
                     $value =  $this->falseValue;

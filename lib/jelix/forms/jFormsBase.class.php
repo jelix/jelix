@@ -286,11 +286,11 @@ abstract class jFormsBase {
 
     /**
      * save data using a dao.
-     * it call insert or update depending the value of the formId store    d in the container
+     * it call insert or update depending the value of the formId stored in the container
      * @param string $daoSelector the selector of a dao file
-     * @param string $key the primary key for the dao. if null, takes t    he form ID as primary key
+     * @param string $key the primary key for the dao. if null, takes the form ID as primary key
      * @param string $dbProfile the jDb profile to use with the dao
-     * @return mixed  the primary key of the new record in a case of in    serting
+     * @return mixed  the primary key of the new record in a case of inserting
      * @see jDao
      */
     public function saveToDao($daoSelector, $key = null, $dbProfile=''){
