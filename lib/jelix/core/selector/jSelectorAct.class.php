@@ -5,7 +5,7 @@
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
 * @contributor Thibault PIRONT < nuKs >
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2009 Laurent Jouanneau
 * @copyright   2007 Thibault PIRONT
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -30,17 +30,7 @@ class jSelectorAct extends jSelectorActFast {
         global $gJCoord;
 
 #if ENABLE_PHP_JELIX
-#if ENABLE_OLD_ACTION_SELECTOR
-        if($GLOBALS['gJConfig']->enableOldActionSelector == false || strpos($sel,':') !== false) {
-            $res = jelix_scan_action_sel($sel, $this, $gJCoord->actionName);
-        }
-        else{
-            $res = jelix_scan_old_action_sel($sel, $this, $gJCoord->actionName);
-        }
-        if($res){
-#else
         if(jelix_scan_action_sel($sel, $this, $gJCoord->actionName)){
-#endif
             if($this->module == '#'){
                 $this->module = $gJCoord->moduleName;
             }elseif($this->module ==''){
@@ -65,14 +55,7 @@ class jSelectorAct extends jSelectorActFast {
                 $this->resource = $gJCoord->actionName;
             else
                 $this->resource = $m[2];
-#if ENABLE_OLD_ACTION_SELECTOR
-            if($GLOBALS['gJConfig']->enableOldActionSelector == false || strpos($this->resource,':') !== false)
-                $r = explode(':',$this->resource);
-            else
-                $r = explode('_',$this->resource);
-#else
             $r = explode(':',$this->resource);
-#endif
             if(count($r) == 1){
                 $this->controller = 'default';
                 $this->method = $r[0]==''?'index':$r[0];

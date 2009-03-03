@@ -4,6 +4,7 @@
  * @subpackage  urls_engine
  * @author      Laurent Jouanneau
  * @contributor
+ * @copyright   2005-2009 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -178,11 +179,6 @@ class significantUrlEngine implements jIUrlEngine {
                 // array( 0=> 'module', 1=>'action', 2=>'selecteur handler', 3=>array('actions','secondaires'))
                 $s = new jSelectorUrlHandler($infoparsing[2]);
                 $c =$s->className.'UrlsHandler';
-#if ENABLE_OLD_CLASS_NAMING
-                if(!class_exists($c,false)){
-                    $c ='URLS'.$s->resource;
-                }
-#endif
                 $handler =new $c();
 
                 $url->params['module']=$infoparsing[0];
@@ -191,19 +187,9 @@ class significantUrlEngine implements jIUrlEngine {
                 // et qu'elle fait partie des actions secondaires, alors on la laisse
                 // sinon on prend celle indiquée dans la conf
                 if ($infoparsing[3] && isset($params['action'])) {
-#if ENABLE_OLD_ACTION_SELECTOR
-                    if(strpos($params['action'], ':') === false) {
-                        if(!$gJConfig->enableOldActionSelector || strpos($params['action'], '_') === false) {
-                            $params['action'] = 'default:'.$params['action'];
-                        } else if($gJConfig->enableOldActionSelector && strpos($params['action'], '_') !== false) {
-                            $params['action'] = str_replace("_",":",$params['action']);
-                        }
-                    }
-#else
                     if(strpos($params['action'], ':') === false) {
                         $params['action'] = 'default:'.$params['action'];
                     }
-#endif
                     if(in_array($params['action'], $infoparsing[3]))
                         $url->params['action']=$params['action']; // action peut avoir été écrasé par une itération précédente
                     else
@@ -232,19 +218,9 @@ class significantUrlEngine implements jIUrlEngine {
                     // sinon on prend celle indiquée dans la conf
 
                     if($infoparsing[6] && isset($params['action']) ) {
-#if ENABLE_OLD_ACTION_SELECTOR
-                        if(strpos($params['action'], ':') === false) {
-                            if(!$gJConfig->enableOldActionSelector || strpos($params['action'], '_') === false) {
-                                $params['action'] = 'default:'.$params['action'];
-                            } else if($gJConfig->enableOldActionSelector && strpos($params['action'], '_') !== false) {
-                                $params['action'] = str_replace("_",":",$params['action']);
-                            }
-                        }
-#else
                         if(strpos($params['action'], ':') === false) {
                             $params['action'] = 'default:'.$params['action'];
                         }
-#endif
                         if(!in_array($params['action'], $infoparsing[6]) && $infoparsing[1] !='') {
                             $params['action']=$infoparsing[1];
                         }
@@ -401,11 +377,6 @@ class significantUrlEngine implements jIUrlEngine {
         if($urlinfo[0]==0){
             $s = new jSelectorUrlHandler($urlinfo[3]);
             $c =$s->resource.'UrlsHandler';
-#if ENABLE_OLD_CLASS_NAMING
-            if(!class_exists($c,false)){
-                $c ='URLS'.$s->resource;
-            }
-#endif
             $handler =new $c();
             $handler->create($urlact, $url);
         }elseif($urlinfo[0]==1){

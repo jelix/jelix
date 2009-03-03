@@ -5,7 +5,7 @@
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
 * @contributor Thibault PIRONT < nuKs >
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2009 Laurent Jouanneau
 * @copyright   2007 Thibault PIRONT
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -29,15 +29,7 @@ class jSelectorActFast extends jSelectorModule {
      */
     function __construct($request, $module, $action){
         $this->module = $module;
-#if ENABLE_OLD_ACTION_SELECTOR
-        if($GLOBALS['gJConfig']->enableOldActionSelector == false || strpos($action,':') !== false)
-            $separator = ':';
-        else
-            $separator = '_';
-        $r = explode($separator,$action);
-#else
         $r = explode(':',$action);
-#endif
         if(count($r) == 1){
             $this->controller = 'default';
             $this->method = $r[0]==''?'index':$r[0];
@@ -71,16 +63,7 @@ class jSelectorActFast extends jSelectorModule {
     }
 
     public function getClass(){
-#if ENABLE_OLD_CLASS_NAMING
-        $className = $this->controller.'Ctrl';
-        if(!class_exists($className,false)){
-            if(class_exists('CT'.$this->controller,false))
-                $className = 'CT'.$this->controller;
-        }
-        return $className;
-#else
         return $this->controller.'Ctrl';
-#endif
     }
 
 }

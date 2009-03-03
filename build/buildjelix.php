@@ -3,7 +3,7 @@
 * @package     jelix
 * @author      Jouanneau Laurent
 * @contributor Kévin Lepeltier
-* @copyright   2006-2008 Jouanneau laurent
+* @copyright   2006-2009 Jouanneau laurent
 * @copyright   2008 Kévin Lepeltier
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -62,14 +62,6 @@ $BUILD_OPTIONS = array(
     ),
 'PACKAGE_ZIP'=>array(
     "create a zip package",
-    false,
-    ),
-'ENABLE_OLD_CLASS_NAMING'=>array(
-    "old module class naming (jelix <= 1.0a5) can be used. deprecated for Jelix 1.0 and higher.",
-    false,
-    ),
-'ENABLE_OLD_ACTION_SELECTOR'=>array(
-    "old action selector can be used. deprecated for Jelix 1.1 and higher.",
     false,
     ),
 'INCLUDE_ALL_FONTS'=>array(
@@ -202,8 +194,8 @@ switch($WITH_BYTECODE_CACHE){
     case 'eaccelerator': $BUILD_FLAGS |=32; break;
     case 'xcache': $BUILD_FLAGS |=64; break;
 }
-if($ENABLE_OLD_CLASS_NAMING)  $BUILD_FLAGS |=256;
-if($ENABLE_OLD_ACTION_SELECTOR) $BUILD_FLAGS |= 512;
+//if($ENABLE_OLD_CLASS_NAMING)  $BUILD_FLAGS |=256;
+//if($ENABLE_OLD_ACTION_SELECTOR) $BUILD_FLAGS |= 512;
 
 
 if($EDITION_NAME ==''){
@@ -274,7 +266,7 @@ file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 // creation du fichier d'infos sur le build
 $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SVN_REVISION', 'ENABLE_PHP_FILTER',
     'ENABLE_PHP_JSON', 'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
-    'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT', 'ENABLE_OLD_CLASS_NAMING', 'ENABLE_OLD_ACTION_SELECTOR' );
+    'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
 
 $infos = '; --- build date:  '.date('Y-m-d H:i')."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);
 

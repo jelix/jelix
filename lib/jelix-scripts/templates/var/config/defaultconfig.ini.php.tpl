@@ -25,10 +25,6 @@ trustedModules =
 ; or not installed.
 unusedModules = jacldb
 
-#if ENABLE_OLD_ACTION_SELECTOR
-enableOldActionSelector =
-#endif
-
 [coordplugins]
 ;nom = nom_fichier_ini
 

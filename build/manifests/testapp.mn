@@ -143,9 +143,6 @@ cd testapp/modules/jelix_tests/forms
 cd testapp/modules/jelix_tests/tests/
   core.jlocale.html_cli.php
   core.jrequest.html_cli.php
-  core.old_selectors_action.html.php
-  core.old_urls_generation.html.php
-  core.old_urls_parsing.html.php
   core.selectors_action.html.php
   core.selectors_module.html_cli.php
   core.soap.html.php

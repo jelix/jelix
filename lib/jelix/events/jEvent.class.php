@@ -4,7 +4,7 @@
 * @subpackage  events
 * @author      Croes Gérald, Patrice Ferlet
 * @contributor Laurent Jouanneau
-* @copyright 2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
+* @copyright 2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
 * This classes were get originally from the Copix project
 * (CopixEvent*, CopixListener* from Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -181,11 +181,6 @@ class jEvent {
                 if (! isset (self::$listenersSingleton[$module][$listenerName])){
                     require_once ($GLOBALS['gJConfig']->_modulesPathList[$module].'classes/'.$listenerName.'.listener.php');
                     $className = $listenerName.'Listener';
-        #if ENABLE_OLD_CLASS_NAMING
-                    if(!class_exists($className,false)){
-                        $className = 'Listener'.$listenerName;
-                    }
-        #endif
                     self::$listenersSingleton[$module][$listenerName] =  new $className ();
                 }
                 self::$hashListened[$eventName][] = self::$listenersSingleton[$module][$listenerName];
