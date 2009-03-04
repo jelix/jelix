@@ -3,27 +3,33 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Julien Issler
 * @copyright   2007-2009 Jouanneau laurent
+* @copyright   2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 class UTjDbPgsql extends jUnitTestCaseDb {
     protected $dbProfile ='testapp_pgsql';
-    
+
+    function getTests(){
+        try{
+            $profile = jDb::getConnection($this->dbProfile);
+        }
+        catch (Exception $e) {
+            $this->sendMessage('UTjDbPgsql cannot be run: '.$e->getMessage());
+            return array();
+        }
+        return parent::getTests();
+    }
+
     function testStart() {
         $this->emptyTable('product_test');
     }
 
     function testTools(){
-        try {
-            $profile = jDb::getProfile($this->dbProfile);
-            $tools = jDb::getTools($this->dbProfile);
-        } catch (Exception $e) {
-            $this->sendMessage("UTjDbPgsql cannot be run : no postgresql connexion");
-            return;
-        }
+        $tools = jDb::getTools($this->dbProfile);
 
         $fields = $tools->getFieldList('products');
         $structure = '<array>
@@ -142,25 +148,25 @@ class UTjDbPgsql extends jUnitTestCaseDb {
         $prod->id = $this->prod1->id;
 
         $dao->update($prod);
-        
+
         $prod2 = $dao->get($this->prod1->id);
         $this->assertTrue($prod2 instanceof jDaoRecordBase,'jDao::get doesn\'t return a jDaoRecordBase object');
         $this->assertEqual($prod2->id, $this->prod1->id, 'jDao::get : bad id on record');
         $this->assertEqual($prod2->name,'assiette nouvelle', 'jDao::get : bad name property on record');
         $this->assertEqual($prod2->price,5.90, 'jDao::get : bad price property on record');
         $this->assertEqual($prod2->promo,'t', 'jDao::get : bad promo property on record');
-        
-        
+
+
         $prod->promo = 't';
         $dao->update($prod);
         $prod2 = $dao->get($this->prod1->id);
         $this->assertEqual($prod2->promo,'t', 'jDao::get : bad promo property on record : %');
-        
+
         $prod->promo = 1;
         $dao->update($prod);
         $prod2 = $dao->get($this->prod1->id);
         $this->assertEqual($prod2->promo,'t', 'jDao::get : bad promo property on record : %');
-        
+
         $prod->promo = 'f';
         $dao->update($prod);
         $prod2 = $dao->get($this->prod1->id);
@@ -170,12 +176,12 @@ class UTjDbPgsql extends jUnitTestCaseDb {
         $dao->update($prod);
         $prod2 = $dao->get($this->prod1->id);
         $this->assertEqual($prod2->promo,'f', 'jDao::get : bad promo property on record : %');
-        
+
         $prod->promo = 0;
         $dao->update($prod);
         $prod2 = $dao->get($this->prod1->id);
         $this->assertEqual($prod2->promo,'f', 'jDao::get : bad promo property on record : %');
-        
+
     }
 
 }
