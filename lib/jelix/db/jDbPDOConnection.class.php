@@ -3,9 +3,10 @@
 * @package    jelix
 * @subpackage db
 * @author     Laurent Jouanneau
-* @contributor Gwendal Jouannic, Thomas
+* @contributor Gwendal Jouannic, Thomas, Julien Issler
 * @copyright  2005-2006 Laurent Jouanneau
 * @copyright  2008 Gwendal Jouannic, 2009 Thomas
+* @copyright  2009 Julien Issler
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -98,11 +99,11 @@ class jDbPDOConnection extends PDO {
         // et que l'on utilise cet attribut...
         if($this->dbms == 'mysql')
             $this->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-    
+
         // Oracle renvoie les noms de colonnes en majuscules, il faut donc forcer la casse en minuscules
         if ($this->dbms == 'oci')
-            $this->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);            
-            
+            $this->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+
         if(isset($prof['force_encoding']) && $prof['force_encoding']==true){
             if($this->dbms == 'mysql' && isset($this->_mysqlCharsets[$GLOBALS['gJConfig']->charset])){
                 $this->exec("SET CHARACTER SET '".$this->_mysqlCharsets[$GLOBALS['gJConfig']->charset]."'");
@@ -188,5 +189,19 @@ class jDbPDOConnection extends PDO {
      */
     public function hasTablePrefix(){
         return (isset($this->profile['table_prefix']) && $this->profile['table_prefix']!='');
+    }
+
+    /**
+     * enclose the field name
+     * @param string $fieldName the field name
+     * @return string the enclosed field name
+     * @since 1.1.2
+     */
+    public function encloseFieldName($fieldName){
+        switch($this->dbms){
+            case 'mysql': return '`'.$fieldName.'`';
+            case 'pgsql': return '"'.$fieldName.'"';
+            default: return $fieldName;
+        }
     }
 }
