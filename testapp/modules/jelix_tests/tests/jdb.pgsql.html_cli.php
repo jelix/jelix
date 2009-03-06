@@ -185,7 +185,7 @@ class UTjDbPgsql extends jUnitTestCaseDb {
     }
 
     function testFieldNameEnclosure(){
-        $this->assertEqualOrDiff(jDb::getConnection($this->dbProfile)->encloseFieldName('toto'),'"toto"');
+        $this->assertEqualOrDiff(jDb::getConnection($this->dbProfile)->encloseName('toto'),'"toto"');
     }
 
 }

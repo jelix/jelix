@@ -140,8 +140,16 @@ abstract class jDbConnection {
      * @return string the enclosed field name
      * @since 1.1.1
      */
-    public function encloseFieldName($fieldName){
+    public function encloseName($fieldName){
         return $fieldName;
+    }
+    
+    /**
+     * @deprecated since 1.1.2
+     * @see encloseName
+     */
+    public function encloseFieldName($fieldName) {
+        return $this->encloseName($fieldName);
     }
 
     /**

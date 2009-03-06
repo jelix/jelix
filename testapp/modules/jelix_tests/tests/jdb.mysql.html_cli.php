@@ -12,7 +12,7 @@
 class UTjDbMysql extends jUnitTestCaseDb {
 
     function testFieldNameEnclosure(){
-        $this->assertEqualOrDiff(jDb::getConnection()->encloseFieldName('toto'),'`toto`');
+        $this->assertEqualOrDiff(jDb::getConnection()->encloseName('toto'),'`toto`');
     }
 
 }

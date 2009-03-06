@@ -197,11 +197,12 @@ class jDbPDOConnection extends PDO {
      * @return string the enclosed field name
      * @since 1.1.2
      */
-    public function encloseFieldName($fieldName){
+    public function encloseName($fieldName){
         switch($this->dbms){
             case 'mysql': return '`'.$fieldName.'`';
             case 'pgsql': return '"'.$fieldName.'"';
             default: return $fieldName;
         }
     }
+
 }

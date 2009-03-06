@@ -341,7 +341,7 @@ abstract class jDaoFactoryBase  {
         $props =$this->getProperties();
         foreach ($daocond->order as $name => $way){
             if (isset($props[$name]))
-                $order[] = $this->_conn->encloseFieldName($name).' '.$way;
+                $order[] = $this->_conn->encloseName($name).' '.$way;
         }
 
         if(count ($order)){
@@ -358,7 +358,7 @@ abstract class jDaoFactoryBase  {
         $props = $this->getProperties();
         foreach ($daocond->group as $name) {
             if (isset($props[$name]))
-                $group[] = $this->_conn->encloseFieldName($name);
+                $group[] = $this->_conn->encloseName($name);
         }
 
         if (count ($group)) {
@@ -385,7 +385,7 @@ abstract class jDaoFactoryBase  {
             if($forSelect)
                 $prefixNoCondition = $this->_tables[$prop['table']]['name'].'.'.$prop['fieldName'];
             else
-                $prefixNoCondition = $this->_conn->encloseFieldName($prop['fieldName']);
+                $prefixNoCondition = $this->_conn->encloseName($prop['fieldName']);
 
             $op = strtoupper($cond['operator']);
             $prefix = $prefixNoCondition.' '.$op.' '; // ' ' for LIKE..

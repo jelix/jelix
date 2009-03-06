@@ -40,7 +40,7 @@ class mysqlDbConnection extends jDbConnection {
      * @return string the enclosed field name
      * @since 1.1.1
      */
-    public function encloseFieldName($fieldName){
+    public function encloseName($fieldName){
         return '`'.$fieldName.'`';
     }
 
