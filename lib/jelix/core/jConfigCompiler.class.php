@@ -4,7 +4,7 @@
 * @subpackage   core
 * @author       Jouanneau Laurent
 * @contributor  Thibault PIRONT < nuKs >, Christophe Thiriot, Philippe Schelté
-* @copyright    2006-2008 Jouanneau laurent
+* @copyright    2006-2009 Jouanneau laurent
 * @copyright    2007 Thibault PIRONT, 2008 Christophe Thiriot, 2008 Philippe Schelté
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -110,6 +110,20 @@ class jConfigCompiler {
         $config->_modulesPathList = self::_loadPathList($config->modulesPath, $unusedModules, $config->_allBasePath);
 
         self::_loadPluginsPathList($config);
+
+        $coordplugins = array();
+        foreach ($config->coordplugins as $name=>$conf) {
+            if (!isset($config->_pluginsPathList_coord[$name])) {
+                die("Jelix Error: Error in the main configuration. The coord plugin $name doesn't exist!");
+            }
+            if ($conf) {
+                if ($conf != '1' && !file_exists(JELIX_APP_CONFIG_PATH.$conf)) {
+                    die("Jelix Error: Error in the main configuration. Configuration file '$conf' for coord plugin $name doesn't exist!");
+                }
+                $coordplugins[$name] = $conf;
+            }
+        }
+        $config->coordplugins = $coordplugins;
 
         if($config->checkTrustedModules){
             $config->_trustedModules = explode(',',$config->trustedModules);

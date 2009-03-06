@@ -4,7 +4,7 @@
 * @subpackage   core
 * @author       Laurent Jouanneau
 * @contributor  Thibault PIRONT < nuKs >, Julien Issler, Dominique Papin
-* @copyright    2005-2008 laurent Jouanneau
+* @copyright    2005-2009 laurent Jouanneau
 * @copyright    2007 Thibault PIRONT
 * @copyright    2008 Julien Issler
 * @copyright    2008 Dominique Papin
@@ -110,21 +110,20 @@ class jCoordinator {
     private function _loadPlugins(){
         global $gJConfig;
 
-        foreach($gJConfig->coordplugins as $name=>$conf){
-            if($conf && isset($gJConfig->_pluginsPathList_coord[$name])){
-                if($conf=='1'){
-                    $conf = array();
-                }else{
-                   $conff = $conf;
-                   if(!file_exists(JELIX_APP_CONFIG_PATH.$conff))
-                        die("Jelix Error: Error in the main configuration. Configuration file '$conff' for coord plugin $name doesn't exist!");
-                   if( false === ($conf = parse_ini_file(JELIX_APP_CONFIG_PATH.$conff,true)))
-                        die("Jelix Error: Error in the configuration file of plugin $name ($conff)!");
-                }
-                include( $gJConfig->_pluginsPathList_coord[$name].$name.'.coord.php');
-                $class= $name.'CoordPlugin';
-                $this->plugins[strtolower($name)] = new $class($conf);
+        foreach ($gJConfig->coordplugins as $name=>$conf) {
+            // the config compiler has removed all deactivated plugins
+            // so we don't have to check if the value $conf is empty or not
+            if ($conf == '1') {
+                $conf = array();
             }
+            else {
+                $conff = JELIX_APP_CONFIG_PATH.$conf;
+                if (false === ($conf = parse_ini_file($conff,true)))
+                    die("Jelix Error: Error in the configuration file of plugin $name ($conff)!");
+            }
+            include( $gJConfig->_pluginsPathList_coord[$name].$name.'.coord.php');
+            $class= $name.'CoordPlugin';
+            $this->plugins[strtolower($name)] = new $class($conf);
         }
     }
 
