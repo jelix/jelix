@@ -142,7 +142,7 @@ class jManifest {
         $tokens = token_get_all($content);
         $result = '';
         $firstcomment= true;
-        $currentWhistpace ='';
+        $currentWhitespace ='';
         $firstPHPfound = false;
         foreach($tokens as $token) {
             if (is_string($token)) {
