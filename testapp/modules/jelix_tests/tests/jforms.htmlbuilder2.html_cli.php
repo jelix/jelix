@@ -322,7 +322,7 @@ c2.activate(\'closed\');
 
         $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest2\');
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
 jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -340,7 +340,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest3\');
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
 jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -359,7 +359,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         $result ='<form action="https://www.jelix.org/dummy.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest4\');
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest2\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
 jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
