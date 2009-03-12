@@ -24,7 +24,7 @@ function jtpl_meta_html_html($tpl, $method, $param)
 {
     global $gJCoord,$gJConfig;
 
-    if($gJCoord->response->getFormatType() != 'html'){
+    if($gJCoord->response->getType() != 'html'){
         return;
     }
     switch($method){
