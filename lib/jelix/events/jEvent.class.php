@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  events
 * @author      Croes Gérald, Patrice Ferlet
-* @contributor Laurent Jouanneau
-* @copyright 2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
+* @contributor Laurent Jouanneau, Dominique Papin
+* @copyright 2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau, 2009 Dominique Papin
 * This classes were get originally from the Copix project
 * (CopixEvent*, CopixListener* from Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -150,7 +150,7 @@ class jEvent {
 
     /**
     * because a listener can listen several events, we should
-    * create only one instancy of a listener for performance, and 
+    * create only one instancy of a listener for performance, and
     * $hashListened will contains only reference to this listener.
     * @var array of jEventListener
     */
@@ -176,10 +176,13 @@ class jEvent {
         $inf = & $GLOBALS['JELIX_EVENTS'];
         self::$hashListened[$eventName] = array();
         if(isset($inf[$eventName])){
+            $modules = & $GLOBALS['gJConfig']->_modulesPathList;
             foreach ($inf[$eventName] as $listener){
                 list($module,$listenerName) = $listener;
+                if (! isset($modules[$module]))  // some modules could be unused
+                    continue;
                 if (! isset (self::$listenersSingleton[$module][$listenerName])){
-                    require_once ($GLOBALS['gJConfig']->_modulesPathList[$module].'classes/'.$listenerName.'.listener.php');
+                    require_once ($modules[$module].'classes/'.$listenerName.'.listener.php');
                     $className = $listenerName.'Listener';
                     self::$listenersSingleton[$module][$listenerName] =  new $className ();
                 }
