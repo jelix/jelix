@@ -20,6 +20,12 @@
  * @param string $thousands_sep the separator string for the thousands
  * @return string
  */
-function jtpl_modifier_common_number_format($number, $decimals=0, $dec_point='.', $thousands_sep=','){
+function jtpl_modifier_common_number_format($number, $decimals=0, $dec_point=false, $thousands_sep=false){
+    if ($dec_point == false) {
+        $dec_point = jLocale::get('jelix~format.decimal_point');
+    }
+    if ($thousands_sep == false) {
+        $thousands_sep = jLocale::get('jelix~format.thousands_sep');
+    }
     return number_format($number, $decimals, $dec_point, $thousands_sep);
 }
