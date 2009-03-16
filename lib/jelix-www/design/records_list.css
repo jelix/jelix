@@ -40,6 +40,7 @@ table.records-list tbody tr:hover { background: #eed !important }
 table.records-list tbody td { }
 table.records-list tbody td.colblank { background-color:#fff; border:0 none #fff!important;}
 table.records-list thead th.colblank { background-color:#fff; border-top:0 none #fff!important;border-bottom:0 none #fff!important;}
+table.records-list thead th.colreduced { width: 65px;}
 
 .pagelinks li { display:inline; border:1px solid gray; padding:4px; color:black; }
 .pagelinks li.pagelinks-disabled { color: gray;}

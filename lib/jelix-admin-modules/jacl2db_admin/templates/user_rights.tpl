@@ -11,12 +11,12 @@
 <thead>
     <tr>
         <th rowspan="2"></th>
-        <th rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights.1@}<br />{@jacl2db_admin~acl2.col.personnal.rights.2@}</th>
+        <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights@}</th>
         {if $nbgrp}
         <th colspan="{$nbgrp}">{@jacl2db_admin~acl2.col.groups@}</th>
         {/if}
         <th class="colblank" rowspan="2"></th>
-        <th rowspan="2">{@jacl2db_admin~acl2.col.resulting.1@}<br />{@jacl2db_admin~acl2.col.resulting.2@}</th>
+        <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.resulting@}</th>
     </tr>
     <tr>
     {foreach $groups as $group}
@@ -43,11 +43,11 @@
 {assign $line = true}
 {foreach $rights as $subject=>$right}
 <tr class="{if $line}odd{else}even{/if}">
-    <th>{$subject}</th>
+    <th><label for="{$subject|eschtml}">{$subject}</label></th>
     {assign $hasr=false}
     {foreach $right as $group=>$r}
     {if $group == $hisgroup->id_aclgrp}
-    <td><input type="checkbox" name="rights[{$subject}]" {if $r}{assign $hasr=true}checked="checked"{/if} /></td>
+    <td><input type="checkbox" name="rights[{$subject}]" id="{$subject|eschtml}{if $r}{assign $hasr=true} checked="checked"{/if} /></td>
     {else}
     <td {if !isset($groupsuser[$group])}class="notingroup"{elseif $r}{assign $hasr=true}{/if}>{if $r}X{/if}</td>
     {/if}

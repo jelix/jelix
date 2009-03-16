@@ -9,12 +9,12 @@
 <thead>
     <tr>
         <th rowspan="2"></th>
-        <th rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights.1@}<br />{@jacl2db_admin~acl2.col.personnal.rights.2@}</th>
+        <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights@}</th>
         {if $nbgrp}
         <th colspan="{$nbgrp}">{@jacl2db_admin~acl2.col.groups@}</th>
         {/if}
         <th class="colblank" rowspan="2"></th>
-        <th rowspan="2">{@jacl2db_admin~acl2.col.resulting.1@}<br />{@jacl2db_admin~acl2.col.resulting.2@}</th>
+        <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.resulting@}</th>
     </tr>
     <tr>
     {foreach $groups as $group}
