@@ -137,7 +137,7 @@ class createformCommand extends JelixScriptCommand {
             if($datatype != '')
                 $attr.=' type="'.$datatype.'"';
 
-            $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label>$name</label>\n</$tag>";
+            $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label>".ucwords(str_replace('_',' ',$name))."</label>\n</$tag>";
         }
         $this->createFile($filename,'form.xml.tpl', array('content'=>$content.$submit));
 
