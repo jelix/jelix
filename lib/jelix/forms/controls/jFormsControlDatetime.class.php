@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Julien Issler
-* @contributor
-* @copyright   2008 Julien Issler
+* @contributor Thomas
+* @copyright   2008 Julien Issler, 2009 Thomas
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -32,5 +32,14 @@ class jFormsControlDatetime extends jFormsControlDate {
                 $value['seconds'] = '00';
             $this->setData($value['year'].'-'.$value['month'].'-'.$value['day'].' '.$value['hour'].':'.$value['minutes'].':'.$value['seconds']);
         }
+    }
+    
+    function getDisplayValue($value) {
+        if ($value != '') {
+            $dt = new jDateTime();
+            $dt->setFromString($value, jDateTime::DB_DTFORMAT);
+            $value = $dt->toString(jDateTime::LANG_DTFORMAT);
+        }
+        return $value;
     }
 }
