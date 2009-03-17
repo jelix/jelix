@@ -62,7 +62,7 @@ function jtpl_function_html_breadcrumb($tpl, $nb=null, $separator = '') {
     for( $i = $nb; $i < $leng; $i++ ) {
 
         $page = $_SESSION[$config['session_name']][$i];
-        echo '<li value="'.($i+1).'"'.($i==$nb?' class="first"':($i==$leng-1?' class="end"':'')).'>';
+        echo '<li'.($i==$nb?' class="first"':($i==$leng-1?' class="end"':'')).'>';
         if( $i!=$leng-1 )
             echo '<a href="'.jUrl::get($page['action'], $page['params'], jUrl::XMLSTRING).'" '.($page['title']!=''?'title="'.$page['title'].'"':'').'>';
         echo $_SESSION[$config['session_name']][$i]['label'];

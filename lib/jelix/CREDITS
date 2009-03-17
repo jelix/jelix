@@ -142,6 +142,7 @@ F. Fernandez (aka e-media)
 FoxMaSk
   - bug fix in jFile::removeDir (#733)
   - little improvement in jtpl_function_html_diff(#720)
+  - remove deprecated "value" attribute in breadcrumb function (#800)
 
 Mickaël Fradin (aka mike)
  - improvements in the jtpl plugin: formcontrols (#223)
