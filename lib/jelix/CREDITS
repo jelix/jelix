@@ -216,6 +216,7 @@ Thomas
  - JDaoConditions::addItemGroup : add clause group by (#579)
  - jDbPDOConnection : fixed bug in query method with 3 arguments (#839)
  - better display of date/datetime values with jforms (#866)
+ - jforms: attribute type on output control (#855)
 
 Baptiste Toinot (aka Surfoo)
  - double / in path for locale selector

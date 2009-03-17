@@ -4,11 +4,11 @@
 * @subpackage forms
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin, Julien Issler
-* @contributor Uriel Corfa Emotic SARL
+* @contributor Uriel Corfa Emotic SARL, Thomas
 * @copyright   2006-2008 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2007-2008 Dominique Papin
 * @copyright   2007 Emotic SARL
-* @copyright   2008 Julien Issler
+* @copyright   2008 Julien Issler, 2009 Thomas
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -22,7 +22,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
 
     const NS = 'http://jelix.org/ns/forms/1.1';
 
-    protected $allowedInputType = array('string','boolean','decimal','integer','hexadecimal',
+    protected $allowedType = array('string','boolean','decimal','integer','hexadecimal',
                                       'datetime','date','time','localedatetime','localedate','localetime',
                                       'url','email','ipv4','ipv6','html');
 

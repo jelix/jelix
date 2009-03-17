@@ -4,11 +4,11 @@
 * @subpackage forms
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin, Julien Issler
-* @contributor Uriel Corfa Emotic SARL
+* @contributor Uriel Corfa Emotic SARL, Thomas
 * @copyright   2006-2008 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2007 Dominique Papin
 * @copyright   2007 Emotic SARL
-* @copyright   2008 Julien Issler
+* @copyright   2008 Julien Issler, 2009 Thomas
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -88,22 +88,12 @@ class jFormsCompiler_jf_1_0  {
         return $twocontrols;
     }
 
-    protected $allowedInputType = array('string','boolean','decimal','integer','hexadecimal',
+    protected $allowedType = array('string','boolean','decimal','integer','hexadecimal',
                                       'datetime','date','time','localedatetime','localedate','localetime',
                                       'url','email','ipv4','ipv6');
 
     protected function generateInput(&$source, $control, &$attributes) {
-        $type='string';
-        if(isset($attributes['type'])){
-            $type = strtolower($attributes['type']);
-            if(!in_array($type, $this->allowedInputType)){
-                throw new jException('jelix~formserr.datatype.unknow',array($type,'input',$this->sourceFile));
-            }
-
-            if($type != 'string')
-                $source[]='$ctrl->datatype= new jDatatype'.$type.'();';
-            unset($attributes['type']);
-        }
+        $type = $this->attrType($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->attrDefaultvalue($source, $attributes);
         if(isset($attributes['minlength'])){
@@ -160,6 +150,7 @@ class jFormsCompiler_jf_1_0  {
     }
 
     protected function generateOutput(&$source, $control, &$attributes) {
+        $type = $this->attrType($source, $attributes);
         $this->attrDefaultvalue($source, $attributes);
         $this->readLabel($source, $control, 'output');
         //$this->readHelpHintAlert($source, $control);
@@ -335,6 +326,21 @@ class jFormsCompiler_jf_1_0  {
             $source[]='$ctrl->size='.$size.';';
             unset($attributes['size']);
         }
+    }
+
+    protected function attrType(&$source, &$attributes) {
+        $type = 'string';
+        if(isset($attributes['type'])){
+            $type = strtolower($attributes['type']);
+            if(!in_array($type, $this->allowedType)){
+                throw new jException('jelix~formserr.datatype.unknow',array($type,'input',$this->sourceFile));
+            }
+            
+            if($type != 'string')
+                $source[]='$ctrl->datatype= new jDatatype'.$type.'();';
+            unset($attributes['type']);
+        }
+        return $type;
     }
 
     protected function readLabel(&$source, $control, $controltype) {
