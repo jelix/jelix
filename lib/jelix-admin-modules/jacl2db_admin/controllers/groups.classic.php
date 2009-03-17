@@ -30,9 +30,8 @@ class groupsCtrl extends jController {
         if (jAcl2::check('acl.group.modify')) {
             $tpl->assign('groups', jAcl2DbUserGroup::getGroupList());
             $rep->body->assign('MAIN', $tpl->fetch('groups_edit'));
-
-        } else {
-
+        }
+        else {
             $gid=array(0);
             $o = new StdClass;
             $o->id_aclgrp = '0';
