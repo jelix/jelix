@@ -10,13 +10,19 @@
 
 class jacl2db_adminListener extends jEventListener{
 
-   /**
-   *
-   */
-   function onmasteradminGetMenuContent ($event) {
-      if(jAcl2::check('acl.user.view'))
-        $event->add(new masterAdminMenuItem('usersrights', jLocale::get('jacl2db_admin~acl2.menu.item.rights'), jUrl::get('jacl2db_admin~users:index'), 30, 'system'));
-      if(jAcl2::check('acl.group.view'))
-        $event->add(new masterAdminMenuItem('usersgroups', jLocale::get('jacl2db_admin~acl2.menu.item.groups'), jUrl::get('jacl2db_admin~groups:index'), 20, 'system'));
-   }
+    /**
+    *
+    */
+    function onmasteradminGetMenuContent ($event) {
+        if(jAcl2::check('acl.user.view')) {
+            $item = new masterAdminMenuItem('usersrights', jLocale::get('jacl2db_admin~acl2.menu.item.rights'), jUrl::get('jacl2db_admin~users:index'), 30, 'system');
+            $item->icon = $GLOBALS['gJConfig']->urlengine['jelixWWWPath'] . 'design/images/rights.png';
+            $event->add($item);
+        }
+        if(jAcl2::check('acl.group.view')) {
+            $item = new masterAdminMenuItem('usersgroups', jLocale::get('jacl2db_admin~acl2.menu.item.groups'), jUrl::get('jacl2db_admin~groups:index'), 20, 'system');
+            $item->icon = $GLOBALS['gJConfig']->urlengine['jelixWWWPath'] . 'design/images/group.png';
+            $event->add($item);
+        }
+    }
 }

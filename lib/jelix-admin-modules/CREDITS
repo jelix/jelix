@@ -5,7 +5,9 @@ By alphabetic order on the name
 
 Laurent Jouanneau
   - creator of modules: jacl2db_admin, jauthdb_admin, master_admin
-  
+
+Cédric Houwaer (hoover (dot) united (at) gmail (dot) com)
+  - designer of dashboard.png
 Kévin Lepeltier
   - improvement on the master_admin menu (#811)
   - improvement on the master_admin info box (#812)
@@ -16,3 +18,6 @@ Geekbay
 
 Baptiste Toinot
   - improvement of wording in the master_admin (#855)
+  - improvement of design on the master_admin menu (#863)
+
+Thanks to famfamfam.com for the cute icons. (http://www.famfamfam.com/lab/icons/silk/)

@@ -1,7 +1,7 @@
 @import url(records_list.css);
 
-body {  
-    font-family: Verdana, Arial, Sans; 
+body {
+    font-family: Verdana, Arial, Sans;
     font-size:0.8em;
     margin:0; padding:0;
     background-color:#eff4f6;
@@ -9,7 +9,13 @@ body {
 
 a img { border: 0}
 
-fieldset { margin-top:1em; }
+fieldset {
+    margin-top: 1em;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+}
 
 #login-content {
    margin: 4em auto;
@@ -109,7 +115,7 @@ fieldset { margin-top:1em; }
     -o-border-radius:4px 4px 0 0;
     border-radius:4px 4px 0 0;
     -webkit-border-top-right-radius: 4px;
-    -webkit-border-top-left-radius: 4px; 
+    -webkit-border-top-left-radius: 4px;
 }
 
 #menu .menu-bloc ul {
@@ -119,7 +125,7 @@ fieldset { margin-top:1em; }
     list-style-type:none;
 }
 #menu .menu-bloc li {
-    padding: 2px 8px 2px 20px;
+    padding: 0;
     border-top:  1px solid #EFF8FC;
     border-bottom:  1px solid #B0C4CB;
     background-position:0 0;
@@ -127,11 +133,24 @@ fieldset { margin-top:1em; }
     margin:0;
 }
 
-#menu .menu-bloc li a { color:#3f6f7a; text-decoration:none; }
+#menu .menu-bloc li a {
+    color: #3f6f7a;
+    text-decoration: none;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: 2px center;
+    padding: 2px 2px 2px 20px;
+}
 #menu .menu-bloc li a:visited {  color : #002830;}
 #menu .menu-bloc li a:hover { text-decoration:underline; background-color: #D5E6EC; }
 #menu .menu-bloc li:hover { background-color: #D5E6EC; }
 
+#menu .menu-bloc .selected {
+    background-color:#D5E6EC;
+}
+#menu .menu-bloc .selected a:hover {
+    text-decoration: none;
+}
 
 #admin-message {}
 

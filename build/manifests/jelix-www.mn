@@ -13,6 +13,10 @@ cd lib/jelix-www/design/images
   fond-bandeau.png
   fond-cellule.png
   jelix_powered.png
+  dashboard.png
+  group.png
+  rights.png
+  user.png
 cd lib/jelix-www/js
   tooltip.js
   jforms_light.js
