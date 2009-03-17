@@ -147,6 +147,7 @@ FoxMaSk
 Mickaël Fradin (aka mike)
  - improvements in the jtpl plugin: formcontrols (#223)
  - added style feature in the meta_html plugin (#553)
+ - little other improvements (#835)
 
 Olivier Gambier (aka d-m-p)
  - code reviewer, bug fixes

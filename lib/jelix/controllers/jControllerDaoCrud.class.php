@@ -5,9 +5,11 @@
 * @author       Laurent Jouanneau
 * @contributor  Bastien Jaillot
 * @contributor  Thibault PIRONT < nuKs >
+* @contributor  Mickael Fradin
 * @copyright    2007-2008 Laurent Jouanneau
 * @copyright    2007 Thibault PIRONT
 * @copyright    2007,2008 Bastien Jaillot
+* @copyright    2009 Mickael Fradin
 * @link         http://www.jelix.org
 * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
@@ -320,9 +322,9 @@ class jControllerDaoCrud extends jController {
             $id = $form_daorec->getPk();
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
+            $rep->params['id'] = $id;
             $this->_afterCreate($form, $id, $rep);
             jForms::destroy($this->form);
-            $rep->params['id'] = $id;
             return $rep;
         } else {
             $rep->action = $this->_getAction('create');
@@ -453,12 +455,13 @@ class jControllerDaoCrud extends jController {
             $form_dao->update($form_daorec);
             $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
+            $rep->params['id'] = $id;
             $this->_afterUpdate($form, $id, $rep);
             jForms::destroy($this->form, $id);
         } else {
             $rep->action = $this->_getAction('editupdate');
+            $rep->params['id'] = $id;
         }
-        $rep->params['id'] = $id;
         return $rep;
     }
 
