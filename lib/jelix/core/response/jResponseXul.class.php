@@ -263,7 +263,7 @@ class jResponseXul extends jResponse {
 
         // js link
         foreach ($this->_JSLink as $src=>$params){
-            echo '<script type="application/x-javascript" src="',$src,'" />',"\n";
+            echo '<script type="application/x-javascript" src="',htmlspecialchars($src),'" />',"\n";
         }
 
         // js code

@@ -5,7 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Yann (description and keywords), Dominique Papin
 * @contributor Warren Seine, Alexis Métaireau
-* @copyright   2005-2008 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
+* @copyright   2005-2009 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
 * @copyright   2008 Warren Seine, Alexis Métaireau
 *              few lines of code are copyrighted CopixTeam http://www.copix.org
 * @link        http://www.jelix.org
@@ -432,7 +432,7 @@ class jResponseHtml extends jResponse {
             }
             if(!isset($params['rel']))
                 $more .='rel="stylesheet" ';
-            echo  '<link type="text/css" href="',$src,'" ',$more,$this->_endTag;
+            echo  '<link type="text/css" href="',htmlspecialchars($src),'" ',$more,$this->_endTag;
         }
 
         foreach ($this->_CSSIELink as $src=>$params){
@@ -449,7 +449,7 @@ class jResponseHtml extends jResponse {
             }
             if(!isset($params['rel']))
                 $more .='rel="stylesheet" ';
-            echo  '<link type="text/css" href="',$src,'" ',$more,$this->_endTag;
+            echo  '<link type="text/css" href="',htmlspecialchars($src),'" ',$more,$this->_endTag;
             echo '<![endif]-->';
         }
 
@@ -464,7 +464,7 @@ class jResponseHtml extends jResponse {
             $more = '';
             if (!empty($params[2]))
                 $more = 'title = "'.htmlspecialchars($params[2]).'"';
-            echo '<link rel="',$params[0],'" type="',$params[1],'" href="',$href,'" ',$more,$this->_endTag;
+            echo '<link rel="',$params[0],'" type="',$params[1],'" href="',htmlspecialchars($href),'" ',$more,$this->_endTag;
         }
 
         // js link
@@ -474,7 +474,7 @@ class jResponseHtml extends jResponse {
             foreach ($params as $param_name=>$param_value){
                 $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
             }
-            echo '<script type="text/javascript" src="',$src,'" ',$more,'></script>',"\n";
+            echo '<script type="text/javascript" src="',htmlspecialchars($src),'" ',$more,'></script>',"\n";
         }
         if(count($this->_JSIELink)){
             echo '<!--[if IE]>';
@@ -484,7 +484,7 @@ class jResponseHtml extends jResponse {
                 foreach ($params as $param_name=>$param_value){
                     $more .= $param_name.'="'. htmlspecialchars($param_value).'" ';
                 }
-                echo '<script type="text/javascript" src="',$src,'" ',$more,'></script>',"\n";
+                echo '<script type="text/javascript" src="',htmlspecialchars($src),'" ',$more,'></script>',"\n";
             }
             echo '<![endif]-->';
         }
