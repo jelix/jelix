@@ -47,7 +47,7 @@
     {assign $hasr=false}
     {foreach $right as $group=>$r}
     {if $group == $hisgroup->id_aclgrp}
-    <td><input type="checkbox" name="rights[{$subject}]" id="{$subject|eschtml}{if $r}{assign $hasr=true} checked="checked"{/if} /></td>
+    <td><input type="checkbox" name="rights[{$subject}]" id="{$subject|eschtml}" {if $r}{assign $hasr=true} checked="checked"{/if} /></td>
     {else}
     <td {if !isset($groupsuser[$group])}class="notingroup"{elseif $r}{assign $hasr=true}{/if}>{if $r}X{/if}</td>
     {/if}
