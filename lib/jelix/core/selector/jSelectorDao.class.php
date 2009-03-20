@@ -25,15 +25,17 @@ class jSelectorDao extends jSelectorModule {
     protected $_where;
 
     function __construct($sel, $driver, $isprofile=true){
-        if($isprofile){
+        if ($isprofile) {
             $p = jDb::getProfile($driver);
-            if($p['driver'] == 'pdo'){
-                $this->driver=substr($p['dsn'],0,strpos($p['dsn'],':'));
-            }else{
-                $this->driver= $p['driver'];
+            if ($p['driver'] == 'pdo') {
+                $this->driver = substr($p['dsn'], 0, strpos($p['dsn'],':'));
             }
-        }else{
-            $this->driver=$driver;
+            else {
+                $this->driver = $p['driver'];
+            }
+        }
+        else {
+            $this->driver = $driver;
         }
         $this->_compiler='jDaoCompiler';
         $this->_compilerPath=JELIX_LIB_PATH.'dao/jDaoCompiler.class.php';

@@ -4,18 +4,21 @@
 * @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006-2007 Jouanneau laurent
+* @copyright   2006-2009 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php');
+require_once(dirname(__FILE__).'/daotests.lib.php');
+
 
 class UTDao_parser_update extends jUnitTestCase {
 
+    protected $_selector;
     function setUp() {
-        jDaoCompiler::$daoId ='';
-        jDaoCompiler::$daoPath = '';
+        if (!$this->_selector) {
+          $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
+        }
     }
 
     protected $methDatas=array(
@@ -218,8 +221,11 @@ class UTDao_parser_update extends jUnitTestCase {
   </record>
 </dao>';
 
-        $parser = new jDaoParser();
-        $parser->parse(simplexml_load_string($dao),1);
+        $parser = new testjDaoParser($this->_selector);
+        $xml = simplexml_load_string($dao);
+        $tools = new mysqlDbTools(null);
+        $parser->testParseDatasource($xml);
+        $parser->testParseRecord($xml,$tools);
 
         foreach($this->methDatas as $k=>$t){
             //$this->sendMessage("test good method ".$k);
@@ -241,7 +247,7 @@ class UTDao_parser_update extends jUnitTestCase {
       array('<?xml version="1.0"?>
           <method name="foo" type="update">
           </method>',
-          'jelix~daoxml.method.values.undefine', array('','','foo')
+          'jelix~daoxml.method.values.undefine', array('foo~bar','','foo')
           ),
       array('<?xml version="1.0"?>
           <method name="foo" type="update">
@@ -249,7 +255,7 @@ class UTDao_parser_update extends jUnitTestCase {
                 <value  value="" />
             </values>
           </method>',
-          'jelix~daoxml.method.values.property.unknow', array('','','foo','')
+          'jelix~daoxml.method.values.property.unknow', array('foo~bar','','foo','')
           ),
       array('<?xml version="1.0"?>
           <method name="foo" type="update">
@@ -257,7 +263,7 @@ class UTDao_parser_update extends jUnitTestCase {
                 <value property="plop" value="" />
             </values>
           </method>',
-          'jelix~daoxml.method.values.property.unknow', array('','','foo','plop')
+          'jelix~daoxml.method.values.property.unknow', array('foo~bar','','foo','plop')
           ),
       array('<?xml version="1.0"?>
           <method name="foo" type="update">
@@ -265,7 +271,7 @@ class UTDao_parser_update extends jUnitTestCase {
                 <value property="author_firstname" value="" />
             </values>
           </method>',
-          'jelix~daoxml.method.values.property.bad', array('','','foo','author_firstname')
+          'jelix~daoxml.method.values.property.bad', array('foo~bar','','foo','author_firstname')
           ),
       array('<?xml version="1.0"?>
           <method name="foo" type="update">
@@ -273,7 +279,7 @@ class UTDao_parser_update extends jUnitTestCase {
                 <value property="id" value="" />
             </values>
           </method>',
-          'jelix~daoxml.method.values.property.pkforbidden', array('','','foo','id')
+          'jelix~daoxml.method.values.property.pkforbidden', array('foo~bar','','foo','id')
           ),
       array('<?xml version="1.0"?>
           <method name="foo" type="update">
@@ -281,7 +287,7 @@ class UTDao_parser_update extends jUnitTestCase {
                 <value property="subject" value="abc" expr="\'abs\'"/>
             </values>
           </method>',
-          'jelix~daoxml.method.values.valueexpr', array('','','foo','subject')
+          'jelix~daoxml.method.values.valueexpr', array('foo~bar','','foo','subject')
           ),
 
     );
@@ -303,8 +309,11 @@ class UTDao_parser_update extends jUnitTestCase {
   </record>
 </dao>';
 
-        $parser = new jDaoParser();
-        $parser->parse(simplexml_load_string($dao),1);
+        $parser = new testjDaoParser($this->_selector);
+        $xml = simplexml_load_string($dao);
+        $tools = new mysqlDbTools(null);
+        $parser->testParseDatasource($xml);
+        $parser->testParseRecord($xml,$tools);
 
         foreach($this->badmethDatas as $k=>$t){
             //$this->sendMessage("test bad method ".$k);
@@ -333,8 +342,11 @@ class UTDao_parser_update extends jUnitTestCase {
   </record>
 </dao>';
 
-        $parser = new jDaoParser();
-        $parser->parse(simplexml_load_string($dao),1);
+        $parser = new testjDaoParser($this->_selector);
+        $xml = simplexml_load_string($dao);
+        $tools = new mysqlDbTools(null);
+        $parser->testParseDatasource($xml);
+        $parser->testParseRecord($xml,$tools);
 
         //$this->sendMessage("test bad update method ");
         $xml= simplexml_load_string('<?xml version="1.0"?>
@@ -350,7 +362,7 @@ class UTDao_parser_update extends jUnitTestCase {
             $this->fail("Pas d'exception survenue !");
         }catch(jDaoXmlException $e){
             $this->assertEqual($e->getLocaleKey(), 'jelix~daoxml.method.update.forbidden');
-            $this->assertEqual($e->getLocaleParameters(), array('','','tryupdate'));
+            $this->assertEqual($e->getLocaleParameters(), array('foo~bar','','tryupdate'));
         }catch(Exception $e){
             $this->fail("Exception inconnue : ".$e->getMessage());
         }

@@ -9,13 +9,19 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php');
+require_once(dirname(__FILE__).'/daotests.lib.php');
 
 class UTDao_parser extends jUnitTestCase {
 
+    protected $_selector;
+    protected $_tools;
     function setUp() {
-        jDaoCompiler::$daoId ='';
-        jDaoCompiler::$daoPath = '';
+        if (!$this->_selector) {
+            $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
+        }
+        if (!$this->_tools) {
+            $this->_tools= new mysqlDbTools(null);
+        }
     }
 
 
@@ -190,9 +196,9 @@ class UTDao_parser extends jUnitTestCase {
         foreach($this->dsTest as $k=>$t){
             //$this->sendMessage("test good datasource ".$k);
             $xml= simplexml_load_string($t[0]);
-            $p = new jDaoParser();
+            $p = new testjDaoParser($this->_selector);
             try{
-                $p->parse($xml,2);
+                $p->testParseDatasource($xml);
                 $this->assertComplexIdenticalStr($p, $t[1]);
             }catch(jDaoXmlException $e){
                 $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocaleKey().')');
@@ -212,7 +218,7 @@ class UTDao_parser extends jUnitTestCase {
   </datasources>
 </dao>',
 'jelix~daoxml.datasource.missing',
-array('','')
+array('foo~bar','')
 ),
 
         array('<?xml version="1.0"?>
@@ -222,7 +228,7 @@ array('','')
   </datasources>
 </dao>',
 'jelix~daoxml.table.name',
-array('','')
+array('foo~bar','')
 
 ),
 
@@ -233,7 +239,7 @@ array('','')
   </datasources>
 </dao>',
 'jelix~daoxml.primarykey.missing',
-array('','')
+array('foo~bar','')
 
 ),
         array('<?xml version="1.0"?>
@@ -243,7 +249,7 @@ array('','')
   </datasources>
 </dao>',
 'jelix~daoxml.primarykey.missing',
-array('','')
+array('foo~bar','')
 
 ),
         array('<?xml version="1.0"?>
@@ -254,7 +260,7 @@ array('','')
   </datasources>
 </dao>',
 'jelix~daoxml.table.two.many',
-array('','')
+array('foo~bar','')
 
 ),
 
@@ -267,7 +273,7 @@ array('','')
   </datasources>
 </dao>',
 'jelix~daoxml.foreignkey.missing',
-array('','')
+array('foo~bar','')
 
 ),
 
@@ -280,7 +286,7 @@ array('','')
   </datasources>
 </dao>',
 'jelix~daoxml.foreignkey.missing',
-array('','')
+array('foo~bar','')
 
 ),
 
@@ -293,7 +299,7 @@ array('','')
   </datasources>
 </dao>',
 'jelix~daoxml.foreignkey.missing',
-array('','')
+array('foo~bar','')
 
 ),
 
@@ -304,9 +310,9 @@ array('','')
         foreach($this->dsTestbad as $k=>$t){
             //$this->sendMessage("test bad datasource ".$k);
             $xml= simplexml_load_string($t[0]);
-            $p = new jDaoParser();
+            $p = new testjDaoParser($this->_selector);
             try{
-                $p->parse($xml,2);
+                $p->testParseDatasource($xml);
                 $this->fail("Pas d'exception survenue !");
             }catch(jDaoXmlException $e){
                 $this->assertEqual($e->getLocaleKey(), $t[1]);
@@ -328,6 +334,8 @@ array('','')
             <string p="fieldName" value="label"/>
             <string p="table" value="news"/>
             <string p="datatype" value="string"/>
+            <string p="unifiedType" value="varchar"/>
+            <boolean p="autoIncrement" value="false" />
             <null p="regExp"/>
             <boolean p="required" value="false"/>
             <boolean p="requiredInConditions" value="false"/>
@@ -352,6 +360,8 @@ array('','')
             <string p="fieldName" value="label"/>
             <string p="table" value="news"/>
             <string p="datatype" value="string"/>
+            <string p="unifiedType" value="varchar"/>
+            <boolean p="autoIncrement" value="false" />
             <null p="regExp"/>
             <boolean p="required" value="false"/>
             <boolean p="requiredInConditions" value="false"/>
@@ -363,7 +373,7 @@ array('','')
             <string p="sequenceName" value="" />
             <null p="maxlength"/>
             <null p="minlength"/>
-            <string p="defaultValue" value="no label" />
+            <string p="defaultValue" value="\'no label\'" />
             <boolean p="ofPrimaryTable" value="true" />
         </object>'
         ),
@@ -376,6 +386,8 @@ array('','')
             <string p="fieldName" value="firstname"/>
             <string p="table" value="news_author"/>
             <string p="datatype" value="string"/>
+            <string p="unifiedType" value="varchar"/>
+            <boolean p="autoIncrement" value="false" />
             <null p="regExp"/>
             <boolean p="required" value="false"/>
             <boolean p="requiredInConditions" value="false"/>
@@ -387,11 +399,12 @@ array('','')
             <string p="sequenceName" value="" />
             <null p="maxlength"/>
             <null p="minlength"/>
+            <null p="defaultValue" />
             <boolean p="ofPrimaryTable" value="false" />
         </object>'
         ),
 
-    array(
+        array(
         '<?xml version="1.0"?>
         <property name="id" fieldname="news_id" datatype="autoincrement" />',
         '<?xml version="1.0"?>
@@ -400,6 +413,8 @@ array('','')
             <string p="fieldName" value="news_id"/>
             <string p="table" value="news"/>
             <string p="datatype" value="autoincrement"/>
+            <string p="unifiedType" value="integer"/>
+            <boolean p="autoIncrement" value="true" />
             <null p="regExp"/>
             <boolean p="required" value="false"/>
             <boolean p="requiredInConditions" value="true"/>
@@ -422,6 +437,8 @@ array('','')
             <string p="fieldName" value="label"/>
             <string p="table" value="news"/>
             <string p="datatype" value="string"/>
+            <string p="unifiedType" value="varchar"/>
+            <boolean p="autoIncrement" value="false" />
             <null p="regExp"/>
             <boolean p="required" value="false"/>
             <boolean p="requiredInConditions" value="false"/>
@@ -445,6 +462,8 @@ array('','')
             <string p="fieldName" value="label"/>
             <string p="table" value="news"/>
             <string p="datatype" value="string"/>
+            <string p="unifiedType" value="varchar"/>
+            <boolean p="autoIncrement" value="false" />
             <null p="regExp"/>
             <boolean p="required" value="false"/>
             <boolean p="requiredInConditions" value="false"/>
@@ -470,15 +489,15 @@ array('','')
   </datasources>
 </dao>';
 
-        $parser = new jDaoParser();
-        $parser->parse(simplexml_load_string($dao),2);
+        $parser = new testjDaoParser($this->_selector);
+        $parser->testParseDatasource(simplexml_load_string($dao));
 
         foreach($this->propDatas as $k=>$t){
             //$this->sendMessage("test good property ".$k);
             $xml= simplexml_load_string($t[0]);
             try{
-                $p = new jDaoProperty($xml, $parser);
-                $this->assertComplexIdenticalStr($p, $t[1]);
+                $p = new jDaoProperty($xml, $parser, $this->_tools);
+                $this->assertComplexIdenticalStr($p, $t[1], "test $k");
             }catch(jDaoXmlException $e){
                 $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
@@ -486,8 +505,5 @@ array('','')
             }
         }
     }
-
 }
 
-
-?>

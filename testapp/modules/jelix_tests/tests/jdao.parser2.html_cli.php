@@ -4,18 +4,20 @@
 * @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006-2007 Jouanneau laurent
+* @copyright   2006-2009 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+require_once(dirname(__FILE__).'/daotests.lib.php');
 
-require_once(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php');
 
 class UTDao_parser2 extends jUnitTestCase {
 
+    protected $_selector;
     function setUp() {
-        jDaoCompiler::$daoId ='';
-        jDaoCompiler::$daoPath = '';
+        if (!$this->_selector) {
+          $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
+        }
     }
 
     protected $methDatas=array(
@@ -380,8 +382,10 @@ class UTDao_parser2 extends jUnitTestCase {
   </record>
 </dao>';
 
-        $parser = new jDaoParser();
-        $parser->parse(simplexml_load_string($dao),1);
+        $parser = new testjDaoParser($this->_selector);
+        $doc = simplexml_load_string($dao);
+        $parser->testParseDatasource($doc);
+        $parser->testParseRecord($doc, new mysqlDbTools(null));
 
         foreach($this->methDatas as $k=>$t){
             //$this->sendMessage("test good method ".$k);
@@ -407,7 +411,7 @@ class UTDao_parser2 extends jUnitTestCase {
                 <orderitem property="publishdate" way="$afoo"/>
             </order>
           </method>',
-          'jelix~daoxml.method.orderitem.parameter.unknow', array('','','foo','$afoo')
+          'jelix~daoxml.method.orderitem.parameter.unknow', array('foo~bar','','foo','$afoo')
           ),
 
     );
@@ -429,9 +433,11 @@ class UTDao_parser2 extends jUnitTestCase {
   </record>
 </dao>';
 
-        $parser = new jDaoParser();
-        $parser->parse(simplexml_load_string($dao),1);
-
+        $parser = new testjDaoParser($this->_selector);
+        $doc = simplexml_load_string($dao);
+        $parser->testParseDatasource($doc);
+        $parser->testParseRecord($doc, new mysqlDbTools(null));
+        
         foreach($this->badmethDatas as $k=>$t){
             //$this->sendMessage("test bad method ".$k);
             $xml= simplexml_load_string($t[0]);

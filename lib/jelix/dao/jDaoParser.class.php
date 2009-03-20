@@ -66,26 +66,35 @@ class jDaoParser {
      */
     private $_eventList = array();
 
-
     public $hasOnlyPrimaryKeys = false;
+    
+    public $selector;
     /**
     * Constructor
     */
-    function __construct(){
+    function __construct($selector) {
+        $this->selector = $selector;
     }
 
     /**
     * parse a dao xml content
     * @param SimpleXmlElement $xml
+    * @param jDbTools $tools
     * @param int $debug  for debug only 0:parse all, 1:parse only datasource+record, 2;parse only datasource
     */
-    public function parse( $xml, $debug=0){
+    public function parse( $xml, $tools){
+        $this->parseDatasource($xml);
+        $this->parseRecord($xml, $tools);
+        $this->parseFactory($xml);
+    }
+    
+    protected function parseDatasource($xml) {
         // -- tables
         if(isset ($xml->datasources) && isset ($xml->datasources[0]->primarytable)){
             $t = $this->_parseTable (0, $xml->datasources[0]->primarytable[0]);
             $this->_primaryTable = $t['name'];
             if(isset($xml->datasources[0]->primarytable[1])){
-                throw new jDaoXmlException ('table.two.many');
+                throw new jDaoXmlException ($this->selector, 'table.two.many');
             }
             foreach($xml->datasources[0]->foreigntable as $table){
                 $this->_parseTable (1, $table);
@@ -94,26 +103,27 @@ class jDaoParser {
                 $this->_parseTable (2, $table);
             }
         }else{
-            throw new jDaoXmlException ('datasource.missing');
+            throw new jDaoXmlException ($this->selector, 'datasource.missing');
         }
-
-        if($debug == 2) return;
+    }
+    
+    protected function parseRecord($xml, $tools) {
         $countprop = 0;
         //add the record properties
         if(isset($xml->record) && isset($xml->record[0]->property)){
             foreach ($xml->record[0]->property as $prop){
-                $p = new jDaoProperty ($prop->attributes(), $this);
+                $p = new jDaoProperty ($prop->attributes(), $this, $tools);
                 $this->_properties[$p->name] = $p;
                 $this->_tables[$p->table]['fields'][] = $p->name;
-                if(($p->table == $this->_primaryTable) && !$p->isPK)
+                if($p->ofPrimaryTable && !$p->isPK)
                     $countprop ++;
             }
             $this->hasOnlyPrimaryKeys = ($countprop == 0);
         }else
-            throw new jDaoXmlException ('properties.missing');
-
-        if($debug == 1) return;
-
+            throw new jDaoXmlException ($this->selector, 'properties.missing');
+    }
+    
+    protected function parseFactory($xml) {
         // get additionnal methods definition
         if (isset ($xml->factory)) {
             if (isset($xml->factory[0]['events'])) {
@@ -125,7 +135,7 @@ class jDaoParser {
                 foreach($xml->factory[0]->method as $method){
                     $m = new jDaoMethod ($method, $this);
                     if(isset ($this->_methods[$m->name])){
-                        throw new jDaoXmlException ('method.duplicate',$m->name);
+                        throw new jDaoXmlException ($this->selector, 'method.duplicate',$m->name);
                     }
                     $this->_methods[$m->name] = $m;
                 }
@@ -140,29 +150,29 @@ class jDaoParser {
         $infos = $this->getAttr($tabletag, array('name','realname','primarykey','onforeignkey'));
 
         if ($infos['name'] === null )
-            throw new jDaoXmlException ('table.name');
+            throw new jDaoXmlException ($this->selector, 'table.name');
 
         if($infos['realname'] === null)
             $infos['realname'] = $infos['name'];
 
         if($infos['primarykey'] === null)
-            throw new jDaoXmlException ('primarykey.missing');
+            throw new jDaoXmlException ($this->selector, 'primarykey.missing');
 
         $infos['pk']= preg_split("/[\s,]+/", $infos['primarykey']);
         unset($infos['primarykey']);
 
         if(count($infos['pk']) == 0 || $infos['pk'][0] == '')
-            throw new jDaoXmlException ('primarykey.missing');
+            throw new jDaoXmlException ($this->selector, 'primarykey.missing');
 
         if($typetable){ // pour les foreigntable et optionalforeigntable
             if($infos['onforeignkey'] === null)
-                throw new jDaoXmlException ('foreignkey.missing');
+                throw new jDaoXmlException ($this->selector, 'foreignkey.missing');
             $infos['fk']=preg_split("/[\s,]+/",$infos['onforeignkey']);
             unset($infos['onforeignkey']);
             if(count($infos['fk']) == 0 || $infos['fk'][0] == '')
-                throw new jDaoXmlException ('foreignkey.missing');
+                throw new jDaoXmlException ($this->selector, 'foreignkey.missing');
             if(count($infos['fk']) != count($infos['pk']))
-                throw new jDaoXmlException ('foreignkey.missing');
+                throw new jDaoXmlException ($this->selector, 'foreignkey.missing');
             if($typetable == 1){
                 $this->_ijoins[]=$infos['name'];
             }else{

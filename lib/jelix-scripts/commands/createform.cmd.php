@@ -53,25 +53,24 @@ class createformCommand extends JelixScriptCommand {
         $gJConfig->startModule = $this->_parameters['module'];
         jContext::push($this->_parameters['module']);
 
+        $tools = jDb::getTools();
+        
         // we're going to parse the dao
-        $selector = new jSelectorDao($dao, '',false);
-
-        jDaoCompiler::$daoId = $selector->toString();
-        jDaoCompiler::$daoPath = $selector->getPath();
-        jDaoCompiler::$dbType = $selector->driver;
+        $selector = new jSelectorDao($dao,'');
 
         $doc = new DOMDocument();
-
-        if(!$doc->load(jDaoCompiler::$daoPath)){
-           throw new jException('jelix~daoxml.file.unknow', jDaoCompiler::$daoPath);
+        $daoPath = $selector->getPath();
+        
+        if(!$doc->load($daoPath)){
+           throw new jException('jelix~daoxml.file.unknow', $daoPath);
         }
 
         if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0'){
-           throw new jException('jelix~daoxml.namespace.wrong',array(jDaoCompiler::$daoPath, $doc->namespaceURI));
+           throw new jException('jelix~daoxml.namespace.wrong',array($daoPath, $doc->namespaceURI));
         }
 
-        $parser = new jDaoParser ();
-        $parser->parse(simplexml_import_dom($doc));
+        $parser = new jDaoParser ($selector);
+        $parser->parse(simplexml_import_dom($doc), $tools);
 
         // know we generate the form file
 
@@ -84,8 +83,7 @@ class createformCommand extends JelixScriptCommand {
             if( !$property->ofPrimaryTable) {
                 continue;
             }
-            if($property->isPK && ($property->datatype =='autoincrement' ||
-                                   $property->datatype =='bigautoincrement')) {
+            if($property->isPK && $property->autoIncrement) {
                 continue;
             }
 
@@ -106,10 +104,7 @@ class createformCommand extends JelixScriptCommand {
             //    $attr.=' defaultvalue=""';
             $datatype='';
             $tag = 'input';
-            switch($property->datatype){
-                case 'autoincrement':
-                case 'bigautoincrement':
-                case 'int':
+            switch($property->unifiedType){
                 case 'integer':
                 case 'numeric':
                     $datatype='integer';
@@ -128,6 +123,7 @@ class createformCommand extends JelixScriptCommand {
                     $datatype='decimal';
                     break;
                 case 'text':
+                case 'blob':
                     $tag='textarea';
                     break;
                 case 'boolean':

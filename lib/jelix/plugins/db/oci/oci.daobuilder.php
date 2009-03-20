@@ -19,10 +19,6 @@ class ociDaoBuilder extends jDaoGenerator {
     protected $aliasWord = ' ';
     protected $propertiesListForInsert = 'PrimaryFieldsExcludeAutoIncrement';
 
-    function __construct($factoryClassName, $recordClassName, $daoDefinition){
-        parent::__construct($factoryClassName, $recordClassName, $daoDefinition);
-    }
-
     protected function genOuterJoins(&$tables, $primaryTableName){
         $sqlFrom = '';
         $sqlWhere ='';

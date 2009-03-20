@@ -154,16 +154,7 @@ class jDb {
             throw new jException('jelix~db.error.profile.unknow',$name);
         }
     }
-    
-    /**
-     * DEPRECATED. same as getProfile
-     * @deprecated
-     */
-    public static function getProfil ($name='', $nameIsProfileType=false){
-        trigger_error("jDb::getProfil() is deprecated, you should use jDb::getProfile()", E_USER_NOTICE);
-        return self::getProfile($name, $nameIsProfileType);
-    }
-    
+
     /**
      * call it to test a profile (during an install for example)
      * @param array  $profile  profile properties

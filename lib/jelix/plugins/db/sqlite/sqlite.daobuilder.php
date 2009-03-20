@@ -18,11 +18,6 @@ class sqliteDaoBuilder extends jDaoGenerator {
 
     protected $propertiesListForInsert = 'PrimaryFieldsExcludeAutoIncrement';
 
-    function __construct($factoryClassName, $recordClassName, $daoDefinition){
-        parent::__construct($factoryClassName, $recordClassName, $daoDefinition);
-
-    }
-
     protected function genSelectPattern ($pattern, $table, $fieldname, $propname ){
         if ($pattern =='%s'){
             $field = $table.$this->_encloseName($fieldname).' as '.$this->_encloseName($propname);

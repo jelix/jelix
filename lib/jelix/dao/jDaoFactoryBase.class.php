@@ -121,15 +121,16 @@ abstract class jDaoFactoryBase  {
      *  'isPK' => true/false, //says if it is a primary key
      *  'isFK' => true/false, //says if it is a foreign key
      *  'datatype' => '', // type of data : string
+     *  'unifiedType'=> '' // the corresponding unified type
      *  'table' => 'grp', // alias of the table the property is attached to
      *  'updatePattern' => '%s',
      *  'insertPattern' => '%s',
      *  'selectPattern' => '%s',
-     *  'sequenceName' => '', // name of the sequence when type is autoincrement
+     *  'sequenceName' => '', // name of the sequence when field is autoincrement
      *  'maxlength' => NULL, // or a number
      *  'minlength' => NULL, // or a number
-     *  'ofPrimaryTable' => true/false,
-     *  'needsQuotes' => tree/false, // says if the value need to enclosed between quotes
+     *  'ofPrimaryTable' => true/false
+     *  'autoIncrement'=> true/false
      * ) </pre>
      * @return array informations on all properties
      * @since 1.0beta3
@@ -394,7 +395,7 @@ abstract class jDaoFactoryBase  {
                 if(is_array($cond['value'])){
                     $values = array();
                     foreach($cond['value'] as $value)
-                        $values[] = $this->_prepareValue($value,$prop['datatype']);
+                        $values[] = $this->_prepareValue($value,$prop['unifiedType']);
                     $values = join(',', $values);
                 }
                 else
@@ -403,7 +404,7 @@ abstract class jDaoFactoryBase  {
                 $r .= $prefix.'('.$values.')';
             }
             else if (!is_array ($cond['value'])){
-                $value = $this->_prepareValue($cond['value'],$prop['datatype']);
+                $value = $this->_prepareValue($cond['value'],$prop['unifiedType']);
                 if ($value === 'NULL'){
                     if($op == '='){
                         $r .= $prefixNoCondition.' IS NULL';
@@ -420,7 +421,7 @@ abstract class jDaoFactoryBase  {
                     if (!$firstCV){
                         $r .= ' or ';
                     }
-                    $value = $this->_prepareValue($conditionValue,$prop['datatype']);
+                    $value = $this->_prepareValue($conditionValue,$prop['unifiedType']);
                     if ($value === 'NULL'){
                         if($op == '='){
                             $r .= $prefixNoCondition.' IS NULL';
@@ -460,35 +461,25 @@ abstract class jDaoFactoryBase  {
             return 'NULL';
         
         switch(strtolower($fieldType)){
-            case 'int':
             case 'integer':
-            case 'autoincrement':
-                $value = intval($value);
-                break;
+                return intval($value);
             case 'double':
             case 'float':
-                $value = doubleval($value);
-                break;
-            case 'numeric'://usefull for bigint and stuff
-            case 'bigautoincrement':
-                if (is_numeric ($value)){
-                    //was numeric, we can sends it as is
-                    // no cast with intval else overflow
+                return doubleval($value);
+            case 'numeric':
+            case 'decimal':
+                if(is_numeric($value))
                     return $value;
-                }else{
-                    //not a numeric, nevermind, casting it
-                    return intval ($value);
-                }
-                break;
+                else
+                    return doubleval($value);
             case 'boolean':
                 if ($value === true|| strtolower($value)=='true'|| $value =='1' || $value ==='t')
-                    $value =  $this->trueValue;
+                    return $this->trueValue;
                 else
-                    $value =  $this->falseValue;
+                    return $this->falseValue;
                 break;
             default:
-                $value = $this->_conn->quote ($value);
+                return $this->_conn->quote ($value);
         }
-        return $value;
     }
 }

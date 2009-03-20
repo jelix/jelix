@@ -154,8 +154,7 @@ class jControllerDaoCrudDfk extends jController {
             $dao = jDao::get($this->dao, $this->dbProfile);
 
         $props = $dao->getProperties();
-        $dt = $props[$this->dpkName]['datatype'];
-        return ($dt == 'autoincrement' || $dt == 'bigautoincrement');
+        return ($props[$this->dpkName]['autoIncrement'] == true);
     }
 
     protected function _getPk($spk, $dpk, $dao=null) {

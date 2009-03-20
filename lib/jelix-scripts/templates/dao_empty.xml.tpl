@@ -4,10 +4,10 @@
         <primarytable name="%%table%%" realname="%%table%%" primarykey=""/>
     </datasources>
     <record>
-    <!--<property name="" fieldname="" datatype="string/int/float/autoincrement/date"
+    <!--<property name="" fieldname="" datatype=""
         required="yes"
         maxlength="" minlength="" regexp=""
-        sequence=""
+        sequence="" autoincrement="false"
         updatepattern="" insertpattern="" selectpattern=""
     />-->
     </record>

@@ -78,92 +78,30 @@ class createdaoCommand extends JelixScriptCommand {
          $primarykeys='';
          foreach($fields as $fieldname=>$prop){
 
-            switch(strtolower($prop->type)){
-
-               case 'clob': 
-               case 'text':
-               case 'mediumtext':
-               case 'longtext':
-               case 'tinytext':
-                  $type='text';
-                  break;
-               case 'varchar2':
-               case 'varchar':
-               case 'char':
-               case 'enum':
-               case 'bpchar':
-               case 'set':
-                  $type='string';
-                  break;
-               case 'number':
-               case 'tinyint':
-               case 'numeric':
-               case 'int':
-               case 'integer':
-               case 'smallint':
-               case 'year':
-                  if($prop->autoIncrement ){
-                     $type='autoincrement';
-                  }else{
-                     $type='int';
-                  }
-                  break;
-
-               case 'mediumint':
-               case 'bigint':
-                  if($prop->autoIncrement ){
-                     $type='bigautoincrement';
-                  }else{
-                     $type='numeric';
-                  }
-                  break;
-               case 'float':
-               case 'double':
-               case 'decimal':
-                  $type='float';
-                  break;
-
-               case 'date':
-                  $type='date';
-                  break;
-               case 'timestamp':
-               case 'datetime':
-                  $type='datetime';
-                  break;
-               case 'time':
-                  $type='time';
-                  break;
-               case 'bool':
-               case 'boolean':
-                  $type='boolean';
-                  break;
-               default:
-                  $type='';
+            $properties.="\n        <property name=\"$fieldname\" fieldname=\"$fieldname\"";
+            $properties.=' datatype="'.$prop->type.'"';
+            if($prop->primary) {
+               if($primarykeys != '')
+                  $primarykeys.=','.$fieldname;
+               else
+                  $primarykeys.=$fieldname;
             }
+            if($prop->notNull && !$prop->autoIncrement)
+               $properties.=' required="true"';
+            
+            if($prop->autoIncrement)
+                $properties.=' autoincrement="true"';
 
-            if($type!=''){
-               $properties.="\n        <property name=\"$fieldname\" fieldname=\"$fieldname\"";
-               $properties.=' datatype="'.$type.'"';
-               if($prop->primary){
-                  if($primarykeys != '')
-                     $primarykeys.=','.$fieldname;
-                  else
-                     $primarykeys.=$fieldname;
-               }
-               if($prop->notNull && !$prop->autoIncrement)
-                  $properties.=' required="true"';
-
-               if($prop->hasDefault) {
-                   $properties.=' default="'.htmlspecialchars($prop->default).'"';
-               }
-               if ($prop->length) {
-                    $properties.=' maxlength="'.$prop->length.'"';
-               }
-               if ($prop->sequence) {
-                    $properties.=' sequence="'.$prop->sequence.'"';
-               }
-               $properties.='/>';
+            if($prop->hasDefault) {
+                $properties.=' default="'.htmlspecialchars($prop->default).'"';
             }
+            if ($prop->length) {
+                 $properties.=' maxlength="'.$prop->length.'"';
+            }
+            if ($prop->sequence) {
+                 $properties.=' sequence="'.$prop->sequence.'"';
+            }
+            $properties.='/>';
 
          }
 

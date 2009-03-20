@@ -5,7 +5,7 @@
 #if ENABLE_OPTIMIZED_SOURCE
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
 * Ideas and some parts of this file were get originally from the Copix project
 * (CopixDAOGeneratorV1, CopixDAODefinitionV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -24,7 +24,7 @@
 #else
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2009 Laurent Jouanneau
 * Idea of this class was get originally from the Copix project
 * (CopixDaoCompiler, Copix 2.3dev20050901, http://www.copix.org)
 * no more line of code are copyrighted by CopixTeam
@@ -49,46 +49,24 @@ require(JELIX_LIB_PATH.'dao/jDaoGenerator.class.php');
  * @subpackage dao
  */
 class jDaoCompiler  implements jISimpleCompiler {
-    /**
-    * the current DAO id.
-    * @var string
-    */
-    static public $daoId = '';
-
-    /**
-     * the current DAO file path
-     * @var string
-     */
-    static public $daoPath = '';
-
-    /**
-     * The database type
-     * @var string
-     */
-    static public $dbType='';
 
     /**
     * compile the given class id.
     */
     public function compile ($selector) {
 
-        jDaoCompiler::$daoId = $selector->toString();
-        jDaoCompiler::$daoPath = $selector->getPath();
-        jDaoCompiler::$dbType = $selector->driver;
+        $daoPath = $selector->getPath();
 
         // chargement du fichier XML
         $doc = new DOMDocument();
 
-        if(!$doc->load(jDaoCompiler::$daoPath)){
-            throw new jException('jelix~daoxml.file.unknow', jDaoCompiler::$daoPath);
+        if(!$doc->load($daoPath)){
+            throw new jException('jelix~daoxml.file.unknow', $daoPath);
         }
 
         if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0'){
-            throw new jException('jelix~daoxml.namespace.wrong',array(jDaoCompiler::$daoPath, $doc->namespaceURI));
+            throw new jException('jelix~daoxml.namespace.wrong',array($daoPath, $doc->namespaceURI));
         }
-
-        $parser = new jDaoParser ();
-        $parser->parse(simplexml_import_dom($doc));
 
         global $gJConfig;
 #ifnot ENABLE_OPTIMIZED_SOURCE
@@ -97,9 +75,17 @@ class jDaoCompiler  implements jISimpleCompiler {
             throw new jException('jelix~db.error.driver.notfound', $selector->driver);
         }
 #endif
-        require_once($gJConfig->_pluginsPathList_db[$selector->driver].$selector->driver.'.daobuilder.php');
+        $path = $gJConfig->_pluginsPathList_db[$selector->driver].$selector->driver;
+        require_once($path.'.dbtools.php');
+        $class = $selector->driver.'DbTools';
+        $tools = new $class(null);
+
+        $parser = new jDaoParser ($selector);
+        $parser->parse(simplexml_import_dom($doc), $tools);
+
+        require_once($path.'.daobuilder.php');
         $class = $selector->driver.'DaoBuilder';
-        $generator = new $class ($selector->getDaoClass(), $selector->getDaoRecordClass(), $parser);
+        $generator = new $class ($selector, $tools, $parser);
 
         // génération des classes PHP correspondant à la définition de la DAO
         $compiled = '<?php '.$generator->buildClasses ()."\n?>";
@@ -116,13 +102,13 @@ class jDaoCompiler  implements jISimpleCompiler {
 class jDaoXmlException extends jException {
 
     /**
+     * @param jSelectorDao $selector
      * @param string $localekey a locale key
      * @param array $localeParams parameters for the message (for sprintf)
      */
-    public function __construct($localekey, $localeParams=array()) {
+    public function __construct($selector, $localekey, $localeParams=array()) {
         $localekey= 'jelix~daoxml.'.$localekey;
-
-        $arg=array(jDaoCompiler::$daoId, jDaoCompiler::$daoPath);
+        $arg=array($selector->toString(), $selector->getPath());
         if(is_array($localeParams)){
             $arg=array_merge($arg, $localeParams);
         }else{

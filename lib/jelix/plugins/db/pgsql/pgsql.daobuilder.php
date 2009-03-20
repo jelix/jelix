@@ -17,22 +17,9 @@
 class pgsqlDaoBuilder extends jDaoGenerator {
 
     protected $propertiesListForInsert = 'PrimaryFieldsExcludeAutoIncrement';
-    
-    protected $trueValue = 'TRUE';
-    
-    protected $falseValue = 'FALSE';
-    
-    function __construct($factoryClassName, $recordClassName, $daoDefinition){
-        parent::__construct($factoryClassName, $recordClassName, $daoDefinition);
-
-    }
 
     protected function genUpdateAutoIncrementPK($pkai, $pTableRealName) {
         return '          $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
-    }
-
-    protected function _encloseName($name){
-        return '"'.$name.'"';
     }
 
     protected function _getAutoIncrementPKField ($using = null){
@@ -46,7 +33,7 @@ class pgsqlDaoBuilder extends jDaoGenerator {
         foreach ($using as $id=>$field) {
             if(!$field->isPK)
                 continue;
-            if ($field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement') {
+            if ($field->autoIncrement) {
                if(!strlen($field->sequenceName)){
                   $field->sequenceName = $tb.'_'.$field->name.'_seq';
                }

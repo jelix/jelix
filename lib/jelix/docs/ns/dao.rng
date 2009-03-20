@@ -53,9 +53,7 @@
          <oneOrMore>
             <element name="property">
                <attribute name="name" />
-               <attribute name="datatype">
-                  <ref  name="dao.datatypes"/>
-               </attribute>
+               <attribute name="datatype" />
                <optional><attribute name="fieldname" /></optional>
                <optional><attribute name="table" /></optional>
                <optional><attribute name="required"><data type="boolean" /></attribute></optional>
@@ -286,7 +284,6 @@
 
    <!-- divers -->
 
-
    <define name="any">
       <element>
          <anyName/>
@@ -302,30 +299,4 @@
       </element>
    </define>
 
-
-   <define name="dao.datatypes">
-      <choice>
-         <value>varchar</value>
-         <value>varchardate</value>
-         <value>autoincrement</value>
-         <value>bigautoincrement</value>
-         <ref name="jelix.datatypes.value"/>
-      </choice>
-   </define>
-
-   <define name="jelix.datatypes.value">
-      <choice>
-         <value>int</value>
-         <value>integer</value>
-         <value>numeric</value>
-         <value>double</value>
-         <value>float</value>
-         <value>datetime</value>
-         <value>time</value>
-         <value>date</value>
-         <value>string</value>
-         <value>text</value>
-         <value>boolean</value>
-      </choice>
-   </define>
 </grammar>

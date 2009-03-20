@@ -49,17 +49,27 @@ class jDaoGenerator {
 
     protected $aliasWord = ' AS ';
 
-    protected $trueValue = 1;
-    protected $falseValue = 0;
+    /**
+     * @var jDbTools
+    */
+    protected $tools;
+
+    protected $_daoId;
+    protected $_daoPath;
+    protected $_dbType;
 
     /**
     * constructor
     * @param jDaoParser $daoDefinition
     */
-    function __construct($factoryClassName, $recordClassName, $daoDefinition){
-        $this->_dataParser = $daoDefinition;
-        $this->_DaoClassName = $factoryClassName;
-        $this->_DaoRecordClassName = $recordClassName;
+    function __construct($selector, $tools, $daoParser){
+        $this->_daoId = $selector->toString();
+        $this->_daoPath = $selector->getPath();
+        $this->_dbType = $selector->driver;
+        $this->_dataParser = $daoParser;
+        $this->_DaoClassName = $selector->getDaoClass();
+        $this->_DaoRecordClassName = $selector->getDaoRecordClass();
+        $this->tools = $tools;
     }
 
     /**
@@ -93,10 +103,11 @@ class jDaoGenerator {
 
         $properties=array();
 
-        foreach ($this->_dataParser->getProperties() as $id=>$field){
+        foreach ($this->_dataParser->getProperties() as $id=>$field) {
             $properties[$id] = get_object_vars($field);
-            if($field->defaultValue !== null)
+            if ($field->defaultValue !== null) {
                 $src[] =' public $'.$id.'='.var_export($field->defaultValue, true).';';
+            }
             else
                 $src[] =' public $'.$id.';';
         }
@@ -116,11 +127,11 @@ class jDaoGenerator {
         $src[] = '   protected $_fromClause;';
         $src[] = '   protected $_whereClause=\''.$sqlWhereClause.'\';';
         $src[] = '   protected $_DaoRecordClassName=\''.$this->_DaoRecordClassName.'\';';
-        $src[] = '   protected $_daoSelector = \''.jDaoCompiler::$daoId.'\';';
+        $src[] = '   protected $_daoSelector = \''.$this->_daoId.'\';';
 
-        if($this->trueValue != 1){
-            $src[]='   protected $trueValue ='.var_export($this->trueValue,true).';';
-            $src[]='   protected $falseValue ='.var_export($this->falseValue,true).';';
+        if($this->tools->trueValue != '1'){
+            $src[]='   protected $trueValue ='.var_export($this->tools->trueValue, true).';';
+            $src[]='   protected $falseValue ='.var_export($this->tools->falseValue, true).';';
         }
 
         if($this->_dataParser->hasEvent('deletebefore') || $this->_dataParser->hasEvent('delete'))
@@ -141,7 +152,8 @@ class jDaoGenerator {
         $src[] = '   $this->_fromClause = \''.$sqlFromClause.'\';';
         $src[] = '}';
 
-        // cannot put this methods directly into jDaoBase because of a php bug on static methods/properties
+        // cannot put this methods directly into jDaoBase because self cannot refer to a child class
+        // FIXME PHP53, we could use the static keyword instead of self
         $src[] = '   public function getProperties() { return self::$_properties; }';
         $src[] = '   public function getPrimaryKeyNames() { return self::$_pkFields;}';
 
@@ -283,7 +295,7 @@ class jDaoGenerator {
         }else{
             //the dao is mapped on a table which contains only primary key : update is impossible
             // so we will generate an error on update
-            $src[] = "     throw new jException('jelix~dao.error.update.impossible',array('".jDaoCompiler::$daoId."','".jDaoCompiler::$daoPath."'));";
+            $src[] = "     throw new jException('jelix~dao.error.update.impossible',array('".$this->_daoId."','".$this->_daoPath."'));";
             $src[] = " }";
         }
 
@@ -331,7 +343,7 @@ class jDaoGenerator {
                             $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '. $value[0];
                         }else{
                             $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '.
-                                $this->_preparePHPValue($value[0],$updatefields[$propname]->datatype,false);
+                                $this->tools->escapeValue($updatefields[$propname]->unifiedType, $value[0], false, true);
                         }
                     }
                     $src[] =substr($sqlSet,1).'\';';
@@ -592,8 +604,7 @@ class jDaoGenerator {
     }
 
     protected function _capturePrimaryFieldsExcludeAutoIncrement(&$field){
-        return ($field->table == $this->_dataParser->getPrimaryTable()) &&
-        ($field->datatype != 'autoincrement') && ($field->datatype != 'bigautoincrement');
+        return ($field->table == $this->_dataParser->getPrimaryTable() && !$field->autoIncrement);
     }
 
     protected function _capturePrimaryFieldsExcludePk(&$field){
@@ -612,16 +623,14 @@ class jDaoGenerator {
         return ($field->table == $this->_dataParser->getPrimaryTable()
                 && !$field->isPK
                 && !$field->isFK
-                && ( $field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement'
-                    || ($field->insertPattern != '%s' && $field->selectPattern != '')));
+                && ( $field->autoIncrement || ($field->insertPattern != '%s' && $field->selectPattern != '')));
     }
 
     protected function _captureFieldToUpdateOnUpdate(&$field){
         return ($field->table == $this->_dataParser->getPrimaryTable()
                 && !$field->isPK
                 && !$field->isFK
-                && ( $field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement'
-                    || ($field->updatePattern != '%s' && $field->selectPattern != '')));
+                && ( $field->autoIncrement || ($field->updatePattern != '%s' && $field->selectPattern != '')));
     }
 
     /**
@@ -638,7 +647,7 @@ class jDaoGenerator {
         foreach ($using as $id=>$field) {
             if(!$field->isPK)
                 continue;
-            if ($field->datatype == 'autoincrement' || $field->datatype == 'bigautoincrement') {
+            if ($field->autoIncrement) {
                 return $field;
             }
         }
@@ -828,10 +837,10 @@ class jDaoGenerator {
                         foreach($params as $param){
                             $value = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $prop, !$prop->requiredInConditions).'.\'',$value);
                         }
-                        $value= $cond['operator'].' '.$value;
+                        $value = $cond['operator'].' '.$value;
                     }
                 }else{
-                    $value= $cond['operator'].' '.$this->_preparePHPValue($cond['value'], $prop->datatype,false);
+                    $value = $cond['operator'].' '.$this->tools->escapeValue($prop->unifiedType, $cond['value'], false, true);
                 }
                 $r.=$value;
             }
@@ -852,45 +861,6 @@ class jDaoGenerator {
         return $r;
     }
 
-
-
-    /**
-    * prepare a string ready to be included in a PHP script
-    * we assume that if the value is "NULL", all things has been take care of
-    *   before the call of this method
-    * The method generates something like (including quotes) '.some PHP code.'
-    *   (we do break "simple quoted strings")
-    */
-    protected function _preparePHPValue($value, $fieldType, $checknull=true){
-        if($checknull){
-            if($value == 'null' || $value == 'NULL' || $value === null)
-                return 'NULL';
-        }
-        switch(strtolower($fieldType)){
-            case 'int':
-            case 'integer':
-            case 'autoincrement':
-                return intval($value);
-            case 'double':
-            case 'float':
-                return doubleval($value);
-            case 'numeric': //usefull for bigint and stuff
-            case 'bigautoincrement':
-                if(is_numeric($value))
-                    return $value;
-                else
-                    return intval($value);
-            case 'boolean':
-                return $this->getBooleanValue($value);
-            default:
-                if(strpos($value,"'") !== false){
-                    return '\'.$this->_conn->quote(\''.str_replace('\'','\\\'',$value).'\').\'';
-                }else{
-                    return "\\'".$value."\\'";
-                }
-        }
-    }
-
     protected function _preparePHPExpr($expr, $field, $checknull=true, $forCondition=''){
         $opnull=$opval='';
         if($checknull && $forCondition != ''){
@@ -904,17 +874,13 @@ class jDaoGenerator {
         if($forCondition!='')
             $forCondition = '\''.$forCondition.'\'.';
 
-        switch(strtolower($field->datatype)){
-            case 'int':
+        switch(strtolower($field->unifiedType)){
             case 'integer':
                 if($checknull){
                     $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'intval('.$expr.'))';
                 }else{
                     $expr= $forCondition.'intval('.$expr.')';
                 }
-                break;
-            case 'autoincrement':
-                $expr= $forCondition.'intval('.$expr.')';
                 break;
             case 'double':
             case 'float':
@@ -924,15 +890,13 @@ class jDaoGenerator {
                     $expr= $forCondition.'doubleval('.$expr.')';
                 }
                 break;
-            case 'numeric': //usefull for bigint and stuff
+            case 'numeric':
+            case 'decimal': 
                 if($checknull){
-                    $expr='('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.')))';
+                    $expr='('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : floatval('.$expr.')))';
                 }else{
-                    $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
+                    $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : floatval('.$expr.'))';
                 }
-                break;
-            case 'bigautoincrement':
-                $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : intval('.$expr.'))';
                 break;
             case 'boolean':
                 if($checknull){
@@ -952,14 +916,10 @@ class jDaoGenerator {
     }
 
     protected function _encloseName($name){
-        return $name;
+        return $this->tools->encloseName($name);
     }
 
     protected function genUpdateAutoIncrementPK($pkai, $pTableRealName) {
         return '       $record->'.$pkai->name.'= $this->_conn->lastInsertId();';
-    }
-
-    protected function getBooleanValue($value){
-        return (strtolower($value)=='true'|| $value =='1'|| $value=='t'?$this->trueValue:$this->falseValue);
     }
 }
