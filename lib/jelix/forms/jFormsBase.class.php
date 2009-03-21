@@ -166,8 +166,8 @@ abstract class jFormsBase {
      * prepare an object with values of all controls
      * @param object $object the object to fill
      * @param array $properties array of 'propertyname'=>array('required'=>true/false,
-     *                          'defaultValue'=>$value, 'datatype'=>$datatype)
-     *   values of datatype = same as dao datatypes = ex: 'string', 'int','integer','double','float','boolean','datetime','date'
+     *                          'defaultValue'=>$value, 'unifiedType'=>$datatype)
+     *   values of datatype = same as jdb unified types
      */
     public function prepareObjectFromControls($object, $properties = null){
         if ($properties == null) {
@@ -178,10 +178,10 @@ abstract class jFormsBase {
                     $t = gettype($v);
                 }
                 else {
-                    $t = 'string';
+                    $t = 'varchar';
                     $r = false;
                 }
-                $properties[$n]=array('required'=>$r, 'defaultValue'=>$v, 'datatype'=>$t);
+                $properties[$n]=array('required'=>$r, 'defaultValue'=>$v, 'unifiedType'=>$t);
             }
         }
         
@@ -205,26 +205,33 @@ abstract class jFormsBase {
                 // if no value and if the property is not required, we set null to it
                 $object->$name = null;
             }
-            else if($object->$name == '' && $properties[$name]['defaultValue'] !== null
-                    && in_array($properties[$name]['datatype'],
-                                array('int','integer','double','float'))) {
-                $object->$name = $properties[$name]['defaultValue'];
-            }
-            else if( $properties[$name]['datatype'] == 'boolean' && !is_bool($object->$name)) {
-                $object->$name = ($object->$name == '1'|| $object->$name == 'true'
-                                  || $object->$name == 't');
-            }
-            else if($ctrl->datatype instanceof jDatatypeLocaleDateTime
-                     && $properties[$name]['datatype'] == 'datetime') {
-                $dt = new jDateTime();
-                $dt->setFromString($object->$name, jDateTime::LANG_DTFORMAT);
-                $object->$name = $dt->toString(jDateTime::DB_DTFORMAT);
-            }
-            elseif($ctrl->datatype instanceof jDatatypeLocaleDate
-                    && $properties[$name]['datatype'] == 'date') {
-                $dt = new jDateTime();
-                $dt->setFromString($object->$name, jDateTime::LANG_DFORMAT);
-                $object->$name = $dt->toString(jDateTime::DB_DFORMAT);
+            else {
+                if (isset($properties[$name]['unifiedType']))
+                    $type = $properties[$name]['unifiedType'];
+                else
+                    $type = $properties[$name]['datatype']; // for compatibility
+
+                if($object->$name == '' && $properties[$name]['defaultValue'] !== null
+                        && in_array($type,
+                                    array('int','integer','double','float', 'numeric', 'decimal'))) {
+                    $object->$name = $properties[$name]['defaultValue'];
+                }
+                else if( $type == 'boolean' && !is_bool($object->$name)) {
+                    $object->$name = ($object->$name == '1' || $object->$name == 'true'
+                                      || $object->$name == 't');
+                }
+                else if($ctrl->datatype instanceof jDatatypeLocaleDateTime
+                         && $type == 'datetime') {
+                    $dt = new jDateTime();
+                    $dt->setFromString($object->$name, jDateTime::LANG_DTFORMAT);
+                    $object->$name = $dt->toString(jDateTime::DB_DTFORMAT);
+                }
+                elseif($ctrl->datatype instanceof jDatatypeLocaleDate
+                        && $type == 'date') {
+                    $dt = new jDateTime();
+                    $dt->setFromString($object->$name, jDateTime::LANG_DFORMAT);
+                    $object->$name = $dt->toString(jDateTime::DB_DFORMAT);
+                }
             }
         }
     }
