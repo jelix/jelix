@@ -273,6 +273,9 @@ $infos = '; --- build date:  '.date('Y-m-d H:i')."\n; --- lib version: $LIB_VERS
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
 
 //... packages
+if ($PACKAGE_TAR_GZ || $PACKAGE_ZIP) {
+  file_put_contents($MAIN_TARGET_PATH.'/PACKAGE_NAME',$PACKAGE_NAME);
+}
 
 if($PACKAGE_TAR_GZ){
     exec('tar czf '.$MAIN_TARGET_PATH.'/'.$PACKAGE_NAME.'.tar.gz -C '.$MAIN_TARGET_PATH.' '.$PACKAGE_NAME);
