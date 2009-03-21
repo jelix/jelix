@@ -4,9 +4,9 @@
 *
 * @package  jelix
 * @subpackage core
-* @author   Jouanneau Laurent
+* @author   Laurent Jouanneau
 * @contributor Bastien Jaillot
-* @copyright 2007-2008 Jouanneau laurent, 2008 Bastien Jaillot
+* @copyright 2007-2009 Laurent Jouanneau, 2008 Bastien Jaillot
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0b2
@@ -144,7 +144,7 @@ class jInstallMessageProvider {
             'extension.tokenizer'=>'tokenizer extension is not installed',
             'extension.iconv'=>'iconv extension is not installed',
             'extensions.required.ok'=>'All needed PHP extensions are installed',
-            'extension.filter'=>'This Jelix edition require the xmlrpc extension',
+            'extension.filter'=>'This Jelix edition require the filter extension',
             'extension.json'=>'This Jelix edition require the json extension',
             'extension.xmlrpc'=>'This Jelix edition require the xmlrpc extension',
             'extension.jelix'=>'This Jelix edition require the jelix extension',
