@@ -217,7 +217,7 @@ abstract class jFormsBase {
             else if($ctrl->datatype instanceof jDatatypeLocaleDateTime
                      && $properties[$name]['datatype'] == 'datetime') {
                 $dt = new jDateTime();
-                $dt->setFromString($daorec->$name, jDateTime::LANG_DTFORMAT);
+                $dt->setFromString($object->$name, jDateTime::LANG_DTFORMAT);
                 $object->$name = $dt->toString(jDateTime::DB_DTFORMAT);
             }
             elseif($ctrl->datatype instanceof jDatatypeLocaleDate

@@ -144,10 +144,11 @@ FoxMaSk
   - little improvement in jtpl_function_html_diff(#720)
   - remove deprecated "value" attribute in breadcrumb function (#800)
 
-Mickaël Fradin (aka mike)
+Mickaël Fradin (aka mike/kewix)
  - improvements in the jtpl plugin: formcontrols (#223)
  - added style feature in the meta_html plugin (#553)
  - little other improvements (#835)
+ - fixed bugs (#884)
 
 Olivier Gambier (aka d-m-p)
  - code reviewer, bug fixes
