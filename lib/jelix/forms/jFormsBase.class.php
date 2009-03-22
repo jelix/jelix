@@ -6,7 +6,7 @@
 * @contributor Dominique Papin
 * @contributor Bastien Jaillot
 * @contributor Christophe Thiriot, Julien Issler
-* @copyright   2006-2008 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
+* @copyright   2006-2009 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
 * @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -770,5 +770,18 @@ abstract class jFormsBase {
                 $this->container->data[$control->ref] = $control->defaultValue;
             }
         }
+    }
+    
+    /**
+     * generate a new token for security against CSRF
+     * a builder should call it and create for example an hidden input
+     * so jForms could verify it after the submit.
+     * @return string the token
+     * @since 1.1.2
+     */
+    public function createNewToken() {
+      $tok = md5($this->container->formId.time().session_id());
+      $this->container->token = $tok;
+      return $tok;
     }
 }

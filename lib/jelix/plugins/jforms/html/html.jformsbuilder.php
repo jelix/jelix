@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin
-* @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @copyright   2008 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -138,8 +138,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         }
 
         if($this->_form->securityLevel){
-            $c = $this->_form->getContainer();
-            $tok = $c->token = md5($c->formId.time().session_id());
+            $tok = $this->_form->createNewToken();
             $hiddens .= '<input type="hidden" name="__JFORMS_TOKEN__" value="'.$tok.'"'.$this->_endt. "\n";
         }
 
@@ -169,7 +168,6 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
                         echo '<li>', jLocale::get('jelix~formserr.js.err.invalid', $ctrls[$cname]->label),'</li>';
                     }
                 }
-
             }
             echo '</ul>';
         }

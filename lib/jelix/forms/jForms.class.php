@@ -47,7 +47,7 @@ class jForms {
      * @param string $formId  the id of the new instance (an id of a record for example)
      * @return jFormBase the object representing the form
      */
-    public static function create($formSel , $formId=null){
+    public static function create($formSel, $formId=null){
         $sel = new jSelectorForm($formSel);
         jIncluder::inc($sel);
         $c = $sel->getClass();
@@ -70,7 +70,7 @@ class jForms {
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      * @return jFormBase the object representing the form. Return null if there isn't an existing form
      */
-    static public function get($formSel,$formId=null){
+    static public function get($formSel, $formId=null){
         global $gJCoord;
         if($formId === null)
             $formId= self::DEFAULT_ID;

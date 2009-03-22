@@ -6,7 +6,7 @@
 * @contributor  Bastien Jaillot
 * @contributor  Thibault PIRONT < nuKs >
 * @contributor  Mickael Fradin
-* @copyright    2007-2008 Laurent Jouanneau
+* @copyright    2007-2009 Laurent Jouanneau
 * @copyright    2007 Thibault PIRONT
 * @copyright    2007,2008 Bastien Jaillot
 * @copyright    2009 Mickael Fradin
@@ -307,12 +307,12 @@ class jControllerDaoCrud extends jController {
      */
     function savecreate(){
         $form = $this->_getForm();
-        $form->initFromRequest();
         $rep = $this->getResponse('redirect');
         if($form == null){
             $rep->action = $this->_getAction('index');
             return $rep;
         }
+        $form->initFromRequest();
 
         if($form->check() && $this->_checkData($form, false)){
             extract($form->prepareDaoFromControls($this->dao,null,$this->dbProfile), 
@@ -441,12 +441,11 @@ class jControllerDaoCrud extends jController {
         $rep = $this->getResponse('redirect');
         $id = $this->param('id');
         $form = $this->_getForm($id);
-        $form->initFromRequest();
-
         if( $form === null || $id === null){
             $rep->action = $this->_getAction('index');
             return $rep;
         }
+        $form->initFromRequest();
 
         if($form->check() && $this->_checkData($form, true)){
             extract($form->prepareDaoFromControls($this->dao,$id,$this->dbProfile), 
