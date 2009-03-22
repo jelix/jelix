@@ -84,6 +84,7 @@ Loic Mathaud (bballizlife):
  - documentation
  - many improvements (jClasses::inc(), jIniFile, jAppManager, jelix-scripts etc )
  - coord plugin for Zend Framework (#651)
+ - added title feature in the meta_html plugin (#810)
 
 Dominique Papin (aka bibo)
  - added j_themepath variable in jtpl (#346)
