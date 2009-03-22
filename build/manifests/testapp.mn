@@ -18,6 +18,7 @@ cd testapp/www
   soap.php
   testnews.php
   check.php
+  robots.txt
 cd testapp/www/foo
   bar.php
 cd testapp/www/design
