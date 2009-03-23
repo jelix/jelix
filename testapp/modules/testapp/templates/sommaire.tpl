@@ -13,7 +13,8 @@
    <li><a href="{jurl 'junittests~default:index'}">PHP Unit tests</a></li>
    <li> JS unit tests :
       <ul>
-         <li><a href="{jurl 'jelix_tests~jstests:jforms'}">jforms</a></li>
+        <li><a href="{jurl 'jelix_tests~jstests:jforms'}">jforms</a></li>
+        <li><a href="{jurl 'jelix_tests~jstests:jsonrpc'}">jsonrpc</a></li>
       </ul>
    </li>
 </ul>

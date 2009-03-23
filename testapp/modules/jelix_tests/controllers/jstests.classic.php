@@ -11,6 +11,7 @@
 
 class jstestsCtrl extends jController {
 
+
   function jforms() {
       $rep = $this->getResponse('html', true);
       $rep->setXhtmlOutput(false);
@@ -28,6 +29,20 @@ class jstestsCtrl extends jController {
       
       return $rep;
   }
+  
+  function jsonrpc() {
+      $rep = $this->getResponse('html', true);
+      $rep->setXhtmlOutput(false);
+      $rep->title = 'Unit tests for jsonrpc';
+      $rep->bodyTpl = 'jstest_jsonrpc';
+      $rep->addCssLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testsuite.css');
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'jquery/jquery.js');
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testrunner.js');
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'js/json.js');
+      return $rep;
+  }
+  
+  
 }
 
 ?>

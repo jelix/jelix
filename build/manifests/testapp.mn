@@ -120,6 +120,7 @@ cd testapp/modules/jelix_tests/locales/en_EN
   tests4.UTF-8.properties
 cd testapp/modules/jelix_tests/templates
   jstest_jforms.tpl
+  jstest_jsonrpc.tpl
   menu.tpl
   test_plugin_counter_init_allarg_noexeption.tpl
   test_plugin_counter_init_exeption.tpl
@@ -132,6 +133,7 @@ cd testapp/modules/jelix_tests/templates
 cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php
   jstests.classic.php
+  jstests.jsonrpc.php
 cd testapp/modules/jelix_tests/daos
   products.dao.xml
   products_events.dao.xml
