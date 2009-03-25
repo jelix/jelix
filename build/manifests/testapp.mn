@@ -78,6 +78,7 @@ cd testapp/modules/testapp/zones
   sommaire.zone.php
 cd testapp/modules/testapp/forms
   sample.form.xml
+  sample2.form.xml
   products.form.xml
 
 cd testapp/modules/jelix_tests

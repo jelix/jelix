@@ -19,8 +19,8 @@ class formsCtrl extends jController {
 
         $tpl = new jTpl();
         // on triche ici, il n'y a pas d'api car inutile en temps normal
-        if(isset($_SESSION['JFORMS']['sample']))
-            $tpl->assign('liste', $_SESSION['JFORMS']['sample']);
+        if(isset($_SESSION['JFORMS']['sample2']))
+            $tpl->assign('liste', $_SESSION['JFORMS']['sample2']);
         else
             $tpl->assign('liste', array()); 
         $rep->body->assign('MAIN',$tpl->fetch('forms_liste'));
@@ -33,7 +33,7 @@ class formsCtrl extends jController {
      */
     function newform(){
         // création d'un formulaire vierge
-        $form = jForms::create('sample');
+        $form = jForms::create('sample2');
         $rep= $this->getResponse("redirect");
         $rep->action="forms:showform";
         $rep->params['id']= $form->id();
@@ -46,7 +46,7 @@ class formsCtrl extends jController {
      */
     function edit(){
         $id = $this->param('id');
-        $form = jForms::create('sample', $this->param('id'));
+        $form = jForms::create('sample2', $this->param('id'));
         // remplissage du formulaire. Ici on le fait à la main, mais ça pourrait
         // être à partir d'un dao
         if($id == 1){
@@ -75,14 +75,18 @@ class formsCtrl extends jController {
     function showform(){
         $rep = $this->getResponse('html');
         $rep->title = 'Form editing';
-        $rep->body->assign('page_title','forms');
+        $rep->body->assign('page_title', 'forms');
 
         // recupère les données du formulaire dont l'id est dans le paramètre id
-        $form = jForms::get('sample',$this->param('id'));
-        if($form){
+        $form = jForms::get('sample2', $this->param('id'));
+        if ($form) {
             $tpl = new jTpl();
             $tpl->assign('form', $form->getContainer());
             $tpl->assign('id', $form->id());
+            if ($form->securityLevel != jFormsBase::SECURITY_LOW)
+              $tpl->assign('token', $form->createNewToken());
+            else
+              $tpl->assign('token','');
             $rep->body->assign('MAIN',$tpl->fetch('forms_edit'));
         }else{
             $rep->body->assign('MAIN','<p>bad id</p>' );
@@ -93,19 +97,20 @@ class formsCtrl extends jController {
 
     function save(){
 
-        // comme on laisse la possibilité dans le formulaire, de pouvoir specifier
-        // l'id du formulaire, on compare le nouvel id avec l'ancien pour créer
-        // un nouveau form en cas de new id
         $id = $this->param('id');
         $newid = $this->param('newid');
 
-        if($id != $newid){
-            $id=$newid;
-            jForms::create('sample',$id);
-        }
-
         // récupe le formulaire et le rempli avec les données reçues de la requête
-        $form = jForms::fill('sample',$id);
+        $form = jForms::fill('sample2', $id);
+
+        if($id != $newid){
+            $form2 = jForms::create('sample2', $newid);
+            $form2->getContainer()->data = $form->getContainer()->data;
+        }
+        
+        if ($id == '0') {
+           jForms::destroy('sample2', $id);
+        }
 
         // on pourrait ici enregistrer les données aprés un $form->check()
         // non implementé pour le moment...
@@ -116,7 +121,7 @@ class formsCtrl extends jController {
     }
 
     function view(){
-        $form = jForms::get('sample',$this->param('id'));
+        $form = jForms::get('sample2',$this->param('id'));
         $rep = $this->getResponse('html');
         $rep->title = 'Content of a form';
         $rep->body->assign('page_title','forms');
@@ -134,7 +139,7 @@ class formsCtrl extends jController {
     }
 
    function destroy(){
-      jForms::destroy('sample',$this->param('id'));
+      jForms::destroy('sample2',$this->param('id'));
       $rep= $this->getResponse("redirect");
       $rep->action="forms:listform";
       return $rep;

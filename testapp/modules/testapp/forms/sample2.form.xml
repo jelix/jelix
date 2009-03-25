@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form xmlns="http://jelix.org/ns/forms/1.1">
+
+  <input ref="nom" required="true">
+      <label>Your name</label>
+  </input>
+
+  <input ref="prenom" defaultvalue="robert">
+      <label>Your firstname</label>
+  </input>
+
+  <submit ref="valid">
+    <label>Validate</label>
+  </submit>
+
+</form>

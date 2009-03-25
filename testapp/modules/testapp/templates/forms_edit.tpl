@@ -2,7 +2,9 @@
 <p>Fill the form.</p>
 
 <form action="{formurl 'forms:save',array()}" method="POST">
-
+{if $token}
+<input type="hidden" name="__JFORMS_TOKEN__" value="{$token}" />
+{/if}
 <fieldset>
    <legend>Your identity</legend>
     <p><label for="nom">Lastname:</label> <input type="text" name="nom" id="nom" value="{$form->data['nom']}"/></p>
