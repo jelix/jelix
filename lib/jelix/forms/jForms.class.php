@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -55,9 +55,17 @@ class jForms {
             $formId = self::DEFAULT_ID;
         $fid = is_array($formId) ? serialize($formId) : $formId;
         if(!isset($_SESSION['JFORMS'][$formSel][$fid])){
-            $_SESSION['JFORMS'][$formSel][$fid]= new jFormsDataContainer($formSel, $formId);
+            $dc = $_SESSION['JFORMS'][$formSel][$fid]= new jFormsDataContainer($formSel, $formId);
+            if ($formId == self::DEFAULT_ID) {
+                $dc->refcount = 1;
+            }
         }
-        $form = new $c($sel->toString(), $_SESSION['JFORMS'][$formSel][$fid],true);
+        else {
+            $dc = $_SESSION['JFORMS'][$formSel][$fid];
+            if ($formId == self::DEFAULT_ID) 
+                $dc->refcount++;
+        }
+        $form = new $c($sel->toString(), $dc, true);
         return $form;
     }
 
@@ -112,11 +120,17 @@ class jForms {
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      */
-    static public function destroy($formSel,$formId=null){
+    static public function destroy($formSel, $formId=null){
         global $gJCoord;
         if($formId === null)  $formId = self::DEFAULT_ID;
         if(is_array($formId)) $formId = serialize($formId);
         if(isset($_SESSION['JFORMS'][$formSel][$formId])){
+            if ($formId == self::DEFAULT_ID) {
+                if((--$_SESSION['JFORMS'][$formSel][$formId]->refcount) > 0) {
+                  $_SESSION['JFORMS'][$formSel][$formId]->clear();
+                    return;
+                }
+            }
             unset($_SESSION['JFORMS'][$formSel][$formId]);
         }
     }

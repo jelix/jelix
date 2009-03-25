@@ -2,9 +2,9 @@
 /**
 * @package     testapp
 * @subpackage  jelix_tests module
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007 Jouanneau laurent
+* @copyright   2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -136,10 +136,14 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="1" />
         </object>
      </array>
 </array>';
         $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+        // second time
+        $this->form1 = jForms::create('product');
+        $this->assertEqual($this->form1->getContainer()->refcount, 2);
 
         $this->form2 = jForms::create('product', 'akey');
         $this->assertComplexIdenticalStr($this->form2, $this->form2Descriptor);
@@ -312,6 +316,46 @@ class UTjforms extends jUnitTestCase {
 
     function testDestroy(){
 
+        // first destroy of the default instance
+        // since we called create() twice, we should still have
+        // the instance
+        jForms::destroy('product');
+
+        $verif='
+<array>
+     <array key="product">
+        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
+            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
+            <string property="formSelector" value="product" />
+            <array property="data">array()</array>
+            <array property="errors">array()</array>
+            <integer property="refcount" value="1" />
+        </object>
+        <object key="akey" class="jFormsDataContainer">
+            <string property="formId" value="akey" />
+            <string property="formSelector" value="product" />
+            <array property="data">
+                <string key="name" value="phone" />
+                <string key="price" value="45" />
+            </array>
+            <array property="errors">array()</array>
+        </object>
+     </array>
+     <array key="label">
+        <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
+            <array property="formId">array(1,\'fr\')</array>
+            <string property="formSelector" value="label" />
+            <array property="data">
+                <string key="label" value="" />
+            </array>
+            <array property="errors">array()</array>
+        </object>
+     </array>
+</array>';
+        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+
+
+        // second destroy, we should have no more default instance
         jForms::destroy('product');
 
         $verif='
@@ -339,6 +383,7 @@ class UTjforms extends jUnitTestCase {
      </array>
 </array>';
         $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+
 
         jForms::destroy('product','akey');
         $verif='

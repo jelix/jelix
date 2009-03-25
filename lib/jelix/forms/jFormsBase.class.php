@@ -780,8 +780,10 @@ abstract class jFormsBase {
      * @since 1.1.2
      */
     public function createNewToken() {
-      $tok = md5($this->container->formId.time().session_id());
-      $this->container->token = $tok;
-      return $tok;
+      if ($this->container->formId != jForms::DEFAULT_ID || $this->container->token == '') {
+          $tok = md5($this->container->formId.time().session_id());
+          return ($this->container->token = $tok);
+      }
+      return $this->container->token;
     }
 }
