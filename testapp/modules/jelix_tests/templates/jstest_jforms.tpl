@@ -170,6 +170,7 @@ test("Radio buttons + ControlString", function() {
     jfo.addControl(c);
 
     var e = jfo.element.elements['sexe'];
+    ok(e != null, "the retrieve of the radiobuttons element should not be null");
     ok(jFormsJQ.isCollection(e), "test jFormsJQ.isCollection, should return true");
 
     equals(jFormsJQ.getValue(e), null, "jFormsJQ.getValue should return null");
@@ -221,10 +222,6 @@ test("Single checkbox", function() {
 
 });
 
-
-
-
-
 </script>
 
 
@@ -239,8 +236,7 @@ test("Single checkbox", function() {
 
  <div id="main"></div>
  
- 
- 
+
  <hr />
  <p>Test form, don't use it.</p>
  
