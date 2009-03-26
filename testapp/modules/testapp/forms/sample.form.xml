@@ -72,6 +72,10 @@
       <label>Your birthday</label>
   </date>
 
+  <datetime ref="meeting">
+      <label>Next meeting</label>
+  </datetime>
+
   <secret ref="pwd">
     <label>A password</label>
     <confirm>Type again the password to confirm</confirm>
