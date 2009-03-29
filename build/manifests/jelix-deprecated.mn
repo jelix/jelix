@@ -1,0 +1,31 @@
+
+# list of deprecated files to delete (in the case of an update of jelix from an old version)
+cd lib/jelix/core-modules/jelix/install/sql
+  install_jacl.datas.mysql.sql
+  install_jacl.datas.pgsql.sql
+
+cd lib/jelix/forms/jIFormsBuilderCompiler.iface.php
+
+cd lib/jelix/plugins/tpl/html
+  block.formdatas.php
+  function.formdatasfull.php
+
+cd lib/jelix/plugins/jforms/html
+  html.jformscompiler.php
+
+rmd lib/jelix-plugins/acl
+rmd lib/jelix-plugins/acl2
+rmd lib/jelix-plugins/auth
+rmd lib/jelix-plugins/coord
+rmd lib/jelix-plugins/db
+rmd lib/jelix-plugins/tpl
+rmd lib/jelix-plugins/urls
+rmd lib/jelix-plugins/wr_rules
+
+cd lib/jelix-www/js
+  jforms.js
+
+rmd lib/tcpdf/barcode
+rmd lib/tcpdf/config/lang
+
+rmd lib/jelix-admin-modules/jacl2_admin

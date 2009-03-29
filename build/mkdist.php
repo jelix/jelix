@@ -29,7 +29,10 @@ if(substr($_SERVER['argv'][0],0,1) == '-'){
 
 try {
     list($ficlist, $sourcedir, $distdir) = $_SERVER['argv'];
-    jManifest::process($ficlist, $sourcedir, $distdir, $_SERVER, $options['stripcomment'], $options['verbose']);
+    jManifest::$verbose =  $options['verbose'];
+    jManifest::$stripComment = $options['stripcomment'];
+    
+    jManifest::process($ficlist, $sourcedir, $distdir, $_SERVER);
     exit(0);
 }catch(Exception $e){
     echo $e->getMessage();

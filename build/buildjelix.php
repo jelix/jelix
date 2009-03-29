@@ -1,19 +1,32 @@
 <?php
 /**
 * @package     jelix
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Kévin Lepeltier
-* @copyright   2006-2009 Jouanneau laurent
+* @copyright   2006-2009 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier
-* @link        http://www.jelix.org
+* @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
 $BUILD_OPTIONS = array(
+  // each build options item should be an array
+  // 0: help (or false for hidden options)
+  // 1: the default value (string)
+  // 2: a preg expression to verify the given value
+  // or
+  // 1: a boolean, which indicates that the option is a boolean value
+  //    the value of this boolean is the default value
+  // 2: no value
+  //
+  // if an option in the ini file, is empty :
+  //   if there isn't a regexp, the result value will be the empty value
+  //   if there is a regexp and if it does match, the value will be the empty value
+  //   if there is a regexp and if it does not match,  the value will be the default value
 'MAIN_TARGET_PATH'=> array(
-    "main directory where sources will be copied",  // signification (false = option cachée)
-    '_dist',                                        // valeur par défaut (boolean = option booleene)
-    '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
+    "main directory where sources will be copied",
+    '_dist',
+    '',
     ),
 'PHP_VERSION_TARGET'=> array(
     "PHP5 version for which jelix will be generated (by default, the target is php 5.2)",
@@ -105,6 +118,15 @@ $BUILD_OPTIONS = array(
 'PHP53ORMORE'=> array(
     false,
     false,
+    ),
+'DELETE_DEPRECATED_FILES'=> array(
+    "If 'on', deprecated files will be deleted",
+    false
+    ),
+'TARGET_REPOSITORY'=> array(
+    "The type of the version control system you use on the target directory : none (default), svn or hg",
+    '',
+    '/^(svn|hg|none)?$/',
     ),
 'SVN_REVISION'=> array(
     false,
@@ -219,8 +241,16 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
         $PACKAGE_NAME.='-'.$EDITION_NAME_x;
 
     $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME.'/';
-}else{
+}
+else {
     $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
+}
+
+if ($TARGET_REPOSITORY == 'none')
+  $TARGET_REPOSITORY = '';
+
+if ($TARGET_REPOSITORY != '') {
+    $DELETE_DEPRECATED_FILES = true;
 }
 
 //----------------- Génération des sources
@@ -228,33 +258,41 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
 //... creation des repertoires
 jBuildUtils::createDir($BUILD_TARGET_PATH);
 
+jManifest::$stripComment = $STRIP_COMMENT;
+jManifest::$verbose = $VERBOSE;
+jManifest::$usedVcs = $TARGET_REPOSITORY;
+jManifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
+jManifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
+
 //... execution des manifests
-jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), $STRIP_COMMENT, $VERBOSE);
-jManifest::process('build/manifests/jelix-www.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), $STRIP_COMMENT, $VERBOSE);
+jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
+jManifest::process('build/manifests/jelix-www.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
 
 if( ! $ENABLE_OPTIMIZED_SOURCE){
-    jManifest::process('build/manifests/jelix-no-opt.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), $STRIP_COMMENT, $VERBOSE);
+    jManifest::process('build/manifests/jelix-no-opt.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
 if( ! $ENABLE_PHP_JELIX && ! $ENABLE_OPTIMIZED_SOURCE){
-    jManifest::process('build/manifests/jelix-no-ext.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), $STRIP_COMMENT, $VERBOSE);
+    jManifest::process('build/manifests/jelix-no-ext.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
+
+jManifest::$stripComment = false;
 
 if($ENABLE_DEVELOPER){
-    jManifest::process('build/manifests/jelix-dev.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), false, $VERBOSE);
+    jManifest::process('build/manifests/jelix-dev.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
 if(!$ENABLE_PHP_JSON){
-    jManifest::process('build/manifests/lib-json.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), false, $VERBOSE);
+    jManifest::process('build/manifests/lib-json.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
-jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , ENV::getAll(), false, $VERBOSE);
-jManifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), false, $VERBOSE);
-jManifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), false, $VERBOSE);
+jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , ENV::getAll());
+jManifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
+jManifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
 
 if($INCLUDE_ALL_FONTS){
-    jManifest::process('build/manifests/fonts.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), false, $VERBOSE);
+    jManifest::process('build/manifests/fonts.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
 
 if($ENABLE_PHP_JELIX && ($PACKAGE_TAR_GZ || $PACKAGE_ZIP)){
-   jManifest::process('build/manifests/jelix-ext-php.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), false, $VERBOSE);
+   jManifest::process('build/manifests/jelix-ext-php.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
 
 $var = ENV::getAll();
@@ -275,6 +313,13 @@ file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
 //... packages
 if ($PACKAGE_TAR_GZ || $PACKAGE_ZIP) {
   file_put_contents($MAIN_TARGET_PATH.'/PACKAGE_NAME',$PACKAGE_NAME);
+}
+
+if ($DELETE_DEPRECATED_FILES) {
+    jManifest::removeFiles('build/manifests/jelix-deprecated.mn', $BUILD_TARGET_PATH);
+    if($ENABLE_DEVELOPER){
+        jManifest::removeFiles('build/manifests/jelix-deprecated-dev.mn', $BUILD_TARGET_PATH);
+    }
 }
 
 if($PACKAGE_TAR_GZ){

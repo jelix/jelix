@@ -1,0 +1,9 @@
+
+# list of deprecated files to delete (in the case of an update of jelix from an old version)
+
+cd lib/jelix/docs/ns
+  jforms.rng
+
+cd lib/jelix-scripts/
+  scripts.conf.php
+

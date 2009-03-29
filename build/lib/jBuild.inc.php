@@ -1,9 +1,9 @@
 <?php
 /**
 * @package     jBuildTools
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Dominique Papin
-* @copyright   2006-2007 Jouanneau laurent
+* @copyright   2006-2009 Laurent Jouanneau
 * @copyright   2008 Dominique Päpin
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -23,12 +23,31 @@ class Env {
 
     private function __construct(){ }
 
+    /**
+     * init the globals variables, by reading the given
+     * array which describes all this variables
+     *
+     *  each build options item should be an array
+     *   0: help (or false for hidden options)
+     *   1: the default value (string)
+     *   2: a preg expression to verify the given value
+     *   or
+     *   1: a boolean, which indicates that the option is a boolean value
+     *      the value of this boolean is the default value
+     *    2: no value
+     * @param array $build_options the options to create as globals variables
+    */
     static public function init($build_options){
         self::$variables_def = $build_options;
+
         foreach($build_options as $name=>$def){
+            // if there isn't a defined default value,
+            // let's defining an empty string as default value
             if(!isset($def[1])){
                 self::$variables_def[$name][1]='';
             }
+            // if the default value is not a boolean, and if there isn't a third
+            // parameter in the array, let's define a third parameter
             if(!isset($def[2]) && !is_bool(self::$variables_def[$name][1])){
                 self::$variables_def[$name][2]='';
             }
