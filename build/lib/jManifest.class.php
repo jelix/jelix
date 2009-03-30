@@ -264,7 +264,7 @@ class jManifest {
             if (preg_match(';^(cd|rmd)?\s+([a-zA-Z0-9\/.\-_]+)\s*$;m', $line, $m)) {
                 if($m[1] == 'rmd'){
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);
-                    jBuildUtils::removeDir($distdir.$currentdestdir, $command);
+                    jBuildUtils::removeDir($distdir.$currentdestdir, self::$usedVcs);
                 }
                 elseif($m[1] == 'cd') {
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);

@@ -258,8 +258,8 @@ if ($TARGET_REPOSITORY != '') {
 //... creation des repertoires
 jBuildUtils::createDir($BUILD_TARGET_PATH);
 
-jManifest::$stripComment = $STRIP_COMMENT;
-jManifest::$verbose = $VERBOSE;
+jManifest::$stripComment = ($STRIP_COMMENT == '1');
+jManifest::$verbose = ($VERBOSE == '1');
 jManifest::$usedVcs = $TARGET_REPOSITORY;
 jManifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
 jManifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;

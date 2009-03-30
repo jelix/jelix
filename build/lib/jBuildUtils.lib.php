@@ -38,7 +38,7 @@ class jBuildUtils {
      */
     static public function removeDir ($dir, $cmd = 'rm') {
       if (!file_exists($dir)) {
-          echo "cannot remove $dir. It doesn't exist.\n";
+          //echo "cannot remove $dir. It doesn't exist.\n";
           return;
       }
       switch($cmd) {
