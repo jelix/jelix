@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDbToolsMysql, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -119,9 +119,18 @@ class mysqlDbTools extends jDbTools {
     */
     public function getTableList () {
         $results = array ();
-
-        $rs = $this->_conn->query ('SHOW TABLES FROM '.$this->_conn->profile['database']);
-        $col_name = 'Tables_in_'.$this->_conn->profile['database'];
+        if (isset($this->_conn->profile['database'])) {
+            $db = $this->_conn->profile['database'];
+        }
+        else if (isset($this->_conn->profile['dsn'])
+                 && preg_match('/dbname=([a-z0-9_ ]*)/', $this->_conn->profile['dsn'], $m)){
+            $db = $m[1];  
+        }
+        else {
+            throw new jException("jelix~error.no.database.name", $this->_conn->profile['name']);
+        }
+        $rs = $this->_conn->query ('SHOW TABLES FROM '.$this->encloseName($db));
+        $col_name = 'Tables_in_'.$db;
 
         while ($line = $rs->fetch ()){
             $results[] = $line->$col_name;

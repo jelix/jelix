@@ -105,5 +105,21 @@ END", "CALL updateComponent()");
 //echo '<pre>';var_export($tools->testParseSQLScript($sql));echo '</pre>';
 
     }
+    
+    function testTableList() {
+        $db = jDb::getConnection();
+        $tools = new testmysqlDbTools($db);
+        
+        $goodList = array('jacl_group', 'jacl_right_values', 'jacl_right_values_group',
+                          'jacl_rights', 'jacl_subject', 'jacl_user_group',
+                          'jacl2_group','jacl2_user_group','jacl2_subject',
+                          'jacl2_rights', 'jlx_user', 'myconfig', 'product_test',
+                          'product_tags_test', 'labels_test', 'products');
+        
+        $list = $tools->getTableList();
+        sort($goodList);
+        sort($list);
+        $this->assertEqual($list, $goodList);
+    }
 }
 
