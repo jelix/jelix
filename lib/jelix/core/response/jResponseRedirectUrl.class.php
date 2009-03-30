@@ -43,7 +43,7 @@ final class jResponseRedirectUrl extends jResponse {
 
     public function output(){
         if ($this->url =='')
-            throw new jException('repredirect.empty.url');
+            throw new jException('jelix~errors.repredirect.empty.url');
         if($this->hasErrors())
             return false;
         $this->sendHttpHeaders();

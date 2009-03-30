@@ -113,6 +113,9 @@ Christophe Thiriot (aka Doubleface)
 Contributors
 ------------
 
+Arnall
+ - bug in jReponseRedirectUrl (#894)
+
 Yoan Blanc (aka Greut)
  - bug fix in jDaoFactoryBase::findBy : it should not ignore limit=0 (#665)
 
