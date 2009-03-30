@@ -4,7 +4,7 @@
 * @subpackage dao
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau, Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
 * @copyright  2008 Thomas
 * @copyright  2008 Julien Issler
 * This classes was get originally from the Copix project (CopixDAOSearchConditions, Copix 2.3dev20050901, http://www.copix.org)
@@ -152,6 +152,12 @@ class jDaoConditions {
     * @param boolean $foo      parameter for internal use : don't use it or set to false
     */
     function addCondition ($field_id, $operator, $value, $foo = false){
+        $operator = trim(strtoupper($operator));
+        if (!in_array($operator, array('=', '<>', '!=', '<', '>', '>=', '<=', 'LIKE',
+                                       'IN', 'NOT IN', '<=>', 'IS', 'IS NOT', 'IS NULL', 'IS NOT NULL', 'MATCH',
+                                       'REGEXP', 'NOT REGEXP', 'RLIKE', 'SOUNDS LIKE')))
+            throw new jException('jelix~dao.error.bad.operator', $operator);
+        
         $this->_currentCondition->conditions[] = array (
            'field_id'=>$field_id,
            'value'=>$value,
