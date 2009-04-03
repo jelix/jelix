@@ -162,6 +162,9 @@ FoxMaSk
 Olivier Gambier (aka d-m-p)
  - code reviewer, bug fixes
 
+Geekbay
+ - fixed bug in jMailer about the support of html plugins into the template (#898)
+
 Gildas Givaja (aka Giviz)
  - testor, bug fixes
  - bug fix in jXmlRpc.class.php (#192)

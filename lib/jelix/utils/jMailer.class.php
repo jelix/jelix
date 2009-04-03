@@ -8,9 +8,9 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Laurent Jouanneau
-* @contributor Kévin Lepeltier
+* @contributor Kévin Lepeltier, GeekBay
 * @copyright   2006-2009 Laurent Jouanneau
-* @copyright   2008 Kévin Lepeltier
+* @copyright   2008 Kévin Lepeltier, 2009 Geekbay
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -33,7 +33,7 @@ class jMailer extends PHPMailer {
 
     /**
      * the selector of the template used for the mail.
-     * Use the Tpl() method instead of this property 
+     * Use the Tpl() method instead of this property
      * @deprecated
      * @var string
      */
@@ -108,7 +108,7 @@ class jMailer extends PHPMailer {
             if ($this->tpl == null)
                 $this->tpl = new jTpl();
             $mailtpl = $this->tpl;
-            $metas = $mailtpl->meta( $this->bodyTpl );
+            $metas = $mailtpl->meta( $this->bodyTpl , ($this->ContentType == 'text/html'?'html':'text') );
 
             if( isset($metas['Subject']) )
                 $this->Subject = $metas['Subject'];
@@ -168,7 +168,7 @@ class jMailer extends PHPMailer {
                 $arg = $m[3];
             if(strpos($m[2], 'WARNING:') !== false) {
                 $locale = 'jelix~errors.mail.'.substr($m[2],8);
-                if($arg !== null) 
+                if($arg !== null)
                     parent::SetError(jLocale::get($locale, $arg, $this->lang, $this->CharSet));
                 else
                     parent::SetError(jLocale::get($locale, array(), $this->lang, $this->CharSet));
