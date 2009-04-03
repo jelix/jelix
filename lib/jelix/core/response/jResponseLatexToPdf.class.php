@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Aubanel MONNIER
-* @contributor Laurent Jouanneau (better integration into jelix)
-* @copyright   2007 Aubanel MONNIER
+* @contributor Laurent Jouanneau (better integration into jelix), Thomas
+* @copyright   2007 Aubanel MONNIER, 2009 Thomas
 * @link        http://aubanel.info
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -41,7 +41,13 @@ class jResponseLatexToPdf extends jResponse {
      * @var string
      */
     public $title = '';
-
+    /**
+     * Document date
+     * @var string
+     * @since 1.2
+     */
+    public $date = '\today';
+	
     /**
      * Contains the list of commands to write in the preamble. 
      * @var array
@@ -60,6 +66,13 @@ class jResponseLatexToPdf extends jResponse {
      * @since 1.0
      */
     public $cachePath= '';
+
+    /**
+     * Document file name
+     * @var string
+     * @since 1.2
+     */
+    public $outputFileName = 'document.pdf';
 
     /**
      * constructor;
@@ -113,8 +126,7 @@ class jResponseLatexToPdf extends jResponse {
         foreach ($this->authors as $a) 
             $data.= $a.'\\\\'."\n";
         $data.= '}
-\date{\today}
-\maketitle
+\date{'.$this->date.'}
 ';
         $data.=$this->body->fetch($this->bodyTpl);
         $data.= '
@@ -133,18 +145,15 @@ class jResponseLatexToPdf extends jResponse {
             jFile::write($texFile, $data);
             $output=array();
             $retVal=1;	
-                exec('
-            TEXMFOUTPUT='.$this->cachePath.' && export TEXMFOUTPUT && TEXINPUTS=:'.$this->cachePath.' && export TEXINPUTS &&
-            '.$this->pdflatexPath.' --interaction=batchmode '.$texFile, $output, $retVal);
-            if ($retVal==0){
-                $outputStr=implode('<br />',$output);
-                throw new jException('jelix~errors.ltx2pdf.exec',array($this->pdflatexPath, $outputStr));
-            }
+            exec($this->pdflatexPath.' --interaction batchmode --output-directory '.$this->cachePath.' '.$texFile, $output, $retval);
+			if($retVal==0){
+				$outputStr=implode('<br />',$output);
+				throw new jException('jelix~errors.ltx2pdf.exec',array($this->pdflatexPath, $outputStr));
+			}
         }
-
         $this->_httpHeaders['Content-Type']='application/pdf';
         $this->_httpHeaders['Content-length']=@filesize($pdfFile);
-        $this->_httpHeaders['Content-Disposition']='attachment; filename='.$this->title.'.pdf';
+        $this->_httpHeaders['Content-Disposition']='attachment; filename='.$this->outputFileName;
         $this->sendHttpHeaders();
 
         readfile($pdfFile);

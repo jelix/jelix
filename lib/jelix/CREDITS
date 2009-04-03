@@ -110,6 +110,17 @@ Christophe Thiriot (aka Doubleface)
  - automatic timezone setting (#600)
  - bug in jFilter tests (#842)
 
+Mickaël Fradin (aka mike/kewix)
+ - improvements in the jtpl plugin: formcontrols (#223)
+ - added style feature in the meta_html plugin (#553)
+ - little other improvements (#835)
+ - fixed bugs (#884)
+
+Baptiste Toinot (aka Surfoo)
+ - double / in path for locale selector
+ - fixed little bugs in jForms (#789, #790)
+ - little improvement in number_format modifier (#875)
+
 Contributors
 ------------
 
@@ -147,12 +158,6 @@ FoxMaSk
   - bug fix in jFile::removeDir (#733)
   - little improvement in jtpl_function_html_diff(#720)
   - remove deprecated "value" attribute in breadcrumb function (#800)
-
-Mickaël Fradin (aka mike/kewix)
- - improvements in the jtpl plugin: formcontrols (#223)
- - added style feature in the meta_html plugin (#553)
- - little other improvements (#835)
- - fixed bugs (#884)
 
 Olivier Gambier (aka d-m-p)
  - code reviewer, bug fixes
@@ -222,11 +227,7 @@ Thomas
  - jDbPDOConnection : fixed bug in query method with 3 arguments (#839)
  - better display of date/datetime values with jforms (#866)
  - jforms: attribute type on output control (#855)
-
-Baptiste Toinot (aka Surfoo)
- - double / in path for locale selector
- - fixed little bugs in jForms (#789, #790)
- - little improvement in number_format modifier (#875)
+ - Improvements on jResponseLatexPdf (#864)
  
 Christian Tritten
  - improvements on pagelinks plugin (#340)
