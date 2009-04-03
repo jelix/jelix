@@ -174,6 +174,9 @@ Florian Hatat (aka flh)
  - improvements on jDateTime + RFC2822 support (#379)
  - Fix bugs on duration calculation + new jDuration class (#425, #453)
 
+Emmanuel Hesry (aka m@noo)
+ - improvement on jDateTime plugin for full date format (#796)
+
 Julien Jacottet
  - tpl plugin link_to_remote (#30)
 

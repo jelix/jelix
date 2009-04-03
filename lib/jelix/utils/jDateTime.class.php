@@ -6,11 +6,13 @@
 * @contributor Laurent Jouanneau, Julien Issler
 * @contributor Loic Mathaud
 * @contributor Florian Hatat
+* @contributor Emmanuel Hesry
 * @copyright   2005-2008 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud
 * @copyright   2007-2008 Florian Hatat
 * @copyright   2001-2005 CopixTeam, GeraldCroes, Laurent Jouanneau
 * @copyright   2008 Julien Issler
+* @copyright   2009 Emmanuel Hesry
 *
 * This class was get originally from the Copix project (CopixDate.lib.php, Copix 2.3dev20050901, http://www.copix.org)
 * Only few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -88,6 +90,7 @@ class jDateTime {
     const TIMESTAMP_FORMAT=50;
     const RFC822_FORMAT=60;
     const RFC2822_FORMAT=61;
+    const FULL_LANG_DATE=62;
 
     /**#@+
      * use DB_* consts instead
@@ -186,6 +189,19 @@ class jDateTime {
            case self::RFC822_FORMAT:
            case self::RFC2822_FORMAT:
                $str = date('r', mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year ));
+               break;
+           case self::FULL_LANG_DATE:
+               $t = mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
+               // traduction du mois	
+               $month = jLocale::get('jelix~date_time.month.'.date('m',$t).'.label');
+               // traduction du jour
+               $day = jLocale::get('jelix~date_time.day.'.date('w',$t).'.label');
+               // récupération du formatage de la date	
+               $lf = jLocale::get('jelix~format.date_full');
+               // récupération du format ordinal du jour dans le mois surtout pour le format en anglais (1st, 2nd, 3rd et th pour les autres
+               $ordinal = jLocale::get('jelix~date_time.day.'.$this->day.'.ordinal');
+               // on mets le tout dans le bon ordre à l'aide de la chaine de formatage
+               $str = sprintf($lf, $day, $this->day, $ordinal, $month, $this->year);
                break;
         }
        return $str;

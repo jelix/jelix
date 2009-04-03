@@ -3,7 +3,9 @@
 * @package    jelix
 * @subpackage jtpl_plugin
 * @author     Jouanneau Laurent
+* @contributor Emmanuel Hesry
 * @copyright   2006 Jouanneau laurent
+* @copyright   2009 Emmanuel Hesry
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -25,7 +27,8 @@
  * <li>'db_time' => jDateTime::DB_TFORMAT)</li>
  * <li>'iso8601' => jDateTime::ISO8601_FORMAT)</li>
  * <li>'timestamp' => jDateTime::TIMESTAMP_FORMAT)</li>
- * <li>'rfc822'=> jDateTime::RFC822_FORMAT)</li></ul>
+ * <li>'rfc822'=> jDateTime::RFC822_FORMAT)</li>
+ * <li>'full_lang_date'=> jDateTime::FULL_LANG_DATE</li></ul>
  * 
  * examples :
  *  {$mydate|jdatetime}
@@ -48,8 +51,9 @@ function jtpl_modifier_common_jdatetime($date, $format_in = 'db_datetime',
         'db_time' => jDateTime::DB_TFORMAT,
         'iso8601' => jDateTime::ISO8601_FORMAT,
         'timestamp' => jDateTime::TIMESTAMP_FORMAT,
-        'rfc822'=> jDateTime::RFC822_FORMAT);
-
+        'rfc822'=> jDateTime::RFC822_FORMAT,
+        'full_lang_date'=> jDateTime::FULL_LANG_DATE
+        );
     if(!isset($formats[$format_in]) | !isset($formats[$format_out])){
         throw new jException("jelix~errors.tpl.tag.modifier.invalid", array('','jdatetime',''));
     }
