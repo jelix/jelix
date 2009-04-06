@@ -4,9 +4,10 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Yann (description and keywords), Dominique Papin
-* @contributor Warren Seine, Alexis Métaireau
+* @contributor Warren Seine, Alexis Métaireau, Julien Issler
 * @copyright   2005-2009 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
 * @copyright   2008 Warren Seine, Alexis Métaireau
+* @copyright   2009 Julien Issler
 *              few lines of code are copyrighted CopixTeam http://www.copix.org
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -119,6 +120,13 @@ class jResponseHtml extends jResponse {
      */
     protected $_isXhtml = true;
     protected $_endTag="/>\n";
+
+    /**
+     * says if the document uses a Strict or Transitional Doctype
+     * @var boolean
+     * @since 1.1.3
+     */
+    protected $_strictDoctype = true;
 
     /**
      * says if xhtml content type should be send or not.
@@ -394,11 +402,11 @@ class jResponseHtml extends jResponse {
      */
     protected function outputDoctype (){
         if($this->_isXhtml){
-            echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+            echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 ',$this->_strictDoctype?'Strict':'Transitional','//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-',$this->_strictDoctype?'strict':'transitional','.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$this->_lang,'" lang="',$this->_lang,'">
 ';
         }else{
-            echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n";
+            echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01',$this->_strictDoctype?'':' Transitional','//EN" "http://www.w3.org/TR/html4/',$this->_strictDoctype?'strict':'loose','.dtd">', "\n";
             echo '<html lang="',$this->_lang,'">';
         }
     }
@@ -542,6 +550,15 @@ class jResponseHtml extends jResponse {
             $this->_endTag = "/>\n";
         else
             $this->_endTag = ">\n";
+    }
+
+    /**
+     * activate / deactivate the strict Doctype (activated by default)
+     * @param boolean $val true for strict, false for transitional
+     * @since 1.1.3
+     */
+    final public function strictDoctype($val = true){
+        $this->_strictDoctype = $val;
     }
 
     /**
