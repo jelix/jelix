@@ -3,9 +3,10 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Laurent Jouanneau
-* @contributor Nicolas Lassalle <nicolas@beroot.org> (ticket #188)
+* @contributor Nicolas Lassalle <nicolas@beroot.org> (ticket #188), Julien Issler
 * @copyright   2005-2007 Laurent Jouanneau
 * @copyright   2007 Nicolas Lassalle
+* @copyright   2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -79,6 +80,8 @@ final class jResponseBinary  extends jResponse {
             if (is_readable ($this->fileName) && is_file ($this->fileName)){
                 $this->_httpHeaders['Content-Length']=filesize ($this->fileName);
                 $this->sendHttpHeaders();
+                ob_end_clean();
+                session_write_close();
                 readfile ($this->fileName);
                 flush();
                 return true;
@@ -89,6 +92,8 @@ final class jResponseBinary  extends jResponse {
         }else{
             $this->_httpHeaders['Content-Length']=strlen ($this->content);
             $this->sendHttpHeaders();
+            ob_end_clean();
+            session_write_close();
             echo $this->content;
             flush();
             return true;
