@@ -29,8 +29,8 @@ class %%name%%Ctrl extends jControllerDaoCrud {
     //protected $propertiesForList = array();
 
     /**
-     * list of properties which serve to order the record list
-     * if empty list (default), the list is in a natural order
+     * list of properties which serve to order the record list.
+     * if empty list (default), the list is in a natural order.
      * keys are properties name, and values are "asc" or "desc"
      * @var array
      */
@@ -59,7 +59,13 @@ class %%name%%Ctrl extends jControllerDaoCrud {
      */
     //protected $offsetParameterName = 'offset';
 
-
+    /**
+     * full path to the directory where uploaded files will be stored
+     * automatically by jForms.
+     * Set it to false if you want to handle yourself the uploaded files.
+     * Set it with an empty string if you want to stored files in the default
+     * var/uploads directory.
+     */
     //protected $uploadsDirectory ='';
 
 
@@ -78,7 +84,6 @@ class %%name%%Ctrl extends jControllerDaoCrud {
      * Don't do a jForms::get or jForms::fill in this method !
      * called in methods: index, precreate, create, preupdate, view
      * @return jFormsBase the form
-     * @since 1.1
      */
     /*protected function _createForm($formId = null) {
         return jForms::create($this->form, $formId);
@@ -159,7 +164,9 @@ class %%name%%Ctrl extends jControllerDaoCrud {
 
     /**
      * redefine this method if you wan to do additionnal things after the creation of
-     * a record
+     * a record. For example, you can handle here the uploaded files. If you do
+     * such handling, set the uploadsDirectory property to false, to prevent
+     * the default behavior on uploaded files in the controller.
      * @param jFormsBase $form the form object
      * @param mixed $id the new id of the inserted record
      * @param jHtmlResponse $resp the response
@@ -200,7 +207,9 @@ class %%name%%Ctrl extends jControllerDaoCrud {
 
     /**
      * redefine this method if you wan to do additionnal things after the update of
-     * a record
+     * a record. For example, you can handle here the uploaded files. If you do
+     * such handling, set the uploadsDirectory property to false, to prevent
+     * the default behavior on uploaded files in the controller.
      * @param jFormsBase $form the form object
      * @param mixed $id the new id of the updated record
      * @param jHtmlResponse $resp the response

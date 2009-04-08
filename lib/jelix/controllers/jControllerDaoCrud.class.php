@@ -46,9 +46,9 @@ class jControllerDaoCrud extends jController {
     protected $propertiesForList = array();
 
     /**
-     * list of properties which serve to order the record list
-     * if empty list (default), the list is in a natural order
-     * keys are properties name, and values are "asc" or "desc"
+     * list of properties which serve to order the record list.
+     * if empty list (default), the list is in a natural order.
+     * keys are properties name, and values are "asc" or "desc".
      * @var array
      */
     protected $propertiesForRecordsOrder = array();
@@ -97,7 +97,14 @@ class jControllerDaoCrud extends jController {
      */
     protected $pseudoFormId = 'jelix_crud_roxor';
 
-
+    /**
+     * full path to the directory where uploaded files will be stored
+     * automatically by jForms.
+     * Set it to false if you want to handle yourself the uploaded files.
+     * Set it with an empty string if you want to stored files in the default
+     * var/uploads directory.
+     * @var string|false
+     */
     protected $uploadsDirectory ='';
 
     /**
@@ -320,10 +327,11 @@ class jControllerDaoCrud extends jController {
             $this->_beforeSaveCreate($form, $form_daorec);
             $form_dao->insert($form_daorec);
             $id = $form_daorec->getPk();
-            $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
             $rep->params['id'] = $id;
             $this->_afterCreate($form, $id, $rep);
+            if ($this->uploadsDirectory !== false)
+                $form->saveAllFiles($this->uploadsDirectory);
             jForms::destroy($this->form);
             return $rep;
         } else {
@@ -334,7 +342,9 @@ class jControllerDaoCrud extends jController {
 
     /**
      * redefine this method if you wan to do additionnal things after the creation of
-     * a record
+     * a record. For example, you can handle here the uploaded files. If you do
+     * such handling, set the uploadsDirectory property to false, to prevent
+     * the default behavior on uploaded files in the controller. 
      * @param jFormsBase $form the form object
      * @param mixed $id the new id of the inserted record
      * @param jHtmlResponse $resp the response
@@ -452,10 +462,11 @@ class jControllerDaoCrud extends jController {
                 EXTR_PREFIX_ALL, "form");
             $this->_beforeSaveUpdate($form, $form_daorec, $id);
             $form_dao->update($form_daorec);
-            $form->saveAllFiles($this->uploadsDirectory);
             $rep->action = $this->_getAction('view');
             $rep->params['id'] = $id;
             $this->_afterUpdate($form, $id, $rep);
+            if ($this->uploadsDirectory !== false)
+                $form->saveAllFiles($this->uploadsDirectory);
             jForms::destroy($this->form, $id);
         } else {
             $rep->action = $this->_getAction('editupdate');
@@ -466,7 +477,9 @@ class jControllerDaoCrud extends jController {
 
     /**
      * redefine this method if you wan to do additionnal things after the update of
-     * a record
+     * a record. For example, you can handle here the uploaded files. If you do
+     * such handling, set the uploadsDirectory property to false, to prevent
+     * the default behavior on uploaded files in the controller.
      * @param jFormsBase $form the form object
      * @param mixed $id the new id of the updated record
      * @param jHtmlResponse $resp the response
