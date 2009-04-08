@@ -85,6 +85,8 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urla', 'first'=>'premier');
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urlb');
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urlc');
+      $resultList[]= array('module'=>'news',        'action'=>'main:chou',     'e'=>'g');
+      $resultList[]= array('module'=>'articles',    'action'=>'default:zap',   't'=>'r');
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -108,6 +110,8 @@ class UTParseUrls extends UnitTestCase {
           array("handlermodule.php","/myhand/urlsig/urla",array('first'=>'premier')),
           array("handlermodule.php","/myhand/urlsig/urlb",array()),
           array("handlermodule.php","/myhand/urlsig/urlc",array()),
+          array("news.php","",array('module'=>'news', 'e'=>'g','action'=>'main:chou')),
+          array("news.php","",array('module'=>'articles', 't'=>'r','action'=>'default:zap')),
 
        );
 
@@ -146,6 +150,8 @@ class UTParseUrls extends UnitTestCase {
           array("handlermodule","/myhand/urlsig/urla",array('first'=>'premier')),
           array("handlermodule","/myhand/urlsig/urlb",array()),
           array("handlermodule","/myhand/urlsig/urlc",array()),
+          array("news","",array('module'=>'news', 'e'=>'g','action'=>'main:chou')),
+          array("news","",array('module'=>'articles', 't'=>'r','action'=>'default:zap')),
        );
       foreach($request as $k=>$urldata){
          $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);

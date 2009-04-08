@@ -68,6 +68,7 @@
 
     <classicentrypoint name="news">
         <url module="news" />
+        <url module="articles" />
     </classicentrypoint>
     <xmlrpcentrypoint name="xmlrpc" default="true" />
     <jsonrpcentrypoint name="jsonrpc" default="true" />

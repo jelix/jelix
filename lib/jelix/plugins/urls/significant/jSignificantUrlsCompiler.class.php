@@ -4,7 +4,7 @@
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor Thibault PIRONT < nuKs >
-* @copyright   2005-2008 Laurent Jouanneau
+* @copyright   2005-2009 Laurent Jouanneau
 * @copyright   2007 Thibault PIRONT
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -23,8 +23,6 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $sourceFile = $aSelector->getPath();
         $cachefile = $aSelector->getCompiledFilePath();
 
-
-        // lecture du fichier xml
         $xml = simplexml_load_file ( $sourceFile);
         if(!$xml){
            return false;
@@ -41,45 +39,52 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
          </classicentrypoint>
         </urls>
 
-         génère dans un fichier propre à chaque entrypoint :
+        The compiler generates two files.
 
-            $PARSE_URL = array($isDefault , $infoparser,$infoparser... )
+        It generates a php file for each entrypoint. A file contains a $PARSE_URL
+        array:
 
-            où
-            $isDefault : indique si c'est un point d'entrée par défaut, et donc si le parser ne trouve rien,
-                            si il ignore ou fait une erreur
+            $PARSE_URL = array($isDefault, $infoparser, $infoparser, ... )
 
-            $infoparser = array('module','action','selecteur handler')
-            ou
-            $infoparser = array( 'module','action', 'regexp_pathinfo',
-               array('annee','mois'), // tableau des valeurs dynamiques, classées par ordre croissant
-               array(true, false), // tableau des valeurs escapes
-               array('bla'=>'cequejeveux' ) // tableau des valeurs statiques
+        where:
+            $isDefault: true if it is the default entry point. In this case and
+            where the url parser doesn't find a corresponding action, it will
+            ignore else it will generate an error
+            
+            $infoparser = array('module','action','handler selector', array('secondaries','actions'))
+            or
+            $infoparser = array('module','action','regexp_pathinfo',
+               array('year','month'), // list of dynamic value included in the url,
+                                      // alphabetical ascendant order
+               array(true, false),    // list of boolean which indicates for each
+                                      // dynamic value, if it is an escaped value or not
+               array('bla'=>'whatIWant' ), // list of static values
+               array('secondaries','actions')
             )
 
-
-         génère dans un fichier commun à tous :
+        It generates an other file common to all entry point. It contains an
+        array which contains informations to create urls
 
             $CREATE_URL = array(
-               'news~show@classic' =>
-                  array(0,'entrypoint', https true/false, 'selecteur handler')
-                  ou
+               'news~show@classic' => // the action selector
+                  array(0,'entrypoint', https true/false, 'handler selector')
+                  or
                   array(1,'entrypoint', https true/false,
-                        array('annee','mois','jour','id','titre'), // liste des paramètres de l'url à prendre en compte
-                        array(true, false..), // valeur des escapes
-                        "/news/%1/%2/%3/%4-%5", // forme de l'url
-                        array('bla'=>'cequejeveux' ) // tableau des valeurs statiques, pour comparer 
-                                                     quand il y a plusieurs urls vers la même action
+                        array('year','month',), // list of dynamic values included in the url
+                        array(true, false..), // list of boolean which indicates for each
+                                              // dynamic value, if it is an escaped value or not
+                        "/news/%1/%2/", // the url 
+                        array('bla'=>'whatIWant' ) // list of static values
                         )
-                   quand il y a plusieurs urls vers la même action, il y a plutôt un tableau contenant
-                    plusieurs tableaux du type précédent
-                    array( 4, array(1,...), array(1,...)...)
+                  or
+                  When there are  several urls to the same action, it is an array of this kind of the previous array:
+                  array(4, array(1,...), array(1,...)...)
 
-                  ou
-                  array(2,'entrypoint', https true/false); pour les clés du type "@request"
-                  array(3,'entrypoint', https true/false);  pour les clés du type  "module~@request"
-
+                  or
+                  array(2,'entrypoint', https true/false), // for the patterns "@request"
+                  array(3,'entrypoint', https true/false), // for the patterns "module~@request"
         */
+
         $typeparam = array('string'=>'([^\/]+)','char'=>'([^\/])', 'letter'=>'(\w)',
            'number'=>'(\d+)', 'int'=>'(\d+)', 'integer'=>'(\d+)', 'digit'=>'(\d)',
            'date'=>'([0-2]\d{3}\-(?:0[1-9]|1[0-2])\-(?:[0-2][1-9]|3[0-1]))', 
@@ -91,7 +96,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
         foreach($xml->children() as $name=>$tag){
            if(!preg_match("/^(.*)entrypoint$/", $name,$m)){
-               //TODO : erreur
+               //TODO : error
                continue;
            }
            $requestType= $m[1];
@@ -110,6 +115,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
              $createUrlInfos['@'.$requestType]=array(2,$entryPoint, $isHttps);
            }
 
+           $createUrlInfosDedicatedModules = array();
            $parseContent = "<?php \n";
            foreach($tag->url as $url){
                $module = (string)$url['module'];
@@ -123,12 +129,13 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                }else{
                    $urlep=$generatedentrypoint;
                }
-               // dans le cas d'un point d'entrée qui n'est pas celui par défaut pour le type de requete indiqué
-               // si il y a juste un module indiqué alors on sait que toutes les actions
-               // concernant ce module passeront par ce point d'entrée.
+
+               // in the case of a non default entry point, if there is just an
+               // <url module="" />, so all actions of this module will be assigned
+               // to this entry point.
                if(!$isDefault && !isset($url['action']) && !isset($url['handler'])){
-                 $parseInfos[]=array($module, '', '/.*/', array(), array(), array(), false );
-                 $createUrlInfos[$module.'~*@'.$requestType] = array(3,$urlep, $urlhttps);
+                 $parseInfos[] = array($module, '', '/.*/', array(), array(), array(), false );
+                 $createUrlInfosDedicatedModules[$module.'~*@'.$requestType] = array(3, $urlep, $urlhttps, true);
                  continue;
                }
 
@@ -266,6 +273,12 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                      }
                   }
                }
+           }
+           $c = count($createUrlInfosDedicatedModules);
+           foreach($createUrlInfosDedicatedModules as $k=>$inf) {
+              if ($c > 1)
+                $inf[3] = false;
+              $createUrlInfos[$k] = $inf;
            }
 
            $parseContent.='$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($entryPoint).'\'] = '.var_export($parseInfos, true).";\n?>";

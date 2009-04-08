@@ -208,6 +208,7 @@ class UTCreateUrls extends UnitTestCase {
        );
 
       $gJConfig->_modulesPathList['news']='/';
+      $gJConfig->_modulesPathList['articles']='/';
 
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
 
@@ -238,6 +239,7 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('testurls~urlsig:urla', array());
       $urlList[]= array('testurls~urlsig:urla', array('first'=>'premier'));
       $urlList[]= array('testurls~urlsig:urlb', array());
+      $urlList[]= array('articles~zap', array('f'=>'g'));
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -249,7 +251,7 @@ class UTCreateUrls extends UnitTestCase {
           "/foo/bar.php/withhandler/premier/deuxieme",
           "/index.php?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
           "/xmlrpc.php",
-          "/news.php?aaa=bbb&action=default:bar",
+          "/news.php?aaa=bbb&module=news&action=default:bar",
           "/index.php/test/news/2007/23/74?action=urlsig:url8",
           "/index.php/shop/vetements/98",
           "/index.php/shop/bricolage/53/",
@@ -265,6 +267,7 @@ class UTCreateUrls extends UnitTestCase {
           "/myhand/urlsig/urla",
           "/myhand/urlsig/urla?first=premier",
           "/myhand/urlsig/urlb",
+          "/news.php?f=g&module=articles&action=default:zap",
        );
 
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
@@ -282,7 +285,7 @@ class UTCreateUrls extends UnitTestCase {
           "/foo/bar/withhandler/premier/deuxieme",
           "/index?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
           "/xmlrpc",
-          "/news?aaa=bbb&action=default:bar",
+          "/news?aaa=bbb&module=news&action=default:bar",
           "/index/test/news/2007/23/74?action=urlsig:url8",
           "/index/shop/vetements/98",
           "/index/shop/bricolage/53/",
@@ -298,6 +301,7 @@ class UTCreateUrls extends UnitTestCase {
           "/myhand/urlsig/urla",
           "/myhand/urlsig/urla?first=premier",
           "/myhand/urlsig/urlb",
+          "/news?f=g&module=articles&action=default:zap",
        );
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
