@@ -218,6 +218,7 @@ Rahal
 
 Tahina Ramaroson
  - ldap driver for jAuth (#787)
+ - jCache (#540)
 
 Philippe Schelte (aka dubphil)
  - plugin tpl cycle (#149)
@@ -249,6 +250,7 @@ Sylvain de Vathaire (aka sylvain261)
  - little bug fix in jZone (#508)
  - jResponseHtmlFragment for Ajax content response (#501)
  - little bug fix in mysql.dbconnection.php (#97bis)
+ - jCache (#540)
 
 Thanks for all users, especially those who reported bugs. :-)
 

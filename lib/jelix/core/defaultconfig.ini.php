@@ -27,6 +27,8 @@ unusedModules =
 
 dbProfils = dbprofils.ini.php
 
+cacheProfiles = cache.ini.php
+
 use_error_handler = on
 
 enableOldActionSelector =

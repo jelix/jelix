@@ -180,7 +180,6 @@ CREATE TABLE jacl2_user_group (
     id_aclgrp integer NOT NULL
 );
 
-
 ALTER TABLE ONLY jacl2_group
     ADD CONSTRAINT jacl2_group_pkey PRIMARY KEY (id_aclgrp);
 
@@ -201,6 +200,15 @@ ALTER TABLE ONLY jacl2_rights
 
 ALTER TABLE ONLY jacl2_user_group
     ADD CONSTRAINT jacl2_user_group_id_aclgrp_fkey FOREIGN KEY (id_aclgrp) REFERENCES jacl2_group(id_aclgrp);
+
+CREATE TABLE jlx_cache (
+  cache_key character varying(255) NOT NULL,
+  cache_data text,
+  cache_date timestamp default NULL,
+);
+
+ALTER TABLE ONLY jlx_cache
+    ADD CONSTRAINT jlx_cache_pkey PRIMARY KEY (cache_key);
 
 
 

@@ -91,6 +91,7 @@ cd testapp/modules/jelix_tests/classes
   test.iface.php
   myclass.class.php
   mydatasource.class.php
+  testCache.class.php
 cd testapp/modules/jelix_tests/classes/tests
   foo.class.php
   foo.iface.php
@@ -161,6 +162,7 @@ cd testapp/modules/jelix_tests/tests/
   jacl2.manager.html_cli.php
   jacl2.users_and_groups.html_cli.php
   jauth.ldap_api.html.php
+  jcache.api.html.php
   jdao.conditions.html_cli.php
   jdao.events.html_cli.php
   jdao.main_api.html_cli.php
@@ -213,6 +215,7 @@ cd testapp/var/config
   auth_ldap.coord.ini.php.dist
   defaultconfig.ini.php
   dbprofils.ini.php.dist
+  cache.ini.php.dist
   urls.xml
   urls_old.xml
 cd testapp/var/config/index

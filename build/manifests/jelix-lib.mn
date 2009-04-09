@@ -101,6 +101,7 @@ cd lib/jelix/core-modules/jelix/daos
    jacl2subject.dao.xml
    jacl2usergroup.dao.xml
    jacl2groupsofuser.dao.xml
+   jcache.dao.xml
 cd lib/jelix/core-modules/jelix/install/sql
   delete.mysql.sql
   delete.pgsql.sql
@@ -118,11 +119,14 @@ cd lib/jelix/core-modules/jelix/install/sql
   install_jauth.data.pgsql.sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
+  install_jcache.schema.mysql.sql
+  install_jcache.schema.pgsql.sql
 
 cd lib/jelix/core-modules/jelix/locales/en_US
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cch auth.UTF-8.properties(auth.%charset%.properties)
+cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
 cch common.UTF-8.properties(common.%charset%.properties)
 cch crud.UTF-8.properties(crud.%charset%.properties)
@@ -140,6 +144,7 @@ cd lib/jelix/core-modules/jelix/locales/en_EN
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cch auth.UTF-8.properties(auth.%charset%.properties)
+cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
 cch common.UTF-8.properties(common.%charset%.properties)
 cch crud.UTF-8.properties(crud.%charset%.properties)
@@ -159,6 +164,7 @@ cch date_time.UTF-8.properties(date_time.%charset%.properties)
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cch auth.UTF-8.properties(auth.%charset%.properties)
+cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
 cch common.UTF-8.properties(common.%charset%.properties)
 cch crud.UTF-8.properties(crud.%charset%.properties)
@@ -234,6 +240,7 @@ cd lib/jelix/tpl/
 
 cd lib/jelix/utils/
   jAppManager.class.php
+  jCache.class.php
   jClasses.class.php
   jClassBinding.class.php
   jCmdUtils.class.php
@@ -273,6 +280,11 @@ cd lib/jelix/plugins/auth/class
 * class.auth.php
 cd lib/jelix/plugins/auth/lds
   lds.auth.php
+
+cd lib/jelix/plugins/cache/db
+  db.cache.php
+cd lib/jelix/plugins/cache/memcached
+  memcached.cache.php
 
 cd lib/jelix/plugins/coord/magicquotes
 ! magicquotes.coord.php
