@@ -26,6 +26,8 @@ class UTjCacheAPI extends jUnitTestCaseDb {
             $this->profils[] = 'usingdb';
         if ($conf['usingmemcached']['enabled'])
             $this->profils[] = 'usingmemcached';
+        if ($conf['usingfile']['enabled'])
+            $this->profils[] = 'usingfile';
 
         foreach($this->profils as $profil){
             switch($profil){
@@ -35,6 +37,10 @@ class UTjCacheAPI extends jUnitTestCaseDb {
                 case 'usingmemcached':
                     $mmc=memcache_connect('localhost',11211);
                     memcache_flush($mmc);
+                    break;
+                case 'usingfile':
+                    if (file_exists(JELIX_APP_TEMP_PATH.'cache'))
+                        jFile::removeDir(JELIX_APP_TEMP_PATH.'cache/',false);
                     break;
             }
         }
@@ -75,9 +81,15 @@ class UTjCacheAPI extends jUnitTestCaseDb {
             }
 
             $this->assertFalse(jCache::set('unableToSerializeDataKey',$img,0,$profil));
-
+            
+            if ($profil == 'usingfile') {
+                $this->assertTrue(file_exists(JELIX_APP_TEMP_PATH.'cache'));
+                $this->assertTrue(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___noExpireKey.cache'));
+                $this->assertFalse(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___expiredKey.cache'));
+                $this->assertTrue(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___ttlInDateKey.cache'));
+                $this->assertTrue(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___ttlInSecondesKey.cache'));
+            }
        }
-
     }
 
     public function testGet (){
@@ -88,14 +100,14 @@ class UTjCacheAPI extends jUnitTestCaseDb {
             jCache::set('getKey','string for data',0,$profil);
             jCache::set('expiredKey','data expired',strtotime("-1 day"),$profil);
 
-            $data=jCache::get(array('getKey','expiredKey','inexistentKey'),$profil);
+            $data = jCache::get(array('getKey','expiredKey','inexistentKey'),$profil);
             $this->assertTrue($data['getKey']=='string for data');
             $this->assertTrue(!isset($data['expiredKey']));
             $this->assertTrue(!isset($data['inexistentKey']));
 
             switch($profil){
                 case 'usingdb':
-                    $this->insertRecordsIntoTable('jlx_cache',array('cache_key','cache_data','cache_date'),array(array('cache_key'=>'phpIncompleteClassKey','cache_data'=>'O:9:"dummyData":2:{s:5:"label";s:23:"test unserializing data";s:11:"description";s:26:"for expecting an exception";}','cache_date'=>null)));
+                    $this->insertRecordsIntoTable('jlx_cache', array('cache_key','cache_data','cache_date'),array(array('cache_key'=>'phpIncompleteClassKey','cache_data'=>'O:9:"dummyData":2:{s:5:"label";s:23:"test unserializing data";s:11:"description";s:26:"for expecting an exception";}','cache_date'=>null)));
                     $data=jCache::get('phpIncompleteClassKey',$profil);
                     if(!is_object($data)){
                         $this->pass();
@@ -302,6 +314,10 @@ class UTjCacheAPI extends jUnitTestCaseDb {
                     $this->assertFalse(memcache_get($mmc,'garbage1DataKey'));
                     $this->assertFalse(memcache_get($mmc,'garbage2DataKey'));
                     break;
+                case 'usingfile':
+                    $this->assertTrue(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___remainingDataKey.cache'));
+                    $this->assertFalse(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___garbage1DataKey.cache'));
+                    $this->assertFalse(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___garbage1DataKey.cache'));
             }
 
         }
@@ -318,18 +334,30 @@ class UTjCacheAPI extends jUnitTestCaseDb {
             jCache::set('flush2DataKey','data to remove',strtotime("+1 day"),$profil);
             jCache::set('flush3DataKey','other data to remove',time()+30,$profil);
 
-            $this->assertTrue(jCache::flush($profil));
-
             switch($profil){
                 case 'usingdb':
+                    $this->assertTableHasNRecords('jlx_cache', 3);
+                    $this->assertTrue(jCache::flush($profil));
                     $this->assertTableIsEmpty('jlx_cache');
                     break;
                 case 'usingmemcached':
                     $mmc=memcache_connect('localhost',11211);
+                    $this->assertTrue(memcache_get($mmc,'flush1DataKey'));
+                    $this->assertTrue(memcache_get($mmc,'flush2DataKey'));
+                    $this->assertTrue(memcache_get($mmc,'flush3DataKey'));
+                    $this->assertTrue(jCache::flush($profil));
                     $this->assertFalse(memcache_get($mmc,'flush1DataKey'));
                     $this->assertFalse(memcache_get($mmc,'flush2DataKey'));
                     $this->assertFalse(memcache_get($mmc,'flush3DataKey'));
                     break;
+                case 'usingfile':
+                    $this->assertTrue(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___flush1DataKey.cache'));
+                    $this->assertTrue(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___flush2DataKey.cache'));
+                    $this->assertTrue(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___flush3DataKey.cache'));
+                    $this->assertTrue(jCache::flush($profil));
+                    $this->assertFalse(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___flush1DataKey.cache'));
+                    $this->assertFalse(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___flush2DataKey.cache'));
+                    $this->assertFalse(file_exists(JELIX_APP_TEMP_PATH.'cache/jelix_cache___flush3DataKey.cache'));
             }
 
         }

@@ -552,3 +552,7 @@ cd lib/phpMailer/language
 ! phpmailer.lang-ru.php
 ! phpmailer.lang-se.php
 ! phpmailer.lang-tr.php
+
+cd lib/jelix-plugins/cache/file
+  file.cache.php
+  LICENCE

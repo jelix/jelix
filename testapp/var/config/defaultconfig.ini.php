@@ -13,7 +13,7 @@ checkTrustedModules = off
 ; list of modules : module,module,module
 trustedModules =
 
-pluginsPath = app:plugins/
+pluginsPath = app:plugins/,lib:jelix-plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 
 dbProfils = dbprofils.ini.php

@@ -22,6 +22,9 @@ rmd lib/jelix-plugins/tpl
 rmd lib/jelix-plugins/urls
 rmd lib/jelix-plugins/wr_rules
 
+cd lib/jelix-plugins/
+  CREDITS
+
 cd lib/jelix-www/js
   jforms.js
 
