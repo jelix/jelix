@@ -364,6 +364,7 @@ cd lib/jelix/plugins/tpl/common
   block.stripws.php
   cfunction.fetchzone.php
   cfunction.zone.php
+  cfunction.include.php
   function.counter.php
   function.counter_init.php
   function.counter_reset.php
