@@ -2,9 +2,9 @@
 /**
 * @package     testapp
 * @subpackage  jelix_tests module
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2007 Jouanneau laurent
+* @copyright   2006-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -240,6 +240,9 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('testurls~urlsig:urla', array('first'=>'premier'));
       $urlList[]= array('testurls~urlsig:urlb', array());
       $urlList[]= array('articles~zap', array('f'=>'g'));
+      $urlList[]= array('jelix_tests~default:wikishow', array('page'=>''));
+      $urlList[]= array('jelix_tests~default:wikishow', array('page'=>'foo'));
+      
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -268,6 +271,8 @@ class UTCreateUrls extends UnitTestCase {
           "/myhand/urlsig/urla?first=premier",
           "/myhand/urlsig/urlb",
           "/news.php?f=g&module=articles&action=default:zap",
+          "/index.php/super/wiki/",
+          "/index.php/super/wiki/foo",
        );
 
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
@@ -302,6 +307,8 @@ class UTCreateUrls extends UnitTestCase {
           "/myhand/urlsig/urla?first=premier",
           "/myhand/urlsig/urlb",
           "/news?f=g&module=articles&action=default:zap",
+          "/index/super/wiki/",
+          "/index/super/wiki/foo",
        );
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
@@ -457,9 +464,5 @@ class UTCreateUrls extends UnitTestCase {
        );
       $this->_doCompareError("simple, errors multiview = true", $urlList,$trueResult);
     }
-
-
-
-
 }
 ?>

@@ -2,9 +2,9 @@
 /**
 * @package     testapp
 * @subpackage  jelix_tests module
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Thibault PIRONT < nuKs >
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2009 Laurent Jouanneau
 * @copyright   2007 Thibault PIRONT
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -87,6 +87,10 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urlc');
       $resultList[]= array('module'=>'news',        'action'=>'main:chou',     'e'=>'g');
       $resultList[]= array('module'=>'articles',    'action'=>'default:zap',   't'=>'r');
+      $resultList[]= array('module'=>'jelix_tests',    'action'=>'default:wikishow',   'page'=>'/');
+      $resultList[]= array('module'=>'jelix_tests',    'action'=>'default:wikishow',   'page'=>'/foo/bar');
+      $resultList[]= array('module'=>'jelix_tests',    'action'=>'default:wikiedit',   'page'=>'/foo/bar');
+      
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -112,6 +116,9 @@ class UTParseUrls extends UnitTestCase {
           array("handlermodule.php","/myhand/urlsig/urlc",array()),
           array("news.php","",array('module'=>'news', 'e'=>'g','action'=>'main:chou')),
           array("news.php","",array('module'=>'articles', 't'=>'r','action'=>'default:zap')),
+          array("index.php","/super/wiki/",array()),
+          array("index.php","/super/wiki/foo/bar",array()),
+          array("index.php","/super/wiki/foo/bar",array('action'=>"default:wikiedit")),
 
        );
 
@@ -122,7 +129,7 @@ class UTParseUrls extends UnitTestCase {
          ksort($p);
          ksort($resultList[$k]);
 
-         $this->assertTrue( ($p == $resultList[$k]), 'created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
+         $this->assertTrue( ($p == $resultList[$k]), 'test '.$k.' created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
       }
 
 
@@ -152,6 +159,10 @@ class UTParseUrls extends UnitTestCase {
           array("handlermodule","/myhand/urlsig/urlc",array()),
           array("news","",array('module'=>'news', 'e'=>'g','action'=>'main:chou')),
           array("news","",array('module'=>'articles', 't'=>'r','action'=>'default:zap')),
+          array("index.php","/super/wiki/",array()),
+          array("index.php","/super/wiki/foo/bar",array()),
+          array("index.php","/super/wiki/foo/bar",array('action'=>"default:wikiedit")),
+
        );
       foreach($request as $k=>$urldata){
          $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);
@@ -159,7 +170,7 @@ class UTParseUrls extends UnitTestCase {
          ksort($p);
          ksort($resultList[$k]);
 
-         $this->assertTrue( ($p == $resultList[$k]), 'created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
+         $this->assertTrue( ($p == $resultList[$k]), 'test '.$k.' created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
       }
 
     }

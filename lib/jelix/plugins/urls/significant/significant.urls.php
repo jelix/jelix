@@ -170,32 +170,40 @@ class significantUrlEngine implements jIUrlEngine {
                 continue;
             }
 
-            if(count($infoparsing) < 5){
+            if(count($infoparsing) < 6){
                 // we have an array like this:
-                // array( 0=> 'module', 1=>'action', 2=>'selecteur handler', 3=>array(secondaries','actions'))
-                $s = new jSelectorUrlHandler($infoparsing[2]);
+                // array( 0=> 'module', 1=>'action', 2=>'regexp', 3=>'selecteur handler', 4=>array(secondaries','actions'))
+                $reg = $infoparsing[2];
+                $url2 = clone $url;
+                if ($reg != '') {
+                    if (preg_match($reg, $pathinfo, $m))
+                        $url2->pathInfo = $m[1];
+                    else
+                        continue;
+                }
+                $s = new jSelectorUrlHandler($infoparsing[3]);
                 $c =$s->className.'UrlsHandler';
                 $handler =new $c();
 
-                $url->params['module']=$infoparsing[0];
+                $url2->params['module']=$infoparsing[0];
 
                 // si une action est présente dans l'url actuelle
                 // et qu'elle fait partie des actions secondaires, alors on la laisse
                 // sinon on prend celle indiquée dans la conf
-                if ($infoparsing[3] && isset($params['action'])) {
+                if ($infoparsing[4] && isset($params['action'])) {
                     if(strpos($params['action'], ':') === false) {
                         $params['action'] = 'default:'.$params['action'];
                     }
-                    if(in_array($params['action'], $infoparsing[3]))
+                    if(in_array($params['action'], $infoparsing[4]))
                         // action peut avoir été écrasé par une itération précédente
-                        $url->params['action']=$params['action'];
+                        $url2->params['action']=$params['action'];
                     else
-                        $url->params['action']=$infoparsing[1];
+                        $url2->params['action']=$infoparsing[1];
                 }else{
-                    $url->params['action']=$infoparsing[1];
+                    $url2->params['action']=$infoparsing[1];
                 }
                 // appel au handler
-                if($urlact = $handler->parse($url)){
+                if($urlact = $handler->parse($url2)){
                     break;
                 }
             }
@@ -324,7 +332,7 @@ class significantUrlEngine implements jIUrlEngine {
         }
         /*
         urlinfo =
-          or array(0,'entrypoint', https true/false, 'handler selector')
+          or array(0,'entrypoint', https true/false, 'handler selector', 'basepathinfo')
           or array(1,'entrypoint', https true/false,
                   array('year','month',), // list of dynamic values included in the url
                   array(true, false..), // list of boolean which indicates for each
@@ -380,6 +388,9 @@ class significantUrlEngine implements jIUrlEngine {
             $c =$s->resource.'UrlsHandler';
             $handler =new $c();
             $handler->create($urlact, $url);
+            if ($urlinfo[4] !='') {
+                $url->pathInfo = $urlinfo[4].$url->pathInfo;
+            }
         }elseif($urlinfo[0]==1){
             $pi = $urlinfo[5];
             foreach ($urlinfo[3] as $k=>$param){

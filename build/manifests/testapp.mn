@@ -86,6 +86,7 @@ cd testapp/modules/jelix_tests
   module.xml
 cd testapp/modules/jelix_tests/classes
   urlsig.urlhandler.php
+  urlsigwiki.urlhandler.php
   testevents.listener.php
   testdaoevents.listener.php
   test.iface.php

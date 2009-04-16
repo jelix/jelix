@@ -51,7 +51,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             where the url parser doesn't find a corresponding action, it will
             ignore else it will generate an error
             
-            $infoparser = array('module','action','handler selector', array('secondaries','actions'))
+            $infoparser = array('module','action', 'regexp_pathinfo',
+                                'handler selector', array('secondaries','actions'))
             or
             $infoparser = array('module','action','regexp_pathinfo',
                array('year','month'), // list of dynamic value included in the url,
@@ -173,12 +174,24 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                   if(!isset($url['action'])) {
                     $action = '*';
                   }
+                  if(isset($url['pathinfo'])){
+                    $pathinfo = '/'.trim($url['pathinfo'],'/');
+                    if ($pathinfo !='/') {
+                        $regexp = '!^'.preg_quote($pathinfo,'!').'(/.*)?$!';   
+                    }
+                    else
+                        $pathinfo = '';
+                  }
+                  else {
+                    $pathinfo = '';
+                    $regexp = '';
+                  }
                   $createUrlContent.="include_once('".$s->getPath()."');\n";
-                  $parseInfos[]=array($module, $action, $selclass, $actionOverride );
-                  $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$urlep, $urlhttps, $selclass);
+                  $parseInfos[]=array($module, $action, $regexp, $selclass, $actionOverride );
+                  $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$urlep, $urlhttps, $selclass, $pathinfo);
                   if($actionOverride){
                      foreach($actionOverride as $ao){
-                        $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(0,$urlep,$urlhttps, $selclass);
+                        $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(0,$urlep,$urlhttps, $selclass, $pathinfo);
                      }
                   }
                   continue;
