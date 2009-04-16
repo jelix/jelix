@@ -372,6 +372,7 @@ cd lib/jelix/plugins/tpl/common
   function.cycle_init.php
   function.cycle.php
   function.cycle_reset.php
+  function.repeat_string.php
   modifier.cat.php
   modifier.count_array.php
   modifier.count_characters.php
