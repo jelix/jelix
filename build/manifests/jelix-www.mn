@@ -22,6 +22,7 @@ cd lib/jelix-www/js
   jforms_light.js
   jforms_jquery.js
   json.js
+c json2.js
 cd lib/jelix-www/js/jforms/datepickers/default
   init.js
 cd lib/jelix-www/xul

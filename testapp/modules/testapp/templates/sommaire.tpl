@@ -15,6 +15,7 @@
       <ul>
         <li><a href="{jurl 'jelix_tests~jstests:jforms'}">jforms</a></li>
         <li><a href="{jurl 'jelix_tests~jstests:jsonrpc'}">jsonrpc</a></li>
+        <li><a href="{jurl 'jelix_tests~jstests:jsonrpc2'}">jsonrpc (with json2.js)</a></li>
       </ul>
    </li>
 </ul>

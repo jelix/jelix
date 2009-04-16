@@ -123,6 +123,7 @@ cd testapp/modules/jelix_tests/locales/en_EN
 cd testapp/modules/jelix_tests/templates
   jstest_jforms.tpl
   jstest_jsonrpc.tpl
+  jstest_jsonrpc2.tpl
   menu.tpl
   test_plugin_counter_init_allarg_noexeption.tpl
   test_plugin_counter_init_exeption.tpl
