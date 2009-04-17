@@ -154,7 +154,7 @@ class jDaoConditions {
     function addCondition ($field_id, $operator, $value, $foo = false){
         $operator = trim(strtoupper($operator));
         if(preg_match ('/^[^\w\d\s;\(\)]+$/', $operator) ||
-           in_array($operator, array('LIKE', 'IN', 'NOT IN', 'IS', 'IS NOT', 'IS NULL',
+           in_array($operator, array('LIKE', 'ILIKE', 'IN', 'NOT IN', 'IS', 'IS NOT', 'IS NULL',
                     'IS NOT NULL', 'MATCH', 'REGEXP', 'NOT REGEXP', 'RLIKE', 'SOUNDS LIKE'))) {
 
             $this->_currentCondition->conditions[] = array (
