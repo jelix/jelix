@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud (fix bug)
-* @copyright   2005-2007 Laurent Jouanneau, 2007 Loic Mathaud
+* @copyright   2005-2009 Laurent Jouanneau, 2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -24,6 +24,12 @@ final class jResponseRedirectUrl extends jResponse {
      * @var string
      */
     public $url = '';
+    
+    /**
+     * true if it is a temporary redirection
+     * @var boolean
+     */
+    public $temporary = true;
 
     /**
      * set the url with the referer URL
@@ -46,6 +52,10 @@ final class jResponseRedirectUrl extends jResponse {
             throw new jException('jelix~errors.repredirect.empty.url');
         if($this->hasErrors())
             return false;
+        if($this->temporary)
+            $this->setHttpStatus(303, 'Redirection');
+        else
+            $this->setHttpStatus(301, 'Redirection');
         $this->sendHttpHeaders();
         header ('location: '.$this->url);
         return true;

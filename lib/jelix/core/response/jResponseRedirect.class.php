@@ -5,7 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Aubanel Monnier (patch for anchor)
 * @contributor Loic Mathaud (fix bug)
-* @copyright   2005-2006 Laurent Jouanneau,  2007 Loic Mathaud
+* @copyright   2005-2009 Laurent Jouanneau,  2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -41,8 +41,18 @@ final class jResponseRedirect extends jResponse {
      */
     public $params = array();
 
+    /**
+     * true if it is a temporary redirection
+     * @var boolean
+     */
+    public $temporary = true;
+
     public function output(){
         if($this->hasErrors()) return false;
+        if($this->temporary)
+            $this->setHttpStatus(303, 'Redirection');
+        else
+            $this->setHttpStatus(301, 'Redirection');
         $this->sendHttpHeaders();
         header ('location: '.jUrl::get($this->action, $this->params).($this->anchor!='' ? '#'.$this->anchor:''));
         return true;
