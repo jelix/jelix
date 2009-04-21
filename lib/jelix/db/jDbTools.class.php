@@ -144,7 +144,7 @@ abstract class jDbTools {
      * @return array an array which contains characteristics of the type
      *        array ( 'nativetype', 'corresponding unifiedtype', minvalue, maxvalue, minlength, maxlength)
      * minvalue, maxvalue, minlength, maxlength can be null.
-     * @since 1.1.1
+     * @since 1.2
     */
     public function getTypeInfo($nativeType) {
         if(isset($this->typesInfo[$nativeType])) {
@@ -160,7 +160,7 @@ abstract class jDbTools {
      * return the PHP type corresponding to the given unified type
      * @param string $unifiedType
      * @return string the php type
-     * @since 1.1.1
+     * @since 1.2
     */
     public function unifiedToPHPType($unifiedType) {
         if(isset($this->unifiedToPhp[$unifiedType])) {
@@ -173,7 +173,7 @@ abstract class jDbTools {
      * @param string $unifiedType  the unified type name
      * @param string $value        the value
      * @return string  the php value corresponding to the type
-     * @since 1.1.1
+     * @since 1.2
     */
     public function stringToPhpValue($unifiedType, $value, $checkNull = false) {
         if($checkNull && ($value === null ||strtolower($value)=='null'))
@@ -200,7 +200,7 @@ abstract class jDbTools {
      * @param string $unifiedType  the unified type name
      * @param mixed $value        the value
      * @return string  the value which is ready to include a SQL query string
-     * @since 1.1.1
+     * @since 1.2
     */
     public function escapeValue($unifiedType, $value, $checkNull = false, $toPhpSource = false) {
         if($checkNull && ($value === null ||strtolower($value)=='null'))
@@ -236,7 +236,7 @@ abstract class jDbTools {
     /**
      * @param string|boolean $value a value which is a boolean
      * @return string the string value representing a boolean in SQL
-     * @since 1.1.1
+     * @since 1.2
     */
     public function getBooleanValue($value) {
       if(is_string($value))
@@ -251,7 +251,7 @@ abstract class jDbTools {
      * enclose the field name
      * @param string $fieldName the field name
      * @return string the enclosed field name
-     * @since 1.1.1
+     * @since 1.2
      */
     public function encloseName($fieldName){
         return $fieldName;

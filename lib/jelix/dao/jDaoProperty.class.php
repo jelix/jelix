@@ -159,7 +159,7 @@ class jDaoProperty {
         }
 
         if ($params['default'] !== null) {
-            $this->defaultValue = $tools->escapeValue($this->unifiedType, $params['default']);
+            $this->defaultValue = $tools->stringToPhpValue($this->unifiedType, $params['default']);
         }
 
         // we ignore *pattern attributes on PK and FK fields

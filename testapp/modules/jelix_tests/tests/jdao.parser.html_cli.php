@@ -373,7 +373,7 @@ array('foo~bar','')
             <string p="sequenceName" value="" />
             <null p="maxlength"/>
             <null p="minlength"/>
-            <string p="defaultValue" value="\'no label\'" />
+            <string p="defaultValue" value="no label" />
             <boolean p="ofPrimaryTable" value="true" />
         </object>'
         ),

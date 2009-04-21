@@ -5,7 +5,7 @@
    </datasources>
    <record>
       <property name="id"   fieldname="id" datatype="integer"/>
-      <property name="lang"   fieldname="lang" datatype="string"/>
+      <property name="lang"   fieldname="lang" datatype="string" default="fr"/>
       <property name="texte" fieldname="texte" datatype="string"  required="true"/>
    </record>
 </dao>

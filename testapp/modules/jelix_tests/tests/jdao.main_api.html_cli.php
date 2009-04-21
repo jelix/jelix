@@ -41,11 +41,11 @@ class UTDao extends jUnitTestCaseDb {
  
         $record = jDao::createRecord ('description');
         $this->assertEqual($record->id , '');
-        $this->assertEqual($record->lang , '');
-
-        $record->setPk(5,'fr');
-        $this->assertEqual($record->id , 5);
         $this->assertEqual($record->lang , 'fr');
+
+        $record->setPk(5,'es');
+        $this->assertEqual($record->id , 5);
+        $this->assertEqual($record->lang , 'es');
 
         $record->setPk(array(4,'en'));
         $this->assertEqual($record->id , 4);
