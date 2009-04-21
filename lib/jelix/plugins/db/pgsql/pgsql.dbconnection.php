@@ -33,6 +33,11 @@ class pgsqlDbConnection extends jDbConnection {
         parent::__construct($profile);
         if(isset($this->profile['single_transaction']) && ($this->profile['single_transaction'])){
             $this->beginTransaction();
+			$this->setAutoCommit(false);
+		}
+		else
+		{
+			$this->setAutoCommit(true);
         }
     }
 
@@ -180,7 +185,7 @@ class pgsqlDbConnection extends jDbConnection {
 
     protected function _autoCommitNotify ($state){
 
-        $this->query ('SET AUTOCOMMIT='.$state ? 'on' : 'off');
+        $this->_doExec('SET AUTOCOMMIT TO '.($state ? 'ON' : 'OFF'));
     }
 
     protected function _quote($text){
