@@ -80,7 +80,6 @@ final class jResponseBinary  extends jResponse {
             if (is_readable ($this->fileName) && is_file ($this->fileName)){
                 $this->_httpHeaders['Content-Length']=filesize ($this->fileName);
                 $this->sendHttpHeaders();
-                ob_end_clean();
                 session_write_close();
                 readfile ($this->fileName);
                 flush();
@@ -92,7 +91,6 @@ final class jResponseBinary  extends jResponse {
         }else{
             $this->_httpHeaders['Content-Length']=strlen ($this->content);
             $this->sendHttpHeaders();
-            ob_end_clean();
             session_write_close();
             echo $this->content;
             flush();
