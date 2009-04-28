@@ -797,7 +797,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
                 // we remove readonly status so when a user change the choice and
                 // javascript is deactivated, it can still change the value of the control
                 $ro = $c->isReadOnly();
-                if($ro && $readonly != '') $c->setReadOnly(false);
+                if($ro && $readonly == '') $c->setReadOnly(false);
                 $this->outputControlLabel($c);
                 echo ' ';
                 $this->outputControl($c);
