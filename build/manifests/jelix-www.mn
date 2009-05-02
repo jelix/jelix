@@ -6,6 +6,7 @@ cd lib/jelix-www/design
   master_admin.css
   records_list.css
   jacl2.css
+  diff.css
 cd lib/jelix-www/design/jforms/
   calendar.gif
 cd lib/jelix-www/design/images

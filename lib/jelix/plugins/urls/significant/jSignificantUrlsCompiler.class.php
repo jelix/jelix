@@ -174,17 +174,13 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                   if(!isset($url['action'])) {
                     $action = '*';
                   }
+                  $regexp = '';
+                  $pathinfo = '';
                   if(isset($url['pathinfo'])){
                     $pathinfo = '/'.trim($url['pathinfo'],'/');
                     if ($pathinfo !='/') {
                         $regexp = '!^'.preg_quote($pathinfo,'!').'(/.*)?$!';   
                     }
-                    else
-                        $pathinfo = '';
-                  }
-                  else {
-                    $pathinfo = '';
-                    $regexp = '';
                   }
                   $createUrlContent.="include_once('".$s->getPath()."');\n";
                   $parseInfos[]=array($module, $action, $regexp, $selclass, $actionOverride );

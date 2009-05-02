@@ -58,9 +58,12 @@ function jtpl_function_html_diff($tpl, $str1,$str2, $options = array())
                 $fmt = new HtmlUnifiedDiffFormatter();
                 break;
             case 'inlinetable' :
+                require_once(LIB_PATH.'diff/difftableformatter.php'); 
+                $fmt = new HtmlInlineTableDiffFormatter($version1,$version2);        
+                break;
             case 'sidebyside' :
                 require_once(LIB_PATH.'diff/difftableformatter.php'); 
-                $fmt = new HtmlTableDiffFormatter($version1,$version2,$type);        
+                $fmt = new HtmlTableDiffFormatter($version1,$version2);        
                 break;
         }
         echo $fmt->format($diff);

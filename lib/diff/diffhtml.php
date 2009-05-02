@@ -7,7 +7,7 @@
 // Copyright (C) 2000, 2001 Geoffrey T. Dairiki <dairiki@dairiki.org>
 // You may copy this code freely under the conditions of the GPL.
 //
-// Contributor : Laurent Jouanneau (sept, 2006)
+// Contributor : Laurent Jouanneau (sept 2006, may 2009)
 //      this html formater doesn't use HTML lib...
 //      adaptation for PHP5
 
@@ -130,14 +130,14 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
     }
 
     function _start_diff() {
-        $this->result = '<div class="diff">';
+        $this->result = '<div class="diff unified">';
     }
     function _end_diff() {
         return $this->result.'</div>';
     }
 
     function _start_block($header) {
-        $this->result.='<div class="block">'.$header."<br>";
+        $this->result.='<div class="block"><span class="lineno">'.$header.'</span>';
     }
 
     function _end_block() {
@@ -157,49 +157,41 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
     }*/
 
     function _context($lines) {
-        $div = '<div class="difftext">';
+        $div = '';
         foreach ($lines as $line) {
-            $div.="\n".'<div class="context"><tt class="prefix">&nbsp;</tt>'.htmlspecialchars($line).'</div>';
-
+            $div.="\n".'<div class="context"><tt>&nbsp;</tt>'.htmlspecialchars($line).'</div>';
         }
-        $this->result.=$div."</div>\n";
+        $this->result.=$div."\n";
     }
     function _deleted($lines) {
-        $div = '<div class="difftext">';
+        $div = '';
         foreach ($lines as $line) {
-            $div.="\n".'<div class="deleted"><tt class="prefix">-</tt><del>'.htmlspecialchars($line).'</del></div>';
-
+            $div.="\n".'<div class="deleted"><tt>-</tt><del>'.htmlspecialchars($line).'</del></div>';
         }
-        $this->result.=$div."</div>\n";
+        $this->result.=$div."\n";
     }
 
     function _added($lines) {
-        $div = '<div class="difftext">';
+        $div = '';
         foreach ($lines as $line) {
-            $div.="\n".'<div class="added"><tt class="prefix">+</tt><ins>'.htmlspecialchars($line).'</ins></div>';
-
+            $div.="\n".'<div class="added"><tt>+</tt><ins>'.htmlspecialchars($line).'</ins></div>';
         }
-        $this->result.=$div."</div>\n";
+        $this->result.=$div."\n";
     }
 
     function _changed($orig, $final) {
         $diff = new WordLevelDiff($orig, $final);
-        $div = '<div class="difftext">';
+        $div = '';
         foreach ($diff->orig() as $line) {
-            $div.="\n".'<div class="original"><tt class="prefix">-</tt>'.$line.'</div>';
+            $div.="\n".'<div class="original"><tt>-</tt>'.$line.'</div>';
 
         }
-        $this->result.=$div."</div>\n";
-        $div = '<div class="difftext">';
+        $this->result.=$div."\n";
+        $div = '';
         foreach ($diff->_final() as $line) {
-            $div.="\n".'<div class="final"><tt class="prefix">+</tt>'.$line.'</div>';
+            $div.="\n".'<div class="final"><tt>+</tt>'.$line.'</div>';
 
         }
-        $this->result.=$div."</div>\n";
-
+        $this->result.=$div."\n";
     }
 }
-
-
-
-?>
