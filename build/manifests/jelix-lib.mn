@@ -487,15 +487,17 @@ cd lib/wikirenderer
 ! WikiRenderer.lib.php
 
 cd lib/wikirenderer/rules
-! wr3_to_xhtml.php
 ! classicwr_to_text.php
-! classicwr_to_xhtml.php
 ! classicwr_to_wr3.php
-! wr3_to_text.php
-! wr3_to_docbook.php
-! dokuwiki_to_xhtml.php
+! classicwr_to_xhtml.php
 ! dokuwiki_to_docbook.php
+! dokuwiki_to_xhtml.php
+! jwiki_to_xhtml.php
+! phpwiki_to_dokuwiki.php
 ! trac_to_xhtml.php
+! wr3_to_docbook.php
+! wr3_to_text.php
+! wr3_to_xhtml.php
 
 
 cd lib/tcpdf
