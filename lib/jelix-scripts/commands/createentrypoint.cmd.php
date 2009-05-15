@@ -33,7 +33,7 @@ class createentrypointCommand extends JelixScriptCommand {
     Create a new entry point in the www directory of the application.
     
     The -type option indicates the type of the entry point: classic, jsonrpc,
-    xmlrpc, rdf, soap.
+    xmlrpc, rdf, soap, cmdline.
     
     The name of the entry point can contain a subdirectory. It shouldn't
     contain the .php suffix.

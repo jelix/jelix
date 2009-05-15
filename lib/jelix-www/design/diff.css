@@ -19,8 +19,12 @@ table.diff tbody.block  { }
 table.sidebyside  col.lineno { width: 4em }
 table.inlinetable col.diffcontent {width:80%}
 
-.diff .block tt { font-weight: normal;  font-family: monospace;  color: black; margin-left: 0; }
+.diff .block tt { font-weight: normal;  font-family: monospace;  white-space:pre; color: black; margin-left: 0; }
 
+.diff .context, .diff .original, .diff .final, .diff .deleted, .diff .added {
+    font-family: monospace;
+    white-space:pre;
+}
 
 .diff .context                  { background-color: white;}
 .diff .original, .diff .deleted { background-color: #fcc;}

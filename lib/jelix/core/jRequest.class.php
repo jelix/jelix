@@ -183,5 +183,19 @@ abstract class jRequest {
 
         return $response;
     }
+    
+    /**
+     * return the ip address of the user
+     * @return string the ip
+     */
+    function getIP() {
+        if (isset ($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']){
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }else if (isset ($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']){
+            return  $_SERVER['HTTP_CLIENT_IP'];
+        }else{
+            return $_SERVER['REMOTE_ADDR'];
+        }
+    }
 }
 

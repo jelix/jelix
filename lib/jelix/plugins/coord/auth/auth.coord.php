@@ -141,13 +141,7 @@ class AuthCoordPlugin implements jICoordPlugin {
     private function _getIpForSecure (){
         //this method is heavily based on the article found on
         // phpbuilder.com, and from the comments on the official phpdoc.
-        if (isset ($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']){
-            $IP_ADDR = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }else if (isset ($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']){
-            $IP_ADDR =  $_SERVER['HTTP_CLIENT_IP'];
-        }else{
-            $IP_ADDR = $_SERVER['REMOTE_ADDR'];
-        }
+        $IP_ADDR = $GLOBALS['gJCoord']->request->getIP();
 
         // get server ip and resolved it
         $FIRE_IP_ADDR = $_SERVER['REMOTE_ADDR'];
