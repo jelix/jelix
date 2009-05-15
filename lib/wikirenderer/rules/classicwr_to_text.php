@@ -24,15 +24,13 @@
  */
 
 class classicwr_to_text   extends WikiRendererConfig {
-  /**
-    * @var array   liste des tags inline
-   */
-   public $inlinetags= array( 'cwrtext_strong','cwrtext_em','cwrtext_code','cwrtext_q',
-    'cwrtext_cite','cwrtext_acronym','cwrtext_link', 'cwrtext_image', 'cwrtext_anchor');
 
    public $defaultTextLineContainer = 'WikiTextLine';
 
-   public $availabledTextLineContainers = array('WikiTextLine');
+   public $textLineContainers = array(
+          'WikiTextLine'=>array( 'cwrtext_strong','cwrtext_em','cwrtext_code','cwrtext_q',
+              'cwrtext_cite','cwrtext_acronym','cwrtext_link', 'cwrtext_image', 'cwrtext_anchor')
+    );
 
    /**
    * liste des balises de type bloc reconnus par WikiRenderer.

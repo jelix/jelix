@@ -24,16 +24,15 @@
  */
 
 class wr3_to_docbook  extends WikiRendererConfig  {
-  /**
-    * @var array   liste des tags inline
-   */
-   public $inlinetags= array( 'wr3dbk_strong','wr3dbk_emphasis','wr3dbk_code','wr3dbk_q',
-    'wr3dbk_cite','wr3dbk_acronym','wr3dbk_link', 'wr3dbk_image',
-    'wr3dbk_anchor', 'wr3dbk_footnote');
+
 
    public $defaultTextLineContainer = 'WikiHtmlTextLine';
 
-   public $availabledTextLineContainers = array('WikiHtmlTextLine');
+   public $textLineContainers = array(
+            'WikiHtmlTextLine'=>array( 'wr3dbk_strong','wr3dbk_emphasis','wr3dbk_code','wr3dbk_q',
+    'wr3dbk_cite','wr3dbk_acronym','wr3dbk_link', 'wr3dbk_image',
+    'wr3dbk_anchor', 'wr3dbk_footnote')
+    );
 
    /**
    * liste des balises de type bloc reconnus par WikiRenderer.

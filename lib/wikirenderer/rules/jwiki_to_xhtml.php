@@ -1,11 +1,11 @@
 <?php
 /**
- * dokuwiki syntax to xhtml
+ * jwiki syntax to xhtml
  *
  * @package WikiRenderer
  * @subpackage rules
  * @author Laurent Jouanneau
- * @copyright 2008 Laurent Jouanneau
+ * @copyright 2009 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *
  * This library is free software; you can redistribute it and/or
@@ -23,52 +23,51 @@
  *
  */
 
-class dokuwiki_to_xhtml  extends WikiRendererConfig  {
+class jwiki_to_xhtml  extends WikiRendererConfig  {
 
     public $defaultTextLineContainer = 'WikiHtmlTextLine';
-
+    
     public $textLineContainers = array(
-            'WikiHtmlTextLine'=>array( 'dkxhtml_strong','dkxhtml_emphasis','dkxhtml_underlined','dkxhtml_monospaced',
-        'dkxhtml_subscript', 'dkxhtml_superscript', 'dkxhtml_del', 'dkxhtml_link', 'dkxhtml_footnote', 'dkxhtml_image',
-        'dkxhtml_nowiki_inline',),
-            'dkxhtml_table_row'=>array( 'dkxhtml_strong','dkxhtml_emphasis','dkxhtml_underlined','dkxhtml_monospaced',
-        'dkxhtml_subscript', 'dkxhtml_superscript', 'dkxhtml_del', 'dkxhtml_link', 'dkxhtml_footnote', 'dkxhtml_image',
-        'dkxhtml_nowiki_inline',));
+            'WikiHtmlTextLine'=>array( 'jwxhtml_strong','jwxhtml_emphasis','jwxhtml_underlined','jwxhtml_code',
+        'jwxhtml_subscript', 'jwxhtml_superscript', 'jwxhtml_del', 'jwxhtml_link', 'jwxhtml_footnote',
+        'jwxhtml_image', 'jwxhtml_q', 'jwxhtml_anchor', 'jwxhtml_nowiki_inline',),
+            'jwxhtml_table_row'=>array( 'jwxhtml_strong','jwxhtml_emphasis','jwxhtml_underlined','jwxhtml_code',
+        'jwxhtml_subscript', 'jwxhtml_superscript', 'jwxhtml_del', 'jwxhtml_link', 'jwxhtml_footnote',
+        'jwxhtml_image', 'jwxhtml_q', 'jwxhtml_anchor', 'jwxhtml_nowiki_inline',));
 
-   /**
-   * liste des balises de type bloc reconnus par WikiRenderer.
-   */
-   public $bloctags = array('dkxhtml_title', 'dkxhtml_list', 'dkxhtml_blockquote','dkxhtml_table', 'dkxhtml_pre',
-         'dkxhtml_syntaxhighlight', 'dkxhtml_file', 'dkxhtml_nowiki', 'dkxhtml_html', 'dkxhtml_php', 'dkxhtml_para',
-         'dkxhtml_macro'
-   );
+    public $bloctags = array('jwxhtml_title', 'jwxhtml_list', 'jwxhtml_blockquote','jwxhtml_table',
+        'jwxhtml_syntaxhighlight', 'jwxhtml_file', 'jwxhtml_nowiki', 'jwxhtml_macro',
+        'jwxhtml_definition', 'jwxhtml_para'
+    );
 
+    public $simpletags = array("\\\\"=>"");
+    
+    public $escapeChar = '';
+    
+    public $sectionLevel= array();
+    
+    public $footnotes = array();
+    public $footnotesId='';
+    public $footnotesTemplate = '<div class="footnotes"><h4>Notes</h4>%s</div>';
 
-   public $simpletags = array("\\\\"=>"");
-
-   public $escapeChar = '';
-
-   public $sectionLevel= array();
-
-   public $footnotes = array();
-   public $footnotesId='';
-   public $footnotesTemplate = '<div class="footnotes"><h4>Notes</h4>%s</div>';
-
-    public $startHeaderNumber = 1; // top level header will be <h1> if you set to 1, <h2> if it is 2 etc..
+    /**
+     * top level header will be <h1> if you set to 1, <h2> if it is 2 etc..
+     */
+    public $startHeaderNumber = 1;
 
     /**
     * called before the parsing
     */
-   public function onStart($texte){
+    public function onStart($texte){
         $this->sectionLevel = array();
         $this->footnotesId = rand(0,30000);
         $this->footnotes = array();
         return $texte;
     }
 
-   /**
-    * called after the parsing
-    */
+    /**
+     * called after the parsing
+     */
     public function onParse($finalTexte){
         $finalTexte.= str_repeat('</div>', count($this->sectionLevel));
         if(count($this->footnotes)){
@@ -82,104 +81,113 @@ class dokuwiki_to_xhtml  extends WikiRendererConfig  {
 // ===================================== inline tags
 
 
-class DokuWikiTag extends WikiTagXhtml {
+class jwikiTag extends WikiTagXhtml {
 
-    protected function _findWikiWord($string){
-/*$t = array (
-                0 => array (
-                        0 => array (
-                                0 => 'http://ipsum.dolor',
-                                1 => 6,
-                                ),
-                        1 => array (
-                                0 => '',
-                                1 => 6,
-                                ),
-                        2 => array (
-                                0 => 'http://ipsum.dolor',
-                                1 => 6,
-                                ),
-                        ),
-        )
-    */
-        if(preg_match_all('/([a-z]+\:(?:\/\/)?\w+[^\s]*)/', $string, $m, PREG_SET_ORDER |PREG_OFFSET_CAPTURE)){
-            $str ='';
-            $begin = 0;
-
-            foreach($m as $match) {
-                $len = ($match[0][1])-$begin;
-                $str.= substr($string, $begin, $len);
-                $begin = $match[0][1] + strlen($match[0][0]);
-                $str.='<a href="'.$match[2][0].'">'.$match[2][0].'</a>';
-            }
-            if($begin < strlen($string))
-                $str.= substr($string, $begin);
-            return $str;
-        }
-        else return $string;
-    }
 }
 
 
 
 
 
-class dkxhtml_strong extends DokuWikiTag {
+class jwxhtml_strong extends jwikiTag {
     protected $name='strong';
     public $beginTag='**';
     public $endTag='**';
-    protected $additionnalAttributes=array();
 }
 
-class dkxhtml_emphasis extends DokuWikiTag {
+class jwxhtml_emphasis extends jwikiTag {
     protected $name='em';
     public $beginTag='//';
     public $endTag='//';
 }
 
-class dkxhtml_underlined extends DokuWikiTag {
+class jwxhtml_underlined extends jwikiTag {
     protected $name='u';
     public $beginTag='__';
     public $endTag='__';
 }
 
-class dkxhtml_monospaced extends DokuWikiTag {
+class jwxhtml_code extends jwikiTag {
     protected $name='code';
-    public $beginTag='\'\'';
-    public $endTag='\'\'';
+    public $beginTag='@@';
+    public $endTag='@@';
+
+    public function getContent(){
+        $code = $this->wikiContentArr[0];
+        
+        $tag='<code>';
+        $endtag ='</code>';
+        if($match{1} == '@') {
+            $type= $code{0};
+            $code = substr($code,2);
+            if($type=='K') {
+                $tag='<key>';
+                $endtag='</key>';
+            }
+            else if($type=='V'){
+                $tag='<var>';
+                $endtag='</var>';
+            }
+            else if(isset($this->code_types[$type])) {
+                $tag = '<code class="'.$this->code_types[$type].'">';
+                $endtag ='</code>';
+            }
+            else {
+                $code = $this->wikiContentArr[0];
+            }
+        }
+        return $tag.htmlspecialchars($code).$endtag;
+    }
+    protected $code_types = array(
+        'A'=>'attribute', 
+        'C'=>'classname',
+        'T'=>'constant',
+        'c'=>'command',
+        'E'=>'element',
+        'e'=>'envar',
+        'F'=>'filename',
+        'f'=>'function',
+        'I'=>'interfacename',
+        'L'=>'literal',
+        'M'=>'methodname',
+        'P'=>'property',
+        'R'=>'returnvalue',
+        'V'=>'varname',
+    );
+    public function isOtherTagAllowed() {
+        return false;
+    }
 }
 
-
-class dkxhtml_subscript extends DokuWikiTag {
+class jwxhtml_subscript extends jwikiTag {
     protected $name='sub';
     public $beginTag='<sub>';
     public $endTag='</sub>';
 }
 
-class dkxhtml_superscript extends DokuWikiTag {
+class jwxhtml_superscript extends jwikiTag {
     protected $name='sup';
     public $beginTag='<sup>';
     public $endTag='</sup>';
 }
 
-class dkxhtml_del extends DokuWikiTag {
+class jwxhtml_del extends jwikiTag {
     protected $name='del';
     public $beginTag='<del>';
     public $endTag='</del>';
-    public function getContent(){ return '';}
 }
 
-class dkxhtml_link extends WikiTagXhtml {
+class jwxhtml_link extends WikiTagXhtml {
     protected $name='a';
     public $beginTag='[[';
     public $endTag=']]';
-    protected $attribute=array('href','$$');
+    protected $attribute=array('href','$$','hreflang','title');
     public $separators=array('|');
 
     public function getContent(){
-        $cntattr=count($this->attribute);
-        $cnt=($this->separatorCount + 1 > $cntattr?$cntattr:$this->separatorCount+1);
-        if($cnt == 1 ){
+        $cntattr = count($this->attribute);
+        $cnt = ($this->separatorCount + 1 > $cntattr?$cntattr:$this->separatorCount+1);
+        if ($cnt == 1 ) {
             $contents = $this->wikiContentArr[0];
             $href=$contents;
             if(strpos($href,'javascript:')!==false) // for security reason
@@ -187,7 +195,8 @@ class dkxhtml_link extends WikiTagXhtml {
             if(strlen($contents) > 40)
                 $contents=substr($contents,0,40).'(..)';
             return '<a href="'.htmlspecialchars(trim($href)).'">'.htmlspecialchars($contents).'</a>';
-        }else{
+        }
+        else {
             if(strpos($this->wikiContentArr[0],'javascript:')!==false) // for security reason
                 $this->wikiContentArr[0]='#';
             return parent::getContent();
@@ -195,7 +204,7 @@ class dkxhtml_link extends WikiTagXhtml {
     }
 }
 
-class dkxhtml_footnote extends DokuWikiTag {
+class jwxhtml_footnote extends jwikiTag {
     protected $name='footnote';
     public $beginTag='((';
     public $endTag='))';
@@ -210,7 +219,7 @@ class dkxhtml_footnote extends DokuWikiTag {
 }
 
 
-class dkxhtml_nowiki_inline extends WikiTagXhtml {
+class jwxhtml_nowiki_inline extends WikiTagXhtml {
     protected $name='nowiki';
     public $beginTag='<nowiki>';
     public $endTag='</nowiki>';
@@ -219,8 +228,7 @@ class dkxhtml_nowiki_inline extends WikiTagXhtml {
     }
 }
 
-
-class dkxhtml_image extends WikiTagXhtml {
+class jwxhtml_image extends WikiTagXhtml {
     protected $name='image';
     public $beginTag='{{';
     public $endTag='}}';
@@ -274,29 +282,46 @@ class dkxhtml_image extends WikiTagXhtml {
     }
 }
 
+class jwxhtml_q extends jwikiTag {
+    protected $name='q';
+    public $beginTag='^^';
+    public $endTag='^^';
+    protected $attribute=array('$$','lang','cite');
+    public $separators=array('|');
+}
 
+class jwxhtml_anchor extends jwikiTag {
+    protected $name='anchor';
+    public $beginTag='##';
+    public $endTag='##';
+    protected $attribute=array('name');
+    public $separators=array('|');
+    public function getContent(){
+        return '<a name="'.htmlspecialchars($this->wikiContentArr[0]).'"></a>';
+    }
+}
 
 // ===================================== blocs
 
 /**
- * traite les signes de types liste
+ * 
  */
-class dkxhtml_list extends WikiRendererBloc {
+class jwxhtml_list extends WikiRendererBloc {
 
     public $type='list';
     protected $_stack=array();
     protected $_firstTagLen;
-    protected $regexp="/^(\s*)([\*\-])(.*)/";
+    protected $regexp="/^(\s*)([\*\-#])(.*)/";
     protected $_firstItem = true;
 
     public function open(){
         $this->_stack[] = array(strlen($this->_detectMatch[1]) ,  $this->_detectMatch[2]);
         $this->_firstTagLen = strlen($this->_detectMatch[1]);
         $this->_firstItem = true;
-        if($this->_detectMatch[2] == '-')
-            return "<ol>\n";
-        else
+        if($this->_detectMatch[2] == '*')
             return "<ul>\n";
+        else
+            return "<ol>\n";
    }
 
    public function close(){
@@ -305,7 +330,7 @@ class dkxhtml_list extends WikiRendererBloc {
         for($i=count($this->_stack)-1; $i >=0; $i--){
             if($this->_stack[$i][0] < $this->_firstTagLen) break;
 
-            $str.=($this->_stack[$i][1]== '-'?"</li></ol>\n":"</li></ul>\n");
+            $str.=($this->_stack[$i][1]== '*'?"</li></ul>\n":"</li></ol>\n");
             array_pop($this->_stack);
         }
         return $str;
@@ -319,7 +344,7 @@ class dkxhtml_list extends WikiRendererBloc {
 
         if( $d < 0 ){ // un niveau de plus
             $this->_stack[] = array($newLen ,  $this->_detectMatch[2]);
-            $str=($this->_detectMatch[2] == '-'?"<ol><li>":"<ul><li>");
+            $str=($this->_detectMatch[2] == '*'?"<ul><li>":"<ol><li>");
 
         } else {
             if( $d > 0 ){ // on remonte d'un ou plusieurs cran dans la hierarchie...
@@ -327,7 +352,7 @@ class dkxhtml_list extends WikiRendererBloc {
                     if($this->_stack[$i][0] <= $newLen){
                         break;
                     } else {
-                        $str.=($this->_stack[$i][1]== '-'?"</li></ol>\n":"</li></ul>\n");
+                        $str.=($this->_stack[$i][1]== '*'?"</li></ul>\n":"</li></ol>\n");
                     }
                     array_pop($this->_stack);
                 }
@@ -336,10 +361,10 @@ class dkxhtml_list extends WikiRendererBloc {
                     $this->_firstItem = true;
                     $t = array($newLen,   $this->_detectMatch[2]);
                     $this->_stack[] = $t;
-                    if($t[1] == '-')
-                        $str .= "<ol>\n";
-                    else
+                    if($t[1] == '*')
                         $str .= "<ul>\n";
+                    else
+                        $str .= "<ol>\n";
                 } else {
                     $t=end($this->_stack);
                 }
@@ -350,10 +375,10 @@ class dkxhtml_list extends WikiRendererBloc {
                 if(!$this->_firstItem)
                     $str .='</li>';
 
-                if($t[1] == '-')
-                    $str .= "<ol>\n<li>";
-                else
+                if($t[1] == '*')
                     $str .= "<ul>\n<li>";
+                else
+                    $str .= "<ol>\n<li>";
                 array_pop($this->_stack);
                 $this->_stack[] = array($newLen ,  $this->_detectMatch[2]);
             } else {
@@ -366,16 +391,13 @@ class dkxhtml_list extends WikiRendererBloc {
         }
         $this->_firstItem = false;
         return $str.$this->_renderInlineTag(trim($this->_detectMatch[3]));
-
     }
 }
 
-
-
 /**
- * traite les signes de types titre
+ *
  */
-class dkxhtml_title extends WikiRendererBloc {
+class jwxhtml_title extends WikiRendererBloc {
     public $type='title';
     protected $regexp="/^\s*(\={1,6})([^=]*)(\={1,6})\s*$/";
     protected $_closeNow=true;
@@ -410,9 +432,9 @@ class dkxhtml_title extends WikiRendererBloc {
 }
 
 /**
- * traite les signes de type paragraphe
+ * 
  */
-class dkxhtml_para extends WikiRendererBloc {
+class jwxhtml_para extends WikiRendererBloc {
     public $type='para';
     protected $_openTag='<p>';
     protected $_closeTag='</p>';
@@ -421,7 +443,7 @@ class dkxhtml_para extends WikiRendererBloc {
         if($string=='') return false;
         if (preg_match("/^\s+[\*\-\=\|\^>;<=~]/",$string))
             return false;
-        if(preg_match("/^\s*([^\*\-\=\|\^>;<=~].*)/",$string, $m)) {
+        if(preg_match("/^\s*([^\*\-#\=\|\^>;<=~].*)/",$string, $m)) {
             $this->_detectMatch=array($m[1],$m[1]);
             return true;
         }
@@ -429,12 +451,10 @@ class dkxhtml_para extends WikiRendererBloc {
     }
 }
 
-
-
 /**
- * traite les signes de type blockquote
+ * 
  */
-class dkxhtml_blockquote extends WikiRendererBloc {
+class jwxhtml_blockquote extends WikiRendererBloc {
    public $type='blockquote';
    protected $regexp="/^\s*(\>+)(.*)/";
 
@@ -454,13 +474,15 @@ class dkxhtml_blockquote extends WikiRendererBloc {
       $d=strlen($this->_previousTag) - strlen($this->_detectMatch[1]);
       $str='';
 
-      if( $d > 0 ){ // on remonte d'un cran dans la hierarchie...
+      if( $d > 0 ) { // on remonte d'un cran dans la hierarchie...
          $str='</p>'.str_repeat('</blockquote>',$d).'<p>';
          $this->_previousTag=$this->_detectMatch[1];
-      }elseif( $d < 0 ){ // un niveau de plus
+      }
+      elseif( $d < 0 ) { // un niveau de plus
          $this->_previousTag=$this->_detectMatch[1];
          $str='</p>'.str_repeat('<blockquote>',-$d).'<p>';
-      }else{
+      }
+      else {
          if($this->_firstLine)
             $this->_firstLine=false;
       }
@@ -471,12 +493,12 @@ class dkxhtml_blockquote extends WikiRendererBloc {
 /**
  *
  */
-class dkxhtml_table_row extends WikiTag {
+class jwxhtml_table_row extends WikiTag {
     public $isTextLineTag=true;
-    protected $attribute=array('$$');
-    protected $checkWikiWordIn=array('$$');
+    protected $attribute = array('$$');
+    protected $checkWikiWordIn = array('$$');
 
-    public $separators=array('|','^');
+    public $separators = array('|','^');
 
     protected $columns = array('');
 
@@ -527,12 +549,13 @@ class dkxhtml_table_row extends WikiTag {
             if($k == 0) continue; // we ignore first content (which is before the first separator
             if($k == $last)  break; // we ignore the last content (which is after the last separator
 
-            if($content == '') {
+            if ($content == '') {
                 if($col == '' && $k > 0) { // if bad syntax on first col
                      $c.='<td></td>';
                 } else 
                     $colspan++;
-            } else {
+            }
+            else {
                 if($col !='')
                     $c.= $this->addCol($colnum, $col, $colspan);
                 $colnum = $k;
@@ -576,13 +599,12 @@ class dkxhtml_table_row extends WikiTag {
             return '<'.$t.$align.'>'.$content.'</'.$t.'>';
         }
     }
-
 }
 
 /**
  * traite les signes de types table
  */
-class dkxhtml_table extends WikiRendererBloc {
+class jwxhtml_table extends WikiRendererBloc {
     public $type='table';
     protected $regexp="/^\s*(\||\^)(.*)/";
     protected $_openTag='<table>';
@@ -591,7 +613,7 @@ class dkxhtml_table extends WikiRendererBloc {
     protected $_colcount=0;
 
     public function open(){
-        $this->engine->getConfig()->defaultTextLineContainer = 'dkxhtml_table_row';
+        $this->engine->getConfig()->defaultTextLineContainer = 'jwxhtml_table_row';
         return $this->_openTag;
     }
 
@@ -603,11 +625,10 @@ class dkxhtml_table extends WikiRendererBloc {
     public function getRenderedLine(){
         return $this->engine->inlineParser->parse($this->_detectMatch[1].$this->_detectMatch[2]);
     }
-
 }
 
 
-class dkxhtml_syntaxhighlight extends WikiRendererBloc {
+class jwxhtml_syntaxhighlight extends WikiRendererBloc {
 
     public $type='syntaxhighlight';
     protected $_openTag='<pre><code>';
@@ -615,15 +636,15 @@ class dkxhtml_syntaxhighlight extends WikiRendererBloc {
     protected $isOpen = false;
     protected $dktag='code';
 
-   public function open(){
-      $this->isOpen = true;
-      return $this->_openTag;
-   }
+    public function open(){
+        $this->isOpen = true;
+        return $this->_openTag;
+    }
 
-   public function close(){
-      $this->isOpen=false;
-      return $this->_closeTag;
-   }
+    public function close(){
+        $this->isOpen=false;
+        return $this->_closeTag;
+    }
 
     public function getRenderedLine(){
         return htmlspecialchars($this->_detectMatch);
@@ -638,7 +659,6 @@ class dkxhtml_syntaxhighlight extends WikiRendererBloc {
                 $this->_detectMatch=$string;
             }
             return true;
-
         }else{
             if(preg_match('/^\s*<'.$this->dktag.'( \w+)?>(.*)/',$string,$m)){
                 if(preg_match('/(.*)<\/'.$this->dktag.'>\s*$/',$m[2],$m2)){
@@ -657,79 +677,21 @@ class dkxhtml_syntaxhighlight extends WikiRendererBloc {
     }
 }
 
-class dkxhtml_file extends dkxhtml_syntaxhighlight {
+class jwxhtml_file extends jwxhtml_syntaxhighlight {
     public $type='filesyntaxhighlight';
     protected $_openTag='<pre class="file-content">';
     protected $_closeTag='</pre>';
     protected $dktag='file';
 }
 
-class dkxhtml_nowiki extends dkxhtml_syntaxhighlight {
+class jwxhtml_nowiki extends jwxhtml_syntaxhighlight {
     public $type='nowikisyntaxhighlight';
     protected $_openTag='<pre>';
     protected $_closeTag='</pre>';
-    protected $dktag='nowiki';
+    protected $dktag='pre';
 }
 
-class dkxhtml_pre extends WikiRendererBloc {
-    public $type='pre';
-    protected $_openTag='<pre>';
-    protected $_closeTag='</pre>';
-
-    public function detect($string){
-        if($string=='') return false;
-        if(preg_match("/^(\s{2,}[^\*\-\=\|\^>;<=~].*)/",$string)) {
-            $this->_detectMatch=array($string,$string);
-            return true;
-        }
-        return false;
-    }
-}
-
-
-class dkxhtml_html extends WikiRendererBloc {
-
-    public $type='html';
-    protected $isOpen = false;
-    protected $dktag='html';
-
-    public function open(){
-        $this->isOpen = true;
-        return '';
-    }
-
-   public function close(){
-      $this->isOpen=false;
-      return '';
-   }
-
-    public function getRenderedLine(){
-        return '';
-    }
-
-    public function detect($string){
-        if($this->isOpen){
-            if(preg_match('/(.*)<\/'.$this->dktag.'>\s*$/',$string,$m)){
-                $this->isOpen=false;
-            }
-            return true;
-        }else{
-            if(preg_match('/^\s*<'.$this->dktag.'>(.*)/',$string,$m)){
-                return true;
-            }else{
-                return false;
-            }
-        }
-    }
-}
-
-class dkxhtml_php extends dkxhtml_html {
-    protected $dktag='php';
-}
-
-
-
-class dkxhtml_macro extends WikiRendererBloc {
+class jwxhtml_macro extends WikiRendererBloc {
     public $type='macro';
     protected $regexp="/^\s*~~[^~]*~~\s*$/";
     protected $_closeNow=true;
@@ -740,21 +702,28 @@ class dkxhtml_macro extends WikiRendererBloc {
 }
 
 
-
 /**
  * definition list
  */
-class dkxhtml_definition extends WikiRendererBloc {
-
-   public $type='dfn';
-   protected $regexp="/^\s*;(.*) : (.*)/i";
-   protected $_openTag='<dl>';
-   protected $_closeTag='</dl>';
-
-   public function getRenderedLine(){
-      $dt=$this->_renderInlineTag($this->_detectMatch[1]);
-      $dd=$this->_renderInlineTag($this->_detectMatch[2]);
-      return "<dt>$dt</dt>\n<dd>$dd</dd>\n";
-   }
+class jwxhtml_definition extends WikiRendererBloc {
+    public $type='dfn';
+    protected $regexp="/^\s*;(.*) : (.*)/i";
+    protected $_openTag='<dl>';
+    protected $_closeTag='</dl>';
+ 
+    public function getRenderedLine(){
+        $dt=$this->_renderInlineTag($this->_detectMatch[1]);
+        $dd=$this->_renderInlineTag($this->_detectMatch[2]);
+        return "<dt>$dt</dt>\n<dd>$dd</dd>\n";
+    }
 }
 
+class jwxhtml_hr extends WikiRendererBloc {
+    public $type='hr';
+    protected $regexp='/^\s*-{4,} *$/';
+    protected $_closeNow=true;
+ 
+    public function getRenderedLine(){
+        return '<hr />';
+    }
+}

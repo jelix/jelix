@@ -24,16 +24,13 @@
  */
 
 class wr3_to_text   extends WikiRendererConfig {
-  /**
-    * @var array   liste des tags inline
-   */
-   public $inlinetags= array( 'wr3text_strong','wr3text_em','wr3text_code','wr3text_q',
-    'wr3text_cite','wr3text_acronym','wr3text_link', 'wr3text_image', 'wr3text_anchor',
-    'wr3text_footnote');
 
    public $defaultTextLineContainer = 'WikiTextLine';
 
-   public $availabledTextLineContainers = array('WikiTextLine');
+   public $textLineContainers = array(
+            'WikiTextLine'=>array( 'wr3text_strong','wr3text_em','wr3text_code','wr3text_q',
+    'wr3text_cite','wr3text_acronym','wr3text_link', 'wr3text_image', 'wr3text_anchor',
+    'wr3text_footnote'));
 
    /**
    * liste des balises de type bloc reconnus par WikiRenderer.

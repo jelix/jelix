@@ -25,14 +25,17 @@
 
 class trac_to_xhtml  extends WikiRendererConfig  {
 
-    public $inlinetags= array( 'tracxhtml_strongem', 'tracxhtml_strong','tracxhtml_emphasis',
-        'tracxhtml_underlined', 'tracxhtml_monospaced', 'tracxhtml_monospaced2', 'tracxhtml_strikethrough',
-        'tracxhtml_subscript', 'tracxhtml_superscript', 'tracxhtml_macro', 'tracxhtml_link',
-        );
-
     public $defaultTextLineContainer = 'tracWikiHtmlTextLine';
 
-    public $availabledTextLineContainers = array('tracWikiHtmlTextLine', 'tracxhtml_table_row');
+    public $textLineContainers = array(
+                'tracWikiHtmlTextLine'=> array( 'tracxhtml_strongem', 'tracxhtml_strong','tracxhtml_emphasis',
+        'tracxhtml_underlined', 'tracxhtml_monospaced', 'tracxhtml_monospaced2', 'tracxhtml_strikethrough',
+        'tracxhtml_subscript', 'tracxhtml_superscript', 'tracxhtml_macro', 'tracxhtml_link',
+        ),
+                'tracxhtml_table_row'=> array( 'tracxhtml_strongem', 'tracxhtml_strong','tracxhtml_emphasis',
+        'tracxhtml_underlined', 'tracxhtml_monospaced', 'tracxhtml_monospaced2', 'tracxhtml_strikethrough',
+        'tracxhtml_subscript', 'tracxhtml_superscript', 'tracxhtml_macro', 'tracxhtml_link',
+        ));
 
     /**
     * liste des balises de type bloc reconnus par WikiRenderer.
