@@ -169,17 +169,17 @@ class jMailer extends PHPMailer {
             if(strpos($m[2], 'WARNING:') !== false) {
                 $locale = 'jelix~errors.mail.'.substr($m[2],8);
                 if($arg !== null)
-                    parent::SetError(jLocale::get($locale, $arg, $this->lang, $this->CharSet));
+                    parent::SetError(jLocale::get($locale, $arg, 1, $this->lang, $this->CharSet));
                 else
-                    parent::SetError(jLocale::get($locale, array(), $this->lang, $this->CharSet));
+                    parent::SetError(jLocale::get($locale, array(), 1, $this->lang, $this->CharSet));
                 return;
             }
             $locale = 'jelix~errors.mail.'.$m[2];
             if ($arg !== null) {
-                throw new jException($locale, $arg, $this->lang, $this->CharSet);
+                throw new jException($locale, $arg, 1, $this->lang, $this->CharSet);
             }
             else
-                throw new jException($locale, array(), $this->lang, $this->CharSet);
+                throw new jException($locale, array(), 1, $this->lang, $this->CharSet);
         }
         else {
             throw new Exception($msg);
