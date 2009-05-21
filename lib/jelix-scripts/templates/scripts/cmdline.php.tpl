@@ -8,13 +8,13 @@
 * @license   %%default_license_url%% %%default_license%%
 */
 
-require_once ('%%rp_app%%application-cli.init.php');
+require_once ('%%rp_cmd%%application-cli.init.php');
 
 require_once (JELIX_LIB_CORE_PATH.'jCmdlineCoordinator.class.php');
 
 require_once (JELIX_LIB_CORE_PATH.'request/jCmdLineRequest.class.php');
 
-$config_file = 'cmdline/config.ini.php';
+$config_file = '%%config_file%%';
 
 $jelix = new jCmdlineCoordinator($config_file);
 $jelix->process(new jCmdLineRequest());
