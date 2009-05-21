@@ -191,6 +191,9 @@ Nicolas Jeudy (aka njeudy)
 Gwendal Jouannic (aka obewan)
  - oracle support with PDO-OCI (#615)
 
+Denis Lallement (dlalleme)
+ - tpl plugin break (#808)
+ 
 Nicolas Lassalle
  - bug fix in jResponseBinary (#188)
 

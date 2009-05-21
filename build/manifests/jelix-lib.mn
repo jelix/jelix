@@ -362,6 +362,7 @@ cd lib/jelix/plugins/tpl/common
   block.ifuserconnected.php
   block.ifusernotconnected.php
   block.stripws.php
+  cfunction.break.php
   cfunction.fetchzone.php
   cfunction.zone.php
   cfunction.include.php
