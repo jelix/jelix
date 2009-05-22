@@ -202,6 +202,7 @@ cd testapp/modules/jelix_tests/tests/
   utils.jdatetime.html_cli.php
   utils.jinifilemodifier.html_cli.php
   utils.jclasses.html_cli.php
+  utils.jmailer.html_cli.php
 
 cd testapp/modules/testurls/classes/
   urlhandlermodule.urlhandler.php
@@ -213,6 +214,7 @@ cd testapp/var
 cd testapp/var/log
 cd testapp/var/log-cli
 cd testapp/var/uploads
+cd testapp/var/mails
 cd testapp/var/config
   auth_ldap.coord.ini.php.dist
   defaultconfig.ini.php

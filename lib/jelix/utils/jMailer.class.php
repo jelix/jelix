@@ -2,7 +2,7 @@
 /**
 * jMailer : based on PHPMailer - PHP email class
 * Class for sending email using either
-* sendmail, PHP mail(), or SMTP.  Methods are
+* sendmail, PHP mail(), SMTP, or files for tests.  Methods are
 * based upon the standard AspEmail(tm) classes.
 *
 * @package     jelix
@@ -42,6 +42,12 @@ class jMailer extends PHPMailer {
     protected $lang;
 
     /**
+     * the path of the directory where to store mails
+     * if mailer is file.
+    */
+    public $filePath = '';
+
+    /**
      * initialize some member
      */
     function __construct(){
@@ -63,6 +69,16 @@ class jMailer extends PHPMailer {
             $this->From = $gJConfig->mailer['webmasterEmail'];
         }
         $this->FromName = $gJConfig->mailer['webmasterName'];
+        $this->filePath = JELIX_APP_VAR_PATH.$gJConfig->mailer['filesDir'];
+    }
+
+    /**
+     * Sets Mailer to store message into files instead of sending it
+     * useful for tests.
+     * @return void
+     */
+    public function IsFile() {
+        $this->Mailer = 'file';
     }
 
 
@@ -152,7 +168,78 @@ class jMailer extends PHPMailer {
             $this->Body = $mailtpl->fetch( $this->bodyTpl, ($this->ContentType == 'text/html'?'html':'text'));
         }
 
-        return parent::Send();
+        // following lines are copied from the orginal file 
+        
+        if((count($this->to) + count($this->cc) + count($this->bcc)) < 1) {
+          $this->SetError($this->Lang('provide_address'));
+          return false;
+        }
+    
+        /* Set whether the message is multipart/alternative */
+        if(!empty($this->AltBody)) {
+          $this->ContentType = 'multipart/alternative';
+        }
+    
+        $this->error_count = 0; // reset errors
+        $this->SetMessageType();
+        $header .= $this->CreateHeader();
+        $body = $this->CreateBody();
+    
+        if($body == '') {
+          return false;
+        }
+    
+        /* Choose the mailer */
+        switch($this->Mailer) {
+          case 'sendmail':
+            $result = $this->SendmailSend($header, $body);
+            break;
+          case 'smtp':
+            $result = $this->SmtpSend($header, $body);
+            break;
+          case 'file':
+            $result = $this->FileSend($header, $body);
+            break;
+          case 'mail':
+          default:
+            $result = $this->MailSend($header, $body);
+            break;
+        }
+    
+        return $result;
+    }
+    
+    /**
+     * store mail in file instead of sending it
+     * @access public
+     * @return bool
+     */
+    public function FileSend($header, $body) {
+    
+        $to = '';
+        $toList = array();
+        for($i = 0; $i < count($this->to); $i++) {
+            if($i != 0) { $to .= ', '; }
+            $a = $this->AddrFormat($this->to[$i]);
+            $to .= $a;
+            $toList [] = $a;
+        }
+
+        $mail = '';
+        foreach ($toList as $key => $val) {
+            if ($key > 0) $mail.="\n\n";
+            $mail.= $header.$this->EncodeHeader($this->SecureHeader($this->Subject)).$body;
+        }
+      
+        if(!isset($_SERVER['REMOTE_ADDR'])){ // for CLI mode
+            $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        }
+
+        return jFile::write ($this->getStorageFile(), $mail);
+    }
+    
+    protected function getStorageFile() {
+        return rtrim($this->filePath,'/').'/mail.'.$_SERVER['REMOTE_ADDR'].'-'.date('Ymd-His');
     }
 
     function SetLanguage($lang_type = 'en_EN', $lang_path = 'language/') {
