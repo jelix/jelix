@@ -7,3 +7,6 @@ cd lib/jelix/docs/ns
 cd lib/jelix-scripts/
   scripts.conf.php
 
+rmd lib/jelix-scripts/modules/beta_migrating
+
+

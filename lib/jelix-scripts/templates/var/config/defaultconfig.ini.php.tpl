@@ -132,6 +132,10 @@ mailerType = mail
 hostname =
 sendmailPath = "/usr/sbin/sendmail"
 
+; if mailer = file, fill the following parameters
+; this should be the directory in the var/ directory, where to store mail as files
+filesDir = "mails/"
+
 ; if mailer = smtp , fill the following parameters
 
 ; SMTP hosts.  All hosts must be separated by a semicolon : "smtp1.example.com:25;smtp2.example.com"

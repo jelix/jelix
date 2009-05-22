@@ -167,14 +167,6 @@ cd lib/jelix-scripts/templates/var/config/cmdline/
 cd lib/jelix-scripts/templates/var/config/soap/
   config.ini.php.tpl
 
-cd lib/jelix-scripts/modules/beta_migrating/
-   README.txt
-cd lib/jelix-scripts/modules/beta_migrating/controllers/
-  default.cmdline.php
-cd lib/jelix-scripts/modules/beta_migrating/install/
-  cmdline.php
-  config.ini.php
-
 cd lib/jelix/docs
   workflow_action.sxd
 
