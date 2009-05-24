@@ -193,6 +193,10 @@ class jDaoGenerator {
             $fields = $this->_getPropertiesBy('PrimaryTable');
         }
 
+        if($this->_dataParser->hasEvent('insertbefore') || $this->_dataParser->hasEvent('insert')){
+            $src[] = '   jEvent::notify("daoInsertBefore", array(\'dao\'=>$this->_daoSelector, \'record\'=>$record));';
+        }
+        
         // if there isn't a autoincrement as primary key, then we do a full insert.
         // if there isn't a value for the autoincrement field and if this is a mysql/sqlserver and pgsql,
         // we do an insert without given primary key. In other case, we do a full insert.
@@ -209,9 +213,6 @@ class jDaoGenerator {
         if($pkai !== null)
             $src[] = '}';
 
-        if($this->_dataParser->hasEvent('insertbefore') || $this->_dataParser->hasEvent('insert')){
-            $src[] = '   jEvent::notify("daoInsertBefore", array(\'dao\'=>$this->_daoSelector, \'record\'=>$record));';
-        }
         $src[] = '   $result = $this->_conn->exec ($query);';
 
         if($pkai !== null){
@@ -253,7 +254,12 @@ class jDaoGenerator {
         $src[] = 'public function update ($record){';
         list($fields, $values) = $this->_prepareValues($this->_getPropertiesBy('PrimaryFieldsExcludePk'),'updatePattern', 'record->');
         if(count($fields)){
-            $src[] = '   $query = \'UPDATE '.$pTableRealNameEsc.' SET ';
+        	
+            if($this->_dataParser->hasEvent('updatebefore') || $this->_dataParser->hasEvent('update')){
+                $src[] = '   jEvent::notify("daoUpdateBefore", array(\'dao\'=>$this->_daoSelector, \'record\'=>$record));';
+            }
+            
+        	$src[] = '   $query = \'UPDATE '.$pTableRealNameEsc.' SET ';
             $sqlSet='';
             foreach($fields as $k=> $fname){
                 $sqlSet.= ', '.$fname. '= '. $values[$k];
@@ -265,9 +271,6 @@ class jDaoGenerator {
                 $src[] = ' where '.$sqlCondition;
 
             $src[] = "';";
-            if($this->_dataParser->hasEvent('updatebefore') || $this->_dataParser->hasEvent('update')){
-                $src[] = '   jEvent::notify("daoUpdateBefore", array(\'dao\'=>$this->_daoSelector, \'record\'=>$record));';
-            }
 
             $src[] = '   $result = $this->_conn->exec ($query);';
 
