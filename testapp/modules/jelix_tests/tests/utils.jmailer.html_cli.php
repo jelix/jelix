@@ -14,7 +14,7 @@ class testJMailer extends jMailer {
     protected function getStorageFile() {
         return rtrim($this->filePath,'/').'/mail.txt';
     }
-    
+
      function getStorageFile2() {
         return $this->getStorageFile();
     }
@@ -25,12 +25,12 @@ class UTjmailer extends jUnitTestCase {
 
     public function setUp() {
     }
-    
+
     public function testFileMail() {
-        
-        if (file_exists(JELIX_APP_VAR_PATH.'mails/mail.txt'));
+
+        if (file_exists(JELIX_APP_VAR_PATH.'mails/mail.txt'))
             unlink(JELIX_APP_VAR_PATH.'mails/mail.txt');
-        
+
         $mail = new testJMailer();
         $mail->From = 'toto@truc.local';
         $mail->FromName = 'Super Me';
@@ -41,14 +41,14 @@ class UTjmailer extends jUnitTestCase {
         $mail->AddAddress('titi@machin.local');
         $mail->IsFile();
         $mail->Send();
-        
+
         $this->assertEqual(JELIX_APP_VAR_PATH.'mails/', $mail->filePath);
         $this->assertEqual(JELIX_APP_VAR_PATH.'mails/mail.txt', $mail->getStorageFile2());
-        
-        
+
+
         if ($this->assertTrue(file_exists(JELIX_APP_VAR_PATH.'mails/mail.txt'))) {
             $content = file_get_contents(JELIX_APP_VAR_PATH.'mails/mail.txt');
-            
+
             $this->assertTrue(strpos($content, 'Return-Path: toto@truc.com') !== false);
             $this->assertTrue(strpos($content, 'To: titi@machin.local') !== false);
             $this->assertTrue(strpos($content, 'From: Super Me <toto@truc.local>') !== false);
