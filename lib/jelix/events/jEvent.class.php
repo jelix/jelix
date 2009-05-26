@@ -133,10 +133,9 @@ class jEvent {
             self::loadListenersFor ($eventname);
         }
 
-        $methodName = 'on'.$event->getName ();
         $list = & self::$hashListened[$eventname];
         foreach (array_keys ($list) as $key) {
-            $list[$key]->$methodName ($event);
+            $list[$key]->performEvent ($event);
         }
 
         return $event;
