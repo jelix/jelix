@@ -3,12 +3,13 @@
 * @package    jelix
 * @subpackage coord_plugin
 * @author     Gerald Croes, Jouanneau Laurent
-* @contributor
+* @contributor Julien Issler
 * @copyright  2001-2005 CopixTeam, 2005-2007 Jouanneau laurent
 * Some parts of this file are took from Copix Framework v2.3dev20050901, magicquotes.plugin.php,
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence
 * author : Gerald Croes, Laurent Jouanneau
 * http://www.copix.org
+* @copyright  2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 *
@@ -39,6 +40,8 @@ class MagicQuotesCoordPlugin implements jICoordPlugin {
             foreach ($_REQUEST as $key=>$elem){
                 $_REQUEST[$key] = $this->_stripSlashes ($elem);
             }
+            foreach ($_FILES as $key=>$elem)
+                $_FILES[$key] = $this->_stripSlashes ($elem);
         }
         set_magic_quotes_runtime(0);
     }
