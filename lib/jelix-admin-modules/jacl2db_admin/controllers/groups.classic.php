@@ -68,24 +68,50 @@ class groupsCtrl extends jController {
         $rep = $this->getResponse('html');
         $tpl = new jTpl();
 
+        $p = jAcl2Db::getProfile();
+
         $gid=array(0);
         $o = new StdClass;
         $o->id_aclgrp ='0';
         $o->name = jLocale::get('jacl2db_admin~acl2.anonymous.group.name');
         $o->grouptype=0;
+        
+        $daorights = jDao::get('jelix~jacl2rights',$p);
+        $rightsWithResources = array();
+        $hasRightsOnResources = false;
+
         $groups=array($o);
         $grouprights=array(0=>false);
         foreach(jAcl2DbUserGroup::getGroupList() as $grp) {
             $gid[]=$grp->id_aclgrp;
             $groups[]=$grp;
             $grouprights[$grp->id_aclgrp]=false;
+            
+            $rs = $daorights->getRightsHavingRes($grp->id_aclgrp);
+            foreach($rs as $rec){
+                if (!isset($rightsWithResources[$rec->id_aclsbj]))
+                    $rightsWithResources[$rec->id_aclsbj] = array();
+                if (!isset($rightsWithResources[$rec->id_aclsbj][$grp->id_aclgrp]))
+                    $rightsWithResources[$rec->id_aclsbj][$grp->id_aclgrp] = 0;
+                $rightsWithResources[$rec->id_aclsbj][$grp->id_aclgrp] ++;
+            }
         }
-        $rights=array();
-        $p = jAcl2Db::getProfile();
 
+        $rs = $daorights->getRightsHavingRes(0);
+        foreach($rs as $rec){
+            if (!isset($rightsWithResources[$rec->id_aclsbj]))
+                $rightsWithResources[$rec->id_aclsbj] = array();
+            if (!isset($rightsWithResources[$rec->id_aclsbj][0]))
+                $rightsWithResources[$rec->id_aclsbj][0] = 0;
+            $rightsWithResources[$rec->id_aclsbj][0] ++;
+        }
+
+        $rights=array();
         $rs = jDao::get('jelix~jacl2subject',$p)->findAllSubject();
         foreach($rs as $rec){
             $rights[$rec->id_aclsbj] = $grouprights;
+            if (!isset($rightsWithResources[$rec->id_aclsbj]))
+                $rightsWithResources[$rec->id_aclsbj] = array();
         }
 
         $rs = jDao::get('jelix~jacl2rights',$p)->getRightsByGroups($gid);
@@ -93,7 +119,7 @@ class groupsCtrl extends jController {
             $rights[$rec->id_aclsbj][$rec->id_aclgrp] = true;
         }
 
-        $tpl->assign(compact('groups', 'rights'));
+        $tpl->assign(compact('groups', 'rights', 'rightsWithResources'));
         $rep->body->assign('MAIN', $tpl->fetch('groups_right'));
         $rep->body->assign('selectedMenuItem','usersgroups');
         return $rep;
@@ -111,6 +137,92 @@ class groupsCtrl extends jController {
         jAcl2DbManager::setRightsOnGroup(0, (isset($rights[0])?$rights[0]:array()));
         jMessage::add(jLocale::get('acl2.message.group.rights.ok'), 'ok');
         $rep->action = 'jacl2db_admin~groups:rights';
+        return $rep;
+    }
+
+    function rightres(){
+        $rep = $this->getResponse('html');
+
+        $groupid = $this->intParam('group', null);
+        
+        if ($groupid === null || $groupid < 0) {
+            $rep->body->assign('MAIN', '<p>invalid group.</p>');
+            return $rep;
+        }
+
+        $p = jAcl2Db::getProfile();
+        $daogroup = jDao::get('jelix~jacl2group',$p);
+        if ($groupid > 0) {
+            $group = $daogroup->get($groupid);
+            if (!$group) {
+                $rep->body->assign('MAIN', '<p>invalid group.</p>');
+                return $rep;
+            }
+            $groupname = $group->name;
+        }
+        else
+            $groupname = jLocale::get('jacl2db_admin~acl2.anonymous.group.name');
+
+        $rightsWithResources = array();
+        $daorights = jDao::get('jelix~jacl2rights',$p);
+        
+        $rs = $daorights->getRightsHavingRes($groupid);
+        $hasRightsOnResources = false;
+        foreach($rs as $rec){
+            if (!isset($rightsWithResources[$rec->id_aclsbj]))
+                $rightsWithResources[$rec->id_aclsbj] = array();
+            $rightsWithResources[$rec->id_aclsbj][] = $rec->id_aclres;
+            $hasRightsOnResources = true;
+        }
+
+        $tpl = new jTpl();
+        $tpl->assign(compact('groupid', 'groupname', 'rightsWithResources', 'hasRightsOnResources'));
+
+        if(jAcl2::check('acl.group.modify')) {
+            $rep->body->assign('MAIN', $tpl->fetch('group_rights_res'));
+        }else{
+            $rep->body->assign('MAIN', $tpl->fetch('group_rights_res_view'));
+        }
+        $rep->body->assign('selectedMenuItem','usersgroups');
+        return $rep;
+    }
+
+    function saverightres(){
+        $rep = $this->getResponse('redirect');
+        $rep->action = 'jacl2db_admin~groups:rightres';
+
+        $subjects = $this->param('subjects',array());
+
+        $groupid = $this->intParam('group', null);
+        if ($groupid === null || $groupid < 0) {
+            $rep->action = 'jacl2db_admin~groups:rights';
+            return $rep;
+        }
+
+        $p = jAcl2Db::getProfile();
+        $daogroup = jDao::get('jelix~jacl2group', $p);
+        if ($groupid > 0) {
+            $group = $daogroup->get($groupid);
+            if (!$group) {
+                $rep->action = 'jacl2db_admin~groups:rights';
+
+                return $rep;
+            }
+        }
+
+        $rep->params = array('group'=>$groupid);
+
+        $subjectsToRemove = array();
+
+        foreach($subjects as $sbj=>$val) {
+            if ($val != '' || $val == true) {
+                $subjectsToRemove[] = $sbj; 
+            }
+        }
+
+        jDao::get('jelix~jacl2rights', jAcl2Db::getProfile())
+            ->deleteRightsOnResource($groupid, $subjectsToRemove);
+        jMessage::add(jLocale::get('jacl2db_admin~acl2.message.group.rights.ok'), 'ok');
         return $rep;
     }
 

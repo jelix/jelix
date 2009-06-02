@@ -129,14 +129,23 @@ class usersCtrl extends jController {
             $rights[$rec->id_aclsbj] = $grouprights;
         }
 
+        $rightsWithResources = array_fill_keys(array_keys($rights),0);
+        $daorights = jDao::get('jelix~jacl2rights',$p);
+        
+        $rs = $daorights->getRightsHavingRes($hisgroup->id_aclgrp);
+        $hasRightsOnResources = false;
+        foreach($rs as $rec){
+            $rightsWithResources[$rec->id_aclsbj]++;
+            $hasRightsOnResources = true;
+        }
 
-        $rs = jDao::get('jelix~jacl2rights',$p)->getRightsByGroups($gid);
+        $rs = $daorights->getRightsByGroups($gid);
         foreach($rs as $rec){
             $rights[$rec->id_aclsbj][$rec->id_aclgrp] = true;
         }
 
         $tpl = new jTpl();
-        $tpl->assign(compact('hisgroup', 'groupsuser', 'groups', 'rights','user'));
+        $tpl->assign(compact('hisgroup', 'groupsuser', 'groups', 'rights','user', 'rightsWithResources', 'hasRightsOnResources'));
         $tpl->assign('nbgrp', count($groups));
 
         if(jAcl2::check('acl.user.modify')) {
@@ -169,6 +178,73 @@ class usersCtrl extends jController {
         return $rep;
     }
 
+    function rightres(){
+        $rep = $this->getResponse('html');
+
+        $user = $this->param('user');
+        if (!$user) {
+            $rep->body->assign('MAIN', '<p>invalid user</p>');
+            return $rep;
+        }
+
+        $p = jAcl2Db::getProfile();
+        $daogroup = jDao::get('jelix~jacl2group',$p);
+
+        $group = $daogroup->getPrivateGroup($user);
+
+        $rightsWithResources = array();
+        $daorights = jDao::get('jelix~jacl2rights',$p);
+        
+        $rs = $daorights->getRightsHavingRes($group->id_aclgrp);
+        $hasRightsOnResources = false;
+        foreach($rs as $rec){
+            if (!isset($rightsWithResources[$rec->id_aclsbj]))
+                $rightsWithResources[$rec->id_aclsbj] = array();
+            $rightsWithResources[$rec->id_aclsbj][] = $rec->id_aclres;
+            $hasRightsOnResources = true;
+        }
+
+        $tpl = new jTpl();
+        $tpl->assign(compact('user', 'rightsWithResources', 'hasRightsOnResources'));
+
+        if(jAcl2::check('acl.user.modify')) {
+            $rep->body->assign('MAIN', $tpl->fetch('user_rights_res'));
+        }else{
+            $rep->body->assign('MAIN', $tpl->fetch('user_rights_res_view'));
+        }
+        $rep->body->assign('selectedMenuItem','usersrights');
+        return $rep;
+    }
+
+    function saverightres(){
+        $rep = $this->getResponse('redirect');
+        $login = $this->param('user');
+        $subjects = $this->param('subjects',array());
+
+        if($login == '') {
+            $rep->action = 'jacl2db_admin~users:index';
+            return $rep;
+        }
+
+        $rep->action = 'jacl2db_admin~users:rightres';
+        $rep->params=array('user'=>$login);
+
+        $daogroup = jDao::get('jelix~jacl2group', jAcl2Db::getProfile());
+        $grp = $daogroup->getPrivateGroup($login);
+
+        $subjectsToRemove = array();
+
+        foreach($subjects as $sbj=>$val) {
+            if ($val != '' || $val == true) {
+                $subjectsToRemove[] = $sbj; 
+            }
+        }
+
+        jDao::get('jelix~jacl2rights', jAcl2Db::getProfile())
+            ->deleteRightsOnResource($grp->id_aclgrp, $subjectsToRemove);
+        jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
+        return $rep;
+    }
 
     function removegroup(){
         $rep = $this->getResponse('redirect');

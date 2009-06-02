@@ -65,17 +65,34 @@ class jAcl2DbManager {
     }
 
     /**
-     * set rights on the given group. old rights are removed
+     * set rights on the given group. Only rights on given subjects are changed.
+     * Rights with resources are not changed.
      * @param int    $group the group id.
-     * @param array  $rights, list of rights key=subject, value=true
+     * @param array  $rights, list of rights key=subject, value=true or non empty string
      */
     public static function setRightsOnGroup($group, $rights){
         $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfile());
-        $dao->deleteByGroup($group);
-        foreach($rights as $sbj=>$val){
-            if($val != '')
-              self::addRight($group,$sbj);
+        
+        $oldrights = array();
+        $rs = $dao->getRightsByGroup($group);
+        foreach($rs as $rec){
+            $oldrights [$rec->id_aclsbj] = true;
         }
+        
+        $rightsToRemove = array();
+        foreach($rights as $sbj=>$val) {
+            if ($val != '' || $val == true) {
+                if (!isset($oldrights[$sbj]))
+                    self::addRight($group,$sbj);
+            }
+            else
+                $rightsToRemove[] = $sbj;
+        }
+
+        if (count($rightsToRemove)) {
+            $dao->deleteByGroupAndSubjects($group, $rightsToRemove);
+        }
+
         jAcl2::clearCache();
     }
 

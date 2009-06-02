@@ -41,7 +41,7 @@
 </table>
 {/if}
 
-{if $usersCount > 0}
+{if $usersCount > $listPageSize}
 <div class="record-pages-list">{@jacl2db_admin~acl2.pages.links.label@} {pagelinks 'jacl2db_admin~users:index', array('grpid'=>$grpid),  $usersCount, $offset, $listPageSize, 'idx' }</div>
 {/if}
 

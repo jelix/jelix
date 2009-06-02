@@ -8,26 +8,41 @@
 <table class="records-list jacl2-list">
 <thead>
     <tr>
-        <th></th>
+        <th rowspan="2"></th>
         <th colspan="0">{@jacl2db_admin~acl2.table.th.groups@}</th>
+    </tr>
+    <tr>
+        
+    {foreach $groups as $group}
+        <th colspan="2">{$group->name}</th>
+    {/foreach}
     </tr>
     <tr>
         <th>{@jacl2db_admin~acl2.table.th.rights@}</th>
     {foreach $groups as $group}
-        <th>{$group->name}</th>
+        <th>global</th>
+        <th>on res</th>
     {/foreach}
     </tr>
 </thead>
+<tfoot>
+    <tr>
+        <td></td>
+    {foreach $groups as $group}
+        <th></th>
+        <th><a href="{jurl 'jacl2db_admin~groups:rightres',array('group'=>$group->id_aclgrp)}">see</a></th>
+    {/foreach}
+    </tr>
+</tfoot>
 <tbody>
-{assign $line = true}
 {foreach $rights as $subject=>$right}
-<tr class="{if $line}odd{else}even{/if}">
+<tr class="{cycle array('odd','even')}">
     <th>{$subject}</th>
     {foreach $right as $group=>$r}
     <td><input type="checkbox" name="rights[{$group}][{$subject}]" {if $r}checked="checked"{/if} /></td>
+    <td>{if isset($rightsWithResources[$subject][$group]) && $rightsWithResources[$subject][$group]}yes{/if}</td>
     {/foreach}
 </tr>
-{assign $line = !$line}
 {/foreach}
 </tbody>
 </table>
