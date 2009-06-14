@@ -61,6 +61,14 @@ class userCtrl extends jController {
             $rep->action = 'master_admin~default:index';
             return $rep;
         }
+        
+        if ($id != jAuth::getUserSession()->login) {
+            jMessage::add(jLocale::get('jelix~errors.acl.action.right.needed'), 'error');
+            $rep = $this->getResponse('redirect');
+            $rep->action = 'master_admin~default:index';
+            return $rep;
+        }
+
         $rep = $this->getResponse('html');
 
         // we're using a form to display a record, to have the portunity to have
@@ -93,6 +101,13 @@ class userCtrl extends jController {
             $rep->action = 'master_admin~default:index';
             return $rep;
         }
+
+        if ($id != jAuth::getUserSession()->login) {
+            jMessage::add(jLocale::get('jelix~errors.acl.action.right.needed'), 'error');
+            $rep->action = 'master_admin~default:index';
+            return $rep;
+        }
+
         $rep->params['id'] = $id;
 
         $form = jForms::create($this->form, $id);
@@ -132,6 +147,14 @@ class userCtrl extends jController {
             $rep->action = 'master_admin~default:index';
             return $rep;
         }
+
+        if ($id != jAuth::getUserSession()->login) {
+            jMessage::add(jLocale::get('jelix~errors.acl.action.right.needed'), 'error');
+            $rep = $this->getResponse('redirect');
+            $rep->action = 'master_admin~default:index';
+            return $rep;
+        }
+
         $rep = $this->getResponse('html');
 
         $tpl = new jTpl();
@@ -153,6 +176,13 @@ class userCtrl extends jController {
     function saveupdate(){
         $rep = $this->getResponse('redirect');
         $id = $this->param('id');
+
+        if ($id != jAuth::getUserSession()->login) {
+            jMessage::add(jLocale::get('jelix~errors.acl.action.right.needed'), 'error');
+            $rep = $this->getResponse('redirect');
+            $rep->action = 'master_admin~default:index';
+            return $rep;
+        }
 
         $form = jForms::get($this->form,$id);
         $form->initFromRequest();

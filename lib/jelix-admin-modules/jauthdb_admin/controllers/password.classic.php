@@ -28,6 +28,14 @@ class passwordCtrl extends jController {
             $rep->action = 'master_admin~default:index';
             return $rep;
         }
+        
+        if ($this->personalView && $id != jAuth::getUserSession()->login) {
+            jMessage::add(jLocale::get('jelix~errors.acl.action.right.needed'), 'error');
+            $rep = $this->getResponse('redirect');
+            $rep->action = 'master_admin~default:index';
+            return $rep;
+        }
+        
         $rep = $this->getResponse('html');
 
         $tpl = new jTpl();
@@ -50,6 +58,12 @@ class passwordCtrl extends jController {
         $pwd = $this->param('pwd');
         $pwdconf = $this->param('pwd_confirm');
         $rep = $this->getResponse('redirect');
+
+        if ($this->personalView && $id != jAuth::getUserSession()->login) {
+            jMessage::add(jLocale::get('jelix~errors.acl.action.right.needed'), 'error');
+            $rep->action = 'master_admin~default:index';
+            return $rep;
+        }
 
         if (trim($pwd) == '' || $pwd != $pwdconf) {
             jMessage::add(jLocale::get('crud.message.bad.password'), 'error');

@@ -14,9 +14,8 @@
 </tr>
 </thead>
 <tbody>
-{assign $lineparity = true}
 {foreach $list as $record}
-<tr class="{if $lineparity}odd{else}even{/if}">
+<tr class="{cycle array('odd','even')}">
     {foreach $properties as $propname}
     <td>{$record->$propname|eschtml}</td>
     {/foreach}
@@ -24,7 +23,6 @@
         <a href="{jurl $viewAction,array('id'=>$record->$primarykey)}">{@jelix~crud.link.view.record@}</a>
     </td>
 </tr>
-{assign $lineparity = !$lineparity}
 {/foreach}
 </tbody>
 </table>

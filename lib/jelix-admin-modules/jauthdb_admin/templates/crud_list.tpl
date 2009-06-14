@@ -8,9 +8,8 @@
 </tr>
 </thead>
 <tbody>
-{assign $lineparity = true}
 {foreach $list as $record}
-<tr class="{if $lineparity}odd{else}even{/if}">
+<tr class="{cycle array('odd','even')}">
     <td>{$record->login|eschtml}</td>
     <td>
         {if $canview}
@@ -18,7 +17,6 @@
         {/if}
     </td>
 </tr>
-{assign $lineparity = !$lineparity}
 {/foreach}
 </tbody>
 </table>

@@ -177,7 +177,7 @@ class significantUrlEngine implements jIUrlEngine {
                 $url2 = clone $url;
                 if ($reg != '') {
                     if (preg_match($reg, $pathinfo, $m))
-                        $url2->pathInfo = $m[1];
+                        $url2->pathInfo = isset($m[1])?$m[1]:'/';
                     else
                         continue;
                 }
