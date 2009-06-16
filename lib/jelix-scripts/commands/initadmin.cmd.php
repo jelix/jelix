@@ -59,7 +59,7 @@ class initadminCommand extends JelixScriptCommand {
                 $cmd->init(array(),array('name'=>$entrypoint));
                 $cmd->run();
             } catch (Exception $e) {
-                echo "The entrypoint has not been created because of this error: ".$e->getMessage().". No other files have been created.";
+                echo "The entrypoint has not been created because of this error: ".$e->getMessage().". No other files have been created.\n";
             }
         }
         $inifile = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',
@@ -144,11 +144,11 @@ class initadminCommand extends JelixScriptCommand {
                         $db->exec("INSERT INTO jlx_user (usr_login , usr_password , usr_email) VALUES ('admin', '".md5('admin')."', 'admin@localhost.localdomain')");
                     $rs = null;
                 } catch(Exception $e) {
-                    echo "An error has occured during the execution of SQL script to install jAuth: ".$e->getMessage();
+                    echo "An error has occured during the execution of SQL script to install jAuth: ".$e->getMessage()."\n";
                 }
             }
             else {
-                echo "Tables and datas for jAuth.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.";
+                echo "Tables and datas for jAuth.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.\n";
             }    
         }
         else {
@@ -223,11 +223,11 @@ class initadminCommand extends JelixScriptCommand {
                         $tools->execSQLScript($path.'install_jacl2.schema.'.$db->dbms.'.sql');
                         $tools->execSQLScript($path.'install_jacl2.data.'.$db->dbms.'.sql');
                     } catch(Exception $e) {
-                        echo "An error has occured during the execution of SQL script to install jAcl2.db: ".$e->getMessage();
+                        echo "An error has occured during the execution of SQL script to install jAcl2.db: ".$e->getMessage()."\n";
                     }
                 }
                 else {
-                    echo "Tables and datas for jAcl2.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.";
+                    echo "Tables and datas for jAcl2.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.\n";
                 }
             }
         }

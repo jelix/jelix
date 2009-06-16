@@ -158,7 +158,7 @@ class createappCommand extends JelixScriptCommand {
                 $this->createFile(JELIX_APP_PATH.'modules/'.$param['modulename'].'/templates/main.tpl', 'main.tpl.tpl', $param);
             } catch (Exception $e) {
                 $moduleok = false;
-                echo "The module has not been created because of this error: ".$e->getMessage()."\nHowever the application has been created";
+                echo "The module has not been created because of this error: ".$e->getMessage()."\nHowever the application has been created\n";
             }
         }
 
