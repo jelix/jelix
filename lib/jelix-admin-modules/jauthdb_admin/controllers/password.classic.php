@@ -22,7 +22,7 @@ class passwordCtrl extends jController {
     }
 
     function index(){
-        $id = $this->param('id');
+        $id = $this->param('j_user_login');
         if($id === null){
             $rep = $this->getResponse('redirect');
             $rep->action = 'master_admin~default:index';
@@ -54,7 +54,7 @@ class passwordCtrl extends jController {
      * 
      */
     function update(){
-        $id = $this->param('id');
+        $id = $this->param('j_user_login');
         $pwd = $this->param('pwd');
         $pwdconf = $this->param('pwd_confirm');
         $rep = $this->getResponse('redirect');
@@ -68,7 +68,7 @@ class passwordCtrl extends jController {
         if (trim($pwd) == '' || $pwd != $pwdconf) {
             jMessage::add(jLocale::get('crud.message.bad.password'), 'error');
             $rep->action = 'password:index';
-            $rep->params['id'] = $id;
+            $rep->params['j_user_login'] = $id;
             return $rep;
         }
         
@@ -78,13 +78,13 @@ class passwordCtrl extends jController {
                 $rep->action = 'user:index';
             else
                 $rep->action = 'default:view';
-            $rep->params['id'] = $id;
+            $rep->params['j_user_login'] = $id;
             return $rep;
         }
         else{
             jMessage::add(jLocale::get('crud.message.change.password.notok'), 'error');
             $rep->action = 'password:index';
-            $rep->params['id'] = $id;
+            $rep->params['j_user_login'] = $id;
         }
         return $rep;
     }

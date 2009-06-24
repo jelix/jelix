@@ -2,7 +2,7 @@
         <li id="info-user">
             <strong>{@master_admin~gui.header.user@}</strong>
             {ifacl2 'auth.user.view'}
-                <span id="info-user-login"><a href="{jurl 'jauthdb_admin~user:index', array('id'=>$user->login)}">{$user->login}</a></span>
+                <span id="info-user-login"><a href="{jurl 'jauthdb_admin~user:index', array('j_user_login'=>$user->login)}">{$user->login}</a></span>
             {else}
                 <span id="info-user-login">{$user->login}</span>
             {/ifacl2}

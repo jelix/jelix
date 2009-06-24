@@ -20,10 +20,10 @@ function verifpass() {
 }
 //]]>
 </script>
-<form action="{formurl 'password:update', array('id'=>$id)}" method="post"
+<form action="{formurl 'password:update', array('j_user_login'=>$id)}" method="post"
 onsubmit="return verifpass()">
 	<fieldset><legend>{@jauthdb_admin~crud.form.new.password@}</legend>
-	{formurlparam 'password:update', array('id'=>$id)}
+	{formurlparam 'password:update', array('j_user_login'=>$id)}
 	
 	<p><label for="pwd">{@jauthdb_admin~crud.form.password@}</label>
 	<input type="password" id="pwd" name="pwd" />
@@ -37,4 +37,4 @@ onsubmit="return verifpass()">
 	</fieldset>
 </form>
 
-<p><a href="{jurl $viewaction, array('id'=>$id)}" class="crud-link">{if $personalview}{@jauthdb_admin~crud.link.return.to.view@}{else}{@jauthdb_admin~user.link.return.to.view@}{/if}</a>.</p>
+<p><a href="{jurl $viewaction, array('j_user_login'=>$id)}" class="crud-link">{if $personalview}{@jauthdb_admin~crud.link.return.to.view@}{else}{@jauthdb_admin~user.link.return.to.view@}{/if}</a>.</p>

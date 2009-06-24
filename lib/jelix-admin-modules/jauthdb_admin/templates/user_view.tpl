@@ -6,8 +6,8 @@
 {formdatafull $form}
 
 <ul class="crud-links-list">
-    {if $canUpdate}<li><a href="{jurl 'jauthdb_admin~user:preupdate', array('id'=>$id)}" class="crud-link">{@jauthdb_admin~user.link.edit.record@}</a></li>{/if}
-    {if $canChangePass}<li><a href="{jurl 'jauthdb_admin~password:index', array('id'=>$id)}" class="crud-link">{@jauthdb_admin~user.link.change.password@}</a></li>{/if}
+    {if $canUpdate}<li><a href="{jurl 'jauthdb_admin~user:preupdate', array('j_user_login'=>$id)}" class="crud-link">{@jauthdb_admin~user.link.edit.record@}</a></li>{/if}
+    {if $canChangePass}<li><a href="{jurl 'jauthdb_admin~password:index', array('j_user_login'=>$id)}" class="crud-link">{@jauthdb_admin~user.link.change.password@}</a></li>{/if}
 </ul>
 
 {if count($otherInfo)}

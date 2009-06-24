@@ -10,8 +10,8 @@
 
 <h1>{@jauthdb_admin~crud.title.update@}</h1>
 
-{formfull $form, 'default:saveupdate', array('id'=>$id)}
-<p><a href="{jurl 'default:view', array('id'=>$id)}" class="crud-link">{@jauthdb_admin~crud.link.return.to.view@}</a>.</p>
+{formfull $form, 'default:saveupdate', array('j_user_login'=>$id)}
+<p><a href="{jurl 'default:view', array('j_user_login'=>$id)}" class="crud-link">{@jauthdb_admin~crud.link.return.to.view@}</a>.</p>
 {/if}
 
 
