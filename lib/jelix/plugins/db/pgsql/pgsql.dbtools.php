@@ -103,7 +103,12 @@ class pgsqlDbTools extends jDbTools {
       'circle'          =>array('circle',   'varchar',    null,       null,       0,     24),
       'cidr'            =>array('cidr',     'varchar',    null,       null,       0,     24),
       'inet'            =>array('inet',     'varchar',    null,       null,       0,     24),
-      'macaddr'         =>array('macaddr',  'integer',    0,          0xFFFFFFFFFFFF, null,       null),
+#if PHP50 || PHP51
+      // FIXME !! bad maximum value
+      'macaddr'         =>array('macaddr',    'integer',    0,          0xFFFFFFFF, null,       null),
+#else
+      'macaddr'         =>array('macaddr',    'integer',    0,          0xFFFFFFFFFFFF, null,       null),
+#endif
       'bit varying'     =>array('bit varying', 'varchar', null,       null,       0,     65535),
       'arrays'          =>array('array',    'varchar',    null,       null,       0,     65535),
       'complex types'   =>array('complex',  'varchar',    null,       null,       0,     65535),

@@ -232,7 +232,7 @@ class jManifest {
                 }
             }
         }
-        return $result;
+        return $result."\n";
     }
 
     static protected function strip_ws($s){

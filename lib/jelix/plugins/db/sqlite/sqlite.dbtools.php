@@ -98,7 +98,12 @@ class sqliteDbTools extends jDbTools {
       'circle'          =>array('varchar',    'varchar',    null,       null,       0,     24),
       'cidr'            =>array('varchar',    'varchar',    null,       null,       0,     24),
       'inet'            =>array('varchar',    'varchar',    null,       null,       0,     24),
+#if PHP50 || PHP51
+      // FIXME !! bad maximum value
+      'macaddr'         =>array('integer',    'integer',    0,          0xFFFFFFFF, null,       null),
+#else
       'macaddr'         =>array('integer',    'integer',    0,          0xFFFFFFFFFFFF, null,       null),
+#endif
       'bit varying'     =>array('varchar',    'varchar',    null,       null,       0,     65535),
       'arrays'          =>array('varchar',    'varchar',    null,       null,       0,     65535),
       'complex types'   =>array('varchar',    'varchar',    null,       null,       0,     65535),

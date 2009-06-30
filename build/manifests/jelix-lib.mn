@@ -229,6 +229,7 @@ cd lib/jelix/forms
 
 cd lib/jelix/installer
   jIInstallReporter.iface.php
+  jInstaller.class.php
   jInstallerApp.class.php
   jInstallerBase.class.php
   jInstallerModule.class.php
@@ -329,24 +330,24 @@ cd lib/jelix/plugins/db/intuition
 cd lib/jelix/plugins/db/mysql
   mysql.dbconnection.php
   mysql.dbresultset.php
-  mysql.dbtools.php
+* mysql.dbtools.php
   mysql.daobuilder.php
 
 cd lib/jelix/plugins/db/pgsql
   pgsql.dbconnection.php
   pgsql.dbresultset.php
-  pgsql.dbtools.php
+* pgsql.dbtools.php
   pgsql.daobuilder.php
 
 cd lib/jelix/plugins/db/sqlite
   sqlite.dbconnection.php
   sqlite.dbresultset.php
-  sqlite.dbtools.php
+* sqlite.dbtools.php
   sqlite.daobuilder.php
 
 cd lib/jelix/plugins/db/oci
   oci.daobuilder.php
-  oci.dbtools.php
+* oci.dbtools.php
 
 cd lib/jelix/plugins/jforms/html
   html.jformsbuilder.php
