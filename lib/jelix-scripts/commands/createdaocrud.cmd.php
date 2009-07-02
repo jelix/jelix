@@ -13,16 +13,19 @@
 class createdaocrudCommand extends JelixScriptCommand {
 
     public  $name = 'createdaocrud';
-    public  $allowed_options=array('-profile'=>true);
+    public  $allowed_options=array('-profile'=>true, '-createlocales'=>false);
     public  $allowed_parameters=array('module'=>true, 'table'=>true, 'ctrlname'=>false);
 
-    public  $syntaxhelp = "[-profile name] MODULE TABLE [CTRLNAME]";
+    public  $syntaxhelp = "[-createlocales] [-profile name] MODULE TABLE [CTRLNAME]";
     public  $help=array(
         'fr'=>"
     Crée un nouveau contrôleur de type jControllerDaoCrud, reposant sur un jdao et un jform.
 
     -profile (facultatif) : indique le profil à utiliser pour se connecter à
                            la base et récupérer les informations de la table
+                           
+    -createlocales (facultatif) : crée les fichiers locales avec les champs du formulaire
+    
     MODULE : le nom du module où stocker le contrôleur
     TABLE : le nom de la table SQL
     CTRLNAME (facultatif) : nom du contrôleur (par défaut, celui de la table)",
@@ -32,6 +35,8 @@ class createdaocrudCommand extends JelixScriptCommand {
 
     -profile (optional) : indicate the name of the profile to use for the
                         database connection.
+                        
+    -createslocales (optional) : creates the locales files with the form's values.
 
     MODULE: name of the module where to create the crud
     TABLE : name of the SQL table
@@ -62,7 +67,11 @@ class createdaocrudCommand extends JelixScriptCommand {
         $agcommand->run();
 
         $agcommand = jxs_load_command('createform');
-        $agcommand->init(array(),array('module'=>$this->_parameters['module'], 'form'=>$table,'dao'=>$table));
+         if ($this->getOption('-createlocales')) {
+            $options = array('-createlocales'=>true);
+        }
+        
+        $agcommand->init($options,array('module'=>$this->_parameters['module'], 'form'=>$table,'dao'=>$table));
         $agcommand->run();
 
         $this->createDir($path.'controllers/');

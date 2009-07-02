@@ -139,6 +139,7 @@ cd lib/jelix-scripts/templates
   jelix-scripts.init.php.tpl
   htaccess_deny
   htaccess_allow
+  locales.tpl
 cd lib/jelix-scripts/templates/responses/
   adminHtmlResponse.class.php.tpl
   adminLoginHtmlResponse.class.php.tpl
