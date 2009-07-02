@@ -3,10 +3,14 @@
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
 * @contributor Loic Mathaud
-* @copyright   2007 Jouanneau laurent, 2008 Loic Mathaud
+* @copyright   2007 Jouanneau laurent, 2008 Loic Mathaud, 2009 Bastien Jaillot
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
+
+#if ENABLE_OPTIMIZED_SOURCE
+require(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php'); // jDaoParser is in jDaoCompiler file
+#endif
 
 class createformCommand extends JelixScriptCommand {
 
