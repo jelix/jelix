@@ -8,11 +8,6 @@ charset = "UTF-8"
 ; if empty, jelix will try to get the default timezone
 timeZone = 
 
-checkTrustedModules = off
-
-; list of modules : module,module,module
-trustedModules =
-
 pluginsPath = app:plugins/,lib:jelix-plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 
@@ -24,6 +19,13 @@ theme = default
 
 ; for junittests module
 enableTests = on
+
+[modules]
+jelix_tests.status = 3
+testapp.status = 3
+testurls.status = 3
+junittests.status = 3
+jWSDL.status = 3
 
 [coordplugins]
 
@@ -44,8 +46,6 @@ notice       = ECHO
 strict       = ECHO
 ; pour les exceptions, il y a implicitement un EXIT
 exception    = ECHO
-
-
 
 [compilation]
 checkCacheFiletime  = on

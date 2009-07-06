@@ -23,11 +23,14 @@ class jConfigCompiler {
 
     /**
      * read the given ini file. Merge it with the content of defaultconfig.ini.php
-     * It also calculates some options. It stores the result in a temporary file
+     * It also calculates some options. 
      * @param string $configFile the config file name
+     * @param boolean $allModuleInfo may be true for the installer, which needs all informations
+     *                               else should be false, these extra informations are
+     *                               not needed to run the application
      * @return object an object which contains configuration values
      */
-    static public function read($configFile){
+    static public function read($configFile, $allModuleInfo = false){
 
         if(JELIX_APP_TEMP_PATH=='/'){
             // if it equals to '/', this is because realpath has returned false in the application.init.php
@@ -67,7 +70,19 @@ class jConfigCompiler {
         $config = (object) $config;
 #endif
 
-        self::prepareConfig($config);
+        self::prepareConfig($config, $allModuleInfo);
+        return $config;
+    }
+    
+    /**
+     * read the given ini file. Merge it with the content of defaultconfig.ini.php
+     * It also calculates some options. It stores the result in a temporary file
+     * @param string $configFile the config file name
+     * @return object an object which contains configuration values
+     */
+    static public function readAndCache($configFile){
+        
+        $config = self::read($configFile);
 
 #if WITH_BYTECODE_CACHE == 'auto'
         if(BYTECODE_CACHE_EXISTS){
@@ -98,7 +113,7 @@ class jConfigCompiler {
     /**
      * fill some config properties with calculated values
      */
-    static protected function prepareConfig($config){
+    static protected function prepareConfig($config, $allModuleInfo){
 
         $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
         if(trim( $config->startAction) == '') {
@@ -106,9 +121,8 @@ class jConfigCompiler {
         }
 
         $config->_allBasePath = array();
-        $unusedModules = split(' *, *',$config->unusedModules);
-        $config->_modulesPathList = self::_loadPathList($config->modulesPath, $unusedModules, $config->_allBasePath);
 
+        self::_loadModuleInfo($config, $allModuleInfo);
         self::_loadPluginsPathList($config);
 
         $coordplugins = array();
@@ -124,14 +138,6 @@ class jConfigCompiler {
             }
         }
         $config->coordplugins = $coordplugins;
-
-        if($config->checkTrustedModules){
-            $config->_trustedModules = explode(',',$config->trustedModules);
-            if(!in_array('jelix',$config->_trustedModules))
-                $config->_trustedModules[]='jelix';
-        }else{
-            $config->_trustedModules = array_keys($config->_modulesPathList);
-        }
 
         if($config->urlengine['scriptNameServerVariable'] == '') {
             $config->urlengine['scriptNameServerVariable'] = self::_findServerName($config->urlengine['entrypointExtension']);
@@ -232,38 +238,56 @@ class jConfigCompiler {
      * @param array $list list of "lib:*" and "app:*" path
      * @return array list of full path
      */
-    static protected function _loadPathList($list, $forbiddenList, &$allBasePath){
-        $list = split(' *, *',$list);
+    static protected function _loadModuleInfo($config, $allModuleInfo) {
+        $list = preg_split('/ *, */',$config->modulesPath);
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $result=array();
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
             if(!file_exists($p)){
-                trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
-                exit;
+                throw new Exception('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
             }
             if(substr($p,-1) !='/')
                 $p.='/';
             if($k!=0)
-                $allBasePath[]=$p;
+                $config->_allBasePath[]=$p;
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
-                    if ($f{0} != '.' && is_dir($p.$f) && !in_array($f, $forbiddenList)) {
-                        $result[$f]=$p.$f.'/';
+                    if ($f{0} != '.' && is_dir($p.$f)) {
+                        
+                        if($f == 'jelix') {
+                            $config->modules['jelix.status'] = 3;
+                        }
+                        else {
+                            if (!isset($config->modules[$f.'.status']))
+                                $config->modules[$f.'.status'] = 0;
+                        }
+
+                        if ($allModuleInfo) {
+                            if (!isset($config->modules[$f.'.version']))
+                                $config->modules[$f.'.version'] = '';
+    
+                            if (!isset($config->modules[$f.'.dataversion']))
+                                $config->modules[$f.'.dataversion'] = '';
+
+                            $config->_allModulesPathList[$f]=$p.$f.'/';
+                        }
+                        
+                        if($config->modules[$f.'.status'] > 1)
+                            $config->_modulesPathList[$f]=$p.$f.'/';
                     }
                 }
                 closedir($handle);
             }
         }
-        return $result;
     }
 
     /**
      * Analyse plugin paths
      * @param array|object $config the config container
      */
-    static protected function _loadPluginsPathList(&$config){
+    static protected function _loadPluginsPathList(&$config) {
         $list = split(' *, *',$config->pluginsPath);
         array_unshift($list, JELIX_LIB_PATH.'plugins/');
         foreach($list as $k=>$path){

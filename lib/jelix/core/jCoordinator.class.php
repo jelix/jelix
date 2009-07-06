@@ -154,14 +154,14 @@ class jCoordinator {
             }
         }
 
-        // module check
-        if($gJConfig->checkTrustedModules && !in_array($this->moduleName,$gJConfig->_trustedModules)){
-            throw new jException('jelix~errors.module.untrusted',$this->moduleName);
-        }
-
         jContext::push ($this->moduleName);
         try{
             $this->action = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
+
+            if($gJConfig->modules[$this->moduleName.'.status'] < 3){
+                throw new jException('jelix~errors.module.untrusted',$this->moduleName);
+            }
+
             $ctrl = $this->getController($this->action);
         }catch(jException $e){
             if ($gJConfig->urlengine['notfoundAct'] =='') {
@@ -448,7 +448,7 @@ class jCoordinator {
     * @return boolean true : module is ok
     */
     public function isModuleEnabled ($moduleName){
-        return in_array($moduleName, $GLOBALS['gJConfig']->_trustedModules);
+        return ($GLOBALS['gJConfig']->modules[$moduleName.'.status'] > 1);
     }
 
     /**

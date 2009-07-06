@@ -14,17 +14,6 @@ timeZone =
 pluginsPath = app:plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 
-; says if jelix should check trustedModules
-checkTrustedModules = off
-
-; list of modules which can be accessed from the web
-;    module,module,module
-trustedModules =
-
-; list of modules which are not used by the application
-; or not installed.
-unusedModules = 
-
 dbProfils = dbprofils.ini.php
 
 cacheProfiles = cache.ini.php
@@ -32,6 +21,16 @@ cacheProfiles = cache.ini.php
 use_error_handler = on
 
 enableOldActionSelector =
+
+[modules]
+jelix.status = 3
+jacldb.status = 0
+
+; syntax is
+; modulename.status = x
+; where x : 1 = installed, 2 = activated, 3 = public access
+; modulename.version = number of installed version
+
 
 [coordplugins]
 

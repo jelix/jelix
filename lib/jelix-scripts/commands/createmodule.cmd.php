@@ -1,11 +1,11 @@
 <?php
 /**
 * @package     jelix-scripts
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Loic Mathaud
 * @contributor Bastien Jaillot
-* @copyright   2005-2007 Jouanneau laurent, 2007 Loic Mathaud, 2008 Bastien Jaillot
-* @link        http://www.jelix.org
+* @copyright   2005-2009 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
+* @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
@@ -45,22 +45,26 @@ class createmoduleCommand extends JelixScriptCommand {
     public function run(){
         jxs_init_jelix_env();
 
+        $module = $this->_parameters['module'];
+        $initialVersion = '0.1pre';
+
         // note: since module name are used for name of generated name,
         // only this characters are allowed
-        if(preg_match('/([^a-zA-Z_0-9])/', $this->_parameters['module'])) {
-            throw new Exception("the name '".$this->_parameters['module']."' is not valid for a module");
+        if(preg_match('/([^a-zA-Z_0-9])/', $module)) {
+            throw new Exception("the name '".$module."' is not valid for a module");
         }
         
-        $path= $this->getModulePath($this->_parameters['module'], false);
+        $path= $this->getModulePath($module, false);
 
         if(file_exists($path)){
-            throw new Exception("module '".$this->_parameters['module']."' already exists");
+            throw new Exception("module '".$module."' already exists");
         }
         $this->createDir($path);
         
         $param = array();
-        $param['name']=$this->_parameters['module'];
-        $param['default_id'] = $this->_parameters['module'].JELIXS_INFO_DEFAULT_IDSUFFIX;
+        $param['name'] = $module;
+        $param['default_id'] = $module.JELIXS_INFO_DEFAULT_IDSUFFIX;
+        $param['version'] = $initialVersion;
 
         $this->createFile($path.'module.xml','module.xml.tpl',$param);
 
@@ -86,7 +90,7 @@ class createmoduleCommand extends JelixScriptCommand {
             if ($this->getOption('-addinstallzone')) {
                 $options = array('-addinstallzone'=>true);
             }
-            $agcommand->init($options,array('module'=>$this->_parameters['module'], 'name'=>'default','method'=>'index'));
+            $agcommand->init($options,array('module'=>$module, 'name'=>'default','method'=>'index'));
             $agcommand->run();
         }
         $inifiles = array(JELIX_APP_CONFIG_PATH.'index/config.ini.php',
@@ -101,16 +105,21 @@ class createmoduleCommand extends JelixScriptCommand {
             try {
                 $ini = new jIniFileModifier($filename);
                 if ($isdefault && $k == 0) {
-                    $ini->setValue('startModule', $this->_parameters['module']);
+                    $ini->setValue('startModule', $module);
                     $ini->setValue('startAction', 'default:index');
                 }
                 else if ($ini->getValue('startModule') == '')
-                    $ini->setValue('startModule', $this->_parameters['module']);
+                    $ini->setValue('startModule', $module);
                 $ini->save();
             }catch(Exception $e){
                 echo "Error during the modification of an ini file: ".$e->getMessage()."\n";
             }
         }
+        
+        $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        $ini->setValue($module.'.status', 3 , 'modules');
+        $ini->setValue($module.'.version', $initialVersion , 'modules');
+        $ini->save();
     }
 }
 

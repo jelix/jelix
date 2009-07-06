@@ -14,16 +14,19 @@ pluginsPath = app:plugins/,lib:jelix-plugins/
 
 modulesPath = lib:jelix-modules/,app:modules/
 
-; says if jelix should check trustedModules
-checkTrustedModules = off
+[modules]
+; modulename.status = x where x =
+; 0 if not installed
+; 1 if installed (database schema is ok for example)
+; 2 if activated (other modules can use it, but it is not accessible directly through the web)
+; 3 if public (accessible through the web)
 
-; list of modules which can be accessed from the web
-;    module,module,module
-trustedModules =
+; jacldb is deprecated. keep it uninstall
+jacldb.status = 0
 
-; list of modules which are not used by the application
-; or not installed.
-unusedModules = jacldb
+; modulename.version = installed version of the module
+
+
 
 [coordplugins]
 ;nom = nom_fichier_ini

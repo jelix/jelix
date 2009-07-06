@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="%%default_id%%" name="%%name%%" createdate="%%createdate%%">
-        <version stability="pre-alpha" date="">0.1pre</version>
+        <version stability="pre-alpha" date="">%%version%%</version>
         <label lang="%%default_locale%%">%%name%%</label>
         <description lang="%%default_locale%%"></description>
         <license URL="%%default_license_url%%">%%default_license%%</license>
