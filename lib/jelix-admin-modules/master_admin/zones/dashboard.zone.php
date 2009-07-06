@@ -11,6 +11,13 @@
 class masterAdminDashboardWidget {
     public $title = '';
     public $content = '';
+    public $order = 0;
+}
+
+
+function masterAdminDashboardWidgetSort($itemA, $itemB)
+{
+    return ($itemA->order - $itemB->order);
 }
 
 class dashboardZone extends jZone {
@@ -19,7 +26,9 @@ class dashboardZone extends jZone {
     protected function _prepareTpl(){
         $this->_tpl->assignIfNone('foo','bar');
         
-        $this->_tpl->assign('widgets', jEvent::notify('masterAdminGetDashboardWidget')->getResponse());
+        $widgets = jEvent::notify('masterAdminGetDashboardWidget')->getResponse();
+        usort($widgets, 'masterAdminDashboardWidgetSort');
+        $this->_tpl->assign('widgets', $widgets);
         
         
     }
