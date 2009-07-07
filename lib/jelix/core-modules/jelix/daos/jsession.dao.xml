@@ -3,11 +3,11 @@
     <datasources>
         <primarytable name="jsessions" realname="jsessions" primarykey="id" />
     </datasources>
-    
+
     <record>
         <property name="id" fieldname="id" datatype="string"/>
-        <property name="creation" fieldname="creation" datatype="date" insertpattern="NOW()" updatepattern="" required="true"/>
-        <property name="access" fieldname="access" datatype="date" insertpattern="NOW()" updatepattern="NOW()" required="true"/>
+        <property name="creation" fieldname="creation" datatype="date" required="true"/>
+        <property name="access" fieldname="access" datatype="date" required="true"/>
         <property name="data" fieldname="data" datatype="string" required="true"/>
     </record>
 
