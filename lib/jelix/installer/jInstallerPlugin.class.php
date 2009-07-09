@@ -19,18 +19,6 @@
 */
 class jInstallerPlugin extends jInstallerBase {
 
-    protected $application;
-
-    /**
-     * The plugin should be present in the application.
-     * @param string $type the type of the plugin ('acl', 'auth', 'tpl', 'urls'...)
-     * @param string $name the name of the plugin
-     * @param jInstallerApp $application
-     */
-    function __construct($type, $name, $application) {
-        // read the module.xml
-        // and set the $path property
-    }
 
 }
 

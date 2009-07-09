@@ -157,6 +157,7 @@ cd testapp/modules/jelix_tests/tests/
   core.urls_parsing.html_cli.php
   daotests.lib.php
   events.simple_test.html_cli.php
+  installer.misc.html_cli.php
   jacl.main_api.html_cli.php
   jacl.manager.html_cli.php
   jacl.users_and_groups.html_cli.php

@@ -4,7 +4,7 @@
 * @subpackage  installer
 * @author      Laurent Jouanneau
 * @contributor 
-* @copyright   2008 Laurent Jouanneau
+* @copyright   2008-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -18,45 +18,57 @@
 * @since 1.1
 */
 class jInstallerModule extends jInstallerBase {
-
-    protected $application;
-
-    /**
-     * The module should be present in the application.
-     * @param string $name the name of the module
-     * @param jInstallerApp $application
-     */
-    function __construct($name, $application) {
-        // read the module.xml
-        // and set the $path property
-    }
+    
+    protected $namespace = 'http://jelix.org/ns/module/1.0';
+    protected $rootName = 'module';
+    protected $identityFile = 'module.xml';
 
     /**
-     * @return boolean true if the module is installed
-     */
-    function isInstalled() {
-        
-    }
-
-    /**
-     * install the module, by checking dependencies.
+     * install the module.
+     * this method should be called after verifying and resolving
+     * dependencies. Needed components (modules or plugins) should be
+     * installed before calling this method
      * @throw jException  if an error occurs during the install.
      */
     function install() {
-
-        // * check that all dependencies are ok : the needed modules and plugins
-        // should be present in the application, even if this modules or plugins
-        // are not install
-        // * start the install of all needed modules and plugins before installing
-        // the module. Check before isInstalled() of the module/plugin
-        // If an exception occured during the install of this dependencies
-        // we should call uninstall of previous modules/plugins well installed and which
-        // install() has returned true. throw the exception
-        // * if ok, install the module, by calling the _install.php script
-        // * if error, uninstall dependencies which have just been installed,
-        //   undo things which have made during the install of the module, and
-        //   throw an exception
+        if (file_exists($this->path.'install/install.php')) {
+            
+        }
     }
+    
+    /**
+     * upgrade the module.
+     * this method should be called after verifying and resolving
+     * dependencies. Needed components (modules or plugins) should be
+     * installed/upgraded before calling this method
+     * @throw jException  if an error occurs during the install.
+     */
+    function upgrade($fromVersion) {
+        $p = $this->path.'install/';
+        
+        // we get the list of files for the upgrade
+        $fileList = array();
+        if ($handle = opendir($p)) {
+            while (false !== ($f = readdir($handle))) {
+                if (!is_dir($p.$f) && preg_match('/^upgrade_to_([^\.]*)\.php$/', $f, $m)) {
+                    $fileList[] = array($f, $m[1]);
+                }
+            }
+            closedir($handle);
+        }
+        
+        if (!count($fileList)) {
+            return;
+        }
+        
+        // now we order the list of file, and removing the useless files
+        
+        
+    }
+    
+    
+    
+    
     
     /**
      * uninstall the module, by checking dependencies.

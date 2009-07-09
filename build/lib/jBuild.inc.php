@@ -194,14 +194,6 @@ class Subversion {
         $path=jBuildUtils::normalizeDir($path);
         $rev=-1;
         if(file_exists($path.'.svn/entries')){
-            /* FIXME : namespace invalide dans les fichiers entries, on ne peut
-              donc pas les lire à partir de simplxml ou dom
-
-            $path = $path.'.svn/entries';
-            $svninfo = simplexml_load_file ( $path);
-            if(isset($svninfo->entry[0]))
-                $rev=$svninfo->entry[0]['revision'];
-            */
             $rev=`svnversion $path --no-newline`;
             if(preg_match("/(\d+)[MS]+/",$rev, $m))
                 $rev=$m[1];
