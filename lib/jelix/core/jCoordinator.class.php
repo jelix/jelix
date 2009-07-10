@@ -158,7 +158,7 @@ class jCoordinator {
         try{
             $this->action = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
 
-            if($gJConfig->modules[$this->moduleName.'.status'] < 3){
+            if($gJConfig->modules[$this->moduleName.'.access'] < 2){
                 throw new jException('jelix~errors.module.untrusted',$this->moduleName);
             }
 
@@ -208,7 +208,6 @@ class jCoordinator {
             $this->plugins[$name]->beforeOutput ();
         }
 
-        // envoi de la réponse
         if(!$this->response->output()){
             $this->response->outputErrors();
         }
@@ -448,7 +447,7 @@ class jCoordinator {
     * @return boolean true : module is ok
     */
     public function isModuleEnabled ($moduleName){
-        return ($GLOBALS['gJConfig']->modules[$moduleName.'.status'] > 1);
+        return ($GLOBALS['gJConfig']->modules[$moduleName.'.access'] > 0);
     }
 
     /**

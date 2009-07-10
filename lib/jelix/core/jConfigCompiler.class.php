@@ -245,23 +245,27 @@ class jConfigCompiler {
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
-            if(!file_exists($p)){
+            if (!file_exists($p)) {
                 throw new Exception('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
             }
-            if(substr($p,-1) !='/')
+            if (substr($p,-1) !='/')
                 $p.='/';
-            if($k!=0)
+            if ($k!=0) // don't include the core-modules
                 $config->_allBasePath[]=$p;
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
                     if ($f{0} != '.' && is_dir($p.$f)) {
                         
                         if($f == 'jelix') {
-                            $config->modules['jelix.status'] = 3;
+                            $config->modules['jelix.installed'] = 1;
+                            $config->modules['jelix.access'] = 2;
                         }
                         else {
-                            if (!isset($config->modules[$f.'.status']))
-                                $config->modules[$f.'.status'] = 0;
+                            if (!isset($config->modules[$f.'.installed']))
+                                $config->modules[$f.'.installed'] = 0;
+                            if (!isset($config->modules[$f.'.access'])
+                                || !$config->modules[$f.'.installed'])
+                                $config->modules[$f.'.access'] = 0;
                         }
 
                         if ($allModuleInfo) {
@@ -274,7 +278,7 @@ class jConfigCompiler {
                             $config->_allModulesPathList[$f]=$p.$f.'/';
                         }
                         
-                        if($config->modules[$f.'.status'] > 1)
+                        if($config->modules[$f.'.access'])
                             $config->_modulesPathList[$f]=$p.$f.'/';
                     }
                 }
@@ -330,11 +334,14 @@ class jConfigCompiler {
         $varname = '';
         $extlen = strlen($ext);
 
-        if(strrpos($_SERVER['SCRIPT_NAME'], $ext) === (strlen($_SERVER['SCRIPT_NAME']) - $extlen) || php_sapi_name() == 'cli') {
+        if(strrpos($_SERVER['SCRIPT_NAME'], $ext) === (strlen($_SERVER['SCRIPT_NAME']) - $extlen)
+           || php_sapi_name() == 'cli') {
             return 'SCRIPT_NAME';
-        }else if (isset($_SERVER['REDIRECT_URL']) && strrpos( $_SERVER['REDIRECT_URL'], $ext) === (strlen( $_SERVER['REDIRECT_URL']) -$extlen)) {
+        }else if (isset($_SERVER['REDIRECT_URL'])
+                  && strrpos( $_SERVER['REDIRECT_URL'], $ext) === (strlen( $_SERVER['REDIRECT_URL']) -$extlen)) {
             return 'REDIRECT_URL';
-        }else if (isset($_SERVER['ORIG_SCRIPT_NAME']) && strrpos( $_SERVER['ORIG_SCRIPT_NAME'], $ext) === (strlen( $_SERVER['ORIG_SCRIPT_NAME']) - $extlen)) {
+        }else if (isset($_SERVER['ORIG_SCRIPT_NAME'])
+                  && strrpos( $_SERVER['ORIG_SCRIPT_NAME'], $ext) === (strlen( $_SERVER['ORIG_SCRIPT_NAME']) - $extlen)) {
             return 'ORIG_SCRIPT_NAME';
         }
         throw new Exception('Jelix Error: in config file the parameter urlengine:scriptNameServerVariable is empty and Jelix don\'t find

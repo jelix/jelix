@@ -21,11 +21,17 @@ theme = default
 enableTests = on
 
 [modules]
-jelix_tests.status = 3
-testapp.status = 3
-testurls.status = 3
-junittests.status = 3
-jWSDL.status = 3
+jelix_tests.access = 2
+testapp.access = 2
+testurls.access = 2
+junittests.access = 2
+jWSDL.access = 2
+
+jelix_tests.installed = 1
+testapp.installed = 1
+testurls.installed = 1
+junittests.installed = 1
+jWSDL.installed = 1
 
 [coordplugins]
 

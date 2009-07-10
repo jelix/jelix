@@ -117,7 +117,8 @@ class createmoduleCommand extends JelixScriptCommand {
         }
         
         $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
-        $ini->setValue($module.'.status', 3 , 'modules');
+        $ini->setValue($module.'.installed', 1 , 'modules');
+        $ini->setValue($module.'.access', 2 , 'modules');
         $ini->setValue($module.'.version', $initialVersion , 'modules');
         $ini->save();
     }

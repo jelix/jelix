@@ -61,11 +61,20 @@ class jInstallerModule extends jInstallerBase {
             return;
         }
         
-        // now we order the list of file, and removing the useless files
+        // now we order the list of file
+        sort($fileList, array($this, 'sortFileList'));
         
-        
+        foreach($fileList as $fileInfo) {
+            if ($this->compareVersion($this->installedVersion, $fileInfo[1]))
+                continue;
+            include($p.$fileInfo[0]);
+            $this->updateVersion($fileInfo[1]);
+        }
     }
-    
+
+    function sortFileList($fileA, $fileB) {
+        return $this->compareVersion($fileA[1], $fileB[1]);
+    }
     
     
     

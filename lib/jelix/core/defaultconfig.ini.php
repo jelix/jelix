@@ -23,13 +23,16 @@ use_error_handler = on
 enableOldActionSelector =
 
 [modules]
-jelix.status = 3
-jacldb.status = 0
-
-; syntax is
-; modulename.status = x
-; where x : 1 = installed, 2 = activated, 3 = public access
+; modulename.access = x   where x : 0= unused/forbidden, 1 = private access, 2 = public access
 ; modulename.version = number of installed version
+; modulename.installed = 0/1 module not installed/installed
+
+jelix.installed = 1
+jelix.access = 3
+
+; jacldb is deprecated. keep it uninstall
+jacldb.access = 0
+jacldb.installed = 0
 
 
 [coordplugins]

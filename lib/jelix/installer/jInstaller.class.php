@@ -18,12 +18,15 @@ class jInstaller {
     const INSTALL_ERROR_MISSING_DEPENDENCIES = 1;
     const INSTALL_ERROR_CIRCULAR_DEPENDENCY = 2;
 
+    static public $iniFile = null;
+
     static protected $config = null;
     static protected $modules = array();
 
     static function init() {
         if (!self::$config) {
             self::$config = jConfigCompiler::read('defaultconfig.ini.php', true);
+            self::$iniFile = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
             self::$modules = array();
             foreach($config->_allModulesPathList as $name=>$path) {
                 $status = $config->modules[$name.'.status'];
@@ -42,17 +45,6 @@ class jInstaller {
         else
             return null;
     }
-
-
-
-    /**
-     * @return jInstallerApp
-     */
-    static function getApplication() {
-        
-    }
-
-
 
     /**
      * install the given modules and plugins
@@ -106,9 +98,7 @@ class jInstaller {
         $component->install();
         
         unset(self::$_installingComponents[$component->name]);
-
     }
-    
 
     /**
      * uninstall the given modules and plugins, by checking dependencies.
@@ -188,5 +178,45 @@ class jInstaller {
         // if the install fails, the new directories of modules and plugins
         // should be deleted.
     }
+
+
+    /**
+     * import a sql script into the given profile.
+     *
+     * The name of the script should be store in install/sql/$name.databasetype.sql
+     * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
+     * 
+     * @param string $name the name of the script, without suffixes
+     */
+    public function execSQLScript($name, $profile='') {
+        $tools = jDb::getTools($profile);
+        $p = jDb::getProfile ($profile);
+        $driver = $p['driver'];
+        if($driver == 'pdo'){
+            preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
+            $driver = $m[1];
+        }
+        $tools->execSQLScript($this->path.'install/sql/'.$name.'.'.$driver.'.sql');
+    }
+
+    /**
+     * @param string $sourcePath
+     * @param string $targetPath
+     */
+    static function copyDirectoryContent($sourcePath, $targetPath) {
+        jFile::createDir($targetPath);
+        $dir = new DirectoryIterator($sourcePath);
+        foreach ($dir as $dirContent) {
+            if ($dirContent->isFile()) {
+                copy($dirContent->getPathName(), $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath())));
+            } else {
+                if (!$dirContent->isDot() && $dirContent->isDir()) {
+                    $newTarget = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
+                    $this->copyDirectoryContent($dirContent->getPathName(),$newTarget );
+                }
+            }
+        }
+    }
+
 
 }

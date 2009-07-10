@@ -78,12 +78,18 @@ class initadminCommand extends JelixScriptCommand {
         }
         $inifile->setValue('driver','db','acl2');
         
-        $inifile->setValue('master_admin.status', '3', 'modules');
-        $inifile->setValue('jauth.status', '3', 'modules');
-        $inifile->setValue('jacl2db.status', '2', 'modules');
-        $inifile->setValue('jacldb.status', '0', 'modules');
-        $inifile->setValue('junittests.status', '0', 'modules');
-        $inifile->setValue('jWSDL.status', '0', 'modules');
+        $inifile->setValue('master_admin.installed', '1', 'modules');
+        $inifile->setValue('master_admin.access', '2', 'modules');
+        $inifile->setValue('jauth.installed', '1', 'modules');
+        $inifile->setValue('jauth.access', '2', 'modules');
+        $inifile->setValue('jacl2db.installed', '1', 'modules');
+        $inifile->setValue('jacl2db.access', '1', 'modules');
+        $inifile->setValue('jacldb.installed', '0', 'modules');
+        $inifile->setValue('jacldb.access', '0', 'modules');
+        $inifile->setValue('junittests.installed', '0', 'modules');
+        $inifile->setValue('junittests.access', '0', 'modules');
+        $inifile->setValue('jWSDL.installed', '0', 'modules');
+        $inifile->setValue('jWSDL.access', '0', 'modules');
         
         $urlconf = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints', null, true);
         if($urlconf === null || $urlconf == '') {
@@ -157,10 +163,12 @@ class initadminCommand extends JelixScriptCommand {
             else {
                 echo "Tables and datas for jAuth.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.\n";
             }
-            $inifile->setValue('jauthdb_admin.status', '3', 'modules');
+            $inifile->setValue('jauthdb_admin.installed', '1', 'modules');
+            $inifile->setValue('jauthdb_admin.access', '2', 'modules');
         }
         else {
-            $inifile->setValue('jauthdb_admin.status', '0', 'modules');
+            $inifile->setValue('jauthdb_admin.installed', '0', 'modules');
+            $inifile->setValue('jauthdb_admin.access', '0', 'modules');
         }
 
         if (!$this->getOption('-noacl2db')) {
@@ -238,10 +246,12 @@ class initadminCommand extends JelixScriptCommand {
                     echo "Tables and datas for jAcl2.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.\n";
                 }
             }
-            $inifile->setValue('jacl2db_admin.status', '3', 'modules');
+            $inifile->setValue('jacl2db_admin.installed', '1', 'modules');
+            $inifile->setValue('jacl2db_admin.access', '2', 'modules');
         }
         else {
-            $inifile->setValue('jacl2db_admin.status', '0', 'modules');
+            $inifile->setValue('jacl2db_admin.installed', '0', 'modules');
+            $inifile->setValue('jacl2db_admin.access', '0', 'modules');
         }
 
         $authini->save();

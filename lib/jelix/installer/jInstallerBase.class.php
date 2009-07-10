@@ -43,6 +43,9 @@ abstract class jInstallerBase {
     protected $rootName = '';
     protected $identityFile = '';
     
+    protected $xmlDescriptor = null;
+    
+    
     /**
      * code error of the installation
      */
@@ -108,48 +111,25 @@ abstract class jInstallerBase {
      */
     abstract function deactivate();
 
-    /**
-     * import a sql script into the given profile.
-     *
-     * The name of the script should be store in install/sql/$name.databasetype.sql
-     * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
-     * 
-     * @param string $name the name of the script, without suffixes
-     */
-    public function execSQLScript($name, $profile='') {
-        $tools = jDb::getTools($profile);
-        $p = jDb::getProfile ($profile);
-        $driver = $p['driver'];
-        if($driver == 'pdo'){
-            preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
-            $driver = $m[1];
-        }
-        $tools->execSQLScript($this->path.'install/sql/'.$name.'.'.$driver.'.sql');
-    }
 
-    /**
-     * @param string $sourcePath
-     * @param string $targetPath
-     */
-    static function copyDirectoryContent($sourcePath, $targetPath) {
-        jFile::createDir($targetPath);
-        $dir = new DirectoryIterator($sourcePath);
-        foreach ($dir as $dirContent) {
-            if ($dirContent->isFile()) {
-                copy($dirContent->getPathName(), $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath())));
-            } else {
-                if (!$dirContent->isDot() && $dirContent->isDir()) {
-                    $newTarget = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
-                    $this->copyDirectoryContent($dirContent->getPathName(),$newTarget );
-                }
-            }
-        }
-    }
-    
-    
     public function init () {
         $this->readIdentity();
     }
+    
+    protected function updateVersion($newVersion) {
+        $this->installedVersion = $newVersion;
+
+        if ($this->compareVersion($newVersion, $this->sourceVersion) > 0) {
+            $info = $this->xmlDescriptor->documentElement->getElementsByTagName('info')->item(0);
+            $version = $info->getElementsByTagName('version')->item(0);
+            $version->firstChild = $this->xmlDescriptor->createTextNode($newVersion);
+            $this->xmlDescriptor->save($this->path.$this->identityFile);
+        }
+
+        jInstaller::$iniFile->setValue($this->name.'.version', $newVersion, 'modules');
+        jInstaller::$iniFile->save();
+    }
+    
     
     protected $identityReaded = false;
     
@@ -157,17 +137,20 @@ abstract class jInstallerBase {
         if ($this->identityReaded)
             return;
         $this->identityReaded = true;
-        $doc = new DOMDocument();
+        $this->xmlDescriptor = new DOMDocument();
 
-        if(!$doc->load($this->path.$this->identityFile)){
+        if(!$this->xmlDescriptor->load($this->path.$this->identityFile)){
             throw new jException('jelix~install.invalid.xml.file',array($this->path.$this->identityFile));
         }
         
-        // TODO, read <info>
+        // TODO : verifier avec le schema relaxng
+        
+        
+        $root = $this->xmlDescriptor->documentElement;
 
-        if ($doc->documentElement->namespaceURI == $this->namespace) {
-            $xml = simplexml_import_dom($doc);
+        if ($root->namespaceURI == $this->namespace) {
             
+            $xml = simplexml_import_dom($this->xmlDescriptor);
             $this->sourceVersion = (string) $xml->info[0]->version[0];
             
             $this->readDependencies($xml);
@@ -234,13 +217,13 @@ abstract class jInstallerBase {
     }
     
     protected function compareVersion($version1, $version2) {
-jLog::log("compare  $version1 vs $version2");
+
         if ($version1 == $version2)
             return 0;
-        
+
         $v1 = explode('.', $version1);
         $v2 = explode('.', $version2);
-        
+
         if (count($v1) > count($v2) ) {
             $reverse = true;
             $v = $v1;
@@ -253,23 +236,15 @@ jLog::log("compare  $version1 vs $version2");
         $r = '/^([0-9]+)([a-zA-Z]*|pre|-?dev)([0-9]*)(pre|-?dev)?$/';
 
         foreach ($v1 as $k=>$v) {
-jLog::log("n1=$v  n2=".$v2[$k]);
-            
+
             if ($v == $v2[$k])
                 continue;
 
             $pm = preg_match($r, $v, $m1);
             $pm2 = preg_match($r, $v2[$k], $m2);
-jLog::log("   pm=$pm  pm2=$pm2");
 
             if ($pm && $pm2) {
-jLog::dump($m1);
-jLog::dump($m2);
-
-//jLog::log("");
-                
                 if ($m1[1] != $m2[1]) {
-jLog::dump("   first numbers not equals");
                     if ($reverse) {
                         return ($m1[1] < $m2[1] ? 1: -1);
                     }
@@ -279,8 +254,6 @@ jLog::dump("   first numbers not equals");
 
                 $this->normalizeVersionNumber($m1);
                 $this->normalizeVersionNumber($m2);
-jLog::dump($m1, "after normalize");
-jLog::dump($m2, "after normalize");
                 if ($m1[2] != $m2[2]) {
                     if ($reverse) {
                         return ($m1[2] < $m2[2] ? 1: -1);
@@ -310,11 +283,11 @@ jLog::dump($m2, "after normalize");
                 }
             }
         }
-        
+
         if (count($v1) != count($v2) ) {
             return ($reverse?1:-1);
         }
-        
+
         return -5;
     }
     
@@ -332,7 +305,6 @@ jLog::dump($m2, "after normalize");
             if ($n[4] == 'pre' || $n[4] == '-dev' ) $n[4] = 'dev';
         }
 
-        
         if ($n[2] == 'a') $n[2] = 'alpha';
         elseif($n[2] == 'b') $n[2] = 'beta';
         elseif($n[2] == '') $n[2] = 'zzz';
