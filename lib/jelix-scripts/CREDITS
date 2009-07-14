@@ -6,6 +6,9 @@ By alphabetic order on the name
 Geekbay
   - little improvements (#879)
 
+Romain Bisse (RomainB)
+  - createclassfromdao command (#870)
+
 Patrick Dos-Santos
   - option "-createlocales" for createform and createdaocrud creates the french and english locale files (#848)
   

@@ -110,6 +110,7 @@ cd lib/jelix-scripts/commands
   createapp.cmd.php
   createctrl.cmd.php
   createdao.cmd.php
+  createclassfromdao.cmd.php
   createdaocrud.cmd.php
   createentrypoint.cmd.php
 * createform.cmd.php
@@ -128,6 +129,7 @@ cd lib/jelix-scripts/templates
   htaccess_deny
   htaccess_allow
 cd lib/jelix-scripts/templates/module/
+  classfromdao.class.tpl
   main.tpl.tpl
   module.xml.tpl
   dao.xml.tpl
