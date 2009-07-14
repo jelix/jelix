@@ -66,7 +66,7 @@ class createmoduleCommand extends JelixScriptCommand {
         $param['default_id'] = $module.JELIXS_INFO_DEFAULT_IDSUFFIX;
         $param['version'] = $initialVersion;
 
-        $this->createFile($path.'module.xml','module.xml.tpl',$param);
+        $this->createFile($path.'module.xml','module/module.xml.tpl',$param);
 
         if(!$this->getOption('-nosubdir')){
             $this->createDir($path.'classes/');

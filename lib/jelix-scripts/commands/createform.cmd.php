@@ -64,7 +64,7 @@ class createformCommand extends JelixScriptCommand {
         
         
         if(($dao = $this->getParam('dao')) === null) {
-            $this->createFile($filename,'form.xml.tpl', array('content'=>'<!-- add control declaration here -->'.$submit));
+            $this->createFile($filename,'module/form.xml.tpl', array('content'=>'<!-- add control declaration here -->'.$submit));
             return;
         }
         global $gJConfig;
@@ -168,13 +168,13 @@ class createformCommand extends JelixScriptCommand {
         if ($this->getOption('-createlocales')) {
             $locale_content .= "form.ok=OK\n";
             $submit="\n\n<submit ref=\"_submit\">\n\t<label locale='".$locale_base."ok' />\n</submit>";
-            $this->createFile($locale_filename_fr, 'locales.tpl', array('content'=>$locale_content));
-            $this->createFile($locale_filename_en, 'locales.tpl', array('content'=>$locale_content));
+            $this->createFile($locale_filename_fr, 'module/locales.tpl', array('content'=>$locale_content));
+            $this->createFile($locale_filename_en, 'module/locales.tpl', array('content'=>$locale_content));
         } else {
             $submit="\n\n<submit ref=\"_submit\">\n\t<label>ok</label>\n</submit>";
         }
         
-        $this->createFile($filename,'form.xml.tpl', array('content'=>$content.$submit));
+        $this->createFile($filename,'module/form.xml.tpl', array('content'=>$content.$submit));
     }
 }
 

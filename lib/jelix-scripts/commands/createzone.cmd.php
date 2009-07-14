@@ -53,12 +53,12 @@ class createzoneCommand extends JelixScriptCommand {
           }else{
              $param['template'] = strtolower($this->_parameters['name']);
           }
-          $this->createFile($path.'templates/'.$param['template'].'.tpl','template.tpl');
+          $this->createFile($path.'templates/'.$param['template'].'.tpl','module/template.tpl');
        }else{
           $param['template'] = '';
        }
 
-       $this->createFile($filename,'zone.tpl',$param);
+       $this->createFile($filename,'module/zone.tpl',$param);
     }
 }
 

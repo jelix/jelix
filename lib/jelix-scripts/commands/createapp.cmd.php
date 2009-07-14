@@ -135,7 +135,7 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php','var/config/dbprofils.ini.php.tpl',$param);
         $this->createFile(JELIX_APP_CONFIG_PATH.'cache.ini.php','var/config/cache.ini.php.tpl',$param);
         $this->createFile(JELIX_APP_CONFIG_PATH.'index/config.ini.php','var/config/index/config.ini.php.tpl',$param);
-        $this->createFile(JELIX_APP_PATH.'responses/myHtmlResponse.class.php','myHtmlResponse.class.php.tpl',$param);
+        $this->createFile(JELIX_APP_PATH.'responses/myHtmlResponse.class.php','module/myHtmlResponse.class.php.tpl',$param);
         $this->createFile(JELIX_APP_PATH.'application.init.php','application.init.php.tpl',$param);
     
         $param['rp_temp_app'] = $param['rp_temp'];
@@ -156,7 +156,7 @@ class createappCommand extends JelixScriptCommand {
                 $cmd = jxs_load_command('createmodule');
                 $cmd->init(array('-addinstallzone'=>true),array('module'=>$param['modulename']));
                 $cmd->run();
-                $this->createFile(JELIX_APP_PATH.'modules/'.$param['modulename'].'/templates/main.tpl', 'main.tpl.tpl', $param);
+                $this->createFile(JELIX_APP_PATH.'modules/'.$param['modulename'].'/templates/main.tpl', 'module/main.tpl.tpl', $param);
             } catch (Exception $e) {
                 $moduleok = false;
                 echo "The module has not been created because of this error: ".$e->getMessage()."\nHowever the application has been created\n";

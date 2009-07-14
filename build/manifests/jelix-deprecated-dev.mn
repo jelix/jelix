@@ -9,4 +9,18 @@ cd lib/jelix-scripts/
 
 rmd lib/jelix-scripts/modules/beta_migrating
 
+cd lib/jelix-scripts/templates
+  main.tpl.tpl
+  myHtmlResponse.class.php.tpl
+  module.xml.tpl
+  dao.xml.tpl
+  form.xml.tpl
+  dao_empty.xml.tpl
+  controller.tpl
+  controller.newapp.tpl
+  controller.cmdline.tpl
+  controller.daocrud.tpl
+  template.tpl
+  zone.tpl
+  locales.tpl
 

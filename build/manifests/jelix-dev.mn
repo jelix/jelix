@@ -122,8 +122,13 @@ cd lib/jelix-scripts/includes
   command.class.php
   utils.lib.php
 cd lib/jelix-scripts/templates
+  project.xml.tpl
+  application.init.php.tpl
+  jelix-scripts.init.php.tpl
+  htaccess_deny
+  htaccess_allow
+cd lib/jelix-scripts/templates/module/
   main.tpl.tpl
-  myHtmlResponse.class.php.tpl
   module.xml.tpl
   dao.xml.tpl
   form.xml.tpl
@@ -134,15 +139,11 @@ cd lib/jelix-scripts/templates
   controller.daocrud.tpl
   template.tpl
   zone.tpl
-  project.xml.tpl
-  application.init.php.tpl
-  jelix-scripts.init.php.tpl
-  htaccess_deny
-  htaccess_allow
   locales.tpl
 cd lib/jelix-scripts/templates/responses/
   adminHtmlResponse.class.php.tpl
   adminLoginHtmlResponse.class.php.tpl
+  myHtmlResponse.class.php.tpl
 cd lib/jelix-scripts/templates/www
   xmlrpc.php.tpl
   index.php.tpl

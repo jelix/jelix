@@ -80,7 +80,7 @@ class createdaocrudCommand extends JelixScriptCommand {
                 'table'=>$table,
                 'profile'=>$profile);
         
-        $this->createFile($path.'controllers/'.$ctrlname.'.classic.php','controller.daocrud.tpl',$params);
+        $this->createFile($path.'controllers/'.$ctrlname.'.classic.php','module/controller.daocrud.tpl',$params);
     }
 }
 
