@@ -4,7 +4,8 @@
 * @subpackage utils
 * @author      Bastien Jaillot
 * @contributor Dominique Papin, Lepeltier kévin (the author of the original plugin)
-* @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot
+* @contributor geekbay
+* @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -125,7 +126,7 @@ class jImageModifier {
         // apply transforms if necessary (serve directly or from cache otherwise)
         $pendingTransforms = ($chaine !== $src);
         if( $pendingTransforms && is_file($srcPath) && !is_file($cachePath) ) {
-                self::transformAndCache($src, $cacheName, $params);
+            self::transformAndCache($src, $cacheName, $params);
         }
 
 
@@ -163,6 +164,7 @@ class jImageModifier {
 
         global $gJConfig;
         $srcUri = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'].$src;
+        $srcFs = JELIX_APP_WWW_PATH.$src;
 
         $path_parts = pathinfo($srcUri);
         $mimeType = $mimes[strtolower($path_parts['extension'])];
@@ -170,12 +172,12 @@ class jImageModifier {
 
         // Creating an image
         switch ( $mimeType ) {
-            case 'image/gif'             : $image = imagecreatefromgif($srcUri); break;
-            case 'image/jpeg'            : $image = imagecreatefromjpeg($srcUri); break;
-            case 'image/png'             : $image = imagecreatefrompng($srcUri); break;
-            case 'image/vnd.wap.wbmp'    : $image = imagecreatefromwbmp($srcUri); break;
-            case 'image/image/x-xbitmap' : $image = imagecreatefromxbm($srcUri); break;
-            case 'image/x-xpixmap'       : $image = imagecreatefromxpm($srcUri); break;
+            case 'image/gif'             : $image = imagecreatefromgif($srcFs); break;
+            case 'image/jpeg'            : $image = imagecreatefromjpeg($srcFs); break;
+            case 'image/png'             : $image = imagecreatefrompng($srcFs); break;
+            case 'image/vnd.wap.wbmp'    : $image = imagecreatefromwbmp($srcFs); break;
+            case 'image/image/x-xbitmap' : $image = imagecreatefromxbm($srcFs); break;
+            case 'image/x-xpixmap'       : $image = imagecreatefromxpm($srcFs); break;
             default                      : return ;
         }
 
