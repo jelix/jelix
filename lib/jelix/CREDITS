@@ -182,6 +182,9 @@ Florian Hatat (aka flh)
 Emmanuel Hesry (aka m@noo)
  - improvement on jDateTime plugin for full date format (#796)
 
+Didier Huguet (aka isepman)
+ - tpl plugin: modifier truncatehtml (#760)
+
 Julien Jacottet
  - tpl plugin link_to_remote (#30)
 

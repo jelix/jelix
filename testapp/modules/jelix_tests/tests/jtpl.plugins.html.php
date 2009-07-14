@@ -44,6 +44,71 @@ class UTjtplplugins extends jUnitTestCase {
         ),
    );
 
+	protected $truncateHTMLAssigns = array(
+		0=>array(
+			'33',													//Where do we cut?
+			'<p>Lorem &nbsp; ipsum <strong>sit...</strong></p>',	//What are we expecting to see
+			false													//Do we add other etcPattern
+		),
+		1=>array(													//Cutting in the middle of a tag
+			'27',
+			'<p>Lorem &nbsp; ipsum...</p>',
+			false
+		),
+		2=>array(
+			'47',													//Cutting in the middle of an auto closing tag
+			'<p>Lorem &nbsp; ipsum <strong>sit dolor...</strong></p>',
+			false
+		),
+		3=>array(
+			'53',													//Including auto closing tags and not try to close it
+			'<p>Lorem &nbsp; ipsum <strong>sit dolor<br /><br />...</strong></p>',
+			false
+		),
+		4=>array(
+			'50',													//Testing cutting in midlle of an image
+			'<p>Lorem &nbsp; ipsum <strong>sit dolor<br />...</strong></p>',
+			false														
+		),
+		5=>array(
+			'31',													//Testing etc pattern
+			'<p>Lorem &nbsp; ipsum<strong>This is not the entire text</strong></p>',			
+			'<strong>This is not the entire text</strong>'								
+		),
+		6=>array(
+			'15',													//Trying to break an XML entity
+			'<p>Lorem &nbsp;...</p>',
+			false
+		),
+		7=>array(
+			'14',													//Trying to break an XML entity
+			'<p>Lorem...</p>',
+			false
+		),
+        8=>array(
+             '120',													//breaking in the middle of a comment
+             '<p>Lorem &nbsp; ipsum <strong>sit dolor<br /><br /> &nbsp; <img src="#longReference" alt="image" title="image" />...</strong></p>',
+             false        		
+        ),
+        9=>array(
+		    '0',                                                    //too short cut
+		    '',
+		    false
+        ),															//too long get the same, without comments;
+        10=>array(
+            '1000',
+            '<p>Lorem &nbsp; ipsum <strong>sit dolor<br /><br /> &nbsp; <img src="#longReference" alt="image" title="image" /><div class="emphase">youhou ca marche</div></strong></p>',
+            false
+        ),
+        11=>array(
+        	'150',
+        	'<p>Lorem &nbsp; ipsum <strong>sit dolor<br /><br /> &nbsp; <img src="#longReference" alt="image" title="image" /><div class="emphase">youhou ca...</div></strong></p>',
+        	false        
+        )
+		
+	);
+	
+
     function testPlugin() {
 
         foreach($this->templates as $k=>$t) {
@@ -66,6 +131,21 @@ class UTjtplplugins extends jUnitTestCase {
 
         }
     }
+
+
+
+	function testTruncateHTML(){
+		$sentence = '<p>Lorem &nbsp; ipsum <strong>sit dolor<br /><br /> &nbsp; <img src="#longReference" alt="image" title="image" /><!-- This is a comment, it should not be included neither evaluated in the number of word we use for truncate --><div class="emphase">youhou ca marche</div></strong></p>';
+		foreach ( $this->truncateHTMLAssigns as $key=>$caracs ) {
+       		$tpl = new jTpl();
+       		$tpl->assign('cut',$caracs[0]);
+       		$tpl->assign('etc',$caracs[2] ? $caracs[2] : '...');
+       		$tpl->assign('sentence',$sentence);
+       		$this->assertEqualOrDiff('test => '.$key .'(cut '.$caracs[0].' ) :'.$tpl->fetch('test_truncate_html'),'test => '.$key .'(cut '.$caracs[0].' ) : '.$caracs[1],'testplugin['.$key.'], %s');
+		}
+		
+	}
+
 
     function testPageLinks() {
         $tpl = new jTpl();

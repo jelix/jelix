@@ -134,6 +134,7 @@ cd testapp/modules/jelix_tests/templates
   test_plugin_counter.tpl
   test_plugin_jurl.tpl
   test_plugin_pagelinks.tpl
+  test_truncate_html.tpl
 cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php
   jstests.classic.php

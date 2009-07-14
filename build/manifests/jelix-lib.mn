@@ -394,6 +394,7 @@ cd lib/jelix/plugins/tpl/common
   modifier.sprintf.php
   modifier.strip.php
   modifier.truncate.php
+  modifier.truncatehtml.php
   modifier.wiki.php
   modifier.wordwrap.php
 

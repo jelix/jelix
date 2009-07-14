@@ -1,0 +1,1 @@
+ {$sentence|truncatehtml:$cut,$etc}
