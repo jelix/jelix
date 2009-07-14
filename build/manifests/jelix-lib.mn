@@ -232,6 +232,8 @@ cd lib/jelix/installer
   jInstaller.class.php
   jInstallerApp.class.php
   jInstallerBase.class.php
+  jInstallerComponentBase.class.php
+  jInstallerMessageProvider.class.php
   jInstallerModule.class.php
   jInstallerPlugin.class.php
 

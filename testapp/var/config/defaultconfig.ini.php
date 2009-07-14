@@ -27,11 +27,6 @@ testurls.access = 2
 junittests.access = 2
 jWSDL.access = 2
 
-jelix_tests.installed = 1
-testapp.installed = 1
-testurls.installed = 1
-junittests.installed = 1
-jWSDL.installed = 1
 
 [coordplugins]
 

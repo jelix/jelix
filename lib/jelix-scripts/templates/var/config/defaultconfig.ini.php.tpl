@@ -19,14 +19,9 @@ modulesPath = lib:jelix-modules/,app:modules/
 ; 0 if installed but not used (database schema is ok for example)
 ; 2 if accessible by other modules (other modules can use it, but it is not accessible directly through the web)
 ; 3 if public (accessible through the web)
-; modulename.version = installed version of the module
-; modulename.installed =  0/1 module not installed/installed 
-
 
 ; jacldb is deprecated. keep it uninstall
 jacldb.access = 0
-jacldb.installed = 0
-
 
 [coordplugins]
 ;name = file_ini_name or 1

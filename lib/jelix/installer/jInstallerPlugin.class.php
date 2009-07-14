@@ -17,7 +17,7 @@
 * @experimental
 * @since 1.1
 */
-class jInstallerPlugin extends jInstallerBase {
+class jInstallerPlugin extends jInstallerComponentBase {
 
 
 }

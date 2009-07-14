@@ -1,3 +1,17 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
+    <info id="jelix_tests@testapp.jelix.org" name="jelix_tests">
+#expand        <version>__VERSION__</version>
+        <label>Jelix tests</label>
+        <description>unit tests for jelix</description>
+        <license URL=""></license>
+        <copyright>Copyright 2006-2009 jelix.org</copyright>
+        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
+        <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
+        <homepageURL>http://jelix.org</homepageURL>
+    </info>
+    <dependencies>
+#expand        <jelix minversion="__VERSION__" maxversion="__VERSION__" />
+#expand        <module name="testurls" minversion="__VERSION__" maxversion="__VERSION__" />
+    </dependencies>
 </module>

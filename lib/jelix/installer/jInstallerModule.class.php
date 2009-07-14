@@ -17,7 +17,7 @@
 * @experimental
 * @since 1.1
 */
-class jInstallerModule extends jInstallerBase {
+class jInstallerModule extends jInstallerComponentBase {
     
     protected $namespace = 'http://jelix.org/ns/module/1.0';
     protected $rootName = 'module';
@@ -32,7 +32,7 @@ class jInstallerModule extends jInstallerBase {
      */
     function install() {
         if (file_exists($this->path.'install/install.php')) {
-            
+            include($this->path.'install/install.php');
         }
     }
     
@@ -75,10 +75,7 @@ class jInstallerModule extends jInstallerBase {
     function sortFileList($fileA, $fileB) {
         return $this->compareVersion($fileA[1], $fileB[1]);
     }
-    
-    
-    
-    
+
     /**
      * uninstall the module, by checking dependencies.
      * @throw jException  if an error occurs during the install.
@@ -91,11 +88,8 @@ class jInstallerModule extends jInstallerBase {
         // * if ok, uninstall the module, by calling the _uninstall.php script      
     }
     
-    function activate() {
+    function activate($accessLevel) {
     }
     
-    function deactivate() {
-        
-    }
 }
 

@@ -155,8 +155,9 @@ cd lib/jelix-scripts/templates/var/config/
   auth.coord.ini.php.tpl
   cache.ini.php.tpl
   dbprofils.ini.php.tpl
-*  defaultconfig.ini.php.tpl
+* defaultconfig.ini.php.tpl
   jacl2.coord.ini.php.tpl
+  installer.ini.php.tpl
 cd lib/jelix-scripts/templates/var/config/index/
   config.ini.php.tpl
 cd lib/jelix-scripts/templates/var/config/jsonrpc/
@@ -190,7 +191,7 @@ cd lib/jelix-www/xul/test/
 
 
 cd lib/jelix-modules/junittests/
-  module.xml
+* module.xml
 cd lib/jelix-modules/junittests/classes
   jhtmlrespreporter.class.php
   jtextrespreporter.class.php
@@ -201,7 +202,6 @@ cd lib/jelix-modules/junittests/controllers
   default.cmdline.php
 cd lib/jelix-modules/junittests/templates
   main.tpl
-
 cd lib/jelix-modules/junittests/install
   application-cli.init.php
 cd lib/jelix-modules/junittests/install/www/tests/

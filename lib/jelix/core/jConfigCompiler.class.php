@@ -239,6 +239,16 @@ class jConfigCompiler {
      * @return array list of full path
      */
     static protected function _loadModuleInfo($config, $allModuleInfo) {
+        
+        if (!file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php')) {
+            if ($allModuleInfo)
+                $installation = array ('modules'=>array());
+            else
+                die("installer.ini.php doesn't exist! You should install your application..\n");
+        }
+        else
+            $installation = parse_ini_file(JELIX_APP_CONFIG_PATH.'installer.ini.php',true);
+
         $list = preg_split('/ *, */',$config->modulesPath);
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $result=array();
@@ -257,23 +267,27 @@ class jConfigCompiler {
                     if ($f{0} != '.' && is_dir($p.$f)) {
                         
                         if($f == 'jelix') {
-                            $config->modules['jelix.installed'] = 1;
+                            $installation['modules']['jelix.installed'] = 1;
                             $config->modules['jelix.access'] = 2;
                         }
                         else {
-                            if (!isset($config->modules[$f.'.installed']))
-                                $config->modules[$f.'.installed'] = 0;
+                            if (!isset($installation['modules'][$f.'.installed']))
+                                $installation['modules'][$f.'.installed'] = 0;
                             if (!isset($config->modules[$f.'.access'])
-                                || !$config->modules[$f.'.installed'])
+                                || !$installation['modules'][$f.'.installed'])
                                 $config->modules[$f.'.access'] = 0;
                         }
 
                         if ($allModuleInfo) {
-                            if (!isset($config->modules[$f.'.version']))
-                                $config->modules[$f.'.version'] = '';
+                            if (!isset($installation['modules'][$f.'.version']))
+                                $installation['modules'][$f.'.version'] = '';
     
-                            if (!isset($config->modules[$f.'.dataversion']))
-                                $config->modules[$f.'.dataversion'] = '';
+                            if (!isset($installation['modules'][$f.'.dataversion']))
+                                $installation['modules'][$f.'.dataversion'] = '';
+                                
+                            $config->modules[$f.'.version'] = $installation['modules'][$f.'.version'];
+                            $config->modules[$f.'.dataversion'] = $installation['modules'][$f.'.dataversion'];
+                            $config->modules[$f.'.installed'] = $installation['modules'][$f.'.installed'];
 
                             $config->_allModulesPathList[$f]=$p.$f.'/';
                         }

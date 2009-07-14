@@ -115,12 +115,15 @@ class createmoduleCommand extends JelixScriptCommand {
                 echo "Error during the modification of an ini file: ".$e->getMessage()."\n";
             }
         }
-        
+
         $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
-        $ini->setValue($module.'.installed', 1 , 'modules');
         $ini->setValue($module.'.access', 2 , 'modules');
-        $ini->setValue($module.'.version', $initialVersion , 'modules');
         $ini->save();
+
+        $install = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
+        $install->setValue($module.'.installed', 1 , 'modules');
+        $install->setValue($module.'.version', $initialVersion , 'modules');
+        $install->save();
     }
 }
 

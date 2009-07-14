@@ -62,6 +62,9 @@ class initadminCommand extends JelixScriptCommand {
                 echo "The entrypoint has not been created because of this error: ".$e->getMessage().". No other files have been created.\n";
             }
         }
+        
+        $installConfig = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
+        
         $inifile = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',
                                           JELIX_APP_CONFIG_PATH.$entrypoint.'/config.ini.php');
 
@@ -78,17 +81,17 @@ class initadminCommand extends JelixScriptCommand {
         }
         $inifile->setValue('driver','db','acl2');
         
-        $inifile->setValue('master_admin.installed', '1', 'modules');
+        $installConfig->setValue('master_admin.installed', '1', 'modules');
         $inifile->setValue('master_admin.access', '2', 'modules');
-        $inifile->setValue('jauth.installed', '1', 'modules');
+        $installConfig->setValue('jauth.installed', '1', 'modules');
         $inifile->setValue('jauth.access', '2', 'modules');
-        $inifile->setValue('jacl2db.installed', '1', 'modules');
+        $installConfig->setValue('jacl2db.installed', '1', 'modules');
         $inifile->setValue('jacl2db.access', '1', 'modules');
-        $inifile->setValue('jacldb.installed', '0', 'modules');
+        $installConfig->setValue('jacldb.installed', '0', 'modules');
         $inifile->setValue('jacldb.access', '0', 'modules');
-        $inifile->setValue('junittests.installed', '0', 'modules');
+        $installConfig->setValue('junittests.installed', '0', 'modules');
         $inifile->setValue('junittests.access', '0', 'modules');
-        $inifile->setValue('jWSDL.installed', '0', 'modules');
+        $installConfig->setValue('jWSDL.installed', '0', 'modules');
         $inifile->setValue('jWSDL.access', '0', 'modules');
         
         $urlconf = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints', null, true);
@@ -163,11 +166,11 @@ class initadminCommand extends JelixScriptCommand {
             else {
                 echo "Tables and datas for jAuth.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.\n";
             }
-            $inifile->setValue('jauthdb_admin.installed', '1', 'modules');
+            $installConfig->setValue('jauthdb_admin.installed', '1', 'modules');
             $inifile->setValue('jauthdb_admin.access', '2', 'modules');
         }
         else {
-            $inifile->setValue('jauthdb_admin.installed', '0', 'modules');
+            $installConfig->setValue('jauthdb_admin.installed', '0', 'modules');
             $inifile->setValue('jauthdb_admin.access', '0', 'modules');
         }
 
@@ -246,14 +249,15 @@ class initadminCommand extends JelixScriptCommand {
                     echo "Tables and datas for jAcl2.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.\n";
                 }
             }
-            $inifile->setValue('jacl2db_admin.installed', '1', 'modules');
+            $installConfig->setValue('jacl2db_admin.installed', '1', 'modules');
             $inifile->setValue('jacl2db_admin.access', '2', 'modules');
         }
         else {
-            $inifile->setValue('jacl2db_admin.installed', '0', 'modules');
+            $installConfig->setValue('jacl2db_admin.installed', '0', 'modules');
             $inifile->setValue('jacl2db_admin.access', '0', 'modules');
         }
-
+        
+        $installConfig->save();
         $authini->save();
         $inifile->save();
     }

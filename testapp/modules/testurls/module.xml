@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
-    <info id="testapp@testapp.jelix.org" name="testapp">
+    <info id="testurls@testapp.jelix.org" name="testurls">
 #expand        <version>__VERSION__</version>
-        <label>testapp</label>
-        <description>Test application</description>
+        <label>testurls</label>
+        <description>Test module for urls</description>
         <license URL=""></license>
         <copyright>Copyright 2006-2009 jelix.org</copyright>
         <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
@@ -11,7 +11,6 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="__VERSION__" maxversion="__VERSION__" />
-#expand        <module name="jelix_tests" minversion="__VERSION__" maxversion="__VERSION__" />
+#expand    <jelix minversion="__VERSION__" maxversion="__VERSION__" />
     </dependencies>
 </module>

@@ -10,7 +10,7 @@
 * @since 1.2
 */
 
-class testInstallerBase extends jInstallerBase {
+class testInstallerBase extends jInstallerComponentBase {
     
     function compver($v1, $v2){
         return $this->compareVersion($v1, $v2);
@@ -18,8 +18,7 @@ class testInstallerBase extends jInstallerBase {
 
     function install()   {}
     function uninstall() {}
-    function activate()  {}
-    function deactivate() {}    
+    function activate($access)  {}
 }
 
 
@@ -30,7 +29,7 @@ class UTjinstallermisc extends UnitTestCase {
 
     public function testCompareVersion() {
         
-        $inst = new testInstallerBase('','','','');
+        $inst = new testInstallerBase('','','','','',null);
         
         // 0 = equals
         // -1 : v1 < v2
@@ -68,6 +67,13 @@ class UTjinstallermisc extends UnitTestCase {
         $this->assertEqual(-1, $inst->compver('1.2RC-dev','1.2RC'));
         $this->assertEqual(1, $inst->compver('1.2RC','1.2RC-dev'));
 
+
+        $this->assertEqual(0, $inst->compver('1.1.*','1.1.1'));
+        $this->assertEqual(0, $inst->compver('1.1.2','1.1.*'));
+        $this->assertEqual(0, $inst->compver('1.1.*','1.1'));
+        $this->assertEqual(0, $inst->compver('1.1','1.1.*'));
+        $this->assertEqual(-1, $inst->compver('1.1.*','1.2'));
+        $this->assertEqual(-1, $inst->compver('1.1','1.2.*'));
         
         
     }

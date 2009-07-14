@@ -41,7 +41,7 @@ cd testapp/scripts
     tests.php
 
 cd testapp/modules/testapp
-  module.xml
+*  module.xml
 cd testapp/modules/testapp/locales/en_US
   parameter.ISO-8859-1.properties
 cd testapp/modules/testapp/locales/fr_FR
@@ -83,7 +83,7 @@ cd testapp/modules/testapp/forms
 
 cd testapp/modules/jelix_tests
   events.xml
-  module.xml
+*  module.xml
 cd testapp/modules/jelix_tests/classes
   urlsig.urlhandler.php
   urlsigwiki.urlhandler.php
@@ -205,6 +205,8 @@ cd testapp/modules/jelix_tests/tests/
   utils.jclasses.html_cli.php
   utils.jmailer.html_cli.php
 
+cd testapp/modules/testurls/
+*  module.xml
 cd testapp/modules/testurls/classes/
   urlhandlermodule.urlhandler.php
 cd testapp/modules/testurls/controllers/
