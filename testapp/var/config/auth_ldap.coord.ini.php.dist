@@ -78,7 +78,7 @@ persistant_cookie_path =
 ;------- parameters for the "Db" driver
 [Db]
 ; name of the dao to get user data
-dao = "jauth~jelixuser"
+dao = "jauthdb~jelixuser"
 
 ; profil to use for jDb 
 profil = ""

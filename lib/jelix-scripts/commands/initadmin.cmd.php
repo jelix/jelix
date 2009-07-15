@@ -145,13 +145,13 @@ class initadminCommand extends JelixScriptCommand {
         $profile = $this->getOption('-profile');
 
         if (!$this->getOption('-noauthdb')) {
-            $authini->setValue('dao','jauth~jelixuser', 'Db');
+            $authini->setValue('dao','jauthdb~jelixuser', 'Db');
             $authini->setValue('form','jauthdb_admin~jelixuser', 'Db');
             if ($profile != '')
                 $authini->setValue('profile',$profile, 'Db');
             $tools = jDb::getTools($profile);
             $db = jDb::getConnection($profile);
-            $path = JELIX_LIB_PATH.'core-modules/jelix/install/sql/';
+            $path = JELIX_LIB_PATH.'jelix-modules/jauthdb/install/';
             if(file_exists($path.'install_jauth.schema.'.$db->dbms.'.sql')) {
                 try {
                     $tools->execSQLScript($path.'install_jauth.schema.'.$db->dbms.'.sql');
@@ -166,10 +166,14 @@ class initadminCommand extends JelixScriptCommand {
             else {
                 echo "Tables and datas for jAuth.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.\n";
             }
+            $installConfig->setValue('jauthdb.installed', '1', 'modules');
+            $inifile->setValue('jauthdb.access', '1', 'modules');
             $installConfig->setValue('jauthdb_admin.installed', '1', 'modules');
             $inifile->setValue('jauthdb_admin.access', '2', 'modules');
         }
         else {
+            $installConfig->setValue('jauthdb.installed', '0', 'modules');
+            $inifile->setValue('jauthdb.access', '0', 'modules');
             $installConfig->setValue('jauthdb_admin.installed', '0', 'modules');
             $inifile->setValue('jauthdb_admin.access', '0', 'modules');
         }
@@ -177,7 +181,7 @@ class initadminCommand extends JelixScriptCommand {
         if (!$this->getOption('-noacl2db')) {
             $tools = jDb::getTools($profile);
             $db = jDb::getConnection($profile);
-            $path = JELIX_LIB_PATH.'core-modules/jelix/install/sql/';
+            $path = JELIX_LIB_PATH.'jelix-modules/jacl2db/install/';
                 
             $tables = $tools->getTableList();
             if (in_array('jacl2_rights', $tables)) {
@@ -237,7 +241,7 @@ class initadminCommand extends JelixScriptCommand {
                 ob_end_clean();
             }
             else {
-                if(file_exists($path.'install_jauth.schema.'.$db->dbms.'.sql')) {
+                if(file_exists($path.'install_jacl2.schema.'.$db->dbms.'.sql')) {
                     try {
                         $tools->execSQLScript($path.'install_jacl2.schema.'.$db->dbms.'.sql');
                         $tools->execSQLScript($path.'install_jacl2.data.'.$db->dbms.'.sql');

@@ -8,11 +8,49 @@ cd lib/jelix-modules/jacldb
   events.xml
 cd lib/jelix-modules/jacldb/classes
 !  jacldb.listener.php
+cd lib/jelix-modules/jacldb/daos
+   jaclgroup.dao.xml
+   jaclrights.dao.xml
+   jaclrightvalues.dao.xml
+   jaclrightvaluesgroup.dao.xml
+   jaclrightvaluesandgroup.dao.xml
+   jaclsubject.dao.xml
+   jaclusergroup.dao.xml
+   jaclgroupsofuser.dao.xml
+cd lib/jelix-modules/jacldb/install
+  delete.mysql.sql
+  delete.pgsql.sql
+  install_jacl.schema.mysql.sql
+  install_jacl.schema.pgsql.sql
+  install_jacl.data.mysql.sql
+  install_jacl.data.pgsql.sql
 cd lib/jelix-modules/jacl2db
 * module.xml
   events.xml
 cd lib/jelix-modules/jacl2db/classes
 !  jacl2db.listener.php
+cd lib/jelix-modules/jacl2db/daos
+   jacl2group.dao.xml
+   jacl2rights.dao.xml
+   jacl2subject.dao.xml
+   jacl2usergroup.dao.xml
+   jacl2groupsofuser.dao.xml
+cd lib/jelix-modules/jacl2db/install
+  install_jacl2.schema.mysql.sql
+  install_jacl2.schema.pgsql.sql
+  install_jacl2.data.mysql.sql
+  install_jacl2.data.pgsql.sql
+
+cd lib/jelix-modules/jauthdb
+* module.xml
+cd lib/jelix-modules/jauthdb/daos
+  jelixuser.dao.xml
+cd lib/jelix-modules/jauthdb/install/
+  install_jauth.schema.mysql.sql
+  install_jauth.schema.pgsql.sql
+  install_jauth.data.mysql.sql
+  install_jauth.data.pgsql.sql
+
 cd lib/jelix-modules/jauth
 * module.xml
   events.xml
@@ -21,8 +59,6 @@ cd lib/jelix-modules/jauth/classes
 cd lib/jelix-modules/jauth/controllers
 ! login.classic.php
 ! loginsw.classic.php
-cd lib/jelix-modules/jauth/daos
-  jelixuser.dao.xml
 cd lib/jelix-modules/jauth/install/var/config
   auth.coord.ini.php
   authsw.coord.ini.php

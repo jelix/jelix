@@ -10,8 +10,11 @@ jelix.installed = 1
 jelix_tests.installed = 1
 testapp.installed = 1
 testurls.installed = 1
+
+; for tests
 junittests.installed = 1
 jWSDL.installed = 1
-
-; jacldb is deprecated. keep it uninstall if possible
-jacldb.installed = 0
+jacldb.installed = 1
+jacl2db.installed = 1
+jauthdb.installed = 1
+jauth.installed = 1

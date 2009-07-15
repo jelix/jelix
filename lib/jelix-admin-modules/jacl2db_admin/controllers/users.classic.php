@@ -47,7 +47,7 @@ class usersCtrl extends jController {
 
         if($grpid == -2) {
             //all users
-            $dao = jDao::get('jelix~jacl2groupsofuser',$p);
+            $dao = jDao::get('jacl2db~jacl2groupsofuser',$p);
             $cond = jDao::createConditions();
             $cond->addCondition('grouptype', '=', 2);
             $rs = $dao->findBy($cond,$offset,$listPageSize);
@@ -70,12 +70,12 @@ class usersCtrl extends jController {
             $usersCount = $rs->rowCount();
         } else {
             //in a specific group
-            $dao = jDao::get('jelix~jacl2usergroup',$p);
+            $dao = jDao::get('jacl2db~jacl2usergroup',$p);
             $rs = $dao->getUsersGroupLimit($grpid, $offset, $listPageSize);
             $usersCount = $dao->getUsersGroupCount($grpid);
         }
         $users=array();
-        $dao2 = jDao::get('jelix~jacl2groupsofuser',$p);
+        $dao2 = jDao::get('jacl2db~jacl2groupsofuser',$p);
         foreach($rs as $u){
             $u->groups = array();
             $gl = $dao2->getGroupsUser($u->login);
@@ -124,13 +124,13 @@ class usersCtrl extends jController {
 
         $rights=array();
         $p = jAcl2Db::getProfile();
-        $rs = jDao::get('jelix~jacl2subject',$p)->findAllSubject();
+        $rs = jDao::get('jacl2db~jacl2subject',$p)->findAllSubject();
         foreach($rs as $rec){
             $rights[$rec->id_aclsbj] = $grouprights;
         }
 
         $rightsWithResources = array_fill_keys(array_keys($rights),0);
-        $daorights = jDao::get('jelix~jacl2rights',$p);
+        $daorights = jDao::get('jacl2db~jacl2rights',$p);
         
         $rs = $daorights->getRightsHavingRes($hisgroup->id_aclgrp);
         $hasRightsOnResources = false;
@@ -170,7 +170,7 @@ class usersCtrl extends jController {
         $rep->action = 'jacl2db_admin~users:rights';
         $rep->params=array('user'=>$login);
 
-        $dao = jDao::get('jelix~jacl2groupsofuser',jAcl2Db::getProfile());
+        $dao = jDao::get('jacl2db~jacl2groupsofuser',jAcl2Db::getProfile());
         $grp = $dao->getPrivateGroup($login);
 
         jAcl2DbManager::setRightsOnGroup($grp->id_aclgrp, $rights);
@@ -188,12 +188,12 @@ class usersCtrl extends jController {
         }
 
         $p = jAcl2Db::getProfile();
-        $daogroup = jDao::get('jelix~jacl2group',$p);
+        $daogroup = jDao::get('jacl2db~jacl2group',$p);
 
         $group = $daogroup->getPrivateGroup($user);
 
         $rightsWithResources = array();
-        $daorights = jDao::get('jelix~jacl2rights',$p);
+        $daorights = jDao::get('jacl2db~jacl2rights',$p);
         
         $rs = $daorights->getRightsHavingRes($group->id_aclgrp);
         $hasRightsOnResources = false;
@@ -229,7 +229,7 @@ class usersCtrl extends jController {
         $rep->action = 'jacl2db_admin~users:rightres';
         $rep->params=array('user'=>$login);
 
-        $daogroup = jDao::get('jelix~jacl2group', jAcl2Db::getProfile());
+        $daogroup = jDao::get('jacl2db~jacl2group', jAcl2Db::getProfile());
         $grp = $daogroup->getPrivateGroup($login);
 
         $subjectsToRemove = array();
@@ -240,7 +240,7 @@ class usersCtrl extends jController {
             }
         }
 
-        jDao::get('jelix~jacl2rights', jAcl2Db::getProfile())
+        jDao::get('jacl2db~jacl2rights', jAcl2Db::getProfile())
             ->deleteRightsOnResource($grp->id_aclgrp, $subjectsToRemove);
         jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
         return $rep;

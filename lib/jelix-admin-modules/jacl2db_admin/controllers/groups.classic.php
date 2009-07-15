@@ -47,12 +47,12 @@ class groupsCtrl extends jController {
             $rights=array();
             $p = jAcl2Db::getProfile();
     
-            $rs = jDao::get('jelix~jacl2subject',$p)->findAllSubject();
+            $rs = jDao::get('jacl2db~jacl2subject',$p)->findAllSubject();
             foreach($rs as $rec){
                 $rights[$rec->id_aclsbj] = $grouprights;
             }
     
-            $rs = jDao::get('jelix~jacl2rights',$p)->getRightsByGroups($gid);
+            $rs = jDao::get('jacl2db~jacl2rights',$p)->getRightsByGroups($gid);
             foreach($rs as $rec){
                 $rights[$rec->id_aclsbj][$rec->id_aclgrp] = true;
             }
@@ -76,7 +76,7 @@ class groupsCtrl extends jController {
         $o->name = jLocale::get('jacl2db_admin~acl2.anonymous.group.name');
         $o->grouptype=0;
         
-        $daorights = jDao::get('jelix~jacl2rights',$p);
+        $daorights = jDao::get('jacl2db~jacl2rights',$p);
         $rightsWithResources = array();
         $hasRightsOnResources = false;
 
@@ -107,14 +107,14 @@ class groupsCtrl extends jController {
         }
 
         $rights=array();
-        $rs = jDao::get('jelix~jacl2subject',$p)->findAllSubject();
+        $rs = jDao::get('jacl2db~jacl2subject',$p)->findAllSubject();
         foreach($rs as $rec){
             $rights[$rec->id_aclsbj] = $grouprights;
             if (!isset($rightsWithResources[$rec->id_aclsbj]))
                 $rightsWithResources[$rec->id_aclsbj] = array();
         }
 
-        $rs = jDao::get('jelix~jacl2rights',$p)->getRightsByGroups($gid);
+        $rs = jDao::get('jacl2db~jacl2rights',$p)->getRightsByGroups($gid);
         foreach($rs as $rec){
             $rights[$rec->id_aclsbj][$rec->id_aclgrp] = true;
         }
@@ -151,7 +151,7 @@ class groupsCtrl extends jController {
         }
 
         $p = jAcl2Db::getProfile();
-        $daogroup = jDao::get('jelix~jacl2group',$p);
+        $daogroup = jDao::get('jacl2db~jacl2group',$p);
         if ($groupid > 0) {
             $group = $daogroup->get($groupid);
             if (!$group) {
@@ -164,7 +164,7 @@ class groupsCtrl extends jController {
             $groupname = jLocale::get('jacl2db_admin~acl2.anonymous.group.name');
 
         $rightsWithResources = array();
-        $daorights = jDao::get('jelix~jacl2rights',$p);
+        $daorights = jDao::get('jacl2db~jacl2rights',$p);
         
         $rs = $daorights->getRightsHavingRes($groupid);
         $hasRightsOnResources = false;
@@ -200,7 +200,7 @@ class groupsCtrl extends jController {
         }
 
         $p = jAcl2Db::getProfile();
-        $daogroup = jDao::get('jelix~jacl2group', $p);
+        $daogroup = jDao::get('jacl2db~jacl2group', $p);
         if ($groupid > 0) {
             $group = $daogroup->get($groupid);
             if (!$group) {
@@ -220,7 +220,7 @@ class groupsCtrl extends jController {
             }
         }
 
-        jDao::get('jelix~jacl2rights', jAcl2Db::getProfile())
+        jDao::get('jacl2db~jacl2rights', jAcl2Db::getProfile())
             ->deleteRightsOnResource($groupid, $subjectsToRemove);
         jMessage::add(jLocale::get('jacl2db_admin~acl2.message.group.rights.ok'), 'ok');
         return $rep;

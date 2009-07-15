@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  acl_driver
 * @author      Laurent Jouanneau
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -52,7 +52,7 @@ class dbAclDriver implements jIAclDriver {
         // recupère toutes les valeurs correspondant aux groupes auquel appartient le user,
         //   avec le sujet et ressource indiqué
         $values= array();
-        $dao = jDao::get('jelix~jaclrights', jAclDb::getProfile());
+        $dao = jDao::get('jacldb~jaclrights', jAclDb::getProfile());
         $list = $dao->getAllGroupRights($subject, $groups);
         foreach($list as $right){
             $values [] = $right->value;

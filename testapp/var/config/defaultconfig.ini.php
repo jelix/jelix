@@ -26,6 +26,10 @@ testapp.access = 2
 testurls.access = 2
 junittests.access = 2
 jWSDL.access = 2
+jacldb.access = 1
+jacl2db.access = 1
+jauthdb.access = 1
+jauth.access = 1
 
 
 [coordplugins]

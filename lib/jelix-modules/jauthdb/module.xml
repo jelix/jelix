@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="http://jelix.org/ns/module/1.0">
+    <info id="jauthdb@modules.jelix.org" name="jauthdb" createdate="">
+#expand        <version stability="stable">__LIB_VERSION__</version>
+        <label lang="en-EN">ressources for db driver of jAuth</label>
+        <description lang="en-EN">It provides a basic dao and install scripts.</description>
+        <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
+        <copyright>2008-2009 Laurent Jouanneau and other contributors</copyright>
+        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
+        <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
+        <homepageURL>http://jelix.org</homepageURL>
+    </info>
+    <dependencies>
+#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION__" />
+#expand        <plugin id="auth-coord@plugins.jelix.org" name="auth"  minversion="__LIB_VERSION__" maxversion="__LIB_VERSION__"/>
+    </dependencies>
+</module>

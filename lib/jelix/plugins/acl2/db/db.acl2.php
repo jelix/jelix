@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  acl_driver
 * @author      Laurent Jouanneau
-* @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -44,7 +44,7 @@ class dbAcl2Driver implements jIAcl2Driver {
             $groups = jAcl2DbUserGroup::getGroups();
             self::$acl=array();
             if (count($groups)) {
-                $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfile());
+                $dao = jDao::get('jacl2db~jacl2rights', jAcl2Db::getProfile());
                 foreach($dao->getRightsByGroups($groups) as $rec){
                     self::$acl[$rec->id_aclsbj] = true;
                 }
@@ -68,7 +68,7 @@ class dbAcl2Driver implements jIAcl2Driver {
             if($groups===null)
                 $groups = jAcl2DbUserGroup::getGroups();
             if (count($groups)) {
-                $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfile());
+                $dao = jDao::get('jacl2db~jacl2rights', jAcl2Db::getProfile());
                 $right = $dao->getRightWithRes($subject, $groups, $resource);
                 self::$aclres[$subject][$resource] = ($right != false);
             }
@@ -81,7 +81,7 @@ class dbAcl2Driver implements jIAcl2Driver {
     protected function getAnonymousRight($subject, $resource=null) {
 
         if (self::$anonacl === null) {
-            $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfile());
+            $dao = jDao::get('jacl2db~jacl2rights', jAcl2Db::getProfile());
             self::$anonacl=array();
             foreach($dao->getAllAnonymousRights() as $rec){
                 self::$anonacl[$rec->id_aclsbj] = true;
@@ -102,7 +102,7 @@ class dbAcl2Driver implements jIAcl2Driver {
 
         self::$anonaclres[$subject][$resource] = self::$anonacl[$subject];
         if(!self::$anonacl[$subject]){
-            $dao = jDao::get('jelix~jacl2rights', jAcl2Db::getProfile());
+            $dao = jDao::get('jacl2db~jacl2rights', jAcl2Db::getProfile());
             $right = $dao->getAnonymousRightWithRes($subject, $resource);
             self::$anonaclres[$subject][$resource] = $r = ($right != false);
             return $r;
