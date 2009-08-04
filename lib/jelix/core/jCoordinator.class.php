@@ -331,9 +331,8 @@ class jCoordinator {
         ));
 
         if(strpos($toDo , 'TRACE') !== false){
-            $arr = debug_backtrace();
             $messageLog.="\ttrace:";
-            foreach($arr as $k=>$t){
+            foreach($trace as $k=>$t){
                 $messageLog.="\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
                 $messageLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
             }
