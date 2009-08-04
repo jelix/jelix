@@ -202,6 +202,21 @@ class Subversion {
     }
 }
 
+class Mercurial {
+    static public function revision($path='.') {
+        $path=jBuildUtils::normalizeDir($path);
+        $rev=-1;
+        if(file_exists($path.'.hg')){
+            $rev=`hg tip --template "{rev}" -R $path`;
+            if(preg_match("/(\d+)/",$rev, $m))
+                $rev=$m[1];
+        }
+        return $rev;
+        
+        
+    }
+}
+
 
 function init(){
 

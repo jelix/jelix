@@ -36,7 +36,7 @@ $BUILD_OPTIONS = array(
     false,
     false,
     ),
-'SVN_REVISION'=> array(
+'HG_REVISION'=> array(
     false,
     ),
 );
@@ -51,15 +51,15 @@ $APPDIR = jBuildUtils::normalizeDir($APPNAME);
 $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
 
 Env::setFromFile('VERSION',$APPDIR.'/VERSION',true);
-$SVN_REVISION = Subversion::revision($APPDIR);
+$HG_REVISION = Mercurial::revision(dirname(__FILE__).'/../');
 
-$IS_NIGHTLY = (strpos($VERSION,'SVN') !== false);
+$IS_NIGHTLY = (strpos($VERSION,'SERIAL') !== false);
 
 if($IS_NIGHTLY){
-    $PACKAGE_NAME=$APPNAME.'-'.str_replace('SVN', '', $VERSION);
+    $PACKAGE_NAME=$APPNAME.'-'.str_replace('SERIAL', '', $VERSION);
     if(substr($PACKAGE_NAME,-1,1) == '.')
       $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
-    $VERSION = str_replace('SVN', $SVN_REVISION, $VERSION);
+    $VERSION = str_replace('SERIAL', $HG_REVISION, $VERSION);
 }
 else {
     $PACKAGE_NAME=$APPNAME.'-'.$VERSION;

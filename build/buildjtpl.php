@@ -34,7 +34,7 @@ $BUILD_OPTIONS = array(
     false,
     false,
     ),
-'SVN_REVISION'=> array(
+'HG_REVISION'=> array(
     false,
     ),
 'JTPL_STANDALONE'=> array(
@@ -48,15 +48,15 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 //----------------- Preparation des variables d'environnement
 
 Env::setFromFile('VERSION','lib/jelix/tpl/VERSION', true);
-$SVN_REVISION = Subversion::revision();
+$HG_REVISION = Mercurial::revision(dirname(__FILE__).'/../');
 
-$IS_NIGHTLY = (strpos($VERSION,'SVN') !== false);
+$IS_NIGHTLY = (strpos($VERSION,'SERIAL') !== false);
 
 if($IS_NIGHTLY){
-    $PACKAGE_NAME='jtpl-'.str_replace('SVN', '', $VERSION);
+    $PACKAGE_NAME='jtpl-'.str_replace('SERIAL', '', $VERSION);
     if(substr($PACKAGE_NAME,-1,1) == '.')
       $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
-    $VERSION = str_replace('SVN', $SVN_REVISION, $VERSION);
+    $VERSION = str_replace('SERIAL', $HG_REVISION, $VERSION);
 }
 else {
     $PACKAGE_NAME='jtpl-'.$VERSION;

@@ -23,14 +23,14 @@ $BUILD_OPTIONS = array(
     ),
 'VERSION'=> array(
     false,
-    'SVN',
+    'SERIAL',
     '',
     ),
 'IS_NIGHTLY'=> array(
     false,
     false,
     ),
-'SVN_REVISION'=> array(
+'HG_REVISION'=> array(
     false,
     ),
 );
@@ -39,10 +39,10 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 //----------------- Preparation des variables d'environnement
 
 Env::setFromFile('VERSION','build/VERSION', true);
-$SVN_REVISION = Subversion::revision('build/');
+$HG_REVISION = Mercurial::revision(dirname(__FILE__).'/../');
 
-if($VERSION == 'SVN'){
-    $VERSION = 'SVN-'.$SVN_REVISION;
+if($VERSION == 'SERIAL'){
+    $VERSION = 'SERIAL-'.$HG_REVISION;
     $IS_NIGHTLY = true;
 }else{
     $IS_NIGHTLY = false;
