@@ -95,14 +95,18 @@ class jInstallerMessageProvider {
             'module.needed'=>'Pour installer le module %s, ces modules doivent être présent : %s',
             'module.bad.jelix.version'=>'Le module %s necessite une autre version de jelix (%s - %s)',
             'module.bad.dependency.version'=>'Le module %s necessite une autre version du module %s (%s - %s)',
+            'module.installer.class.not.found'=>'La classe d\'installation %s pour le module %s n\'existe pas',
+            'module.upgrader.class.not.found'=>'La classe de mise à jour %s pour le module %s n\'existe pas',
             
             'install.dependencies.ok'=>'Toutes les dépendances des modules sont valides',
             'install.bad.dependencies'=>'Il y a des erreurs dans les dépendances. Installation annulée.',
 
             'install.module.already.installed'=>'Le module %s déjà installé',
-            'install.module.installed'=>'Le module %s installé',
+            'install.module.installed'=>'Le module %s est installé',
             'install.module.error'=>'Une erreur est survenue durant l\'installation du module %s: %s',
             'install.module.check.dependency'=>'Vérifie les dépendances du module %s',
+            'install.module.upgraded'=>'Le module %s est mis à jour à la version %s',
+
         ),
 
         'en'=>array(
@@ -177,6 +181,8 @@ class jInstallerMessageProvider {
             'module.needed'=>'To install %s these modules are needed: %s',
             'module.bad.jelix.version'=>'The module %s needs another jelix version (%s - %s)',
             'module.bad.dependency.version'=>'The module %s needs another version of the module %s (%s - %s)',
+            'module.installer.class.not.found'=>'The installation class %s for the module %s doesn\'t exist',
+            'module.upgrader.class.not.found'=>'The upgrade class %s for the module %s doesn\'t exist',
 
             'install.dependencies.ok'=>'All modules dependencies are ok',
             'install.bad.dependencies'=>'Error in dependencies. Installation cancelled.',
@@ -184,6 +190,7 @@ class jInstallerMessageProvider {
             'install.module.installed'=>'Module %s installed',
             'install.module.error'=>'An error occured during the installation of the module %s: %s',
             'install.module.check.dependency'=>'Check dependencies of the module %s',
+            'install.module.upgraded'=>'Module %s upgraded to the version %s',
 
         ),
     );

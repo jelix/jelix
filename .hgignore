@@ -1,0 +1,5 @@
+# .hgignore - List of filenames hg should ignore
+
+~$
+(^|/)TAGS$
+(^|/)\.DS_Store$

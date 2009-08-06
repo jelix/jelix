@@ -4,12 +4,11 @@
 * @subpackage  installer
 * @author      Laurent Jouanneau
 * @contributor 
-* @copyright   2007-2009 Laurent Jouanneau
+* @copyright   2009 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
 
 
 /**
@@ -22,75 +21,63 @@ require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
 */
 abstract class jInstallerBase {
 
-    /**
-     * the object responsible of the results output
-     * @var jIInstallReporter
-     */
-    public $reporter;
+    public $version = '0';
+
 
     /**
-     * @var JInstallerMessageProvider
+     * default configuration of the application
+     * @var jIniFileModifier
      */
-    public $messages;
-
-    public $nbError = 0;
-    public $nbOk = 0;
-    public $nbWarning = 0;
-    public $nbNotice = 0;
-
-    function __construct ($reporter, $lang=''){
-        $this->reporter = $reporter;
-        $this->messages = new jInstallerMessageProvider($lang);
-    }
-
-    protected function startMessage () {
-        $this->nbError = 0;
-        $this->nbOk = 0;
-        $this->nbWarning = 0;
-        $this->nbNotice = 0;
-        $this->reporter->start();
-    }
+    protected $config;
     
-    protected function endMessage() {
-        $this->reporter->end($this);
-    }
-
-    protected function error($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->showMessage ( $msg, 'error');
-        }
-        $this->nbError ++;
-    }
-
-    protected function ok($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->showMessage ( $msg, '');
-        }
-        $this->nbOk ++;
-    }
     /**
-     * generate a warning
-     * @param string $msg  the key of the message to display
+     * The path of the module
+     * @var string
      */
-    protected function warning($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->showMessage ( $msg, 'warning');
-        }
-        $this->nbWarning ++;
+    protected $path;
+
+    function __construct ($defaultConfig, $modulePath, $version) {
+        $this->config = $defaultConfig;
+        $this->path = $modulePath;
+        $this->version = $version;
     }
 
-    protected function notice($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->showMessage ( $msg, 'notice');
+
+    /**
+     * import a sql script into the given profile.
+     *
+     * The name of the script should be store in install/sql/$name.databasetype.sql
+     * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
+     * 
+     * @param string $name the name of the script, without suffixes
+     */
+    final protected function execSQLScript($name, $profile='') {
+        $tools = jDb::getTools($profile);
+        $p = jDb::getProfile ($profile);
+        $driver = $p['driver'];
+        if($driver == 'pdo'){
+            preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
+            $driver = $m[1];
         }
-        $this->nbNotice ++;
+        $tools->execSQLScript($this->path.'install/sql/'.$name.'.'.$driver.'.sql');
+    }
+
+    /**
+     * @param string $sourcePath
+     * @param string $targetPath
+     */
+    final protected function copyDirectoryContent($sourcePath, $targetPath) {
+        jFile::createDir($targetPath);
+        $dir = new DirectoryIterator($sourcePath);
+        foreach ($dir as $dirContent) {
+            if ($dirContent->isFile()) {
+                copy($dirContent->getPathName(), $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath())));
+            } else {
+                if (!$dirContent->isDot() && $dirContent->isDir()) {
+                    $newTarget = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
+                    $this->copyDirectoryContent($dirContent->getPathName(),$newTarget );
+                }
+            }
+        }
     }
 }

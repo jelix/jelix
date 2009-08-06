@@ -13,5 +13,8 @@
     <dependencies>
 #expand        <jelix minversion="__VERSION__" maxversion="__VERSION__" />
 #expand        <module name="testurls" minversion="__VERSION__" maxversion="__VERSION__" />
+               <module name="jauthdb" />
+               <module name="jacl2db" />
+               <module name="jacldb" />
     </dependencies>
 </module>

@@ -4,75 +4,62 @@
 * @subpackage  installer
 * @author      Laurent Jouanneau
 * @contributor 
-* @copyright   2008-2009 Laurent Jouanneau
-* @link        http://www.jelix.org
+* @copyright   2009 Laurent Jouanneau
+* @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
 * EXPERIMENTAL
-* a class to install a module. 
 * @package     jelix
 * @subpackage  installer
 * @experimental
 * @since 1.2
 */
-class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
+interface jIInstallerComponent {
 
     /**
-     * Called before the installation of all other modules
+     * Called before the installation of all other components
      * (dependents modules or the whole application).
-     * Here, you should check if the module can be installed or not
+     * Here, you should check if the component can be installed or not
      * @throw jException if an error occurs during the check of the installation
      */
-    function preInstall() {
-
-    }
+    function preInstall();
 
     /**
-     * should configure the module, install table into the database etc..
+     * should configure the component, install table into the database etc..
      * If an error occurs during the installation, you are responsible
      * to cancel/revert all things the method did before the error
      * @throw jException  if an error occurs during the install.
      */
-    function install() {
-        
-    }
+    function install();
 
     /**
      * Redefine this method if you do some additionnal process after the installation of
      * all other modules (dependents modules or the whole application)
      * @throw jException  if an error occurs during the post installation.
      */
-    function postInstall() {
-        
-    }
+    function postInstall();
 
     /**
      * Called before the uninstallation of all other modules
      * (dependents modules or the whole application).
-     * Here, you should check if the module can be uninstalled or not
+     * Here, you should check if the component can be uninstalled or not
      * @throw jException if an error occurs during the check of the installation
      */
-    function preUninstall() {
-        
-    }
+    function preUninstall();
 
     /**
-     * should configure the module, install table into the database etc.. 
+     * should configure the component, install table into the database etc.. 
      * @throw jException  if an error occurs during the install.
      */
-    function uninstall() {
-        
-    }
+    function uninstall();
 
     /**
      * 
      * @throw jException  if an error occurs during the install.
      */
-    function postUninstall() {
-    
-    }
+    function postUninstall();
 
 }
 

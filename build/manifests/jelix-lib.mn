@@ -78,7 +78,7 @@ cd lib/jelix/core/response
   jResponseHtmlFragment.class.php
 
 cd lib/jelix/core-modules/jelix
-  module.xml
+*  module.xml
 cd lib/jelix/core-modules/jelix/controllers
 ! help.cmdline.php
 ! error.classic.php
@@ -201,12 +201,14 @@ cd lib/jelix/forms
 * jFormsDatasource.class.php
 
 cd lib/jelix/installer
+  jIInstallerComponent.iface.php
   jIInstallReporter.iface.php
   jInstaller.class.php
-  jInstallerApp.class.php
   jInstallerBase.class.php
   jInstallerComponentBase.class.php
-  jInstallerMessageProvider.class.php
+  jInstallerComponentModule.class.php
+  jInstallerComponentPlugin.class.php
+* jInstallerMessageProvider.class.php
   jInstallerModule.class.php
   jInstallerPlugin.class.php
 

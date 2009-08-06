@@ -32,7 +32,11 @@ cd lib/jelix/core-modules/jelix/daos
    jacl2usergroup.dao.xml
    jacl2groupsofuser.dao.xml
 
-cd lib/jelix/forms/jIFormsBuilderCompiler.iface.php
+cd lib/jelix/forms/
+   jIFormsBuilderCompiler.iface.php
+
+cd lib/jelix/installer/
+  jInstallerApp.class.php
 
 cd lib/jelix/plugins/tpl/html
   block.formdatas.php

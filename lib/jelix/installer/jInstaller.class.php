@@ -10,8 +10,10 @@
 */
 
 require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
+require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerBase.class.php');
 require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
+require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
 
 
 /**
@@ -67,9 +69,6 @@ class jInstallerException extends Exception {
     /**
      * @param string $localekey a locale key
      * @param array $localeParams parameters for the message (for sprintf)
-     * @param integer $code error code (can be provided by the localized message)
-     * @param string $lang
-     * @param string $charset
      */
     public function __construct($localekey, $localeParams = null) {
 
@@ -102,7 +101,7 @@ class jInstallerException extends Exception {
 /**
  * main class for the installation
  */
-class jInstaller extends jInstallerBase {
+class jInstaller {
 
     const STATUS_UNINSTALLED = 0;
     const STATUS_INSTALLED = 1;
@@ -121,8 +120,27 @@ class jInstaller extends jInstallerBase {
     protected $rConfig = null;
     protected $modules = array();
 
+    /**
+     * the object responsible of the results output
+     * @var jIInstallReporter
+     */
+    public $reporter;
+
+    /**
+     * @var JInstallerMessageProvider
+     */
+    public $messages;
+
+    public $nbError = 0;
+    public $nbOk = 0;
+    public $nbWarning = 0;
+    public $nbNotice = 0;
+
+
     function __construct ($reporter, $lang='') {
-        parent::__construct($reporter, $lang);
+
+        $this->reporter = $reporter;
+        $this->messages = new jInstallerMessageProvider($lang);
 
         if (!file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php'))
             file_put_contents(JELIX_APP_CONFIG_PATH.'installer.ini.php', ";<?php die(''); ?>
@@ -142,10 +160,10 @@ class jInstaller extends jInstallerBase {
             $version = $this->rConfig->modules[$name.'.version'];
             $this->installConfig->setValue($name.'.installed', $installed, 'modules');
             $this->installConfig->setValue($name.'.version', $version, 'modules');
-            $this->modules[$name] = new jInstallerModule($name, $path, $installed, $access, $version, $this);
+            $this->modules[$name] = new jInstallerComponentModule($name, $path, $installed, $access, $version, $this);
         }
         $this->installConfig->save();
-        
+
         $GLOBALS['gJConfig'] = jConfig::load('defaultconfig.ini.php');
     }
 
@@ -169,6 +187,8 @@ class jInstaller extends jInstallerBase {
         $this->startMessage ();
         
         $modules = array();
+        // always install jelix
+        array_unshift($list, 'jelix');
         foreach($list as $name) {
             if (!isset($this->modules[$name])) {
                 $this->error('module.unknow', $name);
@@ -181,11 +201,85 @@ class jInstaller extends jInstallerBase {
 
         if ($result) {
             $this->ok('install.dependencies.ok');
-            $this->_installingComponents = array();
-            // call the install() method of each object.
-            foreach($modules as $component) {
+
+            // pre install
+            foreach($this->_componentsToInstall as $item) {
+                list($component, $toInstall) = $item;
                 try {
-                    $this->_installComponent($component);
+                    if ($toInstall) {
+                        $installer = $component->getInstaller();
+                        $installer->preInstall();
+                    }
+                    else {
+                        foreach($component->getUpgraders() as $upgrader) {
+                            $upgrader->preInstall();
+                        }
+                    }
+                } catch( jInstallerException $e) {
+                    $result = false;
+                    $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
+                } catch( Exception $e) {
+                    $result = false;
+                    $this->error ('install.module.error', $e->getMessage());
+                }
+            }
+            
+            $installedModules = array();
+            // install
+            if ($result) {
+                try {
+                    foreach($this->_componentsToInstall as $item) {
+                        list($component, $toInstall) = $item;
+                        if ($toInstall) {
+                            $installer = $component->getInstaller();
+                            $installer->install();
+                            $this->installConfig->setValue($component->getName().'.installed', 1, 'modules');
+                            $this->installConfig->setValue($component->getName().'.version', $component->getSourceVersion(), 'modules');
+                            $this->ok('install.module.installed', $component->getName());
+                            $installedModules[] = array($component, true);
+                        }
+                        else {
+                            $lastversion='';
+                            foreach($component->getUpgraders() as $upgrader) {
+                                $upgrader->install();
+                                // we set the version of the upgrade, so if an error occurs in
+                                // the next upgrader, we won't have to re-run this current upgrader
+                                // during a future update
+                                $this->installConfig->setValue($component->getName().'.version', $upgrader->version, 'modules');
+                                $this->ok('install.module.upgraded', array($component->getName(), $upgrader->version));
+                                $lastversion = $upgrader->version;
+                            }
+                            // we set the version to the component version, because the version
+                            // of the last upgrader could not correspond to the component version.
+                            if ($lastversion != $component->getSourceVersion()) {
+                                $this->installConfig->setValue($component->getName().'.version', $component->getSourceVersion(), 'modules');
+                                $this->ok('install.module.upgraded', array($component->getName(), $component->getSourceVersion()));
+                            }
+                            $installedModules[] = array($component, false);
+                        }
+                    }
+                } catch( jInstallerException $e) {
+                    $result = false;
+                    $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
+                } catch( Exception $e) {
+                    $result = false;
+                    $this->error ('install.module.error', $e->getMessage());
+                }
+            }
+            
+            // post install
+            foreach($installedModules as $item) {
+                try {
+                    list($component, $toInstall) = $item;
+                    if ($toInstall) {
+                        $installer = $component->getInstaller();
+                        $installer->postInstall();
+                    }
+                    else {
+                        foreach($component->getUpgraders() as $upgrader) {
+                            $upgrader->postInstall();
+                        }
+                    }
                 } catch( jInstallerException $e) {
                     $result = false;
                     $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
@@ -204,29 +298,39 @@ class jInstaller extends jInstallerBase {
     }
 
 
+    protected $_componentsToInstall = array();
     protected $_checkedComponents = array();
     protected $_checkedCircularDependency = array();
 
    /**
      * check dependencies of given modules and plugins
      *
-     * @param array $list  list of jInstallerModule/jInstallerPlugin objects
+     * @param array $list  list of jInstallerComponentModule/jInstallerComponentPlugin objects
      * @throw jException if the install has failed
      */
     protected function checkDependencies ($list) {
         
         $this->_checkedComponents = array();
+        $this->_componentsToInstall = array();
         $result = true;
         foreach($list as $component) {
             $this->_checkedCircularDependency = array();
             if (!isset($this->_checkedComponents[$component->getName()])) {
                 try {
                     $component->init();
+
                     $this->_checkDependencies($component);
-                } catch( jInstallerException $e) {
+
+                    if (!$component->isInstalled()) {
+                        $this->_componentsToInstall[] = array($component, true);
+                    }
+                    else if (!$component->isUpgraded()) {
+                        $this->_componentsToInstall[] =array($component, false);
+                    }
+                } catch (jInstallerException $e) {
                     $result = false;
                     $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-                } catch( Exception $e) {
+                } catch (Exception $e) {
                     $result = false;
                     $this->error ($e->getMessage(), null, true);
                 }
@@ -237,7 +341,7 @@ class jInstaller extends jInstallerBase {
 
     /**
      * check dependencies of a module
-     * @param jInstallerBase $component
+     * @param jInstallerComponentBase $component
      */
     protected function _checkDependencies($component) {
 
@@ -245,31 +349,44 @@ class jInstaller extends jInstallerBase {
             $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
             throw new jInstallerException ('module.circular.dependency',$component->getName());
         }
+
         $this->ok('install.module.check.dependency', $component->getName());
 
         $this->_checkedCircularDependency[$component->getName()] = true;
 
-        if (!$component->checkJelixVersion(JELIX_VERSION)) {
-            $args = $component->getJelixVersion();
-            array_unshift($args, $component->getName());
-            throw new jInstallerException ('module.bad.jelix.version', $args);
-        }
-
         $compNeeded = '';
-        foreach($component->dependencies as $compInfo) {
-            $name = (string)$compInfo['name'];
+        foreach ($component->dependencies as $compInfo) {
+            // TODO : supports others type of components
+            if ($compInfo['type'] != 'module')
+                continue;
+            $name = $compInfo['name'];
             $comp = $this->getModule($name);
             if (!$comp)
-                $compNeeded.=$name.', ';
+                $compNeeded .= $name.', ';
             else {
-                if (!isset($this->_checkedComponents[$comp->getName()]))
+                if (!isset($this->_checkedComponents[$comp->getName()])) {
                     $comp->init();
+                }
 
-                if (!$comp->checkVersion($compInfo['minversion'], $compInfo['maxversion']))
-                    throw new jInstallerException ('module.bad.dependency.version',array($component->getName(), $comp->getName(), $compInfo['minversion'], $compInfo['maxversion']));
+                if (!$comp->checkVersion($compInfo['minversion'], $compInfo['maxversion'])) {
+                    if ($name == 'jelix') {
+                        $args = $component->getJelixVersion();
+                        array_unshift($args, $component->getName());
+                        throw new jInstallerException ('module.bad.jelix.version', $args);
+                    }
+                    else
+                        throw new jInstallerException ('module.bad.dependency.version',array($component->getName(), $comp->getName(), $compInfo['minversion'], $compInfo['maxversion']));
+                }
 
-                if (!isset($this->_checkedComponents[$comp->getName()])) 
+                if (!isset($this->_checkedComponents[$comp->getName()])) {
                     $this->_checkDependencies($comp);
+                    if (!$comp->isInstalled()) {
+                        $this->_componentsToInstall[] = array($comp, true);
+                    }
+                    else if(!$comp->isUpgraded()) {
+                        $this->_componentsToInstall[] = array($comp, false);
+                    }
+                }
             }
         }
 
@@ -279,34 +396,6 @@ class jInstaller extends jInstallerBase {
         if ($compNeeded) {
             $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
             throw new jInstallerException ('module.needed', array($component->getName(), $compNeeded));
-        }
-    }
-
-    /**
-     * install a module or a plugin
-     * should be called after a dependencies check.
-     * @param jInstallerBase $component
-     */
-    protected function _installComponent($component) {
-
-        if ($component->isInstalled()) {
-            $this->ok('install.module.already.installed', $component->getName());
-            return;
-        }
-
-        $compNeeded = '';
-        foreach ($component->dependencies as $compInfo) {
-            $comp = $this->getModule((string)$compInfo['name']);
-            $this->_installComponent($comp);
-        }
-
-        try {
-            $component->install();
-            $this->installConfig->setValue($component->getName().'.installed', 1, 'modules');
-            $this->installConfig->setValue($component->getName().'.version', $component->getSourceVersion(), 'modules');
-            $this->ok('install.module.installed', $component->getName());
-        } catch(Exception $e) {
-            throw $e;
         }
     }
 
@@ -332,73 +421,87 @@ class jInstaller extends jInstallerBase {
         // if the install fails, the new directories of modules and plugins
         // should be deleted.
     }
-
-
+    
     /**
-     * import a sql script into the given profile.
-     *
-     * The name of the script should be store in install/sql/$name.databasetype.sql
-     * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
-     * 
-     * @param string $name the name of the script, without suffixes
+     * get on object to modify the config file of an entry point 
+     * @param string $filename relative path to the var/config directory
+     * @return jIniMultiFilesModifier
      */
-    static public function execSQLScript($name, $profile='') {
-        $tools = jDb::getTools($profile);
-        $p = jDb::getProfile ($profile);
-        $driver = $p['driver'];
-        if($driver == 'pdo'){
-            preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
-            $driver = $m[1];
-        }
-        $tools->execSQLScript($this->path.'install/sql/'.$name.'.'.$driver.'.sql');
+    function getEntryPointConfig($entrypoint) {
+        
+         throw new Exception('not implemented');
+        
+        //TODO
+        // get the path of the config file corresponding to the entrypoint,
+        // from the project.xml
+        $filename = '';
+        return new jIniMutliFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',
+                                          JELIX_APP_CONFIG_PATH.$filename);
     }
 
-    /**
-     * @param string $sourcePath
-     * @param string $targetPath
-     */
-    static function copyDirectoryContent($sourcePath, $targetPath) {
-        jFile::createDir($targetPath);
-        $dir = new DirectoryIterator($sourcePath);
-        foreach ($dir as $dirContent) {
-            if ($dirContent->isFile()) {
-                copy($dirContent->getPathName(), $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath())));
-            } else {
-                if (!$dirContent->isDot() && $dirContent->isDir()) {
-                    $newTarget = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
-                    $this->copyDirectoryContent($dirContent->getPathName(),$newTarget );
-                }
-            }
-        }
+    function addEntryPoint($filename, $type, $configFilename) {
+        throw new Exception('not implemented');
+        // should modify the project.xml
+        // if the config file doesn't exist, create it
+        // if the entrypoint doesn't exist, create it, with the given type
     }
 
-/*$path = JELIX_APP_PATH.'project.xml';
 
-        $projectXml = new DOMDocument();
+    function removeEntryPoint($filename) {
+        throw new Exception('not implemented');
+        // should modify the project.xml
+        // if the config file is not used by another entrypoint, remove it
+    }
 
-        if(!$projectXml->load($path)){
-            throw new jException('jelix~install.invalid.xml.file',array($path));
+    protected function startMessage () {
+        $this->nbError = 0;
+        $this->nbOk = 0;
+        $this->nbWarning = 0;
+        $this->nbNotice = 0;
+        $this->reporter->start();
+    }
+    
+    protected function endMessage() {
+        $this->reporter->end($this);
+    }
+
+    protected function error($msg, $params=null, $fullString=false){
+        if($this->reporter) {
+            if (!$fullString)
+                $msg = $this->messages->get($msg,$params);
+            $this->reporter->showMessage ( $msg, 'error');
         }
-        
-        $root = $projectXml->documentElement;
+        $this->nbError ++;
+    }
 
-        $modules = array();
-        
-        if ($root->namespaceURI == 'http://jelix.org/ns/project/1.0') {
-            $xml = simplexml_import_dom($projectXml);
-            $entrypoints = $xml->entrypoints[0]->entry;
-            foreach ($entrypoints as $entrypoint) {
-                $config = jConfigCompiler::read($entrypoint['config'], true);
-                foreach($config->_allModulesPathList as $name=>$path) {
-                    if (isset($modules[$name])) {
-                        continue;
-                    }
-                    $access = $config->modules[$name.'.access'];
-                    $installed = $config->modules[$name.'.installed'];
-                    $version = $config->modules[$name.'.version'];
-                    $modules[$name] = new jInstallerModule($name, $path, $installed, $access, $version);
-                }
-            }
-        }*/
+    protected function ok($msg, $params=null, $fullString=false){
+        if($this->reporter) {
+            if (!$fullString)
+                $msg = $this->messages->get($msg,$params);
+            $this->reporter->showMessage ( $msg, '');
+        }
+        $this->nbOk ++;
+    }
+    /**
+     * generate a warning
+     * @param string $msg  the key of the message to display
+     */
+    protected function warning($msg, $params=null, $fullString=false){
+        if($this->reporter) {
+            if (!$fullString)
+                $msg = $this->messages->get($msg,$params);
+            $this->reporter->showMessage ( $msg, 'warning');
+        }
+        $this->nbWarning ++;
+    }
+
+    protected function notice($msg, $params=null, $fullString=false){
+        if($this->reporter) {
+            if (!$fullString)
+                $msg = $this->messages->get($msg,$params);
+            $this->reporter->showMessage ( $msg, 'notice');
+        }
+        $this->nbNotice ++;
+    }
 
 }

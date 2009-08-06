@@ -59,6 +59,9 @@ cd testapp/modules/testapp/controllers
   default.cmdline.php
   clientSoap.classic.php
   soap.soap.php
+cd testapp/modules/testapp/install
+  upgrade_to_1.2b1pre.1303_bar.php
+  upgrade_to_1.2b1pre.1304_foo.php
 cd testapp/modules/testapp/templates
   hello.tpl
   hello2.tpl

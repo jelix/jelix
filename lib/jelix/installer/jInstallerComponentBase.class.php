@@ -47,7 +47,7 @@ abstract class jInstallerComponentBase {
     
     protected $xmlDescriptor = null;
     
-    protected $installer = null;
+    protected $mainInstaller = null;
     
     /**
      * code error of the installation
@@ -61,13 +61,13 @@ abstract class jInstallerComponentBase {
      * @param integer $access 0=unused, 1=only by other module, 2=public
      * @param string $installedVersion the installed version
      */
-    function __construct($name, $path, $isInstalled, $access, $installedVersion, $installer) {
+    function __construct($name, $path, $isInstalled, $access, $installedVersion, $mainInstaller) {
         $this->path = $path;
         $this->name = $name;
         $this->access = $access;
         $this->isInstalled = $isInstalled;
         $this->installedVersion = $installedVersion;
-        $this->installer = $installer;
+        $this->mainInstaller = $mainInstaller;
     }
     
     public function getName() { return $this->name; }
@@ -80,56 +80,39 @@ abstract class jInstallerComponentBase {
         return $this->isInstalled;
     }
 
+    public function isUpgraded() {
+        return ($this->isInstalled && ($this->compareVersion($this->sourceVersion,$this->installedVersion) == 0));
+    }
+
+
     public function accessLevel() {
         return $this->access;
     }
 
     /**
-     * install the component. It just call the _install.php of the component
+     * get the object which is responsible to install the component. this
+     * object should implement jIInstallerComponent.
      *
-     * It should expose a variable $installer to the _install.php,
-     * $installer should be the current instance of this class.
+     * @return jIInstallerComponent
      */
-    abstract function install();
+    abstract function getInstaller();
 
     /**
-     * uninstall the component. It just call the _uninstall.php
-     * of the component
-     *
-     * It should expose a variable $installer to the _uninstall.php,
-     * $installer should be the current instance of this class.
+     * return the list of objects which are responsible to upgrade the component
+     * from the current installed version of the component.
+     * 
+     * this method should be called after verifying and resolving
+     * dependencies. Needed components (modules or plugins) should be
+     * installed/upgraded before calling this method
+     * @throw jInstallerException  if an error occurs during the install.
+     * @return array   array of jIInstallerComponent
      */
-    abstract function uninstall();
-
-    /**
-     * activate the component.
-     * It just call the _activate.php of the component ?
-     *
-     * It should expose a variable $installer to the _activate.php,
-     * $installer should be the current instance of this class.
-     */
-    abstract function activate($accessLevel);
-
+    abstract function getUpgraders();
 
     public function init () {
         $this->readIdentity();
     }
-    
-    protected function updateVersion($newVersion) {
-        $this->installedVersion = $newVersion;
 
-        if ($this->compareVersion($newVersion, $this->sourceVersion) > 0) {
-            $info = $this->xmlDescriptor->documentElement->getElementsByTagName('info')->item(0);
-            $version = $info->getElementsByTagName('version')->item(0);
-            $version->firstChild = $this->xmlDescriptor->createTextNode($newVersion);
-            $this->xmlDescriptor->save($this->path.$this->identityFile);
-        }
-
-        $this->installer->installConfig->setValue($this->name.'.version', $newVersion, 'modules');
-        $this->installer->installConfig->save();
-    }
-    
-    
     protected $identityReaded = false;
     
     protected function readIdentity() {
@@ -142,7 +125,7 @@ abstract class jInstallerComponentBase {
             throw new jException('jelix~install.invalid.xml.file',array($this->path.$this->identityFile));
         }
         
-        // TODO : verifier avec le schema relaxng
+        // TODO : verify with the relaxNG schema ?
         
         
         $root = $this->xmlDescriptor->documentElement;
@@ -179,9 +162,7 @@ abstract class jInstallerComponentBase {
       */
 
     }
-    
-    
-    
+
     protected function readDependencies($xml) {
 
         $this->dependencies = array();
@@ -191,6 +172,16 @@ abstract class jInstallerComponentBase {
                 if ($type == 'jelix') {
                     $this->jelixMinVersion = isset($dependency['minversion'])?(string)$dependency['minversion']:'*';
                     $this->jelixMaxVersion = isset($dependency['maxversion'])?(string)$dependency['maxversion']:'*';
+                    if ($this->name != 'jelix') {
+                        $this->dependencies[] = array(
+                            'type'=> 'module',
+                            'id' => 'jelix@jelix.org',
+                            'name' => 'jelix',
+                            'minversion' => $this->jelixMinVersion,
+                            'maxversion' => $this->jelixMaxVersion,
+                            ''
+                        );
+                    }
                 }
                 else if ($type == 'module') {
                     $this->dependencies[] = array(
@@ -209,6 +200,7 @@ abstract class jInstallerComponentBase {
                             'name' => (string)$dependency['name'],
                             'minversion' => isset($dependency['minversion'])?(string)$dependency['minversion']:'*',
                             'maxversion' => isset($dependency['maxversion'])?(string)$dependency['maxversion']:'*',
+                            ''
                             );
                 }
             }
@@ -238,10 +230,10 @@ abstract class jInstallerComponentBase {
         $v2 = explode('.', $version2);
 
         if (count($v1) > count($v2) ) {
-            $v2 = array_pad($v2, count($v1), '0');
+            $v2 = array_pad($v2, count($v1), ($v2[count($v2)-1] == '*'?'*':'0'));
         }
         elseif (count($v1) < count($v2) ) {
-            $v1 = array_pad($v1, count($v2), '0');
+            $v1 = array_pad($v1, count($v2), ($v1[count($v1)-1] == '*'?'*':'0'));
         }
 
         $r = '/^([0-9]+)([a-zA-Z]*|pre|-?dev)([0-9]*)(pre|-?dev)?$/';

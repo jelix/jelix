@@ -266,13 +266,13 @@ class jConfigCompiler {
                 while (false !== ($f = readdir($handle))) {
                     if ($f{0} != '.' && is_dir($p.$f)) {
                         
+                        if (!isset($installation['modules'][$f.'.installed']))
+                            $installation['modules'][$f.'.installed'] = 0;
+
                         if($f == 'jelix') {
-                            $installation['modules']['jelix.installed'] = 1;
-                            $config->modules['jelix.access'] = 2;
+                            $config->modules['jelix.access'] = 2; // the jelix module should always be public
                         }
                         else {
-                            if (!isset($installation['modules'][$f.'.installed']))
-                                $installation['modules'][$f.'.installed'] = 0;
                             if (!isset($config->modules[$f.'.access'])
                                 || !$installation['modules'][$f.'.installed'])
                                 $config->modules[$f.'.access'] = 0;
