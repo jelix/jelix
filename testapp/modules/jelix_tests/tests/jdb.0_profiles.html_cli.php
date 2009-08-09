@@ -26,7 +26,7 @@ class UTjDb_profile extends jUnitTestCase {
 
         $this->assertEqual($p, $result);
 
-        $p = jDb::getProfile('forward',true);
+        $p = jDb::getProfile('forward');
         $result= array(
             'driver'=>"mysql",
             'database'=>"jelix_tests_forward",
@@ -35,15 +35,17 @@ class UTjDb_profile extends jUnitTestCase {
             'password'=> "futchball_forward",
             'persistent'=> '1',
             'force_encoding'=>0,
-            'name'=>'jelix_tests_forward',
+            'name'=>'forward',
         );
 
         $this->assertEqual($p, $result);
 
         $p = jDb::getProfile('testapp');
         $this->assertEqual($p['name'], 'testapp');
-        $p = jDb::getProfile();
-        $this->assertEqual($p['name'], 'testapp');
+        $p2 = jDb::getProfile();
+        $this->assertEqual($p2['name'], 'default');
+        $p2['name'] = 'testapp';
+        $this->assertEqual($p, $p2);
         $p = jDb::getProfile('testapppdo');
         $this->assertEqual($p['name'], 'testapppdo');
     }
@@ -69,28 +71,8 @@ class UTjDb_profile extends jUnitTestCase {
 
 
     function testBadProfile(){
-        try {
-            $p = jDb::getProfile('abcdef'); // unknow profile
-            $this->fail('getting a wrong profile doesn\'t generate an exception');
-        }catch(jException $e){
-            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profile.unknow', 'wrong exception on getting a wrong profile ('.$e->getLocaleKey().')');
-        }
+        $p = jDb::getProfile('abcdef'); // unknow profile
+        $this->assertError("(413) The given jDb profile \"abcdef\" doesn't exist. The default one is used instead. To not show this error, create the profile or an alias to the default profile.");
 
-        try {
-            $p = jDb::getProfile('abcdef', true); // unknow profile option
-            $this->fail('getting a wrong profile option doesn\'t generate an exception');
-        }catch(jException $e){
-            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profile.type.unknow', 'wrong exception on getting a wrong profile option ('.$e->getLocaleKey().')');
-        }
-
-        try {
-            $p = jDb::getProfile('wrong_profilname', true); // unknow profile name
-            $this->fail('getting a profile option with a wrong name doesn\'t generate an exception');
-        }catch(jException $e){
-            $this->assertEqual($e->getLocaleKey(),'jelix~db.error.profile.unknow', 'wrong exception on getting a profile option with a wrong name ('.$e->getLocaleKey().')');
-        }
     }
 }
-
-
-?>

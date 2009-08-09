@@ -5,7 +5,7 @@
 #if ENABLE_OPTIMIZED_SOURCE
 * @author      Laurent Jouanneau
 * @contributor Yannick Le Guédart, Laurent Raufaste, Christophe Thiriot
-* @copyright   2005-2007 Laurent Jouanneau, 2008 Laurent Raufaste
+* @copyright   2005-2009 Laurent Jouanneau, 2008 Laurent Raufaste
 *
 * Some of this classes were get originally from the Copix project
 * (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -23,7 +23,7 @@
 #else
 * @author     Laurent Jouanneau
 * @contributor Yannick Le Guédart, Laurent Raufaste
-* @copyright  2005-2007 Laurent Jouanneau
+* @copyright  2005-2009 Laurent Jouanneau
 *
 * API ideas of this class were get originally from the Copix project (CopixDbFactory, Copix 2.3dev20050901, http://www.copix.org)
 * No lines of code are copyrighted by CopixTeam
@@ -116,42 +116,59 @@ class jDb {
     *
     * a profile is a section in the dbprofils.ini.php file
     *
-    * with getProfile('myprofile') (or getProfile('myprofile', false)), you get the profile which
-    * has the name "myprofile". this name should correspond to a section name in the ini file
+    * the given name can be a profile name (it should correspond to a section name
+    * in the ini file), or an alias of a profile. An alias is a parameter name
+    * in the global section of the ini file, and the value of this parameter
+    * should be a profile name.
     *
-    * with getProfile('myprofiletype',true), it will search a parameter named 'myprofiletype' in the ini file. 
-    * This parameter should contains a profile name, and the corresponding profile will be loaded.
-    *
-    * with getProfile(), it will load the default profile, (so the profile of "default" type)
-    *
-    * @param string   $name  profile name or profile type to load. if empty, use the default one
-    * @param boolean  $nameIsProfileType  says if the name is a profile name or a profile type. this parameter exists since 1.0b2
+    * @param string   $name  profile name or alias of a profile name. if empty, use the default profile
     * @return array  properties
     */
-    public static function getProfile ($name='', $nameIsProfileType=false){
+    public static function getProfile ($name=''){
         global $gJConfig;
         if(self::$_profiles === null){
             self::$_profiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$gJConfig->dbProfils , true);
         }
 
-        if($name == ''){
-            if(isset(self::$_profiles['default']))
-                $name=self::$_profiles['default'];
-            else
-                throw new jException('jelix~db.error.default.profile.unknow');
-        }elseif($nameIsProfileType){
-            if(isset(self::$_profiles[$name]) && is_string(self::$_profiles[$name])){
-                $name = self::$_profiles[$name];
-            }else{
-                throw new jException('jelix~db.error.profile.type.unknow',$name);
+        if($name == '')
+            $name = 'default';
+        $targetName = $name;
+
+        if(isset(self::$_profiles[$name])) {
+            if (is_string(self::$_profiles[$name])) {
+                $targetName = self::$_profiles[$name];
+            }
+            else { // this is an array, and so a section
+                self::$_profiles[$name]['name'] = $name;
+                return self::$_profiles[$name];
             }
         }
+        // if the profile doesn't exist, we take the default one
+        elseif(isset(self::$_profiles['default'])) {
+#ifnot ENABLE_OPTIMIZED_SOURCE
+            trigger_error(jLocale::get('jelix~db.error.profile.use.default', $name), E_USER_NOTICE);
+#endif
+            if (is_string(self::$_profiles['default'])) {
+                $targetName = self::$_profiles['default'];
+            }
+            else {
+                self::$_profiles['default']['name'] = 'default';
+                return self::$_profiles['default'];
+            }
+        }
+        else {
+            if ($name == 'default')
+                throw new jException('jelix~db.error.default.profile.unknow');
+            else
+                throw new jException('jelix~db.error.profile.type.unknow',$name);
+        }
 
-        if(isset(self::$_profiles[$name]) && is_array(self::$_profiles[$name])){
+        if(isset(self::$_profiles[$targetName]) && is_array(self::$_profiles[$targetName])){
+            self::$_profiles[$name] = self::$_profiles[$targetName];
             self::$_profiles[$name]['name'] = $name;
             return self::$_profiles[$name];
         }else{
-            throw new jException('jelix~db.error.profile.unknow',$name);
+            throw new jException('jelix~db.error.profile.unknow',$targetName);
         }
     }
 

@@ -11,7 +11,7 @@
 */
 
 class UTjDbPgsql extends jUnitTestCaseDb {
-    protected $dbProfile ='testapp_pgsql';
+    protected $dbProfile ='pgsql_profile';
 
     function getTests(){
         try{

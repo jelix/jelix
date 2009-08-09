@@ -80,7 +80,7 @@ ACTION:
                     r.id_aclgrp = g.id_aclgrp
                  AND r.id_aclsbj=s.id_aclsbj
                 ORDER BY name, subject, value,id_aclres ";
-        $cnx = jDb::getConnection(jAclDb::getProfile());
+        $cnx = jDb::getConnection('jacl_profile');
         $rs = $cnx->query($sql);
         echo "group\tsubject\tvalue\t\tresource\n---------------------------------------------------------------\n";
         $grp=-1;
@@ -105,7 +105,7 @@ ACTION:
         if(!is_array($params) || count($params) <3 || count($params) >4)
             throw new Exception("wrong parameter count");
 
-        $cnx = jDb::getConnection(jAclDb::getProfile());
+        $cnx = jDb::getConnection('jacl_profile');
 
         $group = intval($params[0]);
         $subject=$cnx->quote($params[1]);
@@ -159,7 +159,7 @@ ACTION:
         if(!is_array($params) || count($params) <3 || count($params) >4)
             throw new Exception("wrong parameter count");
 
-         $cnx = jDb::getConnection(jAclDb::getProfile());
+         $cnx = jDb::getConnection('jacl_profile');
 
         $group = intval($params[0]);
         $subject=$cnx->quote($params[1]);
@@ -195,7 +195,7 @@ ACTION:
     protected function cmd_subject_list(){
 
         $sql="SELECT id_aclsbj, id_aclvalgrp, label_key FROM jacl_subject ORDER BY id_aclsbj";
-        $cnx = jDb::getConnection(jAclDb::getProfile());
+        $cnx = jDb::getConnection('jacl_profile');
         $rs = $cnx->query($sql);
         echo "id\t\t\tlabel key\n--------------------------------------------------------\n";
         foreach($rs as $rec){
@@ -215,7 +215,7 @@ ACTION:
         if(!is_array($params) || count($params) != 3)
             throw new Exception("wrong parameter count");
 
-        $cnx = jDb::getConnection(jAclDb::getProfile());
+        $cnx = jDb::getConnection('jacl_profile');
  
         $sql="SELECT id_aclsbj FROM jacl_subject WHERE id_aclsbj=".$cnx->quote($params[0]);
         $rs = $cnx->query($sql);
@@ -243,7 +243,7 @@ ACTION:
         if(!is_array($params) || count($params) != 1)
             throw new Exception("wrong parameter count");
 
-        $cnx = jDb::getConnection(jAclDb::getProfile());
+        $cnx = jDb::getConnection('jacl_profile');
 
         $sql="SELECT id_aclsbj FROM jacl_subject WHERE id_aclsbj=".$cnx->quote($params[0]);
         $rs = $cnx->query($sql);

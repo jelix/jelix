@@ -44,7 +44,7 @@ class dbAcl2Driver implements jIAcl2Driver {
             $groups = jAcl2DbUserGroup::getGroups();
             self::$acl=array();
             if (count($groups)) {
-                $dao = jDao::get('jacl2db~jacl2rights', jAcl2Db::getProfile());
+                $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
                 foreach($dao->getRightsByGroups($groups) as $rec){
                     self::$acl[$rec->id_aclsbj] = true;
                 }
@@ -68,7 +68,7 @@ class dbAcl2Driver implements jIAcl2Driver {
             if($groups===null)
                 $groups = jAcl2DbUserGroup::getGroups();
             if (count($groups)) {
-                $dao = jDao::get('jacl2db~jacl2rights', jAcl2Db::getProfile());
+                $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
                 $right = $dao->getRightWithRes($subject, $groups, $resource);
                 self::$aclres[$subject][$resource] = ($right != false);
             }
@@ -81,7 +81,7 @@ class dbAcl2Driver implements jIAcl2Driver {
     protected function getAnonymousRight($subject, $resource=null) {
 
         if (self::$anonacl === null) {
-            $dao = jDao::get('jacl2db~jacl2rights', jAcl2Db::getProfile());
+            $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
             self::$anonacl=array();
             foreach($dao->getAllAnonymousRights() as $rec){
                 self::$anonacl[$rec->id_aclsbj] = true;
@@ -102,7 +102,7 @@ class dbAcl2Driver implements jIAcl2Driver {
 
         self::$anonaclres[$subject][$resource] = self::$anonacl[$subject];
         if(!self::$anonacl[$subject]){
-            $dao = jDao::get('jacl2db~jacl2rights', jAcl2Db::getProfile());
+            $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
             $right = $dao->getAnonymousRightWithRes($subject, $resource);
             self::$anonaclres[$subject][$resource] = $r = ($right != false);
             return $r;

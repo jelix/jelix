@@ -116,6 +116,8 @@ class jInstaller {
     public $appConfig = null;
     
     public $installConfig = null;
+    
+    protected $epConfig = array();
 
     protected $rConfig = null;
     protected $modules = array();
@@ -149,7 +151,11 @@ class jInstaller {
 [modules]
 
 ");
-
+        $xml = simplexml_load_file(JELIX_APP_PATH.'project.xml');
+        foreach ($xml->entrypoints->entrypoint as $entrypoint) {
+            $file = (string)$entrypoint['file'];
+            $this->epConfig[$file] = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php', JELIX_APP_CONFIG_PATH.((string)$entrypoint['config']));
+        }
         $this->rConfig = jConfigCompiler::read('defaultconfig.ini.php', true);
         $this->appConfig = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
         $this->installConfig = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
@@ -177,6 +183,14 @@ class jInstaller {
         else
             return null;
     }
+    
+    
+    public function installApplication() {
+        
+        
+    }
+    
+    
 
     /**
      * install given modules

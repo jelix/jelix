@@ -26,27 +26,19 @@ class jAclDb {
     /**
      * return the profile name used for jacl connection
      * @return string profile name
+     * @deprecated 1.2
      */
     public static function getProfile(){
-        static $profile='';
-        if($profile== ''){
-            try{
-                $prof = jDb::getProfile ('jacl_profile', true);
-            }catch(Exception $e){
-                $prof = jDb::getProfile ();
-            }
-            $profile = $prof['name'];
-        }
-        return $profile;
+        return 'jacl_profile';
     }
 
     /**
      * DEPRECATED. same as getProfile
-     * @deprecated
+     * @deprecated 1.1
      */
     public static function getProfil (){
         trigger_error("jAclDb::getProfil() is deprecated, you should use jAclDb::getProfile()", E_USER_NOTICE);
-        return self::getProfile();
+        return 'jacl_profile';
     }
 }
 

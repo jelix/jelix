@@ -28,7 +28,7 @@ class UTjacl2usergroup extends jUnitTestCaseDb {
     protected $grpId7;
 
     public function testStart(){
-        $this->dbProfile = jAcl2Db::getProfile();
+        $this->dbProfile = 'jacl2_profile';
 
         $this->emptyTable('jacl2_user_group');
         $this->emptyTable('jacl2_group');

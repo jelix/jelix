@@ -25,18 +25,10 @@ class jAcl2Db {
 
     /**
      * return the profile name used for jacl connection
-     * @return string profile name
+     * @return string  'jacl_profile'
+     * @deprecated 1.2
      */
     public static function getProfile(){
-        static $profile='';
-        if($profile== ''){
-            try{
-                $prof = jDb::getProfile ('jacl_profile', true);
-            }catch(Exception $e){
-                $prof = jDb::getProfile ();
-            }
-            $profile = $prof['name'];
-        }
-        return $profile;
+        return 'jacl2_profile';
     }
 }
