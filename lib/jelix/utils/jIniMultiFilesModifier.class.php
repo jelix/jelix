@@ -88,5 +88,9 @@ class jIniMultiFilesModifier {
         $this->master->save();
         $this->overrider->save();
     }
+    
+    public function isModified() {
+        return $this->master->isModified() || $this->overrider->isModified();
+    }
 }
 

@@ -26,6 +26,8 @@ class jIniFileModifier {
     protected $content = array();
 
     protected $filename = '';
+    
+    protected $modified = false;
 
     /**
      * load the given ini file
@@ -133,6 +135,8 @@ class jIniFileModifier {
                 $this->content[$section][]= array(self::TK_ARR_VALUE, $name, $value, $key);
             }
         }
+
+        $this->modified = true;
     }
 
     /**
@@ -177,7 +181,10 @@ class jIniFileModifier {
      * save the ini file
      */
     public function save() {
-        file_put_contents($this->filename, $this->generateIni());
+        if ($this->modified) {
+            file_put_contents($this->filename, $this->generateIni());
+            $this->modified = false;
+        }
     }
 
     /**
@@ -186,6 +193,14 @@ class jIniFileModifier {
      */
     public function saveAs($filename) {
         file_put_contents($filename, $this->generateIni());
+    }
+
+    /**
+     * says if the ini content has been modified
+     * @return boolean
+     */
+    public function isModified() {
+        return $this->modified;
     }
 
     protected function generateIni() {
