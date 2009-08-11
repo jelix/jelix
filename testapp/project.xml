@@ -22,5 +22,7 @@
     </directories>
     <entrypoints>
         <entry file="index.php" config="index/config.ini.php" />
+        <entry file="soap.php" config="soap/config.ini.php" />
+        <entry file="jsonrpc.php" config="jsonrpc/config.ini.php" />
     </entrypoints>
 </project>

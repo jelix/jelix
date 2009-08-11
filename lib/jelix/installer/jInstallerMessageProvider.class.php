@@ -11,9 +11,8 @@
 * @since 1.0b2
 */
 
-
 /**
- * message provider for jInstallCheck
+ * message provider for jInstallCheck and jInstaller
  * @package  jelix
  * @subpackage core
  * @since 1.0b2
@@ -97,6 +96,9 @@ class jInstallerMessageProvider {
             'module.bad.dependency.version'=>'Le module %s necessite une autre version du module %s (%s - %s)',
             'module.installer.class.not.found'=>'La classe d\'installation %s pour le module %s n\'existe pas',
             'module.upgrader.class.not.found'=>'La classe de mise à jour %s pour le module %s n\'existe pas',
+            
+            'install.entrypoint.start'=>'Installation pour le point d\'entrée %s',
+            'install.entrypoint.end'=>'Tout les modules sont installés ou mise à jour pour le point d\'entrée %s',
             
             'install.dependencies.ok'=>'Toutes les dépendances des modules sont valides',
             'install.bad.dependencies'=>'Il y a des erreurs dans les dépendances. Installation annulée.',
@@ -183,6 +185,9 @@ class jInstallerMessageProvider {
             'module.bad.dependency.version'=>'The module %s needs another version of the module %s (%s - %s)',
             'module.installer.class.not.found'=>'The installation class %s for the module %s doesn\'t exist',
             'module.upgrader.class.not.found'=>'The upgrade class %s for the module %s doesn\'t exist',
+
+            'install.entrypoint.start'=>'Installation starts for the entry point %s',
+            'install.entrypoint.end'=>'All modules are installed or upgraded for the entry point %s',
 
             'install.dependencies.ok'=>'All modules dependencies are ok',
             'install.bad.dependencies'=>'Error in dependencies. Installation cancelled.',

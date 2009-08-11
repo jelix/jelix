@@ -4,8 +4,8 @@
 * @subpackage utils
 * @author     Laurent Jouanneau
 * @contributor
-* @copyright  2008 Laurent Jouanneau
-* @link       http://www.jelix.org
+* @copyright  2008-2009 Laurent Jouanneau
+* @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
@@ -88,7 +88,12 @@ class jIniMultiFilesModifier {
         $this->master->save();
         $this->overrider->save();
     }
-    
+
+    /**
+     * says if the ini content has been modified
+     * @return boolean
+     * @since 1.2
+     */
     public function isModified() {
         return $this->master->isModified() || $this->overrider->isModified();
     }

@@ -26,9 +26,9 @@ abstract class jInstallerBase {
 
     /**
      * default configuration of the application
-     * @var jIniFileModifier
+     * @var jIniMultiFilesModifier
      */
-    protected $config;
+    public $config;
     
     /**
      * The path of the module
@@ -36,12 +36,14 @@ abstract class jInstallerBase {
      */
     protected $path;
 
-    function __construct ($defaultConfig, $modulePath, $version) {
-        $this->config = $defaultConfig;
+    /**
+     * @param jIniMultiFilesModifier $config the configuration of the entry point
+     */
+    function __construct ($config, $modulePath, $version) {
+        $this->config = $config;
         $this->path = $modulePath;
         $this->version = $version;
     }
-
 
     /**
      * import a sql script into the given profile.

@@ -25,7 +25,7 @@ enableOldActionSelector =
 [modules]
 ; modulename.access = x   where x : 0= unused/forbidden, 1 = private access, 2 = public access
 
-jelix.access = 3
+jelix.access = 2
 
 ; jacldb is deprecated. keep it uninstall if possible
 jacldb.access = 0

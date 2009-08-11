@@ -9,9 +9,9 @@
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-require_once ('../application-cli.init.php');
+require_once (dirname(__FILE__).'/../application-cli.init.php');
 
 $installer = new jInstaller(new textInstallReporter());
 
-$installer->installModules(array('testapp', 'junittests', 'jWSDL'));
+$installer->installApplication();
 

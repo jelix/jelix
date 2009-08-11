@@ -15,7 +15,7 @@ require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
 class configCompileTest extends jConfigCompiler {
 
     static public function prepareConfig2($config){
-        self::prepareConfig($config, false);
+        self::prepareConfig($config, false, false, '');
     }
 }
 

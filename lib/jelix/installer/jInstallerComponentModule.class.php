@@ -23,22 +23,24 @@ class jInstallerComponentModule extends jInstallerComponentBase {
     protected $rootName = 'module';
     protected $identityFile = 'module.xml';
 
-
     protected $moduleInstaller = null;
     
     protected $moduleUpgraders = null;
 
-    function getInstaller() {
+    function getInstaller($config) {
         if ($this->moduleInstaller == null) {
             if (file_exists($this->path.'install/install.php')) {
                 include($this->path.'install/install.php');
                 $cname = $this->name.'ModuleInstaller';
                 if (!class_exists($cname))
                     throw new jInstallerException("module.installer.class.not.found",array($cname,$this->name));
-                $this->moduleInstaller = new $cname($this->mainInstaller->appConfig, $this->path, $this->sourceVersion);
+                $this->moduleInstaller = new $cname($config, $this->path, $this->sourceVersion);
             }
             else
-                $this->moduleInstaller = new jInstallerModule($this->mainInstaller->appConfig, $this->path, $this->sourceVersion);
+                $this->moduleInstaller = new jInstallerModule($config, $this->path, $this->sourceVersion);
+        }
+        else {
+            $this->moduleInstaller->config = $config; 
         }
         return $this->moduleInstaller;
     }
@@ -46,10 +48,14 @@ class jInstallerComponentModule extends jInstallerComponentBase {
     /**
      * upgrade the module.
      */
-    function getUpgraders() {
+    function getUpgraders($config) {
         
-        if ($this->moduleUpgraders !== null)
+        if ($this->moduleUpgraders !== null) {
+            foreach($this->moduleUpgraders as $upgrader) {
+                $upgrader->config = $config;
+            }
             return $this->moduleUpgraders;
+        }
         
         $this->moduleUpgraders = array();
         
@@ -82,15 +88,13 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             $cname = $this->name.'ModuleUpgrader_'.$fileInfo[2];
             if (!class_exists($cname))
                 throw new jInstallerException("module.upgrader.class.not.found",array($cname,$this->name));
-            $this->moduleUpgraders[] = new $cname($this->mainInstaller->appConfig, $this->path, $fileInfo[1]);
+            $this->moduleUpgraders[] = new $cname($config, $this->path, $fileInfo[1]);
         }
-        
+
         return $this->moduleUpgraders;
     }
 
     function sortFileList($fileA, $fileB) {
         return $this->compareVersion($fileA[1], $fileB[1]);
     }
-
 }
-

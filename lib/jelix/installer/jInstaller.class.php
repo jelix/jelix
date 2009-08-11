@@ -112,14 +112,13 @@ class jInstaller {
     
     const INSTALL_ERROR_MISSING_DEPENDENCIES = 1;
     const INSTALL_ERROR_CIRCULAR_DEPENDENCY = 2;
-
-    public $appConfig = null;
     
     public $installConfig = null;
     
     protected $epConfig = array();
 
-    protected $rConfig = null;
+    protected $epId = array();
+
     protected $modules = array();
 
     /**
@@ -148,70 +147,120 @@ class jInstaller {
             file_put_contents(JELIX_APP_CONFIG_PATH.'installer.ini.php', ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
-[modules]
 
 ");
-        $xml = simplexml_load_file(JELIX_APP_PATH.'project.xml');
-        foreach ($xml->entrypoints->entrypoint as $entrypoint) {
-            $file = (string)$entrypoint['file'];
-            $this->epConfig[$file] = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php', JELIX_APP_CONFIG_PATH.((string)$entrypoint['config']));
-        }
-        $this->rConfig = jConfigCompiler::read('defaultconfig.ini.php', true);
-        $this->appConfig = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
-        $this->installConfig = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
         $this->modules = array();
-        foreach($this->rConfig->_allModulesPathList as $name=>$path) {
-            $access = $this->rConfig->modules[$name.'.access'];
-            $installed = $this->rConfig->modules[$name.'.installed'];
-            $version = $this->rConfig->modules[$name.'.version'];
-            $this->installConfig->setValue($name.'.installed', $installed, 'modules');
-            $this->installConfig->setValue($name.'.version', $version, 'modules');
-            $this->modules[$name] = new jInstallerComponentModule($name, $path, $installed, $access, $version, $this);
+        $this->installConfig = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
+
+        $xml = simplexml_load_file(JELIX_APP_PATH.'project.xml');
+
+        $configFileList = array();
+
+        foreach ($xml->entrypoints->entry as $entrypoint) {
+
+            $file = (string)$entrypoint['file'];
+            $configFile = (string)$entrypoint['config'];
+            $isCliScript = (isset($entrypoint['cli'])?(string)$entrypoint['cli'] == 'true':false);
+
+            // ignore entry point which have the same config file of an other one
+            if (isset($configFileList[$configFile]))
+                continue;
+
+            $configFileList[$configFile] = true;
+
+            $config = jConfigCompiler::read($configFile, true, $isCliScript, ($isCliScript?$file:'/'.$file)); // to have compiled version of the config
+            $id = $config->urlengine['urlScriptId'];
+            $this->epId[$file] = $id;
+            $this->epConfig[$id] = array(
+              'config'=>$config,
+              'configFile'=> $configFile,
+              'isCliScript'=> $isCliScript,
+              'scriptName'=> ($isCliScript?$file:'/'.$file),
+              'file'=>$file,
+            );
+            
+            // we don't load yet a jIniMultiFilesModifier because installer could modify defaultconfig file,
+            // so other installer should have a jIniMultiFilesModifier loaded with the good version of the defaultconfig file
+
+            $this->modules[$id] = array();
+
+            foreach ($config->_allModulesPathList as $name=>$path) {
+                $access = $config->modules[$name.'.access'];
+                $installed = $config->modules[$name.'.installed'];
+                $version = $config->modules[$name.'.version'];
+                $this->installConfig->setValue($name.'.installed', $installed, $id);
+                $this->installConfig->setValue($name.'.version', $version, $id);
+                $this->modules[$id][$name] = new jInstallerComponentModule($name, $path, $installed, $access, $version, $this);
+            }
         }
+
         $this->installConfig->save();
-
-        $GLOBALS['gJConfig'] = jConfig::load('defaultconfig.ini.php');
     }
 
-    /**
-     * get a module by its name
-     * @return jInstallerModule
-     */
-    public function getModule($name) {
-        if (isset($this->modules[$name]))
-            return $this->modules[$name];
-        else
-            return null;
-    }
-    
-    
     public function installApplication() {
-        
-        
+
+        $this->startMessage ();
+        $result = true;
+
+        foreach($this->epConfig as $id=>$parameters) {
+            $modules = array();
+            foreach($this->modules[$id] as $name => $module) {
+                if ($module->getAccessLevel() == 0)
+                    continue;
+                $modules[$name] = $module;
+            }
+            $result = $result & $this->_installModules($modules, $id);
+        }
+
+        $this->installConfig->save();
+        $this->endMessage();
+        return $result;
     }
-    
-    
 
     /**
      * install given modules
      * @param array $list array of module names
+     * @param string $entrypoint  the entrypoint name as it appears in project.xml
+     * @return boolean true if the installation is ok
      */
-    public function installModules($list) {
+    public function installModules($list, $entrypoint = 'index.php') {
         
         $this->startMessage ();
+        $id = $this->epId[$entrypoint];
+        $allModules = &$this->modules[$id];
         
         $modules = array();
         // always install jelix
         array_unshift($list, 'jelix');
         foreach($list as $name) {
-            if (!isset($this->modules[$name])) {
+            if (!isset($allModules[$name])) {
                 $this->error('module.unknow', $name);
             }
             else
-                $modules[] = $this->modules[$name];
+                $modules[] = $allModules[$name];
         }
 
-        $result = $this->checkDependencies($modules);
+        $result = $this->_installModules($modules, $id);
+        $this->installConfig->save();
+        $this->endMessage();
+        return $result;
+    }
+    
+    /**
+     * @param array $modules list of jInstallerComponentModule
+     * @param string $epId  the entrypoint id
+     * @return boolean true if the installation is ok
+     */
+    protected function _installModules(&$modules, $epId) {
+
+        $this->ok('install.entrypoint.start', $epId);
+        
+        $params = $this->epConfig[$epId];
+        $GLOBALS['gJConfig'] = $params['config'];
+        
+        $config = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php', JELIX_APP_CONFIG_PATH.$params['configFile']);
+
+        $result = $this->checkDependencies($modules, $epId);
 
         if ($result) {
             $this->ok('install.dependencies.ok');
@@ -221,11 +270,11 @@ class jInstaller {
                 list($component, $toInstall) = $item;
                 try {
                     if ($toInstall) {
-                        $installer = $component->getInstaller();
+                        $installer = $component->getInstaller($config);
                         $installer->preInstall();
                     }
                     else {
-                        foreach($component->getUpgraders() as $upgrader) {
+                        foreach($component->getUpgraders($config) as $upgrader) {
                             $upgrader->preInstall();
                         }
                     }
@@ -245,31 +294,37 @@ class jInstaller {
                     foreach($this->_componentsToInstall as $item) {
                         list($component, $toInstall) = $item;
                         if ($toInstall) {
-                            $installer = $component->getInstaller();
+                            $installer = $component->getInstaller($config);
                             $installer->install();
-                            $this->installConfig->setValue($component->getName().'.installed', 1, 'modules');
-                            $this->installConfig->setValue($component->getName().'.version', $component->getSourceVersion(), 'modules');
+                            $this->installConfig->setValue($component->getName().'.installed', 1, $epId);
+                            $this->installConfig->setValue($component->getName().'.version', $component->getSourceVersion(), $epId);
                             $this->ok('install.module.installed', $component->getName());
                             $installedModules[] = array($component, true);
                         }
                         else {
                             $lastversion='';
-                            foreach($component->getUpgraders() as $upgrader) {
+                            foreach($component->getUpgraders($config) as $upgrader) {
                                 $upgrader->install();
                                 // we set the version of the upgrade, so if an error occurs in
                                 // the next upgrader, we won't have to re-run this current upgrader
                                 // during a future update
-                                $this->installConfig->setValue($component->getName().'.version', $upgrader->version, 'modules');
+                                $this->installConfig->setValue($component->getName().'.version', $upgrader->version, $epId);
                                 $this->ok('install.module.upgraded', array($component->getName(), $upgrader->version));
                                 $lastversion = $upgrader->version;
                             }
                             // we set the version to the component version, because the version
                             // of the last upgrader could not correspond to the component version.
                             if ($lastversion != $component->getSourceVersion()) {
-                                $this->installConfig->setValue($component->getName().'.version', $component->getSourceVersion(), 'modules');
+                                $this->installConfig->setValue($component->getName().'.version', $component->getSourceVersion(), $epId);
                                 $this->ok('install.module.upgraded', array($component->getName(), $component->getSourceVersion()));
                             }
                             $installedModules[] = array($component, false);
+                        }
+                        if ($config->isModified()) {
+                            $config->save();
+                            // we re-load configuration file for each module because
+                            // previous module installer could have modify it.
+                            $GLOBALS['gJConfig'] = jConfigCompiler::read($params['configFile'], true, $params['isCliScript'], $params['scriptName']);
                         }
                     }
                 } catch( jInstallerException $e) {
@@ -286,13 +341,19 @@ class jInstaller {
                 try {
                     list($component, $toInstall) = $item;
                     if ($toInstall) {
-                        $installer = $component->getInstaller();
+                        $installer = $component->getInstaller($config);
                         $installer->postInstall();
                     }
                     else {
-                        foreach($component->getUpgraders() as $upgrader) {
+                        foreach($component->getUpgraders($config) as $upgrader) {
                             $upgrader->postInstall();
                         }
+                    }
+                    if ($config->isModified()) {
+                        $config->save();
+                        // we re-load configuration file for each module because
+                        // previous module installer could have modify it.
+                        $GLOBALS['gJConfig'] = jConfigCompiler::read($params['configFile'], true, $params['isCliScript'], $params['scriptName']);
                     }
                 } catch( jInstallerException $e) {
                     $result = false;
@@ -305,9 +366,9 @@ class jInstaller {
         }
         else
             $this->error('install.bad.dependencies');
-        
-        $this->installConfig->save();
-        $this->endMessage();
+
+        $this->ok('install.entrypoint.end', $epId);
+
         return $result;
     }
 
@@ -316,13 +377,13 @@ class jInstaller {
     protected $_checkedComponents = array();
     protected $_checkedCircularDependency = array();
 
-   /**
+    /**
      * check dependencies of given modules and plugins
      *
      * @param array $list  list of jInstallerComponentModule/jInstallerComponentPlugin objects
      * @throw jException if the install has failed
      */
-    protected function checkDependencies ($list) {
+    protected function checkDependencies ($list, $epId) {
         
         $this->_checkedComponents = array();
         $this->_componentsToInstall = array();
@@ -333,7 +394,7 @@ class jInstaller {
                 try {
                     $component->init();
 
-                    $this->_checkDependencies($component);
+                    $this->_checkDependencies($component, $epId);
 
                     if (!$component->isInstalled()) {
                         $this->_componentsToInstall[] = array($component, true);
@@ -357,7 +418,7 @@ class jInstaller {
      * check dependencies of a module
      * @param jInstallerComponentBase $component
      */
-    protected function _checkDependencies($component) {
+    protected function _checkDependencies($component, $epId) {
 
         if (isset($this->_checkedCircularDependency[$component->getName()])) {
             $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
@@ -374,7 +435,7 @@ class jInstaller {
             if ($compInfo['type'] != 'module')
                 continue;
             $name = $compInfo['name'];
-            $comp = $this->getModule($name);
+            $comp = $this->modules[$epId][$name];
             if (!$comp)
                 $compNeeded .= $name.', ';
             else {
@@ -393,7 +454,7 @@ class jInstaller {
                 }
 
                 if (!isset($this->_checkedComponents[$comp->getName()])) {
-                    $this->_checkDependencies($comp);
+                    $this->_checkDependencies($comp, $epId);
                     if (!$comp->isInstalled()) {
                         $this->_componentsToInstall[] = array($comp, true);
                     }
@@ -412,61 +473,7 @@ class jInstaller {
             throw new jInstallerException ('module.needed', array($component->getName(), $compNeeded));
         }
     }
-
-    /**
-     * install a package.
-     * a package is a zip or gz archive. Top directories of this archive
-     * should be a plugin or a module not an application. So in this directories
-     * it should contains a module.xml, or a plugin.xml.
-     * @param string $packageFileName  the file path of the package
-     * @return array an array of jInstallerModule or jInstallerPlugin objects,
-     * corresponding to 
-     */
-    function installPackage ($packageFileName) {
-        // it should
-        // * extract the package in the temp directory
-        // * verify that modules/plugins are not already installed
-        // in the application
-        // * if ok, it should copy modules and plugins in the right directories
-        // into the application
-        // * create instance of jInstallerModule/jInstallerPlugin corresponding of
-        // each module & plugins
-        // call install()
-        // if the install fails, the new directories of modules and plugins
-        // should be deleted.
-    }
     
-    /**
-     * get on object to modify the config file of an entry point 
-     * @param string $filename relative path to the var/config directory
-     * @return jIniMultiFilesModifier
-     */
-    function getEntryPointConfig($entrypoint) {
-        
-         throw new Exception('not implemented');
-        
-        //TODO
-        // get the path of the config file corresponding to the entrypoint,
-        // from the project.xml
-        $filename = '';
-        return new jIniMutliFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',
-                                          JELIX_APP_CONFIG_PATH.$filename);
-    }
-
-    function addEntryPoint($filename, $type, $configFilename) {
-        throw new Exception('not implemented');
-        // should modify the project.xml
-        // if the config file doesn't exist, create it
-        // if the entrypoint doesn't exist, create it, with the given type
-    }
-
-
-    function removeEntryPoint($filename) {
-        throw new Exception('not implemented');
-        // should modify the project.xml
-        // if the config file is not used by another entrypoint, remove it
-    }
-
     protected function startMessage () {
         $this->nbError = 0;
         $this->nbOk = 0;

@@ -16,8 +16,10 @@
  *
  */
 #if STANDALONE_CHECKER
+#includephp installer/jInstallerMessageProvider.class.php
 #includephp core/jInstallChecker.class.php
 #else
+include dirname(__FILE__).'/installer/jInstallerMessageProvider.class.php';
 include dirname(__FILE__).'/core/jInstallChecker.class.php';
 #endif
 /**

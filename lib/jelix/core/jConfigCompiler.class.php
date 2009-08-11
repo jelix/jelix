@@ -28,9 +28,12 @@ class jConfigCompiler {
      * @param boolean $allModuleInfo may be true for the installer, which needs all informations
      *                               else should be false, these extra informations are
      *                               not needed to run the application
+     * @param boolean $isCli  indicate if the configuration to read is for a CLI script or no
+     *   If you are in a CLI script but you want to load a configuration file for a web entry point
+     *   or vice-versa, you need to indicate the $pseudoScriptName parameter with the name of the entry point
      * @return object an object which contains configuration values
      */
-    static public function read($configFile, $allModuleInfo = false){
+    static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
 
         if(JELIX_APP_TEMP_PATH=='/'){
             // if it equals to '/', this is because realpath has returned false in the application.init.php
@@ -70,7 +73,7 @@ class jConfigCompiler {
         $config = (object) $config;
 #endif
 
-        self::prepareConfig($config, $allModuleInfo);
+        self::prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName);
         return $config;
     }
     
@@ -82,7 +85,7 @@ class jConfigCompiler {
      */
     static public function readAndCache($configFile){
         
-        $config = self::read($configFile);
+        $config = self::read($configFile, false, (PHP_SAPI == 'cli'));
 
 #if WITH_BYTECODE_CACHE == 'auto'
         if(BYTECODE_CACHE_EXISTS){
@@ -113,7 +116,7 @@ class jConfigCompiler {
     /**
      * fill some config properties with calculated values
      */
-    static protected function prepareConfig($config, $allModuleInfo){
+    static protected function prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName){
 
         $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
         if(trim( $config->startAction) == '') {
@@ -121,6 +124,62 @@ class jConfigCompiler {
         }
 
         $config->_allBasePath = array();
+
+        if ($pseudoScriptName) {
+            $config->urlengine['urlScript'] = $pseudoScriptName;
+        }
+        else {
+            if($config->urlengine['scriptNameServerVariable'] == '') {
+                $config->urlengine['scriptNameServerVariable'] = self::_findServerName($config->urlengine['entrypointExtension']);
+            }
+            $config->urlengine['urlScript'] = $_SERVER[$config->urlengine['scriptNameServerVariable']];
+        }
+        $lastslash = strrpos ($config->urlengine['urlScript'], '/');
+
+        if ($isCli) {
+            if ($lastslash === false) {
+                $config->urlengine['urlScriptPath'] = $_SERVER['PWD'].'/';
+                $config->urlengine['urlScriptName'] = $config->urlengine['urlScript'];
+            }
+            else {
+                $config->urlengine['urlScriptPath'] = $_SERVER['PWD'].'/'.substr ($config->urlengine['urlScript'], 0, $lastslash ).'/';
+                $config->urlengine['urlScriptName'] = substr ($config->urlengine['urlScript'], $lastslash+1);
+            }
+            $config->urlengine['urlScript'] = $_SERVER['PWD'].'/'.$config->urlengine['urlScript'];
+            $basepath = $config->urlengine['basePath'] = $config->urlengine['urlScriptPath'] ;
+            $snp = $config->urlengine['urlScriptName'];
+        }
+        else {
+            $config->urlengine['urlScriptPath'] = substr ($config->urlengine['urlScript'], 0, $lastslash ).'/';
+            $config->urlengine['urlScriptName'] = substr ($config->urlengine['urlScript'], $lastslash+1);
+        
+            $basepath = $config->urlengine['basePath'];
+            if ($basepath == '') {
+                // for beginners or simple site, we "guess" the base path
+                $basepath = $config->urlengine['urlScriptPath'];
+            }
+            elseif ($basepath != '/') {
+                if($basepath{0} != '/') $basepath='/'.$basepath;
+                if(substr($basepath,-1) != '/') $basepath.='/';
+    
+                if(strpos($config->urlengine['urlScriptPath'], $basepath) !== 0){
+                    throw new Exception('Jelix Error: basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$config->urlengine['urlScriptPath']);
+                }
+            }
+    
+            $config->urlengine['basePath'] = $basepath;
+    
+            if($config->urlengine['jelixWWWPath']{0} != '/')
+                $config->urlengine['jelixWWWPath'] = $basepath.$config->urlengine['jelixWWWPath'];
+            $snp = substr($config->urlengine['urlScript'],strlen($basepath));
+        }
+
+        $pos = strrpos($snp, $config->urlengine['entrypointExtension']);
+        if($pos !== false){
+            $snp = substr($snp,0,$pos);
+        }
+        $config->urlengine['urlScriptId'] = $snp;
+        $config->urlengine['urlScriptIdenc'] = rawurlencode($snp);
 
         self::_loadModuleInfo($config, $allModuleInfo);
         self::_loadPluginsPathList($config);
@@ -138,40 +197,6 @@ class jConfigCompiler {
             }
         }
         $config->coordplugins = $coordplugins;
-
-        if($config->urlengine['scriptNameServerVariable'] == '') {
-            $config->urlengine['scriptNameServerVariable'] = self::_findServerName($config->urlengine['entrypointExtension']);
-        }
-        $config->urlengine['urlScript'] = $_SERVER[$config->urlengine['scriptNameServerVariable']];
-        $lastslash = strrpos ($config->urlengine['urlScript'], '/');
-        $config->urlengine['urlScriptPath'] = substr ($config->urlengine['urlScript'], 0, $lastslash ).'/';
-        $config->urlengine['urlScriptName'] = substr ($config->urlengine['urlScript'], $lastslash+1);
-
-        $basepath = $config->urlengine['basePath'];
-        if ($basepath != '/' && $basepath != '') {
-            if($basepath{0} != '/') $basepath='/'.$basepath;
-            if(substr($basepath,-1) != '/') $basepath.='/';
-
-            if(PHP_SAPI != 'cli' && strpos($config->urlengine['urlScriptPath'], $basepath) !== 0){
-                throw new Exception('Jelix Error: basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$config->urlengine['urlScriptPath']);
-            }
-
-        } else if ($basepath == '') {
-            // for beginners or simple site, we "guess" the base path
-            $basepath = $config->urlengine['urlScriptPath'];
-        }
-        $config->urlengine['basePath'] = $basepath;
-
-        if($config->urlengine['jelixWWWPath']{0} != '/')
-            $config->urlengine['jelixWWWPath'] = $basepath.$config->urlengine['jelixWWWPath'];
-
-        $snp = substr($config->urlengine['urlScript'],strlen($basepath));
-        $pos = strrpos($snp, $config->urlengine['entrypointExtension']);
-        if($pos !== false){
-            $snp = substr($snp,0,$pos);
-        }
-        $config->urlengine['urlScriptId'] = $snp;
-        $config->urlengine['urlScriptIdenc'] = rawurlencode($snp);
 
         self::_initResponsesPath($config->responses);
         self::_initResponsesPath($config->_coreResponses);
@@ -242,12 +267,17 @@ class jConfigCompiler {
         
         if (!file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php')) {
             if ($allModuleInfo)
-                $installation = array ('modules'=>array());
+                $installation = array ();
             else
                 die("installer.ini.php doesn't exist! You should install your application..\n");
         }
         else
             $installation = parse_ini_file(JELIX_APP_CONFIG_PATH.'installer.ini.php',true);
+            
+        $section = $config->urlengine['urlScriptId'];
+
+        if (!isset($installation[$section]))
+            $installation[$section] = array();
 
         $list = preg_split('/ *, */',$config->modulesPath);
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
@@ -266,28 +296,28 @@ class jConfigCompiler {
                 while (false !== ($f = readdir($handle))) {
                     if ($f{0} != '.' && is_dir($p.$f)) {
                         
-                        if (!isset($installation['modules'][$f.'.installed']))
-                            $installation['modules'][$f.'.installed'] = 0;
+                        if (!isset($installation[$section][$f.'.installed']))
+                            $installation[$section][$f.'.installed'] = 0;
 
                         if($f == 'jelix') {
                             $config->modules['jelix.access'] = 2; // the jelix module should always be public
                         }
                         else {
                             if (!isset($config->modules[$f.'.access'])
-                                || !$installation['modules'][$f.'.installed'])
+                                || (!$installation[$section][$f.'.installed'] && !$allModuleInfo))
                                 $config->modules[$f.'.access'] = 0;
                         }
 
                         if ($allModuleInfo) {
-                            if (!isset($installation['modules'][$f.'.version']))
-                                $installation['modules'][$f.'.version'] = '';
+                            if (!isset($installation[$section][$f.'.version']))
+                                $installation[$section][$f.'.version'] = '';
     
-                            if (!isset($installation['modules'][$f.'.dataversion']))
-                                $installation['modules'][$f.'.dataversion'] = '';
+                            if (!isset($installation[$section][$f.'.dataversion']))
+                                $installation[$section][$f.'.dataversion'] = '';
                                 
-                            $config->modules[$f.'.version'] = $installation['modules'][$f.'.version'];
-                            $config->modules[$f.'.dataversion'] = $installation['modules'][$f.'.dataversion'];
-                            $config->modules[$f.'.installed'] = $installation['modules'][$f.'.installed'];
+                            $config->modules[$f.'.version'] = $installation[$section][$f.'.version'];
+                            $config->modules[$f.'.dataversion'] = $installation[$section][$f.'.dataversion'];
+                            $config->modules[$f.'.installed'] = $installation[$section][$f.'.installed'];
 
                             $config->_allModulesPathList[$f]=$p.$f.'/';
                         }
