@@ -15,7 +15,7 @@
 * @package     jelix
 * @subpackage  installer
 * @experimental
-* @since 1.1
+* @since 1.2
 */
 class jInstallerComponentPlugin extends jInstallerComponentBase {
 

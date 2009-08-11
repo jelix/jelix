@@ -10,12 +10,10 @@
 */
 
 /**
-* EXPERIMENTAL
 * a class to install a module. 
 * @package     jelix
 * @subpackage  installer
-* @experimental
-* @since 1.1
+* @since 1.2
 */
 class jInstallerComponentModule extends jInstallerComponentBase {
     

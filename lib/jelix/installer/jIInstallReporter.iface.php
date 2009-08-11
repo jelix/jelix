@@ -10,12 +10,10 @@
 */
 
 /**
-* EXPERIMENTAL
 * interface for classes used as reporter for installation
 * This classes are responsible to show information to the user
 * @package     jelix
 * @subpackage  installer
-* @experimental
 * @since 1.2
 */
 interface jIInstallReporter {

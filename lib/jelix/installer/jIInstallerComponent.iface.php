@@ -10,10 +10,8 @@
 */
 
 /**
-* EXPERIMENTAL
 * @package     jelix
 * @subpackage  installer
-* @experimental
 * @since 1.2
 */
 interface jIInstallerComponent {

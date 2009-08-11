@@ -10,11 +10,9 @@
 */
 
 /**
-* EXPERIMENTAL
 * a class to install a plugin.
 * @package     jelix
 * @subpackage  installer
-* @experimental
 * @since 1.2
 */
 class jInstallerPlugin extends jInstallerBase implements jIInstallerComponent {
