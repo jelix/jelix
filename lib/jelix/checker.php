@@ -6,7 +6,7 @@
 * @package     jelix
 * @subpackage  core
 * @author      Jouanneau Laurent
-* @copyright   2007 Jouanneau laurent
+* @copyright   2007-2009 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since       1.0b2
@@ -16,61 +16,62 @@
  *
  */
 #if STANDALONE_CHECKER
+#includephp installer/jIInstallReporter.iface.php
 #includephp installer/jInstallerMessageProvider.class.php
-#includephp core/jInstallChecker.class.php
+#includephp installer/jInstallChecker.class.php
 #else
+include dirname(__FILE__).'/installer/jIInstallReporter.iface.php';
 include dirname(__FILE__).'/installer/jInstallerMessageProvider.class.php';
-include dirname(__FILE__).'/core/jInstallChecker.class.php';
+include dirname(__FILE__).'/installer/jInstallChecker.class.php';
 #endif
 /**
  * an HTML reporter for jInstallChecker
  * @package jelix
  */
-class jHtmlInstallChecker implements jIInstallCheckReporter {
+class jHtmlInstallChecker implements jIInstallReporter {
+
     function start(){
         echo '<ul class="checkresults">';
     }
-    function showError($message){
-        echo '<li class="checkerror">'.htmlspecialchars($message).'</li>';
-    }
-    function showWarning($message){
-        echo '<li class="checkwarning">'.htmlspecialchars($message).'</li>';
 
+    function message($message, $type=''){
+        echo '<li class="check'.$type.'">'.htmlspecialchars($message).'</li>';
     }
-    function showOk($message){
-        echo '<li class="checkok">'.htmlspecialchars($message).'</li>';
-
-    }
-    function showNotice($message){
-        echo '<li class="checknotice">'.htmlspecialchars($message).'</li>';
-
-    }
-    function end($checker){
+    
+    function end($results){
         echo '</ul>';
+        
+        $nbError = $results['error'];
+        $nbWarning = $results['warning'];
+        $nbNotice = $results['notice'];
+
         echo '<div class="results">';
-        if($checker->nbError){
-            echo ' ',$checker->nbError, $checker->messages->get( ($checker->nbError > 1?'number.errors':'number.error'));
+        if ($nbError) {
+            echo ' '.$nbError. $this->messageProvider->get( ($nbError > 1?'number.errors':'number.error'));
         }
-        if($checker->nbWarning){
-            echo ' ',$checker->nbWarning, $checker->messages->get(($checker->nbWarning > 1?'number.warnings':'number.warning'));
+        if ($nbWarning) {
+            echo ' '.$nbWarning. $this->messageProvider->get(($nbWarning > 1?'number.warnings':'number.warning'));
         }
-        if($checker->nbNotice){
-            echo ' ',$checker->nbNotice, $checker->messages->get(($checker->nbNotice > 1?'number.notices':'number.notice'));
+        if ($nbNotice) {
+            echo ' '.$nbNotice. $this->messageProvider->get(($nbNotice > 1?'number.notices':'number.notice'));
         }
 
-        if($checker->nbError){
-           echo '<p>',$checker->messages->get(($checker->nbError > 1?'conclusion.errors':'conclusion.error')),'</p>';
-        }else  if($checker->nbWarning){
-            echo '<p>',$checker->messages->get(($checker->nbWarning > 1?'conclusion.warnings':'conclusion.warning')),'</p>';
-        }else  if($checker->nbNotice){
-            echo '<p>',$checker->messages->get(($checker->nbNotice > 1?'conclusion.notices':'conclusion.notice')),'</p>';
+        if($nbError){
+            echo '<p>'.$this->messageProvider->get(($nbError > 1?'conclusion.errors':'conclusion.error')).'</p>';
+        }else if($nbWarning){
+            echo '<p>'.$this->messageProvider->get(($nbWarning > 1?'conclusion.warnings':'conclusion.warning')).'</p>';
+        }else if($nbNotice){
+            echo '<p>'.$this->messageProvider->get(($nbNotice > 1?'conclusion.notices':'conclusion.notice')).'</p>';
         }else{
-            echo '<p>',$checker->messages->get('conclusion.ok'),'</p>';
+            echo '<p>'.$this->messageProvider->get('conclusion.ok').'</p>';
         }
         echo "</div>";
     }
 }
-$check = new jInstallCheck(new jHtmlInstallChecker);
+
+$reporter = new jHtmlInstallChecker();
+$check = new jInstallCheck($reporter);
+$reporter->messageProvider = $check->messages;
 
 header("Content-type:text/html;charset=UTF-8");
 

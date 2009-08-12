@@ -13,22 +13,6 @@
 */
 
 /**
- * interface for objects which output result of the install check
- * @package  jelix
- * @subpackage core
- * @since 1.0b2
- */
-interface jIInstallCheckReporter {
-    function start();
-    function showError($message);
-    function showWarning($message);
-    function showOk($message);
-    function showNotice($message);
-    function end($checker);
-}
-
-
-/**
  * check an installation of a jelix application
  * @package  jelix
  * @subpackage core
@@ -38,7 +22,7 @@ class jInstallCheck {
 
     /**
      * the object responsible of the results output
-     * @var jIInstallCheckReporter
+     * @var jIInstallReporter
      */
     protected $reporter;
 
@@ -85,18 +69,19 @@ class jInstallCheck {
             $this->reporter->showError($this->messages->get('cannot.continue').$e->getMessage());
             $this->nbError ++;
         }
-        $this->reporter->end($this);
+        $results = array('error'=>$this->nbError, 'warning'=>$this->nbWarning, 'ok'=>$this->nbOk,'notice'=>$this->nbNotice);
+        $this->reporter->end($results);
     }
 
     protected function error($msg){
         if($this->reporter)
-            $this->reporter->showError($this->messages->get($msg));
+            $this->reporter->message($this->messages->get($msg), 'error');
         $this->nbError ++;
     }
 
     protected function ok($msg){
         if($this->reporter)
-            $this->reporter->showOk($this->messages->get($msg));
+            $this->reporter->message($this->messages->get($msg), 'ok');
         $this->nbOk ++;
     }
     /**
@@ -105,13 +90,14 @@ class jInstallCheck {
      */
     protected function warning($msg){
         if($this->reporter)
-            $this->reporter->showWarning($this->messages->get($msg));
+            $this->reporter->message($this->messages->get($msg), 'warning');
         $this->nbWarning ++;
     }
 
     protected function notice($msg){
-        if($this->reporter)
-            $this->reporter->showNotice($this->messages->get($msg));
+        if($this->reporter) {
+            $this->reporter->message($this->messages->get($msg), 'notice');
+        }
         $this->nbNotice ++;
     }
 

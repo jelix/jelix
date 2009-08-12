@@ -30,15 +30,16 @@ class textInstallReporter implements jIInstallReporter {
      * @param string $message the message to display
      * @param string $type the type of the message : 'error', 'notice', 'warning', ''
      */
-    function showMessage($message, $type='') {
-        echo ($type != ''?$type.': ':'').$message."\n";
+    function message($message, $type='') {
+        echo ($type != ''?'['.$type.'] ':'').$message."\n";
     }
 
     /**
      * called when the installation is finished
-     * @param object $installer
+     * @param array $results an array which contains, for each type of message,
+     * the number of messages
      */
-    function end($installer) {
+    function end($results) {
         echo "Installation ended.\n";
     }
 }
@@ -483,14 +484,14 @@ class jInstaller {
     }
     
     protected function endMessage() {
-        $this->reporter->end($this);
+        $this->reporter->end(array('error'=>$this->nbError, 'warning'=>$this->nbWarning, 'ok'=>$this->nbOk,'notice'=>$this->nbNotice));
     }
 
     protected function error($msg, $params=null, $fullString=false){
         if($this->reporter) {
             if (!$fullString)
                 $msg = $this->messages->get($msg,$params);
-            $this->reporter->showMessage ( $msg, 'error');
+            $this->reporter->message($msg, 'error');
         }
         $this->nbError ++;
     }
@@ -499,19 +500,16 @@ class jInstaller {
         if($this->reporter) {
             if (!$fullString)
                 $msg = $this->messages->get($msg,$params);
-            $this->reporter->showMessage ( $msg, '');
+            $this->reporter->message($msg, '');
         }
         $this->nbOk ++;
     }
-    /**
-     * generate a warning
-     * @param string $msg  the key of the message to display
-     */
+
     protected function warning($msg, $params=null, $fullString=false){
         if($this->reporter) {
             if (!$fullString)
                 $msg = $this->messages->get($msg,$params);
-            $this->reporter->showMessage ( $msg, 'warning');
+            $this->reporter->message($msg, 'warning');
         }
         $this->nbWarning ++;
     }
@@ -520,7 +518,7 @@ class jInstaller {
         if($this->reporter) {
             if (!$fullString)
                 $msg = $this->messages->get($msg,$params);
-            $this->reporter->showMessage ( $msg, 'notice');
+            $this->reporter->message($msg, 'notice');
         }
         $this->nbNotice ++;
     }

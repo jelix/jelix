@@ -10,8 +10,8 @@
 */
 
 /**
-* interface for classes used as reporter for installation
-* This classes are responsible to show information to the user
+* interface for classes used as reporter for installation or check etc...
+* This classes are responsible to show informations to the user
 * @package     jelix
 * @subpackage  installer
 * @since 1.2
@@ -19,7 +19,7 @@
 interface jIInstallReporter {
 
     /**
-     * start the installation
+     * start the process
      */
     function start();
 
@@ -28,13 +28,14 @@ interface jIInstallReporter {
      * @param string $message the message to display
      * @param string $type the type of the message : 'error', 'notice', 'warning', ''
      */
-    function showMessage($message, $type='');
+    function message($message, $type='');
 
     /**
      * called when the installation is finished
-     * @param object $installer
+     * @param array $results an array which contains, for each type of message,
+     * the number of messages
      */
-    function end($installer);
+    function end($results);
 
 }
 

@@ -37,7 +37,6 @@ cd lib/jelix/controllers
 cd lib/jelix/core
 ! defaultconfig.ini.php
 * jConfigCompiler.class.php
-* jInstallChecker.class.php
   jSoapCoordinator.class.php
   jCmdlineCoordinator.class.php
 
@@ -205,6 +204,7 @@ cd lib/jelix/installer
   jIInstallReporter.iface.php
   jInstaller.class.php
   jInstallerBase.class.php
+* jInstallChecker.class.php
   jInstallerComponentBase.class.php
   jInstallerComponentModule.class.php
   jInstallerComponentPlugin.class.php
