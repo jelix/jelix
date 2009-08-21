@@ -53,11 +53,11 @@ final class jResponseRedirectUrl extends jResponse {
         if($this->hasErrors())
             return false;
         if($this->temporary)
-            $this->setHttpStatus(303, 'Redirection');
+            $this->setHttpStatus(303, 'See Other');
         else
-            $this->setHttpStatus(301, 'Redirection');
+            $this->setHttpStatus(301, 'Moved Permanently');
         $this->sendHttpHeaders();
-        header ('location: '.$this->url);
+        header ('Location: '.$this->url);
         return true;
     }
 

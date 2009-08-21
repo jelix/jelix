@@ -195,6 +195,9 @@ Nicolas Jeudy (aka njeudy)
 Gwendal Jouannic (aka obewan)
  - oracle support with PDO-OCI (#615)
 
+Xavier L. (aka afroxav)
+ - improved the conformance with HTTP specification in redirections (#957)
+
 Denis Lallement (dlalleme)
  - tpl plugin break (#808)
  
