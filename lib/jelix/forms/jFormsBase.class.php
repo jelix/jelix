@@ -586,14 +586,49 @@ abstract class jFormsBase {
     }
 
     /**
+     * returns the old values of the controls which have been modified since
+     * the call of the method initModifiedControlsList()
      * @return array key=control id,  value=old value
      * @since 1.1
      */
     public function getModifiedControls(){
-        if(count($this->container->originalData))
-            return array_diff_assoc($this->container->originalData, $this->container->data);
+        if (count($this->container->originalData)) {
+
+            // we musn't use array_diff_assoc because it convert array values
+            // to "Array" before comparison, so these values are always equal for it.
+            // We shouldn't use array_udiff_assoc  because it crashes PHP, at least on
+            // some PHP version.
+            // so we have to compare by ourself.
+
+            $result = array();
+            $orig = & $this->container->originalData;
+            foreach($this->container->data as $k=>$v1) {
+                
+                if (!isset($orig[$k])) {
+                    continue;
+                }
+                
+                if($this->_diffValues($orig[$k], $v1))  {
+                    $result[$k] = $orig[$k];
+                    continue;
+                }
+            }
+            return $result;
+        }
         else
             return $this->container->data;
+    }
+
+    protected function _diffValues(&$v1, &$v2) {
+        if (is_array($v1) && is_array($v2)) {
+            return (count(array_diff($v1,$v2)) > 0);
+        }
+        elseif (is_array($v1) || is_array($v2)) {
+            return true;
+        }
+        else {
+            return !($v1==$v2);
+        }
     }
 
     /**

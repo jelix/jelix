@@ -3,9 +3,9 @@
 * @package     testapp
 * @subpackage  unittest module
 * @author      Bastien Jaillot
-* @contributor 
-* @copyright   2008 Bastien Jaillot
-* @link        http://www.jelix.org
+* @contributor Laurent Jouanneau
+* @copyright   2008 Bastien Jaillot, 2009 Laurent Jouanneau
+* @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
@@ -51,6 +51,13 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
         $ctrl->valueOnCheck='1';
         $ctrl->valueOnUncheck='0';
         $this->form->addControl($ctrl);
+        
+        $ctrl= new jFormsControlListbox('list');
+        $ctrl->multiple=true;
+        $ctrl->datasource = new jFormsStaticDatasource();
+        $ctrl->datasource->data = array('a'=>'aaa', 'b'=>'bbb', 'c'=>'123', 'd'=>'456');
+        $this->form->addCtrl($ctrl, false);
+        $this->form->setData('list', array('bbb','123'));
     }
     
     function testinitModifiedControlsList() {
@@ -62,7 +69,9 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
           'inputctrl' => 'toto',
           'chckbxctrl' => '1',
           'chckbxctrl1'=>'0',
-          'chckbxctrl2'=>'1');
+          'chckbxctrl2'=>'1',
+          'list'=>array('bbb','123'),
+          );
         $this->assertIdentical($initForm, $this->form->getContainer()->originalData);
     }
     
@@ -74,7 +83,8 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
           'inputctrl' => 'toto',
           'chckbxctrl' => '0',
           'chckbxctrl1'=>'0',
-          'chckbxctrl2'=>'1');
+          'chckbxctrl2'=>'1',
+          'list'=>array('bbb','123'),);
         $this->assertIdentical($newForm, $this->form->getContainer()->data);
         $modifiedControls = array (
             'chckbxctrl' => '1');
@@ -85,11 +95,41 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
           'inputctrl' => 'tata',
           'chckbxctrl' => '0',
           'chckbxctrl1'=>'0',
-          'chckbxctrl2'=>'1');
+          'chckbxctrl2'=>'1',
+          'list'=>array('bbb','123'),);
         $this->assertIdentical($newForm, $this->form->getContainer()->data);
         $modifiedControls = array (
            'inputctrl' => 'toto' ,
             'chckbxctrl' => '1');
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+
+        $this->form->setData('list', array('123'));
+        $newForm = array (
+          'inputctrl' => 'tata',
+          'chckbxctrl' => '0',
+          'chckbxctrl1'=>'0',
+          'chckbxctrl2'=>'1',
+          'list'=>array('123'),);
+        $this->assertIdentical($newForm, $this->form->getContainer()->data);
+        $modifiedControls = array (
+           'inputctrl' => 'toto' ,
+            'chckbxctrl' => '1',
+            'list'=>array('bbb','123'));
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('list', array());
+        $newForm = array (
+          'inputctrl' => 'tata',
+          'chckbxctrl' => '0',
+          'chckbxctrl1'=>'0',
+          'chckbxctrl2'=>'1',
+          'list'=>array(),);
+        $this->assertIdentical($newForm, $this->form->getContainer()->data);
+        $modifiedControls = array (
+           'inputctrl' => 'toto' ,
+            'chckbxctrl' => '1',
+            'list'=>array('bbb','123'));
         $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
 
         // despite all changes : originalData hasn't changed
@@ -97,8 +137,8 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
           'inputctrl' => 'toto',
           'chckbxctrl' => '1',
           'chckbxctrl1'=>'0',
-          'chckbxctrl2'=>'1');
+          'chckbxctrl2'=>'1',
+          'list'=>array('bbb','123'),);
         $this->assertIdentical($initForm, $this->form->getContainer()->originalData);
-        
     }    
 }
