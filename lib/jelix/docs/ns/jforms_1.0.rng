@@ -2,7 +2,7 @@
 <grammar 
   xmlns="http://relaxng.org/ns/structure/1.0"
   xmlns:ev="http://www.w3.org/2001/xml-events"
-  datatype="http://www.w3.org/2001/XMLSchema-datatypes"
+  datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
   ns="http://jelix.org/ns/forms/1.0">
 
    <start>
