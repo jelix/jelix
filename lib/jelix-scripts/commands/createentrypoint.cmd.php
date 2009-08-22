@@ -4,7 +4,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor 
-* @copyright   2008 Laurent Jouanneau
+* @copyright   2008-2009 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -75,6 +75,14 @@ class createentrypointCommand extends JelixScriptCommand {
                 $param2['rp_cmd'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_APP_CMD_PATH,  true);
                 $param2['rp_jelix'] = jxs_getRelativePath(JELIX_APP_PATH, JELIX_LIB_PATH, true);
                 $param2['rp_app']   = jxs_getRelativePath(JELIX_APP_WWW_PATH, JELIX_APP_PATH, true);
+                
+                $param2['php_rp_temp'] = $this->convertRp($param2['rp_temp']);
+                $param2['php_rp_var']  = $this->convertRp($param2['rp_var']);
+                $param2['php_rp_log']  = $this->convertRp($param2['rp_log']);
+                $param2['php_rp_conf'] = $this->convertRp($param2['rp_conf']);
+                $param2['php_rp_www']  = $this->convertRp($param2['rp_www']);
+                $param2['php_rp_cmd']  = $this->convertRp($param2['rp_cmd']);
+                
                 $this->createFile(JELIX_APP_PATH.'application-cli.init.php','application.init.php.tpl',$param2);
             }
             $this->createDir(JELIX_APP_CONFIG_PATH.'cmdline');
