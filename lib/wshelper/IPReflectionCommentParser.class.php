@@ -52,7 +52,7 @@ class IPReflectionCommentParser{
 		$this->fullDescriptionDone = false;
 
 		//split lines
-		$lines = split("\n", $this->comment);
+		$lines = explode("\n", $this->comment);
 
 		//check lines for description or tags
 		foreach ($lines as $line) {

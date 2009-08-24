@@ -36,10 +36,11 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         E_RECOVERABLE_ERROR => 'error',
         E_WARNING       => 'warning',
         E_NOTICE        => 'notice',
-        E_DEPRECATED    => 'notice',
+        E_DEPRECATED    => 'deprecated',
         E_USER_ERROR    => 'error',
         E_USER_WARNING  => 'warning',
         E_USER_NOTICE   => 'notice',
+        E_USER_DEPRECATED => 'deprecated',
         E_STRICT        => 'strict'
     );
 

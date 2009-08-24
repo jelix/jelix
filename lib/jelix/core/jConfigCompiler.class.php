@@ -219,7 +219,7 @@ class jConfigCompiler {
 
         $config->sessions['_class_to_load'] = array();
         if ($config->sessions['loadClasses'] != '') {
-            $list = split(' *, *',$config->sessions['loadClasses']);
+            $list = preg_split('/ *, */',$config->sessions['loadClasses']);
             foreach($list as $sel) {
                 if(preg_match("/^([a-zA-Z0-9_\.]+)~([a-zA-Z0-9_\.\\/]+)$/", $sel, $m)){
                     if (!isset($config->_modulesPathList[$m[1]])) {
@@ -336,7 +336,7 @@ class jConfigCompiler {
      * @param array|object $config the config container
      */
     static protected function _loadPluginsPathList(&$config) {
-        $list = split(' *, *',$config->pluginsPath);
+        $list = preg_split('/ *, */',$config->pluginsPath);
         array_unshift($list, JELIX_LIB_PATH.'plugins/');
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;

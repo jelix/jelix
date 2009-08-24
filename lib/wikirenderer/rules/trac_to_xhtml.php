@@ -784,7 +784,7 @@ class tracxhtml_image extends WikiRendererBloc {
     protected $_closeNow=true;
 
     public function getRenderedLine(){
-        $params = split(",",$this->_detectMatch[1]);
+        $params = preg_split("/,/",$this->_detectMatch[1]);
         $file = trim(array_shift($params));
         $width = null;
         $nolink=false;

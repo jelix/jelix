@@ -288,7 +288,7 @@ class jFormsCompiler_jf_1_0  {
         }
 
         if(isset($attributes['mimetype'])){
-            $mime = split('[,; ]',$attributes['mimetype']);
+            $mime = preg_split('/[,; ]/',$attributes['mimetype']);
             $mime = array_diff($mime, array('')); // we remove all ''
             $source[]='$ctrl->mimetype='.var_export($mime,true).';';
             unset($attributes['mimetype']);

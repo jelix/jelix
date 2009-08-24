@@ -1,5 +1,5 @@
---- unpatched/IPReflectionClass.class.php	2006-04-07 11:24:40.000000000 +0200
-+++ IPReflectionClass.class.php	2008-03-18 11:18:16.000000000 +0100
+--- unpatched/IPReflectionClass.class.php	2009-07-20 01:29:06.000000000 +0200
++++ IPReflectionClass.class.php	2009-07-20 01:29:06.000000000 +0200
 @@ -5,16 +5,18 @@
   * This class extends the reflectionClass class by also parsing the
   * comment for javadoc compatible @tags and by providing help
@@ -65,8 +65,27 @@
  				}
  			}
  		}
---- unpatched/IPReflectionCommentParser.class.php	2006-03-03 17:54:40.000000000 +0100
-+++ IPReflectionCommentParser.class.php	2008-04-14 15:17:05.000000000 +0200
+--- unpatched/IPReflectionCommentParser.class.php	2009-07-20 01:29:06.000000000 +0200
++++ IPReflectionCommentParser.class.php	2009-08-24 22:46:39.000000000 +0200
+@@ -47,17 +47,17 @@
+ 	 * @return void
+ 	 */
+ 	function parse() {
+ 		//reset object
+ 		$descriptionDone = false;
+ 		$this->fullDescriptionDone = false;
+ 
+ 		//split lines
+-		$lines = split("\n", $this->comment);
++		$lines = explode("\n", $this->comment);
+ 
+ 		//check lines for description or tags
+ 		foreach ($lines as $line) {
+ 			$pos = strpos($line,"* @");
+ 			if (trim($line) == "/**" || trim($line) == "*/") { //skip the start and end line
+ 			}elseif (!($pos === false)) { //comment
+ 				$this->parseTagLine(substr($line,$pos+3));
+ 				$descriptionDone=true;
 @@ -124,18 +124,19 @@
  				break;
  			case 'extends': break;
@@ -88,8 +107,8 @@
  			case 'since':
  				$this->obj->since = trim($tagArr[1]); break;
  			case 'static':
---- unpatched/IPReflectionMethod.class.php	2006-04-07 12:31:18.000000000 +0200
-+++ IPReflectionMethod.class.php	2008-04-14 15:18:16.000000000 +0200
+--- unpatched/IPReflectionMethod.class.php	2009-07-20 01:29:06.000000000 +0200
++++ IPReflectionMethod.class.php	2009-07-20 01:29:06.000000000 +0200
 @@ -60,25 +60,16 @@
  	}
  	
@@ -116,8 +135,8 @@
  	 * @param $annotationName String the annotation name
  	 * @param $annotationClass String the annotation class
  	 * @return void
---- unpatched/IPXMLSchema.class.php	2006-02-15 19:14:28.000000000 +0100
-+++ IPXMLSchema.class.php	2008-04-14 15:21:54.000000000 +0200
+--- unpatched/IPXMLSchema.class.php	2009-07-20 01:29:06.000000000 +0200
++++ IPXMLSchema.class.php	2009-07-20 01:29:06.000000000 +0200
 @@ -1,12 +1,13 @@
  <?php
  
@@ -230,8 +249,8 @@
  	/**
  	 * Creates an xmlSchema element for the given array
  	 */
---- unpatched/WSDLStruct.class.php	2006-04-07 10:45:12.000000000 +0200
-+++ WSDLStruct.class.php	2008-04-14 15:23:03.000000000 +0200
+--- unpatched/WSDLStruct.class.php	2009-07-20 01:29:06.000000000 +0200
++++ WSDLStruct.class.php	2009-07-20 01:29:06.000000000 +0200
 @@ -62,17 +62,18 @@
  	/** @var IPXMLSchema */
  	private $xmlSchema;

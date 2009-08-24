@@ -103,6 +103,7 @@ error        = ECHO EXIT
 warning      = ECHO
 notice       = ECHO
 strict       = ECHO
+deprecated   =
 ; pour les exceptions, il y a implicitement un EXIT
 exception    = ECHO
 
