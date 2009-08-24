@@ -254,7 +254,7 @@ class jPreProcessor{
             }elseif(preg_match('/^\#include(php)?\s+([\w\/\.\:]+)\s*$/m',$sline,$m)){
                 if($isOpen){
                     $path = $m[2];
-                    if(!($path{0} == '/' || preg_match('/^\w\:\\.+$/',$path))){
+                    if(!($path[0] == '/' || preg_match('/^\w\:\\.+$/',$path))){
                         $path = realpath(dirname($filename).'/'.$path);
                         if($path == ''){
                             throw new jExceptionPreProc($filename,$nb,self::ERR_INVALID_FILENAME, $m[2]);
@@ -281,8 +281,8 @@ class jPreProcessor{
                }else{
                     $tline=false;
                 }
-            }elseif(strlen($sline) && $sline{0} == '#'){
-                if(strlen($sline)>1 && $sline{1} == '#'){
+            }elseif(strlen($sline) && $sline[0] == '#'){
+                if(strlen($sline)>1 && $sline[1] == '#'){
                     if(!$isOpen){
                         $tline=false;
                     }else{

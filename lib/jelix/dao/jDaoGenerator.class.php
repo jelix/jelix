@@ -756,12 +756,12 @@ class jDaoGenerator {
                     $ord = $this->_encloseName($fields[$name]->table).'.'.$this->_encloseName($fields[$name]->fieldName);
                 else
                     $ord = $this->_encloseName($fields[$name]->fieldName);
-            }elseif($name{0} == '$'){
+            }elseif($name[0] == '$'){
                 $ord = '\'.'.$name.'.\'';
             }else{
                 continue;
             }
-            if($way{0} == '$'){
+            if($way[0] == '$'){
                 $order[]=$ord.' \'.( strtolower('.$way.') ==\'asc\'?\'asc\':\'desc\').\'';
             }else{
                 $order[]=$ord.' '.$way;

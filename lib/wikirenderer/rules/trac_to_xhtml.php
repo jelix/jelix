@@ -73,7 +73,7 @@ class trac_to_xhtml  extends WikiRendererConfig  {
     public function transformWikiWord($ww){
         $result=array();
         foreach($ww as $w){
-            if ($w{0} == '!')
+            if ($w[0] == '!')
                 $result[]=substr($w,1);
             else
                 $result[]='<a href="'.$this->wikiWordBaseUrl.$w.'">'.$w.'</a>';

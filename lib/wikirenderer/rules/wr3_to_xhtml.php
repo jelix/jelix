@@ -226,7 +226,7 @@ class wr3xhtml_list extends WikiRendererBloc {
       $str='';
 
       for($i=strlen($t); $i >= $this->_firstTagLen; $i--){
-          $str.=($t{$i-1}== '#'?"</li></ol>\n":"</li></ul>\n");
+          $str.=($t[$i-1]== '#'?"</li></ol>\n":"</li></ul>\n");
       }
       return $str;
    }
@@ -239,7 +239,7 @@ class wr3xhtml_list extends WikiRendererBloc {
       if( $d > 0 ){ // on remonte d'un ou plusieurs cran dans la hierarchie...
          $l=strlen($this->_detectMatch[1]);
          for($i=strlen($t); $i>$l; $i--){
-            $str.=($t{$i-1}== '#'?"</li></ol>\n":"</li></ul>\n");
+            $str.=($t[$i-1]== '#'?"</li></ol>\n":"</li></ul>\n");
          }
          $str.="</li>\n<li>";
          $this->_previousTag=substr($this->_previousTag,0,-$d); // pour étre sur...

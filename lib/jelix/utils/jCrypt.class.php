@@ -105,12 +105,12 @@ class jCrypt {
         $kl=strlen($key)<32?strlen($key):32;
         $k=array();
         for($i=0;$i<$kl;$i++){
-            $k[$i]=ord($key{$i})&0x1F;
+            $k[$i]=ord($key[$i])&0x1F;
         }
         $j=0;
         for($i=0;$i<strlen($str);$i++){
-            $e=ord($str{$i});
-            $str{$i}=$e&0xE0?chr($e^$k[$j]):chr($e);
+            $e=ord($str[$i]);
+            $str[$i]=$e&0xE0?chr($e^$k[$j]):chr($e);
             $j++;$j=$j==$kl?0:$j;
         }
         return $str;

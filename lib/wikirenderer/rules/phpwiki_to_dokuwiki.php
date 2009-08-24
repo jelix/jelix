@@ -51,7 +51,7 @@ class phpwiki_to_dokuwiki  extends WikiRendererConfig {
     public function transformWikiWord($ww){
         $result=array();
         foreach($ww as $w){
-            if ($w{0} == '!')
+            if ($w[0] == '!')
                 $result[]=substr($w,1);
             elseif($this->enableLinkOnWikiWord) {
               if ($this->wikiWordBaseUrl)
@@ -240,7 +240,7 @@ class pwdk_link extends PhpWikiTag {
             return $href;
         }
 
-        if($href{0} == '#' || $href{0} == '/') {
+        if($href[0] == '#' || $href[0] == '/') {
           if ($label!='')
             return $href.'|'.$label;
           else
@@ -414,7 +414,7 @@ class pwdk_p extends PwDkBloc {
    public function detect($string){
       if($string=='') return false;
       if(preg_match('/^(<\?plugin|-{4,})/',$string)) return false;
-      $c=$string{0};
+      $c=$string[0];
       if(strpos("*#!| \t>;" ,$c) === false){
         $this->_detectMatch = array($string,$string);
         return true;
@@ -449,7 +449,7 @@ class pwdk_note extends PwDkBloc {
           $this->isOpen=false;
           return false;
         }
-        $c=$string{0};
+        $c=$string[0];
         if(strpos("*#!| \t>;" ,$c) === false){
           $this->_detectMatch = $string;
           return true;

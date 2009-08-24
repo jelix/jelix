@@ -240,7 +240,7 @@ class cwrtext_p extends WikiRendererBloc {
    public function detect($string){
       if($string=='') return false;
       if(preg_match('/^={4,} *$/',$string)) return false;
-      $c=$string{0};
+      $c=$string[0];
       if(strpos("*#-!| \t>;" ,$c) === false){
         $this->_detectMatch=array($string,$string);
         return true;

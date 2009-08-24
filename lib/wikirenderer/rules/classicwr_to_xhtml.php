@@ -186,7 +186,7 @@ class cwrxhtml_list extends WikiRendererBloc {
       $str='';
 
       for($i=strlen($t); $i >= $this->_firstTagLen; $i--){
-          $str.=($t{$i-1}== '#'?"</li></ol>\n":"</li></ul>\n");
+          $str.=($t[$i-1]== '#'?"</li></ol>\n":"</li></ul>\n");
       }
       return $str;
    }
@@ -199,7 +199,7 @@ class cwrxhtml_list extends WikiRendererBloc {
       if( $d > 0 ){ // on remonte d'un ou plusieurs cran dans la hierarchie...
          $l=strlen($this->_detectMatch[1]);
          for($i=strlen($t); $i>$l; $i--){
-            $str.=($t{$i-1}== '#'?"</li></ol>\n":"</li></ul>\n");
+            $str.=($t[$i-1]== '#'?"</li></ol>\n":"</li></ul>\n");
          }
          $str.="</li>\n<li>";
          $this->_previousTag=substr($this->_previousTag,0,-$d); // pour étre sur...
@@ -309,7 +309,7 @@ class cwrxhtml_p extends WikiRendererBloc {
    public function detect($string){
       if($string=='') return false;
       if(preg_match('/^={4,} *$/',$string)) return false;
-      $c=$string{0};
+      $c=$string[0];
       if(strpos("*#-!| \t>;" ,$c) === false){
         $this->_detectMatch=array($string,$string);
         return true;

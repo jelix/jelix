@@ -76,7 +76,7 @@ class jTplConfig {
 
         if ($handle = opendir($path)) {
             while (false !== ($f = readdir($handle))) {
-                if ($f{0} != '.' && is_dir($path.$f)) {
+                if ($f[0] != '.' && is_dir($path.$f)) {
                     self::$pluginPathList[$f][]= $path.$f.'/';
                 }
             }

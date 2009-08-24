@@ -159,7 +159,7 @@ class jConfigCompiler {
                 $basepath = $config->urlengine['urlScriptPath'];
             }
             elseif ($basepath != '/') {
-                if($basepath{0} != '/') $basepath='/'.$basepath;
+                if($basepath[0] != '/') $basepath='/'.$basepath;
                 if(substr($basepath,-1) != '/') $basepath.='/';
     
                 if(strpos($config->urlengine['urlScriptPath'], $basepath) !== 0){
@@ -169,7 +169,7 @@ class jConfigCompiler {
     
             $config->urlengine['basePath'] = $basepath;
     
-            if($config->urlengine['jelixWWWPath']{0} != '/')
+            if($config->urlengine['jelixWWWPath'][0] != '/')
                 $config->urlengine['jelixWWWPath'] = $basepath.$config->urlengine['jelixWWWPath'];
             $snp = substr($config->urlengine['urlScript'],strlen($basepath));
         }
@@ -294,7 +294,7 @@ class jConfigCompiler {
                 $config->_allBasePath[]=$p;
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
-                    if ($f{0} != '.' && is_dir($p.$f)) {
+                    if ($f[0] != '.' && is_dir($p.$f)) {
                         
                         if (!isset($installation[$section][$f.'.installed']))
                             $installation[$section][$f.'.installed'] = 0;
@@ -350,12 +350,12 @@ class jConfigCompiler {
 
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
-                    if ($f{0} != '.' && is_dir($p.$f)) {
+                    if ($f[0] != '.' && is_dir($p.$f)) {
                         if($subdir = opendir($p.$f)){
                             if($k!=0)
                                $config->_allBasePath[]=$p.$f.'/';
                             while (false !== ($subf = readdir($subdir))) {
-                                if ($subf{0} != '.' && is_dir($p.$f.'/'.$subf)) {
+                                if ($subf[0] != '.' && is_dir($p.$f.'/'.$subf)) {
                                     if($f == 'tpl'){
                                         $prop = '_tplpluginsPathList_'.$subf;
                                         $config->{$prop}[] = $p.$f.'/'.$subf.'/';
@@ -421,7 +421,7 @@ class jConfigCompiler {
                 $array[$k] = $v;
                 continue;
             }
-            if($k{1} == '_')
+            if($k[1] == '_')
                 continue;
             if(is_array($v)){
                 $array[$k] = array_merge($array[$k], $v);

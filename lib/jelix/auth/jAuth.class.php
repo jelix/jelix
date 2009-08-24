@@ -341,7 +341,7 @@ class jAuth {
         $letter = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $pass = '';
         for($i=0;$i<$length;$i++)
-            $pass .= $letter{rand(0,61)};
+            $pass .= $letter[rand(0,61)];
         return $pass;
     }
 }

@@ -42,7 +42,7 @@ class jLog {
     public static function log($message, $type='default'){
 
         $f = $GLOBALS['gJConfig']->logfiles[$type];
-        if ($f{0} == '!') {
+        if ($f[0] == '!') {
             $GLOBALS['gJCoord']->addLogMsg("log $type: $message", substr($f, 1));
         }
         else {

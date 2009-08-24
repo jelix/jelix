@@ -117,8 +117,8 @@ class jwxhtml_code extends jwikiTag {
         
         $tag='<code>';
         $endtag ='</code>';
-        if($match{1} == '@') {
-            $type= $code{0};
+        if($match[1] == '@') {
+            $type= $code[0];
             $code = substr($code,2);
             if($type=='K') {
                 $tag='<key>';
