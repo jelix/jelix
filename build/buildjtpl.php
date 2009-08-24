@@ -13,7 +13,11 @@ $BUILD_OPTIONS = array(
     "main directory where sources will be copied",  // signification (false = option cachée)
     '_dist',                                        // valeur par défaut (boolean = option booleene)
     '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
-    ), 
+    ),
+'PHP_VERSION_TARGET'=> array(
+    "PHP5 version for which jTpl will be generated (by default, the target is php 5.2)",
+    '5.2'
+    ),
 'PACKAGE_TAR_GZ'=>array(
     "create a tar.gz package",
     false,
@@ -41,6 +45,34 @@ $BUILD_OPTIONS = array(
     false,
     '1',
     ),
+'PHP50'=> array(
+    false,   // hidden option
+    false,
+    ),
+'PHP51'=> array(
+    false,
+    false,
+    ),
+'PHP52'=> array(
+    false,
+    false,
+    ),
+'PHP53'=> array(
+    false,
+    false,
+    ),
+'PHP51ORMORE'=> array(
+    false,
+    false,
+    ),
+'PHP52ORMORE'=> array(
+    false,
+    false,
+    ),
+'PHP53ORMORE'=> array(
+    false,
+    false,
+    ),
 );
 
 include(dirname(__FILE__).'/lib/jBuild.inc.php');
@@ -66,6 +98,25 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
     $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME.'/';
 }else{
     $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
+}
+
+if($PHP_VERSION_TARGET){
+    if(version_compare($PHP_VERSION_TARGET, '5.3') > -1){
+        $PHP53 = 1;
+        $PHP53ORMORE = 1;
+    }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
+        $PHP52 = 1;
+        $PHP52ORMORE = 1;
+    }elseif(version_compare($PHP_VERSION_TARGET, '5.1') > -1){
+        $PHP51=1;
+        $PHP51ORMORE = 1;
+    }else{
+        die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
+    }
+}else{
+    // no defined target, so php 5.2
+    $PHP52=1;
+    $PHP2ORMORE=1;
 }
 
 

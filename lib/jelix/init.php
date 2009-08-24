@@ -66,8 +66,7 @@ if(!defined('E_RECOVERABLE_ERROR'))
     define ('E_RECOVERABLE_ERROR',4096);
 error_reporting (E_ALL | E_STRICT | E_RECOVERABLE_ERROR);
 #else
-#if PHP53ORMORE
-#else
+#if !PHP53ORMORE
 if(!defined('E_DEPRECATED'))
     define ('E_DEPRECATED',8192);
 if(!defined('E_USER_DEPRECATED'))
