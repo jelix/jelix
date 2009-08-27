@@ -834,7 +834,7 @@ class jDaoGenerator {
                     // is = or <>, then we need to generate a thing like :
                     // - in case 1: ($foo === null ? 'IS NULL' : '='.$this->_conn->quote($foo))
                     // - in case 2: '= concat('.($foo === null ? 'NULL' : $this->_conn->quote($foo)).' ,\'bla\')'
-                    if(strpos($value, '$') === 0){
+                    if($value[0] == '$'){
                         $value = '\'.'.$this->_preparePHPExpr($value, $prop, !$prop->requiredInConditions,$cond['operator']).'.\'';
                     }else{
                         foreach($params as $param){
@@ -874,8 +874,9 @@ class jDaoGenerator {
             else
                 $checknull=false;
         }
-        if($forCondition!='')
-            $forCondition = '\''.$forCondition.'\'.';
+        if($forCondition!=''){
+            $forCondition = '\' '.$forCondition.' \'.'; // spaces for operators like LIKE
+        }
 
         switch(strtolower($field->unifiedType)){
             case 'integer':
