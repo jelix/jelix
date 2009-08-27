@@ -1,24 +1,26 @@
 <?php
-
 /**
 * @package     jelix
 * @subpackage  utils
 * @author      Antoine Detante
-* @contributor
-* @copyright   2007 Antoine Detante
+* @contributor Laurent Jouanneau
+* @copyright   2007 Antoine Detante, 2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 **/
 
 /** 
-* Static methods help to encrypt and decrypt string. mCrypt is used if it is installed, else a basic algorithm is used.
+* Static methods help to encrypt and decrypt string. mCrypt is used if it is
+* installed, else a basic algorithm is used.
 * @package     jelix
 * @subpackage  utils
 */
 class jCrypt {
 
     /**
-     * Decrypt a string with a specific key
+     * Decrypt a string with a specific key.
+     *
+     * Use mCrypt if it is installed, else a basic algorithm.
      * @param string $string the string to decrypt
      * @param string $key the key used to decrypt
      * @return string decrypted string
@@ -36,6 +38,8 @@ class jCrypt {
 
     /**
      * Encrypt a string with a specific key
+     *
+     * Use mCrypt if it is installed, else a basic algorithm.
      * @param string $string the string to encrypt
      * @param string $key the key used to encrypt
      * @return string encrypted string
@@ -56,7 +60,7 @@ class jCrypt {
      * @param string $key the key used to encrypt string
      * @return string encrypted string
      */
-    protected static function mcryptEncrypt($string,$key){
+    public static function mcryptEncrypt($string,$key){
         if($key=='')
             throw new jException('jelix~auth.error.key.empty');
         $td = mcrypt_module_open(MCRYPT_WAKE, '', MCRYPT_MODE_STREAM, '');
@@ -75,7 +79,7 @@ class jCrypt {
      * @param string $key the key used to decrypt string
      * @return string decrypted string 
      */
-    protected static function mcryptDecrypt($string,$key){
+    public static function mcryptDecrypt($string,$key){
         if($key=='')
             throw new jException('jelix~auth.error.key.empty');
         $td = mcrypt_module_open(MCRYPT_WAKE, '', MCRYPT_MODE_STREAM, '');
