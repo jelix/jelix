@@ -49,6 +49,8 @@ class jForms {
      */
     public static function create($formSel, $formId=null){
         $sel = new jSelectorForm($formSel);
+        // normalize the selector to avoid conflict in session
+        $formSel = $sel->toString(); 
         jIncluder::inc($sel);
         $c = $sel->getClass();
         if($formId === null)
@@ -65,7 +67,7 @@ class jForms {
             if ($formId == self::DEFAULT_ID) 
                 $dc->refcount++;
         }
-        $form = new $c($sel->toString(), $dc, true);
+        $form = new $c($formSel, $dc, true);
         return $form;
     }
 
@@ -84,14 +86,17 @@ class jForms {
             $formId= self::DEFAULT_ID;
         $fid = is_array($formId) ? serialize($formId) : $formId;
 
+        $sel = new jSelectorForm($formSel);
+        // normalize the selector to avoid conflict in session
+        $formSel = $sel->toString();
+
         if(!isset($_SESSION['JFORMS'][$formSel][$fid])){
             return null;
         }
 
-        $sel = new jSelectorForm($formSel);
         jIncluder::inc($sel);
         $c = $sel->getClass();
-        $form = new $c($sel->toString(), $_SESSION['JFORMS'][$formSel][$fid],false);
+        $form = new $c($formSel, $_SESSION['JFORMS'][$formSel][$fid],false);
 
         return $form;
     }
@@ -124,6 +129,11 @@ class jForms {
         global $gJCoord;
         if($formId === null)  $formId = self::DEFAULT_ID;
         if(is_array($formId)) $formId = serialize($formId);
+        
+        // normalize the selector to avoid conflict in session
+        $sel = new jSelectorForm($formSel);
+        $formSel = $sel->toString();
+
         if(isset($_SESSION['JFORMS'][$formSel][$formId])){
             if ($formId == self::DEFAULT_ID) {
                 if((--$_SESSION['JFORMS'][$formSel][$formId]->refcount) > 0) {
@@ -145,11 +155,17 @@ class jForms {
             foreach($_SESSION['JFORMS'] as $sel=>$f) {
                 self::clean($sel, $life);
             }
-        } else if(isset($_SESSION['JFORMS'][$formSel])) {
-            $t = time();
-            foreach($_SESSION['JFORMS'][$formSel] as $id=>$cont) {
-                if($t-$cont->updatetime > $life)
-                    unset($_SESSION['JFORMS'][$formSel][$id]);
+        } else {
+            // normalize the selector to avoid conflict in session
+            $sel = new jSelectorForm($formSel);
+            $formSel = $sel->toString();
+            
+            if(isset($_SESSION['JFORMS'][$formSel])) {
+                $t = time();
+                foreach($_SESSION['JFORMS'][$formSel] as $id=>$cont) {
+                    if($t-$cont->updatetime > $life)
+                        unset($_SESSION['JFORMS'][$formSel][$id]);
+                }
             }
         }
     }

@@ -30,7 +30,7 @@ class UTjforms extends jUnitTestCase {
 <object class="cForm_jelix_tests_Jx_product">
     <object method="getContainer()" class="jFormsDataContainer">
         <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
-        <string property="formSelector" value="product" />
+        <string property="formSelector" value="jelix_tests~product" />
         <array property="data">
             <string key="name" value="" />
             <string key="price" value="" />
@@ -65,7 +65,7 @@ class UTjforms extends jUnitTestCase {
 <object class="cForm_jelix_tests_Jx_product">
     <object method="getContainer()" class="jFormsDataContainer">
         <string property="formId" value="akey" />
-        <string property="formSelector" value="product" />
+        <string property="formSelector" value="jelix_tests~product" />
         <array property="data">
             <string key="name" value="" />
             <string key="price" value="" />
@@ -99,7 +99,7 @@ class UTjforms extends jUnitTestCase {
 <object class="cForm_jelix_tests_Jx_label">
     <object method="getContainer()" class="jFormsDataContainer">
         <array property="formId">array(1,\'fr\')</array>
-        <string property="formSelector" value="label" />
+        <string property="formSelector" value="jelix_tests~label" />
         <array property="data">
             <string key="label" value="" />
         </array>
@@ -127,10 +127,10 @@ class UTjforms extends jUnitTestCase {
 
         $verif='
 <array>
-     <array key="product">
+     <array key="jelix_tests~product">
         <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
@@ -149,10 +149,10 @@ class UTjforms extends jUnitTestCase {
         $this->assertComplexIdenticalStr($this->form2, $this->form2Descriptor);
         $verif='
 <array>
-     <array key="product">
+     <array key="jelix_tests~product">
         <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
@@ -161,7 +161,7 @@ class UTjforms extends jUnitTestCase {
         </object>
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
@@ -177,10 +177,10 @@ class UTjforms extends jUnitTestCase {
         $this->assertComplexIdenticalStr($this->formLabel, $this->formLabelDescriptor);
         $verif='
 <array>
-     <array key="product">
+     <array key="jelix_tests~product">
         <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
@@ -189,7 +189,7 @@ class UTjforms extends jUnitTestCase {
         </object>
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
@@ -197,10 +197,10 @@ class UTjforms extends jUnitTestCase {
             <array property="errors">array()</array>
         </object>
      </array>
-     <array key="label">
+     <array key="jelix_tests~label">
         <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
             <array property="formId">array(1,\'fr\')</array>
-            <string property="formSelector" value="label" />
+            <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
@@ -240,7 +240,7 @@ class UTjforms extends jUnitTestCase {
 <object class="cForm_jelix_tests_Jx_product">
     <object method="getContainer()" class="jFormsDataContainer">
         <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
-        <string property="formSelector" value="product" />
+        <string property="formSelector" value="jelix_tests~product" />
         <array property="data">
             <string key="name" value="phone" />
             <string key="price" value="45" />
@@ -280,7 +280,7 @@ class UTjforms extends jUnitTestCase {
 <object class="cForm_jelix_tests_Jx_product">
     <object method="getContainer()" class="jFormsDataContainer">
         <integer property="formId" value="akey" />
-        <string property="formSelector" value="product" />
+        <string property="formSelector" value="jelix_tests~product" />
         <array property="data">
             <string key="name" value="phone" />
             <string key="price" value="45" />
@@ -323,17 +323,17 @@ class UTjforms extends jUnitTestCase {
 
         $verif='
 <array>
-     <array key="product">
+     <array key="jelix_tests~product">
         <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">array()</array>
             <array property="errors">array()</array>
             <integer property="refcount" value="1" />
         </object>
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="phone" />
                 <string key="price" value="45" />
@@ -341,10 +341,10 @@ class UTjforms extends jUnitTestCase {
             <array property="errors">array()</array>
         </object>
      </array>
-     <array key="label">
+     <array key="jelix_tests~label">
         <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
             <array property="formId">array(1,\'fr\')</array>
-            <string property="formSelector" value="label" />
+            <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
@@ -360,10 +360,10 @@ class UTjforms extends jUnitTestCase {
 
         $verif='
 <array>
-     <array key="product">
+     <array key="jelix_tests~product">
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="phone" />
                 <string key="price" value="45" />
@@ -371,10 +371,10 @@ class UTjforms extends jUnitTestCase {
             <array property="errors">array()</array>
         </object>
      </array>
-     <array key="label">
+     <array key="jelix_tests~label">
         <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
             <array property="formId">array(1,\'fr\')</array>
-            <string property="formSelector" value="label" />
+            <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
@@ -388,11 +388,11 @@ class UTjforms extends jUnitTestCase {
         jForms::destroy('product','akey');
         $verif='
 <array>
-     <array key="product">array()</array>
-     <array key="label">
+     <array key="jelix_tests~product">array()</array>
+     <array key="jelix_tests~label">
         <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
             <array property="formId">array(1,\'fr\')</array>
-            <string property="formSelector" value="label" />
+            <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
@@ -413,10 +413,10 @@ class UTjforms extends jUnitTestCase {
         
         $verif='
 <array>
-     <array key="product">
+     <array key="jelix_tests~product">
         <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
@@ -434,10 +434,10 @@ class UTjforms extends jUnitTestCase {
 
         $verif='
 <array>
-     <array key="product">
+     <array key="jelix_tests~product">
         <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="car" />
                 <integer key="price" value="56598" />

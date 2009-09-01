@@ -142,7 +142,7 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         jForms::destroy('product', $this->id);
         $verif='
 <array>
-     <array key="product">array()</array>
+     <array key="jelix_tests~product">array()</array>
 </array>';
         $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
 
@@ -150,10 +150,10 @@ class UTjformsWithDao extends jUnitTestCaseDb {
 
 $verif='
 <array>
-     <array key="product">
+     <array key="jelix_tests~product">
         <object key="'.$this->id.'" class="jFormsDataContainer">
             <integer property="formId" value="'.$this->id.'" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
@@ -169,10 +169,10 @@ $verif='
 
 $verif='
 <array>
-     <array key="product">
+     <array key="jelix_tests~product">
         <object key="'.$this->id.'" class="jFormsDataContainer">
             <integer property="formId" value="'.$this->id.'" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="other phone" />
                 <string key="price" value="68" />
@@ -190,10 +190,10 @@ $verif='
         $form->initControlFromDao('tag', 'product_tags');
 $verif='
 <array>
-     <array key="product">
+     <array key="jelix_tests~product">
         <object key="'.$this->id.'" class="jFormsDataContainer">
             <integer property="formId" value="'.$this->id.'" />
-            <string property="formSelector" value="product" />
+            <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="other phone" />
                 <string key="price" value="68" />
