@@ -189,9 +189,10 @@ class jAuth {
             if(!isset($rep['canremove']) || $rep['canremove'] === false)
                 return false;
         }
+        $user = $dr->getUser($login);
         if($dr->removeUser($login)===false)
             return false;
-        jEvent::notify ('AuthRemoveUser', array('login'=>$login));
+        jEvent::notify ('AuthRemoveUser', array('login'=>$login, 'user'=>$user));
         if(self::isConnected() && self::getUserSession()->login === $login)
             self::logout();
         return true;
