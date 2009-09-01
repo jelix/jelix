@@ -39,6 +39,7 @@ class UTjmailer extends jUnitTestCase {
 
         $mail->Body = 'This is a test mail';
         $mail->AddAddress('titi@machin.local');
+        $mail->AddAddress('toto@machin.local');
         $mail->IsFile();
         $mail->Send();
 
@@ -50,13 +51,12 @@ class UTjmailer extends jUnitTestCase {
             $content = file_get_contents(JELIX_APP_VAR_PATH.'mails/mail.txt');
 
             $this->assertTrue(strpos($content, 'Return-Path: toto@truc.com') !== false);
-            $this->assertTrue(strpos($content, 'To: titi@machin.local') !== false);
+            $this->assertTrue(strpos($content, 'To: titi@machin.local, toto@machin.local') !== false);
             $this->assertTrue(strpos($content, 'From: Super Me <toto@truc.local>') !== false);
             $this->assertTrue(strpos($content, 'Subject: Email test') !== false);
             $this->assertTrue(strpos($content, 'Content-Transfer-Encoding: 8bit') !== false);
             $this->assertTrue(strpos($content, 'Content-Type: text/plain; charset="UTF-8"') !== false);
-            $this->assertTrue(strpos($content, 'Email testThis is a test mail') !== false);
-
+            $this->assertTrue(strpos($content, 'This is a test mail') !== false);
         }
     }
 }

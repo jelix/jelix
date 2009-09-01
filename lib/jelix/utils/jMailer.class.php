@@ -116,8 +116,6 @@ class jMailer extends PHPMailer {
      * @return bool
      */
     function Send() {
-        $header = "";
-        $body = "";
         $result = true;
 
         if( isset($this->bodyTpl) && $this->bodyTpl != "") {
@@ -182,7 +180,7 @@ class jMailer extends PHPMailer {
     
         $this->error_count = 0; // reset errors
         $this->SetMessageType();
-        $header .= $this->CreateHeader();
+        $header = $this->CreateHeader();
         $body = $this->CreateBody();
     
         if($body == '') {
@@ -215,31 +213,16 @@ class jMailer extends PHPMailer {
      * @return bool
      */
     public function FileSend($header, $body) {
-    
-        $to = '';
-        $toList = array();
-        for($i = 0; $i < count($this->to); $i++) {
-            if($i != 0) { $to .= ', '; }
-            $a = $this->AddrFormat($this->to[$i]);
-            $to .= $a;
-            $toList [] = $a;
-        }
-
-        $mail = '';
-        foreach ($toList as $key => $val) {
-            if ($key > 0) $mail.="\n\n";
-            $mail.= $header.$this->EncodeHeader($this->SecureHeader($this->Subject)).$body;
-        }
       
         if(!isset($_SERVER['REMOTE_ADDR'])){ // for CLI mode
             $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         }
 
-        return jFile::write ($this->getStorageFile(), $mail);
+        return jFile::write ($this->getStorageFile(), $header.$body);
     }
     
     protected function getStorageFile() {
-        return rtrim($this->filePath,'/').'/mail.'.$_SERVER['REMOTE_ADDR'].'-'.date('Ymd-His');
+        return rtrim($this->filePath,'/').'/mail.'.$_SERVER['REMOTE_ADDR'].'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
     }
 
     function SetLanguage($lang_type = 'en_EN', $lang_path = 'language/') {

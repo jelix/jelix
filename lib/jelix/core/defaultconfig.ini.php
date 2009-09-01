@@ -208,7 +208,8 @@ default=messages.log
 webmasterEmail = root@localhost
 webmasterName =
 
-; How to send mail : "mail" (mail()), "sendmail" (call sendmail), or "smtp" (send directly to a smtp)
+; How to send mail : "mail" (mail()), "sendmail" (call sendmail), "smtp" (send directly to a smtp)
+;                   or "file" (store the mail into a file, in filesDir directory)
 mailerType = mail
 ; Sets the hostname to use in Message-Id and Received headers
 ; and as default HELO string. If empty, the value returned
