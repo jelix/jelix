@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Laurent Jouanneau
 * @contributor
-* @copyright  2007 Laurent Jouanneau
+* @copyright  2007-2009 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -18,11 +18,11 @@ class pgsqlDaoBuilder extends jDaoGenerator {
 
     protected $propertiesListForInsert = 'PrimaryFieldsExcludeAutoIncrement';
 
-    protected function genUpdateAutoIncrementPK($pkai, $pTableRealName) {
+    protected function buildUpdateAutoIncrementPK($pkai) {
         return '          $record->'.$pkai->name.'= $this->_conn->lastInsertId(\''.$pkai->sequenceName.'\');';
     }
 
-    protected function _getAutoIncrementPKField ($using = null){
+    protected function getAutoIncrementPKField ($using = null){
         if ($using === null){
             $using = $this->_dataParser->getProperties ();
         }

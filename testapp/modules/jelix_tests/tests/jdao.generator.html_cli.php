@@ -450,13 +450,13 @@ class UTDao_generator extends jUnitTestCase {
         $this->assertTrue(count($pkFields) ==1);
         $this->assertTrue(isset($pkFields['id_aclgrp']));
 
-        $where = $generator->BuildSimpleConditions ($pkFields);
+        $where = $generator->BuildSimpleConditions2 ($pkFields);
         $this->assertEqualOrDiff(' `grp`.`id_aclgrp`\'.\' = \'.intval($id_aclgrp).\'',$where);
 
-        $where = $generator->BuildSimpleConditions ($pkFields, 'record->');
+        $where = $generator->BuildSimpleConditions2 ($pkFields, 'record->');
         $this->assertEqualOrDiff(' `grp`.`id_aclgrp`\'.\' = \'.intval($record->id_aclgrp).\'',$where);
 
-        $where = $generator->BuildSimpleConditions ($pkFields, 'record->', false);
+        $where = $generator->BuildSimpleConditions2 ($pkFields, 'record->', false);
         $this->assertEqualOrDiff(' `id_aclgrp`\'.\' = \'.intval($record->id_aclgrp).\'',$where);
     }
 
@@ -507,38 +507,38 @@ class UTDao_generator extends jUnitTestCase {
         $methods = $parser->getMethods();
 
         $this->assertTrue($methods['method1']->getConditions() != null);
-        $sql = $generator->BuildConditions ($methods['method1']->getConditions(), $parser->getProperties(),
+        $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
                                                 $methods['method1']->getParameters(), false,  $methods['method1']->getGroupBy());
         $this->assertEqualOrDiff(' `grouptype` = 1', $sql);
 
         $this->assertTrue($methods['method2']->getConditions() != null);
-        $sql = $generator->BuildConditions ($methods['method2']->getConditions(), $parser->getProperties(),
+        $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
                                                 $methods['method2']->getParameters(), false, $methods['method2']->getGroupBy());
         $this->assertEqualOrDiff(' `grouptype` <> 2 GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
 
         $this->assertTrue($methods['method3']->getConditions() !== null);
-        $sql = $generator->BuildConditions ($methods['method3']->getConditions(), $parser->getProperties(),
+        $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
                                                 $methods['method3']->getParameters(), false, $methods['method3']->getGroupBy());
         $this->assertEqualOrDiff(' 1=1  ORDER BY `name` asc',$sql);
 
         $this->assertTrue($methods['method4']->getConditions() !== null);
-        $sql = $generator->BuildConditions ($methods['method4']->getConditions(), $parser->getProperties(),
+        $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
                                                 $methods['method4']->getParameters(), false, $methods['method4']->getGroupBy());
         $this->assertEqualOrDiff(' 1=1  GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
 
-        $sql = $generator->BuildConditions ($methods['method1']->getConditions(), $parser->getProperties(),
+        $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
                                                 $methods['method1']->getParameters(), true,  $methods['method1']->getGroupBy());
         $this->assertEqualOrDiff(' `grp`.`grouptype` = 1', $sql);
 
-        $sql = $generator->BuildConditions ($methods['method2']->getConditions(), $parser->getProperties(),
+        $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
                                                 $methods['method2']->getParameters(), true, $methods['method2']->getGroupBy());
         $this->assertEqualOrDiff(' `grp`.`grouptype` <> 2 GROUP BY `grp`.`id_aclgrp`, `grp`.`parent_id`, `grp`.`name` ORDER BY `grp`.`name` asc',$sql);
 
-        $sql = $generator->BuildConditions ($methods['method3']->getConditions(), $parser->getProperties(),
+        $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
                                                 $methods['method3']->getParameters(), true, $methods['method3']->getGroupBy());
         $this->assertEqualOrDiff(' 1=1  ORDER BY `grp`.`name` asc',$sql);
 
-        $sql = $generator->BuildConditions ($methods['method4']->getConditions(), $parser->getProperties(),
+        $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
                                                 $methods['method4']->getParameters(), true, $methods['method4']->getGroupBy());
         $this->assertEqualOrDiff(' 1=1  GROUP BY `grp`.`id_aclgrp`, `grp`.`parent_id`, `grp`.`name` ORDER BY `grp`.`name` asc',$sql);
 

@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Laurent Jouanneau
 * @contributor Gwendal Jouannic
-* @copyright  2007 Laurent Jouanneau
+* @copyright  2007-2009 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -19,7 +19,7 @@ class ociDaoBuilder extends jDaoGenerator {
     protected $aliasWord = ' ';
     protected $propertiesListForInsert = 'PrimaryFieldsExcludeAutoIncrement';
 
-    protected function genOuterJoins(&$tables, $primaryTableName){
+    protected function buildOuterJoins(&$tables, $primaryTableName){
         $sqlFrom = '';
         $sqlWhere ='';
         foreach($this->_dataParser->getOuterJoins() as $tablejoin){
@@ -46,7 +46,7 @@ class ociDaoBuilder extends jDaoGenerator {
         return array($sqlFrom, $sqlWhere);
     }
 
-    protected function genSelectPattern ($pattern, $table, $fieldname, $propname ){
+    protected function buildSelectPattern ($pattern, $table, $fieldname, $propname ){
         if ($pattern =='%s'){
             if ($fieldname != $propname){
                 $field = $table.$this->_encloseName($fieldname).' "'.$propname.'"';
@@ -62,7 +62,7 @@ class ociDaoBuilder extends jDaoGenerator {
     /*
      * Remplace le lastInsertId qui ne marche pas avec oci 
      */
-    protected function genUpdateAutoIncrementPK($pkai, $pTableRealName) {
+    protected function buildUpdateAutoIncrementPK($pkai) {
         return '          $record->'.$pkai->name.'= $this->_conn->query(\'SELECT '.$pkai->sequenceName.'.currval as '.$pkai->name.' from dual\')->fetch()->'.$pkai->name.';';
     }
 

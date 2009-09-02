@@ -33,16 +33,16 @@ class testMysqlDaoGenerator extends mysqlDaoBuilder {
         return $this->_getPropertiesBy ($captureMethod);
     }
 
-    function BuildSimpleConditions (&$fields, $fieldPrefix='', $forSelect=true){
-        return $this->_buildSimpleConditions ($fields, $fieldPrefix, $forSelect);
+    function BuildSimpleConditions2 (&$fields, $fieldPrefix='', $forSelect=true){
+        return $this->buildSimpleConditions ($fields, $fieldPrefix, $forSelect);
     }
 
-    function BuildConditions($cond, $fields, $params=array(), $withPrefix=true, $groupby='') {
-        return $this->_buildConditions ($cond, $fields, $params, $withPrefix, $groupby);
+    function BuildConditions2($cond, $fields, $params=array(), $withPrefix=true, $groupby='') {
+        return $this->buildConditions ($cond, $fields, $params, $withPrefix, $groupby);
     }
 
     function BuildSQLCondition ($condition, $fields, $params, $withPrefix){
-        return $this->_buildSQLCondition ($condition, $fields, $params, $withPrefix, true);
+        return $this->buildOneSQLCondition ($condition, $fields, $params, $withPrefix, true);
     }
 
     function GetPreparePHPValue($value, $fieldType, $checknull=true){
@@ -54,11 +54,11 @@ class testMysqlDaoGenerator extends mysqlDaoBuilder {
     }
 
     function GetSelectClause ($distinct=false){
-        return $this->_getSelectClause ($distinct);
+        return $this->buildSelectClause ($distinct);
     }
 
     function GetFromClause(){
-        return $this->_getFromClause();
+        return $this->buildFromWhereClause();
     }
 }
 
