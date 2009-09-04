@@ -205,13 +205,9 @@ function __autoload($class) {
         $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
     }
 
-#if ENABLE_OPTIMIZED_SOURCE
-    require($f);
-#else
     if(file_exists($f)){
         require($f);
     }
-#endif
 }
 
 #if PHP52ORMORE

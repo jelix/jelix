@@ -72,7 +72,9 @@ class UTjDb_profile extends jUnitTestCase {
 
     function testBadProfile(){
         $p = jDb::getProfile('abcdef'); // unknow profile
-        $this->assertError("(413) The given jDb profile \"abcdef\" doesn't exist. The default one is used instead. To not show this error, create the profile or an alias to the default profile.");
+        $build = parse_ini_file(JELIX_LIB_PATH.'BUILD');
+        if (!$build['ENABLE_OPTIMIZED_SOURCE'])
+            $this->assertError("(413) The given jDb profile \"abcdef\" doesn't exist. The default one is used instead. To not show this error, create the profile or an alias to the default profile.");
 
     }
 }

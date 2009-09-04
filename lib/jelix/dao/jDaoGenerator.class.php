@@ -471,7 +471,7 @@ class jDaoGenerator {
                         $src[] = '   $args = func_get_args();';
                         $methname = ($method->type == 'update'?'Update':'Delete');
                         if ($method->eventBeforeEnabled) {
-                        $src[] = '   jEvent::notify("daoSpecific'.$methname.'Before", array(\'dao\'=>$this->_daoSelector,\'method\'=>\''.
+                            $src[] = '   jEvent::notify("daoSpecific'.$methname.'Before", array(\'dao\'=>$this->_daoSelector,\'method\'=>\''.
                             $method->name.'\', \'params\'=>$args));';
                         }
                         if ($method->eventAfterEnabled) {
@@ -604,10 +604,9 @@ class jDaoGenerator {
     */
     protected function buildSelectPattern ($pattern, $table, $fieldname, $propname ){
         if ($pattern =='%s'){
+            $field = $table.$this->_encloseName($fieldname);
             if ($fieldname != $propname){
-                $field = $table.$this->_encloseName($fieldname).' as '.$this->_encloseName($propname);
-            }else{
-                $field = $table.$this->_encloseName($fieldname);
+                $field .= ' as '.$this->_encloseName($propname);    
             }
         }else{
             $field = str_replace(array("'", "%s"), array("\\'",$table.$this->_encloseName($fieldname)),$pattern).' as '.$this->_encloseName($propname);
