@@ -13,25 +13,49 @@ require_once(dirname(__FILE__).'/preprocessor.lib.php');
 require_once(dirname(__FILE__).'/jBuildUtils.lib.php');
 require_once(dirname(__FILE__).'/class.JavaScriptPacker.php');
 
-
+/**
+ * jManifest copy files indicated in a 'manifest' file, to a specific directory
+ * in order to generate a set of PHP files ready to be executed. It can do
+ * pre-processing on these files during the copying, strip comments and
+ * compress whitespaces, so sources will take less disk spaces and it will
+ * improve performances a bit.
+ *
+ * jManifest supports also VCS like Subversion or Mercurial, so when it detect
+ * that new files are added, it will call the VCS to add these files in the repository.
+ */
 class jManifest {
 
+    /**
+     * @var boolean true if you want to strip comment and compress whitespaces
+     */
     static public $stripComment = false;
     
+    /**
+     * @var boolean true if you want more messages during the copy
+    */
     static public $verbose = false;
 
+    /**
+     * @var string  the name of the vcs to use. 'svn' for Subversion, 'hg' for mercurial. '' for no support.
+     */
     static public $usedVcs = ''; 
 
     static public $sourcePropertiesFilesDefaultCharset = 'utf-8';
     
     static public $targetPropertiesFilesCharset = 'utf-8';
     
+    /**
+     * when compressing whitespaces, jManifest will replace indentation made with spaces
+     * by a tab character.
+     * @var integer  the number of spaces for indentation used in your sources
+     */
     static public $indentation = 4;
 
     /**
+     * read the given manifest file and copy files
      * @param string $ficlist manifest file name
-     * @param string $sourcepath directory where it reads files
-     * @param string $distpath directory were files are copied
+     * @param string $sourcepath main directory where it reads files
+     * @param string $distpath main directory were files are copied
      */
     static public function process($ficlist, $sourcepath, $distpath, $preprocvars){
 
@@ -166,7 +190,7 @@ class jManifest {
                     }
                 }
             }elseif(preg_match("!^\s*(\#.*)?$!",$line)){
-                // commentaire, on ignore
+                // we ignore comments
             }else{
                 throw new Exception ( "$ficlist : syntax error on line $nbline \n");
             }
@@ -209,7 +233,7 @@ class jManifest {
                         $currentWhitespace.="\n";
                         break;
                     case T_DOC_COMMENT:
-                        // on garde le premier commentaire documentaire
+                        // wee keep the first doc comment
                         if($firstcomment){
                             $result.= self::strip_ws($currentWhitespace, $canRemoveNextSpaces);
                             $result.=$token[1];
@@ -230,8 +254,6 @@ class jManifest {
                         else {
                             $result.=self::strip_ws($currentWhitespace, $canRemoveNextSpaces);
                         }
-//echo token_name($token[0]).':'.$token[1]."->".($canRemoveNextSpaces?'canremove':'no').' #'.str_replace(array("\n","\t"),array('\n','\t'),$currentWhitespace). "#\n";
-                        
                         $result.=$token[1];
                         break;
                 }
@@ -279,6 +301,8 @@ class jManifest {
     }
     
     /**
+     * delete files indicated in the given manifest file, from the indicated target
+     * directory.
      * @param string $ficlist manifest file name
      * @param string $distpath directory were files are copied
      */
@@ -320,7 +344,6 @@ class jManifest {
                         case 'rm':
                             if (!unlink($destfile))
                                 throw new Exception ( " $ficlist: cannot remove file ".$m[2].", line $nbline \n");
-                            //echo "unlink $destfile \n";
                             break;
                         case 'svn':
                             exec("svn remove $destfile");
@@ -331,7 +354,7 @@ class jManifest {
                     }
                 }
             }elseif(preg_match("!^\s*(\#.*)?$!",$line)){
-                // commentaire, on ignore
+                // we ignore comments
             }else{
                 throw new Exception ( "$ficlist : syntax error on line $nbline \n");
             }
