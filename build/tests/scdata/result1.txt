@@ -1,0 +1,42 @@
+<?php
+/* comments & extra-whitespaces have been removed by jBuildTools*/
+
+/**
+* @package     jBuildTools
+* @author      Laurent Jouanneau
+* @contributor
+* @copyright   2009 Laurent Jouanneau
+* @link        http://jelix.org
+* @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
+*/
+require_once(dirname(__FILE__).'/../lib/jManifest.lib.php');
+require_once(dirname(__FILE__).'/../../lib/simpletest/unit_tester.php');
+require_once(dirname(__FILE__).'/../../lib/simpletest/reporter.php');
+require_once(dirname(__FILE__).'/../../lib/diff/difflib.php');
+define('SC_DATA_DIR','scdata/');
+class StripCommentTestCase extends UnitTestCase{
+	protected $testcase=array(
+		'source1.txt'=>'result1.txt',
+	);
+	function setUp(){
+	}
+	function tearDown(){
+	}
+	function testSimple(){
+		foreach($this->testcase as $source=>$result){
+			$res=testManifest(file_get_contents(SC_DATA_DIR.$source));
+			if(!$this->assertEqual($res,file_get_contents(SC_DATA_DIR.$result),"test $source / $result ")){
+				$this->showDiff(file_get_contents(SC_DATA_DIR.$result),$res);
+			}
+		}
+	}
+	protected function showDiff($str1,$str2){
+		$diff=new Diff(explode("\n",$str1),explode("\n",$str2));
+		if($diff->isEmpty()){
+			$this->fail("No difference ???");
+		}else{
+			$fmt=new UnifiedDiffFormatter();
+			$this->fail($fmt->format($diff));
+		}
+	}
+}
