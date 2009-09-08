@@ -1,6 +1,12 @@
 Changelog of WikiRenderer
 
-Version 3.1pre
+Version 3.1.1
+
+- better compatibility with PHP 5.3
+- fixed a notice on an undefined variable
+- fixed a bug: WR3 rule didn't generate good markup when </code> was on the same line of <code>
+
+Version 3.1
 
 - no more PHP4 version, only PHP5
 - fixed bug: / was not allowed in patterns for inline tags

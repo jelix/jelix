@@ -224,6 +224,7 @@ class pwdk_link extends PhpWikiTag {
     }
     
     function transformWikiLink($href, $label='') {
+        $href = trim($href);
         if ($href == '') return '';
         if(preg_match("!^([a-z]+)\:(.+)!", trim($href), $m)) {
           if ($m[1] == 'phpwiki') {

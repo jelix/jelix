@@ -271,11 +271,16 @@ class wr3text_pre extends WikiRendererBloc {
                 $this->_detectMatch=$string;
             }
             return true;
-
         }else{
-            if(preg_match("/^\s*<code>(.*)/",$string,$m)){
-                $this->isOpen = true;
-                $this->_detectMatch=$m[1];
+            if(preg_match('/^\s*<code>(.*)/',$string,$m)){
+                if(preg_match('/(.*)<\/code>\s*$/',$m[1],$m2)){
+                    $this->_closeNow = true;
+                    $this->_detectMatch=$m2[1];
+                }
+                else {
+                    $this->_closeNow = false;
+                    $this->_detectMatch=$m[1];
+                }
                 return true;
             }else{
                 return false;

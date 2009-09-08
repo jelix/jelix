@@ -21,7 +21,7 @@
  *
  */
 define('WIKIRENDERER_PATH', dirname(__FILE__).'/');
-define('WIKIRENDERER_VERSION', '3.1pre.75');
+define('WIKIRENDERER_VERSION', '3.1.1');
 
 
 /**
