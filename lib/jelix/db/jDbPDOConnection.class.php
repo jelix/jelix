@@ -106,7 +106,7 @@ class jDbPDOConnection extends PDO {
 
         if(isset($prof['force_encoding']) && $prof['force_encoding']==true){
             if($this->dbms == 'mysql' && isset($this->_mysqlCharsets[$GLOBALS['gJConfig']->charset])){
-                $this->exec("SET CHARACTER SET '".$this->_mysqlCharsets[$GLOBALS['gJConfig']->charset]."'");
+                $this->exec("SET NAMES SET '".$this->_mysqlCharsets[$GLOBALS['gJConfig']->charset]."'");
             }elseif($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[$GLOBALS['gJConfig']->charset])){
                 $this->exec("SET client_encoding to '".$this->_pgsqlCharsets[$GLOBALS['gJConfig']->charset]."'");
             }
