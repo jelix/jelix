@@ -7,7 +7,7 @@
 * @contributor Warren Seine, Alexis Métaireau, Julien Issler
 * @copyright   2005-2009 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
 * @copyright   2008 Warren Seine, Alexis Métaireau
-* @copyright   2009 Julien Issler
+* @copyright   2009 Julien Issler, Olivier Demah
 *              few lines of code are copyrighted CopixTeam http://www.copix.org
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -416,7 +416,11 @@ class jResponseHtml extends jResponse {
      */
     final protected function outputHtmlHeader (){
         echo '<head>'."\n";
-        echo '<meta content="text/html; charset='.$this->_charset.'" http-equiv="content-type"'.$this->_endTag;
+        if($this->_isXhtml && $this->xhtmlContentType && strstr($_SERVER['HTTP_ACCEPT'],'application/xhtml+xml')){      
+            echo '<meta content="application/xhtml+xml; charset='.$this->_charset.'" http-equiv="content-type"'.$this->_endTag;
+        } else {
+            echo '<meta content="text/html; charset='.$this->_charset.'" http-equiv="content-type"'.$this->_endTag;
+        }
         echo '<title>'.htmlspecialchars($this->title)."</title>\n";
 
         if(!empty($this->_MetaDescription)){
