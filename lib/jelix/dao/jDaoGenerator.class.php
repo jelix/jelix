@@ -92,7 +92,7 @@ class jDaoGenerator {
     /**
     * build all classes
     */
-    public final function buildClasses () {
+    public function buildClasses () {
 
         $src = array();
         $src[] = ' require_once ( JELIX_LIB_PATH .\'dao/jDaoRecordBase.class.php\');';
@@ -513,7 +513,7 @@ class jDaoGenerator {
     /**
     * create FROM clause and WHERE clause for all SELECT query
     */
-    final protected function buildFromWhereClause(){
+    protected function buildFromWhereClause(){
 
         $tables = $this->_dataParser->getTables();
 
