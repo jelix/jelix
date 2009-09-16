@@ -7,5 +7,9 @@ Installation of testapp
 - configure parameters in dbprofils.ini.php, in section testapp for mysql,
     testapppdo if you have pdo extension and testapp_pgsql if you have postgresql sql
     don't touch other sections.
+- rename testapp/var/config/cache.ini.php.dist to testapp/var/config/cache.ini.php
+- configure parameters in cache.ini.php
 - create the "testapp/" directory in the temp directory of Jelix
-- put write access for apache on temp/testapp/
+- put write access for apache on temp/testapp/, testapp/var/log/ and testapp/var/mails
+- run the script in install/installer.php 
+    cd testapp/install && php installer.php
