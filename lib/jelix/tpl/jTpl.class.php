@@ -233,10 +233,17 @@ class jTpl {
 #else
         $this->_templateName = $tpl;
         $tpl = jTplConfig::$templatePath . $tpl;
-        if ($outputtype=='')
+        if ($outputtype == '')
             $outputtype = 'html';
 
-        $cachefile = jTplConfig::$cachePath.dirname($this->_templateName).'/'.$outputtype.($trusted?'_t':'').'_'.basename($tpl);
+        $cachefile = dirname($this->_templateName).'/';
+        if ($cachefile == './')
+            $cachefile = '';
+
+        if (jTplConfig::$cachePath == '/' || jTplConfig::$cachePath == '')
+            throw new Exception('cache path is invalid ! its value is: "'.jTplConfig::$cachePath.'".');
+
+        $cachefile = jTplConfig::$cachePath.$cachefile.$outputtype.($trusted?'_t':'').'_'.basename($tpl);
 
         $mustCompile = jTplConfig::$compilationForce || !file_exists($cachefile);
         if (!$mustCompile) {
@@ -249,7 +256,8 @@ class jTpl {
             include_once(JTPL_PATH . 'jTplCompiler.class.php');
 
             $compiler = new jTplCompiler();
-            $compiler->compile($this->_templateName,$tpl,$outputtype, $trusted, $this->userModifiers, $this->userFunctions);
+            $compiler->compile($this->_templateName, $tpl, $outputtype, $trusted,
+                               $this->userModifiers, $this->userFunctions);
         }
         require_once($cachefile);
         $fct = $fctname.md5($tpl.'_'.$outputtype.($trusted?'_t':''));
@@ -279,7 +287,15 @@ class jTpl {
 #else
             $this->_templateName = $tpl;
             $tpl = jTplConfig::$templatePath . $tpl;
-            $cachefile = jTplConfig::$cachePath.dirname($this->_templateName).'/'.$outputtype.($trusted?'_t':'').'_'.basename($tpl);
+
+            $cachefile = dirname($this->_templateName).'/';
+            if ($cachefile == './')
+                $cachefile = '';
+
+            if (jTplConfig::$cachePath == '/' || jTplConfig::$cachePath == '')
+                throw new Exception('cache path is invalid ! its value is: "'.jTplConfig::$cachePath.'".');
+
+            $cachefile = jTplConfig::$cachePath.$cachefile.$outputtype.($trusted?'_t':'').'_'.basename($tpl);
 
             $mustCompile = jTplConfig::$compilationForce || !file_exists($cachefile);
             if (!$mustCompile) {
@@ -291,7 +307,8 @@ class jTpl {
             if ($mustCompile) {
                 include_once(JTPL_PATH . 'jTplCompiler.class.php');
                 $compiler = new jTplCompiler();
-                $compiler->compile($this->_templateName, $tpl, $outputtype, $trusted, $this->userModifiers, $this->userFunctions);
+                $compiler->compile($this->_templateName, $tpl, $outputtype,
+                                   $trusted, $this->userModifiers, $this->userFunctions);
             }
             require_once($cachefile);
             $md = md5($tpl.'_'.$outputtype.($trusted?'_t':''));

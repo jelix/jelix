@@ -11,7 +11,8 @@
 */
 
 #if !PHP53ORMORE
-define('T_GOTO',333);
+if (!defined('T_GOTO'))
+  define('T_GOTO',333);
 #endif
 
 
@@ -30,20 +31,32 @@ class jTplCompiler
 #endif
     private $_literals;
 
+    /**
+     * tokens of variable type
+     */
     private  $_vartype = array(T_CHARACTER, T_CONSTANT_ENCAPSED_STRING, T_DNUMBER,
             T_ENCAPSED_AND_WHITESPACE, T_LNUMBER, T_OBJECT_OPERATOR, T_STRING,
             T_WHITESPACE, T_ARRAY);
 
+    /**
+     * tokens of operators for assignements
+     */
     private  $_assignOp = array(T_AND_EQUAL, T_DIV_EQUAL, T_MINUS_EQUAL,
             T_MOD_EQUAL, T_MUL_EQUAL, T_OR_EQUAL, T_PLUS_EQUAL, T_PLUS_EQUAL,
             T_SL_EQUAL, T_SR_EQUAL, T_XOR_EQUAL);
 
+    /**
+     * tokens of operators for tests
+     */
     private  $_op = array(T_BOOLEAN_AND, T_BOOLEAN_OR, T_EMPTY, T_INC, T_DEC,
             T_ISSET, T_IS_EQUAL, T_IS_GREATER_OR_EQUAL, T_IS_IDENTICAL,
             T_IS_NOT_EQUAL, T_IS_NOT_IDENTICAL, T_IS_SMALLER_OR_EQUAL,
             T_LOGICAL_AND, T_LOGICAL_OR, T_LOGICAL_XOR, T_SR, T_SL,
             T_DOUBLE_ARROW);
 
+    /**
+     * tokens authorized into locale names
+     */
     private $_inLocaleOk = array(T_STRING, T_ABSTRACT, T_AS, T_BREAK, T_CASE,
             T_CATCH, T_CLASS, T_CLONE, T_CONST, T_CONTINUE, T_DECLARE, T_DEFAULT,
             T_DO, T_ECHO, T_ELSE, T_ELSEIF, T_EMPTY, T_EXIT, T_FINAL, T_FOR,
@@ -53,38 +66,87 @@ class jTplCompiler
             T_SWITCH, T_THROW, T_TRY, T_USE, T_VAR, T_WHILE, T_DNUMBER,
             T_LNUMBER, T_EVAL);
 
+    /**
+     * tokens allowed in output for variables
+     */
     protected $_allowedInVar;
+    
+    /**
+     * tokens allowed into expressions
+     */
     protected $_allowedInExpr;
+    
+    /**
+     * tokens allowed into assignements
+     */
     protected $_allowedAssign;
+    
+    /**
+     * tokens allowed in foreach statements
+     */
     protected $_allowedInForeach;
+    
+    /**
+     * tokens not allowed in variable
+     */
     protected $_excludedInVar = array(';','=');
 
     protected $_allowedConstants = array('TRUE','FALSE','NULL', 'M_1_PI',
             'M_2_PI', 'M_2_SQRTPI', 'M_E', 'M_LN10', 'M_LN2', 'M_LOG10E',
             'M_LOG2E', 'M_PI','M_PI_2','M_PI_4','M_SQRT1_2','M_SQRT2');
 
-    private $_pluginPath=array();
+    /**
+     * list of plugins paths
+     */
+    private $_pluginPath = array();
+    
     private $_metaBody = '';
 
+    /**
+     * native modifiers
+     */
     protected $_modifier = array('upper'=>'strtoupper', 'lower'=>'strtolower',
             'escxml'=>'htmlspecialchars', 'eschtml'=>'htmlspecialchars',
             'strip_tags'=>'strip_tags', 'escurl'=>'rawurlencode',
             'capitalize'=>'ucwords', 'stripslashes'=>'stripslashes',
             'upperfirst'=>'ucfirst');
 
-    private $_blockStack=array();
+    /**
+     * stack of founded blocks
+     */
+    private $_blockStack = array();
 
+    /**
+     * name of the template file
+     */
     private $_sourceFile;
+    
+    /**
+     * current parsed jtpl tag
+     */
     private $_currentTag;
-    public $outputType='';
-    public $trusted=true;
+    
+    /**
+     * type of the output
+     */
+    public $outputType = '';
+    
+    /**
+     * true if the template doesn't come from an untrusted source.
+     * if it comes from an untrusted source, like a template uploaded by a user,
+     * you should set to false.
+     */
+    public $trusted = true;
 
+    /**
+     * list of user functions
+     */
     protected $_userFunctions = array();
 
     /**
      * Initialize some properties
      */
-    function __construct(){
+    function __construct() {
         $this->_allowedInVar = array_merge($this->_vartype, array(T_INC, T_DEC, T_DOUBLE_ARROW));
         $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
         $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
@@ -105,7 +167,8 @@ class jTplCompiler
      * @param string $tplfile the file name that contains the template
      * @return boolean true if ok
      */
-    public function compile($tplName, $tplFile, $outputtype, $trusted, $userModifiers = array(), $userFunctions = array()){
+    public function compile($tplName, $tplFile, $outputtype, $trusted,
+                            $userModifiers = array(), $userFunctions = array()) {
         $this->_sourceFile = $tplFile;
         $this->outputType = $outputtype;
         $cachefile = jTplConfig::$cachePath .dirname($tplName).'/'.$this->outputType.($trusted?'_t':'').'_'. basename($tplName);
@@ -121,7 +184,7 @@ class jTplCompiler
      * @param jSelectorTpl $selector the template selector
      * @return boolean true if ok
      */
-    public function compile($selector){
+    public function compile($selector) {
         $this->_sourceFile = $selector->getPath();
         $cachefile = $selector->getCompiledFilePath();
         $this->outputType = $selector->outputType;
@@ -132,14 +195,14 @@ class jTplCompiler
         jContext::push($selector->module);
 #endif
 
-        if(!file_exists($this->_sourceFile)){
+        if (!file_exists($this->_sourceFile)) {
             $this->doError0('errors.tpl.not.found');
         }
 
         $result = $this->compileContent(file_get_contents ($this->_sourceFile));
 
         $header ="<?php \n";
-        foreach($this->_pluginPath as $path=>$ok){
+        foreach ($this->_pluginPath as $path=>$ok) {
             $header.=' require_once(\''.$path."');\n";
         }
 #if JTPL_STANDALONE
@@ -157,13 +220,16 @@ class jTplCompiler
         $result = $header.$result."<?php \n}\n?>";
 
 #if JTPL_STANDALONE
-
-        $_dirname = jTplConfig::$cachePath.dirname($tplName).'/';
+        $_dirname = dirname($tplName).'/';
+        if ($_dirname == './')
+            $_dirname = '';
+        $_dirname = jTplConfig::$cachePath.$_dirname;
 
         if (!is_dir($_dirname)) { 
- 	        umask(0000); 
- 	        mkdir($_dirname, 0777, true); 
- 	    } else if (!@is_writable($_dirname)) {
+            umask(jTplConfig::$umask); 
+            mkdir($_dirname, jTplConfig::$chmodDir, true); 
+        }
+        else if (!@is_writable($_dirname)) {
             throw new Exception (sprintf($this->_locales['file.directory.notwritable'], $cachefile, $_dirname));
         }
 
@@ -188,7 +254,7 @@ class jTplCompiler
         }
 
         @rename($_tmp_file, $cachefile);
-        @chmod($cachefile, 0664);
+        @chmod($cachefile, jTplConfig::$chmodFile);
 #else
         jFile::write($cachefile, $result);
 
@@ -232,7 +298,7 @@ class jTplCompiler
      * @param array $matches a matched item
      * @return string the corresponding php code of the tag (with php tag).
      */
-    public function _callback($matches){
+    public function _callback($matches) {
         list(,$tag, $firstcar) = $matches;
 
         // check the first character

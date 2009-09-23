@@ -19,7 +19,7 @@ class jTplConfig {
 
     /**
      * the path of the directory which contains the
-     * templates
+     * templates. The path should have a / at the end.
      */
     static $templatePath = '';
 
@@ -45,15 +45,30 @@ class jTplConfig {
     static $localesGetter = 'getDummyLocales';
 
     /**
-     * the path of the cache directory
+     * the path of the cache directory.  The path should have a / at the end.
      */
     static $cachePath = '';
 
     /**
      * the path of the directory which contains the
-     * localization files of jtpl
+     * localization files of jtpl.  The path should have a / at the end.
      */
     static $localizedMessagesPath = '';
+    
+    /**
+     * umask for directories created in the cache directory
+     */
+    static $umask = 0000;
+    
+    /**
+     * permissions for directories created in the cache directory
+     */
+    static $chmodDir = 0755;
+
+    /**
+     * permissions for cache files
+     */
+    static $chmodFile = 0644;
 
     /**
      * @internal
