@@ -16,6 +16,10 @@
  */
 class jTpl {
 
+#if JTPL_STANDALONE
+#expand     const VERSION = '__VERSION__';
+#endif
+
     /**
      * all assigned template variables. 
      * It have a public access only for plugins. So you musn't use directly this property
@@ -41,7 +45,7 @@ class jTpl {
      */
     public $_meta = array();
 
-    public function __construct(){
+    public function __construct () {
 #ifnot JTPL_STANDALONE
         global $gJConfig;
         $this->_vars['j_basepath'] = $gJConfig->urlengine['basePath'];
@@ -58,10 +62,10 @@ class jTpl {
      * @param string|array $name the variable name, or an associative array 'name'=>'value'
      * @param mixed  $value the value (or null if $name is an array)
      */
-    public function assign ($name, $value = null){
-        if(is_array($name)){
+    public function assign ($name, $value = null) {
+        if (is_array($name)) {
             $this->_vars = array_merge($this->_vars, $name);
-        }else{
+        } else {
             $this->_vars[$name] = $value;
         }
     }
@@ -72,7 +76,7 @@ class jTpl {
      * @param mixed  $value the value
      * @since jelix 1.1
      */
-    public function assignByRef ($name, & $value){
+    public function assignByRef ($name, & $value) {
         $this->_vars[$name] = &$value;
     }
 
@@ -81,19 +85,19 @@ class jTpl {
      * @param string|array $name the variable name, or an associative array 'name'=>'value'
      * @param mixed  $value the value (or null if $name is an array)
      */
-    public function append ($name, $value = null){
-        if(is_array($name)){
-           foreach ($name as $key => $val) {
-               if(isset($this->_vars[$key]))
-                  $this->_vars[$key] .= $val;
-               else
-                  $this->_vars[$key] = $val;
-           }
-        }else{
-            if(isset($this->_vars[$name]))
-               $this->_vars[$name] .= $value;
+    public function append ($name, $value = null) {
+        if (is_array($name)) {
+            foreach ($name as $key => $val) {
+                if (isset($this->_vars[$key]))
+                    $this->_vars[$key] .= $val;
+                else
+                    $this->_vars[$key] = $val;
+            }
+        } else {
+            if (isset($this->_vars[$name]))
+                $this->_vars[$name] .= $value;
             else
-               $this->_vars[$name] = $value;
+                $this->_vars[$name] = $value;
         }
     }
 
@@ -102,15 +106,15 @@ class jTpl {
      * @param string|array $name the variable name, or an associative array 'name'=>'value'
      * @param mixed  $value the value (or null if $name is an array)
      */
-    public function assignIfNone ($name, $value = null){
-        if(is_array($name)){
-           foreach ($name as $key => $val) {
-               if(!isset($this->_vars[$key]))
-                  $this->_vars[$key] = $val;
-           }
-        }else{
-            if(!isset($this->_vars[$name]))
-               $this->_vars[$name] = $value;
+    public function assignIfNone ($name, $value = null) {
+        if (is_array($name)) {
+            foreach ($name as $key => $val) {
+                if (!isset($this->_vars[$key]))
+                    $this->_vars[$key] = $val;
+            }
+        } else {
+            if (!isset($this->_vars[$name]))
+                $this->_vars[$name] = $value;
         }
     }
 
@@ -122,7 +126,7 @@ class jTpl {
      * @param array  $params  parameters for the zone
      * @see jZone
      */
-    function assignZone($name, $zoneName, $params=array()){
+    function assignZone ($name, $zoneName, $params = array()) {
         $this->_vars[$name] = jZone::get ($zoneName, $params);
     }
 
@@ -134,8 +138,8 @@ class jTpl {
      * @see jZone
      * @since 1.0
      */
-    function appendZone($name, $zoneName, $params=array()){
-        if(isset($this->_vars[$name]))
+    function appendZone ($name, $zoneName, $params = array()) {
+        if (isset($this->_vars[$name]))
             $this->_vars[$name] .= jZone::get ($zoneName, $params);
         else
             $this->_vars[$name] = jZone::get ($zoneName, $params);
@@ -148,8 +152,8 @@ class jTpl {
      * @param array  $params  parameters for the zone
      * @see jZone
      */
-    function assignZoneIfNone($name, $zoneName, $params=array()){
-        if(!isset($this->_vars[$name]))
+    function assignZoneIfNone ($name, $zoneName, $params = array()) {
+        if (!isset($this->_vars[$name]))
             $this->_vars[$name] = jZone::get ($zoneName, $params);
     }
 #endif
@@ -159,8 +163,8 @@ class jTpl {
      * @param string $name the variable template name
      * @return boolean true if the variable exists
      */
-    public function isAssigned ($name){
-        return isset ($this->_vars[$name]);
+    public function isAssigned ($name) {
+        return isset($this->_vars[$name]);
     }
 
     /**
@@ -168,10 +172,10 @@ class jTpl {
      * @param string $name the variable template name
      * @return mixed the value (or null if it isn't exist)
      */
-    public function get ($name){
-        if (isset ($this->_vars[$name])){
+    public function get ($name) {
+        if (isset ($this->_vars[$name])) {
             return $this->_vars[$name];
-        }else{
+        } else {
             $return = null;
             return $return;
         }
@@ -181,7 +185,7 @@ class jTpl {
      * Return all template variables
      * @return array
      */
-    public function getTemplateVars (){
+    public function getTemplateVars () {
         return $this->_vars;
     }
 
@@ -191,7 +195,7 @@ class jTpl {
      * @param string $outputtype the type of output (html, text etc..)
      * @param boolean $trusted  says if the template file is trusted or not
      */
-    public function meta($tpl, $outputtype='', $trusted = true){
+    public function meta ($tpl, $outputtype = '', $trusted = true) {
         $this->getTemplate($tpl,'template_meta_', $outputtype, $trusted);
         return $this->_meta;
     }
@@ -202,8 +206,8 @@ class jTpl {
      * @param string $outputtype the type of output (html, text etc..)
      * @param boolean $trusted  says if the template file is trusted or not
      */
-    public function display ($tpl, $outputtype='', $trusted = true){
-        $this->getTemplate($tpl,'template_', $outputtype, $trusted);
+    public function display ($tpl, $outputtype = '', $trusted = true) {
+        $this->getTemplate ($tpl, 'template_', $outputtype, $trusted);
     }
 
     /**
@@ -222,7 +226,7 @@ class jTpl {
      * @param string $outputtype the type of output (html, text etc..)
      * @param boolean $trusted  says if the template file is trusted or not
      */
-    protected function getTemplate($tpl,$fctname, $outputtype='', $trusted = true){
+    protected function getTemplate ($tpl, $fctname, $outputtype = '', $trusted = true) {
 #ifnot JTPL_STANDALONE
         $sel = new jSelectorTpl($tpl,$outputtype,$trusted);
         $sel->userModifiers = $this->userModifiers;
@@ -273,7 +277,7 @@ class jTpl {
      * @param boolean $callMeta false if meta should not be called
      * @return string the generated content
      */
-    public function fetch ($tpl, $outputtype='', $trusted = true, $callMeta=true){
+    public function fetch ($tpl, $outputtype='', $trusted = true, $callMeta=true) {
         $content = '';
         ob_start ();
         try{
@@ -320,7 +324,8 @@ class jTpl {
             $fct = 'template_'.$md;
             $fct($this);
             $content = ob_get_clean();
-        }catch(Exception $e){
+
+        } catch(Exception $e) {
             ob_end_clean();
             throw $e;
         }
@@ -336,8 +341,8 @@ class jTpl {
      * @return string the generated content
      * @deprecated
      */
-    public function metaFetch ($tpl, $outputtype='', $trusted = true){
-        return $this->fetch ($tpl, $outputtype, $trusted,true);
+    public function metaFetch ($tpl, $outputtype = '', $trusted = true) {
+        return $this->fetch ($tpl, $outputtype, $trusted, true);
     }
 
 
@@ -351,7 +356,7 @@ class jTpl {
      * @param string $functionName the corresponding PHP function
      * @since jelix 1.1
      */
-    public function registerModifier($name, $functionName) {
+    public function registerModifier ($name, $functionName) {
         $this->userModifiers[$name] = $functionName;
     }
 
@@ -364,7 +369,7 @@ class jTpl {
      * @param string $functionName the corresponding PHP function
      * @since jelix 1.1
      */
-    public function registerFunction($name, $functionName) {
+    public function registerFunction ($name, $functionName) {
         $this->userFunctions[$name] = $functionName;
     }
 
@@ -373,7 +378,7 @@ class jTpl {
      * @return string the charset string
      * @since 1.0b2
      */
-    public static function getEncoding (){
+    public static function getEncoding () {
 #if JTPL_STANDALONE
         return jTplConfig::$charset;
 #else

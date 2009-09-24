@@ -54,12 +54,12 @@ class jTplConfig {
      * localization files of jtpl.  The path should have a / at the end.
      */
     static $localizedMessagesPath = '';
-    
+
     /**
      * umask for directories created in the cache directory
      */
     static $umask = 0000;
-    
+
     /**
      * permissions for directories created in the cache directory
      */
@@ -79,24 +79,25 @@ class jTplConfig {
      * @internal
      */
     static $pluginPathList = array();
-    
-    
-    static function addPluginsRepository($path){
-        if(trim($path) == '') return;
-        if(!file_exists($path)){
+
+    static function addPluginsRepository ($path) {
+        if (trim($path) == '') return;
+
+        if (!file_exists($path)) {
             throw new Exception('The given path, '.$path.' doesn\'t exists');
         }
-        if(substr($path,-1) !='/')
-            $path.='/';
+
+        if (substr($path,-1) != '/')
+            $path .= '/';
 
         if ($handle = opendir($path)) {
             while (false !== ($f = readdir($handle))) {
                 if ($f[0] != '.' && is_dir($path.$f)) {
-                    self::$pluginPathList[$f][]= $path.$f.'/';
+                    self::$pluginPathList[$f][] = $path.$f.'/';
                 }
             }
             closedir($handle);
-        }        
+        }
     }
 }
 
@@ -106,9 +107,5 @@ jTplConfig::$templatePath = realpath(JTPL_PATH.'templates/') . '/';
 
 jTplConfig::addPluginsRepository(realpath(JTPL_PATH.'plugins/'));
 
-
 include(JTPL_PATH . 'jTpl.class.php');
-
-
-
 
