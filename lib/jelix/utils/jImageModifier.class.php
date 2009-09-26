@@ -24,7 +24,7 @@ class jImageModifier {
      */
     static protected $transformParams = array('width', 'height', 'maxwidth', 'maxheight', 'zoom', 'alignh',
                                            'alignv', 'ext', 'quality', 'shadow', 'scolor', 'sopacity', 'sblur',
-                                           'soffset', 'sangle', 'background');
+                                           'soffset', 'sangle', 'background', 'omo');
 
     /**
      * params associated with html equivalent attributes
@@ -34,7 +34,7 @@ class jImageModifier {
     static protected $attributeParams = array('alt', 'class', 'id', 'style', 'longdesc', 'name', 'ismap', 'usemap',
                                            'title', 'dir', 'lang', 'onclick', 'ondblclick', 'onmousedown',
                                            'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout', 'onkeypress',
-                                           'onkeydown', 'onkeyup') ;
+                                           'onkeydown', 'onkeyup', 'width', 'height');
 
 
     /**
@@ -104,7 +104,8 @@ class jImageModifier {
         foreach($params as $key => $value) {
             if( in_array($key, jImageModifier::$transformParams)) {
                 $chaine .= $key.$value;
-            } else {
+            }
+            if( in_array($key, jImageModifier::$attributeParams)) {
                 // attribute params are just transmitted back
                 $att[$key] = $value;
             }
