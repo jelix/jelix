@@ -265,7 +265,7 @@ class jTplCompiler
 
     protected function compileContent ($tplcontent) {
         // we remove all php tags 
-        $tplcontent = preg_replace("!<\?(.*?)\?>!s", '', $tplcontent);
+        $tplcontent = preg_replace("!<\?((?:php|=|\s).*)\?>!s", '', $tplcontent);
         // we remove all template comments
         $tplcontent = preg_replace("!{\*(.*?)\*}!s", '', $tplcontent);
 

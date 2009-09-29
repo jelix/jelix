@@ -142,6 +142,34 @@ function toto() {
         '<p>ok{=intval($foo.($truc.$bbb))}</p>',
         '<p>ok<?php echo intval($t->_vars[\'foo\'].($t->_vars[\'truc\'].$t->_vars[\'bbb\'])); ?></p>',
         ),
+26=>array(
+        '<p>ok<? echo $toto ?></p>',
+        '<p>ok</p>',
+        ),
+27=>array(
+        '<p>ok<?
+ echo $toto ?></p>',
+        '<p>ok</p>',
+        ),
+28=>array(
+        '<p>ok<?=$toto ?></p>',
+        '<p>ok</p>',
+        ),
+29=>array(
+        '<p>ok<?xml echo $toto ?></p>',
+        '<p>ok<?xml echo $toto ?></p>',
+        ),
+30=>array(
+        '<p>ok<?browser echo $toto ?></p>',
+        '<p>ok<?browser echo $toto ?></p>',
+        ),
+31=>array(
+        '<p>ok<?php
+ echo $toto ?></p>',
+        '<p>ok</p>',
+        ),
+
+
 /*26=>array(
         '',
         '',
