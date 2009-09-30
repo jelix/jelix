@@ -72,24 +72,29 @@ class jAcl2DbManager {
     public static function setRightsOnGroup($group, $rights){
         $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
         
+        // retrieve old rights.
         $oldrights = array();
         $rs = $dao->getRightsByGroup($group);
         foreach($rs as $rec){
             $oldrights [$rec->id_aclsbj] = true;
         }
-        
-        $rightsToRemove = array();
+
+        // set new rights.  we modify $oldrights in order to have
+        // only deprecated rights in $oldrights
         foreach($rights as $sbj=>$val) {
             if ($val != '' || $val == true) {
                 if (!isset($oldrights[$sbj]))
                     self::addRight($group,$sbj);
+                else
+                  unset($oldrights[$sbj]);
             }
             else
-                $rightsToRemove[] = $sbj;
+                $oldrights [$sbj] = true;
         }
 
-        if (count($rightsToRemove)) {
-            $dao->deleteByGroupAndSubjects($group, $rightsToRemove);
+        if (count($oldrights)) {
+            // $oldrights contains now rights to remove
+            $dao->deleteByGroupAndSubjects($group, array_keys($oldrights));
         }
 
         jAcl2::clearCache();
