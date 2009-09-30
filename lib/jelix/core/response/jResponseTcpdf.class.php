@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Julien Issler
 * @contributor Uriel Corfa, Laurent Jouannneau
-* @copyright   2007 Julien Issler, 2007 Emotic SARL, 2007 Laurent Jouanneau
+* @copyright   2007 Julien Issler, 2007 Emotic SARL, 2007-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0
@@ -94,6 +94,8 @@ class jResponseTcpdf  extends jResponse {
         if($this->hasErrors()){
             foreach( $GLOBALS['gJCoord']->errorMessages  as $e)
                echo '['.$e[0].' '.$e[1].'] '.$e[2]." \t".$e[3]." \t".$e[4]."\n";
+               if ($e[5])
+                  echo $e[5]."\n\n";
         }
         else
             echo "[unknow error]\n";

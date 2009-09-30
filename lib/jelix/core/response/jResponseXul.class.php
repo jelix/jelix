@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin, Julien Issler
-* @copyright   2005-2008 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2005-2009 Laurent Jouanneau, 2007 Dominique Papin
 * @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -132,7 +132,8 @@ class jResponseXul extends jResponse {
                         echo 'console.error("[error ';
                         break;
                     }
-                    echo $e[1],'] ',str_replace(array('"',"\n","\r","\t"),array('\"','\\n','\\r','\\t'),$e[2]),' (',str_replace('\\','\\\\',$e[3]),' ',$e[4],')");';
+                    $m = $e[2]. ($e[5]?"\n".$e[5]:"");
+                    echo $e[1],'] ',str_replace(array('"',"\n","\r","\t"),array('\"','\\n','\\r','\\t'),$m),' (',str_replace('\\','\\\\',$e[3]),' ',$e[4],')");';
                 }
                 echo '}else{alert("there are some errors, you should activate Firebug to see them");}</script>';
             }else{
@@ -188,7 +189,10 @@ class jResponseXul extends jResponse {
     protected function getFormatedErrorMsg(){
         $errors='';
         foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
-            $errors .=  '<description style="color:#FF0000;">['.$e[0].' '.$e[1].'] '.htmlspecialchars($e[2], ENT_NOQUOTES, $GLOBALS['gJConfig']->charset)." \t".$e[3]." \t".$e[4]."</description>\n";
+            $errors .=  '<description style="color:#FF0000;">['.$e[0].' '.$e[1].'] ';
+            $errors .= htmlspecialchars($e[2], ENT_NOQUOTES, $GLOBALS['gJConfig']->charset)." \t".$e[3]." \t".$e[4]."</description>\n";
+            if ($e[5])
+              $errors .= '<div xmlns="http://www.w3.org/1999/xhtml"><pre>'.htmlspecialchars($e[5], ENT_NOQUOTES, $GLOBALS['gJConfig']->charset).'</pre></div>';
         }
         return $errors;
     }

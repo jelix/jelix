@@ -330,13 +330,14 @@ class jCoordinator {
             '\n' => "\n"
         ));
 
+        $traceLog = '';
         if(strpos($toDo , 'TRACE') !== false){
             $messageLog.="\ttrace:";
             foreach($trace as $k=>$t){
-                $messageLog.="\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
-                $messageLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
+                $traceLog.="\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
+                $traceLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
             }
-            $messageLog.="\n";
+            $messageLog.=$traceLog."\n";
         }
 
 
@@ -348,7 +349,7 @@ class jCoordinator {
                 header("HTTP/1.1 500 Internal jelix error");
                 header('Content-type: text/plain');
                 echo 'JELIX PANIC ! Error during initialization !! ';
-            }elseif($this->addErrorMsg($type, $code, $conf['quietMessage'], '', '')){
+            }elseif($this->addErrorMsg($type, $code, $conf['quietMessage'], '', '', '')){
                 $toDo.=' EXIT';
             }
         }elseif(strpos($toDo , 'ECHO') !== false){
@@ -357,7 +358,7 @@ class jCoordinator {
                 header("HTTP/1.1 500 Internal jelix error");
                 header('Content-type: text/plain');
                 echo $messageLog;
-            }elseif($this->addErrorMsg($type, $code, $message, $file, $line)){
+            }elseif($this->addErrorMsg($type, $code, $message, $file, $line, $traceLog)){
                 $toDo.=' EXIT';
             }
         }
@@ -397,8 +398,8 @@ class jCoordinator {
      * @param  integer $line  the line number where the error appear
      * @return boolean    true= the process should stop now, false = the error manager do its job
      */
-    protected function addErrorMsg($type, $code, $message, $file, $line){
-        $this->errorMessages[] = array($type, $code, $message, $file, $line);
+    protected function addErrorMsg($type, $code, $message, $file, $line, $trace){
+        $this->errorMessages[] = array($type, $code, $message, $file, $line, $trace);
         return !$this->response->acceptSeveralErrors();
     }
 

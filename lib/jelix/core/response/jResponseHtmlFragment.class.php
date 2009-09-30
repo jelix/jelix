@@ -3,10 +3,10 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Tahina Ramaroson
-* @contributor Sylvain de Vathaire, Dominique Papin, Olivier Demah
+* @contributor Sylvain de Vathaire, Dominique Papin, Olivier Demah, Laurent Jouanneau
 * @copyright   2008 Tahina Ramaroson, Sylvain de Vathaire
 * @copyright   2008 Dominique Papin
-* @copyright   2009 Olivier Demah
+* @copyright   2009 Olivier Demah, 2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -141,11 +141,14 @@ class jResponseHtmlFragment extends jResponse {
      * @return string html content
      */
     protected function getFormatedErrorMsg(){
-
-		global $gJConfig;
+        global $gJConfig;
+        
         $errors='';
-        foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
-           $errors .=  '<p style="margin:0;"><b>['.$e[0].' '.$e[1].']</b> <span style="color:#FF0000">'.htmlspecialchars($e[2], ENT_NOQUOTES, $gJConfig->charset)."</span> \t".$e[3]." \t".$e[4]."</p>\n";
+        foreach ($GLOBALS['gJCoord']->errorMessages  as $e) {
+           $errors .= '<p style="margin:0;"><b>['.$e[0].' '.$e[1].']</b> <span style="color:#FF0000">';
+           $errors .= htmlspecialchars($e[2], ENT_NOQUOTES, $gJConfig->charset)."</span> \t".$e[3]." \t".$e[4]."</p>\n";
+           if ($e[5])
+              $errors.= '<pre>'.htmlspecialchars($e[5], ENT_NOQUOTES, $gJConfig->charset).'</pre>';
         }
         return $errors;
     }

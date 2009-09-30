@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Nicolas Lassalle <nicolas@beroot.org> (ticket #188), Julien Issler
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2009 Laurent Jouanneau
 * @copyright   2007 Nicolas Lassalle
 * @copyright   2009 Julien Issler
 * @link        http://www.jelix.org
@@ -121,8 +121,10 @@ final class jResponseBinary  extends jResponse {
         $this->_httpHeaders["Content-Type"]='text/plain';
         $this->sendHttpHeaders();
         if($this->hasErrors()){
-            foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+            foreach ($GLOBALS['gJCoord']->errorMessages  as $e) {
                echo '['.$e[0].' '.$e[1].'] '.$e[2]." \t".$e[3]." \t".$e[4]."\n";
+               if ($e[5])
+                  echo $e[5]."\n\n";
             }
         }else{
             echo "[unknow error]\n";

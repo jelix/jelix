@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -153,6 +153,7 @@ final class jResponseRdf extends jResponse {
                 echo "<li>\n";
                 echo '<Description err:code="'.$e[1].'" err:type="'.$e[0].'" err:file="'.$e[3].'" err:line="'.$e[4].'">';
                 echo '<err:message>'.htmlspecialchars($e[2]).'</err:message>';
+                echo '<err:trace>'.htmlspecialchars($e[5]).'</err:trace>';
                 echo "</Description>\n";
                 echo "</li>\n";
             }

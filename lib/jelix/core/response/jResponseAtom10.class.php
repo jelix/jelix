@@ -5,7 +5,7 @@
 * @author      Yannick Le Guédart
 * @contributor Laurent Jouanneau
 * @copyright   2006 Yannick Le Guédart
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -105,8 +105,11 @@ class jResponseAtom10 extends jResponseXMLFeed {
     protected function getFormatedErrorMsg(){
         $errors = '';
         foreach ($GLOBALS['gJCoord']->errorMessages  as $e) {
-            // FIXME : Pourquoi utiliser htmlentities() ?
-           $errors .=  '<error xmlns="http://jelix.org/ns/xmlerror/1.0" type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">'.htmlentities($e[2], ENT_NOQUOTES, $this->charset). '</error>'. "\n";
+           $errors .=  '<error xmlns="http://jelix.org/ns/xmlerror/1.0" type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">';
+           $errors .= htmlspecialchars($e[2], ENT_NOQUOTES, $this->charset);
+           if ($e[5])
+              $errors .= "\n".htmlspecialchars($e[5], ENT_NOQUOTES, $this->charset);
+           $errors .= '</error>'. "\n";
         }
         return $errors;
     }

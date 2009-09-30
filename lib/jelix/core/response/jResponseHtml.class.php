@@ -196,7 +196,8 @@ class jResponseHtml extends jResponse {
                         echo 'console.error("[error ';
                         break;
                     }
-                    echo $e[1],'] ',str_replace(array('"',"\n","\r","\t"),array('\"','\\n','\\r','\\t'),$e[2]),' (',str_replace('\\','\\\\',$e[3]),' ',$e[4],')");';
+                    $m = $e[2]. ($e[5]?"\n".$e[5]:"");
+                    echo $e[1],'] ',str_replace(array('"',"\n","\r","\t"),array('\"','\\n','\\r','\\t'),$m),' (',str_replace('\\','\\\\',$e[3]),' ',$e[4],')");';
                 }
                 echo '}else{alert("there are some errors, you should activate Firebug to see them");}</script>';
             }else{
@@ -274,7 +275,10 @@ class jResponseHtml extends jResponse {
     protected function getFormatedErrorMsg(){
         $errors='';
         foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
-           $errors .=  '<p style="margin:0;"><b>['.$e[0].' '.$e[1].']</b> <span style="color:#FF0000">'.htmlspecialchars($e[2], ENT_NOQUOTES, $this->_charset)."</span> \t".$e[3]." \t".$e[4]."</p>\n";
+           $errors .=  '<p style="margin:0;"><b>['.$e[0].' '.$e[1].']</b> <span style="color:#FF0000">';
+           $errors .= htmlspecialchars($e[2], ENT_NOQUOTES, $this->_charset)."</span> \t".$e[3]." \t".$e[4]."</p>\n";
+           if ($e[5])
+            $errors.= '<pre>'.htmlspecialchars($e[5], ENT_NOQUOTES, $this->_charset).'</pre>';
         }
         return $errors;
     }

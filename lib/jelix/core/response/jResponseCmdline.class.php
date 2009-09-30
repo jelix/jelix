@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Christophe Thiriot
 * @contributor Laurent Jouanneau
-* @copyright   2008 Christophe Thiriot, 2008 Laurent Jouanneau
+* @copyright   2008 Christophe Thiriot, 2008-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -109,6 +109,8 @@ class jResponseCmdline extends jResponse {
         if($this->hasErrors()){
             foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
                $message.= '['.$e[0].' '.$e[1].'] '.$e[2]." \t".$e[3]." \t".$e[4]."\n";
+               if ($e[5])
+                  echo $e[5]."\n\n";
             }
         }else{
             $message.= "[unknown error]\n";

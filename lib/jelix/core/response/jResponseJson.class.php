@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @copyright   2007-2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -60,6 +60,8 @@ final class jResponseJson extends jResponse {
             $e = $gJCoord->errorMessages[0];
             $message['errorCode'] = $e[1];
             $message['errorMessage'] = '['.$e[0].'] '.$e[2].' (file: '.$e[3].', line: '.$e[4].')';
+            if ($e[5])
+               $message['errorMessage'] .= "\n".$e[5];
         }else{
             $message['errorMessage'] = 'Unknow error';
             $message['errorCode'] = -1;

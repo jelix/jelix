@@ -6,7 +6,7 @@
 * @contributor Laurent Jouanneau
 * @contributor Sylvain de Vathaire
 * @copyright   2005-2006 loic Mathaud
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2009 Laurent Jouanneau
 * @copyright   2008 Sylvain de Vathaire
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -125,7 +125,11 @@ class jResponseXml extends jResponse {
         echo '<errors xmlns="http://jelix.org/ns/xmlerror/1.0">';
         if ($this->hasErrors()) {
             foreach ($GLOBALS['gJCoord']->errorMessages  as $e) {
-                echo '<error xmlns="http://jelix.org/ns/xmlerror/1.0" type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">'.htmlspecialchars($e[2], ENT_NOQUOTES, $this->_charset). '</error>'. "\n";
+                echo '<error xmlns="http://jelix.org/ns/xmlerror/1.0" type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">';
+                echo htmlspecialchars($e[2], ENT_NOQUOTES, $this->_charset);
+                if ($e[5])
+                    echo "\n".htmlspecialchars($e[5], ENT_NOQUOTES, $this->_charset);
+                echo '</error>'. "\n";
             }
         } else {
             echo '<error>Unknow Error</error>';
