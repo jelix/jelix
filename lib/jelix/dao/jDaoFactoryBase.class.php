@@ -5,11 +5,15 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  * @contributor Julien Issler
- * @contributor Thomas, Yoan Blanc
+ * @contributor Thomas
+ * @contributor Yoan Blanc
+ * @contributor Michael Fradin
  * @copyright   2005-2009 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007-2009 Julien Issler
- * @copyright   2008 Thomas, 2008 Yoan Blanc
+ * @copyright   2008 Thomas
+ * @copyright   2008 Yoan Blanc
+ * @copyright   2009 Mickael Fradin
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -406,7 +410,7 @@ abstract class jDaoFactoryBase  {
             else if (!is_array ($cond['value'])){
                 $value = $this->_prepareValue($cond['value'],$prop['unifiedType']);
                 if ($value === 'NULL'){
-                    if($op == '='){
+                    if(in_array($op, array('=','LIKE','IS','IS NULL'))){
                         $r .= $prefixNoCondition.' IS NULL';
                     }else{
                         $r .= $prefixNoCondition.' IS NOT NULL';
@@ -423,7 +427,7 @@ abstract class jDaoFactoryBase  {
                     }
                     $value = $this->_prepareValue($conditionValue,$prop['unifiedType']);
                     if ($value === 'NULL'){
-                        if($op == '='){
+                        if(in_array($op, array('=','LIKE','IS','IS NULL'))){
                             $r .= $prefixNoCondition.' IS NULL';
                         }else{
                             $r .= $prefixNoCondition.' IS NOT NULL';

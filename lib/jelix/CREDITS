@@ -116,6 +116,7 @@ Mickaël Fradin (aka mike/kewix)
  - added style feature in the meta_html plugin (#553)
  - little other improvements (#835)
  - fixed bugs (#884)
+ - correct _generateCondition doesn't handle some operators with NULL values (#992)
 
 Baptiste Toinot (aka Surfoo)
  - double / in path for locale selector
