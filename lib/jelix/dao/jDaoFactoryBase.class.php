@@ -393,7 +393,7 @@ abstract class jDaoFactoryBase  {
                 $prefixNoCondition = $this->_conn->encloseName($prop['fieldName']);
 
             $op = strtoupper($cond['operator']);
-            $prefix = $prefixNoCondition.' '.$op.' '; // ' ' for LIKE..
+            $prefix = $prefixNoCondition.' '.$op.' '; // ' ' for LIKE
 
             if ($op == 'IN' || $op == 'NOT IN'){
                 if(is_array($cond['value'])){
@@ -407,37 +407,46 @@ abstract class jDaoFactoryBase  {
 
                 $r .= $prefix.'('.$values.')';
             }
-            else if (!is_array ($cond['value'])){
-                $value = $this->_prepareValue($cond['value'],$prop['unifiedType']);
-                if ($value === 'NULL'){
-                    if(in_array($op, array('=','LIKE','IS','IS NULL'))){
-                        $r .= $prefixNoCondition.' IS NULL';
-                    }else{
-                        $r .= $prefixNoCondition.' IS NOT NULL';
-                    }
-                } else {
-                    $r .= $prefix.$value;
+            else {
+                if ($op == 'LIKE' || $op == 'NOT LIKE') {
+                    $type = 'varchar';
                 }
-            }else{
-                $r .= ' ( ';
-                $firstCV = true;
-                foreach ($cond['value'] as $conditionValue){
-                    if (!$firstCV){
-                        $r .= ' or ';
-                    }
-                    $value = $this->_prepareValue($conditionValue,$prop['unifiedType']);
-                    if ($value === 'NULL'){
-                        if(in_array($op, array('=','LIKE','IS','IS NULL'))){
+                else {
+                    $type = $prop['unifiedType'];
+                }
+
+                if (!is_array($cond['value'])) {
+                    $value = $this->_prepareValue($cond['value'], $type);
+                    if ($cond['value'] === null) {
+                        if (in_array($op, array('=','LIKE','IS','IS NULL'))) {
                             $r .= $prefixNoCondition.' IS NULL';
-                        }else{
+                        } else {
                             $r .= $prefixNoCondition.' IS NOT NULL';
                         }
-                    }else{
+                    } else {
                         $r .= $prefix.$value;
                     }
-                    $firstCV = false;
+                } else {
+                    $r .= ' ( ';
+                    $firstCV = true;
+                    foreach ($cond['value'] as $conditionValue){
+                        if (!$firstCV) {
+                            $r .= ' or ';
+                        }
+                        $value = $this->_prepareValue($conditionValue, $type);
+                        if ($conditionValue === null) {
+                            if (in_array($op, array('=','LIKE','IS','IS NULL'))) {
+                                $r .= $prefixNoCondition.' IS NULL';
+                            } else {
+                                $r .= $prefixNoCondition.' IS NOT NULL';
+                            }
+                        } else {
+                            $r .= $prefix.$value;
+                        }
+                        $firstCV = false;
+                    }
+                    $r .= ' ) ';
                 }
-                $r .= ' ) ';
             }
         }
         //sub conditions

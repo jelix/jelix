@@ -139,6 +139,22 @@ class UTDao_generator extends jUnitTestCase {
         $this->assertEqualOrDiff('\' <= \'.(is_numeric ($foo) ? $foo : floatval($foo))',$result);
         $result = $this->_getProp('bigautoincrement','$foo', true,'<=');
         $this->assertEqualOrDiff('\' <= \'.(is_numeric ($foo) ? $foo : floatval($foo))',$result);
+
+        // with checknull and other operator LIKE
+        $result = $this->_getProp('integer','$foo', true,'LIKE');
+        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $result = $this->_getProp('autoincrement','$foo', true,'LIKE');
+        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $result = $this->_getProp('string','$foo', true,'LIKE');
+        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $result = $this->_getProp('double','$foo', true,'LIKE');
+        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $result = $this->_getProp('float','$foo', true,'LIKE');
+        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $result = $this->_getProp('numeric','$foo', true,'LIKE');
+        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $result = $this->_getProp('bigautoincrement','$foo', true,'LIKE');
+        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
     }
  
     function testBuildSQLCondition(){
@@ -228,6 +244,7 @@ class UTDao_generator extends jUnitTestCase {
         <method name="method10" type="select">
            <parameter name="login" />
            <conditions>
+              <like property="grouptype" value="2%" />
               <like property="name" value="a%" />
               <like property="ownerlogin" expr="$login" />
            </conditions>
@@ -289,7 +306,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method10']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method10']->getParameters(), false);
-        $this->assertEqualOrDiff(' `name` LIKE \\\'a%\\\' AND `ownerlogin` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
+        $this->assertEqualOrDiff(' `grouptype` LIKE \\\'2%\\\' AND `name` LIKE \\\'a%\\\' AND `ownerlogin` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method11']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method11']->getParameters(), false);
@@ -385,6 +402,7 @@ class UTDao_generator extends jUnitTestCase {
            <conditions>
               <eq property="grouptype" value="2" />
               <eq property="name" expr="TOUPPER($login)" />
+              <like property="grouptype" expr="$login" />
            </conditions>
         </method>
     </factory>
@@ -422,7 +440,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method9']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method9']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` = 2 AND `name` = TOUPPER(\'.$this->_conn->quote($login).\')',$where);
+        $this->assertEqualOrDiff(' `grouptype` = 2 AND `name` = TOUPPER(\'.$this->_conn->quote($login).\') AND `grouptype` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
 
     }
 

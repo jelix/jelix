@@ -750,7 +750,7 @@ class jDaoGenerator {
             }
 
             $var = '$'.$fieldPrefix.$field->name;
-            $value = $this->_preparePHPExpr($var,$field, !$field->requiredInConditions,'=' );
+            $value = $this->_preparePHPExpr($var, $field, !$field->requiredInConditions, '=');
 
             $r .= $condition.'\'.'.$value.'.\'';
         }
@@ -763,7 +763,7 @@ class jDaoGenerator {
         $values = $fields = array();
 
         foreach ((array)$fieldList as $fieldName=>$field) {
-            if ($pattern != '' && $field->$pattern == ''){
+            if ($pattern != '' && $field->$pattern == '') {
                 continue;
             }
 
@@ -904,8 +904,13 @@ class jDaoGenerator {
                         }
                         $value = $cond['operator'].' '.$value;
                     }
-                }else{
-                    $value = $cond['operator'].' '.$this->tools->escapeValue($prop->unifiedType, $cond['value'], false, true);
+                } else {
+                    $value = $cond['operator'].' ';
+                    if ($cond['operator'] == 'LIKE' || $cond['operator'] == 'NOT LIKE') {
+                        $value .= $this->tools->escapeValue('varchar', $cond['value'], false, true);
+                    } else {
+                        $value .= $this->tools->escapeValue($prop->unifiedType, $cond['value'], false, true);
+                    }
                 }
                 $r.=$value;
             }
@@ -927,7 +932,7 @@ class jDaoGenerator {
     }
 
     protected function _preparePHPExpr($expr, $field, $checknull=true, $forCondition=''){
-        $opnull=$opval='';
+        $opnull = $opval = '';
         if($checknull && $forCondition != ''){
             if($forCondition == '=')
                 $opnull = 'IS ';
@@ -936,11 +941,15 @@ class jDaoGenerator {
             else
                 $checknull=false;
         }
-        if($forCondition!=''){
+        $type = '';
+        if ($forCondition != 'LIKE' && $forCondition != 'NOT LIKE')
+            $type = strtolower($field->unifiedType);
+        
+        if ($forCondition != '') {
             $forCondition = '\' '.$forCondition.' \'.'; // spaces for operators like LIKE
         }
 
-        switch(strtolower($field->unifiedType)){
+        switch($type){
             case 'integer':
                 if($checknull){
                     $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'intval('.$expr.'))';
