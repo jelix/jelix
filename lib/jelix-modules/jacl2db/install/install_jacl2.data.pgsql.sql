@@ -2,7 +2,8 @@
 INSERT INTO jacl2_group (id_aclgrp, name, grouptype, ownerlogin) VALUES (1, 'admins', 0, NULL);
 INSERT INTO jacl2_group (id_aclgrp, name, grouptype, ownerlogin) VALUES (2, 'users', 1, NULL);
 INSERT INTO jacl2_group (id_aclgrp, name, grouptype, ownerlogin) VALUES (3, 'admin', 2, 'admin');
-SELECT setval('jacl2_group_id_aclgrp_seq', 2, true);
+INSERT INTO jacl2_group (id_aclgrp, name, grouptype, ownerlogin) VALUES (0, 'anonymous', 1, NULL);
+SELECT setval('jacl2_group_id_aclgrp_seq', 3, true);
 
 INSERT INTO jacl2_user_group (login, id_aclgrp) VALUES ('admin', 1);
 INSERT INTO jacl2_user_group (login, id_aclgrp) VALUES ('admin', 3);
