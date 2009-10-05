@@ -185,6 +185,16 @@ class UTfilter extends jUnitTestCase {
         $result="<div>lorem <a>ah ah </a>\n</div>";
         $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
 
+        $html='<div>lorem <a href="foo/bar">a</a> <a href="http://foo/bar">a</a> <a href="hTTps://foo/bar">a</a>
+         <a href="ftp://foo/bar">a</a>  <a href="mailto:foo@bar.baz">a</a>  <a href="foo/bar:/bla">a</a>
+         <a href="foo:bar/bla">a</a> <a href="data:bar/bla">a</a></div>';
+        $result='<div>lorem <a href="foo/bar">a</a> <a href="http://foo/bar">a</a> <a href="hTTps://foo/bar">a</a>
+         <a href="ftp://foo/bar">a</a>  <a href="mailto:foo@bar.baz">a</a>  <a href="foo/bar:/bla">a</a>
+         <a>a</a> <a>a</a>
+</div>';
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+
+
     }
 
 }

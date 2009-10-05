@@ -257,8 +257,10 @@ class jFilter {
                     if(strtolower(substr($attr->localName,0,2)) == 'on')
                         $child->removeAttributeNode($attr);
                     else if(strtolower($attr->localName) == 'href') {
-                        if(preg_match("/^(javascript|vbscript)\:.*/",trim($attr->nodeValue)))
-                            $child->removeAttributeNode($attr);
+                        if(preg_match("/^([a-z\-]+)\:.*/i",trim($attr->nodeValue), $m)) {
+                            if(!preg_match('/^http|https|mailto|ftp|irc|about|news/i', $m[1]))
+                                $child->removeAttributeNode($attr);
+                        }
                     }
                 }
                 self::cleanAttr($child);
