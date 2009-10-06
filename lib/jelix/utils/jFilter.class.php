@@ -4,7 +4,7 @@
 * @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -175,6 +175,9 @@ class jFilter {
 #endif
     }
 
+    const INVALID_HTML = 1;
+    const BAD_SAVE_HTML = 2;
+
     /**
      * remove all javascript things in a html content
      * The html content should be a subtree of a body tag, not a whole document
@@ -182,10 +185,15 @@ class jFilter {
      * @return string  the cleaned html content
      * @since 1.1
      */
-    static public function cleanHtml($html) { //, $isXhtml = true
+    static public function cleanHtml($html, $isXhtml = false) {
         global $gJConfig;
         $doc = new DOMDocument('1.0',$gJConfig->charset);
         $foot = '</body></html>';
+
+        if (strpos($html, "\r") !== false) {
+            $html = str_replace("\r\n", "\n", $html); // removed \r
+            $html = str_replace("\r", "\n", $html); // removed standalone \r
+        }
 
         /*if($isXhtml) {
             $head = '<?xml version="1.0" encoding=""?>
@@ -196,8 +204,8 @@ class jFilter {
             }
         }else{*/
             $head = '<html><head><meta http-equiv="Content-Type" content="text/html; charset='.$gJConfig->charset.'"/><title></title></head><body>';
-            if(!$doc->loadHTML($head.$html.$foot)) {
-                return 1;
+            if(!@$doc->loadHTML($head.$html.$foot)) {
+                return jFilter::INVALID_HTML;
             }
         //}
 
@@ -243,8 +251,14 @@ class jFilter {
         }
         self::cleanAttr($doc->getElementsByTagName('body')->item(0));
         $doc->formatOutput = true;
-        if(!preg_match('!<body>(.*)</body>!smU', $doc->saveHTML(), $m))
-            return 2;
+        if ($isXhtml) {
+          $result = $doc->saveXML();
+        }
+        else {
+          $result = $doc->saveHTML();          
+        }
+        if(!preg_match('!<body>(.*)</body>!smU', $result, $m))
+            return jFilter::BAD_SAVE_HTML;
         return $m[1];
     }
 

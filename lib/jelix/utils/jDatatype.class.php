@@ -4,7 +4,7 @@
 * @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -116,8 +116,13 @@ class jDatatypeHtml extends jDatatype implements jIFilteredDatatype {
     protected $minLength=null;
     protected $maxLength=null;
     protected $facets = array('length','minLength','maxLength');
+    public $outputXhtml = false;
 
     protected $newValue;
+
+    public function __construct($aOutputXhtml = false) {
+        $this->outputXhtml = $aOutputXhtml;
+    }
 
     public function check($value){
         if($this->hasFacets){
@@ -129,7 +134,7 @@ class jDatatypeHtml extends jDatatype implements jIFilteredDatatype {
             if($this->maxLength !== null && $len > $this->maxLength)
                 return false;
         }
-        $this->newValue = jFilter::cleanHtml($value);
+        $this->newValue = jFilter::cleanHtml($value, $this->outputXhtml);
         return is_string($this->newValue);
     }
 

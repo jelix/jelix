@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin, Julien Issler
 * @contributor Uriel Corfa Emotic SARL, Thomas
-* @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2007-2008 Dominique Papin
 * @copyright   2007 Emotic SARL
 * @copyright   2008 Julien Issler, 2009 Thomas
@@ -24,7 +24,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
 
     protected $allowedType = array('string','boolean','decimal','integer','hexadecimal',
                                       'datetime','date','time','localedatetime','localedate','localetime',
-                                      'url','email','ipv4','ipv6','html');
+                                      'url','email','ipv4','ipv6','html','xhtml');
 
     protected function _compile ($xml, &$source) {
         if(isset($xml['allowAnyOrigin']) && $xml['allowAnyOrigin'] == 'true') {
@@ -95,10 +95,11 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
 
     protected function generateTextarea(&$source, $control, &$attributes) {
         if(isset($attributes['type'])){
-            if ( $attributes['type'] != 'html') {
-                throw new jException('jelix~formserr.datatype.unknow',array($attributes['type'],'textarea',$this->sourceFile));
+            if ($attributes['type'] != 'html' && $attributes['type'] != 'xhtml') {
+                throw new jException('jelix~formserr.datatype.unknow',
+                                     array($attributes['type'], 'textarea', $this->sourceFile));
             }
-            $source[]='$ctrl->datatype= new jDatatypeHtml();';
+            $source[] = '$ctrl->datatype= new jDatatypeHtml('.($attributes['type'] == 'xhtml'?'true':'').');';
             unset($attributes['type']);
         }
         return $this->_generateTextareaHtmlEditor($source, $control, $attributes);
@@ -148,6 +149,11 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
     }
 
     protected function generateHtmleditor(&$source, $control, &$attributes) {
+        if (isset($attributes['xhtml'])) {
+            $source[] = '$ctrl->datatype= new jDatatypeHtml('.($attributes['xhtml'] == 'true'?'true':'').');';
+            unset($attributes['xhtml']);
+        }
+
         $this->_generateTextareaHtmlEditor($source, $control, $attributes);
 
         if (isset($attributes['config'])) {

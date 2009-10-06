@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
 * @contributor
-* @copyright   2006-2008 Jouanneau laurent
+* @copyright   2006-2009 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -194,7 +194,31 @@ class UTfilter extends jUnitTestCase {
 </div>';
         $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
 
+        // invalid html
+        $html='<div>lorem<em>aaa</er></div>';
+        $result="<div>lorem<em>aaa</em>\n</div>";
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
 
+        $html='<div lorem<em>aaa</er></div>';
+        $result="<div lorem>aaa</div>";
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+
+        $html='<div>lorem <br/> ipsum</div>';
+        $result='<div>lorem <br> ipsum</div>';
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+
+        // XHTML
+        $html='<div>lorem <br/> ipsum</div>';
+        $result="\n    <div>lorem <br/> ipsum</div>\n  ";
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html, true));
+
+        $html='<div lorem<em>aaa</er></div>';
+        $result="\n    <div lorem=\"\">aaa</div>\n  ";
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html, true));
+
+        $html='<div>lorem<em>aaa</er></div>';
+        $result="\n    <div>lorem<em>aaa</em></div>\n  ";
+        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html, true));
     }
 
 }

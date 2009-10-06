@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin, Julien Issler
 * @contributor Uriel Corfa Emotic SARL, Thomas
-* @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2007 Dominique Papin
 * @copyright   2007 Emotic SARL
 * @copyright   2008 Julien Issler, 2009 Thomas
@@ -97,14 +97,14 @@ class jFormsCompiler_jf_1_0  {
         $this->attrRequired($source, $attributes);
         $this->attrDefaultvalue($source, $attributes);
         if(isset($attributes['minlength'])){
-            if($type != 'string' && $type != 'html'){
+            if($type != 'string' && $type != 'html'  && $type != 'xhtml'){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('minlength','input',$this->sourceFile));
             }
             $source[]='$ctrl->datatype->addFacet(\'minLength\','.intval($attributes['minlength']).');';
             unset($attributes['minlength']);
         }
         if(isset($attributes['maxlength'])){
-            if($type != 'string' && $type != 'html'){
+            if($type != 'string' && $type != 'html' && $type != 'xhtml'){
                 throw new jException('jelix~formserr.attribute.not.allowed',array('maxlength','input',$this->sourceFile));
             }
             $source[]='$ctrl->datatype->addFacet(\'maxLength\','.intval($attributes['maxlength']).');';
@@ -336,7 +336,9 @@ class jFormsCompiler_jf_1_0  {
                 throw new jException('jelix~formserr.datatype.unknow',array($type,'input',$this->sourceFile));
             }
             
-            if($type != 'string')
+            if($type == 'xhtml')
+                $source[]='$ctrl->datatype= new jDatatypeHtml(true);';
+            else if($type != 'string')
                 $source[]='$ctrl->datatype= new jDatatype'.$type.'();';
             unset($attributes['type']);
         }

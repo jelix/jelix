@@ -271,7 +271,7 @@ class jManifest {
 
         $indent = str_repeat(" ", self::$indentation);
         $result = $s;
-        $result = str_replace("\n\r","\n",$result); // removed \r
+        $result = str_replace("\r\n","\n",$result); // removed \r
         $result = str_replace("\r","\n",$result); // removed standalone \r
         $result = preg_replace("(\n+)", "\n", $result);
         $result = str_replace("\t",$indent,$result);

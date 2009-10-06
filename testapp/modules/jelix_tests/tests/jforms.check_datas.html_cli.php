@@ -75,6 +75,37 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->assertTrue($this->form->check());
         $this->form->setData('nom','off');
         $this->assertTrue($this->form->check());
+
+        $ctrl = new jFormsControlInput('nom');
+        $ctrl->datatype = new jDatatypeHtml();
+        $ctrl->required = false;
+        $this->form->addCtrl($ctrl);
+
+        $this->form->setData('nom',null);
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','foo');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','<div>lorem<em>aaa</em></div>');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','<div>lorem<em>aaa</er></div>');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','<div lorem<em>aaa</er></div>');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','<div>lorem <br/> ipsum</div>');
+        $this->assertTrue($this->form->check());
+        
+        $ctrl->datatype = new jDatatypeHtml(true);
+        $this->form->setData('nom','<div>lorem<em>aaa</em></div>');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','<div>lorem <br/> ipsum</div>');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','<div lorem<em>aaa</er></div>');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','<div>lorem<em>aaa</er></div>');
+        $this->assertTrue($this->form->check());
+
     }
 
     function testCheckbox() {
@@ -273,7 +304,6 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
 
         $this->form->setData('categories','');
         $this->assertTrue($this->form->check());
-
     }
 }
 

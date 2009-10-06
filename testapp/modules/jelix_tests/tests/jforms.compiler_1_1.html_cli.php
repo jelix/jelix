@@ -2,9 +2,9 @@
 /**
 * @package     testapp
 * @subpackage  unittest module
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin, Julien Issler
-* @copyright   2007-2008 Jouanneau laurent
+* @copyright   2007-2009 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2008 Dominique Papin
 * @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
@@ -379,6 +379,15 @@ class UTjformsCompiler_1_1 extends jUnitTestCase {
     <label>Votre mot de passe</label>
     <confirm>confirmez</confirm>
 </secret>',
+84=>'<input ref="nom" type="xhtml" xmlns="http://jelix.org/ns/forms/1.1">
+    <label>Votre nom</label>
+</input>',
+85=>'<textarea ref="nom" type="xhtml" xmlns="http://jelix.org/ns/forms/1.1">
+    <label>Votre nom</label>
+</textarea>',
+86=>'<htmleditor ref="contenu" xhtml="true" xmlns="http://jelix.org/ns/forms/1.1">
+    <label>Texte</label>
+</htmleditor>',
     );
 
     protected $_PhpControls = array(
@@ -839,6 +848,19 @@ $ctrl2->label=\'confirmez\';
 $ctrl2->required = $ctrl->required;
 $this->addControl($ctrl);
 $this->addControl($ctrl2);',
+84=>'$ctrl= new jFormsControlinput(\'nom\');
+$ctrl->datatype= new jDatatypeHtml(true);
+$ctrl->label=\'Votre nom\';
+$this->addControl($ctrl);',
+85=>'$ctrl= new jFormsControltextarea(\'nom\');
+$ctrl->datatype= new jDatatypeHtml(true);
+$ctrl->label=\'Votre nom\';
+$this->addControl($ctrl);',
+86=>'$ctrl= new jFormsControlhtmleditor(\'contenu\');
+$ctrl->datatype= new jDatatypeHtml(true);
+$ctrl->label=\'Texte\';
+$this->addControl($ctrl);',
+
 );
 
     function testPhpControl11(){
