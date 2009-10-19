@@ -76,8 +76,9 @@ class htmllightJformsBuilder extends jFormsBuilderBase {
                     }
                     if(isset($gJConfig->htmleditors[$ed->config.'.config']))
                         $resp->addJSLink($bp.$gJConfig->htmleditors[$ed->config.'.config']);
-                    if(isset($gJConfig->htmleditors[$ed->config.'.skin.'.$ed->skin]))
-                        $resp->addCSSLink($bp.$gJConfig->htmleditors[$ed->config.'.skin.'.$ed->skin]);
+                    $skin = $ed->config.'.skin.'.$ed->skin;
+                    if(isset($gJConfig->htmleditors[$skin]) && $gJConfig->htmleditors[$skin] != '')
+                        $resp->addCSSLink($bp.$gJConfig->htmleditors[$skin]);
                 }
             }
         }
