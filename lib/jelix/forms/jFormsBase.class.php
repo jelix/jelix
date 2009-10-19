@@ -7,7 +7,7 @@
 * @contributor Bastien Jaillot
 * @contributor Christophe Thiriot, Julien Issler
 * @copyright   2006-2009 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
-* @copyright   2008 Julien Issler
+* @copyright   2008-2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -34,7 +34,7 @@ class jExceptionForms extends jException {
  * @subpackage  forms
  */
 abstract class jFormsBase {
-    
+
     const SECURITY_LOW = 0;
     const SECURITY_CSRF = 1;
 
@@ -184,7 +184,7 @@ abstract class jFormsBase {
                 $properties[$n]=array('required'=>$r, 'defaultValue'=>$v, 'unifiedType'=>$t);
             }
         }
-        
+
         foreach($this->controls as $name=>$ctrl){
             if(!isset($properties[$name]))
                 continue;
@@ -568,6 +568,12 @@ abstract class jFormsBase {
     public function getHtmlEditors(){ return $this->htmleditors; }
 
     /**
+     * @return array of jFormsControl objects
+     * @since 1.2
+     */
+    public function getUploads(){ return $this->uploads; }
+
+    /**
      * call this method after initilization of the form, in order to track
      * modified controls
      * @since 1.1
@@ -603,11 +609,11 @@ abstract class jFormsBase {
             $result = array();
             $orig = & $this->container->originalData;
             foreach($this->container->data as $k=>$v1) {
-                
+
                 if (!isset($orig[$k])) {
                     continue;
                 }
-                
+
                 if($this->_diffValues($orig[$k], $v1))  {
                     $result[$k] = $orig[$k];
                     continue;
@@ -806,7 +812,7 @@ abstract class jFormsBase {
             }
         }
     }
-    
+
     /**
      * generate a new token for security against CSRF
      * a builder should call it and create for example an hidden input
