@@ -143,6 +143,10 @@ class jTplCompiler
      */
     protected $_userFunctions = array ();
 
+    protected $escapePI = false;
+    
+    protected $removeASPtags = true;
+
     /**
      * Initialize some properties
      */
@@ -151,6 +155,9 @@ class jTplCompiler
         $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
         $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
         $this->_allowedInForeach = array_merge($this->_vartype, array(T_AS, T_DOUBLE_ARROW));
+
+        $this->escapePI = (ini_get("short_open_tag") == "1");
+        $this->removeASPtags = (ini_get("asp_tags") == "1");
 
 #if JTPL_STANDALONE
         require_once(jTplConfig::$localizedMessagesPath.jTplConfig::$lang.'.php');
@@ -263,11 +270,30 @@ class jTplCompiler
         return true;
     }
 
+    protected function _piCallback($matches) {
+        return '<?php echo \''.str_replace("'","\\'",$matches[1]).'\'?>';
+    }
+
+
     protected function compileContent ($tplcontent) {
         // we remove all php tags 
         $tplcontent = preg_replace("!<\?((?:php|=|\s).*)\?>!s", '', $tplcontent);
         // we remove all template comments
         $tplcontent = preg_replace("!{\*(.*?)\*}!s", '', $tplcontent);
+
+        if ($this->escapePI) {
+#if PHP50 || PHP51
+        // there is a @ because an exception in the callback function generates a warning in PHP 5.1.2
+        // (not in PHP 5.2)
+            $tplcontent = @preg_replace_callback("!(<\?.*\?>)!sm", array($this,'_piCallback'), $tplcontent);
+#else
+            $tplcontent = preg_replace_callback("!(<\?.*\?>)!sm", array($this,'_piCallback'), $tplcontent);
+#endif
+        }
+        if ($this->removeASPtags) {
+          // we remove all asp tags 
+          $tplcontent = preg_replace("!<%.*%>!s", '', $tplcontent);
+        }
 
         preg_match_all("!{literal}(.*?){/literal}!s", $tplcontent, $_match);
 
