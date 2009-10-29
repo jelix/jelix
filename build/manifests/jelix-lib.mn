@@ -374,35 +374,36 @@ cd lib/jelix/plugins/tpl/common
   modifier.wordwrap.php
 
 cd lib/jelix/plugins/tpl/html
-  function.jlocale.php
-  function.jurl.php
-  function.urljsstring.php
-  modifier.nl2br.php
-  meta.html.php
-  cfunction.formfull.php
-  function.formdatafull.php
-  function.formurl.php
-  function.formurlparam.php
-  function.diff.php
   block.form.php
   block.formcontrols.php
   block.formdata.php
   block.formsubmits.php
   block.ifctrl.php
+  block.swf.php
+  block.swfjs.php
   cfunction.const.php
+  cfunction.formfull.php
+  cfunction.swfbiscuit.php
+  function.breadcrumb.php
   function.ctrl_control.php
   function.ctrl_label.php
   function.ctrl_value.php
-  function.formsubmit.php
+  function.diff.php
+  function.formdatafull.php
   function.formreset.php
+  function.formsubmit.php
+  function.formurl.php
+  function.formurlparam.php
   function.image.php
-  function.pagelinks.php
-  block.swf.php
-  cfunction.swfbiscuit.php
-  block.swfjs.php
-  function.link_to_remote.php
-  function.breadcrumb.php
   function.jmessage.php
+  function.jlocale.php
+  function.jurl.php
+  function.link_to_remote.php
+  function.mailto.php
+  function.pagelinks.php
+  function.urljsstring.php
+  meta.html.php
+  modifier.nl2br.php
 
 cd lib/jelix/plugins/tpl/ltx2pdf
   function.jlocale.php
