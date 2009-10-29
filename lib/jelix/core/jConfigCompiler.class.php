@@ -299,7 +299,7 @@ class jConfigCompiler {
                         if (!isset($installation[$section][$f.'.installed']))
                             $installation[$section][$f.'.installed'] = 0;
 
-                        if($f == 'jelix') {
+                        if ($f == 'jelix') {
                             $config->modules['jelix.access'] = 2; // the jelix module should always be public
                         }
                         else {
@@ -322,7 +322,7 @@ class jConfigCompiler {
                             $config->_allModulesPathList[$f]=$p.$f.'/';
                         }
                         
-                        if($config->modules[$f.'.access'])
+                        if ($config->modules[$f.'.access'])
                             $config->_modulesPathList[$f]=$p.$f.'/';
                     }
                 }

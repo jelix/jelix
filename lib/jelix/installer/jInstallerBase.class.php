@@ -9,20 +9,18 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
-
 /**
-* EXPERIMENTAL
 * base class for installers
 * @package     jelix
 * @subpackage  installer
-* @experimental
 * @since 1.2
 */
 abstract class jInstallerBase {
 
+    /**
+     * @var string the version of the component
+     */
     public $version = '0';
-
 
     /**
      * default configuration of the application
@@ -38,8 +36,11 @@ abstract class jInstallerBase {
 
     /**
      * @param jIniMultiFilesModifier $config the configuration of the entry point
+     * @param string $path the component path
+     * @param string $version version of the component
+     * 
      */
-    function __construct ($config, $modulePath, $version) {
+    function __construct ($config, $path, $version) {
         $this->config = $config;
         $this->path = $modulePath;
         $this->version = $version;
@@ -53,11 +54,11 @@ abstract class jInstallerBase {
      * 
      * @param string $name the name of the script, without suffixes
      */
-    final protected function execSQLScript($name, $profile='') {
+    final protected function execSQLScript ($name, $profile='') {
         $tools = jDb::getTools($profile);
         $p = jDb::getProfile ($profile);
         $driver = $p['driver'];
-        if($driver == 'pdo'){
+        if ($driver == 'pdo') {
             preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
             $driver = $m[1];
         }

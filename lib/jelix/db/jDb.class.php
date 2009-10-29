@@ -46,16 +46,24 @@ require(JELIX_LIB_PATH.'db/jDbResultSet.class.php');
  */
 class jDb {
 
-    static private $_profiles =  null;
+    /**
+     * @var array list of profiles currently used
+     */
+    static private $_profiles = null;
+    
+    /**
+     * @var array list of opened connections
+     */
     static private $_cnxPool = array();
 
     /**
-    * return a database connector
-    * Use a local pool.
+    * return a database connector. It uses a temporay pool of connection to reuse
+    * currently opened connections.
+    * 
     * @param string  $name  profile name to use. if empty, use the default one
-    * @return jDbConnection  connector
+    * @return jDbConnection  the connector
     */
-    public static function getConnection ($name = null){
+    public static function getConnection ($name = null) {
         $profile = self::getProfile ($name);
 
         if (!$name) {
@@ -75,7 +83,7 @@ class jDb {
      * @param string  $name  profile name to use. if empty, use the default one
      * @return jDbWidget
      */
-    public static function getDbWidget($name=null){
+    public static function getDbWidget ($name = null) {
         $dbw = new jDbWidget(self::getConnection($name));
         return $dbw;
     }
@@ -85,20 +93,20 @@ class jDb {
     * @param string $name profile name to use. if empty, use the default one
     * @return jDbTools
     */
-    public static function getTools ($name=null){
+    public static function getTools ($name = null) {
         $profile = self::getProfile ($name);
 
         $driver = $profile['driver'];
 
-        if($driver == 'pdo'){
-            preg_match('/^(\w+)\:.*$/',$profile['dsn'], $m);
+        if ($driver == 'pdo') {
+            preg_match('/^(\w+)\:.*$/', $profile['dsn'], $m);
             $driver = $m[1];
         }
 
         global $gJConfig;
 #ifnot ENABLE_OPTIMIZED_SOURCE
-        if(!isset($gJConfig->_pluginsPathList_db[$driver])
-            || !file_exists($gJConfig->_pluginsPathList_db[$driver]) ){
+        if (!isset($gJConfig->_pluginsPathList_db[$driver])
+            || !file_exists($gJConfig->_pluginsPathList_db[$driver])) {
             throw new jException('jelix~db.error.driver.notfound', $driver);
         }
 #endif
@@ -124,17 +132,17 @@ class jDb {
     * @param string   $name  profile name or alias of a profile name. if empty, use the default profile
     * @return array  properties
     */
-    public static function getProfile ($name=''){
+    public static function getProfile ($name='') {
         global $gJConfig;
-        if(self::$_profiles === null){
+        if (self::$_profiles === null) {
             self::$_profiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$gJConfig->dbProfils , true);
         }
 
-        if($name == '')
+        if ($name == '')
             $name = 'default';
         $targetName = $name;
 
-        if(isset(self::$_profiles[$name])) {
+        if (isset(self::$_profiles[$name])) {
             if (is_string(self::$_profiles[$name])) {
                 $targetName = self::$_profiles[$name];
             }
@@ -144,7 +152,7 @@ class jDb {
             }
         }
         // if the profile doesn't exist, we take the default one
-        elseif(isset(self::$_profiles['default'])) {
+        elseif (isset(self::$_profiles['default'])) {
 #ifnot ENABLE_OPTIMIZED_SOURCE
             trigger_error(jLocale::get('jelix~db.error.profile.use.default', $name), E_USER_NOTICE);
 #endif
@@ -163,12 +171,13 @@ class jDb {
                 throw new jException('jelix~db.error.profile.type.unknow',$name);
         }
 
-        if(isset(self::$_profiles[$targetName]) && is_array(self::$_profiles[$targetName])){
+        if (isset(self::$_profiles[$targetName]) && is_array(self::$_profiles[$targetName])) {
             self::$_profiles[$name] = self::$_profiles[$targetName];
             self::$_profiles[$name]['name'] = $name;
             return self::$_profiles[$name];
-        }else{
-            throw new jException('jelix~db.error.profile.unknow',$targetName);
+        }
+        else {
+            throw new jException('jelix~db.error.profile.unknow', $targetName);
         }
     }
 
@@ -177,11 +186,12 @@ class jDb {
      * @param array  $profile  profile properties
      * @return boolean  true if properties are ok
      */
-    public function testProfile($profile){
-        try{
+    public function testProfile ($profile) {
+        try {
             self::_createConnector ($profile);
             $ok = true;
-        }catch(Exception $e){
+        }
+        catch(Exception $e) {
             $ok = false;
         }
         return $ok;
@@ -192,15 +202,16 @@ class jDb {
     * @param array  $profile  profile properties
     * @return jDbConnection|jDbPDOConnection  database connector
     */
-    private static function _createConnector ($profile){
-        if($profile['driver'] == 'pdo'){
+    private static function _createConnector ($profile) {
+        if ($profile['driver'] == 'pdo') {
             $dbh = new jDbPDOConnection($profile);
             return $dbh;
-        }else{
+        }
+        else {
             global $gJConfig;
 #ifnot ENABLE_OPTIMIZED_SOURCE
-            if(!isset($gJConfig->_pluginsPathList_db[$profile['driver']])
-                || !file_exists($gJConfig->_pluginsPathList_db[$profile['driver']]) ){
+            if (!isset($gJConfig->_pluginsPathList_db[$profile['driver']])
+                || !file_exists($gJConfig->_pluginsPathList_db[$profile['driver']])) {
                 throw new jException('jelix~db.error.driver.notfound', $profile['driver']);
             }
 #endif
@@ -215,6 +226,12 @@ class jDb {
         }
     }
 
+    /**
+     * create a temporary new profile
+     * @param string $name the name of the profile
+     * @param array $params parameters of the profile. key=parameter name, value=parameter value.
+     *                      same kind of parameters we found in dbProfils.ini.php
+     */
     public static function createVirtualProfile ($name, $params) {
         global $gJConfig;
         if ($name == '') {

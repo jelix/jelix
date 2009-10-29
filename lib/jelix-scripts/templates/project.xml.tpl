@@ -22,6 +22,10 @@
         <temp>%%rp_temp%%</temp>
     </directories>
     <entrypoints>
+        <!-- file: the path to the entry point relative to the base path
+            config: the path to the config file used by the entry point, relative
+                    to var/config/
+            cli: true if it is an entry point for command line -->
         <entry file="index.php" config="index/config.ini.php" />
     </entrypoints>
 </project>

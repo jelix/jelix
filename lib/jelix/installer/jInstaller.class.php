@@ -114,12 +114,34 @@ class jInstaller {
     const INSTALL_ERROR_MISSING_DEPENDENCIES = 1;
     const INSTALL_ERROR_CIRCULAR_DEPENDENCY = 2;
     
+    /**
+     *  @var jIniFileModifier it represents the installer.ini.php file.
+     */
     public $installConfig = null;
     
+    /**
+     * parameters for each entry point.
+     * @var array
+     * 'config'=> configuration object provided by jConfigCompiler
+     * 'configFile'=> name of the configuration file.
+     * 'isCliScript'=> boolean, true = this is a CLI script
+     * 'scriptName'=> the filename of the entry point.
+     * 'file'=> the filename as indicated into project.xml
+     */
     protected $epConfig = array();
 
+    /**
+     * list of entry point identifiant (provided by the configuration compiler).
+     * identifiant of the entry point is the path+filename of the entry point
+     * without the php extension
+     * @var array   key=entry point name, value=url id
+     */
     protected $epId = array();
 
+    /**
+     * list of modules for each entry point
+     * @var array first key: entry point id, second key: module name, value = jInstallerComponentModule
+     */
     protected $modules = array();
 
     /**
@@ -139,6 +161,12 @@ class jInstaller {
     public $nbNotice = 0;
 
 
+    /**
+     * initialize the installation
+     *
+     * it reads configurations files of all entry points, and prepare object for
+     * each module, needed to install/upgrade modules.
+     */
     function __construct ($reporter, $lang='') {
 
         $this->reporter = $reporter;
@@ -157,6 +185,7 @@ class jInstaller {
 
         $configFileList = array();
 
+        // 
         foreach ($xml->entrypoints->entry as $entrypoint) {
 
             $file = (string)$entrypoint['file'];
@@ -198,6 +227,11 @@ class jInstaller {
         $this->installConfig->save();
     }
 
+    /**
+     * install and upgrade if needed, all modules for each
+     * entry point.
+     * @return boolean
+     */
     public function installApplication() {
 
         $this->startMessage ();
