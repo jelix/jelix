@@ -135,6 +135,9 @@ Yoan Blanc (aka Greut)
 Vincent Bonnard
  - bug fix in jXmlRpc.class.php (#190)
 
+Catsoup
+ - bug fixed in jEvent for multi entry point (#1004)
+
 Cedric
  - bug fix in jFile::read
 
