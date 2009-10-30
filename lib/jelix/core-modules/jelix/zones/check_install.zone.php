@@ -3,12 +3,14 @@
 * @package    jelix-modules
 * @subpackage jelix
 * @author     Bastien Jaillot
-* @contributor Laurent Jouanneau
+* @contributor Laurent Jouanneau, Julien Issler
 * @copyright  2008 Bastien Jaillot
+* @copyright  2009 Julien Issler
 * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
 include (JELIX_LIB_PATH.'installer/jInstallChecker.class.php');
+include (JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
 
 /**
  * an HTML reporter for jInstallChecker
