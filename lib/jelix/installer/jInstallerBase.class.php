@@ -42,7 +42,7 @@ abstract class jInstallerBase {
      */
     function __construct ($config, $path, $version) {
         $this->config = $config;
-        $this->path = $modulePath;
+        $this->path = $path;
         $this->version = $version;
     }
 
