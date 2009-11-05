@@ -33,6 +33,8 @@ abstract class jInstallerComponentBase {
     
     protected $sourceVersion = '';
     
+    protected $dbProfile = '';
+    
     public $dependencies = array();
     
     protected $jelixMinVersion = '*';
@@ -58,14 +60,18 @@ abstract class jInstallerComponentBase {
      * @param boolean $isInstalled true if the component is installed
      * @param integer $access 0=unused, 1=only by other module, 2=public
      * @param string $installedVersion the installed version
+     * @param string $dbProfile  the jdb profile to use to install the module
+     * @param jInstaller $mainInstaller
      */
-    function __construct($name, $path, $isInstalled, $access, $installedVersion, $mainInstaller) {
+    function __construct($name, $path, $isInstalled, $access, $installedVersion,
+                         $dbProfile, $mainInstaller) {
         $this->path = $path;
         $this->name = $name;
         $this->access = $access;
         $this->isInstalled = $isInstalled;
         $this->installedVersion = $installedVersion;
         $this->mainInstaller = $mainInstaller;
+        $this->dbProfile = $dbProfile;
     }
     
     public function getName() { return $this->name; }

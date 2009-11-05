@@ -63,6 +63,7 @@ class UTjinstallermisc extends UnitTestCase {
         $this->assertEqual(-1, $inst->compver('1.2b2pre.4','1.2b2-dev.9'));
         $this->assertEqual(-1, $inst->compver('1.2b2pre','1.2b2-dev.9'));
         $this->assertEqual(-1, $inst->compver('1.2RC1','1.2RC2'));
+        $this->assertEqual(0, $inst->compver('1.2.3a1pre','1.2.3a1-dev'));
         
         $this->assertEqual(-1, $inst->compver('1.2RC-dev','1.2RC'));
         $this->assertEqual(1, $inst->compver('1.2RC','1.2RC-dev'));

@@ -27,7 +27,4 @@ class jelix_testsModuleUpgrader_bar extends jInstallerModule {
        echo  "upgrader jelix_tests 1303  post install\n"; 
     }
 
-
-
-
 }

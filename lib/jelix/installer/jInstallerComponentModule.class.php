@@ -32,10 +32,15 @@ class jInstallerComponentModule extends jInstallerComponentBase {
                 $cname = $this->name.'ModuleInstaller';
                 if (!class_exists($cname))
                     throw new jInstallerException("module.installer.class.not.found",array($cname,$this->name));
-                $this->moduleInstaller = new $cname($config, $this->path, $this->sourceVersion);
+                $this->moduleInstaller = new $cname($this->name, $config,
+                                                    $this->path, $this->sourceVersion,
+                                                    $this->dbProfile);
             }
             else
-                $this->moduleInstaller = new jInstallerModule($config, $this->path, $this->sourceVersion);
+                $this->moduleInstaller = new jInstallerModule($this->name, $config,
+                                                              $this->path,
+                                                              $this->sourceVersion,
+                                                              $this->dbProfile);
         }
         else {
             $this->moduleInstaller->config = $config; 

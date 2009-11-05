@@ -269,7 +269,7 @@ class jConfigCompiler {
             if ($allModuleInfo)
                 $installation = array ();
             else
-                die("installer.ini.php doesn't exist! You should install your application..\n");
+                die("installer.ini.php doesn't exist! You must install your application.\n");
         }
         else
             $installation = parse_ini_file(JELIX_APP_CONFIG_PATH.'installer.ini.php',true);
@@ -307,6 +307,11 @@ class jConfigCompiler {
                                 || (!$installation[$section][$f.'.installed'] && !$allModuleInfo))
                                 $config->modules[$f.'.access'] = 0;
                         }
+
+                        if (!isset($installation[$section][$f.'.dbprofile']))
+                            $config->modules[$f.'.dbprofile'] = 'default';
+                        else
+                            $config->modules[$f.'.dbprofile'] = $installation[$section][$f.'.dbprofile'];
 
                         if ($allModuleInfo) {
                             if (!isset($installation[$section][$f.'.version']))

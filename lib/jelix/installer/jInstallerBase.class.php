@@ -18,6 +18,11 @@
 abstract class jInstallerBase {
 
     /**
+     * @var string name of the component
+     */
+    public $name;
+
+    /**
      * @var string the version of the component
      */
     public $version = '0';
@@ -35,15 +40,52 @@ abstract class jInstallerBase {
     protected $path;
 
     /**
+     * @var string the jDb profile for the component
+     */
+    protected $dbProfile = '';
+
+    /**
+     * @param string $name name of the component
      * @param jIniMultiFilesModifier $config the configuration of the entry point
      * @param string $path the component path
      * @param string $version version of the component
+     * @param string $dbProfile name of the jdb profile to use to install the component
      * 
      */
-    function __construct ($config, $path, $version) {
+    function __construct ($name, $config, $path, $version, $dbProfile) {
         $this->config = $config;
         $this->path = $path;
         $this->version = $version;
+        $this->name = $name;
+        $this->dbProfile = $dbprofile;
+    }
+
+    /**
+     * @var jDbTools
+     */
+    private $_dbTool = null;
+
+    /**
+     * @var jDbConnection
+     */
+    private $_dbConn = null;
+
+    /**
+     * @return jDbTools  the tool class of jDb
+     */
+    protected function dbTool () {
+        if (!$this->_dbTool)
+            $this->_dbTool = jDb::getTools($this->dbProfile);
+        return $this->_dbTool;
+    }
+
+    /**
+     * @return jDbConnection  the connection to the database used for the module
+     */
+    protected function dbConnection () {
+        if (!$this->_dbConn)
+            $this->_dbConn = jDb::getConnection($this->dbProfile);
+        return $this->_dbConn;
     }
 
     /**
@@ -54,9 +96,9 @@ abstract class jInstallerBase {
      * 
      * @param string $name the name of the script, without suffixes
      */
-    final protected function execSQLScript ($name, $profile='') {
-        $tools = jDb::getTools($profile);
-        $p = jDb::getProfile ($profile);
+    final protected function execSQLScript ($name) {
+        $tools = $this->dbTool();
+        $p = jDb::getProfile ($this->dbProfile);
         $driver = $p['driver'];
         if ($driver == 'pdo') {
             preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);

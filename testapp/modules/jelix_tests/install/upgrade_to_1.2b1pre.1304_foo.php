@@ -30,7 +30,4 @@ class jelix_testsModuleUpgrader_foo extends jInstallerModule {
        echo  "upgrader jelix_tests 1304 post install\n"; 
     }
 
-
-
-
 }

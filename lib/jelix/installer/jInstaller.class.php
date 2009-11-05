@@ -96,11 +96,39 @@ class jInstallerException extends Exception {
 
 }
 
-
+/**
+ * container for entry points properties
+ */
+class jInstallerEntryPointProperties {
+    /** @var StdObj   configuration parameters */
+    public $config;
+    
+    public $configFile;
+    
+    public $isCliScript;
+    
+    public $scriptName;
+    
+    public $file;
+    
+}
 
 
 /**
  * main class for the installation
+ *
+ * It load all entry points configurations. Each configurations has its own
+ * activated modules. jInstaller then construct a tree dependencies for these
+ * activated modules, and launch their installation and the installation
+ * of their dependencies.
+ * An installation can be an initial installation, or just an upgrade
+ * if the module is already installed.
+ * @internal The object which drives the installation of a component
+ * (module, plugin...) is an object which inherits from jInstallerComponentBase.
+ * This object calls load a file from the directory of the component. this
+ * file should contain a class which should inherits from jInstallerModule
+ * or jInstallerPlugin. this class should implements processes to install
+ * the component.
  */
 class jInstaller {
 
@@ -117,16 +145,11 @@ class jInstaller {
     /**
      *  @var jIniFileModifier it represents the installer.ini.php file.
      */
-    public $installConfig = null;
+    public $installerIni = null;
     
     /**
      * parameters for each entry point.
-     * @var array
-     * 'config'=> configuration object provided by jConfigCompiler
-     * 'configFile'=> name of the configuration file.
-     * 'isCliScript'=> boolean, true = this is a CLI script
-     * 'scriptName'=> the filename of the entry point.
-     * 'file'=> the filename as indicated into project.xml
+     * @var array of jInstallerEntryPointProperties
      */
     protected $epConfig = array();
 
@@ -179,7 +202,7 @@ class jInstaller {
 
 ");
         $this->modules = array();
-        $this->installConfig = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
+        $this->installerIni = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
 
         $xml = simplexml_load_file(JELIX_APP_PATH.'project.xml');
 
@@ -198,33 +221,41 @@ class jInstaller {
 
             $configFileList[$configFile] = true;
 
-            $config = jConfigCompiler::read($configFile, true, $isCliScript, ($isCliScript?$file:'/'.$file)); // to have compiled version of the config
-            $id = $config->urlengine['urlScriptId'];
-            $this->epId[$file] = $id;
-            $this->epConfig[$id] = array(
-              'config'=>$config,
-              'configFile'=> $configFile,
-              'isCliScript'=> $isCliScript,
-              'scriptName'=> ($isCliScript?$file:'/'.$file),
-              'file'=>$file,
-            );
-            
-            // we don't load yet a jIniMultiFilesModifier because installer could modify defaultconfig file,
-            // so other installer should have a jIniMultiFilesModifier loaded with the good version of the defaultconfig file
+            $c = new jInstallerEntryPointProperties();
+            $c->isCliScript = $isCliScript;
+            $c->configFile = $configFile;
+            $c->scriptName =  ($isCliScript?$file:'/'.$file);
+            $c->file = $file;
 
+            // we don't load yet a jIniMultiFilesModifier because installer
+            // could modify defaultconfig file, so other installer should have
+            // a jIniMultiFilesModifier loaded with the good version of the
+            // defaultconfig file. However, we load a static version of
+            // the configuration here because we need it.
+            $c->config = jConfigCompiler::read($configFile, true,
+                                               $isCliScript, $c->scriptName);
+            
+            $id = $c->config->urlengine['urlScriptId'];
+            $this->epId[$file] = $id;
+            $this->epConfig[$id] = $c;
             $this->modules[$id] = array();
 
-            foreach ($config->_allModulesPathList as $name=>$path) {
-                $access = $config->modules[$name.'.access'];
-                $installed = $config->modules[$name.'.installed'];
-                $version = $config->modules[$name.'.version'];
-                $this->installConfig->setValue($name.'.installed', $installed, $id);
-                $this->installConfig->setValue($name.'.version', $version, $id);
-                $this->modules[$id][$name] = new jInstallerComponentModule($name, $path, $installed, $access, $version, $this);
+            foreach ($c->config->_allModulesPathList as $name=>$path) {
+                $installed = $c->config->modules[$name.'.installed'];
+                $version = $c->config->modules[$name.'.version'];
+                $this->installerIni->setValue($name.'.installed', $installed, $id);
+                $this->installerIni->setValue($name.'.version', $version, $id);
+                $this->modules[$id][$name] =
+                    new jInstallerComponentModule($name, $path,
+                                                  $installed,
+                                                  $c->config->modules[$name.'.access'],
+                                                  $version,
+                                                  $c->config->modules[$name.'.dbProfile'],
+                                                  $this);
             }
         }
 
-        $this->installConfig->save();
+        $this->installerIni->save();
     }
 
     /**
@@ -234,10 +265,10 @@ class jInstaller {
      */
     public function installApplication() {
 
-        $this->startMessage ();
+        $this->startMessage();
         $result = true;
 
-        foreach($this->epConfig as $id=>$parameters) {
+        foreach(array_keys($this->epConfig) as $id) {
             $modules = array();
             foreach($this->modules[$id] as $name => $module) {
                 if ($module->getAccessLevel() == 0)
@@ -247,7 +278,7 @@ class jInstaller {
             $result = $result & $this->_installModules($modules, $id);
         }
 
-        $this->installConfig->save();
+        $this->installerIni->save();
         $this->endMessage();
         return $result;
     }
@@ -260,7 +291,7 @@ class jInstaller {
      */
     public function installModules($list, $entrypoint = 'index.php') {
         
-        $this->startMessage ();
+        $this->startMessage();
         $id = $this->epId[$entrypoint];
         $allModules = &$this->modules[$id];
         
@@ -276,7 +307,7 @@ class jInstaller {
         }
 
         $result = $this->_installModules($modules, $id);
-        $this->installConfig->save();
+        $this->installerIni->save();
         $this->endMessage();
         return $result;
     }
@@ -290,10 +321,12 @@ class jInstaller {
 
         $this->ok('install.entrypoint.start', $epId);
         
-        $params = $this->epConfig[$epId];
-        $GLOBALS['gJConfig'] = $params['config'];
+        $ep = $this->epConfig[$epId];
+        $GLOBALS['gJConfig'] = $ep->config;
         
-        $config = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php', JELIX_APP_CONFIG_PATH.$params['configFile']);
+        // load an update
+        $config = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',
+                                             JELIX_APP_CONFIG_PATH.$ep->configFile);
 
         $result = $this->checkDependencies($modules, $epId);
 
@@ -313,10 +346,10 @@ class jInstaller {
                             $upgrader->preInstall();
                         }
                     }
-                } catch( jInstallerException $e) {
+                } catch (jInstallerException $e) {
                     $result = false;
                     $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-                } catch( Exception $e) {
+                } catch (Exception $e) {
                     $result = false;
                     $this->error ('install.module.error', $e->getMessage());
                 }
@@ -331,8 +364,10 @@ class jInstaller {
                         if ($toInstall) {
                             $installer = $component->getInstaller($config);
                             $installer->install();
-                            $this->installConfig->setValue($component->getName().'.installed', 1, $epId);
-                            $this->installConfig->setValue($component->getName().'.version', $component->getSourceVersion(), $epId);
+                            $this->installerIni->setValue($component->getName().'.installed',
+                                                           1, $epId);
+                            $this->installerIni->setValue($component->getName().'.version',
+                                                           $component->getSourceVersion(), $epId);
                             $this->ok('install.module.installed', $component->getName());
                             $installedModules[] = array($component, true);
                         }
@@ -343,15 +378,19 @@ class jInstaller {
                                 // we set the version of the upgrade, so if an error occurs in
                                 // the next upgrader, we won't have to re-run this current upgrader
                                 // during a future update
-                                $this->installConfig->setValue($component->getName().'.version', $upgrader->version, $epId);
-                                $this->ok('install.module.upgraded', array($component->getName(), $upgrader->version));
+                                $this->installerIni->setValue($component->getName().'.version',
+                                                              $upgrader->version, $epId);
+                                $this->ok('install.module.upgraded',
+                                          array($component->getName(), $upgrader->version));
                                 $lastversion = $upgrader->version;
                             }
                             // we set the version to the component version, because the version
                             // of the last upgrader could not correspond to the component version.
                             if ($lastversion != $component->getSourceVersion()) {
-                                $this->installConfig->setValue($component->getName().'.version', $component->getSourceVersion(), $epId);
-                                $this->ok('install.module.upgraded', array($component->getName(), $component->getSourceVersion()));
+                                $this->installerIni->setValue($component->getName().'.version',
+                                                              $component->getSourceVersion(), $epId);
+                                $this->ok('install.module.upgraded',
+                                          array($component->getName(), $component->getSourceVersion()));
                             }
                             $installedModules[] = array($component, false);
                         }
@@ -359,13 +398,16 @@ class jInstaller {
                             $config->save();
                             // we re-load configuration file for each module because
                             // previous module installer could have modify it.
-                            $GLOBALS['gJConfig'] = jConfigCompiler::read($params['configFile'], true, $params['isCliScript'], $params['scriptName']);
+                            $GLOBALS['gJConfig'] = $ep->config =
+                                jConfigCompiler::read($ep->configFile, true,
+                                                      $ep->isCliScript,
+                                                      $ep->scriptName);
                         }
                     }
-                } catch( jInstallerException $e) {
+                } catch (jInstallerException $e) {
                     $result = false;
                     $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-                } catch( Exception $e) {
+                } catch (Exception $e) {
                     $result = false;
                     $this->error ('install.module.error', $e->getMessage());
                 }
@@ -388,12 +430,15 @@ class jInstaller {
                         $config->save();
                         // we re-load configuration file for each module because
                         // previous module installer could have modify it.
-                        $GLOBALS['gJConfig'] = jConfigCompiler::read($params['configFile'], true, $params['isCliScript'], $params['scriptName']);
+                        $GLOBALS['gJConfig'] = $ep->config =
+                            jConfigCompiler::read($ep->configFile, true,
+                                                  $ep->isCliScript,
+                                                  $ep->scriptName);
                     }
-                } catch( jInstallerException $e) {
+                } catch (jInstallerException $e) {
                     $result = false;
                     $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-                } catch( Exception $e) {
+                } catch (Exception $e) {
                     $result = false;
                     $this->error ('install.module.error', $e->getMessage());
                 }
