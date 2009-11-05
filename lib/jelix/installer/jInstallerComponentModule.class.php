@@ -25,37 +25,42 @@ class jInstallerComponentModule extends jInstallerComponentBase {
     
     protected $moduleUpgraders = null;
 
-    function getInstaller($config) {
+    
+
+    /**
+     * @return jInstallerBase
+     */
+    function getInstaller($config, $epId) {
         if ($this->moduleInstaller == null) {
             if (file_exists($this->path.'install/install.php')) {
                 include($this->path.'install/install.php');
                 $cname = $this->name.'ModuleInstaller';
                 if (!class_exists($cname))
                     throw new jInstallerException("module.installer.class.not.found",array($cname,$this->name));
-                $this->moduleInstaller = new $cname($this->name, $config,
-                                                    $this->path, $this->sourceVersion,
-                                                    $this->dbProfile);
+                $this->moduleInstaller = new $cname($this->name,
+                                                    $this->path,
+                                                    $this->sourceVersion
+                                                    );
             }
             else
-                $this->moduleInstaller = new jInstallerModule($this->name, $config,
+                $this->moduleInstaller = new jInstallerModule($this->name,
                                                               $this->path,
-                                                              $this->sourceVersion,
-                                                              $this->dbProfile);
+                                                              $this->sourceVersion);
         }
-        else {
-            $this->moduleInstaller->config = $config; 
-        }
+
+        $this->moduleInstaller->setEntryPoint($epId, $config, $this->dbProfile[$epId]);
         return $this->moduleInstaller;
     }
 
     /**
      * upgrade the module.
+     * @return array list of jInstallerBase
      */
-    function getUpgraders($config) {
+    function getUpgraders($config, $epId) {
         
         if ($this->moduleUpgraders !== null) {
             foreach($this->moduleUpgraders as $upgrader) {
-                $upgrader->config = $config;
+                $upgrader->setEntryPoint($epId, $config, $this->dbProfile[$epId]);
             }
             return $this->moduleUpgraders;
         }
@@ -91,7 +96,10 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             $cname = $this->name.'ModuleUpgrader_'.$fileInfo[2];
             if (!class_exists($cname))
                 throw new jInstallerException("module.upgrader.class.not.found",array($cname,$this->name));
-            $this->moduleUpgraders[] = new $cname($config, $this->path, $fileInfo[1]);
+                
+            $upgrader = new $cname($this->name, $this->path, $fileInfo[1]);
+            $upgrader->setEntryPoint($epId, $config, $this->dbProfile[$epId]);
+            $this->moduleUpgraders[] = $upgrader;
         }
 
         return $this->moduleUpgraders;

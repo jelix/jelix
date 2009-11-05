@@ -393,12 +393,12 @@ class jConfigCompiler {
                   && strrpos( $_SERVER['ORIG_SCRIPT_NAME'], $ext) === (strlen( $_SERVER['ORIG_SCRIPT_NAME']) - $extlen)) {
             return 'ORIG_SCRIPT_NAME';
         }
-        throw new Exception('Jelix Error: in config file the parameter urlengine:scriptNameServerVariable is empty and Jelix don\'t find
+        throw new Exception('Jelix Error: in config file the parameter urlengine:scriptNameServerVariable is empty and Jelix doesn\'t find
             the variable in $_SERVER which contains the script name. You must see phpinfo and setup this parameter in your config file.');
     }
 
     /**
-     * get all physical pathes of responses file
+     * get all physical paths of responses file
      */
     static private function _initResponsesPath(&$list){
         $copylist = $list; // because we modify $list and then it will search for "foo.path" responses...

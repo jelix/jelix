@@ -16,24 +16,44 @@
 * @since 1.2
 */
 abstract class jInstallerComponentBase {
-    
+
+    /**
+     *  @var string  name of the component
+     */
+    protected $name = '';
+
     /**
      * the path of the directory of the component
      * it should be set by the constructor
      */
     protected $path = '';
+
+    /**
+     * accessibility of the component for each entry points
+     * @var array key:epId, value: 0=unused, 1=only by other module, 2=public
+     */
+    protected $access = array();
     
-    protected $access = 0;
+    /**
+     * for each entry point, flags indicating if the component is installed
+     * @var array key: entry point id, value: boolean
+     */
+    protected $isInstalled = array();
     
-    protected $isInstalled = false;
+    /**
+     * for each entry point, installed version of the component
+     * @var array key: entry point id, value: version
+     */
+    protected $installedVersion = array();
     
-    protected $name = '';
-    
-    protected $installedVersion = "";
     
     protected $sourceVersion = '';
     
-    protected $dbProfile = '';
+    /**
+     * list of jdb profiles for each entry point
+     * @var array  key:id of the entry point, value:the jdb profile to use to install the module
+     */
+    protected $dbProfile = array();
     
     public $dependencies = array();
     
@@ -57,38 +77,48 @@ abstract class jInstallerComponentBase {
     /**
      * @param string $name the name of the component
      * @param string $path the path of the component
-     * @param boolean $isInstalled true if the component is installed
-     * @param integer $access 0=unused, 1=only by other module, 2=public
-     * @param string $installedVersion the installed version
-     * @param string $dbProfile  the jdb profile to use to install the module
      * @param jInstaller $mainInstaller
      */
-    function __construct($name, $path, $isInstalled, $access, $installedVersion,
-                         $dbProfile, $mainInstaller) {
+    function __construct($name, $path, $mainInstaller) {
         $this->path = $path;
         $this->name = $name;
-        $this->access = $access;
-        $this->isInstalled = $isInstalled;
-        $this->installedVersion = $installedVersion;
         $this->mainInstaller = $mainInstaller;
-        $this->dbProfile = $dbProfile;
     }
     
     public function getName() { return $this->name; }
     public function getPath() { return $this->path; }
-    public function getInstalledVersion() { return $this->installedVersion; }
     public function getSourceVersion() { return $this->sourceVersion; }
     public function getJelixVersion() { return array($this->jelixMinVersion, $this->jelixMaxVersion);}
-    public function getAccessLevel() { return $this->access; }
-
-    public function isInstalled() {
-        return $this->isInstalled;
+    
+    /**
+     * @param string $epId  the entry point id
+     * @param integer $access the access level on this entry point
+     * @param string $dbProfile the jdb profile to use to install the module for this entry point
+     * @param boolean $isInstalled true if the component is installed
+     * @param string $installedVersion the installed version
+     */
+    public function setEntryPointData ($epId, $access, $dbProfile, $isInstalled, $installedVersion) {
+        $this->dbProfile[$epId] = $dbProfile;
+        $this->access[$epId] = $access;
+        $this->isInstalled[$epId] = $isInstalled;
+        $this->installedVersion[$epId] = $installedVersion;
+    }
+    
+    public function getAccessLevel($epId) {
+        return $this->access[$epId];
     }
 
-    public function isUpgraded() {
-        return ($this->isInstalled && ($this->compareVersion($this->sourceVersion,$this->installedVersion) == 0));
+    public function isInstalled($epId) {
+        return $this->isInstalled[$epId];
     }
 
+    public function isUpgraded($epId) {
+        return ($this->isInstalled[$epId] && ($this->compareVersion($this->sourceVersion,$this->installedVersion[$epId]) == 0));
+    }
+    
+    public function getInstalledVersion($epId) {
+        return $this->installedVersion[$epId];
+    }
 
     /**
      * get the object which is responsible to install the component. this
@@ -97,7 +127,7 @@ abstract class jInstallerComponentBase {
      * @param jIniMultiFilesModifier $config the configuration of the entry point
      * @return jIInstallerComponent
      */
-    abstract function getInstaller($config);
+    abstract function getInstaller($config, $epId);
 
     /**
      * return the list of objects which are responsible to upgrade the component
@@ -111,7 +141,7 @@ abstract class jInstallerComponentBase {
      * @throw jInstallerException  if an error occurs during the install.
      * @return array   array of jIInstallerComponent
      */
-    abstract function getUpgraders($config);
+    abstract function getUpgraders($config, $epId);
 
     public function init () {
         $this->readIdentity();

@@ -44,6 +44,9 @@ abstract class jInstallerBase {
      */
     protected $dbProfile = '';
 
+    
+    
+
     /**
      * @param string $name name of the component
      * @param jIniMultiFilesModifier $config the configuration of the entry point
@@ -52,12 +55,10 @@ abstract class jInstallerBase {
      * @param string $dbProfile name of the jdb profile to use to install the component
      * 
      */
-    function __construct ($name, $config, $path, $version, $dbProfile) {
-        $this->config = $config;
+    function __construct ($name, $path, $version) {
         $this->path = $path;
         $this->version = $version;
         $this->name = $name;
-        $this->dbProfile = $dbprofile;
     }
 
     /**
@@ -69,6 +70,26 @@ abstract class jInstallerBase {
      * @var jDbConnection
      */
     private $_dbConn = null;
+
+    private $_dbpInstalled = array();
+
+    /**
+     * an installer should call this method before doing things with jDb or jDao, in order to know
+     * if it haven't already been called for the same jdb profile and entry point, because the installer
+     * is called for each entry points on which the component is activated.
+     */
+    protected function isDbAlreadyInstalled() {
+        return (isset($this->_dbpInstalled[$this->dbProfile]) && $this->_dbpInstalled[$this->dbProfile] != $this->entryPointId);
+    }
+
+    public function setEntryPoint($epId, $config, $dbProfile) {
+        $this->config = $config;
+        $this->entryPointId = $epId;
+        $this->dbProfile = $dbProfile;
+        if (!isset($this->_dbpInstalled[$this->dbProfile]))
+            $this->_dbpInstalled[$this->dbProfile] = $epId;
+    }
+
 
     /**
      * @return jDbTools  the tool class of jDb
@@ -91,7 +112,7 @@ abstract class jInstallerBase {
     /**
      * import a sql script into the given profile.
      *
-     * The name of the script should be store in install/sql/$name.databasetype.sql
+     * The name of the script should be store in install/$name.databasetype.sql
      * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
      * 
      * @param string $name the name of the script, without suffixes
@@ -104,7 +125,7 @@ abstract class jInstallerBase {
             preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
             $driver = $m[1];
         }
-        $tools->execSQLScript($this->path.'install/sql/'.$name.'.'.$driver.'.sql');
+        $tools->execSQLScript($this->path.'install/'.$name.'.'.$driver.'.sql');
     }
 
     /**

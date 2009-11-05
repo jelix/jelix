@@ -136,28 +136,6 @@ CREATE TABLE `jlx_user` (
 
 -- --------------------------------------------------------
 
---
--- Structure de la table `myconfig`
---
-
-CREATE TABLE `myconfig` (
-  `cfg_key` varchar(150) NOT NULL default '',
-  `cfg_value` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`cfg_key`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Contenu de la table `myconfig`
---
-
-INSERT INTO `myconfig` (`cfg_key`, `cfg_value`) VALUES ('foo', 'foovalue'),
-('bar', 'barvalue'),
-('name', 'laurent'),
-('engine', 'jelix'),
-('browser', 'firefox'),
-('33', '456ghjk'),
-('test', '33');
-
 -- for unit tests
 CREATE TABLE `product_test` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,

@@ -151,7 +151,7 @@ class jInstaller {
      * parameters for each entry point.
      * @var array of jInstallerEntryPointProperties
      */
-    protected $epConfig = array();
+    protected $epProperties = array();
 
     /**
      * list of entry point identifiant (provided by the configuration compiler).
@@ -166,6 +166,12 @@ class jInstaller {
      * @var array first key: entry point id, second key: module name, value = jInstallerComponentModule
      */
     protected $modules = array();
+    
+    /**
+     * list of all modules of the application
+     * @var array key=path of the module, value = jInstallerComponentModule
+     */
+    protected $allModules = array();
 
     /**
      * the object responsible of the results output
@@ -192,6 +198,9 @@ class jInstaller {
      */
     function __construct ($reporter, $lang='') {
 
+        set_error_handler('jInstallerErrorHandler');
+        //set_exception_handler('jExceptionHandler');
+
         $this->reporter = $reporter;
         $this->messages = new jInstallerMessageProvider($lang);
 
@@ -202,6 +211,7 @@ class jInstaller {
 
 ");
         $this->modules = array();
+        $this->allModules = array();
         $this->installerIni = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
 
         $xml = simplexml_load_file(JELIX_APP_PATH.'project.xml');
@@ -237,7 +247,7 @@ class jInstaller {
             
             $id = $c->config->urlengine['urlScriptId'];
             $this->epId[$file] = $id;
-            $this->epConfig[$id] = $c;
+            $this->epProperties[$id] = $c;
             $this->modules[$id] = array();
 
             foreach ($c->config->_allModulesPathList as $name=>$path) {
@@ -245,13 +255,15 @@ class jInstaller {
                 $version = $c->config->modules[$name.'.version'];
                 $this->installerIni->setValue($name.'.installed', $installed, $id);
                 $this->installerIni->setValue($name.'.version', $version, $id);
-                $this->modules[$id][$name] =
-                    new jInstallerComponentModule($name, $path,
-                                                  $installed,
-                                                  $c->config->modules[$name.'.access'],
-                                                  $version,
-                                                  $c->config->modules[$name.'.dbProfile'],
-                                                  $this);
+                
+                if (!isset($this->allModules[$path])) {
+                    $this->allModules[$path] = new jInstallerComponentModule($name, $path, $this);
+                }
+                $m = $this->allModules[$path];
+                $m->setEntryPointData ($id, $c->config->modules[$name.'.access'],
+                                       $c->config->modules[$name.'.dbprofile'],
+                                       $installed, $version);
+                $this->modules[$id][$name] = $m;
             }
         }
 
@@ -260,7 +272,8 @@ class jInstaller {
 
     /**
      * install and upgrade if needed, all modules for each
-     * entry point.
+     * entry point. Only modules which have an access property > 0
+     * are installed.
      * @return boolean
      */
     public function installApplication() {
@@ -268,14 +281,14 @@ class jInstaller {
         $this->startMessage();
         $result = true;
 
-        foreach(array_keys($this->epConfig) as $id) {
+        foreach(array_keys($this->epProperties) as $epId) {
             $modules = array();
-            foreach($this->modules[$id] as $name => $module) {
-                if ($module->getAccessLevel() == 0)
+            foreach($this->modules[$epId] as $name => $module) {
+                if ($module->getAccessLevel($epId) == 0)
                     continue;
                 $modules[$name] = $module;
             }
-            $result = $result & $this->_installModules($modules, $id);
+            $result = $result & $this->_installModules($modules, $epId);
         }
 
         $this->installerIni->save();
@@ -284,7 +297,7 @@ class jInstaller {
     }
 
     /**
-     * install given modules
+     * install given modules even if they don't have an access property > 0
      * @param array $list array of module names
      * @param string $entrypoint  the entrypoint name as it appears in project.xml
      * @return boolean true if the installation is ok
@@ -292,8 +305,14 @@ class jInstaller {
     public function installModules($list, $entrypoint = 'index.php') {
         
         $this->startMessage();
-        $id = $this->epId[$entrypoint];
-        $allModules = &$this->modules[$id];
+        
+        if (!isset($this->epId[$entrypoint])) {
+            throw new Exception("unknow entry point");
+        }
+        
+        
+        $epId = $this->epId[$entrypoint];
+        $allModules = &$this->modules[$epId];
         
         $modules = array();
         // always install jelix
@@ -306,7 +325,7 @@ class jInstaller {
                 $modules[] = $allModules[$name];
         }
 
-        $result = $this->_installModules($modules, $id);
+        $result = $this->_installModules($modules, $epId);
         $this->installerIni->save();
         $this->endMessage();
         return $result;
@@ -321,11 +340,11 @@ class jInstaller {
 
         $this->ok('install.entrypoint.start', $epId);
         
-        $ep = $this->epConfig[$epId];
+        $ep = $this->epProperties[$epId];
         $GLOBALS['gJConfig'] = $ep->config;
         
         // load an update
-        $config = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',
+        $epConfig = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',
                                              JELIX_APP_CONFIG_PATH.$ep->configFile);
 
         $result = $this->checkDependencies($modules, $epId);
@@ -338,11 +357,11 @@ class jInstaller {
                 list($component, $toInstall) = $item;
                 try {
                     if ($toInstall) {
-                        $installer = $component->getInstaller($config);
+                        $installer = $component->getInstaller($epConfig, $epId);
                         $installer->preInstall();
                     }
                     else {
-                        foreach($component->getUpgraders($config) as $upgrader) {
+                        foreach($component->getUpgraders($epConfig, $epId) as $upgrader) {
                             $upgrader->preInstall();
                         }
                     }
@@ -362,7 +381,7 @@ class jInstaller {
                     foreach($this->_componentsToInstall as $item) {
                         list($component, $toInstall) = $item;
                         if ($toInstall) {
-                            $installer = $component->getInstaller($config);
+                            $installer = $component->getInstaller($epConfig, $epId);
                             $installer->install();
                             $this->installerIni->setValue($component->getName().'.installed',
                                                            1, $epId);
@@ -373,7 +392,7 @@ class jInstaller {
                         }
                         else {
                             $lastversion='';
-                            foreach($component->getUpgraders($config) as $upgrader) {
+                            foreach($component->getUpgraders($epConfig, $epId) as $upgrader) {
                                 $upgrader->install();
                                 // we set the version of the upgrade, so if an error occurs in
                                 // the next upgrader, we won't have to re-run this current upgrader
@@ -394,8 +413,8 @@ class jInstaller {
                             }
                             $installedModules[] = array($component, false);
                         }
-                        if ($config->isModified()) {
-                            $config->save();
+                        if ($epConfig->isModified()) {
+                            $epConfig->save();
                             // we re-load configuration file for each module because
                             // previous module installer could have modify it.
                             $GLOBALS['gJConfig'] = $ep->config =
@@ -409,7 +428,7 @@ class jInstaller {
                     $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
                 } catch (Exception $e) {
                     $result = false;
-                    $this->error ('install.module.error', $e->getMessage());
+                    $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
                 }
             }
             
@@ -418,16 +437,16 @@ class jInstaller {
                 try {
                     list($component, $toInstall) = $item;
                     if ($toInstall) {
-                        $installer = $component->getInstaller($config);
+                        $installer = $component->getInstaller($epConfig, $epId);
                         $installer->postInstall();
                     }
                     else {
-                        foreach($component->getUpgraders($config) as $upgrader) {
+                        foreach($component->getUpgraders($epConfig, $epId) as $upgrader) {
                             $upgrader->postInstall();
                         }
                     }
-                    if ($config->isModified()) {
-                        $config->save();
+                    if ($epConfig->isModified()) {
+                        $epConfig->save();
                         // we re-load configuration file for each module because
                         // previous module installer could have modify it.
                         $GLOBALS['gJConfig'] = $ep->config =
@@ -476,10 +495,10 @@ class jInstaller {
 
                     $this->_checkDependencies($component, $epId);
 
-                    if (!$component->isInstalled()) {
+                    if (!$component->isInstalled($epId)) {
                         $this->_componentsToInstall[] = array($component, true);
                     }
-                    else if (!$component->isUpgraded()) {
+                    else if (!$component->isUpgraded($epId)) {
                         $this->_componentsToInstall[] =array($component, false);
                     }
                 } catch (jInstallerException $e) {
@@ -535,10 +554,10 @@ class jInstaller {
 
                 if (!isset($this->_checkedComponents[$comp->getName()])) {
                     $this->_checkDependencies($comp, $epId);
-                    if (!$comp->isInstalled()) {
+                    if (!$comp->isInstalled($epId)) {
                         $this->_componentsToInstall[] = array($comp, true);
                     }
-                    else if(!$comp->isUpgraded()) {
+                    else if(!$comp->isUpgraded($epId)) {
                         $this->_componentsToInstall[] = array($comp, false);
                     }
                 }
@@ -601,5 +620,47 @@ class jInstaller {
         }
         $this->nbNotice ++;
     }
+
+}
+
+
+
+
+function jInstallerErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
+
+    if (error_reporting() == 0)
+        return;
+
+    $codeString = array(
+        E_ERROR         => 'error',
+        E_RECOVERABLE_ERROR => 'error',
+        E_WARNING       => 'warning',
+        E_NOTICE        => 'notice',
+        E_DEPRECATED    => 'deprecated',
+        E_USER_ERROR    => 'error',
+        E_USER_WARNING  => 'warning',
+        E_USER_NOTICE   => 'notice',
+        E_USER_DEPRECATED => 'deprecated',
+        E_STRICT        => 'strict'
+    );
+
+    if (isset ($codeString[$errno])){
+        $codestr = $codeString[$errno];
+    }else{
+        $codestr = 'error';
+    }
+
+    $trace = debug_backtrace();
+    array_shift($trace);
+
+    echo '['.$codestr.'] '.$errmsg."\n";
+    echo '  '.$filename. ' (line: '.$linenum.")\n";
+
+    echo "\ttrace:";
+    foreach($trace as $k=>$t){
+        echo "\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
+        echo (isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
+    }
+    echo "\n";
 
 }

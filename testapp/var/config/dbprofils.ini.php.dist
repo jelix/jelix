@@ -16,8 +16,8 @@ jacl2_profile = testapp
 pgsql_profile = testapp_pgsql
 
 [testapp]
-; you can change following options : driver, database, host
-; user, password, according to your database configuration
+; you can change following options : database name, user, password, according to your database configuration
+; do not change the driver ! testapp really need a mysql database for this profile
 driver="mysql"
 database="testapp"
 host= "localhost"

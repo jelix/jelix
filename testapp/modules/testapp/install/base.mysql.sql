@@ -6,15 +6,11 @@ CREATE TABLE myconfig (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
-INSERT INTO myconfig VALUES ('foo', 'foovalue');
-INSERT INTO myconfig VALUES ('bar', 'barvalue');
-INSERT INTO myconfig VALUES ('name', 'laurent');
-INSERT INTO myconfig VALUES ('engine', 'jelix');
-INSERT INTO myconfig VALUES ('browser', 'firefox');
-
-
-CREATE TABLE `product_test` (
-`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-`name` VARCHAR( 150 ) NOT NULL ,
-`price` FLOAT NOT NULL
-) TYPE = MYISAM ;
+INSERT INTO `myconfig` (`cfg_key`, `cfg_value`) VALUES
+('foo', 'foovalue'),
+('bar', 'barvalue'),
+('name', 'laurent'),
+('engine', 'jelix'),
+('browser', 'firefox'),
+('33', '456ghjk'),
+('test', '33');

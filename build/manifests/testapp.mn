@@ -80,6 +80,10 @@ cd testapp/modules/testapp/forms
   sample.form.xml
   sample2.form.xml
   products.form.xml
+cd testapp/modules/testapp/install
+  base.mysql.sql
+  base.pgsql.sql
+  install.php
 
 cd testapp/modules/jelix_tests
   events.xml

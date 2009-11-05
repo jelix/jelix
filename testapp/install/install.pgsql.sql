@@ -60,10 +60,7 @@ CREATE TABLE labels_tests (
     label character varying(50) NOT NULL
 );
 
-CREATE TABLE myconfig (
-    cfg_key character varying(150) NOT NULL,
-    cfg_value character varying(255) NOT NULL
-);
+
 
 CREATE TABLE product_tags_test (
     product_id integer NOT NULL,
@@ -114,8 +111,6 @@ ALTER TABLE ONLY jlx_user
 ALTER TABLE ONLY labels_tests
     ADD CONSTRAINT labels_tests_pkey PRIMARY KEY ("key", lang);
 
-ALTER TABLE ONLY myconfig
-    ADD CONSTRAINT myconfig_pkey PRIMARY KEY (cfg_key);
 
 ALTER TABLE ONLY product_tags_test
     ADD CONSTRAINT product_tags_test_pkey PRIMARY KEY (product_id, tag);
@@ -140,20 +135,6 @@ ALTER TABLE ONLY jacl_subject
 
 ALTER TABLE ONLY jacl_user_group
     ADD CONSTRAINT jacl_user_group_id_aclgrp_fkey FOREIGN KEY (id_aclgrp) REFERENCES jacl_group(id_aclgrp);
-
-
-
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('foo', 'foovalue');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('bar', 'barvalue');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('name', 'laurent');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('engine', 'jelix');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('browser', 'firefox');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('33', '456ghjk');
-INSERT INTO myconfig (cfg_key, cfg_value) VALUES ('test', '33');
-
-
-
-
 
 CREATE TABLE jacl2_group (
     id_aclgrp serial NOT NULL,
