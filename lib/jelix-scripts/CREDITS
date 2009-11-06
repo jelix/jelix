@@ -9,6 +9,9 @@ Geekbay
 Romain Bisse (RomainB)
   - createclassfromdao command (#870)
 
+Catsoup
+  - bug fixed in initadmin for the new installer (#978)
+
 Patrick Dos-Santos
   - option "-createlocales" for createform and createdaocrud creates the french and english locale files (#848)
   

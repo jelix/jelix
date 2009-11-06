@@ -81,17 +81,17 @@ class initadminCommand extends JelixScriptCommand {
         }
         $inifile->setValue('driver','db','acl2');
         
-        $installConfig->setValue('master_admin.installed', '1', 'modules');
+        $installConfig->setValue('master_admin.installed', '1', $entrypoint);
         $inifile->setValue('master_admin.access', '2', 'modules');
-        $installConfig->setValue('jauth.installed', '1', 'modules');
+        $installConfig->setValue('jauth.installed', '1', $entrypoint);
         $inifile->setValue('jauth.access', '2', 'modules');
-        $installConfig->setValue('jacl2db.installed', '1', 'modules');
+        $installConfig->setValue('jacl2db.installed', '1', $entrypoint);
         $inifile->setValue('jacl2db.access', '1', 'modules');
-        $installConfig->setValue('jacldb.installed', '0', 'modules');
+        $installConfig->setValue('jacldb.installed', '0', $entrypoint);
         $inifile->setValue('jacldb.access', '0', 'modules');
-        $installConfig->setValue('junittests.installed', '0', 'modules');
+        $installConfig->setValue('junittests.installed', '0', $entrypoint);
         $inifile->setValue('junittests.access', '0', 'modules');
-        $installConfig->setValue('jWSDL.installed', '0', 'modules');
+        $installConfig->setValue('jWSDL.installed', '0', $entrypoint);
         $inifile->setValue('jWSDL.access', '0', 'modules');
         
         $urlconf = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints', null, true);
@@ -151,7 +151,7 @@ class initadminCommand extends JelixScriptCommand {
                 $authini->setValue('profile',$profile, 'Db');
             $tools = jDb::getTools($profile);
             $db = jDb::getConnection($profile);
-            $path = JELIX_LIB_PATH.'jelix-modules/jauthdb/install/';
+            $path = LIB_PATH.'jelix-modules/jauthdb/install/';
             if(file_exists($path.'install_jauth.schema.'.$db->dbms.'.sql')) {
                 try {
                     $tools->execSQLScript($path.'install_jauth.schema.'.$db->dbms.'.sql');
@@ -166,22 +166,22 @@ class initadminCommand extends JelixScriptCommand {
             else {
                 echo "Tables and datas for jAuth.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.\n";
             }
-            $installConfig->setValue('jauthdb.installed', '1', 'modules');
+            $installConfig->setValue('jauthdb.installed', '1', $entrypoint);
             $inifile->setValue('jauthdb.access', '1', 'modules');
-            $installConfig->setValue('jauthdb_admin.installed', '1', 'modules');
+            $installConfig->setValue('jauthdb_admin.installed', '1', $entrypoint);
             $inifile->setValue('jauthdb_admin.access', '2', 'modules');
         }
         else {
-            $installConfig->setValue('jauthdb.installed', '0', 'modules');
+            $installConfig->setValue('jauthdb.installed', '0', $entrypoint);
             $inifile->setValue('jauthdb.access', '0', 'modules');
-            $installConfig->setValue('jauthdb_admin.installed', '0', 'modules');
+            $installConfig->setValue('jauthdb_admin.installed', '0', $entrypoint);
             $inifile->setValue('jauthdb_admin.access', '0', 'modules');
         }
 
         if (!$this->getOption('-noacl2db')) {
             $tools = jDb::getTools($profile);
             $db = jDb::getConnection($profile);
-            $path = JELIX_LIB_PATH.'jelix-modules/jacl2db/install/';
+            $path = LIB_PATH.'jelix-modules/jacl2db/install/';
                 
             $tables = $tools->getTableList();
             if (in_array('jacl2_rights', $tables)) {
@@ -253,11 +253,11 @@ class initadminCommand extends JelixScriptCommand {
                     echo "Tables and datas for jAcl2.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.\n";
                 }
             }
-            $installConfig->setValue('jacl2db_admin.installed', '1', 'modules');
+            $installConfig->setValue('jacl2db_admin.installed', '1', $entrypoint);
             $inifile->setValue('jacl2db_admin.access', '2', 'modules');
         }
         else {
-            $installConfig->setValue('jacl2db_admin.installed', '0', 'modules');
+            $installConfig->setValue('jacl2db_admin.installed', '0', $entrypoint);
             $inifile->setValue('jacl2db_admin.access', '0', 'modules');
         }
         
