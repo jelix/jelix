@@ -204,6 +204,17 @@ class jIniFileModifier {
         return $this->modified;
     }
 
+    /**
+     * return the list of section names
+     * @return array
+     * @since 1.2
+     */
+    public function getSectionList() {
+        $list = array_keys($this->content);
+        array_shift($list); // remove the global section
+        return $list;
+    }
+
     protected function generateIni() {
         $content = '';
         foreach($this->content as $sectionname=>$section) {

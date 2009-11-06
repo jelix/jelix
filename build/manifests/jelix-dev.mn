@@ -207,6 +207,7 @@ cd lib/jelix-modules/junittests/templates
   main.tpl
 cd lib/jelix-modules/junittests/install
   application-cli.init.php
+  install.php
 cd lib/jelix-modules/junittests/install/www/tests/
   design.css
 cd lib/jelix-modules/junittests/install/scripts

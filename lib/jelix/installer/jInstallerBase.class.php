@@ -117,7 +117,7 @@ abstract class jInstallerBase {
      * 
      * @param string $name the name of the script, without suffixes
      */
-    final protected function execSQLScript ($name) {
+    final protected function execSQLScript ($name, $profile = null) {
         $tools = $this->dbTool();
         $p = jDb::getProfile ($this->dbProfile);
         $driver = $p['driver'];

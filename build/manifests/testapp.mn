@@ -32,8 +32,6 @@ cd testapp/modules
   .htaccess
 
 cd testapp/install
-  install.mysql.sql
-  install.pgsql.sql
   installer.php
 
 cd testapp/scripts
@@ -104,6 +102,9 @@ cd testapp/modules/jelix_tests/classes/tests
 cd testapp/modules/jelix_tests/install
   upgrade_to_1.2b1pre.1303_bar.php
   upgrade_to_1.2b1pre.1304_foo.php
+  install.php
+  install.mysql.sql
+  install.pgsql.sql
 cd testapp/modules/jelix_tests/locales/
   test_A.properties
   test_B.properties

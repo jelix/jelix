@@ -1,7 +1,7 @@
 <?php
 /**
-* @package     testapp
-* @subpackage  testapp module
+* @package     jelix
+* @subpackage  junittests module
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2009 Laurent Jouanneau
@@ -10,14 +10,9 @@
 */
 
 
-class testappModuleInstaller extends jInstallerModule {
+class junittestsModuleInstaller extends jInstallerModule {
 
     function install() {
-
-      if ($this->isDbAlreadyInstalled())
-        return;
-
-      $this->execSQLScript('base');
 
     }
 }

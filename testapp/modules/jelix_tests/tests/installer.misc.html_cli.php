@@ -16,8 +16,8 @@ class testInstallerBase extends jInstallerComponentBase {
         return $this->compareVersion($v1, $v2);
     }
 
-    function getInstaller($config)   { return null;}
-    function getUpgraders($config) { return array();}
+    function getInstaller($config, $epId)   { return null;}
+    function getUpgraders($config, $epId) { return array();}
 
 }
 

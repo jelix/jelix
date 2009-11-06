@@ -1,7 +1,7 @@
 <?php
 /**
-* @package     testapp
-* @subpackage  testapp module
+* @package     jelix
+* @subpackage  jauth module
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2009 Laurent Jouanneau
@@ -9,15 +9,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
-class testappModuleInstaller extends jInstallerModule {
+class jauthModuleInstaller extends jInstallerModule {
 
     function install() {
 
       if ($this->isDbAlreadyInstalled())
         return;
 
-      $this->execSQLScript('base');
-
+      //$this->execSQLScript('install_jacl.schema');
     }
 }

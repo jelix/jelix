@@ -2,14 +2,17 @@ Installation of testapp
 
 - download and install a "developer" edition of Jelix
 - move the testapp directory at the same level of the lib/ directory of jelix.
-- create a database and import one of the testapp/install/*.sql script into it.
+- create a database in mysql
 - rename testapp/var/config/dbprofils.ini.php.dist to testapp/var/config/dbprofils.ini.php
-- configure parameters in dbprofils.ini.php, in section testapp for mysql,
-    testapppdo if you have pdo extension and testapp_pgsql if you have postgresql sql
-    don't touch other sections.
+- configure parameters in dbprofils.ini.php:
+    - section testapp for mysql,
+    - section testapppdo if you have pdo extension
+    - section testapp_pgsql if you have postgresql sql
+    don't touch other sections !
 - rename testapp/var/config/cache.ini.php.dist to testapp/var/config/cache.ini.php
-- configure parameters in cache.ini.php
-- create the "testapp/" directory in the temp directory of Jelix
+- configure parameters in cache.ini.php if needed
+- create the "testapp/" "testapp-cli/" and "testapp-scripts/" directories in the temp directory of Jelix
 - put write access for apache on temp/testapp/, testapp/var/log/ and testapp/var/mails
 - run the script in install/installer.php 
     cd testapp/install && php installer.php
+- you can then run testapp in your browser

@@ -1,7 +1,7 @@
 <?php
 /**
-* @package     testapp
-* @subpackage  testapp module
+* @package     jelix
+* @subpackage  jacldb module
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2009 Laurent Jouanneau
@@ -10,14 +10,14 @@
 */
 
 
-class testappModuleInstaller extends jInstallerModule {
+class jacldbModuleInstaller extends jInstallerModule {
 
     function install() {
 
       if ($this->isDbAlreadyInstalled())
         return;
 
-      $this->execSQLScript('base');
-
+      $this->execSQLScript('install_jacl.schema');
+      $this->execSQLScript('install_jacl.data');
     }
 }

@@ -24,6 +24,8 @@ cd lib/jelix-modules/jacldb/install
   install_jacl.schema.pgsql.sql
   install_jacl.data.mysql.sql
   install_jacl.data.pgsql.sql
+  install.php
+  
 cd lib/jelix-modules/jacl2db
 * module.xml
   events.xml
@@ -40,6 +42,7 @@ cd lib/jelix-modules/jacl2db/install
   install_jacl2.schema.pgsql.sql
   install_jacl2.data.mysql.sql
   install_jacl2.data.pgsql.sql
+  install.php
 
 cd lib/jelix-modules/jauthdb
 * module.xml
@@ -50,6 +53,7 @@ cd lib/jelix-modules/jauthdb/install/
   install_jauth.schema.pgsql.sql
   install_jauth.data.mysql.sql
   install_jauth.data.pgsql.sql
+  install.php
 
 cd lib/jelix-modules/jauth
 * module.xml
@@ -59,6 +63,8 @@ cd lib/jelix-modules/jauth/classes
 cd lib/jelix-modules/jauth/controllers
 ! login.classic.php
 ! loginsw.classic.php
+cd lib/jelix-modules/jauth/install/
+  install.php
 cd lib/jelix-modules/jauth/install/var/config
   auth.coord.ini.php
   authsw.coord.ini.php
@@ -89,6 +95,8 @@ cd lib/jelix-modules/jWSDL/locales/en_US
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jWSDL/locales/fr_FR
 cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jWSDL/install
+  install.php
 
 cd lib/jelix-plugins
 

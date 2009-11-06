@@ -1,7 +1,7 @@
 <?php
 /**
-* @package     testapp
-* @subpackage  testapp module
+* @package     jelix
+* @subpackage  jauthdb module
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2009 Laurent Jouanneau
@@ -10,14 +10,14 @@
 */
 
 
-class testappModuleInstaller extends jInstallerModule {
+class jauthdbModuleInstaller extends jInstallerModule {
 
     function install() {
 
       if ($this->isDbAlreadyInstalled())
         return;
 
-      $this->execSQLScript('base');
-
+      $this->execSQLScript('install_jauth.schema');
+      $this->execSQLScript('install_jauth.data');
     }
 }
