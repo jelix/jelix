@@ -22,6 +22,10 @@ use_error_handler = on
 
 enableOldActionSelector =
 
+; default domain name to use with jfullurl for example.
+; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
+domainName =
+
 [modules]
 ; modulename.access = x   where x : 0= unused/forbidden, 1 = private access, 2 = public access
 

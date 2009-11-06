@@ -117,6 +117,7 @@ Mickaël Fradin (aka mike/kewix)
  - little other improvements (#835)
  - fixed bugs (#884)
  - correct _generateCondition doesn't handle some operators with NULL values (#992)
+ - added jfullurl tpl plugin (#938)
 
 Baptiste Toinot (aka Surfoo)
  - double / in path for locale selector

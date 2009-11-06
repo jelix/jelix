@@ -14,6 +14,11 @@ pluginsPath = app:plugins/,lib:jelix-plugins/
 
 modulesPath = lib:jelix-modules/,app:modules/
 
+; default domain name to use with jfullurl for example.
+; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
+domainName =
+
+
 [modules]
 ; modulename.access = x where x =
 ; 0 if installed but not used (database schema is ok for example)

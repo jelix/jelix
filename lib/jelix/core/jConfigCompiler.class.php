@@ -123,6 +123,9 @@ class jConfigCompiler {
             $config->startAction = ':';
         }
 
+        if ($config->domainName == "" && isset($_SERVER['SERVER_NAME']))
+            $config->domainName = $_SERVER['SERVER_NAME'];
+
         $config->_allBasePath = array();
 
         if ($pseudoScriptName) {

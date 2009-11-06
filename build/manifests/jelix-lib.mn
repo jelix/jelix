@@ -398,6 +398,7 @@ cd lib/jelix/plugins/tpl/html
   function.formurlparam.php
   function.image.php
   function.jmessage.php
+  function.jfullurl.php
   function.jlocale.php
   function.jurl.php
   function.link_to_remote.php
@@ -416,18 +417,21 @@ cd lib/jelix/plugins/tpl/ltx2pdf
 
 cd lib/jelix/plugins/tpl/text
   cfunction.const.php
+  function.jfullurl.php
   function.jlocale.php
   function.jurl.php
   function.formdatafull.php
 
 cd lib/jelix/plugins/tpl/xml
   cfunction.const.php
+  function.jfullurl.php
   function.jlocale.php
   function.jurl.php
   meta.xml.php
 
 cd lib/jelix/plugins/tpl/xul
   cfunction.const.php
+  function.jfullurl.php
   function.jlocale.php
   function.jurl.php
   function.urljsstring.php
