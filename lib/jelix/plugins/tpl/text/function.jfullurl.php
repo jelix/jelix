@@ -26,10 +26,7 @@ function jtpl_function_text_jfullurl($tpl, $selector, $params=array(), $domain=f
 
     // Add the http or https if not given
     if (!preg_match('/^http/', $domain)) {
-        if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] && $_SERVER['HTTPS']!='off'))
-            $domain = 'https://'.$domain;
-        else
-            $domain = 'http://'.$domain;
+        $domain = $GLOBALS['gJCoord']->request->getProtocol().$domain;
     }
 
     // echo the full Url

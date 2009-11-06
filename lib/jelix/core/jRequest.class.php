@@ -197,5 +197,17 @@ abstract class jRequest {
             return $_SERVER['REMOTE_ADDR'];
         }
     }
+    
+    /**
+     * return the protocol
+     * @return string  http or https
+     * @since 1.2
+     */
+   function getProtocol() {
+      static $proto = null;
+      if ($proto === null)
+         $proto = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off' ? 'https://':'http://');
+      return $proto;
+   }
 }
 

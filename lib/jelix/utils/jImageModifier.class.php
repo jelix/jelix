@@ -119,7 +119,7 @@ class jImageModifier {
 
         // uris
         global $gJConfig;
-        $www = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'];
+        $www = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'];
         $www .= $gJConfig->urlengine['basePath'];
         $cacheUri = $www.'cache/images/'.$cacheName;
         $srcUri = ((strpos($src,'http://')!==FALSE)?'':$www).$src;
@@ -164,7 +164,7 @@ class jImageModifier {
                        'xpm'=>'image/x-xpixmap', 'xbm'=>'image/x-xbitmap', 'wbmp'=>'image/vnd.wap.wbmp');
 
         global $gJConfig;
-        $srcUri = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'].$src;
+        $srcUri = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'].$src;
         $srcFs = JELIX_APP_WWW_PATH.$src;
 
         $path_parts = pathinfo($srcUri);
