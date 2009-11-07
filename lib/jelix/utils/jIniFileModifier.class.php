@@ -11,6 +11,9 @@
 
 /**
 * utility class to modify an ini file by preserving comments, whitespace..
+* It follows same behaviors of parse_ini_file, except when there are quotes
+* inside values. it doesn't support quotes inside values, because parse_ini_file
+* is totally bugged, depending cases.
 * @package    jelix
 * @subpackage utils
 * @since 1.1

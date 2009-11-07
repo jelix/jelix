@@ -380,7 +380,11 @@ foo[]=machine
   
 foo=bar
 anumber=98
+string= "uuuuu"
+string2= "aaa
+bbb"
 afloatnumber=   5.098  
+
 [aSection]
 truc= true
 laurent=toto
@@ -393,10 +397,14 @@ truc=machin2
         $parser->testParse($content);
         $this->assertEqual($parser->getValue('foo'), 'bar' );
         $this->assertEqual($parser->getValue('anumber'), 98 );
+        $this->assertEqual($parser->getValue('string'), 'uuuuu' );
+        $this->assertEqual($parser->getValue('string2'), 'aaa
+bbb');
         $this->assertEqual($parser->getValue('afloatnumber'), 5.098 );
         $this->assertEqual($parser->getValue('truc','aSection'), true );
         $this->assertEqual($parser->getValue('laurent','aSection'), 'toto' );
         $this->assertEqual($parser->getValue('isvalid','aSection'), true );
+        
     }
     
     function testSave() {
