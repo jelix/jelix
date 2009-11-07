@@ -249,6 +249,7 @@
      <element name="choice">
         <ref name="control.common" />
         <ref name="UI.attr.readonly" />
+        <ref name="UI.attr.required" />
         <optional><attribute name="selectedvalue" /></optional>
         <oneOrMore>
             <element name="item">

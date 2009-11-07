@@ -279,6 +279,8 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
 
         $this->form->addCtrl($choice);
 
+        $this->assertTrue($this->form->check());
+        $choice->required = true;
         $this->assertFalse($this->form->check());
 
         $this->form->setData('choice', 'foo');

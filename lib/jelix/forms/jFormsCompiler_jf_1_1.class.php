@@ -191,6 +191,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
     }
 
     protected function generateChoice(&$source, $control, &$attributes) {
+        $this->attrRequired($source, $attributes);
         $this->readLabel($source, $control, 'choice');
         $this->attrReadOnly($source, $attributes);
         $this->readHelpHintAlert($source, $control);

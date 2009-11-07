@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2006-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -28,17 +28,19 @@ class jFormsControlChoice extends jFormsControlGroups {
     public $itemsNames = array();
 
     function check(){
-        if(isset($this->items[$this->container->data[$this->ref]])) {
+        $val = $this->container->data[$this->ref];
+        if($val !== "" && $val !== null && isset($this->items[$val])) {
             $rv = null;
-            foreach($this->items[$this->container->data[$this->ref]] as $ctrl) {
+            foreach($this->items[$val] as $ctrl) {
                 if (($rv2 = $ctrl->check()) !== null) {
                     $rv = $rv2;
                 }
             }
             return $rv;
-        } else {
+        } else if ($this->required) {
             return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
         }
+        return null;
     }
 
     function createItem($value, $label) {
