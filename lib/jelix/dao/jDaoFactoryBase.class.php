@@ -8,12 +8,14 @@
  * @contributor Thomas
  * @contributor Yoan Blanc
  * @contributor Michael Fradin
+ * @contributor Christophe Thiriot
  * @copyright   2005-2009 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007-2009 Julien Issler
  * @copyright   2008 Thomas
  * @copyright   2008 Yoan Blanc
  * @copyright   2009 Mickael Fradin
+ * @copyright   2009 Christophe Thiriot
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -275,7 +277,7 @@ abstract class jDaoFactoryBase  {
         if ($distinct !== null) {
             $props = $this->getProperties();
             if (isset($props[$distinct]))
-                $count = 'DISTINCT '.$this->_tables[$props[$distinct]['table']]['realname'].'.'.$props[$distinct]['fieldName'];
+                $count = 'DISTINCT '.$this->_tables[$props[$distinct]['table']]['name'].'.'.$props[$distinct]['fieldName'];
         }
 
         $query = 'SELECT COUNT('.$count.') as c '.$this->_fromClause.$this->_whereClause;

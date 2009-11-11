@@ -105,7 +105,7 @@ Laurent Raufaste (aka analogue)
 Christophe Thiriot (aka Doubleface)
  - testor
  - bug fixes on PDO support in jDb
- - fixed minor bugs (#668...)
+ - fixed minor bugs (#668, #1010...)
  - Added enhanced service handling (dependency injection) in jClasses (#523, #602)
  - implementation of "live" exit in command line (#406)
  - automatic timezone setting (#600)
