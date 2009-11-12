@@ -12,7 +12,6 @@
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
-require_once (LIB_PATH.'clearbricks/jelix.inc.php');
 
 class createappCommand extends JelixScriptCommand {
 
@@ -24,6 +23,8 @@ class createappCommand extends JelixScriptCommand {
 
     public  $syntaxhelp = "[-nodefaultmodule] [-withcmdline] [-wwwpath a_path]";
     public  $help='';
+
+    public $applicationMustExist = false;
 
     function __construct(){
         $this->help= array(
@@ -64,6 +65,8 @@ class createappCommand extends JelixScriptCommand {
     }
 
     public function run(){
+        require_once (LIB_PATH.'clearbricks/jelix.inc.php');
+
        if(file_exists(JELIX_APP_PATH)){
            throw new Exception("this application is already created");
        }

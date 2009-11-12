@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Jouanneau Laurent
 * @contributor Mathaud Loic
-* @copyright   2005-2007 Jouanneau laurent, 2008 Mathaud Loic
+* @copyright   2005-2009 Laurent Jouanneau, 2008 Mathaud Loic
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -14,6 +14,9 @@
 
 abstract class JelixScriptCommand {
 
+   /**
+    * @var string the name of the command
+    */
    public $name;
 
    /**
@@ -42,6 +45,12 @@ abstract class JelixScriptCommand {
 
    public $syntaxhelp = '';
    public $help = 'No help for this command';
+
+   /**
+    * @var boolean indicate if the application must exist to execute the command
+    */
+   public $applicationMustExist = true;
+
 
    function __construct(){}
 

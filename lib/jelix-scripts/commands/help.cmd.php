@@ -1,9 +1,9 @@
 <?php
 /**
 * @package     jelix-scripts
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2007 Jouanneau laurent
+* @copyright   2005-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -14,6 +14,8 @@ class helpCommand extends JelixScriptCommand {
     public  $name = 'help';
     public  $allowed_options=array();
     public  $allowed_parameters=array('command'=>false);
+
+    public  $applicationMustExist = false;
 
     public  $syntaxhelp ="[COMMAND]";
     public  $help=array(

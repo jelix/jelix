@@ -8,9 +8,6 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-#if ENABLE_OPTIMIZED_SOURCE
-require(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php'); // jDaoParser is in jDaoCompiler file
-#endif
 
 class createformCommand extends JelixScriptCommand {
 
@@ -43,6 +40,9 @@ class createformCommand extends JelixScriptCommand {
     public function run(){
 
         jxs_init_jelix_env();
+#if ENABLE_OPTIMIZED_SOURCE
+        require(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php'); // jDaoParser is in jDaoCompiler file
+#endif
 
         $path = $this->getModulePath($this->_parameters['module']);
 

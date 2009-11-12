@@ -9,9 +9,6 @@
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
-require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
-
-
 
 class installappCommand extends JelixScriptCommand {
 
@@ -19,8 +16,10 @@ class installappCommand extends JelixScriptCommand {
     public  $allowed_options=array();
     public  $allowed_parameters=array();
 
+    public  $applicationMustExist = false;
+
     public  $syntaxhelp = "";
-    public  $help='';
+    public  $help = '';
 
     function __construct(){
         $this->help= array(
@@ -34,6 +33,8 @@ class installappCommand extends JelixScriptCommand {
     }
 
     public function run(){
+        require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
+
         $installer = new jInstaller(new textInstallReporter());
         $installer->installApplication();
     }
