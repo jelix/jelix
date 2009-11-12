@@ -19,7 +19,7 @@ class jelix_testsModuleInstaller extends jInstallerModule {
       $this->execSQLScript('install');
 
       try {
-        $dbprofile = jDb::getProfile('testapp_pgsql');
+        $dbprofile = jDb::getProfile('testapp_pgsql', true);
       }
       catch(Exception $e) {
         // no profile for pgsql, don't install tables in pgsql

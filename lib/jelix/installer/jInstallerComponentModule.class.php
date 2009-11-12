@@ -90,7 +90,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         // now we order the list of file
         usort($fileList, array($this, 'sortFileList'));
         foreach($fileList as $fileInfo) {
-            if ($this->compareVersion($this->installedVersion, $fileInfo[1]) >= 0 )
+            if ($this->compareVersion($this->installedVersion[$epId], $fileInfo[1]) >= 0 )
                 continue;
             include($p.$fileInfo[0]);
             $cname = $this->name.'ModuleUpgrader_'.$fileInfo[2];

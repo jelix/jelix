@@ -25,20 +25,15 @@ class installappCommand extends JelixScriptCommand {
     function __construct(){
         $this->help= array(
             'fr'=>"
-    Installe une application. EXPERIMENTAL !
+    Installe ou met à jour tout les modules d'une application.
     ",
             'en'=>"
-    Install a new application. EXPERIMENTAL !
+    Install or upgrade all modules of an application.
     ",
     );
     }
 
     public function run(){
-        $f = JELIX_APP_CONFIG_PATH.'installer.ini.php';
-        if(!file_exists($f))
-            file_put_contents($f, ';<?php die(); ?>');
-
-        jxs_init_jelix_env();
         $installer = new jInstaller(new textInstallReporter());
         $installer->installApplication();
     }

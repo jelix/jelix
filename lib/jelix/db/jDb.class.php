@@ -130,9 +130,10 @@ class jDb {
     * should be a profile name.
     *
     * @param string   $name  profile name or alias of a profile name. if empty, use the default profile
+    * @param boolean  $noDefault  if true and if the profile doesn't exist, throw an error instead of getting the default profile
     * @return array  properties
     */
-    public static function getProfile ($name='') {
+    public static function getProfile ($name='', $noDefault = false) {
         global $gJConfig;
         if (self::$_profiles === null) {
             self::$_profiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$gJConfig->dbProfils , true);
@@ -152,7 +153,7 @@ class jDb {
             }
         }
         // if the profile doesn't exist, we take the default one
-        elseif (isset(self::$_profiles['default'])) {
+        elseif (!$noDefault && isset(self::$_profiles['default'])) {
 #ifnot ENABLE_OPTIMIZED_SOURCE
             trigger_error(jLocale::get('jelix~db.error.profile.use.default', $name), E_USER_NOTICE);
 #endif
