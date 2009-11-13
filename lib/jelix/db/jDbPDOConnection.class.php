@@ -92,6 +92,8 @@ class jDbPDOConnection extends PDO {
             unset($prof['password']);
         }
         unset($prof['driver']);
+        if($this->dbms == 'sqlite')
+            $profile['dsn'] = str_replace(array('app:','lib:'), array(JELIX_APP_PATH, LIB_PATH), $profile['dsn']);
         parent::__construct($profile['dsn'], $user, $password, $prof);
         $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
