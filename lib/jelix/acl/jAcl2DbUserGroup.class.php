@@ -3,7 +3,9 @@
 * @package     jelix
 * @subpackage  acl
 * @author      Laurent Jouanneau
+* @contributor Julien Issler
 * @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.1
@@ -54,6 +56,20 @@ class jAcl2DbUserGroup {
         return $groups;
     }
 
+    /**
+     * get the private group for the current user or for the given login
+     * @param string $login The user's login
+     * @return int the id of the private group
+     * @since 1.2
+     */
+    public static function getPrivateGroup($login=null){
+        if(!$login){
+            if(!jAuth::isConnected())
+                return null;
+            $login = jAuth::getUserSession()->login;
+        }
+        return jDao::get('jacl2db~jacl2group', 'jacl2_profile')->getPrivateGroup($login)->id_aclgrp;
+    }
 
     /**
      * get the list of the users of a group
