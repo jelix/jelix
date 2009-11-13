@@ -37,7 +37,7 @@
 <tbody>
 {foreach $rights as $subject=>$right}
 <tr class="{cycle array('odd','even')}">
-    <th>{$subject}</th>
+    <th>{$subjects_localized[$subject]|escxml}</th>
     {foreach $right as $group=>$r}
     <td><input type="checkbox" name="rights[{$group}][{$subject}]" {if $r}checked="checked"{/if} /></td>
     <td>{if isset($rightsWithResources[$subject][$group]) && $rightsWithResources[$subject][$group]}yes{/if}</td>

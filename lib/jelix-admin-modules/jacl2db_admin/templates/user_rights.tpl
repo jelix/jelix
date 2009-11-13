@@ -43,7 +43,7 @@
 <tbody>
 {foreach $rights as $subject=>$right}
 <tr class="{cycle array('odd','even')}">
-    <th><label for="{$subject|eschtml}">{$subject}</label></th>
+    <th><label for="{$subject|eschtml}">{$subjects_localized[$subject]|eschtml}</label></th>
     {assign $hasr=false}
     {foreach $right as $group=>$r}
     {if $group == $hisgroup->id_aclgrp}

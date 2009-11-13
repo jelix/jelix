@@ -15,7 +15,7 @@
 
 {foreach $rights as $subject=>$right}
 <tr class="{cycle array('odd','even')}">
-    <th>{$subject}</th>
+    <th>{$subjects_localized[$subject]|eschtml}</th>
     {foreach $right as $group=>$r}
     <td>{if $r}X{/if}</td>
     {/foreach}

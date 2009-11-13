@@ -1,11 +1,13 @@
 <?php
 /**
-* @package   jelix_admin_modules
-* @subpackage jacl2db_admin
-* @author    Laurent Jouanneau
-* @copyright 2008 Laurent Jouanneau
-* @link      http://jelix.org
-* @licence   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
+* @package     jelix_admin_modules
+* @subpackage  jacl2db_admin
+* @author      Laurent Jouanneau
+* @contributor Julien Issler
+* @copyright   2008 Laurent Jouanneau
+* @copyright   2009 Julien Issler
+* @link        http://jelix.org
+* @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
 */
 
 class usersCtrl extends jController {
@@ -56,12 +58,12 @@ class usersCtrl extends jController {
         } elseif($grpid == -1) {
             $cnx = jDb::getConnection($p);
             //only those who have no groups
-            if($cnx->dbms != 'pgsql') { 
-                // with MYSQL 4.0.12, you must use an alias with the count to use it with HAVING 
+            if($cnx->dbms != 'pgsql') {
+                // with MYSQL 4.0.12, you must use an alias with the count to use it with HAVING
                 $sql = 'SELECT login, count(id_aclgrp) as nbgrp FROM '.$cnx->prefixTable('jacl2_user_group').'
                         GROUP BY login HAVING nbgrp < 2 ORDER BY login';
-            } else { 
-                // But PgSQL doesn't support the HAVING structure with an alias. 
+            } else {
+                // But PgSQL doesn't support the HAVING structure with an alias.
                 $sql = 'SELECT login, count(id_aclgrp) as nbgrp FROM '.$cnx->prefixTable('jacl2_user_group').'
                         GROUP BY login HAVING count(id_aclgrp) < 2 ORDER BY login';
             }
@@ -123,14 +125,16 @@ class usersCtrl extends jController {
         }
 
         $rights=array();
+        $subjects_localized = array();
         $rs = jDao::get('jacl2db~jacl2subject','jacl2_profile')->findAllSubject();
         foreach($rs as $rec){
             $rights[$rec->id_aclsbj] = $grouprights;
+            $subjects_localized[$rec->id_aclsbj] = jLocale::get($rec->label_key);
         }
 
         $rightsWithResources = array_fill_keys(array_keys($rights),0);
         $daorights = jDao::get('jacl2db~jacl2rights','jacl2_profile');
-        
+
         $rs = $daorights->getRightsHavingRes($hisgroup->id_aclgrp);
         $hasRightsOnResources = false;
         foreach($rs as $rec){
@@ -145,7 +149,7 @@ class usersCtrl extends jController {
 
         $tpl = new jTpl();
         $tpl->assign(compact('hisgroup', 'groupsuser', 'groups', 'rights','user',
-                             'rightsWithResources', 'hasRightsOnResources'));
+                             'subjects_localized', 'rightsWithResources', 'hasRightsOnResources'));
         $tpl->assign('nbgrp', count($groups));
 
         if(jAcl2::check('acl.user.modify')) {
@@ -193,7 +197,7 @@ class usersCtrl extends jController {
 
         $rightsWithResources = array();
         $daorights = jDao::get('jacl2db~jacl2rights','jacl2_profile');
-        
+
         $rs = $daorights->getRightsHavingRes($group->id_aclgrp);
         $hasRightsOnResources = false;
         foreach($rs as $rec){
@@ -202,9 +206,15 @@ class usersCtrl extends jController {
             $rightsWithResources[$rec->id_aclsbj][] = $rec->id_aclres;
             $hasRightsOnResources = true;
         }
-
+        $subjects_localized = array();
+        if(!empty($rightsWithResources)){
+            $conditions = jDao::createConditions();
+            $conditions->addCondition('id_aclsbj', 'in', array_keys($rightsWithResources));
+            foreach(jDao::get('jacl2db~jacl2subject','jacl2_profile')->findBy($conditions) as $rec)
+                $subjects_localized[$rec->id_aclsbj] = jLocale::get($rec->label_key);
+        }
         $tpl = new jTpl();
-        $tpl->assign(compact('user', 'rightsWithResources', 'hasRightsOnResources'));
+        $tpl->assign(compact('user', 'subjects_localized', 'rightsWithResources', 'hasRightsOnResources'));
 
         if(jAcl2::check('acl.user.modify')) {
             $rep->body->assign('MAIN', $tpl->fetch('user_rights_res'));
@@ -235,7 +245,7 @@ class usersCtrl extends jController {
 
         foreach($subjects as $sbj=>$val) {
             if ($val != '' || $val == true) {
-                $subjectsToRemove[] = $sbj; 
+                $subjectsToRemove[] = $sbj;
             }
         }
 

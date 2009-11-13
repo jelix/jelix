@@ -12,7 +12,7 @@
 <tbody>
 {foreach $rightsWithResources as $subject=>$resources}
 <tr class="{cycle array('odd','even')}">
-    <th>{$subject|eschtml}</th>
+    <th>{$subjects_localized[$subject]|eschtml}</th>
     <td>{assign $firstr=true}{foreach $resources as $r}{if !$firstr}, {else}{assign $firstr=false}{/if}{$r|eschtml}{/foreach}</td>
 </tr>
 {/foreach}
