@@ -213,6 +213,7 @@ cd testapp/modules/jelix_tests/tests/
   utils.jinifilemodifier.html_cli.php
   utils.jclasses.html_cli.php
   utils.jmailer.html_cli.php
+  utils.jversioncomparator.html_cli.php
 
 cd testapp/modules/testurls/
 *  module.xml
