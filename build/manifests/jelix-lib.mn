@@ -242,6 +242,7 @@ cd lib/jelix/utils/
   jMessage.class.php
   jSmtp.class.php
   jTcpdf.class.php
+  jVersionComparator.class.php
 * jWiki.class.php
   jXmlRpc.class.php
   jZipCreator.class.php
