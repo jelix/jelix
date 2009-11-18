@@ -206,12 +206,18 @@ class jUrl extends jUrlBase {
                 $url_escape_from = explode(' ',jLocale::get('jelix~format.url_escape_from'));
                 $url_escape_to = explode(' ',jLocale::get('jelix~format.url_escape_to'));
             }
+            // first, we do transliteration.
+            // we don't use iconv because it is system dependant
             // we don't use strtr because it is not utf8 compliant
-            $str=str_replace($url_escape_from, $url_escape_to, $str); // supprime les caractères accentués, et les quotes, doubles quotes
-            $str=preg_replace("/([^\w])/"," ",$str); // remplace tout ce qui n'est pas lettre par un espace
-            //$str=preg_replace("/(?<=\s)\w{1,2}(?=\s)/"," ",$str); // enleve les mots de moins de 2 lettres
-            $str=preg_replace("/( +)/","-",trim($str)); // on remplace les espaces et groupes d'espaces par -
-            $str=strtolower($str); // on met en minuscule
+            $str = str_replace($url_escape_from, $url_escape_to, $str);
+            // then we replace all non word characters by a space
+            $str = preg_replace("/([^\w])/"," ",$str);
+            // then we remove words of 2 letters
+            //$str=preg_replace("/(?<=\s)\w{1,2}(?=\s)/"," ",$str);
+            // then we replace all spaces by a -
+            $str = preg_replace("/( +)/","-",trim($str));
+            // we convert all character to lower case
+            $str = strtolower($str);
             return $str;
         }else{
             return urlencode (str_replace (array ('-', ' '), array ('--','-'), $str));
