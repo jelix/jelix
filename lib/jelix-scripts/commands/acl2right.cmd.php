@@ -76,11 +76,14 @@ ACTION:
     protected function cmd_list(){
         echo "group\tsubject\t\tresource\n---------------------------------------------------------------\n";
         echo "- anonymous group\n";
+
+        $cnx = jDb::getConnection('jacl2_profile');
+
         $sql="SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, s.label_key as subject
-                FROM jacl2_rights r, jacl2_subject s
+                FROM ".$cnx->prefixTable('jacl2_rights')." r,
+                ".$cnx->prefixTable('jacl2_subject')." s
                 WHERE r.id_aclgrp = 0 AND r.id_aclsbj=s.id_aclsbj
                 ORDER BY subject, id_aclres ";
-        $cnx = jDb::getConnection('jacl2_profile');
         $rs = $cnx->query($sql);
         $sbj =-1;
         foreach($rs as $rec){
@@ -92,10 +95,12 @@ ACTION:
         }
 
         $sql="SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, name as grp, s.label_key as subject
-                FROM jacl2_rights r, jacl2_group g, jacl2_subject s
+                FROM ".$cnx->prefixTable('jacl2_rights')." r,
+                ".$cnx->prefixTable('jacl2_group')." g,
+                ".$cnx->prefixTable('jacl2_subject')." s
                 WHERE r.id_aclgrp = g.id_aclgrp AND r.id_aclsbj=s.id_aclsbj
                 ORDER BY grp, subject, id_aclres ";
-        $cnx = jDb::getConnection('jacl2_profile');
+
         $rs = $cnx->query($sql);
         $grp=-1;
         $sbj =-1;
@@ -129,7 +134,7 @@ ACTION:
         else
             $resource = $cnx->quote('');
 
-        $sql="SELECT * FROM jacl2_rights 
+        $sql="SELECT * FROM ".$cnx->prefixTable('jacl2_rights')."
                 WHERE id_aclgrp=".$group."
                 AND id_aclsbj=".$subject."
                 AND id_aclres=".$resource;
@@ -138,13 +143,14 @@ ACTION:
             throw new Exception("right already sets");
         }
 
-        $sql="SELECT * FROM jacl2_subject WHERE id_aclsbj=".$subject;
+        $sql="SELECT * FROM ".$cnx->prefixTable('jacl2_subject')." WHERE id_aclsbj=".$subject;
         $rs = $cnx->query($sql);
         if(!($sbj = $rs->fetch())){
             throw new Exception("subject is unknown");
         }
 
-        $sql="INSERT into jacl2_rights (id_aclgrp, id_aclsbj, id_aclres) VALUES (";
+        $sql="INSERT into ".$cnx->prefixTable('jacl2_rights')
+            ." (id_aclgrp, id_aclsbj, id_aclres) VALUES (";
         $sql.=$group.',';
         $sql.=$subject.',';
         $sql.=$resource.')';
@@ -167,7 +173,7 @@ ACTION:
         else
             $resource = '';
 
-        $sql="SELECT * FROM jacl2_rights 
+        $sql="SELECT * FROM ".$cnx->prefixTable('jacl2_rights')."
                 WHERE id_aclgrp=".$group."
                 AND id_aclsbj=".$subject;
         if($resource)
@@ -178,7 +184,7 @@ ACTION:
             throw new Exception("Error: this right is not set");
         }
 
-        $sql="DELETE FROM jacl2_rights
+        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_rights')."
              WHERE id_aclgrp=".$group."
                 AND id_aclsbj=".$subject;
         if($resource)
@@ -190,8 +196,9 @@ ACTION:
 
     protected function cmd_subject_list(){
 
-        $sql="SELECT id_aclsbj, label_key FROM jacl2_subject ORDER BY id_aclsbj";
         $cnx = jDb::getConnection('jacl2_profile');
+        $sql="SELECT id_aclsbj, label_key FROM "
+           .$cnx->prefixTable('jacl2_subject')." ORDER BY id_aclsbj";
         $rs = $cnx->query($sql);
         echo "id\t\t\tlabel key\n--------------------------------------------------------\n";
         foreach($rs as $rec){
@@ -206,14 +213,14 @@ ACTION:
 
         $cnx = jDb::getConnection('jacl2_profile');
  
-        $sql="SELECT id_aclsbj FROM jacl2_subject WHERE id_aclsbj=".$cnx->quote($params[0]);
+        $sql="SELECT id_aclsbj FROM ".$cnx->prefixTable('jacl2_subject')
+            ." WHERE id_aclsbj=".$cnx->quote($params[0]);
         $rs = $cnx->query($sql);
         if($rs->fetch()){
             throw new Exception("This subject already exists");
         }
 
-
-        $sql="INSERT into jacl2_subject (id_aclsbj, label_key) VALUES (";
+        $sql="INSERT into ".$cnx->prefixTable('jacl2_subject')." (id_aclsbj, label_key) VALUES (";
         $sql.=$cnx->quote($params[0]).',';
         $sql.=$cnx->quote($params[1]).')';
         $cnx->exec($sql);
@@ -228,17 +235,18 @@ ACTION:
 
         $cnx = jDb::getConnection('jacl2_profile');
 
-        $sql="SELECT id_aclsbj FROM jacl2_subject WHERE id_aclsbj=".$cnx->quote($params[0]);
+        $sql="SELECT id_aclsbj FROM ".$cnx->prefixTable('jacl2_subject')
+            ." WHERE id_aclsbj=".$cnx->quote($params[0]);
         $rs = $cnx->query($sql);
-        if(!$rs->fetch()){
+        if (!$rs->fetch()) {
             throw new Exception("This subject does not exist");
         }
 
-        $sql="DELETE FROM jacl2_rights WHERE id_aclsbj=";
+        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_rights')." WHERE id_aclsbj=";
         $sql.=$cnx->quote($params[0]);
         $cnx->exec($sql);
 
-        $sql="DELETE FROM jacl2_subject WHERE id_aclsbj=";
+        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_subject')." WHERE id_aclsbj=";
         $sql.=$cnx->quote($params[0]);
         $cnx->exec($sql);
 
@@ -251,14 +259,15 @@ ACTION:
         else $c='';
 
         $cnx = jDb::getConnection('jacl2_profile');
-        if(is_numeric($param)){
+        $sql="SELECT id_aclgrp FROM ".$cnx->prefixTable('jacl2_group')." WHERE $c ";
+        if (is_numeric($param)) {
             if($param == '0')
                 return 0;
-            $sql="SELECT id_aclgrp FROM jacl2_group WHERE $c id_aclgrp = ".$param;
-        }else{
+            $sql .= " id_aclgrp = ".$param;
+        } else {
             if($param =='anonymous')
                 return 0;
-            $sql="SELECT id_aclgrp FROM jacl2_group WHERE $c name = ".$cnx->quote($param);
+            $sql .= " name = ".$cnx->quote($param);
         }
         $rs = $cnx->query($sql);
         if($rec = $rs->fetch()){
