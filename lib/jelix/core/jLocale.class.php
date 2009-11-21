@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
 * @contributor Julien Issler, Yannick Le Guédart
-* @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
 * initial authors : Gerald Croes, Laurent Jouanneau.
@@ -61,34 +61,40 @@ class jLocale {
     */
     static function get ($key, $args=null, $locale=null, $charset=null) {
         global $gJConfig;
-        try{
+        try {
             $file = new jSelectorLoc($key, $locale, $charset);
-        }catch(jExceptionSelector $e){
-            if($e->getCode() == 12) throw $e;
+        }
+        catch (jExceptionSelector $e) {
+            if ($e->getCode() == 12) throw $e;
             if ($locale === null)  $locale = $gJConfig->locale;
             if ($charset === null) $charset = $gJConfig->charset;
-            throw new Exception('(200)The given locale key "'.$key.'" is invalid (for charset '.$charset.', lang '.$locale.')');
+            throw new Exception('(200)The given locale key "'.$key
+                                .'" is invalid (for charset '.$charset
+                                .', lang '.$locale.')');
         }
 
         $locale = $file->locale;
         $keySelector = $file->module.'~'.$file->fileKey;
-        if (!isset (self::$bundles[$keySelector][$locale])){
+
+        if (!isset (self::$bundles[$keySelector][$locale])) {
             self::$bundles[$keySelector][$locale] =  new jBundle ($file, $locale);
         }
+
         $bundle = self::$bundles[$keySelector][$locale];
 
         //try to get the message from the bundle.
         $string = $bundle->get ($file->messageKey, $file->charset);
-        if ($string === null){
+        if ($string === null) {
             //if the message was not found, we're gonna
             //use the default language and country.
-            if ($locale == $gJConfig->locale){
+            if ($locale == $gJConfig->locale) {
                 throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang for the '.$file->charset.' charset');
             }
             return jLocale::get ($key, $args, $gJConfig->locale);
-        }else{
+        }
+        else {
             //here, we know the message
-            if ($args!==null){
+            if ($args !== null && $args !== array()) {
                 $string = call_user_func_array('sprintf', array_merge (array ($string), is_array ($args) ? $args : array ($args)));
             }
             return $string;
