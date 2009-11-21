@@ -561,5 +561,49 @@ class UTDao_generator extends jUnitTestCase {
         $this->assertEqualOrDiff(' 1=1  GROUP BY `grp`.`id_aclgrp`, `grp`.`parent_id`, `grp`.`name` ORDER BY `grp`.`name` asc',$sql);
 
     }
+    
+    function testInsertQuery() {
+        
+        $doc ='<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="product_test" primarykey="code" />
+   </datasources>
+   <record>
+      <property name="code" fieldname="code" datatype="string" insertpattern="now()"/>
+      <property name="name" fieldname="name" datatype="string" />
+      <property name="price" fieldname="price" datatype="float"/>
+   </record>
+</dao>';
+        $parser = new jDaoParser ($this->_selector);
+        $parser->parse(simplexml_load_string($doc), $this->_tools);
+
+        $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
+
+        $fieldList = $generator->GetPropertiesBy('PrimaryTable');
+        list($fields, $values) = $generator->PrepareValues($fieldList,'insertPattern', 'record->');
+        $this->assertEqual("now()", $values['code']);
+        
+        $doc ='<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="product_test" primarykey="code" />
+   </datasources>
+   <record>
+      <property name="code" fieldname="code" datatype="string" insertpattern="now(%s)"/>
+      <property name="name" fieldname="name" datatype="string" />
+      <property name="price" fieldname="price" datatype="float"/>
+   </record>
+</dao>';
+        $parser = new jDaoParser ($this->_selector);
+        $parser->parse(simplexml_load_string($doc), $this->_tools);
+
+        $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
+
+        $fieldList = $generator->GetPropertiesBy('PrimaryTable');
+        list($fields, $values) = $generator->PrepareValues($fieldList,'insertPattern', 'record->');
+        $this->assertEqual('now(\'.($record->code === null ? \'NULL\' : $this->_conn->quote($record->code,false)).\')', $values['code']);
+        
+    }
 }
 ?>

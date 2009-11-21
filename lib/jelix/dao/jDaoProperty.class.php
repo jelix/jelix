@@ -162,6 +162,13 @@ class jDaoProperty {
             $this->defaultValue = $tools->stringToPhpValue($this->unifiedType, $params['default']);
         }
 
+        // insertpattern is allowed on primary keys noy autoincremented
+        if ($this->isPK && !$this->autoIncrement && isset($aAttributes['insertpattern'])) {
+            $this->insertPattern=(string)$aAttributes['insertpattern'];
+        }
+        if ($this->isPK) {
+            $this->updatePattern = '';
+        }
         // we ignore *pattern attributes on PK and FK fields
         if (!$this->isPK && !$this->isFK) {
             if(isset($aAttributes['updatepattern'])) {

@@ -420,7 +420,7 @@ array('foo~bar','')
             <boolean p="requiredInConditions" value="true"/>
             <boolean p="isPK" value="true" />
             <boolean p="isFK" value="false" />
-            <string p="updatePattern" value="%s" />
+            <string p="updatePattern" value="" />
             <string p="insertPattern" value="%s" />
             <string p="selectPattern" value="%s" />
             <string p="sequenceName" value="" />
@@ -478,6 +478,60 @@ array('foo~bar','')
             <boolean p="ofPrimaryTable" value="true" />
         </object>'
         ),
+
+        array(
+        '<?xml version="1.0"?>
+        <property name="id" fieldname="news_id" datatype="string" />',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="id"/>
+            <string p="fieldName" value="news_id"/>
+            <string p="table" value="news"/>
+            <string p="datatype" value="string"/>
+            <string p="unifiedType" value="varchar"/>
+            <boolean p="autoIncrement" value="false" />
+            <null p="regExp"/>
+            <boolean p="required" value="true"/>
+            <boolean p="requiredInConditions" value="true"/>
+            <boolean p="isPK" value="true" />
+            <boolean p="isFK" value="false" />
+            <string p="updatePattern" value="" />
+            <string p="insertPattern" value="%s" />
+            <string p="selectPattern" value="%s" />
+            <string p="sequenceName" value="" />
+            <null p="maxlength"/>
+            <null p="minlength"/>
+            <boolean p="ofPrimaryTable" value="true" />
+        </object>'
+        ),
+
+        array(
+        '<?xml version="1.0"?>
+        <property name="id" fieldname="news_id" datatype="string" insertpattern="now()" updatepattern="concat(\'oups\')" selectpattern="upper(%s)"/>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="id"/>
+            <string p="fieldName" value="news_id"/>
+            <string p="table" value="news"/>
+            <string p="datatype" value="string"/>
+            <string p="unifiedType" value="varchar"/>
+            <boolean p="autoIncrement" value="false" />
+            <null p="regExp"/>
+            <boolean p="required" value="true"/>
+            <boolean p="requiredInConditions" value="true"/>
+            <boolean p="isPK" value="true" />
+            <boolean p="isFK" value="false" />
+            <string p="updatePattern" value="" />
+            <string p="insertPattern" value="now()" />
+            <string p="selectPattern" value="%s" />
+            <string p="sequenceName" value="" />
+            <null p="maxlength"/>
+            <null p="minlength"/>
+            <boolean p="ofPrimaryTable" value="true" />
+        </object>'
+        ),
+
+
     );
 
     function testProperties() {

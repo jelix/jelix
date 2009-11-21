@@ -60,6 +60,10 @@ class testMysqlDaoGenerator extends mysqlDaoBuilder {
     function GetFromClause(){
         return $this->buildFromWhereClause();
     }
+    
+    function PrepareValues ($fieldList, $pattern, $prefixfield) {
+        return $this->_prepareValues($fieldList, $pattern, $prefixfield);
+    }
 }
 
 
