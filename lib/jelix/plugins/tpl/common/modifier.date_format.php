@@ -5,7 +5,9 @@
  * @subpackage jtpl_plugin
  * @author        Smarty team
  * @contributor   Yannick Le Guédart <yannick at over-blog dot com>
+ * @contributor   Olivier Demah, Laurent Jouanneau
  * @copyright  2001-2003 ispi of Lincoln, Inc., Yannick Le Guédart
+ * @copyright  2009 Olivier Demah, Laurent Jouanneau
  * @link http://smarty.php.net/
  * @link http://jelix.org/
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -18,8 +20,8 @@
  * </pre>
  * @param string $string input date string
  * @param string $format strftime format for output
- * @param string $default_date default date if $string is empty
- * @return string|void
+ * @param string|integer $default_date default date if $string is empty
+ * @return string  the formated date
  */
 function jtpl_modifier_common_date_format( $string, $format="%b %e, %Y",
                                     $default_date=null) {
@@ -30,16 +32,14 @@ function jtpl_modifier_common_date_format( $string, $format="%b %e, %Y",
         $format	= str_replace($_win_from, $_win_to, $format);
     }
 
-    if($string != '') {
-
+    if ($string != '') {
         return strftime($format, strtotime($string));
-
-    } elseif (isset($default_date) && $default_date != '') {
-
-        return strftime($format, strtotime($default_date));
-
-    } else {
-
-        return '';
     }
+    elseif (is_string($default_date) && $default_date != '') {
+        return strftime($format, strtotime($default_date));
+    }
+    elseif (is_int($default_date)) {
+        return strftime($format, $default_date);
+    }
+    return '';
 }
