@@ -184,6 +184,10 @@ function toto() {
  echo $toto ?></p>',
         '<p>ok</p>',
         ),
+32=>array('{foreach $obj->meth() as $foo=>$bar} A {/foreach}',
+          '<?php foreach($t->_vars[\'obj\']->meth() as $t->_vars[\'foo\']=>$t->_vars[\'bar\']):?> A <?php endforeach;?>'
+         ),
+
     );
 
     function testCompileContent() {
@@ -298,13 +302,11 @@ function toto() {
                   'jelix~errors.tpl.tag.block.end.missing',array('if',null) ),
          1=>array('{ifuserconnected} {if $foo}  {/if} ',
                   'jelix~errors.tpl.tag.block.end.missing',array('ifuserconnected',null) ),
-         2=>array('{foreach ($t=>$a)} A {/foreach}',
-                  'jelix~errors.tpl.tag.character.invalid',array('foreach ($t=>$a)', '(', NULL) ),
-         3=>array('{for ($i=0;$i<$p;$i++} A {/for}',
+         2=>array('{for ($i=0;$i<$p;$i++} A {/for}',
                   'jelix~errors.tpl.tag.bracket.error',array('for ($i=0;$i<$p;$i++',null) ),
-         4=>array('{form ($foo,$params)} aa {/form}',
+         3=>array('{form ($foo,$params)} aa {/form}',
                   'jelix~errors.tplplugin.block.bad.argument.number',array('form','2-5',null) ),
-         5=>array('{($aaa)}',
+         4=>array('{($aaa)}',
                   'jelix~errors.tpl.tag.syntax.invalid',array('($aaa)',null) ),
          );
 
@@ -315,8 +317,8 @@ function toto() {
             $compil->outputType = 'html';
             $compil->trusted = true;
             try{
-                $compil->compileContent2($t[0]);
-                $this->fail("Test '$k', exception didn't happen");
+                $str = $compil->compileContent2($t[0]);
+                $this->fail("Test '$k', exception didn't happen, compilation result: $str");
             }catch(jException $e){
                 $this->assertEqual($e->getLocaleKey(), $t[1], "Test '$k': %s  (local parameters: ".var_export($e->getLocaleParameters(), true).")");
                 $this->assertEqualOrDiff($e->getLocaleParameters(), $t[2], "Test '$k': %s");
@@ -331,6 +333,8 @@ function toto() {
                   'jelix~errors.tpl.tag.character.invalid',array('for $i=count($a);$i<$p;$i++','(',null) ),
          1=>array('{const \'fff\'}',
                   'jelix~errors.tplplugin.untrusted.not.available',array('const',null) ),
+         2=>array('{foreach $obj->meth($a) as $foo->bar} A {/foreach}',
+                  'jelix~errors.tpl.tag.character.invalid',array('foreach $obj->meth($a) as $foo->bar','(',null) ),
     );
     function testCompileErrorsUntrusted() {
 

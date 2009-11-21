@@ -428,7 +428,15 @@ class jTplCompiler
                 break;
 
             case 'foreach':
-                $res = 'foreach('.$this->_parseFinal($args,$this->_allowedInForeach, array(';','!','(')).'):';
+                if ($this->trusted)
+                    $notallowed = array(';','!');
+                else
+                    $notallowed = array(';','!','(');
+
+                if (preg_match("/^\s*\((.*)\)\s*$/",$args, $m))
+                   $args = $m[1];
+
+                $res = 'foreach('.$this->_parseFinal($args,$this->_allowedInForeach, $notallowed).'):';
                 array_push($this->_blockStack,'foreach');
                 break;
 
