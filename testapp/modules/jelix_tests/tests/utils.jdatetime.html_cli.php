@@ -3,8 +3,8 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Florian Hatat
-* @contributor Rahal
-* @copyright   2007 Florian Hatat, 2008 Rahal
+* @contributor Rahal, Laurent Jouanneau
+* @copyright   2007 Florian Hatat, 2008 Rahal, 2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -163,6 +163,12 @@ class testjDateTime extends UnitTestCase {
 
         $dt->setFromString("2007-12-26T05:17:25Z", jDateTime::ISO8601_FORMAT);
         $this->assertEqual(new jDateTime(2007, 12, 26, 5, 17, 25), $dt);
+
+        $dt->setFromString("2007-12-26T05:17:25+01:30", jDateTime::ISO8601_FORMAT);
+        $this->assertEqual(new jDateTime(2007, 12, 26, 6, 47, 25), $dt);
+
+        $dt->setFromString("2007-12-26T05:17:25-01:15", jDateTime::ISO8601_FORMAT);
+        $this->assertEqual(new jDateTime(2007, 12, 26, 4, 2, 25), $dt);
 
         $dt->setFromString("1198642645", jDateTime::TIMESTAMP_FORMAT);
         $this->assertEqual(new jDateTime(2007, 12, 26, 5, 17, 25), $dt);
