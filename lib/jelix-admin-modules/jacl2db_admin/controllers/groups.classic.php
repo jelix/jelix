@@ -120,7 +120,7 @@ class groupsCtrl extends jController {
             $rights[$rec->id_aclsbj][$rec->id_aclgrp] = true;
         }
 
-        $tpl->assign(compact('groups', 'rights', '$subjects_localized', 'rightsWithResources'));
+        $tpl->assign(compact('groups', 'rights', 'subjects_localized', 'rightsWithResources'));
         $rep->body->assign('MAIN', $tpl->fetch('groups_right'));
         $rep->body->assign('selectedMenuItem','usersgroups');
         return $rep;
