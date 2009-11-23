@@ -14,6 +14,7 @@ Olivier Demah (aka FoxMaSk)
  - jResponseHtml, balise meta content xhtml+xml (#984)
  - fixed issues in the sql script of jacl2db_admin, about the anonymous groups storage (#915)
  - little improvements on date_format tpl plugins (#654)
+ - improvements in jInstallChecker.class.php (#1022)
 
 Mickaël Fradin (aka mike/kewix)
  - improvements in the jtpl plugin: formcontrols (#223)
