@@ -141,14 +141,14 @@ class jConfigCompiler {
 
         if ($isCli) {
             if ($lastslash === false) {
-                $config->urlengine['urlScriptPath'] = $_SERVER['PWD'].'/';
+                $config->urlengine['urlScriptPath'] = getcwd().'/';
                 $config->urlengine['urlScriptName'] = $config->urlengine['urlScript'];
             }
             else {
-                $config->urlengine['urlScriptPath'] = $_SERVER['PWD'].'/'.substr ($config->urlengine['urlScript'], 0, $lastslash ).'/';
+                $config->urlengine['urlScriptPath'] = getcwd().'/'.substr ($config->urlengine['urlScript'], 0, $lastslash ).'/';
                 $config->urlengine['urlScriptName'] = substr ($config->urlengine['urlScript'], $lastslash+1);
             }
-            $config->urlengine['urlScript'] = $_SERVER['PWD'].'/'.$config->urlengine['urlScript'];
+            $config->urlengine['urlScript'] = getcwd().'/'.$config->urlengine['urlScript'];
             $basepath = $config->urlengine['basePath'] = $config->urlengine['urlScriptPath'] ;
             $snp = $config->urlengine['urlScriptName'];
         }
