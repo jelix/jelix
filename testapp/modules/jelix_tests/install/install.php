@@ -13,9 +13,6 @@ class jelix_testsModuleInstaller extends jInstallerModule {
 
     function install() {
 
-      if ($this->isDbAlreadyInstalled())
-        return;
-      
       $this->execSQLScript('install');
 
       try {

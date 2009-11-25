@@ -9,6 +9,8 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+require_once (JELIX_LIB_UTILS_PATH."jVersionComparator.class.php");
+
 /**
 * a class to install a component (module or plugin) 
 * @package     jelix
@@ -23,57 +25,62 @@ abstract class jInstallerComponentBase {
     protected $name = '';
 
     /**
-     * the path of the directory of the component
+     * @var string the path of the directory of the component
      * it should be set by the constructor
      */
     protected $path = '';
-
-    /**
-     * accessibility of the component for each entry points
-     * @var array key:epId, value: 0=unused, 1=only by other module, 2=public
-     */
-    protected $access = array();
     
     /**
-     * for each entry point, flags indicating if the component is installed
-     * @var array key: entry point id, value: boolean
+     * @var string version of the current sources of the module
      */
-    protected $isInstalled = array();
-    
-    /**
-     * for each entry point, installed version of the component
-     * @var array key: entry point id, value: version
-     */
-    protected $installedVersion = array();
-    
-    
     protected $sourceVersion = '';
     
     /**
-     * list of jdb profiles for each entry point
-     * @var array  key:id of the entry point, value:the jdb profile to use to install the module
+     * @var string the namespace of the xml file
      */
-    protected $dbProfile = array();
+    protected $identityNamespace = '';
     
-    public $dependencies = array();
-    
-    protected $jelixMinVersion = '*';
-    protected $jelixMaxVersion = '*';
-
-    // informations about the descriptor file
-    protected $namespace = '';
+    /**
+     * @var string the expected name of the root element in the xml file
+     */
     protected $rootName = '';
+    
+    /**
+     * @var string the name of the xml file
+     */
     protected $identityFile = '';
-    
-    protected $xmlDescriptor = null;
-    
+
+    /**
+     * @var jInstaller the main installer controller
+     */
     protected $mainInstaller = null;
     
+    /**
+     * list of dependencies of the module
+     */
+    public $dependencies = array();
+    
+    /**
+     * @var string the minimum version of jelix for which the component is compatible
+     */
+    protected $jelixMinVersion = '*';
+
+    /**
+     * @var string the maximum version of jelix for which the component is compatible
+     */
+    protected $jelixMaxVersion = '*';
+
     /**
      * code error of the installation
      */
     public $inError = 0;
-    
+
+    /**
+     * list of information about the module for each entry points
+     * @var array  key = epid,  value = jInstallerModuleInfos
+     */
+    protected $moduleInfos = array();
+
     /**
      * @param string $name the name of the component
      * @param string $path the path of the component
@@ -84,40 +91,35 @@ abstract class jInstallerComponentBase {
         $this->name = $name;
         $this->mainInstaller = $mainInstaller;
     }
-    
+
     public function getName() { return $this->name; }
     public function getPath() { return $this->path; }
     public function getSourceVersion() { return $this->sourceVersion; }
     public function getJelixVersion() { return array($this->jelixMinVersion, $this->jelixMaxVersion);}
-    
+
     /**
      * @param string $epId  the entry point id
-     * @param integer $access the access level on this entry point
-     * @param string $dbProfile the jdb profile to use to install the module for this entry point
-     * @param boolean $isInstalled true if the component is installed
-     * @param string $installedVersion the installed version
+     * @param jInstallerModuleInfos $module module infos
      */
-    public function setEntryPointData ($epId, $access, $dbProfile, $isInstalled, $installedVersion) {
-        $this->dbProfile[$epId] = $dbProfile;
-        $this->access[$epId] = $access;
-        $this->isInstalled[$epId] = $isInstalled;
-        $this->installedVersion[$epId] = $installedVersion;
+    public function setEntryPointData ($epId, $module) {
+        $this->moduleInfos[$epId] = $module;
     }
     
     public function getAccessLevel($epId) {
-        return $this->access[$epId];
+        return $this->moduleInfos[$epId]->access;
     }
 
     public function isInstalled($epId) {
-        return $this->isInstalled[$epId];
+        return $this->moduleInfos[$epId]->isInstalled;
     }
 
     public function isUpgraded($epId) {
-        return ($this->isInstalled[$epId] && ($this->compareVersion($this->sourceVersion,$this->installedVersion[$epId]) == 0));
+        return ($this->isInstalled($epId) &&
+                (jVersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos[$epId]->version) == 0));
     }
     
     public function getInstalledVersion($epId) {
-        return $this->installedVersion[$epId];
+        return $this->moduleInfos[$epId]->version;
     }
 
     /**
@@ -125,7 +127,8 @@ abstract class jInstallerComponentBase {
      * object should implement jIInstallerComponent.
      *
      * @param jIniMultiFilesModifier $config the configuration of the entry point
-     * @return jIInstallerComponent
+     * @return jIInstallerComponent the installer, or null if there isn't any installer
+     *         or false if the installer is useless for the given parameter
      */
     abstract function getInstaller($config, $epId);
 
@@ -143,35 +146,41 @@ abstract class jInstallerComponentBase {
      */
     abstract function getUpgraders($config, $epId);
 
-    public function init () {
-        $this->readIdentity();
-    }
-
+    /**
+     * @var boolean  indicate if the identify file has already been readed
+     */
     protected $identityReaded = false;
-    
-    protected function readIdentity() {
+
+    /**
+     * initialize the object, by reading the identity file
+     */
+    public function init () {
         if ($this->identityReaded)
             return;
-        $this->identityReaded = true;
-        $this->xmlDescriptor = new DOMDocument();
+        $this->identityReaded = true;        
+        $this->readIdentity();
+    }
+    
+    /**
+     * read the identity file
+     */
+    protected function readIdentity() {
+        $xmlDescriptor = new DOMDocument();
 
-        if(!$this->xmlDescriptor->load($this->path.$this->identityFile)){
-            throw new jException('jelix~install.invalid.xml.file',array($this->path.$this->identityFile));
+        if(!$xmlDescriptor->load($this->path.$this->identityFile)){
+            throw new jInstallerException('install.invalid.xml.file',array($this->path.$this->identityFile));
         }
         
-        // TODO : verify with the relaxNG schema ?
-        
-        
-        $root = $this->xmlDescriptor->documentElement;
+        $root = $xmlDescriptor->documentElement;
 
-        if ($root->namespaceURI == $this->namespace) {
-            
-            $xml = simplexml_import_dom($this->xmlDescriptor);
+        if ($root->namespaceURI == $this->identityNamespace) {
+            $xml = simplexml_import_dom($xmlDescriptor);
             $this->sourceVersion = (string) $xml->info[0]->version[0];
-            
             $this->readDependencies($xml);
         }
+    }
 
+    protected function readDependencies($xml) {
 
       /*  
 <module xmlns="http://jelix.org/ns/module/1.0">
@@ -192,12 +201,7 @@ abstract class jInstallerComponentBase {
         <plugin id="" name="" minversion="" maxversion="" />
     </dependencies>
 </module>
-        
       */
-
-    }
-
-    protected function readDependencies($xml) {
 
         $this->dependencies = array();
 
@@ -243,98 +247,13 @@ abstract class jInstallerComponentBase {
     
     
     public function checkJelixVersion ($jelixVersion) {
-        return ($this->compareVersion($this->jelixMinVersion, $jelixVersion) <= 0 &&
-                $this->compareVersion($jelixVersion, $this->jelixMaxVersion) <= 0);
+        return (jVersionComparator::compareVersion($this->jelixMinVersion, $jelixVersion) <= 0 &&
+                jVersionComparator::compareVersion($jelixVersion, $this->jelixMaxVersion) <= 0);
     }
     
     public function checkVersion($min, $max) {
-        return ($this->compareVersion($min, $this->sourceVersion) <= 0 &&
-                $this->compareVersion($this->sourceVersion, $max) <= 0);
+        return (jVersionComparator::compareVersion($min, $this->sourceVersion) <= 0 &&
+                jVersionComparator::compareVersion($this->sourceVersion, $max) <= 0);
     }
-    
-    /**
-     * return 1 if $version1 > $version2, 0 if equals, and -1 if $version1 < $version2
-     */
-    protected function compareVersion($version1, $version2) {
-
-        if ($version1 == $version2)
-            return 0;
-
-        $v1 = explode('.', $version1);
-        $v2 = explode('.', $version2);
-
-        if (count($v1) > count($v2) ) {
-            $v2 = array_pad($v2, count($v1), ($v2[count($v2)-1] == '*'?'*':'0'));
-        }
-        elseif (count($v1) < count($v2) ) {
-            $v1 = array_pad($v1, count($v2), ($v1[count($v1)-1] == '*'?'*':'0'));
-        }
-
-        $r = '/^([0-9]+)([a-zA-Z]*|pre|-?dev)([0-9]*)(pre|-?dev)?$/';
-
-        foreach ($v1 as $k=>$v) {
-
-            if ($v == $v2[$k] || $v == '*' || $v2[$k] == '*')
-                continue;
-
-            $pm = preg_match($r, $v, $m1);
-            $pm2 = preg_match($r, $v2[$k], $m2);
-
-            if ($pm && $pm2) {
-                if ($m1[1] != $m2[1]) {
-                    return ($m1[1] < $m2[1] ? -1: 1);
-                }
-
-                $this->normalizeVersionNumber($m1);
-                $this->normalizeVersionNumber($m2);
-                if ($m1[2] != $m2[2]) {
-                    return ($m1[2] < $m2[2] ? -1: 1);
-                }
-                if ($m1[3] != $m2[3]) {
-                    return ($m1[3] < $m2[3] ? -1: 1);
-                }
-
-                $v1pre = ($m1[4] == 'dev');
-                $v2pre = ($m2[4] == 'dev');
-                
-                if ($v1pre && !$v2pre) {
-                    return -1;
-                }
-                elseif ($v2pre && !$v1pre) {
-                    return 1;
-                }
-                else if (!isset($v1[$k+1]) && !isset($v2[$k+1])) {
-                    return 0;
-                }
-            }
-            elseif ($pm){
-                throw new Exception ("bad version number :". $version2);
-            }
-            else
-                throw new Exception ("bad version number :".$version1);
-        }
-
-        return 0;
-    }
-    
-    protected function normalizeVersionNumber(&$n) {
-        $n[2] = strtolower($n[2]);
-        if ($n[2] == 'pre' || $n[2] == 'dev' || $n[2] == '-dev') {
-            $n[2] = '';
-            $n[3] = '';
-            $n[4] = 'dev';
-        }
-        if (!isset($n[4]))
-            $n[4] = '';
-        else {
-            $n[4] = strtolower($n[4]);
-            if ($n[4] == 'pre' || $n[4] == '-dev' ) $n[4] = 'dev';
-        }
-
-        if ($n[2] == 'a') $n[2] = 'alpha';
-        elseif($n[2] == 'b') $n[2] = 'beta';
-        elseif($n[2] == '') $n[2] = 'zzz';
-    }
-
 }
 

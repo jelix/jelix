@@ -50,8 +50,8 @@ class createentrypointCommand extends JelixScriptCommand {
         if(!in_array($type, array('classic','jsonrpc','xmlrpc','rdf','soap','cmdline' )))
             throw new Exception("invalid type");
 
-        if($type=='classic')
-            $type='index';
+        if($type == 'classic')
+            $type = 'index';
 
         $name = $this->getParam('name');
 

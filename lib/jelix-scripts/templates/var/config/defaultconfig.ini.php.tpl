@@ -22,8 +22,8 @@ domainName =
 [modules]
 ; modulename.access = x where x =
 ; 0 if installed but not used (database schema is ok for example)
-; 2 if accessible by other modules (other modules can use it, but it is not accessible directly through the web)
-; 3 if public (accessible through the web)
+; 1 if accessible by other modules (other modules can use it, but it is not accessible directly through the web)
+; 2 if public (accessible through the web)
 
 ; jacldb is deprecated. keep it uninstall
 jacldb.access = 0

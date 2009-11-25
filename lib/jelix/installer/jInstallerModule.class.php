@@ -51,6 +51,7 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
      * (dependents modules or the whole application).
      * Here, you should check if the module can be uninstalled or not
      * @throw jException if an error occurs during the check of the installation
+     * @notimplemented not used for the current version of the installer
      */
     function preUninstall() {
         
@@ -59,6 +60,7 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
     /**
      * should configure the module, install table into the database etc.. 
      * @throw jException  if an error occurs during the install.
+     * @notimplemented not used for the current version of the installer
      */
     function uninstall() {
         
@@ -67,6 +69,7 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
     /**
      * 
      * @throw jException  if an error occurs during the install.
+     * @notimplemented not used for the current version of the installer
      */
     function postUninstall() {
     

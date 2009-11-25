@@ -20,6 +20,11 @@ abstract class jInstallerBase {
     /**
      * @var string name of the component
      */
+    public $componentName;
+
+    /**
+     * @var string name of the installer
+     */
     public $name;
 
     /**
@@ -44,9 +49,6 @@ abstract class jInstallerBase {
      */
     protected $dbProfile = '';
 
-    
-    
-
     /**
      * @param string $name name of the component
      * @param jIniMultiFilesModifier $config the configuration of the entry point
@@ -55,10 +57,11 @@ abstract class jInstallerBase {
      * @param string $dbProfile name of the jdb profile to use to install the component
      * 
      */
-    function __construct ($name, $path, $version) {
+    function __construct ($componentName, $name, $path, $version) {
         $this->path = $path;
         $this->version = $version;
         $this->name = $name;
+        $this->componentName = $componentName;
     }
 
     /**
@@ -71,25 +74,23 @@ abstract class jInstallerBase {
      */
     private $_dbConn = null;
 
-    private $_dbpInstalled = array();
-
     /**
-     * an installer should call this method before doing things with jDb or jDao, in order to know
-     * if it haven't already been called for the same jdb profile and entry point, because the installer
-     * is called for each entry points on which the component is activated.
+     * is called to indicate that the installer will be called for the given
+     * configuration, entry point and db profile. It should return a corresponding
+     * install session id. It should be a unique id, calculated with some
+     * criterias, depending if you want the installer to be called for each
+     * entrypoint or not, for different db profile or not etc..
+     * Typically, you could return an md5 value on a string which could contain
+     * the name of the given entry point, and/or the name of the given dbprofile
+     * and/or any other criteria.
+     * @return string an identifier
      */
-    protected function isDbAlreadyInstalled() {
-        return (isset($this->_dbpInstalled[$this->dbProfile]) && $this->_dbpInstalled[$this->dbProfile] != $this->entryPointId);
-    }
-
     public function setEntryPoint($epId, $config, $dbProfile) {
         $this->config = $config;
         $this->entryPointId = $epId;
         $this->dbProfile = $dbProfile;
-        if (!isset($this->_dbpInstalled[$this->dbProfile]))
-            $this->_dbpInstalled[$this->dbProfile] = $epId;
+        return "0";
     }
-
 
     /**
      * @return jDbTools  the tool class of jDb

@@ -10,6 +10,10 @@
 * @since 1.2
 */
 
+class testInstallerMisc extends jInstaller {
+    
+    
+}
 
 class UTjinstallermisc extends UnitTestCase {
 

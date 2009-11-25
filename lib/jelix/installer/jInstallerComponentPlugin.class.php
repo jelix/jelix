@@ -19,6 +19,10 @@
 */
 class jInstallerComponentPlugin extends jInstallerComponentBase {
 
+    protected $identityNamespace = 'http://jelix.org/ns/plugin/1.0';
+    protected $rootName = 'plugin';
+    protected $identityFile = 'plugin.xml';
+
 
 }
 

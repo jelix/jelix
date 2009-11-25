@@ -14,9 +14,6 @@ class jacldbModuleInstaller extends jInstallerModule {
 
     function install() {
 
-      if ($this->isDbAlreadyInstalled())
-        return;
-
       $this->execSQLScript('install_jacl.schema');
       $this->execSQLScript('install_jacl.data');
     }

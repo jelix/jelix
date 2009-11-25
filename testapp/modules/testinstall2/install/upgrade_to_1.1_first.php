@@ -1,7 +1,7 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  jacl2db module
+* @package     testapp
+* @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2009 Laurent Jouanneau
@@ -9,11 +9,9 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
-class jacl2dbModuleInstaller extends jInstallerModule {
+class testinstall2ModuleUpgrader_first extends jInstallerModule {
 
     function install() {
-      $this->execSQLScript('install_jacl2.schema');
-      $this->execSQLScript('install_jacl2.data');
+
     }
 }

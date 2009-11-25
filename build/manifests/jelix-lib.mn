@@ -210,6 +210,8 @@ cd lib/jelix/installer
   jInstallerComponentBase.class.php
   jInstallerComponentModule.class.php
   jInstallerComponentPlugin.class.php
+  jInstallerEntryPoint.class.php
+  jInstallerException.class.php
 * jInstallerMessageProvider.class.php
   jInstallerModule.class.php
   jInstallerPlugin.class.php

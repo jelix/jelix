@@ -24,5 +24,7 @@
         <entry file="index.php" config="index/config.ini.php" />
         <entry file="soap.php" config="soap/config.ini.php" />
         <entry file="jsonrpc.php" config="jsonrpc/config.ini.php" />
+        <entry file="cmdline.php" config="cmdline/config.ini.php" cli="true"/>
+        <entry file="tests.php" config="cmdline/config.ini.php" cli="true"/>
     </entrypoints>
 </project>

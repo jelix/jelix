@@ -18,9 +18,9 @@
 class jInstallerPlugin extends jInstallerBase implements jIInstallerComponent {
 
     /**
-     * Called before the installation of all other modules
+     * Called before the installation of all other modules and plugins
      * (dependents modules or the whole application).
-     * Here, you should check if the module can be installed or not
+     * Here, you should check if the plugin can be installed or not
      * @throw jException if an error occurs during the check of the installation
      */
     function preInstall() {
@@ -28,7 +28,7 @@ class jInstallerPlugin extends jInstallerBase implements jIInstallerComponent {
     }
 
     /**
-     * should configure the module, install table into the database etc..
+     * should configure the plugin, install table into the database etc..
      * If an error occurs during the installation, you are responsible
      * to cancel/revert all things the method did before the error
      * @throw jException  if an error occurs during the install.
@@ -39,7 +39,7 @@ class jInstallerPlugin extends jInstallerBase implements jIInstallerComponent {
 
     /**
      * Redefine this method if you do some additionnal process after the installation of
-     * all other modules (dependents modules or the whole application)
+     * all other modules/plugins (dependents modules or the whole application)
      * @throw jException  if an error occurs during the post installation.
      */
     function postInstall() {
@@ -51,6 +51,7 @@ class jInstallerPlugin extends jInstallerBase implements jIInstallerComponent {
      * (dependents modules or the whole application).
      * Here, you should check if the module can be uninstalled or not
      * @throw jException if an error occurs during the check of the installation
+     * @notimplemented not used for the current version of the installer
      */
     function preUninstall() {
         
@@ -59,6 +60,7 @@ class jInstallerPlugin extends jInstallerBase implements jIInstallerComponent {
     /**
      * should configure the module, install table into the database etc.. 
      * @throw jException  if an error occurs during the install.
+     * @notimplemented not used for the current version of the installer
      */
     function uninstall() {
         
@@ -67,6 +69,7 @@ class jInstallerPlugin extends jInstallerBase implements jIInstallerComponent {
     /**
      * 
      * @throw jException  if an error occurs during the install.
+     * @notimplemented not used for the current version of the installer
      */
     function postUninstall() {
     

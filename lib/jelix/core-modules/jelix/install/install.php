@@ -13,9 +13,6 @@ class jelixModuleInstaller extends jInstallerModule {
 
     function install() {
 
-        if ($this->isDbAlreadyInstalled())
-            return;
-
         // ---  install table for session storage if needed
         $sessionStorage = $this->config->getValue("storage", "sessions");
         $sessionDao = $this->config->getValue("dao_selector", "sessions");

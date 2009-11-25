@@ -166,7 +166,11 @@ cd testapp/modules/jelix_tests/tests/
   core.urls_parsing.html_cli.php
   daotests.lib.php
   events.simple_test.html_cli.php
+  installer.lib.php
+  installer.main.html_cli.php
   installer.misc.html_cli.php
+  installer.component.html_cli.php
+  installer.dependencies.html_cli.php
   jacl.main_api.html_cli.php
   jacl.manager.html_cli.php
   jacl.users_and_groups.html_cli.php
@@ -221,6 +225,21 @@ cd testapp/modules/testurls/classes/
   urlhandlermodule.urlhandler.php
 cd testapp/modules/testurls/controllers/
   urlsig.classic.php
+
+cd testapp/modules/testinstall1
+*  module.xml
+
+cd testapp/modules/testinstall2
+*  module.xml
+cd testapp/modules/testinstall2/install
+  install.php
+  upgrade_to_1.1.5_second.php
+  upgrade_to_1.1_first.php
+cd testapp/modules/testinstall3
+*  module.xml
+
+
+
 
 cd testapp/var
   .htaccess

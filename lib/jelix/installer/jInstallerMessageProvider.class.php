@@ -99,15 +99,18 @@ class jInstallerMessageProvider {
             
             'install.entrypoint.start'=>'Installation pour le point d\'entrée %s',
             'install.entrypoint.end'=>'Tout les modules sont installés ou mise à jour pour le point d\'entrée %s',
+            'install.entrypoint.bad.end'=>'Installation interrompue pour cause d\'erreurs pour le point d\'entrée %s',
             
             'install.dependencies.ok'=>'Toutes les dépendances des modules sont valides',
             'install.bad.dependencies'=>'Il y a des erreurs dans les dépendances. Installation annulée.',
-
+            'install.invalid.xml.file'=>'Le fichier identité %s est invalide ou inexistant',
+            
             'install.module.already.installed'=>'Le module %s déjà installé',
             'install.module.installed'=>'Le module %s est installé',
             'install.module.error'=>'Une erreur est survenue durant l\'installation du module %s: %s',
             'install.module.check.dependency'=>'Vérifie les dépendances du module %s',
             'install.module.upgraded'=>'Le module %s est mis à jour à la version %s',
+            
 
         ),
 
@@ -188,9 +191,12 @@ class jInstallerMessageProvider {
 
             'install.entrypoint.start'=>'Installation starts for the entry point %s',
             'install.entrypoint.end'=>'All modules are installed or upgraded for the entry point %s',
+            'install.entrypoint.bad.end'=>'Installation/upgrade is aborted for the entry point %s',
 
             'install.dependencies.ok'=>'All modules dependencies are ok',
             'install.bad.dependencies'=>'Error in dependencies. Installation cancelled.',
+            'install.invalid.xml.file'=>'The identity file  %s is invalid or not found',
+
             'install.module.already.installed'=>'Module %s is already installed',
             'install.module.installed'=>'Module %s installed',
             'install.module.error'=>'An error occured during the installation of the module %s: %s',

@@ -14,9 +14,6 @@ class jauthdbModuleInstaller extends jInstallerModule {
 
     function install() {
 
-      if ($this->isDbAlreadyInstalled())
-        return;
-
       $this->execSQLScript('install_jauth.schema');
       $this->execSQLScript('install_jauth.data');
     }

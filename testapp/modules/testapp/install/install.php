@@ -14,9 +14,6 @@ class testappModuleInstaller extends jInstallerModule {
 
     function install() {
 
-      if ($this->isDbAlreadyInstalled())
-        return;
-
       $this->execSQLScript('base');
 
     }
