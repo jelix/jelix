@@ -49,8 +49,6 @@ if (!defined('JELIXS_INFO_DEFAULT_TIMEZONE'))
 if (!defined('JELIXS_INFO_DEFAULT_LOCALE'))
     define('JELIXS_INFO_DEFAULT_LOCALE','en_EN');
 
-if (!defined('JELIXS_APP_CONFIG_FILE'))
-    define('JELIXS_APP_CONFIG_FILE'    , 'defaultconfig.ini.php');
 if (!defined('DO_CHMOD'))
     define('DO_CHMOD',false);
 if (!defined('CHMOD_FILE_VALUE'))

@@ -46,18 +46,18 @@ class jConfig {
 #endif
         $compil=false;
         if(!file_exists($file)){
-            // pas de cache, on compile
+            // no cache, let's compile
             $compil=true;
         }else{
             $t = filemtime($file);
             $dc = JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php';
             if( (file_exists($dc) && filemtime($dc)>$t)
                 || filemtime(JELIX_APP_CONFIG_PATH.$configFile)>$t){
-                // le fichier de conf ou le fichier defaultconfig.ini.php ont ete modifié : on compile
+                // one of the two config file have been modified: let's compile
                 $compil=true;
             }else{
 
-                // on lit le fichier de conf du cache
+                // let's read the cache file
 #if WITH_BYTECODE_CACHE == 'auto'
                 if(BYTECODE_CACHE_EXISTS){
                     include($file);
@@ -81,7 +81,7 @@ class jConfig {
                 $config = (object) $config;
 #endif
 #endif
-                // on va verifier tous les chemins
+                // we check all directories to see if it has been modified
                 if($config->compilation['checkCacheFiletime']){
                     foreach($config->_allBasePath as $path){
                         if(!file_exists($path) || filemtime($path)>$t){

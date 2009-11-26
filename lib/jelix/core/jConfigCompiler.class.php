@@ -83,9 +83,12 @@ class jConfigCompiler {
      * @param string $configFile the config file name
      * @return object an object which contains configuration values
      */
-    static public function readAndCache($configFile){
+    static public function readAndCache($configFile, $isCli = null, $pseudoScriptName = '') {
         
-        $config = self::read($configFile, false, (PHP_SAPI == 'cli'));
+        if ($isCli === null)
+            $isCli = (PHP_SAPI == 'cli');
+
+        $config = self::read($configFile, false, $isCli, $pseudoScriptName);
 
 #if WITH_BYTECODE_CACHE == 'auto'
         if(BYTECODE_CACHE_EXISTS){
@@ -133,7 +136,7 @@ class jConfigCompiler {
         }
         else {
             if($config->urlengine['scriptNameServerVariable'] == '') {
-                $config->urlengine['scriptNameServerVariable'] = self::_findServerName($config->urlengine['entrypointExtension']);
+                $config->urlengine['scriptNameServerVariable'] = self::_findServerName($config->urlengine['entrypointExtension'], $isCli);
             }
             $config->urlengine['urlScript'] = $_SERVER[$config->urlengine['scriptNameServerVariable']];
         }
@@ -382,12 +385,12 @@ class jConfigCompiler {
         }
     }
 
-    static private function _findServerName($ext) {
+    static private function _findServerName($ext, $isCli) {
         $varname = '';
         $extlen = strlen($ext);
 
         if(strrpos($_SERVER['SCRIPT_NAME'], $ext) === (strlen($_SERVER['SCRIPT_NAME']) - $extlen)
-           || php_sapi_name() == 'cli') {
+           || $isCli) {
             return 'SCRIPT_NAME';
         }else if (isset($_SERVER['REDIRECT_URL'])
                   && strrpos( $_SERVER['REDIRECT_URL'], $ext) === (strlen( $_SERVER['REDIRECT_URL']) -$extlen)) {

@@ -14,43 +14,62 @@ define ('JELIX_SCRIPT_PATH', dirname(__FILE__).'/');
 function GetAppsRepository($relatedPath) {
     $path = realpath(dirname(__FILE__).'/'.$relatedPath);
     $last = substr($path, -1,1);
-    if($last == '\\' || $last == '/')
-        $path = substr($path, 0,-1);
+    if ($last == '\\' || $last == '/')
+        $path = substr($path, 0, -1);
     return $path;
 }
 
 
 // ------------- retrieve the name of the jelix command and the name of the application
 
-if($_SERVER['argc'] < 2){
-    die("Error: command is missing. See '".$_SERVER['argv'][0]." help'.\n");
+if ($_SERVER['argc'] < 2) {
+    echo "Error: command is missing. See '".$_SERVER['argv'][0]." help'.\n";
+    exit(1);
 }
 
 $argv = $_SERVER['argv'];
-array_shift($argv); // shift the script name
+$scriptName = array_shift($argv); // shift the script name
 $commandName = array_shift($argv); // get the command name
 
-if (preg_match('/^\-\-([\w\-\.]+)$/',$commandName,$m)) {
-    $APPNAME=$m[1];
+// verify if the first argument is the application name
+if (preg_match('/^\-\-([\w\-\.:]+)$/', $commandName, $m)) {
+    $APPNAME = $m[1];
     if ($_SERVER['argc'] < 3) {
-       die("Error: command is missing. See '".$_SERVER['argv'][0]." help'.\n");
+       echo "Error: command is missing. See '".$scriptName." help'.\n";
+       exit(1);
     }
     $commandName = array_shift($argv);
 }
 else {
-
-    if (!isset($_SERVER['JELIX_APP_NAME'])||$_SERVER['JELIX_APP_NAME'] == '') {
-        if ($commandName != 'help') {
-            die("Error: JELIX_APP_NAME environnement variable doesn't exist \n");
-        }
-        else {
-            $APPNAME='';
-        }
-    }
-    else {
+    
+    if (isset($_SERVER['JELIX_APP_NAME'])) {
         $APPNAME = $_SERVER['JELIX_APP_NAME'];
     }
+    else {
+        $APPNAME='';
+    }
 }
+
+$entryPointName = '';
+if ( ($p = strpos($APPNAME, ':')) !== false) {
+    $APPNAME = substr($APPNAME, 0, $p);
+    $entryPointName = substr($APPNAME, $p+1);
+}
+
+$allEntryPoint = false;
+if ($entryPointName == '') {
+    $entryPointName = 'index.php';
+    $entryPointId = 'index';
+    $allEntryPoint = true;
+}
+else if (($p =strpos($entryPointName,'.php')) === false) {
+    $entryPointId = $entryPointName;
+    $entryPointName.='.php';
+}
+else {
+    $entryPointId = substr($entryPointName, 0, $p);
+}
+
 
 // --------------  Load the command object
 
@@ -58,6 +77,11 @@ include('includes/command.class.php');
 include('includes/utils.lib.php');
 
 $command = jxs_load_command($commandName);
+
+if ($APPNAME == '' && $command->applicationRequired) {
+    echo "Error: an application name is required\n";
+    exit(1);
+}
 
 // --------------  retrieve the configuration for the script commands
 

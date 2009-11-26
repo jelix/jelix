@@ -120,9 +120,10 @@ class createmoduleCommand extends JelixScriptCommand {
         $ini->setValue($module.'.access', 2 , 'modules');
         $ini->save();
 
+        global $entryPointId;
         $install = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
-        $install->setValue($module.'.installed', 1 , 'modules');
-        $install->setValue($module.'.version', $initialVersion , 'modules');
+        $install->setValue($module.'.installed', 1 , $entryPointId);
+        $install->setValue($module.'.version', $initialVersion , $entryPointId);
         $install->save();
     }
 }

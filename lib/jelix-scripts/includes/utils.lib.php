@@ -1,14 +1,18 @@
 <?php
 /**
 * @package     jelix-scripts
-* @author      Jouanneau Laurent
-* @contributor Mathaud Loic
-* @copyright   2005-2007 Jouanneau laurent, 2008 Mathaud Loic
+* @author      Laurent Jouanneau
+* @contributor Loic Mathaud
+* @copyright   2005-2007 Laurent Jouanneau, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-
+/**
+ * load a command object
+ * @param string $cmdName the name of the command
+ * @return JelixScriptCommand  the command
+ */
 function jxs_load_command($cmdName){
    $commandfile = JELIX_SCRIPT_PATH.'commands/'.$cmdName.'.cmd.php';
 
@@ -134,8 +138,27 @@ function jxs_getRelativePath($path, $targetPath, $intoString=false){
 }
 
 function jxs_init_jelix_env(){
-    global $gJConfig;
-    if(!$gJConfig)
-        $gJConfig = jConfig::load(JELIXS_APP_CONFIG_FILE);
+   global $gJConfig;
+   global $entryPointName;
+
+   if ($gJConfig) 
+      return;
+   
+   $xml = simplexml_load_file(JELIX_APP_PATH.'project.xml');
+   $configFile = '';
+
+   foreach ($xml->entrypoints->entry as $entrypoint) {
+      $file = (string)$entrypoint['file'];
+      if ($file == $entryPointName) {
+         $configFile = (string)$entrypoint['config'];
+         // $isCliScript = (isset($entrypoint['cli'])?(string)$entrypoint['cli'] == 'true':false);
+         break;
+      }
+   }
+
+   if ($configFile == '')
+      throw new Exception("Entry point is unknown");
+   require_once(JELIX_LIB_PATH."core/jConfigCompiler.class.php");
+   $gJConfig = jConfigCompiler::read($configFile, false, true, $entryPointName);
 }
 

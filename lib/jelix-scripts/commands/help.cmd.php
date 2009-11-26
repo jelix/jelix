@@ -16,6 +16,8 @@ class helpCommand extends JelixScriptCommand {
     public  $allowed_parameters=array('command'=>false);
 
     public  $applicationMustExist = false;
+    
+    public $applicationRequired = false;
 
     public  $syntaxhelp ="[COMMAND]";
     public  $help=array(
@@ -25,11 +27,14 @@ class helpCommand extends JelixScriptCommand {
     public  $mainhelp = array(
             'fr'=>"
 Utilisation générale :
-    %SCRIPT% [--NOMAPP] COMMANDE [OPTIONS] [PARAMETRES]
+    %SCRIPT% [--NOMAPP[:ENTRYPOINT]] COMMANDE [OPTIONS] [PARAMETRES]
 
     NOMAPP   : nom de l'application concernée. Si non présent, le nom de
                l'application doit être dans une variable d'environnement
                JELIX_APP_NAME
+    ENTRYPOINT : nom du point d'entrée concerné par la commande. Si pas indiqué,
+                la commande s'appliquera sur tout les point d'entrée ou index.php
+                selon le type de la commande.
     COMMANDE : nom de la commande à executer
     OPTIONS  : une ou plusieurs options. Le nom d'une option commence par un
                tiret et peut être suivi par une valeur.
@@ -46,11 +51,14 @@ Utilisation générale :
 Liste des commandes disponibles :\n\t",
             'en'=>"
 General use :
-    %SCRIPT% [--APPNAME] COMMAND [OPTIONS] [PARAMETERS]
+    %SCRIPT% [--APPNAME[:ENTRYPOINT]] COMMAND [OPTIONS] [PARAMETERS]
 
     APPNAME: name of the application on which you want to work. You can omit 
             this parameter if the application name is stored in the 
             JELIX_APP_NAME environment variable.
+    ENTRYPOINT: the name of the entry point on which the command is applied.
+               if not given, and depending of the command, the command will be
+               applied for all entry point or the main one (index.php)
     COMMAND: name of the command to execute
     OPTIONS: one or more options. An option name begin with a '-' and can be 
             followed by a value. Example with some specific commands:
