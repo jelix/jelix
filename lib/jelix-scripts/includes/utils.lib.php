@@ -159,6 +159,6 @@ function jxs_init_jelix_env(){
    if ($configFile == '')
       throw new Exception("Entry point is unknown");
    require_once(JELIX_LIB_PATH."core/jConfigCompiler.class.php");
-   $gJConfig = jConfigCompiler::read($configFile, false, true, $entryPointName);
+   $gJConfig = jConfigCompiler::read($configFile, true, true, $entryPointName);
 }
 

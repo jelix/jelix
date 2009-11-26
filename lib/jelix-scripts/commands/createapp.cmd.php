@@ -94,6 +94,7 @@ class createappCommand extends JelixScriptCommand {
         $this->createDir(JELIX_APP_VAR_PATH.'uploads/');
         $this->createDir(JELIX_APP_VAR_PATH.'sessions/');
         $this->createDir(JELIX_APP_VAR_PATH.'mails/');
+        $this->createDir(JELIX_APP_PATH.'install');
         $this->createDir(JELIX_APP_PATH.'modules');
         $this->createDir(JELIX_APP_PATH.'plugins');
         $this->createDir(JELIX_APP_PATH.'plugins/coord/');
@@ -139,6 +140,7 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile(JELIX_APP_CONFIG_PATH.'cache.ini.php', 'var/config/cache.ini.php.tpl', $param);
         $this->createFile(JELIX_APP_CONFIG_PATH.'index/config.ini.php', 'var/config/index/config.ini.php.tpl', $param);
         $this->createFile(JELIX_APP_PATH.'responses/myHtmlResponse.class.php', 'responses/myHtmlResponse.class.php.tpl', $param);
+        $this->createFile(JELIX_APP_PATH.'install/installer.php','install/installer.php.tpl',$param);
 
         $this->createFile($wwwpath.'index.php','www/index.php.tpl',$param);
         $this->createFile($wwwpath.'.htaccess','htaccess_allow',$param);

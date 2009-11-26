@@ -87,14 +87,15 @@ class createentrypointCommand extends JelixScriptCommand {
             }
             $this->createDir(JELIX_APP_CONFIG_PATH.'cmdline');
             $this->createDir(JELIX_APP_CMD_PATH);
-            $this->createFile(JELIX_APP_CONFIG_PATH.'cmdline/'.$name.'.ini.php','var/config/cmdline/config.ini.php.tpl', $param);
+            $this->createFile(JELIX_APP_CONFIG_PATH.'cmdline/'.$name.'.ini.php', 'var/config/cmdline/config.ini.php.tpl', $param);
             $param['rp_cmd'] =jxs_getRelativePath(JELIX_APP_CMD_PATH, JELIX_APP_PATH, true);
             $param['config_file'] = 'cmdline/'.$name.'.ini.php';
             $this->createFile(JELIX_APP_CMD_PATH.$name.'.php','scripts/cmdline.php.tpl',$param);
             
+            $this->updateProjectXml($name.".php", 'cmdline/'.$name.'.ini.php' , true);
             return;
         }
-        
+
         if (file_exists(JELIX_APP_WWW_PATH.$name.'.php')) {
            throw new Exception("the entry point already exists");
         }
@@ -106,7 +107,6 @@ class createentrypointCommand extends JelixScriptCommand {
         $this->createFile(JELIX_APP_CONFIG_PATH.$name.'/config.ini.php','var/config/index/config.ini.php.tpl',$param);
         $this->createFile(JELIX_APP_WWW_PATH.$name.'.php','www/'.$type.'.php.tpl',$param);
 
-
         $inifile = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
         if(null === $inifile->getValue($name, 'simple_urlengine_entrypoints')) {
             $inifile->setValue($name, '', 'simple_urlengine_entrypoints');
@@ -114,6 +114,10 @@ class createentrypointCommand extends JelixScriptCommand {
         if(null === $inifile->getValue($name, 'basic_significant_urlengine_entrypoints')) {
             $inifile->setValue($name, '1', 'basic_significant_urlengine_entrypoints');
         }
+        $this->updateProjectXml($name.".php", $name."/config.ini.php" , false);
+    }
+    
+    protected function updateProjectXml ($fileName, $configFileName, $isCli) {
 
         $doc = new DOMDocument();
 
@@ -126,8 +130,11 @@ class createentrypointCommand extends JelixScriptCommand {
         }
 
         $elem = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
-        $elem->setAttribute("file", $name.".php");
-        $elem->setAttribute("config", $name."/config.ini.php");
+        $elem->setAttribute("file", $fileName);
+        $elem->setAttribute("config", $configFileName);
+        if ($isCli)
+            $elem->setAttribute("cli", "true");
+
         $ep = $doc->documentElement->getElementsByTagName("entrypoints");
         if(!$ep->length) {
             $ep =  $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
