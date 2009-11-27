@@ -128,7 +128,7 @@ cd lib/jelix-scripts/templates
   jelix-scripts.init.php.tpl
   htaccess_deny
   htaccess_allow
-cd lib/jelix-scripts/templates/
+cd lib/jelix-scripts/templates/installer/
   installer.php.tpl
 cd lib/jelix-scripts/templates/module/
   classfromdao.class.tpl
