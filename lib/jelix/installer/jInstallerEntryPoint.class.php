@@ -18,6 +18,7 @@ class jInstallerModuleInfos {
     public $dbProfile;
     public $isInstalled;
     public $version;
+    public $sessionId;
     
     function __construct($name, $config) {
         $this->name = $name;
@@ -25,6 +26,7 @@ class jInstallerModuleInfos {
         $this->dbProfile = $config->modules[$name.'.dbprofile'];
         $this->isInstalled = $config->modules[$name.'.installed'];
         $this->version = $config->modules[$name.'.version'];
+        $this->sessionId = $config->modules[$name.'.sessionid'];
     }
 }
 

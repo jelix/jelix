@@ -142,7 +142,8 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall1.access'=>2, 
                'testinstall1.dbprofile'=>'dbprofils.ini.php', 
                'testinstall1.installed'=>false, 
-               'testinstall1.version'=>JELIX_VERSION, 
+               'testinstall1.version'=>JELIX_VERSION,
+               'testinstall1.sessionid'=>'',
             ));
             $component->setEntryPointData ('index.php', new jInstallerModuleInfos('testinstall1', $conf) );
 
@@ -158,6 +159,7 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall2.dbprofile'=>'dbprofils.ini.php', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>JELIX_VERSION, 
+               'testinstall2.sessionid'=>'',
             ));
             $component->setEntryPointData ('index.php', new jInstallerModuleInfos('testinstall2', $conf) );
             $component->setEntryPointData ('foo.php', new jInstallerModuleInfos('testinstall2', $conf) );
@@ -189,7 +191,8 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall1.access'=>2, 
                'testinstall1.dbprofile'=>'dbprofils.ini.php', 
                'testinstall1.installed'=>false, 
-               'testinstall1.version'=>JELIX_VERSION, 
+               'testinstall1.version'=>JELIX_VERSION,
+               'testinstall1.sessionid'=>'',
             ));
             $component->setEntryPointData ('index.php', new jInstallerModuleInfos('testinstall1', $conf) );
 
@@ -217,6 +220,7 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall2.dbprofile'=>'dbprofils.ini.php', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>JELIX_VERSION, 
+               'testinstall2.sessionid'=>'',
             ));
             $component->setEntryPointData ('index.php', new jInstallerModuleInfos('testinstall2', $conf));
 
@@ -244,6 +248,7 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall2.dbprofile'=>'dbprofils.ini.php', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>"1.1.2", 
+               'testinstall2.sessionid'=>'',
             ));
             $component->setEntryPointData ('index.php', new jInstallerModuleInfos('testinstall2', $conf));
             $upgraders = $component->getUpgraders($ini, 'index.php');
@@ -279,6 +284,7 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall2.dbprofile'=>'dbprofils.ini.php', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>"0.9",
+               'testinstall2.sessionid'=>'',
             ));
             $component->setEntryPointData ('index.php', new jInstallerModuleInfos('testinstall2', $conf));
             $upgraders = $component->getUpgraders($ini, 'index.php');
@@ -316,6 +322,7 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall2.dbprofile'=>'dbprofils.ini.php', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>"0.9",
+               'testinstall2.sessionid'=>'',
             ));
 
             $component->setEntryPointData ('index.php', new jInstallerModuleInfos('testinstall2', $conf));

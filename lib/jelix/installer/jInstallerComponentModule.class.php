@@ -36,9 +36,26 @@ class jInstallerComponentModule extends jInstallerComponentBase {
     
     protected $moduleUpgraders = null;
 
+    /**
+     * list of sessions Id of the component
+     */
     protected $installerSessionsId = array();
     
     protected $upgradersSessionsId = array();
+
+
+    function __construct($name, $path, $mainInstaller) {
+        parent::__construct($name, $path, $mainInstaller);
+        if ($mainInstaller) {
+            $ini = $mainInstaller->installerIni;
+            foreach($ini->getSectionList() as $section) {
+                $sessid = $ini->getValue($this->name.'.sessionid',$section);
+                if ($sessid !== null && $sessid !== "") {
+                    $this->installerSessionsId[] = $sessid;
+                }
+            }
+        }
+    }
 
     /**
      * @return jInstallerBase
@@ -73,6 +90,8 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             return false;
         }
         $this->installerSessionsId[] = $sessionId;
+        if ($this->mainInstaller)
+            $this->mainInstaller->installerIni->setValue($this->name.'.sessionid', $sessionId, $epId);
         return $this->moduleInstaller;
     }
 

@@ -221,6 +221,7 @@ class jInstaller {
 
                 $this->installerIni->setValue($name.'.installed', $module->isInstalled, $epId);
                 $this->installerIni->setValue($name.'.version', $module->version, $epId);
+                $this->installerIni->setValue($name.'.sessionid', $module->sessionId, $epId);
 
                 if (!isset($this->allModules[$path])) {
                     $this->allModules[$path] = $this->getComponentModule($name, $path, $this);
