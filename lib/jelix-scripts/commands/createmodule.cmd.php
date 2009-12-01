@@ -51,12 +51,12 @@ class createmoduleCommand extends JelixScriptCommand {
         // note: since module name are used for name of generated name,
         // only this characters are allowed
         if(preg_match('/([^a-zA-Z_0-9])/', $module)) {
-            throw new Exception("the name '".$module."' is not valid for a module");
+            throw new Exception("'".$module."' is not a valid name for a module");
         }
-        
+
         $path= $this->getModulePath($module, false);
 
-        if(file_exists($path)){
+        if (file_exists($path)) {
             throw new Exception("module '".$module."' already exists");
         }
         $this->createDir($path);
@@ -68,6 +68,7 @@ class createmoduleCommand extends JelixScriptCommand {
 
         $this->createFile($path.'module.xml','module/module.xml.tpl',$param);
 
+        // create all sub directories of a module
         if(!$this->getOption('-nosubdir')){
             $this->createDir($path.'classes/');
             $this->createDir($path.'zones/');
@@ -81,6 +82,7 @@ class createmoduleCommand extends JelixScriptCommand {
             $this->createDir($path.'locales/fr_FR/');
         }
 
+        // create a default controller
         if(!$this->getOption('-nocontroller')){
             $agcommand = jxs_load_command('createctrl');
             $options = array();
@@ -93,37 +95,47 @@ class createmoduleCommand extends JelixScriptCommand {
             $agcommand->init($options,array('module'=>$module, 'name'=>'default','method'=>'index'));
             $agcommand->run();
         }
-        $inifiles = array(JELIX_APP_CONFIG_PATH.'index/config.ini.php',
-                        JELIX_APP_CONFIG_PATH.'cmdline/config.ini.php',
-                        JELIX_APP_CONFIG_PATH.'jsonrpc/config.ini.php',
-                        JELIX_APP_CONFIG_PATH.'xmlrpc/config.ini.php',
-                        );
+
         $isdefault = $this->getOption('-defaultmodule');
-        foreach($inifiles as $k=> $filename) {
-            if(!file_exists($filename))
-                continue;
-            try {
-                $ini = new jIniFileModifier($filename);
-                if ($isdefault && $k == 0) {
-                    $ini->setValue('startModule', $module);
-                    $ini->setValue('startAction', 'default:index');
-                }
-                else if ($ini->getValue('startModule') == '')
-                    $ini->setValue('startModule', $module);
-                $ini->save();
-            }catch(Exception $e){
-                echo "Error during the modification of an ini file: ".$e->getMessage()."\n";
-            }
-        }
+        global $entryPointName, $entryPointId, $allEntryPoint;
 
         $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        if ($isdefault) {
+            $ini->setValue('startModule', $module);
+            $ini->setValue('startAction', 'default:index');
+        }
         $ini->setValue($module.'.access', 2 , 'modules');
         $ini->save();
 
-        global $entryPointId;
+        $list = $this->getEntryPointsList();
         $install = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
-        $install->setValue($module.'.installed', 1 , $entryPointId);
-        $install->setValue($module.'.version', $initialVersion , $entryPointId);
+        
+        foreach ($list as $k => $entryPoint) {
+            
+            if ($allEntryPoint || $entryPoint['file'] == $entryPointName) {
+                $install->setValue($module.'.installed', 1, $entryPoint['id']);
+                $install->setValue($module.'.version', $initialVersion, $entryPoint['id']);
+            }
+
+            if ($isdefault) {
+                // we set the module as default module for one or all entry points.
+
+                $filename = JELIX_APP_CONFIG_PATH.$entryPoint['config'];
+    
+                // we set the startModule option for all entry points except
+                // if an entry point is indicated on the command line
+                if (file_exists($filename) &&
+                    ($allEntryPoint || $entryPoint['file'] == $entryPointName)) {
+                    $ini = new jIniFileModifier($filename);
+                    if ($ini->getValue('startModule') != '') {
+                        $ini->setValue('startModule', $module);
+                        $ini->setValue('startAction', 'default:index');
+                    }
+                    $ini->save();
+                }
+            }
+        }
+
         $install->save();
     }
 }

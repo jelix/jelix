@@ -222,5 +222,63 @@ abstract class JelixScriptCommand {
          return false;
       }
    }
+   
+   /**
+    * @var DOMDocument the content of the project.xml file, loaded by loadProjectXml
+    */
+   protected $projectXml = null;
+
+   /**
+    * load the content of the project.xml file, and store the corresponding DOM
+    * into the $projectXml property
+    */
+   protected function loadProjectXml() {
+
+      if ($this->projectXml)
+         return;
+
+      $doc = new DOMDocument();
+
+      if (!$doc->load(JELIX_APP_PATH.'project.xml')){
+         throw new Exception("cannot load project.xml");
+      }
+
+      if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'project/1.0'){
+         throw new Exception("bad namespace in project.xml");
+      }
+      $this->projectXml = $doc;
+   }
+
+
+   protected function getEntryPointsList() {
+      $this->loadProjectXml();
+      $listEps = $this->projectXml->documentElement->getElementsByTagName("entrypoints");
+      if (!$listEps->length) {
+         return array();
+      }
+        
+      $listEp = $listEps->item(0)->getElementsByTagName("entry");
+      if(!$listEp->length) {
+         return array();
+      }
+        
+      $list = array();
+      for ($i=0; $i < $listEp->length; $i++) {
+         $epElt = $listEp->item($i);
+         $ep = array(
+            'file'=>$epElt->getAttribute("file"),
+            'config'=>$epElt->getAttribute("config"),
+            'isCli'=> ($epElt->getAttribute("cli") == 'true')
+         );
+         if (($p = strpos($ep['file'], '.php')) !== false)
+            $ep['id'] = substr($ep['file'],0,$p);
+         else
+            $ep['id'] = $ep['file'];
+
+         $list[] = $ep;
+      }
+      return $list;
+   }
+   
 }
 

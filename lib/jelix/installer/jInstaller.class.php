@@ -278,6 +278,37 @@ class jInstaller {
     }
 
     /**
+     * install and upgrade if needed, all modules for the given
+     * entry point. Only modules which have an access property > 0
+     * are installed. Errors appeared during the installation are passed
+     * to the reporter.
+     * @param string $entrypoint  the entrypoint name as it appears in project.xml
+     * @return boolean true if succeed, false if there are some errors
+     */
+    public function installEntryPoint($entrypoint) {
+
+        $this->startMessage();
+
+        if (!isset($this->epId[$entrypoint])) {
+            throw new Exception("unknow entry point");
+        }
+
+        $epId = $this->epId[$entrypoint];
+
+        $modules = array();
+        foreach($this->modules[$epId] as $name => $module) {
+            if ($module->getAccessLevel($epId) == 0)
+                continue;
+            $modules[$name] = $module;
+        }
+        $result = $this->_installModules($modules, $epId);
+
+        $this->installerIni->save();
+        $this->endMessage();
+        return $result;
+    }
+
+    /**
      * install given modules even if they don't have an access property > 0
      * @param array $list array of module names
      * @param string $entrypoint  the entrypoint name as it appears in project.xml
@@ -290,8 +321,7 @@ class jInstaller {
         if (!isset($this->epId[$entrypoint])) {
             throw new Exception("unknow entry point");
         }
-        
-        
+
         $epId = $this->epId[$entrypoint];
         $allModules = &$this->modules[$epId];
         

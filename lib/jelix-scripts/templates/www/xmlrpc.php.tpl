@@ -12,6 +12,6 @@ require ('%%rp_app%%application.init.php');
 require (JELIX_LIB_CORE_PATH.'request/jXmlRpcRequest.class.php');
 
 $config_file = '%%config_file%%';
-$jelix = new JCoordinator($config_file);
+$jelix = new jCoordinator($config_file);
 $jelix->process(new jXmlRpcRequest());
 
