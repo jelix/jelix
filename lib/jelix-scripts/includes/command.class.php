@@ -127,7 +127,7 @@ abstract class JelixScriptCommand {
          'default_locale'        => JELIXS_INFO_DEFAULT_LOCALE,
       );
 
-      if (preg_match('/\.([a-z0-9\-]+)$/i', $defaultparams['jelix_version'], $m )) {
+      if (preg_match('/\.([a-z0-9\-]+)$/i', $defaultparams['jelix_version'], $m)) {
          $defaultparams['jelix_version_next'] =  substr($defaultparams['jelix_version'], 0, - strlen($m[1]))."*";
       }
       else {

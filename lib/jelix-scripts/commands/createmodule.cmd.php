@@ -141,6 +141,7 @@ class createmoduleCommand extends JelixScriptCommand {
 
         $isdefault = $this->getOption('-defaultmodule');
 
+        // activate the module in the application
         $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
         if ($isdefault) {
             $ini->setValue('startModule', $module);
@@ -152,11 +153,13 @@ class createmoduleCommand extends JelixScriptCommand {
         $list = $this->getEntryPointsList();
         $install = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
 
+        // install the module for all needed entry points
         foreach ($list as $k => $entryPoint) {
 
             if ($allEntryPoint || $entryPoint['file'] == $entryPointName) {
                 $install->setValue($module.'.installed', 1, $entryPoint['id']);
                 $install->setValue($module.'.version', $initialVersion, $entryPoint['id']);
+                $install->setValue($module.'.sessionid', 0, $entryPoint['id']);
             }
 
             if ($isdefault) {

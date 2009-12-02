@@ -13,21 +13,25 @@
 class installappCommand extends JelixScriptCommand {
 
     public  $name = 'installapp';
-    public  $allowed_options=array();
-    public  $allowed_parameters=array();
+    public  $allowed_options = array('-v'=>false);
+    public  $allowed_parameters = array();
 
     public  $applicationMustExist = false;
 
-    public  $syntaxhelp = "";
+    public  $syntaxhelp = "[-v]";
     public  $help = '';
 
     function __construct(){
         $this->help= array(
             'fr'=>"
-    Installe ou met à jour tout les modules d'une application.
+    Installe ou met à jour tout les modules d'une application qui sont activés.
+
+    Option -v : mode verbeux.
     ",
             'en'=>"
-    Install or upgrade all modules of an application.
+    Install or upgrade all activated modules of an application.
+
+    Option -v: verbose mode.
     ",
     );
     }
@@ -35,7 +39,13 @@ class installappCommand extends JelixScriptCommand {
     public function run(){
         require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
 
-        $installer = new jInstaller(new textInstallReporter());
+        if ($this->getOption("-v"))
+            $reporter = new textInstallReporter();
+        else
+            $reporter = new ghostInstallReporter();
+
+        $installer = new jInstaller($reporter);
+
         $installer->installApplication();
     }
 }

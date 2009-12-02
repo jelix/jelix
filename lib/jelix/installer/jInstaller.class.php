@@ -46,6 +46,32 @@ class textInstallReporter implements jIInstallReporter {
     }
 }
 
+/**
+ * a reporter which reports... nothing
+ */
+class ghostInstallReporter implements jIInstallReporter {
+
+    function start() {
+    }
+
+    /**
+     * displays a message
+     * @param string $message the message to display
+     * @param string $type the type of the message : 'error', 'notice', 'warning', ''
+     */
+    function message($message, $type='') {
+    }
+
+    /**
+     * called when the installation is finished
+     * @param array $results an array which contains, for each type of message,
+     * the number of messages
+     */
+    function end($results) {
+    }
+}
+
+
 
 
 /**
@@ -210,7 +236,7 @@ class jInstaller {
             // we create an object corresponding to the entry point
             $c = $this->getEntryPointObject($configFile, $file, $isCliScript);
             $epId = $c->getEpId();
-            
+
             $this->epId[$file] = $epId;
             $this->epProperties[$epId] = $c;
             $this->modules[$epId] = array();
@@ -310,34 +336,47 @@ class jInstaller {
 
     /**
      * install given modules even if they don't have an access property > 0
-     * @param array $list array of module names
+     * @param array $modulesList array of module names
      * @param string $entrypoint  the entrypoint name as it appears in project.xml
+     *               or null if modules should be installed for all entry points
      * @return boolean true if the installation is ok
      */
-    public function installModules($list, $entrypoint = 'index.php') {
-        
+    public function installModules($modulesList, $entrypoint = null) {
+
         $this->startMessage();
-        
-        if (!isset($this->epId[$entrypoint])) {
+    
+        $entryPointList = array();
+        if ($entrypoint == null) {
+            $entryPointList = array_keys($this->epProperties);
+        }
+        else if (isset($this->epId[$entrypoint])) {
+            $entryPointList[$entrypoint];
+        }
+        else {
             throw new Exception("unknow entry point");
         }
 
-        $epId = $this->epId[$entrypoint];
-        $allModules = &$this->modules[$epId];
-        
-        $modules = array();
-        // always install jelix
-        array_unshift($list, 'jelix');
-        foreach($list as $name) {
-            if (!isset($allModules[$name])) {
-                $this->error('module.unknow', $name);
-            }
-            else
-                $modules[] = $allModules[$name];
-        }
+        foreach ($entryPointList as $epId) {
 
-        $result = $this->_installModules($modules, $epId);
-        $this->installerIni->save();
+            $allModules = &$this->modules[$epId];
+
+            $modules = array();
+            // always install jelix
+            array_unshift($modulesList, 'jelix');
+            foreach ($modulesList as $name) {
+                if (!isset($allModules[$name])) {
+                    $this->error('module.unknow', $name);
+                }
+                else
+                    $modules[] = $allModules[$name];
+            }
+
+            $result = $this->_installModules($modules, $epId);
+            if (!$result)
+                break;
+            $this->installerIni->save();
+        }
+        
         $this->endMessage();
         return $result;
     }
@@ -351,10 +390,10 @@ class jInstaller {
     protected function _installModules(&$modules, $epId) {
 
         $this->ok('install.entrypoint.start', $epId);
-        
+
         $ep = $this->epProperties[$epId];
         $GLOBALS['gJConfig'] = $ep->config;
-        
+
         // load the main configuration
         $epConfig = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',
                                                JELIX_APP_CONFIG_PATH.$ep->configFile);
@@ -369,7 +408,7 @@ class jInstaller {
             $this->ok('install.entrypoint.bad.end', $epId);
             return false;
         }
-        
+
         $this->ok('install.dependencies.ok');
 
         // ----------- pre install
@@ -417,15 +456,14 @@ class jInstaller {
                 $this->error ('install.module.error', $e->getMessage());
             }
         }
-        
+
         if (!$result) {
             $this->ok('install.entrypoint.bad.end', $epId);
             return false;
         }
-        
-        
+
         $installedModules = array();
-        
+
         // -----  installation process
         try {
             foreach($componentsToInstall as $item) {
@@ -534,7 +572,7 @@ class jInstaller {
      * @throw jException if the install has failed
      */
     protected function checkDependencies ($list, $epId) {
-        
+
         $this->_checkedComponents = array();
         $this->_componentsToInstall = array();
         $result = true;

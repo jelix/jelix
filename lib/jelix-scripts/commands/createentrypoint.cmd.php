@@ -163,10 +163,11 @@ class createentrypointCommand extends JelixScriptCommand {
         }
         else {
 
-            if(null === $inifile->getValue($name, 'simple_urlengine_entrypoints', null, true)) {
+            if (null === $inifile->getValue($name, 'simple_urlengine_entrypoints', null, true)) {
                 $inifile->setValue($name, '', 'simple_urlengine_entrypoints', null, true);
             }
-            if(null === $inifile->getValue($name, 'basic_significant_urlengine_entrypoints', null, true)) {
+
+            if (null === $inifile->getValue($name, 'basic_significant_urlengine_entrypoints', null, true)) {
                 $inifile->setValue($name, '1', 'basic_significant_urlengine_entrypoints', null, true);
             }
             $inifile->save();
@@ -174,7 +175,7 @@ class createentrypointCommand extends JelixScriptCommand {
             $this->updateProjectXml($name.".php", $configFile , false);
         }
         
-        $installer = new jInstaller(new textInstallReporter());
+        $installer = new jInstaller(new ghostInstallReporter());
 
         $installer->installEntryPoint($name.".php");
 
@@ -189,8 +190,9 @@ class createentrypointCommand extends JelixScriptCommand {
             $elem->setAttribute("cli", "true");
 
         $ep = $this->projectXml->documentElement->getElementsByTagName("entrypoints");
-        if(!$ep->length) {
-            $ep =  $this->projectXml->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
+        
+        if (!$ep->length) {
+            $ep = $this->projectXml->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
             $doc->documentElement->appendChild($ep);
             $ep->appendChild($elem);
         }

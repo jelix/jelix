@@ -119,6 +119,7 @@ cd lib/jelix-scripts/commands
   help.cmd.php
   initadmin.cmd.php
   installapp.cmd.php
+  installmodule.cmd.php
 cd lib/jelix-scripts/includes
   command.class.php
   utils.lib.php
