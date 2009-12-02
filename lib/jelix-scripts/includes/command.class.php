@@ -88,15 +88,16 @@ abstract class JelixScriptCommand {
    /**
     * helper method to retrieve the path of the module
     * @param string $module the name of the module
-    * @param boolean $shouldexist  true if the module should exist
     * @return string the path of the module
     */
-   protected function getModulePath($module, $shouldexist=true) {
-      $path=JELIX_APP_PATH.'modules/'.$module.'/';
-      if(!file_exists($path) && $shouldexist){
-         die("Error: module '".$module."' doesn't exist ($path)\n");
+   protected function getModulePath($module) {
+      jxs_init_jelix_env();
+
+      global $gJConfig;
+      if (!isset($gJConfig->_modulesPathList[$module])) {
+         throw new Exception("The module $module doesn't exist");
       }
-      return $path;
+      return $gJConfig->_modulesPathList[$module];   
    }
 
    /**

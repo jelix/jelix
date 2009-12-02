@@ -42,9 +42,9 @@ class createctrlCommand extends JelixScriptCommand {
     );
 
     public function run(){
-       $path= $this->getModulePath($this->_parameters['module']);
+       $path = $this->getModulePath($this->_parameters['module']);
 
-       $agfilename= $path.'controllers/';
+       $agfilename = $path.'controllers/';
        $this->createDir($agfilename);
        
        if ($this->getOption('-cmdline')) { 
