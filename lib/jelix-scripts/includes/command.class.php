@@ -112,7 +112,7 @@ abstract class JelixScriptCommand {
     * @return boolean true if it is ok
     */
    protected function createFile($filename, $template, $tplparam=array()) {
-      
+
       $defaultparams = array (
          'default_website'       => JELIXS_INFO_DEFAULT_WEBSITE,
          'default_license'       => JELIXS_INFO_DEFAULT_LICENSE,
@@ -126,9 +126,16 @@ abstract class JelixScriptCommand {
          'default_timezone'      => JELIXS_INFO_DEFAULT_TIMEZONE,
          'default_locale'        => JELIXS_INFO_DEFAULT_LOCALE,
       );
-      
+
+      if (preg_match('/\.([a-z0-9\-]+)$/i', $defaultparams['jelix_version'], $m )) {
+         $defaultparams['jelix_version_next'] =  substr($defaultparams['jelix_version'], 0, - strlen($m[1]))."*";
+      }
+      else {
+         $defaultparams['jelix_version_next'] = $defaultparams['jelix_version'];
+      }
+
       $tplparam = array_merge($defaultparams, $tplparam);
-      
+
       if (file_exists($filename)) {
          echo "Warning: the file '".$filename."' already exists\n";
          return false;

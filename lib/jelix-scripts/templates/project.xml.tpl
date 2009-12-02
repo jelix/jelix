@@ -12,7 +12,7 @@
         <!--<updateURL>%%default_website%%/update.xml</updateURL>-->
     </info>
     <dependencies>
-        <jelix minversion="%%jelix_version%%" maxversion="%%jelix_version%%" />
+        <jelix minversion="%%jelix_version%%" maxversion="%%jelix_version_next%%" />
     </dependencies>
     <directories>
         <config>%%rp_conf%%</config>
