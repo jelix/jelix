@@ -135,6 +135,10 @@ $BUILD_OPTIONS = array(
     false,
     '',
     ),
+'LIB_VERSION_MAX'=> array(
+    false,
+    '',
+    ),
 'IS_NIGHTLY'=> array(
     false,
     false,
@@ -177,6 +181,11 @@ if($IS_NIGHTLY){
 else {
     $PACKAGE_NAME='jelix-'.$LIB_VERSION;
 }
+
+if (preg_match('/\.([a-z0-9\-]+)$/i', $LIB_VERSION, $m))
+    $LIB_VERSION_MAX =  substr($LIB_VERSION, 0, - strlen($m[1]))."*";
+else
+    $LIB_VERSION_MAX = $LIB_VERSION;
 
 if($PHP_VERSION_TARGET){
     if(version_compare($PHP_VERSION_TARGET, '5.3') > -1){
