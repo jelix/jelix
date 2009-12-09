@@ -22,9 +22,9 @@
     </directories>
     <entrypoints>
         <entry file="index.php" config="index/config.ini.php" />
-        <entry file="soap.php" config="soap/config.ini.php" />
-        <entry file="jsonrpc.php" config="jsonrpc/config.ini.php" />
-        <entry file="cmdline.php" config="cmdline/config.ini.php" cli="true"/>
-        <entry file="tests.php" config="cmdline/config.ini.php" cli="true"/>
+        <entry file="soap.php" config="soap/config.ini.php" type="soap"/>
+        <entry file="jsonrpc.php" config="jsonrpc/config.ini.php" type="jsonrpc"/>
+        <entry file="cmdline.php" config="cmdline/config.ini.php" type="cmdline"/>
+        <entry file="tests.php" config="cmdline/config.ini.php" type="cmdline"/>
     </entrypoints>
 </project>

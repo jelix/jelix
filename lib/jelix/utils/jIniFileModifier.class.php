@@ -42,6 +42,14 @@ class jIniFileModifier {
         $this->filename = $filename;
         $this->parse(preg_split("/(\r\n|\n|\r)/", file_get_contents($filename)));
     }
+    
+    /**
+     * @return string the file name
+     * @since 1.2
+     */
+    function getFileName() {
+        return $this->filename;
+    }
 
     /**
      * parsed the lines of the ini file

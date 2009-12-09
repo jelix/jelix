@@ -225,7 +225,11 @@ class jInstaller {
 
             $file = (string)$entrypoint['file'];
             $configFile = (string)$entrypoint['config'];
-            $isCliScript = (isset($entrypoint['cli'])?(string)$entrypoint['cli'] == 'true':false);
+            if (isset($entrypoint['type'])) {
+                $type = (string)$entrypoint['type'];
+            }
+            else
+                $type = "classic";
 
             // ignore entry point which have the same config file of an other one
             if (isset($configFileList[$configFile]))
@@ -234,7 +238,7 @@ class jInstaller {
             $configFileList[$configFile] = true;
 
             // we create an object corresponding to the entry point
-            $c = $this->getEntryPointObject($configFile, $file, $isCliScript);
+            $c = $this->getEntryPointObject($configFile, $file, $type);
             $epId = $c->getEpId();
 
             $this->epId[$file] = $epId;
@@ -263,8 +267,8 @@ class jInstaller {
     /**
      * @internal for tests
      */
-    protected function getEntryPointObject($configFile, $file, $isCliScript) {
-        return new jInstallerEntryPoint($configFile, $file, $isCliScript);
+    protected function getEntryPointObject($configFile, $file, $type) {
+        return new jInstallerEntryPoint($configFile, $file, $type);
     }
 
     /**
@@ -272,6 +276,14 @@ class jInstaller {
      */
     protected function getComponentModule($name, $path, $installer) {
         return new jInstallerComponentModule($name, $path, $installer);
+    }
+
+    /**
+     * @param string $epId an entry point id
+     * @return jInstallerEntryPoint the corresponding entry point object
+     */
+    public function getEntryPoint($epId) {
+        return $this->epProperties[$epId];
     }
 
     /**

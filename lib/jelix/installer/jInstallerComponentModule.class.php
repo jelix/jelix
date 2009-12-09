@@ -58,7 +58,12 @@ class jInstallerComponentModule extends jInstallerComponentBase {
     }
 
     /**
-     * @return jInstallerBase
+     * get the object which is responsible to install the component. this
+     * object should implement jIInstallerComponent.
+     *
+     * @param jIniMultiFilesModifier $config the configuration of the entry point
+     * @return jIInstallerComponent the installer, or null if there isn't any installer
+     *         or false if the installer is useless for the given parameter
      */
     function getInstaller($config, $epId) {
         if ($this->moduleInstaller === false)
@@ -84,7 +89,9 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         // if there is already the same session Id in the list of session
         // it means that the installer has been already called for the same context
         // so we don't need to call it again
-        $sessionId = $this->moduleInstaller->setEntryPoint($epId, $config, $this->moduleInfos[$epId]->dbProfile);
+        $sessionId = $this->moduleInstaller->setEntryPoint($this->mainInstaller->getEntryPoint($epId),
+                                                           $config,
+                                                           $this->moduleInfos[$epId]->dbProfile);
 
         if (in_array($sessionId, $this->installerSessionsId)) {
             return false;
@@ -96,8 +103,16 @@ class jInstallerComponentModule extends jInstallerComponentBase {
     }
 
     /**
-     * upgrade the module.
-     * @return array list of jInstallerBase
+     * return the list of objects which are responsible to upgrade the component
+     * from the current installed version of the component.
+     * 
+     * this method should be called after verifying and resolving
+     * dependencies. Needed components (modules or plugins) should be
+     * installed/upgraded before calling this method
+     * 
+     * @param jIniMultiFilesModifier $config the configuration of the entry point
+     * @throw jInstallerException  if an error occurs during the install.
+     * @return array   array of jIInstallerComponent
      */
     function getUpgraders($config, $epId) {
 
@@ -137,7 +152,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         }
     
         $list = array();
-
+        $entryPoint = $this->mainInstaller->getEntryPoint($epId);
         foreach($this->moduleUpgraders as $upgrader) {
 
             if (jVersionComparator::compareVersion($this->moduleInfos[$epId]->version, $upgrader->version) >= 0 ) {
@@ -145,7 +160,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             }
 
             $class = get_class($upgrader);
-            $sessionId = $upgrader->setEntryPoint($epId, $config, $this->moduleInfos[$epId]->dbProfile);
+            $sessionId = $upgrader->setEntryPoint($entryPoint, $config, $this->moduleInfos[$epId]->dbProfile);
 
             if (!isset($this->upgradersSessionsId[$class])) {
                 $this->upgradersSessionsId[$class] = array();

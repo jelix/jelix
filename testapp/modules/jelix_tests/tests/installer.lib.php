@@ -27,10 +27,10 @@ class testInstallerComponentModule extends jInstallerComponentModule {
 
 class testInstallerEntryPoint extends jInstallerEntryPoint {
 
-    function __construct($configFile, $file, $isCliScript, $configContent) {
-        $this->isCliScript = $isCliScript;
+    function __construct($configFile, $file, $type, $configContent) {
+        $this->isCliScript = ($type == 'cmdline');
         $this->configFile = $configFile;
-        $this->scriptName =  ($isCliScript?$file:'/'.$file);
+        $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
         $this->config = $configContent;
     }
@@ -170,8 +170,8 @@ class testInstallerMain extends jInstaller {
         $this->installerIni->save();
     }
 
-    protected function getEntryPointObject($configFile, $file, $isCliScript) {
-        return new testInstallerEntryPoint($configFile, $file, $isCliScript, (object) $this->configContent[$configFile]);
+    protected function getEntryPointObject($configFile, $file, $type) {
+        return new testInstallerEntryPoint($configFile, $file, $type, (object) $this->configContent[$configFile]);
     }
     
     protected function getComponentModule($name, $path, $installer) {

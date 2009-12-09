@@ -39,6 +39,12 @@ abstract class jInstallerBase {
     public $config;
     
     /**
+     * the entry point property on which the installer is called
+     * @var jInstallerEntryPoint
+     */
+    public $entryPoint;
+    
+    /**
      * The path of the module
      * @var string
      */
@@ -50,12 +56,10 @@ abstract class jInstallerBase {
     protected $dbProfile = '';
 
     /**
-     * @param string $name name of the component
-     * @param jIniMultiFilesModifier $config the configuration of the entry point
+     * @param string $componentName name of the component
+     * @param string $name name of the installer
      * @param string $path the component path
      * @param string $version version of the component
-     * @param string $dbProfile name of the jdb profile to use to install the component
-     * 
      */
     function __construct ($componentName, $name, $path, $version) {
         $this->path = $path;
@@ -83,11 +87,14 @@ abstract class jInstallerBase {
      * Typically, you could return an md5 value on a string which could contain
      * the name of the given entry point, and/or the name of the given dbprofile
      * and/or any other criteria.
+     * @param jInstallerEntryPoint $ep the entry point
+     * @param jIniMultiFilesModifier $config the configuration of the entry point
+     * @param string $dbProfile the name of the jdb profile
      * @return string an identifier
      */
-    public function setEntryPoint($epId, $config, $dbProfile) {
+    public function setEntryPoint($ep, $config, $dbProfile) {
         $this->config = $config;
-        $this->entryPointId = $epId;
+        $this->entryPoint = $ep;
         $this->dbProfile = $dbProfile;
         return "0";
     }
@@ -146,5 +153,9 @@ abstract class jInstallerBase {
                 }
             }
         }
+    }
+    
+    final protected function copyFile($relativeSourcePath, $targetPath) {
+        copy ($this->path.'install/'.$relativeSourcePath, $targetPath);
     }
 }

@@ -151,7 +151,6 @@ function jxs_init_jelix_env(){
       $file = (string)$entrypoint['file'];
       if ($file == $entryPointName) {
          $configFile = (string)$entrypoint['config'];
-         // $isCliScript = (isset($entrypoint['cli'])?(string)$entrypoint['cli'] == 'true':false);
          break;
       }
    }

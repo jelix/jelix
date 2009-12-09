@@ -97,5 +97,21 @@ class jIniMultiFilesModifier {
     public function isModified() {
         return $this->master->isModified() || $this->overrider->isModified();
     }
+
+    /**
+     * @return jIniFileModifier the first ini file
+     * @since 1.2
+     */
+    public function getMaster() {
+        return $this->master;
+    }
+    
+    /**
+     * @return jIniFileModifier the second ini file
+     * @since 1.2
+     */
+    public function getOverrider() {
+        return $this->overrider;
+    }
 }
 

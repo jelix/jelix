@@ -276,7 +276,8 @@ abstract class JelixScriptCommand {
          $ep = array(
             'file'=>$epElt->getAttribute("file"),
             'config'=>$epElt->getAttribute("config"),
-            'isCli'=> ($epElt->getAttribute("cli") == 'true')
+            'isCli'=> ($epElt->getAttribute("type") == 'cmdline'),
+            'type'=>$epElt->getAttribute("type"),
          );
          if (($p = strpos($ep['file'], '.php')) !== false)
             $ep['id'] = substr($ep['file'],0,$p);

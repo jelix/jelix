@@ -59,16 +59,21 @@ class jInstallerEntryPoint {
     public $file;
 
     /**
+     * @var string the type of entry point
+     */
+    public $type;
+
+    /**
      * @param string $configFile the path of the configuration file, relative
      *                           to the var/config directory
      * @param string $file the filename of the entry point
-     * @param boolean $isCliScript true if the script corresponding to the configuration
-     *                is a script for CLI
+     * @param string $type type of the entry point ('classic', 'cli', 'xmlrpc'....)
      */
-    function __construct($configFile, $file, $isCliScript) {
-        $this->isCliScript = $isCliScript;
+    function __construct($configFile, $file, $type) {
+        $this->type = $type;
+        $this->isCliScript = ($type == 'cmdline');
         $this->configFile = $configFile;
-        $this->scriptName =  ($isCliScript?$file:'/'.$file);
+        $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
         // we don't load yet a jIniMultiFilesModifier because installer
         // could modify defaultconfig file, so other installer should have
@@ -76,7 +81,8 @@ class jInstallerEntryPoint {
         // defaultconfig file. However, we load a static version of
         // the configuration here because we need it.
         $this->config = jConfigCompiler::read($configFile, true,
-                                        $isCliScript, $this->scriptName);
+                                              $this->isCliScript,
+                                              $this->scriptName);
     }
 
     /**
