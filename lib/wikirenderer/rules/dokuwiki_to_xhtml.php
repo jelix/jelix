@@ -286,7 +286,7 @@ class dkxhtml_list extends WikiRendererBloc {
     public $type='list';
     protected $_stack=array();
     protected $_firstTagLen;
-    protected $regexp="/^(\s*)([\*\-])(.*)/";
+    protected $regexp="/^(\s{2,})([\*\-])(.*)/";
     protected $_firstItem = true;
 
     public function open(){
@@ -402,7 +402,7 @@ class dkxhtml_title extends WikiRendererBloc {
         }
 
         $conf->sectionLevel[] = $level;
-        $h = $conf->startHeaderNumber -1 + $level;
+        $h = 6 - $level + $conf->startHeaderNumber;
         if($h > 5) $h = 5;
         elseif($h < 1) $h = 1;
         return $output.'<div><h'.$h.'>'.$this->_renderInlineTag(trim($this->_detectMatch[2])).'</h'.$h.'>';
@@ -421,7 +421,7 @@ class dkxhtml_para extends WikiRendererBloc {
         if($string=='') return false;
         if (preg_match("/^\s+[\*\-\=\|\^>;<=~]/",$string))
             return false;
-        if(preg_match("/^\s*([^\*\-\=\|\^>;<=~].*)/",$string, $m)) {
+        if(preg_match("/^\s*((\*\*|[^\*\-\=\|\^>;<=~]).*)/",$string, $m)) {
             $this->_detectMatch=array($m[1],$m[1]);
             return true;
         }

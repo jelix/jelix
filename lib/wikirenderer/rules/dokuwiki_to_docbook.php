@@ -230,7 +230,7 @@ class dkdbk_list extends WikiRendererBloc {
     public $type='list';
     protected $_stack=array();
     protected $_firstTagLen;
-    protected $regexp="/^(\s*)([\*\-])(.*)/";
+    protected $regexp="/^(\s{2,})([\*\-])(.*)/";
     protected $_firstItem = true;
 
     public function open(){
