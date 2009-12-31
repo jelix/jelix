@@ -20,7 +20,7 @@ class testInstallerComponentForDependencies extends jInstallerComponentBase {
     protected $rootName = 'module';
     protected $identityFile = 'module.xml';
     
-    function getInstaller($config, $epId) {
+    function getInstaller($config, $epId, $installWholeApp) {
         return null;
     }
 
@@ -147,7 +147,7 @@ class UTjInstallerComponent extends UnitTestCase {
             ));
             $component->setEntryPointData ('index.php', new jInstallerModuleInfos('testinstall1', $conf) );
 
-            $installer = $component->getInstaller($ini, 'index.php');
+            $installer = $component->getInstaller($ini, 'index.php', true);
             $this->assertNull($installer);
 
             // testinstall2 has an install.php file
@@ -164,11 +164,11 @@ class UTjInstallerComponent extends UnitTestCase {
             $component->setEntryPointData ('index.php', new jInstallerModuleInfos('testinstall2', $conf) );
             $component->setEntryPointData ('foo.php', new jInstallerModuleInfos('testinstall2', $conf) );
 
-            $installer = $component->getInstaller($ini, 'index.php');
+            $installer = $component->getInstaller($ini, 'index.php', true);
             $this->assertTrue (is_object($installer));
 
             // no discriminant id, so we don't have a new installer for an other entry point
-            $installer = $component->getInstaller($ini, 'foo.php');
+            $installer = $component->getInstaller($ini, 'foo.php', true);
             $this->assertFalse($installer);
 
         }

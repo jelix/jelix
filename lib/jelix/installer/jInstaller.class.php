@@ -305,7 +305,7 @@ class jInstaller {
                     continue;
                 $modules[$name] = $module;
             }
-            $result = $result & $this->_installModules($modules, $epId);
+            $result = $result & $this->_installModules($modules, $epId, true);
             if (!$result)
                 break;
         }
@@ -339,7 +339,7 @@ class jInstaller {
                 continue;
             $modules[$name] = $module;
         }
-        $result = $this->_installModules($modules, $epId);
+        $result = $this->_installModules($modules, $epId, true);
 
         $this->installerIni->save();
         $this->endMessage();
@@ -383,7 +383,7 @@ class jInstaller {
                     $modules[] = $allModules[$name];
             }
 
-            $result = $this->_installModules($modules, $epId);
+            $result = $this->_installModules($modules, $epId, false);
             if (!$result)
                 break;
             $this->installerIni->save();
@@ -397,9 +397,10 @@ class jInstaller {
      * core of the installation
      * @param array $modules list of jInstallerComponentModule
      * @param string $epId  the entrypoint id
+     * @param boolean $installWholeApp true if the installation is done during app installation
      * @return boolean true if the installation is ok
      */
-    protected function _installModules(&$modules, $epId) {
+    protected function _installModules(&$modules, $epId, $installWholeApp) {
 
         $this->ok('install.entrypoint.start', $epId);
 
@@ -432,7 +433,7 @@ class jInstaller {
             list($component, $toInstall) = $item;
             try {
                 if ($toInstall) {
-                    $installer = $component->getInstaller($epConfig, $epId);
+                    $installer = $component->getInstaller($epConfig, $epId, $installWholeApp);
                     if ($installer === null || $installer === false) {
                         $this->installerIni->setValue($component->getName().'.installed',
                                                        1, $epId);

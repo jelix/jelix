@@ -127,10 +127,12 @@ abstract class jInstallerComponentBase {
      * object should implement jIInstallerComponent.
      *
      * @param jIniMultiFilesModifier $config the configuration of the entry point
+     * @param string $epId the entry point id
+     * @param boolean $installWholeApp true if the installation is done during app installation
      * @return jIInstallerComponent the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
      */
-    abstract function getInstaller($config, $epId);
+    abstract function getInstaller($config, $epId, $installWholeApp);
 
     /**
      * return the list of objects which are responsible to upgrade the component
@@ -141,6 +143,7 @@ abstract class jInstallerComponentBase {
      * installed/upgraded before calling this method
      * 
      * @param jIniMultiFilesModifier $config the configuration of the entry point
+     * @param string $epId the entry point id
      * @throw jInstallerException  if an error occurs during the install.
      * @return array   array of jIInstallerComponent
      */

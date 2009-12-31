@@ -54,18 +54,28 @@ abstract class jInstallerBase {
      * @var string the jDb profile for the component
      */
     protected $dbProfile = '';
+    
+    /**
+     * @var boolean true if this is an installation for the whole application.
+     *              false if this is an installation in an
+     *              already installed application. Always False for upgraders.
+     */
+    protected $installWholeApp = false;
 
     /**
      * @param string $componentName name of the component
      * @param string $name name of the installer
      * @param string $path the component path
      * @param string $version version of the component
+     * @param boolean $installWholeApp true if the installation is during the whole app installation
+     *                                 false if it is only few modules and this module
      */
-    function __construct ($componentName, $name, $path, $version) {
+    function __construct ($componentName, $name, $path, $version, $installWholeApp = false) {
         $this->path = $path;
         $this->version = $version;
         $this->name = $name;
         $this->componentName = $componentName;
+        $this->installWholeApp = $installWholeApp;
     }
 
     /**

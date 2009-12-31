@@ -62,10 +62,12 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * object should implement jIInstallerComponent.
      *
      * @param jIniMultiFilesModifier $config the configuration of the entry point
+     * @param string $epId the entry point id
+     * @param boolean $installWholeApp true if the installation is done during app installation
      * @return jIInstallerComponent the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
      */
-    function getInstaller($config, $epId) {
+    function getInstaller($config, $epId, $installWholeApp) {
         if ($this->moduleInstaller === false)
             return null;
 
@@ -81,7 +83,8 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             $this->moduleInstaller = new $cname($this->name,
                                                 $this->name,
                                                 $this->path,
-                                                $this->sourceVersion
+                                                $this->sourceVersion,
+                                                $installApp
                                                 );
         }
 
@@ -111,6 +114,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * installed/upgraded before calling this method
      * 
      * @param jIniMultiFilesModifier $config the configuration of the entry point
+     * @param string $epId the entry point id
      * @throw jInstallerException  if an error occurs during the install.
      * @return array   array of jIInstallerComponent
      */
@@ -147,7 +151,11 @@ class jInstallerComponentModule extends jInstallerComponentBase {
                 if (!class_exists($cname))
                     throw new jInstallerException("module.upgrader.class.not.found",array($cname,$this->name));
                     
-                $this->moduleUpgraders[] = new $cname($this->name, $fileInfo[2], $this->path, $fileInfo[1]);
+                $this->moduleUpgraders[] = new $cname($this->name,
+                                                      $fileInfo[2],
+                                                      $this->path,
+                                                      $fileInfo[1],
+                                                      false);
             }
         }
     
