@@ -109,7 +109,9 @@ class jFilter {
     static public function isUrl ($url, $schemeRequired=false,
                             $hostRequired=false, $pathRequired=false,
                             $queryRequired=false ){
-        /* because of a bug in filter_var (error when no scheme even if there isn't
+        /*
+         FIXME php 5.3
+         because of a bug in filter_var (error when no scheme even if there isn't
          FILTER_FLAG_SCHEME_REQUIRED flag), we don't use filter_var here
         $flag=0;
         if($schemeRequired) $flag |= FILTER_FLAG_SCHEME_REQUIRED;
@@ -120,7 +122,7 @@ class jFilter {
         */
         // php filter use in fact parse_url, so we use the same function to have same result.
         // however, note that it doesn't validate all bad url...
-        $res=@parse_url($url);
+        $res = @parse_url($url);
         if($res === false) return false;
         if($schemeRequired && !isset($res['scheme'])) return false;
         if($hostRequired && !isset($res['host'])) return false;
