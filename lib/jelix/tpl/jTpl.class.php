@@ -4,7 +4,7 @@
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
-* @copyright   2005-2008 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2005-2009 Laurent Jouanneau, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -52,6 +52,7 @@ class jTpl {
         $this->_vars['j_jelixwww'] = $gJConfig->urlengine['jelixWWWPath'];
         $this->_vars['j_themepath'] = $gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/';
         $this->_vars['j_enableOldActionSelector'] = $gJConfig->enableOldActionSelector;
+        $this->_vars['j_locale'] = $gJConfig->locale;
 #endif
         $this->_vars['j_datenow'] = date('Y-m-d');
         $this->_vars['j_timenow'] = date('H:i:s');
