@@ -16,6 +16,7 @@ Olivier Demah (aka FoxMaSk)
  - little improvements on date_format tpl plugins (#654)
  - improvements in jInstallChecker.class.php (#1022)
  - tpl plugin hook (#1019)
+ - tpl plugin gravatar (#993) 
 
 Mickaël Fradin (aka mike/kewix)
  - improvements in the jtpl plugin: formcontrols (#223)
