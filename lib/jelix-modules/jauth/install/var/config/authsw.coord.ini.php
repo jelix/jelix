@@ -4,7 +4,7 @@
 ;============= Main parameters
 
 ; driver name : "ldap", "Db", "Class" or "LDS" (respect the case of characters)
-driver = 
+driver = Db
 
 ;============ Parameters for the plugin
 ; session variable name

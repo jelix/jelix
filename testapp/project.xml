@@ -25,6 +25,6 @@
         <entry file="soap.php" config="soap/config.ini.php" type="soap"/>
         <entry file="jsonrpc.php" config="jsonrpc/config.ini.php" type="jsonrpc"/>
         <entry file="cmdline.php" config="cmdline/config.ini.php" type="cmdline"/>
-        <entry file="tests.php" config="cmdline/configtests.ini.php" type="cmdline"/>
+        <entry file="tests.php" config="cmdline/config.ini.php" type="cmdline"/>
     </entrypoints>
 </project>

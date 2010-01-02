@@ -435,8 +435,6 @@ class jInstaller {
                 if ($toInstall) {
                     $installer = $component->getInstaller($epConfig, $epId, $installWholeApp);
                     if ($installer === null || $installer === false) {
-                        // no installer, so we assume that nothing has to be done to
-                        // install the module.
                         $this->installerIni->setValue($component->getName().'.installed',
                                                        1, $epId);
                         $this->installerIni->setValue($component->getName().'.version',

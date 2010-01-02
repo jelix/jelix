@@ -20,51 +20,16 @@
 */
 class jIniFileModifier {
 
-    /**
-     * @const integer token type for whitespaces
-     */
     const TK_WS = 0;
-    /**
-     * @const integer token type for a comment
-     */
     const TK_COMMENT = 1;
-    /**
-     * @const integer token type for a section header
-     */
     const TK_SECTION = 2;
-    /**
-     * @const integer token type for a simple value
-     */
     const TK_VALUE = 3;
-    /**
-     * @const integer token type for a value of an array item 
-     */
     const TK_ARR_VALUE = 4;
 
-    /**
-     * each item of this array contains data for a section. the key of the item
-     * is the section name. There is a section with the key "0", and which contains
-     * data for options which are not in a section.
-     * each value of the items is an array of tokens. A token is an array with
-     * some values. first value is the token type (see TK_* constants), and other
-     * values depends of the token type:
-     * - TK_WS: content of whitespaces
-     * - TK_COMMENT: the comment
-     * - TK_SECTION: the section name
-     * - TK_VALUE: the name, and the value
-     * - TK_ARRAY_VALUE: the name, the value, and the key
-     * @var array
-     */
     protected $content = array();
 
-    /**
-     * @var string the filename of the ini file
-     */
     protected $filename = '';
     
-    /**
-     * @var boolean true if the content has been modified
-     */
     protected $modified = false;
 
     /**
@@ -94,9 +59,6 @@ class jIniFileModifier {
         $currentSection=0;
         $multiline = false;
         $currentValue= null;
-        
-        $arrayContents = array();
-        
         foreach ($lines as $num => $line) {
             if($multiline) {
                 if(preg_match('/^(.*)"\s*$/', $line, $m)) {
@@ -106,17 +68,11 @@ class jIniFileModifier {
                 } else {
                     $currentValue[2].=$m[1]."\n";
                 }
-            } else if(preg_match('/^\s*([a-z0-9_.-]+)(\[\])?\s*=\s*(")?([^"]*)(")?(\s*)/i', $line, $m)) {
-                list($all, $name, $foundkey, $firstquote, $value ,$secondquote,$lastspace) = $m;
+            } else if(preg_match('/^\s*([a-z0-9_.-]+)(\[([a-z0-9_.-]*)\])?\s*=\s*(")?([^"]*)(")?(\s*)/i', $line, $m)) {
+                list($all, $name, $foundkey, $key, $firstquote, $value ,$secondquote,$lastspace) = $m;
 
-                if ($foundkey !='') {
-                    if (isset($arrayContents[$currentSection][$name]))
-                        $key = count($arrayContents[$currentSection][$name]);
-                    else
-                        $key = 0;
+                if($foundkey !='') 
                     $currentValue = array(self::TK_ARR_VALUE, $name, $value, $key);
-                    $arrayContents[$currentSection][$name][$key] = $value;
-                }
                 else
                     $currentValue = array(self::TK_VALUE, $name, $value);
 
@@ -152,111 +108,26 @@ class jIniFileModifier {
      */
     public function setValue($name, $value, $section=0, $key=null) {
         $foundValue=false;
-        $lastKey = 0; // last key in an array value
-        if (isset($this->content[$section])) {
-            // boolean to erase array values if the new value is not a new item for the array
+        if(isset($this->content[$section])) {
             $deleteMode = false;
             foreach ($this->content[$section] as $k =>$item) {
-                if ($deleteMode) {
-                    if ($item[0] == self::TK_ARR_VALUE && $item[1] == $name)
-                        $this->content[$section][$k] = array(self::TK_WS, '');
+                if($deleteMode) {
+                    if( $item[0] == self::TK_ARR_VALUE && $item[1] == $name )
+                        $this->content[$section][$k] = array(self::TK_WS,'');
                     continue;
                 }
-                
-                // if the item is not a value or an array value, or not the same name
-                if (($item[0] != self::TK_VALUE && $item[0] != self::TK_ARR_VALUE)
+                if( ($item[0] != self::TK_VALUE && $item[0] != self::TK_ARR_VALUE)
                     || $item[1] != $name)
                     continue;
-                // if it is an array value, and if the key doesn't correspond
-                if ($item[0] == self::TK_ARR_VALUE && $key !== null) {
-                    if($item[3] != $key) {
-                        $lastKey = $item[3];
-                        continue;
-                    }
-                }
-                if ($key !== null) {
-                    // we add the value as an array value
-                    $this->content[$section][$k] = array(self::TK_ARR_VALUE,$name,$value, $key);
-                } else {
-                    // we store the value
-                    $this->content[$section][$k] = array(self::TK_VALUE,$name,$value);
-                    if ($item[0] == self::TK_ARR_VALUE) {
-                        // the previous value was an array value, so we erase other array values
-                        $deleteMode = true;
-                        $foundValue = true;
-                        continue;
-                    }
-                }
-                $foundValue=true;
-                break;
-            }
-        }
-        else {
-            $this->content[$section] = array(array(self::TK_SECTION, '['.$section.']'));
-        }
-        if (!$foundValue) {
-            if($key === null) {
-                $this->content[$section][]= array(self::TK_VALUE, $name, $value);
-            } else {
-                $this->content[$section][]= array(self::TK_ARR_VALUE, $name, $value, $lastKey);
-            }
-        }
-
-        $this->modified = true;
-    }
-
-
-
-    /**
-     * remove an option in the ini file. It can remove an entire section if you give
-     * an empty value as $name, and a $section name
-     * @param string $name    the name of the option to remove, or null to remove an entire section
-     * @param string $section the section where to remove the value, or the section to remove
-     * @param string $key     for option which is an item of array, the key in the array
-     * @since 1.2
-     */
-    public function removeValue($name, $section=0, $key=null) {
-        $foundValue=false;
-
-        if ($section === 0 && $name == '')
-            return;
-
-        if ($name == '') {
-
-            if ($section === 0 || !isset($this->content[$section]))
-                return;
-            unset($this->content[$section]);
-            $this->modified = true;
-            return;
-        }
-        
-        if (isset($this->content[$section])) {
-            // boolean to erase array values if the option to remove is an array
-            $deleteMode = false;
-            foreach ($this->content[$section] as $k =>$item) {
-                if ($deleteMode) {
-                    if ($item[0] == self::TK_ARR_VALUE && $item[1] == $name)
-                        $this->content[$section][$k] = array(self::TK_WS, '');
-                    continue;
-                }
-                
-                // if the item is not a value or an array value, or not the same name
-                if (($item[0] != self::TK_VALUE && $item[0] != self::TK_ARR_VALUE)
-                    || $item[1] != $name)
-                    continue;
-                // if it is an array value, and if the key doesn't correspond
-                if ($item[0] == self::TK_ARR_VALUE && $key !== null) {
+                if($item[0] == self::TK_ARR_VALUE && $key !== null){
                     if($item[3] != $key)
                         continue;
                 }
-                if ($key !== null) {
-                    // we remove the value from the array
-                    $this->content[$section][$k] = array(self::TK_WS, '');
+                if($key !== null) {
+                    $this->content[$section][$k]=array(self::TK_ARR_VALUE,$name,$value, $key);
                 } else {
-                    // we remove the value
-                    $this->content[$section][$k] = array(self::TK_WS, '');
-                    if ($item[0] == self::TK_ARR_VALUE) {
-                        // the previous value was an array value, so we erase other array values
+                    $this->content[$section][$k]=array(self::TK_VALUE,$name,$value);
+                    if($item[0] == self::TK_ARR_VALUE) {
                         $deleteMode = true;
                         $foundValue = true;
                         continue;
@@ -265,11 +136,19 @@ class jIniFileModifier {
                 $foundValue=true;
                 break;
             }
+        }else{
+            $this->content[$section] = array(array(self::TK_SECTION, '['.$section.']'));
+        }
+        if(!$foundValue) {
+            if($key === null) {
+                $this->content[$section][]= array(self::TK_VALUE, $name, $value);
+            } else {
+                $this->content[$section][]= array(self::TK_ARR_VALUE, $name, $value, $key);
+            }
         }
 
         $this->modified = true;
     }
-
 
     /**
      * return the value of an option in the ini file. If the option doesn't exist,
@@ -284,10 +163,10 @@ class jIniFileModifier {
             return null;
         }
         foreach ($this->content[$section] as $k =>$item) {
-            if (($item[0] != self::TK_VALUE && $item[0] != self::TK_ARR_VALUE)
+            if( ($item[0] != self::TK_VALUE && $item[0] != self::TK_ARR_VALUE)
                 || $item[1] != $name)
                 continue;
-            if ($item[0] == self::TK_ARR_VALUE && $key !== null){
+            if($item[0] == self::TK_ARR_VALUE && $key !== null){
                 if($item[3] != $key)
                     continue;
             }
@@ -364,7 +243,7 @@ class jIniFileModifier {
                         $content.=$item[1].'='.$this->getIniValue($item[2])."\n";
                     break;
                   case self::TK_ARR_VALUE:
-                        $content.=$item[1].'[]='.$this->getIniValue($item[2])."\n";
+                        $content.=$item[1].'['.$item[3].']='.$this->getIniValue($item[2])."\n";
                     break;
                 }
             }

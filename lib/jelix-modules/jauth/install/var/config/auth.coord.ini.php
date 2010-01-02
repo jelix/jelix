@@ -4,7 +4,7 @@
 ;============= Main parameters
 
 ; driver name : "ldap", "Db", "Class" or "LDS" (respect the case of characters)
-driver = 
+driver = Db
 
 ;============ Parameters for the plugin
 ; session variable name
@@ -16,7 +16,7 @@ secure_with_ip = 0
 
 ;Timeout. After the given time (in minutes) without activity, the user is disconnected.
 ; If the value is 0 : no timeout
-timeout = 30
+timeout = 0
 
 ; If the value is "on", the user must be authentificated for all actions, except those
 ; for which a plugin parameter  auth.required is false

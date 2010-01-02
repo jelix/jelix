@@ -147,22 +147,10 @@ abstract class jInstallerBase {
     }
 
     /**
-     * copy the whole content of a directory existing in the install/ directory
-     * of the component, to the given directory
-     * @param string $relativeSourcePath relative path to the install/ directory of the component
-     * @param string $targetPath the full path where to copy the content
-     */
-    final protected function copyDirectoryContent($relativeSourcePath, $targetPath) {
-        $this->_copyDirectoryContent ($this->path.'install/'.$relativeSourcePath, $targetPath);
-    }
-
-    /**
-     * private function which copy the content of a directory to an other
-     *
-     * @param string $sourcePath 
+     * @param string $sourcePath
      * @param string $targetPath
      */
-    private function _copyDirectoryContent($sourcePath, $targetPath) {
+    final protected function copyDirectoryContent($sourcePath, $targetPath) {
         jFile::createDir($targetPath);
         $dir = new DirectoryIterator($sourcePath);
         foreach ($dir as $dirContent) {
@@ -171,49 +159,13 @@ abstract class jInstallerBase {
             } else {
                 if (!$dirContent->isDot() && $dirContent->isDir()) {
                     $newTarget = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
-                    $this->_copyDirectoryContent($dirContent->getPathName(),$newTarget );
+                    $this->copyDirectoryContent($dirContent->getPathName(),$newTarget );
                 }
             }
         }
-    }
-
-
-    /**
-     * copy a file from the install/ directory to an other
-     * @param string $relativeSourcePath relative path to the install/ directory of the file to copy
-     * @param string $targetPath the full path where to copy the file
-     */
-    final protected function copyFile($relativeSourcePath, $targetPath) {
-        copy ($this->path.'install/'.$relativeSourcePath, $targetPath);
     }
     
-    /**
-     * declare a new db profile. if the content of the section is not given,
-     * it will declare an alias to the default profile
-     * @param string $name  the name of the new section/alias
-     * @param null|array  $sectionContent the content of the new section, or null
-     *     to create an alias.
-     * @param boolean $force true:erase the existing profile
-     */
-    protected function declareDbProfile($name, $sectionContent = null, $force = true ) {
-        $dbprofiles = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$this->config->getValue('dbProfils'));
-        if ($sectionContent == null) {
-            $section = $dbprofiles->getValue('driver', $name);
-            if ($section === null) {
-                // no section
-                if ($dbprofiles->getValue($name) && !$force) {
-                    // already a name
-                    return false;
-                }
-                else {
-                    $default = $dbprofiles->getValue('default');
-                    if($default) {
-                        $dbprofiles->setValue($name, $default);
-                    }
-                    else // default is a section
-                        $dbprofiles->setValue($name, 'default');
-                }
-            }
-        }
+    final protected function copyFile($relativeSourcePath, $targetPath) {
+        copy ($this->path.'install/'.$relativeSourcePath, $targetPath);
     }
 }

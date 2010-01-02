@@ -13,11 +13,10 @@ class initadminCommand extends JelixScriptCommand {
     public  $name = 'initadmin';
     public  $allowed_options=array('-noauthdb'=>false,
                                    '-noacl2db'=>false,
-                                   '-profile'=>true,
-                                   '-v'=>false);
+                                   '-profile'=>true);
     public  $allowed_parameters=array('entrypoint'=>true);
 
-    public  $syntaxhelp = "[-v] [-noauthdb] [-noacl2db] [-profile a_jdb_profile] entrypoint";
+    public  $syntaxhelp = "[-noauthdb] [-noacl2db] [-profile a_jdb_profile] entrypoint";
     public  $help='';
 
     function __construct(){
@@ -40,9 +39,9 @@ class initadminCommand extends JelixScriptCommand {
     Initialize the application with a web interface for administration, by activating
     the module master_admin and configuring jAuth and jAcl.
     
-    Options -noauthdb and -noacl2db indicate to not use and to not configure
-    the driver 'db' of jAuth and the driver 'db' of jAcl2. So you will have to
-    configure jAuth and/or jAcl2 by yourself.
+    Options -noauthdb and -noacl2db indicate to not use and configure the driver 'db'
+    of jAuth and the driver 'db' of jAcl2. So you will have to configure jAuth and/or jAcl2
+    by yourself.
     
     The argument 'entrypoint' indicates the entry point to use for the administration.
     Carefull : if the entry point already exists, its configuration will be changed.
@@ -54,22 +53,13 @@ class initadminCommand extends JelixScriptCommand {
         jxs_init_jelix_env();
         $entrypoint = $this->getParam('entrypoint');
 
-        $verbose = $this->getOption("-v");
-        if ($verbose)
-            $reporter = new textInstallReporter();
-        else
-            $reporter = new ghostInstallReporter();
-
-        $installer = new jInstaller($reporter);
-
         if (!file_exists(JELIX_APP_WWW_PATH.$entrypoint.'.php')) {
             try {
                 $cmd = jxs_load_command('createentrypoint');
                 $cmd->init(array(),array('name'=>$entrypoint));
                 $cmd->run();
-            }
-            catch (Exception $e) {
-                throw new Exception("The entrypoint has not been created because of this error: ".$e->getMessage().". No other files have been created.\n");
+            } catch (Exception $e) {
+                echo "The entrypoint has not been created because of this error: ".$e->getMessage().". No other files have been created.\n";
             }
         }
         
@@ -80,26 +70,32 @@ class initadminCommand extends JelixScriptCommand {
 
         $inifile->setValue('html', 'adminHtmlResponse', 'responses');
         $inifile->setValue('htmlauth', 'adminLoginHtmlResponse', 'responses');
+        $inifile->setValue('auth', $entrypoint.'/auth.coord.ini.php', 'coordplugins');
+        $inifile->setValue('jacl2', $entrypoint.'/jacl2.coord.ini.php', 'coordplugins');
 
         $inifile->setValue('startModule', 'master_admin');
         $inifile->setValue('startAction', 'default:index');
         $modulePath = $inifile->getValue("modulesPath");
-        if (strpos($modulePath, 'lib:jelix-admin-modules') === false) {
+        if(strpos($modulePath, 'lib:jelix-admin-modules')===false){
             $inifile->setValue('modulesPath', 'lib:jelix-admin-modules/,'.$modulePath);
         }
         $inifile->setValue('driver','db','acl2');
         
         $installConfig->setValue('master_admin.installed', '1', $entrypoint);
         $inifile->setValue('master_admin.access', '2', 'modules');
+        $installConfig->setValue('jauth.installed', '1', $entrypoint);
+        $inifile->setValue('jauth.access', '2', 'modules');
         $installConfig->setValue('jacl2db.installed', '1', $entrypoint);
+        $inifile->setValue('jacl2db.access', '1', 'modules');
+        $installConfig->setValue('jacldb.installed', '0', $entrypoint);
         $inifile->setValue('jacldb.access', '0', 'modules');
         $installConfig->setValue('junittests.installed', '0', $entrypoint);
         $inifile->setValue('junittests.access', '0', 'modules');
         $installConfig->setValue('jWSDL.installed', '0', $entrypoint);
         $inifile->setValue('jWSDL.access', '0', 'modules');
-
+        
         $urlconf = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints', null, true);
-        if ($urlconf === null || $urlconf == '') {
+        if($urlconf === null || $urlconf == '') {
             // in defaultconfig
             $inifile->setValue($entrypoint, 'jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic', 'simple_urlengine_entrypoints', null, true);
             // in the config of the entry point
@@ -134,16 +130,12 @@ class initadminCommand extends JelixScriptCommand {
             $inifile->setValue($entrypoint, '1', 'basic_significant_urlengine_entrypoints',null,true);
         }
 
-        $inifile->save();
-
-        $installer->installModules(array('jauth', 'jacl2db'), $entrypoint.'.php');
-
-
         $params = array();
 
         $this->createFile(JELIX_APP_PATH.'responses/adminHtmlResponse.class.php','responses/adminHtmlResponse.class.php.tpl',$params);
         $this->createFile(JELIX_APP_PATH.'responses/adminLoginHtmlResponse.class.php','responses/adminLoginHtmlResponse.class.php.tpl',$params);
 
+        $this->createFile(JELIX_APP_PATH.'var/config/'.$entrypoint.'/auth.coord.ini.php','var/config/auth.coord.ini.php.tpl',$params);
         $this->createFile(JELIX_APP_PATH.'var/config/'.$entrypoint.'/jacl2.coord.ini.php','var/config/jacl2.coord.ini.php.tpl',$params);
         
         $authini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$entrypoint.'/auth.coord.ini.php');
@@ -153,13 +145,38 @@ class initadminCommand extends JelixScriptCommand {
         $profile = $this->getOption('-profile');
 
         if (!$this->getOption('-noauthdb')) {
+            $authini->setValue('dao','jauthdb~jelixuser', 'Db');
+            $authini->setValue('form','jauthdb_admin~jelixuser', 'Db');
             if ($profile != '')
                 $authini->setValue('profile',$profile, 'Db');
-
-            $installer->installModules(array('jauthdb', 'jauthdb_admin'), $entrypoint.'.php');
+            $tools = jDb::getTools($profile);
+            $db = jDb::getConnection($profile);
+            $path = LIB_PATH.'jelix-modules/jauthdb/install/';
+            if(file_exists($path.'install_jauth.schema.'.$db->dbms.'.sql')) {
+                try {
+                    $tools->execSQLScript($path.'install_jauth.schema.'.$db->dbms.'.sql');
+                    $rs = $db->query("SELECT usr_login FROM jlx_user WHERE usr_login='admin'");
+                    if(!$rs || !$rs->fetch())
+                        $db->exec("INSERT INTO jlx_user (usr_login , usr_password , usr_email) VALUES ('admin', '".md5('admin')."', 'admin@localhost.localdomain')");
+                    $rs = null;
+                } catch(Exception $e) {
+                    echo "An error has occured during the execution of SQL script to install jAuth: ".$e->getMessage()."\n";
+                }
+            }
+            else {
+                echo "Tables and datas for jAuth.db couldn't be created because SQL scripts are not available for the database declared in the profile.\nYou should initialize the database by hand.\n";
+            }
+            $installConfig->setValue('jauthdb.installed', '1', $entrypoint);
+            $inifile->setValue('jauthdb.access', '1', 'modules');
+            $installConfig->setValue('jauthdb_admin.installed', '1', $entrypoint);
+            $inifile->setValue('jauthdb_admin.access', '2', 'modules');
         }
-
-
+        else {
+            $installConfig->setValue('jauthdb.installed', '0', $entrypoint);
+            $inifile->setValue('jauthdb.access', '0', 'modules');
+            $installConfig->setValue('jauthdb_admin.installed', '0', $entrypoint);
+            $inifile->setValue('jauthdb_admin.access', '0', 'modules');
+        }
 
         if (!$this->getOption('-noacl2db')) {
             $tools = jDb::getTools($profile);

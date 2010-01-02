@@ -11,34 +11,8 @@
 
 class jauthModuleInstaller extends jInstallerModule {
 
-    public function setEntryPoint($ep, $config, $dbProfile) {
-        parent::setEntryPoint($ep, $config, $dbProfile);
-        return md5($ep->configFile);
-    }
-
     function install() {
-        $authconfig = $this->config->getValue('auth','coordplugins');
 
-        if (!$authconfig) {
-            if ($this->entryPoint->type == 'cmdline') {
-                return;
-            }
-            
-            if ($this->entryPoint->type == 'classic') {
-                $pluginIni = 'auth.coord.ini.php';
-            }
-            else {
-                $pluginIni = 'authsw.coord.ini.php';
-            }
-            
-            $configDir = dirname($this->entryPoint->configFile).'/';
-
-            // no configuration, let's install the plugin for the entry point
-            $this->config->setValue('auth', $configDir.$pluginIni, 'coordplugins');
-
-            if (!file_exists(JELIX_APP_CONFIG_PATH.$configDir.$pluginIni)) {
-                $this->copyFile('var/config/'.$pluginIni, JELIX_APP_CONFIG_PATH.$configDir);
-            }
-        }
+      //$this->execSQLScript('install_jacl.schema');
     }
 }
