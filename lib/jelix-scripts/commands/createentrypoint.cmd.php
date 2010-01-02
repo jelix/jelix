@@ -54,9 +54,9 @@ class createentrypointCommand extends JelixScriptCommand {
         
         // retrieve the type of entry point we want to create
         $type = $this->getOption('-type');
-        if (!$type || $type == 'classic')
-            $type = 'index';
-        else if(!in_array($type, array('classic','jsonrpc','xmlrpc','rdf','soap','cmdline' )))
+        if (!$type)
+            $type = 'classic';
+        else if(!in_array($type, array('classic','jsonrpc','xmlrpc','rdf','soap','cmdline')))
             throw new Exception("invalid type");
 
         // retrieve the name of the entry point
@@ -72,7 +72,7 @@ class createentrypointCommand extends JelixScriptCommand {
         }
         else {
             $entryPointFullPath = JELIX_APP_WWW_PATH.$name.'.php';
-            $entryPointTemplate = 'www/'.$type.'.php.tpl';
+            $entryPointTemplate = 'www/'.($type=='classic'?'index':$type).'.php.tpl';
         }
 
         if (file_exists($entryPointFullPath)) {
@@ -158,8 +158,6 @@ class createentrypointCommand extends JelixScriptCommand {
                 $this->createFile(JELIX_APP_PATH.'application-cli.init.php',
                                   'application.init.php.tpl',$param2);
             }
-
-            $this->updateProjectXml($name.".php", $configFile , true);
         }
         else {
 
@@ -171,23 +169,21 @@ class createentrypointCommand extends JelixScriptCommand {
                 $inifile->setValue($name, '1', 'basic_significant_urlengine_entrypoints', null, true);
             }
             $inifile->save();
-
-            $this->updateProjectXml($name.".php", $configFile , false);
         }
-        
+
+        $this->updateProjectXml($name.".php", $configFile , $type);
+
         $installer = new jInstaller(new ghostInstallReporter());
 
         $installer->installEntryPoint($name.".php");
-
     }
 
-    protected function updateProjectXml ($fileName, $configFileName, $isCli) {
+    protected function updateProjectXml ($fileName, $configFileName, $type) {
 
         $elem = $this->projectXml->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
         $elem->setAttribute("file", $fileName);
         $elem->setAttribute("config", $configFileName);
-        if ($isCli)
-            $elem->setAttribute("cli", "true");
+        $elem->setAttribute("type", $type);
 
         $ep = $this->projectXml->documentElement->getElementsByTagName("entrypoints");
         
