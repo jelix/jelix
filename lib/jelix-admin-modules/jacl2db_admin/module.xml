@@ -3,7 +3,7 @@
     <info id="jacl2db_admin@modules.jelix.org" name="jacl2db_admin" createdate="">
 #expand        <version stability="stable">__LIB_VERSION__</version>
         <label lang="en-EN">jAcl2.db administration</label>
-        <description lang="en-EN">Web interface to manage rights with jAcl2 adn its driver 'db'</description>
+        <description lang="en-EN">Web interface to manage rights with jAcl2 and its driver 'db'</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GPL 2.0</license>
         <copyright>2008-2009 Laurent Jouanneau and other contributors</copyright>
         <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
@@ -12,6 +12,6 @@
     </info>
     <dependencies>
 #expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
-
+        <module name="jacl2db" />
     </dependencies>
 </module>

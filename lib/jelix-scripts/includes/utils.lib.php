@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2007 Laurent Jouanneau, 2008 Loic Mathaud
+* @copyright   2005-2010 Laurent Jouanneau, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -161,3 +161,59 @@ function jxs_init_jelix_env(){
    $gJConfig = jConfigCompiler::read($configFile, true, true, $entryPointName);
 }
 
+
+
+function jlx_error_handler($errno, $errmsg, $filename, $linenum, $errcontext){
+
+   if (error_reporting() == 0)
+      return;
+
+   $codeString = array(
+      E_ERROR         => 'error',
+      E_RECOVERABLE_ERROR => 'error',
+      E_WARNING       => 'warning',
+      E_NOTICE        => 'notice',
+      E_DEPRECATED    => 'deprecated',
+      E_USER_ERROR    => 'error',
+      E_USER_WARNING  => 'warning',
+      E_USER_NOTICE   => 'notice',
+      E_USER_DEPRECATED => 'deprecated',
+      E_STRICT        => 'strict'
+   );
+
+   if(preg_match('/^\s*\((\d+)\)(.+)$/',$errmsg,$m)){
+      $code = $m[1];
+      $errmsg = $m[2];
+   }else{
+      $code=1;
+   }
+
+   if (isset ($codeString[$errno])){
+      $codestr = $codeString[$errno];
+   }else{
+      $codestr = 'error';
+   }
+   $messageLog = strtr("[%typeerror%:%code%]\t%msg%\t%file%\t%line%\n", array(
+      '%date%' => date("Y-m-d H:i:s"),
+      '%typeerror%'=>$codestr,
+      '%code%' => $code,
+      '%msg%'  => $errmsg,
+      '%file%' => $filename,
+      '%line%' => $linenum,
+   ));
+
+   $traceLog = '';
+   $messageLog.="\ttrace:";
+   $trace = debug_backtrace();
+   array_shift($trace);
+   foreach($trace as $k=>$t){
+       $traceLog.="\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
+       $traceLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
+   }
+   $messageLog.=$traceLog."\n";
+   
+   echo $messageLog;
+
+   if ($codestr == 'error')
+      exit(1);
+}

@@ -5,14 +5,19 @@
 
     <div class="nocss">
         <hr />
-        <p>Si vous voyez ce message, c'est que vous n'avez pas rendu accessible les fichiers web (js et css) de Jelix. Deux solutions :</p>
+        <p>Si vous voyez ce message, c'est que vous n'avez pas rendu accessible
+          les fichiers web (js et css) de Jelix. Deux solutions :</p>
         <ul>
-            <li>vous pouvez configurer votre virtualhost et créer un alias <em>{$j_basepath}jelix/</em> pointant vers <em>lib/jelix-www/</em></li>
-            <li>sinon copiez/collez le dossier <em>lib/jelix-www/</em> dans le dossier <em>{$wwwpath}</em> et renommez le en 'jelix'</li>
+            <li>vous pouvez configurer votre virtualhost et créer un alias
+            <em>{$j_basepath}jelix/</em> pointant vers <em>lib/jelix-www/</em></li>
+            <li>sinon copiez/collez le dossier <em>lib/jelix-www/</em>
+            dans le dossier <em>{$wwwpath}</em> et renommez le en 'jelix'</li>
         </ul>
-        <p>Si vous voulez utiliser un autre nom que jelix pour ce dossier, modifier le paramêtre <code>jelixWWWPath</code>
-         dans <em>{$configpath}defaultconfig.ini.php</em>.</p>
-        <p>Pour plus d'informations, consultez <a href="http://jelix.org/articles/fr/manuel-1.1/installation/application#configuration-du-serveur"
+        <p>Si vous voulez utiliser un autre nom que jelix pour ce dossier,
+           modifier le paramêtre <code>jelixWWWPath</code>
+           dans <em>{$configpath}defaultconfig.ini.php</em>.</p>
+        <p>Pour plus d'informations, consultez
+             <a href="http://jelix.org/articles/fr/manuel-1.2/installation/application#configuration-du-serveur"
              title="documentation officielle">la documentation sur l'installation de Jelix</a>.</p>
         <hr />
     </div>
@@ -27,9 +32,10 @@
     <div class="monbloc">
         <h2>Ceci est une page temporaire</h2>
         <div class="blockcontent">
-            <p>Cette page est affichée par le contrôleur <em>default.classic.php</em> présent dans le module de votre application.
-            Ce contrôleur utilise une zone fournie par Jelix. Vous devrez le modifier de manière à afficher votre propre page
-            de démarrage.</p>
+            <p>Cette page est affichée par le contrôleur <em>default.classic.php</em>
+            présent dans le module de votre application.
+            Ce contrôleur utilise une zone fournie par Jelix. Vous devrez le modifier de
+            manière à afficher votre propre page de démarrage.</p>
         </div>
     </div>
 
@@ -39,7 +45,7 @@
             <ul>
                 <li><a href="http://jelix.org" title="Site officiel de Jelix">Visitez le site de Jelix</a></li>
                 <li><a href="http://jelix.org/articles/fr/tutoriels">Suivez les tutoriels</a></li>
-                <li><a href="http://jelix.org/articles/fr/manuel-1.1">Lisez la documentation de Jelix</a></li>
+                <li><a href="http://jelix.org/articles/fr/manuel-1.2">Lisez la documentation de Jelix</a></li>
                 <li><a href="http://jelix.org/forums/index.php?14">Posez vos questions dans les forums</a></li>
             </ul>
         </div>

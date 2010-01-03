@@ -4,7 +4,7 @@
 * @subpackage utils
 * @author     Laurent Jouanneau
 * @contributor
-* @copyright  2008-2009 Laurent Jouanneau
+* @copyright  2008-2010 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -72,7 +72,7 @@ class jIniFileModifier {
      * @param string $filename the file to load
      */
     function __construct($filename) {
-        if(!file_exists($filename))
+        if(!file_exists($filename) || !is_file($filename))
             throw new jException ('jelix~errors.file.notexists', $filename);
         $this->filename = $filename;
         $this->parse(preg_split("/(\r\n|\n|\r)/", file_get_contents($filename)));

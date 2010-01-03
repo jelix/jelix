@@ -25,7 +25,7 @@
         <!-- file: the path to the entry point relative to the base path
             config: the path to the config file used by the entry point, relative
                     to var/config/
-            cli: true if it is an entry point for command line -->
+            type: type of the entry point : classic, cmdline, xmlrpc....-->
         <entry file="index.php" config="index/config.ini.php" />
     </entrypoints>
 </project>

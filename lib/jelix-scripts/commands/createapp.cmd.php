@@ -8,7 +8,7 @@
 * @contributor Christophe Thiriot
 * @contributor Bastien Jaillot
 * @contributor Dominique Papin
-* @copyright   2005-2009 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
+* @copyright   2005-2010 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -66,6 +66,7 @@ class createappCommand extends JelixScriptCommand {
 
     public function run() {
         require_once (LIB_PATH.'clearbricks/jelix.inc.php');
+        require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
 
         if (file_exists(JELIX_APP_PATH)) {
             throw new Exception("this application is already created");
@@ -135,15 +136,15 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile(JELIX_APP_PATH.'.htaccess', 'htaccess_deny', $param);
         $this->createFile(JELIX_APP_PATH.'project.xml','project.xml.tpl', $param);
         $this->createFile(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php', 'var/config/defaultconfig.ini.php.tpl', $param);
-        $this->createFile(JELIX_APP_CONFIG_PATH.'installer.ini.php', 'var/config/installer.ini.php.tpl', $param);
+        //$this->createFile(JELIX_APP_CONFIG_PATH.'installer.ini.php', 'var/config/installer.ini.php.tpl', $param);
         $this->createFile(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php', 'var/config/dbprofils.ini.php.tpl', $param);
         $this->createFile(JELIX_APP_CONFIG_PATH.'cache.ini.php', 'var/config/cache.ini.php.tpl', $param);
         $this->createFile(JELIX_APP_CONFIG_PATH.'index/config.ini.php', 'var/config/index/config.ini.php.tpl', $param);
         $this->createFile(JELIX_APP_PATH.'responses/myHtmlResponse.class.php', 'responses/myHtmlResponse.class.php.tpl', $param);
         $this->createFile(JELIX_APP_PATH.'install/installer.php','installer/installer.php.tpl',$param);
 
-        $this->createFile($wwwpath.'index.php','www/index.php.tpl',$param);
-        $this->createFile($wwwpath.'.htaccess','htaccess_allow',$param);
+        $this->createFile($wwwpath.'index.php', 'www/index.php.tpl',$param);
+        $this->createFile($wwwpath.'.htaccess', 'htaccess_allow',$param);
 
         $param['php_rp_temp'] = $this->convertRp($param['rp_temp']);
         $param['php_rp_var']  = $this->convertRp($param['rp_var']);
@@ -167,7 +168,10 @@ class createappCommand extends JelixScriptCommand {
         $param['php_rp_temp'] = $this->convertRp($param['rp_temp']);
 
         $this->createFile(JELIX_APP_PATH.'application-cli.init.php','application.init.php.tpl',$param);
-    
+
+        $installer = new jInstaller(new textInstallReporter('warning'));
+        $installer->installApplication();
+
         $moduleok = true;
 
         if (!$this->getOption('-nodefaultmodule')) {

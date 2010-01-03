@@ -4,7 +4,7 @@
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
 * @contributor Bastien Jaillot
-* @copyright   2005-2009 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
+* @copyright   2005-2010 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -55,7 +55,7 @@ class createmoduleCommand extends JelixScriptCommand {
 
         // note: since module name are used for name of generated name,
         // only this characters are allowed
-        if($module == null || preg_match('/([^a-zA-Z_0-9])/', $module)) {
+        if ($module == null || preg_match('/([^a-zA-Z_0-9])/', $module)) {
             throw new Exception("'".$module."' is not a valid name for a module");
         }
 
@@ -119,7 +119,7 @@ class createmoduleCommand extends JelixScriptCommand {
         $gJConfig = null;
 
         $param = array();
-        $param['name'] = $module;
+        $param['module'] = $module;
         $param['default_id'] = $module.JELIXS_INFO_DEFAULT_IDSUFFIX;
         $param['version'] = $initialVersion;
 
@@ -137,6 +137,8 @@ class createmoduleCommand extends JelixScriptCommand {
             $this->createDir($path.'locales/');
             $this->createDir($path.'locales/en_EN/');
             $this->createDir($path.'locales/fr_FR/');
+            $this->createDir($path.'install/');
+            $this->createFile($path.'install/install.php','module/install.tpl',$param);
         }
 
         $isdefault = $this->getOption('-defaultmodule');
@@ -147,7 +149,8 @@ class createmoduleCommand extends JelixScriptCommand {
             $ini->setValue('startModule', $module);
             $ini->setValue('startAction', 'default:index');
         }
-        $ini->setValue($module.'.access', 2 , 'modules');
+        if ($allEntryPoint)
+            $ini->setValue($module.'.access', 2 , 'modules');
         $ini->save();
 
         $list = $this->getEntryPointsList();
@@ -155,6 +158,17 @@ class createmoduleCommand extends JelixScriptCommand {
 
         // install the module for all needed entry points
         foreach ($list as $k => $entryPoint) {
+
+            
+            if (!$allEntryPoint || $isdefault) {
+                $configFile = JELIX_APP_CONFIG_PATH.$entryPoint['config'];
+                $epconfig = new jIniFileModifier($configFile);
+                if (!$allEntryPoint && $entryPoint['file'] == $entryPointName) {
+                    $epconfig->setValue($module.'.access', 2 , 'modules');
+                    $epconfig->save();
+                }
+            }
+
 
             if ($allEntryPoint || $entryPoint['file'] == $entryPointName) {
                 $install->setValue($module.'.installed', 1, $entryPoint['id']);
@@ -164,19 +178,14 @@ class createmoduleCommand extends JelixScriptCommand {
 
             if ($isdefault) {
                 // we set the module as default module for one or all entry points.
-
-                $filename = JELIX_APP_CONFIG_PATH.$entryPoint['config'];
-    
                 // we set the startModule option for all entry points except
                 // if an entry point is indicated on the command line
-                if (file_exists($filename) &&
-                    ($allEntryPoint || $entryPoint['file'] == $entryPointName)) {
-                    $ini = new jIniFileModifier($filename);
-                    if ($ini->getValue('startModule') != '') {
-                        $ini->setValue('startModule', $module);
-                        $ini->setValue('startAction', 'default:index');
+                if ($allEntryPoint || $entryPoint['file'] == $entryPointName) {
+                    if ($epconfig->getValue('startModule') != '') {
+                        $epconfig->setValue('startModule', $module);
+                        $epconfig->setValue('startAction', 'default:index');
+                        $epconfig->save();
                     }
-                    $ini->save();
                 }
             }
         }

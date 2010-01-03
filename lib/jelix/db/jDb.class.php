@@ -5,13 +5,13 @@
 #if ENABLE_OPTIMIZED_SOURCE
 * @author      Laurent Jouanneau
 * @contributor Yannick Le Guédart, Laurent Raufaste, Christophe Thiriot
-* @copyright   2005-2009 Laurent Jouanneau, 2008 Laurent Raufaste
+* @copyright   2005-2010 Laurent Jouanneau, 2008 Laurent Raufaste
 *
 * Some of this classes were get originally from the Copix project
 * (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix classes are Gerald Croes and Laurent Jouanneau,
-* and this classes were adapted/improved for Jelix by Laurent Jouanneau
+* and this classes were adapted for Jelix by Laurent Jouanneau
 *
 * @link     http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -23,7 +23,7 @@
 #else
 * @author     Laurent Jouanneau
 * @contributor Yannick Le Guédart, Laurent Raufaste
-* @copyright  2005-2009 Laurent Jouanneau
+* @copyright  2005-2010 Laurent Jouanneau
 *
 * API ideas of this class were get originally from the Copix project (CopixDbFactory, Copix 2.3dev20050901, http://www.copix.org)
 * No lines of code are copyrighted by CopixTeam
@@ -230,8 +230,9 @@ class jDb {
     /**
      * create a temporary new profile
      * @param string $name the name of the profile
-     * @param array $params parameters of the profile. key=parameter name, value=parameter value.
+     * @param array|string $params parameters of the profile. key=parameter name, value=parameter value.
      *                      same kind of parameters we found in dbProfils.ini.php
+     *                      we can also indicate a name of an other profile, to create an alias
      */
     public static function createVirtualProfile ($name, $params) {
         global $gJConfig;
@@ -239,14 +240,20 @@ class jDb {
            throw new jException('jelix~db.error.virtual.profile.no.name');
         }
 
-        if (! is_array ($params)) {
-           throw new jException('jelix~db.error.virtual.profile.invalid.params', $name);
-        }
-
         if (self::$_profiles === null) {
             self::$_profiles = parse_ini_file (JELIX_APP_CONFIG_PATH . $gJConfig->dbProfils, true);
         }
         self::$_profiles[$name] = $params;
         unset (self::$_cnxPool[$name]);
+    }
+    
+    /**
+     * clear the loaded profiles to force to reload the db profiles file.
+     * WARNING: it closes all opened connections !
+     * @since 1.2
+     */
+    public static function clearProfiles() {
+        self::$_profiles = null;
+        self::$_cnxPool  = array();
     }
 }

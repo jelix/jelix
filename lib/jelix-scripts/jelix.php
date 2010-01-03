@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2008 Jouanneau laurent
+* @copyright   2005-2010 Jouanneau laurent
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -41,7 +41,6 @@ if (preg_match('/^\-\-([\w\-\.:]+)$/', $commandName, $m)) {
     $commandName = array_shift($argv);
 }
 else {
-    
     if (isset($_SERVER['JELIX_APP_NAME'])) {
         $APPNAME = $_SERVER['JELIX_APP_NAME'];
     }
@@ -52,8 +51,8 @@ else {
 
 $entryPointName = '';
 if ( ($p = strpos($APPNAME, ':')) !== false) {
-    $APPNAME = substr($APPNAME, 0, $p);
     $entryPointName = substr($APPNAME, $p+1);
+    $APPNAME = substr($APPNAME, 0, $p);
 }
 
 $allEntryPoint = false;
@@ -156,6 +155,8 @@ if(function_exists('date_default_timezone_set')){
     date_default_timezone_set(JELIXS_INFO_DEFAULT_TIMEZONE);
 }
 
+if (DEBUG_MODE)
+    set_error_handler('jlx_error_handler');
 
 // ---------  retrieve options and parameters from the command line
 

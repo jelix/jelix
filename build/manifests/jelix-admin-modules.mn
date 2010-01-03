@@ -7,6 +7,8 @@ cd lib/jelix-admin-modules/master_admin/classes
    masterAdminMenuItem.class.php
 cd lib/jelix-admin-modules/master_admin/controllers
    default.classic.php
+cd lib/jelix-admin-modules/master_admin/install
+   install.php
 cd lib/jelix-admin-modules/master_admin/locales/en_EN
 cch    gui.UTF-8.properties(gui.%charset%.properties)
 cd lib/jelix-admin-modules/master_admin/locales/fr_FR
@@ -60,6 +62,7 @@ cd lib/jelix-admin-modules/jauthdb_admin/controllers
 cd lib/jelix-admin-modules/jauthdb_admin/forms
   jelixuser.form.xml
 cd lib/jelix-admin-modules/jauthdb_admin/install
+  install.php
   urls_example.xml
 cd lib/jelix-admin-modules/jauthdb_admin/locales/en_EN
 cch   auth.UTF-8.properties(auth.%charset%.properties)

@@ -43,7 +43,7 @@ if (!defined('JELIXS_INFO_DEFAULT_CREATOR_NAME'))
 if (!defined('JELIXS_INFO_DEFAULT_CREATOR_EMAIL'))
     define('JELIXS_INFO_DEFAULT_CREATOR_EMAIL','youremail@yourwebsite.undefined');
 if (!defined('JELIXS_INFO_DEFAULT_COPYRIGHT'))
-    define('JELIXS_INFO_DEFAULT_COPYRIGHT','2008 yourname');
+    define('JELIXS_INFO_DEFAULT_COPYRIGHT','2010 yourname');
 if (!defined('JELIXS_INFO_DEFAULT_TIMEZONE'))
     define('JELIXS_INFO_DEFAULT_TIMEZONE','Europe/Paris');
 if (!defined('JELIXS_INFO_DEFAULT_LOCALE'))
@@ -66,3 +66,6 @@ if (!defined('DISPLAY_HELP_UTF_8'))
     define('DISPLAY_HELP_UTF_8', true);
 if (!defined('MESSAGE_LANG'))
     define('MESSAGE_LANG','en');
+
+if (!defined('DEBUG_MODE'))
+    define('DEBUG_MODE',false);

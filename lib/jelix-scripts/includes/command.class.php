@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2009 Laurent Jouanneau, 2008 Loic Mathaud
+* @copyright   2005-2010 Laurent Jouanneau, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -287,6 +287,36 @@ abstract class JelixScriptCommand {
          $list[] = $ep;
       }
       return $list;
+   }
+   
+   protected function getEntryPointInfo($name) {
+      $this->loadProjectXml();
+      $listEps = $this->projectXml->documentElement->getElementsByTagName("entrypoints");
+      if (!$listEps->length) {
+         return null;
+      }
+        
+      $listEp = $listEps->item(0)->getElementsByTagName("entry");
+      if(!$listEp->length) {
+         return null;
+      }
+
+      for ($i=0; $i < $listEp->length; $i++) {
+         $epElt = $listEp->item($i);
+         $ep = array(
+            'file'=>$epElt->getAttribute("file"),
+            'config'=>$epElt->getAttribute("config"),
+            'isCli'=> ($epElt->getAttribute("type") == 'cmdline'),
+            'type'=>$epElt->getAttribute("type"),
+         );
+         if (($p = strpos($ep['file'], '.php')) !== false)
+            $ep['id'] = substr($ep['file'],0,$p);
+         else
+            $ep['id'] = $ep['file'];
+         if ($ep['id'] == $name)
+            return $ep;
+      }
+      return null;
    }
    
 }

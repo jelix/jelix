@@ -60,7 +60,7 @@ define ('JELIXS_INIT_PATH'          , JELIXS_LIB_PATH.'jelix/init.php');
 //define('JELIXS_INFO_DEFAULT_CREATOR_EMAIL','youremail@yourwebsite.undefined');
 
 // Copyright informations
-//define('JELIXS_INFO_DEFAULT_COPYRIGHT','2008 yourname');
+//define('JELIXS_INFO_DEFAULT_COPYRIGHT','2010 yourname');
 
 // default timezone of your application, which will be used in the configuration
 // of your application
@@ -92,4 +92,3 @@ define ('JELIXS_INIT_PATH'          , JELIXS_LIB_PATH.'jelix/init.php');
 
 // the language used for messages and help displayed by jelix.php
 //define('MESSAGE_LANG','en');
-

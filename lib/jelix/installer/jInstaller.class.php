@@ -4,7 +4,7 @@
 * @subpackage  installer
 * @author      Laurent Jouanneau
 * @contributor 
-* @copyright   2008-2009 Laurent Jouanneau
+* @copyright   2008-2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -22,9 +22,18 @@ require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
  * simple text reporter
  */
 class textInstallReporter implements jIInstallReporter {
+    /**
+     * @var string error, notice or warning
+     */
+    protected $level;
+    
+    function __construct($level= 'notice') {
+       $this->level = $level; 
+    }
     
     function start() {
-        echo "Installation start..\n";
+        if ($this->level == 'notice')
+            echo "Installation start..\n";
     }
 
     /**
@@ -33,6 +42,9 @@ class textInstallReporter implements jIInstallReporter {
      * @param string $type the type of the message : 'error', 'notice', 'warning', ''
      */
     function message($message, $type='') {
+        if (($type == 'error' && $this->level != '')
+            || ($type == 'warning' && $this->level != 'notice' && $this->level != '')
+            || (($type == 'notice' || $type =='') && $this->level == 'notice'))
         echo ($type != ''?'['.$type.'] ':'').$message."\n";
     }
 
@@ -42,7 +54,8 @@ class textInstallReporter implements jIInstallReporter {
      * the number of messages
      */
     function end($results) {
-        echo "Installation ended.\n";
+        if ($this->level == 'notice')
+            echo "Installation ended.\n";
     }
 }
 
@@ -133,10 +146,10 @@ class jInstaller {
     public $installerIni = null;
     
     /**
-     * parameters for each entry point.
-     * @var array of jInstallerEntryPoint
+     * list of entry point and their properties
+     * @var array of jInstallerEntryPoint. keys are entry point id.
      */
-    protected $epProperties = array();
+    protected $entryPoints = array();
 
     /**
      * list of entry point identifiant (provided by the configuration compiler).
@@ -238,16 +251,16 @@ class jInstaller {
             $configFileList[$configFile] = true;
 
             // we create an object corresponding to the entry point
-            $c = $this->getEntryPointObject($configFile, $file, $type);
-            $epId = $c->getEpId();
+            $ep = $this->getEntryPointObject($configFile, $file, $type);
+            $epId = $ep->getEpId();
 
             $this->epId[$file] = $epId;
-            $this->epProperties[$epId] = $c;
+            $this->entryPoints[$epId] = $ep;
             $this->modules[$epId] = array();
 
             // now let's read all modules properties
-            foreach ($c->getModulesList() as $name=>$path) {
-                $module = $c->getModule($name);
+            foreach ($ep->getModulesList() as $name=>$path) {
+                $module = $ep->getModule($name);
 
                 $this->installerIni->setValue($name.'.installed', $module->isInstalled, $epId);
                 $this->installerIni->setValue($name.'.version', $module->version, $epId);
@@ -258,7 +271,7 @@ class jInstaller {
                 }
 
                 $m = $this->allModules[$path];
-                $m->setEntryPointData($epId, $module);
+                $m->addModuleInfos($module);
                 $this->modules[$epId][$name] = $m;
             }
         }
@@ -283,7 +296,7 @@ class jInstaller {
      * @return jInstallerEntryPoint the corresponding entry point object
      */
     public function getEntryPoint($epId) {
-        return $this->epProperties[$epId];
+        return $this->entryPoints[$epId];
     }
 
     /**
@@ -298,7 +311,7 @@ class jInstaller {
         $this->startMessage();
         $result = true;
 
-        foreach(array_keys($this->epProperties) as $epId) {
+        foreach(array_keys($this->entryPoints) as $epId) {
             $modules = array();
             foreach($this->modules[$epId] as $name => $module) {
                 if ($module->getAccessLevel($epId) == 0)
@@ -356,13 +369,12 @@ class jInstaller {
     public function installModules($modulesList, $entrypoint = null) {
 
         $this->startMessage();
-    
         $entryPointList = array();
         if ($entrypoint == null) {
-            $entryPointList = array_keys($this->epProperties);
+            $entryPointList = array_keys($this->entryPoints);
         }
         else if (isset($this->epId[$entrypoint])) {
-            $entryPointList[$entrypoint];
+            $entryPointList = array($this->epId[$entrypoint]);
         }
         else {
             throw new Exception("unknow entry point");
@@ -377,7 +389,7 @@ class jInstaller {
             array_unshift($modulesList, 'jelix');
             foreach ($modulesList as $name) {
                 if (!isset($allModules[$name])) {
-                    $this->error('module.unknow', $name);
+                    $this->error('module.unknown', $name);
                 }
                 else
                     $modules[] = $allModules[$name];
@@ -388,7 +400,7 @@ class jInstaller {
                 break;
             $this->installerIni->save();
         }
-        
+
         $this->endMessage();
         return $result;
     }
@@ -404,7 +416,7 @@ class jInstaller {
 
         $this->ok('install.entrypoint.start', $epId);
 
-        $ep = $this->epProperties[$epId];
+        $ep = $this->entryPoints[$epId];
         $GLOBALS['gJConfig'] = $ep->config;
 
         // load the main configuration
@@ -435,6 +447,8 @@ class jInstaller {
                 if ($toInstall) {
                     $installer = $component->getInstaller($epConfig, $epId, $installWholeApp);
                     if ($installer === null || $installer === false) {
+                        // no installer, so we assume that nothing has to be done to
+                        // install the module.
                         $this->installerIni->setValue($component->getName().'.installed',
                                                        1, $epId);
                         $this->installerIni->setValue($component->getName().'.version',

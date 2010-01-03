@@ -4,7 +4,7 @@
 * @subpackage  installer
 * @author      Laurent Jouanneau
 * @contributor 
-* @copyright   2008-2009 Laurent Jouanneau
+* @copyright   2008-2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -98,11 +98,10 @@ abstract class jInstallerComponentBase {
     public function getJelixVersion() { return array($this->jelixMinVersion, $this->jelixMaxVersion);}
 
     /**
-     * @param string $epId  the entry point id
      * @param jInstallerModuleInfos $module module infos
      */
-    public function setEntryPointData ($epId, $module) {
-        $this->moduleInfos[$epId] = $module;
+    public function addModuleInfos ($module) {
+        $this->moduleInfos[$module->entryPoint->getEpId()] = $module;
     }
     
     public function getAccessLevel($epId) {

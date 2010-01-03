@@ -28,11 +28,16 @@ class testInstallerComponentModule extends jInstallerComponentModule {
 class testInstallerEntryPoint extends jInstallerEntryPoint {
 
     function __construct($configFile, $file, $type, $configContent) {
+        $this->type = $type;
         $this->isCliScript = ($type == 'cmdline');
         $this->configFile = $configFile;
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
         $this->config = $configContent;
+    }
+    
+    function getEpId() {
+        return $this->file;
     }
 }
 

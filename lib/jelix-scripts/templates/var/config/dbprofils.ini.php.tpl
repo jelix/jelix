@@ -14,7 +14,7 @@ default = myapp
 ; the driver name : mysql, pgsql, pdo, sqlite...
 driver="mysql"
 
-; For the most of drivers:
+; For most of drivers:
 database="jelix"
 host= "localhost"
 user= "root"
@@ -26,7 +26,7 @@ persistent= on
 ;force_encoding = on
 
 ; with the following parameter, you can specify a table prefix which will be
-; applied to DAOs automatically. For manual jDb requests, please use method
+; applied to DAOs automatically. For manual jDb requests, please use the method
 ; jDbConnection::prefixTable().
 ;table_prefix =
 

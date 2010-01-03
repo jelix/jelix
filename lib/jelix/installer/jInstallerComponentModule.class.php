@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @contributor
-* @copyright   2008-2009 Laurent Jouanneau
+* @contributor 
+* @copyright   2008-2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -57,6 +57,14 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         }
     }
 
+    protected function _setAccess($config) {
+        $access = $config->getValue($this->name.'.access', 'modules');
+        if ($access == 0 || $access == null) {
+            $config->setValue($this->name.'.access', 2, 'modules');
+            $config->save();
+        }
+    }
+
     /**
      * get the object which is responsible to install the component. this
      * object should implement jIInstallerComponent.
@@ -68,8 +76,11 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      *         or false if the installer is useless for the given parameter
      */
     function getInstaller($config, $epId, $installWholeApp) {
-        if ($this->moduleInstaller === false)
+        $this->_setAccess($config);
+
+        if ($this->moduleInstaller === false) {
             return null;
+        }
 
         if ($this->moduleInstaller === null) {
             if (!file_exists($this->path.'install/install.php')) {
@@ -92,7 +103,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         // if there is already the same session Id in the list of session
         // it means that the installer has been already called for the same context
         // so we don't need to call it again
-        $sessionId = $this->moduleInstaller->setEntryPoint($this->mainInstaller->getEntryPoint($epId),
+        $sessionId = $this->moduleInstaller->setEntryPoint($this->moduleInfos[$epId]->entryPoint,
                                                            $config,
                                                            $this->moduleInfos[$epId]->dbProfile);
 
@@ -160,7 +171,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         }
 
         $list = array();
-        $entryPoint = $this->mainInstaller->getEntryPoint($epId);
+
         foreach($this->moduleUpgraders as $upgrader) {
 
             if (jVersionComparator::compareVersion($this->moduleInfos[$epId]->version, $upgrader->version) >= 0 ) {
@@ -168,13 +179,15 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             }
 
             $class = get_class($upgrader);
-            $sessionId = $upgrader->setEntryPoint($entryPoint, $config, $this->moduleInfos[$epId]->dbProfile);
+            $sessionId = $upgrader->setEntryPoint($this->moduleInfos[$epId]->entryPoint,
+                                                  $config,
+                                                  $this->moduleInfos[$epId]->dbProfile);
 
             if (!isset($this->upgradersSessionsId[$class])) {
                 $this->upgradersSessionsId[$class] = array();
             }
-
-            if (!in_array($sessionId,$this->upgradersSessionsId[$class])) {
+            
+            if (!in_array($sessionId, $this->upgradersSessionsId[$class])) {
                 $list[] = $upgrader;
                 $this->upgradersSessionsId[$class][] = $sessionId;
             }

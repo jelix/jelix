@@ -145,6 +145,7 @@ cd lib/jelix-scripts/templates/module/
   template.tpl
   zone.tpl
   locales.tpl
+  install.tpl
 cd lib/jelix-scripts/templates/responses/
   adminHtmlResponse.class.php.tpl
   adminLoginHtmlResponse.class.php.tpl

@@ -5,14 +5,18 @@
 
     <div class="nocss">
         <hr />
-        <p>If you see this message, it's because you didn't set correctly the access to web files of Jelix (js and css). Two solutions:</p>
+        <p>If you see this message, it's because you didn't set correctly the
+        access to web files of Jelix (js and css). Two solutions:</p>
         <ul>
-            <li>You can configure your virtualhost to create an alias <em>{$j_basepath}jelix/</em> to <em>lib/jelix-www/</em></li>
-            <li>Otherwise copy/past the <em>lib/jelix-www/</em> directory in <em>{$wwwpath}</em> and rename it to 'jelix'</li>
+            <li>You can configure your virtualhost to create an alias
+                <em>{$j_basepath}jelix/</em> to <em>lib/jelix-www/</em></li>
+            <li>Otherwise copy/past the <em>lib/jelix-www/</em> directory in
+                <em>{$wwwpath}</em> and rename it to 'jelix'</li>
         </ul>
-        <p>If you want to use another name for the Jelix's web file directory, modify the <code>jelixWWWPath</code>
-            parameter in <em>{$configpath}defaultconfig.ini.php</em>.</p>
-        <p>For more informations, see <a href="http://jelix.org/articles/en/manual-1.1/installation/applications"
+        <p>If you want to use another name for the Jelix's web file directory,
+            modify the <code>jelixWWWPath</code> parameter in
+            <em>{$configpath}defaultconfig.ini.php</em>.</p>
+        <p>For more informations, see <a href="http://jelix.org/articles/en/manual-1.2/installation/applications"
             title="installation documentation">the installation documentation</a> of Jelix.</p>
         <hr />
     </div>
@@ -39,7 +43,7 @@
             <ul>
                 <li><a href="http://www.jelix.org">Visit the Official Jelix's site</a></li>
                 <li><a href="http://jelix.org/articles/en/tutorials">Learn with tutorials</a></li>
-                <li><a href="http://jelix.org/articles/en/manual-1.1">Read the documentation of Jelix</a></li>
+                <li><a href="http://jelix.org/articles/en/manual-1.2">Read the documentation of Jelix</a></li>
                 <li><a href="http://jelix.org/forums/index.php?13">Ask your questions in forums</a></li>
             </ul>
         </div>

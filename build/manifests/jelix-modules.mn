@@ -25,6 +25,8 @@ cd lib/jelix-modules/jacldb/install
   install_jacl.data.mysql.sql
   install_jacl.data.pgsql.sql
   install.php
+cd lib/jelix-modules/jacldb/install/var/config
+  jacl.coord.ini.php
   
 cd lib/jelix-modules/jacl2db
 * module.xml
@@ -43,6 +45,8 @@ cd lib/jelix-modules/jacl2db/install
   install_jacl2.data.mysql.sql
   install_jacl2.data.pgsql.sql
   install.php
+cd lib/jelix-modules/jacl2db/install/var/config
+  jacl2.coord.ini.php
 
 cd lib/jelix-modules/jauthdb
 * module.xml

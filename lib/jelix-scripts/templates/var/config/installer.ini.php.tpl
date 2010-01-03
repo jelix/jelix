@@ -6,5 +6,7 @@
 ; modulename.version = installed version of the module
 ; modulename.installed =  0/1 module not installed/installed 
 
+jelix.installed = 1;
+
 ; jacldb is deprecated. keep it uninstall if possible
 jacldb.installed = 0
