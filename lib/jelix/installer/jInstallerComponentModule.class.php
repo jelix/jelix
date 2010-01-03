@@ -3,14 +3,14 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @contributor 
+* @contributor
 * @copyright   2008-2009 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
-* a class to install a module. 
+* a class to install a module.
 * @package     jelix
 * @subpackage  installer
 * @since 1.2
@@ -21,26 +21,26 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * @var string the namespace of the xml file
      */
     protected $identityNamespace = 'http://jelix.org/ns/module/1.0';
-    
+
     /**
      * @var string the expected name of the root element in the xml file
      */
     protected $rootName = 'module';
-    
+
     /**
      * @var string the name of the xml file
      */
     protected $identityFile = 'module.xml';
 
     protected $moduleInstaller = null;
-    
+
     protected $moduleUpgraders = null;
 
     /**
      * list of sessions Id of the component
      */
     protected $installerSessionsId = array();
-    
+
     protected $upgradersSessionsId = array();
 
 
@@ -84,7 +84,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
                                                 $this->name,
                                                 $this->path,
                                                 $this->sourceVersion,
-                                                $installApp
+                                                $installWholeApp
                                                 );
         }
 
@@ -108,11 +108,11 @@ class jInstallerComponentModule extends jInstallerComponentBase {
     /**
      * return the list of objects which are responsible to upgrade the component
      * from the current installed version of the component.
-     * 
+     *
      * this method should be called after verifying and resolving
      * dependencies. Needed components (modules or plugins) should be
      * installed/upgraded before calling this method
-     * 
+     *
      * @param jIniMultiFilesModifier $config the configuration of the entry point
      * @param string $epId the entry point id
      * @throw jInstallerException  if an error occurs during the install.
@@ -150,7 +150,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
                 $cname = $this->name.'ModuleUpgrader_'.$fileInfo[2];
                 if (!class_exists($cname))
                     throw new jInstallerException("module.upgrader.class.not.found",array($cname,$this->name));
-                    
+
                 $this->moduleUpgraders[] = new $cname($this->name,
                                                       $fileInfo[2],
                                                       $this->path,
@@ -158,7 +158,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
                                                       false);
             }
         }
-    
+
         $list = array();
         $entryPoint = $this->mainInstaller->getEntryPoint($epId);
         foreach($this->moduleUpgraders as $upgrader) {
@@ -173,7 +173,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             if (!isset($this->upgradersSessionsId[$class])) {
                 $this->upgradersSessionsId[$class] = array();
             }
-            
+
             if (!in_array($sessionId,$this->upgradersSessionsId[$class])) {
                 $list[] = $upgrader;
                 $this->upgradersSessionsId[$class][] = $sessionId;
