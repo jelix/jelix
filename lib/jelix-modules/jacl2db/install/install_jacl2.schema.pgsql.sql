@@ -12,6 +12,7 @@ SET default_with_oids = false;
 CREATE TABLE jacl2_group (
     id_aclgrp serial NOT NULL,
     name character varying(150) NOT NULL,
+    code character varying(30),
     grouptype smallint NOT NULL,
     ownerlogin character varying(50)
 );

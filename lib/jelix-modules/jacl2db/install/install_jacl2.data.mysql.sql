@@ -1,9 +1,9 @@
 --
-INSERT INTO `jacl2_group` (`id_aclgrp`, `name`, `grouptype`, `ownerlogin`) VALUES 
-(1, 'admins', 0, NULL),
-(2, 'users', 1, NULL),
-(3, 'admin', 2, 'admin'),
-(0, 'anonymous', 1, NULL);
+INSERT INTO `jacl2_group` (`id_aclgrp`, `name`, `code`, `grouptype`, `ownerlogin`) VALUES 
+(1, 'admins', 'admins', 0, NULL),
+(2, 'users', NULL, 1, NULL),
+(3, 'admin', NULL, 2, 'admin'),
+(0, 'anonymous', 'anonymous', 1, NULL);
 
 
 INSERT INTO `jacl2_user_group` (`login`, `id_aclgrp`) VALUES

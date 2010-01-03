@@ -7,6 +7,7 @@
 
       <property name="id_aclgrp" fieldname="id_aclgrp" datatype="autoincrement" required="yes"/>
       <property name="name" fieldname="name" datatype="string" required="yes"/>
+      <property name="code" fieldname="code" datatype="string"/>
 
       <!-- 0=normal 1=default 2=private -->
       <property name="grouptype" fieldname="grouptype" datatype="int" required="yes"/>
@@ -36,6 +37,13 @@
            <conditions>
               <eq property="grouptype" value="2" />
               <eq property="ownerlogin" expr="$login" />
+           </conditions>
+        </method>
+
+        <method name="getGroupByCode" type="selectfirst">
+           <parameter name="code" />
+           <conditions>
+              <eq property="code" expr="$code" />
            </conditions>
         </method>
 

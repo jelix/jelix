@@ -3,6 +3,7 @@
 CREATE TABLE  IF NOT EXISTS `jacl2_group` (
   `id_aclgrp` int(11) NOT NULL auto_increment,
   `name` varchar(150) NOT NULL default '',
+  `code` varchar(30) default NULL,
   `grouptype` tinyint(4) NOT NULL default '0',
   `ownerlogin` varchar(50) default NULL,
   PRIMARY KEY  (`id_aclgrp`)

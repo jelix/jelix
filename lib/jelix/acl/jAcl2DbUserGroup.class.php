@@ -72,6 +72,16 @@ class jAcl2DbUserGroup {
     }
 
     /**
+     * get a group by its codename
+     * @param string $code The code
+     * @return int the id of group
+     * @since 1.2
+     */
+    public static function getGroupByCode($code){
+        return jDao::get('jacl2db~jacl2group', 'jacl2_profile')->getGroupByCode($code)->id_aclgrp;
+    }
+
+    /**
      * get the list of the users of a group
      * @param int $groupid  id of the user group
      * @return array a list of users object (dao records)
@@ -164,11 +174,13 @@ class jAcl2DbUserGroup {
     /**
      * create a new group
      * @param string $name its name
+     * @param string $code its code
      * @return int the id of the new group
      */
-    public static function createGroup($name){
+    public static function createGroup($name, $code=null){
         $group = jDao::createRecord('jacl2db~jacl2group','jacl2_profile');
         $group->name=$name;
+        $group->code = $code;
         $group->grouptype=0;
         jDao::get('jacl2db~jacl2group','jacl2_profile')->insert($group);
         return $group->id_aclgrp;
