@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor 
+* @contributor Julien Issler
 * @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -38,9 +39,8 @@ class jFormsControlUpload extends jFormsControl {
                 return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
 
             if(count($this->mimetype)){
-                if($this->fileInfo['type']==''){
-                    $this->fileInfo['type'] = mime_content_type($this->fileInfo['tmp_name']);
-                }
+                $this->fileInfo['type'] = jFile::getMimeType($this->fileInfo['tmp_name']);
+
                 if(!in_array($this->fileInfo['type'], $this->mimetype))
                     return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
             }

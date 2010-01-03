@@ -126,5 +126,16 @@ class jFile {
             rmdir($path);
         }
     }
+
+    /**
+     * get the MIME Type of a file
+     *
+     * @param string $file The full path of the file
+     * @return string the MIME type of the file
+     * @since 1.1.6
+     */
+    public static function getMimeType($file){
+        return mime_content_type($file);
+    }
 }
 
