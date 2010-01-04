@@ -29,7 +29,7 @@ class UTjAuth_LDAP extends jUnitTestCase {
         $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.'auth_ldap.coord.ini.php',true);
 
         global $gJCoord;
-        include( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
+        require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
         $gJCoord->plugins['auth'] = new AuthCoordPlugin($conf);
 
         $this->config = & $gJCoord->plugins['auth']->config;

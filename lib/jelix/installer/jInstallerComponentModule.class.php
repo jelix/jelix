@@ -51,7 +51,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             foreach($ini->getSectionList() as $section) {
                 $sessid = $ini->getValue($this->name.'.sessionid',$section);
                 if ($sessid !== null && $sessid !== "") {
-                    $this->installerSessionsId[] = $sessid;
+                    $this->installerSessionsId = array_merge($this->installerSessionsId, explode(',', $sessid));
                 }
             }
         }
@@ -106,11 +106,22 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         $sessionId = $this->moduleInstaller->setEntryPoint($this->moduleInfos[$epId]->entryPoint,
                                                            $config,
                                                            $this->moduleInfos[$epId]->dbProfile);
-
-        if (in_array($sessionId, $this->installerSessionsId)) {
+        if (is_array($sessionId)) {
+            // if no given session id are in the list of session ids, so let's install it.
+            if (count(array_intersect($sessionId, $this->installerSessionsId)) != 0) {
+                return false;
+            }
+            else {
+                $this->installerSessionsId = array_merge($this->installerSessionsId, $sessionId);
+                $sessionId = implode(',', $sessionId);
+            }
+        }
+        else if (in_array($sessionId, $this->installerSessionsId)) {
             return false;
         }
-        $this->installerSessionsId[] = $sessionId;
+        else
+            $this->installerSessionsId[] = $sessionId;
+
         if ($this->mainInstaller)
             $this->mainInstaller->installerIni->setValue($this->name.'.sessionid', $sessionId, $epId);
         return $this->moduleInstaller;
@@ -186,10 +197,17 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             if (!isset($this->upgradersSessionsId[$class])) {
                 $this->upgradersSessionsId[$class] = array();
             }
-            
-            if (!in_array($sessionId, $this->upgradersSessionsId[$class])) {
-                $list[] = $upgrader;
+
+            if (is_array($sessionId)) {
+                // if no given session id are in the list of session ids, so let's upgrade.
+                if (count(array_intersect($sessionId, $this->upgradersSessionsId[$class])) == 0) {
+                    $this->upgradersSessionsId[$class] = array_merge($this->upgradersSessionsId[$class], $sessionId);
+                    $list[] = $upgrader;
+                }
+            }
+            else if (!in_array($sessionId, $this->upgradersSessionsId[$class])) {
                 $this->upgradersSessionsId[$class][] = $sessionId;
+                $list[] = $upgrader;
             }
         }
 

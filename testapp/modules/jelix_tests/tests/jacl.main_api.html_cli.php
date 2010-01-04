@@ -9,28 +9,37 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-if(!class_exists('jAuth',false)) {
-    class jAuth {
-
-        static public $connect = true;
-
-        static function isConnected() {
-            return self::$connect;
-        }
-
-        static function getUserSession() {
-            return $_SESSION['JELIX_USER'];
-        }
-    }
-}
-
-
-class userTest {
-    public $login;
-}
-
 
 class UTjacl extends jUnitTestCaseDb {
+
+    protected $config;
+    protected $oldAuthPlugin;
+
+    public function setUp (){
+        $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.'auth_class.coord.ini.php',true);
+
+        global $gJCoord;
+        require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
+        if (isset($gJCoord->plugins['auth']))
+            $this->oldAuthPlugin = $gJCoord->plugins['auth'];
+        $gJCoord->plugins['auth'] = new AuthCoordPlugin($conf);
+
+        $this->config = & $gJCoord->plugins['auth']->config;
+        $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
+        
+        jAuth::login('laurent','foo', false);
+    }
+
+    public function tearDown (){
+        global $gJCoord;
+        if ($this->oldAuthPlugin)
+            $gJCoord->plugins['auth'] = $this->oldAuthPlugin;
+        else
+            unset($gJCoord->plugins['auth']);
+        unset($_SESSION[$this->config['session_name']]);
+        $this->config = null;
+    }
+
 
     public function testStart(){
         $this->dbProfile = 'jacl_profile';
@@ -41,9 +50,6 @@ class UTjacl extends jUnitTestCaseDb {
                        array('id_aclgrp'=>2, 'name'=>'group2', 'grouptype'=>0, 'ownerlogin'=>null));
 
         $this->insertRecordsIntoTable('jacl_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
-
-        $_SESSION['JELIX_USER'] = new userTest();
-        $_SESSION['JELIX_USER']->login = 'laurent';
 
         $usergroups=array(
             array('login'=>'laurent', 'id_aclgrp'=>1),
@@ -102,11 +108,10 @@ class UTjacl extends jUnitTestCaseDb {
     }
 
     public function testGetRightDisconnect(){
-        jAuth::$connect = false;
+        jAuth::logout();
         jAcl::clearCache();
         $this->assertEqual(jAcl::getRight('super.cms'), array());
         $this->assertEqual(jAcl::getRight('admin.access'), array());
-        jAuth::$connect = true;
         jAcl::clearCache();
     }
 
@@ -138,12 +143,4 @@ class UTjacl extends jUnitTestCaseDb {
         $this->assertFalse(jAcl::check('foo', 'bar'));
         $this->assertFalse(jAcl::check('foo', 'bar','baz'));
     }
-
-
-    public function testEnd(){
-        $_SESSION['JELIX_USER']=null;
-    }
-
 }
-
-?>

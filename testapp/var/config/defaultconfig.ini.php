@@ -21,6 +21,7 @@ theme = default
 enableTests = on
 
 [modules]
+jelix.access = 2
 jelix_tests.access = 2
 testapp.access = 2
 testurls.access = 2
@@ -33,6 +34,9 @@ jauth.access = 1
 
 
 [coordplugins]
+auth = auth.coord.ini.php
+jacl2 = jacl2.coord.ini.php
+jacl = jacl.coord.ini.php
 
 [responses]
 

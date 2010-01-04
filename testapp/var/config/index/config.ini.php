@@ -1,9 +1,9 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-startModule="testapp"
+startModule=testapp
 startAction="main:index"
 
 [responses]
-html = myHtmlResponse
+html=myHtmlResponse
 

@@ -5,7 +5,9 @@ startModule="jelix_tests"
 startAction="jstests:first"
 
 [coordplugins]
-;nom = nom_fichier_ini
+auth = auth_ws.coord.ini.php
+jacl2 = jacl2_ws.coord.ini.php
+jacl = jacl_ws.coord.ini.php
 
 [responses]
 

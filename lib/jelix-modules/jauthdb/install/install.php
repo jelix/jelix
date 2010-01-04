@@ -25,11 +25,11 @@ class jauthdbModuleInstaller extends jInstallerModule {
     }
 
     function install() {
-        if ($this->entryPoint->type == 'cmdline')
-            return;
+        //if ($this->entryPoint->type == 'cmdline')
+        //    return;
 
         $authconfig = $this->config->getValue('auth','coordplugins');
-        
+
         if ($authconfig) {
             // a config file for the auth plugin exists, so we can install
             // the module, else we ignore it
@@ -52,7 +52,9 @@ class jauthdbModuleInstaller extends jInstallerModule {
             if ($daoName == 'jauthdb~jelixuser') {
                 $profile = $conf->getValue('profile', 'Db');
                 $this->execSQLScript('install_jauth.schema', $profile);
-                $this->execSQLScript('install_jauth.data', $profile);
+                try {
+                    $this->execSQLScript('install_jauth.data', $profile);
+                } catch(Exception $e) {}
             }
         }
     }

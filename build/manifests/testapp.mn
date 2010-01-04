@@ -94,6 +94,7 @@ cd testapp/modules/jelix_tests/classes
   test.iface.php
   myclass.class.php
   mydatasource.class.php
+  testAuthDriver.class.php
   testCache.class.php
 cd testapp/modules/jelix_tests/classes/tests
   foo.class.php
@@ -248,10 +249,17 @@ cd testapp/var/log-cli
 cd testapp/var/uploads
 cd testapp/var/mails
 cd testapp/var/config
+  auth.coord.ini.php
+  auth_class.coord.ini.php
+  auth_ws.coord.ini.php
   auth_ldap.coord.ini.php.dist
+  cache.ini.php.dist
   defaultconfig.ini.php
   dbprofils.ini.php.dist
-  cache.ini.php.dist
+  jacl2.coord.ini.php
+  jacl2_ws.coord.ini.php
+  jacl.coord.ini.php
+  jacl_ws.coord.ini.php
   urls.xml
   urls_old.xml
 cd testapp/var/config/index
