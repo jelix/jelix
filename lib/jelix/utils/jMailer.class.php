@@ -33,11 +33,10 @@ class jMailer extends PHPMailer {
 
     /**
      * the selector of the template used for the mail.
-     * Use the Tpl() method instead of this property
-     * @deprecated
+     * Use the Tpl() method to change this property
      * @var string
      */
-    public $bodyTpl = '';
+    protected $bodyTpl = '';
 
     protected $lang;
 

@@ -35,16 +35,6 @@ interface jIFormsDatasource {
 #endif
 
 /**
- * old interface which have been renamed to jIFormsDatasource.
- * use jIFormsDatasource instead
- * @package     jelix
- * @subpackage  forms
- * @deprecated since 1.1
- */
-interface jIFormDatasource extends jIFormsDatasource {
-}
-
-/**
  * A datasource which is based on static values.
  * @package     jelix
  * @subpackage  forms

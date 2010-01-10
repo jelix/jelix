@@ -92,15 +92,6 @@ class jDateTime {
     const RFC2822_FORMAT=61;
     const FULL_LANG_DATE=62;
 
-    /**#@+
-     * use DB_* consts instead
-     * @deprecated
-     */
-    const BD_DFORMAT=20;
-    const BD_DTFORMAT=21;
-    const BD_TFORMAT=22;
-    /**#@-*/
-
     /**
      *
      */

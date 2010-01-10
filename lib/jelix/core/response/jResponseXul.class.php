@@ -287,15 +287,6 @@ class jResponseXul extends jResponse {
      * @since 1.1
      */
     protected function doAfterActions(){
-        $this->_commonProcess(); // for compatibility with jelix 1.0
-    }
-
-    /**
-     * same use as doAfterActions, but deprecated method. It is just here for compatibility with Jelix 1.0.
-     * Use doAfterActions instead
-     * @deprecated
-     */
-    protected function _commonProcess(){
     }
 
     /**

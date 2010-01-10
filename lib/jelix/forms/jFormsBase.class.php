@@ -478,16 +478,6 @@ abstract class jFormsBase {
     public function getAllData(){ return $this->container->data; }
 
     /**
-     * DEPRECATED, use getAllData() instead.
-     * @return array form data
-     * @deprecated since 1.1
-     */
-    public function getDatas(){
-        trigger_error('jFormsBase::getDatas is deprecated, use getAllData instead',E_USER_NOTICE);
-        return $this->container->data;
-    }
-
-    /**
      * deactivate (or reactivate) a control
      * When a control is deactivated, it is not displayes anymore in the output form
      * @param string $name  the name of the control

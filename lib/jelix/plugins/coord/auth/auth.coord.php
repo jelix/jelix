@@ -23,14 +23,6 @@ require(JELIX_LIB_PATH.'auth/jAuth.class.php');
 require(JELIX_LIB_PATH.'auth/jAuthDummyUser.class.php');
 
 /**
- * deprecated class. It is here only for a soft migrating from jelix 1.0b3 to 1.0
- * when a jDummyAuthUser object is stored in a session
- * @deprecated
- */
-class jDummyAuthUser extends jAuthUser {
-}
-
-/**
 * @package    jelix
 * @subpackage coord_plugin
 */

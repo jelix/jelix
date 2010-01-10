@@ -333,20 +333,6 @@ class jTpl {
         return $content;
     }
 
-    /**
-     * deprecated function: optimized version of meta() + fetch().
-     * Instead use fetch with true as $callMeta parameter.
-     * @param string $tpl template selector
-     * @param string $outputtype the type of output (html, text etc..)
-     * @param boolean $trusted  says if the template file is trusted or not
-     * @return string the generated content
-     * @deprecated
-     */
-    public function metaFetch ($tpl, $outputtype = '', $trusted = true) {
-        return $this->fetch ($tpl, $outputtype, $trusted, true);
-    }
-
-
     protected $userModifiers = array();
 
     /**

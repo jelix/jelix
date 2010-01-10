@@ -58,16 +58,6 @@ abstract class jController{
     }
 
     /**
-    * jZone::get alias
-    * @param string $name zone selector
-    * @param array $params associative array, parameters
-    * @deprecated
-    */
-    protected function processZone($name, $params=array ()){
-        return jZone::get ($name, $params);
-    }
-
-    /**
     * Gets the value of a request parameter. If not defined, gets its default value.
     * @param string  $parName           the name of the request parameter
     * @param mixed   $parDefaultValue   the default returned value if the parameter doesn't exists
