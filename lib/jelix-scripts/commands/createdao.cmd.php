@@ -71,7 +71,7 @@ class createdaoCommand extends JelixScriptCommand {
           $this->createFile($filename,'module/dao_empty.xml.tpl',$param);
        }else{
 
-         $tools = jDb::getTools($profile);
+         $tools = jDb::getConnection($profile)->tools();
          $fields = $tools->getFieldList($param['table']);
 
          $properties='';

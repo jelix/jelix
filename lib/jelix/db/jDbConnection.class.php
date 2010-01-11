@@ -298,4 +298,26 @@ abstract class jDbConnection {
     protected function _quote($text){
         return addslashes($text);
     }
+    
+    /**
+     * @var jDbTools
+     */
+    protected $_tools = null;
+    
+    /**
+     * @return jDbTools
+     */
+    public function tools () {
+        if (!$this->_tools) {
+            global $gJConfig;
+            require_once($gJConfig->_pluginsPathList_db[$this->dbms].$this->dbms.'.dbtools.php');
+            $class = $this->dbms.'DbTools';
+            $this->_tools = new $class($this);
+        }
+
+        return $this->_tools;
+    }
+
+    
+    
 }

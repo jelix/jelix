@@ -12,48 +12,6 @@
 */
 
 /**
- * a resultset based on PDOStatement
- * @package  jelix
- * @subpackage db
- */
-class jDbPDOResultSet extends PDOStatement {
-
-    const FETCH_CLASS = 8;
-
-    protected $_fetchMode = 0;
-
-    /**
-     * return all results from the statement.
-     * Arguments are ignored. JDb don't care about it (fetch always as classes or objects)
-     * But there are here because of the compatibility of internal methods of PDOStatement
-     * @param integer $fetch_style ignored
-     * @param integer $column_index
-     * @param array $ctor_arg  (ignored)
-     * @return array list of object which contain all rows
-     */
-    public function fetchAll ($fetch_style = PDO::FETCH_OBJ, $column_index=0, $ctor_arg=null) {
-        if ($this->_fetchMode) {
-            if ($this->_fetchMode != PDO::FETCH_COLUMN)
-                return parent::fetchAll($this->_fetchMode);
-            else
-                return parent::fetchAll($this->_fetchMode, $column_index);
-        }
-        else {
-            return parent::fetchAll(PDO::FETCH_OBJ);
-        }
-    }
-
-    /**
-     * Set the fetch mode.
-     */
-    public function setFetchMode($mode, $param=null){
-        $this->_fetchMode = $mode;
-        return parent::setFetchMode($mode, $param);
-    }
-}
-
-
-/**
  * A connection object based on PDO
  * @package  jelix
  * @subpackage db
@@ -231,4 +189,30 @@ class jDbPDOConnection extends PDO {
             default: return $fieldName;
         }
     }
+    
+    /**
+     * @var jDbTools
+     */
+    protected $_tools = null;
+    
+    /**
+     * @return jDbTools
+     */
+    public function tools () {
+        if (!$this->_tools) {
+            global $gJConfig;
+    #ifnot ENABLE_OPTIMIZED_SOURCE
+            if (!isset($gJConfig->_pluginsPathList_db[$this->dbms])
+                || !file_exists($gJConfig->_pluginsPathList_db[$this->dbms])) {
+                throw new jException('jelix~db.error.driver.notfound', $this->dbms);
+            }
+    #endif
+            require_once($gJConfig->_pluginsPathList_db[$this->dbms].$this->dbms.'.dbtools.php');
+            $class = $this->dbms.'DbTools';
+            $this->_tools = new $class($this);
+        }
+
+        return $this->_tools;
+    }
+
 }

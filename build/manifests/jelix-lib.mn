@@ -182,6 +182,7 @@ cd lib/jelix/dao
 cd lib/jelix/db
 * jDb.class.php
 * jDbPDOConnection.class.php
+  jDbPDOResultSet.class.php
   jDbTools.class.php
   jDbWidget.class.php
 

@@ -15,7 +15,7 @@ class UTjDbPgsql extends jUnitTestCaseDb {
 
     function getTests(){
         try{
-            $profile = jDb::getConnection($this->dbProfile);
+            $cnx = jDb::getConnection($this->dbProfile);
         }
         catch (Exception $e) {
             $this->sendMessage('UTjDbPgsql cannot be run: '.$e->getMessage());
@@ -29,7 +29,7 @@ class UTjDbPgsql extends jUnitTestCaseDb {
     }
 
     function testTools(){
-        $tools = jDb::getTools($this->dbProfile);
+        $tools = jDb::getConnection($this->dbProfile)->tools();
 
         $fields = $tools->getFieldList('products');
         $structure = '<array>

@@ -154,7 +154,7 @@ class UTjDb extends jUnitTestCase {
 
     function testTools(){
 
-        $tools = jDb::getTools($this->dbProfile);
+        $tools = jDb::getConnection($this->dbProfile)->tools();
         $fields = $tools->getFieldList('products');
         $structure = '<array>
     <object key="id" class="jDbFieldProperties">

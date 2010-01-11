@@ -113,9 +113,7 @@ abstract class jInstallerBase {
      * @return jDbTools  the tool class of jDb
      */
     protected function dbTool () {
-        if (!$this->_dbTool)
-            $this->_dbTool = jDb::getTools($this->dbProfile);
-        return $this->_dbTool;
+        return $this->dbConnection()->tools();
     }
 
     /**

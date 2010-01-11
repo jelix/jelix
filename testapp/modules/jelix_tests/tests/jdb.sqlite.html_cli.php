@@ -19,7 +19,7 @@ class UTjDbSqlite extends jUnitTestCase {
             return;
         }
 
-        $tools = jDb::getTools('testapp_sqlite');
+        $tools = jDb::getConnection('testapp_sqlite')->tools();
         $fields = $tools->getFieldList('products');
         $structure = '<array>
     <object key="id" class="jDbFieldProperties">

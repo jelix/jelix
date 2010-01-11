@@ -89,34 +89,14 @@ class jDb {
     }
 
     /**
-    * instancy a jDbTools object
+    * instancy a jDbTools object. Use jDbConnection::tools() instead.
     * @param string $name profile name to use. if empty, use the default one
     * @return jDbTools
+    * @deprecated since 1.2
     */
     public static function getTools ($name = null) {
-        $profile = self::getProfile ($name);
-
-        $driver = $profile['driver'];
-
-        if ($driver == 'pdo') {
-            preg_match('/^(\w+)\:.*$/', $profile['dsn'], $m);
-            $driver = $m[1];
-        }
-
-        global $gJConfig;
-#ifnot ENABLE_OPTIMIZED_SOURCE
-        if (!isset($gJConfig->_pluginsPathList_db[$driver])
-            || !file_exists($gJConfig->_pluginsPathList_db[$driver])) {
-            throw new jException('jelix~db.error.driver.notfound', $driver);
-        }
-#endif
-        require_once($gJConfig->_pluginsPathList_db[$driver].$driver.'.dbtools.php');
-        $class = $driver.'DbTools';
-
-        //Création de l'objet
         $cnx = self::getConnection ($name);
-        $tools = new $class ($cnx);
-        return $tools;
+        return $cnx->tools();
     }
 
     /**

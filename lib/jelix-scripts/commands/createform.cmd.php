@@ -83,7 +83,7 @@ class createformCommand extends JelixScriptCommand {
         $gJConfig->startModule = $this->_parameters['module'];
         jContext::push($this->_parameters['module']);
 
-        $tools = jDb::getTools();
+        $tools = jDb::getConnection()->tools();
         
         // we're going to parse the dao
         $selector = new jSelectorDao($dao,'');
