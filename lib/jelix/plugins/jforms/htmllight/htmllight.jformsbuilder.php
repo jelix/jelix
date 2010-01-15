@@ -401,9 +401,9 @@ jForms.declareForm(jForms.tForm);
         $minDate = $ctrl->datatype->getFacet('minValue');
         $maxDate = $ctrl->datatype->getFacet('maxValue');
         if($minDate)
-            $this->jsContent .= "c.minDate = '".$minDate->toString(jDateTime::BD_DFORMAT)."';\n";
+            $this->jsContent .= "c.minDate = '".$minDate->toString(jDateTime::DB_DFORMAT)."';\n";
         if($maxDate)
-            $this->jsContent .= "c.maxDate = '".$maxDate->toString(jDateTime::BD_DFORMAT)."';\n";
+            $this->jsContent .= "c.maxDate = '".$maxDate->toString(jDateTime::DB_DFORMAT)."';\n";
         $this->commonJs($ctrl);
     }
 
@@ -449,9 +449,9 @@ jForms.declareForm(jForms.tForm);
         $minDate = $ctrl->datatype->getFacet('minValue');
         $maxDate = $ctrl->datatype->getFacet('maxValue');
         if($minDate)
-            $this->jsContent .= "c.minDate = '".$minDate->toString(jDateTime::BD_DTFORMAT)."';\n";
+            $this->jsContent .= "c.minDate = '".$minDate->toString(jDateTime::DB_DTFORMAT)."';\n";
         if($maxDate)
-            $this->jsContent .= "c.maxDate = '".$maxDate->toString(jDateTime::BD_DTFORMAT)."';\n";
+            $this->jsContent .= "c.maxDate = '".$maxDate->toString(jDateTime::DB_DTFORMAT)."';\n";
         $this->commonJs($ctrl);
     }
 

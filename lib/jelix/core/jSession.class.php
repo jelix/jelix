@@ -174,7 +174,7 @@ class jSession {
         $date = new jDateTime();
         $date->now();
         $date->sub(0,0,0,0,0,$maxlifetime);
-        self::_getDao()->deleteExpired($date->toString(jDateTime::BD_DTFORMAT));
+        self::_getDao()->deleteExpired($date->toString(jDateTime::DB_DTFORMAT));
         return true;
     }
 

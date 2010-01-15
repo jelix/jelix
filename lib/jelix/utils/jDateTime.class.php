@@ -160,15 +160,12 @@ class jDateTime {
                $str = date($lf, $t);
                break;
            case self::DB_DFORMAT:
-           case self::BD_DFORMAT:
                $str = sprintf('%04d-%02d-%02d', $this->year, $this->month, $this->day);
                break;
            case self::DB_DTFORMAT:
-           case self::BD_DTFORMAT:
                $str = sprintf('%04d-%02d-%02d %02d:%02d:%02d', $this->year, $this->month, $this->day, $this->hour, $this->minute, $this->second);
                break;
            case self::DB_TFORMAT:
-           case self::BD_TFORMAT:
                $str = sprintf('%02d:%02d:%02d', $this->hour, $this->minute, $this->second);
                break;
            case self::ISO8601_FORMAT:
@@ -248,7 +245,6 @@ class jDateTime {
                }
                break;
            case self::DB_DFORMAT:
-           case self::BD_DFORMAT:
                if($res = strptime( $str, "%Y-%m-%d" )){
                    $ok=true;
                    $this->year = $res['tm_year'] + 1900;
@@ -257,7 +253,6 @@ class jDateTime {
                }
                break;
            case self::DB_DTFORMAT:
-           case self::BD_DTFORMAT:
                if($res = strptime( $str, "%Y-%m-%d %H:%M:%S" )){
                    $ok=true;
                    $this->year = $res['tm_year'] + 1900;
@@ -269,7 +264,6 @@ class jDateTime {
                }
                break;
            case self::DB_TFORMAT:
-           case self::BD_TFORMAT:
                if($res = strptime( $str, "%H:%M:%S" )){
                    $ok=true;
                    $this->hour = $res['tm_hour'];
