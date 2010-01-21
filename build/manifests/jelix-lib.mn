@@ -181,15 +181,17 @@ cd lib/jelix/dao
 
 cd lib/jelix/db
 * jDb.class.php
+  jDbColumn.class.php
 * jDbPDOConnection.class.php
   jDbPDOResultSet.class.php
+  jDbSchema.class.php
+  jDbTable.class.php
   jDbTools.class.php
   jDbWidget.class.php
 
 cd lib/jelix/events
 * jEvent.class.php
   jEventCompiler.class.php
-
 
 cd lib/jelix/forms
   jForms.class.php
@@ -313,23 +315,27 @@ cd lib/jelix/plugins/db/intuition
 cd lib/jelix/plugins/db/mysql
   mysql.dbconnection.php
   mysql.dbresultset.php
+  mysql.dbschema.php
 * mysql.dbtools.php
   mysql.daobuilder.php
 
 cd lib/jelix/plugins/db/pgsql
   pgsql.dbconnection.php
   pgsql.dbresultset.php
+  pgsql.dbschema.php
 * pgsql.dbtools.php
   pgsql.daobuilder.php
 
 cd lib/jelix/plugins/db/sqlite
   sqlite.dbconnection.php
   sqlite.dbresultset.php
+  sqlite.dbschema.php
 * sqlite.dbtools.php
   sqlite.daobuilder.php
 
 cd lib/jelix/plugins/db/oci
   oci.daobuilder.php
+  oci.dbschema.php
 * oci.dbtools.php
 
 cd lib/jelix/plugins/jforms/html

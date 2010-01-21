@@ -129,7 +129,7 @@ class mysqlDbTools extends jDbTools {
         }
         else if (isset($this->_conn->profile['dsn'])
                  && preg_match('/dbname=([a-z0-9_ ]*)/', $this->_conn->profile['dsn'], $m)){
-            $db = $m[1];  
+            $db = $m[1];
         }
         else {
             throw new jException("jelix~error.no.database.name", $this->_conn->profile['name']);

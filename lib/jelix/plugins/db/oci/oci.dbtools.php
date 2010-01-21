@@ -105,7 +105,6 @@ class ociDbTools extends jDbTools {
       'complex types'   =>array('varchar',    'varchar',    null,       null,       0,     65535),
     );
 
-
     /**
     * returns the list of tables 
     * @return   array    list of table names

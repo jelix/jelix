@@ -259,12 +259,14 @@ abstract class jDbTools {
 
     /**
     * returns the table list
+    * @deprecated since 1.2
     */
     abstract public function getTableList ();
 
     /**
     * return the field list of a given table
     * @return array  array of jDbFieldProperties
+    * @deprecated since 1.2
     */
     abstract public function getFieldList ($tableName);
 

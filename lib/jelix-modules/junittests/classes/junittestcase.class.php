@@ -203,7 +203,7 @@ $this->dump('!!!!! value de n  pas ok');*/
                     return true;
             case 'int':
             case 'integer':
-                $ok = $this->assertIsA($value,'integer', $name.': not an integer'.$errormessage);
+                $ok = $this->assertTrue(is_integer($value), $name.': not an integer ('.$value.') '.$errormessage);
                 if(!$ok) return false;
                 if(isset($xml['value'])){
                     return $this->assertEqual($value, intval((string)$xml['value']),$name.': bad value. %s'.$errormessage);
@@ -211,14 +211,14 @@ $this->dump('!!!!! value de n  pas ok');*/
                     return true;
             case 'float':
             case 'double':
-                $ok = $this->assertIsA($value,'float', $name.': not a float'.$errormessage);
+                $ok = $this->assertIsA($value,'float', $name.': not a float ('.$value.') '.$errormessage);
                 if(!$ok) return false;
                 if(isset($xml['value'])){
                     return $this->assertEqual($value, floatval((string)$xml['value']),$name.': bad value. %s'.$errormessage);
                 }else
                     return true;
             case 'boolean':
-                $ok = $this->assertIsA($value,'boolean', $name.': not a boolean'.$errormessage);
+                $ok = $this->assertIsA($value,'boolean', $name.': not a boolean ('.$value.') '.$errormessage);
                 if(!$ok) return false;
                 if(isset($xml['value'])){
                     $v = ((string)$xml['value'] == 'true');
@@ -226,7 +226,7 @@ $this->dump('!!!!! value de n  pas ok');*/
                 }else
                     return true;
             case 'null':
-                return $this->assertNull($value, $name.': not null'.$errormessage);
+                return $this->assertNull($value, $name.': not null ('.$value.') '.$errormessage);
             case 'notnull':
                 return $this->assertNotNull($value, $name.' is null'.$errormessage);
             case 'resource':

@@ -301,11 +301,13 @@ abstract class jDbConnection {
     
     /**
      * @var jDbTools
+     * @since 1.2
      */
     protected $_tools = null;
     
     /**
      * @return jDbTools
+     * @since 1.2
      */
     public function tools () {
         if (!$this->_tools) {
@@ -318,6 +320,26 @@ abstract class jDbConnection {
         return $this->_tools;
     }
 
+
+    /**
+     * @var jDbSchema
+     * @since 1.2
+     */
+    protected $_schema = null;
     
+    /**
+     * @return jDbSchema
+     * @since 1.2
+     */
+    public function schema () {
+        if (!$this->_schema) {
+            global $gJConfig;
+            require_once($gJConfig->_pluginsPathList_db[$this->dbms].$this->dbms.'.dbschema.php');
+            $class = $this->dbms.'DbSchema';
+            $this->_schema = new $class($this);
+        }
+
+        return $this->_schema;
+    }
     
 }
