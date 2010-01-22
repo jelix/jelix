@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Nicolas Jeudy (patch ticket #99)
-* @copyright  2005-2009 Laurent Jouanneau
+* @copyright  2005-2010 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -199,7 +199,11 @@ class pgsqlDbTools extends jDbTools {
     }
 
     public function execSQLScript ($file) {
-        $sqlQueries=file_get_contents($file);
+        if(!isset($this->_conn->profile['table_prefix']))
+            $prefix = '';
+        else
+            $prefix = $this->_conn->profile['table_prefix'];
+        $sqlQueries = str_replace('%%PREFIX%%', $prefix, file_get_contents($file));
         $this->_conn->query ($sqlQueries);
     }
 }

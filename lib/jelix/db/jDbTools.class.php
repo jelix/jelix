@@ -4,7 +4,7 @@
 * @subpackage db
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau, Gwendal Jouannic, Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
 * @copyright  2008 Gwendal Jouannic
 * @copyright  2008 Julien Issler
 *
@@ -276,6 +276,10 @@ abstract class jDbTools {
     protected $dbmsStyle = array('/^\s*#/', '/;\s*$/');
 
     public function execSQLScript ($file) {
+        if(!isset($this->_conn->profile['table_prefix']))
+            $prefix = '';
+        else
+            $prefix = $this->_conn->profile['table_prefix'];
 
         $lines = file($file);
         $cmdSQL = '';
@@ -287,13 +291,14 @@ abstract class jDbTools {
             if ((!preg_match($style[0],$line))&&(strlen(trim($line))>0)) { // la ligne n'est ni vide ni commentaire
                //$line = str_replace("\\'","''",$line);
                //$line = str_replace($this->scriptReplaceFrom, $this->scriptReplaceBy,$line);
-
+               
                 $cmdSQL.=$line;
 
                 if (preg_match($style[1],$line)) {
                     //Si on est à la ligne de fin de la commande on l'execute
                     // On nettoie la commande du ";" de fin et on l'execute
                     $cmdSQL = preg_replace($style[1],'',$cmdSQL);
+                    $cmdSQL = str_replace('%%PREFIX%%', $prefix, $cmdSQL);
                     $this->_conn->query ($cmdSQL);
                     $nbCmd++;
                     $cmdSQL = '';

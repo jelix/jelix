@@ -190,7 +190,12 @@ class mysqlDbTools extends jDbTools {
     }
     
     public function execSQLScript ($file) {
-        $queries = $this->parseSQLScript(file_get_contents($file));
+        if(!isset($this->_conn->profile['table_prefix']))
+            $prefix = '';
+        else
+            $prefix = $this->_conn->profile['table_prefix'];
+        $sqlQueries = str_replace('%%PREFIX%%', $prefix, file_get_contents($file));
+        $queries = $this->parseSQLScript($sqlQueries);
         foreach($queries as $query)
             $this->_conn->exec($query);
         return count($queries);
