@@ -54,5 +54,5 @@ cache_file_umask =
 
 ; Memcached servers. 
 ; Can be a list e.g
-;servers = memcache_host1:11211;memcache_host2:11211;memcache_host3:11211 i.e HOST_NAME:PORT
+;servers = memcache_host1:11211,memcache_host2:11211,memcache_host3:11211 i.e HOST_NAME:PORT
 ;servers = 

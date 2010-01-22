@@ -4,7 +4,8 @@
 * @subpackage plugins_cache_memcached
 * @author     Tahina Ramaroson
 * @contributor Sylvain de Vathaire
-* @copyright  2009 Neov
+* @copyright  2009 Neov, 2010 Neov
+* @link     http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
@@ -71,11 +72,11 @@ class memcachedCacheDriver implements jICacheDriver {
             throw new jException('jelix~cache.error.memcache.extension.missing',array($this->profil_name, $e->getMessage()));
         }
 
-        if(isset($param['servers'])){
+        if(isset($params['servers'])){
             $this->_servers = $params['servers'];
         }
 
-        $servers = explode(';',$this->_servers );
+        $servers = explode(',',$this->_servers );
         $fails = 0;
         for ($i = 0; $i<count($servers); $i++) {
             list($server,$port) = explode(':', $servers[$i]);
