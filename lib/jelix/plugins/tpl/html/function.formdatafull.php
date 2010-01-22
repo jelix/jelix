@@ -3,9 +3,9 @@
 * @package      jelix
 * @subpackage   jtpl_plugin
 * @author       Laurent Jouanneau
-* @contributor  Dominique Papin, Julien Issler
+* @contributor  Dominique Papin, Julien Issler, Brunto
 * @copyright    2007-2008 Laurent Jouanneau, 2007 Dominique Papin
-* @copyright    2008 Julien Issler
+* @copyright    2008 Julien Issler, 2010 Brunto
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -21,7 +21,7 @@ function jtpl_function_html_formdatafull($tpl, $form)
     echo '<table class="jforms-table" border="0">';
 
     foreach( $form->getControls() as $ctrlref=>$ctrl){
-        if($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden' || $ctrl->type == 'captcha') continue;
+        if($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden' || $ctrl->type == 'captcha' || $ctrl->type == 'secretconfirm') continue;
         if(!$form->isActivated($ctrlref)) continue;
 
         echo '<tr><th scope="row">';

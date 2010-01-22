@@ -154,6 +154,9 @@ Yoan Blanc (aka Greut)
 Vincent Bonnard
  - bug fix in jXmlRpc.class.php (#190)
 
+Brunto
+ - bug fix in the formdatafull plugin (#1027)
+
 Catsoup
  - bug fixed in jEvent for multi entry point (#1004)
  - invalid error locale in jMailer class  (#983)
