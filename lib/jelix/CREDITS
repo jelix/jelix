@@ -230,6 +230,9 @@ Nicolas Lassalle
 Hugues Magnier (aka BaGroN)
  - tpl plugin stripws (#140)
 
+Yann Lecommandoux (aka YannL)
+ - mssql driver for jDb (#799)
+
 Alexis Métaireau
  - improvements on jtpl plugin formcontrol (#652)
  - added jResponseHtml::addLink(#657)

@@ -312,6 +312,12 @@ cd lib/jelix/plugins/db/intuition
   intuition.dbtools.php
   intuition.daobuilder.php
 
+cd lib/jelix/plugins/db/mssql
+  mssql.dbconnection.php
+  mssql.dbresultset.php
+* mssql.dbtools.php
+  mssql.daobuilder.php
+
 cd lib/jelix/plugins/db/mysql
   mysql.dbconnection.php
   mysql.dbresultset.php
