@@ -4,7 +4,7 @@
 * @subpackage core
 * @author     Laurent Jouanneau
 * @contributor
-* @copyright  2005-2008 Laurent Jouanneau
+* @copyright  2005-2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -208,6 +208,47 @@ abstract class jRequest {
       if ($proto === null)
          $proto = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off' ? 'https://':'http://');
       return $proto;
+   }
+
+   /**
+    * call it when you want to read the content of the body of a request
+    * when the method is not GET or POST
+    * @return mixed    array of parameters or a single string when the content-type is unknown
+    * @since 1.2
+    */
+   public function readHttpBody() {
+      $input = file_get_contents("php://input");
+      $values = array();
+
+      if (strpos($_SERVER["CONTENT_TYPE"], "application/x-www-url-encoded") == 0) {
+         parse_str($input, $values);
+         return $values;
+      }
+      else if (strpos($_SERVER["CONTENT_TYPE"], "multipart/form-data") == 0) {
+
+         if (!preg_match("/boundary=([a-zA-Z0-9]+)/", $_SERVER["CONTENT_TYPE"], $m))
+            return $input;
+
+         $parts = explode('--'.$m[1], $input);
+         foreach($parts as $part) {
+            if (trim($part) == '' || $part == '--')
+               continue;
+            list($header, $value) = explode("\r\n\r\n", $part);
+            if (preg_match('/content\-disposition\:(?: *)form\-data\;(?: *)name="([^"]+)"(\;(?: *)filename="([^"]+)")?/i', $header, $m)) {
+               if (isset($m[2]) && $m[3] != '')
+                  $return[$m[1]] = array( $m[3], $value);
+               else
+                  $return[$m[1]] = $value;
+            }
+         }
+         if (count($values))
+            return $values;
+         else
+            return $input;
+      }
+      else {
+         return $input;
+      }
    }
 }
 
