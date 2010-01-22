@@ -4,11 +4,11 @@
 * @subpackage forms
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin, Julien Issler
-* @contributor Uriel Corfa Emotic SARL, Thomas
+* @contributor Uriel Corfa Emotic SARL, Thomas, Olivier Demah
 * @copyright   2006-2009 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2007-2008 Dominique Papin
 * @copyright   2007 Emotic SARL
-* @copyright   2008 Julien Issler, 2009 Thomas
+* @copyright   2008 Julien Issler, 2009 Thomas, 2009 Olivier Demah
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -167,6 +167,16 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
         return false;
     }
 
+    protected function generateWikieditor(&$source, $control, &$attributes) {
+        $this->_generateTextareaHtmlEditor($source, $control, $attributes);
+
+        if (isset($attributes['config'])) {
+            $source[]='$ctrl->config=\''.str_replace("'","\\'",$attributes['config']).'\';';
+            unset($attributes['config']);
+        }
+        return false;
+    }
+
     protected function generateHidden(&$source, $control, &$attributes) {
         $this->attrDefaultvalue($source, $attributes);
         return false;
@@ -258,7 +268,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
             if(in_array($ctrltype, $ignore))
                 continue;
             if(!in_array($ctrltype, array('input','textarea', 'output','checkbox','checkboxes','radiobuttons',
-                        'menulist','listbox','secret', 'upload', 'hidden','htmleditor','date','datetime'))) {
+                        'menulist','listbox','secret', 'upload', 'hidden','htmleditor','date','datetime','wikieditor'))) {
                 throw new jException('jelix~formserr.control.not.allowed',array($ctrltype, $controltype,$this->sourceFile));
             }
             $ctrlcount++;

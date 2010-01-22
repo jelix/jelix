@@ -305,3 +305,13 @@ disableCache = off
 [classbindings]
 ; bindings for class and interfaces : selector_of_class/iface = selector_of_implementation
 
+[wikieditors]
+default.engine.name = wr3
+default.wiki.rules = wr3_to_xhtml
+; path to the engine file
+default.engine.file = jelix/markitup/jquery.markitup.js
+; define the path to the "internationalized" file to translate the label of each button
+default.config.path = jelix/markitup/sets/wr3/
+; define the path to the image of buttons of the toolbar
+default.image.path = jelix/markitup/sets/wr3/images/
+default.skin = jelix/markitup/skins/simple/style.css

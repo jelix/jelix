@@ -56,6 +56,10 @@
       <label>Description in html</label>
   </htmleditor>
 
+  <wikieditor ref="wikicontent">
+      <label>a wiki editor</label>
+  </wikieditor>
+
   <checkboxes ref="objets" required="true">
       <label>You have </label>
       <item value="maison">a house</item>

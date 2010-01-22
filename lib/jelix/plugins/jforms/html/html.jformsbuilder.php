@@ -3,9 +3,10 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor Julien Issler, Dominique Papin
-* @copyright   2006-2009 Laurent Jouanneau
+* @contributor Julien Issler, Dominique Papin, Olivier Demah
+* @copyright   2006-2010 Laurent Jouanneau
 * @copyright   2008 Julien Issler, 2008 Dominique Papin
+* @copyright   2009 Olivier Demah
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -89,6 +90,18 @@ class htmlJformsBuilder extends jFormsBuilderBase {
                     $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:$datepicker_default_config;
                     $resp->addJSLink($bp.$gJConfig->datepickers[$config]);
                 }
+            }
+
+            foreach($v->getWikiEditors() as $ed) {
+                if(isset($gJConfig->wikieditors[$ed->config.'.engine.file']))
+                    $resp->addJSLink($bp.$gJConfig->wikieditors[$ed->config.'.engine.file']);
+                if(isset($gJConfig->wikieditors[$ed->config.'.config.path'])) {
+                    $p = $bp.$gJConfig->wikieditors[$ed->config.'.config.path'];
+                    $resp->addJSLink($p.$GLOBALS['gJConfig']->locale.'.js');
+                    $resp->addCSSLink($p.'style.css');
+                }
+                if(isset($gJConfig->wikieditors[$ed->config.'.skin']))
+                    $resp->addCSSLink($bp.$gJConfig->wikieditors[$ed->config.'.skin']);
             }
         }
     }
@@ -657,6 +670,18 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $this->jsTextarea($ctrl);
         $engine = $GLOBALS['gJConfig']->htmleditors[$ctrl->config.'.engine.name'];
         $this->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$this->_name.'_'.$ctrl->ref.'","'.$this->_name."\");\n";
+    }
+
+    protected function outputWikieditor($ctrl, $id, $class, $readonly, $hint) {
+        $value = $this->_form->getData($ctrl->ref);
+        $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
+        echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
+    }
+
+    protected function jsWikieditor($ctrl) {
+        $this->jsTextarea($ctrl);
+        $engine = $GLOBALS['gJConfig']->wikieditors[$ctrl->config.'.engine.name'];
+		$this->jsContent .= '$("#'.$this->_name.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
     }
 
     protected function outputSecret($ctrl, $id, $class, $readonly, $hint) {

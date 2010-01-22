@@ -74,3 +74,4 @@ cd lib/jelix/forms/controls
   jFormsControlUpload.class.php
   jFormsControlDate.class.php
   jFormsControlDatetime.class.php
+  jFormsControlWikiEditor.class.php

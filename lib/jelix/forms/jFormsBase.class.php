@@ -5,9 +5,9 @@
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
 * @contributor Bastien Jaillot
-* @contributor Christophe Thiriot, Julien Issler
-* @copyright   2006-2009 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
-* @copyright   2008-2009 Julien Issler
+* @contributor Christophe Thiriot, Julien Issler, Olivier Demah
+* @copyright   2006-2010 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
+* @copyright   2008-2009 Julien Issler, 2009 Olivier Demah
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -95,6 +95,15 @@ abstract class jFormsBase {
      * @see jFormsControl
      */
     protected $htmleditors = array();
+
+	/**
+     * List of wikieditorcontrols
+     * array of jFormsControl objects
+     * @var array
+     * @see jFormsControl
+     * @since 1.2
+     */
+    protected $wikieditors = array();
 
     /**
      * the data container
@@ -557,6 +566,12 @@ abstract class jFormsBase {
      */
     public function getHtmlEditors(){ return $this->htmleditors; }
 
+     /**
+     * @return array of jFormsControl objects
+     * @since 1.2
+     */
+    public function getWikiEditors(){ return $this->wikieditors; }
+
     /**
      * @return array of jFormsControl objects
      * @since 1.2
@@ -768,6 +783,7 @@ abstract class jFormsBase {
         unset($this->uploads [$name]);
         unset($this->hiddens [$name]);
         unset($this->htmleditors [$name]);
+        unset($this->wikieditors [$name]);
         unset($this->container->data[$name]);
     }
 
@@ -778,17 +794,26 @@ abstract class jFormsBase {
     */
     public function addChildControl($control){
         $this->controls [$control->ref] = $control;
-        if($control->type =='submit')
-            $this->submits [$control->ref] = $control;
-        else if($control->type =='reset')
-            $this->reset = $control;
-        else if($control->type =='upload')
-            $this->uploads [$control->ref] = $control;
-        else if($control->type =='hidden')
-            $this->hiddens [$control->ref] = $control;
-        else if($control->type == 'htmleditor')
-            $this->htmleditors [$control->ref] = $control;
-
+        switch ($control->type) {
+            case 'submit':
+                $this->submits [$control->ref] = $control;
+                break;
+            case 'reset':
+                $this->reset = $control;
+                break;
+            case 'upload':
+                $this->uploads [$control->ref] = $control;
+                break;
+            case 'hidden':
+                $this->hiddens [$control->ref] = $control;
+                break;
+            case 'htmleditor':
+                $this->htmleditors [$control->ref] = $control;
+                break;
+            case 'wikieditor':
+                $this->wikieditors [$control->ref] = $control;
+                break;
+        }
         $control->setForm($this);
 
         if(!isset($this->container->data[$control->ref])){

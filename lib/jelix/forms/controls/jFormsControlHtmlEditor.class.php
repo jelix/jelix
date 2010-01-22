@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor 
-* @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2006-2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -25,4 +25,12 @@ class jFormsControlHtmlEditor extends jFormsControl {
         $this->ref = $ref;
         $this->datatype = new jDatatypeHtml();
     }
+
+    /**
+     * @since 1.2
+     */
+    public function isHtmlContent() {
+        return true;
+    }
+
 }

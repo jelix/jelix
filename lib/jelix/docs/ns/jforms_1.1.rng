@@ -38,6 +38,7 @@
     <ref name="input" />
     <ref name="textarea" />
     <ref name="htmleditor" />
+    <ref name="wikieditor" />
     <ref name="secret" />
     <ref name="output" />
     <ref name="upload" />
@@ -110,6 +111,19 @@
        <ref name="attr.length" />
        <optional><attribute name="config" /></optional>
        <optional><attribute name="skin" /></optional>
+       <optional><attribute name="rows"><data type="integer" /></attribute></optional>
+       <optional><attribute name="cols"><data type="integer" /></attribute></optional>
+     </element>
+  </define>
+
+  <define name="wikieditor">
+     <element name="wikieditor">
+       <ref name="control.common" />
+       <ref name="UI.attr.readonly" />
+       <ref name="UI.attr.required" />
+       <ref name="UI.attr.defaultvalue" />
+       <ref name="attr.length" />
+       <optional><attribute name="config" /></optional>
        <optional><attribute name="rows"><data type="integer" /></attribute></optional>
        <optional><attribute name="cols"><data type="integer" /></attribute></optional>
      </element>
