@@ -17,14 +17,14 @@
 */
 class jSignificantUrlsCompiler implements jISimpleCompiler{
 
-    public function compile($aSelector){
+    public function compile($aSelector) {
         global $gJCoord;
 
         $sourceFile = $aSelector->getPath();
         $cachefile = $aSelector->getCompiledFilePath();
 
-        $xml = simplexml_load_file ( $sourceFile);
-        if(!$xml){
+        $xml = simplexml_load_file ($sourceFile);
+        if (!$xml) {
            return false;
         }
         /*
@@ -91,213 +91,223 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
            'date'=>'([0-2]\d{3}\-(?:0[1-9]|1[0-2])\-(?:[0-2][1-9]|3[0-1]))', 
             'year'=>'([0-2]\d{3})', 'month'=>'(0[1-9]|1[0-2])', 'day'=>'([0-2][1-9]|[1-2]0|3[0-1])'
            );
-        $createUrlInfos=array();
-        $createUrlContent="<?php \n";
-        $defaultEntrypoints=array();
+        $createUrlInfos = array();
+        $createUrlContent = "<?php \n";
+        $defaultEntrypoints = array();
 
-        foreach($xml->children() as $name=>$tag){
-           if(!preg_match("/^(.*)entrypoint$/", $name,$m)){
-               //TODO : error
-               continue;
-           }
-           $requestType= $m[1];
-           $entryPoint = (string)$tag['name'];
-           $isDefault =  (isset($tag['default']) ? (((string)$tag['default']) == 'true'):false);
-           $isHttps = (isset($tag['https']) ? (((string)$tag['https']) == 'true'):false);
-           $generatedentrypoint =$entryPoint;
-           if(isset($tag['noentrypoint']) && (string)$tag['noentrypoint'] == 'true')
+        foreach ($xml->children() as $name => $tag) {
+            if (!preg_match("/^(.*)entrypoint$/", $name, $m)) {
+                //TODO : error
+                continue;
+            }
+            $requestType = $m[1];
+            $entryPoint = (string)$tag['name'];
+            $isDefault = (isset($tag['default']) ? (((string)$tag['default']) == 'true'):false);
+            $isHttps = (isset($tag['https']) ? (((string)$tag['https']) == 'true'):false);
+            $generatedentrypoint = $entryPoint;
+            if (isset($tag['noentrypoint']) && (string)$tag['noentrypoint'] == 'true')
                 $generatedentrypoint = '';
-           $parseInfos = array($isDefault);
+            $parseInfos = array($isDefault);
 
-           // si c'est le point d'entrée par défaut pour le type de requet indiqué
-           // alors on indique une regle supplementaire que matcherons
-           // toutes les urls qui ne correspondent pas aux autres rêgles
-           if($isDefault){
-             $createUrlInfos['@'.$requestType]=array(2,$entryPoint, $isHttps);
-           }
+            // si c'est le point d'entrée par défaut pour le type de requet indiqué
+            // alors on indique une regle supplementaire que matcherons
+            // toutes les urls qui ne correspondent pas aux autres rêgles
+            if ($isDefault) {
+                $createUrlInfos['@'.$requestType] = array(2, $entryPoint, $isHttps);
+            }
 
-           $createUrlInfosDedicatedModules = array();
-           $parseContent = "<?php \n";
-           foreach($tag->url as $url){
-               $module = (string)$url['module'];
-               if(isset($url['https'])){
-                   $urlhttps=(((string)$url['https']) == 'true');
-               }else{
-                   $urlhttps=$isHttps;
-               }
-               if(isset($url['noentrypoint']) && ((string)$url['noentrypoint']) == 'true'){
-                   $urlep='';
-               }else{
-                   $urlep=$generatedentrypoint;
-               }
+            $createUrlInfosDedicatedModules = array();
+            $parseContent = "<?php \n";
+            foreach ($tag->url as $url) {
+                $module = (string)$url['module'];
+                if (isset($url['https'])) {
+                    $urlhttps = (((string)$url['https']) == 'true');
+                }
+                else {
+                    $urlhttps = $isHttps;
+                }
+                if (isset($url['noentrypoint']) && ((string)$url['noentrypoint']) == 'true') {
+                    $urlep = '';
+                }
+                else {
+                    $urlep = $generatedentrypoint;
+                }
 
-               // in the case of a non default entry point, if there is just an
-               // <url module="" />, so all actions of this module will be assigned
-               // to this entry point.
-               if(!$isDefault && !isset($url['action']) && !isset($url['handler'])){
-                 $parseInfos[] = array($module, '', '/.*/', array(), array(), array(), false );
-                 $createUrlInfosDedicatedModules[$module.'~*@'.$requestType] = array(3, $urlep, $urlhttps, true);
-                 continue;
-               }
+                // in the case of a non default entry point, if there is just an
+                // <url module="" />, so all actions of this module will be assigned
+                // to this entry point.
+                if (!$isDefault && !isset($url['action']) && !isset($url['handler'])) {
+                    $parseInfos[] = array($module, '', '/.*/', array(), array(), array(), false);
+                    $createUrlInfosDedicatedModules[$module.'~*@'.$requestType] = array(3, $urlep, $urlhttps, true);
+                    continue;
+                }
 
-               $action = (string)$url['action'];
+                $action = (string)$url['action'];
 
-               if (strpos($action, ':') === false) {
-                  $action = 'default:'.$action;
-               }
+                if (strpos($action, ':') === false) {
+                    $action = 'default:'.$action;
+                }
 
-               if(isset($url['actionoverride'])){
-                  $actionOverride = preg_split("/[\s,]+/", (string)$url['actionoverride']);
-                  foreach ($actionOverride as &$each) {
-                     if (strpos($each, ':') === false) {
-                        $each = 'default:'.$each;
-                     }
-                  }
-               }else{
-                  $actionOverride = false;
-               }
-
-               // si il y a un handler indiqué, on sait alors que pour le module et action indiqué
-               // il faut passer par cette classe handler pour le parsing et la creation de l'url
-               if(isset($url['handler'])){
-                  $class = (string)$url['handler'];
-                  // il faut absolument un nom de module dans le selecteur, car lors de l'analyse de l'url
-                  // dans le request, il n'y a pas de module connu dans le context (normal...)
-                  $p= strpos($class,'~');
-                  if($p === false)
-                    $selclass = $module.'~'.$class;
-                  elseif( $p == 0)
-                    $selclass = $module.$class;
-                  else
-                    $selclass = $class;
-                  $s= new jSelectorUrlHandler($selclass);
-                  if(!isset($url['action'])) {
-                    $action = '*';
-                  }
-                  $regexp = '';
-                  $pathinfo = '';
-                  if(isset($url['pathinfo'])){
-                    $pathinfo = '/'.trim($url['pathinfo'],'/');
-                    if ($pathinfo !='/') {
-                        $regexp = '!^'.preg_quote($pathinfo,'!').'(/.*)?$!';   
+                if (isset($url['actionoverride'])) {
+                    $actionOverride = preg_split("/[\s,]+/", (string)$url['actionoverride']);
+                    foreach ($actionOverride as &$each) {
+                        if (strpos($each, ':') === false) {
+                            $each = 'default:'.$each;
+                        }
                     }
-                  }
-                  $createUrlContent.="include_once('".$s->getPath()."');\n";
-                  $parseInfos[]=array($module, $action, $regexp, $selclass, $actionOverride );
-                  $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$urlep, $urlhttps, $selclass, $pathinfo);
-                  if($actionOverride){
-                     foreach($actionOverride as $ao){
-                        $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(0,$urlep,$urlhttps, $selclass, $pathinfo);
-                     }
-                  }
-                  continue;
-               }
+                }
+                else {
+                    $actionOverride = false;
+                }
 
-               $listparam=array();
-               $escapes = array();
-               if(isset($url['pathinfo'])){
-                  $path = (string)$url['pathinfo'];
-                  $regexppath = $path;
+                // si il y a un handler indiqué, on sait alors que pour le module et action indiqué
+                // il faut passer par cette classe handler pour le parsing et la creation de l'url
+                if (isset($url['handler'])) {
+                    $class = (string)$url['handler'];
+                    // il faut absolument un nom de module dans le selecteur, car lors de l'analyse de l'url
+                    // dans le request, il n'y a pas de module connu dans le context (normal...)
+                    $p = strpos($class,'~');
+                    if ($p === false)
+                        $selclass = $module.'~'.$class;
+                    elseif ($p == 0)
+                        $selclass = $module.$class;
+                    else
+                        $selclass = $class;
+                    $s = new jSelectorUrlHandler($selclass);
+                    if (!isset($url['action'])) {
+                        $action = '*';
+                    }
+                    $regexp = '';
+                    $pathinfo = '';
+                    if (isset($url['pathinfo'])) {
+                        $pathinfo = '/'.trim($url['pathinfo'], '/');
+                        if ($pathinfo != '/') {
+                            $regexp = '!^'.preg_quote($pathinfo, '!').'(/.*)?$!';   
+                        }
+                    }
+                    $createUrlContent .= "include_once('".$s->getPath()."');\n";
+                    $parseInfos[] = array($module, $action, $regexp, $selclass, $actionOverride );
+                    $createUrlInfos[$module.'~'.$action.'@'.$requestType] = array(0,$urlep, $urlhttps, $selclass, $pathinfo);
+                    if ($actionOverride) {
+                        foreach ($actionOverride as $ao) {
+                            $createUrlInfos[$module.'~'.$ao.'@'.$requestType] = array(0,$urlep,$urlhttps, $selclass, $pathinfo);
+                        }
+                    }
+                    continue;
+                }
 
-                  if(preg_match_all("/\:([a-zA-Z_]+)/",$path,$m, PREG_PATTERN_ORDER)){
-                      $listparam=$m[1];
+                $listparam = array();
+                $escapes = array();
+                if (isset($url['pathinfo'])) {
+                    $path = (string)$url['pathinfo'];
+                    $regexppath = $path;
 
-                      foreach($url->param as $var){
+                    if (preg_match_all("/\:([a-zA-Z_]+)/",$path,$m, PREG_PATTERN_ORDER)) {
+                        $listparam = $m[1];
 
-                        $nom = (string) $var['name'];
-                        $k = array_search($nom, $listparam);
-                        if($k === false){
-                          // TODO error
-                          continue;
+                        foreach ($url->param as $var) {
+
+                            $nom = (string) $var['name'];
+                            $k = array_search($nom, $listparam);
+                            if ($k === false) {
+                                // TODO error
+                                continue;
+                            }
+    
+                            if (isset($var['escape'])) {
+                                $escapes[$k] = (((string)$var['escape']) == 'true');
+                            }
+                            else {
+                                $escapes[$k] = false;
+                            }
+    
+                            if (isset($var['type'])) {
+                                if (isset($typeparam[(string)$var['type']]))
+                                    $regexp = $typeparam[(string)$var['type']];
+                                else
+                                    $regexp = '([^\/]+)';
+                            }
+                            elseif (isset ($var['regexp'])) {
+                                $regexp = '('.(string)$var['regexp'].')';
+                            }
+                            else {
+                                $regexp = '([^\/]+)';
+                            }
+    
+                            $regexppath = str_replace(':'.$nom, $regexp, $regexppath);
                         }
 
-                        if (isset ($var['escape'])){
-                            $escapes[$k] = (((string)$var['escape']) == 'true');
-                        }else{
+                        foreach ($listparam as $k=>$name) {
+                            if (isset($escapes[$k])) {
+                                continue;
+                            }
                             $escapes[$k] = false;
+                            $regexppath = str_replace(':'.$name, '([^\/]+)', $regexppath);
                         }
-
-                        if(isset($var['type'])){
-                           if(isset($typeparam[(string)$var['type']]))
-                              $regexp = $typeparam[(string)$var['type']];
-                           else
-                              $regexp = '([^\/]+)';
-                        }else if (isset ($var['regexp'])){
-                            $regexp = '('.(string)$var['regexp'].')';
-                        }else{
-                            $regexp = '([^\/]+)';
-                        }
-
-                        $regexppath = str_replace(':'.$nom, $regexp, $regexppath);
-                      }
-
-                      foreach($listparam as $k=>$name){
-                        if(isset($escapes[$k])){
-                           continue;
-                        }
-                        $escapes[$k] = false;
-                        $regexppath = str_replace(':'.$name, '([^\/]+)', $regexppath);
-                      }
-                  }
-               }else{
-                 $regexppath='.*';
-                 $path='';
-               }
-               if(isset($url['optionalTrailingSlash']) && $url['optionalTrailingSlash'] == 'true'){
-                    if(substr($regexppath, -1) == '/'){
-                        $regexppath.='?';
-                    }else{
-                        $regexppath.='\/?';
                     }
-               }
+                }
+                else {
+                    $regexppath = '.*';
+                    $path = '';
+                }
+                if (isset($url['optionalTrailingSlash']) && $url['optionalTrailingSlash'] == 'true') {
+                    if (substr($regexppath, -1) == '/') {
+                        $regexppath .= '?';
+                    }
+                    else {
+                        $regexppath .= '\/?';
+                    }
+                }
 
-               $liststatics = array();
-               foreach($url->static as $var){
-                  $liststatics[(string)$var['name']] =(string)$var['value'];
-               }
-               $parseInfos[]=array($module, $action, '!^'.$regexppath.'$!', $listparam, $escapes, $liststatics, $actionOverride );
-               $cuisel = $module.'~'.$action.'@'.$requestType;
-               $arr = array(1,$urlep, $urlhttps, $listparam, $escapes,$path, false, $liststatics);
-               if(isset($createUrlInfos[$cuisel])){
-                    if($createUrlInfos[$cuisel][0] == 4){
+                $liststatics = array();
+                foreach ($url->static as $var) {
+                    $liststatics[(string)$var['name']] = (string)$var['value'];
+                }
+                $parseInfos[] = array($module, $action, '!^'.$regexppath.'$!', $listparam, $escapes, $liststatics, $actionOverride );
+                $cuisel = $module.'~'.$action.'@'.$requestType;
+                $arr = array(1, $urlep, $urlhttps, $listparam, $escapes, $path, false, $liststatics);
+                if (isset($createUrlInfos[$cuisel])) {
+                    if ($createUrlInfos[$cuisel][0] == 4) {
                         $createUrlInfos[$cuisel][] = $arr;
-                    }else{
-                        $createUrlInfos[$cuisel] = array( 4, $createUrlInfos[$cuisel] , $arr);
                     }
-               }else{
-                   $createUrlInfos[$cuisel] = $arr;
-               }
-               if($actionOverride){
-                  foreach($actionOverride as $ao){
-                     $cuisel = $module.'~'.$ao.'@'.$requestType;
-                     $arr = array(1,$urlep, $urlhttps, $listparam, $escapes,$path, true, $liststatics);
-                     if(isset($createUrlInfos[$cuisel])){
-                        if($createUrlInfos[$cuisel][0] == 4){
-                            $createUrlInfos[$cuisel][] = $arr;
-                        }else{
-                            $createUrlInfos[$cuisel] = array( 4, $createUrlInfos[$cuisel] , $arr);
+                    else {
+                        $createUrlInfos[$cuisel] = array(4, $createUrlInfos[$cuisel], $arr);
+                    }
+                }
+                else {
+                    $createUrlInfos[$cuisel] = $arr;
+                }
+                if ($actionOverride) {
+                    foreach ($actionOverride as $ao) {
+                        $cuisel = $module.'~'.$ao.'@'.$requestType;
+                        $arr = array(1, $urlep, $urlhttps, $listparam, $escapes,$path, true, $liststatics);
+                        if (isset($createUrlInfos[$cuisel])) {
+                            if ($createUrlInfos[$cuisel][0] == 4) {
+                                $createUrlInfos[$cuisel][] = $arr;
+                            }
+                            else {
+                                $createUrlInfos[$cuisel] = array(4, $createUrlInfos[$cuisel], $arr);
+                            }
                         }
-                     }else{
-                        $createUrlInfos[$cuisel] = $arr;
-                     }
-                  }
-               }
-           }
-           $c = count($createUrlInfosDedicatedModules);
-           foreach($createUrlInfosDedicatedModules as $k=>$inf) {
-              if ($c > 1)
-                $inf[3] = false;
-              $createUrlInfos[$k] = $inf;
-           }
+                        else {
+                            $createUrlInfos[$cuisel] = $arr;
+                        }
+                    }
+                }
+            }
+            $c = count($createUrlInfosDedicatedModules);
+            foreach ($createUrlInfosDedicatedModules as $k=>$inf) {
+                if ($c > 1)
+                    $inf[3] = false;
+                $createUrlInfos[$k] = $inf;
+            }
 
-           $parseContent.='$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($entryPoint).'\'] = '.var_export($parseInfos, true).";\n?>";
-
-           jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($entryPoint).'.entrypoint.php',$parseContent);
+            $parseContent .= '$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($entryPoint).'\'] = '.var_export($parseInfos, true).";\n?>";
+    
+            jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($entryPoint).'.entrypoint.php',$parseContent);
         }
-        $createUrlContent .='$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($createUrlInfos, true).";\n?>";
-        jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$aSelector->file.'.creationinfos.php',$createUrlContent);
+        $createUrlContent .= '$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($createUrlInfos, true).";\n?>";
+        jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$aSelector->file.'.creationinfos.php', $createUrlContent);
         return true;
     }
-
 }
-
