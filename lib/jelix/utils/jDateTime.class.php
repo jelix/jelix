@@ -7,12 +7,14 @@
 * @contributor Loic Mathaud
 * @contributor Florian Hatat
 * @contributor Emmanuel Hesry
+* @contributor Hadrien Lanneau <hadrien@over-blog.com>
 * @copyright   2005-2008 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud
 * @copyright   2007-2008 Florian Hatat
 * @copyright   2001-2005 CopixTeam, GeraldCroes, Laurent Jouanneau
 * @copyright   2008 Julien Issler
 * @copyright   2009 Emmanuel Hesry
+* @copyright   2010 Hadrien Lanneau
 *
 * This class was get originally from the Copix project (CopixDate.lib.php, Copix 2.3dev20050901, http://www.copix.org)
 * Only few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -454,4 +456,90 @@ class jDateTime {
         $this->minute = date('i');
         $this->second = date('s');
     }
+    
+    
+    /**
+    * Substract a date with another
+    * @param jDateTime $date
+    * @return jDateTime
+    * @author Hadrien Lanneau <hadrien@over-blog.com>
+    * @since 1.2
+    */
+    public function substract($date = null) {
+        if (!$date) {
+            $date = new jDateTime();
+            $date->now();
+        }
+           
+        $newDate = new jDateTime();
+        
+        $items = array(
+                'second',
+                'minute',
+                'hour',
+                'day',
+                'month',
+                'year'
+            );
+
+        foreach ($items as $k => $i) {
+            $newDate->{$i} = $date->{$i} - $this->{$i};
+            if ($newDate->{$i} < 0) {
+                switch ($i) {
+                    case 'second':
+                    case 'minute':
+                        $sub = 60;
+                        break;
+                    case 'hour':
+                        $sub = 24;
+                        break;
+                    case 'day':
+                        switch ($this->month) {
+                            // Month with 31 days
+                            case 1:
+                            case 3:
+                            case 5:
+                            case 7:
+                            case 8:
+                            case 10:
+                            case 12:
+                                $sub = 31;
+                                break;
+                            // Month with 30 days
+                            case 4:
+                            case 6:
+                            case 9:
+                            case 11:
+                                $sub = 30;
+                                break;
+                            // February
+                            case 2:
+                                if ($this->year % 4 == 0 and
+                                        !(
+                                                $this->year % 100 == 0 and
+                                                $this->year % 400 != 0
+                                        )) {
+                                    // Bissextile
+                                    $sub = 29;
+                                }
+                                else {
+                                   $sub = 28;
+                                }
+                                break;
+                        }
+                        break;
+                    case 'month':
+                        $sub = 12;
+                        break;
+                    default:
+                        $sub = 0;
+                }
+                $newDate->{$i} = abs($sub + $newDate->{$i});
+                if (isset($items[$k+1])) {
+                    $date->{$items[$k+1]}--;
+                }
+            }
+        }  
+        return $newDate;
+    } 
 }

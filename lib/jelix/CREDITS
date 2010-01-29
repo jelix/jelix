@@ -223,7 +223,10 @@ Xavier L. (aka afroxav)
 
 Denis Lallement (dlalleme)
  - tpl plugin break (#808)
- 
+
+Hadrien Lanneau
+ - jDateTime::substract() (#623)
+
 Nicolas Lassalle
  - bug fix in jResponseBinary (#188)
 
