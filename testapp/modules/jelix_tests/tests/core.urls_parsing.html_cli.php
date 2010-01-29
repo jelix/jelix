@@ -90,7 +90,11 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'jelix_tests',    'action'=>'default:wikishow',   'page'=>'/');
       $resultList[]= array('module'=>'jelix_tests',    'action'=>'default:wikishow',   'page'=>'/foo/bar');
       $resultList[]= array('module'=>'jelix_tests',    'action'=>'default:wikiedit',   'page'=>'/foo/bar');
-      
+      $resultList[]= array('module'=>'testapp',   'action'=>'login:in',   'login'=>'laurent');
+      $resultList[]= array('module'=>'testapp',   'action'=>'login:out');
+      $resultList[]= array('module'=>'testapp',   'action'=>'login:form');
+      $resultList[]= array('module'=>'testapp',   'action'=>'user:index', 'user'=>'laurent');
+
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -119,7 +123,10 @@ class UTParseUrls extends UnitTestCase {
           array("index.php","/super/wiki/",array()),
           array("index.php","/super/wiki/foo/bar",array()),
           array("index.php","/super/wiki/foo/bar",array('action'=>"default:wikiedit")),
-
+          array("index.php","/auth/dologin", array('login'=>'laurent')),
+          array("index.php","/auth/dologout", array()),
+          array("index.php","/auth/login/", array()),
+          array("index.php","/auth/user/laurent", array()),
        );
 
       //$this->sendMessage("significant, multiview = false");
@@ -162,6 +169,10 @@ class UTParseUrls extends UnitTestCase {
           array("index.php","/super/wiki/",array()),
           array("index.php","/super/wiki/foo/bar",array()),
           array("index.php","/super/wiki/foo/bar",array('action'=>"default:wikiedit")),
+          array("index","/auth/dologin", array('login'=>'laurent')),
+          array("index","/auth/dologout", array()),
+          array("index","/auth/login/", array()),
+          array("index","/auth/user/laurent", array()),
 
        );
       foreach($request as $k=>$urldata){

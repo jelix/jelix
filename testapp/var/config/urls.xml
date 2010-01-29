@@ -50,6 +50,9 @@
         <url pathinfo="/hello3" module="jelix_tests" action="default:hello3" />
         <url pathinfo="/super/wiki" handler="urlsigwiki" module="jelix_tests" action="default:wikishow"
              actionoverride="default:wikiedit,default:wikidelete" />
+
+        <url pathinfo="/auth" module="testapp" include="urls.xml" />
+
     </classicentrypoint>
     <entrypoint name="testnews">
        <url pathinfo="/:annee/:mois" module="jelix_tests" action="urlsig:url2">

@@ -27,6 +27,7 @@ cd lib/jelix-admin-modules/master_admin/zones/
 cd lib/jelix-admin-modules/jacl2db_admin
 *  module.xml
    events.xml
+   urls.xml
 cd lib/jelix-admin-modules/jacl2db_admin/classes/
   jacl2db_admin.listener.php
 cd lib/jelix-admin-modules/jacl2db_admin/locales/en_EN
@@ -53,6 +54,7 @@ cd lib/jelix-admin-modules/jacl2db_admin/templates
 cd lib/jelix-admin-modules/jauthdb_admin
 *  module.xml
    events.xml
+   urls.xml
 cd lib/jelix-admin-modules/jauthdb_admin/classes/
   jauthdb_admin.listener.php
 cd lib/jelix-admin-modules/jauthdb_admin/controllers

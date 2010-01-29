@@ -62,6 +62,8 @@ cd lib/jelix-modules/jauthdb/install/
 cd lib/jelix-modules/jauth
 * module.xml
   events.xml
+  urls.xml
+  urls_ws.xml
 cd lib/jelix-modules/jauth/classes
 !  jauth.listener.php
 cd lib/jelix-modules/jauth/controllers

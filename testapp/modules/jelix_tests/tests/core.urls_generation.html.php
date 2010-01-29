@@ -242,7 +242,10 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('articles~zap', array('f'=>'g'));
       $urlList[]= array('jelix_tests~default:wikishow', array('page'=>''));
       $urlList[]= array('jelix_tests~default:wikishow', array('page'=>'foo'));
-      
+      $urlList[]= array('testapp~login:in', array('login'=>'foo', 'password'=>'pass'));
+      $urlList[]= array('testapp~login:out', array());
+      $urlList[]= array('testapp~login:form', array());
+      $urlList[]= array('testapp~user:index', array('user'=>'laurent'));
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -273,6 +276,10 @@ class UTCreateUrls extends UnitTestCase {
           "/news.php?f=g&module=articles&action=default:zap",
           "/index.php/super/wiki/",
           "/index.php/super/wiki/foo",
+          "/index.php/auth/dologin?login=foo&password=pass",
+          "/index.php/auth/dologout",
+          "/index.php/auth/login",
+          "/index.php/auth/user/laurent"
        );
 
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
@@ -309,6 +316,10 @@ class UTCreateUrls extends UnitTestCase {
           "/news?f=g&module=articles&action=default:zap",
           "/index/super/wiki/",
           "/index/super/wiki/foo",
+          "/index/auth/dologin?login=foo&password=pass",
+          "/index/auth/dologout",
+          "/index/auth/login",
+          "/index/auth/user/laurent"
        );
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);

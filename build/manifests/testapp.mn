@@ -40,6 +40,7 @@ cd testapp/scripts
 
 cd testapp/modules/testapp
 *  module.xml
+   urls.xml
 cd testapp/modules/testapp/locales/en_US
   parameter.ISO-8859-1.properties
 cd testapp/modules/testapp/locales/fr_FR

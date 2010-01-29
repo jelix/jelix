@@ -188,6 +188,7 @@ cd lib/jelix/docs/ns
   module.rng
   plugin.rng
   project.rng
+  suburls.rng
   update.rng
   urls.rng
 

@@ -50,6 +50,7 @@
       <optional><attribute name="noentrypoint"><data type="boolean"/></attribute> </optional>
       <zeroOrMore>
          <choice>
+            <ref name="url.module.dedicated" />
             <ref name="url" />
             <ref name="url.handler" />
          </choice>
@@ -58,42 +59,55 @@
 
    <define name="url">
       <element name="url">
-         <attribute name="module" />
-         <optional> <attribute name="noentrypoint"><data type="boolean"/></attribute> </optional>
-         <optional> <attribute name="https"><data type="boolean"/></attribute> </optional>
+         <ref name="url.common" />
+         <attribute name="action" />
          <optional>
-             <attribute name="action" />
-             <optional>
-                <attribute name="actionoverride" />
-             </optional>
+            <attribute name="actionoverride" />
          </optional>
          <optional>
             <attribute name="pathinfo" />
             <zeroOrMore>
                <ref name="param" />
             </zeroOrMore>
-            <zeroOrMore>
-               <ref name="static" />
-            </zeroOrMore>
          </optional>
+         <zeroOrMore>
+            <ref name="static" />
+         </zeroOrMore>
          <optional> <attribute name="optionalTrailingSlash"><data type="boolean"/></attribute> </optional>
+      </element>
+   </define>
+
+   <define name="url.module.dedicated">
+      <element name="url">
+         <ref name="url.common" />
+         <optional>
+            <attribute name="include" />
+         </optional>
+         <empty/>
       </element>
    </define>
 
    <define name="url.handler">
       <element name="url">
-         <attribute name="module" />
-         <optional> <attribute name="noentrypoint"><data type="boolean"/></attribute> </optional>
-         <optional> <attribute name="https"><data type="boolean"/></attribute> </optional>
-         <attribute name="handler" />
+         <ref name="url.common" />
          <optional>
             <attribute name="action" />
             <optional>
                <attribute name="actionoverride" />
             </optional>
          </optional>
+         <optional>
+            <attribute name="pathinfo" />
+         </optional>
+         <attribute name="handler" />
          <empty/>
       </element>
+   </define>
+
+   <define name="url.common">
+      <attribute name="module" />
+      <optional> <attribute name="noentrypoint"><data type="boolean"/></attribute> </optional>
+      <optional> <attribute name="https"><data type="boolean"/></attribute> </optional>
    </define>
 
    <define name="param">

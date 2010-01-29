@@ -8,6 +8,9 @@
 * @license   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public Licence
 */
 
+/**
+ * controller to allow a user to edit his own profile in the admin
+ */
 class userCtrl extends jController {
    
     public $pluginParams=array(

@@ -71,3 +71,9 @@ rmd lib/jelix-admin-modules/jacl2_admin
 
 cd lib/jelix-modules/jauth/daos
   jelixuser.dao.xml
+
+cd lib/jelix-admin-modules/jacl2db_admin/install/
+  urls_example.xml
+
+cd lib/jelix-admin-modules/jauthdb_admin/install/
+  urls_example.xml

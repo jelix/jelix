@@ -8,6 +8,9 @@
 * @license   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public Licence
 */
 
+/**
+ * controller to manage all users
+ */
 class defaultCtrl extends jController {
 
     public $pluginParams=array(

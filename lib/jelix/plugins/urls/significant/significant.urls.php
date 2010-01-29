@@ -282,7 +282,6 @@ class significantUrlEngine implements jIUrlEngine {
         return $urlact;
     }
 
-
     /**
     * Create a jurl object with the given action data
     * @param jUrlAction $url  information about the action
