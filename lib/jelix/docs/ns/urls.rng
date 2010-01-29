@@ -14,28 +14,46 @@
 
 
    <define name="entrypoint">
-      <element>
-         <choice>
-            <name>classicentrypoint</name>
-            <name>xmlrpcentrypoint</name>
-            <name>jsonrpcentrypoint</name>
-            <name>rdfentrypoint</name>
-            <name>xmlentrypoint</name>
-            <name>xulentrypoint</name>
-            <name>cssentrypoint</name>
-         </choice>
-
-         <attribute name="name"/>
-         <optional><attribute name="default"><data type="boolean"/></attribute></optional>
-         <optional><attribute name="https"><data type="boolean"/></attribute> </optional>
-         <optional><attribute name="noentrypoint"><data type="boolean"/></attribute> </optional>
-         <zeroOrMore>
+      <choice>
+         <element>
             <choice>
-               <ref name="url" />
-               <ref name="url.handler" />
+               <name>classicentrypoint</name>
+               <name>xmlrpcentrypoint</name>
+               <name>jsonrpcentrypoint</name>
+               <name>rdfentrypoint</name>
+               <name>xmlentrypoint</name>
+               <name>xulentrypoint</name>
+               <name>cssentrypoint</name>
             </choice>
-         </zeroOrMore>
-      </element>
+            <ref name="entrypoint.common" />
+         </element>
+         <element name="entrypoint">
+            <attribute name="type">
+               <choice><value>classic</value>
+                  <value>xmlrpc</value>
+                  <value>jsonrpc</value>
+                  <value>rdf</value>
+                  <value>xml</value>
+                  <value>xul</value>
+                  <value>css</value>
+               </choice>
+            </attribute>
+            <ref name="entrypoint.common" />
+         </element>
+      </choice>
+   </define>
+
+   <define name="entrypoint.common">
+      <attribute name="name"/>
+      <optional><attribute name="default"><data type="boolean"/></attribute></optional>
+      <optional><attribute name="https"><data type="boolean"/></attribute> </optional>
+      <optional><attribute name="noentrypoint"><data type="boolean"/></attribute> </optional>
+      <zeroOrMore>
+         <choice>
+            <ref name="url" />
+            <ref name="url.handler" />
+         </choice>
+      </zeroOrMore>
    </define>
 
    <define name="url">

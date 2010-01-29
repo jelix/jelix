@@ -135,9 +135,16 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                 //TODO : error
                 continue;
             }
+            $type = $m[1];
+            if ($type == '') {
+                if (isset($tag['type']))
+                    $type = (string)$tag['type'];
+                if ($type == '')
+                    $type = 'classic';
+            }
 
             $this->defaultUrl = new significantUrlInfoParsing (
-                $m[1],
+                $type,
                 (string)$tag['name'],
                 (isset($tag['default']) ? (((string)$tag['default']) == 'true'):false),
                 (isset($tag['https']) ? (((string)$tag['https']) == 'true'):false)
