@@ -7,7 +7,7 @@
 * @contributor Yannick Le Guédart
 * @contributor Laurent Raufaste
 * @contributor Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007-2008 Laurent Raufaste
+* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau, 2007-2008 Laurent Raufaste
 * @copyright  2009 Julien Issler
 * This class was get originally from the Copix project (CopixDBConnectionPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -120,15 +120,24 @@ class pgsqlDbConnection extends jDbConnection {
             $str .= ' connect_timeout=\''.$this->profile['timeout'].'\'';
         }
 
-        if($cnx=@$funcconnect ($str)){
-            if(isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true
-               && isset($this->_charsets[$GLOBALS['gJConfig']->charset])){
+        // let's do the connection
+        if ($cnx = @$funcconnect ($str)) {
+            if (isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true
+               && isset($this->_charsets[$GLOBALS['gJConfig']->charset])) {
                 pg_set_client_encoding($cnx, $this->_charsets[$GLOBALS['gJConfig']->charset]);
             }
-            return $cnx;
-        }else{
+        }
+		else {
             throw new jException('jelix~db.error.connection',$this->profile['host']);
         }
+
+        if (isset($this->profile['search_path']) && trim($this->profile['search_path']) != '') {
+            $sql = 'SET search_path TO '.$this->profile['search_path'];
+            if (! @pg_query($cnx, $sql)) {
+                throw new jException('jelix~db.error.query.bad',  pg_last_error($cnx).'('.$sql.')');
+            }
+        }
+        return $cnx;
     }
 
     protected function _disconnect (){
@@ -160,9 +169,6 @@ class pgsqlDbConnection extends jDbConnection {
         $result = $this->_doQuery($queryString);
         return $result;
     }
-
-
-
 
     public function lastInsertId($seqname=''){
 
