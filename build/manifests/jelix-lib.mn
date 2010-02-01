@@ -113,7 +113,9 @@ cch formserr.UTF-8.properties(formserr.%charset%.properties)
 cch jelix.UTF-8.properties(jelix.%charset%.properties)
 cch ui.UTF-8.properties(ui.%charset%.properties)
 cch jforms.UTF-8.properties(jforms.%charset%.properties)
+cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch date_time.UTF-8.properties(date_time.%charset%.properties)
+
 cd lib/jelix/core-modules/jelix/locales/en_EN
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cch acldb.UTF-8.properties(acldb.%charset%.properties)
@@ -131,7 +133,9 @@ cch formserr.UTF-8.properties(formserr.%charset%.properties)
 cch jelix.UTF-8.properties(jelix.%charset%.properties)
 cch ui.UTF-8.properties(ui.%charset%.properties)
 cch jforms.UTF-8.properties(jforms.%charset%.properties)
+cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch date_time.UTF-8.properties(date_time.%charset%.properties)
+
 cd lib/jelix/core-modules/jelix/locales/fr_FR
 cch jforms.UTF-8.properties(jforms.%charset%.properties)
 cch date_time.UTF-8.properties(date_time.%charset%.properties)
@@ -149,7 +153,9 @@ cch errors.UTF-8.properties(errors.%charset%.properties)
 cch format.UTF-8.properties(format.%charset%.properties)
 cch formserr.UTF-8.properties(formserr.%charset%.properties)
 cch jelix.UTF-8.properties(jelix.%charset%.properties)
+cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch ui.UTF-8.properties(ui.%charset%.properties)
+
 cd lib/jelix/core-modules/jelix/templates
   404.xul.tpl
   403.html.tpl
@@ -218,6 +224,10 @@ cd lib/jelix/installer
 * jInstallerMessageProvider.class.php
   jInstallerModule.class.php
   jInstallerPlugin.class.php
+
+cd lib/jelix/kvstore
+  jKVDriver.class.php
+  jKVStore.class.php
 
 cd lib/jelix/tpl/
 *  jTpl.class.php
@@ -349,6 +359,16 @@ cd lib/jelix/plugins/jforms/html
 
 cd lib/jelix/plugins/jforms/htmllight
   htmllight.jformsbuilder.php
+
+cd lib/jelix/plugins/kvstore/file/
+  file.kvdriver.php
+
+cd lib/jelix/plugins/kvstore/memcache/
+  memcache.kvdriver.php
+
+cd lib/jelix/plugins/kvstore/redis/
+  redis.kvdriver.php
+
 
 cd lib/jelix/plugins/tpl/common
   block.ifacl.php
@@ -561,6 +581,9 @@ cd lib/phpMailer/language
 ! phpmailer.lang-ru.php
 ! phpmailer.lang-se.php
 ! phpmailer.lang-tr.php
+
+cd lib/php5redis/
+  Php5Redis.class.php
 
 cd lib/jelix-plugins/cache/file
   file.cache.php
