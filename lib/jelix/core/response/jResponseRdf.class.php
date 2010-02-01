@@ -160,7 +160,7 @@ final class jResponseRdf extends jResponse {
         }else{
             echo "<li>\n";
             echo '<Description err:code="-1" err:type="error" err:file="" err:line="">';
-            echo '<err:message>Unknow error</err:message>';
+            echo '<err:message>Unknown error</err:message>';
             echo "</Description>\n";
             echo "</li>\n";
         }

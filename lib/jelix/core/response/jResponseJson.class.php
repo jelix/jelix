@@ -63,7 +63,7 @@ final class jResponseJson extends jResponse {
             if ($e[5])
                $message['errorMessage'] .= "\n".$e[5];
         }else{
-            $message['errorMessage'] = 'Unknow error';
+            $message['errorMessage'] = 'Unknown error';
             $message['errorCode'] = -1;
         }
         $this->clearHttpHeaders();

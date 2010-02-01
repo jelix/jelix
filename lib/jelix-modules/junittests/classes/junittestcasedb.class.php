@@ -146,7 +146,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
 
         if($onlyThem && count($results) != 0){
             $globalok = false;
-            $this->fail($message.'. Other unknow records exists');
+            $this->fail($message.'. Other unknown records exists');
         }
 
         if($globalok){
@@ -230,7 +230,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
 
         if($onlyThem && count($results) != 0){
             $globalok = false;
-            $this->fail($message.'. Other unknow records exists');
+            $this->fail($message.'. Other unknown records exists');
             $this->sendMessage('Unexpected records');
             $this->dump($results);
         }

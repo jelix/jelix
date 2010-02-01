@@ -132,7 +132,7 @@ class jResponseXml extends jResponse {
                 echo '</error>'. "\n";
             }
         } else {
-            echo '<error>Unknow Error</error>';
+            echo '<error>Unknown Error</error>';
         }
         echo '</errors>';
     }

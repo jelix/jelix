@@ -93,7 +93,7 @@ class jResponseAtom10 extends jResponseXMLFeed {
         if ($this->hasErrors()) {
             echo $this->getFormatedErrorMsg();
         } else {
-            echo '<error>Unknow Error</error>';
+            echo '<error>Unknown Error</error>';
         }
         echo '</errors>';
     }

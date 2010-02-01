@@ -50,7 +50,7 @@ final class jResponseXmlRpc extends jResponse {
             if ($e[5])
                $errorMessage .= "\n".$e[5];
         }else{
-            $errorMessage = 'Unknow error';
+            $errorMessage = 'Unknown error';
             $errorCode = -1;
         }
         $this->clearHttpHeaders();

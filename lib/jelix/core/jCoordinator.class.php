@@ -314,7 +314,7 @@ class jCoordinator {
         // url params including module and action
         if ($this->request)
             $url = str_replace('array', 'url', var_export($this->request->params, true));
-        else $url = 'Unknow url';
+        else $url = 'Unknown url';
 
         // formatting message
         $messageLog = strtr($conf['messageLogFormat'], array(

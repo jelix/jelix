@@ -14,7 +14,7 @@ class jExceptionPreProc extends Exception {
     public $sourceLine = 0;
 
     protected $errmessages = array(
-        'unknow error',
+        'unknown error',
         'syntax error',
         '#ifxx statement is missing',
         '#endif statement is missing',

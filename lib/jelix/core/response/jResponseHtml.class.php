@@ -254,7 +254,7 @@ class jResponseHtml extends jResponse {
         if($this->hasErrors()){
             echo $this->getFormatedErrorMsg();
         }else{
-            echo '<p style="color:#FF0000">Unknow Error</p>';
+            echo '<p style="color:#FF0000">Unknown Error</p>';
         }
         echo '</body></html>';
     }

@@ -143,7 +143,7 @@ class pgsqlDbTools extends jDbTools {
         $sql ='SELECT oid, relhaspkey, relhasindex FROM pg_class WHERE relname = \''.$tableName.'\'';
         $rs = $this->_conn->query ($sql);
         if (! ($table = $rs->fetch())) {
-            throw new Exception('dbtools, pgsql: unknow table');
+            throw new Exception('dbtools, pgsql: unknown table');
         }
 
         $pkeys = array();

@@ -62,7 +62,7 @@ class jCmdUtils {
                     $switches[$sw] = true;
                 }
             } else {
-                throw new Exception("Error: unknow option '".$argv[0]."' \n");
+                throw new Exception("Error: unknown option '".$argv[0]."' \n");
             }
         }
 

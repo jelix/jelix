@@ -177,7 +177,7 @@ class jResponseXul extends jResponse {
         if($this->hasErrors()){
             echo $this->getFormatedErrorMsg();
         }else{
-            echo "<description style=\"color:#FF0000;\">Unknow error</description>";
+            echo "<description style=\"color:#FF0000;\">Unknown error</description>";
         }
         echo '</vbox></',$this->_root,'>';
     }

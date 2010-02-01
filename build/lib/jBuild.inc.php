@@ -76,7 +76,7 @@ class Env {
 
     static public function set($name,$value){
         if(!self::verifyName($name)){
-            echo "warning: unknow option name ($name)\n";
+            echo "warning: unknown option name ($name)\n";
         }else{
             self::storeValue($name,$value);
         }
@@ -88,7 +88,7 @@ class Env {
                 if(self::verifyName($k)){
                     self::storeValue($k,$v);
                 }else{
-                    echo "warning: unknow option name ($k) in the ini file\n";
+                    echo "warning: unknown option name ($k) in the ini file\n";
                 }
             }
         }else{
@@ -99,7 +99,7 @@ class Env {
     static public function setFromFile($name,$file, $onlyIfNotExists=false){
         if($onlyIfNotExists && isset($GLOBALS[$name]) && $GLOBALS[$name] !='') return;
         if(!self::verifyName($name)){
-            echo "warning: unknow option name ($name)\n";
+            echo "warning: unknown option name ($name)\n";
         }else{
             self::storeValue($name,file_get_contents($file));
         }

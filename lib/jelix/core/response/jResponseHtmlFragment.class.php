@@ -120,7 +120,7 @@ class jResponseHtmlFragment extends jResponse {
         if($this->hasErrors()){
             $content = $this->getFormatedErrorMsg();
         }else{
-            $content = '<p style="color:#FF0000">Unknow Error</p>';
+            $content = '<p style="color:#FF0000">Unknown Error</p>';
         }
 
         $this->_httpHeaders['Content-length'] = strlen($content);

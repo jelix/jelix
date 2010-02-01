@@ -98,7 +98,7 @@ class jResponseTcpdf  extends jResponse {
                   echo $e[5]."\n\n";
         }
         else
-            echo "[unknow error]\n";
+            echo "[unknown error]\n";
     }
 
 
