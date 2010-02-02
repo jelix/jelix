@@ -16,6 +16,41 @@
  */
 class ociDbTable extends jDbTable {
 
+    protected function _loadColumns() {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _alterColumn(jDbColumn $old, jDbColumn $new) {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _addColumn(jDbColumn $new) {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _loadIndexesAndKeys() {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _createIndex(jDbIndex $index) {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _dropIndex(jDbIndex $index) {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _loadReferences() {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _createReference(jDbReference $ref) {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _dropReference(jDbReference $ref) {
+        throw new Exception ('Not Implemented');
+    }
 }
 
 /**
@@ -25,29 +60,21 @@ class ociDbTable extends jDbTable {
  */
 class ociDbSchema extends jDbSchema {
 
-    /**
-     *
-     */
-    function createTable($name, $columns, $primaryKeys, $attributes=array()) {
-        
+    protected function _createTable($name, $columns, $primaryKey, $attributes = array()) {
+        throw new Exception ('Not Implemented');
+        //return  new ociDbTable($this->schema->getConn()->prefixTable($name), $this);
     }
 
-    /**
-     * @return jDbTable
-     */
-    function getTable($name) {
-        return  new ociDbTable($this->schema->getConn()->prefixTable($name), $this);
-    }
-
-    public function getTables () {
+    protected function _getTables() {
         $results = array ();
 
-        $rs = $this->schema->getConn()->query ('SELECT TABLE_NAME FROM USER_TABLES');
+        $rs = $this->conn->query ('SELECT TABLE_NAME FROM USER_TABLES');
 
         while ($line = $rs->fetch ()){
-            $results[] = new ociDbTable($line->table_name, $this);
+            $results[$line->table_name] = new ociDbTable($line->table_name, $this);
         }
 
         return $results;
     }
+
 }
