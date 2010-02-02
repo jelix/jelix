@@ -583,7 +583,8 @@ cd lib/phpMailer/language
 ! phpmailer.lang-tr.php
 
 cd lib/php5redis/
-  Php5Redis.class.php
+  Php5Redis.php
+  README.txt
 
 cd lib/jelix-plugins/cache/file
   file.cache.php
