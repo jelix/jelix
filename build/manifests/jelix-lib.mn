@@ -325,6 +325,7 @@ cd lib/jelix/plugins/db/intuition
 cd lib/jelix/plugins/db/mssql
   mssql.dbconnection.php
   mssql.dbresultset.php
+  mssql.dbschema.php
 * mssql.dbtools.php
   mssql.daobuilder.php
 
