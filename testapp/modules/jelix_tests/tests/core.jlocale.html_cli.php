@@ -27,15 +27,15 @@ class UTjlocale extends jUnitTestCase {
 
     protected $filePath;
 
-    public function testBundleUnknowFile(){
+    public function testBundleUnknownFile(){
         $this->filePath =  JELIX_APP_PATH.'modules/jelix_tests/locales/';
         $b = new bundleTest('','');
         try {
-            $b->readProperties($this->filePath.'unknowfile');
-            $this->fail('should throw an exception when trying reading unknowfile');
+            $b->readProperties($this->filePath.'unknownfile');
+            $this->fail('should throw an exception when trying reading unknownfile');
         }catch(Exception $e){
-            $this->assertTrue($e->getMessage() == 'Cannot load the resource '.$this->filePath.'unknowfile',
-            'should throw the right exception when trying reading unknowfile (wrong message: '.$e->getMessage().')');
+            $this->assertTrue($e->getMessage() == 'Cannot load the resource '.$this->filePath.'unknownfile',
+            'should throw the right exception when trying reading unknownfile (wrong message: '.$e->getMessage().')');
         }
 
     }

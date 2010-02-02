@@ -229,21 +229,21 @@ class jCoordinator {
         $ctrlpath = $selector->getPath();
 #ifnot ENABLE_OPTIMIZED_SOURCE
         if(!file_exists($ctrlpath)){
-            throw new jException('jelix~errors.ad.controller.file.unknow',array($this->actionName,$ctrlpath));
+            throw new jException('jelix~errors.ad.controller.file.unknown',array($this->actionName,$ctrlpath));
         }
 #endif
         require_once($ctrlpath);
         $class = $selector->getClass();
 #ifnot ENABLE_OPTIMIZED_SOURCE
         if(!class_exists($class,false)){
-            throw new jException('jelix~errors.ad.controller.class.unknow',array($this->actionName,$class, $ctrlpath));
+            throw new jException('jelix~errors.ad.controller.class.unknown',array($this->actionName,$class, $ctrlpath));
         }
 #endif
         $ctrl = new $class($this->request);
         if($ctrl instanceof jIRestController){
             $method = $selector->method = strtolower($_SERVER['REQUEST_METHOD']);
         }elseif(!method_exists($ctrl, $selector->method)){
-            throw new jException('jelix~errors.ad.controller.method.unknow',array($this->actionName, $selector->method, $class, $ctrlpath));
+            throw new jException('jelix~errors.ad.controller.method.unknown',array($this->actionName, $selector->method, $class, $ctrlpath));
         }
         return $ctrl;
     }
@@ -264,7 +264,7 @@ class jCoordinator {
         $type = $this->request->defaultResponseType;
 
         if(!isset($responses[$type]))
-            return jLocale::get('jelix~errors.default.response.type.unknow',array($this->moduleName.'~'.$this->actionName,$type));
+            return jLocale::get('jelix~errors.default.response.type.unknown',array($this->moduleName.'~'.$this->actionName,$type));
 
         try{
             $respclass = $responses[$type];

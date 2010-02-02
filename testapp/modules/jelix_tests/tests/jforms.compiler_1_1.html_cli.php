@@ -884,7 +884,7 @@ array(
 '<foo ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
 </foo>',
-'jelix~formserr.unknow.tag',
+'jelix~formserr.unknown.tag',
 array('foo','myfile')
 ),
 array(
@@ -898,14 +898,14 @@ array(
 '<textarea ref="nom" type="boolean" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
 </textarea>',
-'jelix~formserr.datatype.unknow',
+'jelix~formserr.datatype.unknown',
 array('boolean','textarea','myfile')
 ),
 array(
 '<input ref="nom" type="foo" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
 </input>',
-'jelix~formserr.datatype.unknow',
+'jelix~formserr.datatype.unknown',
 array('foo','input','myfile')
 ),
 array(

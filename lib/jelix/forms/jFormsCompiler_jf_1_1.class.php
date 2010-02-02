@@ -96,7 +96,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
     protected function generateTextarea(&$source, $control, &$attributes) {
         if(isset($attributes['type'])){
             if ($attributes['type'] != 'html' && $attributes['type'] != 'xhtml') {
-                throw new jException('jelix~formserr.datatype.unknow',
+                throw new jException('jelix~formserr.datatype.unknown',
                                      array($attributes['type'], 'textarea', $this->sourceFile));
             }
             $source[] = '$ctrl->datatype= new jDatatypeHtml('.($attributes['type'] == 'xhtml'?'true':'').');';

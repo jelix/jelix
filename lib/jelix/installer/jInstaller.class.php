@@ -341,7 +341,7 @@ class jInstaller {
         $this->startMessage();
 
         if (!isset($this->epId[$entrypoint])) {
-            throw new Exception("unknow entry point");
+            throw new Exception("unknown entry point");
         }
 
         $epId = $this->epId[$entrypoint];
@@ -377,7 +377,7 @@ class jInstaller {
             $entryPointList = array($this->epId[$entrypoint]);
         }
         else {
-            throw new Exception("unknow entry point");
+            throw new Exception("unknown entry point");
         }
 
         foreach ($entryPointList as $epId) {

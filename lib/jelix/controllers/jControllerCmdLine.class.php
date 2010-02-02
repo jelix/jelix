@@ -68,7 +68,7 @@ class jControllerCmdLine extends jController {
         $action = new jSelectorAct($this->request->params['action']);
 
         if( !in_array($action->method, get_class_methods(get_class($this)))) {
-            throw new jException('jelix~errors.cli.unknow.command', $action->method);
+            throw new jException('jelix~errors.cli.unknown.command', $action->method);
         }
         $opt = isset($this->allowed_options[$action->method]) ? $this->allowed_options[$action->method]: array();
         $par = isset($this->allowed_parameters[$action->method]) ? $this->allowed_parameters[$action->method]: array();

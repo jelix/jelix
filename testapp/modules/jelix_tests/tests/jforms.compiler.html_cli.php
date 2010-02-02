@@ -663,7 +663,7 @@ array(
 '<foo ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
 </foo>',
-'jelix~formserr.unknow.tag',
+'jelix~formserr.unknown.tag',
 array('foo','myfile')
 ),
 array(
@@ -684,7 +684,7 @@ array(
 '<input ref="nom" type="foo" xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
 </input>',
-'jelix~formserr.datatype.unknow',
+'jelix~formserr.datatype.unknown',
 array('foo','input','myfile')
 ),
 array(

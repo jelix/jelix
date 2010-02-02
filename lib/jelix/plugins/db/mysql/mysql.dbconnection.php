@@ -105,7 +105,7 @@ class mysqlDbConnection extends jDbConnection {
         // ici et non lors du connect, pour le cas où il y a plusieurs connexion active
         if(!mysql_select_db ($this->profile['database'], $this->_connection)){
             if(mysql_errno($this->_connection))
-                throw new jException('jelix~db.error.database.unknow',$this->profile['database']);
+                throw new jException('jelix~db.error.database.unknown',$this->profile['database']);
             else
                 throw new jException('jelix~db.error.connection.closed',$this->profile['name']);
         }
@@ -119,7 +119,7 @@ class mysqlDbConnection extends jDbConnection {
 
     protected function _doExec($query){
         if(!mysql_select_db ($this->profile['database'], $this->_connection))
-            throw new jException('jelix~db.error.database.unknow',$this->profile['database']);
+            throw new jException('jelix~db.error.database.unknown',$this->profile['database']);
 
         if ($qI = mysql_query ($query, $this->_connection)){
             return mysql_affected_rows($this->_connection);

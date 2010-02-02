@@ -40,7 +40,7 @@ class jSelectorForm extends jSelectorModule {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString(true));
+            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString(true));
         }
 
         // we see if the forms have been redefined

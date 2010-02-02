@@ -279,7 +279,7 @@ class jDaoMethod {
 
         if(substr ($way,0,1) == '$'){
             if(!in_array (substr ($way,1),$this->_parameters)){
-                throw new jDaoXmlException ($this->_parser->selector, 'method.orderitem.parameter.unknow', array($this->name, $way));
+                throw new jDaoXmlException ($this->_parser->selector, 'method.orderitem.parameter.unknown', array($this->name, $way));
             }
         }
 
@@ -289,7 +289,7 @@ class jDaoMethod {
                 $this->_conditions->addItemOrder($attr['property'], $way);
             }elseif(substr ($attr['property'],0,1) == '$'){
                 if(!in_array (substr ($attr['property'],1),$this->_parameters)){
-                    throw new jDaoXmlException ($this->_parser->selector, 'method.orderitem.parameter.unknow', array($this->name, $way));
+                    throw new jDaoXmlException ($this->_parser->selector, 'method.orderitem.parameter.unknown', array($this->name, $way));
                 }
                 $this->_conditions->addItemOrder($attr['property'], $way);
             }else{
@@ -312,11 +312,11 @@ class jDaoMethod {
         $props =$this->_parser->getProperties();
 
         if ($prop === null){
-            throw new jDaoXmlException ($this->_parser->selector, 'method.values.property.unknow', array($this->name, $prop));
+            throw new jDaoXmlException ($this->_parser->selector, 'method.values.property.unknown', array($this->name, $prop));
         }
 
         if(!isset($props[$prop])){
-            throw new jDaoXmlException ($this->_parser->selector, 'method.values.property.unknow', array($this->name, $prop));
+            throw new jDaoXmlException ($this->_parser->selector, 'method.values.property.unknown', array($this->name, $prop));
         }
 
         if($props[$prop]->table != $this->_parser->getPrimaryTable()){
@@ -354,7 +354,7 @@ class jDaoMethod {
             if(in_array (substr ($offset,1),$this->_parameters)){
                 $offsetparam=true;
             }else{
-                throw new jDaoXmlException ($this->_parser->selector, 'method.limit.parameter.unknow', array($this->name, $offset));
+                throw new jDaoXmlException ($this->_parser->selector, 'method.limit.parameter.unknown', array($this->name, $offset));
             }
         }else{
             if(is_numeric ($offset)){
@@ -369,7 +369,7 @@ class jDaoMethod {
             if(in_array (substr ($count,1),$this->_parameters)){
                 $countparam=true;
             }else{
-                throw new jDaoXmlException ($this->_parser->selector, 'method.limit.parameter.unknow', array($this->name, $count));
+                throw new jDaoXmlException ($this->_parser->selector, 'method.limit.parameter.unknown', array($this->name, $count));
             }
         }else{
             if(is_numeric($count)){

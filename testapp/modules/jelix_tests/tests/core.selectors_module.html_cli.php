@@ -53,7 +53,7 @@ class UTSelectorMod extends UnitTestCase {
     /*
     selector.invalid.syntax=(10)Syntax du sélecteur invalide
     selector.invalid.target=(11)Le sélecteur ne désigne pas une ressource du bon type
-    selector.module.unknow=(12)
+    selector.module.unknown=(12)
     */
     function testBadClassSelector() {
         $sels=array(

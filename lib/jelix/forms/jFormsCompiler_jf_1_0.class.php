@@ -68,7 +68,7 @@ class jFormsCompiler_jf_1_0  {
 
         $method = 'generate'.$controltype;
         if(!class_exists($class,false) || !method_exists($this, $method)){
-            throw new jException('jelix~formserr.unknow.tag',array($controltype,$this->sourceFile));
+            throw new jException('jelix~formserr.unknown.tag',array($controltype,$this->sourceFile));
         }
 
         if(!isset($attributes['ref']) || $attributes['ref'] == ''){
@@ -333,7 +333,7 @@ class jFormsCompiler_jf_1_0  {
         if(isset($attributes['type'])){
             $type = strtolower($attributes['type']);
             if(!in_array($type, $this->allowedType)){
-                throw new jException('jelix~formserr.datatype.unknow',array($type,'input',$this->sourceFile));
+                throw new jException('jelix~formserr.datatype.unknown',array($type,'input',$this->sourceFile));
             }
             
             if($type == 'xhtml')

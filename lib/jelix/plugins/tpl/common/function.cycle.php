@@ -44,7 +44,7 @@ function jtpl_function_common_cycle($tpl, $param=''){
         if(isset($tpl->_privateVars['cycle'][$cycle_name]['values'])){
             $cycle_array = $tpl->_privateVars['cycle'][$cycle_name]['values'];
         } else {
-            throw new jException("jelix~errors.tplplugin.function.argument.unknow", array($cycle_name,'cycle',''));
+            throw new jException("jelix~errors.tplplugin.function.argument.unknown", array($cycle_name,'cycle',''));
         }
         $index = & $tpl->_privateVars['cycle'][$cycle_name]['index'];
         $retval = $cycle_array[$index];

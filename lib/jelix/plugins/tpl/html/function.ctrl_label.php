@@ -25,7 +25,7 @@ function jtpl_function_html_ctrl_label($tpl, $ctrlname='')
     }else{
         $ctrls = $tpl->_privateVars['__form']->getControls();
         if (!isset($ctrls[$ctrlname])) {
-            throw new jException('jelix~formserr.unknow.control',
+            throw new jException('jelix~formserr.unknown.control',
                 array($ctrlname, $tpl->_privateVars['__form']->getSelector(),$tpl->_templateName));
         }
         $ctrl=$ctrls[$ctrlname];

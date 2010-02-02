@@ -99,7 +99,7 @@ class mssqlDbConnection extends jDbConnection {
     protected function _doQuery ($query){
         if(!mssql_select_db ($this->profile['database'], $this->_connection)){
             if(mssql_get_last_message()){
-                throw new jException('jelix~db.error.database.unknow',$this->profile['database']);
+                throw new jException('jelix~db.error.database.unknown',$this->profile['database']);
             } else {
                 throw new jException('jelix~db.error.connection.closed',$this->profile['name']);
             }
@@ -118,7 +118,7 @@ class mssqlDbConnection extends jDbConnection {
      */
     protected function _doExec($query){
         if(!mssql_select_db ($this->profile['database'], $this->_connection))
-        throw new jException('jelix~db.error.database.unknow',$this->profile['database']);
+        throw new jException('jelix~db.error.database.unknown',$this->profile['database']);
 
         if ($qI = mssql_query ($query, $this->_connection)){
             return mssql_rows_affected($this->_connection);

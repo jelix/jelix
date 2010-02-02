@@ -79,7 +79,7 @@ class jSelectorLoc extends jSelectorModule {
         if(!isset($gJConfig->_modulesPathList[$this->module])){
             if ($this->module == 'jelix')
                 throw new Exception('jelix module is not enabled !!');
-            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
+            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
 
         $locales = array($this->locale);

@@ -45,7 +45,7 @@ class jSelectorActFast extends jSelectorModule {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
+            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }else{
             $this->_path = $gJConfig->_modulesPathList[$this->module].'controllers/'.$this->controller.'.'.$this->request.'.php';
         }

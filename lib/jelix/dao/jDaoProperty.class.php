@@ -111,7 +111,7 @@ class jDaoProperty {
         $tables = $parser->getTables();
 
         if(!isset( $tables[$this->table])){
-            throw new jDaoXmlException ($parser->selector, 'property.unknow.table', $this->name);
+            throw new jDaoXmlException ($parser->selector, 'property.unknown.table', $this->name);
         }
 
         $this->required   = $this->requiredInConditions = $parser->getBool ($params['required']);

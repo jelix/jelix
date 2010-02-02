@@ -85,7 +85,7 @@ abstract class jSelectorModule implements jISelector {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString(true));
+            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString(true));
         }
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
         if (!is_readable ($this->_path)){

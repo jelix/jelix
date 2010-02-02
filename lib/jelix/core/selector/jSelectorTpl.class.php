@@ -51,7 +51,7 @@ class jSelectorTpl extends jSelectorModule {
     protected function _createPath(){
         global $gJConfig;
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
+            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
 
         $path = $this->module.'/'.$this->resource;

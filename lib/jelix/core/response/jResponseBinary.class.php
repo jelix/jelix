@@ -85,7 +85,7 @@ final class jResponseBinary  extends jResponse {
                 flush();
                 return true;
             }else{
-                throw new jException('jelix~errors.repbin.unknow.file' , $this->fileName);
+                throw new jException('jelix~errors.repbin.unknown.file' , $this->fileName);
                 return false;
             }
         }else{

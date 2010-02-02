@@ -218,7 +218,7 @@ class UTjforms extends jUnitTestCase {
         $f2 = jForms::get('product', 'akey');
         $this->assertComplexIdenticalStr($f2, $this->form2Descriptor);
 
-        $f3 = jForms::get('product', 'anUnknowKey');
+        $f3 = jForms::get('product', 'anUnknownKey');
         $this->assertNull($f3);
 
         $f4 = jForms::get('label', array(1,'fr'));

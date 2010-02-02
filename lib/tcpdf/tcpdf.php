@@ -2781,7 +2781,7 @@ if (!class_exists('TCPDF', false)) {
 			} elseif ($type == 'TrueTypeUnicode') {
 				$this->setFontBuffer($fontkey, array('i' => $this->numfonts, 'type' => $type, 'name' => $name, 'desc' => $desc, 'up' => $up, 'ut' => $ut, 'cw' => $cw, 'dw' => $dw, 'enc' => $enc, 'file' => $file, 'ctg' => $ctg));
 			} else {
-				$this->Error('Unknow font type: '.$type.'');
+				$this->Error('Unknown font type: '.$type.'');
 			}
 			if (isset($diff) AND (!empty($diff))) {
 				//Search existing encodings

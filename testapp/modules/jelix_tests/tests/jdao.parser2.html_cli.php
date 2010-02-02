@@ -411,7 +411,7 @@ class UTDao_parser2 extends jUnitTestCase {
                 <orderitem property="publishdate" way="$afoo"/>
             </order>
           </method>',
-          'jelix~daoxml.method.orderitem.parameter.unknow', array('foo~bar','','foo','$afoo')
+          'jelix~daoxml.method.orderitem.parameter.unknown', array('foo~bar','','foo','$afoo')
           ),
 
     );

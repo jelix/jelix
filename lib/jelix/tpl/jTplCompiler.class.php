@@ -392,7 +392,7 @@ class jTplCompiler
                 if (isset($this->_modifier[$m[1]])) {
                     $res = $this->_modifier[$m[1]].'('.$res.')';
                 } else {
-                    $this->doError2('errors.tpl.tag.modifier.unknow',$this->_currentTag, $m[1]);
+                    $this->doError2('errors.tpl.tag.modifier.unknown',$this->_currentTag, $m[1]);
                 }
             }
         }
@@ -509,7 +509,7 @@ class jTplCompiler
                         $this->_parseMeta($args,$path[1]);
                         $this->_pluginPath[$path[0]] = true;
                     } else {
-                        $this->doError1('errors.tpl.tag.meta.unknow',$m[1]);
+                        $this->doError1('errors.tpl.tag.meta.unknown',$m[1]);
                     }
                     $res='';
 
@@ -536,7 +536,7 @@ class jTplCompiler
                     $res = $this->_userFunctions[$name].'( $t'.(trim($argfct)!=''?','.$argfct:'').');';
 
                 } else {
-                    $this->doError1('errors.tpl.tag.function.unknow',$name);
+                    $this->doError1('errors.tpl.tag.function.unknown',$name);
                 }
         }
         return $res;

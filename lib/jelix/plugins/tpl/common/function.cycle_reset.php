@@ -30,6 +30,6 @@ function jtpl_function_common_cycle_reset($tpl, $name='') {
     if(isset($tpl->_privateVars['cycle'][$cycle_name])){
         $tpl->_privateVars['cycle'][$cycle_name]['index'] = 0;
     } else {
-        throw new jException("jelix~errors.tplplugin.function.argument.unknow", array($cycle_name,'cycle',''));
+        throw new jException("jelix~errors.tplplugin.function.argument.unknown", array($cycle_name,'cycle',''));
     }
 }

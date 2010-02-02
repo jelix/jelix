@@ -159,13 +159,13 @@ abstract class jRequest {
 
         if($useOriginal){
             if(!isset($gJConfig->_coreResponses[$type])){
-                throw new jException('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
+                throw new jException('jelix~errors.ad.response.type.unknown',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
             }
             $respclass = $gJConfig->_coreResponses[$type];
             $path = $gJConfig->_coreResponses[$type.'.path'];
         }else{
             if(!isset($gJConfig->responses[$type])){
-                throw new jException('jelix~errors.ad.response.type.unknow',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
+                throw new jException('jelix~errors.ad.response.type.unknown',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
             }
             $respclass = $gJConfig->responses[$type];
             $path = $gJConfig->responses[$type.'.path'];

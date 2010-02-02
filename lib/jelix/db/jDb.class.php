@@ -147,9 +147,9 @@ class jDb {
         }
         else {
             if ($name == 'default')
-                throw new jException('jelix~db.error.default.profile.unknow');
+                throw new jException('jelix~db.error.default.profile.unknown');
             else
-                throw new jException('jelix~db.error.profile.type.unknow',$name);
+                throw new jException('jelix~db.error.profile.type.unknown',$name);
         }
 
         if (isset(self::$_profiles[$targetName]) && is_array(self::$_profiles[$targetName])) {
@@ -158,7 +158,7 @@ class jDb {
             return self::$_profiles[$name];
         }
         else {
-            throw new jException('jelix~db.error.profile.unknow', $targetName);
+            throw new jException('jelix~db.error.profile.unknown', $targetName);
         }
     }
 

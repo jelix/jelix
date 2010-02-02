@@ -92,7 +92,7 @@ class createformCommand extends JelixScriptCommand {
         $daoPath = $selector->getPath();
         
         if(!$doc->load($daoPath)){
-           throw new jException('jelix~daoxml.file.unknow', $daoPath);
+           throw new jException('jelix~daoxml.file.unknown', $daoPath);
         }
 
         if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0'){

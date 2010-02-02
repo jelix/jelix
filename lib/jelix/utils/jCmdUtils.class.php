@@ -65,7 +65,7 @@ class jCmdUtils {
                     $switches[$sw] = true;
                 }
             } else {
-                throw new jException('jelix~errors.cli.unknow.option', $argv[0]);
+                throw new jException('jelix~errors.cli.unknown.option', $argv[0]);
             }
         }
 

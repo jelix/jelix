@@ -65,7 +65,7 @@ class createclassfromdaoCommand extends JelixScriptCommand {
         $doc = new DOMDocument();
         
         if(!$doc->load($sourceDaoPath)){
-           throw new jException('jelix~daoxml.file.unknow', $sourceDaoPath);
+           throw new jException('jelix~daoxml.file.unknown', $sourceDaoPath);
         }
         if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0'){
            throw new jException('jelix~daoxml.namespace.wrong',array($sourceDaoPath, $doc->namespaceURI));

@@ -74,7 +74,7 @@ class jWSDL {
 
         //Check module availability
         if(!isset($gJConfig->_modulesPathList[$this->module])){
-            throw new jExceptionSelector('jelix~errors.module.unknow', $this->module);
+            throw new jExceptionSelector('jelix~errors.module.unknown', $this->module);
         }
 
         //Build controller path
@@ -82,14 +82,14 @@ class jWSDL {
 
         //Check controller availability
         if(!file_exists($this->_ctrlpath)){
-            throw new jException('jelix~errors.action.unknow',$this->controller);
+            throw new jException('jelix~errors.action.unknown',$this->controller);
         }
 
         //Check controller declaration
         require_once($this->_ctrlpath);
         $this->controllerClassName = $this->controller.'Ctrl';
         if(!class_exists($this->controllerClassName,false)){
-            throw new jException('jelix~errors.ad.controller.class.unknow', array('jWSDL', $this->controllerClassName, $this->_ctrlpath));
+            throw new jException('jelix~errors.ad.controller.class.unknown', array('jWSDL', $this->controllerClassName, $this->_ctrlpath));
         }
 
         //Check eAccelerator configuration in order to Reflexion API work
@@ -196,7 +196,7 @@ class jWSDL {
 
         if($className != ""){
             if(!class_exists($className,false)){
-                throw new jException('jelix~errors.ad.controller.class.unknow', array('WSDL generation', $className, $this->_ctrlpath));
+                throw new jException('jelix~errors.ad.controller.class.unknown', array('WSDL generation', $className, $this->_ctrlpath));
             }
             $classObject = new IPReflectionClass($className);
         }else{

@@ -66,7 +66,7 @@ class jSelectorClass extends jSelectorModule {
     protected function _createPath(){
         global $gJConfig;
         if (!isset($gJConfig->_modulesPathList[$this->module])) {
-            throw new jExceptionSelector('jelix~errors.selector.module.unknow', $this->toString());
+            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->subpath.$this->className.$this->_suffix;
 

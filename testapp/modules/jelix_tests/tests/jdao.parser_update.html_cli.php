@@ -255,7 +255,7 @@ class UTDao_parser_update extends jUnitTestCase {
                 <value  value="" />
             </values>
           </method>',
-          'jelix~daoxml.method.values.property.unknow', array('foo~bar','','foo','')
+          'jelix~daoxml.method.values.property.unknown', array('foo~bar','','foo','')
           ),
       array('<?xml version="1.0"?>
           <method name="foo" type="update">
@@ -263,7 +263,7 @@ class UTDao_parser_update extends jUnitTestCase {
                 <value property="plop" value="" />
             </values>
           </method>',
-          'jelix~daoxml.method.values.property.unknow', array('foo~bar','','foo','plop')
+          'jelix~daoxml.method.values.property.unknown', array('foo~bar','','foo','plop')
           ),
       array('<?xml version="1.0"?>
           <method name="foo" type="update">

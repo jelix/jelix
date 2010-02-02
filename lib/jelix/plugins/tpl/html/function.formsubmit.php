@@ -24,7 +24,7 @@ function jtpl_function_html_formsubmit($tpl, $ctrlname='')
         }else{
             $ctrls = $tpl->_privateVars['__form']->getSubmits();
             if (count($ctrls) == 0) {
-                throw new jException('jelix~formserr.unknow.control',
+                throw new jException('jelix~formserr.unknown.control',
                 array('submit', $tpl->_privateVars['__form']->getSelector(),$tpl->_templateName));
             }
             reset($ctrls);
@@ -34,7 +34,7 @@ function jtpl_function_html_formsubmit($tpl, $ctrlname='')
     }else{
         $ctrls = $tpl->_privateVars['__form']->getSubmits();
         if (count($ctrls) == 0) {
-            throw new jException('jelix~formserr.unknow.control',
+            throw new jException('jelix~formserr.unknown.control',
             array($ctrlname, $tpl->_privateVars['__form']->getSelector(),$tpl->_templateName));
         }
         $ctrl = $ctrls[$ctrlname];
