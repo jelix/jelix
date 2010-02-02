@@ -121,6 +121,7 @@ class mysqlDbTools extends jDbTools {
     /**
     * returns the list of tables 
     * @return   array    list of table names
+    * @deprecated since 1.2
     */
     public function getTableList () {
         $results = array ();
@@ -147,6 +148,7 @@ class mysqlDbTools extends jDbTools {
     /**
     * retrieve the list of fields of a table
     * @return   array    keys are field names and values are jDbFieldProperties objects
+    * @deprecated since 1.2
     */
     public function getFieldList ($tableName) {
         $tableName = $this->_conn->prefixTable($tableName);

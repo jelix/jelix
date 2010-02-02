@@ -71,32 +71,30 @@ class mysqlDbTable extends jDbTable {
 
     protected function _alterColumn(jDbColumn $old, jDbColumn $new) {
         $conn = $this->schema->getConn();
-        $tools = $conn->tools();
 
         $pk = $this->getPrimaryKey();
         $isPk = ($pk && in_array($new->name, $pk->columns));
 
 		$sql = 'ALTER TABLE '.$conn->encloseName($this->name)
                 .' CHANGE COLUMN '.$conn->encloseName($old->name)
-                .' '.$this->schema->_prepareSqlColumn($new, $tools, $isPk);
+                .' '.$this->schema->_prepareSqlColumn($new);
+        if ($isPk && $col->autoIncrement)
+            $sql .= ' AUTO_INCREMENT';
 		$conn->exec($sql);
     }
 
     protected function _addColumn(jDbColumn $new) {
         $conn = $this->schema->getConn();
-        $tools = $conn->tools();
         $pk = $this->getPrimaryKey();
         $isPk = ($pk && in_array($new->name, $pk->columns));
-		$sql = 'ALTER TABLE '.$conn->encloseName($this->name)
-                .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new, $tools, $isPk);
+        $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
+                .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new);
+        if ($isPk && $col->autoIncrement)
+            $sql .= ' AUTO_INCREMENT';
+
 		$conn->exec($sql);
     }
 
-    protected function _dropColumn($name) {
-        $conn = $this->schema->getConn();
-		$sql = 'ALTER TABLE '.$conn->encloseName($this->name).' DROP COLUMN '.$conn->encloseName($name);
-		$conn->exec($sql);
-    }
 
     protected function _loadIndexesAndKeys() {
 
@@ -241,52 +239,23 @@ class mysqlDbTable extends jDbTable {
 class mysqlDbSchema extends jDbSchema {
 
     /**
-     * method private, and should be used only by mysqlDbTable
-     */
-    function _prepareSqlColumn($col, $tools, $isPrimaryKey) {
-        $type = $tools->getTypeInfo($col->type);
-        $colstr = $this->conn->encloseName($col->name).' '.$type[0];
-
-        $length = $col->length;
-        if (!$length && $type[5]) {
-            $length = $type[5];
-        }
-
-        if ($length) {
-            $colstr .= '('.$length.')';
-        }
-
-        $colstr.= ($col->notNull?' NOT NULL':' NULL');
-        if ($col->hasDefault && !$col->autoIncrement) {
-            if (!($col->notNull && $col->defaultValue === null)) {
-                if ($col->defaultValue === null)
-                    $colstr .= ' DEFAULT NULL';
-                else
-                    $colstr .= ' DEFAULT '.$this->conn->quote($col->defaultValue);
-            }
-        }
-
-        if ($isPrimaryKey && $col->autoIncrement)
-            $colstr .= '  AUTO_INCREMENT';
-
-        return $colstr;
-    }
-
-
-    /**
      * @param string $name
      * @param array[jDbColumn] $columns
      */
     function _createTable($name, $columns, $primaryKey, $attributes=array()) {
 
-        $tools = $this->conn->tools();
         $cols = array();
 
         if (is_string($primaryKey))
             $primaryKey = array($primaryKey);
 
         foreach ($columns as $col) {
-            $cols[] = $this->_prepareSqlColumn($col, $tools, in_array($col->name, $primaryKey));
+            $colstr = $this->_prepareSqlColumn($col);
+
+            if (in_array($col->name, $primaryKey) && $col->autoIncrement)
+                $colstr .= '  AUTO_INCREMENT';
+
+            $cols[] = $colstr;
         }
 
         $sql = 'CREATE TABLE '.$this->conn->encloseName($name).' ('.implode(", ",$cols);
@@ -330,10 +299,6 @@ class mysqlDbSchema extends jDbSchema {
             $results[$line->$col_name] = new mysqlDbTable($line->$col_name, $this);
         }
         return $results;
-    }
-
-    protected function _dropTable($name) {
-        $this->conn->exec('DROP TABLE '.$this->conn->encloseName($name));
     }
 }
 

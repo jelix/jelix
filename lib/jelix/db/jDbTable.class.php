@@ -98,9 +98,11 @@ abstract class jDbTable {
         $this->_alterColumn($oldColumn, $column);
         $this->columns[$column->name] = $column;
 	}
-    
+
     public function dropColumn($name) {
-        $this->_dropColumn($name);
+        $conn = $this->schema->getConn();
+        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' DROP COLUMN '.$conn->encloseName($name);
+        $conn->exec($sql);
     }
 
     /**
@@ -247,8 +249,6 @@ abstract class jDbTable {
     abstract protected function _alterColumn(jDbColumn $old, jDbColumn $new);
 
     abstract protected function _addColumn(jDbColumn $new);
-
-    abstract protected function _dropColumn($name);
 
     abstract protected function _loadIndexesAndKeys();
 

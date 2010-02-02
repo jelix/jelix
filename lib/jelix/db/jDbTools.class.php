@@ -152,7 +152,7 @@ abstract class jDbTools {
         }
         else 
             $r = $this->typesInfo['varchar'];
-        $r[] = ($nativeType == 'serial' || $nativeType == 'autoincrement' || $nativeType == 'bigautoincrement');
+        $r[] = ($nativeType == 'serial' || $nativeType == 'bigserial' ||$nativeType == 'autoincrement' || $nativeType == 'bigautoincrement');
         return $r;
     }
 

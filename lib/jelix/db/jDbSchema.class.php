@@ -103,6 +103,55 @@ abstract class jDbSchema {
 
     abstract protected function _getTables();
 
-    abstract protected function _dropTable($name);
+    protected function _dropTable($name) {
+        $this->conn->exec('DROP TABLE '.$this->conn->encloseName($name));
+    }
 
+    /**
+     * return the SQL string corresponding to the given column.
+     * private method, should be used only by a jDbTable object
+     * @param jDbColumn $col  the column
+     * @param jDbTools $tools
+     * @return string the sql string
+     * @access private
+     */
+    function _prepareSqlColumn($col) {
+        $this->normalizeColumn($col);
+        $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
+
+        if ($col->length) {
+            $colstr .= '('.$length.')';
+        }
+
+        $colstr.= ($col->notNull?' NOT NULL':' NULL');
+
+        if ($col->hasDefault && !$col->autoIncrement) {
+            if (!($col->notNull && $col->defaultValue === null)) {
+                if ($col->defaultValue === null)
+                    $colstr .= ' DEFAULT NULL';
+                else
+                    $colstr .= ' DEFAULT '.$this->conn->quote($col->defaultValue);
+            }
+        }
+        return $colstr;
+    }
+
+    /**
+     * fill correctly some properties of the column, depending of its type
+     * and other properties
+     * @param jDbColumn $col
+     */
+    function normalizeColumn($col) {
+        $type = $this->conn->tools()->getTypeInfo($col->type);
+
+        $col->nativeType = $type[0];
+        if (!$col->length && $type[5]) {
+            $col->length = $type[5];
+        }
+
+        $col->autoIncrement = $type[6];
+        if ($type[6]) {
+            $col->notNull = true;
+        }
+    }
 }

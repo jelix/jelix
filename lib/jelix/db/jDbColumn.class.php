@@ -73,6 +73,12 @@ class jDbColumn {
     public $type;
 
     /**
+     * internal use
+     * @internal
+     */
+    public $nativeType;
+
+    /**
      * field name
      * @var string
      */
