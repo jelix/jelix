@@ -45,9 +45,19 @@ class jDbPDOResultSet extends PDOStatement {
 
     /**
      * Set the fetch mode.
+     * @param int $mode  the mode, a PDO::FETCH_* constant
+     * @param mixed $arg1 a parameter for the given mode
+     * @param mixed $arg2 a parameter for the given mode
      */
-    public function setFetchMode($mode, $param=null){
+    public function setFetchMode($mode, $arg1=null , $arg2=null){
         $this->_fetchMode = $mode;
-        return parent::setFetchMode($mode, $param);
+        // depending the mode, original setFetchMode throw an error if wrong arguments
+        // are given, even if there are null
+        if ($arg1 === null)
+            return parent::setFetchMode($mode);
+        else if ($arg2 === null)
+            return parent::setFetchMode($mode, $arg1);
+        return parent::setFetchMode($mode, $arg1, $arg2);
     }
+
 }
