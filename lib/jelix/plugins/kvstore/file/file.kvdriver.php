@@ -73,7 +73,7 @@ class fileServer {
 	*
 	* @return boolean whether the action was successful or not
 	*/
-	public static function set($key, $value, $ttl) {
+	public function set($key, $value, $ttl) {
 		$r = false;
 
 		if ($fl = @fopen($this->dir . '/.flock', 'w+')) {
@@ -117,7 +117,7 @@ class fileServer {
 	* @return mixed false if the cached info does not exist or has expired
 	*               or the data if the info exists and is valid
 	*/
-	public static function get($key) {
+	public function get($key) {
 		$r = false;
 
 		// the name of the file
@@ -159,7 +159,7 @@ class fileServer {
 	*
 	* @return boolean whether the action was successful or not
 	*/
-	public static function delete($key) {
+	public function delete($key) {
  		// the name of the file
 		$md5    = md5($key);
 		$subdir = $md5[0].$md5[1];
@@ -174,7 +174,7 @@ class fileServer {
 	*
 	* @return boolean whether the action was successful or not
 	*/
-	public static function flush() {
+	public function flush() {
         return @unlink($this->dir);
     }
 }
