@@ -10,9 +10,9 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-define ('TMP_DIR', (JELIX_APP_TEMP_PATH . 'filekv'));
-
 class fileKVDriver extends jKVDriver {
+
+	protected $dir;
 
     /**
 	 * "Connects" to the fileServer
@@ -22,7 +22,7 @@ class fileKVDriver extends jKVDriver {
 	 * @access protected
 	 */
    	protected function _connect() {
-        $cnx = new fileServer();
+        $cnx = new fileServer(JELIX_APP_TEMP_PATH . 'filekv');
 
         return $cnx;
 	}
@@ -51,11 +51,16 @@ class fileKVDriver extends jKVDriver {
 }
 
 class fileServer {
-    public function __construct () {
+	
+	protected $dir;
+	
+    public function __construct ($directory) {
+		
+		$this->dir = $directory;
         // Create temp kvFile directory if necessary
 
-        if (! file_exists(TMP_DIR)) {
-            jFile::createDir(TMP_DIR);
+        if (! file_exists()) {
+            jFile::createDir($this->dir);
         }
     }
 
@@ -71,19 +76,19 @@ class fileServer {
 	public static function set($key, $value, $ttl) {
 		$r = false;
 
-		if ($fl = @fopen(TMP_DIR . '/.flock', 'w+')) {
+		if ($fl = @fopen($this->dir . '/.flock', 'w+')) {
 			if (flock($fl, LOCK_EX)) {
 				// mutex zone
 
 				$md5 	= md5($key);
 				$subdir = $md5[0].$md5[1];
 
-                if (! file_exists(TMP_DIR . '/' . $subdir)) {
-                    jFile::createDir(TMP_DIR . '/' . $subdir);
+                if (! file_exists($this->dir . '/' . $subdir)) {
+                    jFile::createDir($this->dir . '/' . $subdir);
                 }
 
 				// write data to cache
-                $fn = TMP_DIR . '/' . $subdir . '/' . $md5;
+                $fn = $this->dir . '/' . $subdir . '/' . $md5;
 				if ($f = @gzopen($fn . '.tmp', 'w')) {
 					// write temporary file
 					fputs($f, base64_encode(serialize($value)));
@@ -119,7 +124,7 @@ class fileServer {
 		$md5    = md5($key);
 		$subdir = $md5[0].$md5[1];
 
-		$fn = TMP_DIR . '/' . $subdir . '/' . $md5;
+		$fn = $this->dir . '/' . $subdir . '/' . $md5;
 
 		// file does not exists
 		if (! file_exists($fn)) {
@@ -159,7 +164,7 @@ class fileServer {
 		$md5    = md5($key);
 		$subdir = $md5[0].$md5[1];
 
-		$fn = TMP_DIR . '/' . $subdir . '/' . $md5;
+		$fn = $this->dir . '/' . $subdir . '/' . $md5;
 
         return @unlink($fn);
     }
@@ -170,6 +175,6 @@ class fileServer {
 	* @return boolean whether the action was successful or not
 	*/
 	public static function flush() {
-        return @unlink(TMP_DIR);
+        return @unlink($this->dir);
     }
 }
