@@ -192,7 +192,7 @@ class UTjDbSchemaMysql extends jUnitTestCase {
         
         $this->assertComplexIdenticalStr($list['promo'], $obj);
     }
-    
+
     function testDropTable() {
 
         $db = jDb::getConnection();

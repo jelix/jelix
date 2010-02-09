@@ -120,7 +120,7 @@ abstract class jDbSchema {
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
 
         if ($col->length) {
-            $colstr .= '('.$length.')';
+            $colstr .= '('.$col->length.')';
         }
 
         $colstr.= ($col->notNull?' NOT NULL':' NULL');
@@ -149,8 +149,8 @@ abstract class jDbSchema {
             $col->length = $type[5];
         }
 
-        $col->autoIncrement = $type[6];
         if ($type[6]) {
+            $col->autoIncrement = true;
             $col->notNull = true;
         }
     }

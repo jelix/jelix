@@ -252,8 +252,9 @@ class mysqlDbSchema extends jDbSchema {
         foreach ($columns as $col) {
             $colstr = $this->_prepareSqlColumn($col);
 
-            if (in_array($col->name, $primaryKey) && $col->autoIncrement)
+            if (in_array($col->name, $primaryKey) && $col->autoIncrement) {
                 $colstr .= '  AUTO_INCREMENT';
+            }
 
             $cols[] = $colstr;
         }
@@ -273,7 +274,8 @@ class mysqlDbSchema extends jDbSchema {
             $sql.= ' COLLATE '.$attributes['collate'];
         }
 
-		$this->conn->exec($sql);
+        $this->conn->exec($sql);
+
         $table = new mysqlDbTable($name, $this);
         $table->attributes = $attributes;
         return $table;
@@ -301,5 +303,3 @@ class mysqlDbSchema extends jDbSchema {
         return $results;
     }
 }
-
-
