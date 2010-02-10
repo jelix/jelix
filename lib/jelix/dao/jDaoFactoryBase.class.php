@@ -9,7 +9,7 @@
  * @contributor Yoan Blanc
  * @contributor Michael Fradin
  * @contributor Christophe Thiriot
- * @copyright   2005-2009 Laurent Jouanneau
+ * @copyright   2005-2010 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007-2009 Julien Issler
  * @copyright   2008 Thomas
@@ -156,7 +156,7 @@ abstract class jDaoFactoryBase  {
      */
     public function findAll(){
         $rs = $this->_conn->query ($this->_selectClause.$this->_fromClause.$this->_whereClause);
-        $rs->setFetchMode(8,$this->_DaoRecordClassName);
+        $this->finishInitResultSet($rs);
         return $rs;
     }
 
@@ -191,7 +191,7 @@ abstract class jDaoFactoryBase  {
         $q .= $this->_getPkWhereClauseForSelect($keys);
 
         $rs = $this->_conn->query ($q);
-        $rs->setFetchMode(8,$this->_DaoRecordClassName);
+        $this->finishInitResultSet($rs);
         $record =  $rs->fetch ();
         return $record;
     }
@@ -259,7 +259,7 @@ abstract class jDaoFactoryBase  {
         }else{
             $rs = $this->_conn->query ($query);
         }
-        $rs->setFetchMode(8,$this->_DaoRecordClassName);
+        $this->finishInitResultSet($rs);
         return $rs;
     }
 
@@ -494,7 +494,16 @@ abstract class jDaoFactoryBase  {
                     return $this->falseValue;
                 break;
             default:
-                return $this->_conn->quote ($value);
+                return $this->_conn->quote ($value, true, ($fieldType == 'binary'));
         }
+    }
+
+    /**
+     * finish to initialise a record set. Could be redefined in child class
+     * to do additionnal processes
+     * @param jDbResultSet $rs the record set
+     */
+    protected function finishInitResultSet($rs) {
+        $rs->setFetchMode(8, $this->_DaoRecordClassName);
     }
 }

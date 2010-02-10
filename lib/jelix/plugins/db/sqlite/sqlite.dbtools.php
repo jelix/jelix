@@ -79,7 +79,7 @@ class sqliteDbTools extends jDbTools {
       'longblob'        =>array('blob',   'blob',       null,       null,       0,     0),
       'bfile'           =>array('blob',   'blob',       null,       null,       0,     0),
       
-      'bytea'           =>array('blob',   'blob',       null,       null,       0,     0),
+      'bytea'           =>array('blob',   'varbinary',       null,       null,       0,     0),
       'binary'          =>array('blob',     'binary',     null,       null,       0,     255),
       'varbinary'       =>array('blob',  'varbinary',  null,       null,       0,     255),
       'raw'             =>array('blob',  'varbinary',  null,       null,       0,     2000),

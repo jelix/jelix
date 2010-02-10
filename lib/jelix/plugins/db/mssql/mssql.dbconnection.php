@@ -161,9 +161,9 @@ class mssqlDbConnection extends jDbConnection {
 
     /**
      * escape special characters
-     * @access private
+     * @todo support of binary strings
      */
-    protected function _quote($text){
+    protected function _quote($text, $binary){
         return str_replace( "'", "''", $text );
     }
 }

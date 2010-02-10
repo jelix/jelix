@@ -6,7 +6,7 @@
 * @contributor Laurent Jouanneau
 * @contributor Bastien Jaillot (bug fix)
 * @contributor Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
 * @copyright  2007-2008 Julien Issler
 * This class was get originally from the Copix project (CopixDAOGeneratorV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -130,6 +130,7 @@ class jDaoGenerator {
                 $src[] =' public $'.$id.';';
         }
 
+        // TODO PHP 5.3 : we could remove that
         $src[] = '   public function getProperties() { return '.$this->_DaoClassName.'::$_properties; }';
         $src[] = '   public function getPrimaryKeyNames() { return '.$this->_DaoClassName.'::$_pkFields; }';
         $src[] = '}';
@@ -198,6 +199,8 @@ class jDaoGenerator {
         //----- other user methods
 
         $src[] = $this->buildUserMethods();
+
+        $src[] = $this->buildEndOfClass();
 
         $src[] = '}';//end of class
 
@@ -493,7 +496,7 @@ class jDaoGenerator {
                     break;
                 case 'selectfirst':
                     $src[] = '    $__rs = $this->_conn->limitQuery($__query,0,1);';
-                    $src[] = '    $__rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
+                    $src[] = '    $this->finishInitResultSet($__rs);';
                     $src[] = '    return $__rs->fetch();';
                     break;
                 case 'select':
@@ -502,7 +505,7 @@ class jDaoGenerator {
                         $src[] = '    $__rs = $this->_conn->limitQuery($__query'.$limit.');';
                     else
                         $src[] = '    $__rs = $this->_conn->query($__query);';
-                    $src[] = '    $__rs->setFetchMode(8,\''.$this->_DaoRecordClassName.'\');';
+                    $src[] = '    $this->finishInitResultSet($__rs);';
                     $src[] = '    return $__rs;';
             }
             $src[] = '}';
@@ -614,6 +617,10 @@ class jDaoGenerator {
         return $field;
     }
 
+    protected function buildEndOfClass() {
+        return '';
+    }
+
     /**
     * format field names with start, end and between strings.
     *   will write the field named info.
@@ -696,6 +703,10 @@ class jDaoGenerator {
                 && !$field->isPK
                 && !$field->isFK
                 && ( $field->autoIncrement || ($field->updatePattern != '%s' && $field->selectPattern != '')));
+    }
+
+    protected function _captureBinaryField(&$field) {
+        return ($field->unifiedType == 'binary' || $field->unifiedType == 'varbinary');
     }
 
     /**
@@ -944,7 +955,7 @@ class jDaoGenerator {
         $type = '';
         if ($forCondition != 'LIKE' && $forCondition != 'NOT LIKE')
             $type = strtolower($field->unifiedType);
-        
+
         if ($forCondition != '') {
             $forCondition = '\' '.$forCondition.' \'.'; // spaces for operators like LIKE
         }
@@ -981,10 +992,16 @@ class jDaoGenerator {
                 }
                 break;
             default:
-                if($checknull){
-                    $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_conn->quote('.$expr.',false))';
-                }else{
-                    $expr= $forCondition.'$this->_conn->quote('.$expr.')';
+                if ($type=='varbinary' || $type=='binary')
+                    $qparam = ',true';
+                else
+                    $qparam = '';
+
+                if ($checknull) {
+                   $expr = '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_conn->quote('.$expr.',false'.$qparam.'))';
+                }
+                else {
+                   $expr = $forCondition.'$this->_conn->quote('.$expr.($qparam?',true,true':'').')';
                 }
         }
         return $expr;

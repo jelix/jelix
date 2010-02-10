@@ -140,7 +140,10 @@ class intuitionDbConnection extends jDbConnection {
             array ('intuition','_autoCommitNotify')); 
     }
 
-    protected function _quote ($text){
+    /**
+     * @todo support of binary strings
+     */
+    protected function _quote ($text, $binary) {
         return quote ($text);
     }
 }

@@ -78,13 +78,13 @@ class mysqlDbTools extends jDbTools {
       'nclob'           =>array('longtext',   'text',       null,       null,       0,     0),
 
 
-      'tinyblob'        =>array('tinyblob',   'blob',       null,       null,       0,     255),
-      'blob'            =>array('blob',       'blob',       null,       null,       0,     65535),
-      'mediumblob'      =>array('mediumblob', 'blob',       null,       null,       0,     16777215),
-      'longblob'        =>array('longblob',   'blob',       null,       null,       0,     0),
-      'bfile'           =>array('longblob',   'blob',       null,       null,       0,     0),
+      'tinyblob'        =>array('tinyblob',   'varbinary',  null,       null,       0,     255),
+      'blob'            =>array('blob',       'varbinary',  null,       null,       0,     65535),
+      'mediumblob'      =>array('mediumblob', 'varbinary',  null,       null,       0,     16777215),
+      'longblob'        =>array('longblob',   'varbinary',  null,       null,       0,     0),
+      'bfile'           =>array('longblob',   'varbinary',  null,       null,       0,     0),
       
-      'bytea'           =>array('longblob',   'blob',       null,       null,       0,     0),
+      'bytea'           =>array('longblob',   'varbinary',  null,       null,       0,     0),
       'binary'          =>array('binary',     'binary',     null,       null,       0,     255),
       'varbinary'       =>array('varbinary',  'varbinary',  null,       null,       0,     255),
       'raw'             =>array('varbinary',  'varbinary',  null,       null,       0,     2000),

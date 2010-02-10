@@ -194,8 +194,11 @@ class pgsqlDbConnection extends jDbConnection {
         $this->_doExec('SET AUTOCOMMIT TO '.($state ? 'ON' : 'OFF'));
     }
 
-    protected function _quote($text){
-        return pg_escape_string($text);
-    }
+    protected function _quote($text, $binary) {
+        if ($binary)
+            return pg_escape_bytea($this->_connection, $text);
+        else
+            return pg_escape_string($this->_connection, $text);
+	}
 }
 

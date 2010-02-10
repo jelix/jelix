@@ -4,7 +4,7 @@
 * @subpackage  db
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2005-2006 Laurent Jouanneau
+* @copyright   2005-2010 Laurent Jouanneau
 * @copyright   2007-2009 Julien Issler
 *
 * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -126,11 +126,11 @@ abstract class jDbConnection {
     * @param boolean $checknull if true, check if $text is a null value, and then return NULL
     * @return string escaped string
     */
-    public function quote ($text, $checknull=true) {
+    public function quote ($text, $checknull=true, $binary = false) {
         if ($checknull)
-            return (is_null ($text) ? 'NULL' : "'".$this->_quote($text)."'");
+            return (is_null ($text) ? 'NULL' : "'".$this->_quote($text, $binary)."'");
         else
-            return "'".$this->_quote ($text)."'";
+            return "'".$this->_quote($text, $binary)."'";
     }
 
     /**
@@ -294,8 +294,10 @@ abstract class jDbConnection {
     /**
     * do the escaping of a string.
     * you should override it into the driver
+    * @param string $text the text to escape
+    * @param boolean $binary true if the content of the string is a binary content
     */
-    protected function _quote($text){
+    protected function _quote($text, $binary){
         return addslashes($text);
     }
     

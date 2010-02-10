@@ -4,7 +4,7 @@
 * @subpackage  dao
 * @author      Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright   2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
+* @copyright   2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDAODefinitionV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,

@@ -22,6 +22,15 @@ class jDbPDOResultSet extends PDOStatement {
 
     protected $_fetchMode = 0;
 
+    public function fetch ($fetch_style = PDO::FETCH_BOTH, $cursor_orientation = PDO::FETCH_ORI_NEXT, $cursor_offset = 0) {
+        $rec = parent::fetch();
+        if ($rec && count($this->modifier)) {
+            foreach($this->modifier as $m)
+                call_user_func_array($m, array($rec, $this));
+        }
+        return $rec;
+    }
+
     /**
      * return all results from the statement.
      * Arguments are ignored. JDb don't care about it (fetch always as classes or objects)
@@ -60,4 +69,28 @@ class jDbPDOResultSet extends PDOStatement {
         return parent::setFetchMode($mode, $arg1, $arg2);
     }
 
+    /**
+     * @param string a binary string to unescape
+     * @since 1.1.6
+     */
+    public function unescapeBin($text) {
+        return $text;
+    }
+
+    /**
+     * a callback function which will modify on the fly record's value
+     * @var array of callback
+     * @since 1.1.6
+     */
+    protected $modifier = array();
+
+    /**
+     * @param callback $function a callback function
+     *     the function should accept in parameter the record,
+     *     and the resulset object
+     * @since 1.1.6
+     */
+    public function addModifier($function) {
+        $this->modifier[] = $function;
+    }
 }

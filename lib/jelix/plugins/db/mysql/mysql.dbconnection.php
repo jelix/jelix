@@ -5,7 +5,7 @@
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Sylvain de Vathaire, Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
 * @copyright  2009 Julien Issler
 * This class was get originally from the Copix project (CopixDbConnectionMysql, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -149,11 +149,10 @@ class mysqlDbConnection extends jDbConnection {
     }
 
     /**
-     * renvoi une chaine avec les caractères spéciaux échappés
-     * @access private
+     * @return string escaped text or binary string
      */
-    protected function _quote($text){
-        return mysql_real_escape_string($text,  $this->_connection );
+    protected function _quote($text, $binary) {
+        return mysql_real_escape_string($text, $this->_connection);
     }
 
 }

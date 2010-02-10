@@ -220,9 +220,13 @@ abstract class jDbTools {
                     return (string)floatval($value);
             default:
                 if ($toPhpSource) {
-                    if(strpos($value,"'") !== false){
+                    if ($unifiedType == 'varbinary' || $unifiedType == 'binary') {
+                        return '\'.$this->_conn->quote(\''.str_replace('\'','\\\'',$value).'\',true,true).\'';
+                    }
+                    else if(strpos($value,"'") !== false) {
                         return '\'.$this->_conn->quote(\''.str_replace('\'','\\\'',$value).'\').\'';
-                    }else{
+                    }
+                    else {
                         return "\\'".$value."\\'";
                     }
                 }

@@ -4,7 +4,7 @@
 * @subpackage db
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright  2005-2006 Laurent Jouanneau
+* @copyright  2005-2010 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -21,7 +21,7 @@ abstract class jDbResultSet implements Iterator {
     protected $_fetchModeParam = null;
     protected $_fetchModeCtoArgs = null;
 
-    function __construct (  $idResult){
+    function __construct ($idResult) {
         $this->_idResult = $idResult;
     }
 
@@ -33,6 +33,31 @@ abstract class jDbResultSet implements Iterator {
     }
 
     public function id() { return $this->_idResult; }
+
+    /**
+     * @param string a binary string to unescape
+     * @since 1.1.6
+     */
+    public function unescapeBin($text) {
+        return $text;
+    }
+
+    /**
+     * a callback function which will modify on the fly record's value
+     * @var array of callback
+     * @since 1.1.6
+     */
+    protected $modifier = array();
+
+    /**
+     * @param callback $function a callback function
+     *     the function should accept in parameter the record,
+     *     and the resulset object
+     * @since 1.1.6
+     */
+    public function addModifier($function) {
+        $this->modifier[] = $function;
+    }
 
     /**
     * set the fetch mode.
@@ -51,9 +76,18 @@ abstract class jDbResultSet implements Iterator {
      */
     public function fetch(){
         $result = $this->_fetch ();
-        if (!$result || $this->_fetchMode == jDbConnection::FETCH_OBJ)
+
+        if (!$result)
             return $result;
-        
+
+        if (count($this->modifier)) {
+            foreach($this->modifier as $m)
+                call_user_func_array($m, array($result, $this));
+        }
+
+        if ($this->_fetchMode == jDbConnection::FETCH_OBJ)
+            return $result;
+
         if ($this->_fetchMode == jDbConnection::FETCH_CLASS) {
             if ($result instanceof $this->_fetchModeParam)
                 return $result;

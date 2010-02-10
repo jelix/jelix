@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDbResultsetMysql, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -21,8 +21,8 @@
  */
 class mysqlDbResultSet extends jDbResultSet {
 
-    protected function  _fetch (){
-        if($this->_fetchMode == jDbConnection::FETCH_CLASS){
+    protected function  _fetch () {
+        if($this->_fetchMode == jDbConnection::FETCH_CLASS) {
             if ($this->_fetchModeCtoArgs)
                 $ret =  mysql_fetch_object ($this->_idResult, $this->_fetchModeParam, $this->_fetchModeCtoArgs);
             else
@@ -32,9 +32,11 @@ class mysqlDbResultSet extends jDbResultSet {
         }
         return $ret;
     }
+
     protected function _free (){
         return mysql_free_result ($this->_idResult);
     }
+
     protected function _rewind (){
         return @mysql_data_seek ( $this->_idResult, 0);
     }

@@ -184,6 +184,26 @@ class UTjDbPgsql extends jUnitTestCaseDb {
 
     }
 
+   function testBinaryField() {
+        $this->emptyTable('jsessions');
+
+        $dao = jDao::create ('jelix~jsession', $this->dbProfile);
+
+        $sess1 = jDao::createRecord ('jelix~jsession', $this->dbProfile);
+        $sess1->id ='sess_02939873A32B';
+        $sess1->creation = '2010-02-09 10:28';
+        $sess1->access = '2010-02-09 11:00';
+        $sess1->data = chr(0).chr(254).chr(1);
+
+        $res = $dao->insert($sess1);
+        $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
+
+        $sess2 = $dao->get('sess_02939873A32B');
+
+        $this->assertEqualOrDiff($sess2->id, $sess1->id, 'jDao::get : bad id on record');
+        $this->assertEqualOrDiff(bin2hex($sess2->data), bin2hex($sess1->data), 'jDao::get : bad binary data');
+    }
+
     function testFieldNameEnclosure(){
         $this->assertEqualOrDiff(jDb::getConnection($this->dbProfile)->encloseName('toto'),'"toto"');
     }

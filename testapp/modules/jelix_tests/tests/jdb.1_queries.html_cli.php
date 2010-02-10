@@ -78,6 +78,46 @@ class UTjDb extends jUnitTestCase {
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
     }
 
+    function _callbackTest($record, $rs) {
+        $record->name.='_suffix';
+        $record->price+=10;
+    }
+
+    function testSelectWithModifier(){
+        $db = jDb::getConnection($this->dbProfile);
+        $resultSet = $db->query('SELECT id, name,price FROM product_test');
+        $this->assertNotNull($resultSet, 'a query return null !');
+        if($this->needPDO)
+            $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
+        else
+            $this->assertTrue($resultSet instanceof jDbResultSet, 'resultset is not a jDbResultSet');
+
+        $resultSet->addModifier(array($this, '_callbackTest'));
+
+        $list = array();
+        //foreach($resultSet as $res){
+        while($res = $resultSet->fetch()){
+            $list[] = $res;
+        }
+        $this->assertEqual(count($list), 3, 'query return bad number of results ('.count($list).')');
+
+        $structure = '<array>
+    <object>
+        <string property="name" value="camembert_suffix" />
+        <float property="price" value="12.31" />
+    </object>
+    <object>
+        <string property="name" value="yaourt_suffix" />
+        <float property="price" value="10.76" />
+    </object>
+    <object>
+        <string property="name" value="gloubi-boulga_suffix" />
+        <float property="price" value="14.9" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($list, $structure, 'bad results');
+    }
+
     function testFetchClass(){
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
