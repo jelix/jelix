@@ -226,7 +226,7 @@ class jControllerDaoCrud extends jController {
     /**
      * redefine this method if you wan to do additionnal things on the response and on the list template
      * during the index action.
-     * @param jHtmlResponse $resp the response
+     * @param jResponseHtml $resp the response
      * @param jtpl $tpl the template to display the record list
      */
     protected function _index($resp, $tpl) {
@@ -291,7 +291,7 @@ class jControllerDaoCrud extends jController {
      * redefine this method if you want to do additionnal things on the response and on the edit template
      * during the create action.
      * @param jFormsBase $form the form
-     * @param jHtmlResponse $resp the response
+     * @param jResponseHtml $resp the response
      * @param jtpl $tpl the template to display the edit form 
      */
     protected function _create($form, $resp, $tpl) {
@@ -347,7 +347,7 @@ class jControllerDaoCrud extends jController {
      * the default behavior on uploaded files in the controller. 
      * @param jFormsBase $form the form object
      * @param mixed $id the new id of the inserted record
-     * @param jHtmlResponse $resp the response
+     * @param jResponseHtml $resp the response
      */
     protected function _afterCreate($form, $id, $resp) {
 
@@ -425,7 +425,7 @@ class jControllerDaoCrud extends jController {
      * redefine this method if you wan to do additionnal things on the response and on the edit template
      * during the editupdate action.
      * @param jFormsBase $form the form
-     * @param jHtmlResponse $resp the response
+     * @param jResponseHtml $resp the response
      * @param jtpl $tpl the template to display the edit form 
      */
     protected function _editUpdate($form, $resp, $tpl) {
@@ -482,7 +482,7 @@ class jControllerDaoCrud extends jController {
      * the default behavior on uploaded files in the controller.
      * @param jFormsBase $form the form object
      * @param mixed $id the new id of the updated record
-     * @param jHtmlResponse $resp the response
+     * @param jResponseHtml $resp the response
      */
     protected function _afterUpdate($form, $id, $resp) {
 
@@ -521,7 +521,7 @@ class jControllerDaoCrud extends jController {
      * redefine this method if you want to do additionnal things on the response and on the view template
      * during the view action.
      * @param jFormsBase $form the form
-     * @param jHtmlResponse $resp the response
+     * @param jResponseHtml $resp the response
      * @param jtpl $tpl the template to display the form content
      */
     protected function _view($form, $resp, $tpl) {
@@ -546,7 +546,7 @@ class jControllerDaoCrud extends jController {
      * redefine this method if you want to do additionnal things before the deletion of a record
      * @param mixed $id the id of the record to delete
      * @return boolean true if the record can be deleted
-     * @param jHtmlResponse $resp the response
+     * @param jResponseHtml $resp the response
      */
     protected function _delete($id, $resp) {
         return true;
