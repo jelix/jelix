@@ -10,7 +10,10 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-class fileKVDriver extends jKVDriver {
+/**
+ * @deprecated
+ */
+class file2KVDriver extends jKVDriver {
 
 	protected $dir;
 
