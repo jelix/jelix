@@ -37,20 +37,17 @@ dbprofile = ""
 ; memcached servers. 
 ; Can be a list e.g
 ;servers = memcache_host1:11211;memcache_host2:11211;memcache_host3:11211 i.e HOST_NAME:PORT
-servers = localhost:11211
+;servers = localhost:11211
 
 [usingdb]
-
 enabled = 1
 driver = db
 
 [usingmemcached]
-
-enabled = 1
+enabled = 0
 driver = memcached
 
 [usingfile]
-
 enabled = 1
 driver = file
 

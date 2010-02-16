@@ -15,8 +15,8 @@ default =
 ; driver =  
 
 
-[usingmemcache]
-driver = memcache
+;[usingmemcache]
+;driver = memcache
 
 ; servers list
 ; Can be a list of HOST_NAME:PORT e.g
@@ -25,7 +25,7 @@ driver = memcache
 ;  host[] = memcache_host1:11211
 ;  host[] = memcache_host2:11211
 ;  ...
-host = "localhost:11211"
+;host = "localhost:11211"
 
 [usingfile]
 driver = file
