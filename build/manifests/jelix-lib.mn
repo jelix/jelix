@@ -590,3 +590,7 @@ cd lib/php5redis/
 cd lib/jelix-plugins/cache/file
   file.cache.php
   LICENCE
+
+cd lib/jelix-plugins/kvstore/file
+  file.kvdriver.php
+  LICENCE
