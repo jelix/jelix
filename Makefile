@@ -26,7 +26,7 @@ ifndef TESTS_CACHEPROFILES
 TESTS_CACHEPROFILES=testapp/var/config/cache.ini.php.dist
 endif
 ifndef TESTS_KVPROFILES
-TESTS_KVPROFILES=testapp/var/config/cache.ini.php.dist
+TESTS_KVPROFILES=testapp/var/config/kvprofiles.ini.php.dist
 endif
 
 ifndef PHPDOC
@@ -58,10 +58,10 @@ nightlies:
 tests:
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) build/config/jelix-test2.ini
 	$(PHP) build/buildapp.php -D $(TESTPATHSWITCH) build/config/testapp-test.ini
-	cd $(TESTPATH)
-	cp $(TESTS_DBPROFILES) testapp/var/config/dbprofils.ini.php
-	cp $(TESTS_CACHEPROFILES) testapp/var/config/cache.ini.php
-	cp $(TESTS_KVPROFILES) testapp/var/config/kvprofiles.ini.php
+	cd $(TESTPATH) \
+	&& cp $(TESTS_DBPROFILES) testapp/var/config/dbprofils.ini.php \
+	&& cp $(TESTS_CACHEPROFILES) testapp/var/config/cache.ini.php \
+	&& cp $(TESTS_KVPROFILES) testapp/var/config/kvprofiles.ini.php
 	cd $(TESTPATH)/testapp/install && $(PHP) installer.php
 	cd $(TESTPATH)/testapp/scripts/ && $(PHP) tests.php default:index
 
