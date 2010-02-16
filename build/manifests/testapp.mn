@@ -209,6 +209,10 @@ cd testapp/modules/jelix_tests/tests/
   jforms.htmllightbuilder2.html_cli.php
   jforms.modifiedcontrols.html_cli.php
   jforms.with_dao.html_cli.php
+  jkvstore.memcache.html_cli.php
+  jkvstore.file.html_cli.php
+  jkvstore.redis.html_cli.php
+  jkvstore.lib.php
   jtpl.compiler.html_cli.php
   jtpl.expressions_parsing.html_cli.php
   jtpl.plugins.html.php
@@ -262,6 +266,7 @@ cd testapp/var/config
   jacl2_ws.coord.ini.php
   jacl.coord.ini.php
   jacl_ws.coord.ini.php
+  kvprofiles.ini.php.dist
   urls.xml
   urls_old.xml
 cd testapp/var/config/index

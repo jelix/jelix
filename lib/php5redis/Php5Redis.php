@@ -11,6 +11,10 @@ class Php5Redis {
 		$this->port = $port;
 	}
 	
+	function __destruct() {
+		$this->disconnect();
+	}
+
 	private function connect() {
 		if ($this->_sock)
 			return;
@@ -80,7 +84,7 @@ class Php5Redis {
 				break;
 		}
 	}
-	private function cmd($command) {
+	private function cmd($command, $readResp = true) {
 		$this->debug('Command: '.$command);
 		$this->connect ();
 		$s = $command . "\r\n";
@@ -90,7 +94,10 @@ class Php5Redis {
 				break;
 			$s = substr ( $s, $i );
 		}
-		return $this->cmdResponse ();
+		if ($readResp)
+			return $this->cmdResponse ();
+		else
+			return '';
 	}
 	function disconnect() {
 		if ($this->_sock)
@@ -110,7 +117,8 @@ class Php5Redis {
 	 * @return void The connection is closed as soon as the QUIT command is received. 
 	 */
 	function quit() {
-		return $this->cmd ( 'QUIT' );
+		$this->cmd ( 'QUIT', false );
+		$this->_sock = null;
 	}
 	
 	/**
