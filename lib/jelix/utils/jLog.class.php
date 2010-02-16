@@ -40,6 +40,7 @@ class jLog {
     * @param string $type the log type
     */
     public static function log($message, $type='default'){
+
         $f = $GLOBALS['gJConfig']->logfiles[$type];
         if ($f[0] == '!') {
             $GLOBALS['gJCoord']->addLogMsg("log $type: $message", substr($f, 1));

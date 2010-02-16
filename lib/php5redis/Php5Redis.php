@@ -4,9 +4,8 @@ class Php5Redis {
 	private $port;
 	private $host;
 	private $_sock;
-	public $debug=false;
 	
-	function __construct($host='localhost', $port = 6379) {
+	function __construct($host, $port = 6379) {
 		$this->host = $host;
 		$this->port = $port;
 	}
@@ -16,7 +15,6 @@ class Php5Redis {
 			return;
 		if ($sock = fsockopen ( $this->host, $this->port, $errno, $errstr )) {
 			$this->_sock = $sock;
-			$this->debug('Connected');
 			return;
 		}
 		$msg = "Cannot open socket to {$this->host}:{$this->port}";
@@ -24,13 +22,9 @@ class Php5Redis {
 			$msg .= "," . ($errno ? " error $errno" : "") . ($errmsg ? " $errmsg" : "");
 		throw new Php5RedisException ( "$msg." );
 	}
-	private function debug($msg){
-		if ($this->debug) echo sprintf("[Php5Redis] %s\n", $msg);
-	}
 	
 	private function read($len = 1024) {
 		if ($s = fgets ( $this->_sock )) {
-			$this->debug('Read: '.$s.' ('.strlen($s).' bytes)');
 			return $s;
 		}
 		$this->disconnect ();
@@ -52,9 +46,6 @@ class Php5Redis {
 				if ($i == - 1)
 					return null;
 				$buffer = '';
-				if ($i == 0){
-					$s = $this->read ();
-				}
 				while ( $i > 0 ) {
 					$s = $this->read ();
 					$l = strlen ( $s );
@@ -81,7 +72,6 @@ class Php5Redis {
 		}
 	}
 	private function cmd($command) {
-		$this->debug('Command: '.$command);
 		$this->connect ();
 		$s = $command . "\r\n";
 		while ( $s ) {

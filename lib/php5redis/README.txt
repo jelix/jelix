@@ -1,4 +1,4 @@
-PHP5-redis 1.1
+PHP5-redis
 
 http://code.google.com/p/php5-redis/
 
