@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  kvstore
+ * @subpackage  kvdb
  * @author      Yannick Le Guédart
  * @contributor Laurent Jouanneau
  * @copyright   2009 Yannick Le Guédart, 2010 Laurent Jouanneau
@@ -60,7 +60,7 @@ interface jIKVSet {
 abstract class jKVDriver {
 
     /**
-    * Profile for the connection in the kvstore INIfile.
+    * Profile for the connection in the kvdb INIfile.
     *
     * @var array
     * @see KVDB_PROFILE_FILE
@@ -152,7 +152,7 @@ abstract class jKVDriver {
     abstract public function replace($key, $value);
 
     /**
-     * Deletes a key from the KVStore.
+     * Deletes a key from the KVdb.
      *
      * @param string  $key the key
      * @return boolean false if failure
@@ -160,7 +160,7 @@ abstract class jKVDriver {
     abstract public function delete($key);
 
     /**
-     * Flush the KVStore. Deletes all keys.
+     * Flush the KVDb. Deletes all keys.
      */
     abstract public function flush();
 

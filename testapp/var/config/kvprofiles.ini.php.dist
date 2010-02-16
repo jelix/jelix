@@ -4,7 +4,7 @@
 ; default profile
 default =
 
-; each section correspond to a kvstore profile
+; each section correspond to a kvdb profile
 ; the name of the section is the name of a profile, to use as an argument
 ; for jKVDb::getConnection()
 ; Parameters in each sections depends of the driver type

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  kvstore
+ * @subpackage  kvdb
  * @author      Yannick Le Guédart
  * @copyright   2009 Yannick Le Guédart
  *
@@ -48,7 +48,7 @@ class jKVDb {
 			$name = $profile['name'];
 		}
 
-        // If the connector to the requested KVStore doesn't exists yet, let's
+        // If the connector to the requested KVDb doesn't exists yet, let's
         // create it
 		if(! isset(self::$_cnxPool[$name])) {
 			self::$_cnxPool[$name] = self::_createConnector($profile);
@@ -116,7 +116,7 @@ class jKVDb {
 
         // Determining the plugin path
         $pluginPath =
-            $gJConfig->_pluginsPathList_kvstore[$profile['driver']] .
+            $gJConfig->_pluginsPathList_kvdb[$profile['driver']] .
                 $profile['driver'];
   
         // Including the plugin files

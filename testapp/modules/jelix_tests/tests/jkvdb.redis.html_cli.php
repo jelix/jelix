@@ -8,24 +8,28 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(dirname(__FILE__).'/jkvstore.lib.php');
-
+require_once(dirname(__FILE__).'/jkvdb.lib.php');
+require_once(LIB_PATH . 'php5redis/Php5Redis.php');
 /**
 * Tests API jKVDb
 * @package     testapp
 * @subpackage  jelix_tests module
 */
 
-class UTjKVDbFile extends UTjKVDb {
+class UTjKVDbRedis extends UTjKVDb {
 
-    protected $profile = 'usingfile';
+    protected $profile = 'usingredis';
+
+    protected $redis;
 
     public function setUp (){
-        if (file_exists(JELIX_APP_TEMP_PATH.'kvfiles/tests/'))
-            jFile::removeDir(JELIX_APP_TEMP_PATH.'kvfiles/tests/',false);
+        $this->redis = new Php5Redis('localhost',6379);
+        $this->redis->flushall();
     }
 
     public function tearDown() {
+        //$this->redis->quit();
+        $this->redis->disconnect();
     }
 }
 

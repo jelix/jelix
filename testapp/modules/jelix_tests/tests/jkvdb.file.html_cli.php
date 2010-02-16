@@ -8,7 +8,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(dirname(__FILE__).'/jkvstore.lib.php');
+require_once(dirname(__FILE__).'/jkvdb.lib.php');
 
 /**
 * Tests API jKVDb
@@ -16,18 +16,16 @@ require_once(dirname(__FILE__).'/jkvstore.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class UTjKVDbMemcache extends UTjKVDb {
+class UTjKVDbFile extends UTjKVDb {
 
-    protected $profile = 'usingmemcache';
+    protected $profile = 'usingfile';
 
     public function setUp (){
-        $this->mmc = memcache_connect('localhost',11211);
-        memcache_flush($this->mmc);
+        if (file_exists(JELIX_APP_TEMP_PATH.'kvfiles/tests/'))
+            jFile::removeDir(JELIX_APP_TEMP_PATH.'kvfiles/tests/',false);
     }
 
     public function tearDown() {
-        memcache_close($this->mmc);
-        $this->mmc = null;
     }
 }
 

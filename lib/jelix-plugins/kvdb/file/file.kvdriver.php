@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage  kvstore
+* @subpackage  kvdb
 * @author      Zend Technologies
 * @contributor Tahina Ramaroson, Sylvain de Vathaire, Laurent Jouanneau
 * @copyright  2005-2008 Zend Technologies USA Inc (http://www.zend.com), 2008 Neov, 2010 Laurent Jouanneau
