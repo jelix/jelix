@@ -12,7 +12,7 @@
 
 
 /**
-* driver for jKVStore which store key values in files
+* driver for jKVDb which store key values in files
 */
 class fileKVDriver extends jKVDriver implements jIKVPersistent, jIKVttl {
 

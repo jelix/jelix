@@ -49,6 +49,9 @@ cd lib/jelix/plugins/tpl/html
 cd lib/jelix/plugins/jforms/html
   html.jformscompiler.php
 
+rmd lib/jelix/plugins/kvstore/
+rmd lib/jelix-plugins/kvstore/
+
 rmd lib/jelix-plugins/acl
 rmd lib/jelix-plugins/acl2
 rmd lib/jelix-plugins/auth

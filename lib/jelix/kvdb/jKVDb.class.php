@@ -9,18 +9,18 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-define('KVSTORE_PROFILE_FILE', JELIX_APP_CONFIG_PATH . 'kvprofiles.ini.php');
+define('KVDB_PROFILE_FILE', JELIX_APP_CONFIG_PATH . 'kvprofiles.ini.php');
 
 /**
  * main class to access to key-value storage databases
  */
-class jKVStore {
+class jKVDb {
 
     /**
 	 * Array of the profiles in the profile file.
 	 *
 	 * @var array
-	 * @see KVSTORE_PROFILE_FILE
+	 * @see KVDB_PROFILE_FILE
 	 */    
     static private $_profiles = null;
     
@@ -69,7 +69,7 @@ class jKVStore {
         // The profile file has not been parsed yet, so we do that. The result
         // is stored in the $_profiles static private variable.
  		if (is_null(self::$_profiles)) {
-			self::$_profiles = parse_ini_file(KVSTORE_PROFILE_FILE, true);
+			self::$_profiles = parse_ini_file(KVDB_PROFILE_FILE, true);
 		}
 
         // If no name is provided, we look for the default profile an set the

@@ -10,12 +10,12 @@
 */
 
 /**
-* Tests API jKVStore
+* Tests API jKVDb
 * @package     testapp
 * @subpackage  jelix_tests module
 */
 
-abstract class UTjKVStore extends jUnitTestCaseDb {
+abstract class UTjKVDb extends jUnitTestCaseDb {
 
     protected $profile;
 
@@ -27,7 +27,7 @@ abstract class UTjKVStore extends jUnitTestCaseDb {
              return parent::getTests();
         }
         else {
-            $this->sendMessage('UTjKVStore cannot be run with '.$this->profile.' : undefined profile');
+            $this->sendMessage('UTjKVDb cannot be run with '.$this->profile.' : undefined profile');
             return array();
         }
     }
@@ -41,7 +41,7 @@ abstract class UTjKVStore extends jUnitTestCaseDb {
         $myObj=(object)array('property1'=>'string','property2'=>'integer');
         $img=@imagecreate(100,100);
 
-        $kv = jKVStore::getConnection($this->profile);
+        $kv = jKVDb::getConnection($this->profile);
 
         $this->assertTrue($kv->set('noExpireKey',$myData));
         $this->assertTrue($kv->get('noExpireKey')==$myData);
@@ -64,7 +64,7 @@ abstract class UTjKVStore extends jUnitTestCaseDb {
     }
 
     public function testMultipleGet (){
-        $kv = jKVStore::getConnection($this->profile);
+        $kv = jKVDb::getConnection($this->profile);
         $kv->set('getKey', 'string for data');
         $kv->setWithTtl('expiredKey','data expired',strtotime("-1 day"));
         $data = $kv->get(array('getKey','expiredKey','inexistentKey'));
@@ -75,7 +75,7 @@ abstract class UTjKVStore extends jUnitTestCaseDb {
 
     public function testInsertReplace () {
 
-        $kv = jKVStore::getConnection($this->profile);
+        $kv = jKVDb::getConnection($this->profile);
 
         $this->assertFalse($kv->get('unknowkey'));
         $this->assertFalse($kv->replace('unknowkey','new value'));
@@ -95,7 +95,7 @@ abstract class UTjKVStore extends jUnitTestCaseDb {
 
     public function testAppendPrepend() {
 
-        $kv = jKVStore::getConnection($this->profile);
+        $kv = jKVDb::getConnection($this->profile);
 
         $this->assertFalse($kv->get('unknowkey'));
         $this->assertFalse($kv->append('unknowkey','new value'));
@@ -128,7 +128,7 @@ abstract class UTjKVStore extends jUnitTestCaseDb {
     
     public function testIncrement() {
 
-        $kv = jKVStore::getConnection($this->profile);
+        $kv = jKVDb::getConnection($this->profile);
 
         $this->assertFalse($kv->increment('InexistentKey',1));
 
@@ -159,7 +159,7 @@ abstract class UTjKVStore extends jUnitTestCaseDb {
 
     public function testDecrement (){
 
-        $kv = jKVStore::getConnection($this->profile);
+        $kv = jKVDb::getConnection($this->profile);
 
         $this->assertFalse($kv->decrement('InexistentKey',1));
 
@@ -189,7 +189,7 @@ abstract class UTjKVStore extends jUnitTestCaseDb {
 
     public function testDelete (){
 
-        $kv = jKVStore::getConnection($this->profile);
+        $kv = jKVDb::getConnection($this->profile);
 
         $kv->set('deleteKey','data to delete');
 
@@ -201,7 +201,7 @@ abstract class UTjKVStore extends jUnitTestCaseDb {
 
     public function testGarbage (){
 
-        $kv = jKVStore::getConnection($this->profile);
+        $kv = jKVDb::getConnection($this->profile);
 
         $kv->set('remainingDataKey','remaining data');
         $kv->setWithTtl('garbage1DataKey','data send to the garbage',1);
@@ -238,7 +238,7 @@ abstract class UTjKVStore extends jUnitTestCaseDb {
 
     public function testFlush (){
 
-        $kv = jKVStore::getConnection($this->profile);
+        $kv = jKVDb::getConnection($this->profile);
 
         $kv->set('flush1DataKey','some data',0);
         $kv->setWithTtl('flush2DataKey','data to remove',strtotime("+1 day"));

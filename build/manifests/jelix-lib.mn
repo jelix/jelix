@@ -225,9 +225,9 @@ cd lib/jelix/installer
   jInstallerModule.class.php
   jInstallerPlugin.class.php
 
-cd lib/jelix/kvstore
+cd lib/jelix/kvdb
   jKVDriver.class.php
-  jKVStore.class.php
+  jKVDb.class.php
 
 cd lib/jelix/tpl/
 *  jTpl.class.php
@@ -361,13 +361,13 @@ cd lib/jelix/plugins/jforms/html
 cd lib/jelix/plugins/jforms/htmllight
   htmllight.jformsbuilder.php
 
-cd lib/jelix/plugins/kvstore/file2/
+cd lib/jelix/plugins/kvdb/file2/
   file2.kvdriver.php
 
-cd lib/jelix/plugins/kvstore/memcache/
+cd lib/jelix/plugins/kvdb/memcache/
   memcache.kvdriver.php
 
-cd lib/jelix/plugins/kvstore/redis/
+cd lib/jelix/plugins/kvdb/redis/
   redis.kvdriver.php
 
 
@@ -591,6 +591,6 @@ cd lib/jelix-plugins/cache/file
   file.cache.php
   LICENCE
 
-cd lib/jelix-plugins/kvstore/file
+cd lib/jelix-plugins/kvdb/file
   file.kvdriver.php
   LICENCE

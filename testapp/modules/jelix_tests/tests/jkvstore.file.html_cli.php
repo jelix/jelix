@@ -11,12 +11,12 @@
 require_once(dirname(__FILE__).'/jkvstore.lib.php');
 
 /**
-* Tests API jKVStore
+* Tests API jKVDb
 * @package     testapp
 * @subpackage  jelix_tests module
 */
 
-class UTjKVStoreFile extends UTjKVStore {
+class UTjKVDbFile extends UTjKVDb {
 
     protected $profile = 'usingfile';
 

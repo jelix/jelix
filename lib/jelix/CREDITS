@@ -91,7 +91,7 @@ Yannick Le Guédart (aka Torgan)
  - resolved memory exhausted errors in truncate modifier (#511)
  - fixed bug on jBundle (#639)
  - fixed bug on jDaoConditions (#906)
- - created jKVStore (#1048)
+ - created jKVDb (#1048)
 
 Kévin Lepeltier (aka Lipki)
  - plugin image for jtpl (#474, #502, #558, #559, #560)

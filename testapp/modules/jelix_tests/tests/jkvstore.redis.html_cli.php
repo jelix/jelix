@@ -11,12 +11,12 @@
 require_once(dirname(__FILE__).'/jkvstore.lib.php');
 require_once(LIB_PATH . 'php5redis/Php5Redis.php');
 /**
-* Tests API jKVStore
+* Tests API jKVDb
 * @package     testapp
 * @subpackage  jelix_tests module
 */
 
-class UTjKVStoreRedis extends UTjKVStore {
+class UTjKVDbRedis extends UTjKVDb {
 
     protected $profile = 'usingredis';
 

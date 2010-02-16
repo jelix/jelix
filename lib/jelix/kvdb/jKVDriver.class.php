@@ -63,7 +63,7 @@ abstract class jKVDriver {
     * Profile for the connection in the kvstore INIfile.
     *
     * @var array
-    * @see KVSTORE_PROFILE_FILE
+    * @see KVDB_PROFILE_FILE
     */
    protected $_profile;
 

@@ -11,12 +11,12 @@
 require_once(dirname(__FILE__).'/jkvstore.lib.php');
 
 /**
-* Tests API jKVStore
+* Tests API jKVDb
 * @package     testapp
 * @subpackage  jelix_tests module
 */
 
-class UTjKVStoreMemcache extends UTjKVStore {
+class UTjKVDbMemcache extends UTjKVDb {
 
     protected $profile = 'usingmemcache';
 
