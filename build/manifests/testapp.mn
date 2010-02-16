@@ -180,7 +180,7 @@ cd testapp/modules/jelix_tests/tests/
   jacl2.manager.html_cli.php
   jacl2.users_and_groups.html_cli.php
   jauth.ldap_api.html.php
-  jcache.api.html.php
+  jcache.api.html_cli.php
   jdao.conditions.html_cli.php
   jdao.events.html_cli.php
   jdao.main_api.html_cli.php
