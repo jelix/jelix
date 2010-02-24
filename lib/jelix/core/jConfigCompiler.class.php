@@ -287,7 +287,7 @@ class jConfigCompiler {
 
         $list = preg_split('/ *, */',$config->modulesPath);
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
-        $result=array();
+
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);

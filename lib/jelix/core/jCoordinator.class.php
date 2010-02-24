@@ -4,7 +4,7 @@
 * @subpackage   core
 * @author       Laurent Jouanneau
 * @contributor  Thibault PIRONT < nuKs >, Julien Issler, Dominique Papin
-* @copyright    2005-2009 laurent Jouanneau
+* @copyright    2005-2010 laurent Jouanneau
 * @copyright    2007 Thibault PIRONT
 * @copyright    2008 Julien Issler
 * @copyright    2008 Dominique Papin
@@ -446,8 +446,8 @@ class jCoordinator {
     * @param string $moduleName
     * @return boolean true : module is ok
     */
-    public function isModuleEnabled ($moduleName){
-        return ($GLOBALS['gJConfig']->modules[$moduleName.'.access'] > 0);
+    public function isModuleEnabled ($moduleName) {
+        return isset($GLOBALS['gJConfig']->_modulesPathList[$moduleName]);
     }
 
     /**
@@ -455,10 +455,9 @@ class jCoordinator {
      * @param string $module a module name
      * @return string the corresponding path
      */
-
     public function getModulePath($module){
         global $gJConfig;
-        if(!isset($gJConfig->_modulesPathList[$module])){
+        if (!isset($gJConfig->_modulesPathList[$module])) {
             throw new Exception('getModulePath : invalid module name');
         }
         return $gJConfig->_modulesPathList[$module];
