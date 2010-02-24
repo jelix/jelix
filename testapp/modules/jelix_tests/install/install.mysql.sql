@@ -29,3 +29,10 @@ CREATE TABLE `products` (
 `promo` BOOL NOT NULL 
 ) TYPE = MYISAM ;
 
+
+CREATE TABLE `testkvdb` (
+`k_key` VARCHAR( 50 ) NOT NULL ,
+`k_value` longblob NOT NULL ,
+`k_expire` DATETIME NOT NULL ,
+PRIMARY KEY ( `k_key` )
+) ENGINE = MYISAM;

@@ -209,6 +209,7 @@ cd testapp/modules/jelix_tests/tests/
   jforms.htmllightbuilder2.html_cli.php
   jforms.modifiedcontrols.html_cli.php
   jforms.with_dao.html_cli.php
+  jkvdb.db.html_cli.php
   jkvdb.memcache.html_cli.php
   jkvdb.file.html_cli.php
   jkvdb.redis.html_cli.php

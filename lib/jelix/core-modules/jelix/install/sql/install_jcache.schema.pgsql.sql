@@ -1,6 +1,6 @@
 CREATE TABLE jlx_cache (
   cache_key character varying(255) NOT NULL,
-  cache_data text,
+  cache_data bytea,
   cache_date timestamp default NULL,
 );
 

@@ -5,7 +5,7 @@
     </datasources>
     <record>
     <property name="key" fieldname="cache_key" datatype="string" required="true" maxlength="255"/>
-    <property name="data" fieldname="cache_data" datatype="text"/>
+    <property name="data" fieldname="cache_data" datatype="varbinary"/>
     <property name="date" fieldname="cache_date" datatype="datetime"/>
     </record>
     <factory>

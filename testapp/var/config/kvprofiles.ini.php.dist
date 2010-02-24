@@ -43,5 +43,11 @@ automatic_cleaning_factor = 0
 ;file_umask = 
 
 ;[usingredis]
+; driver=redis
 ;host=localhost
 ;port=6379
+
+[usingdb]
+driver = db
+table=testkvdb
+dbprofile=default

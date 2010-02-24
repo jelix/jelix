@@ -16,6 +16,12 @@ CREATE TABLE labels_tests (
 );
 
 
+CREATE TABLE testkvdb (
+k_key character varying(255) NOT NULL ,
+k_value bytea NOT NULL ,
+k_expire time with time zone NOT NULL ,
+CONSTRAINT testkvdb_pkey PRIMARY KEY (k_key)
+);
 
 CREATE TABLE product_tags_test (
     product_id integer NOT NULL,
