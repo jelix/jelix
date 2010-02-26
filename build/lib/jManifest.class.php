@@ -162,12 +162,15 @@ class jManifest {
                             fwrite($file, mb_convert_encoding($content, $val, $encode));
                             fclose($file);
                             if ($addIntoRepo) {
+                                $d = getcwd();
+                                chdir(dirname($encodefile));
                                 if (self::$usedVcs == 'svn') {
                                     exec("svn add $encodefile");
                                 }
                                 else if (self::$usedVcs  == 'hg') {
                                     exec("hg add $encodefile");
                                 }
+                                chdir($d);
                             }
                         }
                         $addIntoRepo = false;
@@ -181,12 +184,16 @@ class jManifest {
                     }
 
                     if ($addIntoRepo) {
+                        $d = getcwd();
+                        chdir(dirname($destfile));
+
                         if (self::$usedVcs == 'svn') {
                             exec("svn add $destfile");
                         }
                         else if (self::$usedVcs  == 'hg') {
                             exec("hg add $destfile");
                         }
+                        chdir($d);
                     }
                 }
             }elseif(preg_match("!^\s*(\#.*)?$!",$line)){
@@ -346,10 +353,16 @@ class jManifest {
                                 throw new Exception ( " $ficlist: cannot remove file ".$m[2].", line $nbline \n");
                             break;
                         case 'svn':
+                            $d = getcwd();
+                            chdir(dirname($destfile));
                             exec("svn remove $destfile");
+                            chdir($d);
                             break;
                         case 'hg':
+                            $d = getcwd();
+                            chdir(dirname($destfile));
                             exec("hg remove $destfile");
+                            chdir($d);
                             break;
                     }
                 }
