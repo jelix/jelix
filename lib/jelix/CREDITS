@@ -17,6 +17,7 @@ Olivier Demah (aka FoxMaSk)
  - improvements in jInstallChecker.class.php (#1022)
  - tpl plugin hook (#1019)
  - tpl plugin gravatar (#993) 
+ - meta supplementaires (author,generator) (#1063)
 
 Mickaël Fradin (aka mike/kewix)
  - improvements in the jtpl plugin: formcontrols (#223)

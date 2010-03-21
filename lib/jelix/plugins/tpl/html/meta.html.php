@@ -3,8 +3,8 @@
 * @package      jelix
 * @subpackage   jtpl_plugin
 * @author       Jouanneau Laurent
-* @contributor  Yann (description and keywords), Dominique Papin (ie7 support), Mickaël Fradin (style), Loic Mathaud (title)
-* @copyright    2005-2006 Jouanneau laurent, 2007 Dominique Papin, 2008 Mickaël Fradin, 2009 Loic Mathaud
+* @contributor  Yann (description and keywords), Dominique Papin (ie7 support), Mickaël Fradin (style), Loic Mathaud (title), Olivier Demah (auhor,generator)
+* @copyright    2005-2006 Jouanneau laurent, 2007 Dominique Papin, 2008 Mickaël Fradin, 2009 Loic Mathaud, 2010 Olivier Demah
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -84,6 +84,12 @@ function jtpl_meta_html_html($tpl, $method, $param, $params=array())
             break;
         case 'others':
             $gJCoord->response->addHeadContent($param);
+            break;
+        case 'author':
+            $gJCoord->response->addMetaAuthor($param);
+            break;
+        case 'generator':
+            $gJCoord->response->addMetaGenerator($param);
             break;
     }
 }

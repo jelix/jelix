@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Yann (description and keywords), Dominique Papin
-* @contributor Warren Seine, Alexis Métaireau, Julien Issler
+* @contributor Warren Seine, Alexis Métaireau, Julien Issler, Olivier Demah (author,generator)
 * @copyright   2005-2009 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
 * @copyright   2008 Warren Seine, Alexis Métaireau
 * @copyright   2009 Julien Issler, Olivier Demah
@@ -104,6 +104,8 @@ class jResponseHtml extends jResponse {
     protected $_Others  = array ();
     protected $_MetaKeywords = array();
     protected $_MetaDescription = array();
+    protected $_MetaAuthor = '';
+    protected $_MetaGenerator = '';
     protected $_Link = array();
     /**#@-*/
 
@@ -391,7 +393,24 @@ class jResponseHtml extends jResponse {
     final public function addMetaDescription ($content){
         $this->_MetaDescription[] = $content;
     }
-
+    /**
+     * add author(s) in a author meta tag
+     * @author olivier demahol
+     * @param string $content author(s)
+     * @since 1.2
+     */
+    final public function addMetaAuthor($content){
+        $this->_MetaAuthor = $content;
+    }
+    /**
+     * add generator a generator meta tag
+     * @author olivier demahol
+     * @param string $content generator
+     * @since 1.2
+     */
+    final public function addMetaGenerator($content){
+        $this->_MetaGenerator = $content;
+    }
     /**
      * generate the doctype. You can override it if you want to have your own doctype, like XHTML+MATHML.
      * @since 1.1
@@ -430,7 +449,12 @@ class jResponseHtml extends jResponse {
             $keywords = implode(',',$this->_MetaKeywords);
             echo '<meta name="keywords" content="'.htmlspecialchars($keywords).'" '.$this->_endTag;
         }
-
+        if (!empty($this->_MetaGenerator)) {
+            echo '<meta name="generator" content="'.htmlspecialchars($this->_MetaGenerator).'" '.$this->_endTag;
+        }
+        if (!empty($this->_MetaAuthor)) {
+            echo '<meta name="author" content="'.htmlspecialchars($this->_MetaAuthor).'" '.$this->_endTag;
+        }
         // css link
         foreach ($this->_CSSLink as $src=>$params){
             //the extra params we may found in there.
