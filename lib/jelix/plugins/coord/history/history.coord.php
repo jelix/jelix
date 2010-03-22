@@ -3,8 +3,8 @@
 * @package      jelix
 * @subpackage   coord_plugin
 * @author       Lepeltier Kévin
-* @contributor  Dominique Papin, Laurent Jouanneau
-* @copyright  2008 Lepeltier Kévin, 2008 Dominique Papin, 2008 Laurent Jouanneau
+* @contributor  Dominique Papin, Laurent Jouanneau, catsoup
+* @copyright  2008 Lepeltier Kévin, 2008 Dominique Papin, 2008 Laurent Jouanneau, 2010 catsoup
 *
 * The plugin History is a plugin coord,
 * it records the action / settings made during a session and allows for reuse.
@@ -17,14 +17,6 @@ class historyCoordPlugin implements jICoordPlugin {
 
     function __construct ($conf){
         $this->config = $conf;
-        $stn = $this->config['session_time_name'];
-        
-        if ($this->config['time']) {
-            if (!isset($_SESSION[$stn]))
-                $_SESSION[$stn] = microtime(true);
-        } else if (isset($_SESSION[$stn])) {
-            unset($_SESSION[$stn]);
-        }
     }
 
     public function beforeAction ($params) {
@@ -59,6 +51,14 @@ class historyCoordPlugin implements jICoordPlugin {
             if (count($history) > $this->config['maxsize']) {
                 array_shift($history);
             }
+        }
+
+        $stn = $this->config['session_time_name'];
+        if ($this->config['time']) {
+            if (!isset($_SESSION[$stn]))
+                $_SESSION[$stn] = microtime(true);
+        } else if (isset($_SESSION[$stn])) {
+            unset($_SESSION[$stn]);
         }
     }
 
