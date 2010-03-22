@@ -224,6 +224,12 @@ table.jforms-table th {
     text-align:right;
     background-color: #f7f7f7
 }
+
+table.jforms-table th.jforms-group {
+    text-align: center;
+    font-size: 140%;
+}
+
 table.jforms-table td {
     background-color: #fcfcfc
 }

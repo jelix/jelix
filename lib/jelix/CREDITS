@@ -180,6 +180,7 @@ Antoine Detante (aka antoinefr)
 dsdenes
  - fix little thing in crud template (#844)
  - added a native modifier in jtpl (#845)
+ - little improvement in formdatafull (#847)
 
 F. Fernandez (aka e-media)
  - little improvement in jLog.(#344)
