@@ -3,8 +3,9 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Brice Tence
 * @copyright   2009 Laurent Jouanneau
+* @copyright   2010 Brice Tence
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -15,6 +16,11 @@ class jelix_testsModuleInstaller extends jInstallerModule {
 
       $this->execSQLScript('install');
 
+      //Create tables if they do not exist yet because of a specific configuration
+      //(which is the case of testapp's out of the box config)
+      $this->execSQLScript('sql/install_jsession.schema', null, 'jelix');
+      $this->execSQLScript('sql/install_jcache.schema', null, 'jelix');
+
       try {
         $dbprofile = jDb::getProfile('testapp_pgsql', true);
       }
@@ -24,6 +30,6 @@ class jelix_testsModuleInstaller extends jInstallerModule {
       }
 
       $this->execSQLScript('install', 'testapp_pgsql');
-
+      $this->execSQLScript('sql/install_jsession.schema', 'testapp_pgsql', 'jelix');
     }
 }

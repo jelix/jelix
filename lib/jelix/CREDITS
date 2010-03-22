@@ -295,6 +295,9 @@ Sylvain de Vathaire (aka sylvain261)
  - little bug fix in mysql.dbconnection.php (#97bis)
  - jCache (#540)
 
+Brice Tence (aka brayce)
+ - small testapp bug solved about missing tables (#1064)
+
 Thanks for all users, especially those who reported bugs. :-)
 
 Thanks for their works:

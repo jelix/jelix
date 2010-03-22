@@ -132,16 +132,38 @@ abstract class jInstallerBase {
      * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
      * 
      * @param string $name the name of the script, without suffixes
+     * @param string $profile the profile to use. null for the default profile
+     * @param string $module the module from which we should take the sql file. null for the current module
      */
-    final protected function execSQLScript ($name, $profile = null) {
-        $tools = $this->dbTool();
-        $p = jDb::getProfile ($this->dbProfile);
+    final protected function execSQLScript ($name, $profile = null, $module = null) {
+
+        if (!$profile) {
+            $profile = $this->dbProfile;
+            $tools = $this->dbTool();
+        }
+        else {
+            $cnx = jDb::getConnection($profile);
+            $tools = $cnx->tools();
+        }
+        $p = jDb::getProfile ($profile);
         $driver = $p['driver'];
         if ($driver == 'pdo') {
             preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
             $driver = $m[1];
         }
-        $tools->execSQLScript($this->path.'install/'.$name.'.'.$driver.'.sql');
+
+        if ($module) {
+            $conf = $this->entryPoint->config->_modulesPathList;
+            if (!isset($conf[$module])) {
+                throw new Exception('execSQLScript : invalid module name');
+            }
+            $path = $conf[$module];
+        }
+        else {
+            $path = $this->path;
+        }
+        $file = $path.'install/'.$name.'.'.$driver.'.sql';
+        $tools->execSQLScript($path.'install/'.$name.'.'.$driver.'.sql');
     }
 
     /**
