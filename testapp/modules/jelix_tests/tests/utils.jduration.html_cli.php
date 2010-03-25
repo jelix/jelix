@@ -101,5 +101,12 @@ class testjDuration extends UnitTestCase {
         $dt->sub($dur);
         $this->assertEqual($dt, $dtExpected);
     }
+    
+    function testManySeconds () {
+        $dur = new jDuration(98320);
+        $this->assertEqual($dur->months, 0);
+        $this->assertEqual($dur->days, 1);
+        $this->assertEqual($dur->seconds, 11920);
+    }
 }
 ?>
