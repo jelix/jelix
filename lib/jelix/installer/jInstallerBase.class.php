@@ -219,7 +219,7 @@ abstract class jInstallerBase {
     protected function declareDbProfile($name, $sectionContent = null, $force = true ) {
         $dbProfilesFile = $this->config->getValue('dbProfils');
         if ($dbProfilesFile == '')
-            $dbProfilesFile = 'dbProfils.ini.php';
+            $dbProfilesFile = 'dbprofils.ini.php';
         $dbprofiles = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
         if ($sectionContent == null) {
             $section = $dbprofiles->getValue('driver', $name);

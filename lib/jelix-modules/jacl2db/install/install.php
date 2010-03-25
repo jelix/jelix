@@ -15,7 +15,7 @@ class jacl2dbModuleInstaller extends jInstallerModule {
 
         $dbProfilesFile = $config->getValue('dbProfils');
         if ($dbProfilesFile == '')
-            $dbProfilesFile = 'dbProfils.ini.php';
+            $dbProfilesFile = 'dbprofils.ini.php';
         $dbprofiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
         if (isset($dbprofiles['jacl2_profile'])) {
             if (is_string($dbprofiles['jacl2_profile']))

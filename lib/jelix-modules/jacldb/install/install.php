@@ -16,7 +16,7 @@ class jacldbModuleInstaller extends jInstallerModule {
     public function setEntryPoint($ep, $config, $dbProfile) {
         $dbProfilesFile = $config->getValue('dbProfils');
         if ($dbProfilesFile == '')
-            $dbProfilesFile = 'dbProfils.ini.php';
+            $dbProfilesFile = 'dbprofils.ini.php';
         $dbprofiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
         if (isset($dbprofiles['jacl_profile'])) {
             if (is_string($dbprofiles['jacl_profile']))
