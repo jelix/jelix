@@ -141,7 +141,18 @@ class UTfilter extends jUnitTestCase {
     }
 
     public function testEmail(){
-        $this->assertFalse(jFilter::isEmail('toto@mail'), "isEmail('toto@mail')");
+        $this->assertFalse(jFilter::isEmail('toto@mail.'), "isEmail('toto@mail.')");
+        if(jFilter::usePhpFilter()){
+            if (version_compare(PHP_VERSION, '5.2.10') >= 0) {
+                $this->assertTrue(jFilter::isEmail('toto@mail'), "isEmail('toto@mail')");
+            }
+            else {
+                $this->assertFalse(jFilter::isEmail('toto@mail'), "isEmail('toto@mail')");
+            }
+        }
+        else {
+            $this->assertTrue(jFilter::isEmail('toto@mail'), "isEmail('toto@mail')");
+        }
         $this->assertTrue(jFilter::isEmail('toto@mail.com'), "isEmail('toto@mail.com')");
         $this->assertTrue(jFilter::isEmail('toto@mail.poer.dsmlqsd'), "isEmail('toto@mail.poer.dsmlqsd')");
         $this->assertTrue(jFilter::isEmail('"bob john"@mail.com'), "isEmail('\"bob john\"@mail.com')");
