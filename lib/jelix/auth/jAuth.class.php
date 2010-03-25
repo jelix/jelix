@@ -3,9 +3,9 @@
 * @package    jelix
 * @subpackage auth
 * @author     Laurent Jouanneau
-* @contributor Frédéric Guillot, Antoine Detante, Julien Issler, Dominique Papin
+* @contributor Frédéric Guillot, Antoine Detante, Julien Issler, Dominique Papin, Tahina Ramaroson, Sylvain de Vathaire
 * @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
-* @copyright  2007-2008 Julien Issler, 2008 Dominique Papin
+* @copyright  2007-2008 Julien Issler, 2008 Dominique Papin, 2010 NEOV
 *
 * This classes were get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -249,6 +249,12 @@ class jAuth {
         $dr = self::_getDriver();
         $config = self::_getConfig();
 
+        $eventresp = jEvent::notify ('AuthBeforeLogin', array('login'=>$login));
+        foreach($eventresp->getResponse() as $rep){
+            if(isset($rep['processlogin']) && $rep['processlogin'] === false)
+                return false;
+        }
+
         if($user = $dr->verifyPassword($login, $password)){
 
             $eventresp = jEvent::notify ('AuthCanLogin', array('login'=>$login, 'user'=>$user));
@@ -278,8 +284,10 @@ class jAuth {
 
             jEvent::notify ('AuthLogin', array('login'=>$login, 'persistence'=>$persistence));
             return true;
-        }else
+        }else{
+            jEvent::notify ('AuthErrorLogin', array('login'=>$login));
             return false;
+        }
     }
 
     /**

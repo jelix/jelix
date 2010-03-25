@@ -299,6 +299,7 @@ Sylvain de Vathaire (aka sylvain261)
  - jResponseHtmlFragment for Ajax content response (#501)
  - little bug fix in mysql.dbconnection.php (#97bis)
  - jCache (#540)
+ - additional generated events by jAuth (#1051)
 
 Brice Tence (aka brayce)
  - small testapp bug solved about missing tables (#1064)
