@@ -65,6 +65,7 @@ tcpdf = jResponseTcpdf
 soap = jResponseSoap
 htmlfragment = jResponseHtmlFragment
 htmlauth = jResponseHtml
+sitemap = jResponseSitemap
 
 [_coreResponses]
 html = jResponseHtml
@@ -91,6 +92,7 @@ tcpdf = jResponseTcpdf
 soap = jResponseSoap
 htmlfragment = jResponseHtmlFragment
 htmlauth = jResponseHtml
+sitemap = jResponseSitemap
 
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"

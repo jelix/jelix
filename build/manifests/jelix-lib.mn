@@ -74,6 +74,7 @@ cd lib/jelix/core/response
   jResponseTcpdf.class.php
   jResponseSoap.class.php
   jResponseHtmlFragment.class.php
+  jResponseSitemap.class.php
 
 cd lib/jelix/core-modules/jelix
 *  module.xml
@@ -168,6 +169,8 @@ cd lib/jelix/core-modules/jelix/templates
   cruddfk_edit.tpl
   cruddfk_view.tpl
   defaultmain.tpl
+  sitemap.tpl
+  sitemapindex.tpl
 cd lib/jelix/core-modules/jelix/templates/en_EN
   check_install.tpl
 cd lib/jelix/core-modules/jelix/templates/en_US
