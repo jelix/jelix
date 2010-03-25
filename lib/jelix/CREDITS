@@ -219,6 +219,9 @@ Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
  - jResponseCss
 
+johannb
+ - fixed issue in jResponseLatexToPdf (#1070)
+
 Gwendal Jouannic (aka obewan)
  - oracle support with PDO-OCI (#615)
 
