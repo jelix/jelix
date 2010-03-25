@@ -4,7 +4,7 @@
 * @subpackage  acl
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2010 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -164,11 +164,11 @@ class jAcl2DbUserGroup {
         // supprime les droits sur le groupe privé (jacl_rights)
         jDao::get('jacl2db~jacl2rights','jacl2_profile')->deleteByGroup($privategrp->id_aclgrp);
 
-        // supprime le groupe personnel du user (jacl_group)
-        $daogroup->delete($privategrp->id_aclgrp);
-
         // l'enleve de tous les groupes (jacl_users_group)
         jDao::get('jacl2db~jacl2usergroup','jacl2_profile')->deleteByUser($login);
+
+        // supprime le groupe personnel du user (jacl_group)
+        $daogroup->delete($privategrp->id_aclgrp);
     }
 
     /**
