@@ -267,19 +267,18 @@ class jAuth {
             $persistence = 0;
 
             // Add a cookie for session persistance, if enabled
-            if($persistant && isset($config['persistant_enable']) && $config['persistant_enable']) {
-                if(!isset($config['persistant_crypt_key']) || !isset($config['persistant_cookie_name'])){
+            if ($persistant && isset($config['persistant_enable']) && $config['persistant_enable']) {
+                if (!isset($config['persistant_crypt_key']) || !isset($config['persistant_cookie_name'])) {
                     throw new jException('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name, persistant_crypt_key');
                 }
 
-                if(isset($config['persistant_duration']))
-                    $persistence=$config['persistant_duration']*86400;
+                if (isset($config['persistant_duration']))
+                    $persistence = $config['persistant_duration']*86400;
                 else
-                    $persistence=86400; // 24h
+                    $persistence = 86400; // 24h
                 $persistence += time();
-                $encryptedPassword=jCrypt::encrypt($password,$config['persistant_crypt_key']);
-                setcookie($config['persistant_cookie_name'].'[login]', $login, $persistence, $config['persistant_cookie_path']);
-                setcookie($config['persistant_cookie_name'].'[passwd]', $encryptedPassword, $persistence, $config['persistant_cookie_path']);
+                $encrypted = jCrypt::encrypt(serialize(array($login, $password)),$config['persistant_crypt_key']);
+                setcookie($config['persistant_cookie_name'].'[auth]', $encrypted, $persistence, $config['persistant_cookie_path']);
             }
 
             jEvent::notify ('AuthLogin', array('login'=>$login, 'persistence'=>$persistence));
@@ -316,8 +315,7 @@ class jAuth {
         if(isset($config['persistant_enable']) && $config['persistant_enable']){
             if(!isset($config['persistant_cookie_name']))
                 throw new jException('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name, persistant_crypt_key');
-            setcookie($config['persistant_cookie_name'].'[login]', '', time() - 3600, $config['persistant_cookie_path']);
-            setcookie($config['persistant_cookie_name'].'[passwd]', '', time() - 3600, $config['persistant_cookie_path']);
+            setcookie($config['persistant_cookie_name'].'[auth]', '', time() - 3600, $config['persistant_cookie_path']);
         }
     }
 
