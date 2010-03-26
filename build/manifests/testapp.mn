@@ -145,6 +145,7 @@ cd testapp/modules/jelix_tests/templates
   test_plugin_jurl.tpl
   test_plugin_pagelinks.tpl
   test_truncate_html.tpl
+  test_tpl_fetch.tpl
 cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php
   jstests.classic.php
@@ -216,6 +217,7 @@ cd testapp/modules/jelix_tests/tests/
   jkvdb.lib.php
   jtpl.compiler.html_cli.php
   jtpl.expressions_parsing.html_cli.php
+  jtpl.fetch.html_cli.php
   jtpl.plugins.html.php
   utils.jdatatype.html_cli.php
   utils.jduration.html_cli.php

@@ -187,6 +187,25 @@ function toto() {
 32=>array('{foreach $obj->meth() as $foo=>$bar} A {/foreach}',
           '<?php foreach($t->_vars[\'obj\']->meth() as $t->_vars[\'foo\']=>$t->_vars[\'bar\']):?> A <?php endforeach;?>'
          ),
+33=>array('{$foo}
+{$bar}',
+        '<?php echo $t->_vars[\'foo\']; ?>
+
+<?php echo $t->_vars[\'bar\']; ?>'),
+34=>array('ok{while ($foo)}
+aaa
+{/while}
+end',
+        'ok<?php while(($t->_vars[\'foo\'])):?>
+aaa
+<?php endwhile;?>
+end',),
+35=>array('{$foo}{$baz}
+{$bar}',
+        '<?php echo $t->_vars[\'foo\']; ?><?php echo $t->_vars[\'baz\']; ?>
+
+<?php echo $t->_vars[\'bar\']; ?>'),
+
 
     );
 
@@ -200,7 +219,7 @@ function toto() {
 
         foreach($this->content as $k=>$t){
             try{
-                $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));
+                $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]), "Test '$k'");
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){

@@ -138,6 +138,7 @@ Christophe Thiriot (aka Doubleface)
  - implementation of "live" exit in command line (#406)
  - automatic timezone setting (#600)
  - bug in jFilter tests (#842)
+ - fixed php bug on jtpl about ?>+line feed (#1025)
 
 Baptiste Toinot (aka Surfoo)
  - double / in path for locale selector
