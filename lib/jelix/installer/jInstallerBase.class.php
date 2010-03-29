@@ -100,7 +100,7 @@ abstract class jInstallerBase {
      * @param jInstallerEntryPoint $ep the entry point
      * @param jIniMultiFilesModifier $config the configuration of the entry point
      * @param string $dbProfile the name of the jdb profile
-     * @return string an identifier
+     * @return string|array an identifier or a list of identifiers
      */
     public function setEntryPoint($ep, $config, $dbProfile) {
         $this->config = $config;

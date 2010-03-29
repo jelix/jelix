@@ -318,6 +318,23 @@ abstract class JelixScriptCommand {
       }
       return null;
    }
+
+    protected function getSupportedJelixVersion() {
+        $this->loadProjectXml();
+
+        $deps = $this->projectXml->getElementsByTagName('dependencies');
+        $minversion = '';
+        $maxversion = '';
+        if($deps && $deps->length > 0) {
+            $jelix = $deps->item(0)->getElementsByTagName('jelix');
+            if ($jelix && $jelix->length > 0) {
+                $minversion = $jelix->item(0)->getAttribute('minversion');
+                $maxversion = $jelix->item(0)->getAttribute('maxversion');
+            }
+        }
+        return array($minversion, $maxversion);
+    }
+ 
    
 }
 
