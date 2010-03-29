@@ -361,7 +361,7 @@ foo[]=machine
                 array(jIniFileModifier::TK_WS, ""),
                 array(jIniFileModifier::TK_VALUE, 'foo','button'),
                 array(jIniFileModifier::TK_VALUE, 'example','1'),
-                array(jIniFileModifier::TK_WS,''),
+                array(jIniFileModifier::TK_WS,'--'),
                 array(jIniFileModifier::TK_WS, ""),
             ),
             'aSection'=>array(
@@ -461,21 +461,21 @@ foo[]=ccc
 
 ';
         $parser->testParse($content);
-        $this->assertEqualOrDiff($parser->generate(), $result );
+        $this->assertEqualOrDiff($result, $parser->generate() );
 
         file_put_contents(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php', $content);
         $parser = new testIniFileModifier(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php');
-        $this->assertEqualOrDiff($parser->generate(), $result );
+        $this->assertEqualOrDiff($result, $parser->generate() );
         
         $content = str_replace("\n", "\r", $content);
         file_put_contents(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php', $content);
         $parser = new testIniFileModifier(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php');
-        $this->assertEqualOrDiff($parser->generate(), $result );
+        $this->assertEqualOrDiff($result, $parser->generate() );
         
         $content = str_replace("\r", "\r\n", $content);
         file_put_contents(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php', $content);
         $parser = new testIniFileModifier(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php');
-        $this->assertEqualOrDiff($parser->generate(), $result );
+        $this->assertEqualOrDiff($result, $parser->generate());
 
     }
     
@@ -486,6 +486,7 @@ foo[]=ccc
   ; a comment
   
 foo=bar
+;bla bla
 anumber=98
 string= "uuuuu"
 string2= "aaa
@@ -508,16 +509,16 @@ foo[]=ccc
 
 ';
         $parser->testParse($content);
-        $parser->removeValue('anumber');
+        $parser->removeValue('anumber', 0, null, false);
         $this->assertNull($parser->getValue('anumber'));
         
-        $parser->removeValue('laurent','aSection');
+        $parser->removeValue('laurent','aSection', null, false);
         $this->assertNull($parser->getValue('laurent','aSection'));
 
-        $parser->removeValue('foo','vla', 1);
+        $parser->removeValue('foo','vla', 1, false);
         $this->assertNull($parser->getValue('foo','vla', 1));
 
-        $parser->removeValue('', 'aSection');
+        $parser->removeValue('', 'aSection', null, false);
         $this->assertNull($parser->getValue('truc','aSection'));
         $this->assertEqual($parser->getSectionList(), array('othersection', 'vla'));
 
@@ -525,7 +526,7 @@ $result = '
   ; a comment
   
 foo=bar
-
+;bla bla
 string=uuuuu
 string2="aaa
 bbb"
@@ -536,14 +537,79 @@ truc=machin2
 
 [vla]
 foo[]=aaa
-
 foo[]=ccc
 
 
 
 ';
-        $this->assertEqualOrDiff($parser->generate(), $result);
+        $this->assertEqualOrDiff($result, $parser->generate());
     }
+
+    function testRemoveWithComment() {
+        $parser = new testIniFileModifier('');
+        $content = '
+  ; a comment <?php die()
+  
+foo=bar
+anumber=98
+string= "uuuuu"
+string2= "aaa
+bbb"
+afloatnumber=   5.098  
+
+; section comment
+[aSection]
+truc= true
+
+; a comment
+
+laurent=toto
+isvalid = on
+
+; super section
+[othersection]
+truc=machin2
+
+[vla]
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+';
+        $parser->testParse($content);
+        $parser->removeValue('anumber', 0, null, true);
+        $parser->removeValue('laurent','aSection', null, true);
+        $parser->removeValue('foo','vla', 1, true);
+        $parser->removeValue('', 'othersection', null, true);
+        $parser->removeValue('foo',0, null, true);
+
+$result = '
+  ; a comment <?php die()
+  
+string=uuuuu
+string2="aaa
+bbb"
+afloatnumber=5.098  
+
+; section comment
+[aSection]
+truc=true
+
+
+isvalid=on
+
+[vla]
+foo[]=aaa
+foo[]=ccc
+
+
+
+';
+        $this->assertEqualOrDiff($result, $parser->generate());
+    }
+
 }
 
 ?>

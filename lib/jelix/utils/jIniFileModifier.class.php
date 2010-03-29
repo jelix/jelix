@@ -159,7 +159,7 @@ class jIniFileModifier {
             foreach ($this->content[$section] as $k =>$item) {
                 if ($deleteMode) {
                     if ($item[0] == self::TK_ARR_VALUE && $item[1] == $name)
-                        $this->content[$section][$k] = array(self::TK_WS, '');
+                        $this->content[$section][$k] = array(self::TK_WS, '--');
                     continue;
                 }
                 
@@ -215,7 +215,7 @@ class jIniFileModifier {
      * @param string $key     for option which is an item of array, the key in the array
      * @since 1.2
      */
-    public function removeValue($name, $section=0, $key=null) {
+    public function removeValue($name, $section=0, $key=null, $removePreviousComment = true) {
         $foundValue=false;
 
         if ($section === 0 && $name == '')
@@ -225,6 +225,36 @@ class jIniFileModifier {
 
             if ($section === 0 || !isset($this->content[$section]))
                 return;
+
+            if ($removePreviousComment) {
+                // retrieve the previous section
+                $previousSection = -1;
+                foreach($this->content as $s=>$c) {
+                    if ($s === $section) {
+                        break;
+                    }
+                    else {
+                        $previousSection = $s;
+                    }
+                }
+
+                if ($previousSection != -1) {
+                    //retrieve the last comment
+                    $s = $this->content[$previousSection];
+                    end($s);
+                    $tok = current($s);
+                    while($tok !== false) {
+                        if ($tok[0] != self::TK_WS && $tok[0] != self::TK_COMMENT) {
+                            break;
+                        }
+                        if ($tok[0] == self::TK_COMMENT && strpos($tok[1], '<?') === false) {
+                            $this->content[$previousSection][key($s)] = array(self::TK_WS, '--');
+                        }
+                        $tok = prev($s);
+                    }
+                }
+            }
+            
             unset($this->content[$section]);
             $this->modified = true;
             return;
@@ -233,28 +263,46 @@ class jIniFileModifier {
         if (isset($this->content[$section])) {
             // boolean to erase array values if the option to remove is an array
             $deleteMode = false;
+            $previousComment = -1;
             foreach ($this->content[$section] as $k =>$item) {
                 if ($deleteMode) {
                     if ($item[0] == self::TK_ARR_VALUE && $item[1] == $name)
-                        $this->content[$section][$k] = array(self::TK_WS, '');
+                        $this->content[$section][$k] = array(self::TK_WS, '--');
                     continue;
                 }
                 
-                // if the item is not a value or an array value, or not the same name
-                if (($item[0] != self::TK_VALUE && $item[0] != self::TK_ARR_VALUE)
-                    || $item[1] != $name)
+                if ($item[0] == self::TK_COMMENT) {
+                    if ($removePreviousComment)
+                        $previousComment = $k;
                     continue;
+                }
+
+                if ($item[0] == self::TK_WS) {
+                    continue;
+                }
+
+                // if the item is not a value or an array value, or not the same name
+                if ($item[1] != $name) {
+                    $previousComment = -1;
+                    continue;
+                }
+
                 // if it is an array value, and if the key doesn't correspond
                 if ($item[0] == self::TK_ARR_VALUE && $key !== null) {
-                    if($item[3] != $key)
+                    if($item[3] != $key) {
+                        $previousComment = -1;
                         continue;
+                    }
+                }
+                if ($previousComment != -1 && strpos($this->content[$section][$previousComment][1], "<?") === false) {
+                    $this->content[$section][$previousComment] = array(self::TK_WS, '--');
                 }
                 if ($key !== null) {
                     // we remove the value from the array
-                    $this->content[$section][$k] = array(self::TK_WS, '');
+                    $this->content[$section][$k] = array(self::TK_WS, '--');
                 } else {
                     // we remove the value
-                    $this->content[$section][$k] = array(self::TK_WS, '');
+                    $this->content[$section][$k] = array(self::TK_WS, '--');
                     if ($item[0] == self::TK_ARR_VALUE) {
                         // the previous value was an array value, so we erase other array values
                         $deleteMode = true;
@@ -356,8 +404,10 @@ class jIniFileModifier {
                     if($item[1] != '0')
                         $content.=$item[1]."\n";
                     break;
-                  case self::TK_COMMENT:
                   case self::TK_WS:
+                    if ($item[1]=='--')
+                        break;
+                  case self::TK_COMMENT:
                     $content.=$item[1]."\n";
                     break;
                   case self::TK_VALUE:
