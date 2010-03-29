@@ -608,6 +608,39 @@ foo[]=ccc
 
 ';
         $this->assertEqualOrDiff($result, $parser->generate());
+
+
+
+
+
+        $parser = new testIniFileModifier('');
+        $content = '
+string=uuuuu
+
+; bla bla
+
+; bli bli
+;blo blo
+
+string2=aaa
+afloatnumber=5.098  
+
+';
+        $parser->testParse($content);
+        $parser->removeValue('string2', 0, null, true);
+
+$result = '
+string=uuuuu
+
+; bla bla
+
+
+afloatnumber=5.098  
+
+
+';
+        $this->assertEqualOrDiff($result, $parser->generate());
+
     }
 
 }

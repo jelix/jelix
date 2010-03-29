@@ -263,7 +263,7 @@ class jIniFileModifier {
         if (isset($this->content[$section])) {
             // boolean to erase array values if the option to remove is an array
             $deleteMode = false;
-            $previousComment = -1;
+            $previousComment = array();
             foreach ($this->content[$section] as $k =>$item) {
                 if ($deleteMode) {
                     if ($item[0] == self::TK_ARR_VALUE && $item[1] == $name)
@@ -273,29 +273,42 @@ class jIniFileModifier {
                 
                 if ($item[0] == self::TK_COMMENT) {
                     if ($removePreviousComment)
-                        $previousComment = $k;
+                        $previousComment[] = $k;
                     continue;
                 }
 
                 if ($item[0] == self::TK_WS) {
+                    if ($removePreviousComment)
+                        $previousComment[] = $k;
                     continue;
                 }
 
                 // if the item is not a value or an array value, or not the same name
                 if ($item[1] != $name) {
-                    $previousComment = -1;
+                    $previousComment = array();
                     continue;
                 }
 
                 // if it is an array value, and if the key doesn't correspond
                 if ($item[0] == self::TK_ARR_VALUE && $key !== null) {
                     if($item[3] != $key) {
-                        $previousComment = -1;
+                        $previousComment = array();
                         continue;
                     }
                 }
-                if ($previousComment != -1 && strpos($this->content[$section][$previousComment][1], "<?") === false) {
-                    $this->content[$section][$previousComment] = array(self::TK_WS, '--');
+                if (count($previousComment)) {
+                    $kc = array_pop($previousComment);
+                    while ($kc !== null && $this->content[$section][$kc][0] == self::TK_WS) {
+                        $kc = array_pop($previousComment);
+                    }
+
+                    while ($kc !== null && $this->content[$section][$kc][0] == self::TK_COMMENT) {
+                        if(strpos($this->content[$section][$kc][1], "<?") === false) {
+                            $this->content[$section][$kc] = array(self::TK_WS, '--');
+                        }
+                        $kc = array_pop($previousComment);
+                    }
+
                 }
                 if ($key !== null) {
                     // we remove the value from the array
