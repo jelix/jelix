@@ -321,11 +321,25 @@ class ldapAuthDriver implements jIAuthDriver {
         }
     }
 
-    protected function cryptPassword($password){
-        if(isset($this->_params['password_crypt_function'])){
-            $f=$this->_params['password_crypt_function'];
-            if( $f != '')
-               $password = $f($password);
+    /**
+     * crypt the password
+     */
+    protected function cryptPassword($password) {
+        if (isset($this->_params['password_crypt_function'])) {
+            $f = $this->_params['password_crypt_function'];
+            if ($f != '') {
+                if ($f[1] == ':') {
+                    $t = $f[0];
+                    $f = substr($f, 2);
+                    if ($t == '1') {
+                        return $f((isset($this->_params['password_salt'])?$this->_params['password_salt']:''), $password);
+                    }
+                    else if ($t == '2') {
+                        return $f($this->_params, $password);
+                    }
+                }
+                return $f($password);
+            }
         }
         return $password;
     }

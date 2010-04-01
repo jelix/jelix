@@ -154,3 +154,11 @@ class AuthCoordPlugin implements jICoordPlugin {
     }
 }
 
+
+/**
+ * function to use to crypt password. use the password_salt value in the config
+ * file of the plugin.
+ */
+function sha1WithSalt($salt, $password) {
+    return sha1($salt.':'.$password);
+}
