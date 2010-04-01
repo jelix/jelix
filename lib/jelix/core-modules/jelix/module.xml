@@ -11,6 +11,6 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
+#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__"/>
     </dependencies>
 </module>

@@ -6,12 +6,12 @@
         <description lang="en-EN">Main Web interface for the administration of an application</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GPL 2.0</license>
         <copyright>2008-2009 Laurent Jouanneau</copyright>
-        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
+        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true"/>
         <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
+#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__"/>
       <module name="jauth" />
     </dependencies>
 </module>

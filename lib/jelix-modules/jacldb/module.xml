@@ -6,11 +6,11 @@
         <description lang="en-EN">jAuth listener for jAclDB</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
         <copyright>2008-2009 Laurent Jouanneau and other contributors</copyright>
-        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
+        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true"/>
         <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
+#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__"/>
     </dependencies>
 </module>

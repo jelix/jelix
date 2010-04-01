@@ -3,16 +3,16 @@
     <info id="jauthdb_admin@jelix.org" name="jauthdb_admin" createdate="2009-01-04">
 #expand        <version stability="stable">__LIB_VERSION__</version>
         <label lang="en_EN">jauthdb_admin</label>
-        <description lang="en_EN"></description>
+        <description lang="en_EN"/>
         <license URL="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GNU Public Licence</license>
         <copyright>2009 Laurent Jouanneau</copyright>
-        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
+        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true"/>
         <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
         <homepageURL>http://jelix.org</homepageURL>
         <!--<updateURL>http://jelix.org/update.xml</updateURL>-->
     </info>
     <dependencies>
-#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
+#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__"/>
         <module name="jauthdb" />
     </dependencies>
 </module>
