@@ -45,6 +45,8 @@ cd lib/jelix-modules/jacl2db/install
   install_jacl2.data.mysql.sql
   install_jacl2.data.pgsql.sql
   install.php
+  _installclass.php
+  upgrade_to_1.2b1pre.1422_namedgroup.php
 cd lib/jelix-modules/jacl2db/install/var/config
   jacl2.coord.ini.php
 
@@ -58,6 +60,8 @@ cd lib/jelix-modules/jauthdb/install/
   install_jauth.data.mysql.sql
   install_jauth.data.pgsql.sql
   install.php
+  _installclass.php
+  upgrade_to_1.2b1pre.1303_newdao.php
 
 cd lib/jelix-modules/jauth
 * module.xml

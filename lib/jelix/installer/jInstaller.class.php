@@ -140,6 +140,15 @@ class jInstaller {
      */
     const INSTALL_ERROR_CIRCULAR_DEPENDENCY = 2;
     
+    
+    const FLAG_INSTALL_MODULE = 1;
+    
+    const FLAG_UPGRADE_MODULE = 2;
+    
+    const FLAG_ALL = 3;
+  
+    const FLAG_MIGRATION_11X = 66;
+    
     /**
      *  @var jIniFileModifier it represents the installer.ini.php file.
      */
@@ -300,16 +309,35 @@ class jInstaller {
     }
 
     /**
+     * change the module version in readed informations, to simulate an update
+     * when we call installApplication or an other method.
+     * internal use !!
+     * @param string $moduleName the name of the module
+     * @param string $version the new version
+     */
+    public function forceModuleVersion($moduleName, $version) {
+        foreach(array_keys($this->entryPoints) as $epId) {
+            $modules = array();
+            if (isset($this->modules[$epId][$moduleName])) {
+                $this->modules[$epId][$moduleName]->setInstalledVersion($epId, $version);
+            }
+        }
+    }
+
+    /**
      * install and upgrade if needed, all modules for each
      * entry point. Only modules which have an access property > 0
      * are installed. Errors appeared during the installation are passed
      * to the reporter.
-     * @param boolean $onlyUpdateIniFiles if true it only updates config files,
-     *                              it won't call installers.
-     *                              default if false. true is only for internal use
+     * @param int $flags flags indicating if we should install, and/or upgrade
+     *                   modules or only modify config files. internal use.
+     *                   see FLAG_* constants
      * @return boolean true if succeed, false if there are some errors
      */
-    public function installApplication($onlyUpdateIniFiles = false) {
+    public function installApplication($flags = false) {
+
+        if ($flags === false)
+            $flags = self::FLAG_ALL;
 
         $this->startMessage();
         $result = true;
@@ -321,7 +349,7 @@ class jInstaller {
                     continue;
                 $modules[$name] = $module;
             }
-            $result = $result & $this->_installModules($modules, $epId, true, $onlyUpdateIniFiles);
+            $result = $result & $this->_installModules($modules, $epId, true, $flags);
             if (!$result)
                 break;
         }
@@ -413,9 +441,10 @@ class jInstaller {
      * @param array $modules list of jInstallerComponentModule
      * @param string $epId  the entrypoint id
      * @param boolean $installWholeApp true if the installation is done during app installation
+     * @param integer $flags to know what to do
      * @return boolean true if the installation is ok
      */
-    protected function _installModules(&$modules, $epId, $installWholeApp, $onlyUpdateIniFiles=false) {
+    protected function _installModules(&$modules, $epId, $installWholeApp, $flags=3) {
 
         $this->ok('install.entrypoint.start', $epId);
 
@@ -447,7 +476,26 @@ class jInstaller {
         foreach($this->_componentsToInstall as $item) {
             list($component, $toInstall) = $item;
             try {
-                if ($toInstall) {
+                if ($flags & self::FLAG_MIGRATION_11X) {
+                    $this->installerIni->setValue($component->getName().'.installed',
+                                                   1, $epId);
+                    $this->installerIni->setValue($component->getName().'.version',
+                                                   $component->getSourceVersion(), $epId);
+
+                    $upgraders = $component->getUpgraders($epConfig, $epId);
+                    if (count($upgraders) == 0) {
+                        $this->ok('install.module.installed', $component->getName());
+                        continue;
+                    }
+
+                    foreach($upgraders as $upgrader) {
+                        $upgrader->preInstall();
+                    }
+
+                    $componentsToInstall[] = array($upgraders, $component, false);
+
+                }
+                else if ($toInstall) {
                     $installer = $component->getInstaller($epConfig, $epId, $installWholeApp);
                     if ($installer === null || $installer === false) {
                         // no installer, so we assume that nothing has to be done to
@@ -460,7 +508,7 @@ class jInstaller {
                         continue;
                     }
                     $componentsToInstall[] = array($installer, $component, $toInstall);
-                    if (!$onlyUpdateIniFiles)
+                    if ($flags & self::FLAG_INSTALL_MODULE)
                         $installer->preInstall();
                 }
                 else {
@@ -474,7 +522,7 @@ class jInstaller {
                         continue;
                     }
 
-                    if (!$onlyUpdateIniFiles) {
+                    if ($flags & self::FLAG_UPGRADE_MODULE) {
                         foreach($upgraders as $upgrader) {
                             $upgrader->preInstall();
                         }
@@ -502,7 +550,7 @@ class jInstaller {
             foreach($componentsToInstall as $item) {
                 list($installer, $component, $toInstall) = $item;
                 if ($toInstall) {
-                    if ($installer && !$onlyUpdateIniFiles)
+                    if ($installer && ($flags & self::FLAG_INSTALL_MODULE))
                         $installer->install();
                     $this->installerIni->setValue($component->getName().'.installed',
                                                    1, $epId);
@@ -514,7 +562,7 @@ class jInstaller {
                 else {
                     $lastversion = '';
                     foreach($installer as $upgrader) {
-                        if (!$onlyUpdateIniFiles)
+                        if ($flags & self::FLAG_UPGRADE_MODULE)
                             $upgrader->install();
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
@@ -562,17 +610,17 @@ class jInstaller {
         foreach($installedModules as $item) {
             try {
                 list($installer, $component, $toInstall) = $item;
-                if (!$onlyUpdateIniFiles) {
-                    if ($toInstall) {
-                        if ($installer)
-                            $installer->postInstall();
-                    }
-                    else {
-                        foreach($installer as $upgrader) {
-                            $upgrader->postInstall();
-                        }
+
+                if ($toInstall) {
+                    if ($installer && ($flags & self::FLAG_INSTALL_MODULE))
+                        $installer->postInstall();
+                }
+                else if ($flags & self::FLAG_UPGRADE_MODULE){
+                    foreach($installer as $upgrader) {
+                        $upgrader->postInstall();
                     }
                 }
+
                 if ($epConfig->isModified()) {
                     $epConfig->save();
                     // we re-load configuration file for each module because

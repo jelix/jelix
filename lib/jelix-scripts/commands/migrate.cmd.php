@@ -54,14 +54,23 @@ class migrateCommand extends JelixScriptCommand {
         // update project.xml
         $this->updateProjectXml();
 
-        // lancement de jInstaller
+        // launch jInstaller
         require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
         $reporter = new textInstallReporter();
         $install = new jInstaller($reporter);
-        $install->installApplication(true);
+        $install->forceModuleVersion('jacl2db', '1.1');
+        $install->forceModuleVersion('jauthdb', '1.1');
+        $install->installApplication(jInstaller::FLAG_MIGRATION_11X);
+
+        if (!file_exists(JELIX_APP_PATH.'install/installer.php')) {
+            $this->createDir(JELIX_APP_PATH.'install/');
+            $this->createFile(JELIX_APP_PATH.'install/installer.php','installer/installer.php.tpl',array());
+        }
     }
 
-    
+    /**
+     * check the compatibility version of the app with jelix
+     */
     protected function checkVersion() {
         list($minversion, $maxversion) = $this->getSupportedJelixVersion();
         
@@ -75,7 +84,9 @@ class migrateCommand extends JelixScriptCommand {
             throw new Exception("installer.ini.php already exists !");
     }
     
-    
+    /**
+     * update configuration files
+     */
     protected function updateConfig() {
         $configList = array();
 
@@ -116,18 +127,24 @@ class migrateCommand extends JelixScriptCommand {
 
         foreach ($allModulePath as $name=>$module) {
             $defaultconfig->setValue($name.'.access', $module->access, 'modules');
-            $this->updateModuleXml($module);
         }
 
         $defaultconfig->removeValue('checkTrustedModules');
         $defaultconfig->removeValue('trustedModules');
         $defaultconfig->removeValue('unusedModules');
-        $defaultconfig->save();
 
         $configList['defaultconfig.ini.php'] = $defaultconfig;
 
         // read each entry point configuration
         $eplist = $this->getEntryPointsList();
+
+        $help = "In each config files of your entry points, fill this parameters:\n".
+               "* checkTrustedModules=on\n".
+               "* trustedModules: list of modules accessible from the web\n".
+               "* unusedModules: those you don't use at all\n".
+               "For other modules you use but which should not be accessible from the web, nothing to do.\n";
+
+        $otherModulePath = array();
 
         foreach($eplist as $ep) {
             if (isset($configList[$ep['config']]))
@@ -143,52 +160,74 @@ class migrateCommand extends JelixScriptCommand {
             $checkTrustedModules = $config->getValue('checkTrustedModules');
             if ($checkTrustedModules === null)
                 $checkTrustedModules = $this->defaultCheckTrustedModules;
+                
+            if (!$checkTrustedModules) {
+                throw new Exception("checkTrustedModules should be set to 'on' in config files.\n$help");
+            }
 
             $trustedModules = $config->getValue('trustedModules');
             if (!$trustedModules)
                 $trustedModules = $this->defaultTrustedModules;
 
+            if ($trustedModules == '') {
+                throw new Exception("trustedModules should be filled in config files.\n$help");
+            }
+
             $unusedModules = $config->getValue('unusedModules');
             if (!$unusedModules)
                 $unusedModules = $this->defaultUnusedModules;
-    
-            $epModulePath = $this->getModulesPath($modulesPath, ($checkTrustedModules?1:2));
 
-            if ($checkTrustedModules) {
-                $list = preg_split('/ *, */', $trustedModules);
-                foreach ($list as $module) {
-                    if (isset($allModulePath[$module]))
-                        $epModulePath[$module]->access = 2;
-                }
+            $epModulePath = $this->getModulesPath($modulesPath, 1);
+
+            $list = preg_split('/ *, */', $trustedModules);
+            foreach ($list as $module) {
+                if (isset($epModulePath[$module]))
+                    $epModulePath[$module]->access = 2;
             }
 
             if ($unusedModules) {
                 $list = preg_split('/ *, */', $unusedModules);
                 foreach ($list as $module) {
-                    if (isset($allModulePath[$module]))
+                    if (isset($epModulePath[$module]))
                         $epModulePath[$module]->access = 0;
                 }
             }
-            
+
             foreach ($epModulePath as $name=>$module) {
                 if (!isset($allModulePath[$name]) || $allModulePath[$name]->access != $module->access) {
                     $config->setValue($name.'.access', $module->access, 'modules');
                 }
-                if (!isset($allModulePath[$name]))
-                    $this->updateModuleXml($module);
+                if (!isset($allModulePath[$name]) && !isset($otherModulePath[$name]))
+                    $otherModulePath[$name] = $module;
             }
 
             $config->removeValue('checkTrustedModules');
             $config->removeValue('trustedModules');
             $config->removeValue('unusedModules');
-            $config->save();
 
             $configList[$ep['config']] = $config;
+        }
+        
+        // we save at the end, because an error could appear during the previous loop
+        // and we don't want to save change if there are errors
+        $defaultconfig->save();
+        foreach($configList as $config) {
+            $config->save();
+        }
+
+        foreach ($allModulePath as $name=>$module) {
+            $this->updateModuleXml($module);
+        }
+        foreach ($otherModulePath as $name=>$module) {
+            $this->updateModuleXml($module);
         }
     }
     
     protected $moduleRepositories = array();
     
+    /**
+     * retrieve all modules specifications
+     */
     protected function getModulesPath($modulesPath, $defaultAccess) {
 
         $list = preg_split('/ *, */', $modulesPath);
@@ -213,7 +252,7 @@ class migrateCommand extends JelixScriptCommand {
                         $m = new migrateModule();
                         $m->path = $p.$f.'/';
                         $m->name = $f;
-                        $m->access = $defaultAccess;
+                        $m->access = ($f == 'jelix'?2:$defaultAccess);
                         $m->repository = $p;
                         $modulesPathList[$f] = $m;
                         $this->moduleRepositories[$p][$f] = $m;
@@ -224,7 +263,10 @@ class migrateCommand extends JelixScriptCommand {
         }
         return $modulesPathList;
     }
- 
+
+    /**
+     * update the project.xml file
+     */
     protected function updateProjectXml() {
         
         $doc = $this->projectXml;
@@ -259,6 +301,9 @@ class migrateCommand extends JelixScriptCommand {
         }
     }
 
+    /**
+     * update identity of a module or a project, in a module.xml or project.xml file
+     */
     protected function updateInfo($doc, $id, $name) {
         $info = $this->firstElementChild($doc->documentElement, 'info');
 
@@ -278,7 +323,9 @@ class migrateCommand extends JelixScriptCommand {
         return $info;
     }
     
-    
+    /**
+     * update informations about jelix version in a module.xml or project.xml file
+     */
     protected function updateJelixDependency($doc) {
         
         $info = $this->firstElementChild($doc->documentElement);
@@ -294,6 +341,9 @@ class migrateCommand extends JelixScriptCommand {
         }
     }
     
+    /**
+     * update or create the module.xml file of a module
+     */
     protected function updateModuleXml(migrateModule $module) {
         
         $modulexml = $module->path.'module.xml';

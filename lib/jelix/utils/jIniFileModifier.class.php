@@ -398,6 +398,14 @@ class jIniFileModifier {
     }
 
     /**
+     * says if there is a section with the given name
+     * @since 1.2
+     */
+    public function isSection($name) {
+        return isset($this->content[$name]);
+    }
+
+    /**
      * return the list of section names
      * @return array
      * @since 1.2

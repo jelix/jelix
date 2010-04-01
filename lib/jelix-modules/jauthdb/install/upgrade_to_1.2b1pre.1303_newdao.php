@@ -4,24 +4,20 @@
 * @subpackage  jauthdb module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009-2010 Laurent Jouanneau
+* @copyright   2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 require_once(dirname(__FILE__).'/_installclass.php');
 
-class jauthdbModuleInstaller extends jauthdbModuleInstallerBase {
+class jauthdbModuleUpgrader_newdao extends jauthdbModuleInstallerBase {
 
     function install() {
-        //if ($this->entryPoint->type == 'cmdline')
-        //    return;
 
         $authconfig = $this->config->getValue('auth','coordplugins');
 
         if ($authconfig) {
-            // a config file for the auth plugin exists, so we can install
-            // the module, else we ignore it
 
             $conf = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$authconfig);
             $driver = $conf->getValue('driver');
@@ -36,14 +32,10 @@ class jauthdbModuleInstaller extends jauthdbModuleInstallerBase {
                 return;
             }
 
-            // FIXME: should use the given dao to create the table
             $daoName = $conf->getValue('dao', 'Db');
-            if ($daoName == 'jauthdb~jelixuser') {
-                $profile = $conf->getValue('profile', 'Db');
-                $this->execSQLScript('install_jauth.schema', $profile);
-                try {
-                    $this->execSQLScript('install_jauth.data', $profile);
-                } catch(Exception $e) {}
+            if ($daoName == 'jauth~jelixuser') {
+                $conf->setValue('dao', 'jauthdb~jelixuser','Db');
+                $conf->save();
             }
         }
     }

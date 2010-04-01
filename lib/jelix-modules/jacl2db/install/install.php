@@ -9,23 +9,9 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jacl2dbModuleInstaller extends jInstallerModule {
+require_once(dirname(__FILE__).'/_installclass.php');
 
-    public function setEntryPoint($ep, $config, $dbProfile) {
-
-        $dbProfilesFile = $config->getValue('dbProfils');
-        if ($dbProfilesFile == '')
-            $dbProfilesFile = 'dbprofils.ini.php';
-        $dbprofiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
-        if (isset($dbprofiles['jacl2_profile'])) {
-            if (is_string($dbprofiles['jacl2_profile']))
-                $dbProfile = $dbprofiles['jacl2_profile'];
-            else
-                $dbProfile = 'jacl2_profile';
-        }
-        parent::setEntryPoint($ep, $config, $dbProfile);
-        return md5($ep->configFile.'-'.$dbProfile);
-    }
+class jacl2dbModuleInstaller extends jacl2dbModuleInstallerBase {
 
     function install() {
         if ($this->entryPoint->type == 'cmdline')
@@ -56,7 +42,7 @@ class jacl2dbModuleInstaller extends jInstallerModule {
             $cf->save();
         }
 
-        $this->declareDbProfile('jacl2_profile', null, false);
+        $this->declareDbProfile('jacl2_profile', $this->dbProfile, false);
         $driver = $this->config->getValue('driver','acl2');
         if ($driver != 'db')
             $this->config->setValue('driver','db','acl2');

@@ -211,7 +211,7 @@ abstract class jInstallerBase {
      * declare a new db profile. if the content of the section is not given,
      * it will declare an alias to the default profile
      * @param string $name  the name of the new section/alias
-     * @param null|array  $sectionContent the content of the new section, or null
+     * @param null|string|array  $sectionContent the content of the new section, or null
      *     to create an alias.
      * @param boolean $force true:erase the existing profile
      * @return boolean true if the ini file has been changed
@@ -222,8 +222,7 @@ abstract class jInstallerBase {
             $dbProfilesFile = 'dbprofils.ini.php';
         $dbprofiles = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
         if ($sectionContent == null) {
-            $section = $dbprofiles->getValue('driver', $name);
-            if ($section === null) {
+            if (!$dbprofiles->isSection($name)) {
                 // no section
                 if ($dbprofiles->getValue($name) && !$force) {
                     // already a name
@@ -233,7 +232,7 @@ abstract class jInstallerBase {
             else if ($force) {
                 // existing section, and no content provided : we erase the section
                 // and add an alias
-                $dbprofiles->removeValue('', $section);
+                $dbprofiles->removeValue('', $name);
             }
             else {
                 return false;
@@ -246,13 +245,23 @@ abstract class jInstallerBase {
                 $dbprofiles->setValue($name, 'default');
         }
         else {
-            if($dbprofiles->getValue($name) !== null) {
+            if ($dbprofiles->getValue($name) !== null) {
                 if (!$force)
                     return false;
                 $dbprofiles->removeValue($name);
             }
-            foreach($sectionContent as $k=>$v) {
-                $dbprofiles->setValue($k,$v, $name);
+            if (is_array($sectionContent)) {
+                foreach($sectionContent as $k=>$v) {
+                    $dbprofiles->setValue($k,$v, $name);
+                }
+            }
+            else {
+                $profile = $dbprofiles->getValue($sectionContent);
+                if ($profile !== null) {
+                    $dbprofiles->setValue($name, $profile);
+                }
+                else
+                    $dbprofiles->setValue($name, $sectionContent);
             }
         }
         

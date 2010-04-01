@@ -121,6 +121,11 @@ abstract class jInstallerComponentBase {
         return $this->moduleInfos[$epId]->version;
     }
 
+    public function setInstalledVersion($epId, $version) {
+        $this->moduleInfos[$epId]->version = $version;
+    }
+
+
     /**
      * get the object which is responsible to install the component. this
      * object should implement jIInstallerComponent.
