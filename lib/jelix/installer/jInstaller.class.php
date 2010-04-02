@@ -583,15 +583,14 @@ class jInstaller {
                     }
                     $installedModules[] = array($installer, $component, false);
                 }
-                if ($epConfig->isModified()) {
-                    $epConfig->save();
-                    // we re-load configuration file for each module because
-                    // previous module installer could have modify it.
-                    $GLOBALS['gJConfig'] = $ep->config =
-                        jConfigCompiler::read($ep->configFile, true,
-                                              $ep->isCliScript,
-                                              $ep->scriptName);
-                }
+                // we always save the configuration, so it invalidates the cache
+                $epConfig->save();
+                // we re-load configuration file for each module because
+                // previous module installer could have modify it.
+                $GLOBALS['gJConfig'] = $ep->config =
+                    jConfigCompiler::read($ep->configFile, true,
+                                          $ep->isCliScript,
+                                          $ep->scriptName);
             }
         } catch (jInstallerException $e) {
             $result = false;
@@ -621,15 +620,14 @@ class jInstaller {
                     }
                 }
 
-                if ($epConfig->isModified()) {
-                    $epConfig->save();
-                    // we re-load configuration file for each module because
-                    // previous module installer could have modify it.
-                    $GLOBALS['gJConfig'] = $ep->config =
-                        jConfigCompiler::read($ep->configFile, true,
-                                              $ep->isCliScript,
-                                              $ep->scriptName);
-                }
+                // we always save the configuration, so it invalidates the cache
+                $epConfig->save();
+                // we re-load configuration file for each module because
+                // previous module installer could have modify it.
+                $GLOBALS['gJConfig'] = $ep->config =
+                    jConfigCompiler::read($ep->configFile, true,
+                                          $ep->isCliScript,
+                                          $ep->scriptName);
             } catch (jInstallerException $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
