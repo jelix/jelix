@@ -373,7 +373,6 @@ c2.activate(\'closed\');
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlightB\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
-jForms.tForm.setHelpDecorator(new jFormsHelpDecoratorAlert());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
@@ -391,7 +390,6 @@ jForms.declareForm(jForms.tForm);
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlightB1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
-jForms.tForm.setHelpDecorator(new jFormsHelpDecoratorAlert());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="bar"/>
@@ -410,7 +408,6 @@ jForms.declareForm(jForms.tForm);
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlightB2\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
-jForms.tForm.setHelpDecorator(new jFormsHelpDecoratorAlert());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>

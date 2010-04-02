@@ -19,18 +19,11 @@ testErrorDecorator.prototype = {
     }
 };
 
-
-function testHelpDecorator() {};
-testHelpDecorator.prototype = {
-    show : function( message){}
-};
-
 jQuery(document).ready(function(){
 
 var jfo = new jFormsJQForm('jf');
 var jfoElt = $("#jf").get(0);
 jfo.setErrorDecorator(new testErrorDecorator());
-jfo.setHelpDecorator(new testHelpDecorator());
 jFormsJQ.declareForm(jfo);
 
 
@@ -284,7 +277,7 @@ test("DateTime", function() {
     <td><input type="text" name="mail" id="jf_mail" value=""></td></tr>
 
 <tr><th scope="row"><label class="jforms-label" for="jf_geek" title="Check the box if you are a geek">Are you a geek ?</label></th>
-    <td><input type="checkbox" name="geek" id="jf_geek" title="Check the box if you are a geek" value="1"><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp('jforms_jelix_tests_formtest','geek')">?</a></span></td></tr>
+    <td><input type="checkbox" name="geek" id="jf_geek" title="Check the box if you are a geek" value="1"><span class="jforms-help">jforms_jelix_tests_formtest','geek</span></td></tr>
 
 </table></fieldset></td></tr>
 

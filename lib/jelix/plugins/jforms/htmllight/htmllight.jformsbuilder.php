@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2010 Laurent Jouanneau
 * @copyright   2008 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -88,13 +88,12 @@ class htmllightJformsBuilder extends jFormsBuilderBase {
      * output the header content of the form
      * @param array $params some parameters <ul>
      *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
-     *      <li>"helpDecorator"=>"name of your javascript object for help listener"</li>
      *      <li>"method" => "post" or "get". default is "post"</li>
      *      </ul>
      */
     public function outputHeader($params){
         $this->options = array_merge(array('errorDecorator'=>'jFormsErrorDecoratorAlert',
-                 'helpDecorator'=>'jFormsHelpDecoratorAlert', 'method'=>'post'), $params);
+            'method'=>'post'), $params);
 
         if (preg_match('#^https?://#',$this->_action)) {
             $urlParams = $this->_actionParams;
@@ -113,7 +112,6 @@ class htmllightJformsBuilder extends jFormsBuilderBase {
 //<![CDATA[
 jForms.tForm = new jFormsForm(\''.$this->_name.'\');
 jForms.tForm.setErrorDecorator(new '.$this->options['errorDecorator'].'());
-jForms.tForm.setHelpDecorator(new '.$this->options['helpDecorator'].'());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script>';
@@ -212,9 +210,6 @@ jForms.declareForm(jForms.tForm);
     }
 
     protected function commonJs($ctrl) {
-        if($ctrl->help){
-            $this->jsContent .="c.help=".$this->escJsStr($ctrl->help).";\n";
-        }
 
         if($ctrl->required){
             $this->jsContent .="c.required = true;\n";
@@ -829,7 +824,7 @@ jForms.declareForm(jForms.tForm);
             }else{
                 $name=$ctrl->ref;
             }
-            echo '<span class="jforms-help"><a href="javascript:jForms.showHelp(\''. $this->_name.'\',\''.$name.'\')">?</a></span>';
+            echo '<span class="jforms-help" id="'. $this->_name.'-help"><span>'.htmlspecialchars($ctrl->help).'</span></span>';
         }
     }
 }

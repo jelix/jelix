@@ -373,7 +373,6 @@ c2.activate(\'closed\');
 //<![CDATA[
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
@@ -391,7 +390,6 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 //<![CDATA[
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder1\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="bar"/>
@@ -410,7 +408,6 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 //<![CDATA[
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder2\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>

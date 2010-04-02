@@ -18,7 +18,6 @@
  *   <li>string $builderName  (default is 'html')</li>
  *   <li>array  $options for the builder. Example, for the 'html' builder : <ul>
  *      <li>"errorDecorator"=>"name of your javascript object for error listener"</li>
- *      <li>"helpDecorator"=>"name of your javascript object for help listener"</li>
  *      <li>"method" => "post" or "get". default is "post"</li>
  *      </ul>
  *    </li>

@@ -3,7 +3,28 @@
  *
  */
 
-.jforms-help {}
+.jforms-help {
+position:relative;
+padding-left:18px;
+background:url(jforms/help.png) 2px center no-repeat;
+cursor:help;
+}
+.jforms-help span{
+display:none;
+}
+.jforms-help:hover span{
+display:block;
+position:absolute;
+left:20px;
+top:20px;
+z-index:1000;
+background-color:#fff;
+width:250px;
+color:#444;
+border:1px solid #999;
+font-size:0.9em;
+padding:5px;
+}
 .jforms-label {}
 .jforms-value {}
 .jforms-readonly { color:#aaa; }

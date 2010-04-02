@@ -47,7 +47,6 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
 //<![CDATA[
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
@@ -65,7 +64,6 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 //<![CDATA[
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
@@ -156,9 +154,8 @@ jFormsJQ.tForm.addControl(c);
         $ctrl->setReadOnly(false);
         $ctrl->help='some help';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="laurent"/><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->formname.'\',\'input1\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="laurent"/><span class="jforms-help" id="jforms_formtest1-help"><span>some help</span></span>', $out);
         $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
-c.help=\'some help\';
 c.errInvalid=\'"Votre nom" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
@@ -166,9 +163,8 @@ jFormsJQ.tForm.addControl(c);
 
         $ctrl->help="some \nhelp with ' and\nline break.";
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="laurent"/><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->formname.'\',\'input1\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="laurent"/><span class="jforms-help" id="jforms_formtest1-help">'."<span>some \nhelp with ' and\nline break.</span>".'</span>', $out);
         $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
-c.help=\'some \nhelp with \\\' and\nline break.\';
 c.errInvalid=\'"Votre nom" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
@@ -179,9 +175,8 @@ jFormsJQ.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_input1" title="ceci est un tooltip">Votre nom</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" title="ceci est un tooltip" class="jforms-ctrl-input" value="laurent"/><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->formname.'\',\'input1\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" title="ceci est un tooltip" class="jforms-ctrl-input" value="laurent"/><span class="jforms-help" id="jforms_formtest1-help"><span>some help</span></span>', $out);
         $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
-c.help=\'some help\';
 c.errInvalid=\'"Votre nom" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
@@ -1177,7 +1172,6 @@ jFormsJQ.tForm.addControl(c);
 //<![CDATA[
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
@@ -1270,7 +1264,6 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 //<![CDATA[
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
@@ -1291,7 +1284,6 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 //<![CDATA[
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
-jFormsJQ.tForm.setHelpDecorator(new jFormsJQHelpDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
@@ -1343,9 +1335,8 @@ jFormsJQ.tForm.addControl(c);
         $ctrl->setReadOnly(false);
         $ctrl->help='some help';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha jforms-required" value=""/><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->formname.'\',\'cap\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha jforms-required" value=""/><span class="jforms-help" id="jforms_formtest1-help"><span>some help</span></span>', $out);
         $this->assertEqualOrDiff('c = new jFormsJQControlString(\'cap\', \'captcha for security\');
-c.help=\'some help\';
 c.required = true;
 c.errRequired=\'"captcha for security" field is required\';
 c.errInvalid=\'"captcha for security" field is invalid\';
@@ -1357,9 +1348,8 @@ jFormsJQ.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap" title="ceci est un tooltip">captcha for security</label>', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" title="ceci est un tooltip" class="jforms-ctrl-captcha jforms-required" value=""/><span class="jforms-help"><a href="javascript:jFormsJQ.showHelp(\''. $this->formname.'\',\'cap\')">?</a></span>', $out);
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" title="ceci est un tooltip" class="jforms-ctrl-captcha jforms-required" value=""/><span class="jforms-help" id="jforms_formtest1-help"><span>some help</span></span>', $out);
         $this->assertEqualOrDiff('c = new jFormsJQControlString(\'cap\', \'captcha for security\');
-c.help=\'some help\';
 c.required = true;
 c.errRequired=\'"captcha for security" field is required\';
 c.errInvalid=\'"captcha for security" field is invalid\';
