@@ -117,6 +117,7 @@ simple_urlengine_https =
 ; script_name_without_suffix = "list of action selectors separated by a space"
 ; selector syntax :
 ;   m~a@r    -> for the action "a" of the module "m" and for the request of type "r"
+;   m~c:*@r  -> for all actions of the controller "c" of the module "m" and for the request of type "r"
 ;   m~*@r    -> for all actions of the module "m" and for the request of type "r"
 ;   @r       -> for all actions for the request of type "r"
 

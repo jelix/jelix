@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
-* @contributor
-* @copyright   2005-2008 Laurent Jouanneau
+* @contributor GeekBay
+* @copyright   2005-2008 Laurent Jouanneau, 2010 Geekbay
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -119,23 +119,25 @@ class simpleUrlEngine implements jIUrlEngine {
         $script = $gJConfig->urlengine['defaultEntrypoint'];
 
         if(count($gJConfig->simple_urlengine_entrypoints)){
-           if($this->urlspe == null){
-               $this->urlspe = array();
-               foreach($gJConfig->simple_urlengine_entrypoints as $entrypoint=>$sel){
-                 $selectors = preg_split("/[\s,]+/", $sel);
-                 foreach($selectors as $sel2){
-                     $this->urlspe[$sel2]= $entrypoint;
-                 }
-               }
-           }
+            if($this->urlspe == null){
+                $this->urlspe = array();
+                foreach($gJConfig->simple_urlengine_entrypoints as $entrypoint=>$sel){
+                    $selectors = preg_split("/[\s,]+/", $sel);
+                    foreach($selectors as $sel2){
+                        $this->urlspe[$sel2]= $entrypoint;
+                    }
+                }
+            }
 
-           if($action && isset($this->urlspe[$s1 = $module.'~'.$action.'@'.$requestType])){
+            if ($action && isset($this->urlspe[$s1 = $module.'~'.$action.'@'.$requestType])){
                 $script = $this->urlspe[$s1];
-           }elseif($module &&  isset($this->urlspe[$s2 = $module.'~*@'.$requestType])){
+            }elseif($action && isset($this->urlspe[$s1 = $module.'~'.substr($action,0,strrpos($action,":")).':*@'.$requestType])){ 
+                $script = $this->urlspe[$s1];
+            }elseif($module &&  isset($this->urlspe[$s2 = $module.'~*@'.$requestType])){
                 $script = $this->urlspe[$s2];
-           }elseif( isset($this->urlspe[$s3 = '@'.$requestType])){
-               $script = $this->urlspe[$s3];
-           }
+            }elseif( isset($this->urlspe[$s3 = '@'.$requestType])){
+                $script = $this->urlspe[$s3];
+            }
         }
 
         return $script;

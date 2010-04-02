@@ -195,6 +195,7 @@ Olivier Gambier (aka d-m-p)
 Geekbay
  - fixed bug in jMailer about the support of html plugins into the template (#898)
  - fixed bug in jImageModifier (#945)
+ - improved the simple url engine (#917)
 
 Gildas Givaja (aka Giviz)
  - testor, bug fixes

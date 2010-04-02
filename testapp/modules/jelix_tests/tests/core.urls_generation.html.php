@@ -119,6 +119,8 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('urlsig:url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('jelix_tests~urlsig:url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
+      $urlList[]= array('jelix_tests~actu:foo', array('aaa'=>'bbb'));
+      $urlList[]= array('jelix_tests~actu:bar', array('aaa'=>'bbb'));
 
       $trueResult=array(
           "/index.php?mois=10&annee=2005&id=35&module=jelix_tests&action=urlsig:url1",
@@ -128,6 +130,8 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
           "/xmlrpc.php",
           "/index.php?rubrique=vetements&id_article=98&module=jelix_tests&action=urlsig:url8",
+          "/actu.php?aaa=bbb&module=jelix_tests&action=actu:foo",
+          "/actu.php?aaa=bbb&module=jelix_tests&action=actu:bar",
        );
 
 
@@ -145,6 +149,8 @@ class UTCreateUrls extends UnitTestCase {
           "/index?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
           "/xmlrpc",
           "/index?rubrique=vetements&id_article=98&module=jelix_tests&action=urlsig:url8",
+          "/actu?aaa=bbb&module=jelix_tests&action=actu:foo",
+          "/actu?aaa=bbb&module=jelix_tests&action=actu:bar",
        );
       $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
       $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];

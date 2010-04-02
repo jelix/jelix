@@ -98,6 +98,7 @@ simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
 ; nom_script_sans_suffix = "liste de selecteur séparé par un espace"
 ; selecteurs :
 ;   m~a@r    -> pour action a du module m répondant au type de requete r
+;   m~c:*@r  -> for all actions of the controller "c" of the module "m" and for the request of type "r"
 ;   m~*@r    -> pour toute action du module m répondant au type de requete r
 ;   @r       -> toute action de tout module répondant au type de requete r
 
@@ -108,6 +109,7 @@ testnews = "jelix_tests~urlsig:url2@classic jelix_tests~urlsig:url3@classic"
 foo/bar = "jelix_tests~urlsig:url4@classic"
 news = "new~*@classic"
 soap = "@soap"
+actu = "jelix_tests~actu:*@classic"
 
 __https=
 
