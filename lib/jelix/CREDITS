@@ -303,8 +303,9 @@ Sylvain de Vathaire (aka sylvain261)
  - jCache (#540)
  - additional generated events by jAuth (#1051)
 
-Brice Tence (aka brayce)
+Brice Tence (aka brayce/bricet)
  - small testapp bug solved about missing tables (#1064)
+ - fixed bug in jInstallChecker (#1087)
 
 Thanks for all users, especially those who reported bugs. :-)
 

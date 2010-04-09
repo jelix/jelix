@@ -6,8 +6,8 @@
 * @subpackage core
 * @author   Laurent Jouanneau
 * @contributor Bastien Jaillot
-* @contributor Olivier Demah
-* @copyright 2007-2009 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah
+* @contributor Olivier Demah, Brice Tence
+* @copyright 2007-2009 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0b2
@@ -67,16 +67,15 @@ class jInstallCheck {
             $this->checkPhpExtensions();
             $this->checkPhpSettings();
         }catch(Exception $e){
-            $this->error($this->messages->get('cannot.continue').$e->getMessage());
-            $this->nbError ++;
+            $this->error('cannot.continue',$e->getMessage());
         }
         $results = array('error'=>$this->nbError, 'warning'=>$this->nbWarning, 'ok'=>$this->nbOk,'notice'=>$this->nbNotice);
         $this->reporter->end($results);
     }
 
-    protected function error($msg){
+    protected function error($msg, $extraMsg=''){
         if($this->reporter)
-            $this->reporter->message($this->messages->get($msg), 'error');
+            $this->reporter->message($this->messages->get($msg).$extraMsg, 'error');
         $this->nbError ++;
     }
 
