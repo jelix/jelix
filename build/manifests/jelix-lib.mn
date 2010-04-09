@@ -257,6 +257,7 @@ cd lib/jelix/utils/
   jLog.class.php
   jMailer.class.php
   jMessage.class.php
+  jMinifier.class.php
   jSmtp.class.php
   jTcpdf.class.php
   jVersionComparator.class.php
@@ -557,6 +558,38 @@ cd lib/wshelper
 ! WSDLException.class.php
 ! WSDLStruct.class.php
 ! WSException.class.php
+
+cd lib/minify/min/lib
+! JSMinPlus.php
+! Minify.php
+! JSMin.php
+! FirePHP.php
+
+cd lib/minify/min/lib/Minify
+! YUICompressor.php
+! ImportProcessor.php
+! Lines.php
+! CommentPreserver.php
+! Build.php
+! CSS.php
+! Source.php
+! Logger.php
+! HTML.php
+! Packer.php
+
+cd lib/minify/min/lib/Minify/CSS
+! UriRewriter.php
+! Compressor.php
+
+cd lib/minify/min/lib/Minify/Controller
+! Version1.php
+! Groups.php
+! Base.php
+! Files.php
+! Page.php
+! MinApp.php
+
+
 
 cd lib/phpMailer
 ! class.phpmailer.php

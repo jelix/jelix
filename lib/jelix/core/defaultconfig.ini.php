@@ -94,6 +94,20 @@ htmlfragment = jResponseHtmlFragment
 htmlauth = jResponseHtml
 sitemap = jResponseSitemap
 
+[jResponseHtml]
+;concatenate and minify CSS and/or JS files :
+minifyCSS = off
+minifyJS = off
+; check all filemtime() of source files to check if minify's cache should be generated again. Should be set to "off" on production servers :
+minifyCheckCacheFiletime = on
+; list of filenames (no path) which shouldn't be minified :
+minifyExcludeCSS = ""
+minifyExcludeJS = ""
+; add a unique ID to CSS and/or JS files URLs ( this gives for exemple /file.js?1267704635 ). This ID is actually the filemtime of each served file :
+jsUniqueUrlId = off
+cssUniqueUrlId = off
+
+
 [error_handling]
 messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
 logFile = error.log

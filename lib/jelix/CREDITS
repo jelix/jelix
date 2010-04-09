@@ -306,6 +306,7 @@ Sylvain de Vathaire (aka sylvain261)
 Brice Tence (aka brayce/bricet)
  - small testapp bug solved about missing tables (#1064)
  - fixed bug in jInstallChecker (#1087)
+ - introduced optional jMinifier for jResponseHtml for JS/CSS concatenation and minification (#860)
 
 Thanks for all users, especially those who reported bugs. :-)
 
