@@ -123,7 +123,7 @@ abstract class jResponse {
      * send http headers
      */
     protected function sendHttpHeaders(){
-        header("HTTP/1.0 ".$this->_httpStatusCode.' '.$this->_httpStatusMsg);
+        header("HTTP/1.1 ".$this->_httpStatusCode.' '.$this->_httpStatusMsg);
         foreach($this->_httpHeaders as $ht=>$hc){
             header($ht.': '.$hc);
         }
