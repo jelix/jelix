@@ -11,75 +11,10 @@
 */
 
 require(dirname(__FILE__).'/jtpl/jtpl_standalone_prepend.php');
-
-
-class installWizardPage {
-    
-    protected $config;
-    protected $locales = array();
-    protected $errors = array();
-    
-    function __construct($confParameters, $locales) {
-        $this->config = $confParameters;
-        $this->locales = $locales;
-        
-    }
-    
-    /**
-     * action to display the page
-     * @param jTpl $tpl the template container
-     */
-    function show ($tpl) {
-        
-    }
-    
-    /**
-     * action to process the page after the submit
-     */
-    function process() {
-        
-    }
-
-    function getErrors() {
-        return $this->errors;
-    }
-
-}
-
-/*
- 
- pagesPath = liste repertoires de pages wizard
- customPath = repertoire de redefinition
- start = nom page de demarrage
- tempPath =
- supportedLang = en,fr
- 
- 
- 
- nom template layout : main.tpl situé dans wizard, et pouvant etre redefinis
- 
- 
- 
- repertoire pour chaque page
- foo/
-    foo.page.php
-    foo.tpl
-    foo.en.php
-    foo.fr.php
-
-*/
-
+require(dirname(__FILE__).'/installWizardPage.php');
 
 /**
  * main class of the wizard
- *
- *
- *
- *
- * template
- * langue
- *
- *
  *
  */
 class installWizard {
@@ -171,12 +106,9 @@ class installWizard {
                 return;
         }
         if (!isset($this->pages[$step]) || !isset($this->config[$step.'.step'])) {
-//var_export($this->pages);
-//echo "step $step: stop1<br>";
             return;
         }
         if (isset($this->config[$step.'.step']['__previous'])) {
-//echo "step $step: stop2<br>";
             return;
         }
         
@@ -186,7 +118,6 @@ class installWizard {
             $this->config[$step.'.step']['__previous'] = $previousStep;
         
         if (!isset($this->config[$step.'.step']['next'])) {
-//echo "step $step: stop3<br>";
             return;
         }
         
@@ -247,11 +178,10 @@ class installWizard {
             $this->initPath();
 
             $this->initPrevious();
-//var_export($this->config);
+
             $this->guessLanguage();
 
             $this->getStepName();
-
 
             jTplConfig::$lang = $this->lang;
             jTplConfig::$localesGetter = array($this, 'getLocale');

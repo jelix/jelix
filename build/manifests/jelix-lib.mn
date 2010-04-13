@@ -636,10 +636,12 @@ cd lib/jelix-plugins/kvdb/file
 cd lib/installwizard/
   error.php
   installWizard.php
+  installWizardPage.php
+  install.php.dist
   wiz_layout.en.php
   wiz_layout.tpl
-  install.php.dist
   wizard.ini.php.dist
+  README.txt
 cd lib/installwizard/pages/end/
   end.en.php
   end.page.php
