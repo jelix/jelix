@@ -632,3 +632,24 @@ cd lib/jelix-plugins/cache/file
 cd lib/jelix-plugins/kvdb/file
   file.kvdriver.php
   LICENCE
+
+cd lib/installwizard/
+  error.php
+  installWizard.php
+  wiz_layout.en.php
+  wiz_layout.tpl
+  install.php.dist
+  wizard.ini.php.dist
+cd lib/installwizard/pages/end/
+  end.en.php
+  end.page.php
+  end.tpl
+cd lib/installwizard/pages/welcome/
+  welcome.en.php
+  welcome.page.php
+  welcome.tpl
+cd lib/installwizard/pages/checkjelix/
+  checkjelix.en.php
+  checkjelix.page.php
+  checkjelix.tpl
+

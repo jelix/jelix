@@ -153,8 +153,12 @@ $BUILD_OPTIONS = array(
     ),
 'VERBOSE'=> array(
     "show messages",
-    false
-),
+    false,
+    ),
+'JTPL_VERSION'=> array(
+    false,
+    '',
+    ),
 /*''=> array(
     "",
     '',
@@ -303,6 +307,24 @@ if($INCLUDE_ALL_FONTS){
 if($ENABLE_PHP_JELIX && ($PACKAGE_TAR_GZ || $PACKAGE_ZIP)){
    jManifest::process('build/manifests/jelix-ext-php.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
+
+
+// jtpl standalone for wizard
+
+Env::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
+if($IS_NIGHTLY){
+    $JTPL_VERSION = str_replace('SERIAL', $HG_REVISION, $JTPL_VERSION);
+}
+
+$var = ENV::getAll();
+$var['JTPL_STANDALONE'] = true;
+$jtplpath = $BUILD_TARGET_PATH.'lib/installwizard/jtpl/';
+jBuildUtils::createDir($jtplpath);
+jManifest::process('build/manifests/jtpl-standalone.mn', '.', $jtplpath, $var);
+file_put_contents($jtplpath.'/VERSION', $JTPL_VERSION);
+
+
+// the standalone checker
 
 $var = ENV::getAll();
 $var['STANDALONE_CHECKER'] = true;
