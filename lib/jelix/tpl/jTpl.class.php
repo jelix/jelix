@@ -17,7 +17,7 @@
 class jTpl {
 
 #if JTPL_STANDALONE
-#expand     const VERSION = '__VERSION__';
+#expand     const VERSION = '__JTPL_VERSION__';
 #endif
 
     /**
@@ -372,4 +372,15 @@ class jTpl {
         return $GLOBALS['gJConfig']->charset;
 #endif
     }
+
+#if JTPL_STANDALONE
+    public function getLocaleString($locale) {
+        $getter = jTplConfig::$localesGetter;
+        if ($getter)
+            $res = call_user_func($getter, $locale);
+        else
+            $res = $locale;
+        return $res;
+    }
+#endif
 }

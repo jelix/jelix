@@ -30,7 +30,7 @@ $BUILD_OPTIONS = array(
     "includes tests",
     false,
     ),
-'VERSION'=> array(
+'JTPL_VERSION'=> array(
     false,
     '',
     ),
@@ -79,19 +79,19 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 
 //----------------- Preparation des variables d'environnement
 
-Env::setFromFile('VERSION','lib/jelix/tpl/VERSION', true);
+Env::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
 $HG_REVISION = Mercurial::revision(dirname(__FILE__).'/../');
 
-$IS_NIGHTLY = (strpos($VERSION,'SERIAL') !== false);
+$IS_NIGHTLY = (strpos($JTPL_VERSION,'SERIAL') !== false);
 
 if($IS_NIGHTLY){
-    $PACKAGE_NAME='jtpl-'.str_replace('SERIAL', '', $VERSION);
+    $PACKAGE_NAME='jtpl-'.str_replace('SERIAL', '', $JTPL_VERSION);
     if(substr($PACKAGE_NAME,-1,1) == '.')
       $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
-    $VERSION = str_replace('SERIAL', $HG_REVISION, $VERSION);
+    $JTPL_VERSION = str_replace('SERIAL', $HG_REVISION, $JTPL_VERSION);
 }
 else {
-    $PACKAGE_NAME='jtpl-'.$VERSION;
+    $PACKAGE_NAME='jtpl-'.$JTPL_VERSION;
 }
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
@@ -132,9 +132,7 @@ if($WITH_TESTS) {
     jManifest::process('build/manifests/jtpl-standalone-tests.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
 }
 
-
-
-file_put_contents($BUILD_TARGET_PATH.'/VERSION', $VERSION);
+file_put_contents($BUILD_TARGET_PATH.'/VERSION', $JTPL_VERSION);
 
 //... packages
 

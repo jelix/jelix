@@ -640,7 +640,7 @@ class jTplCompiler
                             $this->doError1('errors.tpl.tag.locale.invalid', $this->_currentTag);
                         } else {
 #if JTPL_STANDALONE
-                            $result .= '${jTplConfig::$localesGetter}(\''.$locale.'\')';
+                            $result .= '$t->getLocaleString(\''.$locale.'\')';
 #else
                             $result .= 'jLocale::get(\''.$locale.'\')';
 #endif
