@@ -78,6 +78,8 @@ In a jelix application, it can be temp/myapp.
 
 supportedLang contains the list of language code supported by your wizard.
 
+appname : the name of your application
+
 Calling the wizard
 ------------------
 

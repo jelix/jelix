@@ -194,11 +194,11 @@ class jInstallCheck {
         else
             throw new Exception($this->messages->get('too.critical.error'));
 
-        if(!isset($GLOBALS['config_file']) ||
+        /*if(!isset($GLOBALS['config_file']) ||
            empty($GLOBALS['config_file']) ||
            !file_exists(JELIX_APP_CONFIG_PATH.$GLOBALS['config_file'])){
             throw new Exception($this->messages->get('config.file'));
-        }
+        }*/
 
         return $ok;
     }

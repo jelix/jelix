@@ -7,6 +7,8 @@ start = welcome
 tempPath = "../../temp/testapp/"
 supportedLang = en
 
+appname = TestApp
+
 [welcome.step]
 next=checkjelix
 

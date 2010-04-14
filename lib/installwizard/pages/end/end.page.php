@@ -18,7 +18,7 @@ class endWizPage extends installWizardPage {
      * @param jTpl $tpl the template container
      */
     function show ($tpl) {
-        
+        return false;
     }
     
     /**

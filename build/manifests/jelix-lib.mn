@@ -651,7 +651,7 @@ cd lib/installwizard/pages/welcome/
   welcome.page.php
   welcome.tpl
 cd lib/installwizard/pages/checkjelix/
-  checkjelix.en.php
+* checkjelix.en.php
   checkjelix.page.php
   checkjelix.tpl
 

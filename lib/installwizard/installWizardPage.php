@@ -20,7 +20,7 @@ class installWizardPage {
      * in the main configuration (install.ini.php)
      * @var array
      */
-    protected $config;
+    public $config;
     
     /**
      * the content of the locales file corresponding to the current lang
@@ -50,10 +50,10 @@ class installWizardPage {
      * @param jTpl $tpl the template container which will be used
      * to display the page. The template should be store in the
      * same directory of the page class, with the same prefix.
-     * @return void
+     * @return boolean true if the wizard can continue
      */
     function show ($tpl) {
-
+        return true;
     }
 
     /**

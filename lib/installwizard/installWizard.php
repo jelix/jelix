@@ -18,23 +18,23 @@ require(dirname(__FILE__).'/installWizardPage.php');
  *
  */
 class installWizard {
-    
+
     protected $config;
-    
+
     protected $configPath;
-    
+
     protected $lang = 'en';
-    
+
     protected $pages = array();
-    
+
     protected $customPath = '';
-    
+
     protected $tempPath = '';
-    
+
     protected $stepName = "";
-    
+
     protected $locales = array();
-    
+
     /**
      * @param string $config an ini file for the installation
      * should contain this parameter:
@@ -43,6 +43,7 @@ class installWizard {
     function __construct($configFile) {
         $this->configPath = $configFile;
         session_start();
+        date_default_timezone_set("Europe/Paris");
     }
 
     protected function readConfiguration() {
@@ -57,8 +58,7 @@ class installWizard {
         else
             $this->config['supportedLang'] = array('en');
     }
-    
-    
+
     protected function initPath() {
 
         $list = preg_split('/ *, */',$this->config['pagesPath']);
@@ -129,7 +129,6 @@ class installWizard {
             $this->initPrevious($this->config[$step.'.step']['next'], $step);
     }
 
-
     protected function guessLanguage($lang = '') {
         if($lang == '' && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
             $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
@@ -146,9 +145,8 @@ class installWizard {
         if($lang == '' || !in_array($lang, $this->config['supportedLang'])){
             $lang = 'en';
         }
-        $this->lang = $lang;
+        return $lang;
     }
-    
 
     protected function getStepName() {
         if (isset($_REQUEST['step'])) {
@@ -164,12 +162,24 @@ class installWizard {
         if (!isset($this->pages[$stepname])) {
             throw new Exception('Unknow step');
         }
-        
-        $this->stepName = $stepname;
+
+        return $stepname;
+    }
+
+    protected function getNextStep($page) {
+        if (is_array($page->config['next'])) {
+            if (is_numeric($result))
+                $nextStep = $page->config['next'][$result];
+            else
+                $nextStep = $page->config['next'][0];
+        }
+        else
+            $nextStep = $page->config['next'];
+        return $nextStep;
     }
 
 
-    function  run() {
+    function run () {
 
         try {
 
@@ -179,44 +189,43 @@ class installWizard {
 
             $this->initPrevious();
 
-            $this->guessLanguage();
+            $this->lang = $this->guessLanguage();
 
-            $this->getStepName();
+            $this->stepName = $this->getStepName();
 
             jTplConfig::$lang = $this->lang;
             jTplConfig::$localesGetter = array($this, 'getLocale');
             jTplConfig::$cachePath = $this->tempPath;
 
-            $content = $this->processStep();
+            $page = $this->loadPage();
 
-            $filename = "wiz_layout.tpl";
-            $path = $this->getRealPath('', $filename);
-            jTplConfig::$templatePath = dirname($path).'/';
-            
-            $this->loadLocales('', 'wiz_layout');
-            
-            $conf = $this->config[$this->stepName.'.step'];
+            if (isset($_POST['doprocess']) && $_POST['doprocess'] == "1") {
+                $result = $page->process();
+                if ($result !== false) {
+                    header("location: ?step=".$this->getNextStep($page));
+                    exit(0);
+                }
+            }
+
             $tpl = new jTpl();
-            $tpl->assign ('MAIN', $content);
-            $tpl->assign (array_merge(array('enctype'=>''),$conf));
-            $tpl->assign ('stepname', $this->stepName);
-            $tpl->assign ('lang', $this->lang);
-            $tpl->assign('next', isset($conf['next']));
-            $tpl->assign('previous', isset($conf['__previous'])?$conf['__previous']:'');
+            $tpl->assign($page->config);
+            $tpl->assign($page->getErrors());
             $tpl->assign('appname', isset($this->config['appname'])?$this->config['appname']:'');
 
-            $tpl->display($filename, 'html');
+            $continue = $page->show($tpl);
+            $content = $tpl->fetch($this->stepName.'.tpl', 'html');
 
+            $this->showMainTemplate($content, $continue);
+            
         } catch (Exception $e) {
             $error = $e->getMessage();
             require(dirname(__FILE__).'/error.php');
             exit(1);
         }
-
     }
     
     
-    protected function processStep() {
+    protected function loadPage() {
         $stepname = $this->stepName;
         // load the class which run the step
         require($this->pages[$stepname].$stepname.'.page.php');
@@ -234,38 +243,30 @@ class installWizard {
 
         jTplConfig::$templatePath = dirname($tplfile).'/';
 
-        $stepconfig = $this->config[$stepname.'.step'];
-        $page = new $class($stepconfig, $this->locales);
-
-        $otherTplVars = array();
-
-        if (isset($_POST['doprocess']) && $_POST['doprocess'] == "1") {
-            $result = $page->process();
-            if ($result !== false) {
-                if (is_array($stepconfig['next'])) {
-                    if (is_numeric($result))
-                        $nextStep = $stepconfig['next'][$result];
-                    else
-                        $nextStep = $stepconfig['next'][0];
-                }
-                else
-                    $nextStep = $stepconfig['next'];
-                header("location: ?step=".$nextStep);
-                exit(0);
-            }
-            $otherTplVars = $page->getErrors();
-        }
-
-        $tpl = new jTpl();
-        if (count($otherTplVars))
-            $tpl->assign($otherTplVars);
-        $tpl->assign($stepconfig);
-        $tpl->assign('appname', isset($this->config['appname'])?$this->config['appname']:'');
-
-        
-        $page->show($tpl);
-        return $tpl->fetch($stepname.'.tpl', 'html');
+        $page = new $class($this->config[$stepname.'.step'], $this->locales);
+        return $page;
     }
+    
+    protected function showMainTemplate($content, $continue) {
+        $filename = "wiz_layout.tpl";
+        $path = $this->getRealPath('', $filename);
+        jTplConfig::$templatePath = dirname($path).'/';
+    
+        $this->loadLocales('', 'wiz_layout');
+    
+        $conf = $this->config[$this->stepName.'.step'];
+        $tpl = new jTpl();
+        $tpl->assign ('MAIN', $content);
+        $tpl->assign (array_merge(array('enctype'=>''),$conf));
+        $tpl->assign ('stepname', $this->stepName);
+        $tpl->assign ('lang', $this->lang);
+        $tpl->assign('next', ($continue && isset($conf['next'])));
+        $tpl->assign('previous', isset($conf['__previous'])?$conf['__previous']:'');
+        $tpl->assign('appname', isset($this->config['appname'])?$this->config['appname']:'');
+    
+        $tpl->display($filename, 'html');
+    }
+    
     
     protected function getRealPath($stepname, $fileName) {
         if ($this->customPath) {

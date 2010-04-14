@@ -11,23 +11,43 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-class checkjelixWizPage extends installWizardPage {
+$lib_jelix = dirname(__FILE__).'/../../../jelix/';
+include $lib_jelix.'/installer/jIInstallReporter.iface.php';
+include $lib_jelix.'/installer/jInstallerMessageProvider.class.php';
+include $lib_jelix.'/installer/jInstallChecker.class.php';
+
+/**
+ * page for a wizard, to check a jelix installation
+ */
+class checkjelixWizPage extends installWizardPage  implements jIInstallReporter {
     
+    protected $tpl;
+    protected $messages;
+
     /**
      * action to display the page
      * @param jTpl $tpl the template container
      */
     function show ($tpl) {
-    }
-    
-    /**
-     * action to process the page after the submit
-     */
-    function process() {
-        if ( isset($_POST['confirm']) && $_POST['confirm'] == 'ok')
-            return 0;
-        $this->errors ['error1'] = 'you should check';
-        return false;
+        $this->tpl = $tpl;
+        $check = new jInstallCheck($this);
+        $check->run();
+        
+        return ($check->nbError == 0);
     }
 
+    //----- jIInstallReporter implementation
+
+    function start() {}
+
+    function message($message, $type=''){
+        $this->messages[] = array($type, $message);
+    }
+    
+    function end($results){
+        $this->tpl->assign('messages', $this->messages);
+        $this->tpl->assign('nbError', $results['error']);
+        $this->tpl->assign('nbWarning', $results['warning']);
+        $this->tpl->assign('nbNotice', $results['notice']);
+    }
 }

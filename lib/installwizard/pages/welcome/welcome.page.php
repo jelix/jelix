@@ -18,7 +18,7 @@ class welcomeWizPage extends installWizardPage {
      * @param jTpl $tpl the template container
      */
     function show ($tpl) {
-        
+        return true;
     }
     
     /**
