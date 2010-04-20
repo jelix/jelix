@@ -39,11 +39,21 @@ class jDbPDOConnection extends PDO {
      */
     function __construct($profile) {
         $this->profile = $profile;
-        $this->dbms = substr($profile['dsn'],0,strpos($profile['dsn'],':'));
         $prof = $profile;
         $user = '';
         $password = '';
-        unset($prof['dsn']);
+        $dsn = '';
+        if (isset($profile['dsn'])) {
+            $this->dbms = substr($profile['dsn'],0,strpos($profile['dsn'],':'));
+            $dsn = $profile['dsn'];
+            unset($prof['dsn']);
+        }
+        else {
+            $this->dbms = $profile['driver'];
+            $dsn = $this->dbms.':host='.$profile['host'].';dbname='.$profile['database'];
+        }
+        if(isset($prof['usepdo']))
+            unset($prof['usepdo']);
 
         // we check user and password because some db like sqlite doesn't have user/password
         if (isset($prof['user'])) {
@@ -58,9 +68,9 @@ class jDbPDOConnection extends PDO {
 
         unset($prof['driver']);
         if ($this->dbms == 'sqlite')
-            $profile['dsn'] = str_replace(array('app:','lib:'), array(JELIX_APP_PATH, LIB_PATH), $profile['dsn']);
+            $dsn = str_replace(array('app:','lib:'), array(JELIX_APP_PATH, LIB_PATH), $dsn);
 
-        parent::__construct($profile['dsn'], $user, $password, $prof);
+        parent::__construct($dsn, $user, $password, $prof);
 
         $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

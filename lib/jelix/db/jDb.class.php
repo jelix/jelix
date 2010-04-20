@@ -184,7 +184,7 @@ class jDb {
     * @return jDbConnection|jDbPDOConnection  database connector
     */
     private static function _createConnector ($profile) {
-        if ($profile['driver'] == 'pdo') {
+        if ($profile['driver'] == 'pdo' || (isset($profile['usepdo']) && $profile['usepdo'])) {
             $dbh = new jDbPDOConnection($profile);
             return $dbh;
         }

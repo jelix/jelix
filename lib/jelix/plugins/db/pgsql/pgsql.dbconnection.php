@@ -140,7 +140,7 @@ class pgsqlDbConnection extends jDbConnection {
         return $cnx;
     }
 
-    protected function _disconnect (){
+    protected function _disconnect () {
         return pg_close ($this->_connection);
     }
 
