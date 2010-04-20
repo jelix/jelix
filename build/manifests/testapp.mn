@@ -35,6 +35,8 @@ cd testapp/modules
 cd testapp/install
   installer.php
   wizard.ini.php
+cd testapp/install/wizard
+  wiz_layout.en.php
 
 cd testapp/scripts
     cmdline.php

@@ -14,7 +14,12 @@
  * base class to implement a wizard page
  */
 class installWizardPage {
-    
+
+    /**
+     * the locale key of the title of the page.
+     */
+    public $title = 'title';
+
     /**
      * The content of the configuration in the corresponding section of the page
      * in the main configuration (install.ini.php)
@@ -62,7 +67,7 @@ class installWizardPage {
      * It should return the index of the "next" step name stored
      * in the configuration.
      *
-     * @return integer the index of the "next" step name
+     * @return integer|false the index of the "next" step name, or false if there are errors
      */
     function process() {
         return 0;
@@ -74,5 +79,16 @@ class installWizardPage {
      */
     function getErrors() {
         return $this->errors;
+    }
+
+    /**
+     * return the localized string
+     * @param string $key the key of the locale
+     * @return string the localized string
+     */
+    function getLocale($key) {
+        if(isset($this->locales[$key]))
+            return $this->locales[$key];
+        else return '';
     }
 }

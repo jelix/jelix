@@ -33,7 +33,10 @@
           <input type="hidden" name="doprocess" value="1" />
         </div>
         <div id="content">
-        {$MAIN}
+          <h2>{$title|eschtml}</h2>
+          {if $messageHeader}<div id="contentheader">{@$messageHeader@|eschtml}</div>{/if}
+          {$MAIN}
+          {if $messageFooter}<div id="contentFooter">{@$messageFooter@|eschtml}</div>{/if}
         </div>
         <div id="buttons">
           {if $previous}

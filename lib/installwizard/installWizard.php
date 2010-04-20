@@ -211,11 +211,10 @@ class installWizard {
             $tpl->assign($page->config);
             $tpl->assign($page->getErrors());
             $tpl->assign('appname', isset($this->config['appname'])?$this->config['appname']:'');
-
             $continue = $page->show($tpl);
             $content = $tpl->fetch($this->stepName.'.tpl', 'html');
 
-            $this->showMainTemplate($content, $continue);
+            $this->showMainTemplate($page, $content, $continue);
             
         } catch (Exception $e) {
             $error = $e->getMessage();
@@ -247,15 +246,25 @@ class installWizard {
         return $page;
     }
     
-    protected function showMainTemplate($content, $continue) {
+    protected function showMainTemplate($page, $content, $continue) {
         $filename = "wiz_layout.tpl";
         $path = $this->getRealPath('', $filename);
         jTplConfig::$templatePath = dirname($path).'/';
-    
+
         $this->loadLocales('', 'wiz_layout');
-    
+
         $conf = $this->config[$this->stepName.'.step'];
         $tpl = new jTpl();
+        $tpl->assign('title', $page->getLocale($page->title));
+        if (isset($conf['messageHeader']))
+            $tpl->assign('messageHeader', $conf['messageHeader']);
+        else
+            $tpl->assign('messageHeader', '');
+        if (isset($conf['messageFooter']))
+            $tpl->assign('messageFooter', $conf['messageFooter']);
+        else
+            $tpl->assign('messageFooter', '');
+
         $tpl->assign ('MAIN', $content);
         $tpl->assign (array_merge(array('enctype'=>''),$conf));
         $tpl->assign ('stepname', $this->stepName);
@@ -266,8 +275,7 @@ class installWizard {
     
         $tpl->display($filename, 'html');
     }
-    
-    
+
     protected function getRealPath($stepname, $fileName) {
         if ($this->customPath) {
             if (file_exists($this->customPath.$fileName))
