@@ -251,7 +251,7 @@ class jPreProcessor{
                     }
                     $tline=false;
                 }
-            }elseif(preg_match('/^\#include(php)?\s+([\w\/\.\:]+)\s*$/m',$sline,$m)){
+            }elseif(preg_match('/^\#include(php|raw)?\s+([\w\/\.\:\-]+)\s*$/m',$sline,$m)){
                 if($isOpen){
                     $path = $m[2];
                     if(!($path[0] == '/' || preg_match('/^\w\:\\.+$/',$path))){
@@ -261,12 +261,17 @@ class jPreProcessor{
                         }
                     }
                     if(file_exists($path) && !is_dir($path)){
-                        $preproc = new jPreProcessor();
-                        $preproc->_doSaveVariables = false;
-                        $preproc->setVars($this->_variables);
-                        $tline = $preproc->parseFile($path);
-                        $this->_variables = $preproc->_variables;
-                        $preproc = null;
+                        if ($m[1]  == 'raw') {
+                            $tline = file_get_contents($path);  
+                        }
+                        else {
+                            $preproc = new jPreProcessor();
+                            $preproc->_doSaveVariables = false;
+                            $preproc->setVars($this->_variables);
+                            $tline = $preproc->parseFile($path);
+                            $this->_variables = $preproc->_variables;
+                            $preproc = null;
+                        }
                     }else{
                         throw new jExceptionPreProc($filename,$nb,self::ERR_INVALID_FILENAME,$m[2] );
                     }
@@ -359,4 +364,3 @@ class jPreProcessor{
     }
 }
 
-?>

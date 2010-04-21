@@ -106,7 +106,7 @@ class jManifest {
                         try{
                             $contents = $preproc->parseFile($sourcefile);
                         }catch(Exception $e){
-                            throw new Exception ( "$ficlist : line $nbline, cannot process file ".$m[2]." (". $e->getMessage() .")\n");
+                            throw new Exception ( "$ficlist : line $nbline, cannot process file ".$m[2]." (". $e .")\n");
                         }
                         if($doCompression) {
                             if( preg_match("/\.php$/",$destfile)) {
