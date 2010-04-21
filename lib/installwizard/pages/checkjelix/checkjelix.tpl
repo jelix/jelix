@@ -1,6 +1,6 @@
 
 <ul class="checkresults">
-  {foreach $messages as $msg} <li class="check{$msg[0]}">{$msg[1]|eschtml}</li>
+  {foreach $messages as $msg} <li class="{$msg[0]}">{$msg[1]|eschtml}</li>
   {/foreach}
 </ul>
 

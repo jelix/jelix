@@ -3,6 +3,6 @@
 $locales = array(
 
   'title'=>'End',
-  'finish'=>'the installation is finished',
+  'finish'=>'The installation is finished',
 
 );

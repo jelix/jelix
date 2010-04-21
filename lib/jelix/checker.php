@@ -5,9 +5,9 @@
 *
 * @package     jelix
 * @subpackage  core
-* @author      Jouanneau Laurent
-* @copyright   2007-2009 Jouanneau laurent
-* @link        http://www.jelix.org
+* @author      Laurent Jouanneau
+* @copyright   2007-2010 Laurent Jouanneau
+* @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since       1.0b2
 */
@@ -35,7 +35,7 @@ class jHtmlInstallChecker implements jIInstallReporter {
     }
 
     function message($message, $type=''){
-        echo '<li class="check'.$type.'">'.htmlspecialchars($message).'</li>';
+        echo '<li class="'.$type.'">'.htmlspecialchars($message).'</li>';
     }
     
     function end($results){
@@ -84,22 +84,11 @@ header("Content-type:text/html;charset=UTF-8");
     <title><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></title>
 
     <style type="text/css">
-    body {font-family: verdana, sans-serif;}
-
-    ul.checkresults {
-        border:3px solid black;
-        margin: 2em;
-        padding:1em;
-        list-style-type:none;
-    }
-    ul.checkresults li { margin:0; padding:5px; border-top:1px solid black; }
-    li.checkerror   { background-color:#ff6666;}
-    li.checkok      { background-color:#a4ffa9;}
-    li.checkwarning { background-color:#ffbc8f;}
-    </style>
+#includeraw ../jelix-www/design/jelix.css
+</style>
 
 </head><body >
-    <h1><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></h1>
+    <h1 class="apptitle"><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></h1>
 
 <?php $check->run(); ?>
 </body>

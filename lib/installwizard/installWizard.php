@@ -271,7 +271,7 @@ class installWizard {
         $tpl->assign ('lang', $this->lang);
         $tpl->assign('next', ($continue && isset($conf['next'])));
         $tpl->assign('previous', isset($conf['__previous'])?$conf['__previous']:'');
-        $tpl->assign('appname', isset($this->config['appname'])?$this->config['appname']:'');
+        $tpl->assign('appname', isset($this->config['appname'])?$this->config['appname']:'Application');
     
         $tpl->display($filename, 'html');
     }

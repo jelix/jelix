@@ -446,7 +446,7 @@ class jInstaller {
      */
     protected function _installModules(&$modules, $epId, $installWholeApp, $flags=3) {
 
-        $this->ok('install.entrypoint.start', $epId);
+        $this->notice('install.entrypoint.start', $epId);
 
         $ep = $this->entryPoints[$epId];
         $GLOBALS['gJConfig'] = $ep->config;
@@ -539,7 +539,7 @@ class jInstaller {
         }
 
         if (!$result) {
-            $this->ok('install.entrypoint.bad.end', $epId);
+            $this->warning('install.entrypoint.bad.end', $epId);
             return false;
         }
 
@@ -601,7 +601,7 @@ class jInstaller {
         }
 
         if (!$result) {
-            $this->ok('install.entrypoint.bad.end', $epId);
+            $this->warning('install.entrypoint.bad.end', $epId);
             return false;
         }
 

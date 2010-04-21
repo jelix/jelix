@@ -22,7 +22,8 @@ messageHeader="message.header.dbProfile"
 
 [installapp.step]
 next=end
-;level=notice
+level=notice
 
 [end.step]
 noprevious = on
+messageFooter = "message.footer.end"

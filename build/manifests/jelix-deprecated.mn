@@ -68,6 +68,8 @@ cd lib/jelix-plugins/
 
 cd lib/jelix-www/js
   jforms.js
+cd lib/jelix-www/design/
+  fond-bandeau.png
 
 rmd lib/tcpdf/barcode
 rmd lib/tcpdf/config/lang

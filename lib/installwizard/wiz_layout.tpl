@@ -5,26 +5,14 @@
     <title>Installation Wizard</title>
 
     <style type="text/css">{literal}
-    body {font-family: verdana, sans-serif;}
-
-    ul.checkresults {
-        border:3px solid black;
-        margin: 2em;
-        padding:1em;
-        list-style-type:none;
-    }
-    ul.checkresults li { margin:0; padding:5px; border-top:1px solid black; }
-    li.checkerror   { background-color:#ff6666;}
-    li.checkok      { background-color:#a4ffa9;}
-    li.checkwarning { background-color:#ffbc8f;}
-    
-    .error  { background-color:#ff6666;}
+#includeraw ../jelix-www/design/jelix.css
+   #buttons { margin: 0 auto; width: 924px; text-align:center}
     {/literal}</style>
 
 </head>
 
 <body >
-    <h1>{@maintitle@}</h1>
+    <h1 class="apptitle">{$appname} <br/><span class="welcome">{@maintitle@}</span></h1>
 
     <div id="main">
       <form action="install.php" {if $enctype}enctype="{$enctype}"{/if} method="post">
@@ -32,11 +20,15 @@
           <input type="hidden" name="step" value="{$stepname}" />
           <input type="hidden" name="doprocess" value="1" />
         </div>
-        <div id="content">
-          <h2>{$title|eschtml}</h2>
-          {if $messageHeader}<div id="contentheader">{@$messageHeader@|eschtml}</div>{/if}
-          {$MAIN}
-          {if $messageFooter}<div id="contentFooter">{@$messageFooter@|eschtml}</div>{/if}
+        <div id="page">
+          <div class="block">
+            <h2>{$title|eschtml}</h2>
+            <div class="blockcontent">
+            {if $messageHeader}<div id="contentheader">{@$messageHeader@|eschtml}</div>{/if}
+            {$MAIN}
+            {if $messageFooter}<div id="contentFooter">{@$messageFooter@|eschtml}</div>{/if}
+            </div>
+          </div>
         </div>
         <div id="buttons">
           {if $previous}

@@ -1,12 +1,12 @@
 {meta_html css $j_jelixwww.'design/jelix.css'}
 
 <div id="page">
-    <div class="logo"><img src="{$j_jelixwww}design/images/logo_jelix_moyen.png" alt=""/></div>
+    <div class="logo">Propulsée par <img src="{$j_jelixwww}design/images/logo_jelix_100.png" alt="jelix"/></div>
 
     <div class="nocss">
         <hr />
         <p>Si vous voyez ce message, c'est que vous n'avez pas rendu accessible
-          les fichiers web (js et css) de Jelix. Deux solutions :</p>
+          les fichiers web (js et css) de Jelix. Deux solutions&nbsp;:</p>
         <ul>
             <li>vous pouvez configurer votre virtualhost et créer un alias
             <em>{$j_basepath}jelix/</em> pointant vers <em>lib/jelix-www/</em></li>
@@ -22,14 +22,14 @@
         <hr />
     </div>
 
-    <div class="monbloc">
+    <div class="block">
         <h2>Vérification de l'installation</h2>
         <div class="blockcontent">
             {$check}
         </div>
     </div>
 
-    <div class="monbloc">
+    <div class="block">
         <h2>Ceci est une page temporaire</h2>
         <div class="blockcontent">
             <p>Cette page est affichée par le contrôleur <em>default.classic.php</em>
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="monbloc">
+    <div class="block">
         <h2>Que faire maintenant ?</h2>
         <div class="blockcontent">
             <ul>

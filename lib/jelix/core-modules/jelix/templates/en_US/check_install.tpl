@@ -1,7 +1,7 @@
 {meta_html css $j_jelixwww.'design/jelix.css'}
 
 <div id="page">
-    <div class="logo"><img src="{$j_jelixwww}design/images/logo_jelix_moyen.png" alt=""/></div>
+    <div class="logo">Powered by <img src="{$j_jelixwww}design/images/logo_jelix_100.png" alt="Jelix"/></div>
 
     <div class="nocss">
         <hr />
@@ -21,14 +21,14 @@
         <hr />
     </div>
 
-    <div class="monbloc">
+    <div class="block">
         <h2>Installation check</h2>
         <div class="blockcontent">
             {$check}
         </div>
     </div>
 
-    <div class="monbloc">
+    <div class="block">
         <h2>This is a temporary page</h2>
         <div class="blockcontent">
             <p>This page is displayed by the <em>default.classic.php</em> controller stored in the module of your application.
@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <div class="monbloc">
+    <div class="block">
         <h2>What to do now ?</h2>
         <div class="blockcontent">
             <ul>

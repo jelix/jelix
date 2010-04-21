@@ -28,13 +28,14 @@ class installappWizPage extends installWizardPage {
             $level = 'warning';
         
         
-        $reporter = new wizInstallReporter($level);
+        $reporter = new wizInstallReporter($level, $this);
         $installer = new jInstaller($reporter);
-        $installer->installApplication();
+        $ok = $installer->installApplication();
         
         $tpl->assign('messages', $reporter->messages);
+        $tpl->assign('installok', $ok);
         
-        return true;
+        return $ok;
     }
     
     /**
@@ -56,13 +57,14 @@ class wizInstallReporter implements jIInstallReporter {
 
     public $messages = array();
     
-    function __construct($level= 'notice') {
-       $this->level = $level; 
+    function __construct($level= 'notice', $page) {
+       $this->level = $level;
+       $this->page = $page;
     }
 
     function start() {
         if ($this->level == 'notice')
-            $this->messages[] = array('notice', $this->getLocale('install.start'));
+            $this->messages[] = array('notice', $this->page->getLocale('install.start'));
     }
 
     /**
@@ -83,6 +85,6 @@ class wizInstallReporter implements jIInstallReporter {
      * the number of messages
      */
     function end($results) {
-        $this->messages[] = array('',  $this->getLocale('install.end'));
+        $this->messages[] = array('',  $this->page->getLocale('install.end'));
     }
 }
