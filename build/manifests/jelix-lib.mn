@@ -658,3 +658,7 @@ cd lib/installwizard/pages/dbprofile/
   dbprofile.en.php
   dbprofile.page.php
   dbprofile.tpl
+cd lib/installwizard/pages/installapp/
+  installapp.en.php
+  installapp.page.php
+  installapp.tpl

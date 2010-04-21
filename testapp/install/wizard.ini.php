@@ -15,10 +15,14 @@ next=checkjelix
 next=dbprofile
 
 [dbprofile.step]
-next=end
+next=installapp
 availabledDrivers="mysql,sqlite,pgsql"
 ignoreProfiles="jelix_tests_mysql,jelix_tests_forward"
 messageHeader="message.header.dbProfile"
+
+[installapp.step]
+next=end
+;level=notice
 
 [end.step]
 noprevious = on

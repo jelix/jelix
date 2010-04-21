@@ -25,7 +25,7 @@ class endWizPage extends installWizardPage {
      * action to process the page after the submit
      */
     function process() {
-        
+        return 0;
     }
 
 }
