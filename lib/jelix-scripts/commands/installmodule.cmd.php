@@ -40,6 +40,8 @@ class installmoduleCommand extends JelixScriptCommand {
     public function run(){
         require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
 
+        jAppManager::close();
+
         $module = $this->getParam('module');
         $modulesList = $this->getParam('...', array());
         array_unshift($modulesList, $module);
@@ -59,5 +61,8 @@ class installmoduleCommand extends JelixScriptCommand {
         else {
             $installer->installModules($modulesList, $entryPointName);
         }
+
+        jAppManager::clearTemp(JELIX_APP_REAL_TEMP_PATH);
+        jAppManager::open();
     }
 }

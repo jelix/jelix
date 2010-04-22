@@ -10,6 +10,8 @@
 
 require_once ('%%rp_app%%application-cli.init.php');
 
+checkAppOpened();
+
 require_once (JELIX_LIB_CORE_PATH.'jCmdlineCoordinator.class.php');
 
 require_once (JELIX_LIB_CORE_PATH.'request/jCmdLineRequest.class.php');

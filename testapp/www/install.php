@@ -1,5 +1,6 @@
 <?php
 require ('../application.init.php');
+checkAppNotInstalled();
 
 require('../../lib/installwizard/installWizard.php');
 

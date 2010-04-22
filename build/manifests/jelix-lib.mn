@@ -213,6 +213,7 @@ cd lib/jelix/forms
 * jFormsDatasource.class.php
 
 cd lib/jelix/installer
+  closed.html
   jIInstallerComponent.iface.php
   jIInstallReporter.iface.php
   jInstaller.class.php

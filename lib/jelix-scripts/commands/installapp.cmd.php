@@ -39,6 +39,7 @@ class installappCommand extends JelixScriptCommand {
     public function run(){
         require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
 
+        jAppManager::close();
         if ($this->getOption("-v"))
             $reporter = new textInstallReporter();
         else
@@ -47,5 +48,9 @@ class installappCommand extends JelixScriptCommand {
         $installer = new jInstaller($reporter);
 
         $installer->installApplication();
+
+        jAppManager::clearTemp(JELIX_APP_REAL_TEMP_PATH);
+        jAppManager::open();
+
     }
 }

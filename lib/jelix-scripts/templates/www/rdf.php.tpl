@@ -11,6 +11,8 @@
 require ('%%rp_app%%application.init.php');
 require (JELIX_LIB_CORE_PATH.'request/jRdfRequest.class.php');
 
+checkAppOpened();
+
 $config_file = '%%config_file%%';
 
 $jelix = new jCoordinator($config_file);

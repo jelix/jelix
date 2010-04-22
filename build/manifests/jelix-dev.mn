@@ -106,6 +106,7 @@ cd lib/jelix-scripts/commands
   aclright.cmd.php
   aclvalue.cmd.php
   cleartemp.cmd.php
+  closeapp.cmd.php
   createaction.cmd.php
   createapp.cmd.php
   createctrl.cmd.php
@@ -120,6 +121,7 @@ cd lib/jelix-scripts/commands
   initadmin.cmd.php
   installapp.cmd.php
   installmodule.cmd.php
+  openapp.cmd.php
   migrate.cmd.php
 cd lib/jelix-scripts/includes
   command.class.php
