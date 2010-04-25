@@ -245,7 +245,7 @@ abstract class jDbTools {
     public function getBooleanValue($value) {
       if(is_string($value))
           $value = strtolower($value);
-      if ($value =='true' || $value === true || $value =='1'|| $value=='t')
+      if ($value === 'true' || $value === true || intval($value) === 1 || $value === 't' || $value === 'on')
           return $this->trueValue;
       else
           return $this->falseValue;

@@ -488,7 +488,7 @@ abstract class jDaoFactoryBase  {
                 else
                     return doubleval($value);
             case 'boolean':
-                if ($value === true|| strtolower($value)=='true'|| $value =='1' || $value ==='t')
+                if ($value === true|| strtolower($value)=='true'|| intval($value) === 1 || $value ==='t' || $value ==='on')
                     return $this->trueValue;
                 else
                     return $this->falseValue;

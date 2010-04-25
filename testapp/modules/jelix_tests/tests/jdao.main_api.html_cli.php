@@ -142,7 +142,7 @@ class UTDao extends jUnitTestCaseDb {
         $prod->id = $this->prod1->id;
 
         $dao->update($prod);
-        
+
         $prod2 = $dao->get($this->prod1->id);
         $this->assertTrue($prod2 instanceof jDaoRecordBase,'jDao::get doesn\'t return a jDaoRecordBase object');
         $this->assertEqual($prod2->id, $this->prod1->id, 'jDao::get : bad id on record');
@@ -165,12 +165,37 @@ class UTDao extends jUnitTestCaseDb {
         $prod2 = $dao->get($this->prod1->id);
         $this->assertEqual($prod2->promo,0, 'jDao::get : bad promo property on record : ');
 
+        $prod->promo = 'true';
+        $dao->update($prod);
+        $prod2 = $dao->get($this->prod1->id);
+        $this->assertEqual($prod2->promo,1, 'jDao::get : bad promo property on record : %');
+
+        $prod->promo = 'on';
+        $dao->update($prod);
+        $prod2 = $dao->get($this->prod1->id);
+        $this->assertEqual($prod2->promo,1, 'jDao::get : bad promo property on record : %');
+
+        $prod->promo = 'false';
+        $dao->update($prod);
+        $prod2 = $dao->get($this->prod1->id);
+        $this->assertEqual($prod2->promo,0, 'jDao::get : bad promo property on record : %');
+
         $prod->promo = 0;
         $dao->update($prod);
         $prod2 = $dao->get($this->prod1->id);
         $this->assertEqual($prod2->promo,0, 'jDao::get : bad promo property on record : '.var_export($prod2->promo,true).' ');
 
         $prod->promo = 1;
+        $dao->update($prod);
+        $prod2 = $dao->get($this->prod1->id);
+        $this->assertEqual($prod2->promo,1, 'jDao::get : bad promo property on record : %');
+
+        $prod->promo = '0';
+        $dao->update($prod);
+        $prod2 = $dao->get($this->prod1->id);
+        $this->assertEqual($prod2->promo,0, 'jDao::get : bad promo property on record : %');
+
+        $prod->promo = '1';
         $dao->update($prod);
         $prod2 = $dao->get($this->prod1->id);
         $this->assertEqual($prod2->promo,1, 'jDao::get : bad promo property on record : %');

@@ -226,8 +226,8 @@ abstract class jFormsBase {
                     $object->$name = $properties[$name]['defaultValue'];
                 }
                 else if( $type == 'boolean' && !is_bool($object->$name)) {
-                    $object->$name = ($object->$name == '1' || $object->$name == 'true'
-                                      || $object->$name == 't');
+                    $object->$name = (intval($object->$name) == 1|| strtolower($object->$name) === 'true'
+                                      || $object->$name === 't' || $object->$name === 'on');
                 }
                 else if($ctrl->datatype instanceof jDatatypeLocaleDateTime
                          && $type == 'datetime') {

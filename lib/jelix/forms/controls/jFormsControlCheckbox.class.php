@@ -56,7 +56,7 @@ class jFormsControlCheckbox extends jFormsControl {
 
     function setDataFromDao($value, $daoDatatype) {
         if( $daoDatatype == 'boolean') {
-            if($value == 'TRUE'||  $value == 't'|| $value == '1'|| $value == true){
+            if(strtolower($value) == 'true' ||  $value === 't'|| intval($value) == 1 || $value === 'on' || $value === true){
                 $value = $this->valueOnCheck;
             }else {
                 $value = $this->valueOnUncheck;
