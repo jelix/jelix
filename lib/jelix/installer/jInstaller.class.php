@@ -107,6 +107,7 @@ class jInstaller {
 
     /** value for the installation status of a component: "uninstalled" status */
     const STATUS_UNINSTALLED = 0;
+
     /** value for the installation status of a component: "installed" status */
     const STATUS_INSTALLED = 1;
 
@@ -115,40 +116,40 @@ class jInstaller {
      * a module which have this level won't be installed
      */
     const ACCESS_FORBIDDEN = 0;
-    
+
     /**
      * value for the access level of a component: "private" level.
      * a module which have this level won't be accessible directly
      * from the web, but only from other modules
      */
     const ACCESS_PRIVATE = 1;
-    
+
     /**
      * value for the access level of a component: "public" level.
      * the module is accessible from the web
      */
     const ACCESS_PUBLIC = 2;
-    
+
     /**
      * error code stored in a component: impossible to install
      * the module because dependencies are missing
      */
     const INSTALL_ERROR_MISSING_DEPENDENCIES = 1;
+
     /**
      * error code stored in a component: impossible to install
      * the module because of circular dependencies
      */
     const INSTALL_ERROR_CIRCULAR_DEPENDENCY = 2;
-    
-    
+
     const FLAG_INSTALL_MODULE = 1;
-    
+
     const FLAG_UPGRADE_MODULE = 2;
-    
+
     const FLAG_ALL = 3;
-  
-    const FLAG_MIGRATION_11X = 66;
-    
+
+    const FLAG_MIGRATION_11X = 66; // 64 (migration) + 2 (FLAG_UPGRADE_MODULE)
+
     /**
      *  @var jIniFileModifier it represents the installer.ini.php file.
      */
@@ -476,7 +477,7 @@ class jInstaller {
         foreach($this->_componentsToInstall as $item) {
             list($component, $toInstall) = $item;
             try {
-                if ($flags & self::FLAG_MIGRATION_11X) {
+                if ($flags == self::FLAG_MIGRATION_11X) {
                     $this->installerIni->setValue($component->getName().'.installed',
                                                    1, $epId);
                     $this->installerIni->setValue($component->getName().'.version',
@@ -534,7 +535,7 @@ class jInstaller {
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
             } catch (Exception $e) {
                 $result = false;
-                $this->error ('install.module.error', $e->getMessage());
+                $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
             }
         }
 
@@ -633,7 +634,7 @@ class jInstaller {
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
             } catch (Exception $e) {
                 $result = false;
-                $this->error ('install.module.error', $e->getMessage());
+                $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
             }
         }
 
