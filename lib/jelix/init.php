@@ -251,7 +251,7 @@ function checkAppOpened(){
  * like an installation wizard, not by entry point.
  */
 function checkAppNotInstalled() {
-    if (file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php')) {
+    if (isAppInstalled()) {
          if (php_sapi_name() == 'cli') {
             echo "Application is installed. The script cannot be runned.\n";
         }
@@ -262,4 +262,8 @@ function checkAppNotInstalled() {
         }
         exit(1);
     }
+}
+
+function isAppInstalled() {
+    return file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php');
 }

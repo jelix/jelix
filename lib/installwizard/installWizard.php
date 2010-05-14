@@ -98,18 +98,22 @@ class installWizard {
             throw new Exception("no temp directory");
     }
 
-    protected function initPrevious($step ='', $previousStep='') {
+    /**
+     * filled a __previous variable into data of each step.
+     * @return string the name of the last step
+     */
+    protected function initPrevious($step='', $previousStep='') {
         if ($step == '') {
             if (isset($this->config['start']))
                 $step = $this->config['start'];
             else
-                return;
+                return '';
         }
         if (!isset($this->pages[$step]) || !isset($this->config[$step.'.step'])) {
-            return;
+            return '';
         }
         if (isset($this->config[$step.'.step']['__previous'])) {
-            return;
+            return '';
         }
         
         if (isset($this->config[$step.'.step']['noprevious']) && $this->config[$step.'.step']['noprevious'])
@@ -118,15 +122,19 @@ class installWizard {
             $this->config[$step.'.step']['__previous'] = $previousStep;
         
         if (!isset($this->config[$step.'.step']['next'])) {
-            return;
+            return $step;
         }
-        
+        $last = '';
         if (is_array($this->config[$step.'.step']['next'])) {
-            foreach($this->config[$step.'.step']['next'] as $next)
-                $this->initPrevious($next, $step);
+            foreach($this->config[$step.'.step']['next'] as $next) {
+                $rv = $this->initPrevious($next, $step);
+                if ($rv != '')
+                    $last = $rv;
+            }
         }
         else 
-            $this->initPrevious($this->config[$step.'.step']['next'], $step);
+            $last = $this->initPrevious($this->config[$step.'.step']['next'], $step);
+        return $last;
     }
 
     protected function guessLanguage($lang = '') {
@@ -179,7 +187,7 @@ class installWizard {
     }
 
 
-    function run () {
+    function run ($isAlreadyDone = false) {
 
         try {
 
@@ -187,11 +195,22 @@ class installWizard {
 
             $this->initPath();
 
-            $this->initPrevious();
+            $laststep = $this->initPrevious();
 
             $this->lang = $this->guessLanguage();
 
-            $this->stepName = $this->getStepName();
+            if ($isAlreadyDone && !isset($_POST['doprocess'])) {
+                if (isset($this->config['onalreadydone']))
+                    $laststep = $this->config['onalreadydone'];
+                if ($laststep != '' && isset($this->pages[$laststep])) {
+                    $this->stepName = $laststep;
+                }
+                else {
+                    throw new Exception("Application is installed. The script cannot be runned.");
+                }
+            }
+            else
+                $this->stepName = $this->getStepName();
 
             jTplConfig::$lang = $this->lang;
             jTplConfig::$localesGetter = array($this, 'getLocale');
@@ -200,7 +219,10 @@ class installWizard {
             $page = $this->loadPage();
 
             if (isset($_POST['doprocess']) && $_POST['doprocess'] == "1") {
-                $result = $page->process();
+                if ($isAlreadyDone)
+                    $result = true;
+                else
+                    $result = $page->process();
                 if ($result !== false) {
                     header("location: ?step=".$this->getNextStep($page));
                     exit(0);
@@ -218,6 +240,7 @@ class installWizard {
             
         } catch (Exception $e) {
             $error = $e->getMessage();
+            header("HTTP/1.1 500 Application error");
             require(dirname(__FILE__).'/error.php');
             exit(1);
         }
