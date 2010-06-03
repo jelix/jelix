@@ -19,6 +19,9 @@ class UTjCacheAPI extends jUnitTestCaseDb {
 
     protected $profils = array();
 
+    protected $mmport = 'localhost';
+    protected $mmhost = 11211;
+
     public function setUp (){
         $this->profils = array();
         $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.'cache.ini.php', true);
@@ -35,7 +38,9 @@ class UTjCacheAPI extends jUnitTestCaseDb {
                     $this->emptyTable('jlx_cache');
                     break;
                 case 'usingmemcached':
-                    $mmc=memcache_connect('localhost',11211);
+                    if (isset($conf['usingmemcached']['servers']))
+                        list($this->mmhost, $this->mmport) = explode(":",$conf['usingmemcached']['servers']);
+                    $mmc = memcache_connect($this->mmhost, $this->mmport);
                     memcache_flush($mmc);
                     break;
                 case 'usingfile':
@@ -309,7 +314,7 @@ class UTjCacheAPI extends jUnitTestCaseDb {
                     ));
                     break;
                 case 'usingmemcached':
-                    $mmc=memcache_connect('localhost',11211);
+                    $mmc=memcache_connect($this->mmhost, $this->mmport);
                     $this->assertTrue(memcache_get($mmc,'remainingDataKey')=='remaining data');
                     $this->assertFalse(memcache_get($mmc,'garbage1DataKey'));
                     $this->assertFalse(memcache_get($mmc,'garbage2DataKey'));
@@ -341,7 +346,7 @@ class UTjCacheAPI extends jUnitTestCaseDb {
                     $this->assertTableIsEmpty('jlx_cache');
                     break;
                 case 'usingmemcached':
-                    $mmc=memcache_connect('localhost',11211);
+                    $mmc=memcache_connect($this->mmhost, $this->mmport);
                     $this->assertTrue(memcache_get($mmc,'flush1DataKey'));
                     $this->assertTrue(memcache_get($mmc,'flush2DataKey'));
                     $this->assertTrue(memcache_get($mmc,'flush3DataKey'));
