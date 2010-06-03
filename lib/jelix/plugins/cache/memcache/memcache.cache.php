@@ -14,7 +14,7 @@
 * @package jelix
 * @subpackage plugins_cache_memcached
 */
-class memcachedCacheDriver implements jICacheDriver {
+class memcacheCacheDriver implements jICacheDriver {
 
     /**
     * Memcached servers list

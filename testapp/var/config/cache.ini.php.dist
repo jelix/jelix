@@ -43,9 +43,9 @@ dbprofile = ""
 enabled = 1
 driver = db
 
-[usingmemcached]
+[usingmemcache]
 enabled = 0
-driver = memcached
+driver = memcache
 
 [usingfile]
 enabled = 1
