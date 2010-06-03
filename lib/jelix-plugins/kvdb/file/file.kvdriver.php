@@ -136,7 +136,7 @@ class fileKVDriver extends jKVDriver implements jIKVPersistent, jIKVttl {
     public function set ($key, $value) {
         $filePath = $this->_getFilePath($key);
         $this->_createDir(dirname($filePath));
-        return $this->_setFileContent ($filePath, $value, 0);
+        return $this->_setFileContent ($filePath, $value, time() + 3650*24*3600);
     }
 
     /**
@@ -192,11 +192,11 @@ class fileKVDriver extends jKVDriver implements jIKVPersistent, jIKVttl {
     }
 
     /**
-	 * append a string to an existing key value
-	 * @param string $key   the key of the value to modify
-	 * @param string $value  the value to append to the current key value
-	 * @return boolean false if failure
-    */
+     * append a string to an existing key value
+     * @param string $key   the key of the value to modify
+     * @param string $value  the value to append to the current key value
+     * @return boolean false if failure
+     */
     public function append ($key, $value) {
         $oldData = $this->get($key);
         if ($oldData === null)
@@ -209,11 +209,11 @@ class fileKVDriver extends jKVDriver implements jIKVPersistent, jIKVttl {
     }
 
     /**
-	 * prepend a string to an existing key value
-	 * @param string $key   the key of the value to modify
-	 * @param string $value  the value to prepend to the current key value
-	 * @return boolean false if failure
-    */
+     * prepend a string to an existing key value
+     * @param string $key   the key of the value to modify
+     * @param string $value  the value to prepend to the current key value
+     * @return boolean false if failure
+     */
     public function prepend ($key, $value) {
         $oldData = $this->get($key);
         if ($oldData === null)
@@ -291,7 +291,7 @@ class fileKVDriver extends jKVDriver implements jIKVPersistent, jIKVttl {
             }
         }
         else
-            $ttl = 0;
+            $ttl = time() + 3650*24*3600;
 
         return $this->_setFileContent ($filePath, $var, $ttl);
     }

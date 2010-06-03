@@ -175,7 +175,7 @@ class fileCacheDriver implements jICacheDriver {
 
             switch($ttl) {
                 case 0:
-                    touch($filePath,0);
+                    touch($filePath, time() + 3650*24*3600);
                     break;
                 default:
                     if ($ttl <= 2592000) {

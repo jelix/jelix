@@ -60,7 +60,8 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
         $kv->set('getKey', 'string for data');
         $kv->setWithTtl('expiredKey','data expired',strtotime("-1 day"));
         $data = $kv->get(array('getKey','expiredKey','inexistentKey'));
-        $this->assertTrue($data['getKey']=='string for data');
+        if ($this->assertTrue(isset($data['getKey'])))
+            $this->assertTrue($data['getKey']=='string for data');
         $this->assertTrue(!isset($data['expiredKey']));
         $this->assertTrue(!isset($data['inexistentKey']));
     }

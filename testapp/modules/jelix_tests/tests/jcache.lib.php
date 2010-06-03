@@ -73,7 +73,8 @@ class UTjCacheAPI extends jUnitTestCaseDb {
         jCache::set('expiredKey','data expired',strtotime("-1 day"),$this->profile);
 
         $data = jCache::get(array('getKey','expiredKey','inexistentKey'),$this->profile);
-        $this->assertTrue($data['getKey']=='string for data');
+        if ($this->assertTrue(isset($data['getKey'])))
+            $this->assertTrue($data['getKey']=='string for data');
         $this->assertTrue(!isset($data['expiredKey']));
         $this->assertTrue(!isset($data['inexistentKey']));
     }

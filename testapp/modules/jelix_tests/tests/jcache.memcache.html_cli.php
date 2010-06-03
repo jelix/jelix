@@ -27,20 +27,19 @@ class UTjCacheMemcache extends UTjCacheAPI {
 
     protected $wrongversion = false;
 
-
     function getTests() {
         $r = parent::getTests();
         if (count($r)) {
-            if (version_compare(phpversion('memcache'), '3.0') >= 0) {
+            if (version_compare(phpversion('memcache'), '3.0.1') > 0) {
                 $this->wrongversion = true;
                 return array('tfail');
             }
         }
         return $r;
     }
-    
+
     public function tfail() {
-        $this->fail('UTjCacheMemcache cannot be run because version of memcache is wrong (should be < 3.0)');
+        $this->fail('UTjCacheMemcache cannot be run because version of memcache is wrong (should be <= 3.0.1)');
     }
 
     public function setUp () {
@@ -73,7 +72,7 @@ class UTjCacheMemcache extends UTjCacheAPI {
         $this->assertTrue(memcache_get($mmc,'flush1DataKey'));
         $this->assertTrue(memcache_get($mmc,'flush2DataKey'));
         $this->assertTrue(memcache_get($mmc,'flush3DataKey'));
-        $this->assertTrue(jCache::flush($profil));
+        $this->assertTrue(jCache::flush($this->profile));
         $this->assertFalse(memcache_get($mmc,'flush1DataKey'));
         $this->assertFalse(memcache_get($mmc,'flush2DataKey'));
         $this->assertFalse(memcache_get($mmc,'flush3DataKey'));
