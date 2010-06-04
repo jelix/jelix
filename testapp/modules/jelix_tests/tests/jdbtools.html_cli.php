@@ -147,7 +147,7 @@ class UTjDbTools extends jUnitTestCase {
         $result = $tools->escapeValue('double',5.63, false);
         $this->assertEqualOrDiff('5.63',$result);
         $result = $tools->escapeValue('float',98084345.637655464, false);
-        $this->assertEqualOrDiff('98084345.6377',$result);
+        $this->assertTrue($result === '98084345.6377' || $result === '98084345.637655'); // depending of the php version and/or the platform
         $result = $tools->escapeValue('decimal',98084345.637655464, false);
         $this->assertEqualOrDiff('98084345.637655464',$result);
         $result = $tools->escapeValue('numeric','565465465463', false);
