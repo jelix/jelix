@@ -4,7 +4,7 @@
  * @subpackage  utils
  * @author      Christophe THIRIOT
  * @contributor Laurent Jouanneau
- * @copyright   2008 Christophe THIRIOT, 2008 Laurent Jouanneau
+ * @copyright   2008 Christophe THIRIOT, 2008-2010 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  * @since 1.1
@@ -148,8 +148,12 @@ class jClassBinding {
             }
 
             // 2) see if a default implementation is specified in the source class
-            $class_selector = @constant($this->fromSelector->className . '::JBINDING_BINDED_IMPLEMENTATION');
-            if ($class_selector!==null) return $this->toSelector = new jSelectorClass($class_selector);
+            $constname = $this->fromSelector->className . '::JBINDING_BINDED_IMPLEMENTATION';
+            if (defined($constname)) { // check first, constant() crashes on some php version when the const does not exist
+                $class_selector = constant($constname);
+                if ($class_selector!==null)
+                    return $this->toSelector = new jSelectorClass($class_selector);
+            }
 
             // 3) If the source is a class, then use it as the default implementation
             if (true === ($this->fromSelector instanceof jSelectorClass)) {
