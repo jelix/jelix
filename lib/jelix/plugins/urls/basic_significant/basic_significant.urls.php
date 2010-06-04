@@ -4,7 +4,7 @@
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2005-2008 Laurent Jouanneau
+* @copyright   2005-2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -19,6 +19,17 @@ require_once (dirname(__FILE__).'/../simple/simple.urls.php');
  * @see jIUrlEngine
  */
 class basic_significantUrlEngine extends simpleUrlEngine {
+
+    function __construct() {
+        global $gJConfig;
+
+        foreach($gJConfig->basic_significant_urlengine_entrypoints as $script => $val) {
+            if (strpos($script, '__') !== false) {
+                $script = str_replace('__','/',$script);
+                $gJConfig->basic_significant_urlengine_entrypoints[$script] = $val;
+            }
+        }
+    }
 
     /**
      * Parse a url from the request

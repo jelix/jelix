@@ -4,7 +4,7 @@
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor GeekBay
-* @copyright   2005-2008 Laurent Jouanneau, 2010 Geekbay
+* @copyright   2005-2010 Laurent Jouanneau, 2010 Geekbay
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -124,7 +124,7 @@ class simpleUrlEngine implements jIUrlEngine {
                 foreach($gJConfig->simple_urlengine_entrypoints as $entrypoint=>$sel){
                     $selectors = preg_split("/[\s,]+/", $sel);
                     foreach($selectors as $sel2){
-                        $this->urlspe[$sel2]= $entrypoint;
+                        $this->urlspe[$sel2] = str_replace('__','/',$entrypoint);
                     }
                 }
             }
@@ -139,7 +139,6 @@ class simpleUrlEngine implements jIUrlEngine {
                 $script = $this->urlspe[$s3];
             }
         }
-
         return $script;
     }
 }

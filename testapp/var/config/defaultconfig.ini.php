@@ -106,7 +106,7 @@ index = "@classic"
 xmlrpc = "@xmlrpc"
 jsonrpc = "@jsonrpc"
 testnews = "jelix_tests~urlsig:url2@classic jelix_tests~urlsig:url3@classic"
-foo/bar = "jelix_tests~urlsig:url4@classic"
+foo__bar = "jelix_tests~urlsig:url4@classic"
 news = "new~*@classic"
 soap = "@soap"
 actu = "jelix_tests~actu:*@classic"
@@ -120,7 +120,7 @@ index = on
 xmlrpc = on
 jsonrpc = on
 testnews = off
-foo/bar = on
+foo__bar = on
 news = on
 soap = on
 
