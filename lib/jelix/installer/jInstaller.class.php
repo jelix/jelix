@@ -13,8 +13,14 @@ require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerException.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerBase.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerModule.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerComponentBase.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerComponentModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
 require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
+require_once(JELIX_LIB_PATH.'utils/jIniFile.class.php');
+require_once(JELIX_LIB_PATH.'utils/jIniFileModifier.class.php');
+require_once(JELIX_LIB_PATH.'utils/jIniMultiFilesModifier.class.php');
 require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
 
 
