@@ -199,7 +199,23 @@ class jDbPDOConnection extends PDO {
             default: return $fieldName;
         }
     }
-    
+
+    /**
+    * Escape and quotes strings. if null, will only return the text "NULL"
+    * @param string $text   string to quote
+    * @param boolean $checknull if true, check if $text is a null value, and then return NULL
+    * @param boolean $binary  set to true if $text contains a binary string
+    * @return string escaped string
+    * @since 1.2
+    * @todo $binary parameter is not really supported, check if PDOConnection::quote supports binary strings
+    */
+    public function quote2 ($text, $checknull=true, $binary=false) {
+        if ($checknull)
+            return (is_null ($text) ? 'NULL' : "'".$this->quote($text)."'");
+        else
+            return "'".$this->quote($text)."'";
+    }
+
     /**
      * @var jDbTools
      */

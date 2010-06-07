@@ -494,7 +494,7 @@ abstract class jDaoFactoryBase  {
                     return $this->falseValue;
                 break;
             default:
-                return $this->_conn->quote ($value, true, ($fieldType == 'binary'));
+                return $this->_conn->quote2 ($value, true, ($fieldType == 'binary'));
         }
     }
 
@@ -505,5 +505,31 @@ abstract class jDaoFactoryBase  {
      */
     protected function finishInitResultSet($rs) {
         $rs->setFetchMode(8, $this->_DaoRecordClassName);
+    }
+
+    /**
+     * a callback function for some array_map call in generated methods
+     * @since 1.2
+     */
+    protected function _callbackQuote($value) {
+        return $this->_conn->quote2($value);
+    }
+
+    /**
+     * a callback function for some array_map call in generated methods
+     * @since 1.2
+     */
+    protected function _callbackQuoteBin($value) {
+        return $this->_conn->quote2($value, true, true);
+    }
+
+    /**
+     * a callback function for some array_map call in generated methods
+     */
+    protected function _callbackBool($value) {
+        if ($value === true|| strtolower($value)=='true'|| intval($value) === 1 || $value ==='t' || $value ==='on')
+            return $this->trueValue;
+        else
+            return $this->falseValue;
     }
 }

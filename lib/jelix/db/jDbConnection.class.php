@@ -121,12 +121,27 @@ abstract class jDbConnection {
     }
 
     /**
+    * Escape and quotes strings.
+    * @param string $text   string to quote
+    * @param int $parameter_type unused, just for compatibility with PDO
+    * @return string escaped string
+    */
+    public function quote ($text, $parameter_type = 0) {
+        // for compatibility with older jelix version
+        if ($parameter_type === false || $parameter_type === true)
+            trigger_error("signature of jDbConnection::quote has changed, you should use quote2()", E_USER_WARNING);
+        return "'".$this->_quote($text, false)."'";
+    }
+
+    /**
     * Escape and quotes strings. if null, will only return the text "NULL"
     * @param string $text   string to quote
     * @param boolean $checknull if true, check if $text is a null value, and then return NULL
+    * @param boolean $binary  set to true if $text contains a binary string
     * @return string escaped string
+    * @since 1.2
     */
-    public function quote ($text, $checknull=true, $binary = false) {
+    public function quote2 ($text, $checknull=true, $binary=false) {
         if ($checknull)
             return (is_null ($text) ? 'NULL' : "'".$this->_quote($text, $binary)."'");
         else

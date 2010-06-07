@@ -221,7 +221,7 @@ abstract class jDbTools {
             default:
                 if ($toPhpSource) {
                     if ($unifiedType == 'varbinary' || $unifiedType == 'binary') {
-                        return '\'.$this->_conn->quote(\''.str_replace('\'','\\\'',$value).'\',true,true).\'';
+                        return '\'.$this->_conn->quote2(\''.str_replace('\'','\\\'',$value).'\',true,true).\'';
                     }
                     else if(strpos($value,"'") !== false) {
                         return '\'.$this->_conn->quote(\''.str_replace('\'','\\\'',$value).'\').\'';

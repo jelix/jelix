@@ -72,7 +72,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
 
         $table = $this->_connection->prefixTable($this->table);
         $key = $this->_connection->quote($key);
-        $value = $this->_connection->quote(serialize($value), false, true);
+        $value = $this->_connection->quote2(serialize($value), false, true);
         $expire = $this->_connection->quote($expire);
 
         $sql = 'SELECT k_key, k_value FROM '.$table.
@@ -96,7 +96,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
 
         $table = $this->_connection->prefixTable($this->table);
         $key = $this->_connection->quote($key);
-        $value = $this->_connection->quote(serialize($value), false, true);
+        $value = $this->_connection->quote2(serialize($value), false, true);
 
         try {
             $sql = 'INSERT INTO '.$table.' (k_key, k_value, k_expire) VALUES ('
@@ -114,7 +114,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
 
         $table = $this->_connection->prefixTable($this->table);
         $key = $this->_connection->quote($key);
-        $value = $this->_connection->quote(serialize($value), false, true);
+        $value = $this->_connection->quote2(serialize($value), false, true);
 
         $sql = 'UPDATE '.$table.' SET k_value= '.$value.',  k_expire = \'2050-12-31 00:00:00\'
         WHERE k_key='.$key;
@@ -150,7 +150,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
         }
         
         $value = serialize(unserialize($rs->unescapeBin($rec->k_value)) . $value);
-        $sql = 'UPDATE '.$table.' SET k_value= '.$this->_connection->quote($value, false, true).' WHERE k_key='.$key;
+        $sql = 'UPDATE '.$table.' SET k_value= '.$this->_connection->quote2($value, false, true).' WHERE k_key='.$key;
         return (bool)$this->_connection->exec($sql);
     }
 
@@ -169,7 +169,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
         }
         
         $value = serialize($value.unserialize($rs->unescapeBin($rec->k_value)));
-        $sql = 'UPDATE '.$table.' SET k_value= '.$this->_connection->quote($value, false, true).' WHERE k_key='.$key;
+        $sql = 'UPDATE '.$table.' SET k_value= '.$this->_connection->quote2($value, false, true).' WHERE k_key='.$key;
         return (bool)$this->_connection->exec($sql);
     }
 

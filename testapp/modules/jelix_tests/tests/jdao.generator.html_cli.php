@@ -66,7 +66,7 @@ class UTDao_generator extends jUnitTestCase {
         // with checknull 
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : intval($foo))',$this->_getProp('integer','$foo', true));
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : intval($foo))',$this->_getProp('autoincrement','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : $this->_conn->quote($foo,false))',$this->_getProp('string','$foo', true));
+        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : $this->_conn->quote2($foo,false))',$this->_getProp('string','$foo', true));
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : (is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('double','$foo', true));
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : doubleval($foo))',$this->_getProp('float','$foo', true));
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : (is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('numeric','$foo', true));
@@ -75,7 +75,7 @@ class UTDao_generator extends jUnitTestCase {
         // with checknull and operator =
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.intval($foo))',$this->_getProp('integer','$foo', true,'='));
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.intval($foo))',$this->_getProp('autoincrement','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.$this->_conn->quote($foo,false))',$this->_getProp('string','$foo', true,'='));
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.$this->_conn->quote2($foo,false))',$this->_getProp('string','$foo', true,'='));
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('double','$foo', true,'='));
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.doubleval($foo))',$this->_getProp('float','$foo', true,'='));
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('numeric','$foo', true,'='));
@@ -91,7 +91,7 @@ class UTDao_generator extends jUnitTestCase {
         $this->assertEqualOrDiff('\'=\'.intval($foo)',$result);
         $prop->datatype='string';
         $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.$this->_conn->quote($foo,false))',$result);
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.$this->_conn->quote2($foo,false))',$result);
         $prop->defaultValue=34.6;
         $prop->datatype='double';
         $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
@@ -114,7 +114,7 @@ class UTDao_generator extends jUnitTestCase {
         $result = $this->_getProp('autoincrement','$foo', true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.intval($foo))',$result);
         $result = $this->_getProp('string','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.$this->_conn->quote($foo,false))',$result);
+        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.$this->_conn->quote2($foo,false))',$result);
         $result = $this->_getProp('double','$foo', true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$result);
         $result = $this->_getProp('float','$foo', true,'<>');
@@ -278,7 +278,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method3']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method3']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` = 2 AND `ownerlogin` \'.($login === null ? \'IS NULL\' : \' = \'.$this->_conn->quote($login,false)).\'',$where);
+        $this->assertEqualOrDiff(' `grouptype` = 2 AND `ownerlogin` \'.($login === null ? \'IS NULL\' : \' = \'.$this->_conn->quote2($login,false)).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method4']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method4']->getParameters(), false);
@@ -298,7 +298,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method8']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method8']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` = 2 AND `ownerlogin` = TOUPPER(\'.($login === null ? \'NULL\' : $this->_conn->quote($login,false)).\')',$where);
+        $this->assertEqualOrDiff(' `grouptype` = 2 AND `ownerlogin` = TOUPPER(\'.($login === null ? \'NULL\' : $this->_conn->quote2($login,false)).\')',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method9']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method9']->getParameters(), false);
@@ -314,7 +314,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method12']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method12']->getParameters(), false);
-        $this->assertEqualOrDiff(' `ownerlogin` LIKE concat(\'.($login === null ? \'NULL\' : $this->_conn->quote($login,false)).\',\\\'%\\\')',$where);
+        $this->assertEqualOrDiff(' `ownerlogin` LIKE concat(\'.($login === null ? \'NULL\' : $this->_conn->quote2($login,false)).\',\\\'%\\\')',$where);
 
         // with prefix
         $where = $generator->BuildSQLCondition ($methods['method1']->getConditions()->condition, $parser->getProperties(),
@@ -327,7 +327,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method3']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method3']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` = 2 AND `grp`.`ownerlogin` \'.($login === null ? \'IS NULL\' : \' = \'.$this->_conn->quote($login,false)).\'',$where);
+        $this->assertEqualOrDiff(' `grp`.`grouptype` = 2 AND `grp`.`ownerlogin` \'.($login === null ? \'IS NULL\' : \' = \'.$this->_conn->quote2($login,false)).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method4']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method4']->getParameters(), true);
@@ -347,7 +347,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method8']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method8']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` = 2 AND `grp`.`ownerlogin` = TOUPPER(\'.($login === null ? \'NULL\' : $this->_conn->quote($login,false)).\')',$where);
+        $this->assertEqualOrDiff(' `grp`.`grouptype` = 2 AND `grp`.`ownerlogin` = TOUPPER(\'.($login === null ? \'NULL\' : $this->_conn->quote2($login,false)).\')',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method9']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method9']->getParameters(), true);
@@ -602,7 +602,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $fieldList = $generator->GetPropertiesBy('PrimaryTable');
         list($fields, $values) = $generator->PrepareValues($fieldList,'insertPattern', 'record->');
-        $this->assertEqual('now(\'.($record->code === null ? \'NULL\' : $this->_conn->quote($record->code,false)).\')', $values['code']);
+        $this->assertEqual('now(\'.($record->code === null ? \'NULL\' : $this->_conn->quote2($record->code,false)).\')', $values['code']);
         
     }
 }

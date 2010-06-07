@@ -885,13 +885,8 @@ class jDaoGenerator {
 
             if($cond['operator'] == 'IN' || $cond['operator'] == 'NOT IN'){
                 if($cond['isExpr']){
-                    $phpvalue= $this->_preparePHPExpr('$__e', $prop, false);
-                    if(strpos($phpvalue,'$this->_conn->quote')===0){
-                        $phpvalue = str_replace('$this->_conn->quote(',"'\''.str_replace('\\'','\\\\\\'',",$phpvalue).".'\''";
-                        $phpvalue = str_replace('\\','\\\\', $phpvalue);
-                        $phpvalue = str_replace('\'','\\\'', $phpvalue);
-                    }
-                    $phpvalue = 'implode(\',\', array_map( create_function(\'$__e\',\'return '.$phpvalue.';\'), '.$cond['value'].'))';
+                    $phpexpr = $this->_preparePHPCallbackExpr($prop);
+                    $phpvalue = 'implode(\',\', array_map( '.$phpexpr.', '.$cond['value'].'))';
                     $value= '(\'.'.$phpvalue.'.\')';
                 }else{
                     $value= '('.$cond['value'].')';
@@ -998,13 +993,35 @@ class jDaoGenerator {
                     $qparam = '';
 
                 if ($checknull) {
-                   $expr = '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_conn->quote('.$expr.',false'.$qparam.'))';
+                   $expr = '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_conn->quote2('.$expr.',false'.$qparam.'))';
                 }
                 else {
-                   $expr = $forCondition.'$this->_conn->quote('.$expr.($qparam?',true,true':'').')';
+                   $expr = $forCondition.'$this->_conn->quote'.($qparam?'2('.$expr.',true,true)':'('.$expr.')');
                 }
         }
         return $expr;
+    }
+
+    protected function _preparePHPCallbackExpr($field){
+        $type = strtolower($field->unifiedType);
+        // TODO PHP53: generate a closure instead of create_function
+        switch($type){
+            case 'integer':
+                return 'create_function(\'$__e\',\'return intval($__e);\')';
+            case 'double':
+            case 'float':
+                return 'create_function(\'$__e\',\'return doubleval($__e);\')';
+            case 'numeric':
+            case 'decimal':
+                return 'create_function(\'$__e\',\'return (is_numeric ($__e) ? $__e : floatval($__e));\')';
+            case 'boolean':
+                return 'array($this, \'_callbackBool\')';
+            default:
+                if ($type=='varbinary' || $type=='binary')
+                    return 'array($this, \'_callbackQuoteBin\')';
+                else
+                    return 'array($this, \'_callbackQuote\')';
+        }
     }
 
     protected function _encloseName($name){
