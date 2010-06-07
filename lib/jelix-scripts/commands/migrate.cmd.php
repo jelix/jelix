@@ -43,6 +43,8 @@ class migrateCommand extends JelixScriptCommand {
     }
 
     public function run(){
+        $this->loadStep();
+
         $this->loadProjectXml();
 
         // verify version
@@ -55,17 +57,25 @@ class migrateCommand extends JelixScriptCommand {
         $this->updateProjectXml();
 
         // launch jInstaller
-        require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
-        $reporter = new textInstallReporter();
-        $install = new jInstaller($reporter);
-        $install->forceModuleVersion('jacl2db', '1.1');
-        $install->forceModuleVersion('jauthdb', '1.1');
-        $install->installApplication(jInstaller::FLAG_MIGRATION_11X);
-
-        if (!file_exists(JELIX_APP_PATH.'install/installer.php')) {
-            $this->createDir(JELIX_APP_PATH.'install/');
-            $this->createFile(JELIX_APP_PATH.'install/installer.php','installer/installer.php.tpl',array());
+        if ($this->checkStep("Install virtually all modules")) {
+            require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
+            $reporter = new textInstallReporter();
+            $install = new jInstaller($reporter);
+            $install->forceModuleVersion('jacl2db', '1.1');
+            $install->forceModuleVersion('jauthdb', '1.1');
+            $result = $install->installApplication(jInstaller::FLAG_MIGRATION_11X);
+            if (!$result) {
+                throw new Exception ("Installation of modules failed. Fix and retry.");
+            }
         }
+
+        if ($this->checkStep("Create the install/installer.php script")) {
+            if (!file_exists(JELIX_APP_PATH.'install/installer.php')) {
+                $this->createDir(JELIX_APP_PATH.'install/');
+                $this->createFile(JELIX_APP_PATH.'install/installer.php','installer/installer.php.tpl',array());
+            }
+        }
+        $this->finalStep("Migration done");
     }
 
     /**
@@ -73,23 +83,24 @@ class migrateCommand extends JelixScriptCommand {
      */
     protected function checkVersion() {
         list($minversion, $maxversion) = $this->getSupportedJelixVersion();
-        
-        if($minversion == '' || $maxversion == '')
-            throw new Exception('Minimum and max jelix version of your project is not indicated in project.xml');
-        
-        if (jVersionComparator::compareVersion($maxversion, "1.2") > -1)
-            throw new Exception("Because of maxversion in project.xml, it seems that your application is already compatible with jelix 1.2");
-        
-        if (file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php'))
-            throw new Exception("installer.ini.php already exists !");
+
+        if ($this->checkStep("Check jelix version of your application")) {
+            if($minversion == '' || $maxversion == '')
+                throw new Exception('Minimum and max jelix version of your project is not indicated in project.xml');
+        }
+
+        if ($this->checkStep("Check application compatibility")) {
+            if (jVersionComparator::compareVersion($maxversion, "1.2") > -1)
+                throw new Exception("Because of maxversion in project.xml, it seems that your application is already compatible with jelix 1.2");
+            if (file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php'))
+                throw new Exception("installer.ini.php already exists !");
+        }
     }
-    
+
     /**
      * update configuration files
      */
     protected function updateConfig() {
-        $configList = array();
-
         // retrieve the default config
         $defaultconfig = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
 
@@ -98,133 +109,164 @@ class migrateCommand extends JelixScriptCommand {
             $this->defaultModulesPath = 'lib:jelix-modules/,app:modules/';
         }
 
-        $this->defaultCheckTrustedModules = $defaultconfig->getValue('checkTrustedModules');
-        if ($this->defaultCheckTrustedModules === null)
-            $this->defaultCheckTrustedModules = false;
+        if ($this->checkStep("Update configuration files")) {
 
-        $this->defaultTrustedModules = $defaultconfig->getValue('trustedModules');
-        if ($this->defaultTrustedModules === null)
-            $this->defaultTrustedModules = '';
+            $configList = array();
 
-        $allModulePath = $this->getModulesPath($this->defaultModulesPath, ($this->defaultCheckTrustedModules?1:2));
+            $this->defaultCheckTrustedModules = $defaultconfig->getValue('checkTrustedModules');
+            if ($this->defaultCheckTrustedModules === null)
+                $this->defaultCheckTrustedModules = false;
 
-        if ($this->defaultCheckTrustedModules) {
-            $list = preg_split('/ *, */', $this->defaultTrustedModules);
-            foreach ($list as $module) {
-                if (isset($allModulePath[$module]))
-                    $allModulePath[$module]->access = 2;
-            }
-        }
+            $this->defaultTrustedModules = $defaultconfig->getValue('trustedModules');
+            if ($this->defaultTrustedModules === null)
+                $this->defaultTrustedModules = '';
 
-        $this->defaultUnusedModules = $defaultconfig->getValue('unusedModules');
-        if ($this->defaultUnusedModules) {
-            $list = preg_split('/ *, */', $this->defaultUnusedModules);
-            foreach ($list as $module) {
-                if (isset($allModulePath[$module]))
-                    $allModulePath[$module]->access = 0;
-            }
-        }
+            $allModulePath = $this->getModulesPath($this->defaultModulesPath, ($this->defaultCheckTrustedModules?1:2));
 
-        foreach ($allModulePath as $name=>$module) {
-            $defaultconfig->setValue($name.'.access', $module->access, 'modules');
-        }
-
-        $defaultconfig->removeValue('checkTrustedModules');
-        $defaultconfig->removeValue('trustedModules');
-        $defaultconfig->removeValue('unusedModules');
-
-        $configList['defaultconfig.ini.php'] = $defaultconfig;
-
-        // read each entry point configuration
-        $eplist = $this->getEntryPointsList();
-
-        $help = "In each config files of your entry points, fill this parameters:\n".
-               "* checkTrustedModules=on\n".
-               "* trustedModules: list of modules accessible from the web\n".
-               "* unusedModules: those you don't use at all\n".
-               "For other modules you use but which should not be accessible from the web, nothing to do.\n";
-
-        $otherModulePath = array();
-
-        foreach($eplist as $ep) {
-            if (isset($configList[$ep['config']]))
-                continue;
-
-            $config = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$ep['config']);
-    
-            $modulesPath = $config->getValue('modulesPath');
-            if (!$modulesPath) {
-                $modulesPath = $this->defaultModulesPath;
+            if ($this->defaultCheckTrustedModules) {
+                $list = preg_split('/ *, */', $this->defaultTrustedModules);
+                foreach ($list as $module) {
+                    if (isset($allModulePath[$module]))
+                        $allModulePath[$module]->access = 2;
+                }
             }
 
-            $checkTrustedModules = $config->getValue('checkTrustedModules');
-            if ($checkTrustedModules === null)
-                $checkTrustedModules = $this->defaultCheckTrustedModules;
-                
-            if (!$checkTrustedModules) {
-                throw new Exception("checkTrustedModules should be set to 'on' in config files.\n$help");
+            $this->defaultUnusedModules = $defaultconfig->getValue('unusedModules');
+            if ($this->defaultUnusedModules) {
+                $list = preg_split('/ *, */', $this->defaultUnusedModules);
+                foreach ($list as $module) {
+                    if (isset($allModulePath[$module]))
+                        $allModulePath[$module]->access = 0;
+                }
             }
 
-            $trustedModules = $config->getValue('trustedModules');
-            if (!$trustedModules)
-                $trustedModules = $this->defaultTrustedModules;
-
-            if ($trustedModules == '') {
-                throw new Exception("trustedModules should be filled in config files.\n$help");
+            foreach ($allModulePath as $name=>$module) {
+                $defaultconfig->setValue($name.'.access', $module->access, 'modules');
             }
 
-            $unusedModules = $config->getValue('unusedModules');
-            if (!$unusedModules)
-                $unusedModules = $this->defaultUnusedModules;
+            $defaultconfig->removeValue('checkTrustedModules');
+            $defaultconfig->removeValue('trustedModules');
+            $defaultconfig->removeValue('unusedModules');
 
-            $epModulePath = $this->getModulesPath($modulesPath, 1);
+            $configList['defaultconfig.ini.php'] = $defaultconfig;
 
-            $list = preg_split('/ *, */', $trustedModules);
-            foreach ($list as $module) {
-                if (isset($epModulePath[$module]))
-                    $epModulePath[$module]->access = 2;
-            }
+            // read each entry point configuration
+            $eplist = $this->getEntryPointsList();
 
-            if ($unusedModules) {
-                $list = preg_split('/ *, */', $unusedModules);
+            $help = "In each config files of your entry points, fill this parameters:\n".
+                   "* checkTrustedModules=on\n".
+                   "* trustedModules: list of modules accessible from the web\n".
+                   "* unusedModules: those you don't use at all\n".
+                   "For other modules you use but which should not be accessible from the web, nothing to do.\n";
+
+            // list of modules which are not declared into the default config
+            $otherModulePath = array();
+
+            foreach($eplist as $ep) {
+                if (isset($configList[$ep['config']]))
+                    continue;
+
+                $config = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$ep['config']);
+
+                $modulesPath = $config->getValue('modulesPath');
+                if (!$modulesPath) {
+                    $modulesPath = $this->defaultModulesPath;
+                }
+
+                $checkTrustedModules = $config->getValue('checkTrustedModules');
+                if ($checkTrustedModules === null)
+                    $checkTrustedModules = $this->defaultCheckTrustedModules;
+
+                if (!$checkTrustedModules) {
+                    throw new Exception("checkTrustedModules should be set to 'on' in config files.\n$help");
+                }
+
+                $trustedModules = $config->getValue('trustedModules');
+                if (!$trustedModules)
+                    $trustedModules = $this->defaultTrustedModules;
+
+                if ($trustedModules == '') {
+                    throw new Exception("trustedModules should be filled in config files.\n$help");
+                }
+
+                $unusedModules = $config->getValue('unusedModules');
+                if (!$unusedModules)
+                    $unusedModules = $this->defaultUnusedModules;
+
+                $epModulePath = $this->getModulesPath($modulesPath, 1);
+
+                $list = preg_split('/ *, */', $trustedModules);
                 foreach ($list as $module) {
                     if (isset($epModulePath[$module]))
-                        $epModulePath[$module]->access = 0;
+                        $epModulePath[$module]->access = 2;
                 }
+
+                if ($unusedModules) {
+                    $list = preg_split('/ *, */', $unusedModules);
+                    foreach ($list as $module) {
+                        if (isset($epModulePath[$module]))
+                            $epModulePath[$module]->access = 0;
+                    }
+                }
+
+                foreach ($epModulePath as $name=>$module) {
+                    if (!isset($allModulePath[$name]) || $allModulePath[$name]->access != $module->access) {
+                        $config->setValue($name.'.access', $module->access, 'modules');
+                    }
+                    if (!isset($allModulePath[$name]) && !isset($otherModulePath[$name]))
+                        $otherModulePath[$name] = $module;
+                }
+
+                $config->removeValue('checkTrustedModules');
+                $config->removeValue('trustedModules');
+                $config->removeValue('unusedModules');
+
+                $configList[$ep['config']] = $config;
             }
 
-            foreach ($epModulePath as $name=>$module) {
-                if (!isset($allModulePath[$name]) || $allModulePath[$name]->access != $module->access) {
-                    $config->setValue($name.'.access', $module->access, 'modules');
-                }
-                if (!isset($allModulePath[$name]) && !isset($otherModulePath[$name]))
-                    $otherModulePath[$name] = $module;
+            // we save at the end, because an error could appear during the previous loop
+            // and we don't want to save change if there are errors
+            $defaultconfig->save();
+            foreach($configList as $config) {
+                $config->save();
             }
-
-            $config->removeValue('checkTrustedModules');
-            $config->removeValue('trustedModules');
-            $config->removeValue('unusedModules');
-
-            $configList[$ep['config']] = $config;
         }
-        
-        // we save at the end, because an error could appear during the previous loop
-        // and we don't want to save change if there are errors
-        $defaultconfig->save();
-        foreach($configList as $config) {
-            $config->save();
+        else {
+            // load list of modules for the next step
+            $allModulePath = $this->getModulesPath($this->defaultModulesPath, 2);
+            $eplist = $this->getEntryPointsList();
+            // list of modules which are not declared into the default config
+            $otherModulePath = array();
+
+            foreach($eplist as $ep) {
+                if (isset($configList[$ep['config']]))
+                    continue;
+                $config = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$ep['config']);
+
+                $modulesPath = $config->getValue('modulesPath');
+                if (!$modulesPath) {
+                    $modulesPath = $this->defaultModulesPath;
+                }
+                $epModulePath = $this->getModulesPath($modulesPath, 1);
+                foreach ($epModulePath as $name=>$module) {
+                    if (!isset($allModulePath[$name]) && !isset($otherModulePath[$name]))
+                        $otherModulePath[$name] = $module;
+                }
+            }
         }
 
-        foreach ($allModulePath as $name=>$module) {
-            $this->updateModuleXml($module);
-        }
-        foreach ($otherModulePath as $name=>$module) {
-            $this->updateModuleXml($module);
+        if ($this->checkStep("Update module.xml files")) {
+            foreach ($allModulePath as $name=>$module) {
+                $this->updateModuleXml($module);
+            }
+            foreach ($otherModulePath as $name=>$module) {
+                $this->updateModuleXml($module);
+            }
         }
     }
-    
+
     protected $moduleRepositories = array();
-    
+
     /**
      * retrieve all modules specifications
      */
@@ -233,7 +275,7 @@ class migrateCommand extends JelixScriptCommand {
         $list = preg_split('/ *, */', $modulesPath);
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $modulesPathList = array();
-        
+
         foreach ($list as $k=>$path) {
             if (trim($path) == '') continue;
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
@@ -268,7 +310,8 @@ class migrateCommand extends JelixScriptCommand {
      * update the project.xml file
      */
     protected function updateProjectXml() {
-        
+        if (!$this->checkStep("Update the project.xml file"))
+            return;
         $doc = $this->projectXml;
         
         $this->updateInfo($doc, '', '');
@@ -286,7 +329,7 @@ class migrateCommand extends JelixScriptCommand {
 
         $this->projectXml->save(JELIX_APP_PATH.'project.xml');
     }
-    
+
     protected function checkPath($dir, $localName, $path) {
         $config = $dir->getElementsByTagName($localName);
         if (!$config || $config->length == 0) {
@@ -322,7 +365,7 @@ class migrateCommand extends JelixScriptCommand {
         
         return $info;
     }
-    
+
     /**
      * update informations about jelix version in a module.xml or project.xml file
      */
@@ -340,12 +383,12 @@ class migrateCommand extends JelixScriptCommand {
             $jelix->setAttribute('maxversion', jVersionComparator::getBranchVersion(JELIX_VERSION).'.*');
         }
     }
-    
+
     /**
      * update or create the module.xml file of a module
      */
     protected function updateModuleXml(migrateModule $module) {
-        
+
         $modulexml = $module->path.'module.xml';
         if (!file_exists($modulexml)) {
             $param = array();
@@ -355,7 +398,7 @@ class migrateCommand extends JelixScriptCommand {
             $this->createFile($modulexml, 'module/module.xml.tpl', $param);
             return;
         }
-        
+
         $doc = new DOMDocument();
 
         if (!$doc->load($modulexml)){
@@ -366,8 +409,8 @@ class migrateCommand extends JelixScriptCommand {
         $this->updateJelixDependency($doc);
         $doc->save($modulexml);
     }
-    
-    
+
+
     protected function firstElementChild($elt, $name = '') {
         $child = $elt->firstChild;
         while ($child && $child->nodeType != 1)
@@ -383,7 +426,7 @@ class migrateCommand extends JelixScriptCommand {
         }
         return $child;
     }
-    
+
     protected function nextElementSibling($elt, $name = '') {
         $child = $elt->nextSibling;
         while ($child && $child->nodeType != 1)
@@ -399,5 +442,35 @@ class migrateCommand extends JelixScriptCommand {
         }
 
         return $child;
+    }
+
+    protected $currentStep = 0;
+
+    protected function loadStep() {
+        if (!file_exists(JELIX_APP_CONFIG_PATH.'MIGRATION')) {
+            file_put_contents(JELIX_APP_CONFIG_PATH.'MIGRATION', 0);
+        }
+    }
+
+    /**
+     * @return boolean true if the step did not executed, false if already executed
+     */
+    protected function checkStep($message) {
+        $this->currentStep ++;
+        $step = intval(file_get_contents(JELIX_APP_CONFIG_PATH.'MIGRATION'));
+        if ($this->currentStep < $step) {
+            echo $message." (already done)\n";
+            return false;
+        }
+        else {
+            file_put_contents(JELIX_APP_CONFIG_PATH.'MIGRATION', $this->currentStep);
+            echo $message."\n";
+            return true;
+        }
+    }
+
+    protected function finalStep($message) {
+        unlink(JELIX_APP_CONFIG_PATH.'MIGRATION');
+        echo $message ."\n";
     }
 }
