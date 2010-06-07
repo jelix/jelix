@@ -26,7 +26,9 @@ function jtpl_function_html_gravatar($tpl, $email, $params=array()) {
         $params['default'] = null; 
     if ( !array_key_exists('size',$params))
         $params['size'] = 60;
-    
+    if ( ! array_key_exists($params['username']))
+        $params['username'] = '';
+
     $gravatarUrl = "http://www.gravatar.com/avatar.php?";
     $gravatarUrl .= "gravatar_id=".md5( strtolower($email) );
     if ($params['default'] != null)
