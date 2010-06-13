@@ -11,21 +11,10 @@
 
 class jacl2dbModuleInstallerBase extends jInstallerModule {
 
+    protected $defaultDbProfile = 'jacl2_profile';
+
     public function setEntryPoint($ep, $config, $dbProfile) {
-
-        // let's retrieve the profile used for jacl2
-        $dbProfilesFile = $config->getValue('dbProfils');
-        if ($dbProfilesFile == '')
-            $dbProfilesFile = 'dbprofils.ini.php';
-        $dbprofiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
-        if (isset($dbprofiles['jacl2_profile'])) {
-            if (is_string($dbprofiles['jacl2_profile']))
-                $dbProfile = $dbprofiles['jacl2_profile'];
-            else
-                $dbProfile = 'jacl2_profile';
-        }
         parent::setEntryPoint($ep, $config, $dbProfile);
-        return md5($ep->configFile.'-'.$dbProfile);
+        return md5($ep->configFile.'-'.$this->dbProfile);
     }
-
 }

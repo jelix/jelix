@@ -12,21 +12,11 @@
 
 class jacldbModuleInstaller extends jInstallerModule {
 
-    
-    public function setEntryPoint($ep, $config, $dbProfile) {
-        $dbProfilesFile = $config->getValue('dbProfils');
-        if ($dbProfilesFile == '')
-            $dbProfilesFile = 'dbprofils.ini.php';
-        $dbprofiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
-        if (isset($dbprofiles['jacl_profile'])) {
-            if (is_string($dbprofiles['jacl_profile']))
-                $dbProfile = $dbprofiles['jacl_profile'];
-            else
-                $dbProfile = 'jacl_profile';
-        }
-        parent::setEntryPoint($ep, $config, $dbProfile);
+    protected $defaultDbProfile = 'jacl_profile';
 
-        return md5($ep->configFile.'-'.$dbProfile);
+    public function setEntryPoint($ep, $config, $dbProfile) {
+        parent::setEntryPoint($ep, $config, $dbProfile);
+        return md5($ep->configFile.'-'.$this->dbProfile);
     }
 
     function install() {
@@ -58,7 +48,7 @@ class jacldbModuleInstaller extends jInstallerModule {
             $cf->save();
         }
 
-        $this->declareDbProfile('jacl_profile', null, false);
+        $this->declareDbProfile('jacl_profile', $this->dbProfile, false);
         $driver = $this->config->getValue('driver','acl');
         if ($driver != 'db')
             $this->config->setValue('driver','db','acl');

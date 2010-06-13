@@ -54,7 +54,12 @@ abstract class jInstallerBase {
      * @var string the jDb profile for the component
      */
     protected $dbProfile = '';
-    
+
+    /**
+     * @var string the default profile name for the component, if it exist. keep it to '' if not
+     */
+    protected $defaultDbProfile = '';
+
     /**
      * @var boolean true if this is an installation for the whole application.
      *              false if this is an installation in an
@@ -99,13 +104,32 @@ abstract class jInstallerBase {
      * and/or any other criteria.
      * @param jInstallerEntryPoint $ep the entry point
      * @param jIniMultiFilesModifier $config the configuration of the entry point
-     * @param string $dbProfile the name of the jdb profile
+     * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      * @return string|array an identifier or a list of identifiers
      */
     public function setEntryPoint($ep, $config, $dbProfile) {
         $this->config = $config;
         $this->entryPoint = $ep;
         $this->dbProfile = $dbProfile;
+
+        $dbProfilesFile = $config->getValue('dbProfils');
+        if ($dbProfilesFile == '')
+            $dbProfilesFile = 'dbprofils.ini.php';
+        $dbprofiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
+
+        // let's resolve the db profile
+        if (isset($dbprofiles[$dbProfile]) && is_string($dbprofiles[$dbProfile])) {
+            $this->dbProfile = $dbprofiles[$dbProfile];
+        }
+
+        if ($this->defaultDbProfile != '') {
+            if (isset($dbprofiles[$this->defaultDbProfile])) {
+                if (is_string($dbprofiles[$this->defaultDbProfile]))
+                    $this->dbProfile = $dbprofiles[$this->defaultDbProfile];
+                else
+                    $this->dbProfile = $this->defaultDbProfile;
+            }
+        }
         return "0";
     }
 
