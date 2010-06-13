@@ -1,16 +1,16 @@
 --
-INSERT INTO `jacl2_group` (`id_aclgrp`, `name`, `code`, `grouptype`, `ownerlogin`) VALUES 
+INSERT INTO `%%PREFIX%%jacl2_group` (`id_aclgrp`, `name`, `code`, `grouptype`, `ownerlogin`) VALUES 
 (1, 'admins', 'admins', 0, NULL),
 (2, 'users', NULL, 1, NULL),
 (3, 'admin', NULL, 2, 'admin'),
 (0, 'anonymous', 'anonymous', 1, NULL);
 
 
-INSERT INTO `jacl2_user_group` (`login`, `id_aclgrp`) VALUES
+INSERT INTO `%%PREFIX%%jacl2_user_group` (`login`, `id_aclgrp`) VALUES
 ('admin', 1),
 ('admin', 3);
 
-INSERT INTO `jacl2_subject` (`id_aclsbj`, `label_key`) VALUES 
+INSERT INTO `%%PREFIX%%jacl2_subject` (`id_aclsbj`, `label_key`) VALUES 
 ('acl.user.view', 'jelix~acl2db.acl.user.view'),
 ('acl.user.modify', 'jelix~acl2db.acl.user.modify'),
 ('acl.group.modify', 'jelix~acl2db.acl.group.modify'),
@@ -27,7 +27,7 @@ INSERT INTO `jacl2_subject` (`id_aclsbj`, `label_key`) VALUES
 ('auth.user.modify', 'jelix~auth.acl.user.modify'),
 ('auth.user.change.password', 'jelix~auth.acl.user.change.password');
 
-INSERT INTO `jacl2_rights` (`id_aclsbj`, `id_aclgrp`, `id_aclres`) VALUES
+INSERT INTO `%%PREFIX%%jacl2_rights` (`id_aclsbj`, `id_aclgrp`, `id_aclres`) VALUES
 ('acl.group.modify', 1, ''),
 ('acl.group.create', 1, ''),
 ('acl.group.delete', 1, ''),
