@@ -14,10 +14,9 @@ class jacldbModuleInstaller extends jInstallerModule {
 
     protected $defaultDbProfile = 'jacl_profile';
 
-    public function setEntryPoint($ep, $config, $dbProfile) {
-        parent::setEntryPoint($ep, $config, $dbProfile);
-        return md5($ep->configFile.'-'.$this->dbProfile);
-    }
+    protected $forEachEntryPointsConfig = true;
+
+    protected $useDatabase = true;
 
     function install() {
         if ($this->entryPoint->type != 'cmdline')

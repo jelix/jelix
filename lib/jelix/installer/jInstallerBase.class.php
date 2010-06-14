@@ -68,6 +68,20 @@ abstract class jInstallerBase {
     protected $installWholeApp = false;
 
     /**
+     * flag to indicate if the installer should be executed for each different
+     * entry point or not
+     * @var boolean
+     */
+    protected $forEachEntryPointsConfig = true;
+
+    /**
+     * flag to indicate if the installer use the database. If yes, the installer
+     * will be executed for each entry point which use a different db profile
+     * @var boolean
+     */
+    protected $useDatabase = false;
+
+    /**
      * @param string $componentName name of the component
      * @param string $name name of the installer
      * @param string $path the component path
@@ -130,7 +144,15 @@ abstract class jInstallerBase {
                     $this->dbProfile = $this->defaultDbProfile;
             }
         }
-        return "0";
+
+        $sessionid = "0";
+        if ($this->forEachEntryPointsConfig)
+            $sessionid .= "-".$ep->configFile;
+
+        if ($this->useDatabase)
+            $sessionid .= $this->dbProfile;
+
+        return md5($sessionid);
     }
 
     /**

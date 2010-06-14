@@ -14,10 +14,9 @@ require_once(dirname(__FILE__).'/_installclass.php');
 
 class jacl2dbModuleUpgrader_namedgroup extends jacl2dbModuleInstallerBase {
 
-    public function setEntryPoint($ep, $config, $dbProfile) {
-        parent::setEntryPoint($ep, $config, $dbProfile);
-        return md5($this->dbProfile);
-    }
+    protected $forEachEntryPointsConfig = false;
+
+    protected $useDatabase = true;
 
     function install() {
         $this->declareDbProfile('jacl2_profile', $this->dbProfile, false);

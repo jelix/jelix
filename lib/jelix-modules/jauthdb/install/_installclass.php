@@ -12,15 +12,18 @@
 
 class jauthdbModuleInstallerBase extends jInstallerModule {
 
+    protected $useDatabase = true;
+
     public function setEntryPoint($ep, $config, $dbProfile) {
-        parent::setEntryPoint($ep, $config, $dbProfile);
-        $authconfig = $this->config->getValue('auth','coordplugins');
-        $profile = '';
+        $authconfig = $config->getValue('auth','coordplugins');
         if ($authconfig) {
             $conf = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$authconfig);
             if ($conf->getValue('driver'))
-                $profile = $conf->getValue('profile', 'Db');
+                $dbProfile = $conf->getValue('profile', 'Db');
         }
-        return md5('-' . $authconfig.'-'.$profile);
+
+        parent::setEntryPoint($ep, $config, $dbProfile);
+
+        return md5('-' . $authconfig.'-'.$this->dbProfile);
     }
 }

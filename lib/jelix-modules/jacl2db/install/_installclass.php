@@ -13,8 +13,8 @@ class jacl2dbModuleInstallerBase extends jInstallerModule {
 
     protected $defaultDbProfile = 'jacl2_profile';
 
-    public function setEntryPoint($ep, $config, $dbProfile) {
-        parent::setEntryPoint($ep, $config, $dbProfile);
-        return md5($ep->configFile.'-'.$this->dbProfile);
-    }
+    protected $forEachEntryPointsConfig = true;
+
+    protected $useDatabase = true;
+
 }

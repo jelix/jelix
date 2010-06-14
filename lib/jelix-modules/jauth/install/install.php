@@ -11,10 +11,7 @@
 
 class jauthModuleInstaller extends jInstallerModule {
 
-    public function setEntryPoint($ep, $config, $dbProfile) {
-        parent::setEntryPoint($ep, $config, $dbProfile);
-        return md5($ep->configFile);
-    }
+    protected $forEachEntryPointsConfig = true;
 
     function install() {
         $authconfig = $this->config->getValue('auth','coordplugins');
