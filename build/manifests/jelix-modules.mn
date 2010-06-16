@@ -42,8 +42,10 @@ cd lib/jelix-modules/jacl2db/daos
 cd lib/jelix-modules/jacl2db/install
   install_jacl2.schema.mysql.sql
   install_jacl2.schema.pgsql.sql
+  install_jacl2.schema.sqlite.sql
   install_jacl2.data.mysql.sql
   install_jacl2.data.pgsql.sql
+  install_jacl2.data.sqlite.sql
   install.php
   _installclass.php
   upgrade_to_1.2b1pre.1422_namedgroup.php
@@ -57,8 +59,10 @@ cd lib/jelix-modules/jauthdb/daos
 cd lib/jelix-modules/jauthdb/install/
   install_jauth.schema.mysql.sql
   install_jauth.schema.pgsql.sql
+  install_jauth.schema.sqlite.sql
   install_jauth.data.mysql.sql
   install_jauth.data.pgsql.sql
+  install_jauth.data.sqlite.sql
   install.php
   _installclass.php
   upgrade_to_1.2b1pre.1303_newdao.php
