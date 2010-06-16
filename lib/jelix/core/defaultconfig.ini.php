@@ -175,6 +175,7 @@ basePath = ""
 ; jelix-www, or copy its content in yourapp/www/ (with a name like 'jelix' for example)
 ; so you should indicate the relative path of this link/directory to the basePath, or an absolute path.
 ; if you change it, change also all pathes in [htmleditors]
+; at runtime, it contains the absolute path (basePath+the value) if you give a relative path
 jelixWWWPath = "jelix/"
 
 defaultEntrypoint= index

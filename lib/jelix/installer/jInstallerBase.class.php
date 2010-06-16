@@ -218,8 +218,9 @@ abstract class jInstallerBase {
      * @param string $relativeSourcePath relative path to the install/ directory of the component
      * @param string $targetPath the full path where to copy the content
      */
-    final protected function copyDirectoryContent($relativeSourcePath, $targetPath) {
-        $this->_copyDirectoryContent ($this->path.'install/'.$relativeSourcePath, $targetPath);
+    final protected function copyDirectoryContent($relativeSourcePath, $targetPath, $overwrite = false) {
+        $targetPath = $this->expandPath($targetPath);
+        $this->_copyDirectoryContent ($this->path.'install/'.$relativeSourcePath, $targetPath, $overwrite);
     }
 
     /**
@@ -228,12 +229,14 @@ abstract class jInstallerBase {
      * @param string $sourcePath 
      * @param string $targetPath
      */
-    private function _copyDirectoryContent($sourcePath, $targetPath) {
+    private function _copyDirectoryContent($sourcePath, $targetPath, $overwrite) {
         jFile::createDir($targetPath);
         $dir = new DirectoryIterator($sourcePath);
         foreach ($dir as $dirContent) {
             if ($dirContent->isFile()) {
-                copy($dirContent->getPathName(), $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath())));
+                $p = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
+                if ($overwrite || !file_exists($p))
+                    copy($dirContent->getPathName(), $p);
             } else {
                 if (!$dirContent->isDot() && $dirContent->isDir()) {
                     $newTarget = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
@@ -249,10 +252,34 @@ abstract class jInstallerBase {
      * @param string $relativeSourcePath relative path to the install/ directory of the file to copy
      * @param string $targetPath the full path where to copy the file
      */
-    final protected function copyFile($relativeSourcePath, $targetPath) {
+    final protected function copyFile($relativeSourcePath, $targetPath, $overwrite = false) {
+        $targetPath = $this->expandPath($targetPath);
+        if (!$overwrite && file_exists($targetPath))
+            return;
+        $dir = dirname($targetPath);
+        jFile::createDir($dir);
         copy ($this->path.'install/'.$relativeSourcePath, $targetPath);
     }
-    
+
+    protected function expandPath($path) {
+         if (strpos($path, 'www:') === 0)
+            $path = str_replace('www:', JELIX_APP_WWW_PATH, $path);
+        elseif (strpos($path, 'jelixwww:') === 0) {
+            $p = $this->config->getValue('jelixWWWPath','urlengine');
+            if (substr($p, -1) != '/')
+                $p.='/';
+            $path = str_replace('jelixwww:', JELIX_APP_WWW_PATH.$p, $path);
+        }
+        elseif (strpos($path, 'config:') === 0) {
+            $path = str_replace('config:', JELIX_APP_CONFIG_PATH, $path);
+        }
+        elseif (strpos($path, 'epconfig:') === 0) {
+            $p = dirname(JELIX_APP_CONFIG_PATH.$this->entryPoint->configFile);
+            $path = str_replace('epconfig:', $p.'/', $path);
+        }
+        return $path;
+    }
+
     /**
      * declare a new db profile. if the content of the section is not given,
      * it will declare an alias to the default profile
