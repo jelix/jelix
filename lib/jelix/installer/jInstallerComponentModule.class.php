@@ -99,6 +99,13 @@ class jInstallerComponentModule extends jInstallerComponentBase {
                                                 );
         }
 
+        $this->moduleInstaller->setParameters($this->moduleInfos[$epId]->parameters);
+        $sparam = $config->getValue($this->name.'.installparam','modules');
+        $sp = $this->moduleInfos[$epId]->serializeParameters();
+        if ($sparam != $sp) {
+            $config->setValue($this->name.'.installparam', $sp, 'modules');
+        }
+
         // retrieve the session id for the installer
         // if there is already the same session Id in the list of session
         // it means that the installer has been already called for the same context
@@ -189,6 +196,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
                 continue;
             }
 
+            $upgrader->setParameters($this->moduleInfos[$epId]->parameters);
             $class = get_class($upgrader);
             $sessionId = $upgrader->setEntryPoint($this->moduleInfos[$epId]->entryPoint,
                                                   $config,

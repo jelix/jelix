@@ -125,6 +125,13 @@ abstract class jInstallerComponentBase {
         $this->moduleInfos[$epId]->version = $version;
     }
 
+    public function setInstallParameters($epId, $parameters) {
+        $this->moduleInfos[$epId]->parameters = $parameters;
+    }
+
+    public function getInstallParameters($epId) {
+        return $this->moduleInfos[$epId]->parameters;
+    }
 
     /**
      * get the object which is responsible to install the component. this

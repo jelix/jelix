@@ -228,6 +228,7 @@ cd lib/jelix/installer
   jInstallerException.class.php
 * jInstallerMessageProvider.class.php
   jInstallerModule.class.php
+  jInstallerModuleInfos.class.php
   jInstallerPlugin.class.php
 
 cd lib/jelix/kvdb

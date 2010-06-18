@@ -82,6 +82,13 @@ abstract class jInstallerBase {
     protected $useDatabase = false;
 
     /**
+     * parameters for the installer, indicated in the configuration file or
+     * dynamically, by a launcher in a command line for instance.
+     * @var array
+     */
+    protected $parameters = array();
+
+    /**
      * @param string $componentName name of the component
      * @param string $name name of the installer
      * @param string $path the component path
@@ -95,6 +102,17 @@ abstract class jInstallerBase {
         $this->name = $name;
         $this->componentName = $componentName;
         $this->installWholeApp = $installWholeApp;
+    }
+
+    function setParameters($parameters) {
+        $this->parameters = $parameters;
+    }
+
+    function getParameter($name) {
+        if (isset($this->parameters[$name]))
+            return $this->parameters[$name];
+        else
+            return null;
     }
 
     /**
@@ -150,7 +168,7 @@ abstract class jInstallerBase {
             $sessionid .= "-".$ep->configFile;
 
         if ($this->useDatabase)
-            $sessionid .= $this->dbProfile;
+            $sessionid .= "-".$this->dbProfile;
 
         return md5($sessionid);
     }
@@ -172,12 +190,31 @@ abstract class jInstallerBase {
     }
 
     /**
+     * @param string $profile the db profile
+     * @return string the name of the type of database
+     */
+    protected function getDbType($profile = null) {
+        if (!$profile)
+            $profile = $this->dbProfile;
+        $p = jDb::getProfile ($profile);
+        $driver = $p['driver'];
+        if ($driver == 'pdo') {
+            preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
+            $driver = $m[1];
+        }
+        return $driver;
+    }
+
+
+    /**
      * import a sql script into the given profile.
      *
      * The name of the script should be store in install/$name.databasetype.sql
      * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
+     * You can however provide a script compatible with all databases, but then
+     * you should indicate the full name of the script, with a .sql extension.
      * 
-     * @param string $name the name of the script, without suffixes
+     * @param string $name the name of the script
      * @param string $profile the profile to use. null for the default profile
      * @param string $module the module from which we should take the sql file. null for the current module
      */
@@ -191,12 +228,8 @@ abstract class jInstallerBase {
             $cnx = jDb::getConnection($profile);
             $tools = $cnx->tools();
         }
-        $p = jDb::getProfile ($profile);
-        $driver = $p['driver'];
-        if ($driver == 'pdo') {
-            preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
-            $driver = $m[1];
-        }
+
+        $driver = $this->getDbType($profile);
 
         if ($module) {
             $conf = $this->entryPoint->config->_modulesPathList;
@@ -208,8 +241,11 @@ abstract class jInstallerBase {
         else {
             $path = $this->path;
         }
-        $file = $path.'install/'.$name.'.'.$driver.'.sql';
-        $tools->execSQLScript($path.'install/'.$name.'.'.$driver.'.sql');
+        $file = $path.'install/'.$name;
+        if (substr($name, -4) != '.sql')
+            $file .= '.'.$driver.'.sql';
+
+        $tools->execSQLScript($file);
     }
 
     /**
@@ -240,7 +276,7 @@ abstract class jInstallerBase {
             } else {
                 if (!$dirContent->isDot() && $dirContent->isDir()) {
                     $newTarget = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
-                    $this->_copyDirectoryContent($dirContent->getPathName(),$newTarget );
+                    $this->_copyDirectoryContent($dirContent->getPathName(),$newTarget, $overwrite);
                 }
             }
         }

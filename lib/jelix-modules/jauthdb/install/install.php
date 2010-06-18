@@ -11,6 +11,10 @@
 
 require_once(dirname(__FILE__).'/_installclass.php');
 
+/**
+ * parameters for this installer
+ *    - defaultuser      add a default user, admin
+ */
 class jauthdbModuleInstaller extends jauthdbModuleInstallerBase {
 
     function install() {
@@ -40,10 +44,13 @@ class jauthdbModuleInstaller extends jauthdbModuleInstallerBase {
             $daoName = $conf->getValue('dao', 'Db');
             if ($daoName == 'jauthdb~jelixuser') {
                 $profile = $conf->getValue('profile', 'Db');
-                $this->execSQLScript('install_jauth.schema', $profile);
-                try {
-                    $this->execSQLScript('install_jauth.data', $profile);
-                } catch(Exception $e) {}
+                $this->dbProfile = $profile;
+                $this->execSQLScript('install_jauth.schema');
+                if ($this->getParameter('defaultuser')) {
+                    $cn = $this->dbConnection();
+                    $cn->exec("INSERT INTO ".$cn->prefixTable('jlx_user')." (usr_login, usr_password, usr_email ) VALUES
+                                ('admin', '".sha1('admin')."' , 'admin@localhost.localdomain')");
+                }
             }
         }
     }

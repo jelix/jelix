@@ -11,6 +11,11 @@
 
 require_once(dirname(__FILE__).'/_installclass.php');
 
+/**
+ * parameters for this installer
+ *    - defaultgroups    add default groups admin, users, anonymous
+ *    - defaultuser      add a default user, admin and add default groups
+ */
 class jacl2dbModuleInstaller extends jacl2dbModuleInstallerBase {
 
     function install() {
@@ -24,7 +29,7 @@ class jacl2dbModuleInstaller extends jacl2dbModuleInstallerBase {
         $ownConfig = false;
         if (!$aclconfig || ($forWS && $aclconfigMaster == $aclconfig)) {
 
-            $pluginIni = 'jacl2.coord.ini.php';            
+            $pluginIni = 'jacl2.coord.ini.php';
             $configDir = dirname($this->entryPoint->configFile).'/';
 
             // no configuration, let's install the plugin for the entry point
@@ -47,10 +52,27 @@ class jacl2dbModuleInstaller extends jacl2dbModuleInstallerBase {
         if ($driver != 'db')
             $this->config->setValue('driver','db','acl2');
         $this->execSQLScript('install_jacl2.schema', 'jacl2_profile');
-        try {
-            $this->execSQLScript('install_jacl2.data', 'jacl2_profile');
+
+        $this->execSQLScript('data.sql','jacl2_profile');
+
+        if ($this->getParameter('defaultuser') || $this->getParameter('defaultgroups')) {
+            // declare some groups
+            $this->execSQLScript('groups.sql', 'jacl2_profile');
+            $cn = $this->dbConnection();
+            // mysql ignore the value 0 and replace it by the next value of auto increment
+            // so let's change it to 0
+            try {
+                $cn->exec("UPDATE ".$cn->prefixTable('jacl2_group')." SET id_aclgrp = 0 WHERE  name = 'anonymous'
+                        AND code = 'anonymous' AND grouptype=1 and ownerlogin is null");
+            } catch(Exception $e) {}
+
+            if ($cn->dbms == 'pgsql') {
+                $cn->exec("SELECT setval('".$cn->prefixTable('jacl2_group_id_aclgrp_seq')."', 2, true)");
+            }
         }
-        catch (Exception $e) {
+
+        if ($this->getParameter('defaultuser')) {
+            $this->execSQLScript('user.sql', 'jacl2_profile');
         }
     }
 }

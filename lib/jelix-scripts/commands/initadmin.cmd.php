@@ -153,7 +153,7 @@ class initadminCommand extends JelixScriptCommand {
             if ($profile != '')
                 $authini->setValue('profile',$profile, 'Db');
             $authini->save();
-
+            $installer->setModuleParameters('jauthdb',array('defaultuser'=>true));
             $installer->installModules(array('jauthdb', 'jauthdb_admin'), $entrypoint.'.php');
         }
         else {
@@ -170,6 +170,7 @@ class initadminCommand extends JelixScriptCommand {
                 $dbini->save();
             }
             $installer = new jInstaller($reporter);
+            $installer->setModuleParameters('jacl2db',array('defaultuser'=>true));
             $installer->installModules(array('jacl2db', 'jacl2db_admin'), $entrypoint.'.php');
         }
         else {

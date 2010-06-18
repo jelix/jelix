@@ -10,56 +10,6 @@
 */
 
 /**
- * container for module properties
- */
-class jInstallerModuleInfos {
-    /**
-     * @var string
-     */
-    public $name;
-    /**
-     * @var string
-     */
-    public $access;
-    /**
-     * @var string
-     */
-    public $dbProfile;
-    /**
-     * @var string
-     */
-    public $isInstalled;
-    /**
-     * @var string
-     */
-    public $version;
-    /**
-     * @var string
-     */
-    public $sessionId;
-    /**
-     * @var jInstallerEntryPoint
-     */
-    public $entryPoint;
-    
-    /**
-     * @param string $name the name of the module
-     * @param jInstallerEntryPoint $entryPoint  the entry point on which the module is attached
-     */
-    function __construct($name, $entryPoint) {
-        $this->name = $name;
-        $this->entryPoint = $entryPoint;
-        $config = $entryPoint->config;
-        $this->access = $config->modules[$name.'.access'];
-        $this->dbProfile = $config->modules[$name.'.dbprofile'];
-        $this->isInstalled = $config->modules[$name.'.installed'];
-        $this->version = $config->modules[$name.'.version'];
-        $this->sessionId = $config->modules[$name.'.sessionid'];
-    }
-}
-
-
-/**
  * container for entry points properties
  */
 class jInstallerEntryPoint {

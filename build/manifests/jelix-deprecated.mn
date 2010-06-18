@@ -86,3 +86,13 @@ cd lib/jelix-admin-modules/jacl2db_admin/install/
 
 cd lib/jelix-admin-modules/jauthdb_admin/install/
   urls_example.xml
+
+cd lib/jelix-modules/jacl2db/install
+  install_jacl2.data.mysql.sql
+  install_jacl2.data.pgsql.sql
+  install_jacl2.data.sqlite.sql
+
+cd lib/jelix-modules/jauthdb/install
+  install_jauth.data.mysql.sql
+  install_jauth.data.pgsql.sql
+  install_jauth.data.sqlite.sql
