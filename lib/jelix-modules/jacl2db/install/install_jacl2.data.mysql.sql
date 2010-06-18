@@ -5,6 +5,11 @@ INSERT INTO `%%PREFIX%%jacl2_group` (`id_aclgrp`, `name`, `code`, `grouptype`, `
 (3, 'admin', NULL, 2, 'admin'),
 (0, 'anonymous', 'anonymous', 1, NULL);
 
+-- mysql ignore the 0 value and replace it by the next value of auto increment
+-- so let's change it to 0
+UPDATE `%%PREFIX%%jacl2_group` SET `id_aclgrp` = '0' WHERE `id_aclgrp` = 4 AND name = 'anonymous'
+AND code = 'anonymous' AND grouptype=1 and ownerlogin is null;
+
 
 INSERT INTO `%%PREFIX%%jacl2_user_group` (`login`, `id_aclgrp`) VALUES
 ('admin', 1),
