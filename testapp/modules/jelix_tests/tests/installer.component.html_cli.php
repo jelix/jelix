@@ -20,11 +20,11 @@ class testInstallerComponentForDependencies extends jInstallerComponentBase {
     protected $rootName = 'module';
     protected $identityFile = 'module.xml';
     
-    function getInstaller($config, $epId, $installWholeApp) {
+    function getInstaller($ep, $installWholeApp) {
         return null;
     }
 
-    function getUpgraders($config, $epId) {
+    function getUpgraders($ep) {
         return null;
     }
     
@@ -38,10 +38,14 @@ class testInstallerComponentForDependencies extends jInstallerComponentBase {
 
 class UTjInstallerComponent extends UnitTestCase {
 
+    protected $defaultIni;
+
+
     public function setUp() {
     }
 
     public function testDependenciesReading() {
+        $this->defaultIni = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
         $comp = new testInstallerComponentForDependencies("test","", null);
 
         $str = '<?xml version="1.0" encoding="UTF-8"?>
@@ -146,10 +150,10 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall1.sessionid'=>'',
             ));
 
-            $EPindex = new testInstallerEntryPoint('index/config.ini.php', 'index.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall1', $EPindex));
+            $EPindex = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall1', $EPindex));
 
-            $installer = $component->getInstaller($ini, 'index.php', true);
+            $installer = $component->getInstaller($EPindex, true);
             $this->assertNull($installer);
         }
         catch(jInstallerException $e) {
@@ -161,7 +165,8 @@ class UTjInstallerComponent extends UnitTestCase {
     function testGetInstallerWithInstaller() {
         try {
             // dummy ini file modifier. not used by installer of tested modules
-            $ini = new testInstallerIniFileModifier("test.ini.php");
+            $iniIndex = new testInstallerIniFileModifier('index/config.ini.php');
+            $iniFoo = new testInstallerIniFileModifier('foo/config.ini.php');
 
             // testinstall2 has an install.php file
             $component = new jInstallerComponentModule('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', null);
@@ -175,17 +180,17 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall2.sessionid'=>'',
             ));
 
-            $EPindex = new testInstallerEntryPoint('index/config.ini.php', 'index.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall2', $EPindex));
+            $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex));
 
-            $EPfoo = new testInstallerEntryPoint('foo/config.ini.php', 'foo.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall2', $EPfoo));
+            $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
+            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $EPfoo));
 
-            $installer = $component->getInstaller($ini, 'index.php', true);
+            $installer = $component->getInstaller($EPindex, true);
             $this->assertTrue (is_object($installer));
 
             // no discriminant id, so we don't have a new installer for an other entry point
-            $installer = $component->getInstaller($ini, 'foo.php', true);
+            $installer = $component->getInstaller($EPfoo, true);
             $this->assertFalse($installer);
 
         }
@@ -199,7 +204,7 @@ class UTjInstallerComponent extends UnitTestCase {
         try {
 
             // dummy ini file modifier. not used by installer of tested modules
-            $ini = new testInstallerIniFileModifier("test.ini.php");
+            $ini = new testInstallerIniFileModifier("index/config.ini.php");
 
             // testinstall1 has no upgrade scripts
             $component = new jInstallerComponentModule('testinstall1', JELIX_APP_PATH.'modules/testinstall1/', null);
@@ -211,10 +216,10 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall1.version'=>JELIX_VERSION,
                'testinstall1.sessionid'=>'',
             ));
-            $EPindex = new testInstallerEntryPoint('index/config.ini.php', 'index.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall1', $EPindex) );
+            $EPindex = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall1', $EPindex) );
 
-            $upgraders = $component->getUpgraders($ini, 'index.php');
+            $upgraders = $component->getUpgraders($EPindex);
             $this->assertTrue(is_array($upgraders));
             $this->assertEqual(count($upgraders), 0);
         }
@@ -227,7 +232,7 @@ class UTjInstallerComponent extends UnitTestCase {
 
         try {
             // dummy ini file modifier. not used by installer of tested modules
-            $ini = new testInstallerIniFileModifier("test.ini.php");
+            $ini = new testInstallerIniFileModifier("index/config.ini.php");
 
             //------------ testinstall2 has some upgraders file
             $component = new jInstallerComponentModule('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', null);
@@ -242,10 +247,10 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall2.sessionid'=>'',
             ));
 
-            $EPindex = new testInstallerEntryPoint('index/config.ini.php', 'index.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $EPindex = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex) );
 
-            $upgraders = $component->getUpgraders($ini, 'index.php');
+            $upgraders = $component->getUpgraders($EPindex);
             $this->assertTrue (is_array($upgraders));
             $this->assertEqual(count($upgraders), 0);
         }
@@ -257,7 +262,8 @@ class UTjInstallerComponent extends UnitTestCase {
     function testGetUpgradersWithOneValidUpgrader() {
         try {
             // dummy ini file modifier. not used by installer of tested modules
-            $ini = new testInstallerIniFileModifier("test.ini.php");
+            $iniIndex = new testInstallerIniFileModifier("index/config.ini.php");
+            $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             // the current version is the previous one : one updater
             $component = new jInstallerComponentModule('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', null);
@@ -271,19 +277,19 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall2.sessionid'=>'',
             ));
 
-            $EPindex = new testInstallerEntryPoint('index/config.ini.php', 'index.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex) );
 
-            $upgraders = $component->getUpgraders($ini, 'index.php');
+            $upgraders = $component->getUpgraders($EPindex);
             if ($this->assertTrue (is_array($upgraders))) {
                 if ($this->assertEqual(count($upgraders), 1))
                     $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_second');
             }
 
-            $EPindex = new testInstallerEntryPoint('foo/config.ini.php', 'foo.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
+            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $EPfoo) );
 
-            $upgraders = $component->getUpgraders($ini, 'foo.php');
+            $upgraders = $component->getUpgraders($EPfoo);
 
             if ($this->assertTrue (is_array($upgraders))) {
                 $this->assertEqual(count($upgraders), 0);
@@ -298,7 +304,8 @@ class UTjInstallerComponent extends UnitTestCase {
     function testGetUpgradersWithAllUpgraders() {
         try {
             // dummy ini file modifier. not used by installer of tested modules
-            $ini = new testInstallerIniFileModifier("test.ini.php");
+            $iniIndex = new testInstallerIniFileModifier("index/config.ini.php");
+            $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             // the current version is a very old one : all updaters
             $component = new jInstallerComponentModule('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', null);
@@ -312,10 +319,10 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall2.sessionid'=>'',
             ));
 
-            $EPindex = new testInstallerEntryPoint('index/config.ini.php', 'index.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex) );
 
-            $upgraders = $component->getUpgraders($ini, 'index.php');
+            $upgraders = $component->getUpgraders($EPindex);
             if ($this->assertTrue (is_array($upgraders))) {
                 if ($this->assertEqual(count($upgraders), 2)) {
                     $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_first');
@@ -323,10 +330,10 @@ class UTjInstallerComponent extends UnitTestCase {
                 }
             }
 
-            $EPindex = new testInstallerEntryPoint('foo/config.ini.php', 'foo.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
+            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $EPfoo) );
 
-            $upgraders = $component->getUpgraders($ini, 'foo.php');
+            $upgraders = $component->getUpgraders($EPfoo);
             if ($this->assertTrue (is_array($upgraders))) {
                 $this->assertEqual(count($upgraders), 0);
             }
@@ -342,7 +349,8 @@ class UTjInstallerComponent extends UnitTestCase {
 
         try {
             // dummy ini file modifier. not used by installer of tested modules
-            $ini = new testInstallerIniFileModifier("test.ini.php");
+            $iniIndex = new testInstallerIniFileModifier("index/config.ini.php");
+            $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             $component = new jInstallerComponentModule('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', null);
             $component->init();
@@ -355,10 +363,10 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall2.sessionid'=>'',
             ));
 
-            $EPindex = new testInstallerEntryPoint('index/config.ini.php', 'index.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex) );
 
-            $upgraders = $component->getUpgraders($ini, 'index.php');
+            $upgraders = $component->getUpgraders($EPindex);
             if ($this->assertTrue (is_array($upgraders))) {
                 if ($this->assertEqual(count($upgraders), 2)) {
                     $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_first');
@@ -366,21 +374,21 @@ class UTjInstallerComponent extends UnitTestCase {
                 }
             }
 
-            $EPindex = new testInstallerEntryPoint('foo/config.ini.php', 'foo.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
+            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $EPfoo) );
             
-            $upgraders2 = $component->getUpgraders($ini, 'foo.php');
+            $upgraders2 = $component->getUpgraders($EPfoo);
 
             if ($this->assertTrue (is_array($upgraders2))) {
                 $this->assertEqual(count($upgraders2), 0);
             }
  
             $upgraders[1]->testUseCommonId = false;
-            
-            $EPindex = new testInstallerEntryPoint('bar/config.ini.php', 'bar.php', 'classic', $conf);
-            $component->addModuleInfos(new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $iniBar = new testInstallerIniFileModifier("bar/config.ini.php");
+            $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniBar, 'bar.php', 'classic', $conf);
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex) );
 
-            $upgraders2 = $component->getUpgraders($ini, 'bar.php');
+            $upgraders2 = $component->getUpgraders($EPindex);
 
             if ($this->assertTrue (is_array($upgraders2))) {
                 if ($this->assertEqual(count($upgraders2), 1)) {

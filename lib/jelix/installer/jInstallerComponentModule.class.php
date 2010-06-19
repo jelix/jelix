@@ -69,14 +69,14 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * get the object which is responsible to install the component. this
      * object should implement jIInstallerComponent.
      *
-     * @param jIniMultiFilesModifier $config the configuration of the entry point
-     * @param string $epId the entry point id
+     * @param jInstallerEntryPoint $ep the entry point
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @return jIInstallerComponent the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
      */
-    function getInstaller($config, $epId, $installWholeApp) {
-        $this->_setAccess($config);
+    function getInstaller($ep, $installWholeApp) {
+
+        $this->_setAccess($ep->configIni);
 
         if ($this->moduleInstaller === false) {
             return null;
@@ -100,19 +100,16 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         }
 
         $this->moduleInstaller->setParameters($this->moduleInfos[$epId]->parameters);
-        $sparam = $config->getValue($this->name.'.installparam','modules');
+        $sparam = $ep->configIni->getValue($this->name.'.installparam','modules');
         $sp = $this->moduleInfos[$epId]->serializeParameters();
         if ($sparam != $sp) {
-            $config->setValue($this->name.'.installparam', $sp, 'modules');
+            $ep->configIni->setValue($this->name.'.installparam', $sp, 'modules');
         }
 
-        // retrieve the session id for the installer
-        // if there is already the same session Id in the list of session
-        // it means that the installer has been already called for the same context
-        // so we don't need to call it again
-        $sessionId = $this->moduleInstaller->setEntryPoint($this->moduleInfos[$epId]->entryPoint,
-                                                           $config,
-                                                           $this->moduleInfos[$epId]->dbProfile);
+        $this->moduleInstaller->setEntryPoint($ep,
+                                              $ep->configIni,
+                                              $this->moduleInfos[$epId]->dbProfile,
+                                              $this->installerSessionsId);
         if (is_array($sessionId)) {
             // if no given session id are in the list of session ids, so let's install it.
             if (count(array_intersect($sessionId, $this->installerSessionsId)) != 0) {
@@ -142,12 +139,13 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * dependencies. Needed components (modules or plugins) should be
      * installed/upgraded before calling this method
      *
-     * @param jIniMultiFilesModifier $config the configuration of the entry point
-     * @param string $epId the entry point id
+     * @param jInstallerEntryPoint $ep the entry point
      * @throw jInstallerException  if an error occurs during the install.
      * @return array   array of jIInstallerComponent
      */
-    function getUpgraders($config, $epId) {
+    function getUpgraders($ep) {
+
+        $epId = $ep->getEpId();
 
         if ($this->moduleUpgraders === null) {
 
@@ -198,8 +196,8 @@ class jInstallerComponentModule extends jInstallerComponentBase {
 
             $upgrader->setParameters($this->moduleInfos[$epId]->parameters);
             $class = get_class($upgrader);
-            $sessionId = $upgrader->setEntryPoint($this->moduleInfos[$epId]->entryPoint,
-                                                  $config,
+            $sessionId = $upgrader->setEntryPoint($ep,
+                                                  $ep->configIni,
                                                   $this->moduleInfos[$epId]->dbProfile);
 
             if (!isset($this->upgradersSessionsId[$class])) {

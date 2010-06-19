@@ -27,10 +27,17 @@ class testInstallerComponentModule extends jInstallerComponentModule {
 
 class testInstallerEntryPoint extends jInstallerEntryPoint {
 
-    function __construct($configFile, $file, $type, $configContent) {
+    function __construct($defaultConfig, $configFile, $file, $type, $configContent) {
         $this->type = $type;
         $this->isCliScript = ($type == 'cmdline');
-        $this->configFile = $configFile;
+        if (is_object($configFile)) {
+            $this->configFile = $configFile->getFileName();
+            $this->configIni = new jIniMultiFilesModifier($defaultConfig, $configFile);
+        }
+        else {
+            $this->configFile = $configFile;
+            $this->configIni = new jIniMultiFilesModifier($defaultConfig, new testInstallerIniFileModifier($configFile));
+        }
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
         $this->config = $configContent;

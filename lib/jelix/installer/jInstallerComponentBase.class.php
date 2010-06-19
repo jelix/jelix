@@ -100,10 +100,10 @@ abstract class jInstallerComponentBase {
     /**
      * @param jInstallerModuleInfos $module module infos
      */
-    public function addModuleInfos ($module) {
-        $this->moduleInfos[$module->entryPoint->getEpId()] = $module;
+    public function addModuleInfos ($epId, $module) {
+        $this->moduleInfos[$epId] = $module;
     }
-    
+
     public function getAccessLevel($epId) {
         return $this->moduleInfos[$epId]->access;
     }
@@ -137,13 +137,12 @@ abstract class jInstallerComponentBase {
      * get the object which is responsible to install the component. this
      * object should implement jIInstallerComponent.
      *
-     * @param jIniMultiFilesModifier $config the configuration of the entry point
-     * @param string $epId the entry point id
+     * @param jInstallerEntryPoint $ep the entry point
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @return jIInstallerComponent the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
      */
-    abstract function getInstaller($config, $epId, $installWholeApp);
+    abstract function getInstaller($ep, $installWholeApp);
 
     /**
      * return the list of objects which are responsible to upgrade the component
@@ -153,12 +152,11 @@ abstract class jInstallerComponentBase {
      * dependencies. Needed components (modules or plugins) should be
      * installed/upgraded before calling this method
      * 
-     * @param jIniMultiFilesModifier $config the configuration of the entry point
-     * @param string $epId the entry point id
+     * @param jInstallerEntryPoint $ep the entry point
      * @throw jInstallerException  if an error occurs during the install.
      * @return array   array of jIInstallerComponent
      */
-    abstract function getUpgraders($config, $epId);
+    abstract function getUpgraders($ep);
 
     /**
      * @var boolean  indicate if the identify file has already been readed

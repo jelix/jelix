@@ -37,10 +37,7 @@ class jInstallerModuleInfos {
      * @var string
      */
     public $sessionId;
-    /**
-     * @var jInstallerEntryPoint
-     */
-    public $entryPoint;
+
     /**
      * @var array parameters for installation
      */
@@ -52,7 +49,6 @@ class jInstallerModuleInfos {
      */
     function __construct($name, $entryPoint) {
         $this->name = $name;
-        $this->entryPoint = $entryPoint;
         $config = $entryPoint->config;
         $this->access = $config->modules[$name.'.access'];
         $this->dbProfile = $config->modules[$name.'.dbprofile'];
