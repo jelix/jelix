@@ -79,7 +79,7 @@ class testInstallReporter implements jIInstallReporter {
 class testInstallerIniFileModifier extends jIniFileModifier {
 
     function __construct($filename) {}
-    
+
     public function save() {
         $this->modified = false;
     }
@@ -121,6 +121,7 @@ class testInstallerMain extends jInstaller {
 
     function __construct ($reporter) {
         $this->reporter = $reporter;
+        $this->defaultConfig = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
         $this->messages = new jInstallerMessageProvider('en');
         $nativeModules = array('jelix','jacl2db','jacldb','jauth','jauthdb','junittests','jWSDL');
         global $gJConfig;
@@ -183,7 +184,7 @@ class testInstallerMain extends jInstaller {
     }
 
     protected function getEntryPointObject($configFile, $file, $type) {
-        return new testInstallerEntryPoint($configFile, $file, $type, (object) $this->configContent[$configFile]);
+        return new testInstallerEntryPoint($this->defaultConfig, $configFile, $file, $type, (object) $this->configContent[$configFile]);
     }
     
     protected function getComponentModule($name, $path, $installer) {

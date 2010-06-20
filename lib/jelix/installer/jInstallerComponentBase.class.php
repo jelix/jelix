@@ -169,7 +169,7 @@ abstract class jInstallerComponentBase {
     public function init () {
         if ($this->identityReaded)
             return;
-        $this->identityReaded = true;        
+        $this->identityReaded = true;
         $this->readIdentity();
     }
     

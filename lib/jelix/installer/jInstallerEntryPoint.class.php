@@ -83,7 +83,7 @@ class jInstallerEntryPoint {
      * by the entry point
      */
     function getModule($moduleName) {
-        return new jInstallerModuleInfos($moduleName, $this);
+        return new jInstallerModuleInfos($moduleName, $this->config->modules);
     }
 
     /**

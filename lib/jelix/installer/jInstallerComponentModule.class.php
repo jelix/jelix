@@ -98,7 +98,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
                                                 $installWholeApp
                                                 );
         }
-
+        $epId = $ep->getEpId();
         $this->moduleInstaller->setParameters($this->moduleInfos[$epId]->parameters);
         $sparam = $ep->configIni->getValue($this->name.'.installparam','modules');
         $sp = $this->moduleInfos[$epId]->serializeParameters();
@@ -106,7 +106,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             $ep->configIni->setValue($this->name.'.installparam', $sp, 'modules');
         }
 
-        $this->moduleInstaller->setEntryPoint($ep,
+        $sessionId = $this->moduleInstaller->setEntryPoint($ep,
                                               $ep->configIni,
                                               $this->moduleInfos[$epId]->dbProfile,
                                               $this->installerSessionsId);

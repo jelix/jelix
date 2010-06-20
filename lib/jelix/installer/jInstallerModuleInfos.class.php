@@ -45,19 +45,18 @@ class jInstallerModuleInfos {
 
     /**
      * @param string $name the name of the module
-     * @param jInstallerEntryPoint $entryPoint  the entry point on which the module is attached
+     * @param stdObj $config  configuration of modules ([modules] section)
      */
-    function __construct($name, $entryPoint) {
+    function __construct($name, $config) {
         $this->name = $name;
-        $config = $entryPoint->config;
-        $this->access = $config->modules[$name.'.access'];
-        $this->dbProfile = $config->modules[$name.'.dbprofile'];
-        $this->isInstalled = $config->modules[$name.'.installed'];
-        $this->version = $config->modules[$name.'.version'];
-        $this->sessionId = $config->modules[$name.'.sessionid'];
+        $this->access = $config[$name.'.access'];
+        $this->dbProfile = $config[$name.'.dbprofile'];
+        $this->isInstalled = $config[$name.'.installed'];
+        $this->version = $config[$name.'.version'];
+        $this->sessionId = $config[$name.'.sessionid'];
 
         if (isset($config->modules[$name.'.installparam'])) {
-            $params = explode(';', $config->modules[$name.'.installparam']);
+            $params = explode(';', $config[$name.'.installparam']);
             foreach($params as $param) {
                 $kp = explode("=", $param);
                 if (count($kp) > 1)

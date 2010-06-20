@@ -151,7 +151,7 @@ class UTjInstallerComponent extends UnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall1', $EPindex));
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall1', $conf->modules));
 
             $installer = $component->getInstaller($EPindex, true);
             $this->assertNull($installer);
@@ -181,10 +181,10 @@ class UTjInstallerComponent extends UnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex));
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules));
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
-            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $EPfoo));
+            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules));
 
             $installer = $component->getInstaller($EPindex, true);
             $this->assertTrue (is_object($installer));
@@ -217,7 +217,7 @@ class UTjInstallerComponent extends UnitTestCase {
                'testinstall1.sessionid'=>'',
             ));
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall1', $EPindex) );
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall1', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
             $this->assertTrue(is_array($upgraders));
@@ -248,7 +248,7 @@ class UTjInstallerComponent extends UnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
             $this->assertTrue (is_array($upgraders));
@@ -278,7 +278,7 @@ class UTjInstallerComponent extends UnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
             if ($this->assertTrue (is_array($upgraders))) {
@@ -287,7 +287,7 @@ class UTjInstallerComponent extends UnitTestCase {
             }
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
-            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $EPfoo) );
+            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPfoo);
 
@@ -320,7 +320,7 @@ class UTjInstallerComponent extends UnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
             if ($this->assertTrue (is_array($upgraders))) {
@@ -331,7 +331,7 @@ class UTjInstallerComponent extends UnitTestCase {
             }
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
-            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $EPfoo) );
+            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPfoo);
             if ($this->assertTrue (is_array($upgraders))) {
@@ -364,7 +364,7 @@ class UTjInstallerComponent extends UnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
             if ($this->assertTrue (is_array($upgraders))) {
@@ -375,7 +375,7 @@ class UTjInstallerComponent extends UnitTestCase {
             }
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
-            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $EPfoo) );
+            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
             
             $upgraders2 = $component->getUpgraders($EPfoo);
 
@@ -386,7 +386,7 @@ class UTjInstallerComponent extends UnitTestCase {
             $upgraders[1]->testUseCommonId = false;
             $iniBar = new testInstallerIniFileModifier("bar/config.ini.php");
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniBar, 'bar.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $EPindex) );
+            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders2 = $component->getUpgraders($EPindex);
 
