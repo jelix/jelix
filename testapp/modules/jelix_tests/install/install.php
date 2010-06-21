@@ -14,22 +14,27 @@ class jelix_testsModuleInstaller extends jInstallerModule {
 
     function install() {
 
-      $this->execSQLScript('install');
+        if (!$this->firstDbExec()) {
+            return;
+        }
+        $this->execSQLScript('install');
 
-      //Create tables if they do not exist yet because of a specific configuration
-      //(which is the case of testapp's out of the box config)
-      $this->execSQLScript('sql/install_jsession.schema', null, 'jelix');
-      $this->execSQLScript('sql/install_jcache.schema', null, 'jelix');
+        //Create tables if they do not exist yet because of a specific configuration
+        //(which is the case of testapp's out of the box config)
+        $this->execSQLScript('sql/install_jsession.schema', 'jelix');
+        $this->execSQLScript('sql/install_jcache.schema', 'jelix');
+  
+        try {
+            $dbprofile = jDb::getProfile('testapp_pgsql', true);
+            $this->useDbProfile('testapp_pgsql');
+            
+        }
+        catch(Exception $e) {
+            // no profile for pgsql, don't install tables in pgsql
+            return;
+        }
 
-      try {
-        $dbprofile = jDb::getProfile('testapp_pgsql', true);
+        $this->execSQLScript('install');
+        $this->execSQLScript('sql/install_jsession.schema', 'jelix');
       }
-      catch(Exception $e) {
-        // no profile for pgsql, don't install tables in pgsql
-        return;
-      }
-
-      $this->execSQLScript('install', 'testapp_pgsql');
-      $this->execSQLScript('sql/install_jsession.schema', 'testapp_pgsql', 'jelix');
-    }
 }

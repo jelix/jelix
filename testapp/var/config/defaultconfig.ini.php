@@ -48,13 +48,13 @@ emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursit
 quietMessage="Une erreur technique est survenue. Désolé pour ce désagrément."
 showInFirebug = off
 ; mots clés que vous pouvez utiliser : ECHO, ECHOQUIET, EXIT, LOGFILE, SYSLOG, MAIL, TRACE
-default      = ECHO EXIT
-error        = ECHO EXIT
-warning      = ECHO
-notice       = ECHO
-strict       = ECHO
+default      = ECHO LOGFILE TRACE EXIT
+error        = ECHO LOGFILE TRACE EXIT
+warning      = ECHO LOGFILE TRACE
+notice       = ECHO LOGFILE
+strict       = ECHO LOGFILE
 ; pour les exceptions, il y a implicitement un EXIT
-exception    = ECHO
+exception    = ECHO LOGFILE TRACE
 
 [compilation]
 checkCacheFiletime  = on

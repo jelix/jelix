@@ -289,7 +289,6 @@ class jInstaller {
 
                 $this->installerIni->setValue($name.'.installed', $module->isInstalled, $epId);
                 $this->installerIni->setValue($name.'.version', $module->version, $epId);
-                $this->installerIni->setValue($name.'.sessionid', $module->sessionId, $epId);
 
                 if (!isset($this->allModules[$path])) {
                     $this->allModules[$path] = $this->getComponentModule($name, $path, $this);
@@ -649,15 +648,17 @@ class jInstaller {
                 list($installer, $component, $toInstall) = $item;
 
                 if ($toInstall) {
-                    if ($installer && ($flags & self::FLAG_INSTALL_MODULE))
+                    if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
                         $installer->postInstall();
+                        $component->installFinished($ep);
+                    }
                 }
                 else if ($flags & self::FLAG_UPGRADE_MODULE){
                     foreach($installer as $upgrader) {
                         $upgrader->postInstall();
+                        $component->upgradeFinished($ep, $upgrader);
                     }
                 }
-
 
                 // we always save the configuration, so it invalidates the cache
                 $ep->configIni->save();

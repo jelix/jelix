@@ -33,10 +33,6 @@ class jInstallerModuleInfos {
      * @var string
      */
     public $version;
-    /**
-     * @var string
-     */
-    public $sessionId;
 
     /**
      * @var array parameters for installation
@@ -53,7 +49,6 @@ class jInstallerModuleInfos {
         $this->dbProfile = $config[$name.'.dbprofile'];
         $this->isInstalled = $config[$name.'.installed'];
         $this->version = $config[$name.'.version'];
-        $this->sessionId = $config[$name.'.sessionid'];
 
         if (isset($config->modules[$name.'.installparam'])) {
             $params = explode(';', $config[$name.'.installparam']);

@@ -9,13 +9,11 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(dirname(__FILE__).'/_installclass.php');
-
 /**
  * parameters for this installer
  *    - defaultuser      add a default user, admin
  */
-class jauthdbModuleInstaller extends jauthdbModuleInstallerBase {
+class jauthdbModuleInstaller extends jInstallerModule {
 
     function install() {
         //if ($this->entryPoint->type == 'cmdline')
@@ -23,7 +21,7 @@ class jauthdbModuleInstaller extends jauthdbModuleInstallerBase {
 
         $authconfig = $this->config->getValue('auth','coordplugins');
 
-        if ($authconfig) {
+        if ($authconfig && $this->firstExec($authconfig)) {
             // a config file for the auth plugin exists, so we can install
             // the module, else we ignore it
 
@@ -40,11 +38,12 @@ class jauthdbModuleInstaller extends jauthdbModuleInstallerBase {
                 return;
             }
 
+            $this->useDbProfile($conf->getValue('profile', 'Db'));
+
             // FIXME: should use the given dao to create the table
             $daoName = $conf->getValue('dao', 'Db');
-            if ($daoName == 'jauthdb~jelixuser') {
-                $profile = $conf->getValue('profile', 'Db');
-                $this->dbProfile = $profile;
+            if ($daoName == 'jauthdb~jelixuser' && $this->firstDbExec()) {
+
                 $this->execSQLScript('install_jauth.schema');
                 if ($this->getParameter('defaultuser')) {
                     $cn = $this->dbConnection();

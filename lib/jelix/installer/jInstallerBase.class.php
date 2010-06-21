@@ -68,20 +68,6 @@ abstract class jInstallerBase {
     protected $installWholeApp = false;
 
     /**
-     * flag to indicate if the installer should be executed for each different
-     * entry point or not
-     * @var boolean
-     */
-    protected $forEachEntryPointsConfig = true;
-
-    /**
-     * flag to indicate if the installer use the database. If yes, the installer
-     * will be executed for each entry point which use a different db profile
-     * @var boolean
-     */
-    protected $useDatabase = false;
-
-    /**
      * parameters for the installer, indicated in the configuration file or
      * dynamically, by a launcher in a command line for instance.
      * @var array
@@ -127,50 +113,90 @@ abstract class jInstallerBase {
 
     /**
      * is called to indicate that the installer will be called for the given
-     * configuration, entry point and db profile. It should return a corresponding
-     * install session id. It should be a unique id, calculated with some
-     * criterias, depending if you want the installer to be called for each
-     * entrypoint or not, for different db profile or not etc..
-     * Typically, you could return an md5 value on a string which could contain
-     * the name of the given entry point, and/or the name of the given dbprofile
-     * and/or any other criteria.
+     * configuration, entry point and db profile.
      * @param jInstallerEntryPoint $ep the entry point
      * @param jIniMultiFilesModifier $config the configuration of the entry point
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
-     * @return string|array an identifier or a list of identifiers
+     * @param array $contexts  list of contexts already executed
      */
-    public function setEntryPoint($ep, $config, $dbProfile) {
+    public function setEntryPoint($ep, $config, $dbProfile, $contexts) {
         $this->config = $config;
         $this->entryPoint = $ep;
-        $this->dbProfile = $dbProfile;
-
-        $dbProfilesFile = $config->getValue('dbProfils');
-        if ($dbProfilesFile == '')
-            $dbProfilesFile = 'dbprofils.ini.php';
-        $dbprofiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
-
-        // let's resolve the db profile
-        if (isset($dbprofiles[$dbProfile]) && is_string($dbprofiles[$dbProfile])) {
-            $this->dbProfile = $dbprofiles[$dbProfile];
-        }
+        $this->contextId = $contexts;
+        $this->newContextId = array();
 
         if ($this->defaultDbProfile != '') {
-            if (isset($dbprofiles[$this->defaultDbProfile])) {
-                if (is_string($dbprofiles[$this->defaultDbProfile]))
-                    $this->dbProfile = $dbprofiles[$this->defaultDbProfile];
-                else
-                    $this->dbProfile = $this->defaultDbProfile;
-            }
+            $this->useDbProfile($this->defaultDbProfile);
+        }
+        else
+            $this->useDbProfile($dbProfile);
+    }
+
+    /**
+     * use the given database profile. check if this is an alias and use the
+     * real db profiel if this is the case.
+     * @param string $dbProfile the profile name
+     */
+    protected function useDbProfile($dbProfile) {
+
+        if ($dbProfile == '')
+            $dbProfile = 'default';
+
+        $this->dbProfile = $dbProfile;
+
+        $dbProfilesFile = $this->config->getValue('dbProfils');
+        if ($dbProfilesFile == '')
+            $dbProfilesFile = 'dbprofils.ini.php';
+
+        if (file_exists(JELIX_APP_CONFIG_PATH.$dbProfilesFile)) {
+            $dbprofiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
+            // let's resolve the db profile
+            if (isset($dbprofiles[$dbProfile]) && is_string($dbprofiles[$dbProfile]))
+                $this->dbProfile = $dbprofiles[$dbProfile];
+        }
+    }
+
+    protected $contextId = array();
+
+    protected $newContextId = array();
+
+    /**
+     *
+     */
+    protected function firstExec($contextId) {
+        if (in_array($contextId, $this->contextId)) {
+            return false;
         }
 
-        $sessionid = "0";
-        if ($this->forEachEntryPointsConfig)
-            $sessionid .= "-".$ep->configFile;
+        if (!in_array($contextId, $this->newContextId)) {
+            $this->newContextId[] = $contextId;
+        }
+        return true;
+    }
 
-        if ($this->useDatabase)
-            $sessionid .= "-".$this->dbProfile;
+    /**
+     *
+     */
+    protected function firstDbExec($profile = '') {
+        if ($profile == '')
+            $profile = $this->dbProfile;
+        return $this->firstExec('db:'.$profile);
+    }
 
-        return md5($sessionid);
+    /**
+     *
+     */
+    protected function firstConfExec($config = '') {
+        if ($config == '')
+            $config = $this->entryPoint->configFile;
+        return $this->firstExec('cf:'.$config);
+    }
+
+    /**
+     *
+     */
+    public function getContexts() {
+        return array_unique(array_merge($this->contextId, $this->newContextId));
     }
 
     /**
@@ -207,7 +233,7 @@ abstract class jInstallerBase {
 
 
     /**
-     * import a sql script into the given profile.
+     * import a sql script into the current profile.
      *
      * The name of the script should be store in install/$name.databasetype.sql
      * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
@@ -215,21 +241,13 @@ abstract class jInstallerBase {
      * you should indicate the full name of the script, with a .sql extension.
      * 
      * @param string $name the name of the script
-     * @param string $profile the profile to use. null for the default profile
      * @param string $module the module from which we should take the sql file. null for the current module
      */
-    final protected function execSQLScript ($name, $profile = null, $module = null) {
+    final protected function execSQLScript ($name, $module = null) {
 
-        if (!$profile) {
-            $profile = $this->dbProfile;
-            $tools = $this->dbTool();
-        }
-        else {
-            $cnx = jDb::getConnection($profile);
-            $tools = $cnx->tools();
-        }
+        $tools = $this->dbTool();
 
-        $driver = $this->getDbType($profile);
+        $driver = $this->getDbType($this->dbProfile);
 
         if ($module) {
             $conf = $this->entryPoint->config->_modulesPathList;

@@ -158,6 +158,10 @@ abstract class jInstallerComponentBase {
      */
     abstract function getUpgraders($ep);
 
+    public function installFinished($ep) { }
+
+    public function upgradeFinished($ep, $upgrader) { }
+
     /**
      * @var boolean  indicate if the identify file has already been readed
      */

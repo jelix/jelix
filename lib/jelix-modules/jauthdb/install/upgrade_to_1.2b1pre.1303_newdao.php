@@ -9,15 +9,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(dirname(__FILE__).'/_installclass.php');
-
-class jauthdbModuleUpgrader_newdao extends jauthdbModuleInstallerBase {
+class jauthdbModuleUpgrader_newdao extends jInstallerModule {
 
     function install() {
 
         $authconfig = $this->config->getValue('auth','coordplugins');
 
-        if ($authconfig) {
+        if ($authconfig && $this->firstExec($authconfig)) {
 
             $conf = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$authconfig);
             $driver = $conf->getValue('driver');

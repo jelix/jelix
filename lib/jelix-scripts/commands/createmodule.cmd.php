@@ -173,7 +173,6 @@ class createmoduleCommand extends JelixScriptCommand {
             if ($allEntryPoint || $entryPoint['file'] == $entryPointName) {
                 $install->setValue($module.'.installed', 1, $entryPoint['id']);
                 $install->setValue($module.'.version', $initialVersion, $entryPoint['id']);
-                $install->setValue($module.'.sessionid', 0, $entryPoint['id']);
             }
 
             if ($isdefault) {

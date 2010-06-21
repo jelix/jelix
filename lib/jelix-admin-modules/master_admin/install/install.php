@@ -12,8 +12,6 @@
 
 class master_adminModuleInstaller extends jInstallerModule {
 
-    protected $forEachEntryPointsConfig = true;
-
     function install() {
 
     }

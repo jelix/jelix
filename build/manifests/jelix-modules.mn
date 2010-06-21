@@ -47,7 +47,6 @@ cd lib/jelix-modules/jacl2db/install
   groups.sql
   user.sql
   install.php
-  _installclass.php
   upgrade_to_1.2b1pre.1422_namedgroup.php
 cd lib/jelix-modules/jacl2db/install/var/config
   jacl2.coord.ini.php
@@ -61,7 +60,6 @@ cd lib/jelix-modules/jauthdb/install/
   install_jauth.schema.pgsql.sql
   install_jauth.schema.sqlite.sql
   install.php
-  _installclass.php
   upgrade_to_1.2b1pre.1303_newdao.php
 
 cd lib/jelix-modules/jauth

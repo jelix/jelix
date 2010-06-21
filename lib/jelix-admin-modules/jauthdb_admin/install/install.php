@@ -12,16 +12,10 @@
 
 class jauthdb_adminModuleInstaller extends jInstallerModule {
 
-   public function setEntryPoint($ep, $config, $dbProfile) {
-        parent::setEntryPoint($ep, $config, $dbProfile);
-        return md5('-' . $this->config->getValue('auth','coordplugins'));
-    }
-
     function install() {
-
         $authconfig = $this->config->getValue('auth','coordplugins');
 
-        if ($authconfig && $this->entryPoint->type != 'cmdline') {
+        if ($authconfig && $this->entryPoint->type != 'cmdline' && $this->firstExec($authconfig)) {
 
             $conf = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$authconfig);
             $driver = $conf->getValue('driver');

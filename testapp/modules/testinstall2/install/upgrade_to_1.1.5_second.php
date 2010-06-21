@@ -11,17 +11,6 @@
 
 class testinstall2ModuleUpgrader_second extends jInstallerModule {
 
-    public $testUseCommonId = true;
-
-    public function setEntryPoint($ep, $config, $dbProfile) {
-        parent::setEntryPoint($ep, $config, $dbProfile);
-        if ($this->testUseCommonId)
-            return "0";
-        else
-            return md5($ep->file);
-    }
-
-
     function install() {
 
     }

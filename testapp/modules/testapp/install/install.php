@@ -13,8 +13,8 @@
 class testappModuleInstaller extends jInstallerModule {
 
     function install() {
-
-      $this->execSQLScript('base');
+        if ($this->firstDbExec())
+            $this->execSQLScript('base');
 
     }
 }

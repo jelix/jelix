@@ -11,11 +11,6 @@
 
 class %%module%%ModuleInstaller extends jInstallerModule {
 
-    
-    public function setEntryPoint($ep, $config, $dbProfile) {
-        return parent::setEntryPoint($ep, $config, $dbProfile);
-    }
-
     function install() {
 
     }

@@ -132,7 +132,6 @@ class testInstallerMain extends jInstaller {
                 $this->configContent[$ep]['modules'][$module.'.dbprofile'] = 'default';
                 $this->configContent[$ep]['modules'][$module.'.installed'] = 0;
                 $this->configContent[$ep]['modules'][$module.'.version'] = JELIX_VERSION;
-                $this->configContent[$ep]['modules'][$module.'.sessionid'] = '';
                 $this->configContent[$ep]['_modulesPathList'][$module] = $gJConfig->_modulesPathList[$module];
                 $this->configContent[$ep]['_allModulesPathList'][$module] = $gJConfig->_modulesPathList[$module];
             }
@@ -148,13 +147,12 @@ class testInstallerMain extends jInstaller {
             $this->configContent[$ep]['modules'][$name.'.access'] = $access;
             $this->configContent[$ep]['modules'][$name.'.dbprofile'] = $dbprofile;
             $this->configContent[$ep]['modules'][$name.'.installed'] = $installed;
-            $this->configContent[$ep]['modules'][$name.'.version'] = $version;   
-            $this->configContent[$ep]['modules'][$name.'.sessionid'] = '';
+            $this->configContent[$ep]['modules'][$name.'.version'] = $version;
         }   
     }
 
     function initForTest($projectXml='<entry file="index.php" config="index/config.ini.php" />') {
-        
+
         $projectXml = '<?xml version="1.0" encoding="iso-8859-1"?>
 <project xmlns="http://jelix.org/ns/project/1.0">
     <info id="test@jelix.org" name="test">

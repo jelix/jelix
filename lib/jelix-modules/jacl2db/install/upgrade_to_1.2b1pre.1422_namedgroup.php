@@ -10,15 +10,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(dirname(__FILE__).'/_installclass.php');
+class jacl2dbModuleUpgrader_namedgroup extends jInstallerModule {
 
-class jacl2dbModuleUpgrader_namedgroup extends jacl2dbModuleInstallerBase {
-
-    protected $forEachEntryPointsConfig = false;
-
-    protected $useDatabase = true;
+    protected $defaultDbProfile = 'jacl2_profile';
 
     function install() {
+        if (!$this->firstDbExec())
+            return;
         $this->declareDbProfile('jacl2_profile', $this->dbProfile, false);
         $cn = $this->dbConnection();
         try {

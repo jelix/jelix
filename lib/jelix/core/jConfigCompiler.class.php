@@ -326,13 +326,12 @@ class jConfigCompiler {
                             if (!isset($installation[$section][$f.'.dataversion']))
                                 $installation[$section][$f.'.dataversion'] = '';
 
-                            if (!isset($installation[$section][$f.'.sessionid']))
-                                $installation[$section][$f.'.sessionid'] = '';
+                            if (!isset($installation['__modules_data'][$f.'.contexts']))
+                                $installation['__modules_data'][$f.'.contexts'] = '';
                                 
                             $config->modules[$f.'.version'] = $installation[$section][$f.'.version'];
                             $config->modules[$f.'.dataversion'] = $installation[$section][$f.'.dataversion'];
                             $config->modules[$f.'.installed'] = $installation[$section][$f.'.installed'];
-                            $config->modules[$f.'.sessionid'] = $installation[$section][$f.'.sessionid'];
 
                             $config->_allModulesPathList[$f]=$p.$f.'/';
                         }

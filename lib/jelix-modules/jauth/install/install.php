@@ -11,17 +11,13 @@
 
 class jauthModuleInstaller extends jInstallerModule {
 
-    protected $forEachEntryPointsConfig = true;
-
     function install() {
+
         $authconfig = $this->config->getValue('auth','coordplugins');
         $authconfigMaster = $this->config->getValue('auth','coordplugins', null, true);
         $forWS = (in_array($this->entryPoint->type, array('json', 'jsonrpc', 'soap', 'xmlrpc')));
 
         if (!$authconfig || ($forWS && $authconfig == $authconfigMaster)) {
-            //if ($this->entryPoint->type == 'cmdline') {
-            //    return;
-            //}
 
             if ($forWS) {
                 $pluginIni = 'authsw.coord.ini.php';
@@ -30,13 +26,14 @@ class jauthModuleInstaller extends jInstallerModule {
                 $pluginIni = 'auth.coord.ini.php';
             }
 
-            $configDir = dirname($this->entryPoint->configFile).'/';
+            $authconfig = dirname($this->entryPoint->configFile).'/'.$pluginIni;
 
-            // no configuration, let's install the plugin for the entry point
-            $this->config->setValue('auth', $configDir.$pluginIni, 'coordplugins');
-
-            if (!file_exists(JELIX_APP_CONFIG_PATH.$configDir.$pluginIni)) {
-                $this->copyFile('var/config/'.$pluginIni, JELIX_APP_CONFIG_PATH.$configDir.$pluginIni);
+            if ($this->firstExec('auth:'.$authconfig)) {
+                // no configuration, let's install the plugin for the entry point
+                $this->config->setValue('auth', $authconfig, 'coordplugins');
+                if (!file_exists(JELIX_APP_CONFIG_PATH.$authconfig)) {
+                    $this->copyFile('var/config/'.$pluginIni, JELIX_APP_CONFIG_PATH.$authconfig);
+                }
             }
         }
     }
