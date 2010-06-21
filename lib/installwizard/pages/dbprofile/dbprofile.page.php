@@ -160,13 +160,13 @@ class dbprofileWizPage extends installWizardPage {
     }
 
     protected function loadProfiles () {
-        $file = JELIX_APP_CONFIG_PATH.'dbProfils.ini.php';
+        $file = JELIX_APP_CONFIG_PATH.'dbprofils.ini.php';
 
         if (file_exists($file)) {
 
         }
-        elseif (file_exists(JELIX_APP_CONFIG_PATH.'dbProfils.ini.php.dist')) {
-             copy(JELIX_APP_CONFIG_PATH.'dbProfils.ini.php.dist', $file);
+        elseif (file_exists(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php.dist')) {
+             copy(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php.dist', $file);
         }
         else {
             file_put_contents($file, ";<?php die(''); ?>

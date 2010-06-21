@@ -211,7 +211,7 @@ class jDb {
      * create a temporary new profile
      * @param string $name the name of the profile
      * @param array|string $params parameters of the profile. key=parameter name, value=parameter value.
-     *                      same kind of parameters we found in dbProfils.ini.php
+     *                      same kind of parameters we found in dbprofils.ini.php
      *                      we can also indicate a name of an other profile, to create an alias
      */
     public static function createVirtualProfile ($name, $params) {
