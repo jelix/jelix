@@ -57,7 +57,7 @@ class dbprofileWizPage extends installWizardPage {
 
     function process() {
 
-        $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'dbProfils.ini.php');
+        $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php');
         $hasErrors = false;
         $_SESSION['dbprofiles']['data'] = $_POST;
 
