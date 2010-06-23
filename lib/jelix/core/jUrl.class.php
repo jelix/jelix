@@ -154,7 +154,7 @@ class jUrl extends jUrlBase {
     */
     static function get ($actSel, $params = array (), $what=0) {
 
-        $sel = new jSelectorAct($actSel,true);
+        $sel = new jSelectorAct($actSel,true, true);
         $params['module'] = $sel->module;
         $params['action'] = $sel->resource;
         $ua = new jUrlAction($params, $sel->request);

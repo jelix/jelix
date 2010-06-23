@@ -60,6 +60,10 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             $config->setValue($this->name.'.access', 2, 'modules');
             $config->save();
         }
+        else if ($access == 3) {
+            $config->setValue($this->name.'.access', 1, 'modules');
+            $config->save();
+        }
     }
 
     /**

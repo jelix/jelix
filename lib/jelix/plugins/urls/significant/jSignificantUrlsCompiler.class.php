@@ -128,6 +128,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
         $this->createUrlInfos = array();
         $this->createUrlContent = "<?php \n";
+        $this->retrieveModulePaths();
 
         foreach ($xml->children() as $tagname => $tag) {
             if (!preg_match("/^(.*)entrypoint$/", $tagname, $m)) {
@@ -264,6 +265,38 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         return true;
     }
 
+    protected $modulesPath = array();
+
+    /**
+     * since urls.xml declare all entrypoints, current entry point does not have
+     * access to all modules, so doesn't know all their paths.
+     * We assume here that the defaulconfig.ini.php modulesPath list all
+     * modules repository of the application.
+     */
+    protected function retrieveModulePaths() {
+        $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        $list = preg_split('/ *, */',$conf['modulesPath']);
+        array_unshift($list, JELIX_LIB_PATH.'core-modules/');
+        $this->modulesPath = array();
+        foreach($list as $k=>$path){
+            if(trim($path) == '') continue;
+            $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
+            if (!file_exists($p)) {
+                continue;
+            }
+            if (substr($p,-1) !='/')
+                $p.='/';
+            if ($handle = opendir($p)) {
+                while (false !== ($f = readdir($handle))) {
+                    if ($f[0] != '.' && is_dir($p.$f)) {
+                        $this->modulesPath[$f]=$p.$f.'/';
+                    }
+                }
+                closedir($handle);
+            }
+        }
+    }
+
     /**
      * @param significantUrlInfoParsing $u
      * @param simpleXmlElement $url
@@ -279,6 +312,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             $selclass = $u->module.$class;
         else
             $selclass = $class;
+
         $s = new jSelectorUrlHandler($selclass);
         if (!isset($url['action'])) {
             $u->action = '*';
@@ -384,17 +418,17 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $file = (string)$url['include'];
         $pathinfo = '/'.trim((string)$url['pathinfo'], '/');
 
-        try {
-            $path = $GLOBALS['gJCoord']->getModulePath($uInfo->module);
-            if (!file_exists($path.$file))
-                throw new Exception('bad');
-        }
-        catch (Exception $e) {
-            throw new Exception ('urls.xml: include file '.$file.' of the module '.$module.' does not exist');
-        }
+        if (!isset($this->modulesPath[$uInfo->module]))
+            throw new Exception ('urls.xml: the module '.$uInfo->module.' does not exist');
+
+        $path = $this->modulesPath[$uInfo->module];
+
+        if (!file_exists($path.$file))
+            throw new Exception ('urls.xml: include file '.$file.' of the module '.$uInfo->module.' does not exist');
+
         $xml = simplexml_load_file ($path.$file);
         if (!$xml) {
-           throw new Exception ('urls.xml: include file '.$file.' of the module '.$module.' is not a valid xml file');
+           throw new Exception ('urls.xml: include file '.$file.' of the module '.$uInfo->module.' is not a valid xml file');
         }
 
         foreach ($xml->url as $url) {

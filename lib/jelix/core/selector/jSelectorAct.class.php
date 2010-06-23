@@ -22,13 +22,15 @@
  */
 class jSelectorAct extends jSelectorActFast {
 
+    protected $forUrl = false;
+
     /**
      * @param string $sel  the selector
      * @param boolean $enableRequestPart true if the selector can contain the request part
      */
-    function __construct($sel, $enableRequestPart = false){
+    function __construct($sel, $enableRequestPart = false, $toRetrieveUrl = false){
         global $gJCoord;
-
+        $this->forUrl = $toRetrieveUrl;
 #if ENABLE_PHP_JELIX
         if(jelix_scan_action_sel($sel, $this, $gJCoord->actionName)){
             if($this->module == '#'){
@@ -74,5 +76,18 @@ class jSelectorAct extends jSelectorActFast {
         }else{
             throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
+    }
+
+    protected function _createPath(){
+        global $gJConfig;
+        if (isset($gJConfig->_modulesPathList[$this->module])) {
+            $p = $gJConfig->_modulesPathList[$this->module];
+        } else if ($this->forUrl && isset($gJConfig->_externalModulesPathList[$this->module])) {
+            $p = $gJConfig->_externalModulesPathList[$this->module];
+        }
+        else
+            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
+
+        $this->_path = $p.'controllers/'.$this->controller.'.'.$this->request.'.php';
     }
 }

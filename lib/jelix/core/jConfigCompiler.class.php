@@ -19,6 +19,8 @@
  */
 class jConfigCompiler {
 
+    static protected $commonConfig;
+
     private function __construct (){ }
 
     /**
@@ -45,6 +47,8 @@ class jConfigCompiler {
             die('Jelix Error: Application temp directory is not writable');
         }
 
+        self::$commonConfig = jIniFile::read(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',true);
+
 #if ENABLE_PHP_JELIX
         $config = jelix_read_ini(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
 
@@ -59,8 +63,8 @@ class jConfigCompiler {
 #else
         $config = jIniFile::read(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
 
-        if( $commonConfig = parse_ini_file(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',true)){
-            self::_mergeConfig($config, $commonConfig);
+        if (self::$commonConfig) {
+            self::_mergeConfig($config, self::$commonConfig);
         }
 
         if($configFile !='defaultconfig.ini.php'){
@@ -74,6 +78,7 @@ class jConfigCompiler {
 #endif
 
         self::prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName);
+        self::$commonConfig  = null;
         return $config;
     }
     
@@ -270,7 +275,7 @@ class jConfigCompiler {
      * @return array list of full path
      */
     static protected function _loadModuleInfo($config, $allModuleInfo) {
-        
+
         if (!file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php')) {
             if ($allModuleInfo)
                 $installation = array ();
@@ -286,18 +291,27 @@ class jConfigCompiler {
             $installation[$section] = array();
 
         $list = preg_split('/ *, */',$config->modulesPath);
+        $list = array_merge($list, preg_split('/ *, */',self::$commonConfig['modulesPath']));
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
+        $pathChecked = array();
 
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
             if (!file_exists($p)) {
-                throw new Exception('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
+                throw new Exception('The path, '.$path.' given in the jelix config, doesn\'t exist !',E_USER_ERROR);
             }
             if (substr($p,-1) !='/')
                 $p.='/';
-            if ($k!=0) // don't include the core-modules
+            if (in_array($p, $pathChecked))
+                continue;
+            $pathChecked[] = $p;
+
+             // don't include the core-modules into the list of base path. this list is to verify
+             // if modules have been modified into repositories
+            if ($k!=0 && $config->compilation['checkCacheFiletime'])
                 $config->_allBasePath[]=$p;
+
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
                     if ($f[0] != '.' && is_dir($p.$f)) {
@@ -309,9 +323,28 @@ class jConfigCompiler {
                             $config->modules['jelix.access'] = 2; // the jelix module should always be public
                         }
                         else {
-                            if (!isset($config->modules[$f.'.access'])
-                                || (!$installation[$section][$f.'.installed'] && !$allModuleInfo))
+                            // no given access in defaultconfig and ep config
+                            if (!isset($config->modules[$f.'.access'])) {
                                 $config->modules[$f.'.access'] = 0;
+                            }
+                            else if($config->modules[$f.'.access'] == 0){
+                                // we want to activate the module if it is not activated
+                                // for the entry point, but is declared activated
+                                // in the default config file. In this case, it means
+                                // that it is activated for an other entry point,
+                                // and then we want the possibility to retrieve its
+                                // urls at least
+                                if (isset(self::$commonConfig['modules'][$f.'.access'])
+                                    && self::$commonConfig['modules'][$f.'.access'] > 0)
+                                    $config->modules[$f.'.access'] = 3;
+                            }
+                            // module is not installed
+                            else if (!$installation[$section][$f.'.installed']) {
+                                //outside installation mode, we force the access to 0
+                                // so the module is unusable until it is installed
+                                if (!$allModuleInfo) 
+                                    $config->modules[$f.'.access'] = 0;
+                            }
                         }
 
                         if (!isset($installation[$section][$f.'.dbprofile']))
@@ -336,7 +369,10 @@ class jConfigCompiler {
                             $config->_allModulesPathList[$f]=$p.$f.'/';
                         }
                         
-                        if ($config->modules[$f.'.access'])
+                        if ($config->modules[$f.'.access'] == 3) {
+                            $config->_externalModulesPathList[$f]=$p.$f.'/';
+                        }
+                        elseif ($config->modules[$f.'.access'])
                             $config->_modulesPathList[$f]=$p.$f.'/';
                     }
                 }
@@ -366,7 +402,7 @@ class jConfigCompiler {
                 while (false !== ($f = readdir($handle))) {
                     if ($f[0] != '.' && is_dir($p.$f)) {
                         if($subdir = opendir($p.$f)){
-                            if($k!=0)
+                            if($k!=0 && $config->compilation['checkCacheFiletime'])
                                $config->_allBasePath[]=$p.$f.'/';
                             while (false !== ($subf = readdir($subdir))) {
                                 if ($subf[0] != '.' && is_dir($p.$f.'/'.$subf)) {

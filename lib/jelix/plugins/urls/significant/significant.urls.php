@@ -37,6 +37,23 @@ class jSelectorUrlCfgSig extends jSelectorCfg {
 class jSelectorUrlHandler extends jSelectorClass {
     public $type = 'urlhandler';
     protected $_suffix = '.urlhandler.php';
+
+    protected function _createPath(){
+        global $gJConfig;
+        if (isset($gJConfig->_modulesPathList[$this->module])) {
+            $p = $gJConfig->_modulesPathList[$this->module];
+        } else if (isset($gJConfig->_externalModulesPathList[$this->module])) {
+            $p = $gJConfig->_externalModulesPathList[$this->module];
+        } else {
+            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
+        }
+        $this->_path = $p.$this->_dirname.$this->subpath.$this->className.$this->_suffix;
+
+        if (!file_exists($this->_path) || strpos($this->subpath,'..') !== false ) { // second test for security issues
+            throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), $this->type));
+        }
+    }
+
 }
 
 /**
@@ -181,6 +198,7 @@ class significantUrlEngine implements jIUrlEngine {
                         continue;
                 }
                 $s = new jSelectorUrlHandler($selectorHandler);
+                include_once($s->getPath());
                 $c = $s->className.'UrlsHandler';
                 $handler = new $c();
 

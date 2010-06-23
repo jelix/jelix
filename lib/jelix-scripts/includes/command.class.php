@@ -95,9 +95,11 @@ abstract class JelixScriptCommand {
 
       global $gJConfig;
       if (!isset($gJConfig->_modulesPathList[$module])) {
-         throw new Exception("The module $module doesn't exist");
+        if (isset($gJConfig->_externalModulesPathList[$module]))
+            return $gJConfig->_externalModulesPathList[$module];
+        throw new Exception("The module $module doesn't exist");
       }
-      return $gJConfig->_modulesPathList[$module];   
+      return $gJConfig->_modulesPathList[$module];
    }
 
    /**

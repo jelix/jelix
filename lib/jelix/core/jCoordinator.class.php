@@ -444,20 +444,30 @@ class jCoordinator {
     /**
     * Says if the given module $name is enabled
     * @param string $moduleName
+    * @param boolean $includingExternal  true if we want to know if the module
+    *               is also an external module, e.g. in an other entry point
     * @return boolean true : module is ok
     */
-    public function isModuleEnabled ($moduleName) {
+    public function isModuleEnabled ($moduleName, $includingExternal = false) {
+        if ($includingExternal && isset($GLOBALS['gJConfig']->_externalModulesPathList[$moduleName])) {
+            return true;
+        }
         return isset($GLOBALS['gJConfig']->_modulesPathList[$moduleName]);
     }
 
     /**
      * return the real path of a module
      * @param string $module a module name
+     * @param boolean $includingExternal  true if we want to know if the module
+     *               is also an external module, e.g. in an other entry point
      * @return string the corresponding path
      */
-    public function getModulePath($module){
+    public function getModulePath($module, $includingExternal = false){
         global $gJConfig;
         if (!isset($gJConfig->_modulesPathList[$module])) {
+            if ($includingExternal && isset($gJConfig->_externalModulesPathList[$module])) {
+                return $gJConfig->_externalModulesPathList[$module];
+            }
             throw new Exception('getModulePath : invalid module name');
         }
         return $gJConfig->_modulesPathList[$module];

@@ -76,41 +76,21 @@ class createmoduleCommand extends JelixScriptCommand {
             $repository .= '/';
         $repositoryPath = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $repository);
 
-        $listRepos = preg_split('/ *, */',$gJConfig->modulesPath);
-        $repositoryFound = false;
-        foreach($listRepos as $path){
-            if(trim($path) == '') continue;
-            $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
-            if (substr($p,-1) != '/')
-                $p .= '/';
-            if ($p == $repositoryPath) {
-                $repositoryFound = true;
-                break;
-            }
-        }
+        $iniDefault = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        $this->updateModulePath($iniDefault, $iniDefault->getValue('modulesPath'), $repository, $repositoryPath);
 
-        // the repository doesn't exist in the configuration
-        // let's add it into the configuration
-        if (!$repositoryFound) {
-            if ($allEntryPoint) {
-                $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
-            }
-            else {
-                $list = $this->getEntryPointsList();
-                foreach ($list as $k => $entryPoint) {
-                    if ($entryPoint['file'] == $entryPointName) {
-                        $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$entryPoint['config']);
-                        break;
-                    }
+        if (!$allEntryPoint) {
+            $list = $this->getEntryPointsList();
+            foreach ($list as $k => $entryPoint) {
+                if ($entryPoint['file'] == $entryPointName) {
+                    $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$entryPoint['config']);
+                    break;
                 }
             }
             if (!$ini) {
                 throw new Exception("entry point is unknown");
             }
-            $ini->setValue('modulesPath', $gJConfig->modulesPath.','.$repository);
-            $ini->save();
-            
-            $this->createDir($repositoryPath);
+            $this->updateModulePath($ini, $gJConfig->modulesPath, $repository, $repositoryPath);
         }
 
         $path = $repositoryPath.$module.'/';
@@ -144,14 +124,13 @@ class createmoduleCommand extends JelixScriptCommand {
         $isdefault = $this->getOption('-defaultmodule');
 
         // activate the module in the application
-        $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
         if ($isdefault) {
-            $ini->setValue('startModule', $module);
-            $ini->setValue('startAction', 'default:index');
+            $iniDefault->setValue('startModule', $module);
+            $iniDefault->setValue('startAction', 'default:index');
         }
-        if ($allEntryPoint)
-            $ini->setValue($module.'.access', 2 , 'modules');
-        $ini->save();
+
+        $iniDefault->setValue($module.'.access', ($allEntryPoint?2:1) , 'modules');
+        $iniDefault->save();
 
         $list = $this->getEntryPointsList();
         $install = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
@@ -159,16 +138,16 @@ class createmoduleCommand extends JelixScriptCommand {
         // install the module for all needed entry points
         foreach ($list as $k => $entryPoint) {
 
-            
-            if (!$allEntryPoint || $isdefault) {
-                $configFile = JELIX_APP_CONFIG_PATH.$entryPoint['config'];
-                $epconfig = new jIniFileModifier($configFile);
-                if (!$allEntryPoint && $entryPoint['file'] == $entryPointName) {
-                    $epconfig->setValue($module.'.access', 2 , 'modules');
-                    $epconfig->save();
-                }
-            }
+            $configFile = JELIX_APP_CONFIG_PATH.$entryPoint['config'];
+            $epconfig = new jIniFileModifier($configFile);
 
+            if ($allEntryPoint)
+                $access = 2;
+            else
+                $access = ($entryPoint['file'] == $entryPointName?2:0);
+
+            $epconfig->setValue($module.'.access', $access, 'modules');
+            $epconfig->save();
 
             if ($allEntryPoint || $entryPoint['file'] == $entryPointName) {
                 $install->setValue($module.'.installed', 1, $entryPoint['id']);
@@ -203,6 +182,31 @@ class createmoduleCommand extends JelixScriptCommand {
             }
             $agcommand->init($options,array('module'=>$module, 'name'=>'default','method'=>'index'));
             $agcommand->run();
+        }
+    }
+
+    protected function updateModulePath($ini, $currentModulesPath, $repository, $repositoryPath) {
+        $listRepos = preg_split('/ *, */',$currentModulesPath);
+        $repositoryFound = false;
+        foreach($listRepos as $path){
+            if(trim($path) == '') continue;
+            $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
+            if (substr($p,-1) != '/')
+                $p .= '/';
+            if ($p == $repositoryPath) {
+                $repositoryFound = true;
+                break;
+            }
+        }
+
+        // the repository doesn't exist in the configuration
+        // let's add it into the configuration
+        if (!$repositoryFound) {
+
+            $ini->setValue('modulesPath', $currentModulesPath.','.$repository);
+            $ini->save();
+
+            $this->createDir($repositoryPath);
         }
     }
 }
