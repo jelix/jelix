@@ -648,21 +648,31 @@ cd lib/installwizard/
   README.txt
 cd lib/installwizard/pages/end/
   end.en.php
+  end.fr.php
   end.page.php
   end.tpl
 cd lib/installwizard/pages/welcome/
   welcome.en.php
+  welcome.fr.php
   welcome.page.php
   welcome.tpl
 cd lib/installwizard/pages/checkjelix/
 * checkjelix.en.php
+* checkjelix.fr.php
   checkjelix.page.php
   checkjelix.tpl
 cd lib/installwizard/pages/dbprofile/
   dbprofile.en.php
+  dbprofile.fr.php
   dbprofile.page.php
   dbprofile.tpl
 cd lib/installwizard/pages/installapp/
   installapp.en.php
+  installapp.fr.php
   installapp.page.php
   installapp.tpl
+cd lib/installwizard/pages/confmail/
+  confmail.en.php
+  confmail.fr.php
+  confmail.page.php
+  confmail.tpl

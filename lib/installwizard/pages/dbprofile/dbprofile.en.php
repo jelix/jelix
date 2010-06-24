@@ -5,7 +5,8 @@ $locales = array(
     'title'=>'Database Access Configuration',
 
     'title.profile'=>'Profile',
-    'label.driver'=>'Database',
+    'label.driver'=>'Database type',
+    'label.database'=>'Database name',
     'label.host'=>'Host',
     'label.user'=>'User',
     'label.password'=>'Password',
@@ -16,7 +17,7 @@ $locales = array(
     'label.force_encoding'=>'Force the encoding',
     'help.force_encoding'=>'If you don\'t know what is this parameter, check it.',
 
-    'error.missing.database'=>'Database is required',
+    'error.missing.database'=>'The database name is required',
     'error.missing.host'=>'Host is required',
     'error.missing.user'=>'User is required',
     'error.missing.password'=>'Password is required',

@@ -31,8 +31,17 @@ class checkjelixWizPage extends installWizardPage  implements jIInstallReporter 
     function show ($tpl) {
         $this->tpl = $tpl;
         $check = new jInstallCheck($this);
+        if (isset($this->config['verbose'])) {
+            $check->verbose = (!!$this->config['verbose']);
+        }
+
+        if (isset($this->config['databases'])) {
+            $db = explode(',', trim($this->config['databases']));
+            $check->addDatabaseCheck($db, true);
+        }
+
         $check->run();
-        
+
         return ($check->nbError == 0);
     }
 

@@ -31,15 +31,10 @@ function driverChanged(select, profile) {
     <th><label for="driver[{$profile}]">{@label.driver@}</label></th>
     <td><select id="driver[{$profile}]" name="driver[{$profile}]"
     onchange="driverChanged(this, '{$profile}')">
-    {foreach $drivers as $drv}
-      <option value="{$drv}" {if $driver[$profile] == $drv}selected="selected"{/if}>{$drv}</option>
+    {foreach $drivers as $drv=>$drvname}
+      <option value="{$drv}" {if $driver[$profile] == $drv}selected="selected"{/if}>{$drvname}</option>
     {/foreach}
     </select></td>
-  </tr>
-  <tr>
-    <th><label for="usepdo[{$profile}]">{@label.use.pdo@}</th>
-    <td><input type="checkbox" id="usepdo[{$profile}]" name="usepdo[{$profile}]"
-          {if $usepdo[$profile]}checked="checked"{/if}/></td>
   </tr>
   <tr id="host-{$profile}" {if $driver[$profile] =='sqlite'}style="display:none"{/if}>
     <th><label for="host[{$profile}]">{@label.host@}</label></th>
