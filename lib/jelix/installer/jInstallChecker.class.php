@@ -39,6 +39,8 @@ class jInstallCheck {
 
     protected $buildProperties;
 
+    public $verbose = false; 
+
     function __construct ($reporter, $lang=''){
         $this->reporter = $reporter;
         $this->messages = new jInstallerMessageProvider($lang);
@@ -53,6 +55,23 @@ class jInstallCheck {
 #endif
     }
 
+    protected $otherExtensions = array();
+
+    function addExtensionCheck($extension, $required) {
+        $this->otherExtensions[$extension] = $required;
+    }
+
+    protected $databases = array();
+    protected $dbRequired = false;
+
+    function addDatabaseCheck($databases, $required) {
+        $this->databases = $databases;
+        $this->dbRequired = $required;
+    }
+
+    /**
+     * run the ckecking
+     */
     function run(){
         $this->nbError = 0;
         $this->nbOk = 0;
@@ -73,30 +92,30 @@ class jInstallCheck {
         $this->reporter->end($results);
     }
 
-    protected function error($msg, $extraMsg=''){
+    protected function error($msg, $msgparams=array(), $extraMsg=''){
         if($this->reporter)
-            $this->reporter->message($this->messages->get($msg).$extraMsg, 'error');
+            $this->reporter->message($this->messages->get($msg, $msgparams).$extraMsg, 'error');
         $this->nbError ++;
     }
 
-    protected function ok($msg){
+    protected function ok($msg, $msgparams=array()){
         if($this->reporter)
-            $this->reporter->message($this->messages->get($msg), 'ok');
+            $this->reporter->message($this->messages->get($msg, $msgparams), 'ok');
         $this->nbOk ++;
     }
     /**
      * generate a warning
      * @param string $msg  the key of the message to display
      */
-    protected function warning($msg){
+    protected function warning($msg, $msgparams=array()){
         if($this->reporter)
-            $this->reporter->message($this->messages->get($msg), 'warning');
+            $this->reporter->message($this->messages->get($msg, $msgparams), 'warning');
         $this->nbWarning ++;
     }
 
-    protected function notice($msg){
+    protected function notice($msg, $msgparams=array()){
         if($this->reporter) {
-            $this->reporter->message($this->messages->get($msg), 'notice');
+            $this->reporter->message($this->messages->get($msg, $msgparams), 'notice');
         }
         $this->nbNotice ++;
     }
@@ -105,50 +124,35 @@ class jInstallCheck {
         $ok=true;
         if(!version_compare($this->buildProperties['PHP_VERSION_TARGET'], phpversion(), '<=')){
             $this->error('php.bad.version');
-            $notice = $this->messages->get('php.version.required')
-                     .$this->buildProperties['PHP_VERSION_TARGET'];
-            $notice.= '. '.$this->messages->get('php.version.current').phpversion();
+            $notice = $this->messages->get('php.version.required', $this->buildProperties['PHP_VERSION_TARGET']);
+            $notice.= '. '.$this->messages->get('php.version.current',phpversion());
             $this->reporter->showNotice($notice);
             $ok=false;
         }
-        if(!class_exists('DOMDocument',false)){
-            $this->error('extension.dom');
-            $ok=false;
-        }
-        if(!class_exists('DirectoryIterator',false)){
-            $this->error('extension.spl');
-            $ok=false;
+        else if ($this->verbose) {
+            $this->ok('php.ok.version', phpversion());
         }
 
-        $funcs=array(
-            'simplexml_load_file'=>'simplexml',
-            'preg_match'=>'pcre',
-            'session_start'=>'session',
-            'token_get_all'=>'tokenizer',
-            'iconv_set_encoding'=>'iconv',
-        );
-        foreach($funcs as $f=>$name){
-            if(!function_exists($f)){
-                $this->error('extension.'.$name);
+        $extensions = array( 'dom', 'SPL', 'SimpleXML', 'pcre', 'session',
+            'tokenizer', 'iconv',);
+
+        if($this->buildProperties['ENABLE_PHP_FILTER'] == '1')
+            $extensions[] = 'filter';
+        if($this->buildProperties['ENABLE_PHP_JSON'] == '1')
+            $extensions[] = 'json';
+        if($this->buildProperties['ENABLE_PHP_JELIX'] == '1')
+            $extensions[] = 'jelix';
+
+        foreach($extensions as $name){
+            if(!extension_loaded($name)){
+                $this->error('extension.required.not.installed', $name);
                 $ok=false;
             }
+            else if ($this->verbose) {
+                $this->ok('extension.required.installed', $name);
+            }
         }
-        if($this->buildProperties['ENABLE_PHP_FILTER'] == '1' && !extension_loaded ('filter')) {
-            $this->error('extension.filter');
-            $ok=false;
-        }
-        if($this->buildProperties['ENABLE_PHP_JSON'] == '1' && !extension_loaded ('json')) {
-            $this->error('extension.json');
-            $ok=false;
-        }
-        /*if($this->buildProperties['ENABLE_PHP_XMLRPC'] == '1' && !extension_loaded ('xmlrpc')) {
-            $this->error('extension.xmlrpc');
-            $ok=false;
-        }*/
-        if($this->buildProperties['ENABLE_PHP_JELIX'] == '1' && !extension_loaded ('jelix')) {
-            $this->error('extension.jelix');
-            $ok=false;
-        }
+
         if($this->buildProperties['WITH_BYTECODE_CACHE'] != 'auto' &&
            $this->buildProperties['WITH_BYTECODE_CACHE'] != '') {
             if(!extension_loaded ('apc') && !extension_loaded ('eaccelerator') && !extension_loaded ('xcache')) {
@@ -156,6 +160,61 @@ class jInstallCheck {
                 $ok=false;
             }
         }
+
+        if (count($this->databases)) {
+            $req = ($this->dbRequired?'required':'optional');
+            $okdb = false;
+            if (class_exists('PDO'))
+                $pdodrivers = PDO::getAvailableDrivers();
+            else
+                $pdodrivers = array();
+
+            foreach($this->databases as $name){
+                if(!extension_loaded($name) && !in_array($name, $pdodrivers)){
+                    $this->notice('extension.not.installed', $name);
+                }
+                else {
+                    $okdb = true;
+                    if ($this->verbose)
+                        $this->ok('extension.installed', $name);
+                }
+            }
+            if ($this->dbRequired) {
+                if ($okdb) {
+                    $this->ok('extension.database.ok');
+                }
+                else {
+                    $this->error('extension.database.missing');
+                    $ok = false;
+                }
+            }
+            else {
+                if ($okdb) {
+                    $this->ok('extension.database.ok2');
+                }
+                else {
+                    $this->notice('extension.database.missing2');
+                }
+            }
+            
+        }
+
+        foreach($this->otherExtensions as $name=>$required){
+            $req = ($required?'required':'optional');
+            if(!extension_loaded($name)){
+                if ($required) {
+                    $this->error('extension.'.$req.'.not.installed', $name);
+                    $ok=false;
+                }
+                else {
+                    $this->notice('extension.'.$req.'.not.installed', $name);
+                }
+            }
+            else if ($this->verbose) {
+                $this->ok('extension.'.$req.'.installed', $name);
+            }
+        }
+
         if($ok)
             $this->ok('extensions.required.ok');
 
@@ -215,8 +274,14 @@ class jInstallCheck {
     function checkPhpSettings(){
         $ok = true;
 #ifnot STANDALONE_CHECKER
-        $defaultconfig = parse_ini_file(JELIX_APP_CONFIG_PATH."defaultconfig.ini.php", true);
-        $indexconfig = parse_ini_file(JELIX_APP_CONFIG_PATH."index/config.ini.php", true);
+        if (file_exists(JELIX_APP_CONFIG_PATH."defaultconfig.ini.php"))
+            $defaultconfig = parse_ini_file(JELIX_APP_CONFIG_PATH."defaultconfig.ini.php", true);
+        else
+            $defaultconfig = array();
+        if (file_exists(JELIX_APP_CONFIG_PATH."index/config.ini.php"))
+            $indexconfig = parse_ini_file(JELIX_APP_CONFIG_PATH."index/config.ini.php", true);
+        else
+            $indexconfig = array();
 
         if ((isset ($defaultconfig['coordplugins']['magicquotes']) && $defaultconfig['coordplugins']['magicquotes'] == 1) ||
             (isset ($indexconfig['coordplugins']['magicquotes']) && $indexconfig['coordplugins']['magicquotes'] == 1)) {

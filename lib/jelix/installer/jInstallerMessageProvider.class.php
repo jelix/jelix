@@ -55,8 +55,8 @@ class jInstallerMessageProvider {
         }else{
             throw new Exception ("Error : don't find error message '$key'");
         }
-        
-        if ($params !== null) {
+
+        if ($params !== null || (is_array($params) && count($params) > 0)) {
             $msg = call_user_func_array('sprintf', array_merge (array ($msg), is_array ($params) ? $params : array ($params)));
         }
         return $msg;
