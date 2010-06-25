@@ -240,11 +240,12 @@ class jInstaller {
      */
     protected function getInstallerIni() {
         if (!file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php'))
-            file_put_contents(JELIX_APP_CONFIG_PATH.'installer.ini.php', ";<?php die(''); ?>
+            if (false === @file_put_contents(JELIX_APP_CONFIG_PATH.'installer.ini.php', ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
 
-");
+"))
+                throw new Exception('impossible to create var/config/installer.ini.php');
         return new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
     }
 

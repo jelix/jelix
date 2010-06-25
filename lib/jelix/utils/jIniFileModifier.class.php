@@ -375,7 +375,8 @@ class jIniFileModifier {
      */
     public function save() {
         if ($this->modified) {
-            file_put_contents($this->filename, $this->generateIni());
+            if (false === @file_put_contents($this->filename, $this->generateIni()))
+                throw new Exception("Impossible to write into ".$this->filename);
             $this->modified = false;
         }
     }
