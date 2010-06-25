@@ -39,7 +39,9 @@ class jInstallCheck {
 
     protected $buildProperties;
 
-    public $verbose = false; 
+    public $verbose = false;
+
+    public $checkForInstallation = false;
 
     function __construct ($reporter, $lang=''){
         $this->reporter = $reporter;
@@ -243,6 +245,28 @@ class jInstallCheck {
             $this->error('path.config');
             $ok=false;
         }
+        elseif ($this->checkForInstallation) {
+            if (!is_writable(JELIX_APP_CONFIG_PATH)) {
+                $this->error('path.config.writable');
+                $ok = false;
+            }
+            if (file_exists(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php')
+                && !is_writable(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php')) {
+                $this->error('path.dbprofile.writable');
+                $ok = false;
+            }
+            if (file_exists(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php')
+                && !is_writable(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php')) {
+                $this->error('path.defaultconfig.writable');
+                $ok = false;
+            }
+            if (file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php')
+                && !is_writable(JELIX_APP_CONFIG_PATH.'installer.ini.php')) {
+                $this->error('path.installer.writable');
+                $ok = false;
+            }
+        }
+
         if(!file_exists(JELIX_APP_WWW_PATH)){
             $this->error('path.www');
             $ok=false;

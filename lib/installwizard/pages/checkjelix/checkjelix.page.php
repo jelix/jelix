@@ -39,7 +39,7 @@ class checkjelixWizPage extends installWizardPage  implements jIInstallReporter 
             $db = explode(',', trim($this->config['databases']));
             $check->addDatabaseCheck($db, true);
         }
-
+        $check->checkForInstallation = true;
         $check->run();
 
         return ($check->nbError == 0);
