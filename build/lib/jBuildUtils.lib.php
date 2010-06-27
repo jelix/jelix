@@ -18,9 +18,9 @@ class jBuildUtils {
             if ($vcs == 'svn') {
                 exec("svn add $dir");
             }
-            else if ($vcs == 'hg') {
-                exec("hg add $dir");
-            }
+            //else if ($vcs == 'hg') {
+            //    exec("hg add $dir");
+            //}
         }
     }
 
