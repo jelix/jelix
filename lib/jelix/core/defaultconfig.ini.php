@@ -20,8 +20,6 @@ cacheProfiles = cache.ini.php
 
 use_error_handler = on
 
-enableOldActionSelector =
-
 ; default domain name to use with jfullurl for example.
 ; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
 domainName =

@@ -10,17 +10,6 @@
 */
 
 class UTSelectorAct extends UnitTestCase {
-    protected $oldConfValue;
-
-    function setUp() {
-        $this->oldConfValue = $GLOBALS['gJConfig']->enableOldActionSelector;
-        $GLOBALS['gJConfig']->enableOldActionSelector = false;
-    }
-
-    function tearDown() {
-        $GLOBALS['gJConfig']->enableOldActionSelector = $this->oldConfValue;
-    }
-
 
     function testWithModule() {
         $sels=array(

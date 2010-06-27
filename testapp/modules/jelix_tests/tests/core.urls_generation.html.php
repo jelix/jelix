@@ -16,7 +16,6 @@ class UTCreateUrls extends UnitTestCase {
     protected $oldUrlengineConf;
     protected $oldModule;
     protected $simple_urlengine_entrypoints;
-    protected $oldActionSelector;
 
     function setUp() {
       global $gJCoord, $gJConfig;
@@ -27,9 +26,6 @@ class UTCreateUrls extends UnitTestCase {
       $this->oldUrlengineConf = $gJConfig->urlengine;
       $this->simple_urlengine_entrypoints = $gJConfig->simple_urlengine_entrypoints;
       $this->oldModule = $gJConfig->_modulesPathList;
-      $this->oldActionSelector = $gJConfig->enableOldActionSelector;
-      $gJConfig->enableOldActionSelector = false;
-
     }
 
     function tearDown() {
@@ -41,7 +37,6 @@ class UTCreateUrls extends UnitTestCase {
       $gJConfig->urlengine = $this->oldUrlengineConf;
       $gJConfig->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
       $gJConfig->_modulesPathList=$this->oldModule ;
-      $gJConfig->enableOldActionSelector = $this->oldActionSelector;
       jUrl::getEngine(true);
     }
 

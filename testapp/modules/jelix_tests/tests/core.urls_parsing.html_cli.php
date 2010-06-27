@@ -16,7 +16,6 @@ class UTParseUrls extends UnitTestCase {
     protected $oldRequestType;
     protected $oldUrlengineConf;
     protected $simple_urlengine_entrypoints;
-    protected $oldActionSelector;
 
     function setUp() {
       global $gJCoord, $gJConfig;
@@ -26,8 +25,6 @@ class UTParseUrls extends UnitTestCase {
       $this->oldRequestType = $gJCoord->request->type;
       $this->oldUrlengineConf = $gJConfig->urlengine;
       $this->simple_urlengine_entrypoints = $gJConfig->simple_urlengine_entrypoints;
-      $this->oldActionSelector = $gJConfig->enableOldActionSelector;
-      $gJConfig->enableOldActionSelector = false;
     }
 
     function tearDown() {
@@ -38,7 +35,6 @@ class UTParseUrls extends UnitTestCase {
       $gJCoord->request->type=$this->oldRequestType;
       $gJConfig->urlengine = $this->oldUrlengineConf;
       $gJConfig->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
-      $gJConfig->enableOldActionSelector = $this->oldActionSelector;
       jUrl::getEngine(true);
     }
 
