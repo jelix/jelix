@@ -18,7 +18,7 @@
 function jExceptionHandler($e){
     global $gJConfig, $gJCoord;
 
-    $gJCoord->handleError($gJConfig->error_handling['exception'].' EXIT', 'exception',
+    $gJCoord->handleError(($gJConfig?$gJConfig->error_handling['exception']:'ECHO').' EXIT', 'exception',
                         $e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getTrace());
 }
 
