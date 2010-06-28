@@ -74,26 +74,23 @@ class jCoordinator {
 
     /**
      * @param  string $configFile name of the ini file to configure the framework
+     * @param  boolean $enableErrorHandler enable the error handler of jelix.
+     *                 keep it to true, unless you have something to debug
+     *                 and really have to use the default handler or an other handler
      */
-    function __construct ($configFile) {
+    function __construct ($configFile, $enableErrorHandler=true) {
         global $gJCoord, $gJConfig;
 
         $gJCoord =  $this;
 
-        // load configuration data
-        $gJConfig = jConfig::load($configFile);
-
-#if ENABLE_OPTIMIZED_SOURCE
-        set_error_handler('jErrorHandler');
-        set_exception_handler('jExceptionHandler');
-#else
-        // set Error and exception handler
-        // ne devrait être désactivé que lors de certains tests de jelix
-        if($gJConfig->use_error_handler){
+        if ($enableErrorHandler) {
             set_error_handler('jErrorHandler');
             set_exception_handler('JExceptionHandler');
         }
-#endif
+
+        // load configuration data
+        $gJConfig = jConfig::load($configFile);
+
 #if PHP50
         if(function_exists('date_default_timezone_set')){
             date_default_timezone_set($gJConfig->timeZone);
@@ -119,7 +116,7 @@ class jCoordinator {
             else {
                 $conff = JELIX_APP_CONFIG_PATH.$conf;
                 if (false === ($conf = parse_ini_file($conff,true)))
-                    die("Jelix Error: Error in the configuration file of plugin $name ($conff)!");
+                    throw new Exception("Error in the configuration file of plugin $name ($conff)!", 13);
             }
             include( $gJConfig->_pluginsPathList_coord[$name].$name.'.coord.php');
             $class= $name.'CoordPlugin';
@@ -291,7 +288,15 @@ class jCoordinator {
      */
     public function handleError($toDo, $type, $code, $message, $file, $line, $trace){
         global $gJConfig;
-        $conf = $gJConfig->error_handling;
+        if ($gJConfig)
+            $conf = $gJConfig->error_handling;
+        else {
+            $conf = array(
+                'messageLogFormat'=>'%date%\t[%code%]\t%msg%\t%file%\t%line%\n\t%url%\n',
+                'quietMessage'=>'A technical error has occured. Sorry for this trouble.',
+                'logFile'=>'error.log',
+            );
+        }
 
         $doEchoByResponse = true;
 
@@ -299,7 +304,6 @@ class jCoordinator {
             $message = 'JELIX PANIC ! Error during initialization !! '.$message;
             $doEchoByResponse = false;
             $toDo.= ' EXIT';
-
         }elseif($this->response == null){
             $ret = $this->initDefaultResponseOfRequest();
             if(is_string($ret)){
@@ -314,7 +318,7 @@ class jCoordinator {
         // url params including module and action
         if ($this->request)
             $url = str_replace('array', 'url', var_export($this->request->params, true));
-        else $url = 'Unknown url';
+        else $url = isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'Unknow URI';
 
         // formatting message
         $messageLog = strtr($conf['messageLogFormat'], array(
@@ -346,6 +350,9 @@ class jCoordinator {
         if(strpos($toDo , 'ECHOQUIET') !== false){
             $echoAsked = true;
             if(!$doEchoByResponse){
+                while (ob_get_level()) {
+                        ob_end_clean();
+                }
                 header("HTTP/1.1 500 Internal jelix error");
                 header('Content-type: text/plain');
                 echo 'JELIX PANIC ! Error during initialization !! ';
@@ -355,6 +362,9 @@ class jCoordinator {
         }elseif(strpos($toDo , 'ECHO') !== false){
             $echoAsked = true;
             if(!$doEchoByResponse){
+                while (ob_get_level()) {
+                        ob_end_clean();
+                }
                 header("HTTP/1.1 500 Internal jelix error");
                 header('Content-type: text/plain');
                 echo $messageLog;
@@ -366,7 +376,7 @@ class jCoordinator {
         if(strpos($toDo , 'LOGFILE') !== false){
             @error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);
         }
-        if(strpos($toDo , 'MAIL') !== false){
+        if(strpos($toDo , 'MAIL') !== false && $gJConfig){
             error_log(wordwrap($messageLog,70),1, $conf['email'], $conf['emailHeaders']);
         }
         if(strpos($toDo , 'SYSLOG') !== false){
@@ -375,6 +385,9 @@ class jCoordinator {
 
         if(strpos($toDo , 'EXIT') !== false){
             if($doEchoByResponse) {
+                while (ob_get_level()) {
+                        ob_end_clean();
+                }
                 if ($this->response)
                     $this->response->outputErrors();
                 else if($echoAsked) {

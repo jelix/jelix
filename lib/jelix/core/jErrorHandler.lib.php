@@ -51,14 +51,20 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
         $code=1;
     }
 
-    $conf = $gJConfig->error_handling;
+    if ($gJConfig) {
+        $conf = $gJConfig->error_handling;
 
-    if (isset ($codeString[$errno])){
-        $codestr = $codeString[$errno];
-        $toDo = $conf[$codestr];
-    }else{
+        if (isset ($codeString[$errno])){
+            $codestr = $codeString[$errno];
+            $toDo = $conf[$codestr];
+        }else{
+            $codestr = 'error';
+            $toDo = $conf['default'];
+        }
+    }
+    else {
         $codestr = 'error';
-        $toDo = $conf['default'];
+        $toDo = 'ECHO EXIT';
     }
     $trace = debug_backtrace();
     array_shift($trace);
