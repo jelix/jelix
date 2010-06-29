@@ -57,20 +57,20 @@ class UTSelectorMod extends UnitTestCase {
     */
     function testBadClassSelector() {
         $sels=array(
-            "testapp~"=>10,
-            ""=>10,
-            "~ctrl"=>10,
-            "testapp~sqd'"=>10,
-            "foo~default"=>12,
-            "~"=>10,
-            "~#"=>10,
-            "a-b~toto"=>10,
-            "testapp~ro-ro"=>10,
-            "testapp~#"=>10, 
-            "#~#"=>10, 
-            "#"=>10, 
-            "foo"=>11,
-            "../../../foo"=>11,
+            "testapp~"=>16,
+            ""=>16,
+            "~ctrl"=>16,
+            "testapp~sqd'"=>16,
+            "foo~default"=>18,
+            "~"=>16,
+            "~#"=>16,
+            "a-b~toto"=>16,
+            "testapp~ro-ro"=>16,
+            "testapp~#"=>16,
+            "#~#"=>16,
+            "#"=>16,
+            "foo"=>17,
+            "../../../foo"=>17,
         );
         foreach($sels as $sel=>$res){
             $valid=true;
