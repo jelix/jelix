@@ -643,6 +643,395 @@ afloatnumber=5.098
 
     }
 
+
+    function testImport() {
+        $ini = new testIniFileModifier('');
+        $content = '
+  ; a comment <?php die()
+  
+foo=bar
+anumber=98
+string= "uuuuu"
+string2= "aaa
+bbb"
+afloatnumber=   5.098  
+
+; section comment
+[aSection]
+truc= true
+
+; a comment
+
+laurent=toto
+isvalid = on
+
+; super section
+[othersection]
+truc=machin2
+
+[vla]
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+';
+        $ini->testParse($content);
+
+        $ini2 = new testIniFileModifier('');
+        $content = '
+
+; my comment
+toto = truc
+;bla
+anumber=100
+
+; section comment
+[aSection]
+
+newlaurent=hello
+; a new comment
+isvalid = on
+truc= false
+
+supercar=ferrari
+
+[newsection]
+truc=machin2
+
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+';
+        $ini2->testParse($content);
+
+        $ini->import($ini2);
+
+
+$result = '
+  ; a comment <?php die()
+  
+foo=bar
+anumber=100
+string=uuuuu
+string2="aaa
+bbb"
+afloatnumber=5.098  
+
+
+; my comment
+toto=truc
+
+; section comment
+[aSection]
+truc=false
+
+; a comment
+
+laurent=toto
+isvalid=on
+
+newlaurent=hello
+
+supercar=ferrari
+
+; super section
+[othersection]
+truc=machin2
+
+[vla]
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+
+[newsection]
+truc=machin2
+
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+
+';
+        $this->assertEqualOrDiff($result, $ini->generate());
+
+    }
+
+
+
+    function testImportRename() {
+        $ini = new testIniFileModifier('');
+        $content = '
+  ; a comment <?php die()
+  
+foo=bar
+anumber=98
+string= "uuuuu"
+string2= "aaa
+bbb"
+afloatnumber=   5.098  
+
+; section comment
+[aSection]
+truc= true
+
+; a comment
+
+laurent=toto
+isvalid = on
+
+; super section
+[blob_thesection]
+truc=machin2
+bidule = 1
+[vla]
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+';
+        $ini->testParse($content);
+
+        $ini2 = new testIniFileModifier('');
+        $content = '
+
+; my comment
+toto = truc
+;bla
+anumber=100
+
+; section comment
+[mySection]
+
+newlaurent=hello
+; a new comment
+isvalid = on
+truc= false
+
+supercar=ferrari
+
+[thesection]
+truc=machin3
+truck=on
+
+
+
+';
+        $ini2->testParse($content);
+
+        $ini->import($ini2, 'blob');
+
+
+$result = '
+  ; a comment <?php die()
+  
+foo=bar
+anumber=98
+string=uuuuu
+string2="aaa
+bbb"
+afloatnumber=5.098  
+
+; section comment
+[aSection]
+truc=true
+
+; a comment
+
+laurent=toto
+isvalid=on
+
+; super section
+[blob_thesection]
+truc=machin3
+bidule=1
+truck=on
+[vla]
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+
+[blob]
+
+
+; my comment
+toto=truc
+;bla
+anumber=100
+
+; section comment
+[blob_mySection]
+
+newlaurent=hello
+; a new comment
+isvalid=on
+truc=false
+
+supercar=ferrari
+
+';
+        $this->assertEqualOrDiff($result, $ini->generate());
+
+    }
+
+    public function testRenameSection() {
+        $ini = new testIniFileModifier('');
+        $content = '
+  ; a comment <?php die()
+  
+foo=bar
+anumber=98
+string= "uuuuu"
+string2= "aaa
+bbb"
+afloatnumber=   5.098  
+
+; section comment
+[aSection]
+truc= true
+
+; a comment
+
+laurent=toto
+isvalid = on
+
+; super section
+[thesection]
+truc=machin2
+bidule = 1
+[vla]
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+';
+        $ini->testParse($content);
+        $ini->renameValue('string', 'vuvuzela');
+        $ini->renameSection('aSection', 'beautiful');
+        $result = '
+  ; a comment <?php die()
+  
+foo=bar
+anumber=98
+vuvuzela=uuuuu
+string2="aaa
+bbb"
+afloatnumber=5.098  
+
+; section comment
+[beautiful]
+truc=true
+
+; a comment
+
+laurent=toto
+isvalid=on
+
+; super section
+[thesection]
+truc=machin2
+bidule=1
+[vla]
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+
+';
+        $this->assertEqualOrDiff($result, $ini->generate());
+
+        $ini->renameSection('0', 'zipo');
+        $result = '[zipo]
+
+  ; a comment <?php die()
+  
+foo=bar
+anumber=98
+vuvuzela=uuuuu
+string2="aaa
+bbb"
+afloatnumber=5.098  
+
+; section comment
+[beautiful]
+truc=true
+
+; a comment
+
+laurent=toto
+isvalid=on
+
+; super section
+[thesection]
+truc=machin2
+bidule=1
+[vla]
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+
+';
+        $this->assertEqualOrDiff($result, $ini->generate());
+
+        $ini->renameValue('truc', 'system', 'thesection');
+
+        $result = '[zipo]
+
+  ; a comment <?php die()
+  
+foo=bar
+anumber=98
+vuvuzela=uuuuu
+string2="aaa
+bbb"
+afloatnumber=5.098  
+
+; section comment
+[beautiful]
+truc=true
+
+; a comment
+
+laurent=toto
+isvalid=on
+
+; super section
+[thesection]
+system=machin2
+bidule=1
+[vla]
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+
+';
+        $this->assertEqualOrDiff($result, $ini->generate());
+    }
+
 }
 
 ?>

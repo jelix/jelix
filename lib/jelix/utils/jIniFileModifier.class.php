@@ -456,5 +456,162 @@ class jIniFileModifier {
         }
         return $value;
     }
+
+    /**
+     * import values of an ini file into the current ini content.
+     * If a section prefix is given, all section of the given ini file will be
+     * renamed with the prefix plus "_". The global (unamed) section will be the section
+     * named with the value of prefix. If the section prefix is not given, the existing
+     * sections and given section with the same name will be merged.
+     * @param jIniFileModifier $ini  an ini file modifier to merge with the current
+     * @param string $sectionPrefix the prefix to add to the section prefix
+     * @param string $separator the separator to add between the prefix and the old name
+     *                         of the section
+     * @since 1.2
+     */
+    public function import(jIniFileModifier $ini, $sectionPrefix = '', $separator = '_') {
+        foreach($ini->content as $section=>$values) {
+            if ($sectionPrefix) {
+                if ($section == "0") {
+                    $realSection = $sectionPrefix;
+                }
+                else {
+                    $realSection = $sectionPrefix.$separator.$section;
+                }
+            }
+            else $realSection = $section;
+
+            if (isset($this->content[$realSection])) {
+                // let's merge the current and the given section
+                $this->mergeValues($values, $realSection);
+            }
+            else {
+                if ($values[0][0] == self::TK_SECTION)
+                    $values[0][1] = '['.$realSection.']';
+                else {
+                    array_unshift($values, array(self::TK_SECTION, '['.$realSection.']'));
+                }
+                $this->content[$realSection] = $values;
+            }
+        }
+    }
+
+    /**
+     * move values of a section into an other section and remove the section
+     * @return boolean  true if the merge is a success
+     */
+    public function mergeSection($sectionSource, $sectionTarget) {
+        if (!isset($this->content[$sectionTarget]))
+            return $this->renameSection($sectionSource, $sectionTarget);
+
+        if (!isset($this->content[$sectionSource]))
+            return false;
+        $this->mergeValues($this->content[$sectionSource], $sectionTarget);
+        if ($sectionSource == "0")
+            $this->content[$sectionSource] = array();
+        else
+            unset($this->content[$sectionSource]);
+        return true;
+    }
+
+    protected function mergeValues($values, $sectionTarget) {
+        $previousItems = array();
+        // if options already exists, just change their values.
+        // if options don't exist, add them to the section, with
+        // comments and whitespace
+        foreach ($values as $k=>$item) {
+            switch($item[0]) {
+                case self::TK_SECTION:
+                  break;
+                case self::TK_WS:
+                  if ($item[1]=='--')
+                      break;
+                case self::TK_COMMENT:
+                  $previousItems [] = $item;
+                  break;
+                case self::TK_VALUE:
+                case self::TK_ARR_VALUE:
+                    $found = false;
+                    $lastNonValues = -1;
+                    foreach ($this->content[$sectionTarget] as $j =>$item2) {
+                        if ($item2[0] != self::TK_VALUE && $item2[0] != self::TK_ARR_VALUE) {
+                            if ($lastNonValues == -1 && $item2[0] != self::TK_SECTION)
+                                $lastNonValues = $j;
+                            continue;
+                        }
+                        if ($item2[1] != $item[1]) {
+                            $lastNonValues = -1;
+                            continue;
+                        }
+                        $found = true;
+                        $this->content[$sectionTarget][$j][2] = $item[2];
+                        break;
+                    }
+                    if (!$found) {
+                        $atTheEnd = false;
+                        $previousItems[] = $item;
+                        if ($lastNonValues > 0) {
+                            $previousItems = array_splice($this->content[$sectionTarget], $lastNonValues, $j, $previousItems);
+
+                        }
+                        $this->content[$sectionTarget] = array_merge($this->content[$sectionTarget], $previousItems);
+                    }
+                    $previousItems = array();
+                    break;
+            }
+        }
+    }
+
+
+    /**
+     * rename a value
+     * 
+     */
+    public function renameValue($name, $newName, $section=0) {
+        if (!isset($this->content[$section]))
+            return false;
+        foreach ($this->content[$section] as $k =>$item) {
+            if ($item[0] != self::TK_VALUE && $item[0] != self::TK_ARR_VALUE) {
+                continue;
+            }
+            if ($item[1] != $name) {
+                continue;
+            }
+            $this->content[$section][$k][1] = $newName;
+            break;
+        }
+        return true;
+    }
+
+    /**
+     * rename a section
+     */
+    public function renameSection($oldName, $newName) {
+        if (!isset($this->content[$oldName]))
+            return false;
+
+        if (isset($this->content[$newName])) {
+            return $this->mergeSection($oldName, $newName);
+        }
+
+        $newcontent = array();
+        foreach($this->content as $section=>$values) {
+            if ((string)$oldName == (string)$section) {
+                if ($section == "0") {
+                    $newcontent[0] = array();
+                }
+                if ($values[0][0] == self::TK_SECTION)
+                    $values[0][1] = '['.$newName.']';
+                else {
+                    array_unshift($values, array(self::TK_SECTION, '['.$newName.']'));
+                }
+                $newcontent[$newName] = $values;
+            }
+            else
+                $newcontent [$section] = $values;
+        }
+        $this->content = $newcontent;
+        return true;
+    }
 }
 
