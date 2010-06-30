@@ -261,7 +261,7 @@ class jCoordinator {
         $type = $this->request->defaultResponseType;
 
         if(!isset($responses[$type]))
-            return jLocale::get('jelix~errors.default.response.type.unknown',array($this->moduleName.'~'.$this->actionName,$type));
+            throw new jException('jelix~errors.default.response.type.unknown',array($this->moduleName.'~'.$this->actionName,$type));
 
         try{
             $respclass = $responses[$type];
@@ -298,20 +298,6 @@ class jCoordinator {
             );
         }
 
-        $doEchoByResponse = true;
-
-        if($this->request == null){
-            $message = 'JELIX PANIC ! Error during initialization !! '.$message;
-            $doEchoByResponse = false;
-            $toDo.= ' EXIT';
-        }elseif($this->response == null){
-            $ret = $this->initDefaultResponseOfRequest();
-            if(is_string($ret)){
-                $message = 'Double error ! 1)'. $ret.'; 2)'.$message;
-                $doEchoByResponse = false;
-            }
-        }
-
         // When we are in cmdline we need to fix the remoteAddr
         $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
 
@@ -344,6 +330,23 @@ class jCoordinator {
             $messageLog.=$traceLog."\n";
         }
 
+        // the error should be shown by the response
+        $doEchoByResponse = true;
+
+        if ($this->request == null) {
+            $message = 'JELIX PANIC ! Error during initialization !! '.$message;
+            $doEchoByResponse = false;
+            $toDo.= ' EXIT';
+        }
+        elseif ($this->response == null) {
+            try {
+                $this->initDefaultResponseOfRequest();
+            }
+            catch(Exception $e) {
+                $message = 'Double error ! 1)'. $e->getMessage().'; 2)'.$message;
+                $doEchoByResponse = false;
+            }
+        }
 
         $echoAsked = false;
         // traitement du message
