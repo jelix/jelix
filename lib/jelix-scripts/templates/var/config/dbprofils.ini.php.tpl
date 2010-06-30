@@ -11,7 +11,7 @@ default = myapp
 
 [myapp]
 
-; the driver name : mysql, pgsql, pdo, sqlite...
+; the driver name : mysql, pgsql, sqlite...
 driver="mysql"
 
 ; For most of drivers:
@@ -30,8 +30,5 @@ persistent= on
 ; jDbConnection::prefixTable().
 ;table_prefix =
 
-; Example for pdo :
-;driver=pdo
-;dsn=mysql:host=localhost;dbname=test
-;user=
-;password=
+; to use pdo
+;usepdo=on
