@@ -231,7 +231,7 @@ abstract class jInstallerComponentBase {
                     $maxversion = '*';
 
                 $name = (string)$dependency['name'];
-                if (trim($name) == '')
+                if (trim($name) == '' && $type != 'jelix')
                     throw new Exception('Name is missing in a dependency declaration in module '.$this->name);
                 $id = (string)$dependency['id'];
 
