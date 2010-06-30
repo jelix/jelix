@@ -49,7 +49,7 @@ class jacldbModuleInstaller extends jInstallerModule {
         if (!$this->firstDbExec())
             return;
 
-        $this->declareDbProfile('jacl_profile', $this->dbProfile, false);
+        $this->declareDbProfile('jacl_profile', null, false);
         $driver = $this->config->getValue('driver','acl');
         if ($driver != 'db')
             $this->config->setValue('driver','db','acl');

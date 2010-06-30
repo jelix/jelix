@@ -17,7 +17,7 @@ class jacl2dbModuleUpgrader_namedgroup extends jInstallerModule {
     function install() {
         if (!$this->firstDbExec())
             return;
-        $this->declareDbProfile('jacl2_profile', $this->dbProfile, false);
+        $this->declareDbProfile('jacl2_profile', null, false);
         $cn = $this->dbConnection();
         try {
             $cn->exec("ALTER TABLE ".$cn->prefixTable('jacl2_group')." ADD COLUMN code varchar(30) default NULL");
