@@ -223,9 +223,21 @@ abstract class jInstallerComponentBase {
 
         if (isset($xml->dependencies)) {
             foreach ($xml->dependencies->children() as $type=>$dependency) {
+                $minversion = isset($dependency['minversion'])?(string)$dependency['minversion']:'*';
+                if (trim($minversion) == '')
+                    $minversion = '*';
+                $maxversion = isset($dependency['maxversion'])?(string)$dependency['maxversion']:'*';
+                if (trim($maxversion) == '')
+                    $maxversion = '*';
+
+                $name = (string)$dependency['name'];
+                if (trim($name) == '')
+                    throw new Exception('Name is missing in a dependency declaration in module '.$this->name);
+                $id = (string)$dependency['id'];
+
                 if ($type == 'jelix') {
-                    $this->jelixMinVersion = isset($dependency['minversion'])?(string)$dependency['minversion']:'*';
-                    $this->jelixMaxVersion = isset($dependency['maxversion'])?(string)$dependency['maxversion']:'*';
+                    $this->jelixMinVersion = $minversion;
+                    $this->jelixMaxVersion = $maxversion;
                     if ($this->name != 'jelix') {
                         $this->dependencies[] = array(
                             'type'=> 'module',
@@ -240,20 +252,20 @@ abstract class jInstallerComponentBase {
                 else if ($type == 'module') {
                     $this->dependencies[] = array(
                             'type'=> 'module',
-                            'id' => (string)$dependency['id'],
-                            'name' => (string)$dependency['name'],
-                            'minversion' => isset($dependency['minversion'])?(string)$dependency['minversion']:'*',
-                            'maxversion' => isset($dependency['maxversion'])?(string)$dependency['maxversion']:'*',
+                            'id' => $id,
+                            'name' => $name,
+                            'minversion' => $minversion,
+                            'maxversion' => $maxversion,
                             ''
                             );
                 }
                 else if ($type == 'plugin') {
                     $this->dependencies[] = array(
                             'type'=> 'plugin',
-                            'id' => (string)$dependency['id'],
-                            'name' => (string)$dependency['name'],
-                            'minversion' => isset($dependency['minversion'])?(string)$dependency['minversion']:'*',
-                            'maxversion' => isset($dependency['maxversion'])?(string)$dependency['maxversion']:'*',
+                            'id' => $id,
+                            'name' => $name,
+                            'minversion' => $minversion,
+                            'maxversion' => $maxversion,
                             ''
                             );
                 }

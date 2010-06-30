@@ -720,7 +720,7 @@ class jInstaller {
                     $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
                 } catch (Exception $e) {
                     $result = false;
-                    $this->error ($e->getMessage(), null, true);
+                    $this->error ($e->getMessage(). " comp=".$component->getName(), null, true);
                 }
             }
         }
