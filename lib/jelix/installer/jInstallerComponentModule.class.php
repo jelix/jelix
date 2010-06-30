@@ -79,12 +79,15 @@ class jInstallerComponentModule extends jInstallerComponentBase {
 
         $this->_setAccess($ep->configIni);
 
+        // false means that there isn't an installer for the module
         if ($this->moduleInstaller === false) {
             return null;
         }
 
+        $epId = $ep->getEpId();
+
         if ($this->moduleInstaller === null) {
-            if (!file_exists($this->path.'install/install.php')) {
+            if (!file_exists($this->path.'install/install.php') || $this->moduleInfos[$epId]->skipInstaller) {
                 $this->moduleInstaller = false;
                 return null;
             }
@@ -99,7 +102,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
                                                 $installWholeApp
                                                 );
         }
-        $epId = $ep->getEpId();
+
         $this->moduleInstaller->setParameters($this->moduleInfos[$epId]->parameters);
 
         $sparam = $ep->configIni->getValue($this->name.'.installparam','modules');

@@ -39,9 +39,11 @@ class jInstallerModuleInfos {
      */
     public $parameters = array();
 
+    public $skipInstaller = false;
+
     /**
      * @param string $name the name of the module
-     * @param stdObj $config  configuration of modules ([modules] section)
+     * @param array $config  configuration of modules ([modules] section)
      */
     function __construct($name, $config) {
         $this->name = $name;
@@ -59,6 +61,10 @@ class jInstallerModuleInfos {
                 else
                     $this->parameters[$kp[0]] = true;
             }
+        }
+
+        if (isset($config[$name.'.skipinstaller']) &&  $config[$name.'.skipinstaller'] == 'skip') {
+            $this->skipInstaller = true;
         }
     }
 
