@@ -86,7 +86,8 @@ cd lib/jelix-www/jquery
 cd lib/jelix-www/markitup
   jquery.markitup.js
   jquery.markitup.pack.js
-  readme.txt
+  README.md
+  CHANGELOG.md
 cd lib/jelix-www/markitup/templates
   preview.css
   preview.html

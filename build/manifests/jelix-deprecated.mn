@@ -72,6 +72,9 @@ cd lib/jelix-www/js
   jforms.js
 cd lib/jelix-www/design/
   fond-bandeau.png
+cd lib/jelix-www/markitup
+  readme.txt
+rmd lib/jelix-www/jquery/date_input
 
 rmd lib/tcpdf/barcode
 rmd lib/tcpdf/config/lang
@@ -100,4 +103,3 @@ cd lib/jelix-modules/jauthdb/install
   _installclass.php
 
 
-rmd lib/jelix-www/jquery/date_input
