@@ -78,8 +78,6 @@ cd lib/jelix-www/wymeditor/skins
 cd lib/jelix-www/wymeditor/skins/default
   screen.css
   icons.png
-cd lib/jelix-www/wymeditor/config
-c default.js
 cd lib/jelix-www/jquery
   GPL-LICENSE.txt
   MIT-LICENSE.txt
@@ -217,7 +215,7 @@ cd lib/jelix-www/jquery/ui
   GPL-LICENSE.txt
 
 cd lib/jelix-www/jquery/ui/i18n
-! jquery.ui.i18n.js
+! jquery-ui-i18n.js
 ! jquery.ui.datepicker-af.js
 ! jquery.ui.datepicker-ar.js
 ! jquery.ui.datepicker-az.js
