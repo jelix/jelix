@@ -81,7 +81,6 @@ c default.js
 cd lib/jelix-www/jquery
   GPL-LICENSE.txt
   MIT-LICENSE.txt
-  README
 ! jquery.js
   VERSION
 cd lib/jelix-www/markitup
