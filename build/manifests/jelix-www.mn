@@ -176,7 +176,7 @@ cd lib/jelix-www/markitup/skins/markitup/images
 cd lib/jelix-www/jquery/flash
 c jquery.flash.js
 cd lib/jelix-www/jquery/include
-! jquery.include.pack-1.0.js (jquery.include.js)
+! jquery.include.pack-1.1.js (jquery.include.js)
 cd lib/jelix-www/jquery/ui
 ! ui.accordion.min.js
 ! effects.highlight.min.js
