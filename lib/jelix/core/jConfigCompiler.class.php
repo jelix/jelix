@@ -182,6 +182,8 @@ class jConfigCompiler {
     
             if($config->urlengine['jelixWWWPath'][0] != '/')
                 $config->urlengine['jelixWWWPath'] = $basepath.$config->urlengine['jelixWWWPath'];
+            if($config->urlengine['jqueryPath'][0] != '/')
+                $config->urlengine['jqueryPath'] = $basepath.$config->urlengine['jqueryPath'];
             $snp = substr($config->urlengine['urlScript'],strlen($basepath));
         }
 

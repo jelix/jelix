@@ -75,6 +75,7 @@ cd lib/jelix-www/design/
 cd lib/jelix-www/markitup
   readme.txt
 rmd lib/jelix-www/jquery/date_input
+rmd lib/jelix-www/wymeditor/config
 
 rmd lib/tcpdf/barcode
 rmd lib/tcpdf/config/lang

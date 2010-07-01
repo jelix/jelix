@@ -50,6 +50,7 @@ class jTpl {
         global $gJConfig;
         $this->_vars['j_basepath'] = $gJConfig->urlengine['basePath'];
         $this->_vars['j_jelixwww'] = $gJConfig->urlengine['jelixWWWPath'];
+        $this->_vars['j_jquerypath'] = $gJConfig->urlengine['jqueryPath'];
         $this->_vars['j_themepath'] = $gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/';
         $this->_vars['j_locale'] = $gJConfig->locale;
 #endif

@@ -27,6 +27,8 @@ cd lib/jelix-www/js
 c json2.js
 cd lib/jelix-www/js/jforms/datepickers/default
   init.js
+cd lib/jelix-www/js/jforms/htmleditors/
+c wymeditor_default.js
 cd lib/jelix-www/xul
   jxulform.css
   jxulform.xml

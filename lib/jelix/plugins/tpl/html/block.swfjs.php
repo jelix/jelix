@@ -82,8 +82,8 @@ function jtpl_block_html_swfjs($compiler, $begin, $params) {
             $script .= "        ".\'});\'."\n";
             $script .= "    ".\'});\'."\n";
 
-            $gJCoord->response->addJSLink($gJConfig->urlengine[\'jelixWWWPath\'].\'jquery/jquery.js\');
-            $gJCoord->response->addJSLink($gJConfig->urlengine[\'jelixWWWPath\'].\'jquery/flash/jquery.flash.js\');
+            $gJCoord->response->addJSLink($gJConfig->urlengine[\'jqueryPath\'].\'jquery.js\');
+            $gJCoord->response->addJSLink($gJConfig->urlengine[\'jqueryPath\'].\'flash/jquery.flash.js\');
             $gJCoord->response->addJSCode($script);
         }
         ';

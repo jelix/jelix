@@ -60,10 +60,11 @@ class htmlJformsBuilder extends jFormsBuilderBase {
         if($resp === null || $resp->getType() !='html'){
             return;
         }
-        $www =$gJConfig->urlengine['jelixWWWPath'];
-        $bp =$gJConfig->urlengine['basePath'];
-        $resp->addJSLink($www.'jquery/jquery.js');
-        $resp->addJSLink($www.'jquery/include/jquery.include.js');
+        $www = $gJConfig->urlengine['jelixWWWPath'];
+        $jq = $gJConfig->urlengine['jqueryPath'];
+        $bp = $gJConfig->urlengine['basePath'];
+        $resp->addJSLink($jq.'jquery.js');
+        $resp->addJSLink($jq.'include/jquery.include.js');
         $resp->addJSLink($www.'js/jforms_jquery.js');
         $resp->addCSSLink($www.'design/jform.css');
         foreach($t->_vars as $k=>$v){
@@ -251,7 +252,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         if($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate'){
             $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:$GLOBALS['gJConfig']->forms['datepicker'];
-            $this->jsContent .= 'jelix_datepicker_'.$config.'(c,'.$this->escJsStr($GLOBALS['gJConfig']->locale).','.$this->escJsStr($GLOBALS['gJConfig']->urlengine['basePath']).");\n";
+            $this->jsContent .= 'jelix_datepicker_'.$config.'(c,'.$this->escJsStr($GLOBALS['gJConfig']->locale).','.$this->escJsStr($GLOBALS['gJConfig']->urlengine['basePath']).','.$this->escJsStr($GLOBALS['gJConfig']->urlengine['jqueryPath']).");\n";
         }
 
         if ($this->isRootControl) $this->jsContent .="jFormsJQ.tForm.addControl(c);\n";
@@ -675,7 +676,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
     protected function jsWikieditor($ctrl) {
         $this->jsTextarea($ctrl);
         $engine = $GLOBALS['gJConfig']->wikieditors[$ctrl->config.'.engine.name'];
-		$this->jsContent .= '$("#'.$this->_name.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
+        $this->jsContent .= '$("#'.$this->_name.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
     }
 
     protected function outputSecret($ctrl, $id, $class, $readonly, $hint) {

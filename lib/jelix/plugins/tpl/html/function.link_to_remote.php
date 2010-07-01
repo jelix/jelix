@@ -37,9 +37,8 @@ function jtpl_function_html_link_to_remote($tpl, $label, $element_id, $action_se
 
     if($gJCoord->response->getFormatType() == 'html'){
         // Add js link
-        $gJCoord->response->addJSLink($gJConfig->urlengine['jelixWWWPath'].'jquery/jquery.js');
+        $gJCoord->response->addJSLink($gJConfig->urlengine['jqueryPath'].'jquery.js');
     }
-
 
     $id_link_to_remote++;
 
