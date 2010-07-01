@@ -173,12 +173,6 @@ cd lib/jelix-www/markitup/skins/markitup/images
   handle.png
   menu.png
   submenu.png
-cd lib/jelix-www/jquery/date_input
-  README
-  date_input.css
-! jquery.date_input.min.js
-c jquery.date_input.fr_FR.js
-  LICENCE
 cd lib/jelix-www/jquery/flash
 c jquery.flash.js
 cd lib/jelix-www/jquery/include
