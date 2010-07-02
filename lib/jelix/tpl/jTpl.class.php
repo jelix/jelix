@@ -344,6 +344,47 @@ class jTpl {
         return $content;
     }
 
+     /**
+     * Return the generated content from the given string template (virtual)
+     * @param string $tpl template selector
+     * @param string $outputtype the type of output (html, text etc..)
+     * @param boolean $trusted  says if the template file is trusted or not
+     * @param boolean $callMeta false if meta should not be called
+     * @return string the generated content
+     */
+    public function fetchFromString ($tpl, $outputtype='', $trusted = true, $callMeta=true){
+        $content = '';
+        ob_start ();
+        try{
+#ifnot JTPL_STANDALONE
+            $cachePath = JELIX_APP_TEMP_PATH.'compiled/templates/virtualtemplate.php';
+            require_once(JELIX_LIB_PATH.'tpl/jTplCompiler.class.php');
+#else
+            $cachePath = jTplConfig::$cachePath . '/virtualtemplate.php';
+            include_once(JTPL_PATH . 'jTplCompiler.class.php');
+#endif
+            $this->_templateName = 'virtualtemplate';
+            $md = $this->_templateName . '_' . uniqid();
+
+            $compiler = new jTplCompiler();
+            $compiler->outputType = $outputtype;
+            if ($compiler->compileWithoutSelector($tpl, $cachePath,  $trusted,
+                $this->userModifiers, $this->userFunctions, $md));
+                require($cachePath);
+            if ($callMeta) {
+                $fct = 'template_meta_'.$md;
+                $fct($this);
+            }
+            $fct = 'template_'.$md;
+            $fct($this);
+            $content = ob_get_clean();
+        }catch(exception $e){
+            ob_end_clean();
+            throw $e;
+        }
+        return $content;
+    }
+
     protected $userModifiers = array();
 
     /**
