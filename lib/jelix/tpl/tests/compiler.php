@@ -265,8 +265,8 @@ function toto() {
     protected $tplerrors = array(
          0=>array('{if $foo}',
                   'Dans le template , la fin d\'un bloc if est manquant'),
-         2=>array('{foreach ($t=>$a)} A {/foreach}',
-                  'Dans le tag foreach ($t=>$a) du template , le caractère  ( n\'est pas autorisé'),
+         2=>array('{foreach ($t=>$a);} A {/foreach}',
+                  'Dans le tag foreach ($t=>$a); du template , le caractère  ; n\'est pas autorisé'),
          3=>array('{for ($i=0;$i<$p;$i++} A {/for}',
                   'Dans le tag for ($i=0;$i<$p;$i++ du template , il y a des erreurs au niveau des parenthèses' ),
          5=>array('{($aaa)}',
