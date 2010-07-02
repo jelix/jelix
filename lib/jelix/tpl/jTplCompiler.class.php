@@ -186,6 +186,7 @@ class jTplCompiler
         $this->trusted = $trusted;
         $this->_modifier = array_merge($this->_modifier, $userModifiers);
         $this->_userFunctions = $userFunctions;
+        $md5 = md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':''));
 
 #else
     /**
@@ -202,6 +203,7 @@ class jTplCompiler
         $this->trusted = $selector->trusted;
         $this->_modifier = array_merge($this->_modifier, $selector->userModifiers);
         $this->_userFunctions = $selector->userFunctions;
+        $md5 = md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':''));
 
         jContext::push($selector->module);
 #endif
@@ -210,31 +212,30 @@ class jTplCompiler
             $this->doError0('errors.tpl.not.found');
         }
 
-        $result = $this->compileContent(file_get_contents($this->_sourceFile));
+        $this->compileWithoutSelector(file_get_contents($this->_sourceFile), $cachefile,
+            $this->trusted, $this->_modifier, $this->_userFunctions, $md5);
+
+#ifnot JTPL_STANDALONE
+        jContext::pop();
+#endif
+        return true;
+    }
+
+    public function compileWithoutSelector($templatecontent, $cachefile, $trusted, $modifiers, $userFunctions, $md5) {
+        $result = $this->compileContent($templatecontent);
 
         $header = "<?php \n";
         foreach ($this->_pluginPath as $path=>$ok) {
             $header.=' require_once(\''.$path."');\n";
         }
-#if JTPL_STANDALONE
-        $header.='function template_meta_'.md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){';
-#else
-        $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){';
-#endif
+        $header.='function template_meta_'.$md5.'($t){';
         $header .="\n".$this->_metaBody."\n}\n";
 
-#if JTPL_STANDALONE
-        $header.='function template_'.md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){'."\n?>";
-#else
-        $header.='function template_'.md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){'."\n?>";
-#endif
+        $header.='function template_'.$md5.'($t){'."\n?>";
         $result = $header.$result."<?php \n}\n?>";
 
 #if JTPL_STANDALONE
-        $_dirname = dirname($tplName).'/';
-        if ($_dirname == './')
-            $_dirname = '';
-        $_dirname = jTplConfig::$cachePath.$_dirname;
+        $_dirname = dirname($cachefile).'/';
 
         if (!is_dir($_dirname)) {
             umask(jTplConfig::$umask);
@@ -269,7 +270,6 @@ class jTplCompiler
 #else
         jFile::write($cachefile, $result);
 
-        jContext::pop();
 #endif
         return true;
     }
