@@ -21,7 +21,7 @@ testErrorDecorator.prototype = {
 
 jQuery(document).ready(function(){
 
-var jfo = new jFormsJQForm('jf');
+var jfo = new jFormsJQForm('jf', 'jf','0');
 var jfoElt = $("#jf").get(0);
 jfo.setErrorDecorator(new testErrorDecorator());
 jFormsJQ.declareForm(jfo);

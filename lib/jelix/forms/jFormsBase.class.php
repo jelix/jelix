@@ -96,7 +96,7 @@ abstract class jFormsBase {
      */
     protected $htmleditors = array();
 
-	/**
+    /**
      * List of wikieditorcontrols
      * array of jFormsControl objects
      * @var array

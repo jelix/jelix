@@ -32,7 +32,7 @@ class UTjformsHTMLBuilder2 extends jUnitTestCaseDb {
     protected $formname;
 
     function testStart() {
-        $this->container = new jFormsDataContainer('formtesthtmlbuilder','');
+        $this->container = new jFormsDataContainer('formtesthtmlbuilder','0');
         $this->form = new testHMLForm2('formtesthtmlbuilder', $this->container, true );
         $this->builder = new testJFormsHtmlBuilder2($this->form);
         $this->formname = $this->builder->getName();
@@ -371,7 +371,8 @@ c2.activate(\'closed\');
 
         $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder\');
+jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
@@ -388,7 +389,8 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder1\');
+jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder1\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
@@ -406,7 +408,8 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         $result ='<form action="https://www.jelix.org/dummy.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder2\');
+jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder2\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>

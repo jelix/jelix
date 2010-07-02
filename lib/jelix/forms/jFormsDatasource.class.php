@@ -141,5 +141,9 @@ class jFormsDaoDatasource implements jIFormsDatasource {
         else
             return null;
     }
+
+    public function getDependentControls() {
+        return $this->criteriaFrom;
+    }
 }
 

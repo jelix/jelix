@@ -78,6 +78,7 @@ cd lib/jelix/core/response
 
 cd lib/jelix/core-modules/jelix
 *  module.xml
+   urls.xml
 cd lib/jelix/core-modules/jelix/controllers
 ! help.cmdline.php
 ! error.classic.php
@@ -85,6 +86,7 @@ cd lib/jelix/core-modules/jelix/controllers
 ! error.jsonrpc.php
 ! error.xmlrpc.php
 ! error.rdf.php
+  jforms.classic.php
 cd lib/jelix/core-modules/jelix/daos
    jsession.dao.xml
    jcache.dao.xml

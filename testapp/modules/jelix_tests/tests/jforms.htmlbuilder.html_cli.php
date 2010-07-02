@@ -22,6 +22,7 @@ class testHMLForm extends jFormsBase {
 class testJFormsHtmlBuilder extends htmlJformsBuilder {
     function getJsContent() { $js= $this->jsContent; $this->jsContent = '';return $js;}
     function clearJs() { $this->jsContent = ''; }
+    function getLastJsContent() { $js= $this->lastJsContent; $this->lastJsContent = '';return $js;}
 }
 
 
@@ -31,7 +32,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
     protected $container;
     protected $builder;
     function testStart() {
-        $this->container = new jFormsDataContainer('formtest','');
+        $this->container = new jFormsDataContainer('formtest','0');
         $this->form = new testHMLForm('formtest', $this->container, true );
         $this->form->securityLevel = 0;
         $this->builder = new testJFormsHtmlBuilder($this->form);
@@ -45,7 +46,8 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\');
+jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
@@ -62,7 +64,8 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
+jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
@@ -648,9 +651,13 @@ jFormsJQ.tForm.addControl(c);
         $result.='</select>';
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+c.dependencies = [\'hidden1\'];
 c.errInvalid=\'"Votre choix" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
+
+        $this->assertEqualOrDiff('jFormsJQ.tForm.declareDynamicFill(\'menulist1\');
+', $this->builder->getLastJsContent());
 
 
         $this->form->setData('hidden1',"15");
@@ -1170,7 +1177,8 @@ jFormsJQ.tForm.addControl(c);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'" enctype="multipart/form-data"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
+jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
@@ -1262,7 +1270,8 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
+jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
@@ -1282,7 +1291,8 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\');
+jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorAlert());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>

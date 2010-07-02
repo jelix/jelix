@@ -131,9 +131,11 @@ class htmlJformsBuilder extends jFormsBuilderBase {
         else
             echo '>';
 
+        // no scope into an anonymous js function, because jFormsJQ.tForm is used by other generated source code
         echo '<script type="text/javascript">
 //<![CDATA[
-jFormsJQ.tForm = new jFormsJQForm(\''.$this->_name.'\');
+jFormsJQ.selectFillUrl=\''.jUrl::get('jelix~jforms:getListData').'\';
+jFormsJQ.tForm = new jFormsJQForm(\''.$this->_name.'\',\''.$this->_form->getSelector().'\',\''.$this->_form->getContainer()->formId.'\');
 jFormsJQ.tForm.setErrorDecorator(new '.$this->options['errorDecorator'].'());
 jFormsJQ.declareForm(jFormsJQ.tForm);
 //]]>
@@ -186,12 +188,13 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
     }
 
     protected $jsContent = '';
+    protected $lastJsContent = '';
 
     public function outputFooter(){
         echo '<script type="text/javascript">
 //<![CDATA[
 (function(){var c, c2;
-'.$this->jsContent.'
+'.$this->jsContent.$this->lastJsContent.'
 })();
 //]]>
 </script>';
@@ -581,6 +584,15 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
     protected function jsMenulist($ctrl) {
 
         $this->jsContent .="c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+//'dynamicFillAjax ('".$ctrl->ref."', dependencies)'
+        if ($ctrl instanceof jFormsControlDatasource
+            && $ctrl->datasource instanceof jFormsDaoDatasource) {
+            $dependentControls = $ctrl->datasource->getDependentControls();
+            if ($dependentControls) {
+                $this->jsContent .="c.dependencies = ['".implode("','",$dependentControls)."'];\n";
+                $this->lastJsContent .= "jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n";
+            }
+        }
 
         $this->commonJs($ctrl);
     }
