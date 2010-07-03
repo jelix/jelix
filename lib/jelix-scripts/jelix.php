@@ -85,15 +85,23 @@ if ($APPNAME == '' && $command->applicationRequired) {
 // --------------  retrieve the configuration for the script commands
 
 if (!isset($_SERVER['JELIX_CONFIG'])) {
-
-    $jelix_config = JELIX_SCRIPT_PATH.'scripts.conf.php';
-
+    if ($APPNAME != '') {
+        $jelix_config = JELIX_SCRIPT_PATH.'my.'.$APPNAME.'.conf.php';
+        if (!file_exists($jelix_config)) {
+            $jelix_config = JELIX_SCRIPT_PATH.'my.default.conf.php';
+        }
+    }
+    else {
+        $jelix_config = JELIX_SCRIPT_PATH.'my.default.conf.php';
+    }
     if (file_exists($jelix_config)) {
         require($jelix_config);
     }
+
 }
 elseif (!file_exists($_SERVER['JELIX_CONFIG'])) {
-    die("Error: path given by the JELIX_CONFIG environnement variable doesn't exist (".$_SERVER['JELIX_CONFIG']." )\n");
+    echo("Error: path given by the JELIX_CONFIG environnement variable doesn't exist (".$_SERVER['JELIX_CONFIG']." )\n");
+    exit(1);
 }
 else {
     require($_SERVER['JELIX_CONFIG']);

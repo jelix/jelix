@@ -91,7 +91,7 @@ cd lib/simpletest/test/support/collector
   collectable.2
 
 cd lib/jelix-scripts
-  scripts.conf.php.dist
+  my.default.conf.php.dist
   default.conf.php
   jelix.php
   jelix
