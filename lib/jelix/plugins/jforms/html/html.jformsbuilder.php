@@ -37,7 +37,7 @@ class htmlJformsBuilder extends jFormsBuilderBase {
                 $this->outputControlLabel($ctrl);
                 echo '</th><td>';
                 $this->outputControl($ctrl);
-                echo '</td></tr>';
+                echo "</td></tr>\n";
             }
         }
         echo '</table> <div class="jforms-submit-buttons">';
@@ -51,7 +51,7 @@ class htmlJformsBuilder extends jFormsBuilderBase {
             $this->outputControl($ctrl);
             echo ' ';
         }
-        echo '</div>';
+        echo "</div>\n";
     }
 
     public function outputMetaContent($t) {
@@ -207,10 +207,10 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $inError = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime'){
-            echo '<span class="jforms-label',$required,$inError,'"',$hint,'>',htmlspecialchars($ctrl->label),'</span>';
+            echo '<span class="jforms-label',$required,$inError,'"',$hint,'>',htmlspecialchars($ctrl->label),"</span>\n";
         }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
             $id = $this->_name.'_'.$ctrl->ref;
-            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$hint,'>',htmlspecialchars($ctrl->label),'</label>';
+            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$hint,'>',htmlspecialchars($ctrl->label),"</label>\n";
         }
     }
 
@@ -226,6 +226,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $class = ' class="'.$class.'"';
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
         $this->{'output'.$ctrl->type}($ctrl, $id, $class, $readonly, $hint);
+        echo "\n";
         $this->{'js'.$ctrl->type}($ctrl);
         $this->outputHelp($ctrl);
     }
@@ -514,7 +515,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
                 echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
                 if(in_array((string) $v,$value,true))
                     echo ' checked="checked"';
-                echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label></span>';
+                echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
                 $i++;
             }
         }else{
@@ -523,7 +524,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
                 echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
                 if((string) $v === $value)
                     echo ' checked="checked"';
-                echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),'</label></span>';
+                echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
                 $i++;
             }
         }
@@ -550,7 +551,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $span ='<span class="jforms-radio jforms-ctl-'.$ctrl->ref.'"><input type="radio"';
         foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
             echo $span,$id,$i,'" value="',htmlspecialchars($v),'"',((string) $v===$value?' checked="checked"':''),$readonly,$class,$this->_endt;
-            echo '<label for="',$this->_name,'_',$ctrl->ref,'_',$i,'">',htmlspecialchars($label),'</label></span>';
+            echo '<label for="',$this->_name,'_',$ctrl->ref,'_',$i,'">',htmlspecialchars($label),"</label></span>\n";
             $i++;
         }
     }
@@ -563,7 +564,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
     }
 
     protected function outputMenulist($ctrl, $id, $class, $readonly, $hint) {
-        echo '<select',$id,$hint,$class,' size="1">';
+        echo '<select',$id,$hint,$class,' size="1">'."\n";
         $value = $this->_form->getData($ctrl->ref);
         if(is_array($value)){
             if(isset($value[0]))
@@ -573,10 +574,10 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         }
         $value = (string) $value;
         if (!$ctrl->required) {
-            echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),'</option>';
+            echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
         }
         foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-            echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
+            echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
         }
         echo '</select>';
     }
@@ -599,7 +600,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
     protected function outputListbox($ctrl, $id, $class, $readonly, $hint) {
         if($ctrl->multiple){
-            echo '<select name="',$ctrl->ref,'[]" id="',$this->_name,'_',$ctrl->ref,'"',$hint,$class,' size="',$ctrl->size,'" multiple="multiple">';
+            echo '<select name="',$ctrl->ref,'[]" id="',$this->_name,'_',$ctrl->ref,'"',$hint,$class,' size="',$ctrl->size,'" multiple="multiple">'."\n";
             $value = $this->_form->getData($ctrl->ref);
 
             if(is_array($value) && count($value) == 1)
@@ -608,12 +609,12 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
             if(is_array($value)){
                 $value = array_map(create_function('$v', 'return (string) $v;'),$value);
                 foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                    echo '<option value="',htmlspecialchars($v),'"',(in_array((string) $v,$value,true)?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
+                    echo '<option value="',htmlspecialchars($v),'"',(in_array((string) $v,$value,true)?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
                 }
             }else{
                 $value = (string) $value;
                 foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                    echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
+                    echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
                 }
             }
             echo '</select>';
@@ -628,9 +629,9 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
             }
 
             $value = (string) $value;
-            echo '<select',$id,$hint,$class,' size="',$ctrl->size,'">';
+            echo '<select',$id,$hint,$class,' size="',$ctrl->size,'">'."\n";
             foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),'</option>';
+                echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
             }
             echo '</select>';
         }
@@ -821,7 +822,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
             echo '<li><label><input type="radio"',$id,$i,'" value="',htmlspecialchars($itemName),'"';
             echo ($itemName==$value?' checked="checked"':''),$readonly;
             echo ' onclick="jFormsJQ.getForm(\'',$this->_name,'\').getControl(\'',$ctrl->ref,'\').activate(\'',$itemName,'\')"', $this->_endt;
-            echo htmlspecialchars($ctrl->itemsNames[$itemName]),'</label> ';
+            echo htmlspecialchars($ctrl->itemsNames[$itemName]),"</label>\n";
 
             $displayedControls = false;
             foreach($listctrl as $ref=>$c) {
