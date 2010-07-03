@@ -50,19 +50,20 @@ class jAppManager {
     public static function clearTemp($path='') {
         if ($path == '') {
             if (!defined('JELIX_APP_TEMP_PATH')) {
-                echo "Error: JELIX_APP_TEMP_PATH is not defined\n";
-                exit(1);
+                throw new Exception("default temp path is not defined",1);
             }
             $path = JELIX_APP_TEMP_PATH;
         }
 
         if ($path == DIRECTORY_SEPARATOR || $path == '' || $path == '/') {
-            echo "Error: bad path in JELIX_APP_TEMP_PATH, it is equals to '".$path."' !!\n";
-            echo "       Jelix cannot clear the content of the temp directory.\n";
-            echo "       Correct the path in JELIX_APP_TEMP_PATH or create the directory you\n";
-            echo "       indicated into JELIX_APP_TEMP_PATH.\n";
-            exit(1);
+            throw new Exception('given temp path is invalid', 2);
         }
+        if (!file_exists($path))
+            throw new Exception('given temp path does not exists', 3);
+
+        if (!is_writeable($path))
+            throw new Exception('given temp path does not exists', 4);
+
         jFile::removeDir($path, false);
     }
 }

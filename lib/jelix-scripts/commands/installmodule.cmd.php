@@ -86,7 +86,19 @@ class installmoduleCommand extends JelixScriptCommand {
             $installer->installModules($modulesList, $entryPointName);
         }
 
-        jAppManager::clearTemp(JELIX_APP_REAL_TEMP_PATH);
+        try {
+            jAppManager::clearTemp(JELIX_APP_REAL_TEMP_PATH);
+        }
+        catch(Exception $e) {
+            if ($e->getCode() == 2) {
+                echo "Error: bad path in JELIX_APP_REAL_TEMP_PATH, it is equals to '".$path."' !!\n";
+                echo "       Jelix cannot clear the content of the temp directory.\n";
+                echo "       you must clear it your self.\n";
+                echo "       Correct the path in JELIX_APP_REAL_TEMP_PATH or create the directory you\n";
+                echo "       indicated into JELIX_APP_REAL_TEMP_PATH.\n";
+            }
+            else echo "Error: ".$e->getMessage();
+        }
         jAppManager::open();
     }
 }
