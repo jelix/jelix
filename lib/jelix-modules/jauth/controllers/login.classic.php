@@ -61,8 +61,9 @@ class loginCtrl extends jController {
         if ($conf['after_logout'] == '')
             throw new jException ('jauth~autherror.no.after_logout');
 
-        if (!($conf['enable_after_logout_override'] &&
-              $url_return = $this->param('auth_url_return'))) {
+        $url_return = $this->param('auth_url_return');
+        if (!$conf['enable_after_logout_override'] || $url_return == null
+              || $url_return == jUrl::getCurrentUrl()) { // we don't want to return to the current page if authentification is missing for this page
             $url_return =  jUrl::get($conf['after_logout']);
         }
 
