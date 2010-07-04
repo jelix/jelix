@@ -209,6 +209,7 @@ cd lib/jelix/forms
   jForms.class.php
   jFormsBase.class.php
   jFormsBuilderBase.class.php
+  jFormsBuilderHtml.class.php
   jFormsCompiler.class.php
   jFormsCompiler_jf_1_0.class.php
   jFormsCompiler_jf_1_1.class.php
