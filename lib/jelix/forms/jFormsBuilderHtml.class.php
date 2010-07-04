@@ -197,21 +197,38 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
     }
 
-    public function outputControl($ctrl){
+    public function outputControl($ctrl, $attributes=array()){
         if($ctrl->type == 'hidden') return;
         $ro = $ctrl->isReadOnly();
-        $id = ' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'"';
+        $attributes['name'] = $ctrl->ref;
+        $attributes['id'] = $this->_name.'_'.$ctrl->ref;
+
+        if ($ro)
+            $attributes['readonly'] = 'readonly';
+        else
+            unset($attributes['readonly']);
+        if (!isset($attributes['title']) && $ctrl->hint) {
+            $attributes['title'] = $ctrl->hint;
+        }
+
         $class = 'jforms-ctrl-'.$ctrl->type;
         $class .= ($ctrl->required == false || $ro?'':' jforms-required');
         $class .= (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
         $class .= ($ro && $ctrl->type != 'captcha'?' jforms-readonly':'');
-        $readonly = ($ro?' readonly="readonly"':'');
-        $class = ' class="'.$class.'"';
-        $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
-        $this->{'output'.$ctrl->type}($ctrl, $id, $class, $readonly, $hint);
+        if (isset($attributes['class']))
+            $attributes['class'].= ' '.$class;
+        else
+            $attributes['class'] = $class;
+        $this->{'output'.$ctrl->type}($ctrl, $attributes);
         echo "\n";
         $this->{'js'.$ctrl->type}($ctrl);
         $this->outputHelp($ctrl);
+    }
+
+    protected function _outputAttr(&$attributes) {
+        foreach($attributes as $name=>$val) {
+            echo ' '.$name.'="'.htmlspecialchars($val).'"';
+        }
     }
 
     protected function escJsStr($str) {
@@ -240,15 +257,18 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         if ($this->isRootControl) $this->jsContent .= $this->jFormsJsVarName.".tForm.addControl(c);\n";
     }
 
-    protected function outputInput($ctrl, $id, $class, $readonly, $hint) {
+    protected function outputInput($ctrl, &$attr) {
         $value = $this->_form->getData($ctrl->ref);
-        $size = ($ctrl->size == 0?'' : ' size="'.$ctrl->size.'"');
+        if ($ctrl->size != 0)
+            $attr['size'] = $ctrl->size;
         $maxl= $ctrl->datatype->getFacet('maxLength');
         if($maxl !== null)
-            $maxl=' maxlength="'.$maxl.'"';
-        else
-            $maxl='';
-        echo '<input type="text"',$id,$readonly,$hint,$class,$size,$maxl,' value="',htmlspecialchars($value),'"',$this->_endt;
+            $attr['maxlength']=$maxl;
+        $attr['value'] = $value;
+        $attr['type'] = 'text';
+        echo '<input';
+        $this->_outputAttr($attr);
+        echo $this->_endt;
     }
 
     protected function jsInput($ctrl) {
@@ -284,11 +304,19 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function _outputDateControlDay($ctrl, $id, $value, $class, $readonly, $hint){
-        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
-            echo '<input type="text" size="2" maxlength="2" id="'.$id.'day" name="'.$ctrl->ref.'[day]"'.$readonly.$hint.$class.' value="'.$value.'"'.$this->_endt;
+    protected function _outputDateControlDay($ctrl, $attr, $value){
+        $attr['name'] = $ctrl->ref.'[day]';
+        $attr['id'] .= 'day';
+        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes'){
+            $attr['value'] = $value;
+            echo '<input type="text" size="2" maxlength="2"';
+            $this->_outputAttr($attr);
+            echo $this->_endt;
+        }
         else{
-            echo '<select id="'.$id.'day" name="'.$ctrl->ref.'[day]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.date.day.label')).'</option>';
+            echo '<select';
+            $this->_outputAttr($attr);
+            echo '><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.date.day.label')).'</option>';
             for($i=1;$i<32;$i++){
                 $k = ($i<10)?'0'.$i:$i;
                 echo '<option value="'.$k.'"'.($k == $value?' selected="selected"':'').'>'.$k.'</option>';
@@ -297,12 +325,20 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
     }
 
-    protected function _outputDateControlMonth($ctrl, $id, $value, $class, $readonly, $hint){
-        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
-            echo '<input type="text" size="2" maxlength="2" id="'.$id.'month" name="'.$ctrl->ref.'[month]"'.$readonly.$hint.$class.' value="'.$value.'"'.$this->_endt;
+    protected function _outputDateControlMonth($ctrl, $attr, $value){
+        $attr['name'] = $ctrl->ref.'[month]';
+        $attr['id'] .= 'month';
+        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes') {
+            $attr['value'] = $value;
+            echo '<input type="text" size="2" maxlength="2"';
+            $this->_outputAttr($attr);
+            echo $this->_endt;
+        }
         else{
             $monthLabels = $GLOBALS['gJConfig']->forms['controls.datetime.months.labels'];
-            echo '<select id="'.$id.'month" name="'.$ctrl->ref.'[month]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.date.month.label')).'</option>';
+            echo '<select';
+            $this->_outputAttr($attr);
+            echo '><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.date.month.label')).'</option>';
             for($i=1;$i<13;$i++){
                 $k = ($i<10)?'0'.$i:$i;
                 if($monthLabels == 'names')
@@ -317,28 +353,48 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
     }
 
-    protected function _outputDateControlYear($ctrl, $id, $value, $class, $readonly, $hint){
-        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
-            echo '<input type="text" size="4" maxlength="4" id="'.$id.'year" name="'.$ctrl->ref.'[year]"'.$readonly.$hint.$class.' value="'.$value.'"'.$this->_endt;
+    protected function _outputDateControlYear($ctrl, $attr, $value){
+        $attr['name'] = $ctrl->ref.'[year]';
+        $attr['id'] .= 'year';
+        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes') {
+            $attr['value'] = $value;
+            echo '<input type="text" size="4" maxlength="4"';
+            $this->_outputAttr($attr);
+            echo $this->_endt;
+        }
         else{
             $minDate = $ctrl->datatype->getFacet('minValue');
             $maxDate = $ctrl->datatype->getFacet('maxValue');
             if($minDate && $maxDate){
-                echo '<select id="'.$id.'year" name="'.$ctrl->ref.'[year]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.date.year.label')).'</option>';
+                echo '<select';
+                $this->_outputAttr($attr);
+                echo '><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.date.year.label')).'</option>';
                 for($i=$minDate->year;$i<=$maxDate->year;$i++)
                     echo '<option value="'.$i.'"'.($i == $value?' selected="selected"':'').'>'.$i.'</option>';
                 echo '</select>';
             }
-            else
-                echo '<input type="text" size="4" maxlength="4" id="'.$id.'year" name="'.$ctrl->ref.'[year]"'.$readonly.$hint.$class.' value="'.$value.'"'.$this->_endt;
+            else{
+                $attr['value'] = $value;
+                echo '<input type="text" size="4" maxlength="4"';
+                $this->_outputAttr($attr);
+                echo $this->_endt;
+            }
         }
     }
 
-    protected function _outputDateControlHour($ctrl, $id, $value, $class, $readonly, $hint){
-        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
-            echo '<input type="text" id="'.$id.'hour" name="'.$ctrl->ref.'[hour]" value="'.$value.'"'.$this->_endt;
+    protected function _outputDateControlHour($ctrl, $attr, $value){
+        $attr['name'] = $ctrl->ref.'[hour]';
+        $attr['id'] .= 'hour';
+        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes') {
+            $attr['value'] = $value;
+            echo '<input type="text" size="2" maxlength="2"';
+            $this->_outputAttr($attr);
+            echo $this->_endt;
+        }
         else{
-            echo '<select id="'.$id.'hour" name="'.$ctrl->ref.'[hour]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.time.hour.label')).'</option>';
+            echo '<select';
+            $this->_outputAttr($attr);
+            echo '><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.time.hour.label')).'</option>';
             for($i=0;$i<24;$i++){
                 $k = ($i<10)?'0'.$i:$i;
                 echo '<option value="'.$k.'"'.( (string) $k === $value?' selected="selected"':'').'>'.$k.'</option>';
@@ -347,11 +403,19 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
     }
 
-    protected function _outputDateControlMinutes($ctrl, $id, $value, $class, $readonly, $hint){
-        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
-            echo '<input type="text" id="'.$id.'minutes" name="'.$ctrl->ref.'[minutes]" value="'.$value.'"'.$this->_endt;
+    protected function _outputDateControlMinutes($ctrl, $attr, $value){
+        $attr['name'] = $ctrl->ref.'[minutes]';
+        $attr['id'] .= 'minutes';
+        if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes') {
+            $attr['value'] = $value;
+            echo '<input type="text" size="2" maxlength="2"';
+            $this->_outputAttr($attr);
+            echo $this->_endt;
+        }
         else{
-            echo '<select id="'.$id.'minutes" name="'.$ctrl->ref.'[minutes]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.time.minutes.label')).'</option>';
+            echo '<select';
+            $this->_outputAttr($attr);
+            echo '><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.time.minutes.label')).'</option>';
             for($i=0;$i<60;$i++){
                 $k = ($i<10)?'0'.$i:$i;
                 echo '<option value="'.$k.'"'.( (string) $k === $value?' selected="selected"':'').'>'.$k.'</option>';
@@ -360,13 +424,21 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
     }
 
-    protected function _outputDateControlSeconds($ctrl, $id, $value, $class, $readonly, $hint){
-        if(!$ctrl->enableSeconds)
-            echo '<input type="hidden" id="'.$id.'seconds" name="'.$ctrl->ref.'[seconds]" value="'.$value.'"'.$this->_endt;
-        else if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes')
-            echo '<input type="text" id="'.$id.'seconds" name="'.$ctrl->ref.'[seconds]" value="'.$value.'"'.$this->_endt;
+    protected function _outputDateControlSeconds($ctrl, $attr, $value){
+        $attr['name'] = $ctrl->ref.'[seconds]';
+        $attr['id'] .= 'seconds';
+        if(!$ctrl->enableSeconds) 
+            echo '<input type="hidden" id="'.$attr['id'].'seconds" name="'.$ctrl->ref.'[seconds]" value="'.$value.'"'.$this->_endt;
+        else if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes') {
+            $attr['value'] = $value;
+            echo '<input type="text"';
+            $this->_outputAttr($attr);
+            echo $this->_endt;
+        }
         else{
-            echo '<select id="'.$id.'seconds" name="'.$ctrl->ref.'[seconds]"'.$readonly.$hint.$class.'><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.time.seconds.label')).'</option>';
+            echo '<select';
+            $this->_outputAttr($attr);
+            echo '><option value="">'.htmlspecialchars(jLocale::get('jelix~jforms.time.seconds.label')).'</option>';
             for($i=0;$i<60;$i++){
                 $k = ($i<10)?'0'.$i:$i;
                 echo '<option value="'.$k.'"'.( (string) $k === $value?' selected="selected"':'').'>'.$k.'</option>';
@@ -375,8 +447,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
     }
 
-    protected function outputDate($ctrl, $id, $class, $readonly, $hint){
-        $id = $this->_name.'_'.$ctrl->ref.'_';
+    protected function outputDate($ctrl, &$attr){
+        $attr['id'] = $this->_name.'_'.$ctrl->ref.'_';
         $v = array('year'=>'','month'=>'','day'=>'');
         if(preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?$#',$this->_form->getData($ctrl->ref),$matches)){
             if(isset($matches[1]))
@@ -389,11 +461,11 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $f = jLocale::get('jelix~format.date');
         for($i=0;$i<strlen($f);$i++){
             if($f[$i] == 'Y')
-                $this->_outputDateControlYear($ctrl, $id, $v['year'], $class, $readonly, $hint);
+                $this->_outputDateControlYear($ctrl, $attr, $v['year']);
             else if($f[$i] == 'm')
-                $this->_outputDateControlMonth($ctrl, $id, $v['month'], $class, $readonly, $hint);
+                $this->_outputDateControlMonth($ctrl, $attr, $v['month']);
             else if($f[$i] == 'd')
-                $this->_outputDateControlDay($ctrl, $id, $v['day'], $class, $readonly, $hint);
+                $this->_outputDateControlDay($ctrl, $attr, $v['day']);
             else
                 echo ' ';
         }
@@ -411,8 +483,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputDatetime($ctrl, $id, $class, $readonly, $hint){
-        $id = $this->_name.'_'.$ctrl->ref.'_';
+    protected function outputDatetime($ctrl, &$attr){
+        $attr['id'] = $this->_name.'_'.$ctrl->ref.'_';
         $v = array('year'=>'','month'=>'','day'=>'','hour'=>'','minutes'=>'','seconds'=>'');
         if(preg_match('#^(\d{4})?-(\d{2})?-(\d{2})? (\d{2})?:(\d{2})?(:(\d{2})?)?$#',$this->_form->getData($ctrl->ref),$matches)){
             if(isset($matches[1]))
@@ -431,17 +503,17 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $f = jLocale::get('jelix~format.datetime');
         for($i=0;$i<strlen($f);$i++){
             if($f[$i] == 'Y')
-                $this->_outputDateControlYear($ctrl, $id, $v['year'], $class, $readonly, $hint);
+                $this->_outputDateControlYear($ctrl, $attr, $v['year']);
             else if($f[$i] == 'm')
-                $this->_outputDateControlMonth($ctrl, $id, $v['month'], $class, $readonly, $hint);
+                $this->_outputDateControlMonth($ctrl, $attr, $v['month']);
             else if($f[$i] == 'd')
-                $this->_outputDateControlDay($ctrl, $id, $v['day'], $class, $readonly, $hint);
+                $this->_outputDateControlDay($ctrl, $attr, $v['day']);
             else if($f[$i] == 'H')
-                $this->_outputDateControlHour($ctrl, $id, $v['hour'], $class, $readonly, $hint);
+                $this->_outputDateControlHour($ctrl, $attr, $v['hour']);
             else if($f[$i] == 'i')
-                $this->_outputDateControlMinutes($ctrl, $id, $v['minutes'], $class, $readonly, $hint);
+                $this->_outputDateControlMinutes($ctrl, $attr, $v['minutes']);
             else if($f[$i] == 's')
-                $this->_outputDateControlSeconds($ctrl, $id, $v['seconds'], $class, $readonly, $hint);
+                $this->_outputDateControlSeconds($ctrl, $attr, $v['seconds']);
             else
                 echo ' ';
         }
@@ -459,15 +531,17 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputCheckbox($ctrl, $id, $class, $readonly, $hint) {
+    protected function outputCheckbox($ctrl, &$attr) {
         $value = $this->_form->getData($ctrl->ref);
 
         if($ctrl->valueOnCheck == $value){
-            $v=' checked="checked"';
-        }else{
-            $v='';
-        }
-        echo '<input type="checkbox"',$id,$readonly,$hint,$class,$v,' value="',$ctrl->valueOnCheck,'"',$this->_endt;
+            $attr['checked'] = "checked";
+         }
+        $attr['value'] = $ctrl->valueOnCheck;
+        $attr['type'] = 'checkbox';
+        echo '<input';
+        $this->_outputAttr($attr);
+        echo $this->_endt;
     }
 
     protected function jsCheckbox($ctrl) {
@@ -477,12 +551,13 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputCheckboxes($ctrl, $id, $class, $readonly, $hint) {
+    protected function outputCheckboxes($ctrl, &$attr) {
         $i=0;
-        $id=$this->_name.'_'.$ctrl->ref.'_';
-        $attrs=' name="'.$ctrl->ref.'[]" id="'.$id;
+        $id = $this->_name.'_'.$ctrl->ref.'_';
+        $attrs = ' name="'.$ctrl->ref.'[]" id="'.$id;
         $value = $this->_form->getData($ctrl->ref);
-
+        $attr['name'] = $ctrl->ref.'[]';
+        unset($attr['title']);
         if(is_array($value) && count($value) == 1)
             $value = $value[0];
         $span ='<span class="jforms-chkbox jforms-ctl-'.$ctrl->ref.'"><input type="checkbox"';
@@ -490,19 +565,25 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         if(is_array($value)){
             $value = array_map(create_function('$v', 'return (string) $v;'),$value);
             foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
+                $attr['id'] = $id.$i;
+                $attr['value'] = $v;
+                echo $span;
+                $this->_outputAttr($attr);
                 if(in_array((string) $v,$value,true))
                     echo ' checked="checked"';
-                echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
+                echo $this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
                 $i++;
             }
         }else{
             $value = (string) $value;
             foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                echo $span,$attrs,$i,'" value="',htmlspecialchars($v),'"';
+                $attr['id'] = $id.$i;
+                $attr['value'] = $v;
+                echo $span;
+                $this->_outputAttr($attr);
                 if((string) $v === $value)
                     echo ' checked="checked"';
-                echo $readonly,$class,$this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
+                echo $this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
                 $i++;
             }
         }
@@ -515,20 +596,26 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputRadiobuttons($ctrl, $id, $class, $readonly, $hint) {
+    protected function outputRadiobuttons($ctrl, &$attr) {
         $i=0;
-        $id=' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'_';
+        $id = $this->_name.'_'.$ctrl->ref.'_';
+        $attr['name'] = $ctrl->ref;
+        unset($attr['title']);
         $value = $this->_form->getData($ctrl->ref);
         if(is_array($value)){
             if(isset($value[0]))
                 $value = $value[0];
             else
-                $value='';
+                $value = '';
         }
         $value = (string) $value;
         $span ='<span class="jforms-radio jforms-ctl-'.$ctrl->ref.'"><input type="radio"';
         foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-            echo $span,$id,$i,'" value="',htmlspecialchars($v),'"',((string) $v===$value?' checked="checked"':''),$readonly,$class,$this->_endt;
+            $attr['id'] = $id.$i;
+            $attr['value'] = $v;
+            echo $span;
+            $this->_outputAttr($attr);
+            echo ((string) $v===$value?' checked="checked"':''),$this->_endt;
             echo '<label for="',$this->_name,'_',$ctrl->ref,'_',$i,'">',htmlspecialchars($label),"</label></span>\n";
             $i++;
         }
@@ -541,8 +628,12 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputMenulist($ctrl, $id, $class, $readonly, $hint) {
-        echo '<select',$id,$hint,$class,' size="1">'."\n";
+    protected function outputMenulist($ctrl, &$attr) {
+        unset($attr['readonly']);
+        $attr['size'] = '1';
+        echo '<select';
+        $this->_outputAttr($attr);
+        echo ">\n";
         $value = $this->_form->getData($ctrl->ref);
         if(is_array($value)){
             if(isset($value[0]))
@@ -567,9 +658,17 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputListbox($ctrl, $id, $class, $readonly, $hint) {
+    protected function outputListbox($ctrl, &$attr) {
+        unset($attr['readonly']);
+        $attr['size'] = $ctrl->size;
+
         if($ctrl->multiple){
-            echo '<select name="',$ctrl->ref,'[]" id="',$this->_name,'_',$ctrl->ref,'"',$hint,$class,' size="',$ctrl->size,'" multiple="multiple">'."\n";
+            $attr['name'] = $ctrl->ref.'[]';
+            $attr['id'] = $this->_name.'_'.$ctrl->ref;
+            $attr['multiple'] = 'multiple';
+            echo '<select';
+            $this->_outputAttr($attr);
+            echo ">\n";
             $value = $this->_form->getData($ctrl->ref);
 
             if(is_array($value) && count($value) == 1)
@@ -598,7 +697,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             }
 
             $value = (string) $value;
-            echo '<select',$id,$hint,$class,' size="',$ctrl->size,'">'."\n";
+            echo '<select';
+            $this->_outputAttr($attr);
+            echo ">\n";
             foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
                 echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
             }
@@ -617,10 +718,14 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputTextarea($ctrl, $id, $class, $readonly, $hint) {
-        $value = $this->_form->getData($ctrl->ref);
-        $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
-        echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
+    protected function outputTextarea($ctrl, &$attr) {
+        if (!isset($attr['rows']))
+            $attr['rows'] = $ctrl->rows;
+        if (!isset($attr['cols']))
+            $attr['cols'] = $ctrl->cols;
+        echo '<textarea';
+        $this->_outputAttr($attr);
+        echo '>',htmlspecialchars($this->_form->getData($ctrl->ref)),'</textarea>';
     }
 
     protected function jsTextarea($ctrl) {
@@ -637,10 +742,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputHtmleditor($ctrl, $id, $class, $readonly, $hint) {
-        $value = $this->_form->getData($ctrl->ref);
-        $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
-        echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
+    protected function outputHtmleditor($ctrl, &$attr) {
+        $this->outputTextarea($ctrl, $attr);
     }
 
     protected function jsHtmleditor($ctrl) {
@@ -649,24 +752,25 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$this->_name.'_'.$ctrl->ref.'","'.$this->_name."\");\n";
     }
 
-    protected function outputWikieditor($ctrl, $id, $class, $readonly, $hint) {
-        $value = $this->_form->getData($ctrl->ref);
-        $rows = ' rows="'.$ctrl->rows.'" cols="'.$ctrl->cols.'"';
-        echo '<textarea',$id,$readonly,$hint,$class,$rows,'>',htmlspecialchars($value),'</textarea>';
+    protected function outputWikieditor($ctrl, &$attr) {
+        $this->outputTextarea($ctrl, $attr);
     }
 
     protected function jsWikieditor($ctrl) {
 
     }
 
-    protected function outputSecret($ctrl, $id, $class, $readonly, $hint) {
-        $size = ($ctrl->size == 0?'': ' size="'.$ctrl->size.'"');
+    protected function outputSecret($ctrl, &$attr) {
+        if ($ctrl->size != 0)
+            $attr['size'] = $ctrl->size;
         $maxl = $ctrl->datatype->getFacet('maxLength');
         if($maxl !== null)
-            $maxl = ' maxlength="'.$maxl.'"';
-        else
-            $maxl = '';
-        echo '<input type="password"',$id,$readonly,$hint,$class,$size,$maxl,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
+            $attr['maxlength'] = $maxl;
+        $attr['type'] = 'password';
+        $attr['value'] = $this->_form->getData($ctrl->ref);
+        echo '<input';
+        $this->_outputAttr($attr);
+        echo $this->_endt;
     }
 
     protected function jsSecret($ctrl) {
@@ -683,9 +787,14 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputSecretconfirm($ctrl, $id, $class, $readonly, $hint) {
-        $size = ($ctrl->size == 0?'': ' size="'.$ctrl->size.'"');
-        echo '<input type="password"',$id,$readonly,$hint,$class,$size,' value="',htmlspecialchars($this->_form->getData($ctrl->ref)),'"',$this->_endt;
+    protected function outputSecretconfirm($ctrl, &$attr) {
+        if ($ctrl->size != 0)
+            $attr['size'] = $ctrl->size;
+        $attr['type'] = 'password';
+        $attr['value'] = $this->_form->getData($ctrl->ref);
+        echo '<input';
+        $this->_outputAttr($attr);
+        echo $this->_endt;
     }
 
     protected function jsSecretconfirm($ctrl) {
@@ -693,21 +802,34 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputOutput($ctrl, $id, $class, $readonly, $hint) {
-        $value = $this->_form->getData($ctrl->ref);
-        echo '<input type="hidden"',$id,' value="',htmlspecialchars($value),'"',$this->_endt;
-        echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($value),'</span>';
+    protected function outputOutput($ctrl, &$attr) {
+        unset($attr['readonly']);
+        unset($attr['class']);
+        if (isset($attr['title'])){
+            $hint = ' title="'.htmlspecialchars($attr['title']).'"';
+            unset($attr['title']);
+        }
+        else $hint = '';
+        $attr['type'] = 'hidden';
+        $attr['value'] = $this->_form->getData($ctrl->ref);
+        echo '<input';
+        $this->_outputAttr($attr);
+        echo $this->_endt;
+        echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($attr['value']),'</span>';
     }
 
     protected function jsOutput($ctrl) {
     }
 
-    protected function outputUpload($ctrl, $id, $class, $readonly, $hint) {
+    protected function outputUpload($ctrl, &$attr) {
         if($ctrl->maxsize){
             echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$ctrl->maxsize,'"',$this->_endt;
         }
-        echo '<input type="file"',$id,$readonly,$hint,$class,' value=""',$this->_endt; // ',htmlspecialchars($this->_form->getData($ctrl->ref)),'
-
+        $attr['type'] = 'file';
+        $attr['value'] = '';
+        echo '<input';
+        $this->_outputAttr($attr);
+        echo $this->_endt;
     }
 
     protected function jsUpload($ctrl) {
@@ -716,14 +838,26 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputSubmit($ctrl, $id, $class, $readonly, $hint) {
+    protected function outputSubmit($ctrl, $attr) {
+        unset($attr['readonly']);
+        $attr['class'] = 'jforms-submit';
+        $attr['type'] = 'submit';
+
         if($ctrl->standalone){
-            echo '<input type="submit"',$id,$hint,' class="jforms-submit" value="',htmlspecialchars($ctrl->label),'"/>';
+            $attr['value'] = $ctrl->label;
+            echo '<input';
+            $this->_outputAttr($attr);
+            echo $this->_endt;
         }else{
+            $id = $this->_name.'_'.$ctrl->ref.'_';
+            $attr['name'] = $ctrl->ref;
             foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
                 // because IE6 sucks with <button type=submit> (see ticket #431), we must use input :-(
-                echo '<input type="submit" name="',$ctrl->ref,'" id="',$this->_name,'_',$ctrl->ref,'_',htmlspecialchars($v),'"',
-                    $hint,' class="jforms-submit" value="',htmlspecialchars($label),'"/> ';
+                $attr['value'] = $label;
+                $attr['id'] = $id.$v;
+                echo ' <input';
+                $this->_outputAttr($attr);
+                echo $this->_endt;
             }
         }
     }
@@ -732,25 +866,36 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         // no javascript
     }
 
-    protected function outputReset($ctrl, $id, $class, $readonly, $hint) {
-        echo '<button type="reset"',$id,$hint,' class="jforms-reset">',htmlspecialchars($ctrl->label),'</button>';
+    protected function outputReset($ctrl, &$attr) {
+        unset($attr['readonly']);
+        $attr['class'] = 'jforms-reset';
+        $attr['type'] = 'reset';
+        echo '<button';
+        $this->_outputAttr($attr);
+        echo '>',htmlspecialchars($ctrl->label),'</button>';
     }
 
     protected function jsReset($ctrl) {
         // no javascript
     }
 
-    protected function outputCaptcha($ctrl, $id, $class, $readonly, $hint) {
+    protected function outputCaptcha($ctrl, &$attr) {
         $ctrl->initExpectedValue();
         echo '<span class="jforms-captcha-question">',htmlspecialchars($ctrl->question),'</span> ';
-        echo '<input type="text"',$id,$hint,$class,' value=""',$this->_endt;
+
+        unset($attr['readonly']);
+        $attr['type'] = 'text';
+        $attr['value'] = '';
+        echo '<input';
+        $this->_outputAttr($attr);
+        echo $this->_endt;
     }
 
     protected function jsCaptcha($ctrl) {
         $this->jsTextarea($ctrl);
     }
 
-    protected function outputGroup($ctrl, $id, $class, $readonly, $hint) {
+    protected function outputGroup($ctrl, &$attr) {
         echo '<fieldset><legend>',htmlspecialchars($ctrl->label),"</legend>\n";
         echo '<table class="jforms-table-group" border="0">',"\n";
         foreach( $ctrl->getChildControls() as $ctrlref=>$c){
@@ -769,7 +914,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         //no javacript
     }
 
-    protected function outputChoice($ctrl, $id, $class, $readonly, $hint) {
+    protected function outputChoice($ctrl, &$attr) {
         echo '<ul class="jforms-choice jforms-ctl-'.$ctrl->ref.'" >',"\n";
 
         $value = $this->_form->getData($ctrl->ref);
@@ -781,13 +926,24 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
 
         $i=0;
-        $id=' name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'_';
+        $attr['name'] = $ctrl->ref;
+        $id = $this->_name.'_'.$ctrl->ref.'_';
+        $attr['type']='radio';
+        unset($attr['class']);
+        $readonly = (isset($attr['readonly']) && $attr['readonly']!='');
+
         $this->jsChoiceInternal($ctrl);
         $this->jsContent .="c2 = c;\n";
         $this->isRootControl = false;
         foreach( $ctrl->items as $itemName=>$listctrl){
-            echo '<li><label><input type="radio"',$id,$i,'" value="',htmlspecialchars($itemName),'"';
-            echo ($itemName==$value?' checked="checked"':''),$readonly;
+            echo '<li><label><input';
+            $attr['id'] = $id.$i;
+            $attr['value'] = $itemName;
+            if ($itemName==$value)
+                $attr['checked'] = 'checked';
+            else
+                unset($attr['checked']);
+            $this->_outputAttr($attr);
             echo ' onclick="'.$this->jFormsJsVarName.'.getForm(\'',$this->_name,'\').getControl(\'',$ctrl->ref,'\').activate(\'',$itemName,'\')"', $this->_endt;
             echo htmlspecialchars($ctrl->itemsNames[$itemName]),"</label>\n";
 
@@ -799,7 +955,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                 // we remove readonly status so when a user change the choice and
                 // javascript is deactivated, it can still change the value of the control
                 $ro = $c->isReadOnly();
-                if($ro && $readonly == '') $c->setReadOnly(false);
+                if($ro && !$readonly) $c->setReadOnly(false);
                 $this->outputControlLabel($c);
                 echo ' ';
                 $this->outputControl($c);

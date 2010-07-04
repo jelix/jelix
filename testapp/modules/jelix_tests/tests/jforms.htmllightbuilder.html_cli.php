@@ -97,7 +97,7 @@ jForms.declareForm(jForms.tForm);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_input1">Votre nom</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="" type="text"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'"Votre nom" field is invalid\';
 jForms.tForm.addControl(c);
@@ -105,7 +105,7 @@ jForms.tForm.addControl(c);
 
         $this->form->setData('input1','toto');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="toto"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="toto" type="text"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'"Votre nom" field is invalid\';
 jForms.tForm.addControl(c);
@@ -113,7 +113,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->defaultValue='laurent';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="toto"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="toto" type="text"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'"Votre nom" field is invalid\';
 jForms.tForm.addControl(c);
@@ -122,7 +122,7 @@ jForms.tForm.addControl(c);
         $this->form->removeControl($ctrl->ref);
         $this->form->addControl($ctrl);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="laurent"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="laurent" type="text"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'"Votre nom" field is invalid\';
 jForms.tForm.addControl(c);
@@ -130,7 +130,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->required=true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input jforms-required" value="laurent"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input jforms-required" value="laurent" type="text"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.required = true;
 c.errRequired=\'"Votre nom" field is required\';
@@ -142,7 +142,7 @@ jForms.tForm.addControl(c);
         $ctrl->setReadOnly(true);
         $ctrl->required=false;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" readonly="readonly" class="jforms-ctrl-input jforms-readonly" value="laurent"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" readonly="readonly" class="jforms-ctrl-input jforms-readonly" value="laurent" type="text"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'"Votre nom" field is invalid\';
 jForms.tForm.addControl(c);
@@ -152,7 +152,7 @@ jForms.tForm.addControl(c);
         $ctrl->setReadOnly(false);
         $ctrl->help='some help';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="laurent"/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>some help</span></span>', $out);
+        $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="laurent" type="text"/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>some help</span></span>', $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'"Votre nom" field is invalid\';
 jForms.tForm.addControl(c);
@@ -161,7 +161,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->help="some \nhelp with ' and\nline break.";
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="laurent"/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>'."some \nhelp with ' and\nline break.</span></span>", $out);
+        $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="laurent" type="text"/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help">'."<span>some \nhelp with ' and\nline break.</span>".'</span>', $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'"Votre nom" field is invalid\';
 jForms.tForm.addControl(c);
@@ -173,7 +173,7 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_input1" title="ceci est un tooltip">Votre nom</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" title="ceci est un tooltip" class="jforms-ctrl-input" value="laurent"/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>some help</span></span>', $out);
+        $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" title="ceci est un tooltip" class="jforms-ctrl-input" value="laurent" type="text"/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>some help</span></span>', $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.errInvalid=\'"Votre nom" field is invalid\';
 jForms.tForm.addControl(c);
@@ -184,7 +184,7 @@ jForms.tForm.addControl(c);
         $ctrl->hint='';
         $ctrl->datatype->addFacet('maxLength',5);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="text" name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" maxlength="5" value="laurent"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" maxlength="5" value="laurent" type="text"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'input1\', \'Votre nom\');
 c.maxLength = \'5\';
 c.errInvalid=\'"Votre nom" field is invalid\';
@@ -202,7 +202,7 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk1">Une option</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chk1" id="'.$this->formname.'_chk1" class="jforms-ctrl-checkbox" value="1"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="chk1" id="'.$this->formname.'_chk1" class="jforms-ctrl-checkbox" value="1" type="checkbox"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk1\', \'Une option\');
 c.errInvalid=\'"Une option" field is invalid\';
 jForms.tForm.addControl(c);
@@ -211,7 +211,7 @@ jForms.tForm.addControl(c);
 
         $this->form->setData('chk1','1');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chk1" id="'.$this->formname.'_chk1" class="jforms-ctrl-checkbox" checked="checked" value="1"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="chk1" id="'.$this->formname.'_chk1" class="jforms-ctrl-checkbox" checked="checked" value="1" type="checkbox"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk1\', \'Une option\');
 c.errInvalid=\'"Une option" field is invalid\';
 jForms.tForm.addControl(c);
@@ -226,7 +226,7 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk2">Une option</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" class="jforms-ctrl-checkbox" value="1"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="chk2" id="'.$this->formname.'_chk2" class="jforms-ctrl-checkbox" value="1" type="checkbox"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'"Une option" field is invalid\';
 jForms.tForm.addControl(c);
@@ -237,7 +237,7 @@ jForms.tForm.addControl(c);
         $this->form->removeControl($ctrl->ref);
         $this->form->addControl($ctrl);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" class="jforms-ctrl-checkbox" checked="checked" value="1"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="chk2" id="'.$this->formname.'_chk2" class="jforms-ctrl-checkbox" checked="checked" value="1" type="checkbox"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'"Une option" field is invalid\';
 jForms.tForm.addControl(c);
@@ -245,7 +245,7 @@ jForms.tForm.addControl(c);
 
         $this->form->setData('chk2', '0');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" class="jforms-ctrl-checkbox" value="1"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="chk2" id="'.$this->formname.'_chk2" class="jforms-ctrl-checkbox" value="1" type="checkbox"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'"Une option" field is invalid\';
 jForms.tForm.addControl(c);
@@ -254,7 +254,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" class="jforms-ctrl-checkbox jforms-readonly" value="1"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" class="jforms-ctrl-checkbox jforms-readonly" value="1" type="checkbox"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'"Une option" field is invalid\';
 jForms.tForm.addControl(c);
@@ -263,7 +263,7 @@ jForms.tForm.addControl(c);
 
         $this->form->setData('chk2', '1');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" class="jforms-ctrl-checkbox jforms-readonly" checked="checked" value="1"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" class="jforms-ctrl-checkbox jforms-readonly" checked="checked" value="1" type="checkbox"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'"Une option" field is invalid\';
 jForms.tForm.addControl(c);
@@ -274,7 +274,7 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk2" title="ceci est un tooltip">Une option</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="checkbox" name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-checkbox jforms-readonly" checked="checked" value="1"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-checkbox jforms-readonly" checked="checked" value="1" type="checkbox"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlBoolean(\'chk2\', \'Une option\');
 c.errInvalid=\'"Une option" field is invalid\';
 jForms.tForm.addControl(c);
@@ -300,9 +300,9 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<span class="jforms-label">Vos choix</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_0" value="10" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_1" value="11" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_2" value="23" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.$this->formname.'_choixsimple_0">foo</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_1" class="jforms-ctrl-checkboxes" value="11"/><label for="'.$this->formname.'_choixsimple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.$this->formname.'_choixsimple_2">baz</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'choixsimple[]\', \'Vos choix\');
 c.errInvalid=\'"Vos choix" field is invalid\';
@@ -312,9 +312,9 @@ jForms.tForm.addControl(c);
 
         $this->form->setData('choixsimple',11);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_0" value="10" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_1" value="11" checked="checked" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_2" value="23" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.$this->formname.'_choixsimple_0">foo</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_1" class="jforms-ctrl-checkboxes" value="11" checked="checked"/><label for="'.$this->formname.'_choixsimple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.$this->formname.'_choixsimple_2">baz</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'choixsimple[]\', \'Vos choix\');
 c.errInvalid=\'"Vos choix" field is invalid\';
@@ -337,9 +337,9 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<span class="jforms-label">Vos choix</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_0" value="10" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixmultiple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" value="11" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" value="23" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.$this->formname.'_choixmultiple_0">foo</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" class="jforms-ctrl-checkboxes" value="11"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'choixmultiple[]\', \'Vos choix\');
 c.errInvalid=\'"Vos choix" field is invalid\';
@@ -349,9 +349,9 @@ jForms.tForm.addControl(c);
 
         $this->form->setData('choixmultiple',11);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_0" value="10" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixmultiple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" value="11" checked="checked" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" value="23" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.$this->formname.'_choixmultiple_0">foo</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" class="jforms-ctrl-checkboxes" value="11" checked="checked"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'choixmultiple[]\', \'Vos choix\');
 c.errInvalid=\'"Vos choix" field is invalid\';
@@ -361,9 +361,9 @@ jForms.tForm.addControl(c);
 
         $this->form->setData('choixmultiple',array(10,23));
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_0" value="10" checked="checked" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixmultiple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" value="11" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" value="23" checked="checked" class="jforms-ctrl-checkboxes"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_0" class="jforms-ctrl-checkboxes" value="10" checked="checked"/><label for="'.$this->formname.'_choixmultiple_0">foo</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" class="jforms-ctrl-checkboxes" value="11"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" class="jforms-ctrl-checkboxes" value="23" checked="checked"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'choixmultiple[]\', \'Vos choix\');
 c.errInvalid=\'"Vos choix" field is invalid\';
@@ -377,9 +377,9 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<span class="jforms-label" title="ceci est un tooltip">Vos choix</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_0" value="10" checked="checked" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly"/><label for="'.$this->formname.'_choixmultiple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" value="11" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" value="23" checked="checked" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_0" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly" value="10" checked="checked"/><label for="'.$this->formname.'_choixmultiple_0">foo</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_1" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly" value="11"/><label for="'.$this->formname.'_choixmultiple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_2" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly" value="23" checked="checked"/><label for="'.$this->formname.'_choixmultiple_2">baz</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'choixmultiple[]\', \'Vos choix\');
 c.errInvalid=\'"Vos choix" field is invalid\';
@@ -398,9 +398,9 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<span class="jforms-label">Votre choix</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" value="10" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="11" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" value="23" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errInvalid=\'"Votre choix" field is invalid\';
@@ -411,9 +411,9 @@ jForms.tForm.addControl(c);
         $this->form->setData('rbchoixsimple',11);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" value="10" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="11" checked="checked" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" value="23" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11" checked="checked"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errInvalid=\'"Votre choix" field is invalid\';
@@ -429,9 +429,9 @@ jForms.tForm.addControl(c);
         );
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" value="10" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="11" checked="checked" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" value="23" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11" checked="checked"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errInvalid=\'"Votre choix" field is invalid\';
@@ -441,9 +441,9 @@ jForms.tForm.addControl(c);
 
         $this->form->setData('rbchoixsimple',23);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" value="10" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="11" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" value="23" checked="checked" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23" checked="checked"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errInvalid=\'"Votre choix" field is invalid\';
@@ -456,9 +456,9 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<span class="jforms-label" title="ceci est un tooltip">Votre choix</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" value="10" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="11" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" value="23" checked="checked" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly" value="10"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly" value="11"/><label for="'.$this->formname.'_rbchoixsimple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_2" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly" value="23" checked="checked"/><label for="'.$this->formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errInvalid=\'"Votre choix" field is invalid\';
@@ -472,14 +472,14 @@ jForms.tForm.addControl(c);
         $this->form->setReadOnly('rbchoixsimple',false);
         $this->form->setData('rbchoixsimple',null);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" value="1" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_0">Yes</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="0" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_1">No</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="1"/><label for="'.$this->formname.'_rbchoixsimple_0">Yes</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="0"/><label for="'.$this->formname.'_rbchoixsimple_1">No</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
 
         $this->form->setData('rbchoixsimple',0);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" value="1" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_0">Yes</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" value="0" checked="checked" class="jforms-ctrl-radiobuttons"/><label for="'.$this->formname.'_rbchoixsimple_1">No</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="1"/><label for="'.$this->formname.'_rbchoixsimple_0">Yes</label></span>'."\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="0" checked="checked"/><label for="'.$this->formname.'_rbchoixsimple_1">No</label></span>'."\n\n";
         $this->assertEqualOrDiff($result, $out);
 
         $this->builder->clearJs();
@@ -999,7 +999,7 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd">mot de passe</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" class="jforms-ctrl-secret" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="passwd" id="'.$this->formname.'_passwd" class="jforms-ctrl-secret" type="password" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlSecret(\'passwd\', \'mot de passe\');
 c.errInvalid=\'"mot de passe" field is invalid\';
 jForms.tForm.addControl(c);
@@ -1007,7 +1007,7 @@ jForms.tForm.addControl(c);
 
         $this->form->setData('passwd','laurent');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" class="jforms-ctrl-secret" value="laurent"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="passwd" id="'.$this->formname.'_passwd" class="jforms-ctrl-secret" type="password" value="laurent"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlSecret(\'passwd\', \'mot de passe\');
 c.errInvalid=\'"mot de passe" field is invalid\';
 jForms.tForm.addControl(c);
@@ -1015,7 +1015,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" class="jforms-ctrl-secret jforms-readonly" value="laurent"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" class="jforms-ctrl-secret jforms-readonly" type="password" value="laurent"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlSecret(\'passwd\', \'mot de passe\');
 c.errInvalid=\'"mot de passe" field is invalid\';
 jForms.tForm.addControl(c);
@@ -1025,7 +1025,7 @@ jForms.tForm.addControl(c);
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd" title="ceci est un tooltip">mot de passe</label>'."\n", $out);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-secret jforms-readonly" value="laurent"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-secret jforms-readonly" type="password" value="laurent"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlSecret(\'passwd\', \'mot de passe\');
 c.errInvalid=\'"mot de passe" field is invalid\';
 jForms.tForm.addControl(c);
@@ -1034,7 +1034,7 @@ jForms.tForm.addControl(c);
         $ctrl->datatype->addFacet('minLength',5);
         $ctrl->datatype->addFacet('maxLength',10);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="password" name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-secret jforms-readonly" maxlength="10" value="laurent"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-secret jforms-readonly" maxlength="10" type="password" value="laurent"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlSecret(\'passwd\', \'mot de passe\');
 c.maxLength = \'10\';
 c.minLength = \'5\';
@@ -1053,7 +1053,7 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd_confirm">confirmation mot de passe</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="password" name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" class="jforms-ctrl-secretconfirm" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" class="jforms-ctrl-secretconfirm" type="password" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlConfirm(\'passwd_confirm\', \'confirmation mot de passe\');
 c.errInvalid=\'"confirmation mot de passe" field is invalid\';
 jForms.tForm.addControl(c);
@@ -1061,7 +1061,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->required = true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="password" name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" class="jforms-ctrl-secretconfirm jforms-required" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" class="jforms-ctrl-secretconfirm jforms-required" type="password" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlConfirm(\'passwd_confirm\', \'confirmation mot de passe\');
 c.required = true;
 c.errRequired=\'"confirmation mot de passe" field is required\';
@@ -1073,7 +1073,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="password" name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" readonly="readonly" class="jforms-ctrl-secretconfirm jforms-readonly" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" readonly="readonly" class="jforms-ctrl-secretconfirm jforms-readonly" type="password" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlConfirm(\'passwd_confirm\', \'confirmation mot de passe\');
 c.errInvalid=\'"confirmation mot de passe" field is invalid\';
 jForms.tForm.addControl(c);
@@ -1084,7 +1084,7 @@ jForms.tForm.addControl(c);
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd_confirm" title="ceci est un tooltip">confirmation mot de passe</label>'."\n", $out);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="password" name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-secretconfirm jforms-readonly" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-secretconfirm jforms-readonly" type="password" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlConfirm(\'passwd_confirm\', \'confirmation mot de passe\');
 c.errInvalid=\'"confirmation mot de passe" field is invalid\';
 jForms.tForm.addControl(c);
@@ -1102,19 +1102,19 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<span class="jforms-label">Votre nom</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="hidden" name="output1" id="'.$this->formname.'_output1" value=""/><span class="jforms-value"></span>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="output1" id="'.$this->formname.'_output1" type="hidden" value=""/><span class="jforms-value"></span>'."\n", $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
 
         $this->form->setData('output1','laurent');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="hidden" name="output1" id="'.$this->formname.'_output1" value="laurent"/><span class="jforms-value">laurent</span>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="output1" id="'.$this->formname.'_output1" type="hidden" value="laurent"/><span class="jforms-value">laurent</span>'."\n", $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="hidden" name="output1" id="'.$this->formname.'_output1" value="laurent"/><span class="jforms-value">laurent</span>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="output1" id="'.$this->formname.'_output1" type="hidden" value="laurent"/><span class="jforms-value">laurent</span>'."\n", $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
 
@@ -1123,7 +1123,7 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<span class="jforms-label" title="ceci est un tooltip">Votre nom</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="hidden" name="output1" id="'.$this->formname.'_output1" value="laurent"/><span class="jforms-value" title="ceci est un tooltip">laurent</span>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="output1" id="'.$this->formname.'_output1" type="hidden" value="laurent"/><span class="jforms-value" title="ceci est un tooltip">laurent</span>'."\n", $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
     }
@@ -1138,7 +1138,7 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_upload1">Votre nom</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="file" name="upload1" id="'.$this->formname.'_upload1" class="jforms-ctrl-upload" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="upload1" id="'.$this->formname.'_upload1" class="jforms-ctrl-upload" type="file" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'upload1\', \'Votre nom\');
 c.errInvalid=\'"Votre nom" field is invalid\';
 jForms.tForm.addControl(c);
@@ -1146,7 +1146,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="file" name="upload1" id="'.$this->formname.'_upload1" readonly="readonly" class="jforms-ctrl-upload jforms-readonly" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="upload1" id="'.$this->formname.'_upload1" readonly="readonly" class="jforms-ctrl-upload jforms-readonly" type="file" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'upload1\', \'Votre nom\');
 c.errInvalid=\'"Votre nom" field is invalid\';
 jForms.tForm.addControl(c);
@@ -1157,7 +1157,7 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_upload1" title="ceci est un tooltip">Votre nom</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="file" name="upload1" id="'.$this->formname.'_upload1" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-upload jforms-readonly" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="upload1" id="'.$this->formname.'_upload1" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-upload jforms-readonly" type="file" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'upload1\', \'Votre nom\');
 c.errInvalid=\'"Votre nom" field is invalid\';
 jForms.tForm.addControl(c);
@@ -1192,19 +1192,19 @@ jForms.declareForm(jForms.tForm);
         $this->assertEqualOrDiff('', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="submit" name="submit1" id="'.$this->formname.'_submit1" class="jforms-submit" value="Ok"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="submit1" id="'.$this->formname.'_submit1" class="jforms-submit" type="submit" value="Ok"/>'."\n", $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="submit" name="submit1" id="'.$this->formname.'_submit1" class="jforms-submit" value="Ok"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="submit1" id="'.$this->formname.'_submit1" class="jforms-submit" type="submit" value="Ok"/>'."\n", $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<input type="submit" name="submit1" id="'.$this->formname.'_submit1" title="ceci est un tooltip" class="jforms-submit" value="Ok"/>'."\n", $out);
+        $this->assertEqualOrDiff('<input name="submit1" id="'.$this->formname.'_submit1" title="ceci est un tooltip" class="jforms-submit" type="submit" value="Ok"/>'."\n", $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
 
@@ -1213,8 +1213,8 @@ jForms.declareForm(jForms.tForm);
         $ctrl->datasource->data = array('svg'=>'Sauvegarde','prev'=>'Preview');
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $output = '<input type="submit" name="submit1" id="'.$this->formname.'_submit1_svg" title="ceci est un tooltip" class="jforms-submit" value="Sauvegarde"/> ';
-        $output .= '<input type="submit" name="submit1" id="'.$this->formname.'_submit1_prev" title="ceci est un tooltip" class="jforms-submit" value="Preview"/> '."\n";
+        $output = ' <input name="submit1" id="'.$this->formname.'_submit1_svg" title="ceci est un tooltip" class="jforms-submit" type="submit" value="Sauvegarde"/>';
+        $output .= ' <input name="submit1" id="'.$this->formname.'_submit1_prev" title="ceci est un tooltip" class="jforms-submit" type="submit" value="Preview"/>'."\n";
         $this->assertEqualOrDiff($output, $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
@@ -1229,18 +1229,18 @@ jForms.declareForm(jForms.tForm);
         $this->assertEqualOrDiff('', $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<button type="reset" name="reset1" id="'.$this->formname.'_reset1" class="jforms-reset">Effacer</button>'."\n", $out);
+        $this->assertEqualOrDiff('<button name="reset1" id="'.$this->formname.'_reset1" class="jforms-reset" type="reset">Effacer</button>'."\n", $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<button type="reset" name="reset1" id="'.$this->formname.'_reset1" class="jforms-reset">Effacer</button>'."\n", $out);
+        $this->assertEqualOrDiff('<button name="reset1" id="'.$this->formname.'_reset1" class="jforms-reset" type="reset">Effacer</button>'."\n", $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<button type="reset" name="reset1" id="'.$this->formname.'_reset1" title="ceci est un tooltip" class="jforms-reset">Effacer</button>'."\n", $out);
+        $this->assertEqualOrDiff('<button name="reset1" id="'.$this->formname.'_reset1" title="ceci est un tooltip" class="jforms-reset" type="reset">Effacer</button>'."\n", $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
     }
     function testOutputHidden(){
@@ -1302,7 +1302,7 @@ jForms.declareForm(jForms.tForm);
         $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap">captcha for security</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha jforms-required" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha jforms-required" type="text" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'cap\', \'captcha for security\');
 c.required = true;
 c.errRequired=\'"captcha for security" field is required\';
@@ -1312,7 +1312,7 @@ jForms.tForm.addControl(c);
 
         $this->form->setData('cap','toto');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha jforms-required" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha jforms-required" type="text" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'cap\', \'captcha for security\');
 c.required = true;
 c.errRequired=\'"captcha for security" field is required\';
@@ -1322,7 +1322,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha" value=""/>'."\n", $out);
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha" type="text" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'cap\', \'captcha for security\');
 c.required = true;
 c.errRequired=\'"captcha for security" field is required\';
@@ -1333,7 +1333,7 @@ jForms.tForm.addControl(c);
         $ctrl->setReadOnly(false);
         $ctrl->help='some help';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha jforms-required" value=""/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>some help</span></span>', $out);
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha jforms-required" type="text" value=""/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>some help</span></span>', $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'cap\', \'captcha for security\');
 c.required = true;
 c.errRequired=\'"captcha for security" field is required\';
@@ -1346,7 +1346,7 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap" title="ceci est un tooltip">captcha for security</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input type="text" name="cap" id="'.$this->formname.'_cap" title="ceci est un tooltip" class="jforms-ctrl-captcha jforms-required" value=""/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>some help</span></span>', $out);
+        $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input name="cap" id="'.$this->formname.'_cap" title="ceci est un tooltip" class="jforms-ctrl-captcha jforms-required" type="text" value=""/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>some help</span></span>', $out);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'cap\', \'captcha for security\');
 c.required = true;
 c.errRequired=\'"captcha for security" field is required\';

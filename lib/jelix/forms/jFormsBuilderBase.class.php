@@ -93,8 +93,9 @@ abstract class jFormsBuilderBase {
     /**
      * displays the content corresponding of the given control
      * @param jFormsControl $ctrl the control to display
+     * @param array $attributes  attribute to add on the generated code (html attributes for example)
      */
-    abstract public function outputControl($ctrl);
+    abstract public function outputControl($ctrl, $attributes=array());
 
     /**
      * displays the label corresponding of the given control
