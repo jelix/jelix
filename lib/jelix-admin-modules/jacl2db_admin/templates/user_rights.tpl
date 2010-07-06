@@ -46,7 +46,7 @@
     <th><label for="{$subject|eschtml}">{$subjects_localized[$subject]|eschtml}</label></th>
     {assign $hasr=false}
     {foreach $right as $group=>$r}
-    {if $group == $hisgroup->id_aclgrp}
+    {if $hisgroup && $group == $hisgroup->id_aclgrp}
     <td><input type="checkbox" name="rights[{$subject}]" id="{$subject|eschtml}" {if $r}{assign $hasr=true} checked="checked"{/if} />
     <input type="hidden" name="currentrights[{$subject}]" value="{$r}"/></td>
     <td>{if $rightsWithResources[$subject]}yes{/if}</td>

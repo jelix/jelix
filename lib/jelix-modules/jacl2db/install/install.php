@@ -70,7 +70,7 @@ class jacl2dbModuleInstaller extends jInstallerModule {
             // so let's change it to 0
             try {
                 $cn->exec("UPDATE ".$cn->prefixTable('jacl2_group')." SET id_aclgrp = 0 WHERE  name = 'anonymous'
-                        AND code = 'anonymous' AND grouptype=1 and ownerlogin is null");
+                        AND code = 'anonymous' AND grouptype=0 and ownerlogin is null");
             } catch(Exception $e) {}
 
             if ($cn->dbms == 'pgsql') {
