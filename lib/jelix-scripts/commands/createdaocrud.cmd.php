@@ -36,7 +36,7 @@ class createdaocrudCommand extends JelixScriptCommand {
     -profile (optional) : indicate the name of the profile to use for the
                         database connection.
                         
-    -createslocales (optional) : creates the locales files with the form's values.
+    -createlocales (optional) : creates the locales files with the form's values.
 
     MODULE: name of the module where to create the crud
     TABLE : name of the SQL table
