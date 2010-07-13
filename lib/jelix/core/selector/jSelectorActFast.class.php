@@ -37,6 +37,8 @@ class jSelectorActFast extends jSelectorModule {
             $this->controller = $r[0]=='' ? 'default':$r[0];
             $this->method = $r[1]==''?'index':$r[1];
         }
+        if (substr($this->method,0,2) == '__')
+            throw new jExceptionSelector('jelix~errors.selector.method.invalid', $this->toString());
         $this->resource = $this->controller.':'.$this->method;
         $this->request = $request;
         $this->_createPath();
