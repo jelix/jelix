@@ -47,7 +47,7 @@ class UTjformsHtmlLightBuilder extends jUnitTestCaseDb {
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight\');
-jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
+jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
@@ -63,7 +63,7 @@ jForms.declareForm(jForms.tForm);
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
-jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
+jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
@@ -94,7 +94,7 @@ jForms.declareForm(jForms.tForm);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_input1">Votre nom</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_input1" id="'.$this->formname.'_input1_label">Votre nom</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" value="" type="text"/>'."\n", $out);
@@ -170,7 +170,7 @@ jForms.tForm.addControl(c);
         $ctrl->hint='ceci est un tooltip';
         $ctrl->help='some help';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_input1" title="ceci est un tooltip">Votre nom</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_input1" id="'.$this->formname.'_input1_label" title="ceci est un tooltip">Votre nom</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" title="ceci est un tooltip" class="jforms-ctrl-input" value="laurent" type="text"/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>some help</span></span>', $out);
@@ -199,7 +199,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk1">Une option</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk1" id="'.$this->formname.'_chk1_label">Une option</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="chk1" id="'.$this->formname.'_chk1" class="jforms-ctrl-checkbox" value="1" type="checkbox"/>'."\n", $out);
@@ -223,7 +223,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk2">Une option</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk2" id="'.$this->formname.'_chk2_label">Une option</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="chk2" id="'.$this->formname.'_chk2" class="jforms-ctrl-checkbox" value="1" type="checkbox"/>'."\n", $out);
@@ -271,7 +271,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk2" title="ceci est un tooltip">Une option</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_chk2" id="'.$this->formname.'_chk2_label" title="ceci est un tooltip">Une option</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="chk2" id="'.$this->formname.'_chk2" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-checkbox jforms-readonly" checked="checked" value="1" type="checkbox"/>'."\n", $out);
@@ -297,7 +297,7 @@ jForms.tForm.addControl(c);
         $this->insertRecordsIntoTable('product_test', array('id','name','price'), $records, true);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-label">Vos choix</span>'."\n", $out);
+        $this->assertEqualOrDiff('<span class="jforms-label" id="'.$this->formname.'_choixsimple_label">Vos choix</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.$this->formname.'_choixsimple_0">foo</label></span>'."\n";
@@ -334,7 +334,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-label">Vos choix</span>'."\n", $out);
+        $this->assertEqualOrDiff('<span class="jforms-label" id="'.$this->formname.'_choixmultiple_label">Vos choix</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.$this->formname.'_choixmultiple_0">foo</label></span>'."\n";
@@ -374,7 +374,7 @@ jForms.tForm.addControl(c);
         $ctrl->setReadOnly(true);
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-label" title="ceci est un tooltip">Vos choix</span>'."\n", $out);
+        $this->assertEqualOrDiff('<span class="jforms-label" id="'.$this->formname.'_choixmultiple_label" title="ceci est un tooltip">Vos choix</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.$this->formname.'_choixmultiple_0" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly" value="10" checked="checked"/><label for="'.$this->formname.'_choixmultiple_0">foo</label></span>'."\n";
@@ -395,7 +395,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-label">Votre choix</span>'."\n", $out);
+        $this->assertEqualOrDiff('<span class="jforms-label" id="'.$this->formname.'_rbchoixsimple_label">Votre choix</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
@@ -453,7 +453,7 @@ jForms.tForm.addControl(c);
         $ctrl->setReadOnly(true);
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-label" title="ceci est un tooltip">Votre choix</span>'."\n", $out);
+        $this->assertEqualOrDiff('<span class="jforms-label" id="'.$this->formname.'_rbchoixsimple_label" title="ceci est un tooltip">Votre choix</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.$this->formname.'_rbchoixsimple_0" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly" value="10"/><label for="'.$this->formname.'_rbchoixsimple_0">foo</label></span>'."\n";
@@ -493,7 +493,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_menulist1">Votre choix</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_menulist1" id="'.$this->formname.'_menulist1_label">Votre choix</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="menulist1" id="'.$this->formname.'_menulist1" class="jforms-ctrl-menulist" size="1">'."\n";
@@ -541,7 +541,7 @@ jForms.tForm.addControl(c);
         $ctrl->setReadOnly(true);
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_menulist1" title="ceci est un tooltip">Votre choix</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_menulist1" id="'.$this->formname.'_menulist1_label" title="ceci est un tooltip">Votre choix</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="menulist1" id="'.$this->formname.'_menulist1" title="ceci est un tooltip" class="jforms-ctrl-menulist jforms-readonly" size="1">'."\n";
@@ -748,7 +748,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_listbox1">Votre choix</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_listbox1" id="'.$this->formname.'_listbox1_label">Votre choix</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="listbox1" id="'.$this->formname.'_listbox1" class="jforms-ctrl-listbox" size="4">'."\n";
@@ -793,7 +793,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_listbox1">Votre choix</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_listbox1" id="'.$this->formname.'_listbox1_label">Votre choix</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="listbox1" id="'.$this->formname.'_listbox1" class="jforms-ctrl-listbox jforms-readonly" size="4">'."\n";
@@ -818,7 +818,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_lbchoixmultiple" title="ceci est un tooltip">Votre choix</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_lbchoixmultiple" id="'.$this->formname.'_lbchoixmultiple_label" title="ceci est un tooltip">Votre choix</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="lbchoixmultiple[]" id="'.$this->formname.'_lbchoixmultiple" title="ceci est un tooltip" class="jforms-ctrl-listbox" size="4" multiple="multiple">'."\n";
@@ -857,7 +857,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_listbox2">Votre choix</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_listbox2" id="'.$this->formname.'_listbox2_label">Votre choix</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="listbox2" id="'.$this->formname.'_listbox2" class="jforms-ctrl-listbox" size="4">'."\n";
@@ -882,7 +882,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_lbchoixmultiple2">Votre choix</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_lbchoixmultiple2" id="'.$this->formname.'_lbchoixmultiple2_label">Votre choix</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="lbchoixmultiple2[]" id="'.$this->formname.'_lbchoixmultiple2" class="jforms-ctrl-listbox" size="8" multiple="multiple">'."\n";
@@ -930,7 +930,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_textarea1">Votre nom</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_textarea1" id="'.$this->formname.'_textarea1_label">Votre nom</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="textarea1" id="'.$this->formname.'_textarea1" class="jforms-ctrl-textarea" rows="5" cols="40"></textarea>'."\n", $out);
@@ -960,7 +960,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_textarea1" title="ceci est un tooltip">Votre nom</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_textarea1" id="'.$this->formname.'_textarea1_label" title="ceci est un tooltip">Votre nom</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="textarea1" id="'.$this->formname.'_textarea1" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-textarea jforms-readonly" rows="5" cols="40">laurent</textarea>'."\n", $out);
@@ -996,7 +996,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd">mot de passe</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd" id="'.$this->formname.'_passwd_label">mot de passe</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="passwd" id="'.$this->formname.'_passwd" class="jforms-ctrl-secret" type="password" value=""/>'."\n", $out);
@@ -1023,7 +1023,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd" title="ceci est un tooltip">mot de passe</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd" id="'.$this->formname.'_passwd_label" title="ceci est un tooltip">mot de passe</label>'."\n", $out);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="passwd" id="'.$this->formname.'_passwd" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-secret jforms-readonly" type="password" value="laurent"/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlSecret(\'passwd\', \'mot de passe\');
@@ -1050,7 +1050,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd_confirm">confirmation mot de passe</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd_confirm" id="'.$this->formname.'_passwd_confirm_label">confirmation mot de passe</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" class="jforms-ctrl-secretconfirm" type="password" value=""/>'."\n", $out);
@@ -1082,7 +1082,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd_confirm" title="ceci est un tooltip">confirmation mot de passe</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_passwd_confirm" id="'.$this->formname.'_passwd_confirm_label" title="ceci est un tooltip">confirmation mot de passe</label>'."\n", $out);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="passwd_confirm" id="'.$this->formname.'_passwd_confirm" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-secretconfirm jforms-readonly" type="password" value=""/>'."\n", $out);
         $this->assertEqualOrDiff('c = new jFormsControlConfirm(\'passwd_confirm\', \'confirmation mot de passe\');
@@ -1099,7 +1099,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-label">Votre nom</span>'."\n", $out);
+        $this->assertEqualOrDiff('<span class="jforms-label" id="'.$this->formname.'_output1_label">Votre nom</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="output1" id="'.$this->formname.'_output1" type="hidden" value=""/><span class="jforms-value"></span>'."\n", $out);
@@ -1120,7 +1120,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-label" title="ceci est un tooltip">Votre nom</span>'."\n", $out);
+        $this->assertEqualOrDiff('<span class="jforms-label" id="'.$this->formname.'_output1_label" title="ceci est un tooltip">Votre nom</span>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="output1" id="'.$this->formname.'_output1" type="hidden" value="laurent"/><span class="jforms-value" title="ceci est un tooltip">laurent</span>'."\n", $out);
@@ -1135,7 +1135,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_upload1">Votre nom</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_upload1" id="'.$this->formname.'_upload1_label">Votre nom</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="upload1" id="'.$this->formname.'_upload1" class="jforms-ctrl-upload" type="file" value=""/>'."\n", $out);
@@ -1154,7 +1154,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_upload1" title="ceci est un tooltip">Votre nom</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_upload1" id="'.$this->formname.'_upload1_label" title="ceci est un tooltip">Votre nom</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<input name="upload1" id="'.$this->formname.'_upload1" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-upload jforms-readonly" type="file" value=""/>'."\n", $out);
@@ -1169,7 +1169,7 @@ jForms.tForm.addControl(c);
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'" enctype="multipart/form-data"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
-jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
+jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
@@ -1261,7 +1261,7 @@ jForms.declareForm(jForms.tForm);
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
-jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
+jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
@@ -1281,7 +1281,7 @@ jForms.declareForm(jForms.tForm);
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
-jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorAlert());
+jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
@@ -1299,7 +1299,7 @@ jForms.declareForm(jForms.tForm);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap">captcha for security</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap" id="'.$this->formname.'_cap_label">captcha for security</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha jforms-required" type="text" value=""/>'."\n", $out);
@@ -1343,7 +1343,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap" title="ceci est un tooltip">captcha for security</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap" id="'.$this->formname.'_cap_label" title="ceci est un tooltip">captcha for security</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input name="cap" id="'.$this->formname.'_cap" title="ceci est un tooltip" class="jforms-ctrl-captcha jforms-required" type="text" value=""/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>some help</span></span>', $out);
@@ -1362,7 +1362,7 @@ jForms.tForm.addControl(c);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_contenu">Texte</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_contenu" id="'.$this->formname.'_contenu_label">Texte</label>'."\n", $out);
 
         $this->form->setData('contenu','<p>Ceci est un contenu</p>');
 
@@ -1385,7 +1385,7 @@ jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1")
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_contenu" title="ceci est un tooltip">Texte</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_contenu" id="'.$this->formname.'_contenu_label" title="ceci est un tooltip">Texte</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-htmleditor jforms-readonly" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>'."\n", $out);

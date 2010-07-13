@@ -104,7 +104,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
      *      </ul>
      */
     public function outputHeader($params){
-        $this->options = array_merge(array('errorDecorator'=>$this->jFormsJsVarName.'ErrorDecoratorAlert',
+        $this->options = array_merge(array('errorDecorator'=>$this->jFormsJsVarName.'ErrorDecoratorHtml',
             'method'=>'post'), $params);
 
         if (preg_match('#^https?://#',$this->_action)) {
@@ -144,7 +144,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $errors = $this->_form->getContainer()->errors;
         if(count($errors)){
             $ctrls = $this->_form->getControls();
-            echo '<ul class="jforms-error-list">';
+            echo '<ul id="'.$this->_name.'_errors" class="jforms-error-list">';
             $errRequired='';
             foreach($errors as $cname => $err){
                 if(!$this->_form->isActivated($ctrls[$cname]->ref)) continue;
@@ -189,11 +189,12 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $required = ($ctrl->required == false || $ctrl->isReadOnly()?'':' jforms-required');
         $inError = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
+        $id = $this->_name.'_'.$ctrl->ref;
+        $idLabel = ' id="'.$id.'_label"';
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime'){
-            echo '<span class="jforms-label',$required,$inError,'"',$hint,'>',htmlspecialchars($ctrl->label),"</span>\n";
+            echo '<span class="jforms-label',$required,$inError,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),"</span>\n";
         }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
-            $id = $this->_name.'_'.$ctrl->ref;
-            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$hint,'>',htmlspecialchars($ctrl->label),"</label>\n";
+            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),"</label>\n";
         }
     }
 
@@ -428,7 +429,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $attr['name'] = $ctrl->ref.'[seconds]';
         $attr['id'] .= 'seconds';
         if(!$ctrl->enableSeconds) 
-            echo '<input type="hidden" id="'.$attr['id'].'seconds" name="'.$ctrl->ref.'[seconds]" value="'.$value.'"'.$this->_endt;
+            echo '<input type="hidden" id="'.$attr['id'].'" name="'.$attr['name'].'" value="'.$value.'"'.$this->_endt;
         else if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes') {
             $attr['value'] = $value;
             echo '<input type="text"';
