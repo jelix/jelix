@@ -21,6 +21,8 @@ class admin_menuZone extends jZone {
         $dashboard->icon = $GLOBALS['gJConfig']->urlengine['jelixWWWPath'] . 'design/images/dashboard.png';
         $menu['toplinks']->childItems[] = $dashboard;
 
+        $menu['refdata'] =  new masterAdminMenuItem('refdata', jLocale::get('gui.menu.item.refdata'), '', 80);
+
         $menu['system'] = new masterAdminMenuItem('system', jLocale::get('gui.menu.item.system'), '', 100);
 
         $items = jEvent::notify('masteradminGetMenuContent')->getResponse();
