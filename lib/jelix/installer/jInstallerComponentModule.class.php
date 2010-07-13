@@ -142,7 +142,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             $this->moduleUpgraders = array();
 
             $p = $this->path.'install/';
-            if (!file_exists($p))
+            if (!file_exists($p)  || $this->moduleInfos[$epId]->skipInstaller)
                 return array();
 
             // we get the list of files for the upgrade
