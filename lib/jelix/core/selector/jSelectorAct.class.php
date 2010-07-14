@@ -5,7 +5,7 @@
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
 * @contributor Thibault PIRONT < nuKs >
-* @copyright   2005-2009 Laurent Jouanneau
+* @copyright   2005-2010 Laurent Jouanneau
 * @copyright   2007 Thibault PIRONT
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -32,6 +32,13 @@ class jSelectorAct extends jSelectorActFast {
         global $gJCoord;
         $this->forUrl = $toRetrieveUrl;
 #if ENABLE_PHP_JELIX
+        // jSelectorAct is called by the significant url engine parser, before
+        // jcoordinator set its properties, so we set a value to avoid a
+        // parameter error on jelix_scan_action_sel. the value doesn't matter
+        // since the significant parser call jSelectorAct only for 404 page
+        if ($gJCoord->actionName === null)
+            $gJCoord->actionName = 'default:index';
+
         if(jelix_scan_action_sel($sel, $this, $gJCoord->actionName)){
             if($this->module == '#'){
                 $this->module = $gJCoord->moduleName;
