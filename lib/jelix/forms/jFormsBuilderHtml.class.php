@@ -187,14 +187,15 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     public function outputControlLabel($ctrl){
         if($ctrl->type == 'hidden' || $ctrl->type == 'group') return;
         $required = ($ctrl->required == false || $ctrl->isReadOnly()?'':' jforms-required');
+        $reqhtml = ($required?'<span class="jforms-required-star">*</span>':'');
         $inError = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
         $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
         $id = $this->_name.'_'.$ctrl->ref;
         $idLabel = ' id="'.$id.'_label"';
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime'){
-            echo '<span class="jforms-label',$required,$inError,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),"</span>\n";
+            echo '<span class="jforms-label',$required,$inError,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</span>\n";
         }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
-            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),"</label>\n";
+            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</label>\n";
         }
     }
 

@@ -30,7 +30,7 @@ padding:5px;
 .jforms-readonly { color:#aaa; }
 
 span.jforms-required, label.jforms-required { font-weight:bold; }
-label.jforms-required:after, span.jforms-required:after { content:"*"; font-weight:bold; color:red; }
+span.jforms-required-start { font-weight:bold; color:red; }
 
 .jforms-error-list { color:red; border:1px solid red;}
 

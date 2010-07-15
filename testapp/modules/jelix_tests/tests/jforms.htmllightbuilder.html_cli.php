@@ -1299,7 +1299,7 @@ jForms.declareForm(jForms.tForm);
         $this->form->addControl($ctrl);
 
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap" id="'.$this->formname.'_cap_label">captcha for security</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap" id="'.$this->formname.'_cap_label">captcha for security<span class="jforms-required-star">*</span></label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input name="cap" id="'.$this->formname.'_cap" class="jforms-ctrl-captcha jforms-required" type="text" value=""/>'."\n", $out);
@@ -1343,7 +1343,7 @@ jForms.tForm.addControl(c);
 
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap" id="'.$this->formname.'_cap_label" title="ceci est un tooltip">captcha for security</label>'."\n", $out);
+        $this->assertEqualOrDiff('<label class="jforms-label jforms-required" for="'.$this->formname.'_cap" id="'.$this->formname.'_cap_label" title="ceci est un tooltip">captcha for security<span class="jforms-required-star">*</span></label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<span class="jforms-captcha-question">'.htmlspecialchars($ctrl->question).'</span> <input name="cap" id="'.$this->formname.'_cap" title="ceci est un tooltip" class="jforms-ctrl-captcha jforms-required" type="text" value=""/>'."\n".'<span class="jforms-help" id="jforms_formtestlight1-help"><span>some help</span></span>', $out);
