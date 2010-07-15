@@ -91,7 +91,7 @@ function toggleAuth(checkbox) {
         <tr>
             <th>{@label.smtpSecure@}</th>
             <td>
-                <input type="radio" id="smtpSecureNone" name="smtpSecure" value="" {if $smtpSecure != 'ssl' && smtpSecure !='tls'}checked="checked"{/if}/><label for="smtpSecureNone">{@label.smtpSecure.none@}</label>
+                <input type="radio" id="smtpSecureNone" name="smtpSecure" value="" {if $smtpSecure != 'ssl' && $smtpSecure !='tls'}checked="checked"{/if}/><label for="smtpSecureNone">{@label.smtpSecure.none@}</label>
                 <input type="radio" id="smtpSecureSsl" name="smtpSecure" value="ssl" {if $smtpSecure == 'ssl'}checked="checked"{/if}/><label for="smtpSecureSsl">{@label.smtpSecure.ssl@}</label>
                 <input type="radio" id="smtpSecureTls" name="smtpSecure" value="tls" {if $smtpSecure =='tls'}checked="checked"{/if}/><label for="smtpSecureTls">{@label.smtpSecure.tls@}</label>
             </td>
