@@ -431,7 +431,7 @@ class significantUrlEngine implements jIUrlEngine {
                     $pi = str_replace(':'.$param, jUrl::escape($url->getParam($param,''),true), $pi);
                 }
                 else {
-                    $pi = str_replace(':'.$param, $url->getParam($param,''), $pi);
+                    $pi = str_replace(':'.$param, urlencode($url->getParam($param,'')), $pi);
                 }
                 $url->delParam($param);
             }
