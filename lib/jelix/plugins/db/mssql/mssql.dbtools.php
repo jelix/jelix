@@ -3,7 +3,8 @@
  * @package    jelix
  * @subpackage db_driver
  * @author     Yann Lecommandoux
- * @copyright  2008 Yann Lecommandoux
+ * @contributor Julien
+ * @copyright  2008 Yann Lecommandoux, 2010 Julien
  * @link      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -21,8 +22,8 @@ class mssqlDbTools extends jDbTools {
      */
     function getTableList (){
         $results = array ();
-        $sql = "SELECT TABLE_NAME FROM " .$this->_connector->profile['database']. ".INFORMATION_SCHEMA.TABLES
-        		WHERE TABLE_NAME NOT LIKE ('sys%') AND TABLE_NAME NOT LIKE ('dt%')";
+        $sql = "SELECT TABLE_NAME FROM " .$this->_conn->profile['database']. ".INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_NAME NOT LIKE ('sys%') AND TABLE_NAME NOT LIKE ('dt%')";
         $rs = $this->_connector->query ($sql);
         while ($line = $rs->fetch ()){
             $results[] = $line->TABLE_NAME;
@@ -39,13 +40,13 @@ class mssqlDbTools extends jDbTools {
 
         $pkeys = array();
         // get primary keys informations
-        $rs = $this->_connector->query('EXEC sp_pkeys ' . $tableName);
+        $rs = $this->_conn->query('EXEC sp_pkeys ' . $tableName);
         while ($line = $rs->fetch()){
             $pkeys[] = $line->COLUMN_NAME;
         }
         // get table informations
         unset($line);
-        $rs = $this->_connector->query ('EXEC sp_columns ' . $tableName);
+        $rs = $this->_conn->query ('EXEC sp_columns ' . $tableName);
         while ($line = $rs->fetch ()){
             $field = new jDbFieldProperties();
             $field->name = $line->COLUMN_NAME;
@@ -71,4 +72,3 @@ class mssqlDbTools extends jDbTools {
         return $results;
     }
 }
-?>
