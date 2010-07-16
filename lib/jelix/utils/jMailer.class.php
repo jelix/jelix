@@ -179,7 +179,14 @@ class jMailer extends PHPMailer {
     
         $this->error_count = 0; // reset errors
         $this->SetMessageType();
-        $header = $this->CreateHeader();
+        if ($this->Mailer == 'file') {
+            // to have all headers in the file, like cc, bcc...
+            $this->Mailer = 'sendmail';
+            $header = $this->CreateHeader();
+            $this->Mailer = 'file';
+        }
+        else
+            $header = $this->CreateHeader();
         $body = $this->CreateBody();
     
         if($body == '') {
