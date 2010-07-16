@@ -313,6 +313,18 @@ default.engine.file[] = jelix/wymeditor/jquery.wymeditor.js
 default.config = jelix/js/jforms/htmleditors/wymeditor_default.js
 default.skin.default  = jelix/wymeditor/skins/default/screen.css
 
+ckdefault.engine.name = ckeditor
+ckdefault.engine.file[] = jelix/ckeditor/ckeditor.js
+ckdefault.config = jelix/js/jforms/htmleditors/ckeditor_default.js
+
+ckfull.engine.name = ckeditor
+ckfull.engine.file[] = jelix/ckeditor/ckeditor.js
+ckfull.config = jelix/js/jforms/htmleditors/ckeditor_full.js
+
+ckbasic.engine.name = ckeditor
+ckbasic.engine.file[] = jelix/ckeditor/ckeditor.js
+ckbasic.config = jelix/js/jforms/htmleditors/ckeditor_basic.js
+
 
 [wikieditors]
 default.engine.name = wr3

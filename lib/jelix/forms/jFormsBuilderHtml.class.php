@@ -751,7 +751,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     protected function jsHtmleditor($ctrl) {
         $this->jsTextarea($ctrl);
         $engine = $GLOBALS['gJConfig']->htmleditors[$ctrl->config.'.engine.name'];
-        $this->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$this->_name.'_'.$ctrl->ref.'","'.$this->_name."\");\n";
+        $this->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$this->_name.'_'.$ctrl->ref.'","'.$this->_name.'","'.$ctrl->skin.'","'.$GLOBALS['gJConfig']->locale."\");\n";
     }
 
     protected function outputWikieditor($ctrl, &$attr) {

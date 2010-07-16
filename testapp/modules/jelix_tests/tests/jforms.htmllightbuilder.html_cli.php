@@ -1371,7 +1371,7 @@ jForms.tForm.addControl(c);
         $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default","en_EN");
 ', $this->builder->getJsContent());
 
         $ctrl->setReadOnly(true);
@@ -1380,7 +1380,7 @@ jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1")
         $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default","en_EN");
 ', $this->builder->getJsContent());
 
         $ctrl->hint='ceci est un tooltip';
@@ -1392,7 +1392,7 @@ jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1")
         $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default","en_EN");
 ', $this->builder->getJsContent());
 
 
@@ -1402,7 +1402,7 @@ jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1")
         $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default","en_EN");
 ', $this->builder->getJsContent());
 
 
@@ -1412,7 +1412,7 @@ jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1")
         $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default","en_EN");
 ', $this->builder->getJsContent());
 
         $ctrl->required=true;
@@ -1423,7 +1423,7 @@ c.required = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1");
+jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default","en_EN");
 ', $this->builder->getJsContent());
     }
 }
