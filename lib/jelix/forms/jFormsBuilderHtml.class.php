@@ -730,8 +730,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         echo '>',htmlspecialchars($this->_form->getData($ctrl->ref)),'</textarea>';
     }
 
-    protected function jsTextarea($ctrl) {
-        $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+    protected function jsTextarea($ctrl, $withjsobj=true) {
+        if ($withjsobj)
+            $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $maxl= $ctrl->datatype->getFacet('maxLength');
         if($maxl !== null)
@@ -749,7 +750,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     protected function jsHtmleditor($ctrl) {
-        $this->jsTextarea($ctrl);
+        $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlHtml('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsTextarea($ctrl, false);
         $engine = $GLOBALS['gJConfig']->htmleditors[$ctrl->config.'.engine.name'];
         $this->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$this->_name.'_'.$ctrl->ref.'","'.$this->_name.'","'.$ctrl->skin.'","'.$GLOBALS['gJConfig']->locale."\");\n";
     }

@@ -1368,7 +1368,7 @@ jForms.tForm.addControl(c);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" class="jforms-ctrl-htmleditor" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>'."\n", $out);
-        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlHtml(\'contenu\', \'Texte\');
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
 jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default","en_EN");
@@ -1377,7 +1377,7 @@ jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1",
         $ctrl->setReadOnly(true);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" class="jforms-ctrl-htmleditor jforms-readonly" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>'."\n", $out);
-        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlHtml(\'contenu\', \'Texte\');
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
 jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default","en_EN");
@@ -1389,7 +1389,7 @@ jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1",
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-htmleditor jforms-readonly" rows="5" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>'."\n", $out);
-        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlHtml(\'contenu\', \'Texte\');
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
 jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default","en_EN");
@@ -1399,7 +1399,7 @@ jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1",
         $ctrl->rows=20;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-htmleditor jforms-readonly" rows="20" cols="40">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>'."\n", $out);
-        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlHtml(\'contenu\', \'Texte\');
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
 jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default","en_EN");
@@ -1409,7 +1409,7 @@ jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1",
         $ctrl->cols=60;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-htmleditor jforms-readonly" rows="20" cols="60">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>'."\n", $out);
-        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlHtml(\'contenu\', \'Texte\');
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
 jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default","en_EN");
@@ -1418,7 +1418,7 @@ jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1",
         $ctrl->required=true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEqualOrDiff('<textarea name="contenu" id="'.$this->formname.'_contenu" readonly="readonly" title="ceci est un tooltip" class="jforms-ctrl-htmleditor jforms-readonly" rows="20" cols="60">&lt;p&gt;Ceci est un contenu&lt;/p&gt;</textarea>'."\n", $out);
-        $this->assertEqualOrDiff('c = new jFormsControlString(\'contenu\', \'Texte\');
+        $this->assertEqualOrDiff('c = new jFormsControlHtml(\'contenu\', \'Texte\');
 c.required = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';

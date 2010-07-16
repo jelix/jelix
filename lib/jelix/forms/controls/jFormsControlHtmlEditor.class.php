@@ -23,7 +23,7 @@ class jFormsControlHtmlEditor extends jFormsControl {
     public $skin='default';
     function __construct($ref){
         $this->ref = $ref;
-        $this->datatype = new jDatatypeHtml();
+        $this->datatype = new jDatatypeHtml(true,true);
     }
 
     /**

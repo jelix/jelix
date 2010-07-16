@@ -857,7 +857,7 @@ $ctrl->datatype= new jDatatypeHtml(true);
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 86=>'$ctrl= new jFormsControlhtmleditor(\'contenu\');
-$ctrl->datatype= new jDatatypeHtml(true);
+$ctrl->datatype= new jDatatypeHtml(true, true);
 $ctrl->label=\'Texte\';
 $this->addControl($ctrl);',
 

@@ -150,7 +150,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
 
     protected function generateHtmleditor(&$source, $control, &$attributes) {
         if (isset($attributes['xhtml'])) {
-            $source[] = '$ctrl->datatype= new jDatatypeHtml('.($attributes['xhtml'] == 'true'?'true':'').');';
+            $source[] = '$ctrl->datatype= new jDatatypeHtml('.($attributes['xhtml'] == 'true'?'true':'').', true);';
             unset($attributes['xhtml']);
         }
 
