@@ -45,6 +45,7 @@ class jFormsControlCheckbox extends jFormsControl {
     }
 
     function setData($value) {
+        $value = (string) $value;
         if($value != $this->valueOnCheck){
             if($value =='on')
                 $value = $this->valueOnCheck;

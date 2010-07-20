@@ -89,7 +89,6 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
         $modifiedControls = array (
             'chckbxctrl' => '1');
         $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
-
         $this->form->setData('inputctrl', 'tata');
         $newForm = array (
           'inputctrl' => 'tata',
@@ -140,5 +139,101 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
           'chckbxctrl2'=>'1',
           'list'=>array('bbb','123'),);
         $this->assertIdentical($initForm, $this->form->getContainer()->originalData);
-    }    
+    }
+
+
+    function testModifiedInput() {
+        $this->form->setData('inputctrl', null);
+        $this->form->initModifiedControlsList();
+
+        $this->form->setData('inputctrl', '');
+        $modifiedControls = array ();
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('inputctrl', 'hey');
+        $modifiedControls = array (
+           'inputctrl' => null);
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+    }
+
+
+    function testModifiedNumericalValue() {
+        $this->form->setData('chckbxctrl', 0);
+        $this->form->initModifiedControlsList();
+
+        $this->form->setData('chckbxctrl', '0');
+        $modifiedControls = array ();
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', 'on');
+        $modifiedControls = array ('chckbxctrl'=> '0');
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', '');
+        $modifiedControls = array ();
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', null);
+        $modifiedControls = array ();
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', '1');
+        $modifiedControls = array ('chckbxctrl'=> '0');
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', true);
+        $modifiedControls = array ('chckbxctrl'=> '0');
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+
+        $this->form->setData('chckbxctrl', null);
+        $this->form->initModifiedControlsList();
+
+        $this->form->setData('chckbxctrl', '0');
+        $modifiedControls = array ();
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', 'on');
+        $modifiedControls = array ('chckbxctrl'=>'0');
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+
+        $c = $this->form->getControl('chckbxctrl');
+        $c->valueOnCheck='0';
+        $c->valueOnUncheck='1';
+
+        $this->form->setData('chckbxctrl', 0);
+        $this->form->initModifiedControlsList();
+
+        $this->form->setData('chckbxctrl', '0');
+        $modifiedControls = array ();
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', 0);
+        $modifiedControls = array ();
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', 'on');
+        $modifiedControls = array ();
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', '');
+        $modifiedControls = array ('chckbxctrl'=> '0');
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', null);
+        $modifiedControls = array ('chckbxctrl'=> '0');
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', '1');
+        $modifiedControls = array ('chckbxctrl'=> '0');
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('chckbxctrl', true);
+        $modifiedControls = array ('chckbxctrl'=> '0');
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+    }
+
+
 }

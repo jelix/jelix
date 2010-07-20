@@ -441,7 +441,7 @@ class UTjforms extends jUnitTestCase {
             <array property="data">
                 <string key="name" value="car" />
                 <integer key="price" value="56598" />
-                <boolean key="instock" value="true" />
+                <string key="instock" value="1" />
             </array>
             <array property="errors">array()</array>
         </object>
