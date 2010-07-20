@@ -12,6 +12,12 @@
 class %%module%%ModuleInstaller extends jInstallerModule {
 
     function install() {
+        //if ($this->firstDbExec())
+        //    $this->execSQLScript('sql/install');
 
+        /*if ($this->firstExec('acl2')) {
+            jAcl2DbManager::addSubject('my.subject', '%%module%%~acl.my.subject');
+            jAcl2DbManager::addRight(1, 'my.subject'); // for admin group
+        */
     }
 }

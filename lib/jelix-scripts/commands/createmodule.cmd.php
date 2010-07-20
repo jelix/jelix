@@ -13,10 +13,10 @@
 class createmoduleCommand extends JelixScriptCommand {
 
     public  $name = 'createmodule';
-    public  $allowed_options=array('-nosubdir'=>false, '-nocontroller'=>false, '-cmdline'=>false, '-addinstallzone'=>false, '-defaultmodule'=>false);
+    public  $allowed_options=array('-nosubdir'=>false, '-nocontroller'=>false, '-cmdline'=>false, '-addinstallzone'=>false, '-defaultmodule'=>false, '-admin'=>false);
     public  $allowed_parameters=array('module'=>true, 'repository'=>false);
 
-    public  $syntaxhelp = "[-nosubdir] [-nocontroller] [-cmdline] [-addinstallzone] [-defaultmodule] MODULE [REPOSITORY]";
+    public  $syntaxhelp = "[-nosubdir] [-nocontroller] [-cmdline] [-addinstallzone] [-defaultmodule] [-admin] MODULE [REPOSITORY]";
     public  $help=array(
         'fr'=>"
     Crée un nouveau module, avec son fichier module.xml, et un contrôleur
@@ -28,6 +28,8 @@ class createmoduleCommand extends JelixScriptCommand {
     -cmdline (facultatif) : crée le module avec un contrôleur pour la ligne de commande
     -addinstallzone (facultatif) : ajoute la zone check_install pour une nouvelle application
     -defaultmodule (facultatif) : le module devient le module par defaut de l'application
+    -admin (facultatif) : le module doit être utilisé avec master_admin, création de fichiers
+                        supplémentaires et ajout de configuration adéquates (droits..)
 
     MODULE : le nom du module à créer.
     REPOSITORY: le depot de modules où créer le module. même syntaxe que pour modulesPath
@@ -40,6 +42,8 @@ class createmoduleCommand extends JelixScriptCommand {
     -cmdline (optional): create a controller for command line (jControllerCmdLine)
     -addinstallzone (optional) : add the check_install zone for new application
     -defaultmodule (optional) : the new module become the default module
+    -admin (optional) : the new module should be used with master_admin. install
+                        additionnal file and set additionnal configuration stuff
     MODULE: name of the new module.
     REPOSITORY: the path of the directory where to create the module. same syntax as modulesPath
                 in the configuration. default repository is app:module/"
@@ -95,8 +99,13 @@ class createmoduleCommand extends JelixScriptCommand {
 
         $path = $repositoryPath.$module.'/';
         $this->createDir($path);
-        
+
         $gJConfig = null;
+
+        if ($this->getOption('-admin')) {
+            $this->removeOption('-nosubdir');
+            $this->removeOption('-addinstallzone');
+        }
 
         $param = array();
         $param['module'] = $module;
@@ -183,6 +192,14 @@ class createmoduleCommand extends JelixScriptCommand {
             $agcommand->init($options,array('module'=>$module, 'name'=>'default','method'=>'index'));
             $agcommand->run();
         }
+
+        if ($this->getOption('-admin')) {
+            $this->createFile($path.'classes/admin'.$module.'.listener.php', 'module/admin.listener.php.tpl', $param);
+            $this->createFile($path.'events.xml', 'module/events.xml.tpl', $param);
+            file_put_contents($path.'locales/en_EN/interface.UTF-8.properties', 'menu.item='.$module);
+            file_put_contents($path.'locales/fr_FR/interface.UTF-8.properties', 'menu.item='.$module);
+        }
+
     }
 
     protected function updateModulePath($ini, $currentModulesPath, $repository, $repositoryPath) {

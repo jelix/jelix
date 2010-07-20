@@ -232,7 +232,13 @@ abstract class JelixScriptCommand {
          return false;
       }
    }
-   
+
+    protected function removeOption($name) {
+        if (isset($this->_options[$name])) {
+            unset($this->_options[$name]);
+        }
+    }
+
    /**
     * @var DOMDocument the content of the project.xml file, loaded by loadProjectXml
     */

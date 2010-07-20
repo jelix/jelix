@@ -135,20 +135,22 @@ cd lib/jelix-scripts/templates
 cd lib/jelix-scripts/templates/installer/
   installer.php.tpl
 cd lib/jelix-scripts/templates/module/
+  admin.listener.php.tpl
   classfromdao.class.tpl
-  main.tpl.tpl
-  module.xml.tpl
-  dao.xml.tpl
-  form.xml.tpl
-  dao_empty.xml.tpl
   controller.tpl
   controller.newapp.tpl
   controller.cmdline.tpl
   controller.daocrud.tpl
+  dao.xml.tpl
+  dao_empty.xml.tpl
+  events.xml.tpl
+  form.xml.tpl
+  install.tpl
+  locales.tpl
+  main.tpl.tpl
+  module.xml.tpl
   template.tpl
   zone.tpl
-  locales.tpl
-  install.tpl
 cd lib/jelix-scripts/templates/responses/
   adminHtmlResponse.class.php.tpl
   adminLoginHtmlResponse.class.php.tpl
