@@ -5,7 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Thibault PIRONT < nuKs >
 * @contributor Loic Mathaud
-* @copyright   2005-2008 Laurent Jouanneau
+* @copyright   2005-2010 Laurent Jouanneau
 * @copyright   2007 Thibault PIRONT
 * @copyright   2006 Loic Mathaud
 * Some parts of this file are took from an experimental branch of the Copix project (CopixUrl.class.php, Copix 2.3dev20050901, http://www.copix.org),
@@ -93,14 +93,15 @@ class jUrl extends jUrlBase {
      * @since 1.0.4
      */
     public function getQuery($forxml = false) {
-        $url = '';
         if (count ($this->params)>0){
             $q = http_build_query($this->params, '', ($forxml?'&amp;':'&'));
+            if(!$q)
+                return '';
             if(strpos($q, '%3A')!==false)
                 $q = str_replace( '%3A', ':', $q);
-            $url .='?'.$q;
+            return '?'.$q;
         }
-        return $url;
+        return '';
     }
 
     //============================== static helper methods

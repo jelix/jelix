@@ -106,7 +106,7 @@ class UTCreateUrls extends UnitTestCase {
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
 
       $urlList=array();
-      $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
+      $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35', 'p'=>null));
       $urlList[]= array('urlsig:url2', array('mois'=>'05',  'annee'=>'2004'));
       $urlList[]= array('jelix_tests~urlsig:url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
       $urlList[]= array('jelix_tests~urlsig:url4', array('first'=>'premier',  'second'=>'deuxieme'));
@@ -214,7 +214,7 @@ class UTCreateUrls extends UnitTestCase {
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
 
       $urlList=array();
-      $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'01'));
+      $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'01', 'p'=>null));
       $urlList[]= array('urlsig:url9', array('mois'=>'10',  'annee'=>'2005', 'id'=>'09'));
       $urlList[]= array('urlsig:url10', array('mois'=>'10',  'annee'=>'2005', 'id'=>'10'));
       $urlList[]= array('urlsig:url2', array('mois'=>'05',  'annee'=>'2004'));
@@ -392,7 +392,7 @@ class UTCreateUrls extends UnitTestCase {
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
 
       $urlList=array();
-      $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35'));
+      $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35', 'p'=>null));
       $urlList[]= array('urlsig:url2', array('mois'=>'05',  'annee'=>'2004'));
       $urlList[]= array('jelix_tests~urlsig:url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
       $urlList[]= array('jelix_tests~urlsig:url4', array('first'=>'premier',  'second'=>'%@deuxieme')); // with special char
