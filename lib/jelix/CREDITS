@@ -241,11 +241,14 @@ Hadrien Lanneau
 Nicolas Lassalle
  - bug fix in jResponseBinary (#188)
 
-Hugues Magnier (aka BaGroN)
- - tpl plugin stripws (#140)
-
 Yann Lecommandoux (aka YannL)
  - mssql driver for jDb (#799)
+
+Litchi
+ - bug fix in jforms_jquery.js (#1132)
+
+Hugues Magnier (aka BaGroN)
+ - tpl plugin stripws (#140)
 
 Alexis Métaireau
  - improvements on jtpl plugin formcontrol (#652)
