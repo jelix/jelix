@@ -45,7 +45,7 @@ class mysqlDbTools extends jDbTools {
       'number'          =>array('real',             'decimal',  null,       null,       null,     null), //8bytes
       'binary_float'    =>array('float',            'float',    null,       null,       null,     null), //4bytes
       'binary_double'   =>array('real',             'decimal',  null,       null,       null,     null), //8bytes
-      
+
       'numeric'         =>array('numeric',          'numeric',  null,       null,       null,     null),
       'decimal'         =>array('decimal',          'decimal',  null,       null,       null,     null),
       'dec'             =>array('decimal',          'decimal',  null,       null,       null,     null),
@@ -83,7 +83,7 @@ class mysqlDbTools extends jDbTools {
       'mediumblob'      =>array('mediumblob', 'varbinary',  null,       null,       0,     16777215),
       'longblob'        =>array('longblob',   'varbinary',  null,       null,       0,     0),
       'bfile'           =>array('longblob',   'varbinary',  null,       null,       0,     0),
-      
+
       'bytea'           =>array('longblob',   'varbinary',  null,       null,       0,     0),
       'binary'          =>array('binary',     'binary',     null,       null,       0,     255),
       'varbinary'       =>array('varbinary',  'varbinary',  null,       null,       0,     255),
@@ -119,7 +119,7 @@ class mysqlDbTools extends jDbTools {
     }
 
     /**
-    * returns the list of tables 
+    * returns the list of tables
     * @return   array    list of table names
     * @deprecated since 1.2
     */
@@ -190,7 +190,7 @@ class mysqlDbTools extends jDbTools {
         }
         return $results;
     }
-    
+
     public function execSQLScript ($file) {
         if(!isset($this->_conn->profile['table_prefix']))
             $prefix = '';
@@ -219,7 +219,7 @@ class mysqlDbTools extends jDbTools {
             $preg.='|'.preg_quote($dd);
         }
 
-        $tokens = preg_split('!(\'|"|\\\\|`|DELIMITER |#|/\\*|\\*/|\\-\\- |'."\n".$preg.')!i', $script, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $tokens = preg_split('!(\'|"|\\\\|`|DELIMITER |#|/\\*|\\*/|\\-\\-(?=\s)|'."\n".$preg.')!i', $script, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         $currentDelimiter = ';';
         $context = 0;
@@ -233,7 +233,9 @@ class mysqlDbTools extends jDbTools {
                 $previousToken = $token;
                 switch($token) {
                 case $currentDelimiter:
-                    $queries[] = trim($query);
+                    if (preg_replace("/\s/","",$query) != '') {
+                        $queries[] = trim($query);
+                    }
                     $query = '';
                     break;
                 case '\'':
@@ -255,7 +257,7 @@ class mysqlDbTools extends jDbTools {
                     $context = 6;
                     break;
                 case '#':
-                case '-- ':
+                case '--':
                     $context = 4;
                     break;
                 case '/*':
@@ -317,7 +319,7 @@ class mysqlDbTools extends jDbTools {
             // 4 : comment single line
             case 4:
                 if ($token == "\n") {
-                    $query.=$token;
+                    //$query.=$token;
                     $context = 0;
                 }
                 break;
@@ -333,12 +335,11 @@ class mysqlDbTools extends jDbTools {
                 $context = 0;
                 break;
             }
-            
+
         }
-        if (trim($query) != '')
+        if (preg_replace("/\s/","",$query) != '') {
             $queries[] = trim($query);
+        }
         return $queries;
     }
 }
-
-

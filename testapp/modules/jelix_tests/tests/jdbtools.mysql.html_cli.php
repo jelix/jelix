@@ -36,6 +36,7 @@ class UTjDbToolsMysql extends jUnitTestCase {
         $this->assertEqual($tools->testParseSQLScript("SELECT ''; SELECT toto"), array("SELECT ''", 'SELECT toto'));
         $this->assertEqual($tools->testParseSQLScript('SELECT ""; SELECT toto'), array('SELECT ""', 'SELECT toto'));
         $this->assertEqual($tools->testParseSQLScript('SELECT ``; SELECT toto'), array('SELECT ``', 'SELECT toto'));
+
     }
 
     function testExecSqlComplexScript(){
@@ -101,26 +102,47 @@ CLOSE compCur;
 END", "CALL updateComponent()");
        $this->assertEqual($tools->testParseSQLScript($sql), $result);
 
+    $sql = "-- phpMyAdmin SQL Dump
+-- version 3.3.2deb1
+-- http://www.phpmyadmin.net
+--
+-- Serveur: localhost
+-- Généré le : Ven 02 Juillet 2010 à 19:52
+-- Version du serveur: 5.1.41
+-- Version de PHP: 5.3.2-1ubuntu4.2
 
-//echo '<pre>';var_export($tools->testParseSQLScript($sql));echo '</pre>';
+SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\";
 
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Base de données: `toto`
+--";
+    $result = array(
+            "SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"",
+        );
+        $this->assertEqual($tools->testParseSQLScript($sql), $result);
+        //echo '<pre>';var_export($tools->testParseSQLScript($sql));echo '</pre>';
     }
-    
+
     function testTableList() {
         $db = jDb::getConnection();
         $tools = new testmysqlDbTools($db);
-        
+
         $goodList = array('jacl_group', 'jacl_right_values', 'jacl_right_values_group',
                           'jacl_rights', 'jacl_subject', 'jacl_user_group',
                           'jacl2_group','jacl2_user_group','jacl2_subject',
                           'jacl2_rights', 'jlx_user', 'myconfig', 'product_test',
                           'product_tags_test', 'labels_test', 'products', 'jlx_cache',
                           'jsessions', 'testkvdb');
-        
+
         $list = $tools->getTableList();
         sort($goodList);
         sort($list);
         $this->assertEqual($list, $goodList);
     }
 }
-
