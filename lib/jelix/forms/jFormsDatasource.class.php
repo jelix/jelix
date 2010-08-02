@@ -3,9 +3,10 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor Dominique Papin
+* @contributor Dominique Papin, Julien Issler
 * @copyright   2006-2007 Laurent Jouanneau
 * @copyright   2008 Dominique Papin
+* @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -115,7 +116,7 @@ class jFormsDaoDatasource implements jIFormsDatasource {
         foreach($found as $obj){
             $label = '' ;
             foreach( (array)$this->labelProperty as $property ) {
-                if (!empty( $obj->{$property}))
+                if ((string)$obj->{$property} !== '')
                     $label .= $obj->{$property}.$this->labelSeparator;
             }
             if ($this->labelSeparator != '')
@@ -131,7 +132,7 @@ class jFormsDaoDatasource implements jIFormsDatasource {
         if ($rec) {
             $label = '' ;
             foreach( (array)$this->labelProperty as $property ) {
-                if (!empty( $rec->{$property}))
+                if ((string)$rec->{$property} !== '')
                     $label .= $rec->{$property}.$this->labelSeparator;
             }
             if ($this->labelSeparator != '')
