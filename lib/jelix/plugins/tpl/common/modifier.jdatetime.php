@@ -3,9 +3,10 @@
 * @package    jelix
 * @subpackage jtpl_plugin
 * @author     Jouanneau Laurent
-* @contributor Emmanuel Hesry
+* @contributor Emmanuel Hesry, Julien Issler
 * @copyright   2006 Jouanneau laurent
 * @copyright   2009 Emmanuel Hesry
+* @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -13,8 +14,8 @@
 /**
  * modifier plugin : change the format of a date
  *
- * It uses jDateTime to convert a date. It takes two optionnal arguments. 
- * The first one is the format identifier of the given date (by default, it is db_datetime). 
+ * It uses jDateTime to convert a date. It takes two optionnal arguments.
+ * The first one is the format identifier of the given date (by default, it is db_datetime).
  * The second one is the format identifier of the output date (by default, it is lang_date).
  *
  * Availabled format identifiers are (with the equivalent constant of jDateTime)  :
@@ -29,7 +30,7 @@
  * <li>'timestamp' => jDateTime::TIMESTAMP_FORMAT)</li>
  * <li>'rfc822'=> jDateTime::RFC822_FORMAT)</li>
  * <li>'full_lang_date'=> jDateTime::FULL_LANG_DATE</li></ul>
- * 
+ *
  * examples :
  *  {$mydate|jdatetime}
  *  {$mydate|jdatetime:'db_time':'lang_time'}
@@ -42,6 +43,8 @@
  */
 function jtpl_modifier_common_jdatetime($date, $format_in = 'db_datetime',
                                  $format_out = 'lang_date') {
+    if(is_null($date))
+        return '';
     $formats = array(
         'lang_date' => jDateTime::LANG_DFORMAT,
         'lang_datetime' => jDateTime::LANG_DTFORMAT,
