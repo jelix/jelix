@@ -82,7 +82,7 @@ class jVersionComparator {
 
         return 0;
     }
-    
+
     static protected function normalizeVersionNumber(&$n) {
         $n[2] = strtolower($n[2]);
         if ($n[2] == 'pre' || $n[2] == 'dev' || $n[2] == '-dev') {
@@ -107,18 +107,62 @@ class jVersionComparator {
       $r = '/^([0-9]+)([a-zA-Z]*|pre|-?dev)([0-9]*)(pre|-?dev)?$/';
       if (count($v) < 2)
         $v[1] = '0';
-      
+
       if (!preg_match($r, $v[0], $m)) {
         return $version;
       }
-      
+
       $version = $m[1];
-      
+
       if (!preg_match($r, $v[1], $m)) {
         return $version.'.0';
       }
-      
+
       return $version.'.'.$m[1];
     }
 
+    /**
+     * create a string representing a version number in a manner that it could
+     * be easily to be compared with an other serialized version. useful to
+     * do comparison in a database for example.
+     * @param int $starReplacement 1 if it should replace by max value, 0 for min value
+     */
+    static public function serializeVersion($version, $starReplacement = 0, $pad=4) {
+        $vers = explode('.', $version);
+        $r = '/^([0-9]+)([a-zA-Z]*|pre|-?dev)([0-9]*)(pre|-?dev)?$/';
+
+        $sver = '';
+
+        foreach ($vers as $k=>$v) {
+            if ($v == '*') {
+                $k--;
+                break;
+            }
+
+            $pm = preg_match($r, $v, $m);
+            if ($pm) {
+                self::normalizeVersionNumber($m);
+
+                $m[1] = str_pad($m[1], ($k > 1 ? 10:3), '0', STR_PAD_LEFT);
+                $m[2] = substr($m[2],0,1); // alpha/beta
+                $m[3] = ($m[3] == '' ? '99': str_pad($m[3], 2, '0', STR_PAD_LEFT)); // alpha/beta number
+                $m[4] = ($m[4] == 'dev'? 'd':'z');
+                if ($k)
+                    $sver.='.';
+                $sver.= $m[1].$m[2].$m[3].$m[4];
+            }
+            else
+                throw new Exception ("bad version number");
+        }
+        for($i=$k+1; $i<$pad; $i++) {
+            if ($i >0)
+                $sver.='.';
+            if ($starReplacement > 0)
+                $sver.= ($i > 1 ? '9999999999':'999').'z99z';
+            else
+                $sver.= ($i > 1 ? '0000000000':'000').'a00a';
+        }
+
+        return $sver;
+    }
 }

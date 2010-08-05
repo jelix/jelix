@@ -68,5 +68,93 @@ class UTjversioncomparatormisc extends UnitTestCase {
         
     }
 
+
+    protected function _compare($v1, $v2) {
+        $v1 = jVersionComparator::serializeVersion($v1);
+        $v2 = jVersionComparator::serializeVersion($v2);
+        if ($v1 == $v2)
+            return 0;
+        if ($v1 < $v2)
+            return -1;
+        return 1;
+    }
+    protected function _comparer($v1, $v2) {
+        $v1 = jVersionComparator::serializeVersion($v1);
+        $v2 = jVersionComparator::serializeVersion($v2,1);
+        if ($v1 == $v2)
+            return 0;
+        if ($v1 < $v2)
+            return -1;
+        return 1;
+    }
+    protected function _comparel($v1, $v2) {
+        $v1 = jVersionComparator::serializeVersion($v1,-1);
+        $v2 = jVersionComparator::serializeVersion($v2);
+        if ($v1 == $v2)
+            return 0;
+        if ($v1 < $v2)
+            return -1;
+        return 1;
+    }
+
+    public function testSerialization() {
+        $this->assertEqual('001z99z.002a99z.0000000000a00a.0000000000a00a', jVersionComparator::serializeVersion('1.2alpha'));
+        $this->assertEqual('001z99z.001z99z.0000000000a00a.0000000000a00a', jVersionComparator::serializeVersion('1.1'));
+        $this->assertEqual('001z99z.001z99z.0000000001z99z.0000000000a00a', jVersionComparator::serializeVersion('1.1.1'));
+        $this->assertEqual('001z99z.001z99z.0000000002z99z.0000000000a00a', jVersionComparator::serializeVersion('1.1.2'));
+        $this->assertEqual('001z99z.000a00a.0000000000a00a.0000000000a00a', jVersionComparator::serializeVersion('1.*'));
+    }
+
+    public function testCompareSerializedVersion() {
+        
+        // 0 = equals
+        // -1 : v1 < v2
+        // 1 : v1 > v2
+        $this->assertEqual(0, $this->_compare('1.0','1.0'));
+        $this->assertEqual(1, $this->_compare('1.1','1.0'));
+        $this->assertEqual(-1, $this->_compare('1.0','1.1'));
+        $this->assertEqual(-1, $this->_compare('1.1','1.1.1'));
+        $this->assertEqual(1, $this->_compare('1.1.2','1.1'));
+        $this->assertEqual(1, $this->_compare('1.2','1.2b'));
+        $this->assertEqual(1, $this->_compare('1.2','1.2a'));
+        $this->assertEqual(1, $this->_compare('1.2','1.2RC'));
+        $this->assertEqual(1, $this->_compare('1.2','1.2bETA'));
+        $this->assertEqual(1, $this->_compare('1.2','1.2alpha'));
+
+        $this->assertEqual(-1, $this->_compare('1.2b','1.2'));
+        $this->assertEqual(-1, $this->_compare('1.2a','1.2'));
+        $this->assertEqual(-1, $this->_compare('1.2RC','1.2'));
+        $this->assertEqual(-1, $this->_compare('1.2bEta','1.2'));
+        $this->assertEqual(-1, $this->_compare('1.2alpha','1.2'));
+
+        
+        $this->assertEqual(-1, $this->_compare('1.2b1','1.2b2'));
+        $this->assertEqual(-1, $this->_compare('1.2B1','1.2b2'));
+        $this->assertEqual(1, $this->_compare('1.2b2','1.2b1'));
+        $this->assertEqual(1, $this->_compare('1.2b2','1.2b2-dev'));
+        $this->assertEqual(-1, $this->_compare('1.2b2-dev','1.2b2'));
+        $this->assertEqual(-1, $this->_compare('1.2b2-dev.2324','1.2b2'));
+        $this->assertEqual(0, $this->_compare('1.2b2pre','1.2b2-dev'));
+        $this->assertEqual(1, $this->_compare('1.2b2pre.4','1.2b2-dev'));
+        $this->assertEqual(-1, $this->_compare('1.2b2pre.4','1.2b2-dev.9'));
+        $this->assertEqual(-1, $this->_compare('1.2b2pre','1.2b2-dev.9'));
+        $this->assertEqual(-1, $this->_compare('1.2RC1','1.2RC2'));
+        $this->assertEqual(0, $this->_compare('1.2.3a1pre','1.2.3a1-dev'));
+        
+        $this->assertEqual(-1, $this->_compare('1.2RC-dev','1.2RC'));
+        $this->assertEqual(1, $this->_compare('1.2RC','1.2RC-dev'));
+
+        $this->assertEqual(0, $this->_compare('1.*','1'));
+        $this->assertEqual(-1, $this->_comparel('1.1.*','1.1.1'));
+        $this->assertEqual(-1, $this->_comparer('1.1.2','1.1.*'));
+        $this->assertEqual(0, $this->_comparel('1.1.*','1.1'));
+        $this->assertEqual(-1, $this->_comparer('1.1','1.1.*'));
+        $this->assertEqual(-1, $this->_compare('1.1.*','1.2'));
+        $this->assertEqual(-1, $this->_compare('1.1','1.2.*'));
+        
+        $this->assertEqual(-1, $this->_comparer('1.1','*'));
+        $this->assertEqual(-1, $this->_comparel('*','1.1'));
+        
+    }
 }
 
