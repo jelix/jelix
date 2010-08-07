@@ -186,6 +186,9 @@ dsdenes
  - added a native modifier in jtpl (#845)
  - little improvement in formdatafull (#847)
 
+ Thibaud Fabre (aka fatbeard)
+  - little improvements to ldap auth driver (#1145)
+
 F. Fernandez (aka e-media)
  - little improvement in jLog.(#344)
  - little improvement in formcontrols plugin (#353)
