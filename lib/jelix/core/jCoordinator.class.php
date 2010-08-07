@@ -7,7 +7,7 @@
 * @copyright    2005-2010 laurent Jouanneau
 * @copyright    2007 Thibault PIRONT
 * @copyright    2008 Julien Issler
-* @copyright    2008 Dominique Papin
+* @copyright    2008-2010 Dominique Papin
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -376,7 +376,7 @@ class jCoordinator {
             @error_log($messageLog,3, JELIX_APP_LOG_PATH.$conf['logFile']);
         }
         if(strpos($toDo , 'MAIL') !== false && $gJConfig){
-            error_log(wordwrap($messageLog,70),1, $conf['email'], $conf['emailHeaders']);
+            error_log(wordwrap($messageLog,70),1, $conf['email'], str_replace(array('\\r','\\n'),array("\r","\n"),$conf['emailHeaders']));
         }
         if(strpos($toDo , 'SYSLOG') !== false){
             error_log($messageLog,0);
