@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Julien Issler
-* @contributor Thomas
-* @copyright   2008 Julien Issler, 2009 Thomas
+* @contributor Thomas, Zeffyr
+* @copyright   2008 Julien Issler, 2009 Thomas, 2010 Zeffyr
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -25,7 +25,9 @@ class jFormsControlDatetime extends jFormsControlDate {
 
     function setValueFromRequest($request) {
         $value = $request->getParam($this->ref,'');
-        if($value['year'] === '' && $value['month'] === '' && $value['day'] === '' && $value['hour'] === '' && $value['minutes'] === '' && (!$this->enableSeconds || $value['seconds'] === ''))
+        if(!is_array($value))
+            $this->setData('');
+        elseif($value['year'] === '' && $value['month'] === '' && $value['day'] === '' && $value['hour'] === '' && $value['minutes'] === '' && (!$this->enableSeconds || $value['seconds'] === ''))
             $this->setData('');
         else{
             if($value['seconds']==='')

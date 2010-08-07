@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Julien Issler
-* @contributor Thomas
-* @copyright   2008 Julien Issler, 2009 Thomas
+* @contributor Thomas, Zeffyr
+* @copyright   2008 Julien Issler, 2009 Thomas, 2010 Zeffyr
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -24,7 +24,8 @@ class jFormsControlDate extends jFormsControl {
 
     function setValueFromRequest($request) {
         $value = $request->getParam($this->ref,'');
-        $value = $value['year'].'-'.$value['month'].'-'.$value['day'];
+        if (is_array($value))
+            $value = $value['year'].'-'.$value['month'].'-'.$value['day'];
         if($value == '--')
             $value = '';
         $this->setData($value);

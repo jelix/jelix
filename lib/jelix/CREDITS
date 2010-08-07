@@ -281,6 +281,11 @@ Philippe Schelte (aka dubphil)
 Warren Seine (aka SooW)
  - <script /> tags don't end with a newline (#536)
 
+Brice Tence (aka brayce/bricet)
+ - small testapp bug solved about missing tables (#1064)
+ - fixed bug in jInstallChecker (#1087)
+ - introduced optional jMinifier for jResponseHtml for JS/CSS concatenation and minification (#860)
+
 Thomas
  - fixed bugs in jDao (#576, #643)
  - jDaoFactoryBase::countBy : allowing to do count on distinct fields (#580)
@@ -307,10 +312,8 @@ Sylvain de Vathaire (aka sylvain261)
  - jCache (#540)
  - additional generated events by jAuth (#1051)
 
-Brice Tence (aka brayce/bricet)
- - small testapp bug solved about missing tables (#1064)
- - fixed bug in jInstallChecker (#1087)
- - introduced optional jMinifier for jResponseHtml for JS/CSS concatenation and minification (#860)
+Zeffyr
+  - fixed jFormsControlDate and jFormsControlDatetime (#1139)
 
 Thanks for all users, especially those who reported bugs. :-)
 
