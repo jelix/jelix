@@ -197,8 +197,9 @@ $this->dump('!!!!! value de n  pas ok');*/
             case 'string':
                 $ok = $this->assertIsA($value,'string', $name.': not a string'.$errormessage);
                 if(!$ok) return false;
-                if(isset($xml['value']))
-                    return $this->assertEqual($value, (string)$xml['value'],$name.': bad value. %s'.$errormessage);
+                if(isset($xml['value'])){
+                    return $this->assertEqualOrDiff($value, (string)$xml['value'],$name.': bad value. %s'.$errormessage);
+                }
                 else
                     return true;
             case 'int':

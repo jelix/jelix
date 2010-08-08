@@ -15,9 +15,9 @@
 class bundleTest extends jBundle {
 
     public function readProperties($fichier){
-        $this->_loadResources($fichier,'foo');
-        if(isset($this->_strings['foo']))
-            return $this->_strings['foo'];
+        $this->_loadResources($fichier,'UTF-8');
+        if(isset($this->_strings['UTF-8']))
+            return $this->_strings['UTF-8'];
         else return null;
     }
 
@@ -39,8 +39,8 @@ class UTjlocale extends jUnitTestCase {
         }
 
     }
-
-    protected $firstlist = array(
+    public function testBundle(){
+        $firstlist = array(
         'test_A.properties' => '<null> </null>',
         'test_B.properties' => '<array>array("aaa"=>"bbb","ccc"=>"")</array>',
         'test_C.properties' => '<array>array("aaa"=>"bbb","ccc"=>"ddd")</array>',
@@ -51,6 +51,11 @@ class UTjlocale extends jUnitTestCase {
                                     <string key="ooo" value="bbbb" />
                                     <string key="bbb" value=" " />
                                     <string key="ddd" value="lorem ipsum &amp;#65; &lt;html&gt; &amp;quote; test &amp;gt;" />
+                                    <string key="ee" value=" "/>
+                                    <string key="ff" value="  # other"/>
+                                    <string key="hh" value="    "/>
+                                    <string key="ii" value="   '.utf8_encode(chr(160)).' bidule"/>
+                                    <string key="jj" value="truc"/>
                                 </array>',
         'test_H.properties' => '<array><string key="module.description" value="Tests unitaires # jelix" /><string key="ooo" value="bbbb" /></array>',
         'test_I.properties' => '<array><string key="module.description" value="Tests unitaires # jelix" /><string key="ooo" value="bbbb" /></array>',
@@ -60,13 +65,11 @@ class UTjlocale extends jUnitTestCase {
                 <string key="text.key3" value="youpa" /></array>',
         );
 
-    public function testBundle(){
-
-        foreach($this->firstlist as $file=>$content){
+        foreach($firstlist as $file=>$content){
             $b = new bundleTest('','');
             try{
                 $strings = $b->readProperties($this->filePath.$file);
-                $this->assertComplexIdenticalStr($strings,"<?xml version=\"1.0\"?>\n$content",$file );
+                $this->assertComplexIdenticalStr($strings,"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n$content",$file );
             }catch(Exception $e){
                 $this->fail('test failed because of exception : ['.$e->getCode().'] '.$e->getMessage());
             }

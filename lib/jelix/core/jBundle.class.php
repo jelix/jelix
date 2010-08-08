@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
 * @contributor Julien Issler, Yannick Le Guédart, Dominique Papin
-* @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
 * initial authors : Gerald Croes, Laurent Jouanneau.
@@ -110,6 +110,9 @@ class jBundle {
 
         if (($f = @fopen ($fichier, 'r')) !== false) {
             $utf8Mod = ($charset=='UTF-8')?'u':'';
+            $unbreakablespace = ($charset=='UTF-8')?utf8_encode(chr(160)):chr(160);
+            $escapedChars = array('\#','\n', '\w', '\S', '\s');
+            $unescape = array('#',"\n", ' ', $unbreakablespace, ' ');
             $multiline=false;
             $linenumber=0;
             $key='';
@@ -122,7 +125,7 @@ class jBundle {
                             $multiline= ($match[2] =="\\");
                             if (strlen ($match[1])) {
                                 $sp = preg_split('/(?<!\\\\)\#/', $match[1], -1 ,PREG_SPLIT_NO_EMPTY);
-                                $this->_strings[$charset][$key].=' '.trim(str_replace(array('\#','\n'),array('#',"\n"),$sp[0]));
+                                $this->_strings[$charset][$key].=' '.str_replace($escapedChars,$unescape,trim($sp[0]));
                             } else {
                                 $this->_strings[$charset][$key].=' ';
                             }
@@ -135,18 +138,15 @@ class jBundle {
                         $multiline= ($match[3] =="\\");
                         $sp = preg_split('/(?<!\\\\)\#/', $match[2], -1 ,PREG_SPLIT_NO_EMPTY);
                         if(count($sp)){
-                            $value=trim(str_replace('\#','#',$sp[0]));
-                            if($value == '\w'){
-                                $value = ' ';
-                            }
+                            $value=trim($sp[0]);
                         }else{
                             $value='';
                         }
 
-                        $this->_strings[$charset][$key] = str_replace(array('\#','\n'),array('#',"\n"),$value);
+                        $this->_strings[$charset][$key] = str_replace($escapedChars,$unescape,$value);
 
                     }elseif(preg_match("/^\s*(\#.*)?$/",$line, $match)){
-                        // ok, juste un commentaire
+                        // ok, just a comment
                     }else {
                         throw new Exception('Syntaxe error in file properties '.$fichier.' line '.$linenumber,211);
                     }
