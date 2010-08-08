@@ -397,7 +397,7 @@ class jCoordinator {
                 }
             }
             jSession::end();
-            exit;
+            exit(1);
         }
     }
 
