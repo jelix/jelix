@@ -536,7 +536,7 @@ class jDateTime {
                 }
                 $newDate->{$i} = abs($sub + $newDate->{$i});
                 if (isset($items[$k+1])) {
-                    $date->{$items[$k+1]}--;
+                    $newDate->{$items[$k+1]}--;
                 }
             }
         }  
