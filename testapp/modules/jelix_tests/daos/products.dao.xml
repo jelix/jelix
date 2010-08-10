@@ -25,6 +25,12 @@
                 <lt property="id" expr="$maxId" />
             </conditions>
        </method>
+       <method name="findOrderPrice" type="select">
+           <order>
+                <orderitem property="price" way="asc" />
+           </order>
+       </method>
+
    </factory>
 </dao>
 

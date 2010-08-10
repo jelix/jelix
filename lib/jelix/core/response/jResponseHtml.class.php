@@ -204,7 +204,7 @@ class jResponseHtml extends jResponse {
                 }
                 echo '}else{alert("there are some errors, you should activate Firebug to see them");}</script>';
             }else{
-                echo '<div id="jelixerror" style="position:absolute;left:0px;top:0px;border:3px solid red; background-color:#f39999;color:black;">';
+                echo '<div id="jelixerror" style="position:absolute;left:0px;top:0px;border:3px solid red; background-color:#f39999;color:black;z-index:100;">';
                 echo $this->getFormatedErrorMsg();
                 echo '<p><a href="#" onclick="document.getElementById(\'jelixerror\').style.display=\'none\';return false;">close</a></p></div>';
             }

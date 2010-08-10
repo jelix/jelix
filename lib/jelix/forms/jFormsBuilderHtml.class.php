@@ -553,10 +553,40 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputCheckboxes($ctrl, &$attr) {
-        $i=0;
+    protected function echoCheckboxes($span, $id, &$values, &$attr, &$value, &$i) {
+        foreach($values as $v=>$label){
+            $attr['id'] = $id.$i;
+            $attr['value'] = $v;
+            echo $span;
+            $this->_outputAttr($attr);
+            if((is_array($value) && in_array((string) $v,$value,true)) || ($value === (string) $v))
+                echo ' checked="checked"';
+            echo $this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
+            $i++;
+        }
+    }
+
+    protected function showRadioCheck($ctrl, &$attr, &$value, $span) {
         $id = $this->_name.'_'.$ctrl->ref.'_';
-        $attrs = ' name="'.$ctrl->ref.'[]" id="'.$id;
+        $i=0;
+        $data = $ctrl->datasource->getData($this->_form);
+        if ($ctrl->datasource instanceof jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
+            if (isset($data[''])) {
+                $this->echoCheckboxes($span, $id, $data[''], $attr, $value, $i);
+            }
+            foreach($data as $group=>$values){
+                if ($group === '')
+                    continue;
+                echo '<fieldset><legend>'.htmlspecialchars($group).'</legend>'."\n";
+                $this->echoCheckboxes($span, $id, $values, $attr, $value, $i);
+                echo "</fieldset>\n";
+            }
+        }else{
+            $this->echoCheckboxes($span, $id, $data, $attr, $value, $i);
+        }
+    }
+
+    protected function outputCheckboxes($ctrl, &$attr) {
         $value = $this->_form->getData($ctrl->ref);
         $attr['name'] = $ctrl->ref.'[]';
         unset($attr['title']);
@@ -566,29 +596,11 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
 
         if(is_array($value)){
             $value = array_map(create_function('$v', 'return (string) $v;'),$value);
-            foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                $attr['id'] = $id.$i;
-                $attr['value'] = $v;
-                echo $span;
-                $this->_outputAttr($attr);
-                if(in_array((string) $v,$value,true))
-                    echo ' checked="checked"';
-                echo $this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
-                $i++;
-            }
-        }else{
-            $value = (string) $value;
-            foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                $attr['id'] = $id.$i;
-                $attr['value'] = $v;
-                echo $span;
-                $this->_outputAttr($attr);
-                if((string) $v === $value)
-                    echo ' checked="checked"';
-                echo $this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
-                $i++;
-            }
         }
+        else {
+            $value = (string) $value;
+        }
+        $this->showRadioCheck($ctrl, $attr, $value, $span);
     }
 
     protected function jsCheckboxes($ctrl) {
@@ -599,7 +611,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     protected function outputRadiobuttons($ctrl, &$attr) {
-        $i=0;
         $id = $this->_name.'_'.$ctrl->ref.'_';
         $attr['name'] = $ctrl->ref;
         unset($attr['title']);
@@ -612,15 +623,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
         $value = (string) $value;
         $span ='<span class="jforms-radio jforms-ctl-'.$ctrl->ref.'"><input type="radio"';
-        foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-            $attr['id'] = $id.$i;
-            $attr['value'] = $v;
-            echo $span;
-            $this->_outputAttr($attr);
-            echo ((string) $v===$value?' checked="checked"':''),$this->_endt;
-            echo '<label for="',$this->_name,'_',$ctrl->ref,'_',$i,'">',htmlspecialchars($label),"</label></span>\n";
-            $i++;
-        }
+        $this->showRadioCheck($ctrl, $attr, $value, $span);
     }
 
     protected function jsRadiobuttons($ctrl) {
@@ -628,6 +631,45 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
 
         $this->commonJs($ctrl);
+    }
+
+
+    protected function fillSelect($ctrl, $value) {
+        $data = $ctrl->datasource->getData($this->_form);
+        if ($ctrl->datasource instanceof jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
+            if (isset($data[''])) {
+                foreach($data[''] as $v=>$label){
+                    if(is_array($value))
+                        $selected = in_array((string) $v,$value,true);
+                    else
+                        $selected = ((string) $v===$value);
+                    echo '<option value="',htmlspecialchars($v),'"',($selected?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
+                }
+            }
+            foreach($data as $group=>$values) {
+                if ($group === '')
+                    continue;
+                echo '<optgroup label="'.htmlspecialchars($group).'">';
+                foreach($values as $v=>$label){
+                    if(is_array($value))
+                        $selected = in_array((string) $v,$value,true);
+                    else
+                        $selected = ((string) $v===$value);
+                    echo '<option value="',htmlspecialchars($v),'"',($selected?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
+                }
+                echo '</optgroup>';
+            }
+        }
+        else {
+            foreach($data as $v=>$label){
+                    if(is_array($value))
+                        $selected = in_array((string) $v,$value,true);
+                    else
+                        $selected = ((string) $v===$value);
+                echo '<option value="',htmlspecialchars($v),'"',($selected?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
+            }
+        }
+        
     }
 
     protected function outputMenulist($ctrl, &$attr) {
@@ -647,9 +689,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         if (!$ctrl->required) {
             echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
         }
-        foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-            echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
-        }
+        $this->fillSelect($ctrl, $value);
         echo '</select>';
     }
 
@@ -678,14 +718,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
 
             if(is_array($value)){
                 $value = array_map(create_function('$v', 'return (string) $v;'),$value);
-                foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                    echo '<option value="',htmlspecialchars($v),'"',(in_array((string) $v,$value,true)?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
-                }
+                $this->fillSelect($ctrl, $value);
             }else{
-                $value = (string) $value;
-                foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                    echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
-                }
+                $this->fillSelect($ctrl, (string)$value);
             }
             echo '</select>';
         }else{
@@ -702,9 +737,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             echo '<select';
             $this->_outputAttr($attr);
             echo ">\n";
-            foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                echo '<option value="',htmlspecialchars($v),'"',((string) $v===$value?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
-            }
+            $this->fillSelect($ctrl, $value);
             echo '</select>';
         }
     }

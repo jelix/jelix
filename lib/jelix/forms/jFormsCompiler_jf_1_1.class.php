@@ -321,6 +321,9 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
                 if($controltype == 'submit'){
                     $source[]='$ctrl->standalone=false;';
                 }
+                if (isset($attrs['groupby']) && trim($attrs['groupby']) != '') {
+                    $source[]='$ctrl->datasource->setGroupBy(\''.trim($attrs['groupby']).'\');';
+                }
             }else if(isset($attrs['class'])) {
                 $class = new jSelectorClass($attrs['class']);
                 $source[]='jClasses::inc(\''.$attrs['class'].'\');';
@@ -330,37 +333,54 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
                 if($controltype == 'submit'){
                     $source[]='$ctrl->standalone=false;';
                 }
+                if (isset($attrs['groupby']) && trim($attrs['groupby']) != '') {
+                    $source[]='$ctrl->datasource->setGroupBy(\''.trim($attrs['groupby']).'\');';
+                }
             } else {
                 throw new jException('jelix~formserr.attribute.missing',array('class/dao', 'datasource',$this->sourceFile));
             }
-        }elseif(isset($control->item)){
+        }else{
             // get all <items> and their label|labellocale attributes + their values
-            if($controltype == 'submit'){
+            $source[]='$ctrl->datasource= new jFormsStaticDatasource();';
+            //$source[]='$ctrl->datasource->data = ';
+            $nogroup = '';
+            $groups = array();
+            $selectedvalues = array();
+            foreach($control->children() as $tag=>$elem){
+                if($tag !='item' && $tag !='itemsgroup')
+                    continue;
+                if ($tag == 'item') {
+                    $nogroup .= $this->readItem($elem, $hasSelectedValues, $controltype, $selectedvalues);
+                }
+                else {
+                    $group = '$ctrl->datasource->data[';
+                    if (isset($elem['locale'])) {
+                       $group.="jLocale::get('".(string)$elem['locale']."')]=array(";
+                    } elseif(isset($elem['label'])) {
+                        $group.="'".str_replace("'","\\'",(string)$elem['label'])."']=array(";
+                    } else {
+                        throw new jException('jelix~formserr.attribute.missing',array('locale/label', 'itemsgroup',$this->sourceFile));
+                    }
+                    foreach($elem->item as $item) {
+                        $group.=$this->readItem($item, $hasSelectedValues, $controltype, $selectedvalues);
+                    }
+                    $group .= ');';
+                    $groups[] = $group;
+                }
+            }
+            if (count($groups)) {
+                $source[] = '$ctrl->datasource->data[\'\'] = array('.$nogroup.');';
+                $source[] = implode("\n", $groups);
+                $source[] = '$ctrl->datasource->setGroupBy(true);';
+            }
+            elseif ($nogroup) {
+                $source[]='$ctrl->datasource->data = array('.$nogroup.');';
+            }
+
+            if($controltype == 'submit' && (count($groups) || $nogroup)){
                 $source[]='$ctrl->standalone=false;';
             }
-            $source[]='$ctrl->datasource= new jFormsStaticDatasource();';
-            $source[]='$ctrl->datasource->data = array(';
-            $selectedvalues=array();
-            foreach($control->item as $item){
-                $value ="'".str_replace("'","\\'",(string)$item['value'])."'=>";
-                if(isset($item['locale'])){
-                    $source[] = $value."jLocale::get('".(string)$item['locale']."'),";
-                }elseif( "" != (string)$item){
-                    $source[] = $value."'".str_replace("'","\\'",(string)$item)."',";
-                }else{
-                    $source[] = $value."'".str_replace("'","\\'",(string)$item['value'])."',";
-                }
 
-                if(isset($item['selected'])){
-                    if($hasSelectedValues || $controltype == 'submit'){
-                        throw new jException('jelix~formserr.selected.attribute.not.allowed',$this->sourceFile);
-                    }
-                    if((string)$item['selected']== 'true'){
-                        $selectedvalues[]=(string)$item['value'];
-                    }
-                }
-            }
-            $source[]=");";
             if(count($selectedvalues)){
                 if(count($selectedvalues)>1 &&
                         (($controltype == 'listbox' && isset($control['multiple']) && 'true' != (string)$control['multiple'])
@@ -369,8 +389,27 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
                 }
                 $source[]='$ctrl->defaultValue='.var_export($selectedvalues,true).';';
             }
-        }else{
-            $source[]='$ctrl->datasource= new jFormsStaticDatasource();';
         }
+    }
+    
+    protected function readItem($item, $hasSelectedValues, $controltype, &$selectedvalues) {
+        $value ="'".str_replace("'","\\'",(string)$item['value'])."'=>";
+        if(isset($item['locale'])){
+            $value.="jLocale::get('".(string)$item['locale']."'),";
+        }elseif( "" != (string)$item){
+            $value.="'".str_replace("'","\\'",(string)$item)."',";
+        }else{
+            $value.="'".str_replace("'","\\'",(string)$item['value'])."',";
+        }
+
+        if(isset($item['selected'])){
+            if($hasSelectedValues || $controltype == 'submit'){
+                throw new jException('jelix~formserr.selected.attribute.not.allowed',$this->sourceFile);
+            }
+            if((string)$item['selected']== 'true'){
+                $selectedvalues[]=(string)$item['value'];
+            }
+        }
+        return $value;
     }
 }

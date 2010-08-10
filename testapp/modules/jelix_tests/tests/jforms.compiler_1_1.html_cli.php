@@ -388,6 +388,52 @@ class UTjformsCompiler_1_1 extends jUnitTestCase {
 86=>'<htmleditor ref="contenu" xhtml="true" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Texte</label>
 </htmleditor>',
+87=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1" size="8">
+    <label>Votre nom</label>
+    <item value="aaa">1aa</item>
+    <itemsgroup label="group">
+        <item locale="locb" value="bbb" />
+        <item value="ccc"/>
+    </itemsgroup>
+</listbox>',
+88=>'<menulist ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
+    <label>Votre nom</label>
+    <item value="aaa">1aa</item>
+    <itemsgroup label="group">
+        <item locale="locb" value="bbb" />
+        <item value="ccc"/>
+    </itemsgroup>
+</menulist>',
+89=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1" multiple="false">
+    <label>Votre nom</label>
+    <item value="aaa">1aa</item>
+    <itemsgroup label="group">
+        <item selected="true" locale="locb" value="bbb" />
+        <item value="ccc"/>
+    </itemsgroup>
+</listbox>',
+90=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1" multiple="true">
+    <label>Votre nom</label>
+    <item selected="true" value="aaa">1aa</item>
+    <itemsgroup label="group">
+        <item locale="locb" value="bbb" />
+        <item selected="true" value="ccc"/>
+    </itemsgroup>
+</listbox>',
+91=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1" multiple="true">
+    <label>Votre nom</label>
+    <item value="aaa">1aa</item>
+    <itemsgroup label="group">
+        <item locale="locb" value="bbb" />
+        <item value="ccc"/>
+    </itemsgroup>
+    <selectedvalues> <value>bbb</value><value>aaa</value></selectedvalues>
+</listbox>',
+92=>'<listbox ref="nom" xmlns="http://jelix.org/ns/forms/1.1" multiple="true">
+    <label>Votre nom</label>
+     <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop" criteriafrom="prenom" groupby="category"/>
+ </listbox>',
+
     );
 
     protected $_PhpControls = array(
@@ -486,48 +532,28 @@ $this->addControl($ctrl);',
 25=>'$ctrl= new jFormsControlcheckboxes(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(
-\'aaa\'=>\'1aa\',
-\'bbb\'=>jLocale::get(\'locb\'),
-\'ccc\'=>\'ccc\',
-);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
 26=>'$ctrl= new jFormsControlradiobuttons(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(
-\'aaa\'=>\'1aa\',
-\'bbb\'=>jLocale::get(\'locb\'),
-\'ccc\'=>\'ccc\',
-);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
 27=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->size=8;
 $ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(
-\'aaa\'=>\'1aa\',
-\'bbb\'=>jLocale::get(\'locb\'),
-\'ccc\'=>\'ccc\',
-);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
 28=>'$ctrl= new jFormsControlmenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(
-\'aaa\'=>\'1aa\',
-\'bbb\'=>jLocale::get(\'locb\'),
-\'ccc\'=>\'ccc\',
-);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
 29=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(
-\'aaa\'=>\'1aa\',
-\'bbb\'=>jLocale::get(\'locb\'),
-\'ccc\'=>\'ccc\',
-);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
 30=>'$ctrl= new jFormsControlinput(\'nom\');
 $ctrl->defaultValue=\'toto\';
@@ -536,11 +562,7 @@ $this->addControl($ctrl);',
 31=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(
-\'aaa\'=>\'1aa\',
-\'bbb\'=>jLocale::get(\'locb\'),
-\'ccc\'=>\'ccc\',
-);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->defaultValue=array (
   0 => \'aaa\',
 );
@@ -548,11 +570,7 @@ $this->addControl($ctrl);',
 32=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(
-\'aaa\'=>\'1aa\',
-\'bbb\'=>jLocale::get(\'locb\'),
-\'ccc\'=>\'ccc\',
-);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->defaultValue=array (
   0 => \'aaa\',
   1 => \'ccc\',
@@ -563,22 +581,14 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue=array(\'aaa\');
 $ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(
-\'aaa\'=>\'1aa\',
-\'bbb\'=>jLocale::get(\'locb\'),
-\'ccc\'=>\'ccc\',
-);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
 34=>'$ctrl= new jFormsControllistbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue= array(\'bbb\',\'aaa\',);
 $ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(
-\'aaa\'=>\'1aa\',
-\'bbb\'=>jLocale::get(\'locb\'),
-\'ccc\'=>\'ccc\',
-);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
 35=>'$ctrl= new jFormsControlinput(\'nom\');
@@ -638,13 +648,9 @@ $ctrl->standalone=false;
 $this->addControl($ctrl);',
 46=>'$ctrl= new jFormsControlsubmit(\'validation\');
 $ctrl->label=\'Type de validation\';
-$ctrl->standalone=false;
 $ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(
-\'aaa\'=>\'1aa\',
-\'bbb\'=>jLocale::get(\'locb\'),
-\'ccc\'=>\'ccc\',
-);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->standalone=false;
 $this->addControl($ctrl);',
 47=>'$ctrl= new jFormsControlupload(\'nom\');
 $ctrl->label=\'Votre nom\';
@@ -859,6 +865,58 @@ $this->addControl($ctrl);',
 86=>'$ctrl= new jFormsControlhtmleditor(\'contenu\');
 $ctrl->datatype= new jDatatypeHtml(true, true);
 $ctrl->label=\'Texte\';
+$this->addControl($ctrl);',
+87=>'$ctrl= new jFormsControllistbox(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->size=8;
+$ctrl->datasource= new jFormsStaticDatasource();
+$ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->setGroupBy(true);
+$this->addControl($ctrl);',
+88=>'$ctrl= new jFormsControlmenulist(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource= new jFormsStaticDatasource();
+$ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->setGroupBy(true);
+$this->addControl($ctrl);',
+89=>'$ctrl= new jFormsControllistbox(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource= new jFormsStaticDatasource();
+$ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->setGroupBy(true);
+$ctrl->defaultValue=array (
+  0 => \'bbb\',
+);
+$this->addControl($ctrl);',
+90=>'$ctrl= new jFormsControllistbox(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource= new jFormsStaticDatasource();
+$ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->setGroupBy(true);
+$ctrl->defaultValue=array (
+  0 => \'aaa\',
+  1 => \'ccc\',
+);
+$ctrl->multiple=true;
+$this->addControl($ctrl);',
+91=>'$ctrl= new jFormsControllistbox(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->defaultValue= array(\'bbb\',\'aaa\',);
+$ctrl->datasource= new jFormsStaticDatasource();
+$ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->setGroupBy(true);
+$ctrl->multiple=true;
+$this->addControl($ctrl);',
+92=>'$ctrl= new jFormsControllistbox(\'nom\');
+$ctrl->label=\'Votre nom\';
+$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,\'prenom\');
+$ctrl->datasource->setGroupBy(\'category\');
+$ctrl->multiple=true;
 $this->addControl($ctrl);',
 
 );

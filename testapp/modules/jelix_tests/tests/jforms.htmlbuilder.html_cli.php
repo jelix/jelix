@@ -338,6 +338,26 @@ jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
+        $ctrl->datasource= new jFormsStaticDatasource();
+        $ctrl->datasource->setGroupBy(true);
+        $ctrl->datasource->data = array(
+            ''=>array('10'=>'foo'),
+            'toto'=>array('11'=>'bar',
+            '23'=>'baz',)
+        );
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.$this->formname.'_choixsimple_0">foo</label></span>'."\n";
+        $result.="<fieldset><legend>toto</legend>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_1" class="jforms-ctrl-checkboxes" value="11" checked="checked"/><label for="'.$this->formname.'_choixsimple_1">bar</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.$this->formname.'_choixsimple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.$this->formname.'_choixsimple_2">baz</label></span>'."\n";
+        $result.="</fieldset>\n\n";
+        $this->assertEqualOrDiff($result, $out);
+        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'choixsimple[]\', \'Vos choix\');
+c.errInvalid=\'"Vos choix" field is invalid\';
+jFormsJQ.tForm.addControl(c);
+', $this->builder->getJsContent());
+
+
         $ctrl= new jFormsControlcheckboxes('choixmultiple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Vos choix';
@@ -554,6 +574,39 @@ c.errInvalid=\'"Votre choix" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
+
+
+        $ctrl->datasource->setGroupBy(true);
+        $ctrl->datasource->data = array(
+            'you'=>array(
+                '10'=>'foo',
+                '11'=>'bar',),
+            ''=>array(
+                '23'=>'baz',),
+        );
+
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="menulist1" id="'.$this->formname.'_menulist1" class="jforms-ctrl-menulist" size="1">'."\n";
+        $result.='<option value=""></option>'."\n";
+        $result.='<option value="23">baz</option>'."\n<optgroup label=\"you\">";
+        $result.='<option value="10">foo</option>'."\n";
+        $result.='<option value="11" selected="selected">bar</option>'."\n</optgroup>";
+        $result.='</select>'."\n";
+
+        $this->assertEqualOrDiff($result, $out);
+        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+c.errInvalid=\'"Votre choix" field is invalid\';
+jFormsJQ.tForm.addControl(c);
+', $this->builder->getJsContent());
+
+        $ctrl->datasource->setGroupBy(false);
+        $ctrl->datasource->data = array(
+            '10'=>'foo',
+            '11'=>'bar',
+            '23'=>'baz',
+        );
+
+
         $ctrl->setReadOnly(true);
         $ctrl->hint='ceci est un tooltip';
         ob_start();$this->builder->outputControlLabel($ctrl);$out = ob_get_clean();
@@ -605,6 +658,43 @@ c.errInvalid=\'"Votre choix" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
+        $records = array(
+            array('id'=>'10', 'name'=>'foo', 'price'=>'15'),
+            array('id'=>'11', 'name'=>'bar', 'price'=>'54'),
+            array('id'=>'23', 'name'=>'baz', 'price'=>'97'),
+            array('id'=>'42', 'name'=>'bidule', 'price'=>'54'),
+            array('id'=>'12', 'name'=>'truc', 'price'=>'97'),
+            array('id'=>'27', 'name'=>'zoulou', 'price'=>'0'),
+        );
+        $this->insertRecordsIntoTable('product_test', array('id','name','price'), $records, true);
+
+        $ctrl->setReadOnly(false);
+        $ctrl->hint='';
+        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findOrderPrice','name','id');
+        $ctrl->datasource->setGroupBy('price');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="menulist1" id="'.$this->formname.'_menulist1" class="jforms-ctrl-menulist" size="1">'."\n";
+        $result.='<option value="" selected="selected"></option>'."\n";
+        $result.='<optgroup label="0"><option value="27">zoulou</option>'."\n";
+        $result.='</optgroup><optgroup label="15"><option value="10">foo</option>'."\n";
+        $result.='</optgroup><optgroup label="54"><option value="11">bar</option>'."\n";
+        $result.='<option value="42">bidule</option>'."\n";
+        $result.='</optgroup><optgroup label="97"><option value="23">baz</option>'."\n";
+        $result.='<option value="12">truc</option>'."\n";
+        $result.='</optgroup></select>'."\n";
+        $this->assertEqualOrDiff($result, $out);
+        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+c.errInvalid=\'"Votre choix" field is invalid\';
+jFormsJQ.tForm.addControl(c);
+', $this->builder->getJsContent());
+
+
+        $records = array(
+            array('id'=>'10', 'name'=>'foo', 'price'=>'12'),
+            array('id'=>'11', 'name'=>'bar', 'price'=>'54'),
+            array('id'=>'23', 'name'=>'baz', 'price'=>'97'),
+        );
+        $this->insertRecordsIntoTable('product_test', array('id','name','price'), $records, true);
 
         $ctrl->setReadOnly(false);
         $ctrl->hint='';
