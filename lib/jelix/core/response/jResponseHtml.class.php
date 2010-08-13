@@ -157,17 +157,18 @@ class jResponseHtml extends jResponse {
      * @return boolean    true if the generated content is ok
      */
     final public function output(){
+        $this->doAfterActions();
+
         $this->_headSent = 0;
         if($this->_isXhtml && $this->xhtmlContentType && strstr($_SERVER['HTTP_ACCEPT'],'application/xhtml+xml')){
             $this->_httpHeaders['Content-Type']='application/xhtml+xml;charset='.$this->_charset;
         }else{
             $this->_httpHeaders['Content-Type']='text/html;charset='.$this->_charset;
         }
-
         $this->sendHttpHeaders();
         $this->outputDoctype();
         $this->_headSent = 1;
-        $this->doAfterActions();
+        
         if($this->bodyTpl != '')
             $this->body->meta($this->bodyTpl);
         $this->outputHtmlHeader();

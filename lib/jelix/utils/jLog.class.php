@@ -4,7 +4,7 @@
 * @subpackage utils
 * @author     Laurent Jouanneau
 * @contributor F. Fernandez
-* @copyright  2006 Laurent Jouanneau, 2007 F. Fernandez
+* @copyright  2006-2010 Laurent Jouanneau, 2007 F. Fernandez
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -40,22 +40,25 @@ class jLog {
     * @param string $type the log type
     */
     public static function log($message, $type='default'){
+        global $gJCoord;
+        if (!isset($GLOBALS['gJConfig']->logfiles[$type])) {
+            $gJCoord->addLogMsg($message, $type);
+            return;
+        }
         $f = $GLOBALS['gJConfig']->logfiles[$type];
         if ($f[0] == '!') {
-            $GLOBALS['gJCoord']->addLogMsg("log $type: $message", substr($f, 1));
+            $gJCoord->addLogMsg($message, substr($f, 1));
         }
         else {
-            if(!isset($_SERVER['REMOTE_ADDR'])){ // for CLI mode (bug #111)
-                $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-            }
-            $f = str_replace('%ip%', $_SERVER['REMOTE_ADDR'], $f);
+            $ip = $gJCoord->request->getIP();
+            $f = str_replace('%ip%', $ip , $f);
             $f = str_replace('%m%', date("m"), $f);
             $f = str_replace('%Y%', date("Y"), $f);
             $f = str_replace('%d%', date("d"), $f);
             $f = str_replace('%H%', date("H"), $f);
             $sel = new jSelectorLog($f);
 
-            error_log(date ("Y-m-d H:i:s")."\t".$_SERVER['REMOTE_ADDR']."\t$type\t$message\n", 3, $sel->getPath());
+            error_log(date ("Y-m-d H:i:s")."\t".$ip."\t$type\t$message\n", 3, $sel->getPath());
         }
     }
 }

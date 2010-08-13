@@ -294,13 +294,16 @@ class jCoordinator {
             );
         }
 
-        // When we are in cmdline we need to fix the remoteAddr
-        $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
-
         // url params including module and action
-        if ($this->request)
+        if ($this->request) {
             $url = str_replace('array', 'url', var_export($this->request->params, true));
-        else $url = isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'Unknow URI';
+            $remoteAddr = $this->request->getIP();
+        }
+        else {
+            $url = isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'Unknow URI';
+            // When we are in cmdline we need to fix the remoteAddr
+            $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
+        }
 
         // formatting message
         $messageLog = strtr($conf['messageLogFormat'], array(
