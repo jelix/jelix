@@ -6,7 +6,7 @@
 * @contributor Dominique Papin, Julien Issler
 * @copyright   2007-2008 Jouanneau laurent
 * @copyright   2008 Dominique Papin
-* @copyright   2008-2009 Julien Issler
+* @copyright   2008-2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -47,7 +47,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.selectFillUrl=\''.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -65,7 +65,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.selectFillUrl=\''.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -1278,7 +1278,7 @@ jFormsJQ.tForm.addControl(c);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'" enctype="multipart/form-data"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.selectFillUrl=\''.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -1371,7 +1371,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.selectFillUrl=\''.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -1392,7 +1392,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $out = ob_get_clean();
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.selectFillUrl=\'/index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.selectFillUrl=\''.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);

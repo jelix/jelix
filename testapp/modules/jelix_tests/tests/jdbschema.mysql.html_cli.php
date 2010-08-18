@@ -3,8 +3,9 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Julien Issler
 * @copyright   2007 Jouanneau laurent
+* @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -13,18 +14,18 @@ include_once (JELIX_LIB_PATH.'plugins/db/mysql/mysql.dbschema.php');
 
 class UTjDbSchemaMysql extends jUnitTestCase {
 
-    
+
     function testTableList() {
         $db = jDb::getConnection();
         $schema = $db->schema();
-        
+
         $goodList = array('jacl_group', 'jacl_right_values', 'jacl_right_values_group',
                           'jacl_rights', 'jacl_subject', 'jacl_user_group',
                           'jacl2_group','jacl2_user_group','jacl2_subject',
                           'jacl2_rights', 'jlx_user', 'myconfig', 'product_test',
                           'product_tags_test', 'labels_test', 'products', 'jlx_cache',
                           'jsessions', 'testkvdb');
-        
+
         $list = $schema->getTables();
         $tables = array();
         foreach($list as $table) {
@@ -35,7 +36,7 @@ class UTjDbSchemaMysql extends jUnitTestCase {
         sort($tables);
         $this->assertEqual($tables, $goodList);
     }
-    
+
     function testTable() {
         $db = jDb::getConnection();
         $schema = $db->schema();
@@ -46,7 +47,7 @@ class UTjDbSchemaMysql extends jUnitTestCase {
             return;
 
         $this->assertEqual($table->getName(), 'product_test');
-        
+
         $pk = $table->getPrimaryKey();
         $this->assertEqual($pk->columns, array('id'));
 
@@ -130,14 +131,14 @@ class UTjDbSchemaMysql extends jUnitTestCase {
 
         $this->assertComplexIdenticalStr($table->getColumns(), $verif);
     }
-    
-    
-    
+
+
+
     function testCreateTable() {
         $db = jDb::getConnection();
         $schema = $db->schema();
-        
-        
+
+
         $columns = array();
         $col = new jDbColumn('id', 'int', 0, false, null, true);
         $col->autoIncrement = true;
@@ -145,14 +146,14 @@ class UTjDbSchemaMysql extends jUnitTestCase {
         $columns[] = new jDbColumn('name','string',50);
         $columns[] = new jDbColumn('price','double');
         $columns[] = new jDbColumn('promo','boolean');
-        
+
         $table = $schema->createTable('test_prod', $columns, 'id');
-        
+
         $rs = $db->query('SHOW COLUMNS from test_prod');
         while($l = $rs->fetch()) {
             $list[$l->Field] = $l;
         }
-        
+
         $obj = '<object>
         <string property="Type" value="int(11)" />
         <string property="Field" value="id" />
@@ -160,9 +161,9 @@ class UTjDbSchemaMysql extends jUnitTestCase {
         <string property="Extra"  value="auto_increment" />
         <null property="Default" />
         </object>';
-        
+
         $this->assertComplexIdenticalStr($list['id'], $obj);
-        
+
         $obj = '<object>
         <string property="Type" value="varchar(50)" />
         <string property="Field" value="name" />
@@ -170,9 +171,9 @@ class UTjDbSchemaMysql extends jUnitTestCase {
         <string property="Extra"  value="" />
         <null property="Default" />
         </object>';
-        
+
         $this->assertComplexIdenticalStr($list['name'], $obj);
-        
+
         $obj = '<object>
         <string property="Type" value="double" />
         <string property="Field" value="price" />
@@ -180,9 +181,9 @@ class UTjDbSchemaMysql extends jUnitTestCase {
         <string property="Extra"  value="" />
         <null property="Default" />
         </object>';
-        
+
         $this->assertComplexIdenticalStr($list['price'], $obj);
-        
+
         $obj = '<object>
         <string property="Type" value="tinyint(1)" />
         <string property="Field" value="promo" />
@@ -190,7 +191,7 @@ class UTjDbSchemaMysql extends jUnitTestCase {
         <string property="Extra"  value="" />
         <null property="Default" />
         </object>';
-        
+
         $this->assertComplexIdenticalStr($list['promo'], $obj);
     }
 
@@ -203,7 +204,7 @@ class UTjDbSchemaMysql extends jUnitTestCase {
         $schema->dropTable($table);
 
         $dbname = $db->profile['database'];
-        $rs = $db->query ('SHOW TABLES FROM '.$dbname);
+        $rs = $db->query ('SHOW TABLES FROM '.$db->encloseName($dbname));
 
         $col_name = 'Tables_in_'.$dbname;
         $found = false;
