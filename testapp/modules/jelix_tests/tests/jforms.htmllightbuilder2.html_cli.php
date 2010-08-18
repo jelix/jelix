@@ -5,7 +5,7 @@
 * @author      Jouanneau Laurent
 * @contributor Julien Issler
 * @copyright   2007-2008 Jouanneau laurent
-* @copyright   2008-2009 Julien Issler
+* @copyright   2008-2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -180,7 +180,7 @@ jForms.tForm.addControl(c);
         $choice->addChildControl($ctrl,'closed');
 
         $this->form->addControl($choice);
-
+        $choice->setReadOnly(false);
 
         ob_start();$this->builder->outputControlLabel($choice);$out = ob_get_clean();
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_status" id="'.$this->formname.'_status_label">Task Status</label>'."\n", $out);

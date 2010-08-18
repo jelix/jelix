@@ -115,6 +115,32 @@
           </menulist>
       </item>
    </choice>
+
+   <choice ref="choice2">
+      <label>Another choice</label>
+      <item value="choice1">
+          <label>Choice 1</label>
+      </item>
+      <item value="choice2">
+          <label>Choice 2</label>
+          <input ref="choice2readonly" readonly="true">
+              <label>readonly field</label>
+          </input>
+          <datetime ref="choice2datettime">
+            <label>Datetime</label>
+         </datetime>
+          <input ref="choice2datesimplefield" type="date" required="true">
+              <label>another date</label>
+          </input>
+      </item>
+      <item value="choice3">
+          <label>Choice 3</label>
+          <datetime ref="choice2datettimerequired" required="true">
+            <label>Datetime required</label>
+         </datetime>
+      </item>
+   </choice>
+
   <captcha ref="cap">
     <label>Antispam filter</label>
   </captcha>

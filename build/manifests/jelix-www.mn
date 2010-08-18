@@ -10,6 +10,7 @@ cd lib/jelix-www/design
 cd lib/jelix-www/design/jforms/
   calendar.gif
   help.png
+  cross.png
 cd lib/jelix-www/design/images
   logo_jelix_moyen.png
   logo_jelix_100.png

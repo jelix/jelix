@@ -161,7 +161,6 @@ jFormsJQ.tForm.addControl(c);
         $ctrlnom->label='Name';
         $choice->addChildControl($ctrlnom,'assigned');
 
-
         $ctrlprenom= new jFormsControlinput('prenom');
         $ctrlprenom->defaultValue='robert';
         $ctrlprenom->label='Firstname';
@@ -180,7 +179,7 @@ jFormsJQ.tForm.addControl(c);
         $choice->addChildControl($ctrlreason,'closed');
 
         $this->form->addControl($choice);
-
+        $choice->setReadOnly(false);
 
         ob_start();$this->builder->outputControlLabel($choice);$out = ob_get_clean();
         $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_status" id="'.$this->formname.'_status_label">Task Status</label>'."\n", $out);

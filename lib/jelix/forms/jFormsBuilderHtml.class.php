@@ -5,7 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin
 * @copyright   2006-2010 Laurent Jouanneau
-* @copyright   2008 Julien Issler, 2008 Dominique Papin
+* @copyright   2008-2010 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -429,7 +429,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     protected function _outputDateControlSeconds($ctrl, $attr, $value){
         $attr['name'] = $ctrl->ref.'[seconds]';
         $attr['id'] .= 'seconds';
-        if(!$ctrl->enableSeconds) 
+        if(!$ctrl->enableSeconds)
             echo '<input type="hidden" id="'.$attr['id'].'" name="'.$attr['name'].'" value="'.$value.'"'.$this->_endt;
         else if($GLOBALS['gJConfig']->forms['controls.datetime.input'] == 'textboxes') {
             $attr['value'] = $value;
@@ -669,7 +669,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                 echo '<option value="',htmlspecialchars($v),'"',($selected?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
             }
         }
-        
+
     }
 
     protected function outputMenulist($ctrl, &$attr) {
@@ -989,14 +989,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                 if(!$this->_form->isActivated($ref) || $c->type == 'hidden') continue;
                 $displayedControls = true;
                 echo ' <span class="jforms-item-controls">';
-                // we remove readonly status so when a user change the choice and
-                // javascript is deactivated, it can still change the value of the control
-                $ro = $c->isReadOnly();
-                if($ro && !$readonly) $c->setReadOnly(false);
                 $this->outputControlLabel($c);
                 echo ' ';
                 $this->outputControl($c);
-                if($ro) $c->setReadOnly(true);
                 echo "</span>\n";
                 $this->jsContent .="c2.addControl(c, ".$this->escJsStr($itemName).");\n";
             }

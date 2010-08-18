@@ -3,8 +3,9 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Julien Issler
 * @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -51,17 +52,6 @@ class jFormsControlChoice extends jFormsControlGroups {
     function addChildControl($control, $itemValue = '') {
         $this->childControls[$control->ref] = $control;
         $this->items[$itemValue][$control->ref] = $control;
-    }
-
-    function setData($value) {
-        parent::setData($value);
-        // we deactivate controls which are not selected
-        foreach($this->items as $item => $list) {
-            $ro = ($item != $value);
-            foreach($list as $ref=>$ctrl) {
-                $this->form->setReadOnly($ref, $ro);
-            }
-        }
     }
 
     function setValueFromRequest($request) {
