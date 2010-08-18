@@ -11,4 +11,4 @@
 class %%name%% {
 
 %%properties%%
-}\ No newline at end of file
+}

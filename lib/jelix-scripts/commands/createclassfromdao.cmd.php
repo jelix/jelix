@@ -62,6 +62,9 @@ class createclassfromdaoCommand extends JelixScriptCommand {
          * Parsing the dao xml file
          */
         
+        $selector = new jSelectorDao($this->_parameters['module'].'~'.$this->_parameters['daoname'], '');
+        $tools = jDb::getConnection()->tools();
+        
         $doc = new DOMDocument();
         
         if(!$doc->load($sourceDaoPath)){
@@ -71,8 +74,8 @@ class createclassfromdaoCommand extends JelixScriptCommand {
            throw new jException('jelix~daoxml.namespace.wrong',array($sourceDaoPath, $doc->namespaceURI));
         }
         
-        $parser = new jDaoParser();
-        $parser->parse(simplexml_import_dom($doc));
+        $parser = new jDaoParser($selector);
+        $parser->parse(simplexml_import_dom($doc), $tools);
         $properties = $parser->GetProperties();
         
         /*
