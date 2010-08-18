@@ -3,8 +3,9 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Jouanneau Laurent
-* @contributor
+* @contributor Julien Issler
 * @copyright   2007 Jouanneau laurent
+* @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -39,13 +40,13 @@ class UTjlog extends UnitTestCase {
         jLog::log('aaa','test');
         $this->assertTrue(isset($gJCoord->logMessages['response']));
         $this->assertTrue(isset($gJCoord->logMessages['response'][0]));
-        $this->assertTrue(preg_match("/^log test: aaa$/",$gJCoord->logMessages['response'][0]));
+        $this->assertTrue($gJCoord->logMessages['response'][0] == 'aaa');
 
         jLog::log('bbb','test');
         $this->assertTrue(isset($gJCoord->logMessages['response'][0]));
         $this->assertTrue(isset($gJCoord->logMessages['response'][1]));
-        $this->assertTrue(preg_match("/^log test: aaa$/",$gJCoord->logMessages['response'][0]));
-        $this->assertTrue(preg_match("/^log test: bbb$/",$gJCoord->logMessages['response'][1]));
+        $this->assertTrue($gJCoord->logMessages['response'][0] == 'aaa');
+        $this->assertTrue($gJCoord->logMessages['response'][1] == 'bbb');
 
         $gJCoord->logMessages = array();
     }
@@ -61,13 +62,13 @@ class UTjlog extends UnitTestCase {
         jLog::log('aaa','test');
         $this->assertTrue(isset($gJCoord->logMessages['firebug']));
         $this->assertTrue(isset($gJCoord->logMessages['firebug'][0]));
-        $this->assertTrue(preg_match("/^log test: aaa$/",$gJCoord->logMessages['firebug'][0]));
+        $this->assertTrue($gJCoord->logMessages['firebug'][0] == 'aaa');
 
         jLog::log('bbb','test');
         $this->assertTrue(isset($gJCoord->logMessages['firebug'][0]));
         $this->assertTrue(isset($gJCoord->logMessages['firebug'][1]));
-        $this->assertTrue(preg_match("/^log test: aaa$/",$gJCoord->logMessages['firebug'][0]));
-        $this->assertTrue(preg_match("/^log test: bbb$/",$gJCoord->logMessages['firebug'][1]));
+        $this->assertTrue($gJCoord->logMessages['firebug'][0] == 'aaa');
+        $this->assertTrue($gJCoord->logMessages['firebug'][1] == 'bbb');
 
         $gJCoord->logMessages = array();
     }
