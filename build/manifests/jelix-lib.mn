@@ -252,7 +252,7 @@ cd lib/jelix/utils/
 * jDatatype.class.php
   jDateTime.class.php
   jDuration.class.php
-  jFile.class.php
+* jFile.class.php
 * jFilter.class.php
   jHttp.class.php
   jImageModifier.class.php
