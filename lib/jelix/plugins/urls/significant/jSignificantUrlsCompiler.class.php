@@ -153,7 +153,10 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             if (isset($tag['noentrypoint']) && (string)$tag['noentrypoint'] == 'true')
                 $this->defaultUrl->entryPointUrl = '';
 
+            $optionalTrailingSlash = (isset($tag['optionalTrailingSlash']) && $tag['optionalTrailingSlash'] == 'true');
+
             $this->parseInfos = array($this->defaultUrl->isDefault);
+            
 
             // if this is the default entry point for the request type,
             // then we add a rule which will match urls which are not
@@ -224,7 +227,11 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                     $path = '';
                 }
 
-                if (isset($url['optionalTrailingSlash']) && $url['optionalTrailingSlash'] == 'true') {
+                $tempOptionalTrailingSlash = $optionalTrailingSlash;
+                if (isset($url['optionalTrailingSlash'])) {
+                    $tempOptionalTrailingSlash = ($url['optionalTrailingSlash'] == 'true');
+                }
+                if ($tempOptionalTrailingSlash) {
                     if (substr($regexppath, -1) == '/') {
                         $regexppath .= '?';
                     }
@@ -430,6 +437,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         if (!$xml) {
            throw new Exception ('urls.xml: include file '.$file.' of the module '.$uInfo->module.' is not a valid xml file');
         }
+        $optionalTrailingSlash = (isset($xml['optionalTrailingSlash']) && $xml['optionalTrailingSlash'] == 'true');
 
         foreach ($xml->url as $url) {
             $u = clone $uInfo;
@@ -467,7 +475,11 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                 $path = '';
             }
 
-            if (isset($url['optionalTrailingSlash']) && $url['optionalTrailingSlash'] == 'true') {
+            $tempOptionalTrailingSlash = $optionalTrailingSlash;
+            if (isset($url['optionalTrailingSlash'])) {
+                $tempOptionalTrailingSlash = ($url['optionalTrailingSlash'] == 'true');
+            }
+            if ($tempOptionalTrailingSlash) {
                 if (substr($regexppath, -1) == '/') {
                     $regexppath .= '?';
                 }
