@@ -1,12 +1,13 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
-* @author     Laurent Jouanneau
-* @contributor
-* @copyright  2005-2009 Laurent Jouanneau
+* @package     jelix
+* @subpackage  core
+* @author      Laurent Jouanneau
+* @contributor Julien Issler
+* @copyright   2005-2009 Laurent Jouanneau
+* @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
-* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
@@ -97,7 +98,7 @@ abstract class jResponse {
      * @param string $hcontent value of the header type
      * @param boolean $overwrite false if the value should be set only if it doesn't still exist
      */
-    public function addHttpHeader($htype, $hcontent, $overwrite=true){ 
+    public function addHttpHeader($htype, $hcontent, $overwrite=true){
         if(!$overwrite && isset($this->_httpHeaders[$htype]))
             return;
         $this->_httpHeaders[$htype]=$hcontent;
@@ -123,10 +124,9 @@ abstract class jResponse {
      * send http headers
      */
     protected function sendHttpHeaders(){
-        header("HTTP/1.1 ".$this->_httpStatusCode.' '.$this->_httpStatusMsg);
-        foreach($this->_httpHeaders as $ht=>$hc){
+        header((isset($_SERVER['SERVER_PROTOCOL'])?$_SERVER['SERVER_PROTOCOL']:'HTTP/1.1').' '.$this->_httpStatusCode.' '.$this->_httpStatusMsg);
+        foreach($this->_httpHeaders as $ht=>$hc)
             header($ht.': '.$hc);
-        }
         $this->_httpHeadersSent=true;
         /*
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
