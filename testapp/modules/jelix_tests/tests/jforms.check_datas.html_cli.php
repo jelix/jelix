@@ -61,6 +61,14 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->form->setData('nom','aaqq');
         $this->assertFalse($this->form->check());
 
+        $ctrl->datatype->addFacet('length',null);
+        $ctrl->datatype->addFacet('pattern', '/^[0-9]{1,3}$/');
+        $this->form->setData('nom','a');
+        $this->assertFalse($this->form->check());
+        $this->form->setData('nom','123');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','1234');
+        $this->assertFalse($this->form->check());
 
         $ctrl = new jFormsControlInput('nom');
         $ctrl->datatype=new jDatatypeBoolean();

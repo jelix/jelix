@@ -433,7 +433,9 @@ class UTjformsCompiler_1_1 extends jUnitTestCase {
     <label>Votre nom</label>
      <datasource dao="foo" method="bar" labelproperty="baz" valueproperty="plop" criteriafrom="prenom" groupby="category"/>
  </listbox>',
-
+93=>'<input ref="nom" pattern="/^[0-9]+$/" xmlns="http://jelix.org/ns/forms/1.1">
+    <label>Votre nom</label>
+</input>',
     );
 
     protected $_PhpControls = array(
@@ -918,7 +920,10 @@ $ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\
 $ctrl->datasource->setGroupBy(\'category\');
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
-
+93=>'$ctrl= new jFormsControlinput(\'nom\');
+$ctrl->datatype->addFacet(\'pattern\',\'/^[0-9]+$/\');
+$ctrl->label=\'Votre nom\';
+$this->addControl($ctrl);',
 );
 
     function testPhpControl11(){

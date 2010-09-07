@@ -207,6 +207,16 @@ c.errInvalid=\'"Votre nom" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
+        $ctrl->datatype->addFacet('pattern','/^[a-f]{5}$/');
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $this->assertEqualOrDiff('<input name="input1" id="'.$this->formname.'_input1" class="jforms-ctrl-input" maxlength="5" value="laurent" type="text"/>'."\n", $out);
+        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'input1\', \'Votre nom\');
+c.maxLength = \'5\';
+c.regexp = /^[a-f]{5}$/;
+c.errInvalid=\'"Votre nom" field is invalid\';
+jFormsJQ.tForm.addControl(c);
+', $this->builder->getJsContent());
+
     }
     function testOutputCheckbox(){
         $ctrl= new jFormsControlCheckbox('chk1');

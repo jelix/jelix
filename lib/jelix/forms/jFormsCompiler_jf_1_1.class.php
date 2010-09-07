@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin, Julien Issler
 * @contributor Uriel Corfa Emotic SARL, Thomas, Olivier Demah
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2010 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2007-2008 Dominique Papin
 * @copyright   2007 Emotic SARL
 * @copyright   2008 Julien Issler, 2009 Thomas, 2009 Olivier Demah
@@ -30,6 +30,17 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
         if(isset($xml['allowAnyOrigin']) && $xml['allowAnyOrigin'] == 'true') {
             $source[]='$this->securityLevel=0;';
         }
+    }
+
+    protected function generateInput(&$source, $control, &$attributes) {
+        if(isset($attributes['pattern'])){
+            if(isset($attributes['type']) && $attributes['type'] != 'string'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('pattern','input',$this->sourceFile));
+            }
+            $source[]='$ctrl->datatype->addFacet(\'pattern\',\''.str_replace("'","\\'", $attributes['pattern']).'\');';
+            unset($attributes['pattern']);
+        }
+        return parent::generateInput($source, $control, $attributes);
     }
 
     protected function generateMenulist(&$source, $control, &$attributes) {
@@ -144,6 +155,10 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
         if(isset($attributes['maxlength'])){
             $source[]='$ctrl->datatype->addFacet(\'maxLength\','.intval($attributes['maxlength']).');';
             unset($attributes['maxlength']);
+        }
+        if(isset($attributes['pattern'])){
+            $source[]='$ctrl->datatype->addFacet(\'pattern\',\''.str_replace("'","\\'", $attributes['pattern']).'\');';
+            unset($attributes['pattern']);
         }
         return parent::generateSecret($source, $control, $attributes);
     }

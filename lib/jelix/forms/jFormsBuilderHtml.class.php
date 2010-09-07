@@ -302,6 +302,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $minl= $ctrl->datatype->getFacet('minLength');
         if($minl !== null)
             $this->jsContent .="c.minLength = '$minl';\n";
+        $re = $ctrl->datatype->getFacet('pattern');
+        if($re !== null)
+            $this->jsContent .="c.regexp = ".$re.";\n";
 
         $this->commonJs($ctrl);
     }
@@ -820,7 +823,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $minl= $ctrl->datatype->getFacet('minLength');
         if($minl !== null)
             $this->jsContent .="c.minLength = '$minl';\n";
-
+        $re = $ctrl->datatype->getFacet('pattern');
+        if($re !== null)
+            $this->jsContent .="c.regexp = ".$re.";\n";
         $this->commonJs($ctrl);
     }
 
