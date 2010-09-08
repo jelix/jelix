@@ -4,6 +4,7 @@
 * @subpackage  dao
 * @author      Croes Gérald, Laurent Jouanneau
 * @contributor Laurent Jouanneau
+* @contributor Olivier Demah 2010
 * @copyright   2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDAODefinitionV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -54,6 +55,9 @@ class jDaoMethod {
         if (isset ($method->parameter)){
             foreach ($method->parameter as $param){
                 $attr = $param->attributes();
+                if (strpos($attr['name'],'$') !== false) {
+                    throw new jDaoXmlException($this->_parser->selector,'method.parameter.invalidname',array($method->name,$attr['name']));
+                }
                 if (!isset ($attr['name'])){
                     throw new jDaoXmlException ($this->_parser->selector, 'method.parameter.unknowname', array($this->name));
                 }

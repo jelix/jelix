@@ -19,6 +19,7 @@ Olivier Demah (aka FoxMaSk)
  - tpl plugin gravatar (#993) 
  - meta supplementaires (author,generator) (#1063)
  - install jacl2db sans prefix de table (#1119)
+ - $ should not be allowed in parameters of dao methods  (#1129)
 
 Mickaël Fradin (aka mike/kewix)
  - improvements in the jtpl plugin: formcontrols (#223)
