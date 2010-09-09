@@ -333,6 +333,10 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
 
                 $source[]='$ctrl->datasource = new jFormsDaoDatasource(\''.$attrs['dao'].'\',\''.
                                 $attrs['method'].'\',\''.$attrs['labelproperty'].'\',\''.$daovalue.'\''.$profile.$criteria.$labelSeparator.');';
+                if(isset($attrs['labelmethod'])) {
+                    $source[]='$ctrl->datasource->labelMethod=\''.$attrs['labelmethod'].'\';';
+                }
+
                 if($controltype == 'submit'){
                     $source[]='$ctrl->standalone=false;';
                 }

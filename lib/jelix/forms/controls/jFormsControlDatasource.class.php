@@ -28,12 +28,19 @@ abstract class jFormsControlDatasource extends jFormsControl {
         if(is_array($value)){
             $labels = array();
             foreach($value as $val){
-                $labels[$val]=$this->datasource->getLabel($val);
+                $labels[$val] = $this->_getLabel($val);
             }
             return $labels;
         }else{
-            return $this->datasource->getLabel($value);
+            return $this->_getLabel($value);
         }
+    }
+
+    protected function _getLabel($value){
+        if ($this->datasource instanceof jIFormsDatasource2)
+            return $this->datasource->getLabel2($value, $this->form);
+        else
+            return $this->datasource->getLabel($value);
     }
 }
 

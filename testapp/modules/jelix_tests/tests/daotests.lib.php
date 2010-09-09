@@ -29,6 +29,10 @@ class fakejSelectorDao extends jSelectorDao {
 
 class testMysqlDaoGenerator extends mysqlDaoBuilder {
 
+    function GetPkFields() {
+        return $this->_getPrimaryFieldsList();
+    }
+
     function GetPropertiesBy ($captureMethod){
         return $this->_getPropertiesBy ($captureMethod);
     }

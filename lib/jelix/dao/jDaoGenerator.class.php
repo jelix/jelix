@@ -102,12 +102,12 @@ class jDaoGenerator {
 
         $this->buildFromWhereClause();
         $this->sqlSelectClause   = $this->buildSelectClause();
-        
+
         $tables            = $this->_dataParser->getTables();
-        $pkFields          = $this->_getPropertiesBy('PkFields');
+        $pkFields          = $this->_getPrimaryFieldsList();
         $this->tableRealName    = $tables[$this->_dataParser->getPrimaryTable()]['realname'];
         $this->tableRealNameEsc = $this->_encloseName('\'.$this->_conn->prefixTable(\''.$this->tableRealName.'\').\'');
-        
+
         $sqlPkCondition    = $this->buildSimpleConditions($pkFields);
         if ($sqlPkCondition != '') {
             $sqlPkCondition= ($this->sqlWhereClause !='' ? ' AND ':' WHERE ').$sqlPkCondition;
@@ -654,6 +654,23 @@ class jDaoGenerator {
         return $this->_writeFieldsInfoWith ('name', $start, $end, $beetween, $using);
     }
 
+    protected function _getPrimaryFieldsList() {
+        $tables            = $this->_dataParser->getTables();
+        $pkFields          = array();
+
+        $primTable = $tables[$this->_dataParser->getPrimaryTable()];
+        $props  = $this->_dataParser->getProperties();
+        // we want to have primary keys as the same order indicated into primarykey attr
+        foreach($primTable['pk'] as $pkname) {
+            foreach($primTable['fields'] as $f){
+                if ($props[$f]->fieldName == $pkname) {
+                    $pkFields[$props[$f]->name] = $props[$f];
+                    break;
+                }
+            }
+        }
+        return $pkFields;
+    }
 
     /**
     * gets fields that match a condition returned by the $captureMethod
@@ -669,10 +686,6 @@ class jDaoGenerator {
             }
         }
         return $result;
-    }
-
-    protected function _capturePkFields(&$field){
-        return ($field->table == $this->_dataParser->getPrimaryTable()) && $field->isPK;
     }
 
     protected function _capturePrimaryFieldsExcludeAutoIncrement(&$field){

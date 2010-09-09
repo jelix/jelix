@@ -28,6 +28,8 @@ interface jIFormsDatasource {
 
     /**
      * Return the label corresponding to the given key
+     * if the class implements also jIFormsDatasource2,
+     * you must not call getLabel but getLabel2
      * @param string $key the key
      * @return string the label
      */
@@ -55,6 +57,16 @@ interface jIFormsDatasource2 extends jIFormsDatasource {
      * @param string $group the group parameter
      */
     public function setGroupBy($group);
+
+    /**
+     * Return the label corresponding to the given key.
+     * It replace getLabel so it should be called instead of getLabel.
+     * @param string $key the key
+     * @param jFormsBase $form  the form
+     * @return string the label
+     */
+    public function getLabel2($key, $form);
+
 }
 
 
@@ -74,6 +86,10 @@ class jFormsStaticDatasource implements jIFormsDatasource2 {
 
     public function getData($form){
         return $this->data;
+    }
+
+    public function getLabel2($key, $form) {
+        return $this->getLabel($key);
     }
 
     public function getLabel($key){
@@ -109,6 +125,7 @@ class jFormsDaoDatasource implements jIFormsDatasource2 {
     protected $method;
     protected $labelProperty = array();
     protected $labelSeparator;
+    public $labelMethod;
     protected $keyProperty;
     protected $profile;
 
@@ -171,15 +188,35 @@ class jFormsDaoDatasource implements jIFormsDatasource2 {
         return $result;
     }
 
-    public function getLabel($key){
+    public function getLabel($key) {
+        throw new Exception("should not be called");
+    }
+
+    public function getLabel2($key, $form){
         if($this->dao === null)
             $this->dao = jDao::get($this->selector, $this->profile);
-        $rec = $this->dao->get($key);
+        if ($this->labelMethod)
+            $method = $this->labelMethod;
+        else
+            $method = 'get';
+
+        if ($this->criteria !== null) {
+            $rec = call_user_func_array( array($this->dao, $method), array($key, $this->criteria));
+        } else if ($this->criteriaFrom !== null) {
+            $args = array($key) ;
+            foreach( (array)$this->criteriaFrom as $criteria ) {
+              array_push($args, $form->getData($criteria));
+            }
+            $rec = call_user_func_array( array($this->dao, $method), $args);
+        } else {
+            $rec = $this->dao->{$method}($key);
+        }
         if ($rec) {
             return $this->buildLabel($rec);
         }
-        else
+        else {
             return null;
+        }
     }
 
     protected function buildLabel($rec) {

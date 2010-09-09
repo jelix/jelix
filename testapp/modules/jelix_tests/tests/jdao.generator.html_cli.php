@@ -464,7 +464,7 @@ class UTDao_generator extends jUnitTestCase {
         $parser->parse(simplexml_load_string($doc), $this->_tools);
         $generator = new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
 
-        $pkFields=$generator->GetPropertiesBy('PkFields');
+        $pkFields=$generator->GetPkFields();
         $this->assertTrue(count($pkFields) ==1);
         $this->assertTrue(isset($pkFields['id_aclgrp']));
 
