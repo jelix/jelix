@@ -310,7 +310,8 @@ abstract class jFormsBase {
      * @see jDao
      */
     public function saveToDao($daoSelector, $key = null, $dbProfile=''){
-        extract($this->prepareDaoFromControls($daoSelector,$key,$dbProfile));
+        $results = $this->prepareDaoFromControls($daoSelector,$key,$dbProfile);
+        extract($results); //use a temp variable to avoid notices
         if($toInsert){
             // todo : what about updating the formId with the Pk ?
             $dao->insert($daorec);

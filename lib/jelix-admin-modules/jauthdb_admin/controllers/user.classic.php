@@ -196,8 +196,8 @@ class userCtrl extends jController {
         }
         $evresp = array();
         if($form->check() && !jEvent::notify('jauthdbAdminCheckUpdateForm', array('form'=>$form, 'himself'=>true))->inResponse('check', false, $evresp)){
-            extract($form->prepareDaoFromControls($this->dao,$id,$this->dbProfile), 
-                EXTR_PREFIX_ALL, "form");
+            $results = $form->prepareDaoFromControls($this->dao,$id,$this->dbProfile);
+            extract($results, EXTR_PREFIX_ALL, "form");
             // we call jAuth instead of using jDao, to allow jAuth to do
             // all process, events...
             jAuth::updateUser($form_daorec);
