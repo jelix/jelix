@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://jelix.org/ns/project/1.0">
     <info id="%%default_id%%" name="%%appname%%" createdate="%%createdate%%">
-        <version stability="pre-alpha" date="">0.1pre</version>
+        <version>0.1pre</version>
         <label lang="%%default_locale%%">%%appname%%</label>
         <description lang="%%default_locale%%"></description>
         <license URL="%%default_license_url%%">%%default_license%%</license>
