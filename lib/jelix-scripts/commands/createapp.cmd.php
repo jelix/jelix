@@ -191,12 +191,12 @@ class createappCommand extends JelixScriptCommand {
             if(!$this->getOption('-nodefaultmodule') && $moduleok){
                 $agcommand = jxs_load_command('createctrl');
                 $options = array('-cmdline'=>true);
-                $agcommand->init($options,array('module'=>$GLOBALS['APPNAME'], 'name'=>'default','method'=>'index'));
+                $agcommand->init($options,array('module'=>$param['modulename'], 'name'=>'default','method'=>'index'));
                 $agcommand->run();
             }
             $agcommand = jxs_load_command('createentrypoint');
             $options = array('-type'=>'cmdline');
-            $parameters = array('name'=>$GLOBALS['APPNAME']);
+            $parameters = array('name'=>$param['modulename']);
             $agcommand->init($options, $parameters);
             $agcommand->run();
         }
