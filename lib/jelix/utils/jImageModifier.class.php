@@ -4,8 +4,8 @@
 * @subpackage utils
 * @author      Bastien Jaillot
 * @contributor Dominique Papin, Lepeltier kévin (the author of the original plugin)
-* @contributor geekbay
-* @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay
+* @contributor geekbay, Brunto, Laurent Jouanneau
+* @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay, 2010 Brunto, 2010 Laurent Jouanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -113,16 +113,22 @@ class jImageModifier {
         // generate cache key based on image src and transform params
         $cacheName = md5($chaine).'.'.$ext;
 
-        // paths
-        $cachePath = JELIX_APP_WWW_PATH.'cache/images/'.$cacheName;
-        $srcPath = JELIX_APP_WWW_PATH.$src;
-
-        // uris
+        // paths & uri
         global $gJConfig;
         $www = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'];
-        $www .= $gJConfig->urlengine['basePath'];
-        $cacheUri = $www.'cache/images/'.$cacheName;
-        $srcUri = ((strpos($src,'http://')!==FALSE)?'':$www).$src;
+        $basePath = $gJConfig->urlengine['basePath'];
+        $cachePath = JELIX_APP_WWW_PATH.'cache/images/'.$cacheName;
+        if(strpos($src,$basePath) === 0) {
+            // in the case where the path is constructed with $j_basepath or $j_themepath
+            // in a template
+            $srcPath = JELIX_APP_WWW_PATH.substr($src,strlen($basePath));
+            $srcUri = $www.$src;
+        }
+        else {
+            $srcPath = JELIX_APP_WWW_PATH.$src;
+            $srcUri = $www.$basePath.$src;
+        }
+        $cacheUri = $www.$basePath.'cache/images/'.$cacheName;
 
         // apply transforms if necessary (serve directly or from cache otherwise)
         $pendingTransforms = ($chaine !== $src);
@@ -164,8 +170,20 @@ class jImageModifier {
                        'xpm'=>'image/x-xpixmap', 'xbm'=>'image/x-xbitmap', 'wbmp'=>'image/vnd.wap.wbmp');
 
         global $gJConfig;
-        $srcUri = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'].$src;
-        $srcFs = JELIX_APP_WWW_PATH.$src;
+        $srcUri = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'];
+
+        $basePath = $gJConfig->urlengine['basePath'];
+        $cachePath = JELIX_APP_WWW_PATH.'cache/images/'.$cacheName;
+        if(strpos($src,$basePath) === 0) {
+            // in the case where the path is constructed with $j_basepath or $j_themepath
+            // in a template
+            $srcFs = JELIX_APP_WWW_PATH. substr($src,strlen($basePath));
+            $srcUri .= $src;
+        }
+        else {
+            $srcFs = JELIX_APP_WWW_PATH.$src;
+            $srcUri .= $basePath.$src;
+        }
 
         $path_parts = pathinfo($srcUri);
         $mimeType = $mimes[strtolower($path_parts['extension'])];

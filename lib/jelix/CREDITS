@@ -162,6 +162,7 @@ Vincent Bonnard
 
 Brunto
  - bug fix in the formdatafull plugin (#1027)
+ - bug fix in jImageModifier (#1161)
 
 Cedric
  - bug fix in jFile::read
