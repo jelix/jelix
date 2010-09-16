@@ -3,7 +3,8 @@
  * @package     jelix
  * @subpackage  jtpl_plugin
  * @author      Olivier Demah
- * @copyright  2009
+ * @contributor Steven Jehannet
+ * @copyright   2009 Olivier Demah, 2010 Steven Jehannet
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -26,7 +27,7 @@ function jtpl_function_html_gravatar($tpl, $email, $params=array()) {
         $params['default'] = null; 
     if ( !array_key_exists('size',$params))
         $params['size'] = 60;
-    if ( ! array_key_exists($params['username']))
+    if ( ! array_key_exists('username',$params))
         $params['username'] = '';
 
     $gravatarUrl = "http://www.gravatar.com/avatar.php?";

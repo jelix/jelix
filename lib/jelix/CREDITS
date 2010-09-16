@@ -163,12 +163,6 @@ Vincent Bonnard
 Brunto
  - bug fix in the formdatafull plugin (#1027)
 
-Catsoup
- - bug fixed in jEvent for multi entry point (#1004)
- - invalid error locale in jMailer class  (#983)
- - meta_html plugin should allow additionnal parameters (#996)
- - fixed issue with history plugin and session (#1068)
-
 Cedric
  - bug fix in jFile::read
 
@@ -222,6 +216,13 @@ Didier Huguet (aka isepman)
 
 Julien Jacottet
  - tpl plugin link_to_remote (#30)
+
+Steven Jehannet (aka Catsoup)
+ - bug fixed in jEvent for multi entry point (#1004)
+ - invalid error locale in jMailer class  (#983)
+ - meta_html plugin should allow additionnal parameters (#996)
+ - fixed issue with history plugin and session (#1068)
+ - fixed issue in the gravatar plugin (#1172)
 
 Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
