@@ -24,15 +24,18 @@ class jConfigCompiler {
     private function __construct (){ }
 
     /**
-     * read the given ini file. Merge it with the content of defaultconfig.ini.php
-     * It also calculates some options. 
+     * read the given ini file, for the current entry point, or for the entrypoint given
+     * in $pseudoScriptName. Merge it with the content of defaultconfig.ini.php
+     * It also calculates some options.
+     * If you are in a CLI script but you want to load a configuration file for a web entry point
+     * or vice-versa, you need to indicate the $pseudoScriptName parameter with the name of the entry point
      * @param string $configFile the config file name
      * @param boolean $allModuleInfo may be true for the installer, which needs all informations
      *                               else should be false, these extra informations are
      *                               not needed to run the application
      * @param boolean $isCli  indicate if the configuration to read is for a CLI script or no
-     *   If you are in a CLI script but you want to load a configuration file for a web entry point
-     *   or vice-versa, you need to indicate the $pseudoScriptName parameter with the name of the entry point
+     * @param string $pseudoScriptName the name of the entry point, relative to the base path,
+     *              corresponding to the readed configuration 
      * @return object an object which contains configuration values
      */
     static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
@@ -83,9 +86,10 @@ class jConfigCompiler {
     }
     
     /**
-     * read the given ini file. Merge it with the content of defaultconfig.ini.php
-     * It also calculates some options. It stores the result in a temporary file
+     * Identical to read(), but also stores the result in a temporary file
      * @param string $configFile the config file name
+     * @param boolean $isCli
+     * @param string $pseudoScriptName
      * @return object an object which contains configuration values
      */
     static public function readAndCache($configFile, $isCli = null, $pseudoScriptName = '') {
@@ -136,6 +140,10 @@ class jConfigCompiler {
 
         $config->_allBasePath = array();
 
+        // retrieve the script path+name.
+        // for cli, it will be the path from the directory were we execute the script (given to the php exec).
+        // for web, it is the path from the root of the url
+
         if ($pseudoScriptName) {
             $config->urlengine['urlScript'] = $pseudoScriptName;
         }
@@ -147,23 +155,24 @@ class jConfigCompiler {
         }
         $lastslash = strrpos ($config->urlengine['urlScript'], '/');
 
+        // now we separate the path and the name of the script, and then the basePath
         if ($isCli) {
             if ($lastslash === false) {
-                $config->urlengine['urlScriptPath'] = getcwd().'/';
+                $config->urlengine['urlScriptPath'] = ($pseudoScriptName? JELIX_APP_PATH.'/scripts/': getcwd().'/');
                 $config->urlengine['urlScriptName'] = $config->urlengine['urlScript'];
             }
             else {
                 $config->urlengine['urlScriptPath'] = getcwd().'/'.substr ($config->urlengine['urlScript'], 0, $lastslash ).'/';
                 $config->urlengine['urlScriptName'] = substr ($config->urlengine['urlScript'], $lastslash+1);
             }
-            $config->urlengine['urlScript'] = getcwd().'/'.$config->urlengine['urlScript'];
-            $basepath = $config->urlengine['basePath'] = $config->urlengine['urlScriptPath'] ;
+            $basepath = $config->urlengine['urlScriptPath'];
             $snp = $config->urlengine['urlScriptName'];
+            $config->urlengine['urlScript'] = $basepath.$snp;
         }
         else {
             $config->urlengine['urlScriptPath'] = substr ($config->urlengine['urlScript'], 0, $lastslash ).'/';
             $config->urlengine['urlScriptName'] = substr ($config->urlengine['urlScript'], $lastslash+1);
-        
+
             $basepath = $config->urlengine['basePath'];
             if ($basepath == '') {
                 // for beginners or simple site, we "guess" the base path
@@ -172,14 +181,21 @@ class jConfigCompiler {
             elseif ($basepath != '/') {
                 if($basepath[0] != '/') $basepath='/'.$basepath;
                 if(substr($basepath,-1) != '/') $basepath.='/';
-    
-                if(strpos($config->urlengine['urlScriptPath'], $basepath) !== 0){
+
+                if ($pseudoScriptName) {
+                    // with pseudoScriptName, we aren't in a true context, we could be in a cli context
+                    // (the installer), and we want the path as when we are in a web context.
+                    // $pseudoScriptName is supposed to be relative to the basePath
+                    $config->urlengine['urlScriptPath'] = substr($basepath,0,-1).$config->urlengine['urlScriptPath'];
+                    $config->urlengine['urlScript'] = $config->urlengine['urlScriptPath'].$config->urlengine['urlScriptName'];
+                }
+                elseif(strpos($config->urlengine['urlScriptPath'], $basepath) !== 0){
                     throw new Exception('Jelix Error: basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$config->urlengine['urlScriptPath']);
                 }
             }
-    
+
             $config->urlengine['basePath'] = $basepath;
-    
+
             if($config->urlengine['jelixWWWPath'][0] != '/')
                 $config->urlengine['jelixWWWPath'] = $basepath.$config->urlengine['jelixWWWPath'];
             if($config->urlengine['jqueryPath'][0] != '/')

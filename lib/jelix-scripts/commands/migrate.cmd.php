@@ -358,12 +358,12 @@ class migrateCommand extends JelixScriptCommand {
 
         $version = $this->firstElementChild($info, 'version');
 
-        if (!$version->hasAttribute('stability')) {
-            $version->setAttribute('stability', 'stable');
-        }
+        $version->removeAttribute('stability');
+        if ($version->getAttribute('date') == '')
+            $version->removeAttribute('date');
         if ($version->textContent == '')
             $version->textContent = '1.0';
-        
+
         return $info;
     }
 
