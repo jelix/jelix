@@ -87,6 +87,16 @@ class wr3xhtml_code extends WikiTagXhtml {
     protected $name='code';
     public $beginTag='@@';
     public $endTag='@@';
+
+    public function getContent(){
+        $code = $this->wikiContentArr[0];
+        return '<code>'.htmlspecialchars($code).'</code>';
+    }
+
+    public function isOtherTagAllowed() {
+        return false;
+    }
+
 }
 
 class wr3xhtml_q extends WikiTagXhtml {

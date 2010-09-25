@@ -5,7 +5,7 @@
  * @package WikiRenderer
  * @subpackage rules
  * @author Laurent Jouanneau
- * @copyright 2003-2006 Laurent Jouanneau
+ * @copyright 2003-2010 Laurent Jouanneau
  * @link http://wikirenderer.berlios.de
  *
  * This library is free software; you can redistribute it and/or
@@ -83,6 +83,13 @@ class wr3dbk_code extends WikiTagXhtml {
     protected $name='code';
     public $beginTag='@@';
     public $endTag='@@';
+    public function getContent(){
+        $code = $this->wikiContentArr[0];
+        return '<code>'.htmlspecialchars($code).'</code>';
+    }
+    public function isOtherTagAllowed() {
+        return false;
+    }
 }
 
 class wr3dbk_q extends WikiTagXhtml {

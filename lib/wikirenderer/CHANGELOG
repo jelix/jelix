@@ -1,5 +1,8 @@
 Changelog of WikiRenderer
 
+Version 3.1.2
+- fixed bug on dokuwiki_to_xhtml rules
+
 Version 3.1.1
 
 - better compatibility with PHP 5.3
