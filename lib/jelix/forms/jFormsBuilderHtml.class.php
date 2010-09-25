@@ -789,7 +789,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlHtml('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         $this->jsTextarea($ctrl, false);
         $engine = $GLOBALS['gJConfig']->htmleditors[$ctrl->config.'.engine.name'];
-        $this->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$this->_name.'_'.$ctrl->ref.'","'.$this->_name.'","'.$ctrl->skin.'","'.$GLOBALS['gJConfig']->locale."\");\n";
+        $this->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$this->_name.'_'.$ctrl->ref.'","'.$this->_name.'","'.$ctrl->skin."\",".$this->jFormsJsVarName.".config);\n";
     }
 
     protected function outputWikieditor($ctrl, &$attr) {

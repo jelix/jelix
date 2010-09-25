@@ -76,10 +76,15 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
     }
 
     protected function outputHeaderScript(){
+        global $gJConfig;
         // no scope into an anonymous js function, because jFormsJQ.tForm is used by other generated source code
         echo '<script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.jUrl::get('jelix~jforms:getListData').'\';
+jFormsJQ.config = {locale:'.$this->escJsStr($gJConfig->locale).
+    ',basePath:'.$this->escJsStr($gJConfig->urlengine['basePath']).
+    ',jqueryPath:'.$this->escJsStr($gJConfig->urlengine['jqueryPath']).
+    ',jelixWWWPath:'.$this->escJsStr($gJConfig->urlengine['jelixWWWPath']).'};
 jFormsJQ.tForm = new jFormsJQForm(\''.$this->_name.'\',\''.$this->_form->getSelector().'\',\''.$this->_form->getContainer()->formId.'\');
 jFormsJQ.tForm.setErrorDecorator(new '.$this->options['errorDecorator'].'());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -108,7 +113,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         if($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate'){
             $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:$GLOBALS['gJConfig']->forms['datepicker'];
-            $this->jsContent .= 'jelix_datepicker_'.$config.'(c,'.$this->escJsStr($GLOBALS['gJConfig']->locale).','.$this->escJsStr($GLOBALS['gJConfig']->urlengine['basePath']).','.$this->escJsStr($GLOBALS['gJConfig']->urlengine['jqueryPath']).");\n";
+            $this->jsContent .= 'jelix_datepicker_'.$config."(c, jFormsJQ.config);\n";
         }
 
         if ($this->isRootControl) $this->jsContent .="jFormsJQ.tForm.addControl(c);\n";
