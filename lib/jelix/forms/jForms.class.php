@@ -152,8 +152,13 @@ class jForms {
     static public function clean($formSel='', $life=86400) {
         if(!isset($_SESSION['JFORMS'])) return;
         if($formSel=='') {
+            $t = time();
             foreach($_SESSION['JFORMS'] as $sel=>$f) {
-                self::clean($sel, $life);
+                // don't call clean itself, see bug #1154
+                foreach($_SESSION['JFORMS'][$sel] as $id=>$cont) {
+                    if($t-$cont->updatetime > $life)
+                        unset($_SESSION['JFORMS'][$sel][$id]);
+                }
             }
         } else {
             // normalize the selector to avoid conflict in session
