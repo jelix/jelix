@@ -9,7 +9,7 @@
 * @contributor Foxmask (#733)
 * @contributor Cedric (fix bug ticket 56)
 * @contributor Julien Issler
-* @copyright   2005-2006 Laurent Jouanneau, 2006 Thiriot Christophe, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Foxmask, 2009-2010 Julien Issler
+* @copyright   2005-2010 Laurent Jouanneau, 2006 Thiriot Christophe, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Foxmask, 2009-2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -141,7 +141,14 @@ class jFile {
         finfo_close($finfo);
         return $type;
 #else
-        return mime_content_type($file);
+        if (function_exists('finfo_open')) { 
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $type = finfo_file($finfo, $file);
+            finfo_close($finfo);
+            return $type;
+        }
+        else
+            return mime_content_type($file);
 #endif
     }
 }
