@@ -31,7 +31,8 @@ if(!function_exists('strptime')){ // existe depuis php 5.1
      * @ignore
      */
     function strptime ( $strdate, $format ){
-        // c'est pas une compatibilité 100% avec strptime de PHP 5.1 mais c'est suffisant pour nos besoins
+        // It's not a full compatibility with strptime of PHP5.1, but it is
+        // enough for our needs
         $plop = array( 'S'=>'tm_sec', 'M'=>'tm_min', 'H'=>'tm_hour',
             'd'=>'tm_mday', 'm'=>'tm_mon', 'Y'=>'tm_year');
 
@@ -276,15 +277,15 @@ class jDateTime {
            case self::ISO8601_FORMAT:
                if($ok=preg_match('/^(\d{4})(?:\-(\d{2})(?:\-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{2}))?)?(Z|([+\-])(\d{2}):(\d{2})))?)?)?$/', $str, $match)){
                     $c = count($match)-1;
-                    $this->year = $match[1];
+                    $this->year = intval($match[1]);
                     if($c<2) break;
-                    $this->month = $match[2];
+                    $this->month = intval($match[2]);
                     if($c<3) break;
-                    $this->day = $match[3];
+                    $this->day = intval($match[3]);
                     if($c<4) break;
-                    $this->hour = $match[4];
-                    $this->minute = $match[5];
-                    if($match[6] != '') $this->second = $match[6];
+                    $this->hour = intval($match[4]);
+                    $this->minute = intval($match[5]);
+                    if($match[6] != '') $this->second = intval($match[6]);
                     if($match[8] != 'Z'){
                         $d = new jDuration(array('hour'=>$match[10],'minute'=>$match[11]));
                         if($match[9] == '+')
@@ -449,12 +450,12 @@ class jDateTime {
     * set date to current datetime
     */
     public function now() {
-        $this->year = date('Y');
-        $this->month = date('m');
-        $this->day = date('d');
-        $this->hour = date('H');
-        $this->minute = date('i');
-        $this->second = date('s');
+        $this->year = intval(date('Y'));
+        $this->month = intval(date('m'));
+        $this->day = intval(date('d'));
+        $this->hour = intval(date('H'));
+        $this->minute = intval(date('i'));
+        $this->second = intval(date('s'));
     }
     
     
