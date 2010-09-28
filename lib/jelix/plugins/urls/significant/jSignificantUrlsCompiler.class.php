@@ -400,6 +400,11 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         return $regexppath;
     }
 
+    /**
+     * register the given url informations
+     * @param significantUrlInfoParsing $u
+     * @param string $path
+     */
     protected function appendUrlInfo($u, $path, $secondaryAction) {
         $cuisel = $u->getFullSel();
         $arr = array(1, $u->entryPointUrl, $u->isHttps, $u->params, $u->escapes, $path, $secondaryAction, $u->statics);
@@ -418,7 +423,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
     /**
      * @param simpleXmlElement $url
-     * @param significantUrlInfoParsing $u
+     * @param significantUrlInfoParsing $uInfo
     */
     protected function readInclude($url, $uInfo) {
 
@@ -467,7 +472,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
             // parse dynamic parameters
             if (isset($url['pathinfo'])) {
-                $path = $pathinfo.'/'.trim((string)$url['pathinfo'],'/');
+                $path = $pathinfo.($pathinfo !='/'?'/':'').trim((string)$url['pathinfo'],'/');
                 $regexppath = $this->extractDynamicParams($url, $path, $u);
             }
             else {
