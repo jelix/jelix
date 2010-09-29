@@ -48,7 +48,7 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
-jFormsJQ.config = {locale:\'en_EN\',basePath:\'/\',jqueryPath:\'/jelix/jquery/\',jelixWWWPath:\'/jelix/\'};
+jFormsJQ.config = {locale:\''.$GLOBALS['gJConfig']->locale.'\',basePath:\''.$GLOBALS['gJConfig']->urlengine['basePath'].'\',jqueryPath:\''.$GLOBALS['gJConfig']->urlengine['jqueryPath'].'\',jelixWWWPath:\''.$GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -67,7 +67,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
-jFormsJQ.config = {locale:\'en_EN\',basePath:\'/\',jqueryPath:\'/jelix/jquery/\',jelixWWWPath:\'/jelix/\'};
+jFormsJQ.config = {locale:\''.$GLOBALS['gJConfig']->locale.'\',basePath:\''.$GLOBALS['gJConfig']->urlengine['basePath'].'\',jqueryPath:\''.$GLOBALS['gJConfig']->urlengine['jqueryPath'].'\',jelixWWWPath:\''.$GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -1291,7 +1291,7 @@ jFormsJQ.tForm.addControl(c);
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'" enctype="multipart/form-data"><script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
-jFormsJQ.config = {locale:\'en_EN\',basePath:\'/\',jqueryPath:\'/jelix/jquery/\',jelixWWWPath:\'/jelix/\'};
+jFormsJQ.config = {locale:\''.$GLOBALS['gJConfig']->locale.'\',basePath:\''.$GLOBALS['gJConfig']->urlengine['basePath'].'\',jqueryPath:\''.$GLOBALS['gJConfig']->urlengine['jqueryPath'].'\',jelixWWWPath:\''.$GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -1385,7 +1385,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
-jFormsJQ.config = {locale:\'en_EN\',basePath:\'/\',jqueryPath:\'/jelix/jquery/\',jelixWWWPath:\'/jelix/\'};
+jFormsJQ.config = {locale:\''.$GLOBALS['gJConfig']->locale.'\',basePath:\''.$GLOBALS['gJConfig']->urlengine['basePath'].'\',jqueryPath:\''.$GLOBALS['gJConfig']->urlengine['jqueryPath'].'\',jelixWWWPath:\''.$GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -1407,7 +1407,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
-jFormsJQ.config = {locale:\'en_EN\',basePath:\'/\',jqueryPath:\'/jelix/jquery/\',jelixWWWPath:\'/jelix/\'};
+jFormsJQ.config = {locale:\''.$GLOBALS['gJConfig']->locale.'\',basePath:\''.$GLOBALS['gJConfig']->urlengine['basePath'].'\',jqueryPath:\''.$GLOBALS['gJConfig']->urlengine['jqueryPath'].'\',jelixWWWPath:\''.$GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
