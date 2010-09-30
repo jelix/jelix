@@ -105,7 +105,7 @@ cssUniqueUrlId = off
 
 
 [error_handling]
-messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
+messageLogFormat = "%date%\t%url\n\t[%code%]\t%msg%\t%file%\t%line%\n"
 logFile = error.log
 email = root@localhost
 emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"

@@ -49,11 +49,11 @@ defaultJformsBuilder = html
 html=myHtmlResponse
 
 [error_handling]
-messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
-logFile = error.log
-email = root@localhost
-emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
-quietMessage="An error occured. Sorry for the inconvenience."
+;messageLogFormat = "%date%\t%url%\n\t[%code%]\t%msg%\t%file%\t%line%\n"
+;logFile = error.log
+;email = root@localhost
+;emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
+;quietMessage="An error occured. Sorry for the inconvenience."
 
 ; keywords you can use: ECHO, ECHOQUIET, EXIT, LOGFILE, SYSLOG, MAIL, TRACE
 default      = ECHO EXIT
@@ -63,8 +63,6 @@ notice       = ECHO
 strict       = ECHO
 ; for exceptions, there is always an implicit EXIT by default
 exception    = ECHO
-
-
 
 [compilation]
 checkCacheFiletime  = on

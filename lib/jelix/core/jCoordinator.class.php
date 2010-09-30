@@ -294,13 +294,14 @@ class jCoordinator {
             );
         }
 
+        $url = isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'Unknow requested URI';
         // url params including module and action
         if ($this->request) {
-            $url = str_replace('array', 'url', var_export($this->request->params, true));
+            $params = str_replace("\n", ' ', var_export($this->request->params, true));
             $remoteAddr = $this->request->getIP();
         }
         else {
-            $url = isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'Unknow URI';
+            $params = isset($_SERVER['QUERY_STRING'])?$_SERVER['QUERY_STRING']:'';
             // When we are in cmdline we need to fix the remoteAddr
             $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
         }
@@ -313,6 +314,7 @@ class jCoordinator {
             '%code%' => $code,
             '%msg%'  => $message,
             '%url%'  => $url,
+            '%params%'=>$params,
             '%file%' => $file,
             '%line%' => $line,
             '\t' =>"\t",
