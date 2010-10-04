@@ -40,3 +40,13 @@ label.jforms-error, span.jforms-error {font-style:italic; color:red;}
 
 .ui-datepicker-trigger { cursor:pointer;}
 .ui-datepicker-reset { vertical-align:text-bottom; cursor:pointer;}
+
+.jforms-choice{
+list-style-type:none;
+margin:0;
+padding:0;
+}
+.jforms-choice .jforms-item-controls{
+display:block;
+margin:0.2em 0 0.2em 1.8em;
+}
