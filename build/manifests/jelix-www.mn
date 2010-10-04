@@ -21,15 +21,15 @@ cd lib/jelix-www/design/images
   rights.png
   user.png
 cd lib/jelix-www/js
-  tooltip.js
-  jforms_light.js
-  jforms_jquery.js
-  json.js
+c tooltip.js
+c jforms_light.js
+c jforms_jquery.js
+c json.js
 c json2.js
 cd lib/jelix-www/js/jforms/datepickers/default
-  init.js
-  ui.en.js
-  ui.fr.js
+c init.js
+c ui.en.js
+c ui.fr.js
 cd lib/jelix-www/js/jforms/htmleditors/
 c wymeditor_default.js
 c ckeditor_default.js
