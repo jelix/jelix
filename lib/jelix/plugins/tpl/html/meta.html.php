@@ -3,8 +3,9 @@
 * @package      jelix
 * @subpackage   jtpl_plugin
 * @author       Jouanneau Laurent
-* @contributor  Yann (description and keywords), Dominique Papin (ie7 support), Mickaël Fradin (style), Loic Mathaud (title), Olivier Demah (auhor,generator)
+* @contributor  Yann (description and keywords), Dominique Papin (ie7 support), Mickaël Fradin (style), Loic Mathaud (title), Olivier Demah (auhor,generator), Julien Issler
 * @copyright    2005-2006 Jouanneau laurent, 2007 Dominique Papin, 2008 Mickaël Fradin, 2009 Loic Mathaud, 2010 Olivier Demah
+* @copyright    2010 Julien Issler
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -21,7 +22,7 @@
  * @param mixed $param parameter (a css style sheet for "css" for example)
  * @params array $params additionnal parameters (a media attribute for stylesheet for example)
  */
-function jtpl_meta_html_html($tpl, $method, $param, $params=array())
+function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
 {
     global $gJCoord,$gJConfig;
 
@@ -90,7 +91,28 @@ function jtpl_meta_html_html($tpl, $method, $param, $params=array())
             break;
         case 'generator':
             $gJCoord->response->addMetaGenerator($param);
+        case 'jquery':
+            $gJCoord->response->addJSLink($gJConfig->urlengine['jqueryPath'].'jquery.js');
+            break;
+        case 'jquery_ui':
+            $base = $gJConfig->urlengine['jqueryPath'];
+            switch($param){
+                case 'components':
+                    $gJCoord->response->addJSLink($base.'jquery.js');
+                    $gJCoord->response->addJSLink($base.'ui/jquery.ui.core.min.js');
+                    foreach($params as $f)
+                        $gJCoord->response->addJSLink($base.'ui/jquery.ui.'.$f.'.min.js');
+                    break;
+                case 'effects':
+                    $gJCoord->response->addJSLink($base.'jquery.js');
+                    $gJCoord->response->addJSLink($base.'ui/jquery.ui.core.min.js');
+                    foreach($params as $f)
+                        $gJCoord->response->addJSLink($base.'ui/jquery.effects.'.$f.'.min.js');
+                    break;
+                case 'theme':
+                    $gJCoord->response->addCSSLink($base.'themes/base/jquery.ui.all.css');
+                    break;
+            }
             break;
     }
 }
-
