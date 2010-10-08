@@ -3,9 +3,10 @@
 * @package     jelix_admin_modules
 * @subpackage  jacl2db_admin
 * @author      Laurent Jouanneau
-* @contributor Julien Issler
+* @contributor Julien Issler, Olivier Demah
 * @copyright   2008 Laurent Jouanneau
 * @copyright   2009 Julien Issler
+* @copyright   2010 Olivier Demah
 * @link        http://jelix.org
 * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
 */
@@ -20,6 +21,7 @@ class groupsCtrl extends jController {
         'newgroup'=>array('jacl2.rights.and'=>array('acl.group.view','acl.group.create')),
         'changename'=>array('jacl2.rights.and'=>array('acl.group.view','acl.group.modify')),
         'delgroup'=>array('jacl2.rights.and'=>array('acl.group.view','acl.group.delete')),
+        'setdefault'=>array('jacl2.rights.and'=>array('acl.group.view','acl.group.modify')),
     );
 
     /**

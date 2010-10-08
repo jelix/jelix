@@ -8,6 +8,7 @@
     <url pathinfo="/groups/new"                     action="groups:newgroup"/>
     <url pathinfo="/groups/rename"                  action="groups:changename"/>
     <url pathinfo="/groups/delete"                  action="groups:delgroup"/>
+    <url pathinfo="/groups/setdefault"              action="groups:setdefault"/>
     <url pathinfo="/users"                          action="users:index"/>
     <url pathinfo="/users/:user"                    action="users:rights"
         actionoverride="users:removegroup,users:addgroup,users:saverights,users:rightres,users:saverightres"/>

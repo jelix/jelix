@@ -41,6 +41,7 @@ Olivier Demah (aka FoxMaSk)
  - install jacl2db sans prefix de table (#1119)
  - $ should not be allowed in parameters of dao methods  (#1129)
  - format of date / hour too permissive (#1046)
+ - missing method groups:setdefault in ursl.xml jacl2db_admin (#1187)
 
 Antoine Detante (aka antoinefr)
  - support of persistant authentification in jAuth and auth plugin (#229)
