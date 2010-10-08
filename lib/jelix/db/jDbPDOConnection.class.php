@@ -47,10 +47,21 @@ class jDbPDOConnection extends PDO {
             $this->dbms = substr($profile['dsn'],0,strpos($profile['dsn'],':'));
             $dsn = $profile['dsn'];
             unset($prof['dsn']);
+            if ($this->dbms == 'sqlite')
+                $dsn = str_replace(array('app:','lib:','var:'), array(JELIX_APP_PATH, LIB_PATH, JELIX_APP_VAR_PATH), $dsn);
         }
         else {
             $this->dbms = $profile['driver'];
-            $dsn = $this->dbms.':host='.$profile['host'].';dbname='.$profile['database'];
+            $db = $profile['database'];
+            $dsn = $this->dbms.':host='.$profile['host'].';dbname='.$db;
+            if($this->dbms != 'sqlite')
+                $dsn = $this->dbms.':host='.$profile['host'].';dbname='.$db;
+            else {
+                if (preg_match('/^(app|lib|var)\:/', $db, $m))
+                    $dsn = 'sqlite:'.str_replace(array('app:','lib:','var:'), array(JELIX_APP_PATH, LIB_PATH, JELIX_APP_VAR_PATH), $db);
+                else
+                    $dsn = 'sqlite:'.JELIX_APP_VAR_PATH.'db/sqlite/'.$db;
+            }
         }
         if(isset($prof['usepdo']))
             unset($prof['usepdo']);
@@ -67,8 +78,6 @@ class jDbPDOConnection extends PDO {
         }
 
         unset($prof['driver']);
-        if ($this->dbms == 'sqlite')
-            $dsn = str_replace(array('app:','lib:'), array(JELIX_APP_PATH, LIB_PATH), $dsn);
 
         parent::__construct($dsn, $user, $password, $prof);
 

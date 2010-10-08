@@ -61,10 +61,16 @@ class sqliteDbConnection extends jDbConnection {
 
     protected function _connect (){
         $funcconnect= (isset($this->profile['persistent']) && $this->profile['persistent']? 'sqlite_popen':'sqlite_open');
-        if ($cnx = @$funcconnect(JELIX_APP_VAR_PATH. 'db/sqlite/'.$this->profile['database'])) {
+        $db = $this->profile['database'];
+        if (preg_match('/^(app|lib|var)\:/', $db))
+            $path = str_replace(array('app:','lib:','var:'), array(JELIX_APP_PATH, LIB_PATH, JELIX_APP_VAR_PATH), $db);
+        else
+            $path = JELIX_APP_VAR_PATH.'db/sqlite/'.$db;
+
+        if ($cnx = @$funcconnect($path)) {
             return $cnx;
         } else {
-            throw new jException('jelix~db.error.connection',$this->profile['database']);
+            throw new jException('jelix~db.error.connection',$db);
         }
     }
 
