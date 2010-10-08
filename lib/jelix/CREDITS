@@ -40,6 +40,7 @@ Olivier Demah (aka FoxMaSk)
  - meta supplementaires (author,generator) (#1063)
  - install jacl2db sans prefix de table (#1119)
  - $ should not be allowed in parameters of dao methods  (#1129)
+ - format of date / hour too permissive (#1046)
 
 Antoine Detante (aka antoinefr)
  - support of persistant authentification in jAuth and auth plugin (#229)

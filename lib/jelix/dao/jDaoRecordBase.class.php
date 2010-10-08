@@ -3,9 +3,10 @@
  * @package     jelix
  * @subpackage  dao
  * @author      Laurent Jouanneau
- * @contributor Loic Mathaud
+ * @contributor Loic Mathaud, Olivier Demah
  * @copyright   2005-2007 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
+ * @copyright   2010 Olivier Demah
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -84,16 +85,16 @@ abstract class jDaoRecordBase {
                 }
                 break;
             case 'datetime':
-                if(!preg_match('/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})?$/', $value))
+                if(!preg_match('/^(\d{4})-(((0?[1,3-9]|1[0-2])-([01][0-9]|2[0-9]|3[01]))|((0?2)-([01][0-9]|2[0-9])) [01]?[0-9]|2[0-3]:[0-5][0-9]:[0-5][0-9])?$/',$value))
                     $errors[$prop][] = self::ERROR_BAD_FORMAT;
                 break;
             case 'time':
-                if(!preg_match('/^(\d{2}:\d{2}:\d{2})?$/', $value))
+                if(!preg_match('/^([01]?[0-9]|2[0-3]:[0-5][0-9]:[0-5][0-9])?$/',$value))
                     $errors[$prop][] = self::ERROR_BAD_FORMAT;
                 break;
             case 'varchardate':
             case 'date':
-                if(!preg_match('/^(\d{4}-\d{2}-\d{2})?$/', $value))
+                if(!preg_match('/^(\d{4})-(((0?[1,3-9]|1[0-2])-([01][0-9]|2[0-9]|3[01]))|((0?2)-([01][0-9]|2[0-9])))?$/',$value))
                     $errors[$prop][] = self::ERROR_BAD_FORMAT;
                 break;
             }
