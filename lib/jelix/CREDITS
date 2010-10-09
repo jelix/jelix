@@ -274,6 +274,7 @@ Brice Tence (aka brayce/bricet)
  - small testapp bug solved about missing tables (#1064)
  - fixed bug in jInstallChecker (#1087)
  - introduced optional jMinifier for jResponseHtml for JS/CSS concatenation and minification (#860)
+ - type attribut on link tag should be optional (#1188)
 
 Christophe Thiriot (aka Doubleface)
  - testor
