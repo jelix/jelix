@@ -3,11 +3,12 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Laurent Jouanneau
-* @contributor Yann (description and keywords), Dominique Papin
-* @contributor Warren Seine, Alexis Métaireau, Julien Issler, Olivier Demah (author,generator)
+* @contributor Yann, Dominique Papin
+* @contributor Warren Seine, Alexis Métaireau, Julien Issler, Olivier Demah, Brice Tence
 * @copyright   2005-2009 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
 * @copyright   2008 Warren Seine, Alexis Métaireau
 * @copyright   2009 Julien Issler, Olivier Demah
+* @copyright   2010 Brice Tence
 *              few lines of code are copyrighted CopixTeam http://www.copix.org
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -301,7 +302,7 @@ class jResponseHtml extends jResponse {
      * @param string $type  mime type of the ressource
      * @param string $title
      */ 
-    final public function addLink($href, $rel, $type, $title='') {
+    final public function addLink($href, $rel, $type='', $title='') {
         $this->_Link[$href] = array($rel, $type, $title);
     }
 
@@ -670,10 +671,12 @@ class jResponseHtml extends jResponse {
         
         // others links
         foreach($this->_Link as $href=>$params){
-            $more = '';
+            $more = array();
+            if( !empty($params[1]))
+                $more[] = 'type="'.$params[1].'"';
             if (!empty($params[2]))
-                $more = 'title = "'.htmlspecialchars($params[2]).'"';
-            echo '<link rel="',$params[0],'" type="',$params[1],'" href="',htmlspecialchars($href),'" ',$more,$this->_endTag;
+                $more[] = 'title = "'.htmlspecialchars($params[2]).'"';
+            echo '<link rel="',$params[0],'" href="',htmlspecialchars($href),'" ',implode($more, ' '),$this->_endTag;
         }
 
         $this->outputJsScripts( $this->_JSLink );
