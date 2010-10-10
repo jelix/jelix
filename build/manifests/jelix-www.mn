@@ -43,12 +43,22 @@ cd lib/jelix-www/xul
   jxbl.xml
   jxbl.css
 cd lib/jelix-www/wymeditor
-c jquery.wymeditor.js
-c wym_css_parser.js
-c xhtml_parser.js
+  jquery.wymeditor.js
   GPL-license.txt
   MIT-license.txt
   README
+cd lib/jelix-www/wymeditor/iframe/default
+  lbl-blockquote.png
+  lbl-h1.png
+  lbl-h2.png
+  lbl-h3.png
+  lbl-h4.png
+  lbl-h5.png
+  lbl-h6.png
+  lbl-p.png
+  lbl-pre.png
+  wymiframe.html
+  wymiframe.css
 cd lib/jelix-www/wymeditor/lang
 c es.js
 c fr.js
@@ -60,35 +70,60 @@ c hu.js
 c it.js
 c en.js
 c ca.js
+cd lib/jelix-www/wymeditor/plugins/embed/
+c jquery.wymeditor.embed.js
+cd lib/jelix-www/wymeditor/plugins/fullscreen
+  icon_fullscreen.gif
+c jquery.wymeditor.fullscreen.js
 cd lib/jelix-www/wymeditor/plugins/hovertools
 c jquery.wymeditor.hovertools.js
+cd lib/jelix-www/wymeditor/plugins/resizable
+c jquery.wymeditor.resizable.js
+  readme.txt
 cd lib/jelix-www/wymeditor/plugins/tidy
   tidy.php
 c jquery.wymeditor.tidy.js
   wand.png
   README
-cd lib/jelix-www/wymeditor/iframe/default
-  lbl-pre.png
-  lbl-blockquote.png
-  lbl-h1.png
-  lbl-h2.png
-  wymiframe.html
-  lbl-h3.png
-  lbl-h4.png
-  lbl-h5.png
-  lbl-h6.png
-  wymiframe.css
-  lbl-p.png
 cd lib/jelix-www/wymeditor/skins
   wymeditor_icon.png
-cd lib/jelix-www/wymeditor/skins/default
-  screen.css
+cd lib/jelix-www/wymeditor/skins/compact
   icons.png
+  skin.css
+  skin.js
+cd lib/jelix-www/wymeditor/skins/default
+  skin.css
+  icons.png
+  skin.js
+cd lib/jelix-www/wymeditor/skins/minimal
+  skin.css
+  skin.js
+cd lib/jelix-www/wymeditor/skins/minimal/images
+  bg.header.gif
+  bg.selector.silver.gif
+  bg.wymeditor.png
+  icons.silver.gif
+cd lib/jelix-www/wymeditor/skins/silver
+  COPYING
+  README
+  skin.css
+  skin.js
+cd lib/jelix-www/wymeditor/skins/silver/images
+  bg.header.gif
+  bg.selector.silver.gif
+  bg.wymeditor.png
+  icons.silver.gif
+cd lib/jelix-www/wymeditor/skins/twopanels
+  icons.png
+  skin.css
+  skin.js
+
 cd lib/jelix-www/jquery
   GPL-LICENSE.txt
   MIT-LICENSE.txt
 ! jquery.js
   VERSION
+
 cd lib/jelix-www/markitup
   jquery.markitup.js
   jquery.markitup.pack.js

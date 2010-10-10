@@ -311,7 +311,7 @@ default.engine.name = wymeditor
 default.engine.file[] = jelix/jquery/jquery.js
 default.engine.file[] = jelix/wymeditor/jquery.wymeditor.js
 default.config = jelix/js/jforms/htmleditors/wymeditor_default.js
-default.skin.default  = jelix/wymeditor/skins/default/screen.css
+default.skin.default  = jelix/wymeditor/skins/default/skin.css
 
 ckdefault.engine.name = ckeditor
 ckdefault.engine.file[] = jelix/ckeditor/ckeditor.js

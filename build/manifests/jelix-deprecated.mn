@@ -146,6 +146,12 @@ cd lib/jelix-www/jquery/ui/i18n
 rmd lib/jelix-www/jquery/themes/default
 rmd lib/jelix-www/wymeditor/config
 
+cd lib/jelix-www/wymeditor
+  wym_css_parser.js
+  xhtml_parser.js
+cd lib/jelix-www/wymeditor/skins/default
+  screen.css
+
 rmd lib/tcpdf/barcode
 rmd lib/tcpdf/config/lang
 
