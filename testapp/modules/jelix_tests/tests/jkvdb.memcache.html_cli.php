@@ -20,32 +20,38 @@ class UTjKVDbMemcache extends UTjKVDb {
 
     protected $profile = 'usingmemcache';
 
-    protected $wrongversion = false;
+    protected $mmcError = '';
 
     function getTests() {
         $r = parent::getTests();
         if (count($r)) {
+            if (!extension_loaded('memcache')) {
+                $this->mmcError = 'UTjKVDbMemcache cannot be run because memcache is not installed';
+                return array('tfail');
+            }
             if (version_compare(phpversion('memcache'), '3.0.1') > 0) {
+                $this->mmcError = 'UTjKVDbMemcache cannot be run because version of memcache is wrong (should be <= 3.0.1)';
                 $this->wrongversion = true;
                 return array('tfail');
             }
+
         }
         return $r;
     }
 
     public function tfail() {
-        $this->fail('UTjKVDb cannot be run because version of memcache is wrong (should be <= 3.0.1)');
+        $this->fail($this->mmcError);
     }
 
     public function setUp (){
-        if ($this->wrongversion)
+        if ($this->mmcError)
             return;
         $this->mmc = memcache_connect('localhost',11211);
         memcache_flush($this->mmc);
     }
 
     public function tearDown() {
-        if ($this->wrongversion)
+        if ($this->mmcError)
             return;
         memcache_close($this->mmc);
         $this->mmc = null;

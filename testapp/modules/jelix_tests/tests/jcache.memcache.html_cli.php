@@ -25,13 +25,18 @@ class UTjCacheMemcache extends UTjCacheAPI {
     protected $mmport = 'localhost';
     protected $mmhost = 11211;
 
-    protected $wrongversion = false;
+
+    protected $mmcError = '';
 
     function getTests() {
         $r = parent::getTests();
         if (count($r)) {
+            if (!extension_loaded('memcache')) {
+                $this->mmcError = 'UTjCacheMemcache cannot be run because memcache is not installed';
+                return array('tfail');
+            }
             if (version_compare(phpversion('memcache'), '3.0.1') > 0) {
-                $this->wrongversion = true;
+                $this->mmcError = 'UTjCacheMemcache cannot be run because version of memcache is wrong (should be <= 3.0.1)';
                 return array('tfail');
             }
         }
@@ -39,11 +44,11 @@ class UTjCacheMemcache extends UTjCacheAPI {
     }
 
     public function tfail() {
-        $this->fail('UTjCacheMemcache cannot be run because version of memcache is wrong (should be <= 3.0.1)');
+        $this->fail($this->mmcError);
     }
 
     public function setUp () {
-        if ($this->wrongversion)
+        if ($this->mmcError)
             return;
         if (isset($this->conf['servers']))
             list($this->mmhost, $this->mmport) = explode(":",$this->conf['servers']);
