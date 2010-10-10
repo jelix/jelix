@@ -306,21 +306,21 @@ class PHPMailer {
   // PROPERTIES, PRIVATE AND PROTECTED
   /////////////////////////////////////////////////
 
-  private   $smtp           = NULL;
-  private   $to             = array();
-  private   $cc             = array();
-  private   $bcc            = array();
-  private   $ReplyTo        = array();
-  private   $all_recipients = array();
-  private   $attachment     = array();
-  private   $CustomHeader   = array();
-  private   $message_type   = '';
-  private   $boundary       = array();
+  protected $smtp           = NULL;
+  protected $to             = array();
+  protected $cc             = array();
+  protected $bcc            = array();
+  protected $ReplyTo        = array();
+  protected $all_recipients = array();
+  protected $attachment     = array();
+  protected $CustomHeader   = array();
+  protected $message_type   = '';
+  protected $boundary       = array();
   protected $language       = array();
-  private   $error_count    = 0;
-  private   $sign_cert_file = "";
-  private   $sign_key_file  = "";
-  private   $sign_key_pass  = "";
+  protected $error_count    = 0;
+  protected $sign_cert_file = "";
+  protected $sign_key_file  = "";
+  protected $sign_key_pass  = "";
   private   $exceptions     = false;
 
   /////////////////////////////////////////////////
@@ -569,14 +569,11 @@ class PHPMailer {
       }
 
       // Choose the mailer and send through it
-      switch($this->Mailer) {
-        case 'sendmail':
-          return $this->SendmailSend($header, $body);
-        case 'smtp':
-          return $this->SmtpSend($header, $body);
-        default:
-          return $this->MailSend($header, $body);
-      }
+      $method = $this->Mailer.'Send';
+      if (method_exists($this, $method))
+        return $this->{$method}($header, $body);
+      else
+        return $this->MailSend($header, $body);
 
     } catch (phpmailerException $e) {
       $this->SetError($e->getMessage());
@@ -1953,7 +1950,7 @@ class PHPMailer {
    * @access private
    * @return string
    */
-  private function Lang($key) {
+  protected function Lang($key) {
     if(count($this->language) < 1) {
       $this->SetLanguage('en'); // set the default language
     }
@@ -2317,4 +2314,3 @@ class phpmailerException extends Exception {
     return $errorMsg;
   }
 }
-?>

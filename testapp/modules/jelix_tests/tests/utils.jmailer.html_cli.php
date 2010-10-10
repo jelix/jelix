@@ -28,10 +28,10 @@ class UTjmailer extends jUnitTestCase {
 
     public function testFileMail() {
 
-        if (file_exists(JELIX_APP_VAR_PATH.'mails/mail.txt'))
-            unlink(JELIX_APP_VAR_PATH.'mails/mail.txt');
-
+        //if (file_exists(JELIX_APP_VAR_PATH.'mails/mail.txt'))
+        //    unlink(JELIX_APP_VAR_PATH.'mails/mail.txt');
         $mail = new testJMailer();
+   
         $mail->From = 'toto@truc.local';
         $mail->FromName = 'Super Me';
         $mail->Sender = 'toto@truc.com';
@@ -45,7 +45,6 @@ class UTjmailer extends jUnitTestCase {
 
         $this->assertEqual(JELIX_APP_VAR_PATH.'mails/', $mail->filePath);
         $this->assertEqual(JELIX_APP_VAR_PATH.'mails/mail.txt', $mail->getStorageFile2());
-
 
         if ($this->assertTrue(file_exists(JELIX_APP_VAR_PATH.'mails/mail.txt'))) {
             $content = file_get_contents(JELIX_APP_VAR_PATH.'mails/mail.txt');
@@ -61,4 +60,4 @@ class UTjmailer extends jUnitTestCase {
     }
 }
 
-?>
+

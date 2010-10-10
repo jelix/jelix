@@ -38,7 +38,7 @@ class jMailer extends PHPMailer {
      */
     protected $bodyTpl = '';
 
-    protected $lang;
+    protected $defaultLang;
 
     /**
      * the path of the directory where to store mails
@@ -51,7 +51,7 @@ class jMailer extends PHPMailer {
      */
     function __construct(){
         global $gJConfig;
-        $this->lang = $gJConfig->locale;
+        $this->defaultLang = $gJConfig->locale;
         $this->CharSet = $gJConfig->charset;
         $this->Mailer = $gJConfig->mailer['mailerType'];
         $this->Hostname = $gJConfig->mailer['hostname'];
@@ -67,9 +67,10 @@ class jMailer extends PHPMailer {
         if($gJConfig->mailer['webmasterEmail'] != '') {
             $this->From = $gJConfig->mailer['webmasterEmail'];
         }
+
         $this->FromName = $gJConfig->mailer['webmasterName'];
         $this->filePath = JELIX_APP_VAR_PATH.$gJConfig->mailer['filesDir'];
-        parent::_construct(true);
+        parent::__construct(true);
     }
 
     /**
@@ -125,7 +126,6 @@ class jMailer extends PHPMailer {
      * @return bool
      */
     function Send() {
-        $result = true;
 
         if (isset($this->bodyTpl) && $this->bodyTpl != "") {
             if ($this->tpl == null)
@@ -175,66 +175,27 @@ class jMailer extends PHPMailer {
             $this->Body = $mailtpl->fetch( $this->bodyTpl, ($this->ContentType == 'text/html'?'html':'text'));
         }
 
-        // following lines are copied from the orginal file 
-        
-        if((count($this->to) + count($this->cc) + count($this->bcc)) < 1) {
-          $this->SetError($this->Lang('provide_address'));
-          return false;
-        }
-    
-        /* Set whether the message is multipart/alternative */
-        if(!empty($this->AltBody)) {
-          $this->ContentType = 'multipart/alternative';
-        }
-    
-        $this->error_count = 0; // reset errors
-        $this->SetMessageType();
+        return parent::Send();
+    }
+
+    public function CreateHeader() {
         if ($this->Mailer == 'file') {
             // to have all headers in the file, like cc, bcc...
             $this->Mailer = 'sendmail';
-            $header = $this->CreateHeader();
+            $headers = parent::CreateHeader();
             $this->Mailer = 'file';
+            return $headers;
         }
         else
-            $header = $this->CreateHeader();
-        $body = $this->CreateBody();
-    
-        if($body == '') {
-            throw new phpmailerException($this->Lang('empty_message'), self::STOP_CRITICAL);
-        }
-
-        // digitally sign with DKIM if enabled
-        if ($this->DKIM_domain && $this->DKIM_private) {
-          $header_dkim = $this->DKIM_Add($header,$this->Subject,$body);
-          $header = str_replace("\r\n","\n",$header_dkim) . $header;
-        }
-
-        /* Choose the mailer */
-        switch($this->Mailer) {
-          case 'sendmail':
-            return $this->SendmailSend($header, $body);
-            break;
-          case 'smtp':
-            return $this->SmtpSend($header, $body);
-            break;
-          case 'file':
-            return $this->FileSend($header, $body);
-            break;
-          case 'mail':
-          default:
-            return $this->MailSend($header, $body);
-            break;
-        }
-    
-        return $result;
+            return parent::CreateHeader();
     }
-    
+
     /**
      * store mail in file instead of sending it
      * @access public
      * @return bool
      */
-    public function FileSend($header, $body) {
+    protected function FileSend($header, $body) {
         return jFile::write ($this->getStorageFile(), $header.$body);
     }
     
@@ -242,45 +203,19 @@ class jMailer extends PHPMailer {
         return rtrim($this->filePath,'/').'/mail.'.$GLOBALS['gJCoord']->request->getIP().'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
     }
 
-    function SetLanguage($lang_type = 'en_EN', $lang_path = 'language/') {
-        $this->lang = $lang_type;
+    function SetLanguage($lang_type = 'en', $lang_path = 'language/') {
+        $lang = explode('_', $lang_type);
+        return parent::SetLanguage($lang[0], $lang_path);
     }
 
-    protected function SetError($msg) {
-        if (preg_match("/^([^#]*)#([^#]+)#(.*)$/", $msg, $m)) {
-            $arg = null;
-            if($m[1] != '')
-                $arg = $m[1];
-            if($m[3] != '')
-                $arg = $m[3];
-            if(strpos($m[2], 'WARNING:') !== false) {
-                $locale = 'jelix~errors.mail.'.substr($m[2],8);
-                if($arg !== null)
-                    parent::SetError(jLocale::get($locale, $arg, $this->lang, $this->CharSet));
-                else
-                    parent::SetError(jLocale::get($locale, array(), $this->lang, $this->CharSet));
-                return;
-            }
-            $locale = 'jelix~errors.mail.'.$m[2];
-            if ($arg !== null) {
-                throw new jException($locale, $arg, 1, $this->lang, $this->CharSet);
-            }
-            else
-                throw new jException($locale, array(), 1, $this->lang, $this->CharSet);
-        }
-        else {
-            throw new Exception($msg);
-        }
-    }
-
-    /**
-    * @return string
-    */
     protected function Lang($key) {
-        if($key == 'tls' || $key == 'authenticate')
-            $key = 'WARNING:'.$key;
-        return '#'.$key.'#';
+      if(count($this->language) < 1) {
+        $this->SetLanguage($this->defaultLang); // set the default language
+      }
+      if(isset($this->language[$key])) {
+        return $this->language[$key];
+      } else {
+        return 'Language string failed to load: ' . $key;
+      }
     }
 }
-
-
