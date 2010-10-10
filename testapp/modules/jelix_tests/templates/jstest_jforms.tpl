@@ -236,6 +236,43 @@ test("DateTime", function() {
 });
 
 
+test("list build for elements updates", function() {
+
+    jfo.allDependencies = {
+        "g": ['e','f'],
+        "h": ['f'],
+        'e': ['c','d'],
+        'f': ['e','d'],
+        'd' : ['b'],
+        'c' : ['a']        
+        };
+    jfo.controlsToUpdate = [];
+    jfo.buildOrderedControlsList('a');
+    isSet(jfo.controlsToUpdate, [], "for a, controlsToUpdate should be empty");
+
+    jfo.buildOrderedControlsList('b');
+    isSet(jfo.controlsToUpdate, [], "for b, controlsToUpdate should be empty");
+    
+    jfo.buildOrderedControlsList('c');
+    isSet(jfo.controlsToUpdate, ['a'], "for c, controlsToUpdate should contain ['a']");
+    
+    jfo.buildOrderedControlsList('d');
+    isSet(jfo.controlsToUpdate, ['b'], "for d, controlsToUpdate should contain ['b']");
+
+    jfo.buildOrderedControlsList('e');
+    isSet(jfo.controlsToUpdate, ['a','c','b','d'], "for e, controlsToUpdate should contain ['a','c','b','d']");
+
+    jfo.buildOrderedControlsList('f');
+    isSet(jfo.controlsToUpdate, ['a','c','b','d', 'e'], "for f, controlsToUpdate should contain ['a','c','b','d','e']");
+
+    jfo.buildOrderedControlsList('g');
+    isSet(jfo.controlsToUpdate, ['a','c','b','d', 'e', 'f'], "for g, controlsToUpdate should contain ['a','c','b','d', 'e', 'f']");
+
+    jfo.buildOrderedControlsList('h');
+    isSet(jfo.controlsToUpdate, ['a','c','b','d', 'e', 'f'], "for h, controlsToUpdate should contain ['a','c','b','d', 'e', 'f']");
+
+});
+
 /*test("", function() {
 });
 */
