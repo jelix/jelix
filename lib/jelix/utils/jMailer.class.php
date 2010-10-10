@@ -69,6 +69,7 @@ class jMailer extends PHPMailer {
         }
         $this->FromName = $gJConfig->mailer['webmasterName'];
         $this->filePath = JELIX_APP_VAR_PATH.$gJConfig->mailer['filesDir'];
+        parent::_construct(true);
     }
 
     /**
@@ -86,10 +87,19 @@ class jMailer extends PHPMailer {
      * @param string $address
      * @return array( $name, $address )
      */
-    function getAddrName($address) {
-        preg_match ('`^([^<]*)<([^>]*)>$`', $address, $tab );
-        array_shift($tab);
-        return $tab;
+    function getAddrName($address, $kind = false) {
+        if (preg_match ('`^([^<]*)<([^>]*)>$`', $address, $tab )) {
+            $name = $tab[1];
+            $addr = $tab[2];
+        }
+        else {
+            $name = '';
+            $addr = $address;
+        }
+        if (!$kind) {
+            return array($addr, $name);
+        }
+        $this->AddAnAddress($kind, $addr, $name);
     }
 
     protected $tpl = null;
@@ -117,50 +127,50 @@ class jMailer extends PHPMailer {
     function Send() {
         $result = true;
 
-        if( isset($this->bodyTpl) && $this->bodyTpl != "") {
+        if (isset($this->bodyTpl) && $this->bodyTpl != "") {
             if ($this->tpl == null)
                 $this->tpl = new jTpl();
             $mailtpl = $this->tpl;
             $metas = $mailtpl->meta( $this->bodyTpl , ($this->ContentType == 'text/html'?'html':'text') );
 
-            if( isset($metas['Subject']) )
+            if (isset($metas['Subject']))
                 $this->Subject = $metas['Subject'];
 
-            if( isset($metas['Priority']) )
+            if (isset($metas['Priority']))
                 $this->Priority = $metas['Priority'];
             $mailtpl->assign('Priority', $this->Priority );
 
-            if( isset($metas['From']) ) {
-                $adr = $this->getAddrName( $metas['From'] );
-                $this->From = $adr[1];
-                $this->FromName = $adr[0];
-            }
-            $mailtpl->assign('From', $this->From );
-            $mailtpl->assign('FromName', $this->FromName );
-
-            if( isset($metas['Sender']) )
+            if (isset($metas['Sender']))
                 $this->Sender = $metas['Sender'];
             $mailtpl->assign('Sender', $this->Sender );
 
-            if( isset($metas['to']) )
+            if (isset($metas['to']))
                 foreach( $metas['to'] as $val )
-                    $this->to[] = $this->getAddrName( $val );
+                    $this->getAddrName( $val, 'to' );
             $mailtpl->assign('to', $this->to );
 
-            if( isset($metas['cc']) )
+            if (isset($metas['cc']))
                 foreach( $metas['cc'] as $val )
-                    $this->cc[] = $this->getAddrName( $val );
+                    $this->getAddrName($val, 'cc');
             $mailtpl->assign('cc', $this->cc );
 
-            if( isset($metas['bcc']) )
+            if (isset($metas['bcc']))
                 foreach( $metas['bcc'] as $val )
-                    $this->bcc[] = $this->getAddrName( $val );
-            $mailtpl->assign('bcc', $this->bcc );
+                    $this->getAddrName($val, 'bcc');
+            $mailtpl->assign('bcc', $this->bcc);
 
-            if( isset($metas['ReplyTo']) )
+            if (isset($metas['ReplyTo']))
                 foreach( $metas['ReplyTo'] as $val )
-                    $this->ReplyTo[] = $this->getAddrName( $val );
+                    $this->getAddrName($val, 'ReplyTo');
             $mailtpl->assign('ReplyTo', $this->ReplyTo );
+
+            if (isset($metas['From'])) {
+                $adr = $this->getAddrName($metas['From']);
+                $this->SetFrom($adr[1], $adr[0]);
+            }
+
+            $mailtpl->assign('From', $this->From );
+            $mailtpl->assign('FromName', $this->FromName );
 
             $this->Body = $mailtpl->fetch( $this->bodyTpl, ($this->ContentType == 'text/html'?'html':'text'));
         }
@@ -190,23 +200,29 @@ class jMailer extends PHPMailer {
         $body = $this->CreateBody();
     
         if($body == '') {
-          return false;
+            throw new phpmailerException($this->Lang('empty_message'), self::STOP_CRITICAL);
         }
-    
+
+        // digitally sign with DKIM if enabled
+        if ($this->DKIM_domain && $this->DKIM_private) {
+          $header_dkim = $this->DKIM_Add($header,$this->Subject,$body);
+          $header = str_replace("\r\n","\n",$header_dkim) . $header;
+        }
+
         /* Choose the mailer */
         switch($this->Mailer) {
           case 'sendmail':
-            $result = $this->SendmailSend($header, $body);
+            return $this->SendmailSend($header, $body);
             break;
           case 'smtp':
-            $result = $this->SmtpSend($header, $body);
+            return $this->SmtpSend($header, $body);
             break;
           case 'file':
-            $result = $this->FileSend($header, $body);
+            return $this->FileSend($header, $body);
             break;
           case 'mail':
           default:
-            $result = $this->MailSend($header, $body);
+            return $this->MailSend($header, $body);
             break;
         }
     

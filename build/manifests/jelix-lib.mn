@@ -608,6 +608,7 @@ cd lib/phpMailer
 cd lib/phpMailer/language
 ! phpmailer.lang-br.php
 ! phpmailer.lang-ca.php
+! phpmailer.lang-ch.php
 ! phpmailer.lang-cz.php
 ! phpmailer.lang-de.php
 ! phpmailer.lang-dk.php
@@ -627,6 +628,8 @@ cd lib/phpMailer/language
 ! phpmailer.lang-ru.php
 ! phpmailer.lang-se.php
 ! phpmailer.lang-tr.php
+! phpmailer.lang-zh.php
+! phpmailer.lang-zh_cn.php
 
 cd lib/php5redis/
   Php5Redis.php
