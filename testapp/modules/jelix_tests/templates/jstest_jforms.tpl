@@ -314,7 +314,7 @@ test("list build for elements updates", function() {
     <td><input type="text" name="mail" id="jf_mail" value=""></td></tr>
 
 <tr><th scope="row"><label class="jforms-label" for="jf_geek" title="Check the box if you are a geek">Are you a geek ?</label></th>
-    <td><input type="checkbox" name="geek" id="jf_geek" title="Check the box if you are a geek" value="1"><span class="jforms-help">jforms_jelix_tests_formtest','geek</span></td></tr>
+    <td><input type="checkbox" name="geek" id="jf_geek" title="Check the box if you are a geek" value="1"><span class="jforms-help">A geek is a person which is extremely keen on computer science</span></td></tr>
 
 </table></fieldset></td></tr>
 
