@@ -1,5 +1,5 @@
 --- class.phpmailer.php.original	2009-11-10 19:04:14.000000000 +0100
-+++ class.phpmailer.php	2010-10-10 17:56:22.000000000 +0200
++++ class.phpmailer.php	2010-10-16 16:59:22.000000000 +0200
 @@ -306,21 +306,21 @@
    // PROPERTIES, PRIVATE AND PROTECTED
    /////////////////////////////////////////////////
@@ -36,6 +36,15 @@
    private   $exceptions     = false;
  
    /////////////////////////////////////////////////
+@@ -449,7 +449,7 @@
+    * @return boolean true on success, false if address already used or invalid in some way
+    * @access private
+    */
+-  private function AddAnAddress($kind, $address, $name = '') {
++  protected function AddAnAddress($kind, $address, $name = '') {
+     if (!preg_match('/^(to|cc|bcc|ReplyTo)$/', $kind)) {
+       echo 'Invalid recipient array: ' . kind;
+       return false;
 @@ -569,14 +569,11 @@
        }
  
@@ -65,3 +74,9 @@
      if(count($this->language) < 1) {
        $this->SetLanguage('en'); // set the default language
      }
+@@ -2317,4 +2314,3 @@
+     return $errorMsg;
+   }
+ }
+-?>
+\ No newline at end of file

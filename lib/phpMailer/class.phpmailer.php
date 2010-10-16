@@ -449,7 +449,7 @@ class PHPMailer {
    * @return boolean true on success, false if address already used or invalid in some way
    * @access private
    */
-  private function AddAnAddress($kind, $address, $name = '') {
+  protected function AddAnAddress($kind, $address, $name = '') {
     if (!preg_match('/^(to|cc|bcc|ReplyTo)$/', $kind)) {
       echo 'Invalid recipient array: ' . kind;
       return false;
