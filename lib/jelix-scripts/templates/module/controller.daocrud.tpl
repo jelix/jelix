@@ -27,7 +27,7 @@ class %%name%%Ctrl extends jControllerDaoCrud {
         '*'          =>array('auth.required'=>true),
         // examples of rights, change subjects of rights as needed, and
         // create subjects
-        'index'      =>array('jacl2.right'=>'%%module%%.%%name%%.manage')),
+        'index'      =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
         'precreate'  =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
         'create'     =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
         'savecreate' =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),

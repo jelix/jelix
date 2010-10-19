@@ -18,6 +18,7 @@ class %%module%%ModuleInstaller extends jInstallerModule {
         /*if ($this->firstExec('acl2')) {
             jAcl2DbManager::addSubject('my.subject', '%%module%%~acl.my.subject');
             jAcl2DbManager::addRight(1, 'my.subject'); // for admin group
+        }
         */
     }
 }
