@@ -135,6 +135,16 @@ class jDateTime {
         return true;
     }
 
+     /**
+     * Check if jDateTime is "null" (all values egals to 0)
+     *
+     * @return boolean
+     * @author Hadrien Lanneau (hadrien at over-blog dot com)
+     **/
+    public function isNull() {
+        return ($this->year === 0 && $this->month === 0 && $this->day === 0 && $this->hour == 0 && $this->minute == 0 && $this->second == 0);
+    }
+
     /**
      * convert the date to a string format
      * @param int $format one of the class constant xxx_FORMAT, or -1 if it should use the default format

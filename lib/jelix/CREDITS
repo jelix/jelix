@@ -176,6 +176,7 @@ Denis Lallement (dlalleme)
 
 Hadrien Lanneau
  - jDateTime::substract() (#623)
+ - jDateTime::isNull() (#1179)
  - bug on jDateTime::now() (#1164)
  - jCrypt : default key in configuration (#1137)
 
