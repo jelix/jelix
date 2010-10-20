@@ -179,6 +179,7 @@ Hadrien Lanneau
  - jDateTime::isNull() (#1179)
  - bug on jDateTime::now() (#1164)
  - jCrypt : default key in configuration (#1137)
+ - jUrl::getFull() (#1186)
 
 Nicolas Lassalle
  - bug fix in jResponseBinary (#188)

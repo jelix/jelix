@@ -18,18 +18,6 @@
  * @param string domain name, false if you want to use the config domain name or the server name
  * @param boolean $escape if true, then escape the string for html
  */
-function jtpl_function_html_jfullurl($tpl, $selector, $params=array(), $domain=false, $escape=true) {
-    global $gJConfig;
-
-    if (!$domain) {
-        $domain = $gJConfig->domainName;
-    }
-
-    // Add the http or https if not given
-    if (!preg_match('/^http/', $domain)) {
-        $domain = $GLOBALS['gJCoord']->request->getProtocol().$domain;
-    }
-
-    // echo the full Url
-    echo $domain.jUrl::get($selector, $params, ($escape?1:0));
+function jtpl_function_html_jfullurl($tpl, $selector, $params=array(), $domain=null, $escape=true) {
+    echo jUrl::getFull($selector, $params, ($escape?1:0), $domain);
 }

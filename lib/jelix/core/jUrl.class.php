@@ -5,9 +5,10 @@
 * @author      Laurent Jouanneau
 * @contributor Thibault PIRONT < nuKs >
 * @contributor Loic Mathaud
+* @contributor Hadrien Lanneau
 * @copyright   2005-2010 Laurent Jouanneau
 * @copyright   2007 Thibault PIRONT
-* @copyright   2006 Loic Mathaud
+* @copyright   2006 Loic Mathaud, 2010 Hadrien Lanneau
 * Some parts of this file are took from an experimental branch of the Copix project (CopixUrl.class.php, Copix 2.3dev20050901, http://www.copix.org),
 * Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this parts are Gerald Croes and Laurent Jouanneau,
@@ -167,6 +168,39 @@ class jUrl extends jUrlBase {
         if($what == 2) return $url;
 
         return $url->toString($what != 0);
+    }
+
+    /**
+    * Gets the absolute url corresponding to an action, in the given format with
+    * the domainName in defaultConfig or current
+    * @param string $actSel  action selector. You can use # instead of the module
+    *                or the action name, to specify the current url.
+    * @param array $params associative array with the parameters
+    * @param integer $what the format you want : only jUrl::STRING or jUrl::XMLSTRING
+    * @param string $domainName Customized domain name
+    * @return string the url string
+    */
+    static function getFull ($actSel, $params = array (), $what=0, $domainName = null) {
+        global $gJConfig;
+
+        if ($domainName) {
+            $domain = $domainName;
+        }
+        elseif ($gJConfig->domainName != '') {
+            $domain = $gJConfig->domainName;
+        }
+        elseif (isset($_SERVER['HTTP_HOST'])) {
+            $domain = $_SERVER['HTTP_HOST'];
+        }
+        else {
+            throw new jException('jelix~errors.urls.domain.void');
+        }
+
+        if (!preg_match('/^http/', $domain)) {
+            $domain = $GLOBALS['gJCoord']->request->getProtocol().$domain;
+        }
+
+        return $domain . self::get($actSel, $params, ($what != self::XMLSTRING?self::STRING:$what));
     }
 
     /**
