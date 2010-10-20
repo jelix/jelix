@@ -523,10 +523,6 @@ class jInstaller {
                                                    $component->getSourceVersion(), $epId);
 
                     $upgraders = $component->getUpgraders($ep);
-                    if (count($upgraders) == 0) {
-                        $this->ok('install.module.installed', $component->getName());
-                        continue;
-                    }
 
                     foreach($upgraders as $upgrader) {
                         $upgrader->preInstall();
@@ -537,32 +533,14 @@ class jInstaller {
                 }
                 else if ($toInstall) {
                     $installer = $component->getInstaller($ep, $installWholeApp);
-                    if ($installer === null || $installer === false) {
-                        // no installer, so we assume that nothing has to be done to
-                        // install the module.
-                        $this->installerIni->setValue($component->getName().'.installed',
-                                                       1, $epId);
-                        $this->installerIni->setValue($component->getName().'.version',
-                                                       $component->getSourceVersion(), $epId);
-                        $this->ok('install.module.installed', $component->getName());
-                        continue;
-                    }
                     $componentsToInstall[] = array($installer, $component, $toInstall);
-                    if ($flags & self::FLAG_INSTALL_MODULE)
+                    if ($flags & self::FLAG_INSTALL_MODULE && $installer)
                         $installer->preInstall();
                 }
                 else {
                     $upgraders = $component->getUpgraders($ep);
 
-                    if (count($upgraders) == 0) {
-                        $this->installerIni->setValue($component->getName().'.version',
-                                                      $component->getSourceVersion(), $epId);
-                        $this->ok('install.module.upgraded',
-                                  array($component->getName(), $component->getSourceVersion()));
-                        continue;
-                    }
-
-                    if ($flags & self::FLAG_UPGRADE_MODULE) {
+                    if ($flags & self::FLAG_UPGRADE_MODULE && count($upgraders)) {
                         foreach($upgraders as $upgrader) {
                             $upgrader->preInstall();
                         }
