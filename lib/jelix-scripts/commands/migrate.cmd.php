@@ -331,6 +331,34 @@ class migrateCommand extends JelixScriptCommand {
         $this->projectXml->save(JELIX_APP_PATH.'project.xml');
     }
 
+    /**
+     * update or create the module.xml file of a module
+     */
+    protected function updateModuleXml(migrateModule $module) {
+
+        $modulexml = $module->path.'module.xml';
+        if (!file_exists($modulexml)) {
+            $param = array();
+            $param['module'] = $module->name;
+            $param['default_id'] = $module->name.JELIXS_INFO_DEFAULT_IDSUFFIX;
+            $param['version'] = '1.0';
+            $this->createFile($modulexml, 'module/module.xml.tpl', $param);
+            return;
+        }
+
+        $doc = new DOMDocument();
+
+        if (!$doc->load($modulexml)){
+           throw new Exception("cannot load $modulexml");
+        }
+
+        $this->updateInfo($doc, $module->name.JELIXS_INFO_DEFAULT_IDSUFFIX, $module->name);
+
+        $this->updateJelixDependency($doc);
+
+        $doc->save($modulexml);
+    }
+
     protected function checkPath($dir, $localName, $path) {
         $config = $dir->getElementsByTagName($localName);
         if (!$config || $config->length == 0) {
@@ -361,7 +389,7 @@ class migrateCommand extends JelixScriptCommand {
         $version->removeAttribute('stability');
         if ($version->getAttribute('date') == '')
             $version->removeAttribute('date');
-        if ($version->textContent == '')
+        if (trim($version->textContent) == '')
             $version->textContent = '1.0';
 
         return $info;
@@ -385,33 +413,6 @@ class migrateCommand extends JelixScriptCommand {
         }
     }
 
-    /**
-     * update or create the module.xml file of a module
-     */
-    protected function updateModuleXml(migrateModule $module) {
-
-        $modulexml = $module->path.'module.xml';
-        if (!file_exists($modulexml)) {
-            $param = array();
-            $param['module'] = $module->name;
-            $param['default_id'] = $module->name.JELIXS_INFO_DEFAULT_IDSUFFIX;
-            $param['version'] = '1.0';
-            $this->createFile($modulexml, 'module/module.xml.tpl', $param);
-            return;
-        }
-
-        $doc = new DOMDocument();
-
-        if (!$doc->load($modulexml)){
-           throw new Exception("cannot load $modulexml");
-        }
-
-        $this->updateInfo($doc, $module->name.JELIXS_INFO_DEFAULT_IDSUFFIX, $module->name);
-        $this->updateJelixDependency($doc);
-        $doc->save($modulexml);
-    }
-
-
     protected function firstElementChild($elt, $name = '') {
         $child = $elt->firstChild;
         while ($child && $child->nodeType != 1)
@@ -420,10 +421,18 @@ class migrateCommand extends JelixScriptCommand {
         if ($name != '' && (!$child || $child->localName != $name)) {
             $doc = $elt->ownerDocument;
             $new = $doc->createElement($name);
-            if ($child)
-                $child = $doc->documentElement->insertBefore($new, $child);
-            else
-                $child = $doc->appendChild($new);
+            $cr = $doc->createTextNode("\n");
+            $cr2 = $doc->createTextNode("\n");
+            if ($child) {
+                $elt->insertBefore($cr, $child);
+                $newcr2 = $elt->insertBefore($cr, $child);
+                $child = $elt->insertBefore($new, $newcr2);
+            }
+            else{
+                $elt->appendChild($cr);
+                $child = $elt->appendChild($new);
+                $elt->appendChild($cr2);
+            }
         }
         return $child;
     }
@@ -436,10 +445,18 @@ class migrateCommand extends JelixScriptCommand {
         if ($name != '' && (!$child || $child->localName != $name)) {
             $doc = $elt->ownerDocument;
             $new = $doc->createElement($name);
-            if ($child)
-                $child = $doc->documentElement->insertBefore($new, $child);
-            else
-                $child = $doc->appendChild($new);
+            $cr = $doc->createTextNode("\n");
+            $cr2 = $doc->createTextNode("\n");
+            if ($child) {
+                $elt->parentNode->insertBefore($cr, $child);
+                $newcr2 = $elt->parentNode->insertBefore($cr2, $child);
+                $child = $elt->parentNode->insertBefore($new, $newcr2);
+            }
+            else{
+                $elt->parentNode->appendChild($cr);
+                $child = $elt->parentNode->appendChild($new);
+                $elt->parentNode->appendChild($cr2);
+            }
         }
 
         return $child;
