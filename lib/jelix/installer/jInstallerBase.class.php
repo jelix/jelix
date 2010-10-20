@@ -242,8 +242,9 @@ abstract class jInstallerBase {
      * 
      * @param string $name the name of the script
      * @param string $module the module from which we should take the sql file. null for the current module
+     * @param boolean $inTransaction indicate if queries should be executed inside a transaction
      */
-    final protected function execSQLScript ($name, $module = null) {
+    final protected function execSQLScript ($name, $module = null, $inTransaction = true) {
 
         $tools = $this->dbTool();
 
@@ -263,7 +264,19 @@ abstract class jInstallerBase {
         if (substr($name, -4) != '.sql')
             $file .= '.'.$driver.'.sql';
 
-        $tools->execSQLScript($file);
+        if ($inTransaction)
+            $this->dbConnection()->beginTransaction();
+        try {
+            $tools->execSQLScript($file);
+            if ($inTransaction) {
+                $this->dbConnection()->commit();
+            }
+        }
+        catch(Exception $e) {
+            if ($inTransaction)
+                $this->dbConnection()->rollback();
+            throw $e;
+        }
     }
 
     /**
