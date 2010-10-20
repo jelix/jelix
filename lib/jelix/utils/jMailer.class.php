@@ -172,7 +172,11 @@ class jMailer extends PHPMailer {
             $mailtpl->assign('From', $this->From );
             $mailtpl->assign('FromName', $this->FromName );
 
-            $this->Body = $mailtpl->fetch( $this->bodyTpl, ($this->ContentType == 'text/html'?'html':'text'));
+            if ($this->ContentType == 'text/html') {
+                $this->MsgHTML($mailtpl->fetch( $this->bodyTpl, 'html'));
+            }
+            else
+                $this->Body = $mailtpl->fetch( $this->bodyTpl, 'text');
         }
 
         return parent::Send();
