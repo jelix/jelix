@@ -11,9 +11,9 @@ class closeappCommand extends JelixScriptCommand {
 
     public  $name = 'closeapp';
     public  $allowed_options = array();
-    public  $allowed_parameters = array();
+    public  $allowed_parameters = array('message'=>false);
 
-    public  $syntaxhelp = "";
+    public  $syntaxhelp = "[MESSAGE]";
     public  $help = '';
 
     function __construct(){
@@ -28,6 +28,6 @@ class closeappCommand extends JelixScriptCommand {
     }
 
     public function run(){
-        jAppManager::close();
+        jAppManager::close($this->getParam('message',''));
     }
 }
