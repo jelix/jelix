@@ -32,6 +32,7 @@ c ui.en.js
 c ui.fr.js
 cd lib/jelix-www/js/jforms/htmleditors/
 c wymeditor_default.js
+c wymeditor_basic.js
 c ckeditor_default.js
 c ckeditor_full.js
 c ckeditor_basic.js
