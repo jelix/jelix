@@ -71,7 +71,7 @@ class installmoduleCommand extends JelixScriptCommand {
         if ($this->getOption("-v"))
             $reporter = new textInstallReporter();
         else
-            $reporter = new ghostInstallReporter();
+            $reporter = new textInstallReporter('error');
 
         $installer = new jInstaller($reporter);
 

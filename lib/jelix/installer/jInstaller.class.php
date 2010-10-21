@@ -727,7 +727,9 @@ class jInstaller {
             if ($compInfo['type'] != 'module')
                 continue;
             $name = $compInfo['name'];
-            $comp = $this->modules[$epId][$name];
+            $comp = null;
+            if (isset($this->modules[$epId][$name]))
+                $comp = $this->modules[$epId][$name];
             if (!$comp)
                 $compNeeded .= $name.', ';
             else {
