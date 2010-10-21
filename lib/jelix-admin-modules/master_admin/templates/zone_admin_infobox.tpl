@@ -1,10 +1,9 @@
 <ul>
         <li id="info-user">
-            <strong>{@master_admin~gui.header.user@}</strong>
+            {*<strong>{@master_admin~gui.header.user@}</strong>*}
+            <span id="info-user-login">{$user->login|eschtml}</span>
             {ifacl2 'auth.user.view'}
-                <span id="info-user-login"><a href="{jurl 'jauthdb_admin~user:index', array('j_user_login'=>$user->login)}">{$user->login}</a></span>
-            {else}
-                <span id="info-user-login">{$user->login}</span>
+            | <a href="{jurl 'jauthdb_admin~user:index', array('j_user_login'=>$user->login)}">{@master_admin~gui.header.your.account@}</a>
             {/ifacl2}
             | <a href="{jurl 'jauth~login:out'}" id="info-user-logout">{@master_admin~gui.header.disconnect@}</a>
         </li>

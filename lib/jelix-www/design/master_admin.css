@@ -62,6 +62,12 @@ fieldset {
     margin-left: 10px;
 }
 
+#info-box #info-user-login {
+    font-weight:bold;
+    color:#FAEDED;
+}
+#info-box a { text-decoration:underline;}
+
 #main {
     clear:both;
     background: white url('images/fond-cellule.png') repeat-x top left;
