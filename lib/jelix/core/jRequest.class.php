@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage core
 * @author     Laurent Jouanneau
-* @contributor
-* @copyright  2005-2010 Laurent Jouanneau
+* @contributor Yannick Le Guédart
+* @copyright  2005-2010 Laurent Jouanneau, 2010 Yannick Le Guédart
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -250,5 +250,41 @@ abstract class jRequest {
          return $input;
       }
    }
+
+   private $_headers = null;
+
+   private function _generateHeaders() {
+      if (is_null($this->_headers)) {
+         if (function_exists('apache_response_headers')) {
+            $this->_headers = apache_request_headers();
+         }
+         else {
+            $this->_headers = array();
+
+            foreach($_SERVER as $key => $value) {
+               if (substr($key,0,5) == "HTTP_") {
+                  $key = str_replace(" ", "-",
+                          ucwords(strtolower(str_replace('_', ' ', substr($key,5)))));
+                  $this->_headers[$key] = $value;
+               }
+            }
+         }
+      }
+   }
+
+   public function header($name) {
+      $this->_generateHeaders();
+      if (isset($this->_headers[$name])) {
+         return $this->_headers[$name];
+      }
+      return null;
+   }
+
+   public function headers() {
+      $this->_generateHeaders();
+      return $this->_headers;
+   }
+
+
 }
 

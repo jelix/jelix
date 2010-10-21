@@ -198,6 +198,7 @@ Yannick Le Guédart (aka Torgan)
  - fixed bug on jDaoConditions (#906)
  - created jKVDb (#1048)
  - fixed bug on jDaoFactoryBase (#1192)
+ - headers on jRequest (#1201)
 
 Kévin Lepeltier (aka Lipki)
  - plugin image for jtpl (#474, #502, #558, #559, #560)
