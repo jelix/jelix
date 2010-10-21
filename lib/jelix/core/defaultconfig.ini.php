@@ -113,15 +113,15 @@ quietMessage="A technical error has occured. Sorry for this trouble."
 
 showInFirebug = off
 
-; mots clés que vous pouvez utiliser : ECHO, ECHOQUIET, EXIT, LOGFILE, SYSLOG, MAIL, TRACE
-default      = ECHO EXIT
-error        = ECHO EXIT
-warning      = ECHO
+; keywords you can use: ECHO, ECHOQUIET, EXIT, LOGFILE, SYSLOG, MAIL, TRACE
+default      = ECHO TRACE EXIT
+error        = ECHO TRACE EXIT
+warning      = ECHO TRACE
 notice       = ECHO
 strict       = ECHO
-deprecated   =
-; pour les exceptions, il y a implicitement un EXIT
-exception    = ECHO
+; for exceptions, there is always an implicit EXIT by default
+exception    = ECHO TRACE
+
 
 [compilation]
 checkCacheFiletime  = on
@@ -270,10 +270,14 @@ driver =
 [sessions]
 ; to disable sessions, set the following parameter to 0
 start = 1
-shared_session = off
-; You can change the session name by setting the following parameter (only accepts alpha-numeric chars) :
-; name = "mySessionName"
 
+; If several applications are installed in the same documentRoot but with
+; a different basePath, shared_session indicates if these application
+; share the same php session
+shared_session = off
+
+; indicate a session name for each applications installed with the same
+; domain and basePath, if their respective sessions shouldn't be shared
 name=
 
 ;

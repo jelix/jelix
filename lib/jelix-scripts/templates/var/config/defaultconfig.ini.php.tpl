@@ -55,18 +55,18 @@ html=myHtmlResponse
 ;emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
 ;quietMessage="An error occured. Sorry for the inconvenience."
 
+; on a production server :
 ; keywords you can use: ECHO, ECHOQUIET, EXIT, LOGFILE, SYSLOG, MAIL, TRACE
-default      = ECHO EXIT
-error        = ECHO EXIT
-warning      = ECHO
-notice       = ECHO
-strict       = ECHO
-; for exceptions, there is always an implicit EXIT by default
-exception    = ECHO
+;default      = ECHOQUIET LOGFILE TRACE EXIT
+;error        = ECHOQUIET LOGFILE TRACE EXIT
+;warning      = ECHOQUIET LOGFILE TRACE
+;notice       = ECHOQUIET
+;strict       = 
+;exception    = ECHOQUIET LOGFILE TRACE EXIT
 
-[compilation]
-checkCacheFiletime  = on
-force  = off
+;[compilation]
+;checkCacheFiletime  = on
+;force  = off
 
 [urlengine]
 ; name of url engine :  "simple", "basic_significant" or "significant"
@@ -174,31 +174,33 @@ smtpTimeout = 10
 driver =
 
 [sessions]
-; to disable sessions, set the following parameter to 0
-start = 1
-; You can change the session name by setting the following parameter (only accepts alpha-numeric chars) :
-; name = "mySessionName"
+; If several applications are installed in the same documentRoot but with
+; a different basePath, shared_session indicates if these application
+; share the same php session
+shared_session = off
+
+; indicate a session name for each applications installed with the same
+; domain and basePath, if their respective sessions shouldn't be shared
+name=
+
 ; Use alternative storage engines for sessions
-;
-; usage :
-;
-; storage = "files"
-; files_path = "app:var/sessions/"
+;storage = "files"
+;files_path = "app:var/sessions/"
 ;
 ; or
 ;
-; storage = "dao"
-; dao_selector = "jelix~jsession"
-; dao_db_profile = ""
+;storage = "dao"
+;dao_selector = "jelix~jsession"
+;dao_db_profile = ""
 
 
 [forms]
 ; define input type for datetime widgets : "textboxes" or "menulists"
-controls.datetime.input = "menulists"
+;controls.datetime.input = "menulists"
 ; define the way month labels are displayed widgets: "numbers", "names" or "shortnames"
-controls.datetime.months.labels = "names"
+;controls.datetime.months.labels = "names"
 ; define the default config for datepickers in jforms
-datepicker = default
+;datepicker = default
 
 [datepickers]
-default = jelix/js/jforms/datepickers/default/init.js
+;default = jelix/js/jforms/datepickers/default/init.js
