@@ -148,22 +148,32 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             $errRequired='';
             foreach($errors as $cname => $err){
                 if(!$this->_form->isActivated($ctrls[$cname]->ref)) continue;
-                if($err == jForms::ERRDATA_REQUIRED) {
-                    if($ctrls[$cname]->alertRequired){
+                if ($err === jForms::ERRDATA_REQUIRED) {
+                    if ($ctrls[$cname]->alertRequired){
                         echo '<li>', $ctrls[$cname]->alertRequired,'</li>';
-                    }else{
+                    }
+                    else {
                         echo '<li>', jLocale::get('jelix~formserr.js.err.required', $ctrls[$cname]->label),'</li>';
                     }
-                }elseif ($err != '' && $err != jForms::ERRDATA_INVALID) {
-                    echo '<li>', $err,'</li>';
-                }else{
+                }else if ($err === jForms::ERRDATA_INVALID) {
                     if($ctrls[$cname]->alertInvalid){
                         echo '<li>', $ctrls[$cname]->alertInvalid,'</li>';
                     }else{
                         echo '<li>', jLocale::get('jelix~formserr.js.err.invalid', $ctrls[$cname]->label),'</li>';
                     }
                 }
-
+                elseif ($err === jForms::ERRDATA_INVALID_FILE_SIZE) {
+                    echo '<li>', jLocale::get('jelix~formserr.js.err.invalid.file.size', $ctrls[$cname]->label),'</li>';
+                }
+                elseif ($err === jForms::ERRDATA_INVALID_FILE_TYPE) {
+                    echo '<li>', jLocale::get('jelix~formserr.js.err.invalid.file.type', $ctrls[$cname]->label),'</li>';
+                }
+                elseif ($err === jForms::ERRDATA_FILE_UPLOAD_ERROR) {
+                    echo '<li>', jLocale::get('jelix~formserr.js.err.file.upload', $ctrls[$cname]->label),'</li>';
+                }
+                elseif ($err != '') {
+                    echo '<li>', $err,'</li>';
+                }
             }
             echo '</ul>';
         }
@@ -864,9 +874,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     protected function outputUpload($ctrl, &$attr) {
-        if($ctrl->maxsize){
+        /*if($ctrl->maxsize){
             echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$ctrl->maxsize,'"',$this->_endt;
-        }
+        }*/
         $attr['type'] = 'file';
         $attr['value'] = '';
         echo '<input';

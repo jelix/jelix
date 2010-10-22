@@ -30,6 +30,9 @@ class jForms {
 
     const ERRDATA_INVALID = 1;
     const ERRDATA_REQUIRED = 2;
+    const ERRDATA_INVALID_FILE_SIZE = 3;
+    const ERRDATA_INVALID_FILE_TYPE = 4;
+    const ERRDATA_FILE_UPLOAD_ERROR = 5;
 
     /**
      * pure static class, so no constructor
