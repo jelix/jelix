@@ -20,6 +20,7 @@ cd testapp/www
   check.php
   robots.txt
   install.php
+  rest.php
 cd testapp/www/foo
   bar.php
 cd testapp/www/design
@@ -154,6 +155,7 @@ cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php
   jstests.classic.php
   jstests.jsonrpc.php
+  myrest.classic.php
 cd testapp/modules/jelix_tests/daos
   products.dao.xml
   products_events.dao.xml
@@ -166,6 +168,7 @@ cd testapp/modules/jelix_tests/forms
 cd testapp/modules/jelix_tests/tests/
   core.jlocale.html_cli.php
   core.jrequest.html_cli.php
+  core.rest_controller.html_cli.php
   core.selectors_action.html.php
   core.selectors_module.html_cli.php
   core.soap.html.php
@@ -278,8 +281,11 @@ cd testapp/var/config
   jacl_ws.coord.ini.php
   kvprofiles.ini.php.dist
   urls.xml
+  urls_rest.xml
   urls_old.xml
 cd testapp/var/config/index
+  config.ini.php
+cd testapp/var/config/rest
   config.ini.php
 cd testapp/var/config/xmlrpc
   config.ini.php

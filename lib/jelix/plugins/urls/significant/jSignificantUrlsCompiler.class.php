@@ -31,7 +31,16 @@ class significantUrlInfoParsing {
     }
 
     function getFullSel() {
-        return $this->module.'~'.($this->action?$this->action:'*').'@'.$this->requestType;
+        if ($this->action) {
+            $act = $this->action;
+            if (substr($act,-1) == ':') // this is a rest action
+                // we should add index because jSelectorAct resolve a "ctrl:" as "ctrl:index"
+                // and then create the corresponding selector so url create infos will be found
+                $act .= 'index';
+        }
+        else
+            $act = '*';
+        return $this->module.'~'.$act.'@'.$this->requestType;
     }
 }
 
