@@ -67,8 +67,8 @@ function driverChanged(select, profile) {
                {if $force_encoding[$profile]}checked="checked"{/if}/> {@help.force_encoding@}</td>
   </tr>
   <tr>
-    <th><label for="prefix[{$profile}]">{@label.prefix@}</label></th>
-    <td><input id="prefix[{$profile}]" name="prefix[{$profile}]" value="{$prefix[$profile]|eschtml}" size=""/></td>
+    <th><label for="table_prefix[{$profile}]">{@label.prefix@}</label></th>
+    <td><input id="table_prefix[{$profile}]" name="table_prefix[{$profile}]" value="{$table_prefix[$profile]|eschtml}" size=""/></td>
   </tr>
 </table>
 {/foreach}
