@@ -74,7 +74,7 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url13', 'rubrique'=>'chaussures');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'en_EN');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'fr_FR');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url30');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url30');  
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:hello2');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:hello3');
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urla');
@@ -90,7 +90,6 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'testapp',   'action'=>'login:out');
       $resultList[]= array('module'=>'testapp',   'action'=>'login:form');
       $resultList[]= array('module'=>'testapp',   'action'=>'user:index', 'user'=>'laurent');
-
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -134,7 +133,14 @@ class UTParseUrls extends UnitTestCase {
 
          $this->assertTrue( ($p == $resultList[$k]), 'test '.$k.' created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
       }
-
+      
+      // the dot should be escaped in the regular expression
+      $url = jUrl::parse ("index.php", "/hello.html",array());
+      $this->assertEqual($url->params['module'], 'jelix_tests');
+      $this->assertEqual($url->params['action'], 'urlsig:url31');
+      $url = jUrl::parse ("index.php", "/helloUhtml",array());
+      $this->assertEqual($url->params['module'], 'jelix');
+      $this->assertEqual($url->params['action'], 'default:notfound');
 
       //$this->sendMessage("significant, multiview = true");
       $gJConfig->urlengine['multiview']=true;

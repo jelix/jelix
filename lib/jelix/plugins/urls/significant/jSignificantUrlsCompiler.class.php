@@ -362,8 +362,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
      * @return string the correponding regular expression
      */
     protected function extractDynamicParams($url, $regexppath, $u) {
-
-        if (preg_match_all("/\:([a-zA-Z_]+)/", $regexppath, $m, PREG_PATTERN_ORDER)) {
+        $regexppath = preg_quote($regexppath , '!');
+        if (preg_match_all("/\\\:([a-zA-Z_]+)/", $regexppath, $m, PREG_PATTERN_ORDER)) {
             $u->params = $m[1];
 
             foreach ($url->param as $var) {
@@ -395,7 +395,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                     $regexp = '([^\/]+)';
                 }
 
-                $regexppath = str_replace(':'.$name, $regexp, $regexppath);
+                $regexppath = str_replace('\:'.$name, $regexp, $regexppath);
             }
 
             foreach ($u->params as $k=>$name) {
@@ -403,7 +403,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                     continue;
                 }
                 $u->escapes[$k] = false;
-                $regexppath = str_replace(':'.$name, '([^\/]+)', $regexppath);
+                $regexppath = str_replace('\:'.$name, '([^\/]+)', $regexppath);
             }
         }
         return $regexppath;
