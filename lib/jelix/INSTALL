@@ -20,7 +20,7 @@ installation
 
 - unzip the archive
 - set write access on temp directory, for apache
-- install or create an application with lib/jelix-scripts/jelix
+- install or create an application with the jelix.php script in lib/jelix-scripts/jelix
 
 Details
 -------
