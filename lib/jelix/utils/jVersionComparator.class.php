@@ -53,6 +53,7 @@ class jVersionComparator {
 
                 self::normalizeVersionNumber($m1);
                 self::normalizeVersionNumber($m2);
+
                 if ($m1[2] != $m2[2]) {
                     return ($m1[2] < $m2[2] ? -1: 1);
                 }
@@ -86,7 +87,7 @@ class jVersionComparator {
     static protected function normalizeVersionNumber(&$n) {
         $n[2] = strtolower($n[2]);
         if ($n[2] == 'pre' || $n[2] == 'dev' || $n[2] == '-dev') {
-            $n[2] = '';
+            $n[2] = '_';
             $n[3] = '';
             $n[4] = 'dev';
         }

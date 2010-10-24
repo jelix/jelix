@@ -31,6 +31,7 @@ class UTjversioncomparatormisc extends UnitTestCase {
         $this->assertEqual(1, jVersionComparator::compareVersion('1.2','1.2RC'));
         $this->assertEqual(1, jVersionComparator::compareVersion('1.2','1.2bETA'));
         $this->assertEqual(1, jVersionComparator::compareVersion('1.2','1.2alpha'));
+        $this->assertEqual(1, jVersionComparator::compareVersion('1.2','1.2pre'));
 
         $this->assertEqual(-1, jVersionComparator::compareVersion('1.2b','1.2'));
         $this->assertEqual(-1, jVersionComparator::compareVersion('1.2a','1.2'));
@@ -55,6 +56,14 @@ class UTjversioncomparatormisc extends UnitTestCase {
         $this->assertEqual(-1, jVersionComparator::compareVersion('1.2RC-dev','1.2RC'));
         $this->assertEqual(1, jVersionComparator::compareVersion('1.2RC','1.2RC-dev'));
 
+        $this->assertEqual(-1, jVersionComparator::compareVersion('1.2pre','1.2a'));
+        $this->assertEqual(-1, jVersionComparator::compareVersion('1.2pre','1.2b'));
+        $this->assertEqual(-1, jVersionComparator::compareVersion('1.2pre','1.2RC'));
+        $this->assertEqual(-1, jVersionComparator::compareVersion('1.2PRE','1.2RC'));
+        $this->assertEqual(-1, jVersionComparator::compareVersion('1.2a','1.2b'));
+        $this->assertEqual(-1, jVersionComparator::compareVersion('1.2b','1.2rc'));
+        $this->assertEqual(-1, jVersionComparator::compareVersion('1.2rc','1.2'));
+
         $this->assertEqual(0, jVersionComparator::compareVersion('1.*','1'));
         $this->assertEqual(0, jVersionComparator::compareVersion('1.1.*','1.1.1'));
         $this->assertEqual(0, jVersionComparator::compareVersion('1.1.2','1.1.*'));
@@ -65,7 +74,7 @@ class UTjversioncomparatormisc extends UnitTestCase {
         
         $this->assertEqual(0, jVersionComparator::compareVersion('1.1','*'));
         $this->assertEqual(0, jVersionComparator::compareVersion('*','1.1'));
-        
+
     }
 
 
@@ -155,6 +164,13 @@ class UTjversioncomparatormisc extends UnitTestCase {
         $this->assertEqual(-1, $this->_comparer('1.1','*'));
         $this->assertEqual(-1, $this->_comparel('*','1.1'));
         
+        $this->assertEqual(-1, $this->_compare('1.2pre','1.2a'));
+        $this->assertEqual(-1, $this->_compare('1.2pre','1.2b'));
+        $this->assertEqual(-1, $this->_compare('1.2pre','1.2RC'));
+        $this->assertEqual(-1, $this->_compare('1.2PRE','1.2RC'));
+        $this->assertEqual(-1, $this->_compare('1.2a','1.2b'));
+        $this->assertEqual(-1, $this->_compare('1.2b','1.2rc'));
+        $this->assertEqual(-1, $this->_compare('1.2rc','1.2'));
     }
 }
 
