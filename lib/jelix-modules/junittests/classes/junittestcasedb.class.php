@@ -17,7 +17,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
     */
     function emptyTable($table){
         $db = jDb::getConnection($this->dbProfile);
-        $db->exec('DELETE FROM '.$table);
+        $db->exec('DELETE FROM '.$db->encloseName($table));
     }
 
     function insertRecordsIntoTable($table, $fields, $records, $emptyBefore=false){
@@ -25,7 +25,14 @@ class jUnitTestCaseDb extends jUnitTestCase {
             $this->emptytable($table);
         $db = jDb::getConnection($this->dbProfile);
 
-        $sql = 'INSERT INTO '.$table.'  ('.implode(',',$fields).') VALUES (';
+        $fieldsList = '';
+        foreach($fields as $f) {
+            if ($fieldsList != '')
+                $fieldsList.=',';
+            $fieldsList .= $db->encloseName($f);
+        }
+
+        $sql = 'INSERT INTO '.$db->encloseName($table).'  ('.$fieldsList.') VALUES (';
 
         foreach($records as $rec){
             $ins='';
@@ -42,7 +49,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      */
     function assertTableIsEmpty($table, $message="%s"){
         $db = jDb::getConnection($this->dbProfile);
-        $rs = $db->query('SELECT count(*) as N FROM '.$table);
+        $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table should be empty");
             if($r->N == 0){
@@ -63,7 +70,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      */
     function assertTableIsNotEmpty($table, $message="%s"){
         $db = jDb::getConnection($this->dbProfile);
-        $rs = $db->query('SELECT count(*) as N FROM '.$table);
+        $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table shouldn't be empty");
             if($r->N > 0){
@@ -84,7 +91,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      */
     function assertTableHasNRecords($table, $n, $message="%s"){
         $db = jDb::getConnection($this->dbProfile);
-        $rs = $db->query('SELECT count(*) as N FROM '.$table);
+        $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table should contains ".$n." records");
             if($r->N == $n){
@@ -108,7 +115,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
 
         $message = sprintf( $message, $table. " table should contains given records.");
 
-        $sql = 'SELECT * FROM '.$table;
+        $sql = 'SELECT * FROM '.$db->encloseName($table);
         $rs = $db->query($sql);
         if(!$rs){
            $this->fail($message.' ( no results set)');
@@ -177,7 +184,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
 
         $message = sprintf( $message, $table. " table should contains given records.");
 
-        $sql = 'SELECT * FROM '.$table;
+        $sql = 'SELECT * FROM '.$db->encloseName($table);
         $rs = $db->query($sql);
         if(!$rs){
            $this->fail($message.' ( no results set)');
@@ -251,6 +258,3 @@ class jUnitTestCaseDb extends jUnitTestCase {
 
 }
 
-
-
-?>
