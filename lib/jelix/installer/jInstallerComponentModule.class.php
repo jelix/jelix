@@ -183,6 +183,9 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             if (jVersionComparator::compareVersion($this->moduleInfos[$epId]->version, $upgrader->version) >= 0 ) {
                 continue;
             }
+            if (jVersionComparator::compareVersion($this->sourceVersion, $upgrader->version) < 0 ) {
+                continue;
+            }
 
             $upgrader->setParameters($this->moduleInfos[$epId]->parameters);
             $class = get_class($upgrader);

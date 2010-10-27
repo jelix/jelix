@@ -153,6 +153,8 @@ class UTjversioncomparatormisc extends UnitTestCase {
         $this->assertEqual(-1, $this->_compare('1.2RC-dev','1.2RC'));
         $this->assertEqual(1, $this->_compare('1.2RC','1.2RC-dev'));
 
+        $this->assertEqual(-1, $this->_compare('1.2RC2-dev.1699','1.2RC2-dev.1700'));
+
         $this->assertEqual(0, $this->_compare('1.*','1'));
         $this->assertEqual(-1, $this->_comparel('1.1.*','1.1.1'));
         $this->assertEqual(-1, $this->_comparer('1.1.2','1.1.*'));
