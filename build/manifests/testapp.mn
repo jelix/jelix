@@ -109,7 +109,7 @@ cd testapp/modules/jelix_tests/classes/tests
 cd testapp/modules/jelix_tests/install
   upgrade_to_1.2b1pre.1303_bar.php
   upgrade_to_1.2b1pre.1304_foo.php
-  upgrade_to_1.2RC2-dev.1702_labels1.php
+  upgrade_to_1.2rc2-dev.1702_labels1.php
   upgrade_to_1.2RC2-dev.1702.mysql.sql
   upgrade_to_1.2RC2-dev.1702.pgsql.sql
   install.php

@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin, Julien Issler
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2010 Laurent Jouanneau
 * @copyright   2008 Dominique Papin
 * @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
@@ -222,7 +222,6 @@ class jFormsDaoDatasource implements jIFormsDatasource2 {
                 while (count($values) != $countPKeys) {
                     array_pop($values);
                 }
-            //var_dump($values);
             }
             $rec = call_user_func_array( array($this->dao, $method), $values);
 

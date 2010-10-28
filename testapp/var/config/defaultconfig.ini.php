@@ -111,8 +111,6 @@ news = "new~*@classic"
 soap = "@soap"
 actu = "jelix_tests~actu:*@classic"
 
-__https=
-
 [basic_significant_urlengine_entrypoints]
 ; for each entry point, it indicates if the entry point name
 ; should be include in the url or not
