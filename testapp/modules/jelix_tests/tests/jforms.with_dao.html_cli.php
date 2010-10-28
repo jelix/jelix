@@ -206,9 +206,24 @@ $verif='
         $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
     }
 
+
+
+
+    function testGetValue() {
+        
+        $this->emptyTable('labels1_test');
+        
+        
+        
+        
+    }
+
     function testEnd(){
         global $gJCoord;
         $gJCoord->request->params = $this->savedParams;
+        jForms::destroy('product');
+        jForms::destroy('label', array(1,'fr'));
+        jForms::destroy('label', array(1,'en'));
     }
 }
 ?>

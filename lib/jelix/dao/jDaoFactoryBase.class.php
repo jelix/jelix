@@ -183,7 +183,7 @@ abstract class jDaoFactoryBase  {
         if(count($args)==1 && is_array($args[0])){
             $args=$args[0];
         }
-        $keys = array_combine($this->getPrimaryKeyNames(),$args );
+        $keys = @array_combine($this->getPrimaryKeyNames(),$args );
 
         if($keys === false){
             throw new jException('jelix~dao.error.keys.missing');

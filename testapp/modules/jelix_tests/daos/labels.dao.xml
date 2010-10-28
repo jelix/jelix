@@ -6,7 +6,94 @@
    <record>
       <property name="key"   fieldname="key" datatype="int"/>
       <property name="lang"  fieldname="lang" datatype="string"/>
+      <property name="keyalias"  fieldname="keyalias" datatype="string"/>
       <property name="label" fieldname="label" datatype="string"  required="true"/>
    </record>
+   <factory>
+      <method name="findByLang">
+         <parameter name="lang" />
+         <conditions>
+            <eq property="lang" expr="$lang" />
+         </conditions>
+      </method>
+
+
+      <method name="findByAlias">
+         <parameter name="alias" />
+         <conditions>
+            <eq property="keyalias" expr="$alias" />
+         </conditions>
+      </method>
+
+      <method name="getByAliasLang" type="selectfirst">
+         <parameter name="alias" />
+         <parameter name="lang" />
+         <conditions>
+            <eq property="keyalias" expr="$alias" />
+            <eq property="lang" expr="$lang" />
+         </conditions>
+      </method>
+
+
+      <method name="findByLang2">
+         <parameter name="lang1" />
+         <parameter name="lang2" />
+         <conditions logic="or">
+            <eq property="lang" expr="$lang1" />
+            <eq property="lang" expr="$lang2" />
+         </conditions>
+      </method>
+
+      <method name="findByLang3">
+         <parameter name="any" />
+         <parameter name="lang1" />
+         <conditions logic="and">
+            <eq property="lang" expr="$lang1" />
+         </conditions>
+      </method>
+
+
+
+      <method name="getByLang2" type="selectfirst">
+         <parameter name="key" />
+         <parameter name="lang1" />
+         <parameter name="lang2" />
+         <conditions>
+            <eq property="key" expr="$key" />
+            <conditions logic="or">
+               <eq property="lang" expr="$lang1" />
+               <eq property="lang" expr="$lang2" />
+            </conditions>
+         </conditions>
+      </method>
+
+      <method name="findAllFr">
+         <parameter name="any" />
+         <conditions>
+            <eq property="lang" value="fr" />
+         </conditions>
+      </method>
+
+      <method name="getFr" type="selectfirst">
+         <parameter name="key" />
+         <parameter name="any" />
+         <conditions>
+            <eq property="key" expr="$key" />
+            <eq property="lang" value="fr" />
+         </conditions>
+      </method>
+
+      <method name="getByLang3" type="selectfirst">
+         <parameter name="key" />
+         <parameter name="any" />
+         <parameter name="lang" />
+         <conditions>
+            <eq property="key" expr="$key" />
+            <eq property="lang" expr="$lang" />
+         </conditions>
+      </method>
+
+
+   </factory>
 </dao>
 

@@ -11,9 +11,18 @@ SET default_with_oids = false;
 
 CREATE TABLE labels_tests (
     "key" integer NOT NULL,
+    keyalias VARCHAR( 10 ) NULL,
     lang character varying(5) NOT NULL,
     label character varying(50) NOT NULL
 );
+
+CREATE TABLE labels1_tests (
+    "key" integer NOT NULL,
+    keyalias VARCHAR( 10 ) NOT NULL,
+    lang character varying(5) NOT NULL,
+    label character varying(50) NOT NULL
+);
+
 
 
 CREATE TABLE testkvdb (
@@ -50,6 +59,15 @@ SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('products', 'id'), 1,
 
 ALTER TABLE ONLY labels_tests
     ADD CONSTRAINT labels_tests_pkey PRIMARY KEY ("key", lang);
+ALTER TABLE ONLY labels_tests
+    ADD CONSTRAINT labels_tests_keyalias UNIQUE KEY ("keyalias");
+
+ALTER TABLE ONLY labels1_tests
+    ADD CONSTRAINT labels1_tests_pkey PRIMARY KEY ("key");
+
+ALTER TABLE ONLY labels1_tests
+    ADD CONSTRAINT labels1_tests_keyalias UNIQUE KEY ("keyalias");
+
 
 ALTER TABLE ONLY product_tags_test
     ADD CONSTRAINT product_tags_test_pkey PRIMARY KEY (product_id, tag);

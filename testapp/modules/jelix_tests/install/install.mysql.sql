@@ -15,11 +15,21 @@ PRIMARY KEY ( `product_id` , `tag` )
 
 CREATE TABLE `labels_test` (
 `key` INT NOT NULL ,
+`keyalias` VARCHAR( 10 ) NULL,
 `lang` VARCHAR( 5 ) NOT NULL ,
 `label` VARCHAR( 50 ) NOT NULL ,
-PRIMARY KEY ( `key` , `lang` )
+PRIMARY KEY ( `key` , `lang` ),
+UNIQUE (`keyalias`)
 );
 
+CREATE TABLE `labels1_test` (
+`key` INT NOT NULL ,
+`keyalias` VARCHAR( 10 ) NOT NULL,
+`lang` VARCHAR( 5 ) NOT NULL,
+`label` VARCHAR( 50 ) NOT NULL ,
+PRIMARY KEY ( `key`),
+UNIQUE (`keyalias`)
+);
 
 -- for the crud example
 CREATE TABLE `products` (

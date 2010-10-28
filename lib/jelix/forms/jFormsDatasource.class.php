@@ -125,7 +125,7 @@ class jFormsDaoDatasource implements jIFormsDatasource2 {
     protected $method;
     protected $labelProperty = array();
     protected $labelSeparator;
-    public $labelMethod;
+    public $labelMethod = 'get';
     protected $keyProperty;
     protected $profile;
 
@@ -195,20 +195,39 @@ class jFormsDaoDatasource implements jIFormsDatasource2 {
     public function getLabel2($key, $form){
         if($this->dao === null)
             $this->dao = jDao::get($this->selector, $this->profile);
-        if ($this->labelMethod)
-            $method = $this->labelMethod;
-        else
-            $method = 'get';
 
-        if ($this->criteria !== null) {
-            $rec = call_user_func_array( array($this->dao, $method), array($key, $this->criteria));
-        } else if ($this->criteriaFrom !== null) {
-            $args = array($key) ;
-            foreach( (array)$this->criteriaFrom as $criteria ) {
-              array_push($args, $form->getData($criteria));
+        $method = $this->labelMethod;
+
+
+        if ($this->criteria !== null || $this->criteriaFrom !== null) {
+            $countPKeys = count($this->dao->getPrimaryKeyNames());
+            if ($this->criteria !== null) {
+                $values = $this->criteria;
+                array_unshift($values, $key);                
             }
-            $rec = call_user_func_array( array($this->dao, $method), $args);
-        } else {
+            else if ($this->criteriaFrom !== null) {
+                $values = array($key);
+                foreach( (array)$this->criteriaFrom as $criteria ) {
+                    array_push($values, $form->getData($criteria));
+                }
+            }
+
+            if ($method == 'get') {
+                // in the case where the number of criterias doesn't correspond
+                // to the number of field of the primary key, we give only
+                // the expected number of values. So the retrieved record
+                // won't correspond to the criterias. However, in some case,
+                // it could make sens.
+                // for example, the dependence could be just a filter...
+                while (count($values) != $countPKeys) {
+                    array_pop($values);
+                }
+            //var_dump($values);
+            }
+            $rec = call_user_func_array( array($this->dao, $method), $values);
+
+        }
+        else {
             $rec = $this->dao->{$method}($key);
         }
         if ($rec) {

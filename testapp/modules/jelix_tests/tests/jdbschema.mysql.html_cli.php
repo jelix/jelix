@@ -23,7 +23,7 @@ class UTjDbSchemaMysql extends jUnitTestCase {
                           'jacl_rights', 'jacl_subject', 'jacl_user_group',
                           'jacl2_group','jacl2_user_group','jacl2_subject',
                           'jacl2_rights', 'jlx_user', 'myconfig', 'product_test',
-                          'product_tags_test', 'labels_test', 'products', 'jlx_cache',
+                          'product_tags_test', 'labels_test', 'labels1_test', 'products', 'jlx_cache',
                           'jsessions', 'testkvdb');
 
         $list = $schema->getTables();

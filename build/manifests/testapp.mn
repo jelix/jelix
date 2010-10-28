@@ -109,6 +109,9 @@ cd testapp/modules/jelix_tests/classes/tests
 cd testapp/modules/jelix_tests/install
   upgrade_to_1.2b1pre.1303_bar.php
   upgrade_to_1.2b1pre.1304_foo.php
+  upgrade_to_1.2RC2-dev.1702_labels1.php
+  upgrade_to_1.2RC2-dev.1702.mysql.sql
+  upgrade_to_1.2RC2-dev.1702.pgsql.sql
   install.php
   install.mysql.sql
   install.pgsql.sql
@@ -162,6 +165,7 @@ cd testapp/modules/jelix_tests/daos
   product_tags.dao.xml
   description.dao.xml
   labels.dao.xml
+  labels1.dao.xml
 cd testapp/modules/jelix_tests/forms
   product.form.xml
   label.form.xml
@@ -214,6 +218,7 @@ cd testapp/modules/jelix_tests/tests/
   jforms.check_datas.html_cli.php
   jforms.compiler.html_cli.php
   jforms.compiler_1_1.html_cli.php
+  jforms.datasources.html_cli.php
   jforms.htmlbuilder.html_cli.php
   jforms.htmlbuilder2.html_cli.php
   jforms.htmllightbuilder.html_cli.php

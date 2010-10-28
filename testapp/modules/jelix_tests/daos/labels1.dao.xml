@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="labels1_test" primarykey="key" />
+   </datasources>
+   <record>
+      <property name="key"   fieldname="key" datatype="int"/>
+      <property name="keyalias"  fieldname="keyalias" datatype="string"/>
+      <property name="lang"  fieldname="lang" datatype="string"/>
+      <property name="label" fieldname="label" datatype="string"  required="true"/>
+   </record>
+   <factory>
+      
+      <method name="findByLang">
+         <parameter name="lang" />
+         <conditions>
+            <eq property="lang" expr="$lang" />
+         </conditions>
+      </method>
+
+      <method name="findByAlias">
+         <parameter name="alias" />
+         <conditions>
+            <eq property="keyalias" expr="$alias" />
+         </conditions>
+      </method>
+
+      <method name="getByAlias" type="selectfirst">
+         <parameter name="alias" />
+         <conditions>
+            <eq property="keyalias" expr="$alias" />
+         </conditions>
+      </method>
+      <method name="getByAliasAndCriteria" type="selectfirst">
+         <parameter name="alias" />
+         <parameter name="crit" />
+         <conditions>
+            <eq property="keyalias" expr="$alias" />
+         </conditions>
+      </method>
+
+      
+   </factory>
+   
+</dao>
+
