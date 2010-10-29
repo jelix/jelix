@@ -8,9 +8,10 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Laurent Jouanneau
-* @contributor Kévin Lepeltier, GeekBay
+* @contributor Kévin Lepeltier, GeekBay, Julien Issler
 * @copyright   2006-2010 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier, 2009 Geekbay
+* @copyright   2010 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -166,7 +167,7 @@ class jMailer extends PHPMailer {
 
             if (isset($metas['From'])) {
                 $adr = $this->getAddrName($metas['From']);
-                $this->SetFrom($adr[1], $adr[0]);
+                $this->SetFrom($adr[0], $adr[1]);
             }
 
             $mailtpl->assign('From', $this->From );
@@ -202,7 +203,7 @@ class jMailer extends PHPMailer {
     protected function FileSend($header, $body) {
         return jFile::write ($this->getStorageFile(), $header.$body);
     }
-    
+
     protected function getStorageFile() {
         return rtrim($this->filePath,'/').'/mail.'.$GLOBALS['gJCoord']->request->getIP().'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
     }
