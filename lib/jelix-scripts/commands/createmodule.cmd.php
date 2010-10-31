@@ -13,7 +13,13 @@
 class createmoduleCommand extends JelixScriptCommand {
 
     public  $name = 'createmodule';
-    public  $allowed_options=array('-nosubdir'=>false, '-nocontroller'=>false, '-cmdline'=>false, '-addinstallzone'=>false, '-defaultmodule'=>false, '-admin'=>false);
+    public  $allowed_options=array('-nosubdir'=>false,
+                                   '-nocontroller'=>false,
+                                   '-cmdline'=>false,
+                                   '-addinstallzone'=>false,
+                                   '-defaultmodule'=>false,
+                                   '-admin'=>false,
+                                   '-ver'=>true);
     public  $allowed_parameters=array('module'=>true, 'repository'=>false);
 
     public  $syntaxhelp = "[-nosubdir] [-nocontroller] [-cmdline] [-addinstallzone] [-defaultmodule] [-admin] MODULE [REPOSITORY]";
@@ -30,6 +36,7 @@ class createmoduleCommand extends JelixScriptCommand {
     -defaultmodule (facultatif) : le module devient le module par defaut de l'application
     -admin (facultatif) : le module doit être utilisé avec master_admin, création de fichiers
                         supplémentaires et ajout de configuration adéquates (droits..)
+    -ver {version} (facultatif) : indique le numéro de version initial du module
 
     MODULE : le nom du module à créer.
     REPOSITORY: le depot de modules où créer le module. même syntaxe que pour modulesPath
@@ -44,6 +51,7 @@ class createmoduleCommand extends JelixScriptCommand {
     -defaultmodule (optional) : the new module become the default module
     -admin (optional) : the new module should be used with master_admin. install
                         additionnal file and set additionnal configuration stuff
+    -ver {version} (optional) : indicates the initial version of the module
     MODULE: name of the new module.
     REPOSITORY: the path of the directory where to create the module. same syntax as modulesPath
                 in the configuration. default repository is app:module/"
@@ -55,7 +63,9 @@ class createmoduleCommand extends JelixScriptCommand {
         global $entryPointName, $entryPointId, $allEntryPoint, $gJConfig;
 
         $module = $this->getParam('module');
-        $initialVersion = '0.1pre';
+        $initialVersion = $this->getOption('-ver');
+        if ($initialVersion === false)
+            $initialVersion = '0.1pre';
 
         // note: since module name are used for name of generated name,
         // only this characters are allowed
