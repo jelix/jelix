@@ -189,9 +189,11 @@ class installWizard {
 
     /**
      * return the name of the next step after the current page
+     * @param installWizardPage $page the current page
+     * @param integer $result  the return code of the process method of the current page
      * @return string the name
      */
-    protected function getNextStep($page) {
+    protected function getNextStep($page, $result=0) {
         if (is_array($page->config['next'])) {
             if (is_numeric($result))
                 $nextStep = $page->config['next'][$result];
@@ -244,7 +246,7 @@ class installWizard {
                 //else
                     $result = $page->process();
                 if ($result !== false) {
-                    header("location: ?step=".$this->getNextStep($page));
+                    header("location: ?step=".$this->getNextStep($page, $result));
                     exit(0);
                 }
             }
