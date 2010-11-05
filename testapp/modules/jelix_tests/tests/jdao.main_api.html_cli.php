@@ -88,6 +88,7 @@ class UTDao extends jUnitTestCaseDb {
         $this->prod2->name ='fourchette';
         $this->prod2->price = 1.54;
         $this->prod2->promo = true;
+        $this->prod2->dummy = 'started';
         $res = $dao->insert($this->prod2);
 
         $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
@@ -236,6 +237,45 @@ class UTDao extends jUnitTestCaseDb {
         $this->assertComplexIdenticalStr($list, $verif);
     }
 
+    function testEqualityOnValue() {
+        $dao = jDao::create ('products');
+
+        $res = $dao->findFourchette();
+        $list = array();
+        foreach($res as $r){
+            $list[] = $r;
+        }
+        $this->assertEqual(count($list), 1, 'findFourchette doesn\'t return one record. %s ');
+
+    $verif='<array>
+    <object>
+        <string property="id" value="'.$this->prod2->id.'" />
+        <string property="name" value="fourchette" />
+        <string property="price" value="1.54" />
+        <string property="promo" value="1" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($list, $verif);
+
+
+        $res = $dao->findStarted();
+        $list = array();
+        foreach($res as $r){
+            $list[] = $r;
+        }
+        $this->assertEqual(count($list), 1, 'findStarted doesn\'t return one record. %s ');
+
+    $verif='<array>
+    <object>
+        <string property="id" value="'.$this->prod2->id.'" />
+        <string property="name" value="fourchette" />
+        <string property="price" value="1.54" />
+        <string property="promo" value="1" />
+        <string property="dummy" value="started" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($list, $verif);
+    }
 
     function testFindByCountByOrder(){
         $dao = jDao::create ('products');

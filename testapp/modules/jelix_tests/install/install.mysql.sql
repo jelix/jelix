@@ -4,7 +4,8 @@ CREATE TABLE `product_test` (
 `name` VARCHAR( 150 ) NOT NULL ,
 `price` FLOAT NOT NULL,
 `create_date` datetime default NULL,
-`promo` BOOL NOT NULL 
+`promo` BOOL NOT NULL,
+`dummy` set('created','started','stopped') DEFAULT NULL
 ) TYPE = MYISAM ;
 
 CREATE TABLE `product_tags_test` (

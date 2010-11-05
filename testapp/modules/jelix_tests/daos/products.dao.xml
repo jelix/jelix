@@ -9,6 +9,7 @@
       <property name="price" fieldname="price" datatype="float" default="0" required="true"/>
       <property name="create_date" fieldname="create_date" datatype="datetime" insertpattern="NOW()" />
       <property name="promo" fieldname="promo" datatype="boolean" required="true" default="false"/>
+      <property name="dummy" fieldname="dummy" datatype="string" />
    </record>
    <factory>
        <method name="findByMaxId" type="select">
@@ -30,7 +31,17 @@
                 <orderitem property="price" way="asc" />
            </order>
        </method>
+       <method name="findFourchette" type="select">
+           <conditions>
+                <eq property="name" value="fourchette" />
+            </conditions>
+       </method>
 
+       <method name="findStarted" type="select">
+           <conditions>
+                <eq property="dummy" value="started" />
+            </conditions>
+       </method>
    </factory>
 </dao>
 

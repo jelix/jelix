@@ -112,6 +112,7 @@ cd testapp/modules/jelix_tests/install
   upgrade_to_1.2rc2-dev.1702_labels1.php
   upgrade_to_1.2RC2-dev.1702.mysql.sql
   upgrade_to_1.2RC2-dev.1702.pgsql.sql
+  upgrade_to_1.2rc2-dev.1707_testdaoset.php
   install.php
   install.mysql.sql
   install.pgsql.sql
