@@ -47,7 +47,7 @@ class ldapAuthDriver implements jIAuthDriver {
 
         // iterate each default parameter and apply it to actual params if missing in $params.
         foreach($_default_params as $name => $value) {
-            if (!isset($this->_params[$name]) || $this->_params[$name] = '') {
+            if (!isset($this->_params[$name]) || $this->_params[$name] == '') {
                 $this->_params[$name] = $value;
             }
         }

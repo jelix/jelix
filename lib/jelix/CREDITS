@@ -207,8 +207,9 @@ Kévin Lepeltier (aka Lipki)
  - plugin coord history (#507)
  - improvement in jMailer (#530)
 
-Litchi
+Vincent V (aka Litchi)
  - bug fix in jforms_jquery.js (#1132)
+ - fixed misprint in ldap plugin (#1219)
 
 Hugues Magnier (aka BaGroN)
  - tpl plugin stripws (#140)
