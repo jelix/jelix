@@ -4,9 +4,9 @@
 * @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor Frederic Guillot
-* @contributor Thibault PIRONT < nuKs >
+* @contributor Thibault Piront (nuKs)
 * @copyright   2005-2006 Laurent Jouanneau, 2007 Frederic Guillot
-* @copyright   2007 Thibault PIRONT
+* @copyright   2007 Thibault Piront
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

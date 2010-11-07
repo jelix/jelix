@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage db_driver
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Yannick Le Guédart
 * @contributor Laurent Raufaste

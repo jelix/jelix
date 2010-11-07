@@ -2,9 +2,9 @@
 /**
 * @package    jelix
 * @subpackage jtpl_plugin
-* @author     Jouanneau Laurent
+* @author     Laurent Jouanneau
 * @contributor Emmanuel Hesry, Julien Issler
-* @copyright   2006 Jouanneau laurent
+* @copyright   2006 Laurent Jouanneau
 * @copyright   2009 Emmanuel Hesry
 * @copyright   2010 Julien Issler
 * @link        http://www.jelix.org

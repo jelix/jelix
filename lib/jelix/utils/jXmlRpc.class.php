@@ -3,7 +3,6 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Laurent Jouanneau
-* @contributor Laurent Jouanneau for jelix
 * @contributor Gildas Givaja
 * @contributor Vincent Bonnard
 * @copyright   2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau

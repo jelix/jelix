@@ -2,8 +2,8 @@
 /**
  * @package     jelix
  * @subpackage  jtpl_plugin
- * @author      Philippe SCHELTE < dubphil >
- * @copyright   2008 Philippe SCHELTE
+ * @author      Philippe Schelté (dubphil)
+ * @copyright   2008 Philippe Schelté
  * @link        http://jelix.org/
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */

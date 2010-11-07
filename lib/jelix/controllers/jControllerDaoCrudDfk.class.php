@@ -4,9 +4,9 @@
 * @subpackage   controllers
 * @author       Laurent Jouanneau
 * @contributor  Bastien Jaillot
-* @contributor  Thibault PIRONT < nuKs >
+* @contributor  Thibault Piront (nuKs)
 * @copyright    2007-2008 Laurent Jouanneau
-* @copyright    2007 Thibault PIRONT
+* @copyright    2007 Thibault Piront
 * @copyright    2007,2008 Bastien Jaillot
 * @link         http://www.jelix.org
 * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file

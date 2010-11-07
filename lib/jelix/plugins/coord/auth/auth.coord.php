@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage coord_plugin
-* @author     Croes Gérald
+* @author     Gérald Croes
 * @contributor  Laurent Jouanneau, Frédéric Guillot, Antoine Detante, Julien Issler
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
 * @copyright  2007 Julien Issler

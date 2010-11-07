@@ -2,10 +2,10 @@
 /**
 * @package    jelix
 * @subpackage jtpl_plugin
-* @author     Jouanneau Laurent
-* @contributor Julien Issler, Hadrien
-* @copyright  2005-2007 Jouanneau laurent
-* @copyright 2008 Julien Issler
+* @author     Laurent Jouanneau
+* @contributor Julien Issler, Hadrien Lanneau
+* @copyright  2005-2007 Laurent Jouanneau
+* @copyright 2008 Julien Issler, 2010 Hadrien Lanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

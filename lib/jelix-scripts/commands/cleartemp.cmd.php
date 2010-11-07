@@ -1,10 +1,10 @@
 <?php
 /**
 * @package     jelix-scripts
-* @author      Thiriot Christophe
+* @author      Christophe Thiriot
 * @contributor Loic Mathaud
 * @contributor Laurent Jouanneau
-* @copyright   2006 Thiriot Christophe, 2007 Laurent Jouanneau
+* @copyright   2006 Christophe Thiriot, 2007 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */

@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage jtpl_plugin
-* @author     Mickael Fradin aka kewix
+* @author     Mickael Fradin
 * @contributor Laurent Jouanneau
 * @copyright  2009 Mickael Fradin
 * @link       http://www.jelix.org

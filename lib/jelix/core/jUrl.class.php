@@ -3,11 +3,11 @@
 * @package     jelix
 * @subpackage  core_url
 * @author      Laurent Jouanneau
-* @contributor Thibault PIRONT < nuKs >
+* @contributor Thibault Piront (nuKs)
 * @contributor Loic Mathaud
 * @contributor Hadrien Lanneau
 * @copyright   2005-2010 Laurent Jouanneau
-* @copyright   2007 Thibault PIRONT
+* @copyright   2007 Thibault Piront
 * @copyright   2006 Loic Mathaud, 2010 Hadrien Lanneau
 * Some parts of this file are took from an experimental branch of the Copix project (CopixUrl.class.php, Copix 2.3dev20050901, http://www.copix.org),
 * Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -25,7 +25,7 @@
  * @author      Laurent Jouanneau (for the original code from Copix and enhancement for jelix)
  * @author      Gerald Croes (for the original code from Copix)
  * @contributor Loic Mathaud
- * @contributor Thibault PIRONT < nuKs >
+ * @contributor Thibault Piront (nuKs)
  */
 class jUrl extends jUrlBase {
 

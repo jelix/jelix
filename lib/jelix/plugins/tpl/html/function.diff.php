@@ -3,9 +3,9 @@
 * @package    jelix
 * @subpackage jtpl_plugin
 * @author     Laurent Jouanneau
-* @contributor foxmask
+* @contributor Olivier Demah
 * @copyright  2005-2006 Laurent Jouanneau
-* @copyright  2008 foxmask
+* @copyright  2008 Olivier Demah
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

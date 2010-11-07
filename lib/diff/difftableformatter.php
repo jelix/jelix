@@ -1,9 +1,9 @@
 <?php
 /**
  *  Wikipedia Table style diff formatter.
- * @author Foxmask (for Jelix)
+ * @author Olivier Demah (for Jelix)
  * @contributor Laurent Jouanneau
- * @copyright 2008 Foxmask, 2009 Laurent Jouanneau
+ * @copyright 2008 Olivier Demah, 2009 Laurent Jouanneau
  */
 require_once(dirname(__FILE__).'/diffhtml.php');
 

@@ -2,9 +2,9 @@
 /**
 * @package    jelix
 * @subpackage coord_plugin
-* @author     Gerald Croes, Jouanneau Laurent
+* @author     Gerald Croes, Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2007 Jouanneau laurent
+* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 * Some parts of this file are took from Copix Framework v2.3dev20050901, magicquotes.plugin.php,
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence
 * author : Gerald Croes, Laurent Jouanneau

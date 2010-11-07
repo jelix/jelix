@@ -2,10 +2,10 @@
 /**
 * @package     jelix
 * @subpackage  junittests
-* @author      Jouanneau Laurent
-* @contributor Thiriot Christophe
-* @copyright   2008 Jouanneau laurent
-* @copyright   2008 Thiriot Christophe
+* @author      Laurent Jouanneau
+* @contributor Christophe Thiriot
+* @copyright   2008 Laurent Jouanneau
+* @copyright   2008 Christophe Thiriot
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

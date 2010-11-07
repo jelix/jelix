@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage db_driver
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDBResultSetPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)

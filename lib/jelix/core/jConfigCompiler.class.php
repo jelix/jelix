@@ -2,10 +2,10 @@
 /**
 * @package      jelix
 * @subpackage   core
-* @author       Jouanneau Laurent
-* @contributor  Thibault PIRONT < nuKs >, Christophe Thiriot, Philippe Schelté
-* @copyright    2006-2009 Jouanneau laurent
-* @copyright    2007 Thibault PIRONT, 2008 Christophe Thiriot, 2008 Philippe Schelté
+* @author       Laurent Jouanneau
+* @contributor  Thibault Piront (nuKs), Christophe Thiriot, Philippe Schelté
+* @copyright    2006-2009 Laurent Jouanneau
+* @copyright    2007 Thibault Piront, 2008 Christophe Thiriot, 2008 Philippe Schelté
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

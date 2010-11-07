@@ -4,9 +4,9 @@
 * @package     jelix
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
-* @contributor Thibault PIRONT < nuKs >
+* @contributor Thibault Piront (nuKs)
 * @copyright   2005-2010 Laurent Jouanneau
-* @copyright   2007 Thibault PIRONT
+* @copyright   2007 Thibault Piront
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

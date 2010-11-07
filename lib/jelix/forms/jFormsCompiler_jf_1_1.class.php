@@ -4,7 +4,7 @@
 * @subpackage forms
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin, Julien Issler
-* @contributor Uriel Corfa Emotic SARL, Thomas, Olivier Demah
+* @contributor Uriel Corfa (Emotic SARL), Thomas, Olivier Demah
 * @copyright   2006-2010 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2007-2008 Dominique Papin
 * @copyright   2007 Emotic SARL

@@ -1,10 +1,10 @@
 <?php
 /**
 * @package     jTpl Standalone
-* @author      Mathaud Loic
+* @author      Loic Mathaud
 * @contributor Laurent Jouanneau
-* @copyright   2006 Mathaud Loic
-* @copyright   2006-2008 Jouanneau Laurent
+* @copyright   2006 Loic Mathaud
+* @copyright   2006-2008 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

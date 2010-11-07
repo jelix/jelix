@@ -398,7 +398,7 @@ class jResponseHtml extends jResponse {
     }
     /**
      * add author(s) in a author meta tag
-     * @author olivier demahol
+     * @author Olivier Demah
      * @param string $content author(s)
      * @since 1.2
      */
@@ -407,7 +407,7 @@ class jResponseHtml extends jResponse {
     }
     /**
      * add generator a generator meta tag
-     * @author olivier demahol
+     * @author Olivier Demah
      * @param string $content generator
      * @since 1.2
      */

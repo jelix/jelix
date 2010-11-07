@@ -2,9 +2,9 @@
 /**
 * @package     jelix
 * @subpackage  jtpl_plugin
-* @author      Jouanneau Laurent
-* @contributor Mickaël Fradin, F.Fernandez, Dominique Papin, Alexis Métaireau
-* @copyright   2007-2008 Jouanneau laurent, 2007 Mickaël Fradin, 2007 F.Fernandez, 2007 Dominique Papin, 2008 Alexis Métaireau
+* @author      Laurent Jouanneau
+* @contributor Mickaël Fradin, F. Fernandez, Dominique Papin, Alexis Métaireau
+* @copyright   2007-2008 Laurent Jouanneau, 2007 Mickaël Fradin, 2007 F. Fernandez, 2007 Dominique Papin, 2008 Alexis Métaireau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

@@ -3,13 +3,13 @@
 * @package    jelix
 * @subpackage utils
 * @author Laurent Jouanneau
-* @contributor Thiriot Christophe
+* @contributor Christophe Thiriot
 * @contributor Bastien Jaillot
 * @contributor Loic Mathaud
-* @contributor Foxmask (#733)
+* @contributor Olivier Demah (#733)
 * @contributor Cedric (fix bug ticket 56)
 * @contributor Julien Issler
-* @copyright   2005-2010 Laurent Jouanneau, 2006 Thiriot Christophe, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Foxmask, 2009-2010 Julien Issler
+* @copyright   2005-2010 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -36,7 +36,7 @@ class jFile {
     * Is using a temporary file and then rename the file. We guess the file system will be smarter than us, avoiding a writing / reading
     *  while renaming the file.
     * This method comes from CopixFile class of Copix framework
-    * @author     Croes Gérald
+    * @author     Gérald Croes
     * @copyright  2001-2005 CopixTeam
     * @link http://www.copix.org
     */

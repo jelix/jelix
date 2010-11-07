@@ -2,8 +2,8 @@
 /**
  * @package     jelix
  * @subpackage  jtpl_plugin
- * @author      Thibault PIRONT < nuKs >
- * @copyright   2007 Thibault PIRONT
+ * @author      Thibault Piront (nuKs)
+ * @copyright   2007 Thibault Piront
  * @link        http://jelix.org/
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */

@@ -3,8 +3,8 @@
 * @package      jelix
 * @subpackage   coord_plugin
 * @author       Lepeltier Kévin
-* @contributor  Dominique Papin, Laurent Jouanneau, catsoup
-* @copyright  2008 Lepeltier Kévin, 2008 Dominique Papin, 2008 Laurent Jouanneau, 2010 catsoup
+* @contributor  Dominique Papin, Laurent Jouanneau, Steven Jehannet
+* @copyright  2008 Lepeltier Kévin, 2008 Dominique Papin, 2008 Laurent Jouanneau, 2010 Steven Jehannet
 *
 * The plugin History is a plugin coord,
 * it records the action / settings made during a session and allows for reuse.

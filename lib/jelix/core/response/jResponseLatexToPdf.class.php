@@ -2,9 +2,9 @@
 /**
 * @package     jelix
 * @subpackage  core_response
-* @author      Aubanel MONNIER
-* @contributor Laurent Jouanneau, Thomas, johannb
-* @copyright   2007 Aubanel MONNIER, 2009 Thomas, 2009 Laurent Jouanneau
+* @author      Aubanel Monnier
+* @contributor Laurent Jouanneau, Thomas, Johannb
+* @copyright   2007 Aubanel Monnier, 2009 Thomas, 2009 Laurent Jouanneau
 * @link        http://aubanel.info
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

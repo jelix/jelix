@@ -7,7 +7,7 @@
  *          (Smarty online manual)
  * @link http://jelix.org/
  * @author   Monte Ohrt <monte at ohrt dot com>
- * @author   credits to Jason Sweat (added cc, bcc and subject functionality)
+ * @contributor Jason Sweat (added cc, bcc and subject functionality)
  */
 
 /**
@@ -20,7 +20,8 @@
  * {mailto array(address=>"me@domain.com",cc=>"you@domain.com,they@domain.com")}
  * {mailto array(address=>"me@domain.com",extra=>'class="mailto"')}
  * </pre>
- * @params  array
+ * @params jTpl $tpl
+ * @params array $params
  */
 function jtpl_function_html_mailto($tpl,$params)
 {

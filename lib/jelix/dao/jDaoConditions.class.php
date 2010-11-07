@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage dao
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau, Julien Issler, Yannick Le Guédart
 * @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
 * @copyright  2008 Thomas

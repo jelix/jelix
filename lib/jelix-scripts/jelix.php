@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2010 Jouanneau laurent
+* @copyright   2005-2010 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */

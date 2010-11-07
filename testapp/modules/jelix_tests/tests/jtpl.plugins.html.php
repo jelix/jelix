@@ -2,10 +2,10 @@
 /**
 * @package     testapp
 * @subpackage  jelix_tests module
-* @author      Jouanneau Laurent
-* @contributor Thibault PIRONT < nuKs >
-* @copyright   2007 Jouanneau laurent
-* @copyright   2007 Thibault PIRONT
+* @author      Laurent Jouanneau
+* @contributor Thibault Piront (nuKs)
+* @copyright   2007 Laurent Jouanneau
+* @copyright   2007 Thibault Piront
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage events
-* @author     Croes Gérald
+* @author     Gérald Croes
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
 * This class was get originally from the Copix project

@@ -2,9 +2,9 @@
 /**
 * @package     testapp
 * @subpackage  jelix_tests module
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2007-2009 Jouanneau laurent
+* @copyright   2007-2009 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

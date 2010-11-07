@@ -6,7 +6,7 @@
  * @author        Smarty team
  * @contributor   Yannick Le Guédart <yannick at over-blog dot com>
  * @contributor   Olivier Demah, Laurent Jouanneau
- * @copyright  2001-2003 ispi of Lincoln, Inc., Yannick Le Guédart
+ * @copyright  2001-2003 ispi of Lincoln Inc., Yannick Le Guédart
  * @copyright  2009 Olivier Demah, Laurent Jouanneau
  * @link http://smarty.php.net/
  * @link http://jelix.org/

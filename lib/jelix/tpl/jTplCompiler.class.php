@@ -3,9 +3,9 @@
 * @package     jelix
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
-* @contributor Mathaud Loic (standalone version), Dominique Papin, dsdenes, Thiriot Christophe, Julien Issler
+* @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler
 * @copyright   2005-2008 Laurent Jouanneau
-* @copyright   2006 Mathaud Loic, 2007 Dominique Papin, 2009 dsdenes, 2010 Thiriot Christophe
+* @copyright   2006 Loic Mathaud, 2007 Dominique Papin, 2009 DSDenes, 2010 Christophe Thiriot
 * @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

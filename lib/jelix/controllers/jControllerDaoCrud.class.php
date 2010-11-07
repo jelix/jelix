@@ -4,10 +4,10 @@
 * @subpackage   controllers
 * @author       Laurent Jouanneau
 * @contributor  Bastien Jaillot
-* @contributor  Thibault PIRONT < nuKs >
+* @contributor  Thibault Piront (nuKs)
 * @contributor  Mickael Fradin
 * @copyright    2007-2009 Laurent Jouanneau
-* @copyright    2007 Thibault PIRONT
+* @copyright    2007 Thibault Piront
 * @copyright    2007,2008 Bastien Jaillot
 * @copyright    2009 Mickael Fradin
 * @link         http://www.jelix.org

@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage dao
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Bastien Jaillot (bug fix)
 * @contributor Julien Issler

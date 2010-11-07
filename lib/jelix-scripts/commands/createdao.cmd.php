@@ -1,11 +1,11 @@
 <?php
 /**
 * @package     jelix-scripts
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Nicolas Jeudy (patch ticket #99)
 * @contributor Gwendal Jouannic (patch ticket #615)
 * @contributor Loic Mathaud
-* @copyright   2005-2007 Jouanneau laurent
+* @copyright   2005-2007 Laurent Jouanneau
 * @copyright   2007 Nicolas Jeudy, 2008 Gwendal Jouannic, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html

@@ -14,7 +14,7 @@
 * @contributor Loic Mathaud, Julien Issler
 * @copyright 2005-2010 Laurent Jouanneau
 * @copyright 2001-2005 CopixTeam
-* @copyright 2006 Mathaud Loic
+* @copyright 2006 Loic Mathaud
 * @copyright 2007-2009 Julien Issler
 * @link http://www.copix.org
 #else

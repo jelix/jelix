@@ -2,8 +2,8 @@
 /**
 * @package      jelix
 * @subpackage   core
-* @author       Christophe THIRIOT
-* @copyright    2008 Christophe THIRIOT
+* @author       Christophe Thiriot
+* @copyright    2008 Christophe Thiriot
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

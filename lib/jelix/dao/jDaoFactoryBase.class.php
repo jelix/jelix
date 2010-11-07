@@ -7,9 +7,9 @@
  * @contributor Julien Issler
  * @contributor Thomas
  * @contributor Yoan Blanc
- * @contributor Michael Fradin
+ * @contributor Mickael Fradin
  * @contributor Christophe Thiriot
- * @contributor Yannick Le Guédart
+ * @contributor Yannick Le Gu√©dart
  * @copyright   2005-2010 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007-2009 Julien Issler
@@ -17,7 +17,7 @@
  * @copyright   2008 Yoan Blanc
  * @copyright   2009 Mickael Fradin
  * @copyright   2009 Christophe Thiriot
- * @copyright   2010 Yannick Le Guédart
+ * @copyright   2010 Yannick Le Gu√©dart
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */

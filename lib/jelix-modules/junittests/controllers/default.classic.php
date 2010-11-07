@@ -2,9 +2,9 @@
 /**
 * @package     jelix
 * @subpackage  junittests
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Rahal Aboulfeth
-* @copyright   2007 Jouanneau laurent, 2007 Rahal Aboulfeth
+* @copyright   2007 Laurent Jouanneau, 2007 Rahal Aboulfeth
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

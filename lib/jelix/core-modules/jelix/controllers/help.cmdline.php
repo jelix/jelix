@@ -3,9 +3,9 @@
 * @package     jelix-modules
 * @subpackage  jelix
 * @author      Loic Mathaud
-* @contributor Thiriot Christophe
+* @contributor Christophe Thiriot
 * @copyright   2006 Loic Mathaud
-* @copyright   2008 Thiriot Christophe
+* @copyright   2008 Christophe Thiriot
 * @licence     http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 

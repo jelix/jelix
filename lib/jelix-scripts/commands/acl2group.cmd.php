@@ -1,10 +1,10 @@
 <?php
 /**
 * @package     jelix-scripts
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Julien Issler
 * @contributor Loic Mathaud
-* @copyright   2007-2008 Jouanneau laurent
+* @copyright   2007-2008 Laurent Jouanneau
 * @copyright   2008 Julien Issler
 * @copyright   2008 Loic Mathaud
 * @link        http://www.jelix.org

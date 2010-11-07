@@ -2,9 +2,9 @@
 /**
 * @package     jelix-modules
 * @subpackage  jacl2db
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Bastien Jaillot
-* @copyright   2008 Jouanneau laurent, 2008 Bastien Jaillot
+* @copyright   2008 Laurent Jouanneau, 2008 Bastien Jaillot
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.1
 */

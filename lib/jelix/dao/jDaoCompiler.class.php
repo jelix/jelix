@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage dao
 #if ENABLE_OPTIMIZED_SOURCE
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
 * Ideas and some parts of this file were get originally from the Copix project

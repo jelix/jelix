@@ -3,9 +3,9 @@
 * @package      jelix
 * @subpackage   core
 * @author       Laurent Jouanneau
-* @contributor  Thibault PIRONT < nuKs >, Julien Issler, Dominique Papin
+* @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin
 * @copyright    2005-2010 laurent Jouanneau
-* @copyright    2007 Thibault PIRONT
+* @copyright    2007 Thibault Piront
 * @copyright    2008 Julien Issler
 * @copyright    2008-2010 Dominique Papin
 * @link         http://www.jelix.org

@@ -2,9 +2,9 @@
 /**
 * @package  jelix
 * @subpackage testapp
-* @author   Jouanneau Laurent
+* @author   Laurent Jouanneau
 * @contributor
-* @copyright 2007-2008 Jouanneau laurent
+* @copyright 2007-2008 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */

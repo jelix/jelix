@@ -46,7 +46,7 @@ Olivier Demah (aka FoxMaSk)
 Antoine Detante (aka antoinefr)
  - support of persistant authentification in jAuth and auth plugin (#229)
 
-dsdenes
+DSDenes
  - fix little thing in crud template (#844)
  - added a native modifier in jtpl (#845)
  - little improvement in formdatafull (#847)
@@ -159,7 +159,7 @@ Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
  - jResponseCss
 
-johannb
+Johannb
  - fixed issue in jResponseLatexToPdf (#1070)
 
 Laurent Jouanneau (laurentj):
@@ -267,7 +267,7 @@ Laurent Raufaste (aka analogue)
  - patches on postgresql driver (#123, #671, #672, #674)
  - replaced getParam (deprecated) with param in jZone (#680)
 
-Philippe Schelte (aka dubphil)
+Philippe Schelté (aka dubphil)
  - plugin tpl cycle (#149)
  - error in checkTrustedModules function (#715)
 
@@ -338,4 +338,5 @@ Copix Team
     in particulary Gerald Croes, co-author of source parts from Copix project
     (version 2.3dev20050901), under copyright 2001-2005 Copix Team
     (http://www.copix.org)
-
+halojoy
+    for a method into jCrypt

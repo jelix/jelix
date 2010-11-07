@@ -2,10 +2,10 @@
 /**
 * @package     jelix
 * @subpackage  dao
-* @author      Croes Gérald, Laurent Jouanneau
+* @author      Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @contributor Olivier Demah 2010
-* @copyright   2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
+* @contributor Olivier Demah
+* @copyright   2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau, 2010 Olivier Demah
 * This class was get originally from the Copix project (CopixDAODefinitionV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,

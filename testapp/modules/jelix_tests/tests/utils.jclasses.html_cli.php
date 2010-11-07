@@ -2,9 +2,9 @@
 /**
 * @package     testapp
 * @subpackage  jelix_tests module
-* @author      Thiriot Christophe
+* @author      Christophe Thiriot
 * @contributor
-* @copyright   2008 Thiriot Christophe
+* @copyright   2008 Christophe Thiriot
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.1

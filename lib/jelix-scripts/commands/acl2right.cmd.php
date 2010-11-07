@@ -1,9 +1,9 @@
 <?php
 /**
 * @package     jelix-scripts
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2007-2008 Jouanneau laurent, 2008 Loic Mathaud
+* @copyright   2007-2008 Laurent Jouanneau, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */

@@ -2,8 +2,8 @@
 /**
 * @package    jelix
 * @subpackage jtpl_plugin
-* @author     Aubanel MONNIER
-* @copyright  2007 Aubanel MONNIER
+* @author     Aubanel Monnier
+* @copyright  2007 Aubanel Monnier
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

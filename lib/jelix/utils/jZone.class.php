@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage utils
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau, Laurent Raufaste, Pulsation
 * @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau, 2008 Laurent Raufaste, 2008 Pulsation
 *

@@ -2,8 +2,8 @@
 /**
 * @package    jelix
 * @subpackage jtpl_plugin
-* @author     Jouanneau Laurent
-* @copyright  2007 Jouanneau laurent
+* @author     Laurent Jouanneau
+* @copyright  2007 Laurent Jouanneau
 * @contributor Christian Tritten (christian.tritten@laposte.net)
 * @copyright  2007 Christian Tritten
 * @link        http://www.jelix.org

@@ -2,9 +2,9 @@
 /**
 * @package     testapp
 * @subpackage  unittest module
-* @author      Jouanneau Laurent
+* @author      Laurent Jouanneau
 * @contributor Dominique Papin, Julien Issler
-* @copyright   2007-2008 Jouanneau laurent
+* @copyright   2007-2008 Laurent Jouanneau
 * @copyright   2008 Dominique Papin
 * @copyright   2008-2010 Julien Issler
 * @link        http://www.jelix.org

@@ -2,7 +2,7 @@
 /**
 * @package    jelix
 * @subpackage db
-* @author     Croes Gérald, Laurent Jouanneau
+* @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau
 *
