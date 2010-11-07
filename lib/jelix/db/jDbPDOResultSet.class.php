@@ -70,7 +70,7 @@ class jDbPDOResultSet extends PDOStatement {
     }
 
     /**
-     * @param string a binary string to unescape
+     * @param string $text a binary string to unescape
      * @since 1.1.6
      */
     public function unescapeBin($text) {

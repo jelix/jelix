@@ -194,7 +194,7 @@ abstract class jDbConnection {
 
     /**
     * sets the autocommit state
-    * @param boolean state the status of autocommit
+    * @param boolean $state the status of autocommit
     */
     public function setAutoCommit($state=true){
         $this->_autocommit = $state;
@@ -273,7 +273,7 @@ abstract class jDbConnection {
     /**
     * Notify the changes on autocommit
     * Drivers may overload this
-    * @param boolean state the new state of autocommit
+    * @param boolean $state the new state of autocommit
     */
     abstract protected function _autoCommitNotify ($state);
 

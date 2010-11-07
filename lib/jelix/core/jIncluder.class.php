@@ -3,7 +3,6 @@
  * @package    jelix
  * @subpackage core
  * @author     Laurent Jouanneau
- * @contributor
  * @copyright  2005-2006 Laurent Jouanneau
  *   Idea of this class was picked from the Copix project (CopixInclude, Copix 2.3dev20050901, http://www.copix.org)
  * @link       http://www.jelix.org
@@ -121,7 +120,7 @@ class jIncluder {
 
     /**
      * include a cache file which is the results of the compilation of multiple file sotred in multiple modules
-    * @param    array    aType
+    * @param    array    $aType
     *    = array(
     *    'compilator class name',
     *    'relative path of the compilator class file to lib/jelix/',

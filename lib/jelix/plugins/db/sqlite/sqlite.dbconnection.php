@@ -106,7 +106,7 @@ class sqliteDbConnection extends jDbConnection {
 
     /**
     * tell mysql to be autocommit or not
-    * @param boolean state the state of the autocommit value
+    * @param boolean $state the state of the autocommit value
     * @return void
     */
     protected function _autoCommitNotify ($state){

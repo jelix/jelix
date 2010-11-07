@@ -3,7 +3,6 @@
  * @package     jelix
  * @subpackage  jtpl_plugin
  * @author      Julien Issler
- * @contributor
  * @copyright   2009 Julien Issler
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

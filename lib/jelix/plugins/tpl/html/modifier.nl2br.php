@@ -14,7 +14,7 @@
 /**
  * modifier plugin : convert \r\n, \r or \n to <<br/>>
  * Example:  {$text|nl2br}
- * @param string
+ * @param string $string the string to modify
  * @return string
  */
 function jtpl_modifier_html_nl2br($string)

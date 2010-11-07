@@ -3,7 +3,6 @@
 * @package    jelix
 * @subpackage core
 * @author    Laurent Jouanneau
-* @contributor
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixContext, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).

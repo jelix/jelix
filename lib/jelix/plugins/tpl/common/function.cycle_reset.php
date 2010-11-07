@@ -21,8 +21,8 @@
  * {cycle_reset 'name'}
  * {cycle_reset}
  * </pre>
- * @param $tpl
- * @param string
+ * @param jTpl $tpl
+ * @param string $name the name of the cycle
  * @return 1
  */
 function jtpl_function_common_cycle_reset($tpl, $name='') {

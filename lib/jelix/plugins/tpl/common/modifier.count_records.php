@@ -13,7 +13,7 @@
  * modifier plugin :  display count of a DbResultSet Object (how many records)
  *
  * <pre>{$myarray|count_records}</pre>
- * @param object DbResultSet
+ * @param jDbResultSet $DbResultSet
  * @return integer
  */
 function jtpl_modifier_common_count_records($DbResultSet)

@@ -3,7 +3,6 @@
  * @package     jelix
  * @subpackage  urls_engine
  * @author      Laurent Jouanneau
- * @contributor
  * @copyright   2005-2009 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -66,7 +65,7 @@ class jSelectorUrlHandler extends jSelectorClass {
 interface jIUrlSignificantHandler {
     /**
     * create the jUrlAction corresponding to the given jUrl. Return false if it doesn't correspond
-    * @param jUrl
+    * @param jUrl $url
     * @return jUrlAction|false
     */
     public function parse($url);

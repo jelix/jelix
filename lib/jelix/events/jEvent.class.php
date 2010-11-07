@@ -122,7 +122,7 @@ class jEvent {
 
     /**
     * send a notification to all modules
-    * @param $event string   the event name
+    * @param string $event the event name
     * @return jEvent
     */
     public static function notify ($eventname, $params=array()) {

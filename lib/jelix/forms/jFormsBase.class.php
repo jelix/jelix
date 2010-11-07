@@ -499,7 +499,7 @@ abstract class jFormsBase {
 
     /**
     * check if a control is activated
-    * @param $name the control name
+    * @param string $name the control name
     * @return boolean true if it is activated
     */
     public function isActivated($name) {

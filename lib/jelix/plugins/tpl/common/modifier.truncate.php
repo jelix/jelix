@@ -3,7 +3,6 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @author
  * @contributor Laurent Jouanneau (utf8 compliance)
  * @contributor Yannick Le Guédart
  * @copyright  2001-2003 ispi of Lincoln, Inc., 2007 Laurent Jouanneau
@@ -23,10 +22,10 @@
  * {$mytext|truncate:45:'...'}
  * {$mytext|truncate:60:'...':true}
  * </pre>
- * @param string
- * @param integer $length
- * @param string $etc
- * @param boolean $break_words
+ * @param string $string the string to truncate
+ * @param integer $length the number of char to keep
+ * @param string $etc the string to append to the truncated string
+ * @param boolean $break_words false if the last word shouldn't be cut
  * @return string
  */
 function jtpl_modifier_common_truncate($string, $length = 80, $etc = '...',

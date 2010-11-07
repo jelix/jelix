@@ -22,8 +22,8 @@
  * {cycle 'name'}
  * {cycle}
  * </pre>
- * @paramm $tpl
- * @param string or array 
+ * @paramm jTpl $tpl
+ * @param string,array $param the name of the cycle, or the list of values
  * @return string
  */
 function jtpl_function_common_cycle($tpl, $param=''){

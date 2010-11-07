@@ -15,7 +15,7 @@
  *
  * <pre>{ifuserconnected} ..here generated content if the user is connected  {/ifuserconnected}</pre>
  * @param jTplCompiler $compiler the template compiler
- * @param boolean true if it is the begin of block, else false
+ * @param boolean $begin true if it is the begin of block, else false
  * @param array $params no parameters. array should be empty
  * @return string the php code corresponding to the begin or end of the block
  */

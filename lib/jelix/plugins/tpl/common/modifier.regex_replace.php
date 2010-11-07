@@ -3,7 +3,6 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @author
  * @copyright  2001-2003 ispi of Lincoln, Inc.
  * @link http://smarty.php.net/
  * @link http://jelix.org/
@@ -16,9 +15,9 @@
  * You should provide two arguments, like the first both of preg_replace
  * {$mystring|regex_replace:'/(\w+) (\d+), (\d+)/i':'${1}1,$3'}
  *
- * @param string
- * @param string|array
- * @param string|array
+ * @param string $string
+ * @param string|array $search
+ * @param string|array $replace
  * @return string
  */
 function jtpl_modifier_common_regex_replace($string, $search, $replace)

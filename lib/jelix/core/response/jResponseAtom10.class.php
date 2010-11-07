@@ -32,7 +32,6 @@ class jResponseAtom10 extends jResponseXMLFeed {
     /**
      * Class constructor
      *
-     * @param  array
      * @return void
      */
     function __construct (){

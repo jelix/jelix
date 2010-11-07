@@ -17,9 +17,9 @@
  * {$mytext|truncatehtml:150:"\n<a href="...">read full article</a>"}
  * {$mytext|truncatehtml:45}
  * </pre>
- * @param string
- * @param integer (warning html tags included )
- * @param string
+ * @param string $string the string to truncate
+ * @param integer $nbChar number of chars to keep (warning html tags included )
+ * @param string $etcPattern  the string to append to the truncated string
  * @return string
  */
  function jtpl_modifier_common_truncatehtml($string,$nbChar=200,$etcPattern='...')

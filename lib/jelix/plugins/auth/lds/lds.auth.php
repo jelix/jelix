@@ -129,8 +129,8 @@ class ldsAuthDriver implements jIAuthDriver {
     /**
     * call an xmlrpc call for a method
     * via the xmlrpc server in python (lmc-agent)
-    * @param $method name of the method
-    * @param $params array with param
+    * @param string $method name of the method
+    * @param array $params array with param
     */
     protected function xmlCall($method,$params) {
 

@@ -175,7 +175,7 @@ abstract class jDaoFactoryBase  {
 
     /**
      * return the record corresponding to the given key
-     * @param string  one or more primary key
+     * @param string $key one or more primary key
      * @return jDaoRecordBase
      */
     final public function get(){
@@ -200,7 +200,7 @@ abstract class jDaoFactoryBase  {
 
     /**
      * delete a record corresponding to the given key
-     * @param string  one or more primary key
+     * @param string  $key one or more primary key
      * @return int the number of deleted record
      */
     final public function delete(){

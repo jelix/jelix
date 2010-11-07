@@ -3,7 +3,6 @@
 * @package     jelix
 * @subpackage  core_request
 * @author      Sylvain de Vathaire
-* @contributor
 * @copyright   2008 Sylvain de Vathaire
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

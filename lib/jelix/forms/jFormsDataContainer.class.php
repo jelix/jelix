@@ -3,7 +3,6 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor
 * @copyright   2006-2008 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -115,7 +114,7 @@ class jFormsDataContainer {
 
     /**
     * check if a control is activated
-    * @param $name the control name
+    * @param string $name the control name
     * @return boolean true if it is activated
     */
     public function isActivated($name) {
@@ -124,7 +123,7 @@ class jFormsDataContainer {
 
     /**
     * check if a control is activated
-    * @param $name the control name
+    * @param string $name the control name
     * @return boolean true if it is activated
     */
     public function isReadOnly($name) {

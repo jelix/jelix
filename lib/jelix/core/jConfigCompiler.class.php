@@ -479,8 +479,8 @@ class jConfigCompiler {
 #ifnot ENABLE_PHP_JELIX
     /**
      * merge two array which are the result of a parse_ini_file call
-     * @param $array the main array
-     * @param $tomerge the array to merge in the first one
+     * @param array $array the main array
+     * @param array $tomerge the array to merge in the first one
      */
     static private function _mergeConfig(&$array, $tomerge){
 

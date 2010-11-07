@@ -23,7 +23,7 @@ require_once(JELIX_LIB_UTILS_PATH.'jWiki.class.php');
  * {$var|wiki:"classicwr_to_xhtml"}
  * </pre>
  * @param string $text the wiki texte
- * @param string
+ * @param string $config  the name of the wikirenderer rule to use
  * @return string
  * @see jWiki
  * @link  http://wikirenderer.berlios.de/

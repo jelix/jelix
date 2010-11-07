@@ -3,7 +3,6 @@
 * @package     jelix
 * @subpackage  plugin
 * @author      Hugues Magnier
-* @contributor
 * @copyright   2007 Hugues Magnier
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

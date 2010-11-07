@@ -15,8 +15,8 @@
  *
  * <pre>{ifnotacl2 'subject',54} ..here generated content if the user has NOT the right  {/ifnotacl2}</pre>
  * @param jTplCompiler $compiler the template compiler
- * @param boolean true if it is the begin of block, else false
- * @param $params array  0=>subject 1=>optional resource
+ * @param boolean $begin true if it is the begin of block, else false
+ * @param array $params 0=>subject 1=>optional resource
  * @return string the php code corresponding to the begin or end of the block
  */
 function jtpl_block_common_ifnotacl2($compiler, $begin, $params=array())

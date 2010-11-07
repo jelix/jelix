@@ -128,8 +128,8 @@ class jWSDL {
 
     /**
      * Return array of params object for the operation $operationName
-     * @param $operationName string Name of the operation (controller method)
-     * @return array of params object (empty if no params)
+     * @param string $operationName Name of the operation (controller method)
+     * @return array list params object (empty if no params)
      */
     public function getOperationParams($operationName){
 

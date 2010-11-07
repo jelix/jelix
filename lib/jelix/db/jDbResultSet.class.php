@@ -3,7 +3,6 @@
 * @package    jelix
 * @subpackage db
 * @author      Laurent Jouanneau
-* @contributor
 * @copyright  2005-2010 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -35,7 +34,7 @@ abstract class jDbResultSet implements Iterator {
     public function id() { return $this->_idResult; }
 
     /**
-     * @param string a binary string to unescape
+     * @param string $text a binary string to unescape
      * @since 1.1.6
      */
     public function unescapeBin($text) {

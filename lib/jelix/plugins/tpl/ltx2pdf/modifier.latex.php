@@ -10,7 +10,7 @@
 
 /**
  * modifier plugin : simple search/replace for latex chars
- * @param string
+ * @param string $string the string to modify
  */
 function jtpl_modifier_ltx2pdf_latex($string)
 {

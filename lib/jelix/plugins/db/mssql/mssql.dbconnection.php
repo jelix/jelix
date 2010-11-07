@@ -15,7 +15,7 @@ class mssqlDbConnection extends jDbConnection {
 
     /**
      * Default constructor
-     * @param $profile profile de connexion
+     * @param array $profile profile de connexion
      * @return unknown_type
      */
     function __construct($profile){
@@ -148,7 +148,7 @@ class mssqlDbConnection extends jDbConnection {
 
     /**
      * tell mssql to be implicit commit or not
-     * @param boolean state the state of the autocommit value
+     * @param boolean $state the state of the autocommit value
      * @return void
      */
     protected function _autoCommitNotify ($state){

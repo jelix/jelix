@@ -3,7 +3,6 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @author
  * @copyright  2001-2003 ispi of Lincoln, Inc.
  * @link http://smarty.php.net/
  * @link http://jelix.org/
@@ -17,9 +16,9 @@
  * {$mytext|indent:$number_of_spaces}
  * {$mytext|indent:$number_of_chars:$chars_to_repeat}
  * </pre>
- * @param string
- * @param integer
- * @param string
+ * @param string $string
+ * @param integer $chars the value of the indentation
+ * @param string $char the char to repeat
  * @return string
  */
 function jtpl_modifier_common_indent($string,$chars=4,$char=" ")

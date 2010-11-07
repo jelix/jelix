@@ -36,7 +36,7 @@ class jClassBinding {
 
     /**
      * __constructor
-     * @param jSelectorIface|jSelectorClass
+     * @param jSelectorIface|jSelectorClass $selector the selector of the class
      * @return void
      */
     public function __construct($selector) {

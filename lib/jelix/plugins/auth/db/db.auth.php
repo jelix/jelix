@@ -3,7 +3,6 @@
 * @package    jelix
 * @subpackage auth_driver
 * @author     Laurent Jouanneau
-* @contributor
 * @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
 * This classe was get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).

@@ -21,7 +21,6 @@ class file2KVDriver extends jKVDriver {
 	 * "Connects" to the fileServer
 	 *
 	 * @return fileServer object
-	 *
 	 * @access protected
 	 */
    	protected function _connect() {
@@ -70,9 +69,9 @@ class fileServer {
 	/**
 	* set
 	*
-	* @param $key	a key (unique name) to identify the cached info
-	* @param $value	the value to cache
-	* @param $ttl how many seconds will the info be cached
+	* @param string $key	a key (unique name) to identify the cached info
+	* @param mixed  $value	the value to cache
+	* @param integer $ttl how many seconds will the info be cached
 	*
 	* @return boolean whether the action was successful or not
 	*/
@@ -115,9 +114,9 @@ class fileServer {
 	/**
 	* get
 	*
-	* @param $key	the key (unique name) that identify the cached info
+	* @param string $key	the key (unique name) that identify the cached info
 	*
-	* @return mixed false if the cached info does not exist or has expired
+	* @return mixed,false  false if the cached info does not exist or has expired
 	*               or the data if the info exists and is valid
 	*/
 	public function get($key) {
@@ -158,7 +157,7 @@ class fileServer {
 	/**
 	* delete
 	*
-	* @param $key	a key (unique 0name) to identify the cached info
+	* @param string $key	a key (unique name) to identify the cached info
 	*
 	* @return boolean whether the action was successful or not
 	*/

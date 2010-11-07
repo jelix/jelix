@@ -3,7 +3,6 @@
 * @package    jelix
 * @subpackage utils
 * @author     Laurent Jouanneau
-* @contributor
 * @copyright  2008-2010 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file

@@ -149,7 +149,7 @@ class jDbPDOConnection extends PDO {
 
     /**
      * sets the autocommit state
-     * @param boolean state the status of autocommit
+     * @param boolean $state the status of autocommit
      */
     public function setAutoCommit($state=true) {
         $this->setAttribute(PDO::ATTR_AUTOCOMMIT,$state);

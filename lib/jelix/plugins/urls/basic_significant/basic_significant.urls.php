@@ -3,7 +3,6 @@
 * @package     jelix
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
-* @contributor
 * @copyright   2005-2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

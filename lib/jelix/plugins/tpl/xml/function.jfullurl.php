@@ -15,7 +15,7 @@
  * @param jTpl $tpl template engine
  * @param string $selector selector action
  * @param array $params parameters for the url
- * @param string domain name, false if you want to use the config domain name or the server name
+ * @param string $domain domain name, false if you want to use the config domain name or the server name
  * @param boolean $escape if true, then escape the string for html
  */
 function jtpl_function_xul_jfullurl($tpl, $selector, $params=array(), $domain=null, $escape=true) {

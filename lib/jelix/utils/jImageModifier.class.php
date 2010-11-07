@@ -160,7 +160,7 @@ class jImageModifier {
     /**
      * transform source image file (given parameters) and cache result
      * @param string $src the url of image (myapp/www/):string.[gif|jpeg|jpg|jpe|xpm|xbm|wbmp|png]
-     * @param string image's hashname
+     * @param string $cacheName image's hashname for the cache
      * @param array $params parameters specifying transformations
      **/
     static protected function transformAndCache($src, $cacheName, $params) {

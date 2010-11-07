@@ -42,7 +42,7 @@
  * $params[3][xx] Flashvar for the Flash Player
  *
  * @param jTplCompiler $compiler the template compiler
- * @param boolean true if it is the begin of block, else false
+ * @param boolean $begin true if it is the begin of block, else false
  * @param array $params parameters for the url
  */
 function jtpl_block_html_swf($compiler, $begin, $params) {

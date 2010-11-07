@@ -74,7 +74,6 @@ class jResponseSitemap extends jResponse {
     /**
      * Class constructor
      *
-     * @param  array
      * @return void
      */
     public function __construct() {

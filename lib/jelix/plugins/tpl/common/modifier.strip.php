@@ -16,8 +16,8 @@
  * <pre>{$var|strip} 
  * {$var|strip:"&nbsp;"}</pre>
  *
- * @param string
- * @param string
+ * @param string $text the text to strip
+ * @param string $replace the string replacing the repeated spaces
  * @return string
  */
 function jtpl_modifier_common_strip($text, $replace = ' ')

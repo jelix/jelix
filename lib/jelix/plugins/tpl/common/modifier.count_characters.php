@@ -3,7 +3,6 @@
  * Plugin from smarty project and adapted for jtpl
  * @package    jelix
  * @subpackage jtpl_plugin
- * @author
  * @contributor Laurent Jouanneau (utf8 compliance)
  * @copyright  2001-2003 ispi of Lincoln, Inc., 2007 Laurent Jouanneau
  * @link http://smarty.php.net/
@@ -16,7 +15,7 @@
  *
  * <pre>{$mytext|count_characters}
  * {$mytext|count_characters:true}</pre>
- * @param string
+ * @param string $string
  * @param boolean $include_spaces include whitespace in the character count
  * @return integer
  */

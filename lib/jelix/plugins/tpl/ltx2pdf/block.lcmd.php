@@ -13,8 +13,8 @@
  *
  * usage : {lcmd <command>} .. calls the \<command>{} latex command
  * @param jTplCompiler $compiler the template compiler
- * @param boolean true if it is the begin of block, else false
- * @param $param array  1=>latex command
+ * @param boolean $begin true if it is the begin of block, else false
+ * @param array $param  1=>latex command
  * @return string the php code corresponding to the begin or end of the block
  */
 function jtpl_block_ltx2pdf_lcmd($compiler, $begin, $param=array())
