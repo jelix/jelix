@@ -119,6 +119,7 @@ error        = ECHO TRACE EXIT
 warning      = ECHO TRACE
 notice       = ECHO
 strict       = ECHO
+deprecated   = ECHO
 ; for exceptions, there is always an implicit EXIT by default
 exception    = ECHO TRACE
 

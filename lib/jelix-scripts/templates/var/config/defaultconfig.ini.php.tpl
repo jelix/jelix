@@ -61,7 +61,8 @@ html=myHtmlResponse
 ;error        = ECHOQUIET LOGFILE TRACE EXIT
 ;warning      = ECHOQUIET LOGFILE TRACE
 ;notice       = ECHOQUIET
-;strict       = 
+;strict       =
+;deprecated   = 
 ;exception    = ECHOQUIET LOGFILE TRACE EXIT
 
 ;[compilation]
