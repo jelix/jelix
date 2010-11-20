@@ -50,8 +50,6 @@ class createentrypointCommand extends JelixScriptCommand {
     }
 
     public function run() {
-        jxs_init_jelix_env();
-        require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
 
         // retrieve the type of entry point we want to create
         $type = $this->getOption('-type');
@@ -126,6 +124,7 @@ class createentrypointCommand extends JelixScriptCommand {
             }
         }
 
+        require_once (JELIXS_LIB_PATH.'jelix/utils/jIniMultiFilesModifier.class.php');
         $inifile = new jIniMultiFilesModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php',
                                               JELIX_APP_CONFIG_PATH.$configFile);
         $param = array();
@@ -174,6 +173,7 @@ class createentrypointCommand extends JelixScriptCommand {
 
         $this->updateProjectXml($name.".php", $configFile , $type);
 
+        require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
         $installer = new jInstaller(new textInstallReporter('warning'));
         $installer->installEntryPoint($name.".php");
     }
