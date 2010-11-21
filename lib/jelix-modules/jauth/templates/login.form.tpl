@@ -31,6 +31,6 @@
        </fieldset>
    </form>
 {else}
-    <p>{$user->login}</p>
+    <p>{$user->login} | <a href="{jurl 'jauth~login:out'}" >{@jauth~auth.buttons.logout@}</a></p>
 {/if}
 </div>
