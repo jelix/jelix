@@ -221,7 +221,7 @@ cd lib/jelix-www/markitup/skins/markitup/images
 cd lib/jelix-www/jquery/flash
 c jquery.flash.js
 cd lib/jelix-www/jquery/include
-! jquery.include.pack-1.1.js (jquery.include.js)
+c jquery.include.js
 cd lib/jelix-www/jquery/ui
 ! jquery.effects.blind.min.js
 ! jquery.effects.bounce.min.js
