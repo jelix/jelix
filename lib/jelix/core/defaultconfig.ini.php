@@ -22,6 +22,15 @@ cacheProfiles = cache.ini.php
 ; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
 domainName =
 
+
+; ---  don't set the following options to on, except if you know what you do
+
+; disable all installers and the installer.ini.php
+; useful only if you manage the installation of modules by hands (not recommanded)
+disableInstallers = off
+; if set to on, all modules have an access=2, and access values in [modules] are not readed (not recommanded)
+enableAllModules = off
+
 [modules]
 ; modulename.access = x   where x : 0= unused/forbidden, 1 = private access, 2 = public access
 

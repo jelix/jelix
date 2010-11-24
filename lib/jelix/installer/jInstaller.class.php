@@ -490,9 +490,11 @@ class jInstaller {
     protected function _installModules(&$modules, $epId, $installWholeApp, $flags=3) {
 
         $this->notice('install.entrypoint.start', $epId);
-
         $ep = $this->entryPoints[$epId];
         $GLOBALS['gJConfig'] = $ep->config;
+
+        if ($ep->config->disableInstallers)
+            $this->notice('install.entrypoint.installers.disabled');
 
         // first, check dependencies of the component, to have the list of component
         // we should really install. It fills $this->_componentsToInstall, in the right
@@ -521,23 +523,35 @@ class jInstaller {
                     $this->installerIni->setValue($component->getName().'.version',
                                                    $component->getSourceVersion(), $epId);
 
-                    $upgraders = $component->getUpgraders($ep);
-
-                    foreach($upgraders as $upgrader) {
-                        $upgrader->preInstall();
+                    if ($ep->config->disableInstallers) {
+                        $upgraders = array();
+                    }
+                    else {
+                        $upgraders = $component->getUpgraders($ep);
+                        foreach($upgraders as $upgrader) {
+                            $upgrader->preInstall();
+                        }
                     }
 
                     $componentsToInstall[] = array($upgraders, $component, false);
 
                 }
                 else if ($toInstall) {
-                    $installer = $component->getInstaller($ep, $installWholeApp);
+                    if ($ep->config->disableInstallers)
+                        $installer = null;
+                    else
+                        $installer = $component->getInstaller($ep, $installWholeApp);
                     $componentsToInstall[] = array($installer, $component, $toInstall);
                     if ($flags & self::FLAG_INSTALL_MODULE && $installer)
                         $installer->preInstall();
                 }
                 else {
-                    $upgraders = $component->getUpgraders($ep);
+                    if ($ep->config->disableInstallers) {
+                        $upgraders = array();
+                    }
+                    else {
+                        $upgraders = $component->getUpgraders($ep);
+                    }
 
                     if ($flags & self::FLAG_UPGRADE_MODULE && count($upgraders)) {
                         foreach($upgraders as $upgrader) {
@@ -686,7 +700,8 @@ class jInstaller {
 
                     $this->_checkDependencies($component, $epId);
 
-                    if (!$component->isInstalled($epId)) {
+                    if ($this->entryPoints[$epId]->config->disableInstallers
+                        || !$component->isInstalled($epId)) {
                         $this->_componentsToInstall[] = array($component, true);
                     }
                     else if (!$component->isUpgraded($epId)) {
@@ -748,7 +763,8 @@ class jInstaller {
 
                 if (!isset($this->_checkedComponents[$comp->getName()])) {
                     $this->_checkDependencies($comp, $epId);
-                    if (!$comp->isInstalled($epId)) {
+                    if ($this->entryPoints[$epId]->config->disableInstallers
+                        || !$comp->isInstalled($epId)) {
                         $this->_componentsToInstall[] = array($comp, true);
                     }
                     else if(!$comp->isUpgraded($epId)) {

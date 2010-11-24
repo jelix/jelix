@@ -127,6 +127,13 @@ class jConfigCompiler {
 
     /**
      * fill some config properties with calculated values
+     * @param object $config  the config object
+     * @param boolean $allModuleInfo may be true for the installer, which needs all informations
+     *                               else should be false, these extra informations are
+     *                               not needed to run the application
+     * @param boolean $isCli  indicate if the configuration to read is for a CLI script or no
+     * @param string $pseudoScriptName the name of the entry point, relative to the base path,
+     *              corresponding to the readed configuration 
      */
     static protected function prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName){
 
@@ -289,12 +296,17 @@ class jConfigCompiler {
 
     /**
      * Analyse and check the "lib:" and "app:" path.
-     * @param array $list list of "lib:*" and "app:*" path
-     * @return array list of full path
+     * @param object $config  the config object
+     * @param boolean $allModuleInfo may be true for the installer, which needs all informations
+     *                               else should be false, these extra informations are
+     *                               not needed to run the application
      */
     static protected function _loadModuleInfo($config, $allModuleInfo) {
 
-        if (!file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php')) {
+        if ($config->disableInstallers) {
+            $installation = array ();
+        }
+        else if (!file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php')) {
             if ($allModuleInfo)
                 $installation = array ();
             else
@@ -302,7 +314,7 @@ class jConfigCompiler {
         }
         else
             $installation = parse_ini_file(JELIX_APP_CONFIG_PATH.'installer.ini.php',true);
-            
+
         $section = $config->urlengine['urlScriptId'];
 
         if (!isset($installation[$section]))
@@ -333,16 +345,26 @@ class jConfigCompiler {
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
                     if ($f[0] != '.' && is_dir($p.$f)) {
-                        
-                        if (!isset($installation[$section][$f.'.installed']))
+
+                        if ($config->disableInstallers)
+                            $installation[$section][$f.'.installed'] = 1;
+                        else if (!isset($installation[$section][$f.'.installed']))
                             $installation[$section][$f.'.installed'] = 0;
 
                         if ($f == 'jelix') {
                             $config->modules['jelix.access'] = 2; // the jelix module should always be public
                         }
                         else {
-                            // no given access in defaultconfig and ep config
-                            if (!isset($config->modules[$f.'.access'])) {
+                            if ($config->enableAllModules) {
+                                if ($config->disableInstallers
+                                    || $installation[$section][$f.'.installed']
+                                    || $allModuleInfo)
+                                    $config->modules[$f.'.access'] = 2;
+                                else
+                                    $config->modules[$f.'.access'] = 0;
+                            }
+                            else if (!isset($config->modules[$f.'.access'])) {
+                                // no given access in defaultconfig and ep config
                                 $config->modules[$f.'.access'] = 0;
                             }
                             else if($config->modules[$f.'.access'] == 0){
@@ -351,14 +373,14 @@ class jConfigCompiler {
                                 // in the default config file. In this case, it means
                                 // that it is activated for an other entry point,
                                 // and then we want the possibility to retrieve its
-                                // urls at least
+                                // urls, at least
                                 if (isset(self::$commonConfig['modules'][$f.'.access'])
                                     && self::$commonConfig['modules'][$f.'.access'] > 0)
                                     $config->modules[$f.'.access'] = 3;
                             }
-                            // module is not installed
                             else if (!$installation[$section][$f.'.installed']) {
-                                //outside installation mode, we force the access to 0
+                                // module is not installed.
+                                // outside installation mode, we force the access to 0
                                 // so the module is unusable until it is installed
                                 if (!$allModuleInfo) 
                                     $config->modules[$f.'.access'] = 0;
@@ -401,9 +423,9 @@ class jConfigCompiler {
 
     /**
      * Analyse plugin paths
-     * @param array|object $config the config container
+     * @param object $config the config container
      */
-    static protected function _loadPluginsPathList(&$config) {
+    static protected function _loadPluginsPathList($config) {
         $list = preg_split('/ *, */',$config->pluginsPath);
         array_unshift($list, JELIX_LIB_PATH.'plugins/');
         foreach($list as $k=>$path){
