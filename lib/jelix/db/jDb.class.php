@@ -66,11 +66,10 @@ class jDb {
     public static function getConnection ($name = null) {
         $profile = self::getProfile ($name);
 
-        if (!$name) {
-            // we set the name to avoid two connection for a same profile, when it is the default profile
-            // and when we call getConnection two times, one with no name and on with the name
-            $name = $profile['name'];
-        }
+        // we set the name to avoid two connections for a same profile, when the given name
+        // is an alias of a real profile and when we call getConnection several times,
+        // with no name, with the alias name or with the real name.
+        $name = $profile['name'];
 
         if (!isset(self::$_cnxPool[$name])) {
             self::$_cnxPool[$name] = self::_createConnector($profile);
@@ -123,6 +122,10 @@ class jDb {
             $name = 'default';
         $targetName = $name;
 
+        // the name attribute created in this method will be the name of the connection
+        // in the connections pool. So profiles of aliases and real profiles should have
+        // the same name attribute.
+
         if (isset(self::$_profiles[$name])) {
             if (is_string(self::$_profiles[$name])) {
                 $targetName = self::$_profiles[$name];
@@ -153,9 +156,8 @@ class jDb {
         }
 
         if (isset(self::$_profiles[$targetName]) && is_array(self::$_profiles[$targetName])) {
-            self::$_profiles[$name] = self::$_profiles[$targetName];
-            self::$_profiles[$name]['name'] = $name;
-            return self::$_profiles[$name];
+            self::$_profiles[$targetName]['name'] = $targetName;
+            return self::$_profiles[$targetName];
         }
         else {
             throw new jException('jelix~db.error.profile.unknown', $targetName);
@@ -224,7 +226,8 @@ class jDb {
             self::$_profiles = parse_ini_file (JELIX_APP_CONFIG_PATH . $gJConfig->dbProfils, true);
         }
         self::$_profiles[$name] = $params;
-        unset (self::$_cnxPool[$name]);
+        self::$_profiles[$name]['name'] = $name; // pool name
+        unset (self::$_cnxPool[$name]); // close existing connection with the same pool name
     }
     
     /**

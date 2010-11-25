@@ -35,7 +35,7 @@ class UTjDb_profile extends jUnitTestCase {
             'password'=> "futchball_forward",
             'persistent'=> '1',
             'force_encoding'=>0,
-            'name'=>'forward',
+            'name'=>'jelix_tests_forward',
         );
 
         $this->assertEqual($p, $result);
@@ -43,8 +43,7 @@ class UTjDb_profile extends jUnitTestCase {
         $p = jDb::getProfile('testapp');
         $this->assertEqual($p['name'], 'testapp');
         $p2 = jDb::getProfile();
-        $this->assertEqual($p2['name'], 'default');
-        $p2['name'] = 'testapp';
+        $this->assertEqual($p2['name'], 'testapp');
         $this->assertEqual($p, $p2);
         $p = jDb::getProfile('testapppdo');
         $this->assertEqual($p['name'], 'testapppdo');
@@ -68,7 +67,6 @@ class UTjDb_profile extends jUnitTestCase {
 
         $this->assertEqual($profile, $p);
     }
-
 
     function testBadProfile(){
         $p = jDb::getProfile('abcdef'); // unknown profile
