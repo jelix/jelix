@@ -97,6 +97,8 @@ class testInstallerMain extends jInstaller {
     public $configContent = array(
         'index/config.ini.php'=> array(
             'dbProfils'=>"dbprofils.ini.php",
+            "disableInstallers"=>false,
+            "enableAllModules"=>false,
             'modules'=>array(
             ),
             'urlengine'=>array('urlScriptId'=>'index',
@@ -117,7 +119,6 @@ class testInstallerMain extends jInstaller {
             ),
         ),
     );
-
 
     function __construct ($reporter) {
         $this->reporter = $reporter;
