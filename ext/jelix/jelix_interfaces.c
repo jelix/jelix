@@ -40,8 +40,9 @@ interface jIAcl2Driver{
     public function clearCache();
 }
 */
-
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIAcl2Driver_getRight, 0, 0, 1)
     ZEND_ARG_INFO(0, subject)
     ZEND_ARG_INFO(0, resource)
@@ -62,7 +63,9 @@ interface jIAclDriver{
 }
 */
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIAclDriver_getRight, 0, 0, 1)
     ZEND_ARG_INFO(0, subject)
     ZEND_ARG_INFO(0, resource)
@@ -91,27 +94,37 @@ interface jIAuthDriver {
 }
 */
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIAuthDriver_params, 0, 0, 1)
 	ZEND_ARG_INFO(0, params)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIAuthDriver_pattern, 0, 0, 1)
 	ZEND_ARG_INFO(0, pattern)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIAuthDriver_user, 0, 0, 1)
 	ZEND_ARG_INFO(0, user)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIAuthDriver_login, 0, 0, 1)
 	ZEND_ARG_INFO(0, login)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIAuthDriver_loginpwd, 0, 0, 2)
 	ZEND_ARG_INFO(0, login)
 	ZEND_ARG_INFO(0, password)
@@ -145,22 +158,30 @@ interface jIAuthDriverClass {
 }
 */
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIAuthDriverClass_pattern, 0, 0, 1)
     ZEND_ARG_INFO(0, pattern)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIAuthDriverClass_user, 0, 0, 1)
     ZEND_ARG_INFO(0, user)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIAuthDriverClass_login, 0, 0, 1)
     ZEND_ARG_INFO(0, login)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIAuthDriverClass_loginpwd, 0, 0, 2)
     ZEND_ARG_INFO(0, login)
     ZEND_ARG_INFO(0, password)
@@ -188,12 +209,16 @@ interface jICoordPlugin{
 }
 */
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jICoordPlugin_beforeAction, 0, 0, 1)
     ZEND_ARG_INFO(0, params)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jICoordPlugin_config, 0, 0, 1)
     ZEND_ARG_INFO(0, config)
 ZEND_END_ARG_INFO();
@@ -225,12 +250,16 @@ interface jIFormsDatasource {
 }
 */
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIFormsDatasource_params, 0, 0, 1)
     ZEND_ARG_INFO(0, params)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIFormsDatasource_key, 0, 0, 1)
     ZEND_ARG_INFO(0, keys)
 ZEND_END_ARG_INFO();
@@ -249,13 +278,17 @@ interface jIMultiFileCompiler {
 }
 
 */
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIMultiFileCompiler_compileItem, 0, 0, 2)
     ZEND_ARG_INFO(0, sourceFile)
     ZEND_ARG_INFO(0, module)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIMultiFileCompiler_endCompile, 0, 0, 1)
     ZEND_ARG_INFO(0, cachefile)
 ZEND_END_ARG_INFO();
@@ -296,7 +329,9 @@ interface jISelector {
 }
 
 */
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jISelector_toString, 0, 0, 0)
 	ZEND_ARG_INFO(0, full)
 ZEND_END_ARG_INFO();
@@ -319,7 +354,9 @@ interface jISimpleCompiler {
 }
 
 */
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jISimpleCompiler_compile, 0, 0, 1)
     ZEND_ARG_INFO(0, aSelector)
 ZEND_END_ARG_INFO();
@@ -338,20 +375,26 @@ interface jIUrlEngine {
 }
 
 */
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIUrlEngine_parse, 0, 0, 3)
     ZEND_ARG_INFO(0, scriptNamePath)
     ZEND_ARG_INFO(0, pathinfo)
     ZEND_ARG_INFO(0, params)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIUrlEngine_parseFromRequest, 0, 0, 2)
     ZEND_ARG_INFO(0, request)
     ZEND_ARG_INFO(0, params)
 ZEND_END_ARG_INFO();
 
+#if PHP_API_VERSION <= 20081117
 static
+#endif
 ZEND_BEGIN_ARG_INFO_EX(arginfo_jIUrlEngine_create, 0, 0, 1)
     ZEND_ARG_INFO(0, urlact)
 ZEND_END_ARG_INFO();

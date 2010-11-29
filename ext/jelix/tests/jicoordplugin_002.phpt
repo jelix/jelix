@@ -21,7 +21,14 @@ Interface [ <internal:jelix> interface jICoordPlugin ] {
   - Properties [0] {
   }
 
-  - Methods [3] {
+  - Methods [4] {
+    Method [ <internal:jelix, ctor> abstract public method __construct ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $config ]
+      }
+    }
+
     Method [ <internal:jelix> abstract public method beforeAction ] {
 
       - Parameters [1] {

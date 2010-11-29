@@ -10,7 +10,6 @@ cd ext/jelix
   CREDITS
   LICENCE
   INSTALL
-  TODO
   php_jelix.h
   jelix_interfaces.c
   jelix_interfaces.h

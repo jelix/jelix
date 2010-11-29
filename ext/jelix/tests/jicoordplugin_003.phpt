@@ -7,6 +7,10 @@ Use of jICoordPlugin interface
 
 class myClass implements jICoordPlugin {
 
+    function __construct($config) {
+        
+    }
+
 	function beforeAction($param){
 		echo "beforeAction\n";
 	}
@@ -19,7 +23,7 @@ class myClass implements jICoordPlugin {
 
 }
 
-$c = new myClass();
+$c = new myClass(null);
 $c->beforeAction('');
 $c->beforeOutput();
 $c->afterProcess();

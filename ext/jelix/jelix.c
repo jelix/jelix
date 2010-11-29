@@ -17,6 +17,7 @@
 #include "ext/standard/info.h"
 #include "php_jelix.h"
 #include "jelix_interfaces.h"
+#include "zend_ini_scanner.h"
 
 ZEND_DECLARE_MODULE_GLOBALS(jelix)
 
@@ -145,10 +146,14 @@ PHP_FUNCTION(jelix_version)
 /* }}} */
 
 
-
+#if PHP_API_VERSION < 20070928
 static void jelix_ini_parser_cb(zval *arg1, zval *arg2, int callback_type, zval *obj)
 {
 	TSRMLS_FETCH();
+#else
+static void jelix_ini_parser_cb(zval *arg1, zval *arg2, zval *arg3, int callback_type, zval *obj)
+{
+#endif
 
 /*
 ZEND_INI_PARSER_ENTRY       foo = bar
@@ -289,7 +294,12 @@ PHP_FUNCTION(jelix_read_ini)
 	Z_TYPE(fh) = ZEND_HANDLE_FILENAME;
 	JELIX_G(active_ini_file_section) = NULL;
 
-	zend_parse_ini_file(&fh, 0, (zend_ini_parser_cb_t)jelix_ini_parser_cb, confObject);
+#if PHP_API_VERSION < 20070928
+    zend_parse_ini_file(&fh, 0, (zend_ini_parser_cb_t)jelix_ini_parser_cb, confObject);
+#else
+    zend_parse_ini_file(&fh, 0, ZEND_INI_SCANNER_NORMAL, (zend_ini_parser_cb_t)jelix_ini_parser_cb, (void *)confObject TSRMLS_CC);
+#endif
+
 }
 /* }}} */
 

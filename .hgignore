@@ -3,3 +3,4 @@
 ~$
 (^|/)TAGS$
 (^|/)\.DS_Store$
+^_dist$

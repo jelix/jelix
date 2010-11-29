@@ -29,7 +29,7 @@ Interface [ <internal:jelix> interface jIAuthDriver ] {
       }
     }
 
-    Method [ <internal:jelix> abstract public method createUser ] {
+    Method [ <internal:jelix> abstract public method createUserObject ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $login ]
