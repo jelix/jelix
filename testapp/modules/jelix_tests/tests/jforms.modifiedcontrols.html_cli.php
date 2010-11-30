@@ -3,8 +3,8 @@
 * @package     testapp
 * @subpackage  unittest module
 * @author      Bastien Jaillot
-* @contributor Laurent Jouanneau
-* @copyright   2008 Bastien Jaillot, 2009 Laurent Jouanneau
+* @contributor Laurent Jouanneau, Steven Jehannet
+* @copyright   2008 Bastien Jaillot, 2009 Laurent Jouanneau, 2010 Steven Jehannet
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -235,5 +235,24 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
 
     }
 
+    function testModifiedList() {
+        $this->form->setData('list', array());
+        $this->form->initModifiedControlsList();
+
+        $this->form->setData('list', '');
+        $modifiedControls = array ();
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+
+        $this->form->setData('list', array('123'));
+        $modifiedControls = array (
+           'list' => array());
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        
+        $this->form->setData('list', array('123','aaa'));
+        $this->form->initModifiedControlsList();
+        $this->form->setData('list', array('aaa', '123'));
+        $modifiedControls = array ();
+        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+    }
 
 }
