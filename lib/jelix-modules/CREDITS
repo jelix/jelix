@@ -25,3 +25,6 @@ By alphabetic order on the name
 
 * Sylvain de Vathaire (sylvain261)
    jWSDL module (#377)
+
+* Vincent Viaud
+  acl listener for jauth::logout (#1236)
