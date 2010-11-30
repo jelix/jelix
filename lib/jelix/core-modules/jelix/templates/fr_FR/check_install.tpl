@@ -17,7 +17,7 @@
            modifier le paramêtre <code>jelixWWWPath</code>
            dans <em>{$configpath}defaultconfig.ini.php</em>.</p>
         <p>Pour plus d'informations, consultez
-             <a href="http://jelix.org/articles/fr/manuel-1.2/installation/application#configuration-du-serveur"
+             <a href="http://jelix.org/articles/fr/manuel-1.2/configurer-server"
              title="documentation officielle">la documentation sur l'installation de Jelix</a>.</p>
         <hr />
     </div>
@@ -46,7 +46,7 @@
                 <li><a href="http://jelix.org" title="Site officiel de Jelix">Visitez le site de Jelix</a></li>
                 <li><a href="http://jelix.org/articles/fr/tutoriels">Suivez les tutoriels</a></li>
                 <li><a href="http://jelix.org/articles/fr/manuel-1.2">Lisez la documentation de Jelix</a></li>
-                <li><a href="http://jelix.org/forums/index.php?14">Posez vos questions dans les forums</a></li>
+                <li><a href="http://jelix.org/forums/cat/1-francais">Posez vos questions dans les forums</a></li>
             </ul>
         </div>
     </div>
