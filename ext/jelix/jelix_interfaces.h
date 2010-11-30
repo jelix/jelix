@@ -25,6 +25,9 @@ extern PHPAPI zend_class_entry * jelix_ce_jIRestController;
 extern PHPAPI zend_class_entry * jelix_ce_jISelector;
 extern PHPAPI zend_class_entry * jelix_ce_jISimpleCompiler;
 extern PHPAPI zend_class_entry * jelix_ce_jIUrlEngine;
+extern PHPAPI zend_class_entry * jelix_ce_jIUrlSignificantHandler;
+extern PHPAPI zend_class_entry * jelix_ce_jIKVPersistent;
+extern PHPAPI zend_class_entry * jelix_ce_jIKVttl;
 
 PHP_MINIT_FUNCTION(jelix_interfaces);
 #endif

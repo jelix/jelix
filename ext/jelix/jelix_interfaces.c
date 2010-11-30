@@ -32,6 +32,9 @@ PHPAPI zend_class_entry * jelix_ce_jIRestController;
 PHPAPI zend_class_entry * jelix_ce_jISelector;
 PHPAPI zend_class_entry * jelix_ce_jISimpleCompiler;
 PHPAPI zend_class_entry * jelix_ce_jIUrlEngine;
+PHPAPI zend_class_entry * jelix_ce_jIUrlSignificantHandler;
+PHPAPI zend_class_entry * jelix_ce_jIKVPersistent;
+PHPAPI zend_class_entry * jelix_ce_jIKVttl;
 
 
 /* -------------------------------------
@@ -82,14 +85,13 @@ zend_function_entry zend_funcs_jIAclDriver[] = {
 
 interface jIAuthDriver {
     function __construct($params);
-    public function createUser($login, $password);
+    public function createUserObject($login, $password);
     public function saveNewUser($user);
     public function removeUser($login);
     public function updateUser($user);
     public function getUser($login);
     public function getUserList($pattern);
     public function changePassword($login, $newpassword);
-
     public function verifyPassword($login, $password);
 }
 */
@@ -192,6 +194,7 @@ zend_function_entry zend_funcs_jIAuthDriverClass[] = {
     ZEND_ABSTRACT_ME(jIAuthDriverClass, deleteByLogin, arginfo_jIAuthDriverClass_login)
     ZEND_ABSTRACT_ME(jIAuthDriverClass, update,        arginfo_jIAuthDriverClass_user)
     ZEND_ABSTRACT_ME(jIAuthDriverClass, getByLogin,    arginfo_jIAuthDriverClass_login)
+    ZEND_ABSTRACT_ME(jIAuthDriverClass, createUserObject,       NULL)
     ZEND_ABSTRACT_ME(jIAuthDriverClass, findAll,       NULL)
     ZEND_ABSTRACT_ME(jIAuthDriverClass, findByLoginPattern,   arginfo_jIAuthDriverClass_pattern)
     ZEND_ABSTRACT_ME(jIAuthDriverClass, updatePassword, arginfo_jIAuthDriverClass_loginpwd)
@@ -409,6 +412,69 @@ zend_function_entry zend_funcs_jIUrlEngine[] = {
 
 
 
+/* -------------------------------------
+interface jIUrlSignificantHandler {
+    public function parse($url);
+    public function create($urlact, $url);
+}
+*/
+#if PHP_API_VERSION <= 20081117
+static
+#endif
+ZEND_BEGIN_ARG_INFO_EX(arginfo_jIUrlSignificantHandler_parse, 0, 0, 1)
+    ZEND_ARG_INFO(0, url)
+ZEND_END_ARG_INFO();
+
+#if PHP_API_VERSION <= 20081117
+static
+#endif
+ZEND_BEGIN_ARG_INFO_EX(arginfo_jIUrlSignificantHandler_create, 0, 0, 2)
+    ZEND_ARG_INFO(0, urlact)
+    ZEND_ARG_INFO(0, url)
+ZEND_END_ARG_INFO();
+
+zend_function_entry zend_funcs_jIUrlSignificantHandler[] = {
+    ZEND_ABSTRACT_ME(jIUrlSignificantHandler, parse, arginfo_jIUrlSignificantHandler_parse)
+    ZEND_ABSTRACT_ME(jIUrlSignificantHandler, create, arginfo_jIUrlSignificantHandler_create)
+    {NULL, NULL, NULL}
+};
+
+
+/* -------------------------------------
+interface jIKVPersistent {
+    public function sync();
+}
+*/
+zend_function_entry zend_funcs_jIKVPersistent[] = {
+    ZEND_ABSTRACT_ME(jIKVPersistent, sync, NULL)
+    {NULL, NULL, NULL}
+};
+
+/* -------------------------------------
+interface jIKVttl {
+    public function setWithTtl($key, $value, $ttl);
+    public function garbage();
+}
+*/
+#if PHP_API_VERSION <= 20081117
+static
+#endif
+ZEND_BEGIN_ARG_INFO_EX(arginfo_jIKVttl_setWithTtl, 0, 0, 3)
+    ZEND_ARG_INFO(0, key)
+    ZEND_ARG_INFO(0, value)
+    ZEND_ARG_INFO(0, ttl)
+ZEND_END_ARG_INFO();
+
+zend_function_entry zend_funcs_jIKVttl[] = {
+    ZEND_ABSTRACT_ME(jIUrlSignificantHandler, setWithTtl, arginfo_jIKVttl_setWithTtl)
+    ZEND_ABSTRACT_ME(jIKVttl, garbage, NULL)
+    {NULL, NULL, NULL}
+};
+
+
+
+
+
 #define JELIX_DECLARE_INTERFACE(classname) \
     INIT_CLASS_ENTRY(_ce, #classname, zend_funcs_##classname) \
 	jelix_ce_##classname = zend_register_internal_interface(&_ce TSRMLS_CC);
@@ -432,4 +498,7 @@ PHP_MINIT_FUNCTION(jelix_interfaces)
 	JELIX_DECLARE_INTERFACE(jISelector)
     JELIX_DECLARE_INTERFACE(jISimpleCompiler)
     JELIX_DECLARE_INTERFACE(jIUrlEngine)
+    JELIX_DECLARE_INTERFACE(jIUrlSignificantHandler)
+    JELIX_DECLARE_INTERFACE(jIKVPersistent)
+    JELIX_DECLARE_INTERFACE(jIKVttl)
 }

@@ -9,7 +9,7 @@
  * @link     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-
+#ifnot ENABLE_PHP_JELIX
 /**
  * interface for KV driver which store values in a persistent manner (in a file...)
  */
@@ -41,7 +41,7 @@ interface jIKVttl {
      */
     public function garbage();
 }
-
+#endif
 /**
  *
  */

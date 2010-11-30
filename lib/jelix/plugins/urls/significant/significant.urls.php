@@ -54,7 +54,7 @@ class jSelectorUrlHandler extends jSelectorClass {
     }
 
 }
-
+#ifnot ENABLE_PHP_JELIX
 /**
  * interface for user url handler
  * @package  jelix
@@ -77,7 +77,7 @@ interface jIUrlSignificantHandler {
     */
     public function create($urlact, $url);
 }
-
+#endif
 /**
  * an url engine to parse,analyse and create significant url
  * it needs an urls.xml file in the config directory (see documentation)
