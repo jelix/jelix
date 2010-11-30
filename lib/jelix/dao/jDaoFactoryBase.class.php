@@ -10,6 +10,7 @@
  * @contributor Mickael Fradin
  * @contributor Christophe Thiriot
  * @contributor Yannick Le Guédart
+ * @contributor Steven Jehannet
  * @copyright   2005-2010 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007-2009 Julien Issler
@@ -18,6 +19,7 @@
  * @copyright   2009 Mickael Fradin
  * @copyright   2009 Christophe Thiriot
  * @copyright   2010 Yannick Le Guédart
+ * @copyright   2010 Steven Jehannet
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -269,6 +271,7 @@ abstract class jDaoFactoryBase  {
      * return the number of records corresponding to the conditions stored into the
      * jDaoConditions object.
      * @author Loic Mathaud
+     * @contributor Steven Jehannet
      * @copyright 2007 Loic Mathaud
      * @since 1.0b2
      * @param jDaoConditions $searchcond
@@ -276,17 +279,24 @@ abstract class jDaoFactoryBase  {
      */
     final public function countBy($searchcond, $distinct=null) {
         $count = '*';
+        $sqlite = false;
         if ($distinct !== null) {
             $props = $this->getProperties();
             if (isset($props[$distinct]))
                 $count = 'DISTINCT '.$this->_tables[$props[$distinct]['table']]['name'].'.'.$props[$distinct]['fieldName'];
+            $sqlite = ($this->_conn->dbms == 'sqlite');
         }
 
-        $query = 'SELECT COUNT('.$count.') as c '.$this->_fromClause.$this->_whereClause;
+        if (!$sqlite)
+            $query = 'SELECT COUNT('.$count.') as c '.$this->_fromClause.$this->_whereClause;
+        else // specific query for sqlite, which doesn't support COUNT+DISTINCT
+            $query = 'SELECT COUNT(*) as c FROM (SELECT '.$count.' '.$this->_fromClause.$this->_whereClause;
+
         if ($searchcond->hasConditions ()){
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
             $query .= $this->_createConditionsClause($searchcond);
         }
+        if($sqlite) $query .= ')';
         $rs  = $this->_conn->query ($query);
         $res = $rs->fetch();
         return intval($res->c);

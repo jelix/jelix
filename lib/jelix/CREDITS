@@ -154,6 +154,7 @@ Steven Jehannet (aka Catsoup)
  - meta_html plugin should allow additionnal parameters (#996)
  - fixed issue with history plugin and session (#1068)
  - fixed issue in the gravatar plugin (#1172)
+ - fixed bug in jdao for sqlite + count+ distinct (#1225)
 
 Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
