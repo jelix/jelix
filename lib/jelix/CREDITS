@@ -270,6 +270,9 @@ Laurent Raufaste (aka analogue)
  - patches on postgresql driver (#123, #671, #672, #674)
  - replaced getParam (deprecated) with param in jZone (#680)
 
+Rob2
+  - image plugin: alt attribute is not generated when it is empty (#1240)
+
 Philippe Schelté (aka dubphil)
  - plugin tpl cycle (#149)
  - error in checkTrustedModules function (#715)
