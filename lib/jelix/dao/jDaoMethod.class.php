@@ -43,7 +43,8 @@ class jDaoMethod {
     function __construct ($method, $parser){
         $this->_parser = $parser;
 
-        $params = $parser->getAttr($method, array('name', 'type', 'call','distinct', 'eventbefore', 'eventafter', 'groupby'));
+        $params = $parser->getAttr($method, array('name', 'type', 'call','distinct',
+                                                  'eventbefore', 'eventafter', 'groupby'));
 
         if ($params['name']===null){
             throw new jDaoXmlException ($this->_parser->selector, 'missing.attr', array('name', 'method'));

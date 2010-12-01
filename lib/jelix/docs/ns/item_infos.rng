@@ -139,14 +139,14 @@
                <element name="module">
                   <attribute name="id" />
                   <attribute name="name" />
-                  <attribute name="maxversion" />
-                  <attribute name="minversion" />
+                  <optional><attribute name="maxversion" /></optional>
+                  <optional><attribute name="minversion" /></optional>
                </element>
                <element name="plugin">
                   <attribute name="id" />
                   <attribute name="name" />
-                  <attribute name="maxversion" />
-                  <attribute name="minversion" />
+                  <optional><attribute name="maxversion" /></optional>
+                  <optional><attribute name="minversion" /></optional>
                </element>
             </choice>
          </zeroOrMore>

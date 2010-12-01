@@ -65,6 +65,9 @@
                <optional><attribute name="insertpattern" /></optional>
                <optional><attribute name="selectpattern" /></optional>
                <optional><attribute name="default" /></optional>
+               <optional><attribute name="autoincrement">
+                  <choice><value>true</value><value>false</value></choice>
+               </attribute></optional>
             </element>
          </oneOrMore>
       </element>
@@ -129,7 +132,12 @@
                </attribute>
             </optional>
             <optional>
-                <attribute name="distinct" />
+               <attribute name="distinct">
+                  <choice>
+                     <value>true</value>
+                     <value>false</value>
+                  </choice>
+                </attribute>
             </optional>
             <optional>
                 <attribute name="groupby" />
@@ -204,7 +212,6 @@
             </choice>
          </oneOrMore>
       </element>
-
    </define>
 
    <define name="method.condition.attr">
@@ -256,14 +263,7 @@
                <element name="orderitem">
                   <attribute name="property" />
                   <optional>
-                     <attribute name="way">
-                        <choice>
-                           <value>ASC</value>
-                           <value>DESC</value>
-                           <value>asc</value>
-                           <value>desc</value>
-                        </choice>
-                     </attribute>
+                     <attribute name="way" />
                   </optional>
                   <empty/>
                </element>
