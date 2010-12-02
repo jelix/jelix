@@ -291,6 +291,8 @@ cd lib/jelix/plugins/cache/db
   db.cache.php
 cd lib/jelix/plugins/cache/memcache
   memcache.cache.php
+cd lib/jelix/plugins/cache/memcache22
+  memcache22.cache.php
 
 cd lib/jelix/plugins/coord/magicquotes
 ! magicquotes.coord.php

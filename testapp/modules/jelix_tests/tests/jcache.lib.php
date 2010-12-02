@@ -18,11 +18,13 @@
 
 class UTjCacheAPI extends jUnitTestCaseDb {
 
-    protected $profile;
+    protected $profile = '';
     
     protected $conf;
 
     function getTests() {
+        if ($this->profile == '')
+            return array();
         $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.'cache.ini.php', true);
         if (isset($conf[$this->profile]) && $conf[$this->profile]['enabled']) {
             $this->conf = $conf[$this->profile];
@@ -147,10 +149,11 @@ class UTjCacheAPI extends jUnitTestCaseDb {
         $this->assertTrue(jCache::increment('integerDataKey',1,$this->profile)==101);
 
         $this->assertTrue(jCache::set('floatDataKey',100.5,1,$this->profile));
-        $this->assertTrue(jCache::increment('floatDataKey',1,$this->profile)==101);
+        $this->assertEqual(jCache::get('floatDataKey',$this->profile), 100.5);
+        $this->assertEqual(jCache::increment('floatDataKey',1,$this->profile),101);
 
         $this->assertTrue(jCache::set('floatIncrementationKey',100,1,$this->profile));
-        $this->assertTrue(jCache::increment('floatIncrementationKey',1.5,$this->profile)==101);
+        $this->assertEqual(jCache::increment('floatIncrementationKey',1.5,$this->profile),101);
 
         $this->assertTrue(jCache::set('stringIncrementationKey',1,1,$this->profile));
         $this->assertFalse(jCache::increment('stringIncrementationKey','increment by string',$this->profile));
@@ -192,11 +195,18 @@ class UTjCacheAPI extends jUnitTestCaseDb {
         $oData=(object)array('property1'=>'string','property2'=>1);
         $this->assertTrue(jCache::set('objectDataKey',$oData,1,$this->profile));
         $this->assertFalse(jCache::decrement('objectDataKey',1,$this->profile));
+    }
 
+    public function testFlush (){
+
+        $this->assertFalse(jCache::flush());
+        // prepare data for overriding methods
+        jCache::set('flush1DataKey','some data',0,$this->profile);
+        jCache::set('flush2DataKey','data to remove',strtotime("+1 day"),$this->profile);
+        jCache::set('flush3DataKey','other data to remove',time()+30,$this->profile);
     }
 
     public function testReplace (){
-
         $newData = 'data to replace';
 
         jCache::set('replace1Key','data one',0,$this->profile);
@@ -212,8 +222,7 @@ class UTjCacheAPI extends jUnitTestCaseDb {
 
     public function testDelete (){
 
-        jCache::set('deleteKey','data to delete',0,$this->profile);
-
+        $this->assertTrue(jCache::set('deleteKey','data to delete',0,$this->profile));
         $this->assertTrue(jCache::delete('deleteKey',$this->profile));
         $this->assertFalse(jCache::get('deleteKey',$this->profile));
         $this->assertFalse(jCache::delete('inexistentKey',$this->profile));
@@ -233,12 +242,4 @@ class UTjCacheAPI extends jUnitTestCaseDb {
         $this->assertTrue(jCache::garbage($this->profile));
     }
 
-    public function testFlush (){
-
-        $this->assertFalse(jCache::flush());
-
-        jCache::set('flush1DataKey','some data',0,$this->profile);
-        jCache::set('flush2DataKey','data to remove',strtotime("+1 day"),$this->profile);
-        jCache::set('flush3DataKey','other data to remove',time()+30,$this->profile);
-    }
 }

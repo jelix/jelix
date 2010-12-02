@@ -14,7 +14,7 @@
 * @package jelix
 * @subpackage plugins_cache_memcached
 */
-class memcacheCacheDriver implements jICacheDriver {
+class memcache22CacheDriver implements jICacheDriver {
 
     /**
     * Memcached servers list
@@ -59,10 +59,9 @@ class memcacheCacheDriver implements jICacheDriver {
         if (!extension_loaded('memcache')) {
             throw new jException('jelix~cache.error.memcache.extension.missing',array($this->profil_name, ''));
         }
-        if (version_compare(phpversion('memcache'), '3.0.1') == -1) { // memcache >= 3.0.1
-            throw new jException('jelix~cache.error.memcache.extension.badversion.3',array($this->profil_name));
+        if (version_compare(phpversion('memcache'), '3.0.1') > 0) { // memcache >= 3.0.1
+            throw new jException('jelix~cache.error.memcache.extension.badversion.2',array($this->profil_name));
         }
-
 
         $this->profil_name = $params['profile'];
 
@@ -130,17 +129,8 @@ class memcacheCacheDriver implements jICacheDriver {
     * @return boolean       false if failure
     */
     public function increment ($key,$var=1){
-        if (!is_numeric($var)) {
+        if (!is_numeric($var) || !is_numeric($this->get($key))) {
             return false;
-        }
-        $val = $this->get($key);
-        if(!is_numeric($val)) {
-            return false;
-        }else if (is_float($val)) {
-            $val = ((int)$val) + $var;
-            if($this->_memcache->set($key, $val))
-                return $val;
-            else return false;
         }
         return $this->_memcache->increment($key,$var);
     }
@@ -151,18 +141,9 @@ class memcacheCacheDriver implements jICacheDriver {
     * @param mixed  $var    value used
     * @return boolean       false if failure
     */
-    public function decrement ($key, $var=1) {
-        if (!is_numeric($var)) {
+    public function decrement ($key,$var=1){
+        if(!is_numeric($var) || !is_numeric($this->get($key))){
             return false;
-        }
-        $val = $this->get($key);
-        if(!is_numeric($val)) {
-            return false;
-        }else if (is_float($val)) {
-            $val = ((int)$val) - $var;
-            if($this->_memcache->set($key, $val))
-                return $val;
-            else return false;
         }
         return $this->_memcache->decrement($key,$var);
     }

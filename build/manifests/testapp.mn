@@ -197,6 +197,7 @@ cd testapp/modules/jelix_tests/tests/
   jcache.db.html_cli.php
   jcache.file.html_cli.php
   jcache.memcache.html_cli.php
+  jcache.memcache22.html_cli.php
   jdao.conditions.html_cli.php
   jdao.events.html_cli.php
   jdao.main_api.html_cli.php
