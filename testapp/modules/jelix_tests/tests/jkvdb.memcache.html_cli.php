@@ -29,11 +29,11 @@ class UTjKVDbMemcache extends UTjKVDb {
                 $this->mmcError = 'UTjKVDbMemcache cannot be run because memcache is not installed';
                 return array('tfail');
             }
-            if (version_compare(phpversion('memcache'), '3.0.1') > 0) {
+            /*if (version_compare(phpversion('memcache'), '3.0.1') > 0) {
                 $this->mmcError = 'UTjKVDbMemcache cannot be run because version of memcache is wrong (should be <= 3.0.1)';
                 $this->wrongversion = true;
                 return array('tfail');
-            }
+            }*/
 
         }
         return $r;
