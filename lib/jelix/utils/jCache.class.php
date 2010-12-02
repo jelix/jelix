@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  cache
 * @author      Tahina Ramaroson
-* @contributor Sylvain de Vathaire
-* @copyright   2009 Neov
+* @contributor Sylvain de Vathaire, Brice Tence
+* @copyright   2009 Neov, 2010 Brice Tence
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -163,8 +163,33 @@ class jCache {
         if($drv->enabled){
 
             $key = md5(serialize($fn).serialize($fnargs));
+            $lockKey = $key.'___jcacheLock';
 
             if (!($data = $drv->get($key))) {
+                //wait lock to be realesed (if a lock exists)
+                $lockTests=0;
+                while( $drv->get($lockKey) ) {
+                    usleep(100000);
+                    if( ($lockTests++)%10 == 0 ) { //every second, first shot is on first call
+                        //automatic cleaning cache
+                        if($drv->automatic_cleaning_factor > 0 &&  rand(1, $drv->automatic_cleaning_factor) == 1){
+                            $drv->garbage();
+                        }
+                    }
+                }
+                if( $lockTests > 0 ) {
+                    //a lock has been met. So read again jCache value now that it has been released
+                    $data = $drv->get($key);
+                }
+            }
+
+            if ( !$data ) {
+                $lockTtl = get_cfg_var('max_execution_time');
+                if( !$lockTtl ) {
+                    $lockTtl = $drv->ttl;
+                }
+                $lockTtl = max( 30, min( $lockTtl, $drv->ttl ) ); //prevent lock ttl from being more than drv's ttl and from being eternal
+                $drv->set($lockKey,true,$lockTtl);
 
                 $data = self::_doFunctionCall($fn,$fnargs);
 
@@ -184,6 +209,7 @@ class jCache {
                         $drv->set($key,$data,$ttl);
                     }
                 }
+                $drv->delete($lockKey);
             }
 
             return $data;

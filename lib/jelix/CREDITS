@@ -285,6 +285,7 @@ Brice Tence (aka brayce/bricet)
  - fixed bug in jInstallChecker (#1087)
  - introduced optional jMinifier for jResponseHtml for JS/CSS concatenation and minification (#860)
  - type attribut on link tag should be optional (#1188)
+ - added lock on jCache::call to prevent multiple calls on CPU high-consuming functions (ticket #1237)
 
 Christophe Thiriot (aka Doubleface)
  - testor
