@@ -39,7 +39,7 @@ user=root
 ; you can change password option : use same value as password in testapp profiles
 password=
 
-; to run tests with pgsql
+; to run tests with pgsql. don't use pdo !
 ;[testapp_pgsql]
 ;driver="pgsql"
 ;host=
