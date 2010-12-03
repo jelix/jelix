@@ -11,17 +11,24 @@
 function driverChanged(select, profile) {
   if (select.options[select.selectedIndex].value == 'sqlite') {
     document.getElementById('host-'+profile).style.display = 'none';
+    document.getElementById('port-'+profile).style.display = 'none';
     document.getElementById('user-'+profile).style.display = 'none';
     document.getElementById('password-'+profile).style.display = 'none';
     document.getElementById('passwordconfirm-'+profile).style.display = 'none';
     document.getElementById('force_encoding-'+profile).style.display = 'none';
+    document.getElementById('search_path-'+profile).style.display = 'none';
   }
   else {
     document.getElementById('host-'+profile).style.display = 'table-row';
+    document.getElementById('port-'+profile).style.display = 'table-row';
     document.getElementById('user-'+profile).style.display = 'table-row';
     document.getElementById('password-'+profile).style.display = 'table-row';
     document.getElementById('passwordconfirm-'+profile).style.display = 'table-row';
     document.getElementById('force_encoding-'+profile).style.display = 'table-row';
+    document.getElementById('search_path-'+profile).style.display = 'none';
+    if (select.options[select.selectedIndex].value == 'pgsql') {
+      document.getElementById('search_path-'+profile).style.display = 'table-row';
+    }
   }
 }
 {/literal}
@@ -39,6 +46,10 @@ function driverChanged(select, profile) {
   <tr id="host-{$profile}" {if $driver[$profile] =='sqlite'}style="display:none"{/if}>
     <th><label for="host[{$profile}]">{@label.host@}</label></th>
     <td><input id="host[{$profile}]" name="host[{$profile}]" value="{$host[$profile]|eschtml}" size=""/></td>
+  </tr>
+  <tr id="port-{$profile}" {if $driver[$profile] =='sqlite'}style="display:none"{/if}>
+    <th><label for="port[{$profile}]">{@label.port@}</label></th>
+    <td><input id="port[{$profile}]" name="port[{$profile}]" value="{$port[$profile]|eschtml}" size=""/></td>
   </tr>
   <tr>
     <th><label for="database[{$profile}]">{@label.database@}</label></th>
@@ -69,6 +80,10 @@ function driverChanged(select, profile) {
   <tr>
     <th><label for="table_prefix[{$profile}]">{@label.prefix@}</label></th>
     <td><input id="table_prefix[{$profile}]" name="table_prefix[{$profile}]" value="{$table_prefix[$profile]|eschtml}" size=""/></td>
+  </tr>
+  <tr id="search_path-{$profile}" {if $driver[$profile] !='pgsql'}style="display:none"{/if}>
+    <th><label for="search_path[{$profile}]">{@label.search_path@}</label></th>
+    <td><input id="search_path[{$profile}]" name="search_path[{$profile}]" value="{$search_path[$profile]|eschtml}" size=""/></td>
   </tr>
 </table>
 {/foreach}
