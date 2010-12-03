@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Gwendal Jouannic
 * @contributor Laurent Jouanneau
-* @copyright  2008 Gwendal Jouannic, 2009 Laurent Jouanneau
+* @copyright  2008 Gwendal Jouannic, 2009-2010 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -123,9 +123,11 @@ class ociDbTools extends jDbTools {
 
     /**
     * retrieve the list of fields of a table
+    * @param string $tableName the name of the table
+    * @param string $sequence  the sequence used to auto increment the primary key
     * @return   array    keys are field names and values are jDbFieldProperties objects
     */
-    public function getFieldList ($tableName) {
+    public function getFieldList ($tableName, $sequence='') {
         $tableName = $this->_conn->prefixTable($tableName);
         $results = array ();
 
@@ -136,9 +138,7 @@ class ociDbTools extends jDbTools {
                             AND UC.TABLE_NAME = UTC.TABLE_NAME
                             AND UCC.COLUMN_NAME = UTC.COLUMN_NAME
                             AND UC.CONSTRAINT_NAME = UCC.CONSTRAINT_NAME
-                            AND UC.CONSTRAINT_TYPE = \'P\') AS CONSTRAINT_TYPE,
-                         (SELECT \'Y\' FROM USER_SEQUENCES US
-                         WHERE US.SEQUENCE_NAME = concat(\''.$this->_getAISequenceName($tableName,'\', UTC.COLUMN_NAME').')) AS IS_AUTOINCREMENT   
+                            AND UC.CONSTRAINT_TYPE = \'P\') AS CONSTRAINT_TYPE
                     FROM USER_TAB_COLUMNS UTC 
                     WHERE UTC.TABLE_NAME = \''.strtoupper($tableName).'\'';
 
@@ -166,17 +166,24 @@ class ociDbTools extends jDbTools {
             $field->notNull = ($line->nullable == 'N');
             $field->primary = ($line->constraint_type == 'P');
 
-            /**
-             * A chaque champ auto increment correspond une sequence
-             */
-            if ($line->is_autoincrement == 'Y'){
-                $field->autoIncrement  = true;
-                $field->sequence = $this->_getAISequenceName($tableName, $field->name);
+            // FIXME, retrieve autoincrement property for other field than primary key
+            if ($field->primary) {
+                if ($sequence == '')
+                    $sequence = $this->_getAISequenceName($tableName, $field->name);
+                if ($sequence != '') {
+                    $sqlai = "SELECT 'Y' FROM USER_SEQUENCES US
+                                WHERE US.SEQUENCE_NAME = '".$sequence."'";
+                    $rsai = $this->_conn->query ($sqlai);
+                    if ($this->_conn->query($sqlai)->fetch()){
+                        $field->autoIncrement  = true;
+                        $field->sequence = $sequence;
+                    }
+                }
             }
 
             if ($line->data_default !== null || !($line->data_default === null && $field->notNull)){
                 $field->hasDefault = true;
-                $field->default =  $line->data_default;   
+                $field->default =  $line->data_default;
             }
 
             $results[$field->name] = $field;
@@ -189,6 +196,10 @@ class ociDbTools extends jDbTools {
     * @return   string 
     */
     function _getAISequenceName($tbName, $clName){
-        return preg_replace(array('/\*tbName\*/', '/\*clName\*/'), array(strtoupper($tbName), strtoupper($clName)), $this->_conn->profile['sequence_AI_pattern']);
+        if (isset($this->_conn->profile['sequence_AI_pattern']))
+            return preg_replace(array('/\*tbName\*/', '/\*clName\*/'),
+                            array(strtoupper($tbName), strtoupper($clName)),
+                            $this->_conn->profile['sequence_AI_pattern']);
+        return '';
     }
 }

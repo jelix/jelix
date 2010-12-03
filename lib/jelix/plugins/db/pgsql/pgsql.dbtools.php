@@ -131,11 +131,14 @@ class pgsqlDbTools extends jDbTools {
       }
       return $results;
    }
+
     /**
     * retrieve the list of fields of a table
+    * @param string $tableName the name of the table
+    * @param string $sequence  the sequence used to auto increment the primary key
     * @return   array    keys are field names and values are jDbFieldProperties objects
     */
-    public function getFieldList ($tableName) {
+    public function getFieldList ($tableName, $sequence='') {
         $tableName = $this->_conn->prefixTable($tableName);
         $results = array ();
         
@@ -186,6 +189,9 @@ class pgsqlDbTools extends jDbTools {
 
             if(in_array($line->attnum, $pkeys))
                 $field->primary = true;
+
+            if($field->autoIncrement && $sequence && $field->primary)
+                $field->sequence = $sequence;
 
             if($line->attlen == -1 && $line->atttypmod != -1) {
                 $field->length = $line->atttypmod - 4;

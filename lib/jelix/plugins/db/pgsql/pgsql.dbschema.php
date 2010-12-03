@@ -13,6 +13,7 @@
  * 
  * @package    jelix
  * @subpackage db_driver
+ * @notimplemented
  */
 class pgsqlDbTable extends jDbTable {
 

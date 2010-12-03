@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDbToolsMysql, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -121,7 +121,6 @@ class mysqlDbTools extends jDbTools {
     /**
     * returns the list of tables
     * @return   array    list of table names
-    * @deprecated since 1.2
     */
     public function getTableList () {
         $results = array ();
@@ -147,10 +146,12 @@ class mysqlDbTools extends jDbTools {
 
     /**
     * retrieve the list of fields of a table
+    * @param string $tableName the name of the table
+    * @param string $sequence  the sequence used to auto increment the primary key (not supported here)
     * @return   array    keys are field names and values are jDbFieldProperties objects
-    * @deprecated since 1.2
     */
-    public function getFieldList ($tableName) {
+    public function getFieldList ($tableName, $sequence='') {
+
         $tableName = $this->_conn->prefixTable($tableName);
         $results = array ();
 

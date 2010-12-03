@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Loic Mathaud
 * @contributor Laurent Jouanneau
-* @copyright  2006 Loic Mathaud, 2007-2009 Laurent Jouanneau
+* @copyright  2006 Loic Mathaud, 2007-2010 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -127,9 +127,12 @@ class sqliteDbTools extends jDbTools {
 
     /**
     * retrieve the list of fields of a table
+    * @param string $tableName the name of the table
+    * @param string $sequence  the sequence used to auto increment the primary key (not supported here)
     * @return   array    keys are field names and values are jDbFieldProperties objects
     */
-    public function getFieldList ($tableName) {
+    public function getFieldList ($tableName, $sequence='') {
+
         $tableName = $this->_conn->prefixTable($tableName);
         $results = array ();
 

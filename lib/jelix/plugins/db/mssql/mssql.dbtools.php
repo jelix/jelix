@@ -32,10 +32,13 @@ class mssqlDbTools extends jDbTools {
     }
 
     /**
-     * return a field list of a table.
-     * @return   array    $tab[NomDuChamp] = obj avec prop (type, length, lengthVar, notnull)
-     */
-    function getFieldList ($tableName){
+    * retrieve the list of fields of a table
+    * @param string $tableName the name of the table
+    * @param string $sequence  the sequence used to auto increment the primary key (not supported here)
+    * @return   array    keys are field names and values are jDbFieldProperties objects
+    */
+    public function getFieldList ($tableName, $sequence='') {
+
         $results = array ();
 
         $pkeys = array();
