@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="junittests@modules.jelix.org" name="junittests" createdate="">
-#expand        <version stability="stable">__LIB_VERSION__</version>
+        <version stability="stable">1.2</version>
         <label lang="en-EN">Web interfaces for simple test</label>
         <description lang="en-EN">Provides a web interface to run tests from simpletest</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
@@ -11,6 +11,6 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__"/>
+        <jelix minversion="1.2RC3" maxversion="1.2.*"/>
     </dependencies>
 </module>
