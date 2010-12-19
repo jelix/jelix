@@ -102,6 +102,7 @@ class jResponseHtml extends jResponse {
     protected $_Styles  = array ();
     protected $_JSLink  = array ();
     protected $_JSIELink  = array ();
+    protected $_JSCodeBefore  = array ();
     protected $_JSCode  = array ();
     protected $_Others  = array ();
     protected $_MetaKeywords = array();
@@ -373,9 +374,13 @@ class jResponseHtml extends jResponse {
     /**
      * add inline javascript code (inside a <script> tag)
      * @param string $code  javascript source code
+     * @param boolean $before will insert the code before js links if true
      */
-    final public function addJSCode ($code){
-        $this->_JSCode[] = $code;
+    final public function addJSCode ($code, $before = false){
+        if ($before)
+            $this->_JSCodeBefore[] = $code;
+        else
+            $this->_JSCode[] = $code;
     }
 
     /**
@@ -606,10 +611,6 @@ class jResponseHtml extends jResponse {
         }
     }
 
-
-
-
-
     /**
      * generate the content of the <head> content
      */
@@ -677,6 +678,15 @@ class jResponseHtml extends jResponse {
             if (!empty($params[2]))
                 $more[] = 'title = "'.htmlspecialchars($params[2]).'"';
             echo '<link rel="',$params[0],'" href="',htmlspecialchars($href),'" ',implode($more, ' '),$this->_endTag;
+        }
+
+        // js code
+        if(count($this->_JSCodeBefore)){
+            echo '<script type="text/javascript">
+// <![CDATA[
+ '.implode ("\n", $this->_JSCodeBefore).'
+// ]]>
+</script>';
         }
 
         $this->outputJsScripts( $this->_JSLink );
