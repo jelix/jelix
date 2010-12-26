@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage utils
+* @subpackage core
 * @author     Laurent Jouanneau
 * @contributor F. Fernandez
 * @copyright  2006-2010 Laurent Jouanneau, 2007 F. Fernandez

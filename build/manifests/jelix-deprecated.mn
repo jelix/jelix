@@ -44,6 +44,9 @@ cd lib/jelix/forms/
 cd lib/jelix/installer/
   jInstallerApp.class.php
 
+cd lib/jelix/utils/
+  jLog.class.php
+
 cd lib/jelix/plugins/tpl/html
   block.formdatas.php
   function.formdatasfull.php

@@ -261,7 +261,6 @@ cd lib/jelix/utils/
   jIniMultiFilesModifier.class.php
 * jJson.class.php
 * jJsonRpc.class.php
-  jLog.class.php
   jMailer.class.php
   jMessage.class.php
   jMinifier.class.php
