@@ -47,6 +47,7 @@ defaultJformsBuilder = html
 
 [responses]
 html = jResponseHtml
+basichtml = jResponseBasicHtml
 redirect = jResponseRedirect
 redirectUrl = jResponseRedirectUrl
 binary = jResponseBinary
@@ -74,6 +75,7 @@ sitemap = jResponseSitemap
 
 [_coreResponses]
 html = jResponseHtml
+basichtml = jResponseBasicHtml
 redirect = jResponseRedirect
 redirectUrl = jResponseRedirectUrl
 binary = jResponseBinary

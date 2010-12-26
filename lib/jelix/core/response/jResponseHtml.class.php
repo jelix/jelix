@@ -5,7 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Yann, Dominique Papin
 * @contributor Warren Seine, Alexis Métaireau, Julien Issler, Olivier Demah, Brice Tence
-* @copyright   2005-2009 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
+* @copyright   2005-2010 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
 * @copyright   2008 Warren Seine, Alexis Métaireau
 * @copyright   2009 Julien Issler, Olivier Demah
 * @copyright   2010 Brice Tence
@@ -17,6 +17,7 @@
 /**
 *
 */
+require_once(JELIX_LIB_CORE_PATH.'response/jResponseBasicHtml.class.php');
 require_once(JELIX_LIB_PATH.'tpl/jTpl.class.php');
 require_once(JELIX_LIB_PATH.'utils/jMinifier.class.php');
 
@@ -25,7 +26,7 @@ require_once(JELIX_LIB_PATH.'utils/jMinifier.class.php');
 * @package  jelix
 * @subpackage core_response
 */
-class jResponseHtml extends jResponse {
+class jResponseHtml extends jResponseBasicHtml {
     /**
     * jresponse id
     * @var string
@@ -78,18 +79,6 @@ class jResponseHtml extends jResponse {
     protected $_headSent = 0;
 
     /**
-     * the charset of the document
-     * @var string
-     */
-    protected $_charset;
-
-    /**
-     * the lang of the document
-     * @var string
-     */
-    protected $_lang;
-
-    /**
      * properties of the head content
      */
 
@@ -104,7 +93,6 @@ class jResponseHtml extends jResponse {
     protected $_JSIELink  = array ();
     protected $_JSCodeBefore  = array ();
     protected $_JSCode  = array ();
-    protected $_Others  = array ();
     protected $_MetaKeywords = array();
     protected $_MetaDescription = array();
     protected $_MetaAuthor = '';
@@ -112,18 +100,6 @@ class jResponseHtml extends jResponse {
     protected $_Link = array();
     /**#@-*/
 
-    /**#@+
-     * content for the body
-     * @var array
-     */
-    protected $_bodyTop = array();
-    protected $_bodyBottom = array();
-    /**#@-*/
-
-    /**
-     * says if the document is in xhtml or html
-     */
-    protected $_isXhtml = true;
     protected $_endTag="/>\n";
 
     /**
@@ -134,21 +110,10 @@ class jResponseHtml extends jResponse {
     protected $_strictDoctype = true;
 
     /**
-     * says if xhtml content type should be send or not.
-     * it true, a verification of HTTP_ACCEPT is done.
-     * @var boolean
-     */
-    public $xhtmlContentType = false;
-
-
-    /**
     * constructor;
     * setup the charset, the lang, the template engine
     */
     function __construct (){
-        global $gJConfig;
-        $this->_charset = $gJConfig->charset;
-        $this->_lang = $gJConfig->locale;
         $this->body = new jTpl();
         parent::__construct();
     }
@@ -162,11 +127,7 @@ class jResponseHtml extends jResponse {
         $this->doAfterActions();
 
         $this->_headSent = 0;
-        if($this->_isXhtml && $this->xhtmlContentType && strstr($_SERVER['HTTP_ACCEPT'],'application/xhtml+xml')){
-            $this->_httpHeaders['Content-Type']='application/xhtml+xml;charset='.$this->_charset;
-        }else{
-            $this->_httpHeaders['Content-Type']='text/html;charset='.$this->_charset;
-        }
+        $this->setContentType();
         $this->sendHttpHeaders();
         $this->outputDoctype();
         $this->_headSent = 1;
@@ -184,63 +145,11 @@ class jResponseHtml extends jResponse {
         if($this->bodyTpl != '')
             $this->body->display($this->bodyTpl);
 
-        if($this->hasErrors()){
-            if($GLOBALS['gJConfig']->error_handling['showInFirebug']){
-                echo '<script type="text/javascript">if(console){';
-                foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
-                    switch ($e[0]) {
-                      case 'warning':
-                        echo 'console.warn("[warning ';
-                        break;
-                      case 'notice':
-                        echo 'console.info("[notice ';
-                        break;
-                      case 'strict':
-                        echo 'console.info("[strict ';
-                        break;
-                      case 'error':
-                        echo 'console.error("[error ';
-                        break;
-                    }
-                    $m = $e[2]. ($e[5]?"\n".$e[5]:"");
-                    echo $e[1],'] ',str_replace(array('"',"\n","\r","\t"),array('\"','\\n','\\r','\\t'),$m),' (',str_replace('\\','\\\\',$e[3]),' ',$e[4],')");';
-                }
-                echo '}else{alert("there are some errors, you should activate Firebug to see them");}</script>';
-            }else{
-                echo '<div id="jelixerror" style="position:absolute;left:0px;top:0px;border:3px solid red; background-color:#f39999;color:black;z-index:100;">';
-                echo $this->getFormatedErrorMsg();
-                echo '<p><a href="#" onclick="document.getElementById(\'jelixerror\').style.display=\'none\';return false;">close</a></p></div>';
-            }
-        }
+        echo $this->getErrorBarContent();
         echo implode("\n",$this->_bodyBottom);
-        if(count($GLOBALS['gJCoord']->logMessages)) {
-            if(count($GLOBALS['gJCoord']->logMessages['response'])) {
-                echo '<ul id="jelixlog">';
-                foreach($GLOBALS['gJCoord']->logMessages['response'] as $m) {
-                    echo '<li>',htmlspecialchars($m),'</li>';
-                }
-                echo '</ul>';
-            }
-            if(count($GLOBALS['gJCoord']->logMessages['firebug'])) {
-                echo '<script type="text/javascript">if(console){';
-                foreach($GLOBALS['gJCoord']->logMessages['firebug'] as $m) {
-                    echo 'console.debug("',str_replace(array('"',"\n","\r","\t"),array('\"','\\n','\\r','\\t'),$m),'");';
-                }
-                echo '}else{alert("there are log messages, you should activate Firebug to see them");}</script>';
-            }
-        }
+        echo $this->getLogMessageContent();
         echo '</body></html>';
         return true;
-    }
-
-    /**
-     * The method you can overload in your inherited html response
-     * overload it if you want to add processes (stylesheet, head settings, additionnal content etc..)
-     * after all actions
-     * @since 1.1
-     */
-    protected function doAfterActions(){
-
     }
 
     /**
@@ -263,36 +172,6 @@ class jResponseHtml extends jResponse {
             echo '<p style="color:#FF0000">Unknown Error</p>';
         }
         echo '</body></html>';
-    }
-
-
-    /**
-     * create html error messages
-     * @return string html content
-     */
-    protected function getFormatedErrorMsg(){
-        $errors='';
-        foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
-           $errors .=  '<p style="margin:0;"><b>['.$e[0].' '.$e[1].']</b> <span style="color:#FF0000">';
-           $errors .= htmlspecialchars($e[2], ENT_NOQUOTES, $this->_charset)."</span> \t".$e[3]." \t".$e[4]."</p>\n";
-           if ($e[5])
-            $errors.= '<pre>'.htmlspecialchars($e[5], ENT_NOQUOTES, $this->_charset).'</pre>';
-        }
-        return $errors;
-    }
-
-    /**
-     * add content to the body
-     * you can add additionnal content, before or after the content generated by the main template
-     * @param string $content additionnal html content
-     * @param boolean $beforeTpl true if you want to add it before the template content, else false for after
-     */
-    function addContent($content, $beforeTpl = false){
-      if($beforeTpl){
-        $this->_bodyTop[]=$content;
-      }else{
-         $this->_bodyBottom[]=$content;
-      }
     }
     
     /**
@@ -360,15 +239,6 @@ class jResponseHtml extends jResponse {
         if (!isset ($this->_Styles[$selector])){
             $this->_Styles[$selector] = $def;
         }
-    }
-
-    /**
-     * add additional content into the document head
-     * @param string $content
-     * @since 1.0b1
-     */
-    final public function addHeadContent ($content){
-        $this->_Others[] = $content;
     }
 
     /**
@@ -480,9 +350,9 @@ class jResponseHtml extends jResponse {
         echo '<link type="text/css" href="',htmlspecialchars($fileUrl),$cssFilemtime,'" ',$params,$this->_endTag,"\n";
     }
 
-
-
-
+    /**
+     * output js links into the <head>
+     */
     final protected function outputJsScripts( &$scriptList ) {
         global $gJConfig;
 
@@ -539,8 +409,9 @@ class jResponseHtml extends jResponse {
         }
     }
 
-
-
+    /**
+     * output css link into the <head>
+     */
     final protected function outputCssLinks( &$linkList ) {
         global $gJConfig;
 
@@ -723,7 +594,7 @@ class jResponseHtml extends jResponse {
 // ]]>
 </script>';
         }
-        echo implode ("\n", $this->_Others), '</head>';
+        echo implode ("\n", $this->_headBottom), '</head>';
     }
 
     /**
@@ -762,12 +633,6 @@ class jResponseHtml extends jResponse {
     final public function strictDoctype($val = true){
         $this->_strictDoctype = $val;
     }
-
-    /**
-     * says if the response will be xhtml or html
-     * @return boolean true if it is xhtml
-     */
-    final public function isXhtml(){ return $this->_isXhtml; }
 
     /**
      * return the end of a html tag : "/>" or ">", depending if it will generate xhtml or html

@@ -51,6 +51,7 @@ cd lib/jelix/core/request
 
 cd lib/jelix/core/response
   jResponseBinary.class.php
+  jResponseBasicHtml.class.php
   jResponseHtml.class.php
   jResponseJsonrpc.class.php
 * jResponseJson.class.php
