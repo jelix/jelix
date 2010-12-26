@@ -147,8 +147,8 @@ final class jResponseRdf extends jResponse {
         echo '  xmlns:err="http://jelix.org/ns/rdferr#"  xmlns:NC="http://home.netscape.com/NC-rdf#">'.$EOL;
 
         echo '<Bag RDF:about="urn:jelix:error">'.$EOL;
-        if(count($gJCoord->errorMessages)){
-            foreach($gJCoord->errorMessages as $e){
+        if($this->hasErrors()){
+            foreach($gJCoord->getErrorMessages() as $e){
                 echo "<li>\n";
                 echo '<Description err:code="'.$e[1].'" err:type="'.$e[0].'" err:file="'.$e[3].'" err:line="'.$e[4].'">';
                 echo '<err:message>'.htmlspecialchars($e[2]).'</err:message>';

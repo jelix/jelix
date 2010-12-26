@@ -117,7 +117,7 @@ class jResponseXul extends jResponse {
         if($this->hasErrors()){
             if($GLOBALS['gJConfig']->error_handling['showInFirebug']){
                 echo '<script type="text/javascript">if(console){';
-                foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+                foreach( $GLOBALS['gJCoord']->getErrorMessages()  as $e){
                     switch ($e[0]) {
                       case 'warning':
                         echo 'console.warn("[warning ';
@@ -188,7 +188,7 @@ class jResponseXul extends jResponse {
      */
     protected function getFormatedErrorMsg(){
         $errors='';
-        foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+        foreach( $GLOBALS['gJCoord']->getErrorMessages()  as $e){
             $errors .=  '<description style="color:#FF0000;">['.$e[0].' '.$e[1].'] ';
             $errors .= htmlspecialchars($e[2], ENT_NOQUOTES, $GLOBALS['gJConfig']->charset)." \t".$e[3]." \t".$e[4]."</description>\n";
             if ($e[5])

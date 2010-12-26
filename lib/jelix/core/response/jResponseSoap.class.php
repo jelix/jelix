@@ -37,8 +37,8 @@ final class jResponseSoap extends jResponse {
     public function outputErrors(){
         global $gJCoord, $gJConfig;
  
-       if(count($gJCoord->errorMessages)){
-            $e = $gJCoord->errorMessages[0];
+        $e = $gJCoord->getFirstErrorMessage();
+        if($e){
             $errorCode = $e[1];
             $errorMessage = '['.$e[0].'] '.$e[2].' (file: '.$e[3].', line: '.$e[4].')';
             if ($e[5])

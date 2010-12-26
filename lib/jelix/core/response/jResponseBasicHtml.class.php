@@ -171,7 +171,7 @@ class jResponseBasicHtml extends jResponse {
      */
     protected function getFormatedErrorMsg(){
         $errors='';
-        foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+        foreach( $GLOBALS['gJCoord']->getErrorMessages()  as $e){
            $errors .=  '<p style="margin:0;"><b>['.$e[0].' '.$e[1].']</b> <span style="color:#FF0000">';
            $errors .= htmlspecialchars($e[2], ENT_NOQUOTES, $this->_charset)."</span> \t".$e[3]." \t".$e[4]."</p>\n";
            if ($e[5])
@@ -191,7 +191,7 @@ class jResponseBasicHtml extends jResponse {
 
         if($GLOBALS['gJConfig']->error_handling['showInFirebug']){
             $content .= '<script type="text/javascript">if(console){';
-            foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+            foreach( $GLOBALS['gJCoord']->getErrorMessages()  as $e){
                 switch ($e[0]) {
                   case 'warning':
                     $content .= 'console.warn("[warning ';

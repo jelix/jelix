@@ -184,7 +184,7 @@ class jResponseLatexToPdf extends jResponse {
         header("HTTP/1.0 500 Internal Server Error");
         header('Content-Type: text/plain;charset='.$gJConfig->charset);
         if($this->hasErrors()){
-            foreach( $GLOBALS['gJCoord']->errorMessages  as $e){
+            foreach( $GLOBALS['gJCoord']->getErrorMessages()  as $e){
                 echo '['.$e[0].' '.$e[1].'] '.$e[2]." \t".$e[3]." \t".$e[4]."\n";
                 if ($e[5])
                   echo $e[5]."\n\n";

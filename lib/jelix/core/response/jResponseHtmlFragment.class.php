@@ -136,7 +136,7 @@ class jResponseHtmlFragment extends jResponse {
         global $gJConfig;
         
         $errors='';
-        foreach ($GLOBALS['gJCoord']->errorMessages  as $e) {
+        foreach ($GLOBALS['gJCoord']->getErrorMessages()  as $e) {
            $errors .= '<p style="margin:0;"><b>['.$e[0].' '.$e[1].']</b> <span style="color:#FF0000">';
            $errors .= htmlspecialchars($e[2], ENT_NOQUOTES, $gJConfig->charset)."</span> \t".$e[3]." \t".$e[4]."</p>\n";
            if ($e[5])

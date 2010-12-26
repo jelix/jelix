@@ -124,7 +124,7 @@ class jResponseXml extends jResponse {
 
         echo '<errors xmlns="http://jelix.org/ns/xmlerror/1.0">';
         if ($this->hasErrors()) {
-            foreach ($GLOBALS['gJCoord']->errorMessages  as $e) {
+            foreach ($GLOBALS['gJCoord']->getErrorMessages()  as $e) {
                 echo '<error xmlns="http://jelix.org/ns/xmlerror/1.0" type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">';
                 echo htmlspecialchars($e[2], ENT_NOQUOTES, $this->_charset);
                 if ($e[5])

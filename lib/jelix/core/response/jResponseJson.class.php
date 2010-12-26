@@ -56,8 +56,8 @@ final class jResponseJson extends jResponse {
     public function outputErrors(){
         global $gJCoord;
         $message = array();
-        if(count($gJCoord->errorMessages)){
-            $e = $gJCoord->errorMessages[0];
+        $e = $gJCoord->getFirstErrorMessage();
+        if($e){
             $message['errorCode'] = $e[1];
             $message['errorMessage'] = '['.$e[0].'] '.$e[2].' (file: '.$e[3].', line: '.$e[4].')';
             if ($e[5])

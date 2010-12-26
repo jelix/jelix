@@ -145,7 +145,7 @@ class jResponseSitemap extends jResponse {
      */
     protected function getFormatedErrorMsg() {
         $errors = '';
-        foreach ($GLOBALS['gJCoord']->errorMessages as $e) {
+        foreach ($GLOBALS['gJCoord']->getErrorMessages() as $e) {
            $errors .=  '<error xmlns="http://jelix.org/ns/xmlerror/1.0" type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">'. $e[2] .'</error>'. "\n";
         }
         return $errors;

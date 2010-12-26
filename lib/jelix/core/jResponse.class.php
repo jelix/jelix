@@ -89,7 +89,7 @@ abstract class jResponse {
     /**
      *
      */
-    public final function hasErrors(){ return count($GLOBALS['gJCoord']->errorMessages)>0;}
+    public final function hasErrors(){ return $GLOBALS['gJCoord']->hasErrorMessages();}
 
     /**
      * add an http header to the response.

@@ -63,7 +63,7 @@ class jCoordinator {
      * List of all errors
      * @var array
      */
-    public $errorMessages=array();
+    protected $errorMessages=array();
 
     /**
      * List of all log messages
@@ -428,6 +428,35 @@ class jCoordinator {
      */
     public function addLogMsg($message, $type='default'){
         $this->logMessages[$type][] = $message;
+    }
+
+    /**
+     * return the list of current error messages
+     * @return array  array of error data
+     * @since 1.3a1
+     */
+    public function getErrorMessages() {
+        return $this->errorMessages;
+    }
+
+    /**
+     * says if there are error messages
+     * @return boolean true if there are error messsages
+     * @since 1.3a1
+     */
+    public function hasErrorMessages() {
+        return (count($this->errorMessages) > 0);
+    }
+
+    /**
+     * return the first error message
+     * @return array error data
+     * @since 1.3a1
+     */
+    public function getFirstErrorMessage() {
+        if (count($this->errorMessages))
+            return $this->errorMessages[0];
+        return null;
     }
 
     /**
