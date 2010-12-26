@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  acl
 * @author      Laurent Jouanneau
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.1
@@ -40,16 +40,15 @@ class jAcl2 {
     protected static function _getDriver(){
         static $driver = null;
         if($driver == null){
-            global $gJConfig;
+            global $gJCoord, $gJConfig;
             $db = strtolower($gJConfig->acl2['driver']);
-            if($db == '' || !isset($gJConfig->_pluginsPathList_acl2) 
-                || !isset($gJConfig->_pluginsPathList_acl2[$db])
-                || !file_exists($gJConfig->_pluginsPathList_acl2[$db]) ){
+            if ($db == '')
+                throw new jException('jelix~errors.acl.driver.notfound',$db);
+
+            $driver = $gJCoord->loadPlugin($db, 'acl2', '.acl2.php', $gJConfig->acl2['driver'].'Acl2Driver', $gJConfig->acl2);
+            if (is_null($driver)) {
                 throw new jException('jelix~errors.acl.driver.notfound',$db);
             }
-            require_once($gJConfig->_pluginsPathList_acl2[$db].$db.'.acl2.php');
-            $dname = $gJConfig->acl2['driver'].'Acl2Driver';
-            $driver = new $dname($gJConfig->acl);
         }
         return $driver;
     }

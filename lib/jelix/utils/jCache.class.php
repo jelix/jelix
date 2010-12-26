@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  cache
 * @author      Tahina Ramaroson
-* @contributor Sylvain de Vathaire, Brice Tence
-* @copyright   2009 Neov, 2010 Brice Tence
+* @contributor Sylvain de Vathaire, Brice Tence, Laurent Jouanneau
+* @copyright   2009 Neov, 2010 Brice Tence, 2010 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -398,7 +398,7 @@ class jCache {
      */
     protected static function _getDriver($profile) {
 
-        global $gJConfig;
+        global $gJCoord;
 
         //cache drivers list : array of object jICacheDriver
         static $drivers = array();
@@ -409,23 +409,13 @@ class jCache {
         }
 
         $params = self::_getProfile($profile);
-
-        $oDriver = $params['driver'].'CacheDriver';
-
-        if (!class_exists($oDriver,false)) {
-            if (!isset($gJConfig->_pluginsPathList_cache) 
-                || !isset($gJConfig->_pluginsPathList_cache[$params['driver']])
-                || !file_exists($gJConfig->_pluginsPathList_cache[$params['driver']]) ) {
-                throw new jException('jelix~cache.error.driver.missing',array($profile,$params['driver']));
-            }
-            require_once($gJConfig->_pluginsPathList_cache[$params['driver']].$params['driver'].'.cache.php');
-        }
-
         $params['profile'] = $profile;
 
-        $drv = new $oDriver($params);
+        $drv = $gJCoord->loadPlugin($params['driver'], 'cache', '.cache.php', $params['driver'].'CacheDriver', $params);
+        if (is_null($drv))
+            throw new jException('jelix~cache.error.driver.missing',array($profile,$params['driver']));
 
-        if(!$drv instanceof jICacheDriver){
+        if (!$drv instanceof jICacheDriver) {
             throw new jException('jelix~cache.driver.object.invalid', array($profile, $params['driver']));
         }
 

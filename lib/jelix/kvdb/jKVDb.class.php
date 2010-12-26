@@ -3,7 +3,8 @@
  * @package     jelix
  * @subpackage  kvdb
  * @author      Yannick Le Guédart
- * @copyright   2009 Yannick Le Guédart
+ * @contributor  Laurent Jouanneau
+ * @copyright   2009 Yannick Le Guédart, 2010 Laurent Jouanneau
  *
  * @link     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -106,7 +107,7 @@ class jKVDb {
 	 * @return object jKVConnection
 	 */    
 	private static function _createConnector($profile) {
-        global $gJConfig;
+        global $gJCoord;
 
         // If no driver is specified, let's throw an exception
         if (! isset($profile['driver'])) {
@@ -114,17 +115,10 @@ class jKVDb {
                 'jelix~kvstore.error.driver.notset', $profile['name']);
         }
 
-        // Determining the plugin path
-        $pluginPath =
-            $gJConfig->_pluginsPathList_kvdb[$profile['driver']] .
-                $profile['driver'];
-  
-        // Including the plugin files
-        require_once($pluginPath . '.kvdriver.php');
-
-        // Creating the connector
-        $class      = $profile['driver'] . 'KVDriver';
-        $connector  = new $class($profile);
+        $connector = $gJCoord->loadPlugin($profile['driver'], 'kvdb', '.kvdriver.php', $profile['driver'] . 'KVDriver', $profile);
+        //if (is_null($connector)) {
+        //    throw new jException('jelix~errors.kvdb.driver.notfound',$profile['driver']);
+        //}
 
         return $connector;
 	}

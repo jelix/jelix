@@ -110,9 +110,9 @@ abstract class jDbTools {
     protected $_conn;
 
     /**
-    *
+    * @param jDbConnection $connector the connection to a database
     */
-    function __construct( $connector){
+    function __construct($connector = null){
         $this->_conn = $connector;
     }
 

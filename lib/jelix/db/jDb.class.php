@@ -191,20 +191,10 @@ class jDb {
             return $dbh;
         }
         else {
-            global $gJConfig;
-#ifnot ENABLE_OPTIMIZED_SOURCE
-            if (!isset($gJConfig->_pluginsPathList_db[$profile['driver']])
-                || !file_exists($gJConfig->_pluginsPathList_db[$profile['driver']])) {
+            global $gJCoord;
+            $dbh = $gJCoord->loadPlugin($profile['driver'], 'db', '.dbconnection.php', $profile['driver'].'DbConnection', $profile);
+            if (is_null($dbh))
                 throw new jException('jelix~db.error.driver.notfound', $profile['driver']);
-            }
-#endif
-            $p = $gJConfig->_pluginsPathList_db[$profile['driver']].$profile['driver'];
-            require_once($p.'.dbconnection.php');
-            require_once($p.'.dbresultset.php');
-
-            //creating of the connection
-            $class = $profile['driver'].'DbConnection';
-            $dbh = new $class ($profile);
             return $dbh;
         }
     }

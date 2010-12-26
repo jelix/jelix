@@ -277,18 +277,11 @@ class jUrl extends jUrlBase {
         static $engine = null;
 
         if($engine === null || $reset){
-            global $gJConfig;
+            global $gJCoord, $gJConfig;
             $name = $gJConfig->urlengine['engine'];
-#ifnot ENABLE_OPTIMIZED_SOURCE
-            if( !isset($gJConfig->_pluginsPathList_urls[$name])
-                || !file_exists($gJConfig->_pluginsPathList_urls[$name]) ){
-                    throw new jException('jelix~errors.urls.engine.notfound', $name);
-            }
-#endif
-            require_once($gJConfig->_pluginsPathList_urls[$name].$name.'.urls.php');
-
-            $cl = $name.'UrlEngine';
-            $engine = new $cl();
+            $engine = $gJCoord->loadPlugin($name, 'urls', '.urls.php', $name.'UrlEngine');
+            if(is_null($engine))
+                throw new jException('jelix~errors.urls.engine.notfound', $name);
         }
         return $engine;
     }

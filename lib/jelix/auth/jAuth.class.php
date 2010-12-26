@@ -4,7 +4,7 @@
 * @subpackage auth
 * @author     Laurent Jouanneau
 * @contributor Frédéric Guillot, Antoine Detante, Julien Issler, Dominique Papin, Tahina Ramaroson, Sylvain de Vathaire, Vincent Viaud
-* @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
+* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
 * @copyright  2007-2008 Julien Issler, 2008 Dominique Papin, 2010 NEOV, 2010 BP2I
 *
 * This classes were get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
@@ -60,16 +60,11 @@ class jAuth {
         static $driver = null;
         if($driver == null){
             $config = self::_getConfig();
-            global $gJConfig;
+            global $gJCoord;
             $db = strtolower($config['driver']);
-            if(!isset($gJConfig->_pluginsPathList_auth)
-                || !isset($gJConfig->_pluginsPathList_auth[$db])
-                || !file_exists($gJConfig->_pluginsPathList_auth[$db]) )
+            $driver = $gJCoord->loadPlugin($db, 'auth', '.auth.php', $config['driver'].'AuthDriver', $config[$config['driver']]);
+            if(is_null($driver))
                 throw new jException('jelix~auth.error.driver.notfound',$db);
-
-            require_once($gJConfig->_pluginsPathList_auth[$db].$db.'.auth.php');
-            $dname = $config['driver'].'AuthDriver';
-            $driver = new $dname($config[$config['driver']]);
         }
         return $driver;
     }

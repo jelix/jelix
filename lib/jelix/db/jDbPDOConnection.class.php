@@ -235,16 +235,10 @@ class jDbPDOConnection extends PDO {
      */
     public function tools () {
         if (!$this->_tools) {
-            global $gJConfig;
-    #ifnot ENABLE_OPTIMIZED_SOURCE
-            if (!isset($gJConfig->_pluginsPathList_db[$this->dbms])
-                || !file_exists($gJConfig->_pluginsPathList_db[$this->dbms])) {
+            global $gJCoord;
+            $this->_tools = $gJCoord->loadPlugin($this->dbms, 'db', '.dbtools.php', $this->dbms.'DbTools', $this);
+            if (is_null($this->_tools))
                 throw new jException('jelix~db.error.driver.notfound', $this->dbms);
-            }
-    #endif
-            require_once($gJConfig->_pluginsPathList_db[$this->dbms].$this->dbms.'.dbtools.php');
-            $class = $this->dbms.'DbTools';
-            $this->_tools = new $class($this);
         }
 
         return $this->_tools;
