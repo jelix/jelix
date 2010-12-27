@@ -114,26 +114,9 @@ minifyExcludeJS = ""
 jsUniqueUrlId = off
 cssUniqueUrlId = off
 
-
 [error_handling]
-messageLogFormat = "%date%\t%url%\n\t[%code%]\t%msg%\t%file%\t%line%\n"
-logFile = error.log
-email = root@localhost
-emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
-quietMessage="A technical error has occured. Sorry for this trouble."
-
-showInFirebug = off
-
-; keywords you can use: ECHO, ECHOQUIET, EXIT, LOGFILE, SYSLOG, MAIL, TRACE
-default      = ECHO TRACE EXIT
-error        = ECHO TRACE EXIT
-warning      = ECHO TRACE
-notice       = ECHO
-strict       = ECHO
-deprecated   = ECHO
-; for exceptions, there is always an implicit EXIT by default
-exception    = ECHO TRACE
-
+messageLogFormat = "%date%\t%ip%\t[%code%]\t%msg%\t%file%\t%line%\n\t%url%\n%params%\n%trace%\n\n"
+errorMessage="A technical error has occured (code: %code%). Sorry for this inconvenience."
 
 [compilation]
 checkCacheFiletime  = on
@@ -251,6 +234,10 @@ warning=errors.log
 notice=errors.log
 deprecated=errors.log
 strict=errors.log
+
+[mailLogger]
+email = root@localhost
+emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
 
 [mailer]
 webmasterEmail = root@localhost

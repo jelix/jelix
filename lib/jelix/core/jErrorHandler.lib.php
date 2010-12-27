@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @contributor Sylvain de Vathaire
 * @contributor Loic Mathaud <loic@mathaud.net>
-* @copyright  2001-2005 CopixTeam, 2005-2008 Laurent Jouanneau, 2007 Sylvain de Vathaire, 2007 Loic Mathaud
+* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau, 2007 Sylvain de Vathaire, 2007 Loic Mathaud
 * This function was get originally from the Copix project (CopixErrorHandler, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this function are Gerald Croes and Laurent Jouanneau,
@@ -56,13 +56,7 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
     }
     $codestr = $codeString[$errno];
 
-    if ($gJConfig) {
-        $toDo = $gJConfig->error_handling[$codestr];
-    }
-    else {
-        $toDo = 'ECHO EXIT';
-    }
     $trace = debug_backtrace();
     array_shift($trace);
-    $gJCoord->handleError($toDo, $codestr, $errno, $errmsg, $filename, $linenum, $trace);
+    $gJCoord->handleError($codestr, $errno, $errmsg, $filename, $linenum, $trace);
 }

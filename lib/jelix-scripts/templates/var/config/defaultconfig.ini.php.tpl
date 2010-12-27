@@ -49,21 +49,7 @@ defaultJformsBuilder = html
 html=myHtmlResponse
 
 [error_handling]
-;messageLogFormat = "%date%\t%url%\n\t[%code%]\t%msg%\t%file%\t%line%\n"
-;logFile = error.log
-;email = root@localhost
-;emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
-;quietMessage="An error occured. Sorry for the inconvenience."
-
-; on a production server :
-; keywords you can use: ECHO, ECHOQUIET, EXIT, LOGFILE, SYSLOG, MAIL, TRACE
-;default      = ECHOQUIET LOGFILE TRACE EXIT
-;error        = ECHOQUIET LOGFILE TRACE EXIT
-;warning      = ECHOQUIET LOGFILE TRACE
-;notice       = ECHOQUIET
-;strict       =
-;deprecated   = 
-;exception    = ECHOQUIET LOGFILE TRACE EXIT
+;errorMessage="A technical error has occured (code: %code%). Sorry for this inconvenience."
 
 ;[compilation]
 ;checkCacheFiletime  = on
@@ -133,6 +119,10 @@ rdf = on
 
 [fileLogger]
 default=messages.log
+
+[mailLogger]
+;email = root@localhost
+;emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
 
 [mailer]
 webmasterEmail = root@localhost

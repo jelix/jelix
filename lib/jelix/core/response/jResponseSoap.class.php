@@ -20,7 +20,6 @@ final class jResponseSoap extends jResponse {
     * @var string
     */
     protected $_type = 'soap';
-    protected $_acceptSeveralErrors=false;
 
     /**
      * PHP data you want to return

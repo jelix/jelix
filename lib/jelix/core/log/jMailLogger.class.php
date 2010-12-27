@@ -33,8 +33,8 @@ class jMailLogger implements jILogger {
         if (!$gJCoord->request)
             return;
 
-        $email = $gJConfig->error_handling['email'];
-        $headers = str_replace(array('\\r','\\n'),array("\r","\n"),$gJConfig->error_handling['emailHeaders']);
+        $email = $gJConfig->mailLogger['email'];
+        $headers = str_replace(array('\\r','\\n'),array("\r","\n"),$gJConfig->mailLogger['emailHeaders']);
         $message = '';
         foreach($this->messages as $msg) {
             $message.= "\n\n".$msg->getFormatedMessage();

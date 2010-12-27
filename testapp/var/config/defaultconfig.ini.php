@@ -41,20 +41,7 @@ jacl = jacl.coord.ini.php
 [responses]
 
 [error_handling]
-messageLogFormat = "%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
-logFile = error.log
-email = root@localhost
-emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
-quietMessage="Une erreur technique est survenue. Désolé pour ce désagrément."
-showInFirebug = off
-; mots clés que vous pouvez utiliser : ECHO, ECHOQUIET, EXIT, LOGFILE, SYSLOG, MAIL, TRACE
-default      = ECHO LOGFILE TRACE EXIT
-error        = ECHO LOGFILE TRACE EXIT
-warning      = ECHO LOGFILE TRACE
-notice       = ECHO LOGFILE
-strict       = ECHO LOGFILE
-; pour les exceptions, il y a implicitement un EXIT
-exception    = ECHO LOGFILE TRACE
+;errorMessage="A technical error has occured (code: %code%). Sorry for this inconvenience."
 
 [compilation]
 checkCacheFiletime  = on
@@ -125,6 +112,9 @@ soap = on
 [fileLogger]
 default=messages.log
 
+[mailLogger]
+;email = root@localhost
+;emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
 
 [acl]
 driver = db

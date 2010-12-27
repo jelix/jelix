@@ -23,7 +23,6 @@ final class jResponseJsonRpc extends jResponse {
     * @var string
     */
     protected $_type = 'jsonrpc';
-    protected $_acceptSeveralErrors=false;
 
     /**
      * PHP data you want to return

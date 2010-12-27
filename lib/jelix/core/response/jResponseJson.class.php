@@ -26,7 +26,6 @@ require_once (LIB_PATH.'json/JSON.php');
 * @since 1.0b1
 */
 final class jResponseJson extends jResponse {
-    protected $_acceptSeveralErrors=false;
 
     /**
      * data in PHP you want to send

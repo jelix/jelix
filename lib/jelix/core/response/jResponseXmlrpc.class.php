@@ -20,7 +20,6 @@ final class jResponseXmlRpc extends jResponse {
     * @var string
     */
     protected $_type = 'xmlrpc';
-    protected $_acceptSeveralErrors=false;
 
     /**
      * PHP Data to send into the response

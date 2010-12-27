@@ -23,7 +23,6 @@ final class jResponseRdf extends jResponse {
     * @var string
     */
     protected $_type = 'rdf';
-    protected $_acceptSeveralErrors=true;
 
     /**
      * List of object or array, which will be transform into RDF content

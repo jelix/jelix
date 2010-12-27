@@ -149,20 +149,30 @@ class jResponseBasicHtml extends jResponse {
     }
 
     /**
-     * output a html page sowing only error messages
+     * output errors
      */
     public function outputErrors(){
         header("HTTP/1.0 500 Internal Server Error");
         header('Content-Type: text/html;charset='.$this->_charset);
-        echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n<html>";
-        echo '<head><title>Errors</title></head><body>';
 
-        if($this->hasErrors()){
-            echo $this->getFormatedErrorMsg();
-        }else{
-            echo '<p style="color:#FF0000">Unknown Error</p>';
-        }
-        echo '</body></html>';
+        if (file_exists(JELIX_APP_PATH.'response/error.en_US.php'))
+            $file = JELIX_APP_PATH.'response/error.en_US.php';
+        else
+            $file = JELIX_LIB_CORE_PATH.'response/error.en_US.php';
+        // we erase already generated content
+        $this->_headBottom = array();
+        $this->_bodyBottom = array();
+        $this->_bodyTop = array();
+
+        jLog::outputLog($this);
+
+        $HEADBOTTOM = implode("\n", $this->_headBottom);
+        $BODYTOP = implode("\n", $this->_bodyTop);
+        $BODYBOTTOM = implode("\n", $this->_bodyBottom);
+
+        header("HTTP/1.1 500 Internal jelix error");
+        header('Content-type: text/html');
+        include($file);
     }
 
     /**

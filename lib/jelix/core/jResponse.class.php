@@ -24,11 +24,6 @@ abstract class jResponse {
     protected  $_type = null;
 
     /**
-     * @var boolean indicates if several errors can be returned by the response
-     */
-    protected $_acceptSeveralErrors = true;
-
-    /**
      * @var array list of http headers that will be send to the client
      */
     protected $_httpHeaders = array();
@@ -54,7 +49,10 @@ abstract class jResponse {
     }
 
     /**
-     * Send the response in the correct format.
+     * Send the response in the correct format. If errors or exceptions appears
+     * during this method, outputErrors will be called. So the
+     * the content should be generated using the output buffer if errors can
+     * be appeared during this generation. Be care of http headers.
      *
      * @return boolean    true if the output is ok
      * @internal should take care about errors
@@ -79,12 +77,6 @@ abstract class jResponse {
      * @return string the name
      */
     public function getFormatType(){ return $this->_type;}
-
-    /**
-     * says if the response can embed more than one error message
-     * @return boolean true if many
-     */
-    public final function acceptSeveralErrors(){ return $this->_acceptSeveralErrors;}
 
     /**
      *
