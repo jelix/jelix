@@ -6,7 +6,7 @@
 * @contributor Laurent Jouanneau
 * @contributor Sylvain de Vathaire
 * @copyright   2005-2006 loic Mathaud
-* @copyright   2007-2009 Laurent Jouanneau
+* @copyright   2007-2010 Laurent Jouanneau
 * @copyright   2008 Sylvain de Vathaire
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -29,7 +29,6 @@ class jResponseXml extends jResponse {
     */
     protected $_type = 'xml';
 
-
     /**
      * the template container
      * @var jTpl
@@ -43,6 +42,12 @@ class jResponseXml extends jResponse {
     public $contentTpl = '';
 
     /**
+     * if true, verify validity of the xml content, before to output it
+     * @var boolean
+     */
+    public $checkValidity = false;
+
+    /**
      * The charset
      * @var string
      */
@@ -51,12 +56,6 @@ class jResponseXml extends jResponse {
     private $_css = array();
     private $_xsl = array();
 
-    /**
-     * says what part of the html head has been send
-     * @var integer
-     */
-    protected $_headSent = 0;
-
     /** 
      * say if the XML header have to be generated
      * Usefull if the XML string to output already contain the XML header
@@ -64,7 +63,6 @@ class jResponseXml extends jResponse {
      * @since 1.0.3
      */
     public $sendXMLHeader = TRUE;
-
 
     /**
     * constructor..
@@ -82,14 +80,6 @@ class jResponseXml extends jResponse {
      */
     final public function output(){
         $this->_httpHeaders['Content-Type']='text/xml;charset='.$this->_charset;
-        $this->sendHttpHeaders();
-
-        if($this->sendXMLHeader){
-            echo '<?xml version="1.0" encoding="'. $this->_charset .'"?>', "\n";
-            $this->outputXmlHeader();
-        }
-        $this->_headSent = true;
-
 
         if(is_string($this->content)) {
             // utilisation chaine de caractères xml
@@ -101,12 +91,20 @@ class jResponseXml extends jResponse {
             throw new jException('jelix~errors.repxml.no.content');
         }
 
-        if (simplexml_load_string($xml_string)) {
-            echo $xml_string;
-        } else {
-            // xml mal formé
-            throw new jException('jelix~errors.repxml.invalid.content');
+        if ($this->checkValidity) {
+            if (!simplexml_load_string($xml_string)) {
+                // xml mal-formed
+                throw new jException('jelix~errors.repxml.invalid.content');
+            }
         }
+
+        $this->sendHttpHeaders();
+        if($this->sendXMLHeader){
+            echo '<?xml version="1.0" encoding="'. $this->_charset .'"?>', "\n";
+            $this->outputXmlHeader();
+        }
+        echo $xml_string;
+
         return true;
     }
 
@@ -114,27 +112,10 @@ class jResponseXml extends jResponse {
      * output errors if any
      */
     final public function outputErrors() {
-        if (!$this->_headSent) {
-            if (!$this->_httpHeadersSent) {
-                header("HTTP/1.0 500 Internal Server Error");
-                header('Content-Type: text/xml;charset='.$this->_charset);
-            }
-            echo '<?xml version="1.0" encoding="'. $this->_charset .'"?>';
-        }
-
-        echo '<errors xmlns="http://jelix.org/ns/xmlerror/1.0">';
-        if ($this->hasErrors()) {
-            foreach ($GLOBALS['gJCoord']->getErrorMessages()  as $e) {
-                echo '<error xmlns="http://jelix.org/ns/xmlerror/1.0" type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">';
-                echo htmlspecialchars($e[2], ENT_NOQUOTES, $this->_charset);
-                if ($e[5])
-                    echo "\n".htmlspecialchars($e[5], ENT_NOQUOTES, $this->_charset);
-                echo '</error>'. "\n";
-            }
-        } else {
-            echo '<error>Unknown Error</error>';
-        }
-        echo '</errors>';
+        global $gJConfig;
+        header("HTTP/1.0 500 Internal Jelix Error");
+        header('Content-Type: text/plain;charset='.$gJConfig->charset);
+        echo $GLOBALS['gJCoord']->getGenericErrorMessage();
     }
 
     /**

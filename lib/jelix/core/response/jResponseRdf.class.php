@@ -3,11 +3,10 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Laurent Jouanneau
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
 
 /**
 * output RDF content.
@@ -70,29 +69,27 @@ final class jResponseRdf extends jResponse {
      * @var string
      */
     public $asElement=array();
-    /**
-     *
-     */
-    protected $prologSent=false;
 
     public function output(){
-        if($this->hasErrors()) return false;
         $this->_httpHeaders['Content-Type']='text/xml;charset='.$GLOBALS['gJConfig']->charset;
-        $this->sendHttpHeaders();
 
-        echo '<?xml version="1.0" encoding="'.$GLOBALS['gJConfig']->charset.'"?>';
-        $this->prologSent = true;
-        if($this->template !=''){
+        if ($this->template !='') {
             $tpl= new jTpl();
             $tpl->assign('data',$this->data);
-            $tpl->display($this->template);
-        }else{
-            $this->generateContent();
+            $content = $tpl->fetch($this->template);
         }
+        else {
+            $content = $this->generateContent();
+        }
+        
+        $this->sendHttpHeaders();
+        echo '<?xml version="1.0" encoding="'.$GLOBALS['gJConfig']->charset.'"?>';
+        echo $content;
         return true;
     }
 
-    protected function generateContent(){
+    protected function generateContent() {
+        ob_start();
         $EOL="\n";
         echo '<RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'.$EOL;
         echo '  xmlns:',$this->resNsPrefix,'="',$this->resNs,'"  xmlns:NC="http://home.netscape.com/NC-rdf#">',$EOL;
@@ -129,40 +126,6 @@ final class jResponseRdf extends jResponse {
             }
         }
         echo "</Bag>\n</RDF>\n";
-    }
-
-
-    public function outputErrors(){
-        global $gJCoord;
-        $EOL="\n";
-        if(!$this->_httpHeadersSent){
-            header("HTTP/1.0 500 Internal Server Error");
-            header("Content-Type: text/xml;charset=".$GLOBALS['gJConfig']->charset);
-        }
-        if(!$this->prologSent){
-            echo '<?xml version="1.0" encoding="ISO-8859-1"?>'.$EOL;
-        }
-        echo '<RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'.$EOL;
-        echo '  xmlns:err="http://jelix.org/ns/rdferr#"  xmlns:NC="http://home.netscape.com/NC-rdf#">'.$EOL;
-
-        echo '<Bag RDF:about="urn:jelix:error">'.$EOL;
-        if($this->hasErrors()){
-            foreach($gJCoord->getErrorMessages() as $e){
-                echo "<li>\n";
-                echo '<Description err:code="'.$e[1].'" err:type="'.$e[0].'" err:file="'.$e[3].'" err:line="'.$e[4].'">';
-                echo '<err:message>'.htmlspecialchars($e[2]).'</err:message>';
-                echo '<err:trace>'.htmlspecialchars($e[5]).'</err:trace>';
-                echo "</Description>\n";
-                echo "</li>\n";
-            }
-        }else{
-            echo "<li>\n";
-            echo '<Description err:code="-1" err:type="error" err:file="" err:line="">';
-            echo '<err:message>Unknown error</err:message>';
-            echo "</Description>\n";
-            echo "</li>\n";
-        }
-        echo "</Bag>\n";
-        echo "</RDF>\n";
+        return ob_get_clean();
     }
 }

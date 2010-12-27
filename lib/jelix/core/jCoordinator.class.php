@@ -381,35 +381,6 @@ class jCoordinator {
     }
 
     /**
-     * return the list of current error messages
-     * @return array  array of jLogErrorMessage
-     * @since 1.3a1
-     */
-    public function getErrorMessages() {
-        return $this->initErrorMessages;
-    }
-
-    /**
-     * says if there are error messages
-     * @return boolean true if there are error messsages
-     * @since 1.3a1
-     */
-    public function hasErrorMessages() {
-        return (count($this->initErrorMessages) > 0);
-    }
-
-    /**
-     * return the first error message
-     * @return jLogErrorMessage
-     * @since 1.3a1
-     */
-    public function getFirstErrorMessage() {
-        if (count($this->initErrorMessages))
-            return $this->initErrorMessages[0];
-        return null;
-    }
-
-    /**
     * gets a given plugin if registered
     * @param string   $pluginName   the name of the plugin
     * @param boolean  $required  says if the plugin is required or not. If true, will generate an exception if the plugin is not registered.

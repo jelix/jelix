@@ -38,5 +38,6 @@ class defaultCtrl extends jControllerCmdLine {
         $rep->addContent("given parameters:\naaa=".$this->param('aaa')."\nbbb=".$this->param('bbb')."\n");
         return $rep;
     }
+
 }
 

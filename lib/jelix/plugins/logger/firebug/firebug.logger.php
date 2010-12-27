@@ -25,7 +25,7 @@ class firebugLogger implements jILogger {
      */
     function output($response){
         //if (! ($response instanceof jResponseBasicHtml)
-        if (!count($this->allmessages))
+        if (!count($this->messages))
             return;
         $type = $response->getType();
         if ($type != 'html' && $type != 'htmlfragment')

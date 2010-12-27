@@ -4,7 +4,7 @@
 * @subpackage  core
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2005-2009 Laurent Jouanneau
+* @copyright   2005-2010 Laurent Jouanneau
 * @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -60,11 +60,22 @@ abstract class jResponse {
     abstract public function output();
 
     /**
-     * Send a response with only error messages which appears during the action
-     * (errors, warning, notice, exceptions...). Type and error details
-     *  depend on the application configuration
+     * Send a response with a generic error message.
      */
-    abstract public function outputErrors();
+    public function outputErrors() {
+        // if accept text/html
+        if (isset($_SERVER['HTTP_ACCEPT']) && strstr($_SERVER['HTTP_ACCEPT'],'text/html')) {
+            require_once(JELIX_LIB_CORE_PATH.'responses/jResponseBasicHtml.class.php');
+            $response = new jResponseBasicHtml();
+            $response->outputErrors();
+        }
+        else {
+            // output text response
+            header("HTTP/1.1 500 Internal jelix error");
+            header('Content-type: text/plain');
+            echo $GLOBALS['gJCoord']->getGenericErrorMessage();
+        }
+    }
 
     /**
      * return the response type name
@@ -77,11 +88,6 @@ abstract class jResponse {
      * @return string the name
      */
     public function getFormatType(){ return $this->_type;}
-
-    /**
-     *
-     */
-    public final function hasErrors(){ return $GLOBALS['gJCoord']->hasErrorMessages();}
 
     /**
      * add an http header to the response.

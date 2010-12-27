@@ -127,11 +127,11 @@ class jResponseBasicHtml extends jResponse {
         if ($this->htmlFile == '')
             throw new Exception('static page is missing');
 
+        jLog::outputLog($this);
+
         $HEADBOTTOM = implode("\n", $this->_headBottom);
         $BODYTOP = implode("\n", $this->_bodyTop);
-        $BODYBOTTOM = $this->getErrorBarContent();
-        $BODYBOTTOM .= implode("\n", $this->_bodyBottom);
-        $BODYBOTTOM .= $this->getLogMessageContent();
+        $BODYBOTTOM = implode("\n", $this->_bodyBottom);
 
         include($this->htmlFile);
 
@@ -174,86 +174,6 @@ class jResponseBasicHtml extends jResponse {
         header('Content-type: text/html');
         include($file);
     }
-
-    /**
-     * create html error messages
-     * @return string html content
-     */
-    protected function getFormatedErrorMsg(){
-        $errors='';
-        foreach( $GLOBALS['gJCoord']->getErrorMessages()  as $e){
-           $errors .=  '<p style="margin:0;"><b>['.$e[0].' '.$e[1].']</b> <span style="color:#FF0000">';
-           $errors .= htmlspecialchars($e[2], ENT_NOQUOTES, $this->_charset)."</span> \t".$e[3]." \t".$e[4]."</p>\n";
-           if ($e[5])
-            $errors.= '<pre>'.htmlspecialchars($e[5], ENT_NOQUOTES, $this->_charset).'</pre>';
-        }
-        return $errors;
-    }
-
-    /**
-     * return the html error bar containing errors appeared during the execution of the action
-     * @return string
-     */
-    protected function getErrorBarContent() {
-        if (!$this->hasErrors())
-            return '';
-        $content = '';
-
-        if($GLOBALS['gJConfig']->error_handling['showInFirebug']){
-            $content .= '<script type="text/javascript">if(console){';
-            foreach( $GLOBALS['gJCoord']->getErrorMessages()  as $e){
-                switch ($e[0]) {
-                  case 'warning':
-                    $content .= 'console.warn("[warning ';
-                    break;
-                  case 'notice':
-                    $content .= 'console.info("[notice ';
-                    break;
-                  case 'strict':
-                    $content .= 'console.info("[strict ';
-                    break;
-                  case 'error':
-                    $content .= 'console.error("[error ';
-                    break;
-                }
-                $m = $e[2]. ($e[5]?"\n".$e[5]:"");
-                $content .= $e[1].'] '.str_replace(array('"',"\n","\r","\t"),array('\"','\\n','\\r','\\t'),$m).' ('.str_replace('\\','\\\\',$e[3]).' '.$e[4].')");';
-            }
-            $content .= '}else{alert("there are some errors, you should activate Firebug to see them");}</script>';
-        }else{
-            $content .= '<div id="jelixerror" style="position:absolute;left:0px;top:0px;border:3px solid red; background-color:#f39999;color:black;z-index:100;">';
-            $content .= $this->getFormatedErrorMsg();
-            $content .= '<p><a href="#" onclick="document.getElementById(\'jelixerror\').style.display=\'none\';return false;">close</a></p></div>';
-        }
-
-        return $content;
-    }
-
-    /**
-     *  return the HTML content to display log messages that have 'response' as target
-     *  @return string
-     */
-    protected function getLogMessageContent() {
-        if(!count($GLOBALS['gJCoord']->logMessages))
-            return '';
-        $content = '';
-        if(count($GLOBALS['gJCoord']->logMessages['response'])) {
-            $content .= '<ul id="jelixlog">';
-            foreach($GLOBALS['gJCoord']->logMessages['response'] as $m) {
-                $content .= '<li>'.htmlspecialchars($m).'</li>';
-            }
-            $content .= '</ul>';
-        }
-        if(count($GLOBALS['gJCoord']->logMessages['firebug'])) {
-            $content .= '<script type="text/javascript">if(console){';
-            foreach($GLOBALS['gJCoord']->logMessages['firebug'] as $m) {
-                $content .= 'console.debug("'.str_replace(array('"',"\n","\r","\t"),array('\"','\\n','\\r','\\t'),$m).'");';
-            }
-            $content .= '}else{alert("there are log messages, you should activate Firebug to see them");}</script>';
-        }
-        return $content;
-    }
-
 
     /**
      * change the type of html for the output

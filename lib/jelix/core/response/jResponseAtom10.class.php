@@ -5,7 +5,7 @@
 * @author      Yannick Le Guédart
 * @contributor Laurent Jouanneau
 * @copyright   2006 Yannick Le Guédart
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -49,68 +49,26 @@ class jResponseAtom10 extends jResponseXMLFeed {
      * @return boolean true if generation is ok, else false
      */
     final public function output (){
-        $this->_headSent = false;
 
         $this->_httpHeaders['Content-Type'] =
                 'application/atom+xml;charset=' . $this->charset;
-
-        $this->sendHttpHeaders ();
-
-        echo '<?xml version="1.0" encoding="'. $this->charset .'"?>', "\n";
-        $this->_outputXmlHeader ();
-
-        $this->_headSent = true;
 
         if(!$this->infos->updated){
             $this->infos->updated = date("Y-m-d H:i:s");
         }
 
-        // $this->_outputOptionals();
-
+        // generate the main content, in a buffer
+        // so we can handle errors
         $this->_template->assign ('atom', $this->infos);
         $this->_template->assign ('items', $this->itemList);
         $this->_template->assign ('lang',$this->lang);
-        $this->_template->display ($this->_mainTpl);
+        $content = $this->_template->fetch ($this->_mainTpl);
 
-        if ($this->hasErrors ()) {
-            echo $this->getFormatedErrorMsg ();
-        }
-        echo '</feed>';
+        $this->sendHttpHeaders();
+        echo '<?xml version="1.0" encoding="'. $this->charset .'"?>', "\n";
+        $this->_outputXmlHeader ();
+        echo $content;
         return true;
-    }
-
-    final public function outputErrors() {
-        if (!$this->_headSent) {
-            if (!$this->_httpHeadersSent) {
-                header("HTTP/1.0 500 Internal Server Error");
-                header('Content-Type: text/xml;charset='.$this->charset);
-            }
-            echo '<?xml version="1.0" encoding="'. $this->charset .'"?>';
-        }
-
-        echo '<errors xmlns="http://jelix.org/ns/xmlerror/1.0">';
-        if ($this->hasErrors()) {
-            echo $this->getFormatedErrorMsg();
-        } else {
-            echo '<error>Unknown Error</error>';
-        }
-        echo '</errors>';
-    }
-
-    /**
-     * Format error messages
-     * @return string formated errors
-     */
-    protected function getFormatedErrorMsg(){
-        $errors = '';
-        foreach ($GLOBALS['gJCoord']->getErrorMessages()  as $e) {
-           $errors .=  '<error xmlns="http://jelix.org/ns/xmlerror/1.0" type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">';
-           $errors .= htmlspecialchars($e[2], ENT_NOQUOTES, $this->charset);
-           if ($e[5])
-              $errors .= "\n".htmlspecialchars($e[5], ENT_NOQUOTES, $this->charset);
-           $errors .= '</error>'. "\n";
-        }
-        return $errors;
     }
 
     /**

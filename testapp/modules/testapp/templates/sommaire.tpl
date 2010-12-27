@@ -6,6 +6,7 @@
    <li><a href="{jurl 'main:hello', array('output'=>'text')}">Hello world in text</a></li>
    <li><a href="{jurl 'main:hello2'}">Overloaded "Hello world" template</a></li>
    <li><a href="{jurl 'main:testdao'}">Dao test</a></li>
+   <li><a href="{jurl 'main:generateerror'}">error on a page</a></li>
 </ul>
 
 <h3>Unit tests</h3>

@@ -72,16 +72,6 @@ class jResponseHtml extends jResponseBasicHtml {
      */
     public $bodyTagAttributes= array();
 
-    /**
-     * says what part of the html head has been send
-     * @var integer
-     */
-    protected $_headSent = 0;
-
-    /**
-     * properties of the head content
-     */
-
     /**#@+
      * content for the head
      * @var array
@@ -126,52 +116,34 @@ class jResponseHtml extends jResponseBasicHtml {
     final public function output(){
         $this->doAfterActions();
 
-        $this->_headSent = 0;
         $this->setContentType();
+        // let's get the main content for the body
+        // we don't output yet <head> and other things, to have the
+        // opportunity for any components called during the output,
+        // to add things in the <head>
+        if ($this->bodyTpl != '') {
+            $this->body->meta($this->bodyTpl);
+            $content = $this->body->fetch($this->bodyTpl,'html');
+        }
+        else $content = '';
+
+        // retrieve errors messages and log messages
+        jLog::outputLog($this);
+
+        // now let's output the html content
         $this->sendHttpHeaders();
         $this->outputDoctype();
-        $this->_headSent = 1;
-        
-        if($this->bodyTpl != '')
-            $this->body->meta($this->bodyTpl);
         $this->outputHtmlHeader();
         echo '<body ';
         foreach($this->bodyTagAttributes as $attr=>$value){
             echo $attr,'="', htmlspecialchars($value),'" ';
         }
         echo ">\n";
-        $this->_headSent = 2;
         echo implode("\n",$this->_bodyTop);
-        if($this->bodyTpl != '')
-            $this->body->display($this->bodyTpl);
-
-        echo $this->getErrorBarContent();
+        echo $content;
         echo implode("\n",$this->_bodyBottom);
-        echo $this->getLogMessageContent();
         echo '</body></html>';
         return true;
-    }
-
-    /**
-     * output errors
-     */
-    final public function outputErrors(){
-        if($this->_headSent < 1){
-             if(!$this->_httpHeadersSent){
-                header("HTTP/1.0 500 Internal Server Error");
-                header('Content-Type: text/html;charset='.$this->_charset);
-             }
-            echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', "\n<html>";
-        }
-        if($this->_headSent < 2){
-            echo '<head><title>Errors</title></head><body>';
-        }
-        if($this->hasErrors()){
-            echo $this->getFormatedErrorMsg();
-        }else{
-            echo '<p style="color:#FF0000">Unknown Error</p>';
-        }
-        echo '</body></html>';
     }
     
     /**

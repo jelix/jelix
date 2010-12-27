@@ -3,7 +3,8 @@
 * @package     jelix
 * @subpackage  core_response
 * @author      Baptiste Toinot
-* @copyright   2008 Baptiste Toinot
+* @contributor Laurent Jouanneau
+* @copyright   2008 Baptiste Toinot, 2010 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -88,67 +89,25 @@ class jResponseSitemap extends jResponse {
      * @return boolean true if generation is ok, else false
      */
     final public function output() {
-        $this->_headSent = false;
         $this->_httpHeaders['Content-Type'] = 'application/xml;charset=UTF-8';
-        $this->sendHttpHeaders();
-        echo '<?xml version="1.0" encoding="UTF-8"?>', "\n";
 
         if (!is_null($this->urlSitemap)) {
-            echo '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
-            $this->_headSent = true;
+            $head = '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+            $foot = '</sitemapindex>';
             $this->contentTpl = 'jelix~sitemapindex';
             $this->content->assign('sitemaps', $this->urlSitemap);
         } else {
-            echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
-            $this->_headSent = true;
+            $head = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+            $foot = '</urlset>';
             $this->content->assign('urls', $this->urlList);
         }
+        $content = $this->content->fetch($this->contentTpl);
 
-        $this->content->display($this->contentTpl);
-
-        if ($this->hasErrors()) {
-            echo $this->getFormatedErrorMsg();
-        }
-
-        if (!is_null($this->urlSitemap)) {
-            echo '</sitemapindex>';
-        } else {
-            echo '</urlset>';
-        }
+        // content is generated, no errors, we can send it
+        $this->sendHttpHeaders();
+        echo '<?xml version="1.0" encoding="UTF-8"?>', "\n";
+        echo $head, $content, $foot;
         return true;
-    }
-
-    /**
-     * output errors
-     */
-    final public function outputErrors() {
-        if (!$this->_headSent) {
-            if (!$this->_httpHeadersSent) {
-                header("HTTP/1.0 500 Internal Server Error");
-                header('Content-Type: text/xml;charset=UTF-8');
-            }
-            echo '<?xml version="1.0" encoding="UTF-8"?>';
-        }
-
-        echo '<errors xmlns="http://jelix.org/ns/xmlerror/1.0">';
-        if ($this->hasErrors()) {
-            echo $this->getFormatedErrorMsg();
-        } else {
-            echo '<error>Unknow Error</error>';
-        }
-        echo '</errors>';
-    }
-
-    /**
-     * Format error messages
-     * @return string formated errors
-     */
-    protected function getFormatedErrorMsg() {
-        $errors = '';
-        foreach ($GLOBALS['gJCoord']->getErrorMessages() as $e) {
-           $errors .=  '<error xmlns="http://jelix.org/ns/xmlerror/1.0" type="'. $e[0] .'" code="'. $e[1] .'" file="'. $e[3] .'" line="'. $e[4] .'">'. $e[2] .'</error>'. "\n";
-        }
-        return $errors;
     }
 
     /**

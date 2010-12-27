@@ -216,10 +216,9 @@ jsonrpc = on
 rdf = on
 
 [logger]
-; available loggers : file, syslog
+; available loggers : file, syslog, firebug, mail. see plugins for others
 
 default=file
-
 error= file
 warning=file
 notice=file

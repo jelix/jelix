@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud (fix bug)
-* @copyright   2005-2009 Laurent Jouanneau, 2007 Loic Mathaud
+* @copyright   2005-2010 Laurent Jouanneau, 2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -50,8 +50,6 @@ final class jResponseRedirectUrl extends jResponse {
     public function output(){
         if ($this->url =='')
             throw new jException('jelix~errors.repredirect.empty.url');
-        if($this->hasErrors())
-            return false;
         if($this->temporary)
             $this->setHttpStatus(303, 'See Other');
         else
@@ -59,11 +57,5 @@ final class jResponseRedirectUrl extends jResponse {
         $this->sendHttpHeaders();
         header ('Location: '.$this->url);
         return true;
-    }
-
-    public function outputErrors(){
-         include_once(JELIX_LIB_CORE_PATH.'response/jResponseHtml.class.php');
-         $resp = new jResponseHtml();
-         $resp->outputErrors();
     }
 }

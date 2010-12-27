@@ -65,4 +65,9 @@ class mainCtrl extends jController {
 
       return $rep;
    }
+
+    function generateerror() {
+        $rep = $this->getResponse();
+        throw new Exception("here is an error");
+    }
 }
