@@ -37,7 +37,7 @@ class jAclDb {
      * @deprecated 1.1
      */
     public static function getProfil (){
-        trigger_error("jAclDb::getProfil() is deprecated, you should use jAclDb::getProfile()", E_USER_NOTICE);
+        trigger_error("jAclDb::getProfil() is deprecated, you should use jAclDb::getProfile()", E_USER_DEPRECATED);
         return 'jacl_profile';
     }
 }

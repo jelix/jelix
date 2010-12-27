@@ -131,7 +131,7 @@ xmlrpc = on
 jsonrpc = on
 rdf = on
 
-[logfiles]
+[fileLogger]
 default=messages.log
 
 [mailer]

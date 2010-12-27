@@ -14,7 +14,7 @@ cd lib/jelix/core
   jException.lib.php
 * jIncluder.class.php
   jLocale.class.php
-  jLog.class.php
+* jLog.class.php
   jRequest.class.php
   jResponse.class.php
 * jSelector.class.php
@@ -36,6 +36,10 @@ cd lib/jelix/core/selector
   jSelectorSimpleFile.class.php
   jSelectorTpl.class.php
   jSelectorZone.class.php
+
+cd lib/jelix/core/log/
+  jLogErrorMessage.class.php
+  jLogMessage.class.php
 
 cd lib/jelix/db
   jDbConnection.class.php

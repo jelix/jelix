@@ -122,7 +122,7 @@ foo__bar = on
 news = on
 soap = on
 
-[logfiles]
+[fileLogger]
 default=messages.log
 
 

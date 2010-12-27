@@ -39,6 +39,11 @@ cd lib/jelix/core
   jSoapCoordinator.class.php
   jCmdlineCoordinator.class.php
 
+cd lib/jelix/core/log/
+  jFileLogger.class.php
+  jSyslogLogger.class.php
+  jMailLogger.class.php
+
 cd lib/jelix/core/request
   jClassicRequest.class.php
 * jCmdLineRequest.class.php
@@ -93,6 +98,7 @@ cd lib/jelix/core-modules/jelix/daos
    jcache.dao.xml
 cd lib/jelix/core-modules/jelix/install
   install.php
+  upgrade_to_1.3pre.1753_newlog.php
 cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
@@ -385,6 +391,8 @@ cd lib/jelix/plugins/kvdb/memcache/
 cd lib/jelix/plugins/kvdb/redis/
   redis.kvdriver.php
 
+cd lib/jelix/plugins/logger/firebug
+  firebug.logger.php
 
 cd lib/jelix/plugins/tpl/common
   block.ifacl.php

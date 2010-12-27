@@ -232,8 +232,25 @@ xmlrpc = on
 jsonrpc = on
 rdf = on
 
-[logfiles]
+[logger]
+; available loggers : file, syslog
+
+default=file
+
+error= file
+warning=file
+notice=file
+deprecated=
+strict=
+
+; log files for categories which have "file"
+[fileLogger]
 default=messages.log
+error=errors.log
+warning=errors.log
+notice=errors.log
+deprecated=errors.log
+strict=errors.log
 
 [mailer]
 webmasterEmail = root@localhost
