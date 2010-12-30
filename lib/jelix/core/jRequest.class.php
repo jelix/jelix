@@ -211,6 +211,18 @@ abstract class jRequest {
    }
 
    /**
+    * says if this is an ajax request
+    * @return boolean true if it is an ajax request
+    * @since 1.3a1
+    */
+   function isAjax() {
+      if (isset($_SERVER['HTTP_X_REQUESTED_WITH']))
+         return ($_SERVER['HTTP_X_REQUESTED_WITH'] === "XMLHttpRequest");
+      else
+         return false;
+   }
+
+   /**
     * call it when you want to read the content of the body of a request
     * when the method is not GET or POST
     * @return mixed    array of parameters or a single string when the content-type is unknown
