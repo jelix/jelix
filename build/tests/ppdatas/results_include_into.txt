@@ -1,0 +1,25 @@
+aaaaa
+bbbbb
+dddddd
+
+==== include quote
+pop'opqsd
+mlml'ml
+
+qsdqs"dqs"d
+
+==== include esc quote
+'pop\'opqsd
+mlml\'ml
+
+qsdqs"dqs"d
+'
+==== include raw
+
+pop'opqsd
+mlml'ml
+
+qsdqs"dqs"d
+
+
+zzzz

@@ -1,0 +1,13 @@
+aaaaa
+bbbbb
+dddddd
+==== include quote
+#includeraw source_inc_quotes.txt | escquote
+==== include dblquote
+#includeraw source_inc_quotes.txt | escdblquote
+==== include quote/dblquote
+#includeraw source_inc_quotes.txt | escquote| escdblquote
+==== include base64
+#includeraw source_inc_quotes.txt | base64
+
+zzzz

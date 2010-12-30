@@ -251,41 +251,34 @@ class jPreProcessor{
                     }
                     $tline=false;
                 }
-            }elseif(preg_match('/^\#include(php|raw)?\s+([\w\/\.\:\-]+)\s*$/m',$sline,$m)){
+            }elseif(preg_match('/^\#include(php|raw)?\s+([\w\/\.\:\-]+)((?:\s*\|\s*[\w\/\.\:\-]+)*)\s*$/m',$sline,$m)){
                 if($isOpen){
                     $path = $m[2];
-                    if(!($path[0] == '/' || preg_match('/^\w\:\\.+$/',$path))){
-                        $path = realpath(dirname($filename).'/'.$path);
-                        if($path == ''){
-                            throw new jExceptionPreProc($filename,$nb,self::ERR_INVALID_FILENAME, $m[2]);
-                        }
+                    if (isset($m[3])) {
+                        $options = preg_split('/\s*\|\s*/',$m[3]);
                     }
-                    if(file_exists($path) && !is_dir($path)){
-                        if ($m[1]  == 'raw') {
-                            $tline = file_get_contents($path);  
-                        }
-                        else {
-                            $preproc = new jPreProcessor();
-                            $preproc->_doSaveVariables = false;
-                            $preproc->setVars($this->_variables);
-                            $tline = $preproc->parseFile($path);
-                            $this->_variables = $preproc->_variables;
-                            $preproc = null;
-                        }
-                    }else{
-                        throw new jExceptionPreProc($filename,$nb,self::ERR_INVALID_FILENAME,$m[2] );
-                    }
+                    else $options = array();
+
                     if($m[1] == 'php'){
-                        if(preg_match('/^\s*\<\?(?:php)?(.*)/sm',$tline,$ms)){
-                            $tline = $ms[1];
-                        }
-                        if(preg_match('/(.*)\?\>\s*$/sm',$tline,$ms)){
-                            $tline = $ms[1];
-                        }
+                        array_unshift($options,'rmphptag');
                     }
+
+                    $tline = $this->readInclude($filename, $nb, $path, ($m[1]  == 'raw'), $options);
+
                }else{
                     $tline=false;
                 }
+            }elseif(preg_match('/^\#include(raw)?into\s+([\w]+)\s+([\w\/\.\:\-]+)((?:\s*\|\s*[\w\/\.\:\-]+)*)\s*$/m',$sline,$m)){
+                if($isOpen){
+                    $path = $m[3];
+                    if (isset($m[4])) {
+                        $options = preg_split('/\s*\|\s*/',$m[4]);
+                    }
+                    else $options = array();
+                    
+                    $this->_variables[$m[2]] = $this->readInclude($filename, $nb, $path, ($m[1]  == 'raw'), $options);
+                }
+                $tline=false;
             }elseif(strlen($sline) && $sline[0] == '#'){
                 if(strlen($sline)>1 && $sline[1] == '#'){
                     if(!$isOpen){
@@ -361,6 +354,72 @@ class jPreProcessor{
         }else{
             return $val;
         }
+    }
+
+    protected function readInclude($currentFilename, $currentLine, $path, $raw, $options=array()) {
+        if(!($path[0] == '/' || preg_match('/^\w\:\\.+$/',$path))){
+            $path = realpath(dirname($currentFilename).'/'.$path);
+            if($path == ''){
+                throw new jExceptionPreProc($currentFilename, $currentLine, self::ERR_INVALID_FILENAME, $path);
+            }
+        }
+        if(file_exists($path) && !is_dir($path)){
+            if ($raw) {
+                $tline = file_get_contents($path);  
+            }
+            else {
+                $preproc = new jPreProcessor();
+                $preproc->_doSaveVariables = false;
+                $preproc->setVars($this->_variables);
+                $tline = $preproc->parseFile($path);
+                $this->_variables = $preproc->_variables;
+                $preproc = null;
+            }
+        }else{
+            throw new jExceptionPreProc($currentFilename, $currentLine, self::ERR_INVALID_FILENAME, $path);
+        }
+        
+        if (count($options))
+            $tline = $this->applyIncludeOptions($tline, $options);
+        return $tline;
+    }
+
+
+    protected function applyIncludeOptions($content, $options) {
+        foreach ($options as $option) {
+            if (trim($option) == '')
+                continue;
+            switch($option) {
+                case 'rmphptag':
+                    if(preg_match('/^\s*\<\?(?:php)?(.*)/sm',$content,$ms)){
+                        $content = $ms[1];
+                    }
+                    if(preg_match('/(.*)\?\>\s*$/sm',$content,$ms)){
+                        $content = $ms[1];
+                    }
+                    break;
+                case 'escquote':
+                    $content = str_replace('\'', '\\\'', $content);
+                    break;
+                case 'escdblquote':
+                    $content = str_replace('"', '\\"', $content);
+                    break;
+                case 'base64':
+                    $content = base64_encode($content);
+                    break;
+                case 'jspacker':
+                    $packer = new JavaScriptPacker($content, 0, true, false);
+                    $content = $packer->pack();
+                    break;
+                case 'addquote':
+                    $content = "'".$content."'";
+                    break;
+                case 'adddblquote':
+                    $content = '"'.$content.'"';
+                    break;
+            }
+        }
+        return $content;
     }
 }
 

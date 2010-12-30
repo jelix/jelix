@@ -22,33 +22,40 @@ class PreProcTestCase extends UnitTestCase {
     protected $proc;
 
     protected $testcase = array(
+        // file without instructions
       'source1.txt'=>array(
           'source1.txt'=>array()
           ),
+        // with a simple #ifdef
       'source2.txt'=>array(
            'result2_1.txt'=>array(),
            'result2_2.txt'=>array('FOO'=>true),
           ),
+      // with a simple #ifdef #else
       'source3.txt'=>array(
            'result3_1.txt'=>array(),
            'result3_2.txt'=>array('FOO'=>true),
           ),
+      // with several imbricated #ifdef
       'source4.txt'=>array(
            'result4_1.txt'=>array(),
            'result4_2.txt'=>array('FOO'=>true),
            'result4_3.txt'=>array('BAR'=>true),
            'result4_4.txt'=>array('FOO'=>true, 'BAR'=>true),
           ),
+      // #ifdef + #expand
       'source5.txt' =>array(
            'result5_1.txt'=>array(),
            'result5_2.txt'=>array('FOO'=>"une variable foo", "BAR"=>"le bar est ouvert"),
           ),
+      // #ifdef + #elifdef
       'source6.txt'=>array(
            'result6_1.txt'=>array(),
            'result6_2.txt'=>array('FOO'=>true),
            'result6_3.txt'=>array('BAR'=>true),
            'result6_4.txt'=>array('FOO'=>true, 'BAR'=>true),
           ),
+      // #ifdef + 2 x #elifdef
       'source7.txt'=>array(
            'result7_1.txt'=>array(),
            'result7_2.txt'=>array('FOO'=>true),
@@ -56,19 +63,38 @@ class PreProcTestCase extends UnitTestCase {
            'result7_4.txt'=>array('BAZ'=>true),
            'result7_5.txt'=>array('BAZ'=>true, 'BAR'=>true),
           ),
+      // #ifef + define
       'source_define.txt'=>array(
             'result_define.txt'=>array('FOO'=>true),
           ),
+      // #undef, #define
       'source_define2.txt'=>array(
             'result_define2.txt'=>array('FOO'=>'ok'),
           ),
+      // #include
       'source_include1.txt'=>array(
             'result_include1.txt'=>array('FOO'=>'ok'),
           ),
+      // #includephp
       'source_include2.txt'=>array(
             'result_include2.txt'=>array('FOO'=>'ok'),
           ),
-
+      // #include | rmphptag
+      'source_include_phptag.txt'=>array(
+            'result_include2.txt'=>array('FOO'=>'ok'),
+          ),
+      // #include | some options
+      'source_include_options.txt'=>array(
+            'results_include_options.txt'=>array(),
+          ),
+      // #includeraw | some options
+      'source_includeraw_options.txt'=>array(
+            'results_includeraw_options.txt'=>array(),
+          ),
+      // #includeinto
+      'source_include_into.txt'=>array(
+            'results_include_into.txt'=>array(),
+          ),
     );
 
 

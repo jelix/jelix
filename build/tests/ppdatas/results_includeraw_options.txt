@@ -1,0 +1,28 @@
+aaaaa
+bbbbb
+dddddd
+==== include quote
+
+pop\'opqsd
+mlml\'ml
+
+qsdqs"dqs"d
+
+==== include dblquote
+
+pop'opqsd
+mlml'ml
+
+qsdqs\"dqs\"d
+
+==== include quote/dblquote
+
+pop\'opqsd
+mlml\'ml
+
+qsdqs\"dqs\"d
+
+==== include base64
+CnBvcCdvcHFzZAptbG1sJ21sCgpxc2RxcyJkcXMiZAo=
+
+zzzz
