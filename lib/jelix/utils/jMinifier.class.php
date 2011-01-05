@@ -31,13 +31,6 @@ require_once 'Minify.php';
  */
 class jMinifier {
 
-    const TYPE_CSS = 'text/css';
-    const TYPE_HTML = 'text/html';
-    // there is some debate over the ideal JS Content-Type, but this is the
-    // Apache default and what Yahoo! uses..
-    const TYPE_JS = 'application/x-javascript';
-
-
     /**
      * @var Minify_Controller active controller for current request
      */
@@ -53,17 +46,6 @@ class jMinifier {
      * NFS system flock-ing attempts stalled PHP for 30 seconds!
      */
     protected static $min_cacheFileLocking = true;
-
-    /**
-     * If this string is not empty AND the serve() option 'bubbleCssImports' is
-     * NOT set, then serve() will check CSS files for @import declarations that
-     * appear too late in the combined stylesheet. If found, serve() will prepend
-     * the output with this warning.
-     *
-     * @var string $importWarning
-     */
-    public static $importWarning = "/* See http://code.google.com/p/minify/wiki/CommonProblems#@imports_can_appear_in_invalid_locations_in_combined_CSS_files */\n";
-
 
     /**
      * This is a static class, so private constructor
@@ -96,12 +78,12 @@ class jMinifier {
         $cacheExt = '';
         switch ($fileType) {
         case 'js':
-            $options['contentType'] = self::TYPE_JS;
+            $options['contentType'] = Minify::TYPE_JS;
             $cachePath = $cachePathJS;
             $cacheExt = 'js';
             break;
         case 'css':
-            $options['contentType'] = self::TYPE_CSS;
+            $options['contentType'] = Minify::TYPE_CSS;
             $cachePath = $cachePathCSS;
             $cacheExt = 'css';
             break;
@@ -149,7 +131,7 @@ class jMinifier {
                 //cache does not exist or is to old. Let's refresh it :
 
                 //rewrite URL in CSS files
-                if (self::$_options['contentType'] === self::TYPE_CSS && self::$_options['rewriteCssUris']) {
+                if (self::$_options['contentType'] === Minify::TYPE_CSS && self::$_options['rewriteCssUris']) {
                     reset($controller->sources);
                     while (list($key, $source) = each(self::$_controller->sources)) {
                         if ($source->filepath 
@@ -194,7 +176,7 @@ class jMinifier {
 
         // when combining scripts, make sure all statements separated and
         // trailing single line comment is terminated
-        $implodeSeparator = ($type === self::TYPE_JS)
+        $implodeSeparator = ($type === Minify::TYPE_JS)
             ? "\n;"
             : '';
         // allow the user to pass a particular array of options to each
@@ -241,7 +223,7 @@ class jMinifier {
             $content = implode($implodeSeparator, $pieces);
         }
 
-        if ($type === self::TYPE_CSS && false !== strpos($content, '@import')) {
+        if ($type === Minify::TYPE_CSS && false !== strpos($content, '@import')) {
             $content = self::_handleCssImports($content);
         }
 
@@ -265,7 +247,7 @@ class jMinifier {
             // bubble CSS imports
             preg_match_all('/@import.*?;/', $css, $imports);
             $css = implode('', $imports[0]) . preg_replace('/@import.*?;/', '', $css);
-        } else if ('' !== self::$importWarning) {
+        } else if ('' !== Minify::$importWarning) {
             // remove comments so we don't mistake { in a comment as a block
             $noCommentCss = preg_replace('@/\\*[\\s\\S]*?\\*/@', '', $css);
             $lastImportPos = strrpos($noCommentCss, '@import');
@@ -275,7 +257,7 @@ class jMinifier {
                 && $firstBlockPos < $lastImportPos
             ) {
                 // { appears before @import : prepend warning
-                $css = self::$importWarning . $css;
+                $css = Minify::$importWarning . $css;
             }
         }
         return $css;
