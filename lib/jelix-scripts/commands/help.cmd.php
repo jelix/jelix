@@ -16,7 +16,7 @@ class helpCommand extends JelixScriptCommand {
     public  $allowed_parameters=array('command'=>false);
 
     public  $applicationMustExist = false;
-    
+
     public $applicationRequired = false;
 
     public  $syntaxhelp ="[COMMAND]";
@@ -33,7 +33,7 @@ Utilisation générale :
                l'application doit être dans une variable d'environnement
                JELIX_APP_NAME
     ENTRYPOINT : nom du point d'entrée concerné par la commande. Si pas indiqué,
-                la commande s'appliquera sur tout les point d'entrée ou index.php
+                la commande s'appliquera sur tous les points d'entrée ou index.php
                 selon le type de la commande.
     COMMANDE : nom de la commande à executer
     OPTIONS  : une ou plusieurs options. Le nom d'une option commence par un
@@ -53,21 +53,21 @@ Liste des commandes disponibles :\n\t",
 General use :
     %SCRIPT% [--APPNAME[:ENTRYPOINT]] COMMAND [OPTIONS] [PARAMETERS]
 
-    APPNAME: name of the application on which you want to work. You can omit 
-            this parameter if the application name is stored in the 
+    APPNAME: name of the application on which you want to work. You can omit
+            this parameter if the application name is stored in the
             JELIX_APP_NAME environment variable.
     ENTRYPOINT: the name of the entry point on which the command is applied.
                if not given, and depending of the command, the command will be
                applied for all entry point or the main one (index.php)
     COMMAND: name of the command to execute
-    OPTIONS: one or more options. An option name begin with a '-' and can be 
+    OPTIONS: one or more options. An option name begin with a '-' and can be
             followed by a value. Example with some specific commands:
               -cmdline
               -profile myprofile
     PARAMETERS: one or more values
 
-    Options and parameters depends of the command. Options are always 
-    optional. Parameters could be optional or required, depending of the 
+    Options and parameters depends of the command. Options are always
+    optional. Parameters could be optional or required, depending of the
     command. To know options and parameters, type:
        %SCRIPT% help COMMAND
 
@@ -123,4 +123,3 @@ List of available commands:\n\t",
        }
     }
 }
-

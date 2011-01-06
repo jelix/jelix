@@ -47,14 +47,14 @@ class MagicQuotesCoordPlugin implements jICoordPlugin {
     }
 
     /**
-    * enleve tout les slashes d'une chaine ou d'un tableau de chaine
+    * enleve tous les slashes d'une chaine ou d'un tableau de chaine
     * @param string/array   $string
     * @return string/array   l'objet transformé
     */
     protected function _stripSlashes ($string){
         if (is_array ($string)){
             $toReturn = array ();
-            // c'est un tableau, on traite un à un tout les elements du tableau
+            // c'est un tableau, on traite un à un tous les elements du tableau
             foreach ($string as $key=>$elem){
                 $toReturn[$key] = $this->_stripSlashes ($elem);
             }
@@ -80,4 +80,3 @@ class MagicQuotesCoordPlugin implements jICoordPlugin {
     */
     public function afterProcess (){}
 }
-
