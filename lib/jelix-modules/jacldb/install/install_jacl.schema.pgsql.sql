@@ -2,12 +2,6 @@
 -- PostgreSQL database dump
 --
 
-SET client_encoding = 'UTF8';
-SET check_function_bodies = false;
-SET client_min_messages = warning;
-SET default_tablespace = '';
-SET default_with_oids = false;
-
 CREATE TABLE %%PREFIX%%jacl_group (
     id_aclgrp serial NOT NULL,
     name character varying(150) NOT NULL,
