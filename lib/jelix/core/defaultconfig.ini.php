@@ -107,7 +107,7 @@ minifyJS = off
 minifyCheckCacheFiletime = on
 ; list of filenames (no path) which shouldn't be minified :
 minifyExcludeCSS = ""
-minifyExcludeJS = ""
+minifyExcludeJS = "jquery.wymeditor.js"
 ; add a unique ID to CSS and/or JS files URLs ( this gives for exemple /file.js?1267704635 ). This ID is actually the filemtime of each served file :
 jsUniqueUrlId = off
 cssUniqueUrlId = off
