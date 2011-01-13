@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2009-2010 Laurent Jouanneau
+* @copyright   2009-2011 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -153,6 +153,8 @@ abstract class jInstallerBase {
             if (isset($dbprofiles[$dbProfile]) && is_string($dbprofiles[$dbProfile]))
                 $this->dbProfile = $dbprofiles[$dbProfile];
         }
+
+        $this->_dbConn = null; // we force to retrieve a db connection
     }
 
     protected $contextId = array();
