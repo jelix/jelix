@@ -74,7 +74,8 @@ class jacl2dbModuleInstaller extends jInstallerModule {
             } catch(Exception $e) {}
 
             if ($cn->dbms == 'pgsql') {
-                $cn->exec("SELECT setval('".$cn->prefixTable('jacl2_group_id_aclgrp_seq')."', 2, true)");
+                // 3, to have the same autoincrement in mysql, so user.sql will work correctly
+                $cn->exec("SELECT setval('".$cn->prefixTable('jacl2_group_id_aclgrp_seq')."', 3, true)");
             }
         }
 
