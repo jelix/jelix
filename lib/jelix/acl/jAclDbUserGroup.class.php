@@ -199,7 +199,7 @@ class jAclDbUserGroup {
         $daogroup = jDao::get('jacldb~jaclgroup','jacl_profile');
         $daoright = jDao::get('jacldb~jaclrights','jacl_profile');
         $daousergroup = jDao::get('jacldb~jaclusergroup','jacl_profile');
-        // enlever tout les droits attaché au groupe
+        // enlever tous les droits attachés au groupe
         $daoright->deleteByGroup($groupid);
         // enlever les utilisateurs du groupe
         $daousergroup->deleteByGroup($groupid);
@@ -225,4 +225,3 @@ class jAclDbUserGroup {
         }
     }
 }
-

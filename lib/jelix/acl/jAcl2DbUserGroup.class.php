@@ -223,7 +223,7 @@ class jAcl2DbUserGroup {
     public static function removeGroup($groupid){
         if( $groupid == 0)
             throw new Exception ('jAcl2DbUserGroup::removeGroup : invalid group id');
-        // enlever tout les droits attaché au groupe
+        // enlever tous les droits attachés au groupe
         jDao::get('jacl2db~jacl2rights','jacl2_profile')->deleteByGroup($groupid);
         // enlever les utilisateurs du groupe
         jDao::get('jacl2db~jacl2usergroup','jacl2_profile')->deleteByGroup($groupid);

@@ -76,19 +76,18 @@
         'module.bad.dependency.version'=>'Le module %s necessite une autre version du module %s (%s - %s)',
         'module.installer.class.not.found'=>'La classe d\'installation %s pour le module %s n\'existe pas',
         'module.upgrader.class.not.found'=>'La classe de mise à jour %s pour le module %s n\'existe pas',
-        
+
         'install.entrypoint.start'  =>'Installation pour le point d\'entrée %s',
-        'install.entrypoint.end'    =>'Tout les modules sont installés ou mise à jour pour le point d\'entrée %s',
+        'install.entrypoint.end'    =>'Tous les modules sont installés ou mis à jour pour le point d\'entrée %s',
         'install.entrypoint.bad.end'=>'Installation interrompue pour cause d\'erreurs pour le point d\'entrée %s',
-        'install.entrypoint.installers.disabled'=>'Les scripts d\'installation et de mise à jour ne seront pas executés, ils sont désactivés dans la configuration.', 
-        
+        'install.entrypoint.installers.disabled'=>'Les scripts d\'installation et de mise à jour ne seront pas executés, ils sont désactivés dans la configuration.',
+
         'install.dependencies.ok'   =>'Toutes les dépendances des modules sont valides',
         'install.bad.dependencies'  =>'Il y a des erreurs dans les dépendances. Installation annulée.',
         'install.invalid.xml.file'  =>'Le fichier identité %s est invalide ou inexistant',
-        
+
         'install.module.already.installed'  =>'Le module %s déjà installé',
         'install.module.installed'          =>'Le module %s est installé',
         'install.module.error'              =>'Une erreur est survenue durant l\'installation du module %s: %s',
         'install.module.check.dependency'   =>'Vérifie les dépendances du module %s',
         'install.module.upgraded'           =>'Le module %s est mis à jour à la version %s',
-

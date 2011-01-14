@@ -1,7 +1,7 @@
 CREATE TABLE %%PREFIX%%jlx_cache (
   cache_key character varying(255) NOT NULL,
   cache_data bytea,
-  cache_date timestamp default NULL,
+  cache_date timestamp default NULL
 );
 
 ALTER TABLE ONLY %%PREFIX%%jlx_cache

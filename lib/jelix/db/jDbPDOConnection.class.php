@@ -3,10 +3,11 @@
 * @package    jelix
 * @subpackage db
 * @author     Laurent Jouanneau
-* @contributor Gwendal Jouannic, Thomas, Julien Issler
+* @contributor Gwendal Jouannic, Thomas, Julien Issler, BP2I GBIS
 * @copyright  2005-2010 Laurent Jouanneau
 * @copyright  2008 Gwendal Jouannic, 2009 Thomas
 * @copyright  2009 Julien Issler
+* @copyright  2011 BP2I GBIS
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -143,6 +144,11 @@ class jDbPDOConnection extends PDO {
             elseif ($this->dbms == 'pgsql') {
                 $queryString .= ' LIMIT '.intval($limitCount).' OFFSET '.intval($limitOffset);
             }
+            elseif ($this->dbms == 'oci') {
+                $limitOffset = $limitOffset + 1; // rnum begins at 1
+                $queryString = 'SELECT * FROM ( SELECT ocilimit.*, rownum rnum FROM ('.$queryString.') ocilimit WHERE
+                    rownum<'.(intval($limitOffset)+intval($limitCount)).'  ) WHERE rnum >='.intval($limitOffset);
+            }
         }
         return $this->query ($queryString);
     }
@@ -229,7 +235,7 @@ class jDbPDOConnection extends PDO {
      * @var jDbTools
      */
     protected $_tools = null;
-    
+
     /**
      * @return jDbTools
      */

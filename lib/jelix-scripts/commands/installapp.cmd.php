@@ -24,7 +24,7 @@ class installappCommand extends JelixScriptCommand {
     function __construct(){
         $this->help= array(
             'fr'=>"
-    Installe ou met à jour tout les modules d'une application qui sont activés.
+    Installe ou met à jour tous les modules d'une application qui sont activés.
 
     Option -v : mode verbeux.
     ",
