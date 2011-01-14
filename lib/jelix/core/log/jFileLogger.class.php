@@ -13,7 +13,7 @@
  */
 class jFileLogger implements jILogger {
     /**
-     * @param jILoggerMessage $message the message to log
+     * @param jILogMessage $message the message to log
      */
     function logMessage($message) {
         global $gJConfig, $gJCoord;

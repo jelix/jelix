@@ -216,9 +216,14 @@ jsonrpc = on
 rdf = on
 
 [logger]
-; available loggers : file, syslog, firebug, mail. see plugins for others
+; list of loggers for each categories of log messages
+; available loggers : file, syslog, firebug, mail, memory. see plugins for others
 
-default=file
+; _all category is the category containing loggers executed for any categories
+_all =
+
+; default category is the category used when a given category is not declared here
+default=
 error= file
 warning=file
 notice=file

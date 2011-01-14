@@ -11,7 +11,7 @@
 /**
  * this class is formatting an error message for a logger
  */
-class jLogErrorMessage implements jILoggerMessage {
+class jLogErrorMessage implements jILogMessage {
     protected $category;
     protected $message;
     protected $file;
@@ -20,6 +20,14 @@ class jLogErrorMessage implements jILoggerMessage {
     protected $code;
     protected $format = '%date%\t%ip%\t[%code%]\t%msg%\t%file%\t%line%\n\t%url%\n%params%\n%trace%';
 
+    /**
+     * @param string $category category of the message (error, warning...)
+     * @param integer $code  error code
+     * @param string $message error message
+     * @param string $file  file path + file name where the error appeared
+     * @param integer $line the line where the error appeared
+     * @param array $trace stack trace
+     */
     public function __construct($category, $code, $message, $file, $line, $trace) {
         $this->category = $category;
         $this->message = $message;
@@ -29,18 +37,59 @@ class jLogErrorMessage implements jILoggerMessage {
         $this->trace = $trace;
     }
 
-    public function getCode() {
-        return $this->code;
-    }
-
+    /**
+     * set the pattern to format the message output
+     * @param string $format
+     */
     public function setFormat($format) {
         $this->format = $format;
     }
 
+    /**
+     * @return string error code
+     */
+    public function getCode() {
+        return $this->code;
+    }
+
+    /**
+     * @return string category of the message (error, warning...)
+     */
     public function getCategory() {
         return $this->category;
     }
 
+    /**
+     * @return string error message
+     */
+    public function getMessage() {
+        return $this->message;
+    }
+
+    /**
+     * @return string file path + file name where the error appeared
+     */
+    public function getFile() {
+        return $this->file;
+    }
+
+    /**
+     * @return integer the line where the error appeared
+     */
+    public function getLine() {
+        return $this->line;
+    }
+
+    /**
+     * @return array the stack trace
+     */
+    public function getTrace() {
+        return $this->trace;
+    }
+
+    /**
+     * @return string formated error message
+     */
     public function getFormatedMessage() {
         global $gJCoord, $gJConfig;
 

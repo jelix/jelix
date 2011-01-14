@@ -11,7 +11,7 @@
 /**
  * class that handles a simple message for a logger
  */
-class jLogMessage implements jILoggerMessage {
+class jLogMessage implements jILogMessage {
     /**
      * @var string the category of the message
      */
@@ -29,6 +29,10 @@ class jLogMessage implements jILoggerMessage {
 
     public function getCategory() {
         return $this->category;
+    }
+
+    public function getMessage() {
+        return $this->message;
     }
 
     public function getFormatedMessage() {

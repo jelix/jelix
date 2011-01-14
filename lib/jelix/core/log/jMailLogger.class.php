@@ -19,7 +19,7 @@ class jMailLogger implements jILogger {
     protected $messages = array();
 
     /**
-     * @param jILoggerMessage $message the message to log
+     * @param jILogMessage $message the message to log
      */
     function logMessage($message) {
         $this->messages[] = $message;
