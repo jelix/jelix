@@ -308,7 +308,7 @@ class jCoordinator {
 
         // formatting message
         $messageLog = strtr($conf['messageLogFormat'], array(
-            '%date%' => date("Y-m-d H:i:s"),
+            '%date%' => @date("Y-m-d H:i:s"), // @ because if the timezone is not set, we will have an error here
             '%ip%'   => $remoteAddr,
             '%typeerror%'=>$type,
             '%code%' => $code,
