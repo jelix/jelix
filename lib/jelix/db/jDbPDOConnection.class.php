@@ -3,11 +3,10 @@
 * @package    jelix
 * @subpackage db
 * @author     Laurent Jouanneau
-* @contributor Gwendal Jouannic, Thomas, Julien Issler, BP2I GBIS
+* @contributor Gwendal Jouannic, Thomas, Julien Issler
 * @copyright  2005-2010 Laurent Jouanneau
 * @copyright  2008 Gwendal Jouannic, 2009 Thomas
 * @copyright  2009 Julien Issler
-* @copyright  2011 BP2I GBIS
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
