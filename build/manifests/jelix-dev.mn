@@ -161,6 +161,7 @@ cd lib/jelix-scripts/templates/www
   jsonrpc.php.tpl
   rdf.php.tpl
   soap.php.tpl
+  minify.php.tpl
 cd lib/jelix-scripts/templates/scripts
   cmdline.php.tpl
 cd lib/jelix-scripts/templates/var/config/

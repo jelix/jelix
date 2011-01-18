@@ -7,6 +7,7 @@
    <li><a href="{jurl 'main:hello2'}">Overloaded "Hello world" template</a></li>
    <li><a href="{jurl 'main:testdao'}">Dao test</a></li>
    <li><a href="{jurl 'main:generateerror'}">error on a page</a></li>
+   <li><a href="{jurl 'main:testminify'}">page using minify</a></li>
 </ul>
 
 <h3>Unit tests</h3>

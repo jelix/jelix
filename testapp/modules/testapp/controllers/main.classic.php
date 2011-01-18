@@ -70,4 +70,21 @@ class mainCtrl extends jController {
         $rep = $this->getResponse();
         throw new Exception("here is an error");
     }
+
+
+    function testminify() {
+        global $gJConfig;
+        $gJConfig->jResponseHtml['plugins'] = 'minify';
+        $gJConfig->jResponseHtml['minifyCSS'] = true;
+        $gJConfig->jResponseHtml['minifyJS'] = true;
+        
+        $resp = $this->getResponse('html', true);
+        $resp->bodyTpl = 'testapp~testminify';
+        $resp->addJSLink ($gJConfig->urlengine['basePath'].'testminify/js/s1.js');
+        $resp->addJSLink ($gJConfig->urlengine['basePath'].'testminify/js/s2.js');
+        $resp->addCSSLink($gJConfig->urlengine['basePath'].'testminify/css/style1.css');
+        $resp->addCSSLink($gJConfig->urlengine['basePath'].'testminify/css/style2.css');
+        return $resp;
+    }
+
 }

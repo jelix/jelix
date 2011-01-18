@@ -19,7 +19,6 @@
 */
 require_once(JELIX_LIB_CORE_PATH.'response/jResponseBasicHtml.class.php');
 require_once(JELIX_LIB_PATH.'tpl/jTpl.class.php');
-require_once(JELIX_LIB_PATH.'utils/jMinifier.class.php');
 
 /**
 * HTML response
@@ -72,24 +71,81 @@ class jResponseHtml extends jResponseBasicHtml {
      */
     public $bodyTagAttributes= array();
 
-    /**#@+
-     * content for the head
-     * @var array
+    /**
+     * list of css stylesheet
+     * @var array  key = url, value=link attributes
      */
     protected $_CSSLink = array ();
-    protected $_CSSIELink = array ();
-    protected $_Styles  = array ();
-    protected $_JSLink  = array ();
-    protected $_JSIELink  = array ();
-    protected $_JSCodeBefore  = array ();
-    protected $_JSCode  = array ();
-    protected $_MetaKeywords = array();
-    protected $_MetaDescription = array();
-    protected $_MetaAuthor = '';
-    protected $_MetaGenerator = '';
-    protected $_Link = array();
-    /**#@-*/
 
+    /**
+     * list of css stylesheet for IE
+     * @var array  key = url, value=link attributes + optional parameter _iecondition
+     */
+    protected $_CSSIELink = array ();
+
+    /**
+     * list of CSS code
+     */
+    protected $_Styles  = array ();
+
+    /**
+     * list of js script
+     * @var array  key = url, value=link attributes
+     */
+    protected $_JSLink  = array ();
+
+    /**
+     * list of js script for IE
+     * @var array  key = url, value=link attributes + optional parameter _iecondition
+     */
+    protected $_JSIELink  = array ();
+
+    /**
+     * inline js code to insert before js links
+     * @var array list of js source code
+     */
+    protected $_JSCodeBefore  = array ();
+
+    /**
+     * inline js code to insert after js links
+     * @var array list of js source code
+     */
+    protected $_JSCode  = array ();
+
+    /**
+     * list of keywords to add into a meta keyword tag
+     * @var array  array of strings
+     */
+    protected $_MetaKeywords = array();
+
+    /**
+     * list of descriptions to add into a meta description tag
+     * @var array  array of strings
+     */
+    protected $_MetaDescription = array();
+
+    /**
+     * content of the meta author tag
+     * @var string
+     */
+    protected $_MetaAuthor = '';
+
+    /**
+     * content of the meta generator tag
+     * @var string
+     */
+    protected $_MetaGenerator = '';
+
+    /**
+     * list of information to generate link tags
+     * @var array keys are the href value, valu is an array ('rel','type','title')
+     */
+    protected $_Link = array();
+
+    /**
+     * the end tag to finish tags. it is different if we are in XHTML mode or not
+     * @var string
+     */
     protected $_endTag="/>\n";
 
     /**
@@ -176,11 +232,13 @@ class jResponseHtml extends jResponseBasicHtml {
      *
      * @param string $src the link
      * @param array $params additionnals attributes for the script tag
-     * @param boolean $forIE if true, the script sheet will be only for IE browser
+     * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7')
      */
     public function addJSLink ($src, $params=array(), $forIE=false){
         if($forIE){
             if (!isset ($this->_JSIELink[$src])){
+                if (!is_bool($forIE) && !empty($forIE))
+                    $params['_ieCondition'] = $forIE;
                 $this->_JSIELink[$src] = $params;
             }
         }else{
@@ -189,6 +247,54 @@ class jResponseHtml extends jResponseBasicHtml {
             }
         }
     }
+
+    /**
+     * returns all JS links
+     * @return array  key = url, value=link attributes
+     */
+    public function getJSLinks() { return $this->_JSLink; }
+
+    /**
+     * set all JS links
+     * @param array  $list key = url, value=link attributes
+     */
+    public function setJSLinks($list) { $this->_JSLink = $list; }
+
+    /**
+     * returns all JS links for IE
+     * @return array  key = url, value=link attributes + optional parameter _iecondition
+     */
+    public function getJSIELinks() { return $this->_JSIELink; }
+
+    /**
+     * set all JS links for IE
+     * @param array  $list key = url, value=link attributes
+     */
+    public function setJSIELinks($list) { $this->_JSIELink = $list; }
+
+     /**
+     * returns all CSS links
+     * @var array  key = url, value=link attributes
+     */
+    public function getCSSLinks() { return $this->_CSSLink; }
+
+    /**
+     * set all CSS links
+     * @param array  $list key = url, value=link attributes
+     */
+    public function setCSSLinks($list) { $this->_CSSLink = $list; }
+
+    /**
+     * returns all CSS links for IE
+     * @var array  key = url, value=link attributes + optional parameter _iecondition
+     */
+     public function getCSSIELinks() { return $this->_CSSIELink; }
+
+    /**
+     * set all CSS links for IE
+     * @param array  $list key = url, value=link attributes
+     */
+    public function setCSSIELinks($list) { $this->_CSSIELink = $list; }
 
     /**
      * add a link to a css stylesheet in the document head
@@ -287,182 +393,28 @@ class jResponseHtml extends jResponseBasicHtml {
         }
     }
 
-    protected function outputJsScriptTag( $fileUrl, $scriptParams, $filePath = null ) {
-        global $gJConfig;
+    protected function outputJsScriptTag( $fileUrl, $scriptParams ) {
 
-        $params = '';
-        if( is_array($scriptParams) ) {
-            foreach ($scriptParams as $param_name=>$param_value){
-                $params .= $param_name.'="'. htmlspecialchars($param_value).'" ';
-            }
-        } else {
-            $params = $scriptParams;
+        foreach ($scriptParams as $param_name=>$param_value){
+            if ($param_name=='_ieCondition')
+                continue ;
+            $params .= $param_name.'="'. htmlspecialchars($param_value).'" ';
         }
 
-        $jsFilemtime = '';
-        if( isset($gJConfig->jResponseHtml) && $gJConfig->jResponseHtml['jsUniqueUrlId']
-            && $filePath !== null
-            && (strpos($fileUrl,'http://')===FALSE) //path is not absolute
-          ) {
-            $jsFilemtime = "?".filemtime($filePath);
-        }
-        echo '<script type="text/javascript" src="',htmlspecialchars($fileUrl),$jsFilemtime,'" ',$params,'></script>',"\n";
+        echo '<script type="text/javascript" src="',htmlspecialchars($fileUrl),'" ',$params,'></script>',"\n";
     }
 
-    protected function outputCssLinkTag( $fileUrl, $cssParams, $filePath = null ) {
-        global $gJConfig;
-
-        $params = '';
-        if( is_array($cssParams) ) {
-            foreach ($cssParams as $param_name=>$param_value){
-                $params .= $param_name.'="'. htmlspecialchars($param_value).'" ';
-            }
-        } else {
-            $params = $cssParams;
+    protected function outputCssLinkTag( $fileUrl, $cssParams ) {
+        $params = '';   
+        foreach ($cssParams as $param_name=>$param_value){
+            if ($param_name=='_ieCondition')
+                continue ;
+            $params .= $param_name.'="'. htmlspecialchars($param_value).'" ';
         }
 
-        $cssFilemtime = '';
-        if( isset($gJConfig->jResponseHtml) && $gJConfig->jResponseHtml['cssUniqueUrlId']
-            && $filePath !== null
-            && (strpos($fileUrl,'http://')===FALSE) //path is not absolute
-          ) {
-            $cssFilemtime = "?".filemtime($filePath);
-        }
-        echo '<link type="text/css" href="',htmlspecialchars($fileUrl),$cssFilemtime,'" ',$params,$this->_endTag,"\n";
-    }
-
-    /**
-     * output js links into the <head>
-     */
-    protected function outputJsScripts( &$scriptList ) {
-        global $gJConfig;
-
-        $minifyJsByParams = array();
-        $minifyExcludeJS = array();
-
-        if( isset($gJConfig->jResponseHtml) && $gJConfig->jResponseHtml['minifyExcludeJS'] ) {
-            $minifyExcludeJS = explode( ',', $gJConfig->jResponseHtml['minifyExcludeJS'] );
-        }
-
-        $basePath = $gJConfig->urlengine['basePath'];
-
-        foreach ($scriptList as $src=>$params){
-            //the extra params we may found in there.
-            $scriptParams = '';
-
-            $pathSrc = $src;
-            if ( $basePath != '/' && $basePath != '' ) {
-                    $res = explode($basePath, $src);
-                    if ( count($res) > 1 )
-                        list(,$pathSrc) = $res;
-                }
-
-            $pathIsAbsolute = (strpos($pathSrc,'http://')!==FALSE);
-
-            if( isset($gJConfig->jResponseHtml) && $gJConfig->jResponseHtml['minifyJS'] &&
-                ! $pathIsAbsolute && ! in_array(basename($pathSrc), $minifyExcludeJS) ) {
-                //this file should be minified
-                $sparams=$params;
-                ksort($sparams); //sort to avoid duplicity just because of params order
-                foreach ($sparams as $param_name=>$param_value){
-                    $scriptParams .= $param_name.'="'. htmlspecialchars($param_value).'" ';
-                }
-                $minifyJsByParams[$scriptParams][] = "$src";
-            } else {
-                // current script should not be minified
-                // thus to preserve scripts order we should apply previous pending minifications and generate its script tag
-                // ex: a.js, b.js, c.js, d.js where c should not be minified. script tag generated must be min_a_+_b.js, c.js, min_d.js
-                foreach ($minifyJsByParams as $param_value=>$js_files) {
-                    foreach (jMinifier::minify( $js_files, 'js' ) as $minifiedJs ) {
-                        $this->outputJsScriptTag( $basePath.$minifiedJs, $param_value, JELIX_APP_WWW_PATH.$minifiedJs);
-                    }
-                }
-                // minified operation finished on pending scripts. thus clear js array of scripts to minify :
-                $minifyJsByParams = array();
-
-                $this->outputJsScriptTag( $src, $params, JELIX_APP_WWW_PATH.$pathSrc );
-            }
-        }
-        //minify all pending JS script files (may be all files if none was excluded or had absolute URL)
-        foreach ($minifyJsByParams as $param_value=>$js_files) {
-            foreach (jMinifier::minify( $js_files, 'js' ) as $minifiedJs ) {
-                $this->outputJsScriptTag($basePath.$minifiedJs, $param_value, JELIX_APP_WWW_PATH.$minifiedJs);
-            }
-        }
-    }
-
-    /**
-     * output css link into the <head>
-     */
-    protected function outputCssLinks( &$linkList ) {
-        global $gJConfig;
-
-        $minifyCssByParams = array();
-        $minifyExcludeCSS = array();
-
-        if( isset($gJConfig->jResponseHtml) && $gJConfig->jResponseHtml['minifyExcludeCSS'] ) {
-            $minifyExcludeCSS = explode( ',', $gJConfig->jResponseHtml['minifyExcludeCSS'] );
-        }
-
-        $basePath = $gJConfig->urlengine['basePath'];
-
-        foreach ($linkList as $src=>$params){
-            //the extra params we may found in there.
-            $cssParams = '';
-            
-            $pathSrc = $src;
-            if ( $basePath != '/' && $basePath != '' ) {
-                $res = explode($basePath, $src);
-                if ( count($res) > 1 )
-                    list(,$pathSrc) = $res;
-            }
-
-            $pathIsAbsolute = (strpos($pathSrc,'http://')!==FALSE);
-
-            if( isset($gJConfig->jResponseHtml) && $gJConfig->jResponseHtml['minifyCSS'] &&
-                ! $pathIsAbsolute && ! in_array(basename($pathSrc), $minifyExcludeCSS) ) {
-                //this file should be minified
-                $sparams=$params;
-                ksort($sparams); //sort to avoid duplicity just because of params order
-                foreach ($sparams as $param_name=>$param_value){
-                    if( $param_name != "media" ) {
-                        $cssParams .= $param_name.'="'. htmlspecialchars($param_value).'" ';
-                    }
-                }
-                if(!isset($params['rel']))
-                    $cssParams .='rel="stylesheet" ';
-                if( isset($params['media'] ) ) {
-                    //split for each media if specified
-                    foreach ( explode(',', $params['media']) as $medium) {
-                        $myCssParams = $cssParams . 'media="' . $medium . '" ';
-                        $minifyCssByParams[$myCssParams][] = "$src";
-                    }
-                } else {
-                    $minifyCssByParams[$cssParams][] = "$src";
-                }
-            } else {
-                // current stylesheet should not be minified
-                // thus to preserve stylesheets order we should apply previous pending minifications and generate its link tag
-                // ex: a.css, b.css, c.css, d.css where c should not be minified. script tag genrated must be min_a_+_b.css, c.js, min_d.js
-                foreach ($minifyCssByParams as $param_value=>$css_files) {
-                    foreach (jMinifier::minify( $css_files, 'css' ) as $minifiedCss ) {
-                        $this->outputCssLinkTag( $basePath.$minifiedCss, $param_value, JELIX_APP_WWW_PATH.$minifiedCss);
-                    }
-                }
-                $minifyCssByParams = array();
-                
-                if(!isset($params['rel']))
-                    $params['rel'] ='stylesheet';
-                
-                $this->outputCssLinkTag( $src, $params, JELIX_APP_WWW_PATH.$pathSrc);
-            }
-        }
-        //minify all pending CSS files (may be all files if none was excluded or had absolute URL)
-        foreach ($minifyCssByParams as $param_value=>$css_files) {
-            foreach (jMinifier::minify( $css_files, 'css' ) as $minifiedCss ) {
-                $this->outputCssLinkTag( $basePath.$minifiedCss, $param_value, JELIX_APP_WWW_PATH.$minifiedCss);
-            }
-        }
+        if(!isset($cssParams['rel']))
+            $params .='rel="stylesheet" ';
+        echo '<link type="text/css" href="',htmlspecialchars($fileUrl),'" ',$params,$this->_endTag,"\n";
     }
 
     /**
@@ -497,18 +449,17 @@ class jResponseHtml extends jResponseBasicHtml {
             echo '<meta name="author" content="'.htmlspecialchars($this->_MetaAuthor).'" '.$this->_endTag;
         }
 
-        $this->outputCssLinks( $this->_CSSLink );
+        // css link
+        foreach ($this->_CSSLink as $src=>$params){
+            $this->outputCssLinkTag($src, $params);
+        }
 
         foreach ($this->_CSSIELink as $src=>$params){
             // special params for conditions on IE versions
             if (!isset($params['_ieCondition']))
-                $params['_ieCondition'] = 'IE' ;
+              $params['_ieCondition'] = 'IE' ;
             echo '<!--[if '.$params['_ieCondition'].' ]>';
-
-            unset($params['_ieCondition']);
-            $cssIeLink = array($src=>$params); //make a var to pass it by ref
-            $this->outputCssLinks( $cssIeLink );
-
+            $this->outputCssLinkTag($src, $params);
             echo '<![endif]-->';
         }
 
@@ -537,20 +488,22 @@ class jResponseHtml extends jResponseBasicHtml {
 </script>';
         }
 
-        $this->outputJsScripts( $this->_JSLink );
+        // js link
+        foreach ($this->_JSLink as $src=>$params){
+            $this->outputJsScriptTag($src, $params);
+        }
 
-        if(count($this->_JSIELink)){
-            echo '<!--[if IE]>';
-
-            $this->outputJsScripts( $this->_JSIELink );
-
+        foreach ($this->_JSIELink as $src=>$params){
+            if (!isset($params['_ieCondition']))
+                $params['_ieCondition'] = 'IE' ;
+            echo '<!--[if '.$params['_ieCondition'].' ]>';
+            $this->outputJsScriptTag($src, $params);
             echo '<![endif]-->';
         }
 
         // styles
         if(count($this->_Styles)){
-            echo '<style type="text/css">
-            ';
+            echo "<style type=\"text/css\">\n";
             foreach ($this->_Styles as $selector=>$value){
                 if (strlen ($value)){
                     //il y a une paire clef valeur.

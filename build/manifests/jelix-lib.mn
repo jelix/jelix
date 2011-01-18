@@ -101,6 +101,7 @@ cd lib/jelix/core-modules/jelix/install
   install.php
   upgrade_to_1.3pre.1753_newlog.php
   upgrade_to_1.3pre.1754_newerrormanager.php
+  upgrade_to_1.3pre.1760_minify.php
 cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
@@ -272,7 +273,6 @@ cd lib/jelix/utils/
 * jJsonRpc.class.php
   jMailer.class.php
   jMessage.class.php
-  jMinifier.class.php
   jSmtp.class.php
   jTcpdf.class.php
   jVersionComparator.class.php
@@ -395,6 +395,9 @@ cd lib/jelix/plugins/kvdb/redis/
 
 cd lib/jelix/plugins/logger/firebug
   firebug.logger.php
+
+cd lib/jelix/plugins/htmlresponse/minify
+  minify.htmlresponse.php
 
 cd lib/jelix/plugins/tpl/common
   block.ifacl.php
@@ -578,11 +581,26 @@ cd lib/wshelper
 ! WSDLStruct.class.php
 ! WSException.class.php
 
+cd lib/minify/
+  jelix_minify.php
+  README.txt
+  LICENSE.txt
+
+cd lib/minify/min/
+! config.php
+! groupsConfig.php
+! utils.php
+  README.txt
+
 cd lib/minify/min/lib
 ! JSMinPlus.php
 ! Minify.php
 ! JSMin.php
 ! FirePHP.php
+
+cd lib/minify/min/lib/HTTP
+! ConditionalGet.php
+! Encoder.php
 
 cd lib/minify/min/lib/Minify
 ! YUICompressor.php
@@ -596,6 +614,11 @@ cd lib/minify/min/lib/Minify
 ! HTML.php
 ! Packer.php
 
+cd lib/minify/min/lib/Minify/Cache
+! APC.php
+! File.php
+! Memcache.php
+
 cd lib/minify/min/lib/Minify/CSS
 ! UriRewriter.php
 ! Compressor.php
@@ -608,7 +631,8 @@ cd lib/minify/min/lib/Minify/Controller
 ! Page.php
 ! MinApp.php
 
-
+cd lib/minify/min/lib/Solar
+! Dir.php
 
 cd lib/phpMailer
 ! class.phpmailer.php

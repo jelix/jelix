@@ -46,6 +46,7 @@ cd lib/jelix/installer/
 
 cd lib/jelix/utils/
   jLog.class.php
+  jMinifier.class.php
 
 cd lib/jelix/plugins/tpl/html
   block.formdatas.php

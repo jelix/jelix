@@ -21,6 +21,7 @@ cd testapp/www
   robots.txt
   install.php
   rest.php
+  minify.php
 cd testapp/www/foo
   bar.php
 cd testapp/www/design
@@ -30,6 +31,12 @@ cd testapp/www/tests
 cd testapp/www/qunit
   testsuite.css
   testrunner.js
+cd testapp/www/testminify/css/
+  style1.css
+  style2.css
+cd testapp/www/testminify/js/
+  s1.js
+  s2.js
 cd testapp/modules
   .htaccess
 
@@ -77,6 +84,7 @@ cd testapp/modules/testapp/templates
   forms_liste.tpl
   forms_view.tpl
   soap.tpl
+  testminify.tpl
 cd testapp/modules/testapp/zones
   test.zone.php
   sommaire.zone.php

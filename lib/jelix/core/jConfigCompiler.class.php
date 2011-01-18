@@ -147,76 +147,7 @@ class jConfigCompiler {
 
         $config->_allBasePath = array();
 
-        // retrieve the script path+name.
-        // for cli, it will be the path from the directory were we execute the script (given to the php exec).
-        // for web, it is the path from the root of the url
-
-        if ($pseudoScriptName) {
-            $config->urlengine['urlScript'] = $pseudoScriptName;
-        }
-        else {
-            if($config->urlengine['scriptNameServerVariable'] == '') {
-                $config->urlengine['scriptNameServerVariable'] = self::_findServerName($config->urlengine['entrypointExtension'], $isCli);
-            }
-            $config->urlengine['urlScript'] = $_SERVER[$config->urlengine['scriptNameServerVariable']];
-        }
-        $lastslash = strrpos ($config->urlengine['urlScript'], '/');
-
-        // now we separate the path and the name of the script, and then the basePath
-        if ($isCli) {
-            if ($lastslash === false) {
-                $config->urlengine['urlScriptPath'] = ($pseudoScriptName? JELIX_APP_PATH.'/scripts/': getcwd().'/');
-                $config->urlengine['urlScriptName'] = $config->urlengine['urlScript'];
-            }
-            else {
-                $config->urlengine['urlScriptPath'] = getcwd().'/'.substr ($config->urlengine['urlScript'], 0, $lastslash ).'/';
-                $config->urlengine['urlScriptName'] = substr ($config->urlengine['urlScript'], $lastslash+1);
-            }
-            $basepath = $config->urlengine['urlScriptPath'];
-            $snp = $config->urlengine['urlScriptName'];
-            $config->urlengine['urlScript'] = $basepath.$snp;
-        }
-        else {
-            $config->urlengine['urlScriptPath'] = substr ($config->urlengine['urlScript'], 0, $lastslash ).'/';
-            $config->urlengine['urlScriptName'] = substr ($config->urlengine['urlScript'], $lastslash+1);
-
-            $basepath = $config->urlengine['basePath'];
-            if ($basepath == '') {
-                // for beginners or simple site, we "guess" the base path
-                $basepath = $config->urlengine['urlScriptPath'];
-            }
-            elseif ($basepath != '/') {
-                if($basepath[0] != '/') $basepath='/'.$basepath;
-                if(substr($basepath,-1) != '/') $basepath.='/';
-
-                if ($pseudoScriptName) {
-                    // with pseudoScriptName, we aren't in a true context, we could be in a cli context
-                    // (the installer), and we want the path as when we are in a web context.
-                    // $pseudoScriptName is supposed to be relative to the basePath
-                    $config->urlengine['urlScriptPath'] = substr($basepath,0,-1).$config->urlengine['urlScriptPath'];
-                    $config->urlengine['urlScript'] = $config->urlengine['urlScriptPath'].$config->urlengine['urlScriptName'];
-                }
-                elseif(strpos($config->urlengine['urlScriptPath'], $basepath) !== 0){
-                    throw new Exception('Jelix Error: basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$config->urlengine['urlScriptPath']);
-                }
-            }
-
-            $config->urlengine['basePath'] = $basepath;
-
-            if($config->urlengine['jelixWWWPath'][0] != '/')
-                $config->urlengine['jelixWWWPath'] = $basepath.$config->urlengine['jelixWWWPath'];
-            if($config->urlengine['jqueryPath'][0] != '/')
-                $config->urlengine['jqueryPath'] = $basepath.$config->urlengine['jqueryPath'];
-            $snp = substr($config->urlengine['urlScript'],strlen($basepath));
-        }
-
-        $pos = strrpos($snp, $config->urlengine['entrypointExtension']);
-        if($pos !== false){
-            $snp = substr($snp,0,$pos);
-        }
-        $config->urlengine['urlScriptId'] = $snp;
-        $config->urlengine['urlScriptIdenc'] = rawurlencode($snp);
-
+        self::getPaths($config->urlengine, $pseudoScriptName, $isCli);
         self::_loadModuleInfo($config, $allModuleInfo);
         self::_loadPluginsPathList($config);
 
@@ -464,7 +395,96 @@ class jConfigCompiler {
         }
     }
 
-    static private function _findServerName($ext, $isCli) {
+    /**
+     * calculate miscelaneous path, depending of the server configuration and other informations
+     * in the given array : script path, script name, documentRoot ..
+     * @param array $urlconf  urlengine configuration. scriptNameServerVariable, basePath,
+     * jelixWWWPath, jqueryPath and entrypointExtension should be present
+     */
+    static public function getPaths(&$urlconf, $pseudoScriptName ='', $isCli = false) {
+        // retrieve the script path+name.
+        // for cli, it will be the path from the directory were we execute the script (given to the php exec).
+        // for web, it is the path from the root of the url
+
+        if ($pseudoScriptName) {
+            $urlconf['urlScript'] = $pseudoScriptName;
+        }
+        else {
+            if($urlconf['scriptNameServerVariable'] == '') {
+                $urlconf['scriptNameServerVariable'] = self::findServerName($urlconf['entrypointExtension'], $isCli);
+            }
+            $urlconf['urlScript'] = $_SERVER[$urlconf['scriptNameServerVariable']];
+        }
+        $lastslash = strrpos ($urlconf['urlScript'], '/');
+
+        // now we separate the path and the name of the script, and then the basePath
+        if ($isCli) {
+            if ($lastslash === false) {
+                $urlconf['urlScriptPath'] = ($pseudoScriptName? JELIX_APP_PATH.'/scripts/': getcwd().'/');
+                $urlconf['urlScriptName'] = $urlconf['urlScript'];
+            }
+            else {
+                $urlconf['urlScriptPath'] = getcwd().'/'.substr ($urlconf['urlScript'], 0, $lastslash ).'/';
+                $urlconf['urlScriptName'] = substr ($urlconf['urlScript'], $lastslash+1);
+            }
+            $basepath = $urlconf['urlScriptPath'];
+            $snp = $urlconf['urlScriptName'];
+            $urlconf['urlScript'] = $basepath.$snp;
+        }
+        else {
+            $urlconf['urlScriptPath'] = substr ($urlconf['urlScript'], 0, $lastslash ).'/';
+            $urlconf['urlScriptName'] = substr ($urlconf['urlScript'], $lastslash+1);
+
+            $basepath = $urlconf['basePath'];
+            if ($basepath == '') {
+                // for beginners or simple site, we "guess" the base path
+                $basepath = $urlconf['urlScriptPath'];
+            }
+            elseif ($basepath != '/') {
+                if($basepath[0] != '/') $basepath='/'.$basepath;
+                if(substr($basepath,-1) != '/') $basepath.='/';
+
+                if ($pseudoScriptName) {
+                    // with pseudoScriptName, we aren't in a true context, we could be in a cli context
+                    // (the installer), and we want the path as when we are in a web context.
+                    // $pseudoScriptName is supposed to be relative to the basePath
+                    $urlconf['urlScriptPath'] = substr($basepath,0,-1).$urlconf['urlScriptPath'];
+                    $urlconf['urlScript'] = $urlconf['urlScriptPath'].$urlconf['urlScriptName'];
+                }
+                elseif(strpos($urlconf['urlScriptPath'], $basepath) !== 0){
+                    throw new Exception('Jelix Error: basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$urlconf['urlScriptPath']);
+                }
+            }
+
+            $urlconf['basePath'] = $basepath;
+
+            if($urlconf['jelixWWWPath'][0] != '/')
+                $urlconf['jelixWWWPath'] = $basepath.$urlconf['jelixWWWPath'];
+            if($urlconf['jqueryPath'][0] != '/')
+                $urlconf['jqueryPath'] = $basepath.$urlconf['jqueryPath'];
+            $snp = substr($urlconf['urlScript'],strlen($basepath));
+
+            if ($basepath == '/')
+                $urlconf['documentRoot'] = JELIX_APP_WWW_PATH;
+            else if(strpos(JELIX_APP_WWW_PATH, $basepath) === false) {
+                if (isset($_SERVER['DOCUMENT_ROOT']))
+                    $urlconf['documentRoot'] = $_SERVER['DOCUMENT_ROOT'];
+                else
+                    $urlconf['documentRoot'] = JELIX_APP_WWW_PATH;
+            }
+            else
+                $urlconf['documentRoot'] = substr(JELIX_APP_WWW_PATH, 0, - (strlen($basepath)));
+        }
+
+        $pos = strrpos($snp, $urlconf['entrypointExtension']);
+        if($pos !== false){
+            $snp = substr($snp,0,$pos);
+        }
+        $urlconf['urlScriptId'] = $snp;
+        $urlconf['urlScriptIdenc'] = rawurlencode($snp);
+    }
+
+    static public function findServerName($ext = '.php', $isCli = false) {
         $varname = '';
         $extlen = strlen($ext);
 

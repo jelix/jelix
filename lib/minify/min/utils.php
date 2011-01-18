@@ -80,8 +80,9 @@ function _Minify_getBuild($group)
 {
     static $builds = array();
     static $gc = false;
+    global $min_groupConfigPath;
     if (false === $gc) {
-        $gc = (require dirname(__FILE__) . '/groupsConfig.php');
+        $gc = (require $min_groupConfigPath);
     }
     if (! isset($builds[$group])) {
         $builds[$group] = new Minify_Build($gc[$group]);
