@@ -80,3 +80,6 @@ cd lib/jelix/forms/controls
   jFormsControlDate.class.php
   jFormsControlDatetime.class.php
   jFormsControlWikiEditor.class.php
+
+cd lib/jelix/plugins/htmlresponse/debugbar/
+* errors.debugbar.php

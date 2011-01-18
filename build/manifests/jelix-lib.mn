@@ -399,6 +399,9 @@ cd lib/jelix/plugins/logger/firebug
 cd lib/jelix/plugins/htmlresponse/minify
   minify.htmlresponse.php
 
+cd lib/jelix/plugins/htmlresponse/debugbar
+* debugbar.htmlresponse.php
+
 cd lib/jelix/plugins/tpl/common
   block.ifacl.php
   block.ifnotacl.php

@@ -109,6 +109,22 @@ foo__bar = on
 news = on
 soap = on
 
+[jResponseHtml]
+; list of active plugins for jResponseHtml
+plugins = debugbar
+
+
+[logger]
+; list of loggers for each categories of log messages
+; default category is the category used when a given category is not declared here
+; available loggers : file, syslog, firebug, mail, memory. see plugins for others
+default=file,memory
+error= file,memory
+warning=file,memory
+notice=file,memory
+deprecated=memory
+strict=memory
+
 [fileLogger]
 default=messages.log
 

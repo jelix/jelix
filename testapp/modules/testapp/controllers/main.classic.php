@@ -67,8 +67,22 @@ class mainCtrl extends jController {
    }
 
     function generateerror() {
-        $rep = $this->getResponse();
+        $rep = $this->getResponse('html');
         throw new Exception("here is an error");
+    }
+
+    function generatewarning(){
+
+      $rep = $this->getResponse('html');
+      $rep->title = 'This is a test for the debug bar';
+      $tpl = new jTpl();
+
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple warning", E_USER_WARNING);
+
+      $rep->body->assign('MAIN', $tpl->fetch('loremipsum'));
+
+      return $rep;
     }
 
 

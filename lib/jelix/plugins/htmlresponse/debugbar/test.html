@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>test</title>
+    <link type="text/css" href="debugbar.css" media="all" rel="stylesheet" />
+    <script type="text/javascript" src="debugbar.js"></script>
+    <script type="text/javascript" src="errors.debugbar.js"></script>
+    <style type="text/css">
+    
+#jxdb-errors li h5 a { background-image: url(icons/bullet_toggle_plus.png);}
+#jxdb-errors li.jxdb-opened  h5 a  {background-image: url(icons/bullet_toggle_minus.png);}
+#jxdb-errors li.jxdb-msg-error h5 span {background-image: url(icons/exclamation.png);}
+#jxdb-errors li.jxdb-msg-notice h5 span {background-image: url(icons/information.png);}
+#jxdb-errors li.jxdb-msg-warning h5 span {background-image: url(icons/error.png); }
+    </style>
+</head>
+<body>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar laoreet lacinia. Pellentesque luctus, massa quis tincidunt faucibus,
+sem neque sollicitudin lacus, nec iaculis tortor augue sit amet augue. Morbi scelerisque, nunc vitae luctus feugiat, nibh velit condimentum
+odio, eu convallis metus leo sodales nibh. Etiam at risus et ante ornare tincidunt id non nisi. Fusce ullamcorper massa a risus semper ut
+tempus sapien faucibus. Suspendisse potenti. Aliquam facilisis ultricies lobortis.</p>
+
+<p>Curabitur ornare elit non risus pharetra sed posuere
+lectus tincidunt. Integer varius, turpis id semper facilisis, nisi nibh tempor justo, quis tempor nibh quam sed diam. Donec enim orci,
+volutpat vitae accumsan eu, consequat vel tellus. Sed at diam ut magna tempor varius.</p>
+
+<p>Vivamus quis turpis sem, sit amet ultricies lectus. Vestibulum suscipit, nisl eu auctor auctor, est tellus vulputate felis, at ultricies
+magna turpis ut orci. Sed a arcu enim, non ultrices neque. In hac habitasse platea dictumst. In sit amet tellus vitae magna pel</p>
+
+<p>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non, pulvinar a urna. Morbi venenatis, enim sit amet
+imperdiet blandit, quam ligula pellentesque lacus, lobortis ultrices lacus diam in mauris. Cum sociis natoque penatibus et magnis dis
+parturient montes, nascetur ridiculus mus. Etiam in libero ac augue tincidunt facilisis volutpat sit amet leo. Pellentesque habitant morbi
+tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia urna eget erat bibendum interdum. </p>
+
+
+<div id="jxdb">
+    <div id="jxdb-header">
+        <a href="javascript:jxdb.selectTab('jxdb-panel-jelix');"><img src="jelix-dbg.png" alt="Jelix debug toolbar"/></a>
+
+        <span><a href="javascript:jxdb.selectTab('jxdb-panel-1');" title="Configuration"><img src="icons/wrench.png" alt="config"/></a></span> 
+        <span><a href="javascript:jxdb.selectTab('jxdb-panel-2');" title="13 errors"><img src="icons/exclamation.png" alt="errors"/> 13</a></span> 
+        <span><a href="javascript:jxdb.selectTab('jxdb-panel-3');"><img src="icons/database.png" /> 5</a></span>
+        <span><img src="icons/time.png" /> 150 ms</span>
+        <span> 20KB</span>
+        <span> request</span>
+
+        <a href="javascript:jxdb.close();"><img src="icons/cancel.png" alt="close" title="click to close the debug toolbar"/></a>
+    </div>
+    <div id="jxdb-tabpanels">
+        <div id="jxdb-panel-jelix" class="jxdb-tabpanel" style="display:none">
+            <ul>
+                <li>Jelix version 1.3</li>
+                <li>Move the debug bar <a id="jxdb-pjlx-a-right" href="javascript:jxdb.moveTo('r')">to right</a>
+                <a href="javascript:jxdb.moveTo('l')" id="jxdb-pjlx-a-left">to left</a></li>
+            </ul>
+        </div>
+        <div id="jxdb-panel-1" class="jxdb-tabpanel" style="display:none">
+                <h3>Configuration</h3>
+                <ul>
+                    <li>configuration variables: TODO</li>
+                </ul>
+                    
+        </div>
+        <div id="jxdb-panel-2" class="jxdb-tabpanel" style="display:none">
+            <ul id="jxdb-errors">
+                <li class="jxdb-msg-error">
+                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <div>
+                    <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <table>
+                        <tr>
+                            <td>0</td>
+                            <td>header()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jResponse.class.php</td>
+                            <td>129</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>jResponse->sendHttpHeaders()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>169</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>jResponseHtml->output()	</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>202</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>jCoordinator->process()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+                    </div>
+                </li>
+                <li class="jxdb-msg-notice">
+                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Undefined variable: gJConfig</span></a></h5>
+                    <div>
+                    <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <table>
+                        <tr>
+                            <td>0</td>
+                            <td>minifyRHTMLPlugin->beforeOutput()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>257</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>jResponseHtml->output()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>207</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>jCoordinator->process()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+                    </div>
+                </li>
+                <li class="jxdb-msg-notice">
+                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <div>
+                    <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <table>
+                        <tr>
+                            <td>0</td>
+                            <td>minifyRHTMLPlugin->beforeOutput()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>257</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>jResponseHtml->output()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>207</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>jCoordinator->process()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+                    </div>
+                </li>
+                <li class="jxdb-msg-notice">
+                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <div>
+                <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <table>
+                        <tr>
+                            <td>0</td>
+                            <td>minifyRHTMLPlugin->beforeOutput()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>257</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>jResponseHtml->output()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>207</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>jCoordinator->process()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+                    </div>
+                </li>
+                <li class="jxdb-msg-warning">
+                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <div>
+                <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <table>
+                        <tr>
+                            <td>0</td>
+                            <td>minifyRHTMLPlugin->beforeOutput()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>257</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>jResponseHtml->output()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>207</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>jCoordinator->process()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+                    </div>
+                </li>
+                <li class="jxdb-msg-warning">
+                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <div>
+                <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <table>
+                        <tr>
+                            <td>0</td>
+                            <td>minifyRHTMLPlugin->beforeOutput()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>257</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>jResponseHtml->output()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>207</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>jCoordinator->process()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+                    </div>
+                </li>
+                <li class="jxdb-msg-warning">
+                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <div>
+                <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <table>
+                        <tr>
+                            <td>0</td>
+                            <td>minifyRHTMLPlugin->beforeOutput()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>257</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>jResponseHtml->output()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>207</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>jCoordinator->process()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+                    </div>
+                </li>
+                <li class="jxdb-msg-warning">
+                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <div>
+                    <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <table>
+                        <tr>
+                            <td>0</td>
+                            <td>minifyRHTMLPlugin->beforeOutput()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>257</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>jResponseHtml->output()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>207</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>jCoordinator->process()</td>
+                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+                    </div>
+                </li>
+            </dl>
+        </div>
+        <div id="jxdb-panel-3" class="jxdb-tabpanel" style="display:none">
+                <h3>Queries</h3>
+                <p>TODO...</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

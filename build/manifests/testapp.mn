@@ -85,6 +85,7 @@ cd testapp/modules/testapp/templates
   forms_view.tpl
   soap.tpl
   testminify.tpl
+  loremipsum.tpl
 cd testapp/modules/testapp/zones
   test.zone.php
   sommaire.zone.php
