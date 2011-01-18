@@ -381,7 +381,7 @@ class jCoordinator {
     }
 
     /**
-    * gets a given plugin if registered
+    * gets a given coordinator plugin if registered
     * @param string   $pluginName   the name of the plugin
     * @param boolean  $required  says if the plugin is required or not. If true, will generate an exception if the plugin is not registered.
     * @return jICoordPlugin
@@ -400,7 +400,7 @@ class jCoordinator {
     }
 
     /**
-     * load a plugin from a plugin directory
+     * load a plugin from a plugin directory (any type of plugins)
      * @param string $name the name of the plugin
      * @param string $type the type of the plugin
      * @param string $suffix the suffix of the filename
@@ -431,7 +431,7 @@ class jCoordinator {
     }
 
     /**
-    * Says if the given plugin $name is enabled
+    * Says if the given coordinator plugin $name is enabled
     * @param string $pluginName
     * @return boolean true : plugin is ok
     */

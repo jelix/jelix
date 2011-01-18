@@ -8,6 +8,40 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+
+/**
+ * interface for plugins for jResponseBasicHtml or jResponseHtml, which allows
+ * to make changes in the response at several step
+ */
+interface jIHTMLResponsePlugin {
+
+    public function __construct(jResponse $c);
+
+    /**
+     * called just before the jResponseBasicHtml::doAfterActions() call
+     */
+    public function afterAction();
+
+    /**
+     * called just before the final output. This is the opportunity
+     * to make changes before the head and body output. At this step
+     * the main content (if any) is already generated.
+     */
+    public function beforeOutput();
+
+    /**
+     * called when the content is generated, and potentially sent, except
+     * the body end tag and the html end tags. This method can output
+     * directly some contents.
+     */
+    public function atBottom();
+
+    /**
+     * called just before the output of an error page
+     */
+    public function beforeOutputError();
+}
+
 /**
  * Basic HTML response. the HTML content should be provided by a simple php file.
  * @package  jelix
@@ -68,14 +102,48 @@ class jResponseBasicHtml extends jResponse {
     public $htmlFile = '';
 
     /**
+     * list of plugins
+     * @var array  array of jIHTMLResponsePlugin
+     * @since 1.3a1
+     */
+    protected $_plugins;
+
+    /**
     * constructor;
     * setup the charset, the lang
     */
     function __construct (){
-        global $gJConfig;
+        global $gJConfig, $gJCoord;
         $this->_charset = $gJConfig->charset;
         $this->_lang = $gJConfig->locale;
+
+        // load plugins
+        $plugins = $gJConfig->jResponseHtml['plugins'];
+        if ($plugins) {
+            $plugins = preg_split('/ *, */', $plugins);
+            foreach ($plugins as $name) {
+                if (!$name)
+                    continue;
+                $plugin = $gJCoord->loadPlugin($name, 'htmlresponse', '.htmlresponse.php', $name.'HTMLResponsePlugin', $this);
+                if ($plugin)
+                    $this->plugins[$name] = $plugin;
+                // do nothing if the plugin does not exist, we could be already into the error handle
+            }
+        }
+
         parent::__construct();
+    }
+
+    /**
+     * return the corresponding plugin
+     * @param string $name the name of the plugin
+     * @return jIHTMLResponsePlugin|null the plugin or null if it isn't loaded
+     * @since 1.3a1
+     */
+    function getPlugin($name) {
+        if (isset($this->plugins[$name]))
+            return $this->plugins[$name];
+        return null;
     }
 
     /**
@@ -120,19 +188,31 @@ class jResponseBasicHtml extends jResponse {
      */
     public function output(){
 
+        foreach($this->plugins as $name=>$plugin)
+            $plugin->afterAction();
+
         $this->doAfterActions();
-        $this->setContentType();
-        $this->sendHttpHeaders();
 
         if ($this->htmlFile == '')
             throw new Exception('static page is missing');
 
+        $this->setContentType();
+
         jLog::outputLog($this);
+
+        foreach($this->plugins as $name=>$plugin)
+            $plugin->beforeOutput();
 
         $HEADBOTTOM = implode("\n", $this->_headBottom);
         $BODYTOP = implode("\n", $this->_bodyTop);
         $BODYBOTTOM = implode("\n", $this->_bodyBottom);
 
+        ob_start();
+        foreach($this->plugins as $name=>$plugin)
+            $plugin->atBottom();
+        $BODYBOTTOM .= ob_get_clean();
+
+        $this->sendHttpHeaders();
         include($this->htmlFile);
 
         return true;
@@ -141,7 +221,7 @@ class jResponseBasicHtml extends jResponse {
     /**
      * The method you can overload in your inherited html response
      * overload it if you want to add processes (stylesheet, head settings, additionnal content etc..)
-     * after all actions
+     * after any actions
      * @since 1.1
      */
     protected function doAfterActions(){
@@ -152,8 +232,6 @@ class jResponseBasicHtml extends jResponse {
      * output errors
      */
     public function outputErrors(){
-        header("HTTP/1.0 500 Internal Server Error");
-        header('Content-Type: text/html;charset='.$this->_charset);
 
         if (file_exists(JELIX_APP_PATH.'response/error.en_US.php'))
             $file = JELIX_APP_PATH.'response/error.en_US.php';
@@ -166,12 +244,15 @@ class jResponseBasicHtml extends jResponse {
 
         jLog::outputLog($this);
 
+        foreach($this->plugins as $name=>$plugin)
+            $plugin->beforeOutputError();
+
         $HEADBOTTOM = implode("\n", $this->_headBottom);
         $BODYTOP = implode("\n", $this->_bodyTop);
         $BODYBOTTOM = implode("\n", $this->_bodyBottom);
 
         header("HTTP/1.1 500 Internal jelix error");
-        header('Content-type: text/html');
+        header('Content-Type: text/html;charset='.$this->_charset);
         include($file);
     }
 
@@ -182,7 +263,6 @@ class jResponseBasicHtml extends jResponse {
     public function setXhtmlOutput($xhtml = true){
         $this->_isXhtml = $xhtml;
     }
-
 
     /**
      * says if the response will be xhtml or html

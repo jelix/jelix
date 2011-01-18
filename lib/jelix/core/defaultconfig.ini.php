@@ -102,6 +102,9 @@ htmlauth = jResponseHtml
 sitemap = jResponseSitemap
 
 [jResponseHtml]
+; list of active plugins for jResponseHtml
+plugins =
+
 ;concatenate and minify CSS and/or JS files :
 minifyCSS = off
 minifyJS = off

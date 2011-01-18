@@ -113,7 +113,11 @@ class jResponseHtml extends jResponseBasicHtml {
      *
      * @return boolean    true if the generated content is ok
      */
-    final public function output(){
+    public function output(){
+
+        foreach($this->plugins as $name=>$plugin)
+            $plugin->afterAction();
+
         $this->doAfterActions();
 
         $this->setContentType();
@@ -130,6 +134,9 @@ class jResponseHtml extends jResponseBasicHtml {
         // retrieve errors messages and log messages
         jLog::outputLog($this);
 
+        foreach($this->plugins as $name=>$plugin)
+            $plugin->beforeOutput();
+
         // now let's output the html content
         $this->sendHttpHeaders();
         $this->outputDoctype();
@@ -142,10 +149,14 @@ class jResponseHtml extends jResponseBasicHtml {
         echo implode("\n",$this->_bodyTop);
         echo $content;
         echo implode("\n",$this->_bodyBottom);
+
+        foreach($this->plugins as $name=>$plugin)
+            $plugin->atBottom();
+
         echo '</body></html>';
         return true;
     }
-    
+
     /**
      * add a generic link to the head
      * 
@@ -154,7 +165,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param string $type  mime type of the ressource
      * @param string $title
      */ 
-    final public function addLink($href, $rel, $type='', $title='') {
+    public function addLink($href, $rel, $type='', $title='') {
         $this->_Link[$href] = array($rel, $type, $title);
     }
 
@@ -167,7 +178,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param array $params additionnals attributes for the script tag
      * @param boolean $forIE if true, the script sheet will be only for IE browser
      */
-    final public function addJSLink ($src, $params=array(), $forIE=false){
+    public function addJSLink ($src, $params=array(), $forIE=false){
         if($forIE){
             if (!isset ($this->_JSIELink[$src])){
                 $this->_JSIELink[$src] = $params;
@@ -188,7 +199,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param array $params additionnals attributes for the link tag
      * @param mixed $forIE if true, the style sheet will be only for IE browser. string values possible (ex:'lt IE 7')
      */
-    final public function addCSSLink ($src, $params=array (), $forIE=false){
+    public function addCSSLink ($src, $params=array (), $forIE=false){
         if($forIE){
             if (!isset ($this->_CSSIELink[$src])){
                 if (!is_bool($forIE) && !empty($forIE))
@@ -207,7 +218,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param string $selector css selector
      * @param string $def      css properties for the given selector
      */
-    final public function addStyle ($selector, $def=null){
+    public function addStyle ($selector, $def=null){
         if (!isset ($this->_Styles[$selector])){
             $this->_Styles[$selector] = $def;
         }
@@ -218,7 +229,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param string $code  javascript source code
      * @param boolean $before will insert the code before js links if true
      */
-    final public function addJSCode ($code, $before = false){
+    public function addJSCode ($code, $before = false){
         if ($before)
             $this->_JSCodeBefore[] = $code;
         else
@@ -231,7 +242,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param string $content keywords
      * @since 1.0b1
      */
-    final public function addMetaKeywords ($content){
+    public function addMetaKeywords ($content){
         $this->_MetaKeywords[] = $content;
     }
     /**
@@ -240,7 +251,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param string $content a description
      * @since 1.0b1
      */
-    final public function addMetaDescription ($content){
+    public function addMetaDescription ($content){
         $this->_MetaDescription[] = $content;
     }
     /**
@@ -249,7 +260,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param string $content author(s)
      * @since 1.2
      */
-    final public function addMetaAuthor($content){
+    public function addMetaAuthor($content){
         $this->_MetaAuthor = $content;
     }
     /**
@@ -258,7 +269,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param string $content generator
      * @since 1.2
      */
-    final public function addMetaGenerator($content){
+    public function addMetaGenerator($content){
         $this->_MetaGenerator = $content;
     }
     /**
@@ -276,7 +287,7 @@ class jResponseHtml extends jResponseBasicHtml {
         }
     }
 
-    final protected function outputJsScriptTag( $fileUrl, $scriptParams, $filePath = null ) {
+    protected function outputJsScriptTag( $fileUrl, $scriptParams, $filePath = null ) {
         global $gJConfig;
 
         $params = '';
@@ -298,9 +309,7 @@ class jResponseHtml extends jResponseBasicHtml {
         echo '<script type="text/javascript" src="',htmlspecialchars($fileUrl),$jsFilemtime,'" ',$params,'></script>',"\n";
     }
 
-
-
-    final protected function outputCssLinkTag( $fileUrl, $cssParams, $filePath = null ) {
+    protected function outputCssLinkTag( $fileUrl, $cssParams, $filePath = null ) {
         global $gJConfig;
 
         $params = '';
@@ -325,7 +334,7 @@ class jResponseHtml extends jResponseBasicHtml {
     /**
      * output js links into the <head>
      */
-    final protected function outputJsScripts( &$scriptList ) {
+    protected function outputJsScripts( &$scriptList ) {
         global $gJConfig;
 
         $minifyJsByParams = array();
@@ -385,7 +394,7 @@ class jResponseHtml extends jResponseBasicHtml {
     /**
      * output css link into the <head>
      */
-    final protected function outputCssLinks( &$linkList ) {
+    protected function outputCssLinks( &$linkList ) {
         global $gJConfig;
 
         $minifyCssByParams = array();
@@ -459,7 +468,7 @@ class jResponseHtml extends jResponseBasicHtml {
     /**
      * generate the content of the <head> content
      */
-    final protected function outputHtmlHeader (){
+    protected function outputHtmlHeader (){
         global $gJConfig;
 
         echo '<head>'."\n";
@@ -569,7 +578,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * used to erase some head properties
      * @param array $what list of one or many of this strings : 'CSSLink', 'CSSIELink', 'Styles', 'JSLink', 'JSIELink', 'JSCode', 'Others','MetaKeywords','MetaDescription'. If null, it cleans all values.
      */
-    final public function clearHtmlHeader ($what=null){
+    public function clearHtmlHeader ($what=null){
         $cleanable = array ('CSSLink', 'CSSIELink', 'Styles', 'JSLink','JSIELink', 'JSCode', 'Others','MetaKeywords','MetaDescription');
         if($what==null)
             $what= $cleanable;
@@ -585,7 +594,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * change the type of html for the output
      * @param boolean $xhtml true if you want xhtml, false if you want html
      */
-    final public function setXhtmlOutput($xhtml = true){
+    public function setXhtmlOutput($xhtml = true){
         $this->_isXhtml = $xhtml;
         if($xhtml)
             $this->_endTag = "/>\n";
@@ -598,7 +607,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param boolean $val true for strict, false for transitional
      * @since 1.1.3
      */
-    final public function strictDoctype($val = true){
+    public function strictDoctype($val = true){
         $this->_strictDoctype = $val;
     }
 
@@ -606,6 +615,6 @@ class jResponseHtml extends jResponseBasicHtml {
      * return the end of a html tag : "/>" or ">", depending if it will generate xhtml or html
      * @return string
      */
-    final public function endTag(){ return $this->_endTag;}
+    public function endTag(){ return $this->_endTag;}
 
 }
