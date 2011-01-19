@@ -3,7 +3,7 @@
 * @package     jelix
 * @author      Laurent Jouanneau
 * @contributor Kévin Lepeltier
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2011 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -35,10 +35,6 @@ $BUILD_OPTIONS = array(
 'EDITION_NAME'=> array(
     "The edition name of the version (optional)",
     '',
-    ),
-'ENABLE_PHP_JSON'=>array(
-    "true if jelix can use php json api (api included in PHP>=5.2)",
-    false,
     ),
 'ENABLE_PHP_XMLRPC'=>array(
     "true if jelix can use php xmlrpc api",
@@ -190,12 +186,10 @@ else
 if($PHP_VERSION_TARGET){
     if(version_compare($PHP_VERSION_TARGET, '5.3') > -1){
         // filter and json are in php >=5.2
-        $ENABLE_PHP_JSON = 1;
         $PHP53 = 1;
         $PHP53ORMORE = 1;
     }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
         // filter and json are in php >=5.2
-        $ENABLE_PHP_JSON = 1;
         $PHP52 = 1;
         $PHP52ORMORE = 1;
     }elseif(version_compare($PHP_VERSION_TARGET, '5.1') > -1){
@@ -206,14 +200,12 @@ if($PHP_VERSION_TARGET){
     }
 }else{
     // no defined target, so php 5.2
-    $ENABLE_PHP_JSON = 1;
     $PHP52=1;
     $PHP2ORMORE=1;
 }
 
 $BUILD_FLAGS = 0;
 if($ENABLE_PHP_JELIX)  $BUILD_FLAGS |=1;
-if($ENABLE_PHP_JSON)  $BUILD_FLAGS |=2;
 if($ENABLE_PHP_XMLRPC)  $BUILD_FLAGS |=4;
 
 switch($WITH_BYTECODE_CACHE){
@@ -286,9 +278,6 @@ jManifest::$stripComment = false;
 if($ENABLE_DEVELOPER){
     jManifest::process('build/manifests/jelix-dev.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
-if(!$ENABLE_PHP_JSON){
-    jManifest::process('build/manifests/lib-json.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
-}
 jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , ENV::getAll());
 jManifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
 jManifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
@@ -327,7 +316,7 @@ file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // creation du fichier d'infos sur le build
 $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'HG_REVISION',
-    'ENABLE_PHP_JSON', 'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
+    'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
 
 $infos = '; --- build date:  '.date('Y-m-d H:i')."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);

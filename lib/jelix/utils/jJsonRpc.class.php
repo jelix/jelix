@@ -4,18 +4,12 @@
 * @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Julien ISSLER
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2011 Laurent Jouanneau
 * @copyright   2007 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-#ifnot ENABLE_PHP_JSON
-/**
- *
- */
-require_once (LIB_PATH.'json/JSON.php');
-#endif
 /**
  * object which encode and decode a jsonrpc request and response
  * @package    jelix
@@ -33,16 +27,7 @@ class jJsonRpc {
      */
     public static function decodeRequest($content){
         // {"method":.. , "params":.. , "id":.. }
-#if ENABLE_PHP_JSON
         $obj = json_decode($content,true);
-#else
-        $json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
-        $obj = $json->decode($content);
-        /*
-        $obj->method
-        $obj->params
-        $obj->id*/
-#endif
         return $obj;
     }
 
@@ -53,14 +38,7 @@ class jJsonRpc {
      * @return string jsonrcp request content
      */
     public static function encodeRequest($methodname, $params, $id=1){
-
-#if ENABLE_PHP_JSON
         return '{"method":"'.$methodname.'","params":'.json_encode($params).',"id":'.json_encode($id).'}';
-#else
-        $json = new Services_JSON();
-        return '{"method":"'.$methodname.'","params":'.$json->encode($params).',"id":'.$json->encode($id).'}';
-#endif
-
     }
 
     /**
@@ -70,13 +48,7 @@ class jJsonRpc {
      */
     public static function decodeResponse($content){
         // {result:.. , error:.. , id:.. }
-#if ENABLE_PHP_JSON
         return json_decode($content,true);
-#else
-        $json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
-        return $json->decode($content);
-#endif
-
     }
 
     /**
@@ -85,12 +57,7 @@ class jJsonRpc {
      * @return string encoded response
      */
     public static function encodeResponse($params, $id=1){
-#if ENABLE_PHP_JSON
         return '{"result":'.json_encode($params).',"error":null,"id":'.json_encode($id).'}';
-#else
-        $json = new Services_JSON();
-        return '{"result":'.$json->encode($params).',"error":null,"id":'.$json->encode($id).'}';
-#endif
     }
 
     /**
@@ -100,12 +67,7 @@ class jJsonRpc {
      * @return string encoded response
      */
     public static function encodeFaultResponse($code, $message, $id=1){
-#if ENABLE_PHP_JSON
         return '{"result":null,"error":{"code": '.json_encode($code).', "string":'.json_encode($message).' },"id":'.json_encode($id).'}';
-#else
-        $json = new Services_JSON();
-        return '{"result":null,"error":{"code": '.$json->encode($code).', "string":'.$json->encode($message).' },"id":'.$json->encode($id).'}';
-#endif
     }
 }
 

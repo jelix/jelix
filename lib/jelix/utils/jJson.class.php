@@ -3,26 +3,11 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Laurent Jouanneau
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2011 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-#ifnot ENABLE_PHP_JSON
-/**
- *
- */
-require_once (LIB_PATH.'json/JSON.php');
-
-/**
- * object which encode or decode a php variable to or from JSON
- * @package    jelix
- * @subpackage utils
- */
-class jJson extends Services_JSON {
-
-}
-#else
 define('SERVICES_JSON_STRICT_TYPE', 0);
 define('SERVICES_JSON_LOOSE_TYPE', 16);
 
@@ -46,8 +31,7 @@ class jJson {
      *                                   "{...}" syntax creates associative arrays
      *                                   instead of objects in decode().
      */
-    function jJSON($use = 0)
-    {
+    function jJSON($use = 0) {
         $this->use = $use;
     }
 
@@ -63,7 +47,6 @@ class jJson {
         return json_encode($var);
     }
 
-
    /**
     * decodes a JSON string into appropriate variable
     *
@@ -75,7 +58,5 @@ class jJson {
     function decode($str) {
         return json_decode($str, ($this->use == SERVICES_JSON_LOOSE_TYPE) );
     }
-
 }
-#endif
 

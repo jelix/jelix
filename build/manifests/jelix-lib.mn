@@ -60,7 +60,7 @@ cd lib/jelix/core/response
   jResponseBasicHtml.class.php
   jResponseHtml.class.php
   jResponseJsonrpc.class.php
-* jResponseJson.class.php
+  jResponseJson.class.php
   jResponseRedirect.class.php
   jResponseRedirectUrl.class.php
   jResponseText.class.php
@@ -269,8 +269,8 @@ cd lib/jelix/utils/
   jIniFile.class.php
   jIniFileModifier.class.php
   jIniMultiFilesModifier.class.php
-* jJson.class.php
-* jJsonRpc.class.php
+  jJson.class.php
+  jJsonRpc.class.php
   jMailer.class.php
   jMessage.class.php
   jSmtp.class.php
