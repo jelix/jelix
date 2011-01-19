@@ -4,7 +4,7 @@
 * @subpackage   core
 * @author       Laurent Jouanneau
 * @contributor  Thibault Piront (nuKs), Christophe Thiriot, Philippe Schelté
-* @copyright    2006-2009 Laurent Jouanneau
+* @copyright    2006-2011 Laurent Jouanneau
 * @copyright    2007 Thibault Piront, 2008 Christophe Thiriot, 2008 Philippe Schelté
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -169,15 +169,11 @@ class jConfigCompiler {
         self::_initResponsesPath($config->_coreResponses);
 
         if (trim($config->timeZone) === '') {
-#if PHP50
-            $config->timeZone = "Europe/Paris";
-#else
             $tz = ini_get('date.timezone');
             if ($tz != '')
                 $config->timeZone = $tz;
             else
                 $config->timeZone = "Europe/Paris";
-#endif
         }
 
         if($config->sessions['storage'] == 'files'){

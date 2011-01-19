@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2011 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDbToolsMysql, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -103,12 +103,7 @@ class mysqlDbTools extends jDbTools {
       'circle'          =>array('varchar',    'varchar',    null,       null,       0,     24),
       'cidr'            =>array('varchar',    'varchar',    null,       null,       0,     24),
       'inet'            =>array('varchar',    'varchar',    null,       null,       0,     24),
-#if PHP50 || PHP51
-      // FIXME !! bad maximum value
-      'macaddr'         =>array('integer',    'integer',    0,          0xFFFFFFFF, null,       null),
-#else
       'macaddr'         =>array('integer',    'integer',    0,          0xFFFFFFFFFFFF, null,       null),
-#endif
       'bit varying'     =>array('varchar',    'varchar',    null,       null,       0,     65535),
       'arrays'          =>array('varchar',    'varchar',    null,       null,       0,     65535),
       'complex types'   =>array('varchar',    'varchar',    null,       null,       0,     65535),

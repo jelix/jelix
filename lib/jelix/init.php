@@ -12,14 +12,14 @@
 #if ENABLE_OPTIMIZED_SOURCE
 * @author Croes Gerald
 * @contributor Loic Mathaud, Julien Issler
-* @copyright 2005-2010 Laurent Jouanneau
+* @copyright 2005-2011 Laurent Jouanneau
 * @copyright 2001-2005 CopixTeam
 * @copyright 2006 Loic Mathaud
 * @copyright 2007-2009 Julien Issler
 * @link http://www.copix.org
 #else
 * @contributor Loic Mathaud, Julien Issler
-* @copyright 2005-2010 Laurent Jouanneau
+* @copyright 2005-2011 Laurent Jouanneau
 * @copyright 2007 Julien Issler
 #endif
 * @link     http://www.jelix.org
@@ -59,13 +59,6 @@ define ('BYTECODE_CACHE_EXISTS', true);
 define ('BYTECODE_CACHE_EXISTS', false);
 #endif
 
-#if PHP50 || PHP51
-define ('E_DEPRECATED',8192);
-define ('E_USER_DEPRECATED', 16384);
-if(!defined('E_RECOVERABLE_ERROR'))
-    define ('E_RECOVERABLE_ERROR',4096);
-error_reporting (E_ALL | E_STRICT | E_RECOVERABLE_ERROR);
-#else
 #if !PHP53ORMORE
 if(!defined('E_DEPRECATED'))
     define ('E_DEPRECATED',8192);
@@ -73,7 +66,6 @@ if(!defined('E_USER_DEPRECATED'))
     define ('E_USER_DEPRECATED',16384);
 #endif
 error_reporting (E_ALL | E_STRICT);
-#endif
 
 #if ENABLE_OPTIMIZED_SOURCE
 

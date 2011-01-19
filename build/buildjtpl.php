@@ -45,23 +45,11 @@ $BUILD_OPTIONS = array(
     false,
     '1',
     ),
-'PHP50'=> array(
-    false,   // hidden option
-    false,
-    ),
-'PHP51'=> array(
-    false,
-    false,
-    ),
 'PHP52'=> array(
     false,
     false,
     ),
 'PHP53'=> array(
-    false,
-    false,
-    ),
-'PHP51ORMORE'=> array(
     false,
     false,
     ),
@@ -107,9 +95,6 @@ if($PHP_VERSION_TARGET){
     }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
         $PHP52 = 1;
         $PHP52ORMORE = 1;
-    }elseif(version_compare($PHP_VERSION_TARGET, '5.1') > -1){
-        $PHP51=1;
-        $PHP51ORMORE = 1;
     }else{
         die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }

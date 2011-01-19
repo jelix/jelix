@@ -4,7 +4,7 @@
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler
-* @copyright   2005-2008 Laurent Jouanneau
+* @copyright   2005-2011 Laurent Jouanneau
 * @copyright   2006 Loic Mathaud, 2007 Dominique Papin, 2009 DSDenes, 2010 Christophe Thiriot
 * @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
@@ -283,13 +283,7 @@ class jTplCompiler
         $tplcontent = preg_replace("!{\*(.*?)\*}!s", '', $tplcontent);
 
         if ($this->escapePI) {
-#if PHP50 || PHP51
-        // there is a @ because an exception in the callback function generates a warning in PHP 5.1.2
-        // (not in PHP 5.2)
-            $tplcontent = @preg_replace_callback("!(<\?.*\?>)!sm", array($this,'_piCallback'), $tplcontent);
-#else
             $tplcontent = preg_replace_callback("!(<\?.*\?>)!sm", array($this,'_piCallback'), $tplcontent);
-#endif
         }
         if ($this->removeASPtags) {
           // we remove all asp tags
@@ -302,15 +296,8 @@ class jTplCompiler
 
         $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', $tplcontent);
 
-#if PHP50 || PHP51
-        // there is a @ because an exception in the callback function generates a warning in PHP 5.1.2
-        // (not in PHP 5.2)
-        $tplcontent = @preg_replace_callback("/{((.).*?)}(\n)/sm", array($this,'_callbackLineFeed'), $tplcontent);
-        $tplcontent = @preg_replace_callback("/{((.).*?)}/sm", array($this,'_callback'), $tplcontent);
-#else
         $tplcontent = preg_replace_callback("/{((.).*?)}(\n)/sm", array($this,'_callbackLineFeed'), $tplcontent);
         $tplcontent = preg_replace_callback("/{((.).*?)}/sm", array($this,'_callback'), $tplcontent);
-#endif
 
         /*$tplcontent = preg_replace('/\?>\n?<\?php/', '', $tplcontent);*/
         $tplcontent = preg_replace('/<\?php\\s+\?>/', '', $tplcontent);

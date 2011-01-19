@@ -346,34 +346,34 @@ cd lib/jelix/plugins/db/mssql
   mssql.dbconnection.php
   mssql.dbresultset.php
   mssql.dbschema.php
-* mssql.dbtools.php
+  mssql.dbtools.php
   mssql.daobuilder.php
 
 cd lib/jelix/plugins/db/mysql
   mysql.dbconnection.php
   mysql.dbresultset.php
   mysql.dbschema.php
-* mysql.dbtools.php
+  mysql.dbtools.php
   mysql.daobuilder.php
 
 cd lib/jelix/plugins/db/pgsql
   pgsql.dbconnection.php
   pgsql.dbresultset.php
   pgsql.dbschema.php
-* pgsql.dbtools.php
+  pgsql.dbtools.php
   pgsql.daobuilder.php
 
 cd lib/jelix/plugins/db/sqlite
   sqlite.dbconnection.php
   sqlite.dbresultset.php
   sqlite.dbschema.php
-* sqlite.dbtools.php
+  sqlite.dbtools.php
   sqlite.daobuilder.php
 
 cd lib/jelix/plugins/db/oci
   oci.daobuilder.php
   oci.dbschema.php
-* oci.dbtools.php
+  oci.dbtools.php
 
 cd lib/jelix/plugins/jforms/html
   html.jformsbuilder.php

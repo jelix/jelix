@@ -8,7 +8,7 @@
 * @contributor Florian Hatat
 * @contributor Emmanuel Hesry
 * @contributor Hadrien Lanneau <hadrien@over-blog.com>
-* @copyright   2005-2008 Laurent Jouanneau
+* @copyright   2005-2011 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud
 * @copyright   2007-2008 Florian Hatat
 * @copyright   2001-2005 CopixTeam, GeraldCroes, Laurent Jouanneau
@@ -24,49 +24,6 @@
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
-
-#if PHP50
-if(!function_exists('strptime')){ // existe depuis php 5.1
-    /**
-     * @ignore
-     */
-    function strptime ( $strdate, $format ){
-        // It's not a full compatibility with strptime of PHP5.1, but it is
-        // enough for our needs
-        $plop = array( 'S'=>'tm_sec', 'M'=>'tm_min', 'H'=>'tm_hour',
-            'd'=>'tm_mday', 'm'=>'tm_mon', 'Y'=>'tm_year');
-
-        $regexp = preg_quote($format, '/');
-        $regexp = str_replace(
-                array('%d','%m','%Y','%H','%M','%S'),
-                array('(?P<tm_mday>\d{2})','(?P<tm_mon>\d{2})',
-                      '(?P<tm_year>\d{4})','(?P<tm_hour>\d{2})',
-                      '(?P<tm_min>\d{2})','(?P<tm_sec>\d{2})'),
-                $regexp);
-        if(preg_match('/^'.$regexp.'$/', $strdate, $m)){
-            $result=array('tm_sec'=>0,'tm_min'=>0,'tm_hour'=>0,'tm_mday'=>0,'tm_mon'=>0,'tm_year'=>0,'tm_wday'=>0,'tm_yday'=>0,'unparsed'=>'');
-            foreach($m as $key => $value){
-                if(!isset($result[$key])){
-                    continue;
-                }
-                $result[$key] = intval($value);
-                switch($key){
-                case 'tm_mon':
-                    $result[$key]--;
-                    break;
-                case 'tm_year':
-                    $result[$key] -= 1900;
-                    break;
-                default:
-                    break;
-                }
-            }
-            return $result;
-        }
-        return false;
-    }
-}
-#endif
 
 /**
  * Utility to manipulate dates and convert date format

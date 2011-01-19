@@ -4,7 +4,7 @@
 * @subpackage   core
 * @author       Laurent Jouanneau
 * @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin
-* @copyright    2005-2010 laurent Jouanneau
+* @copyright    2005-2011 laurent Jouanneau
 * @copyright    2007 Thibault Piront
 * @copyright    2008 Julien Issler
 * @copyright    2008-2010 Dominique Papin
@@ -90,13 +90,8 @@ class jCoordinator {
         // load configuration data
         $gJConfig = jConfig::load($configFile);
 
-#if PHP50
-        if(function_exists('date_default_timezone_set')){
-            date_default_timezone_set($gJConfig->timeZone);
-        }
-#else
         date_default_timezone_set($gJConfig->timeZone);
-#endif
+
         $this->_loadPlugins();
     }
 

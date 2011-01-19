@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Loic Mathaud
 * @contributor Laurent Jouanneau
-* @copyright  2006 Loic Mathaud, 2007-2010 Laurent Jouanneau
+* @copyright  2006 Loic Mathaud, 2007-2011 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -98,12 +98,7 @@ class sqliteDbTools extends jDbTools {
       'circle'          =>array('varchar',    'varchar',    null,       null,       0,     24),
       'cidr'            =>array('varchar',    'varchar',    null,       null,       0,     24),
       'inet'            =>array('varchar',    'varchar',    null,       null,       0,     24),
-#if PHP50 || PHP51
-      // FIXME !! bad maximum value
-      'macaddr'         =>array('integer',    'integer',    0,          0xFFFFFFFF, null,       null),
-#else
       'macaddr'         =>array('integer',    'integer',    0,          0xFFFFFFFFFFFF, null,       null),
-#endif
       'bit varying'     =>array('varchar',    'varchar',    null,       null,       0,     65535),
       'arrays'          =>array('varchar',    'varchar',    null,       null,       0,     65535),
       'complex types'   =>array('varchar',    'varchar',    null,       null,       0,     65535),
