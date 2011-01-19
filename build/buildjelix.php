@@ -36,10 +36,6 @@ $BUILD_OPTIONS = array(
     "The edition name of the version (optional)",
     '',
     ),
-'ENABLE_PHP_FILTER'=>array(
-    "true if jelix can use php filter api (api included in PHP>=5.2)",
-    false,
-    ),
 'ENABLE_PHP_JSON'=>array(
     "true if jelix can use php json api (api included in PHP>=5.2)",
     false,
@@ -194,13 +190,11 @@ else
 if($PHP_VERSION_TARGET){
     if(version_compare($PHP_VERSION_TARGET, '5.3') > -1){
         // filter and json are in php >=5.2
-        $ENABLE_PHP_FILTER = 1;
         $ENABLE_PHP_JSON = 1;
         $PHP53 = 1;
         $PHP53ORMORE = 1;
     }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
         // filter and json are in php >=5.2
-        $ENABLE_PHP_FILTER = 1;
         $ENABLE_PHP_JSON = 1;
         $PHP52 = 1;
         $PHP52ORMORE = 1;
@@ -212,7 +206,6 @@ if($PHP_VERSION_TARGET){
     }
 }else{
     // no defined target, so php 5.2
-    $ENABLE_PHP_FILTER = 1;
     $ENABLE_PHP_JSON = 1;
     $PHP52=1;
     $PHP2ORMORE=1;
@@ -222,7 +215,7 @@ $BUILD_FLAGS = 0;
 if($ENABLE_PHP_JELIX)  $BUILD_FLAGS |=1;
 if($ENABLE_PHP_JSON)  $BUILD_FLAGS |=2;
 if($ENABLE_PHP_XMLRPC)  $BUILD_FLAGS |=4;
-if($ENABLE_PHP_FILTER)  $BUILD_FLAGS |=8;
+
 switch($WITH_BYTECODE_CACHE){
     case 'auto': $BUILD_FLAGS |=112; break;
     case 'apc': $BUILD_FLAGS |=16; break;
@@ -333,7 +326,7 @@ jManifest::process('build/manifests/jelix-checker.mn','.', $BUILD_TARGET_PATH , 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // creation du fichier d'infos sur le build
-$view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'HG_REVISION', 'ENABLE_PHP_FILTER',
+$view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'HG_REVISION',
     'ENABLE_PHP_JSON', 'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
 

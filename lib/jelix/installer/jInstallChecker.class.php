@@ -49,7 +49,6 @@ class jInstallCheck {
 #if STANDALONE_CHECKER
         $this->buildProperties = array(
 #expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__', 
-#expand    'ENABLE_PHP_FILTER' =>'__ENABLE_PHP_FILTER__', 
 #expand    'ENABLE_PHP_JSON'   =>'__ENABLE_PHP_JSON__', 
 #expand    'ENABLE_PHP_JELIX'  =>'__ENABLE_PHP_JELIX__', 
 #expand    'WITH_BYTECODE_CACHE'=>'__WITH_BYTECODE_CACHE__',
@@ -136,10 +135,8 @@ class jInstallCheck {
         }
 
         $extensions = array( 'dom', 'SPL', 'SimpleXML', 'pcre', 'session',
-            'tokenizer', 'iconv',);
+            'tokenizer', 'iconv', 'filter');
 
-        if($this->buildProperties['ENABLE_PHP_FILTER'] == '1')
-            $extensions[] = 'filter';
         if($this->buildProperties['ENABLE_PHP_JSON'] == '1')
             $extensions[] = 'json';
         if($this->buildProperties['ENABLE_PHP_JELIX'] == '1')

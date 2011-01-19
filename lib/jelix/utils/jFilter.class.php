@@ -4,7 +4,7 @@
 * @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2011 Laurent Jouanneau
 * @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -21,11 +21,7 @@ class jFilter {
     private function _construct() {}
 
     static public function usePhpFilter(){
-#if ENABLE_PHP_FILTER
         return true;
-#else
-        return false;
-#endif
     }
 
     /**
@@ -36,13 +32,8 @@ class jFilter {
      * @return boolean true if it is valid
      */
     static public function isInt ($val, $min=null, $max=null){
-#if ENABLE_PHP_FILTER
         // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
         if(filter_var($val, FILTER_VALIDATE_INT) === false) return false;
-#else
-        // @FIXME : trouver une solution plus performante ?
-        if(!preg_match("/^\\-?\d+$/", $val)) return false;
-#endif
         if($min !== null && intval($val) < $min) return false;
         if($max !== null && intval($val) > $max) return false;
         return true;
@@ -56,13 +47,8 @@ class jFilter {
      * @return boolean true if it is valid
      */
     static public function isHexInt ($val, $min=null, $max=null){
-#if ENABLE_PHP_FILTER
         // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
         if(filter_var($val, FILTER_VALIDATE_INT, FILTER_FLAG_ALLOW_HEX) === false) return false;
-#else
-        // @FIXME : trouver une solution plus performante ?
-        if(!preg_match("/^(0x[a-f0-9A-F]+|\\-?\d+)$/", $val)) return false;
-#endif
         if($min !== null && intval($val,16) < $min) return false;
         if($max !== null && intval($val,16) > $max) return false;
         return true;
@@ -89,12 +75,8 @@ class jFilter {
      * @return boolean true if it is valid
      */
     static public function isFloat ($val, $min=null, $max=null){
-#if ENABLE_PHP_FILTER
         // @FIXME pas de doc sur la façon d'utiliser les min/max sur les filters
         if(filter_var($val, FILTER_VALIDATE_FLOAT) === false) return false;
-#else
-        if(!is_numeric($val)) return false;
-#endif
         if($min !== null && floatval($val) < $min) return false;
         if($max !== null && floatval($val) > $max) return false;
         return true;
@@ -137,16 +119,7 @@ class jFilter {
      * @return boolean true if it is valid
      */
     static public function isIPv4 ($val){
-#if ENABLE_PHP_FILTER
         return filter_var($val, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
-#else
-        if(!preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/',$val,$m)) return false;
-        if(intval($m[1]) > 255) return false;
-        if(intval($m[2]) > 255) return false;
-        if(intval($m[3]) > 255) return false;
-        if(intval($m[4]) > 255) return false;
-        return true;
-#endif
     }
 
     /**
@@ -155,12 +128,7 @@ class jFilter {
      * @return boolean true if it is valid
      */
     static public function isIPv6 ($val){
-#if ENABLE_PHP_FILTER
         return filter_var($val, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
-#else
-        if (!preg_match('/^(?:[a-f0-9]{1,4})(?::(?:[a-f0-9]{1,4})){7}$/i',$val)) return false;
-        return true;
-#endif
     }
 
     /**
@@ -169,12 +137,7 @@ class jFilter {
      * @return boolean true if it is valid
      */
     static public function isEmail ($val){
-#if ENABLE_PHP_FILTER
         return filter_var($val, FILTER_VALIDATE_EMAIL) !== false;
-#else
-        if (!preg_match("/^(?:(?:\\\"[^\\\"\\f\\n\\r\\t\\b]+\\\")|(?:[\\w\\!\\#\\$\\%\\&\\'\\*\\+\\-\\~\\/\\^\\`\\|\\{\\}]+(?:\\.[\\w\\!\\#\\$\\%\\&\\'\\*\\+\\-\\~\\/\\^\\`\\|\\{\\}]+)*))@(?:(?:\\[(?:(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9])))\\])|(?:(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9]))\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:[0-1]?[0-9]?[0-9])))|(?:(?:(?:[A-Za-z0-9\\-])+\\.)*[A-Za-z\\-]+))$/",$val)) return false;
-        return true;
-#endif
     }
 
     const INVALID_HTML = 1;
