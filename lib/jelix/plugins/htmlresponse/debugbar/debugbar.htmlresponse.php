@@ -119,7 +119,7 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
         if ($plugins) {
             $plugins = preg_split('/ *, */', $plugins);
             foreach ($plugins as $name) {
-                $plugin = $gJCoord->loadPlugin($name, 'debugbar', '.debugbar.php', $name.'DebugbarPlugin', $this);
+                $plugin = jApplication::loadPlugin($name, 'debugbar', '.debugbar.php', $name.'DebugbarPlugin', $this);
                 if ($plugin) {
                     $this->plugins[$name] = $plugin;
                 }

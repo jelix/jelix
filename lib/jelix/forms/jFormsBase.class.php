@@ -668,7 +668,7 @@ abstract class jFormsBase {
      * @return jFormsBuilderBase
      */
     public function getBuilder($buildertype){
-        global $gJCoord;
+
         if($buildertype == '')
             $buildertype = 'html';
 
@@ -676,7 +676,7 @@ abstract class jFormsBase {
             return $this->builders[$buildertype];
 
         include_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
-        $o = $gJCoord->loadPlugin($buildertype, 'jforms', '.jformsbuilder.php', $buildertype.'JformsBuilder', $this);
+        $o = jApplication::loadPlugin($buildertype, 'jforms', '.jformsbuilder.php', $buildertype.'JformsBuilder', $this);
         if ($o) {
             $this->builders[$buildertype] = $o;
             return $o;

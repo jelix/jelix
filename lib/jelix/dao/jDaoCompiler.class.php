@@ -67,8 +67,8 @@ class jDaoCompiler  implements jISimpleCompiler {
             throw new jException('jelix~daoxml.namespace.wrong',array($daoPath, $doc->namespaceURI));
         }
 
-        global $gJConfig, $gJCoord;
-        $tools = $gJCoord->loadPlugin($selector->driver, 'db', '.dbtools.php', $selector->driver.'DbTools');
+        global $gJConfig;
+        $tools = jApplication::loadPlugin($selector->driver, 'db', '.dbtools.php', $selector->driver.'DbTools');
         if(is_null($tools))
             throw new jException('jelix~db.error.driver.notfound', $selector->driver);
 

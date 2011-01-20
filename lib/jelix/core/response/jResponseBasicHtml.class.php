@@ -113,7 +113,7 @@ class jResponseBasicHtml extends jResponse {
     * setup the charset, the lang
     */
     function __construct (){
-        global $gJConfig, $gJCoord;
+        global $gJConfig;
         $this->_charset = $gJConfig->charset;
         $this->_lang = $gJConfig->locale;
 
@@ -124,7 +124,7 @@ class jResponseBasicHtml extends jResponse {
             foreach ($plugins as $name) {
                 if (!$name)
                     continue;
-                $plugin = $gJCoord->loadPlugin($name, 'htmlresponse', '.htmlresponse.php', $name.'HTMLResponsePlugin', $this);
+                $plugin = jApplication::loadPlugin($name, 'htmlresponse', '.htmlresponse.php', $name.'HTMLResponsePlugin', $this);
                 if ($plugin)
                     $this->plugins[$name] = $plugin;
                 // do nothing if the plugin does not exist, we could be already into the error handle

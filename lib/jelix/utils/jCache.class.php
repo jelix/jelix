@@ -398,8 +398,6 @@ class jCache {
      */
     protected static function _getDriver($profile) {
 
-        global $gJCoord;
-
         //cache drivers list : array of object jICacheDriver
         static $drivers = array();
 
@@ -411,7 +409,7 @@ class jCache {
         $params = self::_getProfile($profile);
         $params['profile'] = $profile;
 
-        $drv = $gJCoord->loadPlugin($params['driver'], 'cache', '.cache.php', $params['driver'].'CacheDriver', $params);
+        $drv = jApplication::loadPlugin($params['driver'], 'cache', '.cache.php', $params['driver'].'CacheDriver', $params);
         if (is_null($drv))
             throw new jException('jelix~cache.error.driver.missing',array($profile,$params['driver']));
 

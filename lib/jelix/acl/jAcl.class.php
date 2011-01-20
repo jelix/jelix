@@ -56,12 +56,12 @@ class jAcl {
     protected static function _getDriver(){
         static $driver = null;
         if ($driver == null) {
-            global $gJCoord, $gJConfig;
+            global $gJConfig;
             $db = strtolower($gJConfig->acl['driver']);
             if ($db == '')
                 throw new jException('jelix~errors.acl.driver.notfound',$db);
 
-            $driver = $gJCoord->loadPlugin($db, 'acl', '.acl.php', $gJConfig->acl['driver'].'AclDriver', $gJConfig->acl);
+            $driver = jApplication::loadPlugin($db, 'acl', '.acl.php', $gJConfig->acl['driver'].'AclDriver', $gJConfig->acl);
             if (is_null($driver)) {
                 throw new jException('jelix~errors.acl.driver.notfound',$db);
             }

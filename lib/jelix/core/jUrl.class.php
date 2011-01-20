@@ -277,9 +277,9 @@ class jUrl extends jUrlBase {
         static $engine = null;
 
         if($engine === null || $reset){
-            global $gJCoord, $gJConfig;
+            global $gJConfig;
             $name = $gJConfig->urlengine['engine'];
-            $engine = $gJCoord->loadPlugin($name, 'urls', '.urls.php', $name.'UrlEngine');
+            $engine = jApplication::loadPlugin($name, 'urls', '.urls.php', $name.'UrlEngine');
             if(is_null($engine))
                 throw new jException('jelix~errors.urls.engine.notfound', $name);
         }

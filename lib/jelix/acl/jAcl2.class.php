@@ -40,12 +40,12 @@ class jAcl2 {
     protected static function _getDriver(){
         static $driver = null;
         if($driver == null){
-            global $gJCoord, $gJConfig;
+            global $gJConfig;
             $db = strtolower($gJConfig->acl2['driver']);
             if ($db == '')
                 throw new jException('jelix~errors.acl.driver.notfound',$db);
 
-            $driver = $gJCoord->loadPlugin($db, 'acl2', '.acl2.php', $gJConfig->acl2['driver'].'Acl2Driver', $gJConfig->acl2);
+            $driver = jApplication::loadPlugin($db, 'acl2', '.acl2.php', $gJConfig->acl2['driver'].'Acl2Driver', $gJConfig->acl2);
             if (is_null($driver)) {
                 throw new jException('jelix~errors.acl.driver.notfound',$db);
             }

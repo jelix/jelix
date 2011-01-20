@@ -5,6 +5,7 @@ cd lib/jelix/auth
   jIAuthDriver.iface.php
 
 cd lib/jelix/core
+* jApplication.class.php
   jBundle.class.php
 * jConfig.class.php
   jContext.class.php

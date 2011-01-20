@@ -107,7 +107,6 @@ class jKVDb {
 	 * @return object jKVConnection
 	 */    
 	private static function _createConnector($profile) {
-        global $gJCoord;
 
         // If no driver is specified, let's throw an exception
         if (! isset($profile['driver'])) {
@@ -115,7 +114,7 @@ class jKVDb {
                 'jelix~kvstore.error.driver.notset', $profile['name']);
         }
 
-        $connector = $gJCoord->loadPlugin($profile['driver'], 'kvdb', '.kvdriver.php', $profile['driver'] . 'KVDriver', $profile);
+        $connector = jApplication::loadPlugin($profile['driver'], 'kvdb', '.kvdriver.php', $profile['driver'] . 'KVDriver', $profile);
         //if (is_null($connector)) {
         //    throw new jException('jelix~errors.kvdb.driver.notfound',$profile['driver']);
         //}

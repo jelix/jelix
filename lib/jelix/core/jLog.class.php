@@ -133,7 +133,7 @@ class jLog {
     }
     
     protected static function _log($message, $loggers) {
-        global $gJCoord;
+
         // let's inject the message in all loggers
         foreach($loggers as $loggername) {
             if ($loggername == '')
@@ -154,7 +154,7 @@ class jLog {
                     self::$loggers[$loggername] = new jMailLogger();
                 }
                 else {
-                    $l = $gJCoord->loadPlugin($loggername, 'logger', '.logger.php', $loggername.'Logger');
+                    $l = jApplication::loadPlugin($loggername, 'logger', '.logger.php', $loggername.'Logger');
                     if (is_null($l))
                         continue; // yes, silent, because we could be inside an error handler
                     self::$loggers[$loggername] = $l;
