@@ -86,9 +86,11 @@ class initadminCommand extends JelixScriptCommand {
 
         $inifile->setValue('startModule', 'master_admin');
         $inifile->setValue('startAction', 'default:index');
-        $modulePath = $inifile->getValue("modulesPath");
+        $modulePath = $inifile->getValue("modulesPath",0,null,true);
         if (strpos($modulePath, 'lib:jelix-admin-modules') === false) {
-            $inifile->setValue('modulesPath', 'lib:jelix-admin-modules/,'.$modulePath);
+            // we set it on defaultconfig.ini.php, so if the url engine is "significant"
+            // it could know the admin modules during the parsing of modules
+            $inifile->setValue('modulesPath', 'lib:jelix-admin-modules/,'.$modulePath, 0, null, true);
         }
 
         $installConfig->setValue('jacldb.installed', '0', $entrypoint);
