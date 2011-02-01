@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  cache
 * @author      Tahina Ramaroson
-* @contributor Sylvain de Vathaire, Brice Tence
-* @copyright   2009 Neov, 2010 Brice Tence
+* @contributor Sylvain de Vathaire, Brice Tence, Laurent Jouanneau
+* @copyright   2009 Neov, 2010 Brice Tence, 2011 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -24,6 +24,7 @@ interface jICacheDriver {
     /**
     * read a specific data in the cache.
     * @param mixed $key     key or array of keys used for storing data in the cache
+    * @return mixed the value or false if failure
     */
     public function get ($key);
 
@@ -149,7 +150,11 @@ class jCache {
     }
 
     /**
-    * call a specified method/function or get the result from cache
+    * call a specified method/function or get the result from cache. The function
+    * must not return false. The result of the function is stored into the
+    * cache system, with the function name and other things as key. If the
+    * key already exists in the cache, the function is not called and the value
+    * is returned directly.
     * @param mixed  $fn        method/function name ($functionName or array($object, $methodName) or array($className, $staticMethodName))
     * @param array  $fnargs    arguments used by the method/function
     * @param mixed  $ttl    data time expiration. 0 means no expire, use a timestamp UNIX or a delay in secondes which mustn't exceed 30 days i.e 2592000s or a string in date format US
@@ -164,8 +169,8 @@ class jCache {
 
             $key = md5(serialize($fn).serialize($fnargs));
             $lockKey = $key.'___jcacheLock';
-
-            if (!($data = $drv->get($key))) {
+            $data = $drv->get($key);
+            if ($data === false) {
                 //wait lock to be realesed (if a lock exists)
                 $lockTests=0;
                 while( $drv->get($lockKey) ) {
@@ -183,7 +188,7 @@ class jCache {
                 }
             }
 
-            if ( !$data ) {
+            if ( $data === false ) {
                 $lockTtl = get_cfg_var('max_execution_time');
                 if( !$lockTtl ) {
                     $lockTtl = $drv->ttl;
