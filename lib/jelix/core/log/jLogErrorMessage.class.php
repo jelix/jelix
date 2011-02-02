@@ -112,7 +112,7 @@ class jLogErrorMessage implements jILogMessage {
         }
 
         $messageLog = strtr($this->format, array(
-            '%date%' => date("Y-m-d H:i:s"),
+            '%date%' => @date("Y-m-d H:i:s"), // @ because if the timezone is not set, we will have an error here
             '%typeerror%'=>$this->category,
             '%code%' => $this->code,
             '%msg%'  => $this->message,
