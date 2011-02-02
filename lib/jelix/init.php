@@ -237,7 +237,6 @@ function checkAppOpened(){
     }
 }
 
-
 /**
  * check if the application is not installed. If the app is installed, an
  * error message appears and the scripts ends.
