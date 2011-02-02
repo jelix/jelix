@@ -168,7 +168,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             $this->parseInfos = array($this->defaultUrl->isDefault);
 
             //let's read the modulesPath of the entry point
-            $this->retrieveModulePaths($this->getEntryPointConfig($this->defaultUrl->entryPointUrl));
+            $this->retrieveModulePaths($this->getEntryPointConfig($this->defaultUrl->entryPoint));
 
             // if this is the default entry point for the request type,
             // then we add a rule which will match urls which are not
