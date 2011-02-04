@@ -53,10 +53,6 @@ $BUILD_OPTIONS = array(
     false,
     false,
     ),
-'PHP52ORMORE'=> array(
-    false,
-    false,
-    ),
 'PHP53ORMORE'=> array(
     false,
     false,
@@ -94,14 +90,12 @@ if($PHP_VERSION_TARGET){
         $PHP53ORMORE = 1;
     }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
         $PHP52 = 1;
-        $PHP52ORMORE = 1;
     }else{
         die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }
 }else{
     // no defined target, so php 5.2
     $PHP52=1;
-    $PHP2ORMORE=1;
 }
 
 

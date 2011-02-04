@@ -171,11 +171,7 @@ $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
 /**
  * function used by php to try to load an unknown class
  */
-#if PHP52ORMORE
 function jelix_autoload($class) {
-#else
-function __autoload($class) {
-#endif
     if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms|Auth|Installer|KV).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
     }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
@@ -205,9 +201,7 @@ function __autoload($class) {
     }
 }
 
-#if PHP52ORMORE
 spl_autoload_register("jelix_autoload");
-#endif
 
 /**
  * check if the application is opened. If not, it displays the yourapp/install/closed.html
