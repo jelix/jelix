@@ -24,12 +24,12 @@ $locales = array(
     'error.missing.user'=>'L\'identifiant est requis',
     'error.missing.password'=>'Le mot de passe est requis',
     'error.invalid.confirm.password'=>'La confirmation du mot de passe est érronée',
-    'error.no.connection'=>'Ne peut pas se connecter à la base de donnée. Peut que vos paramètres ne sont pas bon, ou le serveur injoignable',
+    'error.no.connection'=>'L\'application ne peut pas se connecter à la base de données. Il se peut que vos paramètres ne soient pas bons, ou que le serveur soit injoignable',
     'error.no.database'=>'Le serveur n\'a pas la base indiquée',
 
-    'error.extension.mssql.not.installed'=>'MSSql extension is not installed into php',
-    'error.extension.mysql.not.installed'=>'Mysql extension is not installed into php',
-    'error.extension.pgsql.not.installed'=>'Postgresql extension is not installed into php',
-    'error.extension.sqlite.not.installed'=>'sqlite extension is not installed into php',
-    'error.extension.oci.not.installed'=>'Oci extension is not installed into php',
+    'error.extension.mssql.not.installed'=>'L\'extension PHP MSSql n\'est pas installée',
+    'error.extension.mysql.not.installed'=>'L\'extension PHP MySql n\'est pas installée',
+    'error.extension.pgsql.not.installed'=>'L\'extension PHP PostgreSQL n\'est pas installée',
+    'error.extension.sqlite.not.installed'=>'L\'extension PHP SQLite n\'est pas installée',
+    'error.extension.oci.not.installed'=>'L\'extension PHP Oci n\'est pas installée',
 );
