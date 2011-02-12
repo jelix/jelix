@@ -24,7 +24,7 @@ class jClassicRequest extends jRequest {
 
     protected function _initParams(){
 
-        $url  = jUrl::parseFromRequest($this, $_GET);
+        $url  = jUrl::getEngine()->parseFromRequest($this, $_GET);
 
         if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             $_PUT = $this->readHttpBody();

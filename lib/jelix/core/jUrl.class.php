@@ -6,7 +6,7 @@
 * @contributor Thibault Piront (nuKs)
 * @contributor Loic Mathaud
 * @contributor Hadrien Lanneau
-* @copyright   2005-2010 Laurent Jouanneau
+* @copyright   2005-2011 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
 * @copyright   2006 Loic Mathaud, 2010 Hadrien Lanneau
 * Some parts of this file are took from an experimental branch of the Copix project (CopixUrl.class.php, Copix 2.3dev20050901, http://www.copix.org),
@@ -212,17 +212,6 @@ class jUrl extends jUrlBase {
      */
     static function parse($scriptNamePath, $pathinfo, $params ){
          return jUrl::getEngine()->parse($scriptNamePath,$pathinfo, $params);
-    }
-
-    /**
-     * Parse a url from the request
-     * @param jRequest $request
-     * @param array  $params            url parameters ($_REQUEST, or $_GET)
-     * @return jUrlAction
-     * @since 1.1
-     */
-    static function parseFromRequest($request, $params ){
-         return jUrl::getEngine()->parseFromRequest($request, $params);
     }
 
     /**
