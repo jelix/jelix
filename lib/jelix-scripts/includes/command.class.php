@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2010 Laurent Jouanneau, 2008 Loic Mathaud
+* @copyright   2005-2011 Laurent Jouanneau, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -129,12 +129,11 @@ abstract class JelixScriptCommand {
          'default_locale'        => JELIXS_INFO_DEFAULT_LOCALE,
       );
 
-      if (preg_match('/\.([a-z0-9\-]+)$/i', $defaultparams['jelix_version'], $m)) {
-         $defaultparams['jelix_version_next'] =  substr($defaultparams['jelix_version'], 0, - strlen($m[1]))."*";
-      }
-      else {
-         $defaultparams['jelix_version_next'] = $defaultparams['jelix_version'];
-      }
+      $v = explode('.', $defaultparams['jelix_version']);
+      if (count($v) < 2)
+        $v[1] = '0';
+
+      $defaultparams['jelix_version_next'] = $v[0].'.'.$v[1].'.*';
 
       $tplparam = array_merge($defaultparams, $tplparam);
 
