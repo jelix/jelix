@@ -23,8 +23,14 @@
     <entrypoints>
         <entry file="index.php" config="index/config.ini.php" />
         <entry file="rest.php" config="rest/config.ini.php" />
+        <entry file="testnews.php" config="index/config.ini.php" />
+        <entry file="foo/bar.php" config="index/config.ini.php" />
+        <entry file="invisible.php" config="index/config.ini.php" />
+        <entry file="handlermodule.php" config="index/config.ini.php" />
+        <entry file="news.php" config="index/config.ini.php" />
         <entry file="soap.php" config="soap/config.ini.php" type="soap"/>
         <entry file="jsonrpc.php" config="jsonrpc/config.ini.php" type="jsonrpc"/>
+        <entry file="xmlrpc.php" config="jsonrpc/config.ini.php" type="xmlrpc"/>
         <entry file="cmdline.php" config="cmdline/config.ini.php" type="cmdline"/>
         <entry file="tests.php" config="cmdline/configtests.ini.php" type="cmdline"/>
     </entrypoints>
