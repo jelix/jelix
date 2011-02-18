@@ -5,13 +5,13 @@
         <label lang="en-EN">Testapp</label>
         <description lang="en-EN">Application to test Jelix</description>
         <licence URL="http://www.gnu.org/licenses/gpl.html">GPL</licence>
-        <copyright>2005-2008 Laurent Jouanneau and other contributors</copyright>
+        <copyright>2005-2011 Laurent Jouanneau and other contributors</copyright>
         <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
         <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="__VERSION__" maxversion="__VERSION__" />
+#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
     </dependencies>
     <directories>
         <config>var/config</config>

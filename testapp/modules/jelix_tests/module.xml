@@ -5,13 +5,13 @@
         <label>Jelix tests</label>
         <description>unit tests for jelix</description>
         <license URL=""></license>
-        <copyright>Copyright 2006-2009 jelix.org</copyright>
+        <copyright>Copyright 2006-2011 jelix.org</copyright>
         <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
         <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="__VERSION__" maxversion="__VERSION__" />
+#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
 #expand        <module name="testurls" minversion="__VERSION__" maxversion="__VERSION__" />
                <module name="jauthdb" />
                <module name="jacl2db" />
