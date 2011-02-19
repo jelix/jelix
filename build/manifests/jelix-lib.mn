@@ -375,6 +375,9 @@ cd lib/jelix/plugins/db/oci
   oci.dbschema.php
   oci.dbtools.php
 
+cd lib/jelix/plugins/debugbar/sqllog
+* sqllog.debugbar.php
+
 cd lib/jelix/plugins/jforms/html
   html.jformsbuilder.php
 

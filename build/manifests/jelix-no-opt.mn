@@ -43,7 +43,7 @@ cd lib/jelix/core/log/
   jLogMessage.class.php
 
 cd lib/jelix/db
-  jDbConnection.class.php
+* jDbConnection.class.php
   jDbResultSet.class.php
 
 cd lib/jelix/events

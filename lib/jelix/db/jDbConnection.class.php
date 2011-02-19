@@ -91,7 +91,14 @@ abstract class jDbConnection {
     */
     public function query ($queryString, $fetchmode = self::FETCH_OBJ, $arg1 = null, $ctoargs = null) {
         $this->lastQuery = $queryString;
+#if ENABLE_OPTIMIZED_SOURCE
         $result = $this->_doQuery ($queryString);
+#else
+        $log = new jSQLLogMessage($queryString);
+        $result = $this->_doQuery ($queryString);
+        $log->endQuery();
+        jLog::log($log,'sql');
+#endif
         if ($fetchmode != self::FETCH_OBJ) {
             $result->setFetchMode($fetchmode, $arg1, $ctoargs);
         }
@@ -107,7 +114,15 @@ abstract class jDbConnection {
     */
     public function limitQuery ($queryString, $limitOffset, $limitCount){
         $this->lastQuery = $queryString;
+#if ENABLE_OPTIMIZED_SOURCE
         return $this->_doLimitQuery ($queryString, intval($limitOffset), intval($limitCount));
+#else
+        $log = new jSQLLogMessage($queryString);
+        $result = $this->_doLimitQuery ($queryString, intval($limitOffset), intval($limitCount));
+        $log->endQuery();
+        jLog::log($log,'sql');
+        return $result;
+#endif
     }
 
     /**
@@ -117,7 +132,15 @@ abstract class jDbConnection {
     */
     public function exec ($query) {
         $this->lastQuery = $query;
+#if ENABLE_OPTIMIZED_SOURCE
         return $this->_doExec ($query);
+#else
+        $log = new jSQLLogMessage($query);
+        $result = $this->_doExec ($query);
+        $log->endQuery();
+        jLog::log($log,'sql');
+        return $result;
+#endif
     }
 
     /**

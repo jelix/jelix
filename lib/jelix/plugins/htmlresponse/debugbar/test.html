@@ -7,8 +7,8 @@
     <script type="text/javascript" src="errors.debugbar.js"></script>
     <style type="text/css">
     
-#jxdb-errors li h5 a { background-image: url(icons/bullet_toggle_plus.png);}
-#jxdb-errors li.jxdb-opened  h5 a  {background-image: url(icons/bullet_toggle_minus.png);}
+ul.jxdb-list li h5 a { background-image: url(icons/bullet_toggle_plus.png);}
+ul.jxdb-list li.jxdb-opened  h5 a  {background-image: url(icons/bullet_toggle_minus.png);}
 #jxdb-errors li.jxdb-msg-error h5 span {background-image: url(icons/exclamation.png);}
 #jxdb-errors li.jxdb-msg-notice h5 span {background-image: url(icons/information.png);}
 #jxdb-errors li.jxdb-msg-warning h5 span {background-image: url(icons/error.png); }
@@ -63,226 +63,285 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
                     
         </div>
         <div id="jxdb-panel-2" class="jxdb-tabpanel" style="display:none">
-            <ul id="jxdb-errors">
+            <ul id="jxdb-errors" class="jxdb-list">
                 <li class="jxdb-msg-error">
-                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                    <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>header()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jResponse.class.php</td>
+                            <td>lib:jelix/core/jResponse.class.php</td>
                             <td>129</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponse->sendHttpHeaders()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
                             <td>169</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jResponseHtml->output()	</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>lib:jelix/core/jCoordinator.class.php</td>
                             <td>202</td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td>jCoordinator->process()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>app:www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
                     </div>
                 </li>
                 <li class="jxdb-msg-notice">
-                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Undefined variable: gJConfig</span></a></h5>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Undefined variable: gJConfig</span></a></h5>
                     <div>
-                    <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>lib:jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>app:www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
                     </div>
                 </li>
                 <li class="jxdb-msg-notice">
-                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                    <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>lib:jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>app:www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
                     </div>
                 </li>
                 <li class="jxdb-msg-notice">
-                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>lib:jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>app:www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
                     </div>
                 </li>
                 <li class="jxdb-msg-warning">
-                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>lib:jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>app:www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
                     </div>
                 </li>
                 <li class="jxdb-msg-warning">
-                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>lib:jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>app:www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
                     </div>
                 </li>
                 <li class="jxdb-msg-warning">
-                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>lib:jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>app:www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
                     </div>
                 </li>
                 <li class="jxdb-msg-warning">
-                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                    <p>File: /Users/laurent/projets/jelix/tests/trunk/lib/jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/response/jResponseHtml.class.php</td>
+                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/lib/jelix/core/jCoordinator.class.php</td>
+                            <td>lib:jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>/Users/laurent/projets/jelix/tests/trunk/testapp/www/index.php</td>
+                            <td>app:www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
                     </div>
                 </li>
-            </dl>
+            </ul>
         </div>
         <div id="jxdb-panel-3" class="jxdb-tabpanel" style="display:none">
                 <h3>Queries</h3>
-                <p>TODO...</p>
+            <ul class="jxdb-list">
+                <li>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <div>
+                    <p>Time: 34ms</p>
+                    <table>
+                        <tr>
+                            <td>0</td>
+                            <td>header()</td>
+                            <td>lib:jelix/core/jResponse.class.php</td>
+                            <td>129</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>jResponse->sendHttpHeaders()</td>
+                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
+                            <td>169</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>jResponseHtml->output()	</td>
+                            <td>lib:jelix/core/jCoordinator.class.php</td>
+                            <td>202</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>jCoordinator->process()</td>
+                            <td>app:www/index.php</td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+                    </div>
+                </li>
+                <li>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Undefined variable: gJConfig</span></a></h5>
+                    <div>
+                    <p>Time: 34ms</p>
+                    <table>
+                        <tr>
+                            <td>0</td>
+                            <td>minifyRHTMLPlugin->beforeOutput()</td>
+                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
+                            <td>257</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>jResponseHtml->output()</td>
+                            <td>lib:jelix/core/jCoordinator.class.php</td>
+                            <td>207</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>jCoordinator->process()</td>
+                            <td>app:www/index.php</td>
+                            <td>19</td>
+                        </tr>
+                    </table>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

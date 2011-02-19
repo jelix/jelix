@@ -124,7 +124,7 @@ class jLog {
         $loggers = preg_split('/[\s,]+/', $gJConfig->logger[$category]);
 
         if ($all != '') {
-            $allLoggers = preg_split('/[\s,]+/', $gJConfig->logger['_all']);        
+            $allLoggers = preg_split('/[\s,]+/', $all);
             self::_log($message, $allLoggers);
             $loggers = array_diff($loggers, $allLoggers);
         }

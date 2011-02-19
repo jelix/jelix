@@ -12,8 +12,6 @@
 #includerawinto LOGOWARNING icons/error.png | base64
 #includerawinto LOGONOERROR icons/accept.png | base64
 #includerawinto LOGONOTICE icons/information.png | base64
-#includerawinto LOGOBULLETPLUS icons/bullet_toggle_plus.png | base64
-#includerawinto LOGOBULLETMINUS icons/bullet_toggle_minus.png | base64
 
 /**
  * native plugin for the debugbar, which displays list of errors, warnings...
@@ -22,8 +20,6 @@
 class errorsDebugbarPlugin implements jIDebugbarPlugin {
 
     function getCss() { return "
-#expand #jxdb-errors li h5 a {background-image: url('data:image/png;base64,__LOGOBULLETPLUS__');}
-#expand #jxdb-errors li.jxdb-opened  h5 a {background-image: url('data:image/png;base64,__LOGOBULLETMINUS__');}
 ##jxdb-errors li.jxdb-msg-error h5 span {background-image: url('".$this->getErrorIcon()."');}
 #expand #jxdb-errors li.jxdb-msg-notice h5 span {background-image: url('data:image/png;base64,__LOGONOTICE__');}
 ##jxdb-errors li.jxdb-msg-warning h5 span {background-image: url('".$this->getWarningIcon()."'); }
@@ -37,7 +33,7 @@ EOS
 
     function show($debugbarPlugin) {
         $info = new debugbarItemInfo('errors', 'Errors');
-        $messages = jLog::getMessages();
+        $messages = jLog::getMessages(array('error','warning','notice','deprecated','strict'));
 
         if (!jLog::isPluginActivated('memory', 'error')) {
             array_unshift($messages, new jLogErrorMessage('warning',0,"Memory logger is not activated in jLog for errors, You cannot see them",'',0,array()));
@@ -55,7 +51,7 @@ EOS
 #expand             $info->htmlLabel = '<img src="data:image/png;base64,__LOGONOERROR__" alt="no errors" title="no errors"/> 0';
         }
         else {
-            $info->popupContent = '<ul id="jxdb-errors">';
+            $info->popupContent = '<ul id="jxdb-errors" class="jxdb-list">';
             $maxLevel = 0;
             foreach($messages as $msg) {
                 if ($msg instanceOf jLogErrorMessage) {
@@ -66,15 +62,11 @@ EOS
 
                     // careful: if you change the position of the div, update debugbar.js
                     $info->popupContent .= '<li class="jxdb-msg-'.$cat.'">
-                    <h5><a href="#" onclick="jxdb.plugins.errors.toggleError(this);return false;"><span>'.htmlspecialchars($msg->getMessage()).'</span></a></h5>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>'.htmlspecialchars($msg->getMessage()).'</span></a></h5>
                     <div>
-                    <p>Code: '.$msg->getCode().'<br/> File: '.htmlspecialchars($msg->getFile()).' '.htmlspecialchars($msg->getLine()).'</p>
-                    <table>';
-                    foreach($msg->getTrace() as $k=>$t) {
-                        $info->popupContent .='<tr><td>'.$k.'</td><td>'.(isset($t['class'])?$t['class'].$t['type']:'').$t['function'].'()</td>';
-                        $info->popupContent .='<td>'.(isset($t['file'])?$t['file']:'[php]').'</td><td>'.(isset($t['line'])?$t['line']:'').'</td></tr>';
-                    }
-                    $info->popupContent .='</table></div>';
+                    <p>Code: '.$msg->getCode().'<br/> File: '.htmlspecialchars($msg->getFile()).' '.htmlspecialchars($msg->getLine()).'</p>';
+                    $info->popupContent .= $debugbarPlugin->formatTrace($msg->getTrace());
+                    $info->popupContent .='</div>';
                 }
             }
             if ($maxLevel) {

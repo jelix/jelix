@@ -115,7 +115,7 @@ minifyExcludeCSS = ""
 minifyExcludeJS = "jquery.wymeditor.js"
 
 [debugbar]
-plugins = 
+plugins = sqllog
 
 [error_handling]
 messageLogFormat = "%date%\t%ip%\t[%code%]\t%msg%\t%file%\t%line%\n\t%url%\n%params%\n%trace%\n\n"

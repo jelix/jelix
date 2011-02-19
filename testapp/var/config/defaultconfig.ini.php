@@ -124,6 +124,7 @@ warning=file,memory
 notice=file,memory
 deprecated=memory
 strict=memory
+sql=memory
 
 [fileLogger]
 default=messages.log

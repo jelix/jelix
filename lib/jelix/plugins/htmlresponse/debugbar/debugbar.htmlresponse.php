@@ -71,6 +71,13 @@ class debugbarItemInfo {
      */
     public $popupOpened = false;
 
+    /**
+     * @param string $id an id
+     * @param string $label a simple text label
+     * @param string $htmlLabel the HTML label to display in the debug bar
+     * @param string $popupContent the HTML content of the popup if the information needs a popup
+     * @param boolean $isOpened indicate if the popup should be opened or not at the startup
+     */
     function __construct($id, $label, $htmlLabel='', $popupContent='', $isOpened= false) {
         $this->id = $id;
         $this->label = $label;
@@ -79,6 +86,9 @@ class debugbarItemInfo {
         $this->popupOpened = $isOpened;
     }
 }
+
+#includerawinto LOGOBULLETPLUS icons/bullet_toggle_plus.png | base64
+#includerawinto LOGOBULLETMINUS icons/bullet_toggle_minus.png | base64
 
 /**
  * plugin for jResponseHTML, it displays a debugbar
@@ -114,7 +124,10 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
     public function beforeOutput() {
         global $gJConfig;
         $plugins = $gJConfig->debugbar['plugins'];
-        $css = '';
+        $css = "
+#expand ul.jxdb-list li h5 a {background-image: url('data:image/png;base64,__LOGOBULLETPLUS__');}
+#expand ul.jxdb-list li.jxdb-opened  h5 a {background-image: url('data:image/png;base64,__LOGOBULLETMINUS__');}
+";
         $js = '';
         if ($plugins) {
             $plugins = preg_split('/ *, */', $plugins);
@@ -220,6 +233,58 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
      */
     function addInfo($info) {
         $this->tabs[] = $info;
+    }
+    
+    /**
+     * returns html formated stack trace
+     * @param array $trace
+     * @return string
+     */
+    function formatTrace(&$trace) {
+        $html = '<table>';
+        foreach($trace as $k=>$t) {
+            if (isset($t['file'])) {
+                $file = $t['file'];
+                $path = '';
+                $shortcut = '';
+                if (strpos($file, LIB_PATH) === 0) {
+                    $path = LIB_PATH;
+                    $shortcut = 'lib:';
+                }
+                elseif (strpos($file, JELIX_APP_TEMP_PATH) === 0) {
+                    $path = JELIX_APP_TEMP_PATH;
+                    $shortcut = 'temp:';
+                }
+                elseif (strpos($file, JELIX_APP_PATH) === 0) {
+                    $path = JELIX_APP_PATH;
+                    $shortcut = 'app:';
+                }
+                else {
+                    $path = dirname(JELIX_APP_PATH);
+                    $shortcut = 'app:';
+                    while ($path != '.' && $path != '') {
+                        $shortcut .= '../';
+                        if (strpos($file, $path) === 0) {
+                            break;
+                        }
+                        $path = dirname($path);
+                    }
+                    if ($path =='.')
+                        $path = '';
+                }
+                if ($path != '') {
+                    $cut = ($path[0] == '/'?0:1);
+                    $file = '<i>'.$shortcut.'</i>'.substr($file, strlen($path)+$cut); 
+                }
+            }
+            else {
+                $file = '[php]';
+            }
+            $html .='<tr><td>'.$k.'</td><td>'.(isset($t['class'])?$t['class'].$t['type']:'').$t['function'].'()</td>';
+            $html .='<td>'.($file).'</td><td>'.(isset($t['line'])?$t['line']:'').'</td></tr>';
+        }
+        $html .='</table>';
+        return $html;
     }
 }
 

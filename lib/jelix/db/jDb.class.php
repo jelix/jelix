@@ -37,6 +37,62 @@
  */
 require(JELIX_LIB_PATH.'db/jDbConnection.class.php');
 require(JELIX_LIB_PATH.'db/jDbResultSet.class.php');
+
+/**
+ * class that handles a sql query for a logger
+ */
+class jSQLLogMessage extends jLogMessage {
+
+    protected $startTime = 0;
+    protected $endTime = 0;
+    protected $trace = array();
+
+    public function __construct($message) {
+        $this->category = 'sql';
+        $this->message = $message;
+        $this->startTime = microtime(true);
+
+        $this->trace = debug_backtrace();
+        array_shift($this->trace); // remove the current __construct call
+    }
+
+    public function endQuery() {
+        $this->endTime = microtime(true);
+    }
+
+    public function getTrace() {
+        return $this->trace;
+    }
+
+    public function getTime() {
+        return $this->endTime - $this->startTime;
+    }
+
+    public function getDao() {
+        foreach ($this->trace as $t) {
+            if (preg_match('/compiled\/daos\/.+\/(.+)~(.+)~.+\.php$/', $t['file'], $m)) {
+                return $m[1].'~'.$m[2];
+            }
+        }
+        return '';
+    }
+
+    public function getFormatedMessage() {
+        $message = $this->message."\n".$this->getTime().'ms';
+        $dao = $this->getDao();
+        if ($dao)
+            $message.=', from dao:'.$dao."\n";
+
+        $traceLog="";
+        foreach($this->trace as $k=>$t){
+            $traceLog.="\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
+            $traceLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
+        }
+
+        return $message.$traceLog;
+    }
+}
+
 #endif
 
 /**
