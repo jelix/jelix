@@ -191,7 +191,7 @@ class jDb {
             return $dbh;
         }
         else {
-            $dbh = jApplication::loadPlugin($profile['driver'], 'db', '.dbconnection.php', $profile['driver'].'DbConnection', $profile);
+            $dbh = jApp::loadPlugin($profile['driver'], 'db', '.dbconnection.php', $profile['driver'].'DbConnection', $profile);
             if (is_null($dbh))
                 throw new jException('jelix~db.error.driver.notfound', $profile['driver']);
             return $dbh;

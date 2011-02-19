@@ -30,7 +30,7 @@ class jWiki extends  WikiRenderer {
                 require_once($f);
                 $this->config= new $config();
             }else{
-                $this->config = jApplication::loadPlugin($config, 'wr_rules', '.rule.php', $config);
+                $this->config = jApp::loadPlugin($config, 'wr_rules', '.rule.php', $config);
                 if (is_null($this->config))
                     throw new Exception('Rules "'.$config.'" not found for jWiki');
             }

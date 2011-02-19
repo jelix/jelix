@@ -114,7 +114,7 @@ class jKVDb {
                 'jelix~kvstore.error.driver.notset', $profile['name']);
         }
 
-        $connector = jApplication::loadPlugin($profile['driver'], 'kvdb', '.kvdriver.php', $profile['driver'] . 'KVDriver', $profile);
+        $connector = jApp::loadPlugin($profile['driver'], 'kvdb', '.kvdriver.php', $profile['driver'] . 'KVDriver', $profile);
         //if (is_null($connector)) {
         //    throw new jException('jelix~errors.kvdb.driver.notfound',$profile['driver']);
         //}

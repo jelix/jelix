@@ -414,7 +414,7 @@ class jCache {
         $params = self::_getProfile($profile);
         $params['profile'] = $profile;
 
-        $drv = jApplication::loadPlugin($params['driver'], 'cache', '.cache.php', $params['driver'].'CacheDriver', $params);
+        $drv = jApp::loadPlugin($params['driver'], 'cache', '.cache.php', $params['driver'].'CacheDriver', $params);
         if (is_null($drv))
             throw new jException('jelix~cache.error.driver.missing',array($profile,$params['driver']));
 

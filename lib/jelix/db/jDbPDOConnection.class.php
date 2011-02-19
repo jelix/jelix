@@ -240,7 +240,7 @@ class jDbPDOConnection extends PDO {
      */
     public function tools () {
         if (!$this->_tools) {
-            $this->_tools = jApplication::loadPlugin($this->dbms, 'db', '.dbtools.php', $this->dbms.'DbTools', $this);
+            $this->_tools = jApp::loadPlugin($this->dbms, 'db', '.dbtools.php', $this->dbms.'DbTools', $this);
             if (is_null($this->_tools))
                 throw new jException('jelix~db.error.driver.notfound', $this->dbms);
         }

@@ -68,7 +68,7 @@ class jDaoCompiler  implements jISimpleCompiler {
         }
 
         global $gJConfig;
-        $tools = jApplication::loadPlugin($selector->driver, 'db', '.dbtools.php', $selector->driver.'DbTools');
+        $tools = jApp::loadPlugin($selector->driver, 'db', '.dbtools.php', $selector->driver.'DbTools');
         if(is_null($tools))
             throw new jException('jelix~db.error.driver.notfound', $selector->driver);
 

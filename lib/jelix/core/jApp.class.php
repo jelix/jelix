@@ -13,7 +13,7 @@
 * @package    jelix
 * @subpackage utils
 */
-class jApplication {
+class jApp {
 
     /**
      * load a plugin from a plugin directory (any type of plugins)

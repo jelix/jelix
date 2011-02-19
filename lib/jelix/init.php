@@ -68,7 +68,7 @@ if(!defined('E_USER_DEPRECATED'))
 error_reporting (E_ALL | E_STRICT);
 
 #if ENABLE_OPTIMIZED_SOURCE
-#includephp core/jApplication.class.php
+#includephp core/jApp.class.php
 #ifnot ENABLE_PHP_JELIX
 #includephp core/jICoordPlugin.iface.php
 #includephp core/jISelector.iface.php
@@ -105,7 +105,7 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/jSession.class.php
 
 #else
-require (JELIX_LIB_CORE_PATH . 'jApplication.class.php');
+require (JELIX_LIB_CORE_PATH . 'jApp.class.php');
 #ifnot ENABLE_PHP_JELIX
 require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jISelector.iface.php');

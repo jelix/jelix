@@ -124,7 +124,7 @@ class jResponseBasicHtml extends jResponse {
             foreach ($plugins as $name) {
                 if (!$name)
                     continue;
-                $plugin = jApplication::loadPlugin($name, 'htmlresponse', '.htmlresponse.php', $name.'HTMLResponsePlugin', $this);
+                $plugin = jApp::loadPlugin($name, 'htmlresponse', '.htmlresponse.php', $name.'HTMLResponsePlugin', $this);
                 if ($plugin)
                     $this->plugins[$name] = $plugin;
                 // do nothing if the plugin does not exist, we could be already into the error handle

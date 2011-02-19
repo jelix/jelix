@@ -154,7 +154,7 @@ class jLog {
                     self::$loggers[$loggername] = new jMailLogger();
                 }
                 else {
-                    $l = jApplication::loadPlugin($loggername, 'logger', '.logger.php', $loggername.'Logger');
+                    $l = jApp::loadPlugin($loggername, 'logger', '.logger.php', $loggername.'Logger');
                     if (is_null($l))
                         continue; // yes, silent, because we could be inside an error handler
                     self::$loggers[$loggername] = $l;

@@ -61,7 +61,7 @@ class jAuth {
         if($driver == null){
             $config = self::_getConfig();
             $db = strtolower($config['driver']);
-            $driver = jApplication::loadPlugin($db, 'auth', '.auth.php', $config['driver'].'AuthDriver', $config[$config['driver']]);
+            $driver = jApp::loadPlugin($db, 'auth', '.auth.php', $config['driver'].'AuthDriver', $config[$config['driver']]);
             if(is_null($driver))
                 throw new jException('jelix~auth.error.driver.notfound',$db);
         }

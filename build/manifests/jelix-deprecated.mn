@@ -5,6 +5,7 @@ cd .
 
 cd lib/jelix/core
   jInstallChecker.class.php
+  jApplication.class.php
 
 cd lib/jelix/core-modules/jelix/install/sql
   install_jacl.datas.mysql.sql
