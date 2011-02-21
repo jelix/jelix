@@ -281,6 +281,8 @@ smtpPassword =
 ; SMTP server timeout in seconds
 smtpTimeout = 10
 
+copyToFiles = off
+
 [acl]
 ; exemple of driver: "db".
 driver =

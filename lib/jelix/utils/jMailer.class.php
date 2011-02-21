@@ -9,7 +9,7 @@
 * @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Kévin Lepeltier, GeekBay, Julien Issler
-* @copyright   2006-2010 Laurent Jouanneau
+* @copyright   2006-2011 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier, 2009 Geekbay
 * @copyright   2010 Julien Issler
 * @link        http://jelix.org
@@ -46,6 +46,11 @@ class jMailer extends PHPMailer {
      * if mailer is file.
     */
     public $filePath = '';
+    
+    /**
+     * indicates if mails should be copied into files, so the developer can verify that all mails are sent.
+     */
+    protected $copyTofile = false;
 
     /**
      * initialize some member
@@ -71,7 +76,11 @@ class jMailer extends PHPMailer {
 
         $this->FromName = $gJConfig->mailer['webmasterName'];
         $this->filePath = JELIX_APP_VAR_PATH.$gJConfig->mailer['filesDir'];
+
+        $this->copyToFiles = $gJConfig->mailer['copyToFiles'];
+
         parent::__construct(true);
+        
     }
 
     /**
@@ -222,5 +231,32 @@ class jMailer extends PHPMailer {
       } else {
         return 'Language string failed to load: ' . $key;
       }
+    }
+
+    protected function SendmailSend($header, $body) {
+        if ($this->copyToFiles)
+            $this->copyMail($header, $body);
+        return parent::SendmailSend($header, $body);
+    }
+
+    protected function MailSend($header, $body) {
+        if ($this->copyToFiles)
+            $this->copyMail($header, $body);
+        return parent::MailSend($header, $body);
+    }
+
+    protected function SmtpSend($header, $body) {
+        if ($this->copyToFiles)
+            $this->copyMail($header, $body);
+        return parent::SmtpSend($header, $body);
+    }
+
+    protected function copyMail($header, $body) {
+        $dir = rtrim($this->filePath,'/').'/copy-'.date('Ymd').'/';
+        if (isset($GLOBALS['gJCoord']->request))
+            $ip = $GLOBALS['gJCoord']->request->getIP();
+        else $ip = "no-ip";
+        $filename = $dir.'mail-'.$ip.'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
+        jFile::write ($filename, $header.$body);
     }
 }
