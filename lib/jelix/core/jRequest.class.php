@@ -4,7 +4,7 @@
 * @subpackage core
 * @author     Laurent Jouanneau
 * @contributor Yannick Le Guédart
-* @copyright  2005-2010 Laurent Jouanneau, 2010 Yannick Le Guédart
+* @copyright  2005-2011 Laurent Jouanneau, 2010 Yannick Le Guédart
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -190,8 +190,28 @@ abstract class jRequest {
      */
     function getIP() {
         if (isset ($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']){
-            return $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }else if (isset ($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']){
+            // it may content ips of all traversed proxies.
+            $list = preg_split('/[\s,]+/', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $list = array_reverse($list);
+            $lastIp = '';
+            foreach($list as $ip) {
+                $ip = trim($ip);
+                if(preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/',$val,$m)) {
+                    if ($m[1] == '10' || $m[1] == '010'
+                        || ($m[1] == '172' && (intval($m[2]) & 240 == 16))
+                        || ($m[1] == '192' && $m[2] == '168'))
+                        break; // stop at first private address. we just want the last public address
+                    $lastIp = $ip;
+                }
+                elseif (preg_match('/^(?:[a-f0-9]{1,4})(?::(?:[a-f0-9]{1,4})){7}$/i',$val)) {
+                    $lastIp = $ip;
+                }
+            }
+            if ($lastIp)
+                return $lastIp;
+        }
+
+        if (isset ($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']){
             return  $_SERVER['HTTP_CLIENT_IP'];
         }else{
             return $_SERVER['REMOTE_ADDR'];
