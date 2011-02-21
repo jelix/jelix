@@ -201,5 +201,34 @@ class pgsqlDbConnection extends jDbConnection {
         else
             return pg_escape_string($this->_connection, $text);
 	}
+
+
+    /**
+     *
+     * @param integer $id the attribut id
+     * @return string the attribute value
+     * @see PDO::getAttribute()
+     */
+    public function getAttribute($id) {
+        switch($id) {
+            case self::ATTR_CLIENT_VERSION:
+				$v = pg_version($this->_connection);
+                return (array_key_exists($v['client']) ? $v['client'] : '');
+            case self::ATTR_SERVER_VERSION:
+                return pg_parameter_status($this->_connection, "server_version");
+                break;
+        }
+        return "";
+    }
+
+    /**
+     * 
+     * @param integer $id the attribut id
+     * @param string $value the attribute value
+     * @see PDO::setAttribute()
+     */
+    public function setAttribute($id, $value) {
+    }
+
 }
 

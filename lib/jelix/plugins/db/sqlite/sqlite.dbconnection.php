@@ -121,5 +121,30 @@ class sqliteDbConnection extends jDbConnection {
         return sqlite_escape_string($text);
     }
 
+
+    /**
+     *
+     * @param integer $id the attribut id
+     * @return string the attribute value
+     * @see PDO::getAttribute()
+     */
+    public function getAttribute($id) {
+        switch($id) {
+            case self::ATTR_CLIENT_VERSION:
+            case self::ATTR_SERVER_VERSION:
+                return sqlite_libversion();
+        }
+        return "";
+    }
+
+    /**
+     * 
+     * @param integer $id the attribut id
+     * @param string $value the attribute value
+     * @see PDO::setAttribute()
+     */
+    public function setAttribute($id, $value) {
+    }
+
 }
 

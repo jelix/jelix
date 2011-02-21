@@ -156,5 +156,33 @@ class mysqlDbConnection extends jDbConnection {
         return mysql_real_escape_string($text, $this->_connection);
     }
 
+    /**
+     *
+     * @param integer $id the attribut id
+     * @return string the attribute value
+     * @see PDO::getAttribute()
+     */
+    public function getAttribute($id) {
+        switch($id) {
+            case self::ATTR_CLIENT_VERSION:
+                return mysql_get_client_info();
+            case self::ATTR_SERVER_VERSION:
+                return mysql_get_server_info($this->_connection);
+                break;
+            case self::ATTR_SERVER_INFO:
+                return mysql_get_host_info($this->_connection);
+        }
+        return "";
+    }
+
+    /**
+     * 
+     * @param integer $id the attribut id
+     * @param string $value the attribute value
+     * @see PDO::setAttribute()
+     */
+    public function setAttribute($id, $value) {
+    }
+
 }
 

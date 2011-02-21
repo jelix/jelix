@@ -4,7 +4,7 @@
 * @subpackage  db
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2005-2010 Laurent Jouanneau
+* @copyright   2005-2011 Laurent Jouanneau
 * @copyright   2007-2009 Julien Issler
 *
 * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -26,8 +26,18 @@ abstract class jDbConnection {
     const FETCH_CLASS = 8;
     const FETCH_INTO = 9;
     const ATTR_AUTOCOMMIT = 0;
+    const ATTR_PREFETCH = 1;
+    const ATTR_TIMEOUT = 2;
     const ATTR_ERRMODE = 3;
+    const ATTR_SERVER_VERSION = 4;
+    const ATTR_SERVER_INFO = 6;
+    const ATTR_CLIENT_VERSION = 5;
+    const ATTR_CONNECTION_STATUS = 7;
+    const ATTR_CASE = 8;
     const ATTR_CURSOR = 10;
+    const ATTR_ORACLE_NULLS = 11;
+    const ATTR_PERSISTENT = 12;
+    const ATTR_DRIVER_NAME = 16;
     const CURSOR_FWDONLY = 0;
     const CURSOR_SCROLL = 1;
 
@@ -266,18 +276,20 @@ abstract class jDbConnection {
     abstract public function lastInsertId($fromSequence='');
 
     /**
-     * Not implemented
+     *
      * @param integer $id the attribut id
      * @return string the attribute value
+     * @see PDO::getAttribute()
      */
-    public function getAttribute($id){ return '';}
+    abstract public function getAttribute($id);
 
     /**
-     * Not implemented
+     * 
      * @param integer $id the attribut id
      * @param string $value the attribute value
+     * @see PDO::setAttribute()
      */
-    public function setAttribute($id, $value){ }
+    abstract public function setAttribute($id, $value);
 
     /**
      * return the maximum value of the given primary key in a table
