@@ -6,7 +6,7 @@
 * @package     InstallWizard
 * @subpackage  pages
 * @author      Laurent Jouanneau
-* @copyright   2010 Laurent Jouanneau
+* @copyright   2010-2011 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -276,7 +276,12 @@ table_prefix=
             $data['password'][$profile] = $ini->getValue('password', $profile);
             $data['passwordconfirm'][$profile] = $data['password'][$profile];
             $data['persistent'][$profile] = $ini->getValue('persistent', $profile);
-            $data['force_encoding'][$profile] = $ini->getValue('force_encoding', $profile);
+
+            $force_encoding = $ini->getValue('force_encoding',$profile);
+            if ($force_encoding === null)
+                $force_encoding = true;
+            $data['force_encoding'][$profile]= $force_encoding;
+
             $data['table_prefix'][$profile] = $ini->getValue('table_prefix', $profile);
             $data['search_path'][$profile] = $ini->getValue('search_path', $profile);
             $data['errors'][$profile] = array();
