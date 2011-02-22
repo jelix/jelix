@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage utils
 * @author     Laurent Jouanneau
-* @contributor F. Fernandez
-* @copyright  2006-2010 Laurent Jouanneau, 2007 F. Fernandez
+* @contributor F. Fernandez, Hadrien Lanneau
+* @copyright  2006-2010 Laurent Jouanneau, 2007 F. Fernandez, 2011 Hadrien Lanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -50,7 +50,10 @@ class jLog {
             $gJCoord->addLogMsg($message, substr($f, 1));
         }
         else {
-            $ip = $gJCoord->request->getIP();
+            $ip = 'NOIP';
+            if ($gJCoord->request) {
+                $ip = $gJCoord->request->getIP();
+            }
             $f = str_replace('%ip%', $ip , $f);
             $f = str_replace('%m%', date("m"), $f);
             $f = str_replace('%Y%', date("Y"), $f);
