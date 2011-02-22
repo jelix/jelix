@@ -419,6 +419,7 @@ cd lib/jelix/plugins/tpl/common
   modifier.number_format.php
   modifier.regex_replace.php
   modifier.replace.php
+  modifier.round.php
   modifier.spacify.php
   modifier.sprintf.php
   modifier.strip.php
