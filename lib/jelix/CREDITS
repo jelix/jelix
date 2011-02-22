@@ -289,7 +289,7 @@ Brice Tence (aka brayce/bricet)
  - introduced optional jMinifier for jResponseHtml for JS/CSS concatenation and minification (#860)
  - type attribut on link tag should be optional (#1188)
  - added lock on jCache::call to prevent multiple calls on CPU high-consuming functions (ticket #1237)
- - fixed meta supports in included template (#1196)
+ - fixed the support of meta in included template (#1196)
 
 Christophe Thiriot (aka Doubleface)
  - testor
