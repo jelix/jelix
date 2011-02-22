@@ -213,6 +213,8 @@ Vincent Viaud (aka Litchi)
  - bug fix in jforms_jquery.js (#1132)
  - fixed misprint in ldap plugin (#1219)
  - acl listener for jauth::logout (#1236)
+ - modifier round (#1206)
+ - fixed auth_url_return transmission during a logout (#1258)
 
 Hugues Magnier (aka BaGroN)
  - tpl plugin stripws (#140)
