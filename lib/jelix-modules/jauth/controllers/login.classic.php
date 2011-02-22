@@ -3,9 +3,9 @@
 * @package     jelix-modules
 * @subpackage  jauth
 * @author      Laurent Jouanneau
-* @contributor Antoine Detante, Bastien Jaillot, Loic Mathaud
+* @contributor Antoine Detante, Bastien Jaillot, Loic Mathaud, Vincent Viaud
 * @copyright   2005-2007 Laurent Jouanneau, 2007 Antoine Detante, 2008 Bastien Jaillot
-* @copyright   2008 Loic Mathaud
+* @copyright   2008 Loic Mathaud, 2011 Vincent Viaud
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -24,15 +24,15 @@ class loginCtrl extends jController {
         $conf = $GLOBALS['gJCoord']->getPlugin('auth')->config;
         $url_return = '/';
 
-        // both after_login and after_logout config fields are required 
+        // both after_login and after_logout config fields are required
         if ($conf['after_login'] == '')
             throw new jException ('jauth~autherror.no.after_login');
 
         if ($conf['after_logout'] == '')
             throw new jException ('jauth~autherror.no.after_logout');
 
-        // if after_login_override = off or url_return doesnt exists, set url_return to after_login   
-        // if auth_url_return exists, redirect to it 
+        // if after_login_override = off or url_return doesnt exists, set url_return to after_login
+        // if auth_url_return exists, redirect to it
         if (!($conf['enable_after_login_override'] && $url_return= $this->param('auth_url_return'))){
             $url_return =  jUrl::get($conf['after_login']);
         }
@@ -64,7 +64,7 @@ class loginCtrl extends jController {
         $url_return = $this->param('auth_url_return');
         if (!$conf['enable_after_logout_override'] || $url_return == null
               || $url_return == jUrl::getCurrentUrl()) { // we don't want to return to the current page if authentification is missing for this page
-            $url_return =  jUrl::get($conf['after_logout']);
+            $url_return =  jUrl::get($conf['after_logout'], array('auth_url_return'=>$url_return));
         }
 
         $rep = $this->getResponse('redirectUrl');
