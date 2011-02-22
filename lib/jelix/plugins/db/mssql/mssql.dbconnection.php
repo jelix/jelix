@@ -127,7 +127,8 @@ class mssqlDbConnection extends jDbConnection {
         }
     }
     /**
-     * (non-PHPdoc)
+     * WARNING: it doesn't take care about offset and number.
+     * @notimplemented
      * @see lib/jelix/db/jDbConnection#_doLimitQuery()
      */
     protected function _doLimitQuery ($queryString, $offset, $number){
