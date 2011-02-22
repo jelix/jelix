@@ -229,9 +229,30 @@ class UTjtplplugins extends jUnitTestCase {
 <li class="pagelinks-end pagelinks-disabled">&gt;|</li>
 </ul>';
         $this->assertEqualOrDiff($expected, $output);
-
-
     }
+
+	function testInclude() {
+
+		$tpl = new jTpl();
+		$tpl->assign ('aaa', 'first');
+		$tpl->assign ('bbb', 'second');
+
+		$meta = $tpl->meta('test_include');
+		$content = $tpl->fetch('test_include');
+
+		$this->assertEqual(array('main'=>'main template','subtpl'=>'sub template'), $meta);
+		$this->assertEqualOrDiff("
+<h1>Main template</h1>
+<p>first</p>
+
+<p>Hello, here the sub template</p>
+<p>first and second</p>
+<p>end of template</p>
+
+<p>End</p>
+
+", $content);
+	}
 }
 
 ?>
