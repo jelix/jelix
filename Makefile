@@ -1,6 +1,10 @@
 
 SHELL=/bin/sh
+ifdef PHPPATH
+PHP=$(PHPPATH)
+else
 PHP=/usr/bin/php
+endif
 
 CURRENT_PATH = $(shell pwd)
 
