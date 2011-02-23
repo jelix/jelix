@@ -60,7 +60,7 @@ nightlies:
 	$(PHP) build/buildfonts.php -D $(DISTPATHSWITCH) build/config/jelix-fonts-dist.ini
 
 tests:
-	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) build/config/jelix-test2.ini
+	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) build/config/jelix-test.ini
 	$(PHP) build/buildapp.php -D $(TESTPATHSWITCH) build/config/testapp-test.ini
 	cd $(TESTPATH) \
 	&& cp $(TESTS_DBPROFILES) testapp/var/config/dbprofils.ini.php \
