@@ -32,6 +32,14 @@ $BUILD_OPTIONS = array(
     '',
     '',
     ),
+'LIB_VERSION'=> array(
+    false,
+    '',
+    ),
+'LIB_VERSION_MAX'=> array(
+    false,
+    '',
+    ),
 'IS_NIGHTLY'=> array(
     false,
     false,
@@ -64,6 +72,19 @@ if($IS_NIGHTLY){
 else {
     $PACKAGE_NAME=$APPNAME.'-'.$VERSION;
 }
+
+
+Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
+$IS_LIB_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
+
+if($IS_LIB_NIGHTLY){
+    $LIB_VERSION = str_replace('SERIAL', $HG_REVISION, $LIB_VERSION);
+}
+
+if (preg_match('/\.([a-z0-9\-]+)$/i', $LIB_VERSION, $m))
+    $LIB_VERSION_MAX =  substr($LIB_VERSION, 0, - strlen($m[1]))."*";
+else
+    $LIB_VERSION_MAX = $LIB_VERSION;
 
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){

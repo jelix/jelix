@@ -8,6 +8,6 @@
         <copyright>Copyright 2009 jelix.org</copyright>
     </info>
     <dependencies>
-#expand        <jelix minversion="__VERSION__" maxversion="__VERSION__" />
+#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
     </dependencies>
 </module>

@@ -4,6 +4,7 @@
  * @package    jelix
  * @subpackage jtpl_plugin
  * @copyright  2001-2003 ispi of Lincoln, Inc.
+ * @contributor Brice Tence
  * @link http://smarty.php.net/
  * @link http://jelix.org/
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -23,6 +24,7 @@ function jtpl_cfunction_common_include($compiler, $param=array()) {
         return '';
     }
     if(count($param) == 1){
+        $compiler->addMetaContent('$t->meta('.$param[0].');');
         return '$t->display('.$param[0].');';
     }else{
         $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','include','1');

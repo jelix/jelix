@@ -182,6 +182,7 @@ Hadrien Lanneau
  - bug on jDateTime::now() (#1164)
  - jCrypt : default key in configuration (#1137)
  - jUrl::getFull() (#1186)
+ - fixed an error in jLog with jRequest (#1273)
 
 Nicolas Lassalle
  - bug fix in jResponseBinary (#188)
@@ -213,6 +214,8 @@ Vincent Viaud (aka Litchi)
  - bug fix in jforms_jquery.js (#1132)
  - fixed misprint in ldap plugin (#1219)
  - acl listener for jauth::logout (#1236)
+ - modifier round (#1206)
+ - fixed auth_url_return transmission during a logout (#1258)
 
 Hugues Magnier (aka BaGroN)
  - tpl plugin stripws (#140)
@@ -286,6 +289,7 @@ Brice Tence (aka brayce/bricet)
  - introduced optional jMinifier for jResponseHtml for JS/CSS concatenation and minification (#860)
  - type attribut on link tag should be optional (#1188)
  - added lock on jCache::call to prevent multiple calls on CPU high-consuming functions (ticket #1237)
+ - fixed the support of meta in included template (#1196)
 
 Christophe Thiriot (aka Doubleface)
  - testor

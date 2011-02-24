@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage core
 * @author     Laurent Jouanneau
-* @contributor F. Fernandez
-* @copyright  2006-2010 Laurent Jouanneau, 2007 F. Fernandez
+* @contributor F. Fernandez, Hadrien Lanneau
+* @copyright  2006-2010 Laurent Jouanneau, 2007 F. Fernandez, 2011 Hadrien Lanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
