@@ -147,8 +147,8 @@ abstract class jInstallerBase {
         if ($dbProfilesFile == '')
             $dbProfilesFile = 'dbprofils.ini.php';
 
-        if (file_exists(JELIX_APP_CONFIG_PATH.$dbProfilesFile)) {
-            $dbprofiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
+        if (file_exists(jApp::configPath($dbProfilesFile))) {
+            $dbprofiles = parse_ini_file(jApp::configPath($dbProfilesFile));
             // let's resolve the db profile
             if (isset($dbprofiles[$dbProfile]) && is_string($dbprofiles[$dbProfile]))
                 $this->dbProfile = $dbprofiles[$dbProfile];
@@ -331,18 +331,18 @@ abstract class jInstallerBase {
 
     protected function expandPath($path) {
          if (strpos($path, 'www:') === 0)
-            $path = str_replace('www:', JELIX_APP_WWW_PATH, $path);
+            $path = str_replace('www:', jApp::wwwPath(), $path);
         elseif (strpos($path, 'jelixwww:') === 0) {
             $p = $this->config->getValue('jelixWWWPath','urlengine');
             if (substr($p, -1) != '/')
                 $p.='/';
-            $path = str_replace('jelixwww:', JELIX_APP_WWW_PATH.$p, $path);
+            $path = str_replace('jelixwww:', jApp::wwwPath($p), $path);
         }
         elseif (strpos($path, 'config:') === 0) {
-            $path = str_replace('config:', JELIX_APP_CONFIG_PATH, $path);
+            $path = str_replace('config:', jApp::configPath(), $path);
         }
         elseif (strpos($path, 'epconfig:') === 0) {
-            $p = dirname(JELIX_APP_CONFIG_PATH.$this->entryPoint->configFile);
+            $p = dirname(jApp::configPath($this->entryPoint->configFile));
             $path = str_replace('epconfig:', $p.'/', $path);
         }
         return $path;
@@ -361,7 +361,7 @@ abstract class jInstallerBase {
         $dbProfilesFile = $this->config->getValue('dbProfils');
         if ($dbProfilesFile == '')
             $dbProfilesFile = 'dbprofils.ini.php';
-        $dbprofiles = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$dbProfilesFile);
+        $dbprofiles = new jIniFileModifier(jApp::configPath($dbProfilesFile));
         if ($sectionContent == null) {
             if (!$dbprofiles->isSection($name)) {
                 // no section

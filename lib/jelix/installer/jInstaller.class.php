@@ -227,9 +227,9 @@ class jInstaller {
     function __construct ($reporter, $lang='') {
         $this->reporter = $reporter;
         $this->messages = new jInstallerMessageProvider($lang);
-        $this->defaultConfig = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        $this->defaultConfig = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
         $this->installerIni = $this->getInstallerIni();
-        $this->readEntryPointData(simplexml_load_file(JELIX_APP_PATH.'project.xml'));
+        $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
         $this->installerIni->save();
     }
 
@@ -238,14 +238,14 @@ class jInstaller {
      * @return jIniFileModifier the modifier for the installer.ini.php file
      */
     protected function getInstallerIni() {
-        if (!file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php'))
-            if (false === @file_put_contents(JELIX_APP_CONFIG_PATH.'installer.ini.php', ";<?php die(''); ?>
+        if (!file_exists(jApp::configPath('installer.ini.php')))
+            if (false === @file_put_contents(jApp::configPath('installer.ini.php'), ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
 
 "))
                 throw new Exception('impossible to create var/config/installer.ini.php');
-        return new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
+        return new jIniFileModifier(jApp::configPath('installer.ini.php'));
     }
 
     /**

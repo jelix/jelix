@@ -44,7 +44,7 @@ class jSelectorForm extends jSelectorModule {
         }
 
         // we see if the forms have been redefined
-        $overloadedPath = JELIX_APP_VAR_PATH.'overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix;
+        $overloadedPath = jApp::varPath('overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix);
         if (is_readable ($overloadedPath)){
            $this->_path = $overloadedPath;
            $this->_where = 'overloaded/';
@@ -61,11 +61,11 @@ class jSelectorForm extends jSelectorModule {
     protected function _createCachePath(){
         // on ne partage pas le même cache pour tous les emplacements possibles
         // au cas où un overload était supprimé
-        $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->_where.$this->module.'~'.$this->resource.$this->_cacheSuffix;
+        $this->_cachePath = jApp::tempPath('compiled/'.$this->_dirname.$this->_where.$this->module.'~'.$this->resource.$this->_cacheSuffix);
     }
 
     public function getCompiledBuilderFilePath ($type){
-        return JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.$this->_where.$this->module.'~'.$this->resource.'_builder_'.$type.$this->_cacheSuffix;
+        return jApp::tempPath('compiled/'.$this->_dirname.$this->_where.$this->module.'~'.$this->resource.'_builder_'.$type.$this->_cacheSuffix);
     }
 
 }

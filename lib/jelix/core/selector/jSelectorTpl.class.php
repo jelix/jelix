@@ -60,13 +60,13 @@ class jSelectorTpl extends jSelectorModule {
         if($gJConfig->theme != 'default'){
             // on regarde si il y a un template redéfinie pour le theme courant
             $this->_where = 'themes/'.$gJConfig->theme.'/'.$lpath;
-            $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
+            $this->_path = jApp::varPath($this->_where.'.tpl');
             if (is_readable ($this->_path)){
                 return;
             }
             // on regarde si il y a un template redéfinie pour le theme courant
             $this->_where = 'themes/'.$gJConfig->theme.'/'.$path;
-            $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
+            $this->_path = jApp::varPath($this->_where.'.tpl');
             if (is_readable ($this->_path)){
                 return;
             }
@@ -74,13 +74,13 @@ class jSelectorTpl extends jSelectorModule {
 
         // on regarde si il y a un template redéfinie dans le theme par defaut
         $this->_where = 'themes/default/'.$lpath;
-        $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
+        $this->_path = jApp::varPath($this->_where.'.tpl');
         if (is_readable ($this->_path)){
             return;
         }
 
         $this->_where = 'themes/default/'.$path;
-        $this->_path = JELIX_APP_VAR_PATH.$this->_where.'.tpl';
+        $this->_path = jApp::varPath($this->_where.'.tpl');
         if (is_readable ($this->_path)){
             return;
         }
@@ -105,6 +105,6 @@ class jSelectorTpl extends jSelectorModule {
     protected function _createCachePath(){
        // on ne partage pas le même cache pour tous les emplacements possibles
        // au cas où un overload était supprimé
-       $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/templates/'.$this->_where.'_'.$this->outputType.($this->trusted?'_t':'').$this->_cacheSuffix;
+       $this->_cachePath = jApp::tempPath('compiled/templates/'.$this->_where.'_'.$this->outputType.($this->trusted?'_t':'').$this->_cacheSuffix);
     }
 }

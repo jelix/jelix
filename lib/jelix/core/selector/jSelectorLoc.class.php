@@ -90,7 +90,7 @@ class jSelectorLoc extends jSelectorModule {
 
         foreach($locales as $locale){
             // check if the locale has been overloaded
-            $overloadedPath = JELIX_APP_VAR_PATH.'overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix;
+            $overloadedPath = jApp::varPath('overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
             if (is_readable ($overloadedPath)){
                 $this->_path = $overloadedPath;
                 $this->_where = 'overloaded/';
@@ -125,7 +125,7 @@ class jSelectorLoc extends jSelectorModule {
     protected function _createCachePath(){
         // on ne partage pas le même cache pour tous les emplacements possibles
         // au cas où un overload était supprimé
-        $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/locales/'.$this->_where.$this->module.'~'.$this->resource.$this->_cacheSuffix;
+        $this->_cachePath = jApp::tempPath('compiled/locales/'.$this->_where.$this->module.'~'.$this->resource.$this->_cacheSuffix);
     }
 
     public function toString($full=false){
