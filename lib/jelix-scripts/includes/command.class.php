@@ -141,7 +141,7 @@ abstract class JelixScriptCommand {
          echo "Warning: the file '".$filename."' already exists\n";
          return false;
       }
-      $tplpath = JELIX_SCRIPT_PATH.'templates/'.$template;
+      $tplpath = JELIX_SCRIPTS_PATH.'templates/'.$template;
 
       if (!file_exists($tplpath)) {
          echo "Error: template file '".$tplpath."' doesn't exist\n";
@@ -254,7 +254,7 @@ abstract class JelixScriptCommand {
 
       $doc = new DOMDocument();
 
-      if (!$doc->load(JELIX_APP_PATH.'project.xml')){
+      if (!$doc->load(jApp::appPath('project.xml'))){
          throw new Exception("cannot load project.xml");
       }
 

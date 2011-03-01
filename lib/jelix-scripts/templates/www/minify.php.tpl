@@ -4,7 +4,7 @@
 * @subpackage 
 * @author   Laurent Jouanneau
 * @contributor
-* @copyright 2010  Laurent Jouanneau
+* @copyright 2010-2011  Laurent Jouanneau
 * @link      http://jelix.org
 * @licence   http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
@@ -23,7 +23,7 @@ require ('../application.init.php');
 //$min_symlinks = array();
 //$min_uploaderHoursBehind = 0;
 
-//$min_groupConfigPath=JELIX_APP_CONFIG_PATH . 'minifyGroupsConfig.php';
+//$min_groupConfigPath=jApp::configPath(). 'minifyGroupsConfig.php';
 
 require(LIB_PATH.'minify/jelix_minify.php');
 

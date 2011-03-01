@@ -4,7 +4,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2008-2009 Laurent Jouanneau
+* @copyright   2008-2011 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html

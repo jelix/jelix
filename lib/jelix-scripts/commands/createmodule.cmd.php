@@ -4,7 +4,7 @@
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
 * @contributor Bastien Jaillot
-* @copyright   2005-2010 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
+* @copyright   2005-2011 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -88,16 +88,16 @@ class createmoduleCommand extends JelixScriptCommand {
         $repository = $this->getParam('repository', 'app:modules/');
         if (substr($repository,-1) != '/')
             $repository .= '/';
-        $repositoryPath = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $repository);
+        $repositoryPath = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $repository);
 
-        $iniDefault = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        $iniDefault = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
         $this->updateModulePath($iniDefault, $iniDefault->getValue('modulesPath'), $repository, $repositoryPath);
 
         if (!$allEntryPoint) {
             $list = $this->getEntryPointsList();
             foreach ($list as $k => $entryPoint) {
                 if ($entryPoint['file'] == $entryPointName) {
-                    $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$entryPoint['config']);
+                    $ini = new jIniFileModifier(jApp::configPath($entryPoint['config']));
                     break;
                 }
             }
@@ -152,12 +152,12 @@ class createmoduleCommand extends JelixScriptCommand {
         $iniDefault->save();
 
         $list = $this->getEntryPointsList();
-        $install = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'installer.ini.php');
+        $install = new jIniFileModifier(jApp::configPath('installer.ini.php'));
 
         // install the module for all needed entry points
         foreach ($list as $k => $entryPoint) {
 
-            $configFile = JELIX_APP_CONFIG_PATH.$entryPoint['config'];
+            $configFile = jApp::configPath($entryPoint['config']);
             $epconfig = new jIniFileModifier($configFile);
 
             if ($allEntryPoint)
@@ -217,7 +217,7 @@ class createmoduleCommand extends JelixScriptCommand {
         $repositoryFound = false;
         foreach($listRepos as $path){
             if(trim($path) == '') continue;
-            $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
+            $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
             if (substr($p,-1) != '/')
                 $p .= '/';
             if ($p == $repositoryPath) {

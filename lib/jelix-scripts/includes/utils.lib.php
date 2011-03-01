@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2010 Laurent Jouanneau, 2008 Loic Mathaud
+* @copyright   2005-2011 Laurent Jouanneau, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -14,7 +14,7 @@
  * @return JelixScriptCommand  the command
  */
 function jxs_load_command($cmdName){
-   $commandfile = JELIX_SCRIPT_PATH.'commands/'.$cmdName.'.cmd.php';
+   $commandfile = JELIX_SCRIPTS_PATH.'commands/'.$cmdName.'.cmd.php';
 
    if(!file_exists($commandfile)){
       die("Error: unknown command\n");
@@ -92,7 +92,7 @@ function jxs_getOptionsAndParams($argv, $sws,$params){
 function jxs_commandlist(){
 
    $list=array();
-   $dir = JELIX_SCRIPT_PATH.'commands/';
+   $dir = JELIX_SCRIPTS_PATH.'commands/';
    if ($dh = opendir($dir)) {
        while (($file = readdir($dh)) !== false) {
            if(is_file($dir . $file) && strpos($file,'.cmd.php') !==false){
@@ -144,7 +144,7 @@ function jxs_init_jelix_env(){
    if ($gJConfig) 
       return;
    
-   $xml = simplexml_load_file(JELIX_APP_PATH.'project.xml');
+   $xml = simplexml_load_file(jApp::appPath('project.xml'));
    $configFile = '';
 
    foreach ($xml->entrypoints->entry as $entrypoint) {
