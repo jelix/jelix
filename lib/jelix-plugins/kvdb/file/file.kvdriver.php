@@ -69,11 +69,11 @@ class fileKVDriver extends jKVDriver implements jIKVPersistent, jIKVttl {
     public function _connect() {
 
         if (isset($this->_profile['storage_dir']) && $this->_profile['storage_dir']!='') {
-            $this->_storage_dir = str_replace(array('var:', 'temp:'), array(JELIX_APP_VAR_PATH, JELIX_APP_TEMP_PATH), $this->_profile['storage_dir']);
+            $this->_storage_dir = str_replace(array('var:', 'temp:'), array(jApp::varPath(), jApp::tempPath()), $this->_profile['storage_dir']);
             $this->_storage_dir = rtrim($this->_storage_dir, '\\/') . DIRECTORY_SEPARATOR;
         }
         else
-            $this->_storage_dir = JELIX_APP_VAR_PATH.'kvfiles/';
+            $this->_storage_dir = jApp::varPath('kvfiles/');
 
         jFile::createDir($this->_storage_dir);
 

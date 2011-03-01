@@ -17,7 +17,7 @@ class jauthdb_adminModuleInstaller extends jInstallerModule {
 
         if ($authconfig && $this->entryPoint->type != 'cmdline' && $this->firstExec($authconfig)) {
 
-            $conf = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$authconfig);
+            $conf = new jIniFileModifier(jApp::configPath($authconfig));
             $driver = $conf->getValue('driver');
             $daoName = $conf->getValue('dao', 'Db');
             $formName = $conf->getValue('form', 'Db');

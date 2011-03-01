@@ -17,7 +17,7 @@ class jauthdbModuleUpgrader_newdao extends jInstallerModule {
 
         if ($authconfig && $this->firstExec($authconfig)) {
 
-            $conf = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$authconfig);
+            $conf = new jIniFileModifier(jApp::configPath($authconfig));
             $driver = $conf->getValue('driver');
 
             if ($driver == '') {

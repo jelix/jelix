@@ -25,7 +25,7 @@ class jauthdbModuleInstaller extends jInstallerModule {
             // a config file for the auth plugin exists, so we can install
             // the module, else we ignore it
 
-            $conf = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$authconfig);
+            $conf = new jIniFileModifier(jApp::configPath($authconfig));
             $driver = $conf->getValue('driver');
 
             if ($driver == '') {

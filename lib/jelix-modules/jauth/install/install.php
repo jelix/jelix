@@ -31,8 +31,8 @@ class jauthModuleInstaller extends jInstallerModule {
             if ($this->firstExec('auth:'.$authconfig)) {
                 // no configuration, let's install the plugin for the entry point
                 $this->config->setValue('auth', $authconfig, 'coordplugins');
-                if (!file_exists(JELIX_APP_CONFIG_PATH.$authconfig)) {
-                    $this->copyFile('var/config/'.$pluginIni, JELIX_APP_CONFIG_PATH.$authconfig);
+                if (!file_exists(jApp::configPath($authconfig)) {
+                    $this->copyFile('var/config/'.$pluginIni, jApp::configPath($authconfig));
                 }
             }
         }

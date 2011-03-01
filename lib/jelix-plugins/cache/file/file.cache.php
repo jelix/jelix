@@ -97,7 +97,7 @@ class fileCacheDriver implements jICacheDriver {
             $this->ttl = $params['ttl'];
         }
 
-        $this->_cache_dir = JELIX_APP_TEMP_PATH.'cache/';
+        $this->_cache_dir = jApp::tempPath('cache/');
         if(isset($params['cache_dir']) && $params['cache_dir']!=''){
             if (is_dir($params['cache_dir']) && is_writable($params['cache_dir'])) {
                 $this->_cache_dir = rtrim(realpath($params['cache_dir']), '\\/') . DIRECTORY_SEPARATOR;

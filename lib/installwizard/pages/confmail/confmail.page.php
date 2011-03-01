@@ -31,7 +31,7 @@ class confmailWizPage extends installWizardPage {
      * action to process the page after the submit
      */
     function process() {
-        $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        $ini = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
         $errors = array();
         $_SESSION['confmail']['webmasterEmail'] = trim($_POST['webmasterEmail']);
         if ($_SESSION['confmail']['webmasterEmail'] == '') {
@@ -106,7 +106,7 @@ class confmailWizPage extends installWizardPage {
 
 
     protected function loadconf() {
-        $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        $ini = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
         $emailConfig = array(
             'webmasterEmail'=>$ini->getValue('webmasterEmail','mailer'),
             'webmasterName'=>$ini->getValue('webmasterName','mailer'),

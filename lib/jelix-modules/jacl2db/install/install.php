@@ -39,14 +39,14 @@ class jacl2dbModuleInstaller extends jInstallerModule {
             if ($this->firstExec('jacl2:'.$aclconfig)) {
                 // no configuration, let's install the plugin for the entry point
                 $this->config->setValue('jacl2', $aclconfig,'coordplugins');
-                if (!file_exists(JELIX_APP_CONFIG_PATH.$aclconfig)) {
-                    $this->copyFile('var/config/'.$pluginIni , JELIX_APP_CONFIG_PATH.$aclconfig);
+                if (!file_exists(jApp::configPath($aclconfig))) {
+                    $this->copyFile('var/config/'.$pluginIni , jApp::configPath($aclconfig));
                 }
             }
         }
 
         if ($forWS && $ownConfig && $this->firstExec('jacl2:'.$aclconfig)) {
-            $cf = new jIniFileModifier(JELIX_APP_CONFIG_PATH.$aclconfig);
+            $cf = new jIniFileModifier(jApp::configPath($aclconfig));
             $cf->setValue('on_error', 1);
             $cf->save();
         }

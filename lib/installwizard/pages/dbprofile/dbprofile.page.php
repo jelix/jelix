@@ -74,7 +74,7 @@ class dbprofileWizPage extends installWizardPage {
 
     function process() {
 
-        $ini = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php');
+        $ini = new jIniFileModifier(jApp::configPath('dbprofils.ini.php'));
         $hasErrors = false;
         $_SESSION['dbprofiles']['data'] = $_POST;
 
@@ -196,13 +196,13 @@ class dbprofileWizPage extends installWizardPage {
     }
 
     protected function loadProfiles () {
-        $file = JELIX_APP_CONFIG_PATH.'dbprofils.ini.php';
+        $file = jApp::configPath('dbprofils.ini.php');
 
         if (file_exists($file)) {
 
         }
-        elseif (file_exists(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php.dist')) {
-             copy(JELIX_APP_CONFIG_PATH.'dbprofils.ini.php.dist', $file);
+        elseif (file_exists(jApp::configPath('dbprofils.ini.php.dist'))) {
+             copy(jApp::configPath('dbprofils.ini.php.dist'), $file);
         }
         else {
             file_put_contents($file, ";<?php die(''); ?>
@@ -383,7 +383,7 @@ table_prefix=
         if(!function_exists('sqlite_open')) {
             throw new Exception($this->locales['error.extension.sqlite.not.installed']);
         }
-        if ($cnx = @sqlite_open (JELIX_APP_VAR_PATH. 'db/sqlite/'.$params['database'])) {
+        if ($cnx = @sqlite_open (jApp::varPath('db/sqlite/'.$params['database']))) {
             sqlite_close($cnx);
         }
         else {
