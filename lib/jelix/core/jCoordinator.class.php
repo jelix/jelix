@@ -80,6 +80,9 @@ class jCoordinator {
     function __construct ($configFile, $enableErrorHandler=true) {
         global $gJCoord, $gJConfig;
 
+        // temporary init. Remove this line when JELIX_APP_* support will be removed completely from Jelix
+        jApp::initLegacy();
+
         $gJCoord =  $this;
 
         if ($enableErrorHandler) {

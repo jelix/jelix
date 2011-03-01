@@ -3,7 +3,7 @@
 * @package  jelix
 * @subpackage core
 * @author   Laurent Jouanneau
-* @copyright 2005-2007 Laurent Jouanneau
+* @copyright 2005-2011 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -33,15 +33,16 @@ class jConfig {
      */
     static public function load($configFile){
         $config=array();
+        $file = jApp::tempPath();
 #if WITH_BYTECODE_CACHE == 'auto'
         if(BYTECODE_CACHE_EXISTS)
-            $file = JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.conf.php';
+            $file .= str_replace('/','~',$configFile).'.conf.php';
         else
-            $file = JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php';
+            $file .= str_replace('/','~',$configFile).'.resultini.php';
 #elseif WITH_BYTECODE_CACHE 
-        $file = JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.conf.php';
+        $file .= str_replace('/','~',$configFile).'.conf.php';
 #else
-        $file = JELIX_APP_TEMP_PATH.str_replace('/','~',$configFile).'.resultini.php';
+        $file .= str_replace('/','~',$configFile).'.resultini.php';
 #endif
         $compil=false;
         if(!file_exists($file)){
@@ -49,9 +50,9 @@ class jConfig {
             $compil=true;
         }else{
             $t = filemtime($file);
-            $dc = JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php';
+            $dc = jApp::configPath('defaultconfig.ini.php');
             if( (file_exists($dc) && filemtime($dc)>$t)
-                || filemtime(JELIX_APP_CONFIG_PATH.$configFile)>$t){
+                || filemtime(jApp::configPath($configFile))>$t){
                 // one of the two config file have been modified: let's compile
                 $compil=true;
             }else{

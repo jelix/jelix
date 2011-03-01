@@ -208,18 +208,25 @@ spl_autoload_register("jelix_autoload");
  * file with a http error (or lib/jelix/installer/closed.html), and exit.
  * This function should be called in all entry point, before the creation of the coordinator.
  * @see jAppManager
+ * @todo migrate the code to jAppManager or jApp
  */
-function checkAppOpened(){
-    if (file_exists(JELIX_APP_CONFIG_PATH.'CLOSED')) {
-        $message = file_get_contents(JELIX_APP_CONFIG_PATH.'CLOSED');
+function checkAppOpened() {
+    if (!jApp::isInit()) {
+        header("HTTP/1.1 500 Application not available");
+        header('Content-type: text/html');
+        echo "checkAppOpened: jApp is not initialized!";
+        exit(1);
+    }
+    if (file_exists(jApp::configPath('CLOSED'))) {
+        $message = file_get_contents(jApp::configPath('CLOSED'));
 
         if (php_sapi_name() == 'cli') {
             echo "Application closed.". ($message?"\n$message\n":"\n");
             exit(1);
         }
 
-        if (file_exists(JELIX_APP_PATH.'install/closed.html')) {
-            $file = JELIX_APP_PATH.'install/closed.html';
+        if (file_exists(jApp::appPath('install/closed.html'))) {
+            $file = jApp::appPath('install/closed.html');
         }
         else
             $file = JELIX_LIB_PATH.'installer/closed.html';
@@ -236,6 +243,7 @@ function checkAppOpened(){
  * error message appears and the scripts ends.
  * It should be called only by some scripts
  * like an installation wizard, not by entry point.
+ * @todo migrate the code to jAppManager or jApp
  */
 function checkAppNotInstalled() {
     if (isAppInstalled()) {
@@ -251,6 +259,9 @@ function checkAppNotInstalled() {
     }
 }
 
+/**
+ * @todo migrate the code to jAppManager or jApp
+ */
 function isAppInstalled() {
-    return file_exists(JELIX_APP_CONFIG_PATH.'installer.ini.php');
+    return file_exists(jApp::configPath('installer.ini.php'));
 }

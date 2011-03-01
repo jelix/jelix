@@ -13,7 +13,7 @@ function getDocumentRoot() {
 
     require_once(JELIX_LIB_PATH."core/jConfigCompiler.class.php");
 
-    $config = parse_ini_file(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+    $config = parse_ini_file(jApp::configPath('defaultconfig.ini.php'));
     $urlengine = $config['urlengine'];
 
     if($urlengine['scriptNameServerVariable'] == '') {
@@ -39,13 +39,13 @@ function getDocumentRoot() {
     }
     
     if ($basepath == '/')
-        return JELIX_APP_WWW_PATH;
+        return jApp::wwwPath();
     
-    if(strpos(JELIX_APP_WWW_PATH, $basepath) === false){
-        return JELIX_APP_WWW_PATH;
+    if(strpos(jApp::wwwPath(), $basepath) === false){
+        return jApp::wwwPath();
     }
     
-    return substr(JELIX_APP_WWW_PATH, 0, - (strlen($basepath)));
+    return substr(jApp::wwwPath(), 0, - (strlen($basepath)));
 }
 
 // ============ configuration of Minify
@@ -58,7 +58,7 @@ if (!isset($min_errorLogger))
 
 $min_enableBuilder = false;
 
-$min_cachePath = JELIX_APP_TEMP_PATH.'minify/';
+$min_cachePath = jApp::tempPath('minify/');
 if (!file_exists($min_cachePath))
     mkdir($min_cachePath, 0775);
 
@@ -86,7 +86,7 @@ if (!isset($min_uploaderHoursBehind))
     $min_uploaderHoursBehind = 0;
 
 if (!isset($min_groupConfigPath))
-    $min_groupConfigPath = JELIX_APP_CONFIG_PATH . 'minifyGroupsConfig.php';
+    $min_groupConfigPath = jApp::configPath('minifyGroupsConfig.php');
 
 
 $min_libPath = MINIFY_MIN_DIR . '/lib';
