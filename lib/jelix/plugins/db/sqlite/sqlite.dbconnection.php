@@ -64,9 +64,9 @@ class sqliteDbConnection extends jDbConnection {
         $funcconnect= (isset($this->profile['persistent']) && $this->profile['persistent']? 'sqlite_popen':'sqlite_open');
         $db = $this->profile['database'];
         if (preg_match('/^(app|lib|var)\:/', $db))
-            $path = str_replace(array('app:','lib:','var:'), array(JELIX_APP_PATH, LIB_PATH, JELIX_APP_VAR_PATH), $db);
+            $path = str_replace(array('app:','lib:','var:'), array(jApp::appPath(), LIB_PATH, jApp::varPath()), $db);
         else
-            $path = JELIX_APP_VAR_PATH.'db/sqlite/'.$db;
+            $path = jApp::varPath('db/sqlite/'.$db);
 
         if ($cnx = @$funcconnect($path)) {
             return $cnx;

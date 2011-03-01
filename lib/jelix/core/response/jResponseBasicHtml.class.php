@@ -233,8 +233,8 @@ class jResponseBasicHtml extends jResponse {
      */
     public function outputErrors(){
 
-        if (file_exists(JELIX_APP_PATH.'response/error.en_US.php'))
-            $file = JELIX_APP_PATH.'response/error.en_US.php';
+        if (file_exists(jApp::appPath('responses/error.en_US.php')))
+            $file = jApp::appPath('responses/error.en_US.php');
         else
             $file = JELIX_LIB_CORE_PATH.'response/error.en_US.php';
         // we erase already generated content

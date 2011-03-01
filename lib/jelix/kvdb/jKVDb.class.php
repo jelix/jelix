@@ -4,13 +4,11 @@
  * @subpackage  kvdb
  * @author      Yannick Le Guédart
  * @contributor  Laurent Jouanneau
- * @copyright   2009 Yannick Le Guédart, 2010 Laurent Jouanneau
+ * @copyright   2009 Yannick Le Guédart, 2010-2011 Laurent Jouanneau
  *
  * @link     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-
-define('KVDB_PROFILE_FILE', JELIX_APP_CONFIG_PATH . 'kvprofiles.ini.php');
 
 /**
  * main class to access to key-value storage databases
@@ -21,7 +19,6 @@ class jKVDb {
 	 * Array of the profiles in the profile file.
 	 *
 	 * @var array
-	 * @see KVDB_PROFILE_FILE
 	 */    
     static private $_profiles = null;
     
@@ -70,7 +67,7 @@ class jKVDb {
         // The profile file has not been parsed yet, so we do that. The result
         // is stored in the $_profiles static private variable.
  		if (is_null(self::$_profiles)) {
-			self::$_profiles = parse_ini_file(KVDB_PROFILE_FILE, true);
+			self::$_profiles = parse_ini_file(jApp::configPath('kvprofiles.ini.php'), true);
 		}
 
         // If no name is provided, we look for the default profile an set the

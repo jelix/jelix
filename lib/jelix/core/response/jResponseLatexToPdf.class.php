@@ -79,7 +79,7 @@ class jResponseLatexToPdf extends jResponse {
      * setup the template engine
      */
     function __construct (){
-        $this->cachePath = JELIX_APP_TEMP_PATH.'responseLatexToPdf/';
+        $this->cachePath = jApp::tempPath('responseLatexToPdf/');
         $this->body = new jTpl();
         parent::__construct();
     }

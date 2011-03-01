@@ -131,7 +131,7 @@ class jIncluder {
     public static function incAll($aType){
 
         global $gJConfig,$gJCoord;
-        $cachefile = JELIX_APP_TEMP_PATH.'compiled/'.$aType[3];
+        $cachefile = jApp::tempPath('compiled/'.$aType[3]);
         if(isset(jIncluder::$_includedFiles[$cachefile])){
             return;
         }

@@ -212,8 +212,8 @@ class jResponseSitemap extends jResponse {
         $entryPoint = $gJConfig->urlengine['defaultEntrypoint'];
         $snp = $gJConfig->urlengine['urlScriptIdenc'];
 
-        $file = JELIX_APP_TEMP_PATH.'compiled/urlsig/' . $significantFile .
-                '.' . rawurlencode($entryPoint) . '.entrypoint.php';
+        $file = jApp::tempPath('compiled/urlsig/' . $significantFile .
+                '.' . rawurlencode($entryPoint) . '.entrypoint.php');
 
         if (file_exists($file)) {
             require $file;

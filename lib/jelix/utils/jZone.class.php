@@ -111,7 +111,7 @@ class jZone {
     * @since 1.0b1
     */
     public static function clearAll($name=''){
-        $dir = JELIX_APP_TEMP_PATH.'zonecache/';
+        $dir = jApp::tempPath('zonecache/');
         if(!file_exists($dir)) return;
 
         if($name !=''){
@@ -241,7 +241,7 @@ class jZone {
         $ar = $this->_params;
         ksort($ar);
         $id=md5(serialize($ar));
-        return JELIX_APP_TEMP_PATH.'zonecache/~'.$module.'~'.strtolower(get_class($this)).'~'.$id.'.php';
+        return jApp::tempPath('zonecache/~'.$module.'~'.strtolower(get_class($this)).'~'.$id.'.php');
     }
 
    /**

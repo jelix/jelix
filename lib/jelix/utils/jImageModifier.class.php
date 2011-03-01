@@ -117,15 +117,15 @@ class jImageModifier {
         global $gJConfig;
         $www = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'];
         $basePath = $gJConfig->urlengine['basePath'];
-        $cachePath = JELIX_APP_WWW_PATH.'cache/images/'.$cacheName;
+        $cachePath = jApp::wwwPath('cache/images/'.$cacheName);
         if(strpos($src,$basePath) === 0) {
             // in the case where the path is constructed with $j_basepath or $j_themepath
             // in a template
-            $srcPath = JELIX_APP_WWW_PATH.substr($src,strlen($basePath));
+            $srcPath = jApp::wwwPath(substr($src,strlen($basePath)));
             $srcUri = $www.$src;
         }
         else {
-            $srcPath = JELIX_APP_WWW_PATH.$src;
+            $srcPath = jApp::wwwPath($src);
             $srcUri = $www.$basePath.$src;
         }
         $cacheUri = $www.$basePath.'cache/images/'.$cacheName;
@@ -173,15 +173,15 @@ class jImageModifier {
         $srcUri = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'];
 
         $basePath = $gJConfig->urlengine['basePath'];
-        $cachePath = JELIX_APP_WWW_PATH.'cache/images/'.$cacheName;
+        $cachePath = jApp::wwwPath('cache/images/'.$cacheName);
         if(strpos($src,$basePath) === 0) {
             // in the case where the path is constructed with $j_basepath or $j_themepath
             // in a template
-            $srcFs = JELIX_APP_WWW_PATH. substr($src,strlen($basePath));
+            $srcFs = jApp::wwwPath(substr($src,strlen($basePath)));
             $srcUri .= $src;
         }
         else {
-            $srcFs = JELIX_APP_WWW_PATH.$src;
+            $srcFs = jApp::wwwPath($src);
             $srcUri .= $basePath.$src;
         }
 
@@ -295,7 +295,7 @@ class jImageModifier {
         }
 
 
-        $cachePath = JELIX_APP_WWW_PATH.'cache/images/';
+        $cachePath = jApp::wwwPath('cache/images/');
         jFile::createDir($cachePath);
 
 

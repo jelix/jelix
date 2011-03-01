@@ -171,7 +171,7 @@ class jDb {
     public static function getProfile ($name='', $noDefault = false) {
         global $gJConfig;
         if (self::$_profiles === null) {
-            self::$_profiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$gJConfig->dbProfils , true);
+            self::$_profiles = parse_ini_file(jApp::configPath($gJConfig->dbProfils), true);
         }
 
         if ($name == '')
@@ -268,7 +268,7 @@ class jDb {
         }
 
         if (self::$_profiles === null) {
-            self::$_profiles = parse_ini_file (JELIX_APP_CONFIG_PATH . $gJConfig->dbProfils, true);
+            self::$_profiles = parse_ini_file (jApp::configPath($gJConfig->dbProfils), true);
         }
         self::$_profiles[$name] = $params;
         self::$_profiles[$name]['name'] = $name; // pool name

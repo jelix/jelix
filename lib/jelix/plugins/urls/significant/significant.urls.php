@@ -23,7 +23,7 @@ class jSelectorUrlCfgSig extends jSelectorCfg {
         $o = new jSignificantUrlsCompiler();
         return $o;
     }
-    public function getCompiledFilePath (){ return JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$this->file.'.creationinfos.php';}
+    public function getCompiledFilePath (){ return jApp::tempPath('compiled/urlsig/'.$this->file.'.creationinfos.php');}
 }
 
 /**
@@ -115,7 +115,7 @@ class significantUrlEngine implements jIUrlEngine {
             $sel = new jSelectorUrlCfgSig($gJConfig->urlengine['significantFile']);
             jIncluder::inc($sel);
             $snp  = $gJConfig->urlengine['urlScriptIdenc'];
-            $file = JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php';
+            $file = jApp::tempPath('compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php');
             if (file_exists($file)) {
                 require($file);
                 $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 99
@@ -154,7 +154,7 @@ class significantUrlEngine implements jIUrlEngine {
                 $snp = substr($snp,0,$pos);
             }
             $snp = rawurlencode($snp);
-            $file = JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php';
+            $file = jApp::tempPath('compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php');
             if (file_exists($file)) {
                 require($file);
                 $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 127

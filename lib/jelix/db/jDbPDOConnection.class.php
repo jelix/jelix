@@ -48,7 +48,7 @@ class jDbPDOConnection extends PDO {
             $dsn = $profile['dsn'];
             unset($prof['dsn']);
             if ($this->dbms == 'sqlite')
-                $dsn = str_replace(array('app:','lib:','var:'), array(JELIX_APP_PATH, LIB_PATH, JELIX_APP_VAR_PATH), $dsn);
+                $dsn = str_replace(array('app:','lib:','var:'), array(jApp::appPath(), LIB_PATH, jApp::varPath()), $dsn);
         }
         else {
             $this->dbms = $profile['driver'];
@@ -58,9 +58,9 @@ class jDbPDOConnection extends PDO {
                 $dsn = $this->dbms.':host='.$profile['host'].';dbname='.$db;
             else {
                 if (preg_match('/^(app|lib|var)\:/', $db, $m))
-                    $dsn = 'sqlite:'.str_replace(array('app:','lib:','var:'), array(JELIX_APP_PATH, LIB_PATH, JELIX_APP_VAR_PATH), $db);
+                    $dsn = 'sqlite:'.str_replace(array('app:','lib:','var:'), array(jApp::appPath(), LIB_PATH, jApp::varPath()), $db);
                 else
-                    $dsn = 'sqlite:'.JELIX_APP_VAR_PATH.'db/sqlite/'.$db;
+                    $dsn = 'sqlite:'.jApp::varPath('db/sqlite/'.$db);
             }
         }
         if(isset($prof['usepdo']))

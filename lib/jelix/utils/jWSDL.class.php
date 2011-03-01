@@ -107,7 +107,7 @@ class jWSDL {
      * Build the WSDL cache file path
      */
     private function _createCachePath(){
-        $this->_cachePath = JELIX_APP_TEMP_PATH.'compiled/'.$this->_dirname.'/'.$this->module.'~'.$this->controller.$this->_cacheSuffix;
+        $this->_cachePath = jApp::tempPath('compiled/'.$this->_dirname.'/'.$this->module.'~'.$this->controller.$this->_cacheSuffix);
     }
 
     /**

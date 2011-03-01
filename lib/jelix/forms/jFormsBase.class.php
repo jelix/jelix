@@ -697,7 +697,7 @@ abstract class jFormsBase {
      */
     public function saveFile($controlName, $path='', $alternateName='') {
         if ($path == '') {
-            $path = JELIX_APP_VAR_PATH.'uploads/'.$this->sel.'/';
+            $path = jApp::varPath('uploads/'.$this->sel.'/');
         } else if (substr($path, -1, 1) != '/') {
             $path.='/';
         }
@@ -727,7 +727,7 @@ abstract class jFormsBase {
      */
     public function saveAllFiles($path='') {
         if ($path == '') {
-            $path = JELIX_APP_VAR_PATH.'uploads/'.$this->sel.'/';
+            $path = jApp::varPath('uploads/'.$this->sel.'/');
         } else if (substr($path, -1, 1) != '/') {
             $path.='/';
         }

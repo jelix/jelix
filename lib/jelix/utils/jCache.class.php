@@ -451,7 +451,7 @@ class jCache {
         static $profiles = null;
         
         if ($profiles === null) {
-            $profiles = parse_ini_file(JELIX_APP_CONFIG_PATH.$gJConfig->cacheProfiles, true);
+            $profiles = parse_ini_file(jApp::configPath($gJConfig->cacheProfiles), true);
         }
         $profile = null;
 

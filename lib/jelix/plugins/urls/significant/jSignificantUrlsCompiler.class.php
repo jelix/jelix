@@ -138,7 +138,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $this->createUrlInfos = array();
         $this->createUrlContent = "<?php \n";
         $this->readProjectXml();
-        $this->retrieveModulePaths(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        $this->retrieveModulePaths(jApp::configPath('defaultconfig.ini.php'));
 
         foreach ($xml->children() as $tagname => $tag) {
             if (!preg_match("/^(.*)entrypoint$/", $tagname, $m)) {
@@ -277,15 +277,15 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             $parseContent .= '$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($this->defaultUrl->entryPoint).'\'] = '
                             .var_export($this->parseInfos, true).";\n?>";
     
-            jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($this->defaultUrl->entryPoint).'.entrypoint.php',$parseContent);
+            jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($this->defaultUrl->entryPoint).'.entrypoint.php'),$parseContent);
         }
         $this->createUrlContent .= '$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($this->createUrlInfos, true).";\n?>";
-        jFile::write(JELIX_APP_TEMP_PATH.'compiled/urlsig/'.$aSelector->file.'.creationinfos.php', $this->createUrlContent);
+        jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos.php'), $this->createUrlContent);
         return true;
     }
 
     protected function readProjectXml() {
-        $xml = simplexml_load_file(JELIX_APP_PATH.'project.xml');
+        $xml = simplexml_load_file(jApp::appPath('project.xml'));
         foreach ($xml->entrypoints->entry as $entrypoint) {
             $file = (string)$entrypoint['file'];
             if (substr($file, -4) != '.php')
@@ -300,7 +300,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             $entrypoint.='.php';
         if (!isset($this->entryPoints[$entrypoint]))
             throw new Exception('The entry point "'.$entrypoint.'" is not declared into project.xml');
-        return JELIX_APP_CONFIG_PATH.$this->entryPoints[$entrypoint];
+        return jApp::configPath($this->entryPoints[$entrypoint]);
     }
     /**
      * list all entry points and their config
@@ -333,7 +333,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
-            $p = str_replace(array('lib:','app:'), array(LIB_PATH, JELIX_APP_PATH), $path);
+            $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
             if (!file_exists($p)) {
                 continue;
             }

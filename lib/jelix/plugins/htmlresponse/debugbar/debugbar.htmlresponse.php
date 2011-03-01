@@ -251,16 +251,16 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
                     $path = LIB_PATH;
                     $shortcut = 'lib:';
                 }
-                elseif (strpos($file, JELIX_APP_TEMP_PATH) === 0) {
-                    $path = JELIX_APP_TEMP_PATH;
+                elseif (strpos($file, jApp::tempPath()) === 0) {
+                    $path = jApp::tempPath();
                     $shortcut = 'temp:';
                 }
-                elseif (strpos($file, JELIX_APP_PATH) === 0) {
-                    $path = JELIX_APP_PATH;
+                elseif (strpos($file, jApp::appPath()) === 0) {
+                    $path = jApp::appPath();
                     $shortcut = 'app:';
                 }
                 else {
-                    $path = dirname(JELIX_APP_PATH);
+                    $path = dirname(jApp::appPath());
                     $shortcut = 'app:';
                     while ($path != '.' && $path != '') {
                         $shortcut .= '../';

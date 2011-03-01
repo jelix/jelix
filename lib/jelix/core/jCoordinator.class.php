@@ -111,7 +111,7 @@ class jCoordinator {
                 $conf = array();
             }
             else {
-                $conff = JELIX_APP_CONFIG_PATH.$conf;
+                $conff = jApp::configPath($conf);
                 if (false === ($conf = parse_ini_file($conff,true)))
                     throw new Exception("Error in the configuration file of plugin $name ($conff)!", 13);
             }
@@ -333,11 +333,11 @@ class jCoordinator {
                 ob_end_clean();
             }
             // log into file
-            @error_log($errorLog->getFormatedMessage(),3, JELIX_APP_LOG_PATH.'errors.log');
+            @error_log($errorLog->getFormatedMessage(),3, jApp::logPath('errors.log'));
             // if accept text/html
             if (isset($_SERVER['HTTP_ACCEPT']) && strstr($_SERVER['HTTP_ACCEPT'],'text/html')) {
-                if (file_exists(JELIX_APP_PATH.'response/error.en_US.php'))
-                    $file = JELIX_APP_PATH.'response/error.en_US.php';
+                if (file_exists(jApp::appPath('responses/error.en_US.php')))
+                    $file = jApp::appPath('responses/error.en_US.php');
                 else
                     $file = JELIX_LIB_CORE_PATH.'response/error.en_US.php';
                 $HEADBOTTOM = '';

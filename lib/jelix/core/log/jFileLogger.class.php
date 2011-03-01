@@ -17,7 +17,7 @@ class jFileLogger implements jILogger {
      */
     function logMessage($message) {
         global $gJConfig, $gJCoord;
-        if (!is_writable(JELIX_APP_LOG_PATH))
+        if (!is_writable(jApp::logPath()))
             return;
 
         $type = $message->getCategory();
@@ -47,7 +47,7 @@ class jFileLogger implements jILogger {
             @error_log(date ("Y-m-d H:i:s")."\t".$ip."\t$type\t".$message->getFormatedMessage()."\n", 3, $file);
         }
         catch(Exception $e) {
-            $file = JELIX_APP_LOG_PATH.'errors.log';
+            $file = jApp::logPath('errors.log');
             @error_log(date ("Y-m-d H:i:s")."\t".$ip."\terror\t".$e->getMessage()."\n", 3, $file);
         }
     }

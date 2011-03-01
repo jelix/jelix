@@ -468,7 +468,7 @@ class jConfigCompiler {
 
             if ($basepath == '/')
                 $urlconf['documentRoot'] = jApp::wwwPath();
-            else if(strpos(JELIX_APP_WWW_PATH, $basepath) === false) {
+            else if(strpos(jApp::wwwPath(), $basepath) === false) {
                 if (isset($_SERVER['DOCUMENT_ROOT']))
                     $urlconf['documentRoot'] = $_SERVER['DOCUMENT_ROOT'];
                 else

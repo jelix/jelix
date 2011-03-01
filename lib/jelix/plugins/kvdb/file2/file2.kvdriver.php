@@ -24,7 +24,7 @@ class file2KVDriver extends jKVDriver {
 	 * @access protected
 	 */
    	protected function _connect() {
-        $cnx = new fileServer(JELIX_APP_TEMP_PATH . 'filekv');
+        $cnx = new fileServer(jApp::tempPath('filekv'));
 
         return $cnx;
 	}

@@ -75,7 +75,7 @@ class jMailer extends PHPMailer {
         }
 
         $this->FromName = $gJConfig->mailer['webmasterName'];
-        $this->filePath = JELIX_APP_VAR_PATH.$gJConfig->mailer['filesDir'];
+        $this->filePath = jApp::varPath($gJConfig->mailer['filesDir']);
 
         $this->copyToFiles = $gJConfig->mailer['copyToFiles'];
 
