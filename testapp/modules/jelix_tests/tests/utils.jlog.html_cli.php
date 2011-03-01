@@ -13,7 +13,7 @@
 class UTjlog extends UnitTestCase {
 
     public function testLogFile(){
-        $file = JELIX_APP_LOG_PATH.'test.log';
+        $file = jApp::logPath('test.log');
         if(file_exists($file))
             file_put_contents($file,'');
 

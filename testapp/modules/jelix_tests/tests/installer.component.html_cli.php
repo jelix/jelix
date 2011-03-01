@@ -45,7 +45,7 @@ class UTjInstallerComponent extends UnitTestCase {
     }
 
     public function testDependenciesReading() {
-        $this->defaultIni = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        $this->defaultIni = new jIniFileModifier(jApp::configPath().'defaultconfig.ini.php');
         $comp = new testInstallerComponentForDependencies("test","", null);
 
         $str = '<?xml version="1.0" encoding="UTF-8"?>
@@ -140,7 +140,7 @@ class UTjInstallerComponent extends UnitTestCase {
             $ini = new testInstallerIniFileModifier("test.ini.php");
 
             // testinstall1 has no install.php file
-            $component = new jInstallerComponentModule('testinstall1', JELIX_APP_PATH.'modules/testinstall1/', null);
+            $component = new jInstallerComponentModule('testinstall1', jApp::appPath().'modules/testinstall1/', null);
             $component->init();
             $conf =(object) array( 'modules'=>array(
                'testinstall1.access'=>2, 
@@ -168,7 +168,7 @@ class UTjInstallerComponent extends UnitTestCase {
             $iniFoo = new testInstallerIniFileModifier('foo/config.ini.php');
 
             // testinstall2 has an install.php file
-            $component = new jInstallerComponentModule('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
             $component->init();
 
             $conf =(object) array( 'modules'=>array(
@@ -204,7 +204,7 @@ class UTjInstallerComponent extends UnitTestCase {
             $ini = new testInstallerIniFileModifier("index/config.ini.php");
 
             // testinstall1 has no upgrade scripts
-            $component = new jInstallerComponentModule('testinstall1', JELIX_APP_PATH.'modules/testinstall1/', null);
+            $component = new jInstallerComponentModule('testinstall1', jApp::appPath().'modules/testinstall1/', null);
             $component->init();
             $conf =(object) array( 'modules'=>array(
                'testinstall1.access'=>2, 
@@ -231,7 +231,7 @@ class UTjInstallerComponent extends UnitTestCase {
             $ini = new testInstallerIniFileModifier("index/config.ini.php");
 
             //------------ testinstall2 has some upgraders file
-            $component = new jInstallerComponentModule('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
             $component->init();
 
             // the current version is the latest one : no updaters
@@ -261,7 +261,7 @@ class UTjInstallerComponent extends UnitTestCase {
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
             $component->init();
 
             $conf =(object) array( 'modules'=>array(
@@ -302,7 +302,7 @@ class UTjInstallerComponent extends UnitTestCase {
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             // the current version is a very old one : all updaters
-            $component = new jInstallerComponentModule('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
             $component->init();
 
             $conf =(object) array( 'modules'=>array(

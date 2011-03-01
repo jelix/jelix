@@ -122,7 +122,7 @@ class testInstallerMain extends jInstaller {
 
     function __construct ($reporter) {
         $this->reporter = $reporter;
-        $this->defaultConfig = new jIniFileModifier(JELIX_APP_CONFIG_PATH.'defaultconfig.ini.php');
+        $this->defaultConfig = new jIniFileModifier(jApp::configPath().'defaultconfig.ini.php');
         $this->messages = new jInstallerMessageProvider('en');
         $nativeModules = array('jelix','jacl2db','jacldb','jauth','jauthdb','junittests','jWSDL');
         global $gJConfig;

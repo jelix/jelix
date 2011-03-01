@@ -25,7 +25,7 @@ class UTjCacheAPI extends jUnitTestCaseDb {
     function getTests() {
         if ($this->profile == '')
             return array();
-        $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.'cache.ini.php', true);
+        $conf = parse_ini_file(jApp::configPath().'cache.ini.php', true);
         if (isset($conf[$this->profile]) && $conf[$this->profile]['enabled']) {
             $this->conf = $conf[$this->profile];
             return parent::getTests();

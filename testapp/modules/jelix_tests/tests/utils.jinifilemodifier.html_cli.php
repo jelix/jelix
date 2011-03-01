@@ -463,18 +463,18 @@ foo[]=ccc
         $parser->testParse($content);
         $this->assertEqualOrDiff($result, $parser->generate() );
 
-        file_put_contents(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php', $content);
-        $parser = new testIniFileModifier(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php');
+        file_put_contents(jApp::tempPath().'test_jinifilemodifier.html_cli.php', $content);
+        $parser = new testIniFileModifier(jApp::tempPath().'test_jinifilemodifier.html_cli.php');
         $this->assertEqualOrDiff($result, $parser->generate() );
         
         $content = str_replace("\n", "\r", $content);
-        file_put_contents(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php', $content);
-        $parser = new testIniFileModifier(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php');
+        file_put_contents(jApp::tempPath().'test_jinifilemodifier.html_cli.php', $content);
+        $parser = new testIniFileModifier(jApp::tempPath().'test_jinifilemodifier.html_cli.php');
         $this->assertEqualOrDiff($result, $parser->generate() );
         
         $content = str_replace("\r", "\r\n", $content);
-        file_put_contents(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php', $content);
-        $parser = new testIniFileModifier(JELIX_APP_TEMP_PATH.'test_jinifilemodifier.html_cli.php');
+        file_put_contents(jApp::tempPath().'test_jinifilemodifier.html_cli.php', $content);
+        $parser = new testIniFileModifier(jApp::tempPath().'test_jinifilemodifier.html_cli.php');
         $this->assertEqualOrDiff($result, $parser->generate());
 
     }

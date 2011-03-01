@@ -22,7 +22,7 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
     protected $mmc;
 
     function getTests() {
-        $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.'kvprofiles.ini.php', true);
+        $conf = parse_ini_file(jApp::configPath().'kvprofiles.ini.php', true);
         if (isset($conf[$this->profile])) {
              return parent::getTests();
         }
@@ -93,13 +93,13 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
         $this->assertTrue($kv->set('existingKey', 'a value'));
         $this->assertEqual($kv->get('existingKey'), 'a value');
         if ($this->profile == 'usingfile') {
-            $this->assertEqual(file_get_contents(JELIX_APP_TEMP_PATH.'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey')
+            $this->assertEqual(file_get_contents(jApp::tempPath().'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey')
                            , serialize('a value'));
         }
 
         $this->assertEqual($kv->append('existingKey','_suffix'), 'a value_suffix');
         if ($this->profile == 'usingfile') {
-            $this->assertEqual(file_get_contents(JELIX_APP_TEMP_PATH.'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey')
+            $this->assertEqual(file_get_contents(jApp::tempPath().'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey')
                            , serialize('a value_suffix'));
         }
 
@@ -108,7 +108,7 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
         $this->assertEqual($kv->prepend('existingKey','prefix_'), 'prefix_a value_suffix');
         $this->assertEqual($kv->get('existingKey'), 'prefix_a value_suffix');
         if ($this->profile == 'usingfile') {
-            $this->assertEqual(file_get_contents(JELIX_APP_TEMP_PATH.'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey')
+            $this->assertEqual(file_get_contents(jApp::tempPath().'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey')
                            , serialize('prefix_a value_suffix'));
         }
     }

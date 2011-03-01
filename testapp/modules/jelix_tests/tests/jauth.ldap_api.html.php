@@ -22,11 +22,11 @@ class UTjAuth_LDAP extends jUnitTestCase {
     protected $config;
 
     public function setUp (){
-        if(!file_exists(JELIX_APP_CONFIG_PATH.'auth_ldap.coord.ini.php')) {
+        if(!file_exists(jApp::configPath().'auth_ldap.coord.ini.php')) {
             $this->config = null;
             return;
         }
-        $conf = parse_ini_file(JELIX_APP_CONFIG_PATH.'auth_ldap.coord.ini.php',true);
+        $conf = parse_ini_file(jApp::configPath().'auth_ldap.coord.ini.php',true);
 
         global $gJCoord;
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');

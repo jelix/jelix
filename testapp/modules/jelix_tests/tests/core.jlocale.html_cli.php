@@ -28,7 +28,7 @@ class UTjlocale extends jUnitTestCase {
     protected $filePath;
 
     public function testBundleUnknownFile(){
-        $this->filePath =  JELIX_APP_PATH.'modules/jelix_tests/locales/';
+        $this->filePath =  jApp::appPath().'modules/jelix_tests/locales/';
         $b = new bundleTest('','');
         try {
             $b->readProperties($this->filePath.'unknownfile');
