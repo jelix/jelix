@@ -321,12 +321,6 @@ class migrateCommand extends JelixScriptCommand {
         
         $dep = $this->nextElementSibling($this->firstElementChild($doc->documentElement));
         $dir = $this->nextElementSibling($dep, 'directories');
-        
-        $this->checkPath($dir, 'config', jApp::configPath());
-        $this->checkPath($dir, 'log', jApp::logPath());
-        $this->checkPath($dir, 'var', jApp::varPath());
-        $this->checkPath($dir, 'www', jApp::wwwPath());
-        $this->checkPath($dir, 'temp', JELIX_APP_REAL_TEMP_PATH);
 
         $this->projectXml->save(jApp::appPath('project.xml'));
     }
@@ -357,20 +351,6 @@ class migrateCommand extends JelixScriptCommand {
         $this->updateJelixDependency($doc);
 
         $doc->save($modulexml);
-    }
-
-    protected function checkPath($dir, $localName, $path) {
-        $config = $dir->getElementsByTagName($localName);
-        if (!$config || $config->length == 0) {
-            $config = $dir->ownerDocument->createElement($localName);
-            $dir->appendChild($config);
-        }
-        else {
-            $config = $config->item(0);
-        }
-        if (trim($config->textContent) == '') {
-            $config->textContent = jxs_getRelativePath(jApp::appPath(), $path, true);
-        }
     }
 
     /**
