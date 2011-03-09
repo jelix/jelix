@@ -276,8 +276,10 @@ cd testapp/modules/testinstall2/install
 cd testapp/modules/testinstall3
 *  module.xml
 
-
-
+cd testapp/tests/
+  phpunit.xml
+cd testapp/tests/jelix/core/
+  jAppContextTest.php
 
 cd testapp/var
   .htaccess

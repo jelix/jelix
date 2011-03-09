@@ -35,6 +35,8 @@ class jApp {
 
     /**
      * initialize the application paths
+     * 
+     * Warning: given paths should be ended by a directory separator.
      * @param string $appPath  application directory
      * @param string $wwwPath  www directory
      * @param string $varPath  var directory
@@ -104,6 +106,27 @@ class jApp {
 
     public static function setTempBasePath($path) {
         self::$tempBasePath = $path;
+    }
+
+    protected static $contextBackup = array();
+
+    /**
+     * save all path and others variables relatives to the application, so you can
+     * temporary change the context to an other application
+     */
+    public static function saveContext() {
+        self::$contextBackup[] = array(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
+                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath);
+    }
+
+    /**
+     * restore the previous context of the application
+     */
+    public static function restoreContext() {
+        if (!count(self::$contextBackup))
+            return;
+        list(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
+             self::$wwwPath, self::$scriptPath, self::$tempBasePath) = array_pop(self::$contextBackup);
     }
 
     /**

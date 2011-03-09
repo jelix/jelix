@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<phpunit bootstrap="../application.init.php">
+  <testsuites>
+    <testsuite name="Jelix Core">
+      <directory>jelix/core/</directory>
+    </testsuite>
+
+  </testsuites>
+</phpunit>

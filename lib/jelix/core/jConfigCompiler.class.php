@@ -254,7 +254,8 @@ class jConfigCompiler {
             $installation[$section] = array();
 
         $list = preg_split('/ *, */',$config->modulesPath);
-        $list = array_merge($list, preg_split('/ *, */',self::$commonConfig['modulesPath']));
+        if (isset(self::$commonConfig['modulesPath']))
+            $list = array_merge($list, preg_split('/ *, */',self::$commonConfig['modulesPath']));
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $pathChecked = array();
 
