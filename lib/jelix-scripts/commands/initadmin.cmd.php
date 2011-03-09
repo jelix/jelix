@@ -78,8 +78,8 @@ class initadminCommand extends JelixScriptCommand {
 
 
         $params = array();
-        $this->createFile(jApp::appPath('responses/adminHtmlResponse.class.php','responses/adminHtmlResponse.class.php.tpl'),$params);
-        $this->createFile(jApp::appPath('responses/adminLoginHtmlResponse.class.php','responses/adminLoginHtmlResponse.class.php.tpl'),$params);
+        $this->createFile(jApp::appPath('responses/adminHtmlResponse.class.php'),'responses/adminHtmlResponse.class.php.tpl',$params);
+        $this->createFile(jApp::appPath('responses/adminLoginHtmlResponse.class.php'),'responses/adminLoginHtmlResponse.class.php.tpl',$params);
         $inifile->setValue('html', 'adminHtmlResponse', 'responses');
         $inifile->setValue('htmlauth', 'adminLoginHtmlResponse', 'responses');
 

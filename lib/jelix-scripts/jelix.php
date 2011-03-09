@@ -185,7 +185,15 @@ try {
     $command->run();
 }
 catch (Exception $e) {
-    echo "Error: ".$e->getMessage(),"\n";
+    echo "Error: ".$e->getMessage()."\n";
+    if (DEBUG_MODE) {
+        echo $e->getFile(). "  line ".$e->getLine()."\n";
+        foreach($e->getTrace() as $k=>$t){
+            echo "\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
+            echo (isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
+        }
+        echo "\n";
+    }
     exit(1);
 }
 

@@ -84,7 +84,7 @@ class createappCommand extends JelixScriptCommand {
 
         $this->createDir(JELIX_APP_REAL_TEMP_PATH);
         $this->createDir(JELIX_APP_CLI_TEMP_PATH);
-        $this->createDir(jApp::appPath());
+        $this->createDir(jApp::tempPath());
         $this->createDir($wwwpath);
         
         $varPath = jApp::varPath();
