@@ -6,7 +6,7 @@ CREATE TABLE `product_test` (
 `create_date` datetime default NULL,
 `promo` BOOL NOT NULL,
 `dummy` set('created','started','stopped') DEFAULT NULL
-) TYPE = MYISAM ;
+) ENGINE = MYISAM ;
 
 CREATE TABLE `product_tags_test` (
 `product_id` INT NOT NULL ,
@@ -38,7 +38,7 @@ CREATE TABLE `products` (
 `name` VARCHAR( 150 ) NOT NULL ,
 `price` FLOAT   default '0',
 `promo` BOOL NOT NULL 
-) TYPE = MYISAM ;
+) ENGINE = MYISAM ;
 
 
 CREATE TABLE `testkvdb` (
