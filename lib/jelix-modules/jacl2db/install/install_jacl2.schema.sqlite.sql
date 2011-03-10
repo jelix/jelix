@@ -1,6 +1,6 @@
 
 CREATE TABLE %%PREFIX%%jacl2_group (
-    id_aclgrp AUTOINCREMENT PRIMARY KEY,
+    id_aclgrp INTEGER AUTOINCREMENT PRIMARY KEY,
     name varchar(150) NOT NULL DEFAULT '',
     code varchar(30),
     grouptype int(5) NOT NULL DEFAULT '0',

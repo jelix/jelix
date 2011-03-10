@@ -30,30 +30,30 @@ class UTjCacheFile extends UTjCacheAPI {
     public function testSet (){
         parent::testSet();
         $this->assertTrue(file_exists(jApp::tempPath().'cache'));
-        $this->assertTrue(file_exists(jApp::tempPath().'cache/jelix_cache___noExpireKey.cache'));
-        $this->assertFalse(file_exists(jApp::tempPath().'cache/jelix_cache___expiredKey.cache'));
-        $this->assertTrue(file_exists(jApp::tempPath().'cache/jelix_cache___ttlInDateKey.cache'));
-        $this->assertTrue(file_exists(jApp::tempPath().'cache/jelix_cache___ttlInSecondesKey.cache'));
+        $this->assertTrue(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___noExpireKey.cache'));
+        $this->assertFalse(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___expiredKey.cache'));
+        $this->assertTrue(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___ttlInDateKey.cache'));
+        $this->assertTrue(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___ttlInSecondesKey.cache'));
     }
 
 
     public function testGarbage (){
         parent::testGarbage();
-        $this->assertTrue(file_exists(jApp::tempPath().'cache/jelix_cache___remainingDataKey.cache'));
-        $this->assertFalse(file_exists(jApp::tempPath().'cache/jelix_cache___garbage1DataKey.cache'));
-        $this->assertFalse(file_exists(jApp::tempPath().'cache/jelix_cache___garbage1DataKey.cache'));
+        $this->assertTrue(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___remainingDataKey.cache'));
+        $this->assertFalse(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___garbage1DataKey.cache'));
+        $this->assertFalse(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___garbage1DataKey.cache'));
     }
 
     public function testFlush (){
         parent::testFlush();
 
-        $this->assertTrue(file_exists(jApp::tempPath().'cache/jelix_cache___flush1DataKey.cache'));
-        $this->assertTrue(file_exists(jApp::tempPath().'cache/jelix_cache___flush2DataKey.cache'));
-        $this->assertTrue(file_exists(jApp::tempPath().'cache/jelix_cache___flush3DataKey.cache'));
+        $this->assertTrue(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___flush1DataKey.cache'));
+        $this->assertTrue(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___flush2DataKey.cache'));
+        $this->assertTrue(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___flush3DataKey.cache'));
         $this->assertTrue(jCache::flush($this->profile));
-        $this->assertFalse(file_exists(jApp::tempPath().'cache/jelix_cache___flush1DataKey.cache'));
-        $this->assertFalse(file_exists(jApp::tempPath().'cache/jelix_cache___flush2DataKey.cache'));
-        $this->assertFalse(file_exists(jApp::tempPath().'cache/jelix_cache___flush3DataKey.cache'));
+        $this->assertFalse(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___flush1DataKey.cache'));
+        $this->assertFalse(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___flush2DataKey.cache'));
+        $this->assertFalse(file_exists(jApp::tempPath().'cache/usingfile/jelix_cache___flush3DataKey.cache'));
     }
 
 }
