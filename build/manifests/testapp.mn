@@ -97,6 +97,8 @@ cd testapp/modules/testapp/install
   base.mysql.sql
   base.pgsql.sql
   install.php
+cd testapp/modules/testapp/tests/
+  test1.pu.php
 
 cd testapp/modules/jelix_tests
   events.xml
@@ -256,6 +258,10 @@ cd testapp/modules/jelix_tests/tests/
   utils.jclasses.html_cli.php
   utils.jmailer.html_cli.php
   utils.jversioncomparator.html_cli.php
+  test1.pu.php
+  test2.unit.pu.php
+  
+  
 
 cd testapp/modules/testurls/
 *  module.xml
@@ -297,6 +303,9 @@ cd testapp/tests-jelix/jelix/installer/app1/var/config/foo/
 cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
   config.ini.php
 
+cd testapp/tests/
+  runtests.php
+  phpunit.xml
 
 cd testapp/var
   .htaccess

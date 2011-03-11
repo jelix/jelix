@@ -182,6 +182,8 @@ cd lib/jelix-scripts/templates/var/config/cmdline/
   config.ini.php.tpl
 cd lib/jelix-scripts/templates/var/config/soap/
   config.ini.php.tpl
+cd lib/jelix-scripts/templates/tests/
+  runtests.php
 
 cd lib/jelix/docs
   workflow_action.sxd
@@ -227,3 +229,11 @@ cd lib/jelix-modules/junittests/install/scripts
 cd lib/jelix-modules/junittests/install/var/log-cli
 cd lib/jelix-modules/junittests/install/var/config/cmdline
   configtests.ini.php
+
+cd lib/jelix-tests/
+  phpunit.inc.php
+cd lib/jelix-tests/classes
+  command.php
+  JelixTestSuite.class.php
+  junittestcase.class.php
+  junittestcasedb.class.php

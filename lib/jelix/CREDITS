@@ -19,6 +19,7 @@ Brunto
 Cedric
  - bug fix in jFile::read
 
+
 Uriel Corfa
  - Support of class datasources in jForms (#323)
  - contribution à jResponseTcpdf (#131)
