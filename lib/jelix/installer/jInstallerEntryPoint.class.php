@@ -84,17 +84,4 @@ class jInstallerEntryPoint {
     function getModule($moduleName) {
         return new jInstallerModuleInfos($moduleName, $this->config->modules);
     }
-
-    /**
-     * @param string $moduleName the module name
-     * @return boolean
-     */
-    function isModuleInstalled($moduleName) {
-        $n = $moduleName.'.installed';
-        if (isset($this->config->modules[$n]))
-            return $this->config->modules[$n];
-        else
-            return false;
-    }
-
 }

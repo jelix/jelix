@@ -232,6 +232,7 @@ cd lib/jelix/installer
   jIInstallerComponent.iface.php
   jIInstallReporter.iface.php
   jInstaller.class.php
+  jInstallerApplication.class.php
   jInstallerBase.class.php
 * jInstallChecker.class.php
   jInstallerComponentBase.class.php
