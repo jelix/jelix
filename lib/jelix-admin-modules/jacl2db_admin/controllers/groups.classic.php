@@ -4,7 +4,7 @@
 * @subpackage  jacl2db_admin
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Olivier Demah
-* @copyright   2008 Laurent Jouanneau
+* @copyright   2008-2011 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @copyright   2010 Olivier Demah
 * @link        http://jelix.org
@@ -38,7 +38,7 @@ class groupsCtrl extends jController {
         else {
             $gid=array(0);
             $o = new StdClass;
-            $o->id_aclgrp = '0';
+            $o->id_aclgrp = '__anonymous';
             $o->name = jLocale::get('jacl2db_admin~acl2.anonymous.group.name');
             $o->grouptype = 0;
             $groups=array($o);
@@ -73,7 +73,7 @@ class groupsCtrl extends jController {
 
         $gid=array(0);
         $o = new StdClass;
-        $o->id_aclgrp ='0';
+        $o->id_aclgrp ='__anonymous';
         $o->name = jLocale::get('jacl2db_admin~acl2.anonymous.group.name');
         $o->grouptype=0;
 
@@ -98,13 +98,13 @@ class groupsCtrl extends jController {
             }
         }
 
-        $rs = $daorights->getRightsHavingRes(0);
+        $rs = $daorights->getRightsHavingRes('__anonymous');
         foreach($rs as $rec){
             if (!isset($rightsWithResources[$rec->id_aclsbj]))
                 $rightsWithResources[$rec->id_aclsbj] = array();
-            if (!isset($rightsWithResources[$rec->id_aclsbj][0]))
-                $rightsWithResources[$rec->id_aclsbj][0] = 0;
-            $rightsWithResources[$rec->id_aclsbj][0] ++;
+            if (!isset($rightsWithResources[$rec->id_aclsbj]['__anonymous']))
+                $rightsWithResources[$rec->id_aclsbj]['__anonymous'] = 0;
+            $rightsWithResources[$rec->id_aclsbj]['__anonymous'] ++;
         }
 
         $rights=array();
@@ -133,11 +133,11 @@ class groupsCtrl extends jController {
         $rights = $this->param('rights',array());
 
         foreach(jAcl2DbUserGroup::getGroupList() as $grp) {
-            $id = intval($grp->id_aclgrp);
+            $id = $grp->id_aclgrp;
             jAcl2DbManager::setRightsOnGroup($id, (isset($rights[$id])?$rights[$id]:array()));
         }
 
-        jAcl2DbManager::setRightsOnGroup(0, (isset($rights[0])?$rights[0]:array()));
+        jAcl2DbManager::setRightsOnGroup('__anonymous', (isset($rights['__anonymous'])?$rights['__anonymous']:array()));
         jMessage::add(jLocale::get('acl2.message.group.rights.ok'), 'ok');
         $rep->action = 'jacl2db_admin~groups:rights';
         return $rep;
@@ -146,15 +146,15 @@ class groupsCtrl extends jController {
     function rightres(){
         $rep = $this->getResponse('html');
 
-        $groupid = $this->intParam('group', null);
+        $groupid = $this->param('group', null);
 
-        if ($groupid === null || $groupid < 0) {
+        if ($groupid === null || $groupid == '') {
             $rep->body->assign('MAIN', '<p>invalid group.</p>');
             return $rep;
         }
 
         $daogroup = jDao::get('jacl2db~jacl2group','jacl2_profile');
-        if ($groupid > 0) {
+        if ($groupid != '__anonymous') {
             $group = $daogroup->get($groupid);
             if (!$group) {
                 $rep->body->assign('MAIN', '<p>invalid group.</p>');
@@ -201,18 +201,17 @@ class groupsCtrl extends jController {
 
         $subjects = $this->param('subjects',array());
 
-        $groupid = $this->intParam('group', null);
-        if ($groupid === null || $groupid < 0) {
+        $groupid = $this->param('group', null);
+        if ($groupid === null || $groupid == '') {
             $rep->action = 'jacl2db_admin~groups:rights';
             return $rep;
         }
 
         $daogroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
-        if ($groupid > 0) {
+        if ($groupid != '__anonymous') {
             $group = $daogroup->get($groupid);
             if (!$group) {
                 $rep->action = 'jacl2db_admin~groups:rights';
-
                 return $rep;
             }
         }
@@ -252,8 +251,11 @@ class groupsCtrl extends jController {
         $rep->action = 'jacl2db_admin~groups:index';
 
         $name = $this->param('newgroup');
+        $id = $this->param('newgroupid');
+        if (trim($id) == '')
+            $id = null;
         if($name != '') {
-            jAcl2DbUserGroup::createGroup($name);
+            jAcl2DbUserGroup::createGroup($name, $id);
             jMessage::add(jLocale::get('acl2.message.group.create.ok'), 'ok');
         }
         return $rep;
@@ -265,7 +267,7 @@ class groupsCtrl extends jController {
 
         $id = $this->param('group_id');
         $name = $this->param('newname');
-        if ($id && $name != '') {
+        if ($id != '' && $name != '') {
             jAcl2DbUserGroup::updateGroup($id, $name);
             jMessage::add(jLocale::get('acl2.message.group.rename.ok'), 'ok');
         }

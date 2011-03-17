@@ -1,19 +1,18 @@
 
 -- Liste des groupes
 CREATE TABLE  IF NOT EXISTS `%%PREFIX%%jacl2_group` (
-  `id_aclgrp` int(11) NOT NULL auto_increment,
+  `id_aclgrp` varchar(50) NOT NULL,
   `name` varchar(150) NOT NULL default '',
-  `code` varchar(30) default NULL,
   `grouptype` tinyint(4) NOT NULL default '0',
   `ownerlogin` varchar(50) default NULL,
   PRIMARY KEY  (`id_aclgrp`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM;
 
 -- liste des groupes associés à chaque utilisateur
 CREATE TABLE IF NOT EXISTS `%%PREFIX%%jacl2_user_group` (
-  `login` varchar(50) NOT NULL default '',
-  `id_aclgrp` int(11) NOT NULL default '0',
-  KEY `login` (`login`,`id_aclgrp`)
+  `login` varchar(50) NOT NULL,
+  `id_aclgrp` varchar(50) NOT NULL,
+  PRIMARY KEY (`login`,`id_aclgrp`)
 ) ENGINE=MyISAM;
 
 
@@ -27,8 +26,8 @@ CREATE TABLE IF NOT EXISTS `%%PREFIX%%jacl2_subject` (
 -- table centrale
 -- valeurs du droit pour chaque couple sujet/groupe ou triplet sujet/groupe/ressource
 CREATE TABLE IF NOT EXISTS `%%PREFIX%%jacl2_rights` (
-  `id_aclsbj` varchar(100) NOT NULL default '',
-  `id_aclgrp` int(11) NOT NULL default '0',
+  `id_aclsbj` varchar(100) NOT NULL,
+  `id_aclgrp` varchar(50) NOT NULL,
   `id_aclres` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id_aclsbj`,`id_aclgrp`,`id_aclres`)
 ) ENGINE=MyISAM;

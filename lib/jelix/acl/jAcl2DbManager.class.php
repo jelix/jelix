@@ -25,7 +25,7 @@ class jAcl2DbManager {
 
     /**
      * add a right on the given subject/group/resource
-     * @param int    $group the group id.
+     * @param string    $group the group id.
      * @param string $subject the key of the subject
      * @param string $resource the id of a resource
      * @return boolean  true if the right is set
@@ -52,7 +52,7 @@ class jAcl2DbManager {
 
     /**
      * remove a right on the given subject/group/resource
-     * @param int    $group the group id.
+     * @param string    $group the group id.
      * @param string $subject the key of the subject
      * @param string $resource the id of a resource
      */
@@ -66,7 +66,7 @@ class jAcl2DbManager {
     /**
      * set rights on the given group. Only rights on given subjects are changed.
      * Rights with resources are not changed.
-     * @param int    $group the group id.
+     * @param string    $group the group id.
      * @param array  $rights list of rights key=subject, value=true or non empty string
      */
     public static function setRightsOnGroup($group, $rights){

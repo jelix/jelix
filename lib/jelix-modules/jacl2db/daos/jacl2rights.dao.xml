@@ -5,7 +5,7 @@
     </datasources>
     <record>
       <property name="id_aclsbj" fieldname="id_aclsbj" datatype="string" required="yes"/>
-      <property name="id_aclgrp" fieldname="id_aclgrp" datatype="int" required="yes"/>
+      <property name="id_aclgrp" fieldname="id_aclgrp" datatype="string" required="yes"/>
       <property name="id_aclres" fieldname="id_aclres" datatype="string" required="yes"/>
     </record>
     <factory>
@@ -57,7 +57,7 @@
             <conditions >
                 <eq property="id_aclsbj" expr="$subject" />
                 <eq property="id_aclres" expr="''"/>
-                <eq property="id_aclgrp" value="0" />
+                <eq property="id_aclgrp" value="__anonymous" />
             </conditions>
         </method>
         <method name="getAnonymousRightWithRes" type="selectfirst">
@@ -66,13 +66,13 @@
             <conditions >
                 <eq property="id_aclsbj" expr="$subject" />
                 <eq property="id_aclres" expr="$res" />
-                <eq property="id_aclgrp" value="0" />
+                <eq property="id_aclgrp" value="__anonymous" />
             </conditions>
         </method>
         <method name="getAllAnonymousRights" type="select">
             <conditions >
                 <eq property="id_aclres" expr="''"/>
-                <eq property="id_aclgrp" value="0" />
+                <eq property="id_aclgrp" value="__anonymous" />
             </conditions>
         </method>
         <method name="deleteByGroup" type="delete">

@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2007-2008 Laurent Jouanneau, 2008 Loic Mathaud
+* @copyright   2007-2011 Laurent Jouanneau, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -82,7 +82,7 @@ ACTION:
         $sql="SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, s.label_key as subject
                 FROM ".$cnx->prefixTable('jacl2_rights')." r,
                 ".$cnx->prefixTable('jacl2_subject')." s
-                WHERE r.id_aclgrp = 0 AND r.id_aclsbj=s.id_aclsbj
+                WHERE r.id_aclgrp = '__anonymous' AND r.id_aclsbj=s.id_aclsbj
                 ORDER BY subject, id_aclres ";
         $rs = $cnx->query($sql);
         $sbj =-1;
@@ -106,7 +106,7 @@ ACTION:
         $sbj =-1;
         foreach($rs as $rec){
             if($grp != $rec->id_aclgrp){
-                echo "- group ", $rec->grp, ' (', $rec->id_aclgrp,")\n";
+                echo "- group ", $rec->id_aclgrp, ' (', $rec->grp,")\n";
                 $grp = $rec->id_aclgrp;
                 $sbj = -1;
             }
@@ -126,7 +126,7 @@ ACTION:
 
         $cnx = jDb::getConnection('jacl2_profile');
 
-        $group = $this->_getGrpId($params[0]);
+        $group = $cnx->quote($this->_getGrpId($params[0]));
 
         $subject=$cnx->quote($params[1]);
         if(isset($params[2]))
@@ -166,7 +166,7 @@ ACTION:
 
          $cnx = jDb::getConnection('jacl2_profile');
 
-        $group = $this->_getGrpId($params[0]);
+        $group = $cnx->quote($this->_getGrpId($params[0]));
         $subject=$cnx->quote($params[1]);
         if(isset($params[2]))
             $resource = $cnx->quote($params[2]);
@@ -254,21 +254,17 @@ ACTION:
     }
 
     private function _getGrpId($param, $onlypublic=false){
-        if($onlypublic)
+        if ($param == '__anonymous')
+            return $param;
+
+        if($onlypublic) {
             $c = ' grouptype <2 AND ';
+        }
         else $c='';
 
         $cnx = jDb::getConnection('jacl2_profile');
         $sql="SELECT id_aclgrp FROM ".$cnx->prefixTable('jacl2_group')." WHERE $c ";
-        if (is_numeric($param)) {
-            if($param == '0')
-                return 0;
-            $sql .= " id_aclgrp = ".$param;
-        } else {
-            if($param =='anonymous')
-                return 0;
-            $sql .= " name = ".$cnx->quote($param);
-        }
+        $sql .= " id_aclgrp = ".$cnx->quote($param);
         $rs = $cnx->query($sql);
         if($rec = $rs->fetch()){
             return $rec->id_aclgrp;

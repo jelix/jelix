@@ -4,7 +4,7 @@
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
 * @contributor Loic Mathaud
-* @copyright   2007-2008 Laurent Jouanneau
+* @copyright   2007-2011 Laurent Jouanneau
 * @copyright   2008 Julien Issler
 * @copyright   2008 Loic Mathaud
 * @link        http://www.jelix.org
@@ -29,7 +29,7 @@ ACTION:
     liste les utilisateurs d'un groupe
  * alluserslist
     liste tous les utilisateurs inscrits
- * [-defaultgroup] create  nom
+ * [-defaultgroup] create  id [nom]
     crée un groupe. Si il y a l'option -defaultgroup, ce nouveau
     groupe sera un groupe par défaut pour les nouveaux utilisateurs
  * setdefault groupid [true|false]
@@ -56,7 +56,7 @@ ACTION:
     list users of a group
  * alluserslist
     list all users
- * [-defaultgroup] create name
+ * [-defaultgroup] create id [name]
     create a group. If there is -defaultgroup option, this new group
     becomes a default group for new users
  * setdefault groupid [true|false]
@@ -169,7 +169,7 @@ ACTION:
                 echo "\n", $rec->login,"\t\t";
                 $login = $rec->login;
             }
-            echo $rec->name," ";
+            echo $rec->name," (",$rec->id_aclgrp,")";
         }
         echo "\n\n";
     }
@@ -177,22 +177,34 @@ ACTION:
 
     protected function cmd_create(){
         $params = $this->getParam('...');
-        if(!is_array($params) || count($params) != 1)
+        if(!is_array($params) || count($params) > 2)
             throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection('jacl2_profile');
 
-        $sql="INSERT into ".$cnx->prefixTable('jacl2_group')
-            ." (name, grouptype, ownerlogin) VALUES (";
-        $sql.=$cnx->quote($params[0]).',';
-        if($this->getOption('-defaultgroup'))
-            $sql.='1, NULL)';
+        $id = $params[0];
+        if (isset($params[1]))
+            $name = $params[1];
         else
-            $sql.='0, NULL)';
+            $name = $id;
 
-        $cnx->exec($sql);
-        $id = $cnx->lastInsertId($cnx->prefixTable('jacl2_group_id_aclgrp_seq')); // name of the sequence for pgsql
-        echo "OK. Group id is: ".$id."\n";
+
+        try {
+            $sql="INSERT into ".$cnx->prefixTable('jacl2_group')
+                ." (id_aclgrp, name, grouptype, ownerlogin) VALUES (";
+            $sql.=$cnx->quote($id).',';
+            $sql.=$cnx->quote($name).',';
+            if($this->getOption('-defaultgroup'))
+                $sql.='1, NULL)';
+            else
+                $sql.='0, NULL)';
+
+            $cnx->exec($sql);
+        }
+        catch(Exception $e) {
+            throw new Exception("this group already exists");
+        }
+        echo "OK\n";
     }
 
     protected function cmd_delete(){
@@ -202,19 +214,15 @@ ACTION:
 
         $cnx = jDb::getConnection('jacl2_profile');
 
-        if($params[0] != 0)
-            $id = $this->_getGrpId($params[0]);
+        $id = $this->_getGrpId($params[0]);
 
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_rights')." WHERE id_aclgrp=";
-        $sql.=intval($id);
+        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_rights')." WHERE id_aclgrp=".$id;
         $cnx->exec($sql);
 
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_user_group')." WHERE id_aclgrp=";
-        $sql.=intval($id);
+        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_user_group')." WHERE id_aclgrp=".$id;
         $cnx->exec($sql);
 
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_group')." WHERE id_aclgrp=";
-        $sql.=intval($id);
+        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_group')." WHERE id_aclgrp=".$id;
         $cnx->exec($sql);
 
         echo "OK\n";
@@ -319,14 +327,15 @@ ACTION:
             throw new Exception("the user is already registered");
         }
 
+        $groupid = $cnx->quote('__priv_'.$params[0]);
+
         $sql = "INSERT into ".$cnx->prefixTable('jacl2_group')
-            ." (name, grouptype, ownerlogin) VALUES (";
-        $sql.= $login.',2, '.$login.')';
+            ." (id_aclgrp, name, grouptype, ownerlogin) VALUES (";
+        $sql.= $groupid.','.$login.',2, '.$login.')';
         $cnx->exec($sql);
-        $id = $cnx->lastInsertId($cnx->prefixTable('jacl2_group_id_aclgrp_seq')); // name of the sequence for pgsql
 
         $sql="INSERT INTO ".$cnx->prefixTable('jacl2_user_group')
-            ." (login, id_aclgrp) VALUES(".$login.", ".$id.")";
+            ." (login, id_aclgrp) VALUES(".$login.", ".$groupid.")";
         $cnx->exec($sql);
         echo "OK\n";
     }
@@ -351,20 +360,12 @@ ACTION:
     private function _getGrpId($param){
         $cnx = jDb::getConnection('jacl2_profile');
         $sql="SELECT id_aclgrp FROM ".$cnx->prefixTable('jacl2_group')
-                ." WHERE grouptype <2 AND ";
-        if(is_numeric($param)){
-            if(intval($param) <= 0)
-                throw new Exception('invalid group id');
-            $sql .= "id_aclgrp = ".$param;
-        }else{
-            $sql .= "name = ".$cnx->quote($param);
-        }
+                ." WHERE grouptype <2 AND id_aclgrp = ".$cnx->quote($param);
         $rs = $cnx->query($sql);
         if($rec = $rs->fetch()){
-            return $rec->id_aclgrp;
+            return $cnx->quote($rec->id_aclgrp);
         }else{
             throw new Exception("this group doesn't exist or is private");
         }
     }
-
 }

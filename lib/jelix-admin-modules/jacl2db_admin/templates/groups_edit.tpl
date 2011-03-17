@@ -22,7 +22,7 @@
 {formurlparam 'jacl2db_admin~groups:changename'}
     <select name="group_id">
     {foreach $groups as $group}
-        {if  $group->id_aclgrp != 0}<option value="{$group->id_aclgrp}">{$group->name}</option>{/if}
+        {if  $group->id_aclgrp != '__anonymous'}<option value="{$group->id_aclgrp}">{$group->name}</option>{/if}
     {/foreach}
      </select>
 
@@ -37,6 +37,7 @@
 <fieldset><legend>{@jacl2db_admin~acl2.create.group@}</legend>
 {formurlparam 'jacl2db_admin~groups:newgroup'}
 <label for="newgroup">{@jacl2db_admin~acl2.group.name.label@}</label> <input id="newgroup" name="newgroup" />
+<label for="newgroupid">{@jacl2db_admin~acl2.group.name.id@}</label> <input id="newgroupid" name="newgroupid" />
 <input type="submit" value="{@jacl2db_admin~acl2.save.button@}" />
 </fieldset>
 </form>
@@ -48,7 +49,7 @@
 {formurlparam 'jacl2db_admin~groups:delgroup'}
     <select name="group_id">
     {foreach $groups as $group}
-        {if  $group->id_aclgrp != 0}<option value="{$group->id_aclgrp}">{$group->name}</option>{/if}
+        {if  $group->id_aclgrp != '__anonymous'}<option value="{$group->id_aclgrp}">{$group->name}</option>{/if}
     {/foreach}
      </select>
 

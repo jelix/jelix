@@ -65,18 +65,6 @@ class jacl2dbModuleInstaller extends jInstallerModule {
         if ($this->getParameter('defaultuser') || $this->getParameter('defaultgroups')) {
             // declare some groups
             $this->execSQLScript('groups.sql');
-            $cn = $this->dbConnection();
-            // mysql ignore the value 0 and replace it by the next value of auto increment
-            // so let's change it to 0
-            try {
-                $cn->exec("UPDATE ".$cn->prefixTable('jacl2_group')." SET id_aclgrp = 0 WHERE  name = 'anonymous'
-                        AND code = 'anonymous' AND grouptype=0 and ownerlogin is null");
-            } catch(Exception $e) {}
-
-            if ($cn->dbms == 'pgsql') {
-                // 3, to have the same autoincrement in mysql, so user.sql will work correctly
-                $cn->exec("SELECT setval('".$cn->prefixTable('jacl2_group_id_aclgrp_seq')."', 3, true)");
-            }
         }
 
         if ($this->getParameter('defaultuser')) {
