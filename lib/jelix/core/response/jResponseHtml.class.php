@@ -394,7 +394,7 @@ class jResponseHtml extends jResponseBasicHtml {
     }
 
     protected function outputJsScriptTag( $fileUrl, $scriptParams ) {
-
+        $params = '';
         foreach ($scriptParams as $param_name=>$param_value){
             if ($param_name=='_ieCondition')
                 continue ;
