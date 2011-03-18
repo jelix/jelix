@@ -27,6 +27,11 @@ jfo.setErrorDecorator(new testErrorDecorator());
 jFormsJQ.declareForm(jfo);
 
 
+var jfo2 = new jFormsJQForm('jf2', 'jf2','0');
+var jfo2Elt = $("#jf2").get(0);
+jfo2.setErrorDecorator(new testErrorDecorator());
+jFormsJQ.declareForm(jfo2);
+
 /*
 module("Module A");
 test("some other test", function() {
@@ -272,6 +277,57 @@ test("list build for elements updates", function() {
     isSet(jfo.controlsToUpdate, ['a','c','b','d', 'e', 'f'], "for h, controlsToUpdate should contain ['a','c','b','d', 'e', 'f']");
 
 });
+
+
+test("submit handlers", function() {
+    var ev = {
+        target: jfo2Elt
+    }
+    ok(jFormsJQ._submitListener(ev));
+    
+    var result1 = false;
+    var result2 = false;
+    var hasException = false;
+    var called1 = '';
+    var called2 = '';
+    
+    jfo2.addSubmitHandler(function(ev) { called1 = 'yes'; return result1; });
+    ok(!jFormsJQ._submitListener(ev), '1.1 the first handler returns false: the result should be false');
+    ok(called1 == 'yes' , '1.2 verify the first handler has been really called');
+
+    result1 = true;
+    called1 = '';
+    ok(jFormsJQ._submitListener(ev),'2.1 the first handler returns true: the result should be true');
+    ok(called1 == 'yes', '2.2 verify the first handler has been really called');
+
+    jfo2.addSubmitHandler(function(ev) { called2 = 'yes';  if(hasException) throw "error"; return result2; }, true);
+
+    result1 = false;
+    result2 = false;
+    called1 = '';
+    called2 = '';
+    ok(!jFormsJQ._submitListener(ev), '3.1 two handlers. the first handler returns false: the result should be false');
+    ok(called1 == 'yes', '3.2 verify the first handler has been really called');
+    ok(called2 == 'yes', '3.3 verify the second handler has been really called');
+
+    result1 = true;
+    called1 = '';
+    ok(!jFormsJQ._submitListener(ev), '4.1 two handlers. the first handler returns true but not the second: the result should be false');
+    ok(called1 == 'yes', '4.2 verify the first handler has been really called');
+    ok(called2 == 'yes', '4.3  verify the second handler has been really called');
+
+    result1 = true;
+    result2 = true;
+    hasException = true;
+    called1 = '';
+    called2 = '';
+    ok(!jFormsJQ._submitListener(ev), '5.1 two handlers. the second handler throw an exception: the result should be false');
+    ok(called1 == '', '5.2 verify the first handler has never been really called');
+    ok(called2 == 'yes', '5.3 verify the second handler has been really called');
+
+
+});
+
 
 /*test("", function() {
 });
@@ -575,5 +631,7 @@ jFormsJQ.tForm.addControl(c);
 //]]>
 </script>{/literal}</form> 
 
- 
+  <form action="/index.php" method="post" id="jf2">
+    
+  </form>
  
