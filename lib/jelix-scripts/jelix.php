@@ -110,40 +110,29 @@ require(JELIX_SCRIPTS_PATH.'default.conf.php');
 
 if (file_exists(JELIXS_APPTPL_PATH) && file_exists(JELIXS_APPTPL_PATH.'application.init.php')) {
 
-    if(!file_exists(JELIXS_APPTPL_PATH.'jelix-scripts.init.php')){
-        echo "Error: jelix-scripts.init.php doesn't exist in your application\n";
-        echo "       You must create this file which should be similar to application.init.php\n";
-        echo "       but with a different temp directory.\n";
-        echo "       it should also declare a constant JELIX_APP_REAL_TEMP_PATH which should contain\n";
-        echo "       the path to the temp directory indicated in application.init.php.\n";
-        exit(1);
-    }
-
-    include (JELIXS_APPTPL_PATH.'jelix-scripts.init.php');
+    include (JELIXS_APPTPL_PATH.'application.init.php');
+    jApp::setEnv('jelix-scripts');
 
     if(!class_exists('jCoordinator', false)) { // for old application.init.php which doesn't include init.php
-        echo "Error: your jelix-scripts.init.php should include the lib/jelix/init.php";
+        echo "Error: your application.init.php should include the lib/jelix/init.php";
         exit(1);
     }
 
     jApp::initLegacy();
 
-    // we always clean the temp directory. But first, let's check some values (see ticket #840)...
-    if (!defined('JELIX_APP_TEMP_PATH')) {
-        echo "Error: jApp has not been set with path in the file jelix-scripts.init.php\n";
-        exit(1);
-    }
+    $tempBasePath = jApp::tempBasePath();
 
-    if (JELIX_APP_TEMP_PATH == DIRECTORY_SEPARATOR || JELIX_APP_TEMP_PATH == '' || JELIX_APP_TEMP_PATH == '/') {
-        echo "Error: bad path in jApp::tempPath(), it is equals to '".JELIX_APP_TEMP_PATH."' !!\n";
+    // we always clean the temp directory. But first, let's check some values (see ticket #840)...
+
+    if ($tempBasePath == DIRECTORY_SEPARATOR || $tempBasePath == '' || $tempBasePath == '/') {
+        echo "Error: bad path in jApp::tempBasePath(), it is equals to '".$tempBasePath."' !!\n";
         echo "       Jelix cannot clear the content of the temp directory.\n";
         echo "       Correct the path for the temp directory or create the directory you\n";
-        echo "       indicated with jApp in your jelix-scripts.init.php.\n";
+        echo "       indicated with jApp in your application.init.php.\n";
         exit(1);
     }
 
-    jFile::removeDir(JELIX_APP_TEMP_PATH, false);
-
+    jFile::removeDir(jApp::tempPath(), false);
 }
 else {
     if ($command->applicationMustExist) {
@@ -159,12 +148,12 @@ else {
         JELIXS_APPTPL_CONFIG_PATH,
         JELIXS_APPTPL_CMD_PATH
     );
-    jApp::setTempBasePath(substr(JELIXS_APPTPL_TEMP_PATH,0,-1).'-jelix-scripts/');
-    define ('JELIX_APP_REAL_TEMP_PATH',    JELIXS_APPTPL_TEMP_PATH);
-    define ('JELIX_APP_CLI_TEMP_PATH',    substr(JELIXS_APPTPL_TEMP_PATH,0,-1).'-cli/');
-
-    jApp::initLegacy();
+    jApp::setTempBasePath(JELIXS_APPTPL_TEMP_PATH);
+    jApp::setEnv('jelix-scripts');
 }
+
+
+
 
 if(function_exists('date_default_timezone_set')){
     date_default_timezone_set(JELIXS_INFO_DEFAULT_TIMEZONE);

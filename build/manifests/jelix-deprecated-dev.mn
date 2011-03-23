@@ -10,6 +10,7 @@ cd lib/jelix-scripts/
 rmd lib/jelix-scripts/modules/beta_migrating
 
 cd lib/jelix-scripts/templates
+  jelix-scripts.init.php.tpl
   main.tpl.tpl
   myHtmlResponse.class.php.tpl
   module.xml.tpl
@@ -24,3 +25,5 @@ cd lib/jelix-scripts/templates
   zone.tpl
   locales.tpl
 
+cd lib/jelix-modules/junittests/install
+  application-cli.init.php

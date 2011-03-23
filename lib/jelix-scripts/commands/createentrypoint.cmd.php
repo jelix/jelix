@@ -137,32 +137,7 @@ class createentrypointCommand extends JelixScriptCommand {
 
         $this->createFile($entryPointFullPath, $entryPointTemplate, $param);
 
-        if ($type == 'cmdline') {
-            if (!file_exists(jApp::appPath('application-cli.init.php'))) {
-                $this->createDir(substr(jApp::tempPath(),-1).'-cli');
-                $appPath = jApp::appPath();
-                $param2['rp_temp']= jxs_getRelativePath($appPath, substr(jApp::tempPath(),0,-1).'-cli', true);
-                $param2['rp_var'] = jxs_getRelativePath($appPath, jApp::varPath(),  true);
-                $param2['rp_log'] = jxs_getRelativePath($appPath, jApp::logPath(),  true);
-                $param2['rp_conf']= jxs_getRelativePath($appPath, jApp::configPath(), true);
-                $param2['rp_www'] = jxs_getRelativePath($appPath, jApp::wwwPath(),  true);
-                $param2['rp_cmd'] = jxs_getRelativePath($appPath, jApp::scriptsPath(),  true);
-                $param2['rp_jelix'] = jxs_getRelativePath($appPath, JELIX_LIB_PATH, true);
-                $param2['rp_app']   = jxs_getRelativePath(jApp::wwwPath(), $appPath, true);
-                
-                $param2['php_rp_temp'] = $this->convertRp($param2['rp_temp']);
-                $param2['php_rp_var']  = $this->convertRp($param2['rp_var']);
-                $param2['php_rp_log']  = $this->convertRp($param2['rp_log']);
-                $param2['php_rp_conf'] = $this->convertRp($param2['rp_conf']);
-                $param2['php_rp_www']  = $this->convertRp($param2['rp_www']);
-                $param2['php_rp_cmd']  = $this->convertRp($param2['rp_cmd']);
-                
-                $this->createFile($appPath.'application-cli.init.php',
-                                  'application.init.php.tpl',$param2);
-            }
-        }
-        else {
-
+        if ($type != 'cmdline') {
             if (null === $inifile->getValue($name, 'simple_urlengine_entrypoints', null, true)) {
                 $inifile->setValue($name, '', 'simple_urlengine_entrypoints', null, true);
             }

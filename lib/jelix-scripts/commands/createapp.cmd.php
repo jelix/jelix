@@ -82,9 +82,7 @@ class createappCommand extends JelixScriptCommand {
             $wwwpath = jApp::wwwPath();
         }
 
-        $this->createDir(JELIX_APP_REAL_TEMP_PATH);
-        $this->createDir(JELIX_APP_CLI_TEMP_PATH);
-        $this->createDir(jApp::tempPath());
+        $this->createDir(jApp::tempBasePath());
         $this->createDir($wwwpath);
         
         $varPath = jApp::varPath();
@@ -129,7 +127,7 @@ class createappCommand extends JelixScriptCommand {
 
         $param['config_file'] = 'index/config.ini.php';
 
-        $param['rp_temp']  = jxs_getRelativePath($appPath, JELIX_APP_REAL_TEMP_PATH, true);
+        $param['rp_temp']  = jxs_getRelativePath($appPath, jApp::tempBasePath(), true);
         $param['rp_var']   = jxs_getRelativePath($appPath, jApp::varPath(),  true);
         $param['rp_log']   = jxs_getRelativePath($appPath, jApp::logPath(),  true);
         $param['rp_conf']  = jxs_getRelativePath($appPath, $configPath, true);
@@ -161,20 +159,6 @@ class createappCommand extends JelixScriptCommand {
         $param['php_rp_cmd']  = $this->convertRp($param['rp_cmd']);
 
         $this->createFile($appPath.'application.init.php','application.init.php.tpl',$param);
-    
-        $param['rp_temp_app']     = $param['rp_temp'];
-        $param['php_rp_temp_app'] = $param['php_rp_temp'];
-        $param['rp_temp']         = jxs_getRelativePath($appPath, jApp::tempPath(), true);
-        $param['rp_temp_cli']     = jxs_getRelativePath($appPath, JELIX_APP_CLI_TEMP_PATH, true);
-        $param['php_rp_temp']     = $this->convertRp($param['rp_temp']);
-        $param['php_rp_temp_cli'] = $this->convertRp($param['rp_temp_cli']);
-        
-        $this->createFile($appPath.'jelix-scripts.init.php','jelix-scripts.init.php.tpl',$param);
-    
-        $param['rp_temp']     = jxs_getRelativePath($appPath, JELIX_APP_CLI_TEMP_PATH, true);
-        $param['php_rp_temp'] = $this->convertRp($param['rp_temp']);
-
-        $this->createFile($appPath.'application-cli.init.php','application.init.php.tpl',$param);
 
         $installer = new jInstaller(new textInstallReporter('warning'));
         $installer->installApplication();

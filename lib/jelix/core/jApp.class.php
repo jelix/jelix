@@ -33,6 +33,8 @@ class jApp {
 
     protected static $_isInit = false;
 
+    protected static $env = 'www/';
+
     /**
      * initialize the application paths
      * 
@@ -102,10 +104,17 @@ class jApp {
     public static function configPath($file='') { return self::$configPath.$file; }
     public static function wwwPath($file='') { return self::$wwwPath.$file; }
     public static function scriptsPath($file='') { return self::$scriptPath.$file; }
-    public static function tempPath($file='') { return self::$tempBasePath.$file; }
+    public static function tempPath($file='') { return self::$tempBasePath.self::$env.$file; }
+    public static function tempBasePath() { return self::$tempBasePath; }
 
     public static function setTempBasePath($path) {
         self::$tempBasePath = $path;
+    }
+
+    public static function setEnv($env) {
+        if (substr($env,-1) != '/')
+            $env.='/';
+        self::$env = $env;
     }
 
     protected static $contextBackup = array();

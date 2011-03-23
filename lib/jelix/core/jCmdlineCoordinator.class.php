@@ -15,7 +15,13 @@
  * @package  jelix
  * @subpackage core
  */
-class jCmdlineCoordinator extends jCoordinator{
+class jCmdlineCoordinator extends jCoordinator {
+
+    function __construct ($configFile, $enableErrorHandler=true) {
+        jApp::setEnv('cli');
+        parent::__construct($configFile, $enableErrorHandler);
+    }
+
     /**
     * main method : launch the execution of the action.
     *

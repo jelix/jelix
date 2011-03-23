@@ -10,6 +10,7 @@
 */
 
 require_once (dirname(__FILE__).'/../application-cli.init.php');
+jApp::setEnv('install');
 
 jAppManager::close();
 

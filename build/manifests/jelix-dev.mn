@@ -129,7 +129,6 @@ cd lib/jelix-scripts/includes
 cd lib/jelix-scripts/templates
   project.xml.tpl
   application.init.php.tpl
-  jelix-scripts.init.php.tpl
   htaccess_deny
   htaccess_allow
 cd lib/jelix-scripts/templates/installer/
@@ -220,7 +219,6 @@ cd lib/jelix-modules/junittests/controllers
 cd lib/jelix-modules/junittests/templates
   main.tpl
 cd lib/jelix-modules/junittests/install
-  application-cli.init.php
   install.php
 cd lib/jelix-modules/junittests/install/www/tests/
   design.css

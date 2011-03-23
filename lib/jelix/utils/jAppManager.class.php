@@ -49,9 +49,9 @@ class jAppManager {
 
     public static function clearTemp($path='') {
         if ($path == '') {
-            $path = jApp::tempPath();
+            $path = jApp::tempBasePath();
             if ($path == '') {
-                throw new Exception("default temp path is not defined",1);
+                throw new Exception("default temp base path is not defined",1);
             }
         }
 

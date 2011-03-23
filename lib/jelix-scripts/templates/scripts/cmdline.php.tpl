@@ -8,7 +8,7 @@
 * @license   %%default_license_url%% %%default_license%%
 */
 
-require_once ('%%rp_app%%application-cli.init.php');
+require_once ('%%rp_app%%application.init.php');
 
 checkAppOpened();
 

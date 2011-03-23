@@ -2,8 +2,6 @@ cd testapp
 * project.xml
   .htaccess
   application.init.php
-  application-cli.init.php
-  jelix-scripts.init.php
   INSTALL.txt
 cd testapp/plugins
   .htaccess
@@ -283,6 +281,7 @@ cd testapp/modules/testinstall3
 *  module.xml
 
 cd testapp/tests-jelix/
+  bootstrap.php
   phpunit.xml
 cd testapp/tests-jelix/jelix/core/
   jAppContextTest.php

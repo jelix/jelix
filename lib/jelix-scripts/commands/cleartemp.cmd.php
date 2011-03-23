@@ -27,40 +27,14 @@ class cleartempCommand extends JelixScriptCommand {
 
     public function run(){
         try {
-            $tempPath = jApp::tempPath();
+            $tempPath = jApp::tempBasePath();
             if ($tempPath == DIRECTORY_SEPARATOR || $tempPath == '' || $tempPath == '/') {
-                echo "Error: bad path in jApp::tempPath(), it is equals to '".$tempPath."' !!\n";
+                echo "Error: bad path in jApp::tempBasePath(), it is equals to '".$tempPath."' !!\n";
                 echo "       Jelix cannot clear the content of the temp directory.\n";
-                echo "       Correct the path in your jelix-scripts.init.php or create the corresponding directory\n";
+                echo "       Correct the path in your application.init.php or create the corresponding directory\n";
                 exit(1);
             }
             jFile::removeDir($tempPath, false);
-
-
-            if (!defined('JELIX_APP_REAL_TEMP_PATH')) {
-                echo "Error: JELIX_APP_REAL_TEMP_PATH is not defined\n";
-                exit(1);
-            }
-            if (JELIX_APP_REAL_TEMP_PATH == DIRECTORY_SEPARATOR || JELIX_APP_REAL_TEMP_PATH == '' || JELIX_APP_REAL_TEMP_PATH == '/') {
-                echo "Error: bad path in JELIX_APP_REAL_TEMP_PATH, it is equals to '".JELIX_APP_REAL_TEMP_PATH."' !!\n";
-                echo "       Jelix cannot clear the content of the temp directory.\n";
-                echo "       Correct the path in JELIX_APP_REAL_TEMP_PATH or create the directory you\n";
-                echo "       indicated into JELIX_APP_REAL_TEMP_PATH.\n";
-                exit(1);
-            }
-            jFile::removeDir(JELIX_APP_REAL_TEMP_PATH, false);
-
-
-            if (defined('JELIX_APP_TEMP_CLI_PATH')){
-                if (JELIX_APP_TEMP_CLI_PATH == DIRECTORY_SEPARATOR || JELIX_APP_TEMP_CLI_PATH == '' || JELIX_APP_TEMP_CLI_PATH == '/') {
-                    echo "Error: bad path in JELIX_APP_TEMP_CLI_PATH, it is equals to '".JELIX_APP_TEMP_CLI_PATH."' !!\n";
-                    echo "       Jelix cannot clear the content of the temp directory.\n";
-                    echo "       Correct the path in JELIX_APP_TEMP_CLI_PATH or create the directory you\n";
-                    echo "       indicated into JELIX_APP_TEMP_CLI_PATH.\n";
-                    exit(1);
-                }
-                jFile::removeDir(JELIX_APP_TEMP_CLI_PATH, false);
-            }
         }
         catch (Exception $e) {
             if(MESSAGE_LANG == 'fr')

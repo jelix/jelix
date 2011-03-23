@@ -40,7 +40,7 @@ class jConfigCompiler {
      */
     static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
 
-        $tempPath = jApp::tempPath();
+        $tempPath = jApp::tempBasePath();
         $configPath = jApp::configPath();
 
         if($tempPath=='/'){
@@ -50,7 +50,7 @@ class jConfigCompiler {
         }
 
         if(!is_writable($tempPath)){
-            throw new Exception('Application temp directory ('.$tempPath.') is not writable', 4);
+            throw new Exception('Application temp base directory ('.$tempPath.') is not writable', 4);
         }
 
         self::$commonConfig = jIniFile::read($configPath.'defaultconfig.ini.php',true);
@@ -102,6 +102,7 @@ class jConfigCompiler {
 
         $config = self::read($configFile, false, $isCli, $pseudoScriptName);
         $tempPath = jApp::tempPath();
+        jFile::createDir($tempPath);
 
 #if WITH_BYTECODE_CACHE == 'auto'
         if(BYTECODE_CACHE_EXISTS){
