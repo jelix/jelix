@@ -48,20 +48,20 @@ default:
 	@echo "   TESTPATH : repertoire cible pour developper (" $(TESTPATH) ")"
 
 nightlies:
-	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) build/config/jelix-dist-dev.ini
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-dev.ini
 	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_DEV
-	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) build/config/jelix-dist-opt.ini
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-opt.ini
 	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_OPT
-	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) build/config/jelix-dist-gold.ini
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-gold.ini
 	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_GOLD
-	$(PHP) build/buildapp.php -D $(DISTPATHSWITCH) build/config/testapp-dist.ini
-	$(PHP) build/buildjbt.php -D $(DISTPATHSWITCH) build/config/jbt-dist.ini
-	$(PHP) build/buildjtpl.php -D $(DISTPATHSWITCH) build/config/jtpl-dist.ini
-	$(PHP) build/buildfonts.php -D $(DISTPATHSWITCH) build/config/jelix-fonts-dist.ini
+	$(PHP) build/buildapp.php -D $(DISTPATHSWITCH) ./build/config/testapp-dist.ini
+	$(PHP) build/buildjbt.php -D $(DISTPATHSWITCH) ./build/config/jbt-dist.ini
+	$(PHP) build/buildjtpl.php -D $(DISTPATHSWITCH) ./build/config/jtpl-dist.ini
+	$(PHP) build/buildfonts.php -D $(DISTPATHSWITCH) ./build/config/jelix-fonts-dist.ini
 
 tests:
-	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) build/config/jelix-test.ini
-	$(PHP) build/buildapp.php -D $(TESTPATHSWITCH) build/config/testapp-test.ini
+	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
+	$(PHP) build/buildapp.php -D $(TESTPATHSWITCH) ./build/config/testapp-test.ini
 	cd $(TESTPATH) \
 	&& cp $(TESTS_DBPROFILES) testapp/var/config/dbprofils.ini.php \
 	&& cp $(TESTS_CACHEPROFILES) testapp/var/config/cache.ini.php \
@@ -70,7 +70,7 @@ tests:
 	cd $(TESTPATH)/testapp/scripts/ && $(PHP) tests.php default:index
 
 docs: 
-	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) build/config/jelix-test.ini
+	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
 #	cp -R -f build/phpdoc/Converters/HTML/frames $(PHPDOC)phpDocumentor/Converters/HTML/
 	$(PHPDOC)phpdoc \
 	-d $(TESTPATH)/lib/jelix/ \
