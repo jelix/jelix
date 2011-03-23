@@ -7,5 +7,8 @@
     <testsuite name="Jelix Installer">
       <directory>jelix/installer/</directory>
     </testsuite>
+    <testsuite name="Jelix Utils">
+      <directory>jelix/utils/</directory>
+    </testsuite>
   </testsuites>
 </phpunit>
