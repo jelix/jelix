@@ -213,6 +213,7 @@ cd lib/jelix-modules/junittests/classes
   jtextrespreporter.class.php
   junittestcase.class.php
   junittestcasedb.class.php
+  jrunnerpreparer.class.php
 cd lib/jelix-modules/junittests/controllers
   default.classic.php
   default.cmdline.php
@@ -227,6 +228,8 @@ cd lib/jelix-modules/junittests/install/scripts
 cd lib/jelix-modules/junittests/install/var/log-cli
 cd lib/jelix-modules/junittests/install/var/config/cmdline
   configtests.ini.php
+cd lib/jelix-modules/junittests/tests
+  jrunnerpreparer.html_cli.unit.php
 
 cd lib/jelix-tests/
   phpunit.inc.php

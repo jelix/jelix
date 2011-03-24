@@ -4,17 +4,10 @@
 * @subpackage  junittests
 * @author      Laurent Jouanneau
 * @contributor Rahal Aboulfeth
-* @copyright   2007 Laurent Jouanneau, 2007 Rahal Aboulfeth
+* @copyright   2007 Laurent Jouanneau, 2007-2011 Rahal Aboulfeth
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
-// used by a usort function
-// PHP5.1.2 generates a strict message if I put this function into defaultCtrl class, although it has the static keyword
-function JUTcompareTestName($a,$b){ 
-    return strcmp($a[0], $b[0]);
-}
-
 
 class defaultCtrl extends jController {
 
@@ -50,18 +43,22 @@ class defaultCtrl extends jController {
         jClasses::inc("junittests~jhtmlrespreporter");
         jClasses::inc('junittests~junittestcase');
         jClasses::inc('junittests~junittestcasedb');
-
-        foreach($this->testsList as $module=>$tests){
-            $reporter = new jhtmlrespreporter();
-            $reporter->setResponse($rep);
-
-            jContext::push($module);
-            $group = new GroupTest('Tests on module '.$module);
-            foreach($this->testsList[$module] as $test){
-                $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+        $category = $this->category ? ' ('.$this->category .')' : '';
+        if (count ($this->testsList)){
+            foreach($this->testsList as $module=>$tests){
+                $reporter = new jhtmlrespreporter();
+                $reporter->setResponse($rep);
+    
+                jContext::push($module);
+                $group = new GroupTest('Tests'.$category.' on module '.$module);
+                foreach($this->testsList[$module] as $test){
+                    $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                }
+                $group->run($reporter);
+                jContext::pop();
             }
-            $group->run($reporter);
-            jContext::pop();
+        } else {
+                $rep->body->assign ('MAIN','<p>no'.$category.' tests available.</p>');
         }
         return $this->_finishResponse($rep);
     }
@@ -77,7 +74,7 @@ class defaultCtrl extends jController {
             return $rep;
         }
         $rep = $this->_prepareResponse();
-
+        $category = $this->category ? ' '.$this->category : '';
         $module = $this->param('mod');
         if(isset($this->testsList[$module])){
             $reporter = jClasses::create("junittests~jhtmlrespreporter");
@@ -85,13 +82,15 @@ class defaultCtrl extends jController {
             jClasses::inc('junittests~junittestcasedb');
             $reporter->setResponse($rep);
 
-            $group = new GroupTest('All tests in "'.$module. '" module');
+            $group = new GroupTest('All'.$category.' tests in "'.$module. '" module');
             foreach($this->testsList[$module] as $test){
                 $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
             }
             jContext::push($module);
             $group->run($reporter);
             jContext::pop();
+        } else {
+            $rep->body->assign ('MAIN','<p>no'.$category.' tests for "'.$module.'" module.</p>');
         }
         return $this->_finishResponse($rep);
     }
@@ -131,8 +130,10 @@ class defaultCtrl extends jController {
             $rep->body->assign ('MAIN','<p>no tests for "'.$module.'" module.</p>');
         return $this->_finishResponse($rep);
     }
-
+    
+    protected $allTestsList = array();
     protected $testsList = array();
+    protected $category =false;
 
     protected function _prepareResponse(){
         $rep = $this->getResponse('html', true);
@@ -146,24 +147,11 @@ class defaultCtrl extends jController {
 
         $rep->addCSSLink($GLOBALS['gJConfig']->urlengine['basePath'].'tests/design.css');
 
-        foreach($GLOBALS['gJConfig']->_modulesPathList as $module=>$path){
-            if(file_exists($path.'tests/')){
-                $dir = new DirectoryIterator($path.'tests/');
-                foreach ($dir as $dirContent) {
-                    if ($dirContent->isFile() && preg_match("/^(.+)\\.html(_cli)?\\.php$/", $dirContent->getFileName(), $m) ) {
-                        $lib = str_replace('.',': ',$m[1]);
-                        $lib = str_replace('_',' ',$lib);
-
-                        $this->testsList[$module][] = array($dirContent->getFileName(), $m[1], $lib) ;
-                    }
-                }
-                if(isset($this->testsList[$module])){
-                    usort($this->testsList[$module], "JUTcompareTestName");
-                }
-            }
-        }
-
-        $rep->body->assign('modules', $this->testsList);
+        $runnerPreparer = jClasses::create('junittests~jrunnerpreparer');
+        $this->allTestsList = $runnerPreparer->getTestsList('html');
+        $this->category = $this->param('categ' , false );
+        $this->testsList = $runnerPreparer->filterTestsByCategory($this->category , $this->allTestsList );
+        $rep->body->assign('modules', $this->allTestsList);
 
         return $rep;
     }
