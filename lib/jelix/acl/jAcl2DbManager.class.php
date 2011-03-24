@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  acl
 * @author      Laurent Jouanneau
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2011 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.1
@@ -114,12 +114,13 @@ class jAcl2DbManager {
      * create a new subject
      * @param string  $subject the key of the subject
      * @param string $label_key the key of a locale which represents the label of the subject
+     * @param string $subjectGroup the id of the group where the subject is attached to
      */
-    public static function addSubject($subject, $label_key){
-        // ajoute un sujet dans la table jacl_subject
+    public static function addSubject($subject, $label_key, $subjectGroup=null){
         $subj = jDao::createRecord('jacl2db~jacl2subject','jacl2_profile');
         $subj->id_aclsbj=$subject;
         $subj->label_key =$label_key;
+        $subj->id_aclsbjgrp = $subjectGroup;
         jDao::get('jacl2db~jacl2subject','jacl2_profile')->insert($subj);
         jAcl2::clearCache();
     }
@@ -131,6 +132,31 @@ class jAcl2DbManager {
     public static function removeSubject($subject){
         jDao::get('jacl2db~jacl2rights','jacl2_profile')->deleteBySubject($subject);
         jDao::get('jacl2db~jacl2subject','jacl2_profile')->delete($subject);
+        jAcl2::clearCache();
+    }
+
+    /**
+     * create a new subject group
+     * @param string  $subjectGroup the key of the subject group
+     * @param string $label_key the key of a locale which represents the label of the subject group
+     * @since 1.3
+     */
+    public static function addSubjectGroup($subjectGroup, $label_key){
+        $subj = jDao::createRecord('jacl2db~jacl2subjectgroup','jacl2_profile');
+        $subj->id_aclsbjgrp=$subjectGroup;
+        $subj->label_key =$label_key;
+        jDao::get('jacl2db~jacl2subjectgroup','jacl2_profile')->insert($subj);
+        jAcl2::clearCache();
+    }
+
+    /**
+     * Delete the given subject
+     * @param string  $subjectGroup the key of the subject group
+     * @since 1.3
+     */
+    public static function removeSubjectGroup($subjectGroup){
+        jDao::get('jacl2db~jacl2subject','jacl2_profile')->removeSubjectFromGroup($subjectGroup);
+        jDao::get('jacl2db~jacl2subjectgroup','jacl2_profile')->delete($subjectGroup);
         jAcl2::clearCache();
     }
 }

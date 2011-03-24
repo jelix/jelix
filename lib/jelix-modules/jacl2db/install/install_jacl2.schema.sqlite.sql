@@ -10,6 +10,7 @@ CREATE TABLE %%PREFIX%%jacl2_group (
 CREATE TABLE %%PREFIX%%jacl2_subject (
   id_aclsbj varchar(100) NOT NULL DEFAULT '',
   label_key varchar(100) DEFAULT NULL,
+  id_aclsbjgrp VARCHAR( 50 ) DEFAULT NULL,
   PRIMARY KEY (id_aclsbj)
 ) ;
 
@@ -26,3 +27,8 @@ CREATE TABLE %%PREFIX%%jacl2_rights (
   PRIMARY KEY (id_aclsbj,id_aclgrp,id_aclres)
 ) ;
 
+CREATE TABLE %%PREFIX%%jacl2_subject_group (
+    id_aclsbjgrp VARCHAR( 50 ) NOT NULL,
+    label_key VARCHAR( 60 ) NOT NULL,
+    PRIMARY KEY (id_aclsbjgrp)
+);

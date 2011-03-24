@@ -24,6 +24,16 @@ class groupsCtrl extends jController {
         'setdefault'=>array('jacl2.rights.and'=>array('acl.group.view','acl.group.modify')),
     );
 
+    protected function getLabel($id, $labelKey) {
+        if ($labelKey) {
+            try {
+                return jLocale::get($labelKey);
+            }
+            catch(Exception $e) { }
+        }
+        return $id;
+    }
+
     /**
     *
     */
@@ -48,11 +58,18 @@ class groupsCtrl extends jController {
                 $groups[]=$grp;
                 $grouprights[$grp->id_aclgrp]=false;
             }
-            $rights=array();
+            $nbgrp = count($groups);
 
+            $rights=array();
+            $subjects = array();
+            $sbjgroups_localized = array();
             $rs = jDao::get('jacl2db~jacl2subject','jacl2_profile')->findAllSubject();
             foreach($rs as $rec){
                 $rights[$rec->id_aclsbj] = $grouprights;
+                $subjects[$rec->id_aclsbj] = array('grp'=>$rec->id_aclsbjgrp, 'label'=>$this->getLabel($rec->id_aclsbj, $rec->label_key));
+                if ($rec->id_aclsbjgrp && !isset($sbjgroups_localized[$rec->id_aclsbjgrp])) {
+                    $sbjgroups_localized[$rec->id_aclsbjgrp] = $this->getLabel($rec->id_aclsbjgrp, $rec->label_group_key);
+                }
             }
 
             $rs = jDao::get('jacl2db~jacl2rights','jacl2_profile')->getRightsByGroups($gid);
@@ -60,7 +77,7 @@ class groupsCtrl extends jController {
                 $rights[$rec->id_aclsbj][$rec->id_aclgrp] = true;
             }
 
-            $tpl->assign(compact('groups', 'rights'));
+            $tpl->assign(compact('groups', 'rights', 'subjects', 'sbjgroups_localized', 'nbgrp'));
             $rep->body->assign('MAIN', $tpl->fetch('groups_right_view'));
         }
         $rep->body->assign('selectedMenuItem','usersgroups');
@@ -108,13 +125,18 @@ class groupsCtrl extends jController {
         }
 
         $rights=array();
-        $subjects_localized = array();
+        $sbjgroups_localized = array();
+        $subjects = array();
         $rs = jDao::get('jacl2db~jacl2subject','jacl2_profile')->findAllSubject();
         foreach($rs as $rec){
             $rights[$rec->id_aclsbj] = $grouprights;
-            $subjects_localized[$rec->id_aclsbj] = jLocale::get($rec->label_key);
+            $subjects[$rec->id_aclsbj] = array('grp'=>$rec->id_aclsbjgrp, 'label'=>$this->getLabel($rec->id_aclsbj, $rec->label_key));
+            if ($rec->id_aclsbjgrp && !isset($sbjgroups_localized[$rec->id_aclsbjgrp])) {
+                $sbjgroups_localized[$rec->id_aclsbjgrp] = $this->getLabel($rec->id_aclsbjgrp, $rec->label_group_key);
+            }
             if (!isset($rightsWithResources[$rec->id_aclsbj]))
                 $rightsWithResources[$rec->id_aclsbj] = array();
+                
         }
 
         $rs = jDao::get('jacl2db~jacl2rights','jacl2_profile')->getRightsByGroups($gid);
@@ -122,7 +144,8 @@ class groupsCtrl extends jController {
             $rights[$rec->id_aclsbj][$rec->id_aclgrp] = true;
         }
 
-        $tpl->assign(compact('groups', 'rights', 'subjects_localized', 'rightsWithResources'));
+        $tpl->assign('nbgrp', count($groups));
+        $tpl->assign(compact('groups', 'rights', 'sbjgroups_localized', 'subjects', 'rightsWithResources'));
         $rep->body->assign('MAIN', $tpl->fetch('groups_right'));
         $rep->body->assign('selectedMenuItem','usersgroups');
         return $rep;

@@ -99,6 +99,15 @@ class usersCtrl extends jController {
         return $rep;
     }
 
+    protected function getLabel($id, $labelKey) {
+        if ($labelKey) {
+            try {
+                return jLocale::get($labelKey);
+            }
+            catch(Exception $e) { }
+        }
+        return $id;
+    }
 
     function rights(){
         $rep = $this->getResponse('html');
@@ -128,11 +137,15 @@ class usersCtrl extends jController {
         }
 
         $rights=array();
-        $subjects_localized = array();
+        $subjects = array();
+        $sbjgroups_localized = array();
         $rs = jDao::get('jacl2db~jacl2subject','jacl2_profile')->findAllSubject();
         foreach($rs as $rec){
             $rights[$rec->id_aclsbj] = $grouprights;
-            $subjects_localized[$rec->id_aclsbj] = jLocale::get($rec->label_key);
+            $subjects[$rec->id_aclsbj] = array('grp'=>$rec->id_aclsbjgrp, 'label'=>$this->getLabel($rec->id_aclsbj, $rec->label_key));
+            if ($rec->id_aclsbjgrp && !isset($sbjgroups_localized[$rec->id_aclsbjgrp])) {
+                $sbjgroups_localized[$rec->id_aclsbjgrp] = $this->getLabel($rec->id_aclsbjgrp, $rec->label_group_key);
+            }
         }
 
         $rightsWithResources = array_fill_keys(array_keys($rights),0);
@@ -152,7 +165,8 @@ class usersCtrl extends jController {
 
         $tpl = new jTpl();
         $tpl->assign(compact('hisgroup', 'groupsuser', 'groups', 'rights','user',
-                             'subjects_localized', 'rightsWithResources', 'hasRightsOnResources'));
+                             'subjects', 'sbjgroups_localized',
+                             'rightsWithResources', 'hasRightsOnResources'));
         $tpl->assign('nbgrp', count($groups));
 
         if(jAcl2::check('acl.user.modify')) {

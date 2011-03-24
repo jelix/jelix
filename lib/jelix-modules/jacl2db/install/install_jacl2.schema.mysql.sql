@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `%%PREFIX%%jacl2_user_group` (
 CREATE TABLE IF NOT EXISTS `%%PREFIX%%jacl2_subject` (
   `id_aclsbj` varchar(100) NOT NULL default '',
   `label_key` varchar(100) default NULL,
+  `id_aclsbjgrp` VARCHAR( 50 ) default NULL ,
   PRIMARY KEY  (`id_aclsbj`)
 ) ENGINE=MyISAM;
 
@@ -31,3 +32,9 @@ CREATE TABLE IF NOT EXISTS `%%PREFIX%%jacl2_rights` (
   `id_aclres` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id_aclsbj`,`id_aclgrp`,`id_aclres`)
 ) ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `%%PREFIX%%jacl2_subject_group` (
+`id_aclsbjgrp` VARCHAR( 50 ) NOT NULL ,
+`label_key` VARCHAR( 60 ) NOT NULL ,
+PRIMARY KEY ( `id_aclsbjgrp` )
+) ENGINE = MYISAM ;

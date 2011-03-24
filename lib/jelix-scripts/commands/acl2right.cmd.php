@@ -23,9 +23,13 @@ ACTION:
  * list
  * add groupid sujet [resource]
  * [-allres] remove groupid sujet [resource]
- * subject_create subject labelkey
+ * subject_create subject labelkey [grouplabelkey]
  * subject_delete subject 
  * subject_list
+ * subject_group_list
+ * subject_group_add group labelkey
+ * subject_group_delete group labelkey
+
 ",
         'en'=>"
 jAcl2: rights management
@@ -34,9 +38,12 @@ ACTION:
  * list
  * add  groupid subject [resource]
  * [-allres] remove groupid subject [resource]
- * subject_create subject labelkey
+ * subject_create subject labelkey [grouplabelkey]
  * subject_delete subject 
  * subject_list
+ * subject_group_list
+ * subject_group_add group labelkey
+ * subject_group_delete group labelkey
 ",
     );
 
@@ -48,6 +55,9 @@ ACTION:
             'subject_create'=>"Création d'un sujet",
             'subject_delete'=>"Effacement d'un sujet",
             'subject_list'=>"Liste des sujets",
+            'subject_group_list'=>"Liste des groupes de sujets",
+            'subject_group_add'=>"Ajout des groupes de sujets",
+            'subject_group_delete'=>"Suppression des groupes de sujets",
             ),
         'en'=>array(
             'list'=>"Rights list",
@@ -56,6 +66,9 @@ ACTION:
             'subject_create'=>"Create a subject",
             'subject_delete'=>"Delete a subject",
             'subject_list'=>"List of subjects",
+            'subject_group_list'=>"List of subject groups",
+            'subject_group_add'=>"Add a subject group",
+            'subject_group_delete'=>"Delete a subject group",
             ),
     );
 
@@ -63,7 +76,10 @@ ACTION:
     public function run(){
         jxs_init_jelix_env();
         $action = $this->getParam('action');
-        if(!in_array($action,array('list','add','remove','subject_create','subject_delete','subject_list'))){
+        if(!in_array($action,array('list','add','remove',
+                                   'subject_create','subject_delete','subject_list',
+                                   'subject_group_add','subject_group_delete','subject_group_list',
+                                   ))){
             throw new Exception("unknown subcommand");
         }
 
@@ -197,18 +213,25 @@ ACTION:
     protected function cmd_subject_list(){
 
         $cnx = jDb::getConnection('jacl2_profile');
-        $sql="SELECT id_aclsbj, label_key FROM "
-           .$cnx->prefixTable('jacl2_subject')." ORDER BY id_aclsbj";
+        $sql="SELECT id_aclsbj, s.label_key, s.id_aclsbjgrp, g.label_key as group_label_key FROM "
+           .$cnx->prefixTable('jacl2_subject')." s
+           LEFT JOIN ".$cnx->prefixTable('jacl2_subject_group')." g
+           ON (s.id_aclsbjgrp = g.id_aclsbjgrp) ORDER BY s.id_aclsbjgrp, id_aclsbj";
         $rs = $cnx->query($sql);
-        echo "id\t\t\tlabel key\n--------------------------------------------------------\n";
+        $group = '';
+        echo "subject group\n\tid\t\t\tlabel key\n--------------------------------------------------------\n";
         foreach($rs as $rec){
-            echo $rec->id_aclsbj,"\t",$rec->label_key,"\n";
+            if ($rec->id_aclsbjgrp != $group) {
+                echo $rec->id_aclsbjgrp."\n";
+                $group = $rec->id_aclsbjgrp;
+            }
+            echo "\t".$rec->id_aclsbj,"\t",$rec->label_key,"\n";
         }
     }
 
     protected function cmd_subject_create(){
         $params = $this->getParam('...');
-        if(!is_array($params) || count($params) != 2)
+        if(!is_array($params) || count($params) > 3  || count($params) < 2)
             throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection('jacl2_profile');
@@ -220,9 +243,14 @@ ACTION:
             throw new Exception("This subject already exists");
         }
 
-        $sql="INSERT into ".$cnx->prefixTable('jacl2_subject')." (id_aclsbj, label_key) VALUES (";
+        $sql="INSERT into ".$cnx->prefixTable('jacl2_subject')." (id_aclsbj, label_key, id_aclsbjgrp) VALUES (";
         $sql.=$cnx->quote($params[0]).',';
-        $sql.=$cnx->quote($params[1]).')';
+        $sql.=$cnx->quote($params[1]);
+        if (isset($params[2]))
+            $sql.=','.$cnx->quote($params[2]);
+        else
+            $sql.=", NULL";
+        $sql .= ')';
         $cnx->exec($sql);
 
         echo "OK.\n";
@@ -252,6 +280,68 @@ ACTION:
 
         echo "OK\n";
     }
+
+    protected function cmd_subject_group_list(){
+        $cnx = jDb::getConnection('jacl2_profile');
+        $sql="SELECT id_aclsbjgrp, label_key FROM "
+           .$cnx->prefixTable('jacl2_subject_group')." ORDER BY id_aclsbjgrp";
+        $rs = $cnx->query($sql);
+        $group = '';
+        echo "id\t\t\tlabel key\n--------------------------------------------------------\n";
+        foreach($rs as $rec){
+            echo $rec->id_aclsbjgrp,"\t",$rec->label_key,"\n";
+        }
+    }
+
+    protected function cmd_subject_group_create(){
+        $params = $this->getParam('...');
+        if(!is_array($params) || count($params) != 2)
+            throw new Exception("wrong parameter count");
+
+        $cnx = jDb::getConnection('jacl2_profile');
+ 
+        $sql="SELECT id_aclsbjgrp FROM ".$cnx->prefixTable('jacl2_subject_group')
+            ." WHERE id_aclsbjgrp=".$cnx->quote($params[0]);
+        $rs = $cnx->query($sql);
+        if($rs->fetch()){
+            throw new Exception("This subject group already exists");
+        }
+
+        $sql="INSERT into ".$cnx->prefixTable('jacl2_subject_group')." (id_aclsbjgrp, label_key) VALUES (";
+        $sql.=$cnx->quote($params[0]).',';
+        $sql.=$cnx->quote($params[1]);
+        $sql .= ')';
+        $cnx->exec($sql);
+
+        echo "OK.\n";
+    }
+
+    protected function cmd_subject_group_delete(){
+        $params = $this->getParam('...');
+        if(!is_array($params) || count($params) != 1)
+            throw new Exception("wrong parameter count");
+
+        $cnx = jDb::getConnection('jacl2_profile');
+
+        $sql="SELECT id_aclsbjgrp FROM ".$cnx->prefixTable('jacl2_subject_group')
+            ." WHERE id_aclsbjgrp=".$cnx->quote($params[0]);
+        $rs = $cnx->query($sql);
+        if (!$rs->fetch()) {
+            throw new Exception("This subject group does not exist");
+        }
+
+        $sql="UDPATE ".$cnx->prefixTable('jacl2_rights')." SET id_aclsbjgrp=NULL WHERE id_aclsbjgrp=";
+        $sql.=$cnx->quote($params[0]);
+        $cnx->exec($sql);
+
+        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_subject_group')." WHERE id_aclsbjgrp=";
+        $sql.=$cnx->quote($params[0]);
+        $cnx->exec($sql);
+
+        echo "OK\n";
+    }
+
+
 
     private function _getGrpId($param, $onlypublic=false){
         if ($param == '__anonymous')

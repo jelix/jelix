@@ -35,9 +35,15 @@
     </tr>
 </tfoot>
 <tbody>
+{assign $currentsbjgroup = '---'}
 {foreach $rights as $subject=>$right}
+{if $subjects[$subject]['grp'] && $currentsbjgroup != $subjects[$subject]['grp']}
 <tr class="{cycle array('odd','even')}">
-    <th>{$subjects_localized[$subject]|escxml}</th>
+    <th colspan="{=$nbgrp*2+1}"><h3>{$sbjgroups_localized[$subjects[$subject]['grp']]}</h3></th>
+</tr>{assign $currentsbjgroup = $subjects[$subject]['grp']}
+{/if}
+<tr class="{cycle array('odd','even')}">
+    <th>{$subjects[$subject]['label']|eschtml}</th>
     {foreach $right as $group=>$r}
     <td><input type="checkbox" name="rights[{$group}][{$subject}]" {if $r}checked="checked"{/if} /></td>
     <td>{if isset($rightsWithResources[$subject][$group]) && $rightsWithResources[$subject][$group]}yes{/if}</td>

@@ -135,7 +135,7 @@ SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\";
 
         $goodList = array('jacl_group', 'jacl_right_values', 'jacl_right_values_group',
                           'jacl_rights', 'jacl_subject', 'jacl_user_group',
-                          'jacl2_group','jacl2_user_group','jacl2_subject',
+                          'jacl2_group','jacl2_user_group','jacl2_subject','jacl2_subject_group',
                           'jacl2_rights', 'jlx_user', 'myconfig', 'product_test',
                           'product_tags_test', 'labels_test', 'labels1_test', 'products', 'jlx_cache',
                           'jsessions', 'testkvdb');
