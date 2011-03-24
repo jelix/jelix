@@ -46,13 +46,13 @@ class UTCreateUrls extends UnitTestCase {
         foreach($urlList as $k=>$urldata){
             try{
                 $url = jUrl::get($urldata[0], $urldata[1]);
-                $this->assertTrue( ($url == $trueResult[$k]), 'expected url '.$k.' ='.$trueResult[$k].'   created url='.$url );
+                $this->assertTrue( ($url == $trueResult[$k]), 'expected url '.$k.' ='.str_replace('%','%%',$trueResult[$k]).'   created url='.str_replace('%','%%',$url).' %s' );
             }catch(jExceptionSelector $e){
-                $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().')');
+                $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
             }catch(jException $e){
-                $this->assertTrue(false,'jException: '.$e->getMessage().' ('.$e->getLocaleKey().')');
+                $this->assertTrue(false,'jException: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
             }catch(Exception $e){
-                $msgerr = '<br>generated exception, code='.$e->getCode().' msg='.$e->getMessage();
+                $msgerr = '<br>generated exception, code='.$e->getCode().' msg='.$e->getMessage().' %s';
                 $this->sendMessage($msgerr);
                 throw $e;
             }
@@ -72,13 +72,13 @@ class UTCreateUrls extends UnitTestCase {
                 $url = jUrl::get($urldata[0], $urldata[1]);
                 $this->assertTrue( false, ($res[0]?$msg2:$msg).'<br>No thrown exception !!!');
             }catch(jExceptionSelector $e){
-                $msgerr = '<br>generated exception, jExceptionSelector code='.$e->getCode().' localkey='.$e->getLocaleKey();
+                $msgerr = '<br>generated exception, jExceptionSelector code='.$e->getCode().' localkey='.$e->getLocaleKey().' (%s)';
                 $this->assertTrue( ($res[0]==2) ,$msg2.$msgerr);
             }catch(jException $e){
-                $msgerr = '<br>generated exception, jException code='.$e->getCode().' localkey='.$e->getLocaleKey();
+                $msgerr = '<br>generated exception, jException code='.$e->getCode().' localkey='.$e->getLocaleKey().' (%s)';
                 $this->assertTrue( ($res[0]==1) ,$msg2.$msgerr);
             }catch(Exception $e){
-                $msgerr = '<br>generated exception, Exception code='.$e->getCode();
+                $msgerr = '<br>generated exception, Exception code='.$e->getCode().' (%s)';
                 $this->assertTrue( ($res[0]==0) ,$msg.$msgerr);
 
             }

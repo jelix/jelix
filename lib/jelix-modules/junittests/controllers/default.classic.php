@@ -50,9 +50,9 @@ class defaultCtrl extends jController {
                 $reporter->setResponse($rep);
     
                 jContext::push($module);
-                $group = new GroupTest('Tests'.$category.' on module '.$module);
+                $group = new TestSuite('Tests'.$category.' on module '.$module);
                 foreach($this->testsList[$module] as $test){
-                    $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                    $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
                 }
                 $group->run($reporter);
                 jContext::pop();
@@ -82,9 +82,9 @@ class defaultCtrl extends jController {
             jClasses::inc('junittests~junittestcasedb');
             $reporter->setResponse($rep);
 
-            $group = new GroupTest('All'.$category.' tests in "'.$module. '" module');
+            $group = new TestSuite('All'.$category.' tests in "'.$module. '" module');
             foreach($this->testsList[$module] as $test){
-                $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
             }
             jContext::push($module);
             $group->run($reporter);
@@ -118,8 +118,8 @@ class defaultCtrl extends jController {
 
             foreach($this->testsList[$module] as $test){
                 if($test[1] == $testname){
-                    $group = new GroupTest('"'.$module. '" module , '.$test[2]);
-                    $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                    $group = new TestSuite('"'.$module. '" module , '.$test[2]);
+                    $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
                     jContext::push($module);
                     $group->run($reporter);
                     jContext::pop();

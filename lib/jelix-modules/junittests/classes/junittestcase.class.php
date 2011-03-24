@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  junittests
 * @author      Laurent Jouanneau
-* @contributor
-* @copyright   2006-2007 Laurent Jouanneau
+* @contributor Rahal Aboulfeth
+* @copyright   2006-2007 Laurent Jouanneau 2011 Rahal Aboufeth
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -16,23 +16,26 @@ class jUnitTestCase extends UnitTestCase {
     protected $dbProfile ='';
     protected $needPDO = false;
 
-    function run(&$reporter) {
-        SimpleTest::setCurrent($this);
-        $this->_reporter = &$reporter;
-        $this->_reporter->paintCaseStart($this->getLabel());
+    
+    function run($reporter) {
+        $context = SimpleTest::getContext();
+        $context->setTest($this);
+        $context->setReporter($reporter);
+        $this->reporter = $reporter;
+        $this->reporter->paintCaseStart($this->getLabel());
         if($this->needPDO){
-            $this->_reporter->makeDry(!$this->assertTrue(class_exists('PDO',false), 'PDO does not exists ! You should install PDO because tests need it.'));
+            $this->reporter->makeDry(!$this->assertTrue(class_exists('PDO',false), 'PDO does not exists ! You should install PDO because tests need it.'));
         }
         foreach ($this->getTests() as $method) {
-            if ($this->_reporter->shouldInvoke($this->getLabel(), $method)) {
-                $invoker = &$this->_reporter->createInvoker($this->createInvoker());
+            if ($this->reporter->shouldInvoke($this->getLabel(), $method)) {
+                $invoker = $this->reporter->createInvoker($this->createInvoker());
                 $invoker->before($method);
                 $invoker->invoke($method);
                 $invoker->after($method);
             }
         }
-        $this->_reporter->paintCaseEnd($this->getLabel());
-        unset($this->_reporter);
+        $this->reporter->paintCaseEnd($this->getLabel());
+        unset($this->reporter);
         return $reporter->getStatus();
     }
 
@@ -44,12 +47,12 @@ class jUnitTestCase extends UnitTestCase {
     *    @param string $message        Message to send.
     */
     function diff($stringA, $stringB, $message='') {
-        if (! isset($this->_reporter)) {
+        if (! isset($this->reporter)) {
             trigger_error('Can only show diff within test methods');
         }
         if($message != '')
-            $this->_reporter->paintMessage($message);
-        $this->_reporter->paintDiff($stringA, $stringB);
+            $this->reporter->paintMessage($message);
+        $this->reporter->paintDiff($stringA, $stringB);
     }
 
     /**
@@ -236,6 +239,27 @@ $this->dump('!!!!! value de n  pas ok');*/
                 $this->fail("_checkIdentical: balise inconnue ".$nodename.$errormessage);
         }
 
+    }
+    
+    /**
+    *    @deprecated
+    *    method removed from simpletest ( stays here for compatibility reasons, some tests still use it )
+    *    @param string $message        Message to send.
+    */
+    function sendMessage($message=''){
+    	$this->reporter->paintMessage($message);
+    }
+    /**
+    *    @deprecated
+    *    Confirms that an error has occoured and
+    *    optionally that the error text matches exactly.
+    *    @param string $expected   Expected error text or
+    *                              false for no check.
+    *    @param string $message    Message to display.
+    *    @return boolean           True on pass
+    */
+    function assertError($expected = false, $message = "%s") {
+    	trigger_error('assertError is a deprecated method, please use expectError for errors expectations ( to be used before the error happens )');
     }
 
 }

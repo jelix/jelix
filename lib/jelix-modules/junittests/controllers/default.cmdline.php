@@ -84,9 +84,9 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
         if (count($this->testsList)){
             foreach($this->testsList as $module=>$tests){
                 jContext::push($module);
-                $group = new GroupTest('Tests'.$category.' on module '.$module);
+                $group = new TestSuite('Tests'.$category.' on module '.$module);
                 foreach($this->testsList[$module] as $test){
-                    $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                    $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
                 }
                 $result = $group->run($reporter);
                 if (!$result) $rep->setExitCode(jResponseCmdline::EXIT_CODE_ERROR);
@@ -111,9 +111,9 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
             jClasses::inc('junittests~junittestcasedb');
             $reporter->setResponse($rep);
 
-            $group = new GroupTest('All'.$category.' tests in "'.$module. '" module');
+            $group = new TestSuite('All'.$category.' tests in "'.$module. '" module');
             foreach($this->testsList[$module] as $test){
-                $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
             }
             jContext::push($module);
             $result = $group->run($reporter);
@@ -140,8 +140,8 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
 
             foreach($this->testsList[$module] as $test){
                 if($test[1] == $testname){
-                    $group = new GroupTest('"'.$module. '" module , '.$test[2]);
-                    $group->addTestFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                    $group = new TestSuite('"'.$module. '" module , '.$test[2]);
+                    $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
                     jContext::push($module);
                     $result = $group->run($reporter);
                     if (!$result) $rep->setExitCode(jResponseCmdline::EXIT_CODE_ERROR);
