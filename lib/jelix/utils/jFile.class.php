@@ -98,26 +98,52 @@ class jFile {
      *
      * @param string $path The path of the directory to remove recursively
      * @param boolean $deleteParent If the path must be deleted too
+     * @param array $except  filenames and suffix of filename, for files to NOT delete
      * @since 1.0b1
      * @author Loic Mathaud
+     * @return boolean true if all the content has been removed
      */
-    public static function removeDir($path, $deleteParent=true) {
+    public static function removeDir($path, $deleteParent=true, $except=array()) {
 
         if($path == '' || $path == '/' || $path == DIRECTORY_SEPARATOR)
             throw new jException('jelix~errors.file.directory.cannot.remove.fs.root'); //see ticket #840
 
         if (!file_exists($path))
-            return;
+            return true;
+
+        $allIsDeleted = true;
 
         $dir = new DirectoryIterator($path);
         foreach ($dir as $dirContent) {
+            if (count($except)) {
+                // test if the basename matches one of patterns
+                $exception = false;
+                foreach($except as $pattern) {
+                    if ($pattern[0] == '*') { // for pattern like *.foo
+                        if ($dirContent->getBasename() != $dirContent->getBasename(substr($pattern, 1))) {
+                            $allIsDeleted = false;
+                            $exception = true;
+                            break;
+                        }
+                    }
+                    else if ($pattern == $dirContent->getBasename()) {
+                        $allIsDeleted = false;
+                        $exception = true;
+                        break;
+                    }
+                }
+                if ($exception)
+                    continue;
+            }
         	// file deletion
             if ($dirContent->isFile() || $dirContent->isLink()) {
         		unlink($dirContent->getPathName());
         	} else {
         		// recursive directory deletion
                 if (!$dirContent->isDot() && $dirContent->isDir()) {
-                    self::removeDir($dirContent->getPathName());
+                    $removed = self::removeDir($dirContent->getPathName(), true, $except);
+                    if (!$removed)
+                        $allIsDeleted = false;
         		}
         	}
         }
@@ -125,9 +151,10 @@ class jFile {
         unset($dirContent);
 
         // removes the parent directory
-        if ($deleteParent) {
+        if ($deleteParent && $allIsDeleted) {
             rmdir($path);
         }
+        return $allIsDeleted;
     }
 
     /**

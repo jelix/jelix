@@ -132,7 +132,7 @@ if (file_exists(JELIXS_APPTPL_PATH) && file_exists(JELIXS_APPTPL_PATH.'applicati
         exit(1);
     }
 
-    jFile::removeDir(jApp::tempPath(), false);
+    jFile::removeDir(jApp::tempPath(), false, array('.svn', '.dummy'));
 }
 else {
     if ($command->applicationMustExist) {

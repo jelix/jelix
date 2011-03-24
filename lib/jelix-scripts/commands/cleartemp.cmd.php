@@ -34,7 +34,7 @@ class cleartempCommand extends JelixScriptCommand {
                 echo "       Correct the path in your application.init.php or create the corresponding directory\n";
                 exit(1);
             }
-            jFile::removeDir($tempPath, false);
+            jFile::removeDir($tempPath, false, array('.svn', '.dummy'));
         }
         catch (Exception $e) {
             if(MESSAGE_LANG == 'fr')
