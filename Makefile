@@ -37,6 +37,12 @@ ifndef PHPDOC
 PHPDOC=../../phpdoc/
 endif
 
+PHPUNITLOG=${CURRENT_PATH}/${TESTPATH}/temp/tests-phpunit.output.xml
+PHPUNITDOXDIR=${CURRENT_PATH}/${TESTPATH}/temp/testdox/
+PHPUNITDOX=${PHPUNITDOXDIR}/tests-phpunit.dox.html
+PHPUNITCLOVER=${CURRENT_PATH}/${TESTPATH}/temp/tests-phpunit.clover.xml
+PHPUNITCOVERAGE=${CURRENT_PATH}/${TESTPATH}/temp/coverage/
+
 default:
 	@echo "target:"
 	@echo " nightlies : "
@@ -68,6 +74,8 @@ tests:
 	&& cp $(TESTS_KVPROFILES) testapp/var/config/kvprofiles.ini.php
 	cd $(TESTPATH)/testapp/install && $(PHP) installer.php
 	cd $(TESTPATH)/testapp/scripts/ && $(PHP) tests.php default:index
+	mkdir -p ${PHPUNITCOVERAGE} ${PHPUNITDOXDIR}
+	cd $(TESTPATH)/testapp/tests/ && $(PHP) runtests.php --testdox --log-junit ${PHPUNITLOG} --testdox-html ${PHPUNITDOX} --coverage-clover ${PHPUNITCLOVER} --coverage-html ${PHPUNITCOVERAGE}  ../tests-jelix 
 
 docs: 
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
