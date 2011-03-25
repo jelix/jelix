@@ -38,6 +38,15 @@ class jSoapClient {
                 $wsdl = null;
             unset ($profile['wsdl']);
         }
+        if (isset($profile['trace'])) {
+            $profile['trace'] = intval($profile['trace']); // SoapClient recognize only true integer
+        }
+        if (isset($profile['exceptions'])) {
+            $profile['exceptions'] = intval($profile['exceptions']); // SoapClient recognize only true integer
+        }
+        if (isset($profile['connection_timeout'])) {
+            $profile['connection_timeout'] = intval($profile['connection_timeout']); // SoapClient recognize only true integer
+        }
 
         // we set the name to avoid two connections for a same profile, when the given name
         // is an alias of a real profile and when we call getConnection several times,
