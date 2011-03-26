@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage utils
 * @author     Laurent Jouanneau
-* @copyright  2008-2010 Laurent Jouanneau
+* @copyright  2008-2011 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -493,6 +493,7 @@ class jIniFileModifier {
                     array_unshift($values, array(self::TK_SECTION, '['.$realSection.']'));
                 }
                 $this->content[$realSection] = $values;
+                $this->modified = true;
             }
         }
     }
@@ -512,6 +513,7 @@ class jIniFileModifier {
             $this->content[$sectionSource] = array();
         else
             unset($this->content[$sectionSource]);
+        $this->modified = true;
         return true;
     }
 
@@ -546,6 +548,7 @@ class jIniFileModifier {
                         }
                         $found = true;
                         $this->content[$sectionTarget][$j][2] = $item[2];
+                        $this->modified = true;
                         break;
                     }
                     if (!$found) {
@@ -556,6 +559,7 @@ class jIniFileModifier {
 
                         }
                         $this->content[$sectionTarget] = array_merge($this->content[$sectionTarget], $previousItems);
+                        $this->modified = true;
                     }
                     $previousItems = array();
                     break;
@@ -579,6 +583,7 @@ class jIniFileModifier {
                 continue;
             }
             $this->content[$section][$k][1] = $newName;
+            $this->modified = true;
             break;
         }
         return true;
@@ -612,6 +617,7 @@ class jIniFileModifier {
                 $newcontent [$section] = $values;
         }
         $this->content = $newcontent;
+        $this->modified = true;
         return true;
     }
 }
