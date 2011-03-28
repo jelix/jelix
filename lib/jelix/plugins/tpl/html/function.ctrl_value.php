@@ -37,6 +37,8 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
         $ctrl = $ctrls[$ctrlname];
     }
 
+    $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
+
     if($ctrl->type == 'hidden' || $ctrl->type == 'captcha')
         return;
 
