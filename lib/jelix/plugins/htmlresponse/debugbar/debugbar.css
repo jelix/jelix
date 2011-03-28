@@ -62,8 +62,9 @@
     padding:0;
     color:black;
     position:relative;
-    max-height:300px;
+    /*max-height:300px;*/
     overflow: auto;
+    resize:both;
 }
 #jxdb-tabpanels div.jxdb-tabpanel { padding:4px; }
 .jxdb-list {margin:10px; padding:8px 8px 8px 8px; list-style-type:none;}
