@@ -43,9 +43,9 @@ class UTjformsHTMLBuilder extends jUnitTestCaseDb {
     function testOutputHeader(){
         $this->builder->setAction('jelix_tests~urlsig:url1',array());
         ob_start();
-        $this->builder->outputHeader(array('method'=>'post'));
+        $this->builder->outputHeader(array('method'=>'post', 'attributes'=>array('class'=>'foo')));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
+        $result ='<form class="foo" action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
 jFormsJQ.config = {locale:\''.$GLOBALS['gJConfig']->locale.'\',basePath:\''.$GLOBALS['gJConfig']->urlengine['basePath'].'\',jqueryPath:\''.$GLOBALS['gJConfig']->urlengine['jqueryPath'].'\',jelixWWWPath:\''.$GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'\'};

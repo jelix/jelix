@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin
-* @copyright   2006-2010 Laurent Jouanneau
+* @copyright   2006-2011 Laurent Jouanneau
 * @copyright   2008-2010 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -106,19 +106,28 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     public function outputHeader($params){
         $this->options = array_merge(array('errorDecorator'=>$this->jFormsJsVarName.'ErrorDecoratorHtml',
             'method'=>'post'), $params);
+        if (isset($params['attributes']))
+            $attrs = $params['attributes'];
+        else
+            $attrs = array();
 
+        echo '<form';
         if (preg_match('#^https?://#',$this->_action)) {
             $urlParams = $this->_actionParams;
-            echo '<form action="',$this->_action,'" method="'.$this->options['method'].'" id="', $this->_name,'"';
+            $attrs['action'] = $this->_action;
         } else {
             $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
             $urlParams = $url->params;
-            echo '<form action="',$url->getPath(),'" method="'.$this->options['method'].'" id="', $this->_name,'"';
+            $attrs['action'] = $url->getPath();
         }
+        $attrs['method'] = $this->options['method'];
+        $attrs['id'] = $this->_name;
+
         if($this->_form->hasUpload())
-            echo ' enctype="multipart/form-data">';
-        else
-            echo '>';
+            $attrs['enctype'] = "multipart/form-data";
+
+        $this->_outputAttr($attrs);
+        echo '>';
 
         $this->outputHeaderScript();
 
