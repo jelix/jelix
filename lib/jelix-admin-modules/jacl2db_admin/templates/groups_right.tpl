@@ -43,7 +43,7 @@
 </tr>{assign $currentsbjgroup = $subjects[$subject]['grp']}
 {/if}
 <tr class="{cycle array('odd','even')}">
-    <th>{$subjects[$subject]['label']|eschtml}</th>
+    <th title="{$subject}">{$subjects[$subject]['label']|eschtml}</th>
     {foreach $right as $group=>$r}
     <td><input type="checkbox" name="rights[{$group}][{$subject}]" {if $r}checked="checked"{/if} /></td>
     <td>{if isset($rightsWithResources[$subject][$group]) && $rightsWithResources[$subject][$group]}yes{/if}</td>
