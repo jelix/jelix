@@ -6,7 +6,7 @@
     <script type="text/javascript" src="debugbar.js"></script>
     <script type="text/javascript" src="errors.debugbar.js"></script>
     <style type="text/css">
-    
+
 ul.jxdb-list li h5 a { background-image: url(icons/bullet_toggle_plus.png);}
 ul.jxdb-list li.jxdb-opened  h5 a  {background-image: url(icons/bullet_toggle_minus.png);}
 #jxdb-errors li.jxdb-msg-error h5 span {background-image: url(icons/exclamation.png);}
@@ -38,9 +38,10 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
     <div id="jxdb-header">
         <a href="javascript:jxdb.selectTab('jxdb-panel-jelix');"><img src="jelix-dbg.png" alt="Jelix debug toolbar"/></a>
 
-        <span><a href="javascript:jxdb.selectTab('jxdb-panel-1');" title="Configuration"><img src="icons/wrench.png" alt="config"/></a></span> 
-        <span><a href="javascript:jxdb.selectTab('jxdb-panel-2');" title="13 errors"><img src="icons/exclamation.png" alt="errors"/> 13</a></span> 
-        <span><a href="javascript:jxdb.selectTab('jxdb-panel-3');"><img src="icons/database.png" /> 5</a></span>
+        <span><a href="javascript:jxdb.selectTab('jxdb-panel-1');" title="Configuration"><img src="icons/wrench.png" alt="config"/></a></span>
+        <span><a href="javascript:jxdb.selectTab('jxdb-panel-2');" title="13 errors"><img src="icons/exclamation.png" alt="errors"/> 13</a></span>
+        <span><a href="javascript:jxdb.selectTab('jxdb-panel-sqllog');"><img src="icons/database.png" /> 5</a></span>
+        <span><a href="javascript:jxdb.selectTab('jxdb-panel-sessiondata');">Session (5)</a></span>
         <span><img src="icons/time.png" /> 150 ms</span>
         <span> 20KB</span>
         <span> request</span>
@@ -60,37 +61,36 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
                 <ul>
                     <li>configuration variables: TODO</li>
                 </ul>
-                    
         </div>
         <div id="jxdb-panel-2" class="jxdb-tabpanel" style="display:none">
             <ul id="jxdb-errors" class="jxdb-list">
                 <li class="jxdb-msg-error">
                     <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                    <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <p>Code: 1024<br/>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>header()</td>
-                            <td>lib:jelix/core/jResponse.class.php</td>
+                            <td><i>lib:</i>jelix/core/jResponse.class.php</td>
                             <td>129</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponse->sendHttpHeaders()</td>
-                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
+                            <td><i>lib:</i>jelix/core/response/jResponseHtml.class.php</td>
                             <td>169</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jResponseHtml->output()	</td>
-                            <td>lib:jelix/core/jCoordinator.class.php</td>
+                            <td><i>lib:</i>jelix/core/jCoordinator.class.php</td>
                             <td>202</td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td>jCoordinator->process()</td>
-                            <td>app:www/index.php</td>
+                            <td><i>app:</i>www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
@@ -99,24 +99,24 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
                 <li class="jxdb-msg-notice">
                     <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Undefined variable: gJConfig</span></a></h5>
                     <div>
-                    <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <p>Code: 1024<br/>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
+                            <td><i>lib:</i>jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>lib:jelix/core/jCoordinator.class.php</td>
+                            <td><i>lib:</i>jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>app:www/index.php</td>
+                            <td><i>app:</i>www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
@@ -125,24 +125,24 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
                 <li class="jxdb-msg-notice">
                     <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                    <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <p>Code: 1024<br/>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
+                            <td><i>lib:</i>jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>lib:jelix/core/jCoordinator.class.php</td>
+                            <td><i>lib:</i>jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>app:www/index.php</td>
+                            <td><i>app:</i>www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
@@ -151,24 +151,24 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
                 <li class="jxdb-msg-notice">
                     <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                <p>Code: 1024<br/>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
+                            <td><i>lib:</i>jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>lib:jelix/core/jCoordinator.class.php</td>
+                            <td><i>lib:</i>jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>app:www/index.php</td>
+                            <td><i>app:</i>www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
@@ -177,24 +177,24 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
                 <li class="jxdb-msg-warning">
                     <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                <p>Code: 1024<br/>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
+                            <td><i>lib:</i>jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>lib:jelix/core/jCoordinator.class.php</td>
+                            <td><i>lib:</i>jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>app:www/index.php</td>
+                            <td><i>app:</i>www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
@@ -203,24 +203,24 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
                 <li class="jxdb-msg-warning">
                     <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                <p>Code: 1024<br/>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
+                            <td><i>lib:</i>jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>lib:jelix/core/jCoordinator.class.php</td>
+                            <td><i>lib:</i>jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>app:www/index.php</td>
+                            <td><i>app:</i>www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
@@ -229,24 +229,24 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
                 <li class="jxdb-msg-warning">
                     <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                <p>Code: 1024<br/>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
+                            <td><i>lib:</i>jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>lib:jelix/core/jCoordinator.class.php</td>
+                            <td><i>lib:</i>jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>app:www/index.php</td>
+                            <td><i>app:</i>www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
@@ -255,24 +255,24 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
                 <li class="jxdb-msg-warning">
                     <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
                     <div>
-                    <p>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
+                    <p>Code: 1024<br/>File: lib:jelix/plugins/responsehtml/minify/minify.responsehtml.php	52</p>
                     <table>
                         <tr>
                             <td>0</td>
                             <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
+                            <td><i>lib:</i>jelix/core/response/jResponseHtml.class.php</td>
                             <td>257</td>
                         </tr>
                         <tr>
                             <td>1</td>
                             <td>jResponseHtml->output()</td>
-                            <td>lib:jelix/core/jCoordinator.class.php</td>
+                            <td><i>lib:</i>jelix/core/jCoordinator.class.php</td>
                             <td>207</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>jCoordinator->process()</td>
-                            <td>app:www/index.php</td>
+                            <td><i>app:</i>www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
@@ -280,65 +280,139 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
                 </li>
             </ul>
         </div>
-        <div id="jxdb-panel-3" class="jxdb-tabpanel" style="display:none">
+        <div id="jxdb-panel-sqllog" class="jxdb-tabpanel" style="display:none">
                 <h3>Queries</h3>
-            <ul class="jxdb-list">
+                <ul id="jxdb-sqllog" class="jxdb-list">
                 <li>
-                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Donec porttitor eleifend eleifend. Donec sem erat, sollicitudin posuere pulvinar non</span></a></h5>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>SELECT `jsessions`.`id`, `jsessions`.`creation`, `jsessions`.`access`, `jsessions`.`data` FROM `jsessions` AS `jsessions` WHERE  `jsessions`.`id` = 'v5ivli2lhhhsi5c8a6t0m45t02'</span></a></h5>
                     <div>
-                    <p>Time: 34ms</p>
+                    <p>Time: 0.00081706047058105s</p>
                     <table>
-                        <tr>
-                            <td>0</td>
-                            <td>header()</td>
-                            <td>lib:jelix/core/jResponse.class.php</td>
-                            <td>129</td>
+                        <tr><td>0</td>
+                            <td>jDbConnection->query()</td>
+                            <td><i>lib:</i>jelix/dao/jDaoFactoryBase.class.php</td>
+                            <td>197</td>
+                        </tr>
+                        <tr><td>1</td>
+                            <td>jDaoFactoryBase->get()</td>
+                            <td><i>lib:</i>jelix/core/jSession.class.php</td>
+                            <td>122</td>
+                        </tr>
+                        <tr><td>2</td>
+                            <td>jSession::daoRead()</td>
+                            <td>[php]</td>
+                            <td></td>
+                        </tr>
+                        <tr><td>3</td>
+                            <td>session_start()</td>
+                            <td><i>lib:</i>jelix/core/jSession.class.php</td>
+                            <td>81</td>
+                        </tr>
+                        <tr><td>4</td>
+                            <td>jSession::start()</td>
+                            <td><i>lib:</i>jelix/core/jCoordinator.class.php</td>
+                            <td>141</td>
                         </tr>
                         <tr>
-                            <td>1</td>
-                            <td>jResponse->sendHttpHeaders()</td>
-                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
-                            <td>169</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>jResponseHtml->output()	</td>
-                            <td>lib:jelix/core/jCoordinator.class.php</td>
-                            <td>202</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
+                            <td>5</td>
                             <td>jCoordinator->process()</td>
-                            <td>app:www/index.php</td>
+                            <td><i>app:</i>www/index.php</td>
                             <td>19</td>
                         </tr>
                     </table>
                     </div>
                 </li>
                 <li>
-                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>Undefined variable: gJConfig</span></a></h5>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>SELECT `ug`.`login`, `ug`.`id_aclgrp` FROM `jacl2_user_group` AS `ug` WHERE  `ug`.`login`  = 'admin'</span></a></h5>
                     <div>
-                    <p>Time: 34ms</p>
+                    <p>Time: 0.00057387351989746s<br/>Dao: jacl2db~jacl2usergroup</p>
                     <table>
-                        <tr>
-                            <td>0</td>
-                            <td>minifyRHTMLPlugin->beforeOutput()</td>
-                            <td>lib:jelix/core/response/jResponseHtml.class.php</td>
-                            <td>257</td>
+                        <tr><td>0</td>
+                            <td>jDbConnection->query()</td>
+                            <td><i>temp:</i>compiled/daos/modules/jacl2db~jacl2usergroup~mysql.php</td>
+                            <td>114</td>
                         </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>jResponseHtml->output()</td>
-                            <td>lib:jelix/core/jCoordinator.class.php</td>
-                            <td>207</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>jCoordinator->process()</td>
-                            <td>app:www/index.php</td>
-                            <td>19</td>
-                        </tr>
+                        <tr><td>1</td>
+                            <td>cDao_jacl2db_Jx_jacl2usergroup_Jx_mysql->getGroupsUser()</td>
+                            <td><i>lib:</i>jelix/acl/jAcl2DbUserGroup.class.php</td><td>51</td></tr><tr><td>2</td><td>jAcl2DbUserGroup::getGroups()</td><td><i>lib:</i>jelix/plugins/acl2/db/db.acl2.php</td><td>44</td></tr><tr><td>3</td><td>dbAcl2Driver->getRight()</td><td><i>lib:</i>jelix/acl/jAcl2.class.php</td><td>58</td></tr><tr><td>4</td><td>jAcl2::check()</td><td><i>lib:</i>jelix-admin-modules/jacl2db_admin/classes/jacl2db_admin.listener.php</td><td>17</td></tr><tr><td>5</td><td>jacl2db_adminListener->onmasteradminGetMenuContent()</td><td><i>lib:</i>jelix/events/jEventListener.class.php</td><td>31</td></tr><tr><td>6</td><td>jEventListener->performEvent()</td><td><i>lib:</i>jelix/events/jEvent.class.php</td><td>134</td></tr><tr><td>7</td><td>jEvent::notify()</td><td><i>lib:</i>jelix-admin-modules/master_admin/zones/admin_menu.zone.php</td><td>28</td></tr><tr><td>8</td><td>admin_menuZone->_prepareTpl()</td><td><i>lib:</i>jelix/utils/jZone.class.php</td><td>221</td></tr><tr><td>9</td><td>jZone->_createContent()</td><td><i>lib:</i>jelix/utils/jZone.class.php</td><td>193</td></tr><tr><td>10</td><td>jZone->getContent()</td><td><i>lib:</i>jelix/utils/jZone.class.php</td><td>263</td></tr><tr><td>11</td><td>jZone::_callZone()</td><td><i>lib:</i>jelix/utils/jZone.class.php</td><td>95</td></tr><tr><td>12</td><td>jZone::get()</td><td><i>lib:</i>jelix/tpl/jTpl.class.php</td><td>125</td></tr><tr><td>13</td><td>jTpl->assignZone()</td><td><i>app:</i>responses/adminHtmlResponse.class.php</td><td>33</td></tr><tr><td>14</td><td>adminHtmlResponse->doAfterActions()</td><td><i>lib:</i>jelix/core/response/jResponseHtml.class.php</td><td>177</td></tr><tr><td>15</td><td>jResponseHtml->output()</td><td><i>lib:</i>jelix/core/jCoordinator.class.php</td><td>211</td></tr><tr><td>16</td><td>jCoordinator->process()</td><td><i>app:</i>www/index.php</td><td>19</td></tr>
                     </table>
+                    </div>
+                </li>
+                <li>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>SELECT `r`.`id_aclsbj`, `r`.`id_aclgrp`, `r`.`id_aclres` FROM `jacl2_rights` AS `r` WHERE  `r`.`id_aclres` = '' AND `r`.`id_aclgrp` IN ('admins','__priv_admin')</span></a></h5>
+                    <div>
+                    <p>Time: 0.00057506561279297s<br/>Dao: jacl2db~jacl2rights</p>
+                    <table>
+                        <tr><td>0</td>
+                            <td>jDbConnection->query()</td>
+                            <td><i>temp:</i>compiled/daos/modules/jacl2db~jacl2rights~mysql.php</td>
+                            <td>146</td></tr><tr><td>1</td><td>cDao_jacl2db_Jx_jacl2rights_Jx_mysql->getRightsByGroups()</td><td><i>lib:</i>jelix/plugins/acl2/db/db.acl2.php</td><td>48</td></tr><tr><td>2</td><td>dbAcl2Driver->getRight()</td><td><i>lib:</i>jelix/acl/jAcl2.class.php</td><td>58</td></tr><tr><td>3</td><td>jAcl2::check()</td><td><i>lib:</i>jelix-admin-modules/jacl2db_admin/classes/jacl2db_admin.listener.php</td><td>17</td></tr><tr><td>4</td><td>jacl2db_adminListener->onmasteradminGetMenuContent()</td><td><i>lib:</i>jelix/events/jEventListener.class.php</td><td>31</td></tr><tr><td>5</td><td>jEventListener->performEvent()</td><td><i>lib:</i>jelix/events/jEvent.class.php</td><td>134</td></tr><tr><td>6</td><td>jEvent::notify()</td><td><i>lib:</i>jelix-admin-modules/master_admin/zones/admin_menu.zone.php</td><td>28</td></tr><tr><td>7</td><td>admin_menuZone->_prepareTpl()</td><td><i>lib:</i>jelix/utils/jZone.class.php</td><td>221</td></tr><tr><td>8</td><td>jZone->_createContent()</td><td><i>lib:</i>jelix/utils/jZone.class.php</td><td>193</td></tr><tr><td>9</td><td>jZone->getContent()</td><td><i>lib:</i>jelix/utils/jZone.class.php</td><td>263</td></tr><tr><td>10</td><td>jZone::_callZone()</td><td><i>lib:</i>jelix/utils/jZone.class.php</td><td>95</td></tr><tr><td>11</td><td>jZone::get()</td><td><i>lib:</i>jelix/tpl/jTpl.class.php</td><td>125</td></tr><tr><td>12</td><td>jTpl->assignZone()</td><td><i>app:</i>responses/adminHtmlResponse.class.php</td><td>33</td></tr><tr><td>13</td><td>adminHtmlResponse->doAfterActions()</td><td><i>lib:</i>jelix/core/response/jResponseHtml.class.php</td><td>177</td></tr><tr><td>14</td><td>jResponseHtml->output()</td><td><i>lib:</i>jelix/core/jCoordinator.class.php</td><td>211</td></tr><tr><td>15</td><td>jCoordinator->process()</td><td><i>app:</i>www/index.php</td><td>19</td></tr></table></div>
+                </li>
+            </ul>
+        </div>
+
+        <div id="jxdb-panel-sessiondata" class="jxdb-tabpanel" style="display:none">
+            <h3>Session variables</h3>
+            <ul id="jxdb-sessiondata" class="jxdb-list">
+                <li>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>JELIX_AUTH_SECURE_WITH_IP = &quot;127.0.0.1 - localhost.localdomain&quot;</span></a></h5>
+                    <div></div>
+                </li>
+                <li>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>JELIX_USER</span></a></h5>
+                    <div><pre>cDaoRecord_foo_Jx_user_Jx_mysql::__set_state(array(
+   'login' => 'admin',
+   'email' => 'admin@localhost.localdomain',
+   'password' => 'd033e22ae348aeb5660fc2140aec35850c4da997',
+))</pre>
+                    </div>
+                </li>
+                <li> <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>JELIX_MESSAGE</span></a></h5>
+                    <div><pre>array (
+)</pre>
+                    </div>
+                </li>
+                <li>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>JELIX_AUTH_LASTTIME = 1301658589</span></a></h5>
+                    <div></div>
+                </li>
+                <li>
+                    <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>JFORMS</span></a></h5>
+                    <div><pre>array (
+  'foo~barr_acc' =>
+  array (
+    0 =>
+    jFormsDataContainer::__set_state(array(
+       'data' =>
+      array (
+        'curr_acc' => '',
+        '_submit' =>
+        array (
+        ),
+      ),
+       'originalData' =>
+      array (
+      ),
+       'privateData' =>
+      array (
+      ),
+       'formId' => 0,
+       'formSelector' => 'foo~barr_acc',
+       'errors' =>
+      array (
+      ),
+       'updatetime' => 1301658589,
+       'token' => '3f55e56a8e3ac1210f89cb2fefae53f9',
+       'readOnly' =>
+      array (
+      ),
+       'deactivated' =>
+      array (
+      ),
+       'refcount' => 1,
+    )),
+  ),
+)</pre>
                     </div>
                 </li>
             </ul>

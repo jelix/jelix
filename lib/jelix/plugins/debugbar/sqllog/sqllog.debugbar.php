@@ -23,7 +23,7 @@ class sqllogDebugbarPlugin implements jIDebugbarPlugin {
     }
 
     /**
-     * @return string Javascript code lines 
+     * @return string Javascript code lines
      */
     function getJavascript() {
         return '';
@@ -56,7 +56,7 @@ class sqllogDebugbarPlugin implements jIDebugbarPlugin {
                     if ($dao)
                         $info->popupContent.='Dao: '.$dao;
                     $info->popupContent.='</p>'.$debugbar->formatTrace($msg->getTrace());
-                    $info->popupContent .='</div>';
+                    $info->popupContent .='</div></li>';
                 }
                 $info->popupContent .= '</ul>';
             }
