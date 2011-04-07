@@ -144,7 +144,7 @@ class UTjInstallerComponent extends UnitTestCase {
             $component->init();
             $conf =(object) array( 'modules'=>array(
                'testinstall1.access'=>2, 
-               'testinstall1.dbprofile'=>'dbprofils.ini.php', 
+               'testinstall1.dbprofile'=>'default', 
                'testinstall1.installed'=>false, 
                'testinstall1.version'=>JELIX_VERSION,
             ));
@@ -173,7 +173,7 @@ class UTjInstallerComponent extends UnitTestCase {
 
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2,
-               'testinstall2.dbprofile'=>'dbprofils.ini.php',
+               'testinstall2.dbprofile'=>'default',
                'testinstall2.installed'=>false,
                'testinstall2.version'=>JELIX_VERSION,
             ));
@@ -208,7 +208,7 @@ class UTjInstallerComponent extends UnitTestCase {
             $component->init();
             $conf =(object) array( 'modules'=>array(
                'testinstall1.access'=>2, 
-               'testinstall1.dbprofile'=>'dbprofils.ini.php', 
+               'testinstall1.dbprofile'=>'default', 
                'testinstall1.installed'=>false, 
                'testinstall1.version'=>JELIX_VERSION,
             ));
@@ -237,7 +237,7 @@ class UTjInstallerComponent extends UnitTestCase {
             // the current version is the latest one : no updaters
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2, 
-               'testinstall2.dbprofile'=>'dbprofils.ini.php', 
+               'testinstall2.dbprofile'=>'default', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>JELIX_VERSION, 
             ));
@@ -266,7 +266,7 @@ class UTjInstallerComponent extends UnitTestCase {
 
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2, 
-               'testinstall2.dbprofile'=>'dbprofils.ini.php', 
+               'testinstall2.dbprofile'=>'default', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>"1.1.2", 
             ));
@@ -307,7 +307,7 @@ class UTjInstallerComponent extends UnitTestCase {
 
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2,
-               'testinstall2.dbprofile'=>'dbprofils.ini.php',
+               'testinstall2.dbprofile'=>'default',
                'testinstall2.installed'=>false,
                'testinstall2.version'=>"0.9",
             ));
