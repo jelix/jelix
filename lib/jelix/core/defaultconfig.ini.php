@@ -115,7 +115,7 @@ minifyExcludeCSS = ""
 minifyExcludeJS = "jquery.wymeditor.js"
 
 [debugbar]
-plugins = sqllog
+plugins = sqllog,sessiondata
 
 [error_handling]
 messageLogFormat = "%date%\t%ip%\t[%code%]\t%msg%\t%file%\t%line%\n\t%url%\n%params%\n%trace%\n\n"
@@ -271,7 +271,7 @@ smtpHost = "localhost"
 ; default SMTP server port
 smtpPort = 25
 ; secured connection or not. possible values: "", "ssl", "tls"
-smtpSecure = 
+smtpSecure =
 ; SMTP HELO of the message (Default is hostname)
 smtpHelo =
 ; SMTP authentication

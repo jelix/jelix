@@ -384,6 +384,9 @@ cd lib/jelix/plugins/db/oci
 cd lib/jelix/plugins/debugbar/sqllog
 * sqllog.debugbar.php
 
+cd lib/jelix/plugins/debugbar/sessiondata
+* sessiondata.debugbar.php
+
 cd lib/jelix/plugins/jforms/html
   html.jformsbuilder.php
 
@@ -475,7 +478,7 @@ cd lib/jelix/plugins/tpl/html
   function.formurl.php
   function.formurlparam.php
   function.hook.php
-  function.gravatar.php  
+  function.gravatar.php
   function.image.php
   function.jmessage.php
   function.jfullurl.php
