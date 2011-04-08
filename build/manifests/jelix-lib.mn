@@ -278,6 +278,7 @@ cd lib/jelix/utils/
   jJsonRpc.class.php
   jMailer.class.php
   jMessage.class.php
+  jProfiles.class.php
   jSmtp.class.php
   jSoapClient.class.php
   jTcpdf.class.php

@@ -302,6 +302,7 @@ cd testapp/tests-jelix/jelix/installer/app1/var/config/foo/
 cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
   config.ini.php
 cd testapp/tests-jelix/jelix/utils/
+  profilesTest.php
   soapclientTest.php
 
 cd testapp/tests/
@@ -326,6 +327,7 @@ cd testapp/var/config
   jacl2_ws.coord.ini.php
   jacl.coord.ini.php
   jacl_ws.coord.ini.php
+  profiles.ini.php.dist
   kvprofiles.ini.php.dist
   soapprofiles.ini.php.dist
   urls.xml
