@@ -11,6 +11,16 @@ cd lib/jelix-www/design/jforms/
   calendar.gif
   help.png
   cross.png
+cd lib/jelix-www/design/icons
+  accept.png
+  cancel.png
+  accept_disabled.png
+  cancel_disabled.png
+  error.png
+  exclamation.png
+  information.png
+  lightning.png
+  stop.png
 cd lib/jelix-www/design/images
   logo_jelix_moyen.png
   logo_jelix_100.png

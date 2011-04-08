@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `%%PREFIX%%jacl2_rights` (
   `id_aclsbj` varchar(100) NOT NULL,
   `id_aclgrp` varchar(50) NOT NULL,
   `id_aclres` varchar(100) NOT NULL default '',
+  canceled boolean NOT NULL default 0,
   PRIMARY KEY  (`id_aclsbj`,`id_aclgrp`,`id_aclres`)
 ) ENGINE=MyISAM;
 

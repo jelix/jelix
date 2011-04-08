@@ -25,7 +25,7 @@ class UTjacl2 extends jUnitTestCaseDb {
 
         $this->config = & $gJCoord->plugins['auth']->config;
         $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
-        
+
         jAuth::login('laurent','foo', false);
     }
 
@@ -71,7 +71,6 @@ class UTjacl2 extends jUnitTestCaseDb {
 
         $this->assertTrue(jAcl2::check('super.cms.list'));
         $this->assertTrue(jAcl2::check('super.cms.update'));
-        $this->assertFalse(jAcl2::check('super.cms.delete'));
         $this->assertFalse(jAcl2::check('super.cms.create')); // doesn't exist
         $this->assertFalse(jAcl2::check('super.cms.read'));// doesn't exist
         $this->assertFalse(jAcl2::check('super.cms.delete'));// doesn't exist
@@ -89,6 +88,34 @@ class UTjacl2 extends jUnitTestCaseDb {
         $this->assertTrue(jAcl2::check('admin.access'));
 
     }
+
+
+    public function testCheckCanceledRight(){
+        $usergroups=array(
+            array('login'=>'laurent', 'id_aclgrp'=>'group2'),
+        );
+        $this->insertRecordsIntoTable('jacl2_user_group', array('login','id_aclgrp'), $usergroups);
+        jAcl2::clearCache();
+        jAcl2DbUserGroup::clearCache();
+
+        // it should cancel the right super.cms.update (which is set on group1)
+        jAcl2DbManager::removeRight('group2', 'super.cms.update', '', true);
+
+        $this->assertTrue(jAcl2::check('super.cms.list'));
+        $this->assertFalse(jAcl2::check('super.cms.update')); // is canceled
+        $this->assertFalse(jAcl2::check('super.cms.create')); // doesn't exist
+        $this->assertFalse(jAcl2::check('super.cms.read'));// doesn't exist
+        $this->assertFalse(jAcl2::check('super.cms.delete'));// doesn't exist
+
+        $this->assertTrue(jAcl2::check('admin.access'));
+        $this->assertTrue(jAcl2::check('super.cms.list',154)); // droit sur une ressource
+        $this->assertFalse(jAcl2::check('super.cms.update',154)); // droit sur une ressource
+        $this->assertTrue(jAcl2::check('super.cms.delete',154)); // droit sur une ressource
+        $this->assertTrue(jAcl2::check('super.cms.list',122)); // ressource non repertoriée
+        $this->assertFalse(jAcl2::check('super.cms.update',122)); // ressource non repertoriée
+        $this->assertFalse(jAcl2::check('super.cms.delete',122)); // ressource non repertoriée
+    }
+
 
     public function testGetRightDisconnect(){
         jAuth::logout();

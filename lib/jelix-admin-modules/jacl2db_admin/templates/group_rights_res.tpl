@@ -12,8 +12,8 @@
 <table class="records-list jacl2-list">
 <thead>
     <tr>
-        <th class="">{@jacl2db_admin~acl2.col.subjects@}</th>
-        <th class="">{@jacl2db_admin~acl2.col.resources@}</th>
+        <th>{@jacl2db_admin~acl2.col.subjects@}</th>
+        <th>{@jacl2db_admin~acl2.col.resources@}</th>
     </tr>
 </thead>
 <tfoot>
@@ -29,7 +29,9 @@
         <input type="checkbox" name="subjects[{$subject}]" id="{$subject|eschtml}" />
         <label for="{$subject|eschtml}">{$subjects_localized[$subject]|eschtml}</label>
     </th>
-    <td>{assign $firstr=true}{foreach $resources as $r}{if !$firstr}, {else}{assign $firstr=false}{/if}{$r|eschtml}{/foreach}</td>
+    <td>{assign $firstr=true}
+        {foreach $resources as $r}{if !$firstr}, {else}{assign $firstr=false}{/if}
+        <span class="aclres{$r->canceled}">{$r->id_aclres|eschtml}</span>{/foreach}</td>
 </tr>
 {/foreach}
 </tbody>

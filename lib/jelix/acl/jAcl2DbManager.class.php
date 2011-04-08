@@ -44,6 +44,7 @@ class jAcl2DbManager {
             $right->id_aclsbj = $subject;
             $right->id_aclgrp = $group;
             $right->id_aclres = $resource;
+            $right->canceled = 0;
             $daoright->insert($right);
         }
         jAcl2::clearCache();
@@ -51,15 +52,35 @@ class jAcl2DbManager {
     }
 
     /**
-     * remove a right on the given subject/group/resource
+     * remove a right on the given subject/group/resource. The given right for this group will then
+     * inherit from other groups if the user is in multiple groups of users.
      * @param string    $group the group id.
      * @param string $subject the key of the subject
      * @param string $resource the id of a resource
+     * @param boolean $canceled true if the removing is to cancel a right, instead of an inheritance
      */
-    public static function removeRight($group, $subject, $resource=''){
+    public static function removeRight($group, $subject, $resource='', $canceled = false){
         if($resource === null) $resource='';
-        jDao::get('jacl2db~jacl2rights', 'jacl2_profile')
-            ->delete($subject,$group,$resource);
+
+        $daoright = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
+        if ($canceled) {
+            $right = $daoright->get($subject,$group,$resource);
+            if(!$right){
+                $right = jDao::createRecord('jacl2db~jacl2rights', 'jacl2_profile');
+                $right->id_aclsbj = $subject;
+                $right->id_aclgrp = $group;
+                $right->id_aclres = $resource;
+                $right->canceled = $canceled;
+                $daoright->insert($right);
+            }
+            else if ($right->canceled != $canceled) {
+                $right->canceled = $canceled;
+                $daoright->update($right);
+            }
+        }
+        else {
+            $daoright->delete($subject,$group,$resource);
+        }
         jAcl2::clearCache();
     }
 
@@ -71,25 +92,33 @@ class jAcl2DbManager {
      */
     public static function setRightsOnGroup($group, $rights){
         $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
-        
+
         // retrieve old rights.
         $oldrights = array();
         $rs = $dao->getRightsByGroup($group);
         foreach($rs as $rec){
-            $oldrights [$rec->id_aclsbj] = true;
+            $oldrights [$rec->id_aclsbj] = ($rec->canceled?'n':'y');
         }
 
         // set new rights.  we modify $oldrights in order to have
         // only deprecated rights in $oldrights
         foreach($rights as $sbj=>$val) {
-            if ($val != '' || $val == true) {
-                if (!isset($oldrights[$sbj]))
-                    self::addRight($group,$sbj);
-                else
-                  unset($oldrights[$sbj]);
+            if ($val === '' || $val == false) {
+                // remove
             }
-            else
-                $oldrights [$sbj] = true;
+            else if ($val === true || $val == 'y') {
+                // add
+                if (!isset($oldrights[$sbj]))
+                    self::addRight($group, $sbj);
+                else
+                    unset($oldrights[$sbj]);
+            }
+            else if ($val == 'n') {
+                // cancel
+                if (isset($oldrights[$sbj]))
+                    unset($oldrights[$sbj]);
+                self::removeRight($group, $sbj, '', true);   
+            }
         }
 
         if (count($oldrights)) {
@@ -160,4 +189,3 @@ class jAcl2DbManager {
         jAcl2::clearCache();
     }
 }
-

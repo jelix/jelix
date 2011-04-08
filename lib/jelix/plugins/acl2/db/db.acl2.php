@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  acl_driver
 * @author      Laurent Jouanneau
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2011 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -16,7 +16,7 @@
 class dbAcl2Driver implements jIAcl2Driver {
 
     /**
-     * 
+     *
      */
     function __construct (){ }
 
@@ -46,7 +46,16 @@ class dbAcl2Driver implements jIAcl2Driver {
             if (count($groups)) {
                 $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
                 foreach($dao->getRightsByGroups($groups) as $rec){
-                    self::$acl[$rec->id_aclsbj] = true;
+                    // if there is already a right on a same subject on an other group
+                    // we should take care when this rights says "cancel"
+                    if (isset(self::$acl[$rec->id_aclsbj])) {
+                        if ($rec->canceled) {
+                            self::$acl[$rec->id_aclsbj] = false;
+                        }
+                    }
+                    else {
+                        self::$acl[$rec->id_aclsbj] = ($rec->canceled?false:true);
+                    }
                 }
             }
         }
@@ -64,13 +73,14 @@ class dbAcl2Driver implements jIAcl2Driver {
         }
 
         self::$aclres[$subject][$resource] = self::$acl[$subject];
-        if(!self::$acl[$subject]){
+        // if the general right is not set, check the specific right for the resource
+        if (!self::$acl[$subject]) {
             if($groups===null)
                 $groups = jAcl2DbUserGroup::getGroups();
             if (count($groups)) {
                 $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
                 $right = $dao->getRightWithRes($subject, $groups, $resource);
-                self::$aclres[$subject][$resource] = ($right != false);
+                self::$aclres[$subject][$resource] = ($right != false ? ($right->canceled?false:true) : false);
             }
             return self::$aclres[$subject][$resource];
         }
@@ -84,7 +94,12 @@ class dbAcl2Driver implements jIAcl2Driver {
             $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
             self::$anonacl=array();
             foreach($dao->getAllAnonymousRights() as $rec){
-                self::$anonacl[$rec->id_aclsbj] = true;
+                if (isset(self::$anonacl[$rec->id_aclsbj])) {
+                    if ($rec->canceled)
+                        self::$anonacl[$rec->id_aclsbj] = false;
+                }
+                else
+                    self::$anonacl[$rec->id_aclsbj] = ($rec->canceled?false:true);
             }
         }
 
@@ -101,11 +116,10 @@ class dbAcl2Driver implements jIAcl2Driver {
         }
 
         self::$anonaclres[$subject][$resource] = self::$anonacl[$subject];
-        if(!self::$anonacl[$subject]){
+        if (!self::$anonacl[$subject]) {
             $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
             $right = $dao->getAnonymousRightWithRes($subject, $resource);
-            self::$anonaclres[$subject][$resource] = $r = ($right != false);
-            return $r;
+            return self::$anonaclres[$subject][$resource] = ($right != false ? ($right->canceled?false:true) : false);
         }
         else
             return true;
@@ -123,4 +137,3 @@ class dbAcl2Driver implements jIAcl2Driver {
     }
 
 }
-

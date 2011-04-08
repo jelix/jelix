@@ -35,26 +35,27 @@ class jAcl2DbUserGroup {
         return in_array($groupid, self::getGroups());
     }
 
+    protected static $groups = null;
+
     /**
      * retrieve the list of group the current user is member of
      * @return array list of group id
      */
     public static function getGroups(){
-        static $groups = null;
-
         if(!jAuth::isConnected())
             return array();
 
         // chargement des groupes
-        if($groups === null){
+        if(self::$groups === null){
             $gp = jDao::get('jacl2db~jacl2usergroup', 'jacl2_profile')
                     ->getGroupsUser(jAuth::getUserSession()->login);
-            $groups = array();
+            self::$groups = array();
             foreach($gp as $g){
-                $groups[]=$g->id_aclgrp;
+                self::$groups[] = $g->id_aclgrp;
             }
+
         }
-        return $groups;
+        return self::$groups;
     }
 
     /**
@@ -250,4 +251,13 @@ class jAcl2DbUserGroup {
             return jDao::get('jacl2db~jacl2groupsofuser','jacl2_profile')->getGroupsUser($login);
         }
     }
+
+    /**
+     * clear cache of variables of this class
+     * @since 1.3
+     */
+    public static function clearCache(){
+        self::$groups = null;
+    }
+
 }
