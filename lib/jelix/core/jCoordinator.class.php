@@ -302,7 +302,15 @@ class jCoordinator {
             }
 
             // fatal error, we should output errors
-            if (isset($_SERVER['HTTP_ACCEPT']) && strstr($_SERVER['HTTP_ACCEPT'],'text/html')) {
+            if ($this->request->isAjax()) {
+                if ($this->response)
+                    $resp = $this->response;
+                else {
+                    require_once(JELIX_LIB_CORE_PATH.'response/jResponseText.class.php');
+                    $resp = new jResponseText();
+                }
+            }
+            else if (isset($_SERVER['HTTP_ACCEPT']) && strstr($_SERVER['HTTP_ACCEPT'],'text/html')) {
                 require_once(JELIX_LIB_CORE_PATH.'response/jResponseBasicHtml.class.php');
                 $resp = $this->response = new jResponseBasicHtml();
             }
