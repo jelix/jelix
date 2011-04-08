@@ -24,7 +24,7 @@ class errorsDebugbarPlugin implements jIDebugbarPlugin {
 #expand #jxdb-errors li.jxdb-msg-notice h5 span {background-image: url('data:image/png;base64,__LOGONOTICE__');}
 ##jxdb-errors li.jxdb-msg-warning h5 span {background-image: url('".$this->getWarningIcon()."'); }
 ";}
-    
+
     function getJavascript() {return <<<EOS
 #includeraw errors.debugbar.js
 EOS
@@ -66,7 +66,7 @@ EOS
                     <div>
                     <p>Code: '.$msg->getCode().'<br/> File: '.htmlspecialchars($msg->getFile()).' '.htmlspecialchars($msg->getLine()).'</p>';
                     $info->popupContent .= $debugbarPlugin->formatTrace($msg->getTrace());
-                    $info->popupContent .='</div>';
+                    $info->popupContent .='</div></li>';
                 }
             }
             if ($maxLevel) {

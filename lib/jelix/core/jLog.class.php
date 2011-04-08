@@ -94,13 +94,8 @@ class jLog {
     * @param string $category the message category
     */
     public static function dump($obj, $label='', $category='default'){
-        if($label!=''){
-            $message = $label.': '.var_export($obj,true);
-        }
-        else{
-            $message = var_export($obj,true);
-        }
-        self::log($message, $category);
+        $message = new jLogDumpMessage($obj, $label, $category);
+        self::_dispatchLog($message);
     }
 
     /**
@@ -111,10 +106,14 @@ class jLog {
     * @param string $category the log type
     */
     public static function log ($message, $category='default') {
-        global $gJConfig;
         if (!is_object($message) || ! $message instanceof jILogMessage)
             $message = new jLogMessage($message, $category);
+        self::_dispatchLog($message);
+    }
 
+    protected static function _dispatchLog($message) {
+        global $gJConfig;
+        $category = $message->getCategory();
         if (!isset($gJConfig->logger[$category])
             || strpos($category, 'option_') === 0) { // option_* ar not some type of log messages
             $category = 'default';
@@ -131,7 +130,7 @@ class jLog {
 
         self::_log($message, $loggers);
     }
-    
+
     protected static function _log($message, $loggers) {
 
         // let's inject the message in all loggers
@@ -213,5 +212,5 @@ class jLog {
         $loggers = preg_split('/[\s,]+/', $gJConfig->logger[$category]);
         return in_array($logger, $loggers);
     }
-    
+
 }

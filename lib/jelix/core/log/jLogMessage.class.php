@@ -39,3 +39,31 @@ class jLogMessage implements jILogMessage {
         return $this->message;
     }
 }
+
+/**
+ * class that handles a dump of a php value, for a logger
+ */
+class jLogDumpMessage  extends jLogMessage {
+    /**
+     * @var string the additionnal label
+     */
+    protected $label;
+
+    public function __construct($obj, $label='', $category='default') {
+        $this->message = var_export($obj,true);
+        $this->category = $category;
+        $this->label = $label;
+    }
+
+    public function getLabel() {
+        return $this->label;
+    }
+
+    public function getFormatedMessage() {
+        if ($this->label) {
+            return $this->label.': '.$this->message;
+        }
+        return $this->message;
+    }
+}
+

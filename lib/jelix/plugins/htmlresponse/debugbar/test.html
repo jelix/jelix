@@ -12,6 +12,11 @@ ul.jxdb-list li.jxdb-opened  h5 a  {background-image: url(icons/bullet_toggle_mi
 #jxdb-errors li.jxdb-msg-error h5 span {background-image: url(icons/exclamation.png);}
 #jxdb-errors li.jxdb-msg-notice h5 span {background-image: url(icons/information.png);}
 #jxdb-errors li.jxdb-msg-warning h5 span {background-image: url(icons/error.png); }
+
+#jxdb-defaultlog {
+    list-style-type: disc;
+}
+
     </style>
 </head>
 <body>
@@ -42,6 +47,7 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
         <span><a href="javascript:jxdb.selectTab('jxdb-panel-2');" title="13 errors"><img src="icons/exclamation.png" alt="errors" title="Errors"/> 13</a></span>
         <span><a href="javascript:jxdb.selectTab('jxdb-panel-sqllog');"><img src="icons/database.png" alt="SQL queries" title="SQL queries"/> 5</a></span>
         <span><a href="javascript:jxdb.selectTab('jxdb-panel-sessiondata');"><img src="icons/drive_user.png" alt="Session data" title="Session data"/> 5</a></span>
+        <span><a href="javascript:jxdb.selectTab('jxdb-panel-defaultlog');"><img src="icons/book_open.png" alt="General logs" title="General logs"/> 5</a></span>
         <span><img src="icons/time.png" /> 150 ms</span>
         <span> 20KB</span>
         <span> request</span>
@@ -417,6 +423,22 @@ tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia
                 </li>
             </ul>
         </div>
+
+
+        <div id="jxdb-panel-defaultlog" class="jxdb-tabpanel" style="display:none">
+            <h3>General Log</h3>
+            <ul id="jxdb-defaultlog" class="jxdb-list">
+                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                </li>
+                <li>Morbi varius dapibus placerat. Aliquam erat volutpat. Cras viverra condimentum risus, eget pharetra dui pellentesque a.
+                </li>
+                <li>  Quisque ut diam eros, eget ornare eros. Quisque eu turpis sed turpis varius blandit.</li>
+                <li>Nunc sit amet magna sit amet ligula venenatis gravida. In euismod feugiat cursus. Sed sollicitudin blandit</li>
+            </ul>
+        </div>
+
+
+
     </div>
 </div>
 </body>

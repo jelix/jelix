@@ -115,7 +115,7 @@ minifyExcludeCSS = ""
 minifyExcludeJS = "jquery.wymeditor.js"
 
 [debugbar]
-plugins = sqllog,sessiondata
+plugins = sqllog,sessiondata,defaultlog
 
 [error_handling]
 messageLogFormat = "%date%\t%ip%\t[%code%]\t%msg%\t%file%\t%line%\n\t%url%\n%params%\n%trace%\n\n"
@@ -233,6 +233,7 @@ warning=file
 notice=file
 deprecated=
 strict=
+debug=
 
 ; log files for categories which have "file"
 [fileLogger]
@@ -242,6 +243,7 @@ warning=errors.log
 notice=errors.log
 deprecated=errors.log
 strict=errors.log
+debug=debug.log
 
 [mailLogger]
 email = root@localhost
