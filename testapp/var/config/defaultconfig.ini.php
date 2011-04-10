@@ -11,8 +11,6 @@ timeZone =
 pluginsPath = app:plugins/,lib:jelix-plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 
-cacheProfiles = cache.ini.php
-
 theme = default
 
 ; for junittests module

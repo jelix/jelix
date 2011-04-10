@@ -59,7 +59,7 @@ class dbCacheDriver implements jICacheDriver {
 
     public function __construct($params) {
 
-        $this->profil_name = $params['profile'];
+        $this->profil_name = $params['_name'];
 
         if(isset($params['enabled'])){
             $this->enabled = ($params['enabled']?true:false);

@@ -53,7 +53,7 @@ password=
 driver=sqlite
 database="tests.sqlite"
 
-;--------------- don't remove or change following sections !!!!!!!!
+;--------------- don't remove or change following "jdb:" sections !!!!!!!!
 ;--- used by unit tests
 ;--- don't set one of this profile as default profile
 
@@ -139,3 +139,61 @@ wsdl=   "http://testapp.local/index.php?service=testapp~soap&module=jWSDL&action
 trace=1
 soap_version=SOAP_1_1
 
+;----------------- jCache
+[jcache]
+default = testapp
+
+[jcache:testapp]
+
+; Parameters common to all drivers :
+
+; disable or enable cache for this profile
+enabled = 0
+; driver type (file, db, memcached)
+driver = file
+; TTL used (0 means no expire)
+ttl = 0
+
+; Automatic cleaning configuration (not necessary with memcached. 0 means disabled, 1 means systematic cache cleaning of expired data (at each set call), greater values mean less frequent cleaning)
+automatic_cleaning_factor = 0
+
+
+; Parameters for db driver :
+
+; dao used
+dao = "jelix~jcache"
+; dbprofil (optional)
+dbprofile = "" 
+
+
+; Parameters for memcached driver :
+
+; memcached servers. 
+; Can be a list e.g
+;servers = memcache_host1:11211;memcache_host2:11211;memcache_host3:11211 i.e HOST_NAME:PORT
+;servers = localhost:11211
+
+[jcache:usingdb]
+enabled = 1
+driver = db
+
+[jcache:usingmemcache]
+enabled = 0
+driver = memcache
+
+[jcache:usingfile]
+enabled = 1
+driver = file
+
+; directory where to put the cache files (optional default 'jApp::tempPath('cache/'))
+;cache_dir = 
+; enable / disable locking file
+;file_locking = 1
+; directory level. Set the directory structure level. 0 means "no directory structure", 1 means "one level of directory", 2 means "two levels"...
+;directory_level = 0
+; umask for directory structure (default '0700')
+;directory_umask = 
+; prefix for cache files (default 'jelix_cache')
+;file_name_prefix = ""
+; umask for cache files (default '0600')
+;cache_file_umask = 

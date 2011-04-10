@@ -26,9 +26,6 @@ endif
 ifndef TESTS_PROFILES
 TESTS_PROFILES=testapp/var/config/profiles.ini.php.dist
 endif
-ifndef TESTS_CACHEPROFILES
-TESTS_CACHEPROFILES=testapp/var/config/cache.ini.php.dist
-endif
 
 ifndef PHPDOC
 PHPDOC=../../phpdoc/
@@ -70,8 +67,7 @@ tests:
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
 	$(PHP) build/buildapp.php -D $(TESTPATHSWITCH) ./build/config/testapp-test.ini
 	cd $(TESTPATH) \
-	&& cp $(TESTS_PROFILES) testapp/var/config/profiles.ini.php \
-	&& cp $(TESTS_CACHEPROFILES) testapp/var/config/cache.ini.php
+	&& cp $(TESTS_PROFILES) testapp/var/config/profiles.ini.php
 	cd $(TESTPATH)/testapp/install && $(PHP) installer.php
 	cd $(TESTPATH)/testapp/scripts/ && $(PHP) tests.php default:index
 	mkdir -p ${PHPUNITCOVERAGE} ${PHPUNITDOXDIR}

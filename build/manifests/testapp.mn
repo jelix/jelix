@@ -321,7 +321,6 @@ cd testapp/var/config
   auth_class.coord.ini.php
   auth_ws.coord.ini.php
   auth_ldap.coord.ini.php.dist
-  cache.ini.php.dist
   defaultconfig.ini.php
   jacl2.coord.ini.php
   jacl2_ws.coord.ini.php

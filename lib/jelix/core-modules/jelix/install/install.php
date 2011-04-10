@@ -27,23 +27,22 @@ class jelixModuleInstaller extends jInstallerModule {
         }
 
         // --- install table for jCache if needed
-        $cachefile = $this->config->getValue("cacheProfiles");
-        if ($cachefile) {
-            $cachefile = jApp::configPath($cachefile);
+        $cachefile = jApp::configPath('profiles.ini.php');
 
-            if (file_exists($cachefile)) {
-                $ini = new jIniFileModifier($cachefile);
+        if (file_exists($cachefile)) {
+            $ini = new jIniFileModifier($cachefile);
 
-                foreach ($ini->getSectionList() as $section) {
-                    $driver = $ini->getValue('driver', $section);
-                    $dao = $ini->getValue('dao', $section);
-                    $this->useDbProfile($ini->getValue('dbprofile', $section));
+            foreach ($ini->getSectionList() as $section) {
+                if (substr($section,0,7) != 'jcache:')
+                    continue;
+                $driver = $ini->getValue('driver', $section);
+                $dao = $ini->getValue('dao', $section);
+                $this->useDbProfile($ini->getValue('dbprofile', $section));
 
-                    if ($driver == 'db' &&
-                        $dao == 'jelix~jcache' &&
-                        $this->firstExec('cachedb:'.$this->dbProfile)) {
+                if ($driver == 'db' &&
+                    $dao == 'jelix~jcache' &&
+                    $this->firstExec('cachedb:'.$this->dbProfile)) {
                         $this->execSQLScript('sql/install_jcache.schema');
-                    }
                 }
             }
         }

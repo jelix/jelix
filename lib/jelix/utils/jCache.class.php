@@ -403,28 +403,21 @@ class jCache {
      */
     protected static function _getDriver($profile) {
 
-        //cache drivers list : array of object jICacheDriver
-        static $drivers = array();
+        $params = jProfiles::get('jcache', $profile, true);
+        $name = $params['_name'];
 
-        $profile = ($profile==''?'default':$profile);
-        if (isset($drivers[$profile])) {
-            return $drivers[$profile];
+        $driver = jProfiles::getFromPool('jcache', $name);
+        if (!$driver) {
+            $driver = jApp::loadPlugin($params['driver'], 'cache', '.cache.php', $params['driver'].'CacheDriver', $params);
+            if (is_null($driver))
+                throw new jException('jelix~cache.error.driver.missing',array($profile,$params['driver']));
+    
+            if (!$driver instanceof jICacheDriver) {
+                throw new jException('jelix~cache.driver.object.invalid', array($profile, $params['driver']));
+            }
+            jProfiles::storeInPool('jcache', $name, $driver);
         }
-
-        $params = self::_getProfile($profile);
-        $params['profile'] = $profile;
-
-        $drv = jApp::loadPlugin($params['driver'], 'cache', '.cache.php', $params['driver'].'CacheDriver', $params);
-        if (is_null($drv))
-            throw new jException('jelix~cache.error.driver.missing',array($profile,$params['driver']));
-
-        if (!$drv instanceof jICacheDriver) {
-            throw new jException('jelix~cache.driver.object.invalid', array($profile, $params['driver']));
-        }
-
-        $drivers[$profile] = $drv;
-
-        return $drv;
+        return $driver;
     }
 
     /**
@@ -437,42 +430,6 @@ class jCache {
         if (!preg_match('/^[a-z0-9_]+$/i',$key) || strlen($key) > 255) {
             throw new jException('jelix~cache.error.invalid.key',$key);
         }
-    }
-
-    /**
-    * load a specific profil from the profile file
-    *
-    * @param string   $name  profil to load.
-    * @return array  profil properties
-    */
-    protected static function _getProfile($name){
-
-        global $gJConfig;
-        static $profiles = null;
-        
-        if ($profiles === null) {
-            $profiles = parse_ini_file(jApp::configPath($gJConfig->cacheProfiles), true);
-        }
-        $profile = null;
-
-        if ($name == 'default') {
-            if (isset($profiles['default']) && isset($profiles[$profiles['default']])) {
-                $profile = $profiles[$profiles['default']];
-            }
-            else {
-                throw new jException('jelix~cache.error.profile.missing','default');
-            }
-        }
-        else {
-            if (isset($profiles[$name])) {
-                $profile = $profiles[$name];
-            }
-            else {
-                throw new jException('jelix~cache.error.profile.missing',$name);
-            }
-        }
-
-        return $profile;
     }
 
     /**

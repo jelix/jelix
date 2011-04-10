@@ -63,8 +63,7 @@ class memcacheCacheDriver implements jICacheDriver {
             throw new jException('jelix~cache.error.memcache.extension.badversion.3',array($this->profil_name));
         }
 
-
-        $this->profil_name = $params['profile'];
+        $this->profil_name = $params['_name'];
 
         if (isset($params['enabled'])) {
             $this->enabled = ($params['enabled'])?true:false;

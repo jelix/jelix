@@ -82,6 +82,21 @@ class jelixModuleUpgrader_jprofiles extends jInstallerModule {
             unlink($soapprofilefile);
         }
 
+        // migrate the cache.ini.php
+
+        $cacheprofilefile = jApp::configPath('cache.ini.php');
+        if (file_exists($cacheprofilefile)) {
+            $cacheProfiles = new jIniFileModifier($cacheprofilefile);
+            $profiles->import($cacheProfiles, 'jcache', ':');
+            unlink($cacheprofilefile);
+        }
+
+        $cacheprofilefile = jApp::configPath('cache.ini.php.dist');
+        if (file_exists($cacheprofilefile)) {
+            $cacheProfiles = new jIniFileModifier($cacheprofilefile);
+            $profilesdist->import($cacheProfiles, 'jcache', ':');
+            unlink($cacheprofilefile);
+        }
 
         // save the profile.ini.php
         $profiles->save();
@@ -95,6 +110,8 @@ class jelixModuleUpgrader_jprofiles extends jInstallerModule {
 
         $this->config->getMaster()->removeValue('dbProfils');
         $this->config->getOverrider()->removeValue('dbProfils');
+        $this->config->getMaster()->removeValue('cacheProfiles');
+        $this->config->getOverrider()->removeValue('cacheProfiles');
     }
 
 }

@@ -25,9 +25,9 @@ class UTjCacheAPI extends jUnitTestCaseDb {
     function getTests() {
         if ($this->profile == '')
             return array();
-        $conf = parse_ini_file(jApp::configPath().'cache.ini.php', true);
-        if (isset($conf[$this->profile]) && $conf[$this->profile]['enabled']) {
-            $this->conf = $conf[$this->profile];
+        $conf = parse_ini_file(jApp::configPath().'profiles.ini.php', true);
+        if (isset($conf['jcache:'.$this->profile]) && $conf['jcache:'.$this->profile]['enabled']) {
+            $this->conf = $conf['jcache:'.$this->profile];
             return parent::getTests();
         }
         else {
@@ -127,8 +127,8 @@ class UTjCacheAPI extends jUnitTestCaseDb {
 
         $ttl=strtotime("+1 day");
         try{
-            jCache::add('added1Key',111,$ttl,'invalidProfil');
-            $this->fail();
+            jCache::add('added1Key', 111, $ttl,'invalidProfil');
+            $this->fail("jCache should throw an exeception when we give an invalid profile");
         }catch(jException $e){
             $this->pass();
         }
