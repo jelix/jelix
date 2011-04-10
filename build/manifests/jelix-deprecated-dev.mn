@@ -27,6 +27,7 @@ cd lib/jelix-scripts/templates
 
 cd lib/jelix-scripts/templates/var/config/
    dbprofils.ini.php.tpl
+   kvprofiles.ini.php.tpl
 
 cd lib/jelix-modules/junittests/install
   application-cli.init.php

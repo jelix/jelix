@@ -50,6 +50,22 @@ class jelixModuleUpgrader_jprofiles extends jInstallerModule {
             unlink($dbprofilefile);
         }
 
+        // migrate the kvprofiles.ini.php
+
+        $kvprofilefile = jApp::configPath('kvprofiles.ini.php');
+        if (file_exists($kvprofilefile)) {
+            $dbProfiles = new jIniFileModifier($kvprofilefile);
+            $profiles->import($dbProfiles, 'jkvdb', ':');
+            unlink($kvprofilefile);
+        }
+
+        $kvprofilefile = jApp::configPath('kvprofiles.ini.php.dist');
+        if (file_exists($kvprofilefile)) {
+            $dbProfiles = new jIniFileModifier($kvprofilefile);
+            $profilesdist->import($dbProfiles, 'jkvdb', ':');
+            unlink($kvprofilefile);
+        }
+
         // save the profile.ini.php
         $profiles->save();
         // don't create a dist file if there wasn't some dist files

@@ -15,19 +15,6 @@
  */
 class jKVDb {
 
-    /**
-	 * Array of the profiles in the profile file.
-	 *
-	 * @var array
-	 */    
-    static private $_profiles = null;
-    
-    /**
-	 * Array of the jKVConnection.
-	 * @var array 
-	 */
- 	static private $_cnxPool = array();
-
 	protected function __construct() { } // the class is only static
 
     /**
@@ -37,22 +24,18 @@ class jKVDb {
 	 * @return jKVConnection
 	 */
 	public static function getConnection($name = null) {
-		$profile = self::getProfile($name);
+		$profile = jProfiles::get ('jkvdb', $name);
 
-        // If the name is not set, and no exception was thrown while getting the
-        // profile, then we got the default profile. Torhandle the $_cnxPool
-        // array acorrectly, we sets the $name to the default profile name.
-		if (is_null($name)) {
-			$name = $profile['name'];
-		}
-
-        // If the connector to the requested KVDb doesn't exists yet, let's
-        // create it
-		if(! isset(self::$_cnxPool[$name])) {
-			self::$_cnxPool[$name] = self::_createConnector($profile);
-		}
-
-        return self::$_cnxPool[$name];
+        // we set the name to avoid two connections for a same profile, when the given name
+        // is an alias of a real profile and when we call getConnection several times,
+        // with no name, with the alias name or with the real name.
+        $name = $profile['_name'];
+        $cnx = jProfiles::getFromPool('jkvdb', $name);
+        if (!$cnx) {
+            $cnx = self::_createConnector($profile);
+            jProfiles::storeInPool('jkvdb', $name, $cnx);
+        }
+		return $cnx;
 	}
 
     /**
@@ -61,38 +44,10 @@ class jKVDb {
 	 *
 	 * @param string $name
 	 * @return array
+	 * @deprecated use jProfiles::get instead
 	 */
 	public static function getProfile($name = null) {
-
-        // The profile file has not been parsed yet, so we do that. The result
-        // is stored in the $_profiles static private variable.
- 		if (is_null(self::$_profiles)) {
-			self::$_profiles = parse_ini_file(jApp::configPath('kvprofiles.ini.php'), true);
-		}
-
-        // If no name is provided, we look for the default profile an set the
-        // name accordingly
-		if (is_null($name)) {
-			if (isset (self::$_profiles['default'])) {
-				$name = self::$_profiles['default'];
-            }
-			else {
-				throw new jException (
-                    'jelix~kvstore.error.default.profile.unknown');
-            }
-		}
-
-        // Verifying the requested profile
-		if (! isset(self::$_profiles[$name])
-                or ! is_array(self::$_profiles[$name]))
-        {
-            throw new jException('jelix~kvstore.error.profile.unknown', $name);
-		}
-
-        // Returning the requested profile
-        self::$_profiles[$name]['name'] = $name;
-
-        return self::$_profiles[$name];
+		return jProfiles::get('jkvdb', $name);
 	}
 
     /**

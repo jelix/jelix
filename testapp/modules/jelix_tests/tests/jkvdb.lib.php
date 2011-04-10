@@ -22,8 +22,9 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
     protected $mmc;
 
     function getTests() {
-        $conf = parse_ini_file(jApp::configPath().'kvprofiles.ini.php', true);
-        if (isset($conf[$this->profile])) {
+        
+        $conf = parse_ini_file(jApp::configPath().'profiles.ini.php', true);
+        if (isset($conf['jkvdb:'.$this->profile])) {
              return parent::getTests();
         }
         else {

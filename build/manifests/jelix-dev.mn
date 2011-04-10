@@ -187,7 +187,6 @@ cd lib/jelix-scripts/templates/var/config/
 * defaultconfig.ini.php.tpl
   jacl2.coord.ini.php.tpl
   installer.ini.php.tpl
-  kvprofiles.ini.php.tpl
   profiles.ini.php.tpl
 cd lib/jelix-scripts/templates/var/config/index/
   config.ini.php.tpl

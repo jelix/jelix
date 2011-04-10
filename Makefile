@@ -29,9 +29,6 @@ endif
 ifndef TESTS_CACHEPROFILES
 TESTS_CACHEPROFILES=testapp/var/config/cache.ini.php.dist
 endif
-ifndef TESTS_KVPROFILES
-TESTS_KVPROFILES=testapp/var/config/kvprofiles.ini.php.dist
-endif
 
 ifndef PHPDOC
 PHPDOC=../../phpdoc/
@@ -74,8 +71,7 @@ tests:
 	$(PHP) build/buildapp.php -D $(TESTPATHSWITCH) ./build/config/testapp-test.ini
 	cd $(TESTPATH) \
 	&& cp $(TESTS_PROFILES) testapp/var/config/profiles.ini.php \
-	&& cp $(TESTS_CACHEPROFILES) testapp/var/config/cache.ini.php \
-	&& cp $(TESTS_KVPROFILES) testapp/var/config/kvprofiles.ini.php
+	&& cp $(TESTS_CACHEPROFILES) testapp/var/config/cache.ini.php
 	cd $(TESTPATH)/testapp/install && $(PHP) installer.php
 	cd $(TESTPATH)/testapp/scripts/ && $(PHP) tests.php default:index
 	mkdir -p ${PHPUNITCOVERAGE} ${PHPUNITDOXDIR}
