@@ -402,20 +402,19 @@ class jCache {
      * @return jICacheDriver
      */
     protected static function _getDriver($profile) {
+        return jProfiles::getOrStoreInPool('jcache', $profile, array('jCache', '_loadDriver'), true);
+    }
 
-        $params = jProfiles::get('jcache', $profile, true);
-        $name = $params['_name'];
-
-        $driver = jProfiles::getFromPool('jcache', $name);
-        if (!$driver) {
-            $driver = jApp::loadPlugin($params['driver'], 'cache', '.cache.php', $params['driver'].'CacheDriver', $params);
-            if (is_null($driver))
-                throw new jException('jelix~cache.error.driver.missing',array($profile,$params['driver']));
+    /**
+     * callback method for jProfiles. internal use.
+     */
+    public static function _loadDriver($profile) {
+        $driver = jApp::loadPlugin($profile['driver'], 'cache', '.cache.php', $profile['driver'].'CacheDriver', $profile);
+        if (is_null($driver))
+            throw new jException('jelix~cache.error.driver.missing',array($profile['_name'], $profile['driver']));
     
-            if (!$driver instanceof jICacheDriver) {
-                throw new jException('jelix~cache.driver.object.invalid', array($profile, $params['driver']));
-            }
-            jProfiles::storeInPool('jcache', $name, $driver);
+        if (!$driver instanceof jICacheDriver) {
+            throw new jException('jelix~cache.driver.object.invalid', array($profile['_name'], $profile['driver']));
         }
         return $driver;
     }

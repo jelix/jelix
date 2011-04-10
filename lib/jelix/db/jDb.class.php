@@ -109,19 +109,8 @@ class jDb {
     * @param string  $name  profile name to use. if empty, use the default one
     * @return jDbConnection  the connector
     */
-    public static function getConnection ($name = null) {
-        $profile = jProfiles::get ('jdb', $name);
-
-        // we set the name to avoid two connections for a same profile, when the given name
-        // is an alias of a real profile and when we call getConnection several times,
-        // with no name, with the alias name or with the real name.
-        $name = $profile['_name'];
-        $cnx = jProfiles::getFromPool('jdb', $name);
-        if (!$cnx) {
-            $cnx = self::_createConnector($profile);
-            jProfiles::storeInPool('jdb', $name, $cnx);
-        }
-        return $cnx;
+    public static function getConnection ($name = '') {
+        return jProfiles::getOrStoreInPool('jdb', $name, array('jDb', '_createConnector'));
     }
 
     /**
@@ -181,11 +170,11 @@ class jDb {
     }
 
     /**
-    * create a connector
+    * create a connector. internal use (callback method for jProfiles)
     * @param array  $profile  profile properties
     * @return jDbConnection|jDbPDOConnection  database connector
     */
-    private static function _createConnector ($profile) {
+    public static function _createConnector ($profile) {
         if ($profile['driver'] == 'pdo' || (isset($profile['usepdo']) && $profile['usepdo'])) {
             $dbh = new jDbPDOConnection($profile);
             return $dbh;

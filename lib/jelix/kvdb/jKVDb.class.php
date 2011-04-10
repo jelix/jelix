@@ -18,25 +18,14 @@ class jKVDb {
 	protected function __construct() { } // the class is only static
 
     /**
-	 * get the jKVConnection object associated to a given profile name
-	 *
-	 * @param string $name
-	 * @return jKVConnection
-	 */
-	public static function getConnection($name = null) {
-		$profile = jProfiles::get ('jkvdb', $name);
-
-        // we set the name to avoid two connections for a same profile, when the given name
-        // is an alias of a real profile and when we call getConnection several times,
-        // with no name, with the alias name or with the real name.
-        $name = $profile['_name'];
-        $cnx = jProfiles::getFromPool('jkvdb', $name);
-        if (!$cnx) {
-            $cnx = self::_createConnector($profile);
-            jProfiles::storeInPool('jkvdb', $name, $cnx);
-        }
-		return $cnx;
-	}
+    * get the jKVConnection object associated to a given profile name
+    *
+    * @param string $name
+    * @return jKVConnection
+    */
+    public static function getConnection($name = null) {
+        return jProfiles::getOrStoreInPool('jkvdb', $name, array('jKVDb', '_createConnector'));
+    }
 
     /**
 	 * get the profile from the INI file. If no $name paramter is given, then
@@ -51,19 +40,13 @@ class jKVDb {
 	}
 
     /**
-	 * Creates a jKVConnection object for the given profile, stores it in the
-	 * singleton and the returns it.
-	 *
-	 * @param array $profile
-	 *
-	 * @return object jKVConnection
-	 */    
-	private static function _createConnector($profile) {
-
+     * callback method for jProfiles. internal use
+     */
+    public static function _createConnector($profile) {
         // If no driver is specified, let's throw an exception
         if (! isset($profile['driver'])) {
             throw new jException(
-                'jelix~kvstore.error.driver.notset', $profile['name']);
+                'jelix~kvstore.error.driver.notset', $profile['_name']);
         }
 
         $connector = jApp::loadPlugin($profile['driver'], 'kvdb', '.kvdriver.php', $profile['driver'] . 'KVDriver', $profile);
@@ -72,5 +55,5 @@ class jKVDb {
         //}
 
         return $connector;
-	}
+    }
 }

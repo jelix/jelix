@@ -167,4 +167,30 @@ class profilesTest extends PHPUnit_Framework_TestCase
 
     }
 
+    function testGetStorePool() {
+        testJProfiles::clear();
+        try {
+            $this->assertEquals('result:array:foo',
+                            testJProfiles::getOrStoreInPool('foo', 'new', array($this, '_getObj')));
+            $this->fail();
+        } catch(Exception $e) {
+            $this->assertEquals('Unknown profile "new" for "foo"', $e->getMessage());
+        }
+        testJProfiles::createVirtualProfile('foo', 'new', array('bla'=>'ok'));
+        $this->assertEquals('result:array:new',
+                            testJProfiles::getOrStoreInPool('foo', 'new', array($this, '_getObj')));
+
+        $this->assertEquals('result:array:new', testJProfiles::getFromPool('foo', 'new'));
+    }
+
+    public function _getObj($profile){
+        $value = 'result:';
+        if (is_array($profile))
+            $value.='array:';
+        if (isset($profile['_name']))
+            $value.= $profile['_name'];
+        return $value;
+    }
+
+
 }

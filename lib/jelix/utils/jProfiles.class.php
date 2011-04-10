@@ -113,7 +113,7 @@ class jProfiles {
     }
 
     /**
-     * add an object in the objects pool, corresponding to a profile
+     * store an object in the objects pool, corresponding to a profile
      * @param string $category the profile category
      * @param string $name the name of the profile (value of _name in the retrieved profile)
      * @return object|null the stored object
@@ -123,6 +123,27 @@ class jProfiles {
             return self::$_objectPool[$category][$name];
         return null;
     }
+
+    /**
+     * add an object in the objects pool, corresponding to a profile
+     * or store the object retrieved from the function, which accepts a profile
+     * as parameter (array)
+     * @param string $category the profile category
+     * @param string $name the name of the profile (will be given to jProfiles::get)
+     * @param string|array  $function the function name called to retrieved the object. It uses call_user_func.
+     * @param boolean  $noDefault  if true and if the profile doesn't exist, throw an error instead of getting the default profile
+     * @return object|null the stored object
+     */
+    public static function getOrStoreInPool($category, $name, $function, $nodefault=false) {
+        $profile = self::get($category, $name, $nodefault);
+        if (isset(self::$_objectPool[$category][$profile['_name']]))
+            return self::$_objectPool[$category][$profile['_name']];
+        $obj = call_user_func($function, $profile);
+        if ($obj)
+            self::$_objectPool[$category][$name] = $obj;
+        return $obj;
+    }
+
 
     /**
      * create a temporary new profile
