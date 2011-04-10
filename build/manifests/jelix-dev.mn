@@ -184,7 +184,6 @@ cd lib/jelix-scripts/templates/scripts
 cd lib/jelix-scripts/templates/var/config/
   auth.coord.ini.php.tpl
   cache.ini.php.tpl
-  dbprofils.ini.php.tpl
 * defaultconfig.ini.php.tpl
   jacl2.coord.ini.php.tpl
   installer.ini.php.tpl

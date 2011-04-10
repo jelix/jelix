@@ -218,7 +218,6 @@ cd testapp/modules/jelix_tests/tests/
   jdao.parser_update.html_cli.php
   jdao.generator.html_cli.php
   jdao.generator_select.html_cli.php
-  jdb.0_profiles.html_cli.php
   jdb.1_queries.html_cli.php
   jdb.2_queries_with_pdo.html_cli.php
   jdb.mysql.html_cli.php
@@ -304,6 +303,8 @@ cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
 cd testapp/tests-jelix/jelix/utils/
   profilesTest.php
   soapclientTest.php
+cd testapp/tests-jelix/jelix/db/
+  jDb_profilesTest.php
 
 cd testapp/tests/
   runtests.php
@@ -322,7 +323,6 @@ cd testapp/var/config
   auth_ldap.coord.ini.php.dist
   cache.ini.php.dist
   defaultconfig.ini.php
-  dbprofils.ini.php.dist
   jacl2.coord.ini.php
   jacl2_ws.coord.ini.php
   jacl.coord.ini.php

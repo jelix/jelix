@@ -48,7 +48,7 @@
         'path.config'           =>'Le chemin du répertoire config n\'est pas configuré correctement : ce répertoire n\'existe pas',
         'path.www'              =>'Le chemin du répertoire www n\'est pas configuré correctement : ce répertoire n\'existe pas',
         'path.config.writable' =>'Le répertoire var/config n\'a pas les droits en écriture',
-        'path.dbprofile.writable'=>'Le fichier dbprofils.ini.php n\'a pas les droits en écriture',
+        'path.profiles.writable'=>'Le fichier profiles.ini.php n\'a pas les droits en écriture',
         'path.defaultconfig.writable'=>'Le fichier defaultconfig.ini.php n\'a pas les droits en écriture',
         'path.installer.writable'=>'Le fichier installer.ini.php n\'a pas les droits en écriture',
         'php.bad.version'       =>'Mauvaise version de PHP',

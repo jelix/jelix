@@ -143,15 +143,11 @@ abstract class jInstallerBase {
 
         $this->dbProfile = $dbProfile;
 
-        $dbProfilesFile = $this->config->getValue('dbProfils');
-        if ($dbProfilesFile == '')
-            $dbProfilesFile = 'dbprofils.ini.php';
-
-        if (file_exists(jApp::configPath($dbProfilesFile))) {
-            $dbprofiles = parse_ini_file(jApp::configPath($dbProfilesFile));
-            // let's resolve the db profile
-            if (isset($dbprofiles[$dbProfile]) && is_string($dbprofiles[$dbProfile]))
-                $this->dbProfile = $dbprofiles[$dbProfile];
+        // we check if it is an alias
+        if (file_exists(jApp::configPath('profiles.ini.php'))) {
+            $dbprofiles = parse_ini_file(jApp::configPath('profiles.ini.php'));
+            if (isset($dbprofiles['jdb'][$dbProfile]))
+                $this->dbProfile = $dbprofiles['jdb'][$dbProfile];
         }
 
         $this->_dbConn = null; // we force to retrieve a db connection
@@ -223,7 +219,7 @@ abstract class jInstallerBase {
     protected function getDbType($profile = null) {
         if (!$profile)
             $profile = $this->dbProfile;
-        $p = jDb::getProfile ($profile);
+        $p = jProfiles::get ('jdb', $profile);
         $driver = $p['driver'];
         if ($driver == 'pdo') {
             preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
@@ -358,14 +354,11 @@ abstract class jInstallerBase {
      * @return boolean true if the ini file has been changed
      */
     protected function declareDbProfile($name, $sectionContent = null, $force = true ) {
-        $dbProfilesFile = $this->config->getValue('dbProfils');
-        if ($dbProfilesFile == '')
-            $dbProfilesFile = 'dbprofils.ini.php';
-        $dbprofiles = new jIniFileModifier(jApp::configPath($dbProfilesFile));
+        $profiles = new jIniFileModifier(jApp::configPath('profiles.ini.php'));
         if ($sectionContent == null) {
-            if (!$dbprofiles->isSection($name)) {
+            if (!$profiles->isSection('jdb:'.$name)) {
                 // no section
-                if ($dbprofiles->getValue($name) && !$force) {
+                if ($profiles->getValue($name, 'jdb') && !$force) {
                     // already a name
                     return false;
                 }
@@ -373,41 +366,40 @@ abstract class jInstallerBase {
             else if ($force) {
                 // existing section, and no content provided : we erase the section
                 // and add an alias
-                $dbprofiles->removeValue('', $name);
+                $profiles->removeValue('', 'jdb:'.$name);
             }
             else {
                 return false;
             }
-            $default = $dbprofiles->getValue('default');
+            $default = $profiles->getValue('default', 'jdb');
             if($default) {
-                $dbprofiles->setValue($name, $default);
+                $profiles->setValue($name, $default, 'jdb');
             }
             else // default is a section
-                $dbprofiles->setValue($name, 'default');
+                $profiles->setValue($name, 'default', 'jdb');
         }
         else {
-            if ($dbprofiles->getValue($name) !== null) {
+            if ($profiles->getValue($name, 'jdb') !== null) {
                 if (!$force)
                     return false;
-                $dbprofiles->removeValue($name);
+                $profiles->removeValue($name, 'jdb');
             }
             if (is_array($sectionContent)) {
                 foreach($sectionContent as $k=>$v) {
-                    $dbprofiles->setValue($k,$v, $name);
+                    $profiles->setValue($k,$v, 'jdb:'.$name);
                 }
             }
             else {
-                $profile = $dbprofiles->getValue($sectionContent);
+                $profile = $profiles->getValue($sectionContent, 'jdb');
                 if ($profile !== null) {
-                    $dbprofiles->setValue($name, $profile);
+                    $profiles->setValue($name, $profile, 'jdb');
                 }
                 else
-                    $dbprofiles->setValue($name, $sectionContent);
+                    $profiles->setValue($name, $sectionContent, 'jdb');
             }
         }
-        
-        $dbprofiles->save();
-        jDb::clearProfiles();
+        $profiles->save();
+        jProfiles::clear();
         return true;
     }
 }

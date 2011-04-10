@@ -35,7 +35,7 @@ class dbprofileWizPage extends installWizardPage {
         if (count($ignoreProfiles)) {
             $newsections = array();
             foreach($sections as $profile) {
-                if(!in_array($profile, $ignoreProfiles))
+                if(!in_array(substr($profile,4), $ignoreProfiles))
                     $newsections[] = $profile;
             }
             $tpl->assign('profiles', $newsections);
@@ -74,7 +74,7 @@ class dbprofileWizPage extends installWizardPage {
 
     function process() {
 
-        $ini = new jIniFileModifier(jApp::configPath('dbprofils.ini.php'));
+        $ini = new jIniFileModifier(jApp::configPath('profiles.ini.php'));
         $hasErrors = false;
         $_SESSION['dbprofiles']['data'] = $_POST;
 
@@ -196,19 +196,19 @@ class dbprofileWizPage extends installWizardPage {
     }
 
     protected function loadProfiles () {
-        $file = jApp::configPath('dbprofils.ini.php');
+        $file = jApp::configPath('profiles.ini.php');
 
         if (file_exists($file)) {
 
         }
-        elseif (file_exists(jApp::configPath('dbprofils.ini.php.dist'))) {
-             copy(jApp::configPath('dbprofils.ini.php.dist'), $file);
+        elseif (file_exists(jApp::configPath('profiles.ini.php.dist'))) {
+             copy(jApp::configPath('profiles.ini.php.dist'), $file);
         }
         else {
             file_put_contents($file, ";<?php die(''); ?>
 ;for security reasons, don't remove or modify the first line
 
-[default]
+[jdb:default]
 driver=mysql
 database=
 host=localhost
@@ -237,7 +237,12 @@ table_prefix=
         );
 
         $profiles = $ini->getSectionList();
+        $dbprofileslist = array();
         foreach($profiles as $profile) {
+            if (strpos($profile,'jdb:') !== 0)
+                continue;
+            $dbprofileslist[] = $profile;
+
             $driver = $ini->getValue('driver', $profile);
             if ($driver == 'pdo') {
                 $dsn = $ini->getValue('dsn', $profile);
@@ -287,7 +292,7 @@ table_prefix=
             $data['errors'][$profile] = array();
         }
 
-        $_SESSION['dbprofiles']['profiles'] = $profiles;
+        $_SESSION['dbprofiles']['profiles'] = $dbprofileslist;
         $_SESSION['dbprofiles']['data'] = $data;
     }
 

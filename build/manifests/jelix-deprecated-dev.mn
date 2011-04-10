@@ -25,6 +25,9 @@ cd lib/jelix-scripts/templates
   zone.tpl
   locales.tpl
 
+cd lib/jelix-scripts/templates/var/config/
+   dbprofils.ini.php.tpl
+
 cd lib/jelix-modules/junittests/install
   application-cli.init.php
 

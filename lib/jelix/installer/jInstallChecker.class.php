@@ -244,9 +244,9 @@ class jInstallCheck {
                 $this->error('path.config.writable');
                 $ok = false;
             }
-            if (file_exists(jApp::configPath('dbprofils.ini.php'))
-                && !is_writable(jApp::configPath('dbprofils.ini.php'))) {
-                $this->error('path.dbprofile.writable');
+            if (file_exists(jApp::configPath('profiles.ini.php'))
+                && !is_writable(jApp::configPath('profiles.ini.php'))) {
+                $this->error('path.profiles.writable');
                 $ok = false;
             }
             if (file_exists(jApp::configPath('defaultconfig.ini.php'))

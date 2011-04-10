@@ -96,7 +96,7 @@ class testInstallerMain extends jInstaller {
 
     public $configContent = array(
         'index/config.ini.php'=> array(
-            'dbProfils'=>"dbprofils.ini.php",
+            'dbProfils'=>"default",
             "disableInstallers"=>false,
             "enableAllModules"=>false,
             'modules'=>array(

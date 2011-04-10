@@ -15,7 +15,7 @@ class UTjDbPgsql extends jUnitTestCaseDb {
 
     function getTests(){
         try{
-            $prof = jDb::getProfile($this->dbProfile, true);
+            $prof = jProfiles::get('jdb', $this->dbProfile, true);
         }
         catch (Exception $e) {
             $this->sendMessage('UTjDbPgsql cannot be run: '.$e->getMessage());

@@ -48,7 +48,7 @@
         'path.config'           =>'The application config path is not correctly set: config directory  doesn\'t exist!',
         'path.www'              =>'The application www path is not correctly set: www directory  doesn\'t exist!',
         'path.config.writable' =>'The directory var/config have not write rights',
-        'path.dbprofile.writable'=>'The file dbprofils.ini.php have not write rights',
+        'path.profiles.writable'=>'The file profiles.ini.php have not write rights',
         'path.defaultconfig.writable'=>'The file defaultconfig.ini.php have not write rights',
         'path.installer.writable'=>'The file installer.ini.php have not write rights',
         'php.bad.version'       =>'Bad PHP version',

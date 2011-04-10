@@ -5,7 +5,7 @@
 #if ENABLE_OPTIMIZED_SOURCE
 * @author      Laurent Jouanneau
 * @contributor Yannick Le Guédart, Laurent Raufaste, Christophe Thiriot
-* @copyright   2005-2010 Laurent Jouanneau, 2008 Laurent Raufaste
+* @copyright   2005-2011 Laurent Jouanneau, 2008 Laurent Raufaste
 *
 * Some of this classes were get originally from the Copix project
 * (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -23,7 +23,7 @@
 #else
 * @author     Laurent Jouanneau
 * @contributor Yannick Le Guédart, Laurent Raufaste
-* @copyright  2005-2010 Laurent Jouanneau
+* @copyright  2005-2011 Laurent Jouanneau
 *
 * API ideas of this class were get originally from the Copix project (CopixDbFactory, Copix 2.3dev20050901, http://www.copix.org)
 * No lines of code are copyrighted by CopixTeam
@@ -103,16 +103,6 @@ class jSQLLogMessage extends jLogMessage {
 class jDb {
 
     /**
-     * @var array list of profiles currently used
-     */
-    static private $_profiles = null;
-    
-    /**
-     * @var array list of opened connections
-     */
-    static private $_cnxPool = array();
-
-    /**
     * return a database connector. It uses a temporay pool of connection to reuse
     * currently opened connections.
     * 
@@ -120,17 +110,18 @@ class jDb {
     * @return jDbConnection  the connector
     */
     public static function getConnection ($name = null) {
-        $profile = self::getProfile ($name);
+        $profile = jProfiles::get ('jdb', $name);
 
         // we set the name to avoid two connections for a same profile, when the given name
         // is an alias of a real profile and when we call getConnection several times,
         // with no name, with the alias name or with the real name.
-        $name = $profile['name'];
-
-        if (!isset(self::$_cnxPool[$name])) {
-            self::$_cnxPool[$name] = self::_createConnector($profile);
+        $name = $profile['_name'];
+        $cnx = jProfiles::getFromPool('jdb', $name);
+        if (!$cnx) {
+            $cnx = self::_createConnector($profile);
+            jProfiles::storeInPool('jdb', $name, $cnx);
         }
-        return self::$_cnxPool[$name];
+        return $cnx;
     }
 
     /**
@@ -157,7 +148,7 @@ class jDb {
     /**
     * load properties of a connector profile
     *
-    * a profile is a section in the dbprofils.ini.php file
+    * a profile is a section in the profiles.ini.php file
     *
     * the given name can be a profile name (it should correspond to a section name
     * in the ini file), or an alias of a profile. An alias is a parameter name
@@ -167,57 +158,10 @@ class jDb {
     * @param string   $name  profile name or alias of a profile name. if empty, use the default profile
     * @param boolean  $noDefault  if true and if the profile doesn't exist, throw an error instead of getting the default profile
     * @return array  properties
+    * @deprecated use jProfiles::get instead
     */
     public static function getProfile ($name='', $noDefault = false) {
-        global $gJConfig;
-        if (self::$_profiles === null) {
-            self::$_profiles = parse_ini_file(jApp::configPath($gJConfig->dbProfils), true);
-        }
-
-        if ($name == '')
-            $name = 'default';
-        $targetName = $name;
-
-        // the name attribute created in this method will be the name of the connection
-        // in the connections pool. So profiles of aliases and real profiles should have
-        // the same name attribute.
-
-        if (isset(self::$_profiles[$name])) {
-            if (is_string(self::$_profiles[$name])) {
-                $targetName = self::$_profiles[$name];
-            }
-            else { // this is an array, and so a section
-                self::$_profiles[$name]['name'] = $name;
-                return self::$_profiles[$name];
-            }
-        }
-        // if the profile doesn't exist, we take the default one
-        elseif (!$noDefault && isset(self::$_profiles['default'])) {
-#ifnot ENABLE_OPTIMIZED_SOURCE
-            trigger_error(jLocale::get('jelix~db.error.profile.use.default', $name), E_USER_NOTICE);
-#endif
-            if (is_string(self::$_profiles['default'])) {
-                $targetName = self::$_profiles['default'];
-            }
-            else {
-                self::$_profiles['default']['name'] = 'default';
-                return self::$_profiles['default'];
-            }
-        }
-        else {
-            if ($name == 'default')
-                throw new jException('jelix~db.error.default.profile.unknown');
-            else
-                throw new jException('jelix~db.error.profile.type.unknown',$name);
-        }
-
-        if (isset(self::$_profiles[$targetName]) && is_array(self::$_profiles[$targetName])) {
-            self::$_profiles[$targetName]['name'] = $targetName;
-            return self::$_profiles[$targetName];
-        }
-        else {
-            throw new jException('jelix~db.error.profile.unknown', $targetName);
-        }
+        return jProfiles::get('jdb', $name, $noDefault);
     }
 
     /**
@@ -258,30 +202,21 @@ class jDb {
      * create a temporary new profile
      * @param string $name the name of the profile
      * @param array|string $params parameters of the profile. key=parameter name, value=parameter value.
-     *                      same kind of parameters we found in dbprofils.ini.php
+     *                      same kind of parameters we found in profiles.ini.php
      *                      we can also indicate a name of an other profile, to create an alias
+     * @deprecated since 1.3, use jProfiles::createVirtualProfile instead
      */
     public static function createVirtualProfile ($name, $params) {
-        global $gJConfig;
-        if ($name == '') {
-           throw new jException('jelix~db.error.virtual.profile.no.name');
-        }
-
-        if (self::$_profiles === null) {
-            self::$_profiles = parse_ini_file (jApp::configPath($gJConfig->dbProfils), true);
-        }
-        self::$_profiles[$name] = $params;
-        self::$_profiles[$name]['name'] = $name; // pool name
-        unset (self::$_cnxPool[$name]); // close existing connection with the same pool name
+        jProfiles::createVirtualProfile('jdb',$name, $params);
     }
     
     /**
      * clear the loaded profiles to force to reload the db profiles file.
      * WARNING: it closes all opened connections !
      * @since 1.2
+     * @deprecated since 1.3, use jProfiles::clear instead
      */
     public static function clearProfiles() {
-        self::$_profiles = null;
-        self::$_cnxPool  = array();
+        jProfiles::clear();
     }
 }

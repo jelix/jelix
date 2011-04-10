@@ -25,7 +25,7 @@ class jelix_testsModuleInstaller extends jInstallerModule {
         $this->execSQLScript('sql/install_jcache.schema', 'jelix');
   
         try {
-            $dbprofile = jDb::getProfile('testapp_pgsql', true);
+            $dbprofile = jProfiles::get('jdb', 'testapp_pgsql', true);
             $this->useDbProfile('testapp_pgsql');
             
         }

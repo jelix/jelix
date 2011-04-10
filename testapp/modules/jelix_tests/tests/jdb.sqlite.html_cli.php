@@ -13,7 +13,7 @@ class UTjDbSqlite extends jUnitTestCase {
 
     function testTools(){
         try {
-            $profile = jDb::getProfile('testapp_sqlite');
+            $profile = jProfiles::get('jdb', 'testapp_sqlite', true);
         } catch (Exception $e) {
             $this->sendMessage("UTjDbSqlite cannot be run : no sqlite profile");
             return;

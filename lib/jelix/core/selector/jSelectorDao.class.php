@@ -5,7 +5,7 @@
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2007 Laurent Jouanneau, 2007 Loic Mathaud
+* @copyright   2005-2011 Laurent Jouanneau, 2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -26,7 +26,7 @@ class jSelectorDao extends jSelectorModule {
 
     function __construct($sel, $driver, $isprofile=true){
         if ($isprofile) {
-            $p = jDb::getProfile($driver);
+            $p = jProfiles::get('jdb', $driver);
             if ($p['driver'] == 'pdo') {
                 $this->driver = substr($p['dsn'], 0, strpos($p['dsn'],':'));
             }

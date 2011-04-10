@@ -14,8 +14,6 @@ timeZone =
 pluginsPath = app:plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 
-dbProfils = dbprofils.ini.php
-
 cacheProfiles = cache.ini.php
 
 ; default domain name to use with jfullurl for example.

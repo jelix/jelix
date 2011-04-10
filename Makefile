@@ -23,8 +23,8 @@ endif
 ifndef DOCSPATH
 DOCSPATH=_docs
 endif
-ifndef TESTS_DBPROFILES
-TESTS_DBPROFILES=testapp/var/config/dbprofils.ini.php.dist
+ifndef TESTS_PROFILES
+TESTS_PROFILES=testapp/var/config/profiles.ini.php.dist
 endif
 ifndef TESTS_CACHEPROFILES
 TESTS_CACHEPROFILES=testapp/var/config/cache.ini.php.dist
@@ -73,7 +73,7 @@ tests:
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
 	$(PHP) build/buildapp.php -D $(TESTPATHSWITCH) ./build/config/testapp-test.ini
 	cd $(TESTPATH) \
-	&& cp $(TESTS_DBPROFILES) testapp/var/config/dbprofils.ini.php \
+	&& cp $(TESTS_PROFILES) testapp/var/config/profiles.ini.php \
 	&& cp $(TESTS_CACHEPROFILES) testapp/var/config/cache.ini.php \
 	&& cp $(TESTS_KVPROFILES) testapp/var/config/kvprofiles.ini.php
 	cd $(TESTPATH)/testapp/install && $(PHP) installer.php

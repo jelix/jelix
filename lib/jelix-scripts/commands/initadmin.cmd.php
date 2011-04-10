@@ -167,8 +167,8 @@ class initadminCommand extends JelixScriptCommand {
 
         if (!$this->getOption('-noacl2db')) {
             if ($profile != '') {
-                $dbini = new jIniFileModifier(jApp::configPath('dbprofils.ini.php'));
-                $dbini->setValue('jacl2_profile', $profile);
+                $dbini = new jIniFileModifier(jApp::configPath('profiles.ini.php'));
+                $dbini->setValue('jacl2_profile', $profile, 'jdb');
                 $dbini->save();
             }
             $installer = new jInstaller($reporter);

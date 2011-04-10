@@ -102,6 +102,7 @@ cd lib/jelix/core-modules/jelix/install
   upgrade_to_1.3pre.1753_newlog.php
   upgrade_to_1.3pre.1754_newerrormanager.php
   upgrade_to_1.3pre.1760_minify.php
+  upgrade_to_1.3pre.1871_jprofiles.php
 cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql

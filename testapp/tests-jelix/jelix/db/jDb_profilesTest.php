@@ -4,16 +4,20 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2011 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTjDb_profile extends jUnitTestCase {
+class jDb_profile  extends PHPUnit_Framework_TestCase
+{
+    public static function setUpBeforeClass() {
+        jelix_init_test_env();
+    }
 
     function testProfile() {
-        $p = jDb::getProfile('jelix_tests_mysql');
-        $result= array(
+        $p = jProfiles::get('jdb', 'jelix_tests_mysql');
+        $expected = array(
             'driver'=>"mysql",
             'database'=>"testapp_mysql",
             'host'=> "localhost_mysql",
@@ -24,10 +28,10 @@ class UTjDb_profile extends jUnitTestCase {
             'name'=>'jelix_tests_mysql',
         );
 
-        $this->assertEqual($p, $result);
+        $this->assertEquals($expected, $p);
 
-        $p = jDb::getProfile('forward');
-        $result= array(
+        $p = jProfiles::get('jdb', 'forward');
+        $expected= array(
             'driver'=>"mysql",
             'database'=>"jelix_tests_forward",
             'host'=> "localhost_forward",
@@ -38,15 +42,15 @@ class UTjDb_profile extends jUnitTestCase {
             'name'=>'jelix_tests_forward',
         );
 
-        $this->assertEqual($p, $result);
+        $this->assertEquals($expected, $p);
 
-        $p = jDb::getProfile('testapp');
-        $this->assertEqual($p['name'], 'testapp');
-        $p2 = jDb::getProfile();
-        $this->assertEqual($p2['name'], 'testapp');
-        $this->assertEqual($p, $p2);
-        $p = jDb::getProfile('testapppdo');
-        $this->assertEqual($p['name'], 'testapppdo');
+        $p = jProfiles::get('jdb', 'testapp');
+        $this->assertEquals('testapp', $p['name']);
+        $p2 = jProfiles::get('jdb');
+        $this->assertEquals('testapp', $p2['name']);
+        $this->assertEquals($p, $p2);
+        $p = jProfiles::get('jdb', 'testapppdo');
+        $this->assertEquals('testapppdo', $p['name']);
     }
 
     function testVirtualProfile() {
@@ -60,19 +64,11 @@ class UTjDb_profile extends jUnitTestCase {
             'force_encoding'=>1
         );
 
-        jDb::createVirtualProfile('foobar', $profile);
+        jProfiles::createVirtualProfile('jdb', 'foobar', $profile);
 
-        $p = jDb::getProfile('foobar');
-        $profile['name'] = 'foobar';
+        $p = jProfiles::get('jdb', 'foobar');
+        $profile['_name'] = 'foobar';
 
         $this->assertEqual($profile, $p);
-    }
-
-    function testBadProfile(){
-        $build = parse_ini_file(JELIX_LIB_PATH.'BUILD');
-        if (!$build['ENABLE_OPTIMIZED_SOURCE'])
-            $this->expectError("(413) The given jDb profile \"abcdef\" doesn't exist. The default one is used instead. To not show this error, create the profile or an alias to the default profile.");
-        $p = jDb::getProfile('abcdef'); // unknown profile
-            
     }
 }

@@ -11,8 +11,6 @@ timeZone =
 pluginsPath = app:plugins/,lib:jelix-plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 
-dbProfils = dbprofils.ini.php
-
 cacheProfiles = cache.ini.php
 
 theme = default
