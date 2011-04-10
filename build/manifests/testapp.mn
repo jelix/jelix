@@ -328,7 +328,6 @@ cd testapp/var/config
   jacl.coord.ini.php
   jacl_ws.coord.ini.php
   profiles.ini.php.dist
-  soapprofiles.ini.php.dist
   urls.xml
   urls_rest.xml
   urls_old.xml

@@ -66,3 +66,11 @@ host = "localhost:11211"
 ; umask for cache files (default '0600')
 ;file_umask = 
 
+
+;----------------- jSoapClient
+[jsoapclient]
+
+[jsoapclient:default]
+wsdl= 
+;trace=1
+soap_version=SOAP_1_1

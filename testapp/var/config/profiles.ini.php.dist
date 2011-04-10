@@ -129,3 +129,13 @@ table=testkvdb
 dbprofile=default
 
 
+;----------------- jSoapClient
+[jsoapclient]
+
+[jsoapclient:default]
+
+; WARNING !!  Change the domain name and the path to index.php, according to your installation !!
+wsdl=   "http://testapp.local/index.php?service=testapp~soap&module=jWSDL&action=WSDL:wsdl"
+trace=1
+soap_version=SOAP_1_1
+

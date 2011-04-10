@@ -66,6 +66,23 @@ class jelixModuleUpgrader_jprofiles extends jInstallerModule {
             unlink($kvprofilefile);
         }
 
+        // migrate the soapprofiles.ini.php
+
+        $soapprofilefile = jApp::configPath('soapprofiles.ini.php');
+        if (file_exists($soapprofilefile)) {
+            $soapProfiles = new jIniFileModifier($soapprofilefile);
+            $profiles->import($soapProfiles, 'jsoapclient', ':');
+            unlink($soapprofilefile);
+        }
+
+        $soapprofilefile = jApp::configPath('soapprofiles.ini.php.dist');
+        if (file_exists($soapprofilefile)) {
+            $soapProfiles = new jIniFileModifier($soapprofilefile);
+            $profilesdist->import($soapProfiles, 'jsoapclient', ':');
+            unlink($soapprofilefile);
+        }
+
+
         // save the profile.ini.php
         $profiles->save();
         // don't create a dist file if there wasn't some dist files

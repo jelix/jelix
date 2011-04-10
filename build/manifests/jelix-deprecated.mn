@@ -39,6 +39,15 @@ cd lib/jelix/core-modules/jelix/daos
    jacl2usergroup.dao.xml
    jacl2groupsofuser.dao.xml
 
+cd lib/jelix/core-modules/jelix/locales/en_EN
+   soap.UTF-8.properties
+
+cd lib/jelix/core-modules/jelix/locales/en_US
+   soap.UTF-8.properties
+
+cd lib/jelix/core-modules/jelix/locales/fr_FR
+   soap.UTF-8.properties
+
 cd lib/jelix/forms/
    jIFormsBuilderCompiler.iface.php
 
