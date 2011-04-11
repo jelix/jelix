@@ -3,9 +3,9 @@
 * @package     jelix
 * @subpackage  junittests
 * @author      Laurent Jouanneau
-* @contributor Christophe Thiriot
+* @contributor Christophe Thiriot , Rahal Aboulfeth
 * @copyright   2005-2008 Laurent Jouanneau
-* @copyright   2008 Christophe Thiriot
+* @copyright   2008 Christophe Thiriot , 2011 Rahal Aboulfeth
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -15,15 +15,23 @@ require_once(LIB_PATH.'/simpletest/reporter.php');
 require_once(LIB_PATH.'diff/difflib.php');
 
 class jTextRespReporter extends SimpleReporter {
-   protected $_response;
+    protected $_response;
 
-   function setResponse($response) {
-      $this->_response = $response;
-   }
+    function setResponse($response) {
+        $this->_response = $response;
+    }
+   
+    function paintSuiteStart(){
+        // Nothing here
+    }
+   
+    function paintSuiteEnd(){
+        // Nothing here
+    }
 
-   function paintHeader($test_name) {
-      $this->_response->addContent("\n".$test_name."\n--------------------------------\n");
-   }
+    function paintHeader($test_name) {
+        $this->_response->addContent("\n".$test_name."\n--------------------------------\n");
+    }
 
     function paintFooter($test_name) {
         if ($this->getFailCount() + $this->getExceptionCount() == 0) {
@@ -86,4 +94,3 @@ class jTextRespReporter extends SimpleReporter {
     }
 }
 
-?>

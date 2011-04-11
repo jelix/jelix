@@ -45,6 +45,7 @@ cd lib/simpletest/extensions
   pear_test_case.php
   phpunit_test_case.php
   testdox.php
+  junit_xml_reporter.php
 cd lib/simpletest/extensions/testdox
   test.php
 cd lib/simpletest/test
@@ -227,6 +228,7 @@ cd lib/jelix-modules/junittests/
 cd lib/jelix-modules/junittests/classes
   jhtmlrespreporter.class.php
   jtextrespreporter.class.php
+  jjunitrespreporter.class.php
   junittestcase.class.php
   junittestcasedb.class.php
   jrunnerpreparer.class.php

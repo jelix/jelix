@@ -41,6 +41,14 @@ PHPUNITDOX=${PHPUNITDOXDIR}/tests-phpunit.dox.html
 PHPUNITCLOVER=${CURRENT_PATH}/${TESTPATH}/temp/tests-phpunit.clover.xml
 PHPUNITCOVERAGE=${CURRENT_PATH}/${TESTPATH}/temp/coverage/
 
+ifdef XUNIT_OUTPUT
+SIMPLETEST_OUTPUT=--junitoutput
+BUILDTESTLOG=> ${CURRENT_PATH}/${TESTPATH}/temp/tests-output.xml
+else
+SIMPLETEST_OUTPUT=
+BUILDTESTLOG=
+endif
+
 default:
 	@echo "target:"
 	@echo " nightlies : "
@@ -75,7 +83,7 @@ phpunit:
 	cd $(TESTPATH)/testapp/tests-jelix/ && $(PHPUNIT) --testdox --log-junit ${PHPUNITLOG} --testdox-html ${PHPUNITDOX} --coverage-clover ${PHPUNITCLOVER} --coverage-html ${PHPUNITCOVERAGE}
 
 simpletest:
-	cd $(TESTPATH)/testapp/scripts/ && $(PHP) tests.php default:index
+	cd $(TESTPATH)/testapp/scripts/ && $(PHP) tests.php default:index ${SIMPLETEST_OUTPUT} ${BUILDTESTLOG}
 
 runtests: phpunit simpletest
 	echo "phpunit and simpletest run"
