@@ -90,7 +90,7 @@ class soaplogDebugbarPlugin implements jIDebugbarPlugin {
             }
         }
 
-        return implode("\n", $pretty);
+        return htmlspecialchars(implode("\n", $pretty));
     }
 
 }
