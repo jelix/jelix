@@ -62,7 +62,7 @@
     padding:0;
     color:black;
     position:relative;
-    /*max-height:300px;*/
+    max-height:700px;
     overflow: auto;
     resize:both;
 }
@@ -80,4 +80,3 @@
 #jxdb-errors li.jxdb-msg-warning h5 { background-color:#FFF6D3;}
 .jxdb-list li >div {display:none;}
 .jxdb-list li.jxdb-opened >div {display:block;}
-
