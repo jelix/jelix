@@ -30,6 +30,10 @@ cd testapp/www/tests
 cd testapp/www/qunit
   testsuite.css
   testrunner.js
+cd testapp/www/imagemodifier
+  logo_test.png
+cd testapp/www/cache/images/
+
 cd testapp/modules
   .htaccess
 
@@ -243,6 +247,7 @@ cd testapp/modules/jelix_tests/tests/
   utils.jfilter.html_cli.php
   utils.jlog.html_cli.php
   utils.jdatetime.html_cli.php
+  utils.jimagemodifier.html_cli.php
   utils.jinifilemodifier.html_cli.php
   utils.jclasses.html_cli.php
   utils.jmailer.html_cli.php
