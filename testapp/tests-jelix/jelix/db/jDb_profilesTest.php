@@ -25,7 +25,7 @@ class jDb_profile  extends PHPUnit_Framework_TestCase
             'password'=> "futchball_mysql",
             'persistent'=> '1',
             'force_encoding'=>1,
-            'name'=>'jelix_tests_mysql',
+            '_name'=>'jelix_tests_mysql',
         );
 
         $this->assertEquals($expected, $p);
@@ -39,18 +39,18 @@ class jDb_profile  extends PHPUnit_Framework_TestCase
             'password'=> "futchball_forward",
             'persistent'=> '1',
             'force_encoding'=>0,
-            'name'=>'jelix_tests_forward',
+            '_name'=>'jelix_tests_forward',
         );
 
         $this->assertEquals($expected, $p);
 
         $p = jProfiles::get('jdb', 'testapp');
-        $this->assertEquals('testapp', $p['name']);
+        $this->assertEquals('testapp', $p['_name']);
         $p2 = jProfiles::get('jdb');
-        $this->assertEquals('testapp', $p2['name']);
+        $this->assertEquals('testapp', $p2['_name']);
         $this->assertEquals($p, $p2);
         $p = jProfiles::get('jdb', 'testapppdo');
-        $this->assertEquals('testapppdo', $p['name']);
+        $this->assertEquals('testapppdo', $p['_name']);
     }
 
     function testVirtualProfile() {
@@ -69,6 +69,6 @@ class jDb_profile  extends PHPUnit_Framework_TestCase
         $p = jProfiles::get('jdb', 'foobar');
         $profile['_name'] = 'foobar';
 
-        $this->assertEqual($profile, $p);
+        $this->assertEquals($profile, $p);
     }
 }

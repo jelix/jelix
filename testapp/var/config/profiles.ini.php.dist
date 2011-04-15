@@ -88,7 +88,7 @@ default =
 ; Parameters common to all drivers :
 
 ; driver type (file, memcache, redis)
-; driver =  
+; driver =
 
 
 ;[jkvdb:usingmemcache]
@@ -116,7 +116,7 @@ automatic_cleaning_factor = 0
 ; umask for directory structure (default '0700')
 ;directory_umask = ""
 ; umask for cache files (default '0600')
-;file_umask = 
+;file_umask =
 
 ;[jkvdb:usingredis]
 ; driver=redis
@@ -136,7 +136,7 @@ dbprofile=default
 
 ; WARNING !!  Change the domain name and the path to index.php, according to your installation !!
 wsdl=   "http://testapp.local/index.php?service=testapp~soap&module=jWSDL&action=WSDL:wsdl"
-trace=1
+;trace=1
 soap_version=SOAP_1_1
 
 ;----------------- jCache
@@ -163,12 +163,12 @@ automatic_cleaning_factor = 0
 ; dao used
 dao = "jelix~jcache"
 ; dbprofil (optional)
-dbprofile = "" 
+dbprofile = ""
 
 
 ; Parameters for memcached driver :
 
-; memcached servers. 
+; memcached servers.
 ; Can be a list e.g
 ;servers = memcache_host1:11211;memcache_host2:11211;memcache_host3:11211 i.e HOST_NAME:PORT
 ;servers = localhost:11211
@@ -186,14 +186,14 @@ enabled = 1
 driver = file
 
 ; directory where to put the cache files (optional default 'jApp::tempPath('cache/'))
-;cache_dir = 
+;cache_dir =
 ; enable / disable locking file
 ;file_locking = 1
 ; directory level. Set the directory structure level. 0 means "no directory structure", 1 means "one level of directory", 2 means "two levels"...
 ;directory_level = 0
 ; umask for directory structure (default '0700')
-;directory_umask = 
+;directory_umask =
 ; prefix for cache files (default 'jelix_cache')
 ;file_name_prefix = ""
 ; umask for cache files (default '0600')
-;cache_file_umask = 
+;cache_file_umask =
