@@ -39,7 +39,7 @@ abstract class jRequest {
     public $defaultResponseType = '';
 
     /**
-     * the path of the entry point in the url
+     * the path of the entry point in the url (basePath included)
      * if the url is /foo/index.php/bar, its value is /foo/
      * @var string
      */
@@ -53,7 +53,7 @@ abstract class jRequest {
     public $urlScriptName;
 
     /**
-     * the path to the entry point in the url
+     * the path to the entry point in the url (basePath included)
      * if the url is /foo/index.php/bar, its value is /foo/index.php
      * @var string
      */

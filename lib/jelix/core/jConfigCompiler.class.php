@@ -35,7 +35,7 @@ class jConfigCompiler {
      *                               not needed to run the application
      * @param boolean $isCli  indicate if the configuration to read is for a CLI script or no
      * @param string $pseudoScriptName the name of the entry point, relative to the base path,
-     *              corresponding to the readed configuration 
+     *              corresponding to the readed configuration
      * @return object an object which contains configuration values
      */
     static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
@@ -87,7 +87,7 @@ class jConfigCompiler {
         self::$commonConfig  = null;
         return $config;
     }
-    
+
     /**
      * Identical to read(), but also stores the result in a temporary file
      * @param string $configFile the config file name
@@ -96,7 +96,7 @@ class jConfigCompiler {
      * @return object an object which contains configuration values
      */
     static public function readAndCache($configFile, $isCli = null, $pseudoScriptName = '') {
-        
+
         if ($isCli === null)
             $isCli = (PHP_SAPI == 'cli');
 
@@ -138,7 +138,7 @@ class jConfigCompiler {
      *                               not needed to run the application
      * @param boolean $isCli  indicate if the configuration to read is for a CLI script or no
      * @param string $pseudoScriptName the name of the entry point, relative to the base path,
-     *              corresponding to the readed configuration 
+     *              corresponding to the readed configuration
      */
     static protected function prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName){
 
@@ -201,7 +201,7 @@ class jConfigCompiler {
                         $className = $m[2];
                         $subpath ='';
                     }
-                    
+
                     $path = $config->_modulesPathList[$m[1]].'classes/'.$subpath.$className.'.class.php';
 
                     if (!file_exists($path) || strpos($subpath,'..') !== false ) {
@@ -317,7 +317,7 @@ class jConfigCompiler {
                                 // module is not installed.
                                 // outside installation mode, we force the access to 0
                                 // so the module is unusable until it is installed
-                                if (!$allModuleInfo) 
+                                if (!$allModuleInfo)
                                     $config->modules[$f.'.access'] = 0;
                             }
                         }
@@ -330,20 +330,20 @@ class jConfigCompiler {
                         if ($allModuleInfo) {
                             if (!isset($installation[$section][$f.'.version']))
                                 $installation[$section][$f.'.version'] = '';
-    
+
                             if (!isset($installation[$section][$f.'.dataversion']))
                                 $installation[$section][$f.'.dataversion'] = '';
 
                             if (!isset($installation['__modules_data'][$f.'.contexts']))
                                 $installation['__modules_data'][$f.'.contexts'] = '';
-                                
+
                             $config->modules[$f.'.version'] = $installation[$section][$f.'.version'];
                             $config->modules[$f.'.dataversion'] = $installation[$section][$f.'.dataversion'];
                             $config->modules[$f.'.installed'] = $installation[$section][$f.'.installed'];
 
                             $config->_allModulesPathList[$f]=$p.$f.'/';
                         }
-                        
+
                         if ($config->modules[$f.'.access'] == 3) {
                             $config->_externalModulesPathList[$f]=$p.$f.'/';
                         }
@@ -442,20 +442,34 @@ class jConfigCompiler {
             $basepath = $urlconf['basePath'];
             if ($basepath == '') {
                 // for beginners or simple site, we "guess" the base path
-                $basepath = $urlconf['urlScriptPath'];
+                $basepath = $localBasePath = $urlconf['urlScriptPath'];
             }
-            elseif ($basepath != '/') {
-                if($basepath[0] != '/') $basepath='/'.$basepath;
-                if(substr($basepath,-1) != '/') $basepath.='/';
+            else {
+                if ($basepath != '/') {
+                    if($basepath[0] != '/') $basepath='/'.$basepath;
+                    if(substr($basepath,-1) != '/') $basepath.='/';
+                }
 
                 if ($pseudoScriptName) {
                     // with pseudoScriptName, we aren't in a true context, we could be in a cli context
-                    // (the installer), and we want the path as when we are in a web context.
+                    // (the installer), and we want the path like when we are in a web context.
                     // $pseudoScriptName is supposed to be relative to the basePath
                     $urlconf['urlScriptPath'] = substr($basepath,0,-1).$urlconf['urlScriptPath'];
                     $urlconf['urlScript'] = $urlconf['urlScriptPath'].$urlconf['urlScriptName'];
                 }
-                elseif(strpos($urlconf['urlScriptPath'], $basepath) !== 0){
+                $localBasePath = $basepath;
+                if ($urlconf['backendBasePath']) {
+                    $localBasePath = $urlconf['backendBasePath'];
+                    // we have to change urlScriptPath. it may contains the base path of the backend server
+                    // we should replace this base path by the basePath of the frontend server
+                    if (strpos($urlconf['urlScriptPath'], $urlconf['backendBasePath']) === 0) {
+                        $urlconf['urlScriptPath'] = $basepath.substr( $urlconf['urlScriptPath'], strlen($urlconf['backendBasePath']));
+                    }
+                    else  {
+                        $urlconf['urlScriptPath'] = $basepath.substr($urlconf['urlScriptPath'], 1);
+                    }
+
+                }elseif(strpos($urlconf['urlScriptPath'], $basepath) !== 0) {
                     throw new Exception('Jelix Error: basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$urlconf['urlScriptPath']);
                 }
             }
@@ -466,18 +480,18 @@ class jConfigCompiler {
                 $urlconf['jelixWWWPath'] = $basepath.$urlconf['jelixWWWPath'];
             if($urlconf['jqueryPath'][0] != '/')
                 $urlconf['jqueryPath'] = $basepath.$urlconf['jqueryPath'];
-            $snp = substr($urlconf['urlScript'],strlen($basepath));
+            $snp = substr($urlconf['urlScript'],strlen($localBasePath));
 
-            if ($basepath == '/')
+            if ($localBasePath == '/')
                 $urlconf['documentRoot'] = jApp::wwwPath();
-            else if(strpos(jApp::wwwPath(), $basepath) === false) {
+            else if(strpos(jApp::wwwPath(), $localBasePath) === false) {
                 if (isset($_SERVER['DOCUMENT_ROOT']))
                     $urlconf['documentRoot'] = $_SERVER['DOCUMENT_ROOT'];
                 else
                     $urlconf['documentRoot'] = jApp::wwwPath();
             }
             else
-                $urlconf['documentRoot'] = substr(jApp::wwwPath(), 0, - (strlen($basepath)));
+                $urlconf['documentRoot'] = substr(jApp::wwwPath(), 0, - (strlen($localBasePath)));
         }
 
         $pos = strrpos($snp, $urlconf['entrypointExtension']);

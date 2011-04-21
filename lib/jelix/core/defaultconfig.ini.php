@@ -160,6 +160,12 @@ pathInfoInQueryParameter =
 ; : basePath="/aaa/" )
 basePath = ""
 
+
+; backendBasePath is used when the application is behind a proxy, and when the base path on the frontend
+; server doesn't correspond to the base path on the backend server.
+; you MUST define basePath when you define backendBasePath
+backendBasePath =
+
 ; this is the url path to the jelix-www content (you can found this content in lib/jelix-www/)
 ; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
 ; jelix-www, or copy its content in yourapp/www/ (with a name like 'jelix' for example)
