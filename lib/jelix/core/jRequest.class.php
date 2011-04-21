@@ -183,7 +183,7 @@ abstract class jRequest {
 
         return $response;
     }
-    
+
     /**
      * return the ip address of the user
      * @return string the ip
@@ -196,14 +196,14 @@ abstract class jRequest {
             $lastIp = '';
             foreach($list as $ip) {
                 $ip = trim($ip);
-                if(preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/',$val,$m)) {
+                if(preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/',$ip,$m)) {
                     if ($m[1] == '10' || $m[1] == '010'
                         || ($m[1] == '172' && (intval($m[2]) & 240 == 16))
                         || ($m[1] == '192' && $m[2] == '168'))
                         break; // stop at first private address. we just want the last public address
                     $lastIp = $ip;
                 }
-                elseif (preg_match('/^(?:[a-f0-9]{1,4})(?::(?:[a-f0-9]{1,4})){7}$/i',$val)) {
+                elseif (preg_match('/^(?:[a-f0-9]{1,4})(?::(?:[a-f0-9]{1,4})){7}$/i',$ip)) {
                     $lastIp = $ip;
                 }
             }
@@ -217,7 +217,7 @@ abstract class jRequest {
             return $_SERVER['REMOTE_ADDR'];
         }
     }
-    
+
     /**
      * return the protocol
      * @return string  http or https
@@ -319,4 +319,3 @@ abstract class jRequest {
 
 
 }
-
