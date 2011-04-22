@@ -114,6 +114,9 @@ class jSoapClient {
             $profile['connection_timeout'] = intval($profile['connection_timeout']); // SoapClient recognize only true integer
         }
         unset ($profile['_name']);
+        if (isset($profile['classmap']) && is_string ($profile['classmap']) && $profile['classmap'] != '') {
+            $profile['classmap'] = (array)json_decode($profile['classmap']);
+        }
         return new $client($wsdl, $profile);
     }
 }
