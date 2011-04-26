@@ -680,7 +680,7 @@ foo[]=ccc
         $ini->testParse($content);
 
         $ini2 = new testIniFileModifier('');
-        $content = '
+        $content2 = '
 
 ; my comment
 toto = truc
@@ -707,7 +707,7 @@ foo[]=ccc
 
 
 ';
-        $ini2->testParse($content);
+        $ini2->testParse($content2);
 
         $ini->import($ini2);
 
@@ -804,7 +804,7 @@ foo[]=ccc
         $ini->testParse($content);
 
         $ini2 = new testIniFileModifier('');
-        $content = '
+        $content2 = '
 
 ; my comment
 toto = truc
@@ -828,7 +828,7 @@ truck=on
 
 
 ';
-        $ini2->testParse($content);
+        $ini2->testParse($content2);
 
         $ini->import($ini2, 'blob');
 
@@ -882,6 +882,74 @@ isvalid=on
 truc=false
 
 supercar=ferrari
+
+';
+        $this->assertEqualOrDiff($result, $ini->generate());
+
+
+
+        $ini = new testIniFileModifier('');
+        $ini->testParse($content);
+
+        $ini2 = new testIniFileModifier('');
+        $ini2->testParse($content2);
+
+        $ini->import($ini2, 'blob', ':');
+$result = '
+  ; a comment <?php die()
+  
+foo=bar
+anumber=98
+string=uuuuu
+string2="aaa
+bbb"
+afloatnumber=5.098  
+
+; section comment
+[aSection]
+truc=true
+
+; a comment
+
+laurent=toto
+isvalid=on
+
+; super section
+[blob_thesection]
+truc=machin2
+bidule=1
+[vla]
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+
+
+
+[blob]
+
+
+; my comment
+toto=truc
+;bla
+anumber=100
+
+; section comment
+[blob:mySection]
+
+newlaurent=hello
+; a new comment
+isvalid=on
+truc=false
+
+supercar=ferrari
+
+[blob:thesection]
+truc=machin3
+truck=on
+
+
+
 
 ';
         $this->assertEqualOrDiff($result, $ini->generate());

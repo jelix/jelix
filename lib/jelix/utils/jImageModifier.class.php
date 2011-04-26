@@ -5,7 +5,7 @@
 * @author      Bastien Jaillot
 * @contributor Dominique Papin, Lepeltier kévin (the author of the original plugin)
 * @contributor geekbay, Brunto, Laurent Jouanneau
-* @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay, 2010 Brunto, 2010 Laurent Jouanneau
+* @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay, 2010 Brunto, 2011 Laurent Jouanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -76,18 +76,32 @@ class jImageModifier {
      * png   -> image/png
      * other -> image/png
      *
-     * @param string $src url of source image (myapp/www/):string.[gif|jpeg|jpg|jpe|xpm|xbm|wbmp|png]
+     * @param string $src the path to the source image, relative to the www directory
+     *                    or relative to the path indicated into the configuration.
+     *                    The filename should have one of these extensions:
+     *                    gif,jpeg,jpg,jpe,xpm,xbm,wbmp,png
      * @param array $params parameters specifying image
      * @param array $send_cache_path include cache path in result
+     * @param array $config the paths configuration. should contain same parameters
+     *                      as you find in the imagemodifier section of the configuration.
+     *                      give these array if you want to override the configuration.
      * @return array of attributes
      **/
-    static function get($src, $params = array(), $sendCachePath = true) {
+    static function get($src, $params = array(), $sendCachePath = true, $config = null) {
+        global $gJConfig;
+
+        $basePath = $gJConfig->urlengine['basePath'];
+        if(strpos($src,$basePath) === 0) {
+            // in the case where the path is constructed with $j_basepath or $j_themepath
+            // in a template
+            $src = substr($src,strlen($basePath));
+        }
 
         // extension
         if(empty($params['ext'])) {
             $path_parts = pathinfo($src);
             if ( isset($path_parts['extension']))
-            $ext = strtolower($path_parts['extension']);
+                $ext = strtolower($path_parts['extension']);
         } else {
             $ext = strtolower($params['ext']);
         }
@@ -115,47 +129,81 @@ class jImageModifier {
 
         // paths & uri
         global $gJConfig;
-        $www = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'];
-        $basePath = $gJConfig->urlengine['basePath'];
-        $cachePath = jApp::wwwPath('cache/images/'.$cacheName);
-        if(strpos($src,$basePath) === 0) {
-            // in the case where the path is constructed with $j_basepath or $j_themepath
-            // in a template
-            $srcPath = jApp::wwwPath(substr($src,strlen($basePath)));
-            $srcUri = $www.$src;
-        }
-        else {
-            $srcPath = jApp::wwwPath($src);
-            $srcUri = $www.$basePath.$src;
-        }
-        $cacheUri = $www.$basePath.'cache/images/'.$cacheName;
+
+        list($srcPath, $srcUri, $cachePath, $cacheUri) = self::computeUrlFilePath($config);
 
         // apply transforms if necessary (serve directly or from cache otherwise)
         $pendingTransforms = ($chaine !== $src);
-        if( $pendingTransforms && is_file($srcPath) && !is_file($cachePath) ) {
-            self::transformAndCache($src, $cacheName, $params);
+        if( $pendingTransforms && is_file($srcPath.$src) && !is_file($cachePath.$cacheName) ) {
+            self::transformAndCache($srcPath.$src, $cachePath, $cacheName, $params);
         }
 
-
         // Attributes
-        if( !is_file($cachePath) ) {
+        if( !is_file($cachePath.$cacheName) ) {
             // image does not undergo any transformation
-            $att['src'] = $srcUri;
+            $att['src'] = $srcUri.$src;
             $att['style'] = empty($att['style'])?'':$att['style'];
             if( !empty($params['width']) )             $att['style'] .= 'width:'.$params['width'].'px;';
             else if( !empty($params['maxwidth']) )     $att['style'] .= 'width:'.$params['maxwidth'].'px;';
             if( !empty($params['height']) )            $att['style'] .= 'height:'.$params['height'].'px;';
             else if( !empty($params['maxheight']) )    $att['style'] .= 'height:'.$params['maxheight'].'px;';
         } else {
-            $att['src'] = $cacheUri;
+            $att['src'] = $cacheUri.$cacheName;
         }
 
         if ($sendCachePath)
-            $att['cache_path'] = $cachePath;
+            $att['cache_path'] = $cachePath.$cacheName;
 
         return $att;
     }
 
+    /**
+     * compute path from the configuration or from
+     * the given array. These paths will be used to read images and to save them
+     * into a cache directory.
+     * @return array. keys are
+     *          src_url, src_path, cache_path, cache_url
+     */
+    static public function computeUrlFilePath($config=null) {
+        // paths & uri
+        global $gJConfig;
+        $basePath = $gJConfig->urlengine['basePath'];
+
+        if (!$config)
+            $config = & $gJConfig->imagemodifier;
+
+        // compute URL and file path of the source image
+        if ($config['src_url'] && $config['src_path']) {
+            $srcUri = $config['src_url'];
+            if ($srcUri[0] != '/' && strpos($srcUri, 'http:') !== 0)
+                $srcUri = $basePath.$srcUri;
+            $srcPath = str_replace(array('www:','app:'),
+                                     array(jApp::wwwPath(), jApp::appPath()),
+                                     $config['src_path']);
+        }
+        else {
+            $srcUri = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'].$basePath;
+            $srcPath = jApp::wwwPath();
+        }
+
+        if ($config['cache_path'] && $config['cache_url']) {
+            $cacheUri = $config['cache_url'];
+            if ($cacheUri[0] != '/' && strpos($cacheUri, 'http:') !== 0)
+                $cacheUri = $basePath.$cacheUri;
+            $cachePath = str_replace(array('www:','app:'),
+                                     array(jApp::wwwPath(), jApp::appPath()),
+                                     $config['cache_path']);
+        }
+        else {
+            $cachePath = jApp::wwwPath('cache/images/');
+            $cacheUri = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'].$basePath.'cache/images/';
+        }
+        return array($srcPath, $srcUri, $cachePath, $cacheUri);
+    }
+
+    static protected $mimes = array('gif'=>'image/gif', 'png'=>'image/png',
+                       'jpeg'=>'image/jpeg', 'jpg'=>'image/jpeg', 'jpe'=>'image/jpeg',
+                       'xpm'=>'image/x-xpixmap', 'xbm'=>'image/x-xbitmap', 'wbmp'=>'image/vnd.wap.wbmp');
 
     /**
      * transform source image file (given parameters) and cache result
@@ -163,30 +211,11 @@ class jImageModifier {
      * @param string $cacheName image's hashname for the cache
      * @param array $params parameters specifying transformations
      **/
-    static protected function transformAndCache($src, $cacheName, $params) {
+    static protected function transformAndCache($srcFs, $cachePath, $cacheName, $params) {
 
-        $mimes = array('gif'=>'image/gif', 'png'=>'image/png',
-                       'jpeg'=>'image/jpeg', 'jpg'=>'image/jpeg', 'jpe'=>'image/jpeg',
-                       'xpm'=>'image/x-xpixmap', 'xbm'=>'image/x-xbitmap', 'wbmp'=>'image/vnd.wap.wbmp');
+        $path_parts = pathinfo($srcFs);
+        $mimeType = self::$mimes[strtolower($path_parts['extension'])];
 
-        global $gJConfig;
-        $srcUri = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'];
-
-        $basePath = $gJConfig->urlengine['basePath'];
-        $cachePath = jApp::wwwPath('cache/images/'.$cacheName);
-        if(strpos($src,$basePath) === 0) {
-            // in the case where the path is constructed with $j_basepath or $j_themepath
-            // in a template
-            $srcFs = jApp::wwwPath(substr($src,strlen($basePath)));
-            $srcUri .= $src;
-        }
-        else {
-            $srcFs = jApp::wwwPath($src);
-            $srcUri .= $basePath.$src;
-        }
-
-        $path_parts = pathinfo($srcUri);
-        $mimeType = $mimes[strtolower($path_parts['extension'])];
         $quality = (!empty($params['quality']))?  $params['quality'] : 100;
 
         // Creating an image
@@ -294,10 +323,7 @@ class jImageModifier {
             $image = $fond;
         }
 
-
-        $cachePath = jApp::wwwPath('cache/images/');
         jFile::createDir($cachePath);
-
 
         // Register
         switch ( $mimeType ) {

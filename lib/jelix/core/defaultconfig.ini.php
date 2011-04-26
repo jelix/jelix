@@ -383,3 +383,16 @@ disableCache = off
 
 [classbindings]
 ; bindings for class and interfaces : selector_of_class/iface = selector_of_implementation
+
+[imagemodifier]
+; set this parameters if images and their cache are on an other website (but on the same server)
+; the url from which we can display images (basepath excluded). default = current host
+; if you set this parameter, you MUST set src_path
+src_url=
+; the path on the file system, to the directory where images are stored (the www directory of the other application. default = JELIX_APP_WWW_PATH
+src_path=
+; the url from which we can display images cache. default = current host + basepath + 'cache/images/'
+; if you set this parameter, you MUST set cache_path
+cache_url=
+; the path on the file system, to the directory where images cache are stored. default = JELIX_APP_WWW_PATH
+cache_path=
