@@ -229,7 +229,7 @@ rdf = on
 _all =
 
 ; default category is the category used when a given category is not declared here
-default=
+default=file
 error= file
 warning=file
 notice=file
