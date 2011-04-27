@@ -63,15 +63,25 @@ nightlies:
 	$(PHP) build/buildjtpl.php -D $(DISTPATHSWITCH) ./build/config/jtpl-dist.ini
 	$(PHP) build/buildfonts.php -D $(DISTPATHSWITCH) ./build/config/jelix-fonts-dist.ini
 
-tests:
+preparetestapp:
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
 	$(PHP) build/buildapp.php -D $(TESTPATHSWITCH) ./build/config/testapp-test.ini
 	cd $(TESTPATH) \
 	&& cp $(TESTS_PROFILES) testapp/var/config/profiles.ini.php
 	cd $(TESTPATH)/testapp/install && $(PHP) installer.php
-	cd $(TESTPATH)/testapp/scripts/ && $(PHP) tests.php default:index
+
+phpunit:
 	mkdir -p ${PHPUNITCOVERAGE} ${PHPUNITDOXDIR}
 	cd $(TESTPATH)/testapp/tests-jelix/ && $(PHPUNIT) --testdox --log-junit ${PHPUNITLOG} --testdox-html ${PHPUNITDOX} --coverage-clover ${PHPUNITCLOVER} --coverage-html ${PHPUNITCOVERAGE}
+
+simpletest:
+	cd $(TESTPATH)/testapp/scripts/ && $(PHP) tests.php default:index
+
+runtests: phpunit simpletest
+	echo "phpunit and simpletest run"
+
+tests: preparetestapp runtests
+	echo "Tests complete"
 
 docs: 
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
