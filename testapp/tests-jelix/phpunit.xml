@@ -13,5 +13,8 @@
     <testsuite name="Jelix Utils">
       <directory>jelix/utils/</directory>
     </testsuite>
+    <testsuite name="Jelix Forms">
+      <directory>jelix/forms/</directory>
+    </testsuite>
   </testsuites>
 </phpunit>

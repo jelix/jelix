@@ -262,8 +262,8 @@ cd testapp/modules/jelix_tests/tests/
   utils.jversioncomparator.html_cli.php
   test1.pu.php
   test2.unit.pu.php
-  
-  
+
+
 
 cd testapp/modules/testurls/
 *  module.xml
@@ -310,6 +310,8 @@ cd testapp/tests-jelix/jelix/utils/
   soapclientTest.php
 cd testapp/tests-jelix/jelix/db/
   jDb_profilesTest.php
+cd testapp/tests-jelix/jelix/forms/
+  jforms_init_from_requestTest.php
 
 cd testapp/tests/
   runtests.php

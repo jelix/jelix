@@ -30,9 +30,16 @@ class jFormsControlChoice extends jFormsControlGroups {
 
     function check(){
         $val = $this->container->data[$this->ref];
+
+        if (isset($this->container->privateData[$this->ref][$val])) {
+            return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
+        }
+
         if($val !== "" && $val !== null && isset($this->items[$val])) {
             $rv = null;
             foreach($this->items[$val] as $ctrl) {
+                if (!$ctrl->isActivated())
+                    continue;
                 if (($rv2 = $ctrl->check()) !== null) {
                     $rv = $rv2;
                 }
@@ -49,13 +56,35 @@ class jFormsControlChoice extends jFormsControlGroups {
         $this->itemsNames[$value]= $label;
     }
 
+    function deactivateItem($value, $deactivation=true) {
+        if (!isset($this->items[$value]))
+            return;
+        if ($deactivation) {
+            $this->container->privateData[$this->ref][$value] = true;
+        }
+        else if (isset($this->container->privateData[$this->ref][$value])) {
+            unset($this->container->privateData[$this->ref][$value]);
+        }
+    }
+
+    function isItemActivated($value) {
+        return !(isset($this->container->privateData[$this->ref][$value]));
+    }
+
     function addChildControl($control, $itemValue = '') {
         $this->childControls[$control->ref] = $control;
         $this->items[$itemValue][$control->ref] = $control;
     }
 
     function setValueFromRequest($request) {
-        $this->setData($request->getParam($this->ref,''));
+        $value = $request->getParam($this->ref,'');
+
+        if (isset($this->container->privateData[$this->ref][$value])) {
+            $this->setData('');
+            return;
+        }
+        $this->setData($value);
+
         if(isset($this->items[$this->container->data[$this->ref]])){
             foreach($this->items[$this->container->data[$this->ref]] as $name=>$ctrl) {
                 $ctrl->setValueFromRequest($request);
@@ -63,4 +92,3 @@ class jFormsControlChoice extends jFormsControlGroups {
         }
     }
 }
-

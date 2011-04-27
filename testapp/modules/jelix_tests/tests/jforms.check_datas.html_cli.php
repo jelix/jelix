@@ -103,7 +103,7 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->assertTrue($this->form->check());
         $this->form->setData('nom','<div>lorem <br/> ipsum</div>');
         $this->assertTrue($this->form->check());
-        
+
         $ctrl->datatype = new jDatatypeHtml(true);
         $this->form->setData('nom','<div>lorem<em>aaa</em></div>');
         $this->assertTrue($this->form->check());
@@ -297,6 +297,20 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
 
 
     function testChoice() {
+        /*
+        <choice ref="choice">
+            <item value="item1"><label>labelitem1</label>
+                <input ref="nom" />
+                <checkboxes ref="categories" required="true" />
+            </item>
+            <item value="item2"><label>labelitem2</label>
+                <input ref="datenaissance" type="date" />
+            </item>
+            <item value="item3"><label>labelitem3</label>
+            </item>
+        </choice>
+        */
+
         $choice = new jFormsControlChoice('choice');
         $choice->required = false;
 
@@ -319,32 +333,57 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->form->addCtrl($choice);
 
         $this->assertTrue($this->form->check());
+
+        // test if required work on the whole control
         $choice->required = true;
         $this->assertFalse($this->form->check());
 
+        // test if a bad value on choice trig a bad check
         $this->form->setData('choice', 'foo');
         $this->assertFalse($this->form->check());
 
+        // test if a good value on choice trig a good check
         $this->form->setData('choice', 'item3');
         $this->assertTrue($this->form->check());
 
+        // test if a good value on choice, with missing value on
+        // an item control, trig a bad check
         $this->form->setData('choice', 'item1');
         $this->assertFalse($this->form->check());
 
+        // test if a good value on choice, with a bad value on
+        // an item control, trig a bad check
         $this->form->setData('categories','toto');
         $this->assertFalse($this->form->check());
 
+        // test if a good value on choice, with a bad value on
+        // a deactivated item control, trig a good check
+        $this->form->setData('categories','toto');
+        $this->form->deactivate('categories');
+        $this->assertTrue($this->form->check());
+
+        // test if a good value on choice, with a good value on
+        // an item control, trig a good check
         $this->form->setData('categories',array('toto'));
         $this->assertTrue($this->form->check());
 
         $this->form->setData('categories',array('toto','titi'));
         $this->assertTrue($this->form->check());
 
+        // test if a good value on choice, with a missing value on
+        // a non required item control, trig a good check
         $this->form->setData('choice', 'item2');
         $this->assertTrue($this->form->check());
 
+        // test if a good value on choice, with a bad value on
+        // an item control other than the selected control, trig a good check
         $this->form->setData('categories','');
         $this->assertTrue($this->form->check());
+
+        // test if a value corresponding to a deactivated item, trig a bad check
+        $choice->deactivateItem('item2');
+        $this->form->setData('choice', 'item2');
+        $this->assertFalse($this->form->check());
     }
 }
 
