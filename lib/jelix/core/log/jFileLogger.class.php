@@ -21,7 +21,7 @@ class jFileLogger implements jILogger {
             return;
 
         $type = $message->getCategory();
-        if ($gJCoord->request) {
+        if ($gJCoord && $gJCoord->request ) {
             $conf = & $gJConfig->fileLogger;
             if (!isset($conf[$type]))
                 return;
