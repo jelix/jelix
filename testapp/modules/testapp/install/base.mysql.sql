@@ -1,5 +1,5 @@
 
-CREATE TABLE myconfig (
+CREATE TABLE IF NOT EXISTS myconfig (
   cfg_key varchar(150) NOT NULL default '',
   cfg_value varchar(255) NOT NULL default '',
   PRIMARY KEY  (cfg_key)

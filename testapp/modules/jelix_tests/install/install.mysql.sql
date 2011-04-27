@@ -1,5 +1,5 @@
 
-CREATE TABLE `product_test` (
+CREATE TABLE IF NOT EXISTS `product_test` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `name` VARCHAR( 150 ) NOT NULL ,
 `price` FLOAT NOT NULL,
@@ -8,13 +8,13 @@ CREATE TABLE `product_test` (
 `dummy` set('created','started','stopped') DEFAULT NULL
 ) ENGINE = MYISAM ;
 
-CREATE TABLE `product_tags_test` (
+CREATE TABLE IF NOT EXISTS `product_tags_test` (
 `product_id` INT NOT NULL ,
 `tag` VARCHAR( 50 ) NOT NULL ,
 PRIMARY KEY ( `product_id` , `tag` )
 ) ENGINE = MYISAM ;
 
-CREATE TABLE `labels_test` (
+CREATE TABLE IF NOT EXISTS `labels_test` (
 `key` INT NOT NULL ,
 `keyalias` VARCHAR( 10 ) NULL,
 `lang` VARCHAR( 5 ) NOT NULL ,
@@ -23,7 +23,7 @@ PRIMARY KEY ( `key` , `lang` ),
 UNIQUE (`keyalias`)
 );
 
-CREATE TABLE `labels1_test` (
+CREATE TABLE IF NOT EXISTS `labels1_test` (
 `key` INT NOT NULL ,
 `keyalias` VARCHAR( 10 ) NOT NULL,
 `lang` VARCHAR( 5 ) NOT NULL,
@@ -33,7 +33,7 @@ UNIQUE (`keyalias`)
 );
 
 -- for the crud example
-CREATE TABLE `products` (
+CREATE TABLE IF NOT EXISTS `products` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `name` VARCHAR( 150 ) NOT NULL ,
 `price` FLOAT   default '0',
@@ -41,7 +41,7 @@ CREATE TABLE `products` (
 ) ENGINE = MYISAM ;
 
 
-CREATE TABLE `testkvdb` (
+CREATE TABLE IF NOT EXISTS `testkvdb` (
 `k_key` VARCHAR( 50 ) NOT NULL ,
 `k_value` longblob NOT NULL ,
 `k_expire` DATETIME NOT NULL ,
