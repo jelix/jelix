@@ -25,10 +25,54 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+// on windows plateform, this function doesn't exist.
+if(!function_exists('strptime')){
+    /**
+     * @ignore
+     */
+    function strptime ( $strdate, $format ){
+        // It's not a full compatibility with strptime of PHP5.1, but it is
+        // enough for our needs
+        $plop = array( 'S'=>'tm_sec', 'M'=>'tm_min', 'H'=>'tm_hour',
+            'd'=>'tm_mday', 'm'=>'tm_mon', 'Y'=>'tm_year');
+
+        $regexp = preg_quote($format, '/');
+        $regexp = str_replace(
+                array('%d','%m','%Y','%H','%M','%S'),
+                array('(?P<tm_mday>\d{2})','(?P<tm_mon>\d{2})',
+                      '(?P<tm_year>\d{4})','(?P<tm_hour>\d{2})',
+                      '(?P<tm_min>\d{2})','(?P<tm_sec>\d{2})'),
+                $regexp);
+        if(preg_match('/^'.$regexp.'$/', $strdate, $m)){
+            $result=array('tm_sec'=>0,'tm_min'=>0,'tm_hour'=>0,'tm_mday'=>0,'tm_mon'=>0,'tm_year'=>0,'tm_wday'=>0,'tm_yday'=>0,'unparsed'=>'');
+            foreach($m as $key => $value){
+                if(!isset($result[$key])){
+                    continue;
+                }
+                $result[$key] = intval($value);
+                switch($key){
+                case 'tm_mon':
+                    $result[$key]--;
+                    break;
+                case 'tm_year':
+                    $result[$key] -= 1900;
+                    break;
+                default:
+                    break;
+                }
+            }
+            return $result;
+        }
+        return false;
+    }
+}
+
+
 /**
  * Utility to manipulate dates and convert date format
  * @package     jelix
  * @subpackage  utils
+ * @todo PHP53 : replace the use of strptime by date_parse_from_format
  */
 class jDateTime {
     public $day;
@@ -76,7 +120,7 @@ class jDateTime {
      * @return bool true if the date/time are valid.
      */
     private function _check() {
-        // Only check the date if it is defined (eg. day, month and year are 
+        // Only check the date if it is defined (eg. day, month and year are
         // strictly positive).
         if($this->day > 0 && $this->month > 0 && $this->year > 0
             && !checkdate($this->month, $this->day, $this->year))
@@ -150,11 +194,11 @@ class jDateTime {
                break;
            case self::FULL_LANG_DATE:
                $t = mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
-               // traduction du mois	
+               // traduction du mois
                $month = jLocale::get('jelix~date_time.month.'.date('m',$t).'.label');
                // traduction du jour
                $day = jLocale::get('jelix~date_time.day.'.date('w',$t).'.label');
-               // récupération du formatage de la date	
+               // récupération du formatage de la date
                $lf = jLocale::get('jelix~format.date_full');
                // récupération du format ordinal du jour dans le mois surtout pour le format en anglais (1st, 2nd, 3rd et th pour les autres
                $ordinal = jLocale::get('jelix~date_time.day.'.$this->day.'.ordinal');
@@ -274,7 +318,7 @@ class jDateTime {
                break;
            case self::RFC822_FORMAT:
            case self::RFC2822_FORMAT:
-               // Note the "x" modifier, otherwise the pattern would look like 
+               // Note the "x" modifier, otherwise the pattern would look like
                // obfuscated code.
                $regexp = "/^
                      (?: (?P<nday> Mon | Tue | Wed | Thu | Fri | Sat | Sun) , )? \s+
@@ -300,7 +344,7 @@ class jDateTime {
                    $this->minute = intval($match['minute']);
                    $this->second = intval($match['second']);
 
-                   # Adjust according to the timezone, so that the stored time 
+                   # Adjust according to the timezone, so that the stored time
                    # corresponds to UTC.
                    $tz = new jDuration(array('hour'=>intval($match['tzhour']),
                        'minute'=>intval($match['tzminute'])));
@@ -374,7 +418,7 @@ class jDateTime {
     /**
      * to know the duration between two dates.
      * @param jDateTime $dt  the date on which a sub will be made with the date on the current object
-     * @param bool $absolute 
+     * @param bool $absolute
      * @return jDuration a jDuration object
      */
     public function durationTo($dt, $absolute=true){
@@ -424,8 +468,8 @@ class jDateTime {
         $this->minute = intval(date('i'));
         $this->second = intval(date('s'));
     }
-    
-    
+
+
     /**
     * Substract a date with another
     * @param jDateTime $date
@@ -438,9 +482,9 @@ class jDateTime {
             $date = new jDateTime();
             $date->now();
         }
-           
+
         $newDate = new jDateTime();
-        
+
         $items = array(
                 'second',
                 'minute',
@@ -507,7 +551,7 @@ class jDateTime {
                     $newDate->{$items[$k+1]}--;
                 }
             }
-        }  
+        }
         return $newDate;
-    } 
+    }
 }
