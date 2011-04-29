@@ -15,6 +15,10 @@ class jDb_profile  extends PHPUnit_Framework_TestCase
         jelix_init_test_env();
     }
 
+    public function tearDown() {
+        jProfiles::clear();
+    }
+
     function testProfile() {
         $p = jProfiles::get('jdb', 'jelix_tests_mysql');
         $expected = array(
@@ -71,4 +75,34 @@ class jDb_profile  extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($profile, $p);
     }
+
+    function testCommonValues() {
+
+        $profile = array(
+            'trace'=> 1,
+            'connection_timeout'=> 10,
+            'exceptions'=> 1
+        );
+
+        jProfiles::createVirtualProfile('acme', '__common__', $profile);
+
+        $profile = array(
+            'wsdl'=> "http://example.com/wsdl1",
+            'connection_timeout'=>25
+        );
+
+        jProfiles::createVirtualProfile('acme', 'foo', $profile);
+
+        $p = jProfiles::get('acme', 'foo');
+        $expected = array(
+            'trace'=> 1,
+            'exceptions'=> 1,
+            'connection_timeout'=>25,
+            'wsdl'=> "http://example.com/wsdl1",
+            '_name'=>'foo',
+        );
+
+        $this->assertEquals($expected, $p);
+    }
+
 }

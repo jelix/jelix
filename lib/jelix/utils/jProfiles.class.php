@@ -59,12 +59,20 @@ class jProfiles {
         $section = $category.':'.$name;
         $targetName = $section;
 
+        if (isset(self::$_profiles[$category.':__common__'])) {
+            $common = self::$_profiles[$category.':__common__'];
+        }
+        else
+            $common = null;
+
         // the name attribute created in this method will be the name of the connection
         // in the connections pool. So profiles of aliases and real profiles should have
         // the same name attribute.
 
         if (isset(self::$_profiles[$section])) {
             self::$_profiles[$section]['_name'] = $name;
+            if ($common)
+                return array_merge($common, self::$_profiles[$section]);
             return self::$_profiles[$section];
         }
         else if (isset(self::$_profiles[$category][$name])) {
@@ -79,6 +87,8 @@ class jProfiles {
 #endif
             if (isset(self::$_profiles[$category.':default'])) {
                 self::$_profiles[$category.':default']['_name'] = 'default';
+                if ($common)
+                    return array_merge($common, self::$_profiles[$category.':default']);
                 return self::$_profiles[$category.':default'];
             }
             elseif (isset(self::$_profiles[$category]['default'])) {
@@ -95,6 +105,8 @@ class jProfiles {
 
         if (isset(self::$_profiles[$targetName]) && is_array(self::$_profiles[$targetName])) {
             self::$_profiles[$targetName]['_name'] = $name;
+            if ($common)
+                return array_merge($common, self::$_profiles[$targetName]['_name']);
             return self::$_profiles[$targetName];
         }
         else {
