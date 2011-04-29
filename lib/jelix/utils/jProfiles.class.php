@@ -106,7 +106,7 @@ class jProfiles {
         if (isset(self::$_profiles[$targetName]) && is_array(self::$_profiles[$targetName])) {
             self::$_profiles[$targetName]['_name'] = $name;
             if ($common)
-                return array_merge($common, self::$_profiles[$targetName]['_name']);
+                return array_merge($common, self::$_profiles[$targetName]);
             return self::$_profiles[$targetName];
         }
         else {
