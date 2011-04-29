@@ -4,8 +4,9 @@
 * @subpackage  db
 #if ENABLE_OPTIMIZED_SOURCE
 * @author      Laurent Jouanneau
-* @contributor Yannick Le Guédart, Laurent Raufaste, Christophe Thiriot
+* @contributor Yannick Le Guédart, Laurent Raufaste, Christophe Thiriot, Julien Issler
 * @copyright   2005-2011 Laurent Jouanneau, 2008 Laurent Raufaste
+* @copyright   2011 Julien Issler
 *
 * Some of this classes were get originally from the Copix project
 * (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -21,9 +22,10 @@
 #includephp jDbResultSet.class.php
 
 #else
-* @author     Laurent Jouanneau
-* @contributor Yannick Le Guédart, Laurent Raufaste
-* @copyright  2005-2011 Laurent Jouanneau
+* @author      Laurent Jouanneau
+* @contributor Yannick Le Guédart, Laurent Raufaste, Julien Issler
+* @copyright   2005-2011 Laurent Jouanneau
+* @copyright   2011 Julien Issler
 *
 * API ideas of this class were get originally from the Copix project (CopixDbFactory, Copix 2.3dev20050901, http://www.copix.org)
 * No lines of code are copyrighted by CopixTeam
@@ -70,7 +72,7 @@ class jSQLLogMessage extends jLogMessage {
 
     public function getDao() {
         foreach ($this->trace as $t) {
-            if (preg_match('/compiled\/daos\/.+\/(.+)~(.+)~.+\.php$/', $t['file'], $m)) {
+            if (isset($t['file']) && preg_match('/compiled\/daos\/.+\/(.+)~(.+)~.+\.php$/', $t['file'], $m)) {
                 return $m[1].'~'.$m[2];
             }
         }
@@ -105,7 +107,7 @@ class jDb {
     /**
     * return a database connector. It uses a temporay pool of connection to reuse
     * currently opened connections.
-    * 
+    *
     * @param string  $name  profile name to use. if empty, use the default one
     * @return jDbConnection  the connector
     */
@@ -198,7 +200,7 @@ class jDb {
     public static function createVirtualProfile ($name, $params) {
         jProfiles::createVirtualProfile('jdb',$name, $params);
     }
-    
+
     /**
      * clear the loaded profiles to force to reload the db profiles file.
      * WARNING: it closes all opened connections !
