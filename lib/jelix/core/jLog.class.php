@@ -111,6 +111,19 @@ class jLog {
         self::_dispatchLog($message);
     }
 
+    /**
+    * log an exception into the given category.
+    * @param Exception $exception
+    * @param string $category the log type
+    */
+    public static function logEx ($exception, $category='default') {
+        $message = new jLogErrorMessage($category,
+                                        $exception->getCode(), $exception->getMessage(),
+                                        $exception->getFile(), $exception->getLine(),
+                                        $exception->getTrace());
+        self::_dispatchLog($message);
+    }
+
     protected static function _dispatchLog($message) {
         global $gJConfig;
         $category = $message->getCategory();
