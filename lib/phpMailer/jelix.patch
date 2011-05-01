@@ -1,5 +1,5 @@
---- class.phpmailer.php.original	2009-11-10 19:04:14.000000000 +0100
-+++ class.phpmailer.php	2010-10-16 17:08:49.000000000 +0200
+--- class.phpmailer.php.original	2010-12-11 10:53:14.000000000 +0100
++++ class.phpmailer.php	2011-05-01 18:34:13.000000000 +0200
 @@ -306,21 +306,21 @@
    // PROPERTIES, PRIVATE AND PROTECTED
    /////////////////////////////////////////////////
@@ -74,6 +74,20 @@
            // implement call back function if it exists
            $isSent = ($rt == 1) ? 1 : 0;
            $this->doCallback($isSent,$val,$this->cc,$this->bcc,$this->Subject,$body);
+@@ -1468,11 +1465,11 @@
+       }
+       if (PHP_VERSION < 6) {
+         $magic_quotes = get_magic_quotes_runtime();
+-        set_magic_quotes_runtime(0);
++        ini_set('magic_quotes_runtime', 0);
+       }
+       $file_buffer  = file_get_contents($path);
+       $file_buffer  = $this->EncodeString($file_buffer, $encoding);
+-      if (PHP_VERSION < 6) { set_magic_quotes_runtime($magic_quotes); }
++      if (PHP_VERSION < 6) { ini_set('magic_quotes_runtime', $magic_quotes); }
+       return $file_buffer;
+     } catch (Exception $e) {
+       $this->SetError($e->getMessage());
 @@ -1953,7 +1950,7 @@
     * @access private
     * @return string
