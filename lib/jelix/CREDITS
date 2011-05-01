@@ -156,6 +156,7 @@ Steven Jehannet (aka Catsoup)
  - fixed issue in the gravatar plugin (#1172)
  - fixed bug in jdao for sqlite + count+ distinct (#1225)
  - jforms, fixed bad detection in modified controls (#1234)
+ - jforms, javascript, fixed bug with grouped data in ajax context (#1325)
 
 Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
