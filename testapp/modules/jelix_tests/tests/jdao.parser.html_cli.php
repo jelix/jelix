@@ -531,7 +531,57 @@ array('foo~bar','')
         </object>'
         ),
 
+        array(
+        '<?xml version="1.0"?>
+        <property name="author_id" fieldname="author_id" datatype="integer" required="true" updatepattern="now()"/>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="author_id"/>
+            <string p="fieldName" value="author_id"/>
+            <string p="table" value="news"/>
+            <string p="datatype" value="integer"/>
+            <string p="unifiedType" value="integer"/>
+            <boolean p="autoIncrement" value="false" />
+            <null p="regExp"/>
+            <boolean p="required" value="true"/>
+            <boolean p="requiredInConditions" value="true"/>
+            <boolean p="isPK" value="false" />
+            <boolean p="isFK" value="true" />
+            <string p="updatePattern" value="%s" />
+            <string p="insertPattern" value="%s" />
+            <string p="selectPattern" value="%s" />
+            <string p="sequenceName" value="" />
+            <null p="maxlength"/>
+            <null p="minlength"/>
+            <boolean p="ofPrimaryTable" value="true" />
+        </object>'
+        ),
 
+        array(
+        '<?xml version="1.0"?>
+        <property name="author_id" fieldname="author_id" datatype="integer" table="news_author" required="true"/>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="author_id"/>
+            <string p="fieldName" value="author_id"/>
+            <string p="table" value="news_author"/>
+            <string p="datatype" value="integer"/>
+            <string p="unifiedType" value="integer"/>
+            <boolean p="autoIncrement" value="false" />
+            <null p="regExp"/>
+            <boolean p="required" value="false"/>
+            <boolean p="requiredInConditions" value="false"/>
+            <boolean p="isPK" value="true" />
+            <boolean p="isFK" value="false" />
+            <string p="updatePattern" value="" />
+            <string p="insertPattern" value="" />
+            <string p="selectPattern" value="%s" />
+            <string p="sequenceName" value="" />
+            <null p="maxlength"/>
+            <null p="minlength"/>
+            <boolean p="ofPrimaryTable" value="false" />
+        </object>'
+        ),
     );
 
     function testProperties() {
@@ -560,4 +610,3 @@ array('foo~bar','')
         }
     }
 }
-
