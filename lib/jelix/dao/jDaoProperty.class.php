@@ -4,7 +4,7 @@
 * @subpackage  dao
 * @author      Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright   2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
+* @copyright   2001-2005 CopixTeam, 2005-2011 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDAODefinitionV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -62,7 +62,7 @@ class jDaoProperty {
     public $isFK = false;
 
     public $datatype;
-    
+
     public $unifiedType;
 
     public $table=null;
@@ -81,7 +81,7 @@ class jDaoProperty {
     public $ofPrimaryTable = true;
 
     public $defaultValue = null;
-    
+
     public $autoIncrement = false;
     /**
     * constructor.
@@ -145,8 +145,15 @@ class jDaoProperty {
         }
 
         $this->isPK = in_array($this->fieldName, $tables[$this->table]['pk']);
-        if(!$this->isPK){
-            $this->isFK = isset($tables[$this->table]['fk'][$this->fieldName]);
+        if(!$this->isPK && $this->table == $parser->getPrimaryTable()){
+            foreach($tables as $table=>$info) {
+                if ($table == $this->table)
+                    continue;
+                if (isset($info['fk']) && in_array($this->fieldName, $info['fk'])) {
+                    $this->isFK = true;
+                    break;
+                }
+            }
         }
         else {
             $this->required = true;
