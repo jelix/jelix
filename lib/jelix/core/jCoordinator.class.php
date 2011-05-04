@@ -355,6 +355,7 @@ class jCoordinator {
                 $HEADBOTTOM = '';
                 $BODYTOP = '';
                 $BODYBOTTOM = '';
+                $basePath = '';
                 header("HTTP/1.1 500 Internal jelix error");
                 header('Content-type: text/html');
                 include($file);
