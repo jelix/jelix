@@ -20,7 +20,7 @@ class jacl2dbModuleUpgrader_codegroup extends jInstallerModule {
         try {
             $cn->beginTransaction();
 
-            $this->execSQLScript('sql/upgrade_codegroup_1');
+            $this->execSQLScript('sql/upgrade_codegroup_1',null,false);
 
             $rs = $cn->query("SELECT code, g.id_aclgrp FROM ".$cn->prefixTable('jacl2_group')." g,"
                              .$cn->prefixTable('jacl2_user_group')." ug WHERE g.id_aclgrp = ug.id_aclgrp");
@@ -32,7 +32,7 @@ class jacl2dbModuleUpgrader_codegroup extends jInstallerModule {
             foreach ($rs as $row) {
                 $cn->exec("UPDATE ".$cn->prefixTable('jacl2_rights')." SET code_grp = ".$cn->quote($row->code)." WHERE id_aclgrp=".$row->id_aclgrp);
             }
-            $this->execSQLScript('sql/upgrade_codegroup_2');
+            $this->execSQLScript('sql/upgrade_codegroup_2',null,false);
             $cn->commit();
         } catch(Exception $e) {
             $cn->rollback();

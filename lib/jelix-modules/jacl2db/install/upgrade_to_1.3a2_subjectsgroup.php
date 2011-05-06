@@ -27,7 +27,7 @@ class jacl2dbModuleUpgrader_subjectsgroup extends jInstallerModule {
 
             $cn->exec("ALTER TABLE ".$cn->prefixTable('jacl2_subject')." ADD id_aclsbjgrp VARCHAR(50) DEFAULT NULL");
 
-            $this->execSQLScript('sql/upgrade_subjectgroup_data.sql');
+            $this->execSQLScript('sql/upgrade_subjectgroup_data.sql',null,false);
 
             $cn->commit();
         } catch(Exception $e) {
