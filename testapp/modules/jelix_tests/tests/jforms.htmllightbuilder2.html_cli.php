@@ -78,7 +78,7 @@ class UTjformsHTMLLightBuilder2 extends jUnitTestCaseDb {
         $this->assertEqualOrDiff('', $out);
 
 
-        $expected = '<fieldset><legend>Your identity</legend>'."\n";
+        $expected = '<fieldset id="'.$this->formname.'_identity"><legend>Your identity</legend>'."\n";
         $expected .= '<table class="jforms-table-group" border="0">'."\n";
         $expected .= '<tr><th scope="row"><label class="jforms-label jforms-required" for="'.$this->formname.'_nom" id="'.$this->formname.'_nom_label">Your name<span class="jforms-required-star">*</span></label>'."\n".'</th>'."\n";
         $expected .= '<td><input name="nom" id="'.$this->formname.'_nom" class="jforms-ctrl-input jforms-required" value="" type="text"/>'."\n".'</td></tr>'."\n";
@@ -113,7 +113,7 @@ jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         $group->setReadOnly(true);
-        $expected = '<fieldset><legend>Your identity</legend>'."\n";
+        $expected = '<fieldset id="'.$this->formname.'_identity"><legend>Your identity</legend>'."\n";
         $expected .= '<table class="jforms-table-group" border="0">'."\n";
         $expected .= '<tr><th scope="row"><label class="jforms-label" for="'.$this->formname.'_nom" id="'.$this->formname.'_nom_label">Your name</label>'."\n".'</th>'."\n";
         $expected .= '<td><input name="nom" id="'.$this->formname.'_nom" readonly="readonly" class="jforms-ctrl-input jforms-readonly" value="" type="text"/>'."\n".'</td></tr>'."\n";
@@ -420,4 +420,3 @@ jForms.declareForm(jForms.tForm);
 
     }
 }
-

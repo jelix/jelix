@@ -957,7 +957,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     protected function outputGroup($ctrl, &$attr) {
-        echo '<fieldset><legend>',htmlspecialchars($ctrl->label),"</legend>\n";
+        echo '<fieldset id="',$attr['id'],'"><legend>',htmlspecialchars($ctrl->label),"</legend>\n";
         echo '<table class="jforms-table-group" border="0">',"\n";
         foreach( $ctrl->getChildControls() as $ctrlref=>$c){
             if($c->type == 'submit' || $c->type == 'reset' || $c->type == 'hidden') continue;
