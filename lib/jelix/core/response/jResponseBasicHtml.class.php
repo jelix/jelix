@@ -3,7 +3,9 @@
  * @package     jelix
  * @subpackage  core_response
  * @author      Laurent Jouanneau
+ * @contributor Julien Issler
  * @copyright   2010 Laurent Jouanneau
+ * @copyright   2011 Julien Issler
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -106,7 +108,7 @@ class jResponseBasicHtml extends jResponse {
      * @var array  array of jIHTMLResponsePlugin
      * @since 1.3a1
      */
-    protected $_plugins;
+    protected $plugins = array();
 
     /**
     * constructor;
