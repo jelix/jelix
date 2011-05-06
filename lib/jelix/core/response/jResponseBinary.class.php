@@ -99,7 +99,7 @@ final class jResponseBinary  extends jResponse {
      * set all headers to force download
      */
     protected function _downloadHeader(){
-        $this->addHttpHeader('Content-Disposition','attachment; filename="'.$this->outputFileName.'"', false);
+        $this->addHttpHeader('Content-Disposition','attachment; filename="'.str_replace('"','\"',$this->outputFileName).'"', false);
         $this->addHttpHeader('Content-Description','File Transfert', false);
         $this->addHttpHeader('Content-Transfer-Encoding','binary', false);
         $this->addHttpHeader('Pragma','public', false);

@@ -286,7 +286,7 @@ class jDateTime {
                }
                break;
            case self::ISO8601_FORMAT:
-               if($ok=preg_match('/^(\d{4})(?:\-(\d{2})(?:\-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{2}))?)?(Z|([+\-])(\d{2}):(\d{2})))?)?)?$/', $str, $match)){
+               if($ok=preg_match('/^(\d{4})(?:\-(\d{2})(?:\-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{2,3}))?)?(Z|([+\-])(\d{2}):(\d{2})))?)?)?$/', $str, $match)){
                     $c = count($match)-1;
                     $this->year = intval($match[1]);
                     if($c<2) break;
