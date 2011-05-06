@@ -1046,7 +1046,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             }else{
                 $name=$ctrl->ref;
             }
-            echo '<span class="jforms-help" id="'. $this->_name.'-help"><span>'.htmlspecialchars($ctrl->help).'</span></span>';
+            echo '<span class="jforms-help" id="'. $this->_name.'_'.$ctrl->ref.'-help"><span>'.htmlspecialchars($ctrl->help).'</span></span>';
         }
     }
 }
