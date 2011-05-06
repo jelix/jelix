@@ -119,7 +119,7 @@ class jDateTime {
      * @return bool true if the date/time are valid.
      */
     private function _check() {
-        // Only check the date if it is defined (eg. day, month and year are 
+        // Only check the date if it is defined (eg. day, month and year are
         // strictly positive).
         if($this->day > 0 && $this->month > 0 && $this->year > 0
             && !checkdate($this->month, $this->day, $this->year))
@@ -193,11 +193,11 @@ class jDateTime {
                break;
            case self::FULL_LANG_DATE:
                $t = mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
-               // traduction du mois	
+               // traduction du mois
                $month = jLocale::get('jelix~date_time.month.'.date('m',$t).'.label');
                // traduction du jour
                $day = jLocale::get('jelix~date_time.day.'.date('w',$t).'.label');
-               // récupération du formatage de la date	
+               // récupération du formatage de la date
                $lf = jLocale::get('jelix~format.date_full');
                // récupération du format ordinal du jour dans le mois surtout pour le format en anglais (1st, 2nd, 3rd et th pour les autres
                $ordinal = jLocale::get('jelix~date_time.day.'.$this->day.'.ordinal');
@@ -285,7 +285,7 @@ class jDateTime {
                }
                break;
            case self::ISO8601_FORMAT:
-               if($ok=preg_match('/^(\d{4})(?:\-(\d{2})(?:\-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{2}))?)?(Z|([+\-])(\d{2}):(\d{2})))?)?)?$/', $str, $match)){
+               if($ok=preg_match('/^(\d{4})(?:\-(\d{2})(?:\-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{2,3}))?)?(Z|([+\-])(\d{2}):(\d{2})))?)?)?$/', $str, $match)){
                     $c = count($match)-1;
                     $this->year = intval($match[1]);
                     if($c<2) break;
@@ -317,7 +317,7 @@ class jDateTime {
                break;
            case self::RFC822_FORMAT:
            case self::RFC2822_FORMAT:
-               // Note the "x" modifier, otherwise the pattern would look like 
+               // Note the "x" modifier, otherwise the pattern would look like
                // obfuscated code.
                $regexp = "/^
                      (?: (?P<nday> Mon | Tue | Wed | Thu | Fri | Sat | Sun) , )? \s+
@@ -343,7 +343,7 @@ class jDateTime {
                    $this->minute = intval($match['minute']);
                    $this->second = intval($match['second']);
 
-                   # Adjust according to the timezone, so that the stored time 
+                   # Adjust according to the timezone, so that the stored time
                    # corresponds to UTC.
                    $tz = new jDuration(array('hour'=>intval($match['tzhour']),
                        'minute'=>intval($match['tzminute'])));
@@ -417,7 +417,7 @@ class jDateTime {
     /**
      * to know the duration between two dates.
      * @param jDateTime $dt  the date on which a sub will be made with the date on the current object
-     * @param bool $absolute 
+     * @param bool $absolute
      * @return jDuration a jDuration object
      */
     public function durationTo($dt, $absolute=true){
@@ -467,8 +467,8 @@ class jDateTime {
         $this->minute = intval(date('i'));
         $this->second = intval(date('s'));
     }
-    
-    
+
+
     /**
     * Substract a date with another
     * @param jDateTime $date
@@ -481,9 +481,9 @@ class jDateTime {
             $date = new jDateTime();
             $date->now();
         }
-           
+
         $newDate = new jDateTime();
-        
+
         $items = array(
                 'second',
                 'minute',
@@ -550,7 +550,7 @@ class jDateTime {
                     $newDate->{$items[$k+1]}--;
                 }
             }
-        }  
+        }
         return $newDate;
-    } 
+    }
 }
