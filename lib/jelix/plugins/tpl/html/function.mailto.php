@@ -7,7 +7,8 @@
  *          (Smarty online manual)
  * @link http://jelix.org/
  * @author   Monte Ohrt <monte at ohrt dot com>
- * @contributor Jason Sweat (added cc, bcc and subject functionality)
+ * @contributor Jason Sweat (added cc, bcc and subject functionality), Julien Issler
+ * @copyright 2011 Julien Issler
  */
 
 /**
@@ -28,7 +29,7 @@ function jtpl_function_html_mailto($tpl,$params)
     $extra = '';
 
     if (empty($params['address'])) {
-        throw new jException("jelix~errors.tplplugin.function.argument.unknown", array('address','mailto',$tpl->_templateName)); 
+        throw new jException("jelix~errors.tplplugin.function.argument.unknown", array('address','mailto',$tpl->_templateName));
     } else {
         $address = $params['address'];
     }
@@ -48,7 +49,7 @@ function jtpl_function_html_mailto($tpl,$params)
                 if (!empty($value))
                     $mail_parms[] = $var.'='.str_replace($search,$replace,rawurlencode($value));
                 break;
-                
+
             case 'subject':
             case 'newsgroups':
                 $mail_parms[] = $var.'='.rawurlencode($value);
@@ -82,27 +83,29 @@ function jtpl_function_html_mailto($tpl,$params)
             $js_encode .= '%' . bin2hex($string[$x]);
         }
 
-        echo '<script type="text/javascript">eval(unescape(\''.$js_encode.'\'))</script>';
+        echo '<script type="text/javascript">//<![CDATA[
+eval(unescape(\''.$js_encode.'\')); //]]>
+</script>';
 
     } elseif ($encode == 'javascript_charcode' ) {
         $string = '<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>';
 
         for($x = 0, $y = strlen($string); $x < $y; $x++ ) {
-            $ord[] = ord($string[$x]);   
+            $ord[] = ord($string[$x]);
         }
 
-        $_ret = "<script type=\"text/javascript\" language=\"javascript\">\n";
-        $_ret .= "<!--\n";
+        $_ret = "<script type=\"text/javascript\">\n";
+        $_ret .= "//<![CDATA[\n";
         $_ret .= "{document.write(String.fromCharCode(";
         $_ret .= implode(',',$ord);
         $_ret .= "))";
         $_ret .= "}\n";
-        $_ret .= "//-->\n";
+        $_ret .= "//]]>\n";
         $_ret .= "</script>\n";
-        
+
         echo $_ret;
-        
-        
+
+
     } elseif ($encode == 'hex') {
 
         preg_match('!^(.*)(\?.*)$!',$address,$match);

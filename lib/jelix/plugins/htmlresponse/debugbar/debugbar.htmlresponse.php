@@ -3,7 +3,9 @@
 * @package     jelix
 * @subpackage  responsehtml_plugin
 * @author      Laurent Jouanneau
+* @contributor Julien Issler
 * @copyright   2010-2011 Laurent Jouanneau
+* @copyright   2011 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -20,7 +22,7 @@ interface jIDebugbarPlugin {
     function getCss();
 
     /**
-     * @return string Javascript code lines 
+     * @return string Javascript code lines
      */
     function getJavascript();
 
@@ -151,9 +153,9 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
 #includeraw debugbar.css
 '.$css.'
 </style>
-<script type="text/javascript">
+<script type="text/javascript">//<![CDATA[
 #includeraw debugbar.js|jspacker|escquote
-'.$js.'
+'.$js.' //]]>
 </script>
 ');
     }
@@ -234,7 +236,7 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
     function addInfo($info) {
         $this->tabs[] = $info;
     }
-    
+
     /**
      * returns html formated stack trace
      * @param array $trace
@@ -274,7 +276,7 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
                 }
                 if ($path != '') {
                     $cut = ($path[0] == '/'?0:1);
-                    $file = '<i>'.$shortcut.'</i>'.substr($file, strlen($path)+$cut); 
+                    $file = '<i>'.$shortcut.'</i>'.substr($file, strlen($path)+$cut);
                 }
             }
             else {
