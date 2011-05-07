@@ -257,6 +257,7 @@ jManifest::$stripComment = false;
 if($ENABLE_DEVELOPER){
     jManifest::process('build/manifests/jelix-dev.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
+jManifest::process('build/manifests/jelix-scripts.mn','.', $BUILD_TARGET_PATH , ENV::getAll());
 jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , ENV::getAll());
 jManifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
 jManifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
