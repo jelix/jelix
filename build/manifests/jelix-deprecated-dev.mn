@@ -6,6 +6,18 @@ cd lib/jelix/docs/ns
 
 cd lib/jelix-scripts/
   scripts.conf.php
+  my.default.conf.php.dist
+  default.conf.php
+  jelix.php
+  jelix
+  init
+
+cd lib/jelix-scripts/commands
+  createapp.cmd.php
+
+cd lib/jelix-scripts/includes
+  command.class.php
+  utils.lib.php
 
 rmd lib/jelix-scripts/modules/beta_migrating
 

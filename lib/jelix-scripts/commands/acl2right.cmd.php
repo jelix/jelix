@@ -24,7 +24,7 @@ ACTION:
  * add groupid sujet [resource]
  * [-allres] remove groupid sujet [resource]
  * subject_create subject labelkey [grouplabelkey]
- * subject_delete subject 
+ * subject_delete subject
  * subject_list
  * subject_group_list
  * subject_group_add group labelkey
@@ -39,7 +39,7 @@ ACTION:
  * add  groupid subject [resource]
  * [-allres] remove groupid subject [resource]
  * subject_create subject labelkey [grouplabelkey]
- * subject_delete subject 
+ * subject_delete subject
  * subject_list
  * subject_group_list
  * subject_group_add group labelkey
@@ -74,7 +74,7 @@ ACTION:
 
 
     public function run(){
-        jxs_init_jelix_env();
+        $this->loadAppConfig();
         $action = $this->getParam('action');
         if(!in_array($action,array('list','add','remove',
                                    'subject_create','subject_delete','subject_list',
@@ -84,7 +84,7 @@ ACTION:
         }
 
         $meth= 'cmd_'.$action;
-        echo "----", $this->titles[MESSAGE_LANG][$action],"\n\n";
+        echo "----", $this->titles[$this->config->helpLang][$action],"\n\n";
         $this->$meth();
     }
 
@@ -235,7 +235,7 @@ ACTION:
             throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection('jacl2_profile');
- 
+
         $sql="SELECT id_aclsbj FROM ".$cnx->prefixTable('jacl2_subject')
             ." WHERE id_aclsbj=".$cnx->quote($params[0]);
         $rs = $cnx->query($sql);
@@ -299,7 +299,7 @@ ACTION:
             throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection('jacl2_profile');
- 
+
         $sql="SELECT id_aclsbjgrp FROM ".$cnx->prefixTable('jacl2_subject_group')
             ." WHERE id_aclsbjgrp=".$cnx->quote($params[0]);
         $rs = $cnx->query($sql);
@@ -364,4 +364,3 @@ ACTION:
     }
 
 }
-

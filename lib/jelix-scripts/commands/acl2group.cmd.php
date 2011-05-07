@@ -50,7 +50,7 @@ ACTION:
 jAcl2: user group management
 
 ACTION:
- * list    
+ * list
     list users groups
  * userslist groupid
     list users of a group
@@ -106,7 +106,7 @@ ACTION:
 
 
     public function run(){
-        jxs_init_jelix_env();
+        $this->loadAppConfig();
         $action = $this->getParam('action');
         if(!in_array($action,array('list','create','setdefault','changename',
             'delete','userslist','alluserslist','adduser','removeuser','createuser','destroyuser'))){
@@ -114,7 +114,7 @@ ACTION:
         }
 
         $meth= 'cmd_'.$action;
-        echo "----", $this->titles[MESSAGE_LANG][$action],"\n\n";
+        echo "----", $this->titles[$this->config->helpLang][$action],"\n\n";
         $this->$meth();
     }
 
@@ -158,7 +158,7 @@ ACTION:
 
         $sql="SELECT login, u.id_aclgrp, name FROM "
             .$cnx->prefixTable('jacl2_user_group')." u, "
-            .$cnx->prefixTable('jacl2_group')." g 
+            .$cnx->prefixTable('jacl2_group')." g
             WHERE g.grouptype <2 AND u.id_aclgrp = g.id_aclgrp ORDER BY login";
 
         $rs = $cnx->query($sql);

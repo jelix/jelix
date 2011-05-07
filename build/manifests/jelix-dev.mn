@@ -110,12 +110,8 @@ cd lib/simpletest/test/support/collector
   collectable.2
 
 cd lib/jelix-scripts
-  my.default.conf.php.dist
-  default.conf.php
-  jelix.php
-  jelix
+  createapp.php
   LICENCE
-  init
   INSTALL
   CREDITS
 cd lib/jelix-scripts/commands
@@ -127,7 +123,6 @@ cd lib/jelix-scripts/commands
   cleartemp.cmd.php
   closeapp.cmd.php
   createaction.cmd.php
-  createapp.cmd.php
   createctrl.cmd.php
   createdao.cmd.php
   createclassfromdao.cmd.php
@@ -142,14 +137,21 @@ cd lib/jelix-scripts/commands
   installmodule.cmd.php
   openapp.cmd.php
   migrate.cmd.php
+cd lib/jelix-scripts/commands-single/
+  createapp.cmd.php
 cd lib/jelix-scripts/includes
-  command.class.php
-  utils.lib.php
+  cmd.inc.php
+  JelixScript.class.php
+  JelixScriptCommand.class.php
+  JelixScriptCommandConfig.class.php
+  scripts.inc.php
 cd lib/jelix-scripts/templates
   project.xml.tpl
   application.init.php.tpl
+  cmd.php.tpl
   htaccess_deny
   htaccess_allow
+  jelix-scripts.ini
 cd lib/jelix-scripts/templates/installer/
   installer.php.tpl
 cd lib/jelix-scripts/templates/module/

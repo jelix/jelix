@@ -2,7 +2,7 @@
 /**
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
-* @contributor 
+* @contributor
 * @copyright   2008-2011 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -20,7 +20,7 @@ class initadminCommand extends JelixScriptCommand {
     public  $syntaxhelp = "[-v] [-noauthdb] [-noacl2db] [-profile a_jdb_profile] entrypoint";
     public  $help='';
 
-    function __construct(){
+    function __construct($config){
         $this->help= array(
             'fr'=>"
     Initialise l'application avec interface d'administration en utilisant
@@ -29,29 +29,30 @@ class initadminCommand extends JelixScriptCommand {
     Les options -noauthdb et -noacl2db indiquent de ne pas utiliser et configurer
     respectivement le driver db pour jAuth et le driver db pour jAcl2. La configuration
     de jAcl2 et de jAuth pour l'accés à l'administration sera donc à votre charge.
-    
+
     L'option -profile permet d'indiquer le profil jDb à utiliser pour les drivers
     db de jAuth et jAcl2.
-    
+
     L'argument entrypoint permet d'indique le point d'entrée qui sera utilisé pour
     l'administration. Attention, si le point d'entrée existe déjà, il sera reconfiguré.
     ",
             'en'=>"
     Initialize the application with a web interface for administration, by activating
     the module master_admin and configuring jAuth and jAcl.
-    
+
     Options -noauthdb and -noacl2db indicate to not use and to not configure
     the driver 'db' of jAuth and the driver 'db' of jAcl2. So you will have to
     configure jAuth and/or jAcl2 by yourself.
-    
+
     The argument 'entrypoint' indicates the entry point to use for the administration.
     Carefull : if the entry point already exists, its configuration will be changed.
     ",
     );
+        parent::__construct($config);
     }
 
     public function run(){
-        jxs_init_jelix_env();
+        $this->loadAppConfig();
         $entrypoint = $this->getParam('entrypoint');
         if (($p = strpos($entrypoint, '.php')) !== false)
             $entrypoint = substr($entrypoint,0,$p);
@@ -60,8 +61,8 @@ class initadminCommand extends JelixScriptCommand {
 
         if ($ep == null) {
             try {
-                $cmd = jxs_load_command('createentrypoint');
-                $cmd->init(array(),array('name'=>$entrypoint));
+                $cmd = JelixScript::getCommand('createentrypoint', $this->config);
+                $cmd->initOptParam(array(),array('name'=>$entrypoint));
                 $cmd->run();
                 $this->projectXml = null;
                 $ep = $this->getEntryPointInfo($entrypoint);
@@ -72,7 +73,7 @@ class initadminCommand extends JelixScriptCommand {
         }
 
         $installConfig = new jIniFileModifier(jApp::configPath('installer.ini.php'));
-        
+
         $inifile = new jIniMultiFilesModifier(jApp::configPath('defaultconfig.ini.php'),
                                           jApp::configPath($ep['config']));
 
@@ -109,7 +110,7 @@ class initadminCommand extends JelixScriptCommand {
         }
         else {
             $urlconf2 = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints');
-            
+
             if(strpos($urlconf, 'jacl2db_admin~*@classic') === false)
                 $urlconf .= ',jacl2db_admin~*@classic';
             if(strpos($urlconf, 'jauthdb_admin~*@classic') === false)
@@ -137,7 +138,7 @@ class initadminCommand extends JelixScriptCommand {
 
         $inifile->save();
 
-        require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
+        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
         $verbose = $this->getOption("-v");
 
         $reporter = new textInstallReporter(($verbose? 'notice':'warning'));
@@ -183,4 +184,3 @@ class initadminCommand extends JelixScriptCommand {
         }
     }
 }
-

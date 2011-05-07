@@ -34,7 +34,7 @@ ACTION:
     pour celui indiqué en paramètre
  * add value labelkey rvgid
     ajoute une valeur dans le groupe de valeurs rvgid
- * delete value rvgid 
+ * delete value rvgid
     enlève une valeur du groupe de valeurs rvgid
 ",
         'en'=>"
@@ -55,7 +55,7 @@ ACTION:
     given group
  * add value labelkey rvgid
     add a value in a group (rvgid= group id)
- * delete value rvgid 
+ * delete value rvgid
     remove a value from a group (rvgid= group id)
 ",
     );
@@ -81,14 +81,14 @@ ACTION:
 
 
     public function run(){
-        jxs_init_jelix_env();
+        $this->loadAppConfig();
         $action = $this->getParam('action');
         if(!in_array($action,array('group_list','group_add','group_delete','list','add','delete'))){
             throw new Exception("unknown subcommand");
         }
 
         $meth= 'cmd_'.$action;
-        echo "----", $this->titles[MESSAGE_LANG][$action],"\n\n";
+        echo "----", $this->titles[$this->config->helpLang][$action],"\n\n";
         $this->$meth();
     }
 
@@ -159,7 +159,7 @@ ACTION:
         $bygroup=false;
         if(!is_array($params)|| count($params) == 0){
             $sql="SELECT value, a.label_key, b.label_key as group_label_key, b.id_aclvalgrp
-                   FROM jacl_right_values a,jacl_right_values_group b 
+                   FROM jacl_right_values a,jacl_right_values_group b
                    WHERE a.id_aclvalgrp = b.id_aclvalgrp  ORDER BY a.id_aclvalgrp, value";
             $bygroup=true;
         }else{
@@ -238,9 +238,9 @@ ACTION:
             throw new Exception("Unknown value or group id");
         }
 
-        $sql ='SELECT count(*) as n 
-                FROM jacl_subject s, jacl_rights r 
-                WHERE 
+        $sql ='SELECT count(*) as n
+                FROM jacl_subject s, jacl_rights r
+                WHERE
                     s.id_aclvalgrp='.intval($params[1]).'
                 AND s.id_aclsbj = r.id_aclsbj
                 AND r.value = '.$cnx->quote($params[0]);
@@ -262,4 +262,3 @@ ACTION:
         echo "OK\n";
     }
 }
-

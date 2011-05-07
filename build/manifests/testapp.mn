@@ -3,6 +3,7 @@ cd testapp
   .htaccess
   application.init.php
   INSTALL.txt
+  cmd.php
 cd testapp/plugins
   .htaccess
 cd testapp/responses
@@ -312,6 +313,8 @@ cd testapp/tests-jelix/jelix/db/
   jDb_profilesTest.php
 cd testapp/tests-jelix/jelix/forms/
   jforms_init_from_requestTest.php
+cd testapp/tests-jelix/jelix-scripts/
+  commandTest.php
 
 cd testapp/tests/
   runtests.php

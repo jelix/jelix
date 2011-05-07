@@ -16,8 +16,6 @@ class installappCommand extends JelixScriptCommand {
     public  $allowed_options = array('-v'=>false);
     public  $allowed_parameters = array();
 
-    public  $applicationMustExist = false;
-
     public  $syntaxhelp = "[-v]";
     public  $help = '';
 
@@ -37,7 +35,7 @@ class installappCommand extends JelixScriptCommand {
     }
 
     public function run(){
-        require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
+        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
         jAppManager::close();
         if ($this->getOption("-v"))

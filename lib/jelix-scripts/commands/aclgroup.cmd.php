@@ -37,7 +37,7 @@ ACTION:
 jAcl: user group management
 
 ACTION:
- * list    
+ * list
     list users groups
  * [-defaultgroup] create name
      create a group. If there is -defaultgroup option, this new group
@@ -71,14 +71,14 @@ ACTION:
 
 
     public function run(){
-        jxs_init_jelix_env();
+        $this->loadAppConfig();
         $action = $this->getParam('action');
         if(!in_array($action,array('list','create','setdefault','changename','delete'))){
             throw new Exception("unknown subcommand");
         }
 
         $meth= 'cmd_'.$action;
-        echo "----", $this->titles[MESSAGE_LANG][$action],"\n\n";
+        echo "----", $this->titles[$this->config->helpLang][$action],"\n\n";
         $this->$meth();
     }
 
@@ -201,4 +201,3 @@ ACTION:
         echo "OK\n";
     }
 }
-

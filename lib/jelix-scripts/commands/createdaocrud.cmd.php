@@ -23,9 +23,9 @@ class createdaocrudCommand extends JelixScriptCommand {
 
     -profile (facultatif) : indique le profil à utiliser pour se connecter à
                            la base et récupérer les informations de la table
-                           
+
     -createlocales (facultatif) : crée les fichiers locales avec les champs du formulaire
-    
+
     MODULE : le nom du module où stocker le contrôleur
     TABLE : le nom de la table SQL
     CTRLNAME (facultatif) : nom du contrôleur (par défaut, celui de la table)",
@@ -35,7 +35,7 @@ class createdaocrudCommand extends JelixScriptCommand {
 
     -profile (optional) : indicate the name of the profile to use for the
                         database connection.
-                        
+
     -createlocales (optional) : creates the locales files with the form's values.
 
     MODULE: name of the module where to create the crud
@@ -46,7 +46,7 @@ class createdaocrudCommand extends JelixScriptCommand {
 
     public function run(){
 
-        jxs_init_jelix_env();
+        $this->loadAppConfig();
         $path= $this->getModulePath($this->_parameters['module']);
 
         $table = $this->getParam('table');
@@ -56,31 +56,30 @@ class createdaocrudCommand extends JelixScriptCommand {
             throw new Exception("controller '".$ctrlname."' already exists");
         }
 
-        $agcommand = jxs_load_command('createdao');
+        $agcommand = JelixScript::getCommand('createdao', $this->config);
         $options = array();
         $profile = '';
         if ($this->getOption('-profile')) {
             $profile = $this->getOption('-profile');
             $options = array('-profile'=>$profile);
         }
-        $agcommand->init($options,array('module'=>$this->_parameters['module'], 'name'=>$table,'table'=>$table));
+        $agcommand->initOptParam($options,array('module'=>$this->_parameters['module'], 'name'=>$table,'table'=>$table));
         $agcommand->run();
 
-        $agcommand = jxs_load_command('createform');
+        $agcommand = JelixScript::getCommand('createform', $this->config);
          if ($this->getOption('-createlocales')) {
             $options = array('-createlocales'=>true);
         }
-        
-        $agcommand->init($options,array('module'=>$this->_parameters['module'], 'form'=>$table,'dao'=>$table));
+
+        $agcommand->initOptParam($options,array('module'=>$this->_parameters['module'], 'form'=>$table,'dao'=>$table));
         $agcommand->run();
 
         $this->createDir($path.'controllers/');
-        $params = array('name'=>$ctrlname, 
+        $params = array('name'=>$ctrlname,
                 'module'=>$this->_parameters['module'],
                 'table'=>$table,
                 'profile'=>$profile);
-        
+
         $this->createFile($path.'controllers/'.$ctrlname.'.classic.php','module/controller.daocrud.tpl',$params);
     }
 }
-

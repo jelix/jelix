@@ -1,0 +1,50 @@
+<?php
+/**
+* @package     jelix-scripts
+* @author      Laurent Jouanneau
+* @contributor Loic Mathaud
+* @copyright   2005-2011 Laurent Jouanneau
+* @link        http://jelix.org
+* @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
+*/
+
+// caller script should setup :
+// $commandName
+
+error_reporting(E_ALL);
+define ('JELIX_SCRIPTS_PATH', dirname(__FILE__).'/../');
+
+if (PHP_SAPI != 'cli') {
+    echo "Wrong way";
+    exit(1);
+}
+
+// ------------- retrieve the name of the jelix command
+
+$argv = $_SERVER['argv'];
+$scriptName = array_shift($argv); // shift the script name
+
+// ------------ load the config and retrieve the command object
+require (JELIX_SCRIPTS_PATH.'../jelix/init.php');
+require (JELIX_SCRIPTS_PATH.'includes/JelixScript.class.php');
+
+set_error_handler('JelixScriptsErrorHandler');
+set_exception_handler('JelixScriptsExceptionHandler');
+
+$command = JelixScript::getCommand($commandName, null, true);
+
+if (jApp::isInit()) {
+    echo "Error: shouldn't run within an application\n";
+    exit(1);
+}
+if ($command->applicationRequirement == $command::APP_MUST_EXIST) {
+    echo "Error: This command needs an existing application\n";
+    exit(1);
+}
+
+// --------- launch the command now
+
+$command->init($argv);
+$command->run();
+
+exit(0);

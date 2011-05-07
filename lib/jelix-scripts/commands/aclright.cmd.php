@@ -24,7 +24,7 @@ ACTION:
  * add groupid sujet value [resource]
  * [-allres] remove groupid sujet value [resource]
  * subject_create subject labelkey valuegroup
- * subject_delete subject 
+ * subject_delete subject
  * subject_list
 ",
         'en'=>"
@@ -35,7 +35,7 @@ ACTION:
  * add  groupid subject value [resource]
  * [-allres] remove groupid subject value [resource]
  * subject_create subject labelkey valuegroup
- * subject_delete subject 
+ * subject_delete subject
  * subject_list
 ",
     );
@@ -61,14 +61,14 @@ ACTION:
 
 
     public function run(){
-        jxs_init_jelix_env();
+        $this->loadAppConfig();
         $action = $this->getParam('action');
         if(!in_array($action,array('list','add','remove','subject_create','subject_delete','subject_list'))){
             throw new Exception("unknown subcommand");
         }
 
         $meth= 'cmd_'.$action;
-        echo "----", $this->titles[MESSAGE_LANG][$action],"\n\n";
+        echo "----", $this->titles[$this->config->helpLang][$action],"\n\n";
         $this->$meth();
     }
 
@@ -76,7 +76,7 @@ ACTION:
     protected function cmd_list(){
         $sql="SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, r.value , name as grp, s.label_key as subject
                 FROM jacl_rights r, jacl_group g, jacl_subject s
-                WHERE 
+                WHERE
                     r.id_aclgrp = g.id_aclgrp
                  AND r.id_aclsbj=s.id_aclsbj
                 ORDER BY name, subject, value,id_aclres ";
@@ -115,7 +115,7 @@ ACTION:
         else
             $resource = $cnx->quote('');
 
-        $sql="SELECT * FROM jacl_rights 
+        $sql="SELECT * FROM jacl_rights
                 WHERE id_aclgrp=".$group."
                 AND id_aclsbj=".$subject."
                 AND id_aclres=".$resource."
@@ -169,7 +169,7 @@ ACTION:
         else
             $resource = '';
 
-        $sql="SELECT * FROM jacl_rights 
+        $sql="SELECT * FROM jacl_rights
                 WHERE id_aclgrp=".$group."
                 AND id_aclsbj=".$subject."
                 AND value=".$value;
@@ -216,7 +216,7 @@ ACTION:
             throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection('jacl_profile');
- 
+
         $sql="SELECT id_aclsbj FROM jacl_subject WHERE id_aclsbj=".$cnx->quote($params[0]);
         $rs = $cnx->query($sql);
         if($rs->fetch()){
@@ -263,4 +263,3 @@ ACTION:
     }
 
 }
-

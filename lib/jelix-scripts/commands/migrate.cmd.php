@@ -3,7 +3,7 @@
 /**
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
-* @contributor 
+* @contributor
 * @copyright   2010-2011 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -22,12 +22,10 @@ class migrateCommand extends JelixScriptCommand {
     public  $allowed_options = array('-v'=>false);
     public  $allowed_parameters = array();
 
-    public  $applicationMustExist = true;
-
     public  $syntaxhelp = "[-v]";
     public  $help = '';
 
-    function __construct(){
+    function __construct($config){
         $this->help= array(
             'fr'=>"
     migre une application jelix 1.1  vers jelix 1.2
@@ -40,6 +38,7 @@ class migrateCommand extends JelixScriptCommand {
     Option -v: verbose mode.
     ",
     );
+        parent::__construct($config);
     }
 
     public function run(){
@@ -58,7 +57,7 @@ class migrateCommand extends JelixScriptCommand {
 
         // launch jInstaller
         if ($this->checkStep("Install virtually all modules")) {
-            require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
+            require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
             $reporter = new textInstallReporter();
             $install = new jInstaller($reporter);
             $install->forceModuleVersion('jacl2db', '1.1');
@@ -314,11 +313,11 @@ class migrateCommand extends JelixScriptCommand {
         if (!$this->checkStep("Update the project.xml file"))
             return;
         $doc = $this->projectXml;
-        
+
         $this->updateInfo($doc, '', '');
 
         $this->updateJelixDependency($doc);
-        
+
         $dep = $this->nextElementSibling($this->firstElementChild($doc->documentElement));
         $dir = $this->nextElementSibling($dep, 'directories');
 
@@ -334,7 +333,7 @@ class migrateCommand extends JelixScriptCommand {
         if (!file_exists($modulexml)) {
             $param = array();
             $param['module'] = $module->name;
-            $param['default_id'] = $module->name.JELIXS_INFO_DEFAULT_IDSUFFIX;
+            $param['default_id'] = $module->name.$this->config->infoIDSuffix;
             $param['version'] = '1.0';
             $this->createFile($modulexml, 'module/module.xml.tpl', $param);
             return;
@@ -346,7 +345,7 @@ class migrateCommand extends JelixScriptCommand {
            throw new Exception("cannot load $modulexml");
         }
 
-        $this->updateInfo($doc, $module->name.JELIXS_INFO_DEFAULT_IDSUFFIX, $module->name);
+        $this->updateInfo($doc, $module->name.$this->config->infoIDSuffix, $module->name);
 
         $this->updateJelixDependency($doc);
 
@@ -379,7 +378,7 @@ class migrateCommand extends JelixScriptCommand {
      * update informations about jelix version in a module.xml or project.xml file
      */
     protected function updateJelixDependency($doc) {
-        
+
         $info = $this->firstElementChild($doc->documentElement);
         $dep = $this->nextElementSibling($info, 'dependencies');
         $jelix = $this->firstElementChild($dep, 'jelix');

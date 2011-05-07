@@ -56,7 +56,7 @@ class createdaoCommand extends JelixScriptCommand {
 
     public function run(){
 
-       jxs_init_jelix_env();
+       $this->loadAppConfig();
 
        $path= $this->getModulePath($this->_parameters['module']);
 
@@ -95,7 +95,7 @@ class createdaoCommand extends JelixScriptCommand {
             }
             if($prop->notNull && !$prop->autoIncrement)
                $properties.=' required="true"';
-            
+
             if($prop->autoIncrement)
                 $properties.=' autoincrement="true"';
 
@@ -122,4 +122,3 @@ class createdaoCommand extends JelixScriptCommand {
        }
     }
 }
-

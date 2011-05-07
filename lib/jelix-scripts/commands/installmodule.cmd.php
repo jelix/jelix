@@ -13,12 +13,10 @@ class installmoduleCommand extends JelixScriptCommand {
     public  $allowed_options=array('-v'=>false, '-p'=>true);
     public  $allowed_parameters=array('module'=>true,'...'=>false);
 
-    public  $applicationMustExist = false;
-
     public  $syntaxhelp = '[-v] [-p "param1;param2=value;..."] MODULE [MODULE [....]]';
     public  $help = '';
 
-    function __construct(){
+    function __construct($config){
         $this->help= array(
             'fr'=>"
     Installe ou met à jour les modules indiqués, même si ils ne sont pas activés.
@@ -38,10 +36,11 @@ class installmoduleCommand extends JelixScriptCommand {
            -p: parameters for the installation, valid if only one module is indicated
     ",
     );
+        parent::__construct($config);
     }
 
     public function run(){
-        require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
+        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
         jAppManager::close();
 
@@ -66,8 +65,6 @@ class installmoduleCommand extends JelixScriptCommand {
             }
         }
 
-        global $entryPointName, $entryPointId, $allEntryPoint;
-
         if ($this->getOption("-v"))
             $reporter = new textInstallReporter();
         else
@@ -75,15 +72,15 @@ class installmoduleCommand extends JelixScriptCommand {
 
         $installer = new jInstaller($reporter);
 
-        if ($allEntryPoint) {
+        if ($this->allEntryPoint) {
             if ($parameters)
                 $installer->setModuleParameters($modulesList[0], $parameters);
             $installer->installModules($modulesList);
         }
         else {
             if ($parameters)
-                $installer->setModuleParameters($modulesList[0], $parameters, $entryPointName);
-            $installer->installModules($modulesList, $entryPointName);
+                $installer->setModuleParameters($modulesList[0], $parameters, $this->entryPointName);
+            $installer->installModules($modulesList, $this->entryPointName);
         }
 
         try {

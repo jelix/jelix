@@ -15,16 +15,18 @@
 
 class createappCommand extends JelixScriptCommand {
 
+   protected $commonOptions = array();
+
     public  $name = 'createapp';
     public  $allowed_options=array('-nodefaultmodule'=>false,
                                    '-withcmdline'=>false,
                                    '-wwwpath'=>true);
-    public  $allowed_parameters=array();
+    public  $allowed_parameters=array('path'=>true);
 
     public  $syntaxhelp = "[-nodefaultmodule] [-withcmdline] [-wwwpath a_path]";
     public  $help='';
 
-    public $applicationMustExist = false;
+    public $applicationRequirement = 1;
 
     function __construct(){
         $this->help= array(
@@ -37,43 +39,46 @@ class createappCommand extends JelixScriptCommand {
     Si l'option -withcmdline est présente, crée un point d'entrée afin de
     développer des scripts en ligne de commande.
 
-    Si l'option -wwwpath est présente, sa valeur définit le document root de votre application. 
-    wwwpath doit être relatif au répertoire de l'application (valeur par défaut www/). 
+    Si l'option -wwwpath est présente, sa valeur définit le document root de votre application.
+    wwwpath doit être relatif au répertoire de l'application (valeur par défaut www/).
 
-    Le nom de l'application doit être indiqué
-    1) soit en premier paramètre du script jelix
-          ".$_SERVER['argv'][0]." --helloApp
-    2) soit dans une variable d'environnement JELIX_APP_NAME.
+    le répertoire de la future application doit être indiquée en paramètre.
     ",
             'en'=>"
     Create a new application with all directories and one module named as your application.
 
-    If you give -nodefaultmodule option, it won't create the module. 
+    If you give -nodefaultmodule option, it won't create the module.
 
-    If you give the -withcmdline option, it will create an entry point dedicated to 
-    command line scripts. 
+    If you give the -withcmdline option, it will create an entry point dedicated to
+    command line scripts.
 
-    If you give the -wwwpath option, it will replace your application default document root. 
+    If you give the -wwwpath option, it will replace your application default document root.
     wwwpath must be relative to your application directory (default value is 'www/').
 
-    The application name should be provided by either of this two ways:
-    1) by given the name as parameter. Example for a helloApp application
-          ".$_SERVER['argv'][0]." --helloApp
-    2) or by given the name in the environment variable: JELIX_APP_NAME.
+    The application directory should be  indicated as parameter
     ",
     );
     }
 
     public function run() {
         require_once (LIB_PATH.'clearbricks/jelix.inc.php');
-        require_once (JELIXS_LIB_PATH.'jelix/installer/jInstaller.class.php');
+        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
+        $appPath = $this->getParam('path');
+        $appPath = $this->getRealPath($appPath);
+        $appName = basename($appPath);
+        $appPath .= '/';
 
-        $appPath = jApp::appPath();
         if (file_exists($appPath)) {
             throw new Exception("this application is already created");
         }
 
-        $this->createDir($appPath);
+        $this->config = JelixScript::loadConfig($appName);
+        $this->config->initAppPaths($appPath);
+
+        jApp::setEnv('jelix-scripts');
+        jApp::initLegacy();
+
+        JelixScript::checkTempPath();
 
         if ($p = $this->getOption('-wwwpath')) {
             $wwwpath = path::real($appPath.$p, false).'/';
@@ -82,9 +87,10 @@ class createappCommand extends JelixScriptCommand {
             $wwwpath = jApp::wwwPath();
         }
 
+        $this->createDir($appPath);
         $this->createDir(jApp::tempBasePath());
         $this->createDir($wwwpath);
-        
+
         $varPath = jApp::varPath();
         $configPath = jApp::configPath();
         $this->createDir($varPath);
@@ -112,7 +118,7 @@ class createappCommand extends JelixScriptCommand {
         $this->createDir(jApp::scriptsPath());
 
         $param = array();
-        $param['default_id'] = $GLOBALS['APPNAME'].JELIXS_INFO_DEFAULT_IDSUFFIX;
+        $param['default_id'] = $appName.$this->config->infoIDSuffix;
 
         if($this->getOption('-nodefaultmodule')) {
             $param['tplname']    = 'jelix~defaultmain';
@@ -121,23 +127,24 @@ class createappCommand extends JelixScriptCommand {
         else {
             // note: since module name are used for name of generated name,
             // only this characters are allowed
-            $param['modulename'] = preg_replace('/([^a-zA-Z_0-9])/','_',$GLOBALS['APPNAME']);
+            $param['modulename'] = preg_replace('/([^a-zA-Z_0-9])/','_',$appName);
             $param['tplname']    = $param['modulename'].'~main';
         }
 
         $param['config_file'] = 'index/config.ini.php';
 
-        $param['rp_temp']  = jxs_getRelativePath($appPath, jApp::tempBasePath(), true);
-        $param['rp_var']   = jxs_getRelativePath($appPath, jApp::varPath(),  true);
-        $param['rp_log']   = jxs_getRelativePath($appPath, jApp::logPath(),  true);
-        $param['rp_conf']  = jxs_getRelativePath($appPath, $configPath, true);
-        $param['rp_www']   = jxs_getRelativePath($appPath, $wwwpath,  true);
-        $param['rp_cmd']   = jxs_getRelativePath($appPath, jApp::scriptsPath(),  true);
-        $param['rp_jelix'] = jxs_getRelativePath($appPath, JELIX_LIB_PATH, true);
-        $param['rp_app']   = jxs_getRelativePath($wwwpath, $appPath, true);
+        $param['rp_temp']  = $this->getRelativePath($appPath, jApp::tempBasePath());
+        $param['rp_var']   = $this->getRelativePath($appPath, jApp::varPath());
+        $param['rp_log']   = $this->getRelativePath($appPath, jApp::logPath());
+        $param['rp_conf']  = $this->getRelativePath($appPath, $configPath);
+        $param['rp_www']   = $this->getRelativePath($appPath, $wwwpath);
+        $param['rp_cmd']   = $this->getRelativePath($appPath, jApp::scriptsPath());
+        $param['rp_jelix'] = $this->getRelativePath($appPath, JELIX_LIB_PATH);
+        $param['rp_app']   = $this->getRelativePath($wwwpath, $appPath);
 
         $this->createFile($appPath.'.htaccess', 'htaccess_deny', $param);
         $this->createFile($appPath.'project.xml','project.xml.tpl', $param);
+        $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param);
         $this->createFile($configPath.'defaultconfig.ini.php', 'var/config/defaultconfig.ini.php.tpl', $param);
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param);
         //$this->createFile(JELIX_APP_CONFIG_PATH.'installer.ini.php', 'var/config/installer.ini.php.tpl', $param);
@@ -165,8 +172,8 @@ class createappCommand extends JelixScriptCommand {
 
         if (!$this->getOption('-nodefaultmodule')) {
             try {
-                $cmd = jxs_load_command('createmodule');
-                $cmd->init(array('-addinstallzone'=>true), array('module'=>$param['modulename']));
+                $cmd = JelixScript::getCommand('createmodule', $this->config);
+                $cmd->initOptParam(array('-addinstallzone'=>true), array('module'=>$param['modulename']));
                 $cmd->run();
                 $this->createFile($appPath.'modules/'.$param['modulename'].'/templates/main.tpl', 'module/main.tpl.tpl', $param);
             } catch (Exception $e) {
@@ -177,26 +184,26 @@ class createappCommand extends JelixScriptCommand {
 
         if ($this->getOption('-withcmdline')) {
             if(!$this->getOption('-nodefaultmodule') && $moduleok){
-                $agcommand = jxs_load_command('createctrl');
+                $agcommand = JelixScript::getCommand('createctrl', $this->config);
                 $options = array('-cmdline'=>true);
-                $agcommand->init($options,array('module'=>$param['modulename'], 'name'=>'default','method'=>'index'));
+                $agcommand->initOptParam($options,array('module'=>$param['modulename'], 'name'=>'default','method'=>'index'));
                 $agcommand->run();
             }
-            $agcommand = jxs_load_command('createentrypoint');
+            $agcommand = JelixScript::getCommand('createentrypoint', $this->config);
             $options = array('-type'=>'cmdline');
             $parameters = array('name'=>$param['modulename']);
-            $agcommand->init($options, $parameters);
+            $agcommand->initOptParam($options, $parameters);
             $agcommand->run();
         }
     }
-    
+
     protected function convertRp($rp) {
+        if(strpos($rp, './') === 0)
+            $rp = substr($rp, 2);
         if (strpos($rp, '../') !== false) {
             return 'realpath($appPath.\''.$rp."').'/'";
         }
         else {
-            if(strpos($rp, './') === 0)
-                $rp = substr($rp, 2);
             return '$appPath.\''.$rp."'";
         }
     }

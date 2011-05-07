@@ -59,8 +59,8 @@ class createmoduleCommand extends JelixScriptCommand {
 
 
     public function run(){
-        jxs_init_jelix_env();
-        global $entryPointName, $entryPointId, $allEntryPoint, $gJConfig;
+        $this->loadAppConfig();
+        global $gJConfig;
 
         $module = $this->getParam('module');
         $initialVersion = $this->getOption('-ver');
@@ -93,10 +93,10 @@ class createmoduleCommand extends JelixScriptCommand {
         $iniDefault = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
         $this->updateModulePath($iniDefault, $iniDefault->getValue('modulesPath'), $repository, $repositoryPath);
 
-        if (!$allEntryPoint) {
+        if (!$this->allEntryPoint) {
             $list = $this->getEntryPointsList();
             foreach ($list as $k => $entryPoint) {
-                if ($entryPoint['file'] == $entryPointName) {
+                if ($entryPoint['file'] == $this->entryPointName) {
                     $ini = new jIniFileModifier(jApp::configPath($entryPoint['config']));
                     break;
                 }
@@ -119,7 +119,7 @@ class createmoduleCommand extends JelixScriptCommand {
 
         $param = array();
         $param['module'] = $module;
-        $param['default_id'] = $module.JELIXS_INFO_DEFAULT_IDSUFFIX;
+        $param['default_id'] = $module.$this->config->infoIDSuffix;
         $param['version'] = $initialVersion;
 
         $this->createFile($path.'module.xml', 'module/module.xml.tpl', $param);
@@ -148,7 +148,7 @@ class createmoduleCommand extends JelixScriptCommand {
             $iniDefault->setValue('startAction', 'default:index');
         }
 
-        $iniDefault->setValue($module.'.access', ($allEntryPoint?2:1) , 'modules');
+        $iniDefault->setValue($module.'.access', ($this->allEntryPoint?2:1) , 'modules');
         $iniDefault->save();
 
         $list = $this->getEntryPointsList();
@@ -160,15 +160,15 @@ class createmoduleCommand extends JelixScriptCommand {
             $configFile = jApp::configPath($entryPoint['config']);
             $epconfig = new jIniFileModifier($configFile);
 
-            if ($allEntryPoint)
+            if ($this->allEntryPoint)
                 $access = 2;
             else
-                $access = ($entryPoint['file'] == $entryPointName?2:0);
+                $access = ($entryPoint['file'] == $this->entryPointName?2:0);
 
             $epconfig->setValue($module.'.access', $access, 'modules');
             $epconfig->save();
 
-            if ($allEntryPoint || $entryPoint['file'] == $entryPointName) {
+            if ($this->allEntryPoint || $entryPoint['file'] == $this->entryPointName) {
                 $install->setValue($module.'.installed', 1, $entryPoint['id']);
                 $install->setValue($module.'.version', $initialVersion, $entryPoint['id']);
             }
@@ -177,7 +177,7 @@ class createmoduleCommand extends JelixScriptCommand {
                 // we set the module as default module for one or all entry points.
                 // we set the startModule option for all entry points except
                 // if an entry point is indicated on the command line
-                if ($allEntryPoint || $entryPoint['file'] == $entryPointName) {
+                if ($this->allEntryPoint || $entryPoint['file'] == $this->entryPointName) {
                     if ($epconfig->getValue('startModule') != '') {
                         $epconfig->setValue('startModule', $module);
                         $epconfig->setValue('startAction', 'default:index');
@@ -191,7 +191,7 @@ class createmoduleCommand extends JelixScriptCommand {
 
         // create a default controller
         if(!$this->getOption('-nocontroller')){
-            $agcommand = jxs_load_command('createctrl');
+            $agcommand = JelixScript::getCommand('createctrl', $this->config);
             $options = array();
             if ($this->getOption('-cmdline')) {
                $options = array('-cmdline'=>true);
@@ -199,7 +199,7 @@ class createmoduleCommand extends JelixScriptCommand {
             if ($this->getOption('-addinstallzone')) {
                 $options = array('-addinstallzone'=>true);
             }
-            $agcommand->init($options,array('module'=>$module, 'name'=>'default','method'=>'index'));
+            $agcommand->initOptParam($options,array('module'=>$module, 'name'=>'default','method'=>'index'));
             $agcommand->run();
         }
 
@@ -237,4 +237,3 @@ class createmoduleCommand extends JelixScriptCommand {
         }
     }
 }
-

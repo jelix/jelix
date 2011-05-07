@@ -1,7 +1,7 @@
 <?php
 /**
 * @package   %%appname%%
-* @subpackage 
+* @subpackage
 * @author    %%default_creator_name%%
 * @copyright %%default_copyright%%
 * @link      %%default_website%%
@@ -9,7 +9,7 @@
 */
 
 $appPath = dirname (__FILE__).'/';
-require ($appPath.'%%rp_jelix%%/init.php');
+require ($appPath.'%%rp_jelix%%init.php');
 
 jApp::initPaths(
     $appPath,

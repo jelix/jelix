@@ -15,9 +15,7 @@ class helpCommand extends JelixScriptCommand {
     public  $allowed_options=array();
     public  $allowed_parameters=array('command'=>false);
 
-    public  $applicationMustExist = false;
-
-    public $applicationRequired = false;
+    public  $applicationRequirement = 3;
 
     public  $syntaxhelp ="[COMMAND]";
     public  $help=array(
@@ -27,14 +25,8 @@ class helpCommand extends JelixScriptCommand {
     public  $mainhelp = array(
             'fr'=>"
 Utilisation générale :
-    %SCRIPT% [--NOMAPP[:ENTRYPOINT]] COMMANDE [OPTIONS] [PARAMETRES]
+    %SCRIPT% COMMANDE [OPTIONS] [PARAMETRES]
 
-    NOMAPP   : nom de l'application concernée. Si non présent, le nom de
-               l'application doit être dans une variable d'environnement
-               JELIX_APP_NAME
-    ENTRYPOINT : nom du point d'entrée concerné par la commande. Si pas indiqué,
-                la commande s'appliquera sur tous les points d'entrée ou index.php
-                selon le type de la commande.
     COMMANDE : nom de la commande à executer
     OPTIONS  : une ou plusieurs options. Le nom d'une option commence par un
                tiret et peut être suivi par une valeur.
@@ -51,14 +43,8 @@ Utilisation générale :
 Liste des commandes disponibles :\n\t",
             'en'=>"
 General use :
-    %SCRIPT% [--APPNAME[:ENTRYPOINT]] COMMAND [OPTIONS] [PARAMETERS]
+    %SCRIPT% COMMAND [OPTIONS] [PARAMETERS]
 
-    APPNAME: name of the application on which you want to work. You can omit
-            this parameter if the application name is stored in the
-            JELIX_APP_NAME environment variable.
-    ENTRYPOINT: the name of the entry point on which the command is applied.
-               if not given, and depending of the command, the command will be
-               applied for all entry point or the main one (index.php)
     COMMAND: name of the command to execute
     OPTIONS: one or more options. An option name begin with a '-' and can be
             followed by a value. Example with some specific commands:
@@ -79,18 +65,18 @@ List of available commands:\n\t",
           if($this->_parameters['command'] == 'help'){
              $command=$this;
           }else{
-             $command = jxs_load_command($this->_parameters['command']);
+             $command = JelixScript::getCommand($this->_parameters['command'], $this->config);
           }
-          if(MESSAGE_LANG == 'fr'){
+          if($this->config->helpLang == 'fr'){
               $this->disp("\nUtilisation de la commande ".$this->_parameters['command']." :\n");
-              $this->disp("# ".$_SERVER['argv'][0]." [--NOMAPP] ".$this->_parameters['command']." ". $command->syntaxhelp."\n\n");
+              $this->disp("# ".$_SERVER['argv'][0]."  ".$this->_parameters['command']." ". $command->syntaxhelp."\n\n");
           }else{
               $this->disp("\nUsage of ".$this->_parameters['command'].":\n");
-              $this->disp("# ".$_SERVER['argv'][0]." [--APPNAME] ".$this->_parameters['command']." ". $command->syntaxhelp."\n\n");
+              $this->disp("# ".$_SERVER['argv'][0]." ".$this->_parameters['command']." ". $command->syntaxhelp."\n\n");
           }
           if(is_array($command->help)){
-             if(isset($command->help[MESSAGE_LANG])){
-                $this->disp($command->help[MESSAGE_LANG]."\n\n");
+             if(isset($command->help[$this->config->helpLang])){
+                $this->disp($command->help[$this->config->helpLang]."\n\n");
              }elseif(isset($command->help['en'])){
                 $this->disp($command->help['en']."\n\n");
              }else{
@@ -100,15 +86,15 @@ List of available commands:\n\t",
               $this->disp($command->help."\n\n");
           }
        }else{
-          if(isset($this->mainhelp[MESSAGE_LANG])){
-              $help = $this->mainhelp[MESSAGE_LANG];
+          if(isset($this->mainhelp[$this->config->helpLang])){
+              $help = $this->mainhelp[$this->config->helpLang];
           }else{
               $help = $this->mainhelp['en'];
           }
           $help = str_replace('%SCRIPT%', $_SERVER['argv'][0], $help);
           $this->disp($help);
 
-          $list = jxs_commandlist();
+          $list = JelixScript::commandList();
           foreach($list as $cmd)
              $this->disp($cmd.' ');
           $this->disp("\n\n");
@@ -116,7 +102,7 @@ List of available commands:\n\t",
     }
 
     protected function disp($str){
-       if( ! DISPLAY_HELP_UTF_8){
+       if( !$this->config->displayHelpUtf8){
          echo utf8_decode($str);
        }else{
          echo $str;
