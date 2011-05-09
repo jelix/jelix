@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage jtpl_plugin
 * @author     Laurent Jouanneau
-* @copyright  2005-2007 Laurent Jouanneau
+* @copyright  2005-2011 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -14,20 +14,22 @@
  * example : {jlocale 'myModule~my.locale.key'}
  * @param jTpl $tpl template engine
  * @param string $locale the locale key
+ * @param array $params parameters (optional)
+ * @param string $lang  the lang (optional)
  */
 function jtpl_function_ltx2pdf_jlocale($tpl, $locale)
 {
-     if(func_num_args() == 3 && is_array(func_get_arg(2))){
-         $param = func_get_arg(2);
-         $loc = jLocale::get($locale, $param);
+     if(func_num_args() == 4 && is_array(func_get_arg(2))){
+         $str = jLocale::get($locale, func_get_arg(2), func_get_arg(3));
+     }elseif(func_num_args() == 3 && is_array(func_get_arg(2))){
+         $str = jLocale::get($locale, func_get_arg(2));
      }elseif(func_num_args() > 2){
          $params = func_get_args();
          unset($params[0]);
          unset($params[1]);
-         $loc = jLocale::get($locale, $params);
+         $str = jLocale::get($locale, $params);
      }else{
-         $loc = jLocale::get($locale);
+         $str = jLocale::get($locale);
      }
-     echo str_replace(array('#','$','%','^','&','_','{','}','~'), array('\\#','\\$','\\%','\\^','\\&','\\_','\\{','\\}','\\~'), str_replace('\\','\\textbackslash',$loc));
+     echo str_replace(array('#','$','%','^','&','_','{','}','~'), array('\\#','\\$','\\%','\\^','\\&','\\_','\\{','\\}','\\~'), str_replace('\\','\\textbackslash',$str));
 }
-
