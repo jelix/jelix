@@ -26,7 +26,7 @@ class JelixScriptCommandConfig {
     /**
      * @var string the licence of generated files
      */
-    public $infoLicence='All right reserved';
+    public $infoLicence='All rights reserved';
 
     /**
      * @var string link to the licence
@@ -46,7 +46,7 @@ class JelixScriptCommandConfig {
     /**
      * @var string
      */
-    public $infoCopyright='2010 your name';
+    public $infoCopyright='2011 your name';
 
     /**
      * @var string
