@@ -9,6 +9,19 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+require_once(JELIX_LIB_PATH.'plugins/urls/significant/significant.urls.php');
+
+class UTParseUrlsIncluder extends jIncluder {
+
+    static function resetUrlCache() {
+        global $gJConfig;
+        $sel = new jSelectorUrlCfgSig($gJConfig->urlengine['significantFile']);
+        $file = $sel->getCompiledFilePath();
+
+        unset(self::$_includedFiles[$file]);
+    }
+}
+
 
 class UTParseUrls extends UnitTestCase {
     protected $oldUrlScriptPath;
@@ -55,8 +68,9 @@ class UTParseUrls extends UnitTestCase {
          'significantFile'=>'urls.xml',
          'checkHttpsOnParsing'=>false
        );
-
-      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+        $gJConfig->compilation['force'] = true;
+        UTParseUrlsIncluder::resetUrlCache();
+        jUrl::getEngine(true);
 
 
       $resultList=array();
@@ -135,7 +149,8 @@ class UTParseUrls extends UnitTestCase {
          $this->assertTrue( ($p == $resultList[$k]), 'test '.$k.' created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
       }
 
-      /*$gJConfig->urlengine['checkHttpsOnParsing'] = true;
+      $gJConfig->urlengine['checkHttpsOnParsing'] = true;
+      UTParseUrlsIncluder::resetUrlCache();
       jUrl::getEngine(true);
 
       $expected = array ( 'action' => 'error:notfound', 'module' => 'jelix');
@@ -146,8 +161,8 @@ class UTParseUrls extends UnitTestCase {
       $this->assertEqual($expected, $p);
 
       $gJConfig->urlengine['checkHttpsOnParsing'] = false;
-      jAppManager::clearTemp();
-      jUrl::getEngine(true);*/
+      UTParseUrlsIncluder::resetUrlCache();
+      jUrl::getEngine(true);
 
       // the dot should be escaped in the regular expression
       $url = jUrl::parse ("index.php", "/hello.html",array());
