@@ -115,7 +115,7 @@ class jSoapClient {
         }
         unset ($profile['_name']);
         if (isset($profile['classmap']) && is_string ($profile['classmap']) && $profile['classmap'] != '') {
-            $profile['classmap'] = (array)json_decode($profile['classmap']);
+            $profile['classmap'] = (array)json_decode(str_replace("'", '"',$profile['classmap']));
         }
         return new $client($wsdl, $profile);
     }
