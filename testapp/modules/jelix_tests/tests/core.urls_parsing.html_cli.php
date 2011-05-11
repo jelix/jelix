@@ -53,6 +53,7 @@ class UTParseUrls extends UnitTestCase {
          'entrypointExtension'=>'.php',
          'notfoundAct'=>'jelix~notfound',
          'significantFile'=>'urls.xml',
+         'checkHttpsOnParsing'=>false
        );
 
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
@@ -74,7 +75,7 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url13', 'rubrique'=>'chaussures');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'en_EN');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'fr_FR');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url30');  
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url30');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:hello2');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:hello3');
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urla');
@@ -133,7 +134,21 @@ class UTParseUrls extends UnitTestCase {
 
          $this->assertTrue( ($p == $resultList[$k]), 'test '.$k.' created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
       }
-      
+
+      /*$gJConfig->urlengine['checkHttpsOnParsing'] = true;
+      jUrl::getEngine(true);
+
+      $expected = array ( 'action' => 'error:notfound', 'module' => 'jelix');
+      $url = jUrl::parse ("index.php","/shop/vetements/65",array());
+      $p = $url->params;
+      ksort($p);
+
+      $this->assertEqual($expected, $p);
+
+      $gJConfig->urlengine['checkHttpsOnParsing'] = false;
+      jAppManager::clearTemp();
+      jUrl::getEngine(true);*/
+
       // the dot should be escaped in the regular expression
       $url = jUrl::parse ("index.php", "/hello.html",array());
       $this->assertEqual($url->params['module'], 'jelix_tests');

@@ -166,6 +166,10 @@ basePath = ""
 ; you MUST define basePath when you define backendBasePath
 backendBasePath =
 
+; for an app on a simple http server behind an https proxy, the https verification
+; should be disabled
+checkHttpsOnParsing = on
+
 ; this is the url path to the jelix-www content (you can found this content in lib/jelix-www/)
 ; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
 ; jelix-www, or copy its content in yourapp/www/ (with a name like 'jelix' for example)

@@ -56,15 +56,16 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
     protected $parseInfos;
     protected $createUrlInfos;
     protected $createUrlContent;
+    protected $checkHttps = true;
 
     protected $typeparam = array('string'=>'([^\/]+)','char'=>'([^\/])', 'letter'=>'(\w)',
         'number'=>'(\d+)', 'int'=>'(\d+)', 'integer'=>'(\d+)', 'digit'=>'(\d)',
-        'date'=>'([0-2]\d{3}\-(?:0[1-9]|1[0-2])\-(?:[0-2][1-9]|3[0-1]))', 
+        'date'=>'([0-2]\d{3}\-(?:0[1-9]|1[0-2])\-(?:[0-2][1-9]|3[0-1]))',
         'year'=>'([0-2]\d{3})', 'month'=>'(0[1-9]|1[0-2])', 'day'=>'([0-2][1-9]|[1-2]0|3[0-1])'
         );
 
     /**
-     * 
+     *
      */
     public function compile($aSelector) {
 
@@ -98,9 +99,11 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             $isDefault: true if it is the default entry point. In this case and
             where the url parser doesn't find a corresponding action, it will
             ignore else it will generate an error
-            
+
             $infoparser = array('module','action', 'regexp_pathinfo',
-                                'handler selector', array('secondaries','actions'))
+                                'handler selector', array('secondaries','actions'),
+                                false // needs https or not
+                                )
             or
             $infoparser = array('module','action','regexp_pathinfo',
                array('year','month'), // list of dynamic value included in the url,
@@ -108,7 +111,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                array(true, false),    // list of boolean which indicates for each
                                       // dynamic value, if it is an escaped value or not
                array('bla'=>'whatIWant' ), // list of static values
-               array('secondaries','actions')
+               array('secondaries','actions'),
+               false  // need https or not
             )
 
         It generates an other file common to all entry point. It contains an
@@ -122,7 +126,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                         array('year','month',), // list of dynamic values included in the url
                         array(true, false..), // list of boolean which indicates for each
                                               // dynamic value, if it is an escaped value or not
-                        "/news/%1/%2/", // the url 
+                        "/news/%1/%2/", // the url
                         array('bla'=>'whatIWant' ) // list of static values
                         )
                   or
@@ -139,6 +143,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $this->createUrlContent = "<?php \n";
         $this->readProjectXml();
         $this->retrieveModulePaths(jApp::configPath('defaultconfig.ini.php'));
+        // for an app on a simple http server behind an https proxy, we shouldn't check HTTPS
+        $this->checkHttps = $GLOBALS['gJConfig']->urlengine['checkHttpsOnParsing'];
 
         foreach ($xml->children() as $tagname => $tag) {
             if (!preg_match("/^(.*)entrypoint$/", $tagname, $m)) {
@@ -201,7 +207,9 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                 // <url module="" />, so all actions of this module will be assigned
                 // to this entry point.
                 if (!$u->isDefault && !isset($url['action']) && !isset($url['handler'])) {
-                    $this->parseInfos[] = array($u->module, '', '/.*/', array(), array(), array(), false);
+                    $this->parseInfos[] = array($u->module, '', '/.*/', array(),
+                                                array(), array(), false,
+                                                ($this->checkHttps && $u->isHttps));
                     $createUrlInfosDedicatedModules[$u->getFullSel()] = array(3, $u->entryPointUrl, $u->isHttps, true);
                     continue;
                 }
@@ -257,7 +265,9 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                     $u->statics[(string)$var['name']] = (string)$var['value'];
                 }
 
-                $this->parseInfos[] = array($u->module, $u->action, '!^'.$regexppath.'$!', $u->params, $u->escapes, $u->statics, $u->actionOverride);
+                $this->parseInfos[] = array($u->module, $u->action, '!^'.$regexppath.'$!',
+                                            $u->params, $u->escapes, $u->statics,
+                                            $u->actionOverride, ($this->checkHttps && $u->isHttps));
                 $this->appendUrlInfo($u, $path, false);
 
                 if ($u->actionOverride) {
@@ -276,7 +286,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
             $parseContent .= '$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($this->defaultUrl->entryPoint).'\'] = '
                             .var_export($this->parseInfos, true).";\n?>";
-    
+
             jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($this->defaultUrl->entryPoint).'.entrypoint.php'),$parseContent);
         }
         $this->createUrlContent .= '$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($this->createUrlInfos, true).";\n?>";
@@ -384,7 +394,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         }
 
         $this->createUrlContent .= "include_once('".$s->getPath()."');\n";
-        $this->parseInfos[] = array($u->module, $u->action, $regexp, $selclass, $u->actionOverride);
+        $this->parseInfos[] = array($u->module, $u->action, $regexp, $selclass, $u->actionOverride, ($this->checkHttps && $u->isHttps));
         $this->createUrlInfos[$u->getFullSel()] = array(0, $u->entryPointUrl, $u->isHttps, $selclass, $pathinfo);
         if ($u->actionOverride) {
             foreach ($u->actionOverride as $ao) {
@@ -547,7 +557,9 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                 $u->statics[(string)$var['name']] = (string)$var['value'];
             }
 
-            $this->parseInfos[] = array($u->module, $u->action, '!^'.$regexppath.'$!', $u->params, $u->escapes, $u->statics, $u->actionOverride);
+            $this->parseInfos[] = array($u->module, $u->action, '!^'.$regexppath.'$!',
+                                        $u->params, $u->escapes, $u->statics,
+                                        $u->actionOverride, ($this->checkHttps && $u->isHttps));
             $this->appendUrlInfo($u, $path, false);
             if ($u->actionOverride) {
                 foreach ($u->actionOverride as $ao) {

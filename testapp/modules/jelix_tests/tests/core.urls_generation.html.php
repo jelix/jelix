@@ -102,7 +102,7 @@ class UTCreateUrls extends UnitTestCase {
          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
          'significantFile'=>'urls.xml',
        );
-       
+
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
 
       $urlList=array();
@@ -206,6 +206,7 @@ class UTCreateUrls extends UnitTestCase {
          'entrypointExtension'=>'.php',
          'notfoundAct'=>'jelix~notfound',
          'significantFile'=>'urls.xml',
+         'checkHttpsOnParsing'=>true
        );
 
       $gJConfig->_modulesPathList['news']='/';
@@ -343,6 +344,7 @@ class UTCreateUrls extends UnitTestCase {
          'entrypointExtension'=>'.php',
          'notfoundAct'=>'jelix~notfound',
          'significantFile'=>'urls.xml',
+         'checkHttpsOnParsing'=>true
        );
 
       $gJConfig->_modulesPathList['news']='/';
