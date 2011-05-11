@@ -47,7 +47,7 @@ if (!jApp::isInit()) {
     echo "Error: should run within an application\n";
     exit(1);
 }
-if ($command->applicationRequirement == $command::APP_MUST_NOT_EXIST) {
+if ($command->applicationRequirement == JelixScriptCommand::APP_MUST_NOT_EXIST) {
     echo "Error: This command doesn't apply on an existing application\n";
     exit(1);
 }
