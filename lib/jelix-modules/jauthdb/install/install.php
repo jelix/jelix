@@ -4,7 +4,7 @@
 * @subpackage  jauthdb module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009-2010 Laurent Jouanneau
+* @copyright   2009-2011 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -46,9 +46,16 @@ class jauthdbModuleInstaller extends jInstallerModule {
 
                 $this->execSQLScript('install_jauth.schema');
                 if ($this->getParameter('defaultuser')) {
+                    require_once(JELIX_LIB_PATH.'auth/jIAuthDriver.iface.php');
+                    require_once(JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php');
+                    require_once(JELIX_LIB_PATH.'plugins/auth/db/db.auth.php');
+                    $confIni = parse_ini_file(JELIX_APP_CONFIG_PATH.$authconfig, true);
+                    $driver = new dbAuthDriver($confIni['Db']);
+                    $password = $driver->cryptPassword('admin');
+
                     $cn = $this->dbConnection();
                     $cn->exec("INSERT INTO ".$cn->prefixTable('jlx_user')." (usr_login, usr_password, usr_email ) VALUES
-                                ('admin', '".sha1('admin')."' , 'admin@localhost.localdomain')");
+                                ('admin', ".$cn->quote($password)." , 'admin@localhost.localdomain2')");
                 }
             }
         }

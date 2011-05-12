@@ -14,6 +14,7 @@ cd lib/jelix
 
 cd lib/jelix/auth
 * jAuth.class.php
+  jAuthDriverBase.class.php
   jAuthUser.class.php
   jAuthDummyUser.class.php
   jAuthUserLDAP.class.php
@@ -450,7 +451,7 @@ cd lib/jelix/plugins/tpl/html
   function.formurl.php
   function.formurlparam.php
   function.hook.php
-  function.gravatar.php  
+  function.gravatar.php
   function.image.php
   function.jmessage.php
   function.jfullurl.php

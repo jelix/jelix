@@ -4,8 +4,8 @@
 * @subpackage ldap_driver
 * @author     Tahina Ramaroson
 * @contributor Sylvain de Vathaire
-* @contributor Thibaud Fabre
-* @copyright  2009 Neov, 2010 Thibaud Fabre
+* @contributor Thibaud Fabre, Laurent Jouanneau
+* @copyright  2009 Neov, 2010 Thibaud Fabre, 2011 Laurent Jouanneau
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
@@ -15,7 +15,7 @@
 * @package    jelix
 * @subpackage auth_driver
 */
-class ldapAuthDriver implements jIAuthDriver {
+class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver {
 
     /**
     * default user attributes list
@@ -24,16 +24,13 @@ class ldapAuthDriver implements jIAuthDriver {
     */
     protected $_default_attributes = array("cn","distinguishedName","name");
 
-
-    protected $_params;
-
     function __construct($params){
 
         if (!extension_loaded('ldap')) {
             throw new jException('jelix~auth.ldap.extension.unloaded');
         }
 
-        $this->_params = $params;
+        parent::__construct($params);
 
         // default ldap parameters
         $_default_params = array(
@@ -65,7 +62,6 @@ class ldapAuthDriver implements jIAuthDriver {
         } else {
             $this->_params['searchAttributes'] = explode(",", $this->_params['searchAttributes']);
         }
-
     }
 
     public function saveNewUser($user){
@@ -181,7 +177,7 @@ class ldapAuthDriver implements jIAuthDriver {
 
             if (ldap_bind($connect, $this->_params['ldapUser'], $this->_params['ldapPassword'])) {
                 $filter = ($pattern != '' && $pattern != '%') ? "(&".$this->_params['searchFilter'] . "({$this->_params['uidProperty']}={$pattern}))" : $this->_params['searchFilter'] ;
-                
+
                 if (($search = ldap_search($connect, $this->_params['searchBaseDN'], $filter, $this->_params['searchAttributes']))) {
                     ldap_sort($connect, $search, $this->params['uidProperty']);
                     $entry = ldap_first_entry($connect, $search);
@@ -301,29 +297,6 @@ class ldapAuthDriver implements jIAuthDriver {
                 }
             }
         }
-    }
-
-    /**
-     * crypt the password
-     */
-    protected function cryptPassword($password) {
-        if (isset($this->_params['password_crypt_function'])) {
-            $f = $this->_params['password_crypt_function'];
-            if ($f != '') {
-                if ($f[1] == ':') {
-                    $t = $f[0];
-                    $f = substr($f, 2);
-                    if ($t == '1') {
-                        return $f((isset($this->_params['password_salt'])?$this->_params['password_salt']:''), $password);
-                    }
-                    else if ($t == '2') {
-                        return $f($this->_params, $password);
-                    }
-                }
-                return $f($password);
-            }
-        }
-        return $password;
     }
 
     protected function _buildUserDn($login) {

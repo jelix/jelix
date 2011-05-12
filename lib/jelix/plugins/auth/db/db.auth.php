@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage auth_driver
 * @author     Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2011 Laurent Jouanneau
 * This classe was get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial author of this Copix classe is Laurent Jouanneau, and this classe was adapted for Jelix by him
@@ -16,12 +16,10 @@
 * @package    jelix
 * @subpackage auth_driver
 */
-class dbAuthDriver implements jIAuthDriver {
-
-    protected $_params;
+class dbAuthDriver extends jAuthDriverBase implements jIAuthDriver {
 
     function __construct($params){
-        $this->_params = $params;
+        parent::__construct($params);
         if(!isset($this->_params['profile'])) {
             if(isset($this->_params['profil']))
                 //compatibility with 1.0
@@ -81,28 +79,5 @@ class dbAuthDriver implements jIAuthDriver {
         $daouser = jDao::get($this->_params['dao'], $this->_params['profile']);
         $user = $daouser->getByLoginPassword($login, $this->cryptPassword($password));
         return ($user?$user:false);
-    }
-
-    /**
-     * crypt the password
-     */
-    protected function cryptPassword($password) {
-        if (isset($this->_params['password_crypt_function'])) {
-            $f = $this->_params['password_crypt_function'];
-            if ($f != '') {
-                if ($f[1] == ':') {
-                    $t = $f[0];
-                    $f = substr($f, 2);
-                    if ($t == '1') {
-                        return $f((isset($this->_params['password_salt'])?$this->_params['password_salt']:''), $password);
-                    }
-                    else if ($t == '2') {
-                        return $f($this->_params, $password);
-                    }
-                }
-                return $f($password);
-            }
-        }
-        return $password;
     }
 }
