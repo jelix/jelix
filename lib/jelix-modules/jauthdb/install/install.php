@@ -55,7 +55,7 @@ class jauthdbModuleInstaller extends jInstallerModule {
 
                     $cn = $this->dbConnection();
                     $cn->exec("INSERT INTO ".$cn->prefixTable('jlx_user')." (usr_login, usr_password, usr_email ) VALUES
-                                ('admin', ".$cn->quote($password)." , 'admin@localhost.localdomain2')");
+                                ('admin', ".$cn->quote($password)." , 'admin@localhost.localdomain')");
                 }
             }
         }

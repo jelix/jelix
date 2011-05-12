@@ -2,14 +2,14 @@
 ;for security reasons, don't remove or modify the first line
 
 ; name of the default profile to use for any connection
-default = myapp
+default = "%%appname%%"
 
 ; each section correspond to a connection
 ; the name of the section is the name of the connection, to use as an argument
 ; for jDb and jDao methods
 ; Parameters in each sections depends of the driver type
 
-[myapp]
+[%%appname%%]
 
 ; the driver name : mysql, pgsql, sqlite...
 driver="mysql"
