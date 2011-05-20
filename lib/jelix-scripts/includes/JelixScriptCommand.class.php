@@ -537,6 +537,13 @@ abstract class JelixScriptCommand {
          $prefix = substr($path, 0,3);
          $path = substr($path, 3);
       }
+      elseif ( substr($path, 1,2) == ':/') {
+         //it's seemed to be a WINOS Directoy Seprator
+         //replace all "/" by "\" in the path
+         $path = preg_replace("/\//","\\",$path,-1);
+         $prefix = substr($path, 0,3);
+         $path = substr($path,3);
+      }
       else if (substr($path, 0,1) == '/') {
          $prefix = substr($path, 0,1);
          $path = substr($path, 1);
@@ -552,8 +559,7 @@ abstract class JelixScriptCommand {
             $path = substr($path, 1);
          }
       }
-
-      $cut = (DIRECTORY_SEPARATOR == '/'? '!/!': '![/\\]!');
+      $cut = (DIRECTORY_SEPARATOR == '/'? '!/!': "![/\\\]!");
       $sep = DIRECTORY_SEPARATOR;
       $path = preg_split($cut, $path);
       $newPath = array();
