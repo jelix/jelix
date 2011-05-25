@@ -169,6 +169,7 @@ class createappCommand extends JelixScriptCommand {
         $param['php_rp_conf'] = $this->convertRp($param['rp_conf']);
         $param['php_rp_www']  = $this->convertRp($param['rp_www']);
         $param['php_rp_cmd']  = $this->convertRp($param['rp_cmd']);
+        $param['php_rp_jelix']  = $this->convertRp($param['rp_jelix']);
 
         $this->createFile($appPath.'application.init.php','application.init.php.tpl',$param);
 
@@ -209,6 +210,12 @@ class createappCommand extends JelixScriptCommand {
             $rp = substr($rp, 2);
         if (strpos($rp, '../') !== false) {
             return 'realpath($appPath.\''.$rp."').'/'";
+        }
+        else if (DIRECTORY_SEPARATOR == '/' && $rp[0] == '/') {
+            return "'".$rp."'";
+        }
+        else if (DIRECTORY_SEPARATOR == '\\' && preg_match('/^[a-z]\:/i', $rp)) { // windows
+            return "'".$rp."'";
         }
         else {
             return '$appPath.\''.$rp."'";

@@ -94,6 +94,18 @@ class commandTest extends PHPUnit_Framework_TestCase {
         $targetPath = '/home/foo/bar';
         $this->assertEquals('../foo/bar/', $cmd->testGetRelativePath($path, $targetPath));
 
+        $path = 'c:/home/machin/';
+        $targetPath = 'c:/home/foo/bar';
+        $this->assertEquals('../foo/bar/', $cmd->testGetRelativePath($path, $targetPath));
+
+        $path = 'c:/home/machin/';
+        $targetPath = 'C:/home/foo/bar';
+        $this->assertEquals('../foo/bar/', $cmd->testGetRelativePath($path, $targetPath));
+
+        $path = 'c:/home/machin/';
+        $targetPath = 'E:/home/foo/bar';
+        $this->assertEquals('E:/home/foo/bar/', $cmd->testGetRelativePath($path, $targetPath));
+
     }
 
     function testGetRealPath() {
@@ -112,7 +124,7 @@ class commandTest extends PHPUnit_Framework_TestCase {
             $this->assertEquals('/home/bar', $cmd->testGetRealPath($path));
             $path = '/home/foo/machin/../bar/../../truc';
             $this->assertEquals('/home/truc', $cmd->testGetRealPath($path));
-            
+
         }
         else {
             $path = 'c:\\\\home\\foo\\bar\\';

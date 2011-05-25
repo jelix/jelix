@@ -500,28 +500,47 @@ abstract class JelixScriptCommand {
       $path = preg_split($cut,$path);
       $targetPath = preg_split($cut,$targetPath);
 
-      $dir='';
-      $targetdir='';
+      $dir = '';
+      $targetdir = '';
+
+      if (count($path)) {
+         $dir = array_shift($path);
+         $targetdir = array_shift($targetPath);
+         if (preg_match('/^[a-z]\:/i', $targetdir) && preg_match('/^[a-z]\:/i', $dir)) {
+            if (strcasecmp($dir, $targetdir) != 0) {
+               $targetPath = $targetdir.$sep.implode($sep, $targetPath);
+               if (substr($targetPath, -1) != $sep)
+                  $targetPath .= $sep;
+               return $targetPath;
+            }
+         }
+      }
 
       while(count($path)){
          $dir = array_shift($path);
          $targetdir = array_shift($targetPath);
-         if($dir != $targetdir)
+         if ($dir != $targetdir)
             break;
       }
-      if(count($path)){
-         $relativePath=str_repeat('..'.$sep,count($path));
-      }else{
-         $relativePath='.'.$sep;
+
+      if (count($path)) {
+         $relativePath = str_repeat('..'.$sep, count($path));
       }
+      else {
+         $relativePath = '.'.$sep;
+      }
+
       if(count($targetPath) && $dir != $targetdir){
-         $relativePath.= $targetdir.$sep.implode($sep,$targetPath);
-      }elseif(count($targetPath) ){
-         $relativePath.= implode($sep,$targetPath);
+         $relativePath .= $targetdir.$sep.implode($sep, $targetPath);
       }
-      if(substr($relativePath,-1) != $sep)
-         $relativePath.=$sep;
-      if($sep =='\\') {
+      elseif (count($targetPath)) {
+         $relativePath .= implode($sep, $targetPath);
+      }
+
+      if (substr($relativePath, -1) != $sep)
+         $relativePath .= $sep;
+
+      if ($sep =='\\') {
          $relativePath = str_replace('\\','/', $relativePath);
       }
       return $relativePath;

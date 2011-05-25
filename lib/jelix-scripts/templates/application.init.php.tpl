@@ -9,7 +9,7 @@
 */
 
 $appPath = dirname (__FILE__).'/';
-require ($appPath.'%%rp_jelix%%init.php');
+require (%%php_rp_jelix%%.'init.php');
 
 jApp::initPaths(
     $appPath,
