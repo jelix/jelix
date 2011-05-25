@@ -25,11 +25,26 @@ class JelixScript {
         if ($appname == '')
             $appname = $config->loadFromProject();
 
+        $home = '';
+
         if (isset($_SERVER['HOME'])) {
-            $config->loadFromIni($_SERVER['HOME'].'/.jelix-scripts.ini', $appname);
+            $home = $_SERVER['HOME'];
         }
         else if (isset($_ENV['HOME'])) {
-            $config->loadFromIni($_ENV['HOME'].'/.jelix-scripts.ini', $appname);
+            $home = $_ENV['HOME'];
+        }
+        else if (isset($_SERVER['USERPROFILE'])) { // windows
+            $home = $_SERVER['USERPROFILE'];
+        }
+        else if (isset($_SERVER['HOMEDRIVE']) && isset($_SERVER['HOMEPATH'])) { // windows
+            $home = $_SERVER['HOMEDRIVE'].$_SERVER['HOMEPATH'];
+        }
+
+        if ($home) {
+            if (file_exists($home.DIRECTORY_SEPARATOR.'.jelix-scripts.ini'))
+                $config->loadFromIni($home.DIRECTORY_SEPARATOR.'.jelix-scripts.ini', $appname);
+            else
+                $config->loadFromIni($home.DIRECTORY_SEPARATOR.'jelix-scripts.ini', $appname); // windows users doesn't often use dot files.
         }
 
         self::$debugMode = $config->debugMode;
@@ -177,4 +192,3 @@ function JelixScriptsExceptionHandler($e){
                           $e->getLine(), $e->getTrace());
 
 }
-
