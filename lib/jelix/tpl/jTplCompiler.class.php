@@ -4,7 +4,7 @@
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler
-* @copyright   2005-2008 Laurent Jouanneau
+* @copyright   2005-2011 Laurent Jouanneau
 * @copyright   2006 Loic Mathaud, 2007 Dominique Papin, 2009 DSDenes, 2010 Christophe Thiriot
 * @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
@@ -685,6 +685,11 @@ class jTplCompiler
 
         if ($bracketcount != 0 || $sqbracketcount != 0) {
             $this->doError1('errors.tpl.tag.bracket.error', $this->_currentTag);
+        }
+
+        $last = end($tokens);
+        if (!is_array($last) || $last[0] != T_CLOSE_TAG) {
+            $this->doError1('errors.tpl.tag.syntax.invalid', $this->_currentTag);
         }
 
         if ($splitArgIntoArray) {
