@@ -14,47 +14,47 @@
 class JelixScriptCommandConfig {
 
     /**
-     * @var string the suffix part of generated of new modules
+     * @var string the suffix part of generated name of new modules. value readed from project.xml
      */
     public $infoIDSuffix='@yourwebsite.undefined';
 
     /**
-     * @var string the web site of the project or your company
+     * @var string the web site of the project or your company. value readed from project.xml
      */
     public $infoWebsite='http://www.yourwebsite.undefined';
 
     /**
-     * @var string the licence of generated files
+     * @var string the licence of generated files. value readed from project.xml
      */
     public $infoLicence='All rights reserved';
 
     /**
-     * @var string link to the licence
+     * @var string link to the licence. value readed from project.xml
      */
     public $infoLicenceUrl='';
 
     /**
-     * @var string
+     * @var string the creator's name inserted in new files headers
      */
     public $infoCreatorName='your name';
 
     /**
-     * @var string
+     * @var string the creator's mail inserted in new file headers
      */
     public $infoCreatorMail='your-email@yourwebsite.undefined';
 
     /**
-     * @var string
+     * @var string copyright of new files. value readed from project.xml
      */
     public $infoCopyright='2011 your name';
 
     /**
-     * @var string
+     * @var string default timezone for new app
      */
     public $infoTimezone='Europe/Paris';
 
     /**
-     * @var string
+     * @var string default locale for new app
      */
     public $infoLocale='en_EN';
 
@@ -123,29 +123,29 @@ class JelixScriptCommandConfig {
     */
 
     /**
-     * @var string the suffix part of generated if of modules and projects
+     * @var string the suffix part of generated name of modules in a new project
      */
     public $newAppInfoIDSuffix='@yourwebsite.undefined';
 
     /**
-     * @var string the web site of the project or your company
+     * @var string the web site of the project or your company, used in a new project
      */
     public $newAppInfoWebsite='http://www.yourwebsite.undefined';
 
     /**
-     * @var string the licence of generated files
+     * @var string the licence of generated files, for a new project
      */
-    public $newAppInfoLicence='All right reserved';
+    public $newAppInfoLicence='All rights reserved';
 
     /**
-     * @var string link to the licence
+     * @var string link to the licence, for a new project
      */
     public $newAppInfoLicenceUrl='';
 
     /**
-     * @var string
+     * @var string copyright of new projects
      */
-    public $newAppInfoCopyright='2010 your name';
+    public $newAppInfoCopyright='2011 your name';
 
     /**
      * @var string
