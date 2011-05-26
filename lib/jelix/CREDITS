@@ -134,7 +134,7 @@ Julien Issler
  - jAuth: update usersession when needed (#461)
  - jSession: cannot use NOW() in dao storage because sqlite doesn't support it (#949)
  - jDbPDOConnection: syntax error when setting utf-8 charset in mysql driver
- - fixed also #1331
+ - fixed also #1331, #1334
 
 Julien Jacottet
  - tpl plugin link_to_remote (#30)

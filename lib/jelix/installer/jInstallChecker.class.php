@@ -6,8 +6,8 @@
 * @subpackage core
 * @author   Laurent Jouanneau
 * @contributor Bastien Jaillot
-* @contributor Olivier Demah, Brice Tence
-* @copyright 2007-2009 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence
+* @contributor Olivier Demah, Brice Tence, Julien Issler
+* @copyright 2007-2009 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence, 2011 Julien Issler
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0b2
@@ -48,8 +48,8 @@ class jInstallCheck {
         $this->messages = new jInstallerMessageProvider($lang);
 #if STANDALONE_CHECKER
         $this->buildProperties = array(
-#expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__', 
-#expand    'ENABLE_PHP_JELIX'  =>'__ENABLE_PHP_JELIX__', 
+#expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__',
+#expand    'ENABLE_PHP_JELIX'  =>'__ENABLE_PHP_JELIX__',
 #expand    'WITH_BYTECODE_CACHE'=>'__WITH_BYTECODE_CACHE__',
         );
 #endif
@@ -192,7 +192,7 @@ class jInstallCheck {
                     $this->notice('extension.database.missing2');
                 }
             }
-            
+
         }
 
         foreach($this->otherExtensions as $name=>$required){
@@ -223,7 +223,7 @@ class jInstallCheck {
             throw new Exception($this->messages->get('path.core'));
         }
 
-        if(!file_exists(jApp::tempPath()) || !is_writable(jApp::tempPath())){
+        if(!file_exists(jApp::tempBasePath()) || !is_writable(jApp::tempBasePath())){
             $this->error('path.temp');
             $ok=false;
         }

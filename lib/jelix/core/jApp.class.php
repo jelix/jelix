@@ -9,7 +9,7 @@
 */
 
 /**
-* 
+*
 * @package    jelix
 * @subpackage utils
 */
@@ -37,7 +37,7 @@ class jApp {
 
     /**
      * initialize the application paths
-     * 
+     *
      * Warning: given paths should be ended by a directory separator.
      * @param string $appPath  application directory
      * @param string $wwwPath  www directory
