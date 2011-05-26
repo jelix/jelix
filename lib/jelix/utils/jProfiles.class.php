@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Laurent Jouanneau
-* @contributor Yannick Le Guédart
-* @copyright   2011 Laurent Jouanneau, 2007 Yannick Le Guédart
+* @contributor Yannick Le Guédart, Julien Issler
+* @copyright   2011 Laurent Jouanneau, 2007 Yannick Le Guédart, 2011 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -152,7 +152,7 @@ class jProfiles {
             return self::$_objectPool[$category][$profile['_name']];
         $obj = call_user_func($function, $profile);
         if ($obj)
-            self::$_objectPool[$category][$name] = $obj;
+            self::$_objectPool[$category][$profile['_name']] = $obj;
         return $obj;
     }
 

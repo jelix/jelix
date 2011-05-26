@@ -37,7 +37,7 @@ Olivier Demah (aka FoxMaSk)
  - little improvements on date_format tpl plugins (#654)
  - improvements in jInstallChecker.class.php (#1022)
  - tpl plugin hook (#1019)
- - tpl plugin gravatar (#993) 
+ - tpl plugin gravatar (#993)
  - meta supplementaires (author,generator) (#1063)
  - install jacl2db sans prefix de table (#1119)
  - $ should not be allowed in parameters of dao methods  (#1129)
@@ -134,6 +134,7 @@ Julien Issler
  - jAuth: update usersession when needed (#461)
  - jSession: cannot use NOW() in dao storage because sqlite doesn't support it (#949)
  - jDbPDOConnection: syntax error when setting utf-8 charset in mysql driver
+ - fixed also #1331
 
 Julien Jacottet
  - tpl plugin link_to_remote (#30)
@@ -234,7 +235,7 @@ Loic Mathaud (bballizlife):
  - coord plugin for Zend Framework (#651)
  - added title feature in the meta_html plugin (#810)
  - translations in the config file (#940)
- - jelix-script createdao should'nt validate fieldname with '-' (#980) 
+ - jelix-script createdao should'nt validate fieldname with '-' (#980)
 
 Alexis Métaireau
  - improvements on jtpl plugin formcontrol (#652)
