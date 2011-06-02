@@ -35,6 +35,8 @@ class minifyHTMLResponsePlugin implements jIHTMLResponsePlugin {
      * directly some contents.
      */
     public function beforeOutput() {
+        if (!($this->response instanceof jResponseHtml))
+            return;
         global $gJConfig;
         if ($gJConfig->jResponseHtml['minifyCSS']) {
             if ($gJConfig->jResponseHtml['minifyExcludeCSS']) {
