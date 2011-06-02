@@ -160,10 +160,21 @@ class UTjlocale extends jUnitTestCase {
         // no test2.properties file for fr_CA, so we should have the fr_FR one
         $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale', null, 'fr_CA'));
         // no test3.properties file for fr_CA and fr_FR, so we should have the en_EN one
-        //$GLOBALS['gJConfig']->locale = 'en_EN';
-        //$this->assertEqual('this is an en_EN sentence test3',jLocale::get('tests3.first.locale', null, 'fr_CA'));
-        //$this->assertEqual('this is an en_EN sentence test3',jLocale::get('tests3.first.locale', null, 'fr_FR'));
-        //$GLOBALS['gJConfig']->locale = 'fr_FR';
+        $GLOBALS['gJConfig']->fallbackLocale = 'en_EN';
+        $this->assertEqual('this is an en_EN sentence test3',jLocale::get('tests3.first.locale', null, 'fr_FR'));
+
+        $GLOBALS['gJConfig']->fallbackLocale = '';
+        try{
+            // it doesn't exist
+            jLocale::get('jelix_tests~tests3.first.locale', null, 'fr_FR');
+            $this->fail('no exception when trying to get tests3.first.locale');
+        }catch(jException $e){
+            $this->fail('Bad exception when trying to get tests3.first.locale');
+        }catch(Exception $e){
+            $this->pass();
+            $this->assertEqual('(200)The given locale key "jelix_tests~tests3.first.locale" is invalid (for charset UTF-8, lang fr_FR)', $e->getMessage());
+        }
+
         $GLOBALS['gJConfig']->locale = 'en_EN';
     }
 

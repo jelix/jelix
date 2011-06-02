@@ -65,10 +65,15 @@ class jLocale {
             $file = new jSelectorLoc($key, $locale, $charset);
         }
         catch (jExceptionSelector $e) {
+            // the file is not found
             if ($e->getCode() == 12) throw $e;
             if ($locale === null)  $locale = $gJConfig->locale;
             if ($charset === null) $charset = $gJConfig->charset;
-            throw new Exception('(200)The given locale key "'.$key
+            if ($locale != $gJConfig->fallbackLocale && $gJConfig->fallbackLocale) {
+                return jLocale::get ($key, $args, $gJConfig->fallbackLocale, $charset);
+            }
+            else
+                throw new Exception('(200)The given locale key "'.$key
                                 .'" is invalid (for charset '.$charset
                                 .', lang '.$locale.')');
         }
@@ -92,7 +97,7 @@ class jLocale {
             //use the default language and country.
             else if ($locale == $gJConfig->locale) {
                 if ($gJConfig->fallbackLocale)
-                    return jLocale::get ($key, $args, $gJConfig->fallbackLocale);
+                    return jLocale::get ($key, $args, $gJConfig->fallbackLocale, $charset);
                 throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang for the '.$file->charset.' charset');
             }
             return jLocale::get ($key, $args, $gJConfig->locale);
