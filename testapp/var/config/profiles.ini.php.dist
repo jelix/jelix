@@ -32,9 +32,10 @@ persistent= on
 ; to run all test, you should install pdo on your server
 ; and setup a pdo connection
 [jdb:testapppdo]
-driver=pdo
-; you can change dsn option : use same parameters as testapp profiles
-dsn= "mysql:host=localhost;dbname=testapp"
+driver=mysql
+host=localhost
+database="testapp"
+usepdo=1
 ; you can change user option : use same value as user in testapp profiles
 user=root
 ; you can change password option : use same value as password in testapp profiles

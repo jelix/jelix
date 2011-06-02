@@ -85,13 +85,14 @@ class dbprofileWizPage extends installWizardPage {
             $usepdo = false;
             if(substr($driver, -4) == '_pdo') {
                 $ini->setValue('usepdo', true, $profile);
-                $usepdo =true;
+                $usepdo = true;
                 $realdriver = substr($driver, 0, -4);
             }
             else {
                 $ini->removeValue('usepdo', $profile);
                 $realdriver = $driver;
             }
+            $ini->removeValue('dsn', $profile);
 
             if(isset($_POST['persistent'][$profile]) && $_POST['persistent'][$profile] == 'on') {
                 $ini->setValue('persistent', true, $profile);
@@ -168,7 +169,7 @@ class dbprofileWizPage extends installWizardPage {
 
             if (!count($errors)) {
                 try {
-                    if ($ini->getValue('usepdo', $profile)) {
+                    if ($usepdo) {
                         $m = 'check_PDO';
                     }
                     else {
@@ -420,5 +421,5 @@ table_prefix=
         $pdo = new PDO($dsn, $user, $password, $params);
         $pdo = null;
     }
-    
+
 }
