@@ -145,7 +145,8 @@ class dbprofileWizPage extends installWizardPage {
                 }
 
                 $password = trim($_POST['password'][$profile]);
-                if ($password == '') {
+                $passwordRequired =  (isset($this->config['passwordRequired']) && $this->config['passwordRequired']);
+                if ($password == '' && $passwordRequired) {
                     $errors[] = $this->locales['error.missing.password'];
                 }
                 else {
@@ -153,7 +154,7 @@ class dbprofileWizPage extends installWizardPage {
                      $params['password'] = $password;
                 }
 
-                if ($_POST['passwordconfirm'][$profile] != $password) {
+                if (trim($_POST['passwordconfirm'][$profile]) != $password) {
                     $errors[] = $this->locales['error.invalid.confirm.password'];
                 }
 
@@ -164,7 +165,6 @@ class dbprofileWizPage extends installWizardPage {
                         $ini->setValue('search_path', $search_path, $profile);
                     }
                 }
-
             }
 
             if (!count($errors)) {
