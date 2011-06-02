@@ -18,6 +18,8 @@ modulesPath = lib:jelix-modules/,app:modules/
 ; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
 domainName =
 
+; the locale to fallback when the asked strings doesn't exist in the current locale
+fallbackLocale =
 
 ; ---  don't set the following options to on, except if you know what you do
 

@@ -122,12 +122,26 @@ class UTjlocale extends jUnitTestCase {
         $this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('tests1.second.locale'));
         // no test1.second.locale in fr_CA, so we should have the fr_FR one
         //$this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('tests1.second.locale', null, 'fr_CA'));
-        // no test1.third.locale in fr_CA, fr_FR, so we should have the en_EN one
-        //$GLOBALS['gJConfig']->locale = 'en_EN';
-        //$this->assertEqual('this is the 3th en_EN sentence',jLocale::get('tests1.third.locale', null, 'fr_CA'));
-        //$this->assertEqual('this is the 3th en_EN sentence',jLocale::get('tests1.third.locale', null, 'fr_FR'));
-        //$GLOBALS['gJConfig']->locale = 'fr_FR';
+
+        // no test1.third.locale in fr_FR, so we should have the en_EN one
+        $GLOBALS['gJConfig']->fallbackLocale = 'en_EN';
+        $this->assertEqual('this is the 3th en_EN sentence',jLocale::get('tests1.third.locale', null, 'fr_FR'));
+
         try{
+            // it doesn't exist, even in the fallback locale
+            jLocale::get('tests1.fourth.locale', null, 'fr_FR');
+            $this->fail('no exception when trying to get tests1.fourth.locale locale');
+        }catch(jException $e){
+            $this->fail('Bad exception when trying to get tests1.fourth.locale locale');
+        }catch(Exception $e){
+            $this->pass();
+            $this->assertEqual('(210)The given locale key "jelix_tests~tests1.fourth.locale" does not exists in the default lang and in the fallback lang for the UTF-8 charset', $e->getMessage());
+        }
+
+        $GLOBALS['gJConfig']->fallbackLocale = '';
+
+        try{
+            // it doesn't exist
             jLocale::get('tests1.fourth.locale', null, 'fr_FR');
             $this->fail('no exception when trying to get tests1.fourth.locale locale');
         }catch(jException $e){

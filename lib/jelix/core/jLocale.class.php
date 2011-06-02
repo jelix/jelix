@@ -85,9 +85,14 @@ class jLocale {
         //try to get the message from the bundle.
         $string = $bundle->get ($file->messageKey, $file->charset);
         if ($string === null) {
-            //if the message was not found, we're gonna
+            if ($locale == $gJConfig->fallbackLocale) {
+                throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang and in the fallback lang for the '.$file->charset.' charset');
+            }
+            // if the message was not found, we're gonna
             //use the default language and country.
-            if ($locale == $gJConfig->locale) {
+            else if ($locale == $gJConfig->locale) {
+                if ($gJConfig->fallbackLocale)
+                    return jLocale::get ($key, $args, $gJConfig->fallbackLocale);
                 throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang for the '.$file->charset.' charset');
             }
             return jLocale::get ($key, $args, $gJConfig->locale);
@@ -101,4 +106,3 @@ class jLocale {
         }
     }
 }
-
