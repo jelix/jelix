@@ -732,7 +732,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             $this->_outputAttr($attr);
             echo ">\n";
             $value = $this->_form->getData($ctrl->ref);
-
+            if($ctrl->emptyItemLabel !== null)
+                echo '<option value=""',(in_array('',$value,true)?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
             if(is_array($value) && count($value) == 1)
                 $value = $value[0];
 
@@ -757,6 +758,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             echo '<select';
             $this->_outputAttr($attr);
             echo ">\n";
+            if($ctrl->emptyItemLabel !== null)
+                echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
             $this->fillSelect($ctrl, $value);
             echo '</select>';
         }

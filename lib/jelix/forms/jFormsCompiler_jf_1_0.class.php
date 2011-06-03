@@ -230,6 +230,15 @@ class jFormsCompiler_jf_1_0  {
                 $source[]='$ctrl->multiple=true;';
             unset($attributes['multiple']);
         }
+        if(isset($control->emptyitem)) {
+            if(isset($control->emptyitem['locale'])){
+                $labellocale=(string)$control->emptyitem['locale'];
+                $source[]='$ctrl->emptyItemLabel=jLocale::get(\''.$labellocale.'\');';
+            }else{
+                $label= (string)$control->emptyitem;
+                $source[]='$ctrl->emptyItemLabel=\''.str_replace("'","\\'",$label).'\';';
+            }
+        }
         return false;
     }
 

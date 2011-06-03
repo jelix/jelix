@@ -899,6 +899,21 @@ jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
+        $ctrl->emptyItemLabel = 'no selection';
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="listbox1" id="'.$this->formname.'_listbox1" class="jforms-ctrl-listbox" size="4">'."\n";
+        $result.='<option value="">no selection</option>'."\n";
+        $result.='<option value="10">foo</option>'."\n";
+        $result.='<option value="11">bar</option>'."\n";
+        $result.='<option value="23" selected="selected">baz</option>'."\n";
+        $result.='</select>'."\n";
+        $this->assertEqualOrDiff($result, $out);
+        $ctrl->emptyItemLabel = null;
+        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'listbox1\', \'Votre choix\');
+c.errInvalid=\'"Votre choix" field is invalid\';
+jFormsJQ.tForm.addControl(c);
+', $this->builder->getJsContent());
+
         $ctrl->datasource= new jFormsStaticDatasource();
         $ctrl->datasource->data = array(
             '10'=>'foo',
@@ -907,6 +922,11 @@ jFormsJQ.tForm.addControl(c);
         );
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="listbox1" id="'.$this->formname.'_listbox1" class="jforms-ctrl-listbox" size="4">'."\n";
+        $result.='<option value="10">foo</option>'."\n";
+        $result.='<option value="11">bar</option>'."\n";
+        $result.='<option value="23" selected="selected">baz</option>'."\n";
+        $result.='</select>'."\n";
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('c = new jFormsJQControlString(\'listbox1\', \'Votre choix\');
 c.errInvalid=\'"Votre choix" field is invalid\';
