@@ -3,9 +3,9 @@
 
 [jdb]
 ; name of the default profile to use for any connection
-default = myapp
+default = "%%appname%%"
 
-[jdb:myapp]
+[jdb:%%appname%%]
 ; the driver name : mysql, pgsql, sqlite...
 driver="mysql"
 
@@ -37,7 +37,7 @@ default =
 ;[jkvdb:sectionname] change this
 ; ----------- Parameters common to all drivers :
 ; driver type (file, db, memcached)
-; driver =  
+; driver =
 
 ; ---------- memcached driver
 ;driver = memcached
@@ -64,14 +64,14 @@ host = "localhost:11211"
 ; umask for directory structure (default '0700')
 ;directory_umask = ""
 ; umask for cache files (default '0600')
-;file_umask = 
+;file_umask =
 
 
 ;----------------- jSoapClient
 [jsoapclient]
 
 [jsoapclient:default]
-wsdl= 
+wsdl=
 ;trace=1
 soap_version=SOAP_1_1
 
@@ -100,29 +100,29 @@ ttl = 0
 ; Parameters for file driver :
 
 ; directory where to put the cache files (optional default jApp::tempPath('cache/'))
-cache_dir = 
+cache_dir =
 ; enable / disable locking file
 file_locking = 1
 ; directory level. Set the directory structure level. 0 means "no directory structure", 1 means "one level of directory", 2 means "two levels"...
 directory_level = 0
 ; umask for directory structure (default '0700')
-directory_umask = 
+directory_umask =
 ; prefix for cache files (default 'jelix_cache')
 file_name_prefix = ""
 ; umask for cache files (default '0600')
-cache_file_umask = 
+cache_file_umask =
 
 ; Parameters for db driver :
 
 ; dao used (default 'jelix~jcache')
 ;dao = ""
 ; dbprofil (optional)
-;dbprofile = "" 
+;dbprofile = ""
 
 
 ; Parameters for memcached driver :
 
-; Memcached servers. 
+; Memcached servers.
 ; Can be a list e.g
 ;servers = memcache_host1:11211,memcache_host2:11211,memcache_host3:11211 i.e HOST_NAME:PORT
-;servers = 
+;servers =

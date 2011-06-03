@@ -146,7 +146,7 @@ class mysqlDbConnection extends jDbConnection {
     * @return void
     */
     protected function _autoCommitNotify ($state){
-        $this->query ('SET AUTOCOMMIT='.$state ? '1' : '0');
+        $this->query ('SET AUTOCOMMIT='.($state ? '1' : '0'));
     }
 
     /**
@@ -185,4 +185,3 @@ class mysqlDbConnection extends jDbConnection {
     }
 
 }
-

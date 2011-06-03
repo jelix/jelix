@@ -195,6 +195,7 @@ class UTjtplexpr extends jUnitTestCase {
         '$aa-=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','-=','')),
         '$aa/=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','/=','')),
         '$aa*=$bb'=>array('jelix~errors.tpl.tag.phpsyntax.invalid',array('','*=','')),
+        'array(\'q\'=>$q)\''=>array('jelix~errors.tpl.tag.syntax.invalid',array('','')),
     );
 
     protected $badvarexprTrustedMode = array(
