@@ -18,6 +18,7 @@ cd lib/jelix-scripts/commands
   createdaocrud.cmd.php
   createentrypoint.cmd.php
 * createform.cmd.php
+  createlangpackage.cmd.php
   createmodule.cmd.php
   createzone.cmd.php
   help.cmd.php
