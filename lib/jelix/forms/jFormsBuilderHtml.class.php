@@ -708,9 +708,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                 $value='';
         }
         $value = (string) $value;
-        if (!$ctrl->required) {
-            echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
-        }
+        echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
         $this->fillSelect($ctrl, $value);
         echo '</select>';
     }
