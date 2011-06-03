@@ -3,7 +3,8 @@
  * @package    jelix
  * @subpackage db_driver
  * @author     Yann Lecommandoux
- * @copyright  2008 Yann Lecommandoux
+ * @contributor Laurent Jouanneau, Louis S.
+ * @copyright  2008 Yann Lecommandoux, 2011 Laurent Jouanneau, Louis S.
  * @link     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -64,9 +65,8 @@ class mssqlDbConnection extends jDbConnection {
     public function errorCode(){
         return mssql_get_last_message();
     }
-     
+
     /**
-     * (non-PHPdoc)
      * initialize the connection to the database
      * @see lib/jelix/db/jDbConnection#_connect()
      */
@@ -84,7 +84,6 @@ class mssqlDbConnection extends jDbConnection {
     }
 
     /**
-     * (non-PHPdoc)
      * 	close the connection to the database
      * @see lib/jelix/db/jDbConnection#_disconnect()
      */
@@ -93,7 +92,6 @@ class mssqlDbConnection extends jDbConnection {
     }
 
     /**
-     * (non-PHPdoc)
      * 	execute an SQL instruction
      * @see lib/jelix/db/jDbConnection#_doQuery()
      */
@@ -112,9 +110,8 @@ class mssqlDbConnection extends jDbConnection {
             throw new jException('jelix~db.error.query.bad',  mssql_get_last_message());
         }
     }
-     
+
     /**
-     * (non-PHPdoc)
      * @see lib/jelix/db/jDbConnection#_doExec()
      */
     protected function _doExec($query){
@@ -128,11 +125,58 @@ class mssqlDbConnection extends jDbConnection {
         }
     }
     /**
-     * WARNING: it doesn't take care about offset and number.
-     * @notimplemented
      * @see lib/jelix/db/jDbConnection#_doLimitQuery()
      */
     protected function _doLimitQuery ($queryString, $offset, $number){
+
+        // we suppress existing 'TOP XX'
+        $queryString = preg_replace('/^SELECT TOP[ ]\d*\s*/i', 'SELECT ', trim($queryString));
+
+        $distinct = false;
+
+        // we retrieve the select part and the from part
+        list($select, $from) = preg_split('/\sFROM\s/mi', $queryString, 2);
+
+        $fields = preg_split('/\s*,\s*/', $select);
+        $firstField = preg_replace('/^\s*SELECT\s+/', '', array_shift($fields));
+
+        // is there a distinct?
+        if (stripos($firstField, 'DISTINCT') !== false) {
+            $firstField = preg_replace('/DISTINCT/i', '', $firstField);
+            $distinct = true;
+        }
+
+        // is there an order by? if not, we order with the first field
+        $orderby = stristr($from, 'ORDER BY');
+        if ($orderby === false) {
+            if (stripos($firstField, ' as ') !== false) {
+                list($field, $key) = preg_split('/ as /', $firstField);
+            }
+            else {
+                $key = $firstField;
+            }
+
+            $orderby = ' ORDER BY '.$key.' ASC';
+            $from .= $orderby;
+        }
+
+        // first we select all records from the begining to the last record of the selection
+        if(!$distinct)
+            $queryString = 'SELECT TOP ';
+        else
+            $queryString = 'SELECT DISTINCT TOP ';
+
+        $queryString .= ($number+$offset) . ' '.$firstField.','.implode(',', $fields).' FROM '.$from;
+
+        // then we select the last $number records, by retrieving the first $number record in the reverse order
+        $queryString = 'SELECT TOP ' . $number . ' * FROM (' . $queryString . ') AS inner_tbl ';
+        $order_inner = preg_replace(array('/\bASC\b/i', '/\bDESC\b/i'), array('_DESC', '_ASC'), $orderby);
+        $order_inner = str_replace(array('_DESC', '_ASC'), array('DESC', 'ASC'), $order_inner);
+        $queryString .= $order_inner;
+
+        // finally, we retrieve the result in the expected order
+        $queryString = 'SELECT TOP ' . $number . ' * FROM (' . $queryString . ') AS outer_tbl '.$orderby;
+
         $result = $this->_doQuery($queryString);
         return $result;
     }
@@ -180,7 +224,7 @@ class mssqlDbConnection extends jDbConnection {
     }
 
     /**
-     * 
+     *
      * @param integer $id the attribut id
      * @param string $value the attribute value
      * @see PDO::setAttribute()
