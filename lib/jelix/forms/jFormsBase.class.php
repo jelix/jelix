@@ -342,6 +342,9 @@ abstract class jFormsBase {
      */
     public function initControlFromDao($name, $daoSelector, $primaryKey = null, $primaryKeyNames=null, $dbProfile=''){
 
+        if (!isset($this->controls[$name]))
+            throw new jExceptionForms('jelix~formserr.unknown.control2', array($name, $this->sel));
+
         if(!$this->controls[$name]->isContainer()){
             throw new jExceptionForms('jelix~formserr.control.not.container', array($name, $this->sel));
         }
@@ -404,6 +407,9 @@ abstract class jFormsBase {
      * @see jDao
      */
     public function saveControlToDao($controlName, $daoSelector, $primaryKey = null, $primaryKeyNames=null, $dbProfile=''){
+
+        if (!isset($this->controls[$controlName]))
+            throw new jExceptionForms('jelix~formserr.unknown.control2', array($controlName, $this->sel));
 
         if(!$this->controls[$controlName]->isContainer()){
             throw new jExceptionForms('jelix~formserr.control.not.container', array($controlName, $this->sel));
@@ -468,6 +474,9 @@ abstract class jFormsBase {
      * @param string $value the data value
      */
     public function setData($name, $value) {
+        if (!isset($this->controls[$name]))
+            throw new jExceptionForms('jelix~formserr.unknown.control2', array($name, $this->sel));
+
         $this->controls[$name]->setData($value);
     }
 
@@ -494,6 +503,9 @@ abstract class jFormsBase {
      * @param boolean $deactivation   TRUE to deactivate, or FALSE to reactivate
      */
     public function deactivate($name, $deactivation=true) {
+        if (!isset($this->controls[$name]))
+            throw new jExceptionForms('jelix~formserr.unknown.control2', array($name, $this->sel));
+
         $this->controls[$name]->deactivate($deactivation);
     }
 
@@ -512,6 +524,9 @@ abstract class jFormsBase {
      * @param boolean $r true if you want read only
      */
     public function setReadOnly($name, $r = true) {
+        if (!isset($this->controls[$name]))
+            throw new jExceptionForms('jelix~formserr.unknown.control2', array($name, $this->sel));
+
         $this->controls[$name]->setReadOnly($r);
     }
 
