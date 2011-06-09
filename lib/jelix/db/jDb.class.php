@@ -72,8 +72,26 @@ class jSQLLogMessage extends jLogMessage {
 
     public function getDao() {
         foreach ($this->trace as $t) {
-            if (isset($t['file']) && preg_match('/compiled\/daos\/.+\/(.+)~(.+)~.+\.php$/', $t['file'], $m)) {
-                return $m[1].'~'.$m[2];
+            if (isset($t['class'])) {
+                $dao = '';
+                $class = $t['class'];
+                if ($class == 'jDaoFactoryBase') {
+                    if (isset($t['object'])) {
+                        $class = get_class($t['object']);
+                    }
+                    else {
+                        $class = 'jDaoFactoryBase';
+                        $dao = 'unknow dao, jDaoFactoryBase';
+                    }
+                }
+                if(preg_match('/^cDao_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)) {
+                    $dao = $m[1].'~'.$m[2];
+                }
+                if ($dao && isset($t['function'])) {
+                    $dao.= '::'.$t['function'].'()';
+                }
+                if($dao)
+                    return $dao;
             }
         }
         return '';
