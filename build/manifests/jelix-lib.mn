@@ -451,6 +451,7 @@ cd lib/jelix/plugins/tpl/common
   modifier.count_words.php
   modifier.date_format.php
   modifier.indent.php
+  modifier.implode.php
   modifier.jdatetime.php
   modifier.number_format.php
   modifier.regex_replace.php
