@@ -26,5 +26,15 @@
                 <eq property="id_aclsbjgrp" expr="$id_aclsbjgrp" />
             </conditions>
         </method>
+        <method name="replaceSubjectGroup" type="update">
+            <parameter name="old_id_aclsbjgrp" />
+            <parameter name="new_id_aclsbjgrp" />
+            <values>
+                <value property="id_aclsbjgrp" expr="$new_id_aclsbjgrp" />
+            </values>
+            <conditions>
+                <eq property="id_aclsbjgrp" expr="$old_id_aclsbjgrp" />
+            </conditions>
+        </method>
     </factory>
 </dao>
