@@ -248,9 +248,7 @@ jManifest::process('build/manifests/jelix-www.mn', '.', $BUILD_TARGET_PATH, ENV:
 jManifest::$stripComment = false;
 
 jManifest::process('build/manifests/jelix-vendors.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), true);
-
 jManifest::process('build/manifests/jelix-scripts.mn','.', $BUILD_TARGET_PATH , ENV::getAll());
-jManifest::process('build/manifests/jelix-others.mn','.', $BUILD_TARGET_PATH , ENV::getAll());
 jManifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), true);
 jManifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
 
@@ -261,7 +259,6 @@ if($INCLUDE_ALL_FONTS){
 if($ENABLE_PHP_JELIX && ($PACKAGE_TAR_GZ || $PACKAGE_ZIP)){
    jManifest::process('build/manifests/jelix-ext-php.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
-
 
 // jtpl standalone for wizard
 

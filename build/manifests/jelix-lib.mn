@@ -714,3 +714,6 @@ cd lib/installwizard/pages/confmail/
   confmail.fr.php
   confmail.page.php
   confmail.tpl
+
+cd temp
+  .htaccess
