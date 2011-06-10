@@ -64,6 +64,11 @@ cd lib/jelix/core
   jUrlAction.class.php
 * jUrl.class.php
 * jSession.class.php
+#ifnot ENABLE_PHP_JELIX
+  jICoordPlugin.iface.php
+  jISelector.iface.php
+  jIUrlEngine.iface.php
+#endif
 #endif
 
 

@@ -245,10 +245,6 @@ jManifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
 jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), true);
 jManifest::process('build/manifests/jelix-www.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
 
-if( ! $ENABLE_PHP_JELIX && ! $ENABLE_OPTIMIZED_SOURCE){
-    jManifest::process('build/manifests/jelix-no-ext.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
-}
-
 jManifest::$stripComment = false;
 
 if($ENABLE_DEVELOPER){
