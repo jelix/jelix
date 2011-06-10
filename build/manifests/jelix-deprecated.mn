@@ -1,5 +1,7 @@
 
 # list of deprecated/moved files to delete (in the case of an update of jelix from an old version)
+# for all editions of Jelix
+
 cd .
   README
 
