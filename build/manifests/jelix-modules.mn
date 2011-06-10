@@ -104,6 +104,34 @@ cd lib/jelix-modules/jauth/templates
 cd lib/jelix-modules/jauth/zones
 ! loginform.zone.php
 
+#if ENABLE_DEVELOPER
+cd lib/jelix-modules/junittests/
+* module.xml
+cd lib/jelix-modules/junittests/classes
+  jhtmlrespreporter.class.php
+  jtextrespreporter.class.php
+  jjunitrespreporter.class.php
+  junittestcase.class.php
+  junittestcasedb.class.php
+  jrunnerpreparer.class.php
+cd lib/jelix-modules/junittests/controllers
+  default.classic.php
+  default.cmdline.php
+cd lib/jelix-modules/junittests/templates
+  main.tpl
+cd lib/jelix-modules/junittests/install
+  install.php
+cd lib/jelix-modules/junittests/install/www/tests/
+  design.css
+cd lib/jelix-modules/junittests/install/scripts
+  tests.php
+cd lib/jelix-modules/junittests/install/var/log-cli
+cd lib/jelix-modules/junittests/install/var/config/cmdline
+  configtests.ini.php
+cd lib/jelix-modules/junittests/tests
+  jrunnerpreparer.html_cli.unit.php
+#endif
+
 cd lib/jelix-modules/jWSDL
   module.xml
 cd lib/jelix-modules/jWSDL/controllers

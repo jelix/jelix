@@ -49,6 +49,7 @@ c ckeditor_basic.js
 cd lib/jelix-www/js/jforms/htmleditors/wymeditor_basiciframe
   wymiframe.html
   wymiframe.css
+
 cd lib/jelix-www/xul
   jxulform.css
   jxulform.xml
@@ -56,6 +57,13 @@ cd lib/jelix-www/xul
   jsonrpc.js
   jxbl.xml
   jxbl.css
+#if ENABLE_DEVELOPER
+cd lib/jelix-www/xul/test/
+! testxulform.php
+! testxulform_jsonrpc.php
+! testxulform.xul
+#endif
+
 cd lib/jelix-www/wymeditor
   jquery.wymeditor.js
   GPL-license.txt
@@ -385,4 +393,3 @@ cd lib/jelix-www/jquery/themes/smoothness/images
   ui-icons_454545_256x240.png
   ui-icons_888888_256x240.png
   ui-icons_cd0a0a_256x240.png
-
