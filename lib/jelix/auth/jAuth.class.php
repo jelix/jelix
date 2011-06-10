@@ -351,7 +351,7 @@ class jAuth {
         }
 
         $nbLower = floor(($length-$nbNumber-$nbSpec)/2);
-        $nbUpper = $length-$nbNumber-$nbUpper-$nbSpec;
+        $nbUpper = $length-$nbNumber-$nbLower-$nbSpec;
 
         $pass = '';
 
