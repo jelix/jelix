@@ -14,12 +14,12 @@ cd lib/jelix
 
 cd lib/jelix/auth
 * jAuth.class.php
-  jAuthDriverBase.class.php
   jAuthUser.class.php
   jAuthDummyUser.class.php
   jAuthUserLDAP.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jIAuthDriver.iface.php
+  jAuthDriverBase.class.php
 #endif
 
 cd lib/jelix/acl

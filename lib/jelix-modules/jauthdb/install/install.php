@@ -46,8 +46,7 @@ class jauthdbModuleInstaller extends jInstallerModule {
 
                 $this->execSQLScript('install_jauth.schema');
                 if ($this->getParameter('defaultuser')) {
-                    require_once(JELIX_LIB_PATH.'auth/jIAuthDriver.iface.php');
-                    require_once(JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php');
+                    require_once(JELIX_LIB_PATH.'auth/jAuth.class.php');
                     require_once(JELIX_LIB_PATH.'plugins/auth/db/db.auth.php');
                     $confIni = parse_ini_file(jApp::configPath($authconfig), true);
                     $driver = new dbAuthDriver($confIni['Db']);

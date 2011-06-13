@@ -21,6 +21,12 @@ require(JELIX_LIB_PATH.'auth/jIAuthDriver.iface.php');
 #endif
 #endif
 
+#if ENABLE_OPTIMIZED_SOURCE
+#includephp jAuthDriverBase.class.php
+#else
+require(JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php');
+#endif
+
 /**
  * This is the main class for authentification process
  * @package    jelix
