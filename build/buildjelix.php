@@ -149,7 +149,7 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 
 Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
 $HG_REVISION = Mercurial::revision(dirname(__FILE__).'/../');
-
+$LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 
 if($IS_NIGHTLY){
@@ -315,4 +315,4 @@ if($PACKAGE_ZIP){
 }
 
 exit(0);
-?>
+
