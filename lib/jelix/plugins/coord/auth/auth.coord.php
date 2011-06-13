@@ -107,7 +107,7 @@ class AuthCoordPlugin implements jICoordPlugin {
 
         if($needAuth){
             if($notLogged){
-                if($this->config['on_error'] == 1 
+                if($this->config['on_error'] == 1
                     || !$GLOBALS['gJCoord']->request->isAllowedResponse('jResponseRedirect')){
                     throw new jException($this->config['error_message']);
                 }else{
@@ -154,11 +154,3 @@ class AuthCoordPlugin implements jICoordPlugin {
     }
 }
 
-
-/**
- * function to use to crypt password. use the password_salt value in the config
- * file of the plugin.
- */
-function sha1WithSalt($salt, $password) {
-    return sha1($salt.':'.$password);
-}
