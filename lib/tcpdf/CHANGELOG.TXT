@@ -1,3 +1,21 @@
+5.9.093 (2011-06-16)
+	- Method setStartingPageNumber() was added to set starting page number (for automatic page numbering).
+
+5.9.092 (2011-06-15)
+	- Method _putpages() was improved.
+	- Bug item #3316678 "Memory overflow when use Rotate and SetAutoPageBreak" was fixed.
+	- Right alignment of page numbers was improved.
+
+5.9.090 (2011-06-14)
+	- Methods AliasNbPages() and AliasNumPage() were re-added as deprecated for backward compatibility.
+
+5.9.089 (2011-06-13)
+	- Example n. 8 was updated.
+	- Method sendOutputData() was changed to remove default compression (it was incompatible with some server settings).
+	- Bugs related to page group numbers were fixed.
+	- Method copyPage() was fixed.
+	- Method Image() was improved to include support for alternative and external images.
+
 5.9.088 (2011-06-01)
 	- Method getAutoPageBreak() was added (see example n. 51).
 	- Example n. 51 (full page background) was updated.

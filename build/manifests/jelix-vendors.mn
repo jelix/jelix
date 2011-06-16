@@ -220,19 +220,41 @@ cd lib/simpletest/test/support/collector
   collectable.2
 #endif
 
-
 cd lib/tcpdf
-! unicode_data.php
-  tcpdf.php
-  README.TXT
-  CHANGELOG.TXT
-  LICENSE.TXT
-  htmlcolors.php
+  2dbarcodes.php
   barcodes.php
+  CHANGELOG.TXT
+  htmlcolors.php
+  LICENSE.TXT
+  pdf417.php
+  qrcode.php
+  README.TXT
+  spotcolors.php
+  tcpdf.crt
+  tcpdf.fdf
+  tcpdf.p12
+  tcpdf.php
+! unicode_data.php
 cd lib/tcpdf/config
   tcpdf_config.php
+  tcpdf_config_alt.php
+cd lib/tcpdf/config/lang
+  bra.php
+  chi.php
+  eng.php
+  fra.php
+  ger.php
+  heb.php
+  hrv.php
+  ita.php
+  pol.php
+  por.php
+  rus.php
+  spa.php
+  swe.php
+  zho.php
 cd lib/tcpdf/images
-! _blank.png
+  _blank.png
 
 cd lib/wikirenderer
   CHANGELOG
@@ -267,3 +289,4 @@ cd lib/wshelper
 ! WSDLException.class.php
 ! WSDLStruct.class.php
 ! WSException.class.php
+
