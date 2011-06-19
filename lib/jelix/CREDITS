@@ -218,6 +218,7 @@ Vincent Viaud (aka Litchi)
  - acl listener for jauth::logout (#1236)
  - modifier round (#1206)
  - fixed auth_url_return transmission during a logout (#1258)
+ - fixed issues in ckeditor bindings (#1329)
 
 Hugues Magnier (aka BaGroN)
  - tpl plugin stripws (#140)
