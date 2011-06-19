@@ -3,9 +3,9 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Laurent Jouanneau
-* @contributor Julien Issler
+* @contributor Julien Issler, Hadrien Lanneau
 * @copyright   2006-2009 Laurent Jouanneau
-* @copyright   2008 Julien Issler
+* @copyright   2008 Julien Issler, 2011 Hadrien Lanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -89,7 +89,10 @@ class jDatatypeString extends jDatatype {
 
     public function check($value){
         if($this->hasFacets){
-            $len = iconv_strlen($value, $GLOBALS['gJConfig']->charset);
+            $len = iconv_strlen(
+                trim(preg_replace( '@\s+@', ' ', $value)),
+                $GLOBALS['gJConfig']->charset
+            );
             if($this->length !== null && $len != $this->length)
                 return false;
             if($this->minLength !== null && $len < $this->minLength)
@@ -351,6 +354,3 @@ class jDatatypeEmail extends jDatatype {
         return jFilter::isEmail($value);
     }
 }
-
-
-

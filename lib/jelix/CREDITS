@@ -185,6 +185,7 @@ Hadrien Lanneau
  - jCrypt : default key in configuration (#1137)
  - jUrl::getFull() (#1186)
  - fixed an error in jLog with jRequest (#1273)
+ - better length check in datatype (#1377)
 
 Nicolas Lassalle
  - bug fix in jResponseBinary (#188)
