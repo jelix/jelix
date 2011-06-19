@@ -6,10 +6,10 @@
 {else}
 
 <h1>{@jelix~crud.title.update@}</h1>
-{formfull $form, $submitAction, array($spkName=>$spk,$dpkName=>$dpk)}
+{formfull $form, $submitAction, array($spkName=>$spk, $dpkName=>$dpk, $offsetParameterName=>$page)}
 
 {/if}
 
 
 
-<p><a href="{jurl $listAction, array($spkName=>$spk)}" class="crud-link">{@jelix~crud.link.return.to.list@}</a>.</p>
+<p><a href="{jurl $listAction, array($spkName=>$spk, $offsetParameterName=>$page)}" class="crud-link">{@jelix~crud.link.return.to.list@}</a>.</p>

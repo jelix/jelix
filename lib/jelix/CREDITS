@@ -15,10 +15,10 @@ Vincent Bonnard
 Brunto
  - bug fix in the formdatafull plugin (#1027)
  - bug fix in jImageModifier (#1161)
+ - improvement in crud controllers (#1189)
 
 Cedric
  - bug fix in jFile::read
-
 
 Uriel Corfa
  - Support of class datasources in jForms (#323)

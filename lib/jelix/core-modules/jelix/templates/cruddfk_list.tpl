@@ -20,7 +20,7 @@
     <td>{$record->$propname|eschtml}</td>
     {/foreach}
     <td>
-        <a href="{jurl $viewAction,array($spkName=>$spk, $dpkName=>$record->$dpkName)}">{@jelix~crud.link.view.record@}</a>
+        <a href="{jurl $viewAction,array($spkName=>$spk, $dpkName=>$record->$dpkName, $offsetParameterName=>$page)}">{@jelix~crud.link.view.record@}</a>
     </td>
 </tr>
 {/foreach}

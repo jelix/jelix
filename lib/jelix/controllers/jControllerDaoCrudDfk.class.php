@@ -217,7 +217,7 @@ class jControllerDaoCrudDfk extends jController {
         $tpl->assign('viewAction' , $this->_getAction('view'));
         $tpl->assign('listAction' , $this->_getAction('index'));
         $tpl->assign('listPageSize', $this->listPageSize);
-        $tpl->assign('page',$offset);
+        $tpl->assign('page',$offset>0?$offset:null);
         $tpl->assign('recordCount',$dao->countBy($cond));
         $tpl->assign('offsetParameterName',$this->offsetParameterName);
 
@@ -283,6 +283,8 @@ class jControllerDaoCrudDfk extends jController {
 
         $tpl = new jTpl();
         $tpl->assign('dpk', null);
+        $tpl->assign('page' , null);
+        $tpl->assign('offsetParameterName' , null);
         $tpl->assign('dpkName', $this->dpkName);
         $tpl->assign('spkName', $this->spkName);
         $tpl->assign('spk', $this->param($this->spkName));
@@ -381,6 +383,7 @@ class jControllerDaoCrudDfk extends jController {
     function preupdate(){
         $spk = $this->param($this->spkName);
         $dpk = $this->param($this->dpkName);
+        $page = $this->param($this->offsetParameterName);
 
         $rep = $this->getResponse('redirect');
         $rep->params[$this->spkName] = $spk;
@@ -403,6 +406,7 @@ class jControllerDaoCrudDfk extends jController {
         $this->_preUpdate($form);
 
         $rep->params[$this->dpkName] = $dpk;
+        $rep->params[$this->offsetParameterName] = $page;
         $rep->action = $this->_getAction('editupdate');
         return $rep;
     }
@@ -423,6 +427,7 @@ class jControllerDaoCrudDfk extends jController {
     function editupdate(){
         $spk = $this->param($this->spkName);
         $dpk = $this->param($this->dpkName);
+        $page = $this->param($this->offsetParameterName);
 
         $id = $this->_getPk($spk, $dpk);
         $form = jForms::get($this->form, $id);
@@ -440,6 +445,8 @@ class jControllerDaoCrudDfk extends jController {
         $tpl->assign('spkName', $this->spkName);
         $tpl->assign('spk', $spk);
         $tpl->assign('form',$form);
+        $tpl->assign('page',$page);
+        $tpl->assign('offsetParameterName',$this->offsetParameterName);
         $tpl->assign('submitAction', $this->_getAction('saveupdate'));
         $tpl->assign('listAction' , $this->_getAction('index'));
         $tpl->assign('viewAction' , $this->_getAction('view'));
@@ -465,6 +472,7 @@ class jControllerDaoCrudDfk extends jController {
     function saveupdate(){
         $spk = $this->param($this->spkName);
         $dpk = $this->param($this->dpkName);
+        $page = $this->param($this->offsetParameterName);
 
         $rep = $this->getResponse('redirect');
         $rep->params[$this->spkName] = $spk;
@@ -477,6 +485,7 @@ class jControllerDaoCrudDfk extends jController {
         }
 
         $rep->params[$this->dpkName] = $dpk;
+        $rep->params[$this->offsetParameterName] = $page;
 
         if($form->check() && $this->_checkData($spk, $form, true)){
             $results = $form->prepareDaoFromControls($this->dao, $id, $this->dbProfile);
@@ -525,6 +534,7 @@ class jControllerDaoCrudDfk extends jController {
 
         $spk = $this->param($this->spkName);
         $dpk = $this->param($this->dpkName);
+        $page = $this->param($this->offsetParameterName);
 
         if( $dpk === null ){
             $rep = $this->getResponse('redirect');
@@ -548,6 +558,8 @@ class jControllerDaoCrudDfk extends jController {
         $tpl->assign('spkName', $this->spkName);
         $tpl->assign('spk', $spk);
         $tpl->assign('form',$form);
+        $tpl->assign('page',$page);
+        $tpl->assign('offsetParameterName',$this->offsetParameterName);
         $tpl->assign('editAction' , $this->_getAction('preupdate'));
         $tpl->assign('deleteAction' , $this->_getAction('delete'));
         $tpl->assign('listAction' , $this->_getAction('index'));
@@ -573,10 +585,12 @@ class jControllerDaoCrudDfk extends jController {
     function delete(){
         $spk = $this->param($this->spkName);
         $dpk = $this->param($this->dpkName);
+        $page = $this->param($this->offsetParameterName);
 
         $rep = $this->getResponse('redirect');
         $rep->action = $this->_getAction('index');
         $rep->params[$this->spkName] = $spk;
+        $rep->params = array($this->offsetParameterName=>$page);
 
         $dao = jDao::get($this->dao, $this->dbProfile);
         $id = $this->_getPk($spk, $dpk, $dao);
