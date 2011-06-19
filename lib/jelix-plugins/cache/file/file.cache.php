@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage plugins_cache_file
 * @author      Zend Technologies
-* @contributor Tahina Ramaroson, Sylvain de Vathaire, Bricet
-* @copyright  2005-2008 Zend Technologies USA Inc (http://www.zend.com), 2008 Neov
+* @contributor Tahina Ramaroson, Sylvain de Vathaire, Bricet, Laurent Jouanneau
+* @copyright  2005-2008 Zend Technologies USA Inc (http://www.zend.com), 2008 Neov, 2011 Laurent Jouanneau
 * The implementation of this class is based on Zend Cache Backend File class
 * Few lines of code was adapted for Jelix
 * @licence  see LICENCE file
@@ -292,7 +292,14 @@ class fileCacheDriver implements jICacheDriver {
         $filePath = $this->_getCacheFilePath($key);
         if(!file_exists($filePath))
             return false;
-        clearstatcache();
+#if PHP53ORMORE
+        clearstatcache(false, $filePath);
+#else
+        if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+            clearstatcache(false, $filePath);
+        else
+            clearstatcache();
+#endif
         return (filemtime($filePath) > time() || filemtime($filePath) == 0) && is_readable ($filePath);
     }
 
@@ -423,18 +430,26 @@ class fileCacheDriver implements jICacheDriver {
         if (file_exists($dir) && $handle = opendir($dir)) {
             while (false !== ($file = readdir($handle))) {
                 if ($file != '.' && $file != '..'){
-                    if (is_file ($dir.'/'.$file)){
+                    $f = $dir.'/'.$file;
+                    if (is_file ($f)){
                         if($all){
-                            @unlink ($dir.'/'.$file);
+                            @unlink ($f);
                         }else{
-                            clearstatcache();
-                            if(time() > filemtime($dir.'/'.$file) && filemtime($dir.'/'.$file) != 0){
+#if PHP53ORMORE
+                            clearstatcache(false, $f);
+#else
+                            if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+                                clearstatcache(false, $f);
+                            else
+                                clearstatcache();
+#endif
+                            if(time() > filemtime($f) && filemtime($f) != 0){
                                 @unlink ($dir.'/'.$file);
                             }
                         }
                     }
-                    if (is_dir ($dir.'/'.$file)){
-                        self::_removeDir($dir.'/'.$file,$all);
+                    if (is_dir ($f)){
+                        self::_removeDir($f, $all);
                     }
                 }
             }

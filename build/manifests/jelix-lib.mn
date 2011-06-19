@@ -656,11 +656,11 @@ cd lib/jelix/plugins/urls/basic_significant
   basic_significant.urls.php
 
 cd lib/jelix-plugins/cache/file
-  file.cache.php
+* file.cache.php
   LICENCE
 
 cd lib/jelix-plugins/kvdb/file
-  file.kvdriver.php
+* file.kvdriver.php
   LICENCE
 
 
