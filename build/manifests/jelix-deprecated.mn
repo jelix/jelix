@@ -169,7 +169,16 @@ cd lib/jelix-www/wymeditor/skins/default
   screen.css
 
 rmd lib/tcpdf/barcode
-rmd lib/tcpdf/config/lang
+cd lib/pdf-fonts/
+  courierb.php
+  courierbi.php
+  courieri.php
+  dejavusans-extralight.php
+  dejavusans-extralight.ctg.z
+  dejavusans-extralight.z
+
+rmd lib/pdf-fonts/dejavu-ttf-2.15
+rmd lib/pdf-fonts/freefont-20060126
 
 rmd lib/jelix-admin-modules/jacl2_admin
 

@@ -241,6 +241,13 @@ jManifest::$usedVcs = $TARGET_REPOSITORY;
 jManifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
 jManifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
 
+if ($DELETE_DEPRECATED_FILES) {
+    jManifest::removeFiles('build/manifests/jelix-deprecated.mn', $BUILD_TARGET_PATH);
+    if($ENABLE_DEVELOPER){
+        jManifest::removeFiles('build/manifests/jelix-deprecated-dev.mn', $BUILD_TARGET_PATH);
+    }
+}
+
 //... execution des manifests
 jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), true);
 jManifest::process('build/manifests/jelix-www.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), true);
@@ -297,12 +304,6 @@ if ($PACKAGE_TAR_GZ || $PACKAGE_ZIP) {
   file_put_contents($MAIN_TARGET_PATH.'/PACKAGE_NAME',$PACKAGE_NAME);
 }
 
-if ($DELETE_DEPRECATED_FILES) {
-    jManifest::removeFiles('build/manifests/jelix-deprecated.mn', $BUILD_TARGET_PATH);
-    if($ENABLE_DEVELOPER){
-        jManifest::removeFiles('build/manifests/jelix-deprecated-dev.mn', $BUILD_TARGET_PATH);
-    }
-}
 
 if($PACKAGE_TAR_GZ){
     exec('tar czf '.$MAIN_TARGET_PATH.'/'.$PACKAGE_NAME.'.tar.gz -C '.$MAIN_TARGET_PATH.' '.$PACKAGE_NAME);
@@ -315,4 +316,3 @@ if($PACKAGE_ZIP){
 }
 
 exit(0);
-
