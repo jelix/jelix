@@ -135,7 +135,7 @@ Julien Issler
  - jAuth: update usersession when needed (#461)
  - jSession: cannot use NOW() in dao storage because sqlite doesn't support it (#949)
  - jDbPDOConnection: syntax error when setting utf-8 charset in mysql driver
- - fixed also #1331, #1334
+ - fixed also #1331, #1334, #1335
 
 Julien Jacottet
  - tpl plugin link_to_remote (#30)
@@ -187,6 +187,7 @@ Hadrien Lanneau
  - jCrypt : default key in configuration (#1137)
  - jUrl::getFull() (#1186)
  - fixed an error in jLog with jRequest (#1273)
+ - better length check in datatype (#1377)
 
 Nicolas Lassalle
  - bug fix in jResponseBinary (#188)
@@ -220,6 +221,7 @@ Vincent Viaud (aka Litchi)
  - acl listener for jauth::logout (#1236)
  - modifier round (#1206)
  - fixed auth_url_return transmission during a logout (#1258)
+ - fixed issues in ckeditor bindings (#1329)
 
 Hugues Magnier (aka BaGroN)
  - tpl plugin stripws (#140)
