@@ -15,7 +15,7 @@ error_reporting(E_ALL);
 define ('JELIX_SCRIPTS_PATH', dirname(__FILE__).'/../');
 
 if (PHP_SAPI != 'cli') {
-    echo "Wrong way";
+    echo "You must use the CLI version of PHP, not the ".PHP_SAPI." version\n";
     exit(1);
 }
 
