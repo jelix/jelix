@@ -88,6 +88,9 @@ Florian Hatat (aka flh)
  - improvements on jDateTime + RFC2822 support (#379)
  - Fix bugs on duration calculation + new jDuration class (#425, #453)
 
+Vincent Herr
+ - fixed a bug in jDbPDOConnection related to the mssql support (#1389)
+
 Emmanuel Hesry (aka m@noo)
  - improvement on jDateTime plugin for full date format (#796)
 
