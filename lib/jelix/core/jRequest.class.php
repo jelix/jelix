@@ -183,7 +183,7 @@ abstract class jRequest {
 
         return $response;
     }
-    
+
     /**
      * return the ip address of the user
      * @return string the ip
@@ -197,7 +197,7 @@ abstract class jRequest {
             return $_SERVER['REMOTE_ADDR'];
         }
     }
-    
+
     /**
      * return the protocol
      * @return string  http or https
@@ -208,6 +208,25 @@ abstract class jRequest {
       if ($proto === null)
          $proto = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off' ? 'https://':'http://');
       return $proto;
+   }
+
+   /**
+    * return the domain name
+    * @return string
+    * @since 1.2.3
+    */
+   function getDomaineName() {
+      global $gJConfig;
+      if ($gJConfig->domainName != '') {
+         $domain = $gJConfig->domainName;
+      }
+      elseif (isset($_SERVER['HTTP_HOST'])) {
+         $domain = $_SERVER['HTTP_HOST'];
+      }
+      elseif (isset($_SERVER['SERVER_NAME'])) {
+         $domain = $_SERVER['SERVER_NAME'];
+      }
+      return $domain;
    }
 
    /**
@@ -287,4 +306,3 @@ abstract class jRequest {
 
 
 }
-

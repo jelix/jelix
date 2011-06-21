@@ -147,7 +147,7 @@ class jUrl extends jUrlBase {
 
     /**
     * Gets the url corresponding to an action, in the given format
-    * @param string $actSel  action selector. You can use # instead of the module 
+    * @param string $actSel  action selector. You can use # instead of the module
     *                or the action name, to specify the current url.
     * @param array $params associative array with the parameters
     * @param integer $what the format you want : one of the jUrl const,
@@ -186,13 +186,10 @@ class jUrl extends jUrlBase {
         if ($domainName) {
             $domain = $domainName;
         }
-        elseif ($gJConfig->domainName != '') {
-            $domain = $gJConfig->domainName;
-        }
-        elseif (isset($_SERVER['HTTP_HOST'])) {
-            $domain = $_SERVER['HTTP_HOST'];
-        }
         else {
+            $domain = $GLOBALS['gJCoord']->request->getDomainName();
+        }
+        if ($domain == '') {
             throw new jException('jelix~errors.urls.domain.void');
         }
 
