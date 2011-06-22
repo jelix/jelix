@@ -9,7 +9,7 @@
 * @contributor Olivier Demah (#733)
 * @contributor Cedric (fix bug ticket 56)
 * @contributor Julien Issler
-* @copyright   2005-2010 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
+* @copyright   2005-2011 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -164,7 +164,7 @@ class jFile {
         }
     }
 
-    public static $mimeTypes = array(
+    protected static $mimeTypes = array(
 
         'txt' => 'text/plain',
         'htm' => 'text/html',
