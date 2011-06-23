@@ -204,7 +204,7 @@ jFormsJQ.tForm.addControl(c);
 
         // output of the label of <choice>
         ob_start();$this->builder->outputControlLabel($choice);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<label class="jforms-label" for="'.$this->formname.'_status" id="'.$this->formname.'_status_label">Task Status</label>'."\n", $out);
+        $this->assertEqualOrDiff('<span class="jforms-label" id="'.$this->formname.'_status_label">Task Status</span>'."\n", $out);
 
         // ouput of the whole <choice>, with original values
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";

@@ -186,13 +186,10 @@ class jUrl extends jUrlBase {
         if ($domainName) {
             $domain = $domainName;
         }
-        elseif ($gJConfig->domainName != '') {
-            $domain = $gJConfig->domainName;
-        }
-        elseif (isset($_SERVER['HTTP_HOST'])) {
-            $domain = $_SERVER['HTTP_HOST'];
-        }
         else {
+            $domain = $GLOBALS['gJCoord']->request->getDomainName();
+        }
+        if ($domain == '') {
             throw new jException('jelix~errors.urls.domain.void');
         }
 

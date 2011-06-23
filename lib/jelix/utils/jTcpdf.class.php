@@ -4,7 +4,7 @@
 * @subpackage  utils
 * @author      Julien Issler
 * @contributor Laurent Jouanneau
-* @copyright   2007-2009 Julien Issler, 2007 Laurent Jouanneau
+* @copyright   2007-2009 Julien Issler, 2007-2011 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0
@@ -12,7 +12,10 @@
 
 define('K_TCPDF_EXTERNAL_CONFIG',true);
 define('K_PATH_MAIN', LIB_PATH.'tcpdf/');
-define('K_PATH_URL', $GLOBALS['gJConfig']->urlengine['basePath']);
+define('K_PATH_URL',
+       $GLOBALS['gJCoord']->request->getProtocol() .
+       $GLOBALS['gJCoord']->request->getDomainName() .
+       $GLOBALS['gJConfig']->urlengine['basePath']);
 define('K_PATH_FONTS', LIB_PATH.'pdf-fonts/');
 define('K_PATH_CACHE', jApp::tempPath());
 define('K_PATH_IMAGES', jApp::appPath());
@@ -61,12 +64,12 @@ class jTcpdf extends TCPDF {
 
         if(!is_dir($path))
             throw new jException('jelix~errors.file.directory.notexists',array($path));
-        
+
         if(!is_writable($path))
            throw new jException('jelix~errors.file.directory.notwritable',array($path));
 
         if(file_put_contents(realpath($path).'/'.$filename, $this->Output('','S')))
-           return true;       
+           return true;
 
         throw new jException('jelix~errors.file.write.error',array($path.'/'.$filename,''));
 

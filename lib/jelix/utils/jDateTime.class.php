@@ -12,7 +12,7 @@
 * @copyright   2007 Loic Mathaud
 * @copyright   2007-2008 Florian Hatat
 * @copyright   2001-2005 CopixTeam, GeraldCroes, Laurent Jouanneau
-* @copyright   2008 Julien Issler
+* @copyright   2008-2011 Julien Issler
 * @copyright   2009 Emmanuel Hesry
 * @copyright   2010 Hadrien Lanneau
 *
@@ -423,9 +423,9 @@ class jDateTime {
      */
     public function durationTo($dt, $absolute=true){
         if($absolute){
-            $t = mktime($dt->hour, $dt->minute, $dt->second,
+            $t = gmmktime($dt->hour, $dt->minute, $dt->second,
                 $dt->month, $dt->day, $dt->year)
-                - mktime($this->hour, $this->minute, $this->second,
+                - gmmktime($this->hour, $this->minute, $this->second,
                     $this->month, $this->day, $this->year);
             return new jDuration($t);
         }

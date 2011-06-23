@@ -243,6 +243,25 @@ abstract class jRequest {
    }
 
    /**
+    * return the domain name
+    * @return string
+    * @since 1.2.3
+    */
+   function getDomaineName() {
+      global $gJConfig;
+      if ($gJConfig->domainName != '') {
+         $domain = $gJConfig->domainName;
+      }
+      elseif (isset($_SERVER['HTTP_HOST'])) {
+         $domain = $_SERVER['HTTP_HOST'];
+      }
+      elseif (isset($_SERVER['SERVER_NAME'])) {
+         $domain = $_SERVER['SERVER_NAME'];
+      }
+      return $domain;
+   }
+
+   /**
     * call it when you want to read the content of the body of a request
     * when the method is not GET or POST
     * @return mixed    array of parameters or a single string when the content-type is unknown

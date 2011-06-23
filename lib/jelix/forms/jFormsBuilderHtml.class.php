@@ -1058,7 +1058,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             }else{
                 $name=$ctrl->ref;
             }
-            echo '<span class="jforms-help" id="'. $this->_name.'_'.$ctrl->ref.'-help"><span>'.htmlspecialchars($ctrl->help).'</span></span>';
+            // additionnal &nbsp, else background icon is not shown in webkit
+            echo '<span class="jforms-help" id="'. $this->_name.'_'.$ctrl->ref.'-help">&nbsp;<span>'.htmlspecialchars($ctrl->help).'</span></span>';
         }
     }
 }
