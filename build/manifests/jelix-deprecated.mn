@@ -206,3 +206,7 @@ cd lib/jelix-modules/jauthdb/install
 cd lib/json
   JSON.php
   LICENSE
+
+cd php5redis
+  README.txt
+  Php5Redis.php

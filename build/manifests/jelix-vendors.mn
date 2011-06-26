@@ -71,8 +71,8 @@ cd lib/minify/min/lib/Solar
 ! Dir.php
 
 cd lib/php5redis/
-  Php5Redis.php
-  README.txt
+  Redis.php
+  README.md
 
 cd lib/phpMailer
 ! class.phpmailer.php
@@ -289,4 +289,3 @@ cd lib/wshelper
 ! WSDLException.class.php
 ! WSDLStruct.class.php
 ! WSException.class.php
-

@@ -1,6 +1,13 @@
 <?php
-class Php5RedisException extends Exception {}
-class Php5Redis {
+class RedisException extends Exception {}
+/**
+ * Redis database connection class
+ * 
+ * @author sash
+ * @license LGPL
+ * @version 1.2
+ */
+class Redis {
 	private $port;
 	private $host;
 	private $_sock;
@@ -11,10 +18,6 @@ class Php5Redis {
 		$this->port = $port;
 	}
 	
-	function __destruct() {
-		$this->disconnect();
-	}
-
 	private function connect() {
 		if ($this->_sock)
 			return;
@@ -26,26 +29,26 @@ class Php5Redis {
 		$msg = "Cannot open socket to {$this->host}:{$this->port}";
 		if ($errno || $errmsg)
 			$msg .= "," . ($errno ? " error $errno" : "") . ($errmsg ? " $errmsg" : "");
-		throw new Php5RedisException ( "$msg." );
+		throw new RedisException ( "$msg." );
 	}
 	private function debug($msg){
-		if ($this->debug) echo sprintf("[Php5Redis] %s\n", $msg);
+		if ($this->debug) echo sprintf("[Redis] %s\n", $msg);
 	}
 	
-	private function read($len = 1024) {
+	private function read() {
 		if ($s = fgets ( $this->_sock )) {
 			$this->debug('Read: '.$s.' ('.strlen($s).' bytes)');
 			return $s;
 		}
 		$this->disconnect ();
-		throw new Php5RedisException ( "Cannot read from socket." );
+		throw new RedisException ( "Cannot read from socket." );
 	}
 	private function cmdResponse() {
 		// Read the response
 		$s = trim ( $this->read () );
 		switch ($s [0]) {
 			case '-' : // Error message
-				throw new Php5RedisException ( substr ( $s, 1 ) );
+				throw new RedisException ( substr ( $s, 1 ) );
 				break;
 			case '+' : // Single line response
 				return substr ( $s, 1 );
@@ -80,24 +83,53 @@ class Php5Redis {
 				return $res;
 				break;
 			default :
-				throw new Php5RedisException ( 'Unknown responce line: ' . $s );
+				throw new RedisException ( 'Unknown responce line: ' . $s );
 				break;
 		}
 	}
-	private function cmd($command, $readResp = true) {
-		$this->debug('Command: '.$command);
+	private $pipeline = false;
+	private $pipeline_commands = 0;
+	function pipeline_begin(){
+		$this->pipeline = true;
+		$this->pipeline_commands = 0;
+	}
+	function pipeline_responses(){
+		$response = array();
+		for ($i=0;$i<$this->pipeline_commands;$i++){
+			$response[] = $this->cmdResponse();
+		}
+		$this->pipeline = false;
+		return $response;
+	}
+	private function cmd($command) {
+		$this->debug('Command: '.(is_array($command)?join(', ',$command):$command));
 		$this->connect ();
-		$s = $command . "\r\n";
+		
+		if (is_array($command)){
+			// Use unified command format
+			
+			$s = '*'.count($command)."\r\n";
+			foreach ($command as $m){
+				$s.='$'.strlen($m)."\r\n";
+				$s.=$m."\r\n";
+			}
+		}
+		else{
+			$s = $command . "\r\n";
+		}
 		while ( $s ) {
 			$i = fwrite ( $this->_sock, $s );
 			if ($i == 0)
 				break;
 			$s = substr ( $s, $i );
 		}
-		if ($readResp)
+		if ($this->pipeline){
+			$this->pipeline_commands++;
+			return null;
+		}
+		else{
 			return $this->cmdResponse ();
-		else
-			return '';
+		}
 	}
 	function disconnect() {
 		if ($this->_sock)
@@ -117,8 +149,7 @@ class Php5Redis {
 	 * @return void The connection is closed as soon as the QUIT command is received. 
 	 */
 	function quit() {
-		$this->cmd ( 'QUIT', false );
-		$this->_sock = null;
+		return $this->cmd ( 'QUIT' );
 	}
 	
 	/**
@@ -139,7 +170,7 @@ class Php5Redis {
 	 * @return string Status code reply
 	 */
 	function auth($password) {
-		return $this->cmd ( 'AUTH '.$password );
+		return $this->cmd ( array('AUTH',$password) );
 	}
 	
 	////////////////////////////////
@@ -158,7 +189,7 @@ class Php5Redis {
 	 * @return string Status code reply
 	 */
 	function set($key, $value, $preserve = false) {
-		return $this->cmd ( ($preserve ? 'SETNX' : 'SET') . " $key " . strlen ( $value ) . "\r\n$value" );
+		return $this->cmd ( array( ($preserve ? 'SETNX' : 'SET') , $key, $value) );
 	}
 	/**
 	 * return the string value of the key
@@ -187,10 +218,11 @@ class Php5Redis {
 			$key = $args;
 		}
 		if (is_array($key)){
-			return $this->cmd ( "MGET ".join(' ', $key) );
+			array_unshift($key, "MGET");
+			return $this->cmd ( $key );
 		}
 		else{
-			return $this->cmd ( "GET $key" );
+			return $this->cmd ( array("GET", $key));
 		}
 	}
 	function __get($key) {
@@ -217,7 +249,7 @@ class Php5Redis {
 	 * @return string Bulk reply
 	 */
 	function getset($key, $value) {
-		return $this->cmd ( "GETSET $key ".strlen($value)."\r\n".$value );
+		return $this->cmd ( array("GETSET", $key, $value) );
 	}
 	/**
 	 * increment the integer value of key
@@ -237,9 +269,9 @@ class Php5Redis {
 	 */
 	function incr($key, $amount = 1) {
 		if ($amount == 1)
-			return $this->cmd ( "INCR $key" );
+			return $this->cmd ( array("INCR", $key) );
 		else
-			return $this->cmd ( "INCRBY $key $amount" );
+			return $this->cmd ( array("INCRBY",$key,$amount) );
 	}
 	/**
 	 * decrement the integer value of key
@@ -258,9 +290,9 @@ class Php5Redis {
 	 */
 	function decr($key, $amount = 1) {
 		if ($amount == 1)
-			return $this->cmd ( "DECR $key" );
+			return $this->cmd ( array("DECR", $key) );
 		else
-			return $this->cmd ( "DECRBY $key $amount" );
+			return $this->cmd ( array("DECRBY", $key, $amount) );
 	}
 	/**
 	 * test if a key exists
@@ -274,7 +306,10 @@ class Php5Redis {
 	 * @return int
 	 */
 	function exists($key) {
-		return $this->cmd ( "EXISTS $key" );
+		return $this->cmd ( array("EXISTS", $key) );
+	}
+	function __isset($key){
+		return $this->exists($key);
 	}
 	
 	/**
@@ -288,7 +323,10 @@ class Php5Redis {
 	 * @return int
 	 */
 	function delete($key) {
-		return $this->cmd ( "DEL $key" );
+		return $this->cmd ( array("DEL", $key) );
+	}
+	function __unset($key){
+		return $this->delete($key);
 	}
 	/**
 	 * return the type of the value stored at key
@@ -301,7 +339,7 @@ class Php5Redis {
 	 * @return string
 	 */
 	function type($key){
-		return $this->cms ( "TYPE $key" );
+		return $this->cms ( array("TYPE", $key) );
 	}
 	
 	////////////////////////////////
@@ -314,7 +352,7 @@ class Php5Redis {
 	 * @return string space separated list of keys
 	 */
 	function keys($pattern) {
-		return $this->cmd ( "KEYS $pattern" );
+		return $this->cmd ( array("KEYS", $pattern) );
 	}
 	/**
 	 * return a random key from the key space
@@ -338,9 +376,9 @@ class Php5Redis {
 	 */
 	function rename($src, $dst, $preserve = False) {
 		if ($preserve) {
-			return $this->cmd ( "RENAMENX $src $dst" );
+			return $this->cmd ( array("RENAMENX", $src, $dst) );
 		}
-		return $this->cmd ( "RENAME $src $dst" );
+		return $this->cmd ( array("RENAME", $src, $dst) );
 	}
 	/**
 	 * return the number of keys in the current db
@@ -357,7 +395,7 @@ class Php5Redis {
 	 * @return int 1: the timeout was set. | 0: the timeout was not set since the key already has an associated timeout, or the key does not exist.
 	 */
 	function expire($key, $ttl){
-		return $this->cmd ("EXPIRE $key $ttl");
+		return $this->cmd (array("EXPIRE", $key, $ttl));
 	}
 	/**
 	 * get the time to live in seconds of a key
@@ -365,7 +403,7 @@ class Php5Redis {
 	 * @return int
 	 */
 	function ttl($key){
-		return $this->cmd ("TTL $key");
+		return $this->cmd (array("TTL", $key));
 	}
 	
 	////////////////////////////////
@@ -383,7 +421,7 @@ class Php5Redis {
 	 */
 	function push($key, $value, $tail = true) {
 		// default is to append the element to the list
-		return $this->cmd ( ($tail ? 'RPUSH' : 'LPUSH') . " $key " . strlen ( $value ) . "\r\n$value" );
+		return $this->cmd ( array($tail ? 'RPUSH' : 'LPUSH',  $key, $value) );
 	}
 	/**
 	 * Return the length of the List value at key
@@ -392,7 +430,7 @@ class Php5Redis {
 	 * @return unknown_type
 	 */
 	function llen($key) {
-		return $this->cmd ( "LLEN $key" );
+		return $this->cmd ( array("LLEN", $key) );
 	}
 	/**
 	 * Return a range of elements from the List at key
@@ -403,7 +441,7 @@ class Php5Redis {
 	 * @return unknown_type
 	 */
 	function lrange($key, $start, $end) {
-		return $this->cmd ( "LRANGE $key $start $end" );
+		return $this->cmd ( array("LRANGE", $key, $start, $end) );
 	}
 	
 	/**
@@ -415,7 +453,7 @@ class Php5Redis {
 	 * @return unknown_type
 	 */
 	function ltrim($key, $start, $end) {
-		return $this->cmd ( "LTRIM $key $start $end" );
+		return $this->cmd ( array("LTRIM", $key, $start, $end) );
 	}
 	/**
 	 * Return the element at index position from the List at key
@@ -425,8 +463,7 @@ class Php5Redis {
 	 * @return unknown_type
 	 */
 	function lindex($key, $index) {
-		return $this->cmd ( "LINDEX $key $index" );
-		return $this->_get_value ();
+		return $this->cmd ( array("LINDEX", $key, $index) );
 	}
 	
 	/**
@@ -438,7 +475,7 @@ class Php5Redis {
 	 * @return unknown_type
 	 */
 	function lset($key, $value, $index) {
-		return $this->cmd ( "LSET $key $index " . strlen ( $value ) . "\r\n$value" );
+		return $this->cmd ( array("LSET", $key, $index, $value) );
 	}
 	/**
 	 * Remove the first-N, last-N, or all the elements matching value from the List at key
@@ -460,7 +497,7 @@ class Php5Redis {
 	 * @return int The number of removed elements if the operation succeeded
 	 */
 	function lrem($key, $value, $count=1) {
-		return $this->cmd ( "LREM $key $count " . strlen ( $value ) . "\r\n$value" );
+		return $this->cmd ( array("LREM", $key, $count, $value) );
 	}
 	
 	/**
@@ -471,7 +508,7 @@ class Php5Redis {
 	 * @return string Bulk reply
 	 */
 	function pop($key, $tail = true) {
-		return $this->cmd ( ($tail ? 'RPOP' : 'LPOP') . " $key" );
+		return $this->cmd ( array($tail ? 'RPOP' : 'LPOP', $key) );
 	}
 	
 	
@@ -487,7 +524,7 @@ class Php5Redis {
 	 * @return unknown_type
 	 */
 	function sadd($key, $value) {
-		return $this->cmd ( "SADD $key " . strlen ( $value ) . "\r\n$value" );
+		return $this->cmd ( array("SADD", $key, $value) );
 	}
 	/**
 	 * Remove the specified member from the Set value at name
@@ -497,7 +534,7 @@ class Php5Redis {
 	 * @return unknown_type
 	 */
 	function srem($key, $value) {
-		return $this->cmd ( "SREM $key " . strlen ( $value ) . "\r\n$value" );
+		return $this->cmd ( array("SREM", $key, $value) );
 	}
 	/**
 	 * Remove and return (pop) a random element from the Set value at key
@@ -505,7 +542,7 @@ class Php5Redis {
 	 * @return string
 	 */
 	function spop($key){
-		return $this->cmd("SPOP $key");
+		return $this->cmd( array("SPOP", $key) );
 	}
 	/**
 	 * Move the specified member from one Set to another atomically
@@ -516,7 +553,7 @@ class Php5Redis {
 	 * @return int 1 if the element was moved | 0 if the element was not found on the first set and no operation was performed
 	 */
 	function smove($srckey, $dstkey, $member){
-		$this->cmd("SMOVE $srckey $dstkey " . strlen ( $member ) . "\r\n$member");
+		$this->cmd(array("SMOVE", $srckey, $dstkey, $member));
 	}
 	/**
 	 * Return the number of elements (the cardinality) of the Set at key
@@ -525,7 +562,7 @@ class Php5Redis {
 	 * @return int
 	 */
 	function scard($key) {
-		return $this->cmd ( "SCARD $key" );
+		return $this->cmd ( array("SCARD", $key) );
 	}
 	
 	/**
@@ -536,7 +573,7 @@ class Php5Redis {
 	 * @return int
 	 */
 	function sismember($key, $value) {
-		return $this->cmd ( "SISMEMBER $key " . strlen ( $value ) . "\r\n$value" );
+		return $this->cmd ( array("SISMEMBER", $key, $value) );
 	}
 	/**
 	 * Return the intersection between the Sets stored at key1, key2, ..., keyN
@@ -551,7 +588,8 @@ class Php5Redis {
 		else{
 			$sets = func_get_args();
 		}
-		return $this->cmd ( 'SINTER ' . implode ( ' ', $sets ) );
+		array_unshift($sets, 'SINTER');
+		return $this->cmd ( $sets );
 	}
 	/**
 	 * Compute the intersection between the Sets stored at key1, key2, ..., keyN, and store the resulting 
@@ -563,12 +601,13 @@ class Php5Redis {
 	function sinterstore($dstkey, $key1) {
 		if (is_array($key1)){
 			$sets = $key1;
+			array_unshift($sets, $dstkey);
 		}
 		else{
 			$sets = func_get_args();
-			array_shift($sets);
 		}
-		return $this->cmd ( 'SINTERSTORE ' . $dstkey . ' ' . implode ( ' ', $sets ) . "" );
+		array_unshift($sets, 'SINTERSTORE');
+		return $this->cmd ( $sets );
 	}
 	/**
 	 * Return the union between the Sets stored at key1, key2, ..., keyN
@@ -583,7 +622,8 @@ class Php5Redis {
 		else{
 			$sets = func_get_args();
 		}
-		return $this->cmd ( 'SUNION ' . implode ( ' ', $sets ) . "" );
+		array_unshift($sets, 'SUNION');
+		return $this->cmd ( $sets );
 	}
 	/**
 	 * Compute the union between the Sets stored at key1, key2, ..., keyN, and store the resulting Set at dstkey
@@ -595,12 +635,13 @@ class Php5Redis {
 	function sunionstore($dstkey, $key1) {
 		if (is_array($key1)){
 			$sets = $key1;
+			array_unshift($sets, $dstkey);
 		}
 		else{
 			$sets = func_get_args();
-			array_shift($sets);
 		}
-		return $this->cmd ( 'SUNIONSTORE ' . $dstkey . ' ' . implode ( ' ', $sets ) . "" );
+		array_unshift($sets, 'SUNIONSTORE');
+		return $this->cmd ( $sets );
 	}
 	/**
 	 * Return the difference between the Set stored at key1 and all the Sets key2, ..., keyN
@@ -615,7 +656,8 @@ class Php5Redis {
 		else{
 			$sets = func_get_args();
 		}
-		return $this->cmd ( 'SDIFF ' . implode ( ' ', $sets ) . "" );
+		array_unshift($sets, 'SDIFF');
+		return $this->cmd ( $sets );
 	}
 	/**
 	 * Compute the difference between the Set key1 and all the Sets key2, ..., keyN, and store the resulting Set at dstkey
@@ -627,12 +669,13 @@ class Php5Redis {
 	function sdiffstore($dstkey, $key1) {
 		if (is_array($key1)){
 			$sets = $key1;
+			array_unshift($sets, $dstkey);
 		}
 		else{
 			$sets = func_get_args();
-			array_shift($sets);
 		}
-		return $this->cmd ( 'SDIFFSTORE ' . $dstkey . ' ' . implode ( ' ', $sets ) . "" );
+		array_unshift($sets, 'SDIFFSTORE');
+		return $this->cmd ( $sets );
 	}
 	/**
 	 * Return all the members of the Set value at key
@@ -641,7 +684,7 @@ class Php5Redis {
 	 * @return array
 	 */
 	function smembers($key) {
-		return $this->cmd ( "SMEMBERS $key" );
+		return $this->cmd ( array("SMEMBERS", $key) );
 	}
 	
 	
@@ -655,7 +698,7 @@ class Php5Redis {
 	 * @return string Status code reply
 	 */
 	function select_db($key) {
-		return $this->cmd ( "SELECT $key" );
+		return $this->cmd ( array("SELECT", $key) );
 	}
 
 	/**
@@ -665,7 +708,7 @@ class Php5Redis {
 	 * @return int 1 if the key was moved | 0 if the key was not moved because already present on the target DB or was not found in the current DB.
 	 */
 	function move($key, $db) {
-		return $this->cmd ( "MOVE $key $db" );
+		return $this->cmd ( array("MOVE", $key, $db) );
 	}
 	/**
 	 * Remove all the keys of the currently selected DB
@@ -694,9 +737,9 @@ class Php5Redis {
 	 */
 	function sort($key, $query = false) {
 		if ($query === false) {
-			return $this->cmd ( "SORT $key" );
+			return $this->cmd ( array("SORT", $key) );
 		} else {
-			return $this->cmd ( "SORT $key $query" );
+			return $this->cmd ( array("SORT", $key, $query) );
 		}
 	}
 	
@@ -763,7 +806,7 @@ class Php5Redis {
 	 * @return string Status code reply
 	 */
 	function slaveof($host=null, $port=6379){
-		return $this->cmd('SLAVEOF '.($host?"$host $port":'no one'));
+		return $this->cmd(array('SLAVEOF', $host?"$host $port":'no one'));
 	}
 	
 	////////////////////////////////
@@ -773,7 +816,17 @@ class Php5Redis {
 		return $this->cmd ( "PING" );
 	}
 	function do_echo($s) {
-		return $this->cmd ( "ECHO " . strlen ( $s ) . "\r\n$s" );
+		return $this->cmd ( array("ECHO", $s) );
+	}
+	
+	/**
+	 * Call any non-implemented function of redis using the new unified request protocol
+	 * @param string $name
+	 * @param array $params
+	 */
+	function __call($name, $params){
+		array_unshift($params, strtoupper($name));
+		return $this->cmd($params);
 	}
 	
 }

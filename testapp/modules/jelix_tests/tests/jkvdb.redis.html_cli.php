@@ -9,7 +9,7 @@
 */
 
 require_once(dirname(__FILE__).'/jkvdb.lib.php');
-require_once(LIB_PATH . 'php5redis/Php5Redis.php');
+require_once(LIB_PATH . 'php5redis/Redis.php');
 /**
 * Tests API jKVDb
 * @package     testapp
@@ -23,7 +23,7 @@ class UTjKVDbRedis extends UTjKVDb {
     protected $redis;
 
     public function setUp (){
-        $this->redis = new Php5Redis('localhost',6379);
+        $this->redis = new Redis('localhost',6379);
         $this->redis->flushall();
     }
 
