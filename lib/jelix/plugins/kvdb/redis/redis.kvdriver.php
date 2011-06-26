@@ -120,14 +120,28 @@ class redisKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
         $val = $this->get($key);
         if ($val === null || !is_numeric($val) || !is_numeric($incvalue))
             return false;
-        return $this->_connection->incr($key, $incvalue);
+        if (intval($val) == $val)
+            return $this->_connection->incr($key, intval($incvalue));
+        else { // float values
+            $result = intval($val)+intval($incvalue);
+            if($this->_connection->set($key, $result))
+                return $result;
+            return false;
+        }
     }
 
     public function decrement($key, $decvalue = 1) {
         $val = $this->get($key);
         if ($val === null || !is_numeric($val) || !is_numeric($decvalue))
             return false;
-        return $this->_connection->decr($key, $decvalue);
+        if (intval($val) == $val)
+            return $this->_connection->decr($key, intval($decvalue));
+        else { // float values
+            $result = intval($val)-intval($decvalue);
+            if ($this->_connection->set($key, $result))
+                return $result;
+            return false;
+        }
     }
 
     // jIKVttl -------------------------------------------------------------
