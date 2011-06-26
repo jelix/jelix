@@ -1,7 +1,8 @@
-diff --git a/lib/php5redis/Php5Redis.php b/lib/php5redis/Php5Redis.php
---- a/lib/php5redis/Php5Redis.php
-+++ b/lib/php5redis/Php5Redis.php
-@@ -6,16 +6,20 @@ class Php5Redis {
+diff --git a/lib/php5redis/Redis.php b/lib/php5redis/Redis.php
+--- a/lib/php5redis/Redis.php
++++ b/lib/php5redis/Redis.php
+@@ -12,17 +12,21 @@ class Redis {
+ 	private $host;
  	private $_sock;
  	public $debug=false;
  	
@@ -9,7 +10,8 @@ diff --git a/lib/php5redis/Php5Redis.php b/lib/php5redis/Php5Redis.php
  		$this->host = $host;
  		$this->port = $port;
  	}
- 	
+-	
++
 +	function __destruct() {
 +		$this->disconnect();
 +	}
@@ -22,29 +24,38 @@ diff --git a/lib/php5redis/Php5Redis.php b/lib/php5redis/Php5Redis.php
  			$this->debug('Connected');
  			return;
  		}
-@@ -75,27 +79,30 @@ class Php5Redis {
- 				}
- 				return $res;
- 				break;
- 			default :
- 				throw new Php5RedisException ( 'Unknown responce line: ' . $s );
- 				break;
+@@ -96,17 +100,17 @@ class Redis {
+ 	function pipeline_responses(){
+ 		$response = array();
+ 		for ($i=0;$i<$this->pipeline_commands;$i++){
+ 			$response[] = $this->cmdResponse();
  		}
+ 		$this->pipeline = false;
+ 		return $response;
  	}
 -	private function cmd($command) {
 +	private function cmd($command, $readResp = true) {
- 		$this->debug('Command: '.$command);
+ 		$this->debug('Command: '.(is_array($command)?join(', ',$command):$command));
  		$this->connect ();
- 		$s = $command . "\r\n";
- 		while ( $s ) {
- 			$i = fwrite ( $this->_sock, $s );
+ 		
+ 		if (is_array($command)){
+ 			// Use unified command format
+ 			
+ 			$s = '*'.count($command)."\r\n";
+ 			foreach ($command as $m){
+@@ -122,19 +126,21 @@ class Redis {
  			if ($i == 0)
  				break;
  			$s = substr ( $s, $i );
  		}
--		return $this->cmdResponse ();
-+		if ($readResp)
-+			return $this->cmdResponse ();
+ 		if ($this->pipeline){
+ 			$this->pipeline_commands++;
+ 			return null;
+ 		}
+-		else{
++		elseif ($readResp) {
+ 			return $this->cmdResponse ();
+ 		}
 +		else
 +			return '';
  	}
@@ -55,7 +66,7 @@ diff --git a/lib/php5redis/Php5Redis.php b/lib/php5redis/Php5Redis.php
  	}
  	
  	////////////////////////////////
-@@ -105,17 +112,18 @@ class Php5Redis {
+@@ -144,17 +150,18 @@ class Redis {
  	/**
  	 * close the connection
  	 * 

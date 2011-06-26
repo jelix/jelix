@@ -17,7 +17,11 @@ class Redis {
 		$this->host = $host;
 		$this->port = $port;
 	}
-	
+
+	function __destruct() {
+		$this->disconnect();
+	}
+
 	private function connect() {
 		if ($this->_sock)
 			return;
@@ -101,7 +105,7 @@ class Redis {
 		$this->pipeline = false;
 		return $response;
 	}
-	private function cmd($command) {
+	private function cmd($command, $readResp = true) {
 		$this->debug('Command: '.(is_array($command)?join(', ',$command):$command));
 		$this->connect ();
 		
@@ -127,9 +131,11 @@ class Redis {
 			$this->pipeline_commands++;
 			return null;
 		}
-		else{
+		elseif ($readResp) {
 			return $this->cmdResponse ();
 		}
+		else
+			return '';
 	}
 	function disconnect() {
 		if ($this->_sock)
@@ -149,7 +155,8 @@ class Redis {
 	 * @return void The connection is closed as soon as the QUIT command is received. 
 	 */
 	function quit() {
-		return $this->cmd ( 'QUIT' );
+		$this->cmd ( 'QUIT', false );
+		$this->_sock = null;
 	}
 	
 	/**
