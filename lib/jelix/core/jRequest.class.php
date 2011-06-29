@@ -247,7 +247,7 @@ abstract class jRequest {
     * @return string
     * @since 1.2.3
     */
-   function getDomaineName() {
+   function getDomainName() {
       global $gJConfig;
       if ($gJConfig->domainName != '') {
          $domain = $gJConfig->domainName;
