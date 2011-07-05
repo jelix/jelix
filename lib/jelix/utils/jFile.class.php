@@ -155,13 +155,24 @@ class jFile {
             // we know that it is not the ideal way to do it
             // but don't want to spent time and resource to guess
             // it from the file content.
-            $ext = strtolower(array_pop(explode('.', $file)));
-            if (array_key_exists($ext, self::$mimeTypes)) {
-                return self::$mimeTypes[$ext];
-            }
-            else
-                return 'application/octet-stream';
+            return self::getMimeTypeFromFilename($file);
         }
+    }
+
+    /**
+     * get the MIME Type of a file, only with its name
+     *
+     * @param string $fileName the file name
+     * @return string the MIME type of the file
+     * @since 1.1.10
+     */
+    public static function getMimeTypeFromFilename($fileName){
+        $ext = strtolower(array_pop(explode('.', $fileName)));
+        if (array_key_exists($ext, self::$mimeTypes)) {
+            return self::$mimeTypes[$ext];
+        }
+        else
+            return 'application/octet-stream';
     }
 
     protected static $mimeTypes = array(
