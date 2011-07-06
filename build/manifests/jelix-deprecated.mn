@@ -207,6 +207,6 @@ cd lib/json
   JSON.php
   LICENSE
 
-cd php5redis
+cd lib/php5redis
   README.txt
   Php5Redis.php
