@@ -118,7 +118,8 @@ class jUrl extends jUrlBase {
         }
         static $url = false;
         if ($url === false){
-            $url = 'http://'.$_SERVER['HTTP_HOST'].$GLOBALS['gJCoord']->request->urlScript.$GLOBALS['gJCoord']->request->urlPathInfo.'?';
+            $req = $GLOBALS['gJCoord']->request;
+            $url = $req->getProtocol().$reg->getDomainName().$req->urlScript.$req->urlPathInfo.'?';
             $q = http_build_query($_GET, '', ($forxml?'&amp;':'&'));
             if(strpos($q, '%3A')!==false)
                 $q = str_replace( '%3A', ':', $q);
@@ -183,21 +184,28 @@ class jUrl extends jUrlBase {
     static function getFull ($actSel, $params = array (), $what=0, $domainName = null) {
         global $gJConfig;
 
+        $proto = '';
         if ($domainName) {
             $domain = $domainName;
         }
         else {
             $domain = $GLOBALS['gJCoord']->request->getDomainName();
         }
-        if ($domain == '') {
-            throw new jException('jelix~errors.urls.domain.void');
+
+        $url = self::get($actSel, $params, ($what != self::XMLSTRING?self::STRING:$what));
+        if (!preg_match('/^http/', $url)) {
+            if ($domain == '') {
+                throw new jException('jelix~errors.urls.domain.void');
+            }
+            if (!preg_match('/^http/', $domain))
+                $proto = $GLOBALS['gJCoord']->request->getProtocol();
+        }
+        else if ($domainName != '') {
+            $url = str_replace($GLOBALS['gJCoord']->request->getDomainName(), $domainName, $url);
+            $domain = '';
         }
 
-        if (!preg_match('/^http/', $domain)) {
-            $domain = $GLOBALS['gJCoord']->request->getProtocol().$domain;
-        }
-
-        return $domain . self::get($actSel, $params, ($what != self::XMLSTRING?self::STRING:$what));
+        return $proto.$domain.$url;
     }
 
     /**
