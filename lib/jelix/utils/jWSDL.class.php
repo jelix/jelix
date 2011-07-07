@@ -168,13 +168,13 @@ class jWSDL {
     private function _compile(){
 
         global $gJConfig;
-        
+
         $url = jUrl::get($this->module.'~'.$this->controller.':index@soap',array(),jUrl::JURL);
         $url->clearParam ();
         $url->setParam('service',$this->module.'~'.$this->controller );
 
-        $serviceURL = "http://".$_SERVER['HTTP_HOST'].$url->toString();
-        $serviceNameSpace = "http://".$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'];
+        $serviceURL = "http://".$GLOBALS['gJCoord']->request->getDomainName().$url->toString();
+        $serviceNameSpace = "http://".$GLOBALS['gJCoord']->request->getDomainName().$gJConfig->urlengine['basePath'];
 
         $wsdl = new WSDLStruct($serviceNameSpace, $serviceURL, SOAP_RPC, SOAP_ENCODED);
         $wsdl->setService(new IPReflectionClass($this->controllerClassName));

@@ -182,7 +182,7 @@ class jImageModifier {
                                      $config['src_path']);
         }
         else {
-            $srcUri = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'].$basePath;
+            $srcUri = $GLOBALS['gJCoord']->request->getProtocol().$GLOBALS['gJCoord']->request->getDomainName().$basePath;
             $srcPath = jApp::wwwPath();
         }
 
@@ -196,7 +196,7 @@ class jImageModifier {
         }
         else {
             $cachePath = jApp::wwwPath('cache/images/');
-            $cacheUri = $GLOBALS['gJCoord']->request->getProtocol().$_SERVER['HTTP_HOST'].$basePath.'cache/images/';
+            $cacheUri = $GLOBALS['gJCoord']->request->getProtocol().$GLOBALS['gJCoord']->request->getDomainName().$basePath.'cache/images/';
         }
         return array($srcPath, $srcUri, $cachePath, $cacheUri);
     }

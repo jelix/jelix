@@ -407,7 +407,7 @@ class significantUrlEngine implements jIUrlEngine {
 
         $url->scriptName = $GLOBALS['gJConfig']->urlengine['basePath'].$urlinfo[1];
         if ($urlinfo[2])
-            $url->scriptName = 'https://'.$_SERVER['HTTP_HOST'].$url->scriptName;
+            $url->scriptName = 'https://'.$GLOBALS['gJCoord']->request->getDomainName().$url->scriptName;
 
         if ($urlinfo[1] && !$GLOBALS['gJConfig']->urlengine['multiview']) {
             $url->scriptName .= $GLOBALS['gJConfig']->urlengine['entrypointExtension'];

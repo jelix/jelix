@@ -23,7 +23,7 @@ class simpleUrlEngine implements jIUrlEngine {
 
     /**
      * Parse a url from the request
-     * @param jRequest $request           
+     * @param jRequest $request
      * @param array  $params            url parameters
      * @return jUrlAction
      * @since 1.1
@@ -101,7 +101,7 @@ class simpleUrlEngine implements jIUrlEngine {
         }
 
         if ($usehttps)
-          return 'https://'.$_SERVER['HTTP_HOST'].$gJConfig->urlengine['basePath'];
+          return 'https://'.$GLOBALS['gJCoord']->request->getDomainName().$gJConfig->urlengine['basePath'];
         else
           return $gJConfig->urlengine['basePath'];
     }
@@ -131,7 +131,7 @@ class simpleUrlEngine implements jIUrlEngine {
 
             if ($action && isset($this->urlspe[$s1 = $module.'~'.$action.'@'.$requestType])){
                 $script = $this->urlspe[$s1];
-            }elseif($action && isset($this->urlspe[$s1 = $module.'~'.substr($action,0,strrpos($action,":")).':*@'.$requestType])){ 
+            }elseif($action && isset($this->urlspe[$s1 = $module.'~'.substr($action,0,strrpos($action,":")).':*@'.$requestType])){
                 $script = $this->urlspe[$s1];
             }elseif($module &&  isset($this->urlspe[$s2 = $module.'~*@'.$requestType])){
                 $script = $this->urlspe[$s2];
@@ -142,4 +142,3 @@ class simpleUrlEngine implements jIUrlEngine {
         return $script;
     }
 }
-

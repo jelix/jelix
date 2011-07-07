@@ -123,9 +123,9 @@ class jResponseSitemap extends jResponse {
         if (isset($loc[2048]) || count($this->urlList) >= $this->maxUrl) {
             return false;
         }
-
+        global $gJCoord;
         $url = new jSitemapUrl();
-        $url->loc = 'http'. (empty($_SERVER['HTTPS']) ? '' : 's') .'://'. $_SERVER['HTTP_HOST'] . $loc;
+        $url->loc = $gJCoord->request->getProtocol(). $gJCoord->request->getDomainName() . $loc;
 
         if (($timestamp = strtotime($lastmod))) {
             $url->lastmod = date('c', $timestamp);
@@ -153,9 +153,9 @@ class jResponseSitemap extends jResponse {
         if (isset($loc[2048]) || count($this->urlSitemap) >= $this->maxSitemap) {
             return false;
         }
-
+        global $gJCoord;
         $sitemap = new jSitemapIndex();
-        $sitemap->loc = 'http'. (empty($_SERVER['HTTPS']) ? '' : 's') .'://'. $_SERVER['HTTP_HOST'] . $loc;
+        $sitemap->loc = $gJCoord->request->getProtocol(). $gJCoord->request->getDomainName(). $loc;
 
         if (($timestamp = strtotime($lastmod))) {
             $sitemap->lastmod = date('c', $timestamp);
