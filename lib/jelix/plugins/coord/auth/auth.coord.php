@@ -4,7 +4,7 @@
 * @subpackage coord_plugin
 * @author     Gérald Croes
 * @contributor  Laurent Jouanneau, Frédéric Guillot, Antoine Detante, Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2007 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
+* @copyright  2001-2005 CopixTeam, 2005-2011 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
 * @copyright  2007 Julien Issler
 *
 * This class was get originally from an experimental branch of the Copix project
@@ -134,23 +134,14 @@ class AuthCoordPlugin implements jICoordPlugin {
     public function afterProcess (){}
 
     /**
-    * Getting IP adress of the user
+    * Getting IP informations of the user
     * @return string
     * @access private
     */
     private function _getIpForSecure (){
-        //this method is heavily based on the article found on
-        // phpbuilder.com, and from the comments on the official phpdoc.
-        $IP_ADDR = $GLOBALS['gJCoord']->request->getIP();
-
-        // get server ip and resolved it
-        $FIRE_IP_ADDR = $_SERVER['REMOTE_ADDR'];
-        $ip_resolved = gethostbyaddr($FIRE_IP_ADDR);
-        // builds server ip infos string
-        $FIRE_IP_LITT = ($FIRE_IP_ADDR != $ip_resolved && $ip_resolved) ? $FIRE_IP_ADDR." - ". $ip_resolved : $FIRE_IP_ADDR;
-        // builds client ip full infos string
-        $toReturn = ($IP_ADDR != $FIRE_IP_ADDR) ? "$IP_ADDR | $FIRE_IP_LITT" : $FIRE_IP_LITT;
+        $toReturn = $_SERVER['REMOTE_ADDR']. '|'.gethostbyaddr($_SERVER['REMOTE_ADDR']);
+        if (isset ($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $toReturn .= '|'.$_SERVER['HTTP_X_FORWARDED_FOR'];
         return $toReturn;
     }
 }
-
