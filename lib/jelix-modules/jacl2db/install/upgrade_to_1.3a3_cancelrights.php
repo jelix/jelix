@@ -18,7 +18,7 @@ class jacl2dbModuleUpgrader_cancelrights extends jInstallerModule {
         $cn = $this->dbConnection();
         try {
             $cn->beginTransaction();
-            $cn->exec("ALTER TABLE ".$cn->prefixTable('jacl2_rights')." ADD canceled boolean not NULL default 0");
+            $cn->exec("ALTER TABLE ".$cn->prefixTable('jacl2_rights')." ADD canceled boolean not NULL default '0'");
             $cn->commit();
         } catch(Exception $e) {
             $cn->rollback();
