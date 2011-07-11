@@ -53,18 +53,18 @@ EOS
         else {
             $info->popupContent = '<ul id="jxdb-errors" class="jxdb-list">';
             $maxLevel = 0;
+            $currentCount = array('error'=>0,'warning'=>0,'notice'=>0,'deprecated'=>0,'strict'=>0);
             foreach($messages as $msg) {
                 if ($msg instanceOf jLogErrorMessage) {
                     $cat = $msg->getCategory();
-
+                    $currentCount[$cat]++;
                     if ($cat == 'error')
                         $maxLevel = 1;
 
                     // careful: if you change the position of the div, update debugbar.js
                     $info->popupContent .= '<li class="jxdb-msg-'.$cat.'">
                     <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>'.htmlspecialchars($msg->getMessage()).'</span></a></h5>
-                    <div>
-                    <p>Code: '.$msg->getCode().'<br/> File: '.htmlspecialchars($msg->getFile()).' '.htmlspecialchars($msg->getLine()).'</p>';
+                    <div><p>Code: '.$msg->getCode().'<br/> File: '.htmlspecialchars($msg->getFile()).' '.htmlspecialchars($msg->getLine()).'</p>';
                     $info->popupContent .= $debugbarPlugin->formatTrace($msg->getTrace());
                     $info->popupContent .='</div></li>';
                 }
@@ -77,6 +77,12 @@ EOS
                 $info->htmlLabel = '<img src="'.$this->getWarningIcon().'" alt="Warnings" title="There are '.$c.' warnings" /> '.$c;
             }
             $info->popupContent .= '</ul>';
+
+            foreach($currentCount as $type=>$count) {
+                if (($c = jLog::getMessagesCount($type)) > $count) {
+                    $info->popupContent .= '<p class="jxdb-msg-warning">There are '.$c.' '.$type.' messages. Only first '.$count.' messages are shown.</p>';
+                }
+            }
         }
 
         $debugbarPlugin->addInfo($info);

@@ -44,9 +44,14 @@ class sqllogDebugbarPlugin implements jIDebugbarPlugin {
             $info->label .= 'memory logger is not active';
         }
         else {
-            $info->htmlLabel .= count($messages);
-            if (count($messages)) {
-                $info->popupContent = '<ul id="jxdb-sqllog" class="jxdb-list">';
+            $realCount = jLog::getMessagesCount('sql');
+            $currentCount = count($messages);
+            $info->htmlLabel .= $realCount;
+            if ($realCount) {
+                if ($realCount > $currentCount) {
+                    $info->popupContent = '<p class="jxdb-msg-warning">Too many queries ('.$realCount.'). Only first '.$currentCount.' queries are shown.</p>';
+                }
+                $info->popupContent .= '<ul id="jxdb-sqllog" class="jxdb-list">';
                 foreach($messages as $msg) {
                     $dao = $msg->getDao();
                     if ($dao) {

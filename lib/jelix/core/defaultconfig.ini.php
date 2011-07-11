@@ -242,6 +242,8 @@ notice=file
 deprecated=
 strict=
 debug=
+sql=
+soap=
 
 ; log files for categories which have "file"
 [fileLogger]
@@ -252,6 +254,18 @@ notice=errors.log
 deprecated=errors.log
 strict=errors.log
 debug=debug.log
+
+[memorylogger]
+; number of messages to store in memory for each categories, to avoid memory issues
+default=20
+error= 10
+warning=10
+notice=10
+deprecated=10
+strict=10
+debug=20
+sql=20
+soap=20
 
 [mailLogger]
 email = root@localhost

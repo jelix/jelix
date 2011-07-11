@@ -78,6 +78,29 @@ class mainCtrl extends jController {
       $tpl = new jTpl();
 
       trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("This is a simple notice", E_USER_NOTICE);
+      trigger_error("an other notice!", E_USER_NOTICE);
+      trigger_error("which notice!", E_USER_NOTICE);
+      trigger_error("notice the return", E_USER_NOTICE);
+      trigger_error("damned, a notice!", E_USER_NOTICE);
       trigger_error("This is a simple warning", E_USER_WARNING);
 
       $rep->body->assign('MAIN', $tpl->fetch('loremipsum'));

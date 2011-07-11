@@ -242,7 +242,7 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
      * @param array $trace
      * @return string
      */
-    function formatTrace(&$trace) {
+    function formatTrace($trace) {
         $html = '<table>';
         foreach($trace as $k=>$t) {
             if (isset($t['file'])) {

@@ -47,7 +47,10 @@ class defaultlogDebugbarPlugin implements jIDebugbarPlugin {
         }
         else {
             $info->popupContent = '<ul id="jxdb-defaultlog" class="jxdb-list">';
+            $currentCount = array('default'=>0,'debug'=>0);
             foreach($messages as $msg) {
+                $cat = $msg->getCategory();
+                $currentCount[$cat]++;
                 $title = $msg->getFormatedMessage();
                 $truncated = false;
                 if (strlen($title)>60) {
@@ -66,6 +69,13 @@ class defaultlogDebugbarPlugin implements jIDebugbarPlugin {
                 $info->popupContent .='</div></li>';
             }
             $info->popupContent .= '</ul>';
+
+            foreach($currentCount as $type=>$count) {
+                if (($c = jLog::getMessagesCount($type)) > $count) {
+                    $info->popupContent .= '<p class="jxdb-msg-warning">There are '.$c.' '.($type=='default'?'':$type).' messages. Only first '.$count.' messages are shown.</p>';
+                }
+            }
+
         }
         $debugbar->addInfo($info);
     }
