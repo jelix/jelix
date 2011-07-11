@@ -19,7 +19,7 @@ class jFormsDataContainer {
      * @var array
      */
     public $data = array();
-    
+
     /**
      * contains data provided by the user in each controls
      * @var array
@@ -27,7 +27,7 @@ class jFormsDataContainer {
      * @see jFormsBase::initModifiedControlsList()
      */
     public $originalData = array();
-    
+
     /**
      * internal use. Used by controls object to store some private data. (captcha for example)
      * @var array
@@ -36,7 +36,7 @@ class jFormsDataContainer {
 
     /**
      * the instance id of the form
-     * @var string 
+     * @var string
      */
     public $formId;
     /**
@@ -63,8 +63,13 @@ class jFormsDataContainer {
     public $token = '';
 
     /**
+     * reference counter for the 'anonymous' form id (jForms::DEFAULT_ID)
+     */
+    public $refcount = 0;
+
+    /**
      *
-     */ 
+     */
     protected $readOnly = array();
 
     /**

@@ -47,6 +47,10 @@ class jFormsControlUpload extends jFormsControl {
 
             if(count($this->mimetype)){
                 $this->fileInfo['type'] = jFile::getMimeType($this->fileInfo['tmp_name']);
+                if ( $this->fileInfo['type'] == 'application/octet-stream') {
+                    // let's try with the name
+                    $this->fileInfo['type'] = jFile::getMimeTypeFromFilename($this->fileInfo['name']);
+                }
 
                 if(!in_array($this->fileInfo['type'], $this->mimetype))
                     return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID_FILE_TYPE;
