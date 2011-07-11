@@ -153,6 +153,7 @@ abstract class JelixScriptCommand {
          }
          if ($pname == '...') {
             $this->_parameters['...'] = $argv;
+            $argv = array();
          }
          else {
             $this->_parameters[$pname] = array_shift($argv);
