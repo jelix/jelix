@@ -253,6 +253,25 @@ class UTjtplplugins extends jUnitTestCase {
 
 ", $content);
 	}
+
+	function testIncludeRecursive() {
+		// when a template includes itself, meta should be retrieved only one time
+		// to avoid infinite loop
+		$tpl = new jTpl();
+	 	$tpl->assign('items', array(1,2));
+		$meta = $tpl->meta('test_include_recursive');
+		$content = $tpl->fetch('test_include_recursive');
+		$this->assertEqual(array('main'=>'2', 'counter'=>1), $meta);
+		$this->assertEqualOrDiff("c=2\nx=2\nc=1\nx=1\n" , $content);
+
+		// if a template includes an other template more than one time,
+		// meta should be retrieved only one time
+		$tpl = new jTpl();
+	 	$tpl->assign('items', array());
+		$meta = $tpl->meta('test_include_recursive2');
+		$content = $tpl->fetch('test_include_recursive2');
+		$this->assertEqual(array('main'=>'0', 'counter'=>1), $meta);
+		$this->assertEqualOrDiff("c=2\nx=2\nc=1\nx=1\nc=2\nx=4\nc=1\nx=3\n\n", $content);
+	}
 }
 
-?>

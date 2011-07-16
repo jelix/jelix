@@ -166,7 +166,6 @@ class jTplCompiler
 #endif
     }
 
-
 #if JTPL_STANDALONE
     /**
      * Launch the compilation of a template
