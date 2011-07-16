@@ -197,7 +197,25 @@ class jTpl {
      * @param boolean $trusted  says if the template file is trusted or not
      */
     public function meta ($tpl, $outputtype = '', $trusted = true) {
-        $this->getTemplate($tpl,'template_meta_', $outputtype, $trusted);
+#ifnot JTPL_STANDALONE
+        $sel = new jSelectorTpl($tpl,$outputtype,$trusted);
+        $tpl = $sel->toString();
+#endif
+        if (in_array($tpl, $this->processedMeta)) {
+            // we want to process meta only one time, when a template is included
+            // several time in an other template, or, more important, when a template
+            // is included in a recursive manner (in this case, it did cause infinite loop, see #1396). 
+            return;
+        }
+        $this->processedMeta[] = $tpl;
+#ifnot JTPL_STANDALONE
+        $md = $this->getTemplate ($sel, $outputtype, $trusted);
+#else
+        $md = $this->getTemplate ($tpl, $outputtype, $trusted);
+#endif
+        $fct = 'template_meta_'.$md;
+        $fct($this);
+
         return $this->_meta;
     }
 
@@ -208,7 +226,22 @@ class jTpl {
      * @param boolean $trusted  says if the template file is trusted or not
      */
     public function display ($tpl, $outputtype = '', $trusted = true) {
-        $this->getTemplate ($tpl, 'template_', $outputtype, $trusted);
+#ifnot JTPL_STANDALONE
+        $sel = new jSelectorTpl($tpl,$outputtype,$trusted);
+        $tpl = $sel->toString();
+#endif
+        $previousTpl = $this->_templateName;
+        $this->_templateName = $tpl;
+        $this->recursiveTpl[] = $tpl;
+#ifnot JTPL_STANDALONE
+        $md = $this->getTemplate ($sel, $outputtype, $trusted);
+#else
+        $md = $this->getTemplate ($tpl, $outputtype, $trusted);
+#endif
+        $fct = 'template_'.$md;
+        $fct($this);
+        array_pop($this->recursiveTpl);
+        $this->_templateName = $previousTpl;
     }
 
     /**
@@ -220,23 +253,23 @@ class jTpl {
      */
     public $_templateName;
 
+    protected $recursiveTpl = array();
+    protected $processedMeta = array();
+
     /**
      * include the compiled template file and call one of the generated function
-     * @param string $tpl template selector
-     * @param string $fctname the internal function name (meta or content)
+     * @param string|jSelectorTpl $tpl template selector
      * @param string $outputtype the type of output (html, text etc..)
      * @param boolean $trusted  says if the template file is trusted or not
+     * @return string the suffix name of the function to call
      */
-    protected function getTemplate ($tpl, $fctname, $outputtype = '', $trusted = true) {
+    protected function getTemplate ($tpl, $outputtype = '', $trusted = true) {
 #ifnot JTPL_STANDALONE
-        $sel = new jSelectorTpl($tpl,$outputtype,$trusted);
-        $sel->userModifiers = $this->userModifiers;
-        $sel->userFunctions = $this->userFunctions;
-        jIncluder::inc($sel);
-        $this->_templateName = $sel->toString();
-        $fct = $fctname.md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType.($trusted?'_t':''));
+        $tpl->userModifiers = $this->userModifiers;
+        $tpl->userFunctions = $this->userFunctions;
+        jIncluder::inc($tpl);
+        return md5($tpl->module.'_'.$tpl->resource.'_'.$tpl->outputType.($trusted?'_t':''));
 #else
-        $this->_templateName = $tpl;
         $tpl = jTplConfig::$templatePath . $tpl;
         if ($outputtype == '')
             $outputtype = 'html';
@@ -265,9 +298,8 @@ class jTpl {
                                $this->userModifiers, $this->userFunctions);
         }
         require_once($cachefile);
-        $fct = $fctname.md5($tpl.'_'.$outputtype.($trusted?'_t':''));
+        return md5($tpl.'_'.$outputtype.($trusted?'_t':''));
 #endif
-        $fct($this);
     }
 
     /**
@@ -284,39 +316,16 @@ class jTpl {
         try{
 #ifnot JTPL_STANDALONE
             $sel = new jSelectorTpl($tpl, $outputtype, $trusted);
-            $sel->userModifiers = $this->userModifiers;
-            $sel->userFunctions = $this->userFunctions;
-            jIncluder::inc($sel);
-            $md = md5($sel->module.'_'.$sel->resource.'_'.$sel->outputType.($trusted?'_t':''));
-            $this->_templateName = $sel->toString();
-#else
+            $tpl = $sel->toString();
+#endif
+            $previousTpl = $this->_templateName;
             $this->_templateName = $tpl;
-            $tpl = jTplConfig::$templatePath . $tpl;
-
-            $cachefile = dirname($this->_templateName).'/';
-            if ($cachefile == './')
-                $cachefile = '';
-
-            if (jTplConfig::$cachePath == '/' || jTplConfig::$cachePath == '')
-                throw new Exception('cache path is invalid ! its value is: "'.jTplConfig::$cachePath.'".');
-
-            $cachefile = jTplConfig::$cachePath.$cachefile.$outputtype.($trusted?'_t':'').'_'.basename($tpl);
-
-            $mustCompile = jTplConfig::$compilationForce || !file_exists($cachefile);
-            if (!$mustCompile) {
-                if (filemtime($tpl) > filemtime($cachefile)) {
-                    $mustCompile = true;
-                }
-            }
-
-            if ($mustCompile) {
-                include_once(JTPL_PATH . 'jTplCompiler.class.php');
-                $compiler = new jTplCompiler();
-                $compiler->compile($this->_templateName, $tpl, $outputtype,
-                                   $trusted, $this->userModifiers, $this->userFunctions);
-            }
-            require_once($cachefile);
-            $md = md5($tpl.'_'.$outputtype.($trusted?'_t':''));
+            $this->processedMeta[] = $tpl;
+            $this->recursiveTpl[] = $tpl;
+#ifnot JTPL_STANDALONE
+            $md = $this->getTemplate ($sel, $outputtype, $trusted);
+#else
+            $md = $this->getTemplate ($tpl, $outputtype, $trusted);
 #endif
             if ($callMeta) {
                 $fct = 'template_meta_'.$md;
@@ -324,6 +333,8 @@ class jTpl {
             }
             $fct = 'template_'.$md;
             $fct($this);
+            array_pop($this->recursiveTpl);
+            $this->_templateName = $previousTpl;
             $content = ob_get_clean();
 
         } catch(Exception $e) {

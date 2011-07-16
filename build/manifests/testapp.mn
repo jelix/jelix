@@ -6,6 +6,8 @@ cd testapp
   cmd.php
 cd testapp/plugins
   .htaccess
+cd testapp/plugins/tpl/common/
+  meta.testinc.php
 cd testapp/responses
   myHtmlResponse.class.php
 cd testapp/www
@@ -161,6 +163,8 @@ cd testapp/modules/jelix_tests/templates
   menu.tpl
   test_include.tpl
   test_include_included.tpl
+  test_include_recursive.tpl
+  test_include_recursive2.tpl
   test_plugin_counter_init_allarg_noexeption.tpl
   test_plugin_counter_init_exeption.tpl
   test_plugin_counter_init_noexeption.tpl
