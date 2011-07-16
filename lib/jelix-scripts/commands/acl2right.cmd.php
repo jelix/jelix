@@ -23,7 +23,7 @@ ACTION:
  * list
  * add groupid sujet [resource]
  * [-allres] remove groupid sujet [resource]
- * subject_create subject labelkey [grouplabelkey]
+ * subject_create subject labelkey [grouplabelkey [label]]
  * subject_delete subject
  * subject_list
  * subject_group_list
@@ -38,7 +38,7 @@ ACTION:
  * list
  * add  groupid subject [resource]
  * [-allres] remove groupid subject [resource]
- * subject_create subject labelkey [grouplabelkey]
+ * subject_create subject labelkey [grouplabelkey [label]]
  * subject_delete subject
  * subject_list
  * subject_group_list
@@ -231,7 +231,7 @@ ACTION:
 
     protected function cmd_subject_create(){
         $params = $this->getParam('...');
-        if(!is_array($params) || count($params) > 3  || count($params) < 2)
+        if(!is_array($params) || count($params) > 4  || count($params) < 2)
             throw new Exception("wrong parameter count");
 
         $cnx = jDb::getConnection('jacl2_profile');
@@ -246,13 +246,22 @@ ACTION:
         $sql="INSERT into ".$cnx->prefixTable('jacl2_subject')." (id_aclsbj, label_key, id_aclsbjgrp) VALUES (";
         $sql.=$cnx->quote($params[0]).',';
         $sql.=$cnx->quote($params[1]);
-        if (isset($params[2]))
+        if (isset($params[2]) && $params[2] != 'null')
             $sql.=','.$cnx->quote($params[2]);
         else
             $sql.=", NULL";
         $sql .= ')';
         $cnx->exec($sql);
-
+        if (isset($params[3]) && preg_match("/^([a-zA-Z0-9_\.]+)~([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\.]+)$/", $params[1], $m)) {
+            $localestring = "\n".$m[3].'='.$params[3];
+            $path = $this->getModulePath($m[1]);
+            global $gJConfig;
+            $file = $path.'locales/'.$gJConfig->locale.'/'.$m[2].'.'.$gJConfig->charset.'.properties';
+            if (file_exists($file)) {
+                $localestring = file_get_contents($file).$localestring;
+            }
+            file_put_contents($file, $localestring);
+        }
         echo "OK.\n";
     }
 

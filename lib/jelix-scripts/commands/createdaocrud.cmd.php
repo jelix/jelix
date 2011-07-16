@@ -2,9 +2,10 @@
 /**
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
-* @contributor Bastien Jaillot (bug fix)
-* @contributor Loic Mathaud (typos fix)
-* @copyright   2007 Laurent Jouanneau, 2008 Loic Mathaud
+* @contributor Bastien Jaillot
+* @contributor Loic Mathaud
+* @contributor Mickael Fradin
+* @copyright   2007-2011 Laurent Jouanneau, 2008 Loic Mathaud, 2010 Mickael Fradin
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -13,10 +14,10 @@
 class createdaocrudCommand extends JelixScriptCommand {
 
     public  $name = 'createdaocrud';
-    public  $allowed_options=array('-profile'=>true, '-createlocales'=>false);
+    public  $allowed_options=array('-profile'=>true, '-createlocales'=>false, '-acl2'=>false, '-acl2locale'=>true, '-masteradmin'=>false);
     public  $allowed_parameters=array('module'=>true, 'table'=>true, 'ctrlname'=>false);
 
-    public  $syntaxhelp = "[-createlocales] [-profile name] MODULE TABLE [CTRLNAME]";
+    public  $syntaxhelp = "[-createlocales] [-acl2] [-masteradmin] [-acl2locale module~file] [-profile name] MODULE TABLE [CTRLNAME]";
     public  $help=array(
         'fr'=>"
     Crée un nouveau contrôleur de type jControllerDaoCrud, reposant sur un jdao et un jform.
@@ -24,7 +25,13 @@ class createdaocrudCommand extends JelixScriptCommand {
     -profile (facultatif) : indique le profil à utiliser pour se connecter à
                            la base et récupérer les informations de la table
 
-    -createlocales (facultatif) : crée les fichiers locales avec les champs du formulaire
+    -createlocales (facultatif) : crée le fichier des locales pour les champs du formulaire
+
+    -acl2 (facultatif) : génere automatiquement les droits ACL2
+                        (lister, voir, créer, modifier, effacer)
+    -acl2locale (facultatif): indique le prefix du selecteur du fichier de locale pour stocker
+                les locales des droits quand -acl2 est indiqué
+    -masteradmin (facultatif): ajout un listener d'évènement pour ajouter un item de menu dans master_admin
 
     MODULE : le nom du module où stocker le contrôleur
     TABLE : le nom de la table SQL
@@ -33,24 +40,32 @@ class createdaocrudCommand extends JelixScriptCommand {
         'en'=>"
     Create a new controller jControllerDaoCrud
 
-    -profile (optional) : indicate the name of the profile to use for the
+    -profile (optional): indicate the name of the profile to use for the
                         database connection.
 
-    -createlocales (optional) : creates the locales files with the form's values.
+    -createlocales (optional): creates the locales file for labels of the form.
+    -acl2 (optional): automatically generate ACL2 rights
+                          (list, view, create, modify, delete)
+    -acl2locale (optional): indicates the selector prefix for the file storing
+                            the locales of rights, when -acl2 is set
+    -masteradmin (facultatif): add an event listener to add a menu item in master_admin
 
     MODULE: name of the module where to create the crud
-    TABLE : name of the SQL table
-    CTRLNAME (optional) : name of the controller."
+    TABLE: name of the SQL table
+    CTRLNAME (optional): name of the controller."
     );
 
 
     public function run(){
 
         $this->loadAppConfig();
-        $path= $this->getModulePath($this->_parameters['module']);
+        global $gJConfig;
+        $module = $this->_parameters['module'];
+        $path= $this->getModulePath($module);
 
         $table = $this->getParam('table');
         $ctrlname = $this->getParam('ctrlname', $table);
+        $acl2 = $this->getOption('-acl2');
 
         if(file_exists($path.'controllers/'.$ctrlname.'.classic.php')){
             throw new Exception("controller '".$ctrlname."' already exists");
@@ -63,23 +78,94 @@ class createdaocrudCommand extends JelixScriptCommand {
             $profile = $this->getOption('-profile');
             $options = array('-profile'=>$profile);
         }
-        $agcommand->initOptParam($options,array('module'=>$this->_parameters['module'], 'name'=>$table,'table'=>$table));
+        $agcommand->initOptParam($options,array('module'=>$module, 'name'=>$table,'table'=>$table));
         $agcommand->run();
 
         $agcommand = JelixScript::getCommand('createform', $this->config);
          if ($this->getOption('-createlocales')) {
             $options = array('-createlocales'=>true);
         }
+        else {
+            $options = array();
+        }
 
-        $agcommand->initOptParam($options,array('module'=>$this->_parameters['module'], 'form'=>$table,'dao'=>$table));
+        $agcommand->initOptParam($options,array('module'=>$module, 'form'=>$table,'dao'=>$table));
         $agcommand->run();
+
+        $acl2rights = '';
+        $pluginsParameters = "
+                '*'          =>array('auth.required'=>true),
+                'index'      =>array('jacl2.right'=>'$module.$ctrlname.view'),
+                'precreate'  =>array('jacl2.right'=>'$module.$ctrlname.create'),
+                'create'     =>array('jacl2.right'=>'$module.$ctrlname.create'),
+                'savecreate' =>array('jacl2.right'=>'$module.$ctrlname.create'),
+                'preupdate'  =>array('jacl2.right'=>'$module.$ctrlname.update'),
+                'editupdate' =>array('jacl2.right'=>'$module.$ctrlname.update'),
+                'saveupdate' =>array('jacl2.right'=>'$module.$ctrlname.update'),
+                'view'       =>array('jacl2.right'=>'$module.$ctrlname.view'),
+                'delete'     =>array('jacl2.right'=>'$module.$ctrlname.delete')";
+        if ($acl2) {
+            $subjects = array('view'=>'View','create'=>'Create','update'=>'Update','delete'=>'Delete');
+            $sel = $this->getOption('-acl2locale');
+            if (!$sel) {
+                $sel = $module.'~acl'.$ctrlname;
+            }
+
+            foreach ($subjects as $subject=>$label) {
+                $subject = $module.".".$ctrlname.".".$subject;
+                $labelkey = $sel.'.'.$subject;
+                try {
+                    $agcommand = JelixScript::getCommand('acl2right', $this->config);
+                    $agcommand->initOptParam(array(),array('action'=>'subject_create',
+                                                   '...'=>array($subject, $labelkey, 'null', $label.' '.$ctrlname)));
+                    $agcommand->run();
+                } catch (Exception $e) {}
+            }
+        }
+        else {
+            $pluginsParameters = "/*".$pluginsParameters."\n*/";
+        }
 
         $this->createDir($path.'controllers/');
         $params = array('name'=>$ctrlname,
-                'module'=>$this->_parameters['module'],
+                'module'=>$module,
                 'table'=>$table,
-                'profile'=>$profile);
+                'profile'=>$profile,
+                'acl2rights'=>$pluginsParameters);
 
         $this->createFile($path.'controllers/'.$ctrlname.'.classic.php','module/controller.daocrud.tpl',$params);
+
+        if ($this->getOption('-masteradmin')) {
+            if ($acl2)
+                $params['checkacl2'] = "if(jAcl2::check('$module.$ctrlname.view'))";
+            else
+                $params['checkacl2'] = '';
+            $this->createFile($path.'classes/'.$ctrlname.'menu.listener.php', 'module/masteradminmenu.listener.php.tpl', $params);
+            if (file_exists($path.'events.xml')) {
+                $xml = simplexml_load_file($path.'events.xml');
+                $xml->registerXPathNamespace('j', 'http://jelix.org/ns/events/1.0');
+                $listenerPath = "j:listener[@name='".$ctrlname."menu']";
+                $eventPath = "j:event[@name='masteradminGetMenuContent']";
+                if (!$event = $xml->xpath("//$listenerPath/$eventPath")) {
+                    if ($listeners = $xml->xpath("//$listenerPath")) {
+                         $listener = $listeners[0];
+                    } else {
+                        $listener = $xml->addChild('listener');
+                        $listener->addAttribute('name', $ctrlname.'menu');
+                    }
+                    $event = $listener->addChild('event');
+                    $event->addAttribute('name', 'masteradminGetMenuContent');
+                    $result = $xml->asXML($path.'events.xml');
+                    if ($result)
+                        echo "Notice: events.xml in module '".$this->_parameters['module']."' has been updated.\n";
+                    else
+                        echo "Warning: events.xml in module '".$this->_parameters['module']."' cannot be updated, check permissions or add the event manually.\n";
+                } else
+                    echo "Notice: events.xml in module '".$this->_parameters['module']."' is already up to date.\n";
+            } else {
+                $this->createFile($path.'events.xml', 'module/events_crud.xml.tpl', array('classname'=>$ctrlname.'menu'));
+                echo "Notice: events.xml in module '".$this->_parameters['module']."' has been created.\n";
+            }
+        }
     }
 }

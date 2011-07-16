@@ -54,10 +54,12 @@ cd lib/jelix-scripts/templates/module/
   dao.xml.tpl
   dao_empty.xml.tpl
   events.xml.tpl
+  events_crud.xml.tpl
   form.xml.tpl
   install.tpl
   locales.tpl
   main.tpl.tpl
+  masteradminmenu.listener.php.tpl
   module.xml.tpl
   template.tpl
   zone.tpl

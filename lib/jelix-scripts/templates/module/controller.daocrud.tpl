@@ -23,20 +23,7 @@ class %%name%%Ctrl extends jControllerDaoCrud {
      * parameters for checker of authentification and rights
      */
     public $pluginParams=array(
-/*
-        '*'          =>array('auth.required'=>true),
-        // examples of rights, change subjects of rights as needed, and
-        // create subjects
-        'index'      =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
-        'precreate'  =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
-        'create'     =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
-        'savecreate' =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
-        'preupdate'  =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
-        'editupdate' =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
-        'saveupdate' =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
-        'view'       =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
-        'delete'     =>array('jacl2.right'=>'%%module%%.%%name%%.manage'),
-*/
+%%acl2rights%%
     );
 
 
