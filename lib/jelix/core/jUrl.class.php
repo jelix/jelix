@@ -185,15 +185,17 @@ class jUrl extends jUrlBase {
         global $gJConfig;
 
         $proto = '';
-        if ($domainName) {
-            $domain = $domainName;
-        }
-        else {
-            $domain = $GLOBALS['gJCoord']->request->getDomainName();
-        }
+        $domain = '';
 
         $url = self::get($actSel, $params, ($what != self::XMLSTRING?self::STRING:$what));
         if (!preg_match('/^http/', $url)) {
+            if ($domainName) {
+                $domain = $domainName;
+            }
+            else {
+                $domain = $GLOBALS['gJCoord']->request->getDomainName();
+            }
+
             if ($domain == '') {
                 throw new jException('jelix~errors.urls.domain.void');
             }
@@ -202,7 +204,6 @@ class jUrl extends jUrlBase {
         }
         else if ($domainName != '') {
             $url = str_replace($GLOBALS['gJCoord']->request->getDomainName(), $domainName, $url);
-            $domain = '';
         }
 
         return $proto.$domain.$url;

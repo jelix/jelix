@@ -224,10 +224,7 @@ abstract class jRequest {
      * @since 1.2
      */
    function getProtocol() {
-      static $proto = null;
-      if ($proto === null)
-         $proto = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off' ? 'https://':'http://');
-      return $proto;
+      return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off' ? 'https://':'http://');
    }
 
    /**
