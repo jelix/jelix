@@ -47,6 +47,10 @@ class jAcl2DbManager {
             $right->canceled = 0;
             $daoright->insert($right);
         }
+        else if ($right->canceled) {
+            $right->canceled = false;
+            $daoright->update($right);
+        }
         jAcl2::clearCache();
         return true;
     }
@@ -107,17 +111,14 @@ class jAcl2DbManager {
                 // remove
             }
             else if ($val === true || $val == 'y') {
-                // add
-                if (!isset($oldrights[$sbj]))
-                    self::addRight($group, $sbj);
-                else
-                    unset($oldrights[$sbj]);
+                self::addRight($group, $sbj);
+                unset($oldrights[$sbj]);
             }
             else if ($val == 'n') {
                 // cancel
                 if (isset($oldrights[$sbj]))
                     unset($oldrights[$sbj]);
-                self::removeRight($group, $sbj, '', true);   
+                self::removeRight($group, $sbj, '', true);
             }
         }
 

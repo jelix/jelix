@@ -35,7 +35,7 @@ class groupsCtrl extends jController {
     }
 
     protected function loadGroupRights($tpl) {
-        $gid=array(0);
+        $gid=array('__anonymous');
         $o = new StdClass;
         $o->id_aclgrp = '__anonymous';
         $o->name = jLocale::get('jacl2db_admin~acl2.anonymous.group.name');
@@ -48,7 +48,7 @@ class groupsCtrl extends jController {
         // retrieve the list of groups and the number of existing rights with
         // resource for each groups
         $groups=array($o);
-        $grouprights=array(0=>false);
+        $grouprights=array('__anonymous'=>false);
         foreach(jAcl2DbUserGroup::getGroupList() as $grp) {
             $gid[]=$grp->id_aclgrp;
             $groups[]=$grp;
