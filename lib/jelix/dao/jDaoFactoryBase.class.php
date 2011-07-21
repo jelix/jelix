@@ -360,7 +360,8 @@ abstract class jDaoFactoryBase  {
         $props =$this->getProperties();
         foreach ($daocond->order as $name => $way){
             if (isset($props[$name]))
-                $order[] = $this->_conn->encloseName($name).' '.$way;
+                $order[] = $this->_conn->prefixTable($props[$name]['table']) . '.' 
+	                . $this->_conn->encloseName($props[$name]['fieldName']).' '.$way; 
         }
 
         if(count ($order)){
