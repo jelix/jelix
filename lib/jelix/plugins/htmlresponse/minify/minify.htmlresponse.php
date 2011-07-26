@@ -15,7 +15,7 @@ class minifyHTMLResponsePlugin implements jIHTMLResponsePlugin {
 
     protected $response = null;
 
-    protected $excludeCss = array();
+    protected $excludeCSS = array();
 
     protected $excludeJS = array();
 
