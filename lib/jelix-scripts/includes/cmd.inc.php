@@ -11,10 +11,28 @@
 error_reporting(E_ALL);
 define ('JELIX_SCRIPTS_PATH', dirname(__FILE__).'/../');
 
-if (PHP_SAPI != 'cli') {
-    echo "Wrong way";
+if (PHP_SAPI != 'cli' && strpos(PHP_SAPI, 'cgi') === false) {
+    echo "Error: you're not allowed to execute this script outside a command line shell.\n";
     exit(1);
 }
+
+if (PHP_SAPI != 'cli') {
+    // only php-cgi used from the command line can be used, not the one called by apache
+    // FIXME the detection may not be very good
+    if (isset($_SERVER['SCRIPT_NAME']) || isset($_SERVER['REDIRECT_URL'])  || isset($_SERVER['ORIG_SCRIPT_NAME'])) {
+        echo "Error: you're not allowed to execute this script with php-cgi outside a command line shell.\n";
+        exit(1);
+    }
+    echo "Warning, experimental: you should run this php script with the CLI version of PHP, not the CGI version. It may not work properly.\n";
+
+    header('Content-type: text/plain');
+    if (!isset($_SERVER['argv'])) {
+        $_SERVER['argv'] = array_keys($_GET);
+        $_SERVER['argc'] = count($_GET);
+    }
+}
+
+
 
 if(!class_exists('jCoordinator', false)) { // for old application.init.php which doesn't include init.php
     echo "Error: your application.init.php should include the lib/jelix/init.php";
