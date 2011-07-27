@@ -6,7 +6,7 @@
 * @contributor Laurent Jouanneau, Julien Issler
 * @contributor Loic Mathaud
 * @contributor Florian Hatat
-* @contributor Emmanuel Hesry
+* @contributor Emmanuel Hesry, Brice G.
 * @contributor Hadrien Lanneau <hadrien@over-blog.com>
 * @copyright   2005-2011 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud
@@ -14,7 +14,7 @@
 * @copyright   2001-2005 CopixTeam, GeraldCroes, Laurent Jouanneau
 * @copyright   2008-2011 Julien Issler
 * @copyright   2009 Emmanuel Hesry
-* @copyright   2010 Hadrien Lanneau
+* @copyright   2010 Hadrien Lanneau, 2011 Brice G.
 *
 * This class was get originally from the Copix project (CopixDate.lib.php, Copix 2.3dev20050901, http://www.copix.org)
 * Only few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -87,6 +87,7 @@ class jDateTime {
     const LANG_DFORMAT=10;
     const LANG_DTFORMAT=11;
     const LANG_TFORMAT=12;
+    const LANG_SHORT_DTFORMAT=13;
     const DB_DFORMAT=20;
     const DB_DTFORMAT=21;
     const DB_TFORMAT=22;
@@ -173,6 +174,11 @@ class jDateTime {
                $lf = jLocale::get('jelix~format.time');
                $str = date($lf, $t);
                break;
+           case self::LANG_SHORT_DTFORMAT:
+               $t = mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
+               $lf = jLocale::get('jelix~format.short_datetime');
+               $str = date($lf, $t);
+               break;
            case self::DB_DFORMAT:
                $str = sprintf('%04d-%02d-%02d', $this->year, $this->month, $this->day);
                break;
@@ -256,6 +262,17 @@ class jDateTime {
                    $this->hour = $res['tm_hour'];
                    $this->minute = $res['tm_min'];
                    $this->second = $res['tm_sec'];
+               }
+               break;
+           case self::LANG_SHORT_DTFORMAT:
+               $lf = jLocale::get('jelix~format.short_datetime_st');
+               if($res = strptime ( $str, $lf )){
+                   $ok=true;
+                   $this->year = $res['tm_year'] + 1900;
+                   $this->month = $res['tm_mon'] + 1;
+                   $this->day = $res['tm_mday'];
+                   $this->hour = $res['tm_hour'];
+                   $this->minute = $res['tm_min'];
                }
                break;
            case self::DB_DFORMAT:
