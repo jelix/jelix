@@ -37,7 +37,7 @@ Utilisation générale :
 
     Les options et paramètres à indiquer dépendent de la commande. Les options
     sont toujours facultatives, ainsi que certains paramètres.
-    Consulter l'aide d'une commande en faisant :
+    Consulter l'aide d'une commande COMMANDE en faisant :
        %SCRIPT% help COMMANDE
 
 Liste des commandes disponibles :\n\t",
@@ -54,13 +54,14 @@ General use :
 
     Options and parameters depends of the command. Options are always
     optional. Parameters could be optional or required, depending of the
-    command. To know options and parameters, type:
+    command. To know options and parameters of a command COMMAND, type:
        %SCRIPT% help COMMAND
 
 List of available commands:\n\t",
             );
 
     public function run(){
+
        if(isset($this->_parameters['command'])){
           if($this->_parameters['command'] == 'help'){
              $command=$this;
@@ -95,9 +96,15 @@ List of available commands:\n\t",
           $this->disp($help);
 
           $list = JelixScript::commandList();
-          foreach($list as $cmd)
-             $this->disp($cmd.' ');
-          $this->disp("\n\n");
+          sort($list);
+          $l = '';
+          foreach($list as $k=>$cmd) {
+            if ((($k+1) % 6) == 0)
+                $l .= $cmd."\n\t";
+            else
+                $l .= $cmd.' ';
+          }
+          $this->disp("$l\n\n");
        }
     }
 
