@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<suburls xmlns="http://jelix.org/ns/suburls/1.0">
+    <url pathinfo="/" action="main:indexghost" />
+    <url pathinfo="/suburl/foo" action="main:suburlsfoo" />
+    <url pathinfo="/suburl" action="main:suburls" optionalTrailingSlash="true"/>
+</suburls>

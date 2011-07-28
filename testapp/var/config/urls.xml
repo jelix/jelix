@@ -52,6 +52,7 @@
              actionoverride="default:wikiedit,default:wikidelete" />
 
         <url pathinfo="/auth" module="testapp" include="urls.xml" />
+        <url pathinfo="/" module="testapp" include="urls2.xml" />
 
         <url pathinfo="/hello.html" module="jelix_tests" action="urlsig:url31" />
 

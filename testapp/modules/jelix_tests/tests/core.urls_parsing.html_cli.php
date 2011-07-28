@@ -105,6 +105,9 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'testapp',   'action'=>'login:out');
       $resultList[]= array('module'=>'testapp',   'action'=>'login:form');
       $resultList[]= array('module'=>'testapp',   'action'=>'user:index', 'user'=>'laurent');
+      $resultList[]= array('module'=>'testapp',   'action'=>'main:suburlsfoo');
+      $resultList[]= array('module'=>'testapp',   'action'=>'main:suburls');
+      $resultList[]= array('module'=>'testapp',   'action'=>'main:indexghost');
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -137,6 +140,9 @@ class UTParseUrls extends UnitTestCase {
           array("index.php","/auth/dologout", array()),
           array("index.php","/auth/login/", array()),
           array("index.php","/auth/user/laurent", array()),
+          array("index.php","/suburl/foo", array()),
+          array("index.php","/suburl/", array()),
+          array("index.php","/", array()),
        );
 
       //$this->sendMessage("significant, multiview = false");
@@ -205,6 +211,9 @@ class UTParseUrls extends UnitTestCase {
           array("index","/auth/dologout", array()),
           array("index","/auth/login/", array()),
           array("index","/auth/user/laurent", array()),
+          array("index","/suburl/foo", array()),
+          array("index","/suburl/", array()),
+          array("index","/", array()),
 
        );
       foreach($request as $k=>$urldata){

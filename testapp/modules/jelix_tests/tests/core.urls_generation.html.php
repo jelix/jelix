@@ -74,7 +74,7 @@ class UTCreateUrls extends UnitTestCase {
         foreach($urlList as $k=>$urldata){
             try{
                 $url = jUrl::get($urldata[0], $urldata[1]);
-                $this->assertTrue( ($url == $trueResult[$k]), 'expected url '.$k.' ='.str_replace('%','%%',$trueResult[$k]).'   created url='.str_replace('%','%%',$url).' %s' );
+                $this->assertEqual($url, $trueResult[$k], 'expected url '.$k.' ='.str_replace('%','%%',$trueResult[$k]).'   created url='.str_replace('%','%%',$url).' %s' );
             }catch(jExceptionSelector $e){
                 $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
             }catch(jException $e){
@@ -276,6 +276,9 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('testapp~login:out', array());
       $urlList[]= array('testapp~login:form', array());
       $urlList[]= array('testapp~user:index', array('user'=>'laurent'));
+      $urlList[]= array('testapp~main:suburlsfoo', array());
+      $urlList[]= array('testapp~main:suburls', array());
+      $urlList[]= array('testapp~main:indexghost', array());
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -309,7 +312,10 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php/auth/dologin?login=foo&password=pass",
           "/index.php/auth/dologout",
           "/index.php/auth/login",
-          "/index.php/auth/user/laurent"
+          "/index.php/auth/user/laurent",
+          "/index.php/suburl/foo",
+          "/index.php/suburl",
+          "/index.php/"
        );
 
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
@@ -349,7 +355,10 @@ class UTCreateUrls extends UnitTestCase {
           "/index/auth/dologin?login=foo&password=pass",
           "/index/auth/dologout",
           "/index/auth/login",
-          "/index/auth/user/laurent"
+          "/index/auth/user/laurent",
+          "/index/suburl/foo",
+          "/index/suburl",
+          "/index/"
        );
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
