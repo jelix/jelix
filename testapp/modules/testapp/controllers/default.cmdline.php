@@ -39,5 +39,15 @@ class defaultCtrl extends jControllerCmdLine {
         return $rep;
     }
 
+
+    function testerror() {
+        $rep = $this->getResponse();
+        $rep->addContent("running testerror1");
+        trigger_error("first notice", E_USER_NOTICE);
+        trigger_error("first warning", E_USER_WARNING);
+        throw new Exception("An error");
+        return $rep;
+    }
+
 }
 

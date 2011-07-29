@@ -93,7 +93,12 @@ class jLogErrorMessage implements jILogMessage {
     public function getFormatedMessage() {
         global $gJCoord, $gJConfig;
 
-        $url = isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'Unknow requested URI';
+        if (isset($_SERVER['REQUEST_URI']))
+            $url = $_SERVER['REQUEST_URI'];
+        elseif(isset($_SERVER['SCRIPT_NAME']))
+            $url = $_SERVER['SCRIPT_NAME'];
+        else
+            $url = 'Unknow request';
         // url params including module and action
         if ($gJCoord->request) {
             $params = str_replace("\n", ' ', var_export($gJCoord->request->params, true));

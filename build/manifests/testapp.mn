@@ -368,5 +368,3 @@ cd testapp/var/db/sqlite/
   tests.sqlite
 
 cd temp/testapp
-cd temp/testapp-cli
-cd temp/testapp-scripts
