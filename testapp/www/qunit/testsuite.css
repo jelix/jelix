@@ -59,7 +59,7 @@ div.largeheight {
 }
 
 div.largeopacity {
-	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=100);
+	/*filter: progid:DXImageTransform.Microsoft.Alpha(opacity=100);*/
 }
 
 div.medwidth {
@@ -72,7 +72,7 @@ div.medheight {
 
 div.medopacity {
 	opacity: 0.5;
-	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+	/*filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);*/
 }
 
 div.nowidth {
@@ -85,7 +85,7 @@ div.noheight {
 
 div.noopacity {
 	opacity: 0;
-	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+	/*filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);*/
 }
 
 div.hidden {

@@ -29,6 +29,8 @@ cd testapp/www/design
   screen.css
 cd testapp/www/tests
   design.css
+  testinc1.js
+  testinc2.js
 cd testapp/www/qunit
   testsuite.css
   testrunner.js
@@ -147,6 +149,7 @@ cd testapp/modules/jelix_tests/locales/en_EN
   tests3.UTF-8.properties
   tests4.UTF-8.properties
 cd testapp/modules/jelix_tests/templates
+  jstest_include.tpl
   jstest_jforms.tpl
   jstest_jsonrpc.tpl
   jstest_jsonrpc2.tpl
