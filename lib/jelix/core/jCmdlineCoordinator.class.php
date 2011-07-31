@@ -3,7 +3,8 @@
 * @package      jelix
 * @subpackage   core
 * @author       Christophe Thiriot
-* @copyright    2008 Christophe Thiriot
+* @contributor  Laurent Jouanneau
+* @copyright    2008 Christophe Thiriot, 2011 Laurent Jouanneau
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -18,6 +19,28 @@
 class jCmdlineCoordinator extends jCoordinator {
 
     function __construct ($configFile, $enableErrorHandler=true) {
+        if (PHP_SAPI != 'cli' && strpos(PHP_SAPI, 'cgi') === false) {
+            throw new Exception("Error: you're not allowed to execute this script outside a command line shell.");
+        }
+
+        if (PHP_SAPI != 'cli') {
+            // only php-cgi used from the command line can be used, not the one called by apache
+            if (isset($_SERVER['HTTP_HOST']) || isset($_SERVER['REDIRECT_URL'])  || isset($_SERVER['SERVER_PORT'])) {
+                throw new Exception("Error: you're not allowed to execute this script with php-cgi outside a command line shell.");
+            }
+            header('Content-type: text/plain');
+            if (!isset($_SERVER['argv'])) {
+                $_SERVER['argv'] = array_keys($_GET);
+                $_SERVER['argc'] = count($_GET);
+            }
+            if (!isset($_SERVER['SCRIPT_NAME'])) {
+                $_SERVER['SCRIPT_NAME'] = $_SERVER['argv'][0];
+            }
+            if (!isset($_SERVER['DOCUMENT_ROOT'])) {
+                $_SERVER['DOCUMENT_ROOT'] = '';
+            }
+        }
+
         jApp::setEnv('cli');
         parent::__construct($configFile, $enableErrorHandler);
     }

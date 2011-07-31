@@ -14,8 +14,9 @@ timeZone =
 pluginsPath = app:plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 
-; default domain name to use with jfullurl for example.
+; Default domain name to use with jfullurl for example.
 ; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
+; For cli script, fill it.
 domainName =
 
 ; the locale to fallback when the asked string doesn't exist in the current locale

@@ -247,15 +247,16 @@ abstract class jRequest {
    function getDomainName() {
       global $gJConfig;
       if ($gJConfig->domainName != '') {
-         $domain = $gJConfig->domainName;
+         return $gJConfig->domainName;
       }
       elseif (isset($_SERVER['HTTP_HOST'])) {
-         $domain = $_SERVER['HTTP_HOST'];
+         return $_SERVER['HTTP_HOST'];
       }
       elseif (isset($_SERVER['SERVER_NAME'])) {
-         $domain = $_SERVER['SERVER_NAME'];
+         return $_SERVER['SERVER_NAME'];
       }
-      return $domain;
+      else
+         return '';
    }
 
    /**

@@ -18,17 +18,22 @@ if (PHP_SAPI != 'cli' && strpos(PHP_SAPI, 'cgi') === false) {
 
 if (PHP_SAPI != 'cli') {
     // only php-cgi used from the command line can be used, not the one called by apache
-    // FIXME the detection may not be very good
-    if (isset($_SERVER['SCRIPT_NAME']) || isset($_SERVER['REDIRECT_URL'])  || isset($_SERVER['ORIG_SCRIPT_NAME'])) {
+    if (isset($_SERVER['HTTP_HOST']) || isset($_SERVER['REDIRECT_URL'])  || isset($_SERVER['SERVER_PORT'])) {
         echo "Error: you're not allowed to execute this script with php-cgi outside a command line shell.\n";
         exit(1);
     }
-    echo "Warning, experimental: you should run this php script with the CLI version of PHP, not the CGI version. It may not work properly.\n";
+    //echo "Warning, experimental: you should run this php script with the CLI version of PHP, not the CGI version. It may not work properly.\n";
 
     header('Content-type: text/plain');
     if (!isset($_SERVER['argv'])) {
         $_SERVER['argv'] = array_keys($_GET);
         $_SERVER['argc'] = count($_GET);
+    }
+    if (!isset($_SERVER['SCRIPT_NAME'])) {
+        $_SERVER['SCRIPT_NAME'] = $_SERVER['argv'][0];
+    }
+    if (!isset($_SERVER['DOCUMENT_ROOT'])) {
+        $_SERVER['DOCUMENT_ROOT'] = '';
     }
 }
 
