@@ -54,6 +54,24 @@ class jstestsCtrl extends jController {
       $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'js/json2.js');
       return $rep;
   }
-}
 
-?>
+  function testinclude() {
+      $rep = $this->getResponse('html', true);
+      $rep->setXhtmlOutput(false);
+      $rep->title = 'Unit tests for jquery include plugin';
+      $rep->bodyTpl = 'jstest_include';
+      $rep->addCssLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testsuite.css');
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'jquery/jquery.js');
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testrunner.js');
+      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'jquery/include/jquery.include.js');
+      return $rep;
+  }
+
+  function testincludejsinc3() {
+    $rep = $this->getResponse('text', true);
+    $rep->addHttpHeader('Content-Type','application/javascript',true);
+    $rep->content= '$("#includeresult").text($("#includeresult").text()+"INC3");';
+    sleep(1);
+    return $rep;
+  }
+}

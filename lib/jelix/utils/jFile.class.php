@@ -197,7 +197,8 @@ class jFile {
      * @since 1.1.10
      */
     public static function getMimeTypeFromFilename($fileName){
-        $ext = strtolower(array_pop(explode('.', $fileName)));
+        $f = explode('.', $fileName);
+        $ext = strtolower(array_pop($f));
         if (array_key_exists($ext, self::$mimeTypes)) {
             return self::$mimeTypes[$ext];
         }
