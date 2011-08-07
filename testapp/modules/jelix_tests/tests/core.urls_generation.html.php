@@ -279,6 +279,11 @@ class UTCreateUrls extends UnitTestCase {
       $urlList[]= array('testapp~main:suburlsfoo', array());
       $urlList[]= array('testapp~main:suburls', array());
       $urlList[]= array('testapp~main:indexghost', array());
+      $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>''));
+      $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'/'));
+      $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'foo'));
+      $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'foo/bar/'));
+
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -315,7 +320,11 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php/auth/user/laurent",
           "/index.php/suburl/foo",
           "/index.php/suburl",
-          "/index.php/"
+          "/index.php/",
+          "/index.php/wiki/",
+          "/index.php/wiki//",
+          "/index.php/wiki/foo",
+          "/index.php/wiki/foo/bar/",
        );
 
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
@@ -358,7 +367,11 @@ class UTCreateUrls extends UnitTestCase {
           "/index/auth/user/laurent",
           "/index/suburl/foo",
           "/index/suburl",
-          "/index/"
+          "/index/",
+          "/index/wiki/",
+          "/index/wiki//",
+          "/index/wiki/foo",
+          "/index/wiki/foo/bar/",
        );
       $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);

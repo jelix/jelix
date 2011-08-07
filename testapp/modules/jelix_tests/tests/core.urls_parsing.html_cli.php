@@ -108,6 +108,11 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'testapp',   'action'=>'main:suburlsfoo');
       $resultList[]= array('module'=>'testapp',   'action'=>'main:suburls');
       $resultList[]= array('module'=>'testapp',   'action'=>'main:indexghost');
+      $resultList[]= array('module'=>'jelix', 'action'=>'default:notfound');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'foo');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'foo/bar/');
+
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -143,6 +148,10 @@ class UTParseUrls extends UnitTestCase {
           array("index.php","/suburl/foo", array()),
           array("index.php","/suburl/", array()),
           array("index.php","/", array()),
+          array('index.php', "/wiki", array()),
+          array('index.php', "/wiki/", array()),
+          array('index.php', "/wiki/foo", array()),
+          array('index.php', "/wiki/foo/bar/", array()),
        );
 
       //$this->sendMessage("significant, multiview = false");
@@ -214,6 +223,10 @@ class UTParseUrls extends UnitTestCase {
           array("index","/suburl/foo", array()),
           array("index","/suburl/", array()),
           array("index","/", array()),
+          array('index', "/wiki", array()),
+          array('index', "/wiki/", array()),
+          array('index', "/wiki/foo", array()),
+          array('index', "/wiki/foo/bar/", array()),
 
        );
       foreach($request as $k=>$urldata){

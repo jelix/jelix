@@ -3,7 +3,7 @@
  * @package     jelix
  * @subpackage  urls_engine
  * @author      Laurent Jouanneau
- * @copyright   2005-2009 Laurent Jouanneau
+ * @copyright   2005-2011 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -84,7 +84,7 @@ interface jIUrlSignificantHandler {
  * @package  jelix
  * @subpackage urls_engine
  * @author      Laurent Jouanneau
- * @copyright   2005-2008 Laurent Jouanneau
+ * @copyright   2005-2011 Laurent Jouanneau
  */
 class significantUrlEngine implements jIUrlEngine {
 
@@ -232,8 +232,8 @@ class significantUrlEngine implements jIUrlEngine {
                 array( 0=>'module', 1=>'action', 2=>'regexp_pathinfo',
                 3=>array('year','month'), // list of dynamic value included in the url,
                                       // alphabetical ascendant order
-                4=>array(true, false),    // list of boolean which indicates for each
-                                      // dynamic value, if it is an escaped value or not
+                4=>array(true, false),    // list of integers which indicates for each
+                                      // dynamic value: 0: urlencode, 1:urlencode except '/', 2:escape
                 5=>array('bla'=>'whatIWant' ), // list of static values
                 6=>false or array('secondaries','actions')
                 */
@@ -271,7 +271,7 @@ class significantUrlEngine implements jIUrlEngine {
                     array_shift($matches);
                     foreach ($dynamicValues as $k=>$name){
                         if (isset($matches[$k])) {
-                            if ($escapes[$k]) {
+                            if ($escapes[$k]==2) {
                                 $params[$name] = jUrl::unescape($matches[$k]);
                             }
                             else {
@@ -363,8 +363,8 @@ class significantUrlEngine implements jIUrlEngine {
           or array(0,'entrypoint', https true/false, 'handler selector', 'basepathinfo')
           or array(1,'entrypoint', https true/false,
                   array('year','month',), // list of dynamic values included in the url
-                  array(true, false..), // list of boolean which indicates for each
-                                        // dynamic value, if it is an escaped value or not
+                  array(true, false..), // list of integers which indicates for each
+                                        // dynamic value: 0: urlencode, 1:urlencode except '/', 2:escape
                   "/news/%1/%2/", // the url
                   true/false, // false : this is a secondary action
                   array('bla'=>'whatIWant' ) // list of static values
@@ -434,12 +434,18 @@ class significantUrlEngine implements jIUrlEngine {
         elseif($urlinfo[0] == 1) {
             $pi = $urlinfo[5];
             foreach ($urlinfo[3] as $k=>$param){
-                if ($urlinfo[4][$k]) {
-                    $pi = str_replace(':'.$param, jUrl::escape($url->getParam($param,''),true), $pi);
+                switch ($urlinfo[4][$k]) {
+                    case 2:
+                        $value = jUrl::escape($url->getParam($param,''),true);
+                        break;
+                    case 1:
+                        $value = str_replace('%2F', '/',urlencode($url->getParam($param,'')));
+                        break;
+                    default:
+                        $value = urlencode($url->getParam($param,''));
+                        break;
                 }
-                else {
-                    $pi = str_replace(':'.$param, urlencode($url->getParam($param,'')), $pi);
-                }
+                $pi = str_replace(':'.$param, $value, $pi);
                 $url->delParam($param);
             }
             $url->pathInfo = $pi;

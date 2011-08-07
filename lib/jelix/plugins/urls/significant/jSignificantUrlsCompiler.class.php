@@ -4,7 +4,7 @@
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor Thibault Piront (nuKs)
-* @copyright   2005-2010 Laurent Jouanneau
+* @copyright   2005-2011 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -61,7 +61,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
     protected $typeparam = array('string'=>'([^\/]+)','char'=>'([^\/])', 'letter'=>'(\w)',
         'number'=>'(\d+)', 'int'=>'(\d+)', 'integer'=>'(\d+)', 'digit'=>'(\d)',
         'date'=>'([0-2]\d{3}\-(?:0[1-9]|1[0-2])\-(?:[0-2][1-9]|3[0-1]))',
-        'year'=>'([0-2]\d{3})', 'month'=>'(0[1-9]|1[0-2])', 'day'=>'([0-2][1-9]|[1-2]0|3[0-1])'
+        'year'=>'([0-2]\d{3})', 'month'=>'(0[1-9]|1[0-2])', 'day'=>'([0-2][1-9]|[1-2]0|3[0-1])',
+        'path'=>'(.*)'
         );
 
     /**
@@ -124,8 +125,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                   or
                   array(1,'entrypoint', https true/false,
                         array('year','month',), // list of dynamic values included in the url
-                        array(true, false..), // list of boolean which indicates for each
-                                              // dynamic value, if it is an escaped value or not
+                        array(true, false..), // list of integer which indicates for each
+                                              // dynamic value: 0: urlencode, 1:urlencode except '/', 2:escape
                         "/news/%1/%2/", // the url
                         array('bla'=>'whatIWant' ) // list of static values
                         )
@@ -416,6 +417,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         if (preg_match_all("/\\\:([a-zA-Z_]+)/", $regexppath, $m, PREG_PATTERN_ORDER)) {
             $u->params = $m[1];
 
+            // process parameters which are declared in a <param> element
             foreach ($url->param as $var) {
 
                 $name = (string) $var['name'];
@@ -425,16 +427,11 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                     continue;
                 }
 
-                if (isset($var['escape'])) {
-                    $u->escapes[$k] = (((string)$var['escape']) == 'true');
-                }
-                else {
-                    $u->escapes[$k] = false;
-                }
-
+                $type = '';
                 if (isset($var['type'])) {
-                    if (isset($this->typeparam[(string)$var['type']]))
-                        $regexp = $this->typeparam[(string)$var['type']];
+                    $type = (string)$var['type'];
+                    if (isset($this->typeparam[$type]))
+                        $regexp = $this->typeparam[$type];
                     else
                         $regexp = '([^\/]+)';
                 }
@@ -445,14 +442,25 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                     $regexp = '([^\/]+)';
                 }
 
+                if ($type == 'path') {
+                    $u->escapes[$k] = 1;
+                }
+                else if (isset($var['escape'])) {
+                    $u->escapes[$k] = (((string)$var['escape']) == 'true'?2:0);
+                }
+                else {
+                    $u->escapes[$k] = 0;
+                }
+
                 $regexppath = str_replace('\:'.$name, $regexp, $regexppath);
             }
 
+            // process parameters that are only declared in the pathinfo
             foreach ($u->params as $k=>$name) {
                 if (isset($u->escapes[$k])) {
                     continue;
                 }
-                $u->escapes[$k] = false;
+                $u->escapes[$k] = 0;
                 $regexppath = str_replace('\:'.$name, '([^\/]+)', $regexppath);
             }
         }
