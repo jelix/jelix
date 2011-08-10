@@ -203,7 +203,6 @@ class jCoordinator {
             }
         }
         $this->response = $ctrl->{$this->action->method}();
-
         if($this->response == null){
             throw new jException('jelix~errors.response.missing',$this->action->toString());
         }
@@ -249,29 +248,20 @@ class jCoordinator {
 
     /**
      * instancy a response object corresponding to the default response type
-     * of the current resquest
+     * of the current resquest.
+     * Deprecated. use $request->getResponse() instead.
      * @param boolean $originalResponse TRUE to get the original, non overloaded response
-     * @return mixed  error string or false
+     * @deprecated since 1.3
      */
     public function initDefaultResponseOfRequest($originalResponse = false){
-        if($originalResponse)
-            $responses = &$GLOBALS['gJConfig']->_coreResponses;
-        else
-            $responses = &$GLOBALS['gJConfig']->responses;
-
-        $type = $this->request->defaultResponseType;
-
-        if(!isset($responses[$type]))
-            throw new jException('jelix~errors.default.response.type.unknown',array($this->moduleName.'~'.$this->actionName,$type));
-
-        try{
-            $respclass = $responses[$type];
-            require_once ($responses[$type.'.path']);
-            $this->response = new $respclass();
-            return false;
+        try {
+            $this->request->getResponse('', $originalResponse);
         }
-        catch(Exception $e){
-            return $this->initDefaultResponseOfRequest(true);
+        catch (Exception $e) {
+            if (!$originalResponse)
+                $this->initDefaultResponseOfRequest(true);
+            else
+                throw $e;
         }
     }
 
@@ -305,32 +295,7 @@ class jCoordinator {
                 ob_end_clean();
             }
 
-            // fatal error, we should output errors
-            if ($this->request->isAjax()) {
-                if ($this->response)
-                    $resp = $this->response;
-                else {
-                    require_once(JELIX_LIB_CORE_PATH.'response/jResponseText.class.php');
-                    $resp = new jResponseText();
-                }
-            }
-            else if (isset($_SERVER['HTTP_ACCEPT']) && strstr($_SERVER['HTTP_ACCEPT'],'text/html')) {
-                require_once(JELIX_LIB_CORE_PATH.'response/jResponseBasicHtml.class.php');
-                $resp = $this->response = new jResponseBasicHtml();
-            }
-            elseif($this->response) {
-                $resp = $this->response;
-            }
-            else {
-                try {
-                    $this->initDefaultResponseOfRequest(true);
-                }
-                catch(Exception $e) {
-                    require_once(JELIX_LIB_CORE_PATH.'response/jResponseBasicHtml.class.php');
-                    $this->response = new jResponseBasicHtml();
-                }
-                $resp = $this->response;
-            }
+            $resp = $this->request->getErrorResponse($this->response);
             $resp->outputErrors();
             jSession::end();
         }
@@ -340,7 +305,9 @@ class jCoordinator {
             return;
         }
         else {
-            // fatal error appeared during init, let's display a page
+            // fatal error appeared during init, let's display an HTML page
+            // since we don't know the request, we cannot return a response
+            // corresponding to the expected protocol
             while (ob_get_level()) {
                 ob_end_clean();
             }

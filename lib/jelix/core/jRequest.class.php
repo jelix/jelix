@@ -39,6 +39,11 @@ abstract class jRequest {
     public $defaultResponseType = '';
 
     /**
+     * @var string the name of the base class for an allowed response for the current request
+     */
+    public $authorizedResponseClass = '';
+
+    /**
      * the path of the entry point in the url (basePath included)
      * if the url is /foo/index.php/bar, its value is /foo/
      * @var string
@@ -139,10 +144,11 @@ abstract class jRequest {
     }
 
     /**
-     * @param string $respclass the name of a response class
+     * @param jResponse $response the response
+     * @return boolean true if the given class is allowed for the current request
      */
-    public function isAllowedResponse($respclass){
-        return true;
+    public function isAllowedResponse($response){
+        return ($response instanceof $this->authorizedResponseClass);
     }
 
     /**
@@ -157,31 +163,53 @@ abstract class jRequest {
             $type = $this->defaultResponseType;
         }
 
-        if($useOriginal){
-            if(!isset($gJConfig->_coreResponses[$type])){
-                throw new jException('jelix~errors.ad.response.type.unknown',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
+        if ($useOriginal)
+            $responses = &$gJConfig->_coreResponses;
+        else
+            $responses = &$gJConfig->responses;
+
+        if(!isset($responses[$type])){
+            if ($gJCoord->action) {
+               $action = $gJCoord->action->resource;
+               $path = $gJCoord->action->getPath();
             }
-            $respclass = $gJConfig->_coreResponses[$type];
-            $path = $gJConfig->_coreResponses[$type.'.path'];
-        }else{
-            if(!isset($gJConfig->responses[$type])){
-                throw new jException('jelix~errors.ad.response.type.unknown',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
+            else {
+               $action = $gJCoord->moduleName.'~'.$gJCoord->actionName;
+               $path = '';
             }
-            $respclass = $gJConfig->responses[$type];
-            $path = $gJConfig->responses[$type.'.path'];
+            if ($type == $this->defaultResponseType)
+               throw new jException('jelix~errors.default.response.type.unknown',array($action,$type));
+            else
+               throw new jException('jelix~errors.ad.response.type.unknown',array($action, $type, $path));
         }
 
-        if(!$this->isAllowedResponse($respclass)){
-            throw new jException('jelix~errors.ad.response.type.notallowed',array($gJCoord->action->resource,$type,$gJCoord->action->getPath()));
-        }
+        $respclass = $responses[$type];
+        $path = $responses[$type.'.path'];
 
         if(!class_exists($respclass,false))
             require($path);
-
         $response = new $respclass();
+
+        if (!$this->isAllowedResponse($response)){
+            throw new jException('jelix~errors.ad.response.type.notallowed',array($gJCoord->action->resource, $type, $gJCoord->action->getPath()));
+        }
+
         $gJCoord->response = $response;
 
         return $response;
+    }
+
+    /**
+     * @return jResponse
+     */
+    public function getErrorResponse($currentResponse) {
+      try {
+         return $this->getResponse('', true);
+      }
+      catch(Exception $e) {
+         require_once(JELIX_LIB_CORE_PATH.'response/jResponseText.class.php');
+         return new jResponseText();
+      }
     }
 
     /**

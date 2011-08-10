@@ -18,7 +18,7 @@ test("test first call", function() {
   if(p.status == 200) {  
     equals(p.responseText, '{"result":["coucou"],"error":null,"id":""}', "response first text");
   }
-  else ok(false, "bad http response");
+  else ok(false, "bad http response ("+p.responseText+")");
 
 });
 
@@ -35,7 +35,7 @@ test("test second call", function() {
   if(p.status == 200) {  
     equals(p.responseText, '{"result":1564,"error":null,"id":""}', "response second text");
   }
-  else ok(false, "bad http response");
+  else ok(false, "bad http response ("+p.responseText+")");
 
 });
 
@@ -53,7 +53,7 @@ test("test third call with response parsing", function() {
     var resp = JSON.parse(p.responseText);
     equals(resp.result[0], 'coucou', 'response third test');
   }
-  else ok(false, "bad http response");
+  else ok(false, "bad http response ("+p.responseText+")");
 
 });
 

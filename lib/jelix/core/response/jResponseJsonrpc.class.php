@@ -51,12 +51,16 @@ final class jResponseJsonRpc extends jResponse {
     public function outputErrors(){
         global $gJCoord;
         $e = $gJCoord->getErrorMessage();
-        $errorMessage = $gJCoord->getGenericErrorMessage();
         if ($e) {
             $errorCode = $e->getCode();
+            if ($errorCode > 5000)
+                $errorMessage = $e->getMessage();
+            else
+                $errorMessage = $gJCoord->getGenericErrorMessage();
         }
         else {
             $errorCode = -1;
+            $errorMessage = $gJCoord->getGenericErrorMessage();
         }
         $this->clearHttpHeaders();
         $this->_httpStatusCode ='500';

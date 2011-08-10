@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  core_request
 * @author      Laurent Jouanneau
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2011 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -24,7 +24,9 @@ class jJsonRpcRequest extends jRequest {
 
     public $defaultResponseType = 'jsonrpc';
 
-    public $jsonRequestId=null;
+    public $authorizedResponseClass = 'jResponseJsonrpc';
+
+    public $jsonRequestId = null;
 
     /**
      * analyse the http request and set the params property
@@ -58,9 +60,4 @@ class jJsonRpcRequest extends jRequest {
         $this->params['module'] = $module;
         $this->params['action'] = $action;
     }
-
-    public function isAllowedResponse($respclass){
-        return ('jResponseJsonrpc' == $respclass);
-    }
-
 }

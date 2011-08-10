@@ -35,13 +35,17 @@ final class jResponseSoap extends jResponse {
     public function outputErrors(){
         global $gJCoord, $gJConfig;
  
-        $errorMessage = $gJCoord->getGenericErrorMessage();
         $e = $gJCoord->getErrorMessage();
         if ($e) {
             $errorCode = $e->getCode();
+            if ($errorCode > 5000)
+                $errorMessage = $e->getMessage();
+            else
+                $errorMessage = $gJCoord->getGenericErrorMessage();
         }
         else {
             $errorCode = -1;
+            $errorMessage = $gJCoord->getGenericErrorMessage();
         }
 
         //soapFault param have to be UTF-8 encoded (soapFault seems to not use the encoding param of the SoapServer)

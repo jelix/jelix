@@ -5,18 +5,16 @@
 * @author      Laurent Jouanneau
 * @contributor Frederic Guillot
 * @contributor Thibault Piront (nuKs)
-* @copyright   2005-2006 Laurent Jouanneau, 2007 Frederic Guillot
+* @copyright   2005-2011 Laurent Jouanneau, 2007 Frederic Guillot
 * @copyright   2007 Thibault Piront
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
 /**
 *
 */
 require(JELIX_LIB_UTILS_PATH. 'jXmlRpc.class.php');
-
 
 /**
 * handle XML-rpc call. The response has to be a xml-rpc response.
@@ -29,6 +27,8 @@ class jXmlRpcRequest extends jRequest {
     public $type = 'xmlrpc';
 
     public $defaultResponseType = 'xmlrpc';
+
+    public $authorizedResponseClass = 'jResponseXmlrpc';
 
     /**
      * analyse the http request and set the params property
@@ -55,9 +55,4 @@ class jXmlRpcRequest extends jRequest {
         $this->params['module'] = $module;
         $this->params['action'] = $action;
     }
-
-    public function isAllowedResponse($respclass){
-        return ('jResponseXmlrpc' == $respclass);
-    }
-
 }
