@@ -27,7 +27,7 @@ ACTION:
  * subject_delete subject
  * subject_list
  * subject_group_list
- * subject_group_add group labelkey
+ * subject_group_create group labelkey
  * subject_group_delete group labelkey
 
 ",
@@ -42,7 +42,7 @@ ACTION:
  * subject_delete subject
  * subject_list
  * subject_group_list
- * subject_group_add group labelkey
+ * subject_group_create group labelkey
  * subject_group_delete group labelkey
 ",
     );
@@ -56,7 +56,7 @@ ACTION:
             'subject_delete'=>"Effacement d'un sujet",
             'subject_list'=>"Liste des sujets",
             'subject_group_list'=>"Liste des groupes de sujets",
-            'subject_group_add'=>"Ajout des groupes de sujets",
+            'subject_group_create'=>"Ajout des groupes de sujets",
             'subject_group_delete'=>"Suppression des groupes de sujets",
             ),
         'en'=>array(
@@ -67,7 +67,7 @@ ACTION:
             'subject_delete'=>"Delete a subject",
             'subject_list'=>"List of subjects",
             'subject_group_list'=>"List of subject groups",
-            'subject_group_add'=>"Add a subject group",
+            'subject_group_create'=>"Add a subject group",
             'subject_group_delete'=>"Delete a subject group",
             ),
     );
@@ -78,7 +78,7 @@ ACTION:
         $action = $this->getParam('action');
         if(!in_array($action,array('list','add','remove',
                                    'subject_create','subject_delete','subject_list',
-                                   'subject_group_add','subject_group_delete','subject_group_list',
+                                   'subject_group_create','subject_group_delete','subject_group_list',
                                    ))){
             throw new Exception("unknown subcommand");
         }
