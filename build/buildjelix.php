@@ -198,12 +198,15 @@ if($PHP_VERSION_TARGET){
         $ENABLE_PHP_JSON = 1;
         $PHP53 = 1;
         $PHP53ORMORE = 1;
+        $PHP52ORMORE = 1;
+        $PHP51ORMORE = 1;
     }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
         // filter and json are in php >=5.2
         $ENABLE_PHP_FILTER = 1;
         $ENABLE_PHP_JSON = 1;
         $PHP52 = 1;
         $PHP52ORMORE = 1;
+        $PHP51ORMORE = 1;
     }elseif(version_compare($PHP_VERSION_TARGET, '5.1') > -1){
         $PHP51=1;
         $PHP51ORMORE = 1;
@@ -215,7 +218,8 @@ if($PHP_VERSION_TARGET){
     $ENABLE_PHP_FILTER = 1;
     $ENABLE_PHP_JSON = 1;
     $PHP52=1;
-    $PHP2ORMORE=1;
+    $PHP52ORMORE = 1;
+    $PHP51ORMORE = 1;
 }
 
 $BUILD_FLAGS = 0;
