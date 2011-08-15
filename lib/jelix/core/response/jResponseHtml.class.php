@@ -212,18 +212,19 @@ class jResponseHtml extends jResponse {
                 echo '<p><a href="#" onclick="document.getElementById(\'jelixerror\').style.display=\'none\';return false;">close</a></p></div>';
             }
         }
+
         echo implode("\n",$this->_bodyBottom);
-        if(count($GLOBALS['gJCoord']->logMessages)) {
-            if(count($GLOBALS['gJCoord']->logMessages['response'])) {
+        if(count($msgs)) {
+            if(isset($msgs['response']) && count($msgs['response'])) {
                 echo '<ul id="jelixlog">';
-                foreach($GLOBALS['gJCoord']->logMessages['response'] as $m) {
+                foreach($msgs['response'] as $m) {
                     echo '<li>',htmlspecialchars($m),'</li>';
                 }
                 echo '</ul>';
             }
-            if(count($GLOBALS['gJCoord']->logMessages['firebug'])) {
+            if(isset($msgs['firebug']) && count($msgs['firebug'])) {
                 echo '<script type="text/javascript">if(console){';
-                foreach($GLOBALS['gJCoord']->logMessages['firebug'] as $m) {
+                foreach($msgs['firebug'] as $m) {
                     echo 'console.debug("',str_replace(array('"',"\n","\r","\t"),array('\"','\\n','\\r','\\t'),$m),'");';
                 }
                 echo '}else{alert("there are log messages, you should activate Firebug to see them");}</script>';
