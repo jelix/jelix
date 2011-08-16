@@ -148,7 +148,6 @@ cd lib/jelix-www/jquery
 
 cd lib/jelix-www/markitup
   jquery.markitup.js
-  jquery.markitup.pack.js
   README.md
   CHANGELOG.md
 cd lib/jelix-www/markitup/templates
@@ -163,6 +162,8 @@ cd lib/jelix-www/markitup/sets/default/images
   image.png
   italic.png
   link.png
+  list-bullet.png
+  list-numeric.png
   picture.png
   preview.png
   stroke.png

@@ -90,6 +90,7 @@ cd lib/jelix-www/design/
   fond-bandeau.png
 cd lib/jelix-www/markitup
   readme.txt
+  jquery.markitup.pack.js
 rmd lib/jelix-www/jquery/date_input
 cd lib/jelix-www/jquery/ui
   effects.blind.min.js

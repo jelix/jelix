@@ -1,6 +1,37 @@
-markItUp! 1.1.7
+markItUp! 1.1.12
 
 CHANGE LOG
+markItUp! 1.1.12 2011-08-11
+- Fixed the insertion on empty selection
+- Enhanced the trailing space management
+
+markItUp! 1.1.11 2011-07-19
+- Enabled parsing the markup in javascript (amroth)
+- Added multiline support (alevchuk)
+- Updated with jQuery 1.6.2
+- Added quotes to attribute selectors
+- Tried to fix the endless IE caret position bug
+- Added metakey support for Mac users (michal-krause)
+
+markItUp! 1.1.10 2011-02-20
+- Improved: Ajax property 'dataType' set to 'text'
+- Improved: Ajax property 'global' set to 'false'
+- Fixed: Ctrl+click selection problem
+
+markItUp! 1.1.9 2010-11-04
+- Improved: Selection accuracy in Internet Explorer
+- Improved: Replace focusin() by bind('focusin') to solve some backward compatibility issues (Nick B. C.)
+- Cosmetic: Add new logo
+- Cosmetic: Remove jQuery library and use CDN
+
+markItUp! 1.1.8 2010-08-27
+- Improved: Some skin PNG have been optimized (lukescammell)
+- Fixed: Opera 10 selection bug (Marius G.)
+- Fixed: Accessibility issue with the background default color in the default skin
+- Improved: Avoid giving the preview focus each time autorefresh kicks in. It still gets the focus when the preview button is pressed (DrSlump)
+- Improved: In pop-up mode the preview is closed when the page containing the editor is unloaded (DrSlump)
+- Improved: Press TAB jump right inside the textarea (Yakir)
+
 markItUp! 1.1.7 2010-04-06
 - Fixed: Empty lines are removed at insertion on Webkit
 - Fixed: Focus lost when shortcut is used on FF
