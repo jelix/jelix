@@ -159,6 +159,8 @@ cd lib/jelix-www/jquery/ui/i18n
   ui.datepicker-uk.js
   ui.datepicker-zh-CN.js
   ui.datepicker-zh-TW.js
+cd lib/jelix-www/jquery/themes/smoothness/
+  jquery-ui-1.8.2.custom.css
 rmd lib/jelix-www/jquery/themes/default
 rmd lib/jelix-www/wymeditor/config
 
