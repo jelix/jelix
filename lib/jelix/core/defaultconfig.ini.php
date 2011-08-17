@@ -25,6 +25,14 @@ domainName =
 ; the locale to fallback when the asked string doesn't exist in the current locale
 fallbackLocale =
 
+; indicate HTTP(s) port if it should be forced to a specific value that PHP cannot
+; guess (if the application is behind a proxy on a specific port for example)
+; true for default port, or a number for a specific port. leave empty to use the
+; current server port.
+forceHTTPPort =
+forceHTTPSPort =
+
+
 ; ---  don't set the following options to on, except if you know what you do
 
 ; disable all installers and the installer.ini.php

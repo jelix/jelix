@@ -4,7 +4,7 @@
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor GeekBay
-* @copyright   2005-2010 Laurent Jouanneau, 2010 Geekbay
+* @copyright   2005-2011 Laurent Jouanneau, 2010 Geekbay
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -101,7 +101,7 @@ class simpleUrlEngine implements jIUrlEngine {
         }
 
         if ($usehttps)
-          return 'https://'.$GLOBALS['gJCoord']->request->getDomainName().$gJConfig->urlengine['basePath'];
+          return $GLOBALS['gJCoord']->request->getServerURI(true).$gJConfig->urlengine['basePath'];
         else
           return $gJConfig->urlengine['basePath'];
     }

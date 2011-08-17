@@ -13,12 +13,8 @@ class UTCreateUrls extends UnitTestCase {
     protected $oldUrlScriptPath;
     protected $oldParams;
     protected $oldRequestType;
-    protected $oldUrlengineConf;
-    protected $oldModule;
-    protected $simple_urlengine_entrypoints;
-    protected $oldHttpHost = null;
-    protected $olddomainname;
-    protected $oldproto = null;
+    protected $oldserver;
+    protected $oldConfig;
 
     function setUp() {
       global $gJCoord, $gJConfig;
@@ -26,23 +22,8 @@ class UTCreateUrls extends UnitTestCase {
       $this->oldUrlScriptPath = $gJCoord->request->urlScriptPath;
       $this->oldParams = $gJCoord->request->params;
       $this->oldRequestType = $gJCoord->request->type;
-      $this->oldUrlengineConf = $gJConfig->urlengine;
-      $this->simple_urlengine_entrypoints = $gJConfig->simple_urlengine_entrypoints;
-      $this->oldModule = $gJConfig->_modulesPathList;
-      $this->olddomainname = $gJConfig->domainName;
-
-      if (isset($_SERVER['HTTPS'])) {
-        $this->oldproto = $_SERVER['HTTPS'];
-      }
-      else {
-        $this->oldproto = null;
-      }
-      if (isset($_SERVER['HTTP_HOST'])) {
-        $this->oldHttpHost = $_SERVER['HTTP_HOST'];
-      }
-      else {
-        $this->oldHttpHost = null;
-      }
+      $this->oldConfig = clone $gJConfig;
+      $this->oldserver = $_SERVER;
     }
 
     function tearDown() {
@@ -51,20 +32,10 @@ class UTCreateUrls extends UnitTestCase {
       $gJCoord->request->urlScriptPath=$this->oldUrlScriptPath;
       $gJCoord->request->params=$this->oldParams;
       $gJCoord->request->type=$this->oldRequestType;
-      $gJConfig->urlengine = $this->oldUrlengineConf;
-      $gJConfig->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
-      $gJConfig->_modulesPathList=$this->oldModule ;
-      $gJConfig->domainName = $this->olddomainname;
-      if ($this->oldproto === null) {
-        unset($_SERVER['HTTPS']);
-      }
-      else
-        $_SERVER['HTTPS'] = $this->oldproto;
-      if ($this->oldHttpHost === null) {
-        unset($_SERVER['HTTP_HOST']);
-      }
-      else
-        $_SERVER['HTTP_HOST'] = $this->oldHttpHost;
+
+      $gJConfig = clone $this->oldConfig;
+      $_SERVER = $this->oldserver;
+
       jUrl::getEngine(true);
     }
 
@@ -119,6 +90,9 @@ class UTCreateUrls extends UnitTestCase {
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
+       $gJConfig->domainName = 'testapp.local';
+       $gJConfig->forceHTTPPort = true;
+       $gJConfig->forceHTTPSPort = true;
        $gJConfig->urlengine = array(
          'engine'=>'simple',
          'enableParser'=>true,
@@ -158,8 +132,8 @@ class UTCreateUrls extends UnitTestCase {
        );
 
 
-      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
-      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
+      $trueResult[5]='https://testapp.local'.$trueResult[5];
+      $trueResult[6]='https://testapp.local'.$trueResult[6];
       $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
 
       $gJConfig->urlengine['multiview']=true;
@@ -175,8 +149,8 @@ class UTCreateUrls extends UnitTestCase {
           "/actu?aaa=bbb&module=jelix_tests&action=actu:foo",
           "/actu?aaa=%40%25bbb&module=jelix_tests&action=actu:bar",
        );
-      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
-      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
+      $trueResult[5]='https://testapp.local'.$trueResult[5];
+      $trueResult[6]='https://testapp.local'.$trueResult[6];
       $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
     }
 
@@ -225,6 +199,9 @@ class UTCreateUrls extends UnitTestCase {
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
+       $gJConfig->domainName = 'testapp.local';
+       $gJConfig->forceHTTPPort = true;
+       $gJConfig->forceHTTPSPort = true;
        $gJConfig->urlengine = array(
          'engine'=>'significant',
          'enableParser'=>true,
@@ -327,7 +304,7 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php/wiki/foo/bar/",
        );
 
-      $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
+      $trueResult[11]='https://testapp.local'.$trueResult[11];
       $this->_doCompareUrl("significant, multiview = false", $urlList,$trueResult);
 
 
@@ -373,7 +350,7 @@ class UTCreateUrls extends UnitTestCase {
           "/index/wiki/foo",
           "/index/wiki/foo/bar/",
        );
-      $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
+      $trueResult[11]='https://testapp.local'.$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
 
     }
@@ -429,6 +406,9 @@ class UTCreateUrls extends UnitTestCase {
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
+       $gJConfig->domainName = 'testapp.local';
+       $gJConfig->forceHTTPPort = true;
+       $gJConfig->forceHTTPSPort = true;
        $gJConfig->urlengine = array(
          'engine'=>'basic_significant',
          'enableParser'=>true,
@@ -468,8 +448,8 @@ class UTCreateUrls extends UnitTestCase {
        );
 
 
-      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
-      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
+      $trueResult[5]='https://testapp.local'.$trueResult[5];
+      $trueResult[6]='https://testapp.local'.$trueResult[6];
       $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
 
       $gJConfig->urlengine['multiview']=true;
@@ -485,8 +465,8 @@ class UTCreateUrls extends UnitTestCase {
           "/index/jelix_tests/?rubrique=vetements&id_article=98",
           "/index/jelix_tests/urlsig/?rubrique=vetements&id_article=98",
        );
-      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
-      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
+      $trueResult[5]='https://testapp.local'.$trueResult[5];
+      $trueResult[6]='https://testapp.local'.$trueResult[6];
       $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
     }
 
@@ -529,6 +509,7 @@ class UTCreateUrls extends UnitTestCase {
       $this->_doCompareError("simple, errors multiview = true", $urlList,$trueResult);
     }
 
+
     function testGetFullUrl() {
         global $gJConfig, $gJCoord;
 
@@ -550,13 +531,13 @@ class UTCreateUrls extends UnitTestCase {
         /*
          parameters
             $_SERVER['HTTPS'] ou non
-            $_SERVER['HTTP_HOST'] ou $gJConfig->domainName
+            $_SERVER['SERVER_NAME'] ou $gJConfig->domainName
             given domainName ou pas
             jelix_tests~urlsig:url3 (http) ou jelix_tests~urlsig:url8 (https)
         */
 
-        $_SERVER['HTTP_HOST'] = 'testapp.local';
-
+        $_SERVER['SERVER_NAME'] = 'testapp.local';
+        $_SERVER['SERVER_PORT'] = '80';
 
         // ================= HTTP URL
         unset($_SERVER['HTTPS']);
@@ -598,6 +579,7 @@ class UTCreateUrls extends UnitTestCase {
 
 
         $_SERVER['HTTPS'] = 'on';
+        $_SERVER['SERVER_PORT'] = '443';
         // without given domain name, without domain name in config, with https
         $gJConfig->domainName = '';
         jUrl::getEngine(true);
@@ -632,6 +614,4 @@ class UTCreateUrls extends UnitTestCase {
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,'football.local');
         $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
     }
-
-
 }
