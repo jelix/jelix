@@ -13,9 +13,8 @@ class UTCreateUrls extends UnitTestCase {
     protected $oldUrlScriptPath;
     protected $oldParams;
     protected $oldRequestType;
-    protected $oldUrlengineConf;
-    protected $oldModule;
-    protected $simple_urlengine_entrypoints;
+    protected $oldserver;
+    protected $oldConfig;
 
     function setUp() {
       global $gJCoord, $gJConfig;
@@ -23,9 +22,8 @@ class UTCreateUrls extends UnitTestCase {
       $this->oldUrlScriptPath = $gJCoord->request->urlScriptPath;
       $this->oldParams = $gJCoord->request->params;
       $this->oldRequestType = $gJCoord->request->type;
-      $this->oldUrlengineConf = $gJConfig->urlengine;
-      $this->simple_urlengine_entrypoints = $gJConfig->simple_urlengine_entrypoints;
-      $this->oldModule = $gJConfig->_modulesPathList;
+      $this->oldConfig = clone $gJConfig;
+      $this->oldserver = $_SERVER;
     }
 
     function tearDown() {
@@ -34,9 +32,10 @@ class UTCreateUrls extends UnitTestCase {
       $gJCoord->request->urlScriptPath=$this->oldUrlScriptPath;
       $gJCoord->request->params=$this->oldParams;
       $gJCoord->request->type=$this->oldRequestType;
-      $gJConfig->urlengine = $this->oldUrlengineConf;
-      $gJConfig->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
-      $gJConfig->_modulesPathList=$this->oldModule ;
+
+      $gJConfig = clone $this->oldConfig;
+      $_SERVER = $this->oldserver;
+
       jUrl::getEngine(true);
     }
 
@@ -91,6 +90,9 @@ class UTCreateUrls extends UnitTestCase {
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
+       $gJConfig->domainName = 'testapp.local';
+       $gJConfig->forceHTTPPort = true;
+       $gJConfig->forceHTTPSPort = true;
        $gJConfig->urlengine = array(
          'engine'=>'simple',
          'enableParser'=>true,
@@ -130,8 +132,8 @@ class UTCreateUrls extends UnitTestCase {
        );
 
 
-      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
-      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
+      $trueResult[5]='https://testapp.local'.$trueResult[5];
+      $trueResult[6]='https://testapp.local'.$trueResult[6];
       $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
 
       $gJConfig->urlengine['multiview']=true;
@@ -147,8 +149,8 @@ class UTCreateUrls extends UnitTestCase {
           "/actu?aaa=bbb&module=jelix_tests&action=actu:foo",
           "/actu?aaa=%40%25bbb&module=jelix_tests&action=actu:bar",
        );
-      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
-      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
+      $trueResult[5]='https://testapp.local'.$trueResult[5];
+      $trueResult[6]='https://testapp.local'.$trueResult[6];
       $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
     }
 
@@ -197,6 +199,9 @@ class UTCreateUrls extends UnitTestCase {
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
+       $gJConfig->domainName = 'testapp.local';
+       $gJConfig->forceHTTPPort = true;
+       $gJConfig->forceHTTPSPort = true;
        $gJConfig->urlengine = array(
          'engine'=>'significant',
          'enableParser'=>true,
@@ -283,7 +288,7 @@ class UTCreateUrls extends UnitTestCase {
           "/index.php/auth/user/laurent"
        );
 
-      $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
+      $trueResult[11]='https://testapp.local'.$trueResult[11];
       $this->_doCompareUrl("significant, multiview = false", $urlList,$trueResult);
 
 
@@ -322,7 +327,7 @@ class UTCreateUrls extends UnitTestCase {
           "/index/auth/login",
           "/index/auth/user/laurent"
        );
-      $trueResult[11]='https://'.$_SERVER['HTTP_HOST'].$trueResult[11];
+      $trueResult[11]='https://testapp.local'.$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
 
     }
@@ -377,6 +382,9 @@ class UTCreateUrls extends UnitTestCase {
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
+       $gJConfig->domainName = 'testapp.local';
+       $gJConfig->forceHTTPPort = true;
+       $gJConfig->forceHTTPSPort = true;
        $gJConfig->urlengine = array(
          'engine'=>'basic_significant',
          'enableParser'=>true,
@@ -416,8 +424,8 @@ class UTCreateUrls extends UnitTestCase {
        );
 
 
-      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
-      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
+      $trueResult[5]='https://testapp.local'.$trueResult[5];
+      $trueResult[6]='https://testapp.local'.$trueResult[6];
       $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
 
       $gJConfig->urlengine['multiview']=true;
@@ -433,8 +441,8 @@ class UTCreateUrls extends UnitTestCase {
           "/index/jelix_tests/?rubrique=vetements&id_article=98",
           "/index/jelix_tests/urlsig/?rubrique=vetements&id_article=98",
        );
-      $trueResult[5]='https://'.$_SERVER['HTTP_HOST'].$trueResult[5];
-      $trueResult[6]='https://'.$_SERVER['HTTP_HOST'].$trueResult[6];
+      $trueResult[5]='https://testapp.local'.$trueResult[5];
+      $trueResult[6]='https://testapp.local'.$trueResult[6];
       $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
     }
 
@@ -475,6 +483,112 @@ class UTCreateUrls extends UnitTestCase {
           array(2,11,'jelix~errors.selector.invalid.target'),
        );
       $this->_doCompareError("simple, errors multiview = true", $urlList,$trueResult);
+    }
+
+
+    function testGetFullUrl() {
+        global $gJConfig, $gJCoord;
+
+        $gJCoord->request->urlScriptPath='/';
+        $gJCoord->request->params=array();
+        //$gJCoord->request->type=;
+        $gJConfig->urlengine = array(
+          'engine'=>'basic_significant',
+          'enableParser'=>true,
+          'multiview'=>false,
+          'basePath'=>'/',
+          'defaultEntrypoint'=>'index',
+          'entrypointExtension'=>'.php',
+          'notfoundAct'=>'jelix~error:notfound',
+          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
+          'significantFile'=>'urls.xml',
+        );
+
+        /*
+         parameters
+            $_SERVER['HTTPS'] ou non
+            $_SERVER['SERVER_NAME'] ou $gJConfig->domainName
+            given domainName ou pas
+            jelix_tests~urlsig:url3 (http) ou jelix_tests~urlsig:url8 (https)
+        */
+
+        $_SERVER['SERVER_NAME'] = 'testapp.local';
+        $_SERVER['SERVER_PORT'] = '80';
+
+        // ================= HTTP URL
+        unset($_SERVER['HTTPS']);
+
+        // without given domain name, without domain name in config, without https
+        $gJConfig->domainName = '';
+        jUrl::getEngine(true);
+        $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
+        $this->assertEqual('http://testapp.local/index.php/jelix_tests/urlsig/url1', $url);
+
+        $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
+        $this->assertEqual('https://testapp.local/index.php/jelix_tests/urlsig/url8', $url);
+
+
+        // with given domain name, without domain name in config, without https
+        $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,'football.local');
+        $this->assertEqual('http://football.local/index.php/jelix_tests/urlsig/url1', $url);
+
+        $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,'football.local');
+        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
+
+        // without given domain name, with domain name in config, without https
+        $gJConfig->domainName = 'configdomain.local';
+        jUrl::getEngine(true);
+
+        $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
+        $this->assertEqual('http://configdomain.local/index.php/jelix_tests/urlsig/url1', $url);
+
+        $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
+        $this->assertEqual('https://configdomain.local/index.php/jelix_tests/urlsig/url8', $url);
+
+
+        // with given domain name, with domain name in config, without https
+        $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,'football.local');
+        $this->assertEqual('http://football.local/index.php/jelix_tests/urlsig/url1', $url);
+
+        $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,'football.local');
+        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
+
+
+        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['SERVER_PORT'] = '443';
+        // without given domain name, without domain name in config, with https
+        $gJConfig->domainName = '';
+        jUrl::getEngine(true);
+
+        $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
+        $this->assertEqual('https://testapp.local/index.php/jelix_tests/urlsig/url1', $url);
+
+        $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
+        $this->assertEqual('https://testapp.local/index.php/jelix_tests/urlsig/url8', $url);
+
+        // with given domain name, without domain name in config, with https
+        $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,'football.local');
+        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url1', $url);
+
+        $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,'football.local');
+        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
+
+        // without given domain name, with domain name in config, with https
+        $gJConfig->domainName = 'configdomain.local';
+        jUrl::getEngine(true);
+
+        $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
+        $this->assertEqual('https://configdomain.local/index.php/jelix_tests/urlsig/url1', $url);
+
+        $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
+        $this->assertEqual('https://configdomain.local/index.php/jelix_tests/urlsig/url8', $url);
+
+        // with given domain name, with domain name in config, with https
+        $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,'football.local');
+        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url1', $url);
+
+        $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,'football.local');
+        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
     }
 }
 ?>

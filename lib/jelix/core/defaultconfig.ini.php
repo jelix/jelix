@@ -22,6 +22,13 @@ cacheProfiles = cache.ini.php
 ; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
 domainName =
 
+; indicate HTTP(s) port if it should be forced to a specific value that PHP cannot
+; guess (if the application is behind a proxy on a specific port for example)
+; true for default port, or a number for a specific port. leave empty to use the
+; current server port.
+forceHTTPPort =
+forceHTTPSPort =
+
 
 ; ---  don't set the following options to on, except if you know what you do
 

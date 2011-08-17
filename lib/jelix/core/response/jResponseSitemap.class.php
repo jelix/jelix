@@ -167,7 +167,7 @@ class jResponseSitemap extends jResponse {
         }
         global $gJCoord;
         $url = new jSitemapUrl();
-        $url->loc = $gJCoord->request->getProtocol(). $gJCoord->request->getDomainName() . $loc;
+        $url->loc = $gJCoord->request->getServerURI() . $loc;
 
         if (($timestamp = strtotime($lastmod))) {
             $url->lastmod = date('c', $timestamp);
@@ -198,7 +198,7 @@ class jResponseSitemap extends jResponse {
 
         global $gJCoord;
         $sitemap = new jSitemapIndex();
-        $sitemap->loc = $gJCoord->request->getProtocol(). $gJCoord->request->getDomainName() . $loc;
+        $sitemap->loc = $gJCoord->request->getServerURI() . $loc;
 
         if (($timestamp = strtotime($lastmod))) {
             $sitemap->lastmod = date('c', $timestamp);

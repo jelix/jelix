@@ -101,7 +101,7 @@ class simpleUrlEngine implements jIUrlEngine {
         }
 
         if ($usehttps)
-          return 'https://'.$GLOBALS['gJCoord']->request->getDomainName().$gJConfig->urlengine['basePath'];
+          return $GLOBALS['gJCoord']->request->getServerURI(true).$gJConfig->urlengine['basePath'];
         else
           return $gJConfig->urlengine['basePath'];
     }

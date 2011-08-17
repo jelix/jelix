@@ -204,29 +204,81 @@ abstract class jRequest {
      * @since 1.2
      */
    function getProtocol() {
-      static $proto = null;
-      if ($proto === null)
-         $proto = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off' ? 'https://':'http://');
-      return $proto;
+      return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off' ? 'https://':'http://');
    }
 
    /**
-    * return the domain name
+    * return the application domain name
     * @return string
     * @since 1.2.3
     */
    function getDomainName() {
       global $gJConfig;
       if ($gJConfig->domainName != '') {
-         $domain = $gJConfig->domainName;
-      }
-      elseif (isset($_SERVER['HTTP_HOST'])) {
-         $domain = $_SERVER['HTTP_HOST'];
+         return $gJConfig->domainName;
       }
       elseif (isset($_SERVER['SERVER_NAME'])) {
-         $domain = $_SERVER['SERVER_NAME'];
+         return $_SERVER['SERVER_NAME'];
       }
-      return $domain;
+      elseif (isset($_SERVER['HTTP_HOST'])) {
+         if (($pos = strpos($_SERVER['HTTP_HOST'], ':')) !== false)
+            return substr($_SERVER['HTTP_HOST'],0, $pos);
+         return $_SERVER['HTTP_HOST'];
+      }
+      return '';
+   }
+
+   /**
+    * return the server URI of the application (protocol + server name + port)
+    * @return string the serveur uri
+    * @since 1.2.4
+    */
+   function getServerURI($forceHttps = null) {
+      $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off');
+
+      if ( ($forceHttps === null && $isHttps) || $forceHttps) {
+         $uri = 'https://';
+      }
+      else {
+         $uri = 'http://';
+      }
+
+      $uri .= $this->getDomainName();
+      $uri .= $this->getPort($forceHttps);
+      return $uri;
+   }
+
+   /**
+    * return the server port of the application
+    * @return string the ":port" or empty string
+    * @since 1.2.4
+    */
+   function getPort($forceHttps = null) {
+      $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off');
+
+      if ($forceHttps === null)
+         $https = $isHttps;
+      else
+         $https = $forceHttps;
+
+      global $gJConfig;
+      $forcePort = ($https ? $gJConfig->forceHTTPSPort : $gJConfig->forceHTTPPort);
+      if ($forcePort === true) {
+         return '';
+      }
+      else if ($forcePort) { // a number
+         $port = $forcePort;
+      }
+      else if($isHttps != $https) {
+         // the asked protocol is different from the current protocol
+         // we use the standard port for the asked protocol
+         return '';
+      } else {
+         $port = $_SERVER['SERVER_PORT'];
+      }
+      if (($https && $port == '443' ) || (!$https && $port == '80' ))
+         return '';
+      return ':'.$port;
    }
 
    /**

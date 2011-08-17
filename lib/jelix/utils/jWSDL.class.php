@@ -173,7 +173,7 @@ class jWSDL {
         $url->clearParam ();
         $url->setParam('service',$this->module.'~'.$this->controller );
 
-        $serviceURL = $serviceNameSpace = $gJCoord->request->getProtocol().$gJCoord->request->getDomainName();
+        $serviceURL = $serviceNameSpace = $gJCoord->request->getServerURI();
 
         $serviceURL .= $url->toString();
         $serviceNameSpace .= $gJConfig->urlengine['basePath'];
