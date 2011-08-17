@@ -135,7 +135,7 @@ class jImageModifier {
         // apply transforms if necessary (serve directly or from cache otherwise)
         $pendingTransforms = ($chaine !== $src);
         if( $pendingTransforms && is_file($srcPath.$src) && !is_file($cachePath.$cacheName) ) {
-            self::transformAndCache($srcPath.$src, $cachePath, $cacheName, $params);
+            self::transformImage($srcPath.$src, $cachePath, $cacheName, $params);
         }
 
         // Attributes
@@ -206,12 +206,13 @@ class jImageModifier {
                        'xpm'=>'image/x-xpixmap', 'xbm'=>'image/x-xbitmap', 'wbmp'=>'image/vnd.wap.wbmp');
 
     /**
-     * transform source image file (given parameters) and cache result
-     * @param string $src the url of image (myapp/www/):string.[gif|jpeg|jpg|jpe|xpm|xbm|wbmp|png]
-     * @param string $cacheName image's hashname for the cache
+     * transform source image file (given parameters) and store the result into an other file
+     * @param string $srcFs the path to the image to transform. [gif|jpeg|jpg|jpe|xpm|xbm|wbmp|png]
+     * @param string $targetPath  the path of the directory to store the resulting image
+     * @param string $targetName the filename of the resulting image
      * @param array $params parameters specifying transformations
-     **/
-    static protected function transformAndCache($srcFs, $cachePath, $cacheName, $params) {
+     */
+    static public function transformImage($srcFs, $targetPath, $targetName, $params) {
 
         $path_parts = pathinfo($srcFs);
         $mimeType = self::$mimes[strtolower($path_parts['extension'])];
@@ -323,13 +324,13 @@ class jImageModifier {
             $image = $fond;
         }
 
-        jFile::createDir($cachePath);
+        jFile::createDir($targetPath);
 
         // Register
         switch ( $mimeType ) {
-            case 'image/gif'  : imagegif($image, $cachePath.$cacheName); break;
-            case 'image/jpeg' : imagejpeg($image, $cachePath.$cacheName, $quality); break;
-            default           : imagepng($image, $cachePath.$cacheName);
+            case 'image/gif'  : imagegif($image, $targetPath.$targetName); break;
+            case 'image/jpeg' : imagejpeg($image, $targetPath.$targetName, $quality); break;
+            default           : imagepng($image, $targetPath.$targetName);
         }
 
         // Destruction
