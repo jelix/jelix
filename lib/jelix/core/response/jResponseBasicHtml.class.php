@@ -3,9 +3,9 @@
  * @package     jelix
  * @subpackage  core_response
  * @author      Laurent Jouanneau
- * @contributor Julien Issler
+ * @contributor Julien Issler, Brice Tence
  * @copyright   2010 Laurent Jouanneau
- * @copyright   2011 Julien Issler
+ * @copyright   2011 Julien Issler, 2011 Brice Tence
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -254,7 +254,7 @@ class jResponseBasicHtml extends jResponse {
         $BODYBOTTOM = implode("\n", $this->_bodyBottom);
         $basePath = $GLOBALS['gJConfig']->urlengine['basePath'];
 
-        header("HTTP/1.1 500 Internal jelix error");
+        header("HTTP/{$this->httpVersion} 500 Internal jelix error");
         header('Content-Type: text/html;charset='.$this->_charset);
         include($file);
     }

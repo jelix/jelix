@@ -7,6 +7,9 @@ locale = "en_US"
 charset = "UTF-8"
 theme = default
 
+; set "1.0" or "1.1" if you want to force an HTTP version
+httpVersion=""
+
 ; see http://www.php.net/manual/en/timezones.php for supported values
 ; if empty, jelix will try to get the default timezone
 timeZone =

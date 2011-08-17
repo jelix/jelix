@@ -299,6 +299,7 @@ Brice Tence (aka brayce/bricet)
  - type attribut on link tag should be optional (#1188)
  - added lock on jCache::call to prevent multiple calls on CPU high-consuming functions (ticket #1237)
  - fixed the support of meta in included template (#1196)
+ - http version setting (#1410)
 
 Christophe Thiriot (aka Doubleface)
  - testor
