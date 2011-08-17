@@ -112,6 +112,9 @@ class jIncluder {
                 require($cachefile);
                 jIncluder::$_includedFiles[$cachefile]=true;
             }
+            else {
+                throw new jException('jelix~errors.includer.source.compile',array( $aSelector->toString(true)));
+            }
         }else{
             require($cachefile);
             jIncluder::$_includedFiles[$cachefile]=true;
