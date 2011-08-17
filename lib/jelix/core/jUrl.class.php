@@ -6,7 +6,7 @@
 * @contributor Thibault Piront (nuKs)
 * @contributor Loic Mathaud
 * @contributor Hadrien Lanneau
-* @copyright   2005-2010 Laurent Jouanneau
+* @copyright   2005-2011 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
 * @copyright   2006 Loic Mathaud, 2010 Hadrien Lanneau
 * Some parts of this file are took from an experimental branch of the Copix project (CopixUrl.class.php, Copix 2.3dev20050901, http://www.copix.org),
@@ -118,7 +118,8 @@ class jUrl extends jUrlBase {
         }
         static $url = false;
         if ($url === false){
-            $url = 'http://'.$_SERVER['HTTP_HOST'].$GLOBALS['gJCoord']->request->urlScript.$GLOBALS['gJCoord']->request->urlPathInfo.'?';
+            $req = $GLOBALS['gJCoord']->request;
+            $url = $req->getProtocol().$req->getDomainName().$req->urlScript.$req->urlPathInfo.'?';
             $q = http_build_query($_GET, '', ($forxml?'&amp;':'&'));
             if(strpos($q, '%3A')!==false)
                 $q = str_replace( '%3A', ':', $q);
@@ -183,21 +184,29 @@ class jUrl extends jUrlBase {
     static function getFull ($actSel, $params = array (), $what=0, $domainName = null) {
         global $gJConfig;
 
-        if ($domainName) {
-            $domain = $domainName;
+        $proto = '';
+        $domain = '';
+
+        $url = self::get($actSel, $params, ($what != self::XMLSTRING?self::STRING:$what));
+        if (!preg_match('/^http/', $url)) {
+            if ($domainName) {
+                $domain = $domainName;
+            }
+            else {
+                $domain = $GLOBALS['gJCoord']->request->getDomainName();
+            }
+
+            if ($domain == '') {
+                throw new jException('jelix~errors.urls.domain.void');
+            }
+            if (!preg_match('/^http/', $domain))
+                $proto = $GLOBALS['gJCoord']->request->getProtocol();
         }
-        else {
-            $domain = $GLOBALS['gJCoord']->request->getDomainName();
-        }
-        if ($domain == '') {
-            throw new jException('jelix~errors.urls.domain.void');
+        else if ($domainName != '') {
+            $url = str_replace($GLOBALS['gJCoord']->request->getDomainName(), $domainName, $url);
         }
 
-        if (!preg_match('/^http/', $domain)) {
-            $domain = $GLOBALS['gJCoord']->request->getProtocol().$domain;
-        }
-
-        return $domain . self::get($actSel, $params, ($what != self::XMLSTRING?self::STRING:$what));
+        return $proto.$domain.$url;
     }
 
     /**
