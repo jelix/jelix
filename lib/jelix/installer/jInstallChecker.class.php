@@ -7,7 +7,7 @@
 * @author   Laurent Jouanneau
 * @contributor Bastien Jaillot
 * @contributor Olivier Demah, Brice Tence
-* @copyright 2007-2009 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence
+* @copyright 2007-2011 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0b2
@@ -61,6 +61,18 @@ class jInstallCheck {
 
     function addExtensionCheck($extension, $required) {
         $this->otherExtensions[$extension] = $required;
+    }
+
+    protected $otherPaths = array();
+
+    /**
+     * @since 1.2.5
+     */
+    function addWritablePathCheck($pathOrFileName) {
+        if (is_array($pathOrFileName))
+            $this->otherPaths = array_merge($this->otherPaths, $pathOrFileName);
+        else
+            $this->otherPaths[] = $pathOrFileName;
     }
 
     protected $databases = array();
@@ -270,6 +282,20 @@ class jInstallCheck {
         if(!file_exists(JELIX_APP_WWW_PATH)){
             $this->error('path.www');
             $ok=false;
+        }
+
+        foreach($this->otherPaths as $path) {
+            $realPath = str_replace(array('app:','lib:','var:', 'www:'), array(JELIX_APP_PATH, LIB_PATH, JELIX_APP_VAR_PATH, JELIX_APP_WWW_PATH), $path);
+            if (!file_exists($realPath)) {
+                $this->error('path.custom.not.exists', array($path));
+                $ok = false;
+            }
+            else if(!is_writable($realPath)) {
+                $this->error('path.custom.writable', array($path));
+                $ok = false;
+            }
+            else
+                $this->ok('path.custom.ok', array($path));
         }
 
         if($ok)
