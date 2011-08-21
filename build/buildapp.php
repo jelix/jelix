@@ -44,7 +44,7 @@ $BUILD_OPTIONS = array(
     false,
     false,
     ),
-'HG_REVISION'=> array(
+'SOURCE_REVISION'=> array(
     false,
     ),
 );
@@ -59,7 +59,7 @@ $APPDIR = jBuildUtils::normalizeDir($APPNAME);
 $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
 
 Env::setFromFile('VERSION',$APPDIR.'/VERSION',true);
-$HG_REVISION = Mercurial::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 
 $IS_NIGHTLY = (strpos($VERSION,'SERIAL') !== false);
 
@@ -67,7 +67,7 @@ if($IS_NIGHTLY){
     $PACKAGE_NAME=$APPNAME.'-'.str_replace('SERIAL', '', $VERSION);
     if(substr($PACKAGE_NAME,-1,1) == '.')
       $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
-    $VERSION = str_replace('SERIAL', $HG_REVISION, $VERSION);
+    $VERSION = str_replace('SERIAL', $SOURCE_REVISION, $VERSION);
 }
 else {
     $PACKAGE_NAME=$APPNAME.'-'.$VERSION;
@@ -78,7 +78,7 @@ Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
 $IS_LIB_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 
 if($IS_LIB_NIGHTLY){
-    $LIB_VERSION = str_replace('SERIAL', $HG_REVISION, $LIB_VERSION);
+    $LIB_VERSION = str_replace('SERIAL', $SOURCE_REVISION, $LIB_VERSION);
 }
 
 if (preg_match('/\.([a-z0-9\-]+)$/i', $LIB_VERSION, $m))

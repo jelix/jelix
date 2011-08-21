@@ -25,7 +25,7 @@ $BUILD_OPTIONS = array(
     false,
     false,
     ),
-'HG_REVISION'=> array(
+'SOURCE_REVISION'=> array(
     false,
     ),
 'VERSION'=> array(
@@ -41,10 +41,10 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 
 $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
 
-$HG_REVISION = Mercurial::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 
 if($VERSION == 'SERIAL'){
-    $VERSION = 'SERIAL-'.$HG_REVISION;
+    $VERSION = 'SERIAL-'.$SOURCE_REVISION;
     $IS_NIGHTLY = true;
 }else{
     $IS_NIGHTLY = false;
@@ -56,7 +56,7 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
     if($IS_NIGHTLY)
         $PACKAGE_NAME='additionnal-modules-nightly';
     else
-        $PACKAGE_NAME='additionnal-modules-HG-'.$HG_REVISION;
+        $PACKAGE_NAME='additionnal-modules-HG-'.$SOURCE_REVISION;
 }else{
     $BUILD_SUBPATH = 'lib/jelix-modules/';
 

@@ -45,7 +45,7 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 
 //----------------- initialize variables
 Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
-$HG_REVISION = Mercurial::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 
 $IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 
@@ -54,7 +54,7 @@ if($IS_NIGHTLY){
     if(substr($PACKAGE_NAME,-1,1) == '.')
       $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
     $PACKAGE_NAME .= '-pdf-fonts';
-    $LIB_VERSION = str_replace('SERIAL', $HG_REVISION, $LIB_VERSION);
+    $LIB_VERSION = str_replace('SERIAL', $SOURCE_REVISION, $LIB_VERSION);
 }
 else {
     $PACKAGE_NAME='jelix-'.$LIB_VERSION.'-pdf-fonts';

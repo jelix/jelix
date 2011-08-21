@@ -38,7 +38,7 @@ $BUILD_OPTIONS = array(
     false,
     false,
     ),
-'HG_REVISION'=> array(
+'SOURCE_REVISION'=> array(
     false,
     ),
 'JTPL_STANDALONE'=> array(
@@ -80,7 +80,7 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 //----------------- Preparation des variables d'environnement
 
 Env::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
-$HG_REVISION = Mercurial::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 
 $IS_NIGHTLY = (strpos($JTPL_VERSION,'SERIAL') !== false);
 
@@ -88,7 +88,7 @@ if($IS_NIGHTLY){
     $PACKAGE_NAME='jtpl-'.str_replace('SERIAL', '', $JTPL_VERSION);
     if(substr($PACKAGE_NAME,-1,1) == '.')
       $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
-    $JTPL_VERSION = str_replace('SERIAL', $HG_REVISION, $JTPL_VERSION);
+    $JTPL_VERSION = str_replace('SERIAL', $SOURCE_REVISION, $JTPL_VERSION);
 }
 else {
     $PACKAGE_NAME='jtpl-'.$JTPL_VERSION;
