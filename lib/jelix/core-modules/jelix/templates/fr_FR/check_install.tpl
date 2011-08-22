@@ -17,7 +17,7 @@
            modifier le paramêtre <code>jelixWWWPath</code>
            dans <em>{$configpath}defaultconfig.ini.php</em>.</p>
         <p>Pour plus d'informations, consultez
-             <a href="http://jelix.org/articles/fr/manuel-1.2/configurer-server"
+             <a href="http://jelix.org/articles/fr/manuel-1.3/configurer-server"
              title="documentation officielle">la documentation sur l'installation de Jelix</a>.</p>
         <hr />
     </div>
@@ -34,7 +34,7 @@
         <div class="blockcontent">
             <p>Cette page est affichée par le contrôleur <em>default.classic.php</em>
             présent dans le module de votre application.
-            Ce contrôleur utilise une zone fournie par Jelix. Vous devrez le modifier de
+            Ce contrôleur utilise une 'zone' fournie par Jelix. Vous devrez le modifier de
             manière à afficher votre propre page de démarrage.</p>
         </div>
     </div>
@@ -45,7 +45,7 @@
             <ul>
                 <li><a href="http://jelix.org" title="Site officiel de Jelix">Visitez le site de Jelix</a></li>
                 <li><a href="http://jelix.org/articles/fr/tutoriels">Suivez les tutoriels</a></li>
-                <li><a href="http://jelix.org/articles/fr/manuel-1.2">Lisez la documentation de Jelix</a></li>
+                <li><a href="http://jelix.org/articles/fr/manuel-1.3">Lisez la documentation de Jelix</a></li>
                 <li><a href="http://jelix.org/forums/cat/1-francais">Posez vos questions dans les forums</a></li>
             </ul>
         </div>

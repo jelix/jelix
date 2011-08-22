@@ -16,7 +16,7 @@
         <p>If you want to use another name for the Jelix's web file directory,
             modify the <code>jelixWWWPath</code> parameter in
             <em>{$configpath}defaultconfig.ini.php</em>.</p>
-        <p>For more informations, see <a href="http://jelix.org/articles/en/manual-1.2/server-configuration"
+        <p>For more informations, see <a href="http://jelix.org/articles/en/manual-1.3/server-configuration"
             title="installation documentation">the installation documentation</a> of Jelix.</p>
         <hr />
     </div>
@@ -32,7 +32,7 @@
         <h2>This is a temporary page</h2>
         <div class="blockcontent">
             <p>This page is displayed by the <em>default.classic.php</em> controller stored in the module of your application.
-                This controller uses a zone provided by Jelix. You should modify this controller so it could display
+                This controller uses a 'zone' provided by Jelix. You should modify this controller so it could display
                 your own start page.</p>
         </div>
     </div>
@@ -43,7 +43,7 @@
             <ul>
                 <li><a href="http://www.jelix.org">Visit the Official Jelix's site</a></li>
                 <li><a href="http://jelix.org/articles/en/tutorials">Learn with tutorials</a></li>
-                <li><a href="http://jelix.org/articles/en/manual-1.2">Read the documentation of Jelix</a></li>
+                <li><a href="http://jelix.org/articles/en/manual-1.3">Read the documentation of Jelix</a></li>
                 <li><a href="http://jelix.org/forums/cat/2-english">Ask your questions in forums</a></li>
             </ul>
         </div>
