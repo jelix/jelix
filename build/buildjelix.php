@@ -34,7 +34,7 @@ $BUILD_OPTIONS = array(
     ),
 'EDITION_NAME'=> array(
     "The edition name of the version (optional)",
-    '',
+    'dev',
     ),
 'ENABLE_PHP_FILTER'=>array(
     "true if jelix can use php filter api (api included in PHP>=5.2)",
@@ -49,7 +49,7 @@ $BUILD_OPTIONS = array(
     false,
     ),
 'ENABLE_PHP_JELIX'=>array(
-    "true if jelix can use jelix php extension. WARNING ! EXPERIMENTAL !",
+    "true if jelix can use jelix php extension.",
     false,
     ),
 'WITH_BYTECODE_CACHE'=> array(
@@ -121,7 +121,7 @@ $BUILD_OPTIONS = array(
     ),
 'DELETE_DEPRECATED_FILES'=> array(
     "If 'on', deprecated files will be deleted",
-    false
+    true
     ),
 'TARGET_REPOSITORY'=> array(
     "The type of the version control system you use on the target directory : none (default), svn or hg",

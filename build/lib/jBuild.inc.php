@@ -262,17 +262,11 @@ function init(){
         echo ENV::help();
         exit(0);
     }
-    if(!isset($parameters['ini'])){
-        throw new Exception("ini file name forgotten\n");
-    }
 
     if(isset($switches['-ini'])){
         echo ENV::getIniContent();
         exit(0);
     }
-
-
-
 }
 
 
