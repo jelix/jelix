@@ -18,7 +18,8 @@
 function jtpl_function_xml_jlocale($tpl, $locale)
 {
      if(func_num_args() == 3 && is_array(func_get_arg(2))){
-         echo htmlspecialchars(jLocale::get($locale, func_get_arg(2)));
+          $param = func_get_arg(2);
+          echo htmlspecialchars(jLocale::get($locale, $param));
      }elseif(func_num_args() > 2){
          $params = func_get_args();
          unset($params[0]);
