@@ -30,7 +30,7 @@ $BUILD_OPTIONS = array(
     false,
     false,
     ),
-'HG_REVISION'=> array(
+'SOURCE_REVISIONs'=> array(
     false,
     ),
 );
@@ -39,10 +39,10 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 //----------------- Preparation des variables d'environnement
 
 Env::setFromFile('VERSION','build/VERSION', true);
-$HG_REVISION = Mercurial::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 
 if($VERSION == 'SERIAL'){
-    $VERSION = 'SERIAL-'.$HG_REVISION;
+    $VERSION = 'SERIAL-'.$SOURCE_REVISION;
     $IS_NIGHTLY = true;
 }else{
     $IS_NIGHTLY = false;

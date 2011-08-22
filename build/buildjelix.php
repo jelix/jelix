@@ -34,7 +34,7 @@ $BUILD_OPTIONS = array(
     ),
 'EDITION_NAME'=> array(
     "The edition name of the version (optional)",
-    '',
+    'dev',
     ),
 'ENABLE_PHP_XMLRPC'=>array(
     "true if jelix can use php xmlrpc api",
@@ -97,14 +97,14 @@ $BUILD_OPTIONS = array(
     ),
 'DELETE_DEPRECATED_FILES'=> array(
     "If 'on', deprecated files will be deleted",
-    false
+    true
     ),
 'TARGET_REPOSITORY'=> array(
     "The type of the version control system you use on the target directory : none (default), svn or hg",
     '',
     '/^(svn|hg|none)?$/',
     ),
-'HG_REVISION'=> array(
+'SOURCE_REVISION'=> array(
     false,
     ),
 'LIB_VERSION'=> array(
@@ -148,7 +148,7 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 //----------------- Preparation des variables d'environnement
 
 Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
-$HG_REVISION = Mercurial::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 
@@ -156,7 +156,7 @@ if($IS_NIGHTLY){
     $PACKAGE_NAME='jelix-'.str_replace('SERIAL', '', $LIB_VERSION);
     if(substr($PACKAGE_NAME,-1,1) == '.')
       $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
-    $LIB_VERSION = str_replace('SERIAL', $HG_REVISION, $LIB_VERSION);
+    $LIB_VERSION = str_replace('SERIAL', $SOURCE_REVISION, $LIB_VERSION);
 }
 else {
     $PACKAGE_NAME='jelix-'.$LIB_VERSION;
@@ -271,7 +271,7 @@ if($ENABLE_PHP_JELIX && ($PACKAGE_TAR_GZ || $PACKAGE_ZIP)){
 
 Env::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
 if($IS_NIGHTLY){
-    $JTPL_VERSION = str_replace('SERIAL', $HG_REVISION, $JTPL_VERSION);
+    $JTPL_VERSION = str_replace('SERIAL', $SOURCE_REVISION, $JTPL_VERSION);
 }
 
 $var = ENV::getAll();
@@ -291,7 +291,7 @@ jManifest::process('build/manifests/jelix-checker.mn','.', $BUILD_TARGET_PATH , 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // creation du fichier d'infos sur le build
-$view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'HG_REVISION',
+$view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION',
     'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
 

@@ -5,7 +5,7 @@
 *
 * @package     InstallWizard
 * @author      Laurent Jouanneau
-* @copyright   2010 Laurent Jouanneau
+* @copyright   2010-2011 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -98,6 +98,9 @@ class installWizard {
             $this->tempPath = realpath($basepath.$this->config['tempPath']);
             if (!$this->tempPath)
                 throw new Exception("no temp directory");
+            if (!is_writable($this->tempPath))
+                throw new Exception("The temp directory ".$this->config['tempPath']." is not writable. Change the rights on this directory to allow the web server to write in it.");
+
             $this->tempPath .= '/';
         }
         else
@@ -266,7 +269,10 @@ class installWizard {
         } catch (Exception $e) {
             $error = $e->getMessage();
             header("HTTP/1.1 500 Application error");
-            require(dirname(__FILE__).'/error.php');
+            if ($this->customPath && file_exists($this->customPath.'error.php'))
+                require($this->customPath.'error.php');
+            else
+                require(dirname(__FILE__).'/error.php');
             exit(1);
         }
     }

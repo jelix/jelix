@@ -22,9 +22,12 @@
 function jtpl_function_html_jlocale($tpl, $locale)
 {
     if(func_num_args() == 4 && is_array(func_get_arg(2))){
-        $str = jLocale::get($locale, func_get_arg(2), func_get_arg(3));
+        $param2 = func_get_arg(2);
+        $param3 = func_get_arg(3);
+        $str = jLocale::get($locale, $param2, $param3);
     }elseif(func_num_args() == 3 && is_array(func_get_arg(2))){
-        $str = jLocale::get($locale, func_get_arg(2));
+        $param = func_get_arg(2);
+        $str = jLocale::get($locale, $param);
     }elseif(func_num_args() > 2){
         $params = func_get_args();
         unset($params[0]);
