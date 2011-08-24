@@ -158,7 +158,7 @@ class jResponseHtml extends jResponse {
      *
      * @return boolean    true if the generated content is ok
      */
-    final public function output(){
+    public function output(){
         $this->doAfterActions();
 
         $this->_headSent = 0;
@@ -247,7 +247,7 @@ class jResponseHtml extends jResponse {
     /**
      * output errors
      */
-    final public function outputErrors(){
+    public function outputErrors(){
         if($this->_headSent < 1){
              if(!$this->_httpHeadersSent){
                 header("HTTP/1.0 500 Internal Server Error");
@@ -435,7 +435,7 @@ class jResponseHtml extends jResponse {
         }
     }
 
-    final protected function outputJsScriptTag( $fileUrl, $scriptParams, $filePath = null ) {
+    protected function outputJsScriptTag( $fileUrl, $scriptParams, $filePath = null ) {
         global $gJConfig;
 
         $params = '';
@@ -457,9 +457,7 @@ class jResponseHtml extends jResponse {
         echo '<script type="text/javascript" src="',htmlspecialchars($fileUrl),$jsFilemtime,'" ',$params,'></script>',"\n";
     }
 
-
-
-    final protected function outputCssLinkTag( $fileUrl, $cssParams, $filePath = null ) {
+    protected function outputCssLinkTag( $fileUrl, $cssParams, $filePath = null ) {
         global $gJConfig;
 
         $params = '';
@@ -481,10 +479,7 @@ class jResponseHtml extends jResponse {
         echo '<link type="text/css" href="',htmlspecialchars($fileUrl),$cssFilemtime,'" ',$params,$this->_endTag,"\n";
     }
 
-
-
-
-    final protected function outputJsScripts( &$scriptList ) {
+    protected function outputJsScripts( &$scriptList ) {
         global $gJConfig;
 
         $minifyJsByParams = array();
@@ -541,9 +536,7 @@ class jResponseHtml extends jResponse {
         }
     }
 
-
-
-    final protected function outputCssLinks( &$linkList ) {
+    protected function outputCssLinks( &$linkList ) {
         global $gJConfig;
 
         $minifyCssByParams = array();
@@ -617,7 +610,7 @@ class jResponseHtml extends jResponse {
     /**
      * generate the content of the <head> content
      */
-    final protected function outputHtmlHeader (){
+    protected function outputHtmlHeader (){
         global $gJConfig;
 
         echo '<head>'."\n";
@@ -727,7 +720,7 @@ class jResponseHtml extends jResponse {
      * used to erase some head properties
      * @param array $what list of one or many of this strings : 'CSSLink', 'CSSIELink', 'Styles', 'JSLink', 'JSIELink', 'JSCode', 'Others','MetaKeywords','MetaDescription'. If null, it cleans all values.
      */
-    final public function clearHtmlHeader ($what=null){
+    public function clearHtmlHeader ($what=null){
         $cleanable = array ('CSSLink', 'CSSIELink', 'Styles', 'JSLink','JSIELink', 'JSCode', 'Others','MetaKeywords','MetaDescription');
         if($what==null)
             $what= $cleanable;
@@ -743,7 +736,7 @@ class jResponseHtml extends jResponse {
      * change the type of html for the output
      * @param boolean $xhtml true if you want xhtml, false if you want html
      */
-    final public function setXhtmlOutput($xhtml = true){
+    public function setXhtmlOutput($xhtml = true){
         $this->_isXhtml = $xhtml;
         if($xhtml)
             $this->_endTag = "/>\n";
