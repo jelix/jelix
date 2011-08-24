@@ -404,6 +404,7 @@ class jResponseHtml extends jResponseBasicHtml {
         echo '<script type="text/javascript" src="',htmlspecialchars($fileUrl),'" ',$params,'></script>',"\n";
     }
 
+
     protected function outputCssLinkTag( $fileUrl, $cssParams ) {
         $params = '';   
         foreach ($cssParams as $param_name=>$param_value){

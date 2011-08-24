@@ -3,7 +3,8 @@
 * @package    jelix
 * @subpackage db
 * @author     Laurent Jouanneau
-* @copyright  2010 Laurent Jouanneau
+* @contributor Aurélien Marcel
+* @copyright  2010 Laurent Jouanneau, 2011 Aurélien Marcel
 *
 * @link        http://jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -125,11 +126,11 @@ abstract class jDbSchema {
         $colstr.= ($col->notNull?' NOT NULL':' NULL');
 
         if ($col->hasDefault && !$col->autoIncrement) {
-            if (!($col->notNull && $col->defaultValue === null)) {
-                if ($col->defaultValue === null)
+            if (!($col->notNull && $col->default === null)) {
+                if ($col->default === null)
                     $colstr .= ' DEFAULT NULL';
                 else
-                    $colstr .= ' DEFAULT '.$this->conn->quote($col->defaultValue);
+                    $colstr .= ' DEFAULT '.$this->conn->quote($col->default);
             }
         }
         return $colstr;
