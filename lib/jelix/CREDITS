@@ -300,6 +300,7 @@ Brice Tence (aka brayce/bricet)
  - added lock on jCache::call to prevent multiple calls on CPU high-consuming functions (ticket #1237)
  - fixed the support of meta in included template (#1196)
  - http version setting (#1411)
+ - support of referer in error lof messages (#1421)
 
 Christophe Thiriot (aka Doubleface)
  - testor

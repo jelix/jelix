@@ -3,7 +3,8 @@
 * @package    jelix
 * @subpackage core
 * @author     Laurent Jouanneau
-* @copyright  2006-2010 Laurent Jouanneau
+* @contributor Brice Tence
+* @copyright  2006-2010 Laurent Jouanneau, 2011 Brice Tence
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -116,6 +117,9 @@ class jLogErrorMessage implements jILogMessage {
             $traceLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
         }
 
+        // referer
+        $httpReferer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Unknown referer';
+
         $messageLog = strtr($this->format, array(
             '%date%' => @date("Y-m-d H:i:s"), // @ because if the timezone is not set, we will have an error here
             '%typeerror%'=>$this->category,
@@ -123,6 +127,7 @@ class jLogErrorMessage implements jILogMessage {
             '%msg%'  => $this->message,
             '%ip%'   => $remoteAddr,
             '%url%'  => $url,
+            '%referer%'  => $httpReferer,
             '%params%'=>$params,
             '%file%' => $this->file,
             '%line%' => $this->line,
