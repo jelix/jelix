@@ -224,6 +224,9 @@ Vincent Viaud (aka Litchi)
 Hugues Magnier (aka BaGroN)
  - tpl plugin stripws (#140)
 
+Aurélien Marcel
+ - fixed bad variable name in jDbSchema (#1420)
+
 Loic Mathaud (bballizlife):
  - testor, many bug fixes and many patches on jelix
  - jtpl contributor: standalone edition of jTpl, tag for comments, {for}, stripslashes modifier
