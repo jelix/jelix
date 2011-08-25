@@ -4,7 +4,7 @@
 * @subpackage utils
 * @author     Brice Tencé
 * @contributor 
-* @copyright  
+* @copyright    2011 Laurent Jouanneau
 *
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -17,25 +17,20 @@
  */
 class jRootUrl {
     /**
-     * constructor.
-     */
-    function __construct($params=array()){
-    }
-
-    /**
     * get the root url for a given ressource type
     * @param string $ressourceType Name of the ressource
     * @return string the root URL corresponding to this ressource, or basePath if unknown
     */
-    public static function get ($ressourceType){
+    public static function get($ressourceType){
+
         global $gJConfig;
 
-        if( isset($gJConfig->rootUrls) && isset($gJConfig->rootUrls[$ressourceType]) ) {
-            $rootUrl = $gJConfig->rootUrls[$ressourceType];
-
-            if( substr( $rootUrl, 0, 7) !== 'http://' ) {
-                // url is not absolute. Let's prepend basePath :
-                $rootUrl = $gJConfig->urlengine['basePath'] . $rootUrl;
+        $rootUrl = jRootUrl::getRessourceValue($ressourceType);
+        if( $rootUrl !== null ) {
+            if( substr($rootUrl, 0, 7) !== 'http://' && substr($rootUrl, 0, 8) !== 'https://' // url is not absolute.
+                && substr($rootUrl, 0, 1) !== '/' ) { //and is not relative to root
+                   // so let's prepend basePath :
+                    $rootUrl = $gJConfig->urlengine['basePath'] . $rootUrl;
             }
         } else {
             // basePath by default :
@@ -43,6 +38,23 @@ class jRootUrl {
         }
 
         return $rootUrl;
+    }
+
+
+    /**
+    * get the config value of an item in [rootUrls] section of config
+    * @param string $ressourceType Name of the ressource
+    * @return string the config value of this value, null if it does not exist
+    */
+    public static function getRessourceValue($ressourceType) {
+
+        global $gJConfig;
+
+        if( ! isset($gJConfig->rootUrls[$ressourceType]) ) {
+            return null;
+        } else {
+            return $gJConfig->rootUrls[$ressourceType];
+        }
     }
 }
 

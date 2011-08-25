@@ -430,4 +430,8 @@ cache_path=
 
 
 [rootUrls]
+; This section associates keywords with root URLs.
+; A root url starting with "http://" or "https://" or "/" is supposed to be absolute
+; Other values will be prefixed by application's basePath
+; This will be used by jRootUrl::get() and jTpl's {jrooturl}
 

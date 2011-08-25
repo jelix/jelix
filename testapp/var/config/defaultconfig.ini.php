@@ -133,5 +133,9 @@ driver = db
 driver = db
 
 [rootUrls]
-/themes = "http://www.junittest.com/themes/"
+/themes = "http://themes.junittest.com/"
 test = "http://www.junittest.com/"
+secure_test = "https://www.junittest.com/"
+foo_relPath="foo"
+foo_absPath="/foo"
+
