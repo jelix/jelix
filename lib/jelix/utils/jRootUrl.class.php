@@ -34,11 +34,11 @@ class jRootUrl {
             $rootUrl = $gJConfig->rootUrls[$ressourceType];
 
             if( substr( $rootUrl, 0, 7) !== 'http://' ) {
-                #url is not absolute. Let's prepend basePath :
+                // url is not absolute. Let's prepend basePath :
                 $rootUrl = $gJConfig->urlengine['basePath'] . $rootUrl;
             }
         } else {
-            #basePath by default :
+            // basePath by default :
             $rootUrl = $gJConfig->urlengine['basePath'];
         }
 
