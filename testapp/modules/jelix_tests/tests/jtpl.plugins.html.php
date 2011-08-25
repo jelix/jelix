@@ -42,6 +42,10 @@ class UTjtplplugins extends jUnitTestCase {
             'test_plugin_counter_init_exeption',
             'y-z-1-2-3',
         ),
+        7=>array(
+            'test_plugin_jrooturl',
+            'http://www.junittest.com/',
+        )
    );
 
 	protected $truncateHTMLAssigns = array(

@@ -402,6 +402,7 @@ cd lib/jelix/utils/
   jZipCreator.class.php
 * jZone.class.php
   jWSDL.class.php
+  jRootUrl.class.php
 
 cd lib/jelix/plugins/acl/db
   db.acl.php
@@ -608,6 +609,7 @@ cd lib/jelix/plugins/tpl/html
   function.jmessage.php
   function.jfullurl.php
   function.jlocale.php
+  function.jrooturl.php
   function.jurl.php
   function.link_to_remote.php
   function.mailto.php
