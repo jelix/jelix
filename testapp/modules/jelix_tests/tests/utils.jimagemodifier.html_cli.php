@@ -31,7 +31,7 @@ class UTjimagemodifier extends UnitTestCase {
             unlink($cacheFile);
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('width'=>50, 'height'=>30));
-        $this->assertEqual('http://'.$_SERVER['HTTP_HOST'].$GLOBALS['gJConfig']->urlengine['basePath'].$cacheName, $attributes['src']);
+        $this->assertEqual($GLOBALS['gJCoord']->request->getServerURI().$GLOBALS['gJConfig']->urlengine['basePath'].$cacheName, $attributes['src']);
         $this->assertTrue(file_exists($cacheFile));
 
 
@@ -51,7 +51,7 @@ class UTjimagemodifier extends UnitTestCase {
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('maxwidth'=>50, 'maxheight'=>30, 'omo'=>true));
         $this->assertTrue(file_exists($cacheFile));
-        $this->assertEqual('http://'.$_SERVER['HTTP_HOST'].$GLOBALS['gJConfig']->urlengine['basePath'].$cacheName, $attributes['src']);
+        $this->assertEqual($GLOBALS['gJCoord']->request->getServerURI().$GLOBALS['gJConfig']->urlengine['basePath'].$cacheName, $attributes['src']);
         //$this->assertEqual('50', $attributes['width']);
         //$this->assertEqual('16', $attributes['height']);
 
@@ -70,7 +70,7 @@ class UTjimagemodifier extends UnitTestCase {
             unlink($cacheFile);
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('width'=>50, 'height'=>30, 'omo'=>true));
-        $this->assertEqual('http://'.$_SERVER['HTTP_HOST'].$GLOBALS['gJConfig']->urlengine['basePath'].$cacheName, $attributes['src']);
+        $this->assertEqual($GLOBALS['gJCoord']->request->getServerURI().$GLOBALS['gJConfig']->urlengine['basePath'].$cacheName, $attributes['src']);
         $this->assertEqual('50', $attributes['width']);
         $this->assertEqual('30', $attributes['height']);
         $this->assertTrue(file_exists($cacheFile));
