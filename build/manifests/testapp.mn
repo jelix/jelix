@@ -315,6 +315,7 @@ cd testapp/tests-jelix/jelix/installer/app1/var/config/foo/
 cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
   config.ini.php
 cd testapp/tests-jelix/jelix/utils/
+  minifyHTMLResponsePluginTest.php
   profilesTest.php
   soapclientTest.php
 cd testapp/tests-jelix/jelix/db/
