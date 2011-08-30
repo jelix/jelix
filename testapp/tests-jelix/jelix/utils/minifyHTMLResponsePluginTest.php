@@ -8,6 +8,11 @@ class testMinifyHTMLResponsePlugin extends minifyHTMLResponsePlugin {
     function testGenerateMinifyList($list, $exclude) {
         return $this->generateMinifyList($list, $exclude);
     }
+
+
+    function setExcludeList( $excludeList, $excludeType ) {
+        $this->$excludeType = $excludeList;
+    }
 }
 
 
@@ -27,7 +32,7 @@ class minifyHTMLResponsePluginTest extends PHPUnit_Framework_TestCase
         $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeJS' );
-        $this->assertEquals($minifyList, $inputUrls);
+        $this->assertEquals($inputUrls, $minifyList);
     }
 
     function testStaticCss () {
@@ -40,34 +45,34 @@ class minifyHTMLResponsePluginTest extends PHPUnit_Framework_TestCase
         $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeCSS' );
-        $this->assertEquals($minifyList, $inputUrls);
+        $this->assertEquals($inputUrls, $minifyList);
     }
 
 
     function testRelativeJs () {
         $minOptions = array( 'type' => 'text/javascript' );
         ksort($minOptions);
-        $inputUrls = array('www/testminify/js/s1.css' => $minOptions,
-                           'www/testminify/js/s2.css' => $minOptions);
+        $inputUrls = array('testminify/js/s1.js' => $minOptions,
+                           'testminify/js/s2.js' => $minOptions);
 
         $htmlRep = new jResponseHtml();
         $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeJS' );
-        $this->assertEquals($minifyList, array( 'minify.php?f=www/testminify/js/s1.css,www/testminify/js/s2.css' => $minOptions ));
+        $this->assertEquals(array( 'minify.php?f=testminify/js/s1.js,testminify/js/s2.js' => $minOptions ), $minifyList);
     }
 
     function testRelativeCss () {
         $minOptions = array( 'media' => 'screen' , 'type' => 'text/css' );
         ksort($minOptions);
-        $inputUrls = array('www/testminify/css/style1.css' => $minOptions,
-                           'www/testminify/css/style2.css' => $minOptions);
+        $inputUrls = array('testminify/css/style1.css' => $minOptions,
+                           'testminify/css/style2.css' => $minOptions);
 
         $htmlRep = new jResponseHtml();
         $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeCSS' );
-        $this->assertEquals($minifyList, array( 'minify.php?f=www/testminify/css/style1.css,www/testminify/css/style2.css' => $minOptions ));
+        $this->assertEquals(array( 'minify.php?f=testminify/css/style1.css,testminify/css/style2.css' => $minOptions ), $minifyList);
     }
 
 
@@ -78,15 +83,15 @@ class minifyHTMLResponsePluginTest extends PHPUnit_Framework_TestCase
         ksort($minOptions1);
         $minOptions2 = array( 'type' => 'text/javascript', 'charset' => 'ISO-8859-1' );
         ksort($minOptions2);
-        $inputUrls = array('www/testminify/js/s1.css' => $minOptions1,
-                           'www/testminify/js/s2.css' => $minOptions2);
+        $inputUrls = array('testminify/js/s1.js' => $minOptions1,
+                           'testminify/js/s2.js' => $minOptions2);
 
         $htmlRep = new jResponseHtml();
         $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeJS' );
-        $this->assertEquals($minifyList, array( 'minify.php?f=www/testminify/js/s1.css' => $minOptions1,
-                                                'minify.php?f=www/testminify/js/s2.css' => $minOptions2 ));
+        $this->assertEquals(array( 'minify.php?f=testminify/js/s1.js' => $minOptions1,
+                                   'minify.php?f=testminify/js/s2.js' => $minOptions2 ), $minifyList);
     }
 
     function testRelativeCssDifferentOptions () {
@@ -94,15 +99,45 @@ class minifyHTMLResponsePluginTest extends PHPUnit_Framework_TestCase
         ksort($minOptions1);
         $minOptions2 = array( 'media' => 'print' , 'type' => 'text/css' );
         ksort($minOptions2);
-        $inputUrls = array('www/testminify/css/style1.css' => $minOptions1,
-                           'www/testminify/css/style2.css' => $minOptions2);
+        $inputUrls = array('testminify/css/style1.css' => $minOptions1,
+                           'testminify/css/style2.css' => $minOptions2);
 
         $htmlRep = new jResponseHtml();
         $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeCSS' );
-        $this->assertEquals($minifyList, array( 'minify.php?f=www/testminify/css/style1.css' => $minOptions1,
-                                                'minify.php?f=www/testminify/css/style2.css' => $minOptions2 ));
+        $this->assertEquals(array( 'minify.php?f=testminify/css/style1.css' => $minOptions1,
+                                   'minify.php?f=testminify/css/style2.css' => $minOptions2 ), $minifyList);
+    }
+
+
+
+    function testExcludeJs () {
+        $minOptions = array( 'type' => 'text/javascript' );
+        ksort($minOptions);
+        $inputUrls = array('testminify/js/s1.js' => $minOptions,
+                           'testminify/js/s2.js' => $minOptions);
+
+        $htmlRep = new jResponseHtml();
+        $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
+        $minifyHTMLResponsePluginTester->setExcludeList( array('testminify/js/s1.js'), 'excludeJS' );
+
+        $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeJS' );
+        $this->assertEquals(array( 'testminify/js/s1.js' => $minOptions , 'minify.php?f=testminify/js/s2.js' => $minOptions ), $minifyList);
+    }
+
+    function testExcludeCss () {
+        $minOptions = array( 'media' => 'screen' , 'type' => 'text/css' );
+        ksort($minOptions);
+        $inputUrls = array('testminify/css/style1.css' => $minOptions,
+                           'testminify/css/style2.css' => $minOptions);
+
+        $htmlRep = new jResponseHtml();
+        $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
+        $minifyHTMLResponsePluginTester->setExcludeList( array('testminify/css/style1.css'), 'excludeCSS' );
+
+        $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeCSS' );
+        $this->assertEquals(array( 'testminify/css/style1.css' => $minOptions , 'minify.php?f=testminify/css/style2.css' => $minOptions ), $minifyList);
     }
 
 
