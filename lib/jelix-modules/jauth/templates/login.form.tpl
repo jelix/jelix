@@ -10,7 +10,7 @@
       <table>
        <tr>
            <th><label for="login">{@jauth~auth.login@}</label></th>
-        <td><input type="text" name="login" id="login" size="9" value="{$login}" /></td>
+        <td><input type="text" name="login" id="login" size="9" value="{$login|eschtml}" /></td>
        </tr>
        <tr>
            <th><label for="password">{@jauth~auth.password@}</label></th>
