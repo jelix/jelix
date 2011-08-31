@@ -81,30 +81,26 @@ class minifyHTMLResponsePlugin implements jIHTMLResponsePlugin {
         $resultList = array();
 
         foreach ($list as $url=>$parameters) {
+            $pathAbsolute = (strpos($url,'http://') !== false);
+            if( $pathAbsolute || in_array($url, $this->$exclude) ) {
+                // for absolute or exculded url, we put directly in the result
+                // we won't try to minify it or combine it with an other file
+                $resultList[$url] = $parameters;
+                continue;
+            }
             ksort($parameters);
             if ($pendingParameters === false) {
                 $pendingParameters = $parameters;
                 $pendingList[] = $url;
                 continue;
             }
-            $pathNotAbsolute = (strpos($url,'http://') === false);
-            if ($pendingParameters == $parameters
-                && !in_array($url, $this->$exclude)
-                && $pathNotAbsolute) {
+            if ($pendingParameters == $parameters) {
                 $pendingList[] = $url;
             }
             else {
                 $resultList[$this->generateMinifyUrl($pendingList)] = $pendingParameters;
-                if (!$pathNotAbsolute) { // for absolute url, we put directly in the result
-                                        // we won't try to minify it or combine it with an other file
-                    $resultList[$url] = $parameters;
-                    $pendingList = array();
-                    $pendingParameters = false;
-                }
-                else {
-                    $pendingList = array($url);
-                    $pendingParameters = $parameters;
-                }
+                $pendingList = array($url);
+                $pendingParameters = $parameters;
             }
         }
         if ($pendingParameters !== false && count($pendingList)) {
