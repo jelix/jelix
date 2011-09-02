@@ -17,7 +17,7 @@
  */
 function jtpl_function_html_jrooturl($tpl, $ressourceType)
 {
-     echo jRootUrl::get($ressourceType);
+     echo jUrl::getRootUrl($ressourceType);
 }
 
 

@@ -13,12 +13,12 @@ class UTjrooturl extends UnitTestCase {
 
     public function testjRootUrl(){
 
-        $this->assertEqual( jRootUrl::get( 'test' ), 'http://www.junittest.com/' );
-        $this->assertEqual( jRootUrl::get( 'secure_test' ), 'https://www.junittest.com/' );
-        $this->assertEqual( jRootUrl::get( '/themes' ), 'http://themes.junittest.com/' );
-        $this->assertEqual( jRootUrl::get( 'foo_relPath' ), $GLOBALS['gJConfig']->urlengine['basePath'].'foo' );
-        $this->assertEqual( jRootUrl::get( 'foo_absPath' ), '/foo' );
-        $this->assertEqual( jRootUrl::get( 'notInConfig' ), $GLOBALS['gJConfig']->urlengine['basePath'] );
-        $this->assertEqual( jRootUrl::get( '/notInConfig' ), $GLOBALS['gJConfig']->urlengine['basePath'] );
+        $this->assertEqual( jUrl::getRootUrl( 'test' ), 'http://www.junittest.com/' );
+        $this->assertEqual( jUrl::getRootUrl( 'secure_test' ), 'https://www.junittest.com/' );
+        $this->assertEqual( jUrl::getRootUrl( '/themes' ), 'http://themes.junittest.com/' );
+        $this->assertEqual( jUrl::getRootUrl( 'foo_relPath' ), $GLOBALS['gJConfig']->urlengine['basePath'].'foo' );
+        $this->assertEqual( jUrl::getRootUrl( 'foo_absPath' ), '/foo' );
+        $this->assertEqual( jUrl::getRootUrl( 'notInConfig' ), $GLOBALS['gJConfig']->urlengine['basePath'] );
+        $this->assertEqual( jUrl::getRootUrl( '/notInConfig' ), $GLOBALS['gJConfig']->urlengine['basePath'] );
     }
 }
