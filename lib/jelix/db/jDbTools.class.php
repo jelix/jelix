@@ -4,7 +4,7 @@
 * @subpackage db
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau, Gwendal Jouannic, Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2011 Laurent Jouanneau
 * @copyright  2008 Gwendal Jouannic
 * @copyright  2008 Julien Issler
 *
@@ -211,13 +211,9 @@ abstract class jDbTools {
             case 'integer':
                 return (string)intval($value);
             case 'float':
-                return (string)doubleval($value);
             case 'numeric':
             case 'decimal':
-                if(is_numeric($value))
-                    return $value;
-                else
-                    return (string)floatval($value);
+               return jDb::floatToStr($value);
             default:
                 if ($toPhpSource) {
                     if ($unifiedType == 'varbinary' || $unifiedType == 'binary') {

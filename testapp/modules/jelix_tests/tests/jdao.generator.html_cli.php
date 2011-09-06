@@ -58,28 +58,28 @@ class UTDao_generator extends jUnitTestCase {
         $this->assertEqualOrDiff('intval($foo)',$this->_getProp('integer','$foo', false));
         $this->assertEqualOrDiff('intval($foo)',$this->_getProp('autoincrement','$foo', false));
         $this->assertEqualOrDiff('$this->_conn->quote($foo)',$this->_getProp('string','$foo', false));
-        $this->assertEqualOrDiff('(is_numeric ($foo) ? $foo : floatval($foo))',$this->_getProp('double','$foo', false));
-        $this->assertEqualOrDiff('doubleval($foo)',$this->_getProp('float','$foo', false));
-        $this->assertEqualOrDiff('(is_numeric ($foo) ? $foo : floatval($foo))',$this->_getProp('numeric','$foo', false));
-        $this->assertEqualOrDiff('(is_numeric ($foo) ? $foo : floatval($foo))',$this->_getProp('bigautoincrement','$foo', false));
+        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('double','$foo', false));
+        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('float','$foo', false));
+        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('numeric','$foo', false));
+        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('bigautoincrement','$foo', false));
 
         // with checknull 
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : intval($foo))',$this->_getProp('integer','$foo', true));
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : intval($foo))',$this->_getProp('autoincrement','$foo', true));
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : $this->_conn->quote2($foo,false))',$this->_getProp('string','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : (is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('double','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : doubleval($foo))',$this->_getProp('float','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : (is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('numeric','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : (is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('bigautoincrement','$foo', true));
+        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('double','$foo', true));
+        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('float','$foo', true));
+        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('numeric','$foo', true));
+        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('bigautoincrement','$foo', true));
 
         // with checknull and operator =
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.intval($foo))',$this->_getProp('integer','$foo', true,'='));
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.intval($foo))',$this->_getProp('autoincrement','$foo', true,'='));
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.$this->_conn->quote2($foo,false))',$this->_getProp('string','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('double','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.doubleval($foo))',$this->_getProp('float','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('numeric','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('bigautoincrement','$foo', true,'='));
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('double','$foo', true,'='));
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('float','$foo', true,'='));
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('numeric','$foo', true,'='));
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('bigautoincrement','$foo', true,'='));
 
         // with checknull with default value and operator =
         /*$prop->defaultValue=34;
@@ -116,13 +116,13 @@ class UTDao_generator extends jUnitTestCase {
         $result = $this->_getProp('string','$foo', true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.$this->_conn->quote2($foo,false))',$result);
         $result = $this->_getProp('double','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$result);
+        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
         $result = $this->_getProp('float','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.doubleval($foo))',$result);
+        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
         $result = $this->_getProp('numeric','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$result);
+        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
         $result = $this->_getProp('bigautoincrement','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$result);
+        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
 
         // with checknull and other operator <=
         $result = $this->_getProp('integer','$foo', true,'<=');
@@ -132,13 +132,13 @@ class UTDao_generator extends jUnitTestCase {
         $result = $this->_getProp('string','$foo', true,'<=');
         $this->assertEqualOrDiff('\' <= \'.$this->_conn->quote($foo)',$result);
         $result = $this->_getProp('double','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.(is_numeric ($foo) ? $foo : floatval($foo))',$result);
+        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
         $result = $this->_getProp('float','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.doubleval($foo)',$result);
+        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
         $result = $this->_getProp('numeric','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.(is_numeric ($foo) ? $foo : floatval($foo))',$result);
+        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
         $result = $this->_getProp('bigautoincrement','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.(is_numeric ($foo) ? $foo : floatval($foo))',$result);
+        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
 
         // with checknull and other operator LIKE
         $result = $this->_getProp('integer','$foo', true,'LIKE');
@@ -356,9 +356,7 @@ class UTDao_generator extends jUnitTestCase {
         $where = $generator->BuildSQLCondition ($methods['method11']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method11']->getParameters(), true);
         $this->assertEqualOrDiff(' `grp`.`name` <> \\\'toto\\\'',$where);
-
     }
-
 
     function testBuildSQLConditionWithPattern(){
         $doc ='<?xml version="1.0" encoding="UTF-8"?>
