@@ -8,6 +8,7 @@
       <property name="name" fieldname="name" datatype="string"  required="true"/>
       <property name="price" fieldname="price" datatype="float"/>
       <property name="promo" fieldname="promo" datatype="boolean"/>
+      <property name="publish_date" datatype="date" />
    </record>
 </dao>
 

@@ -135,6 +135,7 @@ cd testapp/modules/jelix_tests/install
   install.php
   install.mysql.sql
   install.pgsql.sql
+  upgrade_to_1.3RC1.2079_productdate.php
 cd testapp/modules/jelix_tests/locales/
   test_A.properties
   test_B.properties
