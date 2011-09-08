@@ -62,6 +62,7 @@ cd testapp/modules/testapp/daos
   config.dao.xml
   testnews.dao.xml
   products.dao.xml
+  productsalias.dao.xml
 cd testapp/modules/testapp/controllers
   main.classic.php
   forms.classic.php
@@ -213,6 +214,7 @@ cd testapp/modules/jelix_tests/tests/
   jcache.memcache22.html_cli.php
   jdao.conditions.html_cli.php
   jdao.events.html_cli.php
+  jdao.factory_base.html_cli.php
   jdao.main_api.html_cli.php
   jdao.main_api_with_pdo.html_cli.php
   jdao.parser.html_cli.php
