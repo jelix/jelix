@@ -1213,7 +1213,7 @@ class Mock {
      */
     static function generate($class, $mock_class = false, $methods = false) {
         $generator = new MockGenerator($class, $mock_class);
-        return @$generator->generateSubclass($methods);
+        return $generator->generateSubclass($methods);
     }
 
     /**
@@ -1228,7 +1228,7 @@ class Mock {
      */
     static function generatePartial($class, $mock_class, $methods) {
         $generator = new MockGenerator($class, $mock_class);
-        return @$generator->generatePartial($methods);
+        return $generator->generatePartial($methods);
     }
 
     /**
@@ -1364,6 +1364,7 @@ class MockGenerator {
         return $code;
     }
 
+
     /**
      *    The new mock class code as a string. The mock will
      *    be a subclass of the original mocked class.
@@ -1430,7 +1431,10 @@ class MockGenerator {
             if (in_array($method, $mock_reflection->getMethods())) {
                 continue;
             }
-            $code .= "    " . $this->reflection->getSignature($method) . " {\n";
+			$sig = $this->reflection->getSignature($method);
+			if ($sig == '')
+				continue;
+            $code .= "    " . $sig . " {\n";
             $code .= "        \$args = func_get_args();\n";
             $code .= "        \$result = &\$this->invoke(\"$method\", \$args);\n";
             $code .= "        return \$result;\n";
@@ -1456,7 +1460,10 @@ class MockGenerator {
             if (in_array($method, $mock_reflection->getMethods())) {
                 continue;
             }
-            $code .= "    " . $this->reflection->getSignature($method) . " {\n";
+			$sig = $this->reflection->getSignature($method);
+			if ($sig == '')
+				continue;
+            $code .= "    " . $sig . " {\n";
             $code .= "        \$args = func_get_args();\n";
             $code .= "        \$result = &\$this->mock->invoke(\"$method\", \$args);\n";
             $code .= "        return \$result;\n";
@@ -1629,8 +1636,11 @@ class MockGenerator {
             if ($this->isConstructor($method)) {
                 continue;
             }
-            $code .= "    " . $this->reflection->getSignature($method) . " {\n";
-            $code .= "        \$args = func_get_args();\n";
+			$sig = $this->reflection->getSignature($method);
+			if ($sig == '')
+				continue;
+            $code .= "    " . $sig . " {\n";
+			$code .= "        \$args = func_get_args();\n";
             $code .= "        \$result = &\$this->mock->invoke(\"$method\", \$args);\n";
             $code .= "        return \$result;\n";
             $code .= "    }\n";

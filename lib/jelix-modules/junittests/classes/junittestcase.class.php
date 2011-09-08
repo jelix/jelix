@@ -16,16 +16,23 @@ class jUnitTestCase extends UnitTestCase {
     protected $dbProfile ='';
     protected $needPDO = false;
 
-    
+
+    function setUpRun() {
+    }
+    function tearDownRun() {
+    }
+
     function run($reporter) {
         $context = SimpleTest::getContext();
         $context->setTest($this);
         $context->setReporter($reporter);
         $this->reporter = $reporter;
         $this->reporter->paintCaseStart($this->getLabel());
+
         if($this->needPDO){
             $this->reporter->makeDry(!$this->assertTrue(class_exists('PDO',false), 'PDO does not exists ! You should install PDO because tests need it.'));
         }
+        $this->setUpRun();
         foreach ($this->getTests() as $method) {
             if ($this->reporter->shouldInvoke($this->getLabel(), $method)) {
                 $invoker = $this->reporter->createInvoker($this->createInvoker());
@@ -34,6 +41,7 @@ class jUnitTestCase extends UnitTestCase {
                 $invoker->after($method);
             }
         }
+        $this->tearDownRun();
         $this->reporter->paintCaseEnd($this->getLabel());
         unset($this->reporter);
         return $reporter->getStatus();

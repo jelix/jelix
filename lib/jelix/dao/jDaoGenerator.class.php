@@ -566,18 +566,12 @@ class jDaoGenerator {
 
         list($sqlFrom, $sqlWhere) = $this->buildOuterJoins($tables, $ptname);
 
-        if($primarytable['name']!=$primarytable['realname'])
-            $sqlFrom =$ptrealname.$this->aliasWord.$ptname.$sqlFrom;
-        else
-            $sqlFrom =$ptrealname.$sqlFrom;
+        $sqlFrom =$ptrealname.$this->aliasWord.$ptname.$sqlFrom;
 
         foreach($this->_dataParser->getInnerJoins() as $tablejoin){
             $table= $tables[$tablejoin];
             $tablename = $this->_encloseName($table['name']);
-            if($table['name']!=$table['realname'])
-                $sqlFrom .=', '.$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
-            else
-                $sqlFrom .=', '.$this->_encloseName($table['realname']);
+            $sqlFrom .=', '.$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
 
             foreach($table['fk'] as $k => $fk){
                 $sqlWhere.=' AND '.$ptname.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
@@ -598,10 +592,7 @@ class jDaoGenerator {
             $table= $tables[$tablejoin[0]];
             $tablename = $this->_encloseName($table['name']);
 
-            if($table['name']!=$table['realname'])
-                $r =$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
-            else
-                $r =$this->_encloseName($table['realname']);
+            $r =$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
 
             $fieldjoin='';
             foreach($table['fk'] as $k => $fk){
