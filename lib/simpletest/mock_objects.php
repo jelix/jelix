@@ -183,7 +183,7 @@
             $descriptions = array();
             if (is_array($args)) {
                 foreach ($args as $arg) {
-                    $dumper = &new SimpleDumper();
+                    $dumper = new SimpleDumper();
                     $descriptions[] = $dumper->describeValue($arg);
                 }
             }
@@ -927,7 +927,7 @@
          *    Factory for mock object classes.
          *    @access public
          */
-        function Mock() {
+        private function Mock() {
             trigger_error('Mock factory methods are class only.');
         }
 
@@ -946,7 +946,7 @@
          *    @static
          *    @access public
          */
-        function generate($class, $mock_class = false, $methods = false) {
+        static function generate($class, $mock_class = false, $methods = false) {
             $generator = new MockGenerator($class, $mock_class);
             return $generator->generate($methods);
         }
@@ -963,7 +963,7 @@
          *    @static
          *    @access public
          */
-        function generatePartial($class, $mock_class, $methods) {
+        static function generatePartial($class, $mock_class, $methods) {
             $generator = new MockGenerator($class, $mock_class);
             return $generator->generatePartial($methods);
         }
@@ -978,7 +978,7 @@
          *    @access public
          *    @static
          */
-        function getExpectationLine($stack = false) {
+        static function getExpectationLine($stack = false) {
             if ($stack === false) {
                 $stack = SimpleTestCompatibility::getStackTrace();
             }
@@ -1054,7 +1054,8 @@
                 trigger_error("Partial mock class [$mock_class] already exists");
                 return false;
             }
-            return eval($this->_extendClassCode($methods));
+			$ret = eval($this->_extendClassCode($methods)." return true;");
+            return true;
         }
 
         /**
@@ -1095,7 +1096,7 @@
             $code .= $this->_addMethodList($methods);
             $code .= "\n";
             $code .= "    function " . $this->_mock_class . "() {\n";
-            $code .= "        \$this->_mock = &new " . $this->_mock_base . "();\n";
+            $code .= "        \$this->_mock = new " . $this->_mock_base . "();\n";
             $code .= "        \$this->_mock->disableExpectationNameChecks();\n";
             $code .= "    }\n";
             $code .= $this->_chainMockReturns();
@@ -1124,9 +1125,12 @@
                 if (in_array($method, $mock_reflection->getMethods())) {
                     continue;
                 }
-                $code .= "    " . $this->_reflection->getSignature($method) . " {\n";
+				$sig = $this->_reflection->getSignature($method);
+				if ($sig == '')
+					continue;
+                $code .= "    " . $sig . " {\n";
                 $code .= "        \$args = func_get_args();\n";
-                $code .= "        \$result = &\$this->_invoke(\"$method\", \$args);\n";
+                $code .= "        \$result = \$this->_invoke(\"$method\", \$args);\n";
                 $code .= "        return \$result;\n";
                 $code .= "    }\n";
             }
@@ -1261,9 +1265,12 @@
         function _overrideMethods($methods) {
             $code = "";
             foreach ($methods as $method) {
-                $code .= "    " . $this->_reflection->getSignature($method) . " {\n";
+				$sig = $this->_reflection->getSignature($method);
+				if ($sig == '')
+					continue;
+                $code .= "    " . $sig . " {\n";
                 $code .= "        \$args = func_get_args();\n";
-                $code .= "        \$result = &\$this->_mock->_invoke(\"$method\", \$args);\n";
+                $code .= "        \$result = \$this->_mock->_invoke(\"$method\", \$args);\n";
                 $code .= "        return \$result;\n";
                 $code .= "    }\n";
             }

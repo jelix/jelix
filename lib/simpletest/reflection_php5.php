@@ -199,13 +199,13 @@
         	if ($name == '__set') {
         		return 'function __set($key, $value)';
         	}
-        	if (! is_callable(array($this->_interface, $name))) {
+        	/*if (! is_callable(array($this->_interface, $name))) {
         		return "function $name()";
-        	}
-        	if ($this->_isInterfaceMethod($name)) {
-        	    return $this->_getFullSignature($name);
-        	}
-        	return "function $name()";
+        	}*/
+			$signature = $this->_getFullSignature($name);
+			if ($signature === false)
+				return "function $name()";
+        	return $signature;
         }
 
         /**
@@ -218,9 +218,23 @@
          */
         function _getFullSignature($name) {
 	        $interface = new ReflectionClass($this->_interface);
-	        $method = $interface->getMethod($name);
+			try {
+				$method = $interface->getMethod($name);
+			}
+			catch(Exception $e) {
+				return false;
+			}
+			
+			if ($method->isFinal() || $method->isPrivate() || $method->isStatic())
+				return '';
+			if ($method->isProtected())
+				$access = 'protected ';
+			else
+				$access = 'public ';
+
 	        $reference = $method->returnsReference() ? '&' : '';
-        	return "function $reference$name(" .
+
+        	return "$access function $reference$name(" .
             		implode(', ', $this->_getParameterSignatures($method)) .
             		")";
         }

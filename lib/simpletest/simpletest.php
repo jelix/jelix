@@ -104,7 +104,7 @@
         /**
          *    @deprecated
          */
-        function getMockBaseClass() {
+        static function getMockBaseClass() {
             $registry = &SimpleTest::_getRegistry();
             return $registry['MockBaseClass'];
         }
