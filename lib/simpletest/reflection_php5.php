@@ -320,9 +320,18 @@ class SimpleReflection {
     protected function getFullSignature($name) {
         $interface = new ReflectionClass($this->interface);
         $method = $interface->getMethod($name);
+		if ($method->isFinal() || $method->isPrivate() || $method->isStatic())
+			return '';
+
         $reference = $method->returnsReference() ? '&' : '';
         $static = $method->isStatic() ? 'static ' : '';
-        return "{$static}function $reference$name(" .
+
+		if ($method->isProtected())
+			$access = 'protected ';
+		else
+			$access = 'public ';
+
+        return "{$static}{$access}function $reference$name(" .
                 implode(', ', $this->getParameterSignatures($method)) .
                 ")";
     }
