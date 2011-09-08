@@ -559,7 +559,91 @@ class UTDao_generator extends jUnitTestCase {
         $this->assertEqualOrDiff(' 1=1  GROUP BY `grp`.`id_aclgrp`, `grp`.`parent_id`, `grp`.`name` ORDER BY `grp`.`name` asc',$sql);
 
     }
-    
+
+ function testBuildConditionsNoAlias(){
+        $doc ='<?xml version="1.0" encoding="UTF-8"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+    <datasources>
+        <primarytable name="jacl_group" primarykey="id_aclgrp" />
+    </datasources>
+    <record>
+      <property name="id_aclgrp" fieldname="id_aclgrp" datatype="autoincrement" required="yes"/>
+      <property name="parent_id" required="false" datatype="int" />
+      <property name="name" fieldname="name" datatype="string" required="yes"/>
+      <property name="grouptype" fieldname="grouptype" datatype="int" required="yes"/>
+      <property name="ownerlogin" fieldname="ownerlogin" datatype="string" />
+    </record>
+    <factory>
+        <method name="method1" type="select">
+            <conditions>
+               <eq property="grouptype" value="1" />
+            </conditions>
+        </method>
+        <method name="method2" type="select" groupby="id_aclgrp,parent_id,name">
+           <conditions>
+              <neq property="grouptype" value="2" />
+           </conditions>
+           <order>
+               <orderitem property="name" way="asc" />
+           </order>
+        </method>
+        <method name="method3" type="select">
+           <order>
+               <orderitem property="name" way="asc" />
+           </order>
+        </method>
+        <method name="method4" type="select" groupby="id_aclgrp,parent_id,name">
+           <order>
+               <orderitem property="name" way="asc" />
+           </order>
+        </method>
+    </factory>
+</dao>';
+        $parser = new jDaoParser ($this->_selector);
+        $parser->parse(simplexml_load_string($doc), $this->_tools);
+        $generator = new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
+
+        $methods = $parser->getMethods();
+
+        $this->assertTrue($methods['method1']->getConditions() != null);
+        $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
+                                                $methods['method1']->getParameters(), false,  $methods['method1']->getGroupBy());
+        $this->assertEqualOrDiff(' `grouptype` = 1', $sql);
+
+        $this->assertTrue($methods['method2']->getConditions() != null);
+        $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
+                                                $methods['method2']->getParameters(), false, $methods['method2']->getGroupBy());
+        $this->assertEqualOrDiff(' `grouptype` <> 2 GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
+
+        $this->assertTrue($methods['method3']->getConditions() !== null);
+        $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
+                                                $methods['method3']->getParameters(), false, $methods['method3']->getGroupBy());
+        $this->assertEqualOrDiff(' 1=1  ORDER BY `name` asc',$sql);
+
+        $this->assertTrue($methods['method4']->getConditions() !== null);
+        $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
+                                                $methods['method4']->getParameters(), false, $methods['method4']->getGroupBy());
+        $this->assertEqualOrDiff(' 1=1  GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
+
+        $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
+                                                $methods['method1']->getParameters(), true,  $methods['method1']->getGroupBy());
+        $this->assertEqualOrDiff(' `jacl_group`.`grouptype` = 1', $sql);
+
+        $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
+                                                $methods['method2']->getParameters(), true, $methods['method2']->getGroupBy());
+        $this->assertEqualOrDiff(' `jacl_group`.`grouptype` <> 2 GROUP BY `jacl_group`.`id_aclgrp`, `jacl_group`.`parent_id`, `jacl_group`.`name` ORDER BY `jacl_group`.`name` asc',$sql);
+
+        $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
+                                                $methods['method3']->getParameters(), true, $methods['method3']->getGroupBy());
+        $this->assertEqualOrDiff(' 1=1  ORDER BY `jacl_group`.`name` asc',$sql);
+
+        $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
+                                                $methods['method4']->getParameters(), true, $methods['method4']->getGroupBy());
+        $this->assertEqualOrDiff(' 1=1  GROUP BY `jacl_group`.`id_aclgrp`, `jacl_group`.`parent_id`, `jacl_group`.`name` ORDER BY `jacl_group`.`name` asc',$sql);
+
+    }
+
+
     function testInsertQuery() {
         
         $doc ='<?xml version="1.0"?>
