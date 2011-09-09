@@ -20,6 +20,8 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
     protected $entryPoint = 'index';
 
+    protected $epInfo = null;
+
     protected $testType = '';
 
     function __construct() {
@@ -58,6 +60,9 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
             $this->arguments['testFile'] = '';
         }
 
+        $appInstaller = new jInstallerApplication();
+        $this->epInfo = $appInstaller->getEntryPointInfo($this->entryPoint);
+
         if ($modulesTests == 0) {
             // we add all modules in the test list
             $suite = $this->getAllModulesTestSuites();
@@ -85,13 +90,14 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
                 exit(PHPUnit_TextUI_TestRunner::FAILURE_EXIT);
             }
         }
+        // it will initialize global variables $gJCoord $gJConfig. it could be needed by tests
+        $coord = new jCoordinator($this->epInfo->configFile, false);
     }
 
     protected function getAllModulesTestSuites() {
 
-        $appInstaller = new jInstallerApplication();
-        $ep = $appInstaller->getEntryPointInfo($this->entryPoint);
-        $moduleList = $ep->getModulesList();
+
+        $moduleList = $this->epInfo->getModulesList();
 
         $topsuite = new PHPUnit_Framework_TestSuite();
 
@@ -114,9 +120,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
     protected function getModuleTestSuite($module) {
 
-        $appInstaller = new jInstallerApplication();
-        $ep = $appInstaller->getEntryPointInfo($this->entryPoint);
-        $moduleList = $ep->getModulesList();
+        $moduleList = $this->epInfo->getModulesList();
 
         $topsuite = new PHPUnit_Framework_TestSuite();
 
