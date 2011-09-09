@@ -35,6 +35,13 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
         $modulesTests = -1;
 
+        /*
+        $this->options[0] is an array of all options '--xxx'.
+          each values is an array(0=>'optionname', 1=>'value if given')
+        $this->options[1] is a list of parameters given after options
+          it can be array(0=>'test name', 1=>'filename')
+        */
+
         foreach ($this->options[0] as $option) {
             switch ($option[0]) {
                 case '--entrypoint':
@@ -137,5 +144,24 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
                 $topsuite->addTestSuite($suite);
         }
         return $topsuite;
+    }
+
+    protected function showHelp() {
+        parent::showHelp();
+        echo "
+
+Specific options for Jelix:
+
+       phpunit [switches] --all-modules
+       phpunit [switches] --module <modulename> [testfile.pu.php]
+
+  --all-modules           Run tests of all installed modules.
+  --module <module>       Run tests of a specific module. An optional filename can be indicated
+                          to run a specific test of this module.
+
+  --entrypoint <ep>       Run tests in the context (same configuration) of the given entry point. By default: 'index'
+  --testtype <type>       Run only tests of the given type, ie. tests that have a filename suffix like '.<type>.pu.php'
+
+        ";
     }
 }
