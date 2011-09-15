@@ -78,8 +78,8 @@ class createappCommand extends JelixScriptCommand {
         $this->config->infoWebsite = $this->config->newAppInfoWebsite;
         $this->config->infoLicence = $this->config->newAppInfoLicence;
         $this->config->infoLicenceUrl = $this->config->newAppInfoLicenceUrl;
-        $this->config->newAppInfoLocale = $this->config->newAppInfoLocale;
-        $this->config->newAppInfoCopyright = $this->config->newAppInfoCopyright;
+        $this->config->infoLocale = $this->config->newAppInfoLocale;
+        $this->config->infoCopyright = $this->config->newAppInfoCopyright;
         $this->config->initAppPaths($appPath);
 
         jApp::setEnv('jelix-scripts');
