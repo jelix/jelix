@@ -214,6 +214,7 @@ class jResponseHtml extends jResponse {
         }
 
         echo implode("\n",$this->_bodyBottom);
+        $msgs = & $GLOBALS['gJCoord']->logMessages;
         if(count($msgs)) {
             if(isset($msgs['response']) && count($msgs['response'])) {
                 echo '<ul id="jelixlog">';
