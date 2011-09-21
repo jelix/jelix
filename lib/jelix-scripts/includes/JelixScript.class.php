@@ -44,7 +44,7 @@ class JelixScript {
             if (file_exists($home.DIRECTORY_SEPARATOR.'.jelix-scripts.ini'))
                 $config->loadFromIni($home.DIRECTORY_SEPARATOR.'.jelix-scripts.ini', $appname);
             else
-                $config->loadFromIni($home.DIRECTORY_SEPARATOR.'jelix-scripts.ini', $appname); // windows users doesn't often use dot files.
+                $config->loadFromIni($home.DIRECTORY_SEPARATOR.'jelix-scripts.ini', $appname); // windows users don't often use dot files.
         }
 
         self::$debugMode = $config->debugMode;
