@@ -167,5 +167,87 @@ class createdaocrudCommand extends JelixScriptCommand {
                 echo "Notice: events.xml in module '".$this->_parameters['module']."' has been created.\n";
             }
         }
+
+        if ($gJConfig->urlengine['engine'] == 'significant') {
+
+            if (!file_exists($path.'urls.xml')) {
+                $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
+                echo "Notice: urls.xml in the module '".$this->_parameters['module']."' has been created.\n";
+                echo "Notice: you should link it into the urls.xml in var/config.\n";
+            }
+
+            $xml = simplexml_load_file($path.'urls.xml');
+            $xml->registerXPathNamespace('j', 'http://jelix.org/ns/suburls/1.0');
+
+            // if the url already exists, let's try an other
+            $count = 0;
+            $urlXPath = "//j:url[@pathinfo='/".$ctrlname."/']";
+            while ($url = $xml->xpath("//$urlXPath")) {
+                $count++;
+                $urlXPath = "//j:url[@pathinfo='/".$ctrlname."-".$count."/']";
+            }
+
+            if ($count == 0)
+                $urlPath = "/".$ctrlname."/";
+            else
+                $urlPath = "/".$ctrlname."-".$count."/";
+
+/*
+ 
+ <url pathinfo="/thedata/" action="mycrud:index" />
+<url pathinfo="/thedata/view/:id" action="mycrud:view" />
+<url pathinfo="/thedata/precreate" action="mycrud:precreate" />
+<url pathinfo="/thedata/create" action="mycrud:create" />
+<url pathinfo="/thedata/savecreate" action="mycrud:savecreate" />
+<url pathinfo="/thedata/preedit/:id" action="mycrud:preupdate" />
+<url pathinfo="/thedata/edit/:id" action="mycrud:editupdate" />
+<url pathinfo="/thedata/save/:id" action="mycrud:saveupdate" />
+<url pathinfo="/thedata/delete/:id" action="mycrud:delete" />
+*/
+
+
+            $url = $xml->addChild('url');
+            $url->addAttribute('pathinfo', $urlPath);
+            $url->addAttribute('action', $ctrlname.':index');
+
+            $url = $xml->addChild('url');
+            $url->addAttribute('pathinfo', $urlPath."view/:id");
+            $url->addAttribute('action', $ctrlname.':view');
+
+            $url = $xml->addChild('url');
+            $url->addAttribute('pathinfo', $urlPath."precreate");
+            $url->addAttribute('action', $ctrlname.':precreate');
+
+            $url = $xml->addChild('url');
+            $url->addAttribute('pathinfo', $urlPath."create");
+            $url->addAttribute('action', $ctrlname.':create');
+
+            $url = $xml->addChild('url');
+            $url->addAttribute('pathinfo', $urlPath."savecreate");
+            $url->addAttribute('action', $ctrlname.':savecreate');
+
+            $url = $xml->addChild('url');
+            $url->addAttribute('pathinfo', $urlPath."preedit/:id");
+            $url->addAttribute('action', $ctrlname.':preupdate');
+
+            $url = $xml->addChild('url');
+            $url->addAttribute('pathinfo', $urlPath."edit/:id");
+            $url->addAttribute('action', $ctrlname.':editupdate');
+
+            $url = $xml->addChild('url');
+            $url->addAttribute('pathinfo', $urlPath."save/:id");
+            $url->addAttribute('action', $ctrlname.':saveupdate');
+
+            $url = $xml->addChild('url');
+            $url->addAttribute('pathinfo', $urlPath."delete/:id");
+            $url->addAttribute('action', $ctrlname.':delete');
+
+
+            $result = $xml->asXML($path.'urls.xml');
+            if ($result)
+                echo "Notice: urls.xml in module '".$this->_parameters['module']."' has been updated.\n";
+            else
+                echo "Warning: urls.xml in module '".$this->_parameters['module']."' cannot be updated, check permissions or add the urls manually.\n";
+        }
     }
 }
