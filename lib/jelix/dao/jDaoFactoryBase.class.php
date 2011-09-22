@@ -400,6 +400,10 @@ abstract class jDaoFactoryBase  {
             }else
                 $notfirst = true;
 
+            if (!isset($fields[$cond['field_id']])) {
+                throw new jException('jelix~dao.error.property.unknown', $cond['field_id']);
+            }
+
             $prop=$fields[$cond['field_id']];
 
             if($forSelect)

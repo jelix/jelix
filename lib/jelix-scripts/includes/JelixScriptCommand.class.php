@@ -299,7 +299,7 @@ abstract class JelixScriptCommand {
       fclose($f);
 
       if ($this->config->doChmod) {
-         chmod($filename, $this->config->chmodFileValue);
+         chmod($filename, intval($this->config->chmodFileValue,8));
       }
 
       if ($this->config->doChown) {
@@ -320,9 +320,10 @@ abstract class JelixScriptCommand {
          return;
       if (!file_exists($dirname)) {
          $this->createDir(dirname($dirname));
+
          mkdir($dirname);
          if ($this->config->doChmod) {
-            chmod($dirname, $this->config->chmodDirValue);
+            chmod($dirname, intval($this->config->chmodDirValue,8));
          }
 
          if ($this->config->doChown) {

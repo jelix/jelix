@@ -138,6 +138,7 @@ class createmoduleCommand extends JelixScriptCommand {
             $this->createDir($path.'locales/fr_FR/');
             $this->createDir($path.'install/');
             $this->createFile($path.'install/install.php','module/install.tpl',$param);
+            $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
         }
 
         $isdefault = $this->getOption('-defaultmodule');

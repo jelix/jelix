@@ -20,6 +20,8 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
     protected $entryPoint = 'index';
 
+    protected $epInfo = null;
+
     protected $testType = '';
 
     function __construct() {
@@ -32,6 +34,13 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
     protected function handleCustomTestSuite() {
 
         $modulesTests = -1;
+
+        /*
+        $this->options[0] is an array of all options '--xxx'.
+          each values is an array(0=>'optionname', 1=>'value if given')
+        $this->options[1] is a list of parameters given after options
+          it can be array(0=>'test name', 1=>'filename')
+        */
 
         foreach ($this->options[0] as $option) {
             switch ($option[0]) {
@@ -57,6 +66,9 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
         } else {
             $this->arguments['testFile'] = '';
         }
+
+        $appInstaller = new jInstallerApplication();
+        $this->epInfo = $appInstaller->getEntryPointInfo($this->entryPoint);
 
         if ($modulesTests == 0) {
             // we add all modules in the test list
@@ -85,13 +97,14 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
                 exit(PHPUnit_TextUI_TestRunner::FAILURE_EXIT);
             }
         }
+        // it will initialize global variables $gJCoord $gJConfig. it could be needed by tests
+        $coord = new jCoordinator($this->epInfo->configFile, false);
     }
 
     protected function getAllModulesTestSuites() {
 
-        $appInstaller = new jInstallerApplication();
-        $ep = $appInstaller->getEntryPointInfo($this->entryPoint);
-        $moduleList = $ep->getModulesList();
+
+        $moduleList = $this->epInfo->getModulesList();
 
         $topsuite = new PHPUnit_Framework_TestSuite();
 
@@ -114,9 +127,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
     protected function getModuleTestSuite($module) {
 
-        $appInstaller = new jInstallerApplication();
-        $ep = $appInstaller->getEntryPointInfo($this->entryPoint);
-        $moduleList = $ep->getModulesList();
+        $moduleList = $this->epInfo->getModulesList();
 
         $topsuite = new PHPUnit_Framework_TestSuite();
 
@@ -133,5 +144,24 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
                 $topsuite->addTestSuite($suite);
         }
         return $topsuite;
+    }
+
+    protected function showHelp() {
+        parent::showHelp();
+        echo "
+
+Specific options for Jelix:
+
+       phpunit [switches] --all-modules
+       phpunit [switches] --module <modulename> [testfile.pu.php]
+
+  --all-modules           Run tests of all installed modules.
+  --module <module>       Run tests of a specific module. An optional filename can be indicated
+                          to run a specific test of this module.
+
+  --entrypoint <ep>       Run tests in the context (same configuration) of the given entry point. By default: 'index'
+  --testtype <type>       Run only tests of the given type, ie. tests that have a filename suffix like '.<type>.pu.php'
+
+        ";
     }
 }

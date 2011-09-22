@@ -27,6 +27,7 @@ cd lib/jelix-scripts/commands
   installmodule.cmd.php
   openapp.cmd.php
   migrate.cmd.php
+  resetfilesrights.cmd.php
 cd lib/jelix-scripts/commands-single/
   createapp.cmd.php
 cd lib/jelix-scripts/includes
@@ -62,6 +63,7 @@ cd lib/jelix-scripts/templates/module/
   masteradminmenu.listener.php.tpl
   module.xml.tpl
   template.tpl
+  urls.xml.tpl
   zone.tpl
 cd lib/jelix-scripts/templates/responses/
   adminHtmlResponse.class.php.tpl

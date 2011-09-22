@@ -3,8 +3,6 @@
 
 class jAppContextTest extends PHPUnit_Framework_TestCase {
 
-
-
     function testContext() {
     
         $appPath = jApp::appPath();
