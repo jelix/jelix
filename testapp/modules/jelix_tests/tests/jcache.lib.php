@@ -16,7 +16,7 @@
 * @subpackage  jelix_tests module
 */
 
-class UTjCacheAPI extends jUnitTestCaseDb {
+abstract class UTjCacheAPI extends jUnitTestCaseDb {
 
     protected $profile = '';
     
