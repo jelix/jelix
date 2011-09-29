@@ -24,9 +24,6 @@ class UTjKVDbFile extends UTjKVDb {
         if (file_exists(jApp::tempPath().'kvfiles/tests/'))
             jFile::removeDir(jApp::tempPath().'kvfiles/tests/',false);
     }
-
-    public function tearDown() {
-    }
     
     public function testSetGet (){
         parent::testSetGet();

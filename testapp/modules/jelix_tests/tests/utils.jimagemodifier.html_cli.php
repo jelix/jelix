@@ -13,14 +13,12 @@ class UTjimagemodifier extends UnitTestCase {
 
     protected $origFile;
 
-    function testStart() {
-        $this->origFile = jApp::wwwPath('imagemodifier/logo_test.png');
-        if (!is_writable(jApp::wwwPath('cache/images/')))
-            $this->fail("cache/images/ is not writable");
-
+    function skip() {
+        $this->skipIf(!is_writable(jApp::wwwPath('cache/images/')), "cache/images/ is not writable");
     }
 
-    function setUp() {
+    function setUpRun() {
+        $this->origFile = jApp::wwwPath('imagemodifier/logo_test.png');
     }
 
     function testGet() {

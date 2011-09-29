@@ -43,6 +43,8 @@ class jDao {
         return $obj;
     }
 
+    static protected $_daoSingleton=array();
+
     /**
     * return a DAO instance. It Handles a singleton of the DAO.
     * If no dao is founded, try to compile a DAO from the dao xml file
@@ -52,15 +54,23 @@ class jDao {
     * @return jDaoFactoryBase  the dao object
     */
     public static function get ($DaoId, $profile='') {
-       static $_daoSingleton=array();
 
        $sel = new jSelectorDao($DaoId, $profile);
        $DaoId = $sel->toString ();
 
-        if (! isset ($_daoSingleton[$DaoId])){
-            $_daoSingleton[$DaoId] = self::create ($sel,$profile);
+        if (! isset (self::$_daoSingleton[$DaoId])){
+            self::$_daoSingleton[$DaoId] = self::create ($sel,$profile);
         }
-        return $_daoSingleton[$DaoId];
+        return self::$_daoSingleton[$DaoId];
+    }
+
+    /**
+     * Release dao singleton own by jDao. Internal use.
+     * @internal
+     * @since 1.3
+     */
+    public static function releaseAll() {
+        self::$_daoSingleton = array();
     }
 
     /**

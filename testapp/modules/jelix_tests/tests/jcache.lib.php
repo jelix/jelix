@@ -16,24 +16,21 @@
 * @subpackage  jelix_tests module
 */
 
-class UTjCacheAPI extends jUnitTestCaseDb {
+abstract class UTjCacheAPI extends jUnitTestCaseDb {
 
     protected $profile = '';
     
-    protected $conf;
+    protected $conf = null;
 
-    function getTests() {
-        if ($this->profile == '')
-            return array();
+    function setUpRun() {
         $conf = parse_ini_file(jApp::configPath().'profiles.ini.php', true);
         if (isset($conf['jcache:'.$this->profile]) && $conf['jcache:'.$this->profile]['enabled']) {
             $this->conf = $conf['jcache:'.$this->profile];
-            return parent::getTests();
         }
-        else {
-            $this->sendMessage('UTjCacheAPI cannot be run with '.$this->profile.': undefined profile');
-            return array();
-        }
+    }
+
+    function skip() {
+        $this->skipIf($this->conf === null, get_class($this).' cannot be run with '.$this->profile.': undefined profile');
     }
 
     public function testSet (){

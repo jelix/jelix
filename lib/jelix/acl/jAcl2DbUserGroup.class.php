@@ -42,8 +42,10 @@ class jAcl2DbUserGroup {
      * @return array list of group id
      */
     public static function getGroups(){
-        if(!jAuth::isConnected())
+        if(!jAuth::isConnected()) {
+            self::$groups = null;
             return array();
+        }
 
         // chargement des groupes
         if(self::$groups === null){

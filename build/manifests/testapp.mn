@@ -137,6 +137,7 @@ cd testapp/modules/jelix_tests/install
   install.mysql.sql
   install.pgsql.sql
   upgrade_to_1.3RC1.2079_productdate.php
+  upgrade_to_1.3RC2.2100_jacl2db.php
 cd testapp/modules/jelix_tests/locales/
   test_A.properties
   test_B.properties
@@ -216,8 +217,10 @@ cd testapp/modules/jelix_tests/tests/
   jacl.manager.html_cli.php
   jacl.users_and_groups.html_cli.php
   jacl2.main_api.html_cli.php
+  jacl2.main_api_pgsql.html_cli.php
   jacl2.manager.html_cli.php
   jacl2.users_and_groups.html_cli.php
+  jacl2_main_api.lib.php
   jauth.ldap_api.html.php
   jcache.lib.php
   jcache.db.html_cli.php
@@ -229,6 +232,7 @@ cd testapp/modules/jelix_tests/tests/
   jdao.factory_base.html_cli.php
   jdao.main_api.html_cli.php
   jdao.main_api_with_pdo.html_cli.php
+  jdao_main_api.lib.php
   jdao.parser.html_cli.php
   jdao.parser2.html_cli.php
   jdao.parser_update.html_cli.php
@@ -236,6 +240,7 @@ cd testapp/modules/jelix_tests/tests/
   jdao.generator_select.html_cli.php
   jdb.1_queries.html_cli.php
   jdb.2_queries_with_pdo.html_cli.php
+  jdb.lib.php
   jdb.mysql.html_cli.php
   jdb.pgsql.html_cli.php
   jdb.sqlite.html_cli.php

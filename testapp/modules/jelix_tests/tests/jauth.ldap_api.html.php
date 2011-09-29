@@ -21,7 +21,7 @@ class UTjAuth_LDAP extends jUnitTestCase {
 
     protected $config;
 
-    public function setUp (){
+    public function setUpRun (){
         if(!file_exists(jApp::configPath().'auth_ldap.coord.ini.php')) {
             $this->config = null;
             return;
@@ -36,7 +36,12 @@ class UTjAuth_LDAP extends jUnitTestCase {
         $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
     }
 
-    public function tearDown (){
+    function skip() {
+        $this->skipIf($this->config === null, 'Ldap plugin for jauth is not tested because there isn\'t configuration.'.
+                               ' To test it, you should create and configure an auth_ldap.coord.ini.php file.');
+    }
+
+    public function tearDownRun (){
         global $gJCoord;
         unset($gJCoord->plugins['auth']);
         unset($_SESSION[$this->config['session_name']]);
@@ -44,11 +49,6 @@ class UTjAuth_LDAP extends jUnitTestCase {
     }
 
     public function testAll (){
-        if ($this->config === null) {
-            $this->sendMessage('Ldap plugin for jauth is not tested because there isn\'t configuration.'.
-                               ' To test it, you should create and configure an auth_ldap.coord.ini.php file.');
-            return;
-        }
         for($i=1;$i<=NB_USERS_LDAP;$i++){
 
             $myUser=jAuth::createUserObject("testldap usr {$i}","pass{$i}");

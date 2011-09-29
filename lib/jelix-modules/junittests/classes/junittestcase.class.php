@@ -32,15 +32,21 @@ class jUnitTestCase extends UnitTestCase {
         if($this->needPDO){
             $this->reporter->makeDry(!$this->assertTrue(class_exists('PDO',false), 'PDO does not exists ! You should install PDO because tests need it.'));
         }
+
         $this->setUpRun();
         foreach ($this->getTests() as $method) {
             if ($this->reporter->shouldInvoke($this->getLabel(), $method)) {
+                $this->skip();
+                if ($this->shouldSkip()) {
+                    break;
+                }
                 $invoker = $this->reporter->createInvoker($this->createInvoker());
                 $invoker->before($method);
                 $invoker->invoke($method);
                 $invoker->after($method);
             }
         }
+
         $this->tearDownRun();
         $this->reporter->paintCaseEnd($this->getLabel());
         unset($this->reporter);
