@@ -15,10 +15,8 @@ require_once(dirname(__FILE__).'/daotests.lib.php');
 class UTDao_parser_update extends jUnitTestCase {
 
     protected $_selector;
-    function setUp() {
-        if (!$this->_selector) {
-          $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
-        }
+    function setUpRun() {
+        $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
     }
 
     protected $methDatas=array(

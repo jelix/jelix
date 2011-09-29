@@ -32,7 +32,7 @@ class UTjformsHTMLBuilder2 extends jUnitTestCaseDb {
     protected $builder;
     protected $formname;
 
-    function testStart() {
+    function setUpRun() {
         $this->container = new jFormsDataContainer('formtesthtmlbuilder','0');
         $this->form = new testHMLForm2('formtesthtmlbuilder', $this->container, true );
         $this->builder = new testJFormsHtmlBuilder2($this->form);

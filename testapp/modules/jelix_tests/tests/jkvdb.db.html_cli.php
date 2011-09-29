@@ -27,10 +27,6 @@ class UTjKVDbdb extends UTjKVDb {
         $this->db->exec('delete from testkvdb');
     }
 
-    public function tearDown() {
-    }
-
-
     public function testGarbage () {
 
         $kv = jKVDb::getConnection($this->profile);

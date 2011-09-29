@@ -31,7 +31,7 @@ class UTjformsHtmlLightBuilder extends jUnitTestCaseDb {
     protected $form;
     protected $container;
     protected $builder;
-    function testStart() {
+    function setUpRun() {
         $this->container = new jFormsDataContainer('formtestlight','');
         $this->form = new testHtmlLightForm('formtestlight', $this->container, true );
         $this->form->securityLevel = 0;

@@ -27,7 +27,7 @@ class UTjaclusergroup extends jUnitTestCaseDb {
     protected $grpId6;
     protected $grpId7;
 
-    public function testStart(){
+    public function setUpRun(){
         $this->dbProfile = 'jacl_profile';
 
         $this->emptyTable('jacl_user_group');

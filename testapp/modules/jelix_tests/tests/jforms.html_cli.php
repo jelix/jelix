@@ -24,7 +24,7 @@ class UTjforms extends jUnitTestCase {
 
     protected $form1Descriptor, $form2Descriptor, $formLabelDescriptor;
 
-    function testStart(){
+    function setUpRun(){
         $_SESSION['JFORMS'] = array();
         $this->form1Descriptor = '
 <object class="cForm_jelix_tests_Jx_product">

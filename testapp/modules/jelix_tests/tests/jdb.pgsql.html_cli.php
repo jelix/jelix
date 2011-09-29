@@ -13,18 +13,16 @@
 class UTjDbPgsql extends jUnitTestCaseDb {
     protected $dbProfile ='pgsql_profile';
 
-    function getTests(){
+    function skip() {
         try{
             $prof = jProfiles::get('jdb', $this->dbProfile, true);
         }
         catch (Exception $e) {
-            $this->sendMessage('UTjDbPgsql cannot be run: '.$e->getMessage());
-            return array();
+            $this->skipIf(true, 'UTjDbPgsql cannot be run: '.$e->getMessage());
         }
-        return parent::getTests();
     }
 
-    function testStart() {
+    function setUpRun() {
         $this->emptyTable('product_test');
     }
 

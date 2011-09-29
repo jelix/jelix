@@ -13,7 +13,7 @@ require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
 class UTjformsWithDao extends jUnitTestCaseDb {
 
-    function testStart(){
+    function setUpRun(){
         global $gJCoord;
         $_SESSION['JFORMS'] = array();
         $form = jForms::create('product');

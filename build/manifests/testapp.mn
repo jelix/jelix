@@ -232,6 +232,7 @@ cd testapp/modules/jelix_tests/tests/
   jdao.factory_base.html_cli.php
   jdao.main_api.html_cli.php
   jdao.main_api_with_pdo.html_cli.php
+  jdao_main_api.lib.php
   jdao.parser.html_cli.php
   jdao.parser2.html_cli.php
   jdao.parser_update.html_cli.php
