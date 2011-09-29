@@ -240,6 +240,7 @@ cd testapp/modules/jelix_tests/tests/
   jdao.generator_select.html_cli.php
   jdb.1_queries.html_cli.php
   jdb.2_queries_with_pdo.html_cli.php
+  jdb.lib.php
   jdb.mysql.html_cli.php
   jdb.pgsql.html_cli.php
   jdb.sqlite.html_cli.php
