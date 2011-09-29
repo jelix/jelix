@@ -18,12 +18,18 @@
  */
 class jDbPDOResultSet extends PDOStatement {
 
-    const FETCH_CLASS = 8;
-
     protected $_fetchMode = 0;
 
-    public function fetch ($fetch_style = PDO::FETCH_BOTH, $cursor_orientation = PDO::FETCH_ORI_NEXT, $cursor_offset = 0) {
-        $rec = parent::fetch();
+    public function fetch ($fetch_style = null, $cursor_orientation = PDO::FETCH_ORI_NEXT, $cursor_offset = 0) {
+        // we take a shortcut: unused parameters are ignored by parent::fetch
+        // let the parent::setFetchMode override as needed, and PHP use its default
+        if ($fetch_style) {
+            $rec = parent::fetch($fetch_style, $cursor_orientation, $cursor_offset);
+        }
+        else {
+            $rec = parent::fetch();
+        }
+
         if ($rec && count($this->modifier)) {
             foreach($this->modifier as $m)
                 call_user_func_array($m, array($rec, $this));
@@ -33,23 +39,35 @@ class jDbPDOResultSet extends PDOStatement {
 
     /**
      * return all results from the statement.
-     * Arguments are ignored. JDb don't care about it (fetch always as classes or objects)
-     * But there are here because of the compatibility of internal methods of PDOStatement
-     * @param integer $fetch_style ignored
-     * @param integer $column_index
-     * @param array $ctor_arg  (ignored)
+     * @param integer $fetch_style
+     * @param integer $fetch_argument
+     * @param array $ctor_arg
      * @return array list of object which contain all rows
      */
-    public function fetchAll ($fetch_style = PDO::FETCH_OBJ, $column_index=0, $ctor_arg=null) {
-        if ($this->_fetchMode) {
-            if ($this->_fetchMode != PDO::FETCH_COLUMN)
-                return parent::fetchAll($this->_fetchMode);
-            else
-                return parent::fetchAll($this->_fetchMode, $column_index);
+    public function fetchAll ($fetch_style = null, $fetch_argument=null, $ctor_arg=null) {
+        // if the user requested to override the style set with setFetchMode, use it
+        $final_style = ($fetch_style ? $fetch_style : $this->_fetchMode);
+
+        // Check how many arguments, if available should be given
+        if (!$final_style) {
+            $records = parent::fetchAll(PDO::FETCH_OBJ);
+        }
+        else if ($ctor_arg) {
+            $records = parent::fetchAll($final_style, $fetch_argument, $ctor_arg);
+        }
+        else if ($fetch_argument) {
+            $records = parent::fetchAll($final_style, $fetch_argument);
         }
         else {
-            return parent::fetchAll(PDO::FETCH_OBJ);
+            $records = parent::fetchAll($final_style);
         }
+
+        if (count($this->modifier)) {
+            foreach ($records as $rec)
+                foreach($this->modifier as $m)
+                    call_user_func_array($m, array($rec, $this));
+        }
+        return $records;
     }
 
     /**
