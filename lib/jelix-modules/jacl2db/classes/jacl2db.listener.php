@@ -4,7 +4,7 @@
 * @subpackage  jacl2db
 * @author      Laurent Jouanneau
 * @contributor Bastien Jaillot, Vincent Viaud
-* @copyright   2008 Laurent Jouanneau, 2008 Bastien Jaillot, 2010 BP2I
+* @copyright   2008-2011 Laurent Jouanneau, 2008 Bastien Jaillot, 2010 BP2I
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.1
 */
@@ -41,6 +41,6 @@ class jacl2dbListener extends jEventListener{
    }
 
    function onAuthLogout($event){
-        try { jAcl2::clearCache(); } catch(Exception $e) {}
+        try { jAcl2::clearCache(); jAcl2DbUserGroup::clearCache(); } catch(Exception $e) {}
     }
 }
