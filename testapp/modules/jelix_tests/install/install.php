@@ -36,5 +36,6 @@ class jelix_testsModuleInstaller extends jInstallerModule {
 
         $this->execSQLScript('install');
         $this->execSQLScript('sql/install_jsession.schema', 'jelix');
+        $this->execSQLScript('install_jacl2.shema', 'jacl2db');
       }
 }

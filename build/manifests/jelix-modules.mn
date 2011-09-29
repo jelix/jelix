@@ -52,6 +52,7 @@ cd lib/jelix-modules/jacl2db/install
   upgrade_to_1.3a1_codegroup.php
   upgrade_to_1.3a2_subjectsgroup.php
   upgrade_to_1.3a3_cancelrights.php
+  upgrade_to_1.3RC2.2100_typecanceled.php
 cd lib/jelix-modules/jacl2db/install/sql/
   upgrade_codegroup_1.mysql.sql
   upgrade_codegroup_2.mysql.sql
@@ -60,6 +61,7 @@ cd lib/jelix-modules/jacl2db/install/sql/
   upgrade_codegroup_1.sqlite.sql
   upgrade_codegroup_2.sqlite.sql
   upgrade_subjectgroup_data.sql
+  upgrade_type_canceled.pgsql.sql
 cd lib/jelix-modules/jacl2db/install/var/config
   jacl2.coord.ini.php
 

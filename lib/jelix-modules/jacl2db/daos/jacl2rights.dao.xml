@@ -7,7 +7,7 @@
       <property name="id_aclsbj" fieldname="id_aclsbj" datatype="string" required="yes"/>
       <property name="id_aclgrp" fieldname="id_aclgrp" datatype="string" required="yes"/>
       <property name="id_aclres" fieldname="id_aclres" datatype="string" required="yes"/>
-      <property name="canceled" fieldname="canceled" datatype="boolean" required="yes"/>
+      <property name="canceled" fieldname="canceled" datatype="tinyint" required="yes"/>
     </record>
     <factory>
         <method name="getRight" type="selectfirst">
