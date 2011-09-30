@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
-    <info id="jacldb@modules.jelix.org" name="jacldb" createdate="">
-        <version stability="stable">1.2</version>
+    <info id="jacldb@modules.jelix.org" name="jacldb" createdate="2008-01-15">
+        <version stability="stable" date="2010-12-03">1.2</version>
         <label lang="en-EN">jAclDb listener</label>
         <description lang="en-EN">jAuth listener for jAclDB</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
-        <copyright>2008-2009 Laurent Jouanneau and other contributors</copyright>
+        <copyright>2008-2011 Laurent Jouanneau and other contributors</copyright>
         <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true"/>
-        <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>

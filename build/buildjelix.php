@@ -159,6 +159,10 @@ $BUILD_OPTIONS = array(
     false,
     '',
     ),
+'TODAY'=> array(
+    false,
+    '',
+    ),
 /*''=> array(
     "",
     '',
@@ -175,6 +179,7 @@ Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
 $SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
+$TODAY = date('Y-m-d H:i');
 
 if($IS_NIGHTLY){
     $PACKAGE_NAME='jelix-'.str_replace('SERIAL', '', $LIB_VERSION);
@@ -341,7 +346,7 @@ $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION', 'ENABLE_P
     'ENABLE_PHP_JSON', 'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
 
-$infos = '; --- build date:  '.date('Y-m-d H:i')."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);
+$infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
 

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
-    <info id="master_admin@modules.jelix.org" name="master_admin" createdate="">
-        <version stability="stable">1.2</version>
+    <info id="master_admin@modules.jelix.org" name="master_admin" createdate="2008-12-22">
+        <version stability="stable" date="2010-12-03">1.2</version>
         <label lang="en-EN">Main Administration Interface</label>
         <description lang="en-EN">Main Web interface for the administration of an application</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GPL 2.0</license>
-        <copyright>2008-2009 Laurent Jouanneau</copyright>
+        <copyright>2008-2011 Laurent Jouanneau</copyright>
         <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true"/>
-        <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
         <jelix minversion="1.2RC3" maxversion="1.2.*"/>
-      <module name="jauth"/>
+        <module name="jauth"/>
     </dependencies>
 </module>
