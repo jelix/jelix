@@ -24,7 +24,6 @@ class testInstallerComponentModule extends jInstallerComponentModule {
 
 }
 
-
 class testInstallerEntryPoint extends jInstallerEntryPoint {
 
     function __construct($defaultConfig, $configFile, $file, $type, $configContent) {
@@ -44,7 +43,7 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
     }
     
     function getEpId() {
-        return $this->file;
+        return str_replace('.php', '', $this->file);
     }
 }
 
