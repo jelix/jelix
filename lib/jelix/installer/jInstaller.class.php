@@ -587,6 +587,12 @@ class jInstaller {
                                                    1, $epId);
                     $this->installerIni->setValue($component->getName().'.version',
                                                    $component->getSourceVersion(), $epId);
+                    $this->installerIni->setValue($component->getName().'.version.date',
+                                                   $component->getSourceDate(), $epId);
+                    $this->installerIni->setValue($component->getName().'.firstversion',
+                                                   $component->getSourceVersion(), $epId);
+                    $this->installerIni->setValue($component->getName().'.firstversion.date',
+                                                   $component->getSourceDate(), $epId);
                     $this->ok('install.module.installed', $component->getName());
                     $installedModules[] = array($installer, $component, true);
                 }
@@ -600,6 +606,8 @@ class jInstaller {
                         // during a future update
                         $this->installerIni->setValue($component->getName().'.version',
                                                       $upgrader->version, $epId);
+                        $this->installerIni->setValue($component->getName().'.version.date',
+                                                      $upgrader->date, $epId);
                         $this->ok('install.module.upgraded',
                                   array($component->getName(), $upgrader->version));
                         $lastversion = $upgrader->version;
@@ -609,6 +617,8 @@ class jInstaller {
                     if ($lastversion != $component->getSourceVersion()) {
                         $this->installerIni->setValue($component->getName().'.version',
                                                       $component->getSourceVersion(), $epId);
+                        $this->installerIni->setValue($component->getName().'.version.date',
+                                                      $component->getSourceDate(), $epId);
                         $this->ok('install.module.upgraded',
                                   array($component->getName(), $component->getSourceVersion()));
                     }

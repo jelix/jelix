@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2010 Laurent Jouanneau
+* @copyright   2008-2011 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -148,8 +148,13 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             $fileList = array();
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
-                    if (!is_dir($p.$f) && preg_match('/^upgrade_to_([^_]+)_([^\.]+)\.php$/', $f, $m)) {
-                        $fileList[] = array($f, $m[1], $m[2]);
+                    if (!is_dir($p.$f)) {
+                        if (preg_match('/^upgrade_to_([^_]+)_([^\.]+)\.php$/', $f, $m)) {
+                            $fileList[] = array($f, $m[1], $m[2]);
+                        }
+                        else if (preg_match('/^upgrade_([^\.]+)\.php$/', $f, $m)){
+                            $fileList[] = array($f, '', $m[1]);
+                        }
                     }
                 }
                 closedir($handle);
@@ -160,18 +165,22 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             }
 
             // now we order the list of file
-            usort($fileList, array($this, 'sortFileList'));
             foreach($fileList as $fileInfo) {
                 require_once($p.$fileInfo[0]);
                 $cname = $this->name.'ModuleUpgrader_'.$fileInfo[2];
                 if (!class_exists($cname))
                     throw new jInstallerException("module.upgrader.class.not.found",array($cname,$this->name));
 
-                $this->moduleUpgraders[] = new $cname($this->name,
-                                                      $fileInfo[2],
-                                                      $this->path,
-                                                      $fileInfo[1],
-                                                      false);
+                $upgrader = new $cname($this->name,
+                                        $fileInfo[2],
+                                        $this->path,
+                                        $fileInfo[1],
+                                        false);
+
+                if ($fileInfo[1] && count($upgrader->targetVersions) == 0) {
+                    $upgrader->targetVersions = array($fileInfo[1]);
+                }
+                $this->moduleUpgraders[] = $upgrader;
             }
         }
 
@@ -179,11 +188,48 @@ class jInstallerComponentModule extends jInstallerComponentBase {
 
         foreach($this->moduleUpgraders as $upgrader) {
 
-            if (jVersionComparator::compareVersion($this->moduleInfos[$epId]->version, $upgrader->version) >= 0 ) {
-                continue;
+            $foundVersion = '';
+            // check the version
+            foreach($upgrader->targetVersions as $version) {
+                if (jVersionComparator::compareVersion($this->moduleInfos[$epId]->version, $version) >= 0 ) {
+                    // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
+                    continue;
+                }
+                if (jVersionComparator::compareVersion($this->sourceVersion, $version) < 0 ) {
+                    // we don't execute upgraders having a version higher than the version indicated in the module.xml
+                    continue;
+                }
+                $foundVersion = $version;
+                // when multiple version are specified, we take the first one which is ok
+                break;
             }
-            if (jVersionComparator::compareVersion($this->sourceVersion, $upgrader->version) < 0 ) {
+            if (!$foundVersion)
                 continue;
+
+            $upgrader->version = $foundVersion;
+
+            // we have to check now the date of versions
+            // we should not execute the updater in some case.
+            // for example, we have an updater for the 1.2 and 2.3 version
+            // we have the 1.4 installed, and want to upgrade to the 2.5 version
+            // we should not execute the update for 2.3 since modifications have already been
+            // made into the 1.4. The only way to now that, is to compare date of versions
+            if ($upgrader->date != '' && $this->mainInstaller) {
+                $upgraderDate = $this->_formatDate($upgrader->date);
+
+                // the date of the first version installed into the application
+                $firstVersionDate = $this->_formatDate($this->mainInstaller->installerIni->getValue($this->name.'.firstversion.date', $epId));
+                if ($firstVersionDate !== null) {
+                    if ($firstVersionDate >= $upgraderDate)
+                        continue;
+                }
+
+                // the date of the current installed version
+                $currentVersionDate = $this->_formatDate($this->mainInstaller->installerIni->getValue($this->name.'.version.date', $epId));
+                if ($currentVersionDate !== null) {
+                    if ($currentVersionDate >= $upgraderDate)
+                        continue;
+                }
             }
 
             $upgrader->setParameters($this->moduleInfos[$epId]->parameters);
@@ -197,21 +243,22 @@ class jInstallerComponentModule extends jInstallerComponentBase {
                                     $ep->configIni,
                                     $this->moduleInfos[$epId]->dbProfile,
                                     $this->upgradersContexts[$class]);
-
             $list[] = $upgrader;
         }
-
+        // now let's sort upgrader, to execute them in the right order (oldest before newest)
+        usort($list, array($this, 'sortUpgraderList'));
         return $list;
     }
 
     /**
-     * internal use. callback function for the sort of the list of upgraders files
-     * @param array $fileA  informations about the first file
-     * @param array $fileB  informations about the second file
+     * internal use. callback function for the sort of the list of upgraders
+     * @param array $upgA  informations about the first upgrader
+     * @param array $upgB  informations about the second upgrader
      * @return integer   0 if equal, -1 if $versionA < $versionB, 1 if $versionA > $versionB
+     * @private
      */
-    function sortFileList($fileA, $fileB) {
-        return jVersionComparator::compareVersion($fileA[1], $fileB[1]);
+    function sortUpgraderList($upgA, $upgB) {
+        return jVersionComparator::compareVersion($upgA->version, $upgB->version);
     }
 
     public function installFinished($ep) {
@@ -224,4 +271,17 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         $class = get_class($upgrader);
         $this->upgradersContexts[$class] = $upgrader->getContexts();
     }
+
+
+    protected function _formatDate($date) {
+        if ($date !== null) {
+            if (strlen($date) == 10)
+                $date.=' 00:00';
+            else if (strlen($date) > 16) {
+                $date = substr($date, 0, 16);
+            }
+        }
+        return $date;
+    }
+
 }
