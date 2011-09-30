@@ -15,20 +15,20 @@
             </attribute>
          </optional>
          <element name="version">
-            <attribute name="stability">
-               <choice>
-                  <value>pre-alpha</value>
-                  <value>alpha</value>
-                  <value>beta</value>
-                  <value>stable</value>
-                  <value>mature</value>
-               </choice>
-            </attribute>
             <optional>
-               <attribute name="date">
-                  <data type="date" />
+               <attribute name="stability">
+                  <choice>
+                     <value>pre-alpha</value>
+                     <value>alpha</value>
+                     <value>beta</value>
+                     <value>stable</value>
+                     <value>mature</value>
+                  </choice>
                </attribute>
             </optional>
+            <attribute name="date">
+               <data type="date" />
+            </attribute>
             <text />
          </element>
          <oneOrMore>

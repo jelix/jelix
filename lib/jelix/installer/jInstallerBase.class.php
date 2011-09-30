@@ -26,8 +26,27 @@ abstract class jInstallerBase {
      */
     public $name;
 
+
     /**
-     * @var string the version of the component
+     * the versions for which the installer should be called.
+     * Useful for an upgrade which target multiple branches of a project.
+     * Put the version for multiple branches. The installer will be called
+     * only once, for the needed version.
+     * If you don't fill it, the name of the class file should contain the
+     * target version (deprecated behavior though)
+     * @var array $targetVersions list of version by asc order
+     * @since 1.2.6
+     */
+    public $targetVersions = array();
+
+    /**
+     * @var string the date of the release of the update. format: yyyy-mm-dd hh:ii
+     * @since 1.2.6
+     */
+    public $date = '';
+
+    /**
+     * @var string the version for which the installer is called
      */
     public $version = '0';
 

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
-    <info id="jwsdl@modules.jelix.org" name="jwsdl" createdate="">
-        <version stability="stable">1.2</version>
+    <info id="jwsdl@modules.jelix.org" name="jwsdl" createdate="2008-04-13">
+        <version stability="stable" date="2010-12-03">1.2</version>
         <label lang="en-EN">jWSDL</label>
         <description lang="en-EN">WSDL generator for SOAP web services</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
         <copyright>2008 Sylvain de Vathaire</copyright>
         <creator name="Sylvain de Vathaire"/>
-        <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>

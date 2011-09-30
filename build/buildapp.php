@@ -47,6 +47,10 @@ $BUILD_OPTIONS = array(
 'SOURCE_REVISION'=> array(
     false,
     ),
+'TODAY'=> array(
+    false,
+    '',
+    ),
 );
 include(dirname(__FILE__).'/lib/jBuild.inc.php');
 
@@ -57,6 +61,7 @@ if(!$APPNAME){
 }
 $APPDIR = jBuildUtils::normalizeDir($APPNAME);
 $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
+$TODAY = date('Y-m-d H:i');
 
 Env::setFromFile('VERSION',$APPDIR.'/VERSION',true);
 $SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
