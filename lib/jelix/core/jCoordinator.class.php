@@ -291,9 +291,7 @@ class jCoordinator {
 
             $this->errorMessage = $errorLog;
 
-            while (ob_get_level()) {
-                ob_end_clean();
-            }
+            while (ob_get_level() && @ob_end_clean());
 
             $resp = $this->request->getErrorResponse($this->response);
             $resp->outputErrors();
@@ -308,9 +306,9 @@ class jCoordinator {
             // fatal error appeared during init, let's display an HTML page
             // since we don't know the request, we cannot return a response
             // corresponding to the expected protocol
-            while (ob_get_level()) {
-                ob_end_clean();
-            }
+
+            while (ob_get_level() && @ob_end_clean());
+
             // log into file
             @error_log($errorLog->getFormatedMessage(),3, jApp::logPath('errors.log'));
             // if accept text/html
