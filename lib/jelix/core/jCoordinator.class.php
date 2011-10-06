@@ -354,9 +354,7 @@ class jCoordinator {
         if(strpos($toDo , 'ECHOQUIET') !== false){
             $echoAsked = true;
             if(!$doEchoByResponse){
-                while (ob_get_level()) {
-                        ob_end_clean();
-                }
+                while (ob_get_level() && @ob_end_clean());
                 header("HTTP/1.1 500 Internal jelix error");
                 header('Content-type: text/plain');
                 echo 'JELIX PANIC ! Error during initialization !! ';
@@ -366,9 +364,7 @@ class jCoordinator {
         }elseif(strpos($toDo , 'ECHO') !== false){
             $echoAsked = true;
             if(!$doEchoByResponse){
-                while (ob_get_level()) {
-                        ob_end_clean();
-                }
+                while (ob_get_level() && @ob_end_clean());
                 header("HTTP/1.1 500 Internal jelix error");
                 header('Content-type: text/plain');
                 echo $messageLog;
@@ -389,9 +385,7 @@ class jCoordinator {
 
         if(strpos($toDo , 'EXIT') !== false){
             if($doEchoByResponse) {
-                while (ob_get_level()) {
-                        ob_end_clean();
-                }
+                while (ob_get_level() && @ob_end_clean());
                 if ($this->response)
                     $this->response->outputErrors();
                 else if($echoAsked) {
