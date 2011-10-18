@@ -2,7 +2,11 @@
 -- PostgreSQL database dump
 --
 
+DROP TABLE IF EXISTS %%PREFIX%%jacl2_rights;
+DROP TABLE IF EXISTS %%PREFIX%%jacl2_user_group;
 DROP TABLE IF EXISTS %%PREFIX%%jacl2_group;
+DROP TABLE IF EXISTS %%PREFIX%%jacl2_subject;
+
 CREATE TABLE %%PREFIX%%jacl2_group (
     id_aclgrp character varying(50) NOT NULL,
     name character varying(150) NOT NULL DEFAULT '',
@@ -12,7 +16,6 @@ CREATE TABLE %%PREFIX%%jacl2_group (
 );
 -- SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('%%PREFIX%%jacl2_group', 'id_aclgrp'), 1, false);
 
-DROP TABLE IF EXISTS %%PREFIX%%jacl2_rights;
 CREATE TABLE %%PREFIX%%jacl2_rights (
     id_aclsbj character varying(255) NOT NULL,
     id_aclgrp character varying(50) NOT NULL,
@@ -21,7 +24,6 @@ CREATE TABLE %%PREFIX%%jacl2_rights (
     CONSTRAINT %%PREFIX%%jacl2_rights_id_aclsbj_id_aclgrp_id_aclres_pk PRIMARY KEY (id_aclsbj, id_aclgrp, id_aclres)
 );
 
-DROP TABLE IF EXISTS %%PREFIX%%jacl2_subject;
 CREATE TABLE %%PREFIX%%jacl2_subject (
     id_aclsbj character varying(100) NOT NULL,
     label_key character varying(100) DEFAULT NULL,
@@ -29,7 +31,6 @@ CREATE TABLE %%PREFIX%%jacl2_subject (
     CONSTRAINT %%PREFIX%%jacl2_subject_id_aclsbj_pk PRIMARY KEY (id_aclsbj)
 );
 
-DROP TABLE IF EXISTS %%PREFIX%%jacl2_user_group;
 CREATE TABLE %%PREFIX%%jacl2_user_group (
     "login" character varying(50) NOT NULL,
     id_aclgrp character varying(50) NOT NULL,
