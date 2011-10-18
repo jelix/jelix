@@ -26,7 +26,7 @@ class jRdfRequest extends jRequest {
     }
 
     public function isAllowedResponse($respclass){
-        return ('jResponseRdf' == $respclass);
+        return ('jResponseRdf' == $respclass || 'jResponseRedirect' == $respclass);
     }
 }
 

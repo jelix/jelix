@@ -26,6 +26,6 @@ class jCssRequest extends jRequest {
     }
 
     public function isAllowedResponse($respclass){
-        return ('jResponseCss' == $respclass);
+        return ('jResponseCss' == $respclass || 'jResponseRedirect' == $respclass);
     }
 }

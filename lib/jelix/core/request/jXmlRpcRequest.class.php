@@ -57,7 +57,7 @@ class jXmlRpcRequest extends jRequest {
     }
 
     public function isAllowedResponse($respclass){
-        return ('jResponseXmlrpc' == $respclass);
+        return ('jResponseXmlrpc' == $respclass || 'jResponseRedirect' == $respclass);
     }
 
 }

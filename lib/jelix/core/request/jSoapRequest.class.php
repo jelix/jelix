@@ -57,7 +57,7 @@ class jSoapRequest extends jRequest {
     protected function _initParams(){}
 
     public function isAllowedResponse($respclass){
-        return ('jResponseSoap' == $respclass);
+        return ('jResponseSoap' == $respclass || 'jResponseRedirect' == $respclass);
     }
 
 }

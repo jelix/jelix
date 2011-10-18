@@ -60,7 +60,7 @@ class jJsonRpcRequest extends jRequest {
     }
 
     public function isAllowedResponse($respclass){
-        return ('jResponseJsonrpc' == $respclass);
+        return ('jResponseJsonrpc' == $respclass || 'jResponseRedirect' == $respclass);
     }
 
 }
