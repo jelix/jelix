@@ -316,7 +316,7 @@ class UTjInstallerComponent extends UnitTestCase {
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
             $component->init();
 
             $conf =(object) array( 'modules'=>array(
@@ -362,7 +362,7 @@ class UTjInstallerComponent extends UnitTestCase {
             $iniIndex = new testInstallerIniFileModifier("index/config.ini.php");
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
-            $component = new jInstallerComponentModule('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
             $component->init();
 
             $conf =(object) array( 'modules'=>array(
@@ -410,11 +410,11 @@ class UTjInstallerComponent extends UnitTestCase {
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             Mock::generate('jInstaller');
-            file_put_contents(JELIX_APP_TEMP_PATH.'dummyInstaller.ini', '');
+            file_put_contents(jApp::tempPath('dummyInstaller.ini'), '');
             $installer = new MockjInstaller();
-            $installer->installerIni = new jIniFileModifier(JELIX_APP_TEMP_PATH.'dummyInstaller.ini');
+            $installer->installerIni = new jIniFileModifier(jApp::tempPath('dummyInstaller.ini'));
 
-            $component = new testInstallerComponentModule2('testinstall2', JELIX_APP_PATH.'modules/testinstall2/', $installer);
+            $component = new testInstallerComponentModule2('testinstall2', jApp::appPath('modules/testinstall2/'), $installer);
             $component->init();
 
             // 1.1  1.1.2* 1.1.3** 1.1.5 1.2.2** 1.2.4*
