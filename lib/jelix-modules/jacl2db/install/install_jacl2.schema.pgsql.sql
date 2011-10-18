@@ -5,6 +5,7 @@
 DROP TABLE IF EXISTS %%PREFIX%%jacl2_rights;
 DROP TABLE IF EXISTS %%PREFIX%%jacl2_user_group;
 DROP TABLE IF EXISTS %%PREFIX%%jacl2_group;
+DROP TABLE IF EXISTS %%PREFIX%%jacl2_subject_group;
 DROP TABLE IF EXISTS %%PREFIX%%jacl2_subject;
 
 CREATE TABLE %%PREFIX%%jacl2_group (
@@ -37,7 +38,7 @@ CREATE TABLE %%PREFIX%%jacl2_user_group (
     CONSTRAINT %%PREFIX%%jacl2_user_group_login_pk PRIMARY KEY ("login", id_aclgrp)
 );
 
-DROP TABLE IF EXISTS %%PREFIX%%jacl2_subject_group;
+
 CREATE TABLE %%PREFIX%%jacl2_subject_group (
 id_aclsbjgrp character varying( 50 ) NOT NULL ,
 label_key character varying( 60 ) NOT NULL ,
