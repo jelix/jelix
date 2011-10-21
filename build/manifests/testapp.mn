@@ -178,6 +178,7 @@ cd testapp/modules/jelix_tests/templates
   test_plugin_counter_reset_all.tpl
   test_plugin_counter_reset.tpl
   test_plugin_counter.tpl
+  test_plugin_jrooturl.tpl
   test_plugin_jurl.tpl
   test_plugin_pagelinks.tpl
   test_truncate_html.tpl
@@ -276,6 +277,7 @@ cd testapp/modules/jelix_tests/tests/
   utils.jinifilemodifier.html_cli.php
   utils.jclasses.html_cli.php
   utils.jmailer.html_cli.php
+  utils.jrooturl.html_cli.php
   utils.jversioncomparator.html_cli.php
   test1.pu.php
   test2.unit.pu.php

@@ -608,6 +608,7 @@ cd lib/jelix/plugins/tpl/html
   function.jmessage.php
   function.jfullurl.php
   function.jlocale.php
+  function.jrooturl.php
   function.jurl.php
   function.link_to_remote.php
   function.mailto.php
