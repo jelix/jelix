@@ -10,7 +10,8 @@
 */
 
 /**
-* cache driver for data stored in a memory
+* cache driver for data stored in Memcached. Use the memcache extension of PHP.
+* This plugin should be used with version 3.0.1 or more of the memcache extension
 * @package jelix
 * @subpackage plugins_cache_memcached
 */
@@ -59,7 +60,7 @@ class memcacheCacheDriver implements jICacheDriver {
         if (!extension_loaded('memcache')) {
             throw new jException('jelix~cache.error.memcache.extension.missing',array($this->profil_name, ''));
         }
-        if (version_compare(phpversion('memcache'), '3.0.1') == -1) { // memcache >= 3.0.1
+        if (version_compare(phpversion('memcache'), '3.0.1') == -1) { // memcache should be >= 3.0.1
             throw new jException('jelix~cache.error.memcache.extension.badversion.3',array($this->profil_name));
         }
 
