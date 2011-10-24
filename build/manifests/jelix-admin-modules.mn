@@ -2,7 +2,7 @@ cd lib/jelix-admin-modules/
    CREDITS
 
 cd lib/jelix-admin-modules/master_admin/
-   module.xml
+*  module.xml
 cd lib/jelix-admin-modules/master_admin/classes
    masterAdminMenuItem.class.php
 cd lib/jelix-admin-modules/master_admin/controllers
@@ -25,7 +25,7 @@ cd lib/jelix-admin-modules/master_admin/zones/
   dashboard.zone.php
 
 cd lib/jelix-admin-modules/jacl2db_admin
-   module.xml
+*  module.xml
    events.xml
    urls.xml
 cd lib/jelix-admin-modules/jacl2db_admin/classes/
@@ -50,7 +50,7 @@ cd lib/jelix-admin-modules/jacl2db_admin/templates
   groups_edit.tpl
 
 cd lib/jelix-admin-modules/jauthdb_admin
-   module.xml
+*  module.xml
    events.xml
    urls.xml
 cd lib/jelix-admin-modules/jauthdb_admin/classes/

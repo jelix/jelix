@@ -4,7 +4,7 @@ cd lib/jelix-modules
   CREDITS
 
 cd lib/jelix-modules/jacldb
-  module.xml
+* module.xml
   events.xml
 cd lib/jelix-modules/jacldb/classes
 !  jacldb.listener.php
@@ -29,7 +29,7 @@ cd lib/jelix-modules/jacldb/install/var/config
   jacl.coord.ini.php
 
 cd lib/jelix-modules/jacl2db
-  module.xml
+* module.xml
   events.xml
 cd lib/jelix-modules/jacl2db/classes
 !  jacl2db.listener.php
@@ -66,7 +66,7 @@ cd lib/jelix-modules/jacl2db/install/var/config
   jacl2.coord.ini.php
 
 cd lib/jelix-modules/jauthdb
-  module.xml
+* module.xml
 cd lib/jelix-modules/jauthdb/daos
   jelixuser.dao.xml
 cd lib/jelix-modules/jauthdb/install/
@@ -77,7 +77,7 @@ cd lib/jelix-modules/jauthdb/install/
   upgrade_to_1.2b1pre.1303_newdao.php
 
 cd lib/jelix-modules/jauth
-  module.xml
+* module.xml
   events.xml
   urls.xml
   urls_ws.xml
@@ -135,7 +135,7 @@ cd lib/jelix-modules/junittests/tests
 #endif
 
 cd lib/jelix-modules/jWSDL
-  module.xml
+* module.xml
 cd lib/jelix-modules/jWSDL/controllers
   WSDL.classic.php
 cd lib/jelix-modules/jWSDL/templates
