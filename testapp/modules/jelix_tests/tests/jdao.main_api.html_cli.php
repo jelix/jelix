@@ -16,6 +16,7 @@ class UTDao extends jUnitTestCaseDb {
 
     function testStart() {
         $this->emptyTable('product_test');
+        $this->emptyTable('labels_test');
     }
 
     function testInstanciation() {
@@ -122,6 +123,32 @@ class UTDao extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('product_test', $this->records);
 
     }
+
+    protected $labelsIP1;
+    protected $recordsLabelIP;
+
+
+    function testInsertpatternOnPk() {
+        $dao = jDao::create ('labels_insertpattern');
+
+        $this->labelsIP1 = jDao::createRecord ('labels_insertpattern');
+        $this->labelsIP1->key = 1;
+        $this->labelsIP1->keyalias = 'alias';
+        $res = $dao->insert($this->labelsIP1);
+
+        $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
+
+        $this->recordsLabelIP = array(
+            array('key'=>$this->labelsIP1->key,
+            'lang'=>date('Y'),
+            'keyalias'=>$this->labelsIP1->keyalias,
+            'label'=>date('Y'),
+           )
+        );
+        $this->assertTableContainsRecords('labels_test', $this->recordsLabelIP);
+
+    }
+
 
     function testGet() {
         $dao = jDao::create ('products');

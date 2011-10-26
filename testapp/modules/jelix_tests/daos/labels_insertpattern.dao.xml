@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="labels_test" primarykey="key,lang" />
+   </datasources>
+   <record>
+      <property name="key"   fieldname="key" datatype="int"/>
+      <property name="lang"  fieldname="lang" datatype="string" insertpattern="YEAR(NOW())"/>
+      <property name="keyalias"  fieldname="keyalias" datatype="string"/>
+      <property name="label" fieldname="label" datatype="string"  required="true" insertpattern="YEAR(NOW())"/>
+   </record>
+   <factory>
+   </factory>
+</dao>
+

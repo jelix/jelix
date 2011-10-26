@@ -188,6 +188,7 @@ cd testapp/modules/jelix_tests/daos
   products.dao.xml
   products_events.dao.xml
   product_tags.dao.xml
+  labels_insertpattern.dao.xml
   description.dao.xml
   labels.dao.xml
   labels1.dao.xml
