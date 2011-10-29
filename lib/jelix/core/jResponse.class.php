@@ -145,13 +145,6 @@ abstract class jResponse {
         foreach($this->_httpHeaders as $ht=>$hc)
             header($ht.': '.$hc);
         $this->_httpHeadersSent=true;
-        /*
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-        header("Cache-Control: no-store, no-cache, must-revalidate");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
-        */
     }
     
     
@@ -172,19 +165,35 @@ abstract class jResponse {
         }
     } 
     
+    /**
+     * check if the request is of type GET or HEAD
+     */
+    protected function _checkRequestType(){
+        
+        $allowedTypes = array('GET', 'HEAD');
+        
+        if(in_array($_SERVER['REQUEST_METHOD'], $allowedTypes)){
+            return true;
+        }
+        else {
+#ifndef PROD_VERSION
+            trigger_error(jLocale::get('jelix~errors.rep.bad.request.method'), E_USER_WARNING);
+#endif
+            return false;
+        }
+    }
+    
+    
     
     /**
     * Clean the differents caches headers
     */  
     public function cleanCacheHeaders(){
-            unset($this->_httpHeaders['Cache-Control']);
-            $this->addHttpHeader('Cache-Control', '');
-                
-            unset($this->_httpHeaders['Expires']);
-            $this->addHttpHeader('Expires', '');    
-            
-            unset($this->_httpHeaders['Pragma']);
-            $this->addHttpHeader('Pragma', '');
+        $toClean = array('Cache-Control', 'Expires', 'Pragma' );
+        foreach($toClean as $h){
+            unset($this->_httpHeaders[$h]);
+            $this->addHttpHeader($h, '');
+        }
     }
     
     
@@ -195,15 +204,17 @@ abstract class jResponse {
      * @param boolean $cleanCacheHeaderTrue for clean/delete other cache headers. Default : true. 
      *
      * @see _normalizeDate
-     * 
-     * @return Type    Description
      */
     public function setExpires($date, $cleanCacheHeader = true) {
-            if($cleanCacheHeader)
-                $this->cleanCacheHeaders();
+        
+        if(!$this->_checkRequestType())
+            return;
+        
+        if($cleanCacheHeader)
+            $this->cleanCacheHeaders();
 
-            $date = $this->_normalizeDate($date);
-            $this->addHttpHeader('Expires', $date);
+        $date = $this->_normalizeDate($date);
+        $this->addHttpHeader('Expires', $date);
     }
     
 
@@ -216,45 +227,65 @@ abstract class jResponse {
      * @param boolean $cleanCacheHeaderTrue for clean/delete other cache headers. Default : true. 
      */
     public function setLifetime($time, $sharedCache = false, $cleanCacheHeader = true) {
-            if($cleanCacheHeader)
-                $this->cleanCacheHeaders();
-                
-            if($sharedCache) {
-                $type='public';
-            }
-            else {
-                $type='private';
-                $this->addHttpHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + $time));
-            }
-    
-            $this->addHttpHeader('Cache-Control', $type.', '.($sharedCache ? 's-' : '').'maxage='.$time);
+        
+        if(!$this->_checkRequestType())
+            return;
+           
+        if($cleanCacheHeader)
+            $this->cleanCacheHeaders();
+        
+        $type = $sharedCache ? 'public' : 'private';
+
+        $this->addHttpHeader('Cache-Control', $type.', '.($sharedCache ? 's-' : '').'maxage='.$time);
     }
     
     /**
-     * Use the HTPP header Last-Modified to see if the ressource in client cache is fresh
+     * Use the HTPP headers Last-Modified to see if the ressource in client cache is fresh
      * 
      * @param mixed $dateLastModified Can be a jDateTime object, a DateTime object or a string understandable by strtotime
      * @param boolean $cleanCacheHeader True for clean/delete other cache headers. Default : true. 
      * 
      * @return boolean    True if the client ressource version is fresh, false otherwise
      */
-    public function activateHttpCache($dateLastModified, $cleanCacheHeader = true){
+    public function isValidCache($dateLastModified = null, $etag = null, $cleanCacheHeader = true){
         
-        $dateLastModified = $this->_normalizeDate($dateLastModified);
+        if(!$this->_checkRequestType())
+            return false;
+        
+        $notModified = false;
         
         if($cleanCacheHeader)
             $this->cleanCacheHeaders();
+         
+        if($dateLastModified != null){
+            $dateLastModified = $this->_normalizeDate($dateLastModified);
+            $lastModified = $GLOBALS['gJCoord']->request->header('If-Modified-Since');
+            if ($lastModified !== null && $lastModified == $dateLastModified) {
+                $notModified = true;
+            }
+            else {
+                $this->addHttpHeader('Last-Modified', $dateLastModified);
+            }
+        }
         
-        $lastModified = $GLOBALS['gJCoord']->request->header('If-Modified-Since');
-        
-        $notModified = false;
-        if ($lastModified !== null && $lastModified == $dateLastModified) {
-            $notModified = true;
+        if($etag != null){
+            $headerEtag = $GLOBALS['gJCoord']->request->header('If-None-Match');
+            if ($headerEtag !== null && $etag == $headerEtag) {
+                $notModified = true;
+            }
+            else {
+                $this->addHttpHeader('Etag', $etag);
+            }
+            
+        }
+
+       if($notModified) {
             $this->_outputOnlyHeaders = true;
             $this->setHttpStatus(304, 'Not Modified');
-        }
-        else {
-            $this->addHttpHeader('Last-Modified', $dateLastModified);
+            
+            $toClean = array('Allow', 'Content-Encoding', 'Content-Language', 'Content-Length', 'Content-MD5', 'Content-Type', 'Last-Modified', 'Etag');
+            foreach($toClean as $h)
+                unset($this->_httpHeaders[$h]);
         }
 
         return $notModified;

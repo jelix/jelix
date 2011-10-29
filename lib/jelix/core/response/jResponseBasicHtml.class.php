@@ -190,6 +190,11 @@ class jResponseBasicHtml extends jResponse {
      */
     public function output(){
 
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
+    
         foreach($this->plugins as $name=>$plugin)
             $plugin->afterAction();
 

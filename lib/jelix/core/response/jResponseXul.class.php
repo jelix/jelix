@@ -101,6 +101,12 @@ class jResponseXul extends jResponse {
      * @return boolean    true if it's ok
      */
     public function output(){
+        
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
+        
         $this->doAfterActions();
         if($this->bodyTpl != '') {
             $this->body->meta($this->bodyTpl);

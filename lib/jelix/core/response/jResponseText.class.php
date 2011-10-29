@@ -30,6 +30,12 @@ class jResponseText extends jResponse {
      * @return boolean    true si it's ok
      */
     public function output(){
+        
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
+        
         global $gJConfig;
         $this->addHttpHeader('Content-Type','text/plain;charset='.$gJConfig->charset,false);
         $this->_httpHeaders['Content-length']=strlen($this->content);

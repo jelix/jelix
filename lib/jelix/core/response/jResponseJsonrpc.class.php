@@ -32,6 +32,12 @@ final class jResponseJsonRpc extends jResponse {
 
 
     public function output(){
+        
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
+        
         global $gJCoord;
 
         $this->_httpHeaders['Content-Type'] = "application/json";

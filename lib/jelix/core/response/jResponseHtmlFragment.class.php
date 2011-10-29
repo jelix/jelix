@@ -60,6 +60,11 @@ class jResponseHtmlFragment extends jResponse {
     */
     final public function output(){
 
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
+    
         global $gJConfig;
 
         $this->doAfterActions();
