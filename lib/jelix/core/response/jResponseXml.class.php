@@ -79,6 +79,12 @@ class jResponseXml extends jResponse {
      * @return boolean    true if ok
      */
     final public function output(){
+        
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
+        
         $this->_httpHeaders['Content-Type']='text/xml;charset='.$this->_charset;
 
         if(is_string($this->content)) {

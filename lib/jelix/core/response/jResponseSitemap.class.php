@@ -89,6 +89,12 @@ class jResponseSitemap extends jResponse {
      * @return boolean true if generation is ok, else false
      */
     final public function output() {
+        
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
+        
         $this->_httpHeaders['Content-Type'] = 'application/xml;charset=UTF-8';
 
         if (!is_null($this->urlSitemap)) {

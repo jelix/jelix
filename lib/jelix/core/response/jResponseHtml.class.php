@@ -170,6 +170,11 @@ class jResponseHtml extends jResponseBasicHtml {
      * @return boolean    true if the generated content is ok
      */
     public function output(){
+    
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
 
         foreach($this->plugins as $name=>$plugin)
             $plugin->afterAction();
