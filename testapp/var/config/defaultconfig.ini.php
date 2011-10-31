@@ -131,3 +131,11 @@ driver = db
 
 [acl2]
 driver = db
+
+[rootUrls]
+/themes = "http://themes.junittest.com/"
+test = "http://www.junittest.com/"
+secure_test = "https://www.junittest.com/"
+foo_relPath="foo"
+foo_absPath="/foo"
+

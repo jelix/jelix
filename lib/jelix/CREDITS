@@ -304,6 +304,7 @@ Brice Tence (aka brayce/bricet)
  - fixed the support of meta in included template (#1196)
  - http version setting (#1411)
  - support of referer in error lof messages (#1421)
+ - added jUrl::getRootUrl*() methods and jrooturl html jTpl plugin (#1073)
 
 Christophe Thiriot (aka Doubleface)
  - testor
