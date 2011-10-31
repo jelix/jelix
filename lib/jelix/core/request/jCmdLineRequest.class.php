@@ -94,5 +94,9 @@ class jCmdLineRequest extends jRequest {
     function getIP() {
         return '127.0.0.1';
     }
+
+    public function isAllowedResponse($response){
+        return ($response instanceof $this->authorizedResponseClass);
+    }
 }
 

@@ -148,7 +148,10 @@ abstract class jRequest {
      * @return boolean true if the given class is allowed for the current request
      */
     public function isAllowedResponse($response){
-        return ($response instanceof $this->authorizedResponseClass);
+        return ( ($response instanceof $this->authorizedResponseClass)
+                || ($c = get_class($response)) == 'jResponseRedirect'
+                || $c == 'jResponseRedirectUrl'
+                );
     }
 
     /**
