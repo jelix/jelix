@@ -71,6 +71,12 @@ final class jResponseRdf extends jResponse {
     public $asElement=array();
 
     public function output(){
+        
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
+        
         $this->_httpHeaders['Content-Type']='text/xml;charset='.$GLOBALS['gJConfig']->charset;
 
         if ($this->template !='') {

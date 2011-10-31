@@ -50,6 +50,11 @@ class jResponseAtom10 extends jResponseXMLFeed {
      */
     final public function output (){
 
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
+    
         $this->_httpHeaders['Content-Type'] =
                 'application/atom+xml;charset=' . $this->charset;
 

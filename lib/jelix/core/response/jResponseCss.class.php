@@ -34,6 +34,12 @@ class jResponseCss extends jResponse {
      * @return boolean    true if it's ok
      */
     public function output(){
+        
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
+        
         global $gJConfig;
         $this->_httpHeaders['Content-Type']='text/css;charset='.$gJConfig->charset;
         $this->_httpHeaders['Content-length']=strlen($this->content);
