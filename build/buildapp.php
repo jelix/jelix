@@ -64,6 +64,7 @@ $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
 $TODAY = date('Y-m-d H:i');
 
 Env::setFromFile('VERSION',$APPDIR.'/VERSION',true);
+$VERSION = preg_replace('/\s+/m', '', $VERSION);
 $SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 
 $IS_NIGHTLY = (strpos($VERSION,'SERIAL') !== false);
@@ -80,6 +81,7 @@ else {
 
 
 Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
+$LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_LIB_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 
 if($IS_LIB_NIGHTLY){
