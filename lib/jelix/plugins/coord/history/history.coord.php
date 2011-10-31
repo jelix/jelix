@@ -24,10 +24,12 @@ class historyCoordPlugin implements jICoordPlugin {
         if( !empty($params['history.add']) && $params['history.add']
             && $_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            if( !isset($_SESSION[$this->config['session_name']]) )
-                $_SESSION[$this->config['session_name']] = array();
+            $sname = $this->config['session_name'];
 
-            $history = & $_SESSION[$this->config['session_name']];
+            if( !isset($_SESSION[$sname]) )
+                $_SESSION[$sname] = array();
+
+            $history = & $_SESSION[$sname];
 
             global $gJCoord;
             $page['params'] = $gJCoord->request->params;
@@ -78,6 +80,8 @@ class historyCoordPlugin implements jICoordPlugin {
 
     public function change( $key, $val ) {
         $sn = $this->config['session_name'];
+        if (!isset($_SESSION[$sn]))
+            return;
         $page = array_pop($_SESSION[$sn]);
         $page[$key] = $val;
 
