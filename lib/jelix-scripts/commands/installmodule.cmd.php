@@ -13,7 +13,7 @@ class installmoduleCommand extends JelixScriptCommand {
     public  $allowed_options=array('-v'=>false, '-p'=>true);
     public  $allowed_parameters=array('module'=>true,'...'=>false);
 
-    public  $syntaxhelp = '[-v] [-p "param1;param2=value;..."] MODULE [MODULE [....]]';
+    public  $syntaxhelp = '[-v] [-p "param1;param2=value;..."] [-ep ENTRYPOINT] MODULE [MODULE [....]]';
     public  $help = '';
 
     function __construct($config){
@@ -26,6 +26,7 @@ class installmoduleCommand extends JelixScriptCommand {
     Option -v : mode verbeux.
            -p : indique des paramètres d'installation, valable que si un seul
                 module est indiqué
+           -ep : spécifie un point d'entrée pour l'installation
     ",
             'en'=>"
     Install or upgrade given modules even if there are not activated.
@@ -34,6 +35,7 @@ class installmoduleCommand extends JelixScriptCommand {
 
     Option -v: verbose mode.
            -p: parameters for the installation, valid if only one module is indicated
+           -ep: specify an entrypoint for the installation
     ",
     );
         parent::__construct($config);
