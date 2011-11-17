@@ -46,10 +46,14 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
             $gJCoord->response->addCSSLink($param,$params,true);
             break;
         case 'cssie7':
-            $gJCoord->response->addCSSLink($param,$params,'IE 7');
+        case 'cssie8':
+        case 'cssie9':
+            $gJCoord->response->addCSSLink($param,$params,'IE '.substr($method,-1,1));
             break;
         case 'cssltie7':
-            $gJCoord->response->addCSSLink($param,$params,'lt IE 7');
+        case 'cssltie8':
+        case 'cssltie9':
+            $gJCoord->response->addCSSLink($param,$params,'lt IE '.substr($method,-1,1));
             break;
         case 'csstheme':
             $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,$params);
@@ -58,10 +62,14 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
             $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,$params,true);
             break;
         case 'cssthemeie7':
-            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,$params,'IE 7');
+        case 'cssthemeie8':
+        case 'cssthemeie9':
+            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,$params,'IE '.substr($method,-1,1));
             break;
         case 'cssthemeltie7':
-            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,$params,'lt IE 7');
+        case 'cssthemeltie8':
+        case 'cssthemeltie9':
+            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,$params,'lt IE '.substr($method,-1,1));
             break;
         case 'style':
             if(is_array($param)){
