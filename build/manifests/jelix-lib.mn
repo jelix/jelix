@@ -147,6 +147,7 @@ cd lib/jelix/core-modules/jelix/controllers
 ! error.xmlrpc.php
 ! error.rdf.php
   jforms.classic.php
+  www.classic.php
 cd lib/jelix/core-modules/jelix/daos
    jsession.dao.xml
    jcache.dao.xml
@@ -613,8 +614,10 @@ cd lib/jelix/plugins/tpl/html
   function.link_to_remote.php
   function.mailto.php
   function.pagelinks.php
+  function.resurl.php
   function.urljsstring.php
   meta.html.php
+  meta.htmlmodule.php
   modifier.nl2br.php
 
 cd lib/jelix/plugins/tpl/ltx2pdf

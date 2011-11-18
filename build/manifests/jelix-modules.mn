@@ -123,8 +123,6 @@ cd lib/jelix-modules/junittests/templates
   main.tpl
 cd lib/jelix-modules/junittests/install
   install.php
-cd lib/jelix-modules/junittests/install/www/tests/
-  design.css
 cd lib/jelix-modules/junittests/install/scripts
   tests.php
 cd lib/jelix-modules/junittests/install/var/log-cli
@@ -132,6 +130,8 @@ cd lib/jelix-modules/junittests/install/var/config/cmdline
   configtests.ini.php
 cd lib/jelix-modules/junittests/tests
   jrunnerpreparer.html_cli.unit.php
+cd lib/jelix-modules/junittests/www
+  design.css
 #endif
 
 cd lib/jelix-modules/jWSDL

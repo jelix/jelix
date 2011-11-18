@@ -145,8 +145,6 @@ class defaultCtrl extends jController {
         $rep->body->assign('basepath',$GLOBALS['gJConfig']->urlengine['basePath']);
         $rep->body->assign('isurlsig', $GLOBALS['gJConfig']->urlengine['engine'] == 'significant');
 
-        $rep->addCSSLink($GLOBALS['gJConfig']->urlengine['basePath'].'tests/design.css');
-
         $runnerPreparer = jClasses::create('junittests~jrunnerpreparer');
         $this->allTestsList = $runnerPreparer->getTestsList('html');
         $this->category = $this->param('categ' , false );

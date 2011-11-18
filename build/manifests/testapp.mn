@@ -28,7 +28,6 @@ cd testapp/www/foo
 cd testapp/www/design
   screen.css
 cd testapp/www/tests
-  design.css
   testinc1.js
   testinc2.js
 cd testapp/www/qunit

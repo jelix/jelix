@@ -206,6 +206,9 @@ cd lib/jelix-modules/jauthdb/install
   install_jauth.data.sqlite.sql
   _installclass.php
 
+cd lib/jelix-modules/junittests/install/www/tests/
+  design.css
+
 cd lib/json
   JSON.php
   LICENSE

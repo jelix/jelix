@@ -1,0 +1,39 @@
+<?php
+/**
+* @package    jelix-modules
+* @subpackage jelix
+* @author     Laurent Jouanneau
+* @copyright  2011 Laurent Jouanneau
+* @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+*/
+
+/**
+ * @package    jelix-modules
+ * @subpackage jelix
+ */
+class wwwCtrl extends jController {
+    
+    public function getfile() {
+        $module = $this->param('targetmodule');
+        global $gJConfig, $gJCoord;
+
+        if (!$gJCoord->isModuleEnabled($module) || $gJConfig->modules[$module.'.access'] < 2) {
+            throw new jException('jelix~errors.module.untrusted',$module);
+        }
+
+        $rep = $this->getResponse('binary');
+        $rep->doDownload = false;
+        $dir = $gJCoord->getModulePath($module).'www/';
+        jLog::log($dir.str_replace('..', '', $this->param('file')));
+        $rep->fileName = realpath($dir.str_replace('..', '', $this->param('file')));
+        if (strpos($rep->fileName, $dir) !==0) {
+            $rep = $this->getResponse('html', true);
+            $rep->bodyTpl = 'jelix~404.html';
+            $rep->setHttpStatus('404', 'Not Found');
+            return $rep;
+        }
+        $rep->mimeType = jFile::getMimeTypeFromFilename($rep->fileName);
+        return $rep;
+    }
+}
+
