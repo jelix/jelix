@@ -91,6 +91,7 @@ class jCmdlineCoordinator extends jCoordinator {
                 $resp = $this->response;
             }
             else {
+                require_once(JELIX_LIB_CORE_PATH.'response/jResponseCmdline.class.php');
                 $resp = $this->response = new jResponseCmdline();
             }
             $resp->outputErrors();
