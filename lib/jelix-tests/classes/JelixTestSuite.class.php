@@ -1,5 +1,4 @@
 <?php
-PHP_CodeCoverage_Filter::getInstance()->addFileToBlacklist(__FILE__, 'PHPUNIT');
 
 class JelixTestSuite extends PHPUnit_Framework_TestSuite {
     protected $module = null;

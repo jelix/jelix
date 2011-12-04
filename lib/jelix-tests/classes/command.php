@@ -13,8 +13,8 @@ require_once(dirname(__FILE__).'/JelixTestSuite.class.php');
 require_once(dirname(__FILE__).'/junittestcase.class.php');
 require_once(dirname(__FILE__).'/junittestcasedb.class.php');
 require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
-
-PHP_CodeCoverage_Filter::getInstance()->addFileToBlacklist(__FILE__, 'PHPUNIT');
+require_once('PHPUnit/Runner/TestCollector.php');
+require_once('PHPUnit/Runner/IncludePathTestCollector.php');
 
 class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
@@ -24,11 +24,49 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
     protected $testType = '';
 
+    protected $version36 = false;
+
     function __construct() {
         $this->longOptions['all-modules'] = null;
         $this->longOptions['module'] = null;
         $this->longOptions['entrypoint='] = null;
         $this->longOptions['testtype='] = null;
+        $this->version36 = (version_compare(PHPUnit_Runner_Version::id(), '3.6')>-1);
+    }
+
+
+    /**
+     * @param boolean $exit
+     */
+    public static function main($exit = TRUE)
+    {
+        $command = new jelix_TextUI_Command;
+        return $command->run($_SERVER['argv'], $exit);
+    }
+
+
+    protected function createRunner()
+    {
+        if ($this->version36) {
+            $filter = new PHP_CodeCoverage_Filter();
+        }
+        else {
+            $filter = PHP_CodeCoverage_Filter::getInstance();
+        }
+
+        $filter->addFileToBlacklist(__FILE__, 'PHPUNIT');
+        $dir = dirname(__FILE__);
+        $filter->addFileToBlacklist($dir.'/JelixTestSuite.class.php', 'PHPUNIT');
+        $filter->addFileToBlacklist($dir.'/junittestcase.class.php', 'PHPUNIT');
+        $filter->addFileToBlacklist($dir.'/junittestcasedb.class.php', 'PHPUNIT');
+        $filter->addFileToBlacklist(dirname($dir).'/phpunit.inc.php', 'PHPUNIT');
+
+        if ($this->version36) {
+            return new PHPUnit_TextUI_TestRunner($this->arguments['loader'], $filter);
+        }
+        else {
+            return new PHPUnit_TextUI_TestRunner($this->arguments['loader']);
+        }
     }
 
     protected function handleCustomTestSuite() {
@@ -162,6 +200,6 @@ Specific options for Jelix:
   --entrypoint <ep>       Run tests in the context (same configuration) of the given entry point. By default: 'index'
   --testtype <type>       Run only tests of the given type, ie. tests that have a filename suffix like '.<type>.pu.php'
 
-        ";
+";
     }
 }
