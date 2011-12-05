@@ -13,8 +13,7 @@ require_once(dirname(__FILE__).'/JelixTestSuite.class.php');
 require_once(dirname(__FILE__).'/junittestcase.class.php');
 require_once(dirname(__FILE__).'/junittestcasedb.class.php');
 require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
-require_once('PHPUnit/Runner/TestCollector.php');
-require_once('PHPUnit/Runner/IncludePathTestCollector.php');
+
 
 class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
@@ -32,6 +31,11 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
         $this->longOptions['entrypoint='] = null;
         $this->longOptions['testtype='] = null;
         $this->version36 = (version_compare(PHPUnit_Runner_Version::id(), '3.6')>-1);
+        
+        if (!$this->version36) {
+            require_once('PHPUnit/Runner/TestCollector.php');
+            require_once('PHPUnit/Runner/IncludePathTestCollector.php');
+        }
     }
 
 
@@ -150,12 +154,22 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
         foreach ($moduleList as $module=>$path) {
             $suite = new JelixTestSuite($module);
-            $testCollector = new PHPUnit_Runner_IncludePathTestCollector(
-                array($path),
-                $type
-            );
+            if ($this->version36) {
+                $fileIteratorFacade = new File_Iterator_Facade;
+                $files = $fileIteratorFacade->getFilesAsArray(
+                  $path,
+                  $type
+                );
+                $suite->addTestFiles($files);
+            }
+            else {
+                $testCollector = new PHPUnit_Runner_IncludePathTestCollector(
+                    array($path),
+                    $type
+                );
+                $suite->addTestFiles($testCollector->collectTests());
+            }
 
-            $suite->addTestFiles($testCollector->collectTests());
             if (count($suite->tests()) > 0)
                 $topsuite->addTestSuite($suite);
         }
@@ -172,12 +186,21 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
         if (isset($moduleList[$module])) {
             $type = ($this->testType?'.'.$this->testType: '').'.pu.php';
             $suite = new JelixTestSuite($module);
-            $testCollector = new PHPUnit_Runner_IncludePathTestCollector(
-                array($moduleList[$module]),
-                $type
-            );
-
-            $suite->addTestFiles($testCollector->collectTests());
+            if ($this->version36) {
+                $fileIteratorFacade = new File_Iterator_Facade;
+                $files = $fileIteratorFacade->getFilesAsArray(
+                  $moduleList[$module],
+                  $type
+                );
+                $suite->addTestFiles($files);
+            }
+            else {
+                $testCollector = new PHPUnit_Runner_IncludePathTestCollector(
+                    array($moduleList[$module]),
+                    $type
+                );
+                $suite->addTestFiles($testCollector->collectTests());
+            }
             if (count($suite->tests()) > 0)
                 $topsuite->addTestSuite($suite);
         }
