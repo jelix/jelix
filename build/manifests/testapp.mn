@@ -308,6 +308,7 @@ cd testapp/tests-jelix/
   bootstrap.php
   phpunit.xml
 cd testapp/tests-jelix/jelix/core/
+  autoloaderTest.php
   jAppContextTest.php
 cd testapp/tests-jelix/jelix/installer/
   installAppTest.php

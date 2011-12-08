@@ -42,6 +42,7 @@ cd lib/jelix/controllers
 
 cd lib/jelix/core
 ! defaultconfig.ini.php
+  jAutoloader.class.php
 * jConfigCompiler.class.php
   jSoapCoordinator.class.php
   jCmdlineCoordinator.class.php
