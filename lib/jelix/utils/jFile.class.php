@@ -188,6 +188,7 @@ class jFile {
             return self::getMimeTypeFromFilename($file);
         }
     }
+#endif
 
     /**
      * get the MIME Type of a file, only with its name
@@ -197,8 +198,7 @@ class jFile {
      * @since 1.1.10
      */
     public static function getMimeTypeFromFilename($fileName){
-        $f = explode('.', $fileName);
-        $ext = strtolower(array_pop($f));
+        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         if (array_key_exists($ext, self::$mimeTypes)) {
             return self::$mimeTypes[$ext];
         }
@@ -316,5 +316,4 @@ class jFile {
         'odt' => 'application/vnd.oasis.opendocument.text',
         'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
     );
-#endif
 }
