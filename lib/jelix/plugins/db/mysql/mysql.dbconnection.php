@@ -131,6 +131,7 @@ class mysqlDbConnection extends jDbConnection {
 
     protected function _doLimitQuery ($queryString, $offset, $number){
         $queryString.= ' LIMIT '.$offset.','.$number;
+        $this->lastQuery = $queryString;
         $result = $this->_doQuery($queryString);
         return $result;
     }

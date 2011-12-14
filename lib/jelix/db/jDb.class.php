@@ -48,6 +48,7 @@ class jSQLLogMessage extends jLogMessage {
     protected $startTime = 0;
     protected $endTime = 0;
     protected $trace = array();
+    public $originalQuery = '';
 
     public function __construct($message) {
         $this->category = 'sql';
@@ -56,6 +57,11 @@ class jSQLLogMessage extends jLogMessage {
 
         $this->trace = debug_backtrace();
         array_shift($this->trace); // remove the current __construct call
+    }
+
+    public function setRealQuery($sql) {
+        $this->originalQuery = $this->message;
+        $this->message = $sql;
     }
 
     public function endQuery() {
@@ -102,6 +108,8 @@ class jSQLLogMessage extends jLogMessage {
         $dao = $this->getDao();
         if ($dao)
             $message.=', from dao:'.$dao."\n";
+        if ($this->message != $this->originalQuery)
+            $message.= 'Original query: '.$this->originalQuery."\n";
 
         $traceLog="";
         foreach($this->trace as $k=>$t){

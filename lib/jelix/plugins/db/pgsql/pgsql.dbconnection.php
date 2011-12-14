@@ -167,6 +167,7 @@ class pgsqlDbConnection extends jDbConnection {
         if($number < 0)
             $number='ALL';
         $queryString.= ' LIMIT '.$number.' OFFSET '.$offset;
+        $this->lastQuery = $queryString;
         $result = $this->_doQuery($queryString);
         return $result;
     }
