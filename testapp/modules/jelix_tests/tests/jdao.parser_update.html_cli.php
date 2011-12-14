@@ -200,8 +200,7 @@ class UTDao_parser_update extends jUnitTestCase {
             <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
-        </object>'),        
-        
+        </object>'),
     );
 
     function testMethods() {
@@ -238,6 +237,70 @@ class UTDao_parser_update extends jUnitTestCase {
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }
+        }
+    }
+
+    function testMethods2() {
+        $dao ='<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+  <datasources>
+    <primarytable name="product" primarykey="product_id" />
+  </datasources>
+  <record>
+    <property name="id" fieldname="product_id" datatype="autoincrement" />
+    <property name="price" datatype="float" />
+    <property name="price_big" datatype="float" />
+  </record>
+</dao>';
+
+        $parser = new testjDaoParser($this->_selector);
+        $xml = simplexml_load_string($dao);
+        $tools = new mysqlDbTools(null);
+        $parser->testParseDatasource($xml);
+        $parser->testParseRecord($xml,$tools);
+
+        $xmlMethod = '<?xml version="1.0"?>
+          <method name="foo" type="update">
+            <parameter name="price" />
+            <parameter name="price_big" />
+            <values>
+                 <value property="price"     expr="$price"     />
+                 <value property="price_big" expr="$price_big" />
+            </values>
+          </method>';
+        $result = 
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="foo"/>
+            <string p="type" value="update"/>
+            <boolean p="distinct" value="false"/>
+            <boolean p="eventBeforeEnabled" value="false"/>
+            <boolean p="eventAfterEnabled" value="false"/>
+            <object m="getConditions()" class="jDaoConditions">
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array()</array>
+                    <array p="group">array()</array>
+                </object>
+                <array p="order">array()</array>
+            </object>
+            <array m="getParameters ()">array(\'price\',\'price_big\')</array>
+            <array m="getParametersDefaultValues ()">array()</array>
+            <null m="getLimit ()"/>
+            <array m="getValues ()">array(\'price\'=>array(\'$price\',true), \'price_big\'=>array(\'$price_big\',true))</array>
+            <null m="getProcStock ()"/>
+            <null m="getBody ()"/>
+        </object>';
+
+        //$this->sendMessage("test good method ".$k);
+        $xml= simplexml_load_string($xmlMethod);
+        try{
+            $p = new jDaoMethod($xml, $parser);
+            $this->assertComplexIdenticalStr($p, $result);
+        }catch(jDaoXmlException $e){
+            $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage());
+        }catch(Exception $e){
+            $this->fail("Exception inconnue : ".$e->getMessage());
         }
     }
 

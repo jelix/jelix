@@ -76,6 +76,10 @@ class testMysqlDaoGenerator extends mysqlDaoBuilder {
       parent::buildCountUserQuery($method, $src, $allField);
       return implode("\n", $src);
     }
+    
+    function GetBuildUpdateUserQuery($method, &$src, &$primaryFields) {
+        $this->buildUpdateUserQuery($method, $src, $primaryFields);
+    }
 }
 
 
