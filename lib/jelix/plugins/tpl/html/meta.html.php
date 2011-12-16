@@ -106,6 +106,7 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
                 case 'effects':
                     $gJCoord->response->addJSLink($base.'jquery.js');
                     $gJCoord->response->addJSLink($base.'ui/jquery.ui.core.min.js');
+                    $gJCoord->response->addJSLink($base.'ui/jquery.effects.core.min.js');
                     foreach($params as $f)
                         $gJCoord->response->addJSLink($base.'ui/jquery.effects.'.$f.'.min.js');
                     break;
