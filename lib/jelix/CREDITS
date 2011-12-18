@@ -94,6 +94,10 @@ Emmanuel Hesry (aka m@noo)
 Didier Huguet (aka isepman)
  - tpl plugin: modifier truncatehtml (#760)
 
+
+Charles R. (aka Hugokernel)
+ - fixed a bug in meta_html, about jquery effects
+
 Julien Issler
  - updated JSON class (#231)
  - table prefix support in jDb and jDao (#293)
@@ -160,6 +164,7 @@ Steven Jehannet (aka Catsoup)
  - fixed bug in jdao for sqlite + count+ distinct (#1225)
  - jforms, fixed bad detection in modified controls (#1234)
  - jforms, javascript, fixed bug with grouped data in ajax context (#1325)
+ - fixed build in jFile for jFile::getMimeTypeForFilename
 
 Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
