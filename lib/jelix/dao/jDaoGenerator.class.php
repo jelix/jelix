@@ -479,10 +479,25 @@ class jDaoGenerator {
         $src[] = '    $__query = \'UPDATE '.$this->tableRealNameEsc.' SET ';
         $updatefields = $this->_getPropertiesBy('PrimaryFieldsExcludePk');
         $sqlSet='';
+
         foreach($method->getValues() as $propname=>$value){
             if($value[1]){
-                foreach($method->getParameters() as $param){
-                    $value[0] = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $updatefields[$propname],true).'.\'',$value[0]);
+                preg_match_all('/\$([a-zA-Z0-9_]+)/', $value[0], $varMatches, PREG_OFFSET_CAPTURE );
+                $parameters = $method->getParameters();
+                if (count($varMatches[0])) {
+                    $result = '';
+                    $len = 0;
+                    foreach($varMatches[1] as $k=>$var) {
+                        $result .= substr($value[0], $len, $len+$varMatches[0][$k][1]);
+                        $len += $varMatches[0][$k][1] + strlen($varMatches[0][$k][0]);
+                        if (in_array($var[0], $parameters)) {
+                            $result .= '\'.'.$this->_preparePHPExpr($varMatches[0][$k][0], $updatefields[$propname],true).'.\'';
+                        }
+                        else {
+                            $result .= $varMatches[0][$k][0];
+                        }
+                    }
+                    $value[0] = $result;
                 }
                 $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '. $value[0];
             }else{
@@ -490,7 +505,7 @@ class jDaoGenerator {
                     $this->tools->escapeValue($updatefields[$propname]->unifiedType, $value[0], false, true);
             }
         }
-        $src[] =substr($sqlSet,1).'\';';
+        $src[] = substr($sqlSet,1).'\';';
         $cond = $method->getConditions();
         if($cond !== null) {
             $sqlCond = $this->buildConditions($cond, $primaryFields, $method->getParameters(), false);

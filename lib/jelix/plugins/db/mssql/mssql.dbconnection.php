@@ -177,6 +177,7 @@ class mssqlDbConnection extends jDbConnection {
         // finally, we retrieve the result in the expected order
         $queryString = 'SELECT TOP ' . $number . ' * FROM (' . $queryString . ') AS outer_tbl '.$orderby;
 
+        $this->lastQuery = $queryString;
         $result = $this->_doQuery($queryString);
         return $result;
     }

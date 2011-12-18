@@ -130,6 +130,7 @@ abstract class jDbConnection {
         $log = new jSQLLogMessage($queryString);
         $result = $this->_doLimitQuery ($queryString, intval($limitOffset), intval($limitCount));
         $log->endQuery();
+        $log->setRealQuery($this->lastQuery);
         jLog::log($log,'sql');
         return $result;
 #endif
