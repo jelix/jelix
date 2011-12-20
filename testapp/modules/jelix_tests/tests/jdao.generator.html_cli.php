@@ -687,5 +687,42 @@ class UTDao_generator extends jUnitTestCase {
         $this->assertEqual('now(\'.($record->code === null ? \'NULL\' : $this->_conn->quote2($record->code,false)).\')', $values['code']);
         
     }
+
+    function testUpdateQuery() {
+        
+        $doc ='<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="product_test" primarykey="code" />
+   </datasources>
+   <record>
+      <property name="code" fieldname="code" datatype="string"/>
+      <property name="name" fieldname="name" datatype="string" />
+      <property name="price" fieldname="price" datatype="float"/>
+      <property name="price_big" fieldname="price_big" datatype="float"/>
+   </record>
+   <factory>
+       <method name="test" type="update">
+            <parameter name="price" />
+            <parameter name="price_big" />
+            <values>
+                 <value property="price"     expr="$price"     />
+                 <value property="price_big" expr="$price_big" />
+            </values>
+       </method>
+   </factory>
+</dao>';
+        $parser = new jDaoParser ($this->_selector);
+        $parser->parse(simplexml_load_string($doc), $this->_tools);
+
+        $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
+        $primaryFields = $generator->GetPropertiesBy('PrimaryTable');
+        $methods = $parser->getMethods();
+        $src = array();
+        $generator->GetBuildUpdateUserQuery($methods['test'], $src, $primaryFields);
+        
+        $this->assertEqualOrDiff('    $__query = \'UPDATE  SET '."\n".' `price`= \'.($price === null ? \'NULL\' : jDb::floatToStr($price)).\', `price_big`= \'.($price_big === null ? \'NULL\' : jDb::floatToStr($price_big)).\'\';', implode("\n",$src));
+    }
+
 }
 ?>

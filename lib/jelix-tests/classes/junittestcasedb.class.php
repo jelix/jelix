@@ -9,8 +9,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-PHP_CodeCoverage_Filter::getInstance()->addFileToBlacklist(__FILE__, 'PHPUNIT');
-
 class jUnitTestCaseDb extends PHPUnit_Framework_TestCase {
 
     /**
