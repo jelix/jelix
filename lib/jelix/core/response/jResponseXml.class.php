@@ -5,9 +5,11 @@
 * @author      Loic Mathaud
 * @contributor Laurent Jouanneau
 * @contributor Sylvain de Vathaire
+* @contributor Thomas Pellissier Tanon
 * @copyright   2005-2006 loic Mathaud
 * @copyright   2007-2010 Laurent Jouanneau
 * @copyright   2008 Sylvain de Vathaire
+* @copyright   2011 Thomas Pellissier Tanon
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -85,7 +87,9 @@ class jResponseXml extends jResponse {
             return true;
         }
         
-        $this->_httpHeaders['Content-Type']='text/xml;charset='.$this->_charset;
+        if(!array_key_exists('Content-Type', $this->_httpHeaders)) {
+            $this->_httpHeaders['Content-Type']='text/xml;charset='.$this->_charset;
+        }
 
         if(is_string($this->content)) {
             // utilisation chaine de caractères xml
