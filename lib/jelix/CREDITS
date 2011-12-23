@@ -93,6 +93,7 @@ Emmanuel Hesry (aka m@noo)
 
 Didier Huguet (aka isepman)
  - tpl plugin: modifier truncatehtml (#760)
+ - jDaoFactoryBase: methods getTables, getPrimaryTable (#1263)
 
 
 Charles R. (aka Hugokernel)
