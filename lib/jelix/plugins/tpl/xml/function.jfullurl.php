@@ -18,6 +18,6 @@
  * @param string $domain domain name, false if you want to use the config domain name or the server name
  * @param boolean $escape if true, then escape the string for html
  */
-function jtpl_function_xul_jfullurl($tpl, $selector, $params=array(), $domain=null, $escape=true) {
+function jtpl_function_xml_jfullurl($tpl, $selector, $params=array(), $domain=null, $escape=true) {
     echo jUrl::getFull($selector, $params, ($escape?1:0), $domain);
 }
