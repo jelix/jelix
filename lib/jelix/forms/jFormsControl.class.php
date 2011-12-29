@@ -71,7 +71,12 @@ abstract class jFormsControl {
 
     function check(){
         $value = $this->container->data[$this->ref];
-        if(trim($value) == '') {
+        if($this->datatype instanceof jDatatypeEmail and
+            $value != '' and
+            !$this->datatype->check($value)
+            ) {
+            return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
+        }elseif(trim($value) == '') {
             if($this->required)
                 return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
         }elseif(!$this->datatype->check($value)){
@@ -188,4 +193,3 @@ require(JELIX_LIB_PATH.'forms/controls/jFormsControlDatetime.class.php');
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlWikiEditor.class.php');
 
 #endif
-
