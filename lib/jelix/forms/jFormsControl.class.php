@@ -71,14 +71,12 @@ abstract class jFormsControl {
 
     function check(){
         $value = $this->container->data[$this->ref];
-        if($this->datatype instanceof jDatatypeEmail and
-            $value != '' and
-            !$this->datatype->check($value)
-            ) {
-            return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
-        }elseif(trim($value) == '') {
+        if(trim($value) == '') {
             if($this->required)
                 return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
+            if (!$this->datatype->allowWhitespace())  {
+                $this->container->data[$this->ref] = trim($value);
+            }
         }elseif(!$this->datatype->check($value)){
             return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
         }elseif($this->datatype instanceof jIFilteredDatatype) {
