@@ -4,7 +4,7 @@
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
-* @copyright   2005-2009 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2005-2012 Laurent Jouanneau, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -346,7 +346,7 @@ class jTpl {
 
      /**
      * Return the generated content from the given string template (virtual)
-     * @param string $tpl template selector
+     * @param string $tpl template content
      * @param string $outputtype the type of output (html, text etc..)
      * @param boolean $trusted  says if the template file is trusted or not
      * @param boolean $callMeta false if meta should not be called
@@ -357,20 +357,34 @@ class jTpl {
         ob_start ();
         try{
 #ifnot JTPL_STANDALONE
-            $cachePath = JELIX_APP_TEMP_PATH.'compiled/templates/virtualtemplate.php';
+            $cachePath = jApp::tempPath('compiled/templates/virtuals/');
             require_once(JELIX_LIB_PATH.'tpl/jTplCompiler.class.php');
 #else
-            $cachePath = jTplConfig::$cachePath . '/virtualtemplate.php';
-            include_once(JTPL_PATH . 'jTplCompiler.class.php');
+            $cachePath = jTplConfig::$cachePath . '/virtuals/';
+            require_once(JTPL_PATH . 'jTplCompiler.class.php');
 #endif
-            $this->_templateName = 'virtualtemplate';
-            $md = $this->_templateName . '_' . uniqid();
+            $previousTpl = $this->_templateName;
+            $md = 'virtual_'.md5($tpl).($trusted?'_t':'');
+            $this->_templateName = $md;
 
-            $compiler = new jTplCompiler();
-            $compiler->outputType = $outputtype;
-            if ($compiler->compileWithoutSelector($tpl, $cachePath,  $trusted,
-                $this->userModifiers, $this->userFunctions, $md));
-                require($cachePath);
+            if ($outputtype == '')
+                $outputtype = 'html';
+
+            $cachePath .= $outputtype.'_'.$this->_templateName.'.php';
+#ifnot JTPL_STANDALONE
+            $mustCompile = $GLOBALS['gJConfig']->compilation['force'] || !file_exists($cachePath);
+#else
+            $mustCompile = jTplConfig::$compilationForce || !file_exists($cachePath);
+#endif
+
+            if ($mustCompile && !function_exists('template_'.$md)) {
+                $compiler = new jTplCompiler();
+                $compiler->outputType = $outputtype;
+                $compiler->trusted = $trusted;
+                $compiler->compileString($tpl, $cachePath, $this->userModifiers, $this->userFunctions, $md);
+            }
+            require_once($cachePath);
+
             if ($callMeta) {
                 $fct = 'template_meta_'.$md;
                 $fct($this);
@@ -378,6 +392,7 @@ class jTpl {
             $fct = 'template_'.$md;
             $fct($this);
             $content = ob_get_clean();
+            $this->_templateName = $previousTpl;
         }catch(exception $e){
             ob_end_clean();
             throw $e;

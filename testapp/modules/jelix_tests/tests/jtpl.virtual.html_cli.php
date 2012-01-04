@@ -37,7 +37,7 @@ world
         $this->assertEqual($expected, $result);
     }
 
-    private function testTemplateWithLocale() {
+    public function testTemplateWithLocale() {
 
         $GLOBALS['gJConfig']->locale = 'en_EN';
         $template = 'hello
@@ -56,7 +56,7 @@ this is the 3th en_EN sentence';
         $this->assertEqual($expected, $result);
     }
 
-    private function testTemplateWithModifier() {
+    public function testTemplateWithModifier() {
 
         $template = 'hello
 this is a sentence with a {$value|upper} with a modifier

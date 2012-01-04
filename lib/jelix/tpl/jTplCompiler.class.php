@@ -4,7 +4,7 @@
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler
-* @copyright   2005-2011 Laurent Jouanneau
+* @copyright   2005-2012 Laurent Jouanneau
 * @copyright   2006 Loic Mathaud, 2007 Dominique Papin, 2009 DSDenes, 2010 Christophe Thiriot
 * @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
@@ -181,12 +181,19 @@ class jTplCompiler
     public function compile ($tplName, $tplFile, $outputtype, $trusted,
                              $userModifiers = array(), $userFunctions = array()) {
         $this->_sourceFile = $tplFile;
-        $this->outputType = $outputtype;
         $cachefile = jTplConfig::$cachePath .dirname($tplName).'/'.$this->outputType.($trusted?'_t':'').'_'. basename($tplName);
+        $this->outputType = $outputtype;
         $this->trusted = $trusted;
-        $this->_modifier = array_merge($this->_modifier, $userModifiers);
-        $this->_userFunctions = $userFunctions;
         $md5 = md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':''));
+
+        if (!file_exists($this->_sourceFile)) {
+            $this->doError0('errors.tpl.not.found');
+        }
+
+        $this->compileString(file_get_contents($this->_sourceFile), $cachefile,
+            $userModifiers, $userFunctions, $md5);
+        return true;
+    }
 
 #else
     /**
@@ -198,30 +205,28 @@ class jTplCompiler
      */
     public function compile ($selector) {
         $this->_sourceFile = $selector->getPath();
-        $cachefile = $selector->getCompiledFilePath();
         $this->outputType = $selector->outputType;
         $this->trusted = $selector->trusted;
-        $this->_modifier = array_merge($this->_modifier, $selector->userModifiers);
-        $this->_userFunctions = $selector->userFunctions;
         $md5 = md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':''));
 
         jContext::push($selector->module);
-#endif
 
         if (!file_exists($this->_sourceFile)) {
             $this->doError0('errors.tpl.not.found');
         }
 
-        $this->compileWithoutSelector(file_get_contents($this->_sourceFile), $cachefile,
-            $this->trusted, $this->_modifier, $this->_userFunctions, $md5);
+        $this->compileString(file_get_contents($this->_sourceFile), $selector->getCompiledFilePath(),
+            $selector->userModifiers, $selector->userFunctions, $md5);
 
-#ifnot JTPL_STANDALONE
         jContext::pop();
-#endif
         return true;
     }
+#endif
 
-    public function compileWithoutSelector($templatecontent, $cachefile, $trusted, $modifiers, $userFunctions, $md5) {
+    public function compileString($templatecontent, $cachefile, $userModifiers, $userFunctions, $md5) {
+        $this->_modifier = array_merge($this->_modifier, $userModifiers);
+        $this->_userFunctions = $userFunctions;
+
         $result = $this->compileContent($templatecontent);
 
         $header = "<?php \n";
