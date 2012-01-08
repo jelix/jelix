@@ -3,7 +3,7 @@
  *  base include file for SimpleTest
  *  @package    SimpleTest
  *  @subpackage UnitTester
- *  @version    $Id: reflection_php5.php 1786 2008-04-26 17:32:20Z pp11 $
+ *  @version    $Id: reflection_php5.php 2011 2011-04-29 08:22:48Z pp11 $
  */
 
 /**
@@ -294,7 +294,7 @@ class SimpleReflection {
         if ($name == '__toString') {
             return "function $name()";
         }
-        
+
         // This wonky try-catch is a work around for a faulty method_exists()
         // in early versions of PHP 5 which would return false for static
         // methods. The Reflection classes work fine, but hasMethod()
@@ -320,18 +320,9 @@ class SimpleReflection {
     protected function getFullSignature($name) {
         $interface = new ReflectionClass($this->interface);
         $method = $interface->getMethod($name);
-		if ($method->isFinal() || $method->isPrivate() || $method->isStatic())
-			return '';
-
         $reference = $method->returnsReference() ? '&' : '';
         $static = $method->isStatic() ? 'static ' : '';
-
-		if ($method->isProtected())
-			$access = 'protected ';
-		else
-			$access = 'public ';
-
-        return "{$static}{$access}function $reference$name(" .
+        return "{$static}function $reference$name(" .
                 implode(', ', $this->getParameterSignatures($method)) .
                 ")";
     }
