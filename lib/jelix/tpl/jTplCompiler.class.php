@@ -4,7 +4,7 @@
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler
-* @copyright   2005-2011 Laurent Jouanneau
+* @copyright   2005-2012 Laurent Jouanneau
 * @copyright   2006 Loic Mathaud, 2007 Dominique Papin, 2009 DSDenes, 2010 Christophe Thiriot
 * @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
@@ -181,11 +181,19 @@ class jTplCompiler
     public function compile ($tplName, $tplFile, $outputtype, $trusted,
                              $userModifiers = array(), $userFunctions = array()) {
         $this->_sourceFile = $tplFile;
-        $this->outputType = $outputtype;
         $cachefile = jTplConfig::$cachePath .dirname($tplName).'/'.$this->outputType.($trusted?'_t':'').'_'. basename($tplName);
+        $this->outputType = $outputtype;
         $this->trusted = $trusted;
-        $this->_modifier = array_merge($this->_modifier, $userModifiers);
-        $this->_userFunctions = $userFunctions;
+        $md5 = md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':''));
+
+        if (!file_exists($this->_sourceFile)) {
+            $this->doError0('errors.tpl.not.found');
+        }
+
+        $this->compileString(file_get_contents($this->_sourceFile), $cachefile,
+            $userModifiers, $userFunctions, $md5);
+        return true;
+    }
 
 #else
     /**
@@ -197,44 +205,42 @@ class jTplCompiler
      */
     public function compile ($selector) {
         $this->_sourceFile = $selector->getPath();
-        $cachefile = $selector->getCompiledFilePath();
         $this->outputType = $selector->outputType;
         $this->trusted = $selector->trusted;
-        $this->_modifier = array_merge($this->_modifier, $selector->userModifiers);
-        $this->_userFunctions = $selector->userFunctions;
+        $md5 = md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':''));
 
         jContext::push($selector->module);
-#endif
 
         if (!file_exists($this->_sourceFile)) {
             $this->doError0('errors.tpl.not.found');
         }
 
-        $result = $this->compileContent(file_get_contents($this->_sourceFile));
+        $this->compileString(file_get_contents($this->_sourceFile), $selector->getCompiledFilePath(),
+            $selector->userModifiers, $selector->userFunctions, $md5);
+
+        jContext::pop();
+        return true;
+    }
+#endif
+
+    public function compileString($templatecontent, $cachefile, $userModifiers, $userFunctions, $md5) {
+        $this->_modifier = array_merge($this->_modifier, $userModifiers);
+        $this->_userFunctions = $userFunctions;
+
+        $result = $this->compileContent($templatecontent);
 
         $header = "<?php \n";
         foreach ($this->_pluginPath as $path=>$ok) {
             $header.=' require_once(\''.$path."');\n";
         }
-#if JTPL_STANDALONE
-        $header.='function template_meta_'.md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){';
-#else
-        $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){';
-#endif
+        $header.='function template_meta_'.$md5.'($t){';
         $header .="\n".$this->_metaBody."\n}\n";
 
-#if JTPL_STANDALONE
-        $header.='function template_'.md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){'."\n?>";
-#else
-        $header.='function template_'.md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){'."\n?>";
-#endif
+        $header.='function template_'.$md5.'($t){'."\n?>";
         $result = $header.$result."<?php \n}\n?>";
 
 #if JTPL_STANDALONE
-        $_dirname = dirname($tplName).'/';
-        if ($_dirname == './')
-            $_dirname = '';
-        $_dirname = jTplConfig::$cachePath.$_dirname;
+        $_dirname = dirname($cachefile).'/';
 
         if (!is_dir($_dirname)) {
             umask(jTplConfig::$umask);
@@ -269,7 +275,6 @@ class jTplCompiler
 #else
         jFile::write($cachefile, $result);
 
-        jContext::pop();
 #endif
         return true;
     }
