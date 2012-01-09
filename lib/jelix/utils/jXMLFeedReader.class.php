@@ -37,8 +37,37 @@ abstract class jXMLFeedReader {
     * @param string $url
     */
     public function __construct($url) {
-        $stream = jHttp::quickGet($url);
+#ifndef PROD_VERSION
+        try{
+#endif
+            $stream = jHttp::quickGet($url);
+#ifndef PROD_VERSION
+        } catch(Exception $e){
+            throw new jException('jelix~errors.xml.remote.feed.error');
+        }
+#endif
+        
+#ifndef PROD_VERSION           
+        if(!$stream){
+            throw new jException('jelix~errors.xml.remote.feed.error');
+        }
+#endif
+
+        libxml_use_internal_errors(true);
         $xml = simplexml_load_string($stream);
+        
+#ifndef PROD_VERSION              
+        if($xml === false){
+            $errors = '';
+            foreach(libxml_get_errors() as $error) {
+                $errors .= $error->message."; ";
+            }
+            throw new jException('jelix~errors.xml.loading.document.error', array($errors));
+        }
+#endif
+        libxml_use_internal_errors();
+        libxml_clear_errors();
+        
         $this->xml = $xml;
     }
 
