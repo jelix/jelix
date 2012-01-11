@@ -17,8 +17,6 @@ class jApp {
 
     protected static $tempBasePath = '';
 
-    protected static $tempPath = '';
-
     protected static $appPath = '';
 
     protected static $varPath = '';
@@ -164,7 +162,7 @@ class jApp {
      */
     public static function saveContext() {
         self::$contextBackup[] = array(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
-                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath);
+                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, self::$_config);
     }
 
     /**
@@ -174,7 +172,7 @@ class jApp {
         if (!count(self::$contextBackup))
             return;
         list(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
-             self::$wwwPath, self::$scriptPath, self::$tempBasePath) = array_pop(self::$contextBackup);
+             self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, self::$_config) = array_pop(self::$contextBackup);
     }
 
     /**
