@@ -177,7 +177,7 @@ function jelix_autoload($class) {
     }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
         // for DAO which are stored in sessions for example
         $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
-        if($GLOBALS['gJConfig']->compilation['checkCacheFiletime']){
+        if(jApp::config()->compilation['checkCacheFiletime']){
             // if it is needed to check the filetime, then we use jIncluder
             // because perhaps we will have to recompile the dao before the include
             jIncluder::inc($s);

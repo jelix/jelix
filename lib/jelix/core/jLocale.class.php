@@ -36,7 +36,7 @@ class jLocale {
      * @return string
      */
     static function getCurrentLang(){
-        $s=$GLOBALS['gJConfig']->locale;
+        $s=jApp::config()->locale;
         return substr($s,0, strpos($s,'_'));
     }
     /**
@@ -44,7 +44,7 @@ class jLocale {
      * @return string
      */
     static function getCurrentCountry (){
-        $s=$GLOBALS['gJConfig']->locale;
+        $s=jApp::config()->locale;
         return substr($s,strpos($s,'_')+1);
     }
 

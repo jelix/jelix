@@ -29,7 +29,7 @@ class jRunnerPreparer {
     /*function getTestsList($accesType = 'cli' ){
         $regAcces = ( $accesType=='cli' ) ? '(html_)?cli' : 'html(_cli)?' ;
         $regCategory = '(\\.\w+)?' ;
-        foreach($GLOBALS['gJConfig']->_modulesPathList as $module=>$path){
+        foreach(jApp::config()->_modulesPathList as $module=>$path){
             if(file_exists($path.'tests/')){
                 $dir = new DirectoryIterator($path.'tests/');
                 foreach ($dir as $dirContent) {
@@ -61,7 +61,7 @@ class jRunnerPreparer {
     
     function getTestsList($accesType = 'cli'){
         $this->setTestCategory($accesType);
-        foreach($GLOBALS['gJConfig']->_modulesPathList as $module=>$path){
+        foreach(jApp::config()->_modulesPathList as $module=>$path){
             if(file_exists($path.'tests/')){
                 $dir = new DirectoryIterator($path.'tests/');
                 foreach ($dir as $dirContent) {

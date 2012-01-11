@@ -33,9 +33,9 @@ final class jResponseXmlRpc extends jResponse {
             return true;
         }
 
-        $content = jXmlRpc::encodeResponse($this->response, $GLOBALS['gJConfig']->charset);
+        $content = jXmlRpc::encodeResponse($this->response, jApp::config()->charset);
 
-        $this->_httpHeaders["Content-Type"]="text/xml;charset=".$GLOBALS['gJConfig']->charset;
+        $this->_httpHeaders["Content-Type"]="text/xml;charset=".jApp::config()->charset;
         $this->_httpHeaders["Content-length"]=strlen($content);
         $this->sendHttpHeaders();
         echo $content;

@@ -58,8 +58,8 @@ abstract class jResponse {
     */
     function __construct() {
 
-        if( $GLOBALS['gJConfig']->httpVersion != "" ) {
-            $this->httpVersion = $GLOBALS['gJConfig']->httpVersion;
+        if( jApp::config()->httpVersion != "" ) {
+            $this->httpVersion = jApp::config()->httpVersion;
             $this->forcedHttpVersion = true;
         }
     }

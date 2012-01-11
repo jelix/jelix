@@ -88,8 +88,8 @@ class mysqlDbConnection extends jDbConnection {
         $funcconnect= ($this->profile['persistent']? 'mysql_pconnect':'mysql_connect');
         if($cnx = @$funcconnect ($this->profile['host'], $this->profile['user'], $this->profile['password'])){
             if(isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true
-              && isset($this->_charsets[$GLOBALS['gJConfig']->charset])){
-                mysql_query("SET NAMES '".$this->_charsets[$GLOBALS['gJConfig']->charset]."'", $cnx);
+              && isset($this->_charsets[jApp::config()->charset])){
+                mysql_query("SET NAMES '".$this->_charsets[jApp::config()->charset]."'", $cnx);
             }
             return $cnx;
         }else{

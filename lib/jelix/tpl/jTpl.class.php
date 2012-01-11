@@ -380,7 +380,7 @@ class jTpl {
 #if JTPL_STANDALONE
         return jTplConfig::$charset;
 #else
-        return $GLOBALS['gJConfig']->charset;
+        return jApp::config()->charset;
 #endif
     }
 

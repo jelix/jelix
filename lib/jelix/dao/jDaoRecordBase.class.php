@@ -66,7 +66,7 @@ abstract class jDaoRecordBase {
                 }
 
                 //  test maxlength et minlength
-                $len = iconv_strlen($value, $GLOBALS['gJConfig']->charset);
+                $len = iconv_strlen($value, jApp::config()->charset);
                 if($infos['maxlength'] !== null && $len > intval($infos['maxlength'])){
                     $errors[$prop][] = self::ERROR_MAXLENGTH;
                 }

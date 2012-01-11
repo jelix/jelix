@@ -74,7 +74,7 @@ class mssqlDbConnection extends jDbConnection {
         $funcconnect = ($this->profile['persistent']? 'mssql_pconnect':'mssql_connect');
         if($cnx = @$funcconnect ($this->profile['host'], $this->profile['user'], $this->profile['password'])){
             /*if(isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true
-            && isset($this->_charsets[$GLOBALS['gJConfig']->charset])){
+            && isset($this->_charsets[jApp::config()->charset])){
                 mssql_query("SET ANSI_DEFAULTS ON", $cnx);
             }*/
             return $cnx;

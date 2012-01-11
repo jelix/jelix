@@ -44,7 +44,7 @@ class UTjformsHtmlLightBuilder extends jUnitTestCaseDb {
         ob_start();
         $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
+        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
@@ -60,7 +60,7 @@ jForms.declareForm(jForms.tForm);
         ob_start();
         $this->builder->outputHeader(array('method'=>'get'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
+        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
@@ -1167,7 +1167,7 @@ jForms.tForm.addControl(c);
         ob_start();
         $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'" enctype="multipart/form-data"><script type="text/javascript">
+        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'" enctype="multipart/form-data"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
@@ -1259,7 +1259,7 @@ jForms.declareForm(jForms.tForm);
         ob_start();
         $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
+        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
@@ -1279,7 +1279,7 @@ jForms.declareForm(jForms.tForm);
         ob_start();
         $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
-        $result ='<form action="'.$GLOBALS['gJConfig']->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
+        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());

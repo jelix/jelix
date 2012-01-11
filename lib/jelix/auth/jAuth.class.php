@@ -53,7 +53,7 @@ class jAuth {
 
             if (!isset( $config['persistant_cookie_path'])
                 ||  $config['persistant_cookie_path'] == '')
-                $config['persistant_cookie_path'] = $GLOBALS['gJConfig']->urlengine['basePath'];
+                $config['persistant_cookie_path'] = jApp::config()->urlengine['basePath'];
         }
         return $config;
     }

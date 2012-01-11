@@ -321,7 +321,7 @@ class significantUrlEngine implements jIUrlEngine {
     public function create($urlact) {
 
         if ($this->dataCreateUrl == null) {
-            $sel = new jSelectorUrlCfgSig($GLOBALS['gJConfig']->urlengine['significantFile']);
+            $sel = new jSelectorUrlCfgSig(jApp::config()->urlengine['significantFile']);
             jIncluder::inc($sel);
             $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
         }
@@ -405,12 +405,12 @@ class significantUrlEngine implements jIUrlEngine {
 
         // at this step, we have informations to build the url
 
-        $url->scriptName = $GLOBALS['gJConfig']->urlengine['basePath'].$urlinfo[1];
+        $url->scriptName = jApp::config()->urlengine['basePath'].$urlinfo[1];
         if ($urlinfo[2])
             $url->scriptName = $GLOBALS['gJCoord']->request->getServerURI(true).$url->scriptName;
 
-        if ($urlinfo[1] && !$GLOBALS['gJConfig']->urlengine['multiview']) {
-            $url->scriptName .= $GLOBALS['gJConfig']->urlengine['entrypointExtension'];
+        if ($urlinfo[1] && !jApp::config()->urlengine['multiview']) {
+            $url->scriptName .= jApp::config()->urlengine['entrypointExtension'];
         }
 
         // pour certains types de requete, les paramètres ne sont pas dans l'url

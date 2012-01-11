@@ -124,8 +124,8 @@ class pgsqlDbConnection extends jDbConnection {
         // let's do the connection
         if ($cnx = @$funcconnect ($str)) {
             if (isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true
-               && isset($this->_charsets[$GLOBALS['gJConfig']->charset])) {
-                pg_set_client_encoding($cnx, $this->_charsets[$GLOBALS['gJConfig']->charset]);
+               && isset($this->_charsets[jApp::config()->charset])) {
+                pg_set_client_encoding($cnx, $this->_charsets[jApp::config()->charset]);
             }
         }
 		else {

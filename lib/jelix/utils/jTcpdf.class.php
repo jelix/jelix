@@ -14,7 +14,7 @@ define('K_TCPDF_EXTERNAL_CONFIG',true);
 define('K_PATH_MAIN', LIB_PATH.'tcpdf/');
 define('K_PATH_URL',
        $GLOBALS['gJCoord']->request->getServerURI() .
-       $GLOBALS['gJConfig']->urlengine['basePath']);
+       jApp::config()->urlengine['basePath']);
 define('K_PATH_FONTS', LIB_PATH.'pdf-fonts/');
 define('K_PATH_CACHE', jApp::tempPath());
 define('K_PATH_IMAGES', jApp::appPath());
@@ -34,7 +34,7 @@ class jTcpdf extends TCPDF {
     public function __construct($orientation='P', $unit='mm', $format='A4', $encoding=null) {
 
         if($encoding === null)
-            $encoding = $GLOBALS['gJConfig']->charset;
+            $encoding = jApp::config()->charset;
 
         parent::__construct($orientation, $unit, $format, ($encoding == 'UTF-8' || $encoding == 'UTF-16'), $encoding);
 

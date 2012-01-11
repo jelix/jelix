@@ -68,7 +68,7 @@ class check_installZone extends jZone {
     protected $_tplname='check_install';
 
     protected function _prepareTpl() {
-        $lang = $GLOBALS['gJConfig']->locale;
+        $lang = jApp::config()->locale;
         if(!$this->getParam('no_lang_check')) {
             $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
             foreach($languages as $bl){
@@ -82,7 +82,7 @@ class check_installZone extends jZone {
             }
             if($lang!='fr_FR' && $lang != 'en_EN' && $lang != 'en_US')
                 $lang = 'en_EN';
-            $GLOBALS['gJConfig']->locale = $lang;
+            jApp::config()->locale = $lang;
         }
 
         $reporter = new checkZoneInstallReporter();

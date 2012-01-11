@@ -15,7 +15,7 @@ class defaultCtrl extends jController {
     *
     */
     function index() {
-        if(!isset($GLOBALS['gJConfig']->enableTests) || !$GLOBALS['gJConfig']->enableTests){
+        if(!isset(jApp::config()->enableTests) || !jApp::config()->enableTests){
             // security
             $rep = $this->getResponse('html', true);
             $rep->title = 'Error';
@@ -30,7 +30,7 @@ class defaultCtrl extends jController {
     }
 
     function all() {
-        if(!isset($GLOBALS['gJConfig']->enableTests) || !$GLOBALS['gJConfig']->enableTests){
+        if(!isset(jApp::config()->enableTests) || !jApp::config()->enableTests){
             // security
             $rep = $this->getResponse('html', true);
             $rep->title = 'Error';
@@ -52,7 +52,7 @@ class defaultCtrl extends jController {
                 jContext::push($module);
                 $group = new TestSuite('Tests'.$category.' on module '.$module);
                 foreach($this->testsList[$module] as $test){
-                    $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                    $group->addFile(jApp::config()->_modulesPathList[$module].'tests/'.$test[0]);
                 }
                 $group->run($reporter);
                 jContext::pop();
@@ -65,7 +65,7 @@ class defaultCtrl extends jController {
 
 
     function module() {
-        if(!isset($GLOBALS['gJConfig']->enableTests) || !$GLOBALS['gJConfig']->enableTests){
+        if(!isset(jApp::config()->enableTests) || !jApp::config()->enableTests){
             // security
             $rep = $this->getResponse('html', true);
             $rep->title = 'Error';
@@ -84,7 +84,7 @@ class defaultCtrl extends jController {
 
             $group = new TestSuite('All'.$category.' tests in "'.$module. '" module');
             foreach($this->testsList[$module] as $test){
-                $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                $group->addFile(jApp::config()->_modulesPathList[$module].'tests/'.$test[0]);
             }
             jContext::push($module);
             $group->run($reporter);
@@ -97,7 +97,7 @@ class defaultCtrl extends jController {
 
 
     function single() {
-        if(!isset($GLOBALS['gJConfig']->enableTests) || !$GLOBALS['gJConfig']->enableTests){
+        if(!isset(jApp::config()->enableTests) || !jApp::config()->enableTests){
             // security
             $rep = $this->getResponse('html', true);
             $rep->title = 'Error';
@@ -119,7 +119,7 @@ class defaultCtrl extends jController {
             foreach($this->testsList[$module] as $test){
                 if($test[1] == $testname){
                     $group = new TestSuite('"'.$module. '" module , '.$test[2]);
-                    $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                    $group->addFile(jApp::config()->_modulesPathList[$module].'tests/'.$test[0]);
                     jContext::push($module);
                     $group->run($reporter);
                     jContext::pop();
@@ -142,8 +142,8 @@ class defaultCtrl extends jController {
         $rep->body->assign('page_title', 'Unit Tests');
         $rep->body->assign('versionphp',phpversion());
         $rep->body->assign('versionjelix',JELIX_VERSION);
-        $rep->body->assign('basepath',$GLOBALS['gJConfig']->urlengine['basePath']);
-        $rep->body->assign('isurlsig', $GLOBALS['gJConfig']->urlengine['engine'] == 'significant');
+        $rep->body->assign('basepath',jApp::config()->urlengine['basePath']);
+        $rep->body->assign('isurlsig', jApp::config()->urlengine['engine'] == 'significant');
 
         $runnerPreparer = jClasses::create('junittests~jrunnerpreparer');
         $this->allTestsList = $runnerPreparer->getTestsList('html');

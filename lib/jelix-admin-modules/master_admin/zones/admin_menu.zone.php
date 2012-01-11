@@ -18,7 +18,7 @@ class admin_menuZone extends jZone {
         $menu['toplinks'] = new masterAdminMenuItem('toplinks', '', '');
 
         $dashboard = new masterAdminMenuItem('dashboard', jLocale::get('gui.menu.item.dashboard'), jUrl::get('default:index'));
-        $dashboard->icon = $GLOBALS['gJConfig']->urlengine['jelixWWWPath'] . 'design/images/dashboard.png';
+        $dashboard->icon = jApp::config()->urlengine['jelixWWWPath'] . 'design/images/dashboard.png';
         $menu['toplinks']->childItems[] = $dashboard;
 
         $menu['refdata'] =  new masterAdminMenuItem('refdata', jLocale::get('gui.menu.item.refdata'), '', 80);

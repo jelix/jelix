@@ -19,7 +19,7 @@
 function jtpl_function_html_resurl($tpl, $module, $file, $intheme = false, $escape=true)
 {
      if ($intheme)
-          $file= 'themes/'.$GLOBALS['gJConfig']->theme.'/'.$file;
+          $file= 'themes/'.jApp::config()->theme.'/'.$file;
      echo jUrl::get("jelix~www:getfile", array('targetmodule'=>$module, 'file'=>$file), ($escape?1:0));
 }
 

@@ -334,7 +334,7 @@ class jCoordinator {
      * @return string
      */
     public function getGenericErrorMessage() {
-        $msg = $GLOBALS['gJConfig']->error_handling['errorMessage'];
+        $msg = jApp::config()->error_handling['errorMessage'];
         if ($this->errorMessage)
             $code = $this->errorMessage->getCode();
         else $code = '';
@@ -385,10 +385,10 @@ class jCoordinator {
     * @return boolean true : module is ok
     */
     public function isModuleEnabled ($moduleName, $includingExternal = false) {
-        if ($includingExternal && isset($GLOBALS['gJConfig']->_externalModulesPathList[$moduleName])) {
+        if ($includingExternal && isset(jApp::config()->_externalModulesPathList[$moduleName])) {
             return true;
         }
-        return isset($GLOBALS['gJConfig']->_modulesPathList[$moduleName]);
+        return isset(jApp::config()->_modulesPathList[$moduleName]);
     }
 
     /**

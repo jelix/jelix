@@ -145,7 +145,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $this->readProjectXml();
         $this->retrieveModulePaths(jApp::configPath('defaultconfig.ini.php'));
         // for an app on a simple http server behind an https proxy, we shouldn't check HTTPS
-        $this->checkHttps = $GLOBALS['gJConfig']->urlengine['checkHttpsOnParsing'];
+        $this->checkHttps = jApp::config()->urlengine['checkHttpsOnParsing'];
 
         foreach ($xml->children() as $tagname => $tag) {
             if (!preg_match("/^(.*)entrypoint$/", $tagname, $m)) {

@@ -33,9 +33,9 @@ class UTjrequest extends jUnitTestCase {
     function setUp() {
         $this->currentServer = $_SERVER;
         $this->currentConfig = clone $GLOBALS['gJConfig'];
-        $GLOBALS['gJConfig']->urlengine['basePath'] = '/';
-        $GLOBALS['gJConfig']->responses=array();
-        $GLOBALS['gJConfig']->_coreResponses=array();
+        jApp::config()->urlengine['basePath'] = '/';
+        jApp::config()->responses=array();
+        jApp::config()->_coreResponses=array();
     }
 
     function tearDown() {
@@ -46,7 +46,7 @@ class UTjrequest extends jUnitTestCase {
     // /foo/index.php, CGI,  cgi.fix_pathinfo=0
     function testSimpleUrl_CGI_0_REDIRECT_URL() {
 
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'REDIRECT_URL';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'REDIRECT_URL';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array(
         'PATH_INFO' => '/foo/index.php',
@@ -70,7 +70,7 @@ class UTjrequest extends jUnitTestCase {
 
     //  /foo/index.php, CGI cgi.fix_pathinfo=1
     function testSimpleUrl_CGI_1_SCRIPT_NAME() {
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';// 'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';// 'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array(
         'ORIG_PATH_INFO' => '/foo/index.php',
@@ -96,7 +96,7 @@ class UTjrequest extends jUnitTestCase {
 
     // /foo/index.php CGI+SUPHP cgi.fix_pathinfo=0
     function testSimpleUrl_SUPHP_0_SCRIPT_NAME() {
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME'; //'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME'; //'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array(
         'PHPRC' => '/etc/php5/cgi/',
@@ -119,7 +119,7 @@ class UTjrequest extends jUnitTestCase {
     // /foo/index.php , CGI+SUPHP,  cgi.fix_pathinfo=1
     function testSimpleUrl_SUPHP_1_SCRIPT_NAME() {
 
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME'; //'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME'; //'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array(
         'PHPRC' => '/etc/php5/cgi/',
@@ -141,7 +141,7 @@ class UTjrequest extends jUnitTestCase {
 
     // /foo/index.php mod apache
     function testSimpleUrl_MODPHP5_SCRIPT_NAME() {
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array (
             'PHP_SELF' => '/foo/index.php',
@@ -162,7 +162,7 @@ class UTjrequest extends jUnitTestCase {
 
     // /foo/index.php/bla CGI cgi.fix_pathinfo=1
     function testPathInfo_CGI_1_SCRIPT_NAME() {
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array (
             'ORIG_PATH_INFO' => '/foo/index.php/bar',
@@ -188,7 +188,7 @@ class UTjrequest extends jUnitTestCase {
     }
     // /foo/index.php/bla CGI+SUPHP cgi.fix_pathinfo=0
     function testPathInfo_SUPHP_0_SCRIPT_NAME() {
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array (
             'PATH_INFO' => '/bar',
@@ -210,7 +210,7 @@ class UTjrequest extends jUnitTestCase {
     }
     // /foo/index.php/bla CGI+SUPHP cgi.fix_pathinfo=1
     function testPathInfo_SUPHP_1_SCRIPT_NAME() {
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array (
             'ORIG_PATH_INFO' => '/bar',
@@ -232,7 +232,7 @@ class UTjrequest extends jUnitTestCase {
     }
     // /foo/index.php/bla MOD_PHP5
     function testPathInfo_MODPHP5_SCRIPT_NAME() {
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array (
             'PATH_INFO' => '/bar',
@@ -254,7 +254,7 @@ class UTjrequest extends jUnitTestCase {
 
     //  /foo/bla where index.php is in foo/, CGI cgi.fix_pathinfo=1
     function testRewrite_CGI_1_SCRIPT_NAME() {
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array (
             'ORIG_PATH_INFO' => '/foo/index.php/bar',
@@ -281,7 +281,7 @@ class UTjrequest extends jUnitTestCase {
 
     //  /foo/bla where index.php is in foo/, CGI+SUPHP cgi.fix_pathinfo=0
     function testRewrite_SUPHP_0_SCRIPT_NAME() {
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array (
              'PATH_INFO' => '/bar',
@@ -305,7 +305,7 @@ class UTjrequest extends jUnitTestCase {
 
     //  /foo/bla where index.php is in foo/, CGI+SUPHP cgi.fix_pathinfo=1
     function testRewrite_SUPHP_1_ORIG_SCRIPT_NAME() {
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array (
              'ORIG_PATH_INFO' => '/bar',
@@ -331,7 +331,7 @@ class UTjrequest extends jUnitTestCase {
 
     //  /foo/bla where index.php is in foo/, MOD_PHP5
     function testRewrite_MODPHP5_SCRIPT_NAME() {
-        $GLOBALS['gJConfig']->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
+        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         //don't change $_SERVER values : it correspond to a real case
         $_SERVER = array (
             'PATH_INFO' => '/bar',

@@ -46,7 +46,7 @@ class jBundle {
     public function get ($key, $charset = null){
 
         if($charset == null){
-            $charset = $GLOBALS['gJConfig']->charset;
+            $charset = jApp::config()->charset;
         }
         if (!in_array ($charset, $this->_loadedCharset)){
             $this->_loadLocales ($this->locale, $charset);

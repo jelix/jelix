@@ -181,7 +181,7 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
                 jContext::push($module);
                 $group = new TestSuite('Tests'.$category.' on module '.$module);
                 foreach($this->testsList[$module] as $test){
-                    $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                    $group->addFile(jApp::config()->_modulesPathList[$module].'tests/'.$test[0]);
                 }
                 $result = $group->run($reporter);
                 if (!$result) $rep->setExitCode(jResponseCmdline::EXIT_CODE_ERROR);
@@ -209,7 +209,7 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
 
             $group = new TestSuite('All'.$category.' tests in "'.$module. '" module');
             foreach($this->testsList[$module] as $test){
-                $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                $group->addFile(jApp::config()->_modulesPathList[$module].'tests/'.$test[0]);
             }
             jContext::push($module);
             $result = $group->run($reporter);
@@ -237,7 +237,7 @@ Unit Tests        php version: '.phpversion().'   Jelix version: '.JELIX_VERSION
             foreach($this->testsList[$module] as $test){
                 if($test[1] == $testname){
                     $group = new TestSuite('"'.$module. '" module , '.$test[2]);
-                    $group->addFile($GLOBALS['gJConfig']->_modulesPathList[$module].'tests/'.$test[0]);
+                    $group->addFile(jApp::config()->_modulesPathList[$module].'tests/'.$test[0]);
                     jContext::push($module);
                     $result = $group->run($reporter);
                     if (!$result) $rep->setExitCode(jResponseCmdline::EXIT_CODE_ERROR);

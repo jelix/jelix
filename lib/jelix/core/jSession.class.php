@@ -26,7 +26,7 @@ class jSession {
      */
     public static function start(){
 
-        $params = & $GLOBALS['gJConfig']->sessions;
+        $params = & jApp::config()->sessions;
 
         // do not start the session if the request is made from the command line or if sessions are disabled in configuration
         if ($GLOBALS['gJCoord']->request instanceof jCmdLineRequest || !$params['start']) {
@@ -35,7 +35,7 @@ class jSession {
 
         //make sure that the session cookie is only for the current application
         if (!$params['shared_session'])
-            session_set_cookie_params ( 0 , $GLOBALS['gJConfig']->urlengine['basePath']);
+            session_set_cookie_params ( 0 , jApp::config()->urlengine['basePath']);
 
         if ($params['storage'] != '') {
 

@@ -70,7 +70,7 @@ class jFile {
 
         // Delete the file if it allready exists (this is needed on Win,
         // because it cannot overwrite files with rename()
-        if ($GLOBALS['gJConfig']->isWindows && file_exists($file)) {
+        if (jApp::config()->isWindows && file_exists($file)) {
             unlink($file);
         }
         rename($_tmp_file, $file);

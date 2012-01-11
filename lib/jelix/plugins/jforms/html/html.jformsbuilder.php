@@ -66,7 +66,7 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
                     $resp->addJSLink($bp.$gJConfig->wikieditors[$ed->config.'.engine.file']);
                 if(isset($gJConfig->wikieditors[$ed->config.'.config.path'])) {
                     $p = $bp.$gJConfig->wikieditors[$ed->config.'.config.path'];
-                    $resp->addJSLink($p.$GLOBALS['gJConfig']->locale.'.js');
+                    $resp->addJSLink($p.jApp::config()->locale.'.js');
                     $resp->addCSSLink($p.'style.css');
                 }
                 if(isset($gJConfig->wikieditors[$ed->config.'.skin']))
@@ -112,7 +112,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         }
 
         if($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate'){
-            $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:$GLOBALS['gJConfig']->forms['datepicker'];
+            $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:jApp::config()->forms['datepicker'];
             $this->jsContent .= 'jelix_datepicker_'.$config."(c, jFormsJQ.config);\n";
         }
 
@@ -136,7 +136,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
     protected function jsWikieditor($ctrl) {
         $this->jsTextarea($ctrl);
-        $engine = $GLOBALS['gJConfig']->wikieditors[$ctrl->config.'.engine.name'];
+        $engine = jApp::config()->wikieditors[$ctrl->config.'.engine.name'];
         $this->jsContent .= '$("#'.$this->_name.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
     }
 
