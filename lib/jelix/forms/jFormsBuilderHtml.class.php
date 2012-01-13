@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin
-* @copyright   2006-2011 Laurent Jouanneau
+* @copyright   2006-2012 Laurent Jouanneau
 * @copyright   2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -56,31 +56,37 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     public function outputMetaContent($t) {
-        global $gJCoord, $gJConfig;
+        global $gJCoord;
         $resp= $gJCoord->response;
         if($resp === null || $resp->getType() !='html'){
             return;
         }
-        $www =$gJConfig->urlengine['jelixWWWPath'];
-        $bp =$gJConfig->urlengine['basePath'];
+        $config = jApp::config();
+        $www = $config->urlengine['jelixWWWPath'];
+        $bp = $config->urlengine['basePath'];
         $resp->addJSLink($www.'js/jforms_light.js');
         $resp->addCSSLink($www.'design/jform.css');
+        $heConf = &$gJConfig->htmleditors;
         foreach($t->_vars as $k=>$v){
             if($v instanceof jFormsBase && count($edlist = $v->getHtmlEditors())) {
                 foreach($edlist as $ed) {
-                    if(isset($gJConfig->htmleditors[$ed->config.'.engine.file'])){
-                        if(is_array($gJConfig->htmleditors[$ed->config.'.engine.file'])){
-                            foreach($gJConfig->htmleditors[$ed->config.'.engine.file'] as $url) {
+
+                    if(isset($heConf[$ed->config.'.engine.file'])){
+                        $file = $heConf[$ed->config.'.engine.file'];
+                        if(is_array($file)){
+                            foreach($file as $url) {
                                 $resp->addJSLink($bp.$url);
                             }
                         }else
-                            $resp->addJSLink($bp.$gJConfig->htmleditors[$ed->config.'.engine.file']);
+                            $resp->addJSLink($bp.$file);
                     }
-                    if(isset($gJConfig->htmleditors[$ed->config.'.config']))
-                        $resp->addJSLink($bp.$gJConfig->htmleditors[$ed->config.'.config']);
+
+                    if(isset($heConf[$ed->config.'.config']))
+                        $resp->addJSLink($bp.$heConf[$ed->config.'.config']);
+
                     $skin = $ed->config.'.skin.'.$ed->skin;
-                    if(isset($gJConfig->htmleditors[$skin]) && $gJConfig->htmleditors[$skin] != '')
-                        $resp->addCSSLink($bp.$gJConfig->htmleditors[$skin]);
+                    if(isset($heConf[$skin]) && $heConf[$skin] != '')
+                        $resp->addCSSLink($bp.$heConf[$skin]);
                 }
             }
         }

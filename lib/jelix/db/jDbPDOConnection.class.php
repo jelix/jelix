@@ -4,7 +4,7 @@
 * @subpackage db
 * @author     Laurent Jouanneau
 * @contributor Gwendal Jouannic, Thomas, Julien Issler
-* @copyright  2005-2010 Laurent Jouanneau
+* @copyright  2005-2012 Laurent Jouanneau
 * @copyright  2008 Gwendal Jouannic, 2009 Thomas
 * @copyright  2009 Julien Issler
 * @link      http://www.jelix.org
@@ -96,11 +96,12 @@ class jDbPDOConnection extends PDO {
             $this->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
 
         if (isset($prof['force_encoding']) && $prof['force_encoding']==true) {
-            if ($this->dbms == 'mysql' && isset($this->_mysqlCharsets[jApp::config()->charset])) {
-                $this->exec("SET NAMES '".$this->_mysqlCharsets[jApp::config()->charset]."'");
+            $charset = jApp::config()->charset;
+            if ($this->dbms == 'mysql' && isset($this->_mysqlCharsets[$charset])) {
+                $this->exec("SET NAMES '".$this->_mysqlCharsets[$charset]."'");
             }
-            elseif($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[jApp::config()->charset])) {
-                $this->exec("SET client_encoding to '".$this->_pgsqlCharsets[jApp::config()->charset]."'");
+            elseif($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[$charset])) {
+                $this->exec("SET client_encoding to '".$this->_pgsqlCharsets[$charset]."'");
             }
         }
     }
