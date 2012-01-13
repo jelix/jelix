@@ -70,15 +70,15 @@ class jWSDL {
      * create the path for the cache file
      */
     private function _createPath(){
-        global $gJConfig;
+        $config = jApp::config();
 
         //Check module availability
-        if(!isset($gJConfig->_modulesPathList[$this->module])){
+        if(!isset($config->_modulesPathList[$this->module])){
             throw new jExceptionSelector('jelix~errors.module.unknown', $this->module);
         }
 
         //Build controller path
-        $this->_ctrlpath = $gJConfig->_modulesPathList[$this->module].'controllers/'.$this->controller.'.soap.php';
+        $this->_ctrlpath = $config->_modulesPathList[$this->module].'controllers/'.$this->controller.'.soap.php';
 
         //Check controller availability
         if(!file_exists($this->_ctrlpath)){
@@ -142,15 +142,14 @@ class jWSDL {
      */
     private function _updateWSDL(){
 
-        global $gJConfig;
         static $updated = FALSE;
 
         if($updated){
             return;
         }
 
-        $mustCompile = $gJConfig->compilation['force'] || !file_exists($this->_cachePath);
-        if($gJConfig->compilation['checkCacheFiletime'] && !$mustCompile){
+        $mustCompile = jApp::config()->compilation['force'] || !file_exists($this->_cachePath);
+        if(jApp::config()->compilation['checkCacheFiletime'] && !$mustCompile){
             if( filemtime($this->_ctrlpath) > filemtime($this->_cachePath)){
                 $mustCompile = true;
             }
@@ -167,7 +166,7 @@ class jWSDL {
      */
     private function _compile(){
 
-        global $gJConfig, $gJCoord;
+        global $gJCoord;
 
         $url = jUrl::get($this->module.'~'.$this->controller.':index@soap',array(),jUrl::JURL);
         $url->clearParam ();
@@ -176,7 +175,7 @@ class jWSDL {
         $serviceURL = $serviceNameSpace = $gJCoord->request->getServerURI();
 
         $serviceURL .= $url->toString();
-        $serviceNameSpace .= $gJConfig->urlengine['basePath'];
+        $serviceNameSpace .= jApp::config()->urlengine['basePath'];
 
         $wsdl = new WSDLStruct($serviceNameSpace, $serviceURL, SOAP_RPC, SOAP_ENCODED);
         $wsdl->setService(new IPReflectionClass($this->controllerClassName));
@@ -227,9 +226,7 @@ class jWSDL {
      */
     public static function getSoapControllers(){
 
-        global $gJConfig;
-
-        $modules = $gJConfig->_modulesPathList;
+        $modules = jApp::config()->_modulesPathList;
         $controllers = array();
 
         foreach($modules as $module){

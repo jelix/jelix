@@ -158,9 +158,8 @@ class jZone {
     * @return string  zone content
     */
     public function getContent (){
-    	global $gJConfig;
 
-        if ($this->_useCache && !$gJConfig->zones['disableCache']){
+        if ($this->_useCache && !jApp::config()->zones['disableCache']){
             $f = $this->_getCacheFile();
             if(file_exists($f)){
                 if($this->_cacheTimeout > 0){

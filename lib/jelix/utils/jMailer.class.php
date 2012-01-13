@@ -56,28 +56,28 @@ class jMailer extends PHPMailer {
      * initialize some member
      */
     function __construct(){
-        global $gJConfig;
-        $this->defaultLang = $gJConfig->locale;
-        $this->CharSet = $gJConfig->charset;
-        $this->Mailer = $gJConfig->mailer['mailerType'];
-        $this->Hostname = $gJConfig->mailer['hostname'];
-        $this->Sendmail = $gJConfig->mailer['sendmailPath'];
-        $this->Host = $gJConfig->mailer['smtpHost'];
-        $this->Port = $gJConfig->mailer['smtpPort'];
-        $this->Helo = $gJConfig->mailer['smtpHelo'];
-        $this->SMTPAuth = $gJConfig->mailer['smtpAuth'];
-        $this->SMTPSecure = $gJConfig->mailer['smtpSecure'];
-        $this->Username = $gJConfig->mailer['smtpUsername'];
-        $this->Password = $gJConfig->mailer['smtpPassword'];
-        $this->Timeout = $gJConfig->mailer['smtpTimeout'];
-        if($gJConfig->mailer['webmasterEmail'] != '') {
-            $this->From = $gJConfig->mailer['webmasterEmail'];
+        $config = jApp::config();
+        $this->defaultLang = $config->locale;
+        $this->CharSet = $config->charset;
+        $this->Mailer = $config->mailer['mailerType'];
+        $this->Hostname = $config->mailer['hostname'];
+        $this->Sendmail = $config->mailer['sendmailPath'];
+        $this->Host = $config->mailer['smtpHost'];
+        $this->Port = $config->mailer['smtpPort'];
+        $this->Helo = $config->mailer['smtpHelo'];
+        $this->SMTPAuth = $config->mailer['smtpAuth'];
+        $this->SMTPSecure = $config->mailer['smtpSecure'];
+        $this->Username = $config->mailer['smtpUsername'];
+        $this->Password = $config->mailer['smtpPassword'];
+        $this->Timeout = $config->mailer['smtpTimeout'];
+        if($config->mailer['webmasterEmail'] != '') {
+            $this->From = $config->mailer['webmasterEmail'];
         }
 
-        $this->FromName = $gJConfig->mailer['webmasterName'];
-        $this->filePath = jApp::varPath($gJConfig->mailer['filesDir']);
+        $this->FromName = $config->mailer['webmasterName'];
+        $this->filePath = jApp::varPath($config->mailer['filesDir']);
 
-        $this->copyToFiles = $gJConfig->mailer['copyToFiles'];
+        $this->copyToFiles = $config->mailer['copyToFiles'];
 
         parent::__construct(true);
         

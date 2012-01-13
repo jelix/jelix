@@ -165,7 +165,6 @@ class jProfiles {
      *                      we can also indicate a name of an other profile, to create an alias
      */
     public static function createVirtualProfile ($category, $name, $params) {
-        global $gJConfig;
         if ($name == '') {
            throw new jException('jelix~errors.profile.virtual.no.name', $category);
         }

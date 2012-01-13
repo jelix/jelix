@@ -126,9 +126,9 @@ class jClassBinding {
             $str_selector_long = $this->fromSelector->toString(true);
 
             // 1) verify that a default implementation is specified in the jelix config file
-            global $gJConfig;
-            if (isset($gJConfig->classbindings) && count($gJConfig->classbindings)) {
-                $conf = $gJConfig->classbindings;
+            $config = jApp::config();
+            if (isset($config->classbindings) && count($config->classbindings)) {
+                $conf = $config->classbindings;
 
                 // No '~' allowed as key of a ini file, we use '-' instead
                 $conf_selector      = str_replace('~', '-', $str_selector);
