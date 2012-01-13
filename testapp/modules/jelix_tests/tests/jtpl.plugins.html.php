@@ -154,80 +154,80 @@ class UTjtplplugins extends jUnitTestCase {
     function testPageLinks() {
         $tpl = new jTpl();
         $output = $tpl->fetch ('test_plugin_pagelinks'); //, $outputtype='', $trusted = true, $callMeta=true
-        global $gJConfig;
+        $config = jApp::config();
         $expected = 
 '1: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled">|&lt;</li>
 <li class="pagelinks-prev pagelinks-disabled">&lt;</li>
 <li class="pagelinks-current">1</li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">2</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=20">3</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=30">4</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">5</a></li>
-<li class="pagelinks-next"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">&gt;</a></li>
-<li class="pagelinks-end"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">&gt;|</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">2</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=20">3</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=30">4</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">5</a></li>
+<li class="pagelinks-next"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">&gt;</a></li>
+<li class="pagelinks-end"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">&gt;|</a></li>
 </ul>
 2: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled">|&lt;</li>
 <li class="pagelinks-prev pagelinks-disabled">&lt;</li>
 <li class="pagelinks-current">1</li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">2</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=20">3</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=30">4</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">5</a></li>
-<li class="pagelinks-next"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">&gt;</a></li>
-<li class="pagelinks-end"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">&gt;|</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">2</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=20">3</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=30">4</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">5</a></li>
+<li class="pagelinks-next"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">&gt;</a></li>
+<li class="pagelinks-end"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">&gt;|</a></li>
 </ul>
 3: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled">|&lt;</li>
 <li class="pagelinks-prev pagelinks-disabled">&lt;</li>
 <li class="pagelinks-current">1</li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">2</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=20">3</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=30">4</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">5</a></li>
-<li class="pagelinks-next"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">&gt;</a></li>
-<li class="pagelinks-end"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">&gt;|</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">2</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=20">3</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=30">4</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">5</a></li>
+<li class="pagelinks-next"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">&gt;</a></li>
+<li class="pagelinks-end"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">&gt;|</a></li>
 </ul>
-4: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">|&lt;</a></li>
-<li class="pagelinks-prev"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">&lt;</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">1</a></li>
+4: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">|&lt;</a></li>
+<li class="pagelinks-prev"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">&lt;</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">1</a></li>
 <li class="pagelinks-current">2</li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=20">3</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=30">4</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">5</a></li>
-<li class="pagelinks-next"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=20">&gt;</a></li>
-<li class="pagelinks-end"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">&gt;|</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=20">3</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=30">4</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">5</a></li>
+<li class="pagelinks-next"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=20">&gt;</a></li>
+<li class="pagelinks-end"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=40">&gt;|</a></li>
 </ul>
 5: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled">|&lt;</li>
 <li class="pagelinks-prev pagelinks-disabled">&lt;</li>
 <li class="pagelinks-current">1</li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=5">2</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">3</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">4</a></li>
-<li class="pagelinks-next"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=5">&gt;</a></li>
-<li class="pagelinks-end"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">&gt;|</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=5">2</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">3</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">4</a></li>
+<li class="pagelinks-next"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=5">&gt;</a></li>
+<li class="pagelinks-end"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">&gt;|</a></li>
 </ul>
-6: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">|&lt;</a></li>
-<li class="pagelinks-prev"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">&lt;</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">1</a></li>
+6: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">|&lt;</a></li>
+<li class="pagelinks-prev"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">&lt;</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">1</a></li>
 <li class="pagelinks-current">2</li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">3</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">4</a></li>
-<li class="pagelinks-next"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">&gt;</a></li>
-<li class="pagelinks-end"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">&gt;|</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">3</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">4</a></li>
+<li class="pagelinks-next"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">&gt;</a></li>
+<li class="pagelinks-end"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">&gt;|</a></li>
 </ul>
-7: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">|&lt;</a></li>
-<li class="pagelinks-prev"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=5">&lt;</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">1</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=5">2</a></li>
+7: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">|&lt;</a></li>
+<li class="pagelinks-prev"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=5">&lt;</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">1</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=5">2</a></li>
 <li class="pagelinks-current">3</li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">4</a></li>
-<li class="pagelinks-next"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">&gt;</a></li>
-<li class="pagelinks-end"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">&gt;|</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">4</a></li>
+<li class="pagelinks-next"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">&gt;</a></li>
+<li class="pagelinks-end"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=15">&gt;|</a></li>
 </ul>
-8: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">|&lt;</a></li>
-<li class="pagelinks-prev"><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">&lt;</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">1</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=5">2</a></li>
-<li><a href="'.$gJConfig->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">3</a></li>
+8: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">|&lt;</a></li>
+<li class="pagelinks-prev"><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">&lt;</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=0">1</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=5">2</a></li>
+<li><a href="'.$config->urlengine['basePath'].'index.php?module=jelix_tests&amp;action=urlsig:url1&amp;offset=10">3</a></li>
 <li class="pagelinks-current">4</li>
 <li class="pagelinks-next pagelinks-disabled">&gt;</li>
 <li class="pagelinks-end pagelinks-disabled">&gt;|</li>

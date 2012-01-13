@@ -17,9 +17,8 @@ class UTjlog extends UnitTestCase {
         if(file_exists($file))
             file_put_contents($file,'');
 
-        global $gJConfig;
-        $gJConfig->logger['test'] = 'file';
-        $gJConfig->fileLogger['test'] = 'test.log';
+        jApp::config()->logger['test'] = 'file';
+        jApp::config()->fileLogger['test'] = 'test.log';
 
         jLog::log('aaa','test');
         $this->assertTrue(file_exists($file));

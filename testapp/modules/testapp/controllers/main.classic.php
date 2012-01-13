@@ -110,17 +110,17 @@ class mainCtrl extends jController {
 
 
     function testminify() {
-        global $gJConfig;
-        $gJConfig->jResponseHtml['plugins'] = 'minify';
-        $gJConfig->jResponseHtml['minifyCSS'] = true;
-        $gJConfig->jResponseHtml['minifyJS'] = true;
+        $config = jApp::config();
+        $config->jResponseHtml['plugins'] = 'minify';
+        $config->jResponseHtml['minifyCSS'] = true;
+        $config->jResponseHtml['minifyJS'] = true;
         
         $resp = $this->getResponse('html', true);
         $resp->bodyTpl = 'testapp~testminify';
-        $resp->addJSLink ($gJConfig->urlengine['basePath'].'testminify/js/s1.js');
-        $resp->addJSLink ($gJConfig->urlengine['basePath'].'testminify/js/s2.js');
-        $resp->addCSSLink($gJConfig->urlengine['basePath'].'testminify/css/style1.css');
-        $resp->addCSSLink($gJConfig->urlengine['basePath'].'testminify/css/style2.css');
+        $resp->addJSLink ($config->urlengine['basePath'].'testminify/js/s1.js');
+        $resp->addJSLink ($config->urlengine['basePath'].'testminify/js/s2.js');
+        $resp->addCSSLink($config->urlengine['basePath'].'testminify/css/style1.css');
+        $resp->addCSSLink($config->urlengine['basePath'].'testminify/css/style2.css');
         return $resp;
     }
 

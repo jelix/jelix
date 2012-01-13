@@ -32,15 +32,16 @@ class UTjrequest extends jUnitTestCase {
 
     function setUp() {
         $this->currentServer = $_SERVER;
-        $this->currentConfig = clone $GLOBALS['gJConfig'];
-        jApp::config()->urlengine['basePath'] = '/';
-        jApp::config()->responses=array();
-        jApp::config()->_coreResponses=array();
+        jApp::saveContext();
+        $conf = jApp::config();
+        $conf->urlengine['basePath'] = '/';
+        $conf->responses=array();
+        $conf->_coreResponses=array();
     }
 
     function tearDown() {
         $_SERVER = $this->currentServer;
-        $GLOBALS['gJConfig'] = clone $this->currentConfig;
+        jApp::restoreContext();
     }
 
     // /foo/index.php, CGI,  cgi.fix_pathinfo=0
@@ -59,7 +60,7 @@ class UTjrequest extends jUnitTestCase {
         'SCRIPT_NAME' => '/cgi-bin/php5',
         );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
 
         $this->assertEqual('/foo/', $req->urlScriptPath);
@@ -85,7 +86,7 @@ class UTjrequest extends jUnitTestCase {
         'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
 
         $this->assertEqual('/foo/', $req->urlScriptPath);
@@ -107,7 +108,7 @@ class UTjrequest extends jUnitTestCase {
         'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
 
         $this->assertEqual('/foo/', $req->urlScriptPath);
@@ -130,7 +131,7 @@ class UTjrequest extends jUnitTestCase {
         'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
 
         $this->assertEqual('/foo/', $req->urlScriptPath);
@@ -151,7 +152,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
 
         $this->assertEqual('/foo/', $req->urlScriptPath);
@@ -179,7 +180,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -201,7 +202,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -223,7 +224,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -244,7 +245,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -271,7 +272,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -295,7 +296,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
        );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -321,7 +322,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/bar',
        );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -344,7 +345,7 @@ class UTjrequest extends jUnitTestCase {
             'SCRIPT_NAME' => '/foo/index.php',
         );
         $req = new requestTest();
-        configCompileTest::prepareConfig2($GLOBALS['gJConfig']);
+        configCompileTest::prepareConfig2(jApp::config());
         $req->init();
         $this->assertEqual('/foo/', $req->urlScriptPath);
         $this->assertEqual('index.php', $req->urlScriptName);
@@ -354,641 +355,641 @@ class UTjrequest extends jUnitTestCase {
 
 
     function testGetServerURI_HTTP_80() {
-        global $gJConfig;
         global $gJCoord;
         $request = $gJCoord->request;
-        $gJConfig->domainName = 'foo.local';
+        $config = jApp::config();
+        $config->domainName = 'foo.local';
         unset($_SERVER['HTTPS']);
         $_SERVER['SERVER_PORT'] = '80';
 
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '';
 
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
     }
 
     function testGetServerURI_HTTP_8082() {
-        global $gJConfig;
         global $gJCoord;
         $request = $gJCoord->request;
-        $gJConfig->domainName = 'foo.local';
+        $config = jApp::config();
+        $config->domainName = 'foo.local';
         unset($_SERVER['HTTPS']);
         $_SERVER['SERVER_PORT'] = '8082';
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '';
 
         $this->assertEqual('http://foo.local:8082', $request->getServerURI());
         $this->assertEqual('http://foo.local:8082', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local:8082', $request->getServerURI());
         $this->assertEqual('http://foo.local:8082', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local:8082', $request->getServerURI());
         $this->assertEqual('http://foo.local:8082', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local:8082', $request->getServerURI());
         $this->assertEqual('http://foo.local:8082', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
     }
     
     function testGetServerURI_HTTPS_443() {
-        global $gJConfig;
         global $gJCoord;
         $request = $gJCoord->request;
-        $gJConfig->domainName = 'foo.local';
+        $config = jApp::config();
+        $config->domainName = 'foo.local';
 
         // ----
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_PORT'] = '443';
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '';
 
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '';
-        $this->assertEqual('https://foo.local', $request->getServerURI());
-        $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
-        $this->assertEqual('https://foo.local', $request->getServerURI(true));
-
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '443';
+        $this->assertEqual('https://foo.local', $request->getServerURI());
+        $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
+        $this->assertEqual('https://foo.local', $request->getServerURI(true));
+
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
     }//bad
     
     function testGetServerURI_HTTPS_4435() {
-        global $gJConfig;
         global $gJCoord;
+        $config = jApp::config();
         $request = $gJCoord->request;
-        $gJConfig->domainName = 'foo.local';
+        $config->domainName = 'foo.local';
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_PORT'] = '4435';
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '';
 
         $this->assertEqual('https://foo.local:4435', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4435', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('https://foo.local:4435', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4435', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('https://foo.local:4435', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4435', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '';
         $this->assertEqual('https://foo.local:4435', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4435', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
     }
     
     function testGetServerURI_HTTPS_80() {
-        global $gJConfig;
         global $gJCoord;
+        $config = jApp::config();
         $request = $gJCoord->request;
-        $gJConfig->domainName = 'foo.local';
+        $config->domainName = 'foo.local';
 
         // special ugly case
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_PORT'] = '80';
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '';
 
         $this->assertEqual('https://foo.local:80', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:80', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('https://foo.local:80', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:80', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('https://foo.local:80', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:80', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '';
         $this->assertEqual('https://foo.local:80', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:80', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('https://foo.local:4433', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('https://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
     }
     
     function testGetServerURI_HTTP_443() {
-        global $gJConfig;
         global $gJCoord;
+        $config = jApp::config();
         $request = $gJCoord->request;
-        $gJConfig->domainName = 'foo.local';
+        $config->domainName = 'foo.local';
         // special ugly case
         unset($_SERVER['HTTPS']);
         $_SERVER['SERVER_PORT'] = '443';
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '';
 
         $this->assertEqual('http://foo.local:443', $request->getServerURI());
         $this->assertEqual('http://foo.local:443', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '';
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local:443', $request->getServerURI());
         $this->assertEqual('http://foo.local:443', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local:443', $request->getServerURI());
         $this->assertEqual('http://foo.local:443', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '443';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '443';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = '4433';
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = '4433';
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local:4433', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = true;
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = true;
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local:443', $request->getServerURI());
         $this->assertEqual('http://foo.local:443', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '80';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '80';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local', $request->getServerURI());
         $this->assertEqual('http://foo.local', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
 
-        $gJConfig->forceHTTPPort = '8080';
-        $gJConfig->forceHTTPSPort = true;
+        $config->forceHTTPPort = '8080';
+        $config->forceHTTPSPort = true;
         $this->assertEqual('http://foo.local:8080', $request->getServerURI());
         $this->assertEqual('http://foo.local:8080', $request->getServerURI(false));
         $this->assertEqual('https://foo.local', $request->getServerURI(true));
