@@ -4,7 +4,7 @@
  * @subpackage  utils
  * @author      Christophe Thiriot
  * @contributor Laurent Jouanneau
- * @copyright   2008 Christophe Thiriot, 2008-2010 Laurent Jouanneau
+ * @copyright   2008 Christophe Thiriot, 2008-2012 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  * @since 1.1
