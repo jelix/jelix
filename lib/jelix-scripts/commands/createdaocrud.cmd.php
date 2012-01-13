@@ -59,7 +59,6 @@ class createdaocrudCommand extends JelixScriptCommand {
     public function run(){
 
         $this->loadAppConfig();
-        global $gJConfig;
         $module = $this->_parameters['module'];
         $path= $this->getModulePath($module);
 
@@ -168,7 +167,7 @@ class createdaocrudCommand extends JelixScriptCommand {
             }
         }
 
-        if ($gJConfig->urlengine['engine'] == 'significant') {
+        if (jApp::config()->urlengine['engine'] == 'significant') {
 
             if (!file_exists($path.'urls.xml')) {
                 $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
