@@ -4,7 +4,7 @@
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
-* @copyright   2005-2009 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2005-2012 Laurent Jouanneau, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -47,12 +47,12 @@ class jTpl {
 
     public function __construct () {
 #ifnot JTPL_STANDALONE
-        global $gJConfig;
-        $this->_vars['j_basepath'] = $gJConfig->urlengine['basePath'];
-        $this->_vars['j_jelixwww'] = $gJConfig->urlengine['jelixWWWPath'];
-        $this->_vars['j_jquerypath'] = $gJConfig->urlengine['jqueryPath'];
-        $this->_vars['j_themepath'] = $gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/';
-        $this->_vars['j_locale'] = $gJConfig->locale;
+        $config = jApp::config();
+        $this->_vars['j_basepath'] = $config->urlengine['basePath'];
+        $this->_vars['j_jelixwww'] = $config->urlengine['jelixWWWPath'];
+        $this->_vars['j_jquerypath'] = $config->urlengine['jqueryPath'];
+        $this->_vars['j_themepath'] = $config->urlengine['basePath'].'themes/'.$config->theme.'/';
+        $this->_vars['j_locale'] = $config->locale;
 #endif
         $this->_vars['j_datenow'] = date('Y-m-d');
         $this->_vars['j_timenow'] = date('H:i:s');
