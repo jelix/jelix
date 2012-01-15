@@ -73,6 +73,8 @@ class jAtom10Item extends jXMLFeedItem {
      */
     public function setFromXML(SimpleXMLElement $item){
         
+        $dt = new jDateTime();
+        
         $this->authorEmail = (string)$item->author->email;
         $this->authorName = (string)$item->author->name;
     
@@ -82,8 +84,17 @@ class jAtom10Item extends jXMLFeedItem {
         }
 
         $this->content = (string)$item->content;
+        if($item->content['type'])
+            $this->contentType = (string)$item->content['type'];
+        
+        $this->source = (string)$item->source;
         $this->id = (string)$item->id;
-        $this->published = (string)$item->published;
+        
+        if((string)$item->published != ''){
+            $dt->setFromString((string)$item->published, jDateTime::ISO8601_FORMAT);
+            $this->published = $dt->toString(jDateTime::DB_DTFORMAT);
+        }
+
         $this->title = (string)$item->title;
         $this->authorUri = (string)$item->author->uri;
         $this->copyright = (string)$item->rights;
@@ -105,7 +116,6 @@ class jAtom10Item extends jXMLFeedItem {
             $i++;
         }
 
-        
         $attrs_links = array('href', 'rel', 'type', 'hreflang', 'title', 'length');
         foreach($item->link as $l){
                 if(($l['rel'] == 'alternate' || $l['rel'] == null)&& $l['href'] != null)
@@ -121,7 +131,14 @@ class jAtom10Item extends jXMLFeedItem {
         }
     
         $this->summary = (string)$item->summary;
-        $this->updated = (string)$item->updated;
+        if($feed->summary['type'])
+            $this->summaryType = (string)$feed->summary['type'];
+
+        if((string)$item->updated != ''){
+            $dt->setFromString((string)$item->updated, jDateTime::ISO8601_FORMAT);
+            $this->updated = $dt->toString(jDateTime::DB_DTFORMAT);
+        }
+    
     }    
 
 }

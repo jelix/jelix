@@ -118,14 +118,25 @@ class jRSS20Info extends jXMLFeedInfo {
      */
     public function setFromXML(SimpleXMLElement $channel){
         
+        $dt = new jDateTime();
+        
         $this->copyright =(string)$channel->copyright;
         $this->description = (string)$channel->description;
         $this->generator = (string)$channel->generator;
-        $this->image = (string)$channel->image;
+        $this->image = (string)$channel->image->url;
         $this->title = (string)$channel->title;
-        $this->updated = (string)$channel->lastBuildDate;
+        
+        if((string)$channel->lastBuildDate != ''){
+            $dt->setFromString((string)$channel->lastBuildDate, jDateTime::RFC2822_FORMAT);
+            $this->updated = $dt->toString(jDateTime::DB_DTFORMAT);
+        }
+                
+        if((string)$channel->pubDate != ''){
+            $dt->setFromString((string)$channel->pubDate, jDateTime::RFC2822_FORMAT);
+            $this->published = $dt->toString(jDateTime::DB_DTFORMAT);
+        }
+
         $this->webSiteUrl = (string)$channel->link;
-        $this->cloud = (string)$channel->cloud;
         $this->docs = (string)$channel->docs;
         $this->imageHeight = (string)$channel->image->height;
         $this->imageLink = (string)$channel->image->link;
@@ -134,7 +145,6 @@ class jRSS20Info extends jXMLFeedInfo {
         $this->imageDescription = (string)$channel->image->description;
         $this->language = (string)$channel->language;
         $this->managingEditor = (string)$channel->managingEditor;
-        $this->published = (string)$channel->pubDate;
         $this->rating = (string)$channel->rating;
         
         $categories = $channel->category;
@@ -143,19 +153,19 @@ class jRSS20Info extends jXMLFeedInfo {
         }
         
         $skipDays = $channel->skipDays;	
-        foreach ($skipDays as $days) {
-            $this->skipDays[] = (string)$days;
+        foreach ($skipDays as $day) {
+            $this->skipDays[] = (string)$day;
         }
         
         $skipHours = $channel->skipHours;	
-        foreach ($skipHours as $hours) {
-            $this->skipHours[] = (string)$hours;
+        foreach ($skipHours as $hour) {
+            $this->skipHours[] = (string)$hour;
         }
 
-        $textInput = $channel->textInput;	
-        foreach ($textInput as $text) {
-            $this->textInput[] = (string)$text;
-        }
+        $this->textInput['title'] = (string)$channel->textInput->title;
+        $this->textInput['description'] = (string)$channel->textInput->description;
+        $this->textInput['name'] = (string)$channel->textInput->name;
+        $this->textInput['link'] = (string)$channel->textInput->link;
 
         $this->ttl = (string)$channel->ttl;
         $this->webMaster = (string)$channel->webMaster;

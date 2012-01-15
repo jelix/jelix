@@ -405,7 +405,7 @@ cd lib/jelix/utils/
   jTcpdf.class.php
   jVersionComparator.class.php
 * jWiki.class.php
-* jXMLFeedReader.class.php
+  jXMLFeedReader.class.php
   jXMLFeedInfo.class.php
   jXMLFeedItem.class.php
   jXmlRpc.class.php

@@ -15,13 +15,6 @@ require_once(JELIX_LIB_PATH.'utils/jRSS20Info.class.php');
 require_once(JELIX_LIB_PATH.'utils/jRSS20Item.class.php');
 
 class jRSS20Reader extends jXMLFeedReader{
-
-    /**
-    * construct an flux with an url parameter
-    */
-    public function __construct($url) {
-        parent::__construct($url);
-    }
     
 
     protected function analyzeInfo() {

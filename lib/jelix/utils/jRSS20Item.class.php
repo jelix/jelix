@@ -53,8 +53,9 @@ class jRSS20Item extends jXMLFeedItem {
      */
     public function setFromXML(SimpleXMLElement $item){
         
+        $dt = new jDateTime();
+        
         $resultat = explode(" ", (string)$item->author);
-            
         foreach ($resultat as $mot){
             if (jFilter::isEmail($mot))
                     $this->authorEmail = $mot;
@@ -70,7 +71,12 @@ class jRSS20Item extends jXMLFeedItem {
         $this->content = (string)$item->description;
         $this->id = (string)$item->guid;
         $this->link = (string)$item->link;
-        $this->published = (string)$item->pubDate;
+        
+        if((string)$item->pubDate != ''){
+            $dt->setFromString((string)$item->pubDate, jDateTime::RFC2822_FORMAT);
+            $this->published = $dt->toString(jDateTime::DB_DTFORMAT);
+        }
+
         $this->title = (string)$item->title;
         
         $this->idIsPermalink = (isset($item->guid['isPermaLink']) && $item->guid['isPermaLink'] == 'true') ? true : false;

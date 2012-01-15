@@ -36,27 +36,21 @@ abstract class jXMLFeedReader {
     * read an flux with an url parameter
     * @param string $url
     */
-    public function __construct($url) {
-#ifndef PROD_VERSION
+    public function __construct($url){
+
         try{
-#endif
             $stream = jHttp::quickGet($url);
-#ifndef PROD_VERSION
         } catch(Exception $e){
             throw new jException('jelix~errors.xml.remote.feed.error');
         }
-#endif
         
-#ifndef PROD_VERSION           
         if(!$stream){
             throw new jException('jelix~errors.xml.remote.feed.error');
         }
-#endif
 
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($stream);
-        
-#ifndef PROD_VERSION              
+                    
         if($xml === false){
             $errors = '';
             foreach(libxml_get_errors() as $error) {
@@ -64,7 +58,6 @@ abstract class jXMLFeedReader {
             }
             throw new jException('jelix~errors.xml.loading.document.error', array($errors));
         }
-#endif
         libxml_use_internal_errors();
         libxml_clear_errors();
         
@@ -94,17 +87,27 @@ abstract class jXMLFeedReader {
         return $this->items;
     }
     
+    /**
+     * return the SimpleXML structure corresponding to the feed
+     */
     public function getXML(){
         return $this->xml;
     }
     
     /**
-    * analyze infos of the feed
+     * Clear the the SimpleXML structure corresponding to the feed (usefull for big feed)
+     */
+    public function clearXML(){
+        $this->xml = null;
+    }
+    
+    /**
+    * Analyze infos of the feed
     */
     protected abstract function analyzeInfo();
     
     /**
-    * analyze items of the feed
+    * Analyze items of the feed
     */
     protected abstract function analyzeItems();
     

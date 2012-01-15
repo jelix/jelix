@@ -14,24 +14,13 @@ require_once(JELIX_LIB_PATH.'utils/jXMLFeedReader.class.php');
 
 class jAtom10Reader extends jXMLFeedReader{
 
-    /**
-    * construct an flux with an url parameter
-    */
-    public function __construct($url) {
-        parent::__construct($url);
-    }
-    
-    /**
-    * analyze the informations to the flux Atom
-    */
+
     protected function analyzeInfo() {	
         $this->infos = new jAtom10Info();
         $this->infos->setFromXML($this->xml);
     }
 
-    /**
-    * analyze the items to the flux RSS
-    */
+
     protected function analyzeItems() {
         $this->items = array();
         

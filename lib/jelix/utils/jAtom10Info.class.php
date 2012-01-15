@@ -74,18 +74,26 @@ class jAtom10Info extends jXMLFeedInfo {
      */
     public function setFromXML(SimpleXMLElement $feed){
         
+        $dt = new jDateTime();
+        
         foreach ($feed->category as $cat) {
             if($cat['term'] != null)
                 $this->categories[] = (string)$cat['term'];
         }
         
-        $this->copyright = (string)$feed->rights;
         $this->description = (string)$feed->subtitle;
+        if($feed->subtitle['type'])
+            $this->descriptionType = (string)$feed->subtitle['type'];
         $this->generator = (string)$feed->generator;
         $this->image = (string)$feed->logo; //or maybe $feed->icon
         $this->title = (string)$feed->title;
-        $this->updated = (string)$feed->updated;
-       
+        $this->copyright = (string)$feed->rights;
+        
+        if((string)$feed->updated != ''){
+            $dt->setFromString((string)$feed->updated, jDateTime::ISO8601_FORMAT);
+            $this->updated = $dt->toString(jDateTime::DB_DTFORMAT);
+        }
+        
        $attrs_links = array('href', 'rel', 'type', 'hreflang', 'title', 'length');
         foreach($feed->link as $l){
                 if(($l['rel'] == 'alternate' || $l['rel'] == null)&& $l['href'] != null)
