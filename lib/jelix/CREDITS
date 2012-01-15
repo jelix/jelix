@@ -220,6 +220,13 @@ Kévin Lepeltier (aka Lipki)
  - plugin coord history (#507)
  - improvement in jMailer (#530)
 
+Florian Lonqueu-Brochard (FlorianLB)
+ - système de cache http (#4)
+ - bcrypt algorithm for jAuth
+ - classe lecture d’un rss/atom distant (#23)
+
+
+
 Vincent Viaud (aka Litchi)
  - bug fix in jforms_jquery.js (#1132)
  - fixed misprint in ldap plugin (#1219)
