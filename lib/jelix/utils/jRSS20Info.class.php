@@ -153,12 +153,12 @@ class jRSS20Info extends jXMLFeedInfo {
         }
         
         $skipDays = $channel->skipDays;	
-        foreach ($skipDays as $day) {
+        foreach ($skipDays->day as $day) {
             $this->skipDays[] = (string)$day;
         }
         
         $skipHours = $channel->skipHours;	
-        foreach ($skipHours as $hour) {
+        foreach ($skipHours->hour as $hour) {
             $this->skipHours[] = (string)$hour;
         }
 
