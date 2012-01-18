@@ -15,9 +15,9 @@ class wwwCtrl extends jController {
     
     public function getfile() {
         $module = $this->param('targetmodule');
-        global $gJConfig, $gJCoord;
+        global $gJCoord;
 
-        if (!$gJCoord->isModuleEnabled($module) || $gJConfig->modules[$module.'.access'] < 2) {
+        if (!$gJCoord->isModuleEnabled($module) || jApp::config()->modules[$module.'.access'] < 2) {
             throw new jException('jelix~errors.module.untrusted',$module);
         }
 

@@ -66,7 +66,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $bp = $config->urlengine['basePath'];
         $resp->addJSLink($www.'js/jforms_light.js');
         $resp->addCSSLink($www.'design/jform.css');
-        $heConf = &$gJConfig->htmleditors;
+        $heConf = &$config->htmleditors;
         foreach($t->_vars as $k=>$v){
             if($v instanceof jFormsBase && count($edlist = $v->getHtmlEditors())) {
                 foreach($edlist as $ed) {

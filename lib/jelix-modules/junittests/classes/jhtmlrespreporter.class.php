@@ -116,8 +116,7 @@ $this->_response->body->append('MAIN','<!--B:'.$stringB.'-->');
    }
 
    function _htmlEntities($message) {
-      global $gJConfig;
-      return htmlentities($message, ENT_COMPAT, $gJConfig->charset);
+      return htmlentities($message, ENT_COMPAT, jApp::config()->charset);
    }
 }
 
