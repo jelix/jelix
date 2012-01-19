@@ -5,7 +5,7 @@
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
 * @contributor Thibault Piront (nuKs)
-* @copyright   2005-2010 Laurent Jouanneau
+* @copyright   2005-2012 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -49,6 +49,10 @@ class jSelectorAct extends jSelectorActFast {
             if($this->request == '')
                 $this->request = $gJCoord->request->type;
 
+            $this->_createPath();
+        }else{
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
+        }
 #else
         if(preg_match("/^(?:([a-zA-Z0-9_\.]+|\#)~)?([a-zA-Z0-9_:]+|\#)?(?:@([a-zA-Z0-9_]+))?$/", $sel, $m)){
             $m=array_pad($m,4,'');
@@ -78,19 +82,19 @@ class jSelectorAct extends jSelectorActFast {
                 $this->request = $m[3];
             else
                 $this->request = $gJCoord->request->type;
-#endif
             $this->_createPath();
         }else{
             throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
+#endif
     }
 
     protected function _createPath(){
-        global $gJConfig;
-        if (isset($gJConfig->_modulesPathList[$this->module])) {
-            $p = $gJConfig->_modulesPathList[$this->module];
-        } else if ($this->forUrl && isset($gJConfig->_externalModulesPathList[$this->module])) {
-            $p = $gJConfig->_externalModulesPathList[$this->module];
+        $conf = jApp::config();
+        if (isset($conf->_modulesPathList[$this->module])) {
+            $p = $conf->_modulesPathList[$this->module];
+        } else if ($this->forUrl && isset($conf->_externalModulesPathList[$this->module])) {
+            $p = $conf->_externalModulesPathList[$this->module];
         }
         else
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());

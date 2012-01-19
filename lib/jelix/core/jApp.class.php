@@ -132,6 +132,10 @@ class jApp {
         return self::$_config;
     }
 
+    public static function setConfig($config) {
+        self::$_config = $config;
+    }
+
     /**
      * Load the configuration from the given file.
      *
@@ -161,8 +165,9 @@ class jApp {
      * temporary change the context to an other application
      */
     public static function saveContext() {
+        $conf = clone self::$_config;
         self::$contextBackup[] = array(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
-                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, self::$_config);
+                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, $conf);
     }
 
     /**

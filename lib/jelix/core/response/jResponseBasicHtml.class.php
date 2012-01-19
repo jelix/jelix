@@ -4,7 +4,7 @@
  * @subpackage  core_response
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Brice Tence
- * @copyright   2010 Laurent Jouanneau
+ * @copyright   2010-2012 Laurent Jouanneau
  * @copyright   2011 Julien Issler, 2011 Brice Tence
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -115,12 +115,12 @@ class jResponseBasicHtml extends jResponse {
     * setup the charset, the lang
     */
     function __construct (){
-        global $gJConfig;
-        $this->_charset = $gJConfig->charset;
-        $this->_lang = $gJConfig->locale;
+
+        $this->_charset = jApp::config()->charset;
+        $this->_lang = jApp::config()->locale;
 
         // load plugins
-        $plugins = $gJConfig->jResponseHtml['plugins'];
+        $plugins = jApp::config()->jResponseHtml['plugins'];
         if ($plugins) {
             $plugins = preg_split('/ *, */', $plugins);
             foreach ($plugins as $name) {

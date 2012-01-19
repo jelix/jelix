@@ -6,7 +6,7 @@
 * @contributor Sylvain de Vathaire, Dominique Papin, Olivier Demah, Laurent Jouanneau
 * @copyright   2008 Tahina Ramaroson, Sylvain de Vathaire
 * @copyright   2008 Dominique Papin
-* @copyright   2009 Olivier Demah, 2009-2010 Laurent Jouanneau
+* @copyright   2009 Olivier Demah, 2009-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -65,8 +65,6 @@ class jResponseHtmlFragment extends jResponse {
             return true;
         }
     
-        global $gJConfig;
-
         $this->doAfterActions();
 
         $content = implode("\n",$this->_contentTop);
@@ -76,7 +74,7 @@ class jResponseHtmlFragment extends jResponse {
 
         $content .= implode("\n",$this->_contentBottom);
 
-        $this->_httpHeaders['Content-Type']='text/plain;charset='.$gJConfig->charset;
+        $this->_httpHeaders['Content-Type']='text/plain;charset='.jApp::config()->charset;
         $this->_httpHeaders['Content-length']=strlen($content);
         $this->sendHttpHeaders();
         echo $content;
@@ -111,12 +109,11 @@ class jResponseHtmlFragment extends jResponse {
      */
     final public function outputErrors(){
 
-        global $gJConfig;
         $this->clearHttpHeaders();
         $this->_httpStatusCode ='500';
         $this->_httpStatusMsg ='Internal Jelix Error';
         // FIXME : text/plain or text/html ?
-        $this->_httpHeaders['Content-Type'] = 'text/plain;charset='.$gJConfig->charset;
+        $this->_httpHeaders['Content-Type'] = 'text/plain;charset='.jApp::config()->charset;
 
         $content = '<p class="htmlfragmenterror">';
         $content .= htmlspecialchars($GLOBALS['gJCoord']->getGenericErrorMessage());

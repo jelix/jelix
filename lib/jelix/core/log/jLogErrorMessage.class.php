@@ -4,7 +4,7 @@
 * @subpackage core
 * @author     Laurent Jouanneau
 * @contributor Brice Tence
-* @copyright  2006-2010 Laurent Jouanneau, 2011 Brice Tence
+* @copyright  2006-2012 Laurent Jouanneau, 2011 Brice Tence
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -92,7 +92,7 @@ class jLogErrorMessage implements jILogMessage {
      * @return string formated error message
      */
     public function getFormatedMessage() {
-        global $gJCoord, $gJConfig;
+        global $gJCoord;
 
         if (isset($_SERVER['REQUEST_URI']))
             $url = $_SERVER['REQUEST_URI'];

@@ -70,8 +70,7 @@ class jResponseXml extends jResponse {
     * constructor..
     */
     function __construct (){
-        global $gJConfig;
-        $this->_charset = $gJConfig->charset;
+        $this->_charset = jApp::config()->charset;
         $this->content = new jTpl();
         parent::__construct();
     }
@@ -122,9 +121,8 @@ class jResponseXml extends jResponse {
      * output errors if any
      */
     final public function outputErrors() {
-        global $gJConfig;
         header("HTTP/1.0 500 Internal Jelix Error");
-        header('Content-Type: text/plain;charset='.$gJConfig->charset);
+        header('Content-Type: text/plain;charset='.jApp::config()->charset);
         echo $GLOBALS['gJCoord']->getGenericErrorMessage();
     }
 

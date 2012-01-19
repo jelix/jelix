@@ -62,10 +62,9 @@ abstract class jResponseXMLFeed extends jResponse {
      * Class constructor
      */
     function __construct (){
-        global $gJConfig;
 
-        $this->charset  = $gJConfig->charset;
-        list($lang,$country ) = explode('_', $gJConfig->locale);
+        $this->charset  = jApp::config()->charset;
+        list($lang,$country ) = explode('_', jApp::config()->locale);
         $this->lang       = $lang;
 
         parent::__construct ();
