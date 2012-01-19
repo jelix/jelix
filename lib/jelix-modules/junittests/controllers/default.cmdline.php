@@ -4,7 +4,7 @@
  * @subpackage  junittests
  * @author      Laurent Jouanneau
  * @contributor Christophe Thiriot, Rahal Aboulfeth
- * @copyright   2008 Laurent Jouanneau
+ * @copyright   2008-2012 Laurent Jouanneau
  * @copyright   2008 Christophe Thiriot, 2011 Rahal Aboulfeth
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

@@ -5,7 +5,7 @@
 * @contributor Bastien Jaillot
 * @contributor Loic Mathaud
 * @contributor Mickael Fradin
-* @copyright   2007-2011 Laurent Jouanneau, 2008 Loic Mathaud, 2010 Mickael Fradin
+* @copyright   2007-2012 Laurent Jouanneau, 2008 Loic Mathaud, 2010 Mickael Fradin
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */

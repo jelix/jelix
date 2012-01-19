@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage coord_plugin
 * @author   Laurent Jouanneau
-* @copyright 2006-2007 Laurent Jouanneau
+* @copyright 2006-2012 Laurent Jouanneau
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 

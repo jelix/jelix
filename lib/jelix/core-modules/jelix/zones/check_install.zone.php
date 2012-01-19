@@ -6,6 +6,7 @@
 * @contributor Laurent Jouanneau, Julien Issler
 * @copyright  2008 Bastien Jaillot
 * @copyright  2009 Julien Issler
+* @copyright 2012 Laurent Jouanneau
 * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 

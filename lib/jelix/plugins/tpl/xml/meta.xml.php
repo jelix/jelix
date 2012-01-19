@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage jtpl_plugin
 * @author     Laurent Jouanneau
-* @copyright  2005-2008 Laurent Jouanneau
+* @copyright  2005-2012 Laurent Jouanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

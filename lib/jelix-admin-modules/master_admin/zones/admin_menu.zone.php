@@ -3,7 +3,7 @@
 * @package   jelix_admin_modules
 * @subpackage master_admin
 * @author    Laurent Jouanneau
-* @copyright 2008 Laurent Jouanneau
+* @copyright 2008-2012 Laurent Jouanneau
 * @link      http://jelix.org
 * @licence  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
 */

@@ -4,7 +4,7 @@
  * @subpackage  dao
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud, Olivier Demah
- * @copyright   2005-2007 Laurent Jouanneau
+ * @copyright   2005-2012 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2010 Olivier Demah
  * @link        http://www.jelix.org

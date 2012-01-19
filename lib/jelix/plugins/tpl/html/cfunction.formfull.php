@@ -4,7 +4,7 @@
 * @subpackage   jtpl_plugin
 * @author       Laurent Jouanneau
 * @contributor  Dominique Papin, Julien Issler, Bastien Jaillot
-* @copyright    2007-2008 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright    2007-2012 Laurent Jouanneau, 2007 Dominique Papin
 * @copyright    2008 Julien Issler, 2008 Bastien Jaillot
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

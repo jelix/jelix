@@ -3,7 +3,7 @@
 * @package    jelix-modules
 * @subpackage jelix
 * @author     Laurent Jouanneau
-* @copyright  2011 Laurent Jouanneau
+* @copyright  2011-2012 Laurent Jouanneau
 * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
