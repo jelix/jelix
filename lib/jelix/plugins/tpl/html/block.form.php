@@ -37,8 +37,6 @@
 function jtpl_block_html_form($compiler, $begin, $param=array())
 {
 
-    global $gJConfig;
-
     if(!$begin){
         return '$t->_privateVars[\'__formbuilder\']->outputFooter();
 unset($t->_privateVars[\'__form\']);
@@ -57,7 +55,7 @@ unset($t->_privateVars[\'__displayed_ctrl\']);';
     if(isset($param[3]) && trim($param[3]) != '""'  && trim($param[3]) != "''")
         $builder = $param[3];
     else
-        $builder = "'".$gJConfig->tplplugins['defaultJformsBuilder']."'";
+        $builder = "'".jApp::config()->tplplugins['defaultJformsBuilder']."'";
 
     if(isset($param[4]))
         $options = $param[4];

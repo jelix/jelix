@@ -18,7 +18,7 @@
  */
 function jtpl_meta_xml_xml($tpl, $method, $param)
 {
-    global $gJCoord, $gJConfig;
+    global $gJCoord;
 
     if($gJCoord->response->getFormatType() != 'xml'){
         return;
@@ -31,7 +31,7 @@ function jtpl_meta_xml_xml($tpl, $method, $param)
             $gJCoord->response->addCSSLink($param);
             break;
         case 'csstheme':
-            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param);
+            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param);
             break;
     }
 }

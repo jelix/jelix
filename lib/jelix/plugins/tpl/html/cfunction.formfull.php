@@ -32,9 +32,6 @@
  */
 function jtpl_cfunction_html_formfull($compiler, $params=array())
 {
-
-    global $gJConfig;
-
     if (count($params) < 2 || count($params) > 5) {
         $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','formfull','2-5');
     }
@@ -42,7 +39,7 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
     if(isset($params[3]) && trim($params[3]) != '""'  && trim($params[3]) != "''")
         $builder = $params[3];
     else
-        $builder = "'".$gJConfig->tplplugins['defaultJformsBuilder']."'";
+        $builder = "'".jApp::config()->tplplugins['defaultJformsBuilder']."'";
 
     $compiler->addMetaContent('if(isset('.$params[0].')) { '.$params[0].'->getBuilder('.$builder.')->outputMetaContent($t);}');
 

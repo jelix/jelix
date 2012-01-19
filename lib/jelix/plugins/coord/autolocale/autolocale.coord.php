@@ -29,7 +29,7 @@ class AutoLocaleCoordPlugin implements jICoordPlugin {
      */
     public function beforeAction($params){
 
-        global $gJCoord, $gJConfig;
+        global $gJCoord;
 
         $langDetected=false;
         $lang='';
@@ -94,7 +94,7 @@ class AutoLocaleCoordPlugin implements jICoordPlugin {
 
         if($lang!=''){
             $_SESSION['JX_LANG']=$lang;
-            $gJConfig->locale = $lang;
+            jApp::config()->locale = $lang;
         }
         return null;
     }

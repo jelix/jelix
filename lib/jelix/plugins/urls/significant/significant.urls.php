@@ -38,11 +38,11 @@ class jSelectorUrlHandler extends jSelectorClass {
     protected $_suffix = '.urlhandler.php';
 
     protected function _createPath(){
-        global $gJConfig;
-        if (isset($gJConfig->_modulesPathList[$this->module])) {
-            $p = $gJConfig->_modulesPathList[$this->module];
-        } else if (isset($gJConfig->_externalModulesPathList[$this->module])) {
-            $p = $gJConfig->_externalModulesPathList[$this->module];
+        $conf = jApp::config();
+        if (isset($conf->_modulesPathList[$this->module])) {
+            $p = $conf->_modulesPathList[$this->module];
+        } else if (isset($conf->_externalModulesPathList[$this->module])) {
+            $p = $conf->_externalModulesPathList[$this->module];
         } else {
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
@@ -108,13 +108,13 @@ class significantUrlEngine implements jIUrlEngine {
      * @since 1.1
      */
     public function parseFromRequest ($request, $params) {
-        global $gJConfig;
 
-        if ($gJConfig->urlengine['enableParser']) {
+        $conf = & jApp::config()->urlengine;
+        if ($conf['enableParser']) {
 
-            $sel = new jSelectorUrlCfgSig($gJConfig->urlengine['significantFile']);
+            $sel = new jSelectorUrlCfgSig($conf['significantFile']);
             jIncluder::inc($sel);
-            $snp  = $gJConfig->urlengine['urlScriptIdenc'];
+            $snp  = $conf['urlScriptIdenc'];
             $file = jApp::tempPath('compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php');
             if (file_exists($file)) {
                 require($file);
@@ -137,20 +137,20 @@ class significantUrlEngine implements jIUrlEngine {
     * @return jUrlAction
     */
     public function parse($scriptNamePath, $pathinfo, $params){
-        global $gJConfig;
+        $conf = & jApp::config()->urlengine;
 
-        if ($gJConfig->urlengine['enableParser']) {
+        if ($conf['enableParser']) {
 
-            $sel = new jSelectorUrlCfgSig($gJConfig->urlengine['significantFile']);
+            $sel = new jSelectorUrlCfgSig($conf['significantFile']);
             jIncluder::inc($sel);
-            $basepath = $gJConfig->urlengine['basePath'];
+            $basepath = $conf['basePath'];
             if (strpos($scriptNamePath, $basepath) === 0) {
                 $snp = substr($scriptNamePath,strlen($basepath));
             }
             else {
                 $snp = $scriptNamePath;
             }
-            $pos = strrpos($snp, $gJConfig->urlengine['entrypointExtension']);
+            $pos = strrpos($snp, $conf['entrypointExtension']);
             if ($pos !== false) {
                 $snp = substr($snp,0,$pos);
             }
@@ -176,7 +176,6 @@ class significantUrlEngine implements jIUrlEngine {
     * @return jUrlAction
     */
     protected function _parse($scriptNamePath, $pathinfo, $params, $isHttps){
-        global $gJConfig;
 
         $urlact = null;
         $isDefault = false;
@@ -292,7 +291,7 @@ class significantUrlEngine implements jIUrlEngine {
             }
             else {
                 try {
-                    $urlact = jUrl::get($gJConfig->urlengine['notfoundAct'], array(), jUrl::JURLACTION);
+                    $urlact = jUrl::get(jApp::config()->urlengine['notfoundAct'], array(), jUrl::JURLACTION);
                 }
                 catch (Exception $e) {
                     $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));

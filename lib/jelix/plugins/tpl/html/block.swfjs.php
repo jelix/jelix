@@ -51,7 +51,7 @@ function jtpl_block_html_swfjs($compiler, $begin, $params) {
     if($begin) {
 
         $meta  = '
-        global $gJCoord, $gJConfig;
+        global $gJCoord;
         if( isset($gJCoord->response) && $gJCoord->response->getType() ==\'html\') {
             $src = '.$params[0].';
             $options = '.$params[1].';
@@ -81,9 +81,9 @@ function jtpl_block_html_swfjs($compiler, $begin, $params) {
             $script .= "            ".\'$(this).prepend($.fn.flash.transform(htmlOptions));\'."\n";
             $script .= "        ".\'});\'."\n";
             $script .= "    ".\'});\'."\n";
-
-            $gJCoord->response->addJSLink($gJConfig->urlengine[\'jqueryPath\'].\'jquery.js\');
-            $gJCoord->response->addJSLink($gJConfig->urlengine[\'jqueryPath\'].\'flash/jquery.flash.js\');
+            $p = jApp::config()->urlengine[\'jqueryPath\']
+            $gJCoord->response->addJSLink($p.\'jquery.js\');
+            $gJCoord->response->addJSLink($p.\'flash/jquery.flash.js\');
             $gJCoord->response->addJSCode($script);
         }
         ';

@@ -24,13 +24,13 @@
  */
 function jtpl_meta_html_htmlmodule($tpl, $method, $module, $path, $params=array())
 {
-    global $gJCoord,$gJConfig;
+    global $gJCoord;
 
     if($gJCoord->response->getType() != 'html'){
         return;
     }
     if (strpos($method, 'csstheme') === 0) {
-        $url = jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>'themes/'.$gJConfig->theme.'/'.$path));
+        $url = jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>'themes/'.jApp::config()->theme.'/'.$path));
         switch($method){
             case 'csstheme':
                 $gJCoord->response->addCSSLink($url,$params);
