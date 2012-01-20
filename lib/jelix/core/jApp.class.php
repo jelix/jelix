@@ -165,7 +165,10 @@ class jApp {
      * temporary change the context to an other application
      */
     public static function saveContext() {
-        $conf = clone self::$_config;
+        if (self::$_config)
+            $conf = clone self::$_config;
+        else
+            $conf = null;
         self::$contextBackup[] = array(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
                                        self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, $conf);
     }

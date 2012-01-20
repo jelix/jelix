@@ -48,7 +48,7 @@ class basic_significantUrlEngine extends simpleUrlEngine {
     */
     public function parse($scriptNamePath, $pathinfo, $params ){
 
-        if ($jApp::config()->urlengine['enableParser']){
+        if (jApp::config()->urlengine['enableParser']){
             $pathinfo = trim($pathinfo,'/');
             if ($pathinfo != '') {
                 $list = explode('/', $pathinfo);
