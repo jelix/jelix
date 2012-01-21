@@ -764,9 +764,9 @@ class jTplCompiler
         if (isset(jTplConfig::$pluginPathList[$this->outputType])) {
             foreach (jTplConfig::$pluginPathList[$this->outputType] as $path) {
 #else
-        global $gJConfig;
-        if (isset($gJConfig->{'_tplpluginsPathList_'.$this->outputType})) {
-            foreach ($gJConfig->{'_tplpluginsPathList_'.$this->outputType} as $path) {
+        $config = jApp::config();
+        if (isset($config->{'_tplpluginsPathList_'.$this->outputType})) {
+            foreach ($config->{'_tplpluginsPathList_'.$this->outputType} as $path) {
 #endif
                 $foundPath = $path.$type.'.'.$name.'.php';
 
@@ -779,8 +779,8 @@ class jTplCompiler
         if (isset(jTplConfig::$pluginPathList['common'])) {
             foreach (jTplConfig::$pluginPathList['common'] as $path) {
 #else
-        if (isset($gJConfig->_tplpluginsPathList_common)) {
-            foreach ($gJConfig->_tplpluginsPathList_common as $path) {
+        if (isset($config->_tplpluginsPathList_common)) {
+            foreach ($config->_tplpluginsPathList_common as $path) {
 #endif
                 $foundPath = $path.$type.'.'.$name.'.php';
                 if (file_exists($foundPath)) {

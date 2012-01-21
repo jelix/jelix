@@ -4,7 +4,7 @@
 * @subpackage   jtpl_plugin
 * @author       Laurent Jouanneau
 * @contributor  Yann (description and keywords), Dominique Papin (ie7 support), Mickaël Fradin (style), Loic Mathaud (title), Olivier Demah (auhor,generator), Julien Issler
-* @copyright    2005-2006 Laurent Jouanneau, 2007 Dominique Papin, 2008 Mickaël Fradin, 2009 Loic Mathaud, 2010 Olivier Demah
+* @copyright    2005-2012 Laurent Jouanneau, 2007 Dominique Papin, 2008 Mickaël Fradin, 2009 Loic Mathaud, 2010 Olivier Demah
 * @copyright    2010 Julien Issler
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -24,7 +24,7 @@
  */
 function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
 {
-    global $gJCoord,$gJConfig;
+    global $gJCoord;
 
     if($gJCoord->response->getType() != 'html'){
         return;
@@ -56,20 +56,20 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
             $gJCoord->response->addCSSLink($param,$params,'lt IE '.substr($method,-1,1));
             break;
         case 'csstheme':
-            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,$params);
+            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params);
             break;
         case 'cssthemeie':
-            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,$params,true);
+            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params,true);
             break;
         case 'cssthemeie7':
         case 'cssthemeie8':
         case 'cssthemeie9':
-            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,$params,'IE '.substr($method,-1,1));
+            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params,'IE '.substr($method,-1,1));
             break;
         case 'cssthemeltie7':
         case 'cssthemeltie8':
         case 'cssthemeltie9':
-            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param,$params,'lt IE '.substr($method,-1,1));
+            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params,'lt IE '.substr($method,-1,1));
             break;
         case 'style':
             if(is_array($param)){
@@ -100,10 +100,10 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
         case 'generator':
             $gJCoord->response->addMetaGenerator($param);
         case 'jquery':
-            $gJCoord->response->addJSLink($gJConfig->urlengine['jqueryPath'].'jquery.js');
+            $gJCoord->response->addJSLink(jApp::config()->urlengine['jqueryPath'].'jquery.js');
             break;
         case 'jquery_ui':
-            $base = $gJConfig->urlengine['jqueryPath'];
+            $base = jApp::config()->urlengine['jqueryPath'];
             switch($param){
                 case 'components':
                     $gJCoord->response->addJSLink($base.'jquery.js');

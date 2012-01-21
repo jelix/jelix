@@ -5,7 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Brice Tence
 * @contributor Florian Lonqueu-Brochard
-* @copyright   2005-2010 Laurent Jouanneau
+* @copyright   2005-2012 Laurent Jouanneau
 * @copyright   2010 Julien Issler, 2011 Brice Tence
 * @copyright   2011 Florian Lonqueu-Brochard
 * @link        http://www.jelix.org
@@ -58,8 +58,8 @@ abstract class jResponse {
     */
     function __construct() {
 
-        if( $GLOBALS['gJConfig']->httpVersion != "" ) {
-            $this->httpVersion = $GLOBALS['gJConfig']->httpVersion;
+        if( jApp::config()->httpVersion != "" ) {
+            $this->httpVersion = jApp::config()->httpVersion;
             $this->forcedHttpVersion = true;
         }
     }

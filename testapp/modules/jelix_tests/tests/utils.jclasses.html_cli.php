@@ -60,19 +60,18 @@ class UTjclasses extends UnitTestCase {
 
     // test with binding in jelix config file + get class name + non existing binded class
     public function testBindingInJelixConfigFile() {
-        global $gJConfig;
-        $oldgjconfig = clone $gJConfig;
+        jApp::saveContext();
 
-        $gJConfig->classbindings['jelix_tests-test'] = 'jelix_tests~myclass';
+        jApp::config()->classbindings['jelix_tests-test'] = 'jelix_tests~myclass';
         $class = jClasses::getBindedService('jelix_tests~test');
         $this->assertTrue($class instanceof myclass);
 
         // test with long selector and test with parse_ini_file
-        $gJConfig->classbindings['class:jelix_tests-myclass'] = 'jelix_tests~myclass';
+        jApp::config()->classbindings['class:jelix_tests-myclass'] = 'jelix_tests~myclass';
         $class = jClasses::getBindedService('class:jelix_tests~myclass');
         $this->assertTrue($class instanceof myclass);
 
-        $gJConfig = $oldgjconfig;
+        jApp::restoreContext();
     }
 
     // test with binding in DEFAULT IMPLEMENTATION constant + get class name + non existing binded class

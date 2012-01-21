@@ -16,8 +16,7 @@ class testjDateTime extends UnitTestCase {
     }
 
     function tearDown(){
-        global $gJConfig;
-        date_default_timezone_set($gJConfig->timeZone);
+        date_default_timezone_set(jApp::config()->timeZone);
     }
 
     function testValidConstruct(){

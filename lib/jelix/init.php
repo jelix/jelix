@@ -12,14 +12,14 @@
 #if ENABLE_OPTIMIZED_SOURCE
 * @author Croes Gerald
 * @contributor Loic Mathaud, Julien Issler
-* @copyright 2005-2011 Laurent Jouanneau
+* @copyright 2005-2012 Laurent Jouanneau
 * @copyright 2001-2005 CopixTeam
 * @copyright 2006 Loic Mathaud
 * @copyright 2007-2009 Julien Issler
 * @link http://www.copix.org
 #else
 * @contributor Loic Mathaud, Julien Issler
-* @copyright 2005-2011 Laurent Jouanneau
+* @copyright 2005-2012 Laurent Jouanneau
 * @copyright 2007 Julien Issler
 #endif
 * @link     http://www.jelix.org
@@ -153,6 +153,7 @@ $gJCoord = null;
  * Object that contains all configuration values
  * @global stdobject $gJConfig
  * @name $gJConfig
+ * @deprecated use jApp::config() instead
  */
 $gJConfig = null;
 
@@ -177,7 +178,7 @@ function jelix_autoload($class) {
     }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
         // for DAO which are stored in sessions for example
         $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
-        if($GLOBALS['gJConfig']->compilation['checkCacheFiletime']){
+        if(jApp::config()->compilation['checkCacheFiletime']){
             // if it is needed to check the filetime, then we use jIncluder
             // because perhaps we will have to recompile the dao before the include
             jIncluder::inc($s);

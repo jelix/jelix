@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage core
 * @author     Laurent Jouanneau
-* @copyright  2011 Laurent Jouanneau
+* @copyright  2011-2012 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -16,8 +16,6 @@
 class jApp {
 
     protected static $tempBasePath = '';
-
-    protected static $tempPath = '';
 
     protected static $appPath = '';
 
@@ -97,6 +95,10 @@ class jApp {
                             JELIX_APP_CMD_PATH);
             self::setTempBasePath(JELIX_APP_TEMP_PATH);
         }
+
+        global $gJConfig;
+        if (!$gJConfig)
+            $gJConfig = self::$_config;
     }
 
     public static function appPath($file='') { return self::$appPath.$file; }
@@ -118,6 +120,44 @@ class jApp {
         self::$env = $env;
     }
 
+    /**
+     * @var object  object containing all configuration options of the application
+     */
+    protected static $_config = null;
+
+    /**
+     * @return object object containing all configuration options of the application
+     */
+    public static function config() {
+        return self::$_config;
+    }
+
+    public static function setConfig($config) {
+        self::$_config = $config;
+    }
+
+    /**
+     * Load the configuration from the given file.
+     *
+     * Call it after initPaths
+     * @param  string $configFile name of the ini file to configure the framework
+     * @param  boolean $enableErrorHandler enable the error handler of jelix.
+     *                 keep it to true, unless you have something to debug
+     *                 and really have to use the default handler or an other handler
+     */
+    public static function loadConfig ($configFile, $enableErrorHandler=true) {
+
+        if ($enableErrorHandler) {
+            set_error_handler('jErrorHandler');
+            set_exception_handler('JExceptionHandler');
+        }
+
+        // load configuration data
+        self::$_config = jConfig::load($configFile);
+
+        date_default_timezone_set(self::$_config->timeZone);
+    }
+
     protected static $contextBackup = array();
 
     /**
@@ -125,8 +165,12 @@ class jApp {
      * temporary change the context to an other application
      */
     public static function saveContext() {
+        if (self::$_config)
+            $conf = clone self::$_config;
+        else
+            $conf = null;
         self::$contextBackup[] = array(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
-                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath);
+                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, $conf);
     }
 
     /**
@@ -136,7 +180,7 @@ class jApp {
         if (!count(self::$contextBackup))
             return;
         list(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
-             self::$wwwPath, self::$scriptPath, self::$tempBasePath) = array_pop(self::$contextBackup);
+             self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, self::$_config) = array_pop(self::$contextBackup);
     }
 
     /**

@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2007 Laurent Jouanneau, 2008 Loic Mathaud, 2009 Bastien Jaillot
+* @copyright   2007-2012 Laurent Jouanneau, 2008 Loic Mathaud, 2009 Bastien Jaillot
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -79,8 +79,7 @@ class createformCommand extends JelixScriptCommand {
             return;
         }
 
-        global $gJConfig;
-        $gJConfig->startModule = $this->_parameters['module'];
+        jApp::config()->startModule = $this->_parameters['module'];
         jContext::push($this->_parameters['module']);
 
         $tools = jDb::getConnection()->tools();

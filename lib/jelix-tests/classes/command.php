@@ -139,7 +139,8 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
                 exit(PHPUnit_TextUI_TestRunner::FAILURE_EXIT);
             }
         }
-        // it will initialize global variables $gJCoord $gJConfig. it could be needed by tests
+        // it will initialize configuration and deprecated global variables $gJCoord $gJConfig. it could be needed by tests
+        // FIXME: is jCoordinator really useful?
         $coord = new jCoordinator($this->epInfo->configFile, false);
     }
 

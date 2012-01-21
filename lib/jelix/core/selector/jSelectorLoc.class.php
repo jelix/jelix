@@ -7,7 +7,7 @@
 * @contributor Rahal
 * @contributor Julien Issler
 * @contributor Baptiste Toinot
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2012 Laurent Jouanneau
 * @copyright   2007 Rahal
 * @copyright   2008 Julien Issler
 * @copyright   2008 Baptiste Toinot
@@ -36,12 +36,12 @@ class jSelectorLoc extends jSelectorModule {
     protected $_where;
 
     function __construct($sel, $locale=null, $charset=null){
-        global $gJConfig;
+
         if ($locale === null){
-            $locale = $gJConfig->locale;
+            $locale = jApp::config()->locale;
         }
         if ($charset === null){
-            $charset = $gJConfig->charset;
+            $charset = jApp::config()->charset;
         }
         if(strpos($locale,'_') === false){
             $locale.='_'.strtoupper($locale);
@@ -56,6 +56,11 @@ class jSelectorLoc extends jSelectorModule {
             if($this->module ==''){
                 $this->module = jContext::get ();
             }
+            $this->_createPath();
+            $this->_createCachePath();
+        }else{
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
+        }
 #else
         if(preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\.]+)$/", $sel, $m)){
             if($m[1]!='' && $m[2]!=''){
@@ -66,17 +71,17 @@ class jSelectorLoc extends jSelectorModule {
             $this->resource = $m[3];
             $this->fileKey = $m[3];
             $this->messageKey = $m[4];
-#endif
             $this->_createPath();
             $this->_createCachePath();
         }else{
             throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
+#endif
     }
 
     protected function _createPath(){
-        global $gJConfig;
-        if(!isset($gJConfig->_modulesPathList[$this->module])){
+
+        if(!isset(jApp::config()->_modulesPathList[$this->module])){
             if ($this->module == 'jelix')
                 throw new Exception('jelix module is not enabled !!');
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
@@ -98,7 +103,7 @@ class jSelectorLoc extends jSelectorModule {
                 return;
             }
             // else check for the original locale file
-            $path = $gJConfig->_modulesPathList[$this->module].'locales/'.$locale.'/'.$this->resource.$this->_suffix;
+            $path = jApp::config()->_modulesPathList[$this->module].'locales/'.$locale.'/'.$this->resource.$this->_suffix;
             if (is_readable ($path)){
                 $this->_where = 'modules/';
                 $this->_path = $path;

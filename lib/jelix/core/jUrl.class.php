@@ -6,7 +6,7 @@
 * @contributor Thibault Piront (nuKs)
 * @contributor Loic Mathaud
 * @contributor Hadrien Lanneau
-* @copyright   2005-2011 Laurent Jouanneau
+* @copyright   2005-2012 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
 * @copyright   2006 Loic Mathaud, 2010 Hadrien Lanneau
 * Some parts of this file are took from an experimental branch of the Copix project (CopixUrl.class.php, Copix 2.3dev20050901, http://www.copix.org),
@@ -271,8 +271,7 @@ class jUrl extends jUrlBase {
         static $engine = null;
 
         if($engine === null || $reset){
-            global $gJConfig;
-            $name = $gJConfig->urlengine['engine'];
+            $name = jApp::config()->urlengine['engine'];
             $engine = jApp::loadPlugin($name, 'urls', '.urls.php', $name.'UrlEngine');
             if(is_null($engine))
                 throw new jException('jelix~errors.urls.engine.notfound', $name);
@@ -290,18 +289,16 @@ class jUrl extends jUrlBase {
     */
     public static function getRootUrl($ressourceType){
 
-        global $gJConfig;
-
         $rootUrl = jUrl::getRootUrlRessourceValue($ressourceType);
         if( $rootUrl !== null ) {
             if( substr($rootUrl, 0, 7) !== 'http://' && substr($rootUrl, 0, 8) !== 'https://' // url is not absolute.
                 && substr($rootUrl, 0, 1) !== '/' ) { //and is not relative to root
                    // so let's prepend basePath :
-                    $rootUrl = $gJConfig->urlengine['basePath'] . $rootUrl;
+                    $rootUrl = jApp::config()->urlengine['basePath'] . $rootUrl;
             }
         } else {
             // basePath by default :
-            $rootUrl = $gJConfig->urlengine['basePath'];
+            $rootUrl = jApp::config()->urlengine['basePath'];
         }
 
         return $rootUrl;
@@ -315,12 +312,10 @@ class jUrl extends jUrlBase {
     */
     public static function getRootUrlRessourceValue($ressourceType) {
 
-        global $gJConfig;
-
-        if( ! isset($gJConfig->rootUrls[$ressourceType]) ) {
+        if( ! isset(jApp::config()->rootUrls[$ressourceType]) ) {
             return null;
         } else {
-            return $gJConfig->rootUrls[$ressourceType];
+            return jApp::config()->rootUrls[$ressourceType];
         }
     }
 

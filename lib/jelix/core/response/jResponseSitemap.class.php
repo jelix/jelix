@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Baptiste Toinot
 * @contributor Laurent Jouanneau
-* @copyright   2008 Baptiste Toinot, 2011 Laurent Jouanneau
+* @copyright   2008 Baptiste Toinot, 2011-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -211,12 +211,12 @@ class jResponseSitemap extends jResponse {
      * @return array
      */
     protected function _parseUrlsXml() {
-        global $gJConfig;
 
         $urls = array();
-        $significantFile = $gJConfig->urlengine['significantFile'];
-        $entryPoint = $gJConfig->urlengine['defaultEntrypoint'];
-        $snp = $gJConfig->urlengine['urlScriptIdenc'];
+        $conf = &jApp::config()->urlengine;
+        $significantFile = $conf['significantFile'];
+        $entryPoint = $conf['defaultEntrypoint'];
+        $snp = $conf['urlScriptIdenc'];
 
         $file = jApp::tempPath('compiled/urlsig/' . $significantFile .
                 '.' . rawurlencode($entryPoint) . '.entrypoint.php');

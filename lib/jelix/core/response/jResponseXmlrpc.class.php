@@ -33,9 +33,9 @@ final class jResponseXmlRpc extends jResponse {
             return true;
         }
 
-        $content = jXmlRpc::encodeResponse($this->response, $GLOBALS['gJConfig']->charset);
+        $content = jXmlRpc::encodeResponse($this->response, jApp::config()->charset);
 
-        $this->_httpHeaders["Content-Type"]="text/xml;charset=".$GLOBALS['gJConfig']->charset;
+        $this->_httpHeaders["Content-Type"]="text/xml;charset=".jApp::config()->charset;
         $this->_httpHeaders["Content-length"]=strlen($content);
         $this->sendHttpHeaders();
         echo $content;
@@ -43,7 +43,7 @@ final class jResponseXmlRpc extends jResponse {
     }
 
     public function outputErrors(){
-        global $gJCoord, $gJConfig;
+        global $gJCoord;
 
         $errorMessage = $gJCoord->getGenericErrorMessage();
         $e = $gJCoord->getErrorMessage();
@@ -55,10 +55,10 @@ final class jResponseXmlRpc extends jResponse {
         }
 
         $this->clearHttpHeaders();
-        $content = jXmlRpc::encodeFaultResponse($errorCode, $errorMessage, $gJConfig->charset);
+        $content = jXmlRpc::encodeFaultResponse($errorCode, $errorMessage, jApp::config()->charset);
 
         header("HTTP/1.0 500 Internal Server Error");
-        header("Content-Type: text/xml;charset=".$gJConfig->charset);
+        header("Content-Type: text/xml;charset=".jApp::config()->charset);
         header("Content-length: ".strlen($content));
         echo $content;
     }

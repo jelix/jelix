@@ -3,7 +3,7 @@
 * @package    jelix-modules
 * @subpackage jelix
 * @author     Laurent Jouanneau
-* @copyright  2011 Laurent Jouanneau
+* @copyright  2011-2012 Laurent Jouanneau
 * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
@@ -15,9 +15,9 @@ class wwwCtrl extends jController {
     
     public function getfile() {
         $module = $this->param('targetmodule');
-        global $gJConfig, $gJCoord;
+        global $gJCoord;
 
-        if (!$gJCoord->isModuleEnabled($module) || $gJConfig->modules[$module.'.access'] < 2) {
+        if (!$gJCoord->isModuleEnabled($module) || jApp::config()->modules[$module.'.access'] < 2) {
             throw new jException('jelix~errors.module.untrusted',$module);
         }
 

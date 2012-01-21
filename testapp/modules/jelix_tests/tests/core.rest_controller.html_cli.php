@@ -19,15 +19,15 @@ class UTRestController extends jUnitTestCase {
 
     function testRestGET() {
         $http = new jHttp($_SERVER['HTTP_HOST']);
-        $http->get($GLOBALS['gJConfig']->urlengine['basePath'].'rest.php/test/rest');
+        $http->get(jApp::config()->urlengine['basePath'].'rest.php/test/rest');
         $this->assertEqual($http->getStatus(), 200);
 
-        $this->assertEqual($http->getContent(), 'this is a GET response. resturl='.$GLOBALS['gJConfig']->urlengine['basePath'].'rest.php/test/rest');
+        $this->assertEqual($http->getContent(), 'this is a GET response. resturl='.jApp::config()->urlengine['basePath'].'rest.php/test/rest');
     }
 
     function testRestPUT() {
         $http = new jHttp($_SERVER['HTTP_HOST']);
-        $http->put($GLOBALS['gJConfig']->urlengine['basePath'].'rest.php/test/rest', array('foo'=>'bar'));
+        $http->put(jApp::config()->urlengine['basePath'].'rest.php/test/rest', array('foo'=>'bar'));
         $this->assertEqual($http->getStatus(), 200);
 
         $this->assertEqual($http->getContent(), 'this is a PUT response. module=jelix_tests action=myrest: foo=bar');
@@ -35,7 +35,7 @@ class UTRestController extends jUnitTestCase {
 
     function testRestPOST() {
         $http = new jHttp($_SERVER['HTTP_HOST']);
-        $http->post($GLOBALS['gJConfig']->urlengine['basePath'].'rest.php/test/rest', array('foo'=>'bar'));
+        $http->post(jApp::config()->urlengine['basePath'].'rest.php/test/rest', array('foo'=>'bar'));
         $this->assertEqual($http->getStatus(), 200);
 
         $this->assertEqual($http->getContent(), 'this is a POST response. module=jelix_tests action=myrest: foo=bar');
@@ -43,7 +43,7 @@ class UTRestController extends jUnitTestCase {
 
     function testRestDELETE() {
         $http = new jHttp($_SERVER['HTTP_HOST']);
-        $http->delete($GLOBALS['gJConfig']->urlengine['basePath'].'rest.php/test/rest');
+        $http->delete(jApp::config()->urlengine['basePath'].'rest.php/test/rest');
         $this->assertEqual($http->getStatus(), 200);
 
         $this->assertEqual($http->getContent(), 'this is a DELETE response');

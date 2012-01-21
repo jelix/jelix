@@ -5,7 +5,7 @@
 * @package     jelix
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -39,6 +39,11 @@ abstract class jSelectorModule implements jISelector {
             if($this->module ==''){
                 $this->module = jContext::get ();
             }
+            $this->_createPath();
+            $this->_createCachePath();
+        }else{
+            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
+        }
 #else
         if(preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_\.]+)$/", $sel, $m)){
             if($m[1]!='' && $m[2]!=''){
@@ -47,12 +52,12 @@ abstract class jSelectorModule implements jISelector {
                 $this->module = jContext::get ();
             }
             $this->resource = $m[3];
-#endif
             $this->_createPath();
             $this->_createCachePath();
         }else{
             throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
+#endif
     }
 
     public function getPath (){
@@ -83,11 +88,11 @@ abstract class jSelectorModule implements jISelector {
     }
 
     protected function _createPath(){
-        global $gJConfig;
-        if(!isset($gJConfig->_modulesPathList[$this->module])){
+
+        if(!isset(jApp::config()->_modulesPathList[$this->module])){
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString(true));
         }
-        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
+        $this->_path = jApp::config()->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
         if (!is_readable ($this->_path)){
             if($this->type == 'loc'){
                 throw new Exception('(202) The file of the locale key "'.$this->toString().'" (charset '.$this->charset.', lang '.$this->locale.') does not exist');
