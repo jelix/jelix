@@ -3,10 +3,10 @@
 * @package     jelix
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
-* @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler
+* @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler, Brice Tence
 * @copyright   2005-2012 Laurent Jouanneau
 * @copyright   2006 Loic Mathaud, 2007 Dominique Papin, 2009 DSDenes, 2010 Christophe Thiriot
-* @copyright   2010 Julien Issler
+* @copyright   2010 Julien Issler, 2010 Brice Tence
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -105,7 +105,7 @@ class jTplCompiler
      */
     private $_pluginPath = array();
 
-    private $_metaBody = '';
+    protected $_metaBody = '';
 
     /**
      * native modifiers
@@ -285,6 +285,9 @@ class jTplCompiler
 
 
     protected function compileContent ($tplcontent) {
+        $this->_metaBody = '';
+        $this->_blockStack = array();
+
         // we remove all php tags
         $tplcontent = preg_replace("!<\?((?:php|=|\s).*)\?>!s", '', $tplcontent);
         // we remove all template comments
@@ -500,7 +503,39 @@ class jTplCompiler
 
             case 'meta':
                 $this->_parseMeta($args);
-                $res='';
+                break;
+
+            case 'meta_if':
+                $metaIfArgs = $this->_parseFinal($args,$this->_allowedInExpr);
+                $this->_metaBody .= 'if('.$metaIfArgs.'):'."\n";
+                array_push($this->_blockStack,'meta_if');
+                break;
+
+            case 'meta_else':
+                if (substr(end($this->_blockStack),0,7) !='meta_if') {
+                    $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
+                } else {
+                    $this->_metaBody .= "else:\n";
+                }
+                break;
+
+            case 'meta_elseif':
+                if (end($this->_blockStack) !='meta_if') {
+                    $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
+                } else {
+                    $elseIfArgs = $this->_parseFinal($args,$this->_allowedInExpr);
+                    $this->_metaBody .= 'elseif('.$elseIfArgs."):\n";
+                }
+                break;
+
+            case '/meta_if':
+                $short = substr($name,1);
+                if (end($this->_blockStack) != $short) {
+                    $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
+                } else {
+                    array_pop($this->_blockStack);
+                    $this->_metaBody .= "endif;\n";
+                }
                 break;
 
             default:
