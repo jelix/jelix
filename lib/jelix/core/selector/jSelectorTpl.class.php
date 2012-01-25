@@ -5,7 +5,7 @@
 * @package     jelix
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -49,23 +49,23 @@ class jSelectorTpl extends jSelectorModule {
     }
 
     protected function _createPath(){
-        global $gJConfig;
-        if(!isset($gJConfig->_modulesPathList[$this->module])){
+
+        if(!isset(jApp::config()->_modulesPathList[$this->module])){
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
 
         $path = $this->module.'/'.$this->resource;
-        $lpath = $this->module.'/'.$gJConfig->locale.'/'.$this->resource;
+        $lpath = $this->module.'/'.jApp::config()->locale.'/'.$this->resource;
 
-        if($gJConfig->theme != 'default'){
+        if(($theme = jApp::config()->theme) != 'default'){
             // on regarde si il y a un template redéfinie pour le theme courant
-            $this->_where = 'themes/'.$gJConfig->theme.'/'.$lpath;
+            $this->_where = 'themes/'.$theme.'/'.$lpath;
             $this->_path = jApp::varPath($this->_where.'.tpl');
             if (is_readable ($this->_path)){
                 return;
             }
             // on regarde si il y a un template redéfinie pour le theme courant
-            $this->_where = 'themes/'.$gJConfig->theme.'/'.$path;
+            $this->_where = 'themes/'.$theme.'/'.$path;
             $this->_path = jApp::varPath($this->_where.'.tpl');
             if (is_readable ($this->_path)){
                 return;
@@ -86,13 +86,13 @@ class jSelectorTpl extends jSelectorModule {
         }
 
         // et sinon, on regarde si le template existe dans le module en question
-        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$gJConfig->locale.'/'.$this->resource.'.tpl';
+        $this->_path = jApp::config()->_modulesPathList[$this->module].$this->_dirname.jApp::config()->locale.'/'.$this->resource.'.tpl';
         if (is_readable ($this->_path)){
             $this->_where = 'modules/'.$lpath;
             return;
         }
 
-        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.'.tpl';
+        $this->_path = jApp::config()->_modulesPathList[$this->module].$this->_dirname.$this->resource.'.tpl';
         if (is_readable ($this->_path)){
             $this->_where = 'modules/'.$path;
             return;

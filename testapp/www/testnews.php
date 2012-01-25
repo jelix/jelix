@@ -14,7 +14,7 @@ require (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
 
 checkAppOpened();
 
-$config_file = 'index/config.ini.php';
-$jelix = new jCoordinator($config_file);
+jApp::loadConfig('index/config.ini.php');
+$jelix = new jCoordinator();
 $jelix->process(new jClassicRequest());
 

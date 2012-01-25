@@ -9,7 +9,7 @@
 * @contributor Olivier Demah (#733)
 * @contributor Cedric (fix bug ticket 56)
 * @contributor Julien Issler
-* @copyright   2005-2011 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
+* @copyright   2005-2012 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -70,7 +70,7 @@ class jFile {
 
         // Delete the file if it allready exists (this is needed on Win,
         // because it cannot overwrite files with rename()
-        if ($GLOBALS['gJConfig']->isWindows && file_exists($file)) {
+        if (jApp::config()->isWindows && file_exists($file)) {
             unlink($file);
         }
         rename($_tmp_file, $file);
@@ -188,6 +188,7 @@ class jFile {
             return self::getMimeTypeFromFilename($file);
         }
     }
+#endif
 
     /**
      * get the MIME Type of a file, only with its name
@@ -197,8 +198,7 @@ class jFile {
      * @since 1.1.10
      */
     public static function getMimeTypeFromFilename($fileName){
-        $f = explode('.', $fileName);
-        $ext = strtolower(array_pop($f));
+        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         if (array_key_exists($ext, self::$mimeTypes)) {
             return self::$mimeTypes[$ext];
         }
@@ -316,5 +316,4 @@ class jFile {
         'odt' => 'application/vnd.oasis.opendocument.text',
         'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
     );
-#endif
 }

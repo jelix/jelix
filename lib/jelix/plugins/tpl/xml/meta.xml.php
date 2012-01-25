@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage jtpl_plugin
 * @author     Laurent Jouanneau
-* @copyright  2005-2008 Laurent Jouanneau
+* @copyright  2005-2012 Laurent Jouanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -18,7 +18,7 @@
  */
 function jtpl_meta_xml_xml($tpl, $method, $param)
 {
-    global $gJCoord, $gJConfig;
+    global $gJCoord;
 
     if($gJCoord->response->getFormatType() != 'xml'){
         return;
@@ -31,7 +31,7 @@ function jtpl_meta_xml_xml($tpl, $method, $param)
             $gJCoord->response->addCSSLink($param);
             break;
         case 'csstheme':
-            $gJCoord->response->addCSSLink($gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/'.$param);
+            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param);
             break;
     }
 }

@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2007-2011 Laurent Jouanneau, 2008 Loic Mathaud
+* @copyright   2007-2012 Laurent Jouanneau, 2008 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -255,8 +255,7 @@ ACTION:
         if (isset($params[3]) && preg_match("/^([a-zA-Z0-9_\.]+)~([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\.]+)$/", $params[1], $m)) {
             $localestring = "\n".$m[3].'='.$params[3];
             $path = $this->getModulePath($m[1]);
-            global $gJConfig;
-            $file = $path.'locales/'.$gJConfig->locale.'/'.$m[2].'.'.$gJConfig->charset.'.properties';
+            $file = $path.'locales/'.jApp::config()->locale.'/'.$m[2].'.'.jApp::config()->charset.'.properties';
             if (file_exists($file)) {
                 $localestring = file_get_contents($file).$localestring;
             }

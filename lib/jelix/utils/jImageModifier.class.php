@@ -5,7 +5,7 @@
 * @author      Bastien Jaillot
 * @contributor Dominique Papin, Lepeltier kévin (the author of the original plugin)
 * @contributor geekbay, Brunto, Laurent Jouanneau
-* @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay, 2010 Brunto, 2011 Laurent Jouanneau
+* @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay, 2010 Brunto, 2011-2012 Laurent Jouanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -88,9 +88,8 @@ class jImageModifier {
      * @return array of attributes
      **/
     static function get($src, $params = array(), $sendCachePath = true, $config = null) {
-        global $gJConfig;
 
-        $basePath = $gJConfig->urlengine['basePath'];
+        $basePath = jApp::config()->urlengine['basePath'];
         if(strpos($src,$basePath) === 0) {
             // in the case where the path is constructed with $j_basepath or $j_themepath
             // in a template
@@ -128,8 +127,6 @@ class jImageModifier {
         $cacheName = md5($chaine).'.'.$ext;
 
         // paths & uri
-        global $gJConfig;
-
         list($srcPath, $srcUri, $cachePath, $cacheUri) = self::computeUrlFilePath($config);
 
         // apply transforms if necessary (serve directly or from cache otherwise)
@@ -166,11 +163,10 @@ class jImageModifier {
      */
     static public function computeUrlFilePath($config=null) {
         // paths & uri
-        global $gJConfig;
-        $basePath = $gJConfig->urlengine['basePath'];
+        $basePath = jApp::config()->urlengine['basePath'];
 
         if (!$config)
-            $config = & $gJConfig->imagemodifier;
+            $config = & jApp::config()->imagemodifier;
 
         // compute URL and file path of the source image
         if ($config['src_url'] && $config['src_path']) {

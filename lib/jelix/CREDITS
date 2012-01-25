@@ -94,6 +94,10 @@ Emmanuel Hesry (aka m@noo)
 Didier Huguet (aka isepman)
  - tpl plugin: modifier truncatehtml (#760)
 
+
+Charles R. (aka Hugokernel)
+ - fixed a bug in meta_html, about jquery effects
+
 Julien Issler
  - updated JSON class (#231)
  - table prefix support in jDb and jDao (#293)
@@ -160,6 +164,7 @@ Steven Jehannet (aka Catsoup)
  - fixed bug in jdao for sqlite + count+ distinct (#1225)
  - jforms, fixed bad detection in modified controls (#1234)
  - jforms, javascript, fixed bug with grouped data in ajax context (#1325)
+ - fixed build in jFile for jFile::getMimeTypeForFilename
 
 Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
@@ -214,6 +219,13 @@ Kévin Lepeltier (aka Lipki)
  - trois plugin swf (#498)
  - plugin coord history (#507)
  - improvement in jMailer (#530)
+
+Florian Lonqueu-Brochard (FlorianLB)
+ - système de cache http (#4)
+ - bcrypt algorithm for jAuth
+ - classe lecture d’un rss/atom distant (#23)
+
+
 
 Vincent Viaud (aka Litchi)
  - bug fix in jforms_jquery.js (#1132)
@@ -305,6 +317,7 @@ Brice Tence (aka brayce/bricet)
  - http version setting (#1411)
  - support of referer in error lof messages (#1421)
  - added jUrl::getRootUrl*() methods and jrooturl html jTpl plugin (#1073)
+ - added support of meta_if in jTpl (#1200)
 
 Christophe Thiriot (aka Doubleface)
  - testor

@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage core
 * @author     Laurent Jouanneau
-* @copyright  2006-2010 Laurent Jouanneau
+* @copyright  2006-2012 Laurent Jouanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -16,13 +16,13 @@ class jFileLogger implements jILogger {
      * @param jILogMessage $message the message to log
      */
     function logMessage($message) {
-        global $gJConfig, $gJCoord;
+        global $gJCoord;
         if (!is_writable(jApp::logPath()))
             return;
 
         $type = $message->getCategory();
         if ($gJCoord && $gJCoord->request ) {
-            $conf = & $gJConfig->fileLogger;
+            $conf = & jApp::config()->fileLogger;
             if (!isset($conf[$type]))
                 return;
             $f = $conf[$type];

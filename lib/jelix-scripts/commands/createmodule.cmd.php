@@ -4,7 +4,7 @@
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
 * @contributor Bastien Jaillot
-* @copyright   2005-2011 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
+* @copyright   2005-2012 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -60,7 +60,6 @@ class createmoduleCommand extends JelixScriptCommand {
 
     public function run(){
         $this->loadAppConfig();
-        global $gJConfig;
 
         $module = $this->getParam('module');
         $initialVersion = $this->getOption('-ver');
@@ -104,13 +103,13 @@ class createmoduleCommand extends JelixScriptCommand {
             if (!$ini) {
                 throw new Exception("entry point is unknown");
             }
-            $this->updateModulePath($ini, $gJConfig->modulesPath, $repository, $repositoryPath);
+            $this->updateModulePath($ini, jApp::config()->modulesPath, $repository, $repositoryPath);
         }
 
         $path = $repositoryPath.$module.'/';
         $this->createDir($path);
 
-        $gJConfig = null;
+        jApp::setConfig(null);
 
         if ($this->getOption('-admin')) {
             $this->removeOption('-nosubdir');

@@ -4,7 +4,7 @@
 * @subpackage  responsehtml_plugin
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2010-2011 Laurent Jouanneau
+* @copyright   2010-2012 Laurent Jouanneau
 * @copyright   2011 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -124,8 +124,7 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
      * the main content (if any) is already generated.
      */
     public function beforeOutput() {
-        global $gJConfig;
-        $plugins = $gJConfig->debugbar['plugins'];
+        $plugins = jApp::config()->debugbar['plugins'];
         $css = "
 #expand ul.jxdb-list li h5 a {background-image: url('data:image/png;base64,__LOGOBULLETPLUS__');}
 #expand ul.jxdb-list li.jxdb-opened  h5 a {background-image: url('data:image/png;base64,__LOGOBULLETMINUS__');}
@@ -166,7 +165,6 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
      * directly some contents.
      */
     public function atBottom() {
-        global $gJConfig;
 
         foreach($this->plugins as $plugin) {
             $plugin->show($this);

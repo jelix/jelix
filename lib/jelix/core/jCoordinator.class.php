@@ -4,7 +4,7 @@
 * @subpackage   core
 * @author       Laurent Jouanneau
 * @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin
-* @copyright    2005-2011 laurent Jouanneau
+* @copyright    2005-2012 laurent Jouanneau
 * @copyright    2007 Thibault Piront
 * @copyright    2008 Julien Issler
 * @copyright    2008-2010 Dominique Papin
@@ -73,27 +73,20 @@ class jCoordinator {
 
     /**
      * @param  string $configFile name of the ini file to configure the framework
+     *              this parameter is optional if jApp::loadConfig has been already called
      * @param  boolean $enableErrorHandler enable the error handler of jelix.
      *                 keep it to true, unless you have something to debug
      *                 and really have to use the default handler or an other handler
      */
-    function __construct ($configFile, $enableErrorHandler=true) {
-        global $gJCoord, $gJConfig;
+    function __construct ($configFile='', $enableErrorHandler=true) {
+        global $gJCoord;
+        $gJCoord = $this;
 
-        // temporary init. Remove this line when JELIX_APP_* support will be removed completely from Jelix
+        if ($configFile)
+            jApp::loadConfig($configFile, $enableErrorHandler);
+
+        // temporary init. Remove this line when JELIX_APP_* and $gJConfig support will be removed completely from Jelix
         jApp::initLegacy();
-
-        $gJCoord =  $this;
-
-        if ($enableErrorHandler) {
-            set_error_handler('jErrorHandler');
-            set_exception_handler('JExceptionHandler');
-        }
-
-        // load configuration data
-        $gJConfig = jConfig::load($configFile);
-
-        date_default_timezone_set($gJConfig->timeZone);
 
         $this->_loadPlugins();
     }
@@ -102,15 +95,15 @@ class jCoordinator {
      * load the plugins and their configuration file
      */
     private function _loadPlugins(){
-        global $gJConfig;
 
-        foreach ($gJConfig->coordplugins as $name=>$conf) {
+        $config = jApp::config();
+        foreach ($config->coordplugins as $name=>$conf) {
             // the config compiler has removed all deactivated plugins
             // so we don't have to check if the value $conf is empty or not
             if ($conf == '1') {
                 $confname = 'coordplugin_'.$name;
-                if (isset($gJConfig->confname))
-                    $conf = $gJConfig->confname;
+                if (isset($config->confname))
+                    $conf = $config->confname;
                 else
                     $conf = array();
             }
@@ -119,7 +112,7 @@ class jCoordinator {
                 if (false === ($conf = parse_ini_file($conff,true)))
                     throw new Exception("Error in the configuration file of plugin $name ($conff)!", 13);
             }
-            include( $gJConfig->_pluginsPathList_coord[$name].$name.'.coord.php');
+            include( $config->_pluginsPathList_coord[$name].$name.'.coord.php');
             $class= $name.'CoordPlugin';
             $this->plugins[strtolower($name)] = new $class($conf);
         }
@@ -132,8 +125,8 @@ class jCoordinator {
     * @param  jRequest  $request the request object
     */
     public function process ($request){
-        global $gJConfig;
 
+        $config = jApp::config();
         $this->request = $request;
 
         // let's log messages appeared during init
@@ -148,11 +141,11 @@ class jCoordinator {
         $this->actionName = $request->getParam('action');
 
         if(empty($this->moduleName)){
-            $this->moduleName = $gJConfig->startModule;
+            $this->moduleName = $config->startModule;
         }
         if(empty($this->actionName)){
-            if($this->moduleName == $gJConfig->startModule)
-                $this->actionName = $gJConfig->startAction;
+            if($this->moduleName == $config->startModule)
+                $this->actionName = $config->startAction;
             else {
                 $this->actionName = 'default:index';
             }
@@ -162,17 +155,17 @@ class jCoordinator {
         try{
             $this->action = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
 
-            if($gJConfig->modules[$this->moduleName.'.access'] < 2){
+            if($config->modules[$this->moduleName.'.access'] < 2){
                 throw new jException('jelix~errors.module.untrusted',$this->moduleName);
             }
 
             $ctrl = $this->getController($this->action);
         }catch(jException $e){
-            if ($gJConfig->urlengine['notfoundAct'] =='') {
+            if ($config->urlengine['notfoundAct'] =='') {
                 throw $e;
             }
             try {
-                $this->action = new jSelectorAct($gJConfig->urlengine['notfoundAct']);
+                $this->action = new jSelectorAct($config->urlengine['notfoundAct']);
                 $ctrl = $this->getController($this->action);
             }catch(jException $e2){
                 throw $e;
@@ -276,13 +269,12 @@ class jCoordinator {
      * @since 1.1
      */
     public function handleError($type, $code, $message, $file, $line, $trace){
-        global $gJConfig;
 
         $errorLog = new jLogErrorMessage($type, $code, $message, $file, $line, $trace);
 
         if ($this->request) {
             // we have config, so we can process "normally"
-            $errorLog->setFormat($gJConfig->error_handling['messageLogFormat']);
+            $errorLog->setFormat(jApp::config()->error_handling['messageLogFormat']);
             jLog::log($errorLog, $type);
 
             // if non fatal error, it is finished
@@ -341,7 +333,7 @@ class jCoordinator {
      * @return string
      */
     public function getGenericErrorMessage() {
-        $msg = $GLOBALS['gJConfig']->error_handling['errorMessage'];
+        $msg = jApp::config()->error_handling['errorMessage'];
         if ($this->errorMessage)
             $code = $this->errorMessage->getCode();
         else $code = '';
@@ -392,10 +384,11 @@ class jCoordinator {
     * @return boolean true : module is ok
     */
     public function isModuleEnabled ($moduleName, $includingExternal = false) {
-        if ($includingExternal && isset($GLOBALS['gJConfig']->_externalModulesPathList[$moduleName])) {
+        $conf = jApp::config();
+        if ($includingExternal && isset($conf->_externalModulesPathList[$moduleName])) {
             return true;
         }
-        return isset($GLOBALS['gJConfig']->_modulesPathList[$moduleName]);
+        return isset($conf->_modulesPathList[$moduleName]);
     }
 
     /**
@@ -406,13 +399,13 @@ class jCoordinator {
      * @return string the corresponding path
      */
     public function getModulePath($module, $includingExternal = false){
-        global $gJConfig;
-        if (!isset($gJConfig->_modulesPathList[$module])) {
-            if ($includingExternal && isset($gJConfig->_externalModulesPathList[$module])) {
-                return $gJConfig->_externalModulesPathList[$module];
+        $config = jApp::config();
+        if (!isset($config->_modulesPathList[$module])) {
+            if ($includingExternal && isset($config->_externalModulesPathList[$module])) {
+                return $config->_externalModulesPathList[$module];
             }
             throw new Exception('getModulePath : invalid module name');
         }
-        return $gJConfig->_modulesPathList[$module];
+        return $config->_modulesPathList[$module];
     }
 }

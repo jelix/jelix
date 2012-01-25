@@ -375,6 +375,9 @@ cd lib/jelix/tpl/
 
 cd lib/jelix/utils/
   jAppManager.class.php
+  jAtom10Reader.class.php
+  jAtom10Info.class.php
+  jAtom10Item.class.php
   jCache.class.php
   jClasses.class.php
   jClassBinding.class.php
@@ -395,11 +398,17 @@ cd lib/jelix/utils/
   jMailer.class.php
   jMessage.class.php
   jProfiles.class.php
+  jRSS20Reader.class.php
+  jRSS20Info.class.php
+  jRSS20Item.class.php
   jSmtp.class.php
   jSoapClient.class.php
   jTcpdf.class.php
   jVersionComparator.class.php
 * jWiki.class.php
+  jXMLFeedReader.class.php
+  jXMLFeedInfo.class.php
+  jXMLFeedItem.class.php
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php
@@ -589,6 +598,7 @@ cd lib/jelix/plugins/tpl/html
   block.formdata.php
   block.formsubmits.php
   block.ifctrl.php
+  block.jscompress.php
   block.swf.php
   block.swfjs.php
   cfunction.const.php

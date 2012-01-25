@@ -14,8 +14,7 @@ require_once(JELIX_LIB_PATH.'plugins/urls/significant/significant.urls.php');
 class UTParseUrlsIncluder extends jIncluder {
 
     static function resetUrlCache() {
-        global $gJConfig;
-        $sel = new jSelectorUrlCfgSig($gJConfig->urlengine['significantFile']);
+        $sel = new jSelectorUrlCfgSig(jApp::config()->urlengine['significantFile']);
         $file = $sel->getCompiledFilePath();
 
         unset(self::$_includedFiles[$file]);
@@ -31,33 +30,33 @@ class UTParseUrls extends UnitTestCase {
     protected $simple_urlengine_entrypoints;
 
     function setUp() {
-      global $gJCoord, $gJConfig;
+      global $gJCoord;
 
       $this->oldUrlScriptPath = $gJCoord->request->urlScriptPath;
       $this->oldParams = $gJCoord->request->params;
       $this->oldRequestType = $gJCoord->request->type;
-      $this->oldUrlengineConf = $gJConfig->urlengine;
-      $this->simple_urlengine_entrypoints = $gJConfig->simple_urlengine_entrypoints;
+      $this->oldUrlengineConf = jApp::config()->urlengine;
+      $this->simple_urlengine_entrypoints = jApp::config()->simple_urlengine_entrypoints;
     }
 
     function tearDown() {
-      global $gJCoord, $gJConfig;
+      global $gJCoord;
 
       $gJCoord->request->urlScriptPath=$this->oldUrlScriptPath;
       $gJCoord->request->params=$this->oldParams;
       $gJCoord->request->type=$this->oldRequestType;
-      $gJConfig->urlengine = $this->oldUrlengineConf;
-      $gJConfig->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
+      jApp::config()->urlengine = $this->oldUrlengineConf;
+      jApp::config()->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
       jUrl::getEngine(true);
     }
 
     function testSignificantEngine() {
-       global $gJConfig, $gJCoord;
-
+       global $gJCoord;
+       $config = jApp::config();
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
-       $gJConfig->urlengine = array(
+       $config->urlengine = array(
          'engine'=>'significant',
          'enableParser'=>true,
          'multiview'=>false,
@@ -68,7 +67,7 @@ class UTParseUrls extends UnitTestCase {
          'significantFile'=>'urls.xml',
          'checkHttpsOnParsing'=>false
        );
-        $gJConfig->compilation['force'] = true;
+        $config->compilation['force'] = true;
         UTParseUrlsIncluder::resetUrlCache();
         jUrl::getEngine(true);
 
@@ -164,7 +163,7 @@ class UTParseUrls extends UnitTestCase {
          $this->assertTrue( ($p == $resultList[$k]), 'test '.$k.' created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
       }
 
-      $gJConfig->urlengine['checkHttpsOnParsing'] = true;
+      $config->urlengine['checkHttpsOnParsing'] = true;
       UTParseUrlsIncluder::resetUrlCache();
       jUrl::getEngine(true);
 
@@ -175,7 +174,7 @@ class UTParseUrls extends UnitTestCase {
 
       $this->assertEqual($expected, $p);
 
-      $gJConfig->urlengine['checkHttpsOnParsing'] = false;
+      $config->urlengine['checkHttpsOnParsing'] = false;
       UTParseUrlsIncluder::resetUrlCache();
       jUrl::getEngine(true);
 
@@ -188,7 +187,7 @@ class UTParseUrls extends UnitTestCase {
       $this->assertEqual($url->params['action'], 'default:notfound');
 
       //$this->sendMessage("significant, multiview = true");
-      $gJConfig->urlengine['multiview']=true;
+      $config->urlengine['multiview']=true;
       $request=array(
           array("index","/test/news/2005/10/35",array()),
           array("index","/test/news/2005/10/35",array("action"=>"urlsig:url8")),
@@ -241,12 +240,13 @@ class UTParseUrls extends UnitTestCase {
     }
 
     function testBasicSignificantEngine() {
-       global $gJConfig, $gJCoord;
+       global $gJCoord;
 
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
        //$gJCoord->request->type=;
-       $gJConfig->urlengine = array(
+       $config = jApp::config();
+       $config->urlengine = array(
          'engine'=>'basic_significant',
          'enableParser'=>true,
          'multiview'=>false,
@@ -303,7 +303,7 @@ class UTParseUrls extends UnitTestCase {
          $this->assertTrue( ($p == $resultList[$k]), 'created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
       }
 
-      $gJConfig->urlengine['multiview']=true;
+      $config->urlengine['multiview']=true;
       $request=array(
           array("index","/jelix_tests/urlsig/url1",array('mois'=>'10',  'annee'=>'2005', 'id'=>'35')),
           array("testnews","/jelix_tests/urlsig/url2",array('mois'=>'05',  'annee'=>'2004')),
