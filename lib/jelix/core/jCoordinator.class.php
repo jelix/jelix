@@ -377,35 +377,20 @@ class jCoordinator {
     }
 
     /**
-    * Says if the given module $name is enabled
-    * @param string $moduleName
-    * @param boolean $includingExternal  true if we want to know if the module
-    *               is also an external module, e.g. in an other entry point
-    * @return boolean true : module is ok
+    * deprecated.  use jApp::isModuleEnabled() instead
+    * @deprecated
     */
     public function isModuleEnabled ($moduleName, $includingExternal = false) {
-        $conf = jApp::config();
-        if ($includingExternal && isset($conf->_externalModulesPathList[$moduleName])) {
-            return true;
-        }
-        return isset($conf->_modulesPathList[$moduleName]);
+        trigger_error("jCoordinator::isModuleEnabled() is deprecated. Use jApp::isModuleEnabled() instead", E_USER_NOTICE);
+        return jApp::isModuleEnabled($moduleName, $includingExternal);
     }
 
     /**
-     * return the real path of a module
-     * @param string $module a module name
-     * @param boolean $includingExternal  true if we want to know if the module
-     *               is also an external module, e.g. in an other entry point
-     * @return string the corresponding path
+    * deprecated.  use jApp::getModulePath() instead
+    * @deprecated
      */
     public function getModulePath($module, $includingExternal = false){
-        $config = jApp::config();
-        if (!isset($config->_modulesPathList[$module])) {
-            if ($includingExternal && isset($config->_externalModulesPathList[$module])) {
-                return $config->_externalModulesPathList[$module];
-            }
-            throw new Exception('getModulePath : invalid module name');
-        }
-        return $config->_modulesPathList[$module];
+        trigger_error("jCoordinator::getModulePath() is deprecated. Use jApp::getModulePath() instead", E_USER_NOTICE);
+        return jApp::getModulePath($module, $includingExternal);
     }
 }
