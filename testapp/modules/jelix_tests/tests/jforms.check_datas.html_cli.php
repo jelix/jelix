@@ -114,6 +114,28 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->form->setData('nom','<div>lorem<em>aaa</er></div>');
         $this->assertTrue($this->form->check());
 
+        $ctrl = new jFormsControlInput('nom');
+        $ctrl->datatype=new jDatatypeEmail();
+        $ctrl->required = false;
+        $this->form->addCtrl($ctrl);
+
+        $this->form->setData('nom',null);
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','   ');
+        $this->assertTrue($this->form->check());
+        $this->assertEqual('', $this->form->getData('nom'));
+        $this->form->setData('nom','foo@machin.com');
+        $this->assertTrue($this->form->check());
+
+        $ctrl->required = true;
+        $this->form->setData('nom',null);
+        $this->assertFalse($this->form->check());
+        $this->form->setData('nom','');
+        $this->assertFalse($this->form->check());
+        $this->form->setData('nom','   ');
+        $this->assertFalse($this->form->check());
     }
 
     function testCheckbox() {

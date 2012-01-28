@@ -71,6 +71,15 @@ abstract class jDatatype {
     public function check($value){
         return true;
     }
+
+    /**
+     * says if the value can contain only whitespaces
+     * @return boolean
+     * @since 1.2.7
+     */
+    public function allowWhitespace() {
+        return false;
+    }
 }
 
 /**
@@ -102,6 +111,10 @@ class jDatatypeString extends jDatatype {
             if($this->pattern !== null && !preg_match($this->pattern,$value))
                 return false;
         }
+        return true;
+    }
+
+    public function allowWhitespace() {
         return true;
     }
 }
@@ -148,6 +161,10 @@ class jDatatypeHtml extends jDatatype implements jIFilteredDatatype {
 
     public function getFilteredValue() {
         return $this->newValue;
+    }
+
+    public function allowWhitespace() {
+        return true;
     }
 }
 
