@@ -587,6 +587,7 @@ cd lib/jelix/plugins/tpl/html
   block.formdata.php
   block.formsubmits.php
   block.ifctrl.php
+  block.jscompress.php
   block.swf.php
   block.swfjs.php
   cfunction.const.php
