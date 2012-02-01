@@ -195,14 +195,13 @@ class jApp {
     public static function loadPlugin($name, $type, $suffix, $classname, $args = null) {
 
         if (!class_exists($classname,false)) {
-            global $gJConfig;
             $optname = '_pluginsPathList_'.$type;
-            if (!isset($gJConfig->$optname))
+            if (!isset(jApp::config()->$optname))
                 return null;
-            $opt = & $gJConfig->$optname;
+            $opt = & jApp::config()->$optname;
 #ifnot ENABLE_OPTIMIZED_SOURCE
             if (!isset($opt[$name])
-                || !file_exists($opt[$name]) ){
+                || !file_exists($opt[$name].$name.$suffix) ){
                 return null;
             }
 #endif
