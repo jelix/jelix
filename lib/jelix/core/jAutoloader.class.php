@@ -17,6 +17,7 @@ class jAutoloader {
 
     protected $nsPaths = array();
     protected $classPaths = array();
+    protected $includePaths = array();
     protected $regClassPaths = array();
 
     /**
@@ -24,7 +25,8 @@ class jAutoloader {
      * supposed to be into a file $includePath.'/'.$className.$extension
      */
     public function registerClass($className, $includePath, $extension='.php') {
-        $this->classPaths[$className] = array($includePath, $extension);
+        $includePath = rtrim(rtrim($includePath, '/'), '\\');
+        $this->classPaths[$className] = $includePath. DIRECTORY_SEPARATOR .str_replace('\\', DIRECTORY_SEPARATOR, $className).$extension;
     }
 
     /**
@@ -32,25 +34,53 @@ class jAutoloader {
      * regular expression, then it will load the file $includePath.'/'.$className.$extension
      */
     public function registerRegClass($regClassName, $includePath, $extension='.php') {
+        $includePath = rtrim(rtrim($includePath, '/'), '\\');
         $this->regClassPaths[$regClassName] = array($includePath, $extension);
     }
 
+    public function registerIncludePath($includePath, $extension='.php') {
+        $includePath = rtrim(rtrim($includePath, '/'), '\\');
+        $this->includePaths[$includePath] = array($extension, true);
+    }
+
     /**
-     * register a namespace associated to a path. If psr0 is true, the path will be resolved
-     * following psr0 rules, else it will be resolved as:
+     * register a namespace associated to a path. The full class path will be resolved
+     * following psr0 rules
+     * 
+     * example: registerNamespace('foo\bar','/my/path', '.php')
+     * the resulting path for the class \foo\bar\baz\myclass is /my/path/foo/bar/baz/myclass.php
+     */
+    public function registerNamespace($namespace, $includePath, $extension='.php') {
+        $includePath = rtrim(rtrim($includePath, '/'), '\\');
+        $namespace = trim($namespace, '\\');
+        if ($namespace == '') {
+            $this->includePaths[$includePath] = array($extension, true);
+        }
+        else
+            $this->nsPaths[$namespace] = array($includePath, $extension, true);
+    }
+
+    /**
+     * register a namespace associated to a path. The full class path will be resolved as:
      *  - the part of the namespace of the class that match $namespace, is removed
      *  - the other part is then transformed following psr0 rules
      *  - the resulting path is then added to $includePath
-     * example: registerNamespace('\foo\bar','/my/path', '.php', true)
-     * the resulting path for the class \foo\bar\baz\myclass is /my/path/foo/bar/baz/myclass.php
      * 
-     * registerNamespace('\foo\bar','/my/path', '.php', false);
+     * registerNamespacePathMap('foo\bar','/my/path', '.php');
      * the resulting path for the class \foo\bar\baz\myclass is /my/path/baz/myclass.php
      */
-    public function registerNamespace($namespace, $includePath, $extension='.php', $psr0=true) {
-        $this->nsPaths[$namespace] = array($includePath, $extension, $psr0);
+    public function registerNamespacePathMap($namespace, $includePath, $extension='.php') {
+        $includePath = rtrim(rtrim($includePath, '/'), '\\');
+        $namespace = trim($namespace, '\\');
+        if ($namespace == '')
+            $this->includePaths[$includePath] = array($extension, false);
+        else
+            $this->nsPaths[$namespace] = array($includePath, $extension, false);
     }
 
+    /**
+     * the method that should be called by the autoload system
+     */
     public function loadClass($className) {
         $path = $this->getPath($className);
         if ($path) {
@@ -60,49 +90,74 @@ class jAutoloader {
         return false;
     }
 
+    /**
+     * @return string the full path of the file declaring the given class
+     */
     protected function getPath($className) {
 
-        $includePath = '';
+        $className = ltrim($className, '\\');
+
+        if (isset($this->classPaths[$className])) {
+            return $this->classPaths[$className];
+        }
+
+        // namespace mapping
 
         foreach($this->nsPaths as $ns=>$info) {
-            // $info: 0=>include path  1=>extension 2=>true=psr0
 
-            // check if the given class corresponds to the registred namespace\class
-            if ($ns == $className) {
-                $fileName = str_replace('_', DIRECTORY_SEPARATOR, $className) . $info[1];
-                $includePath = $info[0].$fileName;
-                break;
-            }
+            list($incPath, $ext, $psr0) = $info;
 
-            // check if the given class name begins with the current namespace
             if (strpos($className, $ns) === 0) {
-                $namespace = '';
+                $path = '';
                 $lastNsPos = strripos($className, '\\');
                 if ($lastNsPos !== false) {
                     // the class name contains a namespace, let's split ns and class
+                    //$namespace = substr($className, $start, $end);
                     $namespace = substr($className, 0, $lastNsPos);
+                    if (!$psr0) {
+                        // not psr0
+                        $namespace = substr($namespace, strlen($ns)+1);
+                    }
                     $className = substr($className, $lastNsPos + 1);
-                }
-                else {
-                    // the given class name does not contains namespace
+                    if ($namespace) {
+                        $path = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
+                    }
                 }
 
-                if ($namespace) {
-                    if (!$info[2]) {
-                        // not psr0
-                        $namespace = substr($namespace, strlen($ns));
-                    }
-                    $path = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
-                }
-                else
-                    $path = '';
-                $fileName = str_replace('_', DIRECTORY_SEPARATOR, $className) . $info[1];
-                $includePath = $info[0].$path.$fileName;
-                break;
+                $fileName = str_replace('_', DIRECTORY_SEPARATOR, $className) . $ext;
+                return $incPath.DIRECTORY_SEPARATOR.$path.$fileName;
             }
         }
 
-        return $includePath;
+        foreach($this->includePaths as $incPath=>$info) {
+            list($ext, $psr0) = $info;
+
+            $lastNsPos = strripos($className, '\\');
+            if ($lastNsPos !== false) {
+                // the class name contains a namespace, let's split ns and class
+                $namespace = substr($className, 0, $lastNsPos);
+                $className = substr($className, $lastNsPos + 1);
+            }
+            else {
+                $namespace = '';
+                // the given class name does not contains namespace
+            }
+
+            if ($namespace) {
+                $path = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
+            }
+            else
+                $path = '';
+            $fileName = str_replace('_', DIRECTORY_SEPARATOR, $className) . $ext;
+            return $incPath.DIRECTORY_SEPARATOR.$path.$fileName;
+        }
+        foreach ($this->regClassPaths as $reg=>$info) {
+            if (preg_match($reg, $className)) {
+                list($incPath, $ext) = $info;
+                return $incPath. DIRECTORY_SEPARATOR .$className.$ext;
+            }
+        }
+        return '';
     }
 }
 
