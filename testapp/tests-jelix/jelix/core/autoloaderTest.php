@@ -56,22 +56,22 @@ class autoloaderTest extends PHPUnit_Framework_TestCase {
         $autoloader = new fakeAutoloader();
 
         $autoloader->registerNamespace('', '/usr/lib/sea', '.php');
-        $this->assertEquals('/usr/lib/sea/bateau.php', $autoloader->test_get_path('bateau'));
-        $this->assertEquals('/usr/lib/sea/bateauinconnu.php', $autoloader->test_get_path('bateauinconnu'));
-        $this->assertEquals('/usr/lib/sea/bateau/sous.php', $autoloader->test_get_path('bateau_sous'));
-        $this->assertEquals('/usr/lib/sea/bateau.php', $autoloader->test_get_path('\bateau'));
-        $this->assertEquals('/usr/lib/sea/foo/bateau.php', $autoloader->test_get_path('\foo\bateau'));
+        $this->assertEquals(array('/usr/lib/sea/bateau.php'), $autoloader->test_get_path('bateau'));
+        $this->assertEquals(array('/usr/lib/sea/bateauinconnu.php'), $autoloader->test_get_path('bateauinconnu'));
+        $this->assertEquals(array('/usr/lib/sea/bateau/sous.php'), $autoloader->test_get_path('bateau_sous'));
+        $this->assertEquals(array('/usr/lib/sea/bateau.php'), $autoloader->test_get_path('\bateau'));
+        $this->assertEquals(array('/usr/lib/sea/foo/bateau.php'), $autoloader->test_get_path('\foo\bateau'));
     }
     
     function testClassPath() {
         $autoloader = new fakeAutoloader();
-        $autoloader->registerClass('bateau', '/usr/lib/sea', '.php');
-        $autoloader->registerClass('foo\bateau', '/usr/lib/sea', '.php');
+        $autoloader->registerClass('bateau', '/usr/lib/sea/bateau.php');
+        $autoloader->registerClass('foo\bateau', '/usr/lib/sea/foobat.php');
 
         $this->assertEquals('/usr/lib/sea/bateau.php', $autoloader->test_get_path('bateau'));
         $this->assertEquals('', $autoloader->test_get_path('bateauinconnu'));
         $this->assertEquals('', $autoloader->test_get_path('bateau_sous'));
-        $this->assertEquals('/usr/lib/sea/foo/bateau.php', $autoloader->test_get_path('foo\bateau'));
+        $this->assertEquals('/usr/lib/sea/foobat.php', $autoloader->test_get_path('foo\bateau'));
         $this->assertEquals('', $autoloader->test_get_path('unknown'));
     }
 
@@ -104,7 +104,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase {
 
     function testClassRegPath() {
         $autoloader = new fakeAutoloader();
-        $autoloader->registerRegClass('/^bat/', '/usr/lib/sea', '.php');
+        $autoloader->registerClassPattern('/^bat/', '/usr/lib/sea', '.php');
 
         $this->assertEquals('/usr/lib/sea/bateau.php', $autoloader->test_get_path('bateau'));
         $this->assertEquals('/usr/lib/sea/batman.php', $autoloader->test_get_path('batman'));

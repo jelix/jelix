@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage core
 * @author     Laurent Jouanneau
-* @copyright  2011 Laurent Jouanneau
+* @copyright  2011-2012 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -21,21 +21,21 @@ class jAutoloader {
     protected $regClassPaths = array();
 
     /**
-     * register a simple class name associated to a path. The class is then
-     * supposed to be into a file $includePath.'/'.$className.$extension
+     * register a simple class name associated to a file.
+     * @parameter string $className the class name. It can contain a namespace
+     * @parameter string $includeFile the full path to the file we have to include
      */
-    public function registerClass($className, $includePath, $extension='.php') {
-        $includePath = rtrim(rtrim($includePath, '/'), '\\');
-        $this->classPaths[$className] = $includePath. DIRECTORY_SEPARATOR .str_replace('\\', DIRECTORY_SEPARATOR, $className).$extension;
+    public function registerClass($className, $includeFile) {
+        $this->classPaths[$className] = $includeFile;
     }
 
     /**
      * register a regular expression associated to a path. If the class name match the given
      * regular expression, then it will load the file $includePath.'/'.$className.$extension
      */
-    public function registerRegClass($regClassName, $includePath, $extension='.php') {
+    public function registerClassPattern($regExp, $includePath, $extension='.php') {
         $includePath = rtrim(rtrim($includePath, '/'), '\\');
-        $this->regClassPaths[$regClassName] = array($includePath, $extension);
+        $this->regClassPaths[$regExp] = array($includePath, $extension);
     }
 
     public function registerIncludePath($includePath, $extension='.php') {
@@ -83,7 +83,15 @@ class jAutoloader {
      */
     public function loadClass($className) {
         $path = $this->getPath($className);
-        if ($path) {
+        if (is_array($path)) {
+            foreach($path as $p) {
+                if (file_exists($p)) {
+                    require($p);
+                    return true;
+                }
+            }
+        }
+        else if ($path) {
             require($path);
             return true;
         }
@@ -101,6 +109,19 @@ class jAutoloader {
             return $this->classPaths[$className];
         }
 
+
+        $lastNsPos = strripos($className, '\\');
+        if ($lastNsPos !== false) {
+            // the class name contains a namespace, let's split ns and class
+            $namespace = substr($className, 0, $lastNsPos);
+            $class = substr($className, $lastNsPos + 1);
+        }
+        else {
+            $namespace = '';
+            $class = &$className;
+            // the given class name does not contains namespace
+        }
+
         // namespace mapping
 
         foreach($this->nsPaths as $ns=>$info) {
@@ -109,53 +130,41 @@ class jAutoloader {
 
             if (strpos($className, $ns) === 0) {
                 $path = '';
-                $lastNsPos = strripos($className, '\\');
                 if ($lastNsPos !== false) {
-                    // the class name contains a namespace, let's split ns and class
-                    //$namespace = substr($className, $start, $end);
-                    $namespace = substr($className, 0, $lastNsPos);
                     if (!$psr0) {
                         // not psr0
                         $namespace = substr($namespace, strlen($ns)+1);
                     }
-                    $className = substr($className, $lastNsPos + 1);
                     if ($namespace) {
                         $path = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
                     }
                 }
 
-                $fileName = str_replace('_', DIRECTORY_SEPARATOR, $className) . $ext;
+                $fileName = str_replace('_', DIRECTORY_SEPARATOR, $class) . $ext;
                 return $incPath.DIRECTORY_SEPARATOR.$path.$fileName;
             }
         }
 
+        foreach ($this->regClassPaths as $reg=>$info) {
+            if (preg_match($reg, $className)) {
+                list($incPath, $ext) = $info;
+                return $incPath. DIRECTORY_SEPARATOR .$className.$ext;
+            }
+        }
+
+        $pathList = array();
         foreach($this->includePaths as $incPath=>$info) {
             list($ext, $psr0) = $info;
-
-            $lastNsPos = strripos($className, '\\');
-            if ($lastNsPos !== false) {
-                // the class name contains a namespace, let's split ns and class
-                $namespace = substr($className, 0, $lastNsPos);
-                $className = substr($className, $lastNsPos + 1);
-            }
-            else {
-                $namespace = '';
-                // the given class name does not contains namespace
-            }
 
             if ($namespace) {
                 $path = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
             }
             else
                 $path = '';
-            $fileName = str_replace('_', DIRECTORY_SEPARATOR, $className) . $ext;
-            return $incPath.DIRECTORY_SEPARATOR.$path.$fileName;
+            $pathList[] = $incPath.DIRECTORY_SEPARATOR.$path.str_replace('_', DIRECTORY_SEPARATOR, $class) . $ext;
         }
-        foreach ($this->regClassPaths as $reg=>$info) {
-            if (preg_match($reg, $className)) {
-                list($incPath, $ext) = $info;
-                return $incPath. DIRECTORY_SEPARATOR .$className.$ext;
-            }
+        if (count($pathList)) {
+            return $pathList;
         }
         return '';
     }
