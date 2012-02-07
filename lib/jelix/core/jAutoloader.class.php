@@ -11,7 +11,7 @@
 /**
 *
 * @package    jelix
-* @subpackage utils
+* @subpackage core
 */
 class jAutoloader {
 
@@ -125,11 +125,9 @@ class jAutoloader {
         // namespace mapping
 
         foreach($this->nsPaths as $ns=>$info) {
-
-            list($incPath, $ext, $psr0) = $info;
-
             if (strpos($className, $ns) === 0) {
                 $path = '';
+                list($incPath, $ext, $psr0) = $info;
                 if ($lastNsPos !== false) {
                     if (!$psr0) {
                         // not psr0
@@ -156,7 +154,7 @@ class jAutoloader {
         foreach($this->includePaths as $incPath=>$info) {
             list($ext, $psr0) = $info;
 
-            if ($namespace) {
+            if ($namespace && $psr0) {
                 $path = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
             }
             else

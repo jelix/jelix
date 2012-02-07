@@ -310,6 +310,7 @@ cd testapp/tests-jelix/
   phpunit.xml
 cd testapp/tests-jelix/jelix/core/
   autoloaderTest.php
+  configautoloaderTest.php
   jAppContextTest.php
 cd testapp/tests-jelix/jelix/installer/
   installAppTest.php
