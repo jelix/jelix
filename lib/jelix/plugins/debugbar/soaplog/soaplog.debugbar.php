@@ -51,6 +51,8 @@ class soaplogDebugbarPlugin implements jIDebugbarPlugin {
             }
             $info->popupContent .= '<ul id="jxdb-soaplog" class="jxdb-list">';
             foreach($messages as $msg) {
+                if (get_class($msg) != 'jLogSoapMessage')
+                    continue;
                 $info->popupContent .= '<li>
                 <h5><a href="#" onclick="jxdb.toggleDetails(this);return false;"><span>'.htmlspecialchars($msg->getMessage()).'</span></a></h5>
                 <div>';
