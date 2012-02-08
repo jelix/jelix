@@ -260,6 +260,13 @@ class jConfigCompiler {
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $pathChecked = array();
 
+        $config->_autoload_class = array();
+        $config->_autoload_namespace = array();
+        $config->_autoload_classpattern = array();
+        $config->_autoload_includepathmap = array();
+        $config->_autoload_includepath = array();
+        $config->_autoload_namespacepathmap = array();
+
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
@@ -349,9 +356,46 @@ class jConfigCompiler {
                         }
                         elseif ($config->modules[$f.'.access'])
                             $config->_modulesPathList[$f]=$p.$f.'/';
+                            self::readModuleFile($config, $p.$f.'/');
                     }
                 }
                 closedir($handle);
+            }
+        }
+    }
+
+    static protected function readModuleFile($config, $path) {
+        $xml = simplexml_load_file($path.'module.xml');
+        if (!isset($xml->autoload))
+            return;
+        foreach($xml->autoload->children() as $type=>$element) {
+            if (isset($element['suffix']))
+                $suffix = '|'.(string)$element['suffix'];
+            else
+                $suffix = '|.php';
+            switch ($type) {
+                case 'class':
+                    $config->_autoload_class[(string)$element['name']] = $path.((string)$element['file']);
+                    break;
+                case 'classPattern':
+                    if (!isset($config->_autoload_classpattern['regexp'])) {
+                        $config->_autoload_classpattern['regexp'] = array();
+                        $config->_autoload_classpattern['path'] = array();
+                    }
+                    $config->_autoload_classpattern['regexp'][] = (string)$element['pattern'];
+                    $config->_autoload_classpattern['path'][] =  $path.((string)$element['dir']).$suffix;
+                    break;
+                case 'namespace':
+                    $config->_autoload_namespace[trim((string)$element['name'],'\\')] = $path.((string)$element['dir']).$suffix;
+                    break;
+                case 'namespacePathMap':
+                    $config->_autoload_namespacepathmap[trim((string)$element['name'],'\\')] = $path.((string)$element['dir']).$suffix;
+                    break;
+                case 'includePath':
+                    if (!isset($config->_autoload_includepath['path'])) {
+                        $config->_autoload_includepath['path'] = array();
+                    }
+                    $config->_autoload_includepath['path'][] =  $path.((string)$element['dir']).$suffix;
             }
         }
     }
