@@ -3,11 +3,20 @@ cd lib/jelix-modules
   INSTALL
   CREDITS
 
+cd lib/jelix-modules/jacl
+* module.xml
+cd lib/jelix-modules/jacl/classes
+* jAcl.class.php
+
 cd lib/jelix-modules/jacldb
 * module.xml
   events.xml
 cd lib/jelix-modules/jacldb/classes
 !  jacldb.listener.php
+  jAclDb.class.php
+  jAclDbManager.class.php
+  jAclDbUserGroup.class.php
+
 cd lib/jelix-modules/jacldb/daos
    jaclgroup.dao.xml
    jaclrights.dao.xml

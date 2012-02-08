@@ -5,6 +5,13 @@
 cd .
   README
 
+
+cd lib/jelix/acl
+  jAcl.class.php
+  jAclDb.class.php
+  jAclDbManager.class.php
+  jAclDbUserGroup.class.php
+
 cd lib/jelix/core
   jInstallChecker.class.php
   jApplication.class.php

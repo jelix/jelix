@@ -23,10 +23,6 @@ cd lib/jelix/auth
 #endif
 
 cd lib/jelix/acl
-* jAcl.class.php
-  jAclDbUserGroup.class.php
-  jAclDbManager.class.php
-  jAclDb.class.php
 * jAcl2.class.php
   jAcl2DbUserGroup.class.php
   jAcl2DbManager.class.php
