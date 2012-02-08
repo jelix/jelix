@@ -78,6 +78,7 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/jException.lib.php
 #includephp core/jContext.class.php
 #includephp core/jConfig.class.php
+#includephp core/jConfigAutoloader.class.php
 #includephp core/jSelector.class.php
 #includephp core/selector/jSelectorModule.class.php
 #includephp core/selector/jSelectorActFast.class.php
@@ -115,6 +116,7 @@ require (JELIX_LIB_CORE_PATH . 'jErrorHandler.lib.php');
 require (JELIX_LIB_CORE_PATH . 'jException.lib.php');
 require (JELIX_LIB_CORE_PATH . 'jContext.class.php');
 require (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
+require (JELIX_LIB_CORE_PATH . 'jConfigAutoloader.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSelector.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorModule.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorActFast.class.php');
