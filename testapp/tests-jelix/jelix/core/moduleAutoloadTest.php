@@ -62,4 +62,13 @@ class moduleAutoloadTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($conf->_autoload_includepath['path']), '_autoload_includepath[path] should have 1 declaration');
         $this->assertEquals(self::$modulePath.'autoloadtest/incpath|.php', $conf->_autoload_includepath['path'][0] , 'check path');
     }
+
+
+    function testAutoloaderSection() {
+        $conf = jApp::config();
+        $this->assertEquals(1, count($conf->_autoload_autoloader), '_autoload_autoloader should have 1 declaration (for jelix_tests)');
+        $this->assertTrue(isset($conf->_autoload_autoloader[0]), '_autoload_autoloader should declare info for myautoloader');
+        $this->assertEquals(self::$modulePath.'autoloadtest/myautoloader.php', $conf->_autoload_autoloader[0] , 'check path of file myautoloader.php');
+    }
+
 }

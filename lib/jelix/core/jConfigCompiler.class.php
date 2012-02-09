@@ -266,6 +266,7 @@ class jConfigCompiler {
         $config->_autoload_includepathmap = array();
         $config->_autoload_includepath = array();
         $config->_autoload_namespacepathmap = array();
+        $config->_autoload_autoloader = array();
 
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
@@ -375,27 +376,49 @@ class jConfigCompiler {
                 $suffix = '|.php';
             switch ($type) {
                 case 'class':
-                    $config->_autoload_class[(string)$element['name']] = $path.((string)$element['file']);
+                    $p = $path.((string)$element['file']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - this class file doesn\'t exists: '.$p);
+                    $config->_autoload_class[(string)$element['name']] = $p;
                     break;
                 case 'classPattern':
+                    $p = $path.((string)$element['dir']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - this directory for classPattern doesn\'t exists: '.$p);
                     if (!isset($config->_autoload_classpattern['regexp'])) {
                         $config->_autoload_classpattern['regexp'] = array();
                         $config->_autoload_classpattern['path'] = array();
                     }
                     $config->_autoload_classpattern['regexp'][] = (string)$element['pattern'];
-                    $config->_autoload_classpattern['path'][] =  $path.((string)$element['dir']).$suffix;
+                    $config->_autoload_classpattern['path'][] =  $p.$suffix;
                     break;
                 case 'namespace':
-                    $config->_autoload_namespace[trim((string)$element['name'],'\\')] = $path.((string)$element['dir']).$suffix;
+                    $p = $path.((string)$element['dir']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - this directory for namespace doesn\'t exists: '.$p);
+                    $config->_autoload_namespace[trim((string)$element['name'],'\\')] = $p.$suffix;
                     break;
                 case 'namespacePathMap':
-                    $config->_autoload_namespacepathmap[trim((string)$element['name'],'\\')] = $path.((string)$element['dir']).$suffix;
+                    $p = $path.((string)$element['dir']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - this directory for namespacePathMap doesn\'t exists: '.$p);
+                    $config->_autoload_namespacepathmap[trim((string)$element['name'],'\\')] = $p.$suffix;
                     break;
                 case 'includePath':
+                    $p = $path.((string)$element['dir']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - this directory for includePath doesn\'t exists: '.$p);
                     if (!isset($config->_autoload_includepath['path'])) {
                         $config->_autoload_includepath['path'] = array();
                     }
-                    $config->_autoload_includepath['path'][] =  $path.((string)$element['dir']).$suffix;
+                    $config->_autoload_includepath['path'][] =  $p.$suffix;
+                    break;
+                case 'autoloader':
+                    $p = $path.((string)$element['file']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - This autoloader doesn\'t exists: '.$p);
+                    $config->_autoload_autoloader[] = $p;
+                    break;
             }
         }
     }

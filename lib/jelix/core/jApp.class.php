@@ -145,6 +145,8 @@ class jApp {
             date_default_timezone_set(self::$_config->timeZone);
             self::$configAutoloader = new jConfigAutoloader($config);
             spl_autoload_register(array(self::$configAutoloader, 'loadClass'));
+            foreach(self::$_config->_autoload_autoloader as $autoloader)
+                require_once($autoloader);
         }
     }
 

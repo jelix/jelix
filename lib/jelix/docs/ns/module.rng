@@ -21,6 +21,9 @@
         <element name="autoload">
             <zeroOrMore>
                 <choice>
+                    <element name="autoloader">
+                        <attribute name="file" />
+                    </element>
                     <element name="class">
                         <attribute name="name" />
                         <attribute name="file" />

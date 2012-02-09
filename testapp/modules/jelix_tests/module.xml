@@ -23,5 +23,6 @@
         <namespace name="jelixTests\foo" dir="autoloadtest" />
         <namespacePathMap name="jelixTests\bar" dir="autoloadtest/barns" suffix=".class.php" />
         <includePath dir="autoloadtest/incpath" suffix=".php" />
+        <autoloader file="autoloadtest/myautoloader.php" />
     </autoload>
 </module>
