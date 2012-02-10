@@ -3,7 +3,7 @@
 * @package     jelix_admin_modules
 * @subpackage  jpref_admin
 * @author    Florian Lonqueu-Brochard
-* @copyright 2011 Florian Lonqueu-Brochard
+* @copyright 2012 Florian Lonqueu-Brochard
 * @link      http://jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -22,7 +22,7 @@ class prefsCtrl extends jController {
         $rep = $this->getResponse('html');
 
         $tpl = new jTpl();
-        $tpl->assign('prefs',jPrefAdminManager::getAllPreferences());
+        $tpl->assign('prefs',jPrefManager::getAllPreferences());
         $rep->body->assign('MAIN', $tpl->fetch('prefs_index'));
 
         return $rep;
@@ -37,7 +37,7 @@ class prefsCtrl extends jController {
         $id = $this->param('id', 0);
         
         
-        $pref = jPrefAdminManager::getPref($id);
+        $pref = jPrefManager::getPref($id);
         
         if(!$pref){
             $rep = $this->getResponse('redirect');
@@ -67,7 +67,6 @@ class prefsCtrl extends jController {
             $control->help = jLocale::get('jpref_admin~admin.help.'.$pref->type);
         if(!empty($pref->value))
             $form->setData($pref->type, $pref->value);
-        $form->setData('id', $id);
         
         $tpl = new jTpl();
         $tpl->assign('form', $form);
@@ -131,8 +130,8 @@ class prefsCtrl extends jController {
         
         $id = $this->param('id', 0);
         
-        $pref = jPrefAdminManager::getPref($id);
-        if(!$id || !$pref  || empty($pref->default_value)){
+        $pref = jPrefManager::getPref($id);
+        if(!$id || !$pref  || (empty($pref->default_value) && $pref->type != 'boolean')){
             return $rep;
         }
         
@@ -147,6 +146,12 @@ class prefsCtrl extends jController {
             $dvalue = (int) $dvalue;
         elseif ($pref->type == 'decimal')
             $dvalue = (float) $dvalue;
+        elseif ($pref->type == 'boolean'){
+            if($dvalue == 'false')
+                $dvalue= false;
+            else if($dvalue == 'true')
+                $dvalue = true;
+        }
         
         jPref::set($pref->id, $dvalue);
         

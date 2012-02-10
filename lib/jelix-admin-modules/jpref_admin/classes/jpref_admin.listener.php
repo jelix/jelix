@@ -3,7 +3,7 @@
 * @package     jelix_admin_modules
 * @subpackage  jpref_admin
 * @author    Florian Lonqueu-Brochard
-* @copyright 2011 Florian Lonqueu-Brochard
+* @copyright 2012 Florian Lonqueu-Brochard
 * @link        http://jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */

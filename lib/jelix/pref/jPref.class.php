@@ -3,7 +3,7 @@
 * @package   jelix
 * @subpackage pref
 * @author    Florian Lonqueu-Brochard
-* @copyright 2011 Florian Lonqueu-Brochard
+* @copyright 2012 Florian Lonqueu-Brochard
 * @link      http://jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -41,11 +41,13 @@ class jPref{
         $cnx = self::_getConnection();
         $result = $cnx->get($key);
         
-        if(!$result)
+        if(!$result){
+            self::$_prefs[$key] = null;
             return null;
+        }
         
-        $type = $result[0];
-        $value = substr($result, 2);
+        $type = $result[6]; //the value have this format : jpref|t|value
+        $value = substr($result, 8);
         
         if($type == 'i')//integer
             $value = (int) $value;
@@ -53,6 +55,8 @@ class jPref{
             $value = (boolean) $value;
         elseif($type == 'd') // decimal
             $value = (float) $value;
+
+        self::$_prefs[$key] = $value;
 
         return $value;
     }
@@ -82,7 +86,7 @@ class jPref{
         else
             $prefix = 's';
             
-        $prefix .= '|';
+        $prefix = 'jpref|' . $prefix . '|';
 
         $cnx->set($key, $prefix.$value);
     } 

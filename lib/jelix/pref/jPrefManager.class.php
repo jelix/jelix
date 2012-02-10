@@ -3,14 +3,15 @@
 * @package   jelix
 * @subpackage pref
 * @author    Florian Lonqueu-Brochard
-* @copyright 2011 Florian Lonqueu-Brochard
+* @copyright 2012 Florian Lonqueu-Brochard
 * @link      http://jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-require_once(JELIX_LIB_PATH.'pref/jPrefAdmin.class.php');
+require_once(JELIX_LIB_PATH.'pref/jPrefItem.class.php');
+require_once(JELIX_LIB_PATH.'pref/jPrefItemGroup.class.php');
 
-class jPrefAdminManager{
+class jPrefManager{
     
     protected static $_ini;
     
@@ -20,7 +21,7 @@ class jPrefAdminManager{
     /**
      * Add a preference into the preference config
      * 
-     * @param jPrefAdmin $preference the preference to add
+     * @param jPrefItem $preference the preference to add
      */
     public function addPreference($pref){
         self::_loadIniModifier();
@@ -47,7 +48,7 @@ class jPrefAdminManager{
     /**
      * Add a group of preference into the preference config
      * 
-     * @param jPrefAdminGroup $grp the preference group to add
+     * @param jPrefItemGroup $grp the preference group to add
      */
     public function addGroup($grp){
         self::_loadIniModifier();
@@ -68,19 +69,19 @@ class jPrefAdminManager{
         $preferences = self::_getPrefFile();
         
         $prefs = array();
-        $nogroup = new jPrefAdminGroup();
+        $nogroup = new jPrefItemGroup();
         $nogroup->id= '__nogroup';
         $nogroup-> locale = 'jpref_admin~admin.group.others';
         
         foreach($preferences as $item_key => $item){
             if(substr($item_key, 0, 5) == 'group'){
-                $g = new jPrefAdminGroup();
+                $g = new jPrefItemGroup();
                 $g->setFromIniNode($item_key, $item);
                 
                 $prefs[$g->id] = $g;
             }
             else if(substr($item_key, 0, 4) == 'pref'){
-                $p = new jPrefAdmin();
+                $p = new jPrefItem();
                 $p->setFromIniNode($item_key, $item);
                     
                 //current user doesnt have rights to read this pref
@@ -108,23 +109,24 @@ class jPrefAdminManager{
     public static function getPref($pref_id, $get_pref_value = true){
         $preferences = self::_getPrefFile();
         
-        foreach($preferences as $item_key => $item){
-            if($item_key == 'pref:'.$pref_id){
-                $p = new jPrefAdmin();
-                $p->setFromIniNode($item_key, $item);
-                
-                //current user doesnt have rights to read this pref
-                if(!$p->isReadable())
-                    break;
-                
-                if($get_pref_value)
-                    $p->loadValue();
-                
-                return $p;
-            }
-        }
+        $item_key = 'pref:'.$pref_id;
         
-        return false;
+        if(isset($preferences[$item_key])){
+            $ini_node = $preferences[$item_key];
+            $p = new jPrefItem();
+            $p->setFromIniNode($item_key, $ini_node);
+            
+            //current user doesnt have rights to read this pref
+            if(!$p->isReadable())
+                break;
+            
+            if($get_pref_value)
+                $p->loadValue();
+            
+            return $p;
+        }
+        else
+            return null;
     }
 
 
