@@ -17,6 +17,8 @@ class jPref{
 
     protected static $_prefs;
 
+    protected static $_prefix = 'jpref_';
+
     protected static function _getConnection(){
     
         if(!self::$_connection){
@@ -39,15 +41,15 @@ class jPref{
             return self::$_prefs[$key];
         
         $cnx = self::_getConnection();
-        $result = $cnx->get($key);
+        $result = $cnx->get(self::$_prefix.$key);
         
         if(!$result){
             self::$_prefs[$key] = null;
             return null;
         }
         
-        $type = $result[6]; //the value have this format : jpref|t|value
-        $value = substr($result, 8);
+        $type = $result[0];
+        $value = substr($result, 2);
         
         if($type == 'i')//integer
             $value = (int) $value;
@@ -86,9 +88,9 @@ class jPref{
         else
             $prefix = 's';
             
-        $prefix = 'jpref|' . $prefix . '|';
+        $prefix .= '|';
 
-        $cnx->set($key, $prefix.$value);
+        $cnx->set(self::$_prefix.$key, $prefix.$value);
     } 
 
 
