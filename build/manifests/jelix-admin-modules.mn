@@ -79,4 +79,24 @@ cd lib/jelix-admin-modules/jauthdb_admin/templates
   password_change.tpl
   user_edit.tpl
   user_view.tpl
+  
+cd lib/jelix-admin-modules/jpref_admin
+*  module.xml
+   events.xml
+   urls.xml
+cd lib/jelix-admin-modules/jpref_admin/classes/
+  jpref_admin.listener.php
+cd lib/jelix-admin-modules/jpref_admin/controllers
+  prefs.classic.php
+cd lib/jelix-admin-modules/jpref_admin/forms
+  pref.form.xml
+cd lib/jelix-admin-modules/jpref_admin/install
+  install.php
+cd lib/jelix-admin-modules/jpref_admin/locales/en_EN
+cch   admin.UTF-8.properties(admin.%charset%.properties)
+cd lib/jelix-admin-modules/jpref_admin/locales/fr_FR
+cch   admin.UTF-8.properties(admin.%charset%.properties)
+cd lib/jelix-admin-modules/jpref_admin/templates
+  prefs_index.tpl
+  pref_edit.tpl
 
