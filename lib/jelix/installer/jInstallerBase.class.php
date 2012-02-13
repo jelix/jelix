@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2009-2011 Laurent Jouanneau
+* @copyright   2009-2012 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -420,5 +420,35 @@ abstract class jInstallerBase {
         $profiles->save();
         jProfiles::clear();
         return true;
+    }
+
+    /**
+     * declare a plugins directory
+     * @param string $path a path. it could contains aliases like 'app:', 'lib:' or 'module:'
+     * @since 1.4
+     */
+    function declarePluginsPath($path) {
+        if (preg_match('@^module:([^/]+)(/.*)?$@', $path, $m)) {
+            if (!isset($m[2]))
+                $path.= '/plugins';
+            else  if (strlen($m[2]) == 1)
+                $path.= 'plugins';
+        }
+        $pluginsPath = $this->config->getValue('pluginsPath');
+        $list = preg_split('/ *, */',$pluginsPath);
+        $path = rtrim($path, '/');
+        foreach($list as $p) {
+            if (preg_match('@^module:([^/]+)(/.*)?$@', $p, $m)) {
+                if (!isset($m[2]))
+                    $p.= '/plugins';
+                else  if (strlen($m[2]) == 1)
+                    $p.= 'plugins';
+            }
+
+            if (rtrim($p, '/') == $path)
+                return;
+        }
+        $pluginsPath .= ','.$path;
+        $this->config->setValue('pluginsPath', $pluginsPath);
     }
 }

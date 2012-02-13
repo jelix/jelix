@@ -167,7 +167,7 @@ $gJConfig = null;
  */
 $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  'Forms'=>JELIX_LIB_PATH.'forms/', 'Event'=>JELIX_LIB_PATH.'events/',
- 'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Acl2'=>JELIX_LIB_PATH.'acl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
+ 'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
  'Auth'=>JELIX_LIB_PATH.'auth/', 'Installer'=>JELIX_LIB_PATH.'installer/',
  'KV'=>JELIX_LIB_PATH.'kvdb/');
 
@@ -175,9 +175,13 @@ $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  * function used by php to try to load an unknown class
  */
 function jelix_autoload($class) {
-    if(preg_match('/^j(Dao|Tpl|Acl2|Event|Db|Controller|Forms|Auth|Installer|KV).*/i', $class, $m)){
+    if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
-    }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
+    }
+    elseif($class == 'jAcl2'){
+        $f = JELIX_LIB_PATH.'acl/jAcl2.class.php';
+    }
+    elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
         // for DAO which are stored in sessions for example
         $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
         if(jApp::config()->compilation['checkCacheFiletime']){

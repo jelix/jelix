@@ -34,10 +34,10 @@ class moduleAutoloadTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($conf->_autoload_classpattern), '_autoload_classpattern should have 2 properties');
         $this->assertTrue(isset($conf->_autoload_classpattern['regexp']), '_autoload_classpattern should have a regexp property');
         $this->assertTrue(isset($conf->_autoload_classpattern['path']), '_autoload_classpattern should have a path property');
-        $this->assertEquals(2, count($conf->_autoload_classpattern['regexp']), '_autoload_classpattern[regexp] should have 2 declarations (for jelix_tests and jacl modules)');
-        $this->assertEquals(2, count($conf->_autoload_classpattern['path']), '_autoload_classpattern[path] should have 2 declarations (for jelix_tests and jacl modules)');
-        $this->assertEquals("/^myalclass/", $conf->_autoload_classpattern['regexp'][1], 'check the regexp');
-        $this->assertEquals(self::$modulePath.'autoloadtest/withpattern/|.cl.php', $conf->_autoload_classpattern['path'][1] , 'check path');
+        $this->assertEquals(3, count($conf->_autoload_classpattern['regexp']), '_autoload_classpattern[regexp] should have 3 declarations (for jelix_tests, jacldb and jacl2db modules)');
+        $this->assertEquals(3, count($conf->_autoload_classpattern['path']), '_autoload_classpattern[path] should have 3 declarations (for jelix_tests, jacldb and jacl2db modules)');
+        $this->assertTrue(in_array("/^myalclass/", $conf->_autoload_classpattern['regexp']), 'check the regexp');
+        $this->assertTrue(in_array(self::$modulePath.'autoloadtest/withpattern/|.cl.php', $conf->_autoload_classpattern['path']), 'check path');
     }
 
 

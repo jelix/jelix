@@ -4,7 +4,7 @@
 * @subpackage   core
 * @author       Laurent Jouanneau
 * @contributor  Thibault Piront (nuKs), Christophe Thiriot, Philippe Schelté
-* @copyright    2006-2011 Laurent Jouanneau
+* @copyright    2006-2012 Laurent Jouanneau
 * @copyright    2007 Thibault Piront, 2008 Christophe Thiriot, 2008 Philippe Schelté
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -432,7 +432,23 @@ class jConfigCompiler {
         array_unshift($list, JELIX_LIB_PATH.'plugins/');
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
-            $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
+            if (preg_match('@^module:([^/]+)(/.*)?$@', $path, $m)) {
+                $mod = $m[1];
+                if (isset($config->_modulesPathList[$mod])) {
+                    $p = $config->_modulesPathList[$mod];
+                    if (isset($m[2]) && strlen($m[2]) > 1)
+                        $p.=$m[2];
+                    else
+                        $p.= '/plugins/';
+                }
+                else {
+                    trigger_error('Configuration: Path given in pluginsPath for the module '.$mod.' is ignored, since this module is unknown or deactivated', E_USER_NOTICE);
+                    continue;
+                }
+            }
+            else {
+                $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
+            }
             if(!file_exists($p)){
                 trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
                 exit;

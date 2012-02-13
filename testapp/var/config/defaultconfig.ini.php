@@ -8,7 +8,7 @@ charset = "UTF-8"
 ; if empty, jelix will try to get the default timezone
 timeZone = 
 
-pluginsPath = app:plugins/,lib:jelix-plugins/
+pluginsPath = app:plugins/,lib:jelix-plugins/,module:jacl2db/plugins,module:jacldb/plugins
 modulesPath = lib:jelix-modules/,app:modules/
 
 theme = default

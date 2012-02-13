@@ -24,9 +24,6 @@ cd lib/jelix/auth
 
 cd lib/jelix/acl
 * jAcl2.class.php
-  jAcl2DbUserGroup.class.php
-  jAcl2DbManager.class.php
-  jAcl2Db.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jIAcl2Driver.iface.php
 #endif
@@ -411,10 +408,6 @@ cd lib/jelix/utils/
 * jZone.class.php
   jWSDL.class.php
 
-cd lib/jelix/plugins/acl/db
-  db.acl.php
-cd lib/jelix/plugins/acl2/db
-  db.acl2.php
 cd lib/jelix/plugins/auth/ldap
   ldap.auth.php
 cd lib/jelix/plugins/auth/db

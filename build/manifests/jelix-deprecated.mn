@@ -11,6 +11,9 @@ cd lib/jelix/acl
   jAclDb.class.php
   jAclDbManager.class.php
   jAclDbUserGroup.class.php
+  jAcl2Db.class.php
+  jAcl2DbManager.class.php
+  jAcl2DbUserGroup.class.php
 
 cd lib/jelix/core
   jInstallChecker.class.php
@@ -66,6 +69,12 @@ cd lib/jelix/installer/
 cd lib/jelix/utils/
   jLog.class.php
   jMinifier.class.php
+
+cd lib/jelix/plugins/acl/db/
+  db.acl.php
+
+cd lib/jelix/plugins/acl2/db
+  db.acl2.php
 
 cd lib/jelix/plugins/tpl/html
   block.formdatas.php
