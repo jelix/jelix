@@ -170,8 +170,8 @@ class jConfigCompiler {
         }
         $config->coordplugins = $coordplugins;
 
-        self::_initResponsesPath($config->responses);
-        self::_initResponsesPath($config->_coreResponses);
+        self::_initResponsesPath($config, 'responses');
+        self::_initResponsesPath($config, '_coreResponses');
 
         if (trim($config->timeZone) === '') {
             $tz = ini_get('date.timezone');
@@ -606,16 +606,35 @@ class jConfigCompiler {
     /**
      * get all physical paths of responses file
      */
-    static private function _initResponsesPath(&$list){
-        $copylist = $list; // because we modify $list and then it will search for "foo.path" responses...
+    static private function _initResponsesPath($config, $list){
+        $copylist = $config->$list; // because we modify $list and then it will search for "foo.path" responses...
         foreach($copylist as $type=>$class){
-            if(file_exists($path=JELIX_LIB_CORE_PATH.'response/'.$class.'.class.php')){
-                $list[$type.'.path']=$path;
-            }elseif(file_exists($path=jApp::appPath('responses/'.$class.'.class.php'))){
-                $list[$type.'.path']=$path;
-            }else{
-                throw new Exception('Configuration Error: the class file of the response type "'.$type.'" is not found ('.$path.')',12);
+            if (strpos($class,'app:') === 0) {
+                $config->{$list}[$type] = $class = substr($class, 4);
+                $config->{$list}[$type.'.path'] = $path = jApp::appPath('responses/'.$class.'.class.php');
+                if (file_exists($path))
+                    continue;
             }
+            else if (preg_match('@^module:([^:]+)(\:(.+))?$@', $class, $m)) {
+                $mod = $m[1];
+                if (isset($config->_modulesPathList[$mod]) && isset($m[2])) {
+                    $class = $m[3];
+                    $path = $config->_modulesPathList[$mod].'responses/'.$class.'.class.php';
+                    $config->{$list}[$type] = $class;
+                    $config->{$list}[$type.'.path'] = $path;
+                    if (file_exists($path))
+                        continue;
+                }
+            }
+            else if(file_exists($path=JELIX_LIB_CORE_PATH.'response/'.$class.'.class.php')){
+                $config->{$list}[$type.'.path']=$path;
+                continue;
+            }
+            else if(file_exists($path=jApp::appPath('responses/'.$class.'.class.php'))){
+                $config->{$list}[$type.'.path']=$path;
+                continue;
+            }
+            throw new Exception('Configuration Error: the class file of the response type "'.$type.'" is not found ('.$path.')',12);
         }
     }
 
