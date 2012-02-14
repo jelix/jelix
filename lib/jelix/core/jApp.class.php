@@ -223,4 +223,40 @@ class jApp {
         else
             return new $classname();
     }
+
+    /**
+    * Says if the given module $name is enabled
+    * @param string $moduleName
+    * @param boolean $includingExternal  true if we want to know if the module
+    *               is also an external module, e.g. in an other entry point
+    * @return boolean true : module is ok
+    */
+    public static function isModuleEnabled ($moduleName, $includingExternal = false) {
+        if (!self::$_config)
+            throw Exception ('Configuration is not loaded');
+        if ($includingExternal && isset(self::$_config->_externalModulesPathList[$moduleName])) {
+            return true;
+        }
+        return isset(self::$_config->_modulesPathList[$moduleName]);
+    }
+
+    /**
+     * return the real path of a module
+     * @param string $module a module name
+     * @param boolean $includingExternal  true if we want to know if the module
+     *               is also an external module, e.g. in an other entry point
+     * @return string the corresponding path
+     */
+    public static function getModulePath($module, $includingExternal = false){
+        if (!self::$_config)
+            throw Exception ('Configuration is not loaded');
+
+        if (!isset(self::$_config->_modulesPathList[$module])) {
+            if ($includingExternal && isset(self::$_config->_externalModulesPathList[$module])) {
+                return self::$_config->_externalModulesPathList[$module];
+            }
+            throw new Exception('getModulePath : invalid module name');
+        }
+        return self::$_config->_modulesPathList[$module];
+    }
 }

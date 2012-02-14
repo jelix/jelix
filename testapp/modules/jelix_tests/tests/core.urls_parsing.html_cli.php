@@ -55,7 +55,6 @@ class UTParseUrls extends UnitTestCase {
        $config = jApp::config();
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
        $config->urlengine = array(
          'engine'=>'significant',
          'enableParser'=>true,
@@ -244,7 +243,7 @@ class UTParseUrls extends UnitTestCase {
 
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
+
        $config = jApp::config();
        $config->urlengine = array(
          'engine'=>'basic_significant',

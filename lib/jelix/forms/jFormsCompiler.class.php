@@ -23,7 +23,6 @@ class jFormsCompiler implements jISimpleCompiler {
     protected $sourceFile;
 
     public function compile($selector){
-        global $gJCoord;
 
         $sel = clone $selector;
 

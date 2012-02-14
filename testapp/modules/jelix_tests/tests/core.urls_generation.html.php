@@ -89,7 +89,6 @@ class UTCreateUrls extends UnitTestCase {
 
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
        $conf = jApp::config();
        $conf->domainName = 'testapp.local';
        $conf->forceHTTPPort = true;
@@ -163,7 +162,6 @@ class UTCreateUrls extends UnitTestCase {
        $conf = jApp::config();
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
        $conf->urlengine = array(
          'engine'=>'simple',
          'enableParser'=>true,
@@ -200,7 +198,6 @@ class UTCreateUrls extends UnitTestCase {
 
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
        $conf = jApp::config();
        $conf->domainName = 'testapp.local';
        $conf->forceHTTPPort = true;
@@ -364,7 +361,6 @@ class UTCreateUrls extends UnitTestCase {
 
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
        $conf = jApp::config();
        $conf->urlengine = array(
          'engine'=>'significant',
@@ -409,7 +405,6 @@ class UTCreateUrls extends UnitTestCase {
 
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
        $conf = jApp::config();
        $conf->domainName = 'testapp.local';
        $conf->forceHTTPPort = true;
@@ -482,7 +477,6 @@ class UTCreateUrls extends UnitTestCase {
 
        $gJCoord->request->urlScriptPath='/';
        $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
        $conf = jApp::config();
        $conf->urlengine = array(
          'engine'=>'basic_significant',
@@ -521,7 +515,6 @@ class UTCreateUrls extends UnitTestCase {
 
         $gJCoord->request->urlScriptPath='/';
         $gJCoord->request->params=array();
-        //$gJCoord->request->type=;
         $conf = jApp::config();
         $conf->urlengine = array(
           'engine'=>'basic_significant',

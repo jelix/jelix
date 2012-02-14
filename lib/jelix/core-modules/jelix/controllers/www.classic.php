@@ -15,15 +15,14 @@ class wwwCtrl extends jController {
     
     public function getfile() {
         $module = $this->param('targetmodule');
-        global $gJCoord;
 
-        if (!$gJCoord->isModuleEnabled($module) || jApp::config()->modules[$module.'.access'] < 2) {
+        if (!jApp::isModuleEnabled($module) || jApp::config()->modules[$module.'.access'] < 2) {
             throw new jException('jelix~errors.module.untrusted',$module);
         }
 
         $rep = $this->getResponse('binary');
         $rep->doDownload = false;
-        $dir = $gJCoord->getModulePath($module).'www/';
+        $dir = jApp::getModulePath($module).'www/';
         jLog::log($dir.str_replace('..', '', $this->param('file')));
         $rep->fileName = realpath($dir.str_replace('..', '', $this->param('file')));
         if (strpos($rep->fileName, $dir) !==0) {

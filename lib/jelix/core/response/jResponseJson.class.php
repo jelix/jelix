@@ -33,7 +33,6 @@ final class jResponseJson extends jResponse {
             return true;
         }
         
-        global $gJCoord;
         $this->_httpHeaders['Content-Type'] = "application/json";
         $content = json_encode($this->data);
         $this->_httpHeaders['Content-length'] = strlen($content);

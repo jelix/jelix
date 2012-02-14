@@ -83,7 +83,7 @@ class jForms {
      * @return jFormBase the object representing the form. Return null if there isn't an existing form
      */
     static public function get($formSel, $formId=null){
-        global $gJCoord;
+
         if($formId === null)
             $formId= self::DEFAULT_ID;
         $fid = is_array($formId) ? serialize($formId) : $formId;
@@ -128,7 +128,7 @@ class jForms {
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      */
     static public function destroy($formSel, $formId=null){
-        global $gJCoord;
+
         if($formId === null)  $formId = self::DEFAULT_ID;
         if(is_array($formId)) $formId = serialize($formId);
         

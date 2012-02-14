@@ -82,7 +82,6 @@ class jIncluder {
      * @param    jISelector   $aSelectorId    the selector corresponding to the file
     */
     public static function inc($aSelector){
-       global $gJCoord;
 
         $cachefile = $aSelector->getCompiledFilePath();
 
@@ -132,7 +131,6 @@ class jIncluder {
     */
     public static function incAll($aType){
 
-        global $gJCoord;
         $cachefile = jApp::tempPath('compiled/'.$aType[3]);
         if(isset(jIncluder::$_includedFiles[$cachefile])){
             return;
