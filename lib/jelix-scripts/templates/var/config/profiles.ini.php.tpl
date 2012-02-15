@@ -67,6 +67,11 @@ host = "localhost:11211"
 ;file_umask =
 
 
+;----------------- jKVDb for jPref
+[jkvdb:jpref]
+;driver = 
+
+
 ;----------------- jSoapClient
 [jsoapclient]
 

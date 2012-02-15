@@ -229,8 +229,7 @@ Florian Lonqueu-Brochard (FlorianLB)
  - système de cache http (#4)
  - bcrypt algorithm for jAuth
  - classe lecture d’un rss/atom distant (#23)
-
-
+ - implementation of jPref (#237)
 
 Vincent Viaud (aka Litchi)
  - bug fix in jforms_jquery.js (#1132)
