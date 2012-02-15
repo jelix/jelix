@@ -106,8 +106,11 @@ class jSoapHandler {
        foreach(array_keys($operationParams) as $i=>$paramName){
            $this->coord->request->params[$paramName] = $soapArgs[$i];
        }
-
         $this->coord->process($this->coord->request);
+        $response = $this->coord->response;
+        if (($c = get_class($response)) == 'jResponseRedirect'
+                || $c == 'jResponseRedirectUrl')
+            return null;
         return $this->coord->response->data;
     }
 }
