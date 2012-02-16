@@ -363,6 +363,12 @@ cd lib/jelix/kvdb
 * jKVDriver.class.php
   jKVDb.class.php
 
+cd lib/jelix/pref
+  jPref.class.php
+  jPrefItem.class.php
+  jPrefItemGroup.class.php
+  jPrefManager.class.php
+
 cd lib/jelix/tpl/
 *  jTpl.class.php
 *  jTplCompiler.class.php

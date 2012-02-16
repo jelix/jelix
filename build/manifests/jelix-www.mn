@@ -30,6 +30,7 @@ cd lib/jelix-www/design/images
   group.png
   rights.png
   user.png
+  cog.png
 cd lib/jelix-www/js
 c tooltip.js
 c jforms_light.js

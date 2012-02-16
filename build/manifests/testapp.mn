@@ -220,6 +220,7 @@ cd testapp/modules/jelix_tests/tests/
   core.urls_parsing.html_cli.php
   daotests.lib.php
   events.simple_test.html_cli.php
+  httpcache.pu.php
   installer.lib.php
   installer.main.html_cli.php
   installer.misc.html_cli.php
@@ -275,6 +276,7 @@ cd testapp/modules/jelix_tests/tests/
   jkvdb.file.html_cli.php
   jkvdb.redis.html_cli.php
   jkvdb.lib.php
+  jpref.main_api.pu.php
   jtpl.compiler.html_cli.php
   jtpl.expressions_parsing.html_cli.php
   jtpl.fetch.html_cli.php

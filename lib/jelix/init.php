@@ -169,13 +169,13 @@ $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  'Forms'=>JELIX_LIB_PATH.'forms/', 'Event'=>JELIX_LIB_PATH.'events/',
  'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
  'Auth'=>JELIX_LIB_PATH.'auth/', 'Installer'=>JELIX_LIB_PATH.'installer/',
- 'KV'=>JELIX_LIB_PATH.'kvdb/');
+ 'KV'=>JELIX_LIB_PATH.'kvdb/', 'Pref'=>JELIX_LIB_PATH.'pref/');
 
 /**
  * function used by php to try to load an unknown class
  */
 function jelix_autoload($class) {
-    if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV).*/i', $class, $m)){
+    if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV|Pref).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
     }
     elseif($class == 'jAcl2'){
