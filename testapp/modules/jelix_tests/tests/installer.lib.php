@@ -123,7 +123,7 @@ class testInstallerMain extends jInstaller {
         $this->reporter = $reporter;
         $this->defaultConfig = new jIniFileModifier(jApp::configPath().'defaultconfig.ini.php');
         $this->messages = new jInstallerMessageProvider('en');
-        $nativeModules = array('jelix','jacl2db','jacldb','jauth','jauthdb','junittests','jWSDL');
+        $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','junittests','jWSDL');
         $config = jApp::config();
         foreach ($this->configContent as $ep=>$conf) {
             
@@ -186,7 +186,7 @@ class testInstallerMain extends jInstaller {
     }
     
     protected function getComponentModule($name, $path, $installer) {
-        if (in_array($name, array('jelix','jacl2db','jacldb','jauth','jauthdb','junittests','jWSDL'))) {
+        if (in_array($name, array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','junittests','jWSDL'))) {
             return new jInstallerComponentModule($name, $path, $installer);
         }
         else {

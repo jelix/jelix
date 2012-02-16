@@ -78,6 +78,7 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/jException.lib.php
 #includephp core/jContext.class.php
 #includephp core/jConfig.class.php
+#includephp core/jConfigAutoloader.class.php
 #includephp core/jSelector.class.php
 #includephp core/selector/jSelectorModule.class.php
 #includephp core/selector/jSelectorActFast.class.php
@@ -115,6 +116,7 @@ require (JELIX_LIB_CORE_PATH . 'jErrorHandler.lib.php');
 require (JELIX_LIB_CORE_PATH . 'jException.lib.php');
 require (JELIX_LIB_CORE_PATH . 'jContext.class.php');
 require (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
+require (JELIX_LIB_CORE_PATH . 'jConfigAutoloader.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSelector.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorModule.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorActFast.class.php');
@@ -165,7 +167,7 @@ $gJConfig = null;
  */
 $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  'Forms'=>JELIX_LIB_PATH.'forms/', 'Event'=>JELIX_LIB_PATH.'events/',
- 'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Acl'=>JELIX_LIB_PATH.'acl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
+ 'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
  'Auth'=>JELIX_LIB_PATH.'auth/', 'Installer'=>JELIX_LIB_PATH.'installer/',
  'KV'=>JELIX_LIB_PATH.'kvdb/', 'Pref'=>JELIX_LIB_PATH.'pref/');
 
@@ -173,9 +175,13 @@ $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  * function used by php to try to load an unknown class
  */
 function jelix_autoload($class) {
-    if(preg_match('/^j(Dao|Tpl|Acl|Event|Db|Controller|Forms|Auth|Installer|KV|Pref).*/i', $class, $m)){
+    if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV|Pref).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
-    }elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
+    }
+    elseif($class == 'jAcl2'){
+        $f = JELIX_LIB_PATH.'acl/jAcl2.class.php';
+    }
+    elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
         // for DAO which are stored in sessions for example
         $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
         if(jApp::config()->compilation['checkCacheFiletime']){

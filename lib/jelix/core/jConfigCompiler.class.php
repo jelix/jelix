@@ -4,7 +4,7 @@
 * @subpackage   core
 * @author       Laurent Jouanneau
 * @contributor  Thibault Piront (nuKs), Christophe Thiriot, Philippe Schelté
-* @copyright    2006-2011 Laurent Jouanneau
+* @copyright    2006-2012 Laurent Jouanneau
 * @copyright    2007 Thibault Piront, 2008 Christophe Thiriot, 2008 Philippe Schelté
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -170,8 +170,8 @@ class jConfigCompiler {
         }
         $config->coordplugins = $coordplugins;
 
-        self::_initResponsesPath($config->responses);
-        self::_initResponsesPath($config->_coreResponses);
+        self::_initResponsesPath($config, 'responses');
+        self::_initResponsesPath($config, '_coreResponses');
 
         if (trim($config->timeZone) === '') {
             $tz = ini_get('date.timezone');
@@ -259,6 +259,14 @@ class jConfigCompiler {
             $list = array_merge($list, preg_split('/ *, */',self::$commonConfig['modulesPath']));
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $pathChecked = array();
+
+        $config->_autoload_class = array();
+        $config->_autoload_namespace = array();
+        $config->_autoload_classpattern = array();
+        $config->_autoload_includepathmap = array();
+        $config->_autoload_includepath = array();
+        $config->_autoload_namespacepathmap = array();
+        $config->_autoload_autoloader = array();
 
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
@@ -349,9 +357,68 @@ class jConfigCompiler {
                         }
                         elseif ($config->modules[$f.'.access'])
                             $config->_modulesPathList[$f]=$p.$f.'/';
+                            self::readModuleFile($config, $p.$f.'/');
                     }
                 }
                 closedir($handle);
+            }
+        }
+    }
+
+    static protected function readModuleFile($config, $path) {
+        $xml = simplexml_load_file($path.'module.xml');
+        if (!isset($xml->autoload))
+            return;
+        foreach($xml->autoload->children() as $type=>$element) {
+            if (isset($element['suffix']))
+                $suffix = '|'.(string)$element['suffix'];
+            else
+                $suffix = '|.php';
+            switch ($type) {
+                case 'class':
+                    $p = $path.((string)$element['file']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - this class file doesn\'t exists: '.$p);
+                    $config->_autoload_class[(string)$element['name']] = $p;
+                    break;
+                case 'classPattern':
+                    $p = $path.((string)$element['dir']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - this directory for classPattern doesn\'t exists: '.$p);
+                    if (!isset($config->_autoload_classpattern['regexp'])) {
+                        $config->_autoload_classpattern['regexp'] = array();
+                        $config->_autoload_classpattern['path'] = array();
+                    }
+                    $config->_autoload_classpattern['regexp'][] = (string)$element['pattern'];
+                    $config->_autoload_classpattern['path'][] =  $p.$suffix;
+                    break;
+                case 'namespace':
+                    $p = $path.((string)$element['dir']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - this directory for namespace doesn\'t exists: '.$p);
+                    $config->_autoload_namespace[trim((string)$element['name'],'\\')] = $p.$suffix;
+                    break;
+                case 'namespacePathMap':
+                    $p = $path.((string)$element['dir']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - this directory for namespacePathMap doesn\'t exists: '.$p);
+                    $config->_autoload_namespacepathmap[trim((string)$element['name'],'\\')] = $p.$suffix;
+                    break;
+                case 'includePath':
+                    $p = $path.((string)$element['dir']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - this directory for includePath doesn\'t exists: '.$p);
+                    if (!isset($config->_autoload_includepath['path'])) {
+                        $config->_autoload_includepath['path'] = array();
+                    }
+                    $config->_autoload_includepath['path'][] =  $p.$suffix;
+                    break;
+                case 'autoloader':
+                    $p = $path.((string)$element['file']);
+                    if (!file_exists($p))
+                        throw new Exception ('Autoload configuration - This autoloader doesn\'t exists: '.$p);
+                    $config->_autoload_autoloader[] = $p;
+                    break;
             }
         }
     }
@@ -365,7 +432,23 @@ class jConfigCompiler {
         array_unshift($list, JELIX_LIB_PATH.'plugins/');
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
-            $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
+            if (preg_match('@^module:([^/]+)(/.*)?$@', $path, $m)) {
+                $mod = $m[1];
+                if (isset($config->_modulesPathList[$mod])) {
+                    $p = $config->_modulesPathList[$mod];
+                    if (isset($m[2]) && strlen($m[2]) > 1)
+                        $p.=$m[2];
+                    else
+                        $p.= '/plugins/';
+                }
+                else {
+                    trigger_error('Configuration: Path given in pluginsPath for the module '.$mod.' is ignored, since this module is unknown or deactivated', E_USER_NOTICE);
+                    continue;
+                }
+            }
+            else {
+                $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
+            }
             if(!file_exists($p)){
                 trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
                 exit;
@@ -523,16 +606,35 @@ class jConfigCompiler {
     /**
      * get all physical paths of responses file
      */
-    static private function _initResponsesPath(&$list){
-        $copylist = $list; // because we modify $list and then it will search for "foo.path" responses...
+    static private function _initResponsesPath($config, $list){
+        $copylist = $config->$list; // because we modify $list and then it will search for "foo.path" responses...
         foreach($copylist as $type=>$class){
-            if(file_exists($path=JELIX_LIB_CORE_PATH.'response/'.$class.'.class.php')){
-                $list[$type.'.path']=$path;
-            }elseif(file_exists($path=jApp::appPath('responses/'.$class.'.class.php'))){
-                $list[$type.'.path']=$path;
-            }else{
-                throw new Exception('Configuration Error: the class file of the response type "'.$type.'" is not found ('.$path.')',12);
+            if (strpos($class,'app:') === 0) {
+                $config->{$list}[$type] = $class = substr($class, 4);
+                $config->{$list}[$type.'.path'] = $path = jApp::appPath('responses/'.$class.'.class.php');
+                if (file_exists($path))
+                    continue;
             }
+            else if (preg_match('@^module:([^:]+)(\:(.+))?$@', $class, $m)) {
+                $mod = $m[1];
+                if (isset($config->_modulesPathList[$mod]) && isset($m[2])) {
+                    $class = $m[3];
+                    $path = $config->_modulesPathList[$mod].'responses/'.$class.'.class.php';
+                    $config->{$list}[$type] = $class;
+                    $config->{$list}[$type.'.path'] = $path;
+                    if (file_exists($path))
+                        continue;
+                }
+            }
+            else if(file_exists($path=JELIX_LIB_CORE_PATH.'response/'.$class.'.class.php')){
+                $config->{$list}[$type.'.path']=$path;
+                continue;
+            }
+            else if(file_exists($path=jApp::appPath('responses/'.$class.'.class.php'))){
+                $config->{$list}[$type.'.path']=$path;
+                continue;
+            }
+            throw new Exception('Configuration Error: the class file of the response type "'.$type.'" is not found ('.$path.')',12);
         }
     }
 
