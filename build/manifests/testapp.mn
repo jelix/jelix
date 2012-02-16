@@ -111,6 +111,18 @@ cd testapp/modules/testapp/tests/
 cd testapp/modules/jelix_tests
   events.xml
 *  module.xml
+cd testapp/modules/jelix_tests/autoloadtest
+  autoloadtestclass.php
+  myautoloader.php
+cd testapp/modules/jelix_tests/autoloadtest/barns
+  foo.class.php
+cd testapp/modules/jelix_tests/autoloadtest/incpath
+  includedclass.php
+cd testapp/modules/jelix_tests/autoloadtest/jelixTests/foo
+  bar.php
+cd testapp/modules/jelix_tests/autoloadtest/withpattern
+  myalclassFoo.cl.php
+
 cd testapp/modules/jelix_tests/classes
   urlsig.urlhandler.php
   urlsigwiki.urlhandler.php
@@ -311,7 +323,10 @@ cd testapp/tests-jelix/
   bootstrap.php
   phpunit.xml
 cd testapp/tests-jelix/jelix/core/
+  autoloaderTest.php
+  configautoloaderTest.php
   jAppContextTest.php
+  moduleAutoloadTest.php
 cd testapp/tests-jelix/jelix/installer/
   installAppTest.php
 cd testapp/tests-jelix/jelix/installer/app1/
