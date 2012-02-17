@@ -4,7 +4,7 @@
 * @subpackage testapp
 * @author   Laurent Jouanneau
 * @contributor
-* @copyright 2005-2010 Laurent Jouanneau
+* @copyright 2005-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
@@ -14,6 +14,9 @@ require (JELIX_LIB_CORE_PATH.'request/jJsonRpcRequest.class.php');
 
 checkAppOpened();
 
-$config_file = 'jsonrpc/config.ini.php';
-$jelix = new JCoordinator($config_file);
-$jelix->process(new jJsonRpcRequest());
+jApp::loadConfig('jsonrpc/config.ini.php');
+
+jApp::setCoord(new jCoordinator());
+jApp::coord()->process(new jJsonRpcRequest());
+
+

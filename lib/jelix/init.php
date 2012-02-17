@@ -146,6 +146,7 @@ require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
  * The main object of Jelix which process all things
  * @global jCoordinator $gJCoord
  * @name $gJCoord
+ * @deprecated use jApp::coord() instead
  */
 $gJCoord = null;
 

@@ -79,8 +79,6 @@ class jCoordinator {
      *                 and really have to use the default handler or an other handler
      */
     function __construct ($configFile='', $enableErrorHandler=true) {
-        global $gJCoord;
-        $gJCoord = $this;
 
         if ($configFile)
             jApp::loadConfig($configFile, $enableErrorHandler);

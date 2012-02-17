@@ -17,8 +17,9 @@ require_once (JELIX_LIB_CORE_PATH.'request/jSoapRequest.class.php');
 
 ini_set("soap.wsdl_cache_enabled", "0"); // disabling PHP's WSDL cache
 
-$config_file = '%%config_file%%';
-$jelix = new JSoapCoordinator($config_file);
+jApp::loadConfig('%%config_file%%');
+$jelix = new JSoapCoordinator();
+jApp::setCoord($jelix);
 $jelix->request = new JSoapRequest();
 $jelix->request->initService();
 $jelix->processSoap();

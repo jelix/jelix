@@ -15,7 +15,9 @@ checkAppOpened();
 
 jApp::loadConfig('%%config_file%%');
 
-$jelix = new jCoordinator();
-$jelix->process(new jJsonRpcRequest());
+jApp::setCoord(new jCoordinator());
+jApp::coord()->process(new jJsonRpcRequest());
+
+
 
 

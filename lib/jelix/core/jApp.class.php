@@ -99,6 +99,9 @@ class jApp {
         global $gJConfig;
         if (!$gJConfig)
             $gJConfig = self::$_config;
+        global $gJCoord;
+        if (!$gJCoord)
+            $gJCoord = self::$_coord;
     }
 
     public static function appPath($file='') { return self::$appPath.$file; }
@@ -158,6 +161,16 @@ class jApp {
         date_default_timezone_set(self::$_config->timeZone);
     }
 
+    protected static $_coord = null;
+    
+    public static function coord() {
+        return self::$_coord;
+    }
+
+    public static function setCoord($coord) {
+        self::$_coord = $coord;
+    }
+
     protected static $contextBackup = array();
 
     /**
@@ -169,8 +182,12 @@ class jApp {
             $conf = clone self::$_config;
         else
             $conf = null;
+        if (self::$_coord)
+            $coord = clone self::$_coord;
+        else
+            $coord = null;
         self::$contextBackup[] = array(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
-                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, $conf);
+                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, $conf, $coord);
     }
 
     /**
@@ -180,7 +197,8 @@ class jApp {
         if (!count(self::$contextBackup))
             return;
         list(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
-             self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, self::$_config) = array_pop(self::$contextBackup);
+             self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env,
+             self::$_config, self::$_coord) = array_pop(self::$contextBackup);
     }
 
     /**
