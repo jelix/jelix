@@ -178,7 +178,7 @@ class jImageModifier {
                                      $config['src_path']);
         }
         else {
-            $srcUri = $GLOBALS['gJCoord']->request->getServerURI().$basePath;
+            $srcUri = jApp::coord()->request->getServerURI().$basePath;
             $srcPath = jApp::wwwPath();
         }
 
@@ -192,7 +192,7 @@ class jImageModifier {
         }
         else {
             $cachePath = jApp::wwwPath('cache/images/');
-            $cacheUri = $GLOBALS['gJCoord']->request->getServerURI().$basePath.'cache/images/';
+            $cacheUri = jApp::coord()->request->getServerURI().$basePath.'cache/images/';
         }
         return array($srcPath, $srcUri, $cachePath, $cacheUri);
     }

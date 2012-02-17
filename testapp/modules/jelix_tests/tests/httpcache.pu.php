@@ -22,11 +22,11 @@ class httpcacheUnitTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_If_Modified_Since'] = $good_date;
         
         
-        $GLOBALS['gJCoord']->request = new jClassicRequest();
-        $rep = $GLOBALS['gJCoord']->request->getResponse('html');
-        $this->assertNotNull($GLOBALS['gJCoord']->request);
+        jApp::coord()->request = new jClassicRequest();
+        $rep = jApp::coord()->request->getResponse('html');
+        $this->assertNotNull(jApp::coord()->request);
         $this->assertInstanceOf('jResponse', $rep);
-        $this->assertEquals($GLOBALS['gJCoord']->request->header('If-Modified-Since'), $good_date);
+        $this->assertEquals(jApp::coord()->request->header('If-Modified-Since'), $good_date);
         
         $unusedHeaderValue = 'test123456';
         $rep->addHttpHeader('Content-Language', $unusedHeaderValue);
@@ -49,11 +49,11 @@ class httpcacheUnitTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_If_None_Match'] = $good_etag;
         
         
-        $GLOBALS['gJCoord']->request = new jClassicRequest();
-        $rep = $GLOBALS['gJCoord']->request->getResponse('html');
-        $this->assertNotNull($GLOBALS['gJCoord']->request);
+        jApp::coord()->request = new jClassicRequest();
+        $rep = jApp::coord()->request->getResponse('html');
+        $this->assertNotNull(jApp::coord()->request);
         $this->assertInstanceOf('jResponse', $rep);
-        $this->assertEquals($GLOBALS['gJCoord']->request->header('If-None-Match'), $good_etag);
+        $this->assertEquals(jApp::coord()->request->header('If-None-Match'), $good_etag);
         
         $this->assertTrue($rep->isValidCache(null, $good_etag));
         $this->assertFalse($rep->isValidCache(null, $wrong_etag));
@@ -66,8 +66,8 @@ class httpcacheUnitTest extends PHPUnit_Framework_TestCase
         
         //prepare
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $GLOBALS['gJCoord']->request = new jClassicRequest();
-        $rep = $GLOBALS['gJCoord']->request->getResponse('html');
+        jApp::coord()->request = new jClassicRequest();
+        $rep = jApp::coord()->request->getResponse('html');
         
        
         $rep->setLifeTime(30);
@@ -90,8 +90,8 @@ class httpcacheUnitTest extends PHPUnit_Framework_TestCase
         
         //prepare
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $GLOBALS['gJCoord']->request = new jClassicRequest();
-        $rep = $GLOBALS['gJCoord']->request->getResponse('html');
+        jApp::coord()->request = new jClassicRequest();
+        $rep = jApp::coord()->request->getResponse('html');
         
         $good_date= gmdate('D, d M Y H:i:s \G\M\T', time());
         
@@ -107,8 +107,8 @@ class httpcacheUnitTest extends PHPUnit_Framework_TestCase
     public function testNormalizeDate(){
 
         if(class_exists('ReflectionMethod')){
-            $GLOBALS['gJCoord']->request = new jClassicRequest();
-            $rep = $GLOBALS['gJCoord']->request->getResponse('html');
+            jApp::coord()->request = new jClassicRequest();
+            $rep = jApp::coord()->request->getResponse('html');
             
             $method = new ReflectionMethod('jResponse', '_normalizeDate');
             $method->setAccessible(TRUE);
@@ -139,8 +139,8 @@ class httpcacheUnitTest extends PHPUnit_Framework_TestCase
         
         if(class_exists('ReflectionMethod')){
             //prepare
-            $GLOBALS['gJCoord']->request = new jClassicRequest();
-            $rep = $GLOBALS['gJCoord']->request->getResponse('html');
+            jApp::coord()->request = new jClassicRequest();
+            $rep = jApp::coord()->request->getResponse('html');
         
             $method = new ReflectionMethod('jResponse', '_checkRequestType');
             $method->setAccessible(TRUE);

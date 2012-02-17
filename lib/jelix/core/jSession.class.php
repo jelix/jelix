@@ -29,7 +29,7 @@ class jSession {
         $params = & jApp::config()->sessions;
 
         // do not start the session if the request is made from the command line or if sessions are disabled in configuration
-        if ($GLOBALS['gJCoord']->request instanceof jCmdLineRequest || !$params['start']) {
+        if (jApp::coord()->request instanceof jCmdLineRequest || !$params['start']) {
             return false;
         }
 

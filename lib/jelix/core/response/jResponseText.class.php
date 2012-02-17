@@ -49,6 +49,6 @@ class jResponseText extends jResponse {
     public function outputErrors(){
         header("HTTP/1.0 500 Internal Jelix Error");
         header('Content-Type: text/plain;charset='.jApp::config()->charset);
-        echo $GLOBALS['gJCoord']->getGenericErrorMessage();
+        echo jApp::coord()->getGenericErrorMessage();
     }
 }

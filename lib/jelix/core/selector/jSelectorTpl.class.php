@@ -36,10 +36,10 @@ class jSelectorTpl extends jSelectorModule {
      */
     function __construct($sel, $outputtype='', $trusted=true){
         if($outputtype == '') {
-            if($GLOBALS['gJCoord']->response)
-                $this->outputType = $GLOBALS['gJCoord']->response->getFormatType();
+            if(jApp::coord()->response)
+                $this->outputType = jApp::coord()->response->getFormatType();
             else
-                $this->outputType = $GLOBALS['gJCoord']->request->defaultResponseType;
+                $this->outputType = jApp::coord()->request->defaultResponseType;
         } else
             $this->outputType = $outputtype;
         $this->trusted = $trusted;

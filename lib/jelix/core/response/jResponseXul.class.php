@@ -134,7 +134,7 @@ class jResponseXul extends jResponse {
         echo '<?xml version="1.0" encoding="'.jApp::config()->charset.'" ?>'."\n";
         echo '<',$this->_root,' title="Errors" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">';
         echo '<vbox>';
-        $message = $GLOBALS['gJCoord']->getGenericErrorMessage();
+        $message = jApp::coord()->getGenericErrorMessage();
         echo "<description style=\"color:#FF0000;\">".htmlspecialchars($message, ENT_NOQUOTES, jApp::config()->charset)."</description>";
         echo '</vbox></',$this->_root,'>';
     }

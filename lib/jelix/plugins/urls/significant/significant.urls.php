@@ -406,7 +406,7 @@ class significantUrlEngine implements jIUrlEngine {
 
         $url->scriptName = jApp::config()->urlengine['basePath'].$urlinfo[1];
         if ($urlinfo[2])
-            $url->scriptName = $GLOBALS['gJCoord']->request->getServerURI(true).$url->scriptName;
+            $url->scriptName = jApp::coord()->request->getServerURI(true).$url->scriptName;
 
         if ($urlinfo[1] && !jApp::config()->urlengine['multiview']) {
             $url->scriptName .= jApp::config()->urlengine['entrypointExtension'];

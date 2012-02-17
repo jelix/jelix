@@ -13,7 +13,7 @@
 define('K_TCPDF_EXTERNAL_CONFIG',true);
 define('K_PATH_MAIN', LIB_PATH.'tcpdf/');
 define('K_PATH_URL',
-       $GLOBALS['gJCoord']->request->getServerURI() .
+       jApp::coord()->request->getServerURI() .
        jApp::config()->urlengine['basePath']);
 define('K_PATH_FONTS', LIB_PATH.'pdf-fonts/');
 define('K_PATH_CACHE', jApp::tempPath());

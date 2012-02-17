@@ -116,7 +116,7 @@ class jResponseHtmlFragment extends jResponse {
         $this->_httpHeaders['Content-Type'] = 'text/plain;charset='.jApp::config()->charset;
 
         $content = '<p class="htmlfragmenterror">';
-        $content .= htmlspecialchars($GLOBALS['gJCoord']->getGenericErrorMessage());
+        $content .= htmlspecialchars(jApp::coord()->getGenericErrorMessage());
         $content .= '</p>';
 
         $this->_httpHeaders['Content-length'] = strlen($content);

@@ -118,7 +118,7 @@ class jUrl extends jUrlBase {
         }
         static $url = false;
         if ($url === false){
-            $req = $GLOBALS['gJCoord']->request;
+            $req = jApp::coord()->request;
             $url = $req->getServerURI().$req->urlScript.$req->urlPathInfo.'?';
             $q = http_build_query($_GET, '', ($forxml?'&amp;':'&'));
             if(strpos($q, '%3A')!==false)

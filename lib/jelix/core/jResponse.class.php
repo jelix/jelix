@@ -89,7 +89,7 @@ abstract class jResponse {
             // output text response
             header("HTTP/{$this->httpVersion} 500 Internal jelix error");
             header('Content-type: text/plain');
-            echo $GLOBALS['gJCoord']->getGenericErrorMessage();
+            echo jApp::coord()->getGenericErrorMessage();
         }
     }
 
@@ -259,7 +259,7 @@ abstract class jResponse {
          
         if($dateLastModified != null){
             $dateLastModified = $this->_normalizeDate($dateLastModified);
-            $lastModified = $GLOBALS['gJCoord']->request->header('If-Modified-Since');
+            $lastModified = jApp::coord()->request->header('If-Modified-Since');
             if ($lastModified !== null && $lastModified == $dateLastModified) {
                 $notModified = true;
             }
@@ -269,7 +269,7 @@ abstract class jResponse {
         }
         
         if($etag != null){
-            $headerEtag = $GLOBALS['gJCoord']->request->header('If-None-Match');
+            $headerEtag = jApp::coord()->request->header('If-None-Match');
             if ($headerEtag !== null && $etag == $headerEtag) {
                 $notModified = true;
             }

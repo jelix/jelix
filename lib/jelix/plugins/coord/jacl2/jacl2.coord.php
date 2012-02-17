@@ -56,7 +56,7 @@ class jAcl2CoordPlugin implements jICoordPlugin {
 
         if(!$aclok){
             if($this->config['on_error'] == 1 
-                || !$GLOBALS['gJCoord']->request->isAllowedResponse('jResponseRedirect')){
+                || !jApp::coord()->request->isAllowedResponse('jResponseRedirect')){
                 throw new jException($this->config['error_message']);
             }else{
                 $selector= new jSelectorAct($this->config['on_error_action']);
