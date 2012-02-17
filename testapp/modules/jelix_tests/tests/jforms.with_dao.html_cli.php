@@ -14,7 +14,6 @@ require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 class UTjformsWithDao extends jUnitTestCaseDb {
 
     function setUpRun(){
-        global $gJCoord;
         $_SESSION['JFORMS'] = array();
         $form = jForms::create('product');
         $form = jForms::create('label', array(1,'fr'));
@@ -22,15 +21,15 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         $this->emptyTable('product_test');
         $this->emptyTable('product_tags_test');
         $this->emptyTable('labels_test');
-        $this->savedParams = $gJCoord->request->params;
+        $this->savedParams = jApp::coord()->request->params;
     }
 
     function testInsertDao(){
-        global $gJCoord;
+        $req = jApp::coord()->request;
 
-        $gJCoord->request->params['name'] = 'phone';
-        $gJCoord->request->params['price'] = '45';
-        $gJCoord->request->params['tag'] = array('professionnal','book');
+        $req->params['name'] = 'phone';
+        $req->params['price'] = '45';
+        $req->params['tag'] = array('professionnal','book');
         $form = jForms::fill('product');
 
         // save main data
@@ -50,9 +49,9 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('product_tags_test', $records);
 
         //insert a second product
-        $gJCoord->request->params['name'] = 'computer';
-        $gJCoord->request->params['price'] = '590';
-        $gJCoord->request->params['tag'] = array('professionnal','promotion');
+        $req->params['name'] = 'computer';
+        $req->params['price'] = '590';
+        $req->params['tag'] = array('professionnal','promotion');
         $form = jForms::fill('product');
 
         $this->id2 = $form->saveToDao('products');
@@ -76,9 +75,9 @@ class UTjformsWithDao extends jUnitTestCaseDb {
     }
 
     function testInsertDao2(){
-        global $gJCoord;
+        $req = jApp::coord()->request;
 
-        $gJCoord->request->params['label'] = 'bonjour';
+        $req->params['label'] = 'bonjour';
         $form = jForms::fill('label', array(1,'fr'));
 
         // save main data
@@ -90,7 +89,7 @@ class UTjformsWithDao extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('labels_test', $records);
 
         //insert a second label
-        $gJCoord->request->params['label'] = 'Hello';
+        $req->params['label'] = 'Hello';
         $form = jForms::fill('label', array(1,'en'));
 
         $id2 = $form->saveToDao('labels');
@@ -104,13 +103,13 @@ class UTjformsWithDao extends jUnitTestCaseDb {
 
     function testUpdateDao(){
 
-        global $gJCoord;
+        $req = jApp::coord()->request;
 
         $form = jForms::create('product',$this->id); // "fill" need an existing form
 
-        $gJCoord->request->params['name'] = 'other phone';
-        $gJCoord->request->params['price'] = '68';
-        $gJCoord->request->params['tag'] = array('high tech','best seller');
+        $req->params['name'] = 'other phone';
+        $req->params['price'] = '68';
+        $req->params['tag'] = array('high tech','best seller');
 
         $form = jForms::fill('product',$this->id);
         $id = $form->saveToDao('products');
@@ -219,8 +218,7 @@ $verif='
     }
 
     function testEnd(){
-        global $gJCoord;
-        $gJCoord->request->params = $this->savedParams;
+        jApp::coord()->request->params = $this->savedParams;
         jForms::destroy('product');
         jForms::destroy('label', array(1,'fr'));
         jForms::destroy('label', array(1,'en'));

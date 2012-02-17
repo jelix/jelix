@@ -29,25 +29,18 @@ class testIFRForm extends jFormsBase {
 class jforms_init_from_request extends PHPUnit_Framework_TestCase {
     protected $form;
     protected $container;
-    protected $oldCoord = null;
     function setUp() {
         $this->container = new jFormsDataContainer('','');
         $this->form = new testIFRForm('bar',$this->container, true);
         $this->form->securityLevel = 0 ; // by default, we don't want to deal with a token in our test
 
-        global $gJCoord;
-
-        if ($gJCoord) {
-           $this->oldCoord = $gJCoord;
-        }
-        $gJCoord = new stdClass();
-        $gJCoord->request = new jClassicRequest();
+        jApp::saveContext();
+        jApp::setCoord(new stdClass());
+        jApp::coord()->request = new jClassicRequest();
     }
 
     function tearDown() {
-        global $gJCoord;
-        if ($this->oldCoord)
-            $gJCoord = $this->oldCoord;
+        jApp::restoreContext();
     }
 
     function testSimpleform() {
@@ -66,8 +59,8 @@ class jforms_init_from_request extends PHPUnit_Framework_TestCase {
         $this->assertEquals('firstnamexxx', $this->container->data['firstname']);
 
         // prepare the request
-        global $gJCoord;
-        $gJCoord->request->params = array('firstname'=>'robert', 'name'=>'dupont');
+
+        jApp::coord()->request->params = array('firstname'=>'robert', 'name'=>'dupont');
 
         // check if the container has new values
         $this->form->initFromRequest();
@@ -77,7 +70,7 @@ class jforms_init_from_request extends PHPUnit_Framework_TestCase {
 
         // Test with a deactivated control
         $this->form->deactivate('firstname');
-        $gJCoord->request->params = array('firstname'=>'jean', 'name'=>'durant');
+        jApp::coord()->request->params = array('firstname'=>'jean', 'name'=>'durant');
         $this->form->initFromRequest();
         // only name should change
         $this->assertEquals('robert', $this->container->data['firstname']);
@@ -86,7 +79,7 @@ class jforms_init_from_request extends PHPUnit_Framework_TestCase {
          // Test with a readonly control
         $this->form->deactivate('firstname', false);
         $this->form->setReadOnly('name');
-        $gJCoord->request->params = array('firstname'=>'alain', 'name'=>'smith');
+        jApp::coord()->request->params = array('firstname'=>'alain', 'name'=>'smith');
         $this->form->initFromRequest();
         // only firstname should change
         $this->assertEquals('alain', $this->container->data['firstname']);
@@ -156,11 +149,8 @@ class jforms_init_from_request extends PHPUnit_Framework_TestCase {
 
         $origdata = $this->container->data;
 
-        // prepare the request
-        global $gJCoord;
-
         // check values in the container when the third item is selected
-        $gJCoord->request->params = array('choice'=>'item3',
+        jApp::coord()->request->params = array('choice'=>'item3',
                                           'nom'=>'dupont',
                                           'categories'=>array('foo','bar'),
                                           'datenaissance'=>'2000-01-01'
@@ -174,7 +164,7 @@ class jforms_init_from_request extends PHPUnit_Framework_TestCase {
 
         // check values in the container when the second item is selected
         $this->container->data = $origdata;
-        $gJCoord->request->params = array('choice'=>'item2',
+        jApp::coord()->request->params = array('choice'=>'item2',
                                           'nom'=>'dupont',
                                           'categories'=>array('foo','bar'),
                                           'datenaissance'=>'2000-01-01'
@@ -187,7 +177,7 @@ class jforms_init_from_request extends PHPUnit_Framework_TestCase {
 
         // check values in the container when the first item is selected
         $this->container->data = $origdata;
-        $gJCoord->request->params = array('choice'=>'item1',
+        jApp::coord()->request->params = array('choice'=>'item1',
                                           'nom'=>'dupont',
                                           'categories'=>array('foo','bar'),
                                           'datenaissance'=>'2000-01-01'
@@ -201,7 +191,7 @@ class jforms_init_from_request extends PHPUnit_Framework_TestCase {
         // let's deactivate an item
         $this->container->data = $origdata;
         $choice->deactivateItem('item1');
-        $gJCoord->request->params = array('choice'=>'item1',
+        jApp::coord()->request->params = array('choice'=>'item1',
                                           'nom'=>'dupont',
                                           'categories'=>array('foo','bar'),
                                           'datenaissance'=>'2000-01-01'

@@ -226,14 +226,14 @@ class UTjforms extends jUnitTestCase {
     }
 
     function testFill(){
-        global $gJCoord;
-        $savedParams = $gJCoord->request->params;
+        $req = jApp::coord()->request;
+        $savedParams = $req->params;
 
         $form = jForms::fill('product');
         $this->assertComplexIdenticalStr($form, $this->form1Descriptor);
 
-        $gJCoord->request->params['name'] = 'phone';
-        $gJCoord->request->params['price'] = '45';
+        $req->params['name'] = 'phone';
+        $req->params['price'] = '45';
 
         $form = jForms::fill('product');
         $verif = '
@@ -310,7 +310,7 @@ class UTjforms extends jUnitTestCase {
     </array>
 </object>';
 
-        $gJCoord->request->params= $savedParams;
+        $req->params= $savedParams;
     }
 
 

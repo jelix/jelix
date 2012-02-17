@@ -17,21 +17,19 @@ class UTCreateUrls extends UnitTestCase {
     protected $oldConfig;
 
     function setUp() {
-      global $gJCoord;
-
-      $this->oldUrlScriptPath = $gJCoord->request->urlScriptPath;
-      $this->oldParams = $gJCoord->request->params;
-      $this->oldRequestType = $gJCoord->request->type;
+      $req = jApp::coord()->request;
+      $this->oldUrlScriptPath = $req->urlScriptPath;
+      $this->oldParams = $req->params;
+      $this->oldRequestType = $req->type;
       $this->oldserver = $_SERVER;
       jApp::saveContext();
     }
 
     function tearDown() {
-      global $gJCoord;
-
-      $gJCoord->request->urlScriptPath=$this->oldUrlScriptPath;
-      $gJCoord->request->params=$this->oldParams;
-      $gJCoord->request->type=$this->oldRequestType;
+      $req = jApp::coord()->request;
+      $req->urlScriptPath = $this->oldUrlScriptPath;
+      $req->params = $this->oldParams;
+      $req->type = $this->oldRequestType;
 
       jApp::restoreContext();
       $_SERVER = $this->oldserver;
@@ -85,10 +83,10 @@ class UTCreateUrls extends UnitTestCase {
     }
 
     function testSimpleEngine() {
-       global $gJCoord;
 
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
        $conf = jApp::config();
        $conf->domainName = 'testapp.local';
        $conf->forceHTTPPort = true;
@@ -157,11 +155,11 @@ class UTCreateUrls extends UnitTestCase {
 
 
     function testSimpleEngineError(){
-       global $gJCoord;
 
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
        $conf = jApp::config();
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
        $conf->urlengine = array(
          'engine'=>'simple',
          'enableParser'=>true,
@@ -194,10 +192,11 @@ class UTCreateUrls extends UnitTestCase {
     }
 
     function testSignificantEngine() {
-       global $gJCoord;
 
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
+
        $conf = jApp::config();
        $conf->domainName = 'testapp.local';
        $conf->forceHTTPPort = true;
@@ -357,10 +356,11 @@ class UTCreateUrls extends UnitTestCase {
 
 
     function testSignificantEngineError(){
-       global $gJCoord;
 
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
+
        $conf = jApp::config();
        $conf->urlengine = array(
          'engine'=>'significant',
@@ -401,10 +401,11 @@ class UTCreateUrls extends UnitTestCase {
     }
 
     function testBasicSignificantEngine() {
-       global $gJCoord;
 
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
+
        $conf = jApp::config();
        $conf->domainName = 'testapp.local';
        $conf->forceHTTPPort = true;
@@ -473,10 +474,11 @@ class UTCreateUrls extends UnitTestCase {
 
 
     function testBasicSignificantEngineError(){
-       global $gJCoord;
 
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
+
        $conf = jApp::config();
        $conf->urlengine = array(
          'engine'=>'basic_significant',
@@ -511,10 +513,11 @@ class UTCreateUrls extends UnitTestCase {
 
 
     function testGetFullUrl() {
-        global $gJCoord;
 
-        $gJCoord->request->urlScriptPath='/';
-        $gJCoord->request->params=array();
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+
         $conf = jApp::config();
         $conf->urlengine = array(
           'engine'=>'basic_significant',

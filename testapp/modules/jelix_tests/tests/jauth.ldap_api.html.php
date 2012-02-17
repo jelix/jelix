@@ -28,11 +28,10 @@ class UTjAuth_LDAP extends jUnitTestCase {
         }
         $conf = parse_ini_file(jApp::configPath().'auth_ldap.coord.ini.php',true);
 
-        global $gJCoord;
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
-        $gJCoord->plugins['auth'] = new AuthCoordPlugin($conf);
+        jApp::coord()->plugins['auth'] = new AuthCoordPlugin($conf);
 
-        $this->config = & $gJCoord->plugins['auth']->config;
+        $this->config = & jApp::coord()->plugins['auth']->config;
         $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
     }
 
@@ -42,8 +41,7 @@ class UTjAuth_LDAP extends jUnitTestCase {
     }
 
     public function tearDownRun (){
-        global $gJCoord;
-        unset($gJCoord->plugins['auth']);
+        unset(jApp::coord()->plugins['auth']);
         unset($_SESSION[$this->config['session_name']]);
         $this->config = null;
     }

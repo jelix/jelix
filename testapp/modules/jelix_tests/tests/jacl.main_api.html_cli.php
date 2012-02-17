@@ -18,13 +18,13 @@ class UTjacl extends jUnitTestCaseDb {
     public function setUpRun (){
         $conf = parse_ini_file(jApp::configPath().'auth_class.coord.ini.php',true);
 
-        global $gJCoord;
+        $coord = jApp::coord();
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
-        if (isset($gJCoord->plugins['auth']))
-            $this->oldAuthPlugin = $gJCoord->plugins['auth'];
-        $gJCoord->plugins['auth'] = new AuthCoordPlugin($conf);
+        if (isset($coord->plugins['auth']))
+            $this->oldAuthPlugin = $coord->plugins['auth'];
+        $coord->plugins['auth'] = new AuthCoordPlugin($conf);
 
-        $this->config = & $gJCoord->plugins['auth']->config;
+        $this->config = & $coord->plugins['auth']->config;
         $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
 
         $this->dbProfile = 'jacl_profile';
@@ -73,11 +73,11 @@ class UTjacl extends jUnitTestCaseDb {
     }
 
     public function tearDownRun (){
-        global $gJCoord;
+
         if ($this->oldAuthPlugin)
-            $gJCoord->plugins['auth'] = $this->oldAuthPlugin;
+            jApp::coord()->plugins['auth'] = $this->oldAuthPlugin;
         else
-            unset($gJCoord->plugins['auth']);
+            unset(jApp::coord()->plugins['auth']);
         unset($_SESSION[$this->config['session_name']]);
         $this->config = null;
     }

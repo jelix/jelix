@@ -30,21 +30,22 @@ class UTParseUrls extends UnitTestCase {
     protected $simple_urlengine_entrypoints;
 
     function setUp() {
-      global $gJCoord;
 
-      $this->oldUrlScriptPath = $gJCoord->request->urlScriptPath;
-      $this->oldParams = $gJCoord->request->params;
-      $this->oldRequestType = $gJCoord->request->type;
+      $req = jApp::coord()->request;
+      $this->oldUrlScriptPath = $req->urlScriptPath;
+      $this->oldParams = $req->params;
+      $this->oldRequestType = $req->type;
+
       $this->oldUrlengineConf = jApp::config()->urlengine;
       $this->simple_urlengine_entrypoints = jApp::config()->simple_urlengine_entrypoints;
     }
 
     function tearDown() {
-      global $gJCoord;
+      $req = jApp::coord()->request;
+      $req->urlScriptPath = $this->oldUrlScriptPath;
+      $req->params = $this->oldParams;
+      $req->type = $this->oldRequestType;
 
-      $gJCoord->request->urlScriptPath=$this->oldUrlScriptPath;
-      $gJCoord->request->params=$this->oldParams;
-      $gJCoord->request->type=$this->oldRequestType;
       jApp::config()->urlengine = $this->oldUrlengineConf;
       jApp::config()->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
       jUrl::getEngine(true);
@@ -52,9 +53,9 @@ class UTParseUrls extends UnitTestCase {
 
     function testSignificantEngine() {
        global $gJCoord;
-       $config = jApp::config();
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
        $config->urlengine = array(
          'engine'=>'significant',
          'enableParser'=>true,
@@ -239,10 +240,9 @@ class UTParseUrls extends UnitTestCase {
     }
 
     function testBasicSignificantEngine() {
-       global $gJCoord;
-
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
 
        $config = jApp::config();
        $config->urlengine = array(

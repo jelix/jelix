@@ -355,8 +355,7 @@ class UTjrequest extends jUnitTestCase {
 
 
     function testGetServerURI_HTTP_80() {
-        global $gJCoord;
-        $request = $gJCoord->request;
+        $request = jApp::coord()->request;
         $config = jApp::config();
         $config->domainName = 'foo.local';
         unset($_SERVER['HTTPS']);
@@ -462,8 +461,8 @@ class UTjrequest extends jUnitTestCase {
     }
 
     function testGetServerURI_HTTP_8082() {
-        global $gJCoord;
-        $request = $gJCoord->request;
+
+        $request = jApp::coord()->request;
         $config = jApp::config();
         $config->domainName = 'foo.local';
         unset($_SERVER['HTTPS']);
@@ -568,8 +567,8 @@ class UTjrequest extends jUnitTestCase {
     }
     
     function testGetServerURI_HTTPS_443() {
-        global $gJCoord;
-        $request = $gJCoord->request;
+
+        $request = jApp::coord()->request;
         $config = jApp::config();
         $config->domainName = 'foo.local';
 
@@ -675,9 +674,9 @@ class UTjrequest extends jUnitTestCase {
     }//bad
     
     function testGetServerURI_HTTPS_4435() {
-        global $gJCoord;
+
         $config = jApp::config();
-        $request = $gJCoord->request;
+        $request = jApp::coord()->request;
         $config->domainName = 'foo.local';
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_PORT'] = '4435';
@@ -781,9 +780,9 @@ class UTjrequest extends jUnitTestCase {
     }
     
     function testGetServerURI_HTTPS_80() {
-        global $gJCoord;
+
         $config = jApp::config();
-        $request = $gJCoord->request;
+        $request = jApp::coord()->request;
         $config->domainName = 'foo.local';
 
         // special ugly case
@@ -889,9 +888,9 @@ class UTjrequest extends jUnitTestCase {
     }
     
     function testGetServerURI_HTTP_443() {
-        global $gJCoord;
+
         $config = jApp::config();
-        $request = $gJCoord->request;
+        $request = jApp::coord()->request;
         $config->domainName = 'foo.local';
         // special ugly case
         unset($_SERVER['HTTPS']);
