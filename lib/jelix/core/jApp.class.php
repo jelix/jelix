@@ -33,6 +33,8 @@ class jApp {
 
     protected static $env = 'www/';
 
+    protected static $configAutoloader = null;
+
     /**
      * initialize the application paths
      *
@@ -136,7 +138,19 @@ class jApp {
     }
 
     public static function setConfig($config) {
+        if (self::$configAutoloader) {
+            spl_autoload_unregister(array(self::$configAutoloader, 'loadClass'));
+            self::$configAutoloader = null;
+        }
+
         self::$_config = $config;
+        if ($config) {
+            date_default_timezone_set(self::$_config->timeZone);
+            self::$configAutoloader = new jConfigAutoloader($config);
+            spl_autoload_register(array(self::$configAutoloader, 'loadClass'));
+            foreach(self::$_config->_autoload_autoloader as $autoloader)
+                require_once($autoloader);
+        }
     }
 
     /**
@@ -154,11 +168,7 @@ class jApp {
             set_error_handler('jErrorHandler');
             set_exception_handler('JExceptionHandler');
         }
-
-        // load configuration data
-        self::$_config = jConfig::load($configFile);
-
-        date_default_timezone_set(self::$_config->timeZone);
+        self:: setConfig(jConfig::load($configFile));
     }
 
     protected static $_coord = null;
