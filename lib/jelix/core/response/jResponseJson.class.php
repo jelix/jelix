@@ -42,10 +42,10 @@ final class jResponseJson extends jResponse {
     }
 
     public function outputErrors(){
-        global $gJCoord;
+
         $message = array();
-        $message['errorMessage'] = $gJCoord->getGenericErrorMessage();
-        $e = $gJCoord->getErrorMessage();
+        $message['errorMessage'] = jApp::coord()->getGenericErrorMessage();
+        $e = jApp::coord()->getErrorMessage();
         if($e){
             $message['errorCode'] = $e->getCode();
         }else{

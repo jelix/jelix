@@ -33,19 +33,19 @@ final class jResponseSoap extends jResponse {
     }
 
     public function outputErrors(){
-        global $gJCoord;
+        $coord = jApp::coord();
  
-        $e = $gJCoord->getErrorMessage();
+        $e = $coord->getErrorMessage();
         if ($e) {
             $errorCode = $e->getCode();
             if ($errorCode > 5000)
                 $errorMessage = $e->getMessage();
             else
-                $errorMessage = $gJCoord->getGenericErrorMessage();
+                $errorMessage = $coord->getGenericErrorMessage();
         }
         else {
             $errorCode = -1;
-            $errorMessage = $gJCoord->getGenericErrorMessage();
+            $errorMessage = $coord->getGenericErrorMessage();
         }
 
         //soapFault param have to be UTF-8 encoded (soapFault seems to not use the encoding param of the SoapServer)
@@ -53,7 +53,7 @@ final class jResponseSoap extends jResponse {
             $errorCode  = utf8_encode($errorCode);
             $errorMessage = utf8_encode($errorMessage);
         }
-        $soapServer = $gJCoord->getSoapServer();
+        $soapServer = $coord->getSoapServer();
         $soapServer->fault($errorCode, $errorMessage);
     }
 }

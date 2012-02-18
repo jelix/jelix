@@ -29,15 +29,13 @@ class AutoLocaleCoordPlugin implements jICoordPlugin {
      */
     public function beforeAction($params){
 
-        global $gJCoord;
-
         $langDetected=false;
         $lang='';
 
         $availableLang = explode(',',$this->config['availableLanguageCode']);
 
         if($this->config['enableUrlDetection']){
-            $l = $gJCoord->request->getParam($this->config['urlParamNameLanguage']);
+            $l = jApp::coord()->request->getParam($this->config['urlParamNameLanguage']);
             if($l !==null){
                 if(strpos('_',$l) ===false){
                     $lg = strtolower($l).'_'.strtoupper($l);

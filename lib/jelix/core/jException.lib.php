@@ -4,7 +4,7 @@
 * @subpackage  core
 * @author      Laurent Jouanneau
 * @contributor Sylvain de Vathaire, Julien Issler
-* @copyright   2005-2010 laurent Jouanneau, 2007 Sylvain de Vathaire
+* @copyright   2005-2012 laurent Jouanneau, 2007 Sylvain de Vathaire
 * @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -16,9 +16,8 @@
 * @param   Exception   $e  the exception object
 */
 function jExceptionHandler($e){
-    global $gJCoord;
 
-    $gJCoord->handleError('error', $e->getCode(), $e->getMessage(), $e->getFile(),
+    jApp::coord()->handleError('error', $e->getCode(), $e->getMessage(), $e->getFile(),
                           $e->getLine(), $e->getTrace());
 }
 

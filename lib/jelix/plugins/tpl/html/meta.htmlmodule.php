@@ -24,29 +24,29 @@
  */
 function jtpl_meta_html_htmlmodule($tpl, $method, $module, $path, $params=array())
 {
-    global $gJCoord;
+    $resp = jApp::coord()->response;
 
-    if($gJCoord->response->getType() != 'html'){
+    if($resp->getType() != 'html'){
         return;
     }
     if (strpos($method, 'csstheme') === 0) {
         $url = jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>'themes/'.jApp::config()->theme.'/'.$path));
         switch($method){
             case 'csstheme':
-                $gJCoord->response->addCSSLink($url,$params);
+                $resp->addCSSLink($url,$params);
                 break;
             case 'cssthemeie':
-                $gJCoord->response->addCSSLink($url,$params,true);
+                $resp->addCSSLink($url,$params,true);
                 break;
             case 'cssthemeie7':
             case 'cssthemeie8':
             case 'cssthemeie9':
-                $gJCoord->response->addCSSLink($url,$params,'IE '.substr($method,-1,1));
+                $resp->addCSSLink($url,$params,'IE '.substr($method,-1,1));
                 break;
             case 'cssthemeltie7':
             case 'cssthemeltie8':
             case 'cssthemeltie9':
-                $gJCoord->response->addCSSLink($url,$params,'lt IE '.substr($method,-1,1));
+                $resp->addCSSLink($url,$params,'lt IE '.substr($method,-1,1));
                 break;
             default:
                 trigger_error("Unknown resource type in meta_htmlmodule", E_USER_WARNING);
@@ -56,26 +56,26 @@ function jtpl_meta_html_htmlmodule($tpl, $method, $module, $path, $params=array(
         $url = jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>$path));
         switch($method){
             case 'js':
-                $gJCoord->response->addJSLink($url,$params);
+                $resp->addJSLink($url,$params);
                 break;
             case 'css':
-                $gJCoord->response->addCSSLink($url,$params);
+                $resp->addCSSLink($url,$params);
                 break;
             case 'jsie':
-                $gJCoord->response->addJSLink($url,$params,true);
+                $resp->addJSLink($url,$params,true);
                 break;
             case 'cssie':
-                $gJCoord->response->addCSSLink($url,$params,true);
+                $resp->addCSSLink($url,$params,true);
                 break;
             case 'cssie7':
             case 'cssie8':
             case 'cssie9':
-                $gJCoord->response->addCSSLink($url,$params,'IE '.substr($method,-1,1));
+                $resp->addCSSLink($url,$params,'IE '.substr($method,-1,1));
                 break;
             case 'cssltie7':
             case 'cssltie8':
             case 'cssltie9':
-                $gJCoord->response->addCSSLink($url,$params,'lt IE '.substr($method,-1,1));
+                $resp->addCSSLink($url,$params,'lt IE '.substr($method,-1,1));
                 break;
             default:
                 trigger_error("Unknown resource type in meta_htmlmodule", E_USER_WARNING);

@@ -129,9 +129,9 @@ class jResponseSitemap extends jResponse {
         if (isset($loc[2048]) || count($this->urlList) >= $this->maxUrl) {
             return false;
         }
-        global $gJCoord;
+
         $url = new jSitemapUrl();
-        $url->loc = $gJCoord->request->getServerURI() . $loc;
+        $url->loc = jApp::coord()->request->getServerURI() . $loc;
 
         if (($timestamp = strtotime($lastmod))) {
             $url->lastmod = date('c', $timestamp);
@@ -159,9 +159,9 @@ class jResponseSitemap extends jResponse {
         if (isset($loc[2048]) || count($this->urlSitemap) >= $this->maxSitemap) {
             return false;
         }
-        global $gJCoord;
+
         $sitemap = new jSitemapIndex();
-        $sitemap->loc = $gJCoord->request->getServerURI() . $loc;
+        $sitemap->loc = jApp::coord()->request->getServerURI() . $loc;
 
         if (($timestamp = strtotime($lastmod))) {
             $sitemap->lastmod = date('c', $timestamp);

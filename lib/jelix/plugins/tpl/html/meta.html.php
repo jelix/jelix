@@ -24,102 +24,102 @@
  */
 function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
 {
-    global $gJCoord;
+    $resp = jApp::coord()->response;
 
-    if($gJCoord->response->getType() != 'html'){
+    if($resp->getType() != 'html'){
         return;
     }
     switch($method){
         case 'title':
-            $gJCoord->response->title = $param;
+            $resp->title = $param;
             break;
         case 'js':
-            $gJCoord->response->addJSLink($param,$params);
+            $resp->addJSLink($param,$params);
             break;
         case 'css':
-            $gJCoord->response->addCSSLink($param,$params);
+            $resp->addCSSLink($param,$params);
             break;
         case 'jsie':
-            $gJCoord->response->addJSLink($param,$params,true);
+            $resp->addJSLink($param,$params,true);
             break;
         case 'cssie':
-            $gJCoord->response->addCSSLink($param,$params,true);
+            $resp->addCSSLink($param,$params,true);
             break;
         case 'cssie7':
         case 'cssie8':
         case 'cssie9':
-            $gJCoord->response->addCSSLink($param,$params,'IE '.substr($method,-1,1));
+            $resp->addCSSLink($param,$params,'IE '.substr($method,-1,1));
             break;
         case 'cssltie7':
         case 'cssltie8':
         case 'cssltie9':
-            $gJCoord->response->addCSSLink($param,$params,'lt IE '.substr($method,-1,1));
+            $resp->addCSSLink($param,$params,'lt IE '.substr($method,-1,1));
             break;
         case 'csstheme':
-            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params);
+            $resp->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params);
             break;
         case 'cssthemeie':
-            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params,true);
+            $resp->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params,true);
             break;
         case 'cssthemeie7':
         case 'cssthemeie8':
         case 'cssthemeie9':
-            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params,'IE '.substr($method,-1,1));
+            $resp->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params,'IE '.substr($method,-1,1));
             break;
         case 'cssthemeltie7':
         case 'cssthemeltie8':
         case 'cssthemeltie9':
-            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params,'lt IE '.substr($method,-1,1));
+            $resp->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param,$params,'lt IE '.substr($method,-1,1));
             break;
         case 'style':
             if(is_array($param)){
                 foreach($param as $p1=>$p2){
-                    $gJCoord->response->addStyle($p1,$p2);
+                    $resp->addStyle($p1,$p2);
                 }
             }
             break;
         case 'bodyattr':
             if(is_array($param)){
                 foreach($param as $p1=>$p2){
-                    if(!is_numeric($p1)) $gJCoord->response->bodyTagAttributes[$p1]=$p2;
+                    if(!is_numeric($p1)) $resp->bodyTagAttributes[$p1]=$p2;
                 }
             }
             break;
         case 'keywords':
-            $gJCoord->response->addMetaKeywords($param);
+            $resp->addMetaKeywords($param);
             break;
         case 'description':
-            $gJCoord->response->addMetaDescription($param);
+            $resp->addMetaDescription($param);
             break;
         case 'others':
-            $gJCoord->response->addHeadContent($param);
+            $resp->addHeadContent($param);
             break;
         case 'author':
-            $gJCoord->response->addMetaAuthor($param);
+            $resp->addMetaAuthor($param);
             break;
         case 'generator':
-            $gJCoord->response->addMetaGenerator($param);
+            $resp->addMetaGenerator($param);
         case 'jquery':
-            $gJCoord->response->addJSLink(jApp::config()->urlengine['jqueryPath'].'jquery.js');
+            $resp->addJSLink(jApp::config()->urlengine['jqueryPath'].'jquery.js');
             break;
         case 'jquery_ui':
             $base = jApp::config()->urlengine['jqueryPath'];
             switch($param){
                 case 'components':
-                    $gJCoord->response->addJSLink($base.'jquery.js');
-                    $gJCoord->response->addJSLink($base.'ui/jquery.ui.core.min.js');
+                    $resp->addJSLink($base.'jquery.js');
+                    $resp->addJSLink($base.'ui/jquery.ui.core.min.js');
                     foreach($params as $f)
-                        $gJCoord->response->addJSLink($base.'ui/jquery.ui.'.$f.'.min.js');
+                        $resp->addJSLink($base.'ui/jquery.ui.'.$f.'.min.js');
                     break;
                 case 'effects':
-                    $gJCoord->response->addJSLink($base.'jquery.js');
-                    $gJCoord->response->addJSLink($base.'ui/jquery.ui.core.min.js');
-                    $gJCoord->response->addJSLink($base.'ui/jquery.effects.core.min.js');
+                    $resp->addJSLink($base.'jquery.js');
+                    $resp->addJSLink($base.'ui/jquery.ui.core.min.js');
+                    $resp->addJSLink($base.'ui/jquery.effects.core.min.js');
                     foreach($params as $f)
-                        $gJCoord->response->addJSLink($base.'ui/jquery.effects.'.$f.'.min.js');
+                        $resp->addJSLink($base.'ui/jquery.effects.'.$f.'.min.js');
                     break;
                 case 'theme':
-                    $gJCoord->response->addCSSLink($base.'themes/base/jquery.ui.all.css');
+                    $resp->addCSSLink($base.'themes/base/jquery.ui.all.css');
                     break;
             }
             break;

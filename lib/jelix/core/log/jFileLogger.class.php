@@ -16,17 +16,18 @@ class jFileLogger implements jILogger {
      * @param jILogMessage $message the message to log
      */
     function logMessage($message) {
-        global $gJCoord;
+
         if (!is_writable(jApp::logPath()))
             return;
 
         $type = $message->getCategory();
-        if ($gJCoord && $gJCoord->request ) {
+        $coord = jApp::coord();
+        if ($coord && $coord->request ) {
             $conf = & jApp::config()->fileLogger;
             if (!isset($conf[$type]))
                 return;
             $f = $conf[$type];
-            $ip = $gJCoord->request->getIP();
+            $ip = $coord->request->getIP();
 
             $f = str_replace('%ip%', $ip , $f);
             $f = str_replace('%m%', date("m"), $f);

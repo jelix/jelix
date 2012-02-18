@@ -29,8 +29,8 @@ class jMailLogger implements jILogger {
      * @param jResponse $response
      */
     function output($response) {
-        global $gJCoord;
-        if (!$gJCoord->request)
+
+        if (!jApp::coord()->request)
             return;
 
         $email = jApp::config()->mailLogger['email'];

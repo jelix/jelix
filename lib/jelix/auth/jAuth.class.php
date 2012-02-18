@@ -41,8 +41,7 @@ class jAuth {
     protected static function  _getConfig(){
         static $config = null;
         if($config == null){
-            global $gJCoord;
-            $plugin = $gJCoord->getPlugin('auth');
+            $plugin = jApp::coord()->getPlugin('auth');
             if($plugin === null)
                 throw new jException('jelix~auth.error.plugin.missing');
             $config = & $plugin->config;

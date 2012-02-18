@@ -166,13 +166,11 @@ class jWSDL {
      */
     private function _compile(){
 
-        global $gJCoord;
-
         $url = jUrl::get($this->module.'~'.$this->controller.':index@soap',array(),jUrl::JURL);
         $url->clearParam ();
         $url->setParam('service',$this->module.'~'.$this->controller );
 
-        $serviceURL = $serviceNameSpace = $gJCoord->request->getServerURI();
+        $serviceURL = $serviceNameSpace = jApp::coord()->request->getServerURI();
 
         $serviceURL .= $url->toString();
         $serviceNameSpace .= jApp::config()->urlengine['basePath'];

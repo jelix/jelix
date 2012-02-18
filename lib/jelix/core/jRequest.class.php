@@ -161,7 +161,7 @@ abstract class jRequest {
      * @return jResponse the response object
      */
     public function getResponse($type='', $useOriginal = false){
-        global $gJCoord;
+
         if($type == ''){
             $type = $this->defaultResponseType;
         }
@@ -171,13 +171,14 @@ abstract class jRequest {
         else
             $responses = &jApp::config()->responses;
 
+        $coord = jApp::coord();
         if(!isset($responses[$type])){
-            if ($gJCoord->action) {
-               $action = $gJCoord->action->resource;
-               $path = $gJCoord->action->getPath();
+            if ($coord->action) {
+               $action = $coord->action->resource;
+               $path = $coord->action->getPath();
             }
             else {
-               $action = $gJCoord->moduleName.'~'.$gJCoord->actionName;
+               $action = $coord->moduleName.'~'.$coord->actionName;
                $path = '';
             }
             if ($type == $this->defaultResponseType)
@@ -194,10 +195,10 @@ abstract class jRequest {
         $response = new $respclass();
 
         if (!$this->isAllowedResponse($response)){
-            throw new jException('jelix~errors.ad.response.type.notallowed',array($gJCoord->action->resource, $type, $gJCoord->action->getPath()));
+            throw new jException('jelix~errors.ad.response.type.notallowed',array($coord->action->resource, $type, $coord->action->getPath()));
         }
 
-        $gJCoord->response = $response;
+        $coord->response = $response;
 
         return $response;
     }

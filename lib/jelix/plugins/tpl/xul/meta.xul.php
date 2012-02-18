@@ -18,28 +18,28 @@
  */
 function jtpl_meta_xul_xul($tpl, $method, $param)
 {
-    global $gJCoord;
+    $resp = jApp::coord()->response;
 
-    if($gJCoord->response->getFormatType() != 'xul'){
+    if($resp->getFormatType() != 'xul'){
         return;
     }
     switch($method){
         case 'overlay':
-            $gJCoord->response->addOverlay($param);
+            $resp->addOverlay($param);
             break;
         case 'js':
-            $gJCoord->response->addJSLink($param);
+            $resp->addJSLink($param);
             break;
         case 'css':
-            $gJCoord->response->addCSSLink($param);
+            $resp->addCSSLink($param);
             break;
         case 'csstheme':
-            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param);
+            $resp->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param);
             break;
         case 'rootattr':
             if(is_array($param)){
                 foreach($param as $p1=>$p2){
-                    if(!is_numeric($p1)) $gJCoord->response->rootAttributes[$p1]=$p2;
+                    if(!is_numeric($p1)) $resp->rootAttributes[$p1]=$p2;
                 }
             }
             break;
@@ -48,7 +48,7 @@ function jtpl_meta_xul_xul($tpl, $method, $param)
                 $ns=array('jxbl'=>"http://jelix.org/ns/jxbl/1.0");
                 foreach($param as $p1=>$p2){
                     if(isset($ns[$p2])) $p2=$ns[$p2];
-                    if(!is_numeric($p1)) $gJCoord->response->rootAttributes['xmlns:'.$p1]=$p2;
+                    if(!is_numeric($p1)) $resp->rootAttributes['xmlns:'.$p1]=$p2;
                 }
             }
             break;

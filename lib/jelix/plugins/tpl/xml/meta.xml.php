@@ -18,20 +18,20 @@
  */
 function jtpl_meta_xml_xml($tpl, $method, $param)
 {
-    global $gJCoord;
+    $resp = jApp::coord()->response;
 
-    if($gJCoord->response->getFormatType() != 'xml'){
+    if($resp->getFormatType() != 'xml'){
         return;
     }
     switch($method){
         case 'xsl':
-            $gJCoord->response->addXSLStyleSheet($param);
+            $resp->addXSLStyleSheet($param);
             break;
         case 'css':
-            $gJCoord->response->addCSSLink($param);
+            $resp->addCSSLink($param);
             break;
         case 'csstheme':
-            $gJCoord->response->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param);
+            $resp->addCSSLink(jApp::config()->urlengine['basePath'].'themes/'.jApp::config()->theme.'/'.$param);
             break;
     }
 }

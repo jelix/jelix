@@ -43,10 +43,9 @@ final class jResponseXmlRpc extends jResponse {
     }
 
     public function outputErrors(){
-        global $gJCoord;
 
-        $errorMessage = $gJCoord->getGenericErrorMessage();
-        $e = $gJCoord->getErrorMessage();
+        $errorMessage = jApp::coord()->getGenericErrorMessage();
+        $e = jApp::coord()->getErrorMessage();
         if ($e) {
             $errorCode = $e->getCode();
         }

@@ -23,8 +23,8 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
     protected $jFormsJsVarName = 'jFormsJQ';
 
     public function outputMetaContent($t) {
-        global $gJCoord;
-        $resp= $gJCoord->response;
+
+        $resp= jApp::coord()->response;
         if($resp === null || $resp->getType() !='html'){
             return;
         }

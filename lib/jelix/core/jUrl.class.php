@@ -182,19 +182,18 @@ class jUrl extends jUrlBase {
     * @return string the url string
     */
     static function getFull ($actSel, $params = array (), $what=0, $domainName = null) {
-        global $gJCoord;
 
         $domain = '';
-
+        $req = jApp::coord()->request;
         $url = self::get($actSel, $params, ($what != self::XMLSTRING?self::STRING:$what));
         if (!preg_match('/^http/', $url)) {
             if ($domainName) {
                 $domain = $domainName;
                 if (!preg_match('/^http/', $domainName))
-                    $domain = $gJCoord->request->getProtocol() . $domain;
+                    $domain = $req->getProtocol() . $domain;
             }
             else {
-                $domain = $gJCoord->request->getServerURI();
+                $domain = $req->getServerURI();
             }
 
             if ($domain == '') {
@@ -202,7 +201,7 @@ class jUrl extends jUrlBase {
             }
         }
         else if ($domainName != '') {
-            $url = str_replace($gJCoord->request->getDomainName(), $domainName, $url);
+            $url = str_replace($req->getDomainName(), $domainName, $url);
         }
 
         return $domain.$url;

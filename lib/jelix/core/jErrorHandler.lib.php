@@ -26,7 +26,6 @@
 * @param   array       $errcontext
 */
 function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
-    global $gJCoord;
 
     if (error_reporting() == 0)
         return;
@@ -58,5 +57,5 @@ function jErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
 
     $trace = debug_backtrace();
     array_shift($trace);
-    $gJCoord->handleError($codestr, $errno, $errmsg, $filename, $linenum, $trace);
+    jApp::coord()->handleError($codestr, $errno, $errmsg, $filename, $linenum, $trace);
 }

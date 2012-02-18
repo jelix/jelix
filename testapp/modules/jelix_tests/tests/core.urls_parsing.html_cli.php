@@ -52,10 +52,11 @@ class UTParseUrls extends UnitTestCase {
     }
 
     function testSignificantEngine() {
-       global $gJCoord;
+
        $req = jApp::coord()->request;
        $req->urlScriptPath = '/';
        $req->params = array();
+       $config = jApp::config();
        $config->urlengine = array(
          'engine'=>'significant',
          'enableParser'=>true,
