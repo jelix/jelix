@@ -169,6 +169,7 @@ cd testapp/modules/jelix_tests/templates
   test_plugin_pagelinks.tpl
   test_truncate_html.tpl
   test_tpl_fetch.tpl
+  test_tpl_meta_call.tpl
 cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php
   jstests.classic.php
