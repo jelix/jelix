@@ -1,18 +1,19 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  jelix_tests module
+* @subpackage  testsjelix
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2007-2010 Laurent Jouanneau
+* @copyright   2007-2012 Laurent Jouanneau
 * @copyright   2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTjlog extends UnitTestCase {
+class jLogTest extends PHPUnit_Framework_TestCase {
 
     public function testLogFile(){
+        jelix_init_test_env();
         $file = jApp::logPath('test.log');
         if(file_exists($file))
             file_put_contents($file,'');
