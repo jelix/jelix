@@ -125,6 +125,8 @@ class jIniFileModifier {
                     $multiline = true;
                     $currentValue[2].="\n";
                 } else {
+                    if($firstquote == '' && $secondquote == '')
+                        $currentValue[2] = trim($value);
                     $this->content[$currentSection][]=$currentValue;
                 }
 
@@ -149,11 +151,11 @@ class jIniFileModifier {
      * @param string $name    the name of the option to modify
      * @param string $value   the new value
      * @param string $section the section where to set the item. 0 is the global section
-     * @param string $key     for option which is an item of array, the key in the array
+     * @param integer $key     for option which is an item of array, the key in the array. '' to just add a value in the array
      */
     public function setValue($name, $value, $section=0, $key=null) {
         $foundValue=false;
-        $lastKey = 0; // last key in an array value
+        $lastKey = -1; // last key in an array value
         if (isset($this->content[$section])) {
             // boolean to erase array values if the new value is not a new item for the array
             $deleteMode = false;
@@ -170,13 +172,15 @@ class jIniFileModifier {
                     continue;
                 // if it is an array value, and if the key doesn't correspond
                 if ($item[0] == self::TK_ARR_VALUE && $key !== null) {
-                    if($item[3] != $key) {
+                    if($item[3] != $key || $key === '') {
                         $lastKey = $item[3];
                         continue;
                     }
                 }
                 if ($key !== null) {
                     // we add the value as an array value
+                    if ($key === '')
+                        $key = 0;
                     $this->content[$section][$k] = array(self::TK_ARR_VALUE,$name,$value, $key);
                 } else {
                     // we store the value
@@ -199,6 +203,10 @@ class jIniFileModifier {
             if($key === null) {
                 $this->content[$section][]= array(self::TK_VALUE, $name, $value);
             } else {
+                if ($lastKey != -1)
+                    $lastKey++;
+                else
+                    $lastKey = 0;
                 $this->content[$section][]= array(self::TK_ARR_VALUE, $name, $value, $lastKey);
             }
         }
@@ -213,7 +221,7 @@ class jIniFileModifier {
      * an empty value as $name, and a $section name
      * @param string $name    the name of the option to remove, or null to remove an entire section
      * @param string $section the section where to remove the value, or the section to remove
-     * @param string $key     for option which is an item of array, the key in the array
+     * @param integer $key     for option which is an item of array, the key in the array
      * @since 1.2
      */
     public function removeValue($name, $section=0, $key=null, $removePreviousComment = true) {
@@ -338,7 +346,7 @@ class jIniFileModifier {
      * it returns null.
      * @param string $name    the name of the option to retrieve
      * @param string $section the section where the option is. 0 is the global section
-     * @param string $key     for option which is an item of array, the key in the array
+     * @param integer $key     for option which is an item of array, the key in the array
      * @return mixed the value
      */
     public function getValue($name, $section=0, $key=null) {

@@ -284,17 +284,11 @@ cd testapp/modules/jelix_tests/tests/
   jtpl.virtual.html_cli.php
   utils.jdatatype.html_cli.php
   utils.jduration.html_cli.php
-  utils.jfilter.html_cli.php
-  utils.jdatetime.html_cli.php
   utils.jimagemodifier.html_cli.php
-  utils.jinifilemodifier.html_cli.php
   utils.jclasses.html_cli.php
-  utils.jmailer.html_cli.php
   utils.jrooturl.html_cli.php
   test1.pu.php
   test2.unit.pu.php
-
-
 
 cd testapp/modules/testurls/
 *  module.xml
@@ -343,6 +337,10 @@ cd testapp/tests-jelix/jelix/installer/app1/var/config/foo/
 cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
   config.ini.php
 cd testapp/tests-jelix/jelix/utils/
+  jDateTimeTest.php
+  jFilterTest.php
+  jIniFileModifierTest.php
+  jMailerTest.php
   minifyHTMLResponsePluginTest.php
   profilesTest.php
   soapclientTest.php

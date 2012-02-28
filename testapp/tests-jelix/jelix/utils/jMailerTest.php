@@ -1,10 +1,10 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  jelix_tests module
+* @subpackage  testsjelix
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2008 Laurent Jouanneau
+* @copyright   2008-2012 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.1
@@ -21,10 +21,8 @@ class testJMailer extends jMailer {
 }
 
 
-class UTjmailer extends jUnitTestCase {
+class jMailerTest extends PHPUnit_Framework_TestCase {
 
-    public function setUp() {
-    }
 
     public function testFileMail() {
 
@@ -43,8 +41,8 @@ class UTjmailer extends jUnitTestCase {
         $mail->IsFile();
         $mail->Send();
 
-        $this->assertEqual(jApp::varPath().'mails/', $mail->filePath);
-        $this->assertEqual(jApp::varPath().'mails/mail.txt', $mail->getStorageFile2());
+        $this->assertEquals(jApp::varPath().'mails/', $mail->filePath);
+        $this->assertEquals(jApp::varPath().'mails/mail.txt', $mail->getStorageFile2());
 
         if ($this->assertTrue(file_exists(jApp::varPath().'mails/mail.txt'))) {
             $content = file_get_contents(jApp::varPath().'mails/mail.txt');

@@ -1,15 +1,15 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  jelix_tests module
+* @subpackage  testsjelix
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTfilter extends jUnitTestCase {
+class jFilterTest extends PHPUnit_Framework_TestCase {
 
     public function testIsBool(){
         $this->assertTrue(jFilter::isBool('true'), "isBool('true')");
@@ -52,35 +52,35 @@ class UTfilter extends jUnitTestCase {
 
         $html='<div>lorem</div>';
         $result='<div>lorem</div>';
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+        $this->assertEquals($result, jFilter::cleanHtml($html));
 
         $html='<div>lorem<em>aaa</em></div>';
         $result="<div>lorem<em>aaa</em>\n</div>";
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+        $this->assertEquals($result, jFilter::cleanHtml($html));
 
         $html='<div>lorem <script> foo </script></div>';
         $result='<div>lorem </div>';
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+        $this->assertEquals($result, jFilter::cleanHtml($html));
 
         $html='<div>lorem <SCRIPT> foo </SCRIPT></div>';
         $result='<div>lorem </div>';
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+        $this->assertEquals($result, jFilter::cleanHtml($html));
 
         //$html='<div>lorem <![CDATA[<SCRIPT> foo </SCRIPT>]]></div>';
         //$result='<div>lorem <![CDATA[<SCRIPT> foo </SCRIPT>]]></div>';
-        //$this->assertEqualOrDiff($result, jFilter::satanizeHtml($html));
+        //$this->assertEquals($result, jFilter::satanizeHtml($html));
 
         $html='<div onclick="xss()">lorem</div>';
         $result='<div>lorem</div>';
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+        $this->assertEquals($result, jFilter::cleanHtml($html));
 
         $html='<div onclick="xss()">lorem <strong onMouseOver="toto()">ah ah </strong></div>';
         $result="<div>lorem <strong>ah ah </strong>\n</div>";
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+        $this->assertEquals($result, jFilter::cleanHtml($html));
 
         $html='<div onclick="xss()">lorem <a href="javascript:pirate()">ah ah </a></div>';
         $result="<div>lorem <a>ah ah </a>\n</div>";
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+        $this->assertEquals($result, jFilter::cleanHtml($html));
 
         $html='<div>lorem <a href="foo/bar">a</a> <a href="http://foo/bar">a</a> <a href="hTTps://foo/bar">a</a>
          <a href="ftp://foo/bar">a</a>  <a href="mailto:foo@bar.baz">a</a>  <a href="foo/bar:/bla">a</a>
@@ -89,33 +89,33 @@ class UTfilter extends jUnitTestCase {
          <a href="ftp://foo/bar">a</a>  <a href="mailto:foo@bar.baz">a</a>  <a href="foo/bar:/bla">a</a>
          <a>a</a> <a>a</a>
 </div>';
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+        $this->assertEquals($result, jFilter::cleanHtml($html));
 
         // invalid html
         $html='<div>lorem<em>aaa</er></div>';
         $result="<div>lorem<em>aaa</em>\n</div>";
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+        $this->assertEquals($result, jFilter::cleanHtml($html));
 
         $html='<div lorem<em>aaa</er></div>';
         $result="<div lorem>aaa</div>";
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+        $this->assertEquals($result, jFilter::cleanHtml($html));
 
         $html='<div>lorem <br/> ipsum</div>';
         $result='<div>lorem <br> ipsum</div>';
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html));
+        $this->assertEquals($result, jFilter::cleanHtml($html));
 
         // XHTML
         $html='<div>lorem <br/> ipsum</div>';
         $result="\n    <div>lorem <br/> ipsum</div>\n  ";
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html, true));
+        $this->assertEquals($result, jFilter::cleanHtml($html, true));
 
         $html='<div lorem<em>aaa</er></div>';
         $result="\n    <div lorem=\"\">aaa</div>\n  ";
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html, true));
+        $this->assertEquals($result, jFilter::cleanHtml($html, true));
 
         $html='<div>lorem<em>aaa</er></div>';
         $result="\n    <div>lorem<em>aaa</em></div>\n  ";
-        $this->assertEqualOrDiff($result, jFilter::cleanHtml($html, true));
+        $this->assertEquals($result, jFilter::cleanHtml($html, true));
     }
 
 }

@@ -1,10 +1,10 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  jelix_tests module
+* @subpackage  testsjelix
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2008 Laurent Jouanneau
+* @copyright   2008-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -27,7 +27,7 @@ class testIniFileModifier extends jIniFileModifier {
 }
 
 
-class UTjIniFileModifier extends jUnitTestCase {
+class jIniFileModifierTest extends PHPUnit_Framework_TestCase {
 
     public function testParseFile(){
         $parser = new testIniFileModifier('');
@@ -38,7 +38,7 @@ class UTjIniFileModifier extends jUnitTestCase {
                  ),
         );
         $parser->testParse($content);
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
 
         $content ='
   ; a comment
@@ -56,7 +56,7 @@ foo=bar
         );
 
         $parser->testParse($content);
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
 
         $content ='
   ; a comment
@@ -82,7 +82,7 @@ truc=machin
         );
 
         $parser->testParse($content);
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
 
         $content ='
   ; a comment
@@ -118,7 +118,7 @@ truc=machin2
         );
 
         $parser->testParse($content);
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
 
 
         $content ='
@@ -137,7 +137,7 @@ foo[]=machine
         );
 
         $parser->testParse($content);
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
     }
 
     function testSetValue() {
@@ -176,7 +176,7 @@ truc=machin2
         );
 
         $parser->testParse($content);
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
 
         $parser->setValue('foo','hello');
         $expected=array(
@@ -199,7 +199,7 @@ truc=machin2
                 array(jIniFileModifier::TK_WS, ""),
             ),
         );
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
 
         $parser->setValue('truc','bidule', 'aSection');
         $expected=array(
@@ -222,7 +222,7 @@ truc=machin2
                 array(jIniFileModifier::TK_WS, ""),
             ),
         );
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
 
         $parser->setValue('truc','bidule2', 'othersection');
         $expected=array(
@@ -245,7 +245,7 @@ truc=machin2
                 array(jIniFileModifier::TK_WS, ""),
             ),
         );
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
 
         $parser->setValue('name','toto', 'othersection');
         $expected=array(
@@ -269,7 +269,7 @@ truc=machin2
                 array(jIniFileModifier::TK_VALUE, 'name','toto'),
             ),
         );
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
 
         $parser->setValue('name','toto', 'othersection','');
         $expected=array(
@@ -293,7 +293,7 @@ truc=machin2
                 array(jIniFileModifier::TK_ARR_VALUE, 'name','toto',0),
             ),
         );
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
         //$this->dump($parser->getContent());
         $parser->setValue('theme','blue', 'aSection',0);
         $expected=array(
@@ -318,7 +318,7 @@ truc=machin2
                 array(jIniFileModifier::TK_ARR_VALUE, 'name','toto', 0),
             ),
         );
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
 
 
         $content ='
@@ -337,7 +337,20 @@ foo[]=machine
         );
 
         $parser->testParse($content);
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
+
+        $parser->setValue('foo','bla', 0,'');
+        $expected=array(
+            0 => array(
+                array(jIniFileModifier::TK_WS, ""),
+                array(jIniFileModifier::TK_ARR_VALUE, 'foo','bar', 0),
+                array(jIniFileModifier::TK_VALUE, 'example','1'),
+                array(jIniFileModifier::TK_ARR_VALUE, 'foo','machine',1),
+                array(jIniFileModifier::TK_WS, ""),
+                array(jIniFileModifier::TK_ARR_VALUE, 'foo','bla',2),
+            ),
+        );
+        $this->assertEquals($expected, $parser->getContent());
 
         $parser->setValue('theme','blue', 'aSection','0');
         $expected=array(
@@ -347,13 +360,14 @@ foo[]=machine
                 array(jIniFileModifier::TK_VALUE, 'example','1'),
                 array(jIniFileModifier::TK_ARR_VALUE, 'foo','machine',1),
                 array(jIniFileModifier::TK_WS, ""),
+                array(jIniFileModifier::TK_ARR_VALUE, 'foo','bla',2),
             ),
             'aSection'=>array(
                 array(jIniFileModifier::TK_SECTION, "[aSection]"),
                 array(jIniFileModifier::TK_ARR_VALUE, 'theme','blue',0),
             ),
         );
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
 
         $parser->setValue('foo','button');
         $expected=array(
@@ -363,13 +377,14 @@ foo[]=machine
                 array(jIniFileModifier::TK_VALUE, 'example','1'),
                 array(jIniFileModifier::TK_WS,'--'),
                 array(jIniFileModifier::TK_WS, ""),
+                array(jIniFileModifier::TK_WS,'--'),
             ),
             'aSection'=>array(
                 array(jIniFileModifier::TK_SECTION, "[aSection]"),
                 array(jIniFileModifier::TK_ARR_VALUE, 'theme','blue',0),
             ),
         );
-        $this->assertEqual($parser->getContent(), $expected);
+        $this->assertEquals($expected, $parser->getContent());
     }
     
     
@@ -400,16 +415,16 @@ foo[]=ccc
 
 ';
         $parser->testParse($content);
-        $this->assertEqual($parser->getValue('foo'), 'bar' );
-        $this->assertEqual($parser->getValue('anumber'), 98 );
-        $this->assertEqual($parser->getValue('string'), 'uuuuu' );
-        $this->assertEqual($parser->getValue('string2'), 'aaa
+        $this->assertEquals($parser->getValue('foo'), 'bar' );
+        $this->assertEquals($parser->getValue('anumber'), 98 );
+        $this->assertEquals($parser->getValue('string'), 'uuuuu' );
+        $this->assertEquals($parser->getValue('string2'), 'aaa
 bbb');
-        $this->assertEqual($parser->getValue('afloatnumber'), 5.098 );
-        $this->assertEqual($parser->getValue('truc','aSection'), true );
-        $this->assertEqual($parser->getValue('laurent','aSection'), 'toto' );
-        $this->assertEqual($parser->getValue('isvalid','aSection'), true );
-        $this->assertEqual($parser->getValue('foo','vla',2), 'ccc' );
+        $this->assertEquals($parser->getValue('afloatnumber'), 5.098 );
+        $this->assertEquals($parser->getValue('truc','aSection'), true );
+        $this->assertEquals($parser->getValue('laurent','aSection'), 'toto' );
+        $this->assertEquals($parser->getValue('isvalid','aSection'), true );
+        $this->assertEquals($parser->getValue('foo','vla',2), 'ccc' );
         
     }
     
@@ -444,7 +459,7 @@ foo=bar
 job=foo.b-a_r
 messageLogFormat="%date%\t[%code%]\t%msg%\t%file%\t%line%\n"
 anumber=98
-afloatnumber=5.098  
+afloatnumber=5.098
 [aSection]
 truc=true
 laurent=toto
@@ -461,21 +476,21 @@ foo[]=ccc
 
 ';
         $parser->testParse($content);
-        $this->assertEqualOrDiff($result, $parser->generate() );
+        $this->assertEquals($result, $parser->generate() );
 
         file_put_contents(jApp::tempPath().'test_jinifilemodifier.html_cli.php', $content);
         $parser = new testIniFileModifier(jApp::tempPath().'test_jinifilemodifier.html_cli.php');
-        $this->assertEqualOrDiff($result, $parser->generate() );
+        $this->assertEquals($result, $parser->generate() );
         
         $content = str_replace("\n", "\r", $content);
         file_put_contents(jApp::tempPath().'test_jinifilemodifier.html_cli.php', $content);
         $parser = new testIniFileModifier(jApp::tempPath().'test_jinifilemodifier.html_cli.php');
-        $this->assertEqualOrDiff($result, $parser->generate() );
+        $this->assertEquals($result, $parser->generate() );
         
         $content = str_replace("\r", "\r\n", $content);
         file_put_contents(jApp::tempPath().'test_jinifilemodifier.html_cli.php', $content);
         $parser = new testIniFileModifier(jApp::tempPath().'test_jinifilemodifier.html_cli.php');
-        $this->assertEqualOrDiff($result, $parser->generate());
+        $this->assertEquals($result, $parser->generate());
 
     }
     
@@ -520,7 +535,7 @@ foo[]=ccc
 
         $parser->removeValue('', 'aSection', null, false);
         $this->assertNull($parser->getValue('truc','aSection'));
-        $this->assertEqual($parser->getSectionList(), array('othersection', 'vla'));
+        $this->assertEquals($parser->getSectionList(), array('othersection', 'vla'));
 
 $result = '
   ; a comment
@@ -530,7 +545,7 @@ foo=bar
 string=uuuuu
 string2="aaa
 bbb"
-afloatnumber=5.098  
+afloatnumber=5.098
 
 [othersection]
 truc=machin2
@@ -542,7 +557,7 @@ foo[]=ccc
 
 
 ';
-        $this->assertEqualOrDiff($result, $parser->generate());
+        $this->assertEquals($result, $parser->generate());
     }
 
     function testRemoveWithComment() {
@@ -591,7 +606,7 @@ $result = '
 string=uuuuu
 string2="aaa
 bbb"
-afloatnumber=5.098  
+afloatnumber=5.098
 
 ; section comment
 [aSection]
@@ -607,7 +622,7 @@ foo[]=ccc
 
 
 ';
-        $this->assertEqualOrDiff($result, $parser->generate());
+        $this->assertEquals($result, $parser->generate());
 
 
 
@@ -635,11 +650,11 @@ string=uuuuu
 ; bla bla
 
 
-afloatnumber=5.098  
+afloatnumber=5.098
 
 
 ';
-        $this->assertEqualOrDiff($result, $parser->generate());
+        $this->assertEquals($result, $parser->generate());
 
     }
 
@@ -720,7 +735,7 @@ anumber=100
 string=uuuuu
 string2="aaa
 bbb"
-afloatnumber=5.098  
+afloatnumber=5.098
 
 
 ; my comment
@@ -762,7 +777,7 @@ foo[]=ccc
 
 
 ';
-        $this->assertEqualOrDiff($result, $ini->generate());
+        $this->assertEquals($result, $ini->generate());
 
     }
 
@@ -841,7 +856,7 @@ anumber=98
 string=uuuuu
 string2="aaa
 bbb"
-afloatnumber=5.098  
+afloatnumber=5.098
 
 ; section comment
 [aSection]
@@ -884,7 +899,7 @@ truc=false
 supercar=ferrari
 
 ';
-        $this->assertEqualOrDiff($result, $ini->generate());
+        $this->assertEquals($result, $ini->generate());
 
 
 
@@ -903,7 +918,7 @@ anumber=98
 string=uuuuu
 string2="aaa
 bbb"
-afloatnumber=5.098  
+afloatnumber=5.098
 
 ; section comment
 [aSection]
@@ -952,7 +967,7 @@ truck=on
 
 
 ';
-        $this->assertEqualOrDiff($result, $ini->generate());
+        $this->assertEquals($result, $ini->generate());
 
     }
 
@@ -1000,7 +1015,7 @@ anumber=98
 vuvuzela=uuuuu
 string2="aaa
 bbb"
-afloatnumber=5.098  
+afloatnumber=5.098
 
 ; section comment
 [beautiful]
@@ -1024,7 +1039,7 @@ foo[]=ccc
 
 
 ';
-        $this->assertEqualOrDiff($result, $ini->generate());
+        $this->assertEquals($result, $ini->generate());
 
         $ini->renameSection('0', 'zipo');
         $result = '[zipo]
@@ -1036,7 +1051,7 @@ anumber=98
 vuvuzela=uuuuu
 string2="aaa
 bbb"
-afloatnumber=5.098  
+afloatnumber=5.098
 
 ; section comment
 [beautiful]
@@ -1060,7 +1075,7 @@ foo[]=ccc
 
 
 ';
-        $this->assertEqualOrDiff($result, $ini->generate());
+        $this->assertEquals($result, $ini->generate());
 
         $ini->renameValue('truc', 'system', 'thesection');
 
@@ -1073,7 +1088,7 @@ anumber=98
 vuvuzela=uuuuu
 string2="aaa
 bbb"
-afloatnumber=5.098  
+afloatnumber=5.098
 
 ; section comment
 [beautiful]
@@ -1097,7 +1112,7 @@ foo[]=ccc
 
 
 ';
-        $this->assertEqualOrDiff($result, $ini->generate());
+        $this->assertEquals($result, $ini->generate());
     }
 
 }
