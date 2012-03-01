@@ -49,8 +49,8 @@ class dbAclDriver implements jIAclDriver {
             return array();
         }
 
-        // recupère toutes les valeurs correspondant aux groupes auquel appartient le user,
-        //   avec le sujet et ressource indiqué
+        // get all the values corresponding to the groups which the user has access to,
+        //  with the subject and resource indicated
         $values= array();
         $dao = jDao::get('jacldb~jaclrights', 'jacl_profile');
         $list = $dao->getAllGroupRights($subject, $groups);
