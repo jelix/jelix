@@ -29,7 +29,7 @@ class soapclientTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("Hello Sylvain", $result);
     }
 
-    function testRedirection() {
+    /*function testRedirection() {
         try {
             $profile = jProfiles::get("jsoapclient");
             if (!isset($profile['wsdl']) || $profile['wsdl'] == '') {
@@ -46,5 +46,5 @@ class soapclientTest extends PHPUnit_Framework_TestCase
         $result =  $client->redirecttohello('Sylvain');
         $this->markTestIncomplete('not found yet a good implementation for redirection with soap request');
         $this->assertEquals("Hello Sylvain", $result);
-    }
+    }*/
 }
