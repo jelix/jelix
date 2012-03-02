@@ -47,7 +47,7 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
         $this->assertTrue($kv->get('noExpireKey')==$myData);
 
         $this->assertTrue($kv->setWithTtl('expiredKey','data expired', strtotime("-1 year")));
-        $this->assertFalse($kv->get('expiredKey'));
+        $this->assertNull($kv->get('expiredKey'));
 
         $this->assertTrue($kv->setWithTtl('ttlInSecondesKey', $myObj, 30));
         $this->assertTrue($kv->get('ttlInSecondesKey')==$myObj);
@@ -70,9 +70,9 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
 
         $kv = jKVDb::getConnection($this->profile);
 
-        $this->assertFalse($kv->get('unknowkey'));
+        $this->assertNull($kv->get('unknowkey'));
         $this->assertFalse($kv->replace('unknowkey','new value'));
-        $this->assertFalse($kv->get('unknowkey'));
+        $this->assertNull($kv->get('unknowkey'));
 
         $this->assertTrue($kv->set('existingKey', 'a value'));
         $this->assertFalse($kv->insert('existingKey','new value'));
@@ -85,10 +85,10 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
 
         $kv = jKVDb::getConnection($this->profile);
 
-        $this->assertFalse($kv->get('unknowkey'));
+        $this->assertNull($kv->get('unknowkey'));
         $this->assertFalse($kv->append('unknowkey','new value'));
         $this->assertFalse($kv->prepend('unknowkey','new value'));
-        $this->assertFalse($kv->get('unknowkey'));
+        $this->assertNull($kv->get('unknowkey'));
 
         $this->assertTrue($kv->set('existingKey', 'a value'));
         $this->assertEqual($kv->get('existingKey'), 'a value');
@@ -182,7 +182,7 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
         $kv->set('deleteKey','data to delete');
 
         $this->assertTrue($kv->delete('deleteKey'));
-        $this->assertFalse($kv->get('deleteKey'));
+        $this->assertNull($kv->get('deleteKey'));
         $this->assertFalse($kv->delete('inexistentKey'));
 
     }

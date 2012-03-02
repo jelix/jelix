@@ -86,7 +86,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
             $sql = 'UPDATE '.$table.' SET k_value= '.$value.',  k_expire = '.$expire.'
             WHERE k_key='.$key;
         }
-        return $this->_connection->exec($sql);
+        return (bool)$this->_connection->exec($sql);
     }
 
     public function insert ($key, $value) {
@@ -147,10 +147,11 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
         if (!$rs || !($rec = $rs->fetch())) {
             return false;
         }
-        
-        $value = serialize(unserialize($rs->unescapeBin($rec->k_value)) . $value);
-        $sql = 'UPDATE '.$table.' SET k_value= '.$this->_connection->quote2($value, false, true).' WHERE k_key='.$key;
-        return (bool)$this->_connection->exec($sql);
+        $value = unserialize($rs->unescapeBin($rec->k_value)) . $value;
+        $sql = 'UPDATE '.$table.' SET k_value= '.$this->_connection->quote2(serialize($value), false, true).' WHERE k_key='.$key;
+        if ($this->_connection->exec($sql))
+            return $value;
+        return false;
     }
 
     public function prepend ($key, $value) {
@@ -166,10 +167,11 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
         if (!$rs || !($rec = $rs->fetch())) {
             return false;
         }
-        
-        $value = serialize($value.unserialize($rs->unescapeBin($rec->k_value)));
-        $sql = 'UPDATE '.$table.' SET k_value= '.$this->_connection->quote2($value, false, true).' WHERE k_key='.$key;
-        return (bool)$this->_connection->exec($sql);
+        $value = $value.unserialize($rs->unescapeBin($rec->k_value));
+        $sql = 'UPDATE '.$table.' SET k_value= '.$this->_connection->quote2(serialize($value), false, true).' WHERE k_key='.$key;
+        if ($this->_connection->exec($sql))
+            return $value;
+        return false;
     }
 
     public function increment ($key, $incr = 1) {

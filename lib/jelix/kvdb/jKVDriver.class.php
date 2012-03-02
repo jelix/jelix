@@ -161,6 +161,7 @@ abstract class jKVDriver {
 
     /**
      * Flush the KVDb. Deletes all keys.
+     * @return boolean true if it is a success
      */
     abstract public function flush();
 
