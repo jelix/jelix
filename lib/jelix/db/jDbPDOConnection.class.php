@@ -260,15 +260,16 @@ class jDbPDOConnection extends PDO {
      * Get the ID of the last inserted row
      * Mssql pdo driver does not support this feature.
      * so, we use a custom query
+     * @param string $fromSequence the sequence name, if needed
      * @return string
      */
-    public function lastInsertId() {
+    public function lastInsertId($fromSequence=null) {
         if ($this->dbms == 'mssql') {
             $res = $this->query('SELECT SCOPE_IDENTITY()');
             return (int) $res->fetchColumn();
         }
 
-        return parent::lastInsertId();
+        return parent::lastInsertId($fromSequence);
     }
 
 }
