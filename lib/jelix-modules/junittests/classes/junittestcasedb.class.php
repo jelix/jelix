@@ -15,7 +15,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
     /**
     *   erase all record in a table
     */
-    function emptyTable($table){
+    public function emptyTable($table){
         $db = jDb::getConnection($this->dbProfile);
         $db->exec('DELETE FROM '.$db->encloseName($table));
     }
@@ -43,11 +43,10 @@ class jUnitTestCaseDb extends jUnitTestCase {
         }
     }
 
-
     /**
      * check if the table is empty
      */
-    function assertTableIsEmpty($table, $message="%s"){
+    public function assertTableIsEmpty($table, $message="%s"){
         $db = jDb::getConnection($this->dbProfile);
         $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
@@ -68,7 +67,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
     /**
      * check if the table is not empty
      */
-    function assertTableIsNotEmpty($table, $message="%s"){
+    public function assertTableIsNotEmpty($table, $message="%s"){
         $db = jDb::getConnection($this->dbProfile);
         $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
@@ -89,7 +88,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
     /**
      * check if a table has a specific number of records
      */
-    function assertTableHasNRecords($table, $n, $message="%s"){
+    public function assertTableHasNRecords($table, $n, $message="%s"){
         $db = jDb::getConnection($this->dbProfile);
         $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
@@ -110,7 +109,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
     /**
      * check if all given record are in the table
      */
-    function assertTableContainsRecords($table, $records, $onlyThem = true, $message ="%s"){
+    public function assertTableContainsRecords($table, $records, $onlyThem = true, $message ="%s"){
         $db = jDb::getConnection($this->dbProfile);
 
         $message = sprintf( $message, $table. " table should contains given records.");
@@ -176,7 +175,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      * @param boolean $onlyThem  if true, check if the table has only this records
      * @param string $message the error message
      */
-    function assertTableContainsRecordsByKeys($table, $records, $keys, $onlyThem = true, $message ="%s"){
+    public function assertTableContainsRecordsByKeys($table, $records, $keys, $onlyThem = true, $message ="%s"){
         $db = jDb::getConnection($this->dbProfile);
 
         if (is_string ($keys))
