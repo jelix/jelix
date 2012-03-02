@@ -30,5 +30,18 @@ end';
         $this->assertEqualOrDiff($expected, $content);
     }
 
+    function testMetaCall() {
+
+        $tpl = new jTpl();
+        $meta = $tpl->meta('test_tpl_meta_call', 'html');
+        $this->assertEqual($meta['counter'], 1);
+
+        // fetch shouldn't call meta if meta already processed
+        $content = $tpl->fetch('test_tpl_meta_call','html');
+
+        // so the counter should be still equals to 1
+        $meta = $tpl->meta('test_tpl_meta_call', 'html');
+        $this->assertEqual($meta['counter'], 1);
+    }
 
 }

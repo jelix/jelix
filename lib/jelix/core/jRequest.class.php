@@ -4,7 +4,7 @@
 * @subpackage core
 * @author     Laurent Jouanneau
 * @contributor Yannick Le Guédart
-* @copyright  2005-2011 Laurent Jouanneau, 2010 Yannick Le Guédart
+* @copyright  2005-2012 Laurent Jouanneau, 2010 Yannick Le Guédart
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -332,7 +332,7 @@ abstract class jRequest {
       else if ($forcePort) { // a number
          $port = $forcePort;
       }
-      else if($isHttps != $https) {
+      else if($isHttps != $https || !isset($_SERVER['SERVER_PORT'])) {
          // the asked protocol is different from the current protocol
          // we use the standard port for the asked protocol
          return '';
