@@ -308,6 +308,7 @@ cd lib/jelix-www/jquery/ui/i18n
 ! jquery.ui.datepicker-fr-CH.js
 ! jquery.ui.datepicker-gl.js
 ! jquery.ui.datepicker-he.js
+! jquery.ui.datepicker-hi.js
 ! jquery.ui.datepicker-hr.js
 ! jquery.ui.datepicker-hu.js
 ! jquery.ui.datepicker-hy.js
@@ -316,6 +317,7 @@ cd lib/jelix-www/jquery/ui/i18n
 ! jquery.ui.datepicker-it.js
 ! jquery.ui.datepicker-ja.js
 ! jquery.ui.datepicker-kk.js
+! jquery.ui.datepicker-km.js
 ! jquery.ui.datepicker-ko.js
 ! jquery.ui.datepicker-kz.js
 ! jquery.ui.datepicker-lb.js

@@ -36,6 +36,17 @@ class soapCtrl extends jController {
         return $rep;
     }
 
+    /** 
+     * Test with a simple parameter
+     * @param string $name
+     * @return void
+     */
+    function redirecttohello(){
+        $rep = $this->getResponse('redirectUrl');
+        $url = new jUrl($this->request->urlScript, array('service'=>'testapp~soap', 'method'=>'hello'));
+        $rep->url = $this->request->getServerURI().$url->toString();
+        return $rep;
+    }
 
     /** 
      * Test with multiple string param

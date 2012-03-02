@@ -53,6 +53,8 @@ class sqllogDebugbarPlugin implements jIDebugbarPlugin {
                 }
                 $info->popupContent .= '<ul id="jxdb-sqllog" class="jxdb-list">';
                 foreach($messages as $msg) {
+                    if (get_class($msg) != 'jSQLLogMessage')
+                        continue;
                     $dao = $msg->getDao();
                     if ($dao) {
                         $m = 'DAO '.$dao;

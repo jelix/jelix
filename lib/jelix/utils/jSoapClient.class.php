@@ -117,6 +117,10 @@ class jSoapClient {
         if (isset($profile['classmap']) && is_string ($profile['classmap']) && $profile['classmap'] != '') {
             $profile['classmap'] = (array)json_decode(str_replace("'", '"',$profile['classmap']));
         }
+
+        //$context = stream_context_create( array('http' => array('max_redirects' => 3)));
+        //$profile['stream_context'] = $context;
+
         return new $client($wsdl, $profile);
     }
 }

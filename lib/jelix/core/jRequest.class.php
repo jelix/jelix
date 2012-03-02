@@ -331,7 +331,7 @@ abstract class jRequest {
       else if ($forcePort) { // a number
          $port = $forcePort;
       }
-      else if($isHttps != $https) {
+      else if($isHttps != $https || !isset($_SERVER['SERVER_PORT'])) {
          // the asked protocol is different from the current protocol
          // we use the standard port for the asked protocol
          return '';

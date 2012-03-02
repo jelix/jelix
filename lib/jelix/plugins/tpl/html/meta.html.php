@@ -16,8 +16,8 @@
  * @see jResponseHtml
  * @param jTpl $tpl template engine
  * @param string $method indicates what you want to specify
- *       (possible values : js, css, jsie, cssie, cssie7, cssltie7, csstheme,
- *       cssthemeie, cssthemeie7, cssthemeltie7, bodyattr, keywords,
+ *       (possible values : js, css, jsie, jsie7, jsltie7, cssie, cssie7, cssltie7,
+ *       csstheme, cssthemeie, cssthemeie7, cssthemeltie7, bodyattr, keywords,
  *       description, others)
  * @param mixed $param parameter (a css style sheet for "css" for example)
  * @params array $params additionnal parameters (a media attribute for stylesheet for example)
@@ -41,6 +41,12 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
             break;
         case 'jsie':
             $resp->addJSLink($param,$params,true);
+            break;
+        case 'jsie7':
+            $gJCoord->response->addJSLink($param,$params,'IE 7');
+            break;
+        case 'jsltie7':
+            $gJCoord->response->addJSLink($param,$params,'lt IE 7');
             break;
         case 'cssie':
             $resp->addCSSLink($param,$params,true);

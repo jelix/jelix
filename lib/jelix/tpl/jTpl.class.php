@@ -205,7 +205,7 @@ class jTpl {
             // we want to process meta only one time, when a template is included
             // several time in an other template, or, more important, when a template
             // is included in a recursive manner (in this case, it did cause infinite loop, see #1396). 
-            return;
+            return $this->_meta;
         }
         $this->processedMeta[] = $tpl;
 #ifnot JTPL_STANDALONE
@@ -320,7 +320,11 @@ class jTpl {
 #endif
             $previousTpl = $this->_templateName;
             $this->_templateName = $tpl;
-            $this->processedMeta[] = $tpl;
+            if (in_array($tpl, $this->processedMeta)) {
+                $callMeta = false;
+            }
+            else
+                $this->processedMeta[] = $tpl;
             $this->recursiveTpl[] = $tpl;
 #ifnot JTPL_STANDALONE
             $md = $this->getTemplate ($sel, $outputtype, $trusted);
