@@ -121,7 +121,7 @@ cache_file_umask =
 
 ; dao used (default 'jelix~jcache')
 ;dao = ""
-; dbprofil (optional)
+; db profil (optional)
 ;dbprofile = ""
 
 

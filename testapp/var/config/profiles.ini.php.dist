@@ -185,6 +185,7 @@ driver = db
 [jcache:usingmemcache]
 enabled = 0
 driver = memcache
+servers = localhost:11211
 
 [jcache:usingfile]
 enabled = 1

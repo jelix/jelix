@@ -16,21 +16,27 @@ require_once(LIB_PATH . 'php5redis/Redis.php');
 * @subpackage  jelix_tests module
 */
 
-class UTjKVDbRedis extends UTjKVDb {
+class jkvdb_redisTest extends UTjKVDb {
 
     protected $profile = 'usingredis';
 
     protected $redis;
 
     public function setUp (){
+        if (!$this->_kvdbSetUp())
+            return;
+
         $this->redis = new Redis('localhost',6379);
         $this->redis->flushall();
     }
 
     public function tearDown() {
-        //$this->redis->quit();
-        $this->redis->disconnect();
+        if ($this->redis) {
+            //$this->redis->quit();
+            $this->redis->disconnect();
+        }
     }
+
     public function testGarbage (){
 
         $kv = jKVDb::getConnection($this->profile);
@@ -43,7 +49,7 @@ class UTjKVDbRedis extends UTjKVDb {
 
         $this->assertTrue($kv->garbage());
 
-        $this->assertEqual($this->redis->get('remainingDataKey'),serialize('remaining data'));
+        $this->assertEquals(serialize('remaining data'), $this->redis->get('remainingDataKey'));
         $this->assertNull($this->redis->get('garbage1DataKey'));
         $this->assertNull($this->redis->get('garbage2DataKey'));
     }
@@ -56,9 +62,9 @@ class UTjKVDbRedis extends UTjKVDb {
         $kv->setWithTtl('flush2DataKey','data to remove',strtotime("+1 day"));
         $kv->setWithTtl('flush3DataKey','other data to remove',time()+30);
 
-        $this->assertEqual($this->redis->get('flush1DataKey'),serialize('some data'));
-        $this->assertEqual($this->redis->get('flush2DataKey'),serialize('data to remove'));
-        $this->assertEqual($this->redis->get('flush3DataKey'),serialize('other data to remove'));
+        $this->assertEquals(serialize('some data'), $this->redis->get('flush1DataKey'));
+        $this->assertEquals(serialize('data to remove'), $this->redis->get('flush2DataKey'));
+        $this->assertEquals(serialize('other data to remove'), $this->redis->get('flush3DataKey'));
         $this->assertTrue($kv->flush());
         $this->assertNull($this->redis->get('flush1DataKey'));
         $this->assertNull($this->redis->get('flush2DataKey'));

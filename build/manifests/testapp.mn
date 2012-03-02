@@ -271,11 +271,6 @@ cd testapp/modules/jelix_tests/tests/
   jforms.htmllightbuilder2.html_cli.php
   jforms.modifiedcontrols.html_cli.php
   jforms.with_dao.html_cli.php
-  jkvdb.db.html_cli.php
-  jkvdb.memcache.html_cli.php
-  jkvdb.file.html_cli.php
-  jkvdb.redis.html_cli.php
-  jkvdb.lib.php
   jpref.main_api.pu.php
   jtpl.compiler.html_cli.php
   jtpl.expressions_parsing.html_cli.php
@@ -347,6 +342,12 @@ cd testapp/tests-jelix/jelix/utils/
   versionComparatorTest.php
 cd testapp/tests-jelix/jelix/db/
   jDb_profilesTest.php
+cd testapp/tests-jelix/jelix/kvdb/
+  jkvdb_dbTest.php
+  jkvdb_fileTest.php
+  jkvdb_memcacheTest.php
+  jkvdb_redisTest.php
+  jkvdb.lib.php
 cd testapp/tests-jelix/jelix/forms/
   jforms_init_from_requestTest.php
 cd testapp/tests-jelix/jelix-scripts/

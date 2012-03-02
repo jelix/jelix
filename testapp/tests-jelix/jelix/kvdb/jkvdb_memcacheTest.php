@@ -16,23 +16,27 @@ require_once(dirname(__FILE__).'/jkvdb.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class UTjKVDbMemcache extends UTjKVDb {
+class jkvdb_memcacheTest extends UTjKVDb {
 
     protected $profile = 'usingmemcache';
 
-    function skip() {
-        parent::skip();
-        $this->skipIf(!extension_loaded('memcache'), 'UTjKVDbMemcache cannot be run because memcache is not installed');
-    }
-
     public function setUp (){
-        $this->mmc = memcache_connect('localhost',11211);
-        memcache_flush($this->mmc);
+        if (!$this->_kvdbSetUp())
+            return;
+        if (!extension_loaded('memcache'))
+            $this->markTestSkipped('jkvdb_memcacheTest cannot be run because memcache is not installed');
+        else {
+            list($host, $port) = explode(':', $this->profileData['host']);
+            $this->mmc = memcache_connect($host, intval($port));
+            memcache_flush($this->mmc);
+        }
     }
 
     public function tearDown() {
-        memcache_close($this->mmc);
-        $this->mmc = null;
+        if ($this->mmc) {
+            memcache_close($this->mmc);
+            $this->mmc = null;
+        }
     }
     
     public function testGarbage () {
@@ -47,7 +51,7 @@ class UTjKVDbMemcache extends UTjKVDb {
 
         $this->assertTrue($kv->garbage());
 
-        $this->assertTrue(memcache_get($this->mmc,'remainingDataKey')=='remaining data');
+        $this->assertEquals('remaining data', memcache_get($this->mmc,'remainingDataKey'));
         $this->assertFalse(memcache_get($this->mmc,'garbage1DataKey'));
         $this->assertFalse(memcache_get($this->mmc,'garbage2DataKey'));
     }
@@ -56,13 +60,13 @@ class UTjKVDbMemcache extends UTjKVDb {
 
         $kv = jKVDb::getConnection($this->profile);
 
-        $kv->set('flush1DataKey','some data',0);
+        $kv->set('flush1DataKey','some data');
         $kv->setWithTtl('flush2DataKey','data to remove',strtotime("+1 day"));
         $kv->setWithTtl('flush3DataKey','other data to remove',time()+30);
 
-        $this->assertTrue(memcache_get($this->mmc,'flush1DataKey'));
-        $this->assertTrue(memcache_get($this->mmc,'flush2DataKey'));
-        $this->assertTrue(memcache_get($this->mmc,'flush3DataKey'));
+        $this->assertEquals('some data', memcache_get($this->mmc,'flush1DataKey'));
+        $this->assertEquals('data to remove', memcache_get($this->mmc,'flush2DataKey'));
+        $this->assertEquals('other data to remove', memcache_get($this->mmc,'flush3DataKey'));
         $this->assertTrue($kv->flush());
         $this->assertFalse(memcache_get($this->mmc,'flush1DataKey'));
         $this->assertFalse(memcache_get($this->mmc,'flush2DataKey'));

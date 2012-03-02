@@ -16,11 +16,13 @@ require_once(dirname(__FILE__).'/jkvdb.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class UTjKVDbFile extends UTjKVDb {
+class jkvdb_fileTest extends UTjKVDb {
 
     protected $profile = 'usingfile';
 
     public function setUp (){
+        if (!$this->_kvdbSetUp())
+            return;
         if (file_exists(jApp::tempPath().'kvfiles/tests/'))
             jFile::removeDir(jApp::tempPath().'kvfiles/tests/',false);
     }
@@ -38,9 +40,7 @@ class UTjKVDbFile extends UTjKVDb {
     public function testInsertReplace () {
         parent::testInsertReplace();
 
-        $this->assertEqual(file_get_contents(jApp::tempPath().'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey')
-            , serialize('new value')
-            );
+        $this->assertEquals(serialize('new value'), file_get_contents(jApp::tempPath().'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey'));
     }    
 
 

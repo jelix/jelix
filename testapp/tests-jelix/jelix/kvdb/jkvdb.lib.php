@@ -20,10 +20,18 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
     protected $profile;
 
     protected $mmc;
+    
+    protected $profileData;
 
-    function skip() {
-        $conf = parse_ini_file(jApp::configPath().'profiles.ini.php', true);
-        $this->skipIf(!isset($conf['jkvdb:'.$this->profile]), get_class($this).' cannot be run with '.$this->profile.' : undefined profile');
+    protected function _kvdbSetUp() {
+        try {
+            $this->profileData = jProfiles::get('jkvdb', $this->profile);
+            return true;
+        }
+        catch(Exception $e) {
+            $this->markTestSkipped(get_class($this).' cannot be run with '.$this->profile.' : undefined profile');
+            return false;
+        }
     }
 
     public function testSetGet() {
@@ -41,7 +49,7 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
         $this->assertTrue($kv->get('noExpireKey')==$myData);
 
         $this->assertTrue($kv->setWithTtl('expiredKey','data expired', strtotime("-1 year")));
-        $this->assertFalse($kv->get('expiredKey'));
+        $this->assertNull($kv->get('expiredKey'));
 
         $this->assertTrue($kv->setWithTtl('ttlInSecondesKey', $myObj, 30));
         $this->assertTrue($kv->get('ttlInSecondesKey')==$myObj);
@@ -64,46 +72,43 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
 
         $kv = jKVDb::getConnection($this->profile);
 
-        $this->assertFalse($kv->get('unknowkey'));
+        $this->assertNull($kv->get('unknowkey'));
         $this->assertFalse($kv->replace('unknowkey','new value'));
-        $this->assertFalse($kv->get('unknowkey'));
+        $this->assertNull($kv->get('unknowkey'));
 
         $this->assertTrue($kv->set('existingKey', 'a value'));
         $this->assertFalse($kv->insert('existingKey','new value'));
-        $this->assertEqual($kv->get('existingKey'), 'a value');
+        $this->assertEquals('a value', $kv->get('existingKey'));
         $this->assertTrue($kv->replace('existingKey','new value'));
-        $this->assertEqual($kv->get('existingKey'), 'new value');
+        $this->assertEquals('new value', $kv->get('existingKey'));
     }
 
     public function testAppendPrepend() {
 
         $kv = jKVDb::getConnection($this->profile);
 
-        $this->assertFalse($kv->get('unknowkey'));
+        $this->assertNull($kv->get('unknowkey'));
         $this->assertFalse($kv->append('unknowkey','new value'));
         $this->assertFalse($kv->prepend('unknowkey','new value'));
-        $this->assertFalse($kv->get('unknowkey'));
+        $this->assertNull($kv->get('unknowkey'));
 
         $this->assertTrue($kv->set('existingKey', 'a value'));
-        $this->assertEqual($kv->get('existingKey'), 'a value');
+        $this->assertEquals('a value', $kv->get('existingKey'));
         if ($this->profile == 'usingfile') {
-            $this->assertEqual(file_get_contents(jApp::tempPath().'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey')
-                           , serialize('a value'));
+            $this->assertEquals(serialize('a value'),file_get_contents(jApp::tempPath().'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey'));
         }
 
-        $this->assertEqual($kv->append('existingKey','_suffix'), 'a value_suffix');
+        $this->assertEquals('a value_suffix', $kv->append('existingKey','_suffix'));
         if ($this->profile == 'usingfile') {
-            $this->assertEqual(file_get_contents(jApp::tempPath().'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey')
-                           , serialize('a value_suffix'));
+            $this->assertEquals(serialize('a value_suffix'), file_get_contents(jApp::tempPath().'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey'));
         }
 
-        $this->assertEqual($kv->get('existingKey'), 'a value_suffix');
+        $this->assertEquals('a value_suffix', $kv->get('existingKey'));
 
-        $this->assertEqual($kv->prepend('existingKey','prefix_'), 'prefix_a value_suffix');
-        $this->assertEqual($kv->get('existingKey'), 'prefix_a value_suffix');
+        $this->assertEquals('prefix_a value_suffix', $kv->prepend('existingKey','prefix_'));
+        $this->assertEquals('prefix_a value_suffix', $kv->get('existingKey'));
         if ($this->profile == 'usingfile') {
-            $this->assertEqual(file_get_contents(jApp::tempPath().'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey')
-                           , serialize('prefix_a value_suffix'));
+            $this->assertEquals( serialize('prefix_a value_suffix'), file_get_contents(jApp::tempPath().'kvfiles/tests/a2/1d/a21d88063ed27afccd86342a31c8be60_existingKey'));
         }
     }
 
@@ -115,14 +120,14 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
         $this->assertFalse($kv->increment('InexistentKey',1));
 
         $this->assertTrue($kv->set('integerDataKey', 100));
-        $this->assertEqual($kv->increment('integerDataKey'), 101);
+        $this->assertEquals(101, $kv->increment('integerDataKey'));
 
         $this->assertTrue($kv->set('floatDataKey', 100.5));
-        $this->assertEqual($kv->get('floatDataKey'), 100.5);
-        $this->assertEqual($kv->increment('floatDataKey',1), 101);
+        $this->assertEquals(100.5, $kv->get('floatDataKey'));
+        $this->assertEquals(101, $kv->increment('floatDataKey',1));
        
         $this->assertTrue($kv->set('floatIncrementationKey',100));
-        $this->assertEqual($kv->increment('floatIncrementationKey',1.5), 101);
+        $this->assertEquals(101, $kv->increment('floatIncrementationKey',1.5));
 
         $this->assertTrue($kv->set('stringIncrementationKey',1));
         $this->assertFalse($kv->increment('stringIncrementationKey','increment by string'));
@@ -146,13 +151,13 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
         $this->assertFalse($kv->decrement('InexistentKey',1));
 
         $this->assertTrue($kv->set('integerDataKey',100));
-        $this->assertEqual($kv->decrement('integerDataKey',1),99);
+        $this->assertEquals(99, $kv->decrement('integerDataKey',1));
 
         $this->assertTrue($kv->set('floatDataKey',100.5));
-        $this->assertEqual($kv->decrement('floatDataKey',1),99);
+        $this->assertEquals(99, $kv->decrement('floatDataKey',1));
 
         $this->assertTrue($kv->set('floatDecrementationKey',100));
-        $this->assertEqual($kv->decrement('floatDecrementationKey',1.5),99);
+        $this->assertEquals(99, $kv->decrement('floatDecrementationKey',1.5));
 
         $this->assertTrue($kv->set('stringDecrementationKey',1));
         $this->assertFalse($kv->decrement('stringDecrementationKey','decrement by string'));
@@ -176,7 +181,7 @@ abstract class UTjKVDb extends jUnitTestCaseDb {
         $kv->set('deleteKey','data to delete');
 
         $this->assertTrue($kv->delete('deleteKey'));
-        $this->assertFalse($kv->get('deleteKey'));
+        $this->assertNull($kv->get('deleteKey'));
         $this->assertFalse($kv->delete('inexistentKey'));
 
     }
