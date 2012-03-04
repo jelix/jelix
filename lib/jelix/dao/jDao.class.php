@@ -88,6 +88,7 @@ class jDao {
         }
         $c = $sel->getDaoRecordClass();
         $obj = new $c();
+    	$obj->DaoId = $DaoId; // mod by @dalixlabs
         return $obj;
     }
 
