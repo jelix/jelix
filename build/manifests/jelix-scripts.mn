@@ -43,6 +43,8 @@ cd lib/jelix-scripts/templates
   htaccess_deny
   htaccess_allow
   jelix-scripts.ini
+  dummy.tpl
+  git_ignore.tpl
 cd lib/jelix-scripts/templates/installer/
   installer.php.tpl
 cd lib/jelix-scripts/templates/module/
