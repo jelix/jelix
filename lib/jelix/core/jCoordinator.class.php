@@ -85,6 +85,9 @@ class jCoordinator {
 
         // temporary init. Remove this line when JELIX_APP_* and $gJConfig support will be removed completely from Jelix
         jApp::initLegacy();
+        
+        #    fix
+		jApp::setCoord($this);
 
         $this->_loadPlugins();
     }
