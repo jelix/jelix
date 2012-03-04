@@ -164,11 +164,11 @@ class jApp {
      */
     public static function loadConfig ($configFile, $enableErrorHandler=true) {
 
+        self:: setConfig(jConfig::load($configFile));
         if ($enableErrorHandler) {
             set_error_handler('jErrorHandler');
             set_exception_handler('JExceptionHandler');
         }
-        self:: setConfig(jConfig::load($configFile));
     }
 
     protected static $_coord = null;
