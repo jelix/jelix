@@ -129,6 +129,9 @@ class jDaoGenerator {
             else
                 $src[] =' public $'.$id.';';
         }
+    	
+		// add the dao id
+		$src[] = " public \$DaoId = '{$this->_daoId}';";
 
         // TODO PHP 5.3 : we could remove that
         $src[] = '   public function getProperties() { return '.$this->_DaoClassName.'::$_properties; }';
