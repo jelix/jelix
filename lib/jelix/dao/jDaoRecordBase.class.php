@@ -36,6 +36,15 @@ abstract class jDaoRecordBase {
      * @since 1.0b3
      */
     abstract public function getPrimaryKeyNames();
+    
+	
+	
+	/**
+	 * Dao selector
+	 * @author: dalixlabs
+	 * @created: 3/03/2012
+	 */
+	public $DaoId;
 
     /**
      * check values in the properties of the record, according on the dao definition
@@ -140,5 +149,28 @@ abstract class jDaoRecordBase {
             return $list;
         }
     }
+    
+	
+	/* save the record
+	 * @author:		dalixlabs (Sid-Ali Djenadi)
+	 * @created:	3/03/2012
+	 */
+	function save()
+	{
+		#	Guard Conditions
+		if(!$this->DaoId) return false;
+		
+		$dao = jDao::get($this->DaoId);
+		
+		#	get primary key value
+		$pk = $this->getPk();
+		if(is_array($pk)) $pk = $pk[0];
+		
+		#	insert or update
+		if($pk == null)
+			$dao->insert($this);
+		else
+			$dao->update($this);
+	}
 }
 
