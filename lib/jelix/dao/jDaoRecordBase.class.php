@@ -36,6 +36,42 @@ abstract class jDaoRecordBase {
      * @since 1.0b3
      */
     abstract public function getPrimaryKeyNames();
+    
+	
+	/**
+	 * Store the additional params
+	 * @author: dalixlabs
+	 * @created: 2/03/2012
+	 */
+	protected $data = array();
+	
+	
+	
+	
+	/**
+     * set an additionnal value to the record
+     * @author: dalixlabs
+	 * @created: 2/03/2012
+	 */
+	public function __set($name, $value)
+    {
+        $this->data[$name] = $value;
+    }
+	
+	
+	
+	/**
+     * retreive some additonal params setting on the fly
+     * @return vars data
+     * @author: dalixlabs
+	 * @created: 2/03/2012
+	 */
+	public function __get($name)
+    {
+        if (array_key_exists($name, $this->data)) {
+            return $this->data[$name];
+        }
+    }
 
     /**
      * check values in the properties of the record, according on the dao definition
@@ -140,5 +176,42 @@ abstract class jDaoRecordBase {
             return $list;
         }
     }
+    
+	
+	/* bind from array
+	 * @author:		dalixlabs (Sid-Ali Djenadi)
+	 * @created:	25/02/2012
+	 */
+	function bind($data, $protectPK=true)
+	{
+		#	Guard Conditions:	return if not array
+		if(!is_array($data) && !is_object($data)) return false;
+		
+
+		#	transform to OBJECT if it's an ARRAY
+		if(is_array($data)) $data = (object)$data;
+		
+		
+		#	bind
+		$keys = get_class_vars(get_class($data));
+		foreach($keys as $key => $value)
+		{
+			#	GC:	skip if proprety not exist
+			if (!property_exists($this, $key)) continue ;
+			
+			$this->$key = $data->$key;
+		}
+		
+		#	return if PRIMARY KEY protection is desactivated
+		if(!$protectPK) return;
+		
+		#	get all primary keys
+		$Pks = $this->getPrimaryKeyNames();
+
+		#	reset all Primary key to null
+		foreach($Pks as $pk) {
+			$this->$pk = null;
+		}
+	}
 }
 
