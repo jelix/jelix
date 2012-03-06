@@ -11,7 +11,7 @@
 /**
 *
 * @package    jelix
-* @subpackage utils
+* @subpackage core
 */
 class jApp {
 

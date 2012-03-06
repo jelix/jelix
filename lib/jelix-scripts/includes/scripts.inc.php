@@ -13,9 +13,11 @@
 
 error_reporting(E_ALL);
 define ('JELIX_SCRIPTS_PATH', dirname(__FILE__).'/../');
+require (JELIX_SCRIPTS_PATH.'../jelix/init.php');
+require (JELIX_SCRIPTS_PATH.'includes/JelixScript.class.php');
 
-if (PHP_SAPI != 'cli') {
-    echo "You must use the CLI version of PHP, not the ".PHP_SAPI." version\n";
+if (!jServer::isCLI()) {
+    echo "Error: you're not allowed to execute this script outside a command line shell.\n";
     exit(1);
 }
 
@@ -25,8 +27,6 @@ $argv = $_SERVER['argv'];
 $scriptName = array_shift($argv); // shift the script name
 
 // ------------ load the config and retrieve the command object
-require (JELIX_SCRIPTS_PATH.'../jelix/init.php');
-require (JELIX_SCRIPTS_PATH.'includes/JelixScript.class.php');
 
 set_error_handler('JelixScriptsErrorHandler');
 set_exception_handler('JelixScriptsExceptionHandler');
