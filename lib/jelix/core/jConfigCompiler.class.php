@@ -98,7 +98,7 @@ class jConfigCompiler {
     static public function readAndCache($configFile, $isCli = null, $pseudoScriptName = '') {
 
         if ($isCli === null)
-            $isCli = (PHP_SAPI == 'cli');
+            $isCli = jServer::isCLI();
 
         $config = self::read($configFile, false, $isCli, $pseudoScriptName);
         $tempPath = jApp::tempPath();
