@@ -48,7 +48,7 @@ cd lib/jelix/core
   jContext.class.php
 * jController.class.php
 * jCoordinator.class.php
-  jException.lib.php
+  jException.class.php
 * jIncluder.class.php
   jLocale.class.php
 * jLog.class.php

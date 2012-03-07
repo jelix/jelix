@@ -163,12 +163,11 @@ class jApp {
      *                 and really have to use the default handler or an other handler
      */
     public static function loadConfig ($configFile, $enableErrorHandler=true) {
-
-        self::$_config->enableErrorHandler = $enableErrorHandler;
         if ($enableErrorHandler) {
             jBasicErrorHandler::register();
         }
         self::setConfig(jConfig::load($configFile));
+        self::$_config->enableErrorHandler = $enableErrorHandler;
     }
 
     protected static $_coord = null;

@@ -75,7 +75,7 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/jIUrlEngine.iface.php
 #endif
 #includephp core/jBasicErrorHandler.class.php
-#includephp core/jException.lib.php
+#includephp core/jException.class.php
 #includephp core/jContext.class.php
 #includephp core/jConfig.class.php
 #includephp core/jConfigAutoloader.class.php
@@ -114,7 +114,7 @@ require (JELIX_LIB_CORE_PATH . 'jISelector.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jIUrlEngine.iface.php');
 #endif
 require (JELIX_LIB_CORE_PATH . 'jBasicErrorHandler.class.php');
-require (JELIX_LIB_CORE_PATH . 'jException.lib.php');
+require (JELIX_LIB_CORE_PATH . 'jException.class.php');
 require (JELIX_LIB_CORE_PATH . 'jContext.class.php');
 require (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
 require (JELIX_LIB_CORE_PATH . 'jConfigAutoloader.class.php');
