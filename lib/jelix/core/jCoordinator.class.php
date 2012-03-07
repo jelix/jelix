@@ -102,7 +102,7 @@ class jCoordinator {
             else {
                 $conff = jApp::configPath($conf);
                 if (false === ($conf = parse_ini_file($conff,true)))
-                    throw new Exception("Error in the configuration file of plugin $name ($conff)!", 13);
+                    throw new Exception("Error in a plugin configuration file -- plugin: $name  file: $conff", 13);
             }
             include( $config->_pluginsPathList_coord[$name].$name.'.coord.php');
             $class= $name.'CoordPlugin';

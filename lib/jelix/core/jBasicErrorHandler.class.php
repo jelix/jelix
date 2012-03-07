@@ -119,6 +119,12 @@ class jBasicErrorHandler {
                 @error_log($err->getFormatedMessage(), 3, jApp::logPath('errors.log'));
             }
             @error_log($errorLog->getFormatedMessage(), 3, jApp::logPath('errors.log'));
+
+            $msg = $errorLog->getMessage();
+            if (strpos($msg, '--') !== false) {
+                list($msg, $bin) = explode('--', $msg, 2); // remove confidential data
+            }
+
             // if accept text/html
             if (isset($_SERVER['HTTP_ACCEPT']) && strstr($_SERVER['HTTP_ACCEPT'],'text/html')) {
                 if (file_exists(jApp::appPath('responses/error.en_US.php')))
@@ -127,7 +133,7 @@ class jBasicErrorHandler {
                     $file = JELIX_LIB_CORE_PATH.'response/error.en_US.php';
                 $HEADBOTTOM = '';
                 $BODYTOP = '';
-                $BODYBOTTOM = '<!-- '.htmlspecialchars($errorLog->getMessage()).'-->';
+                $BODYBOTTOM = htmlspecialchars($msg);
                 $basePath = '';
                 header("HTTP/1.1 500 Internal jelix error");
                 header('Content-type: text/html');
@@ -137,7 +143,7 @@ class jBasicErrorHandler {
                 // output text response
                 header("HTTP/1.1 500 Internal jelix error");
                 header('Content-type: text/plain');
-                echo 'Error during initialization.';
+                echo 'Error during initialization. '.$msg;
             }
         }
         exit(1);

@@ -50,9 +50,14 @@ class jConfigCompiler {
         }
 
         if(!is_writable($tempPath)){
-            throw new Exception('Application temp base directory ('.$tempPath.') is not writable', 4);
+            throw new Exception('Application temp base directory is not writable -- ('.$tempPath.')', 4);
         }
 
+        if(!is_writable(jApp::logPath())) {
+            throw new Exception('Application log directory is not writable -- ('.jApp::logPath().')', 4);
+        }
+
+        
         self::$commonConfig = jIniFile::read($configPath.'defaultconfig.ini.php',true);
 
 #if ENABLE_PHP_JELIX
@@ -62,9 +67,9 @@ class jConfigCompiler {
 
         if($configFile != 'defaultconfig.ini.php'){
             if(!file_exists($configPath.$configFile))
-                throw new Exception("Config file $configFile is missing !", 5);
+                throw new Exception("Configuration file is missing -- $configFile", 5);
             if( false === @jelix_read_ini($configPath.$configFile, $config))
-                throw new Exception("Syntax error in the config file $configFile !", 6);
+                throw new Exception("Syntax error in the configuration file -- $configFile", 6);
         }
 #else
         $config = jIniFile::read(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
@@ -75,9 +80,9 @@ class jConfigCompiler {
 
         if($configFile !='defaultconfig.ini.php'){
             if(!file_exists($configPath.$configFile))
-                throw new Exception("Config file $configFile is missing !", 5);
+                throw new Exception("Configuration file is missing -- $configFile ", 5);
             if( false === ($userConfig = parse_ini_file($configPath.$configFile,true)))
-                throw new Exception("Syntax error in the config file $configFile !", 6);
+                throw new Exception("Syntax error in the configuration file -- $configFile", 6);
             self::_mergeConfig($config, $userConfig);
         }
         $config = (object) $config;
@@ -111,7 +116,7 @@ class jConfigCompiler {
                 fwrite($f, '<?php $config = '.var_export(get_object_vars($config),true).";\n?>");
                 fclose($f);
             } else {
-                throw new Exception('(24)Error while writing config cache file '.$filename);
+                throw new Exception('Error while writing configuration cache file -- '.$filename);
             }
         }else{
             jIniFile::write(get_object_vars($config), $tempPath.str_replace('/','~',$configFile).'.resultini.php', ";<?php die('');?>\n");
@@ -122,7 +127,7 @@ class jConfigCompiler {
             fwrite($f, '<?php $config = '.var_export(get_object_vars($config),true).";\n?>");
             fclose($f);
         } else {
-            throw new Exception('(24)Error while writing config cache file '.$filename);
+            throw new Exception('Error while writing configuration cache file -- '.$filename);
         }
 #else
         jIniFile::write(get_object_vars($config), $tempPath.str_replace('/','~',$configFile).'.resultini.php', ";<?php die('');?>\n");
@@ -159,11 +164,11 @@ class jConfigCompiler {
         $coordplugins = array();
         foreach ($config->coordplugins as $name=>$conf) {
             if (!isset($config->_pluginsPathList_coord[$name])) {
-                throw new Exception("Error in the main configuration. The coord plugin $name doesn't exist!", 7);
+                throw new Exception("Error in the main configuration. A plugin doesn't exist -- The coord plugin $name is unknown.", 7);
             }
             if ($conf) {
                 if ($conf != '1' && !file_exists(jApp::configPath($conf))) {
-                    throw new Exception("Error in the main configuration. Configuration file '$conf' for coord plugin $name doesn't exist!", 8);
+                    throw new Exception("Error in the main configuration. A plugin configuration file doesn't exist -- Configuration file for the coord plugin $name doesn't exist: '$conf'", 8);
                 }
                 $coordplugins[$name] = $conf;
             }
@@ -191,7 +196,7 @@ class jConfigCompiler {
             foreach($list as $sel) {
                 if(preg_match("/^([a-zA-Z0-9_\.]+)~([a-zA-Z0-9_\.\\/]+)$/", $sel, $m)){
                     if (!isset($config->_modulesPathList[$m[1]])) {
-                        throw new Exception('Error in config files, loadClasses: '.$m[1].' is not a valid or activated module');
+                        throw new Exception('Error in the configuration file -- in loadClasses parameter, '.$m[1].' is not a valid or activated module');
                     }
 
                     if( ($p=strrpos($m[2], '/')) !== false){
@@ -205,12 +210,12 @@ class jConfigCompiler {
                     $path = $config->_modulesPathList[$m[1]].'classes/'.$subpath.$className.'.class.php';
 
                     if (!file_exists($path) || strpos($subpath,'..') !== false ) {
-                        throw new Exception('Error in config files, loadClasses, bad class selector: '.$sel);
+                        throw new Exception('Error in the configuration file -- in loadClasses parameter, bad class selector: '.$sel);
                     }
                     $config->sessions['_class_to_load'][] = $path;
                 }
                 else
-                    throw new Exception('Error in config files, loadClasses, bad class selector: '.$sel);
+                    throw new Exception('Error in the configuration file --  in loadClasses parameter, bad class selector: '.$sel);
             }
         }
 
@@ -222,7 +227,7 @@ class jConfigCompiler {
             $config->defaultCountry = strtoupper($m[2]);
             $config->locale = $config->defaultLang.'_'.$config->defaultCountry;
         }else{
-            throw new Exception("Syntax error in the locale parameter in config file $configFile !", 14);
+            throw new Exception("Syntax error in the locale parameter in config file -- $configFile", 14);
         }*/
     }
 
@@ -244,7 +249,7 @@ class jConfigCompiler {
             if ($allModuleInfo)
                 $installation = array ();
             else
-                throw new Exception("installer.ini.php doesn't exist! You must install your application.\n", 9);
+                throw new Exception("The application is not installed -- installer.ini.php doesn't exist!\n", 9);
         }
         else
             $installation = parse_ini_file($installerFile,true);
@@ -272,7 +277,7 @@ class jConfigCompiler {
             if(trim($path) == '') continue;
             $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
             if (!file_exists($p)) {
-                throw new Exception('The path, '.$path.' given in the jelix config, doesn\'t exist !', 10);
+                throw new Exception('Error in the configuration file -- The path, '.$path.' given in the jelix config, doesn\'t exist', 10);
             }
             if (substr($p,-1) !='/')
                 $p.='/';
@@ -378,13 +383,13 @@ class jConfigCompiler {
                 case 'class':
                     $p = $path.((string)$element['file']);
                     if (!file_exists($p))
-                        throw new Exception ('Autoload configuration - this class file doesn\'t exists: '.$p);
+                        throw new Exception ('Error in autoload configuration -- In '.$path.'/module.xml, this class file doesn\'t exists: '.$p);
                     $config->_autoload_class[(string)$element['name']] = $p;
                     break;
                 case 'classPattern':
                     $p = $path.((string)$element['dir']);
                     if (!file_exists($p))
-                        throw new Exception ('Autoload configuration - this directory for classPattern doesn\'t exists: '.$p);
+                        throw new Exception ('Error in the autoload configuration -- In '.$path.'/module.xml, this directory for classPattern doesn\'t exists: '.$p);
                     if (!isset($config->_autoload_classpattern['regexp'])) {
                         $config->_autoload_classpattern['regexp'] = array();
                         $config->_autoload_classpattern['path'] = array();
@@ -395,19 +400,19 @@ class jConfigCompiler {
                 case 'namespace':
                     $p = $path.((string)$element['dir']);
                     if (!file_exists($p))
-                        throw new Exception ('Autoload configuration - this directory for namespace doesn\'t exists: '.$p);
+                        throw new Exception ('Error in the autoload configuration -- In '.$path.'/module.xml, this directory for namespace doesn\'t exists: '.$p);
                     $config->_autoload_namespace[trim((string)$element['name'],'\\')] = $p.$suffix;
                     break;
                 case 'namespacePathMap':
                     $p = $path.((string)$element['dir']);
                     if (!file_exists($p))
-                        throw new Exception ('Autoload configuration - this directory for namespacePathMap doesn\'t exists: '.$p);
+                        throw new Exception ('Error in autoload configuration -- In '.$path.'/module.xml, this directory for namespacePathMap doesn\'t exists: '.$p);
                     $config->_autoload_namespacepathmap[trim((string)$element['name'],'\\')] = $p.$suffix;
                     break;
                 case 'includePath':
                     $p = $path.((string)$element['dir']);
                     if (!file_exists($p))
-                        throw new Exception ('Autoload configuration - this directory for includePath doesn\'t exists: '.$p);
+                        throw new Exception ('Error in autoload configuration -- In '.$path.'/module.xml, this directory for includePath doesn\'t exists: '.$p);
                     if (!isset($config->_autoload_includepath['path'])) {
                         $config->_autoload_includepath['path'] = array();
                     }
@@ -416,7 +421,7 @@ class jConfigCompiler {
                 case 'autoloader':
                     $p = $path.((string)$element['file']);
                     if (!file_exists($p))
-                        throw new Exception ('Autoload configuration - This autoloader doesn\'t exists: '.$p);
+                        throw new Exception ('Error in autoload configuration -- In '.$path.'/module.xml, this autoloader doesn\'t exists: '.$p);
                     $config->_autoload_autoloader[] = $p;
                     break;
             }
@@ -442,7 +447,7 @@ class jConfigCompiler {
                         $p.= '/plugins/';
                 }
                 else {
-                    trigger_error('Configuration: Path given in pluginsPath for the module '.$mod.' is ignored, since this module is unknown or deactivated', E_USER_NOTICE);
+                    trigger_error('Error in main configuration on pluginsPath -- Path given in pluginsPath for the module '.$mod.' is ignored, since this module is unknown or deactivated', E_USER_NOTICE);
                     continue;
                 }
             }
@@ -450,7 +455,7 @@ class jConfigCompiler {
                 $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
             }
             if(!file_exists($p)){
-                trigger_error('The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
+                trigger_error('Error in main configuration on pluginsPath -- The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);
                 exit;
             }
             if(substr($p,-1) !='/')
@@ -553,7 +558,7 @@ class jConfigCompiler {
                     }
 
                 }elseif(strpos($urlconf['urlScriptPath'], $basepath) !== 0) {
-                    throw new Exception('Jelix Error: basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$urlconf['urlScriptPath']);
+                    throw new Exception('Error in main configuration on basePath -- basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$urlconf['urlScriptPath']);
                 }
             }
 
@@ -599,7 +604,7 @@ class jConfigCompiler {
                   && strrpos( $_SERVER['ORIG_SCRIPT_NAME'], $ext) === (strlen( $_SERVER['ORIG_SCRIPT_NAME']) - $extlen)) {
             return 'ORIG_SCRIPT_NAME';
         }
-        throw new Exception('In config file the parameter urlengine:scriptNameServerVariable is empty and Jelix doesn\'t find
+        throw new Exception('Error in main configuration on URL engine parameters -- In config file the parameter urlengine:scriptNameServerVariable is empty and Jelix doesn\'t find
             the variable in $_SERVER which contains the script name. You must see phpinfo and setup this parameter in your config file.', 11);
     }
 
@@ -634,7 +639,7 @@ class jConfigCompiler {
                 $config->{$list}[$type.'.path']=$path;
                 continue;
             }
-            throw new Exception('Configuration Error: the class file of the response type "'.$type.'" is not found ('.$path.')',12);
+            throw new Exception('Error in main configuration on responses parameters -- the class file of the response type "'.$type.'" is not found ('.$path.')',12);
         }
     }
 
