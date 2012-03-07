@@ -100,9 +100,9 @@ $BUILD_OPTIONS = array(
     true
     ),
 'TARGET_REPOSITORY'=> array(
-    "The type of the version control system you use on the target directory : none (default), svn or hg",
+    "The type of the version control system you use on the target directory : none (default), git, hg or svn",
     '',
-    '/^(svn|hg|none)?$/',
+    '/^(git|svn|hg|none)?$/',
     ),
 'SOURCE_REVISION'=> array(
     false,

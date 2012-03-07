@@ -3,7 +3,7 @@
 * @package     jBuildTools
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2012 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -50,6 +50,9 @@ class jBuildUtils {
               break;
           case 'hg':
               exec("hg remove $dir");
+              break;
+          case 'git':
+              exec("git rm $dir");
               break;
           case '':
           case 'none':

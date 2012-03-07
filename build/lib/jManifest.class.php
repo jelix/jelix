@@ -3,7 +3,7 @@
 * @package     jBuildTools
 * @author      Laurent Jouanneau
 * @contributor Kévin Lepeltier
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2012 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -180,6 +180,9 @@ class jManifest {
                                 else if (self::$usedVcs  == 'hg') {
                                     exec("hg add $encodefile");
                                 }
+                                else if (self::$usedVcs  == 'git') {
+                                    exec("git add $encodefile");
+                                }
                                 chdir($d);
                             }
                         }
@@ -202,6 +205,9 @@ class jManifest {
                         }
                         else if (self::$usedVcs  == 'hg') {
                             exec("hg add $destfile");
+                        }
+                        else if (self::$usedVcs  == 'git') {
+                            exec("git add $destfile");
                         }
                         chdir($d);
                     }
@@ -372,6 +378,12 @@ class jManifest {
                             $d = getcwd();
                             chdir(dirname($destfile));
                             exec("hg remove $destfile");
+                            chdir($d);
+                            break;
+                        case 'git':
+                            $d = getcwd();
+                            chdir(dirname($destfile));
+                            exec("git rm $destfile");
                             chdir($d);
                             break;
                     }
