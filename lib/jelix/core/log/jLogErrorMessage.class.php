@@ -100,10 +100,8 @@ class jLogErrorMessage implements jILogMessage {
         else
             $url = 'Unknow request';
 
-        $req = jApp::coord()->request;
-
         // url params including module and action
-        if ($req) {
+        if (jApp::coord() && ($req = jApp::coord()->request)) {
             $params = str_replace("\n", ' ', var_export($req->params, true));
             $remoteAddr = $req->getIP();
         }

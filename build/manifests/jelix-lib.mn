@@ -42,12 +42,12 @@ cd lib/jelix/core
   jCmdlineCoordinator.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jApp.class.php
+  jBasicErrorHandler.class.php
   jBundle.class.php
 * jConfig.class.php
   jContext.class.php
 * jController.class.php
 * jCoordinator.class.php
-  jErrorHandler.lib.php
   jException.lib.php
 * jIncluder.class.php
   jLocale.class.php
@@ -59,6 +59,7 @@ cd lib/jelix/core
   jUrlAction.class.php
 * jUrl.class.php
 * jSession.class.php
+  jServer.class.php
 #ifnot ENABLE_PHP_JELIX
   jICoordPlugin.iface.php
   jISelector.iface.php

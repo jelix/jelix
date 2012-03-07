@@ -10,17 +10,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-/**
-* Exception handler for the framework.
-* Replace the default PHP Exception handler
-* @param   Exception   $e  the exception object
-*/
-function jExceptionHandler($e){
-
-    jApp::coord()->handleError('error', $e->getCode(), $e->getMessage(), $e->getFile(),
-                          $e->getLine(), $e->getTrace());
-}
-
 
 /**
  * Jelix Exception

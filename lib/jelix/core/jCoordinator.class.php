@@ -60,12 +60,6 @@ class jCoordinator {
     public $actionName;
 
     /**
-     * List of all errors appears during the initialisation
-     * @var array array of jLogErrorMessage
-     */
-    protected $initErrorMessages=array();
-
-    /**
      * the current error message
      * @var jLogErrorMessage
      */
@@ -127,9 +121,14 @@ class jCoordinator {
         $config = jApp::config();
         $this->request = $request;
 
-        // let's log messages appeared during init
-        foreach($this->initErrorMessages as $msg) {
-            jLog::log($msg, $msg->getCategory());
+        if ($config->enableErrorHandler) {
+            set_error_handler(array($this, 'errorHandler'));
+            set_exception_handler(array($this, 'exceptionHandler'));
+
+            // let's log messages appeared during init
+            foreach(jBasicErrorHandler::$initErrorMessages as $msg) {
+                jLog::log($msg, $msg->getCategory());
+            }
         }
 
         $this->request->init();
@@ -257,6 +256,50 @@ class jCoordinator {
     }
 
     /**
+     * Error handler using a response object to return the error.
+     * Replace the default PHP error handler.
+     * @param   integer     $errno      error code
+     * @param   string      $errmsg     error message
+     * @param   string      $filename   filename where the error appears
+     * @param   integer     $linenum    line number where the error appears
+     * @param   array       $errcontext
+     * @since 1.4
+     */
+    function errorHandler($errno, $errmsg, $filename, $linenum, $errcontext) {
+
+        if (error_reporting() == 0)
+            return;
+
+        if (preg_match('/^\s*\((\d+)\)(.+)$/', $errmsg, $m)) {
+            $code = $m[1];
+            $errmsg = $m[2];
+        }
+        else {
+            $code = 1;
+        }
+
+        if (!isset (jBasicErrorHandler::$errorCode[$errno])){
+            $errno = E_ERROR;
+        }
+        $codestr = jBasicErrorHandler::$errorCode[$errno];
+
+        $trace = debug_backtrace();
+        array_shift($trace);
+        $this->handleError($codestr, $errno, $errmsg, $filename, $linenum, $trace);
+    }
+
+    /**
+     * Exception handler using a response object to return the error
+     * Replace the default PHP Exception handler
+     * @param   Exception   $e  the exception object
+     * @since 1.4
+     */
+    function exceptionHandler($e) {
+        $this->handleError('error', $e->getCode(), $e->getMessage(), $e->getFile(),
+                          $e->getLine(), $e->getTrace());
+    }
+
+    /**
      * Handle an error event. Called by error handler and exception handler.
      * @param string  $type    error type : 'error', 'warning', 'notice'
      * @param integer $code    error code
@@ -270,58 +313,20 @@ class jCoordinator {
 
         $errorLog = new jLogErrorMessage($type, $code, $message, $file, $line, $trace);
 
-        if ($this->request) {
-            // we have config, so we can process "normally"
-            $errorLog->setFormat(jApp::config()->error_handling['messageLogFormat']);
-            jLog::log($errorLog, $type);
+        $errorLog->setFormat(jApp::config()->error_handling['messageLogFormat']);
+        jLog::log($errorLog, $type);
 
-            // if non fatal error, it is finished
-            if ($type != 'error')
-                return;
-
-            $this->errorMessage = $errorLog;
-
-            while (ob_get_level() && @ob_end_clean());
-
-            $resp = $this->request->getErrorResponse($this->response);
-            $resp->outputErrors();
-            jSession::end();
-        }
-        // for non fatal error appeared during init, let's just store it for loggers later
-        elseif ($type != 'error') {
-            $this->initErrorMessages[] = $errorLog;
+        // if non fatal error, it is finished, continue the execution of the action
+        if ($type != 'error')
             return;
-        }
-        else {
-            // fatal error appeared during init, let's display an HTML page
-            // since we don't know the request, we cannot return a response
-            // corresponding to the expected protocol
 
-            while (ob_get_level() && @ob_end_clean());
+        $this->errorMessage = $errorLog;
 
-            // log into file
-            @error_log($errorLog->getFormatedMessage(),3, jApp::logPath('errors.log'));
-            // if accept text/html
-            if (isset($_SERVER['HTTP_ACCEPT']) && strstr($_SERVER['HTTP_ACCEPT'],'text/html')) {
-                if (file_exists(jApp::appPath('responses/error.en_US.php')))
-                    $file = jApp::appPath('responses/error.en_US.php');
-                else
-                    $file = JELIX_LIB_CORE_PATH.'response/error.en_US.php';
-                $HEADBOTTOM = '';
-                $BODYTOP = '';
-                $BODYBOTTOM = '';
-                $basePath = '';
-                header("HTTP/1.1 500 Internal jelix error");
-                header('Content-type: text/html');
-                include($file);
-            }
-            else {
-                // output text response
-                header("HTTP/1.1 500 Internal jelix error");
-                header('Content-type: text/plain');
-                echo 'Error during initialization.';
-            }
-        }
+        while (ob_get_level() && @ob_end_clean());
+
+        $resp = $this->request->getErrorResponse($this->response);
+        $resp->outputErrors();
+        jSession::end();
         exit(1);
     }
 
