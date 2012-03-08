@@ -97,7 +97,7 @@ class jPrefManager{
                     $nogroup->prefs[] = $p;
             }
         }
-        usort($prefs, 'jPrefAdmin::compareGroup');
+        usort($prefs, 'jPrefItem::compareGroup');
         if(count($nogroup->prefs) > 0)
             $prefs['__nogroup'] = $nogroup;                     
         return $prefs;
