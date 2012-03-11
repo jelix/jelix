@@ -48,6 +48,9 @@ Olivier Demah (aka FoxMaSk)
 Antoine Detante (aka antoinefr)
  - support of persistant authentification in jAuth and auth plugin (#229)
 
+Sid-Ali Djenadid
+ - contribution on the jDaoRecordBase::save method implementation
+
 DSDenes
  - fix little thing in crud template (#844)
  - added a native modifier in jtpl (#845)

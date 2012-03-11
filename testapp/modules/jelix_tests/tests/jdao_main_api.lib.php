@@ -89,7 +89,7 @@ abstract class UTDao_base extends jUnitTestCaseDb {
         $this->prod2->price = 1.54;
         $this->prod2->promo = true;
         $this->prod2->dummy = 'started';
-        $res = $dao->insert($this->prod2);
+        $res = $this->prod2->save();
 
         $this->assertEqual($res, 1, 'jDaoBase::insert does not return 1');
         $this->assertNotEqual($this->prod2->id, '', 'jDaoBase::insert : id not set');
@@ -152,7 +152,7 @@ abstract class UTDao_base extends jUnitTestCaseDb {
         $this->assertEqual($prod2->promo,1, 'jDao::get : bad promo property on record');
         
         $prod->promo = 't';
-        $dao->update($prod);
+        $prod->save();
         $prod2 = $dao->get($this->prod1->id);
         $this->assertEqual($prod2->promo,1, 'jDao::get : bad promo property on record : %');
         
