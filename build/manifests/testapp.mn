@@ -326,6 +326,8 @@ cd testapp/tests-jelix/jelix/installer/app1/
 cd testapp/tests-jelix/jelix/installer/app1/modules/aaa/
   module.xml
 cd testapp/tests-jelix/jelix/installer/app1/plugins/
+cd testapp/tests-jelix/jelix/installer/app1/var/log
+  .dummy
 cd testapp/tests-jelix/jelix/installer/app1/var/config/
   defaultconfig.ini.php
 cd testapp/tests-jelix/jelix/installer/app1/var/config/foo/
