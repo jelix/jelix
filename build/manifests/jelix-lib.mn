@@ -465,6 +465,11 @@ cd lib/jelix/plugins/coord/history
   plugin.xml
   history.coord.ini.php.dist
 
+cd lib/jelix/plugins/coord/traceexec
+! traceexec.coord.php
+  plugin.xml
+  traceexec.coord.ini.php.dist
+
 cd lib/jelix/plugins/db/intuition
   intuition.dbconnection.php
   intuition.dbresultset.php
