@@ -47,14 +47,14 @@ class MagicQuotesCoordPlugin implements jICoordPlugin {
     }
 
     /**
-    * enleve tous les slashes d'une chaine ou d'un tableau de chaine
+    * Remove all the slashes form a string or a string array
     * @param string/array   $string
     * @return string/array   l'objet transformé
     */
     protected function _stripSlashes ($string){
         if (is_array ($string)){
             $toReturn = array ();
-            // c'est un tableau, on traite un à un tous les elements du tableau
+            // it's an array, process each of the array elements
             foreach ($string as $key=>$elem){
                 $toReturn[$key] = $this->_stripSlashes ($elem);
             }

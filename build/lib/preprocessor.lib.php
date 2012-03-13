@@ -92,8 +92,8 @@ class jPreProcessor{
         $this->errorLine=0;
         $this->_blockstack = array();
 
-        // on sauve les variables pour les retrouver intact aprés le parsing
-        // de façon à pouvoir rééxecuter plusieurs fois run sur des contenus différents
+        // save the variables to get them back intact after the parsing
+        // to be able to reexecute multiple times run on different content
         if($this->_doSaveVariables)
             $this->_savedVariables= $this->_variables;
 
@@ -101,7 +101,7 @@ class jPreProcessor{
 
         $result='';
         $nb = -1;
-        // on parcours chaque ligne du source
+        // go through each line of the source
         while(count($source)){
             $nb++;
             $sline = array_shift($source);
@@ -122,7 +122,7 @@ class jPreProcessor{
                         }
                         $tline=false;
                         break;
-                    case 'define': // define avec un seul argument.
+                    case 'define': // define with only one argument
                         if($isOpen ){
                             $this->_variables[$m[2]] = true;
                         }
@@ -170,7 +170,7 @@ class jPreProcessor{
                 echo "\n";*/
 
             }elseif(preg_match('/^\#(define)\s+(\w+)\s+(.+)$/m',$sline,$m)){
-                // define avec deux arguments
+                // define with two arguments
                 if($isOpen){
                     $this->_variables[$m[2]] = trim($m[3]);
                 }

@@ -254,7 +254,7 @@ class wr3xhtml_list extends WikiRendererBloc {
          $str.="</li>\n<li>";
          $this->_previousTag=substr($this->_previousTag,0,-$d); // pour étre sur...
 
-      }elseif( $d < 0 ){ // un niveau de plus
+      }elseif( $d < 0 ){ // one more level
          $c=substr($this->_detectMatch[1],-1,1);
          $this->_previousTag.=$c;
          $str=($c == '#'?"<ol><li>":"<ul><li>");
