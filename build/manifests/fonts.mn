@@ -1,10 +1,23 @@
 cd lib/pdf-fonts
+  aealarabiya.ctg.z
+  aealarabiya.php
+  aealarabiya.z
+  aefurat.ctg.z
+  aefurat.php
+  aefurat.z
   almohanad.ctg.z
   almohanad.php
   almohanad.z
   arialunicid0.php
   chinese.php
+  cid0cs.php
+  cid0ct.php
+  cid0jp.php
+  cid0kr.php
   courier.php
+  courierb.php
+  courierbi.php
+  courieri.php
   dejavusans.ctg.z
   dejavusans.php
   dejavusans.z
@@ -112,6 +125,34 @@ cd lib/pdf-fonts
   kozgopromedium.php
   kozminproregular.php
   msungstdlight.php
+  pdfacourier.php
+  pdfacourier.z
+  pdfacourierb.php
+  pdfacourierb.z
+  pdfacourierbi.php
+  pdfacourierbi.z
+  pdfacourieri.php
+  pdfacourieri.z
+  pdfahelvetica.php
+  pdfahelvetica.z
+  pdfahelveticab.php
+  pdfahelveticab.z
+  pdfahelveticabi.php
+  pdfahelveticabi.z
+  pdfahelveticai.php
+  pdfahelveticai.z
+  pdfasymbol.php
+  pdfasymbol.z
+  pdfatimes.php
+  pdfatimes.z
+  pdfatimesb.php
+  pdfatimesb.z
+  pdfatimesbi.php
+  pdfatimesbi.z
+  pdfatimesi.php
+  pdfatimesi.z
+  pdfazapfdingbats.php
+  pdfazapfdingbats.z
   README.TXT
   stsongstdlight.php
   symbol.php
