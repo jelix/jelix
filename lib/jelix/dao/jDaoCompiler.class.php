@@ -56,7 +56,7 @@ class jDaoCompiler  implements jISimpleCompiler {
 
         $daoPath = $selector->getPath();
 
-        // chargement du fichier XML
+        // load the XML file
         $doc = new DOMDocument();
 
         if(!$doc->load($daoPath)){
@@ -79,7 +79,7 @@ class jDaoCompiler  implements jISimpleCompiler {
         $class = $selector->driver.'DaoBuilder';
         $generator = new $class ($selector, $tools, $parser);
 
-        // génération des classes PHP correspondant à la définition de la DAO
+        // generation of PHP classes corresponding to the DAO definition
         $compiled = '<?php '.$generator->buildClasses ()."\n?>";
         jFile::write ($selector->getCompiledFilePath(), $compiled);
         return true;

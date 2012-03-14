@@ -117,7 +117,7 @@ class jDateTime {
     }
 
     /**
-     * checks if the current jDateTime object is a valid gregorian date/time
+     * Checks if the current jDateTime object is a valid gregorian date/time
      * @return bool true if the date/time are valid.
      */
     private function _check() {
@@ -148,7 +148,7 @@ class jDateTime {
     }
 
     /**
-     * convert the date to a string format
+     * Convert the date to a string format
      * @param int $format one of the class constant xxx_FORMAT, or -1 if it should use the default format
      * @return string the string date
      * @see jDateTime:$defaultFormat
@@ -200,15 +200,15 @@ class jDateTime {
                break;
            case self::FULL_LANG_DATE:
                $t = mktime ( $this->hour, $this->minute,$this->second , $this->month, $this->day, $this->year );
-               // traduction du mois
+               // month translation
                $month = jLocale::get('jelix~date_time.month.'.date('m',$t).'.label');
-               // traduction du jour
+               // day translation
                $day = jLocale::get('jelix~date_time.day.'.date('w',$t).'.label');
-               // récupération du formatage de la date
+               // get the date formatting
                $lf = jLocale::get('jelix~format.date_full');
-               // récupération du format ordinal du jour dans le mois surtout pour le format en anglais (1st, 2nd, 3rd et th pour les autres
+               // get the ordinal format of the day in the month especially for the English format (1st, 2nd, 3rd and th for the others)
                $ordinal = jLocale::get('jelix~date_time.day.'.$this->day.'.ordinal');
-               // on mets le tout dans le bon ordre à l'aide de la chaine de formatage
+               // put all this in the right order using the formatting string
                $str = sprintf($lf, $day, $this->day, $ordinal, $month, $this->year);
                break;
         }
@@ -361,8 +361,8 @@ class jDateTime {
                    $this->minute = intval($match['minute']);
                    $this->second = intval($match['second']);
 
-                   # Adjust according to the timezone, so that the stored time
-                   # corresponds to UTC.
+                   // Adjust according to the timezone, so that the stored time
+                   // corresponds to UTC.
                    $tz = new jDuration(array('hour'=>intval($match['tzhour']),
                        'minute'=>intval($match['tzminute'])));
                    if($match['tzsign'] == '+'){
@@ -459,7 +459,7 @@ class jDateTime {
     }
 
     /**
-     * compare two date
+     * Compare two date
      * @param jDateTime $dt the date to compare
      * @return integer -1 if $dt > $this, 0 if $dt = $this, 1 if $dt < $this
      */
@@ -475,7 +475,7 @@ class jDateTime {
     }
 
     /**
-    * set date to current datetime
+    * Set date to current datetime
     */
     public function now() {
         $this->year = intval(date('Y'));

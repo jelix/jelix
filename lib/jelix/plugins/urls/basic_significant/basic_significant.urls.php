@@ -96,10 +96,10 @@ class basic_significantUrlEngine extends simpleUrlEngine {
 
         $url = new jUrl($scriptName, $urlact->params, '');
 
-        // pour certains types de requete, les paramètres ne sont pas dans l'url
-        // donc on les supprime
-        // c'est un peu crade de faire ça en dur ici, mais ce serait lourdingue
-        // de charger la classe request pour savoir si on peut supprimer ou pas
+        // for some request types, parameters aren't in the url
+        // so we remove them
+        // it's a bit dirty to do that hardcoded here, but it would be a pain
+        // to load the request class to check whether we can remove or not
         if(in_array($urlact->requestType ,array('xmlrpc','jsonrpc','soap'))) {
 
             $url->clearParam();

@@ -9,9 +9,9 @@
 */
 $BUILD_OPTIONS = array(
 'MAIN_TARGET_PATH'=> array(
-    "main directory where sources will be copied",  // signification (false = option cachée)
-    '_dist',                                        // valeur par défaut (boolean = option booleene)
-    '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
+    "main directory where sources will be copied",  // meaning (false = hidden otion)
+    '_dist',                                        // default value (boolean = boolean option)
+    '',                                             // regexp for the value or empty=all (only for non-boolean options)
     ), 
 'PACKAGE_TAR_GZ'=>array(
     "create a tar.gz package",
@@ -36,7 +36,7 @@ $BUILD_OPTIONS = array(
 );
 include(dirname(__FILE__).'/lib/jBuild.inc.php');
 
-//----------------- Preparation des variables d'environnement
+//----------------- Prepare environment variables
 
 Env::setFromFile('VERSION','build/VERSION', true);
 $SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
@@ -60,12 +60,12 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
 }
 
 
-//----------------- Génération des sources
+//----------------- Source generation
 
-//... creation des repertoires
+//... directories creation
 jBuildUtils::createDir($BUILD_TARGET_PATH);
 
-//... execution des manifests
+//... manifests execution
 jManifest::process('build/manifests/jbuildtools.mn', 'build/', $BUILD_TARGET_PATH, ENV::getAll());
 
 

@@ -103,8 +103,8 @@ class jSelectorTpl extends jSelectorModule {
     }
 
     protected function _createCachePath(){
-       // on ne partage pas le même cache pour tous les emplacements possibles
-       // au cas où un overload était supprimé
+       // don't share the same cache for all the possible dirs
+       // in case of overload removal
        $this->_cachePath = jApp::tempPath('compiled/templates/'.$this->_where.'_'.$this->outputType.($this->trusted?'_t':'').$this->_cacheSuffix);
     }
 }
