@@ -27,8 +27,8 @@ class mysqlDbConnection extends jDbConnection {
     protected $_charsets =array( 'UTF-8'=>'utf8', 'ISO-8859-1'=>'latin1');
 
     function __construct($profile){
-        // à cause du @, on est obligé de tester l'existence de mysql, sinon en cas d'absence
-        // on a droit à un arret sans erreur
+        // because of the @, we need to test mysl existance, else there would be 
+        // a stop without error
         if(!function_exists('mysql_connect')){
             throw new jException('jelix~db.error.nofunction','mysql');
         }
@@ -36,7 +36,7 @@ class mysqlDbConnection extends jDbConnection {
     }
 
     /**
-     * enclose the field name
+     * Enclose the field name
      * @param string $fieldName the field name
      * @return string the enclosed field name
      * @since 1.1.1
@@ -46,7 +46,7 @@ class mysqlDbConnection extends jDbConnection {
     }
 
     /**
-    * begin a transaction
+    * Begin a transaction
     */
     public function beginTransaction (){
         $this->_doExec ('SET AUTOCOMMIT=0');
@@ -103,7 +103,7 @@ class mysqlDbConnection extends jDbConnection {
 
 
     protected function _doQuery ($query){
-        // ici et non lors du connect, pour le cas où il y a plusieurs connexion active
+        // here and not during the connect, in case there would be multiple active connections
         if(!mysql_select_db ($this->profile['database'], $this->_connection)){
             if(mysql_errno($this->_connection))
                 throw new jException('jelix~db.error.database.unknown',$this->profile['database']);

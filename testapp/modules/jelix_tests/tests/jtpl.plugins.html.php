@@ -16,7 +16,7 @@ class UTjtplplugins extends jUnitTestCase {
     protected $templates = array(
         0=>array(
             'test_plugin_jurl', // selecteur du template
-            '<p><a href="%BASEPATH%index.php?module=jelix_tests&amp;action=urlsig:url1">aaa</a></p>', // contenu généré
+            '<p><a href="%BASEPATH%index.php?module=jelix_tests&amp;action=urlsig:url1">aaa</a></p>', // generated content
         ),
         1=>array(
             'test_plugin_counter',
@@ -140,12 +140,12 @@ class UTjtplplugins extends jUnitTestCase {
 
 	function testTruncateHTML(){
 		$sentence = '<p>Lorem &nbsp; ipsum <strong>sit dolor<br /><br /> &nbsp; <img src="#longReference" alt="image" title="image" /><!-- This is a comment, it should not be included neither evaluated in the number of word we use for truncate --><div class="emphase">youhou ca marche</div></strong></p>';
-		foreach ( $this->truncateHTMLAssigns as $key=>$caracs ) {
+		foreach ( $this->truncateHTMLAssigns as $key=>$chars ) {
        		$tpl = new jTpl();
-       		$tpl->assign('cut',$caracs[0]);
-       		$tpl->assign('etc',$caracs[2] ? $caracs[2] : '...');
+       		$tpl->assign('cut',$chars[0]);
+       		$tpl->assign('etc',$chars[2] ? $chars[2] : '...');
        		$tpl->assign('sentence',$sentence);
-       		$this->assertEqualOrDiff('test => '.$key .'(cut '.$caracs[0].' ) :'.$tpl->fetch('test_truncate_html'),'test => '.$key .'(cut '.$caracs[0].' ) : '.$caracs[1],'testplugin['.$key.'], %s');
+       		$this->assertEqualOrDiff('test => '.$key .'(cut '.$chars[0].' ) :'.$tpl->fetch('test_truncate_html'),'test => '.$key .'(cut '.$chars[0].' ) : '.$chars[1],'testplugin['.$key.'], %s');
 		}
 		
 	}

@@ -37,12 +37,13 @@ class cleartempCommand extends JelixScriptCommand {
             jFile::removeDir($tempPath, false, array('.svn', '.dummy'));
         }
         catch (Exception $e) {
-            if($this->config->helpLang == 'fr')
+            if($this->config->helpLang == 'fr') {
                echo "Un ou plusieurs répertoires n'ont pas pu être supprimés.\n" .
                     "Message d'erreur : " . $e->getMessage()."\n";
-            else
+            } else {
                echo "One or more directories couldn't be deleted.\n" .
                     "Error: " . $e->getMessage()."\n";
+            }
         }
     }
 }

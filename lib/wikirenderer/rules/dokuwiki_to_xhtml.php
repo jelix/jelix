@@ -317,7 +317,7 @@ class dkxhtml_list extends WikiRendererBloc {
         $d=$t[0] - $newLen;
         $str='';
 
-        if( $d < 0 ){ // un niveau de plus
+        if( $d < 0 ){ // one more level
             $this->_stack[] = array($newLen ,  $this->_detectMatch[2]);
             $str=($this->_detectMatch[2] == '-'?"<ol><li>":"<ul><li>");
 
