@@ -5,11 +5,6 @@ cd lib/pdf-fonts
   aefurat.ctg.z
   aefurat.php
   aefurat.z
-  almohanad.ctg.z
-  almohanad.php
-  almohanad.z
-  arialunicid0.php
-  chinese.php
   cid0cs.php
   cid0ct.php
   cid0jp.php
@@ -165,9 +160,6 @@ cd lib/pdf-fonts
   uni2cid_aj16.php
   uni2cid_ak12.php
   zapfdingbats.php
-  zarbold.ctg.z
-  zarbold.php
-  zarbold.z
 cd lib/pdf-fonts/dejavu-fonts-ttf-2.33
   AUTHORS
   LICENSE
