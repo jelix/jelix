@@ -357,8 +357,8 @@ class pwdk_list extends PwDkBloc {
       $str = str_repeat("   ", $l).$c;
 
       if( $d > 0 ){ // on remonte d'un ou plusieurs cran dans la hierarchie...
-         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour etre sur...
-      }elseif( $d < 0 ){ // un niveau de plus
+         $this->_previousTag=substr($this->_previousTag,0,-$d); // to be sure...
+      }elseif( $d < 0 ){ // one more level
          $this->_previousTag .= $c;
       }
       $this->_firstItem=false;

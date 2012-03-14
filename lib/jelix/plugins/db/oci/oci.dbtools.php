@@ -187,8 +187,8 @@ class ociDbTools extends jDbTools {
     }
 
     /**
-    * récupère le nom de séquence correspondant à un champ auto_increment
-    * @return   string 
+    * Get the sequence name corresponding to an auto_increment field
+    * @return string the sequence name, empty if not found
     */
     function _getAISequenceName($tbName, $clName){
         if (isset($this->_conn->profile['sequence_AI_pattern']))

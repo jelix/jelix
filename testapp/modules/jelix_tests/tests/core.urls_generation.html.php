@@ -530,10 +530,10 @@ class UTCreateUrls extends UnitTestCase {
 
         /*
          parameters
-            $_SERVER['HTTPS'] ou non
-            $_SERVER['SERVER_NAME'] ou $gJConfig->domainName
-            given domainName ou pas
-            jelix_tests~urlsig:url3 (http) ou jelix_tests~urlsig:url8 (https)
+            $_SERVER['HTTPS'] or not
+            $_SERVER['SERVER_NAME'] ot $gJConfig->domainName
+            given domainName oor not
+            jelix_tests~urlsig:url3 (http) or jelix_tests~urlsig:url8 (https)
         */
 
         $_SERVER['SERVER_NAME'] = 'testapp.local';

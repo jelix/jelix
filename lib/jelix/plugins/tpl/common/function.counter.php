@@ -9,7 +9,7 @@
  */
 
 /**
- * function plugin :  Increment and print a counter on all call.
+ * function plugin : Increment and print a counter on all calls.
  *
  * <pre>{for $i=0;$i<10;$i++}{counter 'name', true}{/for}</pre>
  * @param jTpl $tpl The template
@@ -25,22 +25,22 @@ function jtpl_function_common_counter($tpl, $name = '', $print = true) {
     }
     if( !isset($tpl->_privateVars['counterArray'][$name]))
         $tpl->_privateVars['counterArray'][$name] = array( 'type' => '0', 'start' => 1, 'incr' => 1 );
-    /* On racourci la variable */
+    /* Shorten the variable */
     $in_use = &$tpl->_privateVars['counterArray'][$name];
         
-    /* Transforme le start alphabétique en numérique */
+    /* Transforms the alphabetic start into numeric one */
     if(is_string($in_use['start']) && ($in_use['type'] === 'aa' || $in_use['type'] === 'AA')) {
         $in_use['start'] = ord($in_use['start']);
     }
     
-    /* Adapte le code si counter dépasse Z/z ou devient inférieur a A/a */
+    /* Adapts the code if counter is more that Z/z or becomes less than A/a */
     if( ($in_use['type'] === 'aa' && ($in_use['start'] < ord('a') || $in_use['start'] > ord('z')) ) ||
         ($in_use['type'] === 'AA' && ($in_use['start'] < ord('A') || $in_use['start'] > ord('Z')) ) ){
         $in_use['type'] = '0';
         $in_use['start'] = 1;
     }
     
-    /* On affiche le compteur */
+    /* Display the counter */
     if($print) {
         if($in_use['type'] === 'aa' || $in_use['type'] === 'AA'){
             echo chr($in_use['start']);
@@ -55,7 +55,7 @@ function jtpl_function_common_counter($tpl, $name = '', $print = true) {
         }
     }
     
-    /* On incrémente le compteur */
+    /* Increment the counter */
     $in_use['start'] += $in_use['incr'];
 }
 

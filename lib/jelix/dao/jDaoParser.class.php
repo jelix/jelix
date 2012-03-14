@@ -164,7 +164,7 @@ class jDaoParser {
         if(count($infos['pk']) == 0 || $infos['pk'][0] == '')
             throw new jDaoXmlException ($this->selector, 'primarykey.missing');
 
-        if($typetable){ // pour les foreigntable et optionalforeigntable
+        if($typetable){ // for the foreigntable and optionalforeigntable
             if($infos['onforeignkey'] === null)
                 throw new jDaoXmlException ($this->selector, 'foreignkey.missing');
             $infos['fk']=preg_split("/[\s,]+/",$infos['onforeignkey']);
@@ -189,7 +189,7 @@ class jDaoParser {
     }
 
     /**
-    * try to read all given attributes
+    * Try to read all given attributes
     * @param SimpleXmlElement $tag
     * @param array $requiredattr attributes list
     * @return array attributes and their values

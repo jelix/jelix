@@ -245,9 +245,9 @@ class wr3dbk_list extends WikiRendererBloc {
             $str.=($t[$i-1]== '#'?"</listitem></orderedlist>\n":"</listitem></itemizedlist>\n");
          }
          $str.="</listitem>\n<listitem>";
-         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour �tre sur...
+         $this->_previousTag=substr($this->_previousTag,0,-$d); // to be sure...
 
-      }elseif( $d < 0 ){ // un niveau de plus
+      }elseif( $d < 0 ){ // oen more level
          $c=substr($this->_detectMatch[1],-1,1);
          $this->_previousTag.=$c;
          $str=($c == '#'?"<orderedlist><listitem>":"<itemizedlist><listitem>");
