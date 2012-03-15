@@ -28,7 +28,7 @@
 
 #if ENABLE_PHP_JELIX
 if(!function_exists('jelix_version')){
-    die('this edition of Jelix needs jelix php extension.');
+    die('This edition of Jelix needs Jelix PHP extension.');
 }
 #endif
 
@@ -163,7 +163,7 @@ $gJCoord = null;
 $gJConfig = null;
 
 /**
- * contains path for __autoload function
+ * Contains path for __autoload function
  * @global array $gLibPath
  * @name $gLibPath
  * @see __autoload()
@@ -175,7 +175,7 @@ $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  'KV'=>JELIX_LIB_PATH.'kvdb/', 'Pref'=>JELIX_LIB_PATH.'pref/');
 
 /**
- * function used by php to try to load an unknown class
+ * Function used by PHP to try to load an unknown class
  */
 function jelix_autoload($class) {
     if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV|Pref).*/i', $class, $m)){
@@ -214,9 +214,9 @@ function jelix_autoload($class) {
 spl_autoload_register("jelix_autoload");
 
 /**
- * check if the application is opened. If not, it displays the yourapp/install/closed.html
- * file with a http error (or lib/jelix/installer/closed.html), and exit.
- * This function should be called in all entry point, before the creation of the coordinator.
+ * Check if the application is opened. If not, it displays the yourapp/install/closed.html
+ * file with a HTTP error (or lib/jelix/installer/closed.html), and exit.
+ * This function should be called in all entry points, before the creation of the coordinator.
  * @see jAppManager
  * @todo migrate the code to jAppManager or jApp
  */
@@ -231,7 +231,7 @@ function checkAppOpened() {
         $message = file_get_contents(jApp::configPath('CLOSED'));
 
         if (jServer::isCLI()) {
-            echo "Application closed.". ($message?"\n$message\n":"\n");
+            echo "Application closed." . ($message?"\n$message\n":"\n");
             exit(1);
         }
 
@@ -249,7 +249,7 @@ function checkAppOpened() {
 }
 
 /**
- * check if the application is not installed. If the app is installed, an
+ * Check if the application is not installed. If the app is installed, an
  * error message appears and the scripts ends.
  * It should be called only by some scripts
  * like an installation wizard, not by an entry point.
@@ -258,12 +258,12 @@ function checkAppOpened() {
 function checkAppNotInstalled() {
     if (isAppInstalled()) {
          if (jServer::isCLI()) {
-            echo "Application is installed. The script cannot be runned.\n";
+            echo "Application is already installed. The script cannot be run.\n";
         }
         else {
             header("HTTP/1.1 500 Application not available");
             header('Content-type: text/plain');
-            echo "Application is installed. The script cannot be runned.\n";
+            echo "Application is already installed. The script cannot be run.\n";
         }
         exit(1);
     }
