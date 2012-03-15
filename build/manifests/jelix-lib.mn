@@ -490,6 +490,13 @@ cd lib/jelix/plugins/db/mysql
   mysql.dbtools.php
   mysql.daobuilder.php
 
+cd lib/jelix/plugins/db/mysqli
+  mysqli.dbconnection.php
+  mysqli.dbresultset.php
+  mysqli.dbschema.php
+  mysqli.dbtools.php
+  mysqli.daobuilder.php
+
 cd lib/jelix/plugins/db/pgsql
   pgsql.dbconnection.php
   pgsql.dbresultset.php
