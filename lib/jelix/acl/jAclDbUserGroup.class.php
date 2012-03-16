@@ -24,7 +24,7 @@ class jAclDbUserGroup {
     private function __construct (){ }
 
     /**
-     * Says if the current user is a member of the given user group
+     * Indicates if the current user is a member of the given user group
      * @param int $groupid The id of a group
      * @return boolean true if it's ok
      * @since 1.0b3
@@ -35,7 +35,7 @@ class jAclDbUserGroup {
     }
 
     /**
-     * retrieve the list of group the current user is member of
+     * Retrieve the list of group the current user is member of
      * @return array list of group id
      * @since 1.0b3
      */
@@ -45,7 +45,7 @@ class jAclDbUserGroup {
         if(!jAuth::isConnected())
             return array();
 
-        // chargement des groupes
+        // load the groups
         if($groups === null){
             $dao = jDao::get('jacldb~jaclusergroup', 'jacl_profile');
             $gp = $dao->getGroupsUser(jAuth::getUserSession()->login);
@@ -83,7 +83,7 @@ class jAclDbUserGroup {
         $usergrp = jDao::createRecord('jacldb~jaclusergroup','jacl_profile');
         $usergrp->login =$login;
 
-        // si $defaultGroup -> assign le user aux groupes par defaut
+        // if $defaultGroup -> assign the user to the default group(s)
         if($defaultGroup){
             $defgrp = $daogroup->getDefaultGroups();
             foreach($defgrp as $group){
@@ -92,7 +92,7 @@ class jAclDbUserGroup {
             }
         }
 
-        // creation d'un groupe personnel
+        // create a personal group
         $persgrp = jDao::createRecord('jacldb~jaclgroup','jacl_profile');
         $persgrp->name = $login;
         $persgrp->grouptype = 2;

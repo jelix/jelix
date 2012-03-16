@@ -36,7 +36,7 @@ class jAcl2DbManager {
 
         if($resource === null) $resource='';
 
-        //  ajoute la nouvelle valeur
+        //  add the new value
         $daoright = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
         $right = $daoright->get($subject,$group,$resource);
         if(!$right){
@@ -166,7 +166,7 @@ class jAcl2DbManager {
     }
 
     /**
-     * create a new subject group
+     * Create a new subject group
      * @param string  $subjectGroup the key of the subject group
      * @param string $label_key the key of a locale which represents the label of the subject group
      * @since 1.3

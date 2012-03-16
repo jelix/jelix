@@ -17,7 +17,7 @@
 interface jIAcl2Driver {
 
     /**
-     * return the possible values of the right on the given subject (and on the optional resource)
+     * Return the possible values of the right on the given subject (and on the optional resource)
      * @param string $subject the key of the subject
      * @param string $resource the id of a resource
      * @return array list of values corresponding to the right
@@ -25,7 +25,7 @@ interface jIAcl2Driver {
     public function getRight($subject, $resource=null);
 
     /**
-     * clear some cached data, it a cache exists in the driver..
+     * Clear some cached data, it a cache exists in the driver..
      */
     public function clearCache();
 

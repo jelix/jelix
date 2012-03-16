@@ -27,7 +27,7 @@ class jAcl2DbUserGroup {
     private function __construct (){ }
 
     /**
-     * Says if the current user is a member of the given user group
+     * Indicates if the current user is a member of the given user group
      * @param string $groupid The id of a group
      * @return boolean true if it's ok
      */
@@ -38,7 +38,7 @@ class jAcl2DbUserGroup {
     protected static $groups = null;
 
     /**
-     * retrieve the list of group the current user is member of
+     * Retrieve the list of group the current user is member of
      * @return array list of group id
      */
     public static function getGroups(){
@@ -61,7 +61,7 @@ class jAcl2DbUserGroup {
     }
 
     /**
-     * get the private group for the current user or for the given login
+     * Get the private group for the current user or for the given login
      * @param string $login The user's login
      * @return string the id of the private group
      * @since 1.2
@@ -76,7 +76,7 @@ class jAcl2DbUserGroup {
     }
 
     /**
-     * get a group
+     * Get a group
      * @param string $code The code
      * @return jacl2group|false the dao object r false if it doesn't exist
      * @since 1.2
@@ -131,7 +131,7 @@ class jAcl2DbUserGroup {
     }
 
     /**
-     * add a user into a group
+     * Add a user into a group
      *
      * (a user can be a member of several groups)
      * @param string $login the user login
@@ -147,7 +147,7 @@ class jAcl2DbUserGroup {
     }
 
     /**
-     * remove a user from a group
+     * Remove a user from a group
      * @param string $login the user login
      * @param string $groupid the group id
      */

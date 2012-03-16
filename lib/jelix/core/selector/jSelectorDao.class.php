@@ -48,14 +48,14 @@ class jSelectorDao extends jSelectorModule {
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
 
-        // on regarde si le dao a été redéfini
+        // check if the dao was redefined (overloaded)
         $overloadedPath = jApp::varPath('overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix);
         if (is_readable ($overloadedPath)){
            $this->_path = $overloadedPath;
            $this->_where = 'overloaded/';
            return;
         }
-        // et sinon, on regarde si le dao existe dans le module en question
+        // else check if the module exists in the current module
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
 
         if (!is_readable ($this->_path)){
