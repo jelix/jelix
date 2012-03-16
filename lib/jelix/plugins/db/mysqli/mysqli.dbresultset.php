@@ -4,7 +4,9 @@
 * @subpackage db_driver
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
+* @contributor Florian Lonqueu-Brochard
 * @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
+* @copyright  2012 Florian Lonqueu-Brochard
 * This class was get originally from the Copix project (CopixDbResultsetMysql, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,

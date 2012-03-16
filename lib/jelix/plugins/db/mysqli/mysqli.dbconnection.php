@@ -5,8 +5,10 @@
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Sylvain de Vathaire, Julien Issler
+* @contributor Florian Lonqueu-Brochard
 * @copyright  2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau
 * @copyright  2009 Julien Issler
+* @copyright  2012 Florian Lonqueu-Brochard
 * This class was get originally from the Copix project (CopixDbConnectionMysql, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -29,7 +31,7 @@ class mysqliDbConnection extends jDbConnection {
     function __construct($profile){
         // à cause du @, on est obligé de tester l'existence de mysql, sinon en cas d'absence
         // on a droit à un arret sans erreur
-        if(!function_exists('mysql_connect')){
+        if(!function_exists('mysqli_connect')){
             throw new jException('jelix~db.error.nofunction','mysql');
         }
         parent::__construct($profile);
@@ -110,19 +112,6 @@ class mysqliDbConnection extends jDbConnection {
 
 
     protected function _doQuery ($query){
-
-
-        // ici et non lors du connect, pour le cas où il y a plusieurs connexion active
-
-        /* TODO : doit-on le faire ici ?
-        if(!mysql_select_db ($this->profile['database'], $this->_connection)){
-            if(mysql_errno($this->_connection))
-                throw new jException('jelix~db.error.database.unknown',$this->profile['database']);
-            else
-                throw new jException('jelix~db.error.connection.closed',$this->profile['name']);
-        }*/
-
-        
         if ($qI = $this->_connection->query($query)){
             return new mysqliDbResultSet ($qI);
         }else{
@@ -131,12 +120,7 @@ class mysqliDbConnection extends jDbConnection {
     }
 
     protected function _doExec($query){
-        /* TODO : pareil que pour _doQuery
-        if(!mysql_select_db ($this->profile['database'], $this->_connection))
-            throw new jException('jelix~db.error.database.unknown',$this->profile['database']);
-        */
-
-        if ($qI = mysql_query ($query, $this->_connection)){
+        if ($qI = $this->_connection->query($query)){
             return $this->_connection->affected_rows;
         }else{
             throw new jException('jelix~db.error.query.bad',  $this->_connection->error.'('.$query.')');
@@ -197,6 +181,21 @@ class mysqliDbConnection extends jDbConnection {
      * @see PDO::setAttribute()
      */
     public function setAttribute($id, $value) {
+    }
+
+
+    /**
+     * Execute several sql queries
+     */
+    public function exec_multi($queries){
+        $query_res = $this->_connection->multi_query($queries);
+        while($this->_connection->more_results()){
+            $this->_connection->next_result();
+            if($discard = $this->_connection->store_result()){
+                $discard->free();
+            }
+        }
+        return $query_res;
     }
 
 }
