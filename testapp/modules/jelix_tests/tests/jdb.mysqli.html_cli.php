@@ -66,9 +66,49 @@ class UTjDbMysqli extends jUnitTestCaseDb {
         $queries = "INSERT INTO `labels_test` (`key`,`lang` ,`label`) VALUES ('12', 'fr', 'test1');";
         $queries .= "INSERT INTO `labels_test` (`key`,`lang` ,`label`) VALUES ('24', 'en', 'test2');";
 
-        $res = $cnx->exec_multi($queries);
+        $res = $cnx->execMulti($queries);
         $this->assertTrue($res);
         $this->assertTableHasNRecords('labels_test', 2);
+    }
+
+
+    function testPreparedQueries(){
+        $this->assertTableIsEmpty('labels_test');
+        $cnx = jDb::getConnection($this->dbProfile);
+
+        //INSERT
+        $stmt = $cnx->prepare('INSERT INTO `labels_test` (`key`,`lang` ,`label`) VALUES (?, ?, ?)');
+        $this->assertTrue($stmt instanceof mysqliDbStatement);
+
+        $key = 11; $lang = 'fr'; $label = "France";
+        $bind = $stmt->bindParam('iss', $key, $lang, $label);
+        $this->assertTrue($bind);
+        $res = $stmt->execute();
+
+        $key = 15; $lang = 'fr'; $label = "test";
+        $bind = $stmt->bindParam('iss', $key, $lang, $label);
+        $this->assertTrue($bind);
+        $res = $stmt->execute();
+
+        $key = 22; $lang = 'en'; $label = "test2";
+        $bind = $stmt->bindParam('iss', $key, $lang, $label);
+        $this->assertTrue($bind);
+        $res = $stmt->execute();
+
+        $this->assertTableHasNRecords('labels_test', 3);
+        $stmt = null;
+
+
+        //SELECT
+        $stmt = $cnx->prepare('SELECT * FROM labels_test WHERE lang = ?');
+        $this->assertTrue($stmt instanceof mysqliDbStatement);
+        $lang = 'fr';
+        $bind = $stmt->bindParam('s', $lang);
+        $this->assertTrue($bind);
+
+        $res = $stmt->execute();
+        $this->assertTrue($res instanceof mysqliDbResultSet);
+        $this->assertEqual($res->rowCount(), 2);
     }
 
 

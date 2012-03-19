@@ -9,15 +9,11 @@
 * @copyright  2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau
 * @copyright  2009 Julien Issler
 * @copyright  2012 Florian Lonqueu-Brochard
-* This class was get originally from the Copix project (CopixDbConnectionMysql, Copix 2.3dev20050901, http://www.copix.org)
-* Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
-* Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
-* and this class was adapted for Jelix by Laurent Jouanneau
-*
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 require_once(dirname(__FILE__).'/mysqli.dbresultset.php');
+require_once(dirname(__FILE__).'/mysqli.dbstatement.php');
 
 /**
  *
@@ -76,7 +72,7 @@ class mysqliDbConnection extends jDbConnection {
     public function prepare ($query){
         $res = $this->_connection->prepare($query);
         if($res){
-            $rs= new mysqliDbResultSet ($res);
+            $rs= new mysqliDbStatement($res);
         }else{
             throw new jException('jelix~db.error.query.bad',  $this->_connection->error.'('.$query.')');
         }
@@ -187,7 +183,7 @@ class mysqliDbConnection extends jDbConnection {
     /**
      * Execute several sql queries
      */
-    public function exec_multi($queries){
+    public function execMulti($queries){
         $query_res = $this->_connection->multi_query($queries);
         while($this->_connection->more_results()){
             $this->_connection->next_result();
