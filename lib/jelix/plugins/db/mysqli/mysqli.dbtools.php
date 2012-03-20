@@ -28,7 +28,7 @@ class mysqliDbTools extends mysqlDbTools {
         else
             $prefix = $this->_conn->profile['table_prefix'];
         $sqlQueries = str_replace('%%PREFIX%%', $prefix, file_get_contents($file));
-        return $this->_conn->exec_multiple($sqlQueries);
+        return $this->_conn->execMulti($sqlQueries);
     }
 
 }
