@@ -31,7 +31,7 @@ class jXmlRpcRequest extends jRequest {
     public $authorizedResponseClass = 'jResponseXmlrpc';
 
     /**
-     * analyse the http request and set the params property
+     * Analyze the HTTP request and set the params property
      */
     protected function _initParams(){
         global $HTTP_RAW_POST_DATA;
@@ -42,7 +42,7 @@ class jXmlRpcRequest extends jRequest {
             $requestXml = implode("\n",$requestXml);
         }
 
-        // Décodage de la requete
+        // Decode the request
         list($nom,$vars) = jXmlRpc::decodeRequest($requestXml);
         list($module, $action) = explode(':',$nom,2);
 
@@ -51,7 +51,7 @@ class jXmlRpcRequest extends jRequest {
 
         $this->params['params'] = $vars;
 
-        // Définition de l'action a executer et des paramètres
+        // Definition of action to use and its parameters
         $this->params['module'] = $module;
         $this->params['action'] = $action;
     }

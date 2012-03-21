@@ -91,11 +91,11 @@ class intuitionDbConnection extends jDbConnection {
     }
 
     protected function _doQuery ($queryString){
-        // Avant tout, on enlève les retours-chariots
+        // Remove the carriage returns before anything
         
         $queryString = str_replace (array ("\n", "\r"), " ", $queryString);  
         
-        // Exécution de la requète 
+        // Query execution 
         
         $queryResult = $this->_connection->in_query ($queryString);
         
@@ -119,11 +119,11 @@ class intuitionDbConnection extends jDbConnection {
     }
 	
     protected function _doExec ($query){
-        // Avant tout, on enlève les retours-chariots
+        // Remove the carriage returns before anything
         
         $queryString = str_replace (array ("\n", "\r"), " ", $queryString);  
         
-        // Exécution de la requète 
+        // Query execution
         
         $queryResult = $this->_connection->in_query ($queryString);
         

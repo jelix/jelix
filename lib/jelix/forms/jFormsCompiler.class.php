@@ -14,7 +14,7 @@
 */
 
 /**
- * generates form class from an xml file describing the form
+ * Generates form class from an xml file describing the form
  * @package     jelix
  * @subpackage  forms
  */
@@ -29,7 +29,7 @@ class jFormsCompiler implements jISimpleCompiler {
 
         $this->sourceFile = $selector->getPath();
 
-        // chargement du fichier XML
+        // load XML file
         $doc = new DOMDocument();
 
         if(!$doc->load($this->sourceFile)){
