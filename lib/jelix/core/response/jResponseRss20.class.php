@@ -118,8 +118,8 @@ class jRSS20Info extends jXMLFeedInfo{
      * not implemented
      * @var string
      */
-    public $cloud; // indique un webservice par lequel le client peut s'enregistrer auprés du serveur
-                  // pour être tenu au courant des modifs
+    public $cloud; // indicates a webservice from which the user can register to the server
+                  // to be aware of modifications
                   //=array('domain'=>'','path'=>'','port'=>'','registerProcedure'=>'', 'protocol'=>'');
     /**
      * time to live of the cache, in minutes

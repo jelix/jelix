@@ -586,7 +586,7 @@ class jTplCompiler
         $bracketcount = $sqbracketcount = 0;
         $firstok = array_shift($tokens);
 
-        // il y a un bug, parfois le premier token n'est pas T_OPEN_TAG...
+        // there is a bug, sometimes the first token isn't T_OPEN_TAG...
         if ($firstok == '<' && $tokens[0] == '?' && is_array($tokens[1])
             && $tokens[1][0] == T_STRING && $tokens[1][1] == 'php') {
             array_shift($tokens);
@@ -711,7 +711,7 @@ class jTplCompiler
     }
 
     /**
-     * try to find a plugin
+     * Try to find a plugin
      * @param string $type type of plugin (function, modifier...)
      * @param string $name the plugin name
      * @return array|boolean an array containing the path of the plugin

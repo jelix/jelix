@@ -58,13 +58,13 @@ class jSelectorTpl extends jSelectorModule {
         $lpath = $this->module.'/'.$gJConfig->locale.'/'.$this->resource;
 
         if($gJConfig->theme != 'default'){
-            // on regarde si il y a un template redéfinie pour le theme courant
+            // check if there is a redefined template for the current theme
             $this->_where = 'themes/'.$gJConfig->theme.'/'.$lpath;
             $this->_path = jApp::varPath($this->_where.'.tpl');
             if (is_readable ($this->_path)){
                 return;
             }
-            // on regarde si il y a un template redéfinie pour le theme courant
+            // check if there is a redefined template for the current localized theme
             $this->_where = 'themes/'.$gJConfig->theme.'/'.$path;
             $this->_path = jApp::varPath($this->_where.'.tpl');
             if (is_readable ($this->_path)){
@@ -72,7 +72,7 @@ class jSelectorTpl extends jSelectorModule {
             }
         }
 
-        // on regarde si il y a un template redéfinie dans le theme par defaut
+       // check if there is a redefined template for the default theme
         $this->_where = 'themes/default/'.$lpath;
         $this->_path = jApp::varPath($this->_where.'.tpl');
         if (is_readable ($this->_path)){
@@ -85,7 +85,7 @@ class jSelectorTpl extends jSelectorModule {
             return;
         }
 
-        // et sinon, on regarde si le template existe dans le module en question
+        // else check if the template exists in the current module
         $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$gJConfig->locale.'/'.$this->resource.'.tpl';
         if (is_readable ($this->_path)){
             $this->_where = 'modules/'.$lpath;

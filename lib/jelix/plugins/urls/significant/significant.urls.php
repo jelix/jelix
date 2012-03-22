@@ -118,7 +118,7 @@ class significantUrlEngine implements jIUrlEngine {
             $file = jApp::tempPath('compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php');
             if (file_exists($file)) {
                 require($file);
-                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 99
+                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // given by jIncluder line 99
                 $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
                 $isHttps = ($request->getProtocol() == 'https://');
                 return $this->_parse($request->urlScript, $request->urlPathInfo, $params, $isHttps);
@@ -158,7 +158,7 @@ class significantUrlEngine implements jIUrlEngine {
             $file = jApp::tempPath('compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php');
             if (file_exists($file)) {
                 require($file);
-                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 127
+                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // given by jIncluder line 127
                 $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
                 return $this->_parse($scriptNamePath, $pathinfo, $params, false);
             }
