@@ -5,6 +5,7 @@
 * @author      Christophe Thiriot
 * @contributor Laurent Jouanneau
 * @copyright   2008 Christophe Thiriot, 2008-2010 Laurent Jouanneau
+* @copyright   2012 Luc Guyon
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -101,8 +102,12 @@ class jResponseCmdline extends jResponse {
      */
     public function outputErrors(){
         $this->flushContent();
-        foreach(jApp::coord()->allErrorMessages as $msg)
-            fwrite(STDERR, $msg->getFormatedMessage()."\n");
+        foreach(jApp::coord()->allErrorMessages as $msg) {
+            if (defined('STDERR')) 
+                fwrite(STDERR, $msg->getFormatedMessage()."\n");
+            else
+                jLog::log($msg->getFormatedMessage(),"error");
+        }
         $this->setExitCode(self::EXIT_CODE_ERROR);
     }
 
