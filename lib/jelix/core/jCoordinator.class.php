@@ -229,7 +229,7 @@ class jCoordinator {
         $ctrl = new $class($this->request);
         if($ctrl instanceof jIRestController){
             $method = $selector->method = strtolower($_SERVER['REQUEST_METHOD']);
-        }elseif(!method_exists($ctrl, $selector->method)){
+        }elseif(!is_callable($ctrl, $selector->method)){
             throw new jException('jelix~errors.ad.controller.method.unknown',array($this->actionName, $selector->method, $class, $ctrlpath));
         }
         return $ctrl;
