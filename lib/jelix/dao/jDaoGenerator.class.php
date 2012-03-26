@@ -12,6 +12,7 @@
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
 * and this class was rewrited for Jelix by Laurent Jouanneau
+* @copyright  2012 Luc Guyon
 *
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -390,7 +391,7 @@ class jDaoGenerator {
             $glueCondition =' WHERE ';
             switch($method->type){
                 case 'delete':
-                    $this->buildDeleteUserQuery($method, $src, $primaryFields);
+                    $this->buildDeleteUserQuery($method, $src, $allField);
                     break;
                 case 'update':
                     $this->buildUpdateUserQuery($method, $src, $primaryFields);
@@ -463,10 +464,10 @@ class jDaoGenerator {
      *
      */
     protected function buildDeleteUserQuery($method, &$src, &$primaryFields) {
-        $src[] = '    $__query = \'DELETE FROM '.$this->tableRealNameEsc.' \';';
+        $src[] = '    $__query = \'DELETE '.$this->tableRealNameEsc.' \'.$this->_fromClause;';
         $cond = $method->getConditions();
         if($cond !== null) {
-            $sqlCond = $this->buildConditions($cond, $primaryFields, $method->getParameters(), false);
+            $sqlCond = $this->buildConditions($cond, $primaryFields, $method->getParameters(), true);
             if(trim($sqlCond) != '')
                 $src[] = '$__query .=\' WHERE '.$sqlCond."';";
         }
