@@ -167,7 +167,7 @@ class ociDbTools extends jDbTools {
                     $sequence = $this->_getAISequenceName($tableName, $field->name);
                 if ($sequence != '') {
                     $sqlai = "SELECT 'Y' FROM USER_SEQUENCES US
-                                WHERE US.SEQUENCE_NAME = '".$sequence."'";
+                                WHERE LOWER(US.SEQUENCE_NAME) = LOWER('".$sequence."')";
                     $rsai = $this->_conn->query ($sqlai);
                     if ($this->_conn->query($sqlai)->fetch()){
                         $field->autoIncrement  = true;
