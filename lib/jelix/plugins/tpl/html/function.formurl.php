@@ -18,7 +18,7 @@
  */
 function jtpl_function_html_formurl($tpl, $selector, $params=array())
 {
-    $url = jUrl::get($selector, $params, 2); // retourne le jurl correspondant
+    $url = jUrl::get($selector, $params, 2); // returns the corresponding jurl
     echo $url->getPath();
     
     $tpl->_privateVars['_formurl'] = $url;

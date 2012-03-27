@@ -93,7 +93,7 @@ class jUnitTestCase extends UnitTestCase {
     function assertComplexIdentical($value, $file, $errormessage=''){
         $xml = simplexml_load_file($file);
         if(!$xml){
-            trigger_error('Impossible de charger le fichier '.$file,E_USER_ERROR);
+            trigger_error('Impossible to load file '.$file,E_USER_ERROR);
             return false;
         }
         return $this->_checkIdentical($xml, $value, '$value', $errormessage);
@@ -102,7 +102,7 @@ class jUnitTestCase extends UnitTestCase {
     function assertComplexIdenticalStr($value, $string, $errormessage=''){
         $xml = simplexml_load_string($string);
         if(!$xml){
-            trigger_error('mauvais contenu xml '.$string,E_USER_ERROR);
+            trigger_error('wrong xml content '.$string,E_USER_ERROR);
             return false;
         }
         if($errormessage != '')

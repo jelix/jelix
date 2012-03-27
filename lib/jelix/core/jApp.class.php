@@ -157,7 +157,7 @@ class jApp {
      * Load the configuration from the given file.
      *
      * Call it after initPaths
-     * @param  string $configFile name of the ini file to configure the framework
+     * @param  string|object $configFile name of the ini file to configure the framework or a configuration object
      * @param  boolean $enableErrorHandler enable the error handler of jelix.
      *                 keep it to true, unless you have something to debug
      *                 and really have to use the default handler or an other handler
@@ -166,7 +166,10 @@ class jApp {
         if ($enableErrorHandler) {
             jBasicErrorHandler::register();
         }
-        self::setConfig(jConfig::load($configFile));
+        if (is_object($configFile))
+            self::setConfig($configFile);
+        else
+            self::setConfig(jConfig::load($configFile));
         self::$_config->enableErrorHandler = $enableErrorHandler;
     }
 

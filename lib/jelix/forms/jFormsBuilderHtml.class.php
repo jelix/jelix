@@ -121,7 +121,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             $urlParams = $this->_actionParams;
             $attrs['action'] = $this->_action;
         } else {
-            $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
+            $url = jUrl::get($this->_action, $this->_actionParams, 2); // returns the corresponding jurl
             $urlParams = $url->params;
             $attrs['action'] = $url->getPath();
         }

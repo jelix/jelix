@@ -66,7 +66,7 @@ class jCoordinator {
     protected $errorMessage = null;
 
     /**
-     * @param  string $configFile name of the ini file to configure the framework
+     * @param  string|object $config filename of the ini file to configure the framework, or the config object itself
      *              this parameter is optional if jApp::loadConfig has been already called
      * @param  boolean $enableErrorHandler enable the error handler of jelix.
      *                 keep it to true, unless you have something to debug

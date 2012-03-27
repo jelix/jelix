@@ -25,13 +25,13 @@ function jtpl_function_common_counter_init($tpl, $name = '', $type = '0', $start
     if( empty($name) && $name !== '0')
         $name = 'default';
     
-    /* On réinitialise le compteur et on ajoute les variables données */
+    /* Reinitalize the conter and add the given variables */
     $tpl->_privateVars['counterArray'][$name] = array( 'type' => $type, 'start' => $start, 'incr' => $incr );
     
-    /* On racourci la variable */
+    /* Truncate the variable */
     $in_use = &$tpl->_privateVars['counterArray'][$name];
     
-    /* Adapte le nombre au type (pas toujours nécessaire) */
+    /* Adapt the number to the type (not always necessary) */
     if( !is_string($in_use['start']) )
     {
         if( $in_use['type'] === 'aa' )

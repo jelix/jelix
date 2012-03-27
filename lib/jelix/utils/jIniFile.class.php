@@ -56,9 +56,8 @@ class jIniFile {
             fwrite($f, $header.$result);
             fclose($f);
         } else {
-            // jIniFile is used by the config compiler. In this case, the configuration
-            // does not exist yet, and so we musn't use jException since jLocale
-            // cannot be used
+            // jIniFile is used by the configs compiler. There is no configuration
+            // object in that case. we need to generate an error without using jLocale
             if(jApp::config()){
                 throw new jException('jelix~errors.inifile.write.error', array ($filename));
             }else{
