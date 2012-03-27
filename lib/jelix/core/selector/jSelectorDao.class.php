@@ -20,6 +20,7 @@
 class jSelectorDao extends jSelectorModule {
     protected $type = 'dao';
     public $driver;
+    public $isPdo = false;
     protected $_dirname = 'daos/';
     protected $_suffix = '.dao.xml';
     protected $_where;
@@ -29,6 +30,7 @@ class jSelectorDao extends jSelectorModule {
             $p = jProfiles::get('jdb', $driver);
             if ($p['driver'] == 'pdo') {
                 $this->driver = substr($p['dsn'], 0, strpos($p['dsn'],':'));
+                $this->isPdo = true;
             }
             else {
                 $this->driver = $p['driver'];

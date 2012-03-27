@@ -64,4 +64,12 @@ class ociDaoBuilder extends jDaoGenerator {
         return '          $record->'.$pkai->name.'= $this->_conn->query(\'SELECT '.$pkai->sequenceName.'.currval as '.$pkai->name.' from dual\')->fetch()->'.$pkai->name.';';
     }
 
+    /**
+     * build the insert() method in the final class
+     * @return string the source of the method
+     */
+    protected function buildInsertMethod($pkFields) {
+        return parent::buildInsertMethod($pkFields);
+    }
+
 }

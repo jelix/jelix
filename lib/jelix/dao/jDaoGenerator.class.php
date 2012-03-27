@@ -59,6 +59,11 @@ class jDaoGenerator {
     protected $_dbType;
 
     /**
+     * whether we're using PDO or not
+     */
+    protected $_isPdo;
+
+    /**
      * the real name of the main table
      */
     protected $tableRealName = '';
@@ -83,6 +88,7 @@ class jDaoGenerator {
         $this->_daoId = $selector->toString();
         $this->_daoPath = $selector->getPath();
         $this->_dbType = $selector->driver;
+        $this->_isPdo = $selector->isPdo;
         $this->_dataParser = $daoParser;
         $this->_DaoClassName = $selector->getDaoClass();
         $this->_DaoRecordClassName = $selector->getDaoRecordClass();
