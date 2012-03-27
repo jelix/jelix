@@ -3,11 +3,11 @@
 * @package      jelix
 * @subpackage   core
 * @author       Laurent Jouanneau
-* @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin
+* @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin, Flav
 * @copyright    2005-2012 laurent Jouanneau
 * @copyright    2007 Thibault Piront
 * @copyright    2008 Julien Issler
-* @copyright    2008-2010 Dominique Papin
+* @copyright    2008-2010 Dominique Papin, 2012 Flav
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -229,7 +229,7 @@ class jCoordinator {
         $ctrl = new $class($this->request);
         if($ctrl instanceof jIRestController){
             $method = $selector->method = strtolower($_SERVER['REQUEST_METHOD']);
-        }elseif(!method_exists($ctrl, $selector->method)){
+        }elseif(!is_callable(array($ctrl, $selector->method))){
             throw new jException('jelix~errors.ad.controller.method.unknown',array($this->actionName, $selector->method, $class, $ctrlpath));
         }
         return $ctrl;

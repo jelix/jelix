@@ -84,6 +84,9 @@ Gildas Givaja (aka Giviz)
  - testor, bug fixes
  - bug fix in jXmlRpc.class.php (#192)
 
+Flav
+ - allow to implements methods in controllers with __call (#1448)
+
 Frédéric Guillot (aka fg)
  - patch for multiple authentification in a same session (#207)
  - bug fixes in support of XML-RPC request and response
