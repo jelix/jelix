@@ -72,12 +72,12 @@ class jCoordinator {
     protected $errorMessage = null;
 
     /**
-     * @param  string $configFile name of the ini file to configure the framework
+     * @param  string|object $config filename of the ini file to configure the framework, or the config object itself
      * @param  boolean $enableErrorHandler enable the error handler of jelix.
      *                 keep it to true, unless you have something to debug
      *                 and really have to use the default handler or an other handler
      */
-    function __construct ($configFile, $enableErrorHandler=true) {
+    function __construct ($config, $enableErrorHandler=true) {
         global $gJCoord, $gJConfig;
 
         // temporary init. Remove this line when JELIX_APP_* support will be removed completely from Jelix
@@ -91,7 +91,10 @@ class jCoordinator {
         }
 
         // load configuration data
-        $gJConfig = jConfig::load($configFile);
+        if (is_string($config))
+            $gJConfig = jConfig::load($config);
+        else
+            $gJConfig = $config;
 
         date_default_timezone_set($gJConfig->timeZone);
 
