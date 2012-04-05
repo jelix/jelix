@@ -338,7 +338,7 @@ abstract class jRequest {
       } else {
          $port = $_SERVER['SERVER_PORT'];
       }
-      if (($https && $port == '443' ) || (!$https && $port == '80' ))
+      if (($port === NULL) || ($port == '') || ($https && $port == '443' ) || (!$https && $port == '80' ))
          return '';
       return ':'.$port;
    }
