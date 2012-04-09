@@ -6,7 +6,7 @@
  * @subpackage wr3_to_text
  * @author Laurent Jouanneau
  * @copyright 2003-2010 Laurent Jouanneau
- * @link http://wikirenderer.berlios.de
+ * @link http://wikirenderer.jelix.org
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public 2.1

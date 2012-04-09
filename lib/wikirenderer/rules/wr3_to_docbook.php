@@ -6,7 +6,7 @@
  * @subpackage rules
  * @author Laurent Jouanneau
  * @copyright 2003-2010 Laurent Jouanneau
- * @link http://wikirenderer.berlios.de
+ * @link http://wikirenderer.jelix.org
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public 2.1
@@ -144,7 +144,7 @@ class wr3dbk_link extends WikiTagXhtml {
         $cntattr=count($this->attribute);
         $cnt=($this->separatorCount + 1 > $cntattr?$cntattr:$this->separatorCount+1);
         if($cnt == 1 ){
-            $contents = $this->wikiContentArr[0];
+            $contents = $this->config->processLink($this->wikiContentArr[0], $this->name);
 
             if(preg_match("/^\#(.+)$/", $contents, $m))
                 return '<link linkterm="'.htmlspecialchars($m[1]).'">'.htmlspecialchars($contents).'</link>';
@@ -152,10 +152,11 @@ class wr3dbk_link extends WikiTagXhtml {
                 return '<ulink url="'.htmlspecialchars($contents).'">'.htmlspecialchars($contents).'</ulink>';
 
         }else{
-            if(preg_match("/^\#(.+)$/", $this->wikiContentArr[1], $m))
+            $url = $this->config->processLink($this->wikiContentArr[1], $this->name);
+            if(preg_match("/^\#(.+)$/", $url, $m))
                 return '<link linkterm="'.htmlspecialchars($m[1]).'">'.$this->contents[0].'</link>';
             else
-                return '<ulink url="'.htmlspecialchars($this->wikiContentArr[1]).'">'.$this->contents[0].'</ulink>';
+                return '<ulink url="'.htmlspecialchars($url).'">'.$this->contents[0].'</ulink>';
         }
     }
 }
@@ -186,7 +187,7 @@ class wr3dbk_image extends WikiTagXhtml {
                 $alt='<textobject><phrase>'.$contents[1].'</phrase></textobject>';
             case 1:
             default:
-                $attribut.=' fileref="'.$contents[0].'"';
+                $attribut.=' fileref="'.$this->config->processLink($contents[0], $this->name).'"';
         }
 
         return '<inlinemediaobject><imageobject><imagedata'.$attribut.'/></imageobject>'.$alt.'</inlinemediaobject>';
@@ -245,9 +246,9 @@ class wr3dbk_list extends WikiRendererBloc {
             $str.=($t[$i-1]== '#'?"</listitem></orderedlist>\n":"</listitem></itemizedlist>\n");
          }
          $str.="</listitem>\n<listitem>";
-         $this->_previousTag=substr($this->_previousTag,0,-$d); // to be sure...
+         $this->_previousTag=substr($this->_previousTag,0,-$d); // pour �tre sur...
 
-      }elseif( $d < 0 ){ // oen more level
+      }elseif( $d < 0 ){ // un niveau de plus
          $c=substr($this->_detectMatch[1],-1,1);
          $this->_previousTag.=$c;
          $str=($c == '#'?"<orderedlist><listitem>":"<itemizedlist><listitem>");

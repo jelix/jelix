@@ -6,7 +6,7 @@
  * @subpackage rules
  * @author Laurent Jouanneau
  * @copyright 2008 Laurent Jouanneau
- * @link http://wikirenderer.berlios.de
+ * @link http://wikirenderer.jelix.org
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public 2.1
@@ -129,7 +129,7 @@ class dkdbk_link extends WikiTagXhtml {
         $cntattr=count($this->attribute);
         $cnt=($this->separatorCount + 1 > $cntattr?$cntattr:$this->separatorCount+1);
         if($cnt == 1 ){
-            $contents = $this->wikiContentArr[0];
+            $contents = $this->config->processLink($this->wikiContentArr[0], $this->name);
 
             if(preg_match("/^\#(.+)$/", $contents, $m))
                 return '<link linkterm="'.htmlspecialchars(trim($m[1])).'">'.htmlspecialchars($contents).'</link>';
@@ -139,8 +139,10 @@ class dkdbk_link extends WikiTagXhtml {
         }else{
             if(preg_match("/^\#(.+)$/", $this->wikiContentArr[0], $m))
                 return '<link linkterm="'.htmlspecialchars(trim($m[0])).'">'.$this->contents[1].'</link>';
-            else
-                return '<ulink url="'.htmlspecialchars(trim($this->wikiContentArr[0])).'">'.$this->contents[1].'</ulink>';
+            else {
+                $url = $this->config->processLink($this->wikiContentArr[0], $this->name);
+                return '<ulink url="'.htmlspecialchars(trim($url)).'">'.$this->contents[1].'</ulink>';
+            }
         }
     }
 }
@@ -201,7 +203,7 @@ class dkdbk_image extends WikiTagXhtml {
             }
             $href= $m[2];
         }
-
+        $href = $this->config->processLink($href, $this->name);
         $tag = '<inlinemediaobject><imageobject><imagedata fileref="'.$href.'"';
         if($width != '')
             $tag.=' contentwidth="'.$width.'px"';
