@@ -89,7 +89,7 @@ class jCmdlineCoordinator extends jCoordinator {
             // fatal error appeared during init, let's display a single message
             while (ob_get_level() && @ob_end_clean());
             // log into file
-            @error_log($errorLog->getFormatedMessage(),3, jApp::logPath('errors.log'));
+            @error_log($errorLog->getFormatedMessage()."\n",3, jApp::logPath('errors.log'));
             // output text response
             echo 'Error during initialization: '.$message.' ('.$file.' '.$line.")\n";
         }

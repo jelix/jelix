@@ -313,7 +313,7 @@ class jCoordinator {
             while (ob_get_level() && @ob_end_clean());
 
             // log into file
-            @error_log($errorLog->getFormatedMessage(),3, jApp::logPath('errors.log'));
+            @error_log($errorLog->getFormatedMessage()."\n",3, jApp::logPath('errors.log'));
             // if accept text/html
             if (isset($_SERVER['HTTP_ACCEPT']) && strstr($_SERVER['HTTP_ACCEPT'],'text/html')) {
                 if (file_exists(jApp::appPath('responses/error.en_US.php')))
