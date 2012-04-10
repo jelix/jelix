@@ -100,11 +100,11 @@ class jBasicErrorHandler {
             // log into file and output message in the console
             echo 'Error during initialization: \n';
             foreach(self::$initErrorMessages as $err) {
-                @error_log($err->getFormatedMessage(), 3, jApp::logPath('errors.log'));
+                @error_log($err->getFormatedMessage()."\n", 3, jApp::logPath('errors.log'));
                 echo '* '.$err->getMessage().' ('.$e->getFile().' '.$e->getLine().")\n";
             }
 
-            @error_log($errorLog->getFormatedMessage(), 3, jApp::logPath('errors.log'));
+            @error_log($errorLog->getFormatedMessage()."\n", 3, jApp::logPath('errors.log'));
             echo '* '.$message.' ('.$file.' '.$line.")\n";
         }
         else {
@@ -116,9 +116,9 @@ class jBasicErrorHandler {
 
             // log into file
             foreach(self::$initErrorMessages as $err) {
-                @error_log($err->getFormatedMessage(), 3, jApp::logPath('errors.log'));
+                @error_log($err->getFormatedMessage()."\n", 3, jApp::logPath('errors.log'));
             }
-            @error_log($errorLog->getFormatedMessage(), 3, jApp::logPath('errors.log'));
+            @error_log($errorLog->getFormatedMessage()."\n", 3, jApp::logPath('errors.log'));
 
             $msg = $errorLog->getMessage();
             if (strpos($msg, '--') !== false) {
