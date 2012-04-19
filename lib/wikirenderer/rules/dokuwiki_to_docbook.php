@@ -128,22 +128,18 @@ class dkdbk_link extends WikiTagXhtml {
     public function getContent(){
         $cntattr=count($this->attribute);
         $cnt=($this->separatorCount + 1 > $cntattr?$cntattr:$this->separatorCount+1);
+        list($href,$label) = $this->config->processLink($this->wikiContentArr[0], $this->name);
+
         if($cnt == 1 ){
-            $contents = $this->config->processLink($this->wikiContentArr[0], $this->name);
-
-            if(preg_match("/^\#(.+)$/", $contents, $m))
-                return '<link linkterm="'.htmlspecialchars(trim($m[1])).'">'.htmlspecialchars($contents).'</link>';
-            else
-                return '<ulink url="'.htmlspecialchars(trim($contents)).'">'.htmlspecialchars($contents).'</ulink>';
-
-        }else{
-            if(preg_match("/^\#(.+)$/", $this->wikiContentArr[0], $m))
-                return '<link linkterm="'.htmlspecialchars(trim($m[0])).'">'.$this->contents[1].'</link>';
-            else {
-                $url = $this->config->processLink($this->wikiContentArr[0], $this->name);
-                return '<ulink url="'.htmlspecialchars(trim($url)).'">'.$this->contents[1].'</ulink>';
-            }
+            $label = htmlspecialchars($label);
+        } else {
+            $label = $this->contents[1];
         }
+        
+        if(preg_match("/^\#(.+)$/", $href, $m))
+            return '<link linkterm="'.htmlspecialchars(trim($m[1])).'">'.$label.'</link>';
+        else
+            return '<ulink url="'.htmlspecialchars(trim($href)).'">'.$label.'</ulink>';
     }
 }
 
@@ -203,7 +199,7 @@ class dkdbk_image extends WikiTagXhtml {
             }
             $href= $m[2];
         }
-        $href = $this->config->processLink($href, $this->name);
+        list($href, $label) = $this->config->processLink($href, $this->name);
         $tag = '<inlinemediaobject><imageobject><imagedata fileref="'.$href.'"';
         if($width != '')
             $tag.=' contentwidth="'.$width.'px"';

@@ -129,7 +129,8 @@ class cwrtext_link extends WikiTag {
         if($cnt == 1 ){
             return $this->wikiContentArr[0];
         }else{
-            return $this->wikiContentArr[0].' ('.$this->config->processLink($this->wikiContentArr[1], $this->name).')';
+            list($href, $label) = $this->config->processLink($this->wikiContentArr[1], $this->name);
+            return $this->wikiContentArr[0].' ('.$href.')';
         }
     }
 }

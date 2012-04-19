@@ -67,6 +67,16 @@ class wr3_to_xhtml  extends WikiRendererConfig  {
         }
         return $finalTexte;
     }
+
+     public function processLink($url, $tagName='') {
+        $label = $url;
+        if(strlen($label) > 40)
+            $label = substr($label,0,40).'(..)';
+  
+        if(strpos($url,'javascript:')!==false) // for security reason
+            $url='#';
+        return array($url, $label);
+    }
 }
 
 // ===================================== déclarations des tags inlines
@@ -145,18 +155,11 @@ class wr3xhtml_link extends WikiTagXhtml {
         $cntattr=count($this->attribute);
         $cnt=($this->separatorCount + 1 > $cntattr?$cntattr:$this->separatorCount+1);
         if($cnt == 1 ){
-            $contents = $this->config->processLink($this->wikiContentArr[0], $this->name);
-            $href=$contents;
-            if(strpos($href,'javascript:')!==false) // for security reason
-                $href='#';
-            if(strlen($contents) > 40)
-                $contents=substr($contents,0,40).'(..)';
-            return '<a href="'.htmlspecialchars($href).'">'.htmlspecialchars($contents).'</a>';
+            list($href, $label) = $this->config->processLink($this->wikiContentArr[0], $this->name);
+            return '<a href="'.htmlspecialchars($href).'">'.htmlspecialchars($label).'</a>';
         }else{
-            if(strpos($this->wikiContentArr[1],'javascript:')!==false) // for security reason
-                $this->wikiContentArr[1]='#';
-            else
-                $this->wikiContentArr[1] = $this->config->processLink($this->wikiContentArr[1], $this->name);
+            list($href, $label) = $this->config->processLink($this->wikiContentArr[1], $this->name);
+            $this->wikiContentArr[1] = $href;
             return parent::getContent();
         }
     }
@@ -188,7 +191,8 @@ class wr3xhtml_image extends WikiTagXhtml {
                 $attribut.=' alt="'.$contents[1].'"';
             case 1:
             default:
-                $attribut.=' src="'.$this->config->processLink($contents[0], $this->name).'"';
+               list($href, $label) = $this->config->processLink($contents[0], $this->name);
+                $attribut.=' src="'.htmlspecialchars($href).'"';
                 if($cnt == 1) $attribut.=' alt=""';
         }
         return '<img'.$attribut.'/>';
