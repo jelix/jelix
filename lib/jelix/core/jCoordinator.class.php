@@ -327,6 +327,7 @@ class jCoordinator {
         $resp = $this->request->getErrorResponse($this->response);
         $resp->outputErrors();
         jSession::end();
+
         exit(1);
     }
 

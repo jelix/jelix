@@ -21,7 +21,7 @@
  *
  */
 define('WIKIRENDERER_PATH', dirname(__FILE__).'/');
-define('WIKIRENDERER_VERSION', '3.1.3');
+define('WIKIRENDERER_VERSION', '3.1.4');
 
 
 /**
@@ -579,9 +579,10 @@ abstract class WikiRendererConfig {
    /**
     * in some wiki system, some links are specials. You should override this method
     * to transform this specific links to real URL
+    * @return array  first item is the url, second item is an alternate label
     */
    public function processLink($url, $tagName='') {
-      return $url;
+      return array($url, $url);
    }
 }
 
