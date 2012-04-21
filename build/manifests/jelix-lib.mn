@@ -263,6 +263,7 @@ cd lib/jelix/dao
   jDaoParser.class.php
   jDaoProperty.class.php
   jDaoMethod.class.php
+  jPdoDaoGenerator.class.php
 #endif
 
 cd lib/jelix/db
@@ -494,8 +495,10 @@ cd lib/jelix/plugins/db/sqlite
 
 cd lib/jelix/plugins/db/oci
   oci.daobuilder.php
+  oci.dbconnection.php
   oci.dbschema.php
   oci.dbtools.php
+  oci.pdodaobuilder.php
 
 cd lib/jelix/plugins/debugbar/sqllog
 * sqllog.debugbar.php
