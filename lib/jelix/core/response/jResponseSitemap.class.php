@@ -206,11 +206,12 @@ class jResponseSitemap extends jResponse {
      */
     protected function _parseUrlsXml() {
         global $gJConfig;
-
         $urls = array();
         $significantFile = $gJConfig->urlengine['significantFile'];
         $entryPoint = $gJConfig->urlengine['defaultEntrypoint'];
+        $entryPointExtension = $gJConfig->urlengine['entrypointExtension'];
         $snp = $gJConfig->urlengine['urlScriptIdenc'];
+        $basePath = $gJConfig->urlengine['basePath'];
 
         $file = jApp::tempPath('compiled/urlsig/' . $significantFile .
                 '.' . rawurlencode($entryPoint) . '.entrypoint.php');
@@ -225,7 +226,7 @@ class jResponseSitemap extends jResponse {
                 // it is not really relevant to get URL that are not complete
                 // but it is difficult to know automatically what are real URLs
                 if (preg_match('/^([^\(]*)/', substr($infoparsing[2], 2, -2), $matches)) {
-                    $urls[] = $matches[1];
+                    $urls[] = $basePath.$entryPoint.$entryPointExtension.$matches[1];
                 }
             }
         }
