@@ -26,10 +26,8 @@ class ociDaoBuilder extends jDaoGenerator {
             $table= $tables[$tablejoin[0]];
             $tablename = $this->_encloseName($table['name']);
 
-            if($table['name']!=$table['realname'])
-                $r =$this->_encloseName($table['realname']).' '.$tablename;
-            else
-                $r =$this->_encloseName($table['realname']);
+            $r = $this->_encloseName($table['realname']).' '.$tablename;
+
             $fieldjoin='';
 
             if($tablejoin[1] == 0){
@@ -60,7 +58,7 @@ class ociDaoBuilder extends jDaoGenerator {
     }
 
     /*
-     * Remplace le lastInsertId qui ne marche pas avec oci 
+     * Replaces the lastInsertId which doesn't work with oci
      */
     protected function buildUpdateAutoIncrementPK($pkai) {
         return '          $record->'.$pkai->name.'= $this->_conn->query(\'SELECT '.$pkai->sequenceName.'.currval as '.$pkai->name.' from dual\')->fetch()->'.$pkai->name.';';

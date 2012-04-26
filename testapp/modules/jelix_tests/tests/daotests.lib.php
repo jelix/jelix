@@ -62,11 +62,23 @@ class testMysqlDaoGenerator extends mysqlDaoBuilder {
     }
 
     function GetFromClause(){
-        return $this->buildFromWhereClause();
+        $this->buildFromWhereClause();
+        return array($this->sqlFromClause, $this->sqlWhereClause);
     }
     
     function PrepareValues ($fieldList, $pattern, $prefixfield) {
         return $this->_prepareValues($fieldList, $pattern, $prefixfield);
+    }
+
+    function GetBuildCountUserQuery($method) {
+      $allField = $this->_getPropertiesBy('All');
+      $src = array();
+      parent::buildCountUserQuery($method, $src, $allField);
+      return implode("\n", $src);
+    }
+    
+    function GetBuildUpdateUserQuery($method, &$src, &$primaryFields) {
+        $this->buildUpdateUserQuery($method, $src, $primaryFields);
     }
 }
 

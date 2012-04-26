@@ -18,15 +18,15 @@ class jstestsCtrl extends jController {
       $rep->setXhtmlOutput(false);
       $rep->title = 'Unit tests on jforms';
       $rep->bodyTpl = 'jstest_jforms';
-      $rep->addCssLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testsuite.css');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'jquery/jquery.js');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'jquery/include/jquery.include.js');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'js/jforms_jquery.js');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'wymeditor/jquery.wymeditor.js');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'wymeditor/config/default.js');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'js/jforms/datepickers/default/init.js');
+      $rep->addCssLink(jApp::config()->urlengine['basePath'].'qunit/testsuite.css');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/jquery.js');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/include/jquery.include.js');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'js/jforms_jquery.js');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'wymeditor/jquery.wymeditor.js');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'wymeditor/config/default.js');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'js/jforms/datepickers/default/init.js');
 
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testrunner.js');
+      $rep->addJsLink(jApp::config()->urlengine['basePath'].'qunit/testrunner.js');
 
       return $rep;
   }
@@ -36,10 +36,10 @@ class jstestsCtrl extends jController {
       $rep->setXhtmlOutput(false);
       $rep->title = 'Unit tests for jsonrpc';
       $rep->bodyTpl = 'jstest_jsonrpc';
-      $rep->addCssLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testsuite.css');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'jquery/jquery.js');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testrunner.js');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'js/json.js');
+      $rep->addCssLink(jApp::config()->urlengine['basePath'].'qunit/testsuite.css');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/jquery.js');
+      $rep->addJsLink(jApp::config()->urlengine['basePath'].'qunit/testrunner.js');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'js/json.js');
       return $rep;
   }
 
@@ -48,10 +48,10 @@ class jstestsCtrl extends jController {
       $rep->setXhtmlOutput(false);
       $rep->title = 'Unit tests for jsonrpc';
       $rep->bodyTpl = 'jstest_jsonrpc2';
-      $rep->addCssLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testsuite.css');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'jquery/jquery.js');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testrunner.js');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'js/json2.js');
+      $rep->addCssLink(jApp::config()->urlengine['basePath'].'qunit/testsuite.css');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/jquery.js');
+      $rep->addJsLink(jApp::config()->urlengine['basePath'].'qunit/testrunner.js');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'js/json2.js');
       return $rep;
   }
 
@@ -60,10 +60,10 @@ class jstestsCtrl extends jController {
       $rep->setXhtmlOutput(false);
       $rep->title = 'Unit tests for jquery include plugin';
       $rep->bodyTpl = 'jstest_include';
-      $rep->addCssLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testsuite.css');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'jquery/jquery.js');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['basePath'].'qunit/testrunner.js');
-      $rep->addJsLink($GLOBALS['gJConfig']->urlengine['jelixWWWPath'].'jquery/include/jquery.include.js');
+      $rep->addCssLink(jApp::config()->urlengine['basePath'].'qunit/testsuite.css');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/jquery.js');
+      $rep->addJsLink(jApp::config()->urlengine['basePath'].'qunit/testrunner.js');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/include/jquery.include.js');
       return $rep;
   }
 

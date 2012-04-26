@@ -4,20 +4,18 @@
 * @subpackage  junittests
 * @author      Laurent
 * @contributor Christophe Thiriot
-* @copyright   2007-2011 Jouanneau laurent
+* @copyright   2007-2012 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-PHP_CodeCoverage_Filter::getInstance()->addFileToBlacklist(__FILE__, 'PHPUNIT');
-
-class jUnitTestCaseDb extends PHPUnit_Framework_TestCase {
+class jUnitTestCaseDb extends jUnitTestCase {
 
     /**
     *   erase all record in a table
     */
     public function emptyTable($table){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         $db->exec('DELETE FROM '.$db->encloseName($table));
     }
 
@@ -53,7 +51,7 @@ class jUnitTestCaseDb extends PHPUnit_Framework_TestCase {
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table should be empty");
             if($r->N == 0){
-                $this->pass($message);
+                $this->assertTrue(true, $message);
                 return true;
             }else{
                 $this->fail($message);
@@ -69,12 +67,12 @@ class jUnitTestCaseDb extends PHPUnit_Framework_TestCase {
      * check if the table is not empty
      */
     public function assertTableIsNotEmpty($table, $message="%s"){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table shouldn't be empty");
             if($r->N > 0){
-                $this->pass($message);
+                $this->assertTrue(true, $message);
                 return true;
             }else{
                 $this->fail($message);
@@ -90,12 +88,12 @@ class jUnitTestCaseDb extends PHPUnit_Framework_TestCase {
      * check if a table has a specific number of records
      */
     public function assertTableHasNRecords($table, $n, $message="%s"){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table should contains ".$n." records");
             if($r->N == $n){
-                $this->pass($message);
+                $this->assertTrue(true, $message);
                 return true;
             }else{
                 $this->fail($message);
@@ -111,7 +109,7 @@ class jUnitTestCaseDb extends PHPUnit_Framework_TestCase {
      * check if all given record are in the table
      */
     public function assertTableContainsRecords($table, $records, $onlyThem = true, $message ="%s"){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
 
         $message = sprintf( $message, $table. " table should contains given records.");
 
@@ -157,7 +155,7 @@ class jUnitTestCaseDb extends PHPUnit_Framework_TestCase {
         }
 
         if($globalok){
-            $this->pass($message);
+            $this->assertTrue(true, $message);
             return true;
         }else{
             $this->sendMessage('Results from database');
@@ -243,7 +241,7 @@ class jUnitTestCaseDb extends PHPUnit_Framework_TestCase {
         }
 
         if($globalok){
-            $this->pass($message);
+            $this->assertTrue(true, $message);
             return true;
         }
         else {
@@ -252,7 +250,7 @@ class jUnitTestCaseDb extends PHPUnit_Framework_TestCase {
     }
 
     public function getLastId($fieldName, $tableName){
-        $db = jDb::getConnection($this->dbProfil);
+        $db = jDb::getConnection($this->dbProfile);
         return $db->lastIdInTable($fieldName, $tableName);
     }
 }

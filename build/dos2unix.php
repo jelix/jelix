@@ -11,8 +11,8 @@
 
 require_once(dirname(__FILE__).'/lib/jCmdUtils.class.php');
 
-// arguments :  repertoire
-// repertoire : le chemin du repertoire où les fichiers seront convertis
+// arguments:  directory
+// directory: directory path where the files will be converted
 
 try{
     $sws = array('-n'=>false);
@@ -83,7 +83,7 @@ $output='';
 if (is_dir($dirpath)) {
     parsePath($dirpath);
 }else{
-    echo "mauvais repertoire $dirpath\n";
+    echo "wrong directory $dirpath\n";
     exit(1);
 }
 

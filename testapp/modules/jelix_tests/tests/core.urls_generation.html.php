@@ -17,23 +17,21 @@ class UTCreateUrls extends UnitTestCase {
     protected $oldConfig;
 
     function setUp() {
-      global $gJCoord, $gJConfig;
-
-      $this->oldUrlScriptPath = $gJCoord->request->urlScriptPath;
-      $this->oldParams = $gJCoord->request->params;
-      $this->oldRequestType = $gJCoord->request->type;
-      $this->oldConfig = clone $gJConfig;
+      $req = jApp::coord()->request;
+      $this->oldUrlScriptPath = $req->urlScriptPath;
+      $this->oldParams = $req->params;
+      $this->oldRequestType = $req->type;
       $this->oldserver = $_SERVER;
+      jApp::saveContext();
     }
 
     function tearDown() {
-      global $gJCoord, $gJConfig;
+      $req = jApp::coord()->request;
+      $req->urlScriptPath = $this->oldUrlScriptPath;
+      $req->params = $this->oldParams;
+      $req->type = $this->oldRequestType;
 
-      $gJCoord->request->urlScriptPath=$this->oldUrlScriptPath;
-      $gJCoord->request->params=$this->oldParams;
-      $gJCoord->request->type=$this->oldRequestType;
-
-      $gJConfig = clone $this->oldConfig;
+      jApp::restoreContext();
       $_SERVER = $this->oldserver;
 
       jUrl::getEngine(true);
@@ -85,15 +83,15 @@ class UTCreateUrls extends UnitTestCase {
     }
 
     function testSimpleEngine() {
-       global $gJConfig, $gJCoord;
 
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
-       $gJConfig->domainName = 'testapp.local';
-       $gJConfig->forceHTTPPort = true;
-       $gJConfig->forceHTTPSPort = true;
-       $gJConfig->urlengine = array(
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
+       $conf = jApp::config();
+       $conf->domainName = 'testapp.local';
+       $conf->forceHTTPPort = true;
+       $conf->forceHTTPSPort = true;
+       $conf->urlengine = array(
          'engine'=>'simple',
          'enableParser'=>true,
          'multiview'=>false,
@@ -136,7 +134,7 @@ class UTCreateUrls extends UnitTestCase {
       $trueResult[6]='https://testapp.local'.$trueResult[6];
       $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
 
-      $gJConfig->urlengine['multiview']=true;
+      $conf->urlengine['multiview']=true;
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
       $trueResult=array(
           "/index?mois=10&annee=2005&id=35&module=jelix_tests&action=urlsig:url1",
@@ -157,12 +155,12 @@ class UTCreateUrls extends UnitTestCase {
 
 
     function testSimpleEngineError(){
-       global $gJConfig, $gJCoord;
 
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
-       $gJConfig->urlengine = array(
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
+       $conf = jApp::config();
+       $conf->urlengine = array(
          'engine'=>'simple',
          'enableParser'=>true,
          'multiview'=>false,
@@ -186,7 +184,7 @@ class UTCreateUrls extends UnitTestCase {
 
       $this->_doCompareError("simple, errors, multiview = false", $urlList,$trueResult);
 
-      $gJConfig->urlengine['multiview']=true;
+      $conf->urlengine['multiview']=true;
       $trueResult=array(
           array(2,11,'jelix~errors.selector.invalid.target'),
        );
@@ -194,15 +192,16 @@ class UTCreateUrls extends UnitTestCase {
     }
 
     function testSignificantEngine() {
-       global $gJConfig, $gJCoord;
 
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
-       $gJConfig->domainName = 'testapp.local';
-       $gJConfig->forceHTTPPort = true;
-       $gJConfig->forceHTTPSPort = true;
-       $gJConfig->urlengine = array(
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
+
+       $conf = jApp::config();
+       $conf->domainName = 'testapp.local';
+       $conf->forceHTTPPort = true;
+       $conf->forceHTTPSPort = true;
+       $conf->urlengine = array(
          'engine'=>'significant',
          'enableParser'=>true,
          'multiview'=>false,
@@ -214,8 +213,8 @@ class UTCreateUrls extends UnitTestCase {
          'checkHttpsOnParsing'=>true
        );
 
-      $gJConfig->_modulesPathList['news']='/';
-      $gJConfig->_modulesPathList['articles']='/';
+      $conf->_modulesPathList['news']='/';
+      $conf->_modulesPathList['articles']='/';
 
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
 
@@ -308,7 +307,7 @@ class UTCreateUrls extends UnitTestCase {
       $this->_doCompareUrl("significant, multiview = false", $urlList,$trueResult);
 
 
-      $gJConfig->urlengine['multiview']=true;
+      $conf->urlengine['multiview']=true;
       $trueResult=array(
           "/index/test/news/2005/10/01",
           "/index/test/news/2005/10/09?action=urlsig:url9",
@@ -357,12 +356,13 @@ class UTCreateUrls extends UnitTestCase {
 
 
     function testSignificantEngineError(){
-       global $gJConfig, $gJCoord;
 
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
-       $gJConfig->urlengine = array(
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
+
+       $conf = jApp::config();
+       $conf->urlengine = array(
          'engine'=>'significant',
          'enableParser'=>true,
          'multiview'=>false,
@@ -374,7 +374,7 @@ class UTCreateUrls extends UnitTestCase {
          'checkHttpsOnParsing'=>true
        );
 
-      $gJConfig->_modulesPathList['news']='/';
+      $conf->_modulesPathList['news']='/';
 
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
 
@@ -391,7 +391,7 @@ class UTCreateUrls extends UnitTestCase {
 
       $this->_doCompareError("significant, errors, multiview = false", $urlList,$trueResult);
 
-      $gJConfig->urlengine['multiview']=true;
+      $conf->urlengine['multiview']=true;
       $trueResult=array(
           array(2,11,'jelix~errors.selector.invalid.target'),
        );
@@ -401,15 +401,16 @@ class UTCreateUrls extends UnitTestCase {
     }
 
     function testBasicSignificantEngine() {
-       global $gJConfig, $gJCoord;
 
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
-       $gJConfig->domainName = 'testapp.local';
-       $gJConfig->forceHTTPPort = true;
-       $gJConfig->forceHTTPSPort = true;
-       $gJConfig->urlengine = array(
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
+
+       $conf = jApp::config();
+       $conf->domainName = 'testapp.local';
+       $conf->forceHTTPPort = true;
+       $conf->forceHTTPSPort = true;
+       $conf->urlengine = array(
          'engine'=>'basic_significant',
          'enableParser'=>true,
          'multiview'=>false,
@@ -452,7 +453,7 @@ class UTCreateUrls extends UnitTestCase {
       $trueResult[6]='https://testapp.local'.$trueResult[6];
       $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
 
-      $gJConfig->urlengine['multiview']=true;
+      $conf->urlengine['multiview']=true;
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
       $trueResult=array(
           "/index/jelix_tests/urlsig/url1?mois=10&annee=2005&id=35",
@@ -473,12 +474,13 @@ class UTCreateUrls extends UnitTestCase {
 
 
     function testBasicSignificantEngineError(){
-       global $gJConfig, $gJCoord;
 
-       $gJCoord->request->urlScriptPath='/';
-       $gJCoord->request->params=array();
-       //$gJCoord->request->type=;
-       $gJConfig->urlengine = array(
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
+
+       $conf = jApp::config();
+       $conf->urlengine = array(
          'engine'=>'basic_significant',
          'enableParser'=>true,
          'multiview'=>false,
@@ -502,7 +504,7 @@ class UTCreateUrls extends UnitTestCase {
 
       $this->_doCompareError("simple, errors, multiview = false", $urlList,$trueResult);
 
-      $gJConfig->urlengine['multiview']=true;
+      $conf->urlengine['multiview']=true;
       $trueResult=array(
           array(2,11,'jelix~errors.selector.invalid.target'),
        );
@@ -511,12 +513,13 @@ class UTCreateUrls extends UnitTestCase {
 
 
     function testGetFullUrl() {
-        global $gJConfig, $gJCoord;
 
-        $gJCoord->request->urlScriptPath='/';
-        $gJCoord->request->params=array();
-        //$gJCoord->request->type=;
-        $gJConfig->urlengine = array(
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+
+        $conf = jApp::config();
+        $conf->urlengine = array(
           'engine'=>'basic_significant',
           'enableParser'=>true,
           'multiview'=>false,
@@ -530,10 +533,10 @@ class UTCreateUrls extends UnitTestCase {
 
         /*
          parameters
-            $_SERVER['HTTPS'] ou non
-            $_SERVER['SERVER_NAME'] ou $gJConfig->domainName
-            given domainName ou pas
-            jelix_tests~urlsig:url3 (http) ou jelix_tests~urlsig:url8 (https)
+            $_SERVER['HTTPS'] or not
+            $_SERVER['SERVER_NAME'] ot $conf->domainName
+            given domainName or not
+            jelix_tests~urlsig:url3 (http) or jelix_tests~urlsig:url8 (https)
         */
 
         $_SERVER['SERVER_NAME'] = 'testapp.local';
@@ -543,7 +546,7 @@ class UTCreateUrls extends UnitTestCase {
         unset($_SERVER['HTTPS']);
 
         // without given domain name, without domain name in config, without https
-        $gJConfig->domainName = '';
+        $conf->domainName = '';
         jUrl::getEngine(true);
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
         $this->assertEqual('http://testapp.local/index.php/jelix_tests/urlsig/url1', $url);
@@ -560,7 +563,7 @@ class UTCreateUrls extends UnitTestCase {
         $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
 
         // without given domain name, with domain name in config, without https
-        $gJConfig->domainName = 'configdomain.local';
+        $conf->domainName = 'configdomain.local';
         jUrl::getEngine(true);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
@@ -581,7 +584,7 @@ class UTCreateUrls extends UnitTestCase {
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_PORT'] = '443';
         // without given domain name, without domain name in config, with https
-        $gJConfig->domainName = '';
+        $conf->domainName = '';
         jUrl::getEngine(true);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
@@ -598,7 +601,7 @@ class UTCreateUrls extends UnitTestCase {
         $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
 
         // without given domain name, with domain name in config, with https
-        $gJConfig->domainName = 'configdomain.local';
+        $conf->domainName = 'configdomain.local';
         jUrl::getEngine(true);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);

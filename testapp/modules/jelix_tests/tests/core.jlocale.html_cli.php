@@ -78,7 +78,7 @@ class UTjlocale extends jUnitTestCase {
 
 
     function testSimpleLocale(){
-        $GLOBALS['gJConfig']->locale = 'fr_FR';
+        jApp::config()->locale = 'fr_FR';
         $this->assertEqual('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale'));
         $this->assertEqual('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale', null, 'fr_FR'));
         $this->assertEqualOrDiff('Chaîne à tester',jLocale::get('tests1.multiline.locale.with.accent'));
@@ -88,11 +88,11 @@ class UTjlocale extends jUnitTestCase {
         $this->assertEqual('ceci est une phrase fr_CA',jLocale::get('tests1.first.locale', null, 'fr_CA'));
         $this->assertEqual('this is an en_US sentence',jLocale::get('tests1.first.locale', null, 'en_US'));
         $this->assertEqual('this is an en_EN sentence',jLocale::get('tests1.first.locale', null, 'en_EN'));
-        $GLOBALS['gJConfig']->locale = 'en_EN';
+        jApp::config()->locale = 'en_EN';
     }
 
     function testException() {
-        $GLOBALS['gJConfig']->locale = 'fr_FR';
+        jApp::config()->locale = 'fr_FR';
         try {
             $loc = jLocale::get('tests1.first.locale', null, 'de_DE');
             $this->fail('no exception');
@@ -103,7 +103,7 @@ class UTjlocale extends jUnitTestCase {
             $this->assertEqual($e->getMessage(), '(200)The given locale key "tests1.first.locale" is invalid (for charset UTF-8, lang de_DE)');
         }
 
-        $GLOBALS['gJConfig']->locale = 'de_DE';
+        jApp::config()->locale = 'de_DE';
         try {
             $loc = jLocale::get('tests1.first.locale', null, 'de_DE');
             $this->fail('no exception');
@@ -113,18 +113,18 @@ class UTjlocale extends jUnitTestCase {
             $this->pass();
             $this->assertEqual($e->getMessage(), '(200)The given locale key "tests1.first.locale" is invalid (for charset UTF-8, lang de_DE)');
         }
-        $GLOBALS['gJConfig']->locale = 'en_EN';
+        jApp::config()->locale = 'en_EN';
     }
 
     function testWithNoAskedLocale(){
         // all this tests are made on an existing locale file
-        $GLOBALS['gJConfig']->locale = 'fr_FR';
+        jApp::config()->locale = 'fr_FR';
         $this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('tests1.second.locale'));
         // no test1.second.locale in fr_CA, so we should have the fr_FR one
         //$this->assertEqual('ceci est une phrase 2 fr_FR',jLocale::get('tests1.second.locale', null, 'fr_CA'));
 
         // no test1.third.locale in fr_FR, so we should have the en_EN one
-        $GLOBALS['gJConfig']->fallbackLocale = 'en_EN';
+        jApp::config()->fallbackLocale = 'en_EN';
         $this->assertEqual('this is the 3th en_EN sentence',jLocale::get('tests1.third.locale', null, 'fr_FR'));
 
         try{
@@ -138,7 +138,7 @@ class UTjlocale extends jUnitTestCase {
             $this->assertEqual('(210)The given locale key "jelix_tests~tests1.fourth.locale" does not exists in the default lang and in the fallback lang for the UTF-8 charset', $e->getMessage());
         }
 
-        $GLOBALS['gJConfig']->fallbackLocale = '';
+        jApp::config()->fallbackLocale = '';
 
         try{
             // it doesn't exist
@@ -150,20 +150,20 @@ class UTjlocale extends jUnitTestCase {
             $this->pass();
             $this->assertEqual('(210)The given locale key "jelix_tests~tests1.fourth.locale" does not exists in the default lang for the UTF-8 charset', $e->getMessage());
         }
-        $GLOBALS['gJConfig']->locale = 'en_EN';
+        jApp::config()->locale = 'en_EN';
     }
 
     function testWithNoAskedLocaleFile(){
         // all this tests are made on an non existing locale file
-        $GLOBALS['gJConfig']->locale = 'fr_FR';
+        jApp::config()->locale = 'fr_FR';
         $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale'));
         // no test2.properties file for fr_CA, so we should have the fr_FR one
         $this->assertEqual('ceci est une phrase fr_FR test2',jLocale::get('tests2.first.locale', null, 'fr_CA'));
         // no test3.properties file for fr_CA and fr_FR, so we should have the en_EN one
-        $GLOBALS['gJConfig']->fallbackLocale = 'en_EN';
+        jApp::config()->fallbackLocale = 'en_EN';
         $this->assertEqual('this is an en_EN sentence test3',jLocale::get('tests3.first.locale', null, 'fr_FR'));
 
-        $GLOBALS['gJConfig']->fallbackLocale = '';
+        jApp::config()->fallbackLocale = '';
         try{
             // it doesn't exist
             jLocale::get('jelix_tests~tests3.first.locale', null, 'fr_FR');
@@ -175,7 +175,7 @@ class UTjlocale extends jUnitTestCase {
             $this->assertEqual('(200)The given locale key "jelix_tests~tests3.first.locale" is invalid (for charset UTF-8, lang fr_FR)', $e->getMessage());
         }
 
-        $GLOBALS['gJConfig']->locale = 'en_EN';
+        jApp::config()->locale = 'en_EN';
     }
 
     function testWithBadCharset() {
@@ -204,7 +204,7 @@ class UTjlocale extends jUnitTestCase {
 
         // ok now, we change to ISO-8859-11 : error message of jelix don't exists in this charset
         // it causes infinite loop in Jelix 1.0.2 and lower.
-        $GLOBALS['gJConfig']->charset = 'ISO-8859-11';
+        jApp::config()->charset = 'ISO-8859-11';
         try {
             // this locale exists, but only in UTF-8, not in ISO-8859-11
             jLocale::get('tests1.second.locale', null,'fr_FR','ISO-8859-11');
@@ -215,7 +215,7 @@ class UTjlocale extends jUnitTestCase {
            $this->pass();
            $this->assertEqual('(200)The given locale key "tests1.second.locale" is invalid (for charset ISO-8859-11, lang fr_FR)', $e->getMessage());
         }
-        $GLOBALS['gJConfig']->charset = 'UTF-8';
+        jApp::config()->charset = 'UTF-8';
     }
 
     function testLineBreak(){

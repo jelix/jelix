@@ -3,10 +3,10 @@
 * @package     jelix
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
-* @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler
-* @copyright   2005-2011 Laurent Jouanneau
+* @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler, Brice Tence
+* @copyright   2005-2012 Laurent Jouanneau
 * @copyright   2006 Loic Mathaud, 2007 Dominique Papin, 2009 DSDenes, 2010 Christophe Thiriot
-* @copyright   2010 Julien Issler
+* @copyright   2010 Julien Issler, 2010 Brice Tence
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -14,6 +14,10 @@
 #if !PHP53ORMORE
 if (!defined('T_GOTO'))
     define('T_GOTO',333);
+if (!defined('T_NAMESPACE'))
+    define('T_NAMESPACE',377);
+if (!defined('T_USE'))
+    define('T_USE',340);
 #endif
 
 
@@ -60,12 +64,12 @@ class jTplCompiler
      */
     private $_inLocaleOk = array (T_STRING, T_ABSTRACT, T_AS, T_BREAK, T_CASE,
             T_CATCH, T_CLASS, T_CLONE, T_CONST, T_CONTINUE, T_DECLARE, T_DEFAULT,
-            T_DO, T_ECHO, T_ELSE, T_ELSEIF, T_EMPTY, T_EXIT, T_FINAL, T_FOR,
-            T_FOREACH, T_FUNCTION, T_GLOBAL, T_GOTO, T_IF, T_IMPLEMENTS, T_INSTANCEOF,
-            T_INTERFACE, T_LIST, T_LOGICAL_AND, T_LOGICAL_OR, T_LOGICAL_XOR,
-            T_NEW, T_PRIVATE, T_PUBLIC, T_PROTECTED, T_RETURN, T_STATIC,
-            T_SWITCH, T_THROW, T_TRY, T_USE, T_VAR, T_WHILE, T_DNUMBER,
-            T_LNUMBER, T_EVAL);
+            T_DNUMBER, T_DO, T_ECHO, T_ELSE, T_ELSEIF, T_EMPTY, T_ENDIF, T_ENDFOR,
+            T_EVAL, T_EXIT, T_EXTENDS, T_FINAL, T_FOR, T_FOREACH, T_FUNCTION,
+            T_GLOBAL, T_GOTO, T_IF, T_IMPLEMENTS, T_INCLUDE, T_INSTANCEOF, T_INTERFACE,
+            T_LIST, T_LNUMBER, T_LOGICAL_AND, T_LOGICAL_OR, T_LOGICAL_XOR,
+            T_NAMESPACE, T_NEW, T_PRINT, T_PRIVATE, T_PUBLIC, T_PROTECTED, T_REQUIRE,
+            T_RETURN, T_STATIC, T_SWITCH, T_THROW, T_TRY, T_USE, T_VAR, T_WHILE);
 
     /**
      * tokens allowed in output for variables
@@ -101,7 +105,7 @@ class jTplCompiler
      */
     private $_pluginPath = array();
 
-    private $_metaBody = '';
+    protected $_metaBody = '';
 
     /**
      * native modifiers
@@ -177,11 +181,19 @@ class jTplCompiler
     public function compile ($tplName, $tplFile, $outputtype, $trusted,
                              $userModifiers = array(), $userFunctions = array()) {
         $this->_sourceFile = $tplFile;
-        $this->outputType = $outputtype;
         $cachefile = jTplConfig::$cachePath .dirname($tplName).'/'.$this->outputType.($trusted?'_t':'').'_'. basename($tplName);
+        $this->outputType = $outputtype;
         $this->trusted = $trusted;
-        $this->_modifier = array_merge($this->_modifier, $userModifiers);
-        $this->_userFunctions = $userFunctions;
+        $md5 = md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':''));
+
+        if (!file_exists($this->_sourceFile)) {
+            $this->doError0('errors.tpl.not.found');
+        }
+
+        $this->compileString(file_get_contents($this->_sourceFile), $cachefile,
+            $userModifiers, $userFunctions, $md5);
+        return true;
+    }
 
 #else
     /**
@@ -193,44 +205,42 @@ class jTplCompiler
      */
     public function compile ($selector) {
         $this->_sourceFile = $selector->getPath();
-        $cachefile = $selector->getCompiledFilePath();
         $this->outputType = $selector->outputType;
         $this->trusted = $selector->trusted;
-        $this->_modifier = array_merge($this->_modifier, $selector->userModifiers);
-        $this->_userFunctions = $selector->userFunctions;
+        $md5 = md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':''));
 
         jContext::push($selector->module);
-#endif
 
         if (!file_exists($this->_sourceFile)) {
             $this->doError0('errors.tpl.not.found');
         }
 
-        $result = $this->compileContent(file_get_contents($this->_sourceFile));
+        $this->compileString(file_get_contents($this->_sourceFile), $selector->getCompiledFilePath(),
+            $selector->userModifiers, $selector->userFunctions, $md5);
+
+        jContext::pop();
+        return true;
+    }
+#endif
+
+    public function compileString($templatecontent, $cachefile, $userModifiers, $userFunctions, $md5) {
+        $this->_modifier = array_merge($this->_modifier, $userModifiers);
+        $this->_userFunctions = $userFunctions;
+
+        $result = $this->compileContent($templatecontent);
 
         $header = "<?php \n";
         foreach ($this->_pluginPath as $path=>$ok) {
             $header.=' require_once(\''.$path."');\n";
         }
-#if JTPL_STANDALONE
-        $header.='function template_meta_'.md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){';
-#else
-        $header.='function template_meta_'.md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){';
-#endif
+        $header.='function template_meta_'.$md5.'($t){';
         $header .="\n".$this->_metaBody."\n}\n";
 
-#if JTPL_STANDALONE
-        $header.='function template_'.md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){'."\n?>";
-#else
-        $header.='function template_'.md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':'')).'($t){'."\n?>";
-#endif
+        $header.='function template_'.$md5.'($t){'."\n?>";
         $result = $header.$result."<?php \n}\n?>";
 
 #if JTPL_STANDALONE
-        $_dirname = dirname($tplName).'/';
-        if ($_dirname == './')
-            $_dirname = '';
-        $_dirname = jTplConfig::$cachePath.$_dirname;
+        $_dirname = dirname($cachefile).'/';
 
         if (!is_dir($_dirname)) {
             umask(jTplConfig::$umask);
@@ -265,7 +275,6 @@ class jTplCompiler
 #else
         jFile::write($cachefile, $result);
 
-        jContext::pop();
 #endif
         return true;
     }
@@ -276,6 +285,9 @@ class jTplCompiler
 
 
     protected function compileContent ($tplcontent) {
+        $this->_metaBody = '';
+        $this->_blockStack = array();
+
         // we remove all php tags
         $tplcontent = preg_replace("!<\?((?:php|=|\s).*)\?>!s", '', $tplcontent);
         // we remove all template comments
@@ -491,7 +503,39 @@ class jTplCompiler
 
             case 'meta':
                 $this->_parseMeta($args);
-                $res='';
+                break;
+
+            case 'meta_if':
+                $metaIfArgs = $this->_parseFinal($args,$this->_allowedInExpr);
+                $this->_metaBody .= 'if('.$metaIfArgs.'):'."\n";
+                array_push($this->_blockStack,'meta_if');
+                break;
+
+            case 'meta_else':
+                if (substr(end($this->_blockStack),0,7) !='meta_if') {
+                    $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
+                } else {
+                    $this->_metaBody .= "else:\n";
+                }
+                break;
+
+            case 'meta_elseif':
+                if (end($this->_blockStack) !='meta_if') {
+                    $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
+                } else {
+                    $elseIfArgs = $this->_parseFinal($args,$this->_allowedInExpr);
+                    $this->_metaBody .= 'elseif('.$elseIfArgs."):\n";
+                }
+                break;
+
+            case '/meta_if':
+                $short = substr($name,1);
+                if (end($this->_blockStack) != $short) {
+                    $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
+                } else {
+                    array_pop($this->_blockStack);
+                    $this->_metaBody .= "endif;\n";
+                }
                 break;
 
             default:
@@ -582,7 +626,7 @@ class jTplCompiler
         $bracketcount = $sqbracketcount = 0;
         $firstok = array_shift($tokens);
 
-        // il y a un bug, parfois le premier token n'est pas T_OPEN_TAG...
+        // there is a bug, sometimes the first token isn't T_OPEN_TAG...
         if ($firstok == '<' && $tokens[0] == '?' && is_array($tokens[1])
             && $tokens[1][0] == T_STRING && $tokens[1][1] == 'php') {
             array_shift($tokens);
@@ -707,7 +751,7 @@ class jTplCompiler
     }
 
     /**
-     * try to find a plugin
+     * Try to find a plugin
      * @param string $type type of plugin (function, modifier...)
      * @param string $name the plugin name
      * @return array|boolean an array containing the path of the plugin
@@ -720,9 +764,9 @@ class jTplCompiler
         if (isset(jTplConfig::$pluginPathList[$this->outputType])) {
             foreach (jTplConfig::$pluginPathList[$this->outputType] as $path) {
 #else
-        global $gJConfig;
-        if (isset($gJConfig->{'_tplpluginsPathList_'.$this->outputType})) {
-            foreach ($gJConfig->{'_tplpluginsPathList_'.$this->outputType} as $path) {
+        $config = jApp::config();
+        if (isset($config->{'_tplpluginsPathList_'.$this->outputType})) {
+            foreach ($config->{'_tplpluginsPathList_'.$this->outputType} as $path) {
 #endif
                 $foundPath = $path.$type.'.'.$name.'.php';
 
@@ -735,8 +779,8 @@ class jTplCompiler
         if (isset(jTplConfig::$pluginPathList['common'])) {
             foreach (jTplConfig::$pluginPathList['common'] as $path) {
 #else
-        if (isset($gJConfig->_tplpluginsPathList_common)) {
-            foreach ($gJConfig->_tplpluginsPathList_common as $path) {
+        if (isset($config->_tplpluginsPathList_common)) {
+            foreach ($config->_tplpluginsPathList_common as $path) {
 #endif
                 $foundPath = $path.$type.'.'.$name.'.php';
                 if (file_exists($foundPath)) {

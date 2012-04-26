@@ -24,17 +24,19 @@ class historyCoordPlugin implements jICoordPlugin {
         if( !empty($params['history.add']) && $params['history.add']
             && $_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            if( !isset($_SESSION[$this->config['session_name']]) )
-                $_SESSION[$this->config['session_name']] = array();
+            $sname = $this->config['session_name'];
 
-            $history = & $_SESSION[$this->config['session_name']];
+            if( !isset($_SESSION[$sname]) )
+                $_SESSION[$sname] = array();
 
-            global $gJCoord;
-            $page['params'] = $gJCoord->request->params;
+            $history = & $_SESSION[$sname];
+
+            $coord = jApp::coord();
+            $page['params'] = $coord->request->params;
             unset( $page['params']['module'] );
             unset( $page['params']['action'] );
 
-            $page['action'] = $gJCoord->action->toString();
+            $page['action'] = $coord->action->toString();
             $page['label'] = ( !empty($params['history.label']) )? $params['history.label']:'';
             $page['title'] = ( !empty($params['history.title']) )? $params['history.title']:'';
 
@@ -78,6 +80,8 @@ class historyCoordPlugin implements jICoordPlugin {
 
     public function change( $key, $val ) {
         $sn = $this->config['session_name'];
+        if (!isset($_SESSION[$sn]))
+            return;
         $page = array_pop($_SESSION[$sn]);
         $page[$key] = $val;
 

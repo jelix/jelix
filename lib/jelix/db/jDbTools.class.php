@@ -4,7 +4,7 @@
 * @subpackage db
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau, Gwendal Jouannic, Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2011 Laurent Jouanneau
 * @copyright  2008 Gwendal Jouannic
 * @copyright  2008 Julien Issler
 *
@@ -139,7 +139,7 @@ abstract class jDbTools {
 
 
     /**
-     * get informations about the given SQL type
+     * Get informations about the given SQL type
      * @param string $nativeType the SQL type
      * @return array an array which contains characteristics of the type
      *        array ( 'nativetype', 'corresponding unifiedtype', minvalue, maxvalue, minlength, maxlength)
@@ -152,12 +152,12 @@ abstract class jDbTools {
         }
         else 
             $r = $this->typesInfo['varchar'];
-        $r[] = ($nativeType == 'serial' || $nativeType == 'bigserial' ||$nativeType == 'autoincrement' || $nativeType == 'bigautoincrement');
+        $r[] = ($nativeType == 'serial' || $nativeType == 'bigserial' || $nativeType == 'autoincrement' || $nativeType == 'bigautoincrement');
         return $r;
     }
 
     /**
-     * return the PHP type corresponding to the given unified type
+     * Return the PHP type corresponding to the given unified type
      * @param string $unifiedType
      * @return string the php type
      * @since 1.2
@@ -166,7 +166,7 @@ abstract class jDbTools {
         if(isset($this->unifiedToPhp[$unifiedType])) {
             return $this->unifiedToPhp[$unifiedType];
         }
-        throw new Exception('bad unified type name:'.$unifiedType);
+        throw new Exception('bad unified type name:' . $unifiedType);
     }
 
     /**
@@ -211,13 +211,9 @@ abstract class jDbTools {
             case 'integer':
                 return (string)intval($value);
             case 'float':
-                return (string)doubleval($value);
             case 'numeric':
             case 'decimal':
-                if(is_numeric($value))
-                    return $value;
-                else
-                    return (string)floatval($value);
+               return jDb::floatToStr($value);
             default:
                 if ($toPhpSource) {
                     if ($unifiedType == 'varbinary' || $unifiedType == 'binary') {
@@ -252,7 +248,7 @@ abstract class jDbTools {
     }
 
     /**
-     * enclose the field name
+     * Rnclose the field name
      * @param string $fieldName the field name
      * @return string the enclosed field name
      * @since 1.2
@@ -262,12 +258,12 @@ abstract class jDbTools {
     }
 
     /**
-    * returns the table list
+    * <teturns the table list
     */
     abstract public function getTableList ();
 
     /**
-    * retrieve the list of fields of a table
+    * Retrieve the list of fields of a table
     * @param string $tableName the name of the table
     * @param string $sequence  the sequence used to auto increment the primary key
     * @return   array    keys are field names and values are jDbFieldProperties objects
@@ -292,15 +288,15 @@ abstract class jDbTools {
         $style = $this->dbmsStyle;
 
         foreach ((array)$lines as $key=>$line) {
-            if ((!preg_match($style[0],$line))&&(strlen(trim($line))>0)) { // la ligne n'est ni vide ni commentaire
+            if ((!preg_match($style[0],$line))&&(strlen(trim($line))>0)) { // The line isn't empty and isn't a comment
                //$line = str_replace("\\'","''",$line);
                //$line = str_replace($this->scriptReplaceFrom, $this->scriptReplaceBy,$line);
                
                 $cmdSQL.=$line;
 
                 if (preg_match($style[1],$line)) {
-                    //Si on est à la ligne de fin de la commande on l'execute
-                    // On nettoie la commande du ";" de fin et on l'execute
+                    // If at the last line of the command, execute it
+                    // Cleanup the command from the ending ";" and execute it
                     $cmdSQL = preg_replace($style[1],'',$cmdSQL);
                     $cmdSQL = str_replace('%%PREFIX%%', $prefix, $cmdSQL);
                     $this->_conn->query ($cmdSQL);

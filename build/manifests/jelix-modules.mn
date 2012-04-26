@@ -3,11 +3,20 @@ cd lib/jelix-modules
   INSTALL
   CREDITS
 
+cd lib/jelix-modules/jacl
+* module.xml
+cd lib/jelix-modules/jacl/classes
+* jAcl.class.php
+
 cd lib/jelix-modules/jacldb
-  module.xml
+* module.xml
   events.xml
 cd lib/jelix-modules/jacldb/classes
 !  jacldb.listener.php
+  jAclDb.class.php
+  jAclDbManager.class.php
+  jAclDbUserGroup.class.php
+
 cd lib/jelix-modules/jacldb/daos
    jaclgroup.dao.xml
    jaclrights.dao.xml
@@ -25,14 +34,20 @@ cd lib/jelix-modules/jacldb/install
   install_jacl.data.mysql.sql
   install_jacl.data.pgsql.sql
   install.php
+  upgrade_pluginmoved.php
 cd lib/jelix-modules/jacldb/install/var/config
   jacl.coord.ini.php
+cd lib/jelix-modules/jacldb/plugins/acl/db/
+  db.acl.php
 
 cd lib/jelix-modules/jacl2db
-  module.xml
+* module.xml
   events.xml
 cd lib/jelix-modules/jacl2db/classes
 !  jacl2db.listener.php
+  jAcl2DbUserGroup.class.php
+  jAcl2DbManager.class.php
+  jAcl2Db.class.php
 cd lib/jelix-modules/jacl2db/daos
    jacl2group.dao.xml
    jacl2rights.dao.xml
@@ -52,6 +67,8 @@ cd lib/jelix-modules/jacl2db/install
   upgrade_to_1.3a1_codegroup.php
   upgrade_to_1.3a2_subjectsgroup.php
   upgrade_to_1.3a3_cancelrights.php
+  upgrade_to_1.3RC2.2100_typecanceled.php
+  upgrade_pluginmoved.php
 cd lib/jelix-modules/jacl2db/install/sql/
   upgrade_codegroup_1.mysql.sql
   upgrade_codegroup_2.mysql.sql
@@ -60,11 +77,14 @@ cd lib/jelix-modules/jacl2db/install/sql/
   upgrade_codegroup_1.sqlite.sql
   upgrade_codegroup_2.sqlite.sql
   upgrade_subjectgroup_data.sql
+  upgrade_type_canceled.pgsql.sql
 cd lib/jelix-modules/jacl2db/install/var/config
   jacl2.coord.ini.php
+cd lib/jelix-modules/jacl2db/plugins/acl2/db/
+  db.acl2.php
 
 cd lib/jelix-modules/jauthdb
-  module.xml
+* module.xml
 cd lib/jelix-modules/jauthdb/daos
   jelixuser.dao.xml
 cd lib/jelix-modules/jauthdb/install/
@@ -75,7 +95,7 @@ cd lib/jelix-modules/jauthdb/install/
   upgrade_to_1.2b1pre.1303_newdao.php
 
 cd lib/jelix-modules/jauth
-  module.xml
+* module.xml
   events.xml
   urls.xml
   urls_ws.xml
@@ -121,8 +141,6 @@ cd lib/jelix-modules/junittests/templates
   main.tpl
 cd lib/jelix-modules/junittests/install
   install.php
-cd lib/jelix-modules/junittests/install/www/tests/
-  design.css
 cd lib/jelix-modules/junittests/install/scripts
   tests.php
 cd lib/jelix-modules/junittests/install/var/log-cli
@@ -130,10 +148,12 @@ cd lib/jelix-modules/junittests/install/var/config/cmdline
   configtests.ini.php
 cd lib/jelix-modules/junittests/tests
   jrunnerpreparer.html_cli.unit.php
+cd lib/jelix-modules/junittests/www
+  design.css
 #endif
 
 cd lib/jelix-modules/jWSDL
-  module.xml
+* module.xml
 cd lib/jelix-modules/jWSDL/controllers
   WSDL.classic.php
 cd lib/jelix-modules/jWSDL/templates

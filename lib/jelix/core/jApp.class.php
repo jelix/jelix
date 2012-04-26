@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage core
 * @author     Laurent Jouanneau
-* @copyright  2011 Laurent Jouanneau
+* @copyright  2011-2012 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -11,13 +11,11 @@
 /**
 *
 * @package    jelix
-* @subpackage utils
+* @subpackage core
 */
 class jApp {
 
     protected static $tempBasePath = '';
-
-    protected static $tempPath = '';
 
     protected static $appPath = '';
 
@@ -34,6 +32,8 @@ class jApp {
     protected static $_isInit = false;
 
     protected static $env = 'www/';
+
+    protected static $configAutoloader = null;
 
     /**
      * initialize the application paths
@@ -79,6 +79,7 @@ class jApp {
     public static function initLegacy() {
         if (self::$_isInit) {
             if (!defined('JELIX_APP_PATH')) {
+                define ('JELIX_APP_PATH',         self::$appPath);
                 define ('JELIX_APP_TEMP_PATH',    self::tempPath());
                 define ('JELIX_APP_VAR_PATH',     self::$varPath);
                 define ('JELIX_APP_LOG_PATH',     self::$logPath);
@@ -96,6 +97,13 @@ class jApp {
                             JELIX_APP_CMD_PATH);
             self::setTempBasePath(JELIX_APP_TEMP_PATH);
         }
+
+        global $gJConfig;
+        if (!$gJConfig)
+            $gJConfig = self::$_config;
+        global $gJCoord;
+        if (!$gJCoord)
+            $gJCoord = self::$_coord;
     }
 
     public static function appPath($file='') { return self::$appPath.$file; }
@@ -117,6 +125,64 @@ class jApp {
         self::$env = $env;
     }
 
+    /**
+     * @var object  object containing all configuration options of the application
+     */
+    protected static $_config = null;
+
+    /**
+     * @return object object containing all configuration options of the application
+     */
+    public static function config() {
+        return self::$_config;
+    }
+
+    public static function setConfig($config) {
+        if (self::$configAutoloader) {
+            spl_autoload_unregister(array(self::$configAutoloader, 'loadClass'));
+            self::$configAutoloader = null;
+        }
+
+        self::$_config = $config;
+        if ($config) {
+            date_default_timezone_set(self::$_config->timeZone);
+            self::$configAutoloader = new jConfigAutoloader($config);
+            spl_autoload_register(array(self::$configAutoloader, 'loadClass'));
+            foreach(self::$_config->_autoload_autoloader as $autoloader)
+                require_once($autoloader);
+        }
+    }
+
+    /**
+     * Load the configuration from the given file.
+     *
+     * Call it after initPaths
+     * @param  string|object $configFile name of the ini file to configure the framework or a configuration object
+     * @param  boolean $enableErrorHandler enable the error handler of jelix.
+     *                 keep it to true, unless you have something to debug
+     *                 and really have to use the default handler or an other handler
+     */
+    public static function loadConfig ($configFile, $enableErrorHandler=true) {
+        if ($enableErrorHandler) {
+            jBasicErrorHandler::register();
+        }
+        if (is_object($configFile))
+            self::setConfig($configFile);
+        else
+            self::setConfig(jConfig::load($configFile));
+        self::$_config->enableErrorHandler = $enableErrorHandler;
+    }
+
+    protected static $_coord = null;
+    
+    public static function coord() {
+        return self::$_coord;
+    }
+
+    public static function setCoord($coord) {
+        self::$_coord = $coord;
+    }
+
     protected static $contextBackup = array();
 
     /**
@@ -124,8 +190,16 @@ class jApp {
      * temporary change the context to an other application
      */
     public static function saveContext() {
+        if (self::$_config)
+            $conf = clone self::$_config;
+        else
+            $conf = null;
+        if (self::$_coord)
+            $coord = clone self::$_coord;
+        else
+            $coord = null;
         self::$contextBackup[] = array(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
-                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath);
+                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, $conf, $coord);
     }
 
     /**
@@ -135,7 +209,8 @@ class jApp {
         if (!count(self::$contextBackup))
             return;
         list(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
-             self::$wwwPath, self::$scriptPath, self::$tempBasePath) = array_pop(self::$contextBackup);
+             self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env,
+             self::$_config, self::$_coord) = array_pop(self::$contextBackup);
     }
 
     /**
@@ -150,14 +225,13 @@ class jApp {
     public static function loadPlugin($name, $type, $suffix, $classname, $args = null) {
 
         if (!class_exists($classname,false)) {
-            global $gJConfig;
             $optname = '_pluginsPathList_'.$type;
-            if (!isset($gJConfig->$optname))
+            if (!isset(jApp::config()->$optname))
                 return null;
-            $opt = & $gJConfig->$optname;
+            $opt = & jApp::config()->$optname;
 #ifnot ENABLE_OPTIMIZED_SOURCE
             if (!isset($opt[$name])
-                || !file_exists($opt[$name]) ){
+                || !file_exists($opt[$name].$name.$suffix) ){
                 return null;
             }
 #endif
@@ -167,5 +241,41 @@ class jApp {
             return new $classname($args);
         else
             return new $classname();
+    }
+
+    /**
+    * Says if the given module $name is enabled
+    * @param string $moduleName
+    * @param boolean $includingExternal  true if we want to know if the module
+    *               is also an external module, e.g. in an other entry point
+    * @return boolean true : module is ok
+    */
+    public static function isModuleEnabled ($moduleName, $includingExternal = false) {
+        if (!self::$_config)
+            throw Exception ('Configuration is not loaded');
+        if ($includingExternal && isset(self::$_config->_externalModulesPathList[$moduleName])) {
+            return true;
+        }
+        return isset(self::$_config->_modulesPathList[$moduleName]);
+    }
+
+    /**
+     * return the real path of a module
+     * @param string $module a module name
+     * @param boolean $includingExternal  true if we want to know if the module
+     *               is also an external module, e.g. in an other entry point
+     * @return string the corresponding path
+     */
+    public static function getModulePath($module, $includingExternal = false){
+        if (!self::$_config)
+            throw Exception ('Configuration is not loaded');
+
+        if (!isset(self::$_config->_modulesPathList[$module])) {
+            if ($includingExternal && isset(self::$_config->_externalModulesPathList[$module])) {
+                return self::$_config->_externalModulesPathList[$module];
+            }
+            throw new Exception('getModulePath : invalid module name');
+        }
+        return self::$_config->_modulesPathList[$module];
     }
 }

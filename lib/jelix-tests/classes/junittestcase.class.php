@@ -4,12 +4,10 @@
 * @subpackage  junittests
 * @author      Laurent Jouanneau
 * @contributor Christophe Thiriot
-* @copyright   2006-2011 Laurent Jouanneau
+* @copyright   2006-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
-PHP_CodeCoverage_Filter::getInstance()->addFileToBlacklist(__FILE__, 'PHPUNIT');
 
 class jUnitTestCase extends PHPUnit_Framework_TestCase {
 
@@ -37,7 +35,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
     public function assertComplexIdentical($value, $file, $errormessage=''){
         $xml = simplexml_load_file($file);
         if(!$xml){
-            trigger_error('Impossible de charger le fichier '.$file,E_USER_ERROR);
+            trigger_error('Unable to load file '.$file,E_USER_ERROR);
             return false;
         }
         return $this->_checkIdentical($xml, $value, '$value', $errormessage);
@@ -46,7 +44,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
     public function assertComplexIdenticalStr($value, $string, $errormessage=''){
         $xml = simplexml_load_string($string);
         if(!$xml){
-            trigger_error('mauvais contenu xml '.$string,E_USER_ERROR);
+            trigger_error('Wrong xml content '.$string,E_USER_ERROR);
             return false;
         }
         if($errormessage != '')
@@ -91,7 +89,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
         switch($nodename){
             case 'object':
                 if(isset($xml['class'])){
-                    $ok = $this->assertIsA($value,(string)$xml['class'], $name.': not a '.(string)$xml['class'].' object'.$errormessage);
+                    $ok = $this->assertInternalType((string)$xml['class'], $value, $name.': not a '.(string)$xml['class'].' object'.$errormessage);
                 }else
                     $ok = $this->assertTrue(is_object($value),  $name.': not an object'.$errormessage);
                 if(!$ok) return false;
@@ -121,7 +119,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
                 return $ok;
 
             case 'array':
-                $ok = $this->assertIsA($value,'array', $name.': not an array'.$errormessage);
+                $ok = $this->assertInternalType('array', $value, $name.': not an array'.$errormessage);
                 if(!$ok) return false;
 
                 if(trim((string)$xml) != ''){
@@ -129,7 +127,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
                         $this->fail("invalid php array syntax");
                         return false;
                     }
-                    return $this->assertEqual($value,$v,'negative test on '.$name.': %s'.$errormessage);
+                    return $this->assertEquals($v,$value,'negative test on '.$name.': %s'.$errormessage);
                 }else{
                     $key=0;
                     foreach ($xml->children() as $child) {
@@ -151,10 +149,10 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
                 break;
 
             case 'string':
-                $ok = $this->assertIsA($value,'string', $name.': not a string'.$errormessage);
+                $ok = $this->assertInternalType('string', $value,$name.': not a string'.$errormessage);
                 if(!$ok) return false;
                 if(isset($xml['value'])){
-                    return $this->assertEqual($value, (string)$xml['value'],$name.': bad value. %s'.$errormessage);
+                    return $this->assertEquals((string)$xml['value'],$value, $name.': bad value. %s'.$errormessage);
                 }
                 else
                     return true;
@@ -163,23 +161,23 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
                 $ok = $this->assertTrue(is_integer($value), $name.': not an integer ('.$value.') '.$errormessage);
                 if(!$ok) return false;
                 if(isset($xml['value'])){
-                    return $this->assertEqual($value, intval((string)$xml['value']),$name.': bad value. %s'.$errormessage);
+                    return $this->assertEquals(intval((string)$xml['value']),$value, $name.': bad value. %s'.$errormessage);
                 }else
                     return true;
             case 'float':
             case 'double':
-                $ok = $this->assertIsA($value,'float', $name.': not a float ('.$value.') '.$errormessage);
+                $ok = $this->assertInternalType('float', $value,$name.': not a float ('.$value.') '.$errormessage);
                 if(!$ok) return false;
                 if(isset($xml['value'])){
-                    return $this->assertEqual($value, floatval((string)$xml['value']),$name.': bad value. %s'.$errormessage);
+                    return $this->assertEquals( floatval((string)$xml['value']),$value,$name.': bad value. %s'.$errormessage);
                 }else
                     return true;
             case 'boolean':
-                $ok = $this->assertIsA($value,'boolean', $name.': not a boolean ('.$value.') '.$errormessage);
+                $ok = $this->assertInternalType('boolean', $value,$name.': not a boolean ('.$value.') '.$errormessage);
                 if(!$ok) return false;
                 if(isset($xml['value'])){
                     $v = ((string)$xml['value'] == 'true');
-                    return $this->assertEqual($value, $v ,$name.': bad value. %s'.$errormessage);
+                    return $this->assertEquals($v ,$value, $name.': bad value. %s'.$errormessage);
                 }else
                     return true;
             case 'null':
@@ -187,7 +185,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
             case 'notnull':
                 return $this->assertNotNull($value, $name.' is null'.$errormessage);
             case 'resource':
-                return $this->assertIsA($value,'resource', $name.': not a resource'.$errormessage);
+                return $this->assertInternalType('resource', $value,$name.': not a resource'.$errormessage);
             default:
                 $this->fail("_checkIdentical: balise inconnue ".$nodename.$errormessage);
         }

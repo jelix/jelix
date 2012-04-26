@@ -15,33 +15,18 @@ class UTjacl extends jUnitTestCaseDb {
     protected $config;
     protected $oldAuthPlugin;
 
-    public function setUp (){
+    public function setUpRun (){
         $conf = parse_ini_file(jApp::configPath().'auth_class.coord.ini.php',true);
 
-        global $gJCoord;
+        $coord = jApp::coord();
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
-        if (isset($gJCoord->plugins['auth']))
-            $this->oldAuthPlugin = $gJCoord->plugins['auth'];
-        $gJCoord->plugins['auth'] = new AuthCoordPlugin($conf);
+        if (isset($coord->plugins['auth']))
+            $this->oldAuthPlugin = $coord->plugins['auth'];
+        $coord->plugins['auth'] = new AuthCoordPlugin($conf);
 
-        $this->config = & $gJCoord->plugins['auth']->config;
+        $this->config = & $coord->plugins['auth']->config;
         $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
-        
-        jAuth::login('laurent','foo', false);
-    }
 
-    public function tearDown (){
-        global $gJCoord;
-        if ($this->oldAuthPlugin)
-            $gJCoord->plugins['auth'] = $this->oldAuthPlugin;
-        else
-            unset($gJCoord->plugins['auth']);
-        unset($_SESSION[$this->config['session_name']]);
-        $this->config = null;
-    }
-
-
-    public function testStart(){
         $this->dbProfile = 'jacl_profile';
         $this->emptyTable('jacl_rights');
         $this->emptyTable('jacl_subject');
@@ -81,7 +66,20 @@ class UTjacl extends jUnitTestCaseDb {
         );
 
         $this->insertRecordsIntoTable('jacl_right_values', array('value','label_key','id_aclvalgrp'), $rv, true);
+    }
+    
+    public function setUp (){
+        jAuth::login('laurent','foo', false);
+    }
 
+    public function tearDownRun (){
+
+        if ($this->oldAuthPlugin)
+            jApp::coord()->plugins['auth'] = $this->oldAuthPlugin;
+        else
+            unset(jApp::coord()->plugins['auth']);
+        unset($_SESSION[$this->config['session_name']]);
+        $this->config = null;
     }
 
     public function testIsMemberOfGroup(){

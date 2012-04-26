@@ -78,8 +78,8 @@ class createappCommand extends JelixScriptCommand {
         $this->config->infoWebsite = $this->config->newAppInfoWebsite;
         $this->config->infoLicence = $this->config->newAppInfoLicence;
         $this->config->infoLicenceUrl = $this->config->newAppInfoLicenceUrl;
-        $this->config->newAppInfoLocale = $this->config->newAppInfoLocale;
-        $this->config->newAppInfoCopyright = $this->config->newAppInfoCopyright;
+        $this->config->infoLocale = $this->config->newAppInfoLocale;
+        $this->config->infoCopyright = $this->config->newAppInfoCopyright;
         $this->config->initAppPaths($appPath);
 
         jApp::setEnv('jelix-scripts');
@@ -149,17 +149,39 @@ class createappCommand extends JelixScriptCommand {
         $param['rp_jelix'] = $this->getRelativePath($appPath, JELIX_LIB_PATH);
         $param['rp_app']   = $this->getRelativePath($wwwpath, $appPath);
 
+        $this->createFile(jApp::logPath().'.dummy', 'dummy.tpl', array());
+        $this->createFile(jApp::varPath().'mails/.dummy', 'dummy.tpl', array());
+        $this->createFile(jApp::varPath().'sessions/.dummy', 'dummy.tpl', array());
+        $this->createFile(jApp::varPath().'overloads/.dummy', 'dummy.tpl', array());
+        $this->createFile(jApp::varPath().'themes/default/.dummy', 'dummy.tpl', array());
+        $this->createFile($appPath.'plugins/.dummy', 'dummy.tpl', array());
+        $this->createFile(jApp::scriptsPath().'.dummy', 'dummy.tpl', array());
+        $this->createFile(jApp::tempBasePath().'.dummy', 'dummy.tpl', array());
+
         $this->createFile($appPath.'.htaccess', 'htaccess_deny', $param);
         $this->createFile($appPath.'project.xml','project.xml.tpl', $param);
         $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param);
+        $this->createFile($appPath.'.gitignore', 'git_ignore.tpl', $param);
         $this->createFile($configPath.'defaultconfig.ini.php', 'var/config/defaultconfig.ini.php.tpl', $param);
+        $this->createFile($configPath.'defaultconfig.ini.php.dist', 'var/config/defaultconfig.ini.php.tpl', $param);
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param);
+        $this->createFile($configPath.'profiles.ini.php.dist', 'var/config/profiles.ini.php.tpl', $param);
+        $this->createFile($configPath.'preferences.ini.php', 'var/config/preferences.ini.php.tpl', $param);
         $this->createFile($configPath.'urls.xml', 'var/config/urls.xml.tpl', $param);
         //$this->createFile(JELIX_APP_CONFIG_PATH.'installer.ini.php', 'var/config/installer.ini.php.tpl', $param);
         $this->createFile($configPath.'index/config.ini.php', 'var/config/index/config.ini.php.tpl', $param);
         $this->createFile($appPath.'responses/myHtmlResponse.class.php', 'responses/myHtmlResponse.class.php.tpl', $param);
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param);
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param);
+
+        $temp = dirname(jApp::tempBasePath());
+        if (file_exists($temp.'/.gitignore')) {
+            $gitignore = file_get_contents($temp.'/.gitignore'). "\n" .$appName."/*\n";
+            file_put_contents($temp.'/.gitignore', $gitignore);
+        }
+        else {
+            file_put_contents($temp.'/.gitignore', $appName."/*\n");
+        }
 
         $this->createFile($wwwpath.'index.php', 'www/index.php.tpl',$param);
         $this->createFile($wwwpath.'.htaccess', 'htaccess_allow',$param);

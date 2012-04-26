@@ -6,7 +6,7 @@
  * @subpackage rules
  * @author Laurent Jouanneau
  * @copyright 2009 Laurent Jouanneau
- * @link http://wikirenderer.berlios.de
+ * @link http://wikirenderer.jelix.org
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public 2.1
@@ -75,6 +75,16 @@ class jwiki_to_xhtml  extends WikiRendererConfig  {
             $finalTexte .= str_replace('%s', $footnotes, $this->footnotesTemplate);
         }
         return $finalTexte;
+    }
+
+    public function processLink($url, $tagName='') {
+        $label = $url;
+        if(strlen($label) > 40)
+            $label = substr($label,0,40).'(..)';
+  
+        if(strpos($url,'javascript:')!==false) // for security reason
+            $url='#';
+        return array($url, $label);
     }
 }
 
@@ -187,18 +197,12 @@ class jwxhtml_link extends WikiTagXhtml {
     public function getContent(){
         $cntattr = count($this->attribute);
         $cnt = ($this->separatorCount + 1 > $cntattr?$cntattr:$this->separatorCount+1);
+        list($href, $label) = $this->config->processLink($this->wikiContentArr[0], $this->name);
         if ($cnt == 1 ) {
-            $contents = $this->wikiContentArr[0];
-            $href=$contents;
-            if(strpos($href,'javascript:')!==false) // for security reason
-                $href='#';
-            if(strlen($contents) > 40)
-                $contents=substr($contents,0,40).'(..)';
-            return '<a href="'.htmlspecialchars(trim($href)).'">'.htmlspecialchars($contents).'</a>';
+            return '<a href="'.htmlspecialchars(trim($href)).'">'.htmlspecialchars($label).'</a>';
         }
         else {
-            if(strpos($this->wikiContentArr[0],'javascript:')!==false) // for security reason
-                $this->wikiContentArr[0]='#';
+            $this->wikiContentArr[0] = $href;
             return parent::getContent();
         }
     }
@@ -266,7 +270,7 @@ class jwxhtml_image extends WikiTagXhtml {
             }
             $href= $m[2];
         }
-
+        list($href,$label) = $this->config->processLink($href, $this->name);
         $tag = '<img src="'.$href.'"';
         if($width != '')
             $tag.=' width="'.$width.'"';

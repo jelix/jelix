@@ -4,7 +4,7 @@
 * @subpackage  core_response
 * @author      Baptiste Toinot
 * @contributor Laurent Jouanneau
-* @copyright   2008 Baptiste Toinot, 2011 Laurent Jouanneau
+* @copyright   2008 Baptiste Toinot, 2011-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -89,6 +89,12 @@ class jResponseSitemap extends jResponse {
      * @return boolean true if generation is ok, else false
      */
     final public function output() {
+        
+        if($this->_outputOnlyHeaders){
+            $this->sendHttpHeaders();
+            return true;
+        }
+        
         $this->_httpHeaders['Content-Type'] = 'application/xml;charset=UTF-8';
 
         if (!is_null($this->urlSitemap)) {
@@ -123,9 +129,9 @@ class jResponseSitemap extends jResponse {
         if (isset($loc[2048]) || count($this->urlList) >= $this->maxUrl) {
             return false;
         }
-        global $gJCoord;
+
         $url = new jSitemapUrl();
-        $url->loc = $gJCoord->request->getServerURI() . $loc;
+        $url->loc = jApp::coord()->request->getServerURI() . $loc;
 
         if (($timestamp = strtotime($lastmod))) {
             $url->lastmod = date('c', $timestamp);
@@ -153,9 +159,9 @@ class jResponseSitemap extends jResponse {
         if (isset($loc[2048]) || count($this->urlSitemap) >= $this->maxSitemap) {
             return false;
         }
-        global $gJCoord;
+
         $sitemap = new jSitemapIndex();
-        $sitemap->loc = $gJCoord->request->getServerURI() . $loc;
+        $sitemap->loc = jApp::coord()->request->getServerURI() . $loc;
 
         if (($timestamp = strtotime($lastmod))) {
             $sitemap->lastmod = date('c', $timestamp);
@@ -205,6 +211,7 @@ class jResponseSitemap extends jResponse {
      * @return array
      */
     protected function _parseUrlsXml() {
+<<<<<<< HEAD
         global $gJConfig;
         $urls = array();
         $significantFile = $gJConfig->urlengine['significantFile'];
@@ -212,6 +219,14 @@ class jResponseSitemap extends jResponse {
         $entryPointExtension = $gJConfig->urlengine['entrypointExtension'];
         $snp = $gJConfig->urlengine['urlScriptIdenc'];
         $basePath = $gJConfig->urlengine['basePath'];
+=======
+
+        $urls = array();
+        $conf = &jApp::config()->urlengine;
+        $significantFile = $conf['significantFile'];
+        $entryPoint = $conf['defaultEntrypoint'];
+        $snp = $conf['urlScriptIdenc'];
+>>>>>>> d1e187668353911d467b60e7f95d9a1007f1f8b9
 
         $file = jApp::tempPath('compiled/urlsig/' . $significantFile .
                 '.' . rawurlencode($entryPoint) . '.entrypoint.php');

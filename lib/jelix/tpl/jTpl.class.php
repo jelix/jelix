@@ -4,7 +4,7 @@
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
-* @copyright   2005-2009 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2005-2012 Laurent Jouanneau, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -47,12 +47,12 @@ class jTpl {
 
     public function __construct () {
 #ifnot JTPL_STANDALONE
-        global $gJConfig;
-        $this->_vars['j_basepath'] = $gJConfig->urlengine['basePath'];
-        $this->_vars['j_jelixwww'] = $gJConfig->urlengine['jelixWWWPath'];
-        $this->_vars['j_jquerypath'] = $gJConfig->urlengine['jqueryPath'];
-        $this->_vars['j_themepath'] = $gJConfig->urlengine['basePath'].'themes/'.$gJConfig->theme.'/';
-        $this->_vars['j_locale'] = $gJConfig->locale;
+        $config = jApp::config();
+        $this->_vars['j_basepath'] = $config->urlengine['basePath'];
+        $this->_vars['j_jelixwww'] = $config->urlengine['jelixWWWPath'];
+        $this->_vars['j_jquerypath'] = $config->urlengine['jqueryPath'];
+        $this->_vars['j_themepath'] = $config->urlengine['basePath'].'themes/'.$config->theme.'/';
+        $this->_vars['j_locale'] = $config->locale;
 #endif
         $this->_vars['j_datenow'] = date('Y-m-d');
         $this->_vars['j_timenow'] = date('H:i:s');
@@ -205,7 +205,7 @@ class jTpl {
             // we want to process meta only one time, when a template is included
             // several time in an other template, or, more important, when a template
             // is included in a recursive manner (in this case, it did cause infinite loop, see #1396). 
-            return;
+            return $this->_meta;
         }
         $this->processedMeta[] = $tpl;
 #ifnot JTPL_STANDALONE
@@ -320,7 +320,11 @@ class jTpl {
 #endif
             $previousTpl = $this->_templateName;
             $this->_templateName = $tpl;
-            $this->processedMeta[] = $tpl;
+            if (in_array($tpl, $this->processedMeta)) {
+                $callMeta = false;
+            }
+            else
+                $this->processedMeta[] = $tpl;
             $this->recursiveTpl[] = $tpl;
 #ifnot JTPL_STANDALONE
             $md = $this->getTemplate ($sel, $outputtype, $trusted);
@@ -338,6 +342,62 @@ class jTpl {
             $content = ob_get_clean();
 
         } catch(Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
+        return $content;
+    }
+
+     /**
+     * Return the generated content from the given string template (virtual)
+     * @param string $tpl template content
+     * @param string $outputtype the type of output (html, text etc..)
+     * @param boolean $trusted  says if the template file is trusted or not
+     * @param boolean $callMeta false if meta should not be called
+     * @return string the generated content
+     */
+    public function fetchFromString ($tpl, $outputtype='', $trusted = true, $callMeta=true){
+        $content = '';
+        ob_start ();
+        try{
+#ifnot JTPL_STANDALONE
+            $cachePath = jApp::tempPath('compiled/templates/virtuals/');
+            require_once(JELIX_LIB_PATH.'tpl/jTplCompiler.class.php');
+#else
+            $cachePath = jTplConfig::$cachePath . '/virtuals/';
+            require_once(JTPL_PATH . 'jTplCompiler.class.php');
+#endif
+            $previousTpl = $this->_templateName;
+            $md = 'virtual_'.md5($tpl).($trusted?'_t':'');
+            $this->_templateName = $md;
+
+            if ($outputtype == '')
+                $outputtype = 'html';
+
+            $cachePath .= $outputtype.'_'.$this->_templateName.'.php';
+#ifnot JTPL_STANDALONE
+            $mustCompile = $GLOBALS['gJConfig']->compilation['force'] || !file_exists($cachePath);
+#else
+            $mustCompile = jTplConfig::$compilationForce || !file_exists($cachePath);
+#endif
+
+            if ($mustCompile && !function_exists('template_'.$md)) {
+                $compiler = new jTplCompiler();
+                $compiler->outputType = $outputtype;
+                $compiler->trusted = $trusted;
+                $compiler->compileString($tpl, $cachePath, $this->userModifiers, $this->userFunctions, $md);
+            }
+            require_once($cachePath);
+
+            if ($callMeta) {
+                $fct = 'template_meta_'.$md;
+                $fct($this);
+            }
+            $fct = 'template_'.$md;
+            $fct($this);
+            $content = ob_get_clean();
+            $this->_templateName = $previousTpl;
+        }catch(exception $e){
             ob_end_clean();
             throw $e;
         }
@@ -380,7 +440,7 @@ class jTpl {
 #if JTPL_STANDALONE
         return jTplConfig::$charset;
 #else
-        return $GLOBALS['gJConfig']->charset;
+        return jApp::config()->charset;
 #endif
     }
 

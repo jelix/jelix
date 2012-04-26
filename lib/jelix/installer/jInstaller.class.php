@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2010 Laurent Jouanneau
+* @copyright   2008-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -491,7 +491,7 @@ class jInstaller {
 
         $this->notice('install.entrypoint.start', $epId);
         $ep = $this->entryPoints[$epId];
-        $GLOBALS['gJConfig'] = $ep->config;
+        jApp::setConfig($ep->config);
 
         if ($ep->config->disableInstallers)
             $this->notice('install.entrypoint.installers.disabled');
@@ -587,6 +587,12 @@ class jInstaller {
                                                    1, $epId);
                     $this->installerIni->setValue($component->getName().'.version',
                                                    $component->getSourceVersion(), $epId);
+                    $this->installerIni->setValue($component->getName().'.version.date',
+                                                   $component->getSourceDate(), $epId);
+                    $this->installerIni->setValue($component->getName().'.firstversion',
+                                                   $component->getSourceVersion(), $epId);
+                    $this->installerIni->setValue($component->getName().'.firstversion.date',
+                                                   $component->getSourceDate(), $epId);
                     $this->ok('install.module.installed', $component->getName());
                     $installedModules[] = array($installer, $component, true);
                 }
@@ -600,6 +606,8 @@ class jInstaller {
                         // during a future update
                         $this->installerIni->setValue($component->getName().'.version',
                                                       $upgrader->version, $epId);
+                        $this->installerIni->setValue($component->getName().'.version.date',
+                                                      $upgrader->date, $epId);
                         $this->ok('install.module.upgraded',
                                   array($component->getName(), $upgrader->version));
                         $lastversion = $upgrader->version;
@@ -609,6 +617,8 @@ class jInstaller {
                     if ($lastversion != $component->getSourceVersion()) {
                         $this->installerIni->setValue($component->getName().'.version',
                                                       $component->getSourceVersion(), $epId);
+                        $this->installerIni->setValue($component->getName().'.version.date',
+                                                      $component->getSourceDate(), $epId);
                         $this->ok('install.module.upgraded',
                                   array($component->getName(), $component->getSourceVersion()));
                     }
@@ -618,10 +628,11 @@ class jInstaller {
                 $ep->configIni->save();
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
-                $GLOBALS['gJConfig'] = $ep->config =
+                $ep->config =
                     jConfigCompiler::read($ep->configFile, true,
                                           $ep->isCliScript,
                                           $ep->scriptName);
+                jApp::setConfig($ep->config);
             }
         } catch (jInstallerException $e) {
             $result = false;
@@ -658,10 +669,11 @@ class jInstaller {
                 $ep->configIni->save();
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
-                $GLOBALS['gJConfig'] = $ep->config =
+                $ep->config =
                     jConfigCompiler::read($ep->configFile, true,
                                           $ep->isCliScript,
                                           $ep->scriptName);
+                jApp::setConfig($ep->config);
             } catch (jInstallerException $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());

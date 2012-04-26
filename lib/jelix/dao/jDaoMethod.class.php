@@ -56,11 +56,11 @@ class jDaoMethod {
         if (isset ($method->parameter)){
             foreach ($method->parameter as $param){
                 $attr = $param->attributes();
-                if (strpos($attr['name'],'$') !== false) {
-                    throw new jDaoXmlException($this->_parser->selector,'method.parameter.invalidname',array($method->name,$attr['name']));
-                }
                 if (!isset ($attr['name'])){
                     throw new jDaoXmlException ($this->_parser->selector, 'method.parameter.unknowname', array($this->name));
+                }
+                if (!preg_match('/[a-zA-Z_][a-zA-Z0-9_]*/', (string)$attr['name'])) {
+                    throw new jDaoXmlException($this->_parser->selector,'method.parameter.invalidname',array($method->name,$attr['name']));
                 }
                 $this->_parameters[]=(string)$attr['name'];
                 if (isset ($attr['default'])){

@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
 * @contributor Julien Issler, Yannick Le Guédart
-* @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
 * initial authors : Gerald Croes, Laurent Jouanneau.
@@ -36,7 +36,7 @@ class jLocale {
      * @return string
      */
     static function getCurrentLang(){
-        $s=$GLOBALS['gJConfig']->locale;
+        $s=jApp::config()->locale;
         return substr($s,0, strpos($s,'_'));
     }
     /**
@@ -44,7 +44,7 @@ class jLocale {
      * @return string
      */
     static function getCurrentCountry (){
-        $s=$GLOBALS['gJConfig']->locale;
+        $s = jApp::config()->locale;
         return substr($s,strpos($s,'_')+1);
     }
 
@@ -60,17 +60,18 @@ class jLocale {
     * @return string the localized string
     */
     static function get ($key, $args=null, $locale=null, $charset=null) {
-        global $gJConfig;
+
+        $config = jApp::config();
         try {
             $file = new jSelectorLoc($key, $locale, $charset);
         }
         catch (jExceptionSelector $e) {
             // the file is not found
             if ($e->getCode() == 12) throw $e;
-            if ($locale === null)  $locale = $gJConfig->locale;
-            if ($charset === null) $charset = $gJConfig->charset;
-            if ($locale != $gJConfig->fallbackLocale && $gJConfig->fallbackLocale) {
-                return jLocale::get ($key, $args, $gJConfig->fallbackLocale, $charset);
+            if ($locale === null)  $locale = $config->locale;
+            if ($charset === null) $charset = $config->charset;
+            if ($locale != $config->fallbackLocale && $config->fallbackLocale) {
+                return jLocale::get ($key, $args, $config->fallbackLocale, $charset);
             }
             else
                 throw new Exception('(200)The given locale key "'.$key
@@ -90,17 +91,17 @@ class jLocale {
         //try to get the message from the bundle.
         $string = $bundle->get ($file->messageKey, $file->charset);
         if ($string === null) {
-            if ($locale == $gJConfig->fallbackLocale) {
+            if ($locale == $config->fallbackLocale) {
                 throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang and in the fallback lang for the '.$file->charset.' charset');
             }
             // if the message was not found, we're gonna
             //use the default language and country.
-            else if ($locale == $gJConfig->locale) {
-                if ($gJConfig->fallbackLocale)
-                    return jLocale::get ($key, $args, $gJConfig->fallbackLocale, $charset);
+            else if ($locale == $config->locale) {
+                if ($config->fallbackLocale)
+                    return jLocale::get ($key, $args, $config->fallbackLocale, $charset);
                 throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang for the '.$file->charset.' charset');
             }
-            return jLocale::get ($key, $args, $gJConfig->locale);
+            return jLocale::get ($key, $args, $config->locale);
         }
         else {
             //here, we know the message

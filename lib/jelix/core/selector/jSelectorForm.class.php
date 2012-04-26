@@ -5,7 +5,7 @@
 * @package     jelix
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -38,8 +38,7 @@ class jSelectorForm extends jSelectorModule {
 
 
     protected function _createPath(){
-        global $gJConfig;
-        if(!isset($gJConfig->_modulesPathList[$this->module])){
+        if(!isset(jApp::config()->_modulesPathList[$this->module])){
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString(true));
         }
 
@@ -51,7 +50,7 @@ class jSelectorForm extends jSelectorModule {
            return;
         }
 
-        $this->_path = $gJConfig->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
+        $this->_path = jApp::config()->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
         if (!is_readable ($this->_path)){
             throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), $this->type));
         }
@@ -59,8 +58,8 @@ class jSelectorForm extends jSelectorModule {
     }
 
     protected function _createCachePath(){
-        // on ne partage pas le même cache pour tous les emplacements possibles
-        // au cas où un overload était supprimé
+        // don't share the same cache for all the possible dirs
+        // in case of overload removal
         $this->_cachePath = jApp::tempPath('compiled/'.$this->_dirname.$this->_where.$this->module.'~'.$this->resource.$this->_cacheSuffix);
     }
 

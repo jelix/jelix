@@ -5,9 +5,22 @@
 cd .
   README
 
+
+cd lib/jelix/acl
+  jAcl.class.php
+  jAclDb.class.php
+  jAclDbManager.class.php
+  jAclDbUserGroup.class.php
+  jAcl2Db.class.php
+  jAcl2DbManager.class.php
+  jAcl2DbUserGroup.class.php
+
 cd lib/jelix/core
   jInstallChecker.class.php
   jApplication.class.php
+  jErrorHandler.lib.php
+  jException.lib.php
+
 
 cd lib/jelix/core-modules/jelix/install/sql
   install_jacl.datas.mysql.sql
@@ -59,6 +72,12 @@ cd lib/jelix/installer/
 cd lib/jelix/utils/
   jLog.class.php
   jMinifier.class.php
+
+cd lib/jelix/plugins/acl/db/
+  db.acl.php
+
+cd lib/jelix/plugins/acl2/db
+  db.acl2.php
 
 cd lib/jelix/plugins/tpl/html
   block.formdatas.php
@@ -205,6 +224,9 @@ cd lib/jelix-modules/jauthdb/install
   install_jauth.data.pgsql.sql
   install_jauth.data.sqlite.sql
   _installclass.php
+
+cd lib/jelix-modules/junittests/install/www/tests/
+  design.css
 
 cd lib/json
   JSON.php

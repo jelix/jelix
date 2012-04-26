@@ -29,7 +29,7 @@ class jJsonRpcRequest extends jRequest {
     public $jsonRequestId = null;
 
     /**
-     * analyse the http request and set the params property
+     * Analyze the HTTP request and set the params property
      */
     protected function _initParams(){
         global $HTTP_RAW_POST_DATA;
@@ -40,7 +40,7 @@ class jJsonRpcRequest extends jRequest {
             $request = implode("\n",$request);
         }
 
-        // Décodage de la requete
+        // Decode the request
         $requestobj = jJsonRpc::decodeRequest($request);
         if($requestobj['method']){
             list($module, $action) = explode('~',$requestobj['method']);
@@ -56,7 +56,7 @@ class jJsonRpcRequest extends jRequest {
 
         $this->params['params'] = $requestobj['params'];
 
-        // Définition de l'action a executer et des paramètres
+        // Definition of action to use and its parameters
         $this->params['module'] = $module;
         $this->params['action'] = $action;
     }

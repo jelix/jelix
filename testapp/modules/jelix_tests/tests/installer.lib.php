@@ -24,7 +24,6 @@ class testInstallerComponentModule extends jInstallerComponentModule {
 
 }
 
-
 class testInstallerEntryPoint extends jInstallerEntryPoint {
 
     function __construct($defaultConfig, $configFile, $file, $type, $configContent) {
@@ -44,7 +43,7 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
     }
     
     function getEpId() {
-        return $this->file;
+        return str_replace('.php', '', $this->file);
     }
 }
 
@@ -124,8 +123,8 @@ class testInstallerMain extends jInstaller {
         $this->reporter = $reporter;
         $this->defaultConfig = new jIniFileModifier(jApp::configPath().'defaultconfig.ini.php');
         $this->messages = new jInstallerMessageProvider('en');
-        $nativeModules = array('jelix','jacl2db','jacldb','jauth','jauthdb','junittests','jWSDL');
-        global $gJConfig;
+        $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','junittests','jWSDL');
+        $config = jApp::config();
         foreach ($this->configContent as $ep=>$conf) {
             
             foreach($nativeModules as $module) {
@@ -133,8 +132,8 @@ class testInstallerMain extends jInstaller {
                 $this->configContent[$ep]['modules'][$module.'.dbprofile'] = 'default';
                 $this->configContent[$ep]['modules'][$module.'.installed'] = 0;
                 $this->configContent[$ep]['modules'][$module.'.version'] = JELIX_VERSION;
-                $this->configContent[$ep]['_modulesPathList'][$module] = $gJConfig->_modulesPathList[$module];
-                $this->configContent[$ep]['_allModulesPathList'][$module] = $gJConfig->_modulesPathList[$module];
+                $this->configContent[$ep]['_modulesPathList'][$module] = $config->_modulesPathList[$module];
+                $this->configContent[$ep]['_allModulesPathList'][$module] = $config->_modulesPathList[$module];
             }
         }
 
@@ -187,7 +186,7 @@ class testInstallerMain extends jInstaller {
     }
     
     protected function getComponentModule($name, $path, $installer) {
-        if (in_array($name, array('jelix','jacl2db','jacldb','jauth','jauthdb','junittests','jWSDL'))) {
+        if (in_array($name, array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','junittests','jWSDL'))) {
             return new jInstallerComponentModule($name, $path, $installer);
         }
         else {

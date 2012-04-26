@@ -10,8 +10,8 @@
  * @contributor Mickael Fradin
  * @contributor Christophe Thiriot
  * @contributor Yannick Le Guédart
- * @contributor Steven Jehannet
- * @copyright   2005-2010 Laurent Jouanneau
+ * @contributor Steven Jehannet, Didier Huguet
+ * @copyright   2005-2011 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007-2009 Julien Issler
  * @copyright   2008 Thomas
@@ -19,7 +19,7 @@
  * @copyright   2009 Mickael Fradin
  * @copyright   2009 Christophe Thiriot
  * @copyright   2010 Yannick Le Guédart
- * @copyright   2010 Steven Jehannet
+ * @copyright   2010 Steven Jehannet, 2010 Didier Huguet
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -117,6 +117,23 @@ abstract class jDaoFactoryBase  {
                 $this->_tables[$table_name]['realname'] = $this->_conn->prefixTable($table['realname']);
             }
         }
+    }
+
+    /**
+     * @since 1.3.2
+     * @return array informations on tables
+     * @see $_tables
+     */
+    public function getTables() {
+        return $this->_tables;
+    }
+
+    /**
+     * @since 1.3.2
+     * @return string the id (alias or realname) of the primary table
+     */
+    public function getPrimaryTable() {
+        return $this->_primaryTable;
     }
 
     /**
@@ -231,12 +248,14 @@ abstract class jDaoFactoryBase  {
      * save a new record into the database
      * if the dao record has an autoincrement key, its corresponding property is updated
      * @param jDaoRecordBase $record the record to save
+     * @return integer  1 if success (the number of affected rows). False if the query has failed. 
      */
     abstract public function insert ($record);
 
     /**
      * save a modified record into the database
      * @param jDaoRecordBase $record the record to save
+     * @return integer  1 if success (the number of affected rows). False if the query has failed. 
      */
     abstract public function update ($record);
 
@@ -359,9 +378,9 @@ abstract class jDaoFactoryBase  {
         $order = array ();
         $props =$this->getProperties();
         foreach ($daocond->order as $name => $way){
-            if (isset($props[$name]))
-                $order[] = $this->_conn->prefixTable($props[$name]['table']) . '.' 
-	                . $this->_conn->encloseName($props[$name]['fieldName']).' '.$way; 
+            if (isset($props[$name])) {
+                $order[] = $this->_conn->encloseName($props[$name]['table']).'.'.$this->_conn->encloseName($props[$name]['fieldName']).' '.$way;
+            }
         }
 
         if(count ($order)){
@@ -399,6 +418,10 @@ abstract class jDaoFactoryBase  {
                 $r .= ' '.$condition->glueOp.' ';
             }else
                 $notfirst = true;
+
+            if (!isset($fields[$cond['field_id']])) {
+                throw new jException('jelix~dao.error.property.unknown', $cond['field_id']);
+            }
 
             $prop=$fields[$cond['field_id']];
 
@@ -493,13 +516,9 @@ abstract class jDaoFactoryBase  {
                 return intval($value);
             case 'double':
             case 'float':
-                return doubleval($value);
             case 'numeric':
             case 'decimal':
-                if(is_numeric($value))
-                    return $value;
-                else
-                    return doubleval($value);
+                return jDb::floatToStr($value);
             case 'boolean':
                 if ($value === true|| strtolower($value)=='true'|| intval($value) === 1 || $value ==='t' || $value ==='on')
                     return $this->trueValue;

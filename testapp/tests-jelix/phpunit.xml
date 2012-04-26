@@ -4,8 +4,11 @@
     <testsuite name="Jelix Core">
       <directory>jelix/core/</directory>
     </testsuite>
-    <testsuite name="Jelix Core">
+    <testsuite name="Jelix Db">
       <directory>jelix/db/</directory>
+    </testsuite>
+    <testsuite name="Jelix KVDb">
+      <directory>jelix/kvdb/</directory>
     </testsuite>
     <testsuite name="Jelix Installer">
       <directory>jelix/installer/</directory>

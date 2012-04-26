@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2009-2011 Laurent Jouanneau
+* @copyright   2009-2012 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -26,8 +26,27 @@ abstract class jInstallerBase {
      */
     public $name;
 
+
     /**
-     * @var string the version of the component
+     * the versions for which the installer should be called.
+     * Useful for an upgrade which target multiple branches of a project.
+     * Put the version for multiple branches. The installer will be called
+     * only once, for the needed version.
+     * If you don't fill it, the name of the class file should contain the
+     * target version (deprecated behavior though)
+     * @var array $targetVersions list of version by asc order
+     * @since 1.2.6
+     */
+    public $targetVersions = array();
+
+    /**
+     * @var string the date of the release of the update. format: yyyy-mm-dd hh:ii
+     * @since 1.2.6
+     */
+    public $date = '';
+
+    /**
+     * @var string the version for which the installer is called
      */
     public $version = '0';
 
@@ -401,5 +420,35 @@ abstract class jInstallerBase {
         $profiles->save();
         jProfiles::clear();
         return true;
+    }
+
+    /**
+     * declare a plugins directory
+     * @param string $path a path. it could contains aliases like 'app:', 'lib:' or 'module:'
+     * @since 1.4
+     */
+    function declarePluginsPath($path) {
+        if (preg_match('@^module:([^/]+)(/.*)?$@', $path, $m)) {
+            if (!isset($m[2]))
+                $path.= '/plugins';
+            else  if (strlen($m[2]) == 1)
+                $path.= 'plugins';
+        }
+        $pluginsPath = $this->config->getValue('pluginsPath');
+        $list = preg_split('/ *, */',$pluginsPath);
+        $path = rtrim($path, '/');
+        foreach($list as $p) {
+            if (preg_match('@^module:([^/]+)(/.*)?$@', $p, $m)) {
+                if (!isset($m[2]))
+                    $p.= '/plugins';
+                else  if (strlen($m[2]) == 1)
+                    $p.= 'plugins';
+            }
+
+            if (rtrim($p, '/') == $path)
+                return;
+        }
+        $pluginsPath .= ','.$path;
+        $this->config->setValue('pluginsPath', $pluginsPath);
     }
 }

@@ -13,14 +13,12 @@ class UTjimagemodifier extends UnitTestCase {
 
     protected $origFile;
 
-    function testStart() {
-        $this->origFile = jApp::wwwPath('imagemodifier/logo_test.png');
-        if (!is_writable(jApp::wwwPath('cache/images/')))
-            $this->fail("cache/images/ is not writable");
-
+    function skip() {
+        $this->skipIf(!is_writable(jApp::wwwPath('cache/images/')), "cache/images/ is not writable");
     }
 
-    function setUp() {
+    function setUpRun() {
+        $this->origFile = jApp::wwwPath('imagemodifier/logo_test.png');
     }
 
     function testGet() {
@@ -31,7 +29,7 @@ class UTjimagemodifier extends UnitTestCase {
             unlink($cacheFile);
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('width'=>50, 'height'=>30));
-        $this->assertEqual('http://'.$_SERVER['HTTP_HOST'].$GLOBALS['gJConfig']->urlengine['basePath'].$cacheName, $attributes['src']);
+        $this->assertEqual(jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName, $attributes['src']);
         $this->assertTrue(file_exists($cacheFile));
 
 
@@ -51,7 +49,7 @@ class UTjimagemodifier extends UnitTestCase {
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('maxwidth'=>50, 'maxheight'=>30, 'omo'=>true));
         $this->assertTrue(file_exists($cacheFile));
-        $this->assertEqual('http://'.$_SERVER['HTTP_HOST'].$GLOBALS['gJConfig']->urlengine['basePath'].$cacheName, $attributes['src']);
+        $this->assertEqual(jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName, $attributes['src']);
         //$this->assertEqual('50', $attributes['width']);
         //$this->assertEqual('16', $attributes['height']);
 
@@ -70,7 +68,7 @@ class UTjimagemodifier extends UnitTestCase {
             unlink($cacheFile);
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('width'=>50, 'height'=>30, 'omo'=>true));
-        $this->assertEqual('http://'.$_SERVER['HTTP_HOST'].$GLOBALS['gJConfig']->urlengine['basePath'].$cacheName, $attributes['src']);
+        $this->assertEqual(jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName, $attributes['src']);
         $this->assertEqual('50', $attributes['width']);
         $this->assertEqual('30', $attributes['height']);
         $this->assertTrue(file_exists($cacheFile));

@@ -58,28 +58,28 @@ class UTDao_generator extends jUnitTestCase {
         $this->assertEqualOrDiff('intval($foo)',$this->_getProp('integer','$foo', false));
         $this->assertEqualOrDiff('intval($foo)',$this->_getProp('autoincrement','$foo', false));
         $this->assertEqualOrDiff('$this->_conn->quote($foo)',$this->_getProp('string','$foo', false));
-        $this->assertEqualOrDiff('(is_numeric ($foo) ? $foo : floatval($foo))',$this->_getProp('double','$foo', false));
-        $this->assertEqualOrDiff('doubleval($foo)',$this->_getProp('float','$foo', false));
-        $this->assertEqualOrDiff('(is_numeric ($foo) ? $foo : floatval($foo))',$this->_getProp('numeric','$foo', false));
-        $this->assertEqualOrDiff('(is_numeric ($foo) ? $foo : floatval($foo))',$this->_getProp('bigautoincrement','$foo', false));
+        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('double','$foo', false));
+        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('float','$foo', false));
+        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('numeric','$foo', false));
+        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('bigautoincrement','$foo', false));
 
         // with checknull 
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : intval($foo))',$this->_getProp('integer','$foo', true));
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : intval($foo))',$this->_getProp('autoincrement','$foo', true));
         $this->assertEqualOrDiff('($foo === null ? \'NULL\' : $this->_conn->quote2($foo,false))',$this->_getProp('string','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : (is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('double','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : doubleval($foo))',$this->_getProp('float','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : (is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('numeric','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : (is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('bigautoincrement','$foo', true));
+        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('double','$foo', true));
+        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('float','$foo', true));
+        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('numeric','$foo', true));
+        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('bigautoincrement','$foo', true));
 
         // with checknull and operator =
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.intval($foo))',$this->_getProp('integer','$foo', true,'='));
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.intval($foo))',$this->_getProp('autoincrement','$foo', true,'='));
         $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.$this->_conn->quote2($foo,false))',$this->_getProp('string','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('double','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.doubleval($foo))',$this->_getProp('float','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('numeric','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$this->_getProp('bigautoincrement','$foo', true,'='));
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('double','$foo', true,'='));
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('float','$foo', true,'='));
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('numeric','$foo', true,'='));
+        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('bigautoincrement','$foo', true,'='));
 
         // with checknull with default value and operator =
         /*$prop->defaultValue=34;
@@ -116,13 +116,13 @@ class UTDao_generator extends jUnitTestCase {
         $result = $this->_getProp('string','$foo', true,'<>');
         $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.$this->_conn->quote2($foo,false))',$result);
         $result = $this->_getProp('double','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$result);
+        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
         $result = $this->_getProp('float','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.doubleval($foo))',$result);
+        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
         $result = $this->_getProp('numeric','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$result);
+        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
         $result = $this->_getProp('bigautoincrement','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.(is_numeric ($foo) ? $foo : floatval($foo)))',$result);
+        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
 
         // with checknull and other operator <=
         $result = $this->_getProp('integer','$foo', true,'<=');
@@ -132,13 +132,13 @@ class UTDao_generator extends jUnitTestCase {
         $result = $this->_getProp('string','$foo', true,'<=');
         $this->assertEqualOrDiff('\' <= \'.$this->_conn->quote($foo)',$result);
         $result = $this->_getProp('double','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.(is_numeric ($foo) ? $foo : floatval($foo))',$result);
+        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
         $result = $this->_getProp('float','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.doubleval($foo)',$result);
+        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
         $result = $this->_getProp('numeric','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.(is_numeric ($foo) ? $foo : floatval($foo))',$result);
+        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
         $result = $this->_getProp('bigautoincrement','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.(is_numeric ($foo) ? $foo : floatval($foo))',$result);
+        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
 
         // with checknull and other operator LIKE
         $result = $this->_getProp('integer','$foo', true,'LIKE');
@@ -356,9 +356,7 @@ class UTDao_generator extends jUnitTestCase {
         $where = $generator->BuildSQLCondition ($methods['method11']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method11']->getParameters(), true);
         $this->assertEqualOrDiff(' `grp`.`name` <> \\\'toto\\\'',$where);
-
     }
-
 
     function testBuildSQLConditionWithPattern(){
         $doc ='<?xml version="1.0" encoding="UTF-8"?>
@@ -561,7 +559,91 @@ class UTDao_generator extends jUnitTestCase {
         $this->assertEqualOrDiff(' 1=1  GROUP BY `grp`.`id_aclgrp`, `grp`.`parent_id`, `grp`.`name` ORDER BY `grp`.`name` asc',$sql);
 
     }
-    
+
+ function testBuildConditionsNoAlias(){
+        $doc ='<?xml version="1.0" encoding="UTF-8"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+    <datasources>
+        <primarytable name="jacl_group" primarykey="id_aclgrp" />
+    </datasources>
+    <record>
+      <property name="id_aclgrp" fieldname="id_aclgrp" datatype="autoincrement" required="yes"/>
+      <property name="parent_id" required="false" datatype="int" />
+      <property name="name" fieldname="name" datatype="string" required="yes"/>
+      <property name="grouptype" fieldname="grouptype" datatype="int" required="yes"/>
+      <property name="ownerlogin" fieldname="ownerlogin" datatype="string" />
+    </record>
+    <factory>
+        <method name="method1" type="select">
+            <conditions>
+               <eq property="grouptype" value="1" />
+            </conditions>
+        </method>
+        <method name="method2" type="select" groupby="id_aclgrp,parent_id,name">
+           <conditions>
+              <neq property="grouptype" value="2" />
+           </conditions>
+           <order>
+               <orderitem property="name" way="asc" />
+           </order>
+        </method>
+        <method name="method3" type="select">
+           <order>
+               <orderitem property="name" way="asc" />
+           </order>
+        </method>
+        <method name="method4" type="select" groupby="id_aclgrp,parent_id,name">
+           <order>
+               <orderitem property="name" way="asc" />
+           </order>
+        </method>
+    </factory>
+</dao>';
+        $parser = new jDaoParser ($this->_selector);
+        $parser->parse(simplexml_load_string($doc), $this->_tools);
+        $generator = new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
+
+        $methods = $parser->getMethods();
+
+        $this->assertTrue($methods['method1']->getConditions() != null);
+        $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
+                                                $methods['method1']->getParameters(), false,  $methods['method1']->getGroupBy());
+        $this->assertEqualOrDiff(' `grouptype` = 1', $sql);
+
+        $this->assertTrue($methods['method2']->getConditions() != null);
+        $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
+                                                $methods['method2']->getParameters(), false, $methods['method2']->getGroupBy());
+        $this->assertEqualOrDiff(' `grouptype` <> 2 GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
+
+        $this->assertTrue($methods['method3']->getConditions() !== null);
+        $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
+                                                $methods['method3']->getParameters(), false, $methods['method3']->getGroupBy());
+        $this->assertEqualOrDiff(' 1=1  ORDER BY `name` asc',$sql);
+
+        $this->assertTrue($methods['method4']->getConditions() !== null);
+        $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
+                                                $methods['method4']->getParameters(), false, $methods['method4']->getGroupBy());
+        $this->assertEqualOrDiff(' 1=1  GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
+
+        $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
+                                                $methods['method1']->getParameters(), true,  $methods['method1']->getGroupBy());
+        $this->assertEqualOrDiff(' `jacl_group`.`grouptype` = 1', $sql);
+
+        $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
+                                                $methods['method2']->getParameters(), true, $methods['method2']->getGroupBy());
+        $this->assertEqualOrDiff(' `jacl_group`.`grouptype` <> 2 GROUP BY `jacl_group`.`id_aclgrp`, `jacl_group`.`parent_id`, `jacl_group`.`name` ORDER BY `jacl_group`.`name` asc',$sql);
+
+        $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
+                                                $methods['method3']->getParameters(), true, $methods['method3']->getGroupBy());
+        $this->assertEqualOrDiff(' 1=1  ORDER BY `jacl_group`.`name` asc',$sql);
+
+        $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
+                                                $methods['method4']->getParameters(), true, $methods['method4']->getGroupBy());
+        $this->assertEqualOrDiff(' 1=1  GROUP BY `jacl_group`.`id_aclgrp`, `jacl_group`.`parent_id`, `jacl_group`.`name` ORDER BY `jacl_group`.`name` asc',$sql);
+
+    }
+
+
     function testInsertQuery() {
         
         $doc ='<?xml version="1.0"?>
@@ -605,5 +687,42 @@ class UTDao_generator extends jUnitTestCase {
         $this->assertEqual('now(\'.($record->code === null ? \'NULL\' : $this->_conn->quote2($record->code,false)).\')', $values['code']);
         
     }
+
+    function testUpdateQuery() {
+        
+        $doc ='<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="product_test" primarykey="code" />
+   </datasources>
+   <record>
+      <property name="code" fieldname="code" datatype="string"/>
+      <property name="name" fieldname="name" datatype="string" />
+      <property name="price" fieldname="price" datatype="float"/>
+      <property name="price_big" fieldname="price_big" datatype="float"/>
+   </record>
+   <factory>
+       <method name="test" type="update">
+            <parameter name="price" />
+            <parameter name="price_big" />
+            <values>
+                 <value property="price"     expr="$price"     />
+                 <value property="price_big" expr="$price_big" />
+            </values>
+       </method>
+   </factory>
+</dao>';
+        $parser = new jDaoParser ($this->_selector);
+        $parser->parse(simplexml_load_string($doc), $this->_tools);
+
+        $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
+        $primaryFields = $generator->GetPropertiesBy('PrimaryTable');
+        $methods = $parser->getMethods();
+        $src = array();
+        $generator->GetBuildUpdateUserQuery($methods['test'], $src, $primaryFields);
+        
+        $this->assertEqualOrDiff('    $__query = \'UPDATE  SET '."\n".' `price`= \'.($price === null ? \'NULL\' : jDb::floatToStr($price)).\', `price_big`= \'.($price_big === null ? \'NULL\' : jDb::floatToStr($price_big)).\'\';', implode("\n",$src));
+    }
+
 }
 ?>

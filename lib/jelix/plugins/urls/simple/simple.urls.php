@@ -4,7 +4,7 @@
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor GeekBay
-* @copyright   2005-2011 Laurent Jouanneau, 2010 Geekbay
+* @copyright   2005-2012 Laurent Jouanneau, 2010 Geekbay
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -50,22 +50,22 @@ class simpleUrlEngine implements jIUrlEngine {
     * @return jUrl the url correspondant to the action
     */
     public function create($urlact){
-        global $gJConfig;
+
         $m = $urlact->getParam('module');
         $a = $urlact->getParam('action');
 
         $scriptName = $this->getBasePath($urlact->requestType, $m, $a);
         $scriptName .= $this->getScript($urlact->requestType, $m, $a);
 
-        if(!$gJConfig->urlengine['multiview']){
-            $scriptName.=$gJConfig->urlengine['entrypointExtension'];
+        if(!jApp::config()->urlengine['multiview']){
+            $scriptName .= jApp::config()->urlengine['entrypointExtension'];
         }
 
         $url = new jUrl($scriptName, $urlact->params, '');
-        // pour certains types de requete, les paramètres ne sont pas dans l'url
-        // donc on les supprime
-        // c'est un peu crade de faire ça en dur ici, mais ce serait lourdingue
-        // de charger la classe request pour savoir si on peut supprimer ou pas
+        // for some request types, parameters aren't in the url
+        // so we remove them
+        // it's a bit dirty to do that hardcoded here, but it would be a pain
+        // to load the request class to check whether we can remove or not
         if(in_array($urlact->requestType ,array('xmlrpc','jsonrpc','soap')))
           $url->clearParam();
 
@@ -73,17 +73,17 @@ class simpleUrlEngine implements jIUrlEngine {
     }
 
     /**
-     * read the configuration and return an url part according of the
+     * Read the configuration and return an url part according of the
      * of the https configuration
      * @param string $requestType
      * @param string $module
      * @param string  $action
      */
     protected function getBasePath($requestType, $module=null, $action=null) {
-        global $gJConfig;
+
         if($this->urlhttps == null){
             $this->urlhttps=array();
-            $selectors = preg_split("/[\s,]+/", $gJConfig->urlengine['simple_urlengine_https']);
+            $selectors = preg_split("/[\s,]+/", jApp::config()->urlengine['simple_urlengine_https']);
             foreach($selectors as $sel2){
                 $this->urlhttps[$sel2]= true;
             }
@@ -101,27 +101,26 @@ class simpleUrlEngine implements jIUrlEngine {
         }
 
         if ($usehttps)
-          return $GLOBALS['gJCoord']->request->getServerURI(true).$gJConfig->urlengine['basePath'];
+          return jApp::coord()->request->getServerURI(true).jApp::config()->urlengine['basePath'];
         else
-          return $gJConfig->urlengine['basePath'];
+          return jApp::config()->urlengine['basePath'];
     }
 
 
     /**
-     * read the configuration and gets the script path corresponding to the given parameters
+     * Read the configuration and gets the script path corresponding to the given parameters
      * @param string $requestType
      * @param string $module
      * @param string  $action
      */
     protected function getScript($requestType, $module=null, $action=null){
-        global $gJConfig;
 
-        $script = $gJConfig->urlengine['defaultEntrypoint'];
+        $script = jApp::config()->urlengine['defaultEntrypoint'];
 
-        if(count($gJConfig->simple_urlengine_entrypoints)){
+        if(count(jApp::config()->simple_urlengine_entrypoints)){
             if($this->urlspe == null){
                 $this->urlspe = array();
-                foreach($gJConfig->simple_urlengine_entrypoints as $entrypoint=>$sel){
+                foreach(jApp::config()->simple_urlengine_entrypoints as $entrypoint=>$sel){
                     $selectors = preg_split("/[\s,]+/", $sel);
                     foreach($selectors as $sel2){
                         $this->urlspe[$sel2] = str_replace('__','/',$entrypoint);

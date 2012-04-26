@@ -36,8 +36,29 @@ class UTjDbTools extends jUnitTestCase {
         $result = $tools->encloseName('foo');
         $this->assertEqualOrDiff('foo',$result);
     }
-    
-   function testStringToPhpValue(){
+
+    function testFloatToStr() {
+        $this->assertEqual('12', jDb::floatToStr(12));
+        $this->assertEqual('12.56', jDb::floatToStr(12.56));
+        $this->assertEqual('12', jDb::floatToStr("12"));
+        $this->assertEqual('12.56', jDb::floatToStr("12.56"));
+        $this->assertEqual('65.78E6', jDb::floatToStr("65.78E6"));
+        $this->assertEqual('65.78E6', jDb::floatToStr(65.78E6));
+        $this->assertEqual('65.78E42', jDb::floatToStr(65.78E42));
+
+        // not very good behavior, but this is the behavior in old stable version of jelix
+        $this->assertEqual('65', jDb::floatToStr("65,650.98"));
+        $this->assertEqual('12', jDb::floatToStr("12,589")); // ',' no allowed as decimal separator
+        $this->assertEqual('96', jDb::floatToStr("96 000,98"));
+
+        // some test to detect if the behavior of PHP change
+        $this->assertFalse(is_numeric("65,650.98"));
+        $this->assertFalse(is_float("65,650.98"));
+        $this->assertFalse(is_integer("65,650.98"));
+        $this->assertEqual('65', floatval("65,650.98"));
+    }
+
+    function testStringToPhpValue(){
     
         $tools= new mysqlDbTools(null);
 
@@ -147,7 +168,7 @@ class UTjDbTools extends jUnitTestCase {
         $result = $tools->escapeValue('double',5.63, false);
         $this->assertEqualOrDiff('5.63',$result);
         $result = $tools->escapeValue('float',98084345.637655464, false);
-        $this->assertTrue($result === '98084345.6377' || $result === '98084345.637655'); // depending of the php version and/or the platform
+        $this->assertEqualOrDiff('98084345.637655464',$result);
         $result = $tools->escapeValue('decimal',98084345.637655464, false);
         $this->assertEqualOrDiff('98084345.637655464',$result);
         $result = $tools->escapeValue('numeric','565465465463', false);

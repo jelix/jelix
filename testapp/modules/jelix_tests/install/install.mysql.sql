@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS `products` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `name` VARCHAR( 150 ) NOT NULL ,
 `price` FLOAT   default '0',
-`promo` BOOL NOT NULL 
+`promo` BOOL NOT NULL,
+`publish_date` DATE NOT NULL
 ) ENGINE = MYISAM ;
 
 

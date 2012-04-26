@@ -12,9 +12,6 @@ JX_URL_SCRIPT_PATH
 JX_URL_SCRIPT_NAME
 JX_URL_PATH_INFO
 
-$gJConfig = null;
-$gJCoord = null;
-
 Fonctions
 =========
 

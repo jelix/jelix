@@ -21,34 +21,32 @@ class UTjAuth_LDAP extends jUnitTestCase {
 
     protected $config;
 
-    public function setUp (){
+    public function setUpRun (){
         if(!file_exists(jApp::configPath().'auth_ldap.coord.ini.php')) {
             $this->config = null;
             return;
         }
         $conf = parse_ini_file(jApp::configPath().'auth_ldap.coord.ini.php',true);
 
-        global $gJCoord;
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
-        $gJCoord->plugins['auth'] = new AuthCoordPlugin($conf);
+        jApp::coord()->plugins['auth'] = new AuthCoordPlugin($conf);
 
-        $this->config = & $gJCoord->plugins['auth']->config;
+        $this->config = & jApp::coord()->plugins['auth']->config;
         $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
     }
 
-    public function tearDown (){
-        global $gJCoord;
-        unset($gJCoord->plugins['auth']);
+    function skip() {
+        $this->skipIf($this->config === null, 'Ldap plugin for jauth is not tested because there isn\'t configuration.'.
+                               ' To test it, you should create and configure an auth_ldap.coord.ini.php file.');
+    }
+
+    public function tearDownRun (){
+        unset(jApp::coord()->plugins['auth']);
         unset($_SESSION[$this->config['session_name']]);
         $this->config = null;
     }
 
     public function testAll (){
-        if ($this->config === null) {
-            $this->sendMessage('Ldap plugin for jauth is not tested because there isn\'t configuration.'.
-                               ' To test it, you should create and configure an auth_ldap.coord.ini.php file.');
-            return;
-        }
         for($i=1;$i<=NB_USERS_LDAP;$i++){
 
             $myUser=jAuth::createUserObject("testldap usr {$i}","pass{$i}");

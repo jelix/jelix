@@ -23,14 +23,7 @@ cd lib/jelix/auth
 #endif
 
 cd lib/jelix/acl
-* jAcl.class.php
-  jAclDbUserGroup.class.php
-  jAclDbManager.class.php
-  jAclDb.class.php
 * jAcl2.class.php
-  jAcl2DbUserGroup.class.php
-  jAcl2DbManager.class.php
-  jAcl2Db.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jIAcl2Driver.iface.php
 #endif
@@ -42,28 +35,31 @@ cd lib/jelix/controllers
 
 cd lib/jelix/core
 ! defaultconfig.ini.php
+  jAutoloader.class.php
+  jConfigAutoloader.class.php
 * jConfigCompiler.class.php
   jSoapCoordinator.class.php
   jCmdlineCoordinator.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jApp.class.php
+  jBasicErrorHandler.class.php
   jBundle.class.php
 * jConfig.class.php
   jContext.class.php
 * jController.class.php
 * jCoordinator.class.php
-  jErrorHandler.lib.php
-  jException.lib.php
+  jException.class.php
 * jIncluder.class.php
   jLocale.class.php
 * jLog.class.php
   jRequest.class.php
-  jResponse.class.php
+* jResponse.class.php
 * jSelector.class.php
   jUrlBase.class.php
   jUrlAction.class.php
 * jUrl.class.php
 * jSession.class.php
+  jServer.class.php
 #ifnot ENABLE_PHP_JELIX
   jICoordPlugin.iface.php
   jISelector.iface.php
@@ -147,6 +143,7 @@ cd lib/jelix/core-modules/jelix/controllers
 ! error.xmlrpc.php
 ! error.rdf.php
   jforms.classic.php
+  www.classic.php
 cd lib/jelix/core-modules/jelix/daos
    jsession.dao.xml
    jcache.dao.xml
@@ -272,6 +269,7 @@ cd lib/jelix/db
   jDbSchema.class.php
   jDbTable.class.php
   jDbTools.class.php
+  jDbStatement.class.php
   jDbWidget.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jDbConnection.class.php
@@ -367,12 +365,21 @@ cd lib/jelix/kvdb
 * jKVDriver.class.php
   jKVDb.class.php
 
+cd lib/jelix/pref
+  jPref.class.php
+  jPrefItem.class.php
+  jPrefItemGroup.class.php
+  jPrefManager.class.php
+
 cd lib/jelix/tpl/
 *  jTpl.class.php
 *  jTplCompiler.class.php
 
 cd lib/jelix/utils/
   jAppManager.class.php
+  jAtom10Reader.class.php
+  jAtom10Info.class.php
+  jAtom10Item.class.php
   jCache.class.php
   jClasses.class.php
   jClassBinding.class.php
@@ -393,20 +400,22 @@ cd lib/jelix/utils/
   jMailer.class.php
   jMessage.class.php
   jProfiles.class.php
+  jRSS20Reader.class.php
+  jRSS20Info.class.php
+  jRSS20Item.class.php
   jSmtp.class.php
   jSoapClient.class.php
   jTcpdf.class.php
   jVersionComparator.class.php
 * jWiki.class.php
+  jXMLFeedReader.class.php
+  jXMLFeedInfo.class.php
+  jXMLFeedItem.class.php
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php
   jWSDL.class.php
 
-cd lib/jelix/plugins/acl/db
-  db.acl.php
-cd lib/jelix/plugins/acl2/db
-  db.acl2.php
 cd lib/jelix/plugins/auth/ldap
   ldap.auth.php
 cd lib/jelix/plugins/auth/db
@@ -457,6 +466,11 @@ cd lib/jelix/plugins/coord/history
   plugin.xml
   history.coord.ini.php.dist
 
+cd lib/jelix/plugins/coord/traceexec
+! traceexec.coord.php
+  plugin.xml
+  traceexec.coord.ini.php.dist
+
 cd lib/jelix/plugins/db/intuition
   intuition.dbconnection.php
   intuition.dbresultset.php
@@ -476,6 +490,14 @@ cd lib/jelix/plugins/db/mysql
   mysql.dbschema.php
   mysql.dbtools.php
   mysql.daobuilder.php
+
+cd lib/jelix/plugins/db/mysqli
+  mysqli.dbconnection.php
+  mysqli.dbresultset.php
+  mysqli.dbschema.php
+  mysqli.dbstatement.php
+  mysqli.dbtools.php
+  mysqli.daobuilder.php
 
 cd lib/jelix/plugins/db/pgsql
   pgsql.dbconnection.php
@@ -587,6 +609,7 @@ cd lib/jelix/plugins/tpl/html
   block.formdata.php
   block.formsubmits.php
   block.ifctrl.php
+  block.jscompress.php
   block.swf.php
   block.swfjs.php
   cfunction.const.php
@@ -608,12 +631,15 @@ cd lib/jelix/plugins/tpl/html
   function.jmessage.php
   function.jfullurl.php
   function.jlocale.php
+  function.jrooturl.php
   function.jurl.php
   function.link_to_remote.php
   function.mailto.php
   function.pagelinks.php
+  function.resurl.php
   function.urljsstring.php
   meta.html.php
+  meta.htmlmodule.php
   modifier.nl2br.php
 
 cd lib/jelix/plugins/tpl/ltx2pdf

@@ -15,15 +15,10 @@ class UTDao_parser extends jUnitTestCase {
 
     protected $_selector;
     protected $_tools;
-    function setUp() {
-        if (!$this->_selector) {
-            $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
-        }
-        if (!$this->_tools) {
-            $this->_tools= new mysqlDbTools(null);
-        }
+    function setUpRun() {
+        $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
+        $this->_tools= new mysqlDbTools(null);
     }
-
 
     protected $dsTest=array(
         array('<?xml version="1.0"?>

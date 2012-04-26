@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="p" realname="products" primarykey="id" />
+   </datasources>
+   <record>
+      <property name="id"   fieldname="id" datatype="autoincrement"/>
+      <property name="name" fieldname="name" datatype="string"  required="true"/>
+      <property name="price" fieldname="price" datatype="float"/>
+      <property name="promo" fieldname="promo" datatype="boolean"/>
+   </record>
+</dao>
+

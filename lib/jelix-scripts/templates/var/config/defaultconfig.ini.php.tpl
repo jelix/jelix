@@ -88,9 +88,8 @@ defaultEntrypoint= index
 
 entrypointExtension= .php
 
-; leave empty to have jelix error messages
-notfoundAct =
-;notfoundAct = "jelix~error:notfound"
+; action to show the 'page not found' error
+notfoundAct = "jelix~error:notfound"
 
 ; list of actions which require https protocol for the simple url engine
 ; syntax of the list is the same as explained in the simple_urlengine_entrypoints
@@ -117,6 +116,33 @@ index = on
 xmlrpc = on
 jsonrpc = on
 rdf = on
+
+
+[jResponseHtml]
+; list of active plugins for jResponseHtml
+; remove the debugbar plugin on production server, and in this case don't forget
+; to remove the memory logger from the logger section
+plugins = debugbar
+
+
+[logger]
+; list of loggers for each categories of log messages
+; available loggers : file, syslog, firebug, mail, memory. see plugins for others
+
+; _all category is the category containing loggers executed for any categories
+; /!\ remove the memory logger if you don't use the debugbar
+_all = memory
+
+; default category is the category used when a given category is not declared here
+default=file
+error= file
+warning=file
+notice=file
+deprecated=
+strict=
+debug=
+sql=
+soap=
 
 [fileLogger]
 default=messages.log

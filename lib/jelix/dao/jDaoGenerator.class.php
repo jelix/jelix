@@ -6,7 +6,7 @@
 * @contributor Laurent Jouanneau
 * @contributor Bastien Jaillot (bug fix)
 * @contributor Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2010 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau
 * @copyright  2007-2008 Julien Issler
 * This class was get originally from the Copix project (CopixDAOGeneratorV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -130,6 +130,7 @@ class jDaoGenerator {
                 $src[] =' public $'.$id.';';
         }
 
+        $src[] = '   public function getSelector() { return "'.$this->_daoId.'"; }';
         // TODO PHP 5.3 : we could remove that
         $src[] = '   public function getProperties() { return '.$this->_DaoClassName.'::$_properties; }';
         $src[] = '   public function getPrimaryKeyNames() { return '.$this->_DaoClassName.'::$_pkFields; }';
@@ -479,10 +480,25 @@ class jDaoGenerator {
         $src[] = '    $__query = \'UPDATE '.$this->tableRealNameEsc.' SET ';
         $updatefields = $this->_getPropertiesBy('PrimaryFieldsExcludePk');
         $sqlSet='';
+
         foreach($method->getValues() as $propname=>$value){
             if($value[1]){
-                foreach($method->getParameters() as $param){
-                    $value[0] = str_replace('$'.$param, '\'.'.$this->_preparePHPExpr('$'.$param, $updatefields[$propname],true).'.\'',$value[0]);
+                preg_match_all('/\$([a-zA-Z0-9_]+)/', $value[0], $varMatches, PREG_OFFSET_CAPTURE );
+                $parameters = $method->getParameters();
+                if (count($varMatches[0])) {
+                    $result = '';
+                    $len = 0;
+                    foreach($varMatches[1] as $k=>$var) {
+                        $result .= substr($value[0], $len, $len+$varMatches[0][$k][1]);
+                        $len += $varMatches[0][$k][1] + strlen($varMatches[0][$k][0]);
+                        if (in_array($var[0], $parameters)) {
+                            $result .= '\'.'.$this->_preparePHPExpr($varMatches[0][$k][0], $updatefields[$propname],true).'.\'';
+                        }
+                        else {
+                            $result .= $varMatches[0][$k][0];
+                        }
+                    }
+                    $value[0] = $result;
                 }
                 $sqlSet.= ', '.$this->_encloseName($updatefields[$propname]->fieldName). '= '. $value[0];
             }else{
@@ -490,7 +506,7 @@ class jDaoGenerator {
                     $this->tools->escapeValue($updatefields[$propname]->unifiedType, $value[0], false, true);
             }
         }
-        $src[] =substr($sqlSet,1).'\';';
+        $src[] = substr($sqlSet,1).'\';';
         $cond = $method->getConditions();
         if($cond !== null) {
             $sqlCond = $this->buildConditions($cond, $primaryFields, $method->getParameters(), false);
@@ -566,18 +582,12 @@ class jDaoGenerator {
 
         list($sqlFrom, $sqlWhere) = $this->buildOuterJoins($tables, $ptname);
 
-        if($primarytable['name']!=$primarytable['realname'])
-            $sqlFrom =$ptrealname.$this->aliasWord.$ptname.$sqlFrom;
-        else
-            $sqlFrom =$ptrealname.$sqlFrom;
+        $sqlFrom =$ptrealname.$this->aliasWord.$ptname.$sqlFrom;
 
         foreach($this->_dataParser->getInnerJoins() as $tablejoin){
             $table= $tables[$tablejoin];
             $tablename = $this->_encloseName($table['name']);
-            if($table['name']!=$table['realname'])
-                $sqlFrom .=', '.$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
-            else
-                $sqlFrom .=', '.$this->_encloseName($table['realname']);
+            $sqlFrom .=', '.$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
 
             foreach($table['fk'] as $k => $fk){
                 $sqlWhere.=' AND '.$ptname.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
@@ -598,10 +608,7 @@ class jDaoGenerator {
             $table= $tables[$tablejoin[0]];
             $tablename = $this->_encloseName($table['name']);
 
-            if($table['name']!=$table['realname'])
-                $r =$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
-            else
-                $r =$this->_encloseName($table['realname']);
+            $r =$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
 
             $fieldjoin='';
             foreach($table['fk'] as $k => $fk){
@@ -1014,18 +1021,12 @@ class jDaoGenerator {
                 break;
             case 'double':
             case 'float':
-                if($checknull){
-                    $expr= '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'doubleval('.$expr.'))';
-                }else{
-                    $expr= $forCondition.'doubleval('.$expr.')';
-                }
-                break;
             case 'numeric':
-            case 'decimal': 
+            case 'decimal':
                 if($checknull){
-                    $expr='('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : floatval('.$expr.')))';
+                    $expr='('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'jDb::floatToStr('.$expr.'))';
                 }else{
-                    $expr=$forCondition.'(is_numeric ('.$expr.') ? '.$expr.' : floatval('.$expr.'))';
+                    $expr=$forCondition.'jDb::floatToStr('.$expr.')';
                 }
                 break;
             case 'boolean':
@@ -1059,10 +1060,9 @@ class jDaoGenerator {
                 return 'create_function(\'$__e\',\'return intval($__e);\')';
             case 'double':
             case 'float':
-                return 'create_function(\'$__e\',\'return doubleval($__e);\')';
             case 'numeric':
             case 'decimal':
-                return 'create_function(\'$__e\',\'return (is_numeric ($__e) ? $__e : floatval($__e));\')';
+                return 'create_function(\'$__e\',\'return jDb::floatToStr($__e);\')';
             case 'boolean':
                 return 'array($this, \'_callbackBool\')';
             default:

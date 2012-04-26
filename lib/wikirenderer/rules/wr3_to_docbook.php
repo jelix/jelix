@@ -6,7 +6,7 @@
  * @subpackage rules
  * @author Laurent Jouanneau
  * @copyright 2003-2010 Laurent Jouanneau
- * @link http://wikirenderer.berlios.de
+ * @link http://wikirenderer.jelix.org
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public 2.1
@@ -144,18 +144,19 @@ class wr3dbk_link extends WikiTagXhtml {
         $cntattr=count($this->attribute);
         $cnt=($this->separatorCount + 1 > $cntattr?$cntattr:$this->separatorCount+1);
         if($cnt == 1 ){
-            $contents = $this->wikiContentArr[0];
+            list($href, $label) = $this->config->processLink($this->wikiContentArr[0], $this->name);
 
-            if(preg_match("/^\#(.+)$/", $contents, $m))
-                return '<link linkterm="'.htmlspecialchars($m[1]).'">'.htmlspecialchars($contents).'</link>';
+            if(preg_match("/^\#(.+)$/", $href, $m))
+                return '<link linkterm="'.htmlspecialchars($m[1]).'">'.htmlspecialchars($label).'</link>';
             else
-                return '<ulink url="'.htmlspecialchars($contents).'">'.htmlspecialchars($contents).'</ulink>';
+                return '<ulink url="'.htmlspecialchars($href).'">'.htmlspecialchars($label).'</ulink>';
 
         }else{
-            if(preg_match("/^\#(.+)$/", $this->wikiContentArr[1], $m))
+            list($href, $label) = $this->config->processLink($this->wikiContentArr[1], $this->name);
+            if(preg_match("/^\#(.+)$/", $href, $m))
                 return '<link linkterm="'.htmlspecialchars($m[1]).'">'.$this->contents[0].'</link>';
             else
-                return '<ulink url="'.htmlspecialchars($this->wikiContentArr[1]).'">'.$this->contents[0].'</ulink>';
+                return '<ulink url="'.htmlspecialchars($href).'">'.$this->contents[0].'</ulink>';
         }
     }
 }
@@ -186,7 +187,8 @@ class wr3dbk_image extends WikiTagXhtml {
                 $alt='<textobject><phrase>'.$contents[1].'</phrase></textobject>';
             case 1:
             default:
-                $attribut.=' fileref="'.$contents[0].'"';
+               list($href, $label) = $this->config->processLink($contents[0], $this->name);
+                $attribut.=' fileref="'.htmlspecialchars($href).'"';
         }
 
         return '<inlinemediaobject><imageobject><imagedata'.$attribut.'/></imageobject>'.$alt.'</inlinemediaobject>';

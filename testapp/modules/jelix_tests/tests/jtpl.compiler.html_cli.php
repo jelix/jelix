@@ -29,6 +29,10 @@ class testJtplContentCompiler extends jTplCompiler {
     public function setRemoveASPTags($b) {
         $this->removeASPtags = $b;
     }
+
+    public function getMetaContent() {
+        return $this->_metaBody;
+    }
 }
 
 function testjtplcontentUserFunction($t,$a,$b) {
@@ -372,6 +376,66 @@ end',),
             }
         }
     }
+
+
+    protected $metaContent = array(
+0=>array(
+        '',
+        '',
+        '',
+        ),
+1=>array(
+        '{meta foo "bar"}
+<p>ok</p>',
+        "\$t->_meta['foo']=\"bar\";\n",
+        "\n<p>ok</p>",
+        ),
+2=>array(
+        '{meta_html title "bar"}
+<p>ok</p>',
+        "jtpl_meta_html_html( \$t,'title',\"bar\");\n",
+        "\n<p>ok</p>",
+        ),
+3=>array(
+        '
+{meta_if $a}
+      {meta_html title "bar"}
+{meta_else}
+    {meta_html title "foo"}
+{/meta_if}
+
+<p>ok</p>',
+        "if(\$t->_vars['a']):
+jtpl_meta_html_html( \$t,'title',\"bar\");
+else:
+jtpl_meta_html_html( \$t,'title',\"foo\");
+endif;
+",
+        "\n\n      \n\n    \n\n\n<p>ok</p>",
+        ),
+
+    );
+
+    function testCompileMeta() {
+        $compil = new testJtplContentCompiler();
+        $compil->outputType = 'html';
+        $compil->trusted = true;
+        $compil->setUserPlugins(array(), array());
+        $compil->setEscapePI(false);
+        $compil->setRemoveASPtags(false);
+
+        foreach($this->metaContent as $k=>$t){
+            try{
+                $this->assertEqualOrDiff($t[2], $compil->compileContent2($t[0]), "Test content '$k'");
+                $this->assertEqualOrDiff($t[1], $compil->getMetaContent(), "Test meta content '$k'");
+            }catch(jException $e){
+                $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
+            }catch(Exception $e){
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+            }
+        }
+    }
+
 
 }
 

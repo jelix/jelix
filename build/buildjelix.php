@@ -100,9 +100,9 @@ $BUILD_OPTIONS = array(
     true
     ),
 'TARGET_REPOSITORY'=> array(
-    "The type of the version control system you use on the target directory : none (default), svn or hg",
+    "The type of the version control system you use on the target directory : none (default), git, hg or svn",
     '',
-    '/^(svn|hg|none)?$/',
+    '/^(git|svn|hg|none)?$/',
     ),
 'SOURCE_REVISION'=> array(
     false,
@@ -135,6 +135,10 @@ $BUILD_OPTIONS = array(
     false,
     '',
     ),
+'TODAY'=> array(
+    false,
+    '',
+    ),
 /*''=> array(
     "",
     '',
@@ -145,12 +149,13 @@ $BUILD_OPTIONS = array(
 
 include(dirname(__FILE__).'/lib/jBuild.inc.php');
 
-//----------------- Preparation des variables d'environnement
+//----------------- Prepare environment variables
 
 Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
 $SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
+$TODAY = date('Y-m-d H:i');
 
 if($IS_NIGHTLY){
     $PACKAGE_NAME='jelix-'.str_replace('SERIAL', '', $LIB_VERSION);
@@ -290,12 +295,12 @@ jManifest::process('build/manifests/jelix-checker.mn','.', $BUILD_TARGET_PATH , 
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
-// creation du fichier d'infos sur le build
+// create the build info file
 $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION',
     'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
 
-$infos = '; --- build date:  '.date('Y-m-d H:i')."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);
+$infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
 

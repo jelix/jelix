@@ -11,10 +11,10 @@
 
 require_once(dirname(__FILE__).'/lib/jCmdUtils.class.php');
 
-// arguments :  repertoire1 [repertoire2]
-// repertoire1 : le chemin du repertoire duquel on veut la liste
-// repertoire2 : si on veut une base de chemin différente de repertoire1 dans le fichier de sortie
-//               on l'indique ici
+// arguments :  directory1 [directory2]
+// directory1 : directory path from which we want the list
+// directory2 : if we want a different base path than directory1 in the output file
+//               indicate it here
 
 try{
     $sws = array('-e'=>false);
@@ -77,7 +77,7 @@ function mkpath($dir, $basepath){
          $output.=mkpath( $dir.'/'.$d, $basepath.'/'.$d);
       }
    }else{
-      echo "erreur ouverture repertoire $dir\n";
+      echo "error opening directory $dir\n";
        exit(1);
    }
    return $output;
@@ -89,7 +89,7 @@ $output='';
 if (is_dir($dirpath)) {
    $output=mkpath($dirpath,$basepath);
 }else{
-     echo "mauvais repertoire $dirpath\n";
+     echo "wrong directory $dirpath\n";
     exit(1);
 }
 

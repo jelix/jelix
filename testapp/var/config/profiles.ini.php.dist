@@ -15,6 +15,7 @@ wrong_profilname = abdsdpoipoipoer
 jacl_profile = testapp
 jacl2_profile = testapp
 pgsql_profile = testapp_pgsql
+mysqli_profile = testapp_mysqli
 
 [jdb:testapp]
 ; you can change following options : database name, user, password, according to your database configuration
@@ -53,6 +54,14 @@ password=
 [jdb:testapp_sqlite]
 driver=sqlite
 database="tests.sqlite"
+
+[jdb:testapp_mysqli]
+driver="mysqli"
+database="testapp"
+host= "localhost"
+user= "root"
+password=
+persistent= on
 
 ;--------------- don't remove or change following "jdb:" sections !!!!!!!!
 ;--- used by unit tests
@@ -129,6 +138,10 @@ driver = db
 table=testkvdb
 dbprofile=default
 
+[jkvdb:jpref]
+driver = db
+table=testkvdb
+dbprofile=default
 
 ;----------------- jSoapClient
 [jsoapclient]
@@ -181,6 +194,7 @@ driver = db
 [jcache:usingmemcache]
 enabled = 0
 driver = memcache
+servers = localhost:11211
 
 [jcache:usingfile]
 enabled = 1

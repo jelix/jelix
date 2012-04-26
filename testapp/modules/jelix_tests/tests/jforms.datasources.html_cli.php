@@ -13,11 +13,11 @@ require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
 class UTjformsDatasources extends jUnitTestCaseDb {
 
-    function testStart(){
-        global $gJCoord;
+    function setUpRun(){
+
         $_SESSION['JFORMS'] = array();
         $form = jForms::create('product');
-        $this->savedParams = $gJCoord->request->params;
+        $this->savedParams = jApp::coord()->request->params;
 
         $labels = array(array('key'=>1, 'keyalias'=>'aa', 'lang'=>'fr', 'label'=>'aa-fr'),
                         array('key'=>2, 'keyalias'=>'bb', 'lang'=>'fr', 'label'=>'bb-fr'),
@@ -317,8 +317,7 @@ class UTjformsDatasources extends jUnitTestCaseDb {
     }
 
     function testEnd(){
-        global $gJCoord;
-        $gJCoord->request->params = $this->savedParams;
+        jApp::coord()->request->params = $this->savedParams;
         jForms::destroy('product');
     }
 }

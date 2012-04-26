@@ -26,7 +26,6 @@ class clientSoapCtrl extends jController {
     function soapExtension() {
 
         ini_set('soap.wsdl_cache_enabled', 0);
-        global $gJConfig;
         $rep = $this->getResponse('html');
         $rep->title = 'Client utilisant l\'extension soap pour faire appel au serveur soap Jelix';
         $rep->body->assign('page_title','Client utilisant l\'extension soap pour faire appel au serveur soap Jelix');

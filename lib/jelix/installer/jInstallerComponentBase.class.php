@@ -33,6 +33,11 @@ abstract class jInstallerComponentBase {
      * @var string version of the current sources of the module
      */
     protected $sourceVersion = '';
+
+    /**
+     * @var string the date of the current sources of the module
+     */
+    protected $sourceDate = '';
     
     /**
      * @var string the namespace of the xml file
@@ -94,6 +99,7 @@ abstract class jInstallerComponentBase {
     public function getName() { return $this->name; }
     public function getPath() { return $this->path; }
     public function getSourceVersion() { return $this->sourceVersion; }
+    public function getSourceDate() { return $this->sourceDate; }
     public function getJelixVersion() { return array($this->jelixMinVersion, $this->jelixMaxVersion);}
 
     /**
@@ -185,12 +191,16 @@ abstract class jInstallerComponentBase {
         if(!$xmlDescriptor->load($this->path.$this->identityFile)){
             throw new jInstallerException('install.invalid.xml.file',array($this->path.$this->identityFile));
         }
-        
+
         $root = $xmlDescriptor->documentElement;
 
         if ($root->namespaceURI == $this->identityNamespace) {
             $xml = simplexml_import_dom($xmlDescriptor);
             $this->sourceVersion = (string) $xml->info[0]->version[0];
+            if (isset($xml->info[0]->version['date']))
+                $this->sourceDate = (string) $xml->info[0]->version['date'];
+            else
+                $this->sourceDate = '';
             $this->readDependencies($xml);
         }
     }

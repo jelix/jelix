@@ -108,13 +108,13 @@ class AuthCoordPlugin implements jICoordPlugin {
         if($needAuth){
             if($notLogged){
                 if($this->config['on_error'] == 1
-                    || !$GLOBALS['gJCoord']->request->isAllowedResponse('jResponseRedirect')){
+                    || !jApp::coord()->request->isAllowedResponse('jResponseRedirect')){
                     throw new jException($this->config['error_message']);
                 }else{
                     if(!$badip){
-                        $auth_url_return = $GLOBALS['gJCoord']->request->getParam('auth_url_return');
+                        $auth_url_return = jApp::coord()->request->getParam('auth_url_return');
                         if($auth_url_return === null)
-                            $GLOBALS['gJCoord']->request->params['auth_url_return'] = jUrl::getCurrentUrl();
+                            jApp::coord()->request->params['auth_url_return'] = jUrl::getCurrentUrl();
                         $selector= new jSelectorAct($this->config['on_error_action']);
                     }
                 }

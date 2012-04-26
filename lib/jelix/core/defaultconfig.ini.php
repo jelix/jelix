@@ -197,9 +197,8 @@ defaultEntrypoint= index
 
 entrypointExtension= .php
 
-; leave empty to have jelix error messages
-notfoundAct =
-;notfoundAct = "jelix~error:notfound"
+; action to show the 'page not found' error
+notfoundAct = "jelix~error:notfound"
 
 ; list of actions which require https protocol for the simple url engine
 ; syntax of the list is the same as explained in the simple_urlengine_entrypoints
@@ -428,3 +427,12 @@ src_path=
 cache_url=
 ; the path on the file system, to the directory where images cache are stored. default = JELIX_APP_WWW_PATH
 cache_path=
+
+
+[rootUrls]
+; This section associates keywords with root URLs.
+; A root url starting with "http://" or "https://" or "/" is supposed to be absolute
+; Other values will be prefixed by application's basePath
+; This will be used by jUrl::getRootUrl() and jTpl's {jrooturl}
+jelix.cache=cache/
+

@@ -10,9 +10,9 @@
 */
 $BUILD_OPTIONS = array(
 'MAIN_TARGET_PATH'=> array(
-    "main directory where sources will be copied",  // signification (false = option cachée)
-    '_dist',                                        // valeur par défaut (boolean = option booleene)
-    '',                                             // regexp pour la valeur ou vide=tout (seulement pour option non booleene)
+    "main directory where sources will be copied",  // meaning (false = hidden otion)
+    '_dist',                                        // default value (boolean = boolean option)
+    '',                                             // regexp for the value or empty=all (only for non-boolean options)
     ),
 'APPNAME'=> array(
     "The name of the app you want to generate (testapp)",
@@ -47,18 +47,24 @@ $BUILD_OPTIONS = array(
 'SOURCE_REVISION'=> array(
     false,
     ),
+'TODAY'=> array(
+    false,
+    '',
+    ),
 );
 include(dirname(__FILE__).'/lib/jBuild.inc.php');
 
-//----------------- Preparation des variables d'environnement
+//----------------- Prepare environment variables
 
 if(!$APPNAME){
     die("Error: APPNAME is empty");
 }
 $APPDIR = jBuildUtils::normalizeDir($APPNAME);
 $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
+$TODAY = date('Y-m-d H:i');
 
 Env::setFromFile('VERSION',$APPDIR.'/VERSION',true);
+$VERSION = preg_replace('/\s+/m', '', $VERSION);
 $SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 
 $IS_NIGHTLY = (strpos($VERSION,'SERIAL') !== false);
@@ -75,6 +81,7 @@ else {
 
 
 Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
+$LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_LIB_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 
 if($IS_LIB_NIGHTLY){
@@ -91,12 +98,12 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
     //$MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME;
 }
 
-//----------------- Génération des sources
+//----------------- Source generation
 
-//... creation des repertoires
+//... directories creation
 jBuildUtils::createDir($MAIN_TARGET_PATH);
 
-//... execution des manifests
+//... manifests execution
 jManifest::process('build/manifests/'.$APPNAME.'.mn', '.', $MAIN_TARGET_PATH, ENV::getAll());
 
 

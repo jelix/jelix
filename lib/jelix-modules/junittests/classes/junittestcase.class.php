@@ -16,24 +16,38 @@ class jUnitTestCase extends UnitTestCase {
     protected $dbProfile ='';
     protected $needPDO = false;
 
-    
+
+    function setUpRun() {
+    }
+    function tearDownRun() {
+    }
+
     function run($reporter) {
         $context = SimpleTest::getContext();
         $context->setTest($this);
         $context->setReporter($reporter);
         $this->reporter = $reporter;
         $this->reporter->paintCaseStart($this->getLabel());
+
         if($this->needPDO){
             $this->reporter->makeDry(!$this->assertTrue(class_exists('PDO',false), 'PDO does not exists ! You should install PDO because tests need it.'));
         }
+
+        $this->setUpRun();
         foreach ($this->getTests() as $method) {
             if ($this->reporter->shouldInvoke($this->getLabel(), $method)) {
+                $this->skip();
+                if ($this->shouldSkip()) {
+                    break;
+                }
                 $invoker = $this->reporter->createInvoker($this->createInvoker());
                 $invoker->before($method);
                 $invoker->invoke($method);
                 $invoker->after($method);
             }
         }
+
+        $this->tearDownRun();
         $this->reporter->paintCaseEnd($this->getLabel());
         unset($this->reporter);
         return $reporter->getStatus();
@@ -79,7 +93,7 @@ class jUnitTestCase extends UnitTestCase {
     function assertComplexIdentical($value, $file, $errormessage=''){
         $xml = simplexml_load_file($file);
         if(!$xml){
-            trigger_error('Impossible de charger le fichier '.$file,E_USER_ERROR);
+            trigger_error('Impossible to load file '.$file,E_USER_ERROR);
             return false;
         }
         return $this->_checkIdentical($xml, $value, '$value', $errormessage);
@@ -88,7 +102,7 @@ class jUnitTestCase extends UnitTestCase {
     function assertComplexIdenticalStr($value, $string, $errormessage=''){
         $xml = simplexml_load_string($string);
         if(!$xml){
-            trigger_error('mauvais contenu xml '.$string,E_USER_ERROR);
+            trigger_error('wrong xml content '.$string,E_USER_ERROR);
             return false;
         }
         if($errormessage != '')

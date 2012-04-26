@@ -3,10 +3,11 @@
 * @package    jelix
 * @subpackage db
 * @author     Laurent Jouanneau
-* @contributor Gwendal Jouannic, Thomas, Julien Issler
-* @copyright  2005-2010 Laurent Jouanneau
+* @contributor Gwendal Jouannic, Thomas, Julien Issler, Vincent Herr
+* @copyright  2005-2012 Laurent Jouanneau
 * @copyright  2008 Gwendal Jouannic, 2009 Thomas
 * @copyright  2009 Julien Issler
+* @copyright  2011 Vincent Herr
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -96,11 +97,12 @@ class jDbPDOConnection extends PDO {
             $this->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
 
         if (isset($prof['force_encoding']) && $prof['force_encoding']==true) {
-            if ($this->dbms == 'mysql' && isset($this->_mysqlCharsets[$GLOBALS['gJConfig']->charset])) {
-                $this->exec("SET NAMES '".$this->_mysqlCharsets[$GLOBALS['gJConfig']->charset]."'");
+            $charset = jApp::config()->charset;
+            if ($this->dbms == 'mysql' && isset($this->_mysqlCharsets[$charset])) {
+                $this->exec("SET NAMES '".$this->_mysqlCharsets[$charset]."'");
             }
-            elseif($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[$GLOBALS['gJConfig']->charset])) {
-                $this->exec("SET client_encoding to '".$this->_pgsqlCharsets[$GLOBALS['gJConfig']->charset]."'");
+            elseif($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[$charset])) {
+                $this->exec("SET client_encoding to '".$this->_pgsqlCharsets[$charset]."'");
             }
         }
     }
@@ -279,6 +281,22 @@ class jDbPDOConnection extends PDO {
         }
 
         return $this->_tools;
+    }
+
+    /**
+     * Get the ID of the last inserted row
+     * Mssql pdo driver does not support this feature.
+     * so, we use a custom query
+     * @param string $fromSequence the sequence name, if needed
+     * @return string
+     */
+    public function lastInsertId($fromSequence=null) {
+        if ($this->dbms == 'mssql') {
+            $res = $this->query('SELECT SCOPE_IDENTITY()');
+            return (int) $res->fetchColumn();
+        }
+
+        return parent::lastInsertId($fromSequence);
     }
 
 }

@@ -224,6 +224,8 @@ cd lib/tcpdf
   2dbarcodes.php
   barcodes.php
   CHANGELOG.TXT
+  datamatrix.php
+  encodings_maps.php
   htmlcolors.php
   LICENSE.TXT
   pdf417.php
@@ -239,6 +241,7 @@ cd lib/tcpdf/config
   tcpdf_config.php
   tcpdf_config_alt.php
 cd lib/tcpdf/config/lang
+  ara.php
   bra.php
   chi.php
   eng.php
@@ -247,9 +250,12 @@ cd lib/tcpdf/config/lang
   heb.php
   hrv.php
   ita.php
+  jpn.php
+  kor.php
   pol.php
   por.php
   rus.php
+  slv.php
   spa.php
   swe.php
   zho.php

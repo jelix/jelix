@@ -53,6 +53,8 @@ class sqllogDebugbarPlugin implements jIDebugbarPlugin {
                 }
                 $info->popupContent .= '<ul id="jxdb-sqllog" class="jxdb-list">';
                 foreach($messages as $msg) {
+                    if (get_class($msg) != 'jSQLLogMessage')
+                        continue;
                     $dao = $msg->getDao();
                     if ($dao) {
                         $m = 'DAO '.$dao;
@@ -64,6 +66,8 @@ class sqllogDebugbarPlugin implements jIDebugbarPlugin {
                     <div>
                     <p>Time: '.$msg->getTime().'s</p>';
                     $info->popupContent.= '<pre style="white-space:pre-wrap">'.htmlspecialchars($msg->getMessage()).'</pre>';
+                    if ($msg->getMessage() != $msg->originalQuery)
+                        $info->popupContent.= '<p>Original query: </p><pre style="white-space:pre-wrap">'.htmlspecialchars($msg->originalQuery).'</pre>';
                     $info->popupContent.= $debugbar->formatTrace($msg->getTrace());
                     $info->popupContent .='</div></li>';
                 }

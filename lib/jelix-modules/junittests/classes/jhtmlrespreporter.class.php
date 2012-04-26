@@ -4,7 +4,7 @@
 * @subpackage  junittests
 * @author     Laurent Jouanneau
 * @contributor
-* @copyright  2005-2007 Laurent Jouanneau
+* @copyright  2005-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -59,13 +59,17 @@ class jHtmlRespReporter extends SimpleReporter {
       $this->_response->body->append('MAIN',$str);
    }
 
-   function paintException($message) {
-      parent::paintException($message);
+   function paintException($exception) {
+      parent::paintException($exception);
       $str=  "<span class=\"exception\">Exception</span>: ";
       $breadcrumb = $this->getTestList();
       array_shift($breadcrumb);
       $str.=  implode(" -&gt; ", $breadcrumb);
-      $str.=  " -&gt; <strong>" . $this->_htmlEntities($message) . "</strong><br />\n";
+      $str.=  'Unexpected exception of type [' . get_class($exception) .
+        '] with message [<strong>"'. $this->_htmlEntities($exception->getMessage()) .
+        '</strong>] in ['. $this->_htmlEntities($exception->getFile()) .
+        ' line ' . $exception->getLine() . "]<br />\n";
+
       $this->_response->body->append('MAIN',$str);
    }
 
@@ -78,6 +82,18 @@ class jHtmlRespReporter extends SimpleReporter {
         $str .= " -&gt; <strong>" . $this->_htmlEntities($message) . "</strong><br />\n";
         $this->_response->body->append('MAIN',$str);
     }
+
+
+    function paintSkip($message) {
+        parent::paintSkip($message);
+         $str = "<span class=\"pass\">Skipped</span>: ";
+        $breadcrumb = $this->getTestList();
+        array_shift($breadcrumb);
+        $str .= implode(" -&gt; ", $breadcrumb);
+        $str .= " -&gt; " . $this->_htmlEntities($message) . "<br />\n";
+        $this->_response->body->append('MAIN',$str);
+    }
+
 
    function paintMessage($message) {
       $this->_response->body->append('MAIN','<p>'.$message.'</p>');
@@ -100,8 +116,7 @@ $this->_response->body->append('MAIN','<!--B:'.$stringB.'-->');
    }
 
    function _htmlEntities($message) {
-      global $gJConfig;
-      return htmlentities($message, ENT_COMPAT, $gJConfig->charset);
+      return htmlentities($message, ENT_COMPAT, jApp::config()->charset);
    }
 }
 

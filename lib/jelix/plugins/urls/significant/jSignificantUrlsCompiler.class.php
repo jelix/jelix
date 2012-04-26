@@ -4,7 +4,7 @@
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor Thibault Piront (nuKs)
-* @copyright   2005-2011 Laurent Jouanneau
+* @copyright   2005-2012 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -145,7 +145,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $this->readProjectXml();
         $this->retrieveModulePaths(jApp::configPath('defaultconfig.ini.php'));
         // for an app on a simple http server behind an https proxy, we shouldn't check HTTPS
-        $this->checkHttps = $GLOBALS['gJConfig']->urlengine['checkHttpsOnParsing'];
+        $this->checkHttps = jApp::config()->urlengine['checkHttpsOnParsing'];
 
         foreach ($xml->children() as $tagname => $tag) {
             if (!preg_match("/^(.*)entrypoint$/", $tagname, $m)) {

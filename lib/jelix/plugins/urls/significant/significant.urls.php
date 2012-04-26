@@ -3,7 +3,7 @@
  * @package     jelix
  * @subpackage  urls_engine
  * @author      Laurent Jouanneau
- * @copyright   2005-2011 Laurent Jouanneau
+ * @copyright   2005-2012 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -38,11 +38,11 @@ class jSelectorUrlHandler extends jSelectorClass {
     protected $_suffix = '.urlhandler.php';
 
     protected function _createPath(){
-        global $gJConfig;
-        if (isset($gJConfig->_modulesPathList[$this->module])) {
-            $p = $gJConfig->_modulesPathList[$this->module];
-        } else if (isset($gJConfig->_externalModulesPathList[$this->module])) {
-            $p = $gJConfig->_externalModulesPathList[$this->module];
+        $conf = jApp::config();
+        if (isset($conf->_modulesPathList[$this->module])) {
+            $p = $conf->_modulesPathList[$this->module];
+        } else if (isset($conf->_externalModulesPathList[$this->module])) {
+            $p = $conf->_externalModulesPathList[$this->module];
         } else {
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
@@ -108,17 +108,17 @@ class significantUrlEngine implements jIUrlEngine {
      * @since 1.1
      */
     public function parseFromRequest ($request, $params) {
-        global $gJConfig;
 
-        if ($gJConfig->urlengine['enableParser']) {
+        $conf = & jApp::config()->urlengine;
+        if ($conf['enableParser']) {
 
-            $sel = new jSelectorUrlCfgSig($gJConfig->urlengine['significantFile']);
+            $sel = new jSelectorUrlCfgSig($conf['significantFile']);
             jIncluder::inc($sel);
-            $snp  = $gJConfig->urlengine['urlScriptIdenc'];
+            $snp  = $conf['urlScriptIdenc'];
             $file = jApp::tempPath('compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php');
             if (file_exists($file)) {
                 require($file);
-                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 99
+                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // given by jIncluder line 99
                 $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
                 $isHttps = ($request->getProtocol() == 'https://');
                 return $this->_parse($request->urlScript, $request->urlPathInfo, $params, $isHttps);
@@ -137,20 +137,20 @@ class significantUrlEngine implements jIUrlEngine {
     * @return jUrlAction
     */
     public function parse($scriptNamePath, $pathinfo, $params){
-        global $gJConfig;
+        $conf = & jApp::config()->urlengine;
 
-        if ($gJConfig->urlengine['enableParser']) {
+        if ($conf['enableParser']) {
 
-            $sel = new jSelectorUrlCfgSig($gJConfig->urlengine['significantFile']);
+            $sel = new jSelectorUrlCfgSig($conf['significantFile']);
             jIncluder::inc($sel);
-            $basepath = $gJConfig->urlengine['basePath'];
+            $basepath = $conf['basePath'];
             if (strpos($scriptNamePath, $basepath) === 0) {
                 $snp = substr($scriptNamePath,strlen($basepath));
             }
             else {
                 $snp = $scriptNamePath;
             }
-            $pos = strrpos($snp, $gJConfig->urlengine['entrypointExtension']);
+            $pos = strrpos($snp, $conf['entrypointExtension']);
             if ($pos !== false) {
                 $snp = substr($snp,0,$pos);
             }
@@ -158,7 +158,7 @@ class significantUrlEngine implements jIUrlEngine {
             $file = jApp::tempPath('compiled/urlsig/'.$sel->file.'.'.$snp.'.entrypoint.php');
             if (file_exists($file)) {
                 require($file);
-                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // fourni via le jIncluder ligne 127
+                $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL']; // given by jIncluder line 127
                 $this->dataParseUrl = & $GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
                 return $this->_parse($scriptNamePath, $pathinfo, $params, false);
             }
@@ -176,7 +176,6 @@ class significantUrlEngine implements jIUrlEngine {
     * @return jUrlAction
     */
     protected function _parse($scriptNamePath, $pathinfo, $params, $isHttps){
-        global $gJConfig;
 
         $urlact = null;
         $isDefault = false;
@@ -292,7 +291,7 @@ class significantUrlEngine implements jIUrlEngine {
             }
             else {
                 try {
-                    $urlact = jUrl::get($gJConfig->urlengine['notfoundAct'], array(), jUrl::JURLACTION);
+                    $urlact = jUrl::get(jApp::config()->urlengine['notfoundAct'], array(), jUrl::JURLACTION);
                 }
                 catch (Exception $e) {
                     $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));
@@ -321,7 +320,7 @@ class significantUrlEngine implements jIUrlEngine {
     public function create($urlact) {
 
         if ($this->dataCreateUrl == null) {
-            $sel = new jSelectorUrlCfgSig($GLOBALS['gJConfig']->urlengine['significantFile']);
+            $sel = new jSelectorUrlCfgSig(jApp::config()->urlengine['significantFile']);
             jIncluder::inc($sel);
             $this->dataCreateUrl = & $GLOBALS['SIGNIFICANT_CREATEURL'];
         }
@@ -405,18 +404,18 @@ class significantUrlEngine implements jIUrlEngine {
 
         // at this step, we have informations to build the url
 
-        $url->scriptName = $GLOBALS['gJConfig']->urlengine['basePath'].$urlinfo[1];
+        $url->scriptName = jApp::config()->urlengine['basePath'].$urlinfo[1];
         if ($urlinfo[2])
-            $url->scriptName = $GLOBALS['gJCoord']->request->getServerURI(true).$url->scriptName;
+            $url->scriptName = jApp::coord()->request->getServerURI(true).$url->scriptName;
 
-        if ($urlinfo[1] && !$GLOBALS['gJConfig']->urlengine['multiview']) {
-            $url->scriptName .= $GLOBALS['gJConfig']->urlengine['entrypointExtension'];
+        if ($urlinfo[1] && !jApp::config()->urlengine['multiview']) {
+            $url->scriptName .= jApp::config()->urlengine['entrypointExtension'];
         }
 
-        // pour certains types de requete, les paramètres ne sont pas dans l'url
-        // donc on les supprime
-        // c'est un peu crade de faire ça en dur ici, mais ce serait lourdingue
-        // de charger la classe request pour savoir si on peut supprimer ou pas
+        // for some request types, parameters aren't in the url
+        // so we remove them
+        // it's a bit dirty to do that hardcoded here, but it would be a pain
+        // to load the request class to check whether we can remove or not
         if (in_array($urlact->requestType, array('xmlrpc','jsonrpc','soap'))) {
             $url->clearParam();
             return $url;

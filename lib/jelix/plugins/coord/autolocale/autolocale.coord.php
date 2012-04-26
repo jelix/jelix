@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage coord_plugin
 * @author   Laurent Jouanneau
-* @copyright 2006-2007 Laurent Jouanneau
+* @copyright 2006-2012 Laurent Jouanneau
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
@@ -29,15 +29,13 @@ class AutoLocaleCoordPlugin implements jICoordPlugin {
      */
     public function beforeAction($params){
 
-        global $gJCoord, $gJConfig;
-
         $langDetected=false;
         $lang='';
 
         $availableLang = explode(',',$this->config['availableLanguageCode']);
 
         if($this->config['enableUrlDetection']){
-            $l = $gJCoord->request->getParam($this->config['urlParamNameLanguage']);
+            $l = jApp::coord()->request->getParam($this->config['urlParamNameLanguage']);
             if($l !==null){
                 if(strpos('_',$l) ===false){
                     $lg = strtolower($l).'_'.strtoupper($l);
@@ -94,7 +92,7 @@ class AutoLocaleCoordPlugin implements jICoordPlugin {
 
         if($lang!=''){
             $_SESSION['JX_LANG']=$lang;
-            $gJConfig->locale = $lang;
+            jApp::config()->locale = $lang;
         }
         return null;
     }

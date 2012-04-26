@@ -43,9 +43,13 @@ Olivier Demah (aka FoxMaSk)
  - $ should not be allowed in parameters of dao methods  (#1129)
  - format of date / hour too permissive (#1046)
  - missing method groups:setdefault in ursl.xml jacl2db_admin (#1187)
+ - jForms type email et chaine vide (#1401)
 
 Antoine Detante (aka antoinefr)
  - support of persistant authentification in jAuth and auth plugin (#229)
+
+Sid-Ali Djenadid
+ - contribution on the jDaoRecordBase::save method implementation
 
 DSDenes
  - fix little thing in crud template (#844)
@@ -80,6 +84,9 @@ Gildas Givaja (aka Giviz)
  - testor, bug fixes
  - bug fix in jXmlRpc.class.php (#192)
 
+Flav
+ - allow to implements methods in controllers with __call (#1448)
+
 Frédéric Guillot (aka fg)
  - patch for multiple authentification in a same session (#207)
  - bug fixes in support of XML-RPC request and response
@@ -88,11 +95,19 @@ Florian Hatat (aka flh)
  - improvements on jDateTime + RFC2822 support (#379)
  - Fix bugs on duration calculation + new jDuration class (#425, #453)
 
+Vincent Herr
+ - fixed a bug in jDbPDOConnection related to the mssql support (#1389)
+
 Emmanuel Hesry (aka m@noo)
  - improvement on jDateTime plugin for full date format (#796)
 
 Didier Huguet (aka isepman)
  - tpl plugin: modifier truncatehtml (#760)
+ - jDaoFactoryBase: methods getTables, getPrimaryTable (#1263)
+
+
+Charles R. (aka Hugokernel)
+ - fixed a bug in meta_html, about jquery effects
 
 Julien Issler
  - updated JSON class (#231)
@@ -160,6 +175,7 @@ Steven Jehannet (aka Catsoup)
  - fixed bug in jdao for sqlite + count+ distinct (#1225)
  - jforms, fixed bad detection in modified controls (#1234)
  - jforms, javascript, fixed bug with grouped data in ajax context (#1325)
+ - fixed build in jFile for jFile::getMimeTypeForFilename
 
 Nicolas Jeudy (aka njeudy)
  - auth driver: jAuthDriverLDS (pour les annuaires ldap LDS)
@@ -215,6 +231,12 @@ Kévin Lepeltier (aka Lipki)
  - plugin coord history (#507)
  - improvement in jMailer (#530)
 
+Florian Lonqueu-Brochard (FlorianLB)
+ - système de cache http (#4)
+ - bcrypt algorithm for jAuth
+ - classe lecture d’un rss/atom distant (#23)
+ - implementation of jPref (#237)
+
 Vincent Viaud (aka Litchi)
  - bug fix in jforms_jquery.js (#1132)
  - fixed misprint in ldap plugin (#1219)
@@ -225,6 +247,9 @@ Vincent Viaud (aka Litchi)
 
 Hugues Magnier (aka BaGroN)
  - tpl plugin stripws (#140)
+
+Aurélien Marcel
+ - fixed bad variable name in jDbSchema (#1420)
 
 Loic Mathaud (bballizlife):
  - testor, many bug fixes and many patches on jelix
@@ -300,6 +325,9 @@ Brice Tence (aka brayce/bricet)
  - added lock on jCache::call to prevent multiple calls on CPU high-consuming functions (ticket #1237)
  - fixed the support of meta in included template (#1196)
  - http version setting (#1411)
+ - support of referer in error lof messages (#1421)
+ - added jUrl::getRootUrl*() methods and jrooturl html jTpl plugin (#1073)
+ - added support of meta_if in jTpl (#1200)
 
 Christophe Thiriot (aka Doubleface)
  - testor

@@ -104,9 +104,9 @@ class initadminCommand extends JelixScriptCommand {
         $urlconf = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints', null, true);
         if ($urlconf === null || $urlconf == '') {
             // in defaultconfig
-            $inifile->setValue($entrypoint, 'jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic', 'simple_urlengine_entrypoints', null, true);
+            $inifile->setValue($entrypoint, 'jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic, jpref_admin~*@classic', 'simple_urlengine_entrypoints', null, true);
             // in the config of the entry point
-            $inifile->setValue($entrypoint, 'jacl2db~*@classic, jauth~*@classic, jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic', 'simple_urlengine_entrypoints');
+            $inifile->setValue($entrypoint, 'jacl2db~*@classic, jauth~*@classic, jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic, jpref_admin~*@classic', 'simple_urlengine_entrypoints');
         }
         else {
             $urlconf2 = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints');
@@ -127,6 +127,8 @@ class initadminCommand extends JelixScriptCommand {
                 $urlconf2 .= ',jacl2db~*@classic';
             if(strpos($urlconf2, 'jauth~*@classic') === false)
                 $urlconf2 .= ',jauth~*@classic';
+            if(strpos($urlconf2, 'jpref_admin~*@classic') === false)
+                $urlconf2 .= ',jpref_admin~*@classic';
 
             $inifile->setValue($entrypoint, $urlconf, 'simple_urlengine_entrypoints', null, true);
             $inifile->setValue($entrypoint, $urlconf2, 'simple_urlengine_entrypoints');
@@ -182,5 +184,7 @@ class initadminCommand extends JelixScriptCommand {
             $inifile->setValue('jacl2db_admin.access', '0', 'modules');
             $inifile->save();
         }
+        
+        $installer->installModules(array('jpref_admin'), $entrypoint.'.php');
     }
 }
