@@ -211,22 +211,13 @@ class jResponseSitemap extends jResponse {
      * @return array
      */
     protected function _parseUrlsXml() {
-<<<<<<< HEAD
-        global $gJConfig;
-        $urls = array();
-        $significantFile = $gJConfig->urlengine['significantFile'];
-        $entryPoint = $gJConfig->urlengine['defaultEntrypoint'];
-        $entryPointExtension = $gJConfig->urlengine['entrypointExtension'];
-        $snp = $gJConfig->urlengine['urlScriptIdenc'];
-        $basePath = $gJConfig->urlengine['basePath'];
-=======
-
         $urls = array();
         $conf = &jApp::config()->urlengine;
         $significantFile = $conf['significantFile'];
         $entryPoint = $conf['defaultEntrypoint'];
+        $entryPointExtension = $conf['entrypointExtension'];
         $snp = $conf['urlScriptIdenc'];
->>>>>>> d1e187668353911d467b60e7f95d9a1007f1f8b9
+        $basePath = $conf['basePath'];
 
         $file = jApp::tempPath('compiled/urlsig/' . $significantFile .
                 '.' . rawurlencode($entryPoint) . '.entrypoint.php');
