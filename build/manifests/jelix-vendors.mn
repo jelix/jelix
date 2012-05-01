@@ -232,6 +232,7 @@ cd lib/tcpdf
   qrcode.php
   README.TXT
   spotcolors.php
+  sRGB.icc
   tcpdf.crt
   tcpdf.fdf
   tcpdf.p12
@@ -244,6 +245,7 @@ cd lib/tcpdf/config/lang
   ara.php
   bra.php
   chi.php
+  dan.php
   eng.php
   fra.php
   ger.php
