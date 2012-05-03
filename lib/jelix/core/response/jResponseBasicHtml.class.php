@@ -74,6 +74,11 @@ class jResponseBasicHtml extends jResponse {
     protected $_isXhtml = true;
 
     /**
+     * says if the document is using html5
+     */
+    protected $_isHtml5 = true;
+
+    /**
      * says if xhtml content type should be send or not.
      * it true, a verification of HTTP_ACCEPT is done.
      * @var boolean
@@ -268,9 +273,26 @@ class jResponseBasicHtml extends jResponse {
     }
 
     /**
+     * change the type of html for the output
+     * @param boolean $html5 true if you want html5, false if you want html/xhtml
+     */
+    public function setHtml5Output($html5 = true){
+        $this->_isHtml5 = $_isHtml5;
+        if($_isHtml5) {
+            $this->_isXhtml = false;
+        }
+    }
+
+    /**
      * says if the response will be xhtml or html
      * @return boolean true if it is xhtml
      */
     final public function isXhtml(){ return $this->_isXhtml; }
+
+    /**
+     * says if the response will be html5 or xhtml /html
+     * @return boolean true if it is html5
+     */
+    final public function isHtml5(){ return $this->_isHtml5; }
 
 }
