@@ -568,7 +568,10 @@ class jResponseHtml extends jResponseBasicHtml {
     public function setHtml5Output($html5 = true){
         $this->_isHtml5 = $_isHtml5;
         if($_isHtml5) {
+            $this->_endTag = "/>\n";
             $this->_isXhtml = false;
+        } else {
+            $this->_endTag = ">\n";
         }
     }
 
