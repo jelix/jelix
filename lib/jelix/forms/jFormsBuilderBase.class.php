@@ -59,7 +59,7 @@ abstract class jFormsBuilderBase {
         $this->_actionParams = $actionParams;
         $this->_name = jFormsBuilderBase::generateFormName($this->_form->getSelector());
         if($GLOBALS['gJCoord']->response!= null && $GLOBALS['gJCoord']->response->getType() == 'html'){
-            $this->_endt = (($GLOBALS['gJCoord']->response->isXhtml() || $GLOBALS['gJCoord']->response->isHtml5())?'/>':'>');
+            $this->_endt = ($GLOBALS['gJCoord']->response->isXhtml()?'/>':'>');
         }
     }
 

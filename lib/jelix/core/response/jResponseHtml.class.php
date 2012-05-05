@@ -388,13 +388,8 @@ class jResponseHtml extends jResponseBasicHtml {
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$this->_lang,'" lang="',$this->_lang,'">
 ';
         }else{
-            if($this->_isHtml5) {
-                echo '<!DOCTYPE html>', "\n";
-                echo '<html lang="',$this->_lang,'">';
-            }else{
-                echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01'.($this->_strictDoctype?'':' Transitional').'//EN" "http://www.w3.org/TR/html4/'.($this->_strictDoctype?'strict':'loose').'.dtd">', "\n";
-                echo '<html lang="',$this->_lang,'">';
-            }
+            echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01'.($this->_strictDoctype?'':' Transitional').'//EN" "http://www.w3.org/TR/html4/'.($this->_strictDoctype?'strict':'loose').'.dtd">', "\n";
+            echo '<html lang="',$this->_lang,'">';
         }
     }
 
@@ -559,20 +554,6 @@ class jResponseHtml extends jResponseBasicHtml {
             $this->_endTag = "/>\n";
         else
             $this->_endTag = ">\n";
-    }
-
-    /**
-     * change the type of html for the output
-     * @param boolean $html5 true if you want html5, false if you want html/xhtml
-     */
-    public function setHtml5Output($html5 = true){
-        $this->_isHtml5 = $_isHtml5;
-        if($_isHtml5) {
-            $this->_endTag = "/>\n";
-            $this->_isXhtml = false;
-        } else {
-            $this->_endTag = ">\n";
-        }
     }
 
     /**
